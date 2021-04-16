@@ -1,276 +1,317 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDAB29CA
-	for <mptcp@lists.linux.dev>; Fri, 16 Apr 2021 10:54:23 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id r12so41520947ejr.5
-        for <mptcp@lists.linux.dev>; Fri, 16 Apr 2021 03:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=prRqfvCrkyy5RtSJxNqzZbfd4V+Wp+8SCCl90CPHCiU=;
-        b=gFGWtuPJ+eJ0M9FUCvOWl04akI0P76qihqGSUw+dG3DyUxs1jqRiKS32m1G2Wa6LZy
-         PkhFa8rtKjffjNcYrqCb1BT5D4qacKQxG3nQ0mmJO9HJ5vrytsr6k8dvooGS0eaHICrh
-         9BWdVo4i+eHy9vutNcfPxmAVC6nXnGlIBBeWm74RFQWlgycHtQUFGGpAG2LEk/P30Jg6
-         5vawpypLDMeQFUe5RUMQwlFtFX4u3cndcateGCgo5igXtXj0Zg4mvRrt5km7gXTZrJBl
-         01mvdeU1GThrxaiRNbqexK7iWYymtTVRws6Y3E+oYeLLbCSybLkzW5ZsdjL1OZJREOJw
-         zFYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=prRqfvCrkyy5RtSJxNqzZbfd4V+Wp+8SCCl90CPHCiU=;
-        b=mlxSumfqfWxRBgHft6BokQu0v1k8XaMTI6c+dPA8K0b6P8QWyiOoRmqO783JXKd00z
-         0cURrEj14hBdEJormm/5YSZhA2IwoWxyRu7Dp7QXdz64mHHLYRUw6S+FxNVhDDTO+XKT
-         z988XeR+wWoNV16KbQL6GulILS7IQGiTf+RIlgOUVKUTJOOMNWElcDjvXN02ZLf4Ricv
-         y8uxN7OqLv3rhzaIJOnAIIWmWbkACBUmgmRjGWWNe2+f7Zs8SBw2WGR4ENMXwVVJRcEb
-         vHkkW7U0kwWdZb0eEzdRMpGmc/YMLs/nKxmppwp4j5hT83a2rqnkqwg8505UZEk7hH6B
-         pG5A==
-X-Gm-Message-State: AOAM532KZZ41JXNb18PcfKr9gxsXRJ6R50bg/ivsBecTz6O1WgNeEmQj
-	uTbQVCeF3C9WCKRKuBBiF/l9Dqjx8N8NWXamppc=
-X-Google-Smtp-Source: ABdhPJxyT6qTaqzghaMwZUeZp3XA8SvOwzrJj6g0ifMwsRFacPktqNPVhALT9chKOO5ytlBUdN02CfnV/gIeIN2lUZk=
-X-Received: by 2002:a17:906:1784:: with SMTP id t4mr7932298eje.167.1618570461983;
- Fri, 16 Apr 2021 03:54:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BD017F
+	for <mptcp@lists.linux.dev>; Fri, 16 Apr 2021 13:59:50 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1lXP0Y-0003Rh-PB; Fri, 16 Apr 2021 15:59:42 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <netdev@vger.kernel.org>
+Cc: <mptcp@lists.linux.dev>,
+	dsahern@gmail.com,
+	stephen@networkplumber.org,
+	Florian Westphal <fw@strlen.de>
+Subject: [PATCH iproute2] mptcp: add support for event monitoring
+Date: Fri, 16 Apr 2021 15:59:30 +0200
+Message-Id: <20210416135930.9480-1-fw@strlen.de>
+X-Mailer: git-send-email 2.26.3
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1618565378-148180-1-git-send-email-liyonglong@chinatelecom.cn> <1618565378-148180-2-git-send-email-liyonglong@chinatelecom.cn>
-In-Reply-To: <1618565378-148180-2-git-send-email-liyonglong@chinatelecom.cn>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 16 Apr 2021 18:54:09 +0800
-Message-ID: <CA+WQbwvgrV0bu7JpcsMb+DGi_0v6sS=HRRsVaz1K4N3R9hQ4tg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] selftests: mptcp: add a test case for MSG_PEEK
-To: Yonglong Li <liyonglong@chinatelecom.cn>
-Cc: mptcp@lists.linux.dev, mptcp <mptcp@lists.01.org>, 
-	Mat Martineau <mathew.j.martineau@linux.intel.com>, 
-	Matthieu Baerts <matthieu.baerts@tessares.net>, Florian Westphal <fw@strlen.de>, 
-	Paolo Abeni <pabeni@redhat.com>, qitiepeng@chinatelecom.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Yonglong,
+This adds iproute2 support for mptcp event monitoring, e.g. creation,
+establishment, address announcements from the peer, subflow establishment
+and so on.
 
-Did you check this patch with the checkpatch.pl script?
+While the kernel-generated events are primarily aimed at mptcpd (e.g. for
+subflow management), this is also useful for debugging.
 
--Geliang
+This adds print support for the existing events.
 
-Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B44=E6=9C=8816=
-=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=885:31=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> Extend mptcp_connect tool with MSG_PEEK support and add a test case in
-> mptcp_connect.sh that checks the data recvived from/after recv() with
-> MSG_PEEK.
->
-> eg: sh mptcp_connect.sh -4 -m poll -P
->
-> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c  | 45 ++++++++++++++++=
-+++++-
->  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 38 ++++++++++++++++=
-+-
->  2 files changed, 80 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> index 2f207cf..668a041 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -45,7 +45,14 @@ enum cfg_mode {
->         CFG_MODE_SENDFILE,
->  };
->
-> +enum cfg_peek {
-> +       CFG_NONE_PEEK,
-> +       CFG_WITH_PEEK,
-> +       CFG_AFTER_PEEK,
-> +};
-> +
->  static enum cfg_mode cfg_mode =3D CFG_MODE_POLL;
-> +static enum cfg_peek cfg_peek =3D CFG_NONE_PEEK;
->  static const char *cfg_host;
->  static const char *cfg_port    =3D "12000";
->  static int cfg_sock_proto      =3D IPPROTO_MPTCP;
-> @@ -73,6 +80,7 @@ static void die_usage(void)
->         fprintf(stderr, "\t-M mark -- set socket packet mark\n");
->         fprintf(stderr, "\t-u -- check mptcp ulp\n");
->         fprintf(stderr, "\t-w num -- wait num sec before closing the sock=
-et\n");
-> +       fprintf(stderr, "\t-P [saveWithPeek|saveAfterPeek] -- save data w=
-ith/after MSG_PEEK form tcp socket \n");
->         exit(1);
->  }
->
-> @@ -331,6 +339,8 @@ static size_t do_write(const int fd, char *buf, const=
- size_t len)
->
->  static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
->  {
-> +       int ret =3D 0;
-> +       char tmp[16384];
->         size_t cap =3D rand();
->
->         cap &=3D 0xffff;
-> @@ -340,7 +350,17 @@ static ssize_t do_rnd_read(const int fd, char *buf, =
-const size_t len)
->         else if (cap > len)
->                 cap =3D len;
->
-> -       return read(fd, buf, cap);
-> +       if (cfg_peek =3D=3D CFG_WITH_PEEK) {
-> +               ret =3D recv(fd, buf, cap, MSG_PEEK);
-> +               ret =3D (ret < 0) ? ret : read(fd, tmp, ret);
-> +       } else if (cfg_peek =3D=3D CFG_AFTER_PEEK) {
-> +               ret =3D recv(fd, buf, cap, MSG_PEEK);
-> +               ret =3D (ret < 0) ? ret : read(fd, buf, cap);
-> +       } else {
-> +               ret =3D read(fd, buf, cap);
-> +       }
-> +
-> +       return ret;
->  }
->
->  static void set_nonblock(int fd)
-> @@ -819,6 +839,24 @@ int parse_mode(const char *mode)
->         return 0;
->  }
->
-> +int parse_peek(const char *mode)
-> +{
-> +       if (!strcasecmp(mode, "saveWithPeek"))
-> +               return CFG_WITH_PEEK;
-> +       if (!strcasecmp(mode, "saveAfterPeek"))
-> +               return CFG_AFTER_PEEK;
-> +
-> +       fprintf(stderr, "Unknown: %s\n", mode);
-> +       fprintf(stderr, "Supported MSG_PEEK mode are:\n");
-> +       fprintf(stderr, "\t\t\"saveWithPeek\" - recv data with flags 'MSG=
-_PEEK' and save the peek data into file \n");
-> +       fprintf(stderr, "\t\t\"saveAfterPeek\" - read data form socket an=
-d save it into file after recv with flags 'MSG_PEEK' \n");
-> +
-> +       die_usage();
-> +
-> +       /* silence compiler warning */
-> +       return 0;
-> +}
-> +
->  static int parse_int(const char *size)
->  {
->         unsigned long s;
-> @@ -846,7 +884,7 @@ static void parse_opts(int argc, char **argv)
->  {
->         int c;
->
-> -       while ((c =3D getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:")) !=3D=
- -1) {
-> +       while ((c =3D getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:")) !=
-=3D -1) {
->                 switch (c) {
->                 case 'j':
->                         cfg_join =3D true;
-> @@ -899,6 +937,9 @@ static void parse_opts(int argc, char **argv)
->                 case 'M':
->                         cfg_mark =3D strtol(optarg, NULL, 0);
->                         break;
-> +               case 'P':
-> +                       cfg_peek =3D parse_peek(optarg);
-> +                       break;
->                 }
->         }
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index 385cdc9..6f77e04 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -3,7 +3,7 @@
->
->  time_start=3D$(date +%s)
->
-> -optstring=3D"S:R:d:e:l:r:h4cm:f:t"
-> +optstring=3D"S:R:d:e:l:r:h4cm:f:tP"
->  ret=3D0
->  sin=3D""
->  sout=3D""
-> @@ -23,6 +23,8 @@ rcvbuf=3D0
->  options_log=3Dtrue
->  do_tcp=3D0
->  filesize=3D0
-> +testpeek=3Dfalse
-> +peekmode=3D""
->
->  if [ $tc_loss -eq 100 ];then
->         tc_loss=3D1%
-> @@ -47,6 +49,7 @@ usage() {
->         echo -e "\t-R: set rcvbuf value (default: use kernel default)"
->         echo -e "\t-m: test mode (poll, sendfile; default: poll)"
->         echo -e "\t-t: also run tests with TCP (use twice to non-fallback=
- tcp)"
-> +       echo -e "\t-P: test MSG_PEEK flags of recv() function"
->  }
->
->  while getopts "$optstring" option;do
-> @@ -104,6 +107,10 @@ while getopts "$optstring" option;do
->         "t")
->                 do_tcp=3D$((do_tcp+1))
->                 ;;
-> +       "P")
-> +               testpeek=3Dtrue
-> +               peekmode=3D"saveWithPeek"
-> +               ;;
->         "?")
->                 usage $0
->                 exit 1
-> @@ -393,6 +400,10 @@ do_transfer()
->                 extra_args=3D"$extra_args -m $testmode"
->         fi
->
-> +       if $testpeek; then
-> +               extra_args=3D"$extra_args -P $peekmode"
-> +       fi
-> +
->         if [ -n "$extra_args" ] && $options_log; then
->                 options_log=3Dfalse
->                 echo "INFO: extra options: $extra_args"
-> @@ -706,6 +717,31 @@ echo "on ns3eth4"
->
->  tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms=
- $tc_reorder
->
-> +if $testpeek; then
-> +       run_tests_lo "$ns1" "$ns1" 10.0.1.1 1
-> +       if [ $ret -ne 0 ] ;then
-> +               echo "FAIL: Could not even run loopback test" 1>&2
-> +               exit $ret
-> +       fi
-> +       run_tests_lo "$ns1" $sender dead:beef:1::1 1
-> +       if [ $ret -ne 0 ] ;then
-> +               echo "FAIL: Could not even run loopback v6 test" 2>&1
-> +               exit $ret
-> +       fi
-> +
-> +       #set peekmode=3D"saveAfterPeek" and test again
-> +       options_log=3Dtrue
-> +       peekmode=3D"saveAfterPeek"
-> +       run_tests_lo "$ns1" "$ns1" 10.0.1.1 1
-> +       run_tests_lo "$ns1" $sender dead:beef:1::1 1
-> +
-> +       time_end=3D$(date +%s)
-> +       time_run=3D$((time_end-time_start))
-> +       echo "Time: ${time_run} seconds"
-> +
-> +       exit $ret
-> +fi
-> +
->  for sender in $ns1 $ns2 $ns3 $ns4;do
->         run_tests_lo "$ns1" "$sender" 10.0.1.1 1
->         if [ $ret -ne 0 ] ;then
-> --
-> 1.8.3.1
->
->
+Sample output of 'ip mptcp monitor':
+[       CREATED] token=83f3a692 remid=0 locid=0 saddr4=10.0.1.2 daddr4=10.0.1.1 sport=58710 dport=10011
+[   ESTABLISHED] token=83f3a692 remid=0 locid=0 saddr4=10.0.1.2 daddr4=10.0.1.1 sport=58710 dport=10011
+[SF_ESTABLISHED] token=83f3a692 remid=0 locid=1 saddr4=10.0.2.2 daddr4=10.0.1.1 sport=40195 dport=10011 backup=0
+[        CLOSED] token=83f3a692
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ include/libgenl.h          |   1 +
+ include/uapi/linux/mptcp.h |   2 +
+ ip/ipmptcp.c               | 113 +++++++++++++++++++++++++++++++++++++
+ lib/libgenl.c              |  66 ++++++++++++++++++++++
+ man/man8/ip-mptcp.8        |   8 +++
+ 5 files changed, 190 insertions(+)
+
+diff --git a/include/libgenl.h b/include/libgenl.h
+index 656493a2c3c4..97281cc1103f 100644
+--- a/include/libgenl.h
++++ b/include/libgenl.h
+@@ -21,6 +21,7 @@ struct {								\
+ 	},								\
+ }
+ 
++int genl_add_mcast_grp(struct rtnl_handle *grth, __u16 genl_family, const char *group);
+ int genl_resolve_family(struct rtnl_handle *grth, const char *family);
+ int genl_init_handle(struct rtnl_handle *grth, const char *family,
+ 		     int *genl_family);
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index c3e40165ad4b..d7d47802bc98 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -174,6 +174,8 @@ enum mptcp_event_attr {
+ 	MPTCP_ATTR_FLAGS,	/* u16 */
+ 	MPTCP_ATTR_TIMEOUT,	/* u32 */
+ 	MPTCP_ATTR_IF_IDX,	/* s32 */
++	MPTCP_ATTR_RESET_REASON,/* u32 */
++	MPTCP_ATTR_RESET_FLAGS, /* u32 */
+ 
+ 	__MPTCP_ATTR_AFTER_LAST
+ };
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index e1ffafb3c658..fa8481069124 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -23,6 +23,7 @@ static void usage(void)
+ 		"	ip mptcp endpoint flush\n"
+ 		"	ip mptcp limits set [ subflows NR ] [ add_addr_accepted NR ]\n"
+ 		"	ip mptcp limits show\n"
++		"	ip mptcp monitor\n"
+ 		"FLAG-LIST := [ FLAG-LIST ] FLAG\n"
+ 		"FLAG  := [ signal | subflow | backup ]\n");
+ 
+@@ -385,6 +386,110 @@ static int mptcp_limit_get_set(int argc, char **argv, int cmd)
+ 	return 0;
+ }
+ 
++static const char * const event_to_str[] = {
++	[MPTCP_EVENT_CREATED] = "CREATED",
++	[MPTCP_EVENT_ESTABLISHED] = "ESTABLISHED",
++	[MPTCP_EVENT_CLOSED] = "CLOSED",
++	[MPTCP_EVENT_ANNOUNCED] = "ANNOUNCED",
++	[MPTCP_EVENT_REMOVED] = "REMOVED",
++	[MPTCP_EVENT_SUB_ESTABLISHED] = "SF_ESTABLISHED",
++	[MPTCP_EVENT_SUB_CLOSED] = "SF_CLOSED",
++	[MPTCP_EVENT_SUB_PRIORITY] = "SF_PRIO",
++};
++
++static void print_addr(const char *key, int af, struct rtattr *value)
++{
++	void *data = RTA_DATA(value);
++	char str[INET6_ADDRSTRLEN];
++
++	if (inet_ntop(af, data, str, sizeof(str)))
++		printf(" %s=%s", key, str);
++}
++
++static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
++			     struct nlmsghdr *n, void *arg)
++{
++	const struct genlmsghdr *ghdr = NLMSG_DATA(n);
++	struct rtattr *tb[MPTCP_ATTR_MAX + 1];
++	int len = n->nlmsg_len;
++
++	len -= NLMSG_LENGTH(GENL_HDRLEN);
++	if (len < 0)
++		return -1;
++
++	if (n->nlmsg_type != genl_family)
++		return 0;
++
++	if (timestamp)
++		print_timestamp(stdout);
++
++	if (ghdr->cmd >= ARRAY_SIZE(event_to_str)) {
++		printf("[UNKNOWN %u]\n", ghdr->cmd);
++		goto out;
++	}
++
++	if (event_to_str[ghdr->cmd] == NULL) {
++		printf("[UNKNOWN %u]\n", ghdr->cmd);
++		goto out;
++	}
++
++	printf("[%14s]", event_to_str[ghdr->cmd]);
++
++	parse_rtattr(tb, MPTCP_ATTR_MAX, (void *) ghdr + GENL_HDRLEN, len);
++
++	printf(" token=%08x", rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
++
++	if (tb[MPTCP_ATTR_REM_ID])
++		printf(" remid=%u", rta_getattr_u8(tb[MPTCP_ATTR_REM_ID]));
++	if (tb[MPTCP_ATTR_LOC_ID])
++		printf(" locid=%u", rta_getattr_u8(tb[MPTCP_ATTR_LOC_ID]));
++
++	if (tb[MPTCP_ATTR_SADDR4])
++		print_addr("saddr4", AF_INET, tb[MPTCP_ATTR_SADDR4]);
++	if (tb[MPTCP_ATTR_DADDR4])
++		print_addr("daddr4", AF_INET, tb[MPTCP_ATTR_DADDR4]);
++	if (tb[MPTCP_ATTR_SADDR6])
++		print_addr("saddr6", AF_INET6, tb[MPTCP_ATTR_SADDR6]);
++	if (tb[MPTCP_ATTR_DADDR6])
++		print_addr("daddr6", AF_INET6, tb[MPTCP_ATTR_DADDR6]);
++	if (tb[MPTCP_ATTR_SPORT])
++		printf(" sport=%u", rta_getattr_be16(tb[MPTCP_ATTR_SPORT]));
++	if (tb[MPTCP_ATTR_DPORT])
++		printf(" dport=%u", rta_getattr_be16(tb[MPTCP_ATTR_DPORT]));
++	if (tb[MPTCP_ATTR_BACKUP])
++		printf(" backup=%d", rta_getattr_u8(tb[MPTCP_ATTR_BACKUP]));
++	if (tb[MPTCP_ATTR_ERROR])
++		printf(" error=%d", rta_getattr_u8(tb[MPTCP_ATTR_ERROR]));
++	if (tb[MPTCP_ATTR_FLAGS])
++		printf(" flags=%x", rta_getattr_u16(tb[MPTCP_ATTR_FLAGS]));
++	if (tb[MPTCP_ATTR_TIMEOUT])
++		printf(" timeout=%u", rta_getattr_u32(tb[MPTCP_ATTR_TIMEOUT]));
++	if (tb[MPTCP_ATTR_IF_IDX])
++		printf(" ifindex=%d", rta_getattr_s32(tb[MPTCP_ATTR_IF_IDX]));
++	if (tb[MPTCP_ATTR_RESET_REASON])
++		printf(" reset_reason=%u", rta_getattr_u32(tb[MPTCP_ATTR_RESET_REASON]));
++	if (tb[MPTCP_ATTR_RESET_FLAGS])
++		printf(" reset_flags=0x%x", rta_getattr_u32(tb[MPTCP_ATTR_RESET_FLAGS]));
++
++	puts("");
++out:
++	fflush(stdout);
++	return 0;
++}
++
++static int mptcp_monitor(void)
++{
++	if (genl_add_mcast_grp(&genl_rth, genl_family, MPTCP_PM_EV_GRP_NAME) < 0) {
++		perror("can't subscribe to mptcp events");
++		return 1;
++	}
++
++	if (rtnl_listen(&genl_rth, mptcp_monitor_msg, stdout) < 0)
++		return 2;
++
++	return 0;
++}
++
+ int do_mptcp(int argc, char **argv)
+ {
+ 	if (argc == 0)
+@@ -429,6 +534,14 @@ int do_mptcp(int argc, char **argv)
+ 						   MPTCP_PM_CMD_GET_LIMITS);
+ 	}
+ 
++	if (matches(*argv, "monitor") == 0) {
++		NEXT_ARG_FWD();
++		if (argc == 0)
++			return mptcp_monitor();
++
++		goto unknown;
++	}
++
+ unknown:
+ 	fprintf(stderr, "Command \"%s\" is unknown, try \"ip mptcp help\".\n",
+ 		*argv);
+diff --git a/lib/libgenl.c b/lib/libgenl.c
+index f2ce698fc711..4c51d47af46b 100644
+--- a/lib/libgenl.c
++++ b/lib/libgenl.c
+@@ -67,6 +67,72 @@ int genl_resolve_family(struct rtnl_handle *grth, const char *family)
+ 	return fnum;
+ }
+ 
++static int genl_parse_grps(struct rtattr *attr, const char *name, unsigned int *id)
++{
++	const struct rtattr *pos;
++
++	rtattr_for_each_nested(pos, attr) {
++		struct rtattr *tb[CTRL_ATTR_MCAST_GRP_MAX + 1];
++
++		parse_rtattr_nested(tb, CTRL_ATTR_MCAST_GRP_MAX, pos);
++
++		if (tb[CTRL_ATTR_MCAST_GRP_NAME] && tb[CTRL_ATTR_MCAST_GRP_ID]) {
++			if (strcmp(name, rta_getattr_str(tb[CTRL_ATTR_MCAST_GRP_NAME])) == 0) {
++				*id = rta_getattr_u32(tb[CTRL_ATTR_MCAST_GRP_ID]);
++				return 0;
++			}
++		}
++	}
++
++	return -1;
++}
++
++int genl_add_mcast_grp(struct rtnl_handle *grth, __u16 fnum, const char *group)
++{
++	GENL_REQUEST(req, 1024, GENL_ID_CTRL, 0, 0, CTRL_CMD_GETFAMILY,
++		     NLM_F_REQUEST);
++	struct rtattr *tb[CTRL_ATTR_MAX + 1];
++	struct nlmsghdr *answer = NULL;
++	struct genlmsghdr *ghdr;
++	struct rtattr *attrs;
++	int len, ret = -1;
++	unsigned int id;
++
++	addattr16(&req.n, sizeof(req), CTRL_ATTR_FAMILY_ID, fnum);
++
++	if (rtnl_talk(grth, &req.n, &answer) < 0) {
++		fprintf(stderr, "Error talking to the kernel\n");
++		return -2;
++	}
++
++	ghdr = NLMSG_DATA(answer);
++	len = answer->nlmsg_len;
++
++	if (answer->nlmsg_type != GENL_ID_CTRL)
++		goto err_free;
++
++	len -= NLMSG_LENGTH(GENL_HDRLEN);
++	if (len < 0)
++		goto err_free;
++
++	attrs = (struct rtattr *) ((char *) ghdr + GENL_HDRLEN);
++	parse_rtattr(tb, CTRL_ATTR_MAX, attrs, len);
++
++	if (tb[CTRL_ATTR_MCAST_GROUPS] == NULL) {
++		fprintf(stderr, "Missing mcast groups TLV\n");
++		goto err_free;
++	}
++
++	if (genl_parse_grps(tb[CTRL_ATTR_MCAST_GROUPS], group, &id) < 0)
++		goto err_free;
++
++	ret = rtnl_add_nl_group(grth, id);
++
++err_free:
++	free(answer);
++	return ret;
++}
++
+ int genl_init_handle(struct rtnl_handle *grth, const char *family,
+ 		     int *genl_family)
+ {
+diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+index ef8409ea4a24..b02cf03e757d 100644
+--- a/man/man8/ip-mptcp.8
++++ b/man/man8/ip-mptcp.8
+@@ -65,6 +65,9 @@ ip-mptcp \- MPTCP path manager configuration
+ .ti -8
+ .BR "ip mptcp limits show"
+ 
++.ti -8
++.BR "ip mptcp monitor"
++
+ .SH DESCRIPTION
+ 
+ MPTCP is a transport protocol built on top of TCP that allows TCP
+@@ -137,5 +140,10 @@ each accepted ADD_ADDR option, respecting the
+ .IR SUBFLOW_NR
+ limit.
+ 
++.sp
++.PP
++.B monitor
++displays creation and deletion of MPTCP connections as well as addition or removal of remote addresses and subflows.
++
+ .SH AUTHOR
+ Original Manpage by Paolo Abeni <pabeni@redhat.com>
+-- 
+2.26.3
+
