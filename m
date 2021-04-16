@@ -1,66 +1,64 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFDD2F85
-	for <mptcp@lists.linux.dev>; Fri, 16 Apr 2021 22:38:22 +0000 (UTC)
-IronPort-SDR: yhRmrCTo+PVdtfrE8dZaXHmhxBsUJDhPhB4J69JV40pwJGW7jOm08ZEkGCxSibw/qrOjp9tNU3
- rsbdkV/YnnjQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9956"; a="175231664"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348712F84
+	for <mptcp@lists.linux.dev>; Fri, 16 Apr 2021 23:01:49 +0000 (UTC)
+IronPort-SDR: iYAyIs5/xs7kcocs5ZThvtxYHViTUaMiGdvvF+4Ys/OPeZ3NR9BWVn6vqXpFlVEKkhWbUOAx2L
+ tCJtx1X6YWkA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9956"; a="195235493"
 X-IronPort-AV: E=Sophos;i="5.82,228,1613462400"; 
-   d="scan'208";a="175231664"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2021 15:38:18 -0700
-IronPort-SDR: iSDFunbap1hYZWGq+wz+/LJG9s1ZjkrP1RRAbWmQ0ObaC1KPCyyOH8QPQohHBhA7t5uQ2Lm6Ee
- LtdMN5OoPY2g==
+   d="scan'208";a="195235493"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2021 16:01:48 -0700
+IronPort-SDR: 4jdu70YoIj7yzx30Cn8HFPFhu145aYcpGAEytkr9aTKH8iSbFrz47aSVH0gy0MBMSqURFNj3SA
+ FiKUT5eDEaVA==
 X-IronPort-AV: E=Sophos;i="5.82,228,1613462400"; 
-   d="scan'208";a="462107400"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.43.70])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2021 15:38:18 -0700
+   d="scan'208";a="419285421"
+Received: from lmfischx-mobl1.amr.corp.intel.com ([10.212.234.72])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2021 16:01:48 -0700
+Date: Fri, 16 Apr 2021 16:01:47 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliangtang@gmail.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 8/8] mptcp: use mptcp_for_each_subflow in mptcp_close
-Date: Fri, 16 Apr 2021 15:38:08 -0700
-Message-Id: <20210416223808.298842-9-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210416223808.298842-1-mathew.j.martineau@linux.intel.com>
-References: <20210416223808.298842-1-mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next 0/3] mptcp: improve MSG_* flags handling
+In-Reply-To: <cover.1618502178.git.pabeni@redhat.com>
+Message-ID: <66565160-cf82-fcb2-b460-ac177c1d755f@linux.intel.com>
+References: <cover.1618502178.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Geliang Tang <geliangtang@gmail.com>
 
-This patch used the macro helper mptcp_for_each_subflow() instead of
-list_for_each_entry() in mptcp_close.
+On Thu, 15 Apr 2021, Paolo Abeni wrote:
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The current handling is a bit fuzzy. Sometimes we silently ignore,
+> sometimes we bail on unsupported even on no-op ones.
+>
+> Let's silently provide a provide a reasonable implementation or
+> bail (currently only for MSG_FASTOPEN) for the flags with user-visible
+> side effects. Finally silently ignore the unsupported flags with no
+> user visible side effects.
+>
+> Paolo Abeni (3):
+>  mptcp: implement dummy MSG_ERRQUEUE support
+>  mptcp: implement MSG_TRUNC support
+>  mptcp: ignore unsupported msg flags
+>
+> net/mptcp/protocol.c | 29 ++++++++++++++++++-----------
+> 1 file changed, 18 insertions(+), 11 deletions(-)
+>
+> -- 
+> 2.26.2
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e26ea143754d..c14ac2975736 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2611,7 +2611,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- cleanup:
- 	/* orphan all the subflows */
- 	inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32;
--	list_for_each_entry(subflow, &mptcp_sk(sk)->conn_list, node) {
-+	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		bool slow = lock_sock_fast(ssk);
- 
--- 
-2.31.1
+Hi Paolo -
 
+Thanks, series looks good to me.
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+--
+Mat Martineau
+Intel
