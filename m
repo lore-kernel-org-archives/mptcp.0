@@ -1,77 +1,75 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDE02F84
-	for <mptcp@lists.linux.dev>; Sat, 17 Apr 2021 00:20:14 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id E3BE2611AC;
-	Sat, 17 Apr 2021 00:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1618618813;
-	bh=9wWq4k3tWpU6QjWArF710iLxNEdprit2kzmU8hh3djM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZJH/UburGVdy1iX+ILYrcjqEAk4LQtd6bKuN2Cx2bPtXAHWEVETxtDitELtYdVhqa
-	 BQnoFLsj57pTc+56hR0l48RgWamwWkuF1uSLXVz4CQ+LASu8LBMloMJ6aen8+G0E7l
-	 uh9vZbHRN4xDg/acWqj8uHGZjagB1Gjp14d7S8iV//TwIDSefJOZB0VGZYu+qDam4+
-	 Dzvv/tmJUyXQgI5S20a9pH/8iMZN0vnSvNVfzfo09+jwwaS+b3gsjocO23HSapThOc
-	 N49CzS7rq4+Uz3WBsiEWvWp0u/PsxSGsOedvMV5xWMste3ubBc1EG8/RzRJalpodET
-	 fUoOQD4EL1OuA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id D561060CD8;
-	Sat, 17 Apr 2021 00:20:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7272F83
+	for <mptcp@lists.linux.dev>; Sat, 17 Apr 2021 04:24:17 +0000 (UTC)
+Received: by mail-lf1-f41.google.com with SMTP id z13so30849206lfd.9
+        for <mptcp@lists.linux.dev>; Fri, 16 Apr 2021 21:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dC0Ua26Rxhnd0n6CHTRnAJbktP1VUUbdUEYM+ldETTs=;
+        b=oLz758tToKci7zsi0yL0Scc7eybfO9b01MpTabJVy82AvrHxAm2Q8Bl580gyU51ORl
+         5O+hqfRQo/6iYzb6O/esTi7MhnB6inJ0UZ/cuMm5NCWSGF2LNtJrP8UzjS/jpcV3dYad
+         niAlpUWRvdSPNLTDAVSOb0zS9baNZ+yioNktaRnNcad2e6nypv+8Y4eSUqBy996u3E+p
+         dzuLhBxP2Nin+DHWvtnMYL4gfn2ujPEJkjlcfStQ5exWrdbLtmwnLwNSGW87LDnt9nVW
+         0diE7nHwTIYX3X25SJy70YHdEdFqr+IDG6Fbh5R/Y3Fd7APM7uiRGoj+GA3ywBCA3jQF
+         xLQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dC0Ua26Rxhnd0n6CHTRnAJbktP1VUUbdUEYM+ldETTs=;
+        b=QIn2lXZGgUcvauimKBC2chFnKPeQm18mdt2tvfGOP6b6g9ovKfez2ixhVG4XLl06aF
+         3SgNgXDIfQ3OixzDHhSEClUlrBBRE0T0JwZfGHEkqZsM1duQuojjhnqH47vKtJ8zOQLA
+         Pmp/QGTiW2fRSsMJFghB+RT4hULdXa4K1rUxq8WMQHRzf2bDr3S3hspkEi+g6hwNOVJW
+         KJDuIchhO7ujqArzwvvU5KO9mlHq1etjxbHFObkx5me1Vb07bP6mCsoNSd+ZBOaNWMET
+         V5PsbugRp68Q0IFgv+dTWZZM8TgGnLMJ3AXo7r6KOBSF39RMAkK8M+dls9juYvM4glWx
+         gddw==
+X-Gm-Message-State: AOAM530jlsfpeueI0hRbhKUCIWSESpnkaQ3jgcLCC4LJXCJTfFEWv8v/
+	oxqRW4LAeHeGxexFw6X8nfdB+V8GTA2dc9WgPH6x3w==
+X-Google-Smtp-Source: ABdhPJzmV9SsVkwYJidvbnM4iWS8L0mm8LtiTIuV/aB/PYpvnOKcYLGWvpGibFQPijvf3rE6GcpLQP9erwMtTMvFSCo=
+X-Received: by 2002:a05:6512:138e:: with SMTP id p14mr3589595lfa.47.1618633455136;
+ Fri, 16 Apr 2021 21:24:15 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/8] mptcp: Fixes and tracepoints from the mptcp tree
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <161861881386.3813.9063075073359203442.git-patchwork-notify@kernel.org>
-Date: Sat, 17 Apr 2021 00:20:13 +0000
-References: <20210416223808.298842-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210416223808.298842-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+References: <cover.1618388989.git.npache@redhat.com> <0fa191715b236766ad13c5f786d8daf92a9a0cf2.1618388989.git.npache@redhat.com>
+ <e26fbcc8-ba3e-573a-523d-9c5d5f84bc46@tessares.net> <CABVgOSm9Lfcu--iiFo=PNLCWCj4vkxqAqO0aZT9B2r3Kw5Fhaw@mail.gmail.com>
+ <b57a1cc8-4921-6ed5-adb8-0510d1918d28@tessares.net>
+In-Reply-To: <b57a1cc8-4921-6ed5-adb8-0510d1918d28@tessares.net>
+From: David Gow <davidgow@google.com>
+Date: Sat, 17 Apr 2021 12:24:03 +0800
+Message-ID: <CABVgOS=QDATYk3nn1jLHhVRh7rXoTp1+jQhUE5pZq8P9M0VpUA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] kunit: mptcp: adhear to KUNIT formatting standard
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Nico Pache <npache@redhat.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brendan Higgins <brendanhiggins@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-ext4@vger.kernel.org, 
+	Networking <netdev@vger.kernel.org>, rafael@kernel.org, linux-m68k@lists.linux-m68k.org, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, "Theodore Ts'o" <tytso@mit.edu>, mathew.j.martineau@linux.intel.com, 
+	davem@davemloft.net, Mark Brown <broonie@kernel.org>, 
+	Shuah Khan <skhan@linuxfoundation.org>, mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+Hi Matt,
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+> Like patch 1/6, I can apply it in MPTCP tree and send it later to
+> net-next with other patches.
+> Except if you guys prefer to apply it in KUnit tree and send it to
+> linux-next?
 
-On Fri, 16 Apr 2021 15:38:00 -0700 you wrote:
-> Here's one more batch of changes that we've tested out in the MPTCP tree.
-> 
-> 
-> Patch 1 makes the MPTCP KUnit config symbol more consistent with other
-> subsystems.
-> 
-> Patch 2 fixes a couple of format specifiers in pr_debug()s
-> 
-> [...]
+Given 1/6 is going to net-next, it makes sense to send this out that
+way too, then, IMHO.
+The only slight concern I have is that the m68k test config patch in
+the series will get split from the others, but that should resolve
+itself when they pick up the last patch.
 
-Here is the summary with links:
-  - [net-next,1/8] kunit: mptcp: adhere to KUNIT formatting standard
-    https://git.kernel.org/netdev/net-next/c/3fcc8a25e391
-  - [net-next,2/8] mptcp: fix format specifiers for unsigned int
-    https://git.kernel.org/netdev/net-next/c/e4b6135134a7
-  - [net-next,3/8] mptcp: export mptcp_subflow_active
-    https://git.kernel.org/netdev/net-next/c/43f1140b9678
-  - [net-next,4/8] mptcp: add tracepoint in mptcp_subflow_get_send
-    https://git.kernel.org/netdev/net-next/c/e10a98920976
-  - [net-next,5/8] mptcp: add tracepoint in get_mapping_status
-    https://git.kernel.org/netdev/net-next/c/0918e34b85c7
-  - [net-next,6/8] mptcp: add tracepoint in ack_update_msk
-    https://git.kernel.org/netdev/net-next/c/ed66bfb4ce34
-  - [net-next,7/8] mptcp: add tracepoint in subflow_check_data_avail
-    https://git.kernel.org/netdev/net-next/c/d96a838a7ce2
-  - [net-next,8/8] mptcp: use mptcp_for_each_subflow in mptcp_close
-    https://git.kernel.org/netdev/net-next/c/442279154c73
+At the very least, this shouldn't cause any conflicts with anything
+we're doing in the KUnit tree.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Cheers,
+-- David
