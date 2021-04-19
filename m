@@ -1,107 +1,61 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAF42F81
-	for <mptcp@lists.linux.dev>; Mon, 19 Apr 2021 21:38:44 +0000 (UTC)
-IronPort-SDR: fkv9ilYJiZ0EiY6WCqGdRUBaGhGwlKISECQpSPyPEYi1h2hP7t8drDxPYnAJNLP7pSsLpCfqaL
- 4WiL9oXfR5Hg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9959"; a="192215879"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D5F2F81
+	for <mptcp@lists.linux.dev>; Mon, 19 Apr 2021 22:28:47 +0000 (UTC)
+IronPort-SDR: 6a+9yF3xc76Qe8+8NOgJVaXSzLM3jFmNkCBVfBIntnZDC+pAbCOEhs3qYDw4MOOH7webqauY3+
+ leGQ5Ul8tNvQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9959"; a="175515571"
 X-IronPort-AV: E=Sophos;i="5.82,235,1613462400"; 
-   d="scan'208";a="192215879"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2021 14:38:42 -0700
-IronPort-SDR: O8No1zt7lF1KiEeCZRUlwDUiTRciItOdDc4DxMkcAEX7eLrkc/PHSrhBlkOtwv1nfXaOQQYJje
- 4Lt2NiuKKSgQ==
+   d="scan'208";a="175515571"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2021 15:28:47 -0700
+IronPort-SDR: PhVIGDN1RPuHvDA52di48xFttjK7sal2Sh2UPvMWhZxbnnh98JqbQJc69bi/ZP6rvfa7AejYKT
+ qHy7lMiXuGkQ==
 X-IronPort-AV: E=Sophos;i="5.82,235,1613462400"; 
-   d="scan'208";a="426660514"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.26.176])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2021 14:38:40 -0700
+   d="scan'208";a="523582399"
+Received: from pdanley-desk.amr.corp.intel.com ([10.212.162.30])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2021 15:28:47 -0700
+Date: Mon, 19 Apr 2021 15:28:46 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	pabeni@redhat.com
-Subject: [PATCH mptcp-next] mptcp: Retransmit DATA_FIN
-Date: Mon, 19 Apr 2021 14:38:36 -0700
-Message-Id: <20210419213836.59887-1-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev, Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: Re: [PATCH mptcp-next 0/3] Squash to "selftests: mptcp: add a test
+ case for MSG_PEEK"
+In-Reply-To: <20210419203355.3937162-1-matthieu.baerts@tessares.net>
+Message-ID: <313ddde-a5d4-2c27-3b7-edc1e6751d38@linux.intel.com>
+References: <20210419203355.3937162-1-matthieu.baerts@tessares.net>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-With this change, the MPTCP-level retransmission timer is used to resend
-DATA_FIN. The retranmit timer is not stopped while waiting for a
-MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
-subflows. The retry interval starts with a couple of attempts at
-TCP_RTO_MIN and then doubles on each attempt, up to TCP_RTO_MAX.
+On Mon, 19 Apr 2021, Matthieu Baerts wrote:
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/146
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+> I started this because I prefer avoiding setting a global variable before
+> calling a function and reset it later in order to take a specific path in the
+> called function. While at it, I also reduced duplicated code.
+>
+> But good thing, I also fixed two unwanted behaviours, see patches 1/3 and 2/3.
+>
+> Matthieu Baerts (3):
+>  selftests: mptcp: use 2 different 'peek' modes
+>  selftests: mptcp: same NS for Peek tests in IPv6
+>  selftests: mptcp: avoid non-const global variables
+>
+> .../selftests/net/mptcp/mptcp_connect.sh      | 44 +++++++++----------
+> 1 file changed, 22 insertions(+), 22 deletions(-)
+>
+> -- 
+> 2.30.2
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a8180a917649..1fddaeeb8051 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -11,6 +11,7 @@
- #include <linux/netdevice.h>
- #include <linux/sched/signal.h>
- #include <linux/atomic.h>
-+#include <linux/log2.h>
- #include <net/sock.h>
- #include <net/inet_common.h>
- #include <net/inet_hashtables.h>
-@@ -402,6 +403,15 @@ static void mptcp_set_timeout(const struct sock *sk, const struct sock *ssk)
- 	mptcp_sk(sk)->timer_ival = tout > 0 ? tout : TCP_RTO_MIN;
- }
- 
-+static void mptcp_set_datafin_timeout(const struct sock *sk)
-+{
-+	struct inet_connection_sock *icsk = inet_csk(sk);
-+	int retransmits = clamp_val(icsk->icsk_retransmits, 1,
-+				    ilog2(TCP_RTO_MAX / TCP_RTO_MIN));
-+
-+	mptcp_sk(sk)->timer_ival = TCP_RTO_MIN << retransmits;
-+}
-+
- static bool tcp_can_send_ack(const struct sock *ssk)
- {
- 	return !((1 << inet_sk_state_load(ssk)) &
-@@ -1061,7 +1071,8 @@ static void __mptcp_clean_una(struct sock *sk)
- 		}
- 	}
- 
--	if (snd_una == READ_ONCE(msk->snd_nxt)) {
-+	if (snd_una == READ_ONCE(msk->snd_nxt) &&
-+	    !mptcp_data_fin_enabled(msk)) {
- 		if (msk->timer_ival)
- 			mptcp_stop_timer(sk);
- 	} else {
-@@ -2287,8 +2298,19 @@ static void __mptcp_retrans(struct sock *sk)
- 
- 	__mptcp_clean_una_wakeup(sk);
- 	dfrag = mptcp_rtx_head(sk);
--	if (!dfrag)
-+	if (!dfrag) {
-+		if (mptcp_data_fin_enabled(msk)) {
-+			struct inet_connection_sock *icsk = inet_csk(sk);
-+
-+			icsk->icsk_retransmits++;
-+			mptcp_set_datafin_timeout(sk);
-+			mptcp_send_ack(msk);
-+
-+			goto reset_timer;
-+		}
-+
- 		return;
-+	}
- 
- 	ssk = mptcp_subflow_get_retrans(msk);
- 	if (!ssk)
--- 
-2.31.1
+Hi Matthieu -
 
+These look good to squash, thanks for the fixups!
+
+
+--
+Mat Martineau
+Intel
