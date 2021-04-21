@@ -1,105 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A0F2F9B
-	for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 08:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1618993075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RTlR5meuig4LJI2XQ2Uw4uyD9dh4tI2ZCXvTzxGxKQE=;
-	b=AJtQa7n5f4N+j7sqBkIDSoH6NaKtnveEXkjWVloqlpcNobuaMWYoAtj3TDQI3B1gGEyloo
-	EV8gbLVcD95z7sYcPggDGhVBUWColN4CvKYmscTlVAFRJ6lEOCZmCbLsL9hRYpnwIEkBlU
-	Ds1BTZpZGug03QQstT9Eh/qzC9B6uLw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-ZJuFCteGMCeIZ-48hkiF3g-1; Wed, 21 Apr 2021 04:17:52 -0400
-X-MC-Unique: ZJuFCteGMCeIZ-48hkiF3g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDBEF802575;
-	Wed, 21 Apr 2021 08:17:51 +0000 (UTC)
-Received: from ovpn-113-128.ams2.redhat.com (ovpn-113-128.ams2.redhat.com [10.36.113.128])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 097C5503BA;
-	Wed, 21 Apr 2021 08:17:50 +0000 (UTC)
-Message-ID: <e6ebf2625a8d8e383e5cb1c62d078c49a879aa88.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: Retransmit DATA_FIN
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
-Date: Wed, 21 Apr 2021 10:17:49 +0200
-In-Reply-To: <20210419213836.59887-1-mathew.j.martineau@linux.intel.com>
-References: <20210419213836.59887-1-mathew.j.martineau@linux.intel.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAC62F9B
+	for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 08:23:32 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id r9so62238759ejj.3
+        for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 01:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i3rbU3TU2UsE81lcy1t10UxNnZ+BCf1YEkUTJCsWmck=;
+        b=IeWfuvIUB3sKDNDoolxLd3UczYXaOymmzWYSkwR+w5jYx2qWnT2I3cSFT7foAfzzX1
+         9XfA0BQjwVrqNbvzt0jO+ubgiVAFRbEjZ502eX3zxwojyd65tVqHTjBkOspu196srnf1
+         FhLbRiZQCxZI3YbYqS1Z6lXyrqvzquggmSTMRlNXqRCO1Krh93+RcsEcZp3dcKZq9el9
+         W8gFsFLpwsQPK5TEZQUS7cY5rr7GyQ9hD+Aj3+OAlaRSQyqesOrLa9jdQo9w8nl6g943
+         hUiBVwt9yPgQHnbKT+DUhwpsox5ZjMdmoRekB6WaZsA38jJNyHT77jIhgtfAbVnuuYNj
+         dcUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i3rbU3TU2UsE81lcy1t10UxNnZ+BCf1YEkUTJCsWmck=;
+        b=ahxzBXNGpmyru9NTrefxat293knTiUOdJHQHbIuzx4PcxlfkqABJX66ptb27MtmfzN
+         DZGWZrQ/TJb1wS/5nCjKQr5HqrYJnu4XpJxyUNPhg19/lp4EdMvy7JRKl4UZH4iBWcXv
+         fCov/H6Ffiix1LqTEzRwjMyHG2nnznRQOuUODu6TCce2bBaF/D8N1koFcIpBqbPcuHsz
+         Y1ek13cvu9TItxbKwTdFcIGW57433jrPSiOqKi9THGzRmdrxZ6wKh+Sbqgzablv5m1gy
+         J50fgEVpqfa15NVCue4E3AXnqicCIq4nICUz/lAXlYpXfq64ElOcao9OfJjoUft183Wn
+         9rfQ==
+X-Gm-Message-State: AOAM533Iv1khLMNTqs3fFi5nI0Vds4pdbESZcob9css9Mk4JjycVx2ha
+	GRFeJBGFL+rOOEbUBxTQRJCPBA==
+X-Google-Smtp-Source: ABdhPJzoK2nY8MQBLLiBPXP5O83IKICYPvHNGRLC1SJewAPMDV64iR0M0Kh5BOu0feoh+8utWtcMNw==
+X-Received: by 2002:a17:906:497:: with SMTP id f23mr30720842eja.198.1618993411293;
+        Wed, 21 Apr 2021 01:23:31 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:d3ed:a403:6ab5:b55f])
+        by smtp.gmail.com with ESMTPSA id g20sm2213078edu.91.2021.04.21.01.23.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Apr 2021 01:23:31 -0700 (PDT)
+To: Jianguo Wu <wujianguo106@163.com>, mptcp@lists.linux.dev
+Cc: Florian Westphal <fw@strlen.de>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>, pabeni@redhat.com
+References: <8f1cc82d-a4a1-ef5e-0430-8e3632e378d0@163.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH] mptcp: using TOKEN_MAX_RETRIES instead of magic number
+Message-ID: <23678d46-1c6f-268a-a8a9-c63c3d4e5677@tessares.net>
+Date: Wed, 21 Apr 2021 10:23:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8f1cc82d-a4a1-ef5e-0430-8e3632e378d0@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Jianguo,
 
-On Mon, 2021-04-19 at 14:38 -0700, Mat Martineau wrote:
-> With this change, the MPTCP-level retransmission timer is used to resend
-> DATA_FIN. The retranmit timer is not stopped while waiting for a
-> MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
-> subflows. The retry interval starts with a couple of attempts at
-> TCP_RTO_MIN and then doubles on each attempt, up to TCP_RTO_MAX.
+Thank you for the patch!
+
+On 21/04/2021 09:36, Jianguo Wu wrote:
+> From: Jianguo Wu <wujianguo@chinatelecom.cn>
 > 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/146
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> We have macro TOKEN_MAX_RETRIES for the number of token generate retries,
+> so using TOKEN_MAX_RETRIES in subflow_check_req().
+> 
+> Fixes: 535fb8152f31 ("mptcp: token: move retry to caller")
+> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
 > ---
->  net/mptcp/protocol.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
+>  net/mptcp/protocol.h | 2 ++
+>  net/mptcp/subflow.c  | 2 +-
+>  net/mptcp/token.c    | 1 -
+>  3 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a8180a917649..1fddaeeb8051 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -11,6 +11,7 @@
->  #include <linux/netdevice.h>
->  #include <linux/sched/signal.h>
->  #include <linux/atomic.h>
-> +#include <linux/log2.h>
->  #include <net/sock.h>
->  #include <net/inet_common.h>
->  #include <net/inet_hashtables.h>
-> @@ -402,6 +403,15 @@ static void mptcp_set_timeout(const struct sock *sk, const struct sock *ssk)
->  	mptcp_sk(sk)->timer_ival = tout > 0 ? tout : TCP_RTO_MIN;
->  }
->  
-> +static void mptcp_set_datafin_timeout(const struct sock *sk)
-> +{
-> +	struct inet_connection_sock *icsk = inet_csk(sk);
-> +	int retransmits = clamp_val(icsk->icsk_retransmits, 1,
-> +				    ilog2(TCP_RTO_MAX / TCP_RTO_MIN));
-> +
-> +	mptcp_sk(sk)->timer_ival = TCP_RTO_MIN << retransmits;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index abd8e31..88f1e2b 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -14,6 +14,8 @@
+> 
+>  #define MPTCP_SUPPORTED_VERSION	1
+> 
+> +#define TOKEN_MAX_RETRIES	4
 
-The patch LGTM! I have only a couple of minor comment WRT to the above.
-To me something alike:
-	
-	mptcp_sk(sk)->timer_ival = min(TCP_RTO_MAX,
-				       TCP_RTO_MIN << icsk->icsk_retransmits);
+Now that this is "exposed" in a header file, probably best to rename it
+to add "MPTCP_" suffix like (most of) the others here.
 
-would be more readable.
+Also maybe best to declare it around where the token related functions
+are declared, no? In other words, just before mptcp_token_init().
 
-Also I'm wondering if we could use  max subflows 'icsk->icsk_rto'
-instead of TCP_RTO_MIN - so that e.g. we are not too "aggressive" on
-slow links
+Or after the other "#define" we have here but it looks strange to put
+this at before them.
 
-The latter could be really a follow-up, if needed at all.
-
-Thanks!
-
-Paolo
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
