@@ -1,7 +1,7 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A9F2F83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C6F2F9C
 	for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 20:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1619036464;
@@ -9,28 +9,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=b+CGTkoMHcODWpNPzRuw+QpegJVd2BbOrk9AVkPrc1g=;
-	b=EMJKCwmxvJmSfPbB/KtZugD7aXRyZjc2rk6rtuXaNYU7tfYpurYFUKGfL9icoEmAzZKdD8
-	vEOAgLHn/ifP72ICzbsid2Pu27GuepZ2mva3LFmhv0WOymjjATuZwHkP4DDca7eJUYMR7G
-	k6v+uTP/o+5GvfXQ81eRbAoxMQEMpIk=
+	bh=S2yflXfPe/WVMVjAlAq2iiV8lrlSkLd4aMHnTQKTuWk=;
+	b=I7XZzo53elx6J6cs2j0nY0boRDfiCCRiuS/7DWYl7/US10fnpZ9nDfJY1MkFugM3Ca9N4E
+	8/JiLac8BCbJcTcaegpto8veQu0SSzUYrzUqD8klm/yFdm06JwexPhgJFNmQ3OiqU6wDEv
+	qy+tFmtJ3uzsgqZN0rAoqVdC+p4QdCw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-83-CNeGLfJPPJGMR8I8uK-zzA-1; Wed, 21 Apr 2021 16:21:00 -0400
-X-MC-Unique: CNeGLfJPPJGMR8I8uK-zzA-1
+ us-mta-337-9EMnTFbCODWuNFH_z_ZHEg-1; Wed, 21 Apr 2021 16:21:01 -0400
+X-MC-Unique: 9EMnTFbCODWuNFH_z_ZHEg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E022107ACF2;
-	Wed, 21 Apr 2021 20:20:59 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A99151008061;
+	Wed, 21 Apr 2021 20:21:00 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-112-15.ams2.redhat.com [10.36.112.15])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 658FA6085A;
-	Wed, 21 Apr 2021 20:20:57 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9D5B46085A;
+	Wed, 21 Apr 2021 20:20:59 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH v3 mptcp-next 17/21] mptcp: tune re-injections for csum enabled mode.
-Date: Wed, 21 Apr 2021 22:18:06 +0200
-Message-Id: <07fceb9ac04b312d3c2732e892a5716156ac8c1a.1619035356.git.pabeni@redhat.com>
+Subject: [PATCH v3 mptcp-next 18/21] mptcp: add the mib for data checksum
+Date: Wed, 21 Apr 2021 22:18:07 +0200
+Message-Id: <0ea2fdf868c525c568d39146cf2c00ecdcb46fb9.1619035356.git.pabeni@redhat.com>
 In-Reply-To: <cover.1619035356.git.pabeni@redhat.com>
 References: <cover.1619035356.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -46,43 +46,57 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-If the MPTCP-level checksum is enabled, on re-injections we
-must spool a complete DSS, or the receive side will not be
-able to compute the csum and process any data.
+From: Geliang Tang <geliangtang@gmail.com>
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+This patch added the mib for the data checksum, MPTCP_MIB_DSSCSUMERR.
+
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/protocol.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/mptcp/mib.c     | 1 +
+ net/mptcp/mib.h     | 1 +
+ net/mptcp/subflow.c | 4 +++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0d8005b480ab..91e25fc91951 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2324,8 +2324,8 @@ static void __mptcp_retrans(struct sock *sk)
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index eb2dc6dbe212..c7042e3317b5 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -25,6 +25,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+ 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
+ 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
++	SNMP_MIB_ITEM("DSSCsumErr", MPTCP_MIB_DSSCSUMERR),
+ 	SNMP_MIB_ITEM("OFOQueueTail", MPTCP_MIB_OFOQUEUETAIL),
+ 	SNMP_MIB_ITEM("OFOQueue", MPTCP_MIB_OFOQUEUE),
+ 	SNMP_MIB_ITEM("OFOMerge", MPTCP_MIB_OFOMERGE),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index f0da4f060fe1..c407358eced8 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -18,6 +18,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+ 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the previous one */
+ 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
++	MPTCP_MIB_DSSCSUMERR,		/* The DSS checksum fail */
+ 	MPTCP_MIB_OFOQUEUETAIL,	/* Segments inserted into OoO queue tail */
+ 	MPTCP_MIB_OFOQUEUE,		/* Segments inserted into OoO queue */
+ 	MPTCP_MIB_OFOMERGE,		/* Segments merged in OoO queue */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 6a3c161ebe34..fa777bf344b0 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -893,8 +893,10 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
+ 	header.csum = 0;
  
- 	/* limit retransmission to the bytes already sent on some subflows */
- 	info.sent = 0;
--	info.limit = dfrag->already_sent;
--	while (info.sent < dfrag->already_sent) {
-+	info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len : dfrag->already_sent;
-+	while (info.sent < info.limit) {
- 		if (!mptcp_alloc_tx_skb(sk, ssk))
- 			break;
- 
-@@ -2337,9 +2337,11 @@ static void __mptcp_retrans(struct sock *sk)
- 		copied += ret;
- 		info.sent += ret;
- 	}
--	if (copied)
-+	if (copied) {
-+		dfrag->already_sent = max(dfrag->already_sent, info.sent);
- 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
- 			 info.size_goal);
+ 	csum = csum_partial(&header, sizeof(header), subflow->map_data_csum);
+-	if (unlikely(csum_fold(csum)))
++	if (unlikely(csum_fold(csum))) {
++		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCSUMERR);
+ 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
 +	}
  
- 	mptcp_set_timeout(sk, ssk);
- 	release_sock(ssk);
+ 	return MAPPING_OK;
+ }
 -- 
 2.26.2
 
