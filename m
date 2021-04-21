@@ -1,98 +1,104 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE5F71
-	for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 18:25:01 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id s15so50492868edd.4
-        for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 11:25:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oEec09zBLanYyKuVU13xdn0Ly+JfsfiOkrN9MielukI=;
-        b=hMajEO+Sbu9HGPrquo8LYzefvTgsqDKPCU6pF5aR2j+wmgijQkysAWucpZWOavFP0W
-         gLitfwZUNFo4/oPKM7ymizD0o0Zz+hqmk/8ky8aU0D9ghgApRHBOFL7mewAJ3tLXKqXX
-         8QXuuNUZiEYlT2tsxFfXFWgWsZmdGKpj2dH091X5WdUUaA1n03vJSFCO9QEnPQo57yWz
-         wk0XTr9rOcffJWkVH+efYGizxPjmk1tPEa1tNWnsQaKC4EoVz3Kj2ELQj5advME4U3cw
-         8VhgQ9oiQ7UdOetDx1DY+pJwiP5wGORighP/G2jlGuxkm1Xw2RUK7XzTzoxC2bSCMLTv
-         wdZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oEec09zBLanYyKuVU13xdn0Ly+JfsfiOkrN9MielukI=;
-        b=BaA9luldxM8v9ifP37AcAVuozgVRQhOx3Oy9ID/uRUeepmGlWwRFeRtuMG92VQputw
-         m1mg3LqW0gRl75kq8VAqAtGZSZ3x3ECOVkBlzpNOF5eDu1XGOTJEynBecI0uVxg5vFu7
-         T4xsaY6Vt37PAuJtXO9Ap2+UqAHJwPdPPkTErEK0FF5GOm/NqDJNAl1g1Ep+1/1rmKrQ
-         Szm/Zh17RcdjLv2t204e2ymUui4RrjTI0IgKKC5QjsLAX3WXYmQXluLTY6UYuuKmeZoI
-         1f98Muzs2MMMlzP/zsC4l58KIpeGpJbuNtej7KjsYA83VNp4pKGxPu2KPmUwUrOk2Djs
-         ZCgA==
-X-Gm-Message-State: AOAM532DfMyQa47t9g6Hta2ZT4CnnSfZ7hFxdwcq2UuTIpzJY3fs+4RL
-	qMHGMeE0hI9JFMjyRHcmA5w4ERDd82Wmo7yq
-X-Google-Smtp-Source: ABdhPJy9GuTbCrp5KvhCTYvpsNQZNv9KKKOew5Ky7t/4k11ZDxAHLPN6GYVRULtbtoCdHYIe/co68w==
-X-Received: by 2002:a05:6402:17a8:: with SMTP id j8mr31255174edy.43.1619029499917;
-        Wed, 21 Apr 2021 11:24:59 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:708a:41af:f01e:2dd])
-        by smtp.gmail.com with ESMTPSA id i19sm141384eds.39.2021.04.21.11.24.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Apr 2021 11:24:59 -0700 (PDT)
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: pabeni@redhat.com, mptcp@lists.linux.dev
-References: <20210421153805.210668-1-mathew.j.martineau@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-next v2] mptcp: Retransmit DATA_FIN
-Message-ID: <9c36342d-cce9-3883-3cbc-17ebb20a4c64@tessares.net>
-Date: Wed, 21 Apr 2021 20:24:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBEFE2F83
+	for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 20:20:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1619036430;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/NEl27SnEOQ/tg04M9mUWgMnKGnlYbXQ11HUCxxEZgo=;
+	b=EwqLDeBXURTCzPYHaYBmfFzT/dRAyaG49Q0QZuYrzbYCoNAy1B7zWsJ8x89VCXsPPVUaal
+	fwUmELd+7jT+ovp+medbQq/RYz0saXZD1bW51vbGGdXzQ+QDACgN7S9K5/9asXLRlsOgFW
+	i9TJMO30bCnY0x5xg5TjzUkJXM70nqY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-ADo59QoqNU6r91Pv5QiqCA-1; Wed, 21 Apr 2021 16:20:27 -0400
+X-MC-Unique: ADo59QoqNU6r91Pv5QiqCA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2490107ACCA;
+	Wed, 21 Apr 2021 20:20:26 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-112-15.ams2.redhat.com [10.36.112.15])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E3D436085A;
+	Wed, 21 Apr 2021 20:20:24 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [PATCH v3 mptcp-next 00/21] mptcp: data checksum support
+Date: Wed, 21 Apr 2021 22:17:49 +0200
+Message-Id: <cover.1619035356.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210421153805.210668-1-mathew.j.martineau@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Mat,
+Changes from v2:
+ - implement RFC behavior WRT csum failure and csum mismatch
+ - cope with zero win probe and re-injection
+ - fix csum computation for DSS with data_fin flag set
 
-On 21/04/2021 17:38, Mat Martineau wrote:
-> With this change, the MPTCP-level retransmission timer is used to resend
-> DATA_FIN. The retranmit timer is not stopped while waiting for a
-> MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
-> subflows. The retry interval starts at TCP_RTO_MIN and then doubles on
-> each attempt, up to TCP_RTO_MAX.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/146
-> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> ---
-> 
-> v2: Simplify timeout limits, move function to avoid -net conflict
-> 
-> v1: Add backoff
-> 
-> Paolo and Matthieu mentioned sending to -net instead of net-next on IRC,
-> I will test out on that branch too.
+I kept the changes from the previous iteration in squash-to
+patches to hopefully simplfy the review process.
 
-Thank you for the patch!
+There are at still least a couple of rough edges:
+- csum computation in the rx path for DSS with data fin set
+  is likely uncorrect
+- the csum computation in the tx path is very suboptimal.
 
-As discussed on IRC, I just applied this patch in our tree without
-Paolo's ACK. It seems you correctly addressed all the comments so no
-need to wait. We can apply some squash-to patches later if needed.
+Anyhow, I propose to address the above with additional squash-to patches
+to avoid complex/extra long review cycles.
 
-- 7137c5d18e29: mptcp: Retransmit DATA_FIN
-- Results: 5eaa9f1d555d..c5409d6a14e5
+Geliang Tang (14):
+  mptcp: add csum_enabled in mptcp_sock
+  mptcp: generate the data checksum
+  mptcp: add csum_reqd in mptcp_out_options
+  mptcp: send out checksum for MP_CAPABLE with data
+  mptcp: send out checksum for DSS
+  mptcp: add sk parameter for mptcp_parse_option
+  mptcp: add csum_reqd in mptcp_options_received
+  mptcp: receive checksum for MP_CAPABLE with data
+  mptcp: receive checksum for DSS
+  mptcp: validate the data checksum
+  mptcp: add the mib for data checksum
+  mptcp: add a new sysctl checksum_enabled
+  selftests: mptcp: enable checksum in mptcp_connect.sh
+  selftests: mptcp: enable checksum in mptcp_join.sh
 
-Builds and tests are now in progress:
+Paolo Abeni (7):
+  Squash-to: "mptcp: generate the data checksum"
+  Squash-to: "mptcp: send out checksum for MP_CAPABLE with data"
+  Squash-to "mptcp: send out checksum for DSS"
+  Squash-to: "mptcp: receive checksum for MP_CAPABLE with data"
+  Squash-to: "mptcp: receive checksum for DSS"
+  Squash-to: mptcp: validate the data checksum
+  mptcp: tune re-injections for csum enabled mode.
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210421T181432
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210421T181432
+ Documentation/networking/mptcp-sysctl.rst     |   8 +
+ include/net/mptcp.h                           |   7 +-
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/ctrl.c                              |  14 ++
+ net/mptcp/mib.c                               |   1 +
+ net/mptcp/mib.h                               |   1 +
+ net/mptcp/mptcp_diag.c                        |   1 +
+ net/mptcp/options.c                           | 147 +++++++++++++-----
+ net/mptcp/protocol.c                          |  39 ++++-
+ net/mptcp/protocol.h                          |  22 ++-
+ net/mptcp/subflow.c                           | 136 +++++++++++++---
+ .../selftests/net/mptcp/mptcp_connect.sh      |  13 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 107 ++++++++++++-
+ 13 files changed, 420 insertions(+), 77 deletions(-)
 
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.2
+
