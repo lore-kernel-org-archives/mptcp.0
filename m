@@ -1,48 +1,49 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04AA2F9B
-	for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 15:42:29 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id l4so64150964ejc.10
-        for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 08:42:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE5F71
+	for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 18:25:01 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id s15so50492868edd.4
+        for <mptcp@lists.linux.dev>; Wed, 21 Apr 2021 11:25:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=K7DGGwOrOWiSIwwBFKCCvXfCW/D9rg4xOJz3UHeb1So=;
-        b=nvMWRjAzPW9MWdf0t7InWTGjIcYVxwBKQuC/jura4rzO9y2FW/c49qc0Rh+8m96bJQ
-         YTnVevBxBOKyIosjAPaBzw6xOBFOUKVltL88NtEQrAI2PJyM09rBP70PmeYFlZhCb+rY
-         qpo23M99ZfWdGliznA3v8gjCiYFI6sayFKPhX4OHUcv+LXMfmey4EaTAWhK/lktIcoRP
-         rs9O1K6taemX+vtZ6URGnZ1TNRrWdS+viHinqitQwp4F2N5v/JWfqPitvHNA8Qzb+nje
-         YeTK4Apwu4ZytmyXU6Jf+eBIOZkrN2EZ+PkaiHS4Kr9GjH1I3z5jc8GKKTyRYJ3l91Ec
-         nJNw==
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oEec09zBLanYyKuVU13xdn0Ly+JfsfiOkrN9MielukI=;
+        b=hMajEO+Sbu9HGPrquo8LYzefvTgsqDKPCU6pF5aR2j+wmgijQkysAWucpZWOavFP0W
+         gLitfwZUNFo4/oPKM7ymizD0o0Zz+hqmk/8ky8aU0D9ghgApRHBOFL7mewAJ3tLXKqXX
+         8QXuuNUZiEYlT2tsxFfXFWgWsZmdGKpj2dH091X5WdUUaA1n03vJSFCO9QEnPQo57yWz
+         wk0XTr9rOcffJWkVH+efYGizxPjmk1tPEa1tNWnsQaKC4EoVz3Kj2ELQj5advME4U3cw
+         8VhgQ9oiQ7UdOetDx1DY+pJwiP5wGORighP/G2jlGuxkm1Xw2RUK7XzTzoxC2bSCMLTv
+         wdZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=K7DGGwOrOWiSIwwBFKCCvXfCW/D9rg4xOJz3UHeb1So=;
-        b=aH5xR4CJYXazghSpdoy8k8BMGkesKfX5RP+R8u25+DCmPg1C7bnH63cE0tKgHgHXLO
-         j05sfrmxeVnIdTdYeP0mxcA4aozk5z2m/PwJG4kYGsn4ms43NQBAIKHhqWfEQTTSKNvC
-         07zEZ4O91bD4CjK4TqnFZ/T2gzmm6nDRvK1ym5wAGZjdyDIfB3+96yYz3Wm1tGTC7WOK
-         iig3olnAVBnAuUBD11YVQopHjBLKqR33CsP7FdqPdZFdcoCHlaZHvj/5INEvcVHz46nX
-         zFFz8O7884pJTonT2BBVk+9GC31zKL0bjPBvqAqKYxPbFy/YghsDjupK9RimtRAbTQNs
-         0lDw==
-X-Gm-Message-State: AOAM530j1RrTzfnwaD0j5LXrxGo9fuiuRvXUadDN6LaG++qAVWc14Pu4
-	l0AQwmqIIZ/K8uhaxhTobHREJuANK4CKWDuR
-X-Google-Smtp-Source: ABdhPJx+yAwWyCXWd6I6V5AeA/CYFcuM/w2t99fx4IR+YbRqvQfeAEnF9CQVy1j2EiOUbmgpyxs+ig==
-X-Received: by 2002:a17:907:f93:: with SMTP id kb19mr33071571ejc.207.1619019747878;
-        Wed, 21 Apr 2021 08:42:27 -0700 (PDT)
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oEec09zBLanYyKuVU13xdn0Ly+JfsfiOkrN9MielukI=;
+        b=BaA9luldxM8v9ifP37AcAVuozgVRQhOx3Oy9ID/uRUeepmGlWwRFeRtuMG92VQputw
+         m1mg3LqW0gRl75kq8VAqAtGZSZ3x3ECOVkBlzpNOF5eDu1XGOTJEynBecI0uVxg5vFu7
+         T4xsaY6Vt37PAuJtXO9Ap2+UqAHJwPdPPkTErEK0FF5GOm/NqDJNAl1g1Ep+1/1rmKrQ
+         Szm/Zh17RcdjLv2t204e2ymUui4RrjTI0IgKKC5QjsLAX3WXYmQXluLTY6UYuuKmeZoI
+         1f98Muzs2MMMlzP/zsC4l58KIpeGpJbuNtej7KjsYA83VNp4pKGxPu2KPmUwUrOk2Djs
+         ZCgA==
+X-Gm-Message-State: AOAM532DfMyQa47t9g6Hta2ZT4CnnSfZ7hFxdwcq2UuTIpzJY3fs+4RL
+	qMHGMeE0hI9JFMjyRHcmA5w4ERDd82Wmo7yq
+X-Google-Smtp-Source: ABdhPJy9GuTbCrp5KvhCTYvpsNQZNv9KKKOew5Ky7t/4k11ZDxAHLPN6GYVRULtbtoCdHYIe/co68w==
+X-Received: by 2002:a05:6402:17a8:: with SMTP id j8mr31255174edy.43.1619029499917;
+        Wed, 21 Apr 2021 11:24:59 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:708a:41af:f01e:2dd])
-        by smtp.gmail.com with ESMTPSA id g10sm4314542edf.82.2021.04.21.08.42.27
-        for <mptcp@lists.linux.dev>
+        by smtp.gmail.com with ESMTPSA id i19sm141384eds.39.2021.04.21.11.24.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Apr 2021 08:42:27 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
+        Wed, 21 Apr 2021 11:24:59 -0700 (PDT)
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: pabeni@redhat.com, mptcp@lists.linux.dev
+References: <20210421153805.210668-1-mathew.j.martineau@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Weekly meeting - 22 April 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm
- CST)
-Message-ID: <65aba7d7-c7d9-a317-f9df-91b19889bbd0@tessares.net>
-Date: Wed, 21 Apr 2021 17:42:26 +0200
+Subject: Re: [PATCH mptcp-next v2] mptcp: Retransmit DATA_FIN
+Message-ID: <9c36342d-cce9-3883-3cbc-17ebb20a4c64@tessares.net>
+Date: Wed, 21 Apr 2021 20:24:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
@@ -50,24 +51,47 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20210421153805.210668-1-mathew.j.martineau@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello everybody!
+Hi Mat,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+On 21/04/2021 17:38, Mat Martineau wrote:
+> With this change, the MPTCP-level retransmission timer is used to resend
+> DATA_FIN. The retranmit timer is not stopped while waiting for a
+> MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
+> subflows. The retry interval starts at TCP_RTO_MIN and then doubles on
+> each attempt, up to TCP_RTO_MAX.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/146
+> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> ---
+> 
+> v2: Simplify timeout limits, move function to avoid -net conflict
+> 
+> v1: Add backoff
+> 
+> Paolo and Matthieu mentioned sending to -net instead of net-next on IRC,
+> I will test out on that branch too.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210422
+Thank you for the patch!
 
-Feel free to add/modify topics!
+As discussed on IRC, I just applied this patch in our tree without
+Paolo's ACK. It seems you correctly addressed all the comments so no
+need to wait. We can apply some squash-to patches later if needed.
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+- 7137c5d18e29: mptcp: Retransmit DATA_FIN
+- Results: 5eaa9f1d555d..c5409d6a14e5
 
-See/Speak to you tomorrow!
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210421T181432
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210421T181432
+
+Cheers,
 Matt
 -- 
 Tessares | Belgium | Hybrid Access Solutions
