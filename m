@@ -1,64 +1,88 @@
-Received: from m12-18.163.com (m12-18.163.com [220.181.12.18])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34AF2F81
-	for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 10:30:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=gNR5X
-	LWqvfVJIpenf4WPy7981MxY6Dx+Of32jfA18Bs=; b=pe9vJdgUuhxh64EjMcY/0
-	0bco2ymEUxXS9gwStx/5wj8pNgzmtkJpvotg3PAVRKtEN5QkzL16Z+eOCo8QF0Fs
-	qeKl01TxHbLNY4Z/dsVB5nW52qzUtdwqgKp4NaFvfMObzYqZZLUGurIaYC5IAw4q
-	21ZFqy+iXTNNTZZR1mfiFI=
-Received: from [192.168.15.51] (unknown [120.36.226.89])
-	by smtp14 (Coremail) with SMTP id EsCowAAnIoI3UIFgQTgRfQ--.4472S2;
-	Thu, 22 Apr 2021 18:30:16 +0800 (CST)
-To: mptcp@lists.linux.dev
-Cc: geliangtang@gmail.com
-From: Jianguo Wu <wujianguo106@163.com>
-Subject: [PATCH] mptcp: create listening socket only if signal flag is set on
-Message-ID: <bbe531db-6d59-d341-16ed-f48b1fd43d2a@163.com>
-Date: Thu, 22 Apr 2021 18:30:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB69E2F9B
+	for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 14:26:52 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id cq11so10078714edb.0
+        for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 07:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=prpgsfQtS8Zswrjf7V6ZP/jCnfE5BZdNp7pRiqwY2nM=;
+        b=HlbLG7uvwwGSYhhveN9DYrDqJj6bBZIoWW64FzZK+tpoXlq0Ebe+OgmjeXAdeu217Z
+         +LBW19MoTZGD60coVaFJPHM4bhpB3RBAQaZy8B3Ae6Z1toKPkEOvhD8MScTd8KXSxU58
+         KHvyQFdOqNbKeYfsur+WA98tkFIfSx0Gf2O10sLRLyKNMmmnl2qzwgFl222o1//5RK0r
+         c2KQ8twPgdGok+Fz4ladjJKQkLiPdk65bcwj6fMBBWTCdIlQDVzMeTtW+X3g+M4lK7Iv
+         vYEsRpSnLiY0wiHFq1DQH7eLHJ6NC1GsY9iNbdVlJtjmBwhXfOtWsWvOsih5Rkde+Eur
+         N/Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=prpgsfQtS8Zswrjf7V6ZP/jCnfE5BZdNp7pRiqwY2nM=;
+        b=cLBWTsRmuXHkT6VnLhZ4aahiaR+tKzEAbzPnY/DZeqDZMLBR9bAuKcAX64L0eCX6UH
+         YE6S71ewRBEBLwunkVP80EKeaCvL6wHoFE0rb7gZ4nmW5BQQcj5iR0z52msWSg5BMIe3
+         guxEbPxrEGbqmxArPY9+N91Yb2rfdUOf9r+BUxn3oca/DSAzOk5lMsABAmXz+Vsd4+Cw
+         ptOhtJ4L3khHauY4wka6DoJNubUl1X1ZSr9Acc+oFvibisPFXRI/ilvKJzpiTwkiqy0/
+         EI9Qd1Mj7lw4B1N1Rd4sqTU1rj6gklwUTRoN3+wOrX/obIS8bbGPD+xc1xDS3SS76QwJ
+         PrvQ==
+X-Gm-Message-State: AOAM533qxmKUjh0qC5l0NjGB30Y33/liVu46cHYwwtzXwxLalhsUW4Ci
+	BXRUvhURMSqcPjfM0BBJCSIiDA==
+X-Google-Smtp-Source: ABdhPJwIiM9uEVLND19JkvEvF3wug71X0z4pEiZ9OSmbVtmBMVrIMh+FRjWfnYE0as56dnEWiyB7xg==
+X-Received: by 2002:a05:6402:27d4:: with SMTP id c20mr4261436ede.271.1619101610941;
+        Thu, 22 Apr 2021 07:26:50 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:12ce:5892:37b1:5a39])
+        by smtp.gmail.com with ESMTPSA id lr27sm1972000ejb.8.2021.04.22.07.26.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Apr 2021 07:26:50 -0700 (PDT)
+Subject: Re: [PATCH v2 RESEND] mptcp: remove redundant initialization in
+ pm_nl_init_net()
+To: Jianguo Wu <wujianguo106@163.com>, mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>
+References: <2462aa3f-f72b-e31e-7a58-346ddc5ac546@163.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <55a59245-e1be-78c3-a07c-b8bd82db0db3@tessares.net>
+Date: Thu, 22 Apr 2021 16:26:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <2462aa3f-f72b-e31e-7a58-346ddc5ac546@163.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:EsCowAAnIoI3UIFgQTgRfQ--.4472S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZrWkKFW3tryfJF1xArykuFg_yoWfCwc_uF
-	W0y3y5Wr4UZrs8Cw4UCr1rXFySv345X3WvgFn3ta9xGas5GrZ0gr1kJa4xuF17G3yqg345
-	CFn5Kry3K3WfKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUYqii3UUUUU==
-X-Originating-IP: [120.36.226.89]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB+BB8kF2MYnAMhwAAsM
 
-From: Jianguo Wu <wujianguo@chinatelecom.cn>
+Hi Jianguo,
 
-PM announces address to remote host when signal flag is set,
-so create listening socket only if signal flag is set.
+On 22/04/2021 12:20, Jianguo Wu wrote:
+> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+> 
+> Memory of struct pm_nl_pernet{} is allocated by kzalloc()
+> in setup_net()->ops_init(), so it's no need to reset counters
+> and zero bitmap in pm_nl_init_net().
 
-Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
-Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
----
- net/mptcp/pm_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the new version.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index becc32b..dbd6910 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1025,7 +1025,7 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
- 	}
+With Paolo, we slightly modified the comment you added to fix one typo
+and make it shorter, nothing important.
 
- 	*entry = addr;
--	if (entry->addr.port) {
-+	if (entry->addr.port && (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
- 		ret = mptcp_pm_nl_create_listen_socket(skb->sk, entry);
- 		if (ret) {
- 			GENL_SET_ERR_MSG(info, "create listen socket error");
+Just added in the tree with Paolo's ACK:
+
+- 7f8536b0200c: mptcp: remove redundant initialization in pm_nl_init_net()
+- Results: b48a833e40ba..bdc5b468c37c
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210422T142551
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210422T142551
+
+Cheers,
+Matt
 -- 
-1.8.3.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
