@@ -1,65 +1,83 @@
-Received: from m12-18.163.com (m12-18.163.com [220.181.12.18])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8A370
-	for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 07:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=Ac8mZ
-	q8+K0nXzOQ/1a5JcV43J9uyaC3Nr6kapeW4nAE=; b=ZHl7K6dwqGfNrYTTpYB/e
-	3H8lMX385lgfdrhR0swYHRVfY/9BxSHHqqhzA1g5+Qk9Jrx1lDtFsm7xGi2qu6/W
-	tYfTgwrnGL2IYbWzzXF4YrNGzJp0G3OuQs1JEvKiezKYq1oVbYkMosoMtf0u1QEn
-	GxSnOOsso66AdD72pHPCSc=
-Received: from [192.168.15.51] (unknown [120.36.226.89])
-	by smtp14 (Coremail) with SMTP id EsCowACnnX3cH4FgXOj1fA--.2056S2;
-	Thu, 22 Apr 2021 15:03:56 +0800 (CST)
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>,
- Matthieu Baerts <matthieu.baerts@tessares.net>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-From: Jianguo Wu <wujianguo106@163.com>
-Subject: [PATCH] mptcp: remove redundant couters reset in pm_nl_init_net()
-Message-ID: <1fc15c8b-ba1c-a1d9-d204-8087d93b73e3@163.com>
-Date: Thu, 22 Apr 2021 15:03:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C499370
+	for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 08:26:03 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id mh2so45931663ejb.8
+        for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 01:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NuvHaSWiuiCpZ+ZN7gu7sSuwKtOQ/Znxuhg2oJhwmr0=;
+        b=tGxLZFQ3Lhyhgs48qcpgb/p9NVcWOzge+bSOqtufwoF2fIKRc8Y0XUDgAK2kAzcydU
+         KEu9GZouW2Sd6tA5+MEyyCxVb8GNArdX0BfIFkev2DyHRL9Kw75++b/AH5UT0h8PZROn
+         6lD+8xkk4DBl6VuslJYkvzC4XxcaW5MynLFStqd3tqhuFgOjy+ZGdDo2X2KvccOFlwrp
+         7RdjxGjfjTvJlRu5xj7eRB7V3ErLAwIs72jAZm2p3HN76VgajxCLJL4X+8Qbj8Z4RVwt
+         DlmJRDnw5xXDeK94n9hdd4HPdFf6DzBAQ9BvWcq3B1TGUaXJGdwKdjdyT1cG3F/Zpk2L
+         C56g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NuvHaSWiuiCpZ+ZN7gu7sSuwKtOQ/Znxuhg2oJhwmr0=;
+        b=Ju/u7ke8NXrZ34P58ZekiMle3LbaVzx/ILOtvMJtyEqSp9KYHx2OkPWP6dgGFckrYz
+         m2DQRp+2nc2qdc8qAgocU3wHi0GvZn+5zkMoOqTsyukwilJfXqRkcbcm2B819Mg+9MVO
+         Da4lhtvE0+SeAb05EM9P3JluqPjK/8HsNcwf06UmbXzqZJCl021MtnHoKdnf2wUnFGee
+         3jHlDQjVCeY4+lDFBU0kJj3EYgNEaszpaHO8h6FF9iFEmXsThpEPD9vZ6yZcrMb4M6oT
+         98z1OhylFJ8KIed8myCHeDk+kGuFCduAU5Emme+U8wVCulhe8zkDSpAV2mVyF2uxkApx
+         5eBQ==
+X-Gm-Message-State: AOAM533ac5edh1hnASSSPBNCSMcD1SFmhs5yyRHam04fCtMyxWf732En
+	PqwzHWV9zcrfd2Qi4AM3KbSvmQ==
+X-Google-Smtp-Source: ABdhPJzvAJxztbNgwVDm964jySJ8hg+FzU1kDawkf03BdnQrkyRuiAV/lm1uCLVjpB/XEkbVgx5Qbw==
+X-Received: by 2002:a17:906:77c5:: with SMTP id m5mr2012283ejn.201.1619079962063;
+        Thu, 22 Apr 2021 01:26:02 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:12ce:5892:37b1:5a39])
+        by smtp.gmail.com with ESMTPSA id s8sm1421818edj.25.2021.04.22.01.26.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Apr 2021 01:26:01 -0700 (PDT)
+Subject: Re: [PATCH mptcp-next] Squash to: mptcp: Retransmit DATA_FIN
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
+Cc: pabeni@redhat.com
+References: <20210422011251.299480-1-mathew.j.martineau@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <103a29fb-1012-f5ef-82f9-d01295d910bc@tessares.net>
+Date: Thu, 22 Apr 2021 10:26:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20210422011251.299480-1-mathew.j.martineau@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:EsCowACnnX3cH4FgXOj1fA--.2056S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JFyxAw17ArWrWrW5ur4UArb_yoWfJrg_ur
-	1Sqay8GF1UJr4Ykr43urn8XFySv3ykWFWkXws7G3y3K3s5Jw1UXrs5XF4fAr1xG34DA34k
-	CF4xKryayryrKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUYRT5tUUUUU==
-X-Originating-IP: [120.36.226.89]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB+BR8kF2MYm3WvAAAs0
 
-From: Jianguo Wu <wujianguo@chinatelecom.cn>
+Hi Mat,
 
-Memory of struct pm_nl_pernet{} is allocated by kzalloc()
-in setup_net()->ops_init(), so it's no need to reset counters
-in pm_nl_init_net().
+On 22/04/2021 03:12, Mat Martineau wrote:
+> Fix timer logic in __mptcp_clean_una(). Only look at DATA_FIN enable
+> when snd_una and snd_nxt match to avoid bad calls to mptcp_reset_timer().
+> 
+> Thank you Paolo for adding the WARN_ON() to mptcp_reset_timer()!
 
-Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
----
- net/mptcp/pm_netlink.c | 1 -
- 1 file changed, 1 deletion(-)
+Thank you for the squash-to patch!
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 6ba0408..99bb9be 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1913,7 +1913,6 @@ static int __net_init pm_nl_init_net(struct net *net)
- 	struct pm_nl_pernet *pernet = net_generic(net, pm_nl_pernet_id);
+Now in our tree:
 
- 	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
--	__reset_counters(pernet);
- 	pernet->next_id = 1;
- 	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
- 	spin_lock_init(&pernet->lock);
+- 6d3e80805071: "squashed" in "mptcp: Retransmit DATA_FIN"
+- Results: fb56846176f2..b48a833e40ba
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210422T082529
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210422T082529
+
+Cheers,
+Matt
 -- 
-1.8.3.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
