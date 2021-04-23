@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6E12FA1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3E770
 	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 14:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1619189428;
+	s=mimecast20190719; t=1619189429;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u+vriRNhKNzg+k4JlbCUU3ILvHB0yOtp1Bg7ySy1xYU=;
-	b=aZccOqsWPDkmkzuHDyP6VJbrTqQd9KhPBPvF3/RMDrknl61W2SiGSrPqlOjxABKqjPD12M
-	IONzP6GkVsJQlrt25UGaOjySq3fSFGJclucRKc+DtzJXjyjVDnZbYNiYdmFIJjpRA1BS3Q
-	Ap76F1DE5OgjSjLjPqRbOAc50yUU2m0=
+	bh=ipYYkV0b2broBA6MH0XiFxOXl+1LPcELx9rXJKNplg4=;
+	b=bCB9WqCStsISW3GVXyi1zNHt+ociSIncLlms7KhTJfK1PSTn02qvGKVfbRcj1O6RM3vXk8
+	hMEGh+AKnkQYeIoV8FCnWmZ/1IbVc6pD0BKUA/r2n2VcEOgq8Pyl8LRTdXkbVA5XCBumQi
+	/aZp+mwBCfWE+OroWvMqVoVQWxV7lG8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-Vmje_PEaP0OLyMEHbkbLRw-1; Fri, 23 Apr 2021 10:50:26 -0400
-X-MC-Unique: Vmje_PEaP0OLyMEHbkbLRw-1
+ us-mta-434-ZvqQy2OzPDCYspsR_8boKQ-1; Fri, 23 Apr 2021 10:50:27 -0400
+X-MC-Unique: ZvqQy2OzPDCYspsR_8boKQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1677918397A8;
-	Fri, 23 Apr 2021 14:50:25 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43F06343A6;
+	Fri, 23 Apr 2021 14:50:26 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-115-60.ams2.redhat.com [10.36.115.60])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4B56419D9B;
-	Fri, 23 Apr 2021 14:50:24 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 750AB19D9B;
+	Fri, 23 Apr 2021 14:50:25 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH v4 mptcp-next 09/22] mptcp: add sk parameter for mptcp_parse_option
-Date: Fri, 23 Apr 2021 16:49:48 +0200
-Message-Id: <4843a8b4dcd59410cad75820473554574c62e98b.1619189145.git.pabeni@redhat.com>
+Subject: [PATCH v4 mptcp-next 10/22] mptcp: add csum_reqd in mptcp_options_received
+Date: Fri, 23 Apr 2021 16:49:49 +0200
+Message-Id: <105e059d1e7e770f1ed8ba6f6179e343155c77d4.1619189145.git.pabeni@redhat.com>
 In-Reply-To: <cover.1619189145.git.pabeni@redhat.com>
 References: <cover.1619189145.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -48,121 +48,94 @@ Content-Type: text/plain; charset="US-ASCII"
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch added a new parameter name sk in mptcp_parse_option() and
-mptcp_get_options().
+This patch added a new flag csum_reqd in struct mptcp_options_received, if
+the flag MPTCP_CAP_CHECKSUM_REQD is set in the receiving MP_CAPABLE
+suboption, set this flag.
+
+In mptcp_sk_clone and subflow_finish_connect, if the csum_reqd flag is set,
+enable the msk->csum_enabled flag.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c  | 10 ++++++----
- net/mptcp/protocol.h |  3 ++-
- net/mptcp/subflow.c  | 10 +++++-----
- 3 files changed, 13 insertions(+), 10 deletions(-)
+ net/mptcp/options.c  | 8 +++++---
+ net/mptcp/protocol.c | 2 ++
+ net/mptcp/protocol.h | 1 +
+ net/mptcp/subflow.c  | 2 ++
+ 4 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index f8430415a954..cf465b62e4b4 100644
+index cf465b62e4b4..2d6b0158e19b 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -20,7 +20,8 @@ static bool mptcp_cap_flag_sha256(u8 flags)
- 	return (flags & MPTCP_CAP_FLAG_MASK) == MPTCP_CAP_HMAC_SHA256;
- }
- 
--static void mptcp_parse_option(const struct sk_buff *skb,
-+static void mptcp_parse_option(const struct sock *sk,
-+			       const struct sk_buff *skb,
+@@ -25,6 +25,8 @@ static void mptcp_parse_option(const struct sock *sk,
  			       const unsigned char *ptr, int opsize,
  			       struct mptcp_options_received *mp_opt)
  {
-@@ -324,7 +325,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 	}
- }
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+ 	u8 subtype = *ptr >> 4;
+ 	int expected_opsize;
+ 	u8 version;
+@@ -72,11 +74,10 @@ static void mptcp_parse_option(const struct sock *sk,
+ 		 * "If a checksum is not present when its use has been
+ 		 * negotiated, the receiver MUST close the subflow with a RST as
+ 		 * it is considered broken."
+-		 *
+-		 * We don't implement DSS checksum - fall back to TCP.
+ 		 */
++		mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+-			break;
++			mp_opt->csum_reqd = 1;
  
--void mptcp_get_options(const struct sk_buff *skb,
-+void mptcp_get_options(const struct sock *sk,
-+		       const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt)
- {
- 	const struct tcphdr *th = tcp_hdr(skb);
-@@ -363,7 +365,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 			if (opsize > length)
- 				return;	/* don't parse partial options */
- 			if (opcode == TCPOPT_MPTCP)
--				mptcp_parse_option(skb, ptr, opsize, mp_opt);
-+				mptcp_parse_option(sk, skb, ptr, opsize, mp_opt);
- 			ptr += opsize - 2;
- 			length -= opsize;
- 		}
-@@ -1025,7 +1027,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		return;
- 	}
+ 		mp_opt->mp_capable = 1;
+ 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
+@@ -344,6 +345,7 @@ void mptcp_get_options(const struct sock *sk,
+ 	mp_opt->dss = 0;
+ 	mp_opt->mp_prio = 0;
+ 	mp_opt->reset = 0;
++	mp_opt->csum_reqd = 0;
  
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk, skb, &mp_opt);
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return;
+ 	length = (th->doff * 4) - sizeof(struct tcphdr);
+ 	ptr = (const unsigned char *)(th + 1);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d012b9998fdd..0d8005b480ab 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2753,6 +2753,8 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 	msk->token = subflow_req->token;
+ 	msk->subflow = NULL;
+ 	WRITE_ONCE(msk->fully_established, false);
++	if (mp_opt->csum_reqd)
++		WRITE_ONCE(msk->csum_enabled, true);
  
+ 	msk->write_seq = subflow_req->idsn + 1;
+ 	msk->snd_nxt = msk->write_seq;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6955f507609e..87d78819a545 100644
+index 87d78819a545..51f4bbe1703a 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -585,7 +585,8 @@ int __init mptcp_proto_v6_init(void);
- struct sock *mptcp_sk_clone(const struct sock *sk,
- 			    const struct mptcp_options_received *mp_opt,
- 			    struct request_sock *req);
--void mptcp_get_options(const struct sk_buff *skb,
-+void mptcp_get_options(const struct sock *sk,
-+		       const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt);
- 
- void mptcp_finish_connect(struct sock *sk);
+@@ -133,6 +133,7 @@ struct mptcp_options_received {
+ 		rm_addr : 1,
+ 		mp_prio : 1,
+ 		echo : 1,
++		csum_reqd : 1,
+ 		backup : 1;
+ 	u32	token;
+ 	u32	nonce;
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 79fd8fbbd846..39ae86d12f06 100644
+index 39ae86d12f06..fc39107b25ec 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -151,7 +151,7 @@ static int subflow_check_req(struct request_sock *req,
- 		return -EINVAL;
- #endif
- 
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk_listener, skb, &mp_opt);
- 
- 	if (mp_opt.mp_capable) {
- 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
-@@ -248,7 +248,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
- 	int err;
- 
- 	subflow_init_req(req, sk_listener);
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk_listener, skb, &mp_opt);
- 
- 	if (mp_opt.mp_capable && mp_opt.mp_join)
- 		return -EINVAL;
-@@ -395,7 +395,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 	subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
- 	pr_debug("subflow=%p synack seq=%x", subflow, subflow->ssn_offset);
- 
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk, skb, &mp_opt);
- 	if (subflow->request_mptcp) {
- 		if (!mp_opt.mp_capable) {
- 			MPTCP_INC_STATS(sock_net(sk),
-@@ -640,7 +640,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			goto create_msk;
+@@ -405,6 +405,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 			goto fallback;
  		}
  
--		mptcp_get_options(skb, &mp_opt);
-+		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_capable) {
- 			fallback = true;
- 			goto create_child;
-@@ -651,7 +651,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		if (!new_msk)
- 			fallback = true;
- 	} else if (subflow_req->mp_join) {
--		mptcp_get_options(skb, &mp_opt);
-+		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
- 		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
++		if (mp_opt.csum_reqd)
++			WRITE_ONCE(mptcp_sk(parent)->csum_enabled, true);
+ 		subflow->mp_capable = 1;
+ 		subflow->can_ack = 1;
+ 		subflow->remote_key = mp_opt.sndr_key;
 -- 
 2.26.2
 
