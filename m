@@ -1,87 +1,114 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1480770
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 15:27:50 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id d21so37797202edv.9
-        for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 08:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zn8muqwd1CaEQwNaYuAZH3Bic4ivwlhTO8mNPei/9Gw=;
-        b=JgwL3C9KQJuY5s7PZ3tNFKwAo9hMu5YHn7g1OUZQVMWkJ0z7jpPG0nmlVxU0Q+gqct
-         DXCRnQRcUBycbZnC2CWgEKQgYEsXeKjUHH9APmfVb941DaqzElw5kBWiTzrRzPCnQlMb
-         hamVtGvt0MtfZJUiQKSUbNEq5/G13waKhm3n1J51KWOMIcbbuIk391pDuEnOP13AKOUk
-         Xns2fIFbhdBu4YSeaYLcE/FkrSy7Xop5qsvDxHsVbKwy8iU8qdj0ZiyaT78KRu8EOh6M
-         oAXzDRI7qFRWJsq2sFf5H2GPH1oKZvJRiSDixz4GOUVpEBd6yWXz1asULd6iU+cbAPgr
-         zYPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zn8muqwd1CaEQwNaYuAZH3Bic4ivwlhTO8mNPei/9Gw=;
-        b=sJU3bsUrxTR3n7/h5L4Ke+1M2921pu/2eFvSccBKvutp0EWXOjFaHN09YgOyPvfA2A
-         X5fA4QOiFx3Eu9BEajxXSFz2LRtvOVxKUGOC/EZGOhhF4Ih/WFXzNNio10vaJb2+JZfS
-         3431/17H4rR7K6UJt8dold0rieNSV4+bQijfb8vVfTstcohpkWuXddPBSE/C3Sduo28z
-         t8r0syzxpJedo44APRNytggNSBItKj48Dy+rxdRgQfcHPZaWqsiHe+cqkZftC5BBHYOc
-         Cv7j5dWao7n0R5uTtI1waS7L81mf/zrVKEbTcwc0yL/Asd/FlmFiOo/ImtPmoN5Mv9lt
-         PJfg==
-X-Gm-Message-State: AOAM531xJvwnQt/nYNJud5Nr2V+UuLsdeyH0ebc8EHAyd5Fd8mUucXHG
-	V8kx8xRa5P1aWBkdSG7fbxKKkvb+Kwgn0A==
-X-Google-Smtp-Source: ABdhPJzU6Mwv5S1uQj0BQgj2VaixgoeAfwVYuK2nipggmWQZ4KPFGrr348ZppLLL++VriIYSEpUGXQ==
-X-Received: by 2002:a50:9fa1:: with SMTP id c30mr5275800edf.66.1619191669194;
-        Fri, 23 Apr 2021 08:27:49 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:d068:c16e:598a:1275])
-        by smtp.gmail.com with ESMTPSA id e11sm4107502ejl.115.2021.04.23.08.27.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Apr 2021 08:27:48 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] Squash-to: mptcp: Retransmit DATA_FIN (again)
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, pabeni@redhat.com
-Cc: mptcp@lists.linux.dev
-References: <20210423011108.179263-1-mathew.j.martineau@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <ef3e2791-6a6d-7858-05ca-321a3da5438e@tessares.net>
-Date: Fri, 23 Apr 2021 17:27:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB96B71
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 16:40:39 +0000 (UTC)
+IronPort-SDR: /li3N+458J0UMQwVHBBCNm+JWllhKs/kzgbLlOAXbqahXGE64FYmwDcDRLIEvuor2vOTLEJEvx
+ 90QR4fVJNUjA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183227919"
+X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
+   d="scan'208";a="183227919"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 09:40:38 -0700
+IronPort-SDR: d7JlwaUXzlGT1OH1nsvTSWRS05fVhKp+6GpOj8jQsHkNYNYf4rQYLVyI3528Y9o/l7y+ho6/eO
+ Z+V7JpQChaGw==
+X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
+   d="scan'208";a="428449394"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.254.72.13])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 09:40:38 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH net] mptcp: Retransmit DATA_FIN
+Date: Fri, 23 Apr 2021 09:40:33 -0700
+Message-Id: <20210423164033.264095-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210423011108.179263-1-mathew.j.martineau@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Mat, Paolo,
+With this change, the MPTCP-level retransmission timer is used to resend
+DATA_FIN. The retranmit timer is not stopped while waiting for a
+MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
+subflows. The retry interval starts at TCP_RTO_MIN and then doubles on
+each attempt, up to TCP_RTO_MAX.
 
-On 23/04/2021 03:11, Mat Martineau wrote:
-> Previous testing happened to involve cases where data had been sent and
-> the retrans timer was already running. Packetdrill testing revealed that
-> the timer was not being started in cases where no data had been
-> transmitted, so __mptcp_retrans() was never called. This change starts
-> the timer when the original DATA_FIN is sent, if the timer is not
-> already running.
-> 
-> Packetdrill PR is forthcoming.
-> 
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/146
+Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ net/mptcp/protocol.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-Thank you for the patch and the review!
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4bde960e19dc..61329b8181ea 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -399,6 +399,14 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
+ 	return false;
+ }
+ 
++static void mptcp_set_datafin_timeout(const struct sock *sk)
++{
++	struct inet_connection_sock *icsk = inet_csk(sk);
++
++	mptcp_sk(sk)->timer_ival = min(TCP_RTO_MAX,
++				       TCP_RTO_MIN << icsk->icsk_retransmits);
++}
++
+ static void mptcp_set_timeout(const struct sock *sk, const struct sock *ssk)
+ {
+ 	long tout = ssk && inet_csk(ssk)->icsk_pending ?
+@@ -1052,7 +1060,7 @@ static void __mptcp_clean_una(struct sock *sk)
+ 	}
+ 
+ 	if (snd_una == READ_ONCE(msk->snd_nxt)) {
+-		if (msk->timer_ival)
++		if (msk->timer_ival && !mptcp_data_fin_enabled(msk))
+ 			mptcp_stop_timer(sk);
+ 	} else {
+ 		mptcp_reset_timer(sk);
+@@ -2276,8 +2284,19 @@ static void __mptcp_retrans(struct sock *sk)
+ 
+ 	__mptcp_clean_una_wakeup(sk);
+ 	dfrag = mptcp_rtx_head(sk);
+-	if (!dfrag)
++	if (!dfrag) {
++		if (mptcp_data_fin_enabled(msk)) {
++			struct inet_connection_sock *icsk = inet_csk(sk);
++
++			icsk->icsk_retransmits++;
++			mptcp_set_datafin_timeout(sk);
++			mptcp_send_ack(msk);
++
++			goto reset_timer;
++		}
++
+ 		return;
++	}
+ 
+ 	ssk = mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+@@ -2460,6 +2479,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
+ 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
+ 			mptcp_set_timeout(sk, ssk);
+ 			tcp_send_ack(ssk);
++			if (!mptcp_timer_pending(sk))
++				mptcp_reset_timer(sk);
+ 		}
+ 		break;
+ 	}
 
-- 820118888287: "squashed" in "mptcp: Retransmit DATA_FIN"
-- Results: 9fb030889e08..0f7c6f5b4a89
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210423T152727
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210423T152727
-
-Cheers,
-Matt
+base-commit: bb556de79f0a9e647e8febe15786ee68483fa67b
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.31.1
+
