@@ -1,53 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59F370
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 15:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1619190152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=29zdYhEkWS+HQrCf04WcNslWzr4JIi4OvOaLOxfOTs8=;
-	b=ZBhCgTqn8i7zjUSXiKIh6kSnPD+aodVCd3ZR79l64xdlyHWQIJIB2omKXc9Vsb35k/gUC7
-	iKa4inBGktAzvet7GFZkSy+I9pp5vVMq1VOiF++J85WqKhF+q+swqotCC3uTNF9JoFavgz
-	5mPGxwWXMuOdXlvYrkFx0UFDgvDuMQk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-5vN7znPnP3KH2XYSxVzZlQ-1; Fri, 23 Apr 2021 11:02:28 -0400
-X-MC-Unique: 5vN7znPnP3KH2XYSxVzZlQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E30319253C3;
-	Fri, 23 Apr 2021 15:02:27 +0000 (UTC)
-Received: from ovpn-115-60.ams2.redhat.com (ovpn-115-60.ams2.redhat.com [10.36.115.60])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4F70460854;
-	Fri, 23 Apr 2021 15:02:25 +0000 (UTC)
-Message-ID: <b4e59773a54b1640d54bbd900a45b7a26e1549cd.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1480770
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 15:27:50 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id d21so37797202edv.9
+        for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 08:27:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zn8muqwd1CaEQwNaYuAZH3Bic4ivwlhTO8mNPei/9Gw=;
+        b=JgwL3C9KQJuY5s7PZ3tNFKwAo9hMu5YHn7g1OUZQVMWkJ0z7jpPG0nmlVxU0Q+gqct
+         DXCRnQRcUBycbZnC2CWgEKQgYEsXeKjUHH9APmfVb941DaqzElw5kBWiTzrRzPCnQlMb
+         hamVtGvt0MtfZJUiQKSUbNEq5/G13waKhm3n1J51KWOMIcbbuIk391pDuEnOP13AKOUk
+         Xns2fIFbhdBu4YSeaYLcE/FkrSy7Xop5qsvDxHsVbKwy8iU8qdj0ZiyaT78KRu8EOh6M
+         oAXzDRI7qFRWJsq2sFf5H2GPH1oKZvJRiSDixz4GOUVpEBd6yWXz1asULd6iU+cbAPgr
+         zYPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zn8muqwd1CaEQwNaYuAZH3Bic4ivwlhTO8mNPei/9Gw=;
+        b=sJU3bsUrxTR3n7/h5L4Ke+1M2921pu/2eFvSccBKvutp0EWXOjFaHN09YgOyPvfA2A
+         X5fA4QOiFx3Eu9BEajxXSFz2LRtvOVxKUGOC/EZGOhhF4Ih/WFXzNNio10vaJb2+JZfS
+         3431/17H4rR7K6UJt8dold0rieNSV4+bQijfb8vVfTstcohpkWuXddPBSE/C3Sduo28z
+         t8r0syzxpJedo44APRNytggNSBItKj48Dy+rxdRgQfcHPZaWqsiHe+cqkZftC5BBHYOc
+         Cv7j5dWao7n0R5uTtI1waS7L81mf/zrVKEbTcwc0yL/Asd/FlmFiOo/ImtPmoN5Mv9lt
+         PJfg==
+X-Gm-Message-State: AOAM531xJvwnQt/nYNJud5Nr2V+UuLsdeyH0ebc8EHAyd5Fd8mUucXHG
+	V8kx8xRa5P1aWBkdSG7fbxKKkvb+Kwgn0A==
+X-Google-Smtp-Source: ABdhPJzU6Mwv5S1uQj0BQgj2VaixgoeAfwVYuK2nipggmWQZ4KPFGrr348ZppLLL++VriIYSEpUGXQ==
+X-Received: by 2002:a50:9fa1:: with SMTP id c30mr5275800edf.66.1619191669194;
+        Fri, 23 Apr 2021 08:27:49 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:d068:c16e:598a:1275])
+        by smtp.gmail.com with ESMTPSA id e11sm4107502ejl.115.2021.04.23.08.27.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Apr 2021 08:27:48 -0700 (PDT)
 Subject: Re: [PATCH mptcp-next] Squash-to: mptcp: Retransmit DATA_FIN (again)
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
-Cc: matthieu.baerts@tessares.net
-Date: Fri, 23 Apr 2021 17:02:24 +0200
-In-Reply-To: <20210423011108.179263-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, pabeni@redhat.com
+Cc: mptcp@lists.linux.dev
 References: <20210423011108.179263-1-mathew.j.martineau@linux.intel.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <ef3e2791-6a6d-7858-05ca-321a3da5438e@tessares.net>
+Date: Fri, 23 Apr 2021 17:27:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210423011108.179263-1-mathew.j.martineau@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2021-04-22 at 18:11 -0700, Mat Martineau wrote:
+Hi Mat, Paolo,
+
+On 23/04/2021 03:11, Mat Martineau wrote:
 > Previous testing happened to involve cases where data had been sent and
 > the retrans timer was already running. Packetdrill testing revealed that
 > the timer was not being started in cases where no data had been
@@ -58,25 +69,19 @@ On Thu, 2021-04-22 at 18:11 -0700, Mat Martineau wrote:
 > Packetdrill PR is forthcoming.
 > 
 > Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> ---
->  net/mptcp/protocol.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6cbddfc18158..aec8e77b18e4 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2497,6 +2497,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
->  			pr_debug("Sending DATA_FIN on subflow %p", ssk);
->  			mptcp_set_timeout(sk, ssk);
->  			tcp_send_ack(ssk);
-> +			if (!mptcp_timer_pending(sk))
-> +				mptcp_reset_timer(sk);
->  		}
->  		break;
->  	}
 
-LGTM, thanks!
+Thank you for the patch and the review!
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+- 820118888287: "squashed" in "mptcp: Retransmit DATA_FIN"
+- Results: 9fb030889e08..0f7c6f5b4a89
 
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210423T152727
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210423T152727
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
