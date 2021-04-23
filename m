@@ -1,186 +1,240 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD3271
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 08:59:27 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id j6-20020a17090adc86b02900cbfe6f2c96so907791pjv.1
-        for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 01:59:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D2271
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 09:17:08 +0000 (UTC)
+Received: by mail-pg1-f181.google.com with SMTP id p2so19333782pgh.4
+        for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 02:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=oaf5Sq4WlkX1csGh+YjddK77GbbkKKfWczAywUtT3MA=;
-        b=moD6YwDKA4JKMo9lIfBh9dZ2w+G+pakfRV7D7TDlyOkDcbyd5e/2n9RXZcYxmYyfPo
-         HxNXqzAUg8VUDBdLVVQLPFjK1WdFfb8waHm9Ab4DtdKrMBM5UaGyDUkR/GNEbRFXnw1w
-         z77nEwbgbxwWXPHxkqeUmimQ0Up90nYi6NGwBoSVhBMc+39s1enc1PVFbNUnLVjjFzcD
-         jvS2RIuElOQ15CvXvQma0XynDNKaUrz6DU5y1zzvW3pRk5HQbKxJALEqWpQtyHFrglvM
-         6Ovy6Z0fEDque4UxHKLnQoCyefE1B3Nn+tyqmwYFQNyB76ITzjJ87ixwmpLTy7OAbWJ2
-         maZA==
+        bh=sBOWjN2Wewpxi/J+ZJFUSdb50TT6ehUKDuE3hJSUb9U=;
+        b=npLdfc7DbW/JZJlR7yLj4UkbI7BhwUd+yjSvf3IJCa0hyeaVprvwD3RwS2Azhtayrs
+         AQ8H4K4YIjyvHPaWkSJR87s1TsRM6C0NPTqvXLeG7VTcOADfZVxpRLEd/M0Yw4NLtG9H
+         /0tUQqqAYc4VLzC1p+52uwlptEKb97AndAXanRGGQUboE6HFSx08xjkDbncu1Hg6DaH1
+         UDsM4u3JJP7yMLdy4BGTYpi6uZhq+BgpnCNbYFD7elvwMoQj8gYevUVb/CLrKhPu/WRE
+         RoPbXw8cMaZw3M6B1+5sAxV1WqSVixs4f/8dt+NglzfoAgliAjnPZARQhrGqbc7uBQkv
+         J3bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oaf5Sq4WlkX1csGh+YjddK77GbbkKKfWczAywUtT3MA=;
-        b=tPeln93Q9r02GdyebiMCIc/48UuPd3gfthg2uNfHEsxV8b00Pdq53qySDxXbVqex8I
-         hKTZzwoUBiYXsZiXoS2JUXRUMe+PEJUNPwJ6NG4QT8WKvzgWfDB4FqAgicV6qKdzFsSy
-         SKHS0DAL48ofa3xzoRfN9NDPNrSHhc6sIU8LtMp9g/gV1QOmienzLNEVLiuB8tF3LX7e
-         q2qex87Fb/OmsVaJWK8enDQuuFMalpRs+QXE+Wcl8aGWlWito8hty+xoRoCXPVgq/Tan
-         /lEKucYopsPu1mqpCefGXlq5NEHLa8JK1ypfE9QARdTABNEwLfd82VuxEGFvsfv7vJTI
-         OUMw==
-X-Gm-Message-State: AOAM531I6jWmWIy4rPKduuYtityV9OV48yJ88soCI8PXLYKfl6EXQ7Ai
-	+sBhPfKTXJ6ubyVMMjz+KV/v7RzjrEg3tZZMaBk=
-X-Google-Smtp-Source: ABdhPJzRsu31BUcXmpomp9MWtoJjiTelZyYa8BmeX5z+fbtU1GWnc2WanZnqWBpOGXGZIMWd3R/5BwZ+XmSDfvJhApI=
-X-Received: by 2002:a17:90b:180b:: with SMTP id lw11mr4655047pjb.6.1619168366920;
- Fri, 23 Apr 2021 01:59:26 -0700 (PDT)
+        bh=sBOWjN2Wewpxi/J+ZJFUSdb50TT6ehUKDuE3hJSUb9U=;
+        b=q8cadv/uVZl2Q5cSp1qNjyCw5BrxrE1lbqi5Bq5rPjJoW+fmys3RAuKZeGjNvMkMZw
+         io7muMot1IpXqBHLCrMQ0gWes0PTIpZPdANFE1KSf+O6ICqubt/XW0n7kiLe6wHqrdCL
+         lnOt8yqyOZkSjgY3WyCfFZpfU1aHM6fd2X1gQ45vVR5ZoWDr1apNtKo8rKRzdPX3b4pX
+         5TMVrD+wEzNBXNOlHpX9Cw+++cKZqEutMVlAVsVnlY7/ezBDgjpRVeBaUBmPYS8xmSS6
+         RgszzgmbBu4TwyJZ4nVeu/KpHJrseyWpZ2p7xrEIguNNwd7ARGCbYCbQPOaXfW5c2jCU
+         DOyw==
+X-Gm-Message-State: AOAM5334KmDeabJYrd6UXSWnSvUPqHOsL+bHjdOpq4lpNFj14FtqF/cw
+	Gb37f2iayar107CHjqmht31Xsl+XKtFMZDuNgGUjS5ICgSo=
+X-Google-Smtp-Source: ABdhPJzhAZuBHSjFpSkP8hHVe/lfDB9t9I8qpFEO8kATm6AgsbHEEcrEKosStRDi4fTLhnlnTbu14I+5czWwRlKCbSI=
+X-Received: by 2002:a65:468d:: with SMTP id h13mr2761377pgr.373.1619169427965;
+ Fri, 23 Apr 2021 02:17:07 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <bbe531db-6d59-d341-16ed-f48b1fd43d2a@163.com> <CA+WQbwvpviu3FAE06bO3CO2azAegzMi8YUXcQPPMBYM8nW7_cg@mail.gmail.com>
- <1b50d699-45ec-e747-983a-1966f64f8e1c@163.com> <CA+WQbwvzabuhsbKKHeWwa3raOfCh270sccdg6=18ytgPjjkaVw@mail.gmail.com>
- <CA+WQbwuSDvyJH+MT00Qvi73MhGoWcrg-AkZfPR56Zfaks2s1uQ@mail.gmail.com>
- <681e0810-fbbc-daaf-054a-0e83038b4d12@163.com> <3c3cf25d-aa4c-d522-102b-ebdd3b767cc0@tessares.net>
-In-Reply-To: <3c3cf25d-aa4c-d522-102b-ebdd3b767cc0@tessares.net>
+References: <cover.1619035356.git.pabeni@redhat.com> <77387e8589417f2ccb445136c74d16ed44a344d1.1619035356.git.pabeni@redhat.com>
+ <CA+WQbws0LhacR_RqaRBSasgwpFO8fwk57AzMHXHK52KBNL6bUQ@mail.gmail.com> <3c5d904e6e4da06c4066955f7a7f714cccc1f207.camel@redhat.com>
+In-Reply-To: <3c5d904e6e4da06c4066955f7a7f714cccc1f207.camel@redhat.com>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 23 Apr 2021 16:59:15 +0800
-Message-ID: <CA+WQbwsPfUzejWRriaTR4t4wJctCXpS-T4Byf1LFG438MC5ZEw@mail.gmail.com>
-Subject: Re: [PATCH] mptcp: create listening socket only if signal flag is set on
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Jianguo Wu <wujianguo106@163.com>, mptcp@lists.linux.dev
+Date: Fri, 23 Apr 2021 17:16:56 +0800
+Message-ID: <CA+WQbwsNGZQHPKhpN=xRMi12=gRCtAX93YAoYZ6_MZbrBSsCpw@mail.gmail.com>
+Subject: Re: [PATCH v3 mptcp-next 12/21] Squash-to: "mptcp: receive checksum
+ for MP_CAPABLE with data"
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
+Hi Paolo,
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B44=E6=
-=9C=8823=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=884:21=E5=86=99=E9=81=
-=93=EF=BC=9A
+Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=8823=E6=97=A5=
+=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=884:52=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Hi Jianguo, Geliang,
->
-> Thank you for the patches and reviews!
->
-> On 23/04/2021 09:41, Jianguo Wu wrote:
+> On Fri, 2021-04-23 at 11:17 +0800, Geliang Tang wrote:
+> > Hi Paolo,
 > >
+> > Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=8822=E6=
+=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=884:20=E5=86=99=E9=81=93=EF=BC=9A
+> > > always parse any csum/nocsum combination and delay the
+> > > presence check to later code, to allow reset if missing.
+> > >
+> > > Additionally, in the TX path, use the newly introduce ext
+> > > field to avoid MPTCP csum recomputation on tcp retransmission
+> > > and unneeded csum update on when setting the data fin_flag.
+> > >
+> > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > > ---
+> > >  include/net/mptcp.h  |  3 ++-
+> > >  net/mptcp/options.c  | 32 ++++++++++++++++++++------------
+> > >  net/mptcp/protocol.h |  2 ++
+> > >  3 files changed, 24 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> > > index 8f86c05ddbfd..bd272c34b53c 100644
+> > > --- a/include/net/mptcp.h
+> > > +++ b/include/net/mptcp.h
+> > > @@ -32,7 +32,8 @@ struct mptcp_ext {
+> > >                         mpc_map:1,
+> > >                         frozen:1,
+> > >                         reset_transient:1;
+> > > -       u8              reset_reason:4;
+> > > +       u8              reset_reason:4,
+> > > +                       csum_reqd:1;
 > >
-> > On 2021/4/23 15:27, Geliang Tang wrote:
-> >> Geliang Tang <geliangtang@gmail.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=882=
-3=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=883:17=E5=86=99=E9=81=93=EF=BC=
-=9A
-> >>>
-> >>> Hi Jianguo,
-> >>>
-> >>> Jianguo Wu <wujianguo106@163.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=8823=
-=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=882:39=E5=86=99=E9=81=93=EF=BC=
-=9A
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2021/4/23 12:33, Geliang Tang wrote:
-> >>>>> Hi Jianguo,
-> >>>>>
-> >>>>> Thanks for your patch.
-> >>>>>
-> >>>>> Jianguo Wu <wujianguo106@163.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=882=
-2=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=886:30=E5=86=99=E9=81=93=EF=BC=
-=9A
-> >>>>>>
-> >>>>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
-> >>>>>>
-> >>>>>> PM announces address to remote host when signal flag is set,
-> >>>>>> so create listening socket only if signal flag is set.
-> >>>>>
-> >>>>> This check has done in the user-space, here are these lines in pm_n=
-l_ctl.c:
-> >>>>>
-> >>>>> 274                 } else if (!strcmp(argv[arg], "port")) {
-> >>>>> 275                         u_int16_t port;
-> >>>>> 276
-> >>>>> 277                         if (++arg >=3D argc)
-> >>>>> 278                                 error(1, 0, " missing port valu=
-e");
-> >>>>> 279                         if (!(flags & MPTCP_PM_ADDR_FLAG_SIGNAL=
-))
-> >>>>> 280                                 error(1, 0, " flags must be sig=
-nal
-> >>>>> when using port");
-> >>>>>
-> >>>>
-> >>>> Hi Geliang, Thanks for point out this, I was use 'ip mptcp' to add a=
-ddress, It doesn't seem to have done that check.
-> >>>> Is it worth to do check in kernel to make sure there is a signal fla=
-g before create listening socket?
-> >>>
-> >>> I think it's better to check this in the user-space, you can write a =
-patch
-> >>> to iproute2 to add this check in 'ip mptcp'.
-> >>
-> >> Or add this check in mptcp_pm_parse_addr, something like:
-> >>
-> >> $ git diff net/mptcp/pm_netlink.c
-> >> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> >> index 6ba040897738..9cd4a4180a2a 100644
-> >> --- a/net/mptcp/pm_netlink.c
-> >> +++ b/net/mptcp/pm_netlink.c
-> >> @@ -971,8 +971,14 @@ static int mptcp_pm_parse_addr(struct nlattr
-> >> *attr, struct genl_info *info,
-> >>         if (tb[MPTCP_PM_ADDR_ATTR_FLAGS])
-> >>                 entry->flags =3D nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLA=
-GS]);
-> >>
-> >> -       if (tb[MPTCP_PM_ADDR_ATTR_PORT])
-> >> +       if (tb[MPTCP_PM_ADDR_ATTR_PORT]) {
-> >> +               if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
-> >> +                       NL_SET_ERR_MSG_ATTR("");
-> >> +                       return -EINVAL;
-> >> +               }
-> >> +
-> >>                 entry->addr.port =3D
-> >> htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]));
-> >> +       }
-> >>
-> >>         return 0;
-> >>  }
-> >>
-> >> WDYT?
-> >>
+> > I want to move these lines to the patch ([PATCH v3 mptcp-next 03/21]
+> > Squash-to: "mptcp: generate the data checksum") in the next version.
+>
+> The 'csum_reqd' bit is used a validity status for the parsed csum: we
+> know a csum was present in the parsed DSS if and only if csum_reqd !=3D
+> 0. I think it needs to stay here.
+
+If we keep this csum_reqd in this patch ...
+
+>
+> > >  };
+> > >
+> > >  #define MPTCP_RM_IDS_MAX       8
+> > > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > > index cd205ad09c00..83a981684bbf 100644
+> > > --- a/net/mptcp/options.c
+> > > +++ b/net/mptcp/options.c
+> > > @@ -39,8 +39,6 @@ static void mptcp_parse_option(const struct sock *s=
+k,
+> > >                 if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)) {
+> > >                         if (skb->len > tcp_hdr(skb)->doff << 2) {
+> > >                                 expected_opsize =3D TCPOLEN_MPTCP_MPC=
+_ACK_DATA;
+> > > -                               if (READ_ONCE(msk->csum_enabled))
+> > > -                                       expected_opsize +=3D TCPOLEN_=
+MPTCP_DSS_CHECKSUM;
+> > >                         } else {
+> > >                                 expected_opsize =3D TCPOLEN_MPTCP_MPC=
+_ACK;
+> > >                         }
 > >
-> > I think this is better, we can't assume that all user-space tools works=
- correctly.
+> > I'll drop these braces '{}' too, it looks like:
+> >
+> >                          if (skb->len > tcp_hdr(skb)->doff << 2)
+> >                                  expected_opsize =3D TCPOLEN_MPTCP_MPC_=
+ACK_DATA;
+> >                          else
+> >                                  expected_opsize =3D TCPOLEN_MPTCP_MPC_=
+ACK;
 >
-> I was thinking a bit about that. With the proposed modifications, it
-> means that a server will have to send an ADD_ADDR if it wants to accept
-> subflows on another port. I guess there will be use-cases where we will
-> not want to send ADD_ADDR because we are in a controlled environment or
-> we don't want to announce a public ADD_ADDR+port on a specific network.
+> Agreed.
 >
-> Do we have to support that? Maybe safer to restrict actions for now and
-> allow that later if there are needs, no?
+> > > @@ -50,7 +48,20 @@ static void mptcp_parse_option(const struct sock *=
+sk,
+> > >                         else
+> > >                                 expected_opsize =3D TCPOLEN_MPTCP_MPC=
+_SYN;
+> > >                 }
+> > > -               if (opsize !=3D expected_opsize)
+> > > +
+> > > +               /* Cfr RFC 8684 Section 3.3.0:
+> > > +                * If a checksum is present but its use had
+> > > +                * not been negotiated in the MP_CAPABLE handshake, t=
+he receiver MUST
+> > > +                * close the subflow with a RST, as it is not behavin=
+g as negotiated.
+> > > +                * If a checksum is not present when its use has been=
+ negotiated, the
+> > > +                * receiver MUST close the subflow with a RST, as it =
+is considered
+> > > +                * broken
+> > > +                * We parse even option with mismatching csum presenc=
+e, so that
+> > > +                * later in subflow_data_ready we can trigger the res=
+et.
+> > > +                */
+> > > +               if ((opsize !=3D expected_opsize) &&
+> > > +                   (expected_opsize !=3D TCPOLEN_MPTCP_MPC_ACK_DATA =
+||
+> > > +                    opsize !=3D TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM))
+> > >                         break;
+> > >
+> > >                 /* try to be gentle vs future versions on the initial=
+ syn */
+> > > @@ -72,11 +83,6 @@ static void mptcp_parse_option(const struct sock *=
+sk,
+> > >                  * host requires the use of checksums, checksums MUST=
+ be used.
+> > >                  * In other words, the only way for checksums not to =
+be used
+> > >                  * is if both hosts in their SYNs set A=3D0."
+> > > -                *
+> > > -                * Section 3.3.0:
+> > > -                * "If a checksum is not present when its use has bee=
+n
+> > > -                * negotiated, the receiver MUST close the subflow wi=
+th a RST as
+> > > -                * it is considered broken."
+> > >                  */
+> > >                 mp_opt->csum_reqd =3D READ_ONCE(msk->csum_enabled);
+> > >                 if (flags & MPTCP_CAP_CHECKSUM_REQD)
+> > > @@ -103,8 +109,9 @@ static void mptcp_parse_option(const struct sock =
+*sk,
+> > >                         mp_opt->data_len =3D get_unaligned_be16(ptr);
+> > >                         ptr +=3D 2;
+> > >                 }
+> > > -               if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK_DATA + TCPOLE=
+N_MPTCP_DSS_CHECKSUM) {
+> > > +               if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM) {
+> > >                         mp_opt->csum =3D (__force __sum16)get_unalign=
+ed_be16(ptr);
+> > > +                       mp_opt->csum_reqd =3D 1;
+> > >                         ptr +=3D 2;
+> > >                 }
+> > >                 pr_debug("MP_CAPABLE version=3D%x, flags=3D%x, optlen=
+=3D%d sndr=3D%llu, rcvr=3D%llu len=3D%d csum=3D%u",
+> > > @@ -353,7 +360,6 @@ void mptcp_get_options(const struct sock *sk,
+> > >         mp_opt->mp_prio =3D 0;
+> > >         mp_opt->reset =3D 0;
+> > >         mp_opt->csum_reqd =3D 0;
+> > > -       mp_opt->csum =3D 0;
+> >
+> > I want to keep this "mp_opt->csum =3D 0;" here.
 >
-> In other words, I guess we should accept the proposed modifications.
-> Any other points of view? :)
+> No, this is not needed. zeoring the csum is not needed. The csum should
+> be accessed if and only if csum_reqd !=3D 0, and in that case 'csum' will
+> always be initialized.
+>
+> > >         length =3D (th->doff * 4) - sizeof(struct tcphdr);
+> > >         ptr =3D (const unsigned char *)(th + 1);
+> > > @@ -543,7 +549,8 @@ static void mptcp_write_data_fin(struct mptcp_sub=
+flow_context *subflow,
+> > >                 ext->data_len++;
+> > >
+> > >                 /* the pseudo header has changed, update the csum acc=
+ordingly */
+> > > -               csum_replace2(&ext->csum, ext->data_len - 1, ext->dat=
+a_len);
+> > > +               if (ext->csum_reqd)
+> > > +                       csum_replace2(&ext->csum, ext->data_len - 1, =
+ext->data_len);
+> >
+> > And I want to move these lines to the patch ([PATCH v3 mptcp-next 03/21=
+]
+> > Squash-to: "mptcp: generate the data checksum") too.
+>
+> Agreed.
 
-I think the proposed modifications is not enough.
+... we need to keep these lines in this patch too.
 
-If the port is set with non-signal flag (like subflow), we should not only
-stop creating listening socket, but also stop appending this address.
+Is that right?
 
-Since our code can't deal with the ADD_SUBFLOW+port case (like
-"pm_nl_ctl add 10.0.0.1 flag subflow port 1000"). Local address's port will
-re-set as the main socket's port number in our code. So set port to a local
-address is useless, we should add the flag check to avoid this case.
+>
+> Side note: I can send the relevant changes, n.p.
 
-I think the flag check should be added both in mptcp_pm_parse_addr and in
-'ip mptcp'. Let's waiting for Jianguo's new patches.
-
-Thanks.
+Please send the changes for me, thanks.
 
 -Geliang
 
 >
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+> /P
+>
