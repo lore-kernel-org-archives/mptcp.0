@@ -1,104 +1,108 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131502F83
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 14:04:17 +0000 (UTC)
-Received: by mail-ej1-f45.google.com with SMTP id r9so74075010ejj.3
-        for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 07:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YOE8zwYy5j7sWC6DfZVirq0Juw5ukZCq6oGff2g4xGQ=;
-        b=nfc0Q6j1c7NIc3gCyAtsymkt5aOq9SFnKCLBO3jeVpmT/JxydwaUPV2i5StaEq+KJi
-         TLamHKKBPuXjGv99a14b09Dd9b0EQUxtzJI2j9hfugJ4OfYIMDyue/UVppVOGahYNkf7
-         UxL7PTFWUbiUJcpJKjPvFrbVTtB52w9q7p3gz/+79lFZmjb0cz1Ws4GObOeqNSJvWCLO
-         IRN2miHmBSRfY1zHaxSfijFNPfbbehcnshat2JAuYnZbS40veMzZgsKTXFTt/2MHpiKu
-         yJGvPjfPYBMdl9weP6VvYMVhCaiHrclJpmBYZAXxX43X9vgZqAG5VYmIU7QA4k8AzoKV
-         ojrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YOE8zwYy5j7sWC6DfZVirq0Juw5ukZCq6oGff2g4xGQ=;
-        b=ls1KVugbDYpdvxm5wzsA7+6IuAa0q+acfiygWDOON2YmggKAjBbMW3E8SUHTwlb5lR
-         kBlix8Qzekqhll4LYH9MCQrwR60xkUnuncYILJGkw6xykEN6/QaDqZDAOKIQaZIuNf8y
-         +7bgo0Q/RgwP5ld2OtQHE+2q+2hKZ0EPkGKHWgHiDyGoBrbV/SaU1p05O9fqfPD6uH1K
-         WX3T3gYiEJSnGA1Qg+4eogjWBm1zXNR4DpVu91W7wbgx6znl4cGiohn58pHftDVhfXoy
-         qM1R7+NDonnp2zINWu9CZMi2CzOHqTwS3VTGazaq+rwVbfV2oTxGvgF0Ok9lbCOnVBRW
-         IlxA==
-X-Gm-Message-State: AOAM533at3+iAVKwJyKlmU7Okr9ODcrMlDKl7+/vxPq4e258KTOf2p4s
-	lnKKVPfVBY8OS//cliX0O2KcMzPI4B/2/Q==
-X-Google-Smtp-Source: ABdhPJxwWcSGnPlxe3wTaOZPIK3Vx6FLPbYjrGds6IV210fdQbYACT5AbI6TrpwzmbqYjtzQi7UaoQ==
-X-Received: by 2002:a17:906:a155:: with SMTP id bu21mr4446479ejb.400.1619186656308;
-        Fri, 23 Apr 2021 07:04:16 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:d068:c16e:598a:1275])
-        by smtp.gmail.com with ESMTPSA id hg19sm4052534ejc.24.2021.04.23.07.04.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Apr 2021 07:04:16 -0700 (PDT)
-Subject: Re: [PATCH] mptcp: create listening socket only if signal flag is set
- on
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: Jianguo Wu <wujianguo106@163.com>, mptcp@lists.linux.dev
-References: <bbe531db-6d59-d341-16ed-f48b1fd43d2a@163.com>
- <CA+WQbwvpviu3FAE06bO3CO2azAegzMi8YUXcQPPMBYM8nW7_cg@mail.gmail.com>
- <1b50d699-45ec-e747-983a-1966f64f8e1c@163.com>
- <CA+WQbwvzabuhsbKKHeWwa3raOfCh270sccdg6=18ytgPjjkaVw@mail.gmail.com>
- <CA+WQbwuSDvyJH+MT00Qvi73MhGoWcrg-AkZfPR56Zfaks2s1uQ@mail.gmail.com>
- <681e0810-fbbc-daaf-054a-0e83038b4d12@163.com>
- <3c3cf25d-aa4c-d522-102b-ebdd3b767cc0@tessares.net>
- <CA+WQbwsPfUzejWRriaTR4t4wJctCXpS-T4Byf1LFG438MC5ZEw@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <f805da0d-a32f-6518-e0f9-1309d4579218@tessares.net>
-Date: Fri, 23 Apr 2021 16:04:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A297A70
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 14:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1619189417;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=57zxk9mBayAa7/zdWQHflf4SkhZrrf+mbr4hzw8b8Ng=;
+	b=F4TU6pkkC5bqXuYlgvENXy+4xon4liyGIJfOKPDd1pj9ZvO2z74TRDRtw++y396UxWwk98
+	eJC/bw2ulpv8jTX8Cc17sna3+y3PzStq6iuz29Hh1+GySTOwCNc07E2GFjdFK6r17q/djN
+	TEP2J5TnNH6ZOvYixYRAeblnkAXjbok=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-505-5bsAMaeuO0q0Qv8d3Dea0g-1; Fri, 23 Apr 2021 10:50:15 -0400
+X-MC-Unique: 5bsAMaeuO0q0Qv8d3Dea0g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57E9A83DD25;
+	Fri, 23 Apr 2021 14:50:14 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-60.ams2.redhat.com [10.36.115.60])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 88C8B19D9B;
+	Fri, 23 Apr 2021 14:50:13 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [PATCH v4 mptcp-next 00/22] mptcp: data checksum support
+Date: Fri, 23 Apr 2021 16:49:39 +0200
+Message-Id: <cover.1619189145.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CA+WQbwsPfUzejWRriaTR4t4wJctCXpS-T4Byf1LFG438MC5ZEw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Geliang,
+Changes from v3:
+ - included Geliang's feedback
+ - hopefully fixed wrong csum computation in the rx path
+   for DSS+data_fin 
 
-On 23/04/2021 10:59, Geliang Tang wrote:
-> Matthieu Baerts <matthieu.baerts@tessares.net> 于2021年4月23日周五 下午4:21写道：
->> On 23/04/2021 09:41, Jianguo Wu wrote:
->>> I think this is better, we can't assume that all user-space tools works correctly.
->>
->> I was thinking a bit about that. With the proposed modifications, it
->> means that a server will have to send an ADD_ADDR if it wants to accept
->> subflows on another port. I guess there will be use-cases where we will
->> not want to send ADD_ADDR because we are in a controlled environment or
->> we don't want to announce a public ADD_ADDR+port on a specific network.
->>
->> Do we have to support that? Maybe safer to restrict actions for now and
->> allow that later if there are needs, no?
->>
->> In other words, I guess we should accept the proposed modifications.
->> Any other points of view? :)
-> 
-> I think the proposed modifications is not enough.
-> 
-> If the port is set with non-signal flag (like subflow), we should not only
-> stop creating listening socket, but also stop appending this address.
-> 
-> Since our code can't deal with the ADD_SUBFLOW+port case (like
-> "pm_nl_ctl add 10.0.0.1 flag subflow port 1000"). Local address's port will
-> re-set as the main socket's port number in our code. So set port to a local
-> address is useless, we should add the flag check to avoid this case.
+Changes from v2:
+ - implement RFC behavior WRT csum failure and csum mismatch
+ - cope with zero win probe and re-injection
+ - fix csum computation for DSS with data_fin flag set
 
-Indeed, that seems to make sense!
+Only some Squash-to patches has been changes WRT the previous
+iteration.
 
-Thanks for checking this!
+There is still at least a ough edge:
+- the csum computation in the tx path is very suboptimal.
 
-Cheers,
-Matt
+Anyhow, I propose to address the above with additional squash-to patches
+to avoid complex/extra long review cycles.
+
+Geliang Tang (14):
+  mptcp: add csum_enabled in mptcp_sock
+  mptcp: generate the data checksum
+  mptcp: add csum_reqd in mptcp_out_options
+  mptcp: send out checksum for MP_CAPABLE with data
+  mptcp: send out checksum for DSS
+  mptcp: add sk parameter for mptcp_parse_option
+  mptcp: add csum_reqd in mptcp_options_received
+  mptcp: receive checksum for MP_CAPABLE with data
+  mptcp: receive checksum for DSS
+  mptcp: validate the data checksum
+  mptcp: add the mib for data checksum
+  mptcp: add a new sysctl checksum_enabled
+  selftests: mptcp: enable checksum in mptcp_connect.sh
+  selftests: mptcp: enable checksum in mptcp_join.sh
+
+Paolo Abeni (8):
+  Squash-to: "mptcp: generate the data checksum"
+  Squash-to: "mptcp: send out checksum for MP_CAPABLE with data"
+  Squash-to "mptcp: send out checksum for DSS"
+  Squash-to: "mptcp: receive checksum for MP_CAPABLE with data"
+  Squash-to: "mptcp: receive checksum for DSS"
+  Squash-to: mptcp: validate the data checksum
+  mptcp: cleanup error path in subflow_check_data_avail()
+  mptcp: tune re-injections for csum enabled mode.
+
+ Documentation/networking/mptcp-sysctl.rst     |   8 +
+ include/net/mptcp.h                           |   7 +-
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/ctrl.c                              |  14 ++
+ net/mptcp/mib.c                               |   1 +
+ net/mptcp/mib.h                               |   1 +
+ net/mptcp/mptcp_diag.c                        |   1 +
+ net/mptcp/options.c                           | 142 +++++++++++++-----
+ net/mptcp/protocol.c                          |  39 ++++-
+ net/mptcp/protocol.h                          |  23 ++-
+ net/mptcp/subflow.c                           | 142 +++++++++++++++---
+ .../selftests/net/mptcp/mptcp_connect.sh      |  13 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 107 ++++++++++++-
+ 13 files changed, 423 insertions(+), 76 deletions(-)
+
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.2
+
