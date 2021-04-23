@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246F02FA1
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 14:50:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277562FA1
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 14:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1619189440;
+	s=mimecast20190719; t=1619189442;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hh/KWjnlOIvcl0s+M/wB81PKxmqUi7R7c8uYVBrx4XA=;
-	b=ZdChO3XwPO0l4VkQOCz0TdIocdI4BtzKmPm53qNR2rbs8UgVIDP6gY3sK/4AASS1lKEHl0
-	hl7BuriJbuYikYFcc8UzqL4xz+1UzRZSDQ0EB/u639YUGoUzJ0lMeo0GLQvPIBXjDOPyRv
-	xWwY4O7yS1Bijadb9VhIXTeVKiRQmM8=
+	bh=v4bmnhIWUoHMFHZps8lzWp0k9j2GjIZ/XI5alWZRjhM=;
+	b=bBoHhKDsNEZtxW6wB+bwXEUlNOJW1PZ/S9zCLYixsx3Qmi34prApvfS3en+2kKzT4jYjVD
+	QDsv2En9tdImBRaPrxYzAJCxq/WhKWZVO32aJ/7ifKDsw6H1/EzFrhT0tyZd2D/3h4nw79
+	ijPguuh2KAJvVuHXUZK7t4oAxMPWuUs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-Lw3AwGdDOdCR69NZX1Y6nw-1; Fri, 23 Apr 2021 10:50:37 -0400
-X-MC-Unique: Lw3AwGdDOdCR69NZX1Y6nw-1
+ us-mta-120-md7IlDQ2NfykKxCyKR62Hw-1; Fri, 23 Apr 2021 10:50:38 -0400
+X-MC-Unique: md7IlDQ2NfykKxCyKR62Hw-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E418E6A2A0;
-	Fri, 23 Apr 2021 14:50:36 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DD92876E19;
+	Fri, 23 Apr 2021 14:50:38 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-115-60.ams2.redhat.com [10.36.115.60])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0DCEA19D9B;
-	Fri, 23 Apr 2021 14:50:35 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4B6AC19D9B;
+	Fri, 23 Apr 2021 14:50:37 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH v4 mptcp-next 19/22] mptcp: add the mib for data checksum
-Date: Fri, 23 Apr 2021 16:49:58 +0200
-Message-Id: <926bd1799e9ccc01e980378bd316afd014ae4c11.1619189145.git.pabeni@redhat.com>
+Subject: [PATCH v4 mptcp-next 20/22] mptcp: add a new sysctl checksum_enabled
+Date: Fri, 23 Apr 2021 16:49:59 +0200
+Message-Id: <60652495c3c62a9621e83b25c7827e5f8065e9f4.1619189145.git.pabeni@redhat.com>
 In-Reply-To: <cover.1619189145.git.pabeni@redhat.com>
 References: <cover.1619189145.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -48,55 +48,98 @@ Content-Type: text/plain; charset="US-ASCII"
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch added the mib for the data checksum, MPTCP_MIB_DSSCSUMERR.
+This patch added a new sysctl, named checksum_enabled, to control
+whether DSS checksum can be enabled.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/mib.c     | 1 +
- net/mptcp/mib.h     | 1 +
- net/mptcp/subflow.c | 4 +++-
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ Documentation/networking/mptcp-sysctl.rst |  8 ++++++++
+ net/mptcp/ctrl.c                          | 14 ++++++++++++++
+ net/mptcp/protocol.h                      |  2 +-
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index eb2dc6dbe212..c7042e3317b5 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -25,6 +25,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
- 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
- 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
-+	SNMP_MIB_ITEM("DSSCsumErr", MPTCP_MIB_DSSCSUMERR),
- 	SNMP_MIB_ITEM("OFOQueueTail", MPTCP_MIB_OFOQUEUETAIL),
- 	SNMP_MIB_ITEM("OFOQueue", MPTCP_MIB_OFOQUEUE),
- 	SNMP_MIB_ITEM("OFOMerge", MPTCP_MIB_OFOMERGE),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index f0da4f060fe1..c407358eced8 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -18,6 +18,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
- 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the previous one */
- 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
-+	MPTCP_MIB_DSSCSUMERR,		/* The DSS checksum fail */
- 	MPTCP_MIB_OFOQUEUETAIL,	/* Segments inserted into OoO queue tail */
- 	MPTCP_MIB_OFOQUEUE,		/* Segments inserted into OoO queue */
- 	MPTCP_MIB_OFOMERGE,		/* Segments merged in OoO queue */
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index b61ebadd796c..4182dff3d5d4 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -898,8 +898,10 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
- 	header.csum = 0;
+diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+index 6af0196c4297..566ec0e4a3da 100644
+--- a/Documentation/networking/mptcp-sysctl.rst
++++ b/Documentation/networking/mptcp-sysctl.rst
+@@ -24,3 +24,11 @@ add_addr_timeout - INTEGER (seconds)
+ 	sysctl.
  
- 	csum = csum_partial(&header, sizeof(header), subflow->map_data_csum);
--	if (unlikely(csum_fold(csum)))
-+	if (unlikely(csum_fold(csum))) {
-+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCSUMERR);
- 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
-+	}
+ 	Default: 120
++
++checksum_enabled - INTEGER
++	Control whether DSS checksum can be enabled.
++
++	DSS checksum can be enabled if the value is nonzero. This is a
++	per-namespace sysctl.
++
++	Default: 0
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 96ba616f59bf..857e371c108c 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -19,6 +19,7 @@ struct mptcp_pernet {
  
- 	return MAPPING_OK;
+ 	int mptcp_enabled;
+ 	unsigned int add_addr_timeout;
++	int checksum_enabled;
+ };
+ 
+ static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
+@@ -36,6 +37,11 @@ unsigned int mptcp_get_add_addr_timeout(struct net *net)
+ 	return mptcp_get_pernet(net)->add_addr_timeout;
  }
+ 
++int mptcp_is_checksum_enabled(struct net *net)
++{
++	return mptcp_get_pernet(net)->checksum_enabled;
++}
++
+ static struct ctl_table mptcp_sysctl_table[] = {
+ 	{
+ 		.procname = "enabled",
+@@ -52,6 +58,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
+ 		.mode = 0644,
+ 		.proc_handler = proc_dointvec_jiffies,
+ 	},
++	{
++		.procname = "checksum_enabled",
++		.maxlen = sizeof(int),
++		.mode = 0644,
++		.proc_handler = proc_dointvec,
++	},
+ 	{}
+ };
+ 
+@@ -59,6 +71,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ {
+ 	pernet->mptcp_enabled = 1;
+ 	pernet->add_addr_timeout = TCP_RTO_MAX;
++	pernet->checksum_enabled = 0;
+ }
+ 
+ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+@@ -75,6 +88,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+ 
+ 	table[0].data = &pernet->mptcp_enabled;
+ 	table[1].data = &pernet->add_addr_timeout;
++	table[2].data = &pernet->checksum_enabled;
+ 
+ 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
+ 	if (!hdr)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 747cd94da78b..51d54343e7cb 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -541,7 +541,7 @@ static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *su
+ 
+ int mptcp_is_enabled(struct net *net);
+ unsigned int mptcp_get_add_addr_timeout(struct net *net);
+-static inline int mptcp_is_checksum_enabled(struct net *net) { return false; }
++int mptcp_is_checksum_enabled(struct net *net);
+ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+ 				     struct mptcp_options_received *mp_opt);
+ bool mptcp_subflow_data_available(struct sock *sk);
 -- 
 2.26.2
 
