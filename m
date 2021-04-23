@@ -1,50 +1,48 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C547472
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 03:17:53 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id g16so7699126plq.3
-        for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 20:17:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD14972
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 03:32:01 +0000 (UTC)
+Received: by mail-pj1-f49.google.com with SMTP id e8-20020a17090a7288b029014e51f5a6baso469745pjg.2
+        for <mptcp@lists.linux.dev>; Thu, 22 Apr 2021 20:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=eSTofpgOm7aLrxC+TqT9oXQ6IrZHSDiXKfsVP5Q0EFY=;
-        b=AMilgtfvTruKkf3CwqFvKD76HWNf6/HhiaOF7mxYGUCd5OdmDaVceJEu4UQtsnBEAK
-         7oSiC/wKZHfF6uT1+Zr+Qwm0AkTmMQs3a7ngGav8bA9kSlQ3wqmJGl0lM4HsjQ+w5fLE
-         MglnH0VmF2497S1CW1WdjAxt5i+A20t4pGUa1u8d0lW4l+xzHoY24v0R4dQ7PEBIdXB7
-         hKMtoCnq2jWeIReD1XBrzfAkJmZkpP7CSaR/o+3KEC/EoDkQMp/+UJ7H8FdZCVy3rjr8
-         fex0ijlqXKdILcFHVTV+lmw952k4lRPfxmlFBIskiQqd8zd1khjiefCF6mZryUzf2QOa
-         MrYQ==
+        bh=4lLhu462EjRLx2NUtgxVwtKciU6nLojmYMLYxgRXuWk=;
+        b=QdqZFfT3bWymHQECwrpIV3BP0AgtjCC+KeGlKV7c5ZFJ+6gozbBppNjcLYFT3x5hVk
+         e1keR2SLdYlaWSgLwki+I97PKd5BEFVB6iGGtgV978hTRGgKS+nh6QKkN/LYaHE7sSRX
+         qXjfWt/PZxzKWq0N/n40K8TyeftXrntEMhiaY9USoVouShP2kAKasiViZviawtHx8iwG
+         AitGZcBQMr0RKtInOhcOfjJosQA8386yatw15qsrd+FqvMi05GhvuK8sLPVINyDujtbz
+         afEI9rnQppWOV8dnoPXv14A6IduC0xvH7zn3EA0wRfpO7Dir6d8BzkN3qBETZodos2x+
+         nYTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eSTofpgOm7aLrxC+TqT9oXQ6IrZHSDiXKfsVP5Q0EFY=;
-        b=UGaD7CLWhaUzARfUvRbFGddCOyusy0e6uFzVqZM/Mb0w7vNsAer5cbxKif/pICnPn6
-         xpQ7U2nVHw4C4SiHvm+PECTgGiaPRw4/3X6u4A3Aacy+32kXr++ojzSJADnu/UF9nPER
-         COYIYgrl2/paY7QcuSsxMhxsSF+eGh6vMc3csC/8ULcVYFi90l4pqQIifChYaXxuYlrv
-         QY/JZiG2CL78RLXgMuxNL9IacCzXwN74D+cXZM9S6cWpWEfprvOX7j59JxzZPLhXGsbl
-         lkSsPDjiHdZP7qvI0Sf+ccq6Arhnvd3Pz7XyOZtKfopVW57KPtYZj55RaCaXhpnAz9A/
-         AEKA==
-X-Gm-Message-State: AOAM531J7CIM6guMLriIovyWKJEwXalH1rv7IYZ9ZNIW8cdZbqolHM7H
-	t4t8N2sbKDkiIsAVlTQdQhwGRXnO4GbslAKwMSw=
-X-Google-Smtp-Source: ABdhPJzdIPRXkEm6vNGGz81shCs/M02LiXdwwtYVoeLSb8uwTykblYtHHmoFPNsPo7zX2/p6sj051kxDu+f0lIHdpt0=
-X-Received: by 2002:a17:902:8693:b029:eb:53f:1336 with SMTP id
- g19-20020a1709028693b02900eb053f1336mr1694624plo.52.1619147873178; Thu, 22
- Apr 2021 20:17:53 -0700 (PDT)
+        bh=4lLhu462EjRLx2NUtgxVwtKciU6nLojmYMLYxgRXuWk=;
+        b=kCZujH/m5J5GLk5z8OkpgFccyRNGLkaYmRQqZvbayTfoyc1i+T/lUCvAlcrnccuIFN
+         EXCNUr17p9osDsU1LIMIb2vwjCBBb+ekCEZW+c9CKfWrZ9jU1yEk/zLdDLqSzpWcfFil
+         hlYhZ0nBraJUGpzI/kp/aJU/Sf/iZihxp40x7Kqq2d7+CgQqluZwkhf6kcpp3L6RQvCu
+         y9sEBP/Ulzw0Rn1+xPsS5njWkasJIPdzpthkfYsffQaqDSWAygF7Nt/sImzPUoaU3MpO
+         hSs1enC+grikAME3ABskNSCbmHCGGcpw/ITGBSx+4tsTm6h6VwzPaNhU3263MnQ9kXHY
+         Z6kA==
+X-Gm-Message-State: AOAM531cemeafo7vE1XRWXvo/ANEdo9IwdPwm5dZhY2+nIaMeoaxHCjz
+	doA08qOwUQfkGYHxgysDTOeQOfWkmxw9RFYy8zeOBcQhaq8=
+X-Google-Smtp-Source: ABdhPJzIP2K3Cje/ftRmu5Jy2oaE7MxGRq6vDKWOYleiBjC3JjU2jvPW2cB7MAXjd+cC8FGBIyAX73cGVlDfTcshYyg=
+X-Received: by 2002:a17:90b:180b:: with SMTP id lw11mr3458408pjb.6.1619148721409;
+ Thu, 22 Apr 2021 20:32:01 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1619035356.git.pabeni@redhat.com> <77387e8589417f2ccb445136c74d16ed44a344d1.1619035356.git.pabeni@redhat.com>
-In-Reply-To: <77387e8589417f2ccb445136c74d16ed44a344d1.1619035356.git.pabeni@redhat.com>
+References: <cover.1619035356.git.pabeni@redhat.com> <a61b61ef9ba9df2c47f91bcfd668cb33afc5dc43.1619035356.git.pabeni@redhat.com>
+In-Reply-To: <a61b61ef9ba9df2c47f91bcfd668cb33afc5dc43.1619035356.git.pabeni@redhat.com>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 23 Apr 2021 11:17:41 +0800
-Message-ID: <CA+WQbws0LhacR_RqaRBSasgwpFO8fwk57AzMHXHK52KBNL6bUQ@mail.gmail.com>
-Subject: Re: [PATCH v3 mptcp-next 12/21] Squash-to: "mptcp: receive checksum
- for MP_CAPABLE with data"
+Date: Fri, 23 Apr 2021 11:31:50 +0800
+Message-ID: <CA+WQbwuDWCusxuCJ3tpcRtdJS=1a5hQ1DtfaC7o7MwRLrWzPcg@mail.gmail.com>
+Subject: Re: [PATCH v3 mptcp-next 16/21] Squash-to: mptcp: validate the data checksum
 To: Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
@@ -53,184 +51,338 @@ Content-Transfer-Encoding: quoted-printable
 Hi Paolo,
 
 Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=8822=E6=97=A5=
-=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=884:20=E5=86=99=E9=81=93=EF=BC=9A
+=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=884:21=E5=86=99=E9=81=93=EF=BC=9A
 >
-> always parse any csum/nocsum combination and delay the
-> presence check to later code, to allow reset if missing.
+> Move the RX csum validation into get_mapping_status().
+> If the current mapping is valid and csum is enabled traverse the
+> later pending skbs and compute csum incrementally till the whole
+> mapping has been covered. If not enough data is available in the
+> rx queue, return MAPPING_EMPTY - that is, no data.
 >
-> Additionally, in the TX path, use the newly introduce ext
-> field to avoid MPTCP csum recomputation on tcp retransmission
-> and unneeded csum update on when setting the data fin_flag.
+> Next subflow_data_ready invocation will trigger again csum computation.
+>
+> When the full DSS is available, validate the csum and return to the
+> caller an appropriate error code, to trigger subflow reset of fallback
+> as required by the RFC.
+>
+> Additionally:
+> - if the csum prevence in the DSS don't match the negotiated value
+> e.g. csum present, but not requested, return invalid mapping to trigger
+> subflow reset.
+> - keep some csum state, to avoid re-compute the csum on the
+> same data when multiple rx queue traversal are required.
+> - clean-up the uncompleted mapping from the receive queue on close,
+> to allow proper subflow disposal
 >
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+
+I want to sign your name in the patch "mptcp: validate the data checksum"
+as the author, and sign my name as Co-developed-by if you don't mind.
+
 > ---
->  include/net/mptcp.h  |  3 ++-
->  net/mptcp/options.c  | 32 ++++++++++++++++++++------------
->  net/mptcp/protocol.h |  2 ++
->  3 files changed, 24 insertions(+), 13 deletions(-)
+>  net/mptcp/protocol.c |  35 ------------
+>  net/mptcp/protocol.h |   6 +--
+>  net/mptcp/subflow.c  | 124 ++++++++++++++++++++++++++++++++++++-------
+>  3 files changed, 107 insertions(+), 58 deletions(-)
 >
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 8f86c05ddbfd..bd272c34b53c 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -32,7 +32,8 @@ struct mptcp_ext {
->                         mpc_map:1,
->                         frozen:1,
->                         reset_transient:1;
-> -       u8              reset_reason:4;
-> +       u8              reset_reason:4,
-> +                       csum_reqd:1;
-
-I want to move these lines to the patch ([PATCH v3 mptcp-next 03/21]
-Squash-to: "mptcp: generate the data checksum") in the next version.
-
->  };
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 5160256de731..0d8005b480ab 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -520,35 +520,6 @@ static bool mptcp_check_data_fin(struct sock *sk)
+>         return ret;
+>  }
 >
->  #define MPTCP_RM_IDS_MAX       8
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index cd205ad09c00..83a981684bbf 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -39,8 +39,6 @@ static void mptcp_parse_option(const struct sock *sk,
->                 if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)) {
->                         if (skb->len > tcp_hdr(skb)->doff << 2) {
->                                 expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK=
-_DATA;
-> -                               if (READ_ONCE(msk->csum_enabled))
-> -                                       expected_opsize +=3D TCPOLEN_MPTC=
-P_DSS_CHECKSUM;
->                         } else {
->                                 expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK=
-;
->                         }
-
-I'll drop these braces '{}' too, it looks like:
-
-                         if (skb->len > tcp_hdr(skb)->doff << 2)
-                                 expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK_=
-DATA;
-                         else
-                                 expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK;
-
-> @@ -50,7 +48,20 @@ static void mptcp_parse_option(const struct sock *sk,
->                         else
->                                 expected_opsize =3D TCPOLEN_MPTCP_MPC_SYN=
-;
->                 }
-> -               if (opsize !=3D expected_opsize)
+> -static bool mptcp_validate_data_checksum(struct sock *ssk)
+> -{
+> -       struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> -       struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> -       struct csum_pseudo_header header;
+> -       __wsum csum;
+> -
+> -       if (__mptcp_check_fallback(msk))
+> -               goto out;
+> -
+> -       if (subflow->csum_len < subflow->map_data_len)
+> -               goto out;
+> -
+> -       header.data_seq =3D subflow->map_seq;
+> -       header.subflow_seq =3D subflow->map_subflow_seq;
+> -       header.data_len =3D subflow->map_data_len;
+> -       header.csum =3D subflow->map_csum;
+> -
+> -       csum =3D csum_partial(&header, sizeof(header), subflow->data_csum=
+);
+> -
+> -       if (csum_fold(csum))
+> -               return false;
+> -       subflow->data_csum =3D 0;
+> -       subflow->csum_len =3D 0;
+> -
+> -out:
+> -       return true;
+> -}
+> -
+>  static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>                                            struct sock *ssk,
+>                                            unsigned int *bytes)
+> @@ -617,12 +588,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mp=
+tcp_sock *msk,
+>                         if (tp->urg_data)
+>                                 done =3D true;
+>
+> -                       if (READ_ONCE(msk->csum_enabled)) {
+> -                               subflow->data_csum =3D skb_checksum(skb, =
+offset, len,
+> -                                                                 subflow=
+->data_csum);
+> -                               subflow->csum_len +=3D len;
+> -                               mptcp_validate_data_checksum(ssk);
+> -                       }
+>                         if (__mptcp_move_skb(msk, ssk, skb, offset, len))
+>                                 moved +=3D len;
+>                         seq +=3D len;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 176f175a00bd..766412e50e73 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -399,9 +399,8 @@ struct mptcp_subflow_context {
+>         u32     map_subflow_seq;
+>         u32     ssn_offset;
+>         u32     map_data_len;
+> -       __wsum  data_csum;
+> -       u32     csum_len;
+> -       __sum16 map_csum;
+> +       __wsum  map_data_csum;
+> +       u32     map_csum_len;
+>         u32     request_mptcp : 1,  /* send MP_CAPABLE */
+>                 request_join : 1,   /* send MP_JOIN */
+>                 request_bkup : 1,
+> @@ -411,6 +410,7 @@ struct mptcp_subflow_context {
+>                 pm_notified : 1,    /* PM hook called for established sta=
+tus */
+>                 conn_finished : 1,
+>                 map_valid : 1,
+> +               map_csum_reqd : 1,
+>                 mpc_map : 1,
+>                 backup : 1,
+>                 send_mp_prio : 1,
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 68efc81eaf2c..6a3c161ebe34 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -829,10 +829,81 @@ static bool validate_mapping(struct sock *ssk, stru=
+ct sk_buff *skb)
+>         return true;
+>  }
+>
+> +static enum mapping_status validate_data_csum(struct sock *ssk, struct s=
+k_buff *skb,
+> +                                             bool csum_reqd)
+> +{
+> +       struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> +       struct csum_pseudo_header header;
+> +       u32 offset, seq, delta;
+> +       __wsum csum;
+> +       int len;
 > +
-> +               /* Cfr RFC 8684 Section 3.3.0:
-> +                * If a checksum is present but its use had
-> +                * not been negotiated in the MP_CAPABLE handshake, the r=
-eceiver MUST
-> +                * close the subflow with a RST, as it is not behaving as=
- negotiated.
-> +                * If a checksum is not present when its use has been neg=
-otiated, the
-> +                * receiver MUST close the subflow with a RST, as it is c=
-onsidered
-> +                * broken
-> +                * We parse even option with mismatching csum presence, s=
-o that
-> +                * later in subflow_data_ready we can trigger the reset.
+> +       if (!csum_reqd)
+> +               return MAPPING_OK;
+> +
+> +       /* mapping already validated on previous traversal */
+> +       if (subflow->map_csum_len =3D=3D subflow->map_data_len)
+> +               return MAPPING_OK;
+> +
+> +       /* traverse the receive queue, ensuring it contains a full
+> +        * DSS mapping and accumulating the related csum.
+> +        * Preserve the accoumlate csum across multiple calls, to compute
+> +        * the csum only once
+> +        */
+> +       delta =3D subflow->map_data_len - subflow->map_csum_len;
+> +       for (;;) {
+> +               seq =3D tcp_sk(ssk)->copied_seq + subflow->map_csum_len;
+> +               offset =3D seq - TCP_SKB_CB(skb)->seq;
+> +
+> +               /* if the current skb has not been accounted yet, csum it=
+s contents
+> +                * up to the amount covered by the current DSS
 > +                */
-> +               if ((opsize !=3D expected_opsize) &&
-> +                   (expected_opsize !=3D TCPOLEN_MPTCP_MPC_ACK_DATA ||
-> +                    opsize !=3D TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM))
->                         break;
->
->                 /* try to be gentle vs future versions on the initial syn=
- */
-> @@ -72,11 +83,6 @@ static void mptcp_parse_option(const struct sock *sk,
->                  * host requires the use of checksums, checksums MUST be =
-used.
->                  * In other words, the only way for checksums not to be u=
-sed
->                  * is if both hosts in their SYNs set A=3D0."
-> -                *
-> -                * Section 3.3.0:
-> -                * "If a checksum is not present when its use has been
-> -                * negotiated, the receiver MUST close the subflow with a=
- RST as
-> -                * it is considered broken."
->                  */
->                 mp_opt->csum_reqd =3D READ_ONCE(msk->csum_enabled);
->                 if (flags & MPTCP_CAP_CHECKSUM_REQD)
-> @@ -103,8 +109,9 @@ static void mptcp_parse_option(const struct sock *sk,
->                         mp_opt->data_len =3D get_unaligned_be16(ptr);
->                         ptr +=3D 2;
+> +               if (offset < skb->len) {
+> +                       len =3D min(skb->len - offset, delta);
+> +                       delta -=3D len;
+> +                       subflow->map_csum_len +=3D len;
+> +                       subflow->map_data_csum =3D skb_checksum(skb, offs=
+et, len,
+> +                                                             subflow->ma=
+p_data_csum);
+> +               }
+> +               if (delta =3D=3D 0)
+> +                       break;
+> +
+> +               if (skb_queue_is_last(&ssk->sk_receive_queue, skb)) {
+> +                       /* if this subflow is closed, the partial mapping
+> +                        * will be never completed; flush the pending skb=
+s, so
+> +                        * that subflow_sched_work_if_closed() can kick i=
+n
+> +                        */
+> +                       if (unlikely(ssk->sk_state =3D=3D TCP_CLOSE))
+> +                               while ((skb =3D skb_peek(&ssk->sk_receive=
+_queue)))
+> +                                       sk_eat_skb(ssk, skb);
+> +
+> +                       /* not enough data to validate the csum */
+> +                       return MAPPING_EMPTY;
+> +               }
+> +
+> +               /* the DSS mapping for next skbs will be validated later,
+> +                * when a get_mapping_status call will process such skb
+> +                */
+> +               skb =3D skb->next;
+> +       }
+> +
+> +       header.data_seq =3D subflow->map_seq;
+> +       header.subflow_seq =3D subflow->map_subflow_seq;
+> +       header.data_len =3D subflow->map_data_len;
+> +       header.csum =3D 0;
+> +
+> +       csum =3D csum_partial(&header, sizeof(header), subflow->map_data_=
+csum);
+> +       if (unlikely(csum_fold(csum)))
+> +               return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY=
+;
+> +
+> +       return MAPPING_OK;
+> +}
+> +
+>  static enum mapping_status get_mapping_status(struct sock *ssk,
+>                                               struct mptcp_sock *msk)
+>  {
+>         struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> +       bool csum_reqd =3D READ_ONCE(msk->csum_enabled);
+>         struct mptcp_ext *mpext;
+>         struct sk_buff *skb;
+>         u16 data_len;
+> @@ -926,9 +997,10 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk,
+>                 /* Allow replacing only with an identical map */
+>                 if (subflow->map_seq =3D=3D map_seq &&
+>                     subflow->map_subflow_seq =3D=3D mpext->subflow_seq &&
+> -                   subflow->map_data_len =3D=3D data_len) {
+> +                   subflow->map_data_len =3D=3D data_len &&
+> +                   subflow->map_csum_reqd =3D=3D mpext->csum_reqd) {
+>                         skb_ext_del(skb, SKB_EXT_MPTCP);
+> -                       return MAPPING_OK;
+> +                       goto validate_csum;
 >                 }
-> -               if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK_DATA + TCPOLEN_MP=
-TCP_DSS_CHECKSUM) {
-> +               if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM) {
->                         mp_opt->csum =3D (__force __sum16)get_unaligned_b=
-e16(ptr);
-> +                       mp_opt->csum_reqd =3D 1;
->                         ptr +=3D 2;
+>
+>                 /* If this skb data are fully covered by the current mapp=
+ing,
+> @@ -940,7 +1012,7 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk,
 >                 }
->                 pr_debug("MP_CAPABLE version=3D%x, flags=3D%x, optlen=3D%=
-d sndr=3D%llu, rcvr=3D%llu len=3D%d csum=3D%u",
-> @@ -353,7 +360,6 @@ void mptcp_get_options(const struct sock *sk,
->         mp_opt->mp_prio =3D 0;
->         mp_opt->reset =3D 0;
->         mp_opt->csum_reqd =3D 0;
-> -       mp_opt->csum =3D 0;
-
-I want to keep this "mp_opt->csum =3D 0;" here.
-
 >
->         length =3D (th->doff * 4) - sizeof(struct tcphdr);
->         ptr =3D (const unsigned char *)(th + 1);
-> @@ -543,7 +549,8 @@ static void mptcp_write_data_fin(struct mptcp_subflow=
-_context *subflow,
->                 ext->data_len++;
+>                 /* will validate the next map after consuming the current=
+ one */
+> -               return MAPPING_OK;
+> +               goto validate_csum;
+>         }
 >
->                 /* the pseudo header has changed, update the csum accordi=
-ngly */
-> -               csum_replace2(&ext->csum, ext->data_len - 1, ext->data_le=
-n);
-> +               if (ext->csum_reqd)
-> +                       csum_replace2(&ext->csum, ext->data_len - 1, ext-=
->data_len);
+>         subflow->map_seq =3D map_seq;
+> @@ -948,12 +1020,18 @@ static enum mapping_status get_mapping_status(stru=
+ct sock *ssk,
+>         subflow->map_data_len =3D data_len;
+>         subflow->map_valid =3D 1;
+>         subflow->mpc_map =3D mpext->mpc_map;
+> -       subflow->data_csum =3D 0;
+> -       subflow->csum_len =3D 0;
+> -       subflow->map_csum =3D mpext->csum;
+> -       pr_debug("new map seq=3D%llu subflow_seq=3D%u data_len=3D%u csum=
+=3D%u",
+> +       subflow->map_csum_reqd =3D mpext->csum_reqd;
+> +       subflow->map_csum_len =3D 0;
+> +       subflow->map_data_csum =3D csum_unfold(mpext->csum);
+> +
+> +       /* Cfr RFC 8684 Section 3.3.0 */
+> +       if (unlikely(subflow->map_csum_reqd !=3D csum_reqd))
+> +               return MAPPING_INVALID;
+> +
+> +       pr_debug("new map seq=3D%llu subflow_seq=3D%u data_len=3D%u csum=
+=3D%d:%u",
+>                  subflow->map_seq, subflow->map_subflow_seq,
+> -                subflow->map_data_len, subflow->map_csum);
+> +                subflow->map_data_len, subflow->map_csum_reqd,
+> +                subflow->map_data_csum);
+>
+>  validate_seq:
+>         /* we revalidate valid mapping on new skb, because we must ensure
+> @@ -963,7 +1041,9 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk,
+>                 return MAPPING_INVALID;
+>
+>         skb_ext_del(skb, SKB_EXT_MPTCP);
+> -       return MAPPING_OK;
+> +
+> +validate_csum:
+> +       return validate_data_csum(ssk, skb, csum_reqd);
+>  }
+>
+>  static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff =
+*skb,
+> @@ -1024,17 +1104,8 @@ static bool subflow_check_data_avail(struct sock *=
+ssk)
+>                         ssk->sk_err =3D EBADMSG;
+>                         goto fatal;
+>                 }
+> -               if (status =3D=3D MAPPING_DUMMY) {
+> -                       __mptcp_do_fallback(msk);
+> -                       skb =3D skb_peek(&ssk->sk_receive_queue);
+> -                       subflow->map_valid =3D 1;
+> -                       subflow->map_seq =3D READ_ONCE(msk->ack_seq);
+> -                       subflow->map_data_len =3D skb->len;
+> -                       subflow->map_subflow_seq =3D tcp_sk(ssk)->copied_=
+seq -
+> -                                                  subflow->ssn_offset;
+> -                       subflow->data_avail =3D MPTCP_SUBFLOW_DATA_AVAIL;
+> -                       return true;
+> -               }
+> +               if (status =3D=3D MAPPING_DUMMY)
+> +                       goto fallback;
+>
+>                 if (status !=3D MAPPING_OK)
+>                         goto no_data;
+> @@ -1089,6 +1160,19 @@ static bool subflow_check_data_avail(struct sock *=
+ssk)
+>         tcp_send_active_reset(ssk, GFP_ATOMIC);
+>         subflow->data_avail =3D 0;
+>         return false;
+> +
+> +fallback:
+> +       __mptcp_do_fallback(msk);
+> +       skb =3D skb_peek(&ssk->sk_receive_queue);
+> +       subflow->map_csum_reqd =3D 0;
+> +       subflow->map_valid =3D 1;
+> +       subflow->map_seq =3D READ_ONCE(msk->ack_seq);
+> +       subflow->map_data_len =3D skb->len;
+> +       subflow->map_subflow_seq =3D tcp_sk(ssk)->copied_seq -
+> +                                  subflow->ssn_offset;
+> +       subflow->data_avail =3D MPTCP_SUBFLOW_DATA_AVAIL;
+> +       return true;
+> +
 
-And I want to move these lines to the patch ([PATCH v3 mptcp-next 03/21]
-Squash-to: "mptcp: generate the data checksum") too.
+I'll drop this blank line here.
 
-WDYT?
+Furthermore, move this fallback trunk as a separated patch if you don't
+mind.
 
 Thanks.
 
 -Geliang
 
->         }
+
 >  }
 >
-> @@ -1129,8 +1136,9 @@ void mptcp_incoming_options(struct sock *sk, struct=
- sk_buff *skb)
->                 }
->                 mpext->data_len =3D mp_opt.data_len;
->                 mpext->use_map =3D 1;
-> +               mpext->csum_reqd =3D mp_opt.csum_reqd;
->
-> -               if (READ_ONCE(msk->csum_enabled))
-> +               if (mpext->csum_reqd)
->                         mpext->csum =3D mp_opt.csum;
->         }
->  }
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d2b00f8c4040..3ac61b8178fd 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -68,6 +68,8 @@
->  #define TCPOLEN_MPTCP_FASTCLOSE                12
->  #define TCPOLEN_MPTCP_RST              4
->
-> +#define TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM        (TCPOLEN_MPTCP_DSS_CHECKS=
-UM + TCPOLEN_MPTCP_MPC_ACK_DATA)
-> +
->  /* MPTCP MP_JOIN flags */
->  #define MPTCPOPT_BACKUP                BIT(0)
->  #define MPTCPOPT_HMAC_LEN      20
+>  bool mptcp_subflow_data_available(struct sock *sk)
 > --
 > 2.26.2
 >
