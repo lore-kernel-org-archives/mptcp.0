@@ -1,258 +1,66 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349A62FAB
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 18:17:18 +0000 (UTC)
-IronPort-SDR: PyF6NT8d9VcpfFa2qfKA7YuRJGr37c5VBWYCsxN5uiS/6VDjY9x1ohZ5i7Fe8/v53QJ8H21dT+
- MHX03Q+0IE9Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183243838"
-X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
-   d="scan'208";a="183243838"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 11:17:15 -0700
-IronPort-SDR: vFuFvjspdBEFLRoxwHc4WpFUB05HAl1rkIWPW2i3BVjia1Wog+BbYJ5DURxkKlfQeOjwVFBYbN
- yZ3hNtrAQ8Iw==
-X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
-   d="scan'208";a="402264972"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.254.72.13])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 11:17:14 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Yonglong Li <liyonglong@chinatelecom.cn>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 5/5] selftests: mptcp: add a test case for MSG_PEEK
-Date: Fri, 23 Apr 2021 11:17:09 -0700
-Message-Id: <20210423181709.330233-6-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210423181709.330233-1-mathew.j.martineau@linux.intel.com>
-References: <20210423181709.330233-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5C42F83
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 21:10:09 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id B4811613CB;
+	Fri, 23 Apr 2021 21:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1619212208;
+	bh=BzRxPELrv1dH0wmTZqU14KTBnV3YOn2NYQUF+cvnzZc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=V/wJNYzn9NSUTEKcWknTMs3//VXKtWwW6F9mJBHesxdsW2d9Z9NnW5AjE4US3+F1s
+	 QThOQf74FHqTKM4ADeYWyjlk0lcH/Fb9VzViMYiv9Y7nWiz5WdV1KC1+Ll02L21H9E
+	 dRRC87HMxTH33RA7bv4bJDJ8jpZgpdBHBWYiekgvZYkzHI3FL739Og+Rc6ZifYHHnJ
+	 6nk+psvY0gNjujP3P9kT1B+si08vfupC5BjQoNskRiz8zZGhjEcDj29gvvD22/3srK
+	 ByKqIylg1pBWca+WcNtMRonzJDMZ2heH1Wxxz6Dm/6+ROG0yETyPs7bKn2V4QKMq+f
+	 hMgxFaD2//3VQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id AB6CE608FB;
+	Fri, 23 Apr 2021 21:10:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] mptcp: Retransmit DATA_FIN
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <161921220869.24005.14221721038180375971.git-patchwork-notify@kernel.org>
+Date: Fri, 23 Apr 2021 21:10:08 +0000
+References: <20210423164033.264095-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210423164033.264095-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com
 
-From: Yonglong Li <liyonglong@chinatelecom.cn>
+Hello:
 
-Extend mptcp_connect tool with MSG_PEEK support and add a test case in
-mptcp_connect.sh that checks the data received from/after recv() with
-MSG_PEEK.
+This patch was applied to netdev/net.git (refs/heads/master):
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 48 ++++++++++++++++++-
- .../selftests/net/mptcp/mptcp_connect.sh      | 29 ++++++++---
- 2 files changed, 69 insertions(+), 8 deletions(-)
+On Fri, 23 Apr 2021 09:40:33 -0700 you wrote:
+> With this change, the MPTCP-level retransmission timer is used to resend
+> DATA_FIN. The retranmit timer is not stopped while waiting for a
+> MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
+> subflows. The retry interval starts at TCP_RTO_MIN and then doubles on
+> each attempt, up to TCP_RTO_MAX.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/146
+> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
+> Acked-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> 
+> [...]
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 2f207cf33661..d88e1fdfb147 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -45,7 +45,14 @@ enum cfg_mode {
- 	CFG_MODE_SENDFILE,
- };
- 
-+enum cfg_peek {
-+	CFG_NONE_PEEK,
-+	CFG_WITH_PEEK,
-+	CFG_AFTER_PEEK,
-+};
-+
- static enum cfg_mode cfg_mode = CFG_MODE_POLL;
-+static enum cfg_peek cfg_peek = CFG_NONE_PEEK;
- static const char *cfg_host;
- static const char *cfg_port	= "12000";
- static int cfg_sock_proto	= IPPROTO_MPTCP;
-@@ -73,6 +80,8 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
-+	fprintf(stderr,
-+		"\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket\n");
- 	exit(1);
- }
- 
-@@ -331,6 +340,8 @@ static size_t do_write(const int fd, char *buf, const size_t len)
- 
- static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- {
-+	int ret = 0;
-+	char tmp[16384];
- 	size_t cap = rand();
- 
- 	cap &= 0xffff;
-@@ -340,7 +351,17 @@ static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- 	else if (cap > len)
- 		cap = len;
- 
--	return read(fd, buf, cap);
-+	if (cfg_peek == CFG_WITH_PEEK) {
-+		ret = recv(fd, buf, cap, MSG_PEEK);
-+		ret = (ret < 0) ? ret : read(fd, tmp, ret);
-+	} else if (cfg_peek == CFG_AFTER_PEEK) {
-+		ret = recv(fd, buf, cap, MSG_PEEK);
-+		ret = (ret < 0) ? ret : read(fd, buf, cap);
-+	} else {
-+		ret = read(fd, buf, cap);
-+	}
-+
-+	return ret;
- }
- 
- static void set_nonblock(int fd)
-@@ -819,6 +840,26 @@ int parse_mode(const char *mode)
- 	return 0;
- }
- 
-+int parse_peek(const char *mode)
-+{
-+	if (!strcasecmp(mode, "saveWithPeek"))
-+		return CFG_WITH_PEEK;
-+	if (!strcasecmp(mode, "saveAfterPeek"))
-+		return CFG_AFTER_PEEK;
-+
-+	fprintf(stderr, "Unknown: %s\n", mode);
-+	fprintf(stderr, "Supported MSG_PEEK mode are:\n");
-+	fprintf(stderr,
-+		"\t\t\"saveWithPeek\" - recv data with flags 'MSG_PEEK' and save the peek data into file\n");
-+	fprintf(stderr,
-+		"\t\t\"saveAfterPeek\" - read and save data into file after recv with flags 'MSG_PEEK'\n");
-+
-+	die_usage();
-+
-+	/* silence compiler warning */
-+	return 0;
-+}
-+
- static int parse_int(const char *size)
- {
- 	unsigned long s;
-@@ -846,7 +887,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -899,6 +940,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'M':
- 			cfg_mark = strtol(optarg, NULL, 0);
- 			break;
-+		case 'P':
-+			cfg_peek = parse_peek(optarg);
-+			break;
- 		}
- 	}
- 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 385cdc98aed8..9236609731b1 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -375,7 +375,7 @@ do_transfer()
- 	local srv_proto="$4"
- 	local connect_addr="$5"
- 	local local_addr="$6"
--	local extra_args=""
-+	local extra_args="$7"
- 
- 	local port
- 	port=$((10000+$TEST_COUNT))
-@@ -394,9 +394,9 @@ do_transfer()
- 	fi
- 
- 	if [ -n "$extra_args" ] && $options_log; then
--		options_log=false
- 		echo "INFO: extra options: $extra_args"
- 	fi
-+	options_log=false
- 
- 	:> "$cout"
- 	:> "$sout"
-@@ -589,6 +589,7 @@ run_tests_lo()
- 	local connector_ns="$2"
- 	local connect_addr="$3"
- 	local loopback="$4"
-+	local extra_args="$5"
- 	local lret=0
- 
- 	# skip if test programs are running inside same netns for subsequent runs.
-@@ -608,7 +609,8 @@ run_tests_lo()
- 		local_addr="0.0.0.0"
- 	fi
- 
--	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${local_addr}
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
-+		    ${connect_addr} ${local_addr} "${extra_args}"
- 	lret=$?
- 	if [ $lret -ne 0 ]; then
- 		ret=$lret
-@@ -622,14 +624,16 @@ run_tests_lo()
- 		fi
- 	fi
- 
--	do_transfer ${listener_ns} ${connector_ns} MPTCP TCP ${connect_addr} ${local_addr}
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP TCP \
-+		    ${connect_addr} ${local_addr} "${extra_args}"
- 	lret=$?
- 	if [ $lret -ne 0 ]; then
- 		ret=$lret
- 		return 1
- 	fi
- 
--	do_transfer ${listener_ns} ${connector_ns} TCP MPTCP ${connect_addr} ${local_addr}
-+	do_transfer ${listener_ns} ${connector_ns} TCP MPTCP \
-+		    ${connect_addr} ${local_addr} "${extra_args}"
- 	lret=$?
- 	if [ $lret -ne 0 ]; then
- 		ret=$lret
-@@ -637,7 +641,8 @@ run_tests_lo()
- 	fi
- 
- 	if [ $do_tcp -gt 1 ] ;then
--		do_transfer ${listener_ns} ${connector_ns} TCP TCP ${connect_addr} ${local_addr}
-+		do_transfer ${listener_ns} ${connector_ns} TCP TCP \
-+			    ${connect_addr} ${local_addr} "${extra_args}"
- 		lret=$?
- 		if [ $lret -ne 0 ]; then
- 			ret=$lret
-@@ -653,6 +658,15 @@ run_tests()
- 	run_tests_lo $1 $2 $3 0
- }
- 
-+run_tests_peekmode()
-+{
-+	local peekmode="$1"
-+
-+	echo "INFO: with peek mode: ${peekmode}"
-+	run_tests_lo "$ns1" "$ns1" 10.0.1.1 1 "-P ${peekmode}"
-+	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
-+}
-+
- make_file "$cin" "client"
- make_file "$sin" "server"
- 
-@@ -732,6 +746,9 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
- 	run_tests "$ns4" $sender dead:beef:3::1
- done
- 
-+run_tests_peekmode "saveWithPeek"
-+run_tests_peekmode "saveAfterPeek"
-+
- time_end=$(date +%s)
- time_run=$((time_end-time_start))
- 
--- 
-2.31.1
+Here is the summary with links:
+  - [net] mptcp: Retransmit DATA_FIN
+    https://git.kernel.org/netdev/net/c/6477dd39e62c
+
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
