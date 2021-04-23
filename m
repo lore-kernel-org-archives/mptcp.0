@@ -1,103 +1,95 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB14A71
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 10:28:46 +0000 (UTC)
-Received: by mail-pf1-f176.google.com with SMTP id w6so19255863pfc.8
-        for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 03:28:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4506F2F83
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 14:02:52 +0000 (UTC)
+Received: by mail-ed1-f48.google.com with SMTP id y3so21306351eds.5
+        for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 07:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yDoiOlV9MJeZnHdXY5UOiOOGtCUDABtuo/u3ndijJbs=;
-        b=BlscbE3gCCZwFATQw4A6E/nEMo/StjhHt3P12h4CUv3gGms8WTretkIz0lK1V0bV4B
-         lDu0+yGY5GNSp29rbhVFmprNErMNc/ANFf5AjBn4ZyghMeedHMfXshVBqwCaEIgy/Baq
-         yEkcKkE3/FM9n0KQM9sL6JZyhicESfB18Tqmw0NPsnCFwx5TCQ+Im7EdkxlUFvhptdvf
-         s0xjQd3vCxOv/8j6ePSBB5Ka2h5tnVjKSB4sCA88W16kuZxtlw7t2hksfxrVUTlqwQe4
-         Htl222YbjwU6jTOWwKWHkCgyaahvBiyOIcWFETJO4AbtjRSMNszXSa9DVkwzqsq1iMs/
-         8+0g==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BhaOLF1Wv+X0XbcNhTwgzbvTafL6JOpg0OaUPKim7aY=;
+        b=k+aKgA9vYONVIrjJDcw3KXccfP2FQVucXT8/87k2aKcBVjZTIvjgwqvKFPj3VcUhUY
+         ltRRjgwPzHHANNzvx62iOxABo83nJsf5OgF9jrn0JfeLIXmHMgjepimucQ6grSUjvtV8
+         idTXlezTXCXgokYdYw2DMiwfiIJYtH3r9DsJCHeLXdtl16/Vpo8D6h4evwQfEtUM37aM
+         yNLVGTk7aZtGAfQneFBEb7iZdaOufeYFeZpFEnTf/Q2ulTaqWtnsKWtjNgO9H5VpZ3PA
+         DEkHjqmNOh051nXHI8dvexLDtuenRtN1mRcpvC9mkReuXIzv1I/xxEEEGVnmwP5hgXsD
+         +Bog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yDoiOlV9MJeZnHdXY5UOiOOGtCUDABtuo/u3ndijJbs=;
-        b=b1XKf3GG1KA6UbwifZ9qAkyPK/cEgJlnEdwCAvUqmfH0LAny5org4DkBqhS5lFTniV
-         k2GgEWFRCj5eWaipoBU0oQ6stPKpuRWSvwnuPEjjouyTBcDkt8CK0tWyVmpkuBlVFbKf
-         7rkTj/gW0GkZRhjqmYd3/cnStmDS2EtJ4ZzP/QV9La7TXvKePcMPkm2ZeUQ47+s6crn+
-         dkHI8KgoZpWJGbplj9HswIX0YKKz+v3bkTQFBeHGjW8hGAmFLzBPX8k7a1LWhi28AB68
-         TaN4n+lIAXydkLh+oGstIpJDufFAw2mc3RZEMCIc+9w9EOC6bViQ0gTDK0Ebk8ZLLBR7
-         5hzA==
-X-Gm-Message-State: AOAM532XFcx6POH0lbcQrDmW5RxN002HSuTUFmEJPA8WCDJhoHS69TUz
-	UbpkXgqJ7+9NkI214M/44ijFBSC9Xcu7yXD8Xw0=
-X-Google-Smtp-Source: ABdhPJwCReObGuUl6KfWtY2+rUiutmDBUX+bB5LxkD3OFAvshO4NFZHMf47TB7tkYtywPVzbCInTirjDakPDKJCH70c=
-X-Received: by 2002:a65:6282:: with SMTP id f2mr3020966pgv.289.1619173726498;
- Fri, 23 Apr 2021 03:28:46 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BhaOLF1Wv+X0XbcNhTwgzbvTafL6JOpg0OaUPKim7aY=;
+        b=WxcA0308u7xcYCQVYeOZ4KHEhmJl1QeeO6e6oROcrbkMTjiXKZ14FAJ/9UfauEHLoo
+         UaFt2mlf3ti5eET5r7owF+KdHriOeY/h3kfwh+P3SqUv/rGW90cklbt3fWSGCIJaFeqN
+         YgFwYPCGxPOxb74iSeUAamtwKtit0g88GMQZddhvnUzFpM/zHw6pyXTXdXwyTL5X2WvT
+         mgnDh1XCFj4UN57LpyqCxFiwVwTEAo23DDB1IxOX7dMOg63jWJDqqjRZoQ9kWHdeJLX2
+         BzWvocqKZupP8bnjaEyii/veNZsq6fveqE9IDv2zgi8/LPDeB46UFZa33KGobSjlQoXq
+         tPzw==
+X-Gm-Message-State: AOAM5308FUff88CitKx2wwgkhHzz9YbNHVifd4OoeHPGP59ifdqSbOp9
+	H0shNTnR7Q2fZ7kha5d980gj8/AO+Z68wQ==
+X-Google-Smtp-Source: ABdhPJytChR2x7O/JOu2k19+sjJkR8zrMvWny0wXzv5khgFmEeOFSf37HdYgL/0wl4s+ABYL+S8K7A==
+X-Received: by 2002:a05:6402:57:: with SMTP id f23mr4591626edu.323.1619186571426;
+        Fri, 23 Apr 2021 07:02:51 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:d068:c16e:598a:1275])
+        by smtp.gmail.com with ESMTPSA id e11sm3967477ejl.115.2021.04.23.07.02.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Apr 2021 07:02:51 -0700 (PDT)
+Subject: Re: [PATCH] mptcp: create listening socket only if signal flag is set
+ on
+To: Jianguo Wu <wujianguo106@163.com>, Geliang Tang <geliangtang@gmail.com>
+Cc: mptcp@lists.linux.dev
+References: <bbe531db-6d59-d341-16ed-f48b1fd43d2a@163.com>
+ <CA+WQbwvpviu3FAE06bO3CO2azAegzMi8YUXcQPPMBYM8nW7_cg@mail.gmail.com>
+ <1b50d699-45ec-e747-983a-1966f64f8e1c@163.com>
+ <CA+WQbwvzabuhsbKKHeWwa3raOfCh270sccdg6=18ytgPjjkaVw@mail.gmail.com>
+ <CA+WQbwuSDvyJH+MT00Qvi73MhGoWcrg-AkZfPR56Zfaks2s1uQ@mail.gmail.com>
+ <681e0810-fbbc-daaf-054a-0e83038b4d12@163.com>
+ <3c3cf25d-aa4c-d522-102b-ebdd3b767cc0@tessares.net>
+ <4b4f4935-138d-a6fc-dfdc-3ef059a33c3e@163.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <f222b5b1-a2a9-5d10-ef22-5db67940daa3@tessares.net>
+Date: Fri, 23 Apr 2021 16:02:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <c388d556-530c-ee11-3ab1-a8019fb2eb6f@163.com>
-In-Reply-To: <c388d556-530c-ee11-3ab1-a8019fb2eb6f@163.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 23 Apr 2021 18:28:35 +0800
-Message-ID: <CA+WQbws5Ehw0BvLoQqT145icXKGTOBMqLUnNdd9qWNkBzU29Ew@mail.gmail.com>
-Subject: Re: [PATCH v2] mptcp: make sure flag signal is set when add addr with port
-To: Jianguo Wu <wujianguo106@163.com>
-Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4b4f4935-138d-a6fc-dfdc-3ef059a33c3e@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
 Hi Jianguo,
 
-Jianguo Wu <wujianguo106@163.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=8823=E6=97=
-=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=886:26=E5=86=99=E9=81=93=EF=BC=9A
->
-> From: Jianguo Wu <wujianguo@chinatelecom.cn>
->
-> When add address with port, it is mean to create a listening socket,
-> and send an ADD_ADDR to remote, so it must have flag signal set,
-> add this check in mptcp_pm_parse_addr().
->
-> Fixes: a77e9179c7651 ("mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM net=
-link")
-> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
-> ---
->  net/mptcp/pm_netlink.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index becc32b..90bba32 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -971,8 +971,14 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, =
-struct genl_info *info,
->         if (tb[MPTCP_PM_ADDR_ATTR_FLAGS])
->                 entry->flags =3D nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]=
-);
->
-> -       if (tb[MPTCP_PM_ADDR_ATTR_PORT])
-> +       if (tb[MPTCP_PM_ADDR_ATTR_PORT]) {
-> +               if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
-> +                       NL_SET_ERR_MSG_ATTR(info->extack, attr,
-> +                                           "flags must have signal when =
-using port");
-> +                       return -EINVAL;
-> +               }
->                 entry->addr.port =3D htons(nla_get_u16(tb[MPTCP_PM_ADDR_A=
-TTR_PORT]));
-> +       }
->
->         return 0;
->  }
+On 23/04/2021 10:38, Jianguo Wu wrote:
+> On 2021/4/23 16:21, Matthieu Baerts wrote:
+>> On 23/04/2021 09:41, Jianguo Wu wrote:
+>>> I think this is better, we can't assume that all user-space tools works correctly.
+>>
+>> I was thinking a bit about that. With the proposed modifications, it
+>> means that a server will have to send an ADD_ADDR if it wants to accept
+>> subflows on another port. I guess there will be use-cases where we will
+>> not want to send ADD_ADDR because we are in a controlled environment or
+>> we don't want to announce a public ADD_ADDR+port on a specific network.
+>>
+> 
+> Hi Matt, do you mean there will be use-cases where using ADD_ADDR+port as local address to initiate
+> a outgoing subflow join, but not send ADD_ADDR?
 
-LGTM.
+That would definitively not be a common use-case but we will see if some
+people are interested by that.
 
-Acked-by: Geliang Tang <geliangtang@gmail.com>
+Anyhow, I think it is better to start by well covering requested
+use-cases and avoid "strange" behaviours, e.g. not announcing the
+address but doing bind.
 
--Geliang
-
-> --
-> 1.8.3.1
->
->
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
