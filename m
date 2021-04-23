@@ -1,32 +1,31 @@
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB96B71
-	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 16:40:39 +0000 (UTC)
-IronPort-SDR: /li3N+458J0UMQwVHBBCNm+JWllhKs/kzgbLlOAXbqahXGE64FYmwDcDRLIEvuor2vOTLEJEvx
- 90QR4fVJNUjA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183227919"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DC571
+	for <mptcp@lists.linux.dev>; Fri, 23 Apr 2021 18:17:15 +0000 (UTC)
+IronPort-SDR: 4k3Ud2ZQRJ1nO34igLKffNsbSxXFeJmk+0fUhleWm1ACk8t09Eb8lt0CjFhxqWuOly4cSTZtg0
+ 1RLi1TTxXGUw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183243827"
 X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
-   d="scan'208";a="183227919"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 09:40:38 -0700
-IronPort-SDR: d7JlwaUXzlGT1OH1nsvTSWRS05fVhKp+6GpOj8jQsHkNYNYf4rQYLVyI3528Y9o/l7y+ho6/eO
- Z+V7JpQChaGw==
+   d="scan'208";a="183243827"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 11:17:14 -0700
+IronPort-SDR: LW9qXCt4g0q1brPfHw6YMETn7T8DGBIsajekmhAS4v7hpFBIvz5vPor+9Vbkidv7c9kJ5Gbkot
+ rgTwGmZHT7hA==
 X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
-   d="scan'208";a="428449394"
+   d="scan'208";a="402264966"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.254.72.13])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 09:40:38 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 11:17:14 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH net] mptcp: Retransmit DATA_FIN
-Date: Fri, 23 Apr 2021 09:40:33 -0700
-Message-Id: <20210423164033.264095-1-mathew.j.martineau@linux.intel.com>
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/5] mptcp: Compatibility with common msg flags
+Date: Fri, 23 Apr 2021 11:17:04 -0700
+Message-Id: <20210423181709.330233-1-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,80 +34,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With this change, the MPTCP-level retransmission timer is used to resend
-DATA_FIN. The retranmit timer is not stopped while waiting for a
-MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
-subflows. The retry interval starts at TCP_RTO_MIN and then doubles on
-each attempt, up to TCP_RTO_MAX.
+These patches from the MPTCP tree handle some of the msg flags that are
+typically used with TCP, to make it easier to adapt userspace programs
+for use with MPTCP.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/146
-Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+Patches 1, 2, and 4 add support for MSG_ERRQUEUE (no-op for now),
+MSG_TRUNC, and MSG_PEEK on the receive side.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4bde960e19dc..61329b8181ea 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -399,6 +399,14 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
- 	return false;
- }
- 
-+static void mptcp_set_datafin_timeout(const struct sock *sk)
-+{
-+	struct inet_connection_sock *icsk = inet_csk(sk);
-+
-+	mptcp_sk(sk)->timer_ival = min(TCP_RTO_MAX,
-+				       TCP_RTO_MIN << icsk->icsk_retransmits);
-+}
-+
- static void mptcp_set_timeout(const struct sock *sk, const struct sock *ssk)
- {
- 	long tout = ssk && inet_csk(ssk)->icsk_pending ?
-@@ -1052,7 +1060,7 @@ static void __mptcp_clean_una(struct sock *sk)
- 	}
- 
- 	if (snd_una == READ_ONCE(msk->snd_nxt)) {
--		if (msk->timer_ival)
-+		if (msk->timer_ival && !mptcp_data_fin_enabled(msk))
- 			mptcp_stop_timer(sk);
- 	} else {
- 		mptcp_reset_timer(sk);
-@@ -2276,8 +2284,19 @@ static void __mptcp_retrans(struct sock *sk)
- 
- 	__mptcp_clean_una_wakeup(sk);
- 	dfrag = mptcp_rtx_head(sk);
--	if (!dfrag)
-+	if (!dfrag) {
-+		if (mptcp_data_fin_enabled(msk)) {
-+			struct inet_connection_sock *icsk = inet_csk(sk);
-+
-+			icsk->icsk_retransmits++;
-+			mptcp_set_datafin_timeout(sk);
-+			mptcp_send_ack(msk);
-+
-+			goto reset_timer;
-+		}
-+
- 		return;
-+	}
- 
- 	ssk = mptcp_subflow_get_retrans(msk);
- 	if (!ssk)
-@@ -2460,6 +2479,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
- 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
- 			mptcp_set_timeout(sk, ssk);
- 			tcp_send_ack(ssk);
-+			if (!mptcp_timer_pending(sk))
-+				mptcp_reset_timer(sk);
- 		}
- 		break;
- 	}
+Patch 3 ignores unsupported msg flags for send and receive.
 
-base-commit: bb556de79f0a9e647e8febe15786ee68483fa67b
+Patch 5 adds a selftest for MSG_PEEK.
+
+
+Paolo Abeni (3):
+  mptcp: implement dummy MSG_ERRQUEUE support
+  mptcp: implement MSG_TRUNC support
+  mptcp: ignore unsupported msg flags
+
+Yonglong Li (2):
+  mptcp: add MSG_PEEK support
+  selftests: mptcp: add a test case for MSG_PEEK
+
+ net/mptcp/protocol.c                          | 49 ++++++++++++-------
+ .../selftests/net/mptcp/mptcp_connect.c       | 48 +++++++++++++++++-
+ .../selftests/net/mptcp/mptcp_connect.sh      | 29 ++++++++---
+ 3 files changed, 99 insertions(+), 27 deletions(-)
+
+
+base-commit: cad4162a90aeff737a16c0286987f51e927f003a
 -- 
 2.31.1
 
