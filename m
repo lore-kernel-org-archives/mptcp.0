@@ -1,50 +1,50 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A3671
-	for <mptcp@lists.linux.dev>; Tue, 27 Apr 2021 10:08:09 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id p17so2716855pjz.3
-        for <mptcp@lists.linux.dev>; Tue, 27 Apr 2021 03:08:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515C571
+	for <mptcp@lists.linux.dev>; Tue, 27 Apr 2021 10:08:12 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id s15so2180068plg.6
+        for <mptcp@lists.linux.dev>; Tue, 27 Apr 2021 03:08:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JouimiQ1PdMhMmTYsaWbWODVB6zakpCSOAadTBamrkw=;
-        b=JFgfdlUlTs2uJmtfkwX+Ggav4vThe1fMSidBHCuFzrVbu7wKFDycPQgtyujWIc57Nr
-         WFWN/EWSoS151ofyxuaHySsZETUdwHxDjk0EHvYnxAH4Pq0hnVYel6kM+sH5/+gRbN1m
-         P1iBhJlVGyIUDU5QB9nFhgD7o4pXpHPVAypYQvL88Z1+Ai5cMK+EE03mV0Qc11PIzL7T
-         UwklsAxkhr0+DjX3pWUuVz657DfWwWsUzZ/+r1ROmEdR5IUL6JXS8heExjV3wslhRK9p
-         5EHfMAzvFzez9dTf3oNQpjaSIcfpRhPmCZ/VzGfBJNTiI/NzUUeht6nDFeaD0QQNRsil
-         7VTQ==
+        bh=hl2ltIkQVBv2JoR5C6O9868Ojlyn4iT6rsKzTQoTm7g=;
+        b=EKr6dvLasz4gOpuyJqCZ0lAzwybkjqrHKgayRIGvROqJCmv+HFPFpH6qhgVjUMrXV1
+         OrfCprGZjV8sUK5t/tmMPzOt7yyKE7Yob48imuy0S/4zWmPE0NeONYDkLcwXjIWQscb/
+         0SP5nBWjTp+U7A06Xrsx95bvdfVjvBUA52+piRzVPBhtoMb93SnmARJYUMmnZPfR6Xo9
+         KNEE0PV2La5XXeDkleIbYtADR6+fG857GVwuLBq9AAm/KnQ/0qhhE5pCxHu9wOx1xNOd
+         Oc1qw1QJ+kizAldl5zXd2PcLLj4qiUfA2HKqSvEsMoF7dKlyvbK85QTb/Dpx2u+TcLAA
+         o40g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JouimiQ1PdMhMmTYsaWbWODVB6zakpCSOAadTBamrkw=;
-        b=ZmnG/UGqszy76b+hTRAAbrkzkj99zkuDP6H0NBLgJzBi4vOPBrUTVYLKu9gf7Xj4ye
-         +KLhvSVTw7Mo3K6LX5i4xIDhPPauwD3VQUfZ0DyqpbMg8U7oUanN8x1sEX0iSkIUX1AN
-         Zpuuj5pl/avnoZGO4oUQ5Lod5QVdUAoBdSsls5V8GHfKFQCsIWy4Ggs4A4QZsTRKBV4n
-         XJqH0xgQDD1QScX9SyqpyTPOWBJrIwGpk2GAzGlM1bVy1VWm7P3HchUWolfqenEnWIHk
-         uQPNwQvSEjXaVlaGP2Wwsz8oKhcmzv/Qm4B3d9U+uebWh/B0Vc9gtP4SnMHI3QfYQrgU
-         mXuw==
-X-Gm-Message-State: AOAM532ATnYwulFcfiJ1ugSEtYc4Wr0rkMCWoxJMK3KEbjiGp62loSJ8
-	oT5JaBgDL/qOiKP7Y80NNxaqHhh73Uo=
-X-Google-Smtp-Source: ABdhPJxRBUspm9jI2hvy7wuLy5ZJt/GSldlr1iiz4Efvmn/Mz9fM+/VVckC+JpyGkfl33MT3rBdGlA==
-X-Received: by 2002:a17:902:6544:b029:ea:f94e:9d4e with SMTP id d4-20020a1709026544b02900eaf94e9d4emr23667443pln.16.1619518089181;
-        Tue, 27 Apr 2021 03:08:09 -0700 (PDT)
+        bh=hl2ltIkQVBv2JoR5C6O9868Ojlyn4iT6rsKzTQoTm7g=;
+        b=l3W22iY8ozWc0vv8eBVVXn49i6l/rHHuwHo7tIyQKTO033Ffr87nNGjxWX/r7i6jiu
+         vS7ArbhkTW/M+OVQ6nHrBIo3Ku7vdK5gFa0jZTwjF2Yio3og4fmGNVM+YuGhFVGPSq7d
+         4HlwiV2nRRC0wVLoABEukqes2ou/I5fQ66YrYEv7cdvJ57HqKH50KA4uSrcwEp3TLMl4
+         VfklmnaTaP7qtGc3DoTNfeEJSOGUy5ITqIh9F6LmEXnbQTtSHlQ7DfNOZL6detSWzOs1
+         eNLiib8vcpZHjQfeGpw3Bi4zcJc8ABsEnrQbwQ8SmYvnyoAVF8bBFUYxIkBXX2xtkrgm
+         gZgw==
+X-Gm-Message-State: AOAM5316GrUJF0q4fqvH/DWQKspeQpjER2Qdf5zjfxnKZbPleuVRXoNl
+	PXaXBLYcAdCTV9OYt8F/n7HQbbfIwYw=
+X-Google-Smtp-Source: ABdhPJwuuPeAdfv4DiXG510NlIjsqb2kjHpMUXY4NOxtJeQnB9hHgqmtO5CJbi4bE1SsFGQwT16uxQ==
+X-Received: by 2002:a17:902:d48c:b029:ec:f7ad:4b28 with SMTP id c12-20020a170902d48cb02900ecf7ad4b28mr16852866plg.60.1619518091801;
+        Tue, 27 Apr 2021 03:08:11 -0700 (PDT)
 Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id w14sm141690pff.94.2021.04.27.03.08.08
+        by smtp.gmail.com with ESMTPSA id lb2sm1777654pjb.53.2021.04.27.03.08.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Apr 2021 03:08:08 -0700 (PDT)
+        Tue, 27 Apr 2021 03:08:11 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next 3/5] mptcp: add sk parameter for mptcp_parse_option
-Date: Tue, 27 Apr 2021 18:07:55 +0800
-Message-Id: <945e6d874461b595c1a08916d87cb4fed219ac40.1619517696.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next 4/5] mptcp: add join_denied in mptcp_sock
+Date: Tue, 27 Apr 2021 18:07:56 +0800
+Message-Id: <3afc2c7d715a21cf73d2573909be1e24fc89883e.1619517696.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <073e1b2e4f7d03b0302e8eacb235a728774b3104.1619517696.git.geliangtang@gmail.com>
-References: <cover.1619517696.git.geliangtang@gmail.com> <b1aefbc214bea1e5cef3dcf3c1c0b5caf502734e.1619517696.git.geliangtang@gmail.com> <073e1b2e4f7d03b0302e8eacb235a728774b3104.1619517696.git.geliangtang@gmail.com>
+In-Reply-To: <945e6d874461b595c1a08916d87cb4fed219ac40.1619517696.git.geliangtang@gmail.com>
+References: <cover.1619517696.git.geliangtang@gmail.com> <b1aefbc214bea1e5cef3dcf3c1c0b5caf502734e.1619517696.git.geliangtang@gmail.com> <073e1b2e4f7d03b0302e8eacb235a728774b3104.1619517696.git.geliangtang@gmail.com> <945e6d874461b595c1a08916d87cb4fed219ac40.1619517696.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -52,121 +52,86 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added a new parameter name sk in mptcp_parse_option() and
-mptcp_get_options().
+This patch added a new flag join_denied in struct mptcp_sock,
+initialized as false in __mptcp_init_sock.
+
+When MP_CAPABLE with the flag MPTCP_CAP_JOIN_DENIED is received, set the
+join_denied to true.
+
+In mptcp_syn_options, if the join_denied flag is set, and the remote
+address id is zero, stop sending the join.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c  | 10 ++++++----
- net/mptcp/protocol.h |  3 ++-
- net/mptcp/subflow.c  | 10 +++++-----
- 3 files changed, 13 insertions(+), 10 deletions(-)
+ net/mptcp/options.c  | 8 ++++++++
+ net/mptcp/protocol.c | 1 +
+ net/mptcp/protocol.h | 1 +
+ 3 files changed, 10 insertions(+)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index df90f8b46055..7b354125f33b 100644
+index 7b354125f33b..068b104d8ca9 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -20,7 +20,8 @@ static bool mptcp_cap_flag_sha256(u8 flags)
- 	return (flags & MPTCP_CAP_FLAG_MASK) == MPTCP_CAP_HMAC_SHA256;
- }
- 
--static void mptcp_parse_option(const struct sk_buff *skb,
-+static void mptcp_parse_option(const struct sock *sk,
-+			       const struct sk_buff *skb,
+@@ -25,6 +25,8 @@ static void mptcp_parse_option(const struct sock *sk,
  			       const unsigned char *ptr, int opsize,
  			       struct mptcp_options_received *mp_opt)
  {
-@@ -324,7 +325,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 	}
- }
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+ 	u8 subtype = *ptr >> 4;
+ 	int expected_opsize;
+ 	u8 version;
+@@ -78,6 +80,9 @@ static void mptcp_parse_option(const struct sock *sk,
+ 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+ 			break;
  
--void mptcp_get_options(const struct sk_buff *skb,
-+void mptcp_get_options(const struct sock *sk,
-+		       const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt)
++		if (flags & MPTCP_CAP_JOIN_DENIED)
++			WRITE_ONCE(msk->join_denied, true);
++
+ 		mp_opt->mp_capable = 1;
+ 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
+ 			mp_opt->sndr_key = get_unaligned_be64(ptr);
+@@ -376,6 +381,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 		       unsigned int *size, struct mptcp_out_options *opts)
  {
- 	const struct tcphdr *th = tcp_hdr(skb);
-@@ -363,7 +365,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 			if (opsize > length)
- 				return;	/* don't parse partial options */
- 			if (opcode == TCPOPT_MPTCP)
--				mptcp_parse_option(skb, ptr, opsize, mp_opt);
-+				mptcp_parse_option(sk, skb, ptr, opsize, mp_opt);
- 			ptr += opsize - 2;
- 			length -= opsize;
- 		}
-@@ -1011,7 +1013,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		return;
- 	}
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
  
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk, skb, &mp_opt);
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return;
+ 	/* we will use snd_isn to detect first pkt [re]transmission
+ 	 * in mptcp_established_options_mp()
+@@ -389,6 +395,8 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 	} else if (subflow->request_join) {
+ 		pr_debug("remote_token=%u, nonce=%u", subflow->remote_token,
+ 			 subflow->local_nonce);
++		if (!subflow->remote_id && READ_ONCE(msk->join_denied))
++			return false;
+ 		opts->suboptions = OPTION_MPTCP_MPJ_SYN;
+ 		opts->join_id = subflow->local_id;
+ 		opts->token = subflow->remote_token;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index aec8e77b18e4..219455616f61 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2411,6 +2411,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->ack_hint = NULL;
+ 	msk->first = NULL;
+ 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
++	WRITE_ONCE(msk->join_denied, false);
+ 
+ 	mptcp_pm_data_init(msk);
  
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ce8bebf13637..1d828668b15a 100644
+index 1d828668b15a..dc20b4d956ea 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -578,7 +578,8 @@ int __init mptcp_proto_v6_init(void);
- struct sock *mptcp_sk_clone(const struct sock *sk,
- 			    const struct mptcp_options_received *mp_opt,
- 			    struct request_sock *req);
--void mptcp_get_options(const struct sk_buff *skb,
-+void mptcp_get_options(const struct sock *sk,
-+		       const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt);
- 
- void mptcp_finish_connect(struct sock *sk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 64cacbb75454..c4fbbefb2c93 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -151,7 +151,7 @@ static int subflow_check_req(struct request_sock *req,
- 		return -EINVAL;
- #endif
- 
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk_listener, skb, &mp_opt);
- 
- 	if (mp_opt.mp_capable) {
- 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
-@@ -248,7 +248,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
- 	int err;
- 
- 	subflow_init_req(req, sk_listener);
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk_listener, skb, &mp_opt);
- 
- 	if (mp_opt.mp_capable && mp_opt.mp_join)
- 		return -EINVAL;
-@@ -395,7 +395,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 	subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
- 	pr_debug("subflow=%p synack seq=%x", subflow, subflow->ssn_offset);
- 
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk, skb, &mp_opt);
- 	if (subflow->request_mptcp) {
- 		if (!mp_opt.mp_capable) {
- 			MPTCP_INC_STATS(sock_net(sk),
-@@ -640,7 +640,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			goto create_msk;
- 		}
- 
--		mptcp_get_options(skb, &mp_opt);
-+		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_capable) {
- 			fallback = true;
- 			goto create_child;
-@@ -651,7 +651,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		if (!new_msk)
- 			fallback = true;
- 	} else if (subflow_req->mp_join) {
--		mptcp_get_options(skb, &mp_opt);
-+		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
- 		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+@@ -235,6 +235,7 @@ struct mptcp_sock {
+ 	bool		snd_data_fin_enable;
+ 	bool		rcv_fastclose;
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
++	bool		join_denied;
+ 	spinlock_t	join_list_lock;
+ 	struct sock	*ack_hint;
+ 	struct work_struct work;
 -- 
 2.30.2
 
