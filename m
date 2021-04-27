@@ -1,85 +1,78 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF41871
-	for <mptcp@lists.linux.dev>; Sat, 24 Apr 2021 08:53:05 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id r12so77168571ejr.5
-        for <mptcp@lists.linux.dev>; Sat, 24 Apr 2021 01:53:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766BA71
+	for <mptcp@lists.linux.dev>; Tue, 27 Apr 2021 10:08:01 +0000 (UTC)
+Received: by mail-pg1-f171.google.com with SMTP id p2so26542888pgh.4
+        for <mptcp@lists.linux.dev>; Tue, 27 Apr 2021 03:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ALo/zJs8TseE0zm20yZLSjAlpPS+/HmWPIoRWvl8zME=;
-        b=eR0Y3dMOif6NMgoiTlV/QWk1c1LshB9J35iHFa4JguyRxJF1Ennm8XCBSVuw4e1PTO
-         /RZf1IwTtvIznm+i/7PIUZ++Muir4cINbK4cNPNxQiDLsYvFGlcNt8suYNUowLECajO6
-         l625Cp0+id2OItsqTIxPp3YF1k7Sm5Hgplak7tFpYXouEF07Be2MhiNxQ9vu8SQJJPCh
-         ydREHutV6EDbxXjV5xY/55Dt6ctezqAdUlfcH/2SY4/YdYsTl92FpVNadKspKLCxwwcp
-         oxW8T+i1aLPpt4kVUMdA3j8tIAy1+OZBPs9FeeCy7jsAOQxwJeA0iFQOZMq84fIoIMYk
-         vlFQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7+SMaP5tttHX7x0sjSlru4HmEmGFsheafeiKCLsmwYE=;
+        b=vXD4kx06RXQSkN4DX69FXP1fg808A4gBf7gfkWYP9ly0KZc+aJaOu4CIsVuHkgkH/9
+         3+r0YO38VRZ65ETcv8YQz9onVw3ONZSJlGtE/4EO28Dv52MXUEG1rJRpGXCGjqaF+zSt
+         n9xHZosyT9BYJOA7Pgk+sr4XNAO+BEpoBPUN5PeMRto3fiTvbuH7WHr3u+qIuQ78M5ra
+         Pf7MtIUZgiRRcg20mZ2ENsMUV2ZKgKbag/JP0WWrd09Bi/IVhn6dQGFyV7PnXnXVFhOs
+         1s3wqxTisjBdl9t1Wt567l06Sv1mVcuf3UZjXtnJ/rJYxSUIeVsBY/NhmfbK1lh06ihr
+         Ccbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ALo/zJs8TseE0zm20yZLSjAlpPS+/HmWPIoRWvl8zME=;
-        b=M2t+5xbBGg9CJkTaWMYAcB7J3oZQbJXU1YaPLr2QSVAsiForugN6R0C+G6KlE5fkdG
-         xG2bV4AhdJ2BFBqz4lnUC3UTYTjBm1+t1LiC1RQikZEhmnewhJsfXo1gdcLjMm3RmbE2
-         weBCkhuZLq0bnD6o44GZ9hSX/gWMaV+yBE93AMJyKkeIP8VHjMUnQLHLdP8KkHFYbUQy
-         rsQFLnwxl3lPYplhuPFlM5zwOFYmaofJWoef9vATxLq6dCwQDZ11XrUF5FvKcphSdo3m
-         4WN0cuQC+lKimHH0Ye2qzOeV4AzkGk4E711Jg95MZQB6hDm2N7DojM+AYeBgSXwqjEbI
-         CD8A==
-X-Gm-Message-State: AOAM532tDtKspIa5cvyPPA+C1C0cDrc/9/MbxV4jslWpDSGlSMW1dicU
-	w3kbLzX0vcrTmBWdR7BMVvj3sA==
-X-Google-Smtp-Source: ABdhPJxWRYcnr6brfLS2gEUyoyYyJZopq7DLf/TTqxS/EmpLO4FiMNE+Rh4KAcneS1g/HImdbh+JjA==
-X-Received: by 2002:a17:906:600b:: with SMTP id o11mr8345595ejj.345.1619254384077;
-        Sat, 24 Apr 2021 01:53:04 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([185.212.171.137])
-        by smtp.gmail.com with ESMTPSA id z22sm8798352edm.57.2021.04.24.01.53.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Apr 2021 01:53:03 -0700 (PDT)
-Subject: Re: [PATCH v2] mptcp: make sure flag signal is set when add addr with
- port
-To: Jianguo Wu <wujianguo106@163.com>, mptcp@lists.linux.dev
+        bh=7+SMaP5tttHX7x0sjSlru4HmEmGFsheafeiKCLsmwYE=;
+        b=Cz/E0oyhrL/1ll4ln05woCcLEXs46dAR5WKxkPuLqpQDAlGs1iqyVCTBYEPw78Ci04
+         cg3xlm1dGI7aK1/wNtrRqW7P16+9nbC6Y65b4D0uqACQZtnohQkEG8smoYbdrOrRfRXN
+         TcojjYsAE/B4EkI0HqXOvjkggVV9fbjGTb7sNicx5eXFwH8+C74AgRvsdSptHM43ZOvG
+         q/DzlHqMh1/NRw/RK385RoYvluWRH6ESIDReVM8MEgIHMzyiV1JDl9mvVQJXFfCVzMNG
+         +iqyrC2OvP2/Xj+Zi1K7OgaWxM+y01pf2emjgmBSiKuf0kVMXzOMaBRSMuK/toEHcF5d
+         rXMg==
+X-Gm-Message-State: AOAM533UfEIZ3ADgYsEhlyZnKDif4kt1tZH3naNpU1jbEHOwDhcEMlPw
+	dmRg9hspJucEEGAOxv0CCIZRNfstL9U=
+X-Google-Smtp-Source: ABdhPJx8/qPy2S/78+RWOt+vdP+KaLmCGLD/IgetqJIl2ZgRPYqHNfzkVHrARMlJBRDs1/RftenpXw==
+X-Received: by 2002:a65:6255:: with SMTP id q21mr20620477pgv.382.1619518080685;
+        Tue, 27 Apr 2021 03:08:00 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id k14sm4223963pgl.2.2021.04.27.03.07.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Apr 2021 03:08:00 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-References: <c388d556-530c-ee11-3ab1-a8019fb2eb6f@163.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <40823af3-2edd-b334-0393-b7652f8bd735@tessares.net>
-Date: Sat, 24 Apr 2021 10:53:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+Subject: [MPTCP][PATCH mptcp-next 0/5] add MP_CAPABLE 'C' flag
+Date: Tue, 27 Apr 2021 18:07:52 +0800
+Message-Id: <cover.1619517696.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <c388d556-530c-ee11-3ab1-a8019fb2eb6f@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jianguo, Geliang,
+This patch set addressed the issue #183.
 
-On 23/04/2021 12:25, Jianguo Wu wrote:
-> From: Jianguo Wu <wujianguo@chinatelecom.cn>
-> 
-> When add address with port, it is mean to create a listening socket,
-> and send an ADD_ADDR to remote, so it must have flag signal set,
-> add this check in mptcp_pm_parse_addr().
+patch 3 is from the "data checksum support" series.
 
-Thank you for your patch and the review!
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/183
 
-This is now in our tree:
+Geliang Tang (5):
+  mptcp: add a new sysctl join_denied
+  mptcp: add join_denied in mptcp_out_options
+  mptcp: add sk parameter for mptcp_parse_option
+  mptcp: add join_denied in mptcp_sock
+  selftests: mptcp: add join_denied testcases
 
-- eb86a8c1aeed: mptcp: make sure flag signal is set when add addr with port
-- Results: 3692d2b92d9f..5c90fe877090
+ Documentation/networking/mptcp-sysctl.rst     |  8 ++++
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/ctrl.c                              | 14 ++++++
+ net/mptcp/options.c                           | 28 +++++++++---
+ net/mptcp/protocol.c                          |  1 +
+ net/mptcp/protocol.h                          | 11 +++--
+ net/mptcp/subflow.c                           | 11 ++---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 45 +++++++++++++++++++
+ 8 files changed, 106 insertions(+), 15 deletions(-)
 
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210424T085242
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210424T085242
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.30.2
+
