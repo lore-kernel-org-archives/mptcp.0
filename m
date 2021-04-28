@@ -1,75 +1,74 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7242F80
-	for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 15:48:53 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id h14-20020a17090aea8eb02901553e1cc649so7144259pjz.0
-        for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 08:48:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAB72F80
+	for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 15:53:25 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id a4so2009466ejk.1
+        for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 08:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tA5FkjFow1OVyRQX6e3K4Lj7EhUbIJjoSiQrtZA4QRY=;
-        b=KKFZooJru5IysnDeNI8ONSBRNrX47HEWOuvNv42MXzcREKqZVCLiQEbdNHPIKTtVai
-         w4QA3lGqvhHS8kZbtCYFuXbwEF5uI8wkwAOZ4Hw4/wHmQfWdLSoqgmiNSbXkp3OAPNyt
-         Sa+tDC8hBuUXnNHDWYmHTdHhFGgeQfPss7RBsIgXD/ImFgSr/C7pbQMpfPo0wxn9rGUz
-         UiIsny5QRKiuLmjRISlufQv1dP8RKqrnl9qS0ZBZH6t9RdOq7lMogAsFzwYOoNLr/vIk
-         nzewTVcOnWhV5/0aVx7VNtk5iD3j/uREEMRnRMSZSkphkcDBldBQ/9YEfn4sDU9HI348
-         LspA==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=NnMgDSeeKlBPycznEFuYSzWGxh/ZaGHgfx8VeVRf0pY=;
+        b=LxAgykoThACN9AG9CY9lIlIfq8WVPidAfZZPmc05UspbRBFG5NB1fPKqBX87D1eXPj
+         uE1l/mte8Vf6uXkYa+KhsaBZY2YkAwvW/mLHzn7LbjLY64BC03h//nahHVzwy3EZgdpe
+         yC2aR9/8LfAVl86J7UI3o/OXwUrWHfYMs9rat3kciW/b6xRVvcv0/puvGR075zpqzWwS
+         F1Zvg4lteAcMY2/IhPhupa3oWanCO8O2WViQZ864QWR6lvXPS7lT7GnSED46+axf7Ia6
+         D2K/mk5PljlcCAYpChWYwjS8vNP1jE12AOBEM2SzDchtzuMfsKu1KdT5VQKZeBTJrDDR
+         nFLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tA5FkjFow1OVyRQX6e3K4Lj7EhUbIJjoSiQrtZA4QRY=;
-        b=RzNyBO5ZMSDb28pgBVANLZvfA7ju1mC2NE9Agu+CsHUYap7XWnT/mmfXZnl/iFvcbA
-         9xbPKuJku4iJuHatusuHLO819G4X2q8fZzLHKC4GyxSO7ni8khU6rSW1i8FmmbWM3QIH
-         977L5fDBXaiDfFzGJX1AmEqeenxdtHAZhh64Cjep4hUD99BD4qHk1k2TgkLGLmeOKJcH
-         XMUMGYfhvgQYcVIyhlDrDK55hsjaO8hoYB7380c2yU4uM9ssUxAB4fzGB6vrtcant+oT
-         WgeZ+DeTFaARn1V9v+TMd6SgLudMN63G/N0CJeCIcHhNPA97Zx1wV1VOb+KQ9h2JU396
-         0dJw==
-X-Gm-Message-State: AOAM533wInoTMh5g545R6DPdOeviHN0kh4LMuETYKj50mzPsmGWqKfJP
-	joanr7jJhRTURv0N0ameQjbTGERAltY=
-X-Google-Smtp-Source: ABdhPJzeO+HwCnhZsDEPGSJJ0aVZZ2mBABBgBKwYlHfBxTKbxIZxL/57eqNRW2iJWq/EPZPUqrKlSg==
-X-Received: by 2002:a17:902:854c:b029:ec:f7a9:9feb with SMTP id d12-20020a170902854cb02900ecf7a99febmr23750488plo.59.1619624932752;
-        Wed, 28 Apr 2021 08:48:52 -0700 (PDT)
-Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id j189sm153146pfd.21.2021.04.28.08.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Apr 2021 08:48:52 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH] Squash to "mptcp: add sysctl allow_join_initial_addr_port"
-Date: Wed, 28 Apr 2021 23:48:50 +0800
-Message-Id: <236391c475f7b8a1a7c4bb3127eae379fb89b82e.1619624900.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=NnMgDSeeKlBPycznEFuYSzWGxh/ZaGHgfx8VeVRf0pY=;
+        b=XeyFDsltvkebftkhobm3Gu6wjPwkeYDlJyKGCImeDNGmxVrdsOyrZOFyjib1vefgao
+         xfsR5uFOYdcI1OY17lK3yFi8rjtMHlK06AtabVWs/ZRjjCr3LkgYotcbPhEfyWNj+CZj
+         69+r0cRzMLJ4QYqXbHO5yXKrBITB8TTR7Od4KeA/bOtJuSKcdp42wNrceaFH3bShOKJR
+         LdSe/uYyBkHuLj8izDriC9PsKhuW0v71SQfteBMJMecgy4MLzdGPdclR0ILTn95N/7Qx
+         AHqyFE2NEkFD54dt5/2b0SwQ9YnDsHCkgm9ZPSH0QFRhs0xj15CifeM1Yk2wsinXE8RF
+         BpKg==
+X-Gm-Message-State: AOAM531UYNcX4aTcDmunUqBSSyt7Ab1ZhrjFE++EhVaevwAJzwfP+8+Q
+	75Qe/pe96fEv8qCg1QRBqaoki8hhIsbAP9D+VQDjmg==
+X-Google-Smtp-Source: ABdhPJwBDBRND3yIbrl3jtn9okITPXgu9P7blaP9ue1/8SefaQWNhsUafaxsyfRoOb7AfxRORnTLpg==
+X-Received: by 2002:a17:906:3a94:: with SMTP id y20mr29279975ejd.35.1619625203567;
+        Wed, 28 Apr 2021 08:53:23 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([185.156.172.168])
+        by smtp.gmail.com with ESMTPSA id i4sm164597ejv.58.2021.04.28.08.53.23
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Apr 2021 08:53:23 -0700 (PDT)
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Weekly meeting - 29 April 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm
+ CST)
+Message-ID: <e347108d-4b83-18f7-6192-30585225ec8c@tessares.net>
+Date: Wed, 28 Apr 2021 17:53:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-Use BOOLEAN instead of INTEGER.
+Hello everybody!
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- Documentation/networking/mptcp-sysctl.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index 6c67ea3d0b7f..e2921346e2fc 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -25,7 +25,7 @@ add_addr_timeout - INTEGER (seconds)
- 
- 	Default: 120
- 
--allow_join_initial_addr_port - INTEGER
-+allow_join_initial_addr_port - BOOLEAN
- 	Allow peers to send join requests to the IP address and port number used
- 	by the initial subflow if the value is 1. This controls a flag that is
- 	sent to the peer at connection time, and whether such join requests are
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20210429
+
+Feel free to add/modify topics!
+
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
+
+See/Speak to you tomorrow!
+Matt
 -- 
-2.30.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
