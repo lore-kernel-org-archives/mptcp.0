@@ -1,90 +1,86 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3552F82
-	for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 14:03:58 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id d14so10551134edc.12
-        for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 07:03:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FB62F80
+	for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 15:34:21 +0000 (UTC)
+Received: by mail-pf1-f177.google.com with SMTP id c3so25218959pfo.3
+        for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 08:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pGOH6z5pfTtTaIcVTra2LqY5Ky7S+kXFI7KyNcyhsKY=;
-        b=qyWhnC4D46YPyLt0v8WJIfMfUt3oVoF0swFuF2W0XpJiAMrvm70Fkf0MplYkaExnNV
-         ZGJFUIDM2rkhj/sB5YqrjT7rtTSpgPsEVKFQ1WxxCLD5VEwC3dUL4DY5jQ+BzwYjq0GH
-         bXSXfBnMINprQDQqgvP1mDuH1OXALbF3+vVLSuHhPqa100ImVFolTlxy3lgsLKZg5H21
-         fVITOJcJ3XyYcApLOwR6xqFMA3vh2Qgx5IfiW6kxOPA1IQZqrok9wtiWFQQC2uFSdb49
-         daM90b0zU6a0iETod8f0I1lFtdlITNvSPI9qC8zN1F3y7fTOTPRZbrbfBK71fk9C7IEu
-         7dkg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p1Dl0ueNjYevrmz3Gt1qtJun8jZZQzbaR4eu/ZyL604=;
+        b=Nv+6TO3S54QRy7NhkBw9Vh/flmygrUl9d+61YWIo6ibuM7txzqJjF7ITRm1kzlF3q1
+         trngnHQFUkdtS9rLtLnrM/MJDnIbcpnCgUAitpllZHGdwDwXqYLCdwRvDh1/V7C0EvbN
+         hQxFNb7iTpYiBj5N6diHWdNBrm7ZpjOJcZSn2Q1tMiCRJM3ZrZuuP4pCSvG3NEEQHPhk
+         FNPKi4ooy/Hb3eVbAveu5c9KazNH0NTKkAF57CwrBd6DdoQPKwzJ5Jng97Ir57Gr+Ybu
+         +dwDwkvBlYHotGoPacDPxCsbQcWoFu+W3vFs9XwrEAtb7UFF3tU/0GjO3UsJXvCCS5Ex
+         EL9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=pGOH6z5pfTtTaIcVTra2LqY5Ky7S+kXFI7KyNcyhsKY=;
-        b=PiFSzXcW9PncKUymLwVubqO0cTG25GtfAbu9VnvxuVpa94QYN1hJAalUWx53c9xQVG
-         3vIPm62RGB/CQe1xrht+kbVmFtT9IeQHpTJ5O3mmfMNX2keo0QGpnjm7dux0yUjn/m0O
-         BSec2PpCmw4tihfOwfDrASFNiiTMRRCMO+ha/YFBpVF2Xf3UKsxp3GcYyuQFieQn4fZp
-         tlA31e4vpvZI85qsRhbJKrosLV90afPIMQ4ZkfO2lTksrQORsOJCyv2UhClwLeM4LmWv
-         Vod+VVzKS1PDZcrgd+FpjPjN96o05cC51s+lPyFio5mMrzSBs69uvs0uxChIVZrVRAB4
-         T8hA==
-X-Gm-Message-State: AOAM530SNkKMYnDYS+3dORbMo6ZhS/tVtaFjlWwbbpr78VSif2wid4Ok
-	sRejP7JwLjkcpbhcz6AlQOkumYL7dTl8YONVUIs=
-X-Google-Smtp-Source: ABdhPJzTIqwY0qMcsKpr1x3xcH9lUgPWAkEhFtjdE2MFDKNxFyIHYJqY3U/TCaC96ADLVcdRiMVnXA==
-X-Received: by 2002:a05:6402:35c8:: with SMTP id z8mr11861933edc.210.1619618636931;
-        Wed, 28 Apr 2021 07:03:56 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:9a01:f17b:24ce:3558])
-        by smtp.gmail.com with ESMTPSA id b8sm5084061edu.41.2021.04.28.07.03.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Apr 2021 07:03:56 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] mptcp: restrict values of 'enabled' sysctl
-To: Florian Westphal <fw@strlen.de>
-Cc: mptcp@lists.linux.dev
-References: <20210428111737.3611480-1-matthieu.baerts@tessares.net>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <c366c6d9-248a-9a52-1fb5-ab57b6b783cc@tessares.net>
-Date: Wed, 28 Apr 2021 16:03:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        bh=p1Dl0ueNjYevrmz3Gt1qtJun8jZZQzbaR4eu/ZyL604=;
+        b=iqgxCwBQyTb6q8KKiA0DJp22Fn0gZ1aCoWLqDpBtL56Zdn1TensZ7IEuUMa7Ff5DfA
+         afh0uEIlhtwkiU8tgvdM4gv6S5R52XSFBqkifODixI5sXAd9gNSw93x5HVHWvJ7yyy9h
+         AVD9/rlX89nH/MsS7XEwAuusVY0ZXlvdD12KGK1PLTkI19i8O3Zmumd2igLOW84w4ZEj
+         s5KECIM7BstJsaWAUWWERuW+DHEiDGcMPo2xWvQZKRl6bpNWRPsmbIFkr88KA79HjQTf
+         EygxoSrVURNui2c795+71cTEHD6cWgMp2f/IY34We2CvPysY+QzrsF+2b/rRdazrKXoP
+         gnUQ==
+X-Gm-Message-State: AOAM5308VJKMKBLieM910Zy7drr5rXZmUCZqYTvAUKLbznoTuq+7yUAp
+	cN2Dgv9CryySNAKAmRvLaERE3m3cYz4=
+X-Google-Smtp-Source: ABdhPJxksAOUER0BZCqXZWylK7TkSvf9NI6CVAw1je50mZeG4zWGfo03llbd/UX9oFdlfBdUZcw5dA==
+X-Received: by 2002:a63:f715:: with SMTP id x21mr27164623pgh.399.1619624060543;
+        Wed, 28 Apr 2021 08:34:20 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id f20sm104056pgb.47.2021.04.28.08.34.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Apr 2021 08:34:20 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v3 mptcp-next 0/4] add MP_CAPABLE 'C' flag
+Date: Wed, 28 Apr 2021 23:34:13 +0800
+Message-Id: <cover.1619623735.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210428111737.3611480-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Florian,
+v3:
+ - use 'u8 allow_join_initial_addr_port'
+ - drop the spinlock in patch 3
 
-On 28/04/2021 13:17, Matthieu Baerts wrote:
-> To avoid confusions, it seems better to parse this sysctl parameter as a
-> boolean. We use it as a boolean, no need to parse an integer and bring
-> confusions if we see a value different from 0 and 1, especially with
-> this parameter name: enabled.
-> 
-> It seems fine to do this modification because the default value is 1
-> (enabled). Then the only other interesting value to set is 0 (disabled).
-> All other values would not have changed the default behaviour.
-> 
-> Suggested-by: Florian Westphal <fw@strlen.de>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+v2:
+ - rename join_denied to allow_join_id0 in mptcp_out_options
+ - rename join_denied to deny_join_id0 in mptcp_options_received
+ - add a new function mptcp_pm_deny_join_id0_received
+ - move deny_join_id0 flag from mptcp_sock to mptcp_pm_data
+ - check deny_join_id0 flag in mptcp_pm_create_subflow_or_signal_addr
+instead of in mptcp_syn_options.
 
-Thank you for your review (on IRC).
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/183
 
-Just applied with your ACK:
+Geliang Tang (4):
+  mptcp: add sysctl allow_join_initial_addr_port
+  mptcp: add allow_join_id0 in mptcp_out_options
+  mptcp: add deny_join_id0 in mptcp_options_received
+  selftests: mptcp: add deny_join_id0 testcases
 
-- e96c1cbd9dfa: mptcp: restrict values of 'enabled' sysctl
-- Results: be556cd0eaa6..837feee36a25
+ Documentation/networking/mptcp-sysctl.rst     | 13 +++++
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/ctrl.c                              | 16 ++++++
+ net/mptcp/options.c                           | 16 +++++-
+ net/mptcp/pm.c                                |  1 +
+ net/mptcp/pm_netlink.c                        |  4 +-
+ net/mptcp/protocol.h                          | 11 +++-
+ net/mptcp/subflow.c                           |  3 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 55 ++++++++++++++++++-
+ 9 files changed, 114 insertions(+), 8 deletions(-)
 
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210428T140248
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210428T140248
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.30.2
+
