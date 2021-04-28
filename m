@@ -1,147 +1,82 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16752F80
-	for <mptcp@lists.linux.dev>; Tue, 27 Apr 2021 23:50:30 +0000 (UTC)
-IronPort-SDR: ooW4rpgA0jz/MiOM87knEGLtrfvgeLe7CwIIuzVRQ2CJ2LmA6Dh64Pc2b3v5Agoe7uPhzJ3Zr6
- 9eqAJpHu7q2A==
-X-IronPort-AV: E=McAfee;i="6200,9189,9967"; a="183755909"
-X-IronPort-AV: E=Sophos;i="5.82,256,1613462400"; 
-   d="scan'208";a="183755909"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2021 16:50:30 -0700
-IronPort-SDR: 1iKC9HwZg7tmqKVOqLXVRnRI36wnqmMl6WfyF9DY7JXOBGbaSQH+Xn1Dk7XCKTjX6dLekqZjr1
- jFtSmklrFfsg==
-X-IronPort-AV: E=Sophos;i="5.82,256,1613462400"; 
-   d="scan'208";a="465671613"
-Received: from wlhines-mobl.amr.corp.intel.com ([10.209.43.196])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2021 16:50:30 -0700
-Date: Tue, 27 Apr 2021 16:50:29 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH mptcp-next 4/5] mptcp: add join_denied in
- mptcp_sock
-In-Reply-To: <3afc2c7d715a21cf73d2573909be1e24fc89883e.1619517696.git.geliangtang@gmail.com>
-Message-ID: <17db5bab-5c30-3394-7130-dc7898a3c53c@linux.intel.com>
-References: <cover.1619517696.git.geliangtang@gmail.com> <b1aefbc214bea1e5cef3dcf3c1c0b5caf502734e.1619517696.git.geliangtang@gmail.com> <073e1b2e4f7d03b0302e8eacb235a728774b3104.1619517696.git.geliangtang@gmail.com>
- <945e6d874461b595c1a08916d87cb4fed219ac40.1619517696.git.geliangtang@gmail.com> <3afc2c7d715a21cf73d2573909be1e24fc89883e.1619517696.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D219C2F80
+	for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 07:01:10 +0000 (UTC)
+Received: by mail-pg1-f177.google.com with SMTP id m12so3325151pgr.9
+        for <mptcp@lists.linux.dev>; Wed, 28 Apr 2021 00:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0bCZnUPxlDjlDQetGgddOg37ZkVBXFOWrY/SRTGTfPc=;
+        b=gwcWo6S1iSIs6SuGF7KhH6QCRtadeWMVWyhl/83YIZEdicLHUwhE8gHrkzHGxAEnC4
+         d0Et/6djGhfAjrGcL2my4/8d6UR1cKAJCnAyR/AkkCVb1V02ce5vTYbkgISRuSIhoku2
+         Pyg7bhxjBxQqNUikve4lz3S+mdNvtd3bw3v1YUNMdxB7T3cbKCvMaQ1IYrNe64barCJK
+         RgOoId38KurR7Po7TufoDb/jE14jjZIWuQXUDlWHIugcNSWDUjzH/ewcpUBeW6rCc0Gi
+         yeDk04H8hptKIdD0A4rav4h/noRV/GtxT5jqepaRL9bXzZNHSQuAC5ZYlNlL7tRu7qLZ
+         jv3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0bCZnUPxlDjlDQetGgddOg37ZkVBXFOWrY/SRTGTfPc=;
+        b=W++TZop/PSqkQZY0XW3hMBDjIVaZfJ8xp1sXamaLa9Z6+WgtroPQl8tSqr/smPWixY
+         QqKrYMzi3WxUugao22FyeavRwvJfs1SXYpdsIpZbXF4h5fiWKdzfT5jj6I0CnuEQJytF
+         F+MC+rkVTxTHwU5VndkZoT+kiIFeegx9iEsUfXJgtpVZONHGArpC72L/DDYQL6MrN48W
+         1DArnfWC0lHPmn90vwwcJ/gEwmfq2siaBC6ElDOo24BPxXwwsANH+SeMubvuAZg7Mkvq
+         UybN9iTiThNVBIvN8xnPZWezUUbpTBOGxyVZYTIJQDALVm6467Rlrms8LCWyeaDo4iIf
+         Hnfg==
+X-Gm-Message-State: AOAM53214BtZNQ1WbZMYRlpsu1M77Bzc94wTNSvKDC0vtT9MaT2C4z73
+	O5WvjT+m2HpBOfuv+4CHQHH3KxEcq98=
+X-Google-Smtp-Source: ABdhPJye+ZtSzDjQUQ8mD2rks0aqV2MqSpucLFnH7BnVq+iFYFO3K1p1aTW4IjXl0O2wjaKN462h4Q==
+X-Received: by 2002:a65:618c:: with SMTP id c12mr25928146pgv.296.1619593270214;
+        Wed, 28 Apr 2021 00:01:10 -0700 (PDT)
+Received: from localhost ([209.9.72.212])
+        by smtp.gmail.com with ESMTPSA id p10sm4102079pfo.210.2021.04.28.00.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Apr 2021 00:01:09 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 0/4] add MP_CAPABLE 'C' flag
+Date: Wed, 28 Apr 2021 15:01:02 +0800
+Message-Id: <cover.1619592361.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 27 Apr 2021, Geliang Tang wrote:
+v2:
+ - rename join_denied to allow_join_id0 in mptcp_out_options
+ - rename join_denied to deny_join_id0 in mptcp_options_received
+ - add a new function mptcp_pm_deny_join_id0_received
+ - move deny_join_id0 flag from mptcp_sock to mptcp_pm_data
+ - check deny_join_id0 flag in mptcp_pm_create_subflow_or_signal_addr
+instead of in mptcp_syn_options.
 
-> This patch added a new flag join_denied in struct mptcp_sock,
-> initialized as false in __mptcp_init_sock.
->
-> When MP_CAPABLE with the flag MPTCP_CAP_JOIN_DENIED is received, set the
-> join_denied to true.
->
-> In mptcp_syn_options, if the join_denied flag is set, and the remote
-> address id is zero, stop sending the join.
->
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
-> net/mptcp/options.c  | 8 ++++++++
-> net/mptcp/protocol.c | 1 +
-> net/mptcp/protocol.h | 1 +
-> 3 files changed, 10 insertions(+)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 7b354125f33b..068b104d8ca9 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -25,6 +25,8 @@ static void mptcp_parse_option(const struct sock *sk,
-> 			       const unsigned char *ptr, int opsize,
-> 			       struct mptcp_options_received *mp_opt)
-> {
-> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-> 	u8 subtype = *ptr >> 4;
-> 	int expected_opsize;
-> 	u8 version;
-> @@ -78,6 +80,9 @@ static void mptcp_parse_option(const struct sock *sk,
-> 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
-> 			break;
->
-> +		if (flags & MPTCP_CAP_JOIN_DENIED)
-> +			WRITE_ONCE(msk->join_denied, true);
-> +
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/183
 
-Rather than directly manipulate the mptcp_sock here, I think it would be 
-better to add something to mptcp_options_received and set that here. Then 
-that structure can be used to set up the mptcp_sock or path manager while 
-the appropriate lock is held.
+Geliang Tang (4):
+  mptcp: add sysctl allow_join_initial_addr_port
+  mptcp: add allow_join_id0 in mptcp_out_options
+  mptcp: add deny_join_id0 in mptcp_options_received
+  selftests: mptcp: add deny_join_id0 testcases
 
-> 		mp_opt->mp_capable = 1;
-> 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
-> 			mp_opt->sndr_key = get_unaligned_be64(ptr);
-> @@ -376,6 +381,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
-> 		       unsigned int *size, struct mptcp_out_options *opts)
-> {
-> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
->
-> 	/* we will use snd_isn to detect first pkt [re]transmission
-> 	 * in mptcp_established_options_mp()
-> @@ -389,6 +395,8 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
-> 	} else if (subflow->request_join) {
-> 		pr_debug("remote_token=%u, nonce=%u", subflow->remote_token,
-> 			 subflow->local_nonce);
-> +		if (!subflow->remote_id && READ_ONCE(msk->join_denied))
-> +			return false;
+ Documentation/networking/mptcp-sysctl.rst     | 13 +++++
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/ctrl.c                              | 14 +++++
+ net/mptcp/options.c                           | 16 +++++-
+ net/mptcp/pm.c                                | 10 ++++
+ net/mptcp/pm_netlink.c                        |  4 +-
+ net/mptcp/protocol.h                          | 12 +++-
+ net/mptcp/subflow.c                           |  3 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 55 ++++++++++++++++++-
+ 9 files changed, 122 insertions(+), 8 deletions(-)
 
-I think this should be handled at a higher level, in the path manager. The 
-PM should make the decision to create (or not create) a new subflow using 
-the peer's subflow 0 address.
+-- 
+2.30.2
 
-When everything is updated for userspace path management (not in scope for 
-this patch set!), the userspace path manager will also need the 'C' flag. 
-It's going to be simpler to make the best path management decisions in 
-both userspace and in-kernel PMs if the 'C' flag is treated similarly in 
-either case.
-
-> 		opts->suboptions = OPTION_MPTCP_MPJ_SYN;
-> 		opts->join_id = subflow->local_id;
-> 		opts->token = subflow->remote_token;
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index aec8e77b18e4..219455616f61 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2411,6 +2411,7 @@ static int __mptcp_init_sock(struct sock *sk)
-> 	msk->ack_hint = NULL;
-> 	msk->first = NULL;
-> 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-> +	WRITE_ONCE(msk->join_denied, false);
->
-> 	mptcp_pm_data_init(msk);
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 1d828668b15a..dc20b4d956ea 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -235,6 +235,7 @@ struct mptcp_sock {
-> 	bool		snd_data_fin_enable;
-> 	bool		rcv_fastclose;
-> 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
-> +	bool		join_denied;
-
-As I mentioned in some comments above, this may belong in mptcp_pm_data in 
-order to integrate with the PM better.
-
-> 	spinlock_t	join_list_lock;
-> 	struct sock	*ack_hint;
-> 	struct work_struct work;
-> -- 
-> 2.30.2
->
->
->
-
---
-Mat Martineau
-Intel
