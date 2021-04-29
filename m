@@ -1,18 +1,49 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE6972
-	for <mptcp@lists.linux.dev>; Thu, 29 Apr 2021 12:01:07 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1lc5Ln-0001o7-1J; Thu, 29 Apr 2021 14:00:59 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp] mptcp: fix close of larval mptcp sockets
-Date: Thu, 29 Apr 2021 14:00:49 +0200
-Message-Id: <20210429120049.8703-1-fw@strlen.de>
-X-Mailer: git-send-email 2.26.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DE92F80
+	for <mptcp@lists.linux.dev>; Thu, 29 Apr 2021 14:59:23 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id w3so100387677ejc.4
+        for <mptcp@lists.linux.dev>; Thu, 29 Apr 2021 07:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jpB7D1BhV8Q6y6cxK30GKIbID+Syy/U+AkGHCaXJoN0=;
+        b=L0QVf2Ov6OTgTgAgNrddvmZ6a1Oj8QhoGxJvNQJ/YJeeAqMXCROU/OQ9IbUgHkjuoj
+         NvfudKh+jEgk5P8xcnBNxqRF+SCl9IISLAuV7+tASMWVdycleY+FZQmpVPXZtgbgW30+
+         ARy776Iswv1XTX8ddEbKlCoB38kfmG+Xls7Br7jrssxW7i6IfmLGz6ypJqOHF7cML41V
+         ohLNGKMYMRvfzhWdGuBDDyQOU3/uhPBGJUWsXiZW+q/IlJLkZakgxPgHPjdQ3g3hszoj
+         I1nrJDRyjnPfMXnz6d9URtC4dRTWB+dvCL1lK4FKbFJluEYgTLRKBY4dN82oC7tlo7WQ
+         HpsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jpB7D1BhV8Q6y6cxK30GKIbID+Syy/U+AkGHCaXJoN0=;
+        b=Y1Ld69uQsdy9SMctcX+Ob79nOnHdxyn30pyP6KM7WbN1edlaNFFYFVHCCH3mDfs9rh
+         TSN0xm1GTX66miXI0rq22ixCrUWHT1dC7xro+FGaURyFMg9ysKnROcb5ZcIIbEuYKDjq
+         f9Woom7CTJx4Y2t6zMkjkakc9FhpGSe/S496FLtfHZuUmYHjS1xbHN/ouBDLR/bEHxsp
+         CuJsrx4fT2eUz0RGFloaeah7KgDQt/zq2E6FK3Mk7LwCAPwhHQjFMfGwm5N/LzdYVdv7
+         ZwFiDQquYSDPQvvgGaqeFzTOY00xyjRow5Q5aC+BzYiqInsk29HLFZo/p8rz1pCqLxwG
+         XOtg==
+X-Gm-Message-State: AOAM530IvTlWTPp7c/Yg62OPqUlkiGMI2Cf46O5F0FH1vHUMvbHEMIA8
+	zeBisF71AGJ/ZfKaz1K2JuHTGB6+kJLQlnKGYWQ=
+X-Google-Smtp-Source: ABdhPJxB7uNBA091nkRzdCoyIuIsDxeoLBydZPFU5uKzvg0s+oC/pekuZDKIvdzEV47T9pSLU0JyEg==
+X-Received: by 2002:a17:906:590b:: with SMTP id h11mr244461ejq.147.1619708361632;
+        Thu, 29 Apr 2021 07:59:21 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id g22sm125251ejz.46.2021.04.29.07.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Apr 2021 07:59:21 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH mptcp-next] mptcp: support SYSCTL only if enabled
+Date: Thu, 29 Apr 2021 16:59:12 +0200
+Message-Id: <20210429145912.2022531-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -20,80 +51,100 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If userspace exits before calling accept() on a listener that had at
-least one new connection ready, we get:
+Since the introduction of the sysctl support in MPTCP with
+commit 784325e9f037 ("mptcp: new sysctl to control the activation per NS"),
+we don't check CONFIG_SYSCTL.
 
-  Attempt to release TCP socket in state 8
+Until now, that was not an issue: the register and unregister functions
+were replaced by NO-OP one if SYSCTL was not enabled in the config. The
+only thing we could have avoid is not to reserve memory for the table
+but that's for the moment only a small table per net-ns.
 
-This happens because the mptcp socket gets cloned when the TCP
-connection is ready, but the socket is never exposed to userspace.
+But the following commit is going to use SYSCTL_ZERO and SYSCTL_ONE
+which are not be defined if SYSCTL is not enabled in the config. This
+causes 'undefined reference' errors from the linker.
 
-Tag the cloned socket until userspace calls accept().
-
-In case a subflow context is destroyed, check the associated mptcp
-socket.  If its still in larval state, it has not been exposed to
-userspace, so it needs the DEAD flag and its state set to TCP_CLOSE.
-
-Fixes: 58b09919626bf ("mptcp: create msk early")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/185
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- Please don't apply, this needs to be reviewd by Paolo.
- The extra release hack/check in subflow_ulp_release gives
- me unpleasant headache, i.e. I have no idea what I am doing.
 
- net/mptcp/protocol.c                          |  1 +
- net/mptcp/protocol.h                          |  1 +
- net/mptcp/subflow.c                           |  5 ++++
- .../net/mptcp/regressions/exit_unaccept.c     | 29 +++++++++++++++++++
- 4 files changed, 36 insertions(+)
- create mode 100644 tools/testing/selftests/net/mptcp/regressions/exit_unaccept.c
+Notes:
+    The "following" commit is "mptcp: restrict values of 'enabled' sysctl".
+    
+    The goal is to place this patch before this commit.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index aec8e77b18e4..69a64401ecef 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2832,6 +2832,7 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
- 		/* acquire the 2nd reference for the owning socket */
- 		sock_hold(new_mptcp_sock);
- 		newsk = new_mptcp_sock;
-+		mptcp_sk(newsk)->is_larval = 0;
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
- 	} else {
- 		MPTCP_INC_STATS(sock_net(sk),
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d230a75af631..839837b5957b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -257,6 +257,7 @@ struct mptcp_sock {
- 		u64	rtt_us; /* last maximum rtt of subflows */
- 	} rcvq_space;
+ net/mptcp/ctrl.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 08c152199b89..1ec4d36a39f0 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -4,7 +4,9 @@
+  * Copyright (c) 2019, Tessares SA.
+  */
  
-+	u8 is_larval:1;		/* incoming mptcp sk cloned but not yet acccepted */
- 	u32 setsockopt_seq;
++#ifdef CONFIG_SYSCTL
+ #include <linux/sysctl.h>
++#endif
+ 
+ #include <net/net_namespace.h>
+ #include <net/netns/generic.h>
+@@ -15,7 +17,9 @@
+ 
+ static int mptcp_pernet_id;
+ struct mptcp_pernet {
++#ifdef CONFIG_SYSCTL
+ 	struct ctl_table_header *ctl_table_hdr;
++#endif
+ 
+ 	u8 mptcp_enabled;
+ 	unsigned int add_addr_timeout;
+@@ -36,6 +40,13 @@ unsigned int mptcp_get_add_addr_timeout(struct net *net)
+ 	return mptcp_get_pernet(net)->add_addr_timeout;
+ }
+ 
++static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
++{
++	pernet->mptcp_enabled = 1;
++	pernet->add_addr_timeout = TCP_RTO_MAX;
++}
++
++#ifdef CONFIG_SYSCTL
+ static struct ctl_table mptcp_sysctl_table[] = {
+ 	{
+ 		.procname = "enabled",
+@@ -57,12 +68,6 @@ static struct ctl_table mptcp_sysctl_table[] = {
+ 	{}
  };
  
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 15620bafc544..00264c6f6479 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -649,6 +649,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		new_msk = mptcp_sk_clone(listener->conn, &mp_opt, req);
- 		if (!new_msk)
- 			fallback = true;
-+		mptcp_sk(new_msk)->is_larval = 1;
- 	} else if (subflow_req->mp_join) {
- 		mptcp_get_options(skb, &mp_opt);
- 		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
-@@ -1570,6 +1571,10 @@ static void subflow_ulp_release(struct sock *ssk)
- 		 * when the subflow is still unaccepted
- 		 */
- 		release = ctx->disposable || list_empty(&ctx->node);
-+		if (mptcp_sk(sk)->is_larval) {
-+			sk->sk_state = TCP_CLOSE;
-+			sock_orphan(sk);
-+		}
- 		sock_put(sk);
- 	}
+-static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+-{
+-	pernet->mptcp_enabled = 1;
+-	pernet->add_addr_timeout = TCP_RTO_MAX;
+-}
+-
+ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+ {
+ 	struct ctl_table_header *hdr;
+@@ -102,6 +107,17 @@ static void mptcp_pernet_del_table(struct mptcp_pernet *pernet)
+ 	kfree(table);
+ }
  
++#else
++
++static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
++{
++	return 0;
++}
++
++static void mptcp_pernet_del_table(struct mptcp_pernet *pernet) {}
++
++#endif /* CONFIG_SYSCTL */
++
+ static int __net_init mptcp_net_init(struct net *net)
+ {
+ 	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
+-- 
+2.30.2
 
