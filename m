@@ -1,104 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C3172
-	for <mptcp@lists.linux.dev>; Mon,  3 May 2021 08:32:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5211672
+	for <mptcp@lists.linux.dev>; Mon,  3 May 2021 08:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620030737;
+	s=mimecast20190719; t=1620031678;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jtMsv/p347BbY//GWzZaBPdk+A8VTRzf3nGU92Uy9hg=;
-	b=fZHUyaeMbdw7q8gHe+9O13uKtt2VuxV8uuMwpTwTDmQ3xvY+4eA4T6nILdLPqhmC9nVpO9
-	kpjrOEkRn75G4uItZRFvxGT0duYnu+r7WNuJkCbqwvFf6GKXzgW8vva0lnfBUizw4F4Yel
-	BOdMxLqeP4F3YzifU+b4VLPRtrj3PJE=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-592-hhGbKlhVPcqw_iLd43c3tw-1; Mon, 03 May 2021 04:32:14 -0400
-X-MC-Unique: hhGbKlhVPcqw_iLd43c3tw-1
-Received: by mail-wr1-f69.google.com with SMTP id 93-20020adf80e60000b0290106fab45006so3480789wrl.20
-        for <mptcp@lists.linux.dev>; Mon, 03 May 2021 01:32:14 -0700 (PDT)
+	bh=1yb1AfLX7LaKikV5SiX4yKFC5XwNT1KRYmq5jmd50gA=;
+	b=Ey1R5B9+NlhryEEF2qpKkjdv9L0MMDrNDtSAPd/WigV0dIvE+C3YkNNOIJBeKOSDO5UkJl
+	VIV3k7Xtc6xptBpWbGpfRpHiTkxF7bPBtGy8RzIeewXe7ToSIRAmD2r4Mo7qiTdOZWFxKi
+	qtzmgqdBqAmng7orO2Sj9ZuP7Nsu3n4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-551-CWesox_gPkmkd66QDNRNaw-1; Mon, 03 May 2021 04:47:56 -0400
+X-MC-Unique: CWesox_gPkmkd66QDNRNaw-1
+Received: by mail-wm1-f69.google.com with SMTP id g199-20020a1c9dd00000b02901355dd71edaso2183975wme.7
+        for <mptcp@lists.linux.dev>; Mon, 03 May 2021 01:47:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jtMsv/p347BbY//GWzZaBPdk+A8VTRzf3nGU92Uy9hg=;
-        b=JHhGrk9OYPqJEPfioRjcqwWQlBA976lfP6Ymqnf5hxa3j5jdvROkE+cV+ZysIZaKNg
-         rrX80YDztKh6hhBCvKmgfNGaTtupRpFiHOYF+eP40fzubL1DqIXayWJXHQ7CcwTRJOWS
-         MW63qELkr0ehPbSj9zslkBuS+kjzd1aLEKNrysVxShn4AVkLkqOkUfOCDv3557IwhXHU
-         lQQyLH10CWR3H11HCMcdwrfy+2B9bVUdtTOGs7OIb1oU4XVvC/qTe5YXIpWRA8IdiFOA
-         wAiOf3yh+lyB8Sgh1RVBUBV8deEOJgF6HeJd6evKLeQDlJ4+nsbLNVXE1qVFG2em3xOe
-         Gq7Q==
-X-Gm-Message-State: AOAM530bIqEp79QLIgYauds4Ly5C/neKBkvXEqxz/m189KWmFOscezXW
-	tw85lLhGaVDrP01L2yPEVd3YntNRtRU5a18rebiOcoo9pw/xM4+cogdNA0lcgyn4x3jFTRsIu7a
-	Uy8lyG92hOf8VL3dyGOiywP+LvVHW8iI=
-X-Received: by 2002:a1c:1c2:: with SMTP id 185mr19813844wmb.66.1620030733551;
-        Mon, 03 May 2021 01:32:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw8T2Zt7ZXTAu3VTrgNAbNTAiZzDcgUJPSO1ABwQd8IXmtmYGXbXeyKMm0wIVws2+t4apv0VAP3PDoZCj8qPQo=
-X-Received: by 2002:a1c:1c2:: with SMTP id 185mr19813820wmb.66.1620030733320;
- Mon, 03 May 2021 01:32:13 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=1yb1AfLX7LaKikV5SiX4yKFC5XwNT1KRYmq5jmd50gA=;
+        b=eWXE8linTkuL2vUu9iFmuuNkqveQxJw9u2r9QRBwJE6dClYvSQRi+0tZqpF7jAAFyi
+         CPaGX4j8Vfrq5CfhK+u9Mq2yDfZLRZ/lQCZ7N9GBTElOFGCsyS3tP64vvHZg0yWdXyC8
+         jLh2u6pisl0zrDghRU+y3GrxIlqxPWazvqVJQl4MfTNmpGiZc6u02x7nykURitR609GG
+         EnPzztrtqwo4W8Dkw4+axVodKzH8d+YauGr0bvgHtW7EHFbezZAhEGVihLZOPXv7ZV7v
+         1POIvSO6qg2bDhUGT8H2gRHrV38JRj1GjbQWAFMgXcnh7LHQWBo5Bndj6cuWiIM3cEoj
+         TpnQ==
+X-Gm-Message-State: AOAM530usf9V4Y+tJC8nlwuJuCqAjYLFn9kNcd9Hf2ypr+WiwVl7W4wX
+	tXsJdDKkbBuISK21ero101ZPQcGc+IxUhPLuePp8Z8W3bLdQoLsrvmed0vFDxH09lhyZ15AXc9+
+	qIi8FqPylVtCtzhk=
+X-Received: by 2002:a1c:804a:: with SMTP id b71mr20805939wmd.82.1620031675216;
+        Mon, 03 May 2021 01:47:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzvq0GNb1XK3tDn6R3IaLyXuAb9AZDAfmwhXp6ojnD6QPLGcHiu2BDyAX6JleP6GKljUruhog==
+X-Received: by 2002:a1c:804a:: with SMTP id b71mr20805928wmd.82.1620031675037;
+        Mon, 03 May 2021 01:47:55 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-108-140.dyn.eolo.it. [146.241.108.140])
+        by smtp.gmail.com with ESMTPSA id j13sm15353537wrd.81.2021.05.03.01.47.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 May 2021 01:47:54 -0700 (PDT)
+Message-ID: <365dffafa78e2aa0786ff3ca964b74d882a34ab0.camel@redhat.com>
+Subject: Re: [PATCH mptcp] mptcp: fix close of larval mptcp sockets
+From: pabeni@redhat.com
+To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Date: Mon, 03 May 2021 10:47:53 +0200
+In-Reply-To: <20210429120049.8703-1-fw@strlen.de>
+References: <20210429120049.8703-1-fw@strlen.de>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <199d0f80d00540b5861a51b5baf27363@shmbx05.spreadtrum.com>
-In-Reply-To: <199d0f80d00540b5861a51b5baf27363@shmbx05.spreadtrum.com>
-From: Paolo Abeni <pabeni@redhat.com>
-Date: Mon, 3 May 2021 10:32:02 +0200
-Message-ID: <CAF6piCLgdRdzZ37ng1ycGB+TEfstTL58yqZa2ANFUZCdPj1=-A@mail.gmail.com>
-Subject: Re: Ask about MPTCP development progress and MPTCP in Kernel 5.4 GKI
-To: =?UTF-8?B?5ZC0546R6ZyHIChKZWFzb24gV3Up?= <jeason.wu@unisoc.com>
-Cc: =?UTF-8?B?5Lu75ZCv5YekIChTZXJlbmEgUmVuKQ==?= <Serena.Ren@unisoc.com>, 
-	mptcp@lists.linux.dev
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Thu, 2021-04-29 at 14:00 +0200, Florian Westphal wrote:
+> If userspace exits before calling accept() on a listener that had at
+> least one new connection ready, we get:
+> 
+>   Attempt to release TCP socket in state 8
+> 
+> This happens because the mptcp socket gets cloned when the TCP
+> connection is ready, but the socket is never exposed to userspace.
 
-First thing first, please use the mptcp devel mailing list
-(mptcp@lists.linux.dev) for this kind of questions. I added the
-relevant email address in CC.
+The above happens if the client additionally sends a DATA_FIN, while
+the msk socket is still unaccepted, right? If so I think the fixes tag
+should point to the DATA_FIN state machine introduction.
 
-On Sun, Apr 25, 2021 at 9:47 AM =E5=90=B4=E7=8E=91=E9=9C=87 (Jeason Wu) <je=
-ason.wu@unisoc.com> wrote:
-> 1. Is there a timeline for the release of the next MPTCP version? About w=
-hen?
+What about something like the following istead ?
 
-MPTCP development is tracked publicly via:
-
-https://github.com/multipath-tcp/mptcp_net-next/projects/
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-> 2. The MPTCP source code on GitHub is ported to Kernel5.4, and several pa=
-rts will be modified to the original structure, which will cause GKI to fai=
-l. Is there any solution to this problem? Does the MPTCP team consider aski=
-ng Google to make some changes on Kernel5.4 to better pass the GKI detectio=
-n so that more users can use MPTCP?
-
-The out of tree MPTCP implementation hosted by mptcp.org has separated
-development. If there are any interoperability issues between the
-official Linux implementation and the out-of-tree one, please file an
-issue on:
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-Please note that google has not direct governance on the Linux kernel.
-Google, as many others, contribute to its development. Major changes
-are discussed and agreed on the relevant ML or if possible at
-conferences.
-
-It's not clear to me what are the 'GKI' failures you refer to. As said
-if you observe some bugs please file an issue and report as much
-technical info as possible.
-
-Cheers,
+Thanks!
 
 Paolo
+---
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 15620bafc544..2aa7fc72a99a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -547,7 +547,7 @@ static void mptcp_sock_destruct(struct sock *sk)
+ 	 * Both result in warnings from inet_sock_destruct.
+ 	 */
+ 
+-	if (sk->sk_state == TCP_ESTABLISHED) {
++	if (((1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
+ 		sk->sk_state = TCP_CLOSE;
+ 		WARN_ON_ONCE(sk->sk_socket);
+ 		sock_orphan(sk);
 
