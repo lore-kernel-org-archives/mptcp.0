@@ -1,113 +1,104 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B9C71
-	for <mptcp@lists.linux.dev>; Fri, 30 Apr 2021 16:54:29 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id j28so19389358edy.9
-        for <mptcp@lists.linux.dev>; Fri, 30 Apr 2021 09:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ockIHPEax9F02Qbn74rnZ3kMw5LuYIpJ+km9YQDmDmo=;
-        b=G07Cd5O/pIOAvP7Gt+TaJ1qDBWaHtYaUNxDatNa7l4Cbhg8PbGJV663NGcM/3Y4Yvr
-         5dQt/CsMUFfM+cMM7+ph0dnLHeQhmo2IjlcKcZ6lHiU7JZ1e8nn0ateMQ4z+fScTKizT
-         Iqmtat+6lS2MOkS60dqXaOCz1pjljTyZgg2r68mA2D5Sgf0uad1zwtbuj82D4AopSDXu
-         Y3DpN3FMm44UlpH/aTD+QLZEb8ZeUuYDPwns6uaEA4bAUcDNqM7N6cBVn41PDkMLUA4H
-         rf1+rV64O2aZfyyUV/22Gd5waotzlPwIGzz29tyoxO87wqDLJyth2ogxuGgmCwzyTsZs
-         xB/w==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C3172
+	for <mptcp@lists.linux.dev>; Mon,  3 May 2021 08:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1620030737;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jtMsv/p347BbY//GWzZaBPdk+A8VTRzf3nGU92Uy9hg=;
+	b=fZHUyaeMbdw7q8gHe+9O13uKtt2VuxV8uuMwpTwTDmQ3xvY+4eA4T6nILdLPqhmC9nVpO9
+	kpjrOEkRn75G4uItZRFvxGT0duYnu+r7WNuJkCbqwvFf6GKXzgW8vva0lnfBUizw4F4Yel
+	BOdMxLqeP4F3YzifU+b4VLPRtrj3PJE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-592-hhGbKlhVPcqw_iLd43c3tw-1; Mon, 03 May 2021 04:32:14 -0400
+X-MC-Unique: hhGbKlhVPcqw_iLd43c3tw-1
+Received: by mail-wr1-f69.google.com with SMTP id 93-20020adf80e60000b0290106fab45006so3480789wrl.20
+        for <mptcp@lists.linux.dev>; Mon, 03 May 2021 01:32:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ockIHPEax9F02Qbn74rnZ3kMw5LuYIpJ+km9YQDmDmo=;
-        b=lhSaxmlHDW6QrW9zqXQ7PE5tYDpl2398me/BiDZgk0x6o/2MLA4q8dB0zaTdZ+BIqK
-         TUfGcUJO1dKCXQjdE8D1d8/wlIwZHMRZ9DSLjEPCyxhzOopbzGCE8Czf9TvA2TtjS6PO
-         ImRGSgLIFcoPurtzmBuZC1miDU3o16gL2bLmXnYme86BPEqmE+OHVqTgQXIQ5C6fTddz
-         TgS06SDN2utMpEjStHfKZeUlxRx2Ensls3S0z+WYhbBvqkzHVEW4RdKc3Ax93qJSnOou
-         GQJkJZIazHiaAPB+2+ah0yRIZsYVM2bA7LIK8TkfBL5zXO5ZoxOogc8525rIXH5N0V8W
-         R8rg==
-X-Gm-Message-State: AOAM533CEI/razW7Poe8NsCOXiHnAKUcuqJXGBmdwTvvRY/nfysrCwD6
-	U1XDxogulEyiINHtXy6SRINN8b9/+sUDRNNY
-X-Google-Smtp-Source: ABdhPJw8Y0pTHxMezfUt20irisBHzzd8eaFUauSwlXgtosPnIZLUm3+AHXYXzBT6i5ydAqzZhzm1MA==
-X-Received: by 2002:a05:6402:36d:: with SMTP id s13mr7211032edw.103.1619801668419;
-        Fri, 30 Apr 2021 09:54:28 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:b92a:fcbd:82a0:9dba])
-        by smtp.gmail.com with ESMTPSA id l15sm1673250edb.48.2021.04.30.09.54.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Apr 2021 09:54:28 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] mptcp: support SYSCTL only if enabled
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <20210429145912.2022531-1-matthieu.baerts@tessares.net>
- <9c92075-e759-baed-c1a5-7f167bfa60f9@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <b3a6e37b-0397-9a21-9ecc-3d30d873d9f2@tessares.net>
-Date: Fri, 30 Apr 2021 18:54:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jtMsv/p347BbY//GWzZaBPdk+A8VTRzf3nGU92Uy9hg=;
+        b=JHhGrk9OYPqJEPfioRjcqwWQlBA976lfP6Ymqnf5hxa3j5jdvROkE+cV+ZysIZaKNg
+         rrX80YDztKh6hhBCvKmgfNGaTtupRpFiHOYF+eP40fzubL1DqIXayWJXHQ7CcwTRJOWS
+         MW63qELkr0ehPbSj9zslkBuS+kjzd1aLEKNrysVxShn4AVkLkqOkUfOCDv3557IwhXHU
+         lQQyLH10CWR3H11HCMcdwrfy+2B9bVUdtTOGs7OIb1oU4XVvC/qTe5YXIpWRA8IdiFOA
+         wAiOf3yh+lyB8Sgh1RVBUBV8deEOJgF6HeJd6evKLeQDlJ4+nsbLNVXE1qVFG2em3xOe
+         Gq7Q==
+X-Gm-Message-State: AOAM530bIqEp79QLIgYauds4Ly5C/neKBkvXEqxz/m189KWmFOscezXW
+	tw85lLhGaVDrP01L2yPEVd3YntNRtRU5a18rebiOcoo9pw/xM4+cogdNA0lcgyn4x3jFTRsIu7a
+	Uy8lyG92hOf8VL3dyGOiywP+LvVHW8iI=
+X-Received: by 2002:a1c:1c2:: with SMTP id 185mr19813844wmb.66.1620030733551;
+        Mon, 03 May 2021 01:32:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw8T2Zt7ZXTAu3VTrgNAbNTAiZzDcgUJPSO1ABwQd8IXmtmYGXbXeyKMm0wIVws2+t4apv0VAP3PDoZCj8qPQo=
+X-Received: by 2002:a1c:1c2:: with SMTP id 185mr19813820wmb.66.1620030733320;
+ Mon, 03 May 2021 01:32:13 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <9c92075-e759-baed-c1a5-7f167bfa60f9@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+References: <199d0f80d00540b5861a51b5baf27363@shmbx05.spreadtrum.com>
+In-Reply-To: <199d0f80d00540b5861a51b5baf27363@shmbx05.spreadtrum.com>
+From: Paolo Abeni <pabeni@redhat.com>
+Date: Mon, 3 May 2021 10:32:02 +0200
+Message-ID: <CAF6piCLgdRdzZ37ng1ycGB+TEfstTL58yqZa2ANFUZCdPj1=-A@mail.gmail.com>
+Subject: Re: Ask about MPTCP development progress and MPTCP in Kernel 5.4 GKI
+To: =?UTF-8?B?5ZC0546R6ZyHIChKZWFzb24gV3Up?= <jeason.wu@unisoc.com>
+Cc: =?UTF-8?B?5Lu75ZCv5YekIChTZXJlbmEgUmVuKQ==?= <Serena.Ren@unisoc.com>, 
+	mptcp@lists.linux.dev
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hello,
 
-On 30/04/2021 02:07, Mat Martineau wrote:
-> On Thu, 29 Apr 2021, Matthieu Baerts wrote:
-> 
->> Since the introduction of the sysctl support in MPTCP with
->> commit 784325e9f037 ("mptcp: new sysctl to control the activation per
->> NS"),
->> we don't check CONFIG_SYSCTL.
->>
->> Until now, that was not an issue: the register and unregister functions
->> were replaced by NO-OP one if SYSCTL was not enabled in the config. The
->> only thing we could have avoid is not to reserve memory for the table
->> but that's for the moment only a small table per net-ns.
->>
->> But the following commit is going to use SYSCTL_ZERO and SYSCTL_ONE
->> which are not be defined if SYSCTL is not enabled in the config. This
->> causes 'undefined reference' errors from the linker.
->>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->>
->> Notes:
->>    The "following" commit is "mptcp: restrict values of 'enabled'
->> sysctl".
->>
->>    The goal is to place this patch before this commit.
->>
->> net/mptcp/ctrl.c | 28 ++++++++++++++++++++++------
->> 1 file changed, 22 insertions(+), 6 deletions(-)
->>
-> 
-> Looks good to me, thanks Matthieu.
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+First thing first, please use the mptcp devel mailing list
+(mptcp@lists.linux.dev) for this kind of questions. I added the
+relevant email address in CC.
 
-Thank you for the review!
+On Sun, Apr 25, 2021 at 9:47 AM =E5=90=B4=E7=8E=91=E9=9C=87 (Jeason Wu) <je=
+ason.wu@unisoc.com> wrote:
+> 1. Is there a timeline for the release of the next MPTCP version? About w=
+hen?
 
-Now in our tree:
+MPTCP development is tracked publicly via:
 
-- 2c38407bd1c5: mptcp: support SYSCTL only if enabled
-- Results: f937cef8ab9f..f6df9e9d3336
+https://github.com/multipath-tcp/mptcp_net-next/projects/
 
-Builds and tests are now in progress:
+https://github.com/multipath-tcp/mptcp_net-next/issues/
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210430T165402
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210430T165402
+> 2. The MPTCP source code on GitHub is ported to Kernel5.4, and several pa=
+rts will be modified to the original structure, which will cause GKI to fai=
+l. Is there any solution to this problem? Does the MPTCP team consider aski=
+ng Google to make some changes on Kernel5.4 to better pass the GKI detectio=
+n so that more users can use MPTCP?
+
+The out of tree MPTCP implementation hosted by mptcp.org has separated
+development. If there are any interoperability issues between the
+official Linux implementation and the out-of-tree one, please file an
+issue on:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+Please note that google has not direct governance on the Linux kernel.
+Google, as many others, contribute to its development. Major changes
+are discussed and agreed on the relevant ML or if possible at
+conferences.
+
+It's not clear to me what are the 'GKI' failures you refer to. As said
+if you observe some bugs please file an issue and report as much
+technical info as possible.
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+Paolo
+
