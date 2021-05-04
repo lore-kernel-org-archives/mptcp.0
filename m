@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A422F80
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487312F81
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620163797;
+	s=mimecast20190719; t=1620163798;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=S0/Wh8PEOM3r3M6vmUyJ1/kbTkmac+6srrtvFD5l/mY=;
-	b=VckooN/QohDLYr7kGnhMHvkpoiM4fWyNuqjeO/C0gnIV/EWRByYgssN93f/iFIkKuRg7MO
-	OsIfzuJ1Si2jYUXnj7KHnKDQ78qxAIOLjLYMaJRoZAUL82F4Ug0P+Gml0JDYL30ZRh1EtP
-	u216+2LWpQ/Y66ue6MTLGTca6cwaAC8=
+	bh=ylx0DKkbgkBEYK5LQNrx/9RLueTvv5JlAQaHw+rq4+s=;
+	b=Po4aS9uclB5int4BR78fEPkRIr41A6IrgPixVHJxIozTHc3jOrP8l8ZDIzAsu6Htdm2M+a
+	G24T7+7WEkewF427EvFao8ohrtBfgPuHUgtByCOE64TiTDyBSdtYE0umJg8IyY4/8AMcmy
+	jXDtjP70A/3agyKF493cQDUDzaOqxOU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-436-xlginLL8PhGFxQ58y3LHSg-1; Tue, 04 May 2021 17:29:54 -0400
-X-MC-Unique: xlginLL8PhGFxQ58y3LHSg-1
+ us-mta-108-yFAYQPaGPJGX7spqOYG5vg-1; Tue, 04 May 2021 17:29:56 -0400
+X-MC-Unique: yFAYQPaGPJGX7spqOYG5vg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53DC818B9ECA;
-	Tue,  4 May 2021 21:29:53 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81821107ACE6;
+	Tue,  4 May 2021 21:29:55 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 921946090F;
-	Tue,  4 May 2021 21:29:52 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id BD3E66090F;
+	Tue,  4 May 2021 21:29:54 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH v5 mptcp-next 08/21] mptcp: add sk parameter for mptcp_parse_option
-Date: Tue,  4 May 2021 23:29:18 +0200
-Message-Id: <7c42a4e99aa9d299c917b5db6f21b8c7ae3ad134.1620162984.git.pabeni@redhat.com>
+Subject: [PATCH v5 mptcp-next 10/21] mptcp: receive checksum for MP_CAPABLE with data
+Date: Tue,  4 May 2021 23:29:20 +0200
+Message-Id: <4471b4f642af673652f129fe594103898ef60f1a.1620162984.git.pabeni@redhat.com>
 In-Reply-To: <cover.1620162984.git.pabeni@redhat.com>
 References: <cover.1620162984.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -48,121 +48,94 @@ Content-Type: text/plain; charset="US-ASCII"
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch added a new parameter name sk in mptcp_parse_option() and
-mptcp_get_options().
+This patch added a new member named csum in struct mptcp_options_received.
+
+When parsing the MP_CAPABLE with data, if the checksum is enabled,
+adjust the expected_opsize. If the receiving option length matches the
+length with the data checksum, get the checksum value and save it in
+mp_opt->csum. And in mptcp_incoming_options, pass it to mpext->csum.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c  | 10 ++++++----
- net/mptcp/protocol.h |  3 ++-
- net/mptcp/subflow.c  | 10 +++++-----
- 3 files changed, 13 insertions(+), 10 deletions(-)
+ net/mptcp/options.c  | 21 ++++++++++++++++-----
+ net/mptcp/protocol.h |  1 +
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ef951cb2aff3..8f768c517586 100644
+index b86777b2b505..abfcb68de165 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -20,7 +20,8 @@ static bool mptcp_cap_flag_sha256(u8 flags)
- 	return (flags & MPTCP_CAP_FLAG_MASK) == MPTCP_CAP_HMAC_SHA256;
- }
- 
--static void mptcp_parse_option(const struct sk_buff *skb,
-+static void mptcp_parse_option(const struct sock *sk,
-+			       const struct sk_buff *skb,
- 			       const unsigned char *ptr, int opsize,
- 			       struct mptcp_options_received *mp_opt)
- {
-@@ -324,7 +325,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 	}
- }
- 
--void mptcp_get_options(const struct sk_buff *skb,
-+void mptcp_get_options(const struct sock *sk,
-+		       const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt)
- {
- 	const struct tcphdr *th = tcp_hdr(skb);
-@@ -363,7 +365,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 			if (opsize > length)
- 				return;	/* don't parse partial options */
- 			if (opcode == TCPOPT_MPTCP)
--				mptcp_parse_option(skb, ptr, opsize, mp_opt);
-+				mptcp_parse_option(sk, skb, ptr, opsize, mp_opt);
- 			ptr += opsize - 2;
- 			length -= opsize;
+@@ -37,10 +37,13 @@ static void mptcp_parse_option(const struct sock *sk,
+ 	case MPTCPOPT_MP_CAPABLE:
+ 		/* strict size checking */
+ 		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)) {
+-			if (skb->len > tcp_hdr(skb)->doff << 2)
++			if (skb->len > tcp_hdr(skb)->doff << 2) {
+ 				expected_opsize = TCPOLEN_MPTCP_MPC_ACK_DATA;
+-			else
++				if (READ_ONCE(msk->csum_enabled))
++					expected_opsize += TCPOLEN_MPTCP_DSS_CHECKSUM;
++			} else {
+ 				expected_opsize = TCPOLEN_MPTCP_MPC_ACK;
++			}
+ 		} else {
+ 			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK)
+ 				expected_opsize = TCPOLEN_MPTCP_MPC_SYNACK;
+@@ -88,7 +91,7 @@ static void mptcp_parse_option(const struct sock *sk,
+ 			mp_opt->rcvr_key = get_unaligned_be64(ptr);
+ 			ptr += 8;
  		}
-@@ -1028,7 +1030,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		return;
- 	}
+-		if (opsize == TCPOLEN_MPTCP_MPC_ACK_DATA) {
++		if (opsize >= TCPOLEN_MPTCP_MPC_ACK_DATA) {
+ 			/* Section 3.1.:
+ 			 * "the data parameters in a MP_CAPABLE are semantically
+ 			 * equivalent to those in a DSS option and can be used
+@@ -100,9 +103,13 @@ static void mptcp_parse_option(const struct sock *sk,
+ 			mp_opt->data_len = get_unaligned_be16(ptr);
+ 			ptr += 2;
+ 		}
+-		pr_debug("MP_CAPABLE version=%x, flags=%x, optlen=%d sndr=%llu, rcvr=%llu len=%d",
++		if (opsize == TCPOLEN_MPTCP_MPC_ACK_DATA + TCPOLEN_MPTCP_DSS_CHECKSUM) {
++			mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
++			ptr += 2;
++		}
++		pr_debug("MP_CAPABLE version=%x, flags=%x, optlen=%d sndr=%llu, rcvr=%llu len=%d csum=%u",
+ 			 version, flags, opsize, mp_opt->sndr_key,
+-			 mp_opt->rcvr_key, mp_opt->data_len);
++			 mp_opt->rcvr_key, mp_opt->data_len, mp_opt->csum);
+ 		break;
  
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk, skb, &mp_opt);
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return;
+ 	case MPTCPOPT_MP_JOIN:
+@@ -346,6 +353,7 @@ void mptcp_get_options(const struct sock *sk,
+ 	mp_opt->mp_prio = 0;
+ 	mp_opt->reset = 0;
+ 	mp_opt->csum_reqd = 0;
++	mp_opt->csum = 0;
+ 
+ 	length = (th->doff * 4) - sizeof(struct tcphdr);
+ 	ptr = (const unsigned char *)(th + 1);
+@@ -1124,6 +1132,9 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 		}
+ 		mpext->data_len = mp_opt.data_len;
+ 		mpext->use_map = 1;
++
++		if (READ_ONCE(msk->csum_enabled))
++			mpext->csum = mp_opt.csum;
+ 	}
+ }
  
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 141317aa6c52..a1def094899c 100644
+index b1d360a498a0..50d7ed2a7d78 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -585,7 +585,8 @@ int __init mptcp_proto_v6_init(void);
- struct sock *mptcp_sk_clone(const struct sock *sk,
- 			    const struct mptcp_options_received *mp_opt,
- 			    struct request_sock *req);
--void mptcp_get_options(const struct sk_buff *skb,
-+void mptcp_get_options(const struct sock *sk,
-+		       const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt);
- 
- void mptcp_finish_connect(struct sock *sk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 2ca20f5ba29c..f12ea479a70f 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -151,7 +151,7 @@ static int subflow_check_req(struct request_sock *req,
- 		return -EINVAL;
- #endif
- 
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk_listener, skb, &mp_opt);
- 
- 	if (mp_opt.mp_capable) {
- 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
-@@ -248,7 +248,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
- 	int err;
- 
- 	subflow_init_req(req, sk_listener);
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk_listener, skb, &mp_opt);
- 
- 	if (mp_opt.mp_capable && mp_opt.mp_join)
- 		return -EINVAL;
-@@ -395,7 +395,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 	subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
- 	pr_debug("subflow=%p synack seq=%x", subflow, subflow->ssn_offset);
- 
--	mptcp_get_options(skb, &mp_opt);
-+	mptcp_get_options(sk, skb, &mp_opt);
- 	if (subflow->request_mptcp) {
- 		if (!mp_opt.mp_capable) {
- 			MPTCP_INC_STATS(sock_net(sk),
-@@ -640,7 +640,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			goto create_msk;
- 		}
- 
--		mptcp_get_options(skb, &mp_opt);
-+		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_capable) {
- 			fallback = true;
- 			goto create_child;
-@@ -651,7 +651,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		if (!new_msk)
- 			fallback = true;
- 	} else if (subflow_req->mp_join) {
--		mptcp_get_options(skb, &mp_opt);
-+		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
- 		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+@@ -124,6 +124,7 @@ struct mptcp_options_received {
+ 	u64	data_seq;
+ 	u32	subflow_seq;
+ 	u16	data_len;
++	__sum16	csum;
+ 	u16	mp_capable : 1,
+ 		mp_join : 1,
+ 		fastclose : 1,
 -- 
 2.26.2
 
