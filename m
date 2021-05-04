@@ -1,35 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16322F80
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74EA2F81
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1620164573;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Dsj4EB1vvobd0NOHpJMyD0suT4rRTRRnGVOkhJhW4wE=;
-	b=jU+wgABL0p/fnX4j15aHBouKjO3jvBS1L/LIR8/RP2gU93Px1gcrkOnUflMSnEdBzLjm/U
-	y6Mtq5+q+f2lGqifxq5IMZFZxceEdg8sTVOmoonNu72QP2PhxEwhN/m730slZqS28zCUcM
-	n11/Qx4M49wJS9Ze42M106BwL8hir0E=
+	bh=MvQWXLRjd7uUl9+Ukn3rnSg1SuoaDCf/3c94cZpa0GM=;
+	b=ipIcpfucx3HLyOwP0xD2i+Kp3UBtltrP+Pp7YO8Ptf9r732OztLSA0eo5a8+TyERdn3ovo
+	tsg6QNWsqcHzpWf/q9J9TF0DTe9qzGyfjt8CAzEKA8mDKxaDTVenr1IxiHrIKV9SgBYne4
+	QCz+X+5zKzuVcc7Z0zSFqS0jxacVc3k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-NKVoWCwIPiisW5bsp_JmkA-1; Tue, 04 May 2021 17:42:51 -0400
-X-MC-Unique: NKVoWCwIPiisW5bsp_JmkA-1
+ us-mta-18-y8VfkigGOjS9IYviey13-w-1; Tue, 04 May 2021 17:42:52 -0400
+X-MC-Unique: y8VfkigGOjS9IYviey13-w-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEDB41006C80
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:50 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6015835DE1
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:51 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C38195C22A
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:49 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3DE045C22A
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:51 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v6 mptcp-next 21/22] selftests: mptcp: enable checksum in mptcp_connect.sh
-Date: Tue,  4 May 2021 23:42:09 +0200
-Message-Id: <da4d4412aaae341d512f9e5bad1e452457e1178d.1620163861.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 22/22] selftests: mptcp: enable checksum in mptcp_join.sh
+Date: Tue,  4 May 2021 23:42:10 +0200
+Message-Id: <a1ff8cad71afbf850f6ccc0f364249b0466e03d2.1620163861.git.pabeni@redhat.com>
 In-Reply-To: <cover.1620163861.git.pabeni@redhat.com>
 References: <cover.1620163861.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -47,67 +47,231 @@ Content-Type: text/plain; charset="US-ASCII"
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch added a new argument "-C" for the mptcp_connect.sh script to
-set the sysctl checksum_enabled to 1 in ns1, ns2, ns3 and ns4 to enable
-the data checksum.
+This patch added a new argument "-C" for the mptcp_join.sh script to set
+the sysctl checksum_enabled to 1 in ns1 and ns2 to enable the data
+checksum.
+
+In chk_join_nr, check the counter of the mib for the data checksum.
+
+Also added a new argument "-S" for the mptcp_join.sh script to start the
+test cases that verify the checksum handshake:
+
+  * Sender and listener both have checksums off
+  * Sender and listener both have checksums on
+  * Sender checksums off, listener checksums on
+  * Sender checksums on, listener checksums off
+
+The output looks like this:
+
+ 01 checksum test 0 0                  sum[ ok ] - csum  [ ok ]
+ 02 checksum test 1 1                  sum[ ok ] - csum  [ ok ]
+ 03 checksum test 0 1                  sum[ ok ] - csum  [ ok ]
+ 04 checksum test 1 0                  sum[ ok ] - csum  [ ok ]
+ 05 no JOIN                            syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       sum[ ok ] - csum  [ ok ]
+ 06 single subflow, limited by client  syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       sum[ ok ] - csum  [ ok ]
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 107 +++++++++++++++++-
+ 1 file changed, 103 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 9236609731b1..96cec8c2d975 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -3,7 +3,7 @@
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index fd99485cf2a4..ef8341c851f7 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -12,6 +12,7 @@ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+ mptcp_connect=""
+ capture=0
++checksum=0
+ do_all_tests=1
  
- time_start=$(date +%s)
+ TEST_COUNT=0
+@@ -49,6 +50,9 @@ init()
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
++		if [ $checksum -eq 1 ]; then
++			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
++		fi
+ 	done
  
--optstring="S:R:d:e:l:r:h4cm:f:t"
-+optstring="S:R:d:e:l:r:h4cm:f:tC"
- ret=0
- sin=""
- sout=""
-@@ -22,6 +22,7 @@ sndbuf=0
- rcvbuf=0
- options_log=true
- do_tcp=0
-+checksum=false
- filesize=0
- 
- if [ $tc_loss -eq 100 ];then
-@@ -47,6 +48,7 @@ usage() {
- 	echo -e "\t-R: set rcvbuf value (default: use kernel default)"
- 	echo -e "\t-m: test mode (poll, sendfile; default: poll)"
- 	echo -e "\t-t: also run tests with TCP (use twice to non-fallback tcp)"
-+	echo -e "\t-C: enable the MPTCP data checksum"
+ 	#  ns1              ns2
+@@ -124,6 +128,17 @@ reset_with_add_addr_timeout()
+ 		-j DROP
  }
  
- while getopts "$optstring" option;do
-@@ -104,6 +106,9 @@ while getopts "$optstring" option;do
- 	"t")
- 		do_tcp=$((do_tcp+1))
- 		;;
-+	"C")
-+		checksum=true
-+		;;
- 	"?")
- 		usage $0
- 		exit 1
-@@ -200,6 +205,12 @@ ip -net "$ns4" route add default via dead:beef:3::2
- # use TCP syn cookies, even if no flooding was detected.
- ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
- 
-+if $checksum; then
-+	for i in "$ns1" "$ns2" "$ns3" "$ns4";do
-+		ip netns exec $i sysctl -q net.mptcp.checksum_enabled=1
-+	done
-+fi
++reset_with_checksum()
++{
++	local ns1_enable=$1
++	local ns2_enable=$2
 +
- set_ethtool_flags() {
- 	local ns="$1"
- 	local dev="$2"
++	reset
++
++	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=$ns1_enable
++	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=$ns2_enable
++}
++
+ ip -Version > /dev/null 2>&1
+ if [ $? -ne 0 ];then
+ 	echo "SKIP: Could not run test without ip tool"
+@@ -476,6 +491,45 @@ run_tests()
+ 	fi
+ }
+ 
++chk_csum_nr()
++{
++	local msg=${1:-""}
++	local count
++	local dump_stats
++
++	if [ ! -z "$msg" ]; then
++		printf "%02u" "$TEST_COUNT"
++	else
++		echo -n "  "
++	fi
++	printf " %-36s %s" "$msg" "sum"
++	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDSSCsumErr | awk '{print $2}'`
++	[ -z "$count" ] && count=0
++	if [ "$count" != 0 ]; then
++		echo "[fail] got $count data checksum error[s] expected 0"
++		ret=1
++		dump_stats=1
++	else
++		echo -n "[ ok ]"
++	fi
++	echo -n " - csum  "
++	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtDSSCsumErr | awk '{print $2}'`
++	[ -z "$count" ] && count=0
++	if [ "$count" != 0 ]; then
++		echo "[fail] got $count data checksum error[s] expected 0"
++		ret=1
++		dump_stats=1
++	else
++		echo "[ ok ]"
++	fi
++	if [ "${dump_stats}" = 1 ]; then
++		echo Server ns stats
++		ip netns exec $ns1 nstat -as | grep MPTcp
++		echo Client ns stats
++		ip netns exec $ns2 nstat -as | grep MPTcp
++	fi
++}
++
+ chk_join_nr()
+ {
+ 	local msg="$1"
+@@ -523,6 +577,9 @@ chk_join_nr()
+ 		echo Client ns stats
+ 		ip netns exec $ns2 nstat -as | grep MPTcp
+ 	fi
++	if [ $checksum -eq 1 ]; then
++		chk_csum_nr
++	fi
+ }
+ 
+ chk_add_nr()
+@@ -1374,6 +1431,37 @@ syncookies_tests()
+ 	chk_add_nr 1 1
+ }
+ 
++checksum_tests()
++{
++	# checksum test 0 0
++	reset_with_checksum 0 0
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_csum_nr "checksum test 0 0"
++
++	# checksum test 1 1
++	reset_with_checksum 1 1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_csum_nr "checksum test 1 1"
++
++	# checksum test 0 1
++	reset_with_checksum 0 1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_csum_nr "checksum test 0 1"
++
++	# checksum test 1 0
++	reset_with_checksum 1 0
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_csum_nr "checksum test 1 0"
++}
++
+ all_tests()
+ {
+ 	subflows_tests
+@@ -1387,6 +1475,7 @@ all_tests()
+ 	backup_tests
+ 	add_addr_ports_tests
+ 	syncookies_tests
++	checksum_tests
+ }
+ 
+ usage()
+@@ -1403,7 +1492,9 @@ usage()
+ 	echo "  -b backup_tests"
+ 	echo "  -p add_addr_ports_tests"
+ 	echo "  -k syncookies_tests"
++	echo "  -S checksum_tests"
+ 	echo "  -c capture pcap files"
++	echo "  -C enable data checksum"
+ 	echo "  -h help"
+ }
+ 
+@@ -1418,13 +1509,16 @@ make_file "$sin" "server" 1
+ trap cleanup EXIT
+ 
+ for arg in "$@"; do
+-	# check for "capture" arg before launching tests
++	# check for "capture/checksum" args before launching tests
+ 	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
+ 		capture=1
+ 	fi
++	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
++		checksum=1
++	fi
+ 
+-	# exception for the capture option, the rest means: a part of the tests
+-	if [ "${arg}" != "-c" ]; then
++	# exception for the capture/checksum options, the rest means: a part of the tests
++	if [ "${arg}" != "-c" ] && [ "${arg}" != "-C" ]; then
+ 		do_all_tests=0
+ 	fi
+ done
+@@ -1434,7 +1528,7 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
+ 
+-while getopts 'fsltra64bpkch' opt; do
++while getopts 'fsltra64bpkchCS' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+@@ -1469,8 +1563,13 @@ while getopts 'fsltra64bpkch' opt; do
+ 		k)
+ 			syncookies_tests
+ 			;;
++		S)
++			checksum_tests
++			;;
+ 		c)
+ 			;;
++		C)
++			;;
+ 		h | *)
+ 			usage
+ 			;;
 -- 
 2.26.2
 
