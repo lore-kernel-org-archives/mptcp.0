@@ -1,35 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ED970
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184DF2F80
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620164557;
+	s=mimecast20190719; t=1620164558;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TfumiE1l1jplV3JjLWBpasdZpys2o/OWWJNudLyhbto=;
-	b=T7tEYCl10pj8bqsrXM3JwN7ID2lu8HdVDRRw5dQC13lTXwSQmjjB58PQeC1uhqXJW+Z6p6
-	p9Dadvfe+efcU6M0+ldAktM1WxV0Cghlm+HzyRrAyqPIvIejB1TDCg1lgcLYvuFZwWAOL5
-	W7d1M9YobXkj43nBp4vc9PdFrOwHQNk=
+	bh=pMwgjYLZJ4WxNrUqVq64YM77NpkI/D+0sjgAlW5EOtk=;
+	b=Xo4kHzyLt3HykmpT8OqAdzI8w6AT9SluiDs5Oae8wnxCnrai1QrlyxN1ukZOERbbJzSljG
+	s/9p1iZPnLLC36CrGJydF6NTEt6ST0sUu15sGY6YnXdQiOAu74sUpSg/7zGEPT9YMmzNMK
+	Qn5tqCR7QPqTas1HT06GU+jBRG+6EP0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-WMuQ7b94Os--395JKR8TTA-1; Tue, 04 May 2021 17:42:35 -0400
-X-MC-Unique: WMuQ7b94Os--395JKR8TTA-1
+ us-mta-237-ywyLxNQOM2yUMWYVhSkn3w-1; Tue, 04 May 2021 17:42:36 -0400
+X-MC-Unique: ywyLxNQOM2yUMWYVhSkn3w-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D55865235
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:34 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEE8C189DF43
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:35 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9D2995C22A
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:33 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3624C5C22A
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:35 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v6 mptcp-next 06/22] Squash-to: "mptcp: send out checksum for MP_CAPABLE with data"
-Date: Tue,  4 May 2021 23:41:54 +0200
-Message-Id: <8850fb3700c38e61a548c65424c678df38ce380d.1620163861.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 07/22] mptcp: send out checksum for DSS
+Date: Tue,  4 May 2021 23:41:55 +0200
+Message-Id: <96baa1d7ec44553aebf095a7d5d5d615ee175952.1620163861.git.pabeni@redhat.com>
 In-Reply-To: <cover.1620163861.git.pabeni@redhat.com>
 References: <cover.1620163861.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -45,97 +45,54 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Finalize the csum value including the pseudo header and copy the
-checksum into the opts only after computing it.
+From: Geliang Tang <geliangtang@gmail.com>
 
-This is necessary after:
-Squash-to: "mptcp: generate the data checksum"
+In mptcp_write_options, If the checksum is enabled, adjust the option
+length and send out the data checksum with DSS suboption.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
-v4 -> v5:$
- - finalize csum in mptcp_write_options() this is necessary due to$
-   the incremental csum update in v5 revision$
----
- net/mptcp/options.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ net/mptcp/options.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 175635214ce6..d18a686aab7d 100644
+index d18a686aab7d..8ff840bca481 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -440,7 +440,6 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	struct mptcp_ext *mpext;
- 	unsigned int data_len;
--	__sum16 csum;
- 	u8 len;
+@@ -549,6 +549,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+ 	bool ret = false;
+ 	u64 ack_seq;
  
- 	/* When skb is not available, we better over-estimate the emitted
-@@ -461,7 +460,6 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
- 	if (subflow->mp_capable) {
- 		mpext = mptcp_get_ext(skb);
- 		data_len = mpext ? mpext->data_len : 0;
--		csum = mpext ? mpext->csum : 0;
++	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 	mpext = skb ? mptcp_get_ext(skb) : NULL;
  
- 		/* we will check ext_copy.data_len in mptcp_write_options() to
- 		 * discriminate between TCPOLEN_MPTCP_MPC_ACK_DATA and
-@@ -472,8 +470,6 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
- 		opts->sndr_key = subflow->local_key;
- 		opts->rcvr_key = subflow->remote_key;
- 		opts->csum_reqd = READ_ONCE(msk->csum_enabled);
--		if (opts->csum_reqd)
--			opts->ext_copy.csum = csum;
+ 	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
+@@ -1350,6 +1351,9 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 			flags |= MPTCP_DSS_HAS_MAP | MPTCP_DSS_DSN64;
+ 			if (mpext->data_fin)
+ 				flags |= MPTCP_DSS_DATA_FIN;
++
++			if (opts->csum_reqd)
++				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
+ 		}
  
- 		/* Section 3.1.
- 		 * The MP_CAPABLE option is carried on the SYN, SYN/ACK, and ACK
-@@ -482,8 +478,10 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
- 		 */
- 		if (data_len > 0) {
- 			len = TCPOLEN_MPTCP_MPC_ACK_DATA;
--			if (opts->csum_reqd)
+ 		*ptr++ = mptcp_option(MPTCPOPT_DSS, len, 0, flags);
+@@ -1369,8 +1373,13 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 			ptr += 2;
+ 			put_unaligned_be32(mpext->subflow_seq, ptr);
+ 			ptr += 1;
+-			put_unaligned_be32(mpext->data_len << 16 |
+-					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
 +			if (opts->csum_reqd) {
-+				opts->ext_copy.csum = mpext->csum;
- 				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
++				put_unaligned_be32(mpext->data_len << 16 |
++						   (__force u16)mpext->csum, ptr);
++			} else {
++				put_unaligned_be32(mpext->data_len << 16 |
++						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
 +			}
- 			*size = ALIGN(len, 4);
- 		} else {
- 			*size = TCPOLEN_MPTCP_MPC_ACK;
-@@ -1135,6 +1133,25 @@ static void mptcp_set_rwin(const struct tcp_sock *tp)
- 		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
- }
+ 		}
+ 	}
  
-+static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
-+{
-+	struct csum_pseudo_header header;
-+	__wsum csum;
-+
-+	/* cfr RFC 8684 3.3.1.:
-+	 * the data sequence number used in the pseudo-header is
-+	 * always the 64-bit value, irrespective of what length is used in the
-+	 * DSS option itself.
-+	 */
-+	header.data_seq = cpu_to_be64(mpext->data_seq);
-+	header.subflow_seq = htonl(mpext->subflow_seq);
-+	header.data_len = htons(mpext->data_len);
-+	header.csum = 0;
-+
-+	csum = csum_partial(&header, sizeof(header), ~csum_unfold(mpext->csum));
-+	return (__force u16)csum_fold(csum);
-+}
-+
- void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 			 struct mptcp_out_options *opts)
- {
-@@ -1177,7 +1194,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 
- 		if (opts->csum_reqd) {
- 			put_unaligned_be32(opts->ext_copy.data_len << 16 |
--					   (__force u16)opts->ext_copy.csum, ptr);
-+					   mptcp_make_csum(&opts->ext_copy), ptr);
- 		} else {
- 			put_unaligned_be32(opts->ext_copy.data_len << 16 |
- 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
 -- 
 2.26.2
 
