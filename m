@@ -1,35 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4AF70
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E76F2F80
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620164552;
+	s=mimecast20190719; t=1620164553;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CIruEmVQ2HncBCBe0dQIReFaLjwuI4FEAG/PR4CG0I4=;
-	b=BgAy/iSyBjPVc1T997HiYqw1sqJM1ScrMfGdR6JzFpNBVRClDrUW0JiUOELmDEHkEwtYBD
-	mqT7MxQyhGL8egtv656DKPacxLS/28Miyrd1MmJ0mUbhrpeUCgIzEdav2yXSdSvBbZHMc7
-	CbELogaUGpTpZDPEMXTCpjEUglNXbXs=
+	bh=dOWtWLmPQ8xa2dUGpJuNX1d7KZsuF0IXiJ6EAyLCgAA=;
+	b=QZjrloepRaAH4drrmxTjVUHicPoB3IiRkzjRibBGd0DMWPYNfM+L6Tf5edTtxJov0hy4Jz
+	VvHEF33Myu8hkV4+d7m2yxRDl7TF9CJPpALczNiWDavB8eAi8Ibh29psuY0CMBoNdr7iwp
+	N8TY2il0T16yb0xwG+apNKyY4GxQ26U=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-Zy-Qy_v-PdKhW9NC9X5pzQ-1; Tue, 04 May 2021 17:42:31 -0400
-X-MC-Unique: Zy-Qy_v-PdKhW9NC9X5pzQ-1
+ us-mta-455-ZnlzHNrYN8e1b90vgXK4qQ-1; Tue, 04 May 2021 17:42:32 -0400
+X-MC-Unique: ZnlzHNrYN8e1b90vgXK4qQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D3ED1006C81
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:30 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5632E801817
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:31 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D8E1D5C22A
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:29 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C1ADE5C22A
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:30 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v6 mptcp-next 02/22] mptcp: generate the data checksum
-Date: Tue,  4 May 2021 23:41:50 +0200
-Message-Id: <3084d7d24b452d871d26309b89b32af449c573f1.1620163861.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 03/22] Squash-to: "mptcp: generate the data checksum"
+Date: Tue,  4 May 2021 23:41:51 +0200
+Message-Id: <6525941e117435c08f154b62bdfd10197169d36e.1620163861.git.pabeni@redhat.com>
 In-Reply-To: <cover.1620163861.git.pabeni@redhat.com>
 References: <cover.1620163861.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -45,89 +45,110 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-From: Geliang Tang <geliangtang@gmail.com>
+We must generate the csum for zero window probe, too.
 
-This patch added a new member named csum in struct mptcp_ext, implemented
-a new function named mptcp_generate_data_checksum().
+Do the csum update incrementally, to avoid multiple csum computation
+when the data is appended to existing skb.
 
-Generate the data checksum in mptcp_sendmsg_frag, save it in mpext->csum.
+Note that in a later patch we will skip unneeded csum related
+operation. Changes not included here to keep the delta small.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- include/net/mptcp.h  |  1 +
- net/mptcp/protocol.c | 21 +++++++++++++++++++++
- net/mptcp/protocol.h |  7 +++++++
- 3 files changed, 29 insertions(+)
+v4 -> v5:
+ - build the csum incrementally
+ - pseudo hdr fields are in NBO/BE
+ - must use len in NBO when updating the csum for data fin
+---
+ net/mptcp/options.c  |  3 +++
+ net/mptcp/protocol.c | 29 ++++++++++++-----------------
+ net/mptcp/protocol.h |  6 +++---
+ 3 files changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 83f23774b908..23bbd439e115 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -23,6 +23,7 @@ struct mptcp_ext {
- 	u64		data_seq;
- 	u32		subflow_seq;
- 	u16		data_len;
-+	__sum16		csum;
- 	u8		use_map:1,
- 			dsn64:1,
- 			data_fin:1,
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 99fc21406168..beac01f58cba 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -519,6 +519,9 @@ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
+ 		 */
+ 		ext->data_fin = 1;
+ 		ext->data_len++;
++
++		/* the pseudo header has changed, update the csum accordingly */
++		csum_replace2(&ext->csum, htons(ext->data_len - 1), htons(ext->data_len));
+ 	}
+ }
+ 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4cf8965fae4a..2a094d35a099 100644
+index 2a094d35a099..f2874afca3ce 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1279,6 +1279,25 @@ static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
+@@ -1279,23 +1279,16 @@ static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
  	return __mptcp_alloc_tx_skb(sk, ssk, sk->sk_allocation);
  }
  
-+static __sum16 mptcp_generate_data_checksum(struct sk_buff *skb)
-+{
-+	struct csum_pseudo_header header;
-+	struct mptcp_ext *mpext;
-+	__wsum csum;
-+
-+	mpext = mptcp_get_ext(skb);
-+
-+	header.data_seq = mpext->data_seq;
-+	header.subflow_seq = mpext->subflow_seq;
-+	header.data_len = mpext->data_len;
-+	header.csum = 0;
-+
-+	csum = skb_checksum(skb, 0, skb->len, 0);
-+	csum = csum_partial(&header, sizeof(header), csum);
-+
-+	return csum_fold(csum);
-+}
-+
+-static __sum16 mptcp_generate_data_checksum(struct sk_buff *skb)
++/* note: this always recompute the csum on the whole skb, even
++ * if we just appended a single frag. More status info needed
++ */
++static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
+ {
+-	struct csum_pseudo_header header;
+-	struct mptcp_ext *mpext;
+-	__wsum csum;
+-
+-	mpext = mptcp_get_ext(skb);
+-
+-	header.data_seq = mpext->data_seq;
+-	header.subflow_seq = mpext->subflow_seq;
+-	header.data_len = mpext->data_len;
+-	header.csum = 0;
++	struct mptcp_ext *mpext = mptcp_get_ext(skb);
++	__wsum csum = csum_unfold(mpext->csum);
++	int offset = skb->len - added;
+ 
+-	csum = skb_checksum(skb, 0, skb->len, 0);
+-	csum = csum_partial(&header, sizeof(header), csum);
+-
+-	return csum_fold(csum);
++	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
+ }
+ 
  static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1377,6 +1396,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+@@ -1392,12 +1385,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	if (zero_window_probe) {
+ 		mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
+ 		mpext->frozen = 1;
+-		ret = 0;
++		if (READ_ONCE(msk->csum_enabled))
++			mptcp_update_data_checksum(tail, ret);
  		tcp_push_pending_frames(ssk);
++		return 0;
  	}
  out:
-+	if (READ_ONCE(msk->csum_enabled))
-+		mpext->csum = mptcp_generate_data_checksum(tail);
+ 	if (READ_ONCE(msk->csum_enabled))
+-		mpext->csum = mptcp_generate_data_checksum(tail);
++		mptcp_update_data_checksum(tail, ret);
  	mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
  	return ret;
  }
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6cbbe7403402..63a1651f9069 100644
+index 63a1651f9069..236782702bfb 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -335,6 +335,13 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
- 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+@@ -336,9 +336,9 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
  }
  
-+struct csum_pseudo_header {
-+	u64 data_seq;
-+	u32 subflow_seq;
-+	u16 data_len;
-+	__sum16 csum;
-+};
-+
- struct mptcp_subflow_request_sock {
- 	struct	tcp_request_sock sk;
- 	u16	mp_capable : 1,
+ struct csum_pseudo_header {
+-	u64 data_seq;
+-	u32 subflow_seq;
+-	u16 data_len;
++	__be64 data_seq;
++	__be32 subflow_seq;
++	__be16 data_len;
+ 	__sum16 csum;
+ };
+ 
 -- 
 2.26.2
 
