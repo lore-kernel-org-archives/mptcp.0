@@ -1,35 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A4670
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4AF70
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620164551;
+	s=mimecast20190719; t=1620164552;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lHhUsrqUrEaohv1rBlsWcOdCEXgAeN4tkTrBga6/MYA=;
-	b=cmdIYaATCJxYq0ejfJ8VZXjukeYxCnKssaCNIfu/rWhgl18eezQqAzR55KUuzaMocqWuWe
-	hOEmq4i5HRU0zanLvSByKc2RAJjDQ6nSAGsqf4zqrHLXBoh4YiXF2fE1ZtTTsrCm+Ucm02
-	+gCfBYtrUNG6AadZwl+DHhXMPmC+I3g=
+	bh=CIruEmVQ2HncBCBe0dQIReFaLjwuI4FEAG/PR4CG0I4=;
+	b=BgAy/iSyBjPVc1T997HiYqw1sqJM1ScrMfGdR6JzFpNBVRClDrUW0JiUOELmDEHkEwtYBD
+	mqT7MxQyhGL8egtv656DKPacxLS/28Miyrd1MmJ0mUbhrpeUCgIzEdav2yXSdSvBbZHMc7
+	CbELogaUGpTpZDPEMXTCpjEUglNXbXs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-464-FsDhjSheOhyfsaI_aZFHyw-1; Tue, 04 May 2021 17:42:29 -0400
-X-MC-Unique: FsDhjSheOhyfsaI_aZFHyw-1
+ us-mta-431-Zy-Qy_v-PdKhW9NC9X5pzQ-1; Tue, 04 May 2021 17:42:31 -0400
+X-MC-Unique: Zy-Qy_v-PdKhW9NC9X5pzQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D993189DF41
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:28 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D3ED1006C81
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:30 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E890C5C22A
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:27 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D8E1D5C22A
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:29 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v6 mptcp-next 01/22] mptcp: add csum_enabled in mptcp_sock
-Date: Tue,  4 May 2021 23:41:49 +0200
-Message-Id: <40407808177db33b02224560589e61fdaab7d4a4.1620163861.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 02/22] mptcp: generate the data checksum
+Date: Tue,  4 May 2021 23:41:50 +0200
+Message-Id: <3084d7d24b452d871d26309b89b32af449c573f1.1620163861.git.pabeni@redhat.com>
 In-Reply-To: <cover.1620163861.git.pabeni@redhat.com>
 References: <cover.1620163861.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -47,76 +47,87 @@ Content-Type: text/plain; charset="US-ASCII"
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch added a new member named csum_enabled in struct mptcp_sock,
-used a dummy mptcp_is_checksum_enabled() helper to initialize it.
+This patch added a new member named csum in struct mptcp_ext, implemented
+a new function named mptcp_generate_data_checksum().
 
-Also added a new member named mptcpi_csum_enabled in struct mptcp_info
-to expose the csum_enabled flag.
+Generate the data checksum in mptcp_sendmsg_frag, save it in mpext->csum.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- include/uapi/linux/mptcp.h | 1 +
- net/mptcp/mptcp_diag.c     | 1 +
- net/mptcp/protocol.c       | 1 +
- net/mptcp/protocol.h       | 2 ++
- 4 files changed, 5 insertions(+)
+ include/net/mptcp.h  |  1 +
+ net/mptcp/protocol.c | 21 +++++++++++++++++++++
+ net/mptcp/protocol.h |  7 +++++++
+ 3 files changed, 29 insertions(+)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 8eb3c0844bff..7b05f7102321 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -105,6 +105,7 @@ struct mptcp_info {
- 	__u64	mptcpi_rcv_nxt;
- 	__u8	mptcpi_local_addr_used;
- 	__u8	mptcpi_local_addr_max;
-+	__u8	mptcpi_csum_enabled;
- };
- 
- /*
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index f16d9b5ee978..8f88ddeab6a2 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -144,6 +144,7 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
- 	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
- 	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
- 	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
-+	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
- 	unlock_sock_fast(sk, slow);
- }
- 
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 83f23774b908..23bbd439e115 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -23,6 +23,7 @@ struct mptcp_ext {
+ 	u64		data_seq;
+ 	u32		subflow_seq;
+ 	u16		data_len;
++	__sum16		csum;
+ 	u8		use_map:1,
+ 			dsn64:1,
+ 			data_fin:1,
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index aec8e77b18e4..4cf8965fae4a 100644
+index 4cf8965fae4a..2a094d35a099 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2411,6 +2411,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	msk->ack_hint = NULL;
- 	msk->first = NULL;
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-+	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
+@@ -1279,6 +1279,25 @@ static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
+ 	return __mptcp_alloc_tx_skb(sk, ssk, sk->sk_allocation);
+ }
  
- 	mptcp_pm_data_init(msk);
- 
++static __sum16 mptcp_generate_data_checksum(struct sk_buff *skb)
++{
++	struct csum_pseudo_header header;
++	struct mptcp_ext *mpext;
++	__wsum csum;
++
++	mpext = mptcp_get_ext(skb);
++
++	header.data_seq = mpext->data_seq;
++	header.subflow_seq = mpext->subflow_seq;
++	header.data_len = mpext->data_len;
++	header.csum = 0;
++
++	csum = skb_checksum(skb, 0, skb->len, 0);
++	csum = csum_partial(&header, sizeof(header), csum);
++
++	return csum_fold(csum);
++}
++
+ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 			      struct mptcp_data_frag *dfrag,
+ 			      struct mptcp_sendmsg_info *info)
+@@ -1377,6 +1396,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		tcp_push_pending_frames(ssk);
+ 	}
+ out:
++	if (READ_ONCE(msk->csum_enabled))
++		mpext->csum = mptcp_generate_data_checksum(tail);
+ 	mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
+ 	return ret;
+ }
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d230a75af631..6cbbe7403402 100644
+index 6cbbe7403402..63a1651f9069 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -234,6 +234,7 @@ struct mptcp_sock {
- 	bool		snd_data_fin_enable;
- 	bool		rcv_fastclose;
- 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
-+	bool		csum_enabled;
- 	spinlock_t	join_list_lock;
- 	struct sock	*ack_hint;
- 	struct work_struct work;
-@@ -524,6 +525,7 @@ static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *su
+@@ -335,6 +335,13 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+ 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+ }
  
- int mptcp_is_enabled(struct net *net);
- unsigned int mptcp_get_add_addr_timeout(struct net *net);
-+static inline int mptcp_is_checksum_enabled(struct net *net) { return false; }
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool mptcp_subflow_data_available(struct sock *sk);
++struct csum_pseudo_header {
++	u64 data_seq;
++	u32 subflow_seq;
++	u16 data_len;
++	__sum16 csum;
++};
++
+ struct mptcp_subflow_request_sock {
+ 	struct	tcp_request_sock sk;
+ 	u16	mp_capable : 1,
 -- 
 2.26.2
 
