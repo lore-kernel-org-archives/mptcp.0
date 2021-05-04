@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6982F81
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A84C2F80
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620163801;
+	s=mimecast20190719; t=1620163803;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aM2YUnQhlQhoXz+K41dGAwMiKx8H8CsDQNEIfIO5w3A=;
-	b=gGvZqa71v8wCfr8ABM7lZ5+9Ybtp+TgjqpC4eIeKQ3ryjtucaWO8Vu6GZ47LxGOxFUMW7j
-	CT1Vm/K4KEbSKByCsXgCEH8nxSlzBPhX+JN+QL3KZDEy38lhsPfGz3ICQMvV+9PcLcTHyg
-	LZjNiLU0J5aKNloD+s7t6Kih7ZZthRg=
+	bh=S7xYSRVOluDLzjshsmvEfG3WTMPV/xZB+aq/BQVXuBM=;
+	b=Rs2PS31dV7SsyEhhFBmdXGxph15KrWlYD3xJmrKXZi2fWNiVc8WYhuZ3L9e00p6JFisQcs
+	A66ebxdxgO/Y/ZY+JxVrlkgpsbQWwNGj+A+Rm9G+APokMMEj8dQKSytd2jLXDn5JUXwV/J
+	WF4fx7yHu/28TY1ndUYu5ow5ZI3UyiA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-195-vt9VBblUM-aufAGtq4iOgQ-1; Tue, 04 May 2021 17:30:00 -0400
-X-MC-Unique: vt9VBblUM-aufAGtq4iOgQ-1
+ us-mta-427-Rkmi3gDvPX6VbPQoT_wmDQ-1; Tue, 04 May 2021 17:29:55 -0400
+X-MC-Unique: Rkmi3gDvPX6VbPQoT_wmDQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 084D11A8A60;
-	Tue,  4 May 2021 21:29:59 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A1CB107ACCA;
+	Tue,  4 May 2021 21:29:54 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3C2B16090F;
-	Tue,  4 May 2021 21:29:58 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A8CB96090F;
+	Tue,  4 May 2021 21:29:53 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH v5 mptcp-next 13/21] Squash-to: "mptcp: receive checksum for DSS"
-Date: Tue,  4 May 2021 23:29:23 +0200
-Message-Id: <c7f543b7f9281021a56929fdb0e96e69b862ad5f.1620162984.git.pabeni@redhat.com>
+Subject: [PATCH v5 mptcp-next 09/21] mptcp: add csum_reqd in mptcp_options_received
+Date: Tue,  4 May 2021 23:29:19 +0200
+Message-Id: <fcfa7d198150907013ec51da9174c0a688307e64.1620162984.git.pabeni@redhat.com>
 In-Reply-To: <cover.1620162984.git.pabeni@redhat.com>
 References: <cover.1620162984.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -46,67 +46,96 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Similar to the previous squash to patch, always parse
-the DSS option regardless of csum presence.
+From: Geliang Tang <geliangtang@gmail.com>
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+This patch added a new flag csum_reqd in struct mptcp_options_received, if
+the flag MPTCP_CAP_CHECKSUM_REQD is set in the receiving MP_CAPABLE
+suboption, set this flag.
+
+In mptcp_sk_clone and subflow_finish_connect, if the csum_reqd flag is set,
+enable the msk->csum_enabled flag.
+
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ net/mptcp/options.c  | 8 +++++---
+ net/mptcp/protocol.c | 2 ++
+ net/mptcp/protocol.h | 1 +
+ net/mptcp/subflow.c  | 2 ++
+ 4 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 3f43d48ee5bc..310c3887be91 100644
+index 8f768c517586..b86777b2b505 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -165,7 +165,6 @@ static void mptcp_parse_option(const struct sock *sk,
- 		mp_opt->use_map = (flags & MPTCP_DSS_HAS_MAP) != 0;
- 		mp_opt->ack64 = (flags & MPTCP_DSS_ACK64) != 0;
- 		mp_opt->use_ack = (flags & MPTCP_DSS_HAS_ACK);
--		mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
- 
- 		pr_debug("data_fin=%d dsn64=%d use_map=%d ack64=%d use_ack=%d",
- 			 mp_opt->data_fin, mp_opt->dsn64,
-@@ -186,17 +185,13 @@ static void mptcp_parse_option(const struct sock *sk,
- 				expected_opsize += TCPOLEN_MPTCP_DSS_MAP64;
- 			else
- 				expected_opsize += TCPOLEN_MPTCP_DSS_MAP32;
--
--			if (mp_opt->csum_reqd)
--				expected_opsize += TCPOLEN_MPTCP_DSS_CHECKSUM;
- 		}
- 
--		/* RFC 6824, Section 3.3:
--		 * If a checksum is present, but its use had
--		 * not been negotiated in the MP_CAPABLE handshake,
--		 * the checksum field MUST be ignored.
-+		/* Always parse any csum presence combination, we will enforce
-+		 * RFC 8684 Section 3.3.0 checks later in subflow_data_ready
+@@ -25,6 +25,8 @@ static void mptcp_parse_option(const struct sock *sk,
+ 			       const unsigned char *ptr, int opsize,
+ 			       struct mptcp_options_received *mp_opt)
+ {
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+ 	u8 subtype = *ptr >> 4;
+ 	int expected_opsize;
+ 	u8 version;
+@@ -72,11 +74,10 @@ static void mptcp_parse_option(const struct sock *sk,
+ 		 * "If a checksum is not present when its use has been
+ 		 * negotiated, the receiver MUST close the subflow with a RST as
+ 		 * it is considered broken."
+-		 *
+-		 * We don't implement DSS checksum - fall back to TCP.
  		 */
--		if (opsize != expected_opsize)
-+		if (opsize != expected_opsize &&
-+		    opsize != expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM)
- 			break;
++		mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+-			break;
++			mp_opt->csum_reqd = 1;
  
- 		mp_opt->dss = 1;
-@@ -228,14 +223,15 @@ static void mptcp_parse_option(const struct sock *sk,
- 			mp_opt->data_len = get_unaligned_be16(ptr);
- 			ptr += 2;
+ 		mp_opt->mp_capable = 1;
+ 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
+@@ -344,6 +345,7 @@ void mptcp_get_options(const struct sock *sk,
+ 	mp_opt->dss = 0;
+ 	mp_opt->mp_prio = 0;
+ 	mp_opt->reset = 0;
++	mp_opt->csum_reqd = 0;
  
--			if (mp_opt->csum_reqd) {
-+			if (opsize == expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
-+				mp_opt->csum_reqd = 1;
- 				mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
- 				ptr += 2;
- 			}
+ 	length = (th->doff * 4) - sizeof(struct tcphdr);
+ 	ptr = (const unsigned char *)(th + 1);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f2874afca3ce..4c79b0518e81 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2764,6 +2764,8 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 	msk->token = subflow_req->token;
+ 	msk->subflow = NULL;
+ 	WRITE_ONCE(msk->fully_established, false);
++	if (mp_opt->csum_reqd)
++		WRITE_ONCE(msk->csum_enabled, true);
  
--			pr_debug("data_seq=%llu subflow_seq=%u data_len=%u csum=%u",
-+			pr_debug("data_seq=%llu subflow_seq=%u data_len=%u csum=%d:%u",
- 				 mp_opt->data_seq, mp_opt->subflow_seq,
--				 mp_opt->data_len, mp_opt->csum);
-+				 mp_opt->data_len, mp_opt->csum_reqd, mp_opt->csum);
+ 	msk->write_seq = subflow_req->idsn + 1;
+ 	msk->snd_nxt = msk->write_seq;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a1def094899c..b1d360a498a0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -133,6 +133,7 @@ struct mptcp_options_received {
+ 		rm_addr : 1,
+ 		mp_prio : 1,
+ 		echo : 1,
++		csum_reqd : 1,
+ 		backup : 1;
+ 	u32	token;
+ 	u32	nonce;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index f12ea479a70f..f8732e11a392 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -405,6 +405,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 			goto fallback;
  		}
  
- 		break;
++		if (mp_opt.csum_reqd)
++			WRITE_ONCE(mptcp_sk(parent)->csum_enabled, true);
+ 		subflow->mp_capable = 1;
+ 		subflow->can_ack = 1;
+ 		subflow->remote_key = mp_opt.sndr_key;
 -- 
 2.26.2
 
