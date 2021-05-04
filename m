@@ -1,34 +1,37 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C7770
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A4670
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620164549;
+	s=mimecast20190719; t=1620164551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vXkc8RlYBZUY1HuJDFsQZ1eCwrMPaZKmXN8+cf1dejc=;
-	b=SDNymJZTW93TUnHUzAXmHR6hPKNywwOjPbkuMXv8v2SFXktqQo551ZPBCrR1APB1MzUOJ4
-	LIck2aOn71bPDj+H68suGwp2fLk4sKdVn+OAmfp9Lr4N1r0+N2+bgNuGcLwP9oW20/p/3N
-	rHBsrOyuKXW0vQD3KVFIrB1H7dN8lcw=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lHhUsrqUrEaohv1rBlsWcOdCEXgAeN4tkTrBga6/MYA=;
+	b=cmdIYaATCJxYq0ejfJ8VZXjukeYxCnKssaCNIfu/rWhgl18eezQqAzR55KUuzaMocqWuWe
+	hOEmq4i5HRU0zanLvSByKc2RAJjDQ6nSAGsqf4zqrHLXBoh4YiXF2fE1ZtTTsrCm+Ucm02
+	+gCfBYtrUNG6AadZwl+DHhXMPmC+I3g=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-ZH91DAGNN6WlvNJdJBm_PA-1; Tue, 04 May 2021 17:42:28 -0400
-X-MC-Unique: ZH91DAGNN6WlvNJdJBm_PA-1
+ us-mta-464-FsDhjSheOhyfsaI_aZFHyw-1; Tue, 04 May 2021 17:42:29 -0400
+X-MC-Unique: FsDhjSheOhyfsaI_aZFHyw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94654801817
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:27 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D993189DF41
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:28 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0CD725C3E0
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:26 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E890C5C22A
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:27 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v6 mptcp-next 00/22] mptcp: data checksum support
-Date: Tue,  4 May 2021 23:41:48 +0200
-Message-Id: <cover.1620163861.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 01/22] mptcp: add csum_enabled in mptcp_sock
+Date: Tue,  4 May 2021 23:41:49 +0200
+Message-Id: <40407808177db33b02224560589e61fdaab7d4a4.1620163861.git.pabeni@redhat.com>
+In-Reply-To: <cover.1620163861.git.pabeni@redhat.com>
+References: <cover.1620163861.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -42,74 +45,78 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Changes from v5:
- - none really, added patch lost in previous iteration due to PEBKAC
+From: Geliang Tang <geliangtang@gmail.com>
 
-Changes from v4:
- - cope with odd-aligned csum blocks
- - avoid re-adding multiple times the same skb bits on tx
- - fix pseudo header generation (must be in NBO)
+This patch added a new member named csum_enabled in struct mptcp_sock,
+used a dummy mptcp_is_checksum_enabled() helper to initialize it.
 
-Changes from v3:
- - included Geliang's feedback
- - hopefully fixed wrong csum computation in the rx path
-   for DSS+data_fin 
+Also added a new member named mptcpi_csum_enabled in struct mptcp_info
+to expose the csum_enabled flag.
 
-Changes from v2:
- - implement RFC behavior WRT csum failure and csum mismatch
- - cope with zero win probe and re-injection
- - fix csum computation for DSS with data_fin flag set
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ include/uapi/linux/mptcp.h | 1 +
+ net/mptcp/mptcp_diag.c     | 1 +
+ net/mptcp/protocol.c       | 1 +
+ net/mptcp/protocol.h       | 2 ++
+ 4 files changed, 5 insertions(+)
 
-Only some Squash-to patches has been changes WRT the previous
-iteration.
-
-There is still at least a ough edge:
-- the csum computation in the tx path is very suboptimal.
-
-Anyhow, I propose to address the above with additional squash-to patches
-to avoid complex/extra long review cycles.
-
-Geliang Tang (14):
-  mptcp: add csum_enabled in mptcp_sock
-  mptcp: generate the data checksum
-  mptcp: add csum_reqd in mptcp_out_options
-  mptcp: send out checksum for MP_CAPABLE with data
-  mptcp: send out checksum for DSS
-  mptcp: add sk parameter for mptcp_parse_option
-  mptcp: add csum_reqd in mptcp_options_received
-  mptcp: receive checksum for MP_CAPABLE with data
-  mptcp: receive checksum for DSS
-  mptcp: validate the data checksum
-  mptcp: add the mib for data checksum
-  mptcp: add a new sysctl checksum_enabled
-  selftests: mptcp: enable checksum in mptcp_connect.sh
-  selftests: mptcp: enable checksum in mptcp_join.sh
-
-Paolo Abeni (8):
-  Squash-to: "mptcp: generate the data checksum"
-  Squash-to: "mptcp: send out checksum for MP_CAPABLE with data"
-  Squash-to "mptcp: send out checksum for DSS"
-  Squash-to: "mptcp: receive checksum for MP_CAPABLE with data"
-  Squash-to: "mptcp: receive checksum for DSS"
-  Squash-to: mptcp: validate the data checksum
-  mptcp: cleanup error path in subflow_check_data_avail()
-  mptcp: tune re-injections for csum enabled mode.
-
- Documentation/networking/mptcp-sysctl.rst     |   8 +
- include/net/mptcp.h                           |   7 +-
- include/uapi/linux/mptcp.h                    |   1 +
- net/mptcp/ctrl.c                              |  14 ++
- net/mptcp/mib.c                               |   1 +
- net/mptcp/mib.h                               |   1 +
- net/mptcp/mptcp_diag.c                        |   1 +
- net/mptcp/options.c                           | 165 +++++++++++++-----
- net/mptcp/protocol.c                          |  29 ++-
- net/mptcp/protocol.h                          |  23 ++-
- net/mptcp/subflow.c                           | 146 +++++++++++++---
- .../selftests/net/mptcp/mptcp_connect.sh      |  13 +-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 107 +++++++++++-
- 13 files changed, 440 insertions(+), 76 deletions(-)
-
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 8eb3c0844bff..7b05f7102321 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -105,6 +105,7 @@ struct mptcp_info {
+ 	__u64	mptcpi_rcv_nxt;
+ 	__u8	mptcpi_local_addr_used;
+ 	__u8	mptcpi_local_addr_max;
++	__u8	mptcpi_csum_enabled;
+ };
+ 
+ /*
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index f16d9b5ee978..8f88ddeab6a2 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -144,6 +144,7 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+ 	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
+ 	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
+ 	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
++	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+ 	unlock_sock_fast(sk, slow);
+ }
+ 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index aec8e77b18e4..4cf8965fae4a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2411,6 +2411,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->ack_hint = NULL;
+ 	msk->first = NULL;
+ 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
++	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
+ 
+ 	mptcp_pm_data_init(msk);
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d230a75af631..6cbbe7403402 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -234,6 +234,7 @@ struct mptcp_sock {
+ 	bool		snd_data_fin_enable;
+ 	bool		rcv_fastclose;
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
++	bool		csum_enabled;
+ 	spinlock_t	join_list_lock;
+ 	struct sock	*ack_hint;
+ 	struct work_struct work;
+@@ -524,6 +525,7 @@ static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *su
+ 
+ int mptcp_is_enabled(struct net *net);
+ unsigned int mptcp_get_add_addr_timeout(struct net *net);
++static inline int mptcp_is_checksum_enabled(struct net *net) { return false; }
+ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+ 				     struct mptcp_options_received *mp_opt);
+ bool mptcp_subflow_data_available(struct sock *sk);
 -- 
 2.26.2
 
