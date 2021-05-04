@@ -1,35 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344BF2F82
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6222F80
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620164565;
+	s=mimecast20190719; t=1620164566;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aM2YUnQhlQhoXz+K41dGAwMiKx8H8CsDQNEIfIO5w3A=;
-	b=a5mbpt1ygBViY6qJI7VvMThRvskHWkkWuxLZQrMDT898XAtryu0YL6Q7rf7E46+CK8dEGO
-	2xMv8hM/gEK6feb7ipS8xzlELUikrmtfsDd1LvHdVmwnRWYZmzSBT3/elxBHW4hHMLh/gh
-	7ptceuz2GcxWI7WBlHDDMtymqaChmAo=
+	bh=awGz+xlOK7u6dtvsrJ4skTkheY09pN/4dxzFWzKKGDc=;
+	b=XX/VynIxEDC/1ybyieTOaKiKKCttmZ4IsY0HCdonJ2Z4uleTuZHjZcJ+28mSZfnjs0ClQk
+	CHowSTqh2tbTXEEZ58mXLpYZnYjG0yW2tGBuplQI55ZHc7eQenFgSsvBPhwFDvT47GnsZ8
+	QvvWI4KY4OsoP5c/i4xoTf5wGY3IQn0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-LGIWUq_jPpqpaQKfZ7sWcQ-1; Tue, 04 May 2021 17:42:43 -0400
-X-MC-Unique: LGIWUq_jPpqpaQKfZ7sWcQ-1
+ us-mta-161-K6ygLByEMb2jB8_cRyUjLw-1; Tue, 04 May 2021 17:42:45 -0400
+X-MC-Unique: K6ygLByEMb2jB8_cRyUjLw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9F00654
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:42 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 599F2189DF41
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:44 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-126.ams2.redhat.com [10.36.114.126])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 63D555C22A
-	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:42 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4938F5C22A
+	for <mptcp@lists.linux.dev>; Tue,  4 May 2021 21:42:43 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v6 mptcp-next 14/22] Squash-to: "mptcp: receive checksum for DSS"
-Date: Tue,  4 May 2021 23:42:02 +0200
-Message-Id: <c7f543b7f9281021a56929fdb0e96e69b862ad5f.1620163861.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 15/22] mptcp: validate the data checksum
+Date: Tue,  4 May 2021 23:42:03 +0200
+Message-Id: <391130d1c4f28e5a4ef8f45ebfc1fec91f65bceb.1620163861.git.pabeni@redhat.com>
 In-Reply-To: <cover.1620163861.git.pabeni@redhat.com>
 References: <cover.1620163861.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -45,67 +45,106 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Similar to the previous squash to patch, always parse
-the DSS option regardless of csum presence.
+From: Geliang Tang <geliangtang@gmail.com>
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+This patch added three new members named data_csum, csum_len and map_csum
+in struct mptcp_subflow_context, implemented a new function named
+mptcp_validate_data_checksum(). Validate the data checksum in the function
+__mptcp_move_skbs_from_subflow.
+
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ net/mptcp/protocol.c | 35 +++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  3 +++
+ net/mptcp/subflow.c  |  7 +++++--
+ 3 files changed, 43 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 3f43d48ee5bc..310c3887be91 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -165,7 +165,6 @@ static void mptcp_parse_option(const struct sock *sk,
- 		mp_opt->use_map = (flags & MPTCP_DSS_HAS_MAP) != 0;
- 		mp_opt->ack64 = (flags & MPTCP_DSS_ACK64) != 0;
- 		mp_opt->use_ack = (flags & MPTCP_DSS_HAS_ACK);
--		mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4c79b0518e81..ba488a36dca0 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -528,6 +528,35 @@ static bool mptcp_check_data_fin(struct sock *sk)
+ 	return ret;
+ }
  
- 		pr_debug("data_fin=%d dsn64=%d use_map=%d ack64=%d use_ack=%d",
- 			 mp_opt->data_fin, mp_opt->dsn64,
-@@ -186,17 +185,13 @@ static void mptcp_parse_option(const struct sock *sk,
- 				expected_opsize += TCPOLEN_MPTCP_DSS_MAP64;
- 			else
- 				expected_opsize += TCPOLEN_MPTCP_DSS_MAP32;
--
--			if (mp_opt->csum_reqd)
--				expected_opsize += TCPOLEN_MPTCP_DSS_CHECKSUM;
- 		}
++static bool mptcp_validate_data_checksum(struct sock *ssk)
++{
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
++	struct csum_pseudo_header header;
++	__wsum csum;
++
++	if (__mptcp_check_fallback(msk))
++		goto out;
++
++	if (subflow->csum_len < subflow->map_data_len)
++		goto out;
++
++	header.data_seq = subflow->map_seq;
++	header.subflow_seq = subflow->map_subflow_seq;
++	header.data_len = subflow->map_data_len;
++	header.csum = subflow->map_csum;
++
++	csum = csum_partial(&header, sizeof(header), subflow->data_csum);
++
++	if (csum_fold(csum))
++		return false;
++	subflow->data_csum = 0;
++	subflow->csum_len = 0;
++
++out:
++	return true;
++}
++
+ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 					   struct sock *ssk,
+ 					   unsigned int *bytes)
+@@ -596,6 +625,12 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 			if (tp->urg_data)
+ 				done = true;
  
--		/* RFC 6824, Section 3.3:
--		 * If a checksum is present, but its use had
--		 * not been negotiated in the MP_CAPABLE handshake,
--		 * the checksum field MUST be ignored.
-+		/* Always parse any csum presence combination, we will enforce
-+		 * RFC 8684 Section 3.3.0 checks later in subflow_data_ready
- 		 */
--		if (opsize != expected_opsize)
-+		if (opsize != expected_opsize &&
-+		    opsize != expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM)
- 			break;
++			if (READ_ONCE(msk->csum_enabled)) {
++				subflow->data_csum = skb_checksum(skb, offset, len,
++								  subflow->data_csum);
++				subflow->csum_len += len;
++				mptcp_validate_data_checksum(ssk);
++			}
+ 			if (__mptcp_move_skb(msk, ssk, skb, offset, len))
+ 				moved += len;
+ 			seq += len;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index c7cc9382bf77..f1d9657eb6ce 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -399,6 +399,9 @@ struct mptcp_subflow_context {
+ 	u32	map_subflow_seq;
+ 	u32	ssn_offset;
+ 	u32	map_data_len;
++	__wsum	data_csum;
++	u32	csum_len;
++	__sum16	map_csum;
+ 	u32	request_mptcp : 1,  /* send MP_CAPABLE */
+ 		request_join : 1,   /* send MP_JOIN */
+ 		request_bkup : 1,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index f8732e11a392..8648d25190e1 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -948,9 +948,12 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 	subflow->map_data_len = data_len;
+ 	subflow->map_valid = 1;
+ 	subflow->mpc_map = mpext->mpc_map;
+-	pr_debug("new map seq=%llu subflow_seq=%u data_len=%u",
++	subflow->data_csum = 0;
++	subflow->csum_len = 0;
++	subflow->map_csum = mpext->csum;
++	pr_debug("new map seq=%llu subflow_seq=%u data_len=%u csum=%u",
+ 		 subflow->map_seq, subflow->map_subflow_seq,
+-		 subflow->map_data_len);
++		 subflow->map_data_len, subflow->map_csum);
  
- 		mp_opt->dss = 1;
-@@ -228,14 +223,15 @@ static void mptcp_parse_option(const struct sock *sk,
- 			mp_opt->data_len = get_unaligned_be16(ptr);
- 			ptr += 2;
- 
--			if (mp_opt->csum_reqd) {
-+			if (opsize == expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
-+				mp_opt->csum_reqd = 1;
- 				mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
- 				ptr += 2;
- 			}
- 
--			pr_debug("data_seq=%llu subflow_seq=%u data_len=%u csum=%u",
-+			pr_debug("data_seq=%llu subflow_seq=%u data_len=%u csum=%d:%u",
- 				 mp_opt->data_seq, mp_opt->subflow_seq,
--				 mp_opt->data_len, mp_opt->csum);
-+				 mp_opt->data_len, mp_opt->csum_reqd, mp_opt->csum);
- 		}
- 
- 		break;
+ validate_seq:
+ 	/* we revalidate valid mapping on new skb, because we must ensure
 -- 
 2.26.2
 
