@@ -1,73 +1,318 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AAB70
-	for <mptcp@lists.linux.dev>; Wed,  5 May 2021 15:58:37 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id zg3so3645641ejb.8
-        for <mptcp@lists.linux.dev>; Wed, 05 May 2021 08:58:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=o4hYc269H1YL0C9vuY0kSM9N7Uc9YrRGDdjHa8HKU/g=;
-        b=kU5A9veQhJ/0rXzX6KvuurXpBdSN+TZwclz6jB/6x2Lq5mi3pZAVPEsL7V6f7mBotD
-         HSW1C69O8co2xTaNgtpLZjCxpmxY0tgLhqjZ7q2prEV+ewWFF4rxpZ4NYl/0dbf/fm8W
-         VA/LrKPqkQ5ETDp8QV1/gQZLDGMPU3uONsmgAdBkzE8lnNnvUSxL2+n3el7jLNof1IlU
-         4T2qhvLESc0FwdWmBj1EaLlA0AcJab9b+yg+Zvdz8C9IAMuFNM8YPvEXBRMY4KAOELX1
-         vH9DC4nzBpg5a8+nslLEDxrJitkQPHTsFQX3gD1fKCHEH1gcbc5o8BXfFlEUFZPMMONG
-         ltxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=o4hYc269H1YL0C9vuY0kSM9N7Uc9YrRGDdjHa8HKU/g=;
-        b=JNSfJSG45M6WClChQAK9F8XZZZXlDA8BuO5JbF9LGCLoA29YLdFmnmG8n1w9GVOxUQ
-         O/5RN3U5zsVg0vroAEyEFqHtISpZknMbz7sfLdLlV5A8CStzH7YtTyA8BY7KXn1YQOLk
-         X058lBtvI+i4yqh8rgnHg2XqmPYnAaveFs9uXGyycp61dkS5ymHzl7r/t1+E7F7NG0Jm
-         okGuvA8yJ4+SZkJsuxDIipmU6v+dxh0Fc0UxXJJwdRVDxdBbJFhDHw36nQAUX1pXtIST
-         7lFzYYkQyDOlt3ZXhlJfrn/FRIuen3A0OIZqIiouzGwFohuauOp+YnYZvIDav0JDA+dZ
-         1m7Q==
-X-Gm-Message-State: AOAM5325oHUSGscnZz5oSBdVP2x+zFMUO48mfN9gjrb//CxlL0CmXnXC
-	izT92YLELfm1oT/QosEecWIRCpfxvjTVeZQl
-X-Google-Smtp-Source: ABdhPJw9t04MtnC12wwjU6dsAdBwB+cD+7Cz4voKAjxpFyhXC/EfoHOe5oZD6t674k1h+mnnK9eOnw==
-X-Received: by 2002:a17:906:31c6:: with SMTP id f6mr28474383ejf.446.1620230315184;
-        Wed, 05 May 2021 08:58:35 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:353b:1bad:486a:b5eb])
-        by smtp.gmail.com with ESMTPSA id z7sm7400773edi.39.2021.05.05.08.58.34
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 May 2021 08:58:34 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Weekly meeting - 6 May 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-Message-ID: <a98fbea7-eb76-8c17-f0a8-8e041a8501b6@tessares.net>
-Date: Wed, 5 May 2021 17:58:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1803271
+	for <mptcp@lists.linux.dev>; Wed,  5 May 2021 16:32:25 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 76CA061421;
+	Wed,  5 May 2021 16:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1620232344;
+	bh=1f2aqeAf5f0fBgxBl1mWFBYRKgKZzhI9iFfrNR25ZKw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MZeTFPGVTB/NR+xI0XQNoKoJUbQFptBjZPJ04eeLjeKbJ2x78yYC+P4kjKiwzUivl
+	 IDg5PqaXx1ej9/UR3e4BtXvxpxAA6GT+11ALncmKJSwrQ7nWRSOKuVNe10SgFPFYzn
+	 /+mCa9ysL8cIYHQ2ZxGMw8r2Lz3zeKUe07omI8Hngwb2m9Npz7wTGMA/1Vm5xCdBXD
+	 V1rgCq1yonmoQYazajAkfgV2cE+gcC00gXOX333UCaD2MeeV4R6pwCBNTIM4PVP6wa
+	 rw9d+aETRht7F8z5j+W887pmr6YP86ej0jIkUuZi49P/iir/qLK1eA+ZeoVMUmix3k
+	 f95ptL4D1Rj8Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.12 043/116] selftests: mptcp: launch mptcp_connect with timeout
+Date: Wed,  5 May 2021 12:30:11 -0400
+Message-Id: <20210505163125.3460440-43-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210505163125.3460440-1-sashal@kernel.org>
+References: <20210505163125.3460440-1-sashal@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-Hello everybody!
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+[ Upstream commit 5888a61cb4e00695075bbacfd86f3fa73af00413 ]
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210506
+'mptcp_connect' already has a timeout for poll() but in some cases, it
+is not enough.
 
-Feel free to add/modify topics!
+With "timeout" tool, we will force the command to fail if it doesn't
+finish on time. Thanks to that, the script will continue and display
+details about the current state before marking the test as failed.
+Displaying this state is very important to be able to understand the
+issue. Best to have our CI reporting the issue than just "the test
+hanged".
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Note that in mptcp_connect.sh, we were using a long timeout to validate
+the fact we cannot create a socket if a sysctl is set. We don't need
+this timeout.
 
-See/Speak to you tomorrow!
-Matt
+In diag.sh, we want to send signals to mptcp_connect instances that have
+been started in the netns. But we cannot send this signal to 'timeout'
+otherwise that will stop the timeout and messages telling us SIGUSR1 has
+been received will be printed. Instead of trying to find the right PID
+and storing them in an array, we can simply use the output of
+'ip netns pids' which is all the PIDs we want to send signal to.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/160
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/net/mptcp/diag.sh     | 55 ++++++++++++-------
+ .../selftests/net/mptcp/mptcp_connect.sh      | 15 +++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 22 ++++++--
+ .../selftests/net/mptcp/simult_flows.sh       | 13 ++++-
+ 4 files changed, 72 insertions(+), 33 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 39edce4f541c..2674ba20d524 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -5,8 +5,9 @@ rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+ ns="ns1-$rndh"
+ ksft_skip=4
+ test_cnt=1
++timeout_poll=100
++timeout_test=$((timeout_poll * 2 + 1))
+ ret=0
+-pids=()
+ 
+ flush_pids()
+ {
+@@ -14,18 +15,14 @@ flush_pids()
+ 	# give it some time
+ 	sleep 1.1
+ 
+-	for pid in ${pids[@]}; do
+-		[ -d /proc/$pid ] && kill -SIGUSR1 $pid >/dev/null 2>&1
+-	done
+-	pids=()
++	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
+ }
+ 
+ cleanup()
+ {
++	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
++
+ 	ip netns del $ns
+-	for pid in ${pids[@]}; do
+-		[ -d /proc/$pid ] && kill -9 $pid >/dev/null 2>&1
+-	done
+ }
+ 
+ ip -Version > /dev/null 2>&1
+@@ -79,39 +76,57 @@ trap cleanup EXIT
+ ip netns add $ns
+ ip -n $ns link set dev lo up
+ 
+-echo "a" | ip netns exec $ns ./mptcp_connect -p 10000 -l 0.0.0.0 -t 100 >/dev/null &
++echo "a" | \
++	timeout ${timeout_test} \
++		ip netns exec $ns \
++			./mptcp_connect -p 10000 -l -t ${timeout_poll} \
++				0.0.0.0 >/dev/null &
+ sleep 0.1
+-pids[0]=$!
+ chk_msk_nr 0 "no msk on netns creation"
+ 
+-echo "b" | ip netns exec $ns ./mptcp_connect -p 10000 127.0.0.1 -j -t 100 >/dev/null &
++echo "b" | \
++	timeout ${timeout_test} \
++		ip netns exec $ns \
++			./mptcp_connect -p 10000 -j -t ${timeout_poll} \
++				127.0.0.1 >/dev/null &
+ sleep 0.1
+-pids[1]=$!
+ chk_msk_nr 2 "after MPC handshake "
+ chk_msk_remote_key_nr 2 "....chk remote_key"
+ chk_msk_fallback_nr 0 "....chk no fallback"
+ flush_pids
+ 
+ 
+-echo "a" | ip netns exec $ns ./mptcp_connect -p 10001 -s TCP -l 0.0.0.0 -t 100 >/dev/null &
+-pids[0]=$!
++echo "a" | \
++	timeout ${timeout_test} \
++		ip netns exec $ns \
++			./mptcp_connect -p 10001 -l -s TCP -t ${timeout_poll} \
++				0.0.0.0 >/dev/null &
+ sleep 0.1
+-echo "b" | ip netns exec $ns ./mptcp_connect -p 10001 127.0.0.1 -j -t 100 >/dev/null &
+-pids[1]=$!
++echo "b" | \
++	timeout ${timeout_test} \
++		ip netns exec $ns \
++			./mptcp_connect -p 10001 -j -t ${timeout_poll} \
++				127.0.0.1 >/dev/null &
+ sleep 0.1
+ chk_msk_fallback_nr 1 "check fallback"
+ flush_pids
+ 
+ NR_CLIENTS=100
+ for I in `seq 1 $NR_CLIENTS`; do
+-	echo "a" | ip netns exec $ns ./mptcp_connect -p $((I+10001)) -l 0.0.0.0 -t 100 -w 10 >/dev/null  &
+-	pids[$((I*2))]=$!
++	echo "a" | \
++		timeout ${timeout_test} \
++			ip netns exec $ns \
++				./mptcp_connect -p $((I+10001)) -l -w 10 \
++					-t ${timeout_poll} 0.0.0.0 >/dev/null &
+ done
+ sleep 0.1
+ 
+ for I in `seq 1 $NR_CLIENTS`; do
+-	echo "b" | ip netns exec $ns ./mptcp_connect -p $((I+10001)) 127.0.0.1 -t 100 -w 10 >/dev/null &
+-	pids[$((I*2 + 1))]=$!
++	echo "b" | \
++		timeout ${timeout_test} \
++			ip netns exec $ns \
++				./mptcp_connect -p $((I+10001)) -w 10 \
++					-t ${timeout_poll} 127.0.0.1 >/dev/null &
+ done
+ sleep 1.5
+ 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 10a030b53b23..65b3b983efc2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -11,7 +11,8 @@ cin=""
+ cout=""
+ ksft_skip=4
+ capture=false
+-timeout=30
++timeout_poll=30
++timeout_test=$((timeout_poll * 2 + 1))
+ ipv6=true
+ ethtool_random_on=true
+ tc_delay="$((RANDOM%50))"
+@@ -273,7 +274,7 @@ check_mptcp_disabled()
+ 	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=0
+ 
+ 	local err=0
+-	LANG=C ip netns exec ${disabled_ns} ./mptcp_connect -t $timeout -p 10000 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
++	LANG=C ip netns exec ${disabled_ns} ./mptcp_connect -p 10000 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
+ 		grep -q "^socket: Protocol not available$" && err=1
+ 	ip netns delete ${disabled_ns}
+ 
+@@ -430,14 +431,20 @@ do_transfer()
+ 	local stat_cookietx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
+ 	local stat_cookierx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
+ 
+-	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s ${srv_proto} $extra_args $local_addr < "$sin" > "$sout" &
++	timeout ${timeout_test} \
++		ip netns exec ${listener_ns} \
++			./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
++				$extra_args $local_addr < "$sin" > "$sout" &
+ 	local spid=$!
+ 
+ 	wait_local_port_listen "${listener_ns}" "${port}"
+ 
+ 	local start
+ 	start=$(date +%s%3N)
+-	ip netns exec ${connector_ns} ./mptcp_connect -t $timeout -p $port -s ${cl_proto} $extra_args $connect_addr < "$cin" > "$cout" &
++	timeout ${timeout_test} \
++		ip netns exec ${connector_ns} \
++			./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
++				$extra_args $connect_addr < "$cin" > "$cout" &
+ 	local cpid=$!
+ 
+ 	wait $cpid
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index ad32240fbfda..43ed99de7734 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -8,7 +8,8 @@ cin=""
+ cinsent=""
+ cout=""
+ ksft_skip=4
+-timeout=30
++timeout_poll=30
++timeout_test=$((timeout_poll * 2 + 1))
+ mptcp_connect=""
+ capture=0
+ do_all_tests=1
+@@ -245,17 +246,26 @@ do_transfer()
+ 		local_addr="0.0.0.0"
+ 	fi
+ 
+-	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port \
+-		-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
++	timeout ${timeout_test} \
++		ip netns exec ${listener_ns} \
++			$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
++				${local_addr} < "$sin" > "$sout" &
+ 	spid=$!
+ 
+ 	sleep 1
+ 
+ 	if [ "$test_link_fail" -eq 0 ];then
+-		ip netns exec ${connector_ns} $mptcp_connect -t $timeout -p $port -s ${cl_proto} $connect_addr < "$cin" > "$cout" &
++		timeout ${timeout_test} \
++			ip netns exec ${connector_ns} \
++				$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
++					$connect_addr < "$cin" > "$cout" &
+ 	else
+-		( cat "$cin" ; sleep 2; link_failure $listener_ns ; cat "$cin" ) | tee "$cinsent" | \
+-		ip netns exec ${connector_ns} $mptcp_connect -t $timeout -p $port -s ${cl_proto} $connect_addr > "$cout" &
++		( cat "$cin" ; sleep 2; link_failure $listener_ns ; cat "$cin" ) | \
++			tee "$cinsent" | \
++			timeout ${timeout_test} \
++				ip netns exec ${connector_ns} \
++					$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
++						$connect_addr > "$cout" &
+ 	fi
+ 	cpid=$!
+ 
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index f039ee57eb3c..3aeef3bcb101 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -7,7 +7,8 @@ ns2="ns2-$rndh"
+ ns3="ns3-$rndh"
+ capture=false
+ ksft_skip=4
+-timeout=30
++timeout_poll=30
++timeout_test=$((timeout_poll * 2 + 1))
+ test_cnt=1
+ ret=0
+ bail=0
+@@ -157,14 +158,20 @@ do_transfer()
+ 		sleep 1
+ 	fi
+ 
+-	ip netns exec ${ns3} ./mptcp_connect -jt $timeout -l -p $port 0.0.0.0 < "$sin" > "$sout" &
++	timeout ${timeout_test} \
++		ip netns exec ${ns3} \
++			./mptcp_connect -jt ${timeout_poll} -l -p $port \
++				0.0.0.0 < "$sin" > "$sout" &
+ 	local spid=$!
+ 
+ 	wait_local_port_listen "${ns3}" "${port}"
+ 
+ 	local start
+ 	start=$(date +%s%3N)
+-	ip netns exec ${ns1} ./mptcp_connect -jt $timeout -p $port 10.0.3.3 < "$cin" > "$cout" &
++	timeout ${timeout_test} \
++		ip netns exec ${ns1} \
++			./mptcp_connect -jt ${timeout_poll} -p $port \
++				10.0.3.3 < "$cin" > "$cout" &
+ 	local cpid=$!
+ 
+ 	wait $cpid
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.30.2
+
