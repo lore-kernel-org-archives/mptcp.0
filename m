@@ -1,20 +1,20 @@
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1803271
-	for <mptcp@lists.linux.dev>; Wed,  5 May 2021 16:32:25 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 76CA061421;
-	Wed,  5 May 2021 16:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A9671
+	for <mptcp@lists.linux.dev>; Wed,  5 May 2021 16:35:11 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 516796191F;
+	Wed,  5 May 2021 16:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1620232344;
-	bh=1f2aqeAf5f0fBgxBl1mWFBYRKgKZzhI9iFfrNR25ZKw=;
+	s=k20201202; t=1620232511;
+	bh=L+J+lbG5CTwQI97H8h0kjpe0OAaHE1DHtEt3o5GsTQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MZeTFPGVTB/NR+xI0XQNoKoJUbQFptBjZPJ04eeLjeKbJ2x78yYC+P4kjKiwzUivl
-	 IDg5PqaXx1ej9/UR3e4BtXvxpxAA6GT+11ALncmKJSwrQ7nWRSOKuVNe10SgFPFYzn
-	 /+mCa9ysL8cIYHQ2ZxGMw8r2Lz3zeKUe07omI8Hngwb2m9Npz7wTGMA/1Vm5xCdBXD
-	 V1rgCq1yonmoQYazajAkfgV2cE+gcC00gXOX333UCaD2MeeV4R6pwCBNTIM4PVP6wa
-	 rw9d+aETRht7F8z5j+W887pmr6YP86ej0jIkUuZi49P/iir/qLK1eA+ZeoVMUmix3k
-	 f95ptL4D1Rj8Q==
+	b=WbGNVxalwwLvvMejk45l3szD0dwM1bVh+QZw9K4BNS4WybAqWLpFh/PQS3HvZEJvO
+	 nnL2Rpd1EQM7AdaTUyAhsCwWiupUsGZw4z6jXoDA9E3XpDR1TYVCANU6+7XgIT6qnQ
+	 9ir8RkYQMUN4Pfx53II+fSi79k5bTBioJLnOqO4W9wSZNNWQaE9Gp/MTmLiSSAOU3y
+	 8oyvV/nibT++yXgTeP5EZboS4psubHRZIay6f1QPrll3bnwuxZR5nQGSKDgyU15IdL
+	 UdxeMgFR6+w3OopOzZDJVfwKbE37xLrY+s89sqIYdk1sX5b7SmASy17MEwVNFyjDAF
+	 173s3g4k/5zJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -25,12 +25,12 @@ Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 043/116] selftests: mptcp: launch mptcp_connect with timeout
-Date: Wed,  5 May 2021 12:30:11 -0400
-Message-Id: <20210505163125.3460440-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.11 040/104] selftests: mptcp: launch mptcp_connect with timeout
+Date: Wed,  5 May 2021 12:33:09 -0400
+Message-Id: <20210505163413.3461611-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210505163125.3460440-1-sashal@kernel.org>
-References: <20210505163125.3460440-1-sashal@kernel.org>
+In-Reply-To: <20210505163413.3461611-1-sashal@kernel.org>
+References: <20210505163413.3461611-1-sashal@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -185,7 +185,7 @@ index 39edce4f541c..2674ba20d524 100755
  sleep 1.5
  
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 10a030b53b23..65b3b983efc2 100755
+index e927df83efb9..c37acb790bd6 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 @@ -11,7 +11,8 @@ cin=""
@@ -198,7 +198,7 @@ index 10a030b53b23..65b3b983efc2 100755
  ipv6=true
  ethtool_random_on=true
  tc_delay="$((RANDOM%50))"
-@@ -273,7 +274,7 @@ check_mptcp_disabled()
+@@ -272,7 +273,7 @@ check_mptcp_disabled()
  	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=0
  
  	local err=0
@@ -207,9 +207,9 @@ index 10a030b53b23..65b3b983efc2 100755
  		grep -q "^socket: Protocol not available$" && err=1
  	ip netns delete ${disabled_ns}
  
-@@ -430,14 +431,20 @@ do_transfer()
- 	local stat_cookietx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
- 	local stat_cookierx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
+@@ -414,14 +415,20 @@ do_transfer()
+ 	local stat_cookietx_last=$(ip netns exec ${listener_ns} nstat -z -a TcpExtSyncookiesSent | while read a count c rest ;do  echo $count;done)
+ 	local stat_cookierx_last=$(ip netns exec ${listener_ns} nstat -z -a TcpExtSyncookiesRecv | while read a count c rest ;do  echo $count;done)
  
 -	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s ${srv_proto} $extra_args $local_addr < "$sin" > "$sout" &
 +	timeout ${timeout_test} \
@@ -231,7 +231,7 @@ index 10a030b53b23..65b3b983efc2 100755
  
  	wait $cpid
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index ad32240fbfda..43ed99de7734 100755
+index 9aa9624cff97..99c5dc0eeb26 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
 @@ -8,7 +8,8 @@ cin=""
@@ -243,8 +243,8 @@ index ad32240fbfda..43ed99de7734 100755
 +timeout_test=$((timeout_poll * 2 + 1))
  mptcp_connect=""
  capture=0
- do_all_tests=1
-@@ -245,17 +246,26 @@ do_transfer()
+ 
+@@ -249,17 +250,26 @@ do_transfer()
  		local_addr="0.0.0.0"
  	fi
  
