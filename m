@@ -1,318 +1,81 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A9671
-	for <mptcp@lists.linux.dev>; Wed,  5 May 2021 16:35:11 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 516796191F;
-	Wed,  5 May 2021 16:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1620232511;
-	bh=L+J+lbG5CTwQI97H8h0kjpe0OAaHE1DHtEt3o5GsTQA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WbGNVxalwwLvvMejk45l3szD0dwM1bVh+QZw9K4BNS4WybAqWLpFh/PQS3HvZEJvO
-	 nnL2Rpd1EQM7AdaTUyAhsCwWiupUsGZw4z6jXoDA9E3XpDR1TYVCANU6+7XgIT6qnQ
-	 9ir8RkYQMUN4Pfx53II+fSi79k5bTBioJLnOqO4W9wSZNNWQaE9Gp/MTmLiSSAOU3y
-	 8oyvV/nibT++yXgTeP5EZboS4psubHRZIay6f1QPrll3bnwuxZR5nQGSKDgyU15IdL
-	 UdxeMgFR6+w3OopOzZDJVfwKbE37xLrY+s89sqIYdk1sX5b7SmASy17MEwVNFyjDAF
-	 173s3g4k/5zJA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Sasha Levin <sashal@kernel.org>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.11 040/104] selftests: mptcp: launch mptcp_connect with timeout
-Date: Wed,  5 May 2021 12:33:09 -0400
-Message-Id: <20210505163413.3461611-40-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210505163413.3461611-1-sashal@kernel.org>
-References: <20210505163413.3461611-1-sashal@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAD371
+	for <mptcp@lists.linux.dev>; Wed,  5 May 2021 18:03:59 +0000 (UTC)
+IronPort-SDR: 4foRtNdcnIR2Lgy1tgDUYgey2QYpUYnqFp4TwGQC96Oou6XcRXdn6GTnK92A9/ck6vOQIpanPY
+ ox8CJvnRuWdw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9975"; a="283702053"
+X-IronPort-AV: E=Sophos;i="5.82,276,1613462400"; 
+   d="scan'208";a="283702053"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2021 11:03:58 -0700
+IronPort-SDR: tm0LvIQ5BMlTc175NY63UQ2A6zQUWwr92ukCg0Ms/4Z9wh0SKRfTH8HH1kTpid7X8vzcuvBae9
+ ToqvXh8IpNcA==
+X-IronPort-AV: E=Sophos;i="5.82,276,1613462400"; 
+   d="scan'208";a="389274723"
+Received: from kkkoney-mobl3.amr.corp.intel.com ([10.212.161.105])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2021 11:03:57 -0700
+Date: Wed, 5 May 2021 11:03:54 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, Christoph Paasch <cpaasch@apple.com>
+Subject: Re: [PATCH v6 mptcp-next 00/22] mptcp: data checksum support
+In-Reply-To: <521bebd638f2baae1d511af64690b5c64b910d57.camel@redhat.com>
+Message-ID: <ef9a9dbe-8ac4-82af-316e-5680377ac7ee@linux.intel.com>
+References: <cover.1620163861.git.pabeni@redhat.com> <521bebd638f2baae1d511af64690b5c64b910d57.camel@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+On Wed, 5 May 2021, Paolo Abeni wrote:
 
-[ Upstream commit 5888a61cb4e00695075bbacfd86f3fa73af00413 ]
+> On Tue, 2021-05-04 at 23:41 +0200, Paolo Abeni wrote:
+>> Changes from v5:
+>>  - none really, added patch lost in previous iteration due to PEBKAC
+>
+> Note: self-tests are successful here (even with -C flag), but I did not
+> test interoperability with mptcp.org because...
+>
+> ... I think mptcp.org csum implementation does not respect RFC 8684.
+>
+> In the current mptcp.org git repo
+> @f8b7c5e4a105b9d561eb5fb8cba26efbac861bc7,
+> file net/mptcp/mptcp_output.c, function mptcp_write_dss_mapping():
+>
+> 		csum = csum_partial(ptr - 2, 12, skb->csum);
 
-'mptcp_connect' already has a timeout for poll() but in some cases, it
-is not enough.
+12 bytes are checksummed here.
 
-With "timeout" tool, we will force the command to fail if it doesn't
-finish on time. Thanks to that, the script will continue and display
-details about the current state before marking the test as failed.
-Displaying this state is very important to be able to understand the
-issue. Best to have our CI reporting the issue than just "the test
-hanged".
+>                p16++;
+>                *p16++ = csum_fold(csum_partial(&hdseq, sizeof(hdseq), csum));
 
-Note that in mptcp_connect.sh, we were using a long timeout to validate
-the fact we cannot create a socket if a sysctl is set. We don't need
-this timeout.
+sizeof(hdseq) is 4, so 4 more bytes for the upper bits of the DSN are 
+checksummed by csum_partial() here, assuming that 
+mptcp_get_highorder_sndbits() grabs the right bits.
 
-In diag.sh, we want to send signals to mptcp_connect instances that have
-been started in the netns. But we cannot send this signal to 'timeout'
-otherwise that will stop the timeout and messages telling us SIGUSR1 has
-been received will be printed. Instead of trying to find the right PID
-and storing them in an array, we can simply use the output of
-'ip netns pids' which is all the PIDs we want to send signal to.
+>
+> since the pseudo header len is 12, it looks like 4 bytes/32bits DSN is used.
+>
+> But RFC 8684 section 3.3.1. says:
+>
+> """
+>   Note that the data sequence number used in the pseudo-header is
+>   always the 64-bit value, irrespective of what length is used in the
+>   DSS option itself.
+> """
+>
+> Even RFC 6824 reports the same sentence, so it looks like I'm missing
+> some bits here?!?
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/160
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/net/mptcp/diag.sh     | 55 ++++++++++++-------
- .../selftests/net/mptcp/mptcp_connect.sh      | 15 +++--
- .../testing/selftests/net/mptcp/mptcp_join.sh | 22 ++++++--
- .../selftests/net/mptcp/simult_flows.sh       | 13 ++++-
- 4 files changed, 72 insertions(+), 33 deletions(-)
+The verification side in mptcp_verif_dss_csum() uses the full 64 bit 
+pseudoheader too, and that would fail if the sender side was skipping part 
+of the DSN.
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 39edce4f541c..2674ba20d524 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -5,8 +5,9 @@ rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
- ns="ns1-$rndh"
- ksft_skip=4
- test_cnt=1
-+timeout_poll=100
-+timeout_test=$((timeout_poll * 2 + 1))
- ret=0
--pids=()
- 
- flush_pids()
- {
-@@ -14,18 +15,14 @@ flush_pids()
- 	# give it some time
- 	sleep 1.1
- 
--	for pid in ${pids[@]}; do
--		[ -d /proc/$pid ] && kill -SIGUSR1 $pid >/dev/null 2>&1
--	done
--	pids=()
-+	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
- }
- 
- cleanup()
- {
-+	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
-+
- 	ip netns del $ns
--	for pid in ${pids[@]}; do
--		[ -d /proc/$pid ] && kill -9 $pid >/dev/null 2>&1
--	done
- }
- 
- ip -Version > /dev/null 2>&1
-@@ -79,39 +76,57 @@ trap cleanup EXIT
- ip netns add $ns
- ip -n $ns link set dev lo up
- 
--echo "a" | ip netns exec $ns ./mptcp_connect -p 10000 -l 0.0.0.0 -t 100 >/dev/null &
-+echo "a" | \
-+	timeout ${timeout_test} \
-+		ip netns exec $ns \
-+			./mptcp_connect -p 10000 -l -t ${timeout_poll} \
-+				0.0.0.0 >/dev/null &
- sleep 0.1
--pids[0]=$!
- chk_msk_nr 0 "no msk on netns creation"
- 
--echo "b" | ip netns exec $ns ./mptcp_connect -p 10000 127.0.0.1 -j -t 100 >/dev/null &
-+echo "b" | \
-+	timeout ${timeout_test} \
-+		ip netns exec $ns \
-+			./mptcp_connect -p 10000 -j -t ${timeout_poll} \
-+				127.0.0.1 >/dev/null &
- sleep 0.1
--pids[1]=$!
- chk_msk_nr 2 "after MPC handshake "
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
- flush_pids
- 
- 
--echo "a" | ip netns exec $ns ./mptcp_connect -p 10001 -s TCP -l 0.0.0.0 -t 100 >/dev/null &
--pids[0]=$!
-+echo "a" | \
-+	timeout ${timeout_test} \
-+		ip netns exec $ns \
-+			./mptcp_connect -p 10001 -l -s TCP -t ${timeout_poll} \
-+				0.0.0.0 >/dev/null &
- sleep 0.1
--echo "b" | ip netns exec $ns ./mptcp_connect -p 10001 127.0.0.1 -j -t 100 >/dev/null &
--pids[1]=$!
-+echo "b" | \
-+	timeout ${timeout_test} \
-+		ip netns exec $ns \
-+			./mptcp_connect -p 10001 -j -t ${timeout_poll} \
-+				127.0.0.1 >/dev/null &
- sleep 0.1
- chk_msk_fallback_nr 1 "check fallback"
- flush_pids
- 
- NR_CLIENTS=100
- for I in `seq 1 $NR_CLIENTS`; do
--	echo "a" | ip netns exec $ns ./mptcp_connect -p $((I+10001)) -l 0.0.0.0 -t 100 -w 10 >/dev/null  &
--	pids[$((I*2))]=$!
-+	echo "a" | \
-+		timeout ${timeout_test} \
-+			ip netns exec $ns \
-+				./mptcp_connect -p $((I+10001)) -l -w 10 \
-+					-t ${timeout_poll} 0.0.0.0 >/dev/null &
- done
- sleep 0.1
- 
- for I in `seq 1 $NR_CLIENTS`; do
--	echo "b" | ip netns exec $ns ./mptcp_connect -p $((I+10001)) 127.0.0.1 -t 100 -w 10 >/dev/null &
--	pids[$((I*2 + 1))]=$!
-+	echo "b" | \
-+		timeout ${timeout_test} \
-+			ip netns exec $ns \
-+				./mptcp_connect -p $((I+10001)) -w 10 \
-+					-t ${timeout_poll} 127.0.0.1 >/dev/null &
- done
- sleep 1.5
- 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index e927df83efb9..c37acb790bd6 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -11,7 +11,8 @@ cin=""
- cout=""
- ksft_skip=4
- capture=false
--timeout=30
-+timeout_poll=30
-+timeout_test=$((timeout_poll * 2 + 1))
- ipv6=true
- ethtool_random_on=true
- tc_delay="$((RANDOM%50))"
-@@ -272,7 +273,7 @@ check_mptcp_disabled()
- 	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=0
- 
- 	local err=0
--	LANG=C ip netns exec ${disabled_ns} ./mptcp_connect -t $timeout -p 10000 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
-+	LANG=C ip netns exec ${disabled_ns} ./mptcp_connect -p 10000 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
- 		grep -q "^socket: Protocol not available$" && err=1
- 	ip netns delete ${disabled_ns}
- 
-@@ -414,14 +415,20 @@ do_transfer()
- 	local stat_cookietx_last=$(ip netns exec ${listener_ns} nstat -z -a TcpExtSyncookiesSent | while read a count c rest ;do  echo $count;done)
- 	local stat_cookierx_last=$(ip netns exec ${listener_ns} nstat -z -a TcpExtSyncookiesRecv | while read a count c rest ;do  echo $count;done)
- 
--	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s ${srv_proto} $extra_args $local_addr < "$sin" > "$sout" &
-+	timeout ${timeout_test} \
-+		ip netns exec ${listener_ns} \
-+			./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
-+				$extra_args $local_addr < "$sin" > "$sout" &
- 	local spid=$!
- 
- 	wait_local_port_listen "${listener_ns}" "${port}"
- 
- 	local start
- 	start=$(date +%s%3N)
--	ip netns exec ${connector_ns} ./mptcp_connect -t $timeout -p $port -s ${cl_proto} $extra_args $connect_addr < "$cin" > "$cout" &
-+	timeout ${timeout_test} \
-+		ip netns exec ${connector_ns} \
-+			./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-+				$extra_args $connect_addr < "$cin" > "$cout" &
- 	local cpid=$!
- 
- 	wait $cpid
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 9aa9624cff97..99c5dc0eeb26 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -8,7 +8,8 @@ cin=""
- cinsent=""
- cout=""
- ksft_skip=4
--timeout=30
-+timeout_poll=30
-+timeout_test=$((timeout_poll * 2 + 1))
- mptcp_connect=""
- capture=0
- 
-@@ -249,17 +250,26 @@ do_transfer()
- 		local_addr="0.0.0.0"
- 	fi
- 
--	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port \
--		-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
-+	timeout ${timeout_test} \
-+		ip netns exec ${listener_ns} \
-+			$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
-+				${local_addr} < "$sin" > "$sout" &
- 	spid=$!
- 
- 	sleep 1
- 
- 	if [ "$test_link_fail" -eq 0 ];then
--		ip netns exec ${connector_ns} $mptcp_connect -t $timeout -p $port -s ${cl_proto} $connect_addr < "$cin" > "$cout" &
-+		timeout ${timeout_test} \
-+			ip netns exec ${connector_ns} \
-+				$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-+					$connect_addr < "$cin" > "$cout" &
- 	else
--		( cat "$cin" ; sleep 2; link_failure $listener_ns ; cat "$cin" ) | tee "$cinsent" | \
--		ip netns exec ${connector_ns} $mptcp_connect -t $timeout -p $port -s ${cl_proto} $connect_addr > "$cout" &
-+		( cat "$cin" ; sleep 2; link_failure $listener_ns ; cat "$cin" ) | \
-+			tee "$cinsent" | \
-+			timeout ${timeout_test} \
-+				ip netns exec ${connector_ns} \
-+					$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-+						$connect_addr > "$cout" &
- 	fi
- 	cpid=$!
- 
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index f039ee57eb3c..3aeef3bcb101 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -7,7 +7,8 @@ ns2="ns2-$rndh"
- ns3="ns3-$rndh"
- capture=false
- ksft_skip=4
--timeout=30
-+timeout_poll=30
-+timeout_test=$((timeout_poll * 2 + 1))
- test_cnt=1
- ret=0
- bail=0
-@@ -157,14 +158,20 @@ do_transfer()
- 		sleep 1
- 	fi
- 
--	ip netns exec ${ns3} ./mptcp_connect -jt $timeout -l -p $port 0.0.0.0 < "$sin" > "$sout" &
-+	timeout ${timeout_test} \
-+		ip netns exec ${ns3} \
-+			./mptcp_connect -jt ${timeout_poll} -l -p $port \
-+				0.0.0.0 < "$sin" > "$sout" &
- 	local spid=$!
- 
- 	wait_local_port_listen "${ns3}" "${port}"
- 
- 	local start
- 	start=$(date +%s%3N)
--	ip netns exec ${ns1} ./mptcp_connect -jt $timeout -p $port 10.0.3.3 < "$cin" > "$cout" &
-+	timeout ${timeout_test} \
-+		ip netns exec ${ns1} \
-+			./mptcp_connect -jt ${timeout_poll} -p $port \
-+				10.0.3.3 < "$cin" > "$cout" &
- 	local cpid=$!
- 
- 	wait $cpid
--- 
-2.30.2
 
+--
+Mat Martineau
+Intel
