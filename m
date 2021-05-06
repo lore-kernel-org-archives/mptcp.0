@@ -1,59 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6B172
-	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 13:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFED72
+	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 13:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620306501;
+	s=mimecast20190719; t=1620306586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZtR41JvJ/YissVRHlPPyFSqoxIa0WCduvp2C6ZaLVcE=;
-	b=MGaU74tlbGTpDg8qNmaq6nWbk+fvFoCEmOfzhQc1r3ukGuAS4OpkPcO0kEBbOOp+fv8UEn
-	UXLhJiawDQvAbRgvY3sA0u9sNAI99UOlMPbnL+TGw1fZ/Vp1i50KtaEMucD+VLeuO1Lx82
-	CZreQdC2dTZwefamcdEviVT1/EbntvI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-557-3ZCsYTRXNyCejgyD-u3xSg-1; Thu, 06 May 2021 09:08:19 -0400
-X-MC-Unique: 3ZCsYTRXNyCejgyD-u3xSg-1
-Received: by mail-wm1-f70.google.com with SMTP id j136-20020a1c238e0000b029014675462236so981908wmj.7
-        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 06:08:19 -0700 (PDT)
+	bh=/WPnGZmFH1/8wiIh1v4eyfnhjUqm2B45g4Pzj4M3ePk=;
+	b=IScR8BzSjBuxCr9/w2GNwFhb/vIopPwyVRkMQvgGj8hZQpbvwScxljot3Wd2bS957twh+x
+	1ofOhaRL8PhDUFY8nSpiqMwZbjcEUVlblc6y30bNYUSWKKsl7ubziITxSp2zTF/C1O4K+q
+	HgGDgVpc2hAnZEmxKCwnaqTI64rzwC4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-447-Wk0Nx0-qOPOPyO6ilY4SiQ-1; Thu, 06 May 2021 09:09:45 -0400
+X-MC-Unique: Wk0Nx0-qOPOPyO6ilY4SiQ-1
+Received: by mail-wr1-f70.google.com with SMTP id l2-20020adf9f020000b029010d6bb7f1cbso2179342wrf.7
+        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 06:09:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ZtR41JvJ/YissVRHlPPyFSqoxIa0WCduvp2C6ZaLVcE=;
-        b=GQAyqUTbahBqMG38HkOToZbIi3eqXndNd+KN66jyxCddT/4Aj2Izte9u1QctEkskTD
-         KgUZEzJqbtjrEzPM3hRhh1EuIECwaamAVGF2u27TkwebptQIo34N9sFl7kWSZCHytq2V
-         ywMiv7zYRUkzbRPLvtuWR2ttltrFxfm1drCgE6RsGABNbslc5eM7ppCVHAn2NqLq3iFT
-         EkeSy8bjUdX39Yom/SpW87OtubGeOkI2LQdNoTcdvsk6k8cunIZ1uxdMjRhTNXm0qYnv
-         0JDx/NqBi3pM10GZnVTWvRWjxXFg95pT1hplAN18E9HfVsRL6eqGyUhSjlXdsY3dB+pV
-         85qw==
-X-Gm-Message-State: AOAM531/UHFPwTz8kc5iql80wqXGXQG1Gfb4jbXHix53roqHsv5sn4iP
-	XgrV9olNtk9tFP5c5b9DMoFiuNBPtnNL/0EHYPz8LswfGy5VoM4rR5dVxTYyfCdSPwh7E6PaGcO
-	37JIN0csCcgwirRQ=
-X-Received: by 2002:a1c:228a:: with SMTP id i132mr3891305wmi.10.1620306498430;
-        Thu, 06 May 2021 06:08:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxOqERSV7DEYKQJcCpkLX9ylGKlmdCNTRlWMgSI6eY0OdkdATpjYt5ViC2BxEuyiHl1qiNxsg==
-X-Received: by 2002:a1c:228a:: with SMTP id i132mr3891279wmi.10.1620306498134;
-        Thu, 06 May 2021 06:08:18 -0700 (PDT)
+        bh=/WPnGZmFH1/8wiIh1v4eyfnhjUqm2B45g4Pzj4M3ePk=;
+        b=NtSUJtwwtiONx72wRX+Yd44YFCm+rT7L9UMjNRNcV5IpV6A+fbfRrg3HOV8vdDG5ao
+         CfpAd5J54ZFb7pzwSvRlZHAzJA5R2RbIDOg7Ztpk67DWyyVGuSVkWGA2f/DK1bKjIt44
+         KyyTx9aZb2FQN6uGpsAC6YQOeJssTW/FBpd2h6K087bP0M42K0kNSkeblytLFCJ0JKjK
+         ONjsnnoRcZHPdgzkeho9ZvDq4IU+Ox4xaWzRZi5o8RNZsHohqQDlxnyhjSF+2rCh33Ds
+         NKKXrt9l19zi9/YaYxskl9pOXx852Z9WsQsphoQEVNmP3LrC+MvExZBUzlfrV75NHqlZ
+         Xrqw==
+X-Gm-Message-State: AOAM532UvqpJ/RM96YKmhun8AYgzxX7Ss2CFbbc/Jn8sMhypl7+qmVaL
+	2xs2PY5mhBKunIVcKZGQu0Q5a3x0IA2SHGoHcwMZv9J4jdeFefmls8HNp1sjE2YlWmwRJjz8Vpq
+	mak8rNs3JtKrKAzM=
+X-Received: by 2002:adf:ef92:: with SMTP id d18mr5143450wro.413.1620306583889;
+        Thu, 06 May 2021 06:09:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzDvSgSU0Dcf0wCgn0FWWN/MFqtnkJRApsNtODFMp4sEvRQvsyDNzoh+qk4NZfAhyjajJQxkA==
+X-Received: by 2002:adf:ef92:: with SMTP id d18mr5143424wro.413.1620306583700;
+        Thu, 06 May 2021 06:09:43 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-108-140.dyn.eolo.it. [146.241.108.140])
-        by smtp.gmail.com with ESMTPSA id s21sm3242577wmc.10.2021.05.06.06.08.17
+        by smtp.gmail.com with ESMTPSA id r7sm3036301wmq.18.2021.05.06.06.09.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 May 2021 06:08:17 -0700 (PDT)
-Message-ID: <a91633ccde6eca3ff6a280d9663c548938bfdc7c.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH v2 mptcp-next 4/5] mptcp: dump csum fields in
- mptcp_dump_mpext
+        Thu, 06 May 2021 06:09:43 -0700 (PDT)
+Message-ID: <d98c77f57836940c9af061478afffc214209a89e.camel@redhat.com>
+Subject: Re: [MPTCP][PATCH v2 mptcp-next 0/5] data checksum support cleanups
 From: Paolo Abeni <pabeni@redhat.com>
 To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Date: Thu, 06 May 2021 15:08:16 +0200
-In-Reply-To: <af98fe46c5b1d2737f02868fddb6d08e84d220c3.1620286893.git.geliangtang@gmail.com>
+Date: Thu, 06 May 2021 15:09:42 +0200
+In-Reply-To: <cover.1620286893.git.geliangtang@gmail.com>
 References: <cover.1620286893.git.geliangtang@gmail.com>
-	 <1ca01996cdfd7e70967d7895776e3ec3014c55cd.1620286893.git.geliangtang@gmail.com>
-	 <093b409c7678032f8639402cf9f13025d2c65965.1620286893.git.geliangtang@gmail.com>
-	 <0e4f818d6894959b07da34e2d190ec2a7aaba51e.1620286893.git.geliangtang@gmail.com>
-	 <af98fe46c5b1d2737f02868fddb6d08e84d220c3.1620286893.git.geliangtang@gmail.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -68,53 +63,37 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Thu, 2021-05-06 at 15:48 +0800, Geliang Tang wrote:
-> In mptcp_dump_mpext, dump the csum fields, csum and csum_reqd in struct
-> mptcp_dump_mpext too.
+> v2:
+>  - add two new squash-to patches to rename the mib DSSCSUMERR to
+>    DATACSUMERR.
 > 
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
->  include/trace/events/mptcp.h | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+> Please insert patch 4 (mptcp: dump csum fields in mptcp_dump_mpext) between the
+> commits "mptcp: add a new sysctl checksum_enabled" and "selftests: mptcp: 
+> enable checksum in mptcp_connect.sh".
 > 
-> diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-> index 775a46d0b0f0..c853849692af 100644
-> --- a/include/trace/events/mptcp.h
-> +++ b/include/trace/events/mptcp.h
-> @@ -73,6 +73,7 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
->  		__field(u64, data_seq)
->  		__field(u32, subflow_seq)
->  		__field(u16, data_len)
-> +		__field(u16, csum)
->  		__field(u8, use_map)
->  		__field(u8, dsn64)
->  		__field(u8, data_fin)
-> @@ -82,6 +83,7 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
->  		__field(u8, frozen)
->  		__field(u8, reset_transient)
->  		__field(u8, reset_reason)
-> +		__field(u8, csum_reqd)
->  	),
->  
->  	TP_fast_assign(
-> @@ -89,6 +91,7 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
->  		__entry->data_seq = mpext->data_seq;
->  		__entry->subflow_seq = mpext->subflow_seq;
->  		__entry->data_len = mpext->data_len;
-> +		__entry->csum = (__force u16)mpext->csum;
->  		__entry->use_map = mpext->use_map;
->  		__entry->dsn64 = mpext->dsn64;
->  		__entry->data_fin = mpext->data_fin;
-> @@ -98,16 +101,18 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
->  		__entry->frozen = mpext->frozen;
->  		__entry->reset_transient = mpext->reset_transient;
->  		__entry->reset_reason = mpext->reset_reason;
-> +		__entry->csum_reqd = mpext->csum_reqd;
->  	),
->  
-> -	TP_printk("data_ack=%llu data_seq=%llu subflow_seq=%u data_len=%u use_map=%u dsn64=%u data_fin=%u use_ack=%u ack64=%u mpc_map=%u frozen=%u reset_transient=%u reset_reason=%u",
-> +	TP_printk("data_ack=%llu data_seq=%llu subflow_seq=%u data_len=%u csum=%u use_map=%u dsn64=%u data_fin=%u use_ack=%u ack64=%u mpc_map=%u frozen=%u reset_transient=%u reset_reason=%u csum_reqd=%u",
+> Geliang Tang (5):
+>   Squash to "mptcp: add csum_reqd in mptcp_out_options"
+>   Squash to "mptcp: add the mib for data checksum"
+>   Squash to "mptcp: add a new sysctl checksum_enabled"
+>   mptcp: dump csum fields in mptcp_dump_mpext
+>   Squash to "selftests: mptcp: enable checksum in mptcp_join.sh"
+> 
+>  Documentation/networking/mptcp-sysctl.rst       |  2 +-
+>  include/net/mptcp.h                             |  4 ++--
+>  include/trace/events/mptcp.h                    | 17 +++++++++++------
+>  net/mptcp/ctrl.c                                |  8 +++++---
+>  net/mptcp/mib.c                                 |  2 +-
+>  net/mptcp/mib.h                                 |  2 +-
+>  net/mptcp/subflow.c                             |  2 +-
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh |  4 ++--
+>  8 files changed, 24 insertions(+), 17 deletions(-)
+> 
 
-Minor thing: I personally prefer %x for csum, but it's not a big deal.
+I had a very minor comment on patch 4/5, but I think this can be merged
+as is and ev. squash an additional change later, if needed/there is
+agreement.
 
-/P
+Cheers,
+
+Paolo
 
