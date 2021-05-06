@@ -1,50 +1,50 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07C372
-	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 07:48:55 +0000 (UTC)
-Received: by mail-pf1-f173.google.com with SMTP id q2so4454721pfh.13
-        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 00:48:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F84972
+	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 07:48:59 +0000 (UTC)
+Received: by mail-pg1-f175.google.com with SMTP id y30so4139196pgl.7
+        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 00:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Pcy0MtDCE2v2WQhbuvgCLMkbkh2dXgGrD3744j14V+g=;
-        b=uukUsItE2Lphxl0Nr5MPgWkCVUL/JAk++SB8vi5jwo9Y/EcYWwZB0g291GUsv9yr4E
-         8XKEkk4tYCehWk/ahv6I/bKp6q+RcarebNzlrRLeLe1x9aifkvs11JedgkXzuZDCvKzH
-         gNf2/Q7Mo/ssRxPSjAWT7k1SXh5SeE+yKKDpKo7A1wVUcSi2FAlH19a9pHRhbtvYcxhg
-         BPr2ZWU5TaFBMZ18g5qBTUrqiGjFb9l6Sa6/wGpN0T21BoMjN30Ad8RQo84JtfuRnyKk
-         7EFvNNUHGwPn0JHiT0NjmJdVl4VpIAJ602VYrt4S1SAkWbLOinHeQvnHIWcTe2+Tsygj
-         URbA==
+        bh=Xc6coH0dC2EvvZlDdldeBmq+Gdii7YKOfov4PS2B93s=;
+        b=aGBzL2FTtU885vU56nrp4PIiUKezrFKnMi6f9CcMgdUvd5nv562GXAUgGgANMEnRMq
+         NCyHXbQRJJ2FbwNdADsOJXmFu+8RFvJNy8uUmNm+tseiF3SO7BQn0JR7Iq/aka8IsFnU
+         s6sLWgLMFD8HCmSf2ZVrPTF23SEprkN7TKwhbXAK828f9vveg4a7uqpE1Vz+p0jGcqB/
+         CXI8vVV9V73qV3Ce9sePo+UnbogF0dKV7ycnZKs2IgJIIUnQprFG4d0yUhgToEP8XTG1
+         P9kYXdwX/JJruLTU7Mo6R/2YnV02dAHlPyXnEZbtMry40hssCGTBMryVo9EEvBiuK/w2
+         VnnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Pcy0MtDCE2v2WQhbuvgCLMkbkh2dXgGrD3744j14V+g=;
-        b=S2n9YdCcaPKoX2NlFqToclcZK/mwCSqE47d7OoOtsmrstl65+mHSUlJtljRMJvOzfx
-         8lfQcQO21GPbYT7deuPDV6fXQySnqYIoqPzou7+7cyR5cRTOH19w9fljL/NGGKlF0T/X
-         vfJwSN7hJ2Ho5alQrUoLgcaFFobVzu1wqE1/PUdn7cgqlVR2iHC//kbjrPVvQpJwp+04
-         Wbvmp/zpzFP48vzmu+OniDGlX4LrClKFaMJJ+m7GcC/nwOOaX3iIfUkQyWWTkRID7B64
-         avJW4/9Giebi9JCUcYCgklGf7x91MtY25Mqo6GH2KhO3ezTVIXjjEwoaOr3eATDeMRV8
-         dozA==
-X-Gm-Message-State: AOAM532aqRQCTEv3sO6DC2pVVhldl1mS227/zA1xcMasdRejvUTLgpBi
-	1sZ+1EqZwaFjF80QM3o6YJhj6xjmiLA=
-X-Google-Smtp-Source: ABdhPJwF0L1pcUh4ZRww2S6r5tJtduXCvhpEywaHqlFMYZjEA/F9TfoiNapND0T8U6W3o+3iSr4ynA==
-X-Received: by 2002:aa7:824e:0:b029:20a:3a1:eeda with SMTP id e14-20020aa7824e0000b029020a03a1eedamr3148978pfn.71.1620287335293;
-        Thu, 06 May 2021 00:48:55 -0700 (PDT)
+        bh=Xc6coH0dC2EvvZlDdldeBmq+Gdii7YKOfov4PS2B93s=;
+        b=nnL6S1waNKmeTL+l0IMgI/bUysEiUKs2N+ZFiImVY9tAosntO4EqoYD7v+X1zwWuTY
+         OV1h1q+3Dyp5imiZPfEFSGypm0H1Cksze0oyar9JtT1lb0/snPkZNXS4Ng6/beIzBDQm
+         uIDMvxdhIpKKWfWtPRaHd+RjCvTUxZOLuVboBjO7eXhC3Y7yE+Q/tIWnO/U+WThYmOJC
+         +k0UJWmmcPnpBV3dkv27RBzc0w6LDOGrNhM4WlMDObZ5lHJEJGcXO5Y9WZsyxU+ueYei
+         6z7yaH930sKXcXYhxF2+s1U1LQigrDeIf5QlPuRYtaAA1DMZjSzIUsOdSxUVCf0frQwZ
+         rDtA==
+X-Gm-Message-State: AOAM531RcOgxmQwnyRY/2/ZITdW3pYxJovVUSxALh+I9wO35ORBR/nkM
+	qlPjBRe7P0OMrdHUtXErzskLWQo/CyM=
+X-Google-Smtp-Source: ABdhPJw1xgYACKhS76cqEGkmqS+AlabttPAP/hfp100T54x3R77HamnwsVY1nMveqGyu3L6eiw90ow==
+X-Received: by 2002:a63:f447:: with SMTP id p7mr2945698pgk.272.1620287338541;
+        Thu, 06 May 2021 00:48:58 -0700 (PDT)
 Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id g15sm1314908pfv.127.2021.05.06.00.48.53
+        by smtp.gmail.com with ESMTPSA id ms2sm1347243pjb.8.2021.05.06.00.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 May 2021 00:48:55 -0700 (PDT)
+        Thu, 06 May 2021 00:48:58 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v2 mptcp-next 1/5] Squash to "mptcp: add csum_reqd in mptcp_out_options"
-Date: Thu,  6 May 2021 15:48:42 +0800
-Message-Id: <1ca01996cdfd7e70967d7895776e3ec3014c55cd.1620286893.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 2/5] Squash to "mptcp: add the mib for data checksum"
+Date: Thu,  6 May 2021 15:48:43 +0800
+Message-Id: <093b409c7678032f8639402cf9f13025d2c65965.1620286893.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1620286893.git.geliangtang@gmail.com>
-References: <cover.1620286893.git.geliangtang@gmail.com>
+In-Reply-To: <1ca01996cdfd7e70967d7895776e3ec3014c55cd.1620286893.git.geliangtang@gmail.com>
+References: <cover.1620286893.git.geliangtang@gmail.com> <1ca01996cdfd7e70967d7895776e3ec3014c55cd.1620286893.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -52,28 +52,60 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update this patch as Mat suggested in the "MP_CAPABLE C flag" series.
+Rename DSSCSUM to DATACSUM.
+
+Please update the commit log too:
+
+'''
+This patch added the mib for the data checksum, MPTCP_MIB_DATACSUMERR.
+'''
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- include/net/mptcp.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/mib.c     | 2 +-
+ net/mptcp/mib.h     | 2 +-
+ net/mptcp/subflow.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index bd272c34b53c..d61bbbf11979 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -65,8 +65,8 @@ struct mptcp_out_options {
- 	struct mptcp_rm_list rm_list;
- 	u8 join_id;
- 	u8 backup;
--	u8 reset_reason:4;
--	u8 reset_transient:1,
-+	u8 reset_reason:4,
-+	   reset_transient:1,
- 	   csum_reqd:1;
- 	u32 nonce;
- 	u64 thmac;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index c7042e3317b5..e7e60bc1fb96 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -25,7 +25,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+ 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
+ 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
+-	SNMP_MIB_ITEM("DSSCsumErr", MPTCP_MIB_DSSCSUMERR),
++	SNMP_MIB_ITEM("DataCsumErr", MPTCP_MIB_DATACSUMERR),
+ 	SNMP_MIB_ITEM("OFOQueueTail", MPTCP_MIB_OFOQUEUETAIL),
+ 	SNMP_MIB_ITEM("OFOQueue", MPTCP_MIB_OFOQUEUE),
+ 	SNMP_MIB_ITEM("OFOMerge", MPTCP_MIB_OFOMERGE),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index c407358eced8..92e56c0cfbdd 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -18,7 +18,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+ 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the previous one */
+ 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
+-	MPTCP_MIB_DSSCSUMERR,		/* The DSS checksum fail */
++	MPTCP_MIB_DATACSUMERR,		/* The data checksum fail */
+ 	MPTCP_MIB_OFOQUEUETAIL,	/* Segments inserted into OoO queue tail */
+ 	MPTCP_MIB_OFOQUEUE,		/* Segments inserted into OoO queue */
+ 	MPTCP_MIB_OFOMERGE,		/* Segments merged in OoO queue */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index f60a2fe1a2cf..c8968038174f 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -902,7 +902,7 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
+ 
+ 	csum = csum_partial(&header, sizeof(header), subflow->map_data_csum);
+ 	if (unlikely(csum_fold(csum))) {
+-		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCSUMERR);
++		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
+ 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
+ 	}
+ 
 -- 
 2.31.1
 
