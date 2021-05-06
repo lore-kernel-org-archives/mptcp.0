@@ -1,20 +1,48 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4722E70
-	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 10:23:28 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1lebAE-0001Qk-K7; Thu, 06 May 2021 12:23:26 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next 8/8] selftests: mptcp_connect: add SO_TIMESTAMPNS cmsg support
-Date: Thu,  6 May 2021 12:22:43 +0200
-Message-Id: <20210506102243.2390-9-fw@strlen.de>
-X-Mailer: git-send-email 2.26.3
-In-Reply-To: <20210506102243.2390-1-fw@strlen.de>
-References: <20210506102243.2390-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5A971
+	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 10:38:06 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id m12so7565191eja.2
+        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 03:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4+vffMCL0zwLHN+KbG8GOAVJ/8MzFakj6qwlUujSFPU=;
+        b=OhkZdcc5JzgxENzEluH8NUTzN0NOaVpoGfduEfyw4H0sXxCUVj9bIs5DCbUxT0u5gf
+         vJ7Y9k9vwd+gJxwJB+FOmz/N7JUoF34ADIQvtBhXKdvFbXb4/8ilg2jGt33qF6kTfCOp
+         naaBjT89A7FMtaaDswyMkH+42cE43cn2ysAV8nx8cds9c0xjIzbjhEi5NIvhgrPAWEeN
+         N7zTsPJ792Qao2QgtKoidLQLBNkKDdYfJKblWty4k8gI8Jr7ogEjcbio7+Dks1tik8HX
+         ZuMOJhEs0Xcs6txu33dFeDd3bCub8y9ALZ2mIslFIPQWrFPmOx2zmiNt0HcEdPVfJh0N
+         8iNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4+vffMCL0zwLHN+KbG8GOAVJ/8MzFakj6qwlUujSFPU=;
+        b=gFX2FgFW+tO8j9jpYdv9rpT1mXp5FEPvW9kaK6I5qrEf4HMnlyIeVuXj858HeE9N+M
+         3yi35WlcakZR9+bsniqawvkY1zbNH3yPA1qFoX6MiYSViYGTV3VFJSHVuqVqEyEYDj0g
+         JfARSpKOkUsALSg7il867p2vHaGVrMLG4ktlcX2Fb9qD8vBF6JnONyKmLUvSMrTSCn0a
+         qsG6IiXDn7SGnnHvAlAfTJYw2+UBmPJi6HdKQvVY3NH3YPRUJTgfO6FT+cyKd1PPszEk
+         U4FNIuPhPRtti5DO92oXY0E8g4eY1oE28VN+OLYw0b4uYQioXzcnnLNcqyHXLJOJnj/T
+         NGuQ==
+X-Gm-Message-State: AOAM533xSm5gyWfXR5VfD61q2cvRvtzNEPh3CHzvo6ufzhzbXQ6HytHz
+	hlnANsitetnntFn6R6RPe5bsmj2zateTyKtswaw=
+X-Google-Smtp-Source: ABdhPJxQVI27aDu13z86/WMo4vM125H+RKN0xbJhAQeujf4nZtJL8GBMP7nG+5yp16LWpx2kXD3g6g==
+X-Received: by 2002:a17:906:6544:: with SMTP id u4mr3628555ejn.455.1620297484414;
+        Thu, 06 May 2021 03:38:04 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id d5sm1334510edt.49.2021.05.06.03.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 May 2021 03:38:03 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next] Squash to "mptcp: add a new sysctl checksum_enabled"
+Date: Thu,  6 May 2021 12:37:34 +0200
+Message-Id: <20210506103734.3845725-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -22,251 +50,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This extends the existing setsockopt test case to also check for cmsg
-timestamps.
+Fix a compilation error without CONFIG_SYSCTL:
 
-mptcp_connect will abort/fail if the setockopt was passed but the
-timestamp cmsg isn't present after successful recvmsg().
+  ld: net/mptcp/protocol.o: in function `__mptcp_init_sock':
+  protocol.c:(.text+0x43e): undefined reference to `mptcp_is_checksum_enabled'
+  ld: net/mptcp/subflow.o: in function `subflow_v6_route_req':
+  subflow.c:(.text+0xa0a): undefined reference to `mptcp_is_checksum_enabled'
+  ld: net/mptcp/subflow.o: in function `subflow_v4_route_req':
+  subflow.c:(.text+0xabd): undefined reference to `mptcp_is_checksum_enabled'
+  ld: net/mptcp/subflow.o: in function `mptcp_subflow_init_cookie_req':
+  subflow.c:(.text+0xb74): undefined reference to `mptcp_is_checksum_enabled'
+  ld: net/mptcp/options.o: in function `mptcp_syn_options':
+  options.c:(.text+0x68a): undefined reference to `mptcp_is_checksum_enabled'
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Simply moved this function outside CONFIG_SYSCTL with the other ones.
+
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       | 125 +++++++++++++++++-
- .../selftests/net/mptcp/mptcp_sockopt.sh      |   4 +-
- 2 files changed, 126 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index d88e1fdfb147..b0457f76968c 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -6,6 +6,7 @@
- #include <limits.h>
- #include <fcntl.h>
- #include <string.h>
-+#include <stdarg.h>
- #include <stdbool.h>
- #include <stdint.h>
- #include <stdio.h>
-@@ -25,6 +26,7 @@
- #include <netinet/in.h>
- 
- #include <linux/tcp.h>
-+#include <linux/time_types.h>
- 
- extern int optind;
- 
-@@ -66,6 +68,13 @@ static unsigned int cfg_do_w;
- static int cfg_wait;
- static uint32_t cfg_mark;
- 
-+struct cfg_cmsg_types {
-+	unsigned int cmsg_enabled:1;
-+	unsigned int timestampns:1;
-+};
-+
-+static struct cfg_cmsg_types cfg_cmsg_types;
-+
- static void die_usage(void)
- {
- 	fprintf(stderr, "Usage: mptcp_connect [-6] [-u] [-s MPTCP|TCP] [-p port] [-m mode]"
-@@ -80,11 +89,22 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
-+	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
- 	fprintf(stderr,
- 		"\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket\n");
- 	exit(1);
+Notes:
+    to be squashed in "mptcp: add a new sysctl checksum_enabled"
+
+ net/mptcp/ctrl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 014752c481d0..603e0c851d2d 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -41,6 +41,11 @@ unsigned int mptcp_get_add_addr_timeout(struct net *net)
+ 	return mptcp_get_pernet(net)->add_addr_timeout;
  }
  
-+static void xerror(const char *fmt, ...)
++int mptcp_is_checksum_enabled(struct net *net)
 +{
-+	va_list ap;
-+
-+	va_start(ap, fmt);
-+	vfprintf(stderr, fmt, ap);
-+	va_end(ap);
-+	exit(1);
++	return mptcp_get_pernet(net)->checksum_enabled;
 +}
 +
- static void handle_signal(int nr)
+ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
  {
- 	quit = true;
-@@ -338,6 +358,58 @@ static size_t do_write(const int fd, char *buf, const size_t len)
- 	return offset;
+ 	pernet->mptcp_enabled = 1;
+@@ -49,11 +54,6 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
  }
  
-+static void process_cmsg(struct msghdr *msgh)
-+{
-+	struct __kernel_timespec ts;
-+	bool ts_found = false;
-+	struct cmsghdr *cmsg;
-+
-+	for (cmsg = CMSG_FIRSTHDR(msgh); cmsg ; cmsg = CMSG_NXTHDR(msgh, cmsg)) {
-+		if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SO_TIMESTAMPNS_NEW) {
-+			memcpy(&ts, CMSG_DATA(cmsg), sizeof(ts));
-+			ts_found = true;
-+			continue;
-+		}
-+	}
-+
-+	if (cfg_cmsg_types.timestampns) {
-+		if (!ts_found)
-+			xerror("TIMESTAMPNS not present\n");
-+	}
-+}
-+
-+static ssize_t do_recvmsg_cmsg(const int fd, char *buf, const size_t len)
-+{
-+	char msg_buf[8192];
-+	struct iovec iov = {
-+		.iov_base = buf,
-+		.iov_len = len,
-+	};
-+	struct msghdr msg = {
-+		.msg_iov = &iov,
-+		.msg_iovlen = 1,
-+		.msg_control = msg_buf,
-+		.msg_controllen = sizeof(msg_buf),
-+	};
-+	int flags = 0;
-+	int ret = recvmsg(fd, &msg, flags);
-+
-+	if (ret <= 0)
-+		return ret;
-+
-+	if (msg.msg_controllen && !cfg_cmsg_types.cmsg_enabled)
-+		xerror("got %lu bytes of cmsg data, expected 0\n",
-+			(unsigned long)msg.msg_controllen);
-+
-+	if (msg.msg_controllen == 0 && cfg_cmsg_types.cmsg_enabled)
-+		xerror("%s\n", "got no cmsg data");
-+
-+	if (msg.msg_controllen)
-+		process_cmsg(&msg);
-+
-+	return ret;
-+}
-+
- static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- {
- 	int ret = 0;
-@@ -357,6 +429,8 @@ static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- 	} else if (cfg_peek == CFG_AFTER_PEEK) {
- 		ret = recv(fd, buf, cap, MSG_PEEK);
- 		ret = (ret < 0) ? ret : read(fd, buf, cap);
-+	} else if (cfg_cmsg_types.cmsg_enabled) {
-+		ret = do_recvmsg_cmsg(fd, buf, cap);
- 	} else {
- 		ret = read(fd, buf, cap);
- 	}
-@@ -786,6 +860,48 @@ static void init_rng(void)
- 	srand(foo);
- }
- 
-+static void xsetsockopt(int fd, int level, int optname, const void *optval, socklen_t optlen)
-+{
-+	int err;
-+
-+	err = setsockopt(fd, level, optname, optval, optlen);
-+	if (err) {
-+		perror("setsockopt");
-+		exit(1);
-+	}
-+}
-+
-+static void apply_cmsg_types(int fd, const struct cfg_cmsg_types *cmsg)
-+{
-+	static const unsigned int on = 1;
-+
-+	if (cmsg->timestampns)
-+		xsetsockopt(fd, SOL_SOCKET, SO_TIMESTAMPNS_NEW, &on, sizeof(on));
-+}
-+
-+static void parse_cmsg_types(const char *type)
-+{
-+	char *next = strchr(type, ',');
-+	unsigned int len = 0;
-+
-+	cfg_cmsg_types.cmsg_enabled = 1;
-+
-+	if (next) {
-+		parse_cmsg_types(next + 1);
-+		len = next - type;
-+	} else {
-+		len = strlen(type);
-+	}
-+
-+	if (strncmp(type, "TIMESTAMPNS", len) == 0) {
-+		cfg_cmsg_types.timestampns = 1;
-+		return;
-+	}
-+
-+	fprintf(stderr, "Unrecognized cmsg option %s\n", type);
-+	exit(1);
-+}
-+
- int main_loop(void)
- {
- 	int fd;
-@@ -801,6 +917,8 @@ int main_loop(void)
- 		set_rcvbuf(fd, cfg_rcvbuf);
- 	if (cfg_sndbuf)
- 		set_sndbuf(fd, cfg_sndbuf);
-+	if (cfg_cmsg_types.cmsg_enabled)
-+		apply_cmsg_types(fd, &cfg_cmsg_types);
- 
- 	return copyfd_io(0, fd, 1);
- }
-@@ -887,7 +1005,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:c:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -943,6 +1061,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'P':
- 			cfg_peek = parse_peek(optarg);
- 			break;
-+		case 'c':
-+			parse_cmsg_types(optarg);
-+			break;
- 		}
- 	}
- 
-@@ -976,6 +1097,8 @@ int main(int argc, char *argv[])
- 			set_sndbuf(fd, cfg_sndbuf);
- 		if (cfg_mark)
- 			set_mark(fd, cfg_mark);
-+		if (cfg_cmsg_types.cmsg_enabled)
-+			apply_cmsg_types(fd, &cfg_cmsg_types);
- 
- 		return main_loop_s(fd);
- 	}
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 2fa13946ac04..1579e471a5e7 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -178,7 +178,7 @@ do_transfer()
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${listener_ns} \
--			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} \
-+			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c TIMESTAMPNS \
- 				${local_addr} < "$sin" > "$sout" &
- 	spid=$!
- 
-@@ -186,7 +186,7 @@ do_transfer()
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${connector_ns} \
--			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} \
-+			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c TIMESTAMPNS \
- 				$connect_addr < "$cin" > "$cout" &
- 
- 	cpid=$!
+ #ifdef CONFIG_SYSCTL
+-int mptcp_is_checksum_enabled(struct net *net)
+-{
+-	return mptcp_get_pernet(net)->checksum_enabled;
+-}
+-
+ static struct ctl_table mptcp_sysctl_table[] = {
+ 	{
+ 		.procname = "enabled",
 -- 
-2.26.3
+2.30.2
 
