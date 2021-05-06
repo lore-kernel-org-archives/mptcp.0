@@ -1,94 +1,103 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C103571
-	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 11:59:15 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id s20so3252756plr.13
-        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 04:59:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60BB71
+	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 12:29:12 +0000 (UTC)
+Received: by mail-ej1-f42.google.com with SMTP id u3so7947484eja.12
+        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 05:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zg7Zr4c4aSwX5XhyqMxd9qrbrvqGLfOePqkRem4JydA=;
-        b=riMKknV6+csYsjQwSGnmYwdxnHPEjcmiDJgRQoClGgvYccjE0Zm2GzYIHPthzIxqDi
-         0k2xLgAYwNnzfidww605Cwm5869nsO0hkfKC7EvPxYwAAtqGbKLm4O0pnIgMxkvii048
-         2XiyTrAXGXx5FFGOXgsHACbZ9xqesXboWDtHmF4V5jOgyNfpgK3JJmrU0Va/StKS+Hcy
-         hmwdyHzN3Ey2QaeMBJ3xVuyZaovqj+P9ClLs+SPbhLplSaJwBHDfKHLx0tOxnX0lYzhw
-         44theI9rCu/f3+hw97CMctLm0G/ELFkbHoIcxjnSZG6TYXj8zNL+H7xX/Qf5tCyPHoF5
-         Rxeg==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7+ek49xjMp2FYjFvt+0RdTwvRCTxGKQeUOk3Syg05ew=;
+        b=GEgZYgBeewzV4G8gczdxjuOCgyE5On30ZT4AXoQTDSvQBT8NYR1ghaRM1Yvg037xPa
+         qBRwsVyNuQbb97VC5OVTBOOIxACWFYBI7UnI20fUyEqn1hNVIqAIk5H3T16Tkolo/HEU
+         NxnJiWPv1fNqJPCs/wz9Eyt4IpH4MYkO9x2cy69l+nnpdK0Zp2ik1+SWVk5AFUXiVMEr
+         4LeTCtMsT5MbnLFKag5DgrbeYalD7EZWw96mx+GgS5RqVo2H8cGH0kqGzyLfGhI96+hV
+         54R5eoEzhM5u4GPWvyNVZwfAsZ5te1piF7zYpNgs5eeMeBvEK7biex4XKObZHeDdK0ZH
+         R0+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=zg7Zr4c4aSwX5XhyqMxd9qrbrvqGLfOePqkRem4JydA=;
-        b=XNtU9av270PhIzhJrOnMR+y3VpSpK4f2fOiJaEILX0vfPTIZijO1Fqbln94Adj9+hw
-         3hWqANmek+bYB/NiX1+qgioPvu8KuMVfxRs9R0VfSZAN3AIiC3mHELsSHwR7LbbAwwKf
-         pcT6+0Ef8e/El87tAUf31jWoCbk1n4L6MvFZFqxPObD7yovoJRJcvRgpbvWVSkk0uq2n
-         j+Ug6pU9TVupFfh+HxMb0o1D9R96duSQ1O2qXsgAVbZnVimxMXweFJCdciCXfpB3bQrL
-         0USDWZ6PttNYIhQA2Pm/2NeVScJ/5RvczD1JShGf7Nnu8Tu9quJAAltySxU4JY3BI+zT
-         gzOg==
-X-Gm-Message-State: AOAM531r4M6dei9k39GEUavLiMNoEsYbPoBBm2Qhc6kSgtuw34U1YurD
-	j1ilB/2sAYj8NnMo+Ec3pLDmDxad5vY=
-X-Google-Smtp-Source: ABdhPJzWzR6HWK3YKmqp17V1YnY/2Snb1H/0YebxtH+Zx+t3zmBHvMrvjRWXKMxCGf3leGCHEQrlDw==
-X-Received: by 2002:a17:902:b408:b029:ec:e879:bbd8 with SMTP id x8-20020a170902b408b02900ece879bbd8mr3997133plr.65.1620302355280;
-        Thu, 06 May 2021 04:59:15 -0700 (PDT)
-Received: from localhost ([209.9.72.214])
-        by smtp.gmail.com with ESMTPSA id i197sm1793273pgc.13.2021.05.06.04.59.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 May 2021 04:59:14 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add sysctl allow_join_initial_addr_port"
-Date: Thu,  6 May 2021 19:59:12 +0800
-Message-Id: <40ab45efbe6d6089015ff846a88f4e12a1225813.1620302190.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        bh=7+ek49xjMp2FYjFvt+0RdTwvRCTxGKQeUOk3Syg05ew=;
+        b=o+OkdJgGQZKm7AulGoqGsxhorpWo43JZfyN3RdnsKbbbhJQK6T8N8ZQ7yuRzvXbsR5
+         n0xisJcjBGpMMQFZ4PZ/cEiPSoypyUs2Vs+qFSj5svkjpDExctNlroySF6CnK/m6OZCb
+         srrI9KIJ93YEeoZC0Acfa+e6qvW6kyUI5N6N6Dg7BWR2usShXoGAoFBIhRI2CtOYOYr5
+         LBWqgSdpQM/tE3eIUCiYr0e/XBPsJSDmqGBTX9CZrzBOCWNK1KgNZVHjO3J2wblN0zC1
+         B4iYn6WcBBcZYrSkOT9RNnYYhzD+RajwEonRQANUyzm5UCBwFXK3eLXkB8ycyTYksUiQ
+         QmLg==
+X-Gm-Message-State: AOAM532LdlWiw+mXYzb5icLHUEepDnWQjuiJ8udJF8L0q2ldsQYd5I4P
+	F8QeiUAEajUqOcgLsgAJBlblXMHiZ2iwa1/ySVqnYg==
+X-Google-Smtp-Source: ABdhPJzz1Cug0ysT/ZpTBMvNOBC0F9RI9xSN6RQZRTczFYnxGgk5hb5FimOjeQVBB6meNyCi30tV9w==
+X-Received: by 2002:a17:906:cc48:: with SMTP id mm8mr4105920ejb.344.1620304150835;
+        Thu, 06 May 2021 05:29:10 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:2955:d350:566e:2ff2])
+        by smtp.gmail.com with ESMTPSA id y21sm823764edv.77.2021.05.06.05.29.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 May 2021 05:29:10 -0700 (PDT)
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add a new sysctl
+ checksum_enabled"
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: mptcp@lists.linux.dev
+References: <20210506103734.3845725-1-matthieu.baerts@tessares.net>
+ <CA+WQbwu+cr0DW=REfMpUKao2sCtHnGCC5u_Kzufh0jdTXRuUrQ@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <c0189cc3-122f-f182-658c-333e7adce137@tessares.net>
+Date: Thu, 6 May 2021 14:29:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CA+WQbwu+cr0DW=REfMpUKao2sCtHnGCC5u_Kzufh0jdTXRuUrQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 
-Move mptcp_allow_join_id0 outside CONFIG_SYSCTL to avoid the compilation
-error without CONFIG_SYSCTL.
+Hi Geliang,
 
-Apply the patch (Squash to "mptcp: add a new sysctl checksum_enabled")
-first.
+On 06/05/2021 13:23, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Matthieu Baerts <matthieu.baerts@tessares.net> 于2021年5月6日周四 下午6:38写道：
+>>
+>> Fix a compilation error without CONFIG_SYSCTL:
+>>
+>>   ld: net/mptcp/protocol.o: in function `__mptcp_init_sock':
+>>   protocol.c:(.text+0x43e): undefined reference to `mptcp_is_checksum_enabled'
+>>   ld: net/mptcp/subflow.o: in function `subflow_v6_route_req':
+>>   subflow.c:(.text+0xa0a): undefined reference to `mptcp_is_checksum_enabled'
+>>   ld: net/mptcp/subflow.o: in function `subflow_v4_route_req':
+>>   subflow.c:(.text+0xabd): undefined reference to `mptcp_is_checksum_enabled'
+>>   ld: net/mptcp/subflow.o: in function `mptcp_subflow_init_cookie_req':
+>>   subflow.c:(.text+0xb74): undefined reference to `mptcp_is_checksum_enabled'
+>>   ld: net/mptcp/options.o: in function `mptcp_syn_options':
+>>   options.c:(.text+0x68a): undefined reference to `mptcp_is_checksum_enabled'
+>>
+>> Simply moved this function outside CONFIG_SYSCTL with the other ones.
+> 
+> Thanks for this fix.
+> 
+> Acked-by: Geliang Tang <geliangtang@gmail.com>
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/mptcp/ctrl.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thank you for the quick review!
 
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 431c1989d3a4..7d738bd06f2c 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -47,6 +47,11 @@ int mptcp_is_checksum_enabled(struct net *net)
- 	return mptcp_get_pernet(net)->checksum_enabled;
- }
- 
-+int mptcp_allow_join_id0(struct net *net)
-+{
-+	return mptcp_get_pernet(net)->allow_join_initial_addr_port;
-+}
-+
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- {
- 	pernet->mptcp_enabled = 1;
-@@ -56,11 +61,6 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- }
- 
- #ifdef CONFIG_SYSCTL
--int mptcp_allow_join_id0(struct net *net)
--{
--	return mptcp_get_pernet(net)->allow_join_initial_addr_port;
--}
--
- static struct ctl_table mptcp_sysctl_table[] = {
- 	{
- 		.procname = "enabled",
+Applying it now to unblock the CI:
+
+- d1af2c92ce6e: Squash to "mptcp: add a new sysctl checksum_enabled"
+- Results: e2c6acaa5239..dd923e74b091
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210506T122849
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210506T122849
+
+Cheers,
+Matt
 -- 
-2.31.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
