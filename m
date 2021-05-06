@@ -1,81 +1,150 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F8670
-	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 14:30:56 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id n2so8585884ejy.7
-        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 07:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jUQetYBGzOO2yl4dYNvvPwx5XB+lGtRY2rUUdYBpkwk=;
-        b=hNt3nMoQPCARVLlmmafD32BXft192SVjab9VR8UoD48TntYpprcOLIdqjqN3g8sB0o
-         ypm9w+WcpG3HNxObxZLi4K2nYmXFMfq82VOCtYtJ/cGx4s7T9vmodtFi9CTBd+2T7fYo
-         MtBeq6a56SV1Lb+NJpTfq0ioG6AnwxRadOBYNxYz8Yf2AoRrY/bL17aC8YQTCVX+y3nu
-         VJiHia4MPnU7gtBynkBNzUnNwUX0qHWx/7IyuVttMqXCbtBYdGca37gHBRWLLd2yM+B7
-         h4Fn3LGhepmjhT/S35OiQ1xzplaTvF7E1+Tv2tapVGvyI4Pa3QSxDKgM1SjKwgDS1scp
-         1EkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jUQetYBGzOO2yl4dYNvvPwx5XB+lGtRY2rUUdYBpkwk=;
-        b=CsEd+GAL+joD6WBs+Rncz+YYBhxXWMsbaXnq9UOnunIQf/9oQyoLAY/d62stACkt3E
-         6MD4u0PjaK8sBTLbIyutWYCM1iOUVQLvofn11pso6nMgSS3Ye3PLSB78/ivGomlSi/NA
-         9E7kKmXza9wgAG5SJnFrYt7tY+uH9xjMnQzOIXakvGlGI+oEL+9wQ7GhyyTTXiECj+CJ
-         I2+I3LXl5ugts7ZZF/SroIktMFygdaTKb0aQ72awlKYFXotWoBixKj9CZ5X98VqKiwrG
-         c1IAArfoZ9GdbFIdHWy7XvJditYBMM+ZHILoSW3TAFLG9WuNV4BVQH5uQRsoz/a3Tho8
-         v3/g==
-X-Gm-Message-State: AOAM531QZO6To1L3KhsPvbeIQ+ChFmIeBWmfwYTSPFLcbo/fNCeCnhSZ
-	xvLHcpML9eIu7Ad8ftpBswaD1b7y2Di9X1/BXWswQQ==
-X-Google-Smtp-Source: ABdhPJyffKoaYRlD+yjE1eLBH9oHcOm2WcrCPhBE9u1jyLc/OclRiHyLmm0q5IaSUfyvBZ1TwT6Fzg==
-X-Received: by 2002:a17:906:c1c9:: with SMTP id bw9mr4800467ejb.239.1620311455253;
-        Thu, 06 May 2021 07:30:55 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:2955:d350:566e:2ff2])
-        by smtp.gmail.com with ESMTPSA id u24sm1745509edt.85.2021.05.06.07.30.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 May 2021 07:30:55 -0700 (PDT)
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: dump csum fields in
- mptcp_dump_mpext"
-To: Geliang Tang <geliangtang@gmail.com>, Paolo Abeni <pabeni@redhat.com>
-References: <7102b3cc726a2562a5903786de957852b9eec033.1620310714.git.geliangtang@gmail.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <0acfb7c0-9a64-85ac-9b61-0b0deaf94d4d@tessares.net>
-Date: Thu, 6 May 2021 16:30:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD33171
+	for <mptcp@lists.linux.dev>; Thu,  6 May 2021 17:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1620321887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=V4mQ/sn0jEf4HeMaNBbxdNGwsG610g0p5fldJ5tErDg=;
+	b=eQUEW3rg7YduS58hNs3pD4JkiEyfyokYx0YPy5JXlcBZsv5K2YCYnpQAsyvUZ2T1D2lj6z
+	PKju0k9xw8HIGgeX7JwejxH8jZAJ4vnCVfO6SNExMUtaq1jZ/VuTRXGILaFku5nwBOPbJ7
+	xoQpDEO2Zqp6ePhJxz4ATAZOKYwQCJI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-314-sy4DlUw9PDqSAaye_UsHtw-1; Thu, 06 May 2021 13:24:40 -0400
+X-MC-Unique: sy4DlUw9PDqSAaye_UsHtw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7300F8030CF;
+	Thu,  6 May 2021 17:24:39 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-113-238.ams2.redhat.com [10.36.113.238])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4700319C46;
+	Thu,  6 May 2021 17:24:37 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>,
+	Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-net] mptcp: avoid OOB access in setsockopt()
+Date: Thu,  6 May 2021 19:24:29 +0200
+Message-Id: <79b377c2cb932a86f0fd1a17f814064dd1ad7015.1620321074.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <7102b3cc726a2562a5903786de957852b9eec033.1620310714.git.geliangtang@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Geliang, Paolo,
+We can't use tcp_set_congestion_control() on an mptcp socket, as
+such function can end-up accessing a tcp-specific field -
+prior_ssthresh - causing an OOB access.
 
-On 06/05/2021 16:19, Geliang Tang wrote:
-> Use %x for csum as Paolo suggested.
-> 
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+To allow propagating the correct ca algo on subflow, cache the ca
+name at initialization time.
 
-Thank you for the patch and the suggestion!
+Additionally avoid overriding the user-selected CA (if any) at
+clone time.
 
-- 4a14b5949e5e: "squashed" in "mptcp: dump csum fields in mptcp_dump_mpext"
-- Results: 9e9ac1620af0..3ad3c4cba5ea
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/182
+Fixes: aa1fbd94e5c7 ("mptcp: sockopt: add TCP_CONGESTION and TCP_INFO")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+@Christoph: could u please give this a spin?
+---
+ net/mptcp/protocol.c | 14 +++++++++++---
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/sockopt.c  |  4 ++--
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210506T143039
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210506T143039
-
-Cheers,
-Matt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 32a39774075b..627352c59416 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2437,8 +2437,6 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+ 	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
+ 
+-	tcp_assign_congestion_control(sk);
+-
+ #if IS_ENABLED(CONFIG_KASAN)
+ 	sock_set_flag(sk, SOCK_RCU_FREE);
+ #endif
+@@ -2448,6 +2446,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 
+ static int mptcp_init_sock(struct sock *sk)
+ {
++	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct net *net = sock_net(sk);
+ 	int ret;
+ 
+@@ -2465,6 +2464,16 @@ static int mptcp_init_sock(struct sock *sk)
+ 	if (ret)
+ 		return ret;
+ 
++	/* fetch the ca name; do it outside __mptcp_init_sock(), so that clone will
++	 * propagate the correct value
++	 */
++	tcp_assign_congestion_control(sk);
++	strcpy(mptcp_sk(sk)->ca_name, icsk->icsk_ca_ops->name);
++
++	/* no need to keep a reference to the oops, the name will suffice */
++	tcp_cleanup_congestion_control(sk);
++	icsk->icsk_ca_ops = NULL;
++
+ 	sk_sockets_allocated_inc(sk);
+ 	sk->sk_rcvbuf = sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
+ 	sk->sk_sndbuf = sock_net(sk)->ipv4.sysctl_tcp_wmem[1];
+@@ -2639,7 +2648,6 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 	sk_stream_kill_queues(sk);
+ 	xfrm_sk_free_policy(sk);
+ 
+-	tcp_cleanup_congestion_control(sk);
+ 	sk_refcnt_debug_release(sk);
+ 	mptcp_dispose_initial_subflow(msk);
+ 	sock_put(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 98c735f237b4..868e878af526 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -263,6 +263,7 @@ struct mptcp_sock {
+ 	} rcvq_space;
+ 
+ 	u32 setsockopt_seq;
++	char		ca_name[TCP_CA_NAME_MAX];
+ };
+ 
+ #define mptcp_lock_sock(___sk, cb) do {					\
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 00d941b66c1e..a79798189599 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -547,7 +547,7 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
+ 	}
+ 
+ 	if (ret == 0)
+-		tcp_set_congestion_control(sk, name, false, cap_net_admin);
++		strcpy(msk->ca_name, name);
+ 
+ 	release_sock(sk);
+ 	return ret;
+@@ -705,7 +705,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
+ 
+ 	if (inet_csk(sk)->icsk_ca_ops != inet_csk(ssk)->icsk_ca_ops)
+-		tcp_set_congestion_control(ssk, inet_csk(sk)->icsk_ca_ops->name, false, true);
++		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
+ }
+ 
+ static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.2
+
