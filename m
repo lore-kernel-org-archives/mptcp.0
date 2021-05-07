@@ -1,81 +1,92 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D2C72
-	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 16:45:31 +0000 (UTC)
-IronPort-SDR: E5nri983ZhNVcclN+8eUxOW8ipzGCfPt4lPa3AsLR6UjfZFCaFgceFf+Z+TeXA/E+AcVmchEVJ
- kqVXFI3Xemqw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9977"; a="219670599"
-X-IronPort-AV: E=Sophos;i="5.82,281,1613462400"; 
-   d="scan'208";a="219670599"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 09:45:30 -0700
-IronPort-SDR: zLKZPAAbn21LV1euiUgZ5IYrw3mbDPdVgIhBzZZuMtaOOMrJaGYQGcqWzTZyJ33QKAyE3yGuY1
- 4elsqU0ZX/zA==
-X-IronPort-AV: E=Sophos;i="5.82,281,1613462400"; 
-   d="scan'208";a="622933676"
-Received: from magalleg-mobl.amr.corp.intel.com ([10.209.84.24])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 09:45:30 -0700
-Date: Fri, 7 May 2021 09:45:29 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>, 
-    mptcp@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C7E72
+	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 17:45:31 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id s7so6476062edq.12
+        for <mptcp@lists.linux.dev>; Fri, 07 May 2021 10:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bLEjt3sGsKagc8B1Onucr1q12Z8iy4MZy85l7noGtd4=;
+        b=invoYbTUXZDrUsVnbabaAVNJtUl+hXA92MwGf2jbTy9/y5gKyhctAytNm9kw52LxV+
+         zqqxIKMZffK/9br29lHItH7AEgzA7m8yH+9EiTbrmOUnFAboDRgfczULRtLF0Za26NhM
+         YvG0ytdbHzPeV985kwP5wC047iuZX5OB+3zbFhQB3N9geEwH7oKcVebwK/Dt1BCNDiU4
+         kDhS/nL2ehP9kDF1c+JTSubsSv6Arit5m+X+tWxYLn9prVgqTUEoSKA+t977ZJXNgMAI
+         HddH2bS5iH14fEOJoqZQwgXK9hXx28wrN/j7AvK+h3ek/Fv/5LGr7BxHK7ncJSTRiy9B
+         qgnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bLEjt3sGsKagc8B1Onucr1q12Z8iy4MZy85l7noGtd4=;
+        b=mGA0DY9NuimsaJv3MaxmZX2K+mLKJWQvBpr77iIraxeXefW0eMaRLjnoU+OxOrhirY
+         DabbBTx33bfupnJVxoGVZWsc2FntKKAqiXFwbpGSYJx6FH+8fTGvMUexlvWFbIa2qOCt
+         4lHFzhwrraCWQB9T5TLEHcMEUrWVwzfJ2NFgsSEHfLS+hFe1kjUS3XsWw2T2y7EEpe8+
+         G68oCjB9DLEmue0zho9Y808HawRk6OhAL6Dhc2T3yoJuiI6XmBoAdCvZK9X8teek2U8v
+         lgO0q//9wdVOgo7KYiP4vWwiaRghq1wM64wM6pdXjCzY2GoVJ4CdMcl74U4NNYcl6qpH
+         w2EQ==
+X-Gm-Message-State: AOAM532nKft1DnISIcrhihWRfnaXKnG7WPGoEMv2DOj+LGbZPgr10CEI
+	nrWeP/vKVvhkY36+9w8tBP/HWyRSL+viuDXCWv8=
+X-Google-Smtp-Source: ABdhPJwqvykFOBZ2JrXWYSJZvexsLUxnUIcz6+g9NjkLE8QUbVUJu4DCCtwhHfHuYoLdJtPLiGLSmw==
+X-Received: by 2002:aa7:d7cf:: with SMTP id e15mr12485782eds.109.1620409529710;
+        Fri, 07 May 2021 10:45:29 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:2fa9:2d27:234d:525d])
+        by smtp.gmail.com with ESMTPSA id p14sm4541685eds.28.2021.05.07.10.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 May 2021 10:45:29 -0700 (PDT)
 Subject: Re: [PATCH mptcp-net] mptcp: avoid OOB access in setsockopt()
-In-Reply-To: <a73a8ce9-bf15-a94d-e936-444632eaa7dc@tessares.net>
-Message-ID: <985e6bfb-c31b-47f8-b94-3eef631578e0@linux.intel.com>
-References: <79b377c2cb932a86f0fd1a17f814064dd1ad7015.1620321074.git.pabeni@redhat.com> <a73a8ce9-bf15-a94d-e936-444632eaa7dc@tessares.net>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>,
+ mptcp@lists.linux.dev
+References: <79b377c2cb932a86f0fd1a17f814064dd1ad7015.1620321074.git.pabeni@redhat.com>
+ <a73a8ce9-bf15-a94d-e936-444632eaa7dc@tessares.net>
+ <985e6bfb-c31b-47f8-b94-3eef631578e0@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <fde1191e-9e7b-a83a-d968-a24fe5467cc7@tessares.net>
+Date: Fri, 7 May 2021 19:45:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+In-Reply-To: <985e6bfb-c31b-47f8-b94-3eef631578e0@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-On Fri, 7 May 2021, Matthieu Baerts wrote:
+Hi Mat,
 
-> Hi Paolo, Florian, Mat,
->
-> On 06/05/2021 19:24, Paolo Abeni wrote:
->> We can't use tcp_set_congestion_control() on an mptcp socket, as
->> such function can end-up accessing a tcp-specific field -
->> prior_ssthresh - causing an OOB access.
->>
->> To allow propagating the correct ca algo on subflow, cache the ca
->> name at initialization time.
->>
->> Additionally avoid overriding the user-selected CA (if any) at
->> clone time.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/182
->> Fixes: aa1fbd94e5c7 ("mptcp: sockopt: add TCP_CONGESTION and TCP_INFO")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->
-> Thank you for the patch and the review!
->
-> I just applied the patch with Florian's Ack, a fix for the typo spot by
-> Mat but not RvB tag for Mat (@Mat: I guess you are OK with the patch but
-> it is unclear :) )
->
-> - 20744dcd6f36: mptcp: avoid OOB access in setsockopt()
-> - c69b45723290: conflict in t/DO-NOT-MERGE-mptcp-use-kmalloc-on-kasan-build
-> - Results: 37818f5e301f..837dc82fa10b
->
-> Builds and tests are now in progress:
->
-> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210507T154124
-> https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210507T154124
->
+On 07/05/2021 18:45, Mat Martineau wrote:
+> I ran syzkaller for a while and didn't see this crash (but without a
+> reproducer I don't know how definitive that is.)
 
-Hi Matthieu -
+Thank you for having started the tests!
 
-I ran syzkaller for a while and didn't see this crash (but without a 
-reproducer I don't know how definitive that is.)
+I think Christoph said he quickly got the warning after having
+re-started syzkaller yesterday at the beginning of the meeting.
 
-You can add my tag:
+Do you see the same issue without the patch?
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+But I guess we can be quite confident here that the bug is fixed :)
 
---
-Mat Martineau
-Intel
+> You can add my tag:
+> 
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+Done!
+
+- 983511e46a4f: tg:msg: add Mat's RvB tag
+- Results: d76b60f54174..860b49961672
+
+Now available in the export branch and export/20210507T174457 tag
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
