@@ -1,48 +1,50 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C3172
-	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 01:12:52 +0000 (UTC)
-Received: by mail-pg1-f180.google.com with SMTP id m12so5980144pgr.9
-        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 18:12:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC7D72
+	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 01:12:55 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id z18so726635plg.8
+        for <mptcp@lists.linux.dev>; Thu, 06 May 2021 18:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WWoCcbO20WtqWseWINCbKemXG4nu8tp4G+fbOhGxUs8=;
-        b=jJnbVDpWMqgxcHAVIGgruFzmAq6VuWeHvns7tRq9yWTH/3VXxgt57NlYq12bXw3XC7
-         CLyPyr142YP8ZCld2VDLEIHspYa3bH8KyM8eKrPyegPilx3O+Iakcnfaa3CndiedPrHQ
-         lcmt4D+aE72cLobGOulA4aOdY8ME+LvX8LDpI0wULUsZ0KA2dS1f+i8Zq4PF4TroCewo
-         xTf47RkOIbaFsxMb1hO4xYS+ZhC5GKrdlAIpr2UxKaH1mA14Tu26wwIN4BRaPnXm2+zZ
-         4eKrljY3u8ziHSWvJEKHSjjnUCwY4+w3BOl5c6dEecBISnOBd9dHxk5zXvoLRykoS2A3
-         LS6A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OD6Zu4IZHo3ycDMZl46myA336Gy5bRX35HQP+kRfulw=;
+        b=p9HPqPQpUHZBhaPf3NST1vAeoDU5bkK84EUPyx9bR/N8TVIkiuYsi1X5vTaaRjOw1L
+         A+/4ceiXOGT9SJV/aGkla8lcq71MnXLOXCJfQdRNHMutqVWcQMWqeWEOBlTFIIIMm1gv
+         VuuH55j6rY+83ihLB1inW6lcfKGsSIFsbVTYi8/rwcMCjRPk0h5qq6isJxZmzeZDdhPy
+         ci20vBpGSCkQ84o3eUEjd1mn0IV3V39tfcRax/nrymrDOMynCDgGc8shrxxzR5exaN+d
+         K6jshSeKc7tLk7NJ52/tH1cevfNss9vGfO/rTIqeQBFeocC1JTsCGTiIasQxPkoUCzsO
+         7cGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WWoCcbO20WtqWseWINCbKemXG4nu8tp4G+fbOhGxUs8=;
-        b=bhwpV6AKRKKNZ5uYg7q9ZkUFHiv1S5R+Z8OJlmDge39KlJbrnKd+m1XFo1Qqp5yYRh
-         bBv6owsScGt8L7ZzgnjrEIFsnY3WWmHipnDghKlY2XEfkZlZaV0AXgPGi3K4D/RxbTcU
-         s8/yFz6oJAf8JL2kHQUsXe+gADXRRP3iGf/pdsWfkgriUqPlbMb5up/xqFSjbxY2DOE7
-         L8ARgocuQH7izZzJGamf44kBqh948lb0RUBlr8zGIIUUq41TAgPl5toVYnpgu84uHY0F
-         zpwPFQMhJTKFRAQE7xykB/76Jyo9x36SOWnBYYXZb+cDMWAdI80VZc43xOGTvqxn7OED
-         dBdg==
-X-Gm-Message-State: AOAM530fS75Fsa3FKIX2tZEXPuyqnV8OWq6tp60T7RV4d6+ixIz82zTK
-	kt9uMwpgHaE2e8g7R0X002gGWAKoVLs=
-X-Google-Smtp-Source: ABdhPJy7dfL8yr0Sj4KIFNQYlAHdLAefoKOakhOn4mFd6ud4olSi0ATRAqKr0EgDhWMuPr4CFwdjlQ==
-X-Received: by 2002:a05:6a00:2b5:b029:28e:9c4b:b8b4 with SMTP id q21-20020a056a0002b5b029028e9c4bb8b4mr7449856pfs.22.1620349972484;
-        Thu, 06 May 2021 18:12:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OD6Zu4IZHo3ycDMZl46myA336Gy5bRX35HQP+kRfulw=;
+        b=I+2VdOVueV8u4Afptbw4mDrdwPCkLrhr1mtQt9RZ8zQauqlT0IM/ualKxRxu5Mpi5W
+         UYRJwbLTB21EdOnQ9qWPHiQziFFS4ItH8ys3yX8mQbxb33kwgo9cw+YfUM3ekFba3vVY
+         1lHy0mX/Nlj2whaG6f2Z+1PlNHyfravBiNyhKhgiIUCu+QJKl9bhV0eeOmUG4DbHb+JQ
+         gsYBdr1zGEM+3zCxKW3gxxMh3UqAtCpUKRETxdEyGubg9NQXkLpEenQOMyrLR8gCTiAk
+         nqmnetuwTKb8YrXElkRHdRZO8n2z3lhnm4jgJtLlEAvf+z16v1zY6STM8y3x2vGqn2tZ
+         gpIA==
+X-Gm-Message-State: AOAM533GgxlA/Dfa8j2LxNanVkICrzzvtP7zHHbQ3ln+4PArPwwLuRJx
+	S+6CA3tBEHLithQOmmPOXF6tXpeIeFM=
+X-Google-Smtp-Source: ABdhPJxMGMxx5R7fmp5k+FLfP8cBV2+3edAssqOtJsxgC0ZisKemEGyHqa0nbg6Hrg7U+fs334kxLg==
+X-Received: by 2002:a17:90a:4e81:: with SMTP id o1mr19811872pjh.7.1620349974758;
+        Thu, 06 May 2021 18:12:54 -0700 (PDT)
 Received: from localhost ([209.9.72.212])
-        by smtp.gmail.com with ESMTPSA id 187sm3142800pff.139.2021.05.06.18.12.51
+        by smtp.gmail.com with ESMTPSA id g29sm3279584pfq.148.2021.05.06.18.12.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 May 2021 18:12:52 -0700 (PDT)
+        Thu, 06 May 2021 18:12:54 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add sk parameter for mptcp_parse_option"
-Date: Fri,  7 May 2021 09:12:47 +0800
-Message-Id: <f3808e3bfccf51a4a41e8ff3c793a464d8c3ae61.1620349748.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add csum_reqd in mptcp_options_received"
+Date: Fri,  7 May 2021 09:12:48 +0800
+Message-Id: <9d886bb5015a687a46287accd3a6f1111233eda7.1620349765.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <f3808e3bfccf51a4a41e8ff3c793a464d8c3ae61.1620349748.git.geliangtang@gmail.com>
+References: <f3808e3bfccf51a4a41e8ff3c793a464d8c3ae61.1620349748.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -50,44 +52,52 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Keep mptcp_parse_option unchanged.
-
-Please update the commit log too:
-
-'''
-mptcp: add sk parameter for mptcp_get_options
-
-This patch added a new parameter name sk in mptcp_get_options().
-'''
+Init csum_reqd in mptcp_get_options, keep mptcp_parse_option unchanged.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/mptcp/options.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8f768c517586..1d360639ca91 100644
+index 4a74b8bb737f..527affbbeea9 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -20,8 +20,7 @@ static bool mptcp_cap_flag_sha256(u8 flags)
- 	return (flags & MPTCP_CAP_FLAG_MASK) == MPTCP_CAP_HMAC_SHA256;
- }
- 
--static void mptcp_parse_option(const struct sock *sk,
--			       const struct sk_buff *skb,
-+static void mptcp_parse_option(const struct sk_buff *skb,
+@@ -24,8 +24,6 @@ static void mptcp_parse_option(const struct sk_buff *skb,
  			       const unsigned char *ptr, int opsize,
  			       struct mptcp_options_received *mp_opt)
  {
-@@ -365,7 +364,7 @@ void mptcp_get_options(const struct sock *sk,
- 			if (opsize > length)
- 				return;	/* don't parse partial options */
- 			if (opcode == TCPOPT_MPTCP)
--				mptcp_parse_option(sk, skb, ptr, opsize, mp_opt);
-+				mptcp_parse_option(skb, ptr, opsize, mp_opt);
- 			ptr += opsize - 2;
- 			length -= opsize;
- 		}
+-	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+-	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+ 	u8 subtype = *ptr >> 4;
+ 	int expected_opsize;
+ 	u8 version;
+@@ -74,7 +72,6 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		 * negotiated, the receiver MUST close the subflow with a RST as
+ 		 * it is considered broken."
+ 		 */
+-		mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+ 			mp_opt->csum_reqd = 1;
+ 
+@@ -329,6 +326,8 @@ void mptcp_get_options(const struct sock *sk,
+ 		       const struct sk_buff *skb,
+ 		       struct mptcp_options_received *mp_opt)
+ {
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+ 	const struct tcphdr *th = tcp_hdr(skb);
+ 	const unsigned char *ptr;
+ 	int length;
+@@ -344,7 +343,7 @@ void mptcp_get_options(const struct sock *sk,
+ 	mp_opt->dss = 0;
+ 	mp_opt->mp_prio = 0;
+ 	mp_opt->reset = 0;
+-	mp_opt->csum_reqd = 0;
++	mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 
+ 	length = (th->doff * 4) - sizeof(struct tcphdr);
+ 	ptr = (const unsigned char *)(th + 1);
 -- 
 2.31.1
 
