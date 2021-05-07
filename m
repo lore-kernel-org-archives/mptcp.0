@@ -1,120 +1,97 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1995D2FB5
-	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 07:59:03 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id t21so4742480plo.2
-        for <mptcp@lists.linux.dev>; Fri, 07 May 2021 00:59:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F1572
+	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 08:07:09 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id s20so6741823ejr.9
+        for <mptcp@lists.linux.dev>; Fri, 07 May 2021 01:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sVPCve7MJlwmWgonas781N7SAX7ibjpEuIpqcfoJb/g=;
-        b=cPLIrQVmjzJi6vCEGrlDfIwmNwmYxXZMd/POnja8M+Bbuyp9hwgS/NVddSqpP5FaH+
-         DOyaJBRzfh3Y8JuYumJIMIW1+XLtFsrhVcbvowanm/1H3J6RxwtGDOPgL5DzqaQJQ/Du
-         5sWxa+SmVcqPFatkDFVsBtnRzehnYTz48ZdEEoDcI1Z9BZ87+CfJtPIPKiS3+9c0bZX2
-         IL1rBaVbupzLLGgqz+KL8s6QyIzBcXgq7VE7Jb/YOtzXnH7+Gba4Auf5F5X6x87PHG8j
-         npqkDV2dbiaN7erEjo8WEFHqfeGQiNd/zHxPNuBgNesCoMGL88K1QV37qYcs3UPsYE2D
-         /0eQ==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sJeEExCsN8EDu8a93RgvFObLI1zSbViCQUNAdxpbMoc=;
+        b=Wqt2mw5dBmhCowt9spg7mMHUqtCIe28u7i5khM8G+BMH13cEu9AEJJ/nPswZx8npZR
+         89F77kFUzVCQEQxiaM3HnghFn070NcJAMQyi+EakjB9MgtMLOlJMUXZEphw+o/ytcJ3o
+         2tD4hFmIm88P76RL7h3xTlS9D2PYnZX6gkm2fDGVpj7ZnugqjoSCafltFtGUHHCbskoR
+         Va8f9Zgf17AL1+3UIoDexiAMJ4Nmw6zgo+YMFOnwi64CmXFI1rkx6Bo4vk+Pu1DMqGtV
+         NRLdoS2zEnf69W964KUvHkOthOZwhI0xks7fPABGzIiu7VMcU76oWAf111ATDNDQyIdr
+         xoPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sVPCve7MJlwmWgonas781N7SAX7ibjpEuIpqcfoJb/g=;
-        b=XidZQ1xioc9/sCVKnnUuXLE0XjG2v7qSyxScJBn/kulU726rYJ80fyCd9AnukbK3Gk
-         BwzYovnx4p0Vij2qZVIOq/Ppv4iPIoSYVvnZl/UDbk/dmXpAjYR7TicA9CW/rmqiwfpv
-         NGJwSKgBNOqF7q5e/hloFEou8vEDIJCWQBldSD1Ormv5qXOuwA57lCjpj1HDZWcKvSC3
-         vdnY9A/SD9O1/mVzBe9mGf0Nu3rUzcGrcWaPDd/Afs4GKWthMEf4l+CTdMSaLiUTS+4m
-         mPEVwfSm1pVkMQH5vc3gXkhERYcS6MQsAKN+2+5Z5RSVeRwcrukZKNC5VGRsdgGBmY2X
-         RtRg==
-X-Gm-Message-State: AOAM530JJ5zTcw0PZRBKeGD6M8zrWFXdpXRJptgKuvgm4k0QuJy9uX6f
-	MpNMYEo0mFj1K8cqo74mLB0bunymFjY=
-X-Google-Smtp-Source: ABdhPJymmo99H60Ziv32uIvrCYeYCHhTUacA06GbHu5/AUYpz7LZhMh6unwUbACMnjqSC0G+DVJjIg==
-X-Received: by 2002:a17:90b:4908:: with SMTP id kr8mr21540445pjb.85.1620374342477;
-        Fri, 07 May 2021 00:59:02 -0700 (PDT)
-Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id k38sm3956799pgi.73.2021.05.07.00.59.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 May 2021 00:59:02 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next] mptcp: don't fallback when data_fin enabled
-Date: Fri,  7 May 2021 15:58:58 +0800
-Message-Id: <c8b33d7b10e063f3bd93d25955d539a6af7f0372.1620374286.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        bh=sJeEExCsN8EDu8a93RgvFObLI1zSbViCQUNAdxpbMoc=;
+        b=uM44H2q+Xh8ouuTOr5RrBSV1PPTvlCFavsDcpckQhZ+eSEvyKy63relYCgtoe90vRS
+         rGT+3988vT7nuGkv/7K3yN2s4fraau3z3Wq0vw7DwMYEhqJVMf7+BhG9uaffhbBD7nIF
+         oErA3aJ8s4RrPo4/ixxZlzx8AfA79QUmy18mreQ9thm+yd7VPQ1LjCoTB4Uek+bE3DXe
+         pdD5vzw+7mgaQpTgR2huFyO/oFCKTSE4dPQhp/YyTeCRqpOFucidOdalF6JoKAgqPMnM
+         C7X0RMQriDU+A0a1GLvrwTOK+hNpABfbhCO03xDa8zDNNgRgiLF/L9XWU1OZDmS93l3A
+         FU7g==
+X-Gm-Message-State: AOAM5308QhoR+zctbqIUohP/VKkxc8VBGNQ3O7Djqsea80UkJTuhhwpM
+	KYS8RTze2L+crWZ/6ZdAUkObdkTk8C424d864LFYnA==
+X-Google-Smtp-Source: ABdhPJxQv39fRYfeju+fEzGzDTk47sogp4/NOvs4CvwgoF+7aBN9Y1JVidzUSDRL2KJn3s3TNqbYCQ==
+X-Received: by 2002:a17:906:8904:: with SMTP id fr4mr8834658ejc.146.1620374827483;
+        Fri, 07 May 2021 01:07:07 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([109.201.130.16])
+        by smtp.gmail.com with ESMTPSA id r17sm3501985edo.48.2021.05.07.01.07.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 May 2021 01:07:07 -0700 (PDT)
+Subject: Re: [MPTCP][PATCH v2 mptcp-next 2/5] Squash to "mptcp: add the mib
+ for data checksum"
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1620286893.git.geliangtang@gmail.com>
+ <1ca01996cdfd7e70967d7895776e3ec3014c55cd.1620286893.git.geliangtang@gmail.com>
+ <093b409c7678032f8639402cf9f13025d2c65965.1620286893.git.geliangtang@gmail.com>
+ <CA+WQbwvjyRF+hpcOfFJoaam8+X1y_eF9N3JQSA6hvbfbMQdp_g@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <9729719d-6331-89d0-5bdb-3bd7f24c41bb@tessares.net>
+Date: Fri, 7 May 2021 10:07:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CA+WQbwvjyRF+hpcOfFJoaam8+X1y_eF9N3JQSA6hvbfbMQdp_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 
-This patch fixed this fallback error:
+Hi Geliang,
 
-<7>[ 1477.059635] MPTCP: msk=000000006bf0cf61
-<7>[ 1485.132216] MPTCP: subflow=000000002296fc22
-<7>[ 1485.132233] MPTCP: subflow=000000002296fc22, family=2
-<7>[ 1485.132242] MPTCP: subflow=000000002296fc22
-<7>[ 1485.132411] MPTCP: msk=000000005b84960a
-<7>[ 1485.132688] MPTCP: subflow=000000002388ad62
-<7>[ 1485.132695] MPTCP: subflow=000000002388ad62, family=2
-<7>[ 1485.132702] MPTCP: subflow=000000002388ad62
-<7>[ 1485.132974] MPTCP: ssk=000000005ab5dbc8, local_key=9186175039591172243, token=2833190200, idsn=13562085501921405456
-<7>[ 1485.133131] MPTCP: subflow=000000002296fc22
-<7>[ 1485.133200] MPTCP: subflow_req=00000000ca26b42c, listener=000000002296fc22
-<7>[ 1485.133209] MPTCP: MP_CAPABLE version=1, flags=1, optlen=4 sndr=582, rcvr=18446744072046692096 len=65535 csum=65535
-<7>[ 1485.133227] MPTCP: req=00000000ca26b42c local_key=9900409276882973726, token=2796355457, idsn=5747750831347864753
-<7>[ 1485.133288] MPTCP: subflow_req=00000000ca26b42c, local_key=9900409276882973726
-<7>[ 1485.133384] MPTCP: subflow=000000002388ad62 synack seq=72748901
-<7>[ 1485.133393] MPTCP: MP_CAPABLE version=1, flags=1, optlen=12 sndr=9900409276882973726, rcvr=18446633460193955073 len=0 csum=0
-<7>[ 1485.133402] MPTCP: subflow=000000002388ad62, remote_key=9900409276882973726
-<7>[ 1485.133409] MPTCP: msk=00000000875940e7, token=2833190200
-<7>[ 1485.133416] MPTCP: msk=00000000875940e7, token=2833190200 side=0
-<7>[ 1485.133457] MPTCP: subflow=000000002388ad62, local_key=9186175039591172243, remote_key=9900409276882973726 map_len=0
-<7>[ 1485.133490] MPTCP: listener=000000002296fc22, req=00000000ca26b42c, conn=000000005b84960a
-<7>[ 1485.133499] MPTCP: MP_CAPABLE version=1, flags=1, optlen=20 sndr=9186175039591172243, rcvr=9900409276882973726 len=0 csum=0
-<7>[ 1485.133587] MPTCP: subflow=000000000587a2a5
-<7>[ 1485.133625] MPTCP: msk=000000005dcb6e30, token=2796355457 side=1
-<7>[ 1485.133658] MPTCP: MP_CAPABLE version=1, flags=1, optlen=20 sndr=9186175039591172243, rcvr=9900409276882973726 len=39782 csum=65535
-<7>[ 1485.134972] MPTCP: msk=00000000875940e7 snd_data_fin_enable=0 shutdown=3 state=4 pending=0
-<7>[ 1485.134987] MPTCP: msk=00000000875940e7 snd_data_fin_enable=1 pending=0 snd_nxt=13562085501921405457 write_seq=13562085501921405458
-<7>[ 1485.134998] MPTCP: Sending DATA_FIN on subflow 000000005ab5dbc8
-<7>[ 1485.135083] MPTCP: DSS
-<7>[ 1485.135089] MPTCP: data_fin=1 dsn64=1 use_map=1 ack64=0 use_ack=1
-<7>[ 1485.135097] MPTCP: data_ack=2683442354
-<7>[ 1485.135102] MPTCP: data_seq=13562085501921405457 subflow_seq=0 data_len=1 csum=0:0
-<7>[ 1485.135198] MPTCP: msk=000000005dcb6e30 snd_data_fin_enable=0 pending=0 snd_nxt=5747750831347864754 write_seq=5747750831347864754
-<7>[ 1485.135233] MPTCP: msk=00000000875940e7 state=4
-<7>[ 1485.135297] MPTCP: msk=000000005b84960a state=7
-<7>[ 1485.135302] MPTCP: msk=000000005b84960a
-<7>[ 1485.135387] MPTCP: msk=000000005dcb6e30
-<7>[ 1485.135436] MPTCP: subflow_req=00000000ca26b42c
-<7>[ 1485.135472] MPTCP: check_fully_established:fallback to TCP (msk=00000000875940e7)
-<7>[ 1485.135628] MPTCP: msk=000000005b84960a
-<7>[ 1485.339305] MPTCP: msk=00000000875940e7 snd_data_fin_enable=1 pending=0 snd_nxt=13562085501921405458 write_seq=13562085501921405458
-<7>[ 1485.339329] MPTCP: msk=00000000875940e7
+On 07/05/2021 04:50, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Geliang Tang <geliangtang@gmail.com> 于2021年5月6日周四 下午3:48写道：
+>>
+>> Rename DSSCSUM to DATACSUM.
+>>
+>> Please update the commit log too:
+>>
+>> '''
+>> This patch added the mib for the data checksum, MPTCP_MIB_DATACSUMERR.
+>> '''
+>>
+> 
+> Thanks for apply this patch to the export branch, please update the commit
+> log too:
+> 
+> MPTCP_MIB_DSSCSUMERR -> MPTCP_MIB_DATACSUMERR
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/176
+Thank you for the reminder.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/mptcp/options.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Indeed, I missed this one!
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index f3e379a0f08d..940b32511443 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -901,7 +901,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 	 * MP_JOIN subflows.
- 	 */
- 	if (!mp_opt->mp_capable) {
--		if (subflow->mp_join)
-+		if (subflow->mp_join || mptcp_data_fin_enabled(msk))
- 			goto reset;
- 		subflow->mp_capable = 0;
- 		pr_fallback(msk);
+Fixed now (but not yet in the export branch)
+
+- a1c71b9ff8ec: tg:msg: MIB has been renamed
+- Results: 3ad3c4cba5ea..37818f5e301f
+
+Cheers,
+Matt
 -- 
-2.31.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
