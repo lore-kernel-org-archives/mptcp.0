@@ -1,50 +1,49 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A54C70
-	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 15:41:48 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id di13so10761931edb.2
-        for <mptcp@lists.linux.dev>; Fri, 07 May 2021 08:41:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B37C70
+	for <mptcp@lists.linux.dev>; Fri,  7 May 2021 15:52:51 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id n2so14334590ejy.7
+        for <mptcp@lists.linux.dev>; Fri, 07 May 2021 08:52:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EByMNjCf4Q/7PjCQclIPBquLApcbaIlxxEFyo4N3wFM=;
-        b=K7wPs2dLyqfPmUhht2LiIlC0iQEtWUJOQxk6ncb1BHJhXxB43evD6Xo3wLakaTUUfI
-         JYidofQTSd7fZ9ktos3M4KnMlRuUkzmBbmbtDLcqivjeKBEi74NXA2hj/5193NFguT55
-         dfMEVm/8J4K4+AcvNEUVws2vqzuRtDBSWWKVxU2N2K2nJSnZcSR89SVgsy0JTEPXQkzP
-         YvRe4WFU3CIwJSoEoTYRQsxqmIRm0tFg6n2HzEfGOO4evaxnpa1wfxU9Aq7k7EA5bI7+
-         gUcQe2E531WTWrfXRPjWUYP7K6qjXeo8R33IP6+kipA1qf2joEHgSIRedLzG7Qb0AGC4
-         7Q7A==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=yEO7ZaatPcmzbqM34zkJdECphq9qnO/o+FpARxgpmg0=;
+        b=tw/N/NGBQKPyIgYay40mnRca4T8d8D5S5rOUcJ9cFFf3xhYM3fQ4uY6eiVKnk84nW5
+         SudrZE4BobNqJVTzypmTEnMHHdxvmzt0ECRWO0O9rGT0bklKSlbRdy/OHdctrr1s8wZa
+         Z4zvmiFD2imCZaLaJK4IprcRlMPGC1eP1phwa5393Pag5A2mB6xgVZW161Ak0hZdaYRb
+         2qxI1ZMC1FJxTD4233DjOsfTaFojOhh7wqFhl3CVMkud3eAYH/SWzLp5Xx/g3ERl8luu
+         wEJUsfoEjuO/DVdQzVIZBRmMrdA6TGcbKnc5019UvoCDKacEBrmAOXMm38W5eyNkIH3h
+         1QYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=EByMNjCf4Q/7PjCQclIPBquLApcbaIlxxEFyo4N3wFM=;
-        b=WHs07hFp9BpkocmT8hSnMEaVoTlM7PhXQuoeEfmAh40xjMCxqHbklL+ml9o8g0xPyc
-         wHBapd7JoYCZ5RqMdarBsKmcceuqoXCcGM8Jet5VXWCGalgPTYi9gkduWtyenLiI5f4p
-         M0AOJFn9DfgCvakcRejAQI9rtR3rvohaKKdqIcy3PDbcj7dI2Livcr3Su8zSB4Kt9NSA
-         iZNvEq2q3PVaRfW2Niwzlkrz1zAVvcg4wFeJJ4nuVvDQ5avoaTzzn/Lk6VGsLKlxWdbT
-         fJhhnPWfsixZAtUWTt3jHWWURNuqVe9A+dABlo/9iM+1RXEvOXy85ZHVVMbebLDn5fhR
-         bQ9g==
-X-Gm-Message-State: AOAM533Yv9JuLZ1AhA8OjASwWbAunZjc4nfy6l5cw+WBh2GvdGZMyc4+
-	/uMB6z8afjD1De8XBSLiKKLsCf3lQfE3jVg+bnM=
-X-Google-Smtp-Source: ABdhPJwJ6T5H9dB+gsPl3nCM24dsNlik6sAFT6LzW3OCAsehIV/jBisNCCuGRwSO7oGnJd0IpsrVJw==
-X-Received: by 2002:a50:8a99:: with SMTP id j25mr11918727edj.253.1620402107013;
-        Fri, 07 May 2021 08:41:47 -0700 (PDT)
+        bh=yEO7ZaatPcmzbqM34zkJdECphq9qnO/o+FpARxgpmg0=;
+        b=ExljSXRbDuB2Po0vjOtu7oJ9mzrmm4ispq0sAq/KACxEGv+ZAWtOpdzJ2S2fd683bs
+         8HdA0YNeVK710QexH4FwCMRlYPRFmmH+LSgjoqsNSl7GIRt8JUvLt676/7h6TXoaqgE+
+         BPJDCHJM8pjAYsDXFvwDudc2wH8skUyxSGaEhZhdWzvwqLmBeD0y4dsV684xOGScr0sy
+         zxsZyajoWf5RXJtGxMaBja/BAEm9ioYsj/wDse6epichB1mwNqAiZqWoVdqPhHRb4RRa
+         hyDDB9pfIpx06j/5/U9LuH33i2pWUJuoEzhpQgZMsZzpH5nUWMsDByocl3Ka0EDOxjuj
+         5BLA==
+X-Gm-Message-State: AOAM533f/UQXSzUJyu3A8MmFN+DRyTpcVhVgFxXbFVEzwg3T9Ge1oEr4
+	RgkuReZiyPsNhCPI/2NoMvT6b+NzT/Dgq/9Pa6s=
+X-Google-Smtp-Source: ABdhPJwERQG9+smxS9CNY3eGK+kMYBlkGIWkkAR5LoOF26ApBJHAgI+eU7ZJKIrGMKirzpeEDmQj2Q==
+X-Received: by 2002:a17:907:f91:: with SMTP id kb17mr10541059ejc.521.1620402769808;
+        Fri, 07 May 2021 08:52:49 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:2fa9:2d27:234d:525d])
-        by smtp.gmail.com with ESMTPSA id dk13sm4450911edb.34.2021.05.07.08.41.46
+        by smtp.gmail.com with ESMTPSA id i8sm1758957ejj.68.2021.05.07.08.52.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 May 2021 08:41:46 -0700 (PDT)
-To: Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <79b377c2cb932a86f0fd1a17f814064dd1ad7015.1620321074.git.pabeni@redhat.com>
+        Fri, 07 May 2021 08:52:49 -0700 (PDT)
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: receive checksum for
+ MP_CAPABLE with data"
+To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
+References: <135787a3f77e222df41dc187395cb4f9181191ac.1620355254.git.geliangtang@gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-net] mptcp: avoid OOB access in setsockopt()
-Message-ID: <a73a8ce9-bf15-a94d-e936-444632eaa7dc@tessares.net>
-Date: Fri, 7 May 2021 17:41:45 +0200
+Message-ID: <8bdb4cf1-fc74-267a-40d7-cf3559d0d31e@tessares.net>
+Date: Fri, 7 May 2021 17:52:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
@@ -52,42 +51,27 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <79b377c2cb932a86f0fd1a17f814064dd1ad7015.1620321074.git.pabeni@redhat.com>
+In-Reply-To: <135787a3f77e222df41dc187395cb4f9181191ac.1620355254.git.geliangtang@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Florian, Mat,
+Hi Geliang,
 
-On 06/05/2021 19:24, Paolo Abeni wrote:
-> We can't use tcp_set_congestion_control() on an mptcp socket, as
-> such function can end-up accessing a tcp-specific field -
-> prior_ssthresh - causing an OOB access.
-> 
-> To allow propagating the correct ca algo on subflow, cache the ca
-> name at initialization time.
-> 
-> Additionally avoid overriding the user-selected CA (if any) at
-> clone time.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/182
-> Fixes: aa1fbd94e5c7 ("mptcp: sockopt: add TCP_CONGESTION and TCP_INFO")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+On 07/05/2021 04:42, Geliang Tang wrote:
+> Drop useless braces '{}'.
 
-Thank you for the patch and the review!
+Good catch!
 
-I just applied the patch with Florian's Ack, a fix for the typo spot by
-Mat but not RvB tag for Mat (@Mat: I guess you are OK with the patch but
-it is unclear :) )
+(I thought CheckPatch was looking at that)
 
-- 20744dcd6f36: mptcp: avoid OOB access in setsockopt()
-- c69b45723290: conflict in t/DO-NOT-MERGE-mptcp-use-kmalloc-on-kasan-build
-- Results: 37818f5e301f..837dc82fa10b
+- 020b96ad5730: "squashed" in "mptcp: receive checksum for MP_CAPABLE
+with data"
 
-Builds and tests are now in progress:
+Builds and tests are now queued:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210507T154124
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210507T154124
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210507T155221
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210507T155221
 
 Cheers,
 Matt
