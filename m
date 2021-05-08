@@ -1,31 +1,30 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC6A72
-	for <mptcp@lists.linux.dev>; Sat,  8 May 2021 00:28:38 +0000 (UTC)
-IronPort-SDR: eWr0nG2ujY3q7VC90nKI8jNzt9XVfboPdyKl86uMtTBdcZKnidRGPv+4+mAIyRhtGkZcTITKJZ
- OI/c6AAqfvWg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9977"; a="195731199"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A53371
+	for <mptcp@lists.linux.dev>; Sat,  8 May 2021 00:45:01 +0000 (UTC)
+IronPort-SDR: UD3O39o/F+8ZECo/Xn7vP3hsUEwinBd6/sbqcGrvvd8GYPcU3/kCRz5oN+KNseFGKWOz3ZKQm9
+ DIJO9jq3Etng==
+X-IronPort-AV: E=McAfee;i="6200,9189,9977"; a="178406045"
 X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
-   d="scan'208";a="195731199"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 17:28:18 -0700
-IronPort-SDR: 19tiphC13zXVWwKD2NwI/qeoVMGuxjPB4wUNW4zaIOAl7PC/E4IMElmq1psEN0N4SDu4CXxGRs
- 1Wpq1bN39j3Q==
+   d="scan'208";a="178406045"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 17:45:00 -0700
+IronPort-SDR: o5cnX6Tsm0OR59G3F7du/ZfuL6PWClboOM7QzzYsBmBTp2ZbEB7oGyk1RnONmf/cuX5qKGLG7h
+ 1evkn2Z+623Q==
 X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
-   d="scan'208";a="431730698"
+   d="scan'208";a="435149964"
 Received: from magalleg-mobl.amr.corp.intel.com ([10.209.84.24])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 17:28:17 -0700
-Date: Fri, 7 May 2021 17:28:17 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 17:45:00 -0700
+Date: Fri, 7 May 2021 17:44:59 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev, Florian Westphal <fw@strlen.de>
-Subject: Re: [MPTCP][PATCH v4 mptcp-next 3/4] mptcp: add deny_join_id0 in
- mptcp_options_received
-In-Reply-To: <2b2c8a35b85111f472e735f29166e1f88ecc3909.1620275759.git.geliangtang@gmail.com>
-Message-ID: <af3f5ef4-d3a2-a989-32df-8f23bfec5674@linux.intel.com>
-References: <cover.1620275759.git.geliangtang@gmail.com> <025c3e92286c1c425b6ce65b4feac7e416947e54.1620275759.git.geliangtang@gmail.com> <75cdf44b996264eeacf424f60fecd873ebc47d39.1620275759.git.geliangtang@gmail.com>
- <2b2c8a35b85111f472e735f29166e1f88ecc3909.1620275759.git.geliangtang@gmail.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [MPTCP][PATCH mptcp-next 2/3] mptcp: MP_FAIL suboption
+ receiving
+In-Reply-To: <bbdc6ded86ae034f443853b6e207aea2b3b2c519.1620282929.git.geliangtang@gmail.com>
+Message-ID: <f04b71cb-8983-fc3c-b1da-6dc990683f2a@linux.intel.com>
+References: <cover.1620282929.git.geliangtang@gmail.com> <f158cbfcb748b9b6792d9b316b8fa810e5cb044a.1620282929.git.geliangtang@gmail.com> <bbdc6ded86ae034f443853b6e207aea2b3b2c519.1620282929.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -35,136 +34,131 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Thu, 6 May 2021, Geliang Tang wrote:
 
-> This patch added a new flag named deny_join_id0 in struct
-> mptcp_options_received. Set it when MP_CAPABLE with the flag
-> MPTCP_CAP_DENYJOIN_ID0 is received.
+> This patch added handling for receiving MP_FAIL suboption.
 >
-> Also add a new flag remote_deny_join_id0 in struct mptcp_pm_data. When the
-> flag deny_join_id0 is set, set this remote_deny_join_id0 flag.
+> Add a new members mp_fail and fail_seq in struct mptcp_options_received.
+> When MP_FAIL suboption is received, set mp_fail to 1 and save the sequence
+> number to fail_seq.
 >
-> In mptcp_pm_create_subflow_or_signal_addr, if the remote_deny_join_id0 flag
-> is set, and the remote address id is zero, stop this connection.
+> Then invoke mptcp_pm_mp_fail_received to deal with the MP_FAIL suboption.
+> In it, send MP_FAIL + RST and fallback.
 >
-> Suggested-by: Florian Westphal <fw@strlen.de>
 > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 > ---
-> net/mptcp/options.c    | 6 ++++++
-> net/mptcp/pm.c         | 1 +
-> net/mptcp/pm_netlink.c | 4 +++-
-> net/mptcp/protocol.h   | 4 +++-
-> net/mptcp/subflow.c    | 2 ++
-> 5 files changed, 15 insertions(+), 2 deletions(-)
+> net/mptcp/options.c  | 16 ++++++++++++++++
+> net/mptcp/pm.c       | 17 +++++++++++++++++
+> net/mptcp/protocol.h |  3 +++
+> 3 files changed, 36 insertions(+)
 >
 > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 630c87c62a87..4179287bd647 100644
+> index 485c5a77e71b..9795e3ccf6cc 100644
 > --- a/net/mptcp/options.c
 > +++ b/net/mptcp/options.c
-> @@ -87,6 +87,9 @@ static void mptcp_parse_option(const struct sock *sk,
-> 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
-> 			mp_opt->csum_reqd = 1;
+> @@ -341,6 +341,16 @@ static void mptcp_parse_option(const struct sock *sk,
+> 		mp_opt->reset_reason = *ptr;
+> 		break;
 >
-> +		if (flags & MPTCP_CAP_DENY_JOIN_ID0)
-> +			mp_opt->deny_join_id0 = 1;
+> +	case MPTCPOPT_MP_FAIL:
+> +		if (opsize != TCPOLEN_MPTCP_FAIL)
+> +			break;
 > +
-> 		mp_opt->mp_capable = 1;
-> 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
-> 			mp_opt->sndr_key = get_unaligned_be64(ptr);
-> @@ -363,6 +366,7 @@ void mptcp_get_options(const struct sock *sk,
-> 	mp_opt->mp_prio = 0;
+> +		ptr += 2;
+> +		mp_opt->mp_fail = 1;
+> +		mp_opt->fail_seq = get_unaligned_be64(ptr);
+> +		pr_debug("MP_FAIL: data_seq=%llu", mp_opt->fail_seq);
+> +		break;
+> +
+> 	default:
+> 		break;
+> 	}
+> @@ -367,6 +377,7 @@ void mptcp_get_options(const struct sock *sk,
 > 	mp_opt->reset = 0;
 > 	mp_opt->csum_reqd = 0;
-> +	mp_opt->deny_join_id0 = 0;
+> 	mp_opt->deny_join_id0 = 0;
+> +	mp_opt->mp_fail = 0;
 >
 > 	length = (th->doff * 4) - sizeof(struct tcphdr);
 > 	ptr = (const unsigned char *)(th + 1);
-> @@ -1055,6 +1059,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+> @@ -1127,6 +1138,11 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+> 		mp_opt.mp_prio = 0;
 > 	}
 >
-> 	mptcp_get_options(sk, skb, &mp_opt);
-> +	if (mp_opt.deny_join_id0)
-> +		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
-> 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
-> 		return;
->
+> +	if (mp_opt.mp_fail) {
+> +		mptcp_pm_mp_fail_received(sk, mp_opt.fail_seq);
+> +		mp_opt.mp_fail = 0;
+> +	}
+> +
+> 	if (mp_opt.reset) {
+> 		subflow->reset_seen = 1;
+> 		subflow->reset_reason = mp_opt.reset_reason;
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9d00fa6d22e9..639271e09604 100644
+> index 639271e09604..87152a2bcbc4 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -320,6 +320,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
-> 	WRITE_ONCE(msk->pm.addr_signal, 0);
-> 	WRITE_ONCE(msk->pm.accept_addr, false);
-> 	WRITE_ONCE(msk->pm.accept_subflow, false);
-> +	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
-> 	msk->pm.status = 0;
+> @@ -247,6 +247,23 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
+> 	mptcp_event(MPTCP_EVENT_SUB_PRIORITY, mptcp_sk(subflow->conn), sk, GFP_ATOMIC);
+> }
 >
-> 	spin_lock_init(&msk->pm.lock);
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d094588afad8..58161510feef 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -456,10 +456,12 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
-> 		if (local) {
-> 			struct mptcp_addr_info remote = { 0 };
->
-> +			remote_address((struct sock_common *)sk, &remote);
-> +			if (!remote.id && READ_ONCE(msk->pm.remote_deny_join_id0))
+> +void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+> +{
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +
+> +	pr_debug("map_seq=%llu fail_seq=%llu %llu", subflow->map_seq, subflow->fail_seq, fail_seq);
+> +
+> +	if (subflow->fail_seq != fail_seq) {
+> +		subflow->send_mp_fail = 1;
+> +		subflow->fail_seq = fail_seq;
+> +		mptcp_subflow_reset(sk);
+> +	}
+> +
+> +	pr_fallback(msk);
+> +	__mptcp_do_fallback(msk);
 
-remote_address() doesn't set remote.id, so it will always be 0 here and no 
-subflows can ever be initiated by this block of code if the peer sent the 
-C flag.
+Note that RFC 8684 section 3.7 says that fallback is only required if 
+there is a single active subflow.
 
-The in-kernel PM should have a better way to select a remote address for 
-this subflow connection, but that might be beyond the scope of this patch 
-set. For the C flag patch set, I do think it makes sense to check to see 
-if we have received any ADD_ADDRs from the remote and use that remote 
-address in the remote_deny_join_id0 case.
+The RFC also says that data following fail_seq should be discarded when 
+there are multiple subflows open. It's similar to a forced checksum 
+failure - the queued data that has already been received on the subflow 
+that received the MP_FAIL is discarded and not DATA_ACKed.
 
 -Mat
 
 
-> +				return;
-> 			msk->pm.local_addr_used++;
-> 			msk->pm.subflows++;
-> 			check_work_pending(msk);
-> -			remote_address((struct sock_common *)sk, &remote);
-> 			spin_unlock_bh(&msk->pm.lock);
-> 			__mptcp_subflow_connect(sk, &local->addr, &remote,
-> 						local->flags, local->ifindex);
+> +}
+> +
+> /* path manager helpers */
+>
+> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index fd6fe3176e08..41baa2ffc9a9 100644
+> index ff70b3e97dd0..fef6adef3c99 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -138,7 +138,8 @@ struct mptcp_options_received {
+> @@ -138,6 +138,7 @@ struct mptcp_options_received {
+> 		add_addr : 1,
+> 		rm_addr : 1,
 > 		mp_prio : 1,
+> +		mp_fail : 1,
 > 		echo : 1,
 > 		csum_reqd : 1,
-> -		backup : 1;
-> +		backup : 1,
-> +		deny_join_id0 : 1;
-> 	u32	token;
-> 	u32	nonce;
-> 	u64	thmac;
-> @@ -193,6 +194,7 @@ struct mptcp_pm_data {
-> 	bool		work_pending;
-> 	bool		accept_addr;
-> 	bool		accept_subflow;
-> +	bool		remote_deny_join_id0;
-> 	u8		add_addr_signaled;
-> 	u8		add_addr_accepted;
-> 	u8		local_addr_used;
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 324aff0b2f16..659b8842ae3b 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -408,6 +408,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+> 		backup : 1,
+> @@ -159,6 +160,7 @@ struct mptcp_options_received {
+> 	u64	ahmac;
+> 	u8	reset_reason:4;
+> 	u8	reset_transient:1;
+> +	u64	fail_seq;
+> };
 >
-> 		if (mp_opt.csum_reqd)
-> 			WRITE_ONCE(mptcp_sk(parent)->csum_enabled, true);
-> +		if (mp_opt.deny_join_id0)
-> +			WRITE_ONCE(mptcp_sk(parent)->pm.remote_deny_join_id0, true);
-> 		subflow->mp_capable = 1;
-> 		subflow->can_ack = 1;
-> 		subflow->remote_key = mp_opt.sndr_key;
+> static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
+> @@ -697,6 +699,7 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
+> int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+> 				 struct mptcp_addr_info *addr,
+> 				 u8 bkup);
+> +void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq);
+> void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+> bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
+> struct mptcp_pm_add_entry *
 > -- 
 > 2.31.1
 >
