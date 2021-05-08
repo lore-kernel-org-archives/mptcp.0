@@ -1,172 +1,101 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287F870
-	for <mptcp@lists.linux.dev>; Sat,  8 May 2021 02:58:56 +0000 (UTC)
-Received: by mail-pj1-f48.google.com with SMTP id lp4so6257108pjb.1
-        for <mptcp@lists.linux.dev>; Fri, 07 May 2021 19:58:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAAC72
+	for <mptcp@lists.linux.dev>; Sat,  8 May 2021 10:33:32 +0000 (UTC)
+Received: by mail-pj1-f50.google.com with SMTP id lj11-20020a17090b344bb029015bc3073608so6955998pjb.3
+        for <mptcp@lists.linux.dev>; Sat, 08 May 2021 03:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PgcfNTAswK0HX0UART+myHszZ4DAqTfvNUL6mW6q12o=;
-        b=cqeG+WqwLWy9uYmDwxneJeXLmKCbAh9D3zsDrLbKRKafkm4Q8TjNHwqKc0o5e4sX7Y
-         FqqWKpI62rr4H/kOgsVpLuIJSK/pBdJT9r37aFcmyhZNdJINj+u/p4qLwb1GEDx+Oj5X
-         AWZrX8254Nk79//deZtBt1yweThzW6tP2BA2+Y6jXuVWiNutjtmmVnm+owbVtdcWsirA
-         5t0WwaipX6rGnDu3p2I+lhtGjl7X8PsqW0mlMig8bZhlVyKJ3r5QEJDUydr1S2rCJRps
-         /d5dm5n0gW3jppuiouNh3Mvw1QKBGDeUVy08lwehH1GRoTfIwFIUbZ/17Pgd45jnnxI+
-         bz1Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3+lBTQBNsOmaQF23L/h0gr46o4WRTdq6/wZoLcz/WZ8=;
+        b=Kx+tY37luJsz4bJSeAN2JE5WNv9JIgOFMWsNAq+87h/yVQnLwZkFdPYMWnqaJSUiWv
+         o4saIHEYPc4sR8mM6RwIXVEg0DdFMfh7AvP3mPL+xuxZvzT0DFQKTxnwY05NqnQEMiLm
+         vpDSItGiX3o/BzkdIgOE0nPu6wpmY6NIS3esb0SvCqJZYy8LG1UzZL3/sA3hA06MAzJB
+         8/bLG2RfeH4D3av0Oi9x2xwVOfQBFsUwMNWJDPgqBJUKLpBz8yUfbLmKvN+5qX+Ujme0
+         U9AvsZ+xxc8Y+fftNIZ0a03MpEHfAPE2JFOAF6ruMnIRg8Y3eIWqYdoG5CeBHyfMTe0y
+         a8cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PgcfNTAswK0HX0UART+myHszZ4DAqTfvNUL6mW6q12o=;
-        b=slafi0gnIf2BIjLbj4I55+rqoDuaLFzI2RT1i0ELGA+SCPyTYjoqM4V/Yoy4d/w8GU
-         eBMYH7Nn0HqYHjtJOh3buu7XHtuj4QBK+zLzk/4x9a3E1RTvSFgeuThOclgRjgw1yy/s
-         hw5KzJmZkUwKIvmr8NkZJlTv4FPKvT2CAiUg8X7SP0hxyE5z2wN4UXrSgwoQ+GlR+tRQ
-         12ukzf+pN+TaH4EiZRS46pHoGfMDeFAUMyfRI7GOrS8hJPy5d18SaCKAj8pphoVybl8I
-         j2xOBqTvjskVQ0e9yQy3EyGoNGZ0wBlhOP/oIytW0c4DNkHTeKb0XKyi14CoequkimSI
-         SkkQ==
-X-Gm-Message-State: AOAM5325xWKY3TNKKkQuy//LtjxZ26mYC0cSkeuIDEIwBdOF6IOI+rJ3
-	iV3THJ6Y3uedycnSa+0jtdKK2rgIk8+bBsXEk3Vsv/YO+T8=
-X-Google-Smtp-Source: ABdhPJyRjS2FxGd0FnwTGWYl2E1m1zt7vnWB/obt5CRiXYwYBMDUNJoNvjhOKySiME4ZdWpbTBMJ/Gzj2fY+17XZ3xo=
-X-Received: by 2002:a17:90b:34a:: with SMTP id fh10mr27965152pjb.123.1620442735694;
- Fri, 07 May 2021 19:58:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3+lBTQBNsOmaQF23L/h0gr46o4WRTdq6/wZoLcz/WZ8=;
+        b=De2c+XEvQsMFp4LMehhZH1y2dUZE3r7RRcwQP+B1+DYWmxLeItHDZzu9jck7kiCn0e
+         rYHAEWvFHsC155IfP46VW3Eul0XH8p+X5AD66mp7GLb2/JzUFQGIyih0S6znJDnyPmhQ
+         teC/3izF7RaPDFAybnlXwc8eh084P6FzOR/oB3uIhNC8N2nCLZFoKPFNr+HmmXw3Erpq
+         vD+R7RCOQUwWZZ8N9rmwrTikn4zs1aKuFjFa7+etLKxiD1AJW/rBagb8ZbjTPMG9bOv4
+         oN9ZxAJ+v92zAJZpaTCiWTHNTraV0IY+VbzzUTWorvG4RZtkc4Hwb/epXz6Sp0pkAiUG
+         WyJg==
+X-Gm-Message-State: AOAM530zPBtK+egP4+NyyvqQTZNgH+/872Z4Sxk4pw0Y2Ojtzx7cHQi8
+	cHIwX8tTdWvxKfJ4m3kZBzCiQA3WDoY=
+X-Google-Smtp-Source: ABdhPJxnCVgEZkjIyChBbQEx+2bEG7+oY34Qj1AuSKzgBad+G+Ly6QRgImLwWJllarDowM1kZExUEQ==
+X-Received: by 2002:a17:90b:e95:: with SMTP id fv21mr15621648pjb.107.1620470012013;
+        Sat, 08 May 2021 03:33:32 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id j3sm6848259pfr.30.2021.05.08.03.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 May 2021 03:33:31 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v5 mptcp-next 0/5] add MP_CAPABLE 'C' flag
+Date: Sat,  8 May 2021 18:33:23 +0800
+Message-Id: <cover.1620469774.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <c8b33d7b10e063f3bd93d25955d539a6af7f0372.1620374286.git.geliangtang@gmail.com>
- <c92941a2-d629-ae34-23e3-18faec2a3750@tessares.net> <CA+WQbwvfLSqK5uWUmNrPwzazwXV2HNUXU_8HUz6dxifYmRTGCw@mail.gmail.com>
- <619cd782-bb39-c284-b59e-546a0aea3e3d@tessares.net> <6b70c2a8-f705-219f-8b1a-ff74a1261a8d@tessares.net>
-In-Reply-To: <6b70c2a8-f705-219f-8b1a-ff74a1261a8d@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Sat, 8 May 2021 10:58:44 +0800
-Message-ID: <CA+WQbwupHRDX29f7=eCb-9UxD_r19ypn0Cz523doN-+EK-9UQQ@mail.gmail.com>
-Subject: Re: [MPTCP][PATCH mptcp-next] mptcp: don't fallback when data_fin enabled
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Matt, Paolo,
+v5:
+ - add a new patch "mptcp: add add_list in mptcp_pm_data"
+ - fix !CONFIG_SYSCTL case
+ - tag: export/20210507T174457
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B45=E6=
-=9C=887=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8811:23=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> On 07/05/2021 14:19, Matthieu Baerts wrote:
-> > Hi Geliang,
-> >
-> > On 07/05/2021 11:08, Geliang Tang wrote:
-> >> Hi Matt,
-> >>
-> >> Thanks for your review.
-> >>
-> >> Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B45=
-=E6=9C=887=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=884:51=E5=86=99=E9=81=
-=93=EF=BC=9A
-> >>>
-> >>> Hi Geliang,
-> >>>
-> >>> On 07/05/2021 09:58, Geliang Tang wrote:
-> >>>> This patch fixed this fallback error:
-> >>>
-> >>> Thank you for the patch!
-> >>>
-> >>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> >>>> index f3e379a0f08d..940b32511443 100644
-> >>>> --- a/net/mptcp/options.c
-> >>>> +++ b/net/mptcp/options.c
-> >>>> @@ -901,7 +901,7 @@ static bool check_fully_established(struct mptcp=
-_sock *msk, struct sock *ssk,
-> >>>>        * MP_JOIN subflows.
-> >>>>        */
-> >>>>       if (!mp_opt->mp_capable) {
-> >>>> -             if (subflow->mp_join)
-> >>>> +             if (subflow->mp_join || mptcp_data_fin_enabled(msk))> =
-                  goto reset;
-> >>>
-> >>> I don't think we should send a reset here. For me this behaviour is n=
-ormal.
-> >>
-> >> Yes, we don't need to send a reset here. What about just return here?
-> >> Something like this:
-> >>
-> >> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> >> index 3428c163299b..bd62dadfefdb 100644
-> >> --- a/net/mptcp/options.c
-> >> +++ b/net/mptcp/options.c
-> >> @@ -905,6 +905,8 @@ static bool check_fully_established(struct
-> >> mptcp_sock *msk, struct sock *ssk,
-> >>         if (!mp_opt->mp_capable) {
-> >>                 if (subflow->mp_join)
-> >>                         goto reset;
-> >> +               if (mptcp_data_fin_enabled(msk))
-> >> +                       return false;
-> >>                 subflow->mp_capable =3D 0;
-> >>                 pr_fallback(msk);
-> >>                 __mptcp_do_fallback(msk);
-> >
-> > I think we still need to do a fallback here not to expect a DATA_ACK.
-> > For example in __mptcp_check_send_data_fin(), we change the state
-> > because we will not get a DATA_ACK.
-> >
-> > So I think everything is OK there.
-> >
-> > Just one thing: should we send a DATA_FIN if we were not "fully
-> > established" when closing the socket?
->
-> Paolo shared this answer on IRC:
->
->   I would say yes. The server side could have already allocated the msk
-> socket (and the 4th ack could have been lost)
->
-> Which makes sense.
->
-> So I think we should not do anything here. Except maybe a comment here
-> in the code? e.g.
->
+v4:
+ - rename mptcp_is_allow_join_id0 to mptcp_allow_join_id0
+ - rename deny_join_id0 in mptcp_pm_data to remote_deny_join_id0
+ - add comments for self test cases
+ - apply: export/20210504T064955 +
+          "data checksum support" +
+          "data checksum support cleanups"
 
-I think it's a little strange to include only a comment in a patch. Let's
-just drop this patch (mptcp: don't fallback when data_fin enabled), and
-close the ticket #176.
+v3:
+ - use 'u8 allow_join_initial_addr_port'
+ - drop the spinlock in patch 3
 
-Thanks.
+v2:
+ - rename join_denied to allow_join_id0 in mptcp_out_options
+ - rename join_denied to deny_join_id0 in mptcp_options_received
+ - add a new function mptcp_pm_deny_join_id0_received
+ - move deny_join_id0 flag from mptcp_sock to mptcp_pm_data
+ - check deny_join_id0 flag in mptcp_pm_create_subflow_or_signal_addr
+instead of in mptcp_syn_options.
 
--Geliang
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/183
 
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 3428c163299b..43d55039743a 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -905,6 +905,14 @@ static bool check_fully_established(struct
-> mptcp_sock *msk, struct sock *ssk,
->         if (!mp_opt->mp_capable) {
->                 if (subflow->mp_join)
->                         goto reset;
-> +
-> +               /* We also want to fallback if the connection is closed
-> while we
-> +                * were not in fully established mode.
-> +                * But we still want to send the DATA_FIN if the
-> userspace has
-> +                * closed the connection at this stage, just in case the
-> server
-> +                * side has already allocated the msk socket or if the
-> 4th ACK
-> +                * has been lost.
-> +                */
->                 subflow->mp_capable =3D 0;
->                 pr_fallback(msk);
->                 __mptcp_do_fallback(msk);
->
->
-> Cheers,
-> Matt
->
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+Geliang Tang (5):
+  mptcp: add sysctl allow_join_initial_addr_port
+  mptcp: add allow_join_id0 in mptcp_out_options
+  mptcp: add add_list in mptcp_pm_data
+  mptcp: add deny_join_id0 in mptcp_options_received
+  selftests: mptcp: add deny_join_id0 testcases
+
+ Documentation/networking/mptcp-sysctl.rst     | 13 +++
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/ctrl.c                              | 16 ++++
+ net/mptcp/options.c                           | 12 +++
+ net/mptcp/pm.c                                |  2 +
+ net/mptcp/pm_netlink.c                        | 86 ++++++++++++++++++-
+ net/mptcp/protocol.c                          |  1 +
+ net/mptcp/protocol.h                          | 13 ++-
+ net/mptcp/subflow.c                           |  3 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 56 +++++++++++-
+ 10 files changed, 199 insertions(+), 6 deletions(-)
+
+-- 
+2.31.1
+
