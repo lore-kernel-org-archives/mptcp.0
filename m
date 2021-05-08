@@ -1,50 +1,51 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508F972
-	for <mptcp@lists.linux.dev>; Sat,  8 May 2021 10:34:11 +0000 (UTC)
-Received: by mail-pf1-f174.google.com with SMTP id b15so9700270pfl.4
-        for <mptcp@lists.linux.dev>; Sat, 08 May 2021 03:34:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC6872
+	for <mptcp@lists.linux.dev>; Sat,  8 May 2021 10:34:14 +0000 (UTC)
+Received: by mail-pf1-f181.google.com with SMTP id i190so9627001pfc.12
+        for <mptcp@lists.linux.dev>; Sat, 08 May 2021 03:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mhHaIGRJdPxaVMDtrNeOx7rD0qNlWbp67hON/dK5j9g=;
-        b=AUdMn9cXRozDg2qJDP9+rwW7+64/U4J0CeRYMwimQWKaJCzoL3FNOsoffzp8TuDowf
-         X1s/oeLcMQ++ETYqoQV24A6y79uJU1fuSkmNdqS9O5pxrAbU7XAn9nvHBfj4ZMBCG/HM
-         HvFGZLEE9h3b4cI3ts9N6NUGubuyWAdBRfQI1i9TB5I8CRjRPaRwjpgx5chydTu6e6tA
-         CsmSkuOa72NX9IttePjIOb+W2kudxLWMAQRyygRYXoE7V+gxq5ga8G9LlxCQF6axDlKe
-         vo+6aA7QenUwTCsGca+zF7i7edqwcnkbvHHS3gXQkJEg1mTPQMFFUOVFNdLZD5awiXCe
-         t73g==
+        bh=Bw0ftZvCnf68WU5l2lN70/KzKBWTxsRpFaY6nF/k0v8=;
+        b=DqttpYgi5/pIS9VCX5yIOCLwa5N+MWtcG+lNCcgLC5GyR+4cB+hxuZ/qRcYI1eu7p6
+         OzH15JSBBYSYJTLOwnDN5tn1vHzjWHTVVqbhAbxrBUdCh+7VtNICE+oSPu0Gotl+DF/v
+         HraUDxB4viGh5QYF0JJT8JzZAjZEu2NnL4xgVzTssz4ZlIq+TLPKTR6kDn9OpWrV3gWB
+         0Wbn65ALTZogOnlobRNCaaxftmP0nk4QaYoHzWVvlV9I5HRtawijDW19mG19qqt0Jc0p
+         nRQB6DwU00HhW2JGt67HWw9XCcNuQiFQA7wePmJQlp6vjW5LhnzfmQvNqaAWrHGpzsI+
+         dLcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mhHaIGRJdPxaVMDtrNeOx7rD0qNlWbp67hON/dK5j9g=;
-        b=He6np/zUjXicU/pnSC8K8gYImMMTlcKYLv4JdsGSqQOVXGb/LqCCt/zowot4lS5Acw
-         W1TWjWiiqjQSkoOBs7sR1XytTzSJIwlPPtatn6BHVQ1q095sUC5uJatddGhfO8+Y7hgX
-         4wZ/oFLLadg3njW+hh9WWOYifYm37UAUi/W0oDEde8k6MGM2zLy+CaWwXC4PatpONZ82
-         8CsxcYJ7OBMPOvW9WnF1WO1wArdKQ/TbFNmpvg8F/OvZ28qZrEQHsveJIqcHJpmdEwxb
-         4eWXcjwyRYStH1cdAXO6VQUkP1h20nFuFI7+derBl5W1xb9ot5En4VfvUfWrw1yCdJii
-         aveA==
-X-Gm-Message-State: AOAM532PpypOpLpDS1iC8Z28rlU8yAdptMGPDWFR9SDV+1gj9YyNs0Rx
-	wbuVLg7Kl6CA9WIAL1J8GCe4nvFWS/o=
-X-Google-Smtp-Source: ABdhPJxatUX42vWl5P+dSoaanIsq93T/WWoIoPzGBnhthxVU/i+bnsAy+yT6XQ157uMj/RvVvUta6Q==
-X-Received: by 2002:aa7:908c:0:b029:209:aacd:d8b with SMTP id i12-20020aa7908c0000b0290209aacd0d8bmr15373638pfa.74.1620470050730;
-        Sat, 08 May 2021 03:34:10 -0700 (PDT)
+        bh=Bw0ftZvCnf68WU5l2lN70/KzKBWTxsRpFaY6nF/k0v8=;
+        b=awSZQ/9EcyRjjdWX1rCiL7plYYkmVJt4Xi27KQ3yayx5qZ2OqBnrcB0zA9jg3uNWNY
+         eOZ/S55C9qxnWBGZLgBSEl8BOQIM2RpEVEks4i2eYxqwzkry7PDYHhGpGcS2Y3X0vU1K
+         GHa+4qVx5qrYGAJmrBGVCcf73gYwZZlLvlBegpZLFTyglote77W9TF+dloJlB9gcUrRL
+         LaTeMPp+h+PpRXg4I4f7V/ni/XC6oo/IAaluLcYLX4AL/Nz7bd0cXjrmdNUR4pdvI6lv
+         4DOONZRpJGMLTmQPrHhnM8tQPm0TU6wqT6wXNNzv/Y8ucOV9qMF1eIyF6Y0S2mrTmZr9
+         mlqw==
+X-Gm-Message-State: AOAM5330mG0OqZspfDrl1hRKrxoOyf5J629Pze7jYNLZKbDdJVo9mGGx
+	rwb5b58kI0WhQFAQN8f4yg7K1fuKVcw=
+X-Google-Smtp-Source: ABdhPJwwYWx6vuuRkVxBzYB1O8et3gvQVig2zLmFUS889wFVdRpS1k/7GfBUTFQ3Y49KA8ux3YLSnw==
+X-Received: by 2002:a62:18d7:0:b029:28c:fdfa:f95b with SMTP id 206-20020a6218d70000b029028cfdfaf95bmr15090297pfy.57.1620470054187;
+        Sat, 08 May 2021 03:34:14 -0700 (PDT)
 Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id l35sm6461799pgm.10.2021.05.08.03.34.09
+        by smtp.gmail.com with ESMTPSA id d129sm112364pfa.6.2021.05.08.03.34.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 May 2021 03:34:10 -0700 (PDT)
+        Sat, 08 May 2021 03:34:13 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v5 mptcp-next 3/5] mptcp: add add_list in mptcp_pm_data
-Date: Sat,  8 May 2021 18:33:26 +0800
-Message-Id: <b2a2ef7d225e72395055f34445968d25939b6b0f.1620469774.git.geliangtang@gmail.com>
+Cc: Geliang Tang <geliangtang@gmail.com>,
+	Florian Westphal <fw@strlen.de>
+Subject: [MPTCP][PATCH v5 mptcp-next 4/5] mptcp: add deny_join_id0 in mptcp_options_received
+Date: Sat,  8 May 2021 18:33:27 +0800
+Message-Id: <c9966a080be92cc508bfdeece2085cfaca7dbe2a.1620469774.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <04612972cea357bc84aa01e145ac689a8397f466.1620469774.git.geliangtang@gmail.com>
-References: <cover.1620469774.git.geliangtang@gmail.com> <0edd6a3ad45c1f67a350356298ed4333fc42dac3.1620469774.git.geliangtang@gmail.com> <04612972cea357bc84aa01e145ac689a8397f466.1620469774.git.geliangtang@gmail.com>
+In-Reply-To: <b2a2ef7d225e72395055f34445968d25939b6b0f.1620469774.git.geliangtang@gmail.com>
+References: <cover.1620469774.git.geliangtang@gmail.com> <0edd6a3ad45c1f67a350356298ed4333fc42dac3.1620469774.git.geliangtang@gmail.com> <04612972cea357bc84aa01e145ac689a8397f466.1620469774.git.geliangtang@gmail.com> <b2a2ef7d225e72395055f34445968d25939b6b0f.1620469774.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -52,168 +53,131 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Like the anno_list member in struct mptcp_pm_data, this patch added a
-new member named add_list in it, to save all the received ADD_ADDRs in
-this add_list.
+This patch added a new flag named deny_join_id0 in struct
+mptcp_options_received. Set it when MP_CAPABLE with the flag
+MPTCP_CAP_DENYJOIN_ID0 is received.
 
+Also add a new flag remote_deny_join_id0 in struct mptcp_pm_data. When the
+flag deny_join_id0 is set, set this remote_deny_join_id0 flag.
+
+In mptcp_pm_create_subflow_or_signal_addr, if the remote_deny_join_id0 flag
+is set, use the first received ADD_ADDR address as the remote address to
+connect.
+
+Suggested-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
+ net/mptcp/options.c    |  6 ++++++
  net/mptcp/pm.c         |  1 +
- net/mptcp/pm_netlink.c | 74 ++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c   |  1 +
- net/mptcp/protocol.h   |  2 ++
- 4 files changed, 78 insertions(+)
+ net/mptcp/pm_netlink.c | 12 +++++++++++-
+ net/mptcp/protocol.h   |  4 +++-
+ net/mptcp/subflow.c    |  2 ++
+ 5 files changed, 23 insertions(+), 2 deletions(-)
 
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 441ec25e117d..b9188c53e58f 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -87,6 +87,9 @@ static void mptcp_parse_option(const struct sock *sk,
+ 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+ 			mp_opt->csum_reqd = 1;
+ 
++		if (flags & MPTCP_CAP_DENY_JOIN_ID0)
++			mp_opt->deny_join_id0 = 1;
++
+ 		mp_opt->mp_capable = 1;
+ 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
+ 			mp_opt->sndr_key = get_unaligned_be64(ptr);
+@@ -363,6 +366,7 @@ void mptcp_get_options(const struct sock *sk,
+ 	mp_opt->mp_prio = 0;
+ 	mp_opt->reset = 0;
+ 	mp_opt->csum_reqd = 0;
++	mp_opt->deny_join_id0 = 0;
+ 
+ 	length = (th->doff * 4) - sizeof(struct tcphdr);
+ 	ptr = (const unsigned char *)(th + 1);
+@@ -1055,6 +1059,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 	}
+ 
+ 	mptcp_get_options(sk, skb, &mp_opt);
++	if (mp_opt.deny_join_id0)
++		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
+ 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+ 		return;
+ 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 9d00fa6d22e9..9456fe17b6a3 100644
+index 9456fe17b6a3..23a309f641aa 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -324,6 +324,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+@@ -320,6 +320,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	WRITE_ONCE(msk->pm.addr_signal, 0);
+ 	WRITE_ONCE(msk->pm.accept_addr, false);
+ 	WRITE_ONCE(msk->pm.accept_subflow, false);
++	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
+ 	msk->pm.status = 0;
  
  	spin_lock_init(&msk->pm.lock);
- 	INIT_LIST_HEAD(&msk->pm.anno_list);
-+	INIT_LIST_HEAD(&msk->pm.add_list);
- 
- 	mptcp_pm_nl_data_init(msk);
- }
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d094588afad8..47a515af2b0a 100644
+index 47a515af2b0a..dddd7c5613fa 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -483,6 +483,72 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
- 	mptcp_pm_create_subflow_or_signal_addr(msk);
- }
+@@ -456,10 +456,20 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 		if (local) {
+ 			struct mptcp_addr_info remote = { 0 };
  
-+struct mptcp_pm_add_entry *
-+mptcp_lookup_add_list_by_id(struct mptcp_sock *msk, u8 id)
-+{
-+	struct mptcp_pm_add_entry *entry;
++			remote_address((struct sock_common *)sk, &remote);
++			if (READ_ONCE(msk->pm.remote_deny_join_id0)) {
++				struct mptcp_pm_add_entry *entry;
 +
-+	lockdep_assert_held(&msk->pm.lock);
++				entry = list_first_entry_or_null(&msk->pm.add_list,
++								 typeof(*entry), list);
++				if (!entry)
++					return;
 +
-+	list_for_each_entry(entry, &msk->pm.add_list, list) {
-+		if (entry->addr.id == id)
-+			return entry;
-+	}
-+
-+	return NULL;
-+}
-+
-+struct mptcp_pm_add_entry *
-+mptcp_lookup_add_list_by_saddr(struct mptcp_sock *msk,
-+			       struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_pm_add_entry *entry;
-+
-+	lockdep_assert_held(&msk->pm.lock);
-+
-+	list_for_each_entry(entry, &msk->pm.add_list, list) {
-+		if (addresses_equal(&entry->addr, addr, true))
-+			return entry;
-+	}
-+
-+	return NULL;
-+}
-+
-+static bool mptcp_pm_alloc_add_list(struct mptcp_sock *msk,
-+				    struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_pm_add_entry *add_entry = NULL;
-+
-+	lockdep_assert_held(&msk->pm.lock);
-+
-+	if (mptcp_lookup_add_list_by_saddr(msk, addr))
-+		return false;
-+
-+	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
-+	if (!add_entry)
-+		return false;
-+
-+	list_add(&add_entry->list, &msk->pm.add_list);
-+	add_entry->addr = *addr;
-+
-+	return true;
-+}
-+
-+void mptcp_pm_free_add_list(struct mptcp_sock *msk)
-+{
-+	struct mptcp_pm_add_entry *entry, *tmp;
-+	LIST_HEAD(free_list);
-+
-+	pr_debug("msk=%p", msk);
-+
-+	spin_lock_bh(&msk->pm.lock);
-+	list_splice_init(&msk->pm.add_list, &free_list);
-+	spin_unlock_bh(&msk->pm.lock);
-+
-+	list_for_each_entry_safe(entry, tmp, &free_list, list)
-+		kfree(entry);
-+}
-+
- static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
-@@ -513,6 +579,8 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	remote = msk->pm.remote;
- 	if (!remote.port)
- 		remote.port = sk->sk_dport;
-+	if (!mptcp_pm_alloc_add_list(msk, &remote))
-+		return;
- 	memset(&local, 0, sizeof(local));
- 	local.family = remote.family;
- 
-@@ -612,6 +680,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
- 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
-+			struct mptcp_pm_add_entry *entry;
- 			u8 id = subflow->local_id;
- 
- 			if (rm_type == MPTCP_MIB_RMADDR)
-@@ -631,6 +700,11 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 			if (rm_type == MPTCP_MIB_RMADDR) {
- 				msk->pm.add_addr_accepted--;
- 				WRITE_ONCE(msk->pm.accept_addr, true);
-+				entry = mptcp_lookup_add_list_by_id(msk, id);
-+				if (entry) {
-+					list_del(&entry->list);
-+					kfree(entry);
-+				}
- 			} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
- 				msk->pm.local_addr_used--;
- 			}
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 652e55a0c6e8..446076388637 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2882,6 +2882,7 @@ void mptcp_destroy_common(struct mptcp_sock *msk)
- 	skb_rbtree_purge(&msk->out_of_order_queue);
- 	mptcp_token_destroy(msk);
- 	mptcp_pm_free_anno_list(msk);
-+	mptcp_pm_free_add_list(msk);
- }
- 
- static void mptcp_destroy(struct sock *sk)
++				remote = entry->addr;
++			}
+ 			msk->pm.local_addr_used++;
+ 			msk->pm.subflows++;
+ 			check_work_pending(msk);
+-			remote_address((struct sock_common *)sk, &remote);
+ 			spin_unlock_bh(&msk->pm.lock);
+ 			__mptcp_subflow_connect(sk, &local->addr, &remote,
+ 						local->flags, local->ifindex);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index fd7ff2d28cb3..d19deee01896 100644
+index d19deee01896..5b2e72cf8e06 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -185,6 +185,7 @@ struct mptcp_pm_data {
- 	struct mptcp_addr_info local;
- 	struct mptcp_addr_info remote;
- 	struct list_head anno_list;
-+	struct list_head add_list;
+@@ -138,7 +138,8 @@ struct mptcp_options_received {
+ 		mp_prio : 1,
+ 		echo : 1,
+ 		csum_reqd : 1,
+-		backup : 1;
++		backup : 1,
++		deny_join_id0 : 1;
+ 	u32	token;
+ 	u32	nonce;
+ 	u64	thmac;
+@@ -194,6 +195,7 @@ struct mptcp_pm_data {
+ 	bool		work_pending;
+ 	bool		accept_addr;
+ 	bool		accept_subflow;
++	bool		remote_deny_join_id0;
+ 	u8		add_addr_signaled;
+ 	u8		add_addr_accepted;
+ 	u8		local_addr_used;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 249a66ad54dc..bb4bf31e73cf 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -408,6 +408,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
  
- 	spinlock_t	lock;		/*protects the whole PM data */
- 
-@@ -693,6 +694,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 				 struct mptcp_addr_info *addr,
- 				 u8 bkup);
- void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
-+void mptcp_pm_free_add_list(struct mptcp_sock *msk);
- bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
- struct mptcp_pm_add_entry *
- mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ 		if (mp_opt.csum_reqd)
+ 			WRITE_ONCE(mptcp_sk(parent)->csum_enabled, true);
++		if (mp_opt.deny_join_id0)
++			WRITE_ONCE(mptcp_sk(parent)->pm.remote_deny_join_id0, true);
+ 		subflow->mp_capable = 1;
+ 		subflow->can_ack = 1;
+ 		subflow->remote_key = mp_opt.sndr_key;
 -- 
 2.31.1
 
