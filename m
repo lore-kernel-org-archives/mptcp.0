@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5CB70
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 13:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ADA70
+	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 13:37:34 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lgSZl-0000Uj-67; Tue, 11 May 2021 15:37:29 +0200
+	id 1lgSZp-0000Uy-B3; Tue, 11 May 2021 15:37:33 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v2 mptcp-next 6/8] tcp: export timestamp helpers for mptcp
-Date: Tue, 11 May 2021 15:36:57 +0200
-Message-Id: <20210511133659.29982-7-fw@strlen.de>
+Subject: [PATCH v2 mptcp-next 7/8] mptcp: receive path cmsg support
+Date: Tue, 11 May 2021 15:36:58 +0200
+Message-Id: <20210511133659.29982-8-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210511133659.29982-1-fw@strlen.de>
 References: <20210511133659.29982-1-fw@strlen.de>
@@ -22,67 +22,113 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-MPTCP is builtin, so no need to add EXPORT_SYMBOL()s.
-
-It will be used to support SO_TIMESTAMP(NS) ancillary
-messages in the mptcp receive path.
+This adds support for SO_TIMESTAMP(NS).  Timestamps are passed to
+userspace in the same way as for plain tcp sockets.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/net/tcp.h |  4 ++++
- net/ipv4/tcp.c    | 10 ++++------
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ net/mptcp/protocol.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d05193cb0d99..e668f1bf780d 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -412,6 +412,10 @@ int tcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int nonblock,
- 		int flags, int *addr_len);
- int tcp_set_rcvlowat(struct sock *sk, int val);
- int tcp_set_window_clamp(struct sock *sk, int val);
-+void tcp_update_recv_tstamps(struct sk_buff *skb,
-+			     struct scm_timestamping_internal *tss);
-+void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
-+			struct scm_timestamping_internal *tss);
- void tcp_data_ready(struct sock *sk);
- #ifdef CONFIG_MMU
- int tcp_mmap(struct file *file, struct socket *sock,
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index f1c1f9e3de72..0e3f0e0e5b51 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1738,8 +1738,8 @@ int tcp_set_rcvlowat(struct sock *sk, int val)
- }
- EXPORT_SYMBOL(tcp_set_rcvlowat);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 86e599eb4403..41d4ec307615 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -40,10 +40,15 @@ struct mptcp_skb_cb {
+ 	u64 map_seq;
+ 	u64 end_seq;
+ 	u32 offset;
++	u8  has_rxtstamp:1;
+ };
  
--static void tcp_update_recv_tstamps(struct sk_buff *skb,
--				    struct scm_timestamping_internal *tss)
-+void tcp_update_recv_tstamps(struct sk_buff *skb,
-+			     struct scm_timestamping_internal *tss)
+ #define MPTCP_SKB_CB(__skb)	((struct mptcp_skb_cb *)&((__skb)->cb[0]))
+ 
++enum {
++	MPTCP_CMSG_TS = BIT(0),
++};
++
+ static struct percpu_counter mptcp_sockets_allocated;
+ 
+ static void __mptcp_destroy_sock(struct sock *sk);
+@@ -273,6 +278,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct sk_buff *tail;
++	bool has_rxtstamp;
+ 
+ 	__skb_unlink(skb, &ssk->sk_receive_queue);
+ 
+@@ -288,6 +294,8 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 			goto drop;
+ 	}
+ 
++	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
++
+ 	/* the skb map_seq accounts for the skb offset:
+ 	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
+ 	 * value
+@@ -295,6 +303,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
+ 	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + copy_len;
+ 	MPTCP_SKB_CB(skb)->offset = offset;
++	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
+ 
+ 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
+ 		/* in sequence */
+@@ -1768,7 +1777,9 @@ static void mptcp_wait_data(struct sock *sk, long *timeo)
+ 
+ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 				struct msghdr *msg,
+-				size_t len, int flags)
++				size_t len, int flags,
++				struct scm_timestamping_internal *tss,
++				int *cmsg_flags)
  {
- 	if (skb->tstamp)
- 		tss->ts[0] = ktime_to_timespec64(skb->tstamp);
-@@ -2024,8 +2024,6 @@ static int tcp_zerocopy_vm_insert_batch(struct vm_area_struct *vma,
- }
+ 	struct sk_buff *skb, *tmp;
+ 	int copied = 0;
+@@ -1788,6 +1799,11 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 			}
+ 		}
  
- #define TCP_VALID_ZC_MSG_FLAGS   (TCP_CMSG_TS)
--static void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
--			       struct scm_timestamping_internal *tss);
- static void tcp_zc_finalize_rx_tstamp(struct sock *sk,
- 				      struct tcp_zerocopy_receive *zc,
- 				      struct scm_timestamping_internal *tss)
-@@ -2197,8 +2195,8 @@ static int tcp_zerocopy_receive(struct sock *sk,
- #endif
++		if (MPTCP_SKB_CB(skb)->has_rxtstamp) {
++			tcp_update_recv_tstamps(skb, tss);
++			*cmsg_flags |= MPTCP_CMSG_TS;
++		}
++
+ 		copied += count;
  
- /* Similar to __sock_recv_timestamp, but does not require an skb */
--static void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
--			       struct scm_timestamping_internal *tss)
-+void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
-+			struct scm_timestamping_internal *tss)
+ 		if (count < data_len) {
+@@ -1975,7 +1991,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			 int nonblock, int flags, int *addr_len)
  {
- 	int new_tstamp = sock_flag(sk, SOCK_TSTAMP_NEW);
- 	bool has_timestamping = false;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+-	int copied = 0;
++	struct scm_timestamping_internal tss;
++	int copied = 0, cmsg_flags = 0;
+ 	int target;
+ 	long timeo;
+ 
+@@ -2003,7 +2020,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	while (copied < len) {
+ 		int bytes_read;
+ 
+-		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags);
++		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags, &tss, &cmsg_flags);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
+@@ -2084,6 +2101,11 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		set_bit(MPTCP_DATA_READY, &msk->flags);
+ 	}
+ out_err:
++	if (cmsg_flags && copied >= 0) {
++		if (cmsg_flags & MPTCP_CMSG_TS)
++			tcp_recv_timestamp(msg, sk, &tss);
++	}
++
+ 	pr_debug("msk=%p data_ready=%d rx queue empty=%d copied=%d",
+ 		 msk, test_bit(MPTCP_DATA_READY, &msk->flags),
+ 		 skb_queue_empty_lockless(&sk->sk_receive_queue), copied);
 -- 
 2.26.3
 
