@@ -1,94 +1,99 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A64C72
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 17:14:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A4B72
+	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 17:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1620753249;
+	s=mimecast20190719; t=1620755185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=pk4z78AX9PO6TFw0FJG3UMJGW7JO7PHknrNHBcHpsYw=;
-	b=cDnqyXP53zF0e6QDq4tq5XE128V7kWPIU3JcjghKGd+4HNlsvlBJnbfXaXAqsXEcUL93Yw
-	3iQB2vg/JEqiPHqKg00Ejm1F6U8/YdN5rVJK4Rjx/WP5dR4yKmV+j6JJXCXHGav7QAgBXC
-	pmNmAhhvHSw+QDZcW8pT8bEuRhJHc2U=
+	bh=nHOjqnrOIRMZcOVKl0nZbHwy7UyN6jaziidK9toHxHg=;
+	b=Xace8pAT1+Jc8Z3K0jhyErLj71Yzo0PLUdYZqnCPwqIRM3hDiNaBwZCOcwtfeCnOUbLNHg
+	kxlzocV+OCr+qN6slFSRvk8Au767OVgbc+/nlilujnb5eUGmtFq+V6qQISz8qwkIUy3qMZ
+	6b6OaFS/AFTfgdyQ4zPzco0TlHbuiT0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-ZgT30B2VODW3_Hx6oOB55A-1; Tue, 11 May 2021 13:14:07 -0400
-X-MC-Unique: ZgT30B2VODW3_Hx6oOB55A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-539-52Uo676-PkmKwWSlyrHFtw-1; Tue, 11 May 2021 13:46:21 -0400
+X-MC-Unique: 52Uo676-PkmKwWSlyrHFtw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47332107ACC7;
-	Tue, 11 May 2021 17:14:05 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-115-64.ams2.redhat.com [10.36.115.64])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5F8661037F2C;
-	Tue, 11 May 2021 17:14:03 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	mptcp@lists.linux.dev,
-	Maxim Galaganov <max@internet.ru>
-Subject: [PATCH v2 net] mptcp: fix data stream corruption
-Date: Tue, 11 May 2021 19:13:51 +0200
-Message-Id: <0c393b7ad78e0bab142f48d53995aaa8636b44d9.1620753167.git.pabeni@redhat.com>
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8101107ACE6;
+	Tue, 11 May 2021 17:46:20 +0000 (UTC)
+Received: from dcaratti.users.ipa.redhat.com (unknown [10.40.194.229])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8CA9D1B18A;
+	Tue, 11 May 2021 17:46:19 +0000 (UTC)
+From: Davide Caratti <dcaratti@redhat.com>
+To: mptcp@lists.linux.dev,
+	Geliang Tang <geliangtang@gmail.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net] mptcp: validate 'id' when stopping the ADD_ADDR retransmit timer
+Date: Tue, 11 May 2021 19:46:16 +0200
+Message-Id: <68c6032edaf880a958bf7f65afc7e9520f39d5cd.1620754971.git.dcaratti@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 
-Maxim reported several issues when forcing a TCP transparent proxy
-to use the MPTCP protocol for the inbound connections. He also
-provided a clean reproducer.
+when Linux receives an echo-ed ADD_ADDR, it checks the IP address against
+the list of "announced" addresses. In case of a positive match, the timer
+that handles retransmissions is stopped regardless of the 'Address Id' in
+the received packet: this behaviour does not comply with RFC8684 §3.4.1.
 
-The problem boils down to 'mptcp_frag_can_collapse_to()' assuming
-that only MPTCP will use the given page_frag.
+Fix it by validating the 'Address Id' in received echo-ed ADD_ADDRs.
+Tested using packetdrill, with the following captured output:
 
-If others - e.g. the plain TCP protocol - allocate page fragments,
-we can end-up re-using already allocated memory for mptcp_data_frag.
+ unpatched kernel:
 
-Fix the issue ensuring that the to-be-expanded data fragment is
-located at the current page frag end.
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 3013740213], length 0
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 3013740213], length 0
+        ^^^ retransmission is stopped here, but 'Address Id' is 90
 
-v1 -> v2:
- - added missing fixes tag (Mat)
+ patched kernel:
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/178
-Reported-and-tested-by: Maxim Galaganov <max@internet.ru>
-Fixes: 18b683bff89d ("mptcp: queue data for mptcp level retransmission")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 1672384568], length 0
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 1672384568], length 0
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 198.51.100.2,mptcp dss ack 1672384568], length 0
+        ^^^ retransmission is stopped here, only when both 'Address Id' and 'IP Address' match
+
+Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
 ---
- net/mptcp/protocol.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/mptcp/pm_netlink.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 29a2d690d8d5..2d21a4793d9d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -879,12 +879,18 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
- 	       !mpext->frozen;
- }
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d094588afad8..4318d4f5902e 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -353,11 +353,11 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
  
-+/* we can append data to the given data frag if:
-+ * - there is space available in the backing page_frag
-+ * - the data frag tail matches the current page_frag free offset
-+ * - the data frag end sequence number matches the current write seq
-+ */
- static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
- 				       const struct page_frag *pfrag,
- 				       const struct mptcp_data_frag *df)
- {
- 	return df && pfrag->page == df->page &&
- 		pfrag->size - pfrag->offset > 0 &&
-+		pfrag->offset == (df->offset + df->data_len) &&
- 		df->data_seq + df->data_len == msk->write_seq;
- }
+ 	spin_lock_bh(&msk->pm.lock);
+ 	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
+-	if (entry)
++	if (entry && entry->addr.id == addr->id)
+ 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
+ 	spin_unlock_bh(&msk->pm.lock);
  
+-	if (entry)
++	if (entry && entry->addr.id == addr->id)
+ 		sk_stop_timer_sync(sk, &entry->add_timer);
+ 
+ 	return entry;
 -- 
-2.26.2
+2.31.1
 
