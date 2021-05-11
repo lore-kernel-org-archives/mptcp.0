@@ -1,70 +1,122 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DA872
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 22:40:53 +0000 (UTC)
-IronPort-SDR: QD+pDyJbl7gD0iT2vbccoGIvr0JUpi5dGUYyanC14Qi3LLWtY1OnKgUJzKc/FYaA2p/Ne176gH
- V6yZlHkKf+0A==
-X-IronPort-AV: E=McAfee;i="6200,9189,9981"; a="197588495"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE68D72
+	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 23:17:24 +0000 (UTC)
+IronPort-SDR: 0wD2SGbnlvAqy/09ADQnUXgcyQSqaW6kMa/D1zhCNdyw+aNfSNwapHRrRltG/JaWF116X3nWti
+ jC4xOVtTt7QA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9981"; a="260831770"
 X-IronPort-AV: E=Sophos;i="5.82,291,1613462400"; 
-   d="scan'208";a="197588495"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 15:40:51 -0700
-IronPort-SDR: tXMX4F55m7VOHQpFeZ6F2ABARtAteqdad3zGtaAZmOVSOjSa+/5NAJuhgA7fOFgcZTLIPVGmZ0
- Uv1SWdtohPMg==
+   d="scan'208";a="260831770"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 16:17:24 -0700
+IronPort-SDR: /Ea0EWK1IS+dwl31oThqRlzBlewRYfzBD4/i0DYPw3UwjzJGNTmW1eblIocxskckpYGfRFiHoo
+ PkUTqtneGXhQ==
 X-IronPort-AV: E=Sophos;i="5.82,291,1613462400"; 
-   d="scan'208";a="408991196"
+   d="scan'208";a="537219337"
 Received: from kcolwell-mobl.amr.corp.intel.com ([10.251.1.71])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 15:40:49 -0700
-Date: Tue, 11 May 2021 15:40:49 -0700 (PDT)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 16:17:23 -0700
+Date: Tue, 11 May 2021 16:17:23 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-    Jakub Kicinski <kuba@kernel.org>, mptcp@lists.linux.dev, 
-    Maxim Galaganov <max@internet.ru>
-Subject: Re: [PATCH v2 net] mptcp: fix data stream corruption
-In-Reply-To: <0c393b7ad78e0bab142f48d53995aaa8636b44d9.1620753167.git.pabeni@redhat.com>
-Message-ID: <dae7171b-8e20-bbdc-d697-78baa341e696@linux.intel.com>
-References: <0c393b7ad78e0bab142f48d53995aaa8636b44d9.1620753167.git.pabeni@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: generate the data
+ checksum"
+In-Reply-To: <YJoCFsHJjFSPgE4G@MiBook>
+Message-ID: <a596fc9b-63be-5f71-d92-d3ac3b4e124b@linux.intel.com>
+References: <694573465901ea0fc5318b379af75f5287a4f77f.1620360953.git.geliangtang@gmail.com> <e3d8cbf6-4de3-40da-5442-49d5265f9f5@linux.intel.com> <YJoCFsHJjFSPgE4G@MiBook>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Tue, 11 May 2021, Paolo Abeni wrote:
+On Tue, 11 May 2021, Geliang Tang wrote:
 
-> Maxim reported several issues when forcing a TCP transparent proxy
-> to use the MPTCP protocol for the inbound connections. He also
-> provided a clean reproducer.
+> Hi Mat,
 >
-> The problem boils down to 'mptcp_frag_can_collapse_to()' assuming
-> that only MPTCP will use the given page_frag.
+> On Mon, May 10, 2021 at 05:45:48PM -0700, Mat Martineau wrote:
+>> On Fri, 7 May 2021, Geliang Tang wrote:
+>>
+>>> Move the csum_replace2 trunk into the later patch "mptcp: receive
+>>> checksum for MP_CAPABLE with data".
+>>>
+>>> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+>>> ---
+>>> net/mptcp/options.c | 3 ---
+>>> 1 file changed, 3 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>> index beac01f58cba..99fc21406168 100644
+>>> --- a/net/mptcp/options.c
+>>> +++ b/net/mptcp/options.c
+>>> @@ -519,9 +519,6 @@ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
+>>> 		 */
+>>> 		ext->data_fin = 1;
+>>> 		ext->data_len++;
+>>> -
+>>> -		/* the pseudo header has changed, update the csum accordingly */
+>>> -		csum_replace2(&ext->csum, htons(ext->data_len - 1), htons(ext->data_len));
+>>
+>> The commit message above says this is is moved to another patch, but the
+>> posted squash-to patch for "mptcp: receive checksum for MP_CAPABLE with
+>> data" doesn't add this functionality back. Is a hunk or another squash-to
+>> patch missing?
 >
-> If others - e.g. the plain TCP protocol - allocate page fragments,
-> we can end-up re-using already allocated memory for mptcp_data_frag.
+> Sorry, I didn't describe it clearly.
 >
-> Fix the issue ensuring that the to-be-expanded data fragment is
-> located at the current page frag end.
+> No squash-to patch is missing here, this truck will be moved to another
+> patch automatically when resolving the conflict.
 >
-> v1 -> v2:
-> - added missing fixes tag (Mat)
+> Apply this squash-to patch (Squash to "mptcp: generate the data checksum")
+> and rebase, we will get a conflict with "mptcp: receive checksum for
+> MP_CAPABLE with data":
 >
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/178
-> Reported-and-tested-by: Maxim Galaganov <max@internet.ru>
-> Fixes: 18b683bff89d ("mptcp: queue data for mptcp level retransmission")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c | 6 ++++++
-> 1 file changed, 6 insertions(+)
+> $ git rebase --continue
+> Auto-merging net/mptcp/protocol.h
+> Auto-merging net/mptcp/options.c
+> CONFLICT (content): Merge conflict in net/mptcp/options.c
+> error: could not apply d56805c0f705... mptcp: receive checksum for MP_CAPABLE with data
+>
+> Resolve this conflict like this:
+>
+> '''
+> <<<<<<< HEAD
+> =======
+>
+>                /* the pseudo header has changed, update the csum accordingly */
+>                if (ext->csum_reqd)
+>                        csum_replace2(&ext->csum, htons(ext->data_len - 1),
+>                                      htons(ext->data_len));
+>>>>>>>> d56805c0f705... mptcp: receive checksum for MP_CAPABLE with data
+>        }
+> }
+> '''
+>
+> ->
+>
+> '''
+>
+>                /* the pseudo header has changed, update the csum accordingly */
+>                if (ext->csum_reqd)
+>                        csum_replace2(&ext->csum, htons(ext->data_len - 1),
+>                                      htons(ext->data_len));
+>        }
+> }
+> '''
+>
+> Then the csum_replace2 trunk have been moved to the patch "mptcp: receive
+> checksum for MP_CAPABLE with data" automatically.
+>
 
-Paolo -
+Ok, thanks for the information. In the future if there's a 
+conflict-creating squash patch like this it does help to have specific 
+conflict resolution notes.
 
-Thanks for the tag fix. Patch looks good to me:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
+It looks like this chunk of code is not needed at all, though - 
+mptcp_make_csum() hasn't been called yet so the pseudoheader has not been 
+included in the checksum.
 
 --
 Mat Martineau
