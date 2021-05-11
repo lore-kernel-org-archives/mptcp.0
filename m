@@ -1,272 +1,102 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1395270
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 13:37:39 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1lgSZt-0000VD-Jy; Tue, 11 May 2021 15:37:37 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v2 mptcp-next 8/8] selftests: mptcp_connect: add SO_TIMESTAMPNS cmsg support
-Date: Tue, 11 May 2021 15:36:59 +0200
-Message-Id: <20210511133659.29982-9-fw@strlen.de>
-X-Mailer: git-send-email 2.26.3
-In-Reply-To: <20210511133659.29982-1-fw@strlen.de>
-References: <20210511133659.29982-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FF071
+	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 16:17:56 +0000 (UTC)
+IronPort-SDR: m4va70U90ogMXvSylQlT5VcQkeaAk9Ttx84a+iaWQREEzzruVCyxfRqKkfxcIwItXRE9jdSxm+
+ ILDo/GD4otcw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9981"; a="263414050"
+X-IronPort-AV: E=Sophos;i="5.82,291,1613462400"; 
+   d="scan'208";a="263414050"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 09:17:53 -0700
+IronPort-SDR: 0XEmA9qfkOOv5KrybAqmasZ9nIH9LuSqyBooO1myD0wwiY1kadczBv0J3IiFq+lcWymMC/NVu3
+ eyQDMAF3cfLQ==
+X-IronPort-AV: E=Sophos;i="5.82,291,1613462400"; 
+   d="scan'208";a="408858875"
+Received: from kcolwell-mobl.amr.corp.intel.com ([10.251.1.71])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 09:17:53 -0700
+Date: Tue, 11 May 2021 09:17:52 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+    Jakub Kicinski <kuba@kernel.org>, mptcp@lists.linux.dev, 
+    Maxim Galaganov <max@internet.ru>
+Subject: Re: [PATCH net] mptcp: fix data stream corruption
+In-Reply-To: <95cee926051dae0afe4d39072f446e1cad17008a.1620720059.git.pabeni@redhat.com>
+Message-ID: <c7b744f0-31e3-c727-ce49-a35613b71a6@linux.intel.com>
+References: <95cee926051dae0afe4d39072f446e1cad17008a.1620720059.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-This extends the existing setsockopt test case to also check for cmsg
-timestamps.
+On Tue, 11 May 2021, Paolo Abeni wrote:
 
-mptcp_connect will abort/fail if the setockopt was passed but the
-timestamp cmsg isn't present after successful recvmsg().
+> Maxim reported several issues when forcing a TCP transparent proxy
+> to use the MPTCP protocol for the inbound connections. He also
+> provided a clean reproducer.
+>
+> The problem boils down to 'mptcp_frag_can_collapse_to()' assuming
+> that only MPTCP will use the given page_frag.
+>
+> If others - e.g. the plain TCP protocol - allocate page fragments,
+> we can end-up re-using already allocated memory for mptcp_data_frag.
+>
+> Fix the issue ensuring that the to-be-expanded data fragment is
+> located at the current page frag end.
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/178
+> Reported-and-tested-by: Maxim Galaganov <max@internet.ru>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/protocol.c | 6 ++++++
+> 1 file changed, 6 insertions(+)
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 125 +++++++++++++++++-
- .../selftests/net/mptcp/mptcp_sockopt.sh      |   4 +-
- 2 files changed, 126 insertions(+), 3 deletions(-)
+Hi Paolo -
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index d88e1fdfb147..b0457f76968c 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -6,6 +6,7 @@
- #include <limits.h>
- #include <fcntl.h>
- #include <string.h>
-+#include <stdarg.h>
- #include <stdbool.h>
- #include <stdint.h>
- #include <stdio.h>
-@@ -25,6 +26,7 @@
- #include <netinet/in.h>
- 
- #include <linux/tcp.h>
-+#include <linux/time_types.h>
- 
- extern int optind;
- 
-@@ -66,6 +68,13 @@ static unsigned int cfg_do_w;
- static int cfg_wait;
- static uint32_t cfg_mark;
- 
-+struct cfg_cmsg_types {
-+	unsigned int cmsg_enabled:1;
-+	unsigned int timestampns:1;
-+};
-+
-+static struct cfg_cmsg_types cfg_cmsg_types;
-+
- static void die_usage(void)
- {
- 	fprintf(stderr, "Usage: mptcp_connect [-6] [-u] [-s MPTCP|TCP] [-p port] [-m mode]"
-@@ -80,11 +89,22 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
-+	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
- 	fprintf(stderr,
- 		"\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket\n");
- 	exit(1);
- }
- 
-+static void xerror(const char *fmt, ...)
-+{
-+	va_list ap;
-+
-+	va_start(ap, fmt);
-+	vfprintf(stderr, fmt, ap);
-+	va_end(ap);
-+	exit(1);
-+}
-+
- static void handle_signal(int nr)
- {
- 	quit = true;
-@@ -338,6 +358,58 @@ static size_t do_write(const int fd, char *buf, const size_t len)
- 	return offset;
- }
- 
-+static void process_cmsg(struct msghdr *msgh)
-+{
-+	struct __kernel_timespec ts;
-+	bool ts_found = false;
-+	struct cmsghdr *cmsg;
-+
-+	for (cmsg = CMSG_FIRSTHDR(msgh); cmsg ; cmsg = CMSG_NXTHDR(msgh, cmsg)) {
-+		if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SO_TIMESTAMPNS_NEW) {
-+			memcpy(&ts, CMSG_DATA(cmsg), sizeof(ts));
-+			ts_found = true;
-+			continue;
-+		}
-+	}
-+
-+	if (cfg_cmsg_types.timestampns) {
-+		if (!ts_found)
-+			xerror("TIMESTAMPNS not present\n");
-+	}
-+}
-+
-+static ssize_t do_recvmsg_cmsg(const int fd, char *buf, const size_t len)
-+{
-+	char msg_buf[8192];
-+	struct iovec iov = {
-+		.iov_base = buf,
-+		.iov_len = len,
-+	};
-+	struct msghdr msg = {
-+		.msg_iov = &iov,
-+		.msg_iovlen = 1,
-+		.msg_control = msg_buf,
-+		.msg_controllen = sizeof(msg_buf),
-+	};
-+	int flags = 0;
-+	int ret = recvmsg(fd, &msg, flags);
-+
-+	if (ret <= 0)
-+		return ret;
-+
-+	if (msg.msg_controllen && !cfg_cmsg_types.cmsg_enabled)
-+		xerror("got %lu bytes of cmsg data, expected 0\n",
-+			(unsigned long)msg.msg_controllen);
-+
-+	if (msg.msg_controllen == 0 && cfg_cmsg_types.cmsg_enabled)
-+		xerror("%s\n", "got no cmsg data");
-+
-+	if (msg.msg_controllen)
-+		process_cmsg(&msg);
-+
-+	return ret;
-+}
-+
- static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- {
- 	int ret = 0;
-@@ -357,6 +429,8 @@ static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- 	} else if (cfg_peek == CFG_AFTER_PEEK) {
- 		ret = recv(fd, buf, cap, MSG_PEEK);
- 		ret = (ret < 0) ? ret : read(fd, buf, cap);
-+	} else if (cfg_cmsg_types.cmsg_enabled) {
-+		ret = do_recvmsg_cmsg(fd, buf, cap);
- 	} else {
- 		ret = read(fd, buf, cap);
- 	}
-@@ -786,6 +860,48 @@ static void init_rng(void)
- 	srand(foo);
- }
- 
-+static void xsetsockopt(int fd, int level, int optname, const void *optval, socklen_t optlen)
-+{
-+	int err;
-+
-+	err = setsockopt(fd, level, optname, optval, optlen);
-+	if (err) {
-+		perror("setsockopt");
-+		exit(1);
-+	}
-+}
-+
-+static void apply_cmsg_types(int fd, const struct cfg_cmsg_types *cmsg)
-+{
-+	static const unsigned int on = 1;
-+
-+	if (cmsg->timestampns)
-+		xsetsockopt(fd, SOL_SOCKET, SO_TIMESTAMPNS_NEW, &on, sizeof(on));
-+}
-+
-+static void parse_cmsg_types(const char *type)
-+{
-+	char *next = strchr(type, ',');
-+	unsigned int len = 0;
-+
-+	cfg_cmsg_types.cmsg_enabled = 1;
-+
-+	if (next) {
-+		parse_cmsg_types(next + 1);
-+		len = next - type;
-+	} else {
-+		len = strlen(type);
-+	}
-+
-+	if (strncmp(type, "TIMESTAMPNS", len) == 0) {
-+		cfg_cmsg_types.timestampns = 1;
-+		return;
-+	}
-+
-+	fprintf(stderr, "Unrecognized cmsg option %s\n", type);
-+	exit(1);
-+}
-+
- int main_loop(void)
- {
- 	int fd;
-@@ -801,6 +917,8 @@ int main_loop(void)
- 		set_rcvbuf(fd, cfg_rcvbuf);
- 	if (cfg_sndbuf)
- 		set_sndbuf(fd, cfg_sndbuf);
-+	if (cfg_cmsg_types.cmsg_enabled)
-+		apply_cmsg_types(fd, &cfg_cmsg_types);
- 
- 	return copyfd_io(0, fd, 1);
- }
-@@ -887,7 +1005,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:c:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -943,6 +1061,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'P':
- 			cfg_peek = parse_peek(optarg);
- 			break;
-+		case 'c':
-+			parse_cmsg_types(optarg);
-+			break;
- 		}
- 	}
- 
-@@ -976,6 +1097,8 @@ int main(int argc, char *argv[])
- 			set_sndbuf(fd, cfg_sndbuf);
- 		if (cfg_mark)
- 			set_mark(fd, cfg_mark);
-+		if (cfg_cmsg_types.cmsg_enabled)
-+			apply_cmsg_types(fd, &cfg_cmsg_types);
- 
- 		return main_loop_s(fd);
- 	}
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 2fa13946ac04..1579e471a5e7 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -178,7 +178,7 @@ do_transfer()
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${listener_ns} \
--			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} \
-+			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c TIMESTAMPNS \
- 				${local_addr} < "$sin" > "$sout" &
- 	spid=$!
- 
-@@ -186,7 +186,7 @@ do_transfer()
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${connector_ns} \
--			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} \
-+			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c TIMESTAMPNS \
- 				$connect_addr < "$cin" > "$cout" &
- 
- 	cpid=$!
--- 
-2.26.3
+Should this also have a:
 
+Fixes: 18b683bff89d ("mptcp: queue data for mptcp level retransmission")
+
+?
+
+
+-Mat
+
+
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 29a2d690d8d5..2d21a4793d9d 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -879,12 +879,18 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
+> 	       !mpext->frozen;
+> }
+>
+> +/* we can append data to the given data frag if:
+> + * - there is space available in the backing page_frag
+> + * - the data frag tail matches the current page_frag free offset
+> + * - the data frag end sequence number matches the current write seq
+> + */
+> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+> 				       const struct page_frag *pfrag,
+> 				       const struct mptcp_data_frag *df)
+> {
+> 	return df && pfrag->page == df->page &&
+> 		pfrag->size - pfrag->offset > 0 &&
+> +		pfrag->offset == (df->offset + df->data_len) &&
+> 		df->data_seq + df->data_len == msk->write_seq;
+> }
+>
+> -- 
+> 2.26.2
+>
+>
+>
+
+--
+Mat Martineau
+Intel
