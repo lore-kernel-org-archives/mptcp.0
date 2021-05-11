@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0923D70
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 13:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3529F70
+	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 13:37:18 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lgSZU-0000TY-Io; Tue, 11 May 2021 15:37:12 +0200
+	id 1lgSZY-0000Tt-OQ; Tue, 11 May 2021 15:37:16 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v2 mptcp-next 2/8] sock: expose so_timestamp options for mptcp
-Date: Tue, 11 May 2021 15:36:53 +0200
-Message-Id: <20210511133659.29982-3-fw@strlen.de>
+Subject: [PATCH v2 mptcp-next 3/8] sock: expose so_timestamping options for mptcp
+Date: Tue, 11 May 2021 15:36:54 +0200
+Message-Id: <20210511133659.29982-4-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210511133659.29982-1-fw@strlen.de>
 References: <20210511133659.29982-1-fw@strlen.de>
@@ -22,76 +22,119 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This exports SO_TIMESTAMP_* function for re-use by MPTCP.
-
-Without this there is too much copy & paste needed to support
-this from mptcp setsockopt path.
+Similar to previous patch: expose SO_TIMESTAMPING helper so we do not
+have to copy & paste this into the mptcp core.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/net/sock.h |  1 +
- net/core/sock.c    | 26 +++++++++++++++++++-------
- 2 files changed, 20 insertions(+), 7 deletions(-)
+ include/net/sock.h |  2 ++
+ net/core/sock.c    | 71 +++++++++++++++++++++++-----------------------
+ 2 files changed, 38 insertions(+), 35 deletions(-)
 
 diff --git a/include/net/sock.h b/include/net/sock.h
-index 42bc5e1a627f..7ee2347846b6 100644
+index 7ee2347846b6..636416631913 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -2741,6 +2741,7 @@ static inline bool sk_dev_equal_l3scope(struct sock *sk, int dif)
- void sock_def_readable(struct sock *sk);
+@@ -2742,6 +2742,8 @@ void sock_def_readable(struct sock *sk);
  
  int sock_bindtoindex(struct sock *sk, int ifindex, bool lock_sk);
-+void sock_set_timestamp(struct sock *sk, int optname, bool valbool);
+ void sock_set_timestamp(struct sock *sk, int optname, bool valbool);
++int sock_set_timestamping(struct sock *sk, int optname, int val);
++
  void sock_enable_timestamps(struct sock *sk);
  void sock_no_linger(struct sock *sk);
  void sock_set_keepalive(struct sock *sk);
 diff --git a/net/core/sock.c b/net/core/sock.c
-index c761c4a0b66b..294b5a9bf520 100644
+index 294b5a9bf520..aba9d8de5303 100644
 --- a/net/core/sock.c
 +++ b/net/core/sock.c
-@@ -776,6 +776,24 @@ void sock_enable_timestamps(struct sock *sk)
+@@ -794,6 +794,40 @@ void sock_set_timestamp(struct sock *sk, int optname, bool valbool)
+ 	}
  }
- EXPORT_SYMBOL(sock_enable_timestamps);
  
-+void sock_set_timestamp(struct sock *sk, int optname, bool valbool)
++int sock_set_timestamping(struct sock *sk, int optname, int val)
 +{
-+	switch (optname) {
-+	case SO_TIMESTAMP_OLD:
-+		__sock_set_timestamps(sk, valbool, false, false);
-+		break;
-+	case SO_TIMESTAMP_NEW:
-+		__sock_set_timestamps(sk, valbool, true, false);
-+		break;
-+	case SO_TIMESTAMPNS_OLD:
-+		__sock_set_timestamps(sk, valbool, false, true);
-+		break;
-+	case SO_TIMESTAMPNS_NEW:
-+		__sock_set_timestamps(sk, valbool, true, true);
-+		break;
++	if (val & ~SOF_TIMESTAMPING_MASK)
++		return -EINVAL;
++
++	if (val & SOF_TIMESTAMPING_OPT_ID &&
++	    !(sk->sk_tsflags & SOF_TIMESTAMPING_OPT_ID)) {
++		if (sk->sk_protocol == IPPROTO_TCP &&
++		    sk->sk_type == SOCK_STREAM) {
++			if ((1 << sk->sk_state) &
++			    (TCPF_CLOSE | TCPF_LISTEN))
++				return -EINVAL;
++			sk->sk_tskey = tcp_sk(sk)->snd_una;
++		} else {
++			sk->sk_tskey = 0;
++		}
 +	}
++
++	if (val & SOF_TIMESTAMPING_OPT_STATS &&
++	    !(val & SOF_TIMESTAMPING_OPT_TSONLY))
++		return -EINVAL;
++
++	sk->sk_tsflags = val;
++	sock_valbool_flag(sk, SOCK_TSTAMP_NEW, optname == SO_TIMESTAMPING_NEW);
++
++	if (val & SOF_TIMESTAMPING_RX_SOFTWARE)
++		sock_enable_timestamp(sk,
++				      SOCK_TIMESTAMPING_RX_SOFTWARE);
++	else
++		sock_disable_timestamp(sk,
++				       (1UL << SOCK_TIMESTAMPING_RX_SOFTWARE));
++	return 0;
 +}
 +
  void sock_set_keepalive(struct sock *sk)
  {
  	lock_sock(sk);
-@@ -989,16 +1007,10 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 		break;
- 
- 	case SO_TIMESTAMP_OLD:
--		__sock_set_timestamps(sk, valbool, false, false);
--		break;
- 	case SO_TIMESTAMP_NEW:
--		__sock_set_timestamps(sk, valbool, true, false);
--		break;
- 	case SO_TIMESTAMPNS_OLD:
--		__sock_set_timestamps(sk, valbool, false, true);
--		break;
+@@ -1012,43 +1046,10 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
  	case SO_TIMESTAMPNS_NEW:
--		__sock_set_timestamps(sk, valbool, true, true);
-+		sock_set_timestamp(sk, valbool, optname);
+ 		sock_set_timestamp(sk, valbool, optname);
  		break;
++
  	case SO_TIMESTAMPING_NEW:
  	case SO_TIMESTAMPING_OLD:
+-		if (val & ~SOF_TIMESTAMPING_MASK) {
+-			ret = -EINVAL;
+-			break;
+-		}
+-
+-		if (val & SOF_TIMESTAMPING_OPT_ID &&
+-		    !(sk->sk_tsflags & SOF_TIMESTAMPING_OPT_ID)) {
+-			if (sk->sk_protocol == IPPROTO_TCP &&
+-			    sk->sk_type == SOCK_STREAM) {
+-				if ((1 << sk->sk_state) &
+-				    (TCPF_CLOSE | TCPF_LISTEN)) {
+-					ret = -EINVAL;
+-					break;
+-				}
+-				sk->sk_tskey = tcp_sk(sk)->snd_una;
+-			} else {
+-				sk->sk_tskey = 0;
+-			}
+-		}
+-
+-		if (val & SOF_TIMESTAMPING_OPT_STATS &&
+-		    !(val & SOF_TIMESTAMPING_OPT_TSONLY)) {
+-			ret = -EINVAL;
+-			break;
+-		}
+-
+-		sk->sk_tsflags = val;
+-		sock_valbool_flag(sk, SOCK_TSTAMP_NEW, optname == SO_TIMESTAMPING_NEW);
+-
+-		if (val & SOF_TIMESTAMPING_RX_SOFTWARE)
+-			sock_enable_timestamp(sk,
+-					      SOCK_TIMESTAMPING_RX_SOFTWARE);
+-		else
+-			sock_disable_timestamp(sk,
+-					       (1UL << SOCK_TIMESTAMPING_RX_SOFTWARE));
++		ret = sock_set_timestamping(sk, optname, val);
+ 		break;
+ 
+ 	case SO_RCVLOWAT:
 -- 
 2.26.3
 
