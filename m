@@ -1,114 +1,71 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C677972
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 22:39:17 +0000 (UTC)
-IronPort-SDR: akvxZv9V1x3aldy/SxYXH0Ibh1Eku+goBe10GdJVa9ddnbI2R9wQ50UXT4XyoKdu5pEo+kN9SL
- 6duSTjmLt63g==
-X-IronPort-AV: E=McAfee;i="6200,9189,9981"; a="260825201"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DA872
+	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 22:40:53 +0000 (UTC)
+IronPort-SDR: QD+pDyJbl7gD0iT2vbccoGIvr0JUpi5dGUYyanC14Qi3LLWtY1OnKgUJzKc/FYaA2p/Ne176gH
+ V6yZlHkKf+0A==
+X-IronPort-AV: E=McAfee;i="6200,9189,9981"; a="197588495"
 X-IronPort-AV: E=Sophos;i="5.82,291,1613462400"; 
-   d="scan'208";a="260825201"
+   d="scan'208";a="197588495"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 15:39:15 -0700
-IronPort-SDR: 6zTuwu3iyCm4uArVWFItl3UeLHxxnf81yU/EuFCJl52X97NI6ZVgqOtb+vsiuHtoWXD2VkdbKD
- feD/Gew0Nlpw==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 15:40:51 -0700
+IronPort-SDR: tXMX4F55m7VOHQpFeZ6F2ABARtAteqdad3zGtaAZmOVSOjSa+/5NAJuhgA7fOFgcZTLIPVGmZ0
+ Uv1SWdtohPMg==
 X-IronPort-AV: E=Sophos;i="5.82,291,1613462400"; 
-   d="scan'208";a="408990679"
+   d="scan'208";a="408991196"
 Received: from kcolwell-mobl.amr.corp.intel.com ([10.251.1.71])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 15:39:14 -0700
-Date: Tue, 11 May 2021 15:39:14 -0700 (PDT)
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 15:40:49 -0700
+Date: Tue, 11 May 2021 15:40:49 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@gmail.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH net] mptcp: validate 'id' when stopping the ADD_ADDR
- retransmit timer
-In-Reply-To: <68c6032edaf880a958bf7f65afc7e9520f39d5cd.1620754971.git.dcaratti@redhat.com>
-Message-ID: <e03119dc-67cb-6ac1-67fe-d92a8f954e4@linux.intel.com>
-References: <68c6032edaf880a958bf7f65afc7e9520f39d5cd.1620754971.git.dcaratti@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+    Jakub Kicinski <kuba@kernel.org>, mptcp@lists.linux.dev, 
+    Maxim Galaganov <max@internet.ru>
+Subject: Re: [PATCH v2 net] mptcp: fix data stream corruption
+In-Reply-To: <0c393b7ad78e0bab142f48d53995aaa8636b44d9.1620753167.git.pabeni@redhat.com>
+Message-ID: <dae7171b-8e20-bbdc-d697-78baa341e696@linux.intel.com>
+References: <0c393b7ad78e0bab142f48d53995aaa8636b44d9.1620753167.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-1995879360-1620772754=:79315"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 11 May 2021, Paolo Abeni wrote:
 
---0-1995879360-1620772754=:79315
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 11 May 2021, Davide Caratti wrote:
-
-> when Linux receives an echo-ed ADD_ADDR, it checks the IP address against
-> the list of "announced" addresses. In case of a positive match, the timer
-> that handles retransmissions is stopped regardless of the 'Address Id' in
-> the received packet: this behaviour does not comply with RFC8684 §3.4.1.
+> Maxim reported several issues when forcing a TCP transparent proxy
+> to use the MPTCP protocol for the inbound connections. He also
+> provided a clean reproducer.
 >
-> Fix it by validating the 'Address Id' in received echo-ed ADD_ADDRs.
-> Tested using packetdrill, with the following captured output:
+> The problem boils down to 'mptcp_frag_can_collapse_to()' assuming
+> that only MPTCP will use the given page_frag.
 >
-> unpatched kernel:
+> If others - e.g. the plain TCP protocol - allocate page fragments,
+> we can end-up re-using already allocated memory for mptcp_data_frag.
 >
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 3013740213], length 0
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 3013740213], length 0
->        ^^^ retransmission is stopped here, but 'Address Id' is 90
+> Fix the issue ensuring that the to-be-expanded data fragment is
+> located at the current page frag end.
 >
-> patched kernel:
+> v1 -> v2:
+> - added missing fixes tag (Mat)
 >
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 1672384568], length 0
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 1672384568], length 0
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 198.51.100.2,mptcp dss ack 1672384568], length 0
->        ^^^ retransmission is stopped here, only when both 'Address Id' and 'IP Address' match
->
-> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/178
+> Reported-and-tested-by: Maxim Galaganov <max@internet.ru>
+> Fixes: 18b683bff89d ("mptcp: queue data for mptcp level retransmission")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> net/mptcp/pm_netlink.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d094588afad8..4318d4f5902e 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -353,11 +353,11 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->
-> 	spin_lock_bh(&msk->pm.lock);
-> 	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-> -	if (entry)
-> +	if (entry && entry->addr.id == addr->id)
-> 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-> 	spin_unlock_bh(&msk->pm.lock);
->
-> -	if (entry)
-> +	if (entry && entry->addr.id == addr->id)
-> 		sk_stop_timer_sync(sk, &entry->add_timer);
->
-> 	return entry;
+> net/mptcp/protocol.c | 6 ++++++
+> 1 file changed, 6 insertions(+)
 
-Hi Davide -
+Paolo -
 
-The code path for ADD_ADDR echo ignores the return value of 
-mptcp_pm_del_add_timer(), so there's no chance there of leaving 
-entry->add_timer running if the addr.id doesn't match.
+Thanks for the tag fix. Patch looks good to me:
 
-The function is also called by remove_anno_list_by_saddr(), which will 
-free 'entry' if a non-NULL value is returned by mptcp_pm_del_add_timer(). 
-There's more of a chance here that the sk_stop_timer_sync() would be 
-skipped and entry would be freed anyway. Looking at the various paths to 
-this in the path manager it seems like it *should* not happen, but I'm not 
-convinced it's impossible. Did you look at the effect of this change on 
-these other code paths?
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
 --
 Mat Martineau
 Intel
---0-1995879360-1620772754=:79315--
