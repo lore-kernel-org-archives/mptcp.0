@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC26970
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 13:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0923D70
+	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 13:37:14 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lgSZQ-0000TI-Cw; Tue, 11 May 2021 15:37:08 +0200
+	id 1lgSZU-0000TY-Io; Tue, 11 May 2021 15:37:12 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v2 mptcp-next 1/8] mptcp: enable busypoll from mptcp receive path
-Date: Tue, 11 May 2021 15:36:52 +0200
-Message-Id: <20210511133659.29982-2-fw@strlen.de>
+Subject: [PATCH v2 mptcp-next 2/8] sock: expose so_timestamp options for mptcp
+Date: Tue, 11 May 2021 15:36:53 +0200
+Message-Id: <20210511133659.29982-3-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210511133659.29982-1-fw@strlen.de>
 References: <20210511133659.29982-1-fw@strlen.de>
@@ -22,59 +22,76 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The setting is only relevant for the msk socket.
-While at it, also handle rcvlowat/rcvtimeo this way.
+This exports SO_TIMESTAMP_* function for re-use by MPTCP.
+
+Without this there is too much copy & paste needed to support
+this from mptcp setsockopt path.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- net/mptcp/protocol.c | 7 +++++++
- net/mptcp/sockopt.c  | 8 ++++++++
- 2 files changed, 15 insertions(+)
+ include/net/sock.h |  1 +
+ net/core/sock.c    | 26 +++++++++++++++++++-------
+ 2 files changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 652e55a0c6e8..86e599eb4403 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -12,6 +12,7 @@
- #include <linux/sched/signal.h>
- #include <linux/atomic.h>
- #include <net/sock.h>
-+#include <net/busy_poll.h>
- #include <net/inet_common.h>
- #include <net/inet_hashtables.h>
- #include <net/protocol.h>
-@@ -1982,6 +1983,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	if (unlikely(flags & MSG_ERRQUEUE))
- 		return inet_recv_error(sk, msg, len, addr_len);
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 42bc5e1a627f..7ee2347846b6 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2741,6 +2741,7 @@ static inline bool sk_dev_equal_l3scope(struct sock *sk, int dif)
+ void sock_def_readable(struct sock *sk);
  
-+	if (sk_can_busy_loop(sk) &&
-+	    skb_queue_empty_lockless(&msk->receive_queue) &&
-+	    skb_queue_empty_lockless(&sk->sk_receive_queue) &&
-+	    inet_sk_state_load(sk) == TCP_ESTABLISHED)
-+		sk_busy_loop(sk, nonblock);
-+
- 	mptcp_lock_sock(sk, __mptcp_splice_receive_queue(sk));
- 	if (unlikely(sk->sk_state == TCP_LISTEN)) {
- 		copied = -ENOTCONN;
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index a79798189599..ee55e4145d7e 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -254,6 +254,14 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
- 	case SO_LINGER:
- 		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
-+	case SO_RCVLOWAT:
-+	case SO_RCVTIMEO_OLD:
-+	case SO_RCVTIMEO_NEW:
-+	case SO_BUSY_POLL:
-+	case SO_PREFER_BUSY_POLL:
-+	case SO_BUSY_POLL_BUDGET:
-+		/* No need to copy: only relevant for msk */
+ int sock_bindtoindex(struct sock *sk, int ifindex, bool lock_sk);
++void sock_set_timestamp(struct sock *sk, int optname, bool valbool);
+ void sock_enable_timestamps(struct sock *sk);
+ void sock_no_linger(struct sock *sk);
+ void sock_set_keepalive(struct sock *sk);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index c761c4a0b66b..294b5a9bf520 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -776,6 +776,24 @@ void sock_enable_timestamps(struct sock *sk)
+ }
+ EXPORT_SYMBOL(sock_enable_timestamps);
+ 
++void sock_set_timestamp(struct sock *sk, int optname, bool valbool)
++{
++	switch (optname) {
++	case SO_TIMESTAMP_OLD:
++		__sock_set_timestamps(sk, valbool, false, false);
 +		break;
- 	case SO_NO_CHECK:
- 	case SO_DONTROUTE:
- 	case SO_BROADCAST:
++	case SO_TIMESTAMP_NEW:
++		__sock_set_timestamps(sk, valbool, true, false);
++		break;
++	case SO_TIMESTAMPNS_OLD:
++		__sock_set_timestamps(sk, valbool, false, true);
++		break;
++	case SO_TIMESTAMPNS_NEW:
++		__sock_set_timestamps(sk, valbool, true, true);
++		break;
++	}
++}
++
+ void sock_set_keepalive(struct sock *sk)
+ {
+ 	lock_sock(sk);
+@@ -989,16 +1007,10 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 		break;
+ 
+ 	case SO_TIMESTAMP_OLD:
+-		__sock_set_timestamps(sk, valbool, false, false);
+-		break;
+ 	case SO_TIMESTAMP_NEW:
+-		__sock_set_timestamps(sk, valbool, true, false);
+-		break;
+ 	case SO_TIMESTAMPNS_OLD:
+-		__sock_set_timestamps(sk, valbool, false, true);
+-		break;
+ 	case SO_TIMESTAMPNS_NEW:
+-		__sock_set_timestamps(sk, valbool, true, true);
++		sock_set_timestamp(sk, valbool, optname);
+ 		break;
+ 	case SO_TIMESTAMPING_NEW:
+ 	case SO_TIMESTAMPING_OLD:
 -- 
 2.26.3
 
