@@ -1,62 +1,83 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA6972
-	for <mptcp@lists.linux.dev>; Tue, 11 May 2021 23:33:10 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id B37226162B;
-	Tue, 11 May 2021 23:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1620775989;
-	bh=uqexOSN0PGIDkMEwL+EsM7yRoQqVZHcrpOKMprylBYg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=g2BtB99tGBhQaO+QzZiVRTLztvKS1JfeigjaGIRc96T/PfNznx6IDy8CJuIVafb7P
-	 CZxoJMoEbSV12+T6ffG73p1ZUM9NVi5mhBkF8VkgmadSUwUCg2kK2Y6R6F7aJYOn3A
-	 QUI5cvYIPNv1wDyvpkhSWFrZOk3YvJYWyDlpkNK1cMVs31LNGu/YnMrAS5WSZfKdF+
-	 L8lEIpS1VZa4mEarjKofTeDCGMB9WHc6v280Ln+y2NoCu22Mt+5qXYtVwX0oPLJ1q6
-	 VWP6fe014vY3LzTkCxeENXtEuHZTOtRwbUgZqhKIfHnIg5Ew/GBNILP0i3UD3wzcmn
-	 NDSFLe2TSH0SA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id A16EA60CD3;
-	Tue, 11 May 2021 23:33:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC26D71
+	for <mptcp@lists.linux.dev>; Wed, 12 May 2021 04:16:59 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id a11so11868135plh.3
+        for <mptcp@lists.linux.dev>; Tue, 11 May 2021 21:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Jv0zqlNJi4uNNhhWUAM/LvCK7bMnYSBvAzGporKkTg=;
+        b=A6DzXkS29rIsK//xstlabwItwxAPeNiLNxburT0eDtAKnFwxtktsS2K5cskAgxONaK
+         +yFK5owOfefWlppG/qwXLhRLfgv4JahTYcOvIwcYY3ztPJobs6dDPfBbHScaAj6KVYD2
+         pA9VyZkI9yGrBkhvak3HbbvrPW8672M0YHltt6MQyZa06RKtE4lQd0bJByG967bBUcHZ
+         1NvWHXR9MGnN9HyUlbFWCUGA78xKsqS3h8Mg2a8WdE7XmTJp8VPxSeJV71XX5twiMw0d
+         NwIeaZkyixC0TU7XuU+hUibERdIi+okG/hFwRhNn/7MwQSQ6dyzyUuB1JqnOuPI99DLN
+         Ee9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Jv0zqlNJi4uNNhhWUAM/LvCK7bMnYSBvAzGporKkTg=;
+        b=LVwpowPw29UdB/BWhnS93E/pI4gZyCt8E8s2nCDJAZoLgVNmgBJxq4xesl8DqQbEpX
+         EYRenm6VV7QhuHhBhX2iiLljDQP92VOczY/zD0xm0i+q+J/M4OUD87kbucMfvhVVz55V
+         hcNaQPGxyG3gBGjhUcIDULbTnnkhf+9mwRdUhOIkDPCaAsxYk+14COGi2873q8I2hrx9
+         uVJ92/oHoNVvtKzl/41UYx2x1XkddsEO5crg3+/aolJag6feZvaxP17OcCpOTTioIqpt
+         onlMgXDMK3XKsQXaqM1zHWwBRC+DEnxZqeY2LBJ/CrJXZGQcscUJaCYV2hX+wd0PJSSk
+         epSA==
+X-Gm-Message-State: AOAM533ib5Y2+ZJoQajk2mHrJixjqnWzN4VcSzgHAg86tQAkU/2u5Bx6
+	L5LWR9eyIAuGy84K3g2w92Gneq5nAe8=
+X-Google-Smtp-Source: ABdhPJwZzN6DJrVfPfC7kY9kYNLTOoK+gyVYJe+mpJhZBKgRDp8/oXJMSNRvwww6bUvoAz4GNYDSGA==
+X-Received: by 2002:a17:90a:d78c:: with SMTP id z12mr8843459pju.106.1620793019330;
+        Tue, 11 May 2021 21:16:59 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id v12sm3147710pgi.44.2021.05.11.21.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 May 2021 21:16:59 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: receive checksum for MP_CAPABLE with data"
+Date: Wed, 12 May 2021 12:16:55 +0800
+Message-Id: <894be7ae85244360c4dd5a250043086d3bbc8826.1620792920.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 net] mptcp: fix data stream corruption
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162077598965.17752.6409841760129894025.git-patchwork-notify@kernel.org>
-Date: Tue, 11 May 2021 23:33:09 +0000
-References: <0c393b7ad78e0bab142f48d53995aaa8636b44d9.1620753167.git.pabeni@redhat.com>
-In-Reply-To: <0c393b7ad78e0bab142f48d53995aaa8636b44d9.1620753167.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, mathew.j.martineau@linux.intel.com,
- davem@davemloft.net, kuba@kernel.org, mptcp@lists.linux.dev, max@internet.ru
 
-Hello:
+Drop the csum_replace2 trunk as Mat suggested.
 
-This patch was applied to bpf/bpf.git (refs/heads/master):
+mptcp_make_csum() hasn't been called yet so the pseudoheader has not been
+included in the checksum.
 
-On Tue, 11 May 2021 19:13:51 +0200 you wrote:
-> Maxim reported several issues when forcing a TCP transparent proxy
-> to use the MPTCP protocol for the inbound connections. He also
-> provided a clean reproducer.
-> 
-> The problem boils down to 'mptcp_frag_can_collapse_to()' assuming
-> that only MPTCP will use the given page_frag.
-> 
-> [...]
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+Apply the patch (Squash to "mptcp: generate the data checksum") first.
+---
+ net/mptcp/options.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Here is the summary with links:
-  - [v2,net] mptcp: fix data stream corruption
-    https://git.kernel.org/bpf/bpf/c/29249eac5225
-
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index cce90c16e47d..6b737ba1f941 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -547,11 +547,6 @@ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
+ 		 */
+ 		ext->data_fin = 1;
+ 		ext->data_len++;
+-
+-		/* the pseudo header has changed, update the csum accordingly */
+-		if (ext->csum_reqd)
+-			csum_replace2(&ext->csum, htons(ext->data_len - 1),
+-				      htons(ext->data_len));
+ 	}
+ }
+ 
+-- 
+2.31.1
 
