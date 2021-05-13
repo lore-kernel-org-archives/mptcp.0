@@ -1,49 +1,49 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C531D2FB1
-	for <mptcp@lists.linux.dev>; Thu, 13 May 2021 07:42:56 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id t4so38688433ejo.0
-        for <mptcp@lists.linux.dev>; Thu, 13 May 2021 00:42:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40672FB1
+	for <mptcp@lists.linux.dev>; Thu, 13 May 2021 07:46:46 +0000 (UTC)
+Received: by mail-ej1-f42.google.com with SMTP id t4so38700725ejo.0
+        for <mptcp@lists.linux.dev>; Thu, 13 May 2021 00:46:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=6sb5g+0CyBnYgspWb7smnxR0u0kh10bCr5C3KgaiSes=;
-        b=nm/LAtXvFRwX89y06H1ALD8Oydr3PR81m/jalrET9VP8ApR7BevglIqGijciQzn64B
-         upKkmS18bNy/b+0fc3/ifDaEYUfAsycKQP19R4ZwyDWQjH80pcCFt3scfwEn29A7zEK+
-         rRK9JTZ/mGzj+jgrVo9H50ilGZ6U4MnmfrfJaz2D5W1/g7oViKKT/bwfStCqLySDF4FO
-         sCbM9gxYYEMG2NrqUxfxzIuJ4hevHulU/U9Bn4fJLg5kUW4klJImje5Xu8WQPl8iImsu
-         WojJQ+t8FknVkEOiY21dX8pz9pmmBdw8UBgB362FT1v3nDh7VUCBqjTV9A88uwn9WhNb
-         /21A==
+        bh=3cJiHQBtEGkH9n4vqOz/EURApAiaRvpZojoG6Ow2pkk=;
+        b=TtNLahayzstiMkESoxpsUdUL3S6XnC9TzmdO6rzalB2RI4RzDpOPUNQDuvEcTHaHFJ
+         tgDyWhh7wvxUnSNMju96Ynkz97CMBHYGRONc5MJMN/2vgstam5hEp83FKxEr8KdSOWah
+         SRmljiAlWSQk9IMLFZhdzwoCsBI0rPWADqf4ZMWrBj54dVejTqmjTzNZ+yTLR3gPlMn5
+         /7nP0JFSsrOXQmFDHYIHr5a9P5BjUe1iZDBYKoHfURhuHeRMMMeWtPjrYkzn868kJEWU
+         uStCKEkcB1sEsrMADs+fSIpOmcttsND+d86jG0mX5cM7iVwlH9w1J9eXbxQw/zh+LZAE
+         sfoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6sb5g+0CyBnYgspWb7smnxR0u0kh10bCr5C3KgaiSes=;
-        b=H3RbkFVBBjEzCIWx8X2tTqnzT/3pdiKRCBnJual8kNMtlKED6b/p5HtDaRom+jVerg
-         4vUcNk7/8fKtG9xzDpjOAB97/FIMSHCQ6DbrNC139vw8w+Iun/AkLErOr0XDebcQ7GQl
-         ux1FcL/EVlzDFOCXJeme47CLB9cyI35XIsXjrkzABFdbDHR5zUiUI76+F0g3F4H9isC2
-         GVXBFRlq7NQuMgIeOq4L3Vh3kKkyKUMyrCHDBVMAt4L/K3J5kMvxg9xE6aW77ohKDVsO
-         R8xrRG4GvWyEEa5CyJBeEv18UqvdPIXmqxnt+ZkrLUDVbgCcL8RgFqrzaFeRkpLzgroN
-         VDmg==
-X-Gm-Message-State: AOAM532iurURNbnLyuInIJCmbFbf1HczNiUIMyHDCzGj934FcecVMFP2
-	JKTbN8u0p0KHABz7NjzUkEjGeXGteYvcLxqa
-X-Google-Smtp-Source: ABdhPJw5nBuMLUOdFcrr4NjleQiiRsCuODoQ92ySXVer204UwXw1r2bX6nVhC0rBuI/Pi/zszt1r1A==
-X-Received: by 2002:a17:907:399:: with SMTP id ss25mr42699031ejb.134.1620891775294;
-        Thu, 13 May 2021 00:42:55 -0700 (PDT)
+        bh=3cJiHQBtEGkH9n4vqOz/EURApAiaRvpZojoG6Ow2pkk=;
+        b=rpt7Ir5ze2TQIMep/urb3Lg8eWejm7nk+IGxTVkBBt/Mhmz5LKnfz9doKHeW3Bq/QB
+         B58r9YNqSHbA8rLp4fFXB159VxuQ77Nh8+YXzJB7IdVe3Ifs5t49VKVonudprwKmI/+x
+         MZ6IIORvKWA/1hqHTPpV5CTJoNamf0oadTgdZtcw6gP2lwkUQrWK9WfgFO19SNQk8EfM
+         c8uHcUn58iSqh25uSMcVBYZBKkst7QyLKGzrCO9CZFFq4bPAFUvzxo/j9ZNfILLPpAjv
+         PogtSeXwkSaDefLOp0dLUkE3UYyW76LybuExPMC3yu6hOFuefUch/2U/Ca+1HGhu55QB
+         pUjw==
+X-Gm-Message-State: AOAM533ekHJWZw+t9NJSF5tXZ+CIC4DVhl1D4YdRrhnLInNs1r9Abc/R
+	x89U7/uiAUtQWuxwX1Xh/ytqXbrw1adj/pvW
+X-Google-Smtp-Source: ABdhPJyZoDp4d111LJMFY/QLrtdZP8TBJZ26fYvCrDXr7q2ziiGEIiDqtH09pQbwKmUUtcALX7lReQ==
+X-Received: by 2002:a17:906:79a:: with SMTP id l26mr41916803ejc.268.1620892005403;
+        Thu, 13 May 2021 00:46:45 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8928:ef6b:4f39:1fcb])
-        by smtp.gmail.com with ESMTPSA id g11sm1405262eje.7.2021.05.13.00.42.54
+        by smtp.gmail.com with ESMTPSA id cr21sm1344464ejc.2.2021.05.13.00.46.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 May 2021 00:42:54 -0700 (PDT)
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: generate the data
- checksum"
+        Thu, 13 May 2021 00:46:45 -0700 (PDT)
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: receive checksum for
+ MP_CAPABLE with data"
 To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-References: <694573465901ea0fc5318b379af75f5287a4f77f.1620360953.git.geliangtang@gmail.com>
+References: <894be7ae85244360c4dd5a250043086d3bbc8826.1620792920.git.geliangtang@gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <ebb1b2d9-7880-ca53-b35e-52eb1a3ebe8d@tessares.net>
-Date: Thu, 13 May 2021 09:42:53 +0200
+Message-ID: <3f87e8e4-4456-04a6-17f6-4a5e8302f954@tessares.net>
+Date: Thu, 13 May 2021 09:46:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
@@ -51,30 +51,34 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <694573465901ea0fc5318b379af75f5287a4f77f.1620360953.git.geliangtang@gmail.com>
+In-Reply-To: <894be7ae85244360c4dd5a250043086d3bbc8826.1620792920.git.geliangtang@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang, Mat,
 
-On 07/05/2021 06:18, Geliang Tang wrote:
-> Move the csum_replace2 trunk into the later patch "mptcp: receive
-> checksum for MP_CAPABLE with data".
+On 12/05/2021 06:16, Geliang Tang wrote:
+> Drop the csum_replace2 trunk as Mat suggested.
+> 
+> mptcp_make_csum() hasn't been called yet so the pseudoheader has not been
+> included in the checksum.
 > 
 > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 
 Thank you for the patch and the review!
 
-Now in our tree!
+Now in our tree:
 
-- 04461ed21558: Squash to "mptcp: generate the data checksum"
-- 2f6a4aa17ccb: conflict in
-t/mptcp-receive-checksum-for-MP_CAPABLE-with-data
-- Results: 6628a7b4ea41..f8de7f4600ea
+- 54133a0eca73: "squashed" in "mptcp: receive checksum for MP_CAPABLE
+with data"
+- 54133a0eca73: Squash to "mptcp: receive checksum for MP_CAPABLE with data"
+- Results: f8de7f4600ea..655ba588ab88
 
-No tag, we need 'Squash to "mptcp: receive checksum for MP_CAPABLE with
-data"'.
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210513T074617
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210513T074617
 
 Cheers,
 Matt
