@@ -1,31 +1,31 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F8F70
-	for <mptcp@lists.linux.dev>; Wed, 12 May 2021 19:51:39 +0000 (UTC)
-IronPort-SDR: Guep2HDbKWL1MdCSndwV/I39HxR5qaFtqNlSBj+0agD+ibR9y3rEvTh/A8F99IZT1m3QS2Ujo/
- pMW3af38LENA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9982"; a="187217248"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F43B2FB7
+	for <mptcp@lists.linux.dev>; Thu, 13 May 2021 00:38:23 +0000 (UTC)
+IronPort-SDR: 7O9E5QFuiaa9ioTn/R8N+ouaATsKVh1b2KvaoeUmKE4H1l8lIVfccL5xr2x4NPwy7gvv2TtZvD
+ DbiH0rjACRsA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9982"; a="285341847"
 X-IronPort-AV: E=Sophos;i="5.82,295,1613462400"; 
-   d="scan'208";a="187217248"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2021 12:51:38 -0700
-IronPort-SDR: AQ5QAm9sjDagCIT9FVhqb7mYa+RnqvU3j/nkBjPGSVjzQ3a210CAEMDmR4Wkm+cbZ//oJW9C0b
- Kp7gVacNc4Xw==
+   d="scan'208";a="285341847"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2021 17:38:17 -0700
+IronPort-SDR: fzJgNZaHWNXiireq7Mu00Wi/1sV9v3JjGxNbSR7qXDgh98hBNNWJSPHzEmuTWLG0dL0KmnNxYM
+ 8GnV2fAhD4yw==
 X-IronPort-AV: E=Sophos;i="5.82,295,1613462400"; 
-   d="scan'208";a="392882583"
+   d="scan'208";a="437434330"
 Received: from bsirota-mobl.amr.corp.intel.com ([10.209.18.175])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2021 12:51:38 -0700
-Date: Wed, 12 May 2021 12:51:38 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2021 17:38:16 -0700
+Date: Wed, 12 May 2021 17:38:15 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>, 
+To: Jianguo Wu <wujianguo106@163.com>
+cc: mptcp@lists.linux.dev, Florian Westphal <fw@strlen.de>, 
+    Paolo Abeni <pabeni@redhat.com>, 
     Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: receive checksum
- for MP_CAPABLE with data"
-In-Reply-To: <894be7ae85244360c4dd5a250043086d3bbc8826.1620792920.git.geliangtang@gmail.com>
-Message-ID: <539353c-ea21-ea0-ef57-a46ac03d7b70@linux.intel.com>
-References: <894be7ae85244360c4dd5a250043086d3bbc8826.1620792920.git.geliangtang@gmail.com>
+Subject: Re: [PATCH] mptcp: generate subflow hmac after mptcp_finish_join()
+In-Reply-To: <79d42988-47da-dc8b-8416-4d4e76510f08@163.com>
+Message-ID: <81606e5-c169-3461-e710-b06b8426d5aa@linux.intel.com>
+References: <79d42988-47da-dc8b-8416-4d4e76510f08@163.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -33,47 +33,59 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 12 May 2021, Geliang Tang wrote:
+On Fri, 7 May 2021, Jianguo Wu wrote:
 
-> Drop the csum_replace2 trunk as Mat suggested.
+> From: Jianguo Wu <wujianguo@chinatelecom.cn>
 >
-> mptcp_make_csum() hasn't been called yet so the pseudoheader has not been
-> included in the checksum.
+> For outgoing subflow join, when recv SYNACK, in subflow_finish_connect(),
+> the mptcp_finish_join() may return false in some cases, and send a RESET
+> to remote, and no local hmac is required.
+> So generate subflow hmac after mptcp_finish_join().
 >
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> Fixes: ec3edaa7ca6c ("mptcp: Add handling of outgoing MP_JOIN requests").
+> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
 > ---
-> Apply the patch (Squash to "mptcp: generate the data checksum") first.
-> ---
-> net/mptcp/options.c | 5 -----
-> 1 file changed, 5 deletions(-)
-
-Thanks Geliang.
-
-Matthieu, all the pending squash-to patches from Geliang are ok to merge.
-
-
--Mat
-
-
+> net/mptcp/subflow.c | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index cce90c16e47d..6b737ba1f941 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -547,11 +547,6 @@ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
-> 		 */
-> 		ext->data_fin = 1;
-> 		ext->data_len++;
+
+Hi Jianguo -
+
+It looks like subflow->hmac is not accessed by any functions called from 
+mptcp_finish_join(), and the selftests pass, so this looks ok for the 
+export branch.
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+
+Mat
+
+
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index c896803..554e7cce 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -433,15 +433,15 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+> 			goto do_reset;
+> 		}
+>
+> +		if (!mptcp_finish_join(sk))
+> +			goto do_reset;
+> +
+> 		subflow_generate_hmac(subflow->local_key, subflow->remote_key,
+> 				      subflow->local_nonce,
+> 				      subflow->remote_nonce,
+> 				      hmac);
+> 		memcpy(subflow->hmac, hmac, MPTCPOPT_HMAC_LEN);
+>
+> -		if (!mptcp_finish_join(sk))
+> -			goto do_reset;
 > -
-> -		/* the pseudo header has changed, update the csum accordingly */
-> -		if (ext->csum_reqd)
-> -			csum_replace2(&ext->csum, htons(ext->data_len - 1),
-> -				      htons(ext->data_len));
-> 	}
-> }
+> 		subflow->mp_join = 1;
+> 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
 >
 > -- 
-> 2.31.1
+> 1.8.3.1
 >
 >
 >
