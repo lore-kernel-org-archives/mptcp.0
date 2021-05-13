@@ -1,238 +1,92 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039762FB7
-	for <mptcp@lists.linux.dev>; Thu, 13 May 2021 00:43:24 +0000 (UTC)
-IronPort-SDR: +HrvosMoYcnSJ84TgaeY7QMtHRsCo6qpisP+Ut15nKGvdAtwLjJ3uj9SWXjyZ2/WqTjkJTqKkf
- n9k0BEKM6HyQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9982"; a="263766417"
-X-IronPort-AV: E=Sophos;i="5.82,295,1613462400"; 
-   d="scan'208";a="263766417"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2021 17:43:16 -0700
-IronPort-SDR: jxwR3ZcpbOkSB1xpVJiG79oZHsZ1oz79FuLtNS34nzqKz+BAOc76dNJL3YYBAwrLt/R5UiSPpD
- lxUJ1qW4RjYQ==
-X-IronPort-AV: E=Sophos;i="5.82,295,1613462400"; 
-   d="scan'208";a="437435421"
-Received: from bsirota-mobl.amr.corp.intel.com ([10.209.18.175])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2021 17:43:16 -0700
-Date: Wed, 12 May 2021 17:43:16 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH v5 mptcp-next 3/5] mptcp: add add_list in
- mptcp_pm_data
-In-Reply-To: <b2a2ef7d225e72395055f34445968d25939b6b0f.1620469774.git.geliangtang@gmail.com>
-Message-ID: <1189682-794-873a-6ebb-9b55cc4cc050@linux.intel.com>
-References: <cover.1620469774.git.geliangtang@gmail.com> <0edd6a3ad45c1f67a350356298ed4333fc42dac3.1620469774.git.geliangtang@gmail.com> <04612972cea357bc84aa01e145ac689a8397f466.1620469774.git.geliangtang@gmail.com>
- <b2a2ef7d225e72395055f34445968d25939b6b0f.1620469774.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752312FB1
+	for <mptcp@lists.linux.dev>; Thu, 13 May 2021 07:29:43 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id b25so38504442eju.5
+        for <mptcp@lists.linux.dev>; Thu, 13 May 2021 00:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=pMkNooRNqtDdw4qUaAg7v0b86Z6I4/D12IQMMp/vdlY=;
+        b=EPKQ6Z5KtlPiuqHBLVkDkzKIX3fBbGxGpqVSRPLuzWtD3bqrQPSKd1e1kdXPpDp3pA
+         9F3YoPuIn+LUJQaSraYWgjBGSeqaFbkETQFLx4P+Hrw6SPvRp7ixuqwAVqz/KvnfFXT8
+         X0AesuUwI66iSDEmYeakhlN4PGHcPOd/I9I3MpuAsZ1xkPcViNSpl3kVMF8aPNbx5bpZ
+         v8pgwDmeJX5YDTklA6/2Zc+EFm9f1EdpYieimZxW/hJ0uRtFZuyG8H3MQ8OmfnVscHjv
+         fJvWRxybxcair33rNRSX/g/DKN9JtT2nq3m3uxKsUCIjkSBLW996WK9Qk7m+fbps9TtO
+         xyhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pMkNooRNqtDdw4qUaAg7v0b86Z6I4/D12IQMMp/vdlY=;
+        b=JW7klx0PZkuPHiSxj+LDckUREZoGG+zYSPLc93u+eKnG8RNpYTvVOMv0jbQt9iTeyH
+         leer16CIFxTm4uEopmQ6eFAN9V/nwvp06eIZsYRbDYzS/kWMyK4b4TAaKuetfNyTWtA6
+         NC0OGp74m67Dh/gqXsENiJvK2gr9Lq3Zf0xdp3PQa2Hbx+tfYUSbITSOljHaAmHyA3gU
+         XL+F8h9mADE98JX+3+r539HZdexyf0RvZgikNg1IMCpu2kd+Eet69a4j1x0u48heI/dP
+         YoZ66wpYPhpuAI1IBnF63K3ZSIXshwANUkNLdwZbL6TTPhAeERHLjgLxKO0snFRGKG01
+         XjYg==
+X-Gm-Message-State: AOAM5306e0mRFFZlARm0/TGiNzssAI6A2w2quYU6gOLwEbtVf7ITWIcj
+	dZej6Do6uH7UHoUJ7pgVH4OboyclmEo0yYUb
+X-Google-Smtp-Source: ABdhPJxN2RqvA1eqliVX49UQBsNcu+JkYRu8Xr9L4+BYHwCGBz8HiZIejm68jsUak2PLbIZKJr3ZJQ==
+X-Received: by 2002:a17:906:fb04:: with SMTP id lz4mr42832377ejb.66.1620890981629;
+        Thu, 13 May 2021 00:29:41 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8928:ef6b:4f39:1fcb])
+        by smtp.gmail.com with ESMTPSA id v18sm1088109ejg.63.2021.05.13.00.29.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 May 2021 00:29:41 -0700 (PDT)
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add sk parameter for
+ mptcp_parse_option"
+To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
+References: <f3808e3bfccf51a4a41e8ff3c793a464d8c3ae61.1620349748.git.geliangtang@gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <9fc0ac14-28e2-f284-9052-f0bf1dfb7552@tessares.net>
+Date: Thu, 13 May 2021 09:29:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <f3808e3bfccf51a4a41e8ff3c793a464d8c3ae61.1620349748.git.geliangtang@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-On Sat, 8 May 2021, Geliang Tang wrote:
+Hi Geliang, Mat,
 
-> Like the anno_list member in struct mptcp_pm_data, this patch added a
-> new member named add_list in it, to save all the received ADD_ADDRs in
-> this add_list.
->
+On 07/05/2021 03:12, Geliang Tang wrote:
+> Keep mptcp_parse_option unchanged.
+> 
+> Please update the commit log too:
+> 
+> '''
+> mptcp: add sk parameter for mptcp_get_options
+> 
+> This patch added a new parameter name sk in mptcp_get_options().
+> '''
+> 
 > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
-> net/mptcp/pm.c         |  1 +
-> net/mptcp/pm_netlink.c | 74 ++++++++++++++++++++++++++++++++++++++++++
-> net/mptcp/protocol.c   |  1 +
-> net/mptcp/protocol.h   |  2 ++
-> 4 files changed, 78 insertions(+)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9d00fa6d22e9..9456fe17b6a3 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -324,6 +324,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
->
-> 	spin_lock_init(&msk->pm.lock);
-> 	INIT_LIST_HEAD(&msk->pm.anno_list);
-> +	INIT_LIST_HEAD(&msk->pm.add_list);
->
-> 	mptcp_pm_nl_data_init(msk);
-> }
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d094588afad8..47a515af2b0a 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -483,6 +483,72 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
-> 	mptcp_pm_create_subflow_or_signal_addr(msk);
-> }
->
-> +struct mptcp_pm_add_entry *
-> +mptcp_lookup_add_list_by_id(struct mptcp_sock *msk, u8 id)
-> +{
-> +	struct mptcp_pm_add_entry *entry;
-> +
-> +	lockdep_assert_held(&msk->pm.lock);
-> +
-> +	list_for_each_entry(entry, &msk->pm.add_list, list) {
-> +		if (entry->addr.id == id)
-> +			return entry;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +struct mptcp_pm_add_entry *
-> +mptcp_lookup_add_list_by_saddr(struct mptcp_sock *msk,
-> +			       struct mptcp_addr_info *addr)
-> +{
-> +	struct mptcp_pm_add_entry *entry;
-> +
-> +	lockdep_assert_held(&msk->pm.lock);
-> +
-> +	list_for_each_entry(entry, &msk->pm.add_list, list) {
-> +		if (addresses_equal(&entry->addr, addr, true))
-> +			return entry;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static bool mptcp_pm_alloc_add_list(struct mptcp_sock *msk,
-> +				    struct mptcp_addr_info *addr)
-> +{
-> +	struct mptcp_pm_add_entry *add_entry = NULL;
-> +
-> +	lockdep_assert_held(&msk->pm.lock);
-> +
-> +	if (mptcp_lookup_add_list_by_saddr(msk, addr))
-> +		return false;
-> +
-> +	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
 
-Hi Geliang -
+Thank you for the patch!
 
-Thanks for adding the list to track addresses announced by the peer. It 
-will also be helpful for future in-kernel path manager functionality.
+Now in our tree:
 
-I think it's worthwhile to add a separate struct for this list instead of 
-reusing struct mptcp_pm_add_entry. The timer_list is a large number of 
-bytes to allocate and not use:
+- 079024ea2393: "squashed" in "mptcp: add sk parameter for
+mptcp_parse_option"
+- 31116dbd2a19: tg:msg: remove mptcp_parse_option
+- Results: 0ebe24033a1a..bcf6675a2d3f
 
-// from pahole
+Builds and tests are now in progress:
 
-struct mptcp_pm_add_entry {
-         struct list_head           list;                 /*     0    16 */
-         struct mptcp_addr_info     addr;                 /*    16    24 */
-         struct timer_list          add_timer;            /*    40    80 */
-         /* --- cacheline 1 boundary (64 bytes) was 56 bytes ago --- */
-         struct mptcp_sock *        sock;                 /*   120     8 */
-         /* --- cacheline 2 boundary (128 bytes) --- */
-         u8                         retrans_times;        /*   128     1 */
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210513T072854
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210513T072854
 
-         /* size: 136, cachelines: 3, members: 5 */
-         /* padding: 7 */
-         /* last cacheline: 8 bytes */
-};
-
-
--Mat
-
-
-> +	if (!add_entry)
-> +		return false;
-> +
-> +	list_add(&add_entry->list, &msk->pm.add_list);
-> +	add_entry->addr = *addr;
-> +
-> +	return true;
-> +}
-> +
-> +void mptcp_pm_free_add_list(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_pm_add_entry *entry, *tmp;
-> +	LIST_HEAD(free_list);
-> +
-> +	pr_debug("msk=%p", msk);
-> +
-> +	spin_lock_bh(&msk->pm.lock);
-> +	list_splice_init(&msk->pm.add_list, &free_list);
-> +	spin_unlock_bh(&msk->pm.lock);
-> +
-> +	list_for_each_entry_safe(entry, tmp, &free_list, list)
-> +		kfree(entry);
-> +}
-> +
-> static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
-> {
-> 	struct sock *sk = (struct sock *)msk;
-> @@ -513,6 +579,8 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
-> 	remote = msk->pm.remote;
-> 	if (!remote.port)
-> 		remote.port = sk->sk_dport;
-> +	if (!mptcp_pm_alloc_add_list(msk, &remote))
-> +		return;
-> 	memset(&local, 0, sizeof(local));
-> 	local.family = remote.family;
->
-> @@ -612,6 +680,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
-> 		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
-> +			struct mptcp_pm_add_entry *entry;
-> 			u8 id = subflow->local_id;
->
-> 			if (rm_type == MPTCP_MIB_RMADDR)
-> @@ -631,6 +700,11 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
-> 			if (rm_type == MPTCP_MIB_RMADDR) {
-> 				msk->pm.add_addr_accepted--;
-> 				WRITE_ONCE(msk->pm.accept_addr, true);
-> +				entry = mptcp_lookup_add_list_by_id(msk, id);
-> +				if (entry) {
-> +					list_del(&entry->list);
-> +					kfree(entry);
-> +				}
-> 			} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
-> 				msk->pm.local_addr_used--;
-> 			}
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 652e55a0c6e8..446076388637 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2882,6 +2882,7 @@ void mptcp_destroy_common(struct mptcp_sock *msk)
-> 	skb_rbtree_purge(&msk->out_of_order_queue);
-> 	mptcp_token_destroy(msk);
-> 	mptcp_pm_free_anno_list(msk);
-> +	mptcp_pm_free_add_list(msk);
-> }
->
-> static void mptcp_destroy(struct sock *sk)
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index fd7ff2d28cb3..d19deee01896 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -185,6 +185,7 @@ struct mptcp_pm_data {
-> 	struct mptcp_addr_info local;
-> 	struct mptcp_addr_info remote;
-> 	struct list_head anno_list;
-> +	struct list_head add_list;
->
-> 	spinlock_t	lock;		/*protects the whole PM data */
->
-> @@ -693,6 +694,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
-> 				 struct mptcp_addr_info *addr,
-> 				 u8 bkup);
-> void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
-> +void mptcp_pm_free_add_list(struct mptcp_sock *msk);
-> bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
-> struct mptcp_pm_add_entry *
-> mptcp_pm_del_add_timer(struct mptcp_sock *msk,
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
+Cheers,
+Mat
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
