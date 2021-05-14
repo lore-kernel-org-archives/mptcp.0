@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E8571
-	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 09:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00CE71
+	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 09:49:18 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lhURR-0006s2-1J; Fri, 14 May 2021 11:49:09 +0200
+	id 1lhURZ-0006sL-Ab; Fri, 14 May 2021 11:49:17 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v3 mptcp-next 1/7] sock: expose so_timestamp options for mptcp
-Date: Fri, 14 May 2021 11:48:51 +0200
-Message-Id: <20210514094857.10663-2-fw@strlen.de>
+Subject: [PATCH v3 mptcp-next 3/7] mptcp: sockopt: propagate timestamp request to subflows
+Date: Fri, 14 May 2021 11:48:53 +0200
+Message-Id: <20210514094857.10663-4-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210514094857.10663-1-fw@strlen.de>
 References: <20210514094857.10663-1-fw@strlen.de>
@@ -22,76 +22,93 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This exports SO_TIMESTAMP_* function for re-use by MPTCP.
+This adds support for TIMESTAMP(NS) setsockopt.
 
-Without this there is too much copy & paste needed to support
-this from mptcp setsockopt path.
+This doesn't make things work yet, because the mptcp receive path
+doesn't convert the skb timestamps to cmsgs for userspace consumption.
+
+receive path cmsg support is added ina followup patch.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/net/sock.h |  1 +
- net/core/sock.c    | 26 +++++++++++++++++++-------
- 2 files changed, 20 insertions(+), 7 deletions(-)
+ net/mptcp/sockopt.c | 50 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 42bc5e1a627f..7ee2347846b6 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2741,6 +2741,7 @@ static inline bool sk_dev_equal_l3scope(struct sock *sk, int dif)
- void sock_def_readable(struct sock *sk);
- 
- int sock_bindtoindex(struct sock *sk, int ifindex, bool lock_sk);
-+void sock_set_timestamp(struct sock *sk, int optname, bool valbool);
- void sock_enable_timestamps(struct sock *sk);
- void sock_no_linger(struct sock *sk);
- void sock_set_keepalive(struct sock *sk);
-diff --git a/net/core/sock.c b/net/core/sock.c
-index c761c4a0b66b..294b5a9bf520 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -776,6 +776,24 @@ void sock_enable_timestamps(struct sock *sk)
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index a79798189599..3168ad4a9298 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -140,6 +140,43 @@ static void mptcp_so_incoming_cpu(struct mptcp_sock *msk, int val)
+ 	mptcp_sol_socket_sync_intval(msk, SO_INCOMING_CPU, val);
  }
- EXPORT_SYMBOL(sock_enable_timestamps);
  
-+void sock_set_timestamp(struct sock *sk, int optname, bool valbool)
++static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optname, int val)
 +{
-+	switch (optname) {
-+	case SO_TIMESTAMP_OLD:
-+		__sock_set_timestamps(sk, valbool, false, false);
-+		break;
-+	case SO_TIMESTAMP_NEW:
-+		__sock_set_timestamps(sk, valbool, true, false);
-+		break;
-+	case SO_TIMESTAMPNS_OLD:
-+		__sock_set_timestamps(sk, valbool, false, true);
-+		break;
-+	case SO_TIMESTAMPNS_NEW:
-+		__sock_set_timestamps(sk, valbool, true, true);
-+		break;
++	sockptr_t optval = KERNEL_SOCKPTR(&val);
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	int ret;
++
++	ret = sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname,
++			      optval, sizeof(val));
++	if (ret)
++		return ret;
++
++	lock_sock(sk);
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		bool slow = lock_sock_fast(ssk);
++
++		switch (optname) {
++		case SO_TIMESTAMP_OLD:
++		case SO_TIMESTAMP_NEW:
++		case SO_TIMESTAMPNS_OLD:
++		case SO_TIMESTAMPNS_NEW:
++			sock_set_timestamp(sk, optname, !!val);
++			break;
++		case SO_TIMESTAMPING_NEW:
++		case SO_TIMESTAMPING_OLD:
++			sock_set_timestamping(sk, optname, val);
++			break;
++		}
++
++		unlock_sock_fast(ssk, slow);
 +	}
++
++	release_sock(sk);
++	return 0;
 +}
 +
- void sock_set_keepalive(struct sock *sk)
+ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
+ 					   sockptr_t optval, unsigned int optlen)
  {
- 	lock_sock(sk);
-@@ -989,16 +1007,10 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 		break;
+@@ -164,6 +201,13 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
+ 	case SO_INCOMING_CPU:
+ 		mptcp_so_incoming_cpu(msk, val);
+ 		return 0;
++	case SO_TIMESTAMP_OLD:
++	case SO_TIMESTAMP_NEW:
++	case SO_TIMESTAMPNS_OLD:
++	case SO_TIMESTAMPNS_NEW:
++	case SO_TIMESTAMPING_OLD:
++	case SO_TIMESTAMPING_NEW:
++		return mptcp_setsockopt_sol_socket_tstamp(msk, optname, val);
+ 	}
  
- 	case SO_TIMESTAMP_OLD:
--		__sock_set_timestamps(sk, valbool, false, false);
--		break;
- 	case SO_TIMESTAMP_NEW:
--		__sock_set_timestamps(sk, valbool, true, false);
--		break;
- 	case SO_TIMESTAMPNS_OLD:
--		__sock_set_timestamps(sk, valbool, false, true);
--		break;
- 	case SO_TIMESTAMPNS_NEW:
--		__sock_set_timestamps(sk, valbool, true, true);
-+		sock_set_timestamp(sk, valbool, optname);
- 		break;
- 	case SO_TIMESTAMPING_NEW:
- 	case SO_TIMESTAMPING_OLD:
+ 	return -ENOPROTOOPT;
+@@ -251,6 +295,12 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 	case SO_MARK:
+ 	case SO_INCOMING_CPU:
+ 	case SO_DEBUG:
++	case SO_TIMESTAMP_OLD:
++	case SO_TIMESTAMP_NEW:
++	case SO_TIMESTAMPNS_OLD:
++	case SO_TIMESTAMPNS_NEW:
++	case SO_TIMESTAMPING_OLD:
++	case SO_TIMESTAMPING_NEW:
+ 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
+ 	case SO_LINGER:
+ 		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
 -- 
 2.26.3
 
