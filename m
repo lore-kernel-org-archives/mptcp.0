@@ -1,111 +1,152 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943E371
-	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 09:57:32 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1lhUZW-0006vf-RZ; Fri, 14 May 2021 11:57:30 +0200
-Date: Fri, 14 May 2021 11:57:30 +0200
-From: Florian Westphal <fw@strlen.de>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-next 1/8] mptcp: enable busypoll from mptcp
- receive path
-Message-ID: <20210514095730.GA30441@breakpoint.cc>
-References: <20210511133659.29982-1-fw@strlen.de>
- <20210511133659.29982-2-fw@strlen.de>
- <83bc7a0dc52a0f362489067babfbbb5c4bd083e6.camel@redhat.com>
- <20210512100413.GJ4038@breakpoint.cc>
- <e5bad85c6b9d560f30f094a1b55fa4e901170931.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFEB71
+	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 10:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1620986753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JJSB9OvVs96iyeN4oMH088olTJEZQMpqDqKIm/zFJ24=;
+	b=ikYvsCDpL7vOd+hWNaY/kw7G9JQLMMYILp/1Pua0sBq76DJcSlvTrVYmLbw5TmBbf982vR
+	KYTnLa6jsIoxwSmZOQ1afCnnZuyHVGH472KgJ18vT3PaWEA1PCzHviqRftzEbXi0faHtyP
+	on0n37l5KErP8jXybWVSBgXT4QTNcRM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-514-33TRmp-hMVW6Iz4gGjW_WQ-1; Fri, 14 May 2021 06:05:51 -0400
+X-MC-Unique: 33TRmp-hMVW6Iz4gGjW_WQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A52D98015F5
+	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 10:05:50 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-112-166.ams2.redhat.com [10.36.112.166])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1CB4810016F9
+	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 10:05:49 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: [PATCH mptcp-net] mptcp: fix sk_forward_memory corruption under memory pressure
+Date: Fri, 14 May 2021 12:05:45 +0200
+Message-Id: <b84d11a2f4c33e69637567e64138a453611064dc.1620986525.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5bad85c6b9d560f30f094a1b55fa4e901170931.camel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Paolo Abeni <pabeni@redhat.com> wrote:
-> On Wed, 2021-05-12 at 12:04 +0200, Florian Westphal wrote:
-> > Paolo Abeni <pabeni@redhat.com> wrote:
-> > > On Tue, 2021-05-11 at 15:36 +0200, Florian Westphal wrote:
-> > > > +	if (sk_can_busy_loop(sk) &&
-> > > > +	    skb_queue_empty_lockless(&msk->receive_queue) &&
-> > > > +	    skb_queue_empty_lockless(&sk->sk_receive_queue) &&
-> > > > +	    inet_sk_state_load(sk) == TCP_ESTABLISHED)
-> > > > +		sk_busy_loop(sk, nonblock);
-> > > 
-> > > If I understand the code correctly, here we need a valid sk-
-> > > > sk_napi_id. That field is set by the TCP input path
-> > > in tcp_finish_connect()/tcp_v{4,6}_do_rcv()/tcp_child_process() for the
-> > > subflow ssk.
-> > > 
-> > > I think sk_napi_id is not currently available for the msk?!? 
-> > > Copying it from the subflow requires some care, as the msk could end-up 
-> > > busy polling on the 'wrong' napi instance ?!?
-> > 
-> > What about:
-> > 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -303,6 +303,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
-> >  		if (tail && mptcp_try_coalesce(sk, tail, skb))
-> >  			return true;
-> >  
-> > +		sk_mark_napi_id_once(sk, skb);
-> >  		skb_set_owner_r(skb, sk);
-> >  		__skb_queue_tail(&sk->sk_receive_queue, skb);
-> >  		return true;
-> > 
-> > This sets the napi id to one that provided the last mptcp-in-sequence skb.
-> 
-> I *think* the above sets napi it to the one provided by the first
-> received skb.
+MPTCP sk_forward_memory handling is a bit special, as such field
+is protected by the msk socket spin_lock, instead of the plain
+socket lock.
 
-Depends on wheter the receive queue is empty or not.
+Currently we have a code path updating such field without handling
+the relevant lock:
 
-Its the most recent subflow that had activity.
+__mptcp_retrans() -> __mptcp_clean_una_wakeup() -> __mptcp_update_wmem()
 
-> What about something as crazy as the following? not even build tested,
-> but I hope it can illustrate the idea bettern than words.
+We can hit the above only under memory pressure. When that happen,
+forward memory accounting could be corrupted, as reported by Mat.
 
-I'm no longer convicend busypolling makes any sense with mptcp sockets,
-see below.
+Address the issue creating a new variant of __mptcp_clean_una_wakeup()
+which handle fwd memory updates with the proper care and invoking
+such new helper in the relevant code path.
 
-> +	for (;;) {
-> +		int nr, napi_id = napi_id_by_subflow_nr(sk, 0);
-> +
-> +		for (nr = 0; napi_id >= 0 ; napi_id = napi_id_by_subflow_nr(sk, ++nr)) }
-> +			napi_busy_loop(napi_id, NULL, NULL,
-> +			       READ_ONCE(sk->sk_prefer_busy_poll),
-> +			       READ_ONCE(sk->sk_busy_poll_budget) ?: BUSY_POLL_BUDGET);
-> +			if (skb_queue_empty_lockless(&sk->sk_receive_queue))
-> +				return;
+Reported-by: 'Matthieu Baerts <matthieu.baerts@tessares.net>'
+Fixes: 64b9cea7a0af ("mptcp: fix spurious retransmissions")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
-We would need a new conditional to early-terminate the busypoll loop.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2d21a4793d9d..1d5d451e9211 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -947,6 +947,10 @@ static void __mptcp_update_wmem(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
++#ifdef CONFIG_LOCKDEP
++	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock.slock));
++#endif
++
+ 	if (!msk->wmem_reserved)
+ 		return;
+ 
+@@ -1027,7 +1031,7 @@ static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
+ 	put_page(dfrag->page);
+ }
+ 
+-static void __mptcp_clean_una(struct sock *sk)
++static bool __mptcp_do_clean_una(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_data_frag *dtmp, *dfrag;
+@@ -1068,12 +1072,6 @@ static void __mptcp_clean_una(struct sock *sk)
+ 	}
+ 
+ out:
+-	if (cleaned) {
+-		if (tcp_under_memory_pressure(sk)) {
+-			__mptcp_update_wmem(sk);
+-			sk_mem_reclaim_partial(sk);
+-		}
+-	}
+ 
+ 	if (snd_una == READ_ONCE(msk->snd_nxt)) {
+ 		if (msk->timer_ival && !mptcp_data_fin_enabled(msk))
+@@ -1081,6 +1079,15 @@ static void __mptcp_clean_una(struct sock *sk)
+ 	} else {
+ 		mptcp_reset_timer(sk);
+ 	}
++	return cleaned;
++}
++
++static void __mptcp_clean_una(struct sock *sk)
++{
++	if (__mptcp_do_clean_una(sk) && tcp_under_memory_pressure(sk)) {
++		__mptcp_update_wmem(sk);
++		sk_mem_reclaim_partial(sk);
++	}
+ }
+ 
+ static void __mptcp_clean_una_wakeup(struct sock *sk)
+@@ -1089,6 +1096,19 @@ static void __mptcp_clean_una_wakeup(struct sock *sk)
+ 	mptcp_write_space(sk);
+ }
+ 
++/* variant __mptcp_clean_una_wakeup() for caller owning the msk socket lock,
++ * but not the msk_data_lock/msk socket spin lock
++ */
++static void mptcp_clean_una_wakeup(struct sock *sk)
++{
++#ifdef CONFIG_LOCKDEP
++	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock));
++#endif
++	if (__mptcp_do_clean_una(sk) && tcp_under_memory_pressure(sk))
++		mptcp_mem_reclaim_partial(sk);
++	mptcp_write_space(sk);
++}
++
+ static void mptcp_enter_memory_pressure(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -2299,7 +2319,7 @@ static void __mptcp_retrans(struct sock *sk)
+ 	struct sock *ssk;
+ 	int ret;
+ 
+-	__mptcp_clean_una_wakeup(sk);
++	mptcp_clean_una_wakeup(sk);
+ 	dfrag = mptcp_rtx_head(sk);
+ 	if (!dfrag) {
+ 		if (mptcp_data_fin_enabled(msk)) {
+-- 
+2.26.3
 
-Else we might be busypolling on napi instance 1 while another instance
-just made a packet available.
-
-Futhermore, we'd have to divide the budget among the napi instances to
-avoid excess usage.
-
-The way I see it busypoll should never increase latency, but with the
-above, afaics, it would since we don't have a 1:1 mapping of mptcp
-socket to a napi instance that we expect packets on.
-
-The way I see it there are two options:
-1. Ignore buyspoll requests, or.
-2. Set the napi instance ID from __mptcp_move_skb().
-   As soon as the instance changes (anoter subflow on different path),
-   disable busypoll for that mptcp socket.
-
-1) is simpler, 2) would still support busypoll for fallback mode and
-for '1 flow' resp. 'multiple flows on same napi instance'.
-
-The latter could happen if we assume server with single
-link that serves clients with multiple uplinks.
