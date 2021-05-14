@@ -1,167 +1,129 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E66171
-	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 14:32:38 +0000 (UTC)
-Received: by mail-pj1-f48.google.com with SMTP id ep16-20020a17090ae650b029015d00f578a8so1722819pjb.2
-        for <mptcp@lists.linux.dev>; Fri, 14 May 2021 07:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vCAtB47EYneB9xZ3pqNAlLvPbgQtyyLLAKTR5G44eUA=;
-        b=OhtXeNaCf+Qu74jlrpgOfKk9UFHPWPhzPScVF+K73bZB+d3t9CKTeUFakRGuv5o+x1
-         o0s1hJphHmbPHB3ONJgFmzko5McCZfi1Tl6Lrz44a+GVpgk0sCtsG1i+CDMWFHs4SaUD
-         wHZrmXwHAonKzD8KGzjjmRf1+gr1w/18qssnWREi0O3gsgQNbjJaTMB54/aTKC9Eeu/9
-         QPydGKdNv5286qlqGakAQEztApv3VNB2/lBUiYcn8CSA2GNnQLAK4Oiv3O9sNKwzRocy
-         YPe2VtqDFx/No4A3pyD3QoJm8y42CJoAx6/qQyCHUQu9dFW4eUKH81nZHLXDWoYvfv0k
-         BRhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vCAtB47EYneB9xZ3pqNAlLvPbgQtyyLLAKTR5G44eUA=;
-        b=ZwilKjuaYG64iM9AEiq2jXJNhX/fkHl0APgSkRggPR47kUIuqpOUKFXRrmHOGGqBI1
-         6I++Mjlaqo0tvtTnbwm8mmZVTysgLou8DncPatNSP9yPQ4Vk+zE6ZcvYjuS48x6P49L+
-         Igc4Z+bfFRAoxGR7eGKHuZzDe/W+0KoY2ALMXeIYdOUyAEkd7OlF+HKujtLyrEF59fU4
-         hWX1Hv3FDwmicTEpcJOBbv31wPQc5BE+tApkaHxhd2IUnjaTAF1F1HUJAmupzzM+Vre8
-         yeHlWCO7b6Mj3kv+Ia8sG7U9ikfCCCX/y3VinYJKweLrhQYbAOCpVyDJbJicE9wyYe+/
-         Dfjg==
-X-Gm-Message-State: AOAM531RyGuiUjdpcuUDFSnt0JkqgesvgJfGv8J2afoTDw4DSUEJU/Iy
-	MGckVAZUmmU9x7ApAiYlk6mhCg0SAHU=
-X-Google-Smtp-Source: ABdhPJxsRfedk+hOeNo24AIJIoveCDLDkyhtlo3nS7T66/yAMHBywbJtFKOSIa1pUeUJFEWsez8JWw==
-X-Received: by 2002:a17:902:e007:b029:ef:9dd2:be6 with SMTP id o7-20020a170902e007b02900ef9dd20be6mr8079508plo.12.1621002757676;
-        Fri, 14 May 2021 07:32:37 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id r11sm4411441pgl.34.2021.05.14.07.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 May 2021 07:32:37 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v6 mptcp-next 6/6] selftests: mptcp: add deny_join_id0 testcases
-Date: Fri, 14 May 2021 22:32:19 +0800
-Message-Id: <26460564eb974520c1d7724c25ef08293450af6e.1621002341.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <774cef61ee52ed2c84c9113205b706e24c4d7c48.1621002341.git.geliangtang@gmail.com>
-References: <cover.1621002341.git.geliangtang@gmail.com> <d051657e9c51ccb27b32d443777896c6ae519444.1621002341.git.geliangtang@gmail.com> <2a6a925510a7d79f0c2101d5d353f6b74f0e69bb.1621002341.git.geliangtang@gmail.com> <ae0d32922128771f09b230e5718774472a088207.1621002341.git.geliangtang@gmail.com> <850406b0f49fa0a76b4825b36c55426a0d033d52.1621002341.git.geliangtang@gmail.com> <774cef61ee52ed2c84c9113205b706e24c4d7c48.1621002341.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ED772
+	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 18:41:23 +0000 (UTC)
+IronPort-SDR: n51RMmg+Z5/y/UbEk+24SsLnFujoHOdPGyeRLtSBeTGiurCnS+D/IxL5eGfQYlRAL7Lvoql5Rl
+ i0pitarj3kVg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9984"; a="285746950"
+X-IronPort-AV: E=Sophos;i="5.82,300,1613462400"; 
+   d="scan'208";a="285746950"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2021 11:41:22 -0700
+IronPort-SDR: g5rgAmIODGhoNevcN5RagcCpjrDsW+aiPe7XKqib2GpjDvAGJu43eCmqugqnDBLSoE429QxV5D
+ mtlqqa0ZbP2Q==
+X-IronPort-AV: E=Sophos;i="5.82,300,1613462400"; 
+   d="scan'208";a="624808474"
+Received: from akshtadu-mobl.amr.corp.intel.com ([10.251.18.116])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2021 11:41:22 -0700
+Date: Fri, 14 May 2021 11:41:21 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Davide Caratti <dcaratti@redhat.com>
+cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@gmail.com>, 
+    Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH net] mptcp: validate 'id' when stopping the ADD_ADDR
+ retransmit timer
+In-Reply-To: <YJ4/V56p8zc/gcoy@dcaratti.users.ipa.redhat.com>
+Message-ID: <543af854-5578-b9d1-d3b4-1a9cc19da4a@linux.intel.com>
+References: <68c6032edaf880a958bf7f65afc7e9520f39d5cd.1620754971.git.dcaratti@redhat.com> <e03119dc-67cb-6ac1-67fe-d92a8f954e4@linux.intel.com> <YJ4/V56p8zc/gcoy@dcaratti.users.ipa.redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="0-2081430717-1621017682=:47168"
 
-This patch added a new argument '-d' for mptcp_join.sh script, to invoke
-the testcases for the MP_CAPABLE 'C' flag.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 56 ++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
+--0-2081430717-1621017682=:47168
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 523c7797f30a..17b385f011d2 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -139,6 +139,17 @@ reset_with_checksum()
- 	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=$ns2_enable
- }
- 
-+reset_with_allow_join_id0()
-+{
-+	local ns1_enable=$1
-+	local ns2_enable=$2
-+
-+	reset
-+
-+	ip netns exec $ns1 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns1_enable
-+	ip netns exec $ns2 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns2_enable
-+}
-+
- ip -Version > /dev/null 2>&1
- if [ $? -ne 0 ];then
- 	echo "SKIP: Could not run test without ip tool"
-@@ -1462,6 +1473,44 @@ checksum_tests()
- 	chk_csum_nr "checksum test 1 0"
- }
- 
-+deny_join_id0_tests()
-+{
-+	# subflow allow join id0 ns1
-+	reset_with_allow_join_id0 1 0
-+	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "single subflow allow join id0 ns1" 1 1 1
-+
-+	# subflow allow join id0 ns2
-+	reset_with_allow_join_id0 0 1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "single subflow allow join id0 ns2" 0 0 0
-+
-+	# subflow and address allow join id0
-+	reset_with_allow_join_id0 0 1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "subflow and address allow join id0" 2 2 2
-+
-+	# signal address allow join id0
-+	# ADD_ADDRs are not affected by allow_join_id0 value.
-+	reset_with_allow_join_id0 0 0
-+	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal address allow join id0" 1 1 1
-+	chk_add_nr 1 1
-+}
-+
- all_tests()
- {
- 	subflows_tests
-@@ -1476,6 +1525,7 @@ all_tests()
- 	add_addr_ports_tests
- 	syncookies_tests
- 	checksum_tests
-+	deny_join_id0_tests
- }
- 
- usage()
-@@ -1493,6 +1543,7 @@ usage()
- 	echo "  -p add_addr_ports_tests"
- 	echo "  -k syncookies_tests"
- 	echo "  -S checksum_tests"
-+	echo "  -d deny_join_id0_tests"
- 	echo "  -c capture pcap files"
- 	echo "  -C enable data checksum"
- 	echo "  -h help"
-@@ -1528,7 +1579,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
- 
--while getopts 'fsltra64bpkchCS' opt; do
-+while getopts 'fsltra64bpkdchCS' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1566,6 +1617,9 @@ while getopts 'fsltra64bpkchCS' opt; do
- 		S)
- 			checksum_tests
- 			;;
-+		d)
-+			deny_join_id0_tests
-+			;;
- 		c)
- 			;;
- 		C)
--- 
-2.31.1
+On Fri, 14 May 2021, Davide Caratti wrote:
 
+> hello Mat, thanks for reviewing!
+>
+> On Tue, May 11, 2021 at 03:39:14PM -0700, Mat Martineau wrote:
+>> On Tue, 11 May 2021, Davide Caratti wrote:
+>>
+>>> when Linux receives an echo-ed ADD_ADDR, it checks the IP address against
+>>> the list of "announced" addresses. In case of a positive match, the timer
+>>> that handles retransmissions is stopped regardless of the 'Address Id' in
+>>> the received packet: this behaviour does not comply with RFC8684 §3.4.1.
+>>>
+>>> Fix it by validating the 'Address Id' in received echo-ed ADD_ADDRs.
+>>> Tested using packetdrill, with the following captured output:
+>>>
+>>
+>> Hi Davide -
+>>
+>> The code path for ADD_ADDR echo ignores the return value of
+>> mptcp_pm_del_add_timer(), so there's no chance there of leaving
+>> entry->add_timer running if the addr.id doesn't match.
+>
+> true, and that's the purpose of this patch. When addr.id doesn't match,
+> it leaves the timer running to allow another attempt of ADD_ADDR + HMAC.
+>
+>> The function is also called by remove_anno_list_by_saddr(), which will free
+>> 'entry' if a non-NULL value is returned by mptcp_pm_del_add_timer(). There's
+>> more of a chance here that the sk_stop_timer_sync() would be skipped and
+>> entry would be freed anyway. Looking at the various paths to this in the
+>> path manager it seems like it *should* not happen, but I'm not convinced
+>> it's impossible. Did you look at the effect of this change on these other
+>> code paths?
+>
+> good point, I only tried packetdrill and the kselftests. I see
+>
+> mptcp_pm_remove_anno_addr()
+>  remove_anno_list_by_saddr()
+>
+> and its callers: in this case,either 'addr.id' is always read from the return
+> value of
+>
+> __lookup_addr_by_id(pernet, addr.addr.id);
+>
+> or by iterating over
+>
+> &pernet->local_addr_list
+>
+> , so those should all be 'signal' endpoints previously added by netlink:
+> the value of addr.id should always match and the timer should always
+> be stopped.
+>
+> However, I also don't feel 100% safe - because 'entry' is freed by
+> remove_anno_list_by_saddr() and the value of 'address.id' is never checked
+> in addresses_equal(). Maybe it's safer to do soemething like:
+>
+> 347 struct mptcp_pm_add_entry *
+> 348 mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+> 349                        struct mptcp_addr_info *addr, bool strict)
+> 350 {
+> 351         struct mptcp_pm_add_entry *entry;
+> 352         struct sock *sk = (struct sock *)msk;
+> 353
+> 354         spin_lock_bh(&msk->pm.lock);
+> 355         entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
+> 356         if (entry && strict && entry->addr.id == addr->id)
+> 357                 entry->retrans_times = ADD_ADDR_RETRANS_MAX;
+> 358         spin_unlock_bh(&msk->pm.lock);
+> 359
+> 360         if (entry && strict && entry->addr.id == addr->id)
+> 361                 sk_stop_timer_sync(sk, &entry->add_timer);
+> 362
+> 363         return entry;
+> 364 }
+>
+>
+> so that mptcp_pm_del_add_timer(..., true) is called only in the receive
+> path of echo-ed ADD_ADDR. WDYT?
+>
+
+I think that's the right general direction, but (entry && (!strict || 
+entry->addr.id == addr->id)) is the logic needed for the !strict callers 
+to work like before.
+
+--
+Mat Martineau
+Intel
+--0-2081430717-1621017682=:47168--
