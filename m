@@ -1,272 +1,111 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8894871
-	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 09:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943E371
+	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 09:57:32 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1lhURq-0006tf-27; Fri, 14 May 2021 11:49:34 +0200
+	(envelope-from <fw@strlen.de>)
+	id 1lhUZW-0006vf-RZ; Fri, 14 May 2021 11:57:30 +0200
+Date: Fri, 14 May 2021 11:57:30 +0200
 From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v3 mptcp-next 7/7] selftests: mptcp_connect: add SO_TIMESTAMPNS cmsg support
-Date: Fri, 14 May 2021 11:48:57 +0200
-Message-Id: <20210514094857.10663-8-fw@strlen.de>
-X-Mailer: git-send-email 2.26.3
-In-Reply-To: <20210514094857.10663-1-fw@strlen.de>
-References: <20210514094857.10663-1-fw@strlen.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-next 1/8] mptcp: enable busypoll from mptcp
+ receive path
+Message-ID: <20210514095730.GA30441@breakpoint.cc>
+References: <20210511133659.29982-1-fw@strlen.de>
+ <20210511133659.29982-2-fw@strlen.de>
+ <83bc7a0dc52a0f362489067babfbbb5c4bd083e6.camel@redhat.com>
+ <20210512100413.GJ4038@breakpoint.cc>
+ <e5bad85c6b9d560f30f094a1b55fa4e901170931.camel@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5bad85c6b9d560f30f094a1b55fa4e901170931.camel@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-This extends the existing setsockopt test case to also check for cmsg
-timestamps.
+Paolo Abeni <pabeni@redhat.com> wrote:
+> On Wed, 2021-05-12 at 12:04 +0200, Florian Westphal wrote:
+> > Paolo Abeni <pabeni@redhat.com> wrote:
+> > > On Tue, 2021-05-11 at 15:36 +0200, Florian Westphal wrote:
+> > > > +	if (sk_can_busy_loop(sk) &&
+> > > > +	    skb_queue_empty_lockless(&msk->receive_queue) &&
+> > > > +	    skb_queue_empty_lockless(&sk->sk_receive_queue) &&
+> > > > +	    inet_sk_state_load(sk) == TCP_ESTABLISHED)
+> > > > +		sk_busy_loop(sk, nonblock);
+> > > 
+> > > If I understand the code correctly, here we need a valid sk-
+> > > > sk_napi_id. That field is set by the TCP input path
+> > > in tcp_finish_connect()/tcp_v{4,6}_do_rcv()/tcp_child_process() for the
+> > > subflow ssk.
+> > > 
+> > > I think sk_napi_id is not currently available for the msk?!? 
+> > > Copying it from the subflow requires some care, as the msk could end-up 
+> > > busy polling on the 'wrong' napi instance ?!?
+> > 
+> > What about:
+> > 
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -303,6 +303,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+> >  		if (tail && mptcp_try_coalesce(sk, tail, skb))
+> >  			return true;
+> >  
+> > +		sk_mark_napi_id_once(sk, skb);
+> >  		skb_set_owner_r(skb, sk);
+> >  		__skb_queue_tail(&sk->sk_receive_queue, skb);
+> >  		return true;
+> > 
+> > This sets the napi id to one that provided the last mptcp-in-sequence skb.
+> 
+> I *think* the above sets napi it to the one provided by the first
+> received skb.
 
-mptcp_connect will abort/fail if the setockopt was passed but the
-timestamp cmsg isn't present after successful recvmsg().
+Depends on wheter the receive queue is empty or not.
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 125 +++++++++++++++++-
- .../selftests/net/mptcp/mptcp_sockopt.sh      |   4 +-
- 2 files changed, 126 insertions(+), 3 deletions(-)
+Its the most recent subflow that had activity.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index d88e1fdfb147..b0457f76968c 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -6,6 +6,7 @@
- #include <limits.h>
- #include <fcntl.h>
- #include <string.h>
-+#include <stdarg.h>
- #include <stdbool.h>
- #include <stdint.h>
- #include <stdio.h>
-@@ -25,6 +26,7 @@
- #include <netinet/in.h>
- 
- #include <linux/tcp.h>
-+#include <linux/time_types.h>
- 
- extern int optind;
- 
-@@ -66,6 +68,13 @@ static unsigned int cfg_do_w;
- static int cfg_wait;
- static uint32_t cfg_mark;
- 
-+struct cfg_cmsg_types {
-+	unsigned int cmsg_enabled:1;
-+	unsigned int timestampns:1;
-+};
-+
-+static struct cfg_cmsg_types cfg_cmsg_types;
-+
- static void die_usage(void)
- {
- 	fprintf(stderr, "Usage: mptcp_connect [-6] [-u] [-s MPTCP|TCP] [-p port] [-m mode]"
-@@ -80,11 +89,22 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
-+	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
- 	fprintf(stderr,
- 		"\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket\n");
- 	exit(1);
- }
- 
-+static void xerror(const char *fmt, ...)
-+{
-+	va_list ap;
-+
-+	va_start(ap, fmt);
-+	vfprintf(stderr, fmt, ap);
-+	va_end(ap);
-+	exit(1);
-+}
-+
- static void handle_signal(int nr)
- {
- 	quit = true;
-@@ -338,6 +358,58 @@ static size_t do_write(const int fd, char *buf, const size_t len)
- 	return offset;
- }
- 
-+static void process_cmsg(struct msghdr *msgh)
-+{
-+	struct __kernel_timespec ts;
-+	bool ts_found = false;
-+	struct cmsghdr *cmsg;
-+
-+	for (cmsg = CMSG_FIRSTHDR(msgh); cmsg ; cmsg = CMSG_NXTHDR(msgh, cmsg)) {
-+		if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SO_TIMESTAMPNS_NEW) {
-+			memcpy(&ts, CMSG_DATA(cmsg), sizeof(ts));
-+			ts_found = true;
-+			continue;
-+		}
-+	}
-+
-+	if (cfg_cmsg_types.timestampns) {
-+		if (!ts_found)
-+			xerror("TIMESTAMPNS not present\n");
-+	}
-+}
-+
-+static ssize_t do_recvmsg_cmsg(const int fd, char *buf, const size_t len)
-+{
-+	char msg_buf[8192];
-+	struct iovec iov = {
-+		.iov_base = buf,
-+		.iov_len = len,
-+	};
-+	struct msghdr msg = {
-+		.msg_iov = &iov,
-+		.msg_iovlen = 1,
-+		.msg_control = msg_buf,
-+		.msg_controllen = sizeof(msg_buf),
-+	};
-+	int flags = 0;
-+	int ret = recvmsg(fd, &msg, flags);
-+
-+	if (ret <= 0)
-+		return ret;
-+
-+	if (msg.msg_controllen && !cfg_cmsg_types.cmsg_enabled)
-+		xerror("got %lu bytes of cmsg data, expected 0\n",
-+			(unsigned long)msg.msg_controllen);
-+
-+	if (msg.msg_controllen == 0 && cfg_cmsg_types.cmsg_enabled)
-+		xerror("%s\n", "got no cmsg data");
-+
-+	if (msg.msg_controllen)
-+		process_cmsg(&msg);
-+
-+	return ret;
-+}
-+
- static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- {
- 	int ret = 0;
-@@ -357,6 +429,8 @@ static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- 	} else if (cfg_peek == CFG_AFTER_PEEK) {
- 		ret = recv(fd, buf, cap, MSG_PEEK);
- 		ret = (ret < 0) ? ret : read(fd, buf, cap);
-+	} else if (cfg_cmsg_types.cmsg_enabled) {
-+		ret = do_recvmsg_cmsg(fd, buf, cap);
- 	} else {
- 		ret = read(fd, buf, cap);
- 	}
-@@ -786,6 +860,48 @@ static void init_rng(void)
- 	srand(foo);
- }
- 
-+static void xsetsockopt(int fd, int level, int optname, const void *optval, socklen_t optlen)
-+{
-+	int err;
-+
-+	err = setsockopt(fd, level, optname, optval, optlen);
-+	if (err) {
-+		perror("setsockopt");
-+		exit(1);
-+	}
-+}
-+
-+static void apply_cmsg_types(int fd, const struct cfg_cmsg_types *cmsg)
-+{
-+	static const unsigned int on = 1;
-+
-+	if (cmsg->timestampns)
-+		xsetsockopt(fd, SOL_SOCKET, SO_TIMESTAMPNS_NEW, &on, sizeof(on));
-+}
-+
-+static void parse_cmsg_types(const char *type)
-+{
-+	char *next = strchr(type, ',');
-+	unsigned int len = 0;
-+
-+	cfg_cmsg_types.cmsg_enabled = 1;
-+
-+	if (next) {
-+		parse_cmsg_types(next + 1);
-+		len = next - type;
-+	} else {
-+		len = strlen(type);
-+	}
-+
-+	if (strncmp(type, "TIMESTAMPNS", len) == 0) {
-+		cfg_cmsg_types.timestampns = 1;
-+		return;
-+	}
-+
-+	fprintf(stderr, "Unrecognized cmsg option %s\n", type);
-+	exit(1);
-+}
-+
- int main_loop(void)
- {
- 	int fd;
-@@ -801,6 +917,8 @@ int main_loop(void)
- 		set_rcvbuf(fd, cfg_rcvbuf);
- 	if (cfg_sndbuf)
- 		set_sndbuf(fd, cfg_sndbuf);
-+	if (cfg_cmsg_types.cmsg_enabled)
-+		apply_cmsg_types(fd, &cfg_cmsg_types);
- 
- 	return copyfd_io(0, fd, 1);
- }
-@@ -887,7 +1005,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:c:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -943,6 +1061,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'P':
- 			cfg_peek = parse_peek(optarg);
- 			break;
-+		case 'c':
-+			parse_cmsg_types(optarg);
-+			break;
- 		}
- 	}
- 
-@@ -976,6 +1097,8 @@ int main(int argc, char *argv[])
- 			set_sndbuf(fd, cfg_sndbuf);
- 		if (cfg_mark)
- 			set_mark(fd, cfg_mark);
-+		if (cfg_cmsg_types.cmsg_enabled)
-+			apply_cmsg_types(fd, &cfg_cmsg_types);
- 
- 		return main_loop_s(fd);
- 	}
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 2fa13946ac04..1579e471a5e7 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -178,7 +178,7 @@ do_transfer()
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${listener_ns} \
--			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} \
-+			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c TIMESTAMPNS \
- 				${local_addr} < "$sin" > "$sout" &
- 	spid=$!
- 
-@@ -186,7 +186,7 @@ do_transfer()
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${connector_ns} \
--			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} \
-+			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c TIMESTAMPNS \
- 				$connect_addr < "$cin" > "$cout" &
- 
- 	cpid=$!
--- 
-2.26.3
+> What about something as crazy as the following? not even build tested,
+> but I hope it can illustrate the idea bettern than words.
 
+I'm no longer convicend busypolling makes any sense with mptcp sockets,
+see below.
+
+> +	for (;;) {
+> +		int nr, napi_id = napi_id_by_subflow_nr(sk, 0);
+> +
+> +		for (nr = 0; napi_id >= 0 ; napi_id = napi_id_by_subflow_nr(sk, ++nr)) }
+> +			napi_busy_loop(napi_id, NULL, NULL,
+> +			       READ_ONCE(sk->sk_prefer_busy_poll),
+> +			       READ_ONCE(sk->sk_busy_poll_budget) ?: BUSY_POLL_BUDGET);
+> +			if (skb_queue_empty_lockless(&sk->sk_receive_queue))
+> +				return;
+
+We would need a new conditional to early-terminate the busypoll loop.
+
+Else we might be busypolling on napi instance 1 while another instance
+just made a packet available.
+
+Futhermore, we'd have to divide the budget among the napi instances to
+avoid excess usage.
+
+The way I see it busypoll should never increase latency, but with the
+above, afaics, it would since we don't have a 1:1 mapping of mptcp
+socket to a napi instance that we expect packets on.
+
+The way I see it there are two options:
+1. Ignore buyspoll requests, or.
+2. Set the napi instance ID from __mptcp_move_skb().
+   As soon as the instance changes (anoter subflow on different path),
+   disable busypoll for that mptcp socket.
+
+1) is simpler, 2) would still support busypoll for fallback mode and
+for '1 flow' resp. 'multiple flows on same napi instance'.
+
+The latter could happen if we assume server with single
+link that serves clients with multiple uplinks.
