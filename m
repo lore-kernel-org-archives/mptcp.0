@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05A271
-	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 09:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317D071
+	for <mptcp@lists.linux.dev>; Fri, 14 May 2021 09:49:27 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lhURd-0006sh-Fq; Fri, 14 May 2021 11:49:21 +0200
+	id 1lhURh-0006t4-KH; Fri, 14 May 2021 11:49:25 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v3 mptcp-next 4/7] mptcp: setsockopt: handle SOL_SOCKET in one place only
-Date: Fri, 14 May 2021 11:48:54 +0200
-Message-Id: <20210514094857.10663-5-fw@strlen.de>
+Subject: [PATCH v3 mptcp-next 5/7] tcp: export timestamp helpers for mptcp
+Date: Fri, 14 May 2021 11:48:55 +0200
+Message-Id: <20210514094857.10663-6-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210514094857.10663-1-fw@strlen.de>
 References: <20210514094857.10663-1-fw@strlen.de>
@@ -22,153 +22,67 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the pre-check to the function that handles all SOL_SOCKET values.
+MPTCP is builtin, so no need to add EXPORT_SYMBOL()s.
 
-At this point there is complete coverage for all values that were
-accepted by the pre-check.
-
-BUSYPOLL functions are accepted but will not have any functionality
-yet until its clear how the expected mptcp behaviour should look like.
+It will be used to support SO_TIMESTAMP(NS) ancillary
+messages in the mptcp receive path.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- net/mptcp/sockopt.c | 99 +++++++++++++--------------------------------
- 1 file changed, 29 insertions(+), 70 deletions(-)
+ include/net/tcp.h |  4 ++++
+ net/ipv4/tcp.c    | 10 ++++------
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 3168ad4a9298..092d1f635d27 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -304,6 +304,14 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
- 	case SO_LINGER:
- 		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
-+	case SO_RCVLOWAT:
-+	case SO_RCVTIMEO_OLD:
-+	case SO_RCVTIMEO_NEW:
-+	case SO_BUSY_POLL:
-+	case SO_PREFER_BUSY_POLL:
-+	case SO_BUSY_POLL_BUDGET:
-+		/* No need to copy: only relevant for msk */
-+		return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen);
- 	case SO_NO_CHECK:
- 	case SO_DONTROUTE:
- 	case SO_BROADCAST:
-@@ -317,7 +325,24 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 		return 0;
- 	}
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index d05193cb0d99..e668f1bf780d 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -412,6 +412,10 @@ int tcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int nonblock,
+ 		int flags, int *addr_len);
+ int tcp_set_rcvlowat(struct sock *sk, int val);
+ int tcp_set_window_clamp(struct sock *sk, int val);
++void tcp_update_recv_tstamps(struct sk_buff *skb,
++			     struct scm_timestamping_internal *tss);
++void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
++			struct scm_timestamping_internal *tss);
+ void tcp_data_ready(struct sock *sk);
+ #ifdef CONFIG_MMU
+ int tcp_mmap(struct file *file, struct socket *sock,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index f1c1f9e3de72..0e3f0e0e5b51 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1738,8 +1738,8 @@ int tcp_set_rcvlowat(struct sock *sk, int val)
+ }
+ EXPORT_SYMBOL(tcp_set_rcvlowat);
  
--	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen);
-+	/* SO_OOBINLINE is not supported, let's avoid the related mess
-+	 * SO_ATTACH_FILTER, SO_ATTACH_BPF, SO_ATTACH_REUSEPORT_CBPF,
-+	 * SO_DETACH_REUSEPORT_BPF, SO_DETACH_FILTER, SO_LOCK_FILTER,
-+	 * we must be careful with subflows
-+	 *
-+	 * SO_ATTACH_REUSEPORT_EBPF is not supported, at it checks
-+	 * explicitly the sk_protocol field
-+	 *
-+	 * SO_PEEK_OFF is unsupported, as it is for plain TCP
-+	 * SO_MAX_PACING_RATE is unsupported, we must be careful with subflows
-+	 * SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
-+	 * but likely needs careful design
-+	 *
-+	 * SO_ZEROCOPY is currently unsupported, TODO in sndmsg
-+	 * SO_TXTIME is currently unsupported
-+	 */
-+
-+	return -EOPNOTSUPP;
+-static void tcp_update_recv_tstamps(struct sk_buff *skb,
+-				    struct scm_timestamping_internal *tss)
++void tcp_update_recv_tstamps(struct sk_buff *skb,
++			     struct scm_timestamping_internal *tss)
+ {
+ 	if (skb->tstamp)
+ 		tss->ts[0] = ktime_to_timespec64(skb->tstamp);
+@@ -2024,8 +2024,6 @@ static int tcp_zerocopy_vm_insert_batch(struct vm_area_struct *vma,
  }
  
- static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
-@@ -349,72 +374,6 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ #define TCP_VALID_ZC_MSG_FLAGS   (TCP_CMSG_TS)
+-static void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
+-			       struct scm_timestamping_internal *tss);
+ static void tcp_zc_finalize_rx_tstamp(struct sock *sk,
+ 				      struct tcp_zerocopy_receive *zc,
+ 				      struct scm_timestamping_internal *tss)
+@@ -2197,8 +2195,8 @@ static int tcp_zerocopy_receive(struct sock *sk,
+ #endif
  
- static bool mptcp_supported_sockopt(int level, int optname)
+ /* Similar to __sock_recv_timestamp, but does not require an skb */
+-static void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
+-			       struct scm_timestamping_internal *tss)
++void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
++			struct scm_timestamping_internal *tss)
  {
--	if (level == SOL_SOCKET) {
--		switch (optname) {
--		case SO_DEBUG:
--		case SO_REUSEPORT:
--		case SO_REUSEADDR:
--
--		/* the following ones need a better implementation,
--		 * but are quite common we want to preserve them
--		 */
--		case SO_BINDTODEVICE:
--		case SO_SNDBUF:
--		case SO_SNDBUFFORCE:
--		case SO_RCVBUF:
--		case SO_RCVBUFFORCE:
--		case SO_KEEPALIVE:
--		case SO_PRIORITY:
--		case SO_LINGER:
--		case SO_TIMESTAMP_OLD:
--		case SO_TIMESTAMP_NEW:
--		case SO_TIMESTAMPNS_OLD:
--		case SO_TIMESTAMPNS_NEW:
--		case SO_TIMESTAMPING_OLD:
--		case SO_TIMESTAMPING_NEW:
--		case SO_RCVLOWAT:
--		case SO_RCVTIMEO_OLD:
--		case SO_RCVTIMEO_NEW:
--		case SO_SNDTIMEO_OLD:
--		case SO_SNDTIMEO_NEW:
--		case SO_MARK:
--		case SO_INCOMING_CPU:
--		case SO_BINDTOIFINDEX:
--		case SO_BUSY_POLL:
--		case SO_PREFER_BUSY_POLL:
--		case SO_BUSY_POLL_BUDGET:
--
--		/* next ones are no-op for plain TCP */
--		case SO_NO_CHECK:
--		case SO_DONTROUTE:
--		case SO_BROADCAST:
--		case SO_BSDCOMPAT:
--		case SO_PASSCRED:
--		case SO_PASSSEC:
--		case SO_RXQ_OVFL:
--		case SO_WIFI_STATUS:
--		case SO_NOFCS:
--		case SO_SELECT_ERR_QUEUE:
--			return true;
--		}
--
--		/* SO_OOBINLINE is not supported, let's avoid the related mess */
--		/* SO_ATTACH_FILTER, SO_ATTACH_BPF, SO_ATTACH_REUSEPORT_CBPF,
--		 * SO_DETACH_REUSEPORT_BPF, SO_DETACH_FILTER, SO_LOCK_FILTER,
--		 * we must be careful with subflows
--		 */
--		/* SO_ATTACH_REUSEPORT_EBPF is not supported, at it checks
--		 * explicitly the sk_protocol field
--		 */
--		/* SO_PEEK_OFF is unsupported, as it is for plain TCP */
--		/* SO_MAX_PACING_RATE is unsupported, we must be careful with subflows */
--		/* SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
--		 * but likely needs careful design
--		 */
--		/* SO_ZEROCOPY is currently unsupported, TODO in sndmsg */
--		/* SO_TXTIME is currently unsupported */
--		return false;
--	}
- 	if (level == SOL_IP) {
- 		switch (optname) {
- 		/* should work fine */
-@@ -624,12 +583,12 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 
- 	pr_debug("msk=%p", msk);
- 
--	if (!mptcp_supported_sockopt(level, optname))
--		return -ENOPROTOOPT;
--
- 	if (level == SOL_SOCKET)
- 		return mptcp_setsockopt_sol_socket(msk, optname, optval, optlen);
- 
-+	if (!mptcp_supported_sockopt(level, optname))
-+		return -ENOPROTOOPT;
-+
- 	/* @@ the meaning of setsockopt() when the socket is connected and
- 	 * there are multiple subflows is not yet defined. It is up to the
- 	 * MPTCP-level socket to configure the subflows until the subflow
+ 	int new_tstamp = sock_flag(sk, SOCK_TSTAMP_NEW);
+ 	bool has_timestamping = false;
 -- 
 2.26.3
 
