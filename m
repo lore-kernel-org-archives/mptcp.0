@@ -1,34 +1,37 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342D470
-	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 16:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46852FB7
+	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 16:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1621270637;
+	s=mimecast20190719; t=1621270638;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mJ6y/tuZY8G8WlPWiDMnosrwD/p+d0dNtBl3nY5UuIA=;
-	b=akhwAy6JycgMrABEyf6sO5/vd0cYN6lRG2b4aRMD3pWZJ+VB5SvhXRudDxNPxm3Zkv6nvo
-	n/dwp2/EBso7J2m3qh70AyMcoldzZ4QTJgi7lQzioVaS7+dgarMuWfdryrWgdpYVxfqkQe
-	SJ9HTdQfnmZ+EBar/1lliBr6UmUEfeU=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X3EROjqika2saQ3IwOxFUe4zOJJOn4t8JNxHZbqgOCM=;
+	b=b0Wg3Xde2C5drtRirkKQmYfeh+7dYxjwx60jvlI1PHo22hKNYxBoPnBxi+lhJZKzvit4R/
+	erLtKzEOmOqD0VyyLe4eoPr8hzMOaOIAn/LQbuyvVws8nzkfdqYNubwjOiIjTGqTxHyXvp
+	/Mqt5I4xLOrA068a+FSVUftvRV3J+qQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-c07RKRfdPyiSl5IkqZvF1Q-1; Mon, 17 May 2021 12:57:15 -0400
-X-MC-Unique: c07RKRfdPyiSl5IkqZvF1Q-1
+ us-mta-287-ITxzPCofOK6lmLEctOQf2Q-1; Mon, 17 May 2021 12:57:17 -0400
+X-MC-Unique: ITxzPCofOK6lmLEctOQf2Q-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C854801AE3
-	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 16:57:14 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05B5C8015F7
+	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 16:57:15 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-112-188.ams2.redhat.com [10.36.112.188])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 85D6F1A881
-	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 16:57:13 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6F02119704
+	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 16:57:14 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-net 1/2] mptcp: always parse mptcp options for MPC reqsk
-Date: Mon, 17 May 2021 18:56:51 +0200
-Message-Id: <18ddcf2f53d732eb9b41a485ce7da23329aaa81e.1621270518.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-net 2/2] mptcp: do not reset MP_CAPABLE subflow on mapping errors
+Date: Mon, 17 May 2021 18:56:52 +0200
+Message-Id: <99f56765d4939e6f21c3950ed2ee3b54369e6d5b.1621270518.git.pabeni@redhat.com>
+In-Reply-To: <18ddcf2f53d732eb9b41a485ce7da23329aaa81e.1621270518.git.pabeni@redhat.com>
+References: <18ddcf2f53d732eb9b41a485ce7da23329aaa81e.1621270518.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -42,67 +45,82 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-In subflow_syn_recv_sock() we currently skip options parsing
-for OoO packet, given that such packets may not carry the relevant
-MPC option.
+When some mapping related errors occours we close the main
+MPC subflow with a RST. We should instead fallback gracefully
+to TCP, and do the reset only for MPJ subflows.
 
-If the peer generates an MPC+data TSO packet and some of the early
-segments are lost or get reorder, we server will ignore the peer key,
-causing transient, unexpected fallback to TCP.
-
-The solution is always parsing the incoming MPTCP options, and
-do the fallback only for in-order packets. This actually cleans
-the existing code a bit.
-
-Reported-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-a note on data ack len: with this patch the server will use
-ack32 for OoO MPC+data pkts, and will move to ack64 ASA will get
-the first in order MPC+data pkt.
-
-We can clean-up/make more consistent the behavior with some additional
-check in mptcp_sk_clone and/or subflow_syn_recv_sock(), but I prefer
-to not introduce only partially related changes here
----
- net/mptcp/subflow.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ net/mptcp/subflow.c | 39 +++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 20 deletions(-)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 554e7ccee02a..278986585088 100644
+index 278986585088..9befe9fe7bca 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -633,21 +633,20 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+@@ -1110,10 +1110,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
  
- 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
- 	if (subflow_req->mp_capable) {
--		if (TCP_SKB_CB(skb)->seq != subflow_req->ssn_offset + 1) {
--			/* here we can receive and accept an in-window,
--			 * out-of-order pkt, which will not carry the MP_CAPABLE
--			 * opt even on mptcp enabled paths
--			 */
--			goto create_msk;
+ 		status = get_mapping_status(ssk, msk);
+ 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
+-		if (unlikely(status == MAPPING_INVALID)) {
+-			ssk->sk_err = EBADMSG;
+-			goto fatal;
 -		}
--
-+		/* we can receive and accept an in-window, out-of-order pkt,
-+		 * which may not carry the MP_CAPABLE opt even on mptcp enabled
-+		 * paths: always try to extract the peer key, and fallback
-+		 * for packets missing it.
-+		 * Even OoO DSS packets coming legitly after dropped or
-+		 * reordered MPC will cause fallback, but we don't have other
-+		 * options.
-+		 */
- 		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_capable) {
- 			fallback = true;
- 			goto create_child;
- 		}
++		if (unlikely(status == MAPPING_INVALID))
++			goto fallback;
++
+ 		if (unlikely(status == MAPPING_DUMMY))
+ 			goto fallback;
  
--create_msk:
- 		new_msk = mptcp_sk_clone(listener->conn, &mp_opt, req);
- 		if (!new_msk)
- 			fallback = true;
+@@ -1128,10 +1127,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		 * MP_CAPABLE-based mapping
+ 		 */
+ 		if (unlikely(!READ_ONCE(msk->can_ack))) {
+-			if (!subflow->mpc_map) {
+-				ssk->sk_err = EBADMSG;
+-				goto fatal;
+-			}
++			if (!subflow->mpc_map)
++				goto fallback;
+ 			WRITE_ONCE(msk->remote_key, subflow->remote_key);
+ 			WRITE_ONCE(msk->ack_seq, subflow->map_seq);
+ 			WRITE_ONCE(msk->can_ack, true);
+@@ -1160,19 +1157,21 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 	subflow_sched_work_if_closed(msk, ssk);
+ 	return false;
+ 
+-fatal:
+-	/* fatal protocol error, close the socket */
+-	/* This barrier is coupled with smp_rmb() in tcp_poll() */
+-	smp_wmb();
+-	ssk->sk_error_report(ssk);
+-	tcp_set_state(ssk, TCP_CLOSE);
+-	subflow->reset_transient = 0;
+-	subflow->reset_reason = MPTCP_RST_EMPTCP;
+-	tcp_send_active_reset(ssk, GFP_ATOMIC);
+-	subflow->data_avail = 0;
+-	return false;
+-
+ fallback:
++	if (subflow->mp_join) {
++		/* fatal protocol error, close the socket */
++		/* This barrier is coupled with smp_rmb() in tcp_poll() */
++		smp_wmb();
++		ssk->sk_err = EBADMSG;
++		ssk->sk_error_report(ssk);
++		tcp_set_state(ssk, TCP_CLOSE);
++		subflow->reset_transient = 0;
++		subflow->reset_reason = MPTCP_RST_EMPTCP;
++		tcp_send_active_reset(ssk, GFP_ATOMIC);
++		subflow->data_avail = 0;
++		return false;
++	}
++
+ 	__mptcp_do_fallback(msk);
+ 	skb = skb_peek(&ssk->sk_receive_queue);
+ 	subflow->map_valid = 1;
 -- 
 2.26.3
 
