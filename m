@@ -1,56 +1,55 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F2B2FB0
-	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 11:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7FE71
+	for <mptcp@lists.linux.dev>; Mon, 17 May 2021 14:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1621251211;
+	s=mimecast20190719; t=1621261061;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V76I9EYPKtTwP+taI6+PUGukmekQbTxU0ZgIiP/You8=;
-	b=aD3B4N9IBnU6OLLKaRfZQuRiLbjMoSgXJr4/BO7+MjqlrMlVJBl1DnD0Oc3lpY9iDrlXTN
-	AovwmTAeNPqT1pp5Q1m9ZdGtP7+udEluLfQmKnEuOWSF+1myJeRqnoPd1yD2q5diiAcoKH
-	M5uL62d6Gw1kNt8yYntaZ6QIagQ69BQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-HeeCUvqYNs67AS98-Ux7Fw-1; Mon, 17 May 2021 07:32:58 -0400
-X-MC-Unique: HeeCUvqYNs67AS98-Ux7Fw-1
-Received: by mail-wr1-f72.google.com with SMTP id n2-20020adfb7420000b029010e47b59f31so3660412wre.9
-        for <mptcp@lists.linux.dev>; Mon, 17 May 2021 04:32:58 -0700 (PDT)
+	bh=SelZIGRZ9YwQD2DSHnmpg6PGyuRR4X/8niV8E1m1d8w=;
+	b=ciE51qfR2fcgkEDCu1LthpxOna/9TPsK/eq+wqGTcpah15e46wHq9mxfusKXE2MoKbWg5d
+	ICY+opPrhDggmXZxqPT1LkuNhCJgcMc1eruxgV5w5Iy2QIKGZCaX2KSWQ7R83KJ6IZvcxq
+	AEUPavqn0eBPmBrAsLaExazkeVn2a9Q=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-435-spyGiuhPNYmCromcQzAvig-1; Mon, 17 May 2021 10:17:38 -0400
+X-MC-Unique: spyGiuhPNYmCromcQzAvig-1
+Received: by mail-wr1-f71.google.com with SMTP id j33-20020adf91240000b029010e4009d2ffso3908830wrj.0
+        for <mptcp@lists.linux.dev>; Mon, 17 May 2021 07:17:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=V76I9EYPKtTwP+taI6+PUGukmekQbTxU0ZgIiP/You8=;
-        b=pOFpAZdhIQ+cOMqxsW1IDiZ5/5OOtTGMavFnEJGshCBWNR1OBCWULL73SVPa1pYb2N
-         hiBTjaMf3HuoiRdUtcHlrs+WJCn3PeOcvpoYQlRuIiqoWMtl/oRU9zM9Fx2881/bZcs7
-         6AWNJ7wm8ytD3f4J0HNLf3X12FGGcQHK7+8CKPnm+7DkghfD1x1GK0Gxl13Llgu5s37d
-         Mx5PWiaSGKDGn6zlBJ+q33SP0Wo1KzEG00zDXVZWPvnYZ0cqrhmjftitbBvK4DJnB3iK
-         VV8uPd9tFXaIoLkiRWxiT0eSR7ryFemuClEcunT+9dqr9rrgWb2sH+1WQGQyJfG6h7U+
-         w8TQ==
-X-Gm-Message-State: AOAM531UjzKl5tLfeC2hwhZ/YP8LkcPZXbUdo8k9dhRkdg5lOpzMILCN
-	5uIlpqsqgEvWm5J3uYzC068odwwJ9E7aKAxutlWPOWfueyskDqhPA6lQOXvvmLB43RfnqaAnq6I
-	hXa3VjelBmIJm/ARFWUMjI3NCaufEQ2ivObfq+DU6ryT2AD7sn/vMU6rfx3Vk1P+0
-X-Received: by 2002:a1c:b7c4:: with SMTP id h187mr62819482wmf.178.1621251177192;
-        Mon, 17 May 2021 04:32:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyE+YJTqMdaoBWVlcgvLbUO3b70OlWy6126vkE168quPITiVt7o7oaVq26NBgcxEsdNgQ4uUQ==
-X-Received: by 2002:a1c:b7c4:: with SMTP id h187mr62819454wmf.178.1621251176831;
-        Mon, 17 May 2021 04:32:56 -0700 (PDT)
+        bh=SelZIGRZ9YwQD2DSHnmpg6PGyuRR4X/8niV8E1m1d8w=;
+        b=EiRatVHfHy5Yqm4/Ph6Rt9nI1O5whpsQhcV1cIi7y0s/cqW04QZJOghteFjfPFAqx+
+         GUtlQpTagGCmATr2gvOW4fSiLxFsuZF2lJzDCFbqbHmdUQmP9QIcr96P2cSjQWHdROwA
+         4djCTDD5aBF0Yhe/XaFJLPijT2mAMPE+3tlqgeDsdyGhFWOTe+FkdAkRTT6BIVDzR5fk
+         tu2zznJIrehrW4yGoCEajAV1UaKxmBaOtSAkp0YFoKD4riDowwm+tPqCUgmTbfwjIcYM
+         QP1JmRs3az6oQCWo3ZOTWV9N0CzlnpHULUTPhCAJK6Z2rPjEKeakwWyxUl+5fUIJjYNe
+         zoGw==
+X-Gm-Message-State: AOAM5315XNlYUvxcVOKSkNQRBB88U7/rtroN2eY3DRS5VrK6aKz8AWiZ
+	UlDAZyzQTESeMifM6nWOF5PyarOt5cmZmGGjH8v/sC+6EejLqROQrJB4uUoZnXp6IF99W75kynb
+	+u5W1miQflvw+c+o=
+X-Received: by 2002:a1c:6a0e:: with SMTP id f14mr192528wmc.114.1621261057372;
+        Mon, 17 May 2021 07:17:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzKIUyzqfiM1cLAG9+MfLbG4c6ZFpdYW4nDLOnuPMNhgTh3RihrC30SRtFnZKt7rnPWo8DYEw==
+X-Received: by 2002:a1c:6a0e:: with SMTP id f14mr192507wmc.114.1621261057141;
+        Mon, 17 May 2021 07:17:37 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-245-104.dyn.eolo.it. [146.241.245.104])
-        by smtp.gmail.com with ESMTPSA id w20sm2505363wmc.44.2021.05.17.04.32.56
+        by smtp.gmail.com with ESMTPSA id f26sm13504842wmj.30.2021.05.17.07.17.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 May 2021 04:32:56 -0700 (PDT)
-Message-ID: <84d520ef86f7ba9644383f421ea4eb0b62c2cc1c.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: always parse mptcp options for MPC
- reqsk
+        Mon, 17 May 2021 07:17:36 -0700 (PDT)
+Message-ID: <10c0783f0b81ab279dbbf202033295e7891c18d6.camel@redhat.com>
+Subject: Re: [MPTCP][PATCH v6 mptcp-next 0/6] add MP_CAPABLE 'C' flag
 From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev, Mat Martineau
- <mathew.j.martineau@linux.intel.com>,  Christoph Paasch <cpaasch@apple.com>
-Date: Mon, 17 May 2021 13:32:55 +0200
-In-Reply-To: <024b61f2b46bb7f8d02db1dbdd1c822859b78674.1621248230.git.pabeni@redhat.com>
-References: <024b61f2b46bb7f8d02db1dbdd1c822859b78674.1621248230.git.pabeni@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev, Mat
+ Martineau <mathew.j.martineau@linux.intel.com>
+Date: Mon, 17 May 2021 16:17:35 +0200
+In-Reply-To: <cover.1621002341.git.geliangtang@gmail.com>
+References: <cover.1621002341.git.geliangtang@gmail.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -64,71 +63,96 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2021-05-17 at 12:44 +0200, Paolo Abeni wrote:
-> In subflow_syn_recv_sock() we currently skip options parsing
-> for OoO packet, given that such packets may not carry the relevant
-> MPC option.
+Hello,
+
+On Fri, 2021-05-14 at 22:32 +0800, Geliang Tang wrote:
+> v6:
+>  - rename mptcp_pm_add_entry to mptcp_pm_anno_entry
+>  - update mptcp_pm_free_add_list
+>  - update code in mptcp_pm_nl_add_addr_received
+>  - tag: export/20210514T055902
 > 
-> If the peer generates an MPC+data TSO packet and some of the early
-> segments are lost or get reorder, we server will ignore the peer key,
-> causing transient, unexpected fallback to TCP.
+> v5:
+>  - add a new patch "mptcp: add add_list in mptcp_pm_data"
+>  - fix !CONFIG_SYSCTL case
+>  - tag: export/20210507T174457
 > 
-> The solution is always parsing the incoming MPTCP options, and
-> do the fallback only for in-order packets. This actually cleans
-> the existing code a bit.
+> v4:
+>  - rename mptcp_is_allow_join_id0 to mptcp_allow_join_id0
+>  - rename deny_join_id0 in mptcp_pm_data to remote_deny_join_id0
+>  - add comments for self test cases
+>  - apply: export/20210504T064955 +
+>           "data checksum support" +
+>           "data checksum support cleanups"
 > 
-> Reported-by:  Matthieu Baerts <matthieu.baerts@tessares.net>
-> Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
-> iSigned-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> a note on data ack len: with this patch the server will use
-> ack32 for OoO MPC+data pkts, and will move to ack64 ASA will get
-> the first in order MPC+data pkt.
+> v3:
+>  - use 'u8 allow_join_initial_addr_port'
+>  - drop the spinlock in patch 3
 > 
-> We can clean-up/make more consistent the behavior with some additional
-> check in mptcp_sk_clone and/or subflow_syn_recv_sock(), but I prefer
-> to not introduce only partially related changes here
+> v2:
+>  - rename join_denied to allow_join_id0 in mptcp_out_options
+>  - rename join_denied to deny_join_id0 in mptcp_options_received
+>  - add a new function mptcp_pm_deny_join_id0_received
+>  - move deny_join_id0 flag from mptcp_sock to mptcp_pm_data
+>  - check deny_join_id0 flag in mptcp_pm_create_subflow_or_signal_addr
+> instead of in mptcp_syn_options.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/183
+> 
+> Geliang Tang (6):
+>   mptcp: add sysctl allow_join_initial_addr_port
+>   mptcp: add allow_join_id0 in mptcp_out_options
+>   mptcp: rename mptcp_pm_add_entry to mptcp_pm_anno_entry
+>   mptcp: add add_list in mptcp_pm_data
+>   mptcp: add deny_join_id0 in mptcp_options_received
+>   selftests: mptcp: add deny_join_id0 testcases
+> 
+>  Documentation/networking/mptcp-sysctl.rst     |  13 ++
+>  include/net/mptcp.h                           |   3 +-
+>  net/mptcp/ctrl.c                              |  16 ++
+>  net/mptcp/options.c                           |  14 +-
+>  net/mptcp/pm.c                                |   2 +
+>  net/mptcp/pm_netlink.c                        | 151 ++++++++++++++----
+>  net/mptcp/protocol.c                          |   1 +
+>  net/mptcp/protocol.h                          |  21 ++-
+>  net/mptcp/subflow.c                           |   3 +
+>  .../testing/selftests/net/mptcp/mptcp_join.sh |  56 ++++++-
+>  10 files changed, 238 insertions(+), 42 deletions(-)
+> 
+I'm very sorry to give feedback this late, but I was unable to review
+this before.
 
-I just note the above is not a complete fix for issues/192.
+I have some very generic/broad questions:
+1) shuold 'allow_join_initial_addr_port' be by default 0 for clients?
+If I read correctly, will be 1 after this patch.
 
-Specifically we can have:
+2) is the additional add_addr accounting required? I mean storing the
+received addrs in the msk pm add_list (patch 4/6). Can we instead
+simply enforce !allow_join_initial_addr_port looking up the relevant
+address into the existing subflows? (or caching first subflow dst addr
+and port in some new msk fields, whatever is simpler)
 
-syn +  MPC ->
-          <- syn + ack + MPC ACK
-ack + MPC -> [not received by the server due to packet loss]
-ack + MPC + data -> [not received by the server due to packet loss]
-		    [this cover data _after_ the MPC + data above]
-ack + DSS(DSS > 1) -> 
+if !allow_join_initial_addr_port && <exists subflow with target
+ip/port> && <such subflow is mp_capable/>
+	<do not create new subflow>
 
-Reading the RFC, I think the client is allowed to sending the DSS even
-if it did not received anything back from the server yet.
+3) If I read correctly the series enforce the peer who could create the
+new subflow to respect the 'allow_join_initial_addr_port' field, but
+does not implement the corrsponding check on the other end. e.g. if a
+server sets 'allow_join_initial_addr_port' to 0 and a client tries to
+create additional subflows, the server will not forbit that. I
+think/fear the missing complexity here is quite significant.
 
-When the server receives the DSS packet, it does not have yet the peer
-key, so it can't send any kind of MPTCP level ack, unless it guesses
-the IDSN from the incoming DSS, which looks unsafe.
+I think it would be nice avoid adding additional complexity for the 'C'
+bit - currently even mptcp.org support it.
 
-Am I missing something?
+Perhaps we could keep 'allow_join_initial_addr_port' constant (always 0
+for client, always 0 for server) - avoding the additional complexity of
+point 3) above.
 
-For net-next, I think we can "fix" (or at least hide) the issue,
-forcing the client to avoid sending any data after the MPC+data block
-some if such block is at least partially acked (at the MPTCP level).
-
-But I think a different client not respect the above, and still trigger
-the issue.
-
-Another option would be ignoring (for fallback's sake) initial incoming
-sack packet not covering the MPC-data mapped data and lacking MPTCP
-level ack.
-
-I'm unsure if that will be "safe enough" and/or will cover correctly
-the scenario where the server is sending data (DSS) before correctly
-receving the peer's key. In such case, could the dack block be omitted
-due to lack of TCP option space ??!
-
-Any comments more than welcome.
-
-Thanks,
+Again, I'm sorry for suggesting significant changes this late.
 
 Paolo
+
+
 
