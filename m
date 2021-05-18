@@ -1,131 +1,76 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33052FBF
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 00:16:59 +0000 (UTC)
-IronPort-SDR: pHss56FMHMSoEZ6YjOAUCWyqQQ5DpT+qaoAGvFbuPVqektPXCl4/1gVLQ5EdKnwMSvXFNGll+N
- XAgOfiBW+Brw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9987"; a="221639438"
-X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
-   d="scan'208";a="221639438"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2021 17:16:58 -0700
-IronPort-SDR: 1XRIAarjoUZa+HeBE8rM2NVO5dY++nNB01+KA+dY5msQkAbXZfcxfrEVc0mCJQKD6zfzYVEMYK
- QHAy8NolRxgA==
-X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
-   d="scan'208";a="393733334"
-Received: from kpporrit-mobl.amr.corp.intel.com ([10.212.243.76])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2021 17:16:58 -0700
-Date: Mon, 17 May 2021 17:16:58 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: do not reset MP_CAPABLE subflow
- on mapping errors
-In-Reply-To: <99f56765d4939e6f21c3950ed2ee3b54369e6d5b.1621270518.git.pabeni@redhat.com>
-Message-ID: <2651afa0-d371-8730-a685-def56669d6e@linux.intel.com>
-References: <18ddcf2f53d732eb9b41a485ce7da23329aaa81e.1621270518.git.pabeni@redhat.com> <99f56765d4939e6f21c3950ed2ee3b54369e6d5b.1621270518.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6EA71
+	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 07:06:20 +0000 (UTC)
+Received: by mail-pl1-f171.google.com with SMTP id s4so3002889plg.12
+        for <mptcp@lists.linux.dev>; Tue, 18 May 2021 00:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=22sN4HArss2xzmdoGTyv0ggYCLq3HrIYnI8r0HF7LL8=;
+        b=N6XrVTCekk5Q7QXonbi4syKYA6Kah3y66/8cyBl5aeoPJLWjUIu40y+zmX0LFavqno
+         448GOrl4W53534J4uk/Z3cAIKeaPPBMj57ycQpaf0pYFQz2cmAj8nIqwQplRTCZhqWTh
+         cwHQyrSkFKOFMIeeDFEgpLrKdh/ti+WDPIyh1xI4Jf+fliZWlFv0D0x4T8z76WvQTvWx
+         E7cvEGifc4mPx3q9fG+6XHdysFu5pCtNBlbZsXMT3mVNO5NZmx2Azp+EvVuNBmJJIGPa
+         UMxP4nL2b1eyiKyCG82q1bXLQsN9Pbh64HaxTAB1wo7uTC4xPqtc/bcXt55EJY0YyR7L
+         xfoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=22sN4HArss2xzmdoGTyv0ggYCLq3HrIYnI8r0HF7LL8=;
+        b=Ic1VMFTDVqfSa5x5WNbbXWjamsZKTbVsvv16KWWDqBdE+YiilTcIwZruPEqU5B/bVM
+         L6/1zhoDpTcx/zGUJPKWGUkrr96s06K0FZANKCjGKHqvCuHYBJIKsxGOmZZuNZXkmGFw
+         qWYz1gnlonJ0Zd5HIiebgLqr+Gqg6WM485aU7+gVYTpqUl6o0geVAfL72PKlhVKB5zW7
+         cClqjxA30ZIrrP5dmF+xERnjDOKmX8rEL04QcnlU0h4xjLwIkGN4H0mWQ5SayKnvMDNO
+         sEFxCWVmadPOCWUbnTAC5igOCOq08hCBAEhVUm8XHwANwQkh8GRXGETSZ/5b3xnleY5R
+         RGoQ==
+X-Gm-Message-State: AOAM533PrRVLR5wJCnqQGaH7WkgjlqJ1eMNP1hOonn5HBJj+mLvCHmaU
+	qJA9dPzwMVYUv6nAA86s8vDJEEsgzqg=
+X-Google-Smtp-Source: ABdhPJygsvGMFlAs9mBFnSdHdrhboiWA5HvCOFd/nV5API6drRb7IztudjjsWTUqbcgGXa3SyhbH8Q==
+X-Received: by 2002:a17:903:30c4:b029:ef:82f1:cb28 with SMTP id s4-20020a17090330c4b02900ef82f1cb28mr3023549plc.19.1621321580009;
+        Tue, 18 May 2021 00:06:20 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id q28sm2018172pfs.197.2021.05.18.00.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 May 2021 00:06:19 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: generate the data checksum"
+Date: Tue, 18 May 2021 15:06:17 +0800
+Message-Id: <ae2099811b8395f7718855c5c7d412b26d960c95.1621321549.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 17 May 2021, Paolo Abeni wrote:
+Move this line "__wsum csum = ~csum_unfold(mpext->csum);" from "mptcp:
+validate the data checksum" to "mptcp: generate the data checksum".
 
-> When some mapping related errors occours we close the main
-> MPC subflow with a RST. We should instead fallback gracefully
-> to TCP, and do the reset only for MPJ subflows.
->
-> Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/subflow.c | 39 +++++++++++++++++++--------------------
-> 1 file changed, 19 insertions(+), 20 deletions(-)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 278986585088..9befe9fe7bca 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1110,10 +1110,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
->
-> 		status = get_mapping_status(ssk, msk);
-> 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
-> -		if (unlikely(status == MAPPING_INVALID)) {
-> -			ssk->sk_err = EBADMSG;
-> -			goto fatal;
-> -		}
-> +		if (unlikely(status == MAPPING_INVALID))
-> +			goto fallback;
-> +
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There are a bunch of other ways to get MAPPING_INVALID during the life of 
-a connection, including when there are multiple subflows active and 
-fallback is not a valid option. Can the new fallback condition be more 
-targeted to this "out of order / packet loss at connection time" issue so 
-truly fatal MAPPING_INVALID cases still reset the connection?
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 38ce8d50e665..58253bd09f93 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1311,7 +1311,7 @@ static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
+ static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
+ {
+ 	struct mptcp_ext *mpext = mptcp_get_ext(skb);
+-	__wsum csum = csum_unfold(mpext->csum);
++	__wsum csum = ~csum_unfold(mpext->csum);
+ 	int offset = skb->len - added;
+ 
+ 	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
+-- 
+2.31.1
 
--Mat
-
-
-> 		if (unlikely(status == MAPPING_DUMMY))
-> 			goto fallback;
->
-> @@ -1128,10 +1127,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 		 * MP_CAPABLE-based mapping
-> 		 */
-> 		if (unlikely(!READ_ONCE(msk->can_ack))) {
-> -			if (!subflow->mpc_map) {
-> -				ssk->sk_err = EBADMSG;
-> -				goto fatal;
-> -			}
-> +			if (!subflow->mpc_map)
-> +				goto fallback;
-> 			WRITE_ONCE(msk->remote_key, subflow->remote_key);
-> 			WRITE_ONCE(msk->ack_seq, subflow->map_seq);
-> 			WRITE_ONCE(msk->can_ack, true);
-> @@ -1160,19 +1157,21 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 	subflow_sched_work_if_closed(msk, ssk);
-> 	return false;
->
-> -fatal:
-> -	/* fatal protocol error, close the socket */
-> -	/* This barrier is coupled with smp_rmb() in tcp_poll() */
-> -	smp_wmb();
-> -	ssk->sk_error_report(ssk);
-> -	tcp_set_state(ssk, TCP_CLOSE);
-> -	subflow->reset_transient = 0;
-> -	subflow->reset_reason = MPTCP_RST_EMPTCP;
-> -	tcp_send_active_reset(ssk, GFP_ATOMIC);
-> -	subflow->data_avail = 0;
-> -	return false;
-> -
-> fallback:
-> +	if (subflow->mp_join) {
-> +		/* fatal protocol error, close the socket */
-> +		/* This barrier is coupled with smp_rmb() in tcp_poll() */
-> +		smp_wmb();
-> +		ssk->sk_err = EBADMSG;
-> +		ssk->sk_error_report(ssk);
-> +		tcp_set_state(ssk, TCP_CLOSE);
-> +		subflow->reset_transient = 0;
-> +		subflow->reset_reason = MPTCP_RST_EMPTCP;
-> +		tcp_send_active_reset(ssk, GFP_ATOMIC);
-> +		subflow->data_avail = 0;
-> +		return false;
-> +	}
-> +
-> 	__mptcp_do_fallback(msk);
-> 	skb = skb_peek(&ssk->sk_receive_queue);
-> 	subflow->map_valid = 1;
-> -- 
-> 2.26.3
->
->
->
-
---
-Mat Martineau
-Intel
