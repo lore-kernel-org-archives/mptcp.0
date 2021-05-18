@@ -1,114 +1,144 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0808371
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:28:28 +0000 (UTC)
-IronPort-SDR: CWL6MfZ+tZz8lheYrZRqG+Dl5weZkaRvDnvAIHtETLU9yDG3j4+r2yAybr8EIp2ZLdSShMqh1z
- r2a8nhA0/W3w==
-X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="180375229"
-X-IronPort-AV: E=Sophos;i="5.82,310,1613462400"; 
-   d="scan'208";a="180375229"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 10:28:28 -0700
-IronPort-SDR: kQn16RAyCS5sGXd29r7bdxUmPSpbSsL8qmi6tCz6U29gfMh1XbL5hofZ5TnaEokcvcUi5FrSk6
- yqGUYDrGjnJQ==
-X-IronPort-AV: E=Sophos;i="5.82,310,1613462400"; 
-   d="scan'208";a="439201321"
-Received: from isofinsk-mobl.amr.corp.intel.com ([10.209.83.65])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 10:28:28 -0700
-Date: Tue, 18 May 2021 10:28:27 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: do not reset MP_CAPABLE subflow
- on mapping errors
-In-Reply-To: <d816c5c2b4bcb0d69effdb3b8fc4fd09fa2a9003.camel@redhat.com>
-Message-ID: <7b2f1ab8-68e-adb8-aaff-8a8cd080529@linux.intel.com>
-References: <18ddcf2f53d732eb9b41a485ce7da23329aaa81e.1621270518.git.pabeni@redhat.com>  <99f56765d4939e6f21c3950ed2ee3b54369e6d5b.1621270518.git.pabeni@redhat.com>  <2651afa0-d371-8730-a685-def56669d6e@linux.intel.com>
- <d816c5c2b4bcb0d69effdb3b8fc4fd09fa2a9003.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBAD71
+	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1621359387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qqZrXLSCYNX7OIWbKpI0icWRXgibj1RA+WdDEgAI9N4=;
+	b=gVbjtD/d+wqdgJkWqyF/U5Yt0DZLlEcmY3FieQ2zK2o9moMWvkrpFzyFZI8rAYASU+o3u4
+	FpjV9NpTgDW5OfC2bFrbHcHnTcL50iWeeCCLknXDNAkV+x96r3eCBLn6o6GHPHYv+3pxA/
+	65pu2kmrKmuyIXPjNxmuQydmnyh8DiA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-500-VLQXNF1-NE-03JkVK8dHkg-1; Tue, 18 May 2021 13:36:24 -0400
+X-MC-Unique: VLQXNF1-NE-03JkVK8dHkg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 966A68049D8;
+	Tue, 18 May 2021 17:36:23 +0000 (UTC)
+Received: from dcaratti.users.ipa.redhat.com (unknown [10.40.195.4])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 99CDB3CC9;
+	Tue, 18 May 2021 17:36:22 +0000 (UTC)
+From: Davide Caratti <dcaratti@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net] mptcp: validate 'id' when stopping the ADD_ADDR retransmit timer
+Date: Tue, 18 May 2021 19:36:10 +0200
+Message-Id: <876dfafb9ec7b090a1da4c2af777be20973649ec.1621359292.git.dcaratti@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 18 May 2021, Paolo Abeni wrote:
+when Linux receives an echo-ed ADD_ADDR, it checks the IP address against
+the list of "announced" addresses. In case of a positive match, the timer
+that handles retransmissions is stopped regardless of the 'Address Id' in
+the received packet: this behaviour does not comply with RFC8684 §3.4.1.
 
-> On Mon, 2021-05-17 at 17:16 -0700, Mat Martineau wrote:
->> On Mon, 17 May 2021, Paolo Abeni wrote:
->>
->>> When some mapping related errors occours we close the main
->>> MPC subflow with a RST. We should instead fallback gracefully
->>> to TCP, and do the reset only for MPJ subflows.
->>>
->>> Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
->>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>> net/mptcp/subflow.c | 39 +++++++++++++++++++--------------------
->>> 1 file changed, 19 insertions(+), 20 deletions(-)
->>>
->>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->>> index 278986585088..9befe9fe7bca 100644
->>> --- a/net/mptcp/subflow.c
->>> +++ b/net/mptcp/subflow.c
->>> @@ -1110,10 +1110,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>>
->>> 		status = get_mapping_status(ssk, msk);
->>> 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
->>> -		if (unlikely(status == MAPPING_INVALID)) {
->>> -			ssk->sk_err = EBADMSG;
->>> -			goto fatal;
->>> -		}
->>> +		if (unlikely(status == MAPPING_INVALID))
->>> +			goto fallback;
->>> +
->>
->> There are a bunch of other ways to get MAPPING_INVALID during the life of
->> a connection, including when there are multiple subflows active and
->> fallback is not a valid option. Can the new fallback condition be more
->> targeted to this "out of order / packet loss at connection time" issue so
->> truly fatal MAPPING_INVALID cases still reset the connection?
->
-> What we should do if we get a MAPPING_INVALID and we have a single
-> (MPC) subflow? I could not find any specific reference in the RFC. I
-> think it's roughly the same as 'no mapping' at all: if we can fallback
-> we do fallback, otherwise we reset.
+Fix it by validating the 'Address Id' in received echo-ed ADD_ADDRs.
+Tested using packetdrill, with the following captured output:
 
-Looking at section 3.7, there aren't many cases where fallback is an 
-option during operation (after the initial data has been successfully 
-acked in each direction).
+ unpatched kernel:
 
-"If a subflow breaks during operation ... then once this is detected ...
-the subflow SHOULD be treated as broken and closed with a RST, since no 
-data can be delivered to the application layer and no fallback signal
-can be reliably sent."
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 3013740213], length 0
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 3013740213], length 0
+        ^^^ retransmission is stopped here, but 'Address Id' is 90
 
-In general, it looks like a bad mapping should reset the *subflow* (rather 
-than the whole MPTCP connection) - what I said above was unclear about 
-what exactly should be reset.
+ patched kernel:
 
-It seems like the only way to fall back the whole connection later in its 
-life involves checksum failure. In that case the RFC describes the 
-conditions where an "infinite mapping" can be used for fallback - but 
-that's different from the beginning-of-connection fallback code we have 
-today.
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 1672384568], length 0
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 1672384568], length 0
+ Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
+ In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 198.51.100.2,mptcp dss ack 1672384568], length 0
+        ^^^ retransmission is stopped here, only when both 'Address Id' and 'IP Address' match
 
->
-> Note that with this patch, under the 'fallback' label, checks if a
-> reset is needed or not. The current patch does a reset only if the
-> subflow is an MP_JOIN one, but that condition could be additionally
-> extended to 'msk has multiple subflows' - even if the latter looks like
-> a net-next patch.
->
-> WDYT?
+Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+---
+ net/mptcp/options.c    | 2 +-
+ net/mptcp/pm_netlink.c | 8 ++++----
+ net/mptcp/protocol.h   | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-As long as the subflow is reset when the mapping failed, that's fine. It 
-doesn't seem like there are conditions during operation (long after 
-connection time) where it's correct to do fallback without an infinite 
-mapping.
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 3428c163299b..55732b8d7e08 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1067,7 +1067,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
+ 		} else {
+ 			mptcp_pm_add_addr_echoed(msk, &mp_opt.addr);
+-			mptcp_pm_del_add_timer(msk, &mp_opt.addr);
++			mptcp_pm_del_add_timer(msk, &mp_opt.addr, true);
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
+ 		}
+ 
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d094588afad8..09722598994d 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -346,18 +346,18 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 
+ struct mptcp_pm_add_entry *
+ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+-		       struct mptcp_addr_info *addr)
++		       struct mptcp_addr_info *addr, bool check_id)
+ {
+ 	struct mptcp_pm_add_entry *entry;
+ 	struct sock *sk = (struct sock *)msk;
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
+-	if (entry)
++	if (entry && (!check_id || entry->addr.id == addr->id))
+ 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+-	if (entry)
++	if (entry && (!check_id || entry->addr.id == addr->id))
+ 		sk_stop_timer_sync(sk, &entry->add_timer);
+ 
+ 	return entry;
+@@ -1070,7 +1070,7 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+ {
+ 	struct mptcp_pm_add_entry *entry;
+ 
+-	entry = mptcp_pm_del_add_timer(msk, addr);
++	entry = mptcp_pm_del_add_timer(msk, addr, false);
+ 	if (entry) {
+ 		list_del(&entry->list);
+ 		kfree(entry);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 868e878af526..16e50caf200e 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -693,7 +693,7 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
+ struct mptcp_pm_add_entry *
+ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+-		       struct mptcp_addr_info *addr);
++		       struct mptcp_addr_info *addr, bool check_id);
+ struct mptcp_pm_add_entry *
+ mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+ 				struct mptcp_addr_info *addr);
+-- 
+2.31.1
 
---
-Mat Martineau
-Intel
