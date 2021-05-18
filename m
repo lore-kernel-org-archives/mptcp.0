@@ -1,121 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B0529CA
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 14:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE80571
+	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1621347444;
+	s=mimecast20190719; t=1621358160;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8cIyUC3A2hseK+z1kTGsfEkrOtqvXRQRXhIMAfCtd9w=;
-	b=Vr6PDM70YxtzQlSbgPLkQSfIHi5jiXULKv9uT+dZo1ExNWJQTKPMYMDnyf+cTVWMIBRBaW
-	7qUc568+q85mvCSHeJUuoGWMngOg2+kchi8SeXYXAaM9a+dEOxynr7kf7/BzwW7kM86oD0
-	+D/1UyNGs9gJLKjMSSAJyaucMtJPUIo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-TxA3LlW2MN2K008E4KEn9w-1; Tue, 18 May 2021 10:17:19 -0400
-X-MC-Unique: TxA3LlW2MN2K008E4KEn9w-1
-Received: by mail-wr1-f70.google.com with SMTP id a9-20020adfc4490000b0290112095ca785so433285wrg.14
-        for <mptcp@lists.linux.dev>; Tue, 18 May 2021 07:17:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=8cIyUC3A2hseK+z1kTGsfEkrOtqvXRQRXhIMAfCtd9w=;
-        b=eMz9kRRseFRQNmKHIo2Ol/xN0Eu3wqWfefPfsVp9NktO1v9XrPMbVtTkEwNh85lRr4
-         HIEVxpk9YgPyNhHfeitgUuH09Wd8JIFlTE/v/3QdOSfNDhj3H+AsFxhfqSRSnIxCGGOm
-         CM/pNsU6ASPDZyiJKSc1rYli7LDEjbstGJRzFOwMqNxy7ZZWwRJzd/4xL0TM2twtO9nN
-         sPY+kocbTEZSpixLKLYkPLtHVbDXHCI2ZIhRYsM1xWCcibP8t2+rzaaJRojYbd4xIUtY
-         V20TpiXQksmrLxeyY101vB1JelWcFvI70/O/MMTnUaPH7GQ/biyUa7/GD/vU4JC7q0jL
-         rYRA==
-X-Gm-Message-State: AOAM532LtEBYzbXHu6Eg5Nkn5MzYSym2W60L5RsfC3teZYIOI3rCyTn2
-	ZUjBUvBT5Mgmia3mqhR1Bq2ikARrKhcNMWx50z0xJFRiB2zbxIX/+TCgmrFQzlrNVN4lpqkSKLT
-	X7THbTp4mRSH353k=
-X-Received: by 2002:a5d:6484:: with SMTP id o4mr7167649wri.8.1621347437686;
-        Tue, 18 May 2021 07:17:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwcTfjidRlXzWZ7qv9wFxD/SQl/D66HblPZCoBUWm2lVtPo+aaY8bsBu7clz5dbqot2Oz44lA==
-X-Received: by 2002:a5d:6484:: with SMTP id o4mr7167622wri.8.1621347437427;
-        Tue, 18 May 2021 07:17:17 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-245-104.dyn.eolo.it. [146.241.245.104])
-        by smtp.gmail.com with ESMTPSA id u14sm1871174wmc.41.2021.05.18.07.17.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 May 2021 07:17:17 -0700 (PDT)
-Message-ID: <d816c5c2b4bcb0d69effdb3b8fc4fd09fa2a9003.camel@redhat.com>
-Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: do not reset MP_CAPABLE subflow
- on mapping errors
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=p68WH9VLySDskaiMusnmvTj/VpfP+ltUb2MqzTApKS0=;
+	b=ZZ7fvJLsVXQO3dm0IwMoz9uFOxq13cL9e2kh7fdPaCDsYuUlDTh6eoeaSkRLd1weF7jx95
+	b+Uq2NE3ic2m0a1eInyrUoNgpA2DwQW0FeNsH4xAOeuO+aRs9q0QtHZEtA6hdwnsjmjklZ
+	ZTSufWFcF33BoS6ct5aGzSeRRR8rRvc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-m6-ZpTGFMm2W5ajyoe6CIA-1; Tue, 18 May 2021 13:15:59 -0400
+X-MC-Unique: m6-ZpTGFMm2W5ajyoe6CIA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C266180FD68
+	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:15:58 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-112-188.ams2.redhat.com [10.36.112.188])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C852118E47
+	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:15:57 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Date: Tue, 18 May 2021 16:17:16 +0200
-In-Reply-To: <2651afa0-d371-8730-a685-def56669d6e@linux.intel.com>
-References: <18ddcf2f53d732eb9b41a485ce7da23329aaa81e.1621270518.git.pabeni@redhat.com>
-	 <99f56765d4939e6f21c3950ed2ee3b54369e6d5b.1621270518.git.pabeni@redhat.com>
-	 <2651afa0-d371-8730-a685-def56669d6e@linux.intel.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: drop unconditional pr_warn on bad opt
+Date: Tue, 18 May 2021 19:15:53 +0200
+Message-Id: <a4a3c36230b2aeb1315c6234fa39f9ef711be759.1621358150.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-On Mon, 2021-05-17 at 17:16 -0700, Mat Martineau wrote:
-> On Mon, 17 May 2021, Paolo Abeni wrote:
-> 
-> > When some mapping related errors occours we close the main
-> > MPC subflow with a RST. We should instead fallback gracefully
-> > to TCP, and do the reset only for MPJ subflows.
-> > 
-> > Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
-> > net/mptcp/subflow.c | 39 +++++++++++++++++++--------------------
-> > 1 file changed, 19 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index 278986585088..9befe9fe7bca 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -1110,10 +1110,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> > 
-> > 		status = get_mapping_status(ssk, msk);
-> > 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
-> > -		if (unlikely(status == MAPPING_INVALID)) {
-> > -			ssk->sk_err = EBADMSG;
-> > -			goto fatal;
-> > -		}
-> > +		if (unlikely(status == MAPPING_INVALID))
-> > +			goto fallback;
-> > +
-> 
-> There are a bunch of other ways to get MAPPING_INVALID during the life of 
-> a connection, including when there are multiple subflows active and 
-> fallback is not a valid option. Can the new fallback condition be more 
-> targeted to this "out of order / packet loss at connection time" issue so 
-> truly fatal MAPPING_INVALID cases still reset the connection?
+This is a left-over of early day. A malicious peer can flood
+the kernel logs with useless messages, just drop it.
 
-What we should do if we get a MAPPING_INVALID and we have a single
-(MPC) subflow? I could not find any specific reference in the RFC. I
-think it's roughly the same as 'no mapping' at all: if we can fallback
-we do fallback, otherwise we reset.
+Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/options.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Note that with this patch, under the 'fallback' label, checks if a
-reset is needed or not. The current patch does a reset only if the
-subflow is an MP_JOIN one, but that condition could be additionally
-extended to 'msk has multiple subflows' - even if the latter looks like
-a net-next patch.
-
-WDYT?
-
-Thanks!
-
-Paolo
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index b713828819b6..f5daccaaac99 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -141,7 +141,6 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 			memcpy(mp_opt->hmac, ptr, MPTCPOPT_HMAC_LEN);
+ 			pr_debug("MP_JOIN hmac");
+ 		} else {
+-			pr_warn("MP_JOIN bad option size");
+ 			mp_opt->mp_join = 0;
+ 		}
+ 		break;
+-- 
+2.26.3
 
