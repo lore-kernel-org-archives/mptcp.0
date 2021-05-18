@@ -1,68 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB671
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1621358200;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xS9d9H1L8u7gi7Bwp1Pgmquu/wSWtKh2FQfFKA82qi0=;
-	b=G50OVwl4lsunZyMu4pELizNRPSFisj6j482KAh1QuBjrFiobWCisnxh4n+IJhpIgqjG83F
-	ARi4raJQaPyy4t6DPYD1RmPYa8FX57VNB8/DetTJzO5Zft+VLqecJ8jWHjT4gQW7LL0c1g
-	VPlZmAnB2boWCZam4dW0dtA8SccirxI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-532-QnPOSUHXPI-MzvEPnFHXgw-1; Tue, 18 May 2021 13:16:26 -0400
-X-MC-Unique: QnPOSUHXPI-MzvEPnFHXgw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 570D3802B78
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:16:25 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-112-188.ams2.redhat.com [10.36.112.188])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C4A70138E8
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:16:24 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: avoid error message on infinite mapping
-Date: Tue, 18 May 2021 19:16:15 +0200
-Message-Id: <3254d58a6dabd03533816388bd6dcb04f8078e6a.1621358167.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0808371
+	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 17:28:28 +0000 (UTC)
+IronPort-SDR: CWL6MfZ+tZz8lheYrZRqG+Dl5weZkaRvDnvAIHtETLU9yDG3j4+r2yAybr8EIp2ZLdSShMqh1z
+ r2a8nhA0/W3w==
+X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="180375229"
+X-IronPort-AV: E=Sophos;i="5.82,310,1613462400"; 
+   d="scan'208";a="180375229"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 10:28:28 -0700
+IronPort-SDR: kQn16RAyCS5sGXd29r7bdxUmPSpbSsL8qmi6tCz6U29gfMh1XbL5hofZ5TnaEokcvcUi5FrSk6
+ yqGUYDrGjnJQ==
+X-IronPort-AV: E=Sophos;i="5.82,310,1613462400"; 
+   d="scan'208";a="439201321"
+Received: from isofinsk-mobl.amr.corp.intel.com ([10.209.83.65])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 10:28:28 -0700
+Date: Tue, 18 May 2021 10:28:27 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: do not reset MP_CAPABLE subflow
+ on mapping errors
+In-Reply-To: <d816c5c2b4bcb0d69effdb3b8fc4fd09fa2a9003.camel@redhat.com>
+Message-ID: <7b2f1ab8-68e-adb8-aaff-8a8cd080529@linux.intel.com>
+References: <18ddcf2f53d732eb9b41a485ce7da23329aaa81e.1621270518.git.pabeni@redhat.com>  <99f56765d4939e6f21c3950ed2ee3b54369e6d5b.1621270518.git.pabeni@redhat.com>  <2651afa0-d371-8730-a685-def56669d6e@linux.intel.com>
+ <d816c5c2b4bcb0d69effdb3b8fc4fd09fa2a9003.camel@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Another left-over. Avoid flooding dmesg with useless text,
-we already have a MIB for that event.
+On Tue, 18 May 2021, Paolo Abeni wrote:
 
-Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/subflow.c | 1 -
- 1 file changed, 1 deletion(-)
+> On Mon, 2021-05-17 at 17:16 -0700, Mat Martineau wrote:
+>> On Mon, 17 May 2021, Paolo Abeni wrote:
+>>
+>>> When some mapping related errors occours we close the main
+>>> MPC subflow with a RST. We should instead fallback gracefully
+>>> to TCP, and do the reset only for MPJ subflows.
+>>>
+>>> Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
+>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>> net/mptcp/subflow.c | 39 +++++++++++++++++++--------------------
+>>> 1 file changed, 19 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>>> index 278986585088..9befe9fe7bca 100644
+>>> --- a/net/mptcp/subflow.c
+>>> +++ b/net/mptcp/subflow.c
+>>> @@ -1110,10 +1110,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>>>
+>>> 		status = get_mapping_status(ssk, msk);
+>>> 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
+>>> -		if (unlikely(status == MAPPING_INVALID)) {
+>>> -			ssk->sk_err = EBADMSG;
+>>> -			goto fatal;
+>>> -		}
+>>> +		if (unlikely(status == MAPPING_INVALID))
+>>> +			goto fallback;
+>>> +
+>>
+>> There are a bunch of other ways to get MAPPING_INVALID during the life of
+>> a connection, including when there are multiple subflows active and
+>> fallback is not a valid option. Can the new fallback condition be more
+>> targeted to this "out of order / packet loss at connection time" issue so
+>> truly fatal MAPPING_INVALID cases still reset the connection?
+>
+> What we should do if we get a MAPPING_INVALID and we have a single
+> (MPC) subflow? I could not find any specific reference in the RFC. I
+> think it's roughly the same as 'no mapping' at all: if we can fallback
+> we do fallback, otherwise we reset.
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 9befe9fe7bca..02b1ff06c741 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -951,7 +951,6 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- 
- 	data_len = mpext->data_len;
- 	if (data_len == 0) {
--		pr_err("Infinite mapping not handled");
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
- 		return MAPPING_INVALID;
- 	}
--- 
-2.26.3
+Looking at section 3.7, there aren't many cases where fallback is an 
+option during operation (after the initial data has been successfully 
+acked in each direction).
 
+"If a subflow breaks during operation ... then once this is detected ...
+the subflow SHOULD be treated as broken and closed with a RST, since no 
+data can be delivered to the application layer and no fallback signal
+can be reliably sent."
+
+In general, it looks like a bad mapping should reset the *subflow* (rather 
+than the whole MPTCP connection) - what I said above was unclear about 
+what exactly should be reset.
+
+It seems like the only way to fall back the whole connection later in its 
+life involves checksum failure. In that case the RFC describes the 
+conditions where an "infinite mapping" can be used for fallback - but 
+that's different from the beginning-of-connection fallback code we have 
+today.
+
+>
+> Note that with this patch, under the 'fallback' label, checks if a
+> reset is needed or not. The current patch does a reset only if the
+> subflow is an MP_JOIN one, but that condition could be additionally
+> extended to 'msk has multiple subflows' - even if the latter looks like
+> a net-next patch.
+>
+> WDYT?
+
+As long as the subflow is reset when the mapping failed, that's fine. It 
+doesn't seem like there are conditions during operation (long after 
+connection time) where it's correct to do fallback without an infinite 
+mapping.
+
+--
+Mat Martineau
+Intel
