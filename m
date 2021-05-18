@@ -1,47 +1,47 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6EA71
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 07:06:20 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id s4so3002889plg.12
-        for <mptcp@lists.linux.dev>; Tue, 18 May 2021 00:06:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388962FBF
+	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 10:05:18 +0000 (UTC)
+Received: by mail-pl1-f179.google.com with SMTP id v13so4798153ple.9
+        for <mptcp@lists.linux.dev>; Tue, 18 May 2021 03:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=22sN4HArss2xzmdoGTyv0ggYCLq3HrIYnI8r0HF7LL8=;
-        b=N6XrVTCekk5Q7QXonbi4syKYA6Kah3y66/8cyBl5aeoPJLWjUIu40y+zmX0LFavqno
-         448GOrl4W53534J4uk/Z3cAIKeaPPBMj57ycQpaf0pYFQz2cmAj8nIqwQplRTCZhqWTh
-         cwHQyrSkFKOFMIeeDFEgpLrKdh/ti+WDPIyh1xI4Jf+fliZWlFv0D0x4T8z76WvQTvWx
-         E7cvEGifc4mPx3q9fG+6XHdysFu5pCtNBlbZsXMT3mVNO5NZmx2Azp+EvVuNBmJJIGPa
-         UMxP4nL2b1eyiKyCG82q1bXLQsN9Pbh64HaxTAB1wo7uTC4xPqtc/bcXt55EJY0YyR7L
-         xfoA==
+        bh=pQBlYbUcAMsEeUXzSteRJVB604pmAWj1/RqsplJ4toA=;
+        b=k8VsH2RzXwfx9eCifnggsln+ChjkZBhgYhqAACE4M2bRghC57WcCcuieVuseOIBcrk
+         +6/iz6AW/FO46Hr179vig4E1akTn5wp4L36iXNTJqHkYd0PDcJGSgDVElFm9VXh0dJAz
+         mHYF+VIPZKSNDcHKuN6AzwojBzI8lpgApAN8c7Re7oRriDtLdyXEp0JPOkf3Nca0VjWU
+         lie98kIonFmMJf3tNG1UNfQC0+IdrBs2QlJb1FyqqAeLnytnJhvEpTeLESSXJpjWjgtW
+         OvDkPynAcNanXPTgAFhOjUXe9Rc6a5JH8TiFg4PVC4TuqI45mJj0qF5hhJYj9PWksKHm
+         TYxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=22sN4HArss2xzmdoGTyv0ggYCLq3HrIYnI8r0HF7LL8=;
-        b=Ic1VMFTDVqfSa5x5WNbbXWjamsZKTbVsvv16KWWDqBdE+YiilTcIwZruPEqU5B/bVM
-         L6/1zhoDpTcx/zGUJPKWGUkrr96s06K0FZANKCjGKHqvCuHYBJIKsxGOmZZuNZXkmGFw
-         qWYz1gnlonJ0Zd5HIiebgLqr+Gqg6WM485aU7+gVYTpqUl6o0geVAfL72PKlhVKB5zW7
-         cClqjxA30ZIrrP5dmF+xERnjDOKmX8rEL04QcnlU0h4xjLwIkGN4H0mWQ5SayKnvMDNO
-         sEFxCWVmadPOCWUbnTAC5igOCOq08hCBAEhVUm8XHwANwQkh8GRXGETSZ/5b3xnleY5R
-         RGoQ==
-X-Gm-Message-State: AOAM533PrRVLR5wJCnqQGaH7WkgjlqJ1eMNP1hOonn5HBJj+mLvCHmaU
-	qJA9dPzwMVYUv6nAA86s8vDJEEsgzqg=
-X-Google-Smtp-Source: ABdhPJygsvGMFlAs9mBFnSdHdrhboiWA5HvCOFd/nV5API6drRb7IztudjjsWTUqbcgGXa3SyhbH8Q==
-X-Received: by 2002:a17:903:30c4:b029:ef:82f1:cb28 with SMTP id s4-20020a17090330c4b02900ef82f1cb28mr3023549plc.19.1621321580009;
-        Tue, 18 May 2021 00:06:20 -0700 (PDT)
-Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id q28sm2018172pfs.197.2021.05.18.00.06.19
+        bh=pQBlYbUcAMsEeUXzSteRJVB604pmAWj1/RqsplJ4toA=;
+        b=MaAmcaTfW9rwxk9v0ZRdaWj98ehuvHxxRZkkdF0oBeHeRFYLbgE6XCKpupHysK+URR
+         pkeTHOu3vDnK5dd+rTte3ueRFTopQNYc+6E/BCyY8gGObP4CmTagNIPk9vbBceAzNYvz
+         fC7ux6i/+Fh1n8bIBlWBsIB4kvNN6Jd2v2XPMBzX7rB32tq4u4t2atHkgSg1VOEoCk+e
+         WZwSaHJGz7ciDcHprvVhgtXkKS0ufY7CKiQx7Cn4jSM8lFyjlsKSMFq0WHNcAgctqOGU
+         33KIJ/Pvra1Y80vQtl01w//fOrsPYRDDD1b35k/msKNjqQdfQ7H4eu4FTZ/udvAboAGv
+         Jgbw==
+X-Gm-Message-State: AOAM531yH3rBivoMS0tBM90iJ+y409jVcmn6GMcRDQdUzJx8/5kAciLc
+	ZphHXcSEfkxhIr58AsXf2dv0aeZ4xlE=
+X-Google-Smtp-Source: ABdhPJy0LfNBL37g+uJuIOuAPi0b/mIozvur63VXG6XwLI/q/mw05yBRtEkiG6Q2rumbY9dw89W+PQ==
+X-Received: by 2002:a17:903:3106:b029:ee:fa93:9546 with SMTP id w6-20020a1709033106b02900eefa939546mr3761154plc.23.1621332317735;
+        Tue, 18 May 2021 03:05:17 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id i123sm12316276pfc.53.2021.05.18.03.05.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 May 2021 00:06:19 -0700 (PDT)
+        Tue, 18 May 2021 03:05:17 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: generate the data checksum"
-Date: Tue, 18 May 2021 15:06:17 +0800
-Message-Id: <ae2099811b8395f7718855c5c7d412b26d960c95.1621321549.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add deny_join_id0 in mptcp_options_received"
+Date: Tue, 18 May 2021 18:05:13 +0800
+Message-Id: <b49f8eb27abe177f54ea8d7b746ba02003d49682.1621332197.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,27 +50,31 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move this line "__wsum csum = ~csum_unfold(mpext->csum);" from "mptcp:
-validate the data checksum" to "mptcp: generate the data checksum".
+Please add this line to the commit log:
+
+'''
+In mptcp_finish_join, add the incomming join address check too.
+'''
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 38ce8d50e665..58253bd09f93 100644
+index c725e8f02533..5cebecc838ca 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1311,7 +1311,7 @@ static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
- static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
- {
- 	struct mptcp_ext *mpext = mptcp_get_ext(skb);
--	__wsum csum = csum_unfold(mpext->csum);
-+	__wsum csum = ~csum_unfold(mpext->csum);
- 	int offset = skb->len - added;
+@@ -3116,7 +3116,8 @@ bool mptcp_finish_join(struct sock *ssk)
+ 	if (!msk->pm.server_side)
+ 		goto out;
  
- 	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
+-	if (!mptcp_pm_allow_new_subflow(msk)) {
++	if (!mptcp_pm_allow_new_subflow(msk) ||
++	    (READ_ONCE(msk->pm.remote_deny_join_id0) && !subflow->remote_id)) {
+ 		subflow->reset_reason = MPTCP_RST_EPROHIBIT;
+ 		return false;
+ 	}
 -- 
 2.31.1
 
