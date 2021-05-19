@@ -1,152 +1,85 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0BE2FB6
-	for <mptcp@lists.linux.dev>; Tue, 18 May 2021 23:06:47 +0000 (UTC)
-IronPort-SDR: /Wq2MmyL+vH9/NAPAmN2NDOm06nL9yM6gSjcVXMw5mMbTzykDf2kv+dVdoTzO5YrCh9OsQLron
- pw7NXx0o8Apg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="198891785"
-X-IronPort-AV: E=Sophos;i="5.82,310,1613462400"; 
-   d="scan'208";a="198891785"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 16:06:46 -0700
-IronPort-SDR: krphjOljU3tSkHg3kMaJM/tPpKvERXUsyX0zSx6mW3PCwewflZRuTxhabD3Po08oeH/8QcrYSj
- zHzWKZJFkxRw==
-X-IronPort-AV: E=Sophos;i="5.82,310,1613462400"; 
-   d="scan'208";a="439328070"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC29370
+	for <mptcp@lists.linux.dev>; Wed, 19 May 2021 03:18:24 +0000 (UTC)
+IronPort-SDR: tIVHV8kesjky04dVd0t5W+Hi1zW40SfrT1ga9eATFNlMfXfRA8NQCLl6Pm4HDBIVon+OjBrld4
+ VH+WiMzuzMzw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="286410140"
+X-IronPort-AV: E=Sophos;i="5.82,311,1613462400"; 
+   d="scan'208";a="286410140"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 20:18:23 -0700
+IronPort-SDR: CCNM9gQgY8zneM9YkePW5DBxFFvts6W/ONumWeWboBqRMPzYEwlP2TlUG/GkJYbc4LZSwBsUtJ
+ QEuROepi3pgg==
+X-IronPort-AV: E=Sophos;i="5.82,311,1613462400"; 
+   d="scan'208";a="542285926"
 Received: from isofinsk-mobl.amr.corp.intel.com ([10.209.83.65])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 16:06:46 -0700
-Date: Tue, 18 May 2021 16:06:45 -0700 (PDT)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 20:18:23 -0700
+Date: Tue, 18 May 2021 20:18:23 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@gmail.com>
-Subject: Re: [PATCH net] mptcp: validate 'id' when stopping the ADD_ADDR
- retransmit timer
-In-Reply-To: <876dfafb9ec7b090a1da4c2af777be20973649ec.1621359292.git.dcaratti@redhat.com>
-Message-ID: <1b5df243-111f-2c64-9743-4e8f33ce19b@linux.intel.com>
-References: <876dfafb9ec7b090a1da4c2af777be20973649ec.1621359292.git.dcaratti@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add deny_join_id0
+ in mptcp_options_received"
+In-Reply-To: <fecc3c1-5ac1-5ce7-7c8-8f253c619bb2@linux.intel.com>
+Message-ID: <485860c5-ebd3-7796-62c4-b1a343f5e670@linux.intel.com>
+References: <b49f8eb27abe177f54ea8d7b746ba02003d49682.1621332197.git.geliangtang@gmail.com> <fecc3c1-5ac1-5ce7-7c8-8f253c619bb2@linux.intel.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-1181676847-1621379206=:76127"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 18 May 2021, Mat Martineau wrote:
 
---0-1181676847-1621379206=:76127
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+> On Tue, 18 May 2021, Geliang Tang wrote:
+>
+>> Please add this line to the commit log:
+>> 
+>> '''
+>> In mptcp_finish_join, add the incomming join address check too.
+>> '''
+>> 
+>> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+>> ---
+>> net/mptcp/protocol.c | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index c725e8f02533..5cebecc838ca 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -3116,7 +3116,8 @@ bool mptcp_finish_join(struct sock *ssk)
+>> 	if (!msk->pm.server_side)
+>> 		goto out;
+>> 
+>> -	if (!mptcp_pm_allow_new_subflow(msk)) {
+>> +	if (!mptcp_pm_allow_new_subflow(msk) ||
+>> +	    (READ_ONCE(msk->pm.remote_deny_join_id0) && !subflow->remote_id)) 
+>> {
+>
+> This checks whether this side received a C==1 bit from the remote - but 
+> that's already checked in mptcp_pm_create_subflow_or_signal_addr().
+>
+> What might be needed is a check in the opposite direction: if this side 
+> *sent* C==1, and the incoming MP_JOIN is for the initial addr/port, that's 
+> invalid.
+>
+> Not sure yet how we are going to interpret the RFC on this, will be 
+> discussing at the meeting tomorrow.
 
-On Tue, 18 May 2021, Davide Caratti wrote:
-
-> when Linux receives an echo-ed ADD_ADDR, it checks the IP address against
-> the list of "announced" addresses. In case of a positive match, the timer
-> that handles retransmissions is stopped regardless of the 'Address Id' in
-> the received packet: this behaviour does not comply with RFC8684 §3.4.1.
->
-> Fix it by validating the 'Address Id' in received echo-ed ADD_ADDRs.
-> Tested using packetdrill, with the following captured output:
->
-> unpatched kernel:
->
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 3013740213], length 0
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0xfd2e62517888fe29,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 3013740213], length 0
->        ^^^ retransmission is stopped here, but 'Address Id' is 90
->
-> patched kernel:
->
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 1.2.3.4,mptcp dss ack 1672384568], length 0
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 90 198.51.100.2,mptcp dss ack 1672384568], length 0
-> Out <...> Flags [.], ack 1, win 256, options [mptcp add-addr v1 id 1 198.51.100.2 hmac 0x1cf372d59e05f4b8,mptcp dss ack 3007449509], length 0
-> In  <...> Flags [.], ack 1, win 257, options [mptcp add-addr v1-echo id 1 198.51.100.2,mptcp dss ack 1672384568], length 0
->        ^^^ retransmission is stopped here, only when both 'Address Id' and 'IP Address' match
->
-> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> ---
-> net/mptcp/options.c    | 2 +-
-> net/mptcp/pm_netlink.c | 8 ++++----
-> net/mptcp/protocol.h   | 2 +-
-> 3 files changed, 6 insertions(+), 6 deletions(-)
-
-Thanks Davide - looks good to me.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+I meant "our next scheduled community meeting" :)
 
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 3428c163299b..55732b8d7e08 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1067,7 +1067,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
-> 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
-> 		} else {
-> 			mptcp_pm_add_addr_echoed(msk, &mp_opt.addr);
-> -			mptcp_pm_del_add_timer(msk, &mp_opt.addr);
-> +			mptcp_pm_del_add_timer(msk, &mp_opt.addr, true);
-> 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
-> 		}
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d094588afad8..09722598994d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -346,18 +346,18 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
->
-> struct mptcp_pm_add_entry *
-> mptcp_pm_del_add_timer(struct mptcp_sock *msk,
-> -		       struct mptcp_addr_info *addr)
-> +		       struct mptcp_addr_info *addr, bool check_id)
-> {
-> 	struct mptcp_pm_add_entry *entry;
-> 	struct sock *sk = (struct sock *)msk;
->
-> 	spin_lock_bh(&msk->pm.lock);
-> 	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-> -	if (entry)
-> +	if (entry && (!check_id || entry->addr.id == addr->id))
-> 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-> 	spin_unlock_bh(&msk->pm.lock);
->
-> -	if (entry)
-> +	if (entry && (!check_id || entry->addr.id == addr->id))
-> 		sk_stop_timer_sync(sk, &entry->add_timer);
->
-> 	return entry;
-> @@ -1070,7 +1070,7 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
-> {
-> 	struct mptcp_pm_add_entry *entry;
->
-> -	entry = mptcp_pm_del_add_timer(msk, addr);
-> +	entry = mptcp_pm_del_add_timer(msk, addr, false);
-> 	if (entry) {
-> 		list_del(&entry->list);
-> 		kfree(entry);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 868e878af526..16e50caf200e 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -693,7 +693,7 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
-> bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
-> struct mptcp_pm_add_entry *
-> mptcp_pm_del_add_timer(struct mptcp_sock *msk,
-> -		       struct mptcp_addr_info *addr);
-> +		       struct mptcp_addr_info *addr, bool check_id);
-> struct mptcp_pm_add_entry *
-> mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
-> 				struct mptcp_addr_info *addr);
-> -- 
-> 2.31.1
->
->
+>> 		subflow->reset_reason = MPTCP_RST_EPROHIBIT;
+>> 		return false;
+>> 	}
+>> -- 
+>> 2.31.1
 
 --
 Mat Martineau
 Intel
---0-1181676847-1621379206=:76127--
