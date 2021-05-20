@@ -1,108 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56512FB6
-	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 14:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1621521997;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mJ6y/tuZY8G8WlPWiDMnosrwD/p+d0dNtBl3nY5UuIA=;
-	b=GQVirmZa7/Xybit9TLQjBlQ4Fl93HJGfFk2Fxpz/sUucbkJL8j9bXAH1voAneCfNfd5xhi
-	UOo6uUvKAT2rtaOsb9wB77BLUECUWJRDjdjZJXXqzhsHnl5d/ocedGiERskc4IaMAFi1yq
-	bAAGDhC/ZnPQe7doZmd+fgDLdtbHPVY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-76-CQ6pddeCPxy6YHJiKTyUWQ-1; Thu, 20 May 2021 10:46:31 -0400
-X-MC-Unique: CQ6pddeCPxy6YHJiKTyUWQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72743106BAEE
-	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 14:46:29 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-114-166.ams2.redhat.com [10.36.114.166])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B53C610013C1
-	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 14:46:28 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v3 mptcp-net 1/3] mptcp: always parse mptcp options for MPC reqsk
-Date: Thu, 20 May 2021 16:46:13 +0200
-Message-Id: <7e97e8e3c7d9265dcbf098b57f12da11d0b383b1.1621521884.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8082170
+	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 18:32:22 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id b17so20576780ede.0
+        for <mptcp@lists.linux.dev>; Thu, 20 May 2021 11:32:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7DzbllBMNqedjXJm4so5ZoWJjhW2vbPQhZTRJ7K6mdo=;
+        b=kIOIwkz6QMgu7EX64eqQZ13S6WXkbCEHpEFQAPNcEN7Yo+U7NDje2ZB+8Y1hWJSQ5p
+         UM68aN7LIbwhvP7KJDKeZuT9KouKPwL8Wl1Pj5avKIhfBeYJTA13wKRpbf7cS2bh3jdB
+         bykrOxKZuhfy4bO6fyBBJ8M4TxyRytYuIdB/AU7wlQTNCjulnmuVcJjeX5RAj9wSd/fX
+         kcE3BfeL2mDZHa0qKo9Sh5VriXte1T8xRc+acOHJbdNfQbxupXsRfUOFHJQHErchvVzm
+         6iaWFTz8Pyx8UAgfmS4FEoxYp7h3Xfslo/r6Uad5yCr8CgfTXsGVsi91/wZMyQyconIX
+         US4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7DzbllBMNqedjXJm4so5ZoWJjhW2vbPQhZTRJ7K6mdo=;
+        b=A68GiGBb128aH/3yc/j4vspbv+RSW5/O7Imzuw20ZgUDQ5fyZwhmeR/5PA4gp8rClA
+         tOTE56DGTUeTIEh3CYnsZ5fYJlR2SuoXIOwpvl7/chElJPGObnt2piYQnzSG2+wPWNju
+         nhDW+zZt3GEOS8l5HYxH6YYc4Lb1UoDDBx2Njzpjw+NwgvQA3Xq2XaQFhKWq0xIMU36t
+         CZzhl1it7nIjX3y+5TaGHTI8ywdqsiurVds85v+PxRpHebILGPpylvU0S/PtS/Fxq6QQ
+         Z+gLJz0yhf/N7JtC7c3kNdkGj8k7vQFEgvA8JR5BZD/CVLmHUrSxzGAjwDPDdM5tdIFk
+         iXYQ==
+X-Gm-Message-State: AOAM530cNO9kDzfF4Jf3aSrnohzu961/bD0YvVrR+4XPzN24qsXeVrg7
+	FhYdIUi1fqWaby4KpyZZ3/gR6jAl5c4rjrKP
+X-Google-Smtp-Source: ABdhPJxL3rfBGEeO4k+KJmJip1xA/IFsi3+hWyH77lklJxVMyj9OkKyVJfkdNllBgZAhk+qXVrJf3g==
+X-Received: by 2002:a50:bae6:: with SMTP id x93mr6522437ede.48.1621535539941;
+        Thu, 20 May 2021 11:32:19 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:c9db:d048:1d4c:cd82])
+        by smtp.gmail.com with ESMTPSA id jo12sm1891274ejb.22.2021.05.20.11.32.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 May 2021 11:32:19 -0700 (PDT)
+Subject: Re: [PATCH mptcp-net] mptcp: drop unconditional pr_warn on bad opt
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <a4a3c36230b2aeb1315c6234fa39f9ef711be759.1621358150.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <a0c68a41-3b2e-c1c2-4587-4ba645429659@tessares.net>
+Date: Thu, 20 May 2021 20:32:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <a4a3c36230b2aeb1315c6234fa39f9ef711be759.1621358150.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-In subflow_syn_recv_sock() we currently skip options parsing
-for OoO packet, given that such packets may not carry the relevant
-MPC option.
+Hi Paolo, Mat,
 
-If the peer generates an MPC+data TSO packet and some of the early
-segments are lost or get reorder, we server will ignore the peer key,
-causing transient, unexpected fallback to TCP.
+On 18/05/2021 19:15, Paolo Abeni wrote:
+> This is a left-over of early day. A malicious peer can flood
+> the kernel logs with useless messages, just drop it.
+> 
+> Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-The solution is always parsing the incoming MPTCP options, and
-do the fallback only for in-order packets. This actually cleans
-the existing code a bit.
+Thank you for the patch and the review:
 
-Reported-by:  Matthieu Baerts <matthieu.baerts@tessares.net>
-Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-a note on data ack len: with this patch the server will use
-ack32 for OoO MPC+data pkts, and will move to ack64 ASA will get
-the first in order MPC+data pkt.
+- 1cb1f9c4c940: mptcp: drop unconditional pr_warn on bad opt
+- Results: bdf8ab2fa53b..f7c7d5a50852
 
-We can clean-up/make more consistent the behavior with some additional
-check in mptcp_sk_clone and/or subflow_syn_recv_sock(), but I prefer
-to not introduce only partially related changes here
----
- net/mptcp/subflow.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+Builds and tests are now in progress:
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 554e7ccee02a..278986585088 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -633,21 +633,20 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 
- 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
- 	if (subflow_req->mp_capable) {
--		if (TCP_SKB_CB(skb)->seq != subflow_req->ssn_offset + 1) {
--			/* here we can receive and accept an in-window,
--			 * out-of-order pkt, which will not carry the MP_CAPABLE
--			 * opt even on mptcp enabled paths
--			 */
--			goto create_msk;
--		}
--
-+		/* we can receive and accept an in-window, out-of-order pkt,
-+		 * which may not carry the MP_CAPABLE opt even on mptcp enabled
-+		 * paths: always try to extract the peer key, and fallback
-+		 * for packets missing it.
-+		 * Even OoO DSS packets coming legitly after dropped or
-+		 * reordered MPC will cause fallback, but we don't have other
-+		 * options.
-+		 */
- 		mptcp_get_options(sk, skb, &mp_opt);
- 		if (!mp_opt.mp_capable) {
- 			fallback = true;
- 			goto create_child;
- 		}
- 
--create_msk:
- 		new_msk = mptcp_sk_clone(listener->conn, &mp_opt, req);
- 		if (!new_msk)
- 			fallback = true;
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210520T183134
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210520T183134
+
+Cheers,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
