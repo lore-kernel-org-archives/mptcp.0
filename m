@@ -1,41 +1,43 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272A971
-	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 13:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0937171
+	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 14:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1621518430;
+	s=mimecast20190719; t=1621521993;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kN4Jzty5N452x+R/DZWg8ZaY3n6KUWMB0+pDX4JQjFk=;
-	b=fmPfmeqbTmPVAEh5+1AEtUs6PufBOiGyXEAiFWlfpD3nB3Irn8FnALhrKtlvaEdJV6a0FL
-	iyHYy7Tl0b102oKMuc3fc7wX3SHUOt5aLnnPnVIV+qSpYzqLc9nRrUrvck+9U5PXWUMnmu
-	chp7rHNs/XGeMwKYfGRBYX73RvdCOxw=
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xNle17lkHpENg7Id/SrnK/JOG3r/lEzMlbNbpxJghAw=;
+	b=aT3uW7IKIJIMgOnjNJeQbchnsXNqG5KYhv1J2Mq29pVyvaS4O4Sc/I0AL8dIHHXx9fHLbj
+	rnkb9XG1xV1z8qHH4qNJSfwlWGP8DmO8EmK3MOkBiLMCSyHJiiMACenVSiYvOTGb1MIiGv
+	eQM85o4P1gi/pm/lk4SN4U8zBGSIdL0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-445-vgEiTG9GOJqGEuNmYizonA-1; Thu, 20 May 2021 09:47:07 -0400
-X-MC-Unique: vgEiTG9GOJqGEuNmYizonA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-47-yQcl8DrSNEqw9BgmqJTgNg-1; Thu, 20 May 2021 10:46:32 -0400
+X-MC-Unique: yQcl8DrSNEqw9BgmqJTgNg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53A831854E39;
-	Thu, 20 May 2021 13:47:06 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2990D8186F0
+	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 14:46:31 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-166.ams2.redhat.com [10.36.114.166])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6408E5D74D;
-	Thu, 20 May 2021 13:47:04 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8FC2410013C1
+	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 14:46:30 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-net] Squash-to: "mptcp: fix sk_forward_memory corruption under memory pressure"
-Date: Thu, 20 May 2021 15:46:57 +0200
-Message-Id: <03e3ba49f6d847686dced53e915ace73928fd008.1621517601.git.pabeni@redhat.com>
+Subject: [PATCH v3 mptcp-net 3/3] mptcp: update selftest for fallback due to OoO
+Date: Thu, 20 May 2021 16:46:15 +0200
+Message-Id: <d3bc9692efce68da5ecf858b6ad810fea249d477.1621521884.git.pabeni@redhat.com>
+In-Reply-To: <7e97e8e3c7d9265dcbf098b57f12da11d0b383b1.1621521884.git.pabeni@redhat.com>
+References: <7e97e8e3c7d9265dcbf098b57f12da11d0b383b1.1621521884.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -43,100 +45,46 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Commit message to be replaced as follow:
-
-"""
-mptcp: fix sk_forward_memory corruption on retransmission
-
-MPTCP sk_forward_memory handling is a bit special, as such field
-is protected by the msk socket spin_lock, instead of the plain
-socket lock.
-
-Currently we have a code path updating such field without handling
-the relevant lock:
-
-__mptcp_retrans() -> __mptcp_clean_una_wakeup()
-
-Several helpers in __mptcp_clean_una_wakeup() will update
-sk_forward_alloc, possibly causing such field corruption, as reported
-by Matthieu.
-
-Address the issue providing and using a new variant of blamed function
-which explicitly acquires the msk spin lock.
-"""
+The previous commit noted that we can have fallback
+scenario due to OoO (or packet drop). Update the self-tests
+accordingly
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 32 +++++++++++++-------------------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0dcb9b753f80..446acfb85493 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1040,7 +1040,7 @@ static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
- 	put_page(dfrag->page);
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 605b8b929f72..69351c3eb68c 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -512,6 +512,7 @@ do_transfer()
+ 	local stat_ackrx_now_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableACKRX")
+ 	local stat_cookietx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
+ 	local stat_cookierx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
++	local stat_ooo_now=$(get_mib_counter "${listener_ns}" "TcpExtTCPOFOQueue")
  
--static bool __mptcp_do_clean_una(struct sock *sk)
-+static void __mptcp_clean_una(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_data_frag *dtmp, *dfrag;
-@@ -1081,6 +1081,12 @@ static bool __mptcp_do_clean_una(struct sock *sk)
- 	}
+ 	expect_synrx=$((stat_synrx_last_l))
+ 	expect_ackrx=$((stat_ackrx_last_l))
+@@ -529,10 +530,14 @@ do_transfer()
+ 			"${stat_synrx_now_l}" "${expect_synrx}" 1>&2
+ 		retc=1
+ 	fi
+-	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ]; then
+-		printf "[ FAIL ] lower MPC ACK rx (%d) than expected (%d)\n" \
+-			"${stat_ackrx_now_l}" "${expect_ackrx}" 1>&2
+-		rets=1
++	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} -a ${stat_ooo_now} -eq 0 ]; then
++		if [ ${stat_ooo_now} -eq 0 ]; then
++			printf "[ FAIL ] lower MPC ACK rx (%d) than expected (%d)\n" \
++				"${stat_ackrx_now_l}" "${expect_ackrx}" 1>&2
++			rets=1
++		else
++			printf "[ Note ] fallback due to TCP OoO"
++		fi
+ 	fi
  
- out:
-+	if (cleaned) {
-+		if (tcp_under_memory_pressure(sk)) {
-+			__mptcp_update_wmem(sk);
-+			sk_mem_reclaim_partial(sk);
-+		}
-+	}
- 
- 	if (snd_una == READ_ONCE(msk->snd_nxt)) {
- 		if (msk->timer_ival && !mptcp_data_fin_enabled(msk))
-@@ -1088,34 +1094,22 @@ static bool __mptcp_do_clean_una(struct sock *sk)
- 	} else {
- 		mptcp_reset_timer(sk);
- 	}
--	return cleaned;
--}
--
--static void __mptcp_clean_una(struct sock *sk)
--{
--	if (__mptcp_do_clean_una(sk) && tcp_under_memory_pressure(sk)) {
--		__mptcp_update_wmem(sk);
--		sk_mem_reclaim_partial(sk);
--	}
- }
- 
- static void __mptcp_clean_una_wakeup(struct sock *sk)
- {
-+#ifdef CONFIG_LOCKDEP
-+	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock.slock));
-+#endif
- 	__mptcp_clean_una(sk);
- 	mptcp_write_space(sk);
- }
- 
--/* variant __mptcp_clean_una_wakeup() for caller owning the msk socket lock,
-- * but not the msk_data_lock/msk socket spin lock
-- */
- static void mptcp_clean_una_wakeup(struct sock *sk)
- {
--#ifdef CONFIG_LOCKDEP
--	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock));
--#endif
--	if (__mptcp_do_clean_una(sk) && tcp_under_memory_pressure(sk))
--		mptcp_mem_reclaim_partial(sk);
--	mptcp_write_space(sk);
-+	mptcp_data_lock(sk);
-+	__mptcp_clean_una_wakeup(sk);
-+	mptcp_data_unlock(sk);
- }
- 
- static void mptcp_enter_memory_pressure(struct sock *sk)
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
 -- 
 2.26.3
 
