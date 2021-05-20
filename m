@@ -1,49 +1,51 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2BA70
-	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 18:35:38 +0000 (UTC)
-Received: by mail-ed1-f53.google.com with SMTP id b17so20586904ede.0
-        for <mptcp@lists.linux.dev>; Thu, 20 May 2021 11:35:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C7770
+	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 18:39:25 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id w12so12815236edx.1
+        for <mptcp@lists.linux.dev>; Thu, 20 May 2021 11:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3rGIUE/MYVVOhd1V/Kk6GDBiTPeviUsRX5NUfyYo4Lw=;
-        b=RsM0YFw65bentRI676ihuvoFZ3+zrv/uN+Yykovvkox0U+anjeh9SGIWqa9M1PnIgp
-         6Gzezuc0vKmGldDz+XJxae07/Wb9WIy6y8oAxSKUeBVnWl3B+OH92XuWQJ6Mk4JnhE4j
-         t/fALGfTjyqeDt7OP8T1g/TDKzTOGobZ8li1x8yelbUV1jxXUcp61fWkHFvjLwuzodqK
-         z79wHZBAKTWRPE9iht2hh8nXAUcRNw5AkppGbYMFoax2pSqgWN4z9FLH2HbwfdGCjhZi
-         M/TJQ8DNXOAsFG+1J5HDnQPlHo1UAaRDB+/fSlfcl65Q5A0bc/8/0dZYvK+prLHriz2l
-         cXEg==
+        bh=eSBj7Q7obpm7zM40FEypFkmI2flUoSPar7DbpxDF4gg=;
+        b=rcea4ASx5ode4jZt82emp85LXrbxPM1++MuRwikwAL+j60O4P7wqbKG1Pjac19Abl+
+         kL/SX4wel7RsNqwC4Axd/i1U0CcWxTjoBcKGCiX/shA3vH4vqUdZgB+IKKqDBQeEvNRY
+         ko14asU3Acq8ClKPBDqZUsC/g1sY8KQ4bYFreuGsLeAsihJfAP3uhryKb4P5EU6+rRus
+         5ts1K5/YJ+Nql55RSn4xcpRA0/JaDoW3BKybpF07my9osOLb4O6egiv/+0o+eFiKq8Bt
+         4e2F7Kvk47ShMvJph/s4PagLDAvBnZHXY8thgch/MKnVgRfZdVF+yngkvM4MlnJ0mbDU
+         5y6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3rGIUE/MYVVOhd1V/Kk6GDBiTPeviUsRX5NUfyYo4Lw=;
-        b=Lxr5wlYV7e3yS8WKLa5VRbyqKfOmQ7Y1HWvRfeTIyJHljDhq7AG1RO04j802hddGd0
-         SKHO9aarPYYmGdXyH7nJqb4iF+eMYdcArkS9i0qAysIzvN0DtkaTVoDbUrTiQH3748zc
-         EVI/MjLlt0PxHT31BJgyQmXBM5COwdsXphi78qrLSS7JQQaeTfQchgF32TpWrtCmhf5T
-         7nNojfT1D5mqsV3192gQyhhYLyiXJHtE+eGOLeuWF/uyqv0+KolnCvCgLOF7ikluwRgQ
-         FN4WPNdakgD8DhOhOF9sjTqcljNLoGmCJFG0pTKuffDLdKMro5Mi981ILoMNjuT1EmMx
-         TXSg==
-X-Gm-Message-State: AOAM5311ilhNDJ0CniqK9zaIDq2GluyVW0znxGy1GX7R9nd0ohb9uK80
-	FRN52JcPDtIv45GDFSiynqU6+A==
-X-Google-Smtp-Source: ABdhPJyv7UixgPOBbPk46lvf3OXbSnJKo+mCFxgmY2UmYjJyTF4cE4ClTimMdme38js54F2Jt+pOZQ==
-X-Received: by 2002:a05:6402:42cc:: with SMTP id i12mr6654458edc.272.1621535737113;
-        Thu, 20 May 2021 11:35:37 -0700 (PDT)
+        bh=eSBj7Q7obpm7zM40FEypFkmI2flUoSPar7DbpxDF4gg=;
+        b=toAsTJVZhk40iayRkH706mpH4Z054+8qBVcWCKX3hEXsxIsSzw90cXOtiL/km6+CJ5
+         Gy11t7wE1jL3kCFfxa7A3AwgIQbqYQhxWSBtHXrm7ihy2+iwPOV+Bwok3YBPlGWbjlhr
+         agD8WpvCwZMy3BwqYd5c9NSdbkK/FpwG0/sAtg+h9xX/aWIJ/3A1dx9dzcUEtAo8RiME
+         vyAJ3K+DsQizfafe0P7sX72ids3DSx0MjoH7pC+7m95PTYZaMQTie0N3wumwDF1TQgVZ
+         HF4U1fDLlWZ45kWtTb9zKn/OTCXQAzo2BKvbuH4r5DCMnbKGn91XYDVFv4R0hN3QHxrM
+         m3TA==
+X-Gm-Message-State: AOAM5308V4q7kBbKqLYEGRvuiBjnPk/+lMlXVHgslTT9jq/kWtV6Qjer
+	VZwUPFT5vGYBQq5bqpDSY6k6BDYTw31a0bZ/
+X-Google-Smtp-Source: ABdhPJzlLxxta4tMIMeERwNyzp3eA9eC2mr3Kb4jWr6CLuR8GP+TYREYR1h8uArf7kAvQ9Tud+p4XQ==
+X-Received: by 2002:a05:6402:4251:: with SMTP id g17mr5521560edb.238.1621535963736;
+        Thu, 20 May 2021 11:39:23 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:c9db:d048:1d4c:cd82])
-        by smtp.gmail.com with ESMTPSA id o21sm1832601ejh.57.2021.05.20.11.35.36
+        by smtp.gmail.com with ESMTPSA id bm13sm1926719ejb.75.2021.05.20.11.39.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 May 2021 11:35:36 -0700 (PDT)
-Subject: Re: [PATCH mptcp-net] mptcp: avoid error message on infinite mapping
-To: Paolo Abeni <pabeni@redhat.com>
-References: <3254d58a6dabd03533816388bd6dcb04f8078e6a.1621358167.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
+        Thu, 20 May 2021 11:39:23 -0700 (PDT)
+Subject: Re: [PATCH net] mptcp: validate 'id' when stopping the ADD_ADDR
+ retransmit timer
+To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <876dfafb9ec7b090a1da4c2af777be20973649ec.1621359292.git.dcaratti@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <85349f95-c351-b1b0-ae64-27cc7e7ec8be@tessares.net>
-Date: Thu, 20 May 2021 20:35:35 +0200
+Message-ID: <81242d9e-f947-5387-9ae6-8c9b4c37cc69@tessares.net>
+Date: Thu, 20 May 2021 20:39:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
@@ -51,29 +53,31 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <3254d58a6dabd03533816388bd6dcb04f8078e6a.1621358167.git.pabeni@redhat.com>
+In-Reply-To: <876dfafb9ec7b090a1da4c2af777be20973649ec.1621359292.git.dcaratti@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+Hi Davide, Mat,
 
-On 18/05/2021 19:16, Paolo Abeni wrote:
-> Another left-over. Avoid flooding dmesg with useless text,
-> we already have a MIB for that event.
+On 18/05/2021 19:36, Davide Caratti wrote:
+> when Linux receives an echo-ed ADD_ADDR, it checks the IP address against
+> the list of "announced" addresses. In case of a positive match, the timer
+> that handles retransmissions is stopped regardless of the 'Address Id' in
+> the received packet: this behaviour does not comply with RFC8684 §3.4.1.
 > 
-> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Fix it by validating the 'Address Id' in received echo-ed ADD_ADDRs.
 
 Thank you for the patch and the review!
 
-- f3d3cf12ada2: mptcp: avoid error message on infinite mapping
-- Results: f7c7d5a50852..bffd86183cb5
+- 64705a88e6f0: mptcp: validate 'id' when stopping the ADD_ADDR
+retransmit timer
+- Results: bffd86183cb5..02925519e50e
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210520T183513
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210520T183513
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210520T183902
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210520T183902
 
 Cheers,
 Matt
