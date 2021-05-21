@@ -1,137 +1,236 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F69E70
-	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 00:22:19 +0000 (UTC)
-IronPort-SDR: CWlnbxY1IbS1KeqxYti4TlgJ2oLe5Kq92ctUZY9UG4xghQHbyLfe6EQ1P+dtmkwdBR6+RKdWLw
- GAaa/u/1A8eA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="188770454"
-X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="188770454"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 17:22:18 -0700
-IronPort-SDR: LGd7vm/wP+UWrsa71fi1qYdYnDZ9JwV4nmtJGKhHBr4OfnPrmHDa5/dDOQGwflJK+d/J5fIgD+
- Yf9/CBoeP0GA==
-X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="631607199"
-Received: from srfejes-mobl4.amr.corp.intel.com ([10.209.82.208])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 17:22:17 -0700
-Date: Thu, 20 May 2021 17:22:17 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v3 mptcp-net 2/3] mptcp: do not reset MP_CAPABLE subflow
- on mapping errors
-In-Reply-To: <d1935d23fff36674a64477cbf4f9b205a301624c.1621521884.git.pabeni@redhat.com>
-Message-ID: <13f2962-d22b-ef6a-7f40-bb11fa9c6873@linux.intel.com>
-References: <7e97e8e3c7d9265dcbf098b57f12da11d0b383b1.1621521884.git.pabeni@redhat.com> <d1935d23fff36674a64477cbf4f9b205a301624c.1621521884.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F50B71
+	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 10:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1621593014;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9ZWS5/taKH+y61UrpYld5dZjtXmLnEcw1oZNHcRXjrg=;
+	b=OZR+aGmrGURECloBUbdLyWhuwj176eaZg+T8aHhpuVC92Xek3F3FgQd7tFVDQXdSziOb+v
+	NNJyZMggPwZPAsRi91Gm6/JVSPEZ32GlTIYxLP4BtBeUAcNmr8P2gzD4m+KvuYfwof5f5P
+	VVriqjCmP+zfTcGtLm9XHNFi3urqlNU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-106-28ztsxTEO0WCmGnNYxbjrQ-1; Fri, 21 May 2021 06:30:12 -0400
+X-MC-Unique: 28ztsxTEO0WCmGnNYxbjrQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DCC3C1853DB1
+	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 10:30:11 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-114-152.ams2.redhat.com [10.36.114.152])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 525E969FB1
+	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 10:30:11 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next] mptcp: drop tx skb cache
+Date: Fri, 21 May 2021 12:30:07 +0200
+Message-Id: <f3cf8531c9215fb77194e332a1aae5e954dbd2ea.1621592920.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-On Thu, 20 May 2021, Paolo Abeni wrote:
+The mentioned cache was introduced to reduce the number of skb
+allocation in atomic context, but the required complexity is
+excessive.
 
-> When some mapping related errors occours we close the main
-> MPC subflow with a RST. We should instead fallback gracefully
-> to TCP, and do the reset only for MPJ subflows.
->
-> Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v2 -> v3:
-> - change the fallback/rst test to better suite the RFC
-> ---
-> net/mptcp/subflow.c | 40 ++++++++++++++++++++--------------------
-> 1 file changed, 20 insertions(+), 20 deletions(-)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 278986585088..a39d99d96900 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1110,10 +1110,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
->
-> 		status = get_mapping_status(ssk, msk);
-> 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
-> -		if (unlikely(status == MAPPING_INVALID)) {
-> -			ssk->sk_err = EBADMSG;
-> -			goto fatal;
-> -		}
-> +		if (unlikely(status == MAPPING_INVALID))
-> +			goto fallback;
-> +
-> 		if (unlikely(status == MAPPING_DUMMY))
-> 			goto fallback;
->
-> @@ -1128,10 +1127,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 		 * MP_CAPABLE-based mapping
-> 		 */
-> 		if (unlikely(!READ_ONCE(msk->can_ack))) {
-> -			if (!subflow->mpc_map) {
-> -				ssk->sk_err = EBADMSG;
-> -				goto fatal;
-> -			}
-> +			if (!subflow->mpc_map)
-> +				goto fallback;
-> 			WRITE_ONCE(msk->remote_key, subflow->remote_key);
-> 			WRITE_ONCE(msk->ack_seq, subflow->map_seq);
-> 			WRITE_ONCE(msk->can_ack, true);
-> @@ -1160,19 +1157,22 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 	subflow_sched_work_if_closed(msk, ssk);
-> 	return false;
->
-> -fatal:
-> -	/* fatal protocol error, close the socket */
-> -	/* This barrier is coupled with smp_rmb() in tcp_poll() */
-> -	smp_wmb();
-> -	ssk->sk_error_report(ssk);
-> -	tcp_set_state(ssk, TCP_CLOSE);
-> -	subflow->reset_transient = 0;
-> -	subflow->reset_reason = MPTCP_RST_EMPTCP;
-> -	tcp_send_active_reset(ssk, GFP_ATOMIC);
-> -	subflow->data_avail = 0;
-> -	return false;
-> -
-> fallback:
-> +	/* RFC 8684 section 3.7. */
-> +	if (subflow->mp_join || subflow->fully_established) {
+This change remove the mentioned cache.
 
-I think this is sufficient to prevent bad fallbacks, thanks for the 
-revision. Looks good for the export branch. Packetdrill tests (including 
-https://github.com/multipath-tcp/packetdrill/pull/58) pass for me.
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+formally submitting this one. I keept a VM running self-tests for ~24h
+with no issues
+---
+ net/mptcp/protocol.c | 89 ++------------------------------------------
+ 1 file changed, 4 insertions(+), 85 deletions(-)
 
-For the series:
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 446acfb85493..1114a914d845 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -903,22 +903,14 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+ 		df->data_seq + df->data_len == msk->write_seq;
+ }
+ 
+-static int mptcp_wmem_with_overhead(struct sock *sk, int size)
++static int mptcp_wmem_with_overhead(int size)
+ {
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-	int ret, skbs;
+-
+-	ret = size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
+-	skbs = (msk->tx_pending_data + size) / msk->size_goal_cache;
+-	if (skbs < msk->skb_tx_cache.qlen)
+-		return ret;
+-
+-	return ret + (skbs - msk->skb_tx_cache.qlen) * SKB_TRUESIZE(MAX_TCP_HEADER);
++	return size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
+ }
+ 
+ static void __mptcp_wmem_reserve(struct sock *sk, int size)
+ {
+-	int amount = mptcp_wmem_with_overhead(sk, size);
++	int amount = mptcp_wmem_with_overhead(size);
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+ 	WARN_ON_ONCE(msk->wmem_reserved);
+@@ -1213,49 +1205,8 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
+ 	return NULL;
+ }
+ 
+-static bool mptcp_tx_cache_refill(struct sock *sk, int size,
+-				  struct sk_buff_head *skbs, int *total_ts)
+-{
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-	struct sk_buff *skb;
+-	int space_needed;
+-
+-	if (unlikely(tcp_under_memory_pressure(sk))) {
+-		mptcp_mem_reclaim_partial(sk);
+-
+-		/* under pressure pre-allocate at most a single skb */
+-		if (msk->skb_tx_cache.qlen)
+-			return true;
+-		space_needed = msk->size_goal_cache;
+-	} else {
+-		space_needed = msk->tx_pending_data + size -
+-			       msk->skb_tx_cache.qlen * msk->size_goal_cache;
+-	}
+-
+-	while (space_needed > 0) {
+-		skb = __mptcp_do_alloc_tx_skb(sk, sk->sk_allocation);
+-		if (unlikely(!skb)) {
+-			/* under memory pressure, try to pass the caller a
+-			 * single skb to allow forward progress
+-			 */
+-			while (skbs->qlen > 1) {
+-				skb = __skb_dequeue_tail(skbs);
+-				*total_ts -= skb->truesize;
+-				__kfree_skb(skb);
+-			}
+-			return skbs->qlen > 0;
+-		}
+-
+-		*total_ts += skb->truesize;
+-		__skb_queue_tail(skbs, skb);
+-		space_needed -= msk->size_goal_cache;
+-	}
+-	return true;
+-}
+-
+ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+ {
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct sk_buff *skb;
+ 
+ 	if (ssk->sk_tx_skb_cache) {
+@@ -1266,22 +1217,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+ 		return true;
+ 	}
+ 
+-	skb = skb_peek(&msk->skb_tx_cache);
+-	if (skb) {
+-		if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
+-			skb = __skb_dequeue(&msk->skb_tx_cache);
+-			if (WARN_ON_ONCE(!skb))
+-				return false;
+-
+-			mptcp_wmem_uncharge(sk, skb->truesize);
+-			ssk->sk_tx_skb_cache = skb;
+-			return true;
+-		}
+-
+-		/* over memory limit, no point to try to allocate a new skb */
+-		return false;
+-	}
+-
+ 	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
+ 	if (!skb)
+ 		return false;
+@@ -1297,7 +1232,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+ static bool mptcp_must_reclaim_memory(struct sock *sk, struct sock *ssk)
+ {
+ 	return !ssk->sk_tx_skb_cache &&
+-	       !skb_peek(&mptcp_sk(sk)->skb_tx_cache) &&
+ 	       tcp_under_memory_pressure(sk);
+ }
+ 
+@@ -1340,7 +1274,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	/* compute send limit */
+ 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+ 	avail_size = info->size_goal;
+-	msk->size_goal_cache = info->size_goal;
+ 	skb = tcp_write_queue_tail(ssk);
+ 	if (skb) {
+ 		/* Limit the write to the size available in the
+@@ -1689,7 +1622,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	while (msg_data_left(msg)) {
+ 		int total_ts, frag_truesize = 0;
+ 		struct mptcp_data_frag *dfrag;
+-		struct sk_buff_head skbs;
+ 		bool dfrag_collapsed;
+ 		size_t psize, offset;
+ 
+@@ -1722,16 +1654,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		psize = pfrag->size - offset;
+ 		psize = min_t(size_t, psize, msg_data_left(msg));
+ 		total_ts = psize + frag_truesize;
+-		__skb_queue_head_init(&skbs);
+-		if (!mptcp_tx_cache_refill(sk, psize, &skbs, &total_ts))
+-			goto wait_for_memory;
+ 
+-		if (!mptcp_wmem_alloc(sk, total_ts)) {
+-			__skb_queue_purge(&skbs);
++		if (!mptcp_wmem_alloc(sk, total_ts))
+ 			goto wait_for_memory;
+-		}
+ 
+-		skb_queue_splice_tail(&skbs, &msk->skb_tx_cache);
+ 		if (copy_page_from_iter(dfrag->page, offset, psize,
+ 					&msg->msg_iter) != psize) {
+ 			mptcp_wmem_uncharge(sk, psize + frag_truesize);
+@@ -2460,13 +2386,11 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	INIT_LIST_HEAD(&msk->rtx_queue);
+ 	INIT_WORK(&msk->work, mptcp_worker);
+ 	__skb_queue_head_init(&msk->receive_queue);
+-	__skb_queue_head_init(&msk->skb_tx_cache);
+ 	msk->out_of_order_queue = RB_ROOT;
+ 	msk->first_pending = NULL;
+ 	msk->wmem_reserved = 0;
+ 	msk->rmem_released = 0;
+ 	msk->tx_pending_data = 0;
+-	msk->size_goal_cache = TCP_BASE_MSS;
+ 
+ 	msk->ack_hint = NULL;
+ 	msk->first = NULL;
+@@ -2527,15 +2451,10 @@ static void __mptcp_clear_xmit(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_data_frag *dtmp, *dfrag;
+-	struct sk_buff *skb;
+ 
+ 	WRITE_ONCE(msk->first_pending, NULL);
+ 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list)
+ 		dfrag_clear(sk, dfrag);
+-	while ((skb = __skb_dequeue(&msk->skb_tx_cache)) != NULL) {
+-		sk->sk_forward_alloc += skb->truesize;
+-		kfree_skb(skb);
+-	}
+ }
+ 
+ static void mptcp_cancel_work(struct sock *sk)
+-- 
+2.26.3
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-> +		/* fatal protocol error, close the socket.
-> +		 * subflow_error_report() will introduce the apprpriate barriers
-
-Minor tweak for Matthieu when applying - "appropriate"       ^^^^^^^^^^
-
-> +		*/
-> +		ssk->sk_err = EBADMSG;
-> +		ssk->sk_error_report(ssk);
-> +		tcp_set_state(ssk, TCP_CLOSE);
-> +		subflow->reset_transient = 0;
-> +		subflow->reset_reason = MPTCP_RST_EMPTCP;
-> +		tcp_send_active_reset(ssk, GFP_ATOMIC);
-> +		subflow->data_avail = 0;
-> +		return false;
-> +	}
-> +
-> 	__mptcp_do_fallback(msk);
-> 	skb = skb_peek(&ssk->sk_receive_queue);
-> 	subflow->map_valid = 1;
-> -- 
-> 2.26.3
->
->
->
-
---
-Mat Martineau
-Intel
