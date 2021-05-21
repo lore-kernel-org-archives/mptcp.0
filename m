@@ -1,30 +1,30 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0677370
-	for <mptcp@lists.linux.dev>; Thu, 20 May 2021 23:15:00 +0000 (UTC)
-IronPort-SDR: N9nZ7jXUsUB13obfd/UPqYuiAPs1nUnH2SH5SD7h4pOxda2rwaafFZe8+9QJOyMMF7qEUBppI6
- TjlrV0fpmV8A==
-X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="265272120"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F69E70
+	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 00:22:19 +0000 (UTC)
+IronPort-SDR: CWlnbxY1IbS1KeqxYti4TlgJ2oLe5Kq92ctUZY9UG4xghQHbyLfe6EQ1P+dtmkwdBR6+RKdWLw
+ GAaa/u/1A8eA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="188770454"
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="265272120"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 16:14:58 -0700
-IronPort-SDR: BdG6FvyVwn1PMbICA7K1GSNHeD+I1RDNQ0Y/c7RWYLGpPuRn0lA1xrxuiRPe5oc7XoCGcPH9pP
- tBVv2jREKkaQ==
+   d="scan'208";a="188770454"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 17:22:18 -0700
+IronPort-SDR: LGd7vm/wP+UWrsa71fi1qYdYnDZ9JwV4nmtJGKhHBr4OfnPrmHDa5/dDOQGwflJK+d/J5fIgD+
+ Yf9/CBoeP0GA==
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="395886399"
+   d="scan'208";a="631607199"
 Received: from srfejes-mobl4.amr.corp.intel.com ([10.209.82.208])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 16:14:58 -0700
-Date: Thu, 20 May 2021 16:14:58 -0700 (PDT)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 17:22:17 -0700
+Date: Thu, 20 May 2021 17:22:17 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-net] Squash-to: "mptcp: fix sk_forward_memory
- corruption under memory pressure"
-In-Reply-To: <03e3ba49f6d847686dced53e915ace73928fd008.1621517601.git.pabeni@redhat.com>
-Message-ID: <b0eeeebe-bccf-4a26-6fd1-9021eadd4116@linux.intel.com>
-References: <03e3ba49f6d847686dced53e915ace73928fd008.1621517601.git.pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v3 mptcp-net 2/3] mptcp: do not reset MP_CAPABLE subflow
+ on mapping errors
+In-Reply-To: <d1935d23fff36674a64477cbf4f9b205a301624c.1621521884.git.pabeni@redhat.com>
+Message-ID: <13f2962-d22b-ef6a-7f40-bb11fa9c6873@linux.intel.com>
+References: <7e97e8e3c7d9265dcbf098b57f12da11d0b383b1.1621521884.git.pabeni@redhat.com> <d1935d23fff36674a64477cbf4f9b205a301624c.1621521884.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -34,106 +34,98 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Thu, 20 May 2021, Paolo Abeni wrote:
 
-> Commit message to be replaced as follow:
+> When some mapping related errors occours we close the main
+> MPC subflow with a RST. We should instead fallback gracefully
+> to TCP, and do the reset only for MPJ subflows.
 >
-> """
-> mptcp: fix sk_forward_memory corruption on retransmission
->
-> MPTCP sk_forward_memory handling is a bit special, as such field
-> is protected by the msk socket spin_lock, instead of the plain
-> socket lock.
->
-> Currently we have a code path updating such field without handling
-> the relevant lock:
->
-> __mptcp_retrans() -> __mptcp_clean_una_wakeup()
->
-> Several helpers in __mptcp_clean_una_wakeup() will update
-> sk_forward_alloc, possibly causing such field corruption, as reported
-> by Matthieu.
->
-> Address the issue providing and using a new variant of blamed function
-> which explicitly acquires the msk spin lock.
-> """
->
+> Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/192
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> net/mptcp/protocol.c | 32 +++++++++++++-------------------
-> 1 file changed, 13 insertions(+), 19 deletions(-)
-
-This version of the fix looks good to me, thanks.
-
--Mat
-
-
+> v2 -> v3:
+> - change the fallback/rst test to better suite the RFC
+> ---
+> net/mptcp/subflow.c | 40 ++++++++++++++++++++--------------------
+> 1 file changed, 20 insertions(+), 20 deletions(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 0dcb9b753f80..446acfb85493 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1040,7 +1040,7 @@ static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
-> 	put_page(dfrag->page);
-> }
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 278986585088..a39d99d96900 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1110,10 +1110,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
 >
-> -static bool __mptcp_do_clean_una(struct sock *sk)
-> +static void __mptcp_clean_una(struct sock *sk)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> 	struct mptcp_data_frag *dtmp, *dfrag;
-> @@ -1081,6 +1081,12 @@ static bool __mptcp_do_clean_una(struct sock *sk)
-> 	}
+> 		status = get_mapping_status(ssk, msk);
+> 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
+> -		if (unlikely(status == MAPPING_INVALID)) {
+> -			ssk->sk_err = EBADMSG;
+> -			goto fatal;
+> -		}
+> +		if (unlikely(status == MAPPING_INVALID))
+> +			goto fallback;
+> +
+> 		if (unlikely(status == MAPPING_DUMMY))
+> 			goto fallback;
 >
-> out:
-> +	if (cleaned) {
-> +		if (tcp_under_memory_pressure(sk)) {
-> +			__mptcp_update_wmem(sk);
-> +			sk_mem_reclaim_partial(sk);
-> +		}
-> +	}
+> @@ -1128,10 +1127,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+> 		 * MP_CAPABLE-based mapping
+> 		 */
+> 		if (unlikely(!READ_ONCE(msk->can_ack))) {
+> -			if (!subflow->mpc_map) {
+> -				ssk->sk_err = EBADMSG;
+> -				goto fatal;
+> -			}
+> +			if (!subflow->mpc_map)
+> +				goto fallback;
+> 			WRITE_ONCE(msk->remote_key, subflow->remote_key);
+> 			WRITE_ONCE(msk->ack_seq, subflow->map_seq);
+> 			WRITE_ONCE(msk->can_ack, true);
+> @@ -1160,19 +1157,22 @@ static bool subflow_check_data_avail(struct sock *ssk)
+> 	subflow_sched_work_if_closed(msk, ssk);
+> 	return false;
 >
-> 	if (snd_una == READ_ONCE(msk->snd_nxt)) {
-> 		if (msk->timer_ival && !mptcp_data_fin_enabled(msk))
-> @@ -1088,34 +1094,22 @@ static bool __mptcp_do_clean_una(struct sock *sk)
-> 	} else {
-> 		mptcp_reset_timer(sk);
-> 	}
-> -	return cleaned;
-> -}
+> -fatal:
+> -	/* fatal protocol error, close the socket */
+> -	/* This barrier is coupled with smp_rmb() in tcp_poll() */
+> -	smp_wmb();
+> -	ssk->sk_error_report(ssk);
+> -	tcp_set_state(ssk, TCP_CLOSE);
+> -	subflow->reset_transient = 0;
+> -	subflow->reset_reason = MPTCP_RST_EMPTCP;
+> -	tcp_send_active_reset(ssk, GFP_ATOMIC);
+> -	subflow->data_avail = 0;
+> -	return false;
 > -
-> -static void __mptcp_clean_una(struct sock *sk)
-> -{
-> -	if (__mptcp_do_clean_una(sk) && tcp_under_memory_pressure(sk)) {
-> -		__mptcp_update_wmem(sk);
-> -		sk_mem_reclaim_partial(sk);
-> -	}
-> }
->
-> static void __mptcp_clean_una_wakeup(struct sock *sk)
-> {
-> +#ifdef CONFIG_LOCKDEP
-> +	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock.slock));
-> +#endif
-> 	__mptcp_clean_una(sk);
-> 	mptcp_write_space(sk);
-> }
->
-> -/* variant __mptcp_clean_una_wakeup() for caller owning the msk socket lock,
-> - * but not the msk_data_lock/msk socket spin lock
-> - */
-> static void mptcp_clean_una_wakeup(struct sock *sk)
-> {
-> -#ifdef CONFIG_LOCKDEP
-> -	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock));
-> -#endif
-> -	if (__mptcp_do_clean_una(sk) && tcp_under_memory_pressure(sk))
-> -		mptcp_mem_reclaim_partial(sk);
-> -	mptcp_write_space(sk);
-> +	mptcp_data_lock(sk);
-> +	__mptcp_clean_una_wakeup(sk);
-> +	mptcp_data_unlock(sk);
-> }
->
-> static void mptcp_enter_memory_pressure(struct sock *sk)
+> fallback:
+> +	/* RFC 8684 section 3.7. */
+> +	if (subflow->mp_join || subflow->fully_established) {
+
+I think this is sufficient to prevent bad fallbacks, thanks for the 
+revision. Looks good for the export branch. Packetdrill tests (including 
+https://github.com/multipath-tcp/packetdrill/pull/58) pass for me.
+
+For the series:
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+> +		/* fatal protocol error, close the socket.
+> +		 * subflow_error_report() will introduce the apprpriate barriers
+
+Minor tweak for Matthieu when applying - "appropriate"       ^^^^^^^^^^
+
+> +		*/
+> +		ssk->sk_err = EBADMSG;
+> +		ssk->sk_error_report(ssk);
+> +		tcp_set_state(ssk, TCP_CLOSE);
+> +		subflow->reset_transient = 0;
+> +		subflow->reset_reason = MPTCP_RST_EMPTCP;
+> +		tcp_send_active_reset(ssk, GFP_ATOMIC);
+> +		subflow->data_avail = 0;
+> +		return false;
+> +	}
+> +
+> 	__mptcp_do_fallback(msk);
+> 	skb = skb_peek(&ssk->sk_receive_queue);
+> 	subflow->map_valid = 1;
 > -- 
 > 2.26.3
 >
