@@ -1,249 +1,268 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D8970
-	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 16:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1621613992;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=RYRF7aV/KapZ+Io6Ob2b2QbFdnhhNBCGjpLgG5UEf+8=;
-	b=MjKM6eEr4EDwV9p3RzL1z/WLYjb1eFHc6Rc8NCtjo8ZPkDFG5S3LV33hV4urqSrgbbE6ZK
-	FUuJt4gKKHOGAQt4ec1hfWj554bCQaiWz4AzQca9dZ+SDCkVJWZAqeYMABOJOWztrCXFp+
-	/qssaUktzoOa+jcZUTfozxlFqkrxRhE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-565-KLJp4rlUMsSHBteLz6A6mg-1; Fri, 21 May 2021 12:19:50 -0400
-X-MC-Unique: KLJp4rlUMsSHBteLz6A6mg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6B8F800C60
-	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 16:19:49 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-114-152.ams2.redhat.com [10.36.114.152])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1C2FA60C17
-	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 16:19:48 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next] mptcp: drop tx skb cache
-Date: Fri, 21 May 2021 18:19:20 +0200
-Message-Id: <8dd3343ea83a7a631acfe4940a9dea841b32c52a.1621613936.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE99C70
+	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 22:57:10 +0000 (UTC)
+IronPort-SDR: b5I8EZyefgUtZkwxnNdRhXYxrjy7gYFDcDC80WVv3lMzxxrkqkMNxc04lxDKC5HcdFth41W+/J
+ Tc/ZVKDTvYaw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9991"; a="188716837"
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="188716837"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:57:09 -0700
+IronPort-SDR: WUBVZn9DvO7oDt4vwTG1mToaPBk6fKBBSF0vO1HKdygiQFf3LhmpPbanrRUaWsE717vExDqzew
+ GSSB/SUtThvw==
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="396261052"
+Received: from kchand3-mobl2.amr.corp.intel.com ([10.251.4.199])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:57:09 -0700
+Date: Fri, 21 May 2021 15:57:09 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-next] mptcp: drop tx skb cache
+In-Reply-To: <8dd3343ea83a7a631acfe4940a9dea841b32c52a.1621613936.git.pabeni@redhat.com>
+Message-ID: <e9657dbd-f455-61e9-2118-e2b2443fafb@linux.intel.com>
+References: <8dd3343ea83a7a631acfe4940a9dea841b32c52a.1621613936.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-The mentioned cache was introduced to reduce the number of skb
-allocation in atomic context, but the required complexity is
-excessive.
 
-This change remove the mentioned cache.
+On Fri, 21 May 2021, Paolo Abeni wrote:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v1 -> v2:
- - drop unused field skb_tx_cache
----
- net/mptcp/protocol.c | 89 ++------------------------------------------
- net/mptcp/protocol.h |  1 -
- 2 files changed, 4 insertions(+), 86 deletions(-)
+> The mentioned cache was introduced to reduce the number of skb
+> allocation in atomic context, but the required complexity is
+> excessive.
+>
+> This change remove the mentioned cache.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+> - drop unused field skb_tx_cache
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 446acfb85493..1114a914d845 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -903,22 +903,14 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
- 		df->data_seq + df->data_len == msk->write_seq;
- }
- 
--static int mptcp_wmem_with_overhead(struct sock *sk, int size)
-+static int mptcp_wmem_with_overhead(int size)
- {
--	struct mptcp_sock *msk = mptcp_sk(sk);
--	int ret, skbs;
--
--	ret = size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
--	skbs = (msk->tx_pending_data + size) / msk->size_goal_cache;
--	if (skbs < msk->skb_tx_cache.qlen)
--		return ret;
--
--	return ret + (skbs - msk->skb_tx_cache.qlen) * SKB_TRUESIZE(MAX_TCP_HEADER);
-+	return size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
- }
- 
- static void __mptcp_wmem_reserve(struct sock *sk, int size)
- {
--	int amount = mptcp_wmem_with_overhead(sk, size);
-+	int amount = mptcp_wmem_with_overhead(size);
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
- 	WARN_ON_ONCE(msk->wmem_reserved);
-@@ -1213,49 +1205,8 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
- 	return NULL;
- }
- 
--static bool mptcp_tx_cache_refill(struct sock *sk, int size,
--				  struct sk_buff_head *skbs, int *total_ts)
--{
--	struct mptcp_sock *msk = mptcp_sk(sk);
--	struct sk_buff *skb;
--	int space_needed;
--
--	if (unlikely(tcp_under_memory_pressure(sk))) {
--		mptcp_mem_reclaim_partial(sk);
--
--		/* under pressure pre-allocate at most a single skb */
--		if (msk->skb_tx_cache.qlen)
--			return true;
--		space_needed = msk->size_goal_cache;
--	} else {
--		space_needed = msk->tx_pending_data + size -
--			       msk->skb_tx_cache.qlen * msk->size_goal_cache;
--	}
--
--	while (space_needed > 0) {
--		skb = __mptcp_do_alloc_tx_skb(sk, sk->sk_allocation);
--		if (unlikely(!skb)) {
--			/* under memory pressure, try to pass the caller a
--			 * single skb to allow forward progress
--			 */
--			while (skbs->qlen > 1) {
--				skb = __skb_dequeue_tail(skbs);
--				*total_ts -= skb->truesize;
--				__kfree_skb(skb);
--			}
--			return skbs->qlen > 0;
--		}
--
--		*total_ts += skb->truesize;
--		__skb_queue_tail(skbs, skb);
--		space_needed -= msk->size_goal_cache;
--	}
--	return true;
--}
--
- static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
- {
--	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct sk_buff *skb;
- 
- 	if (ssk->sk_tx_skb_cache) {
-@@ -1266,22 +1217,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
- 		return true;
- 	}
- 
--	skb = skb_peek(&msk->skb_tx_cache);
--	if (skb) {
--		if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
--			skb = __skb_dequeue(&msk->skb_tx_cache);
--			if (WARN_ON_ONCE(!skb))
--				return false;
--
--			mptcp_wmem_uncharge(sk, skb->truesize);
--			ssk->sk_tx_skb_cache = skb;
--			return true;
--		}
--
--		/* over memory limit, no point to try to allocate a new skb */
--		return false;
--	}
--
- 	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
- 	if (!skb)
- 		return false;
-@@ -1297,7 +1232,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
- static bool mptcp_must_reclaim_memory(struct sock *sk, struct sock *ssk)
- {
- 	return !ssk->sk_tx_skb_cache &&
--	       !skb_peek(&mptcp_sk(sk)->skb_tx_cache) &&
- 	       tcp_under_memory_pressure(sk);
- }
- 
-@@ -1340,7 +1274,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	/* compute send limit */
- 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
- 	avail_size = info->size_goal;
--	msk->size_goal_cache = info->size_goal;
- 	skb = tcp_write_queue_tail(ssk);
- 	if (skb) {
- 		/* Limit the write to the size available in the
-@@ -1689,7 +1622,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	while (msg_data_left(msg)) {
- 		int total_ts, frag_truesize = 0;
- 		struct mptcp_data_frag *dfrag;
--		struct sk_buff_head skbs;
- 		bool dfrag_collapsed;
- 		size_t psize, offset;
- 
-@@ -1722,16 +1654,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		psize = pfrag->size - offset;
- 		psize = min_t(size_t, psize, msg_data_left(msg));
- 		total_ts = psize + frag_truesize;
--		__skb_queue_head_init(&skbs);
--		if (!mptcp_tx_cache_refill(sk, psize, &skbs, &total_ts))
--			goto wait_for_memory;
- 
--		if (!mptcp_wmem_alloc(sk, total_ts)) {
--			__skb_queue_purge(&skbs);
-+		if (!mptcp_wmem_alloc(sk, total_ts))
- 			goto wait_for_memory;
--		}
- 
--		skb_queue_splice_tail(&skbs, &msk->skb_tx_cache);
- 		if (copy_page_from_iter(dfrag->page, offset, psize,
- 					&msg->msg_iter) != psize) {
- 			mptcp_wmem_uncharge(sk, psize + frag_truesize);
-@@ -2460,13 +2386,11 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->rtx_queue);
- 	INIT_WORK(&msk->work, mptcp_worker);
- 	__skb_queue_head_init(&msk->receive_queue);
--	__skb_queue_head_init(&msk->skb_tx_cache);
- 	msk->out_of_order_queue = RB_ROOT;
- 	msk->first_pending = NULL;
- 	msk->wmem_reserved = 0;
- 	msk->rmem_released = 0;
- 	msk->tx_pending_data = 0;
--	msk->size_goal_cache = TCP_BASE_MSS;
- 
- 	msk->ack_hint = NULL;
- 	msk->first = NULL;
-@@ -2527,15 +2451,10 @@ static void __mptcp_clear_xmit(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_data_frag *dtmp, *dfrag;
--	struct sk_buff *skb;
- 
- 	WRITE_ONCE(msk->first_pending, NULL);
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list)
- 		dfrag_clear(sk, dfrag);
--	while ((skb = __skb_dequeue(&msk->skb_tx_cache)) != NULL) {
--		sk->sk_forward_alloc += skb->truesize;
--		kfree_skb(skb);
--	}
- }
- 
- static void mptcp_cancel_work(struct sock *sk)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 868e878af526..0ad1e1d08667 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -245,7 +245,6 @@ struct mptcp_sock {
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
- 	struct sk_buff_head receive_queue;
--	struct sk_buff_head skb_tx_cache;	/* this is wmem accounted */
- 	int		tx_pending_data;
- 	int		size_goal_cache;
- 	struct list_head conn_list;
--- 
-2.26.3
+There's also a size_goal_cache field in struct mptcp_sock that's now 
+unused.
 
+I like the simplification! Do the self tests trigger enough memory 
+pressure to test allocation in that scenario?
+
+The commit that introduced the skb_tx_cache did so to allow removal of the 
+skb_ext cache. It looks like both caches are now unnecessary because the 
+skb and skb_ext allocations are handled together in the 
+__mptcp_{do_,}alloc_tx_skb() functions - so an allocation failure can be 
+handled without the complexity of the caches. Does that match your 
+understanding? If so, it would be helpful information for the commit 
+message.
+
+
+Thanks -
+
+Mat
+
+
+> ---
+> net/mptcp/protocol.c | 89 ++------------------------------------------
+> net/mptcp/protocol.h |  1 -
+> 2 files changed, 4 insertions(+), 86 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 446acfb85493..1114a914d845 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -903,22 +903,14 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+> 		df->data_seq + df->data_len == msk->write_seq;
+> }
+>
+> -static int mptcp_wmem_with_overhead(struct sock *sk, int size)
+> +static int mptcp_wmem_with_overhead(int size)
+> {
+> -	struct mptcp_sock *msk = mptcp_sk(sk);
+> -	int ret, skbs;
+> -
+> -	ret = size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
+> -	skbs = (msk->tx_pending_data + size) / msk->size_goal_cache;
+> -	if (skbs < msk->skb_tx_cache.qlen)
+> -		return ret;
+> -
+> -	return ret + (skbs - msk->skb_tx_cache.qlen) * SKB_TRUESIZE(MAX_TCP_HEADER);
+> +	return size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
+> }
+>
+> static void __mptcp_wmem_reserve(struct sock *sk, int size)
+> {
+> -	int amount = mptcp_wmem_with_overhead(sk, size);
+> +	int amount = mptcp_wmem_with_overhead(size);
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+>
+> 	WARN_ON_ONCE(msk->wmem_reserved);
+> @@ -1213,49 +1205,8 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
+> 	return NULL;
+> }
+>
+> -static bool mptcp_tx_cache_refill(struct sock *sk, int size,
+> -				  struct sk_buff_head *skbs, int *total_ts)
+> -{
+> -	struct mptcp_sock *msk = mptcp_sk(sk);
+> -	struct sk_buff *skb;
+> -	int space_needed;
+> -
+> -	if (unlikely(tcp_under_memory_pressure(sk))) {
+> -		mptcp_mem_reclaim_partial(sk);
+> -
+> -		/* under pressure pre-allocate at most a single skb */
+> -		if (msk->skb_tx_cache.qlen)
+> -			return true;
+> -		space_needed = msk->size_goal_cache;
+> -	} else {
+> -		space_needed = msk->tx_pending_data + size -
+> -			       msk->skb_tx_cache.qlen * msk->size_goal_cache;
+> -	}
+> -
+> -	while (space_needed > 0) {
+> -		skb = __mptcp_do_alloc_tx_skb(sk, sk->sk_allocation);
+> -		if (unlikely(!skb)) {
+> -			/* under memory pressure, try to pass the caller a
+> -			 * single skb to allow forward progress
+> -			 */
+> -			while (skbs->qlen > 1) {
+> -				skb = __skb_dequeue_tail(skbs);
+> -				*total_ts -= skb->truesize;
+> -				__kfree_skb(skb);
+> -			}
+> -			return skbs->qlen > 0;
+> -		}
+> -
+> -		*total_ts += skb->truesize;
+> -		__skb_queue_tail(skbs, skb);
+> -		space_needed -= msk->size_goal_cache;
+> -	}
+> -	return true;
+> -}
+> -
+> static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+> {
+> -	struct mptcp_sock *msk = mptcp_sk(sk);
+> 	struct sk_buff *skb;
+>
+> 	if (ssk->sk_tx_skb_cache) {
+> @@ -1266,22 +1217,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+> 		return true;
+> 	}
+>
+> -	skb = skb_peek(&msk->skb_tx_cache);
+> -	if (skb) {
+> -		if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
+> -			skb = __skb_dequeue(&msk->skb_tx_cache);
+> -			if (WARN_ON_ONCE(!skb))
+> -				return false;
+> -
+> -			mptcp_wmem_uncharge(sk, skb->truesize);
+> -			ssk->sk_tx_skb_cache = skb;
+> -			return true;
+> -		}
+> -
+> -		/* over memory limit, no point to try to allocate a new skb */
+> -		return false;
+> -	}
+> -
+> 	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
+> 	if (!skb)
+> 		return false;
+> @@ -1297,7 +1232,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+> static bool mptcp_must_reclaim_memory(struct sock *sk, struct sock *ssk)
+> {
+> 	return !ssk->sk_tx_skb_cache &&
+> -	       !skb_peek(&mptcp_sk(sk)->skb_tx_cache) &&
+> 	       tcp_under_memory_pressure(sk);
+> }
+>
+> @@ -1340,7 +1274,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> 	/* compute send limit */
+> 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+> 	avail_size = info->size_goal;
+> -	msk->size_goal_cache = info->size_goal;
+> 	skb = tcp_write_queue_tail(ssk);
+> 	if (skb) {
+> 		/* Limit the write to the size available in the
+> @@ -1689,7 +1622,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> 	while (msg_data_left(msg)) {
+> 		int total_ts, frag_truesize = 0;
+> 		struct mptcp_data_frag *dfrag;
+> -		struct sk_buff_head skbs;
+> 		bool dfrag_collapsed;
+> 		size_t psize, offset;
+>
+> @@ -1722,16 +1654,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> 		psize = pfrag->size - offset;
+> 		psize = min_t(size_t, psize, msg_data_left(msg));
+> 		total_ts = psize + frag_truesize;
+> -		__skb_queue_head_init(&skbs);
+> -		if (!mptcp_tx_cache_refill(sk, psize, &skbs, &total_ts))
+> -			goto wait_for_memory;
+>
+> -		if (!mptcp_wmem_alloc(sk, total_ts)) {
+> -			__skb_queue_purge(&skbs);
+> +		if (!mptcp_wmem_alloc(sk, total_ts))
+> 			goto wait_for_memory;
+> -		}
+>
+> -		skb_queue_splice_tail(&skbs, &msk->skb_tx_cache);
+> 		if (copy_page_from_iter(dfrag->page, offset, psize,
+> 					&msg->msg_iter) != psize) {
+> 			mptcp_wmem_uncharge(sk, psize + frag_truesize);
+> @@ -2460,13 +2386,11 @@ static int __mptcp_init_sock(struct sock *sk)
+> 	INIT_LIST_HEAD(&msk->rtx_queue);
+> 	INIT_WORK(&msk->work, mptcp_worker);
+> 	__skb_queue_head_init(&msk->receive_queue);
+> -	__skb_queue_head_init(&msk->skb_tx_cache);
+> 	msk->out_of_order_queue = RB_ROOT;
+> 	msk->first_pending = NULL;
+> 	msk->wmem_reserved = 0;
+> 	msk->rmem_released = 0;
+> 	msk->tx_pending_data = 0;
+> -	msk->size_goal_cache = TCP_BASE_MSS;
+>
+> 	msk->ack_hint = NULL;
+> 	msk->first = NULL;
+> @@ -2527,15 +2451,10 @@ static void __mptcp_clear_xmit(struct sock *sk)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> 	struct mptcp_data_frag *dtmp, *dfrag;
+> -	struct sk_buff *skb;
+>
+> 	WRITE_ONCE(msk->first_pending, NULL);
+> 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list)
+> 		dfrag_clear(sk, dfrag);
+> -	while ((skb = __skb_dequeue(&msk->skb_tx_cache)) != NULL) {
+> -		sk->sk_forward_alloc += skb->truesize;
+> -		kfree_skb(skb);
+> -	}
+> }
+>
+> static void mptcp_cancel_work(struct sock *sk)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 868e878af526..0ad1e1d08667 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -245,7 +245,6 @@ struct mptcp_sock {
+> 	struct sk_buff  *ooo_last_skb;
+> 	struct rb_root  out_of_order_queue;
+> 	struct sk_buff_head receive_queue;
+> -	struct sk_buff_head skb_tx_cache;	/* this is wmem accounted */
+> 	int		tx_pending_data;
+> 	int		size_goal_cache;
+> 	struct list_head conn_list;
+> -- 
+> 2.26.3
+>
+>
+>
+
+--
+Mat Martineau
+Intel
