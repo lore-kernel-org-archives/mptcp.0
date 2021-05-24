@@ -1,268 +1,110 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE99C70
-	for <mptcp@lists.linux.dev>; Fri, 21 May 2021 22:57:10 +0000 (UTC)
-IronPort-SDR: b5I8EZyefgUtZkwxnNdRhXYxrjy7gYFDcDC80WVv3lMzxxrkqkMNxc04lxDKC5HcdFth41W+/J
- Tc/ZVKDTvYaw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9991"; a="188716837"
-X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="188716837"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:57:09 -0700
-IronPort-SDR: WUBVZn9DvO7oDt4vwTG1mToaPBk6fKBBSF0vO1HKdygiQFf3LhmpPbanrRUaWsE717vExDqzew
- GSSB/SUtThvw==
-X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="396261052"
-Received: from kchand3-mobl2.amr.corp.intel.com ([10.251.4.199])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:57:09 -0700
-Date: Fri, 21 May 2021 15:57:09 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-next] mptcp: drop tx skb cache
-In-Reply-To: <8dd3343ea83a7a631acfe4940a9dea841b32c52a.1621613936.git.pabeni@redhat.com>
-Message-ID: <e9657dbd-f455-61e9-2118-e2b2443fafb@linux.intel.com>
-References: <8dd3343ea83a7a631acfe4940a9dea841b32c52a.1621613936.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6928717F
+	for <mptcp@lists.linux.dev>; Mon, 24 May 2021 07:07:24 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id g6-20020a17090adac6b029015d1a9a6f1aso9856161pjx.1
+        for <mptcp@lists.linux.dev>; Mon, 24 May 2021 00:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xey/i7O8wWP66GwC7P5ffRtlbMLEh4wuK6ule0d4ddM=;
+        b=AFkGM3EMkZRqoesIFz2RrhxK8mTsCzYiZUM2xgw47d75IWZ8PctwsG5wibn4dt8a5E
+         CtlTT+YwskaERUIN9FTP4kCvYL75XGHNC/hrkuRjh9+n1DsaB4nM8d/iF2CmWpAGC7nM
+         lL82mTuH1+NdBgvFl4tRBWKK+qq28wRMTKkDbcOTT3Du3faun88GG6HJg11pxcekVCQ7
+         ZkaEe2kp+9pNN2U/c4G/JJfoawunrPwuygDEDp6kRc02GVROvVrnEKJu/WxiObay4bVy
+         QjjaxXknQIkoqb6fJdsSB9WLmJ64dePG4HJ+beGJFi49nfVxAO++OHBobc8YUzTkJ1f6
+         Sa4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xey/i7O8wWP66GwC7P5ffRtlbMLEh4wuK6ule0d4ddM=;
+        b=Kig+T4DWTFde9tlhTc3muRkX+dnl48PfKhCLlLWarIfDU+o9MyhjOnmuFiYaUbkIgn
+         huMeEtVpt7XMQ3IflSp+XQ2AJUZTTl/YA2i0/dtD1K7plU8o1+R8BEj38fRKlYbbe3no
+         4C9WroULASuuVWIJhPmMFE1ENZIo2Bps4t9PxZFmz1RyQNS9pUn/lO5cZ6+aH6N3l3Gb
+         1buckfAxkYEDzwKdRFxn4vn+YQDlahS+GjlHjEpPiwOpNiMPGRrgoD6xhlz+QMS6l1YW
+         1kvCwUkkClGDX+X+JeMmjaiwEQFsyK7a+A9NkWzuUgDe7XQFiP0ls4lk/p9KU4pjsiwj
+         Lldg==
+X-Gm-Message-State: AOAM531LqgzJrcjYMrROJVfSmf/fzGwSmyi3g/pBgKES5+etJLeycsx7
+	O/V1awu8+wpECRdI6u5zrgw3r4uGWRImHA==
+X-Google-Smtp-Source: ABdhPJxjvU57J0+0Qiwyl8FKKQysLbzhbR6h5Pr+8vyhDnewTROaWJqVm+QKsVqIWhi44M1w1i3QLA==
+X-Received: by 2002:a17:90a:2a89:: with SMTP id j9mr14552147pjd.141.1621840043941;
+        Mon, 24 May 2021 00:07:23 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id x14sm7118480pjq.30.2021.05.24.00.07.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 May 2021 00:07:23 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v7 mptcp-next 0/5] add MP_CAPABLE 'C' flag
+Date: Mon, 24 May 2021 15:07:14 +0800
+Message-Id: <cover.1621839764.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
+v7:
+ - use add_cached instead of add_list
+ - tag: export/20210524T060340
 
-On Fri, 21 May 2021, Paolo Abeni wrote:
+v6:
+ - rename mptcp_pm_add_entry to mptcp_pm_anno_entry
+ - update mptcp_pm_free_add_list
+ - update code in mptcp_pm_nl_add_addr_received
+ - tag: export/20210514T055902
 
-> The mentioned cache was introduced to reduce the number of skb
-> allocation in atomic context, but the required complexity is
-> excessive.
->
-> This change remove the mentioned cache.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v1 -> v2:
-> - drop unused field skb_tx_cache
+v5:
+ - add a new patch "mptcp: add add_list in mptcp_pm_data"
+ - fix !CONFIG_SYSCTL case
+ - tag: export/20210507T174457
 
-There's also a size_goal_cache field in struct mptcp_sock that's now 
-unused.
+v4:
+ - rename mptcp_is_allow_join_id0 to mptcp_allow_join_id0
+ - rename deny_join_id0 in mptcp_pm_data to remote_deny_join_id0
+ - add comments for self test cases
+ - apply: export/20210504T064955 +
+          "data checksum support" +
+          "data checksum support cleanups"
 
-I like the simplification! Do the self tests trigger enough memory 
-pressure to test allocation in that scenario?
+v3:
+ - use 'u8 allow_join_initial_addr_port'
+ - drop the spinlock in patch 3
 
-The commit that introduced the skb_tx_cache did so to allow removal of the 
-skb_ext cache. It looks like both caches are now unnecessary because the 
-skb and skb_ext allocations are handled together in the 
-__mptcp_{do_,}alloc_tx_skb() functions - so an allocation failure can be 
-handled without the complexity of the caches. Does that match your 
-understanding? If so, it would be helpful information for the commit 
-message.
+v2:
+ - rename join_denied to allow_join_id0 in mptcp_out_options
+ - rename join_denied to deny_join_id0 in mptcp_options_received
+ - add a new function mptcp_pm_deny_join_id0_received
+ - move deny_join_id0 flag from mptcp_sock to mptcp_pm_data
+ - check deny_join_id0 flag in mptcp_pm_create_subflow_or_signal_addr
+instead of in mptcp_syn_options.
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/183
 
-Thanks -
+Geliang Tang (5):
+  mptcp: add sysctl allow_join_initial_addr_port
+  mptcp: add allow_join_id0 in mptcp_out_options
+  mptcp: add add_cached in mptcp_pm_data
+  mptcp: add deny_join_id0 in mptcp_options_received
+  selftests: mptcp: add deny_join_id0 testcases
 
-Mat
+ Documentation/networking/mptcp-sysctl.rst     | 13 ++++
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/ctrl.c                              | 16 ++++
+ net/mptcp/options.c                           | 12 +++
+ net/mptcp/pm.c                                |  2 +
+ net/mptcp/pm_netlink.c                        | 11 ++-
+ net/mptcp/protocol.h                          | 12 ++-
+ net/mptcp/subflow.c                           |  3 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 73 ++++++++++++++++++-
+ 9 files changed, 139 insertions(+), 6 deletions(-)
 
+-- 
+2.31.1
 
-> ---
-> net/mptcp/protocol.c | 89 ++------------------------------------------
-> net/mptcp/protocol.h |  1 -
-> 2 files changed, 4 insertions(+), 86 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 446acfb85493..1114a914d845 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -903,22 +903,14 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
-> 		df->data_seq + df->data_len == msk->write_seq;
-> }
->
-> -static int mptcp_wmem_with_overhead(struct sock *sk, int size)
-> +static int mptcp_wmem_with_overhead(int size)
-> {
-> -	struct mptcp_sock *msk = mptcp_sk(sk);
-> -	int ret, skbs;
-> -
-> -	ret = size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
-> -	skbs = (msk->tx_pending_data + size) / msk->size_goal_cache;
-> -	if (skbs < msk->skb_tx_cache.qlen)
-> -		return ret;
-> -
-> -	return ret + (skbs - msk->skb_tx_cache.qlen) * SKB_TRUESIZE(MAX_TCP_HEADER);
-> +	return size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
-> }
->
-> static void __mptcp_wmem_reserve(struct sock *sk, int size)
-> {
-> -	int amount = mptcp_wmem_with_overhead(sk, size);
-> +	int amount = mptcp_wmem_with_overhead(size);
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
->
-> 	WARN_ON_ONCE(msk->wmem_reserved);
-> @@ -1213,49 +1205,8 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
-> 	return NULL;
-> }
->
-> -static bool mptcp_tx_cache_refill(struct sock *sk, int size,
-> -				  struct sk_buff_head *skbs, int *total_ts)
-> -{
-> -	struct mptcp_sock *msk = mptcp_sk(sk);
-> -	struct sk_buff *skb;
-> -	int space_needed;
-> -
-> -	if (unlikely(tcp_under_memory_pressure(sk))) {
-> -		mptcp_mem_reclaim_partial(sk);
-> -
-> -		/* under pressure pre-allocate at most a single skb */
-> -		if (msk->skb_tx_cache.qlen)
-> -			return true;
-> -		space_needed = msk->size_goal_cache;
-> -	} else {
-> -		space_needed = msk->tx_pending_data + size -
-> -			       msk->skb_tx_cache.qlen * msk->size_goal_cache;
-> -	}
-> -
-> -	while (space_needed > 0) {
-> -		skb = __mptcp_do_alloc_tx_skb(sk, sk->sk_allocation);
-> -		if (unlikely(!skb)) {
-> -			/* under memory pressure, try to pass the caller a
-> -			 * single skb to allow forward progress
-> -			 */
-> -			while (skbs->qlen > 1) {
-> -				skb = __skb_dequeue_tail(skbs);
-> -				*total_ts -= skb->truesize;
-> -				__kfree_skb(skb);
-> -			}
-> -			return skbs->qlen > 0;
-> -		}
-> -
-> -		*total_ts += skb->truesize;
-> -		__skb_queue_tail(skbs, skb);
-> -		space_needed -= msk->size_goal_cache;
-> -	}
-> -	return true;
-> -}
-> -
-> static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
-> {
-> -	struct mptcp_sock *msk = mptcp_sk(sk);
-> 	struct sk_buff *skb;
->
-> 	if (ssk->sk_tx_skb_cache) {
-> @@ -1266,22 +1217,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
-> 		return true;
-> 	}
->
-> -	skb = skb_peek(&msk->skb_tx_cache);
-> -	if (skb) {
-> -		if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
-> -			skb = __skb_dequeue(&msk->skb_tx_cache);
-> -			if (WARN_ON_ONCE(!skb))
-> -				return false;
-> -
-> -			mptcp_wmem_uncharge(sk, skb->truesize);
-> -			ssk->sk_tx_skb_cache = skb;
-> -			return true;
-> -		}
-> -
-> -		/* over memory limit, no point to try to allocate a new skb */
-> -		return false;
-> -	}
-> -
-> 	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
-> 	if (!skb)
-> 		return false;
-> @@ -1297,7 +1232,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
-> static bool mptcp_must_reclaim_memory(struct sock *sk, struct sock *ssk)
-> {
-> 	return !ssk->sk_tx_skb_cache &&
-> -	       !skb_peek(&mptcp_sk(sk)->skb_tx_cache) &&
-> 	       tcp_under_memory_pressure(sk);
-> }
->
-> @@ -1340,7 +1274,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 	/* compute send limit */
-> 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
-> 	avail_size = info->size_goal;
-> -	msk->size_goal_cache = info->size_goal;
-> 	skb = tcp_write_queue_tail(ssk);
-> 	if (skb) {
-> 		/* Limit the write to the size available in the
-> @@ -1689,7 +1622,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> 	while (msg_data_left(msg)) {
-> 		int total_ts, frag_truesize = 0;
-> 		struct mptcp_data_frag *dfrag;
-> -		struct sk_buff_head skbs;
-> 		bool dfrag_collapsed;
-> 		size_t psize, offset;
->
-> @@ -1722,16 +1654,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> 		psize = pfrag->size - offset;
-> 		psize = min_t(size_t, psize, msg_data_left(msg));
-> 		total_ts = psize + frag_truesize;
-> -		__skb_queue_head_init(&skbs);
-> -		if (!mptcp_tx_cache_refill(sk, psize, &skbs, &total_ts))
-> -			goto wait_for_memory;
->
-> -		if (!mptcp_wmem_alloc(sk, total_ts)) {
-> -			__skb_queue_purge(&skbs);
-> +		if (!mptcp_wmem_alloc(sk, total_ts))
-> 			goto wait_for_memory;
-> -		}
->
-> -		skb_queue_splice_tail(&skbs, &msk->skb_tx_cache);
-> 		if (copy_page_from_iter(dfrag->page, offset, psize,
-> 					&msg->msg_iter) != psize) {
-> 			mptcp_wmem_uncharge(sk, psize + frag_truesize);
-> @@ -2460,13 +2386,11 @@ static int __mptcp_init_sock(struct sock *sk)
-> 	INIT_LIST_HEAD(&msk->rtx_queue);
-> 	INIT_WORK(&msk->work, mptcp_worker);
-> 	__skb_queue_head_init(&msk->receive_queue);
-> -	__skb_queue_head_init(&msk->skb_tx_cache);
-> 	msk->out_of_order_queue = RB_ROOT;
-> 	msk->first_pending = NULL;
-> 	msk->wmem_reserved = 0;
-> 	msk->rmem_released = 0;
-> 	msk->tx_pending_data = 0;
-> -	msk->size_goal_cache = TCP_BASE_MSS;
->
-> 	msk->ack_hint = NULL;
-> 	msk->first = NULL;
-> @@ -2527,15 +2451,10 @@ static void __mptcp_clear_xmit(struct sock *sk)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> 	struct mptcp_data_frag *dtmp, *dfrag;
-> -	struct sk_buff *skb;
->
-> 	WRITE_ONCE(msk->first_pending, NULL);
-> 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list)
-> 		dfrag_clear(sk, dfrag);
-> -	while ((skb = __skb_dequeue(&msk->skb_tx_cache)) != NULL) {
-> -		sk->sk_forward_alloc += skb->truesize;
-> -		kfree_skb(skb);
-> -	}
-> }
->
-> static void mptcp_cancel_work(struct sock *sk)
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 868e878af526..0ad1e1d08667 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -245,7 +245,6 @@ struct mptcp_sock {
-> 	struct sk_buff  *ooo_last_skb;
-> 	struct rb_root  out_of_order_queue;
-> 	struct sk_buff_head receive_queue;
-> -	struct sk_buff_head skb_tx_cache;	/* this is wmem accounted */
-> 	int		tx_pending_data;
-> 	int		size_goal_cache;
-> 	struct list_head conn_list;
-> -- 
-> 2.26.3
->
->
->
-
---
-Mat Martineau
-Intel
