@@ -1,51 +1,50 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B481E2FB1
-	for <mptcp@lists.linux.dev>; Mon, 24 May 2021 07:07:35 +0000 (UTC)
-Received: by mail-pj1-f43.google.com with SMTP id q6so14300812pjj.2
-        for <mptcp@lists.linux.dev>; Mon, 24 May 2021 00:07:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13A72FB1
+	for <mptcp@lists.linux.dev>; Mon, 24 May 2021 07:07:38 +0000 (UTC)
+Received: by mail-pg1-f177.google.com with SMTP id 6so19410175pgk.5
+        for <mptcp@lists.linux.dev>; Mon, 24 May 2021 00:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mkGpVsD+u+ZfjtXc3EL4gJRgI5tONntnk7TSqOq+LB0=;
-        b=i5umm5toy/1dcDZF7lZ3Eo4DulAf/ZKjBod23tGz2FnZcvDd8Faa8GmCcLygxwY8rJ
-         lqjDbKoddTgN7vDfPUt0LWo3lsGmZY8bxBUdAu9tOjMmIKEvYpC88uxOpCkVy6fBCwfs
-         6Tx29bDI2uhQQMGmWRqC85IMmGxW8n4OYF+CtghmZDjyHLAgUU1fF2E2a13TUb5/S4Yl
-         /bX7fUesHJSt/wPHEzjYfsggh0mKePE2T6wXaeye/Lc5JsbCF3fd9jys/xRXLuZl6Jji
-         AmDiwdHvDtK+I5X1utyv7Bnfyb7XQ7dRz74PuFzZ3AlXG4YNes21Yvn1KPmP2eWy4rNq
-         CDeg==
+        bh=PhL4l4bXEl7R0oT3JjOVrtoWSIsA/XWrOPz8BhcuSrY=;
+        b=dQuJ5F6WlrpbzmlImRB3wMfdk7PrWA2eqACA5kVaQj67tjBR7BCu7M0u5ldalhoij4
+         tmpIBlpmNiTBQ478CG150bbGv43JMqgtBctSCAEN/ykw0PqiDFHWttukFGHSjvdjnhVv
+         /38z+HnDKisRaXgcOWGNK3iBfCGYWTqgknqAh8UdcX76f7z5XP1J+9YJGzCFT4NY+YGu
+         28XolEB2lsjnA53/LuWZn+nclwjQsl/S+bU3eB0gVkp0vTJyOE4m3UcOhhRtoBAmtEcQ
+         p1gkej2XBvC7TvNS4nH7BWRQ38JQ281CwMPtdwDNx0ibw3SUIhfAUsHHRflGnBOkxV+Z
+         T+jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mkGpVsD+u+ZfjtXc3EL4gJRgI5tONntnk7TSqOq+LB0=;
-        b=mzEsO+FdCwJAdqf+vz8h1RCWy2q7vOW7lRB362BPOPshbS7Z5OpqsW76zlST3lUQSl
-         /rSjGEbD4oVeTYB6EHbt/1oh+dSZBaggg2pIyPmom4nJBc6ZPt66yvTrRvngM2u5RPUP
-         5g4nQXXUClkgqW4JF2EXIgatxOcRmXJVx2UXIp5kPThJfm9DWP2Xbcom6xpkvi2X8QDN
-         C6SqgLwsxPPS3ME44S80RY4yF8slWuYCtbro/cIH/70IbAt96Pb7CwIPEpNdyTSU2LKc
-         zAauYWL6tgzuz9ENYGTiYWDkea1G+WcR50XJSKN1s64pKj8AesaxzdJW2xmpv1F4FDIk
-         2zhg==
-X-Gm-Message-State: AOAM532dg0vkSYyrUvIfR/bocwe9eNzYmspwKuohSb3XadwOpA1dQrEh
-	BRP8YvDjEZDKO8/OsMqgRiIBFiVH3nk04w==
-X-Google-Smtp-Source: ABdhPJx5poQlTv3jun2D8SswyznNtYPwzm6+B/Q5juC7o/6LarjlKAzHbAVuljcIXtOTNyXzKJxE/g==
-X-Received: by 2002:a17:903:4115:b029:f8:c1c4:2a2d with SMTP id r21-20020a1709034115b02900f8c1c42a2dmr8657746pld.83.1621840055169;
-        Mon, 24 May 2021 00:07:35 -0700 (PDT)
+        bh=PhL4l4bXEl7R0oT3JjOVrtoWSIsA/XWrOPz8BhcuSrY=;
+        b=DVPzt6pEwJoLD8IxCyHEbp9TD4T8qjXYWMMhMjvujWyL6ZM5isJNhIh+LjgJQypk0n
+         QLoJ5U2vAEcY6V8P2cIl6WHeYxjPlO8NlwuVDpJfmqCe9R4dZfcczgan8Hug/KksxGeu
+         +Hj684VotD9cgq+QNlg7prXnOGsqkY404AXr5oRlAInIDHmJCWby/QF8QVaZqC+CM/60
+         D6c4rlqeYyXdqvMVDhz386sW0jQ0e9ppcF9iQcwXCtgkrK2xx0Y9AoXWYbg8Y8Rj7D9E
+         jhth2pFuchF5RF0pVx+fweICroRn3Ew6b2+AxQS6aO3iKSceBVFc+mLB41CSE05yN9dr
+         ZMgg==
+X-Gm-Message-State: AOAM531LysKZ81gG/PIbue1/AITQ33s33M0b/NRrSap0B0QZNmSAWW6s
+	TLXMF4539dzESASfi/1lqvr6RR7cYfarWA==
+X-Google-Smtp-Source: ABdhPJzZk5cTZ9PlZde7wNA+DvKhDoTVHst9MOMaHeNQT7/UkeHYCJchHQOHIcKGuVs5UiUpHgAIPg==
+X-Received: by 2002:a63:3444:: with SMTP id b65mr12052749pga.185.1621840058339;
+        Mon, 24 May 2021 00:07:38 -0700 (PDT)
 Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id f2sm10570064pgl.67.2021.05.24.00.07.34
+        by smtp.gmail.com with ESMTPSA id w206sm9983422pfc.61.2021.05.24.00.07.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 May 2021 00:07:34 -0700 (PDT)
+        Mon, 24 May 2021 00:07:38 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>,
-	Florian Westphal <fw@strlen.de>
-Subject: [MPTCP][PATCH v7 mptcp-next 4/5] mptcp: add deny_join_id0 in mptcp_options_received
-Date: Mon, 24 May 2021 15:07:18 +0800
-Message-Id: <bf509b3a9206c58444fcb9efa7d7d8b0ba8568dc.1621839764.git.geliangtang@gmail.com>
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v7 mptcp-next 5/5] selftests: mptcp: add deny_join_id0 testcases
+Date: Mon, 24 May 2021 15:07:19 +0800
+Message-Id: <9b9f755abe6eb4fc13d14035dc9f10a87536b359.1621839764.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <c27772875a9bf14dd336526f48676f368758be97.1621839764.git.geliangtang@gmail.com>
-References: <cover.1621839764.git.geliangtang@gmail.com> <7df5c99cf5336e3c1b0225903c75d01bbcde8daf.1621839764.git.geliangtang@gmail.com> <372e8fb0d481dfed41cf7e01c60b18c55a852f7e.1621839764.git.geliangtang@gmail.com> <c27772875a9bf14dd336526f48676f368758be97.1621839764.git.geliangtang@gmail.com>
+In-Reply-To: <bf509b3a9206c58444fcb9efa7d7d8b0ba8568dc.1621839764.git.geliangtang@gmail.com>
+References: <cover.1621839764.git.geliangtang@gmail.com> <7df5c99cf5336e3c1b0225903c75d01bbcde8daf.1621839764.git.geliangtang@gmail.com> <372e8fb0d481dfed41cf7e01c60b18c55a852f7e.1621839764.git.geliangtang@gmail.com> <c27772875a9bf14dd336526f48676f368758be97.1621839764.git.geliangtang@gmail.com> <bf509b3a9206c58444fcb9efa7d7d8b0ba8568dc.1621839764.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -53,126 +52,133 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added a new flag named deny_join_id0 in struct
-mptcp_options_received. Set it when MP_CAPABLE with the flag
-MPTCP_CAP_DENYJOIN_ID0 is received.
+This patch added a new argument '-d' for mptcp_join.sh script, to invoke
+the testcases for the MP_CAPABLE 'C' flag.
 
-Also add a new flag remote_deny_join_id0 in struct mptcp_pm_data. When the
-flag deny_join_id0 is set, set this remote_deny_join_id0 flag.
-
-In mptcp_pm_create_subflow_or_signal_addr, if the remote_deny_join_id0 flag
-is set, and the remote address id is zero, stop this connection.
-
-Suggested-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c    | 6 ++++++
- net/mptcp/pm.c         | 1 +
- net/mptcp/pm_netlink.c | 8 +++++++-
- net/mptcp/protocol.h   | 4 +++-
- net/mptcp/subflow.c    | 2 ++
- 5 files changed, 19 insertions(+), 2 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 73 ++++++++++++++++++-
+ 1 file changed, 72 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1e921b5103bf..0d30008f0313 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -83,6 +83,9 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
- 			mp_opt->csum_reqd = 1;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 523c7797f30a..02b934f47f65 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -139,6 +139,17 @@ reset_with_checksum()
+ 	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=$ns2_enable
+ }
  
-+		if (flags & MPTCP_CAP_DENY_JOIN_ID0)
-+			mp_opt->deny_join_id0 = 1;
++reset_with_allow_join_id0()
++{
++	local ns1_enable=$1
++	local ns2_enable=$2
 +
- 		mp_opt->mp_capable = 1;
- 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
- 			mp_opt->sndr_key = get_unaligned_be64(ptr);
-@@ -360,6 +363,7 @@ void mptcp_get_options(const struct sock *sk,
- 	mp_opt->mp_prio = 0;
- 	mp_opt->reset = 0;
- 	mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
-+	mp_opt->deny_join_id0 = 0;
- 
- 	length = (th->doff * 4) - sizeof(struct tcphdr);
- 	ptr = (const unsigned char *)(th + 1);
-@@ -1047,6 +1051,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 	}
- 
- 	mptcp_get_options(sk, skb, &mp_opt);
-+	if (mp_opt.deny_join_id0)
-+		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return;
- 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index edc57ff4c1dd..4d26cfacb1de 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -321,6 +321,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	WRITE_ONCE(msk->pm.addr_signal, 0);
- 	WRITE_ONCE(msk->pm.accept_addr, false);
- 	WRITE_ONCE(msk->pm.accept_subflow, false);
-+	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
- 	msk->pm.status = 0;
- 
- 	spin_lock_init(&msk->pm.lock);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 795f6d84bbfc..4e9943ddac50 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -456,10 +456,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		if (local) {
- 			struct mptcp_addr_info remote = { 0 };
- 
-+			remote_address((struct sock_common *)sk, &remote);
-+			if (READ_ONCE(msk->pm.remote_deny_join_id0)) {
-+				if (!msk->pm.add_cached.id)
-+					return;
++	reset
 +
-+				remote = msk->pm.add_cached;
-+			}
- 			msk->pm.local_addr_used++;
- 			msk->pm.subflows++;
- 			check_work_pending(msk);
--			remote_address((struct sock_common *)sk, &remote);
- 			spin_unlock_bh(&msk->pm.lock);
- 			__mptcp_subflow_connect(sk, &local->addr, &remote,
- 						local->flags, local->ifindex);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d28f6cdc9798..6ab29e5076aa 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -138,7 +138,8 @@ struct mptcp_options_received {
- 		mp_prio : 1,
- 		echo : 1,
- 		csum_reqd : 1,
--		backup : 1;
-+		backup : 1,
-+		deny_join_id0 : 1;
- 	u32	token;
- 	u32	nonce;
- 	u64	thmac;
-@@ -194,6 +195,7 @@ struct mptcp_pm_data {
- 	bool		work_pending;
- 	bool		accept_addr;
- 	bool		accept_subflow;
-+	bool		remote_deny_join_id0;
- 	u8		add_addr_signaled;
- 	u8		add_addr_accepted;
- 	u8		local_addr_used;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0f4dc708e9b2..629be94f4d75 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -408,6 +408,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
++	ip netns exec $ns1 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns1_enable
++	ip netns exec $ns2 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns2_enable
++}
++
+ ip -Version > /dev/null 2>&1
+ if [ $? -ne 0 ];then
+ 	echo "SKIP: Could not run test without ip tool"
+@@ -1462,6 +1473,61 @@ checksum_tests()
+ 	chk_csum_nr "checksum test 1 0"
+ }
  
- 		if (mp_opt.csum_reqd)
- 			WRITE_ONCE(mptcp_sk(parent)->csum_enabled, true);
-+		if (mp_opt.deny_join_id0)
-+			WRITE_ONCE(mptcp_sk(parent)->pm.remote_deny_join_id0, true);
- 		subflow->mp_capable = 1;
- 		subflow->can_ack = 1;
- 		subflow->remote_key = mp_opt.sndr_key;
++deny_join_id0_tests()
++{
++	# subflow allow join id0 ns1
++	reset_with_allow_join_id0 1 0
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "single subflow allow join id0 ns1" 1 1 1
++
++	# subflow allow join id0 ns2
++	reset_with_allow_join_id0 0 1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "single subflow allow join id0 ns2" 0 0 0
++
++	# signal address allow join id0 ns1
++	reset_with_allow_join_id0 1 0
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "signal address allow join id0 ns1" 1 1 1
++	chk_add_nr 1 1
++
++	# signal address allow join id0 ns2
++	reset_with_allow_join_id0 0 1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "signal address allow join id0 ns2" 1 1 1
++	chk_add_nr 1 1
++
++	# subflow and address allow join id0 ns1
++	reset_with_allow_join_id0 1 0
++	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "subflow and address allow join id0 1" 2 2 2
++
++	# subflow and address allow join id0 ns2
++	reset_with_allow_join_id0 0 1
++	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "subflow and address allow join id0 2" 2 2 2
++}
++
+ all_tests()
+ {
+ 	subflows_tests
+@@ -1476,6 +1542,7 @@ all_tests()
+ 	add_addr_ports_tests
+ 	syncookies_tests
+ 	checksum_tests
++	deny_join_id0_tests
+ }
+ 
+ usage()
+@@ -1493,6 +1560,7 @@ usage()
+ 	echo "  -p add_addr_ports_tests"
+ 	echo "  -k syncookies_tests"
+ 	echo "  -S checksum_tests"
++	echo "  -d deny_join_id0_tests"
+ 	echo "  -c capture pcap files"
+ 	echo "  -C enable data checksum"
+ 	echo "  -h help"
+@@ -1528,7 +1596,7 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
+ 
+-while getopts 'fsltra64bpkchCS' opt; do
++while getopts 'fsltra64bpkdchCS' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+@@ -1566,6 +1634,9 @@ while getopts 'fsltra64bpkchCS' opt; do
+ 		S)
+ 			checksum_tests
+ 			;;
++		d)
++			deny_join_id0_tests
++			;;
+ 		c)
+ 			;;
+ 		C)
 -- 
 2.31.1
 
