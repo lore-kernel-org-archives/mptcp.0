@@ -1,51 +1,50 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2902FB0
-	for <mptcp@lists.linux.dev>; Tue, 25 May 2021 09:17:12 +0000 (UTC)
-Received: by mail-pl1-f181.google.com with SMTP id q16so255333pls.6
-        for <mptcp@lists.linux.dev>; Tue, 25 May 2021 02:17:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157862FB0
+	for <mptcp@lists.linux.dev>; Tue, 25 May 2021 09:17:15 +0000 (UTC)
+Received: by mail-pf1-f180.google.com with SMTP id p39so6776391pfw.8
+        for <mptcp@lists.linux.dev>; Tue, 25 May 2021 02:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gMCKa3I+OdVG15KKyUTExe9FHj8cubNYgH9GkLPxXkQ=;
-        b=ISqG2MCH8NPmfIjKXwnJjy6JcT2cDLQdLJMKmPTOuuG+RB4TskPquRZ60H3PRj1+LU
-         PTozpSs/eYwvHmKXKDPT4TCrbMtMzyTiXE87Fc7dFVwVoH7vGT8CQf5DUVyitUs7u5hc
-         umLfuYBqvZIyuiYgOY+xLkcOU7v/LOqcqnVPl/z9lg6Pj1zaQX0rNOvyzN7F4vmRV23E
-         7vx6MEiQiOIpz98+1IkA/JZZFP867ypCngq6fBeTrl4IgTjStyfl9IgGh0RfieOqVdZj
-         xK5mtEwuean4HYZtGeNxlA1NZuXKPMfrQK72HBOY5lm5lPw3xK0DL/K26AdBeeGKGUBE
-         MnXA==
+        bh=PxiQ/zt4bv5qFhspO2jncT4eNc2X4LIM55ZlOeHgeMw=;
+        b=MSURivzjX1kRIiAHybAbRf3+n5gKu6DQkez0iKiLhIwXYFqrtUyo1t5bN/VSblWosR
+         2hu4TCwMI9YOufyDB9QmDqnelZaQLRe1Na1OondXb2vVT47u51Dkz9Ro1B4mn3TWzVLe
+         g4rWsdKj+mjjApoqxEQr9EfrUg5RgH7myozF3fX1pz3f0W9lLC6YUAiGSOVfwpDj4xW3
+         8BUCxw4siW+HNJD4xfzbt6aF6rdEjTdz/SB3QwagM+17Tt/0BbSYfdHmJo5tM1MNLnHn
+         VndCtg7OXjsj88jOmFv5taB4JFWLtrZgGplMnDUTC6De1n37CRKf4631v9Er6sMGspY5
+         vuww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gMCKa3I+OdVG15KKyUTExe9FHj8cubNYgH9GkLPxXkQ=;
-        b=t3W3w5vwhnKnAoQ/TIh0MzS/CH1tkbR7O0eoPsexZcVrhHV6KyTbMPdrXdGoIW8G2i
-         SkYqnFuTCUBmm4IFXNrxQ69fHacgRW8s9oclsvFmKZy0EQwzgbMu4tkMUjKOyxpvEmeK
-         KLea5Ew+LGImp5gshloEadnNTuLfnA6n6caToGRUpZlOsnKwaeuiUHFjwF2D0MTu5G2h
-         TxWVEJ7xPrwdBpEVPFLg/aRNQZuOMdmQJ0WbxKZRpK9O0jMaxj+zzvvSgKS4Btybhkf+
-         W/k8HgwUzkeMuhuLu2XCx7AsgoLDD/Pjk6CEejMNwaDr8ukvqYoJmvm3rVvJJW0WLuCe
-         C85g==
-X-Gm-Message-State: AOAM533JkIE1blA+DVhYd8lA17/Q72dpTErtNxvjpojmL8s8jOxueXgk
-	FAXov3/21Gbr8rnrEfYvbjc8QiGXkaFxOA==
-X-Google-Smtp-Source: ABdhPJwDn815X+myLl+hxbeHXwKtADm6RRRtJvq0d9FrmwMaJbSf5sX2tJXUR8tL5XkvJAlwDKNxHg==
-X-Received: by 2002:a17:90a:6644:: with SMTP id f4mr30014508pjm.154.1621934231953;
-        Tue, 25 May 2021 02:17:11 -0700 (PDT)
+        bh=PxiQ/zt4bv5qFhspO2jncT4eNc2X4LIM55ZlOeHgeMw=;
+        b=m0lkrqR9scZ9dN4oCS3jM/LB1ZNTCyvSSRpGUt9UnQ57aqkq7oqMv0GzQ0KsjQzxrH
+         FYKcoHdrLuIdHKlRoGUIb9BTNNwtzCmb6j85yqPLSxtfLueStobjlLuEtCGdmZnWmciP
+         jJMFSAaxYZzxeC5Nu3euv2Eut57BHDvMwkLz44cdWVAJQKhmlAK3xOocGXpnG7MpsGNv
+         2bbByGdTGxQBpFDl40bf/W+pIIRqosbQRBjyuT8NCRvCzJTOL4HZMppEOAdpSGULMz6B
+         EpwDdRUZnbwtBTqQeUSUBhvbXGyUgLUUYmXve8D78nOwnehlJ3tLIimxN3VqqSPbQyw0
+         zkLw==
+X-Gm-Message-State: AOAM533jDock5vXizedjHUJ3ezz5m2IAKIqlJgTM5twhRLWjZ7ll/dGY
+	ZgnO/r59R5FOUtpto4jLlhl1jeK/TwOGZg==
+X-Google-Smtp-Source: ABdhPJxJav+hyhmFz58V+GpmQhzAlhpFBvGaqPkk4jFWd4IpQEBBulCrjFqHMeSNlhaS45u3mQZmmg==
+X-Received: by 2002:a63:aa48:: with SMTP id x8mr17853904pgo.359.1621934234609;
+        Tue, 25 May 2021 02:17:14 -0700 (PDT)
 Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id h24sm13440024pfn.180.2021.05.25.02.17.11
+        by smtp.gmail.com with ESMTPSA id mj6sm11910372pjb.8.2021.05.25.02.17.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 02:17:11 -0700 (PDT)
+        Tue, 25 May 2021 02:17:14 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>,
-	Florian Westphal <fw@strlen.de>
-Subject: [MPTCP][PATCH v8 mptcp-next 1/4] mptcp: add sysctl allow_join_initial_addr_port
-Date: Tue, 25 May 2021 17:17:03 +0800
-Message-Id: <b7f8df04d7b08026ee10cf2a784afda85e8cf6df.1621933974.git.geliangtang@gmail.com>
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v8 mptcp-next 2/4] mptcp: add allow_join_id0 in mptcp_out_options
+Date: Tue, 25 May 2021 17:17:04 +0800
+Message-Id: <57e35b700b797c875966ae26252ae07316853837.1621933974.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1621933974.git.geliangtang@gmail.com>
-References: <cover.1621933974.git.geliangtang@gmail.com>
+In-Reply-To: <b7f8df04d7b08026ee10cf2a784afda85e8cf6df.1621933974.git.geliangtang@gmail.com>
+References: <cover.1621933974.git.geliangtang@gmail.com> <b7f8df04d7b08026ee10cf2a784afda85e8cf6df.1621933974.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -53,104 +52,109 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added a new sysctl, named allow_join_initial_addr_port, to
-control whether allow peers to send join requests to the IP address and
-port number used by the initial subflow.
+This patch defined a new flag MPTCP_CAP_DENY_JOIN_ID0 for the third bit,
+labeled "C" of the MP_CAPABLE option.
 
-Suggested-by: Florian Westphal <fw@strlen.de>
+Add a new flag allow_join_id0 in struct mptcp_out_options. If this flag is
+set, send out the MP_CAPABLE option with the flag MPTCP_CAP_DENY_JOIN_ID0.
+
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- Documentation/networking/mptcp-sysctl.rst | 13 +++++++++++++
- net/mptcp/ctrl.c                          | 16 ++++++++++++++++
- net/mptcp/protocol.h                      |  1 +
- 3 files changed, 30 insertions(+)
+ include/net/mptcp.h  | 3 ++-
+ net/mptcp/options.c  | 6 ++++++
+ net/mptcp/protocol.h | 6 ++++--
+ net/mptcp/subflow.c  | 1 +
+ 4 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index ee06fd782465..76d939e688b8 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -32,3 +32,16 @@ checksum_enabled - BOOLEAN
- 	per-namespace sysctl.
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index d61bbbf11979..cb580b06152f 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -67,7 +67,8 @@ struct mptcp_out_options {
+ 	u8 backup;
+ 	u8 reset_reason:4,
+ 	   reset_transient:1,
+-	   csum_reqd:1;
++	   csum_reqd:1,
++	   allow_join_id0:1;
+ 	u32 nonce;
+ 	u64 thmac;
+ 	u32 token;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 1aec01686c1a..1e921b5103bf 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -400,6 +400,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 	if (subflow->request_mptcp) {
+ 		opts->suboptions = OPTION_MPTCP_MPC_SYN;
+ 		opts->csum_reqd = mptcp_is_checksum_enabled(sock_net(sk));
++		opts->allow_join_id0 = mptcp_allow_join_id0(sock_net(sk));
+ 		*size = TCPOLEN_MPTCP_MPC_SYN;
+ 		return true;
+ 	} else if (subflow->request_join) {
+@@ -488,6 +489,7 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
+ 		opts->sndr_key = subflow->local_key;
+ 		opts->rcvr_key = subflow->remote_key;
+ 		opts->csum_reqd = READ_ONCE(msk->csum_enabled);
++		opts->allow_join_id0 = mptcp_allow_join_id0(sock_net(sk));
  
- 	Default: 0
+ 		/* Section 3.1.
+ 		 * The MP_CAPABLE option is carried on the SYN, SYN/ACK, and ACK
+@@ -825,6 +827,7 @@ bool mptcp_synack_options(const struct request_sock *req, unsigned int *size,
+ 		opts->suboptions = OPTION_MPTCP_MPC_SYNACK;
+ 		opts->sndr_key = subflow_req->local_key;
+ 		opts->csum_reqd = subflow_req->csum_reqd;
++		opts->allow_join_id0 = subflow_req->allow_join_id0;
+ 		*size = TCPOLEN_MPTCP_MPC_SYNACK;
+ 		pr_debug("subflow_req=%p, local_key=%llu",
+ 			 subflow_req, subflow_req->local_key);
+@@ -1199,6 +1202,9 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 		if (opts->csum_reqd)
+ 			flag |= MPTCP_CAP_CHECKSUM_REQD;
+ 
++		if (!opts->allow_join_id0)
++			flag |= MPTCP_CAP_DENY_JOIN_ID0;
 +
-+allow_join_initial_addr_port - BOOLEAN
-+	Allow peers to send join requests to the IP address and port number used
-+	by the initial subflow if the value is 1. This controls a flag that is
-+	sent to the peer at connection time, and whether such join requests are
-+	accepted or denied.
-+
-+	Joins to addresses advertised with ADD_ADDR are not affected by this
-+	value.
-+
-+	This is a per-namespace sysctl.
-+
-+	Default: 1
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 6c2639bb9c19..7d738bd06f2c 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -24,6 +24,7 @@ struct mptcp_pernet {
- 	u8 mptcp_enabled;
- 	unsigned int add_addr_timeout;
- 	u8 checksum_enabled;
-+	u8 allow_join_initial_addr_port;
- };
- 
- static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
-@@ -46,11 +47,17 @@ int mptcp_is_checksum_enabled(struct net *net)
- 	return mptcp_get_pernet(net)->checksum_enabled;
- }
- 
-+int mptcp_allow_join_id0(struct net *net)
-+{
-+	return mptcp_get_pernet(net)->allow_join_initial_addr_port;
-+}
-+
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- {
- 	pernet->mptcp_enabled = 1;
- 	pernet->add_addr_timeout = TCP_RTO_MAX;
- 	pernet->checksum_enabled = 0;
-+	pernet->allow_join_initial_addr_port = 1;
- }
- 
- #ifdef CONFIG_SYSCTL
-@@ -80,6 +87,14 @@ static struct ctl_table mptcp_sysctl_table[] = {
- 		.extra1       = SYSCTL_ZERO,
- 		.extra2       = SYSCTL_ONE
- 	},
-+	{
-+		.procname = "allow_join_initial_addr_port",
-+		.maxlen = sizeof(u8),
-+		.mode = 0644,
-+		.proc_handler = proc_dou8vec_minmax,
-+		.extra1       = SYSCTL_ZERO,
-+		.extra2       = SYSCTL_ONE
-+	},
- 	{}
- };
- 
-@@ -98,6 +113,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
- 	table[0].data = &pernet->mptcp_enabled;
- 	table[1].data = &pernet->add_addr_timeout;
- 	table[2].data = &pernet->checksum_enabled;
-+	table[3].data = &pernet->allow_join_initial_addr_port;
- 
- 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
- 	if (!hdr)
+ 		*ptr++ = mptcp_option(MPTCPOPT_MP_CAPABLE, len,
+ 				      MPTCP_SUPPORTED_VERSION,
+ 				      flag);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 16e50caf200e..c07db980b5da 100644
+index c07db980b5da..1201ab04bcdf 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -543,6 +543,7 @@ static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *su
- int mptcp_is_enabled(struct net *net);
- unsigned int mptcp_get_add_addr_timeout(struct net *net);
- int mptcp_is_checksum_enabled(struct net *net);
-+int mptcp_allow_join_id0(struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool mptcp_subflow_data_available(struct sock *sk);
+@@ -79,8 +79,9 @@
+ #define MPTCP_VERSION_MASK	(0x0F)
+ #define MPTCP_CAP_CHECKSUM_REQD	BIT(7)
+ #define MPTCP_CAP_EXTENSIBILITY	BIT(6)
++#define MPTCP_CAP_DENY_JOIN_ID0	BIT(5)
+ #define MPTCP_CAP_HMAC_SHA256	BIT(0)
+-#define MPTCP_CAP_FLAG_MASK	(0x3F)
++#define MPTCP_CAP_FLAG_MASK	(0x1F)
+ 
+ /* MPTCP DSS flags */
+ #define MPTCP_DSS_DATA_FIN	BIT(4)
+@@ -352,7 +353,8 @@ struct mptcp_subflow_request_sock {
+ 	u16	mp_capable : 1,
+ 		mp_join : 1,
+ 		backup : 1,
+-		csum_reqd : 1;
++		csum_reqd : 1,
++		allow_join_id0 : 1;
+ 	u8	local_id;
+ 	u8	remote_id;
+ 	u64	local_key;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 2f13d795c2fc..0f4dc708e9b2 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -109,6 +109,7 @@ static void subflow_init_req(struct request_sock *req, const struct sock *sk_lis
+ 	subflow_req->mp_capable = 0;
+ 	subflow_req->mp_join = 0;
+ 	subflow_req->csum_reqd = mptcp_is_checksum_enabled(sock_net(sk_listener));
++	subflow_req->allow_join_id0 = mptcp_allow_join_id0(sock_net(sk_listener));
+ 	subflow_req->msk = NULL;
+ 	mptcp_token_init_request(req);
+ }
 -- 
 2.31.1
 
