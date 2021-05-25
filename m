@@ -1,130 +1,113 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2516A17F
-	for <mptcp@lists.linux.dev>; Tue, 25 May 2021 00:16:54 +0000 (UTC)
-IronPort-SDR: bv6/MaLfxozvVt8i1eCK4qQq79bu7phvqrynKoOYajN5rGI/l03obUMUzsYYGcEeUPzLY+HH0C
- 1FQWdEFDwznA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9994"; a="189440959"
-X-IronPort-AV: E=Sophos;i="5.82,327,1613462400"; 
-   d="scan'208";a="189440959"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2021 17:16:50 -0700
-IronPort-SDR: pp1om8kJ5Nx5YB8+Rpl+6qeXdApUMUqJB1/iF2A7cHbsG3We/QZw2l2B6rv0sk6un2srVrpbXS
- Q5uR9MfU8xcQ==
-X-IronPort-AV: E=Sophos;i="5.82,327,1613462400"; 
-   d="scan'208";a="614296828"
-Received: from taclark-mobl4.amr.corp.intel.com ([10.212.246.204])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2021 17:16:50 -0700
-Date: Mon, 24 May 2021 17:16:50 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH v7 mptcp-next 3/5] mptcp: add add_cached in
- mptcp_pm_data
-In-Reply-To: <c27772875a9bf14dd336526f48676f368758be97.1621839764.git.geliangtang@gmail.com>
-Message-ID: <b2356854-d4e-5968-582e-b8736aeea04b@linux.intel.com>
-References: <cover.1621839764.git.geliangtang@gmail.com> <7df5c99cf5336e3c1b0225903c75d01bbcde8daf.1621839764.git.geliangtang@gmail.com> <372e8fb0d481dfed41cf7e01c60b18c55a852f7e.1621839764.git.geliangtang@gmail.com>
- <c27772875a9bf14dd336526f48676f368758be97.1621839764.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E3C2FB0
+	for <mptcp@lists.linux.dev>; Tue, 25 May 2021 09:17:09 +0000 (UTC)
+Received: by mail-pl1-f181.google.com with SMTP id a7so7351233plh.3
+        for <mptcp@lists.linux.dev>; Tue, 25 May 2021 02:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/+RBMxRD4DnE/EFkVaO5QqVKi7qK46p6FY38dRBVhw=;
+        b=pIN5cZIXjI6PUXSSfXgFsJwQE1HTlZ0/ox5/O6NEz8z0iXJERbGnNAk6YiyP0RhqCY
+         jMMavFrffxhfx9rawRkAWQkhp3yfXeg656c4+PVbwzdXIRHbSDyU86vRWoIqF104q3Ad
+         MuEh5SqVHzMQSjwCp+VwuqJiMvuRPOzB/jaZA47HfvpHqtuDmHYvXQOltS44DvIKnVRK
+         j06BZzFu23rXwoRVK/ndrJiu7NePv8+8kkD3JOj8O2BojjafuVoQqRMuFHdsc+MY5JfP
+         EqRHKOqBGFkRfLWWSC+11GUXoBnZUJZJIATtDRzrfIa7/nMRVxDyDsgmZyJryDt84N1f
+         DW4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/+RBMxRD4DnE/EFkVaO5QqVKi7qK46p6FY38dRBVhw=;
+        b=CaVe74LsK1dxS4ivomQjqpfDe+/0NZJqTjnv2vs6KdkfVRDAtYpBgD4Sye6xR0Aoi2
+         //E/csJdV+LYF93wJysc1Sm3UA0QmbGFPfm+QTVF2/urqZf1EOj7q3wYp0Cplig2SIrZ
+         f9sILj9aiGd9bCTI6K5LaaDmOqHB0HUO8iosm7MKE2e6EPV8AzfMXK0Tc3EZFCdIT4HP
+         NYZ5IRFCLOilSyRSTRFOvfw8PbfB+Dl5fFqQPzMAq5pHP92zOV56yJvqImJqBryf8P87
+         wvWPxbQZ8YsJZ7WA6T3APOMb5/HfidonE3dADda3qnUYRCkpobXVchZcwijQVTWuja7Z
+         KZ4Q==
+X-Gm-Message-State: AOAM531BjFr7LC+E40paKulwaEoXVcR29nGesO0QfhXC7ZPxA12P3AuK
+	2NJvsKfunYuiBfbWrnoldp0uHWLepZJl1A==
+X-Google-Smtp-Source: ABdhPJzolsBmNrJlhongVtXtR55PuGswpER/uGwouZG+MNicNfLvSUn+Gtufzk/3RwBbXtbUedkI9w==
+X-Received: by 2002:a17:90a:1d0c:: with SMTP id c12mr10578268pjd.122.1621934229228;
+        Tue, 25 May 2021 02:17:09 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id w125sm13028387pfw.214.2021.05.25.02.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 May 2021 02:17:08 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v8 mptcp-next 0/4] add MP_CAPABLE 'C' flag
+Date: Tue, 25 May 2021 17:17:02 +0800
+Message-Id: <cover.1621933974.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 May 2021, Geliang Tang wrote:
+v8:
+ - drop add_cached in v7
+ - tag: export/20210525T061510
 
-> This patch added a new member add_cached in struct mptcp_pm_data, to
-> track the most recent received ADD_ADDR information. Also invalidate
-> it if a matching REMOVE_ADDR is received.
->
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
-> net/mptcp/pm.c         | 1 +
-> net/mptcp/pm_netlink.c | 3 +++
-> net/mptcp/protocol.h   | 1 +
-> 3 files changed, 5 insertions(+)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9d00fa6d22e9..edc57ff4c1dd 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -316,6 +316,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
-> 	msk->pm.subflows = 0;
-> 	msk->pm.rm_list_tx.nr = 0;
-> 	msk->pm.rm_list_rx.nr = 0;
-> +	msk->pm.add_cached.id = 0;
-> 	WRITE_ONCE(msk->pm.work_pending, false);
-> 	WRITE_ONCE(msk->pm.addr_signal, 0);
-> 	WRITE_ONCE(msk->pm.accept_addr, false);
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 09722598994d..795f6d84bbfc 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -515,6 +515,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
-> 		remote.port = sk->sk_dport;
-> 	memset(&local, 0, sizeof(local));
-> 	local.family = remote.family;
-> +	msk->pm.add_cached = remote;
->
-> 	spin_unlock_bh(&msk->pm.lock);
-> 	__mptcp_subflow_connect(sk, &local, &remote, 0, 0);
+v7:
+ - use add_cached instead of add_list
+ - tag: export/20210524T060340
 
-I think the above few lines of code show the point Paolo was making in the 
-meeting last week (and I didn't get the full implications of it at the 
-time). If this is the point where the extra remote address is received and 
-cached, then there's already a __mptcp_subflow_connect() here to connect 
-to the peer - and the connection code in 
-mptcp_pm_create_subflow_or_signal_addr() becomes redundant.
+v6:
+ - rename mptcp_pm_add_entry to mptcp_pm_anno_entry
+ - update mptcp_pm_free_add_list
+ - update code in mptcp_pm_nl_add_addr_received
+ - tag: export/20210514T055902
 
-There's a corner case where the pernet limits change after an ADD_ADDR is 
-received, but the above caching doesn't work for that because there's an 
-optimization in mptcp_pm_add_addr_received() to echo the ADD_ADDR without 
-scheduling the worker. So mptcp_pm_nl_add_addr_received() doesn't get 
-called when pm->accept_addr is false, and the address information is lost. 
-This could be handled by removing the optimization and modifying the 
-worker, but that doesn't seem worthwhile.
+v5:
+ - add a new patch "mptcp: add add_list in mptcp_pm_data"
+ - fix !CONFIG_SYSCTL case
+ - tag: export/20210507T174457
 
+v4:
+ - rename mptcp_is_allow_join_id0 to mptcp_allow_join_id0
+ - rename deny_join_id0 in mptcp_pm_data to remote_deny_join_id0
+ - add comments for self test cases
+ - apply: export/20210504T064955 +
+          "data checksum support" +
+          "data checksum support cleanups"
 
-So, after going on a detour after v4 of this patch set, I see the appeal 
-of the simpler logic Paolo suggested in 
-https://lore.kernel.org/mptcp/ef31d1b4b0456a02f0e8515c449ea4fd4e7c1611.camel@redhat.com/
+v3:
+ - use 'u8 allow_join_initial_addr_port'
+ - drop the spinlock in patch 3
 
-Paolo, Geliang, what do you think about using that approach and removing 
-the caching? (I'm guessing your first thought is "finally!"...)
+v2:
+ - rename join_denied to allow_join_id0 in mptcp_out_options
+ - rename join_denied to deny_join_id0 in mptcp_options_received
+ - add a new function mptcp_pm_deny_join_id0_received
+ - move deny_join_id0 flag from mptcp_sock to mptcp_pm_data
+ - check deny_join_id0 flag in mptcp_pm_create_subflow_or_signal_addr
+instead of in mptcp_syn_options.
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/183
 
--Mat
+Geliang Tang (4):
+  mptcp: add sysctl allow_join_initial_addr_port
+  mptcp: add allow_join_id0 in mptcp_out_options
+  mptcp: add deny_join_id0 in mptcp_options_received
+  selftests: mptcp: add deny_join_id0 testcases
 
+ Documentation/networking/mptcp-sysctl.rst     | 13 ++++
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/ctrl.c                              | 16 ++++
+ net/mptcp/options.c                           | 12 +++
+ net/mptcp/pm.c                                |  1 +
+ net/mptcp/pm_netlink.c                        |  3 +-
+ net/mptcp/protocol.h                          | 11 ++-
+ net/mptcp/subflow.c                           |  3 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 75 ++++++++++++++++++-
+ 9 files changed, 131 insertions(+), 6 deletions(-)
 
-> @@ -631,6 +632,8 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
-> 			if (rm_type == MPTCP_MIB_RMADDR) {
-> 				msk->pm.add_addr_accepted--;
-> 				WRITE_ONCE(msk->pm.accept_addr, true);
-> +				if (msk->pm.add_cached.id == id)
-> +					msk->pm.add_cached.id = 0;
-> 			} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
-> 				msk->pm.local_addr_used--;
-> 			}
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 1201ab04bcdf..d28f6cdc9798 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -185,6 +185,7 @@ struct mptcp_pm_data {
-> 	struct mptcp_addr_info local;
-> 	struct mptcp_addr_info remote;
-> 	struct list_head anno_list;
-> +	struct mptcp_addr_info add_cached;
->
-> 	spinlock_t	lock;		/*protects the whole PM data */
->
-> -- 
-> 2.31.1
->
->
->
+-- 
+2.31.1
 
---
-Mat Martineau
-Intel
