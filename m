@@ -1,106 +1,78 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF61C2FAE
-	for <mptcp@lists.linux.dev>; Tue, 25 May 2021 10:57:59 +0000 (UTC)
-Received: by mail-ed1-f47.google.com with SMTP id i13so35642296edb.9
-        for <mptcp@lists.linux.dev>; Tue, 25 May 2021 03:57:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Nofk25BrgkgMTHSFLPzehGtUSAJtpxNLOkg0pfwXahg=;
-        b=y0W1ZjQ/d0bNG2fETBm9rKg70M7pnfzypuORPRjW1A4a/ymDNIr30K+60keNNVR1Zw
-         YLQPZJUrSjby3CpPwbIheIYzaacqRulhBX93q2uh+mPkgrB9hTD3Kn12WvnHh/o3K/d9
-         yMmPYFYay+kzeTSx54wsMm2xFvpSmhB5s7QMC7H2sLa4X3KMHtHJQ8fFN1V/8rxTRV0G
-         hoRdmf8JnbYCY0Ee/MusgftMr54Wu31ngqU4J1zWcbaoG4MuXm6hixHFCv2yMJ9EPOmX
-         slxwMdt+SQsxMuJ/BqNG+JDAfukGkYMAie0YJ6tBLs9yhu/YgXX64wz5ohSQMULMxKDv
-         XnxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Nofk25BrgkgMTHSFLPzehGtUSAJtpxNLOkg0pfwXahg=;
-        b=B/upuK5uHo7Y2JouFtodPkc51P74gJzI0KxozvQ8VW2YPUIDDtRqDibsKxEzmm4kW4
-         UjK2nDxE6WrNiR0jkMo9YIk/LTUCq0CRzD0rz+kK+CI60Fh4ue95UttthWsq/o3OiEIv
-         wZbsls+Mrfsw47XQrUL+W+aZwBoHM3XVUvDfmtVDQSWhShrxgrpc8AuuOMiDnSmmqBbQ
-         806/jv97uxr7ttR/Wm92JvpeQFl3jt8dfxJh956HN4qAe90JxtUXlGNb6C9IO8nKzXZ8
-         L/H+2CITHe/G2jHqucwaAtOnaUgO1DJsprECdDTvfR7bb4Qc8E9P/txtHsTTS0MLpwAW
-         cIpQ==
-X-Gm-Message-State: AOAM530vyvb6wWhCMz3gOUE81OWmNVArKVp+6RD1+E1OCeUQ7Khd3ldA
-	eHdt0JPjsV8O2i7qhcBH3Vqr6iQEHxRpHHF4
-X-Google-Smtp-Source: ABdhPJxhd53UAPdidF6SdlNCaGvkSD0M9ZS3o0qC2A+JYRjWMHzZ/NwzmYIvMtvF7tGaZpD/Cf6ytg==
-X-Received: by 2002:a05:6402:1544:: with SMTP id p4mr31199155edx.341.1621940277877;
-        Tue, 25 May 2021 03:57:57 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8839:6e9:c432:46d9])
-        by smtp.gmail.com with ESMTPSA id t19sm10955215eds.4.2021.05.25.03.57.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 May 2021 03:57:57 -0700 (PDT)
-Subject: Re: [PATCH v3 mptcp-net 1/3] mptcp: always parse mptcp options for
- MPC reqsk
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <7e97e8e3c7d9265dcbf098b57f12da11d0b383b1.1621521884.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <46d6ced3-5c45-e503-b799-368b97ab1571@tessares.net>
-Date: Tue, 25 May 2021 12:57:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413E870
+	for <mptcp@lists.linux.dev>; Tue, 25 May 2021 17:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1621964258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=d344DfVhsugm94awgMQxy3YlOA62b/TbkZN0X6G+QQE=;
+	b=iFy/+haeW4ieyDyo8bCU2CGZYoKy6xoNbq+VKXW+mf2qOrAJdkesYjzqracd8m1T1KEFN8
+	MznXP4xXsrzvz/77at/dwggo+fFTcxjzx4e9bMEZgFIHEgroSJ8xWgTejhJ8rHxrBADNav
+	TAm2r3zv828BUPcXqO/WkuttmOCx6vA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-564-ZcthyrYbM1qC6QyrtzAzfw-1; Tue, 25 May 2021 13:37:36 -0400
+X-MC-Unique: ZcthyrYbM1qC6QyrtzAzfw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AE6F800D62
+	for <mptcp@lists.linux.dev>; Tue, 25 May 2021 17:37:35 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-92.ams2.redhat.com [10.36.115.92])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B8C34100E113;
+	Tue, 25 May 2021 17:37:34 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: fwestpha@redhat.com
+Subject: [RFC PATCH 0/4] mptcp: just another receive path refactor
+Date: Tue, 25 May 2021 19:37:16 +0200
+Message-Id: <cover.1621963632.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <7e97e8e3c7d9265dcbf098b57f12da11d0b383b1.1621521884.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Paolo, Mat,
+Some recent issues outlined we have perhaps too much complexity
+in the receive path and memory accounting.
 
-On 20/05/2021 16:46, Paolo Abeni wrote:
-> In subflow_syn_recv_sock() we currently skip options parsing
-> for OoO packet, given that such packets may not carry the relevant
-> MPC option.
-> 
-> If the peer generates an MPC+data TSO packet and some of the early
-> segments are lost or get reorder, we server will ignore the peer key,
-> causing transient, unexpected fallback to TCP.
-> 
-> The solution is always parsing the incoming MPTCP options, and
-> do the fallback only for in-order packets. This actually cleans
-> the existing code a bit.
-> 
-> Reported-by:  Matthieu Baerts <matthieu.baerts@tessares.net>
-> Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+After recent changes in release_cb() we can drop most such complexity
+in favour of some more traditional RX/memory accounting schema.
 
-Thank you for the patches and the reviews!
+This is the result.
 
-- f407a7aa834a: mptcp: always parse mptcp options for MPC reqsk
+The first 2 patches are actually bugfixes, even if I don't understand
+why we almost never hit the condition addressed by patch 1/4 (and
+the patched kernel hits hit frequently).
 
-- 68379f4d6133: mptcp: do not reset MP_CAPABLE subflow on mapping errors
-  - In this commit has been squashed "mptcp: cleanup error path in
-subflow_check_data_avail()" commit
+The 3rd patch introduces the major change, and the fouth is just
+cleanup.
 
-- cedf8c99c004: mptcp: update selftest for fallback due to OoO
+This could have some negative performance effects, as on average more
+locking is required for each packet. I'm doing some perf test and will
+report the results.
 
-- f76f266a991f: conflict in t/mptcp-add-sk-parameter-for-mptcp_parse_option
+Paolo Abeni (4):
+  mptcp: wake-up readers only for in sequence data.
+  mptcp: don't clear MPTCP_DATA_READY in sk_wait_event()
+  mptcp: move the whole rx path under msk socket lock protection
+  mptcp: cleanup mem accounting.
 
-- b10d71891518: conflict in
-t/mptcp-cleanup-error-path-in-subflow_check_data_avail
+ net/mptcp/protocol.c | 298 +++++++++----------------------------------
+ net/mptcp/protocol.h |  20 +--
+ net/mptcp/subflow.c  |  15 +--
+ 3 files changed, 68 insertions(+), 265 deletions(-)
 
-- Results: 9d8cf0870447..3ebd090a8fbc
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210525T105728
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210525T105728
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.3
+
