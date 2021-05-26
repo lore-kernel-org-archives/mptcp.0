@@ -1,73 +1,95 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BB02FAD
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:50:36 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id h16so2346343edr.6
-        for <mptcp@lists.linux.dev>; Wed, 26 May 2021 09:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=WBKuW/HWdT+W2/GNBaWxzwB2mwcXrK6m8LPzDxXNblg=;
-        b=k+7MJUh2QeY+UHHTH5gWm80MpF6COZG1QQPZwVHjVkcGv63FX035/yIUjPq6yRNfQm
-         Q70/21Y5F6ieJUeBoUhgYh9QaT44ED4O/Hx9XYnSVrT2UCMiU7JR9n2lG4Q9h/gQoi9B
-         pzYy58stApG49fbskNdAsOnkqDkXhhl7Ha43DoN/TMxDsSmvvWb4HzIVosWkS30SQfse
-         vQCJoM9I7R9rscYIUxx3+BlVVcKdpWAh4LYuu37oCL6OvJOsWdEC1EVJJ4IjVDaOjZDJ
-         YmPjopjKQi12QyAuzOJkVC1mTiOwXlY1xwuMkjscYh6tyKl/s1t6iMNnApdw6z/ikWVg
-         P4dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=WBKuW/HWdT+W2/GNBaWxzwB2mwcXrK6m8LPzDxXNblg=;
-        b=KpcOJb9mQxPLm/NaQ+5hK/4jjGNawXTRWU7hENd1cR239iNm4jCMadbs+HaOzx/ZO4
-         uSDIyOw/Rc5e+hnVx4MUnjCFIIUGN9wV6ZZlmf8cPY2LfeK311YUppMqCNE0Z7MudqtG
-         6SnFTqspI/PnBF7bj56FMywIblkVPYIQ27gtvwJQ5EhjSDGlBaAEwhnZP0awqXIU4HS7
-         Vm7p4M733w820OYoAgy8pC4+RftI3PMQ9mfDXZ37G6kkS5P+XOgN05QtFIaTYk/1r9+2
-         V3eHymi3rBz8V7h2TTgasG34gdVIWPnNwo+eDY1Rx28vcqJlEhaytFow+U49sso0zn6m
-         eOCg==
-X-Gm-Message-State: AOAM533O3Qafh42ctgZ1KsxE7O6cgdXKVQwelWMYw0RfpPjbBBVftE/+
-	IKlF7r0EAc2RL5BVuB+3oecqBoCe/8reUfDy+w4=
-X-Google-Smtp-Source: ABdhPJzIv6gA3KZntmHkNKQu5s2Zc3VJ9Rif6sSGg1EyNhe+1EZRnuVWAR6/tJWfwEuNENc1RAGAVQ==
-X-Received: by 2002:aa7:c4c2:: with SMTP id p2mr37363604edr.144.1622047835206;
-        Wed, 26 May 2021 09:50:35 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:a52a:a612:5e57:78a])
-        by smtp.gmail.com with ESMTPSA id h7sm2213449ejp.24.2021.05.26.09.50.34
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 May 2021 09:50:34 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Weekly meeting - 27 May 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-Message-ID: <7c6e5e10-7f3a-d6ab-48fb-5e203cf4110f@tessares.net>
-Date: Wed, 26 May 2021 18:50:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FFF70
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 22:51:36 +0000 (UTC)
+IronPort-SDR: M2Us2ICfrzxKK1QcRclIlcWqDGa9fq0aP6kTn204vUbUJKc1dyfCYKUwi3dNruSWzvb4Z/YKpu
+ mFN8GYGzHsvA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9996"; a="200703203"
+X-IronPort-AV: E=Sophos;i="5.82,333,1613462400"; 
+   d="scan'208";a="200703203"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 15:51:34 -0700
+IronPort-SDR: foHDzfKonwpawJQlxMM7aEEHCxYJyrraSlI8ZTCGkF/kov8fgxfzZEHq0ENray28P9ZUj5gCap
+ JF01YSR7VRPg==
+X-IronPort-AV: E=Sophos;i="5.82,333,1613462400"; 
+   d="scan'208";a="477167310"
+Received: from oelenito-mobl1.amr.corp.intel.com ([10.212.180.42])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 15:51:33 -0700
+Date: Wed, 26 May 2021 15:51:32 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-next] mptcp: drop tx skb cache
+In-Reply-To: <32a776b7dd322f114e385ca406f5ca879c7831cd.camel@redhat.com>
+Message-ID: <8636f1cb-12c2-5cf7-361a-b83880ea904@linux.intel.com>
+References: <8dd3343ea83a7a631acfe4940a9dea841b32c52a.1621613936.git.pabeni@redhat.com>  <e9657dbd-f455-61e9-2118-e2b2443fafb@linux.intel.com> <32a776b7dd322f114e385ca406f5ca879c7831cd.camel@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello everybody!
+On Wed, 26 May 2021, Paolo Abeni wrote:
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> On Fri, 2021-05-21 at 15:57 -0700, Mat Martineau wrote:
+>> On Fri, 21 May 2021, Paolo Abeni wrote:
+>>
+>>> The mentioned cache was introduced to reduce the number of skb
+>>> allocation in atomic context, but the required complexity is
+>>> excessive.
+>>>
+>>> This change remove the mentioned cache.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>> v1 -> v2:
+>>> - drop unused field skb_tx_cache
+>>
+>> There's also a size_goal_cache field in struct mptcp_sock that's now
+>> unused.
+>
+> yep, will do in v3 (sorry, I lost track of this review)
+>
+>> I like the simplification! Do the self tests trigger enough memory
+>> pressure to test allocation in that scenario?
+>
+> Will ensure that before posting v3
+>
+>> The commit that introduced the skb_tx_cache did so to allow removal of the
+>> skb_ext cache. It looks like both caches are now unnecessary because the
+>> skb and skb_ext allocations are handled together in the
+>> __mptcp_{do_,}alloc_tx_skb() functions - so an allocation failure can be
+>> handled without the complexity of the caches.
+>
+> The cache goal was avoid/reduce skb allocation in atomic context. That
+> is still true (e.g. with skb_tx_cache we have less skb allocation in
+> atomic context, expecially when the transfer is link/pacing/peer
+> limited). Plain TCP can allocare skbs in atomic context, but that does
+> not happen often. MPTCP will do that almost for each skb,
+> when link/pacing/peer limited.
+>
+> I think we can ignore the above, as e.g. high performance NIC device
+> driver always allocate skb in atomic context.
+>
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210527
+I think you have a better sense of the tradeoffs with the allocation 
+context than I do - from what you describe it doesn't seem like the extra 
+complexity to avoid atomic allocation has a significant payoff.
 
-Feel free to add/modify topics!
+>>  Does that match your
+>> understanding? If so, it would be helpful information for the commit
+>> message.
+>
+> The main trick, imho is that we still use the sk->sk_tx_skb_cache to
+> prevent the TCP stack from allocating extension-less skb. That trick
+> was introduced with the mptcp tx_cache.
+>
+> Not sure if the above clarify anything ?!?
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Yes - it's helpful background, thanks!
 
-See/Speak to you tomorrow!
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
