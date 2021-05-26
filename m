@@ -1,30 +1,30 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D7570
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 22:55:03 +0000 (UTC)
-IronPort-SDR: CwD+Hwl0wh9FZj5BGLoEvU68vxR9HiS32jvoazPXzWaImPpSk7nqIeWRPkTMTrWR0usALlrbeW
- MY3ewJ8rFilA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9996"; a="202607495"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE34270
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 23:27:13 +0000 (UTC)
+IronPort-SDR: AO7OFprVB1Vj78/k/8qf/t/HO/RVpN8sKNe3lGwK2dB16Spgfg1VbWjDDuWafSxLCVsPHjZi9E
+ q6h1dWSkMvAA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9996"; a="189726152"
 X-IronPort-AV: E=Sophos;i="5.82,333,1613462400"; 
-   d="scan'208";a="202607495"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 15:55:02 -0700
-IronPort-SDR: iem47vSUTa2Cty68V+WRdYwV15avOy9OegdZXTnb33AeXf1Ib0iUJTRnipJRFiuVgex7UHcmTZ
- qBTTjfKZElpw==
+   d="scan'208";a="189726152"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 16:27:06 -0700
+IronPort-SDR: 7bIb3X/PJTVG3Cxlvz41nI0CbZkYoHY/yw8C8PxCinEsMBb3EZRCyVmfs3VW0oXG1sXfOGnz1M
+ kUc7NUIL7e3g==
 X-IronPort-AV: E=Sophos;i="5.82,333,1613462400"; 
-   d="scan'208";a="477168109"
+   d="scan'208";a="472226976"
 Received: from oelenito-mobl1.amr.corp.intel.com ([10.212.180.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 15:55:02 -0700
-Date: Wed, 26 May 2021 15:55:02 -0700 (PDT)
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 16:27:06 -0700
+Date: Wed, 26 May 2021 16:27:04 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev, max@internet.ru
-Subject: Re: [PATCH mptcp-net] mptcp: let warn_bad_map report relevant
- values
-In-Reply-To: <e553550a010387f7ccfafa4010397413b032eef9.1622042688.git.pabeni@redhat.com>
-Message-ID: <8bc674-fcaf-8cf-55c0-678a7bf6af1@linux.intel.com>
-References: <e553550a010387f7ccfafa4010397413b032eef9.1622042688.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net] tcp: ensure that backlog coalescing don't
+ break MPTCP DSS
+In-Reply-To: <925dcab4e637ab2ad2d947baa937a62146040802.1622044966.git.pabeni@redhat.com>
+Message-ID: <8268318-9d67-4752-46c5-5da27e507ebb@linux.intel.com>
+References: <925dcab4e637ab2ad2d947baa937a62146040802.1622044966.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -34,34 +34,49 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 26 May 2021, Paolo Abeni wrote:
 
-> When the right bound check fails, warn_bad_map() reports
-> the wrong ssn value, let's fix it.
+> Currently the backlog coalescing does check for MPTCP validation:
+> a relevant DSS could be lost leading to MPTCP stream corruption.
 >
-> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
+> The above is quite infrequent since the MPTCP subflows are not
+> exposed to user-space but the MPTCP still acquires the ssk socket
+> lock on some events.
+>
+> Fix the issue adding the missing test.
+>
+> Fixes: 85712484110d ("tcp: coalesce/collapse must respect MPTCP extensions")
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> net/mptcp/subflow.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+> this can possibly fix issues/196, but it's very hard to demonstrate,
+> even with pktdrill
+> ---
+> net/ipv4/tcp_ipv4.c | 1 +
+> 1 file changed, 1 insertion(+)
 >
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 6b1cd4257edf..726bc3d083fa 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -821,7 +821,7 @@ static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
-> 	if (unlikely(!before(ssn, subflow->map_subflow_seq +
-> 				  subflow->map_data_len))) {
-> 		/* Mapping does covers past subflow data, invalid */
-> -		warn_bad_map(subflow, ssn + skb->len);
-> +		warn_bad_map(subflow, ssn);
-> 		return false;
-> 	}
-> 	return true;
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index 4f5b68a90be9..6b033593d069 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -1822,6 +1822,7 @@ bool tcp_add_backlog(struct sock *sk, struct sk_buff *skb)
+>
+> 	if (TCP_SKB_CB(tail)->end_seq != TCP_SKB_CB(skb)->seq ||
+> 	    TCP_SKB_CB(tail)->ip_dsfield != TCP_SKB_CB(skb)->ip_dsfield ||
+> +	    !mptcp_skb_can_collapse(tail, skb) ||
+> 	    ((TCP_SKB_CB(tail)->tcp_flags |
+> 	      TCP_SKB_CB(skb)->tcp_flags) & (TCPHDR_SYN | TCPHDR_RST | TCPHDR_URG)) ||
+> 	    !((TCP_SKB_CB(tail)->tcp_flags &
 > -- 
 > 2.26.3
 
-I agree, ssn is more helpful information here.
+Yeah, definitely could lose MPTCP header information here.
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Since mptcp_incoming_options() hasn't been called yet, skbs in the backlog 
+queue will never have the MPTCP skb extensions that 
+mptcp_skb_can_collapse() relies on.
+
+Is it worth it to add a function that will do a subset of the 
+mptcp_incoming_options() work to populate the skb extension for mptcp 
+subflow socks? (and modify mptcp_incoming_options() to detect existing 
+mpexts?)
 
 --
 Mat Martineau
