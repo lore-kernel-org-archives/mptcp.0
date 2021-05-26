@@ -1,47 +1,47 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F393A2FB2
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:08:37 +0000 (UTC)
-Received: by mail-ed1-f50.google.com with SMTP id y7so2217191eda.2
-        for <mptcp@lists.linux.dev>; Wed, 26 May 2021 09:08:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CF170
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:08:38 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id h16so2190613edr.6
+        for <mptcp@lists.linux.dev>; Wed, 26 May 2021 09:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hSPS0ohv8sOjUp3/NyaEgOWpJMbP/S/t+Db7N77pFA8=;
-        b=TCBKqMtctoEIvd49PmezUFaOiCY9ZzDq2DKZbosEfWVZAOlHuWfrrmF664jfWMWGH1
-         hL7yX18wd7insjimsys1HhQcevsDO90ZqUVmvULA9hT5n4AhoitKu753PPbx0iM5UNPC
-         ebfZ2HRsNnl5liJHgtfvubE2o8DNSy4fuR5sDF8BoeAydpeuKrU/9g2m6ITN3lMfzEoD
-         MQqIBAkwfbU3JuCdrDEdck3ewJhf+wq4ZyuzihZD+8IfcT8Mcb3gTMr6yV9MbYtUlLjq
-         VG8kIUZQEHC+RrU92gCbLxmd/nEZ5xxmns9QIXMNGL4aCzwLlA92YpLMthw48UYjyADw
-         ubwQ==
+        bh=uIJFUwijX50mP5Q9l/5wpCyBfe8A+wRv7ItEf9DzwAE=;
+        b=bGF3mTHD78UL3O6DR4qp9Omy0YiA2MCsxTXjWi1dRAhZYt9JGrm4KT4NxhWzIU71FF
+         2ilOZcw7TuiKBkOpDGKYFe/XaEeOp8+yE4vjNkCkbUAzkg+PAur2t4dPMIseVNQY9sfl
+         08mOkv8NFDpK+39HfvxjLiHdQ5ZmVsDWeKFI2knLv+/XV3kQH9YjDrbJXqssSGzYDepD
+         TfoiC7devJkj+jT8/FXmVwkcyE7t976uLAe+YyJUP/RzGz2QQ13EZLRN1q9lK1Qn+T/P
+         l1rQh46fDUKTyQUwh1+62ZGHFSik1ZibEPGQUoWMvPbHubxWmvW/23XA738k/DpGF2yJ
+         nu+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hSPS0ohv8sOjUp3/NyaEgOWpJMbP/S/t+Db7N77pFA8=;
-        b=JyW/Sc/8SGbSgG7YC7imz7l0LJW/jwmbmQeQdInGpMkVQdCYgnfCinJl/MtqbXbXft
-         1Trp9CMODsuCopSq35dgM0szF66or9LUHQoDP3KlM2n6fJ1H/lWKFl7V8+VEU1MZwKQw
-         w8SYyphIc7n2s0Ul0ESfaQpJmKwaNs9f0MGdeAKn72QYPXNPOwTd6EmssHrinKEuyVty
-         Ni71b2lqO1MMVAgkpp5kDPon9xNunMyTmhbA/LeA11jwXVaYvRCL+x7Rv+FhmV+MVpwr
-         4wbAKX4PfzcQFqUPKmWOoQK0VGOMGAcr97iOtCgWKJ2IjYiufXiRgCJDsdZwqzu5Yqo5
-         QmWw==
-X-Gm-Message-State: AOAM5308n8petX/SWK5oxd7wDWmQVnvhwgE4Ekx3VWkUsTu6LtfuAYiU
-	dhf6tSiHLTTZBHB4krAcFvWoEAuYwJ8BZCiV
-X-Google-Smtp-Source: ABdhPJy8hML72twf3wm+qKWeqGabL2q6USJ9zUayWQlKzmb1wH7OkMZM5Xl5zyJ/nbBqsmBScUr0EQ==
-X-Received: by 2002:a50:ff13:: with SMTP id a19mr38440609edu.300.1622045316345;
-        Wed, 26 May 2021 09:08:36 -0700 (PDT)
+        bh=uIJFUwijX50mP5Q9l/5wpCyBfe8A+wRv7ItEf9DzwAE=;
+        b=Nqyn9odnahXwo0h5uO6SJs/tNRLYwzqwOEc0vPGkzVi1h8Vgs9CrelHlAMa3jbpckD
+         ynn6FsneNVex61lvXeih6E76+L7o2KPPeeQhnMa3PWuQCU3pE0yqqhS5ipRLUysU3VvF
+         dajLTlaiKomaPSBVnrTf6am5LmzCBuPBGvqQL3Qy4zjzxpEM2FY1tt9UqGK1qQf6Kp5g
+         2x2nLuCPkPNPxnN60YFw14zcxnhGSw+NTHV/+ZtSq4HpP89xdotir0CGieRlYXjYubk+
+         0lv6cADFZ4ms41Q9lCCW4Gds18rpzSCd3vuV5QpGtHN1jiCLjhTWh7GOPyl4QhgWyvL4
+         SZVQ==
+X-Gm-Message-State: AOAM5332/o00AL1TZieqS4Tj3op/Z20V4JCszk6Oek4FjqoSyJRdwRgc
+	ZxWQl5oaC0/L2NLN+bXJxDiZZ1aZwRrXT+Z3
+X-Google-Smtp-Source: ABdhPJz4byPTXeF25LlRZsV+YOa+47y5564YlGA4gUwa5EFLLFrX8pdXkhO7sjUIqmL5sprcrzE71w==
+X-Received: by 2002:a05:6402:518f:: with SMTP id q15mr38828981edd.345.1622045317199;
+        Wed, 26 May 2021 09:08:37 -0700 (PDT)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id j7sm931655ejk.51.2021.05.26.09.08.35
+        by smtp.gmail.com with ESMTPSA id j7sm931655ejk.51.2021.05.26.09.08.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 09:08:35 -0700 (PDT)
+        Wed, 26 May 2021 09:08:36 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [RESEND] [MPTCP] [RFC PATCH 4/4] tcp: parse tcp options contained in reset packets
-Date: Wed, 26 May 2021 18:08:07 +0200
-Message-ID: <20200924143505.27641-5-fw@strlen.de>
+Subject: [RESEND] [MPTCP] [RFC mptpcp-next] mptcp: add ooo prune support
+Date: Wed, 26 May 2021 18:08:08 +0200
+Message-ID: <20201002154535.28412-1-fw@strlen.de>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210526160813.4160315-1-matthieu.baerts@tessares.net>
 References: <20210526160813.4160315-1-matthieu.baerts@tessares.net>
@@ -51,104 +51,143 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-ID: <20210526160807.kCpMSHmEQCUHAoDHJDTXW8lypLNz1_VEAhH2XfMfPio@z>
+Message-ID: <20210526160808.UOg3X-SCnjVAmC0qouTk8IltwdlX4Nxma8bMylqBzOs@z>
 
 From: Florian Westphal <fw@strlen.de>
 
-This will be used to handle MPTCP_TCPRST suboption.
+It might be possible that entire receive buffer is occupied by
+skbs in the OOO queue.
 
-It allows an MPTCP receiver to learn more information when a subflow is
-re-set.  The MPTCP_TCPRST option gives an error code (protocol error,
-path too slow, middlebox interference detected, and so on).
+In this case we can't pull more skbs from subflows and the holes
+will never be filled.
 
-This allows an MPTCP receiver to make a decision to reopen the subflow
-at a later time, or even completely disable the path.
+If this happens, schedule the work queue and prune ~12% of skbs to
+make space available. Also add a MIB counter for this.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/net/tcp.h        |  2 +-
- net/ipv4/tcp_input.c     | 13 ++++++++-----
- net/ipv4/tcp_minisocks.c |  2 +-
- 3 files changed, 10 insertions(+), 7 deletions(-)
+ Paolo, this does relate a bit to our discussion wrt. oow
+ tracking.  I thought we might need to add some sort of cushion to
+ account for window discrepancies, but that might then get us
+ in a state where wmem might be full...
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index a981b5d60112..92eee154e2a3 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -609,7 +609,7 @@ void tcp_skb_collapse_tstamp(struct sk_buff *skb,
- /* tcp_input.c */
- void tcp_rearm_rto(struct sock *sk);
- void tcp_synack_rtt_meas(struct sock *sk, struct request_sock *req);
--void tcp_reset(struct sock *sk);
-+void tcp_reset(struct sock *sk, struct sk_buff *skb);
- void tcp_skb_mark_lost_uncond_verify(struct tcp_sock *tp, struct sk_buff *skb);
- void tcp_fin(struct sock *sk);
+ What do you think?
+
+ I did NOT see such a problem in practice, this is a theoretical "fix".
+ TCP has similar code to deal with corner cases of small-oow packets.
+
+ net/mptcp/mib.c      |  1 +
+ net/mptcp/mib.h      |  1 +
+ net/mptcp/protocol.c | 48 ++++++++++++++++++++++++++++++++++++++++++--
+ net/mptcp/protocol.h |  1 +
+ 4 files changed, 49 insertions(+), 2 deletions(-)
+
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 84d119436b22..65c575e3af60 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -25,6 +25,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("OFOQueueTail", MPTCP_MIB_OFOQUEUETAIL),
+ 	SNMP_MIB_ITEM("OFOQueue", MPTCP_MIB_OFOQUEUE),
+ 	SNMP_MIB_ITEM("OFOMerge", MPTCP_MIB_OFOMERGE),
++	SNMP_MIB_ITEM("OFOPrune", MPTCP_MIB_OFOPRUNE),
+ 	SNMP_MIB_ITEM("NoDSSInWindow", MPTCP_MIB_NODSSWINDOW),
+ 	SNMP_MIB_ITEM("DuplicateData", MPTCP_MIB_DUPDATA),
+ 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 47bcecce1106..75a7fb3a87db 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -18,6 +18,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_OFOQUEUETAIL,	/* Segments inserted into OoO queue tail */
+ 	MPTCP_MIB_OFOQUEUE,		/* Segments inserted into OoO queue */
+ 	MPTCP_MIB_OFOMERGE,		/* Segments merged in OoO queue */
++	MPTCP_MIB_OFOPRUNE,		/* Segments pruned from OoO queue */
+ 	MPTCP_MIB_NODSSWINDOW,		/* Segments not in MPTCP windows */
+ 	MPTCP_MIB_DUPDATA,		/* Segments discarded due to duplicate DSS */
+ 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=0 */
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 79cd8e879c10..4cc30a3d426c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -658,8 +658,17 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 		sk_rbuf = ssk_rbuf;
  
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 8afa4af30fdc..0a10ba1df1a0 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4206,10 +4206,13 @@ static inline bool tcp_sequence(const struct tcp_sock *tp, u32 seq, u32 end_seq)
+ 	/* over limit? can't append more skbs to msk */
+-	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
+-		goto wake;
++	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf) {
++		if (likely(!skb_queue_empty(&sk->sk_receive_queue)))
++			goto wake;
++
++		/* Entire recvbuf occupied by OOO skbs? Prune time. */
++		if (!test_and_set_bit(MPTCP_WORK_PRUNE_OFO, &msk->flags) &&
++		     schedule_work(&msk->work))
++			sock_hold(sk);
++
++		return;
++	}
+ 
+ 	if (move_skbs_to_msk(msk, ssk))
+ 		goto wake;
+@@ -1797,6 +1806,38 @@ static bool mptcp_check_close_timeout(const struct sock *sk)
+ 	return true;
  }
  
- /* When we get a reset we do this. */
--void tcp_reset(struct sock *sk)
-+void tcp_reset(struct sock *sk, struct sk_buff *skb)
- {
- 	trace_tcp_receive_reset(sk);
- 
-+	if (sk_is_mptcp(sk))
-+		mptcp_incoming_options(sk, skb);
++static void mptcp_prune_ofo(struct mptcp_sock *msk)
++{
++	struct sock *sk = &msk->sk.icsk_inet.sk;
++	struct sk_buff *skb, *prev = NULL;
++	int goal;
 +
- 	/* We want the right error as BSD sees it (and indeed as we do). */
- 	switch (sk->sk_state) {
- 	case TCP_SYN_SENT:
-@@ -5590,7 +5593,7 @@ static bool tcp_validate_incoming(struct sock *sk, struct sk_buff *skb,
- 						  &tp->last_oow_ack_time))
- 				tcp_send_dupack(sk, skb);
- 		} else if (tcp_reset_check(sk, skb)) {
--			tcp_reset(sk);
-+			tcp_reset(sk, skb);
- 		}
- 		goto discard;
- 	}
-@@ -5626,7 +5629,7 @@ static bool tcp_validate_incoming(struct sock *sk, struct sk_buff *skb,
- 		}
++	if (!skb_queue_empty(&sk->sk_receive_queue) ||
++	    atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf)
++		return;
++
++	if (WARN_ON_ONCE(RB_EMPTY_ROOT(&msk->out_of_order_queue)))
++		return;
++
++	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOPRUNE);
++
++	goal = READ_ONCE(sk->sk_rcvbuf) >> 3;
++	skb = msk->ooo_last_skb;
++
++	while (skb) {
++		prev = skb_rb_prev(skb);
++		rb_erase(&skb->rbnode, &msk->out_of_order_queue);
++		goal -= skb->truesize;
++		mptcp_drop(sk, skb);
++
++		if (goal <= 0)
++			break;
++		skb = prev;
++	}
++
++	msk->ooo_last_skb = prev;
++}
++
+ static void mptcp_worker(struct work_struct *work)
+ {
+ 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
+@@ -1819,6 +1860,9 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (mptcp_send_head(sk))
+ 		mptcp_push_pending(sk, 0);
  
- 		if (rst_seq_match)
--			tcp_reset(sk);
-+			tcp_reset(sk, skb);
- 		else {
- 			/* Disable TFO if RST is out-of-order
- 			 * and no data has been received
-@@ -6059,7 +6062,7 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
- 		 */
++	if (test_and_clear_bit(MPTCP_WORK_PRUNE_OFO, &msk->flags))
++		mptcp_prune_ofo(msk);
++
+ 	if (msk->pm.status)
+ 		pm_work(msk);
  
- 		if (th->rst) {
--			tcp_reset(sk);
-+			tcp_reset(sk, skb);
- 			goto discard;
- 		}
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d33e9676a1a3..360441fdaa93 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -91,6 +91,7 @@
+ #define MPTCP_WORK_EOF		3
+ #define MPTCP_FALLBACK_DONE	4
+ #define MPTCP_WORKER_RUNNING	5
++#define MPTCP_WORK_PRUNE_OFO	6
  
-@@ -6501,7 +6504,7 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
- 			if (TCP_SKB_CB(skb)->end_seq != TCP_SKB_CB(skb)->seq &&
- 			    after(TCP_SKB_CB(skb)->end_seq - th->fin, tp->rcv_nxt)) {
- 				NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPABORTONDATA);
--				tcp_reset(sk);
-+				tcp_reset(sk, skb);
- 				return 1;
- 			}
- 		}
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index 56c306e3cd2f..12f2495f98df 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -802,7 +802,7 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
- 		req->rsk_ops->send_reset(sk, skb);
- 	} else if (fastopen) { /* received a valid RST pkt */
- 		reqsk_fastopen_remove(sk, req, true);
--		tcp_reset(sk);
-+		tcp_reset(sk, skb);
- 	}
- 	if (!fastopen) {
- 		inet_csk_reqsk_queue_drop(sk, req);
+ static inline bool before64(__u64 seq1, __u64 seq2)
+ {
