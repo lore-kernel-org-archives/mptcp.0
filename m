@@ -1,47 +1,47 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D032FB2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E289070
 	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:08:40 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id w12so2224091edx.1
+Received: by mail-ed1-f49.google.com with SMTP id s6so2160343edu.10
         for <mptcp@lists.linux.dev>; Wed, 26 May 2021 09:08:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NWtoFOgkqhrjKC1PZ/5woHNifTuxnBnpaiOnfkbriws=;
-        b=E4+Pt+yTCO0dcXaDqVqJ1PVcGaQVYELyuZaxGrh8g4rgkpznizdAtk1BC1GKUmXre3
-         uLOHwXdFdmo0+dwoAOEnzDVLhKdDQ6l3Vww94FgaLQMPU7zrhc8ocBoZEBkS7xQgXe8U
-         FOJuxiWBO4SqG46EJICpxFhnv9o5zM+cePtlbMdLSVedca0WHTLfzuZUWC0K7JjbnQZu
-         hIWI+rs3NGrcjGf96btYcQBuFF8FyagjB6AxxXyYXNCWStTKZ+cSfAoilA7NypaPVbvn
-         poAihJNVg8R76uoPKe15rxjmd/rOnu05SJLhfrSSFmc2pBhOCF1JhAfw4cmPblDinkBH
-         rKiQ==
+        bh=UdeRqN/el4dU4A9dNuI5DWIl6pMo3kfvcBuIGtKGPns=;
+        b=Auw0ZIlkVcvvv0QeS3Kv7t93SCR3MVC/lxxFK9oIPFgeyYVtPrzRkjVvNm6QouXENG
+         f6pcTiyCKMrZvcmocqk6sqYLRpcUbA/fWhEtKjRu9sbipwpXhdzXTEsKFN4NxUXaxqn3
+         E8NMxYyKfh7qG1jVW/drkC2DKIguZ4jj4z9mDjZbomukvxuDkcR8qWlx/ZJjN4UJfXG4
+         qC84Adl7PkDNWJ8TkQjmbwR1fKYS6J998SvIBg5meDC8VyhMTd4n+bZ830rKL5HWxtFo
+         Ti9Y1etKy68pRpL8OnPbwDdYlf/mtezRXHuqVIK+Zas072Ebiplb//5rycrwIQF6zTyJ
+         HsAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NWtoFOgkqhrjKC1PZ/5woHNifTuxnBnpaiOnfkbriws=;
-        b=QuXrS/hMNfYY51+6wASZy1pOiPuGgR5Y1WGcRW7GJYTNUAJkzDfkY1FGls7IaEVIKh
-         fCk0GndC5ZncRws9DvsP/APnGfnT8YvYLo4NDEy18T54RQX0o3Kj5lhARnramnHkZkby
-         wMY3hPNimtWMOpJcmJ89yyd3x957EYO+npztxKlrRqtRlN+eBJYBKSomVszDUZYNF4f9
-         +CU3iL1rCzmyH7BTQT89NbBkCJtfMkHxpyQZFbtWE/Hwd8iAYYflI9eqcfZ+GRlR0hIM
-         pvhTliL/WAWPpBlUP9PJMZVcta4mK9+OSfw/Xa7FOD2Qtmo9elC6L8v/qAMnLr5BqUcx
-         rdLg==
-X-Gm-Message-State: AOAM530HOLccJ7VA96KT16fRnrhPKwc8h8g8RsdzIVdQn5cx3y3OqUa3
-	y0HnjKBZyIuF0bPClyTxHXTw78CIkdVRGt9y
-X-Google-Smtp-Source: ABdhPJzaSR9N11vg1emooWUvpnv55FK1HIsDdAr1mFlBRzQXJIXFQg3WeEsuMxc0PJES6h9o5zQd8g==
-X-Received: by 2002:a05:6402:35c5:: with SMTP id z5mr39914410edc.210.1622045318625;
-        Wed, 26 May 2021 09:08:38 -0700 (PDT)
+        bh=UdeRqN/el4dU4A9dNuI5DWIl6pMo3kfvcBuIGtKGPns=;
+        b=WZx+sWb15MMDBizX2v8NbJ6eYY3DBWxf8CqBxNooaQOCw0cEjupap0vbsZYYiiFADV
+         IJNqv8D0nWE28XBkP3n4tKsjynpdk/kYQGtQcu1QEVLqtVuZCffeKmNicQfJdYfISosp
+         JGomJO4JzBh/zlGQYmr7kYaHC1yKmqhRmTqhTKoq9IQph8wqS8gRFBkl+66ZYcsc1bdF
+         cZDQJ/6Er4QKmT0mkhKFdOWBpQcfqfIomXv0tRnN1eRAVxVgJuy5nytibSrIBlX1cDfO
+         rbF0n13gvWCNlSJSOPEOWnERa8FtS6B9fvF/Ua7GfK6Ey+F/3NZnhUYX0igEDsY6pBVA
+         bB1Q==
+X-Gm-Message-State: AOAM5310mugmxhOfDy0FURCkIZDBKyKiDk4wwko5OZZxslW8y4RBg2Hi
+	CSMvbtf3K22hvlCUe1HIFQC3ABghH1c0UjGs
+X-Google-Smtp-Source: ABdhPJxNR6+9wwUpzqgFnvavY52xe/4YNQo54Y12VleZ/BLa4JBxHgrnY09XkytTFF98+si52Q+EaQ==
+X-Received: by 2002:aa7:da99:: with SMTP id q25mr39406599eds.198.1622045319257;
+        Wed, 26 May 2021 09:08:39 -0700 (PDT)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
         by smtp.gmail.com with ESMTPSA id j7sm931655ejk.51.2021.05.26.09.08.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 26 May 2021 09:08:38 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [RESEND] [MPTCP] [PATCH MPTCP 5/5] mptcp: send fastclose if userspace closes socket with unread data
-Date: Wed, 26 May 2021 18:08:10 +0200
-Message-ID: <20201105170126.5627-6-fw@strlen.de>
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [RESEND] [MPTCP][PATCH mptcp-next 1/3] mptcp: MP_FAIL suboption sending
+Date: Wed, 26 May 2021 18:08:11 +0200
+Message-ID: <f158cbfcb748b9b6792d9b316b8fa810e5cb044a.1620282929.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210526160813.4160315-1-matthieu.baerts@tessares.net>
 References: <20210526160813.4160315-1-matthieu.baerts@tessares.net>
@@ -51,157 +51,142 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-ID: <20210526160810.AQGZaK36PMDV5E686aHcYoQ1voldKfI3QvSTKQR_3rw@z>
+Message-ID: <20210526160811.W9bwqKWzZFyPBsgBAa4XPyH8iqiovjANWYSUuPsASvU@z>
 
-From: Florian Westphal <fw@strlen.de>
+From: Geliang Tang <geliangtang@gmail.com>
 
-Add building & sending of FASTCLOSE option.
-RFC 8684 describes two methods:
+This patch added the MP_FAIL suboption sending support.
 
-A): Host sends an ACK containing the MP_FASTCLOSE
-    option on one subflow [..] On all the other subflows,
-    Host A sends a regular TCP RST to close these subflows and tears
-    them down. [..]
+Add a new flag named send_mp_fail in struct mptcp_subflow_context. If
+this flag is set, send out MP_FAIL suboption.
 
-R): Host A sends a RST containing the MP_FASTCLOSE option on all
-    subflows [..].  Host A can tear down the subflows and the
-    connection immediately.
+Add a new member fail_seq in struct mptcp_out_options to save the data
+sequence number to put into the MP_FAIL suboption.
 
-This implements option R) only: All subflows are re-set with FASTCLOSE.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c  | 35 +++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c | 32 +++++++++++++++++++++++++++++++-
- net/mptcp/protocol.h |  1 +
- 3 files changed, 67 insertions(+), 1 deletion(-)
+ include/net/mptcp.h  |  1 +
+ net/mptcp/options.c  | 46 +++++++++++++++++++++++++++++++++++++++++++-
+ net/mptcp/protocol.h |  4 ++++
+ 3 files changed, 50 insertions(+), 1 deletion(-)
 
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index cb580b06152f..f48d3b5a3fd4 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -72,6 +72,7 @@ struct mptcp_out_options {
+ 	u32 nonce;
+ 	u64 thmac;
+ 	u32 token;
++	u64 fail_seq;
+ 	u8 hmac[20];
+ 	struct mptcp_ext ext_copy;
+ #endif
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0a940687f738..08b60d527de0 100644
+index 4179287bd647..485c5a77e71b 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -681,6 +681,31 @@ static bool mptcp_established_options_rm_addr(struct sock *sk,
- 	return true;
+@@ -777,6 +777,28 @@ static noinline void mptcp_established_options_rst(struct sock *sk, struct sk_bu
+ 	opts->reset_reason = subflow->reset_reason;
  }
  
-+static bool mptcp_fastclose(const struct mptcp_sock *msk)
++static bool mptcp_established_options_mp_fail(struct sock *sk,
++					      unsigned int *size,
++					      unsigned int remaining,
++					      struct mptcp_out_options *opts)
 +{
-+	return READ_ONCE(msk->snd_fastclose);
-+}
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
 +
-+static bool mptcp_established_options_fastclose(struct sock *sk,
-+						unsigned int *size,
-+						unsigned int remaining,
-+						struct mptcp_out_options *opts)
-+{
-+	const struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-+
-+	if (likely(!mptcp_fastclose(mptcp_sk(subflow->conn))))
++	if (!subflow->send_mp_fail)
 +		return false;
 +
-+	if (remaining < TCPOLEN_MPTCP_FASTCLOSE)
++	if (remaining < TCPOLEN_MPTCP_FAIL)
 +		return false;
 +
-+	*size = TCPOLEN_MPTCP_FASTCLOSE;
-+	opts->suboptions |= OPTION_MPTCP_FASTCLOSE;
-+	opts->rcvr_key = subflow->remote_key;
++	*size = TCPOLEN_MPTCP_FAIL;
++	opts->suboptions |= OPTION_MPTCP_FAIL;
++	opts->fail_seq = subflow->fail_seq;
++
++	pr_debug("MP_FAIL fail_seq=%llu", opts->fail_seq);
 +
 +	return true;
 +}
 +
- static noinline void mptcp_established_options_rst(struct sock *sk, struct sk_buff *skb,
- 						   unsigned int *size,
- 						   unsigned int remaining,
-@@ -691,6 +716,9 @@ static noinline void mptcp_established_options_rst(struct sock *sk, struct sk_bu
- 	if (remaining < TCPOLEN_MPTCP_RST)
- 		return;
+ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 			       unsigned int *size, unsigned int remaining,
+ 			       struct mptcp_out_options *opts)
+@@ -792,8 +814,16 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 	if (unlikely(__mptcp_check_fallback(msk)))
+ 		return false;
  
-+	if (mptcp_established_options_fastclose(sk, size, remaining, opts))
-+		return;
++	if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
++		*size += opt_size;
++		remaining -= opt_size;
++		ret = true;
++	}
 +
- 	*size = TCPOLEN_MPTCP_RST;
- 	opts->suboptions |= OPTION_MPTCP_RST;
- 	opts->reset_transient = subflow->reset_transient;
-@@ -1179,6 +1207,13 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		ptr += 5;
+ 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+-		mptcp_established_options_rst(sk, skb, size, remaining, opts);
++		mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts);
++		*size += opt_size;
++		remaining -= opt_size;
+ 		return true;
  	}
  
-+	if (OPTION_MPTCP_FASTCLOSE & opts->suboptions) {
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
-+				      TCPOLEN_MPTCP_FASTCLOSE, 0, 0);
-+		put_unaligned_be64(opts->rcvr_key, ptr);
+@@ -1338,6 +1368,20 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 				      opts->backup, TCPOPT_NOP);
+ 	}
+ 
++	if (OPTION_MPTCP_FAIL & opts->suboptions) {
++		const struct sock *ssk = (const struct sock *)tp;
++		struct mptcp_subflow_context *subflow;
++
++		subflow = mptcp_subflow_ctx(ssk);
++		subflow->send_mp_fail = 0;
++
++		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
++				      TCPOLEN_MPTCP_FAIL,
++				      0, 0);
++		put_unaligned_be64(opts->fail_seq, ptr);
 +		ptr += 2;
 +	}
 +
- 	if (OPTION_MPTCP_RST & opts->suboptions)
- 		*ptr++ = mptcp_option(MPTCPOPT_RST,
- 				      TCPOLEN_MPTCP_RST,
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7e9705943813..6b6efa00cad5 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2133,6 +2133,29 @@ static void __mptcp_check_send_data_fin(struct sock *sk)
- 	}
- }
- 
-+static void __mptcp_send_fastclose(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
-+	WRITE_ONCE(msk->snd_fastclose, true);
-+
-+	__mptcp_flush_join_list(msk);
-+	__mptcp_clear_xmit(sk);
-+
-+	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
-+
-+	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
-+
-+		lock_sock(tcp_sk);
-+		subflow->reset_transient = 0;
-+		subflow->reset_reason = MPTCP_RST_EMPTCP;
-+		mptcp_subflow_reset(tcp_sk);
-+		release_sock(tcp_sk);
-+	}
-+}
-+
- static void __mptcp_wr_shutdown(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -2185,6 +2208,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow;
- 	bool do_cancel_work = false;
-+	bool send_fin = false;
- 
- 	lock_sock(sk);
- 	sk->sk_shutdown = SHUTDOWN_MASK;
-@@ -2197,7 +2221,13 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		goto cleanup;
- 	}
- 
--	if (mptcp_close_state(sk))
-+	send_fin = mptcp_close_state(sk);
-+	if (!skb_queue_empty(&sk->sk_receive_queue)) {
-+		__mptcp_send_fastclose(sk);
-+		send_fin = false;
-+	}
-+
-+	if (send_fin)
- 		__mptcp_wr_shutdown(sk);
- 
- 	sk_stream_wait_close(sk, timeout);
+ 	if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
+ 		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
+ 				      TCPOLEN_MPTCP_MPJ_SYN,
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d4c99e091cb9..93352044bff9 100644
+index 41baa2ffc9a9..ff70b3e97dd0 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -243,6 +243,7 @@ struct mptcp_sock {
- 	bool		fully_established;
- 	bool		rcv_data_fin;
- 	bool		snd_data_fin_enable;
-+	bool		snd_fastclose;
- 	bool		rcv_fastclose;
- 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
- 	spinlock_t	join_list_lock;
+@@ -26,6 +26,7 @@
+ #define OPTION_MPTCP_FASTCLOSE	BIT(8)
+ #define OPTION_MPTCP_PRIO	BIT(9)
+ #define OPTION_MPTCP_RST	BIT(10)
++#define OPTION_MPTCP_FAIL	BIT(11)
+ 
+ /* MPTCP option subtypes */
+ #define MPTCPOPT_MP_CAPABLE	0
+@@ -67,6 +68,7 @@
+ #define TCPOLEN_MPTCP_PRIO_ALIGN	4
+ #define TCPOLEN_MPTCP_FASTCLOSE		12
+ #define TCPOLEN_MPTCP_RST		4
++#define TCPOLEN_MPTCP_FAIL		12
+ 
+ #define TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM	(TCPOLEN_MPTCP_DSS_CHECKSUM + TCPOLEN_MPTCP_MPC_ACK_DATA)
+ 
+@@ -419,6 +421,7 @@ struct mptcp_subflow_context {
+ 		mpc_map : 1,
+ 		backup : 1,
+ 		send_mp_prio : 1,
++		send_mp_fail : 1,
+ 		rx_eof : 1,
+ 		can_ack : 1,        /* only after processing the remote a key */
+ 		disposable : 1;	    /* ctx can be free at ulp release time */
+@@ -433,6 +436,7 @@ struct mptcp_subflow_context {
+ 	u8	reset_seen:1;
+ 	u8	reset_transient:1;
+ 	u8	reset_reason:4;
++	u64	fail_seq;
+ 
+ 	long	delegated_status;
+ 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
