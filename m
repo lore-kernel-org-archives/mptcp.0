@@ -1,101 +1,253 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E4370
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 15:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F65370
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 15:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1622042604;
+	s=mimecast20190719; t=1622042657;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MtFCqLj3Jkq8gVcN0ULqvqWR/taIyAiEdqDilsx+gIE=;
-	b=MwoKqkZ53R2BK/39dZ6kzhUVx7adjpDGFxlfpcCVNWD5baKkTHRIan0JC4A43vtyVq/k0F
-	jFf8/vi9mjzsh1peoENfMfyqx17/RZj9RyzHcyYtOVL7hFjXnEjDdAk+4wtPHlXlZzmKPi
-	vfj/hxEjwDTjLI20QDOk9VRl6iPBsQs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-fDCVRTGrNaixs_Atdvthww-1; Wed, 26 May 2021 11:23:22 -0400
-X-MC-Unique: fDCVRTGrNaixs_Atdvthww-1
-Received: by mail-wr1-f72.google.com with SMTP id 2-20020adf94020000b0290110481f75ddso503438wrq.21
-        for <mptcp@lists.linux.dev>; Wed, 26 May 2021 08:23:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=MtFCqLj3Jkq8gVcN0ULqvqWR/taIyAiEdqDilsx+gIE=;
-        b=hKSE+2YrpnnSM2by1F4x7GXnUI/6/8iqYKZuTPpK1jKiAD3BeDDIGeyp62ufaAk2UH
-         oXDsnSUk/y8vc3i5eI5rNor16jzPD/o0bmWoriE9FswHDocGbdaCCTEzel1xYbbP3uTd
-         +QAUQS9ckJHIZ0L8yB0Wb+hFaQXVOQQ5HoMiosMeY/1/JdDcmiUnnuqQm2lHOAqHZn67
-         RvD0YNGNnCX/gAImEv+v8DpSzLNC75CR7MweJUyHIA/E8NeBV+zbF950X2dwcpsxBeN/
-         /ZB8BExFBiaDa3Aa016wYUF9A/jSfBUqlUOg/lq4x+gWK0joKmXaw0C8lmHvK6GcGmbl
-         Dp5A==
-X-Gm-Message-State: AOAM531xnjcEMBW0wTqvH1dfMHn9BGOpuc2/l+Ut79UIa6nyT3IMua9e
-	Hu0/iDdyiSvLVpdaVWEOK6Df+nOXlp4axwCwiapOqTerdslom622LnNgNNXXE20rnGep0NOOQ6B
-	CRVY9OP/CEm1XqfA=
-X-Received: by 2002:adf:eb82:: with SMTP id t2mr33615563wrn.337.1622042601355;
-        Wed, 26 May 2021 08:23:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzXl1W30rfjivVEWyWkjdPEWwlx14qF6i4mz3fMyFxcLI0S7056rfOyuyiEwU4GLhpUmjov9g==
-X-Received: by 2002:adf:eb82:: with SMTP id t2mr33615535wrn.337.1622042601115;
-        Wed, 26 May 2021 08:23:21 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-110-123.dyn.eolo.it. [146.241.110.123])
-        by smtp.gmail.com with ESMTPSA id r11sm21309197wrp.46.2021.05.26.08.23.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 08:23:20 -0700 (PDT)
-Message-ID: <6a39f2e90415355d478c8691331257974512d7eb.camel@redhat.com>
-Subject: Re: [PATCH v2 mptcp-next] mptcp: drop tx skb cache
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uIiAVsyyFjZEXyddKtDRgWVXOY7wB74ZOQ8giRPS4hw=;
+	b=ic5npWxBCUsgNQPyztPrwcBcoQEmXkN0i9EFhFrz6EXHqdD5XEWZUbtf5GDJwKjcMyLYX7
+	lIJU2p0clnzJAeED5ji0UYDv5CFuP3n7jpmfPHMn8NW+j/yxbMlx30MU5/QmKUuKe7Ly6M
+	+W6G+xIuIwYQ7zNcLiGSM4275GLYnnM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-567-nTK792skNzyIDJ-br82-Ng-1; Wed, 26 May 2021 11:24:15 -0400
+X-MC-Unique: nTK792skNzyIDJ-br82-Ng-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FB65800480
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 15:24:14 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-113-44.ams2.redhat.com [10.36.113.44])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9999018401
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 15:24:13 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Date: Wed, 26 May 2021 17:23:19 +0200
-In-Reply-To: <32a776b7dd322f114e385ca406f5ca879c7831cd.camel@redhat.com>
-References: <8dd3343ea83a7a631acfe4940a9dea841b32c52a.1621613936.git.pabeni@redhat.com>
-	 <e9657dbd-f455-61e9-2118-e2b2443fafb@linux.intel.com>
-	 <32a776b7dd322f114e385ca406f5ca879c7831cd.camel@redhat.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+To: mptcp@lists.linux.dev
+Subject: [PATCH v3 mptcp-next] mptcp: drop tx skb cache
+Date: Wed, 26 May 2021 17:24:09 +0200
+Message-Id: <3373718d8687043f4827123d18a3029f2aace6a2.1622042633.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-On Wed, 2021-05-26 at 13:06 +0200, Paolo Abeni wrote:
-> On Fri, 2021-05-21 at 15:57 -0700, Mat Martineau wrote:
-> > On Fri, 21 May 2021, Paolo Abeni wrote:
-> > 
-> > > The mentioned cache was introduced to reduce the number of skb
-> > > allocation in atomic context, but the required complexity is
-> > > excessive.
-> > > 
-> > > This change remove the mentioned cache.
-> > > 
-> > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > > ---
-> > > v1 -> v2:
-> > > - drop unused field skb_tx_cache
-> > 
-> > There's also a size_goal_cache field in struct mptcp_sock that's now 
-> > unused.
-> 
-> yep, will do in v3 (sorry, I lost track of this review)
-> 
-> > I like the simplification! Do the self tests trigger enough memory 
-> > pressure to test allocation in that scenario?
-> 
-> Will ensure that before posting v3
+The mentioned cache was introduced to reduce the number of skb
+allocation in atomic context, but the required complexity is
+excessive.
 
-Well, we have problems under severe memory pressure, but that happens
-even with the current export branch.
+This change remove the mentioned cache.
 
-I'll send a patch
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v2 -> v3:
+ - drop unused field size_goal_cache (Mat)
+v1 -> v2:
+ - drop unused field skb_tx_cache
+---
+ net/mptcp/protocol.c | 89 ++------------------------------------------
+ net/mptcp/protocol.h |  2 -
+ 2 files changed, 4 insertions(+), 87 deletions(-)
 
-Cheers,
-
-Paolo
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 44fd8c8c759b..bb029dd4ff5e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -903,22 +903,14 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+ 		df->data_seq + df->data_len == msk->write_seq;
+ }
+ 
+-static int mptcp_wmem_with_overhead(struct sock *sk, int size)
++static int mptcp_wmem_with_overhead(int size)
+ {
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-	int ret, skbs;
+-
+-	ret = size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
+-	skbs = (msk->tx_pending_data + size) / msk->size_goal_cache;
+-	if (skbs < msk->skb_tx_cache.qlen)
+-		return ret;
+-
+-	return ret + (skbs - msk->skb_tx_cache.qlen) * SKB_TRUESIZE(MAX_TCP_HEADER);
++	return size + ((sizeof(struct mptcp_data_frag) * size) >> PAGE_SHIFT);
+ }
+ 
+ static void __mptcp_wmem_reserve(struct sock *sk, int size)
+ {
+-	int amount = mptcp_wmem_with_overhead(sk, size);
++	int amount = mptcp_wmem_with_overhead(size);
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+ 	WARN_ON_ONCE(msk->wmem_reserved);
+@@ -1213,49 +1205,8 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
+ 	return NULL;
+ }
+ 
+-static bool mptcp_tx_cache_refill(struct sock *sk, int size,
+-				  struct sk_buff_head *skbs, int *total_ts)
+-{
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-	struct sk_buff *skb;
+-	int space_needed;
+-
+-	if (unlikely(tcp_under_memory_pressure(sk))) {
+-		mptcp_mem_reclaim_partial(sk);
+-
+-		/* under pressure pre-allocate at most a single skb */
+-		if (msk->skb_tx_cache.qlen)
+-			return true;
+-		space_needed = msk->size_goal_cache;
+-	} else {
+-		space_needed = msk->tx_pending_data + size -
+-			       msk->skb_tx_cache.qlen * msk->size_goal_cache;
+-	}
+-
+-	while (space_needed > 0) {
+-		skb = __mptcp_do_alloc_tx_skb(sk, sk->sk_allocation);
+-		if (unlikely(!skb)) {
+-			/* under memory pressure, try to pass the caller a
+-			 * single skb to allow forward progress
+-			 */
+-			while (skbs->qlen > 1) {
+-				skb = __skb_dequeue_tail(skbs);
+-				*total_ts -= skb->truesize;
+-				__kfree_skb(skb);
+-			}
+-			return skbs->qlen > 0;
+-		}
+-
+-		*total_ts += skb->truesize;
+-		__skb_queue_tail(skbs, skb);
+-		space_needed -= msk->size_goal_cache;
+-	}
+-	return true;
+-}
+-
+ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+ {
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct sk_buff *skb;
+ 
+ 	if (ssk->sk_tx_skb_cache) {
+@@ -1266,22 +1217,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+ 		return true;
+ 	}
+ 
+-	skb = skb_peek(&msk->skb_tx_cache);
+-	if (skb) {
+-		if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
+-			skb = __skb_dequeue(&msk->skb_tx_cache);
+-			if (WARN_ON_ONCE(!skb))
+-				return false;
+-
+-			mptcp_wmem_uncharge(sk, skb->truesize);
+-			ssk->sk_tx_skb_cache = skb;
+-			return true;
+-		}
+-
+-		/* over memory limit, no point to try to allocate a new skb */
+-		return false;
+-	}
+-
+ 	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
+ 	if (!skb)
+ 		return false;
+@@ -1297,7 +1232,6 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+ static bool mptcp_must_reclaim_memory(struct sock *sk, struct sock *ssk)
+ {
+ 	return !ssk->sk_tx_skb_cache &&
+-	       !skb_peek(&mptcp_sk(sk)->skb_tx_cache) &&
+ 	       tcp_under_memory_pressure(sk);
+ }
+ 
+@@ -1340,7 +1274,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	/* compute send limit */
+ 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+ 	avail_size = info->size_goal;
+-	msk->size_goal_cache = info->size_goal;
+ 	skb = tcp_write_queue_tail(ssk);
+ 	if (skb) {
+ 		/* Limit the write to the size available in the
+@@ -1689,7 +1622,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	while (msg_data_left(msg)) {
+ 		int total_ts, frag_truesize = 0;
+ 		struct mptcp_data_frag *dfrag;
+-		struct sk_buff_head skbs;
+ 		bool dfrag_collapsed;
+ 		size_t psize, offset;
+ 
+@@ -1722,16 +1654,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		psize = pfrag->size - offset;
+ 		psize = min_t(size_t, psize, msg_data_left(msg));
+ 		total_ts = psize + frag_truesize;
+-		__skb_queue_head_init(&skbs);
+-		if (!mptcp_tx_cache_refill(sk, psize, &skbs, &total_ts))
+-			goto wait_for_memory;
+ 
+-		if (!mptcp_wmem_alloc(sk, total_ts)) {
+-			__skb_queue_purge(&skbs);
++		if (!mptcp_wmem_alloc(sk, total_ts))
+ 			goto wait_for_memory;
+-		}
+ 
+-		skb_queue_splice_tail(&skbs, &msk->skb_tx_cache);
+ 		if (copy_page_from_iter(dfrag->page, offset, psize,
+ 					&msg->msg_iter) != psize) {
+ 			mptcp_wmem_uncharge(sk, psize + frag_truesize);
+@@ -2460,13 +2386,11 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	INIT_LIST_HEAD(&msk->rtx_queue);
+ 	INIT_WORK(&msk->work, mptcp_worker);
+ 	__skb_queue_head_init(&msk->receive_queue);
+-	__skb_queue_head_init(&msk->skb_tx_cache);
+ 	msk->out_of_order_queue = RB_ROOT;
+ 	msk->first_pending = NULL;
+ 	msk->wmem_reserved = 0;
+ 	msk->rmem_released = 0;
+ 	msk->tx_pending_data = 0;
+-	msk->size_goal_cache = TCP_BASE_MSS;
+ 
+ 	msk->ack_hint = NULL;
+ 	msk->first = NULL;
+@@ -2527,15 +2451,10 @@ static void __mptcp_clear_xmit(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_data_frag *dtmp, *dfrag;
+-	struct sk_buff *skb;
+ 
+ 	WRITE_ONCE(msk->first_pending, NULL);
+ 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list)
+ 		dfrag_clear(sk, dfrag);
+-	while ((skb = __skb_dequeue(&msk->skb_tx_cache)) != NULL) {
+-		sk->sk_forward_alloc += skb->truesize;
+-		kfree_skb(skb);
+-	}
+ }
+ 
+ static void mptcp_cancel_work(struct sock *sk)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 16e50caf200e..74184296b6af 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -245,9 +245,7 @@ struct mptcp_sock {
+ 	struct sk_buff  *ooo_last_skb;
+ 	struct rb_root  out_of_order_queue;
+ 	struct sk_buff_head receive_queue;
+-	struct sk_buff_head skb_tx_cache;	/* this is wmem accounted */
+ 	int		tx_pending_data;
+-	int		size_goal_cache;
+ 	struct list_head conn_list;
+ 	struct list_head rtx_queue;
+ 	struct mptcp_data_frag *first_pending;
+-- 
+2.26.3
 
