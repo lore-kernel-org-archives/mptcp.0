@@ -1,86 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD1370
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1622045450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KyjA/x7RYrn2Z4MVMcxwI2PUusUcokfZKrZnI8j+QJ0=;
-	b=a19l8J4nZL49mde+oEYperEUoWny605DZU6MgLTyHhev4DZr04xSqkXQkv2bmaePFVsX3B
-	d3FNEDUxwZbCbMci5aq0fiVOF7PcBwuyfUb3NckHgQBTkZ405cz5U+xf2z8UnKlQZZqj+k
-	VDPSitVTp2anJLti5wx4Wx/d0RVb3T4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-243-s_RWq2akPZylRGKrVtHDbw-1; Wed, 26 May 2021 12:10:48 -0400
-X-MC-Unique: s_RWq2akPZylRGKrVtHDbw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E23EB107ACC7
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:10:47 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-113-44.ams2.redhat.com [10.36.113.44])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5A82958899
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:10:47 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: try harder to borrow memory from subflow under pressure
-Date: Wed, 26 May 2021 18:10:43 +0200
-Message-Id: <bc6471c8f7444b89e7e5f6c8f7713972477fda36.1622045437.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BB02FAD
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:50:36 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id h16so2346343edr.6
+        for <mptcp@lists.linux.dev>; Wed, 26 May 2021 09:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=WBKuW/HWdT+W2/GNBaWxzwB2mwcXrK6m8LPzDxXNblg=;
+        b=k+7MJUh2QeY+UHHTH5gWm80MpF6COZG1QQPZwVHjVkcGv63FX035/yIUjPq6yRNfQm
+         Q70/21Y5F6ieJUeBoUhgYh9QaT44ED4O/Hx9XYnSVrT2UCMiU7JR9n2lG4Q9h/gQoi9B
+         pzYy58stApG49fbskNdAsOnkqDkXhhl7Ha43DoN/TMxDsSmvvWb4HzIVosWkS30SQfse
+         vQCJoM9I7R9rscYIUxx3+BlVVcKdpWAh4LYuu37oCL6OvJOsWdEC1EVJJ4IjVDaOjZDJ
+         YmPjopjKQi12QyAuzOJkVC1mTiOwXlY1xwuMkjscYh6tyKl/s1t6iMNnApdw6z/ikWVg
+         P4dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=WBKuW/HWdT+W2/GNBaWxzwB2mwcXrK6m8LPzDxXNblg=;
+        b=KpcOJb9mQxPLm/NaQ+5hK/4jjGNawXTRWU7hENd1cR239iNm4jCMadbs+HaOzx/ZO4
+         uSDIyOw/Rc5e+hnVx4MUnjCFIIUGN9wV6ZZlmf8cPY2LfeK311YUppMqCNE0Z7MudqtG
+         6SnFTqspI/PnBF7bj56FMywIblkVPYIQ27gtvwJQ5EhjSDGlBaAEwhnZP0awqXIU4HS7
+         Vm7p4M733w820OYoAgy8pC4+RftI3PMQ9mfDXZ37G6kkS5P+XOgN05QtFIaTYk/1r9+2
+         V3eHymi3rBz8V7h2TTgasG34gdVIWPnNwo+eDY1Rx28vcqJlEhaytFow+U49sso0zn6m
+         eOCg==
+X-Gm-Message-State: AOAM533O3Qafh42ctgZ1KsxE7O6cgdXKVQwelWMYw0RfpPjbBBVftE/+
+	IKlF7r0EAc2RL5BVuB+3oecqBoCe/8reUfDy+w4=
+X-Google-Smtp-Source: ABdhPJzIv6gA3KZntmHkNKQu5s2Zc3VJ9Rif6sSGg1EyNhe+1EZRnuVWAR6/tJWfwEuNENc1RAGAVQ==
+X-Received: by 2002:aa7:c4c2:: with SMTP id p2mr37363604edr.144.1622047835206;
+        Wed, 26 May 2021 09:50:35 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:a52a:a612:5e57:78a])
+        by smtp.gmail.com with ESMTPSA id h7sm2213449ejp.24.2021.05.26.09.50.34
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 May 2021 09:50:34 -0700 (PDT)
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Weekly meeting - 27 May 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
+Message-ID: <7c6e5e10-7f3a-d6ab-48fb-5e203cf4110f@tessares.net>
+Date: Wed, 26 May 2021 18:50:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-If the host is under sever memory pressure, and RX forward
-memory allocation for the msk fails, we try to borrow the
-required memory from the ingress subflow.
+Hello everybody!
 
-The current attempt is a bit flaky: if skb->truesize is less
-than SK_MEM_QUANTUM, the ssk will not release any memory, and
-the next schedule will fail again.
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-Instead, directly move the required amount of pages from the
-ssk to the msk, if available
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20210527
 
-Fixes: 9c3f94e1681b ("mptcp: add missing memory scheduling in the rx path")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Feel free to add/modify topics!
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index bb029dd4ff5e..785e74c13b3c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -286,11 +286,13 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
- 
- 	/* try to fetch required memory from subflow */
- 	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
--		if (ssk->sk_forward_alloc < skb->truesize)
--			goto drop;
--		__sk_mem_reclaim(ssk, skb->truesize);
--		if (!sk_rmem_schedule(sk, skb, skb->truesize))
-+		int amount = sk_mem_pages(skb->truesize) << SK_MEM_QUANTUM_SHIFT;
-+
-+		if (ssk->sk_forward_alloc < amount)
- 			goto drop;
-+
-+		ssk->sk_forward_alloc -= amount;
-+		sk->sk_forward_alloc += amount;
- 	}
- 
- 	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
+
+See/Speak to you tomorrow!
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
