@@ -1,77 +1,86 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B76A2FB7
-	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:08:42 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id z12so3359310ejw.0
-        for <mptcp@lists.linux.dev>; Wed, 26 May 2021 09:08:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QzEaCbME0vL9z8gysu4UW6QXI9jijCA3f0/m/3S1jQs=;
-        b=lFVOQRy+bYgHck7LFcmy3inTf8GKB+n260XeChzfOsIPBSSKR0zL+4/al1temjRhjL
-         SggE+3Gtltg3ELHxj2zbconSS59WSdlW5ONt+WTvjKuN3RMQcSPBGqbqP0cKphim6Wcy
-         Uu8+AzV9uPsHqr/UH2frIjV/UmgfYKxM/uTqpzqtDBHKGJwfs8p8P6BLhfGFBLPa7DzX
-         4Y5mlJWwZLTgQcWPlBBIwETFHcmTkmO5McW35QZUX65yji+iWc2ang0SIoK0JCXYxQ6I
-         m6mTOjsOO9t3av0c1ocqWYpyl1FYCfTnCfvtGs6ukFg3w+EGG9GRyZUrvyXwbYpfZgPs
-         uX2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QzEaCbME0vL9z8gysu4UW6QXI9jijCA3f0/m/3S1jQs=;
-        b=sQJj2lV5cE2N2ylugXiFpl+k4q1aQ1HFljz5Y90PQj1M97ZsGfJaKcMi2TtJVv3Akk
-         +9XNkRlDrVYdw1EgFH+KlKyitGxKIySgu72upuoJ/41rx5/baC7aDQNn73EaPq5E6TGG
-         PO9DfDaw0pZyrDIAH0RpcnkzYdPDEOv6lhlnOHrsgmbhW/miQQKsJOdcmzWO2vBLVlFO
-         M61KoRppRk/I+xrgLFJGsnA/el+zCj9g6KutR7dCiF/FbgmE7XizSdw6aCQdUlqYFqds
-         s/ZP0abUvCiHO9EWr5lLEtUh6U39ukUNgYYj02Lup8dzEj1UqksgelHbIVzSodw+m1mg
-         VyCw==
-X-Gm-Message-State: AOAM532DHMlkg1/gBXkRsIZ/eYyMeAftwCjU1MoSZIqFCk+fQknbk5Cl
-	UFm8e0RTwXdtF1hUNj6I7R5TZrdVBtVLE30H
-X-Google-Smtp-Source: ABdhPJwUp8tT6bN6w//rje319mlj2Ia097KODFZNmsNztKmsd/qWC8FXZNmS7LcBIzNJlUcB1rVRAg==
-X-Received: by 2002:a17:906:aac8:: with SMTP id kt8mr33476733ejb.402.1622045320613;
-        Wed, 26 May 2021 09:08:40 -0700 (PDT)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id j7sm931655ejk.51.2021.05.26.09.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 09:08:40 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD1370
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1622045450;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KyjA/x7RYrn2Z4MVMcxwI2PUusUcokfZKrZnI8j+QJ0=;
+	b=a19l8J4nZL49mde+oEYperEUoWny605DZU6MgLTyHhev4DZr04xSqkXQkv2bmaePFVsX3B
+	d3FNEDUxwZbCbMci5aq0fiVOF7PcBwuyfUb3NckHgQBTkZ405cz5U+xf2z8UnKlQZZqj+k
+	VDPSitVTp2anJLti5wx4Wx/d0RVb3T4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-s_RWq2akPZylRGKrVtHDbw-1; Wed, 26 May 2021 12:10:48 -0400
+X-MC-Unique: s_RWq2akPZylRGKrVtHDbw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E23EB107ACC7
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:10:47 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-113-44.ams2.redhat.com [10.36.113.44])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5A82958899
+	for <mptcp@lists.linux.dev>; Wed, 26 May 2021 16:10:47 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [RESEND] [MPTCP][PATCH mptcp-next 3/3] mptcp: send out MP_FAIL when data checksum fail
-Date: Wed, 26 May 2021 18:08:13 +0200
-Message-ID: <f46dabaf1055b87b5613b126372d9e506c178264.1620282930.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210526160813.4160315-1-matthieu.baerts@tessares.net>
-References: <20210526160813.4160315-1-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net] mptcp: try harder to borrow memory from subflow under pressure
+Date: Wed, 26 May 2021 18:10:43 +0200
+Message-Id: <bc6471c8f7444b89e7e5f6c8f7713972477fda36.1622045437.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Message-ID: <20210526160813.L4l1DzKShRoGq0ToaN7HN8-Qkz3M01gh0eYSeqKMCtQ@z>
+Content-Type: text/plain; charset="US-ASCII"
 
-From: Geliang Tang <geliangtang@gmail.com>
+If the host is under sever memory pressure, and RX forward
+memory allocation for the msk fails, we try to borrow the
+required memory from the ingress subflow.
 
-When a bad checksum is detected, send out the MP_FAIL suboption.
+The current attempt is a bit flaky: if skb->truesize is less
+than SK_MEM_QUANTUM, the ssk will not release any memory, and
+the next schedule will fail again.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+Instead, directly move the required amount of pages from the
+ssk to the msk, if available
+
+Fixes: 9c3f94e1681b ("mptcp: add missing memory scheduling in the rx path")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/subflow.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mptcp/protocol.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 659b8842ae3b..efd84ff61015 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -906,6 +906,8 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
- 	csum = csum_partial(&header, sizeof(header), subflow->map_data_csum);
- 	if (unlikely(csum_fold(csum))) {
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCSUMERR);
-+		subflow->send_mp_fail = 1;
-+		subflow->fail_seq = subflow->map_seq;
- 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index bb029dd4ff5e..785e74c13b3c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -286,11 +286,13 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 
+ 	/* try to fetch required memory from subflow */
+ 	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
+-		if (ssk->sk_forward_alloc < skb->truesize)
+-			goto drop;
+-		__sk_mem_reclaim(ssk, skb->truesize);
+-		if (!sk_rmem_schedule(sk, skb, skb->truesize))
++		int amount = sk_mem_pages(skb->truesize) << SK_MEM_QUANTUM_SHIFT;
++
++		if (ssk->sk_forward_alloc < amount)
+ 			goto drop;
++
++		ssk->sk_forward_alloc -= amount;
++		sk->sk_forward_alloc += amount;
  	}
  
+ 	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+-- 
+2.26.3
+
