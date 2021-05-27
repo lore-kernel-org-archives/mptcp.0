@@ -1,57 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B360C2FB4
-	for <mptcp@lists.linux.dev>; Thu, 27 May 2021 09:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8062FB4
+	for <mptcp@lists.linux.dev>; Thu, 27 May 2021 09:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1622106344;
+	s=mimecast20190719; t=1622107802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=F0OBodwPZcry4FC3UKU+ClPT/9OYKMb3PA0qpLQo3rI=;
-	b=E9zK1MrqCKGrgxDfsL0gherM06LACRY4ubaZ8Nxs+KkaRHEobLXR+uSgA/495kWKeaY0/t
-	hscuJLg52EhkaWzLoIQVFmT6HeKM4FDRevkoDiQhlHBzfMFn4wVcKFtuvxzClVSGGFQ2TZ
-	ZjjFuCw3ZE9Zy8fyeTGqepjltpA9bJs=
+	bh=OvFWgWJsd8LS/pauBU6s7GDyjE/T7FzECy+zAPT8NNI=;
+	b=CoGtTuVDXMvogyCBUO4aCDeVbT1lChcF4fE6EPSjZXRjm07+faC/DXCbm58iDaIzVx8Snh
+	1veHIOCkzjPX5olKZqVtjJy36E++gPz5TOFuVbzyT2swSudDpcrRaEE8ah7Ojls9Q/Lluc
+	urxs4qvoM/YXahFWHJYOKuperI5HQys=
 Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
  [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-596-VFBp8UBGOi6LeqH6gY-pwA-1; Thu, 27 May 2021 05:05:42 -0400
-X-MC-Unique: VFBp8UBGOi6LeqH6gY-pwA-1
-Received: by mail-wm1-f71.google.com with SMTP id r1-20020a05600c35c1b029018ec2043223so1099740wmq.7
-        for <mptcp@lists.linux.dev>; Thu, 27 May 2021 02:05:42 -0700 (PDT)
+ us-mta-443-X5E0KTkmPwaqHox4vy7ToA-1; Thu, 27 May 2021 05:30:00 -0400
+X-MC-Unique: X5E0KTkmPwaqHox4vy7ToA-1
+Received: by mail-wm1-f71.google.com with SMTP id x20-20020a1c7c140000b029018f49a7efb7so1284216wmc.1
+        for <mptcp@lists.linux.dev>; Thu, 27 May 2021 02:30:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=F0OBodwPZcry4FC3UKU+ClPT/9OYKMb3PA0qpLQo3rI=;
-        b=ChNv+YbAkA1MdqKDU9PmGTJmsbUllcZd249W2YvyBPbBom3XBje4M0WbnSqDhZ4sNx
-         4jA3eXfkEwx1DwGKVUDfC+IAW/At/Jz/PKaPF4wuKpovreMJAHsB9RbGy8MPoYnj1bzR
-         yvAhzPpWHuHnY3n16ShH4npGttekeeLx//XxW8OrhfvtjvF5QKE9ZlCeLH70/WYoelNw
-         wsMnZ5gLbgIaSFy0CwBffKBq0mKSq/xKLZxmGO81Z2ps9IyokMdV9x1h7a0cSnCQ9CKb
-         HQ76W4sAdK5gBB8XW4gKRd271Yyrn7wFTd9JxPfqJFW56eHZMngXL7eB/UO9TCJo9F8G
-         BBBg==
-X-Gm-Message-State: AOAM532Zyn6gb9TMkhxtkq0R6LR/fyKKKR+3mKSsmjjGFf2LvWqqtzjP
-	WOCWdWsrwWd0LiXGrusL11mbxe6gz9rEUMNulRogBhI8/FaP8BQrjVhpYcSI6lqzHMEfk2hWmwU
-	fVxifo0yPAtRRyzs=
-X-Received: by 2002:a5d:52ce:: with SMTP id r14mr2205331wrv.395.1622106341426;
-        Thu, 27 May 2021 02:05:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx99O+Loap7XDP+UbjPXkyj8pCHfyuV1P5txqD75Hx9126D5915t3R7zQSmC5tVIYJe+18h7g==
-X-Received: by 2002:a5d:52ce:: with SMTP id r14mr2205310wrv.395.1622106341158;
-        Thu, 27 May 2021 02:05:41 -0700 (PDT)
+        bh=OvFWgWJsd8LS/pauBU6s7GDyjE/T7FzECy+zAPT8NNI=;
+        b=NGSePAzhDAjRHJMQGrw5aC4XkHbp/kdwIGqsJIs8EnJ1jpqSDdBx3wXdbFPr+1JpKd
+         E+Ltj69KF/fwzi1E7+eTOGCTI1pKBz/r3flmiSjSpX+eTlMNT3qvRC14VuOqQu1JgdxV
+         Oh9kV1cSQPOB9kEKU3RVWYAWhTsenOOY1D1Mk4w1zzqFpm5V8nGhlV9jkbm+BLN64vuN
+         wlIvdkh2BkRaWz8zfaNjnukjlpuc+jlKTxQlQmffjlHggnlrutPWlwfxYfvUBmU++RU0
+         pk+84uoVr1BKl2k3IlV0WnKCcr5+17eV/8AyXdnoAHOUUjA3CCCteGq+0cs23PW3Ut3L
+         KoVA==
+X-Gm-Message-State: AOAM533QPaChcZupxJjgbHUeEuOfUEu46ylBEOAmEmnoyLsX+0fgy8eF
+	Z8K7/QNlUPC71z+csawubbZVT0TIsH2+FRn6g0TD0KU34YJMY3dg9XpBKkYbG8JBporJAoedgtb
+	2i4SSRefEd9k8BJc=
+X-Received: by 2002:a05:600c:3043:: with SMTP id n3mr2481735wmh.98.1622107799179;
+        Thu, 27 May 2021 02:29:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyPfBXNH2Q6DtfR/MNMThIScrIhFC8LzH9CO2La+0phkbn8NJfU3x9yS2uHhdCBBZnOvBRE6g==
+X-Received: by 2002:a05:600c:3043:: with SMTP id n3mr2481723wmh.98.1622107798997;
+        Thu, 27 May 2021 02:29:58 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-110-123.dyn.eolo.it. [146.241.110.123])
-        by smtp.gmail.com with ESMTPSA id l3sm2112081wmh.2.2021.05.27.02.05.40
+        by smtp.gmail.com with ESMTPSA id f12sm2293432wre.88.2021.05.27.02.29.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 May 2021 02:05:40 -0700 (PDT)
-Message-ID: <a0eb5145d2c40058cbb9df418a6e1828002486be.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: try harder to borrow memory from
- subflow under pressure
+        Thu, 27 May 2021 02:29:58 -0700 (PDT)
+Message-ID: <3df56d50e64671f9220715c2572fe93d4a4b7242.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net] tcp: ensure that backlog coalescing don't
+ break MPTCP DSS
 From: Paolo Abeni <pabeni@redhat.com>
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Date: Thu, 27 May 2021 11:05:39 +0200
-In-Reply-To: <e4ed3091-8734-ff3f-89fd-28ecc5981d5e@linux.intel.com>
-References: <bc6471c8f7444b89e7e5f6c8f7713972477fda36.1622045437.git.pabeni@redhat.com>
-	 <e4ed3091-8734-ff3f-89fd-28ecc5981d5e@linux.intel.com>
+Cc: mptcp@lists.linux.dev, max@internet.ru
+Date: Thu, 27 May 2021 11:29:57 +0200
+In-Reply-To: <8268318-9d67-4752-46c5-5da27e507ebb@linux.intel.com>
+References: <925dcab4e637ab2ad2d947baa937a62146040802.1622044966.git.pabeni@redhat.com>
+	 <8268318-9d67-4752-46c5-5da27e507ebb@linux.intel.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -65,61 +65,67 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2021-05-26 at 21:17 -0700, Mat Martineau wrote:
+On Wed, 2021-05-26 at 16:27 -0700, Mat Martineau wrote:
 > On Wed, 26 May 2021, Paolo Abeni wrote:
 > 
-> > If the host is under sever memory pressure, and RX forward
-> > memory allocation for the msk fails, we try to borrow the
-> > required memory from the ingress subflow.
+> > Currently the backlog coalescing does check for MPTCP validation:
+> > a relevant DSS could be lost leading to MPTCP stream corruption.
 > > 
-> > The current attempt is a bit flaky: if skb->truesize is less
-> > than SK_MEM_QUANTUM, the ssk will not release any memory, and
-> > the next schedule will fail again.
+> > The above is quite infrequent since the MPTCP subflows are not
+> > exposed to user-space but the MPTCP still acquires the ssk socket
+> > lock on some events.
 > > 
-> > Instead, directly move the required amount of pages from the
-> > ssk to the msk, if available
+> > Fix the issue adding the missing test.
 > > 
-> > Fixes: 9c3f94e1681b ("mptcp: add missing memory scheduling in the rx path")
+> > Fixes: 85712484110d ("tcp: coalesce/collapse must respect MPTCP extensions")
 > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > > ---
-> > net/mptcp/protocol.c | 10 ++++++----
-> > 1 file changed, 6 insertions(+), 4 deletions(-)
+> > this can possibly fix issues/196, but it's very hard to demonstrate,
+> > even with pktdrill
+> > ---
+> > net/ipv4/tcp_ipv4.c | 1 +
+> > 1 file changed, 1 insertion(+)
 > > 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index bb029dd4ff5e..785e74c13b3c 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -286,11 +286,13 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+> > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> > index 4f5b68a90be9..6b033593d069 100644
+> > --- a/net/ipv4/tcp_ipv4.c
+> > +++ b/net/ipv4/tcp_ipv4.c
+> > @@ -1822,6 +1822,7 @@ bool tcp_add_backlog(struct sock *sk, struct sk_buff *skb)
 > > 
-> > 	/* try to fetch required memory from subflow */
-> > 	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
-> > -		if (ssk->sk_forward_alloc < skb->truesize)
-> > -			goto drop;
-> > -		__sk_mem_reclaim(ssk, skb->truesize);
-> > -		if (!sk_rmem_schedule(sk, skb, skb->truesize))
-> > +		int amount = sk_mem_pages(skb->truesize) << SK_MEM_QUANTUM_SHIFT;
-> > +
-> > +		if (ssk->sk_forward_alloc < amount)
-> > 			goto drop;
-> > +
-> > +		ssk->sk_forward_alloc -= amount;
-> > +		sk->sk_forward_alloc += amount;
-> > 	}
-> > 
-> > 	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+> > 	if (TCP_SKB_CB(tail)->end_seq != TCP_SKB_CB(skb)->seq ||
+> > 	    TCP_SKB_CB(tail)->ip_dsfield != TCP_SKB_CB(skb)->ip_dsfield ||
+> > +	    !mptcp_skb_can_collapse(tail, skb) ||
+> > 	    ((TCP_SKB_CB(tail)->tcp_flags |
+> > 	      TCP_SKB_CB(skb)->tcp_flags) & (TCPHDR_SYN | TCPHDR_RST | TCPHDR_URG)) ||
+> > 	    !((TCP_SKB_CB(tail)->tcp_flags &
 > > -- 
 > > 2.26.3
 > 
-> Looks ok to me - the memory will be reclaimed from the msk later, if I 
-> understand correctly.
-
-Yes, sk_forward_alloc will be updated when the skb will be freed at
-reception time, and the fwd allocated memory is reclaimed either on
-memory pressure or at socket close time. 
+> Yeah, definitely could lose MPTCP header information here.
 > 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Since mptcp_incoming_options() hasn't been called yet, skbs in the backlog 
+> queue will never have the MPTCP skb extensions that 
+> mptcp_skb_can_collapse() relies on.
 
-Thanks!
+whoops, I missed that point!!! 
+
+> Is it worth it to add a function that will do a subset of the 
+> mptcp_incoming_options() work to populate the skb extension for mptcp 
+> subflow socks? (and modify mptcp_incoming_options() to detect existing 
+> mpexts?)
+
+I was wondering about memcmp-aring the TCP options carried by the two
+skbs, then I noted that the existing code already does:
+
+	 thtail->doff != th->doff ||
+	 memcmp(thtail + 1, th + 1, hdrlen - sizeof(*th)))
+
+Skbs with different mapping can't really be merged, and the suspected
+issue is really not possible.
+
+I think this patch can be dropped,
+
+thanks!
 
 Paolo
 
