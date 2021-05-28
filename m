@@ -1,263 +1,124 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D58D2FB1
-	for <mptcp@lists.linux.dev>; Fri, 28 May 2021 00:56:54 +0000 (UTC)
-IronPort-SDR: 6PIKbn+JG21fvDSkp6tWtfWSCk20HWy2RAitVz64RuUkRNvCjzwfkwPkdD2ADROCNWBXmlqFdT
- SyooQE9omq5w==
-X-IronPort-AV: E=McAfee;i="6200,9189,9997"; a="224090269"
-X-IronPort-AV: E=Sophos;i="5.83,228,1616482800"; 
-   d="scan'208";a="224090269"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2021 17:56:47 -0700
-IronPort-SDR: W0tVXPXIz4hhyqhMRSyc3iuBzd+LjOM6PJtSfE/8s0Dm9gpcZYWnM4AhjvkQ+xA7Fl9Pno/DlW
- eOHDL5107/QA==
-X-IronPort-AV: E=Sophos;i="5.83,228,1616482800"; 
-   d="scan'208";a="415116891"
-Received: from mkronenb-mobl.amr.corp.intel.com ([10.209.5.218])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2021 17:56:47 -0700
-Date: Thu, 27 May 2021 17:56:46 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: wake-up readers only for in sequence
- data.
-In-Reply-To: <5009954210af20796d1cf88ca630d19ec12e2132.1622132690.git.pabeni@redhat.com>
-Message-ID: <c69480a9-2470-45c1-bb3c-083f1d1b8ed@linux.intel.com>
-References: <5009954210af20796d1cf88ca630d19ec12e2132.1622132690.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3192FB4
+	for <mptcp@lists.linux.dev>; Fri, 28 May 2021 15:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1622215142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/3Qp5vTjTabZI1CA4QEBjlisDDf/OYPDGt+D/TgLt54=;
+	b=ENONecfAWT8+N8K+cNmgOsYfYjQfDt6smgZriZpXmBvk8xYz3kaF3p9oW8UGkbowetNNfJ
+	Q9KKLYe45KUz39vBVXR8SrIT6Qba8Rk3MeUjJLu3lAbDcZdqFDrImIpcaXU30/WI2mp41M
+	nCM9VAqRafLsmExz2seOTnk34VAL1nc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-13-tPLVnEWTOD6TNupw0EQ_Yw-1; Fri, 28 May 2021 11:18:59 -0400
+X-MC-Unique: tPLVnEWTOD6TNupw0EQ_Yw-1
+Received: by mail-wm1-f71.google.com with SMTP id h129-20020a1c21870000b02901743c9f70b9so1187237wmh.6
+        for <mptcp@lists.linux.dev>; Fri, 28 May 2021 08:18:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=/3Qp5vTjTabZI1CA4QEBjlisDDf/OYPDGt+D/TgLt54=;
+        b=ZzHqddRfWaHW7FTK48pJobie7mhacdryyg4LzDdpyjPkOYLztckVNv62FcdZod4d6x
+         U8Bl1vTcj9uUitaU28grOeGXhxwSVn7cczOiEb5dTk4MqLbZ3Jh3+kKn3ZGUNLt4OOXR
+         FvzUvago2R1rvY2IKpefItbrec9nvUFWs5V/6Z6vhFTMoAP6VJLnHZ52QIlRp+KLMjl6
+         H+wR+CnRa3SBhKO/6xHesV2HmHRSKAWs3LEoUEjOszTKIG9FW2B8R6q7tXlZ4vq1PNL1
+         +C8OhZG5Oe03rqvpycYktWcSEn9lencJdD6lRESuPyL7DId78Aktt/0VO9Iy8cpEmbES
+         iK8A==
+X-Gm-Message-State: AOAM531XwCP0b4K6T+8NoVtKjcTokofrpzv91HJVjhtYSqwvlhDaSUtE
+	UulmoVn21KJt/Lgkr8Ui/4vcIVGU0F67btF9pNZSqwfxrieWKs3FVMl4errGe3zx47vIFGPtmqG
+	fzV5kGHF7ZFGB6ACN4EOck0BrEqrST/kLzkbDdd+GGLYg4fIn7XjqQzR74lP6lWJY
+X-Received: by 2002:adf:ed52:: with SMTP id u18mr9163720wro.379.1622215137889;
+        Fri, 28 May 2021 08:18:57 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzzP7O4I9W0b033wsoWTQheuBSL1ALRW7+a4AwsXeEvsIUwAj08zgiye9Ojs0tlVMqUbtmTJA==
+X-Received: by 2002:adf:ed52:: with SMTP id u18mr9163696wro.379.1622215137629;
+        Fri, 28 May 2021 08:18:57 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-110-123.dyn.eolo.it. [146.241.110.123])
+        by smtp.gmail.com with ESMTPSA id m5sm13393906wmq.6.2021.05.28.08.18.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 May 2021 08:18:57 -0700 (PDT)
+Message-ID: <9af85be18465b0f9595459764013568456453ce9.camel@redhat.com>
+Subject: Re: [RFC PATCH 0/4] mptcp: just another receive path refactor
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: fwestpha@redhat.com
+Date: Fri, 28 May 2021 17:18:55 +0200
+In-Reply-To: <cover.1621963632.git.pabeni@redhat.com>
+References: <cover.1621963632.git.pabeni@redhat.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
+On Tue, 2021-05-25 at 19:37 +0200, Paolo Abeni wrote:
+> This could have some negative performance effects, as on average more
+> locking is required for each packet. I'm doing some perf test and will
+> report the results.
 
-On Thu, 27 May 2021, Paolo Abeni wrote:
+There are several different possible scenarios:
 
-> Currently we relay on the subflow->data_avail field,
-                ^^^^^ rely
+1) single subflow, ksoftirq && user-space process run on the same CPU
+2) multiple subflows, ksoftirqs && user-space process run on the same
+CPU
+3) single subflow, ksoftirq && user-space process run on different CPUs
+4) multiple subflows ksoftirqs && user-space process run on different
+CPUs
 
-> which is subject to races:
->
-> 	ssk1
-> 		skb len = 500 DSS(seq=1, len=1000, off=0)
-> 		# data_avail == MPTCP_SUBFLOW_DATA_AVAIL
->
-> 	ssk2
-> 		skb len = 500 DSS(seq = 501, len=1000)
-> 		# data_avail == MPTCP_SUBFLOW_DATA_AVAIL
->
-> 	ssk1
-> 		skb len = 500 DSS(seq = 1, len=1000, off =500)
-> 		# still data_avail == MPTCP_SUBFLOW_DATA_AVAIL,
-> 		# as the skb is covered by a pre-existing map,
-> 		# which was in-sequence at reception time.
->
-> Instead we can explicitly check if some has been received in-sequence,
-> propagating the info from __mptcp_move_skbs_from_subflow().
->
-> Additionally and the 'ONCE' annotation to the 'data_avail' memory
-                ^^^ add (right?)
+With a single subflow, the most common scenario is with ksoftirq &&
+user-space process run on the same CPU. With multiple subflows on
+resonable server H/W we should likley observe a more mixed situation:
+softirqs running on multiple CPUs, one of them also hosting the user-
+space process. I don't have data for that yet.
 
-Fixing this one since it's a little confusing to parse, so figured I'd 
-edit above too.
+The figures:
 
-> access, as msk will read it outside the subflow socket lock.
->
-> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c | 29 +++++++++++------------------
-> net/mptcp/protocol.h |  1 -
-> net/mptcp/subflow.c  | 23 +++++++++--------------
-> 3 files changed, 20 insertions(+), 33 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 786f09d83d35..1e77d2defd28 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -681,13 +681,13 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
-> /* In most cases we will be able to lock the mptcp socket.  If its already
->  * owned, we need to defer to the work queue to avoid ABBA deadlock.
->  */
-> -static void move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
-> +static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
-> {
-> 	struct sock *sk = (struct sock *)msk;
-> 	unsigned int moved = 0;
->
-> 	if (inet_sk_state_load(sk) == TCP_CLOSE)
-> -		return;
-> +		return false;
->
-> 	mptcp_data_lock(sk);
->
-> @@ -702,6 +702,8 @@ static void move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
-> 	if (mptcp_pending_data_fin(sk, NULL))
-> 		mptcp_schedule_work(sk);
-> 	mptcp_data_unlock(sk);
-> +
-> +	return moved > 0;
-> }
->
-> void mptcp_data_ready(struct sock *sk, struct sock *ssk)
-> @@ -709,7 +711,6 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
-> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> 	int sk_rbuf, ssk_rbuf;
-> -	bool wake;
->
-> 	/* The peer can send data while we are shutting down this
-> 	 * subflow at msk destruction time, but we must avoid enqueuing
-> @@ -718,28 +719,20 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
-> 	if (unlikely(subflow->disposable))
-> 		return;
->
-> -	/* move_skbs_to_msk below can legitly clear the data_avail flag,
-> -	 * but we will need later to properly woke the reader, cache its
-> -	 * value
-> -	 */
-> -	wake = subflow->data_avail == MPTCP_SUBFLOW_DATA_AVAIL;
-> -	if (wake)
-> -		set_bit(MPTCP_DATA_READY, &msk->flags);
-> -
-> 	ssk_rbuf = READ_ONCE(ssk->sk_rcvbuf);
-> 	sk_rbuf = READ_ONCE(sk->sk_rcvbuf);
-> 	if (unlikely(ssk_rbuf > sk_rbuf))
-> 		sk_rbuf = ssk_rbuf;
->
-> -	/* over limit? can't append more skbs to msk */
-> +	/* over limit? can't append more skbs to msk, Also, no need to wake-up*/
-> 	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
-> -		goto wake;
-> -
-> -	move_skbs_to_msk(msk, ssk);
-> +		return;
->
-> -wake:
-> -	if (wake)
-> +	/* Wake-up the reader only for in-sequence data */
-> +	if (move_skbs_to_msk(msk, ssk)) {
-> +		set_bit(MPTCP_DATA_READY, &msk->flags);
-> 		sk->sk_data_ready(sk);
-> +	}
-> }
->
-> static bool mptcp_do_flush_join_list(struct mptcp_sock *msk)
-> @@ -871,7 +864,7 @@ static struct sock *mptcp_subflow_recv_lookup(const struct mptcp_sock *msk)
-> 	sock_owned_by_me(sk);
->
-> 	mptcp_for_each_subflow(msk, subflow) {
-> -		if (subflow->data_avail)
-> +		if (READ_ONCE(subflow->data_avail))
-> 			return mptcp_subflow_tcp_sock(subflow);
-> 	}
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 74184296b6af..160c2ab09f19 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -373,7 +373,6 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
-> enum mptcp_data_avail {
-> 	MPTCP_SUBFLOW_NODATA,
-> 	MPTCP_SUBFLOW_DATA_AVAIL,
-> -	MPTCP_SUBFLOW_OOO_DATA
-> };
+scenario	export branch 		RX path refactor	delta
+1)		23Mbps			21Mbps			-8%
+2)		30Mbps			19Mbps			-37%
+3)		17.8Mbps		17.5Mbps		noise range
+4)		1-3Mbps			1-3Mbps			???
 
-Now subflow->data_avail is effectively a bool.
+The last scenario outlined a bug, we likely don't send MPTCP level ACK
+frequently enough under some condition. That *could* possibly be
+related to:
 
-Is it appropriate in -net to change it to a bool (in this patch or make it 
-a series)? Or better to save that enum->bool conversion for net-next?
+https://github.com/multipath-tcp/mptcp_net-next/issues/137
 
-If we keep the enum, it makes sense to explicitly write or compare to 
-MPTCP_SUBFLOW_NODATA rather than use 0 or have checks like "if 
-(READ_ONCE(subflow->data_avail))", because all of those code lines are 
-getting touched anyway.
+but I'm unsure about that.
 
->
-> struct mptcp_delegated_action {
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 726bc3d083fa..783a542e5bb7 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1098,7 +1098,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 	struct sk_buff *skb;
->
-> 	if (!skb_peek(&ssk->sk_receive_queue))
-> -		subflow->data_avail = 0;
-> +		WRITE_ONCE(subflow->data_avail, 0);
-> 	if (subflow->data_avail)
+The delta in scenario 2) is quite significant.
 
-Ok, the one line of context immediately above isn't currently changed but 
-my enum->bool comment applies to that line too.
+The root cause is that in such scenario the user-space process is the
+bottle-neck: it keeps a CPU fully busy, spending most of the available
+cycles memcpying the data into the user-space. 
 
+With the current export branch, the skbs movement/enqueuing happens
+completely inside the ksoftirqd processes.
 
-These review comments are only about code/commit formatting and wouldn't 
-affect the compiled code, so I do want to point out that the functionality 
-of the patch looks good to me. Could apply to export and squash some 
-updates to get more testing exposure now. Let Matthieu know what you 
-prefer.
+On top the RX path refactor, some skbs handling is peformed by the
+mptcp_release_cb() inside the scope of the user-space process. That
+reduces the number of CPU cycles available for memcpying the data and
+thus reduces also the overall tput.
 
-Mat
+I experimented with a different approach - e.g. keeping the skbs
+accounted to the incoming subflows - but that looks not feasible.
 
+Input wanted: WDYT of the above?
 
-> 		return true;
->
-> @@ -1137,18 +1137,13 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 		ack_seq = mptcp_subflow_get_mapped_dsn(subflow);
-> 		pr_debug("msk ack_seq=%llx subflow ack_seq=%llx", old_ack,
-> 			 ack_seq);
-> -		if (ack_seq == old_ack) {
-> -			subflow->data_avail = MPTCP_SUBFLOW_DATA_AVAIL;
-> -			break;
-> -		} else if (after64(ack_seq, old_ack)) {
-> -			subflow->data_avail = MPTCP_SUBFLOW_OOO_DATA;
-> -			break;
-> +		if (unlikely(before64(ack_seq, old_ack))) {
-> +			mptcp_subflow_discard_data(ssk, skb, old_ack - ack_seq);
-> +			continue;
-> 		}
->
-> -		/* only accept in-sequence mapping. Old values are spurious
-> -		 * retransmission
-> -		 */
-> -		mptcp_subflow_discard_data(ssk, skb, old_ack - ack_seq);
-> +		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
-> +		break;
-> 	}
-> 	return true;
->
-> @@ -1168,7 +1163,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 		subflow->reset_transient = 0;
-> 		subflow->reset_reason = MPTCP_RST_EMPTCP;
-> 		tcp_send_active_reset(ssk, GFP_ATOMIC);
-> -		subflow->data_avail = 0;
-> +		WRITE_ONCE(subflow->data_avail, 0);
-> 		return false;
-> 	}
->
-> @@ -1178,7 +1173,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 	subflow->map_seq = READ_ONCE(msk->ack_seq);
-> 	subflow->map_data_len = skb->len;
-> 	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-> -	subflow->data_avail = MPTCP_SUBFLOW_DATA_AVAIL;
-> +	WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
-> 	return true;
-> }
->
-> @@ -1190,7 +1185,7 @@ bool mptcp_subflow_data_available(struct sock *sk)
-> 	if (subflow->map_valid &&
-> 	    mptcp_subflow_get_map_offset(subflow) >= subflow->map_data_len) {
-> 		subflow->map_valid = 0;
-> -		subflow->data_avail = 0;
-> +		WRITE_ONCE(subflow->data_avail, 0);
->
-> 		pr_debug("Done with mapping: seq=%u data_len=%u",
-> 			 subflow->map_subflow_seq,
-> -- 
-> 2.26.3
+Thanks!
 
---
-Mat Martineau
-Intel
+Paolo
+
