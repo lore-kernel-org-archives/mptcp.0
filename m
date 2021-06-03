@@ -1,87 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE48570
-	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 11:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F1670
+	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 11:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1622719058;
+	s=mimecast20190719; t=1622719827;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FT9Pxme50cY+ikry33ErHYbuuxJ73aNK8Ulseh5Es2g=;
-	b=OEPt60fO7/7l3/HewycdkVLoY+cCVSCZIzElyEvUSfVhmlAZBihD5yJktEwmImerVT25/L
-	034Oc1lxgUPf0LGRhrnwIGOa7ZWQVw+fHhGPealzBE1qhToKkaeALOrCZBF+d5tvvabWaJ
-	O44DJjPFT5n1H8A3/bJTVI9KwCARr+8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-603-QhcqXfKDPgSncAFKw5kxRQ-1; Thu, 03 Jun 2021 07:17:34 -0400
-X-MC-Unique: QhcqXfKDPgSncAFKw5kxRQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33C9A1009460
-	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 11:17:33 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-115-52.ams2.redhat.com [10.36.115.52])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 742AF614FD;
-	Thu,  3 Jun 2021 11:17:32 +0000 (UTC)
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sByGlhIGhpxQKxtu7s2Bkt4NieT2OfbOBqnxwwwWBfQ=;
+	b=R1HOOTFuAKPOnUh7UAW9aVm9pgaipVf5IS/ib36+uUcqDh4HQ18MUfMU52G0hY9Q0ed/tD
+	lf9hOfDPa3w8clRDaHjPY4ItJAYU0y19NG8zd4qnBzL7FhCV4PosNRPqQkuqblZWLSF3tp
+	/clNlULJy+M1R2S9YIvc4G6RKkCotV8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-576-P2A8BAXZMX-QHBhASQR_eg-1; Thu, 03 Jun 2021 07:30:25 -0400
+X-MC-Unique: P2A8BAXZMX-QHBhASQR_eg-1
+Received: by mail-wr1-f72.google.com with SMTP id h104-20020adf90710000b029010de8455a3aso2315278wrh.12
+        for <mptcp@lists.linux.dev>; Thu, 03 Jun 2021 04:30:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=sByGlhIGhpxQKxtu7s2Bkt4NieT2OfbOBqnxwwwWBfQ=;
+        b=W/gigtS4q4J8xVYvJqZv3li2YYZniJmB3wvu0cqu5EA909c9Di6CvQlGGzYe15puhL
+         uy/kf7/QbDnSvfj7LgGA3GyO5zhEnHlFVyLJ9+FfehrvFOQRNR1NL2y8HCtH7AQ7fCJ8
+         eNX7bMPFMDb74xJweXS0ZtKGCz605yHx3eTdbDXmRdPiwbPlLK598ABS0qYdVgsvncCM
+         iAr6MQTp1xFOfgUVsciHNb1LJ6Sp7xI3+NOfyavs1+t3LpS2+Tfxaxpe0pV07eTG1gHk
+         PHfsMdOjgsJZcd/7/+ztSGmrsfkp2VkZOtfAzcfUdOSvMWlo0dwtmpmHGUW9c2QAScNg
+         wkhw==
+X-Gm-Message-State: AOAM530PLb2s9dC2hPwVPNYkAXvJkgtqCcUg17H2JcAr+AMbw5uQMWmT
+	mhO1ObRi4yOyBVNEot1DTJLHvKXMh7gnnVO1A9LJzNk3KLpL+qjKYq52iq+LoFMcmuDdocHhQ+J
+	QVWtUYCjVIvJZxvs=
+X-Received: by 2002:a05:6000:110e:: with SMTP id z14mr26677765wrw.235.1622719824599;
+        Thu, 03 Jun 2021 04:30:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzhZydWCR04sCn0w60jzrKlwfnFbJ0nwoj8pv4KaJL7TOirjBevNsds2JygfYUmEUeNyNI8iQ==
+X-Received: by 2002:a05:6000:110e:: with SMTP id z14mr26677747wrw.235.1622719824351;
+        Thu, 03 Jun 2021 04:30:24 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-110-123.dyn.eolo.it. [146.241.110.123])
+        by smtp.gmail.com with ESMTPSA id y22sm6650627wma.36.2021.06.03.04.30.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jun 2021 04:30:24 -0700 (PDT)
+Message-ID: <fb4781dd29d0c7ff4f81e5cd44eac7c4434bba8e.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: let warn_bad_map report relevant values
 From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: fwestpha@redhat.com
-Subject: [PATCH mptcp-net] selftests: mptcp: enable syncookie only in absence of reorders
-Date: Thu,  3 Jun 2021 13:17:17 +0200
-Message-Id: <15333b645caafe2b7fbb028e67bb788c0d5cf526.1622719000.git.pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, max@internet.ru
+Date: Thu, 03 Jun 2021 13:30:22 +0200
+In-Reply-To: <8bc674-fcaf-8cf-55c0-678a7bf6af1@linux.intel.com>
+References: <e553550a010387f7ccfafa4010397413b032eef9.1622042688.git.pabeni@redhat.com>
+	 <8bc674-fcaf-8cf-55c0-678a7bf6af1@linux.intel.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Syncookie validation may fail for OoO packets, causing spurious
-resets and self-tests failures, so let's force syncookie only
-for tests iteration with no OoO.
+On Wed, 2021-05-26 at 15:55 -0700, Mat Martineau wrote:
+> On Wed, 26 May 2021, Paolo Abeni wrote:
+> 
+> > When the right bound check fails, warn_bad_map() reports
+> > the wrong ssn value, let's fix it.
+> > 
+> > Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > net/mptcp/subflow.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > index 6b1cd4257edf..726bc3d083fa 100644
+> > --- a/net/mptcp/subflow.c
+> > +++ b/net/mptcp/subflow.c
+> > @@ -821,7 +821,7 @@ static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
+> > 	if (unlikely(!before(ssn, subflow->map_subflow_seq +
+> > 				  subflow->map_data_len))) {
+> > 		/* Mapping does covers past subflow data, invalid */
+> > -		warn_bad_map(subflow, ssn + skb->len);
+> > +		warn_bad_map(subflow, ssn);
+> > 		return false;
+> > 	}
+> > 	return true;
+> > -- 
+> > 2.26.3
+> 
+> I agree, ssn is more helpful information here.
+> 
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Fixes: fed61c4b584c ("selftests: mptcp: make 2nd net namespace use tcp syn cookies unconditionally")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/198
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+I see this one has not been applied yet. Evil/bugged peer (or even
+fallback with no infinite mapping) can trigger this WARN. It looks like
+this is the only WARN() leftover from issues/107.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 69351c3eb68c..9e53334c9512 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -202,9 +202,6 @@ ip -net "$ns4" link set ns4eth3 up
- ip -net "$ns4" route add default via 10.0.3.2
- ip -net "$ns4" route add default via dead:beef:3::2
- 
--# use TCP syn cookies, even if no flooding was detected.
--ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
--
- if $checksum; then
- 	for i in "$ns1" "$ns2" "$ns3" "$ns4";do
- 		ip netns exec $i sysctl -q net.mptcp.checksum_enabled=1
-@@ -748,6 +745,13 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
- 		exit $ret
- 	fi
- 
-+	# force TCP syn cookies only if there is no reorder
-+	if [ $sender = $ns1 ]; then
-+		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
-+	else
-+		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=1
-+	fi
-+
- 	run_tests "$ns2" $sender 10.0.1.2
- 	run_tests "$ns2" $sender dead:beef:1::2
- 	run_tests "$ns2" $sender 10.0.2.1
--- 
-2.26.3
+I'll send a v2 addionally replacing the WARN with a pr_debug().
+
+/P
 
