@@ -1,246 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from fallback16.mail.ru (fallback16.mail.ru [94.100.177.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7310770
-	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 15:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1622735903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=N4OviTOr0jzFU29kJA3VGYZOj/KfDOgE7F1jBSK0paU=;
-	b=fMzNIiEfis40ahwZwLfV7syWQZ6lW1nrWlDsf3bHfNbVbEuPkgNOHuQ8bAs1cyqhzM8V0l
-	h8V8fofxnTU12G73AzNnr0g7daSXLefpY6JWuZT3FH8qqk8GXqtY8tVN+hrTxLWSkzkvMu
-	LPHzas0vGiHeX/BgQBKTu1RUFAVsp0M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-tn5XPISIOLC1MKZuXxzGug-1; Thu, 03 Jun 2021 11:58:19 -0400
-X-MC-Unique: tn5XPISIOLC1MKZuXxzGug-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F6CB107ACCA;
-	Thu,  3 Jun 2021 15:58:18 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-115-52.ams2.redhat.com [10.36.115.52])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E2A2110013D7;
-	Thu,  3 Jun 2021 15:58:17 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Maxim Galaganov <max@internet.ru>
-Subject: [PATCH v3 mptcp-net] mptcp: fix soft lookup in subflow_error_report().
-Date: Thu,  3 Jun 2021 17:58:01 +0200
-Message-Id: <392efcf1d0b83807fd888c2a33be75aa54dbb472.1622734919.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C2D70
+	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 16:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:References:To:Subject; bh=svhgGIOS2/hW6FytAUokF0fNUfLr8KqMEDC5pHKE3zg=;
+	b=JAhhbnBKR5XXNC2EWp9ND3b6oglORvYGfzgtifDecOEoObhuv6lwfWWv/FKEDD9nS6HMdUcxO06tMYEsR5td74QEDPPcH3RGA7RFcJ/lAPxckAR/h4bETQoMROTfOifizZgwkNuf/4/166s/uGSTc2ih4/4SljLtKn6OuQvuymc=;
+Received: from [10.161.22.25] (port=58774 helo=smtp55.i.mail.ru)
+	by fallback16.i with esmtp (envelope-from <max@internet.ru>)
+	id 1looMR-0003dt-Mh
+	for mptcp@lists.linux.dev; Thu, 03 Jun 2021 17:30:15 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:References:To:Subject:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=svhgGIOS2/hW6FytAUokF0fNUfLr8KqMEDC5pHKE3zg=;
+	b=j47x+eaokvG9EZzOgxBjdA3NeChp5vA7XZ1PpTzEDxFChrYPwn90raD19kpTlO/Jjn6iAWK6wcXMAFac7NrwWWubTpcRpwQ7xuXURe0Dn5eF+X4TNacoNnRrmFM0OpGoZNELTUQd6002zr4/KxEdC5X+j/g0wifsTjU8eyX2u/E=;
+Received: by smtp55.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
+	id 1looMJ-0008Bm-QV; Thu, 03 Jun 2021 17:30:08 +0300
+Subject: Re: [PATCH mptcp-next] mptcp: add MIB counter for invalid mapping
+To: Paolo Abeni <pabeni@redhat.com>
+References: <89666f3fb8f14bbe545f2079794ab78ba24fbbc4.1622720045.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Maxim Galaganov <max@internet.ru>
+Message-ID: <ae6bfc3a-e6e2-f9aa-ed9f-e5aca04ed65b@internet.ru>
+Date: Thu, 3 Jun 2021 17:30:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+In-Reply-To: <89666f3fb8f14bbe545f2079794ab78ba24fbbc4.1622720045.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9D5B0DA836B685C54907A7AE9C1BA82BC67C1327DFB87C6A6182A05F53808504066A8E1CB8FD362B31375CD0203F2E6B28564B51B19AE44ADED0591FD5EB1BEB2
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE75037DDE13FB75316EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637E8F1A1743CF948808638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D82B3A4A9A6050771ABE8A23EB2AAA3A1C6F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE7E4CD18687D5AE3809FA2833FD35BB23D9E625A9149C048EE1E561CDFBCA1751FBDFBBEFFF4125B51D2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BC493A577044FAF45A471835C12D1D977C4224003CC8364762BB6847A3DEAEFB0F43C7A68FF6260569E8FC8737B5C2249EC8D19AE6D49635B68655334FD4449CB9ECD01F8117BC8BEAAAE862A0553A3920E30A4C9C8E338DA71F0BD0CACA6A43743847C11F186F3C59DAA53EE0834AAEE
+X-C1DE0DAB: 0D63561A33F958A5065EE57DEA1D3075DF557300F34E640F06D49525AEC5470CD59269BC5F550898D99A6476B3ADF6B47008B74DF8BB9EF7333BD3B22AA88B938A852937E12ACA7569C34DB4251AA965410CA545F18667F91A7EA1CDA0B5A7A0
+X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D3442AF01057B6BF997C7EA41B63CD61343E99FFE9FDAD647442D5CB2B4CC014C2C0DF1C1D3BABC527A1D7E09C32AA3244C3398CAD41BF04556175818FC743B8EF6F2F5F14F68F1805B729B2BEF169E0186
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojNbQUdF9mq4EID/9zRCyWOA==
+X-Mailru-Sender: 3B9A0136629DC91243040E847DF3D73A9FC0192A7C9D15771375CD0203F2E6B2EC9A243AB1C8B1BC84390AFDD794B14678274A4A9E9E44FD5B858845640BC0C1AB428D199E4977E267EA787935ED9F1B
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4F6336583864642B6E715ED18CC527C3ACB4D7179280743A868F3CF0E9FE49B6918222AAF5A16A518C1EED05BBF74227D6CAFEF612B5A46D54B1D86DC3FE940C5
+X-7FA49CB5: 0D63561A33F958A59B20AD5835CB85B01C67CA3C0F2103A4FC2E3665FAE4B632CACD7DF95DA8FC8BD5E8D9A59859A8B6A096F61ED9298604
+X-C1DE0DAB: 0D63561A33F958A59B20AD5835CB85B01C67CA3C0F2103A40B795B5A80738124D59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5xhPKz0ZEsZ5k6NOOPWz5QAiZSCXKGQRq3/7KxbCLSB2ESzQkaOXqCBFZPLWFrEGlV1shfWe2EVcxl5toh0c/aCGOghz/frdRhzMe95NxDFdg+c3AsmhJFRPModc3OGvrg==
+X-Mailru-MI: 800
+X-Mras: Ok
 
-Maxim reported a soft lookup in subflow_error_report():
+03.06.2021 16:25, Paolo Abeni пишет:
+> Account this exceptional events for better introspection.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>   net/mptcp/mib.h     | 1 +
+>   net/mptcp/subflow.c | 4 +++-
+>   2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 92e56c0cfbdd..193466c9b549 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -18,6 +18,7 @@ enum linux_mptcp_mib_field {
+>   	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+>   	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the previous one */
+>   	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
+> +	MPTCP_MIB_DSSTCPMISMATCH,	/* DSS-mapping did not map with TCP's sequence numbers */
 
- watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
- RIP: 0010:native_queued_spin_lock_slowpath
- RSP: 0018:ffffa859c0003bc0 EFLAGS: 00000202
- RAX: 0000000000000101 RBX: 0000000000000001 RCX: 0000000000000000
- RDX: ffff9195c2772d88 RSI: 0000000000000000 RDI: ffff9195c2772d88
- RBP: ffff9195c2772d00 R08: 00000000000067b0 R09: c6e31da9eb1e44f4
- R10: ffff9195ef379700 R11: ffff9195edb50710 R12: ffff9195c2772d88
- R13: ffff9195f500e3d0 R14: ffff9195ef379700 R15: ffff9195ef379700
- FS:  0000000000000000(0000) GS:ffff91961f400000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 000000c000407000 CR3: 0000000002988000 CR4: 00000000000006f0
- Call Trace:
-  <IRQ>
- _raw_spin_lock_bh
- subflow_error_report
- mptcp_subflow_data_available
- __mptcp_move_skbs_from_subflow
- mptcp_data_ready
- tcp_data_queue
- tcp_rcv_established
- tcp_v4_do_rcv
- tcp_v4_rcv
- ip_protocol_deliver_rcu
- ip_local_deliver_finish
- __netif_receive_skb_one_core
- netif_receive_skb
- rtl8139_poll 8139too
- __napi_poll
- net_rx_action
- __do_softirq
- __irq_exit_rcu
- common_interrupt
-  </IRQ>
+Shouldn't there also be a related change to mptcp_snmp_list in mib.c ?
 
-The calling function - mptcp_subflow_data_available() - can be invoked
-from different contexts:
-- plain ssk socket lock
-- ssk socket lock + mptcp_data_lock
-- ssk socket lock + mptcp_data_lock + msk socket lock.
-
-Since subflow_error_report() tries to acquire the mptcp_data_lock, the
-latter two call chains will cause soft lookup.
-
-This change addresses the issue moving the error reporting call to
-outer functions, where the held locks list is known and the we can
-acquire only the needed one.
-
-Reported-by: Maxim Galaganov <max@internet.ru>
-Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/199
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-Note: the diffstat is lager than expected because I had to move
-some functions upwards. Could be reduced [ab-]using forward declaration.
-
-v2 -> v3:
- - really add the mentioned unlikely() annotation
----
- net/mptcp/protocol.c |  9 ++++++
- net/mptcp/subflow.c  | 75 +++++++++++++++++++++++---------------------
- 2 files changed, 48 insertions(+), 36 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 44fd8c8c759b..4c0232067bf3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -689,6 +689,12 @@ static void move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
- 
- 	__mptcp_move_skbs_from_subflow(msk, ssk, &moved);
- 	__mptcp_ofo_queue(msk);
-+	if (unlikely(ssk->sk_err)) {
-+		if (!sock_owned_by_user(sk))
-+			__mptcp_error_report(sk);
-+		else
-+			set_bit(MPTCP_ERROR_REPORT,  &msk->flags);
-+	}
- 
- 	/* If the moves have caught up with the DATA_FIN sequence number
- 	 * it's time to ack the DATA_FIN and change socket state, but
-@@ -1987,6 +1993,9 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 		done = __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
- 		mptcp_data_unlock(sk);
- 		tcp_cleanup_rbuf(ssk, moved);
-+
-+		if (unlikely(ssk->sk_err))
-+			__mptcp_error_report(sk);
- 		unlock_sock_fast(ssk, slowpath);
- 	} while (!done);
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6b1cd4257edf..5ef31aa16cc1 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1163,7 +1163,6 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		 * subflow_error_report() will introduce the appropriate barriers
- 		 */
- 		ssk->sk_err = EBADMSG;
--		ssk->sk_error_report(ssk);
- 		tcp_set_state(ssk, TCP_CLOSE);
- 		subflow->reset_transient = 0;
- 		subflow->reset_reason = MPTCP_RST_EMPTCP;
-@@ -1218,41 +1217,6 @@ void mptcp_space(const struct sock *ssk, int *space, int *full_space)
- 	*full_space = tcp_full_space(sk);
- }
- 
--static void subflow_data_ready(struct sock *sk)
--{
--	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
--	u16 state = 1 << inet_sk_state_load(sk);
--	struct sock *parent = subflow->conn;
--	struct mptcp_sock *msk;
--
--	msk = mptcp_sk(parent);
--	if (state & TCPF_LISTEN) {
--		/* MPJ subflow are removed from accept queue before reaching here,
--		 * avoid stray wakeups
--		 */
--		if (reqsk_queue_empty(&inet_csk(sk)->icsk_accept_queue))
--			return;
--
--		set_bit(MPTCP_DATA_READY, &msk->flags);
--		parent->sk_data_ready(parent);
--		return;
--	}
--
--	WARN_ON_ONCE(!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
--		     !subflow->mp_join && !(state & TCPF_CLOSE));
--
--	if (mptcp_subflow_data_available(sk))
--		mptcp_data_ready(parent, sk);
--}
--
--static void subflow_write_space(struct sock *ssk)
--{
--	struct sock *sk = mptcp_subflow_ctx(ssk)->conn;
--
--	mptcp_propagate_sndbuf(sk, ssk);
--	mptcp_write_space(sk);
--}
--
- void __mptcp_error_report(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -1293,6 +1257,43 @@ static void subflow_error_report(struct sock *ssk)
- 	mptcp_data_unlock(sk);
- }
- 
-+static void subflow_data_ready(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-+	u16 state = 1 << inet_sk_state_load(sk);
-+	struct sock *parent = subflow->conn;
-+	struct mptcp_sock *msk;
-+
-+	msk = mptcp_sk(parent);
-+	if (state & TCPF_LISTEN) {
-+		/* MPJ subflow are removed from accept queue before reaching here,
-+		 * avoid stray wakeups
-+		 */
-+		if (reqsk_queue_empty(&inet_csk(sk)->icsk_accept_queue))
-+			return;
-+
-+		set_bit(MPTCP_DATA_READY, &msk->flags);
-+		parent->sk_data_ready(parent);
-+		return;
-+	}
-+
-+	WARN_ON_ONCE(!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
-+		     !subflow->mp_join && !(state & TCPF_CLOSE));
-+
-+	if (mptcp_subflow_data_available(sk))
-+		mptcp_data_ready(parent, sk);
-+	else if (unlikely(sk->sk_err))
-+		subflow_error_report(sk);
-+}
-+
-+static void subflow_write_space(struct sock *ssk)
-+{
-+	struct sock *sk = mptcp_subflow_ctx(ssk)->conn;
-+
-+	mptcp_propagate_sndbuf(sk, ssk);
-+	mptcp_write_space(sk);
-+}
-+
- static struct inet_connection_sock_af_ops *
- subflow_default_af_ops(struct sock *sk)
- {
-@@ -1603,6 +1604,8 @@ static void subflow_state_change(struct sock *sk)
- 	 */
- 	if (mptcp_subflow_data_available(sk))
- 		mptcp_data_ready(parent, sk);
-+	else if (unlikely(sk->sk_err))
-+		subflow_error_report(sk);
- 
- 	subflow_sched_work_if_closed(mptcp_sk(parent), sk);
- 
--- 
-2.26.3
+>   	MPTCP_MIB_DATACSUMERR,		/* The data checksum fail */
+>   	MPTCP_MIB_OFOQUEUETAIL,	/* Segments inserted into OoO queue tail */
+>   	MPTCP_MIB_OFOQUEUE,		/* Segments inserted into OoO queue */
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 259f99b61c35..ccc07cbab867 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1046,8 +1046,10 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+>   	/* we revalidate valid mapping on new skb, because we must ensure
+>   	 * the current skb is completely covered by the available mapping
+>   	 */
+> -	if (!validate_mapping(ssk, skb))
+> +	if (!validate_mapping(ssk, skb)) {
+> +		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSTCPMISMATCH);
+>   		return MAPPING_INVALID;
+> +	}
+>   
+>   	skb_ext_del(skb, SKB_EXT_MPTCP);
+>   
+> 
 
