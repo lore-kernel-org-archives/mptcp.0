@@ -1,81 +1,88 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454DD70
-	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 14:59:04 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id r11so7447786edt.13
-        for <mptcp@lists.linux.dev>; Thu, 03 Jun 2021 07:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=H2n8iAykoiaVz4T/SAtSY5afyWK9KlAIlpRA63HZfTY=;
-        b=EkifTixhC5k0dABxtfOoB6n+XBdUStoblVAv6PFH99Ok7p0zU2HSeDtNgKH/fO2X7w
-         +F6cMOYmvnanq72Yqq14TqgzenEerN+2bF96175LS4keNdaNnUnQdyFL7P4pNyqh6PkI
-         w3ml7njMsffZu3wmnfa6pAVT8KHtefrtPE6DH8D9JkPiUUsWwrZyNGs2jo970nW2aq0e
-         XhnH3RHqMi0FJ0IVHb2V4aUOaGbsVEGFdodwjz4kg2gLxARpPatAY+bS4TptHHwf4lK1
-         A2SUneq6LUSDgriLihSJ/KpSOaui+QbEn8SGzIw7/iP/eznNvfFvVHVSu7Hvr6ZRANWt
-         ddeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H2n8iAykoiaVz4T/SAtSY5afyWK9KlAIlpRA63HZfTY=;
-        b=Cij8W6/4LS01DApsfKoZOcjDZlRfGlc+q1RkW63m0FHtbgv8j0BeqOf0Fu17BGTJN+
-         EoClDRnAIY5AWEc0telrEJ8SJPLd2SsLESXzMuxyv9Mmq+0UbPhg5u97+lzAQMXyXAgI
-         eP6vnS6/DVqIu04Vb0XNnDSzYF7Wb31cqOMKlO1HtGKMzTVN8z2okM8UdPRY+NzigajA
-         7J0QJrdPsktDQRg5aGfsSB61eQRfujEAm1FkGPhIJvudR74x26PbwR7bSW8meuADzraB
-         doUhdVIC6/1CKfvnAVDV41ElXDi5sDsu03Ml1JgUXciZC+Y53TS8Sc1xWJ+y45ytk88U
-         tuZQ==
-X-Gm-Message-State: AOAM530Bx6pJoMf7GKm+VADEn6pX2E3XrwNQyxdJCVLPFNrIX+FgrCyF
-	q9xxO0JmWcC8z3/oyQthPt2XKYiZD1OFb3cfJWo=
-X-Google-Smtp-Source: ABdhPJxCOQGY0BQ5oC4PCk2pAt7lqvySNnybpNO4DFBqnYolkdSSegSP5+5yIdsxyKym4lbyNk6EHQ==
-X-Received: by 2002:a05:6402:645:: with SMTP id u5mr170793edx.293.1622732343401;
-        Thu, 03 Jun 2021 07:59:03 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:94d5:e4e:f978:9a29])
-        by smtp.gmail.com with ESMTPSA id q9sm1806395edw.51.2021.06.03.07.59.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jun 2021 07:59:03 -0700 (PDT)
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: generate the data
- checksum"
-To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-References: <ae2099811b8395f7718855c5c7d412b26d960c95.1621321549.git.geliangtang@gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <1f7c5cea-28ba-7a90-2499-f9e0cb5d1193@tessares.net>
-Date: Thu, 3 Jun 2021 16:59:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B3870
+	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 15:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1622733003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=myCW9F9ln5/3luVY3lmSNmdk4W22B/sNFJwUXKGs2Hg=;
+	b=LA9mCVe+9fAlFGJx6p8QoChEniR9Un7ZvzfsLdcRMWq8jrkii8Pc5+UOd4ZofpO+nXIHxl
+	NUBQmxoEInv5z3E75A0YLVOX/xGy023IIXEym/wPZYHIgAp4sZNQMwoHF8N1d7cW5vYT0b
+	2wk1+u1zUaxjJl4cLrtWbY2CzMSfZZs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-ix7nxIC8NHegczI6qQw2-A-1; Thu, 03 Jun 2021 11:10:00 -0400
+X-MC-Unique: ix7nxIC8NHegczI6qQw2-A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 465A1818703
+	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 15:09:59 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-52.ams2.redhat.com [10.36.115.52])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7CA7B5D74B;
+	Thu,  3 Jun 2021 15:09:58 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: fwestpha@redhat.com
+Subject: [PATCH v2 mptcp-net] selftests: mptcp: enable syncookie only in absence of reorders
+Date: Thu,  3 Jun 2021 17:09:19 +0200
+Message-Id: <1a2b1cda55fc38e2143aae3ebab3d9b4e5e5d53f.1622731728.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ae2099811b8395f7718855c5c7d412b26d960c95.1621321549.git.geliangtang@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Geliang, Mat,
+Syncookie validation may fail for OoO packets, causing spurious
+resets and self-tests failures, so let's force syncookie only
+for tests iteration with no OoO.
 
-On 18/05/2021 09:06, Geliang Tang wrote:
-> Move this line "__wsum csum = ~csum_unfold(mpext->csum);" from "mptcp:
-> validate the data checksum" to "mptcp: generate the data checksum".
+Fixes: fed61c4b584c ("selftests: mptcp: make 2nd net namespace use tcp syn cookies unconditionally")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/198
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-Sorry for the delay!
-
-This is now applied in our tree:
-
-- 982a61af0143: "squashed" in "mptcp: generate the data checksum"
-- Results: e61f1205c3fe..df4fcde34fab
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210603T145651
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210603T145651
-
-Cheers,
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 69351c3eb68c..2484fb6a9a8d 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -202,9 +202,6 @@ ip -net "$ns4" link set ns4eth3 up
+ ip -net "$ns4" route add default via 10.0.3.2
+ ip -net "$ns4" route add default via dead:beef:3::2
+ 
+-# use TCP syn cookies, even if no flooding was detected.
+-ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
+-
+ if $checksum; then
+ 	for i in "$ns1" "$ns2" "$ns3" "$ns4";do
+ 		ip netns exec $i sysctl -q net.mptcp.checksum_enabled=1
+@@ -748,6 +745,14 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
+ 		exit $ret
+ 	fi
+ 
++	# ns1<->ns2 is not subject to reordering/tc delays. Use it to test
++	# mptcp syncookie support.
++	if [ $sender = $ns1 ]; then
++		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
++	else
++		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=1
++	fi
++
+ 	run_tests "$ns2" $sender 10.0.1.2
+ 	run_tests "$ns2" $sender dead:beef:1::2
+ 	run_tests "$ns2" $sender 10.0.2.1
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.3
+
