@@ -1,73 +1,87 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64F670
-	for <mptcp@lists.linux.dev>; Wed,  2 Jun 2021 17:02:37 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id h24so4930699ejy.2
-        for <mptcp@lists.linux.dev>; Wed, 02 Jun 2021 10:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=l42GfwtIohTN307WgEBVoPqDdlAGpquuDdA4DaAydXU=;
-        b=hg9xVpu9HZFq1C2bL2nlY7qStj/66Z6NkwJ5EHOvnB3emi4c+mePZEqb8pBLOtxzA2
-         hkk+JcNXpho1mm9JU3G5otHBTk61bVD56LcstUzZXdv0xpSbegymGMiSwnfTm9PjqCR6
-         LKNAjyGXEOzfiV38GCPBsULTunmzjT951NgN+QalGvDOzBdpRON8y+aGvnWZ0q+hOLq9
-         hMDEMWZsqj+jjGpmpduyU0OZk6OeKk6946cLeYWRJmHV9E3Q32dzpaIXN1enHk34OMnZ
-         +bpzJNbzMvVPGM1IDNN5UaJ4n9f/FmRmJhmlA9ZAOP54AM/2fP57f3pH1H6jjfIG8UO/
-         Cchg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=l42GfwtIohTN307WgEBVoPqDdlAGpquuDdA4DaAydXU=;
-        b=Jizp1OAZoZ2Ejfw4EOkVzxrNhhB4s/gxwA/shfxasfW02Dqjr7sXgKEGKIU7Xo8XUJ
-         0enZ4ugjDz5hQwPze9xf9vpw6Zoinu8PJKv7pQAN6IPJPQ/0A00IiXe7fgNdl+BL81+i
-         zNowLWy8G27jVtZTo2yAQfEBMJxqRY1jJ7u8Yd47TJ1jAPgO6BwyMDJNpLAX0Yaku9Ip
-         /xveYo1NAR24DwhNRfDz36CsRovdzL0HtqBvbBmSV627Aks+mTkitAJehRIdP9gk27kH
-         Na2ro/XMCCw8T0NxBW5xPo39ybkKatgLVCbgzuwHMhcXQaWiLC5DYYlpL4hf98BZDejH
-         GKpA==
-X-Gm-Message-State: AOAM530JXYYRBSViZneGHbNIAKA46QeYSyMAWiw+Z1e/qttinc/j7YtV
-	texpQdRuyB9g8lu8sRast60x7kNu4qTlXozxfCA=
-X-Google-Smtp-Source: ABdhPJy3naMMMREIgReszBQJWYmJZ/vKgtR+qEfDIFhsnLjmVu1cG3J070d2O5XJee+Lg2oM1cxu9g==
-X-Received: by 2002:a17:906:bfc8:: with SMTP id us8mr22810222ejb.217.1622653355935;
-        Wed, 02 Jun 2021 10:02:35 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([185.212.171.140])
-        by smtp.gmail.com with ESMTPSA id dk9sm278926ejb.91.2021.06.02.10.02.35
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jun 2021 10:02:35 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Weekly meeting - 3 June 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-Message-ID: <63504f40-5832-1d71-8f6e-4b56725c687c@tessares.net>
-Date: Wed, 2 Jun 2021 19:02:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE48570
+	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 11:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1622719058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FT9Pxme50cY+ikry33ErHYbuuxJ73aNK8Ulseh5Es2g=;
+	b=OEPt60fO7/7l3/HewycdkVLoY+cCVSCZIzElyEvUSfVhmlAZBihD5yJktEwmImerVT25/L
+	034Oc1lxgUPf0LGRhrnwIGOa7ZWQVw+fHhGPealzBE1qhToKkaeALOrCZBF+d5tvvabWaJ
+	O44DJjPFT5n1H8A3/bJTVI9KwCARr+8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-603-QhcqXfKDPgSncAFKw5kxRQ-1; Thu, 03 Jun 2021 07:17:34 -0400
+X-MC-Unique: QhcqXfKDPgSncAFKw5kxRQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33C9A1009460
+	for <mptcp@lists.linux.dev>; Thu,  3 Jun 2021 11:17:33 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-52.ams2.redhat.com [10.36.115.52])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 742AF614FD;
+	Thu,  3 Jun 2021 11:17:32 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: fwestpha@redhat.com
+Subject: [PATCH mptcp-net] selftests: mptcp: enable syncookie only in absence of reorders
+Date: Thu,  3 Jun 2021 13:17:17 +0200
+Message-Id: <15333b645caafe2b7fbb028e67bb788c0d5cf526.1622719000.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hello everybody!
+Syncookie validation may fail for OoO packets, causing spurious
+resets and self-tests failures, so let's force syncookie only
+for tests iteration with no OoO.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+Fixes: fed61c4b584c ("selftests: mptcp: make 2nd net namespace use tcp syn cookies unconditionally")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/198
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210603
-
-Feel free to add/modify topics!
-
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
-
-See/Speak to you tomorrow!
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 69351c3eb68c..9e53334c9512 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -202,9 +202,6 @@ ip -net "$ns4" link set ns4eth3 up
+ ip -net "$ns4" route add default via 10.0.3.2
+ ip -net "$ns4" route add default via dead:beef:3::2
+ 
+-# use TCP syn cookies, even if no flooding was detected.
+-ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
+-
+ if $checksum; then
+ 	for i in "$ns1" "$ns2" "$ns3" "$ns4";do
+ 		ip netns exec $i sysctl -q net.mptcp.checksum_enabled=1
+@@ -748,6 +745,13 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
+ 		exit $ret
+ 	fi
+ 
++	# force TCP syn cookies only if there is no reorder
++	if [ $sender = $ns1 ]; then
++		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
++	else
++		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=1
++	fi
++
+ 	run_tests "$ns2" $sender 10.0.1.2
+ 	run_tests "$ns2" $sender dead:beef:1::2
+ 	run_tests "$ns2" $sender 10.0.2.1
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.3
+
