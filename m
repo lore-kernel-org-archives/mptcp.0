@@ -1,441 +1,194 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A942B70
-	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 09:03:45 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id g18so8277005edq.8
-        for <mptcp@lists.linux.dev>; Fri, 04 Jun 2021 02:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=QJKKixqccCtdIjry/MEeEjahqFApvyCpXJ07csb9Lxs=;
-        b=E2rKAkgoKDzqW5G3DLUPS2SC8A4QLyuwYC2t+6HQ05cU/OPKjSV410QRpHfQfpUeKV
-         EGffVmVH+0IbA6iacU0AwIw+8RWqQ5hE2WfjdRv576XLiJztOhelarmAdyjMX8WqafdN
-         1yE7gP7cmq7b3fhUGx8wlzeFhx2YzFhe8OA8pXYtvcrJLNZbp3MJF6PSfGOOYz3YWR2C
-         e10UkLLs2eTWLzCOJJdVmANFAnWSborSDMQPcL+9f1SjAPNJkYwly2FfRINb9Zi0OSnO
-         /ZEFcW+Qre+bd68KpdG+pCp8iqjmiJ068mOCpq0CREDmPfcyqHwOhnfVD8J+7HpEpR5F
-         UJQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=QJKKixqccCtdIjry/MEeEjahqFApvyCpXJ07csb9Lxs=;
-        b=aMZfC//yM3d/hSpPo6mom0cFZ7U5nHZ6CaXAajnT5pywNl4Z9g//BCKadl/tzkM1Eg
-         3faWXJp/jNeUkgnh9dP/ezaWGnhAHnCUm+/OXTUfB1T109cPcFG8A+S/iM9VQpdPDcnc
-         aJg2uCYFXJmuXmO01+Y63l6XbV2zU0iIEXuXYVTQg5Lh3UAxTze7dyXd4aRSWhdXIaYF
-         4netuX//o9zWRfIDPx0Z72LwYr/cBxDSVZFGFkond40zTu0fYtfEimaJT/crLYpkgReu
-         0rvji69zGdfBViDJgeLIZKbeO+l/cnkBDSmnE/aP7XZ85xLvQOfMkD7iMQICl31BlpyK
-         N+jQ==
-X-Gm-Message-State: AOAM5328iUCK7DKKE4RMPFNYbQpLanTS00hxEzTSkKfFSEP6xcepPRSI
-	8B21q6LfjL/K4+IBq3UL9iV5DUv7WMl6L9oR
-X-Google-Smtp-Source: ABdhPJwPLvgxo5p/69aSsdJiGqabFvP0SsPcWmcf/To/NNIqQeLBLS+7Y5KlDsjvMx8mdpsEhaZcxg==
-X-Received: by 2002:aa7:d801:: with SMTP id v1mr3619692edq.349.1622797423507;
-        Fri, 04 Jun 2021 02:03:43 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:c047:d46c:d45:3868])
-        by smtp.gmail.com with ESMTPSA id d17sm2502036ejp.90.2021.06.04.02.03.42
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jun 2021 02:03:43 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: [Weekly meetings] MoM - 27th of May 2021
-Message-ID: <4167b09d-be89-ad5c-c4ed-f273a2b6a8ba@tessares.net>
-Date: Fri, 4 Jun 2021 11:03:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5629070
+	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 16:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1622824927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gZyTc8FxxcN+wp8MGmZr8V9U6eKULP2pTp3Fi2OgBOc=;
+	b=BPNEgarNyN2ige70q+/D1wvChRf9VhVHK8mrGV5qa9eEKtLPLfb14h29T48j2PxZSQvfVZ
+	UyqBcVdwDtXg4kP4HMvHwWOeP66nTYJHQfCoV5rOGfheFbFtx/Co2beA3siC4JU96B6/Lm
+	XWoMydVP8ydPKDHw2fduICf/ZLPP2Zk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-uvw_GbhROWW3NCOzsW19yQ-1; Fri, 04 Jun 2021 12:42:02 -0400
+X-MC-Unique: uvw_GbhROWW3NCOzsW19yQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95FD81936B67
+	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 16:42:01 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-13.ams2.redhat.com [10.36.115.13])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 104822BFF6
+	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 16:42:00 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next] mptcp: refine mptcp_cleanup_rbuf
+Date: Fri,  4 Jun 2021 18:41:53 +0200
+Message-Id: <ed4e9f7d165ec01c45b9f9b9d0a11dab5a17dcdd.1622824500.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-
-Hello everyone,
-
-Last week, we had our 150th meeting with Mat (Intel), Florian, Paolo and
-Davide (RedHat), Geliang (Xiaomi) and myself (Tessares).
-
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-    - The list of accepted patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=3
-
-    netdev (if mptcp ML is in cc) (Mat (sent to the old ML :) )):
-
-  - [net,1/4] mptcp: avoid OOB access in setsockopt()
-    https://git.kernel.org/netdev/net/c/20b5759f21cf
-  - [net,2/4] mptcp: drop unconditional pr_warn on bad opt
-    https://git.kernel.org/netdev/net/c/3812ce895047
-  - [net,3/4] mptcp: avoid error message on infinite mapping
-    https://git.kernel.org/netdev/net/c/3ed0a585bfad
-  - [net,4/4] mptcp: validate 'id' when stopping the ADD_ADDR retransmit
-timer
-    https://git.kernel.org/netdev/net/c/d58300c3185b
-
-
-    our repo (by: Davide Caratti, Paolo Abeni):
-
-12270705  [v3,mptcp-net,3/3] mptcp: update selftest for fallback due to OoO
-12270707  [v3,mptcp-net,2/3] mptcp: do not reset MP_CAPABLE subflow on
-mapping ...
-12270709  [v3,mptcp-net,1/3] mptcp: always parse mptcp options for MPC
-reqsk
-
-12270323  [mptcp-net] Squash-to: "mptcp: fix sk_forward_memory
-corruption under...
-
-12265279  [net] mptcp: validate 'id' when stopping the ADD_ADDR
-retransmit timer
-
-12265221  [mptcp-net] mptcp: avoid error message on infinite mapping
-12265219  [mptcp-net] mptcp: drop unconditional pr_warn on bad opt
-
-
-
-Pending patches:
-    - The list of pending patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=*
-
-    netdev (if mptcp ML is in cc) (by: /):
-
-/
-
-
-    our repo (by: Geliang Tang, Matthieu Baerts, Paolo Abeni):
-
-12263877: Awaiting Upstream: [mptcp-next] Squash to "mptcp: generate the
-data checksum":
-    - TODO: Matth: to apply → Done
-
-12278269: Needs ACK: [v8,mptcp-next,1/4] mptcp: add sysctl
-allow_join_initial_addr_port
-12278271: Needs ACK: [v8,mptcp-next,2/4] mptcp: add allow_join_id0 in
-mptcp_out_options
-12278273: Needs ACK: [v8,mptcp-next,3/4] mptcp: add deny_join_id0 in
-mptcp_options_received
-12278275: Needs ACK: [v8,mptcp-next,4/4] selftests: mptcp: add
-deny_join_id0 testcases:
-    - Paolo will have a look (linked to last week's discussion)
-
-12279735: Changes Requested: [RFC,1/4] mptcp: wake-up readers only for
-in sequence data.
-12279737: Changes Requested: [RFC,2/4] mptcp: don't clear
-MPTCP_DATA_READY in sk_wait_event()
-12279739: Changes Requested: [RFC,3/4] mptcp: move the whole rx path
-under msk socket lock protection
-12279741: Changes Requested: [RFC,4/4] mptcp: cleanup mem accounting.:
-    - clean-up a lot of code and remove a lot of complexity linked to
-implementation choices
-    - it can have some perf impact
-
-    - Paolo started some tests:
-        - the clean-up doesn't have a big impact but depending  on the
-technique used by the userspace, the modification can be visible
-(degradation, around 10/15%)
-        - impact seems to be due to synchronisation
-        - impact can be more if more sync is needed
-
-    - maybe focus the clean-up only in receive path with SKB (...)
-
-    - problem for the moment:
-        - we book memory in advance (maybe too much in some scenarios
-("scenarii"): mem presure earlier, etc.)
-        - to avoid acquiring multiple time the MPTCP spinlock
-        - cleaning up that would avoiding issues like recent ones that
-are difficult to debug and fix
-        - it looks like it's worth continuing looking at that but maybe
-not like with the current version of these RFC patches
-
-12282131: New: [v3,mptcp-next] mptcp: drop tx skb cache:
-    - Can be applied
-    - Improve perf
-    - Matth: To apply
-
-12282133: Queued: [mptcp-net] mptcp: let warn_bad_map report relevant
-values:
-    - Can be applied
-    - Matth: To apply
-
-12282211: Changes Requested: [mptcp-net] tcp: ensure that backlog
-coalescing don't break MPTCP DSS:
-    - Can be dropped
-    - Coalescing is done only if options are already the same → no
-corruption
-
-12282215: Changes Requested: [mptcp-next] mptcp: use fast lock for
-subflows when possible.:
-    - a few more fast lock are possible
-    - Paolo will send them in a v2
-
-12282219: RFC: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to
-tcp.h/mptcp.h
-12282221: RFC: [RESEND,RFC,4/4] tcp: parse tcp options contained in
-reset packets:
-    - Resent to have them on patchwork.kernel.org
-    - WIP
-
-12282223: RFC: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
-    - Resent to have them on patchwork.kernel.org
-    - WIP
-
-12282225: RFC: [RESEND,1/5] tcp: make two mptcp helpers available to tcp
-stack
-12282227: RFC: [RESEND,5/5] mptcp: send fastclose if userspace closes
-socket with unread data:
-    - Resent to have them on patchwork.kernel.org
-    - WIP
-
-12282229: Changes Requested: [RESEND,mptcp-next,1/3] mptcp: MP_FAIL
-suboption sending
-12282231: Changes Requested: [RESEND,mptcp-next,2/3] mptcp: MP_FAIL
-suboption receiving
-12282233: Changes Requested: [RESEND,mptcp-next,3/3] mptcp: send out
-MP_FAIL when data checksum fail:
-    - Resent to have them on patchwork.kernel.org
-    - Geliang is working on a v2
-
-12282235: Queued: [mptcp-net] mptcp: try harder to borrow memory from
-subflow under pressure:
-    - Can be applied
-    - Matth: To apply
-
-
-
-
-Issues on Github:
-    https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-    Recently opened (latest from last week: 195)
-
-  196  warn_bad_map on 5.12.0 [bug] @pabeni:
-      - Patches already sent:
-          - mptcp: let warn_bad_map report relevant values
-          - tcp: ensure that backlog coalescing don't break MPTCP DSS →
-but not needed
-
-      - the report contains interesting info about fallback and
-retransmissions:
-          - interesting to look at that:
-              - seems that more work on retransmissions is needed
-(retransmission is too much and too often)
-              - we pick "randomly" a subflow to get the RTT but that's
-not ideal if you have different networks
-          - the number of fallback is quite important but maybe due to
-the setup/experimentations (e.g. MPTCP used with many random servers on
-the Internet)
-
-
-    Bugs (opened, flagged as "bug" and assigned)
-
-  196  warn_bad_map on 5.12.0 [bug] @pabeni:
-      - see above
-
-  191  Could you please let me know how to use "ip mptcp end points
-backup"? [bug] [question] @matttbe:
-      - is it maybe due to the fact that backup flag was not taking into
-account?
-      → Matth: TODO check → Done
-
-
-    Bugs (opened and flagged as "bug" and not assigned)
-
-  181  implement data_fin ack retransmission for subflow in  TIME_WAIT
-state [bug]
-  137  selftests: simult_flows.sh: unbalanced bwidth tests are unstable
-[bug]
-  120  [interop] netnext is dropping packets, causing MPTCP-level
-retransmissions on mptcp.org [bug]
-  107  Review use of WARN_ON() / WARN_ON_ONCE() [bug]
-   65  clearing properly the status in listen() [bug]
-   56  msk connection state set without msk lock [bug]
-
-
-    In Progress (opened and assigned)
-
-  194  Round-robin packet scheduler support [enhancement] @geliangtang
-  193  Fullmesh path manager support [enhancement] @geliangtang
-
-  189  Wireshark / TCPDump doesn't understand option subtype 8
-(MP_TCPRST) [enhancement] @dcaratti:
-      - merged in Wireshark
-      - pending in TCPDump
-
-  188  Netlink events for MP_TCPRST [enhancement] @dcaratti
-  187  add recvmsg support for ancillary data [enhancement] @fw-strlen
-  186  Add netlink command support [enhancement] @mjmartineau
-
-  183  MP_CAPABLE 'C' flag is ignored [enhancement] @geliangtang:
-      - see patches above
-
-  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
-@dcaratti
-  158  iproute2: change backup mode (MP_PRIO) for active connections
-[enhancement] [iproute2] @dcaratti
-   96  Python: add support for IPPROTO_MPTCP [enhancement] @matttbe
-   52  MP_FAIL support [enhancement] @geliangtang
-
-
-    Recently closed (since last week)
-
-  195  WARNING in sk_stream_kill_queues and inet_sock_destruct [bug]
-@pabeni
-  192  selftests: connect: "poll timed out" issue [bug] @pabeni
-  176  BPF selftest got "fallback to TCP" error [bug] @geliangtang
-
-
-
-FYI: Current Roadmap:
-    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
-    - Current/Coming merge window (5.14):
-https://github.com/multipath-tcp/mptcp_net-next/projects/9
-    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
-
-
-
-Patches to send to netdev:
-    - net:
-        - a couple are queued for the export branch
-        - the 3 last ones:
-            - mptcp: always parse mptcp options for MPC reqsk
-            - mptcp: do not reset MP_CAPABLE subflow on mapping errors
-            - conflicts with: mptcp: add sk parameter for mptcp_get_options
-            - hopefully the sync with net-next will be done soon
-
-    - net-next:
-        - net-next seems open
-        - best to send what we can, backlog is big :)
-
-
-
-Extra tests:
-    - news about Syzkaller? (Christoph):
-        - Mat is running a (much smaller) instance but nothing to report
-
-    - news about interop with mptcp.org? (Christoph):
-        - /
-
-    - news about Intel's kbuild? (Mat):
-        - running and hasn't report any failure
-
-    - packetdrill (Davide):
-        - /
-
-    - CI (Matth):
-        - /
-
-
-
-Patchew:
-    - Davide will check with Paolo Bonzini
-
-
-
-IRC:
-    - Freenode is dying:
-        - warning: channels will be hijacked if they contain "libera" in
-the topic
-        - https://blog.bofh.it/debian/id_461
-        - CentOS has moved
-        - Ubuntu has moved
-        - FOSDEM has moved
-        - Fedora has moved
-        - NetworkManager has moved
-        - Many many more have moved:
-          https://github.com/siraben/freenode-exodus
-        - Operators proving more and more untrustworthy:
-            - https://www.devever.net/~hl/freenode_abuse
-            - https://www.devever.net/~hl/freenode_abuse2
-    - Switch from freenode to ??? libera.chat? OFTC?
-    - Or something else? Matrix? (Element) (there are bridges with IRC)
-    - keep #MPTCPUpstream or:
-        - #mptcp → anything about mptcp
-        - #mptcp-ci → only for the bots
-        - #mptcp-dev → restricted? no: public discussions
-
-    - → decision: move to libera on #mptcp and #mptcp-ci.
-
-    - we will see later if we need more channels (or less)
-    - TODO: Matth: register mptcp project → in progress
-    - TODO: Matth: change topic in freenode to point to the wiki, IRC
-section (NOT mention libera) → Done
-
-
-
-busy polling on a single NAPI instance:
-    - By Paolo
-    - for later discussion
-
-
-
-Patchwork:
-    - ozlabs in read-only: request sent
-
-    - remove ozlabs ML: Mat is going to create a ticket
-
-    - missing patches (RFC/changes requested) have been re-sent
-
-    - New status:
-        - New (same):
-            → Waiting for reviews from anybody
-        - Under review (same):
-            → In review or waiting for precisions
-        - Accepted (same):
-            → Applied in our tree
-        - Rejected (same):
-            → We don't want that
-        - RFC (same):
-            → RFC, more to park this for later
-        - Not applicable (same):
-            → To be rebased
-        - Changes requested (same):
-            → We need a new version
-        - Awaiting Upstream (*CHANGED*):
-            → A patch that is not for our tree, e.g. for iproute2
-            before, with patchwork.ozlabs.org, was "Waiting to be
-applied in our tree"
-        - Superseded (same):
-            → Replaced by a new version
-        - Deferred (same):
-            → Handled by others, typically netdev maintainers (best to
-check the exact status elsewhere)
-        - Mainlined (*NEW*):
-            → Handled by others and applied in another tree (if we don't
-forget to change the status)
-        - Queued (*NEW*):
-            → Waiting to be applied in our tree
-        - Needs ACK (same):
-            → Waiting for reviews a "long time" (at least since the last
-weekly meeting) or for someone specific
-
-    - Wiki has been updated:
-        - https://github.com/multipath-tcp/mptcp_net-next/wiki/Patchwork
-        -
-https://github.com/multipath-tcp/mptcp_net-next/wiki/Patch-prefixes
-
-
-
-Next meeting:
-    - On Thursday, the 4rd of June.
-    - Usual UTC time: 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20210603
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you ~~on Thursday~~ yesterday,
-Matt
+Content-Type: text/plain; charset="US-ASCII"
+
+The current cleanup rbuf tries a bit too hard to avoid acquiring
+the subflow socket lock. We may end-up delaying the needed ack,
+or skip acking a blocked subflow.
+
+Address the above extending the conditions used to trigger the cleanup
+to reflect more closely what TCP does and invoking tcp_cleanup_rbuf()
+on all the active subflows.
+
+Note that we can't replicate the exact tests implemented in
+tcp_cleanup_rbuf(), as MPTCP lacks some of the required info - e.g.
+ping-pong mode.
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+This addresses the low tput I mesured in tests where BHs and U/S
+processes runs on the same CPU, see scenario 4) in:
+
+https://lore.kernel.org/mptcp/9af85be18465b0f9595459764013568456453ce9.camel@redhat.com/
+
+notes:
+
+-  this does not fix completely:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/137
+
+but figures are now more stable.
+
+- while perfing all the above spotted:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/200
+
+which is bad!
+
+---
+ net/mptcp/protocol.c | 44 ++++++++++++++++----------------------------
+ net/mptcp/protocol.h |  1 -
+ 2 files changed, 16 insertions(+), 29 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f9fd905d2d3b..40e97dd6c09f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -457,34 +457,29 @@ static bool mptcp_subflow_cleanup_rbuf(struct sock *ssk)
+ 
+ static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
+ {
+-	struct sock *ack_hint = READ_ONCE(msk->ack_hint);
+ 	int old_space = READ_ONCE(msk->old_wspace);
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk = (struct sock *)msk;
+-	bool cleanup;
++	int space =  __mptcp_space(sk);
++	bool cleanup, rx_empty;
+ 
+-	/* this is a simple superset of what tcp_cleanup_rbuf() implements
+-	 * so that we don't have to acquire the ssk socket lock most of the time
+-	 * to do actually nothing
+-	 */
+-	cleanup = __mptcp_space(sk) - old_space >= max(0, old_space);
+-	if (!cleanup)
+-		return;
++	cleanup = (space > 0) && (space >= (old_space << 1));
++	rx_empty = !atomic_read(&sk->sk_rmem_alloc);
+ 
+-	/* if the hinted ssk is still active, try to use it */
+-	if (likely(ack_hint)) {
+-		mptcp_for_each_subflow(msk, subflow) {
+-			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		const struct inet_connection_sock *icsk;
++		const struct tcp_sock *tp = tcp_sk(sk);
+ 
+-			if (ack_hint == ssk && mptcp_subflow_cleanup_rbuf(ssk))
+-				return;
+-		}
++		icsk = inet_csk(ssk);
++		if (cleanup ||
++		    (inet_csk_ack_scheduled(sk) &&
++		     ((READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->rcv_wup) >
++		       READ_ONCE(icsk->icsk_ack.rcv_mss)) ||
++		       (rx_empty && READ_ONCE(icsk->icsk_ack.pending) &
++				    (ICSK_ACK_PUSHED2|ICSK_ACK_PUSHED)))))
++			mptcp_subflow_cleanup_rbuf(ssk);
+ 	}
+-
+-	/* otherwise pick the first active subflow */
+-	mptcp_for_each_subflow(msk, subflow)
+-		if (mptcp_subflow_cleanup_rbuf(mptcp_subflow_tcp_sock(subflow)))
+-			return;
+ }
+ 
+ static bool mptcp_check_data_fin(struct sock *sk)
+@@ -629,7 +624,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 			break;
+ 		}
+ 	} while (more_data_avail);
+-	WRITE_ONCE(msk->ack_hint, ssk);
+ 
+ 	*bytes += moved;
+ 	return done;
+@@ -1912,7 +1906,6 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
+ 		__mptcp_update_rmem(sk);
+ 		done = __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
+ 		mptcp_data_unlock(sk);
+-		tcp_cleanup_rbuf(ssk, moved);
+ 
+ 		if (unlikely(ssk->sk_err))
+ 			__mptcp_error_report(sk);
+@@ -1928,7 +1921,6 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
+ 		ret |= __mptcp_ofo_queue(msk);
+ 		__mptcp_splice_receive_queue(sk);
+ 		mptcp_data_unlock(sk);
+-		mptcp_cleanup_rbuf(msk);
+ 	}
+ 	if (ret)
+ 		mptcp_check_data_fin((struct sock *)msk);
+@@ -2177,9 +2169,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	if (ssk == msk->last_snd)
+ 		msk->last_snd = NULL;
+ 
+-	if (ssk == msk->ack_hint)
+-		msk->ack_hint = NULL;
+-
+ 	if (ssk == msk->first)
+ 		msk->first = NULL;
+ 
+@@ -2394,7 +2383,6 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->rmem_released = 0;
+ 	msk->tx_pending_data = 0;
+ 
+-	msk->ack_hint = NULL;
+ 	msk->first = NULL;
+ 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
+ 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 160c2ab09f19..9dea0734808e 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -240,7 +240,6 @@ struct mptcp_sock {
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
+ 	bool		csum_enabled;
+ 	spinlock_t	join_list_lock;
+-	struct sock	*ack_hint;
+ 	struct work_struct work;
+ 	struct sk_buff  *ooo_last_skb;
+ 	struct rb_root  out_of_order_queue;
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.3
+
