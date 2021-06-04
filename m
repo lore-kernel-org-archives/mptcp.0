@@ -1,131 +1,75 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0707E70
-	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 20:44:46 +0000 (UTC)
-Received: by mail-ej1-f54.google.com with SMTP id og14so11104457ejc.5
-        for <mptcp@lists.linux.dev>; Fri, 04 Jun 2021 13:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dYQa5q74ycIl2BiINyvO1GPXOoL27aVnZ3Si06LsuTA=;
-        b=iyjB7q5pxiVSbHPKiFjD1A1lo2tCFC0PzldxNdGDVOH4m/r5zEjnZmtKV3DuHlElke
-         tmkDi7Vn1B9Mu6mK3eq996zwiVq+yYm7cJKRuJ/xOKdoo8hamiWjD5CUrk6tDJtcy6Ec
-         DzjF21AtYov6W+pL57980o+9RjBSUy9Zbav2Y9Q71+QkdfHYSDNoJuvtWTZ3KBnNHkSH
-         vru7efDwulOS/ttSOmWG8lTeisaahHjx5k1QgaB5LpLImeiKIgwjejxVjTRvyDevC82o
-         sb0zQU+RqLUgdbn1Zx+HmOXnRxxLNWJvoacv3CoTTlu4N0xspJbxxrwaGhH9XPJZ+a2k
-         RdaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dYQa5q74ycIl2BiINyvO1GPXOoL27aVnZ3Si06LsuTA=;
-        b=YrDD+VIWDQM2Rpu5C85LQKKDHaxz7SEqjNSciSztb/3wVe4CgMRlOsaerjDGIcoDYx
-         IDJrCizQzEdN/koVWgQ+J5iUhMYvkE4SbX2VSGBlwgfq44cOn1Cd4qRbTAy/S90uE5+0
-         VjJjRtzU6/AEd95+cShS6gDRAljHU9Io66NBzN/FJEpilslcR9gEBQKPy4GgYeiufRLa
-         l/+a/B+Mo4Px5+deZPDolEE54P2r3hn5TQwbx9Y7+dN4DvORLNWVmb/KESViCSFZeCXM
-         iVLH+RZMt85xL8DwVAsIF2bGg9kp9jJJxvVpXg8QywrE3zSSW8lJjZ4LQ2cfMX6nbZPu
-         J/Jw==
-X-Gm-Message-State: AOAM530xt0+cz2jwwdrcRh/ehy9zwGF+SwZ08w/F/AiZHjmFKlRVebhr
-	YzSAMMBHoe3LKZNdbFw9Oh74Lg==
-X-Google-Smtp-Source: ABdhPJzHK/D7WBg9UTeB4usEor+DI4h+u8I9J1Xsz5xdS6CuanQcKM7QD79/Ew+p3ag8BMnWMmOcUA==
-X-Received: by 2002:a17:906:b855:: with SMTP id ga21mr6084098ejb.550.1622839485548;
-        Fri, 04 Jun 2021 13:44:45 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:c047:d46c:d45:3868])
-        by smtp.gmail.com with ESMTPSA id oz11sm3269147ejb.16.2021.06.04.13.44.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jun 2021 13:44:45 -0700 (PDT)
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Maxim Galaganov <max@internet.ru>
-References: <392efcf1d0b83807fd888c2a33be75aa54dbb472.1622734919.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH v3 mptcp-net] mptcp: fix soft lookup in
- subflow_error_report().
-Message-ID: <af941fb3-2c24-1940-0c7e-90a450dac859@tessares.net>
-Date: Fri, 4 Jun 2021 22:44:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE60770
+	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 21:20:04 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 5FD8C613EC;
+	Fri,  4 Jun 2021 21:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1622841604;
+	bh=KmDemZaKFYrvRbHIeLHMvQPkjNH8dTvNeqN5E8VxjPU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=C6jMGp4ZkZtfV2US7dS4xL3gCu+gIWQgIlSSof/mZZ9luBrqU0SV28vUvkaHlzssC
+	 HKUV8IrDISRECQ5Fvz4Mqr2h9d1S/8FUSI7UBexWgRF12mH6V3o2DznopmzeblNNyP
+	 bTY2LneXp2vGvAz8sh2kDbbmmKKewlgkitb9l/0DqcnihPeuWQSmXqZyvSWhZ03IyV
+	 Faem4fS3nUYvhN8Gcto9Ul3vV1GAdOKVH29w2IWUNG8QHMb30/RQhe26Dap6dvFUUZ
+	 T4CQGcbf2B4PbhvzPeuiBGml4nhO9UBpdiRvWVT2yFV+wd4ep9OHIcJ1/Uf2WSbZxv
+	 0m54ClAVmLPMQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 50B6060A13;
+	Fri,  4 Jun 2021 21:20:04 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <392efcf1d0b83807fd888c2a33be75aa54dbb472.1622734919.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/7] mptcp: Add timestamp support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <162284160432.23356.2648510889334376322.git-patchwork-notify@kernel.org>
+Date: Fri, 04 Jun 2021 21:20:04 +0000
+References: <20210603232433.260703-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210603232433.260703-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, fw@strlen.de, mptcp@lists.linux.dev
 
-Hi Paolo, Mat,
+Hello:
 
-On 03/06/2021 17:58, Paolo Abeni wrote:
-> Maxim reported a soft lookup in subflow_error_report():
+This series was applied to netdev/net-next.git (refs/heads/master):
+
+On Thu,  3 Jun 2021 16:24:26 -0700 you wrote:
+> Enable the SO_TIMESTAMP and SO_TIMESTAMPING socket options for MPTCP
+> sockets and add receive path cmsg support for timestamps.
 > 
->  watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
->  RIP: 0010:native_queued_spin_lock_slowpath
->  RSP: 0018:ffffa859c0003bc0 EFLAGS: 00000202
->  RAX: 0000000000000101 RBX: 0000000000000001 RCX: 0000000000000000
->  RDX: ffff9195c2772d88 RSI: 0000000000000000 RDI: ffff9195c2772d88
->  RBP: ffff9195c2772d00 R08: 00000000000067b0 R09: c6e31da9eb1e44f4
->  R10: ffff9195ef379700 R11: ffff9195edb50710 R12: ffff9195c2772d88
->  R13: ffff9195f500e3d0 R14: ffff9195ef379700 R15: ffff9195ef379700
->  FS:  0000000000000000(0000) GS:ffff91961f400000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 000000c000407000 CR3: 0000000002988000 CR4: 00000000000006f0
->  Call Trace:
->   <IRQ>
->  _raw_spin_lock_bh
->  subflow_error_report
->  mptcp_subflow_data_available
->  __mptcp_move_skbs_from_subflow
->  mptcp_data_ready
->  tcp_data_queue
->  tcp_rcv_established
->  tcp_v4_do_rcv
->  tcp_v4_rcv
->  ip_protocol_deliver_rcu
->  ip_local_deliver_finish
->  __netif_receive_skb_one_core
->  netif_receive_skb
->  rtl8139_poll 8139too
->  __napi_poll
->  net_rx_action
->  __do_softirq
->  __irq_exit_rcu
->  common_interrupt
->   </IRQ>
+> Patches 1, 2, and 5 expose existing sock and tcp helpers for timestamps
+> (no new EXPORT_SYMBOLS()s).
 > 
-> The calling function - mptcp_subflow_data_available() - can be invoked
-> from different contexts:
-> - plain ssk socket lock
-> - ssk socket lock + mptcp_data_lock
-> - ssk socket lock + mptcp_data_lock + msk socket lock.
+> Patch 3 propagates timestamp options to subflows.
 > 
-> Since subflow_error_report() tries to acquire the mptcp_data_lock, the
-> latter two call chains will cause soft lookup.
-> 
-> This change addresses the issue moving the error reporting call to
-> outer functions, where the held locks list is known and the we can
-> acquire only the needed one.
-> 
-> Reported-by: Maxim Galaganov <max@internet.ru>
-> Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/199
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> [...]
 
-Thank you for the patch and the review!
+Here is the summary with links:
+  - [net-next,1/7] sock: expose so_timestamp options for mptcp
+    https://git.kernel.org/netdev/net-next/c/371087aa476a
+  - [net-next,2/7] sock: expose so_timestamping options for mptcp
+    https://git.kernel.org/netdev/net-next/c/ced122d90f52
+  - [net-next,3/7] mptcp: sockopt: propagate timestamp request to subflows
+    https://git.kernel.org/netdev/net-next/c/9061f24bf82e
+  - [net-next,4/7] mptcp: setsockopt: handle SOL_SOCKET in one place only
+    https://git.kernel.org/netdev/net-next/c/7a009a70ff8a
+  - [net-next,5/7] tcp: export timestamp helpers for mptcp
+    https://git.kernel.org/netdev/net-next/c/892bfd3ded0e
+  - [net-next,6/7] mptcp: receive path cmsg support
+    https://git.kernel.org/netdev/net-next/c/b7f653b297a4
+  - [net-next,7/7] selftests: mptcp_connect: add SO_TIMESTAMPNS cmsg support
+    https://git.kernel.org/netdev/net-next/c/5e6af0a729b6
 
-- 9f1527adae81: mptcp: fix soft lookup in subflow_error_report()
-- Results: ff4906881c2f..2049c3fa2e07
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210604T203735
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210604T203735
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
