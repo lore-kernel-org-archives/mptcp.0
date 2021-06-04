@@ -1,50 +1,51 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C62670
-	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 20:07:21 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id s6so12471309edu.10
-        for <mptcp@lists.linux.dev>; Fri, 04 Jun 2021 13:07:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A077C70
+	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 20:07:41 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id ce15so16284083ejb.4
+        for <mptcp@lists.linux.dev>; Fri, 04 Jun 2021 13:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=to:references:cc:from:subject:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
         bh=W/41+cYSJzu5W9/iuzcKnNKh4Lz2f3PcTNxDrtOWLvg=;
-        b=V9ai2AfFDfQVoUEl2Oe8nsJY676yLQE236J3+x/IdvcgUm6DFYA4GpQJGOFrjNRT5p
-         dU7z1L34sPrsd7DraRXw1bB2uhs4DNt8mjR1aU0WhVaxOyEE1zC16BdvPzTlnG7mXBN5
-         0cKVMyzCoVNvOi+K8bZM7FjuiWX3IaU27toIVhX4VRNDAjjXE0w3QNLshEUvtj5wmp/c
-         dt+ljpNmUWUu978A5vsyor8H4U3KOigVrmn2jIU0JS8XDemcXMnuYPjtB5a/LJ4hkC0G
-         D+g0IkyUHVxr4OgCXYJOTRfW1gQdDs2XjNmAbw89d+K81QnudfhnXE++CiPp9u8KUzeP
-         zXuQ==
+        b=FKwTtPLkPBmq0cjMxtHM5A0wI7uYYS84sEPZOyPeJ5d9EDQ2FjOVO87+bYtK8whh45
+         Ro76SfpxHJtQgYm+GClaVBqCbNneTh29r35uAET3AE+/35gf2mR15bwXMTVlgTueysGL
+         Kj2RnGFAwfbAYWfQwUZw4DHklZA0YAEcefgj3JOncqIjU0zjqzsaqvy8v5CNcmRHoci5
+         3IXOm4V4aJ4n5KnIBgiDTszvphAAvh0mxJrX+z/9qlwjGkrV+mMRkYkRDa6pvBSRb49b
+         gerexGbEHWDeChkT8K3PG/KAlCtNzSG2V2lUGN5XTCyyzEuxUqY1psscrzk4RnnImRWv
+         ExzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:to:references:cc:from:subject:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=W/41+cYSJzu5W9/iuzcKnNKh4Lz2f3PcTNxDrtOWLvg=;
-        b=F3VuPUUhhPSo97FZ1XHlYx8RWRhhBmadP47l39r0OLN4kRL+kPJ8/Fa7lm1gdJepE1
-         1KybcBDdU5mfa3S43rotO+2WB8vZ+UONS41x3QQ72TMp26WUvx3YYCGlmLCW5+JymQQa
-         pr/HAENOY5cMdS3RIbgb51jZBnqOPZadaMFtJA9pqP0YCRgCu6fWBtEmaSWjbOy0syFF
-         QqH2UG6JklHyFDGRc2dzx2DbvbPdi9k7NV6xxAXUrYUu3A/e4ZsGV2DTYFVSInRP/27G
-         xCxvObwVm7ugJ5svRcOjed/9ETiRn62qqwnJtOifGg3+2DlsZRtsqAS1/zKXhl1P/aV0
-         QTFQ==
-X-Gm-Message-State: AOAM532fvu1Ev78sgDnIz7nClYgAqrMBCiEatFpmBkXH3Q/wajA7y+G4
-	L38FbAbTpqOPO6PHZqlOodHdMbazL9mVhxyU
-X-Google-Smtp-Source: ABdhPJzhG7+NvR7YJ5HMYMjgGRvWUTJUOpATr49zyvD3LNwrBhlQzSyMbuh3KcNHXY9PBhNsEzf+9w==
-X-Received: by 2002:a05:6402:3101:: with SMTP id dc1mr6477717edb.324.1622837239952;
-        Fri, 04 Jun 2021 13:07:19 -0700 (PDT)
+        b=ZX0YMTXmeQogE8yV4ljEhZb7CJl9jZtfVgCfRQiHr5jt8PYV4RvZPCZ3AdIvP01CVS
+         uTvzDNTEgyyuh46l97DapKmMFKiC1JHEwiiV5g9uoMb6gpS2gsLijqVrg6yUbxm6G0pj
+         BUydlvn+DAA6//Q0KRHVEogmn52o7ESnGXTFutYzz9efanztGbmW2x3F9CRZY/TS8rfB
+         c7dbey42FLRRY0FMgy6DEeKHIxEjjlOuDSCBu7FM4g4zHIm2E0Evgo7ZbtLlXphWy1Yk
+         z7tn54GaJ2GyKlisvpVDxFDpB1RLy03VrpKmPHq+/SHXaWl3GsQp5JW1oUM/x4qHEmUY
+         zp4g==
+X-Gm-Message-State: AOAM532VIHfzXYSizTIZKPfcTiiS21G6LXwjbhcLKnIskZynozzQe0wX
+	0+XxIHq8ISQwql0KoCU2wugGy/Q8/xG2HrI6
+X-Google-Smtp-Source: ABdhPJw6eICzsBRNO0MGc6pRFOeczi2Y1DKR8gdW8YJUjdgUOKs/S+olwm2RCQmVwxnW4rSacO6Ggg==
+X-Received: by 2002:a17:906:c311:: with SMTP id s17mr5767202ejz.202.1622837260092;
+        Fri, 04 Jun 2021 13:07:40 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:c047:d46c:d45:3868])
-        by smtp.gmail.com with ESMTPSA id n2sm3737603edi.32.2021.06.04.13.07.19
+        by smtp.gmail.com with ESMTPSA id v7sm3728694edx.38.2021.06.04.13.07.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jun 2021 13:07:19 -0700 (PDT)
-To: Paolo Abeni <pabeni@redhat.com>
+        Fri, 04 Jun 2021 13:07:39 -0700 (PDT)
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
 References: <637fc17e2c0f833e820f7f8097fdc1212b4c968f.1622719886.git.pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Subject: Re: [PATCH v2 mptcp-net] mptcp: do not warn on bad input from the
  network
-Message-ID: <2f350f42-4bb1-5092-120a-b9f58d7a21e3@tessares.net>
-Date: Fri, 4 Jun 2021 22:07:18 +0200
+Message-ID: <07a8ab9a-3fef-6004-80df-74eb3f86feca@tessares.net>
+Date: Fri, 4 Jun 2021 22:07:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
