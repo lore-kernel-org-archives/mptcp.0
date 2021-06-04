@@ -1,51 +1,51 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1656D70
-	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 19:34:55 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id f5so7394096eds.0
-        for <mptcp@lists.linux.dev>; Fri, 04 Jun 2021 12:34:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926D370
+	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 19:58:26 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id b9so16182970ejc.13
+        for <mptcp@lists.linux.dev>; Fri, 04 Jun 2021 12:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:cc:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hstRiTMj7tzRn2qay7CXUHvg7gQqMhhnQtWo0eDvNFI=;
-        b=fguaH+8lBsdk+MhQ/92SbvGjHwbn1qbMK3tSf7W0HhkwmOE/K3OSj2trcgnzr/4AaU
-         GyQtnKvKQPtXKeqpNTOwotRvYU6FBUf27dqGnaAoUtBK3k5yFVxPP3XGFGp+oMOBvXiZ
-         0GCBb/QuFp+THwULckgKoibdoWuMyKtS/QkoJdBn13TjbaD1xZp3Qt9lNYmahzh6S5G8
-         kQ39L3kXCD3Xdzt4hS7bJnzDIlL3JQH5Zu9wFLICCZjYIe9EjAVw3Tr5jy2ihRSrq9Ru
-         D0yy8NxMX1bne4M8GJlRFcMTX43QLK/tFf1OV4ZldyDQCFj6YoLfzJIF/OBkMjz1FDcv
-         6npg==
+        bh=K0EuQahp//BzQT3hRb+tk5BEZOQjz5MwNiQbNDyQxjs=;
+        b=bZcGXu5Xit6xjWCbI436qWilSuF6rvrccuQ1jBwuk1rJ2hebloPmwXnzxJOqMzpW48
+         EhO5RbpZr7UGaUZxt4LtZO2eJgZLCC8Ful3hW9y0Lpm9J2vETalygGPkB4RxNHoD/CQi
+         x6Y2t1kBFnlJs7fsmNtS2svkOKD2pCH+7NrMtWvsJSy6lDRbeRCbjxS1upfS/4t817Zs
+         nVGnBJ7OgE7i9ooHWNh+qZNW1P/VnDeqmpsyKKEuKOL+gz2ruj1o6a/I93w2sgq7W5aZ
+         9a8KpD7M+fv2aBUenPuLaensjsA9a0GIG3pfOc2cxcuglOuAlGjf06N+Gn9dv+hcwkNx
+         Rszg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:cc:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=hstRiTMj7tzRn2qay7CXUHvg7gQqMhhnQtWo0eDvNFI=;
-        b=csYBDs3GvOtPL+NEaz5vdnRADnEsi9IYbRMRVHwqkPOnlkw6MD1NkfGKx1mHw92/zV
-         P0u3zu3VrzcXbX2muI2JZFf1rgIQ5bAVetVJcx3f7teIlMmY0SpuroOR4S5OnlK4vAJn
-         uOFhRlNDC2/QocBteQeV0gSg3NYtW4ATDRfN8RGMY9G36D5QpGwvE+FFU+1QUav5QkW4
-         30sSYivZrXnCDLsifkqJwERRg9EXEt8/+QTSIsrQt+fIS85v4g3CU6vhCR6OhPqXgX3Y
-         0/90U15FGEHtPdv9RIvycDhV6oKmszVZBqCFzjBCOU464z1OL+Nc6MWjiJjUpBlkXGkw
-         egLQ==
-X-Gm-Message-State: AOAM531bdUlAfoJR0JA+PRSxWP5fQYa2RgDivoG/lbw7n8929QabjpSK
-	kSgvqfL8zLN0uoIFfS6BVDAISJKzqaQbBLGF
-X-Google-Smtp-Source: ABdhPJxS5/xnFnaJzeQZQf7BZ0AWfiF+C2Et3GJ9JZuSmirb/Sg1BkWm2aDfTe78mziOwy/Gx8X8kA==
-X-Received: by 2002:aa7:d85a:: with SMTP id f26mr6352271eds.332.1622835294034;
-        Fri, 04 Jun 2021 12:34:54 -0700 (PDT)
+        bh=K0EuQahp//BzQT3hRb+tk5BEZOQjz5MwNiQbNDyQxjs=;
+        b=Hksi1//sDiekqiOsfzbpu5XXGsyHhfplp1ywNgiJwXSmZ6t3TeJlRNouRPBF2Qqs2D
+         Zxq7Ws1gObubS/obAfpACKLbDveoMIK++EG7WtQks1tPKENe+mJK3jpNIZ80uX/w8InF
+         +fYqufId7QpC9uCAnhUa3eqIQymtU7DyDz+xjm2VzcgR4mjCSDymPB3KgigOJxOIkXYA
+         oKsebcRPf9fSaMGok7Qn8pgsLCde9Z926/zj40iNEgkUIvM23hBK4eknveQYcJDY6JZS
+         ypwxq8I0N5QcHujpGU3LcAKd8tW7cBBRKRa6CTJc+8Y2sLdJ00qy8hTbxOOvQLKoPuRH
+         ubFg==
+X-Gm-Message-State: AOAM533sym8rMAYu9krWIcPXbKJk7Kn1TcNuo4lI/JexKz+8STJFnDtn
+	NJN9+SkXnBQJsYybysmjmzpbSN7fcqcINmaB
+X-Google-Smtp-Source: ABdhPJwuAwtJV4Gz/7vSqarLRxbvGx5FZHkfkzGiLbXQclx8YUy5b7Mhtb/KnMBGT+lFKe1zjLXQyw==
+X-Received: by 2002:a17:906:1dd1:: with SMTP id v17mr5854954ejh.31.1622836704752;
+        Fri, 04 Jun 2021 12:58:24 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:c047:d46c:d45:3868])
-        by smtp.gmail.com with ESMTPSA id f3sm3696443eds.59.2021.06.04.12.34.53
+        by smtp.gmail.com with ESMTPSA id gv11sm3205481ejb.13.2021.06.04.12.58.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jun 2021 12:34:53 -0700 (PDT)
-Subject: Re: [PATCH mptcp-net] mptcp: try harder to borrow memory from subflow
- under pressure
+        Fri, 04 Jun 2021 12:58:24 -0700 (PDT)
+Subject: Re: [PATCH mptcp-net] mptcp: wake-up readers only for in sequence
+ data.
 To: Paolo Abeni <pabeni@redhat.com>,
  Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <bc6471c8f7444b89e7e5f6c8f7713972477fda36.1622045437.git.pabeni@redhat.com>
+References: <5009954210af20796d1cf88ca630d19ec12e2132.1622132690.git.pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <260c6ca2-014c-a1c9-696b-ec2293f8d02f@tessares.net>
-Date: Fri, 4 Jun 2021 21:34:53 +0200
+Message-ID: <e21808b1-36c0-62fe-e9b2-25020573f4c7@tessares.net>
+Date: Fri, 4 Jun 2021 21:58:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
@@ -53,38 +53,51 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <bc6471c8f7444b89e7e5f6c8f7713972477fda36.1622045437.git.pabeni@redhat.com>
+In-Reply-To: <5009954210af20796d1cf88ca630d19ec12e2132.1622132690.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo, Mat,
 
-On 26/05/2021 18:10, Paolo Abeni wrote:
-> If the host is under sever memory pressure, and RX forward
-> memory allocation for the msk fails, we try to borrow the
-> required memory from the ingress subflow.
+On 27/05/2021 18:27, Paolo Abeni wrote:
+> Currently we relay on the subflow->data_avail field,
+> which is subject to races:
 > 
-> The current attempt is a bit flaky: if skb->truesize is less
-> than SK_MEM_QUANTUM, the ssk will not release any memory, and
-> the next schedule will fail again.
+> 	ssk1
+> 		skb len = 500 DSS(seq=1, len=1000, off=0)
+> 		# data_avail == MPTCP_SUBFLOW_DATA_AVAIL
 > 
-> Instead, directly move the required amount of pages from the
-> ssk to the msk, if available
+> 	ssk2
+> 		skb len = 500 DSS(seq = 501, len=1000)
+> 		# data_avail == MPTCP_SUBFLOW_DATA_AVAIL
 > 
-> Fixes: 9c3f94e1681b ("mptcp: add missing memory scheduling in the rx path")
+> 	ssk1
+> 		skb len = 500 DSS(seq = 1, len=1000, off =500)
+> 		# still data_avail == MPTCP_SUBFLOW_DATA_AVAIL,
+> 		# as the skb is covered by a pre-existing map,
+> 		# which was in-sequence at reception time.
+> 
+> Instead we can explicitly check if some has been received in-sequence,
+> propagating the info from __mptcp_move_skbs_from_subflow().
+> 
+> Additionally and the 'ONCE' annotation to the 'data_avail' memory
+> access, as msk will read it outside the subflow socket lock.
+> 
+> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-Thank you for the patch and the review! (and sorry for the delay)
+Thank you for the patch and the review!
 
-- fa92849db4ec: mptcp: try harder to borrow memory from subflow under
-pressure
-- Results: 809268f427a5..119541ecd3c9
+Just applied in our tree:
+
+- 508f97cb7d94: mptcp: wake-up readers only for in sequence data
+- Results: 119541ecd3c9..02c88cfc4215
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210604T193342
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210604T193342
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210604T195755
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210604T195755
 
 Cheers,
 Matt
