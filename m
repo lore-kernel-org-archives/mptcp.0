@@ -1,187 +1,80 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C78770
-	for <mptcp@lists.linux.dev>; Sat,  5 Jun 2021 08:52:19 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id h24so18173529ejy.2
-        for <mptcp@lists.linux.dev>; Sat, 05 Jun 2021 01:52:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35A170
+	for <mptcp@lists.linux.dev>; Sat,  5 Jun 2021 09:02:01 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id og14so12848895ejc.5
+        for <mptcp@lists.linux.dev>; Sat, 05 Jun 2021 02:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=37fRM5rQtiBaT4bmAZ2ozA4PooE0w5OCWcQXtr9E5cU=;
-        b=16gwbRPtKbqqbpNuYnd+xEJNGMBz2UH0Whdemnclz1/TSDY1VolGqtXbMH9G/2pJSW
-         7qUKs7mKTKEbiI00TeTmUh7Nex+l4xfvNxFXO3kppHdSpxV3eFNP4j0XK5umvOsuWhL3
-         DnCM/m8g6DDfATkIS3KdOUofUgMS8oPg9Gb/8+ytL3Xf5+Cqg4zNJ9UM/sIaP/nlYe7O
-         nwuaMRRh7oDoyfNRM7c2wYrQwut+4b52QNXwum0zjrytgOngy+kGbZ/i5twGUsUrgTlK
-         rdcfUaui0rweJm2jvv43QIL4ZhTMEiPkP2vUQgIuzRjoe1WpWli9U+lRFvmSjjSvLFZq
-         fimA==
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=nNxi5PDXWnyUQ5uLzaWeBAwF2EF84jv4PZusptP9tos=;
+        b=1NY8gwKbq8dd6RUjzI4z7XEtqeLCQqDxqtXF70LiVI993ganiATdITlDVB88zdrykU
+         MTjL9zMhmcQRCPvsUzETcbTU+2zDMfgnrjj7fxSGTxniYuyA7ocLdCewtrXA29Zes7+f
+         R0wzXEBAviOq+jZ8jjmPtKDfOIJf/MKb7oG5jM0vc6FR1JX0rDyGj7x+M98ITyTHGjtb
+         8ILSvndaQmgL2XYgOi1c5F2NOeuLputebHdHEM29KhnummFSEFIVr0Ki7jAR8lpphei0
+         H69JazFzTHq5ONdFWP/R0FsVbIszL/eb+gE4lv4zpPlHW4mZW8/wlSQc9U28lXHdZktw
+         i71w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=37fRM5rQtiBaT4bmAZ2ozA4PooE0w5OCWcQXtr9E5cU=;
-        b=RZLCZOwmT6fYmRBJ3BH7PZvEfD4HJAlo62f+A39HB32k8vhsNs+IIa9jOBFTnCRtb/
-         gZkZ2kxBuFWL3+7WvOvzkH6JBAl2PO2HhqHSeIuQ+ngWDRojrKxj3FzAteBDNIkJSYio
-         hoC6eTcBn0GpfqkytqjhPgua9J5RAWj5Adsl63Iz+t9Alvrg8pN7wObcDTLA9aP5yYH2
-         zWm3DChGnwcECdf0Imrth1/i/s9n1dGqPfWnnypjF2JeaZwqAOmSbqPVhxfdr3iyPCIS
-         rhbWCZIoJaFHsFdAulnKyu9z3NxRUc19E7jAfAsI34h5+WCrYX/GYrF3uuvR89kmmbhJ
-         QsXw==
-X-Gm-Message-State: AOAM533waP7uovRdoL/Sf/AFmP5j4YW+80pA1aRLHSmCPZmOXv34f4Db
-	m6o7lUVE/qhvhidG0gwZ+mNjhF+li4nwvpDF
-X-Google-Smtp-Source: ABdhPJxxZnU6p0DoCYZ0aMNt83vovQCt/JaHvW7R5DCC/DJRGGOYr6rVLaUkxHUlzseJsz03oqza8g==
-X-Received: by 2002:a17:906:6c88:: with SMTP id s8mr8321132ejr.129.1622883138292;
-        Sat, 05 Jun 2021 01:52:18 -0700 (PDT)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id y10sm3828154ejm.76.2021.06.05.01.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jun 2021 01:52:17 -0700 (PDT)
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=nNxi5PDXWnyUQ5uLzaWeBAwF2EF84jv4PZusptP9tos=;
+        b=dZ9lgo0y49t55QvPKVC4Lp8Sp6GKNHVjyFZ7Jy4ECuVjQNnUz+d34n2ik01i2ic0dI
+         a2W1CHJcHg9seuIGGnh6IU4EnfjT7eHqs/LFSSIcaIOLgF6hm9YOkeBgXLxr66nZgLzd
+         tb+VcyLOXHEIkSwPenQjcZqZzPHoL7p8rmbC/qjzGU53mqnKSkCFfceOruwfwV2w0GUd
+         qsmpIlHU6uzKpu0xU9sAoscrxzOb/Asf4LuxTH3c5nKGFqXtWOOUzvVenCAWHOTbISoY
+         FwJy4JEcVoIxgTblObjJiUv00Wr0wTBgAljF/fPys8xREcGVYB2vPJOQ5vl11CX56wp6
+         fM+g==
+X-Gm-Message-State: AOAM532+cm7MWlNknDjIe/VVEd96jvrYZbqpPPDd/ecs0VSWbNelGAV8
+	Ln43IIsLDFdtz+9VYZToZSvSn0TOUC0MQBc5RVg=
+X-Google-Smtp-Source: ABdhPJxvVlfWFea7LJTGQc68KQRML+feG6Bxt0XNA25SKR/kAMKhstqaobOl36qFcF6yMIQybOyQuA==
+X-Received: by 2002:a17:906:489:: with SMTP id f9mr8107067eja.508.1622883720055;
+        Sat, 05 Jun 2021 02:02:00 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:9baf:51f:dba1:e228])
+        by smtp.gmail.com with ESMTPSA id cd4sm1517444ejb.104.2021.06.05.02.01.59
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Jun 2021 02:01:59 -0700 (PDT)
+To: MPTCP Upstream <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next] selftests: mptcp: display proper reason to abort tests
-Date: Sat,  5 Jun 2021 10:51:55 +0200
-Message-Id: <20210605085155.3548173-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.31.1
+Subject: IRC: moving to Libera.Chat
+Message-ID: <71bceb9e-cfc8-4577-5828-237fc66b753f@tessares.net>
+Date: Sat, 5 Jun 2021 11:01:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 
-Without this modification, we were often displaying this error messages:
+Hello everybody,
 
-  FAIL: Could not even run loopback test
+A short announcement: like many, we decided to stop using Freenode and
+switch to Libera.Chat.
 
-But $ret could have been set to a non 0 value in many different cases:
+We support Libera Chat staff's decision to have created this alternate
+network and we trust them.
 
-- net.mptcp.enabled=0 is not working as expected
-- setsockopt(..., TCP_ULP, "mptcp", ...) is allowed
-- ping between each netns are failing
-- tests between ns1 as a receiver and ns>1 are failing
-- other tests not involving ns1 as a receiver are failing
+You can now reach us on #mptcp on irc.libera.chat:6697
 
-So not only for the loopback test.
 
-Now a clearer message, including the time it took to run all tests, is
-displayed.
+If you are interested by the development, please also join #mptcp-ci.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
+Our CI bots are reporting on this channel new tags, end of builds and
+tests and new issues reported on Github.
 
-Notes:
-    Do we want this in -net?
-    
-    Because it seems also valid to add:
-    
-      Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
+For more details:
 
- .../selftests/net/mptcp/mptcp_connect.sh      | 52 +++++++++++++------
- 1 file changed, 36 insertions(+), 16 deletions(-)
+  https://github.com/multipath-tcp/mptcp_net-next/wiki/IRC
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 2484fb6a9a8d..559173a8e387 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -680,6 +680,25 @@ run_tests_peekmode()
- 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
- }
- 
-+display_time()
-+{
-+	time_end=$(date +%s)
-+	time_run=$((time_end-time_start))
-+
-+	echo "Time: ${time_run} seconds"
-+}
-+
-+stop_if_error()
-+{
-+	local msg="$1"
-+
-+	if [ ${ret} -ne 0 ]; then
-+		echo "FAIL: ${msg}" 1>&2
-+		display_time
-+		exit ${ret}
-+	fi
-+}
-+
- make_file "$cin" "client"
- make_file "$sin" "server"
- 
-@@ -687,6 +706,8 @@ check_mptcp_disabled
- 
- check_mptcp_ulp_setsockopt
- 
-+stop_if_error "The kernel configuration is not valid for MPTCP"
-+
- echo "INFO: validating network environment with pings"
- for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns1" $sender 10.0.1.1
-@@ -706,6 +727,8 @@ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns4" $sender dead:beef:3::1
- done
- 
-+stop_if_error "Could not even run ping tests"
-+
- [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
- echo -n "INFO: Using loss of $tc_loss "
- test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
-@@ -733,18 +756,13 @@ echo "on ns3eth4"
- 
- tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms $tc_reorder
- 
--for sender in $ns1 $ns2 $ns3 $ns4;do
--	run_tests_lo "$ns1" "$sender" 10.0.1.1 1
--	if [ $ret -ne 0 ] ;then
--		echo "FAIL: Could not even run loopback test" 1>&2
--		exit $ret
--	fi
--	run_tests_lo "$ns1" $sender dead:beef:1::1 1
--	if [ $ret -ne 0 ] ;then
--		echo "FAIL: Could not even run loopback v6 test" 2>&1
--		exit $ret
--	fi
-+run_tests_lo "$ns1" "$ns1" 10.0.1.1 1
-+stop_if_error "Could not even run loopback test"
-+
-+run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1
-+stop_if_error "Could not even run loopback v6 test"
- 
-+for sender in $ns1 $ns2 $ns3 $ns4;do
- 	# ns1<->ns2 is not subject to reordering/tc delays. Use it to test
- 	# mptcp syncookie support.
- 	if [ $sender = $ns1 ]; then
-@@ -753,6 +771,9 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
- 		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=1
- 	fi
- 
-+	run_tests "$ns1" $sender 10.0.1.1
-+	run_tests "$ns1" $sender dead:beef:1::1
-+
- 	run_tests "$ns2" $sender 10.0.1.2
- 	run_tests "$ns2" $sender dead:beef:1::2
- 	run_tests "$ns2" $sender 10.0.2.1
-@@ -765,14 +786,13 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
- 
- 	run_tests "$ns4" $sender 10.0.3.1
- 	run_tests "$ns4" $sender dead:beef:3::1
-+
-+	stop_if_error "Tests with $sender as a sender have failed"
- done
- 
- run_tests_peekmode "saveWithPeek"
- run_tests_peekmode "saveAfterPeek"
-+stop_if_error "Tests with peek mode have failed"
- 
--time_end=$(date +%s)
--time_run=$((time_end-time_start))
--
--echo "Time: ${time_run} seconds"
--
-+display_time
- exit $ret
+Cheers,
+Matt
 -- 
-2.31.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
