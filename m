@@ -1,121 +1,187 @@
-Received: from m12-13.163.com (m12-13.163.com [220.181.12.13])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CE770
-	for <mptcp@lists.linux.dev>; Sat,  5 Jun 2021 03:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=X965E
-	bsckPeoeThbIOoTy5viCxlDh9HdMiGX6sU2pjc=; b=Sc97H1sYA/jEkiIMLQ7Ig
-	eRvn8eWeoKfsHx65qsawznKTtjWDBNviezzVwRgruPBVWblhFTlGsNJaz/0193hS
-	wPRLx5mhsh+29TGnn/igi2dD4JCkLS0uM/DMgG/retNP/KxpETc1D3HE4TsPBIFD
-	H7DXQmjW1Lm8ER7p6H+FtM=
-Received: from [10.0.0.12] (unknown [110.87.122.35])
-	by smtp9 (Coremail) with SMTP id DcCowAA3P39Z7rpggMVmEg--.45602S2;
-	Sat, 05 Jun 2021 11:24:10 +0800 (CST)
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C78770
+	for <mptcp@lists.linux.dev>; Sat,  5 Jun 2021 08:52:19 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id h24so18173529ejy.2
+        for <mptcp@lists.linux.dev>; Sat, 05 Jun 2021 01:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=37fRM5rQtiBaT4bmAZ2ozA4PooE0w5OCWcQXtr9E5cU=;
+        b=16gwbRPtKbqqbpNuYnd+xEJNGMBz2UH0Whdemnclz1/TSDY1VolGqtXbMH9G/2pJSW
+         7qUKs7mKTKEbiI00TeTmUh7Nex+l4xfvNxFXO3kppHdSpxV3eFNP4j0XK5umvOsuWhL3
+         DnCM/m8g6DDfATkIS3KdOUofUgMS8oPg9Gb/8+ytL3Xf5+Cqg4zNJ9UM/sIaP/nlYe7O
+         nwuaMRRh7oDoyfNRM7c2wYrQwut+4b52QNXwum0zjrytgOngy+kGbZ/i5twGUsUrgTlK
+         rdcfUaui0rweJm2jvv43QIL4ZhTMEiPkP2vUQgIuzRjoe1WpWli9U+lRFvmSjjSvLFZq
+         fimA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=37fRM5rQtiBaT4bmAZ2ozA4PooE0w5OCWcQXtr9E5cU=;
+        b=RZLCZOwmT6fYmRBJ3BH7PZvEfD4HJAlo62f+A39HB32k8vhsNs+IIa9jOBFTnCRtb/
+         gZkZ2kxBuFWL3+7WvOvzkH6JBAl2PO2HhqHSeIuQ+ngWDRojrKxj3FzAteBDNIkJSYio
+         hoC6eTcBn0GpfqkytqjhPgua9J5RAWj5Adsl63Iz+t9Alvrg8pN7wObcDTLA9aP5yYH2
+         zWm3DChGnwcECdf0Imrth1/i/s9n1dGqPfWnnypjF2JeaZwqAOmSbqPVhxfdr3iyPCIS
+         rhbWCZIoJaFHsFdAulnKyu9z3NxRUc19E7jAfAsI34h5+WCrYX/GYrF3uuvR89kmmbhJ
+         QsXw==
+X-Gm-Message-State: AOAM533waP7uovRdoL/Sf/AFmP5j4YW+80pA1aRLHSmCPZmOXv34f4Db
+	m6o7lUVE/qhvhidG0gwZ+mNjhF+li4nwvpDF
+X-Google-Smtp-Source: ABdhPJxxZnU6p0DoCYZ0aMNt83vovQCt/JaHvW7R5DCC/DJRGGOYr6rVLaUkxHUlzseJsz03oqza8g==
+X-Received: by 2002:a17:906:6c88:: with SMTP id s8mr8321132ejr.129.1622883138292;
+        Sat, 05 Jun 2021 01:52:18 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id y10sm3828154ejm.76.2021.06.05.01.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jun 2021 01:52:17 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-From: Jianguo Wu <wujianguo106@163.com>
-Subject: [PATCH] mptcp: fix warning in __skb_flow_dissect() when do syn cookie
- for subflow join
-Message-ID: <21423fd3-708f-fa57-c496-e50057db78e0@163.com>
-Date: Sat, 5 Jun 2021 11:24:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next] selftests: mptcp: display proper reason to abort tests
+Date: Sat,  5 Jun 2021 10:51:55 +0200
+Message-Id: <20210605085155.3548173-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:DcCowAA3P39Z7rpggMVmEg--.45602S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAw4DCrWfZFy3AFy7Gr17KFg_yoW5KF4fpr
-	43JrZrGrW8Jwn8Jr4jyFW7Xr1qyw4qvF4rG3W3Jrn7J3Z8Gwn2qF18Jr40kFy7GrWFg347
-	K3WDXa18KF97AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bbVbkUUUUU=
-X-Originating-IP: [110.87.122.35]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiNw2nkFWBksBbCQABsY
+Content-Transfer-Encoding: 8bit
 
-From: Jianguo Wu <wujianguo@chinatelecom.cn>
+Without this modification, we were often displaying this error messages:
 
-I got the following warning message while doing the test:
+  FAIL: Could not even run loopback test
 
-[   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
-[   55.553024] ------------[ cut here ]------------
-[   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
-...
-[   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
-[   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-[   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
-...
-[   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
-[   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
-[   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
-[   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
-[   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
-[   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
-[   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
-[   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
-[   55.553160] Call Trace:
-[   55.553166]  ? __sha256_final+0x67/0xd0
-[   55.553173]  ? sha256+0x7e/0xa0
-[   55.553177]  __skb_get_hash+0x57/0x210
-[   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
-[   55.553189]  subflow_check_req+0x474/0x550
-[   55.553195]  ? ip_route_output_key_hash+0x67/0x90
-[   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
-[   55.553207]  subflow_v4_route_req+0x8e/0xd0
-[   55.553212]  tcp_conn_request+0x31e/0xab0
-[   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
-[   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
-[   55.553229]  tcp_rcv_state_process+0x179/0x6d0
-[   55.553235]  tcp_v4_do_rcv+0xaf/0x220
-[   55.553239]  tcp_v4_rcv+0xce4/0xd80
-[   55.553243]  ? ip_route_input_rcu+0x246/0x260
-[   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
-[   55.553253]  ip_local_deliver_finish+0x44/0x50
-[   55.553258]  ip_local_deliver+0x6c/0x110
-[   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
-[   55.553267]  ip_rcv+0xd1/0xe0
-...
+But $ret could have been set to a non 0 value in many different cases:
 
-After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
-then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
-code path.
+- net.mptcp.enabled=0 is not working as expected
+- setsockopt(..., TCP_ULP, "mptcp", ...) is allowed
+- ping between each netns are failing
+- tests between ns1 as a receiver and ns>1 are failing
+- other tests not involving ns1 as a receiver are failing
 
-Code snippet in __skb_flow_dissect() that trigger warning:
-  975         if (skb) {
-  976                 if (!net) {
-  977                         if (skb->dev)
-  978                                 net = dev_net(skb->dev);
-  979                         else if (skb->sk)
-  980                                 net = sock_net(skb->sk);
-  981                 }
-  982         }
-  983
-  984         WARN_ON_ONCE(!net);
+So not only for the loopback test.
 
-skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set in this code path.
-But for sk_state is TCP_NEW_SYN_RECV or TCP_TIME_WAIT, skb->dev is not set to NULL,
-so we can remove skb->dev = NULL in tcp_v4_rcv()?
+Now a clearer message, including the time it took to run all tests, is
+displayed.
 
-Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use").
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/ipv4/tcp_ipv4.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 4f5b68a..b1f94a4 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -2061,8 +2061,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 	iph = ip_hdr(skb);
- 	tcp_v4_fill_cb(skb, iph, th);
+Notes:
+    Do we want this in -net?
+    
+    Because it seems also valid to add:
+    
+      Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
 
--	skb->dev = NULL;
+ .../selftests/net/mptcp/mptcp_connect.sh      | 52 +++++++++++++------
+ 1 file changed, 36 insertions(+), 16 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 2484fb6a9a8d..559173a8e387 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -680,6 +680,25 @@ run_tests_peekmode()
+ 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
+ }
+ 
++display_time()
++{
++	time_end=$(date +%s)
++	time_run=$((time_end-time_start))
++
++	echo "Time: ${time_run} seconds"
++}
++
++stop_if_error()
++{
++	local msg="$1"
++
++	if [ ${ret} -ne 0 ]; then
++		echo "FAIL: ${msg}" 1>&2
++		display_time
++		exit ${ret}
++	fi
++}
++
+ make_file "$cin" "client"
+ make_file "$sin" "server"
+ 
+@@ -687,6 +706,8 @@ check_mptcp_disabled
+ 
+ check_mptcp_ulp_setsockopt
+ 
++stop_if_error "The kernel configuration is not valid for MPTCP"
++
+ echo "INFO: validating network environment with pings"
+ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
+ 	do_ping "$ns1" $sender 10.0.1.1
+@@ -706,6 +727,8 @@ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
+ 	do_ping "$ns4" $sender dead:beef:3::1
+ done
+ 
++stop_if_error "Could not even run ping tests"
++
+ [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
+ echo -n "INFO: Using loss of $tc_loss "
+ test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
+@@ -733,18 +756,13 @@ echo "on ns3eth4"
+ 
+ tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms $tc_reorder
+ 
+-for sender in $ns1 $ns2 $ns3 $ns4;do
+-	run_tests_lo "$ns1" "$sender" 10.0.1.1 1
+-	if [ $ret -ne 0 ] ;then
+-		echo "FAIL: Could not even run loopback test" 1>&2
+-		exit $ret
+-	fi
+-	run_tests_lo "$ns1" $sender dead:beef:1::1 1
+-	if [ $ret -ne 0 ] ;then
+-		echo "FAIL: Could not even run loopback v6 test" 2>&1
+-		exit $ret
+-	fi
++run_tests_lo "$ns1" "$ns1" 10.0.1.1 1
++stop_if_error "Could not even run loopback test"
++
++run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1
++stop_if_error "Could not even run loopback v6 test"
+ 
++for sender in $ns1 $ns2 $ns3 $ns4;do
+ 	# ns1<->ns2 is not subject to reordering/tc delays. Use it to test
+ 	# mptcp syncookie support.
+ 	if [ $sender = $ns1 ]; then
+@@ -753,6 +771,9 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
+ 		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=1
+ 	fi
+ 
++	run_tests "$ns1" $sender 10.0.1.1
++	run_tests "$ns1" $sender dead:beef:1::1
++
+ 	run_tests "$ns2" $sender 10.0.1.2
+ 	run_tests "$ns2" $sender dead:beef:1::2
+ 	run_tests "$ns2" $sender 10.0.2.1
+@@ -765,14 +786,13 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
+ 
+ 	run_tests "$ns4" $sender 10.0.3.1
+ 	run_tests "$ns4" $sender dead:beef:3::1
++
++	stop_if_error "Tests with $sender as a sender have failed"
+ done
+ 
+ run_tests_peekmode "saveWithPeek"
+ run_tests_peekmode "saveAfterPeek"
++stop_if_error "Tests with peek mode have failed"
+ 
+-time_end=$(date +%s)
+-time_run=$((time_end-time_start))
 -
- 	if (sk->sk_state == TCP_LISTEN) {
- 		ret = tcp_v4_do_rcv(sk, skb);
- 		goto put_and_return;
+-echo "Time: ${time_run} seconds"
+-
++display_time
+ exit $ret
 -- 
-1.8.3.1
+2.31.1
 
