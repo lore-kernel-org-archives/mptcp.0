@@ -1,202 +1,121 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A3D70
-	for <mptcp@lists.linux.dev>; Fri,  4 Jun 2021 21:29:09 +0000 (UTC)
-IronPort-SDR: NSok5oxLWBH6qKiJdTMbEIbHD8kTYRfZVi19vd7Ge3Yvoq2X3wa9V8q9JC1ghosrUNj4oHAffv
- YdpJgLiGer5g==
-X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="191483892"
-X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
-   d="scan'208";a="191483892"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 14:29:07 -0700
-IronPort-SDR: jZJPif6SxxK4B6SKC0i6JX731cxdYyUmRHHh6ccCyeE4JlSQ9KSjgBgAIhnWt0lqd2JloqW9/Y
- 3lBHFm+9qJxg==
-X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
-   d="scan'208";a="417877711"
-Received: from rhebda-mobl2.amr.corp.intel.com ([10.209.68.101])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 14:29:06 -0700
-Date: Fri, 4 Jun 2021 14:29:06 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] mptcp: refine mptcp_cleanup_rbuf
-In-Reply-To: <ed4e9f7d165ec01c45b9f9b9d0a11dab5a17dcdd.1622824500.git.pabeni@redhat.com>
-Message-ID: <26fba154-61e9-dbdf-f898-84c845474d0@linux.intel.com>
-References: <ed4e9f7d165ec01c45b9f9b9d0a11dab5a17dcdd.1622824500.git.pabeni@redhat.com>
+Received: from m12-13.163.com (m12-13.163.com [220.181.12.13])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CE770
+	for <mptcp@lists.linux.dev>; Sat,  5 Jun 2021 03:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=X965E
+	bsckPeoeThbIOoTy5viCxlDh9HdMiGX6sU2pjc=; b=Sc97H1sYA/jEkiIMLQ7Ig
+	eRvn8eWeoKfsHx65qsawznKTtjWDBNviezzVwRgruPBVWblhFTlGsNJaz/0193hS
+	wPRLx5mhsh+29TGnn/igi2dD4JCkLS0uM/DMgG/retNP/KxpETc1D3HE4TsPBIFD
+	H7DXQmjW1Lm8ER7p6H+FtM=
+Received: from [10.0.0.12] (unknown [110.87.122.35])
+	by smtp9 (Coremail) with SMTP id DcCowAA3P39Z7rpggMVmEg--.45602S2;
+	Sat, 05 Jun 2021 11:24:10 +0800 (CST)
+To: mptcp@lists.linux.dev
+Cc: Florian Westphal <fw@strlen.de>
+From: Jianguo Wu <wujianguo106@163.com>
+Subject: [PATCH] mptcp: fix warning in __skb_flow_dissect() when do syn cookie
+ for subflow join
+Message-ID: <21423fd3-708f-fa57-c496-e50057db78e0@163.com>
+Date: Sat, 5 Jun 2021 11:24:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:DcCowAA3P39Z7rpggMVmEg--.45602S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAw4DCrWfZFy3AFy7Gr17KFg_yoW5KF4fpr
+	43JrZrGrW8Jwn8Jr4jyFW7Xr1qyw4qvF4rG3W3Jrn7J3Z8Gwn2qF18Jr40kFy7GrWFg347
+	K3WDXa18KF97AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bbVbkUUUUU=
+X-Originating-IP: [110.87.122.35]
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiNw2nkFWBksBbCQABsY
 
-On Fri, 4 Jun 2021, Paolo Abeni wrote:
+From: Jianguo Wu <wujianguo@chinatelecom.cn>
 
-> The current cleanup rbuf tries a bit too hard to avoid acquiring
-> the subflow socket lock. We may end-up delaying the needed ack,
-> or skip acking a blocked subflow.
->
-> Address the above extending the conditions used to trigger the cleanup
-> to reflect more closely what TCP does and invoking tcp_cleanup_rbuf()
-> on all the active subflows.
->
-> Note that we can't replicate the exact tests implemented in
-> tcp_cleanup_rbuf(), as MPTCP lacks some of the required info - e.g.
-> ping-pong mode.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> This addresses the low tput I mesured in tests where BHs and U/S
-> processes runs on the same CPU, see scenario 4) in:
->
-> https://lore.kernel.org/mptcp/9af85be18465b0f9595459764013568456453ce9.camel@redhat.com/
->
-> notes:
->
-> -  this does not fix completely:
->
-> https://github.com/multipath-tcp/mptcp_net-next/issues/137
->
-> but figures are now more stable.
->
-> - while perfing all the above spotted:
->
-> https://github.com/multipath-tcp/mptcp_net-next/issues/200
->
-> which is bad!
->
-> ---
-> net/mptcp/protocol.c | 44 ++++++++++++++++----------------------------
-> net/mptcp/protocol.h |  1 -
-> 2 files changed, 16 insertions(+), 29 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f9fd905d2d3b..40e97dd6c09f 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -457,34 +457,29 @@ static bool mptcp_subflow_cleanup_rbuf(struct sock *ssk)
->
-> static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
-> {
-> -	struct sock *ack_hint = READ_ONCE(msk->ack_hint);
-> 	int old_space = READ_ONCE(msk->old_wspace);
-> 	struct mptcp_subflow_context *subflow;
-> 	struct sock *sk = (struct sock *)msk;
-> -	bool cleanup;
-> +	int space =  __mptcp_space(sk);
-> +	bool cleanup, rx_empty;
->
-> -	/* this is a simple superset of what tcp_cleanup_rbuf() implements
-> -	 * so that we don't have to acquire the ssk socket lock most of the time
-> -	 * to do actually nothing
-> -	 */
-> -	cleanup = __mptcp_space(sk) - old_space >= max(0, old_space);
-> -	if (!cleanup)
-> -		return;
-> +	cleanup = (space > 0) && (space >= (old_space << 1));
-> +	rx_empty = !atomic_read(&sk->sk_rmem_alloc);
->
-> -	/* if the hinted ssk is still active, try to use it */
-> -	if (likely(ack_hint)) {
-> -		mptcp_for_each_subflow(msk, subflow) {
-> -			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		const struct inet_connection_sock *icsk;
-> +		const struct tcp_sock *tp = tcp_sk(sk);
->
-> -			if (ack_hint == ssk && mptcp_subflow_cleanup_rbuf(ssk))
-> -				return;
-> -		}
-> +		icsk = inet_csk(ssk);
-> +		if (cleanup ||
-> +		    (inet_csk_ack_scheduled(sk) &&
+I got the following warning message while doing the test:
 
-Is this intended to check sk or ssk?        ^^
+[   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
+[   55.553024] ------------[ cut here ]------------
+[   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
+...
+[   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
+[   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
+[   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
+...
+[   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
+[   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
+[   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
+[   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
+[   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
+[   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
+[   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
+[   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
+[   55.553160] Call Trace:
+[   55.553166]  ? __sha256_final+0x67/0xd0
+[   55.553173]  ? sha256+0x7e/0xa0
+[   55.553177]  __skb_get_hash+0x57/0x210
+[   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
+[   55.553189]  subflow_check_req+0x474/0x550
+[   55.553195]  ? ip_route_output_key_hash+0x67/0x90
+[   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
+[   55.553207]  subflow_v4_route_req+0x8e/0xd0
+[   55.553212]  tcp_conn_request+0x31e/0xab0
+[   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
+[   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
+[   55.553229]  tcp_rcv_state_process+0x179/0x6d0
+[   55.553235]  tcp_v4_do_rcv+0xaf/0x220
+[   55.553239]  tcp_v4_rcv+0xce4/0xd80
+[   55.553243]  ? ip_route_input_rcu+0x246/0x260
+[   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
+[   55.553253]  ip_local_deliver_finish+0x44/0x50
+[   55.553258]  ip_local_deliver+0x6c/0x110
+[   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
+[   55.553267]  ip_rcv+0xd1/0xe0
+...
 
-It doesn't look like icsk_ack.pending is ever updated for the mptcp sock, 
-which makes me think 'ssk' was the intent. If that's the case, note that 
-the inet_csk_ack_scheduled() helper doesn't use READ_ONCE().
+After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
+then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
+code path.
 
+Code snippet in __skb_flow_dissect() that trigger warning:
+  975         if (skb) {
+  976                 if (!net) {
+  977                         if (skb->dev)
+  978                                 net = dev_net(skb->dev);
+  979                         else if (skb->sk)
+  980                                 net = sock_net(skb->sk);
+  981                 }
+  982         }
+  983
+  984         WARN_ON_ONCE(!net);
 
--Mat
+skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set in this code path.
+But for sk_state is TCP_NEW_SYN_RECV or TCP_TIME_WAIT, skb->dev is not set to NULL,
+so we can remove skb->dev = NULL in tcp_v4_rcv()?
 
+Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use").
+---
+ net/ipv4/tcp_ipv4.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> +		     ((READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->rcv_wup) >
-> +		       READ_ONCE(icsk->icsk_ack.rcv_mss)) ||
-> +		       (rx_empty && READ_ONCE(icsk->icsk_ack.pending) &
-> +				    (ICSK_ACK_PUSHED2|ICSK_ACK_PUSHED)))))
-> +			mptcp_subflow_cleanup_rbuf(ssk);
-> 	}
-> -
-> -	/* otherwise pick the first active subflow */
-> -	mptcp_for_each_subflow(msk, subflow)
-> -		if (mptcp_subflow_cleanup_rbuf(mptcp_subflow_tcp_sock(subflow)))
-> -			return;
-> }
->
-> static bool mptcp_check_data_fin(struct sock *sk)
-> @@ -629,7 +624,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
-> 			break;
-> 		}
-> 	} while (more_data_avail);
-> -	WRITE_ONCE(msk->ack_hint, ssk);
->
-> 	*bytes += moved;
-> 	return done;
-> @@ -1912,7 +1906,6 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
-> 		__mptcp_update_rmem(sk);
-> 		done = __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
-> 		mptcp_data_unlock(sk);
-> -		tcp_cleanup_rbuf(ssk, moved);
->
-> 		if (unlikely(ssk->sk_err))
-> 			__mptcp_error_report(sk);
-> @@ -1928,7 +1921,6 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
-> 		ret |= __mptcp_ofo_queue(msk);
-> 		__mptcp_splice_receive_queue(sk);
-> 		mptcp_data_unlock(sk);
-> -		mptcp_cleanup_rbuf(msk);
-> 	}
-> 	if (ret)
-> 		mptcp_check_data_fin((struct sock *)msk);
-> @@ -2177,9 +2169,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-> 	if (ssk == msk->last_snd)
-> 		msk->last_snd = NULL;
->
-> -	if (ssk == msk->ack_hint)
-> -		msk->ack_hint = NULL;
-> -
-> 	if (ssk == msk->first)
-> 		msk->first = NULL;
->
-> @@ -2394,7 +2383,6 @@ static int __mptcp_init_sock(struct sock *sk)
-> 	msk->rmem_released = 0;
-> 	msk->tx_pending_data = 0;
->
-> -	msk->ack_hint = NULL;
-> 	msk->first = NULL;
-> 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-> 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 160c2ab09f19..9dea0734808e 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -240,7 +240,6 @@ struct mptcp_sock {
-> 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
-> 	bool		csum_enabled;
-> 	spinlock_t	join_list_lock;
-> -	struct sock	*ack_hint;
-> 	struct work_struct work;
-> 	struct sk_buff  *ooo_last_skb;
-> 	struct rb_root  out_of_order_queue;
-> -- 
-> 2.26.3
->
->
->
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 4f5b68a..b1f94a4 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -2061,8 +2061,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ 	iph = ip_hdr(skb);
+ 	tcp_v4_fill_cb(skb, iph, th);
 
---
-Mat Martineau
-Intel
+-	skb->dev = NULL;
+-
+ 	if (sk->sk_state == TCP_LISTEN) {
+ 		ret = tcp_v4_do_rcv(sk, skb);
+ 		goto put_and_return;
+-- 
+1.8.3.1
+
