@@ -1,129 +1,124 @@
-Received: from m12-13.163.com (m12-13.163.com [220.181.12.13])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2DB2FAD
-	for <mptcp@lists.linux.dev>; Tue,  8 Jun 2021 01:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=7XHlf
-	C1dYFsHPN0wlFh/WYpUksuX+TFwuM+kBoZ08mc=; b=Mck+ujfzAUE5NC2ZDank8
-	UCvahe5EeopPygCNtWtoCpeXz/Q56QkU7RQdmWC61QE/FyXry45eBeKNOTyE+Dfh
-	7wOQgkRwSVbmNpR0oKFm6NIQyfxqk6fs/nAic6ccz0HB0TJ1cg2y0Br/YUoOU4E5
-	rzUQtaRN8bLL7ealu09A1k=
-Received: from [192.168.16.78] (unknown [110.80.1.45])
-	by smtp9 (Coremail) with SMTP id DcCowACXnKDKxL5gpLCOFA--.54589S2;
-	Tue, 08 Jun 2021 09:15:55 +0800 (CST)
-Subject: Re: [PATCH] mptcp: fix warning in __skb_flow_dissect() when do syn
- cookie for subflow join
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-References: <21423fd3-708f-fa57-c496-e50057db78e0@163.com>
- <36744bda70bf5200fbb43544daca75342341734d.camel@redhat.com>
-From: Jianguo Wu <wujianguo106@163.com>
-Message-ID: <73d9338a-76a2-6d46-447e-efbde76f6872@163.com>
-Date: Tue, 8 Jun 2021 09:15:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BD12FAD
+	for <mptcp@lists.linux.dev>; Tue,  8 Jun 2021 08:58:51 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id ce15so31369180ejb.4
+        for <mptcp@lists.linux.dev>; Tue, 08 Jun 2021 01:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:references:cc:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R132Ar5Zepsar6hohonDBlGNgEKmfUNLhTgz18MBQpA=;
+        b=jUq3YMTxAuzUVuZu/9lnABLZ29qXb6QRShVZKGLij2tdNLC0Uav03FwJC8bBFITnCA
+         nMoeSx+AjRPv3dSAVqqEszvc5KeswtiQDvuhnWNvOVD/aGeQ5BjWTyXV/UjbV0Se8ESo
+         aIQPY7EqS03yRZVrWiYX2yNp1fquVtLt46tMvOR1/allzzyu0w9bP5Zz7ida7co0r3I0
+         /SZBeUHSSUy3v8UoaKvAvq7scX7oKH2coix670+i76WH+S/MMPF2Q0LLiBughqnNgNQ3
+         5AHIsTGY0/K2N3PEe1PdNXmJsMcGXYxL3I6roU0p388a4wVxxzlkRzV4R1W04DnIqHFd
+         Xpxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:cc:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R132Ar5Zepsar6hohonDBlGNgEKmfUNLhTgz18MBQpA=;
+        b=nRW9regWtP6l9oj+inHCA52AJT025fA/ORxgYbGfblqDtsGTITZOhH5pd8S8CENJui
+         rrEZaUPTqZAKltKg696sJDY8x2bOL9oIi0RJXOBhgVIpMswkBsLdnp5g/vfg4f6TGr2r
+         E37iPgnCg7/9bhYEB1cKETHnM0zrL7cCtv2I/0JZDWcAWNdPSuZ7zOYREWaWICKmvxmv
+         8OvNydkUSJARjPcd799Ic0WbWllT1TH7OMKzleNJqpiYA6K1ySTMTkXJgOMsXznLmgx3
+         OlekjX7QDPEbgPv8gbp6nmzPSVIVw/XpphUaxODMJIc9Sd3G8zSMfiMcDn+4GfTj0w2Z
+         vsGw==
+X-Gm-Message-State: AOAM533ZK4h9yyNpirgtr/kEdafR9fFe456CrFw0ScJ6azaOEdPiiWph
+	ywGmvaRRddFeX72zGBnc2PBSAyzc3rQecAm25FA=
+X-Google-Smtp-Source: ABdhPJw1Q4Qq7ut0g+1NMff0cFLBJ6AKKBWDC6Qb9SPbv3N0pQozNwlLg+smjvJS1mP2LP+lePk4BA==
+X-Received: by 2002:a17:906:b213:: with SMTP id p19mr14599866ejz.51.1623142729999;
+        Tue, 08 Jun 2021 01:58:49 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:fc48:eb4c:7e84:e1ff])
+        by smtp.gmail.com with ESMTPSA id da28sm1455970edb.69.2021.06.08.01.58.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Jun 2021 01:58:49 -0700 (PDT)
+To: David Candal Ventureira <dcandal@gti.uvigo.es>
+References: <CAEE33hBe_uiaB3nmjwaZQq7eKfY19z2R02fe2aj6at8wwTXKCw@mail.gmail.com>
+Cc: mptcp-dev@listes.uclouvain.be, MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [mptcp-dev] MPTCPv1 test using multiple interfaces
+Message-ID: <50bb1b1b-5bfb-34d5-e54f-ba41ac55e2fd@tessares.net>
+Date: Tue, 8 Jun 2021 10:58:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <36744bda70bf5200fbb43544daca75342341734d.camel@redhat.com>
+In-Reply-To: <CAEE33hBe_uiaB3nmjwaZQq7eKfY19z2R02fe2aj6at8wwTXKCw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:DcCowACXnKDKxL5gpLCOFA--.54589S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWw17tFyrZFykJr43Gr4fuFg_yoWrGw4kpr
-	45JFZrGrW8A3s5J3yYyrW7Xryqkw4qyF4rG3WFqF1kAF15uwnaq3W8Aw4UuFy7Jr4ru347
-	Kr45Xa1kK3WkZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jv5lbUUUUU=
-X-Originating-IP: [110.80.1.45]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiNwurkFWBkua-jgAAsW
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi David,
 
-On 2021/6/7 19:07, Paolo Abeni wrote:
-> Hello,
-> 
-> On Sat, 2021-06-05 at 11:24 +0800, Jianguo Wu wrote:
->> From: Jianguo Wu <wujianguo@chinatelecom.cn>
->>
->> I got the following warning message while doing the test:
->>
->> [   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
->> [   55.553024] ------------[ cut here ]------------
->> [   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
->> ...
->> [   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
->> [   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
->> [   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
->> ...
->> [   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
->> [   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
->> [   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
->> [   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
->> [   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
->> [   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
->> [   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
->> [   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
->> [   55.553160] Call Trace:
->> [   55.553166]  ? __sha256_final+0x67/0xd0
->> [   55.553173]  ? sha256+0x7e/0xa0
->> [   55.553177]  __skb_get_hash+0x57/0x210
->> [   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
->> [   55.553189]  subflow_check_req+0x474/0x550
->> [   55.553195]  ? ip_route_output_key_hash+0x67/0x90
->> [   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
->> [   55.553207]  subflow_v4_route_req+0x8e/0xd0
->> [   55.553212]  tcp_conn_request+0x31e/0xab0
->> [   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
->> [   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
->> [   55.553229]  tcp_rcv_state_process+0x179/0x6d0
->> [   55.553235]  tcp_v4_do_rcv+0xaf/0x220
->> [   55.553239]  tcp_v4_rcv+0xce4/0xd80
->> [   55.553243]  ? ip_route_input_rcu+0x246/0x260
->> [   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
->> [   55.553253]  ip_local_deliver_finish+0x44/0x50
->> [   55.553258]  ip_local_deliver+0x6c/0x110
->> [   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
->> [   55.553267]  ip_rcv+0xd1/0xe0
->> ...
->>
->> After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
->> then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
->> code path.
->>
->> Code snippet in __skb_flow_dissect() that trigger warning:
->>   975         if (skb) {
->>   976                 if (!net) {
->>   977                         if (skb->dev)
->>   978                                 net = dev_net(skb->dev);
->>   979                         else if (skb->sk)
->>   980                                 net = sock_net(skb->sk);
->>   981                 }
->>   982         }
->>   983
->>   984         WARN_ON_ONCE(!net);
->>
->> skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set in this code path.
->> But for sk_state is TCP_NEW_SYN_RECV or TCP_TIME_WAIT, skb->dev is not set to NULL,
->> so we can remove skb->dev = NULL in tcp_v4_rcv()?
-> 
-> Thank you for the detailed report!
-> 
-> I'm unable to find easily any negative side effect to remove such
-> assignment, still I'm more than a bit uneasy for such change.
-> 
-> The issue is clearly an mptcp-specific one, so I think event the fix
-> should be mptcp-specific.
-> 
-> If the skb->hash is not available - !skb_get_hash_raw(skb) == 0, then
-> we could fallback using an sk-derived hash, e.g. doing something alike
-> what inet_ehashfn() does - with different seeds/secrets.
-> 
++cc MPTCP Upstream ML
 
-I will try to prepare a new patch as your suggestion, Thanks!
-
-> Cheers,
+On 08/06/2021 10:14, David Candal Ventureira wrote:
+> I'm interested in testing MPTCP for research purposes. I would like to
+> build a simple set up with two computers exchanging traffic through two
+> interfaces simultaneously.
 > 
-> Paolo
-> 
+> For this, I deployed two virtual machines running Ubuntu 20.04
+> 5.8.0-53-generic, as this kernel seems to support MPTCPv1 by default. In
+> fact, I was able to exchange a file between the two VMs through MPTCP by
+> using the code in tools/testing/selftests/net/mptcp. However, with this
+> setup only one interface is used to transmit the traffic.
 
+There are currently 2 different Linux kernel implementations: a fork
+(out-of-tree) and a (in progress) rewrite version now in the mainline
+Linux kernel:
+
+
+https://github.com/multipath-tcp/mptcp_net-next/wiki#upstream-vs-out-of-tree-implementations
+
+mptcp-dev ML is dedicated to the out-of-tree kernel.
+
+
+> After seen Multipath TCP part 3: Multiple subflows and path management
+> (https://lwn.net/Articles/816144/),
+> I suppose that multipath support is not available yet in current kernels
+> and I should compile the kernel
+> in https://github.com/multipath-tcp/mptcp_net-next
+> so that I could make use of this capability. Am I right?
+
+With the 5.8 kernel, you can create multiple subflows but use each of
+them one at a time. You might at least use the 5.12.
+
+If you are interested by MPTCP, probably best to build the latest
+version from Git. As an alternative, you can also find already built
+packages for your distribution, e.g.
+
+  https://kernel.ubuntu.com/~kernel-ppa/mainline/
+
+> On the other hand, is there any tutorial regarding how to configure
+> multipath? Is it possible to configure in any way how the traffic is
+> distributed among the interfaces, instead of evenly distributing it
+> through them, either in a dynamic or static way?
+
+The out-of-tree implementation is still more flexible so far and
+documented on:
+
+  https://multipath-tcp.org/
+
+But because the development is much more active on the upstream version,
+it also makes sense to look at it, report issues, ideas and patches ;)
+
+Regarding the configuration, the path manager can be controlled with a
+recent version of IPRoute and its 'ip mptcp' command:
+
+  https://man7.org/linux/man-pages/man8/ip-mptcp.8.html
+
+But any tutorial would be really welcome!
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
