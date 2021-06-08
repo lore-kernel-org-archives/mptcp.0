@@ -1,185 +1,129 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFD62FAD
-	for <mptcp@lists.linux.dev>; Tue,  8 Jun 2021 01:08:44 +0000 (UTC)
-IronPort-SDR: D/wTe35P35lpFY5L010+EbUZIiDC1RSWTEbeEZIBDYWq9Rz0Dl1stmXYjul2AQScOlobjNf1eH
- 4oG4MOkGt70w==
-X-IronPort-AV: E=McAfee;i="6200,9189,10008"; a="185121784"
-X-IronPort-AV: E=Sophos;i="5.83,256,1616482800"; 
-   d="scan'208";a="185121784"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 18:08:43 -0700
-IronPort-SDR: agTJ8dc2JRwIFP7kkm8wYDus+NNg8+wKV86uSVVPkccTwuQx+NzCI/BxzzMqcASMvl5LP2pRjh
- c449Y1M0XB/Q==
-X-IronPort-AV: E=Sophos;i="5.83,256,1616482800"; 
-   d="scan'208";a="401876853"
-Received: from sravikum-mobl1.amr.corp.intel.com ([10.212.171.223])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 18:08:43 -0700
-Date: Mon, 7 Jun 2021 18:08:43 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: display proper reason to
- abort tests
-In-Reply-To: <20210605085155.3548173-1-matthieu.baerts@tessares.net>
-Message-ID: <724782b9-bcf2-889-ca8e-e9d4a91fa693@linux.intel.com>
-References: <20210605085155.3548173-1-matthieu.baerts@tessares.net>
+Received: from m12-13.163.com (m12-13.163.com [220.181.12.13])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2DB2FAD
+	for <mptcp@lists.linux.dev>; Tue,  8 Jun 2021 01:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=7XHlf
+	C1dYFsHPN0wlFh/WYpUksuX+TFwuM+kBoZ08mc=; b=Mck+ujfzAUE5NC2ZDank8
+	UCvahe5EeopPygCNtWtoCpeXz/Q56QkU7RQdmWC61QE/FyXry45eBeKNOTyE+Dfh
+	7wOQgkRwSVbmNpR0oKFm6NIQyfxqk6fs/nAic6ccz0HB0TJ1cg2y0Br/YUoOU4E5
+	rzUQtaRN8bLL7ealu09A1k=
+Received: from [192.168.16.78] (unknown [110.80.1.45])
+	by smtp9 (Coremail) with SMTP id DcCowACXnKDKxL5gpLCOFA--.54589S2;
+	Tue, 08 Jun 2021 09:15:55 +0800 (CST)
+Subject: Re: [PATCH] mptcp: fix warning in __skb_flow_dissect() when do syn
+ cookie for subflow join
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Florian Westphal <fw@strlen.de>
+References: <21423fd3-708f-fa57-c496-e50057db78e0@163.com>
+ <36744bda70bf5200fbb43544daca75342341734d.camel@redhat.com>
+From: Jianguo Wu <wujianguo106@163.com>
+Message-ID: <73d9338a-76a2-6d46-447e-efbde76f6872@163.com>
+Date: Tue, 8 Jun 2021 09:15:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <36744bda70bf5200fbb43544daca75342341734d.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:DcCowACXnKDKxL5gpLCOFA--.54589S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWw17tFyrZFykJr43Gr4fuFg_yoWrGw4kpr
+	45JFZrGrW8A3s5J3yYyrW7Xryqkw4qyF4rG3WFqF1kAF15uwnaq3W8Aw4UuFy7Jr4ru347
+	Kr45Xa1kK3WkZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jv5lbUUUUU=
+X-Originating-IP: [110.80.1.45]
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiNwurkFWBkua-jgAAsW
 
-On Sat, 5 Jun 2021, Matthieu Baerts wrote:
+Hi Paolo,
 
-> Without this modification, we were often displaying this error messages:
->
->  FAIL: Could not even run loopback test
->
-> But $ret could have been set to a non 0 value in many different cases:
->
-> - net.mptcp.enabled=0 is not working as expected
-> - setsockopt(..., TCP_ULP, "mptcp", ...) is allowed
-> - ping between each netns are failing
-> - tests between ns1 as a receiver and ns>1 are failing
-> - other tests not involving ns1 as a receiver are failing
->
-> So not only for the loopback test.
->
-> Now a clearer message, including the time it took to run all tests, is
-> displayed.
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->
-> Notes:
->    Do we want this in -net?
->
->    Because it seems also valid to add:
->
->      Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
->
+On 2021/6/7 19:07, Paolo Abeni wrote:
+> Hello,
+> 
+> On Sat, 2021-06-05 at 11:24 +0800, Jianguo Wu wrote:
+>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>
+>> I got the following warning message while doing the test:
+>>
+>> [   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
+>> [   55.553024] ------------[ cut here ]------------
+>> [   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
+>> ...
+>> [   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
+>> [   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
+>> [   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
+>> ...
+>> [   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
+>> [   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
+>> [   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
+>> [   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
+>> [   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
+>> [   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
+>> [   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
+>> [   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
+>> [   55.553160] Call Trace:
+>> [   55.553166]  ? __sha256_final+0x67/0xd0
+>> [   55.553173]  ? sha256+0x7e/0xa0
+>> [   55.553177]  __skb_get_hash+0x57/0x210
+>> [   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
+>> [   55.553189]  subflow_check_req+0x474/0x550
+>> [   55.553195]  ? ip_route_output_key_hash+0x67/0x90
+>> [   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
+>> [   55.553207]  subflow_v4_route_req+0x8e/0xd0
+>> [   55.553212]  tcp_conn_request+0x31e/0xab0
+>> [   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
+>> [   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
+>> [   55.553229]  tcp_rcv_state_process+0x179/0x6d0
+>> [   55.553235]  tcp_v4_do_rcv+0xaf/0x220
+>> [   55.553239]  tcp_v4_rcv+0xce4/0xd80
+>> [   55.553243]  ? ip_route_input_rcu+0x246/0x260
+>> [   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
+>> [   55.553253]  ip_local_deliver_finish+0x44/0x50
+>> [   55.553258]  ip_local_deliver+0x6c/0x110
+>> [   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
+>> [   55.553267]  ip_rcv+0xd1/0xe0
+>> ...
+>>
+>> After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
+>> then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
+>> code path.
+>>
+>> Code snippet in __skb_flow_dissect() that trigger warning:
+>>   975         if (skb) {
+>>   976                 if (!net) {
+>>   977                         if (skb->dev)
+>>   978                                 net = dev_net(skb->dev);
+>>   979                         else if (skb->sk)
+>>   980                                 net = sock_net(skb->sk);
+>>   981                 }
+>>   982         }
+>>   983
+>>   984         WARN_ON_ONCE(!net);
+>>
+>> skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set in this code path.
+>> But for sk_state is TCP_NEW_SYN_RECV or TCP_TIME_WAIT, skb->dev is not set to NULL,
+>> so we can remove skb->dev = NULL in tcp_v4_rcv()?
+> 
+> Thank you for the detailed report!
+> 
+> I'm unable to find easily any negative side effect to remove such
+> assignment, still I'm more than a bit uneasy for such change.
+> 
+> The issue is clearly an mptcp-specific one, so I think event the fix
+> should be mptcp-specific.
+> 
+> If the skb->hash is not available - !skb_get_hash_raw(skb) == 0, then
+> we could fallback using an sk-derived hash, e.g. doing something alike
+> what inet_ehashfn() does - with different seeds/secrets.
+> 
 
-I think net-next is the right place. Thanks for the change to show more 
-helpful information on failure! Patch applied to my local repo cleanly and 
-tests ran as expected.
+I will try to prepare a new patch as your suggestion, Thanks!
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Cheers,
+> 
+> Paolo
+> 
 
-
-> .../selftests/net/mptcp/mptcp_connect.sh      | 52 +++++++++++++------
-> 1 file changed, 36 insertions(+), 16 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index 2484fb6a9a8d..559173a8e387 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -680,6 +680,25 @@ run_tests_peekmode()
-> 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
-> }
->
-> +display_time()
-> +{
-> +	time_end=$(date +%s)
-> +	time_run=$((time_end-time_start))
-> +
-> +	echo "Time: ${time_run} seconds"
-> +}
-> +
-> +stop_if_error()
-> +{
-> +	local msg="$1"
-> +
-> +	if [ ${ret} -ne 0 ]; then
-> +		echo "FAIL: ${msg}" 1>&2
-> +		display_time
-> +		exit ${ret}
-> +	fi
-> +}
-> +
-> make_file "$cin" "client"
-> make_file "$sin" "server"
->
-> @@ -687,6 +706,8 @@ check_mptcp_disabled
->
-> check_mptcp_ulp_setsockopt
->
-> +stop_if_error "The kernel configuration is not valid for MPTCP"
-> +
-> echo "INFO: validating network environment with pings"
-> for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
-> 	do_ping "$ns1" $sender 10.0.1.1
-> @@ -706,6 +727,8 @@ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
-> 	do_ping "$ns4" $sender dead:beef:3::1
-> done
->
-> +stop_if_error "Could not even run ping tests"
-> +
-> [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
-> echo -n "INFO: Using loss of $tc_loss "
-> test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
-> @@ -733,18 +756,13 @@ echo "on ns3eth4"
->
-> tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms $tc_reorder
->
-> -for sender in $ns1 $ns2 $ns3 $ns4;do
-> -	run_tests_lo "$ns1" "$sender" 10.0.1.1 1
-> -	if [ $ret -ne 0 ] ;then
-> -		echo "FAIL: Could not even run loopback test" 1>&2
-> -		exit $ret
-> -	fi
-> -	run_tests_lo "$ns1" $sender dead:beef:1::1 1
-> -	if [ $ret -ne 0 ] ;then
-> -		echo "FAIL: Could not even run loopback v6 test" 2>&1
-> -		exit $ret
-> -	fi
-> +run_tests_lo "$ns1" "$ns1" 10.0.1.1 1
-> +stop_if_error "Could not even run loopback test"
-> +
-> +run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1
-> +stop_if_error "Could not even run loopback v6 test"
->
-> +for sender in $ns1 $ns2 $ns3 $ns4;do
-> 	# ns1<->ns2 is not subject to reordering/tc delays. Use it to test
-> 	# mptcp syncookie support.
-> 	if [ $sender = $ns1 ]; then
-> @@ -753,6 +771,9 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
-> 		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=1
-> 	fi
->
-> +	run_tests "$ns1" $sender 10.0.1.1
-> +	run_tests "$ns1" $sender dead:beef:1::1
-> +
-> 	run_tests "$ns2" $sender 10.0.1.2
-> 	run_tests "$ns2" $sender dead:beef:1::2
-> 	run_tests "$ns2" $sender 10.0.2.1
-> @@ -765,14 +786,13 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
->
-> 	run_tests "$ns4" $sender 10.0.3.1
-> 	run_tests "$ns4" $sender dead:beef:3::1
-> +
-> +	stop_if_error "Tests with $sender as a sender have failed"
-> done
->
-> run_tests_peekmode "saveWithPeek"
-> run_tests_peekmode "saveAfterPeek"
-> +stop_if_error "Tests with peek mode have failed"
->
-> -time_end=$(date +%s)
-> -time_run=$((time_end-time_start))
-> -
-> -echo "Time: ${time_run} seconds"
-> -
-> +display_time
-> exit $ret
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
