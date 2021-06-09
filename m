@@ -1,22 +1,22 @@
-Received: from m12-16.163.com (m12-16.163.com [220.181.12.16])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F1772
-	for <mptcp@lists.linux.dev>; Wed,  9 Jun 2021 11:11:19 +0000 (UTC)
+Received: from m12-15.163.com (m12-15.163.com [220.181.12.15])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7614A72
+	for <mptcp@lists.linux.dev>; Wed,  9 Jun 2021 11:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=YFxUK
-	P5fEEmYWeV0Hcy6CGbOw+jLSo/aT6C2UWA5cMA=; b=m/bTC2lsY3mSBbxqpg+LM
-	spk8hsSHjI1cE2bXavvN3bCqrcBWJp9FMA7rohIC/aGtNk7Z21NFzQl7NmDLSTVP
-	/YCO6oIZzMaowCWFs0d22wFNQ+ffdCOhCX3Rz4YVz88D8lA5WLhJO6n8ZbaI8Mb7
-	qT6KLZD9ts14Ff0x2AZEBA=
+	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=p01GW
+	YLRbaWSny/I66OmLLpDp2YruCltlW4Vc39yYEk=; b=Zi9O7hH1Undg6UKAgPFNQ
+	g9L1Q4oXpQ/TQIrB4l2YxCkP3Gd6QuwMHc0nSRNP50jouFWZyu0jU1RWfL8ta3LI
+	a9CEOXczYRqNDNjBpsWugAatFKGiyZvVVsBMVh4qiZD30h/LhsYswXBCD6ubowYz
+	nUXQ6EUH/u+L7Ig6WFQUnM=
 Received: from [192.168.16.78] (unknown [110.86.5.93])
-	by smtp8 (Coremail) with SMTP id DMCowACXjvp1msBgTTqxIw--.5347S2;
-	Wed, 09 Jun 2021 18:39:50 +0800 (CST)
+	by smtp8 (Coremail) with SMTP id DMCowADHx9NmmsBg9zCxIw--.5362S2;
+	Wed, 09 Jun 2021 18:39:35 +0800 (CST)
 From: Jianguo Wu <wujianguo106@163.com>
-Subject: [PATCH 2/3] mptcp: remove redundant req destruct in
- subflow_check_req()
+Subject: [PATCH 0/3] Fix some mptcp syncookie process bugs
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Message-ID: <6747dc58-0dbf-b4d3-e084-85816ad5caec@163.com>
-Date: Wed, 9 Jun 2021 18:39:50 +0800
+Cc: Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>,
+ Geliang Tang <geliangtang@gmail.com>
+Message-ID: <5224c600-36f3-2069-beab-4272a301688c@163.com>
+Date: Wed, 9 Jun 2021 18:39:34 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 X-Mailing-List: mptcp@lists.linux.dev
@@ -26,47 +26,24 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:DMCowACXjvp1msBgTTqxIw--.5347S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr4Dtw47WFWrtryktF4ktFb_yoW8Gryfpr
-	sxXw1YyrZxZFyakF4rJF4DZrn0gayFvFn8GFyY93sxJr4qqws3KF1UWr48uFy3Aa1kKay7
-	GFsxtFnxX3ZF9aUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b1cTdUUUUU=
+X-CM-TRANSID:DMCowADHx9NmmsBg9zCxIw--.5362S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUgHqcUUUUU
 X-Originating-IP: [110.86.5.93]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB9w6skF2MZMLj4QAAsw
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbBSQeskFaD+1gMIwAAsr
 
-From: Jianguo Wu <wujianguo@chinatelecom.cn>
+Fix some mptcp syncookie process bugs.
 
-In subflow_check_req(), if subflow sport is mismatch, will put msk,
-destroy token, and destruct req, then return -EPERM, which can be
-done by subflow_req_destructor() via:
-  tcp_conn_request()
-    |--__reqsk_free()
-      |--subflow_req_destructor()
-So we should remove these redundant code, otherwise will call tcp_v4_reqsk_destructor()
-twice, and may double free inet_rsk(req)->ireq_opt.
+Jianguo Wu (3):
+  mptcp: fix warning in __skb_flow_dissect() when do syn cookie for subflow join
+  mptcp: remove redundant req destruct in subflow_check_req()
+  mptcp: fix syncookie process if mptcp can not_accept new subflow
 
-Fixes: 5bc56388c74f ("mptcp: add port number check for MP_JOIN")
-Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
----
- net/mptcp/subflow.c | 5 -----
- 1 file changed, 5 deletions(-)
+ net/ipv4/tcp_input.c   |  7 ++++++-
+ net/mptcp/subflow.c    | 11 +++--------
+ net/mptcp/syncookies.c | 24 +++++++++++++++++++++++-
+ 3 files changed, 32 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6b1cd42..75ed530 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -213,11 +213,6 @@ static int subflow_check_req(struct request_sock *req,
- 				 ntohs(inet_sk(sk_listener)->inet_sport),
- 				 ntohs(inet_sk((struct sock *)subflow_req->msk)->inet_sport));
- 			if (!mptcp_pm_sport_in_anno_list(subflow_req->msk, sk_listener)) {
--				sock_put((struct sock *)subflow_req->msk);
--				mptcp_token_destroy_request(req);
--				tcp_request_sock_ops.destructor(req);
--				subflow_req->msk = NULL;
--				subflow_req->mp_join = 0;
- 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTSYNRX);
- 				return -EPERM;
- 			}
 -- 
 1.8.3.1
 
