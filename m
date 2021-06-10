@@ -1,86 +1,59 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5D772
-	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 09:13:49 +0000 (UTC)
-Received: by mail-pj1-f50.google.com with SMTP id o17-20020a17090a9f91b029015cef5b3c50so3356583pjp.4
-        for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 02:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rKWLpd+1ysbicw8ok2R6Lo0tB8LvBCpWEoXfNVa/ZjQ=;
-        b=STu2+Qz+nBNwuOKUvNNx6Ppa360DcDl2m25CWoArFzxxy8m8E/b4BmGRcDxwg0983h
-         rgVtkE2jwHR7EYOYIDlzSDpRD+oybINr5GS0WLDD/0MGDCXDpAwDfQI0oIhzQHvARoZM
-         LwFz6wQYR+dek6ZAEhBxhilKqTFLJpONrfDugSIM7IsmPSus8fBctdSnT6xdi+nOSkqM
-         Ft4ZyaHCuqpOH4cQG/WrSRMCY9mZIwCJrHiVZQ9ZGCCl8JjOJr4h2PyCtyC2joHrebWA
-         CwNL6ILkYc8f8fpxsw48D2dQrzVaeZoaRX6q2DDh//48yfqRD/hDrNMcal4LKcksSFqK
-         FB0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rKWLpd+1ysbicw8ok2R6Lo0tB8LvBCpWEoXfNVa/ZjQ=;
-        b=BmsHQQPfndHAVZi1XtIIa3/knBADIeMe8EfnA+B+wiQ8+jtn1SybW86hcRu4omqcLF
-         5MHfimlbAtTxTA7gbXbWc+UfnFZ74X3tgFtInzZY1Z3zd7s25MpzgCRmFcfGHkmTjQYh
-         lveS5G2QR3mq946TfjUcunRKU+/6c2wqLUyYY/G11vZmSQRtZyl34uEpY9dynbwsJuVR
-         mtUhN04yJWyies8XRXrAmD5a9LvO5oWo0bTejn3OCYUSA778T0tyqxmGm+nKqd3ALHCM
-         5yC7u++bSZG1sAeN/lBxHd36VgG2kf6XMto42Og54SvXU80kqqcutRthHE84VtlaZUaK
-         Idig==
-X-Gm-Message-State: AOAM531vFcU549UaVZIPP7hvEbzIas3i5VZ/QiFS/1Oem15MqGBdkxPw
-	sT8IxCri8D+Ubi3odGICLtp4UZWyy8unJg==
-X-Google-Smtp-Source: ABdhPJyBMzSNWV9+nDeywVO0DQjIKnIZjGkhAk0KM86MbeLOK3fxEdKpDkradVNy3zXFHhG/48uEbw==
-X-Received: by 2002:a17:90b:ed3:: with SMTP id gz19mr2446925pjb.214.1623316428863;
-        Thu, 10 Jun 2021 02:13:48 -0700 (PDT)
-Received: from localhost ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id m191sm2015733pga.88.2021.06.10.02.13.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 02:13:48 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
+Received: from m12-11.163.com (m12-11.163.com [220.181.12.11])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA9C72
+	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 09:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=Ip2SG
+	EK6EQdw+eG2FkX5jzn//NjCBLG4oW+GxS6dA9Y=; b=ax+eqaUotTfHEzWZMX1o9
+	E7Xj5s5KSJJrUMj8rF3e+1KzVm3rcWqvTJ/6XhWpYRY1tyoeEI1Z0e3zTdZ23Ug+
+	2drpwrLqLAzoE86pNIKkRnXjcGpSK5U7RPbTIutJetmVO2en4euQ1xY8+ytmSVwo
+	tNKqtefACdo6XCswAA0LrA=
+Received: from [192.168.16.78] (unknown [110.80.1.45])
+	by smtp7 (Coremail) with SMTP id C8CowABHMoo428Fgmuj1hA--.24226S2;
+	Thu, 10 Jun 2021 17:28:24 +0800 (CST)
+From: Jianguo Wu <wujianguo106@163.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add deny_join_id0 in mptcp_options_received"
-Date: Thu, 10 Jun 2021 17:13:35 +0800
-Message-Id: <6670b769c9c6129d810282c3c8bd65e3317b1578.1623316231.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
+Cc: Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH v2 0/4] Fix some mptcp syncookie process bugs
+Message-ID: <6f0fe8f0-492d-0a0f-6853-721961b48811@163.com>
+Date: Thu, 10 Jun 2021 17:28:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:C8CowABHMoo428Fgmuj1hA--.24226S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GF4xKryUWFy3CrWDCw4DArb_yoWxKFb_G3
+	yxXry3GrW8uFZ8JFW7Krs8JrWrWrWDW34j9F1vqryUJr13ta40qF4DKrZ7ur18CFZ5XFyD
+	WF17A348AF13KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUeMUDtUUUUU==
+X-Originating-IP: [110.80.1.45]
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbBiBitkFaD-P04tQAAs0
 
-Move the deny_join_id0 test into check_fully_established as Paolo
-suggested.
+Fix some mptcp syncookie process bugs.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/mptcp/options.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+v1->v2:
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0d30008f0313..63c1e18d61d5 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -910,6 +910,9 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 		return false;
- 	}
- 
-+	if (mp_opt->deny_join_id0)
-+		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
-+
- 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
- 		pr_warn_once("bogus mpc option on established client sk");
- 	mptcp_subflow_fully_established(subflow, mp_opt);
-@@ -1051,8 +1054,6 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 	}
- 
- 	mptcp_get_options(sk, skb, &mp_opt);
--	if (mp_opt.deny_join_id0)
--		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return;
- 
+patch1: handle ipv6 sockets/addresses,
+        always use 4-tuple drived hash and never look at skb->hash
+patch2: no changes
+patch3: split into 2 patches.
+patch4: new added.
+
+Jianguo Wu (4):
+  mptcp: fix warning in __skb_flow_dissect() when do syn cookie for subflow join
+  mptcp: remove redundant req destruct in subflow_check_req()
+  mptcp: fix syncookie process if mptcp can not_accept new subflow
+  mptcp: avoid processing packet if a subflow reset
+
+ net/mptcp/options.c    |  2 ++
+ net/mptcp/subflow.c    | 11 +++-------
+ net/mptcp/syncookies.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 58 insertions(+), 12 deletions(-)
+
 -- 
-2.31.1
+1.8.3.1
 
