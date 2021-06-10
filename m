@@ -1,17 +1,17 @@
 Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.227])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D4372
-	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 08:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 750382FB7
+	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 08:52:21 +0000 (UTC)
 HMM_SOURCE_IP:172.18.0.218:40052.999822468
 HMM_ATTACHE_NUM:0000
 HMM_SOURCE_TYPE:SMTP
 Received: from clientip-36.111.140.9?logid-f7c5a0468a3942f1a4a4b00055d3061f (unknown [172.18.0.218])
-	by chinatelecom.cn (HERMES) with SMTP id 4C9752800E2;
-	Thu, 10 Jun 2021 16:52:13 +0800 (CST)
+	by chinatelecom.cn (HERMES) with SMTP id 04739280111;
+	Thu, 10 Jun 2021 16:52:07 +0800 (CST)
 X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
 Received: from  ([172.18.0.218])
-	by app0025 with ESMTP id 6f3eb042546b45f4b7b7708382d63b0d for mptcp@lists.linux.dev;
-	Thu Jun 10 16:52:13 2021
-X-Transaction-ID: 6f3eb042546b45f4b7b7708382d63b0d
+	by app0025 with ESMTP id f7c5a0468a3942f1a4a4b00055d3061f for mptcp@lists.linux.dev;
+	Thu Jun 10 16:52:07 2021
+X-Transaction-ID: f7c5a0468a3942f1a4a4b00055d3061f
 X-filter-score:  filter<0>
 X-Real-From: liyonglong@chinatelecom.cn
 X-Receive-IP: 172.18.0.218
@@ -24,12 +24,10 @@ Cc: pabeni@redhat.com,
 	mathew.j.martineau@linux.intel.com,
 	geliangtang@gmail.com,
 	Yonglong Li <liyonglong@chinatelecom.cn>
-Subject: [PATCH 1/4] mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
-Date: Thu, 10 Jun 2021 16:51:55 +0800
-Message-Id: <1623315118-57936-2-git-send-email-liyonglong@chinatelecom.cn>
+Subject: [PATCH 0/4] mptcp: fix conflicts when using pm.add_signal in ADD_ADDR/echo and RM_ADDR process
+Date: Thu, 10 Jun 2021 16:51:54 +0800
+Message-Id: <1623315118-57936-1-git-send-email-liyonglong@chinatelecom.cn>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1623315118-57936-1-git-send-email-liyonglong@chinatelecom.cn>
-References: <1623315118-57936-1-git-send-email-liyonglong@chinatelecom.cn>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -38,64 +36,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-ADD_ADDR share pm.addr_signal with RM_ADDR, so after RM_ADDR/ADD_ADDR
-done we should not clean ADD_ADDR/RM_ADDR's addr_signal.
+fix issue: ADD_ADDR and RM_ADDR use pm.add_signal to mark event, so 
+in some case pm.add_signal will be flush when ADD_ADDR/RM_ADDR in 
+process.
 
-Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
----
- net/mptcp/pm.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+fix issue: if ADD_ADDR and ADD_ADDR-echo process at the same time, 
+only one event can write pm.add_signal. so ADD_ADDR will process 
+after add_timer timeout or ADD_ADDR-echo will not be process.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 9d00fa6..74886a3 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -252,6 +252,7 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
- {
-+	u8 add_addr;
- 	int ret = false;
- 
- 	spin_lock_bh(&msk->pm.lock);
-@@ -267,7 +268,8 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 		goto out_unlock;
- 
- 	*saddr = msk->pm.local;
--	WRITE_ONCE(msk->pm.addr_signal, 0);
-+	add_addr = READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
-+	WRITE_ONCE(msk->pm.addr_signal, add_addr);
- 	ret = true;
- 
- out_unlock:
-@@ -278,6 +280,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			     struct mptcp_rm_list *rm_list)
- {
-+	u8 rm_addr;
- 	int ret = false, len;
- 
- 	spin_lock_bh(&msk->pm.lock);
-@@ -286,16 +289,17 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 	if (!mptcp_pm_should_rm_signal(msk))
- 		goto out_unlock;
- 
-+	rm_addr = READ_ONCE(msk->pm.addr_signal) & ~BIT(MPTCP_RM_ADDR_SIGNAL);
- 	len = mptcp_rm_addr_len(&msk->pm.rm_list_tx);
- 	if (len < 0) {
--		WRITE_ONCE(msk->pm.addr_signal, 0);
-+		WRITE_ONCE(msk->pm.addr_signal, rm_addr);
- 		goto out_unlock;
- 	}
- 	if (remaining < len)
- 		goto out_unlock;
- 
- 	*rm_list = msk->pm.rm_list_tx;
--	WRITE_ONCE(msk->pm.addr_signal, 0);
-+	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
- 	ret = true;
- 
- out_unlock:
+Patches 1 fix ADD_ADDR and RM_ADDR maybe clear addr_signal each other.
+
+Patch 2 and 3 deal ADD_ADDR and ADD_ADDR-echo with separately to fix 
+conflicts in using pm.addr_signal porcess.
+
+Patch 4 MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT is not necessary.
+
+Yonglong Li (4):
+  mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
+  mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
+  mptcp: build ADD_ADDR/echo-ADD_ADDR option according pm.add_signal
+  mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
+
+ include/net/mptcp.h    |   1 +
+ net/mptcp/options.c    | 161 ++++++++++++++++++++++++++++++++-----------------
+ net/mptcp/pm.c         |  53 +++++++---------
+ net/mptcp/pm_netlink.c |  10 ++-
+ net/mptcp/protocol.h   |  31 ++++------
+ 5 files changed, 147 insertions(+), 109 deletions(-)
+
 -- 
 1.8.3.1
 
