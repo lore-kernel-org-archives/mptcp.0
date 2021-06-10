@@ -1,24 +1,24 @@
 Received: from m12-11.163.com (m12-11.163.com [220.181.12.11])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7097B70
-	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 03:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2E270
+	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 03:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=43f2V
-	GAdTB7CN92yvk++/sIBH4BNVrXgBgdY2EL5xRE=; b=IehsmyjRZbYwb/B6HR9iw
-	1lwnqzYRDo1Y8Ny77YLuBI8Z3o9rRosJO5gGK7rqqDLHxnzzfppD9Y03OftqrtGl
-	ziVq3+UXMXAjUiEwQ5WnSFdNifef6UYe21tDQk70q1zDuHhya6/g4j03Z58z/cgV
-	LHJHmPci0TKmGbN6IE2NYQ=
-Received: from [192.168.16.78] (unknown [110.86.5.93])
-	by smtp7 (Coremail) with SMTP id C8CowADX5Jz6h8FgKI7FhA--.147S2;
-	Thu, 10 Jun 2021 11:33:16 +0800 (CST)
-Subject: Re: [PATCH 3/3] mptcp: fix syncookie process if mptcp can not_accept
- new subflow
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=wBbjx
+	GFOTpQxWoSe2Tp1j/4cBdPs77Ummo69OGau6e4=; b=hG/3CO3GcCalReoj5X1uh
+	6q8Mwiot4PLK3VoPe7ETECy4fT0BqI4DVv2jKGjeXI8cU0zK8+SY5QZCY4Klmqhe
+	dpTKx5Vi+7qfe4dspE5FAci7SH5ctPvcC+AKI4AXdISYbLdJ7qxyO2cbr0B1ktfk
+	RZ3vMEGsQPobuqhy1vyj8M=
+Received: from [192.168.16.78] (unknown [110.80.1.45])
+	by smtp7 (Coremail) with SMTP id C8CowADXSGyEhMFgwKPBhA--.17340S2;
+	Thu, 10 Jun 2021 11:18:28 +0800 (CST)
+Subject: Re: [PATCH 1/3] mptcp: fix warning in __skb_flow_dissect() when do
+ syn cookie for subflow join
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Florian Westphal <fw@strlen.de>
-References: <1034de3d-5528-ea65-6deb-8a67955f1042@163.com>
- <b0a8abf413fa78323f58be466015d665a1bc6f84.camel@redhat.com>
+References: <b8f6479a-f007-d6be-8d7b-672c707d2823@163.com>
+ <15fdea5499d7a91b7915a748a433aed27fed6d1b.camel@redhat.com>
 From: Jianguo Wu <wujianguo106@163.com>
-Message-ID: <d37acdc6-7559-f15a-cac8-270af86c541b@163.com>
-Date: Thu, 10 Jun 2021 11:33:14 +0800
+Message-ID: <76bc8dbc-38ec-a689-c440-3c73b3cdcdb6@163.com>
+Date: Thu, 10 Jun 2021 11:18:28 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 X-Mailing-List: mptcp@lists.linux.dev
@@ -26,106 +26,143 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b0a8abf413fa78323f58be466015d665a1bc6f84.camel@redhat.com>
+In-Reply-To: <15fdea5499d7a91b7915a748a433aed27fed6d1b.camel@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:C8CowADX5Jz6h8FgKI7FhA--.147S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXr43KrWkWrW7WFW3Wr47twb_yoW5KF45pF
-	48tr47trn5JFyxGFySvF4UXr1Sq3yFyr43JrW5ta43Arn8urn3GryrKr1a9FW7CFs5Ca4F
-	vr4Iq3WqvF1j9aDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jgwIDUUUUU=
-X-Originating-IP: [110.86.5.93]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB+AStkF2MZMzGBgAAs4
+X-CM-TRANSID:C8CowADXSGyEhMFgwKPBhA--.17340S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuw4fAr15uw4kJFyruFW7urg_yoW7AFWxpr
+	45GFZxGrWkA34rA3yavrW7Xryqgw4vyFW8G3WftF18AFn8uwn7t3W8Jw4j9Fy7ZrW8C347
+	Kr47X3WkK3WkZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jyLvtUUUUU=
+X-Originating-IP: [110.80.1.45]
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiURyskFWBTQSdewAEsO
 
 Hi Paolo,
 
-On 2021/6/9 22:18, Paolo Abeni wrote:
-> Hello,
-> 
+On 2021/6/9 22:31, Paolo Abeni wrote:
 > On Wed, 2021-06-09 at 18:39 +0800, Jianguo Wu wrote:
 >> From: Jianguo Wu <wujianguo@chinatelecom.cn>
 >>
->> Lots of "TCP: tcp_fin: Impossible, sk->sk_state=7" in client side when doing stress testing.
->> There are at least two cases may trigger this warning:
->> 1. mptcp is in syncookie, and server recv MP_JOIN SYN request, in subflow_check_req(),
->>    the mptcp_can_accept_new_subflow() return false, so subflow_init_req_cookie_join_save()
->>    isn't called, i.e. not store the data present in the MP_JOIN syn request and the random
->>    nonce in hash table - join_entries[], but still send synack. When recv 3rd-ack,
->>    mptcp_token_join_cookie_init_state() will return false, and 3rd-ack is dropped, then if mptcp
->>    conn is closed by client, client will send a DATA_FIN and a MPTCP FIN, the DATA_FIN doesn't have
->>    MP_CAPABLE or MP_JOIN, so mptcp_subflow_init_cookie_req() will return 0, and pass the cookie check,
->>    MP_JOIN request is fallback to normal TCP. Server will send a TCP FIN if closed, in client side,
->>    when process TCP FIN, it will do reset, the code path is:
->>      tcp_data_queue()->mptcp_incoming_options()->check_fully_established()->mptcp_subflow_reset().
->>    mptcp_subflow_reset() will set sock state to TCP_CLOSE, so tcp_fin will hit TCP_CLOSE, and print the warning.
->> 2. mptcp is in syncookie, and server recv 3rd-ack, in mptcp_subflow_init_cookie_req(), mptcp_can_accept_new_subflow()
->>    return false, and subflow_req->mp_join is not set to 1, so in subflow_syn_recv_sock() will not reset the MP_JOIN
->>    subflow, but fallback to normal TCP, and then the same thing happens when server will send a TCP FIN if closed.
-> 
-> Minor nit: each line in the commit message should not be longer than 72
-> chars.
-> 
-
-Ok, I will be more carefully with this.
-
->> For case1, subflow_check_req() return -EPERM, then tcp_conn_request() will drop MP_JOIN SYN.
->> For case2, let subflow_syn_recv_sock() do mptcp_can_accept_new_subflow() check, and do fatal fallback, send reset.
-> 
-> Possibly worthy 2 separate patches.
-> 
-> pktdrill test cases would help.
-> 
-> I still have to wrap my mind on the above, still I have a relevant
-> comment, see below...
-> 
->> And do sanity check in tcp_data_queue().
+>> I got the following warning message while doing the test:
 >>
->> Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use")
+>> [   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
+>> [   55.553024] ------------[ cut here ]------------
+>> [   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
+>> ...
+>> [   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
+>> [   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
+>> [   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
+>> ...
+>> [   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
+>> [   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
+>> [   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
+>> [   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
+>> [   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
+>> [   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
+>> [   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
+>> [   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
+>> [   55.553160] Call Trace:
+>> [   55.553166]  ? __sha256_final+0x67/0xd0
+>> [   55.553173]  ? sha256+0x7e/0xa0
+>> [   55.553177]  __skb_get_hash+0x57/0x210
+>> [   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
+>> [   55.553189]  subflow_check_req+0x474/0x550
+>> [   55.553195]  ? ip_route_output_key_hash+0x67/0x90
+>> [   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
+>> [   55.553207]  subflow_v4_route_req+0x8e/0xd0
+>> [   55.553212]  tcp_conn_request+0x31e/0xab0
+>> [   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
+>> [   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
+>> [   55.553229]  tcp_rcv_state_process+0x179/0x6d0
+>> [   55.553235]  tcp_v4_do_rcv+0xaf/0x220
+>> [   55.553239]  tcp_v4_rcv+0xce4/0xd80
+>> [   55.553243]  ? ip_route_input_rcu+0x246/0x260
+>> [   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
+>> [   55.553253]  ip_local_deliver_finish+0x44/0x50
+>> [   55.553258]  ip_local_deliver+0x6c/0x110
+>> [   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
+>> [   55.553267]  ip_rcv+0xd1/0xe0
+>> ...
+>>
+>> After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
+>> then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
+>> code path, as skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set.
+>>
+>> Code snippet in __skb_flow_dissect() that trigger warning:
+>>   975         if (skb) {
+>>   976                 if (!net) {
+>>   977                         if (skb->dev)
+>>   978                                 net = dev_net(skb->dev);
+>>   979                         else if (skb->sk)
+>>   980                                 net = sock_net(skb->sk);
+>>   981                 }
+>>   982         }
+>>   983
+>>   984         WARN_ON_ONCE(!net);
+>>
+>> So, if the skb->hash is not available, then fallback to use 4-tuple derived hash.
+>>
+>> Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use").
+>> Suggested-by: Paolo Abeni <pabeni@redhat.com>
 >> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
 >> ---
->>  net/ipv4/tcp_input.c | 7 ++++++-
->>  net/mptcp/subflow.c  | 6 +++---
->>  2 files changed, 9 insertions(+), 4 deletions(-)
+>>  net/mptcp/syncookies.c | 24 +++++++++++++++++++++++-
+>>  1 file changed, 23 insertions(+), 1 deletion(-)
 >>
->> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
->> index 7d5e59f..537f24a 100644
->> --- a/net/ipv4/tcp_input.c
->> +++ b/net/ipv4/tcp_input.c
->> @@ -4941,8 +4941,13 @@ static void tcp_data_queue(struct sock *sk, struct sk_buff *skb)
->>  	bool fragstolen;
->>  	int eaten;
+>> diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
+>> index abe0fd0..778bdba 100644
+>> --- a/net/mptcp/syncookies.c
+>> +++ b/net/mptcp/syncookies.c
+>> @@ -35,9 +35,31 @@ struct join_entry {
+>>  static struct join_entry join_entries[COOKIE_JOIN_SLOTS] __cacheline_aligned_in_smp;
+>>  static spinlock_t join_entry_locks[COOKIE_JOIN_SLOTS] __cacheline_aligned_in_smp;
 >>
->> -	if (sk_is_mptcp(sk))
->> +	if (sk_is_mptcp(sk)) {
->>  		mptcp_incoming_options(sk, skb);
->> +		if (sk->sk_state == TCP_CLOSE) {
->> +			__kfree_skb(skb);
->> +			return;
->> +		}
->> +	}
+>> +static u32 mptcp_join_hashfn(const struct net *net, const __be32 laddr,
+>> +			     const __be16 lport, const __be32 faddr,
+>> +			     const __be16 fport)
+>> +{
+>> +	static u32 mptcp_join_hash_secret __read_mostly;
+>> +
+>> +	net_get_random_once(&mptcp_join_hash_secret, sizeof(mptcp_join_hash_secret));
+>> +
+>> +	return jhash_3words((__force __u32) laddr,
+>> +			    (__force __u32) faddr,
+>> +			    ((__u32) lport) << 16 | (__force __u32)fport,
+>> +			    mptcp_join_hash_secret + net_hash_mix(net));
+>> +}
+>> +
+>>  static u32 mptcp_join_entry_hash(struct sk_buff *skb, struct net *net)
+>>  {
+>> -	u32 i = skb_get_hash(skb) ^ net_hash_mix(net);
+>> +	u32 i;
+>> +	struct iphdr *iph = ip_hdr(skb);
+>> +	struct tcphdr *th = tcp_hdr(skb);
+>> +
+>> +	if (!skb_get_hash_raw(skb))
+>> +		i = mptcp_join_hashfn(net, iph->daddr, th->dest,
+>> +				      iph->saddr, th->source);
 > 
-> _if_ I read correctly the commit message, this is needed to avoid
-> processing FIN packets on
-> when check_fully_established()/check_fully_established() causes a
-> subflow reset.
+> Here we need to handle ipv6 sockets/addresses, too. See sk_ehashfn()
+> in net/ipv4/inet_hashtables.c for some reference code.
 > 
 
-Yes
+Will add ipv6 handle,thanks.
 
-> I think we can handle the above in the MPTCP code - in
-> check_fully_established() -  setting:
+> There is an additional caveat I haven't thought before: teorically the
+> syn and the 3rd ack skbs could be received via different interfaces,
+> which will produce different skb->hash value. Or the NIC hash could be
+> teorically disabled (or enabled) in between.
 > 
-> 	TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
+> TL;DR: I think we should always use the mptcp_join_hashfn() and never
+> look at skb->hash.
 > 
 
-I will use this.
+Ok, thanks!
 
-> so that the following check will drop the pkt:
+Jianguo
+> Sorry for the late feedback,
 > 
->>  	if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
->>  		__kfree_skb(skb);
->>
-> 
-> /P
+> Paolo
 > 
 
