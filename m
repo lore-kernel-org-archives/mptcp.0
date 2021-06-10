@@ -1,168 +1,101 @@
-Received: from m12-11.163.com (m12-11.163.com [220.181.12.11])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2E270
-	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 03:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=wBbjx
-	GFOTpQxWoSe2Tp1j/4cBdPs77Ummo69OGau6e4=; b=hG/3CO3GcCalReoj5X1uh
-	6q8Mwiot4PLK3VoPe7ETECy4fT0BqI4DVv2jKGjeXI8cU0zK8+SY5QZCY4Klmqhe
-	dpTKx5Vi+7qfe4dspE5FAci7SH5ctPvcC+AKI4AXdISYbLdJ7qxyO2cbr0B1ktfk
-	RZ3vMEGsQPobuqhy1vyj8M=
-Received: from [192.168.16.78] (unknown [110.80.1.45])
-	by smtp7 (Coremail) with SMTP id C8CowADXSGyEhMFgwKPBhA--.17340S2;
-	Thu, 10 Jun 2021 11:18:28 +0800 (CST)
-Subject: Re: [PATCH 1/3] mptcp: fix warning in __skb_flow_dissect() when do
- syn cookie for subflow join
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-References: <b8f6479a-f007-d6be-8d7b-672c707d2823@163.com>
- <15fdea5499d7a91b7915a748a433aed27fed6d1b.camel@redhat.com>
-From: Jianguo Wu <wujianguo106@163.com>
-Message-ID: <76bc8dbc-38ec-a689-c440-3c73b3cdcdb6@163.com>
-Date: Thu, 10 Jun 2021 11:18:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.227])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D4372
+	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 08:52:20 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.218:40052.999822468
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.9?logid-f7c5a0468a3942f1a4a4b00055d3061f (unknown [172.18.0.218])
+	by chinatelecom.cn (HERMES) with SMTP id 4C9752800E2;
+	Thu, 10 Jun 2021 16:52:13 +0800 (CST)
+X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.218])
+	by app0025 with ESMTP id 6f3eb042546b45f4b7b7708382d63b0d for mptcp@lists.linux.dev;
+	Thu Jun 10 16:52:13 2021
+X-Transaction-ID: 6f3eb042546b45f4b7b7708382d63b0d
+X-filter-score:  filter<0>
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.218
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+To: mptcp@lists.linux.dev
+Cc: pabeni@redhat.com,
+	matthieu.baerts@tessares.net,
+	mathew.j.martineau@linux.intel.com,
+	geliangtang@gmail.com,
+	Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: [PATCH 1/4] mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
+Date: Thu, 10 Jun 2021 16:51:55 +0800
+Message-Id: <1623315118-57936-2-git-send-email-liyonglong@chinatelecom.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1623315118-57936-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1623315118-57936-1-git-send-email-liyonglong@chinatelecom.cn>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <15fdea5499d7a91b7915a748a433aed27fed6d1b.camel@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:C8CowADXSGyEhMFgwKPBhA--.17340S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuw4fAr15uw4kJFyruFW7urg_yoW7AFWxpr
-	45GFZxGrWkA34rA3yavrW7Xryqgw4vyFW8G3WftF18AFn8uwn7t3W8Jw4j9Fy7ZrW8C347
-	Kr47X3WkK3WkZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jyLvtUUUUU=
-X-Originating-IP: [110.80.1.45]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiURyskFWBTQSdewAEsO
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+ADD_ADDR share pm.addr_signal with RM_ADDR, so after RM_ADDR/ADD_ADDR
+done we should not clean ADD_ADDR/RM_ADDR's addr_signal.
 
-On 2021/6/9 22:31, Paolo Abeni wrote:
-> On Wed, 2021-06-09 at 18:39 +0800, Jianguo Wu wrote:
->> From: Jianguo Wu <wujianguo@chinatelecom.cn>
->>
->> I got the following warning message while doing the test:
->>
->> [   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
->> [   55.553024] ------------[ cut here ]------------
->> [   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
->> ...
->> [   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
->> [   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
->> [   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
->> ...
->> [   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
->> [   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
->> [   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
->> [   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
->> [   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
->> [   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
->> [   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
->> [   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
->> [   55.553160] Call Trace:
->> [   55.553166]  ? __sha256_final+0x67/0xd0
->> [   55.553173]  ? sha256+0x7e/0xa0
->> [   55.553177]  __skb_get_hash+0x57/0x210
->> [   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
->> [   55.553189]  subflow_check_req+0x474/0x550
->> [   55.553195]  ? ip_route_output_key_hash+0x67/0x90
->> [   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
->> [   55.553207]  subflow_v4_route_req+0x8e/0xd0
->> [   55.553212]  tcp_conn_request+0x31e/0xab0
->> [   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
->> [   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
->> [   55.553229]  tcp_rcv_state_process+0x179/0x6d0
->> [   55.553235]  tcp_v4_do_rcv+0xaf/0x220
->> [   55.553239]  tcp_v4_rcv+0xce4/0xd80
->> [   55.553243]  ? ip_route_input_rcu+0x246/0x260
->> [   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
->> [   55.553253]  ip_local_deliver_finish+0x44/0x50
->> [   55.553258]  ip_local_deliver+0x6c/0x110
->> [   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
->> [   55.553267]  ip_rcv+0xd1/0xe0
->> ...
->>
->> After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
->> then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
->> code path, as skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set.
->>
->> Code snippet in __skb_flow_dissect() that trigger warning:
->>   975         if (skb) {
->>   976                 if (!net) {
->>   977                         if (skb->dev)
->>   978                                 net = dev_net(skb->dev);
->>   979                         else if (skb->sk)
->>   980                                 net = sock_net(skb->sk);
->>   981                 }
->>   982         }
->>   983
->>   984         WARN_ON_ONCE(!net);
->>
->> So, if the skb->hash is not available, then fallback to use 4-tuple derived hash.
->>
->> Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use").
->> Suggested-by: Paolo Abeni <pabeni@redhat.com>
->> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
->> ---
->>  net/mptcp/syncookies.c | 24 +++++++++++++++++++++++-
->>  1 file changed, 23 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
->> index abe0fd0..778bdba 100644
->> --- a/net/mptcp/syncookies.c
->> +++ b/net/mptcp/syncookies.c
->> @@ -35,9 +35,31 @@ struct join_entry {
->>  static struct join_entry join_entries[COOKIE_JOIN_SLOTS] __cacheline_aligned_in_smp;
->>  static spinlock_t join_entry_locks[COOKIE_JOIN_SLOTS] __cacheline_aligned_in_smp;
->>
->> +static u32 mptcp_join_hashfn(const struct net *net, const __be32 laddr,
->> +			     const __be16 lport, const __be32 faddr,
->> +			     const __be16 fport)
->> +{
->> +	static u32 mptcp_join_hash_secret __read_mostly;
->> +
->> +	net_get_random_once(&mptcp_join_hash_secret, sizeof(mptcp_join_hash_secret));
->> +
->> +	return jhash_3words((__force __u32) laddr,
->> +			    (__force __u32) faddr,
->> +			    ((__u32) lport) << 16 | (__force __u32)fport,
->> +			    mptcp_join_hash_secret + net_hash_mix(net));
->> +}
->> +
->>  static u32 mptcp_join_entry_hash(struct sk_buff *skb, struct net *net)
->>  {
->> -	u32 i = skb_get_hash(skb) ^ net_hash_mix(net);
->> +	u32 i;
->> +	struct iphdr *iph = ip_hdr(skb);
->> +	struct tcphdr *th = tcp_hdr(skb);
->> +
->> +	if (!skb_get_hash_raw(skb))
->> +		i = mptcp_join_hashfn(net, iph->daddr, th->dest,
->> +				      iph->saddr, th->source);
-> 
-> Here we need to handle ipv6 sockets/addresses, too. See sk_ehashfn()
-> in net/ipv4/inet_hashtables.c for some reference code.
-> 
+Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+---
+ net/mptcp/pm.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Will add ipv6 handle,thanks.
-
-> There is an additional caveat I haven't thought before: teorically the
-> syn and the 3rd ack skbs could be received via different interfaces,
-> which will produce different skb->hash value. Or the NIC hash could be
-> teorically disabled (or enabled) in between.
-> 
-> TL;DR: I think we should always use the mptcp_join_hashfn() and never
-> look at skb->hash.
-> 
-
-Ok, thanks!
-
-Jianguo
-> Sorry for the late feedback,
-> 
-> Paolo
-> 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 9d00fa6..74886a3 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -252,6 +252,7 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
+ {
++	u8 add_addr;
+ 	int ret = false;
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+@@ -267,7 +268,8 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 		goto out_unlock;
+ 
+ 	*saddr = msk->pm.local;
+-	WRITE_ONCE(msk->pm.addr_signal, 0);
++	add_addr = READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
++	WRITE_ONCE(msk->pm.addr_signal, add_addr);
+ 	ret = true;
+ 
+ out_unlock:
+@@ -278,6 +280,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			     struct mptcp_rm_list *rm_list)
+ {
++	u8 rm_addr;
+ 	int ret = false, len;
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+@@ -286,16 +289,17 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 	if (!mptcp_pm_should_rm_signal(msk))
+ 		goto out_unlock;
+ 
++	rm_addr = READ_ONCE(msk->pm.addr_signal) & ~BIT(MPTCP_RM_ADDR_SIGNAL);
+ 	len = mptcp_rm_addr_len(&msk->pm.rm_list_tx);
+ 	if (len < 0) {
+-		WRITE_ONCE(msk->pm.addr_signal, 0);
++		WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+ 		goto out_unlock;
+ 	}
+ 	if (remaining < len)
+ 		goto out_unlock;
+ 
+ 	*rm_list = msk->pm.rm_list_tx;
+-	WRITE_ONCE(msk->pm.addr_signal, 0);
++	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+ 	ret = true;
+ 
+ out_unlock:
+-- 
+1.8.3.1
 
