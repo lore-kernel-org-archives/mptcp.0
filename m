@@ -1,115 +1,86 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.227])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B940972
-	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 08:52:29 +0000 (UTC)
-HMM_SOURCE_IP:172.18.0.218:40052.999822468
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.9?logid-f7c5a0468a3942f1a4a4b00055d3061f (unknown [172.18.0.218])
-	by chinatelecom.cn (HERMES) with SMTP id 09917280121;
-	Thu, 10 Jun 2021 16:52:29 +0800 (CST)
-X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
-Received: from  ([172.18.0.218])
-	by app0025 with ESMTP id 57902c2bcf3d478c890c67a1f3ef80a1 for mptcp@lists.linux.dev;
-	Thu Jun 10 16:52:28 2021
-X-Transaction-ID: 57902c2bcf3d478c890c67a1f3ef80a1
-X-filter-score:  filter<0>
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.0.218
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-From: Yonglong Li <liyonglong@chinatelecom.cn>
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5D772
+	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 09:13:49 +0000 (UTC)
+Received: by mail-pj1-f50.google.com with SMTP id o17-20020a17090a9f91b029015cef5b3c50so3356583pjp.4
+        for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 02:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rKWLpd+1ysbicw8ok2R6Lo0tB8LvBCpWEoXfNVa/ZjQ=;
+        b=STu2+Qz+nBNwuOKUvNNx6Ppa360DcDl2m25CWoArFzxxy8m8E/b4BmGRcDxwg0983h
+         rgVtkE2jwHR7EYOYIDlzSDpRD+oybINr5GS0WLDD/0MGDCXDpAwDfQI0oIhzQHvARoZM
+         LwFz6wQYR+dek6ZAEhBxhilKqTFLJpONrfDugSIM7IsmPSus8fBctdSnT6xdi+nOSkqM
+         Ft4ZyaHCuqpOH4cQG/WrSRMCY9mZIwCJrHiVZQ9ZGCCl8JjOJr4h2PyCtyC2joHrebWA
+         CwNL6ILkYc8f8fpxsw48D2dQrzVaeZoaRX6q2DDh//48yfqRD/hDrNMcal4LKcksSFqK
+         FB0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rKWLpd+1ysbicw8ok2R6Lo0tB8LvBCpWEoXfNVa/ZjQ=;
+        b=BmsHQQPfndHAVZi1XtIIa3/knBADIeMe8EfnA+B+wiQ8+jtn1SybW86hcRu4omqcLF
+         5MHfimlbAtTxTA7gbXbWc+UfnFZ74X3tgFtInzZY1Z3zd7s25MpzgCRmFcfGHkmTjQYh
+         lveS5G2QR3mq946TfjUcunRKU+/6c2wqLUyYY/G11vZmSQRtZyl34uEpY9dynbwsJuVR
+         mtUhN04yJWyies8XRXrAmD5a9LvO5oWo0bTejn3OCYUSA778T0tyqxmGm+nKqd3ALHCM
+         5yC7u++bSZG1sAeN/lBxHd36VgG2kf6XMto42Og54SvXU80kqqcutRthHE84VtlaZUaK
+         Idig==
+X-Gm-Message-State: AOAM531vFcU549UaVZIPP7hvEbzIas3i5VZ/QiFS/1Oem15MqGBdkxPw
+	sT8IxCri8D+Ubi3odGICLtp4UZWyy8unJg==
+X-Google-Smtp-Source: ABdhPJyBMzSNWV9+nDeywVO0DQjIKnIZjGkhAk0KM86MbeLOK3fxEdKpDkradVNy3zXFHhG/48uEbw==
+X-Received: by 2002:a17:90b:ed3:: with SMTP id gz19mr2446925pjb.214.1623316428863;
+        Thu, 10 Jun 2021 02:13:48 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id m191sm2015733pga.88.2021.06.10.02.13.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jun 2021 02:13:48 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com,
-	matthieu.baerts@tessares.net,
-	mathew.j.martineau@linux.intel.com,
-	geliangtang@gmail.com,
-	Yonglong Li <liyonglong@chinatelecom.cn>
-Subject: [PATCH 4/4] mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
-Date: Thu, 10 Jun 2021 16:51:58 +0800
-Message-Id: <1623315118-57936-5-git-send-email-liyonglong@chinatelecom.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1623315118-57936-1-git-send-email-liyonglong@chinatelecom.cn>
-References: <1623315118-57936-1-git-send-email-liyonglong@chinatelecom.cn>
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add deny_join_id0 in mptcp_options_received"
+Date: Thu, 10 Jun 2021 17:13:35 +0800
+Message-Id: <6670b769c9c6129d810282c3c8bd65e3317b1578.1623316231.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-there not need MPTCP_ADD_ADDR_PORT and MPTCP_ADD_ADDR_PORT, we can
-get these info from pm.addr or pm.remote
+Move the deny_join_id0 test into check_fully_established as Paolo
+suggested.
 
-Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/pm.c         |  4 ----
- net/mptcp/pm_netlink.c |  6 ++----
- net/mptcp/protocol.h   | 12 ------------
- 3 files changed, 2 insertions(+), 20 deletions(-)
+ net/mptcp/options.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 6a5ee6da..2d9ee3c 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -35,10 +35,6 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 		msk->pm.local = *addr;
- 		add_addr |= BIT(MPTCP_ADD_ADDR_SIGNAL);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 0d30008f0313..63c1e18d61d5 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -910,6 +910,9 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+ 		return false;
  	}
--	if (addr->family == AF_INET6)
--		add_addr |= BIT(MPTCP_ADD_ADDR_IPV6);
--	if (addr->port)
--		add_addr |= BIT(MPTCP_ADD_ADDR_PORT);
- 	WRITE_ONCE(msk->pm.addr_signal, add_addr);
- 	return 0;
- }
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index ae700bd..2e67eca 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -544,10 +544,8 @@ void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
- 		bool slow;
  
- 		spin_unlock_bh(&msk->pm.lock);
--		pr_debug("send ack for %s%s%s",
--			 mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr",
--			 mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
--			 mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
-+		pr_debug("send ack for %s",
-+			 mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr");
++	if (mp_opt->deny_join_id0)
++		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
++
+ 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
+ 		pr_warn_once("bogus mpc option on established client sk");
+ 	mptcp_subflow_fully_established(subflow, mp_opt);
+@@ -1051,8 +1054,6 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 	}
  
- 		slow = lock_sock_fast(ssk);
- 		tcp_send_ack(ssk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 25056c3..eaa19b9 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -176,8 +176,6 @@ enum mptcp_pm_status {
- enum mptcp_addr_signal_status {
- 	MPTCP_ADD_ADDR_SIGNAL,
- 	MPTCP_ADD_ADDR_ECHO,
--	MPTCP_ADD_ADDR_IPV6,
--	MPTCP_ADD_ADDR_PORT,
- 	MPTCP_RM_ADDR_SIGNAL,
- };
+ 	mptcp_get_options(sk, skb, &mp_opt);
+-	if (mp_opt.deny_join_id0)
+-		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
+ 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+ 		return;
  
-@@ -723,16 +721,6 @@ static inline bool mptcp_pm_should_add_signal_echo(struct mptcp_sock *msk)
- 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
- }
- 
--static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *msk)
--{
--	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
--}
--
--static inline bool mptcp_pm_should_add_signal_port(struct mptcp_sock *msk)
--{
--	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_PORT);
--}
--
- static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
- {
- 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
 -- 
-1.8.3.1
+2.31.1
 
