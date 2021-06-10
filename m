@@ -1,77 +1,73 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0A92F80
-	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 21:30:25 +0000 (UTC)
-IronPort-SDR: lO4ioRO7zrWT5ZaoBBKUK1xNpwH07UmvEjM7prrizPcy/2jnF3LuScLeBs7BAuSeifKBu8jfKz
- 8Pqnb1BJ/y2w==
-X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="185098726"
-X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
-   d="scan'208";a="185098726"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 14:30:24 -0700
-IronPort-SDR: BXiV00kt83+uuNElWuvxJM8ZlAb+VWIMKbW6w7V1RNytXfOqS0oBKxt6P4ipENwwBxpp5kWHvQ
- bAFhRgvd679w==
-X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
-   d="scan'208";a="486343783"
-Received: from ngattu-mobl1.amr.corp.intel.com ([10.209.121.205])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 14:30:22 -0700
-Date: Thu, 10 Jun 2021 14:30:20 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add deny_join_id0
- in mptcp_options_received"
-In-Reply-To: <6670b769c9c6129d810282c3c8bd65e3317b1578.1623316231.git.geliangtang@gmail.com>
-Message-ID: <bed4c37-75a3-8ed-fc45-baaae8b1d628@linux.intel.com>
-References: <6670b769c9c6129d810282c3c8bd65e3317b1578.1623316231.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2649E2F80
+	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 21:50:06 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id CEBE4613E9;
+	Thu, 10 Jun 2021 21:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1623361805;
+	bh=FIvv5oraFhhY29I3YGqi23pBnmObIPqnLyGlY3VjM5I=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=dXhBWJh994GIx79SWVhGH9ucLseZ49qPQyoONXy1PAq+lw+M8sMP5bbka+zjVv9SW
+	 QYZfD6Gklgt7hFnyJMsb6kJ94eARKiM4/Igz7JcWP63TbEcr14RNOQDGGeg92G0z+/
+	 aSLfvhlx+GmE2OCT5UGxFP6LyePMWzipd47LK07vV5ZA+KgAfEeEGF3acfKyBzjXm/
+	 BsVWvmcLk2Ckv9nq/j6IU8bIlx77J23o92qxwSenlxXE0mbTf5EGc5fUXpTZ3COftA
+	 kb0Ru4J6Dd1utmPCuCWeIvgjWidh2Qe+ZJrMTjzpgozCI/Q8A8JFxVzPiA3dXviUP6
+	 SW/iCe6+58olw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id C044560A53;
+	Thu, 10 Jun 2021 21:50:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 0/3] Fix out of bounds when parsing TCP options
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <162336180578.29138.2109462655525046867.git-patchwork-notify@kernel.org>
+Date: Thu, 10 Jun 2021 21:50:05 +0000
+References: <20210610164031.3412479-1-maximmi@nvidia.com>
+In-Reply-To: <20210610164031.3412479-1-maximmi@nvidia.com>
+To: Maxim Mikityanskiy <maximmi@nvidia.com>
+Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+ kuba@kernel.org, davem@davemloft.net, pablo@netfilter.org,
+ kadlec@netfilter.org, fw@strlen.de, toke@toke.dk, jhs@mojatatu.com,
+ xiyou.wangcong@gmail.com, jiri@resnulli.us, kaber@trash.net,
+ brouer@redhat.com, pabeni@redhat.com, cpaasch@apple.com,
+ peter.krystad@linux.intel.com, 92siuyang@gmail.com, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
 
-On Thu, 10 Jun 2021, Geliang Tang wrote:
+Hello:
 
-> Move the deny_join_id0 test into check_fully_established as Paolo
-> suggested.
->
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
-> net/mptcp/options.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 0d30008f0313..63c1e18d61d5 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -910,6 +910,9 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
-> 		return false;
-> 	}
->
-> +	if (mp_opt->deny_join_id0)
-> +		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
-> +
-> 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
-> 		pr_warn_once("bogus mpc option on established client sk");
-> 	mptcp_subflow_fully_established(subflow, mp_opt);
-> @@ -1051,8 +1054,6 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
-> 	}
->
-> 	mptcp_get_options(sk, skb, &mp_opt);
-> -	if (mp_opt.deny_join_id0)
-> -		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
-> 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
-> 		return;
->
-> -- 
-> 2.31.1
+This series was applied to netdev/net.git (refs/heads/master):
 
-Looks good, thanks Geliang.
+On Thu, 10 Jun 2021 19:40:28 +0300 you wrote:
+> This series fixes out-of-bounds access in various places in the kernel
+> where parsing of TCP options takes place. Fortunately, many more
+> occurrences don't have this bug.
+> 
+> v2 changes:
+> 
+> synproxy: Added an early return when length < 0 to avoid calling
+> skb_header_pointer with negative length.
+> 
+> [...]
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Here is the summary with links:
+  - [net,v2,1/3] netfilter: synproxy: Fix out of bounds when parsing TCP options
+    https://git.kernel.org/netdev/net/c/5fc177ab7594
+  - [net,v2,2/3] mptcp: Fix out of bounds when parsing TCP options
+    https://git.kernel.org/netdev/net/c/07718be26568
+  - [net,v2,3/3] sch_cake: Fix out of bounds when parsing TCP options and header
+    https://git.kernel.org/netdev/net/c/ba91c49dedbd
 
+You are awesome, thank you!
 --
-Mat Martineau
-Intel
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
