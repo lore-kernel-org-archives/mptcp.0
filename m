@@ -1,31 +1,31 @@
 Received: from m12-15.163.com (m12-15.163.com [220.181.12.15])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DA632FB8
-	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 07:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50055173
+	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 07:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=c/hCVgBOvIQfNVAKDP
-	4lvnA3f4Imf9aWnlkAZ8XFl68=; b=nKo7c0UxwClJncaO2wpdRi17mHNUzKOO16
-	0x3hu98UZnt5D3FWQYDKaIi96und4UqAsvhNyrHOnoUKgaPMgriZDDIzbahSlPmt
-	OP1PFy7BWR4028esBV5zsvrxyk1IFAL0KCyZznLr2uXq2Lg6lTa8x5fWJEdjfS9s
-	D1DbrdUkY=
+	s=s110527; h=From:Subject:Date:Message-Id; bh=iyRuSN4ZPsQ0Nb6yc5
+	jhGaB5VFkg4g2CWpoz+5gGUlA=; b=N/2UTCJbpqBb9nQUkZtmR6lIs7DNwXcDKd
+	GtCf/Afy5DKCjr6uPii8FE0QxyveFzX7JI74cjtTG3QnN4H3HRhiuokB85pX6ubL
+	ZMxv6lrPxb7MHsij3f7VYIMftoboch6av8A8B797JJko8Kay5mCgpsrg2R7KqY0r
+	TSm/TkMHc=
 Received: from localhost.localdomain (unknown [110.80.1.45])
-	by smtp11 (Coremail) with SMTP id D8CowAD325gTEsNgpvWXAA--.80S4;
+	by smtp11 (Coremail) with SMTP id D8CowAD325gTEsNgpvWXAA--.80S5;
 	Fri, 11 Jun 2021 15:34:54 +0800 (CST)
 From: wujianguo106@163.com
 To: mptcp@lists.linux.dev
 Cc: pabeni@redhat.com
-Subject: [PATCH 2/4] mptcp: remove redundant req destruct in subflow_check_req()
-Date: Fri, 11 Jun 2021 15:34:40 +0800
-Message-Id: <1623396882-2748-3-git-send-email-wujianguo106@163.com>
+Subject: [PATCH 3/4] mptcp: fix syncookie process if mptcp can not_accept new subflow
+Date: Fri, 11 Jun 2021 15:34:41 +0800
+Message-Id: <1623396882-2748-4-git-send-email-wujianguo106@163.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1623396882-2748-1-git-send-email-wujianguo106@163.com>
 References: <1623396882-2748-1-git-send-email-wujianguo106@163.com>
-X-CM-TRANSID:D8CowAD325gTEsNgpvWXAA--.80S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr4Dtw47WFWrtryktF4ktFb_yoW8Gryfpr
-	sxXw1YyrZxZFyakF4rJF4DZrn0gayFvFn8GFyY93sxJr4qqws3KF1UWr48uFy3Aa1kKay7
-	GFsxtFnxX3ZF9aUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jqFALUUUUU=
+X-CM-TRANSID:D8CowAD325gTEsNgpvWXAA--.80S5
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAryrJFW3Kr1rCFW5GF45Wrg_yoW5Ww13pr
+	4UXrWxtr1fJFy3GF4ftr4DZw1UWFZYyrZxJa15K347Awn8Zws3Kry8KF1xKryxCFs7Ga45
+	Xr4vq3WqvFnrCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jWT5dUUUUU=
 X-Originating-IP: [110.80.1.45]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiNx6ukFWBkxL-pQAAsY
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB9waukF2MZNtbQQAAs7
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -33,37 +33,71 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 From: Jianguo Wu <wujianguo@chinatelecom.cn>
 
-In subflow_check_req(), if subflow sport is mismatch, will put msk,
-destroy token, and destruct req, then return -EPERM, which can be
-done by subflow_req_destructor() via:
-  tcp_conn_request()
-    |--__reqsk_free()
-      |--subflow_req_destructor()
-So we should remove these redundant code, otherwise will call
-tcp_v4_reqsk_destructor() twice, and may double free inet_rsk(req)->ireq_opt.
+Lots of "TCP: tcp_fin: Impossible, sk->sk_state=7" in client side
+when doing stress testing.
 
-Fixes: 5bc56388c74f ("mptcp: add port number check for MP_JOIN")
+There are at least two cases may trigger this warning:
+1.mptcp is in syncookie, and server recv MP_JOIN SYN request,
+  in subflow_check_req(), the mptcp_can_accept_new_subflow()
+  return false, so subflow_init_req_cookie_join_save() isn't
+  called, i.e. not store the data present in the MP_JOIN syn
+  request and the random nonce in hash table - join_entries[],
+  but still send synack. When recv 3rd-ack,
+  mptcp_token_join_cookie_init_state() will return false, and
+  3rd-ack is dropped, then if mptcp conn is closed by client,
+  client will send a DATA_FIN and a MPTCP FIN, the DATA_FIN
+  doesn't have MP_CAPABLE or MP_JOIN,
+  so mptcp_subflow_init_cookie_req() will return 0, and pass
+  the cookie check, MP_JOIN request is fallback to normal TCP.
+  Server will send a TCP FIN if closed, in client side,
+  when process TCP FIN, it will do reset, the code path is:
+    tcp_data_queue()->mptcp_incoming_options()
+      ->check_fully_established()->mptcp_subflow_reset().
+  mptcp_subflow_reset() will set sock state to TCP_CLOSE,
+  so tcp_fin will hit TCP_CLOSE, and print the warning.
+2.mptcp is in syncookie, and server recv 3rd-ack, in
+  mptcp_subflow_init_cookie_req(), mptcp_can_accept_new_subflow()
+  return false, and subflow_req->mp_join is not set to 1,
+  so in subflow_syn_recv_sock() will not reset the MP_JOIN
+  subflow, but fallback to normal TCP, and then the same thing
+  happens when server will send a TCP FIN if closed.
+
+For case1, subflow_check_req() return -EPERM,
+then tcp_conn_request() will drop MP_JOIN SYN.
+
+For case2, let subflow_syn_recv_sock() call mptcp_can_accept_new_subflow(),
+and do fatal fallback, send reset.
+
+Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use")
 Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
 ---
- net/mptcp/subflow.c | 5 -----
- 1 file changed, 5 deletions(-)
+ net/mptcp/subflow.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6b1cd42..75ed530 100644
+index 75ed530..6d98e19 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -213,11 +213,6 @@ static int subflow_check_req(struct request_sock *req,
- 				 ntohs(inet_sk(sk_listener)->inet_sport),
- 				 ntohs(inet_sk((struct sock *)subflow_req->msk)->inet_sport));
- 			if (!mptcp_pm_sport_in_anno_list(subflow_req->msk, sk_listener)) {
--				sock_put((struct sock *)subflow_req->msk);
--				mptcp_token_destroy_request(req);
--				tcp_request_sock_ops.destructor(req);
--				subflow_req->msk = NULL;
--				subflow_req->mp_join = 0;
- 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTSYNRX);
- 				return -EPERM;
- 			}
+@@ -224,6 +224,8 @@ static int subflow_check_req(struct request_sock *req,
+ 		if (unlikely(req->syncookie)) {
+ 			if (mptcp_can_accept_new_subflow(subflow_req->msk))
+ 				subflow_init_req_cookie_join_save(subflow_req, skb);
++			else
++				return -EPERM;
+ 		}
+ 
+ 		pr_debug("token=%u, remote_nonce=%u msk=%p", subflow_req->token,
+@@ -263,9 +265,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ 		if (!mptcp_token_join_cookie_init_state(subflow_req, skb))
+ 			return -EINVAL;
+ 
+-		if (mptcp_can_accept_new_subflow(subflow_req->msk))
+-			subflow_req->mp_join = 1;
+-
++		subflow_req->mp_join = 1;
+ 		subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq - 1;
+ 	}
+ 
 -- 
 1.8.3.1
 
