@@ -1,29 +1,31 @@
 Received: from m12-15.163.com (m12-15.163.com [220.181.12.15])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164332FB7
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141DF173
 	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 07:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=HJQkRlv/fGsnRu2YK/
-	x+tztyOFAelcTpLauQLQgSzJs=; b=bK80ZDm+4dYRAtvGL/nq9tiiug3j10tw1C
-	VfwK7+kibxHx2WB8pZsAMOnFm9uodFDRcbsoIrJnAfFgoo4ugCdhUmjGn68Fpwu4
-	KdPaAfx8yrC+k08lm0nJxpGmVMcaAYJE2Yhjtzb0M0+PKbeG+LRFYcGgzcDmulRe
-	QeEZaxtVI=
+	s=s110527; h=From:Subject:Date:Message-Id; bh=eKrJ39THeoi1fErkgd
+	hVqGr7NdCfIYrnEdTvCoIpiG0=; b=BONWa2Tm7pwz/2PTcASG0k+nv6LCEZvFdX
+	53PxM1nSBQvF/vAXftGNwx6X3QVJhpnQzgK2ROpffrlEaXMNClHIHE27dyT5C//+
+	pRz/lnNl+d8GxuUc7G4saGQeR4lvwxxwO/Aj8ME6t2joz+mrk8ir13rhzey9q6AP
+	rZYYdguaI=
 Received: from localhost.localdomain (unknown [110.80.1.45])
-	by smtp11 (Coremail) with SMTP id D8CowAD325gTEsNgpvWXAA--.80S2;
+	by smtp11 (Coremail) with SMTP id D8CowAD325gTEsNgpvWXAA--.80S3;
 	Fri, 11 Jun 2021 15:34:53 +0800 (CST)
 From: wujianguo106@163.com
 To: mptcp@lists.linux.dev
 Cc: pabeni@redhat.com
-Subject: [PATCH v3 0/4] Fix some mptcp syncookie process bugs
-Date: Fri, 11 Jun 2021 15:34:38 +0800
-Message-Id: <1623396882-2748-1-git-send-email-wujianguo106@163.com>
+Subject: [PATCH 1/4] mptcp: fix warning in __skb_flow_dissect() when do syn cookie for subflow join
+Date: Fri, 11 Jun 2021 15:34:39 +0800
+Message-Id: <1623396882-2748-2-git-send-email-wujianguo106@163.com>
 X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID:D8CowAD325gTEsNgpvWXAA--.80S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr1kuF4xKr4kuw1fXryrJFb_yoW3KFX_W3
-	97JrW3GrW7ZFZxJFW7Krs8JrWrWrWqg3y09F1vqrW5Gr1aya40qF4qgFs7ur18uFZYvF95
-	CFyUArW0yF13GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8Ma0DUUUUU==
+In-Reply-To: <1623396882-2748-1-git-send-email-wujianguo106@163.com>
+References: <1623396882-2748-1-git-send-email-wujianguo106@163.com>
+X-CM-TRANSID:D8CowAD325gTEsNgpvWXAA--.80S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuw43Jw1DWry3ZFW7Ar43ZFb_yoW7Kw4kpF
+	45GrZxGrWrJ3W3GF4SyrWUZrn09r4vkFZ8Kw13twn2yFn8Wwn2qFy8Jr4jvFy7GrW0ka47
+	KFs7K3WkKFn7ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jzLvZUUUUU=
 X-Originating-IP: [110.80.1.45]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbBSR2ukFaD+3B92QAAsQ
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbBiB6ukFaD-Qi1xwAAs6
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -31,31 +33,149 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 From: Jianguo Wu <wujianguo@chinatelecom.cn>
 
-v1->v2:
+I got the following warning message while doing the test:
 
-patch1: handle ipv6 sockets/addresses,
-        always use 4-tuple drived hash and never look at skb->hash
-patch2: no changes
-patch3: split into 2 patches.
-patch4: new added.
+[   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
+[   55.553024] ------------[ cut here ]------------
+[   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
+...
+[   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
+[   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
+[   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
+...
+[   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
+[   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
+[   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
+[   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
+[   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
+[   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
+[   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
+[   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
+[   55.553160] Call Trace:
+[   55.553166]  ? __sha256_final+0x67/0xd0
+[   55.553173]  ? sha256+0x7e/0xa0
+[   55.553177]  __skb_get_hash+0x57/0x210
+[   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
+[   55.553189]  subflow_check_req+0x474/0x550
+[   55.553195]  ? ip_route_output_key_hash+0x67/0x90
+[   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
+[   55.553207]  subflow_v4_route_req+0x8e/0xd0
+[   55.553212]  tcp_conn_request+0x31e/0xab0
+[   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
+[   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
+[   55.553229]  tcp_rcv_state_process+0x179/0x6d0
+[   55.553235]  tcp_v4_do_rcv+0xaf/0x220
+[   55.553239]  tcp_v4_rcv+0xce4/0xd80
+[   55.553243]  ? ip_route_input_rcu+0x246/0x260
+[   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
+[   55.553253]  ip_local_deliver_finish+0x44/0x50
+[   55.553258]  ip_local_deliver+0x6c/0x110
+[   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
+[   55.553267]  ip_rcv+0xd1/0xe0
+...
 
-v2->v3:
-patch1: directly use inet6_ehashfn() for IPv6
-patch2: no changes
-patch3: no changes
-patch4: add Fixes tag.
+After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
+then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
+code path, as skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set.
 
-Jianguo Wu (4):
-  mptcp: fix warning in __skb_flow_dissect() when do syn cookie for subflow join
-  mptcp: remove redundant req destruct in subflow_check_req()
-  mptcp: fix syncookie process if mptcp can not_accept new subflow
-  mptcp: avoid processing packet if a subflow reset
+Code snippet in __skb_flow_dissect() that trigger warning:
+  975         if (skb) {
+  976                 if (!net) {
+  977                         if (skb->dev)
+  978                                 net = dev_net(skb->dev);
+  979                         else if (skb->sk)
+  980                                 net = sock_net(skb->sk);
+  981                 }
+  982         }
+  983
+  984         WARN_ON_ONCE(!net);
 
- net/mptcp/options.c    |  2 ++
- net/mptcp/subflow.c    | 11 +++--------
+So, use 4-tuple derived hash.
+
+Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use").
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
+---
  net/mptcp/syncookies.c | 46 ++++++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 47 insertions(+), 12 deletions(-)
+ 1 file changed, 42 insertions(+), 4 deletions(-)
 
+diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
+index abe0fd0..2ba09a7 100644
+--- a/net/mptcp/syncookies.c
++++ b/net/mptcp/syncookies.c
+@@ -35,13 +35,51 @@ struct join_entry {
+ static struct join_entry join_entries[COOKIE_JOIN_SLOTS] __cacheline_aligned_in_smp;
+ static spinlock_t join_entry_locks[COOKIE_JOIN_SLOTS] __cacheline_aligned_in_smp;
+ 
+-static u32 mptcp_join_entry_hash(struct sk_buff *skb, struct net *net)
++static u32 mptcp_join_hashfn(const struct net *net, const __be32 laddr,
++			     const __be16 lport, const __be32 faddr,
++			     const __be16 fport)
+ {
+-	u32 i = skb_get_hash(skb) ^ net_hash_mix(net);
++	static u32 mptcp_join_hash_secret __read_mostly;
++	u32 i;
++
++	net_get_random_once(&mptcp_join_hash_secret,
++			    sizeof(mptcp_join_hash_secret));
++
++	i = jhash_3words((__force __u32)laddr,
++			 (__force __u32)faddr,
++			 ((__u32)lport) << 16 | (__force __u32)fport,
++			 mptcp_join_hash_secret + net_hash_mix(net));
+ 
+ 	return i % ARRAY_SIZE(join_entries);
+ }
+ 
++static u32 mptcp_join_hashfn_inet6(const struct net *net,
++				   const struct in6_addr *laddr, const __be16 lport,
++				   const struct in6_addr *faddr, const __be16 fport)
++{
++	u32 i;
++
++	i = inet6_ehashfn(net, laddr, (__force __u16)lport, faddr, fport);
++
++	return i % ARRAY_SIZE(join_entries);
++}
++
++static u32 mptcp_join_entry_hash(struct sk_buff *skb, struct net *net,
++				 unsigned short family)
++{
++	struct tcphdr *th = tcp_hdr(skb);
++
++#if IS_ENABLED(CONFIG_IPV6)
++	if (family == AF_INET6 &&
++	    !ipv6_addr_v4mapped(&ipv6_hdr(skb)->saddr))
++		return mptcp_join_hashfn_inet6(net,
++					       &ipv6_hdr(skb)->daddr, th->dest,
++					       &ipv6_hdr(skb)->saddr, th->source);
++#endif
++	return mptcp_join_hashfn(net, ip_hdr(skb)->daddr, th->dest,
++				 ip_hdr(skb)->saddr, th->source);
++}
++
+ static void mptcp_join_store_state(struct join_entry *entry,
+ 				   const struct mptcp_subflow_request_sock *subflow_req)
+ {
+@@ -58,7 +96,7 @@ void subflow_init_req_cookie_join_save(const struct mptcp_subflow_request_sock *
+ 				       struct sk_buff *skb)
+ {
+ 	struct net *net = read_pnet(&subflow_req->sk.req.ireq_net);
+-	u32 i = mptcp_join_entry_hash(skb, net);
++	u32 i = mptcp_join_entry_hash(skb, net, subflow_req->sk.req.ireq_family);
+ 
+ 	/* No use in waiting if other cpu is already using this slot --
+ 	 * would overwrite the data that got stored.
+@@ -79,7 +117,7 @@ bool mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subfl
+ 					struct sk_buff *skb)
+ {
+ 	struct net *net = read_pnet(&subflow_req->sk.req.ireq_net);
+-	u32 i = mptcp_join_entry_hash(skb, net);
++	u32 i = mptcp_join_entry_hash(skb, net, subflow_req->sk.req.ireq_family);
+ 	struct mptcp_sock *msk;
+ 	struct join_entry *e;
+ 
 -- 
 1.8.3.1
 
