@@ -1,81 +1,92 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0308E72
-	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 14:59:08 +0000 (UTC)
-Received: by mail-ed1-f47.google.com with SMTP id t3so37487302edc.7
-        for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 07:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=cbAXel1e8NTdcOM+zOCrJ4S1l+0l6k6/P+T0IG29wBY=;
-        b=j6N2h2DpB7KZJjpM3Ea6izUhfNZARgKHVJpgYyoJi1VB8GvnsAUKdBuusP291xIyVy
-         bOZJDEhmS4hmX2s5KJcosQx0HNrAMRWR8dzkjgr6bCA5eSL1s5OqdW/z8LJmblr4LGU6
-         5rpBG9lIxPeBaXLnO+GEQl6SQVFA+rMUH367sSeWyCzi/gWfW4M3FLG3BKcF4z1d3uDM
-         u9qJGJxfSd6bjnsJJu8ZNwkABqpkSSRg2vatTUXcDPJnCjq2wOEDhcU05n+wryzWBbHB
-         RxlVclrmiZgizIjUAm3yHzie/jw0qQnyLo7+PP3VnH9RYa++CiZTy1MWiur8lLXnjJfK
-         HPaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=cbAXel1e8NTdcOM+zOCrJ4S1l+0l6k6/P+T0IG29wBY=;
-        b=R4BuRfM/WWdEnxKBo7AsRFBW3+llBrzLcDIroFu4qxycUwgwW6IJyTvcJ2i9CbIRHf
-         UZIt+QLJP3JiNekz7K713Yet9K7Gyh/5KkFnTLCOMAJYhIZmbzYAA6fh96gvcnEx3XFU
-         fdOmaUw4AGu6GI15rLrl3y1G/GdKg9gub3QpYVbwhBrBLRsZDVnl1OpPIXzT//GT32B/
-         jUVDo8f+qaEFHKZPaQCB0+ozp3y05vhHpazyb8RobPyUNwWwLLKqDAAqkF3VClMfQDwE
-         pplIVHIR9tsp3zoNgFKYnHMGMsrzHvcX6zM1f3NGqd6wf4oBKBPa2lXgEj1hxlceNzmJ
-         TLMg==
-X-Gm-Message-State: AOAM530JZAp5++Ogl7eq9k45E1VuJZZc2U4ozckqWICuYRiBzt0Hauh/
-	jyhm2mNS5nGuW98ASRxalZjU5r+0WIa3xT/bUtk=
-X-Google-Smtp-Source: ABdhPJyW0j/yG5GRfWV/6BIbOU+wZe+S2tFxmNd5aJkOqFYmM9VBEQZyBkpwLaGrcERlrYmLn3QVTQ==
-X-Received: by 2002:a50:fb8a:: with SMTP id e10mr4342791edq.330.1623423547363;
-        Fri, 11 Jun 2021 07:59:07 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:26d4:4bdb:59fd:ed42])
-        by smtp.gmail.com with ESMTPSA id q9sm2672684edw.51.2021.06.11.07.59.06
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Jun 2021 07:59:07 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Checksum support: default behaviour
-Message-ID: <4582ad38-e8d5-e639-1ebe-688727329f51@tessares.net>
-Date: Fri, 11 Jun 2021 16:59:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C612FB8
+	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 17:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1623434263;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lNMCSkvQvCmfMPN6940P/QohEDpmPzbyVYQQ2rm767o=;
+	b=XkFuu0RZ3y6Hs9z1ttBOfFR+fOmC9R09EbOX71cSuGFoypBc8PQ1SGZgddkUevJHjlPXRk
+	8TwSd94EtAeZOHNeggrviaoanIKLjUI3logydQpUEHBvA1FCoS/nEmLuO5XCEX9R39E/HN
+	BqqV3g5NC6xWMutMWktpsjkJjICcIM4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-VTeKmNyeOje3FM9D5Fo-0w-1; Fri, 11 Jun 2021 13:57:40 -0400
+X-MC-Unique: VTeKmNyeOje3FM9D5Fo-0w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E150E8015A4
+	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 17:57:39 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-91.ams2.redhat.com [10.36.115.91])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2F6C35D9C6;
+	Fri, 11 Jun 2021 17:57:38 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: fwestpha@redhat.com
+Subject: [RFC PATCH] tcp: consistently disable header prediction for mptcp
+Date: Fri, 11 Jun 2021 19:57:01 +0200
+Message-Id: <982d258452274d2b165b07883307c01a44dbf7f7.1623434219.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hello,
+The MPTCP receive path is hooked only into the TCP slow-path.
+The DSS presence allows plain MPTCP traffic to hit that
+consistently.
 
-With the current checksum support series from Geliang and Paolo
-available in our tree, the default behaviour is not to use this checksum
-feature.
+Since commit e1ff9e82e2ea ("net: mptcp: improve fallback to TCP"),
+when and MPTCP socket falls back to TCP, we can the receive
+fast path, and delay or stop triggering the event notification.
 
-Should we eventually do the opposite and have it enabled by default?
+Address the issue explicitly disabling the header prediction
+for MPTCP sockets.
 
-I do understand this has a cost in terms of performances but this could
-help detecting nasty middleboxes, i.e. the ones that modify the TCP
-packets without modifying MPTCP options if needed.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/200
+Fixes: e1ff9e82e2ea ("net: mptcp: improve fallback to TCP")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+I could not find a reliable way to disable header prediction
+touching the MPTCP code only: the TCP stack can flip header
+prediction on in a bunch of points and I could not find existing
+MPTCP hooks after such check to revert the change.
 
-On the other hand, I don't have numbers showing if these middleboxes are
-rare or not.
+So I opted for this TCP change, unless we are able to really
+drop TCP fast path ?!? (see commit
+31770e34e43d6c8dee129bfee77e56c34e61f0e5)
 
-But also, the main issue I see if we enable the checksum support by
-default is that we are no longer able to talk to servers not supporting
-it (<5.13), no?
+@Florian: WDYT?
+---
+ include/net/tcp.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-WDYT?
-
-Cheers,
-Matt
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index e668f1bf780d..17df9b047ee4 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -686,6 +686,10 @@ static inline u32 __tcp_set_rto(const struct tcp_sock *tp)
+ 
+ static inline void __tcp_fast_path_on(struct tcp_sock *tp, u32 snd_wnd)
+ {
++	/* mptcp hooks are only on the slow path */
++	if (sk_is_mptcp((struct sock *)tp))
++		return;
++
+ 	tp->pred_flags = htonl((tp->tcp_header_len << 26) |
+ 			       ntohl(TCP_FLAG_ACK) |
+ 			       snd_wnd);
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.3
+
