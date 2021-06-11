@@ -1,70 +1,57 @@
-Received: from m12-16.163.com (m12-16.163.com [220.181.12.16])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27AB6173
-	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 07:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=2lEftx1f6zZRnabHis
-	OW/+1xVPCYQBATtPKGQbN7Q4I=; b=MxCPygC9mIglCoRFtm9BTT2j1ctvTcytnk
-	mFFA9WaJ1cdI4I7EydRUZCjvk9370zHiryA0RRi6I5PoEKmh4vkjLrBouB44/pbk
-	tupr7Chtg3kTxq86s3sRfJJDRS1G1b/R8+0+8KS3f3Cq1PL/v8uOq0Eq58Sr8qPA
-	460F7GAZA=
-Received: from localhost.localdomain (unknown [110.80.1.45])
-	by smtp11 (Coremail) with SMTP id D8CowAD325gTEsNgpvWXAA--.80S6;
-	Fri, 11 Jun 2021 15:34:54 +0800 (CST)
-From: wujianguo106@163.com
-To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com
-Subject: [PATCH 4/4] mptcp: avoid processing packet if a subflow reset
-Date: Fri, 11 Jun 2021 15:34:42 +0800
-Message-Id: <1623396882-2748-5-git-send-email-wujianguo106@163.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1623396882-2748-1-git-send-email-wujianguo106@163.com>
-References: <1623396882-2748-1-git-send-email-wujianguo106@163.com>
-X-CM-TRANSID:D8CowAD325gTEsNgpvWXAA--.80S6
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZFyrKr1UKry3Xr4xCr1DAwb_yoWDGFb_Jw
-	n3t3y8Jr4SyayjkFW7GrW5AFZ5Z3yDGFWUGws2ga4UJw1UGa1vqrWDJF13Wr18C390ya45
-	u3ZIka45KFn5KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnzBTUUUUUU==
-X-Originating-IP: [110.80.1.45]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiJx+ukF5u+r4UeAAAse
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E96B2F80
+	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 13:07:45 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1lrgsv-0008Np-Gx; Fri, 11 Jun 2021 15:07:41 +0200
+Date: Fri, 11 Jun 2021 15:07:41 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Jianguo Wu <wujianguo106@163.com>, mptcp@lists.linux.dev,
+	"Westphal, Florian" <fwestpha@redhat.com>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: Re: [PATCH v2 1/4] mptcp: fix warning in __skb_flow_dissect() when
+ do syn cookie for subflow join
+Message-ID: <20210611130741.GS20020@breakpoint.cc>
+References: <ed5254b2-baa9-ea4c-df45-c61fa00622b9@163.com>
+ <15a6b1e5c726b57359d08318545b83311f6e5f3f.camel@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <15a6b1e5c726b57359d08318545b83311f6e5f3f.camel@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: Jianguo Wu <wujianguo@chinatelecom.cn>
+Paolo Abeni <pabeni@redhat.com> wrote:
+> On Thu, 2021-06-10 at 17:28 +0800, Jianguo Wu wrote:
+> > From: Jianguo Wu <wujianguo@chinatelecom.cn>
+> > 
+> > I got the following warning message while doing the test:
+> > 
+> The above codes uses spaces instead of tabs. More importantly you can
+> directly use inet6_ehashfn(), since such function is already visible.
+> 
+> I'm unsure if we could directly use inet_ehashfn() here: it will
+> require making such function visible, and could affect TCP performances
+> (in a very minor way) as the compiler may refuse to inline such
+> function once that is not 'static'
+> 
+> @Florian, @Mat, WDYT?!?
 
-If check_fully_established() causes a subflow reset, it should not
-continue to process the packet in tcp_data_queue().
+I think this is all massive over-engineering.
+Probably its enough to do
 
-setting:
-	TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
+  th->seq % ARRAY_SIZE(join_entries);
 
-so that the following check will drop the pkt in
-tcp_data_queue():
-  if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
-	__kfree_skb(skb);
-	return;
-  }
+... without any hashing.
 
-Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
-Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
----
- net/mptcp/options.c | 2 ++
- 1 file changed, 2 insertions(+)
+I'd suggest to go for
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1aec016..01a1bf6 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -926,6 +926,8 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 	return true;
- 
- reset:
-+	TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
-+
- 	mptcp_subflow_reset(ssk);
- 	return false;
- }
--- 
-1.8.3.1
+jhash_3words(th->seq, net_hash_mix(net), th->sport << 16| th->dport, &secret)
 
+and ignore network headers altogether.
