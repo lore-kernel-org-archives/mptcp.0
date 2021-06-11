@@ -1,71 +1,60 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE55173
-	for <mptcp@lists.linux.dev>; Thu, 10 Jun 2021 23:50:05 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id AF22E6136D;
-	Thu, 10 Jun 2021 23:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1623369004;
-	bh=M5Nz2vtUtdEGenomEodqoNwmIRw3fW7KINR3BmvekwE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=NbHoMpm2CKGbmS7XpAjIO34PhvCy8A8TL+jeHwJtfbcEqW5Wq23AfgV8vNiKW7CWd
-	 hBY6l++8MhGYeuTH8ezKbz3Tk2c3OMhZlrMRmz5+dWS+gnQmSK33hkwBdrEEXy3yUQ
-	 97v7aL3FVXN9ZxzuToKeblGPArjPMa5YPjjac1mP6Dkl1V975w+76v71FEejur9N/n
-	 Vm+529b89SHCuBoaYAEIaRBsI3lrTq4eupGXp/+229FWNH9eu0IEAMWYgCvEQYyQxg
-	 KlVmED11W3xkGgpzfKSUoDcKXLrrIxy1No/6pw2ukBcnYBKK+tW9U+RHO9tORZk0J8
-	 l+u5bWGtb0a8g==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id A1E8160A49;
-	Thu, 10 Jun 2021 23:50:04 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 879AF72
+	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 01:47:39 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.48:54018.2052127694
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.26?logid-20f3e438967a427c9d824f695afa29fd (unknown [172.18.0.48])
+	by chinatelecom.cn (HERMES) with SMTP id B53742800A7;
+	Fri, 11 Jun 2021 09:47:30 +0800 (CST)
+X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.48])
+	by app0024 with ESMTP id 20f3e438967a427c9d824f695afa29fd for geliangtang@gmail.com;
+	Fri Jun 11 09:47:31 2021
+X-Transaction-ID: 20f3e438967a427c9d824f695afa29fd
+X-filter-score:  filter<0>
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.48
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+Subject: Re: [PATCH] mptcp: use icsk_rto of first subflow as ADD_ADDR timeout
+ value
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com, matthieu.baerts@tessares.net,
+ geliangtang@gmail.com
+References: <1623219886-69610-1-git-send-email-liyonglong@chinatelecom.cn>
+ <d5e81793-bdda-9a32-7da3-1f79e8d923d0@linux.intel.com>
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+Message-ID: <68cf533c-7109-6377-7704-d858bfd317d1@chinatelecom.cn>
+Date: Fri, 11 Jun 2021 09:47:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/5] mptcp: More v5.13 fixes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162336900465.18265.8641665537042878923.git-patchwork-notify@kernel.org>
-Date: Thu, 10 Jun 2021 23:50:04 +0000
-References: <20210610225944.351224-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210610225944.351224-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+In-Reply-To: <d5e81793-bdda-9a32-7da3-1f79e8d923d0@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Hello:
 
-This series was applied to netdev/net.git (refs/heads/master):
 
-On Thu, 10 Jun 2021 15:59:39 -0700 you wrote:
-> Here's another batch of MPTCP fixes for v5.13.
+On 2021/6/11 6:11, Mat Martineau wrote:
+>>
 > 
-> Patch 1 cleans up memory accounting between the MPTCP-level socket and
-> the subflows to more reliably transfer forward allocated memory under
-> pressure.
+> There are a few issues with this part of the patch:
 > 
-> Patch 2 wakes up socket readers more reliably.
+> 1. Changes the meaning of the sysctl
+> 2. Not sure millisecond granularity is needed
+> 3. Like above, don't want to allow very short timeouts that could affect userspace path managers
 > 
-> [...]
+> Like I asked above, it would be helpful to understand the problem you're solving so we can discuss possible solutions. It's also very helpful information to explain the motivation in the commit message.
 
-Here is the summary with links:
-  - [net,1/5] mptcp: try harder to borrow memory from subflow under pressure
-    https://git.kernel.org/netdev/net/c/72f961320d5d
-  - [net,2/5] mptcp: wake-up readers only for in sequence data
-    https://git.kernel.org/netdev/net/c/99d1055ce246
-  - [net,3/5] mptcp: do not warn on bad input from the network
-    https://git.kernel.org/netdev/net/c/61e710227e97
-  - [net,4/5] selftests: mptcp: enable syncookie only in absence of reorders
-    https://git.kernel.org/netdev/net/c/2395da0e1793
-  - [net,5/5] mptcp: fix soft lookup in subflow_error_report()
-    https://git.kernel.org/netdev/net/c/499ada507336
+In my test if ADD_ADDR-echo process right after ADD_ADDR, ADD_ADDR event will be flush
+by ADD_ADDR-echo, so ADD_ADDR will process after add_timer timeout. And the timeout of
+add_timer too long to trigger before connection closed.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+The key point of this issue: timeout of add_timer is too long. As your advice we can only
+change to a shorter timeout.
