@@ -1,50 +1,47 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C691C72
-	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 14:45:31 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id ci15so4914399ejc.10
-        for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 07:45:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0308E72
+	for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 14:59:08 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id t3so37487302edc.7
+        for <mptcp@lists.linux.dev>; Fri, 11 Jun 2021 07:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=l7MORHksJQSUhf1VDh+ln5JDqM5fK5k8bJr7yCln2fQ=;
-        b=Wr41KuWE/7SkdnDpqFJzQqMh9RYQEGFMVd9AkMy1npL3vY0DwiQXj8rmTDSCLShy2d
-         LHG4qOgZgPSG1G6TiLo2TI58UrmZsku8mG38dHcm9Cuwi5YvSMFyWyr++BShEi1utdTh
-         +fD0nrASjuNiYqt0emJEf2b5JmVzMTfAMoIuVXOr0/MsvwZ8hAwAL70j8+WltlK6Pzpx
-         Hm7NRBseTMwBtxHdh45CgKQXgW+iFr4jr+E5qW1Kapkl1u0qKCCo0pYdmBoIHiPpltfw
-         7SObn9+egihex64MymoCVUKcRn3Va+1DmMxBVmx9ZUvNEWLAAq25om8UF+yqBeWlICi1
-         S09A==
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=cbAXel1e8NTdcOM+zOCrJ4S1l+0l6k6/P+T0IG29wBY=;
+        b=j6N2h2DpB7KZJjpM3Ea6izUhfNZARgKHVJpgYyoJi1VB8GvnsAUKdBuusP291xIyVy
+         bOZJDEhmS4hmX2s5KJcosQx0HNrAMRWR8dzkjgr6bCA5eSL1s5OqdW/z8LJmblr4LGU6
+         5rpBG9lIxPeBaXLnO+GEQl6SQVFA+rMUH367sSeWyCzi/gWfW4M3FLG3BKcF4z1d3uDM
+         u9qJGJxfSd6bjnsJJu8ZNwkABqpkSSRg2vatTUXcDPJnCjq2wOEDhcU05n+wryzWBbHB
+         RxlVclrmiZgizIjUAm3yHzie/jw0qQnyLo7+PP3VnH9RYa++CiZTy1MWiur8lLXnjJfK
+         HPaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l7MORHksJQSUhf1VDh+ln5JDqM5fK5k8bJr7yCln2fQ=;
-        b=RSuD/arBoM+Do9k3UA0PVl8jVkpKoflaKKRMPjI3Gw2AclDkntDYlM9BQD4KGTY02L
-         PelVqfaaoThiuk9LEpQoVljNaQhDBhucf+AstRG2hXiJMJU4kELQqlmQPxbjP53gqELu
-         OzPP+N99PSSIHU1VDko/hvtTftow49lN4jv9QavBC0J8C2xeUoC+QiC/9947aDXZ5AFs
-         jwgGm0vgfCdr6e6BUpacuDUJs5l6Q0XN/VEdffIawDMw6x8gvR1oCv2ODToG/TjNwwq3
-         Z+PEPGThYvacXUrmk8XGW1b6haFyA7Dk3mp9sT8H/LjCE4qo2ZWw3QAn8uckbRMFG4f5
-         9UMg==
-X-Gm-Message-State: AOAM532s8ydb2cOkY3racRDPb8nmYplIv1PzHUbjVSi3JAVJoHY0E6rr
-	HT07+ANdiyhJV/IR/fEXgdTKHa+0/a072jjppAI=
-X-Google-Smtp-Source: ABdhPJxSlURQxWDMYcX2NLdo/FMes9b4+Td47yxmHrqfm68ly4/lUKaQY8ptXP0bnGZOH3EcvX2CGw==
-X-Received: by 2002:a17:906:3a04:: with SMTP id z4mr3973034eje.221.1623422729962;
-        Fri, 11 Jun 2021 07:45:29 -0700 (PDT)
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=cbAXel1e8NTdcOM+zOCrJ4S1l+0l6k6/P+T0IG29wBY=;
+        b=R4BuRfM/WWdEnxKBo7AsRFBW3+llBrzLcDIroFu4qxycUwgwW6IJyTvcJ2i9CbIRHf
+         UZIt+QLJP3JiNekz7K713Yet9K7Gyh/5KkFnTLCOMAJYhIZmbzYAA6fh96gvcnEx3XFU
+         fdOmaUw4AGu6GI15rLrl3y1G/GdKg9gub3QpYVbwhBrBLRsZDVnl1OpPIXzT//GT32B/
+         jUVDo8f+qaEFHKZPaQCB0+ozp3y05vhHpazyb8RobPyUNwWwLLKqDAAqkF3VClMfQDwE
+         pplIVHIR9tsp3zoNgFKYnHMGMsrzHvcX6zM1f3NGqd6wf4oBKBPa2lXgEj1hxlceNzmJ
+         TLMg==
+X-Gm-Message-State: AOAM530JZAp5++Ogl7eq9k45E1VuJZZc2U4ozckqWICuYRiBzt0Hauh/
+	jyhm2mNS5nGuW98ASRxalZjU5r+0WIa3xT/bUtk=
+X-Google-Smtp-Source: ABdhPJyW0j/yG5GRfWV/6BIbOU+wZe+S2tFxmNd5aJkOqFYmM9VBEQZyBkpwLaGrcERlrYmLn3QVTQ==
+X-Received: by 2002:a50:fb8a:: with SMTP id e10mr4342791edq.330.1623423547363;
+        Fri, 11 Jun 2021 07:59:07 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:26d4:4bdb:59fd:ed42])
-        by smtp.gmail.com with ESMTPSA id i26sm2624355edq.54.2021.06.11.07.45.29
+        by smtp.gmail.com with ESMTPSA id q9sm2672684edw.51.2021.06.11.07.59.06
+        for <mptcp@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Jun 2021 07:45:29 -0700 (PDT)
-Subject: Re: [PATCH v2] selftests: mptcp: turn rp_filter off on each NIC
-To: Yonglong Li <liyonglong@chinatelecom.cn>, mptcp@lists.linux.dev
-Cc: pabeni@redhat.com, mathew.j.martineau@linux.intel.com,
- geliangtang@gmail.com
-References: <1623288316-2771-1-git-send-email-liyonglong@chinatelecom.cn>
+        Fri, 11 Jun 2021 07:59:07 -0700 (PDT)
+To: MPTCP Upstream <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <2e2c5451-db09-9b81-20a0-7b4817eb5d02@tessares.net>
-Date: Fri, 11 Jun 2021 16:45:28 +0200
+Subject: Checksum support: default behaviour
+Message-ID: <4582ad38-e8d5-e639-1ebe-688727329f51@tessares.net>
+Date: Fri, 11 Jun 2021 16:59:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
@@ -52,31 +49,30 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1623288316-2771-1-git-send-email-liyonglong@chinatelecom.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Yonglong, Mat,
+Hello,
 
-On 10/06/2021 03:25, Yonglong Li wrote:
-> To turn rp_filter off we should:
-> echo 0 > /proc/sys/net/ipv4/conf/default/rp_filter
->  and
-> echo 0 > /proc/sys/net/ipv4/conf/all/rp_filter
-> before NIC created.
-> 
-> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+With the current checksum support series from Geliang and Paolo
+available in our tree, the default behaviour is not to use this checksum
+feature.
 
-Thank you for the patch and the review!
+Should we eventually do the opposite and have it enabled by default?
 
-- 48aa051e5c6b: selftests: mptcp: turn rp_filter off on each NIC
-- Results: 4e92195bd477..ea78893dca6c
+I do understand this has a cost in terms of performances but this could
+help detecting nasty middleboxes, i.e. the ones that modify the TCP
+packets without modifying MPTCP options if needed.
 
-Builds and tests are now in progress:
+On the other hand, I don't have numbers showing if these middleboxes are
+rare or not.
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210611T144454
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210611T144454
+But also, the main issue I see if we enable the checksum support by
+default is that we are no longer able to talk to servers not supporting
+it (<5.13), no?
+
+WDYT?
 
 Cheers,
 Matt
