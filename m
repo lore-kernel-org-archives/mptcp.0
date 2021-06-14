@@ -1,56 +1,57 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526F572
-	for <mptcp@lists.linux.dev>; Mon, 14 Jun 2021 08:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19E82FB8
+	for <mptcp@lists.linux.dev>; Mon, 14 Jun 2021 10:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1623659448;
+	s=mimecast20190719; t=1623667175;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=B2RNBjV2KxXT643lBCs2dY1vfHquQ0H7EXwdQYcfnco=;
-	b=ZmLXstA7W4I9xRcH7wFbCzQfeZyX9VZ1pc+tZNSbrx8nMchQMqc3QvPlj869Ve6VECV1TW
-	92kNauzIrLbuHPhbfhYMXllyT4zkxUUAaHqFsQUOnrFPi9QcdnJ3N2/nNdmU6mT36arUXT
-	Z8WXu+gmeASCeTnkvAzXPaDBOYZN57I=
+	bh=vkHxYEIkg7Og+gUMxSohhO0XY1IfsFH7N+LC9E1gFcg=;
+	b=A/lwaPyxtwp1ZnIyNJGaxUV8ia8M3pge0ZDTIuuiL8HZayP4zlJAV9gppY0Na3qAs5A15h
+	icOfD9dmf4B5+E0lA6qRc5XwO0ihbkEFDpm8IznFVD4aoszCYgpLI0x41Z/0ieDg/H59az
+	ZobZmNlFM0XCFrQxV7iEIFXSCmN1TL4=
 Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
  [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-524-O_O5dd91MRyHES939bublA-1; Mon, 14 Jun 2021 04:30:44 -0400
-X-MC-Unique: O_O5dd91MRyHES939bublA-1
-Received: by mail-wr1-f69.google.com with SMTP id e9-20020a5d6d090000b0290119e91be97dso6742539wrq.1
-        for <mptcp@lists.linux.dev>; Mon, 14 Jun 2021 01:30:44 -0700 (PDT)
+ us-mta-394-v95smuj1NBaC7X63Q17b0Q-1; Mon, 14 Jun 2021 06:39:34 -0400
+X-MC-Unique: v95smuj1NBaC7X63Q17b0Q-1
+Received: by mail-wr1-f69.google.com with SMTP id n4-20020a5d42040000b0290119fef97609so6840227wrq.18
+        for <mptcp@lists.linux.dev>; Mon, 14 Jun 2021 03:39:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=B2RNBjV2KxXT643lBCs2dY1vfHquQ0H7EXwdQYcfnco=;
-        b=RnwCfdREPpUE4PzKkhqlj336W1p/FggSByQunWD9OXf7IKXJNSUTP2F1nOjRTkSdRs
-         UQueeg9JWJWVAguDcy1JkbAtCgGsAMQqrjR9rYapOs2IT5bU9Xz4seFIu0Yg6CDmUG8o
-         RNwbj5A1cLEtiTazGEL2ULCtV/EGOixYE+kw+eCueC07FQDBAGvTk3dEB58U3QA1wKS+
-         utFw2ym6ukM+BtyO1OkM6r6L2TTeDQ4etRyIpMsLsLprPoOTTwfcLiGlhbK/1MZPssgO
-         qHA/RUoQXIUQhCrjhpTqkRWtiOw2Ba6trutPgXyAqk2zcdLnC2N89ki9qmQBRz6OCGC0
-         N3iQ==
-X-Gm-Message-State: AOAM532rSUed9qIBMvH2I6GljZ2vH4OEXx+6Tz7rUh6P97Xk5esZ/bsg
-	WDXJPCywx+iEveaOGS42JvqlXoc0HYOkTpqUyV9eBCOvdSeGfzQbd21t0JN5VQu+OPhGQSRtuIy
-	XkCiC7dlr79qkXrk=
-X-Received: by 2002:a1c:4606:: with SMTP id t6mr14949121wma.122.1623659443503;
-        Mon, 14 Jun 2021 01:30:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwxv63h6j0JNdpSf7WJpYWsiKuRXNyshBIlhMsaNM9z4vEFeaM9rwLPiaMbXdj1yxm90UttmA==
-X-Received: by 2002:a1c:4606:: with SMTP id t6mr14949106wma.122.1623659443291;
-        Mon, 14 Jun 2021 01:30:43 -0700 (PDT)
+        bh=vkHxYEIkg7Og+gUMxSohhO0XY1IfsFH7N+LC9E1gFcg=;
+        b=I1u2PgYKOEdh2JJXND20N1W6pAFH5OC66jehw8q8I4+OzB8k+xz+L8IBBmtbIWNwG2
+         e33paNGjmjAMQlsHBoXj1DhJ3u/v5dYkqu06GU6aeLlxy98jQQP28jNHiOjjjnZSSKwh
+         nOzvsKShfFChiYRZB1pMXTW7n562ZJlQMdJwcZszyVBIh8AVLfoZ2YjmN9X3fWCmhEn9
+         X9S/KbBuQQ7Aw+u1uSXm9SfOVq3jLVCwsufky9ORxAjN/CLOrIALFyrSROpzkqPrTw9U
+         s8SzGkP5wKNSx2JieoiLG8IzpMWEi4G1lgI6CX/oUP4TKl9njeTwAKUXDP+2DMNozxY1
+         9K9g==
+X-Gm-Message-State: AOAM5332mmXSP+4Y6xFQtcpGXpNrwNzo+i43meHHZH0AowwRFOWxyCWM
+	qLD0hVN2NQfeHC0NdqOLhDpJTWaH99v3RoyqLlKcYaUkT5eems7dJtn8d5HD/jB+ldPdgVF72An
+	/vOZxx+zTb3q+6p4=
+X-Received: by 2002:a05:600c:441a:: with SMTP id u26mr15835431wmn.166.1623667173288;
+        Mon, 14 Jun 2021 03:39:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy8qU1UnfSjk8uKMOBtEdWrGVbmWl4Q3h139XZxHGiLb/VUsTe50bd9i6FFUCkt8e247UQG+g==
+X-Received: by 2002:a05:600c:441a:: with SMTP id u26mr15835417wmn.166.1623667173047;
+        Mon, 14 Jun 2021 03:39:33 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-109-224.dyn.eolo.it. [146.241.109.224])
-        by smtp.gmail.com with ESMTPSA id u16sm16442980wru.56.2021.06.14.01.30.42
+        by smtp.gmail.com with ESMTPSA id b8sm20290154wmd.35.2021.06.14.03.39.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jun 2021 01:30:43 -0700 (PDT)
-Message-ID: <8cceb711ad974911da62d62a354e6569b573e0b2.camel@redhat.com>
-Subject: Re: MPTCP checksum interop
+        Mon, 14 Jun 2021 03:39:32 -0700 (PDT)
+Message-ID: <eb41332a032c3c8191ce6b0d0ce2d2aa93ad5081.camel@redhat.com>
+Subject: Re: Checksum support: default behaviour
 From: Paolo Abeni <pabeni@redhat.com>
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
-	 <matthieu.baerts@tessares.net>, Geliang Tang <geliangtang@gmail.com>
-Cc: mptcp@lists.linux.dev
-Date: Mon, 14 Jun 2021 10:30:42 +0200
-In-Reply-To: <aedffae2-61ad-eb44-c083-e674f736fd96@linux.intel.com>
-References: <aedffae2-61ad-eb44-c083-e674f736fd96@linux.intel.com>
+	 <matthieu.baerts@tessares.net>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Date: Mon, 14 Jun 2021 12:39:31 +0200
+In-Reply-To: <c8d3563b-4495-b151-645f-305e4192c2c@linux.intel.com>
+References: <4582ad38-e8d5-e639-1ebe-688727329f51@tessares.net>
+	 <c8d3563b-4495-b151-645f-305e4192c2c@linux.intel.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -64,30 +65,43 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hello
+On Fri, 2021-06-11 at 21:05 -0700, Mat Martineau wrote:
+> On Fri, 11 Jun 2021, Matthieu Baerts wrote:
+> 
+> > Hello,
+> > 
+> > With the current checksum support series from Geliang and Paolo
+> > available in our tree, the default behaviour is not to use this checksum
+> > feature.
+> > 
+> > Should we eventually do the opposite and have it enabled by default?
+> > 
+> > I do understand this has a cost in terms of performances but this could
+> > help detecting nasty middleboxes, i.e. the ones that modify the TCP
+> > packets without modifying MPTCP options if needed.
+> > 
+> > On the other hand, I don't have numbers showing if these middleboxes are
+> > rare or not.
+> > 
+> > But also, the main issue I see if we enable the checksum support by
+> > default is that we are no longer able to talk to servers not supporting
+> > it (<5.13), no?
+> > 
+> > WDYT?
+> > 
+> 
+> I lean toward leaving checksums off by default, based on what I've heard 
+> from community members. It sounds like large deployments haven't seen 
+> checksums catch many problems? Some actual data about the frequency of 
+> checksum failures would really help.
 
-On Fri, 2021-06-11 at 20:57 -0700, Mat Martineau wrote:
-> I did some tests with connections with checksums enabled, between the 
-> export branch and the multipath-tcp.org mptcp_trunk branch (v1 mode).
++1 on keeping csum disabled by default until we have at least one of
+- performance data (delta)
+- impact proof (csum corruption in the wild)
+  (side note: even with no middle boxes at all, no app-layer mangling,
+we can have bad MPTCP csum with correct TCP csum, e.g. due to BER plus
+bad luck causing a stream corruption not catched by TCP csum but
+catched by the MPTCP csum).
 
-Thank you for checking!
-
-> When the multipath-tcp.org kernel was listening, the connection would 
-> always fall back to TCP when the first data was sent by the upstream 
-> kernel. The multipath-tcp.org kernel was the first to fall back and stop 
-> sending MPTCP headers.
-
-This sounds like a csum error detected ??! What does wireshark say
-about the MPTCP csum value?
-
-> When the upstream kernel was listening, the multipath-tcp.org kernel would 
-> send corrupt TCP options with the first data packet (the first time a DSS 
-> option was sent). The upstream kernel would then send TCP RST.
-
-How does TCP option look like? Could you please share a short pcap
-snippet?
-
-Thanks!
-
-Paolo
+/P
 
