@@ -1,17 +1,17 @@
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090622FB2
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 09:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B0A6D0E
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 09:46:14 +0000 (UTC)
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7FF6B1A049D;
-	Tue, 15 Jun 2021 11:36:32 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6B9F01A29D4;
+	Tue, 15 Jun 2021 11:36:35 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 37EBC1A0466;
-	Tue, 15 Jun 2021 11:36:26 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 299DB1A16D4;
+	Tue, 15 Jun 2021 11:36:29 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-	by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AC0D040338;
-	Tue, 15 Jun 2021 17:36:17 +0800 (+08)
+	by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 865B240327;
+	Tue, 15 Jun 2021 17:36:21 +0800 (+08)
 From: Yangbo Lu <yangbo.lu@nxp.com>
 To: netdev@vger.kernel.org
 Cc: Yangbo Lu <yangbo.lu@nxp.com>,
@@ -29,124 +29,318 @@ Cc: Yangbo Lu <yangbo.lu@nxp.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Rui Sousa <rui.sousa@nxp.com>,
 	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: [net-next, v3, 00/10] ptp: support virtual clocks and timestamping
-Date: Tue, 15 Jun 2021 17:45:07 +0800
-Message-Id: <20210615094517.48752-1-yangbo.lu@nxp.com>
+Subject: [net-next, v3, 02/10] ptp: support ptp physical/virtual clocks conversion
+Date: Tue, 15 Jun 2021 17:45:09 +0800
+Message-Id: <20210615094517.48752-3-yangbo.lu@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210615094517.48752-1-yangbo.lu@nxp.com>
+References: <20210615094517.48752-1-yangbo.lu@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Current PTP driver exposes one PTP device to user which binds network
-interface/interfaces to provide timestamping. Actually we have a way
-utilizing timecounter/cyclecounter to virtualize any number of PTP
-clocks based on a same free running physical clock for using.
-The purpose of having multiple PTP virtual clocks is for user space
-to directly/easily use them for multiple domains synchronization.
+Support ptp physical/virtual clocks conversion via sysfs.
+There will be a new attribute n_vclocks under ptp physical
+clock sysfs.
 
-user
-space:     ^                                  ^
-           | SO_TIMESTAMPING new flag:        | Packets with
-           | SOF_TIMESTAMPING_BIND_PHC        | TX/RX HW timestamps
-           v                                  v
-         +--------------------------------------------+
-sock:    |     sock (new member sk_bind_phc)          |
-         +--------------------------------------------+
-           ^                                  ^
-           | ethtool_op_get_phc_vclocks       | Convert HW timestamps
-           |                                  | to sk_bind_phc
-           v                                  v
-         +--------------+--------------+--------------+
-vclock:  | ptp1         | ptp2         | ptpN         |
-         +--------------+--------------+--------------+
-pclock:  |             ptp0 free running              |
-         +--------------------------------------------+
+- In default, the value is 0 meaning only ptp physical clock
+  is in use.
+- Setting the value can create corresponding number of ptp
+  virtual clocks to use. But current physical clock is guaranteed
+  to stay free running.
+- Setting the value back to 0 can delete virtual clocks and back
+  use physical clock again.
 
-The block diagram may explain how it works. Besides the PTP virtual
-clocks, the packet HW timestamp converting to the bound PHC is also
-done in sock driver. For user space, PTP virtual clocks can be
-created via sysfs, and extended SO_TIMESTAMPING API (new flag
-SOF_TIMESTAMPING_BIND_PHC) can be used to bind one PTP virtual clock
-for timestamping.
-
-The test tool timestamping.c (together with linuxptp phc_ctl tool) can
-be used to verify:
-
-  # echo 4 > /sys/class/ptp/ptp0/n_vclocks
-  [  129.399472] ptp ptp0: new virtual clock ptp2
-  [  129.404234] ptp ptp0: new virtual clock ptp3
-  [  129.409532] ptp ptp0: new virtual clock ptp4
-  [  129.413942] ptp ptp0: new virtual clock ptp5
-  [  129.418257] ptp ptp0: guarantee physical clock free running
-  #
-  # phc_ctl /dev/ptp2 set 10000
-  # phc_ctl /dev/ptp3 set 20000
-  #
-  # timestamping eno0 2 SOF_TIMESTAMPING_TX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
-  # timestamping eno0 2 SOF_TIMESTAMPING_RX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
-  # timestamping eno0 3 SOF_TIMESTAMPING_TX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
-  # timestamping eno0 3 SOF_TIMESTAMPING_RX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
-
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+---
 Changes for v2:
+	- Split from v1 patch #2.
 	- Converted to num_vclocks for creating virtual clocks.
 	- Guranteed physical clock free running when using virtual
 	  clocks.
 	- Fixed build warning.
 	- Updated copyright.
 Changes for v3:
-	- Supported PTP virtual clock in default in PTP driver.
 	- Protected concurrency of ptp->num_vclocks accessing.
-	- Supported PHC vclocks query via ethtool.
-	- Extended SO_TIMESTAMPING API for PHC binding.
-	- Converted HW timestamps to PHC bound, instead of previous
-	  binding domain value to PHC idea.
-	- Other minor fixes.
+---
+ Documentation/ABI/testing/sysfs-ptp | 13 +++++
+ drivers/ptp/ptp_clock.c             | 22 +++++++
+ drivers/ptp/ptp_private.h           | 15 +++++
+ drivers/ptp/ptp_sysfs.c             | 89 +++++++++++++++++++++++++++++
+ include/uapi/linux/ptp_clock.h      |  5 ++
+ 5 files changed, 144 insertions(+)
 
-Yangbo Lu (10):
-  ptp: add ptp virtual clock driver framework
-  ptp: support ptp physical/virtual clocks conversion
-  ptp: track available ptp vclocks information
-  ptp: add kernel API ptp_get_vclocks_index()
-  ethtool: add a new command for getting PHC virtual clocks
-  ptp: add kernel API ptp_convert_timestamp()
-  net: sock: extend SO_TIMESTAMPING for PHC binding
-  net: socket: support hardware timestamp conversion to PHC bound
-  selftests/net: timestamping: support binding PHC
-  MAINTAINERS: add entry for PTP virtual clock driver
-
- Documentation/ABI/testing/sysfs-ptp        |  13 ++
- MAINTAINERS                                |   7 +
- drivers/ptp/Makefile                       |   2 +-
- drivers/ptp/ptp_clock.c                    |  27 ++-
- drivers/ptp/ptp_private.h                  |  34 ++++
- drivers/ptp/ptp_sysfs.c                    |  95 +++++++++
- drivers/ptp/ptp_vclock.c                   | 212 +++++++++++++++++++++
- include/linux/ethtool.h                    |   2 +
- include/linux/ptp_clock_kernel.h           |  29 ++-
- include/net/sock.h                         |   8 +-
- include/uapi/linux/ethtool.h               |  14 ++
- include/uapi/linux/ethtool_netlink.h       |  15 ++
- include/uapi/linux/net_tstamp.h            |  17 +-
- include/uapi/linux/ptp_clock.h             |   5 +
- net/core/sock.c                            |  65 ++++++-
- net/ethtool/Makefile                       |   2 +-
- net/ethtool/common.c                       |  24 +++
- net/ethtool/common.h                       |   2 +
- net/ethtool/ioctl.c                        |  27 +++
- net/ethtool/netlink.c                      |  10 +
- net/ethtool/netlink.h                      |   2 +
- net/ethtool/phc_vclocks.c                  |  86 +++++++++
- net/mptcp/sockopt.c                        |  10 +-
- net/socket.c                               |  19 +-
- tools/testing/selftests/net/timestamping.c |  62 ++++--
- 25 files changed, 750 insertions(+), 39 deletions(-)
- create mode 100644 drivers/ptp/ptp_vclock.c
- create mode 100644 net/ethtool/phc_vclocks.c
-
-
-base-commit: 89212e160b81e778f829b89743570665810e3b13
+diff --git a/Documentation/ABI/testing/sysfs-ptp b/Documentation/ABI/testing/sysfs-ptp
+index 2363ad810ddb..2ef11b775f47 100644
+--- a/Documentation/ABI/testing/sysfs-ptp
++++ b/Documentation/ABI/testing/sysfs-ptp
+@@ -61,6 +61,19 @@ Description:
+ 		This file contains the number of programmable pins
+ 		offered by the PTP hardware clock.
+ 
++What:		/sys/class/ptp/ptpN/n_vclocks
++Date:		May 2021
++Contact:	Yangbo Lu <yangbo.lu@nxp.com>
++Description:
++		This file contains the ptp virtual clocks number in use,
++		based on current ptp physical clock. In default, the
++		value is 0 meaning only ptp physical clock is in use.
++		Setting the value can create corresponding number of ptp
++		virtual clocks to use. But current ptp physical clock is
++		guaranteed to stay free running. Setting the value back
++		to 0 can delete ptp virtual clocks and back use ptp
++		physical clock again.
++
+ What:		/sys/class/ptp/ptpN/pins
+ Date:		March 2014
+ Contact:	Richard Cochran <richardcochran@gmail.com>
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index a780435331c8..78414b3e16dd 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -76,6 +76,11 @@ static int ptp_clock_settime(struct posix_clock *pc, const struct timespec64 *tp
+ {
+ 	struct ptp_clock *ptp = container_of(pc, struct ptp_clock, clock);
+ 
++	if (ptp_guaranteed_pclock(ptp)) {
++		pr_err("ptp: virtual clock in use, guarantee physical clock free running\n");
++		return -EBUSY;
++	}
++
+ 	return  ptp->info->settime64(ptp->info, tp);
+ }
+ 
+@@ -97,6 +102,11 @@ static int ptp_clock_adjtime(struct posix_clock *pc, struct __kernel_timex *tx)
+ 	struct ptp_clock_info *ops;
+ 	int err = -EOPNOTSUPP;
+ 
++	if (ptp_guaranteed_pclock(ptp)) {
++		pr_err("ptp: virtual clock in use, guarantee physical clock free running\n");
++		return -EBUSY;
++	}
++
+ 	ops = ptp->info;
+ 
+ 	if (tx->modes & ADJ_SETOFFSET) {
+@@ -161,6 +171,7 @@ static void ptp_clock_release(struct device *dev)
+ 	ptp_cleanup_pin_groups(ptp);
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
++	mutex_destroy(&ptp->n_vclocks_mux);
+ 	ida_simple_remove(&ptp_clocks_map, ptp->index);
+ 	kfree(ptp);
+ }
+@@ -208,6 +219,7 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ 	spin_lock_init(&ptp->tsevq.lock);
+ 	mutex_init(&ptp->tsevq_mux);
+ 	mutex_init(&ptp->pincfg_mux);
++	mutex_init(&ptp->n_vclocks_mux);
+ 	init_waitqueue_head(&ptp->tsev_wq);
+ 
+ 	if (ptp->info->do_aux_work) {
+@@ -220,6 +232,10 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ 		}
+ 	}
+ 
++	/* PTP virtual clock is being registered under physical clock */
++	if (parent->class && strcmp(parent->class->name, "ptp") == 0)
++		ptp->vclock_flag = true;
++
+ 	err = ptp_populate_pin_groups(ptp);
+ 	if (err)
+ 		goto no_pin_groups;
+@@ -269,6 +285,7 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ kworker_err:
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
++	mutex_destroy(&ptp->n_vclocks_mux);
+ 	ida_simple_remove(&ptp_clocks_map, index);
+ no_slot:
+ 	kfree(ptp);
+@@ -279,6 +296,11 @@ EXPORT_SYMBOL(ptp_clock_register);
+ 
+ int ptp_clock_unregister(struct ptp_clock *ptp)
+ {
++	if (ptp_guaranteed_pclock(ptp)) {
++		pr_err("ptp: virtual clock in use, guarantee physical clock free running\n");
++		return -EBUSY;
++	}
++
+ 	ptp->defunct = 1;
+ 	wake_up_interruptible(&ptp->tsev_wq);
+ 
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index 3f388d63904c..6949afc9d733 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -46,6 +46,9 @@ struct ptp_clock {
+ 	const struct attribute_group *pin_attr_groups[2];
+ 	struct kthread_worker *kworker;
+ 	struct kthread_delayed_work aux_work;
++	u8 n_vclocks;
++	struct mutex n_vclocks_mux; /* protect concurrent n_vclocks access */
++	bool vclock_flag;
+ };
+ 
+ #define info_to_vclock(d) container_of((d), struct ptp_vclock, info)
+@@ -75,6 +78,18 @@ static inline int queue_cnt(struct timestamp_event_queue *q)
+ 	return cnt < 0 ? PTP_MAX_TIMESTAMPS + cnt : cnt;
+ }
+ 
++/*
++ * Guarantee physical clock to stay free running, if ptp virtual clocks
++ * on it are in use.
++ */
++static inline bool ptp_guaranteed_pclock(struct ptp_clock *ptp)
++{
++	if (!ptp->vclock_flag && ptp->n_vclocks)
++		return true;
++
++	return false;
++}
++
+ /*
+  * see ptp_chardev.c
+  */
+diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
+index be076a91e20e..600edd7a90af 100644
+--- a/drivers/ptp/ptp_sysfs.c
++++ b/drivers/ptp/ptp_sysfs.c
+@@ -3,6 +3,7 @@
+  * PTP 1588 clock support - sysfs interface.
+  *
+  * Copyright (C) 2010 OMICRON electronics GmbH
++ * Copyright 2021 NXP
+  */
+ #include <linux/capability.h>
+ #include <linux/slab.h>
+@@ -148,6 +149,90 @@ static ssize_t pps_enable_store(struct device *dev,
+ }
+ static DEVICE_ATTR(pps_enable, 0220, NULL, pps_enable_store);
+ 
++static int unregister_vclock(struct device *dev, void *data)
++{
++	struct ptp_clock *ptp = dev_get_drvdata(dev);
++	struct ptp_clock_info *info = ptp->info;
++	struct ptp_vclock *vclock;
++	u8 *num = data;
++
++	vclock = info_to_vclock(info);
++	dev_info(dev->parent, "delete virtual clock ptp%d\n",
++		 vclock->clock->index);
++
++	ptp_vclock_unregister(vclock);
++	(*num)--;
++
++	/* For break. Not error. */
++	if (*num == 0)
++		return -EINVAL;
++
++	return 0;
++}
++
++static ssize_t n_vclocks_show(struct device *dev,
++			      struct device_attribute *attr, char *page)
++{
++	struct ptp_clock *ptp = dev_get_drvdata(dev);
++
++	return snprintf(page, PAGE_SIZE-1, "%d\n", ptp->n_vclocks);
++}
++
++static ssize_t n_vclocks_store(struct device *dev,
++			       struct device_attribute *attr,
++			       const char *buf, size_t count)
++{
++	struct ptp_clock *ptp = dev_get_drvdata(dev);
++	struct ptp_vclock *vclock;
++	int err = -EINVAL;
++	u8 num, i;
++
++	if (kstrtou8(buf, 0, &num))
++		goto out;
++
++	if (num > PTP_MAX_VCLOCKS) {
++		dev_err(dev, "max value is %d\n", PTP_MAX_VCLOCKS);
++		goto out;
++	}
++
++	if (mutex_lock_interruptible(&ptp->n_vclocks_mux))
++		return -ERESTARTSYS;
++
++	/* Need to create more vclocks */
++	if (num > ptp->n_vclocks) {
++		for (i = 0; i < num - ptp->n_vclocks; i++) {
++			vclock = ptp_vclock_register(ptp);
++			if (!vclock) {
++				mutex_unlock(&ptp->n_vclocks_mux);
++				goto out;
++			}
++
++			dev_info(dev, "new virtual clock ptp%d\n",
++				 vclock->clock->index);
++		}
++	}
++
++	/* Need to delete vclocks */
++	if (num < ptp->n_vclocks) {
++		i = ptp->n_vclocks - num;
++		device_for_each_child_reverse(dev, &i,
++					      unregister_vclock);
++	}
++
++	if (num == 0)
++		dev_info(dev, "only physical clock in use now\n");
++	else
++		dev_info(dev, "guarantee physical clock free running\n");
++
++	ptp->n_vclocks = num;
++	mutex_unlock(&ptp->n_vclocks_mux);
++
++	return count;
++out:
++	return err;
++}
++static DEVICE_ATTR_RW(n_vclocks);
++
+ static struct attribute *ptp_attrs[] = {
+ 	&dev_attr_clock_name.attr,
+ 
+@@ -162,6 +247,7 @@ static struct attribute *ptp_attrs[] = {
+ 	&dev_attr_fifo.attr,
+ 	&dev_attr_period.attr,
+ 	&dev_attr_pps_enable.attr,
++	&dev_attr_n_vclocks.attr,
+ 	NULL
+ };
+ 
+@@ -183,6 +269,9 @@ static umode_t ptp_is_attribute_visible(struct kobject *kobj,
+ 	} else if (attr == &dev_attr_pps_enable.attr) {
+ 		if (!info->pps)
+ 			mode = 0;
++	} else if (attr == &dev_attr_n_vclocks.attr) {
++		if (ptp->vclock_flag)
++			mode = 0;
+ 	}
+ 
+ 	return mode;
+diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+index 1d108d597f66..4b933dc1b81b 100644
+--- a/include/uapi/linux/ptp_clock.h
++++ b/include/uapi/linux/ptp_clock.h
+@@ -69,6 +69,11 @@
+  */
+ #define PTP_PEROUT_V1_VALID_FLAGS	(0)
+ 
++/*
++ * Max number of PTP virtual clocks per PTP physical clock
++ */
++#define PTP_MAX_VCLOCKS			20
++
+ /*
+  * struct ptp_clock_time - represents a time value
+  *
 -- 
 2.25.1
 
