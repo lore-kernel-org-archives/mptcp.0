@@ -1,99 +1,150 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8CE173
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 19:34:27 +0000 (UTC)
-IronPort-SDR: t09zWRHll0dtEbI/eMQfylMCurvb0gVaDmIlQ2NqlHJYhiQtlrAmhULk/x+I2noTYp+ZNQXCAP
- TY75GM5W/Kxw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="186432810"
-X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="186432810"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 12:34:26 -0700
-IronPort-SDR: dMO5oj56v2gcSMRrfdzPFDWRXV3nifrNkrwsA0iQP5CfW+Rrtbi6ghiFb0gqls2fvgkL9Ljsop
- wTHvkEJG210A==
-X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="487882986"
-Received: from reschenk-mobl1.amr.corp.intel.com ([10.255.230.223])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 12:34:26 -0700
-Date: Tue, 15 Jun 2021 12:34:25 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: fix bad handling od 32 bit ack
- wrap-around.
-In-Reply-To: <de101616524d72d1bd83addd6a717c73edd68703.camel@redhat.com>
-Message-ID: <7f1db2dd-6c91-8813-b5ba-1fce6d60eeb8@linux.intel.com>
-References: <356dce030d0adf2bf6b45888876e2c3f9f553a3a.1623691387.git.pabeni@redhat.com>  <1dbd7296-c31f-dce9-69fc-595df927a456@linux.intel.com> <de101616524d72d1bd83addd6a717c73edd68703.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E97C173
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 19:49:13 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7999061246;
+	Tue, 15 Jun 2021 19:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1623786553;
+	bh=YMYLrhelDjWIC3iMmIrOYrADkVc/iGd03Vt4y+Brc/0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cVAxYiyxUAMbkOY0+zVqijztU/W+glxr+VP3y+/O35yFqvjr2QL2dR1dTRufkTxtm
+	 lpLYoYHacQU7eW4JQK9Vrokd8WMqOOwkSlAKUbKY10W0KqLipdx9LoGmn0dT3B+nKJ
+	 6KRao4iW25FX1PCg3tm1G9jQHJg4NEfiUh9ljpcHA/Zue+LhB6gT++qEW3ihvhWE52
+	 Q4w+ZxcXHSK1iKlL02KrKVomHP82VHv2MvDHblidgr0vFa/M5TzSsDzLIdo53i8dLm
+	 UBPDMxlGYDYAzRLxn5N7cC2+oWcbWhUZiwuHCEf8X7AAwTNE8qHGetvuOATxLBEUC7
+	 RdkcCbrrYkSoA==
+Date: Tue, 15 Jun 2021 12:49:11 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev, Richard Cochran
+ <richardcochran@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mat
+ Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
+ <matthieu.baerts@tessares.net>, Shuah Khan <shuah@kernel.org>, Michal
+ Kubecek <mkubecek@suse.cz>, Florian Fainelli <f.fainelli@gmail.com>, Andrew
+ Lunn <andrew@lunn.ch>, Rui Sousa <rui.sousa@nxp.com>, Sebastien Laveze
+ <sebastien.laveze@nxp.com>
+Subject: Re: [net-next, v3, 05/10] ethtool: add a new command for getting
+ PHC virtual clocks
+Message-ID: <20210615124911.15e64ce9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20210615094517.48752-6-yangbo.lu@nxp.com>
+References: <20210615094517.48752-1-yangbo.lu@nxp.com>
+	<20210615094517.48752-6-yangbo.lu@nxp.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 15 Jun 2021, Paolo Abeni wrote:
+On Tue, 15 Jun 2021 17:45:12 +0800 Yangbo Lu wrote:
+> Add an interface for getting PHC (PTP Hardware Clock)
+> virtual clocks, which are based on PHC physical clock
+> providing hardware timestamp to network packets.
+> 
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 
-> On Mon, 2021-06-14 at 18:27 -0700, Mat Martineau wrote:
->> On Mon, 14 Jun 2021, Paolo Abeni wrote:
->>
->>> When receiving 32 bits DSS ack from the peer, the MPTCP need
->>> to expand them to 64 bits value. The current code is buggy
->>> WRT detectiong 32 bits ack wrap-around: usaging the 'before()'
+> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> index cfef6b08169a..0fb04f945767 100644
+> --- a/include/uapi/linux/ethtool.h
+> +++ b/include/uapi/linux/ethtool.h
+> @@ -17,6 +17,7 @@
+>  #include <linux/const.h>
+>  #include <linux/types.h>
+>  #include <linux/if_ether.h>
+> +#include <linux/ptp_clock.h>
+>  
+>  #ifndef __KERNEL__
+>  #include <limits.h> /* for INT_MAX */
+> @@ -1341,6 +1342,18 @@ struct ethtool_ts_info {
+>  	__u32	rx_reserved[3];
+>  };
+>  
+> +/**
+> + * struct ethtool_phc_vclocks - holds a device's PTP virtual clocks
+> + * @cmd: command number = %ETHTOOL_GET_PHC_VCLOCKS
+> + * @num: number of PTP vclocks
+> + * @index: all index values of PTP vclocks
+> + */
+> +struct ethtool_phc_vclocks {
+> +	__u32	cmd;
+> +	__u8	num;
+> +	__s32	index[PTP_MAX_VCLOCKS];
+> +};
+> +
+>  /*
+>   * %ETHTOOL_SFEATURES changes features present in features[].valid to the
+>   * values of corresponding bits in features[].requested. Bits in .requested
+> @@ -1552,6 +1565,7 @@ enum ethtool_fec_config_bits {
+>  #define ETHTOOL_PHY_STUNABLE	0x0000004f /* Set PHY tunable configuration */
+>  #define ETHTOOL_GFECPARAM	0x00000050 /* Get FEC settings */
+>  #define ETHTOOL_SFECPARAM	0x00000051 /* Set FEC settings */
+> +#define ETHTOOL_GET_PHC_VCLOCKS	0x00000052 /* Get PHC virtual clocks info */
 
-A couple of typo fixes: detecting, using...
+We don't add new IOCTL commands, only netlink API is going to be
+extended. Please remove the IOCTL interface & uAPI.
 
->>> helper is just meaningless: when the wrap-around happes the
+>  /* compatibility with older code */
+>  #define SPARC_ETH_GSET		ETHTOOL_GSET
 
-...happens. And "of" in the subject line.
+> +/* PHC VCLOCKS */
+> +
+> +enum {
+> +	ETHTOOL_A_PHC_VCLOCKS_UNSPEC,
+> +	ETHTOOL_A_PHC_VCLOCKS_HEADER,			/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_PHC_VCLOCKS_NUM,			/* u8 */
 
->>> current 32 bit ack value is lower than the previous one, need
->>> plain direct comparison.
->>>
->>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/204
->>> Fixes: cc9d25669866 ("mptcp: update per unacked sequence on pkt reception")
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>> net/mptcp/options.c | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>> index a05270996613..7db1e219f24f 100644
->>> --- a/net/mptcp/options.c
->>> +++ b/net/mptcp/options.c
->>> @@ -952,7 +952,7 @@ static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
->>> 	old_ack32 = (u32)old_ack;
->>> 	cur_ack32 = (u32)cur_ack;
->>> 	cur_ack = (old_ack & GENMASK_ULL(63, 32)) + cur_ack32;
->>> -	if (unlikely(before(cur_ack32, old_ack32)))
->>> +	if (unlikely(cur_ack32 < old_ack32))
->>> 		return cur_ack + (1LL << 32);
->>> 	return cur_ack;
->>> }
->>
->> I think you're right, but I haven't had a chance to test myself (since
->> this is tagged as closing #204 it sounds like your tests are good!).
->>
->> While it's a good thing that mptcp_trunk helped us find this problem,
->> maybe this also shows that mptcp_trunk should be more aggressive about
->> switching to 64-bit ACKs? Or is this less about speed and only a
->> wraparound bug?
->
-> Without this patch single subflows transfer from net-next to mptcp.org
-> stalls after a few GB - after the wrap-around. That happens because
-> net-next misinterpret the ack for the wrapped seq as a very old one.
-> This patch fixes the issue in my test.
->
-> Not sure if the above answer your question.
+u32, no need to limit yourself, the netlink attribute is rounded up to
+4B anyway.
 
-That is helpful, thanks.
+> +	ETHTOOL_A_PHC_VCLOCKS_INDEX,			/* s32 */
 
-Like we discussed on IRC, the new comparison could result in an old (but 
-recent) ACK getting wrongly interpreted as a "future" 64-bit ACK, but one 
-that is unlikely to be in the correct window - so it gets ignored. Would 
-be good to have a comment explaining this.
+This is an array, AFAICT, not a single s32.
 
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_PHC_VCLOCKS_CNT,
+> +	ETHTOOL_A_PHC_VCLOCKS_MAX = (__ETHTOOL_A_PHC_VCLOCKS_CNT - 1)
+> +};
+> +
+>  /* CABLE TEST */
+>  
+>  enum {
 
---
-Mat Martineau
-Intel
+> +static int phc_vclocks_fill_reply(struct sk_buff *skb,
+> +				  const struct ethnl_req_info *req_base,
+> +				  const struct ethnl_reply_data *reply_base)
+> +{
+> +	const struct phc_vclocks_reply_data *data =
+> +		PHC_VCLOCKS_REPDATA(reply_base);
+> +	const struct ethtool_phc_vclocks *phc_vclocks = &data->phc_vclocks;
+> +
+> +	if (phc_vclocks->num <= 0)
+> +		return 0;
+> +
+> +	if (nla_put_u32(skb, ETHTOOL_A_PHC_VCLOCKS_NUM, phc_vclocks->num) ||
+> +	    nla_put(skb, ETHTOOL_A_PHC_VCLOCKS_INDEX,
+> +		    sizeof(phc_vclocks->index), phc_vclocks->index))
+
+Looks like you'll report the whole array, why not just num?
+
+> +		return -EMSGSIZE;
+> +
+> +	return 0;
+> +}
+> +
+> +const struct ethnl_request_ops ethnl_phc_vclocks_request_ops = {
+> +	.request_cmd		= ETHTOOL_MSG_PHC_VCLOCKS_GET,
+> +	.reply_cmd		= ETHTOOL_MSG_PHC_VCLOCKS_GET_REPLY,
+> +	.hdr_attr		= ETHTOOL_A_PHC_VCLOCKS_HEADER,
+> +	.req_info_size		= sizeof(struct phc_vclocks_req_info),
+> +	.reply_data_size	= sizeof(struct phc_vclocks_reply_data),
+> +
+> +	.prepare_data		= phc_vclocks_prepare_data,
+> +	.reply_size		= phc_vclocks_reply_size,
+> +	.fill_reply		= phc_vclocks_fill_reply,
+> +};
+
