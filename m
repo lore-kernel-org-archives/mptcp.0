@@ -1,101 +1,86 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FE72FB8
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 23:24:51 +0000 (UTC)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 6EEEA21A67;
+	Tue, 15 Jun 2021 23:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1623799484; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HjOO2Dmo42mlJGOoHwQtbKYRUCAg4xIkjWwEosdAdu0=;
+	b=RLBDSVlfP1f0KZ/YzyIL42L4a77lKFcdQEFvG6BYlPDUey7LQgOj92IK0aiUxi8KMCE1lo
+	aj/ux2Aa4sBCNSa2mhGwciOVG5vu8Jqyx+oAT+2yoJiqFUiwXxK25/625KVtJ1i1MABjVZ
+	nFnk6Z2UaY2f/DwLrIMoxyw+DvTJ5Rc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1623799484;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HjOO2Dmo42mlJGOoHwQtbKYRUCAg4xIkjWwEosdAdu0=;
+	b=iFN/JuUES9mxE9eip7VFAzmnkN2rqZRAdCpAIwlpYD/lFmlic2qPjlWfQhF+L81n1Xauyo
+	sZGmXvxvmiOXOFDQ==
+Received: from lion.mk-sys.cz (unknown [10.100.200.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200B52FB8
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 22:45:21 +0000 (UTC)
-IronPort-SDR: U0jlCCbtsrxmAopyzAaewS/TKX0bpu4R+sytQn2YUMzEKpJXzqDdkV+nTbRaAGnmOv/ywN7dk5
- FOekf76/7oHQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="185772502"
-X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="185772502"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 15:45:20 -0700
-IronPort-SDR: fuZM5wJY6MfrZhUKzDQeNs61Q4nIpoYzyOsE2qm1whGhpVnkUjuEYJYn2ScT5C5yjRTw70MldU
- Zcnlc02ZkWQA==
-X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="404365189"
-Received: from reschenk-mobl1.amr.corp.intel.com ([10.255.230.223])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 15:45:20 -0700
-Date: Tue, 15 Jun 2021 15:45:19 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev, Florian Westphal <fw@strlen.de>
-Subject: Re: [RFC PATCH] tcp: consistently disable header prediction for
- mptcp
-In-Reply-To: <982d258452274d2b165b07883307c01a44dbf7f7.1623434219.git.pabeni@redhat.com>
-Message-ID: <39c13ca2-40db-5be2-732-f460d621943@linux.intel.com>
-References: <982d258452274d2b165b07883307c01a44dbf7f7.1623434219.git.pabeni@redhat.com>
+	by relay2.suse.de (Postfix) with ESMTPS id 1C375A3B8A;
+	Tue, 15 Jun 2021 23:24:44 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+	id DBA15607D8; Wed, 16 Jun 2021 01:24:43 +0200 (CEST)
+Date: Wed, 16 Jun 2021 01:24:43 +0200
+From: Michal Kubecek <mkubecek@suse.cz>
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
+	Richard Cochran <richardcochran@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>, Rui Sousa <rui.sousa@nxp.com>,
+	Sebastien Laveze <sebastien.laveze@nxp.com>
+Subject: Re: [net-next, v3, 05/10] ethtool: add a new command for getting PHC
+ virtual clocks
+Message-ID: <20210615232443.itunrkhaiy7h5gty@lion.mk-sys.cz>
+References: <20210615094517.48752-1-yangbo.lu@nxp.com>
+ <20210615094517.48752-6-yangbo.lu@nxp.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210615094517.48752-6-yangbo.lu@nxp.com>
 
-On Fri, 11 Jun 2021, Paolo Abeni wrote:
-
-> The MPTCP receive path is hooked only into the TCP slow-path.
-> The DSS presence allows plain MPTCP traffic to hit that
-> consistently.
->
-> Since commit e1ff9e82e2ea ("net: mptcp: improve fallback to TCP"),
-> when and MPTCP socket falls back to TCP, we can the receive
-> fast path, and delay or stop triggering the event notification.
->
-> Address the issue explicitly disabling the header prediction
-> for MPTCP sockets.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/200
-> Fixes: e1ff9e82e2ea ("net: mptcp: improve fallback to TCP")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+On Tue, Jun 15, 2021 at 05:45:12PM +0800, Yangbo Lu wrote:
+> Add an interface for getting PHC (PTP Hardware Clock)
+> virtual clocks, which are based on PHC physical clock
+> providing hardware timestamp to network packets.
+> 
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 > ---
-> I could not find a reliable way to disable header prediction
-> touching the MPTCP code only: the TCP stack can flip header
-> prediction on in a bunch of points and I could not find existing
-> MPTCP hooks after such check to revert the change.
->
-> So I opted for this TCP change, unless we are able to really
-> drop TCP fast path ?!? (see commit
-> 31770e34e43d6c8dee129bfee77e56c34e61f0e5)
->
-> @Florian: WDYT?
-
-I'm also interested in Florian's thoughts.
-
-We need to fix MPTCP fallback whether regular TCP fast path is still 
-present or not, so I'm in favor of this patch. Looking at Florian's 
-comments on those previous patches (31770e34e43 and the patch it reverts), 
-I wonder if anything in the last four years has changed tcp_ack() calls 
-enough to affect performance.
-
-
-Mat
-
+> Changes for v3:
+> 	- Added this patch.
 > ---
-> include/net/tcp.h | 4 ++++
-> 1 file changed, 4 insertions(+)
->
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index e668f1bf780d..17df9b047ee4 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -686,6 +686,10 @@ static inline u32 __tcp_set_rto(const struct tcp_sock *tp)
->
-> static inline void __tcp_fast_path_on(struct tcp_sock *tp, u32 snd_wnd)
-> {
-> +	/* mptcp hooks are only on the slow path */
-> +	if (sk_is_mptcp((struct sock *)tp))
-> +		return;
-> +
-> 	tp->pred_flags = htonl((tp->tcp_header_len << 26) |
-> 			       ntohl(TCP_FLAG_ACK) |
-> 			       snd_wnd);
-> -- 
-> 2.26.3
->
->
->
+>  include/linux/ethtool.h              |  2 +
+>  include/uapi/linux/ethtool.h         | 14 +++++
+>  include/uapi/linux/ethtool_netlink.h | 15 +++++
+>  net/ethtool/Makefile                 |  2 +-
+>  net/ethtool/common.c                 | 23 ++++++++
+>  net/ethtool/common.h                 |  2 +
+>  net/ethtool/ioctl.c                  | 27 +++++++++
+>  net/ethtool/netlink.c                | 10 ++++
+>  net/ethtool/netlink.h                |  2 +
+>  net/ethtool/phc_vclocks.c            | 86 ++++++++++++++++++++++++++++
+>  10 files changed, 182 insertions(+), 1 deletion(-)
+>  create mode 100644 net/ethtool/phc_vclocks.c
 
---
-Mat Martineau
-Intel
+When updating the ethtool netlink API, please update also its
+documentation in Documentation/networking/ethtool-netlink.rst
+
+Michal
