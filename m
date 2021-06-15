@@ -1,86 +1,101 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FE72FB8
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 23:24:51 +0000 (UTC)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 6EEEA21A67;
-	Tue, 15 Jun 2021 23:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1623799484; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HjOO2Dmo42mlJGOoHwQtbKYRUCAg4xIkjWwEosdAdu0=;
-	b=RLBDSVlfP1f0KZ/YzyIL42L4a77lKFcdQEFvG6BYlPDUey7LQgOj92IK0aiUxi8KMCE1lo
-	aj/ux2Aa4sBCNSa2mhGwciOVG5vu8Jqyx+oAT+2yoJiqFUiwXxK25/625KVtJ1i1MABjVZ
-	nFnk6Z2UaY2f/DwLrIMoxyw+DvTJ5Rc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1623799484;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HjOO2Dmo42mlJGOoHwQtbKYRUCAg4xIkjWwEosdAdu0=;
-	b=iFN/JuUES9mxE9eip7VFAzmnkN2rqZRAdCpAIwlpYD/lFmlic2qPjlWfQhF+L81n1Xauyo
-	sZGmXvxvmiOXOFDQ==
-Received: from lion.mk-sys.cz (unknown [10.100.200.14])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 1C375A3B8A;
-	Tue, 15 Jun 2021 23:24:44 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-	id DBA15607D8; Wed, 16 Jun 2021 01:24:43 +0200 (CEST)
-Date: Wed, 16 Jun 2021 01:24:43 +0200
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Yangbo Lu <yangbo.lu@nxp.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
-	Richard Cochran <richardcochran@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Shuah Khan <shuah@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>, Rui Sousa <rui.sousa@nxp.com>,
-	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: Re: [net-next, v3, 05/10] ethtool: add a new command for getting PHC
- virtual clocks
-Message-ID: <20210615232443.itunrkhaiy7h5gty@lion.mk-sys.cz>
-References: <20210615094517.48752-1-yangbo.lu@nxp.com>
- <20210615094517.48752-6-yangbo.lu@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9436D2FB8
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 23:52:27 +0000 (UTC)
+IronPort-SDR: C/u7HwfNcuXCYzGq1Ll8qiQ1L13NsZ/g9KKqULYzfhBSw424nOljI4ZwsBBOAIRbuCtQI2qS3b
+ jYKx29AzbvrQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="185780108"
+X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
+   d="scan'208";a="185780108"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:52:26 -0700
+IronPort-SDR: mmLZYrPa22/oF5BpWdy14ofruaz+xU4EYx9JBuiMJRQQW43bLfOuEGITJsDDJBGNO9pNRpvzFs
+ uHBIYlqvRXfw==
+X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
+   d="scan'208";a="478881678"
+Received: from reschenk-mobl1.amr.corp.intel.com ([10.255.230.223])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:52:25 -0700
+Date: Tue, 15 Jun 2021 16:52:25 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+cc: matthieu.baerts@tessares.net, davem@davemloft.net, kuba@kernel.org, 
+    netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mptcp: Remove redundant assignment to remaining
+In-Reply-To: <1623754538-85616-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+Message-ID: <66162447-1f70-a6b9-f18a-179a54f8e97@linux.intel.com>
+References: <1623754538-85616-1-git-send-email-jiapeng.chong@linux.alibaba.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210615094517.48752-6-yangbo.lu@nxp.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, Jun 15, 2021 at 05:45:12PM +0800, Yangbo Lu wrote:
-> Add an interface for getting PHC (PTP Hardware Clock)
-> virtual clocks, which are based on PHC physical clock
-> providing hardware timestamp to network packets.
-> 
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+
+On Tue, 15 Jun 2021, Jiapeng Chong wrote:
+
+> Variable remaining is assigned, but this value is never read as it is
+> not used later on, hence it is a redundant assignment and can be
+> removed.
+>
+> Clean up the following clang-analyzer warning:
+>
+> net/mptcp/options.c:779:3: warning: Value stored to 'remaining' is never
+> read [clang-analyzer-deadcode.DeadStores].
+>
+> net/mptcp/options.c:547:3: warning: Value stored to 'remaining' is never
+> read [clang-analyzer-deadcode.DeadStores].
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 > ---
-> Changes for v3:
-> 	- Added this patch.
-> ---
->  include/linux/ethtool.h              |  2 +
->  include/uapi/linux/ethtool.h         | 14 +++++
->  include/uapi/linux/ethtool_netlink.h | 15 +++++
->  net/ethtool/Makefile                 |  2 +-
->  net/ethtool/common.c                 | 23 ++++++++
->  net/ethtool/common.h                 |  2 +
->  net/ethtool/ioctl.c                  | 27 +++++++++
->  net/ethtool/netlink.c                | 10 ++++
->  net/ethtool/netlink.h                |  2 +
->  net/ethtool/phc_vclocks.c            | 86 ++++++++++++++++++++++++++++
->  10 files changed, 182 insertions(+), 1 deletion(-)
->  create mode 100644 net/ethtool/phc_vclocks.c
+> net/mptcp/options.c | 2 --
+> 1 file changed, 2 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 9b263f2..f99272f 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -544,7 +544,6 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>
+> 		map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+>
+> -		remaining -= map_size;
 
-When updating the ethtool netlink API, please update also its
-documentation in Documentation/networking/ethtool-netlink.rst
+Hi Jiapeng, thank you for your MPTCP patch!
 
-Michal
+This change in mptcp_established_options_dss() removes the only reference 
+to 'remaining' in that function, so the variable should also be removed 
+from the function parameters. It also appears to be unused in 
+mptcp_established_options_mp().
+
+I'd like to handle this patch through the MPTCP tree so we can manage 
+conflicts with other in-progress patches. This patch does apply to 
+net-next cleanly but not our subsystem branch. You can find our git repo 
+at https://github.com/multipath-tcp/mptcp_net-next, and develop patches 
+using the 'export' branch. If you email a v2 patch to 
+mptcp@lists.linux.dev (no need to cc other lists), Matthieu and I can make 
+sure it is integrated in the MPTCP repository and handle sending it to 
+netdev along with other patches from the MPTCP community.
+
+> 		dss_size = map_size;
+> 		if (mpext)
+> 			opts->ext_copy = *mpext;
+> @@ -776,7 +775,6 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>
+> 	if (mptcp_established_options_mp_prio(sk, &opt_size, remaining, opts)) {
+> 		*size += opt_size;
+> -		remaining -= opt_size;
+> 		ret = true;
+> 	}
+>
+> -- 
+> 1.8.3.1
+
+Best regards,
+
+--
+Mat Martineau
+Intel
