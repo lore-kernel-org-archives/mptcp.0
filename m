@@ -1,17 +1,17 @@
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8226D00
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 09:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF666D00
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 09:46:14 +0000 (UTC)
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 305C41A0466;
-	Tue, 15 Jun 2021 11:36:51 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4A6781A29E3;
+	Tue, 15 Jun 2021 11:36:37 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 15BA81A29CD;
-	Tue, 15 Jun 2021 11:36:45 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B6BA1A29D6;
+	Tue, 15 Jun 2021 11:36:31 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-	by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5660440310;
-	Tue, 15 Jun 2021 17:36:37 +0800 (+08)
+	by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 30CB340310;
+	Tue, 15 Jun 2021 17:36:23 +0800 (+08)
 From: Yangbo Lu <yangbo.lu@nxp.com>
 To: netdev@vger.kernel.org
 Cc: Yangbo Lu <yangbo.lu@nxp.com>,
@@ -29,9 +29,9 @@ Cc: Yangbo Lu <yangbo.lu@nxp.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Rui Sousa <rui.sousa@nxp.com>,
 	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: [net-next, v3, 10/10] MAINTAINERS: add entry for PTP virtual clock driver
-Date: Tue, 15 Jun 2021 17:45:17 +0800
-Message-Id: <20210615094517.48752-11-yangbo.lu@nxp.com>
+Subject: [net-next, v3, 03/10] ptp: track available ptp vclocks information
+Date: Tue, 15 Jun 2021 17:45:10 +0800
+Message-Id: <20210615094517.48752-4-yangbo.lu@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210615094517.48752-1-yangbo.lu@nxp.com>
 References: <20210615094517.48752-1-yangbo.lu@nxp.com>
@@ -41,34 +41,71 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Add entry for PTP virtual clock driver.
+Track available ptp vclocks information. Record index values
+of available ptp vclocks during registering and unregistering.
+
+This is preparation for supporting ptp vclocks info query
+through ethtool.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
-Changes for v3:
+Change for v3:
 	- Added this patch.
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/ptp/ptp_clock.c   | 2 ++
+ drivers/ptp/ptp_private.h | 1 +
+ drivers/ptp/ptp_sysfs.c   | 6 ++++++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 183cc61e2dc0..537f9f19dfa8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14841,6 +14841,13 @@ F:	drivers/net/phy/dp83640*
- F:	drivers/ptp/*
- F:	include/linux/ptp_cl*
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index 78414b3e16dd..38842a76acf8 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -236,6 +236,8 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ 	if (parent->class && strcmp(parent->class->name, "ptp") == 0)
+ 		ptp->vclock_flag = true;
  
-+PTP VIRTUAL CLOCK SUPPORT
-+M:	Yangbo Lu <yangbo.lu@nxp.com>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	drivers/ptp/ptp_vclock.c
-+F:	net/ethtool/phc_vclocks.c
++	memset(ptp->vclock_index, -1, sizeof(ptp->vclock_index));
 +
- PTRACE SUPPORT
- M:	Oleg Nesterov <oleg@redhat.com>
- S:	Maintained
+ 	err = ptp_populate_pin_groups(ptp);
+ 	if (err)
+ 		goto no_pin_groups;
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index 6949afc9d733..5671710ca0fa 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -47,6 +47,7 @@ struct ptp_clock {
+ 	struct kthread_worker *kworker;
+ 	struct kthread_delayed_work aux_work;
+ 	u8 n_vclocks;
++	int vclock_index[PTP_MAX_VCLOCKS];
+ 	struct mutex n_vclocks_mux; /* protect concurrent n_vclocks access */
+ 	bool vclock_flag;
+ };
+diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
+index 600edd7a90af..d9534935c1e6 100644
+--- a/drivers/ptp/ptp_sysfs.c
++++ b/drivers/ptp/ptp_sysfs.c
+@@ -207,6 +207,9 @@ static ssize_t n_vclocks_store(struct device *dev,
+ 				goto out;
+ 			}
+ 
++			ptp->vclock_index[ptp->n_vclocks + i] =
++				vclock->clock->index;
++
+ 			dev_info(dev, "new virtual clock ptp%d\n",
+ 				 vclock->clock->index);
+ 		}
+@@ -217,6 +220,9 @@ static ssize_t n_vclocks_store(struct device *dev,
+ 		i = ptp->n_vclocks - num;
+ 		device_for_each_child_reverse(dev, &i,
+ 					      unregister_vclock);
++
++		for (i = 1; i <= ptp->n_vclocks - num; i++)
++			ptp->vclock_index[ptp->n_vclocks - i] = -1;
+ 	}
+ 
+ 	if (num == 0)
 -- 
 2.25.1
 
