@@ -1,68 +1,38 @@
-Received: from out4436.biz.mail.alibaba.com (out4436.biz.mail.alibaba.com [47.88.44.36])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E9F72
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 10:56:10 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0UcW4eD-_1623754544;
-Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0UcW4eD-_1623754544)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 15 Jun 2021 18:55:52 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: mathew.j.martineau@linux.intel.com
-Cc: matthieu.baerts@tessares.net,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Subject: [PATCH] mptcp: Remove redundant assignment to remaining
-Date: Tue, 15 Jun 2021 18:55:38 +0800
-Message-Id: <1623754538-85616-1-git-send-email-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7065B70
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 15:19:33 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1ltAqa-0000wc-3t; Tue, 15 Jun 2021 17:19:24 +0200
+Date: Tue, 15 Jun 2021 17:19:24 +0200
+From: Florian Westphal <fw@strlen.de>
+To: wujianguo106@163.com
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
+Subject: Re: [PATCH v4 4/4] mptcp: avoid processing packet if a subflow reset
+Message-ID: <20210615151924.GD1425@breakpoint.cc>
+References: <1623726146-5911-1-git-send-email-wujianguo106@163.com>
+ <1623726146-5911-5-git-send-email-wujianguo106@163.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1623726146-5911-5-git-send-email-wujianguo106@163.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Variable remaining is assigned, but this value is never read as it is
-not used later on, hence it is a redundant assignment and can be
-removed.
+wujianguo106@163.com <wujianguo106@163.com> wrote:
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 1aec01686c1a..01a1bf60b187 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -926,6 +926,8 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+>  	return true;
+>  
+>  reset:
+> +	TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
 
-Clean up the following clang-analyzer warning:
-
-net/mptcp/options.c:779:3: warning: Value stored to 'remaining' is never
-read [clang-analyzer-deadcode.DeadStores].
-
-net/mptcp/options.c:547:3: warning: Value stored to 'remaining' is never
-read [clang-analyzer-deadcode.DeadStores].
-
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- net/mptcp/options.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 9b263f2..f99272f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -544,7 +544,6 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 
- 		map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
- 
--		remaining -= map_size;
- 		dss_size = map_size;
- 		if (mpext)
- 			opts->ext_copy = *mpext;
-@@ -776,7 +775,6 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 
- 	if (mptcp_established_options_mp_prio(sk, &opt_size, remaining, opts)) {
- 		*size += opt_size;
--		remaining -= opt_size;
- 		ret = true;
- 	}
- 
--- 
-1.8.3.1
-
+Magic.  Please at least add a comment here.
