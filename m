@@ -1,150 +1,195 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E97C173
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 19:49:13 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7999061246;
-	Tue, 15 Jun 2021 19:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1623786553;
-	bh=YMYLrhelDjWIC3iMmIrOYrADkVc/iGd03Vt4y+Brc/0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cVAxYiyxUAMbkOY0+zVqijztU/W+glxr+VP3y+/O35yFqvjr2QL2dR1dTRufkTxtm
-	 lpLYoYHacQU7eW4JQK9Vrokd8WMqOOwkSlAKUbKY10W0KqLipdx9LoGmn0dT3B+nKJ
-	 6KRao4iW25FX1PCg3tm1G9jQHJg4NEfiUh9ljpcHA/Zue+LhB6gT++qEW3ihvhWE52
-	 Q4w+ZxcXHSK1iKlL02KrKVomHP82VHv2MvDHblidgr0vFa/M5TzSsDzLIdo53i8dLm
-	 UBPDMxlGYDYAzRLxn5N7cC2+oWcbWhUZiwuHCEf8X7AAwTNE8qHGetvuOATxLBEUC7
-	 RdkcCbrrYkSoA==
-Date: Tue, 15 Jun 2021 12:49:11 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Yangbo Lu <yangbo.lu@nxp.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev, Richard Cochran
- <richardcochran@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mat
- Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
- <matthieu.baerts@tessares.net>, Shuah Khan <shuah@kernel.org>, Michal
- Kubecek <mkubecek@suse.cz>, Florian Fainelli <f.fainelli@gmail.com>, Andrew
- Lunn <andrew@lunn.ch>, Rui Sousa <rui.sousa@nxp.com>, Sebastien Laveze
- <sebastien.laveze@nxp.com>
-Subject: Re: [net-next, v3, 05/10] ethtool: add a new command for getting
- PHC virtual clocks
-Message-ID: <20210615124911.15e64ce9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210615094517.48752-6-yangbo.lu@nxp.com>
-References: <20210615094517.48752-1-yangbo.lu@nxp.com>
-	<20210615094517.48752-6-yangbo.lu@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C132D72
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 21:26:42 +0000 (UTC)
+IronPort-SDR: mFdesDdUm4U6EMkDEcMoZdv+hTbtCEpj+2eDLb3JbicicEkseH0zOgHQy2ks1qV+kVR2JxBowC
+ +q/TxNVNNn6w==
+X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="269921020"
+X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
+   d="scan'208";a="269921020"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 14:26:41 -0700
+IronPort-SDR: 7mfCoQuXUaXd73Q3IfrHbIvbkX4WHyUf3/NjynzxcNGeG2eBeXjFbYJon7K3ffRqb0zzulsyJj
+ Yg4kp6HfXMyA==
+X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
+   d="scan'208";a="442673642"
+Received: from reschenk-mobl1.amr.corp.intel.com ([10.255.230.223])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 14:26:41 -0700
+Date: Tue, 15 Jun 2021 14:26:41 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-next] mptcp: refine mptcp_cleanup_rbuf
+In-Reply-To: <10bbc75802301770d24a9d74b7800f491e7b67f9.1623420606.git.pabeni@redhat.com>
+Message-ID: <e9bfd7b4-4a9-5a6-1f7b-e25db9d19a@linux.intel.com>
+References: <10bbc75802301770d24a9d74b7800f491e7b67f9.1623420606.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 15 Jun 2021 17:45:12 +0800 Yangbo Lu wrote:
-> Add an interface for getting PHC (PTP Hardware Clock)
-> virtual clocks, which are based on PHC physical clock
-> providing hardware timestamp to network packets.
-> 
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+On Fri, 11 Jun 2021, Paolo Abeni wrote:
 
-> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> index cfef6b08169a..0fb04f945767 100644
-> --- a/include/uapi/linux/ethtool.h
-> +++ b/include/uapi/linux/ethtool.h
-> @@ -17,6 +17,7 @@
->  #include <linux/const.h>
->  #include <linux/types.h>
->  #include <linux/if_ether.h>
-> +#include <linux/ptp_clock.h>
->  
->  #ifndef __KERNEL__
->  #include <limits.h> /* for INT_MAX */
-> @@ -1341,6 +1342,18 @@ struct ethtool_ts_info {
->  	__u32	rx_reserved[3];
->  };
->  
-> +/**
-> + * struct ethtool_phc_vclocks - holds a device's PTP virtual clocks
-> + * @cmd: command number = %ETHTOOL_GET_PHC_VCLOCKS
-> + * @num: number of PTP vclocks
-> + * @index: all index values of PTP vclocks
-> + */
-> +struct ethtool_phc_vclocks {
-> +	__u32	cmd;
-> +	__u8	num;
-> +	__s32	index[PTP_MAX_VCLOCKS];
-> +};
-> +
->  /*
->   * %ETHTOOL_SFEATURES changes features present in features[].valid to the
->   * values of corresponding bits in features[].requested. Bits in .requested
-> @@ -1552,6 +1565,7 @@ enum ethtool_fec_config_bits {
->  #define ETHTOOL_PHY_STUNABLE	0x0000004f /* Set PHY tunable configuration */
->  #define ETHTOOL_GFECPARAM	0x00000050 /* Get FEC settings */
->  #define ETHTOOL_SFECPARAM	0x00000051 /* Set FEC settings */
-> +#define ETHTOOL_GET_PHC_VCLOCKS	0x00000052 /* Get PHC virtual clocks info */
-
-We don't add new IOCTL commands, only netlink API is going to be
-extended. Please remove the IOCTL interface & uAPI.
-
->  /* compatibility with older code */
->  #define SPARC_ETH_GSET		ETHTOOL_GSET
-
-> +/* PHC VCLOCKS */
-> +
-> +enum {
-> +	ETHTOOL_A_PHC_VCLOCKS_UNSPEC,
-> +	ETHTOOL_A_PHC_VCLOCKS_HEADER,			/* nest - _A_HEADER_* */
-> +	ETHTOOL_A_PHC_VCLOCKS_NUM,			/* u8 */
-
-u32, no need to limit yourself, the netlink attribute is rounded up to
-4B anyway.
-
-> +	ETHTOOL_A_PHC_VCLOCKS_INDEX,			/* s32 */
-
-This is an array, AFAICT, not a single s32.
-
-> +
-> +	/* add new constants above here */
-> +	__ETHTOOL_A_PHC_VCLOCKS_CNT,
-> +	ETHTOOL_A_PHC_VCLOCKS_MAX = (__ETHTOOL_A_PHC_VCLOCKS_CNT - 1)
-> +};
-> +
->  /* CABLE TEST */
->  
->  enum {
-
-> +static int phc_vclocks_fill_reply(struct sk_buff *skb,
-> +				  const struct ethnl_req_info *req_base,
-> +				  const struct ethnl_reply_data *reply_base)
+> The current cleanup rbuf tries a bit too hard to avoid acquiring
+> the subflow socket lock. We may end-up delaying the needed ack,
+> or skip acking a blocked subflow.
+>
+> Address the above extending the conditions used to trigger the cleanup
+> to reflect more closely what TCP does and invoking tcp_cleanup_rbuf()
+> on all the active subflows.
+>
+> Note that we can't replicate the exact tests implemented in
+> tcp_cleanup_rbuf(), as MPTCP lacks some of the required info - e.g.
+> ping-pong mode.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+> - access ssk icsk/tp state instead of msk (Mat)
+> ---
+> net/mptcp/protocol.c | 49 +++++++++++++++++++-------------------------
+> net/mptcp/protocol.h |  1 -
+> 2 files changed, 21 insertions(+), 29 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 0a220862f62d..1dc3a0cb653d 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -455,36 +455,36 @@ static bool mptcp_subflow_cleanup_rbuf(struct sock *ssk)
+> 	return ret;
+> }
+>
+> +static bool mptcp_subflow_could_cleanup(const struct sock *ssk, bool rx_empty)
 > +{
-> +	const struct phc_vclocks_reply_data *data =
-> +		PHC_VCLOCKS_REPDATA(reply_base);
-> +	const struct ethtool_phc_vclocks *phc_vclocks = &data->phc_vclocks;
+> +	const struct inet_connection_sock *icsk = inet_csk(ssk);
+> +	bool ack_pending = READ_ONCE(icsk->icsk_ack.pending);
+> +	const struct tcp_sock *tp = tcp_sk(ssk);
 > +
-> +	if (phc_vclocks->num <= 0)
-> +		return 0;
-> +
-> +	if (nla_put_u32(skb, ETHTOOL_A_PHC_VCLOCKS_NUM, phc_vclocks->num) ||
-> +	    nla_put(skb, ETHTOOL_A_PHC_VCLOCKS_INDEX,
-> +		    sizeof(phc_vclocks->index), phc_vclocks->index))
-
-Looks like you'll report the whole array, why not just num?
-
-> +		return -EMSGSIZE;
-> +
-> +	return 0;
+> +	return (ack_pending & ICSK_ACK_SCHED) &&
+> +		((READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->rcv_wup) >
+> +		  READ_ONCE(icsk->icsk_ack.rcv_mss)) ||
+> +		 (rx_empty && ack_pending &
+> +			      (ICSK_ACK_PUSHED2 | ICSK_ACK_PUSHED)));
 > +}
 > +
-> +const struct ethnl_request_ops ethnl_phc_vclocks_request_ops = {
-> +	.request_cmd		= ETHTOOL_MSG_PHC_VCLOCKS_GET,
-> +	.reply_cmd		= ETHTOOL_MSG_PHC_VCLOCKS_GET_REPLY,
-> +	.hdr_attr		= ETHTOOL_A_PHC_VCLOCKS_HEADER,
-> +	.req_info_size		= sizeof(struct phc_vclocks_req_info),
-> +	.reply_data_size	= sizeof(struct phc_vclocks_reply_data),
-> +
-> +	.prepare_data		= phc_vclocks_prepare_data,
-> +	.reply_size		= phc_vclocks_reply_size,
-> +	.fill_reply		= phc_vclocks_fill_reply,
-> +};
+> static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
+> {
+> -	struct sock *ack_hint = READ_ONCE(msk->ack_hint);
+> 	int old_space = READ_ONCE(msk->old_wspace);
+> 	struct mptcp_subflow_context *subflow;
+> 	struct sock *sk = (struct sock *)msk;
+> -	bool cleanup;
+> +	int space =  __mptcp_space(sk);
+> +	bool cleanup, rx_empty;
+>
+> -	/* this is a simple superset of what tcp_cleanup_rbuf() implements
+> -	 * so that we don't have to acquire the ssk socket lock most of the time
+> -	 * to do actually nothing
+> -	 */
+> -	cleanup = __mptcp_space(sk) - old_space >= max(0, old_space);
+> -	if (!cleanup)
+> -		return;
+> +	cleanup = (space > 0) && (space >= (old_space << 1));
+> +	rx_empty = !atomic_read(&sk->sk_rmem_alloc);
+>
+> -	/* if the hinted ssk is still active, try to use it */
+> -	if (likely(ack_hint)) {
+> -		mptcp_for_each_subflow(msk, subflow) {
+> -			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>
+> -			if (ack_hint == ssk && mptcp_subflow_cleanup_rbuf(ssk))
+> -				return;
+> -		}
+> +		if (cleanup || mptcp_subflow_could_cleanup(ssk, rx_empty))
+> +			mptcp_subflow_cleanup_rbuf(ssk);
 
+The return value of mptcp_subflow_cleanup_rbuf() is ignored now, so that 
+function can be changed to remove the 'ret' variable and return void.
+
+> 	}
+> -
+> -	/* otherwise pick the first active subflow */
+> -	mptcp_for_each_subflow(msk, subflow)
+> -		if (mptcp_subflow_cleanup_rbuf(mptcp_subflow_tcp_sock(subflow)))
+> -			return;
+> }
+>
+> static bool mptcp_check_data_fin(struct sock *sk)
+> @@ -629,7 +629,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+> 			break;
+> 		}
+> 	} while (more_data_avail);
+> -	WRITE_ONCE(msk->ack_hint, ssk);
+>
+> 	*bytes += moved;
+> 	return done;
+> @@ -1910,7 +1909,6 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
+> 		__mptcp_update_rmem(sk);
+> 		done = __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
+> 		mptcp_data_unlock(sk);
+> -		tcp_cleanup_rbuf(ssk, moved);
+>
+> 		if (unlikely(ssk->sk_err))
+> 			__mptcp_error_report(sk);
+> @@ -1926,7 +1924,6 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
+> 		ret |= __mptcp_ofo_queue(msk);
+> 		__mptcp_splice_receive_queue(sk);
+> 		mptcp_data_unlock(sk);
+> -		mptcp_cleanup_rbuf(msk);
+
+Removing this call and the tcp_cleanup_rbuf() in the hunk above does mean 
+there are fewer opportunites to cleanup/ack, but it looks like those were 
+"extra" calls most of the time. With the location of the one call to 
+mptcp_cleanup_rbuf() in mptcp_recvmsg() it shouldn't make much difference 
+unless __mptcp_recvmsg_mskq() returns an error. Would it make sense to 
+move the call to mptcp_cleanup_rbuf() to immediately follow 
+__mptcp_recvmsg_mskq(), before checking for errors?
+
+
+Thanks,
+Mat
+
+> 	}
+> 	if (ret)
+> 		mptcp_check_data_fin((struct sock *)msk);
+> @@ -2175,9 +2172,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> 	if (ssk == msk->last_snd)
+> 		msk->last_snd = NULL;
+>
+> -	if (ssk == msk->ack_hint)
+> -		msk->ack_hint = NULL;
+> -
+> 	if (ssk == msk->first)
+> 		msk->first = NULL;
+>
+> @@ -2392,7 +2386,6 @@ static int __mptcp_init_sock(struct sock *sk)
+> 	msk->rmem_released = 0;
+> 	msk->tx_pending_data = 0;
+>
+> -	msk->ack_hint = NULL;
+> 	msk->first = NULL;
+> 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
+> 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 160c2ab09f19..9dea0734808e 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -240,7 +240,6 @@ struct mptcp_sock {
+> 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
+> 	bool		csum_enabled;
+> 	spinlock_t	join_list_lock;
+> -	struct sock	*ack_hint;
+> 	struct work_struct work;
+> 	struct sk_buff  *ooo_last_skb;
+> 	struct rb_root  out_of_order_queue;
+> -- 
+> 2.26.3
+
+--
+Mat Martineau
+Intel
