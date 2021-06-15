@@ -1,17 +1,17 @@
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF666D00
-	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 09:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090622FB2
+	for <mptcp@lists.linux.dev>; Tue, 15 Jun 2021 09:46:13 +0000 (UTC)
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4A6781A29E3;
-	Tue, 15 Jun 2021 11:36:37 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7FF6B1A049D;
+	Tue, 15 Jun 2021 11:36:32 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B6BA1A29D6;
-	Tue, 15 Jun 2021 11:36:31 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 37EBC1A0466;
+	Tue, 15 Jun 2021 11:36:26 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-	by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 30CB340310;
-	Tue, 15 Jun 2021 17:36:23 +0800 (+08)
+	by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AC0D040338;
+	Tue, 15 Jun 2021 17:36:17 +0800 (+08)
 From: Yangbo Lu <yangbo.lu@nxp.com>
 To: netdev@vger.kernel.org
 Cc: Yangbo Lu <yangbo.lu@nxp.com>,
@@ -29,83 +29,124 @@ Cc: Yangbo Lu <yangbo.lu@nxp.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Rui Sousa <rui.sousa@nxp.com>,
 	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: [net-next, v3, 03/10] ptp: track available ptp vclocks information
-Date: Tue, 15 Jun 2021 17:45:10 +0800
-Message-Id: <20210615094517.48752-4-yangbo.lu@nxp.com>
+Subject: [net-next, v3, 00/10] ptp: support virtual clocks and timestamping
+Date: Tue, 15 Jun 2021 17:45:07 +0800
+Message-Id: <20210615094517.48752-1-yangbo.lu@nxp.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210615094517.48752-1-yangbo.lu@nxp.com>
-References: <20210615094517.48752-1-yangbo.lu@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Track available ptp vclocks information. Record index values
-of available ptp vclocks during registering and unregistering.
+Current PTP driver exposes one PTP device to user which binds network
+interface/interfaces to provide timestamping. Actually we have a way
+utilizing timecounter/cyclecounter to virtualize any number of PTP
+clocks based on a same free running physical clock for using.
+The purpose of having multiple PTP virtual clocks is for user space
+to directly/easily use them for multiple domains synchronization.
 
-This is preparation for supporting ptp vclocks info query
-through ethtool.
+user
+space:     ^                                  ^
+           | SO_TIMESTAMPING new flag:        | Packets with
+           | SOF_TIMESTAMPING_BIND_PHC        | TX/RX HW timestamps
+           v                                  v
+         +--------------------------------------------+
+sock:    |     sock (new member sk_bind_phc)          |
+         +--------------------------------------------+
+           ^                                  ^
+           | ethtool_op_get_phc_vclocks       | Convert HW timestamps
+           |                                  | to sk_bind_phc
+           v                                  v
+         +--------------+--------------+--------------+
+vclock:  | ptp1         | ptp2         | ptpN         |
+         +--------------+--------------+--------------+
+pclock:  |             ptp0 free running              |
+         +--------------------------------------------+
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Change for v3:
-	- Added this patch.
----
- drivers/ptp/ptp_clock.c   | 2 ++
- drivers/ptp/ptp_private.h | 1 +
- drivers/ptp/ptp_sysfs.c   | 6 ++++++
- 3 files changed, 9 insertions(+)
+The block diagram may explain how it works. Besides the PTP virtual
+clocks, the packet HW timestamp converting to the bound PHC is also
+done in sock driver. For user space, PTP virtual clocks can be
+created via sysfs, and extended SO_TIMESTAMPING API (new flag
+SOF_TIMESTAMPING_BIND_PHC) can be used to bind one PTP virtual clock
+for timestamping.
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index 78414b3e16dd..38842a76acf8 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -236,6 +236,8 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- 	if (parent->class && strcmp(parent->class->name, "ptp") == 0)
- 		ptp->vclock_flag = true;
- 
-+	memset(ptp->vclock_index, -1, sizeof(ptp->vclock_index));
-+
- 	err = ptp_populate_pin_groups(ptp);
- 	if (err)
- 		goto no_pin_groups;
-diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
-index 6949afc9d733..5671710ca0fa 100644
---- a/drivers/ptp/ptp_private.h
-+++ b/drivers/ptp/ptp_private.h
-@@ -47,6 +47,7 @@ struct ptp_clock {
- 	struct kthread_worker *kworker;
- 	struct kthread_delayed_work aux_work;
- 	u8 n_vclocks;
-+	int vclock_index[PTP_MAX_VCLOCKS];
- 	struct mutex n_vclocks_mux; /* protect concurrent n_vclocks access */
- 	bool vclock_flag;
- };
-diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
-index 600edd7a90af..d9534935c1e6 100644
---- a/drivers/ptp/ptp_sysfs.c
-+++ b/drivers/ptp/ptp_sysfs.c
-@@ -207,6 +207,9 @@ static ssize_t n_vclocks_store(struct device *dev,
- 				goto out;
- 			}
- 
-+			ptp->vclock_index[ptp->n_vclocks + i] =
-+				vclock->clock->index;
-+
- 			dev_info(dev, "new virtual clock ptp%d\n",
- 				 vclock->clock->index);
- 		}
-@@ -217,6 +220,9 @@ static ssize_t n_vclocks_store(struct device *dev,
- 		i = ptp->n_vclocks - num;
- 		device_for_each_child_reverse(dev, &i,
- 					      unregister_vclock);
-+
-+		for (i = 1; i <= ptp->n_vclocks - num; i++)
-+			ptp->vclock_index[ptp->n_vclocks - i] = -1;
- 	}
- 
- 	if (num == 0)
+The test tool timestamping.c (together with linuxptp phc_ctl tool) can
+be used to verify:
+
+  # echo 4 > /sys/class/ptp/ptp0/n_vclocks
+  [  129.399472] ptp ptp0: new virtual clock ptp2
+  [  129.404234] ptp ptp0: new virtual clock ptp3
+  [  129.409532] ptp ptp0: new virtual clock ptp4
+  [  129.413942] ptp ptp0: new virtual clock ptp5
+  [  129.418257] ptp ptp0: guarantee physical clock free running
+  #
+  # phc_ctl /dev/ptp2 set 10000
+  # phc_ctl /dev/ptp3 set 20000
+  #
+  # timestamping eno0 2 SOF_TIMESTAMPING_TX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+  # timestamping eno0 2 SOF_TIMESTAMPING_RX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+  # timestamping eno0 3 SOF_TIMESTAMPING_TX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+  # timestamping eno0 3 SOF_TIMESTAMPING_RX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+
+Changes for v2:
+	- Converted to num_vclocks for creating virtual clocks.
+	- Guranteed physical clock free running when using virtual
+	  clocks.
+	- Fixed build warning.
+	- Updated copyright.
+Changes for v3:
+	- Supported PTP virtual clock in default in PTP driver.
+	- Protected concurrency of ptp->num_vclocks accessing.
+	- Supported PHC vclocks query via ethtool.
+	- Extended SO_TIMESTAMPING API for PHC binding.
+	- Converted HW timestamps to PHC bound, instead of previous
+	  binding domain value to PHC idea.
+	- Other minor fixes.
+
+Yangbo Lu (10):
+  ptp: add ptp virtual clock driver framework
+  ptp: support ptp physical/virtual clocks conversion
+  ptp: track available ptp vclocks information
+  ptp: add kernel API ptp_get_vclocks_index()
+  ethtool: add a new command for getting PHC virtual clocks
+  ptp: add kernel API ptp_convert_timestamp()
+  net: sock: extend SO_TIMESTAMPING for PHC binding
+  net: socket: support hardware timestamp conversion to PHC bound
+  selftests/net: timestamping: support binding PHC
+  MAINTAINERS: add entry for PTP virtual clock driver
+
+ Documentation/ABI/testing/sysfs-ptp        |  13 ++
+ MAINTAINERS                                |   7 +
+ drivers/ptp/Makefile                       |   2 +-
+ drivers/ptp/ptp_clock.c                    |  27 ++-
+ drivers/ptp/ptp_private.h                  |  34 ++++
+ drivers/ptp/ptp_sysfs.c                    |  95 +++++++++
+ drivers/ptp/ptp_vclock.c                   | 212 +++++++++++++++++++++
+ include/linux/ethtool.h                    |   2 +
+ include/linux/ptp_clock_kernel.h           |  29 ++-
+ include/net/sock.h                         |   8 +-
+ include/uapi/linux/ethtool.h               |  14 ++
+ include/uapi/linux/ethtool_netlink.h       |  15 ++
+ include/uapi/linux/net_tstamp.h            |  17 +-
+ include/uapi/linux/ptp_clock.h             |   5 +
+ net/core/sock.c                            |  65 ++++++-
+ net/ethtool/Makefile                       |   2 +-
+ net/ethtool/common.c                       |  24 +++
+ net/ethtool/common.h                       |   2 +
+ net/ethtool/ioctl.c                        |  27 +++
+ net/ethtool/netlink.c                      |  10 +
+ net/ethtool/netlink.h                      |   2 +
+ net/ethtool/phc_vclocks.c                  |  86 +++++++++
+ net/mptcp/sockopt.c                        |  10 +-
+ net/socket.c                               |  19 +-
+ tools/testing/selftests/net/timestamping.c |  62 ++++--
+ 25 files changed, 750 insertions(+), 39 deletions(-)
+ create mode 100644 drivers/ptp/ptp_vclock.c
+ create mode 100644 net/ethtool/phc_vclocks.c
+
+
+base-commit: 89212e160b81e778f829b89743570665810e3b13
 -- 
 2.25.1
 
