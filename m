@@ -1,329 +1,123 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A1E70
-	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 01:00:36 +0000 (UTC)
-IronPort-SDR: LLoujEyOM3wfGVaDAWIRVSIM3jiAtKawilK9fH9ZpnMJtUFamCZ23oG6s/fG/G/22+wW9zrXzt
- TsYVLTGIp1Xw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="206052074"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431AD70
+	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 01:28:41 +0000 (UTC)
+IronPort-SDR: 5DElR/6aVF7TuGm2akXRO4rZ/Y8cdeuMtLR4UVbx8w7cINKwMwCKkdP2/qfG1/yjfEqVB4S7TR
+ DwHJoXXEgVHg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="269946956"
 X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="206052074"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 18:00:34 -0700
-IronPort-SDR: jvksWilzoMhFJRsPBrDPqMXs0olHIdj6hY08OFKj6yuTzCN/hXw/YqvBQG9OaEBiSbuAlnyHfo
- d2GbciaOyD+A==
+   d="scan'208";a="269946956"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 18:28:40 -0700
+IronPort-SDR: ef+keDTxCl44EvCbcxAXuVE1w7cPw6DMFPkiZbtWbuiIrkS4xLlejZtTAUrr3IjPejOH+Kkmbv
+ NMwflzlWGI1Q==
 X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="478899811"
+   d="scan'208";a="421315604"
 Received: from reschenk-mobl1.amr.corp.intel.com ([10.255.230.223])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 18:00:33 -0700
-Date: Tue, 15 Jun 2021 18:00:33 -0700 (PDT)
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 18:28:40 -0700
+Date: Tue, 15 Jun 2021 18:28:39 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Yangbo Lu <yangbo.lu@nxp.com>
-cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev, 
-    Richard Cochran <richardcochran@gmail.com>, 
-    "David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>, 
-    Shuah Khan <shuah@kernel.org>, Michal Kubecek <mkubecek@suse.cz>, 
-    Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
-    Rui Sousa <rui.sousa@nxp.com>, Sebastien Laveze <sebastien.laveze@nxp.com>, 
-    Florian Westphal <fw@strlen.de>
-Subject: Re: [net-next, v3, 07/10] net: sock: extend SO_TIMESTAMPING for PHC
- binding
-In-Reply-To: <20210615094517.48752-8-yangbo.lu@nxp.com>
-Message-ID: <66873ea1-a54b-8d2-5b68-ce474fb75e46@linux.intel.com>
-References: <20210615094517.48752-1-yangbo.lu@nxp.com> <20210615094517.48752-8-yangbo.lu@nxp.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, Christoph Paasch <cpaasch@apple.com>
+Subject: Re: [PATCH mptcp-net] mptcp: fix 32 bit DSN expansion
+In-Reply-To: <54a9e415d257a18f8996a9d54cf0c03500ed8aea.1623775386.git.pabeni@redhat.com>
+Message-ID: <ba5a7a80-6cd3-d480-878f-62829afcdbea@linux.intel.com>
+References: <54a9e415d257a18f8996a9d54cf0c03500ed8aea.1623775386.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 15 Jun 2021, Yangbo Lu wrote:
+On Tue, 15 Jun 2021, Paolo Abeni wrote:
 
-> Since PTP virtual clock support is added, there can be
-> several PTP virtual clocks based on one PTP physical
-> clock for timestamping.
+> The current implementation of 32 bit DNS expansion is buggy,
+
+The "DNS" here (and below) puzzled me for a minute :)
+
+> and the fix is quite similar to what we did for ack expansion.
 >
-> This patch is to extend SO_TIMESTAMPING API to support
-> PHC (PTP Hardware Clock) binding by adding a new flag
-> SOF_TIMESTAMPING_BIND_PHC. When PTP virtual clocks are
-> in use, user space can configure to bind one for
-> timestamping, but PTP physical clock is not supported
-> and not needed to bind.
+> There is a small caveat: DNS can both increment and decrement
+> (on MPTCP re-injection) so we need to use more care to catch
+> wrap-around and we must additionally look for reverse wrap.
 >
-> This patch is preparation for timestamp conversion from
-> raw timestamp to a specific PTP virtual clock time in
-> core net.
->
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/120
+> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> Changes for v3:
-> 	- Added this patch.
+> @Christoph: sorry for the duplicate, I used a bad recipient
+> list for the previous attempt
 > ---
-> include/net/sock.h              |  8 +++-
-> include/uapi/linux/net_tstamp.h | 17 ++++++++-
-> net/core/sock.c                 | 65 +++++++++++++++++++++++++++++++--
-> net/ethtool/common.c            |  1 +
-> net/mptcp/sockopt.c             | 10 +++--
-> 5 files changed, 91 insertions(+), 10 deletions(-)
+> net/mptcp/subflow.c | 21 +++++++++++++--------
+> 1 file changed, 13 insertions(+), 8 deletions(-)
 >
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 9b341c2c924f..adb6c0edc867 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -316,7 +316,9 @@ struct bpf_local_storage;
->   *	@sk_timer: sock cleanup timer
->   *	@sk_stamp: time stamp of last packet received
->   *	@sk_stamp_seq: lock for accessing sk_stamp on 32 bit architectures only
-> -  *	@sk_tsflags: SO_TIMESTAMPING socket options
-> +  *	@sk_tsflags: SO_TIMESTAMPING flags
-> +  *	@sk_bind_phc: SO_TIMESTAMPING bind PHC index of PTP virtual clock
-> +  *	              for timestamping
->   *	@sk_tskey: counter to disambiguate concurrent tstamp requests
->   *	@sk_zckey: counter to order MSG_ZEROCOPY notifications
->   *	@sk_socket: Identd and reporting IO signals
-> @@ -493,6 +495,7 @@ struct sock {
-> 	seqlock_t		sk_stamp_seq;
-> #endif
-> 	u16			sk_tsflags;
-> +	int			sk_bind_phc;
-> 	u8			sk_shutdown;
-> 	u32			sk_tskey;
-> 	atomic_t		sk_zckey;
-> @@ -2744,7 +2747,8 @@ void sock_def_readable(struct sock *sk);
->
-> int sock_bindtoindex(struct sock *sk, int ifindex, bool lock_sk);
-> void sock_set_timestamp(struct sock *sk, int optname, bool valbool);
-> -int sock_set_timestamping(struct sock *sk, int optname, int val);
-> +int sock_set_timestamping(struct sock *sk, int optname, int val,
-> +			  sockptr_t optval, unsigned int optlen);
->
-> void sock_enable_timestamps(struct sock *sk);
-> void sock_no_linger(struct sock *sk);
-> diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
-> index 7ed0b3d1c00a..9d4cde4ef7e6 100644
-> --- a/include/uapi/linux/net_tstamp.h
-> +++ b/include/uapi/linux/net_tstamp.h
-> @@ -13,7 +13,7 @@
-> #include <linux/types.h>
-> #include <linux/socket.h>   /* for SO_TIMESTAMPING */
->
-> -/* SO_TIMESTAMPING gets an integer bit field comprised of these values */
-> +/* SO_TIMESTAMPING flags */
-> enum {
-> 	SOF_TIMESTAMPING_TX_HARDWARE = (1<<0),
-> 	SOF_TIMESTAMPING_TX_SOFTWARE = (1<<1),
-> @@ -30,8 +30,9 @@ enum {
-> 	SOF_TIMESTAMPING_OPT_STATS = (1<<12),
-> 	SOF_TIMESTAMPING_OPT_PKTINFO = (1<<13),
-> 	SOF_TIMESTAMPING_OPT_TX_SWHW = (1<<14),
-> +	SOF_TIMESTAMPING_BIND_PHC = (1<<15),
->
-> -	SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_OPT_TX_SWHW,
-> +	SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_BIND_PHC,
-> 	SOF_TIMESTAMPING_MASK = (SOF_TIMESTAMPING_LAST - 1) |
-> 				 SOF_TIMESTAMPING_LAST
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index d55f4ef736a5..004718126345 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -781,13 +781,19 @@ enum mapping_status {
+> 	MAPPING_DUMMY
 > };
-> @@ -46,6 +47,18 @@ enum {
-> 					 SOF_TIMESTAMPING_TX_SCHED | \
-> 					 SOF_TIMESTAMPING_TX_ACK)
 >
-> +/**
-> + * struct so_timestamping - SO_TIMESTAMPING parameter
-> + *
-> + * @flags:	SO_TIMESTAMPING flags
-> + * @bind_phc:	Index of PTP virtual clock bound to sock. This is available
-> + *		if flag SOF_TIMESTAMPING_BIND_PHC is set.
-> + */
-> +struct so_timestamping {
-> +	int flags;
-> +	int bind_phc;
-> +};
+> -static u64 expand_seq(u64 old_seq, u16 old_data_len, u64 seq)
+> +static u64 expand_seq(u64 old_seq, u64 cur_seq)
+> {
+> -	if ((u32)seq == (u32)old_seq)
+> -		return old_seq;
+> +	u32 old_seq32 = (u32)old_seq;
+> +	u32 cur_seq32 = (u32)cur_seq;
+>
+> -	/* Assume map covers data not mapped yet. */
+
+This comment dates back to the original version of this function making 
+single-subflow assumptions. The code did need to be revisited so thanks 
+for working on this.
+
+> -	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63, 32));
+> +	cur_seq = (old_seq & GENMASK_ULL(63, 32)) + cur_seq32;
+> +	if (unlikely(cur_seq32 < old_seq32 && before(old_seq32, cur_seq32)))
+> +		return cur_seq + (1LL << 32);
+
+The above should catch sequence numbers that look like they both "moved 
+forward" and "wrapped around". Looks good.
+
+If the adjustment is incorrect, then we're mistaking an old mapping for a 
+new one - but only if it happens to be in-window.
+
 > +
-> /**
->  * struct hwtstamp_config - %SIOCGHWTSTAMP and %SIOCSHWTSTAMP parameter
->  *
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index ddfa88082a2b..70d2c2322429 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -139,6 +139,8 @@
-> #include <net/tcp.h>
-> #include <net/busy_poll.h>
->
-> +#include <linux/ethtool.h>
-> +
-> static DEFINE_MUTEX(proto_list_mutex);
-> static LIST_HEAD(proto_list);
->
-> @@ -794,8 +796,53 @@ void sock_set_timestamp(struct sock *sk, int optname, bool valbool)
-> 	}
+> +	/* on re-injection we can have wrap around towards bottom */
+> +	if (unlikely(cur_seq32 > old_seq32 && after(old_seq32, cur_seq32)))
+> +		return cur_seq - (1LL << 32);
+
+And this logic looks ok for finding old or reinjected mappings that 
+wrapped. The data will end up discarded, so if we guess wrong then the 
+peer will send again if needed.
+
+Looks good for the export branch, we can test some more there:
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+> +	return cur_seq;
 > }
 >
-> -int sock_set_timestamping(struct sock *sk, int optname, int val)
-> +static int sock_timestamping_bind_phc(struct sock *sk, int phc_index)
-> {
-> +	struct ethtool_phc_vclocks phc_vclocks = { };
-> +	struct net *net = sock_net(sk);
-> +	struct net_device *dev = NULL;
-> +	bool match = false;
-> +	int i;
-> +
-> +	if (sk->sk_bound_dev_if)
-> +		dev = dev_get_by_index(net, sk->sk_bound_dev_if);
-> +
-> +	if (!dev) {
-> +		pr_err("%s: sock not bind to device\n", __func__);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	ethtool_op_get_phc_vclocks(dev, &phc_vclocks);
-> +
-> +	for (i = 0; i < phc_vclocks.num; i++) {
-> +		if (phc_vclocks.index[i] == phc_index) {
-> +			match = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!match)
-> +		return -EINVAL;
-> +
-> +	sk->sk_bind_phc = phc_index;
-> +
-> +	return 0;
-> +}
-> +
-> +int sock_set_timestamping(struct sock *sk, int optname, int val,
-> +			  sockptr_t optval, unsigned int optlen)
-> +{
-> +	struct so_timestamping timestamping;
-> +	int ret;
-> +
-> +	if (optlen == sizeof(timestamping)) {
-> +		if (copy_from_sockptr(&timestamping, optval,
-> +				      sizeof(timestamping)))
-> +			return -EFAULT;
-> +
-> +		val = timestamping.flags;
-> +	}
-> +
-> 	if (val & ~SOF_TIMESTAMPING_MASK)
-> 		return -EINVAL;
->
-> @@ -816,6 +863,15 @@ int sock_set_timestamping(struct sock *sk, int optname, int val)
-> 	    !(val & SOF_TIMESTAMPING_OPT_TSONLY))
-> 		return -EINVAL;
->
-> +	if (optlen == sizeof(timestamping) &&
-> +	    val & SOF_TIMESTAMPING_BIND_PHC) {
-> +		ret = sock_timestamping_bind_phc(sk, timestamping.bind_phc);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		sk->sk_bind_phc = -1;
-> +	}
-> +
-> 	sk->sk_tsflags = val;
-> 	sock_valbool_flag(sk, SOCK_TSTAMP_NEW, optname == SO_TIMESTAMPING_NEW);
->
-> @@ -1057,7 +1113,7 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
->
-> 	case SO_TIMESTAMPING_NEW:
-> 	case SO_TIMESTAMPING_OLD:
-> -		ret = sock_set_timestamping(sk, optname, val);
-> +		ret = sock_set_timestamping(sk, optname, val, optval, optlen);
-> 		break;
->
-> 	case SO_RCVLOWAT:
-> @@ -1332,6 +1388,7 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
-> 		struct __kernel_old_timeval tm;
-> 		struct  __kernel_sock_timeval stm;
-> 		struct sock_txtime txtime;
-> +		struct so_timestamping timestamping;
-> 	} v;
->
-> 	int lv = sizeof(int);
-> @@ -1435,7 +1492,9 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
-> 		break;
->
-> 	case SO_TIMESTAMPING_OLD:
-> -		v.val = sk->sk_tsflags;
-> +		lv = sizeof(v.timestamping);
-> +		v.timestamping.flags = sk->sk_tsflags;
-> +		v.timestamping.bind_phc = sk->sk_bind_phc;
-> 		break;
->
-> 	case SO_RCVTIMEO_OLD:
-> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-> index 14035f2dc6d4..4bf1bd3a3db6 100644
-> --- a/net/ethtool/common.c
-> +++ b/net/ethtool/common.c
-> @@ -398,6 +398,7 @@ const char sof_timestamping_names[][ETH_GSTRING_LEN] = {
-> 	[const_ilog2(SOF_TIMESTAMPING_OPT_STATS)]    = "option-stats",
-> 	[const_ilog2(SOF_TIMESTAMPING_OPT_PKTINFO)]  = "option-pktinfo",
-> 	[const_ilog2(SOF_TIMESTAMPING_OPT_TX_SWHW)]  = "option-tx-swhw",
-> +	[const_ilog2(SOF_TIMESTAMPING_BIND_PHC)]     = "bind-phc",
-> };
-> static_assert(ARRAY_SIZE(sof_timestamping_names) == __SOF_TIMESTAMPING_CNT);
->
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 092d1f635d27..2ca90b230827 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -140,7 +140,10 @@ static void mptcp_so_incoming_cpu(struct mptcp_sock *msk, int val)
-> 	mptcp_sol_socket_sync_intval(msk, SO_INCOMING_CPU, val);
-> }
->
-> -static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optname, int val)
-> +static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk,
-> +					      int optname, int val,
-> +					      sockptr_t optval,
-> +					      unsigned int optlen)
-> {
-> 	sockptr_t optval = KERNEL_SOCKPTR(&val);
-> 	struct mptcp_subflow_context *subflow;
-> @@ -166,7 +169,7 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optnam
-> 			break;
-> 		case SO_TIMESTAMPING_NEW:
-> 		case SO_TIMESTAMPING_OLD:
-> -			sock_set_timestamping(sk, optname, val);
-> +			sock_set_timestamping(sk, optname, val, optval, optlen);
-
-This is inside a loop, so in cases where optlen == sizeof(struct 
-so_timestamping) this will end up re-copying the structure from userspace 
-one extra time for each MPTCP subflow: once for the MPTCP socket, plus one 
-time for each of the TCP subflows that are grouped under this MPTCP 
-connection.
-
-Given that the extra copies only happen when using the extended bind_phc 
-option, it's not a huge cost. But sock_set_timestamping() was written to 
-avoid the extra copies for 'int' sized options, and if that was worth the 
-effort then the larger so_timestamping structure could be copied (once) 
-before the sock_set_timestamping() call and passed in.
-
-> 			break;
-> 		}
->
-> @@ -207,7 +210,8 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
-> 	case SO_TIMESTAMPNS_NEW:
-> 	case SO_TIMESTAMPING_OLD:
-> 	case SO_TIMESTAMPING_NEW:
-> -		return mptcp_setsockopt_sol_socket_tstamp(msk, optname, val);
-> +		return mptcp_setsockopt_sol_socket_tstamp(msk, optname, val,
-> +							  optval, optlen);
-
-Rather than modifying mptcp_setsockopt_sol_socket_int(), I suggest adding 
-a mptcp_setsockopt_sol_socket_timestamping() helper function that can 
-handle the special copying for so_timestamping.
-
+> static void dbg_bad_map(struct mptcp_subflow_context *subflow, u32 ssn)
+> @@ -996,9 +1002,8 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
 > 	}
 >
-> 	return -ENOPROTOOPT;
+> 	if (!mpext->dsn64) {
+> -		map_seq = expand_seq(subflow->map_seq, subflow->map_data_len,
+> -				     mpext->data_seq);
+> -		pr_debug("expanded seq=%llu", subflow->map_seq);
+> +		map_seq = expand_seq(READ_ONCE(msk->ack_seq), mpext->data_seq);
+> +		pr_debug("expanded seq=%llu->%llu", mpext->data_seq, map_seq);
+> 	} else {
+> 		map_seq = mpext->data_seq;
+> 	}
 > -- 
-> 2.25.1
+> 2.26.3
+>
 >
 >
 
