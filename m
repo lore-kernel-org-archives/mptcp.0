@@ -1,184 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7253D71
-	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 13:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1623849775;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UhG2CF7WNmhW6ZGSfscPGsf2qBQTgTXrJ/YejNVexfs=;
-	b=hjaHd2833fTtEytVWmfVQISAmeAsNK6d2uqCzBQslhTU6izuVYYW9k9I5D8a1G9c0nCT+7
-	zUpRf6c/MlId3Kg0itcwI1pk2ZnXhKuvFN4YW3GGD8maYKSV3PpmOLxsVjbGLT+Ar+Vo0C
-	/T03D9UDR78HhFyxEctOvcJMOal5074=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-454-u2QvjNZTO3Ktzfj47a6bgA-1; Wed, 16 Jun 2021 09:22:47 -0400
-X-MC-Unique: u2QvjNZTO3Ktzfj47a6bgA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 584E0192D796
-	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 13:22:24 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-115-78.ams2.redhat.com [10.36.115.78])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C6FBB60BF1
-	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 13:22:23 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: avoid race on msk state changes
-Date: Wed, 16 Jun 2021 15:22:18 +0200
-Message-Id: <ad66de68b4a3abd765da48e0030b08bf852bf9e6.1623849715.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D999471
+	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 13:57:02 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id hq2so4124647ejc.2
+        for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 06:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WLQm9bO/v4odpdaMWPykyQmaUICNaLNesahvzfGmuW8=;
+        b=0oDMUY5FLnyadLjAqDCcYPLaYss7cRt0Rx+aiFGqofl/qtxl9MBsR1eGQBzDRVqd3o
+         B91atDp0gACdeD/gLABKzeWOoXcp7FyDiZW0mYyBBNxfwxRjb23eo2xoMS/Me3BL93Ei
+         Jlahwj6i+/dBZi7TQXUVVn82vLdsBeJX7612Lv5xSFqvMc6aHOpUr96UJfGMumo3SsUS
+         P95JZX62Py8cXIrwHTbh5SuND9XfBd9ySwB5Ww3ckKwL9xBOnArF/z4ZGtvTQcJWQ7Mj
+         x95abIIkVe0d7k6tf6kM1gz1Ik3Rx17XtnFwu4VOttNp2YYiXybmA193UP2/qOZsPLHV
+         fdyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WLQm9bO/v4odpdaMWPykyQmaUICNaLNesahvzfGmuW8=;
+        b=LWPMYiAWjPhm2iJs8RBhpyi8OKdDPttAO5OWN6sCTohDUhU2H9Onvlq3hDtcpJafaK
+         OfdG3kVayPdKxjJ+88mWRcSWltle/5h8m93H8K1BUZGOfTusspuyX2JFl3b64QAMO4nE
+         xubcrDkN3/TJqfU9o6ZCyJ+u8Guqfarewir05ipj7fBIrhLZiXLKVbf0dXfFwWTziglD
+         yuwUF5YhMcDIxeUa5y7rEuMW7dhhzFjMHdraRTEaltmkVuXihtHHz+h9I8yyL1bSNMr/
+         pKsHUCm/V4E8wZOT0lFc49qTnwD3fNxXNrXsXjDZi+SHsuYFTq/5pVc/+8feta3u/3mS
+         oyYg==
+X-Gm-Message-State: AOAM533A9iGd1AUPtEm0FJzoFbIcW+4l8Ei+gR7cqSO7uiMtrOYsvoIP
+	0fK+J7ylmP9NZfopWmadF+DqFg==
+X-Google-Smtp-Source: ABdhPJxcq0/XyM3Rd37/7n4+sZBRDLwlNzUqlfjvypnVN1cRgv77szzmCtcoHklQAQpDaUZMevJV1g==
+X-Received: by 2002:a17:906:7d0:: with SMTP id m16mr5532387ejc.319.1623851821010;
+        Wed, 16 Jun 2021 06:57:01 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:9129:4177:7fbf:cf97])
+        by smtp.gmail.com with ESMTPSA id q9sm1784698edw.51.2021.06.16.06.57.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Jun 2021 06:57:00 -0700 (PDT)
+Subject: Re: [PATCH mptcp-next] Squash-to: "selftests: mptcp: turn rp_filter
+ off on each NIC"
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Yonglong Li <liyonglong@chinatelecom.cn>
+References: <69fc350d5e6b4faeb9cffbbd5d36723e236b2ca2.1623849517.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <e4787877-874f-c44a-38b4-0a6d8e16799b@tessares.net>
+Date: Wed, 16 Jun 2021 15:57:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <69fc350d5e6b4faeb9cffbbd5d36723e236b2ca2.1623849517.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-The msk socket state is currently updated in a few spots without
-owning the msk socket lock itself.
+Hi Paolo,
 
-Some of such operations are safe, as they happens before exposing
-the msk socket to user-space and can't race with other changes.
+On 16/06/2021 15:20, Paolo Abeni wrote:
+> "$1" is undefined in the setup loop context, $i should be used
+> instead, otherwise setup (and tests) will fail.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-A couple of them, at connect time, can actually race with close()
-or shutdown(), leaving breaking the socket state machine.
+Good catch!
 
-This change addresses the issue moving such update under the msk
-socket lock with the usual:
+- 94e9d2854eaa: "squashed" in "selftests: mptcp: turn rp_filter off on
+each NIC"
+- 7c34dfc3461b: "Signed-off-by" + "Co-developed-by"
+- Results: bddebf30244a..2f591d25eeec
 
-<acquire spinlock>
-<check sk lock onwers>
-<ev defer to release_cb>
+Builds and tests are now in progress:
 
-scheme.
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210616T135631
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210616T135631
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/56
-Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
-Fixes: c3c123d16c0e ("net: mptcp: don't hang in mptcp_sendmsg() after TCP fallbac")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c |  2 ++
- net/mptcp/protocol.h |  2 ++
- net/mptcp/subflow.c  | 30 ++++++++++++++++++++++--------
- 3 files changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 05c8382aafef..15c3b75516fb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2906,6 +2906,8 @@ static void mptcp_release_cb(struct sock *sk)
- 		__mptcp_clean_una_wakeup(sk);
- 	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
- 		__mptcp_error_report(sk);
-+	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
-+		__mptcp_set_connected(sk);
- 
- 	/* push_pending may touch wmem_reserved, ensure we do the cleanup
- 	 * later
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2480db50cbd2..515bb1e6acec 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -112,6 +112,7 @@
- #define MPTCP_ERROR_REPORT	8
- #define MPTCP_RETRANSMIT	9
- #define MPTCP_WORK_SYNC_SETSOCKOPT 10
-+#define MPTCP_CONNECTED		11
- 
- static inline bool before64(__u64 seq1, __u64 seq2)
- {
-@@ -600,6 +601,7 @@ void mptcp_get_options(const struct sock *sk,
- 		       struct mptcp_options_received *mp_opt);
- 
- void mptcp_finish_connect(struct sock *sk);
-+void __mptcp_set_connected(struct sock *sk);
- static inline bool mptcp_is_fully_established(struct sock *sk)
- {
- 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6772802737e4..0b5d4a3eadcd 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -373,6 +373,24 @@ static bool subflow_use_different_dport(struct mptcp_sock *msk, const struct soc
- 	return inet_sk(sk)->inet_dport != inet_sk((struct sock *)msk)->inet_dport;
- }
- 
-+void __mptcp_set_connected(struct sock *sk)
-+{
-+	if (sk->sk_state == TCP_SYN_SENT) {
-+		inet_sk_state_store(sk, TCP_ESTABLISHED);
-+		sk->sk_state_change(sk);
-+	}
-+}
-+
-+static void mptcp_set_connected(struct sock *sk)
-+{
-+	mptcp_data_lock(sk);
-+	if (!sock_owned_by_user(sk))
-+		__mptcp_set_connected(sk);
-+	else
-+		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
-+	mptcp_data_unlock(sk);
-+}
-+
- static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-@@ -381,10 +399,6 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 
- 	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
- 
--	if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
--		inet_sk_state_store(parent, TCP_ESTABLISHED);
--		parent->sk_state_change(parent);
--	}
- 
- 	/* be sure no special action on any packet other than syn-ack */
- 	if (subflow->conn_finished)
-@@ -417,6 +431,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 			 subflow->remote_key);
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEACK);
- 		mptcp_finish_connect(sk);
-+		mptcp_set_connected(parent);
- 	} else if (subflow->request_join) {
- 		u8 hmac[SHA256_DIGEST_SIZE];
- 
-@@ -457,6 +472,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 	} else if (mptcp_check_fallback(sk)) {
- fallback:
- 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
-+		mptcp_set_connected(parent);
- 	}
- 	return;
- 
-@@ -564,6 +580,7 @@ static void mptcp_sock_destruct(struct sock *sk)
- 
- static void mptcp_force_close(struct sock *sk)
- {
-+	/* the msk is not yet exposed to user-space */
- 	inet_sk_state_store(sk, TCP_CLOSE);
- 	sk_common_release(sk);
- }
-@@ -1577,10 +1594,7 @@ static void subflow_state_change(struct sock *sk)
- 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
- 		pr_fallback(mptcp_sk(parent));
- 		subflow->conn_finished = 1;
--		if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
--			inet_sk_state_store(parent, TCP_ESTABLISHED);
--			parent->sk_state_change(parent);
--		}
-+		mptcp_set_connected(parent);
- 	}
- 
- 	/* as recvmsg() does not acquire the subflow socket for ssk selection
+Cheers,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
