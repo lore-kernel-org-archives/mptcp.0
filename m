@@ -1,75 +1,71 @@
-Received: from m12-15.163.com (m12-15.163.com [220.181.12.15])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A8D17F
-	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 11:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=/zJz/cksLfaSF98boJ
-	80NmJD0os627Wfym1BW2y38IQ=; b=qMWgs+lHp8U52p7tZemQ3LSkogSM0jq5uR
-	Sr1vta7Hh6pLnDO7Ywkn+nH1DSn+3zWR2ge+Q91v5H4SyQlWwiR/QRti+1yiNpAr
-	XjFfmXyNyK6ypPYoU9+7RKmjCBK4eeRRTO5Ad4NBTUNiOKD8623+ipkB1ZIkT2GF
-	xKudyFehE=
-Received: from localhost.localdomain (unknown [36.111.140.26])
-	by smtp11 (Coremail) with SMTP id D8CowAB33vY718lgxTs1AA--.106S2;
-	Wed, 16 Jun 2021 18:50:32 +0800 (CST)
-From: wujianguo106@163.com
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA59071
+	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 13:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1623849711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TWm7mKM1PrRr9uWRv+mKaPDXoMEjbG7k9lDHQj/VG4I=;
+	b=aihd1dbwIQ/aS5kS89rrzt9ScztOru5c2DB/7haah1M8wHfIK6S9V7qvRPswcM23SYOVjw
+	bmWlrKFPc7nM6MTPVPXFdolukyG4ehuDNjJVoUpxEBZdmTf9B3jgRfi0OLWzsFjN/9joIj
+	DrtaqzVjZElHzAJ1dJTIuLzG8IGMXWo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-KZBDlo_UO8mW9lpYXxv7EQ-1; Wed, 16 Jun 2021 09:21:47 -0400
+X-MC-Unique: KZBDlo_UO8mW9lpYXxv7EQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E393FCB4;
+	Wed, 16 Jun 2021 13:21:07 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-78.ams2.redhat.com [10.36.115.78])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CE4D2100238C;
+	Wed, 16 Jun 2021 13:21:06 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com,
-	fw@strlen.de
-Subject: [PATCH v5 0/4] Fix some mptcp syncookie process bugs
-Date: Wed, 16 Jun 2021 18:49:26 +0800
-Message-Id: <1623840570-42004-1-git-send-email-wujianguo106@163.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID:D8CowAB33vY718lgxTs1AA--.106S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKF15uFy7XFWrWr17GF4rZrb_yoWDtwc_W3
-	9rXrW3Gr47ZFWkAFW2kFs8JrWv9rWqg3yUCr1qqrZ8G3srJa40qFs0qrn7ury8Ga9a9as5
-	CFyUZrW8AF13WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8Za93UUUUU==
-X-Originating-IP: [36.111.140.26]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB9wizkF2MZRh8YgAAsu
+Cc: Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: [PATCH mptcp-next] Squash-to: "selftests: mptcp: turn rp_filter off on each NIC"
+Date: Wed, 16 Jun 2021 15:20:54 +0200
+Message-Id: <69fc350d5e6b4faeb9cffbbd5d36723e236b2ca2.1623849517.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-From: Jianguo Wu <wujianguo@chinatelecom.cn>
+"$1" is undefined in the setup loop context, $i should be used
+instead, otherwise setup (and tests) will fail.
 
-v4->v5:
-patch1: no changes 
-patch2: no changes
-patch3: no changes
-patch4: add comment 
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v3->v4:
-patch1: using seq and sport/dport for hashing, and ignore network headers altogether,
-        as suggest by Florian
-patch2: no changes
-patch3: no changes
-patch4: no changes 
-
-v2->v3:
-patch1: directly use inet6_ehashfn() for IPv6
-patch2: no changes
-patch3: no changes
-patch4: add Fixes tag.
-
-v1->v2:
-patch1: handle ipv6 sockets/addresses,
-        always use 4-tuple drived hash and never look at skb->hash
-patch2: no changes
-patch3: split into 2 patches.
-patch4: new added.
-
-Jianguo Wu (4):
-  mptcp: fix warning in __skb_flow_dissect() when do syn cookie for
-    subflow join
-  mptcp: remove redundant req destruct in subflow_check_req()
-  mptcp: fix syncookie process if mptcp can not_accept new subflow
-  mptcp: avoid processing packet if a subflow reset
-
- net/mptcp/options.c    |  6 ++++++
- net/mptcp/subflow.c    | 11 +++--------
- net/mptcp/syncookies.c | 16 +++++++++++++++-
- 3 files changed, 24 insertions(+), 9 deletions(-)
-
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index 6b6336d1c39d..fd63ebfe9a2b 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -60,8 +60,8 @@ setup()
+ 	for i in "$ns1" "$ns2" "$ns3";do
+ 		ip netns add $i || exit $ksft_skip
+ 		ip -net $i link set lo up
+-		ip netns exec $1 sysctl -q net.ipv4.conf.all.rp_filter=0
+-		ip netns exec $1 sysctl -q net.ipv4.conf.default.rp_filter=0
++		ip netns exec $i sysctl -q net.ipv4.conf.all.rp_filter=0
++		ip netns exec $i sysctl -q net.ipv4.conf.default.rp_filter=0
+ 	done
+ 
+ 	ip link add ns1eth1 netns "$ns1" type veth peer name ns2eth1 netns "$ns2"
 -- 
-1.8.3.1
+2.26.3
 
