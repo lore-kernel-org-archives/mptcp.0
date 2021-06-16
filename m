@@ -1,32 +1,32 @@
 Received: from m12-15.163.com (m12-15.163.com [220.181.12.15])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C76B9173
-	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 10:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B726D17F
+	for <mptcp@lists.linux.dev>; Wed, 16 Jun 2021 10:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=bMErQq/RHb9+Nv55IT
-	915+/t6jItHEXB1wfDPx5DuKk=; b=RbV5RU0tnWstvdhOPEM4K8FGRMLRSRE2D8
-	sekEcSH5jIjvU9FV7aeYNnepLTizxTVUn+J+2W7CPoJQUbWY23RT3YNLgY64V/43
-	fy2VGhMS8g+7vBqQvwDULgGcVx8p9eDMHefFTIH+KIppVyav5Tacos+ysOBbirL3
-	oO4lj6D+k=
+	s=s110527; h=From:Subject:Date:Message-Id; bh=fc7DM/nfCFc+ak5COu
+	7ol9l9KbcCLFVkNjQTdR7mWSs=; b=hqdpP/qHjd95e5u55lmpZUm/fKAMVEpWD2
+	gnCS9wO52JgnMq1W4E/7NV0px77WufGL7Ka/4lzKBoxasKOKtgOOryURQ41dqA4n
+	EeCbkOmvCPK+bC1OOVSCsQ4oMtzjpEdxjS3z3k9Ne4zDOyDPVhil8lJ2oWMMYpFY
+	I6l4cTYu4=
 Received: from localhost.localdomain (unknown [36.111.140.26])
-	by smtp11 (Coremail) with SMTP id D8CowAB33vY718lgxTs1AA--.106S3;
-	Wed, 16 Jun 2021 18:50:32 +0800 (CST)
+	by smtp11 (Coremail) with SMTP id D8CowAB33vY718lgxTs1AA--.106S5;
+	Wed, 16 Jun 2021 18:50:34 +0800 (CST)
 From: wujianguo106@163.com
 To: mptcp@lists.linux.dev
 Cc: pabeni@redhat.com,
 	fw@strlen.de
-Subject: [PATCH v5 1/4] mptcp: fix warning in __skb_flow_dissect() when do syn cookie for subflow join
-Date: Wed, 16 Jun 2021 18:49:27 +0800
-Message-Id: <1623840570-42004-2-git-send-email-wujianguo106@163.com>
+Subject: [PATCH v5 3/4] mptcp: fix syncookie process if mptcp can not_accept new subflow
+Date: Wed, 16 Jun 2021 18:49:29 +0800
+Message-Id: <1623840570-42004-4-git-send-email-wujianguo106@163.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1623840570-42004-1-git-send-email-wujianguo106@163.com>
 References: <1623840570-42004-1-git-send-email-wujianguo106@163.com>
-X-CM-TRANSID:D8CowAB33vY718lgxTs1AA--.106S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAw4DCrWfZFy3AFy7Gr17KFg_yoWrAr13pr
-	45GrWDGrW8Jwn8Jr4YyFW7Xrn8Kr4qvFW8Gw1ayr1kJFs8Gwn2qFy8Jr40vFy7GrWYg347
-	Kr1DJ3WkKFn7ZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jVOJ5UUUUU=
+X-CM-TRANSID:D8CowAB33vY718lgxTs1AA--.106S5
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAryrJFW3Kr1rCFW5GF45Wrg_yoW5Ww43pr
+	4UXrWxtr1fJFy3GF4ftr4DZw1UWFZYyrZxJa15K347Awn8Zws3Kry8KF1xKryxCFs7GFy5
+	Xr4vq3WqvFnrCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j_EfrUUUUU=
 X-Originating-IP: [36.111.140.26]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB+AmzkF2MZRlTUQAAs9
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbBSRSzkFaD+62aYgAAsF
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -34,101 +34,71 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 From: Jianguo Wu <wujianguo@chinatelecom.cn>
 
-I got the following warning message while doing the test:
+Lots of "TCP: tcp_fin: Impossible, sk->sk_state=7" in client side
+when doing stress testing.
 
-[   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
-[   55.553024] ------------[ cut here ]------------
-[   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
-...
-[   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
-[   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-[   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
-...
-[   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
-[   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
-[   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
-[   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
-[   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
-[   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
-[   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
-[   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
-[   55.553160] Call Trace:
-[   55.553166]  ? __sha256_final+0x67/0xd0
-[   55.553173]  ? sha256+0x7e/0xa0
-[   55.553177]  __skb_get_hash+0x57/0x210
-[   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
-[   55.553189]  subflow_check_req+0x474/0x550
-[   55.553195]  ? ip_route_output_key_hash+0x67/0x90
-[   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
-[   55.553207]  subflow_v4_route_req+0x8e/0xd0
-[   55.553212]  tcp_conn_request+0x31e/0xab0
-[   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
-[   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
-[   55.553229]  tcp_rcv_state_process+0x179/0x6d0
-[   55.553235]  tcp_v4_do_rcv+0xaf/0x220
-[   55.553239]  tcp_v4_rcv+0xce4/0xd80
-[   55.553243]  ? ip_route_input_rcu+0x246/0x260
-[   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
-[   55.553253]  ip_local_deliver_finish+0x44/0x50
-[   55.553258]  ip_local_deliver+0x6c/0x110
-[   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
-[   55.553267]  ip_rcv+0xd1/0xe0
-...
+There are at least two cases may trigger this warning:
+1.mptcp is in syncookie, and server recv MP_JOIN SYN request,
+  in subflow_check_req(), the mptcp_can_accept_new_subflow()
+  return false, so subflow_init_req_cookie_join_save() isn't
+  called, i.e. not store the data present in the MP_JOIN syn
+  request and the random nonce in hash table - join_entries[],
+  but still send synack. When recv 3rd-ack,
+  mptcp_token_join_cookie_init_state() will return false, and
+  3rd-ack is dropped, then if mptcp conn is closed by client,
+  client will send a DATA_FIN and a MPTCP FIN, the DATA_FIN
+  doesn't have MP_CAPABLE or MP_JOIN,
+  so mptcp_subflow_init_cookie_req() will return 0, and pass
+  the cookie check, MP_JOIN request is fallback to normal TCP.
+  Server will send a TCP FIN if closed, in client side,
+  when process TCP FIN, it will do reset, the code path is:
+    tcp_data_queue()->mptcp_incoming_options()
+      ->check_fully_established()->mptcp_subflow_reset().
+  mptcp_subflow_reset() will set sock state to TCP_CLOSE,
+  so tcp_fin will hit TCP_CLOSE, and print the warning.
+2.mptcp is in syncookie, and server recv 3rd-ack, in
+  mptcp_subflow_init_cookie_req(), mptcp_can_accept_new_subflow()
+  return false, and subflow_req->mp_join is not set to 1,
+  so in subflow_syn_recv_sock() will not reset the MP_JOIN
+  subflow, but fallback to normal TCP, and then the same thing
+  happens when server will send a TCP FIN if closed.
 
-After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
-then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
-code path, as skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set.
+For case1, subflow_check_req() return -EPERM,
+then tcp_conn_request() will drop MP_JOIN SYN.
 
-Code snippet in __skb_flow_dissect() that trigger warning:
-  975         if (skb) {
-  976                 if (!net) {
-  977                         if (skb->dev)
-  978                                 net = dev_net(skb->dev);
-  979                         else if (skb->sk)
-  980                                 net = sock_net(skb->sk);
-  981                 }
-  982         }
-  983
-  984         WARN_ON_ONCE(!net);
+For case2, let subflow_syn_recv_sock() call mptcp_can_accept_new_subflow(),
+and do fatal fallback, send reset.
 
-So, using seq and transport header derived hash.
-
-Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use").
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Suggested-by: Florian Westphal <fw@strlen.de>
+Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use")
 Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
 ---
- net/mptcp/syncookies.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ net/mptcp/subflow.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
-index abe0fd099746..37127781aee9 100644
---- a/net/mptcp/syncookies.c
-+++ b/net/mptcp/syncookies.c
-@@ -37,7 +37,21 @@ struct join_entry {
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 75ed530706c0..6d98e19a20aa 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -224,6 +224,8 @@ static int subflow_check_req(struct request_sock *req,
+ 		if (unlikely(req->syncookie)) {
+ 			if (mptcp_can_accept_new_subflow(subflow_req->msk))
+ 				subflow_init_req_cookie_join_save(subflow_req, skb);
++			else
++				return -EPERM;
+ 		}
  
- static u32 mptcp_join_entry_hash(struct sk_buff *skb, struct net *net)
- {
--	u32 i = skb_get_hash(skb) ^ net_hash_mix(net);
-+	static u32 mptcp_join_hash_secret __read_mostly;
-+	struct tcphdr *th = tcp_hdr(skb);
-+	u32 seq, i;
-+
-+	net_get_random_once(&mptcp_join_hash_secret,
-+			    sizeof(mptcp_join_hash_secret));
-+
-+	if (th->syn)
-+		seq = TCP_SKB_CB(skb)->seq;
-+	else
-+		seq = TCP_SKB_CB(skb)->seq - 1;
-+
-+	i = jhash_3words(seq, net_hash_mix(net),
-+			 (__force __u32)th->source << 16 | (__force __u32)th->dest,
-+			 mptcp_join_hash_secret);
+ 		pr_debug("token=%u, remote_nonce=%u msk=%p", subflow_req->token,
+@@ -263,9 +265,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ 		if (!mptcp_token_join_cookie_init_state(subflow_req, skb))
+ 			return -EINVAL;
  
- 	return i % ARRAY_SIZE(join_entries);
- }
+-		if (mptcp_can_accept_new_subflow(subflow_req->msk))
+-			subflow_req->mp_join = 1;
+-
++		subflow_req->mp_join = 1;
+ 		subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq - 1;
+ 	}
+ 
 -- 
 1.8.3.1
 
