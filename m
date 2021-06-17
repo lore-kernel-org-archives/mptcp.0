@@ -1,21 +1,21 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0BD72
-	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 23:46:48 +0000 (UTC)
-IronPort-SDR: JPAr8kiOfITrs32TkW9I+HpQPPAI7wFI5lL42fNC8bSaUgHWUC8aJ+PMkSRfyjOjFGRUlavxuY
- 137hVR5AqXBg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="292098930"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E08A2FAE
+	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 23:46:49 +0000 (UTC)
+IronPort-SDR: /e88RSDoVw81OsuvA5F4Lc1qb8VNTYOahldo+j+34OGB5cNN3qQktHpVcrGtJWWsAFYzd26Dc/
+ LoZJy8/ZHcpQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="292098932"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="292098930"
+   d="scan'208";a="292098932"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:29 -0700
-IronPort-SDR: vlixTUoHSeA+MutS2Tdq+wLDAqn0NRVHX2gwBOeezMPYfzYXr/TXVFYbNCB031fLBRvNjX/cAj
- 49CigskX0nEw==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:30 -0700
+IronPort-SDR: edsxzSDGOalpX0SeGuQtJqVVqXBZnUtoYmHToyDKaSjUD98Fm7lmWB0Nsy9L2pTp6XFf85C1j1
+ jT7ERRXvA2Bw==
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="452943901"
+   d="scan'208";a="452943906"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.250.143])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:29 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:30 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliangtang@gmail.com>,
@@ -25,9 +25,9 @@ Cc: Geliang Tang <geliangtang@gmail.com>,
 	mptcp@lists.linux.dev,
 	pabeni@redhat.com,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 04/16] mptcp: send out checksum for MP_CAPABLE with data
-Date: Thu, 17 Jun 2021 16:46:10 -0700
-Message-Id: <20210617234622.472030-5-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 06/16] mptcp: add sk parameter for mptcp_get_options
+Date: Thu, 17 Jun 2021 16:46:12 -0700
+Message-Id: <20210617234622.472030-7-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
 References: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
@@ -40,117 +40,103 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-If the checksum is enabled, send out the data checksum with the
-MP_CAPABLE suboption with data.
+This patch added a new parameter name sk in mptcp_get_options().
 
-In mptcp_established_options_mp, save the data checksum in
-opts->ext_copy.csum. In mptcp_write_options, adjust the option length and
-send it out with the MP_CAPABLE suboption.
-
-Co-developed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/options.c | 52 +++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 43 insertions(+), 9 deletions(-)
+ net/mptcp/options.c  |  5 +++--
+ net/mptcp/protocol.h |  3 ++-
+ net/mptcp/subflow.c  | 10 +++++-----
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index bb3a1f3b6e99..b4da08db1221 100644
+index 1468774f1f87..ae69059583a7 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -439,6 +439,7 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	struct mptcp_ext *mpext;
- 	unsigned int data_len;
-+	u8 len;
- 
- 	/* When skb is not available, we better over-estimate the emitted
- 	 * options len. A full DSS option (28 bytes) is longer than
-@@ -474,10 +475,16 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
- 		 * packets that start the first subflow of an MPTCP connection,
- 		 * as well as the first packet that carries data
- 		 */
--		if (data_len > 0)
--			*size = ALIGN(TCPOLEN_MPTCP_MPC_ACK_DATA, 4);
--		else
-+		if (data_len > 0) {
-+			len = TCPOLEN_MPTCP_MPC_ACK_DATA;
-+			if (opts->csum_reqd) {
-+				opts->ext_copy.csum = mpext->csum;
-+				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
-+			}
-+			*size = ALIGN(len, 4);
-+		} else {
- 			*size = TCPOLEN_MPTCP_MPC_ACK;
-+		}
- 
- 		pr_debug("subflow=%p, local_key=%llu, remote_key=%llu map_len=%d",
- 			 subflow, subflow->local_key, subflow->remote_key,
-@@ -1122,6 +1129,25 @@ static void mptcp_set_rwin(const struct tcp_sock *tp)
- 		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
+@@ -323,7 +323,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 	}
  }
  
-+static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
-+{
-+	struct csum_pseudo_header header;
-+	__wsum csum;
-+
-+	/* cfr RFC 8684 3.3.1.:
-+	 * the data sequence number used in the pseudo-header is
-+	 * always the 64-bit value, irrespective of what length is used in the
-+	 * DSS option itself.
-+	 */
-+	header.data_seq = cpu_to_be64(mpext->data_seq);
-+	header.subflow_seq = htonl(mpext->subflow_seq);
-+	header.data_len = htons(mpext->data_len);
-+	header.csum = 0;
-+
-+	csum = csum_partial(&header, sizeof(header), ~csum_unfold(mpext->csum));
-+	return (__force u16)csum_fold(csum);
-+}
-+
- void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 			 struct mptcp_out_options *opts)
+-void mptcp_get_options(const struct sk_buff *skb,
++void mptcp_get_options(const struct sock *sk,
++		       const struct sk_buff *skb,
+ 		       struct mptcp_options_received *mp_opt)
  {
-@@ -1129,14 +1155,17 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 	     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
- 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
- 
--		if (OPTION_MPTCP_MPC_SYN & opts->suboptions)
-+		if (OPTION_MPTCP_MPC_SYN & opts->suboptions) {
- 			len = TCPOLEN_MPTCP_MPC_SYN;
--		else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
-+		} else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions) {
- 			len = TCPOLEN_MPTCP_MPC_SYNACK;
--		else if (opts->ext_copy.data_len)
-+		} else if (opts->ext_copy.data_len) {
- 			len = TCPOLEN_MPTCP_MPC_ACK_DATA;
--		else
-+			if (opts->csum_reqd)
-+				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
-+		} else {
- 			len = TCPOLEN_MPTCP_MPC_ACK;
-+		}
- 
- 		if (opts->csum_reqd)
- 			flag |= MPTCP_CAP_CHECKSUM_REQD;
-@@ -1159,8 +1188,13 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		if (!opts->ext_copy.data_len)
- 			goto mp_capable_done;
- 
--		put_unaligned_be32(opts->ext_copy.data_len << 16 |
--				   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-+		if (opts->csum_reqd) {
-+			put_unaligned_be32(opts->ext_copy.data_len << 16 |
-+					   mptcp_make_csum(&opts->ext_copy), ptr);
-+		} else {
-+			put_unaligned_be32(opts->ext_copy.data_len << 16 |
-+					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-+		}
- 		ptr += 1;
+ 	const struct tcphdr *th = tcp_hdr(skb);
+@@ -1024,7 +1025,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 		return;
  	}
  
+-	mptcp_get_options(skb, &mp_opt);
++	mptcp_get_options(sk, skb, &mp_opt);
+ 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+ 		return;
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 09e94726e030..a7ed0b8eb9bc 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -586,7 +586,8 @@ int __init mptcp_proto_v6_init(void);
+ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 			    const struct mptcp_options_received *mp_opt,
+ 			    struct request_sock *req);
+-void mptcp_get_options(const struct sk_buff *skb,
++void mptcp_get_options(const struct sock *sk,
++		       const struct sk_buff *skb,
+ 		       struct mptcp_options_received *mp_opt);
+ 
+ void mptcp_finish_connect(struct sock *sk);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 45acab63c387..aa6b307b27c8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -151,7 +151,7 @@ static int subflow_check_req(struct request_sock *req,
+ 		return -EINVAL;
+ #endif
+ 
+-	mptcp_get_options(skb, &mp_opt);
++	mptcp_get_options(sk_listener, skb, &mp_opt);
+ 
+ 	if (mp_opt.mp_capable) {
+ 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
+@@ -248,7 +248,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ 	int err;
+ 
+ 	subflow_init_req(req, sk_listener);
+-	mptcp_get_options(skb, &mp_opt);
++	mptcp_get_options(sk_listener, skb, &mp_opt);
+ 
+ 	if (mp_opt.mp_capable && mp_opt.mp_join)
+ 		return -EINVAL;
+@@ -395,7 +395,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 	subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
+ 	pr_debug("subflow=%p synack seq=%x", subflow, subflow->ssn_offset);
+ 
+-	mptcp_get_options(skb, &mp_opt);
++	mptcp_get_options(sk, skb, &mp_opt);
+ 	if (subflow->request_mptcp) {
+ 		if (!mp_opt.mp_capable) {
+ 			MPTCP_INC_STATS(sock_net(sk),
+@@ -639,7 +639,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 		 * reordered MPC will cause fallback, but we don't have other
+ 		 * options.
+ 		 */
+-		mptcp_get_options(skb, &mp_opt);
++		mptcp_get_options(sk, skb, &mp_opt);
+ 		if (!mp_opt.mp_capable) {
+ 			fallback = true;
+ 			goto create_child;
+@@ -649,7 +649,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 		if (!new_msk)
+ 			fallback = true;
+ 	} else if (subflow_req->mp_join) {
+-		mptcp_get_options(skb, &mp_opt);
++		mptcp_get_options(sk, skb, &mp_opt);
+ 		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
+ 		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
 -- 
 2.32.0
 
