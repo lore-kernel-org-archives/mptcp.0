@@ -1,117 +1,179 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02E1173
-	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 21:06:09 +0000 (UTC)
-IronPort-SDR: VR01/tJzQxkJ8cR2xTgzJx88glnpLQaMHKKriVdTcOcEnKlXnYftmvCrokOBjfIqatMkMI7PqJ
- kf5jRM0slQPA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="204621497"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CE671
+	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 23:46:32 +0000 (UTC)
+IronPort-SDR: l6xIUTSRdeyfI61JGdiPwC10I1Du5B8D0phA2EO5ALNDdRjJ5ABPCNFqqeZuMo4m9raZV3H3VG
+ N51TFbYMsgpQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="270316967"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="204621497"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:06:08 -0700
-IronPort-SDR: MluV9neQm91QPr7Mbbth89Lj8NOQFrUQyOS0/iisSVgKAxOAjMEdyuaIMAKLVzbjnSpZdsJ19g
- zIvajIbxx/Cg==
+   d="scan'208";a="270316967"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:31 -0700
+IronPort-SDR: WQx/aqDgtq7bN7uRZvVOsyFN9gGVGme35GdoNLh3hrZ+K2Ihm1qhYj2MnLdED/Pus4kTkZDwPG
+ LUBI3CDtpObw==
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="637954726"
-Received: from aparija-mobl1.amr.corp.intel.com ([10.212.253.186])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:06:08 -0700
-Date: Thu, 17 Jun 2021 14:06:07 -0700 (PDT)
+   d="scan'208";a="452943908"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.250.143])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:31 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Yonglong Li <liyonglong@chinatelecom.cn>
-cc: mptcp@lists.linux.dev, pabeni@redhat.com, matthieu.baerts@tessares.net, 
-    geliangtang@gmail.com
-Subject: Re: [PATCH v3 1/4] mptcp: fix ADD_ADDR and RM_ADDR maybe flush
- addr_signal each other
-In-Reply-To: <1623921276-97178-2-git-send-email-liyonglong@chinatelecom.cn>
-Message-ID: <c1863869-aef9-58ff-3cea-b3f38682a7f3@linux.intel.com>
-References: <1623921276-97178-1-git-send-email-liyonglong@chinatelecom.cn> <1623921276-97178-2-git-send-email-liyonglong@chinatelecom.cn>
+To: netdev@vger.kernel.org
+Cc: Geliang Tang <geliangtang@gmail.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev,
+	pabeni@redhat.com,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 08/16] mptcp: receive checksum for MP_CAPABLE with data
+Date: Thu, 17 Jun 2021 16:46:14 -0700
+Message-Id: <20210617234622.472030-9-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
+References: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 17 Jun 2021, Yonglong Li wrote:
+From: Geliang Tang <geliangtang@gmail.com>
 
-> ADD_ADDR share pm.addr_signal with RM_ADDR, so after RM_ADDR/ADD_ADDR
-> done we should not clean ADD_ADDR/RM_ADDR's addr_signal.
->
-> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
-> ---
-> net/mptcp/pm.c | 10 +++++++---
-> 1 file changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9d00fa6..611bb2c7 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -252,6 +252,7 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
-> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> 			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
-> {
-> +	u8 add_addr;
-> 	int ret = false;
->
-> 	spin_lock_bh(&msk->pm.lock);
-> @@ -267,7 +268,8 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> 		goto out_unlock;
->
-> 	*saddr = msk->pm.local;
-> -	WRITE_ONCE(msk->pm.addr_signal, 0);
-> +	add_addr = msk->pm.addr_signal & BIT(MPTCP_RM_ADDR_SIGNAL);
+This patch added a new member named csum in struct mptcp_options_received.
 
-Thanks for your reply for my comments in the v2 of this patch. I did 
-misunderstand that the clearing of MPTCP_ADD_ADDR_ECHO here was 
-intentional.
+When parsing the MP_CAPABLE with data, if the checksum is enabled,
+adjust the expected_opsize. If the receiving option length matches the
+length with the data checksum, get the checksum value and save it in
+mp_opt->csum. And in mptcp_incoming_options, pass it to mpext->csum.
 
-Still, I'd prefer to have it written
+We always parse any csum/nocsum combination and delay the presence check
+to later code, to allow reset if missing.
 
-~(BIT(MPTCP_ADD_ADDR_SIGNAL | BIT(MPTCP_ADD_ADDR_ECHO))
+Additionally, in the TX path, use the newly introduce ext field to avoid
+MPTCP csum recomputation on TCP retransmission and unneeded csum update
+on when setting the data fin_flag.
 
-so it more obviously lists the bits to be cleared. Also can't assume that 
-other bits in msk->pm.addr_signal will remain unused forever.
+Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ include/net/mptcp.h  |  3 ++-
+ net/mptcp/options.c  | 35 ++++++++++++++++++++++++++---------
+ net/mptcp/protocol.h |  3 +++
+ 3 files changed, 31 insertions(+), 10 deletions(-)
 
--Mat
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 33af68eea96f..d61bbbf11979 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -32,7 +32,8 @@ struct mptcp_ext {
+ 			mpc_map:1,
+ 			frozen:1,
+ 			reset_transient:1;
+-	u8		reset_reason:4;
++	u8		reset_reason:4,
++			csum_reqd:1;
+ };
+ 
+ #define MPTCP_RM_IDS_MAX	8
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 2e2551590ecd..8cbc75868969 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -44,7 +44,20 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 			else
+ 				expected_opsize = TCPOLEN_MPTCP_MPC_SYN;
+ 		}
+-		if (opsize != expected_opsize)
++
++		/* Cfr RFC 8684 Section 3.3.0:
++		 * If a checksum is present but its use had
++		 * not been negotiated in the MP_CAPABLE handshake, the receiver MUST
++		 * close the subflow with a RST, as it is not behaving as negotiated.
++		 * If a checksum is not present when its use has been negotiated, the
++		 * receiver MUST close the subflow with a RST, as it is considered
++		 * broken
++		 * We parse even option with mismatching csum presence, so that
++		 * later in subflow_data_ready we can trigger the reset.
++		 */
++		if (opsize != expected_opsize &&
++		    (expected_opsize != TCPOLEN_MPTCP_MPC_ACK_DATA ||
++		     opsize != TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM))
+ 			break;
+ 
+ 		/* try to be gentle vs future versions on the initial syn */
+@@ -66,11 +79,6 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		 * host requires the use of checksums, checksums MUST be used.
+ 		 * In other words, the only way for checksums not to be used
+ 		 * is if both hosts in their SYNs set A=0."
+-		 *
+-		 * Section 3.3.0:
+-		 * "If a checksum is not present when its use has been
+-		 * negotiated, the receiver MUST close the subflow with a RST as
+-		 * it is considered broken."
+ 		 */
+ 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+ 			mp_opt->csum_reqd = 1;
+@@ -84,7 +92,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 			mp_opt->rcvr_key = get_unaligned_be64(ptr);
+ 			ptr += 8;
+ 		}
+-		if (opsize == TCPOLEN_MPTCP_MPC_ACK_DATA) {
++		if (opsize >= TCPOLEN_MPTCP_MPC_ACK_DATA) {
+ 			/* Section 3.1.:
+ 			 * "the data parameters in a MP_CAPABLE are semantically
+ 			 * equivalent to those in a DSS option and can be used
+@@ -96,9 +104,14 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 			mp_opt->data_len = get_unaligned_be16(ptr);
+ 			ptr += 2;
+ 		}
+-		pr_debug("MP_CAPABLE version=%x, flags=%x, optlen=%d sndr=%llu, rcvr=%llu len=%d",
++		if (opsize == TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM) {
++			mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
++			mp_opt->csum_reqd = 1;
++			ptr += 2;
++		}
++		pr_debug("MP_CAPABLE version=%x, flags=%x, optlen=%d sndr=%llu, rcvr=%llu len=%d csum=%u",
+ 			 version, flags, opsize, mp_opt->sndr_key,
+-			 mp_opt->rcvr_key, mp_opt->data_len);
++			 mp_opt->rcvr_key, mp_opt->data_len, mp_opt->csum);
+ 		break;
+ 
+ 	case MPTCPOPT_MP_JOIN:
+@@ -1118,6 +1131,10 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 		}
+ 		mpext->data_len = mp_opt.data_len;
+ 		mpext->use_map = 1;
++		mpext->csum_reqd = mp_opt.csum_reqd;
++
++		if (mpext->csum_reqd)
++			mpext->csum = mp_opt.csum;
+ 	}
+ }
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 66e5063ac6c9..76194babc754 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -68,6 +68,8 @@
+ #define TCPOLEN_MPTCP_FASTCLOSE		12
+ #define TCPOLEN_MPTCP_RST		4
+ 
++#define TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM	(TCPOLEN_MPTCP_DSS_CHECKSUM + TCPOLEN_MPTCP_MPC_ACK_DATA)
++
+ /* MPTCP MP_JOIN flags */
+ #define MPTCPOPT_BACKUP		BIT(0)
+ #define MPTCPOPT_HMAC_LEN	20
+@@ -124,6 +126,7 @@ struct mptcp_options_received {
+ 	u64	data_seq;
+ 	u32	subflow_seq;
+ 	u16	data_len;
++	__sum16	csum;
+ 	u16	mp_capable : 1,
+ 		mp_join : 1,
+ 		fastclose : 1,
+-- 
+2.32.0
 
-> +	WRITE_ONCE(msk->pm.addr_signal, add_addr);
-> 	ret = true;
->
-> out_unlock:
-> @@ -278,6 +280,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> 			     struct mptcp_rm_list *rm_list)
-> {
-> +	u8 rm_addr;
-> 	int ret = false, len;
->
-> 	spin_lock_bh(&msk->pm.lock);
-> @@ -286,16 +289,17 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> 	if (!mptcp_pm_should_rm_signal(msk))
-> 		goto out_unlock;
->
-> +	rm_addr = msk->pm.addr_signal & ~BIT(MPTCP_RM_ADDR_SIGNAL);
-> 	len = mptcp_rm_addr_len(&msk->pm.rm_list_tx);
-> 	if (len < 0) {
-> -		WRITE_ONCE(msk->pm.addr_signal, 0);
-> +		WRITE_ONCE(msk->pm.addr_signal, rm_addr);
-> 		goto out_unlock;
-> 	}
-> 	if (remaining < len)
-> 		goto out_unlock;
->
-> 	*rm_list = msk->pm.rm_list_tx;
-> -	WRITE_ONCE(msk->pm.addr_signal, 0);
-> +	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
-> 	ret = true;
->
-> out_unlock:
-> -- 
-> 1.8.3.1
->
->
-
---
-Mat Martineau
-Intel
