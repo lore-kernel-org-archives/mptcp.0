@@ -1,36 +1,34 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111F02FAE
-	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 23:46:47 +0000 (UTC)
-IronPort-SDR: 7sjzas6bANRkd6CcGdi8Yi9Q/K0ShBEu/vniNYiMWOYjAsTY+phFPuHqAhYPQVYOmC2A5s4oaA
- ql+RNT430o7g==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="292098926"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADBB72
+	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 23:46:46 +0000 (UTC)
+IronPort-SDR: 1yPuwZFIRcCNGUcJ6tJgIp9Gwz6oMtr1q63l3DYwkwL7kLDUJYGcW+FieuSkqKh8/zCQMl8a1P
+ ifCE+T0C8yrw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="292098921"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="292098926"
+   d="scan'208";a="292098921"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:29 -0700
-IronPort-SDR: 6P1q/uOhj6mW8Vs8CT5TPLqlDjB19Rs/7kUCMTOdK2JcIp6XyeCZR9F70QAEBkBs5qJyCBIZNw
- cLqXOonV1bxg==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:28 -0700
+IronPort-SDR: 9fZzV1XZRp6M+GPl0wwqtPB4aMz8XFqbo6o/mValoeftoBN1UhDYZcE3jKagGFqmGBj/Q0yVCA
+ uVeprSy+DGYQ==
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="452943898"
+   d="scan'208";a="452943896"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.250.143])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:28 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:27 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliangtang@gmail.com>,
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	pabeni@redhat.com,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 02/16] mptcp: generate the data checksum
-Date: Thu, 17 Jun 2021 16:46:08 -0700
-Message-Id: <20210617234622.472030-3-mathew.j.martineau@linux.intel.com>
+	geliangtang@gmail.com,
+	pabeni@redhat.com
+Subject: [PATCH net-next 00/16] mptcp: DSS checksum support
+Date: Thu, 17 Jun 2021 16:46:06 -0700
+Message-Id: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
-References: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -38,100 +36,83 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliangtang@gmail.com>
+RFC 8684 defines a DSS checksum feature that allows MPTCP to detect
+middlebox interference with the MPTCP DSS header and the portion of the
+data stream associated with that header. So far, the MPTCP
+implementation in the Linux kernel has not supported this feature.
 
-This patch added a new member named csum in struct mptcp_ext, implemented
-a new function named mptcp_generate_data_checksum().
+This patch series adds DSS checksum support. By default, the kernel will
+not request checksums when sending SYN or SYN/ACK packets for MPTCP
+connections. Outgoing checksum requests can be enabled with a
+per-namespace net.mptcp.checksum_enabled sysctl. MPTCP connections will
+now proceed with DSS checksums when the peer requests them, whether the
+sysctl is enabled or not.
 
-Generate the data checksum in mptcp_sendmsg_frag, save it in mpext->csum.
 
-Note that we must generate the csum for zero window probe, too.
+Patches 1-5 add checksum bits to the outgoing SYN, SYN/ACK, and data
+packet headers. This includes calculating the checksum using a range of
+data and the MPTCP DSS mapping for that data.
 
-Do the csum update incrementally, to avoid multiple csum computation
-when the data is appended to existing skb.
+Patches 6-10 handle the checksum request in the SYN or SYN/ACK, and
+receiving and verifying the DSS checksum on data packets.
 
-Note that in a later patch we will skip unneeded csum related operation.
-Changes not included here to keep the delta small.
+Patch 11 adjusts the MPTCP-level retransmission process for checksum
+compatibility.
 
-Co-developed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- include/net/mptcp.h  |  1 +
- net/mptcp/protocol.c | 18 +++++++++++++++++-
- net/mptcp/protocol.h |  7 +++++++
- 3 files changed, 25 insertions(+), 1 deletion(-)
+Patches 12-14 add checksum-related MIBs, the net.mptcp.checksum_enabled
+sysctl, and a checksum field to debug trace output.
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 83f23774b908..23bbd439e115 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -23,6 +23,7 @@ struct mptcp_ext {
- 	u64		data_seq;
- 	u32		subflow_seq;
- 	u16		data_len;
-+	__sum16		csum;
- 	u8		use_map:1,
- 			dsn64:1,
- 			data_fin:1,
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2caca0dc2c1c..f0da067301f6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1308,6 +1308,18 @@ static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
- 	return __mptcp_alloc_tx_skb(sk, ssk, sk->sk_allocation);
- }
- 
-+/* note: this always recompute the csum on the whole skb, even
-+ * if we just appended a single frag. More status info needed
-+ */
-+static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
-+{
-+	struct mptcp_ext *mpext = mptcp_get_ext(skb);
-+	__wsum csum = ~csum_unfold(mpext->csum);
-+	int offset = skb->len - added;
-+
-+	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
-+}
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1402,10 +1414,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	if (zero_window_probe) {
- 		mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
- 		mpext->frozen = 1;
--		ret = 0;
-+		if (READ_ONCE(msk->csum_enabled))
-+			mptcp_update_data_checksum(tail, ret);
- 		tcp_push_pending_frames(ssk);
-+		return 0;
- 	}
- out:
-+	if (READ_ONCE(msk->csum_enabled))
-+		mptcp_update_data_checksum(tail, ret);
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
- 	return ret;
- }
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1fc6693e257e..4913ac7b6d19 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -336,6 +336,13 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
- 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
- }
- 
-+struct csum_pseudo_header {
-+	__be64 data_seq;
-+	__be32 subflow_seq;
-+	__be16 data_len;
-+	__sum16 csum;
-+};
-+
- struct mptcp_subflow_request_sock {
- 	struct	tcp_request_sock sk;
- 	u16	mp_capable : 1,
+Patches 15 & 16 add selftests.
+
+
+The series is slightly longer than the preferred 15-patch limit that
+patchwork warns about. I do try to stay below that whenever possible -
+this series does implement one feature and is, I think, cohesive enough
+to justify keeping it together. If it's at all problematic please let me
+know!
+
+A trivial merge conflict with net/master is introduced in patch 15: a
+commit in net/master removes a couple of nearby lines of code.
+
+
+Geliang Tang (14):
+  mptcp: add csum_enabled in mptcp_sock
+  mptcp: generate the data checksum
+  mptcp: add csum_reqd in mptcp_out_options
+  mptcp: send out checksum for MP_CAPABLE with data
+  mptcp: send out checksum for DSS
+  mptcp: add sk parameter for mptcp_get_options
+  mptcp: add csum_reqd in mptcp_options_received
+  mptcp: receive checksum for MP_CAPABLE with data
+  mptcp: receive checksum for DSS
+  mptcp: add the mib for data checksum
+  mptcp: add a new sysctl checksum_enabled
+  mptcp: dump csum fields in mptcp_dump_mpext
+  selftests: mptcp: enable checksum in mptcp_connect.sh
+  selftests: mptcp: enable checksum in mptcp_join.sh
+
+Paolo Abeni (2):
+  mptcp: validate the data checksum
+  mptcp: tune re-injections for csum enabled mode
+
+ Documentation/networking/mptcp-sysctl.rst     |   8 +
+ include/net/mptcp.h                           |   9 +-
+ include/trace/events/mptcp.h                  |  17 +-
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/ctrl.c                              |  16 ++
+ net/mptcp/mib.c                               |   1 +
+ net/mptcp/mib.h                               |   1 +
+ net/mptcp/mptcp_diag.c                        |   1 +
+ net/mptcp/options.c                           | 154 +++++++++++++-----
+ net/mptcp/protocol.c                          |  29 +++-
+ net/mptcp/protocol.h                          |  23 ++-
+ net/mptcp/subflow.c                           | 120 ++++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.sh      |  13 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 107 +++++++++++-
+ 14 files changed, 431 insertions(+), 69 deletions(-)
+
+
+base-commit: 8fe088bd4fd12f4c8899b51d5bc3daad98767d49
 -- 
 2.32.0
 
