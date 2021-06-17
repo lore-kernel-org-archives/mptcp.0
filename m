@@ -1,21 +1,21 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D046D00
-	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 23:46:36 +0000 (UTC)
-IronPort-SDR: 2otfgfhMRDh0093qz9VJttDxvOET59DbXjF6K2sXv6iFAgCycQllivfzUSS7hHbYIL0SSLMBq1
- USwYPqQZSnQw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="270316985"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25AA72
+	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 23:46:45 +0000 (UTC)
+IronPort-SDR: K23TFLeOfXU3S7vPvA7HQQe/yUuCR45tWWqj79uJbnne7mJ1rzy4WwInxlrcZYSVJpvtRRIUmr
+ fKaUzDTuXXOg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="292098924"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="270316985"
+   d="scan'208";a="292098924"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:35 -0700
-IronPort-SDR: /EorIFpkF2Lf+rArighCB3b/3N9NlLQsJ9OZQtLMOGg5g5j903W4+Yop20Wa5087Rh0N8rs4YB
- 3C0UhYbhy7JQ==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:28 -0700
+IronPort-SDR: Y5/6TygveoKF1iEZY7ouV2L9SLieb0WDigEwil4LLco5wKh3IZ8iQ19dV8sRM4uWb/qc/Dmkzj
+ xZwIo0yqkjfQ==
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="452943927"
+   d="scan'208";a="452943897"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.250.143])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:34 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:46:28 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliangtang@gmail.com>,
@@ -25,9 +25,9 @@ Cc: Geliang Tang <geliangtang@gmail.com>,
 	mptcp@lists.linux.dev,
 	pabeni@redhat.com,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 16/16] selftests: mptcp: enable checksum in mptcp_join.sh
-Date: Thu, 17 Jun 2021 16:46:22 -0700
-Message-Id: <20210617234622.472030-17-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 01/16] mptcp: add csum_enabled in mptcp_sock
+Date: Thu, 17 Jun 2021 16:46:07 -0700
+Message-Id: <20210617234622.472030-2-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
 References: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
@@ -40,233 +40,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch added a new argument "-C" for the mptcp_join.sh script to set
-the sysctl checksum_enabled to 1 in ns1 and ns2 to enable the data
-checksum.
+This patch added a new member named csum_enabled in struct mptcp_sock,
+used a dummy mptcp_is_checksum_enabled() helper to initialize it.
 
-In chk_join_nr, check the counter of the mib for the data checksum.
-
-Also added a new argument "-S" for the mptcp_join.sh script to start the
-test cases that verify the checksum handshake:
-
-  * Sender and listener both have checksums off
-  * Sender and listener both have checksums on
-  * Sender checksums off, listener checksums on
-  * Sender checksums on, listener checksums off
-
-The output looks like this:
-
- 01 checksum test 0 0                  sum[ ok ] - csum  [ ok ]
- 02 checksum test 1 1                  sum[ ok ] - csum  [ ok ]
- 03 checksum test 0 1                  sum[ ok ] - csum  [ ok ]
- 04 checksum test 1 0                  sum[ ok ] - csum  [ ok ]
- 05 no JOIN                            syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       sum[ ok ] - csum  [ ok ]
- 06 single subflow, limited by client  syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       sum[ ok ] - csum  [ ok ]
+Also added a new member named mptcpi_csum_enabled in struct mptcp_info
+to expose the csum_enabled flag.
 
 Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 107 +++++++++++++++++-
- 1 file changed, 103 insertions(+), 4 deletions(-)
+ include/uapi/linux/mptcp.h | 1 +
+ net/mptcp/mptcp_diag.c     | 1 +
+ net/mptcp/protocol.c       | 1 +
+ net/mptcp/protocol.h       | 2 ++
+ 4 files changed, 5 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fd99485cf2a4..523c7797f30a 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -12,6 +12,7 @@ timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- mptcp_connect=""
- capture=0
-+checksum=0
- do_all_tests=1
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 8eb3c0844bff..7b05f7102321 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -105,6 +105,7 @@ struct mptcp_info {
+ 	__u64	mptcpi_rcv_nxt;
+ 	__u8	mptcpi_local_addr_used;
+ 	__u8	mptcpi_local_addr_max;
++	__u8	mptcpi_csum_enabled;
+ };
  
- TEST_COUNT=0
-@@ -49,6 +50,9 @@ init()
- 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
- 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
- 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
-+		if [ $checksum -eq 1 ]; then
-+			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
-+		fi
- 	done
- 
- 	#  ns1              ns2
-@@ -124,6 +128,17 @@ reset_with_add_addr_timeout()
- 		-j DROP
+ /*
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index f16d9b5ee978..8f88ddeab6a2 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -144,6 +144,7 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+ 	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
+ 	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
+ 	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
++	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+ 	unlock_sock_fast(sk, slow);
  }
  
-+reset_with_checksum()
-+{
-+	local ns1_enable=$1
-+	local ns2_enable=$2
-+
-+	reset
-+
-+	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=$ns1_enable
-+	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=$ns2_enable
-+}
-+
- ip -Version > /dev/null 2>&1
- if [ $? -ne 0 ];then
- 	echo "SKIP: Could not run test without ip tool"
-@@ -476,6 +491,45 @@ run_tests()
- 	fi
- }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 993095089990..2caca0dc2c1c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2453,6 +2453,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->ack_hint = NULL;
+ 	msk->first = NULL;
+ 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
++	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
  
-+chk_csum_nr()
-+{
-+	local msg=${1:-""}
-+	local count
-+	local dump_stats
-+
-+	if [ ! -z "$msg" ]; then
-+		printf "%02u" "$TEST_COUNT"
-+	else
-+		echo -n "  "
-+	fi
-+	printf " %-36s %s" "$msg" "sum"
-+	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
-+	[ -z "$count" ] && count=0
-+	if [ "$count" != 0 ]; then
-+		echo "[fail] got $count data checksum error[s] expected 0"
-+		ret=1
-+		dump_stats=1
-+	else
-+		echo -n "[ ok ]"
-+	fi
-+	echo -n " - csum  "
-+	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
-+	[ -z "$count" ] && count=0
-+	if [ "$count" != 0 ]; then
-+		echo "[fail] got $count data checksum error[s] expected 0"
-+		ret=1
-+		dump_stats=1
-+	else
-+		echo "[ ok ]"
-+	fi
-+	if [ "${dump_stats}" = 1 ]; then
-+		echo Server ns stats
-+		ip netns exec $ns1 nstat -as | grep MPTcp
-+		echo Client ns stats
-+		ip netns exec $ns2 nstat -as | grep MPTcp
-+	fi
-+}
-+
- chk_join_nr()
- {
- 	local msg="$1"
-@@ -523,6 +577,9 @@ chk_join_nr()
- 		echo Client ns stats
- 		ip netns exec $ns2 nstat -as | grep MPTcp
- 	fi
-+	if [ $checksum -eq 1 ]; then
-+		chk_csum_nr
-+	fi
- }
+ 	mptcp_pm_data_init(msk);
  
- chk_add_nr()
-@@ -1374,6 +1431,37 @@ syncookies_tests()
- 	chk_add_nr 1 1
- }
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 89f6b73783d5..1fc6693e257e 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -234,6 +234,7 @@ struct mptcp_sock {
+ 	bool		snd_data_fin_enable;
+ 	bool		rcv_fastclose;
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
++	bool		csum_enabled;
+ 	spinlock_t	join_list_lock;
+ 	struct sock	*ack_hint;
+ 	struct work_struct work;
+@@ -525,6 +526,7 @@ static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *su
  
-+checksum_tests()
-+{
-+	# checksum test 0 0
-+	reset_with_checksum 0 0
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_csum_nr "checksum test 0 0"
-+
-+	# checksum test 1 1
-+	reset_with_checksum 1 1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_csum_nr "checksum test 1 1"
-+
-+	# checksum test 0 1
-+	reset_with_checksum 0 1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_csum_nr "checksum test 0 1"
-+
-+	# checksum test 1 0
-+	reset_with_checksum 1 0
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_csum_nr "checksum test 1 0"
-+}
-+
- all_tests()
- {
- 	subflows_tests
-@@ -1387,6 +1475,7 @@ all_tests()
- 	backup_tests
- 	add_addr_ports_tests
- 	syncookies_tests
-+	checksum_tests
- }
- 
- usage()
-@@ -1403,7 +1492,9 @@ usage()
- 	echo "  -b backup_tests"
- 	echo "  -p add_addr_ports_tests"
- 	echo "  -k syncookies_tests"
-+	echo "  -S checksum_tests"
- 	echo "  -c capture pcap files"
-+	echo "  -C enable data checksum"
- 	echo "  -h help"
- }
- 
-@@ -1418,13 +1509,16 @@ make_file "$sin" "server" 1
- trap cleanup EXIT
- 
- for arg in "$@"; do
--	# check for "capture" arg before launching tests
-+	# check for "capture/checksum" args before launching tests
- 	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
- 		capture=1
- 	fi
-+	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
-+		checksum=1
-+	fi
- 
--	# exception for the capture option, the rest means: a part of the tests
--	if [ "${arg}" != "-c" ]; then
-+	# exception for the capture/checksum options, the rest means: a part of the tests
-+	if [ "${arg}" != "-c" ] && [ "${arg}" != "-C" ]; then
- 		do_all_tests=0
- 	fi
- done
-@@ -1434,7 +1528,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
- 
--while getopts 'fsltra64bpkch' opt; do
-+while getopts 'fsltra64bpkchCS' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1469,8 +1563,13 @@ while getopts 'fsltra64bpkch' opt; do
- 		k)
- 			syncookies_tests
- 			;;
-+		S)
-+			checksum_tests
-+			;;
- 		c)
- 			;;
-+		C)
-+			;;
- 		h | *)
- 			usage
- 			;;
+ int mptcp_is_enabled(struct net *net);
+ unsigned int mptcp_get_add_addr_timeout(struct net *net);
++static inline int mptcp_is_checksum_enabled(struct net *net) { return false; }
+ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+ 				     struct mptcp_options_received *mp_opt);
+ bool mptcp_subflow_data_available(struct sock *sk);
 -- 
 2.32.0
 
