@@ -1,42 +1,42 @@
 Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAE772
-	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 17:42:54 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id g20so11301185ejt.0
-        for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 10:42:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFD472
+	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 18:27:52 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id nd37so11623284ejc.3
+        for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 11:27:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=7MHD7EiSpY3e0ERtwOHvIB+KaRhM2Um7f/06TGmH7Gg=;
-        b=ISiz3+CBB3cS1Fjzms1hdR9IOCuWXdV/3OZsAmuGA0u24iyp1VIHRdmDtsT0ZCTDEr
-         6xRvIJTzHq19O7CIonVqvqT5KoNboIJFFofrV9S1qL6xWomF76y1mqpy96Ayf09PDu8Y
-         1F/iId/lDj1MLIEAdk7KjCspqeheaGab+uxzjCKK+tRfDzZi73Scn+qjPBfxHRJniFVl
-         Mh3LLnvEYE8eiKmUVob2T5c0J84jhYChrB+V3br1n5fVFc1nhVxZlUQPGbiF/zQqroVs
-         iwuUT0RO25hRq1026WPDY/sFUqqW89zfqf7etBnfS8mRpohw9uv5ffFsayrcCTX+EUU4
-         UFAg==
+        bh=z9dDka7WqooF8QCzzctsFQ5AKA9e87F9WYFEk1ZSQcs=;
+        b=AyaTj1aLjzpje1OtpqcJshH5hFvoLUhyOYXtR59yQuHG27PVY7Rd7fRhPV1SqeOEvF
+         W4iuM/Sc7iDgwNK4ExCcYGQzPYwi5JEGEvgpVh9TBrkdMDHekt6NxEaaUvJpqAyV3HE9
+         jhUOEdDntyO7yrxvC1JFGSt/m6hmeCN2UejRfoPxewkZzN8M3ukSsdx/1FaSPV4h7Ny/
+         y1k/KRm+W3/G7kCbJCGsq0DcEOReF6xsxVsbIFT9ZkuE00w0r+d2nHyEGRuv+xvL5QL5
+         40Nnt9eMlxJACYj3NaH/2iqCEsmYX/cKKOvqFA+Xhxq0HnhEHPE3wV3MjneUxti535ml
+         whYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7MHD7EiSpY3e0ERtwOHvIB+KaRhM2Um7f/06TGmH7Gg=;
-        b=URLeFgkE0ppLk3YUnc40eFFU64vpNhv0Fr4jX0lcWFF4QK1WePibx6bOQw5rmBAtDR
-         THw5nwMvzmIloybmTmsINPmL+4/HCZwKXDQ+inJrGpnOY97dBzPrT24fY+G4RuguDuQE
-         OHxVC34fZqK8UIPuyduruqhFUBTTWMP3U+i2DcyMhkfin1lz3iy5xMo7RIHue/Uabi7j
-         H0+nBFYKKi78jtOea2qShs5+zpyK8DdLltq23s3EQHL+kHW81ALwFx8DWAqbxJCEq3+H
-         jr75AhIMfVyhLGc1ezDLBM7bxPyhjxYd312WTe2yR7if8SsPGCF1YG1HI2x+GZt8OWEX
-         kJ8A==
-X-Gm-Message-State: AOAM5311rFUf8wRl8UtyKvJHv0pqpRZepB3HWi8HerX9bqlGWKTXkYsS
-	nO1cFrIRr+Jd/1Qy8Yd+hoE=
-X-Google-Smtp-Source: ABdhPJwWNLIULh5OpxfozVq/mF6ozU+8u/EdBodGq5HallWZ8jCIVaPdxjyiv0YLWeBZz65OeLTGJQ==
-X-Received: by 2002:a17:907:3f08:: with SMTP id hq8mr6490774ejc.150.1623951772740;
-        Thu, 17 Jun 2021 10:42:52 -0700 (PDT)
+        bh=z9dDka7WqooF8QCzzctsFQ5AKA9e87F9WYFEk1ZSQcs=;
+        b=ptt+1CbH7d4g+w8RrjPtMJIgqLr2h6YgOJbpv8L2JT8AZNGHU5z/IWUbgrSGHvBfMc
+         RRsyQYHbTSj4M0eycQll4xhNkOXF5vcRTPiGHt4NTQNDW04d0Apa8AjK6hXSRbpWtVkJ
+         MEylnTZGNeibJVVPSyUS8kOk472Wm0TZg/Ha0xOQKDumkoPTHjbp2BSufHg9XgJwasXJ
+         8TuX4EvH4S9hfyomH2WP5ukiDcalP7OFluO/bS/9KhMXkMEfrRV8rdBorr/GVRjVaZE7
+         Lj3NonfZVXEXmQP1N6F3biEOrWTr0iMTw+gaUdvwK52BM5wHFBzKp0n8BumzbN2zHZhi
+         rEog==
+X-Gm-Message-State: AOAM533vJvJRfFt5ZtmIsnqMcl8/hyHkAiHe/e6Bl5NT9eGUSmtGsT+y
+	iYJzGHhKex6OXrli+twwYtU=
+X-Google-Smtp-Source: ABdhPJypw9hZOdaqWcpGkUc3xFICl20D/p5X8o0IST2ZLxYVKIwHB4cA0WK4vA9Y4STPcKtfNnxTzA==
+X-Received: by 2002:a05:6402:1355:: with SMTP id y21mr1917680edw.136.1623954471027;
+        Thu, 17 Jun 2021 11:27:51 -0700 (PDT)
 Received: from localhost ([185.246.22.209])
-        by smtp.gmail.com with ESMTPSA id b10sm4776610edf.77.2021.06.17.10.42.51
+        by smtp.gmail.com with ESMTPSA id r23sm34618edy.13.2021.06.17.11.27.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 10:42:52 -0700 (PDT)
-Date: Thu, 17 Jun 2021 19:42:47 +0200
+        Thu, 17 Jun 2021 11:27:50 -0700 (PDT)
+Date: Thu, 17 Jun 2021 20:27:45 +0200
 From: Richard Cochran <richardcochran@gmail.com>
 To: Yangbo Lu <yangbo.lu@nxp.com>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -51,7 +51,7 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Sebastien Laveze <sebastien.laveze@nxp.com>
 Subject: Re: [net-next, v3, 02/10] ptp: support ptp physical/virtual clocks
  conversion
-Message-ID: <20210617174247.GB4770@localhost>
+Message-ID: <20210617182745.GC4770@localhost>
 References: <20210615094517.48752-1-yangbo.lu@nxp.com>
  <20210615094517.48752-3-yangbo.lu@nxp.com>
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,38 +66,38 @@ User-Agent: Mutt/1.10.1 (2018-07-13)
 
 On Tue, Jun 15, 2021 at 05:45:09PM +0800, Yangbo Lu wrote:
 
-> diff --git a/Documentation/ABI/testing/sysfs-ptp b/Documentation/ABI/testing/sysfs-ptp
-> index 2363ad810ddb..2ef11b775f47 100644
-> --- a/Documentation/ABI/testing/sysfs-ptp
-> +++ b/Documentation/ABI/testing/sysfs-ptp
-> @@ -61,6 +61,19 @@ Description:
->  		This file contains the number of programmable pins
->  		offered by the PTP hardware clock.
+> diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+> index 3f388d63904c..6949afc9d733 100644
+> --- a/drivers/ptp/ptp_private.h
+> +++ b/drivers/ptp/ptp_private.h
+> @@ -46,6 +46,9 @@ struct ptp_clock {
+>  	const struct attribute_group *pin_attr_groups[2];
+>  	struct kthread_worker *kworker;
+>  	struct kthread_delayed_work aux_work;
+> +	u8 n_vclocks;
+
+Hm, type is u8, but ...
+
+> +	struct mutex n_vclocks_mux; /* protect concurrent n_vclocks access */
+> +	bool vclock_flag;
+>  };
 >  
-> +What:		/sys/class/ptp/ptpN/n_vclocks
-> +Date:		May 2021
-> +Contact:	Yangbo Lu <yangbo.lu@nxp.com>
-> +Description:
-> +		This file contains the ptp virtual clocks number in use,
-> +		based on current ptp physical clock. In default, the
-> +		value is 0 meaning only ptp physical clock is in use.
-> +		Setting the value can create corresponding number of ptp
-> +		virtual clocks to use. But current ptp physical clock is
-> +		guaranteed to stay free running. Setting the value back
-> +		to 0 can delete ptp virtual clocks and back use ptp
-> +		physical clock again.
 
-The native speaker in me suggests:
+>  #define info_to_vclock(d) container_of((d), struct ptp_vclock, info)
+> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+> index 1d108d597f66..4b933dc1b81b 100644
+> --- a/include/uapi/linux/ptp_clock.h
+> +++ b/include/uapi/linux/ptp_clock.h
+> @@ -69,6 +69,11 @@
+>   */
+>  #define PTP_PEROUT_V1_VALID_FLAGS	(0)
+>  
+> +/*
+> + * Max number of PTP virtual clocks per PTP physical clock
+> + */
+> +#define PTP_MAX_VCLOCKS			20
 
-		This file contains the number of virtual PTP clocks in
-		use.  By default, the value is 0 meaning that only the
-		physical clock is in use.  Setting the value creates
-		the corresponding number of virtual clocks and causes
-		the physical clock to become free running.  Setting the
-		value back to 0 deletes the virtual clocks and
-		switches the physical clock back to normal, adjustable
-		operation.
+Only 20 clocks are allowed?  Why?
 
 Thanks,
 Richard
-
