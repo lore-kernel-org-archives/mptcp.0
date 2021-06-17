@@ -1,190 +1,126 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B940371
-	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 00:38:08 +0000 (UTC)
-IronPort-SDR: /YYI9oPzvIaKmgXoOQJbJfUF+L1GnQJZSEy0NJR919k6/MXOT6KdBZG69XC1P8q9uSP3NoDhun
- cLzUwRTDplzw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10017"; a="267427058"
-X-IronPort-AV: E=Sophos;i="5.83,278,1616482800"; 
-   d="scan'208";a="267427058"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2021 17:38:07 -0700
-IronPort-SDR: 9xVmhzGO4YDyOYbPvMeML/vWLJ05RL2jv12ItR/UOn8YNOrIR+dvgpqbIJLI7elmKn/HEWSWzv
- /NI9q0T5RLxw==
-X-IronPort-AV: E=Sophos;i="5.83,278,1616482800"; 
-   d="scan'208";a="421692178"
-Received: from ndalili-mobl.amr.corp.intel.com ([10.209.105.124])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2021 17:38:07 -0700
-Date: Wed, 16 Jun 2021 17:38:06 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: avoid race on msk state changes
-In-Reply-To: <ad66de68b4a3abd765da48e0030b08bf852bf9e6.1623849715.git.pabeni@redhat.com>
-Message-ID: <4b871869-969e-b732-86fb-e970beb4f0d6@linux.intel.com>
-References: <ad66de68b4a3abd765da48e0030b08bf852bf9e6.1623849715.git.pabeni@redhat.com>
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B8571
+	for <mptcp@lists.linux.dev>; Thu, 17 Jun 2021 02:13:21 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.218:36628.690729095
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.26?logid-8bd42fcc4c654cd498058dc99871a0a1 (unknown [172.18.0.218])
+	by chinatelecom.cn (HERMES) with SMTP id 290CE28009F;
+	Thu, 17 Jun 2021 10:13:07 +0800 (CST)
+X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.218])
+	by app0025 with ESMTP id 8bd42fcc4c654cd498058dc99871a0a1 for geliangtang@gmail.com;
+	Thu Jun 17 10:13:12 2021
+X-Transaction-ID: 8bd42fcc4c654cd498058dc99871a0a1
+X-filter-score:  filter<0>
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.218
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+Subject: Re: [PATCH v2 1/4] mptcp: fix ADD_ADDR and RM_ADDR maybe flush
+ addr_signal each other
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com, matthieu.baerts@tessares.net,
+ geliangtang@gmail.com
+References: <1623720670-73539-1-git-send-email-liyonglong@chinatelecom.cn>
+ <1623720670-73539-2-git-send-email-liyonglong@chinatelecom.cn>
+ <fdfdf3c-f3bb-4e83-d49-84e97f667954@linux.intel.com>
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+Message-ID: <5eee8ce5-05d6-70ad-a1f6-84cca0a87eda@chinatelecom.cn>
+Date: Thu, 17 Jun 2021 10:13:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <fdfdf3c-f3bb-4e83-d49-84e97f667954@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-On Wed, 16 Jun 2021, Paolo Abeni wrote:
 
-> The msk socket state is currently updated in a few spots without
-> owning the msk socket lock itself.
->
-> Some of such operations are safe, as they happens before exposing
-> the msk socket to user-space and can't race with other changes.
->
-> A couple of them, at connect time, can actually race with close()
-> or shutdown(), leaving breaking the socket state machine.
->
-> This change addresses the issue moving such update under the msk
-> socket lock with the usual:
->
-> <acquire spinlock>
-> <check sk lock onwers>
-> <ev defer to release_cb>
->
-> scheme.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/56
-> Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
-> Fixes: c3c123d16c0e ("net: mptcp: don't hang in mptcp_sendmsg() after TCP fallbac")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c |  2 ++
-> net/mptcp/protocol.h |  2 ++
-> net/mptcp/subflow.c  | 30 ++++++++++++++++++++++--------
-> 3 files changed, 26 insertions(+), 8 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 05c8382aafef..15c3b75516fb 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2906,6 +2906,8 @@ static void mptcp_release_cb(struct sock *sk)
-> 		__mptcp_clean_una_wakeup(sk);
-> 	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
-> 		__mptcp_error_report(sk);
-> +	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
-> +		__mptcp_set_connected(sk);
 
-Is it worth it to move the MPTCP_CONNECTED handling to be first in 
-mptcp_release_cb()? Some of the other handlers would expect to have the 
-msk connection state set first - it doesn't look like the other flags are 
-likely to be set so early in the connection but I haven't (yet?) convinced 
-myself it's impossible.
+On 2021/6/17 7:30, Mat Martineau wrote:
+> On Tue, 15 Jun 2021, Yonglong Li wrote:
+> 
+>> ADD_ADDR share pm.addr_signal with RM_ADDR, so after RM_ADDR/ADD_ADDR
+>> done we should not clean ADD_ADDR/RM_ADDR's addr_signal.
+>>
+>> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+>> ---
+>> net/mptcp/pm.c | 10 +++++++---
+>> 1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>> index 9d00fa6..74886a3 100644
+>> --- a/net/mptcp/pm.c
+>> +++ b/net/mptcp/pm.c
+>> @@ -252,6 +252,7 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
+>> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>                   struct mptcp_addr_info *saddr, bool *echo, bool *port)
+>> {
+>> +    u8 add_addr;
+>>     int ret = false;
+>>
+>>     spin_lock_bh(&msk->pm.lock);
+>> @@ -267,7 +268,8 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>         goto out_unlock;
+>>
+>>     *saddr = msk->pm.local;
+>> -    WRITE_ONCE(msk->pm.addr_signal, 0);
+>> +    add_addr = msk->pm.addr_signal & BIT(MPTCP_RM_ADDR_SIGNAL);
+> 
+> Hello Yonglong, thank you for your revised patch series.
+> 
+> It would be better to use ~BIT(MPTCP_ADD_ADDR_SIGNAL), similar to the change in 
+Hi Mat, Thanks for your review.
+If use ~BIT(MPTCP_ADD_ADDR_SIGNAL), MPTCP_ADD_ADDR_ECHO maybe not being clean out. MPTCP_ADD_ADDR_ECHO
+and MPTCP_ADD_ADDR_SIGNAL are being set with pm.lock at the same time, So I think here use
+BIT(MPTCP_RM_ADDR_SIGNAL) is ok.
 
->
-> 	/* push_pending may touch wmem_reserved, ensure we do the cleanup
-> 	 * later
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 2480db50cbd2..515bb1e6acec 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -112,6 +112,7 @@
-> #define MPTCP_ERROR_REPORT	8
-> #define MPTCP_RETRANSMIT	9
-> #define MPTCP_WORK_SYNC_SETSOCKOPT 10
-> +#define MPTCP_CONNECTED		11
->
-> static inline bool before64(__u64 seq1, __u64 seq2)
-> {
-> @@ -600,6 +601,7 @@ void mptcp_get_options(const struct sock *sk,
-> 		       struct mptcp_options_received *mp_opt);
->
-> void mptcp_finish_connect(struct sock *sk);
-> +void __mptcp_set_connected(struct sock *sk);
-> static inline bool mptcp_is_fully_established(struct sock *sk)
-> {
-> 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 6772802737e4..0b5d4a3eadcd 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -373,6 +373,24 @@ static bool subflow_use_different_dport(struct mptcp_sock *msk, const struct soc
-> 	return inet_sk(sk)->inet_dport != inet_sk((struct sock *)msk)->inet_dport;
-> }
->
-> +void __mptcp_set_connected(struct sock *sk)
-> +{
-> +	if (sk->sk_state == TCP_SYN_SENT) {
-> +		inet_sk_state_store(sk, TCP_ESTABLISHED);
-> +		sk->sk_state_change(sk);
-> +	}
-> +}
-> +
-> +static void mptcp_set_connected(struct sock *sk)
-> +{
-> +	mptcp_data_lock(sk);
-> +	if (!sock_owned_by_user(sk))
-> +		__mptcp_set_connected(sk);
-> +	else
-> +		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
-> +	mptcp_data_unlock(sk);
-> +}
-> +
-> static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
-> {
-> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> @@ -381,10 +399,6 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
->
-> 	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
->
-> -	if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
-> -		inet_sk_state_store(parent, TCP_ESTABLISHED);
-> -		parent->sk_state_change(parent);
-> -	}
->
-
-Minor: this leaves a double-newline in the code. Maybe Matthieu can touch 
-it up, or if a v2 is needed for the mptcp_release_cb() change above you 
-could fold this in.
-
-> 	/* be sure no special action on any packet other than syn-ack */
-> 	if (subflow->conn_finished)
-> @@ -417,6 +431,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
-> 			 subflow->remote_key);
-> 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEACK);
-> 		mptcp_finish_connect(sk);
-> +		mptcp_set_connected(parent);
-> 	} else if (subflow->request_join) {
-> 		u8 hmac[SHA256_DIGEST_SIZE];
->
-> @@ -457,6 +472,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
-> 	} else if (mptcp_check_fallback(sk)) {
-> fallback:
-> 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
-> +		mptcp_set_connected(parent);
-> 	}
-> 	return;
->
-> @@ -564,6 +580,7 @@ static void mptcp_sock_destruct(struct sock *sk)
->
-> static void mptcp_force_close(struct sock *sk)
-> {
-> +	/* the msk is not yet exposed to user-space */
-> 	inet_sk_state_store(sk, TCP_CLOSE);
-> 	sk_common_release(sk);
-> }
-> @@ -1577,10 +1594,7 @@ static void subflow_state_change(struct sock *sk)
-> 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
-> 		pr_fallback(mptcp_sk(parent));
-> 		subflow->conn_finished = 1;
-> -		if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
-> -			inet_sk_state_store(parent, TCP_ESTABLISHED);
-> -			parent->sk_state_change(parent);
-> -		}
-> +		mptcp_set_connected(parent);
-> 	}
->
-> 	/* as recvmsg() does not acquire the subflow socket for ssk selection
+mptcp_pm_rm_addr_signal() below.
+> 
+>> +    WRITE_ONCE(msk->pm.addr_signal, add_addr);
+>>     ret = true;
+>>
+>> out_unlock:
+>> @@ -278,6 +280,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>                  struct mptcp_rm_list *rm_list)
+>> {
+>> +    u8 rm_addr;
+>>     int ret = false, len;
+>>
+>>     spin_lock_bh(&msk->pm.lock);
+>> @@ -286,16 +289,17 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>     if (!mptcp_pm_should_rm_signal(msk))
+>>         goto out_unlock;
+>>
+>> +    rm_addr = msk->pm.addr_signal & ~BIT(MPTCP_RM_ADDR_SIGNAL);
+>>     len = mptcp_rm_addr_len(&msk->pm.rm_list_tx);
+>>     if (len < 0) {
+>> -        WRITE_ONCE(msk->pm.addr_signal, 0);
+>> +        WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+>>         goto out_unlock;
+>>     }
+>>     if (remaining < len)
+>>         goto out_unlock;
+>>
+>>     *rm_list = msk->pm.rm_list_tx;
+>> -    WRITE_ONCE(msk->pm.addr_signal, 0);
+>> +    WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+>>     ret = true;
+>>
+>> out_unlock:
+>> -- 
+>> 1.8.3.1
+>>
+>>
+> 
 > -- 
-> 2.26.3
-
---
-Mat Martineau
-Intel
+> Mat Martineau
+> Intel
+> 
+> 
