@@ -1,17 +1,17 @@
 Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.228])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2295770
-	for <mptcp@lists.linux.dev>; Fri, 18 Jun 2021 08:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F7A070
+	for <mptcp@lists.linux.dev>; Fri, 18 Jun 2021 08:19:01 +0000 (UTC)
 HMM_SOURCE_IP:172.18.0.48:51850.1058790300
 HMM_ATTACHE_NUM:0000
 HMM_SOURCE_TYPE:SMTP
 Received: from clientip-36.111.140.9?logid-0a32ae585ff14ac490b4c9f9c7b87bac (unknown [172.18.0.48])
-	by chinatelecom.cn (HERMES) with SMTP id C35F5280108;
-	Fri, 18 Jun 2021 16:18:50 +0800 (CST)
+	by chinatelecom.cn (HERMES) with SMTP id 4229A280106;
+	Fri, 18 Jun 2021 16:19:01 +0800 (CST)
 X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
 Received: from  ([172.18.0.48])
-	by app0024 with ESMTP id ef9b5caed9b141da9f6320d900cac954 for mptcp@lists.linux.dev;
-	Fri Jun 18 16:18:49 2021
-X-Transaction-ID: ef9b5caed9b141da9f6320d900cac954
+	by app0024 with ESMTP id 2327c78c1e8740cdaef503ab9903abd4 for mptcp@lists.linux.dev;
+	Fri Jun 18 16:19:00 2021
+X-Transaction-ID: 2327c78c1e8740cdaef503ab9903abd4
 X-filter-score:  filter<0>
 X-Real-From: liyonglong@chinatelecom.cn
 X-Receive-IP: 172.18.0.48
@@ -23,9 +23,9 @@ Cc: mathew.j.martineau@linux.intel.com,
 	geliangtang@gmail.com,
 	qitiepeng@chinatelecom.cn,
 	Yonglong Li <liyonglong@chinatelecom.cn>
-Subject: [PATCH v4 1/4] mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
-Date: Fri, 18 Jun 2021 16:18:26 +0800
-Message-Id: <1624004309-54480-2-git-send-email-liyonglong@chinatelecom.cn>
+Subject: [PATCH v4 2/4] mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
+Date: Fri, 18 Jun 2021 16:18:27 +0800
+Message-Id: <1624004309-54480-3-git-send-email-liyonglong@chinatelecom.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1624004309-54480-1-git-send-email-liyonglong@chinatelecom.cn>
 References: <1624004309-54480-1-git-send-email-liyonglong@chinatelecom.cn>
@@ -37,64 +37,109 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-ADD_ADDR share pm.addr_signal with RM_ADDR, so after RM_ADDR/ADD_ADDR
-done we should not clean ADD_ADDR/RM_ADDR's addr_signal.
+MPTCP_ADD_ADDR_SIGNAL only for action of sending ADD_ADDR
+MPTCP_ADD_ADDR_ECHO only for action of sending echo ADD_ADDR
+add a mptcp_addr_info in struct mptcp_out_options for echo ADD_ADDR
+
+to prepare for the next patch.
 
 Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
 ---
- net/mptcp/pm.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ include/net/mptcp.h    |  1 +
+ net/mptcp/pm.c         | 13 ++++++++-----
+ net/mptcp/pm_netlink.c |  4 ++--
+ net/mptcp/protocol.h   |  6 ++++++
+ 4 files changed, 17 insertions(+), 7 deletions(-)
 
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index d61bbbf..637e90b 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -62,6 +62,7 @@ struct mptcp_out_options {
+ 	u64 rcvr_key;
+ 	u64 ahmac;
+ 	struct mptcp_addr_info addr;
++	struct mptcp_addr_info remote;
+ 	struct mptcp_rm_list rm_list;
+ 	u8 join_id;
+ 	u8 backup;
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 9d00fa6..6c427c8 100644
+index 6c427c8..107a5a2 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -252,6 +252,7 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
+@@ -18,7 +18,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
  {
-+	u8 add_addr;
- 	int ret = false;
+ 	u8 add_addr = READ_ONCE(msk->pm.addr_signal);
  
- 	spin_lock_bh(&msk->pm.lock);
-@@ -267,7 +268,8 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 		goto out_unlock;
+-	pr_debug("msk=%p, local_id=%d", msk, addr->id);
++	pr_debug("msk=%p, local_id=%d, echo:%d", msk, addr->id, echo);
  
- 	*saddr = msk->pm.local;
--	WRITE_ONCE(msk->pm.addr_signal, 0);
-+	add_addr = msk->pm.addr_signal & ~(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO));
-+	WRITE_ONCE(msk->pm.addr_signal, add_addr);
- 	ret = true;
+ 	lockdep_assert_held(&msk->pm.lock);
  
- out_unlock:
-@@ -278,6 +280,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			     struct mptcp_rm_list *rm_list)
- {
-+	u8 rm_addr;
- 	int ret = false, len;
- 
- 	spin_lock_bh(&msk->pm.lock);
-@@ -286,16 +289,17 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 	if (!mptcp_pm_should_rm_signal(msk))
- 		goto out_unlock;
- 
-+	rm_addr = msk->pm.addr_signal & ~BIT(MPTCP_RM_ADDR_SIGNAL);
- 	len = mptcp_rm_addr_len(&msk->pm.rm_list_tx);
- 	if (len < 0) {
--		WRITE_ONCE(msk->pm.addr_signal, 0);
-+		WRITE_ONCE(msk->pm.addr_signal, rm_addr);
- 		goto out_unlock;
+@@ -27,10 +27,13 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 		return -EINVAL;
  	}
- 	if (remaining < len)
- 		goto out_unlock;
  
- 	*rm_list = msk->pm.rm_list_tx;
--	WRITE_ONCE(msk->pm.addr_signal, 0);
-+	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
- 	ret = true;
+-	msk->pm.local = *addr;
+-	add_addr |= BIT(MPTCP_ADD_ADDR_SIGNAL);
+-	if (echo)
++	if (echo) {
++		msk->pm.remote = *addr;
+ 		add_addr |= BIT(MPTCP_ADD_ADDR_ECHO);
++	} else {
++		msk->pm.local = *addr;
++		add_addr |= BIT(MPTCP_ADD_ADDR_SIGNAL);
++	}
+ 	if (addr->family == AF_INET6)
+ 		add_addr |= BIT(MPTCP_ADD_ADDR_IPV6);
+ 	if (addr->port)
+@@ -214,7 +217,7 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
  
- out_unlock:
+ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
+ {
+-	if (!mptcp_pm_should_add_signal(msk))
++	if (!mptcp_pm_should_add_signal_echo(msk))
+ 		return;
+ 
+ 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d4732a4..0f302d2 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -317,14 +317,14 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	if (!entry->addr.id)
+ 		return;
+ 
+-	if (mptcp_pm_should_add_signal(msk)) {
++	if (mptcp_pm_should_add_signal_addr(msk)) {
+ 		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX / 8);
+ 		goto out;
+ 	}
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 
+-	if (!mptcp_pm_should_add_signal(msk)) {
++	if (!mptcp_pm_should_add_signal_addr(msk)) {
+ 		pr_debug("retransmit ADD_ADDR id=%d", entry->addr.id);
+ 		mptcp_pm_announce_addr(msk, &entry->addr, false);
+ 		mptcp_pm_add_addr_send_ack(msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 160c2ab..a0b0ec0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -708,6 +708,12 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
++	return READ_ONCE(msk->pm.addr_signal) &
++		(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO));
++}
++
++static inline bool mptcp_pm_should_add_signal_addr(struct mptcp_sock *msk)
++{
+ 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
+ }
+ 
 -- 
 1.8.3.1
 
