@@ -1,98 +1,71 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE412FAD
-	for <mptcp@lists.linux.dev>; Fri, 18 Jun 2021 18:50:08 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 9D196613E2;
-	Fri, 18 Jun 2021 18:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1624042207;
-	bh=ivdV7t61vdAfTwP9qR3mjUR8O1DjMNHgQ0kv94qACvI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jSWRnvfueMPL1Ae+T5MVQXNdu6sVj/3kNWlry1IB14rvoQrQvuPpVAQ9kqYeM+9zG
-	 0+Ts53CKFWHAV1ntJWSfmZXYPsU4AHxAL5r2wQJB6XDI/ELyxANVjhiVPQWVWzBoGa
-	 yVRD7tDgzzYnZKkE/hnrt4oDwXZ/wkSeFUaXnuF+cVd/D7BOBjjC7tdhg1FysGeW9w
-	 sGokZ0NltAeiZav5/VgRM2CkehWgB9Wsy2RyFrEHFxSqU5DcWgar2NSzVbul9Yo+1X
-	 fCJHE1cI9vXONQuyowt2gLkgkqmnSoScWS/WXmZWTzAR5VOXhv+UATRcuJZCjtJyB+
-	 fkJR8zeAnIQ8Q==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 8BE3A60A17;
-	Fri, 18 Jun 2021 18:50:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFCC173
+	for <mptcp@lists.linux.dev>; Fri, 18 Jun 2021 20:59:08 +0000 (UTC)
+IronPort-SDR: Mq9Ky+G8p7Wm4Und5qwutcaMEpfG/xAyOPkLaPLxQeJ0hqjkYTVUy/QbTHyKHtU7nj6hC9xCDz
+ LkhR/6b/77kw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10019"; a="292250021"
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="292250021"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 13:58:52 -0700
+IronPort-SDR: gwya5I9oIOljW8ypa61N9BuYOh6wsKhp9xh6QCPRqEPneVoFr2xYfT88/DAirFXECO8m+V9APl
+ nWEwBb4Qzu3g==
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="405394248"
+Received: from rsurapan-mobl2.amr.corp.intel.com ([10.209.105.229])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 13:58:51 -0700
+Date: Fri, 18 Jun 2021 13:58:50 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: drop duplicate mptcp_setsockopt()
+ declaration
+In-Reply-To: <c3038e2051a4b0a718e868b9129b5c6ecc682fef.1624038975.git.pabeni@redhat.com>
+Message-ID: <c0c8623-72eb-1d0-f4d4-7a9229307a71@linux.intel.com>
+References: <c3038e2051a4b0a718e868b9129b5c6ecc682fef.1624038975.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/16] mptcp: DSS checksum support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162404220756.29148.11727219703950288907.git-patchwork-notify@kernel.org>
-Date: Fri, 18 Jun 2021 18:50:07 +0000
-References: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210617234622.472030-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, geliangtang@gmail.com,
- pabeni@redhat.com
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello:
+On Fri, 18 Jun 2021, Paolo Abeni wrote:
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+> commit 7896248983ef ("mptcp: add skeleton to sync msk socket
+> options to subflows") introduced a duplicate declaration of
+> mptcp_setsockopt(), just drop it.
+>
+> Reported-by: Florian Westphal <fw@strlen.de>
+> Fixes: 7896248983ef ("mptcp: add skeleton to sync msk socket options to subflows")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/protocol.h | 3 ---
+> 1 file changed, 3 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 2480db50cbd2..fce3f34800ff 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -783,9 +783,6 @@ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
+> unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
+> unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
+>
+> -int mptcp_setsockopt(struct sock *sk, int level, int optname,
+> -		     sockptr_t optval, unsigned int optlen);
+> -
+> void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
+> void mptcp_sockopt_sync_all(struct mptcp_sock *msk);
+>
+> -- 
+> 2.26.3
 
-On Thu, 17 Jun 2021 16:46:06 -0700 you wrote:
-> RFC 8684 defines a DSS checksum feature that allows MPTCP to detect
-> middlebox interference with the MPTCP DSS header and the portion of the
-> data stream associated with that header. So far, the MPTCP
-> implementation in the Linux kernel has not supported this feature.
-> 
-> This patch series adds DSS checksum support. By default, the kernel will
-> not request checksums when sending SYN or SYN/ACK packets for MPTCP
-> connections. Outgoing checksum requests can be enabled with a
-> per-namespace net.mptcp.checksum_enabled sysctl. MPTCP connections will
-> now proceed with DSS checksums when the peer requests them, whether the
-> sysctl is enabled or not.
-> 
-> [...]
+Thanks Paolo.
 
-Here is the summary with links:
-  - [net-next,01/16] mptcp: add csum_enabled in mptcp_sock
-    https://git.kernel.org/netdev/net-next/c/752e906732c6
-  - [net-next,02/16] mptcp: generate the data checksum
-    https://git.kernel.org/netdev/net-next/c/d0cc298745f5
-  - [net-next,03/16] mptcp: add csum_reqd in mptcp_out_options
-    https://git.kernel.org/netdev/net-next/c/06fe1719aa50
-  - [net-next,04/16] mptcp: send out checksum for MP_CAPABLE with data
-    https://git.kernel.org/netdev/net-next/c/c94b1f96dcfb
-  - [net-next,05/16] mptcp: send out checksum for DSS
-    https://git.kernel.org/netdev/net-next/c/c5b39e26d003
-  - [net-next,06/16] mptcp: add sk parameter for mptcp_get_options
-    https://git.kernel.org/netdev/net-next/c/c863225b7942
-  - [net-next,07/16] mptcp: add csum_reqd in mptcp_options_received
-    https://git.kernel.org/netdev/net-next/c/0625118115cf
-  - [net-next,08/16] mptcp: receive checksum for MP_CAPABLE with data
-    https://git.kernel.org/netdev/net-next/c/208e8f66926c
-  - [net-next,09/16] mptcp: receive checksum for DSS
-    https://git.kernel.org/netdev/net-next/c/390b95a5fb84
-  - [net-next,10/16] mptcp: validate the data checksum
-    https://git.kernel.org/netdev/net-next/c/dd8bcd1768ff
-  - [net-next,11/16] mptcp: tune re-injections for csum enabled mode
-    https://git.kernel.org/netdev/net-next/c/4e14867d5e91
-  - [net-next,12/16] mptcp: add the mib for data checksum
-    https://git.kernel.org/netdev/net-next/c/fe3ab1cbd357
-  - [net-next,13/16] mptcp: add a new sysctl checksum_enabled
-    https://git.kernel.org/netdev/net-next/c/fc3c82eebf8e
-  - [net-next,14/16] mptcp: dump csum fields in mptcp_dump_mpext
-    https://git.kernel.org/netdev/net-next/c/401e3030e68f
-  - [net-next,15/16] selftests: mptcp: enable checksum in mptcp_connect.sh
-    https://git.kernel.org/netdev/net-next/c/94d66ba1d8e4
-  - [net-next,16/16] selftests: mptcp: enable checksum in mptcp_join.sh
-    https://git.kernel.org/netdev/net-next/c/af66d3e1c3fa
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-You are awesome, thank you!
 --
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Mat Martineau
+Intel
