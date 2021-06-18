@@ -1,98 +1,81 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.227])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA5970
-	for <mptcp@lists.linux.dev>; Fri, 18 Jun 2021 01:24:44 +0000 (UTC)
-HMM_SOURCE_IP:172.18.0.48:50350.1096390252
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.228])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9276470
+	for <mptcp@lists.linux.dev>; Fri, 18 Jun 2021 08:18:46 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.48:51850.1058790300
 HMM_ATTACHE_NUM:0000
 HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.26?logid-cd2652cd494142868a7383321d844183 (unknown [172.18.0.48])
-	by chinatelecom.cn (HERMES) with SMTP id 3D40A2800E3;
-	Fri, 18 Jun 2021 09:24:42 +0800 (CST)
-X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
+Received: from clientip-36.111.140.9?logid-0a32ae585ff14ac490b4c9f9c7b87bac (unknown [172.18.0.48])
+	by chinatelecom.cn (HERMES) with SMTP id B2F4C2800F9;
+	Fri, 18 Jun 2021 16:18:45 +0800 (CST)
+X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
 Received: from  ([172.18.0.48])
-	by app0024 with ESMTP id cd2652cd494142868a7383321d844183 for mptcp@lists.linux.dev;
-	Fri Jun 18 09:24:42 2021
-X-Transaction-ID: cd2652cd494142868a7383321d844183
+	by app0024 with ESMTP id 0a32ae585ff14ac490b4c9f9c7b87bac for mptcp@lists.linux.dev;
+	Fri Jun 18 16:18:44 2021
+X-Transaction-ID: 0a32ae585ff14ac490b4c9f9c7b87bac
 X-filter-score:  filter<0>
 X-Real-From: liyonglong@chinatelecom.cn
 X-Receive-IP: 172.18.0.48
 X-MEDUSA-Status: 0
 Sender: liyonglong@chinatelecom.cn
-Subject: Re: [PATCH v3 3/4] mptcp: build ADD_ADDR/echo-ADD_ADDR option
- according pm.add_signal
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <1623921276-97178-1-git-send-email-liyonglong@chinatelecom.cn>
- <1623921276-97178-4-git-send-email-liyonglong@chinatelecom.cn>
- <d4b0a07d-72af-9a9d-69d3-d63f65ee367@linux.intel.com>
 From: Yonglong Li <liyonglong@chinatelecom.cn>
-Message-ID: <43f90eee-f256-9e1a-7ef3-84130885e0e3@chinatelecom.cn>
-Date: Fri, 18 Jun 2021 09:24:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+To: mptcp@lists.linux.dev
+Cc: mathew.j.martineau@linux.intel.com,
+	geliangtang@gmail.com,
+	qitiepeng@chinatelecom.cn,
+	Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: [PATCH v4 0/4] mptcp: fix conflicts when using pm.add_signal in ADD_ADDR/echo and RM_ADDR process
+Date: Fri, 18 Jun 2021 16:18:25 +0800
+Message-Id: <1624004309-54480-1-git-send-email-liyonglong@chinatelecom.cn>
+X-Mailer: git-send-email 1.8.3.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d4b0a07d-72af-9a9d-69d3-d63f65ee367@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 
+fix issue: ADD_ADDR and RM_ADDR use pm.add_signal to mark event, so 
+in some case pm.add_signal will be flush when ADD_ADDR/RM_ADDR in 
+process.
 
+fix issue: if ADD_ADDR and ADD_ADDR-echo process at the same time, 
+only one event can write pm.add_signal. so ADD_ADDR will process 
+after add_timer timeout or ADD_ADDR-echo will not be process.
 
-On 2021/6/18 8:25, Mat Martineau wrote:
-> 
-> This goto isn't quite right. It jumps below with opts and remaining already modified, and may end up modifying 'remaining' again.
-> 
-> Would be better to separate the logic for sending echo-vs-signal, so the goto isn't necessary.
+Patch 1 fix ADD_ADDR and RM_ADDR maybe clear addr_signal each other.
 
-Thanks for your review. The goto logic is not right indeed. I will separate the logic for sending echo-vs-signal
+Patch 2 and 3 deal ADD_ADDR and ADD_ADDR-echo with separately to fix 
+conflicts in using pm.addr_signal porcess.
 
-> 
->> +        else if (remaining < len)
->> +            goto out;
->> +        remaining -= len;
->> +        *size += len;
->> +        opts->remote = remote;
->> +        flags = (u8)~BIT(MPTCP_ADD_ADDR_ECHO);
->> +        opts->suboptions |= OPTION_MPTCP_ADD_ECHO;
->> +        pr_debug("addr_id=%d, echo=1, port=%d addr_signal:%x",
->> +             opts->remote.id, ntohs(opts->remote.port), add_addr);
->> +    } else if (mptcp_pm_should_add_signal_addr(msk)) {
->> +add_addr:
->> +        if ((local.family == AF_INET6 || local.port) && skb &&
->> +            skb_is_tcp_pure_ack(skb)) {
->> +            pr_debug("drop other suboptions");
->> +            opts->suboptions = 0;
->> +            opts->ext_copy.use_ack = 0;
->> +            opts->ext_copy.use_map = 0;
->> +            remaining += opt_size;
->> +            drop_other_suboptions = true;
->> +        }
->> +        len = mptcp_add_addr_len(local.family, false, !!local.port);
->> +        if (remaining < len)
->> +            goto out;
->> +        *size += len;
->> +        opts->addr = local;
->>         opts->ahmac = add_addr_generate_hmac(msk->local_key,
->>                              msk->remote_key,
->>                              &opts->addr);
->> +        opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
->> +        flags = (u8)~BIT(MPTCP_ADD_ADDR_SIGNAL);
->> +        pr_debug("addr_id=%d, ahmac=%llu, echo=0, port=%d, addr_signal:%x",
->> +             opts->addr.id, opts->ahmac, ntohs(opts->addr.port), add_addr);
->>     }
->> -    pr_debug("addr_id=%d, ahmac=%llu, echo=%d, port=%d",
->> -         opts->addr.id, opts->ahmac, echo, ntohs(opts->addr.port));
->>
->> -    return true;
->> +    if (drop_other_suboptions)
->> +        *size -= opt_size;
->> +    spin_lock_bh(&msk->pm.lock);
->> +    WRITE_ONCE(msk->pm.addr_signal, flags | msk->pm.addr_signal);
->> +    spin_unlock_bh(&msk->pm.lock);
-> 
-> This would set bits in msk->pm.addr_signal rather than clear them. Did you intend '&' instead of '|'?
+Patch 4 MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT is not necessary.
 
-Sorry for this mistake. :(
+v1->v2:
+ - remove READ_ONCE under the pm spin lock.
+
+v2->v3:
+ - Patch 2: rename mptcp_pm_should_add_addr to mptcp_pm_should_add_signal_addr
+ - Patch 3: avoid read-modify-write of msk->pm.addr_signal and change  
+   mptcp_pm_add_addr_signal to return void.
+
+v3->v4:
+ - Patch 1: use ~(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO)) instead 
+   of BIT(MPTCP_RM_ADDR_SIGNAL)
+ - Patch 3: simple the code; init flags; fix wrong goto logic code; 
+
+Yonglong Li (4):
+  mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
+  mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
+  mptcp: build ADD_ADDR/echo-ADD_ADDR option according pm.add_signal
+  mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
+
+ include/net/mptcp.h    |   1 +
+ net/mptcp/options.c    | 161 ++++++++++++++++++++++++++++++++-----------------
+ net/mptcp/pm.c         |  53 +++++++---------
+ net/mptcp/pm_netlink.c |  10 ++-
+ net/mptcp/protocol.h   |  31 ++++------
+ 5 files changed, 147 insertions(+), 109 deletions(-)
+
+-- 
+1.8.3.1
+
