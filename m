@@ -1,30 +1,30 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB5A71
-	for <mptcp@lists.linux.dev>; Fri, 18 Jun 2021 23:19:47 +0000 (UTC)
-IronPort-SDR: Sjsq5g5Z2jxQ0Nv7F+gwDLkWu84XA8IMLi3owRABJmMt4UmUfh/SfDAIQfP+AC3AT1tS+VqHtI
- /42qFxB7aPkg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10019"; a="204807999"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F2B71
+	for <mptcp@lists.linux.dev>; Sat, 19 Jun 2021 00:19:31 +0000 (UTC)
+IronPort-SDR: rQPChLQjemNJccrIfSbIGdUv53atjplCnldMRQYBtB6y0LUfgiqO/bh1iNx8Y1WMS8EuRc3+vR
+ tdi6TS47HPRQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10019"; a="206588774"
 X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
-   d="scan'208";a="204807999"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 16:19:46 -0700
-IronPort-SDR: MwCghhP9lDF1KgwinDlGed5MkjKPB5jeRON83wfiRLP8f1QrwP6rowreojDF12kdtpsFvmgWzB
- qU9PmbfIHhFQ==
+   d="scan'208";a="206588774"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 17:19:31 -0700
+IronPort-SDR: jHHPICdYRkf3MiIZuq5hukwPaE6cJpg9gfTjk18AeHe+B66kNsrPJdIK5/5QZsUBFjSFqQgBk/
+ BPnvf5Tww/EQ==
 X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
-   d="scan'208";a="555717885"
+   d="scan'208";a="485863906"
 Received: from rsurapan-mobl2.amr.corp.intel.com ([10.209.105.229])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 16:19:46 -0700
-Date: Fri, 18 Jun 2021 16:19:46 -0700 (PDT)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 17:19:31 -0700
+Date: Fri, 18 Jun 2021 17:19:30 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: wujianguo106@163.com
 cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
-Subject: Re: [PATCH v5 3/4] mptcp: fix syncookie process if mptcp can not_accept
- new subflow
-In-Reply-To: <1623840570-42004-4-git-send-email-wujianguo106@163.com>
-Message-ID: <3cdb43ff-a2c2-6599-4e8-3cb569e1a26a@linux.intel.com>
-References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <1623840570-42004-4-git-send-email-wujianguo106@163.com>
+Subject: Re: [PATCH v5 4/4] mptcp: avoid processing packet if a subflow
+ reset
+In-Reply-To: <1623840570-42004-5-git-send-email-wujianguo106@163.com>
+Message-ID: <45dcfe4c-1918-2d78-accf-141bb4af2c5b@linux.intel.com>
+References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <1623840570-42004-5-git-send-email-wujianguo106@163.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -36,89 +36,61 @@ On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
 
 > From: Jianguo Wu <wujianguo@chinatelecom.cn>
 >
-> Lots of "TCP: tcp_fin: Impossible, sk->sk_state=7" in client side
-> when doing stress testing.
-
-Hi Jianguo -
-
-Like patch 1, do the existing syncookie selftests trigger this sometimes?
-
-Or are there selftests that could be added to this series, or packetdrill 
-tests, to do such syncookie stress tests?
-
-Thanks,
-
-Mat
-
-
+> If check_fully_established() causes a subflow reset, it should not
+> continue to process the packet in tcp_data_queue().
 >
-> There are at least two cases may trigger this warning:
-> 1.mptcp is in syncookie, and server recv MP_JOIN SYN request,
->  in subflow_check_req(), the mptcp_can_accept_new_subflow()
->  return false, so subflow_init_req_cookie_join_save() isn't
->  called, i.e. not store the data present in the MP_JOIN syn
->  request and the random nonce in hash table - join_entries[],
->  but still send synack. When recv 3rd-ack,
->  mptcp_token_join_cookie_init_state() will return false, and
->  3rd-ack is dropped, then if mptcp conn is closed by client,
->  client will send a DATA_FIN and a MPTCP FIN, the DATA_FIN
->  doesn't have MP_CAPABLE or MP_JOIN,
->  so mptcp_subflow_init_cookie_req() will return 0, and pass
->  the cookie check, MP_JOIN request is fallback to normal TCP.
->  Server will send a TCP FIN if closed, in client side,
->  when process TCP FIN, it will do reset, the code path is:
->    tcp_data_queue()->mptcp_incoming_options()
->      ->check_fully_established()->mptcp_subflow_reset().
->  mptcp_subflow_reset() will set sock state to TCP_CLOSE,
->  so tcp_fin will hit TCP_CLOSE, and print the warning.
-> 2.mptcp is in syncookie, and server recv 3rd-ack, in
->  mptcp_subflow_init_cookie_req(), mptcp_can_accept_new_subflow()
->  return false, and subflow_req->mp_join is not set to 1,
->  so in subflow_syn_recv_sock() will not reset the MP_JOIN
->  subflow, but fallback to normal TCP, and then the same thing
->  happens when server will send a TCP FIN if closed.
+> setting:
+> 	TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
 >
-> For case1, subflow_check_req() return -EPERM,
-> then tcp_conn_request() will drop MP_JOIN SYN.
+> so that the following check will drop the pkt in
+> tcp_data_queue():
+>  if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
+> 	__kfree_skb(skb);
+> 	return;
+>  }
 >
-> For case2, let subflow_syn_recv_sock() call mptcp_can_accept_new_subflow(),
-> and do fatal fallback, send reset.
->
-> Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use")
+> Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
 > Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
 > ---
-> net/mptcp/subflow.c | 6 +++---
-> 1 file changed, 3 insertions(+), 3 deletions(-)
+> net/mptcp/options.c | 6 ++++++
+> 1 file changed, 6 insertions(+)
 >
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 75ed530706c0..6d98e19a20aa 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -224,6 +224,8 @@ static int subflow_check_req(struct request_sock *req,
-> 		if (unlikely(req->syncookie)) {
-> 			if (mptcp_can_accept_new_subflow(subflow_req->msk))
-> 				subflow_init_req_cookie_join_save(subflow_req, skb);
-> +			else
-> +				return -EPERM;
-> 		}
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 1aec01686c1a..be435c5421cd 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -926,6 +926,12 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+> 	return true;
 >
-> 		pr_debug("token=%u, remote_nonce=%u msk=%p", subflow_req->token,
-> @@ -263,9 +265,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
-> 		if (!mptcp_token_join_cookie_init_state(subflow_req, skb))
-> 			return -EINVAL;
->
-> -		if (mptcp_can_accept_new_subflow(subflow_req->msk))
-> -			subflow_req->mp_join = 1;
-> -
-> +		subflow_req->mp_join = 1;
-> 		subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq - 1;
-> 	}
->
+> reset:
+> +	/* If a subflow is reset, the packet should not continue to be
+> +	 * processed in tcp_data_queue(), so setting: end_seq = seq,
+> +	 * then tcp_data_queue() will drop the packet.
+> +	 */
+> +	TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
+> +
+
+This does have the desired effect when mptcp_incoming_options() is called 
+from tcp_data_queue(), but mptcp_incoming_options() is also called from 
+tcp_reset() and tcp_rcv_state_process(). The other callers appear to 
+tolerate the sequence number modification.
+
+I think it would be clearer to either add a return value or output 
+parameter to mptcp_incoming_options() to explicitly tell the caller that a 
+reset has been sent and tcp_done() called. Then it would be clearer in 
+tcp_data_queue() that the packet is being discarded due to mptcp header 
+content.
+
+(It also looks like it unexpected behavior may be possible if we get a 
+strange TCP_RST + MP_JOIN packet when not fully established, but that's 
+unrelated to this patch. Maybe I'll try to create a packetdrill test to 
+see what happens)
+
+> 	mptcp_subflow_reset(ssk);
+> 	return false;
+> }
 > -- 
 > 1.8.3.1
->
->
->
 
 --
 Mat Martineau
