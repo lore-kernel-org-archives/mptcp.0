@@ -1,19 +1,19 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C79A2FB1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412792FB4
 	for <mptcp@lists.linux.dev>; Mon, 21 Jun 2021 22:54:47 +0000 (UTC)
-IronPort-SDR: zkZf5zlwlHwbHPWxzufCObzLjlytKmn6v0irjuBwQh8ugSd233yew7XqdADKyRxWvOGfLSrtMH
- UhBILJGYiu+A==
-X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="203933127"
+IronPort-SDR: r9HNIwpFOFTM5fRuNYm/V1JCh1wAllN1nluXV9zyOdkMW5/sb5gfHsBNluVrYKhBQSK0OTcLkY
+ Kdh4Zo90fZKQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="203933128"
 X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="203933127"
+   d="scan'208";a="203933128"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 15:54:43 -0700
-IronPort-SDR: vh6VkRll+EEvDaoq/BV8IyDWVvvmtWb61/eEhojz5txu0RhzkaOmRCv0wZtERcG7bylqTLRKhK
- rues0IfIp6dg==
+IronPort-SDR: uO2i8dVA8WaId42SIM1vgXuswMq/tkTfwCRuyhTRge140t9kkeBDRS1EI7Ltzrh2g4eBl9aR+4
+ jWWwr90jzaBg==
 X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="486673972"
+   d="scan'208";a="486673973"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.74.136])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 15:54:42 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -24,9 +24,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 4/6] mptcp: drop redundant test in move_skbs_to_msk()
-Date: Mon, 21 Jun 2021 15:54:36 -0700
-Message-Id: <20210621225438.10777-5-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 5/6] mptcp: add MIB counter for invalid mapping
+Date: Mon, 21 Jun 2021 15:54:37 -0700
+Message-Id: <20210621225438.10777-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210621225438.10777-1-mathew.j.martineau@linux.intel.com>
 References: <20210621225438.10777-1-mathew.j.martineau@linux.intel.com>
@@ -39,34 +39,56 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Currently we check the msk state to avoid enqueuing new
-skbs at msk shutdown time.
-
-Such test is racy - as we can't acquire the msk socket lock -
-and useless, as the caller already checked the subflow
-field 'disposable', covering the same scenario in a race
-free manner - read and updated under the ssk socket lock.
+Account this exceptional events for better introspection.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/protocol.c | 3 ---
- 1 file changed, 3 deletions(-)
+ net/mptcp/mib.c     | 1 +
+ net/mptcp/mib.h     | 1 +
+ net/mptcp/subflow.c | 4 +++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3e088e9d20fd..cf75be02eb00 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -686,9 +686,6 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
- 	struct sock *sk = (struct sock *)msk;
- 	unsigned int moved = 0;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index e7e60bc1fb96..52ea2517e856 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -25,6 +25,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+ 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
+ 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
++	SNMP_MIB_ITEM("DSSNoMatchTCP", MPTCP_MIB_DSSTCPMISMATCH),
+ 	SNMP_MIB_ITEM("DataCsumErr", MPTCP_MIB_DATACSUMERR),
+ 	SNMP_MIB_ITEM("OFOQueueTail", MPTCP_MIB_OFOQUEUETAIL),
+ 	SNMP_MIB_ITEM("OFOQueue", MPTCP_MIB_OFOQUEUE),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 92e56c0cfbdd..193466c9b549 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -18,6 +18,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+ 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the previous one */
+ 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
++	MPTCP_MIB_DSSTCPMISMATCH,	/* DSS-mapping did not map with TCP's sequence numbers */
+ 	MPTCP_MIB_DATACSUMERR,		/* The data checksum fail */
+ 	MPTCP_MIB_OFOQUEUETAIL,	/* Segments inserted into OoO queue tail */
+ 	MPTCP_MIB_OFOQUEUE,		/* Segments inserted into OoO queue */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8976ff586b87..585951e7e52f 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1046,8 +1046,10 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 	/* we revalidate valid mapping on new skb, because we must ensure
+ 	 * the current skb is completely covered by the available mapping
+ 	 */
+-	if (!validate_mapping(ssk, skb))
++	if (!validate_mapping(ssk, skb)) {
++		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSTCPMISMATCH);
+ 		return MAPPING_INVALID;
++	}
  
--	if (inet_sk_state_load(sk) == TCP_CLOSE)
--		return false;
--
- 	__mptcp_move_skbs_from_subflow(msk, ssk, &moved);
- 	__mptcp_ofo_queue(msk);
- 	if (unlikely(ssk->sk_err)) {
+ 	skb_ext_del(skb, SKB_EXT_MPTCP);
+ 
 -- 
 2.32.0
 
