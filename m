@@ -1,66 +1,79 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D48C71
-	for <mptcp@lists.linux.dev>; Mon, 21 Jun 2021 21:50:04 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 769AF611C1;
-	Mon, 21 Jun 2021 21:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1624312204;
-	bh=xwBL3uq+6uBXVO1fM9uFND/0FkN+qeVhxLs0Lf6DQQU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oYCxBRULQdMVdzR2Xv+Qz7uS+iUVhJ0kfN8ebAEVhBvyoaMu+6SZiM7/daRYLEs6q
-	 w2RYE75wHQCEQPMi5192fWzjw/GH+ACp778ogOuY0z2/VQOmhhYaPnYJu2IXYTqIbO
-	 /lhwm2+UYTe9cPqweLcpxyaN79juUn4Wbsm1Prnf4R/2zqjxwLyn2Dx/mekdqKHjzt
-	 ZdCy+99KRRltjYkMwtoL4n5nmzGS/uOQn7sgnoLqc4g9p+iPgn36X3GyVVXakRlwU4
-	 X2xo40kdumOllXuPXJ1lDe/W6I6HGmwimje9Lj4PbCq/fsnowOlF58Kur5OSfObRZZ
-	 x3fHx0tChpMcQ==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 64E4F60973;
-	Mon, 21 Jun 2021 21:50:04 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA461173
+	for <mptcp@lists.linux.dev>; Mon, 21 Jun 2021 22:54:43 +0000 (UTC)
+IronPort-SDR: vxo6/N3MqatAKNcwqR0UpO1d+VOoIeM7tx7IxP5Nnnn7/bwSeNlGeipq1ATThdP6FrCTIYsbtQ
+ k9/U0CsJVEpg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="203933122"
+X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
+   d="scan'208";a="203933122"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 15:54:42 -0700
+IronPort-SDR: 81HSb9rpE4RxTd+OSN4ywgZoI/EXSn4qGwKmfDnQfD1MjXucKDLpiO7nVi15Ez6UeBY3sDAhyF
+ rKb0bfwUiZSg==
+X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
+   d="scan'208";a="486673967"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.74.136])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 15:54:42 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev,
+	pabeni@redhat.com
+Subject: [PATCH net-next 0/6] mptcp: A few optimizations
+Date: Mon, 21 Jun 2021 15:54:32 -0700
+Message-Id: <20210621225438.10777-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.32.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] mptcp: 32-bit sequence number improvements
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162431220440.17422.8872440735370690772.git-patchwork-notify@kernel.org>
-Date: Mon, 21 Jun 2021 21:50:04 +0000
-References: <20210618220221.99172-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210618220221.99172-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com,
- fw@strlen.de
 
-Hello:
+Here is a set of patches that we've accumulated and tested in the MPTCP
+tree.
 
-This series was applied to netdev/net.git (refs/heads/master):
 
-On Fri, 18 Jun 2021 15:02:19 -0700 you wrote:
-> MPTCP-level sequence numbers are 64 bits, but RFC 8684 allows use of
-> 32-bit sequence numbers in the DSS option to save header space. Those
-> 32-bit numbers are the least significant bits of the full 64-bit
-> sequence number, so the receiver must infer the correct upper 32 bits.
-> 
-> These two patches improve the logic for determining the full 64-bit
-> sequence numbers when the 32-bit truncated version has wrapped around.
-> 
-> [...]
+Patch 1 removes the MPTCP-level tx skb cache that added complexity but
+did not provide a meaningful benefit.
 
-Here is the summary with links:
-  - [net,1/2] mptcp: fix bad handling of 32 bit ack wrap-around
-    https://git.kernel.org/netdev/net/c/1502328f17ab
-  - [net,2/2] mptcp: fix 32 bit DSN expansion
-    https://git.kernel.org/netdev/net/c/5957a8901db4
+Patch 2 uses the fast socket lock in more places.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Patch 3 improves handling of a data-ready flag.
 
+Patch 4 deletes an unnecessary and racy connection state check.
+
+Patch 5 adds a MIB counter for one type of invalid MPTCP header.
+
+Patch 6 improves self test failure output.
+
+
+Matthieu Baerts (1):
+  selftests: mptcp: display proper reason to abort tests
+
+Paolo Abeni (5):
+  mptcp: drop tx skb cache
+  mptcp: use fast lock for subflows when possible
+  mptcp: don't clear MPTCP_DATA_READY in sk_wait_event()
+  mptcp: drop redundant test in move_skbs_to_msk()
+  mptcp: add MIB counter for invalid mapping
+
+ net/mptcp/mib.c                               |   1 +
+ net/mptcp/mib.h                               |   1 +
+ net/mptcp/pm_netlink.c                        |  10 +-
+ net/mptcp/protocol.c                          | 113 +++---------------
+ net/mptcp/protocol.h                          |   2 -
+ net/mptcp/subflow.c                           |   4 +-
+ .../selftests/net/mptcp/mptcp_connect.sh      |  52 +++++---
+ 7 files changed, 62 insertions(+), 121 deletions(-)
+
+
+base-commit: ef2c3ddaa4ed0b1d9de34378d08d3e24a3fec7ac
+-- 
+2.32.0
 
