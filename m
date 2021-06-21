@@ -1,381 +1,187 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DD471
-	for <mptcp@lists.linux.dev>; Mon, 21 Jun 2021 08:29:56 +0000 (UTC)
-Received: by mail-pf1-f182.google.com with SMTP id c5so420022pfv.8
-        for <mptcp@lists.linux.dev>; Mon, 21 Jun 2021 01:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NbAz1gNVaApEr91SFpGvngx3nXILhBZwVEkQqdHpGeE=;
-        b=gIaK7WEBxbqk9DX0buWrbOZzWcYqFSaHjm1c0VBnxVF+EjEq2P6yh0srpXEoyM0s5R
-         Fm/w78jpwP88N2rNNEsS7n2HTIeNXcMiRrsUWOK4bXhAIqZdqtT5g0sSck019zbCshek
-         5vCSIqtQV/9ANXRlQdOxnCeLbDn1f2/VCbRs+t3N3ltEbGCGNT7IwCS06l5BRN0QTz3K
-         +Q/UNzJO9KsLDUbKJdGIUJFqq1FVDKk7ddHBVB7tNIW5xkjrMvS+o/6zik5s8ZrUCNIk
-         LqCgkjCa58y8g90AI/tglcIwdZ4/EIu5Vlv2VjpchI/t0S1G9kekwz8cHzp7dCxpG1a0
-         YVGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NbAz1gNVaApEr91SFpGvngx3nXILhBZwVEkQqdHpGeE=;
-        b=QUlBUVJPCZfyhK2NWoUD+B9WG7B4aYBKLt/yunhrVmErAZrIFX4miQBMeb7RP2YUNo
-         ToiivREFlfUARD6izdmWcWwx0SaxXn9XBoSsZyNf9K8M4stZe4bsMeBiN+1/nGIKgkHH
-         WC7M8vJc9xrQrt0Xi+OZWSWjskON7BskNROUX0xyuYPuWa4JrTMQsvMjOGVQXiVa6Q79
-         Jnxe3DY3FeR1WNb2/7H4rPFfvCUPLlNwheN+sGYQ6sWZsqSgYKKJAfngYzrcHWLZ8xTA
-         ccH9E23BM6AdDhh31OHdR5kwbOoIp+r63mL1VGmm/fQOO3V2P1SgkkBBkD/6eyKh0BSj
-         O37Q==
-X-Gm-Message-State: AOAM532flhuzKmoSqhUeqEU35aP78CGZbyazXWeBKeSLagYGf2urEV4C
-	qwEbNYGtFWhIzuvWNJr1LyiXCs4h5BboV0XT878=
-X-Google-Smtp-Source: ABdhPJyn32xfbyIj+p07h35oQMXcxZFKqMzHYEORw5dZ75ZZ0377hp18AvuVLgzUsVqMUmJaYk9mUttW81+edoPsf1Q=
-X-Received: by 2002:a63:5a4b:: with SMTP id k11mr22854580pgm.289.1624264196574;
- Mon, 21 Jun 2021 01:29:56 -0700 (PDT)
+Received: from m12-11.163.com (m12-11.163.com [220.181.12.11])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7252A70
+	for <mptcp@lists.linux.dev>; Mon, 21 Jun 2021 10:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=/I4IW
+	F3NsGjGxJL+5m4xr6QN0cn9KFth3Z84yCoYJlw=; b=E0rteQ1rIYUj5LYHcdIWW
+	XlSv83RG7+dCfoaiR+aIjmLwidfr825hXtxRPOyoSpGOdjhVOVjdVtkQr/lxmBwA
+	XtymLfttYO8GDB6PC15AxEgzXvp0+Xku99Nkebf4ad9Jyf5M0YR+8r/dVuwnbUnB
+	ihxvMvgZYawbWrqjoTEkoA=
+Received: from [10.8.1.202] (unknown [36.111.140.26])
+	by smtp7 (Coremail) with SMTP id C8CowAA3L49GZdBgt6+ljA--.1598S2;
+	Mon, 21 Jun 2021 18:09:11 +0800 (CST)
+Subject: Re: [PATCH v5 1/4] mptcp: fix warning in __skb_flow_dissect() when do
+ syn cookie for subflow join
+From: Jianguo Wu <wujianguo106@163.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
+References: <1623840570-42004-1-git-send-email-wujianguo106@163.com>
+ <1623840570-42004-2-git-send-email-wujianguo106@163.com>
+ <64212e1f-2b62-89dc-b4c5-b0c8bae51962@linux.intel.com>
+ <93307b1f-b402-885e-acd0-b5828a11395b@163.com>
+Message-ID: <ad0ed696-8be4-8d9d-5af5-775d620c74be@163.com>
+Date: Mon, 21 Jun 2021 18:09:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1624004309-54480-1-git-send-email-liyonglong@chinatelecom.cn> <1624004309-54480-4-git-send-email-liyonglong@chinatelecom.cn>
-In-Reply-To: <1624004309-54480-4-git-send-email-liyonglong@chinatelecom.cn>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Mon, 21 Jun 2021 16:29:45 +0800
-Message-ID: <CA+WQbwt9ZtBGfk9eRnbs3sAeSy0taxbxbAYnLdvZUaFYnPxBFw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] mptcp: build ADD_ADDR/echo-ADD_ADDR option
- according pm.add_signal
-To: Yonglong Li <liyonglong@chinatelecom.cn>
-Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>, 
-	qitiepeng@chinatelecom.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <93307b1f-b402-885e-acd0-b5828a11395b@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:C8CowAA3L49GZdBgt6+ljA--.1598S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Jw43tFWfGr4kAw1ktr17trb_yoW7uryxpr
+	W3GFZxKr48Awn5J3y2vFZrXr98trsYyFW8Gw1rtF18AF4q9wn7JF18Gw409Fy7Cr4rC342
+	kr45X3Z7K3ZrZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jd4SrUUUUU=
+X-Originating-IP: [36.111.140.26]
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiUQi4kGDEMsSlFAAAsS
 
-Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B46=E6=9C=8818=
-=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=884:19=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> according MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO flag build
-> ADD_ADDR/echo-ADD_ADDR option
->
-> add a suboptions type OPTION_MPTCP_ADD_ECHO to mark as echo option
->
-> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
-> ---
->  net/mptcp/options.c  | 124 +++++++++++++++++++++++++++++++--------------=
-------
->  net/mptcp/pm.c       |  30 ++++---------
->  net/mptcp/protocol.h |  13 +++---
->  3 files changed, 92 insertions(+), 75 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1aec016..43e3241 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -655,41 +655,64 @@ static bool mptcp_established_options_add_addr(stru=
-ct sock *sk, struct sk_buff *
->         struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
->         bool drop_other_suboptions =3D false;
->         unsigned int opt_size =3D *size;
-> -       bool echo;
-> -       bool port;
-> +       struct mptcp_addr_info remote;
-> +       struct mptcp_addr_info local;
-> +       u8 add_addr, flags =3D 0xff;
->         int len;
->
-> -       if ((mptcp_pm_should_add_signal_ipv6(msk) ||
-> -            mptcp_pm_should_add_signal_port(msk) ||
-> -            mptcp_pm_should_add_signal_echo(msk)) &&
-> -           skb && skb_is_tcp_pure_ack(skb)) {
-> -               pr_debug("drop other suboptions");
-> -               opts->suboptions =3D 0;
-> -               opts->ext_copy.use_ack =3D 0;
-> -               opts->ext_copy.use_map =3D 0;
-> -               remaining +=3D opt_size;
-> -               drop_other_suboptions =3D true;
-> -       }
-> -
-> -       if (!mptcp_pm_should_add_signal(msk) ||
-> -           !(mptcp_pm_add_addr_signal(msk, remaining, &opts->addr, &echo=
-, &port)))
-> -               return false;
-> -
-> -       len =3D mptcp_add_addr_len(opts->addr.family, echo, port);
-> -       if (remaining < len)
-> +       if (!mptcp_pm_should_add_signal(msk))
->                 return false;
->
-> -       *size =3D len;
-> -       if (drop_other_suboptions)
-> -               *size -=3D opt_size;
-> -       opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> -       if (!echo) {
-> +       *size =3D 0;
-> +       mptcp_pm_add_addr_signal(msk, &local, &remote, &add_addr);
-> +       if (mptcp_pm_should_add_signal_echo(msk)) {
-> +               if (skb && skb_is_tcp_pure_ack(skb)) {
-> +                       pr_debug("drop other suboptions");
-> +                       opts->suboptions =3D 0;
-> +                       opts->ext_copy.use_ack =3D 0;
-> +                       opts->ext_copy.use_map =3D 0;
-> +                       remaining +=3D opt_size;
-> +                       drop_other_suboptions =3D true;
-> +               }
-> +               len =3D mptcp_add_addr_len(remote.family, true, !!remote.=
-port);
-> +               if (remaining < len)
-> +                       return false;
-> +               remaining -=3D len;
-> +               *size +=3D len;
 
-Could we drop the above '*size =3D 0', change this line to "*size =3D len;"=
-,
-and move it out of the if... else... trunk, just like the original code:
 
-       *size =3D len;
-       if (drop_other_suboptions)
-               *size -=3D opt_size;
+On 2021/6/21 14:14, Jianguo Wu wrote:
+> Hi Mat,
+> 
+> On 2021/6/19 6:40, Mat Martineau wrote:
+>>
+>> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
+>>
+>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>>
+>>> I got the following warning message while doing the test:
+>>
+>> Hi Jianguo, thanks for your patch set and revisions.
+>>
+>> Could you explain some more about which test produced the following result? Was it one of the self tests?
+>>
+>> If this is triggered by test code that is not upstream yet, it would help to add a selftest that shows if this bug is present or fixed. A packetdrill test is also an option, if that is a better way to reproduce the error.
+>>
+> 
+> I tested with wrk(https://github.com/wg/wrk) and webfsd(https://github.com/ourway/webfsd) with the assistance of mptcp-tools(https://github.com/pabeni/mptcp-tools),
+> Server side:
+>     ./use_mptcp.sh webfsd -4 -R /tmp/ -p 8099
+> Client side:
+>     ./use_mptcp.sh wrk -c 200 -d 30 -t 4 http://192.168.174.129:8099/
+> 
+> I will try self tests.
+> 
 
-> +               opts->remote =3D remote;
-> +               flags =3D (u8)~BIT(MPTCP_ADD_ADDR_ECHO);
-> +               opts->suboptions |=3D OPTION_MPTCP_ADD_ECHO;
-> +               pr_debug("addr_id=3D%d, echo=3D1, port=3D%d addr_signal:%=
-x",
-> +                        opts->remote.id, ntohs(opts->remote.port), add_a=
-ddr);
-> +       } else if (mptcp_pm_should_add_signal_addr(msk)) {
+Hi Mat,
 
-Since we called mptcp_pm_should_add_signal before, could we just use
-'else' here?
+It can not be reproduced with selftests(./mptcp_join.sh -k), because skb->l4_hash is 1 in this scenario,
+and direct using skb->hash, so __skb_flow_dissect() isn't called.
 
--Geliang
+Thanks,
+Jianguo
 
-> +               if ((local.family =3D=3D AF_INET6 || local.port) && skb &=
-&
-> +                   skb_is_tcp_pure_ack(skb)) {
-> +                       pr_debug("drop other suboptions");
-> +                       opts->suboptions =3D 0;
-> +                       opts->ext_copy.use_ack =3D 0;
-> +                       opts->ext_copy.use_map =3D 0;
-> +                       remaining +=3D opt_size;
-> +                       drop_other_suboptions =3D true;
-> +               }
-> +               len =3D mptcp_add_addr_len(local.family, false, !!local.p=
-ort);
-> +               if (remaining < len)
-> +                       return false;
-> +               *size +=3D len;
-> +               opts->addr =3D local;
->                 opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
->                                                      msk->remote_key,
->                                                      &opts->addr);
-> +               opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> +               flags =3D (u8)~BIT(MPTCP_ADD_ADDR_SIGNAL);
-> +               pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D0, port=3D%d=
-, addr_signal:%x",
-> +                        opts->addr.id, opts->ahmac, ntohs(opts->addr.por=
-t), add_addr);
->         }
-> -       pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d",
-> -                opts->addr.id, opts->ahmac, echo, ntohs(opts->addr.port)=
-);
-> +
-> +       if (drop_other_suboptions)
-> +               *size -=3D opt_size;
-> +       spin_lock_bh(&msk->pm.lock);
-> +       WRITE_ONCE(msk->pm.addr_signal, flags & msk->pm.addr_signal);
-> +       spin_unlock_bh(&msk->pm.lock);
->
->         return true;
->  }
-> @@ -1228,45 +1251,51 @@ void mptcp_write_options(__be32 *ptr, const struc=
-t tcp_sock *tp,
->         }
->
->  mp_capable_done:
-> -       if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> -               u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> -               u8 echo =3D MPTCP_ADDR_ECHO;
-> +       if ((OPTION_MPTCP_ADD_ADDR | OPTION_MPTCP_ADD_ECHO) & opts->subop=
-tions) {
-> +               struct mptcp_addr_info *addr_info;
-> +               u8 len =3D 0;
-> +               u8 echo =3D 0;
-> +
-> +               if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> +                       len +=3D sizeof(opts->ahmac);
-> +                       addr_info =3D &opts->addr;
-> +               } else {
-> +                       echo =3D MPTCP_ADDR_ECHO;
-> +                       addr_info =3D &opts->remote;
-> +               }
->
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -               if (opts->addr.family =3D=3D AF_INET6)
-> -                       len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> +               if (addr_info->family =3D=3D AF_INET6)
-> +                       len +=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> +               else
->  #endif
-> +                       len +=3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
->
-> -               if (opts->addr.port)
-> +               if (addr_info->port)
->                         len +=3D TCPOLEN_MPTCP_PORT_LEN;
->
-> -               if (opts->ahmac) {
-> -                       len +=3D sizeof(opts->ahmac);
-> -                       echo =3D 0;
-> -               }
-> -
->                 *ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> -                                     len, echo, opts->addr.id);
-> -               if (opts->addr.family =3D=3D AF_INET) {
-> -                       memcpy((u8 *)ptr, (u8 *)&opts->addr.addr.s_addr, =
-4);
-> +                                     len, echo, addr_info->id);
-> +               if (addr_info->family =3D=3D AF_INET) {
-> +                       memcpy((u8 *)ptr, (u8 *)&addr_info->addr.s_addr, =
-4);
->                         ptr +=3D 1;
->                 }
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -               else if (opts->addr.family =3D=3D AF_INET6) {
-> -                       memcpy((u8 *)ptr, opts->addr.addr6.s6_addr, 16);
-> +               else if (addr_info->family =3D=3D AF_INET6) {
-> +                       memcpy((u8 *)ptr, addr_info->addr6.s6_addr, 16);
->                         ptr +=3D 4;
->                 }
->  #endif
->
-> -               if (!opts->addr.port) {
-> -                       if (opts->ahmac) {
-> +               if (!addr_info->port) {
-> +                       if (!echo) {
->                                 put_unaligned_be64(opts->ahmac, ptr);
->                                 ptr +=3D 2;
->                         }
->                 } else {
-> -                       u16 port =3D ntohs(opts->addr.port);
-> +                       u16 port =3D ntohs(addr_info->port);
->
-> -                       if (opts->ahmac) {
-> +                       if (!echo) {
->                                 u8 *bptr =3D (u8 *)ptr;
->
->                                 put_unaligned_be16(port, bptr);
-> @@ -1275,7 +1304,6 @@ void mptcp_write_options(__be32 *ptr, const struct =
-tcp_sock *tp,
->                                 bptr +=3D 8;
->                                 put_unaligned_be16(TCPOPT_NOP << 8 |
->                                                    TCPOPT_NOP, bptr);
-> -
->                                 ptr +=3D 3;
->                         } else {
->                                 put_unaligned_be32(port << 16 |
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 107a5a2..a62d4a5 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -22,7 +22,8 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
->
->         lockdep_assert_held(&msk->pm.lock);
->
-> -       if (add_addr) {
-> +       if (add_addr &
-> +           (echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL)=
-)) {
->                 pr_warn("addr_signal error, add_addr=3D%d", add_addr);
->                 return -EINVAL;
->         }
-> @@ -252,32 +253,19 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 =
-bkup)
->
->  /* path manager helpers */
->
-> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remai=
-ning,
-> -                             struct mptcp_addr_info *saddr, bool *echo, =
-bool *port)
-> +void mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_addr_=
-info *saddr,
-> +                             struct mptcp_addr_info *daddr, u8 *add_addr=
-)
->  {
-> -       u8 add_addr;
-> -       int ret =3D false;
-> -
->         spin_lock_bh(&msk->pm.lock);
->
-> -       /* double check after the lock is acquired */
-> -       if (!mptcp_pm_should_add_signal(msk))
-> -               goto out_unlock;
-> -
-> -       *echo =3D mptcp_pm_should_add_signal_echo(msk);
-> -       *port =3D mptcp_pm_should_add_signal_port(msk);
-> -
-> -       if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo, *=
-port))
-> -               goto out_unlock;
-> -
->         *saddr =3D msk->pm.local;
-> -       add_addr =3D msk->pm.addr_signal & ~(BIT(MPTCP_ADD_ADDR_SIGNAL) |=
- BIT(MPTCP_ADD_ADDR_ECHO));
-> -       WRITE_ONCE(msk->pm.addr_signal, add_addr);
-> -       ret =3D true;
-> +       *daddr =3D msk->pm.remote;
-> +       *add_addr =3D msk->pm.addr_signal;
->
-> -out_unlock:
->         spin_unlock_bh(&msk->pm.lock);
-> -       return ret;
-> +
-> +       if ((mptcp_pm_should_add_signal_echo(msk)) && (mptcp_pm_should_ad=
-d_signal_addr(msk)))
-> +               mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
->  }
->
->  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index a0b0ec0..90fb532 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -22,10 +22,11 @@
->  #define OPTION_MPTCP_MPJ_SYNACK        BIT(4)
->  #define OPTION_MPTCP_MPJ_ACK   BIT(5)
->  #define OPTION_MPTCP_ADD_ADDR  BIT(6)
-> -#define OPTION_MPTCP_RM_ADDR   BIT(7)
-> -#define OPTION_MPTCP_FASTCLOSE BIT(8)
-> -#define OPTION_MPTCP_PRIO      BIT(9)
-> -#define OPTION_MPTCP_RST       BIT(10)
-> +#define OPTION_MPTCP_ADD_ECHO  BIT(7)
-> +#define OPTION_MPTCP_RM_ADDR   BIT(8)
-> +#define OPTION_MPTCP_FASTCLOSE BIT(9)
-> +#define OPTION_MPTCP_PRIO      BIT(10)
-> +#define OPTION_MPTCP_RST       BIT(11)
->
->  /* MPTCP option subtypes */
->  #define MPTCPOPT_MP_CAPABLE    0
-> @@ -760,8 +761,8 @@ static inline int mptcp_rm_addr_len(const struct mptc=
-p_rm_list *rm_list)
->         return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) +=
- 1;
->  }
->
-> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remai=
-ning,
-> -                             struct mptcp_addr_info *saddr, bool *echo, =
-bool *port);
-> +void mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_addr_=
-info *saddr,
-> +                             struct mptcp_addr_info *daddr, u8 *add_addr=
-);
->  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
->                              struct mptcp_rm_list *rm_list);
->  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *sk=
-c);
-> --
-> 1.8.3.1
->
+>> Code below looks fine, but would like to understand the test scenario better!
+>>
+>> -Mat
+>>
+>>>
+>>> [   55.552626] TCP: request_sock_subflow: Possible SYN flooding on port 8099. Sending cookies.  Check SNMP counters.
+>>> [   55.553024] ------------[ cut here ]------------
+>>> [   55.553027] WARNING: CPU: 0 PID: 10 at net/core/flow_dissector.c:984 __skb_flow_dissect+0x280/0x1650
+>>> ...
+>>> [   55.553117] CPU: 0 PID: 10 Comm: ksoftirqd/0 Not tainted 5.12.0+ #18
+>>> [   55.553121] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
+>>> [   55.553124] RIP: 0010:__skb_flow_dissect+0x280/0x1650
+>>> ...
+>>> [   55.553133] RSP: 0018:ffffb79580087770 EFLAGS: 00010246
+>>> [   55.553137] RAX: 0000000000000000 RBX: ffffffff8ddb58e0 RCX: ffffb79580087888
+>>> [   55.553139] RDX: ffffffff8ddb58e0 RSI: ffff8f7e4652b600 RDI: 0000000000000000
+>>> [   55.553141] RBP: ffffb79580087858 R08: 0000000000000000 R09: 0000000000000008
+>>> [   55.553143] R10: 000000008c622965 R11: 00000000d3313a5b R12: ffff8f7e4652b600
+>>> [   55.553146] R13: ffff8f7e465c9062 R14: 0000000000000000 R15: ffffb79580087888
+>>> [   55.553149] FS:  0000000000000000(0000) GS:ffff8f7f75e00000(0000) knlGS:0000000000000000
+>>> [   55.553152] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [   55.553154] CR2: 00007f73d1d19000 CR3: 0000000135e10004 CR4: 00000000003706f0
+>>> [   55.553160] Call Trace:
+>>> [   55.553166]  ? __sha256_final+0x67/0xd0
+>>> [   55.553173]  ? sha256+0x7e/0xa0
+>>> [   55.553177]  __skb_get_hash+0x57/0x210
+>>> [   55.553182]  subflow_init_req_cookie_join_save+0xac/0xc0
+>>> [   55.553189]  subflow_check_req+0x474/0x550
+>>> [   55.553195]  ? ip_route_output_key_hash+0x67/0x90
+>>> [   55.553200]  ? xfrm_lookup_route+0x1d/0xa0
+>>> [   55.553207]  subflow_v4_route_req+0x8e/0xd0
+>>> [   55.553212]  tcp_conn_request+0x31e/0xab0
+>>> [   55.553218]  ? selinux_socket_sock_rcv_skb+0x116/0x210
+>>> [   55.553224]  ? tcp_rcv_state_process+0x179/0x6d0
+>>> [   55.553229]  tcp_rcv_state_process+0x179/0x6d0
+>>> [   55.553235]  tcp_v4_do_rcv+0xaf/0x220
+>>> [   55.553239]  tcp_v4_rcv+0xce4/0xd80
+>>> [   55.553243]  ? ip_route_input_rcu+0x246/0x260
+>>> [   55.553248]  ip_protocol_deliver_rcu+0x35/0x1b0
+>>> [   55.553253]  ip_local_deliver_finish+0x44/0x50
+>>> [   55.553258]  ip_local_deliver+0x6c/0x110
+>>> [   55.553262]  ? ip_rcv_finish_core.isra.19+0x5a/0x400
+>>> [   55.553267]  ip_rcv+0xd1/0xe0
+>>> ...
+>>>
+>>> After debugging, I found in __skb_flow_dissect(), skb->dev and skb->sk are both NULL,
+>>> then net is NULL, and trigger WARN_ON_ONCE(!net), actually net is always NULL in this
+>>> code path, as skb->dev is set to NULL in tcp_v4_rcv(), and skb->sk is never set.
+>>>
+>>> Code snippet in __skb_flow_dissect() that trigger warning:
+>>>  975         if (skb) {
+>>>  976                 if (!net) {
+>>>  977                         if (skb->dev)
+>>>  978                                 net = dev_net(skb->dev);
+>>>  979                         else if (skb->sk)
+>>>  980                                 net = sock_net(skb->sk);
+>>>  981                 }
+>>>  982         }
+>>>  983
+>>>  984         WARN_ON_ONCE(!net);
+>>>
+>>> So, using seq and transport header derived hash.
+>>>
+>>> Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use").
+>>> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+>>> Suggested-by: Florian Westphal <fw@strlen.de>
+>>> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>> ---
+>>> net/mptcp/syncookies.c | 16 +++++++++++++++-
+>>> 1 file changed, 15 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
+>>> index abe0fd099746..37127781aee9 100644
+>>> --- a/net/mptcp/syncookies.c
+>>> +++ b/net/mptcp/syncookies.c
+>>> @@ -37,7 +37,21 @@ struct join_entry {
+>>>
+>>> static u32 mptcp_join_entry_hash(struct sk_buff *skb, struct net *net)
+>>> {
+>>> -    u32 i = skb_get_hash(skb) ^ net_hash_mix(net);
+>>> +    static u32 mptcp_join_hash_secret __read_mostly;
+>>> +    struct tcphdr *th = tcp_hdr(skb);
+>>> +    u32 seq, i;
+>>> +
+>>> +    net_get_random_once(&mptcp_join_hash_secret,
+>>> +                sizeof(mptcp_join_hash_secret));
+>>> +
+>>> +    if (th->syn)
+>>> +        seq = TCP_SKB_CB(skb)->seq;
+>>> +    else
+>>> +        seq = TCP_SKB_CB(skb)->seq - 1;
+>>> +
+>>> +    i = jhash_3words(seq, net_hash_mix(net),
+>>> +             (__force __u32)th->source << 16 | (__force __u32)th->dest,
+>>> +             mptcp_join_hash_secret);
+>>>
+>>>     return i % ARRAY_SIZE(join_entries);
+>>> }
+>>> -- 
+>>> 1.8.3.1
+>>>
+>>>
+>>>
+>>
+>> -- 
+>> Mat Martineau
+>> Intel
+> 
+
