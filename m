@@ -1,21 +1,21 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6B82FB2
-	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 00:33:17 +0000 (UTC)
-IronPort-SDR: RHqImoOsENoLYlHBwLHF+SjSvL3zL/bkjYN+ClVADFEbcoRhEN8Ehp9atMUKw4ss5977TAzgO9
- JbexK33D2I3A==
-X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="292587737"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066AB70
+	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 00:33:16 +0000 (UTC)
+IronPort-SDR: NiO0SSFd+YP2dnLu7hMLENJ2g2gyMxmOiWHzPd4ZRjHd2KDLRkgdi49AC6Ge73zI1ljMaBlaoR
+ KdLDda90ktYA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="292587736"
 X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="292587737"
+   d="scan'208";a="292587736"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 17:33:15 -0700
-IronPort-SDR: nlkGC0OIuiZPrDOEFf1UZvr0Ig8EUKliXTqzvTTvEX9cAG9VpShgjqY4Vp4xWs6Cvc0K5MmSZf
- /4FW1FAurf8w==
+IronPort-SDR: 4tOZh1C5/AHVYSx0BCEsZAVOXMlJdL6x1Coyr6CNVf4Q9j/UcLd3kpO9vDBnM1JNLGVRjbJqfU
+ lO93rkPsHrXA==
 X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="417234900"
+   d="scan'208";a="417234899"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.74.136])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 17:33:15 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 17:33:14 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Paolo Abeni <pabeni@redhat.com>,
@@ -26,9 +26,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	fw@strlen.de,
 	dcaratti@redhat.com,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 2/2] mptcp: drop duplicate mptcp_setsockopt() declaration
-Date: Mon, 21 Jun 2021 17:33:09 -0700
-Message-Id: <20210622003309.71224-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 1/2] mptcp: avoid race on msk state changes
+Date: Mon, 21 Jun 2021 17:33:08 -0700
+Message-Id: <20210622003309.71224-2-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210622003309.71224-1-mathew.j.martineau@linux.intel.com>
 References: <20210622003309.71224-1-mathew.j.martineau@linux.intel.com>
@@ -41,32 +41,147 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-commit 7896248983ef ("mptcp: add skeleton to sync msk socket
-options to subflows") introduced a duplicate declaration of
-mptcp_setsockopt(), just drop it.
+The msk socket state is currently updated in a few spots without
+owning the msk socket lock itself.
 
-Reported-by: Florian Westphal <fw@strlen.de>
-Fixes: 7896248983ef ("mptcp: add skeleton to sync msk socket options to subflows")
+Some of such operations are safe, as they happens before exposing
+the msk socket to user-space and can't race with other changes.
+
+A couple of them, at connect time, can actually race with close()
+or shutdown(), leaving breaking the socket state machine.
+
+This change addresses the issue moving such update under the msk
+socket lock with the usual:
+
+<acquire spinlock>
+<check sk lock onwers>
+<ev defer to release_cb>
+
+scheme.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/56
+Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
+Fixes: c3c123d16c0e ("net: mptcp: don't hang in mptcp_sendmsg() after TCP fallback")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/protocol.h | 3 ---
- 1 file changed, 3 deletions(-)
+ net/mptcp/protocol.c |  5 +++++
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 30 ++++++++++++++++++++++--------
+ 3 files changed, 29 insertions(+), 8 deletions(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 632350018fb6..8ead550df8b1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2946,6 +2946,11 @@ static void mptcp_release_cb(struct sock *sk)
+ 		spin_lock_bh(&sk->sk_lock.slock);
+ 	}
+ 
++	/* be sure to set the current sk state before tacking actions
++	 * depending on sk_state
++	 */
++	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
++		__mptcp_set_connected(sk);
+ 	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
+ 		__mptcp_clean_una_wakeup(sk);
+ 	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7b634568f49c..78ac28902f55 100644
+index 5d7c44028e47..7b634568f49c 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -762,9 +762,6 @@ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
+@@ -109,6 +109,7 @@
+ #define MPTCP_ERROR_REPORT	8
+ #define MPTCP_RETRANSMIT	9
+ #define MPTCP_WORK_SYNC_SETSOCKOPT 10
++#define MPTCP_CONNECTED		11
  
--int mptcp_setsockopt(struct sock *sk, int level, int optname,
--		     sockptr_t optval, unsigned int optlen);
--
- void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_sockopt_sync_all(struct mptcp_sock *msk);
+ static inline bool before64(__u64 seq1, __u64 seq2)
+ {
+@@ -579,6 +580,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ 		       struct mptcp_options_received *mp_opt);
  
+ void mptcp_finish_connect(struct sock *sk);
++void __mptcp_set_connected(struct sock *sk);
+ static inline bool mptcp_is_fully_established(struct sock *sk)
+ {
+ 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 037fba41e170..9f934603bfe8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -371,6 +371,24 @@ static bool subflow_use_different_dport(struct mptcp_sock *msk, const struct soc
+ 	return inet_sk(sk)->inet_dport != inet_sk((struct sock *)msk)->inet_dport;
+ }
+ 
++void __mptcp_set_connected(struct sock *sk)
++{
++	if (sk->sk_state == TCP_SYN_SENT) {
++		inet_sk_state_store(sk, TCP_ESTABLISHED);
++		sk->sk_state_change(sk);
++	}
++}
++
++static void mptcp_set_connected(struct sock *sk)
++{
++	mptcp_data_lock(sk);
++	if (!sock_owned_by_user(sk))
++		__mptcp_set_connected(sk);
++	else
++		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
++	mptcp_data_unlock(sk);
++}
++
+ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+@@ -379,10 +397,6 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 
+ 	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
+ 
+-	if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
+-		inet_sk_state_store(parent, TCP_ESTABLISHED);
+-		parent->sk_state_change(parent);
+-	}
+ 
+ 	/* be sure no special action on any packet other than syn-ack */
+ 	if (subflow->conn_finished)
+@@ -411,6 +425,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 			 subflow->remote_key);
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEACK);
+ 		mptcp_finish_connect(sk);
++		mptcp_set_connected(parent);
+ 	} else if (subflow->request_join) {
+ 		u8 hmac[SHA256_DIGEST_SIZE];
+ 
+@@ -451,6 +466,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 	} else if (mptcp_check_fallback(sk)) {
+ fallback:
+ 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
++		mptcp_set_connected(parent);
+ 	}
+ 	return;
+ 
+@@ -558,6 +574,7 @@ static void mptcp_sock_destruct(struct sock *sk)
+ 
+ static void mptcp_force_close(struct sock *sk)
+ {
++	/* the msk is not yet exposed to user-space */
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ 	sk_common_release(sk);
+ }
+@@ -1474,10 +1491,7 @@ static void subflow_state_change(struct sock *sk)
+ 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+ 		pr_fallback(mptcp_sk(parent));
+ 		subflow->conn_finished = 1;
+-		if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
+-			inet_sk_state_store(parent, TCP_ESTABLISHED);
+-			parent->sk_state_change(parent);
+-		}
++		mptcp_set_connected(parent);
+ 	}
+ 
+ 	/* as recvmsg() does not acquire the subflow socket for ssk selection
 -- 
 2.32.0
 
