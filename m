@@ -1,74 +1,79 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172C92FB1
-	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 21:50:04 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 91EC46128E;
-	Tue, 22 Jun 2021 21:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1624398604;
-	bh=g9LgKtkRSXDgXchVN7V856NOP9+IzTEh/b+J+dTgwyA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=q6dftXDbnB0Ed0kNVtsnZagRYeQgydJ8aSYzHT08REjpSFb+Kl0wAulJhkN2gXrOk
-	 2EkOggeWHER4+AtkvDEqBX25g0pCeEmFoFyOKFAtopjFQA8V49wElP0JH8KFL4A9jN
-	 aX0MlYNYN9vk6+pAu/MFaFoQ6N7DL9buPr4c/nben0MnF92IplLurpqnChXviYZ+Li
-	 YZg/s1mrj4wX1F95RVW0C9hnAnSkrneSqVJqKGCGjhsjuJcKDudtTi1itTAEyvTIl/
-	 +ZcL/cShYa/PzDF7euXfY9gMEYBIaM91jqxmefa3CagCn0Sa+chJfcdzjHo+Daz7H6
-	 Ues2VQDDGMRag==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 858F860A53;
-	Tue, 22 Jun 2021 21:50:04 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FED2FB3
+	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 23:38:57 +0000 (UTC)
+IronPort-SDR: 8q6O8PYrQHWhsiu7wU5ZZcuLIIFE5nY4f7jtY8qwuZACaMj23hW+9e4CP1BjzwV7WkQFEutNs8
+ kp8zXC/iH6Tg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="268300639"
+X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
+   d="scan'208";a="268300639"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 16:38:56 -0700
+IronPort-SDR: yuX3QlshN4AL5i2ARwtE1UfhEIeQsHqG+oUa31ALpXzTJu0Vu/oJ//Ajg8FqFlKo4ukcim5cAj
+ iEGdqXT0dj5Q==
+X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
+   d="scan'208";a="639267407"
+Received: from mrsastry-mobl1.amr.corp.intel.com ([10.212.137.16])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 16:38:56 -0700
+Date: Tue, 22 Jun 2021 16:38:55 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Jianguo Wu <wujianguo106@163.com>
+cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
+Subject: Re: [PATCH v5 1/4] mptcp: fix warning in __skb_flow_dissect() when
+ do syn cookie for subflow join
+In-Reply-To: <ad0ed696-8be4-8d9d-5af5-775d620c74be@163.com>
+Message-ID: <43f673ac-3622-561b-a6af-96fd7d49f01a@linux.intel.com>
+References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <1623840570-42004-2-git-send-email-wujianguo106@163.com> <64212e1f-2b62-89dc-b4c5-b0c8bae51962@linux.intel.com> <93307b1f-b402-885e-acd0-b5828a11395b@163.com>
+ <ad0ed696-8be4-8d9d-5af5-775d620c74be@163.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] mptcp: Connection-time 'C' flag and two fixes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162439860454.27406.8084748160154709431.git-patchwork-notify@kernel.org>
-Date: Tue, 22 Jun 2021 21:50:04 +0000
-References: <20210622192523.90117-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210622192523.90117-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello:
+On Mon, 21 Jun 2021, Jianguo Wu wrote:
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+>
+>
+> On 2021/6/21 14:14, Jianguo Wu wrote:
+>> Hi Mat,
+>>
+>> On 2021/6/19 6:40, Mat Martineau wrote:
+>>>
+>>> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
+>>>
+>>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>>>
+>>>> I got the following warning message while doing the test:
+>>>
+>>> Hi Jianguo, thanks for your patch set and revisions.
+>>>
+>>> Could you explain some more about which test produced the following result? Was it one of the self tests?
+>>>
+>>> If this is triggered by test code that is not upstream yet, it would help to add a selftest that shows if this bug is present or fixed. A packetdrill test is also an option, if that is a better way to reproduce the error.
+>>>
+>>
+>> I tested with wrk(https://github.com/wg/wrk) and webfsd(https://github.com/ourway/webfsd) with the assistance of mptcp-tools(https://github.com/pabeni/mptcp-tools),
+>> Server side:
+>>     ./use_mptcp.sh webfsd -4 -R /tmp/ -p 8099
+>> Client side:
+>>     ./use_mptcp.sh wrk -c 200 -d 30 -t 4 http://192.168.174.129:8099/
+>>
+>> I will try self tests.
+>>
+>
+> Hi Mat,
+>
+> It can not be reproduced with selftests(./mptcp_join.sh -k), because skb->l4_hash is 1 in this scenario,
+> and direct using skb->hash, so __skb_flow_dissect() isn't called.
+>
 
-On Tue, 22 Jun 2021 12:25:17 -0700 you wrote:
-> Here are six more patches from the MPTCP tree.
-> 
-> Most of them add support for the 'C' flag in the MPTCP connection-time
-> option headers. This flag affects how the initial address and port are
-> treated by each peer. Normally one peer may send MP_JOIN requests to the
-> remote address and port that were used when initiating the MPTCP
-> connection. The 'C' bit indicates that MP_JOINs should only be sent to
-> remote addresses that have been advertised with ADD_ADDR.
-> 
-> [...]
+Thanks for the information! We hadn't seen the failures with the self 
+tests so it's good to know that wrk and webfsd were useful for stress 
+testing.
 
-Here is the summary with links:
-  - [net-next,1/6] mptcp: add sysctl allow_join_initial_addr_port
-    https://git.kernel.org/netdev/net-next/c/d2f77960e5b0
-  - [net-next,2/6] mptcp: add allow_join_id0 in mptcp_out_options
-    https://git.kernel.org/netdev/net-next/c/bab6b88e0560
-  - [net-next,3/6] mptcp: add deny_join_id0 in mptcp_options_received
-    https://git.kernel.org/netdev/net-next/c/df377be38725
-  - [net-next,4/6] selftests: mptcp: add deny_join_id0 testcases
-    https://git.kernel.org/netdev/net-next/c/0cddb4a6f4e3
-  - [net-next,5/6] selftests: mptcp: turn rp_filter off on each NIC
-    https://git.kernel.org/netdev/net-next/c/d8e336f77e3b
-  - [net-next,6/6] mptcp: refine mptcp_cleanup_rbuf
-    https://git.kernel.org/netdev/net-next/c/fde56eea01f9
-
-You are awesome, thank you!
 --
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Mat Martineau
+Intel
