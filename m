@@ -1,65 +1,85 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4589570
-	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 17:40:05 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id D00CC61360;
-	Tue, 22 Jun 2021 17:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1624383604;
-	bh=3CAbsHPkm5mRQltUWm0qW52MIoB7fgk5tQAfiOVuDuc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=p2KdFrcQJ944iRHGLHx0pGShd3aoAziACpUGYcxnQFv9Rmo7R1AZJw/6sXOkU/Y5O
-	 Q7WyPqnz3ovSL5jewFWdAQd9/fOmlgYwZHIUDvvtNi+MTpkmNx2jkZ+wyDKi0LRjUI
-	 3YrWU/lOYsICwV2cBoznMjEk0xL5WzUxY1XRIFMIE5ZKAvYJZBONhWI9WmG78rHxh4
-	 RD+5l03EdP5NJ059jkk1eCwJ+l0cLIruPbX12OdNJ0LmvNqgSpYQqNWasuQbqEHO+c
-	 FjgqRuX7JacvfbkeocPlDNDAsha3NVQU7SbwnyQo0Ctu3qbgvRt1KiLdGp59VHC8ID
-	 wLaeVsstp2POg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id C628D60A6C;
-	Tue, 22 Jun 2021 17:40:04 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F4C71
+	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 19:25:29 +0000 (UTC)
+IronPort-SDR: qy+aPPNa+OqCtDeP89v0WrhclNle4iShm8IebuCQBvmAmE6J0VgEdhld5gLGatbInnXTkaQ+89
+ XjrUWBmk1xyA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="228686314"
+X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
+   d="scan'208";a="228686314"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 12:25:28 -0700
+IronPort-SDR: GJ1zFwKTen67slpEWfukTeg+UiSH4HWJtQ4LNxltWHpybX1HuQljsfjsrny0ytBq3PL0RCN5Li
+ v9JoEvxdv3bg==
+X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
+   d="scan'208";a="480909712"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.237.182])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 12:25:28 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/6] mptcp: Connection-time 'C' flag and two fixes
+Date: Tue, 22 Jun 2021 12:25:17 -0700
+Message-Id: <20210622192523.90117-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.32.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] mptcp: Fixes for v5.13
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162438360480.26881.14977711670165986087.git-patchwork-notify@kernel.org>
-Date: Tue, 22 Jun 2021 17:40:04 +0000
-References: <20210622003309.71224-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210622003309.71224-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com,
- fw@strlen.de, dcaratti@redhat.com
 
-Hello:
+Here are six more patches from the MPTCP tree.
 
-This series was applied to netdev/net.git (refs/heads/master):
+Most of them add support for the 'C' flag in the MPTCP connection-time
+option headers. This flag affects how the initial address and port are
+treated by each peer. Normally one peer may send MP_JOIN requests to the
+remote address and port that were used when initiating the MPTCP
+connection. The 'C' bit indicates that MP_JOINs should only be sent to
+remote addresses that have been advertised with ADD_ADDR.
 
-On Mon, 21 Jun 2021 17:33:07 -0700 you wrote:
-> Here are two MPTCP fixes from Paolo.
-> 
-> Patch 1 fixes some possible connect-time race conditions with
-> MPTCP-level connection state changes.
-> 
-> Patch 2 deletes a duplicate function declaration.
-> 
-> [...]
+The other two patches are unrelated improvements.
 
-Here is the summary with links:
-  - [net,1/2] mptcp: avoid race on msk state changes
-    https://git.kernel.org/netdev/net/c/490274b47468
-  - [net,2/2] mptcp: drop duplicate mptcp_setsockopt() declaration
-    https://git.kernel.org/netdev/net/c/597dbae77ee5
+Patches 1-4: Add the 'C' flag feature, a sysctl to optionally enable it,
+and a selftest.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Patch 5: Adjust rp_filter settings in a selftest.
 
+Patch 6: Improve rbuf cleanup for MPTCP sockets.
+
+
+Geliang Tang (4):
+  mptcp: add sysctl allow_join_initial_addr_port
+  mptcp: add allow_join_id0 in mptcp_out_options
+  mptcp: add deny_join_id0 in mptcp_options_received
+  selftests: mptcp: add deny_join_id0 testcases
+
+Paolo Abeni (1):
+  mptcp: refine mptcp_cleanup_rbuf
+
+Yonglong Li (1):
+  selftests: mptcp: turn rp_filter off on each NIC
+
+ Documentation/networking/mptcp-sysctl.rst     | 13 ++++
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/ctrl.c                              | 16 ++++
+ net/mptcp/options.c                           | 13 ++++
+ net/mptcp/pm.c                                |  1 +
+ net/mptcp/pm_netlink.c                        |  3 +-
+ net/mptcp/protocol.c                          | 56 ++++++--------
+ net/mptcp/protocol.h                          | 12 ++-
+ net/mptcp/subflow.c                           |  3 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 75 ++++++++++++++++++-
+ .../selftests/net/mptcp/simult_flows.sh       |  3 +-
+ 11 files changed, 157 insertions(+), 41 deletions(-)
+
+
+base-commit: a432c771e2d9bc059ffe3028faf040c08b6a9f98
+-- 
+2.32.0
 
