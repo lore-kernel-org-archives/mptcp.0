@@ -1,187 +1,83 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066AB70
-	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 00:33:16 +0000 (UTC)
-IronPort-SDR: NiO0SSFd+YP2dnLu7hMLENJ2g2gyMxmOiWHzPd4ZRjHd2KDLRkgdi49AC6Ge73zI1ljMaBlaoR
- KdLDda90ktYA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="292587736"
-X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="292587736"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 17:33:15 -0700
-IronPort-SDR: 4tOZh1C5/AHVYSx0BCEsZAVOXMlJdL6x1Coyr6CNVf4Q9j/UcLd3kpO9vDBnM1JNLGVRjbJqfU
- lO93rkPsHrXA==
-X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="417234899"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.74.136])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 17:33:14 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	fw@strlen.de,
-	dcaratti@redhat.com,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 1/2] mptcp: avoid race on msk state changes
-Date: Mon, 21 Jun 2021 17:33:08 -0700
-Message-Id: <20210622003309.71224-2-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210622003309.71224-1-mathew.j.martineau@linux.intel.com>
-References: <20210622003309.71224-1-mathew.j.martineau@linux.intel.com>
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10B6272
+	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 04:45:50 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.48:60308.1638703953
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.9?logid-10482a78b4d84243ae8fb1d52823714b (unknown [172.18.0.48])
+	by chinatelecom.cn (HERMES) with SMTP id E06FE28009E;
+	Tue, 22 Jun 2021 12:45:46 +0800 (CST)
+X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.48])
+	by app0024 with ESMTP id 10482a78b4d84243ae8fb1d52823714b for mptcp@lists.linux.dev;
+	Tue Jun 22 12:45:47 2021
+X-Transaction-ID: 10482a78b4d84243ae8fb1d52823714b
+X-filter-score:  filter<0>
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.48
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+To: mptcp@lists.linux.dev
+Cc: mathew.j.martineau@linux.intel.com,
+	geliangtang@gmail.com,
+	Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: [PATCH v5 0/4] mptcp: fix conflicts when using pm.add_signal in ADD_ADDR/echo and RM_ADDR process
+Date: Tue, 22 Jun 2021 12:45:31 +0800
+Message-Id: <1624337135-149084-1-git-send-email-liyonglong@chinatelecom.cn>
+X-Mailer: git-send-email 1.8.3.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+fix issue: ADD_ADDR and RM_ADDR use pm.add_signal to mark event, so 
+in some case pm.add_signal will be flush when ADD_ADDR/RM_ADDR in 
+process.
 
-The msk socket state is currently updated in a few spots without
-owning the msk socket lock itself.
+fix issue: if ADD_ADDR and ADD_ADDR-echo process at the same time, 
+only one event can write pm.add_signal. so ADD_ADDR will process 
+after add_timer timeout or ADD_ADDR-echo will not be process.
 
-Some of such operations are safe, as they happens before exposing
-the msk socket to user-space and can't race with other changes.
+Patch 1 fix ADD_ADDR and RM_ADDR maybe clear addr_signal each other.
 
-A couple of them, at connect time, can actually race with close()
-or shutdown(), leaving breaking the socket state machine.
+Patch 2 and 3 deal ADD_ADDR and ADD_ADDR-echo with separately to fix 
+conflicts in using pm.addr_signal porcess.
 
-This change addresses the issue moving such update under the msk
-socket lock with the usual:
+Patch 4 MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT is not necessary.
 
-<acquire spinlock>
-<check sk lock onwers>
-<ev defer to release_cb>
+v1->v2:
+ - remove READ_ONCE under the pm spin lock.
 
-scheme.
+v2->v3:
+ - Patch 2: rename mptcp_pm_should_add_addr to mptcp_pm_should_add_signal_addr
+ - Patch 3: avoid read-modify-write of msk->pm.addr_signal and change  
+   mptcp_pm_add_addr_signal to return void.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/56
-Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
-Fixes: c3c123d16c0e ("net: mptcp: don't hang in mptcp_sendmsg() after TCP fallback")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c |  5 +++++
- net/mptcp/protocol.h |  2 ++
- net/mptcp/subflow.c  | 30 ++++++++++++++++++++++--------
- 3 files changed, 29 insertions(+), 8 deletions(-)
+v3->v4:
+ - Patch 1: use ~(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO)) instead 
+   of BIT(MPTCP_RM_ADDR_SIGNAL)
+ - Patch 3: simple the code; init flags; fix wrong goto logic code; 
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 632350018fb6..8ead550df8b1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2946,6 +2946,11 @@ static void mptcp_release_cb(struct sock *sk)
- 		spin_lock_bh(&sk->sk_lock.slock);
- 	}
- 
-+	/* be sure to set the current sk state before tacking actions
-+	 * depending on sk_state
-+	 */
-+	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
-+		__mptcp_set_connected(sk);
- 	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
- 		__mptcp_clean_una_wakeup(sk);
- 	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 5d7c44028e47..7b634568f49c 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -109,6 +109,7 @@
- #define MPTCP_ERROR_REPORT	8
- #define MPTCP_RETRANSMIT	9
- #define MPTCP_WORK_SYNC_SETSOCKOPT 10
-+#define MPTCP_CONNECTED		11
- 
- static inline bool before64(__u64 seq1, __u64 seq2)
- {
-@@ -579,6 +580,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt);
- 
- void mptcp_finish_connect(struct sock *sk);
-+void __mptcp_set_connected(struct sock *sk);
- static inline bool mptcp_is_fully_established(struct sock *sk)
- {
- 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 037fba41e170..9f934603bfe8 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -371,6 +371,24 @@ static bool subflow_use_different_dport(struct mptcp_sock *msk, const struct soc
- 	return inet_sk(sk)->inet_dport != inet_sk((struct sock *)msk)->inet_dport;
- }
- 
-+void __mptcp_set_connected(struct sock *sk)
-+{
-+	if (sk->sk_state == TCP_SYN_SENT) {
-+		inet_sk_state_store(sk, TCP_ESTABLISHED);
-+		sk->sk_state_change(sk);
-+	}
-+}
-+
-+static void mptcp_set_connected(struct sock *sk)
-+{
-+	mptcp_data_lock(sk);
-+	if (!sock_owned_by_user(sk))
-+		__mptcp_set_connected(sk);
-+	else
-+		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
-+	mptcp_data_unlock(sk);
-+}
-+
- static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-@@ -379,10 +397,6 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 
- 	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
- 
--	if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
--		inet_sk_state_store(parent, TCP_ESTABLISHED);
--		parent->sk_state_change(parent);
--	}
- 
- 	/* be sure no special action on any packet other than syn-ack */
- 	if (subflow->conn_finished)
-@@ -411,6 +425,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 			 subflow->remote_key);
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEACK);
- 		mptcp_finish_connect(sk);
-+		mptcp_set_connected(parent);
- 	} else if (subflow->request_join) {
- 		u8 hmac[SHA256_DIGEST_SIZE];
- 
-@@ -451,6 +466,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 	} else if (mptcp_check_fallback(sk)) {
- fallback:
- 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
-+		mptcp_set_connected(parent);
- 	}
- 	return;
- 
-@@ -558,6 +574,7 @@ static void mptcp_sock_destruct(struct sock *sk)
- 
- static void mptcp_force_close(struct sock *sk)
- {
-+	/* the msk is not yet exposed to user-space */
- 	inet_sk_state_store(sk, TCP_CLOSE);
- 	sk_common_release(sk);
- }
-@@ -1474,10 +1491,7 @@ static void subflow_state_change(struct sock *sk)
- 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
- 		pr_fallback(mptcp_sk(parent));
- 		subflow->conn_finished = 1;
--		if (inet_sk_state_load(parent) == TCP_SYN_SENT) {
--			inet_sk_state_store(parent, TCP_ESTABLISHED);
--			parent->sk_state_change(parent);
--		}
-+		mptcp_set_connected(parent);
- 	}
- 
- 	/* as recvmsg() does not acquire the subflow socket for ssk selection
+v4->v5:
+ - Patch 3: simple the code of function 'mptcp_established_options_add_addr'
+
+Yonglong Li (4):
+  mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
+  mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
+  mptcp: build ADD_ADDR/echo-ADD_ADDR option according pm.add_signal
+  mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
+
+ include/net/mptcp.h    |   1 +
+ net/mptcp/options.c    | 161 ++++++++++++++++++++++++++++++++-----------------
+ net/mptcp/pm.c         |  53 +++++++---------
+ net/mptcp/pm_netlink.c |  10 ++-
+ net/mptcp/protocol.h   |  31 ++++------
+ 5 files changed, 147 insertions(+), 109 deletions(-)
+
 -- 
-2.32.0
+1.8.3.1
 
