@@ -1,34 +1,33 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6680B2FB5
-	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 19:25:31 +0000 (UTC)
-IronPort-SDR: j+jSZG50aq5E/OF103HrwHBm8HYfgVG0FY4iiKwW5ky3hem4L0DJuJjHdJJ9OF1uiCZTtoM4dO
- /uES5RMa5BQQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="228686317"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD5071
+	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 19:25:32 +0000 (UTC)
+IronPort-SDR: DJ6b1f1sygj7SJKzOLlpPmfOjRorLRrjGGi5/AalHbHIqfbXCLjNa9Eqc0QHWNbHrHEcG813wP
+ m+fuRKQPDRrQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="228686323"
 X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
-   d="scan'208";a="228686317"
+   d="scan'208";a="228686323"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 12:25:29 -0700
-IronPort-SDR: w2GhLzl5kCPE21Xbz/oCmehhQ4aKAtLUm3EBgtWBijYG2eJX0ZiC5sfZc6YaopemXlLjhNaYaU
- 84YVRSEfpB5A==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 12:25:30 -0700
+IronPort-SDR: l1N+9FkG1RS1IWpLAUTo6GL30l3+PJe8+GtTpNR5/C1YedhMmy9d11lZLKe/ZjI2i3gkCCvAqi
+ Hi1JhwJ61JIQ==
 X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
-   d="scan'208";a="480909721"
+   d="scan'208";a="480909728"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.237.182])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 12:25:29 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 12:25:30 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliangtang@gmail.com>,
+Cc: Yonglong Li <liyonglong@chinatelecom.cn>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	Florian Westphal <fw@strlen.de>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/6] mptcp: add deny_join_id0 in mptcp_options_received
-Date: Tue, 22 Jun 2021 12:25:20 -0700
-Message-Id: <20210622192523.90117-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 5/6] selftests: mptcp: turn rp_filter off on each NIC
+Date: Tue, 22 Jun 2021 12:25:22 -0700
+Message-Id: <20210622192523.90117-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210622192523.90117-1-mathew.j.martineau@linux.intel.com>
 References: <20210622192523.90117-1-mathew.j.martineau@linux.intel.com>
@@ -39,123 +38,47 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliangtang@gmail.com>
+From: Yonglong Li <liyonglong@chinatelecom.cn>
 
-This patch added a new flag named deny_join_id0 in struct
-mptcp_options_received. Set it when MP_CAPABLE with the flag
-MPTCP_CAP_DENYJOIN_ID0 is received.
+To turn rp_filter off we should:
 
-Also add a new flag remote_deny_join_id0 in struct mptcp_pm_data. When the
-flag deny_join_id0 is set, set this remote_deny_join_id0 flag.
+  echo 0 > /proc/sys/net/ipv4/conf/default/rp_filter
 
-In mptcp_pm_create_subflow_or_signal_addr, if the remote_deny_join_id0 flag
-is set, and the remote address id is zero, stop this connection.
+and
 
-Suggested-by: Florian Westphal <fw@strlen.de>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+  echo 0 > /proc/sys/net/ipv4/conf/all/rp_filter
+
+before NIC created.
+
+Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/options.c    | 7 +++++++
- net/mptcp/pm.c         | 1 +
- net/mptcp/pm_netlink.c | 3 ++-
- net/mptcp/protocol.h   | 4 +++-
- net/mptcp/subflow.c    | 2 ++
- 5 files changed, 15 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 7a4b6d0bf3f6..a05270996613 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -83,6 +83,9 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
- 			mp_opt->csum_reqd = 1;
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index 3aeef3bcb101..fd63ebfe9a2b 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -60,6 +60,8 @@ setup()
+ 	for i in "$ns1" "$ns2" "$ns3";do
+ 		ip netns add $i || exit $ksft_skip
+ 		ip -net $i link set lo up
++		ip netns exec $i sysctl -q net.ipv4.conf.all.rp_filter=0
++		ip netns exec $i sysctl -q net.ipv4.conf.default.rp_filter=0
+ 	done
  
-+		if (flags & MPTCP_CAP_DENY_JOIN_ID0)
-+			mp_opt->deny_join_id0 = 1;
-+
- 		mp_opt->mp_capable = 1;
- 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
- 			mp_opt->sndr_key = get_unaligned_be64(ptr);
-@@ -360,6 +363,7 @@ void mptcp_get_options(const struct sock *sk,
- 	mp_opt->mp_prio = 0;
- 	mp_opt->reset = 0;
- 	mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
-+	mp_opt->deny_join_id0 = 0;
+ 	ip link add ns1eth1 netns "$ns1" type veth peer name ns2eth1 netns "$ns2"
+@@ -80,7 +82,6 @@ setup()
  
- 	length = (th->doff * 4) - sizeof(struct tcphdr);
- 	ptr = (const unsigned char *)(th + 1);
-@@ -908,6 +912,9 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 		return false;
- 	}
+ 	ip netns exec "$ns1" ./pm_nl_ctl limits 1 1
+ 	ip netns exec "$ns1" ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags subflow
+-	ip netns exec "$ns1" sysctl -q net.ipv4.conf.all.rp_filter=0
  
-+	if (mp_opt->deny_join_id0)
-+		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
-+
- 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
- 		pr_warn_once("bogus mpc option on established client sk");
- 	mptcp_subflow_fully_established(subflow, mp_opt);
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 9d00fa6d22e9..639271e09604 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -320,6 +320,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	WRITE_ONCE(msk->pm.addr_signal, 0);
- 	WRITE_ONCE(msk->pm.accept_addr, false);
- 	WRITE_ONCE(msk->pm.accept_subflow, false);
-+	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
- 	msk->pm.status = 0;
- 
- 	spin_lock_init(&msk->pm.lock);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d4732a4f223e..d2591ebf01d9 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -451,7 +451,8 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 
- 	/* check if should create a new subflow */
- 	if (msk->pm.local_addr_used < local_addr_max &&
--	    msk->pm.subflows < subflows_max) {
-+	    msk->pm.subflows < subflows_max &&
-+	    !READ_ONCE(msk->pm.remote_deny_join_id0)) {
- 		local = select_local_address(pernet, msk);
- 		if (local) {
- 			struct mptcp_addr_info remote = { 0 };
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f2326f6074b9..f4eaa5f57e3f 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -138,7 +138,8 @@ struct mptcp_options_received {
- 		mp_prio : 1,
- 		echo : 1,
- 		csum_reqd : 1,
--		backup : 1;
-+		backup : 1,
-+		deny_join_id0 : 1;
- 	u32	token;
- 	u32	nonce;
- 	u64	thmac;
-@@ -193,6 +194,7 @@ struct mptcp_pm_data {
- 	bool		work_pending;
- 	bool		accept_addr;
- 	bool		accept_subflow;
-+	bool		remote_deny_join_id0;
- 	u8		add_addr_signaled;
- 	u8		add_addr_accepted;
- 	u8		local_addr_used;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e9e8ce862218..d55f4ef736a5 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -408,6 +408,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 
- 		if (mp_opt.csum_reqd)
- 			WRITE_ONCE(mptcp_sk(parent)->csum_enabled, true);
-+		if (mp_opt.deny_join_id0)
-+			WRITE_ONCE(mptcp_sk(parent)->pm.remote_deny_join_id0, true);
- 		subflow->mp_capable = 1;
- 		subflow->can_ack = 1;
- 		subflow->remote_key = mp_opt.sndr_key;
+ 	ip -net "$ns2" addr add 10.0.1.2/24 dev ns2eth1
+ 	ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
 -- 
 2.32.0
 
