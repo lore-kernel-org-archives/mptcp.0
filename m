@@ -1,35 +1,35 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19B62FAF
-	for <mptcp@lists.linux.dev>; Mon, 21 Jun 2021 22:54:47 +0000 (UTC)
-IronPort-SDR: jZ571FyxVZtgsRgZPyDhdcr/MSibW3xDztjXOhR6ecdGHvAdvA9MyfpLYqfYd7iFWKF8xbxXuc
- QAk9pEbb9MmQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="203933130"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF19B70
+	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 00:33:15 +0000 (UTC)
+IronPort-SDR: IIeNIudnEQfXYUJxUGVNAaYf8UjSWe7YQj5CMvPwnzdjvPtSVvUNz6gB0/aSgtOg6si4q/L0ss
+ C1hWzQtx4ycQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="292587735"
 X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="203933130"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 15:54:43 -0700
-IronPort-SDR: +petn45s7pg9jt+ljh7bRvmDKQgGq5/eGwZf97Tl49SwN2T94ia1+S98kXfxZDoRvhqVGKp659
- O90AffoXb7ng==
+   d="scan'208";a="292587735"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 17:33:14 -0700
+IronPort-SDR: ifWrKQun0x/KqCSKstUD1fh4aB6zLHqi80f3XYqZpkK1Db6QNvDEKDqy2sazZeWxATB4MW4mnO
+ IaFd0flXANXg==
 X-IronPort-AV: E=Sophos;i="5.83,290,1616482800"; 
-   d="scan'208";a="486673974"
+   d="scan'208";a="417234897"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.74.136])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 15:54:42 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 17:33:14 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	pabeni@redhat.com,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 6/6] selftests: mptcp: display proper reason to abort tests
-Date: Mon, 21 Jun 2021 15:54:38 -0700
-Message-Id: <20210621225438.10777-7-mathew.j.martineau@linux.intel.com>
+	fw@strlen.de,
+	dcaratti@redhat.com
+Subject: [PATCH net 0/2] mptcp: Fixes for v5.13
+Date: Mon, 21 Jun 2021 17:33:07 -0700
+Message-Id: <20210622003309.71224-1-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210621225438.10777-1-mathew.j.martineau@linux.intel.com>
-References: <20210621225438.10777-1-mathew.j.martineau@linux.intel.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -37,133 +37,25 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Here are two MPTCP fixes from Paolo.
 
-Without this modification, we were often displaying this error messages:
+Patch 1 fixes some possible connect-time race conditions with
+MPTCP-level connection state changes.
 
-  FAIL: Could not even run loopback test
+Patch 2 deletes a duplicate function declaration.
 
-But $ret could have been set to a non 0 value in many different cases:
 
-- net.mptcp.enabled=0 is not working as expected
-- setsockopt(..., TCP_ULP, "mptcp", ...) is allowed
-- ping between each netns are failing
-- tests between ns1 as a receiver and ns>1 are failing
-- other tests not involving ns1 as a receiver are failing
+Paolo Abeni (2):
+  mptcp: avoid race on msk state changes
+  mptcp: drop duplicate mptcp_setsockopt() declaration
 
-So not only for the loopback test.
+ net/mptcp/protocol.c |  5 +++++
+ net/mptcp/protocol.h |  5 ++---
+ net/mptcp/subflow.c  | 30 ++++++++++++++++++++++--------
+ 3 files changed, 29 insertions(+), 11 deletions(-)
 
-Now a clearer message, including the time it took to run all tests, is
-displayed.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- .../selftests/net/mptcp/mptcp_connect.sh      | 52 +++++++++++++------
- 1 file changed, 36 insertions(+), 16 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 2484fb6a9a8d..559173a8e387 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -680,6 +680,25 @@ run_tests_peekmode()
- 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
- }
- 
-+display_time()
-+{
-+	time_end=$(date +%s)
-+	time_run=$((time_end-time_start))
-+
-+	echo "Time: ${time_run} seconds"
-+}
-+
-+stop_if_error()
-+{
-+	local msg="$1"
-+
-+	if [ ${ret} -ne 0 ]; then
-+		echo "FAIL: ${msg}" 1>&2
-+		display_time
-+		exit ${ret}
-+	fi
-+}
-+
- make_file "$cin" "client"
- make_file "$sin" "server"
- 
-@@ -687,6 +706,8 @@ check_mptcp_disabled
- 
- check_mptcp_ulp_setsockopt
- 
-+stop_if_error "The kernel configuration is not valid for MPTCP"
-+
- echo "INFO: validating network environment with pings"
- for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns1" $sender 10.0.1.1
-@@ -706,6 +727,8 @@ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns4" $sender dead:beef:3::1
- done
- 
-+stop_if_error "Could not even run ping tests"
-+
- [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
- echo -n "INFO: Using loss of $tc_loss "
- test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
-@@ -733,18 +756,13 @@ echo "on ns3eth4"
- 
- tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms $tc_reorder
- 
--for sender in $ns1 $ns2 $ns3 $ns4;do
--	run_tests_lo "$ns1" "$sender" 10.0.1.1 1
--	if [ $ret -ne 0 ] ;then
--		echo "FAIL: Could not even run loopback test" 1>&2
--		exit $ret
--	fi
--	run_tests_lo "$ns1" $sender dead:beef:1::1 1
--	if [ $ret -ne 0 ] ;then
--		echo "FAIL: Could not even run loopback v6 test" 2>&1
--		exit $ret
--	fi
-+run_tests_lo "$ns1" "$ns1" 10.0.1.1 1
-+stop_if_error "Could not even run loopback test"
-+
-+run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1
-+stop_if_error "Could not even run loopback v6 test"
- 
-+for sender in $ns1 $ns2 $ns3 $ns4;do
- 	# ns1<->ns2 is not subject to reordering/tc delays. Use it to test
- 	# mptcp syncookie support.
- 	if [ $sender = $ns1 ]; then
-@@ -753,6 +771,9 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
- 		ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=1
- 	fi
- 
-+	run_tests "$ns1" $sender 10.0.1.1
-+	run_tests "$ns1" $sender dead:beef:1::1
-+
- 	run_tests "$ns2" $sender 10.0.1.2
- 	run_tests "$ns2" $sender dead:beef:1::2
- 	run_tests "$ns2" $sender 10.0.2.1
-@@ -765,14 +786,13 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
- 
- 	run_tests "$ns4" $sender 10.0.3.1
- 	run_tests "$ns4" $sender dead:beef:3::1
-+
-+	stop_if_error "Tests with $sender as a sender have failed"
- done
- 
- run_tests_peekmode "saveWithPeek"
- run_tests_peekmode "saveAfterPeek"
-+stop_if_error "Tests with peek mode have failed"
- 
--time_end=$(date +%s)
--time_run=$((time_end-time_start))
--
--echo "Time: ${time_run} seconds"
--
-+display_time
- exit $ret
+base-commit: 0cd58e5c53babb9237b741dbef711f0a9eb6d3fd
 -- 
 2.32.0
 
