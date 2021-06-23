@@ -1,135 +1,134 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BE4173
-	for <mptcp@lists.linux.dev>; Wed, 23 Jun 2021 00:00:28 +0000 (UTC)
-IronPort-SDR: DQ5mYHDcY0QelM7cLisVSzwVSwUMiGE548t8uGpM+JzcLr9zxnsbhh/ZdnkMZWMShQceDBGi7v
- WqNZwhrsJiMQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="207104332"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5052FB3
+	for <mptcp@lists.linux.dev>; Wed, 23 Jun 2021 00:07:26 +0000 (UTC)
+IronPort-SDR: 93K+V2hQqQ1FDiO6wW7BUzcN1OYYlsqqK8dRe3ZqA/douLvugJ+WFWYx5nq+TPswQnbblv6FkD
+ Rcn9A8ZdgniA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="271009614"
 X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
-   d="scan'208";a="207104332"
+   d="scan'208";a="271009614"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 17:00:27 -0700
-IronPort-SDR: 9OL5kdTFe5HA4YuAF6z0DdAUsD/P9mqfdNvAa3ojLAL3ZeS3gLlDuvs0W94zL5/mCp25IwJ9ne
- Au6hWbcuuHxw==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 17:07:25 -0700
+IronPort-SDR: GLvdQv4eUM5vbMG/VL5fo2TjTjw1n+98/N/zlQX3wqIYoSRI5blwNCbNaDQzgRQ7IoHA/RpqTS
+ x7skNDttJt+Q==
 X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
-   d="scan'208";a="487096171"
+   d="scan'208";a="487098514"
 Received: from mrsastry-mobl1.amr.corp.intel.com ([10.212.137.16])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 17:00:27 -0700
-Date: Tue, 22 Jun 2021 17:00:27 -0700 (PDT)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 17:07:25 -0700
+Date: Tue, 22 Jun 2021 17:07:25 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Jianguo Wu <wujianguo106@163.com>
 cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
-Subject: Re: [PATCH v5 4/4] mptcp: avoid processing packet if a subflow
- reset
-In-Reply-To: <b568316c-d0f9-9315-692d-ea83b2d49b85@163.com>
-Message-ID: <2024b917-84de-4dea-2244-5dce7a7f2495@linux.intel.com>
-References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <1623840570-42004-5-git-send-email-wujianguo106@163.com> <45dcfe4c-1918-2d78-accf-141bb4af2c5b@linux.intel.com> <b568316c-d0f9-9315-692d-ea83b2d49b85@163.com>
+Subject: Re: [PATCH v5 0/4] Fix some mptcp syncookie process bugs
+In-Reply-To: <d3c1f32b-806a-bf19-d6a2-324b80d4c387@163.com>
+Message-ID: <58edc7e8-652-c5c8-5ee6-878981c6d7b2@linux.intel.com>
+References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <74d34b28-f071-2825-af55-d39952959e4@linux.intel.com> <d3c1f32b-806a-bf19-d6a2-324b80d4c387@163.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-508769315-1624406427=:21759"
+Content-Type: multipart/mixed; BOUNDARY="0-1746725553-1624406647=:21759"
+Content-ID: <b36ad3c-579b-f4bc-9db9-84fb9fc8420@linux.intel.com>
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---0-508769315-1624406427=:21759
-Content-Type: text/plain; charset=utf-8; format=flowed
+--0-1746725553-1624406647=:21759
+Content-Type: text/plain; CHARSET=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 8BIT
+Content-ID: <d25cd3fc-55e2-adc0-c4f8-863cc79cb7f@linux.intel.com>
 
 On Mon, 21 Jun 2021, Jianguo Wu wrote:
 
 > Hi Mat,
 >
-> On 2021/6/19 8:19, Mat Martineau wrote:
+> On 2021/6/19 8:26, Mat Martineau wrote:
 >> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
 >>
 >>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
 >>>
->>> If check_fully_established() causes a subflow reset, it should not
->>> continue to process the packet in tcp_data_queue().
->>>
->>> setting:
->>> Â Â Â Â TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
->>>
->>> so that the following check will drop the pkt in
->>> tcp_data_queue():
->>> Â if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
->>> Â Â Â Â __kfree_skb(skb);
->>> Â Â Â Â return;
->>> Â }
->>>
->>> Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
->>> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
->>> ---
->>> net/mptcp/options.c | 6 ++++++
->>> 1 file changed, 6 insertions(+)
->>>
->>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>> index 1aec01686c1a..be435c5421cd 100644
->>> --- a/net/mptcp/options.c
->>> +++ b/net/mptcp/options.c
->>> @@ -926,6 +926,12 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
->>> Â Â Â Â return true;
->>>
->>> reset:
->>> +Â Â Â  /* If a subflow is reset, the packet should not continue to be
->>> +Â Â Â Â  * processed in tcp_data_queue(), so setting: end_seq = seq,
->>> +Â Â Â Â  * then tcp_data_queue() will drop the packet.
->>> +Â Â Â Â  */
->>> +Â Â Â  TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
->>> +
+>>> v4->v5:
+>>> patch1: no changes
+>>> patch2: no changes
+>>> patch3: no changes
+>>> patch4: add comment
 >>
->> This does have the desired effect when mptcp_incoming_options() is 
->> called from tcp_data_queue(), but mptcp_incoming_options() is also 
->> called from tcp_reset() and tcp_rcv_state_process(). The other callers 
->> appear to tolerate the sequence number modification.
+>> Hi Jianguo -
 >>
->> I think it would be clearer to either add a return value or output 
->> parameter to mptcp_incoming_options() to explicitly tell the caller 
->> that a reset has been sent and tcp_done() called. Then it would be 
->> clearer in tcp_data_queue() that the packet is being discarded due to 
->> mptcp header content.
+>> One other thing that's helpful for reviewers on the list is to use the patch prefixes listed at https://github.com/multipath-tcp/mptcp_net-next/wiki/Patch-prefixes
+>> when emailing patches to mptcp@lists.linux.dev
 >>
 >
-> If a reset has been sent and tcp_done() called in 
-> check_fully_established(), the sk_state will be TCP_CLOSE, how about 
-> just do (sk_state == TCP_CLOSE) check in tcp_data_queue() as it did in 
-> the V1 of this patch?
+> Thanks for your reminding!
+>
+>> For example, if these patches are intended for net-next they should be sent with [PATCH mptcp-next] in the subject line, or for the net tree they should have [PATCH mptcp-net]. If you're unsure where the patches belong, please ask!
+>>
+>
+> and this patchset should use [PATCH mptcp-next]?
 
-Oh, I see now that Paolo suggested the the end_seq assignment in order to 
-only modify MPTCP code.
+I think these look like mptcp-net patches, especially considering the risk 
+of double-free in patch 2.
 
-I still think it's better to make it clear that we're discarding a packet 
-due to the mptcp headers - using the existing sequence check (intended to 
-detect acks) in tcp_data_queue() seems sneaky to me.
+For patch 4 I'm not sure if that would be best for net-next. Is it an 
+optimization or fixing a crash / error / warning?
 
-Something like
-
-if (sk_is_mptcp(sk) && !mptcp_incoming_options(sk, skb)) {
- 	__kfree_skb(skb);
- 	return;
-}
-
-seems both compact and clear. Does that seem ok Paolo?
-
-The optimizer would probably share instructions with the following 
-"end_seq == seq" condition for the kfree+return path anyway.
+-Mat
 
 
 >
->> (It also looks like it unexpected behavior may be possible if we get a 
->> strange TCP_RST + MP_JOIN packet when not fully established, but that's 
->> unrelated to this patch. Maybe I'll try to create a packetdrill test to 
->> see what happens)
+>> Thanks,
 >>
->>> Â Â Â Â mptcp_subflow_reset(ssk);
->>> Â Â Â Â return false;
->>> }
+>> Mat
+>>
+>>
+>>>
+>>> v3->v4:
+>>> patch1: using seq and sport/dport for hashing, and ignore network headers altogether,
+>>>        as suggest by Florian
+>>> patch2: no changes
+>>> patch3: no changes
+>>> patch4: no changes
+>>>
+>>> v2->v3:
+>>> patch1: directly use inet6_ehashfn() for IPv6
+>>> patch2: no changes
+>>> patch3: no changes
+>>> patch4: add Fixes tag.
+>>>
+>>> v1->v2:
+>>> patch1: handle ipv6 sockets/addresses,
+>>>        always use 4-tuple drived hash and never look at skb->hash
+>>> patch2: no changes
+>>> patch3: split into 2 patches.
+>>> patch4: new added.
+>>>
+>>> Jianguo Wu (4):
+>>>  mptcp: fix warning in __skb_flow_dissect() when do syn cookie for
+>>>    subflow join
+>>>  mptcp: remove redundant req destruct in subflow_check_req()
+>>>  mptcp: fix syncookie process if mptcp can not_accept new subflow
+>>>  mptcp: avoid processing packet if a subflow reset
+>>>
+>>> net/mptcp/options.c    |  6 ++++++
+>>> net/mptcp/subflow.c    | 11 +++--------
+>>> net/mptcp/syncookies.c | 16 +++++++++++++++-
+>>> 3 files changed, 24 insertions(+), 9 deletions(-)
+>>>
+>>> --
+??>> 1.8.3.1
+>>>
+>>>
+>>>
+>>
+>> --
+>> Mat Martineau
+>> Intel
+>
+>
 
 --
 Mat Martineau
 Intel
---0-508769315-1624406427=:21759--
+--0-1746725553-1624406647=:21759--
