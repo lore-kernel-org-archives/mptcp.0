@@ -1,79 +1,135 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FED2FB3
-	for <mptcp@lists.linux.dev>; Tue, 22 Jun 2021 23:38:57 +0000 (UTC)
-IronPort-SDR: 8q6O8PYrQHWhsiu7wU5ZZcuLIIFE5nY4f7jtY8qwuZACaMj23hW+9e4CP1BjzwV7WkQFEutNs8
- kp8zXC/iH6Tg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="268300639"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BE4173
+	for <mptcp@lists.linux.dev>; Wed, 23 Jun 2021 00:00:28 +0000 (UTC)
+IronPort-SDR: DQ5mYHDcY0QelM7cLisVSzwVSwUMiGE548t8uGpM+JzcLr9zxnsbhh/ZdnkMZWMShQceDBGi7v
+ WqNZwhrsJiMQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10023"; a="207104332"
 X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
-   d="scan'208";a="268300639"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 16:38:56 -0700
-IronPort-SDR: yuX3QlshN4AL5i2ARwtE1UfhEIeQsHqG+oUa31ALpXzTJu0Vu/oJ//Ajg8FqFlKo4ukcim5cAj
- iEGdqXT0dj5Q==
+   d="scan'208";a="207104332"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 17:00:27 -0700
+IronPort-SDR: 9OL5kdTFe5HA4YuAF6z0DdAUsD/P9mqfdNvAa3ojLAL3ZeS3gLlDuvs0W94zL5/mCp25IwJ9ne
+ Au6hWbcuuHxw==
 X-IronPort-AV: E=Sophos;i="5.83,292,1616482800"; 
-   d="scan'208";a="639267407"
+   d="scan'208";a="487096171"
 Received: from mrsastry-mobl1.amr.corp.intel.com ([10.212.137.16])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 16:38:56 -0700
-Date: Tue, 22 Jun 2021 16:38:55 -0700 (PDT)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2021 17:00:27 -0700
+Date: Tue, 22 Jun 2021 17:00:27 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Jianguo Wu <wujianguo106@163.com>
 cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
-Subject: Re: [PATCH v5 1/4] mptcp: fix warning in __skb_flow_dissect() when
- do syn cookie for subflow join
-In-Reply-To: <ad0ed696-8be4-8d9d-5af5-775d620c74be@163.com>
-Message-ID: <43f673ac-3622-561b-a6af-96fd7d49f01a@linux.intel.com>
-References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <1623840570-42004-2-git-send-email-wujianguo106@163.com> <64212e1f-2b62-89dc-b4c5-b0c8bae51962@linux.intel.com> <93307b1f-b402-885e-acd0-b5828a11395b@163.com>
- <ad0ed696-8be4-8d9d-5af5-775d620c74be@163.com>
+Subject: Re: [PATCH v5 4/4] mptcp: avoid processing packet if a subflow
+ reset
+In-Reply-To: <b568316c-d0f9-9315-692d-ea83b2d49b85@163.com>
+Message-ID: <2024b917-84de-4dea-2244-5dce7a7f2495@linux.intel.com>
+References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <1623840570-42004-5-git-send-email-wujianguo106@163.com> <45dcfe4c-1918-2d78-accf-141bb4af2c5b@linux.intel.com> <b568316c-d0f9-9315-692d-ea83b2d49b85@163.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/mixed; boundary="0-508769315-1624406427=:21759"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--0-508769315-1624406427=:21759
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
 On Mon, 21 Jun 2021, Jianguo Wu wrote:
 
->
->
-> On 2021/6/21 14:14, Jianguo Wu wrote:
->> Hi Mat,
->>
->> On 2021/6/19 6:40, Mat Martineau wrote:
->>>
->>> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
->>>
->>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
->>>>
->>>> I got the following warning message while doing the test:
->>>
->>> Hi Jianguo, thanks for your patch set and revisions.
->>>
->>> Could you explain some more about which test produced the following result? Was it one of the self tests?
->>>
->>> If this is triggered by test code that is not upstream yet, it would help to add a selftest that shows if this bug is present or fixed. A packetdrill test is also an option, if that is a better way to reproduce the error.
->>>
->>
->> I tested with wrk(https://github.com/wg/wrk) and webfsd(https://github.com/ourway/webfsd) with the assistance of mptcp-tools(https://github.com/pabeni/mptcp-tools),
->> Server side:
->>     ./use_mptcp.sh webfsd -4 -R /tmp/ -p 8099
->> Client side:
->>     ./use_mptcp.sh wrk -c 200 -d 30 -t 4 http://192.168.174.129:8099/
->>
->> I will try self tests.
->>
->
 > Hi Mat,
 >
-> It can not be reproduced with selftests(./mptcp_join.sh -k), because skb->l4_hash is 1 in this scenario,
-> and direct using skb->hash, so __skb_flow_dissect() isn't called.
+> On 2021/6/19 8:19, Mat Martineau wrote:
+>> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
+>>
+>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>>
+>>> If check_fully_established() causes a subflow reset, it should not
+>>> continue to process the packet in tcp_data_queue().
+>>>
+>>> setting:
+>>>     TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
+>>>
+>>> so that the following check will drop the pkt in
+>>> tcp_data_queue():
+>>>  if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
+>>>     __kfree_skb(skb);
+>>>     return;
+>>>  }
+>>>
+>>> Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
+>>> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>> ---
+>>> net/mptcp/options.c | 6 ++++++
+>>> 1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>> index 1aec01686c1a..be435c5421cd 100644
+>>> --- a/net/mptcp/options.c
+>>> +++ b/net/mptcp/options.c
+>>> @@ -926,6 +926,12 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+>>>     return true;
+>>>
+>>> reset:
+>>> +    /* If a subflow is reset, the packet should not continue to be
+>>> +     * processed in tcp_data_queue(), so setting: end_seq = seq,
+>>> +     * then tcp_data_queue() will drop the packet.
+>>> +     */
+>>> +    TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
+>>> +
+>>
+>> This does have the desired effect when mptcp_incoming_options() is 
+>> called from tcp_data_queue(), but mptcp_incoming_options() is also 
+>> called from tcp_reset() and tcp_rcv_state_process(). The other callers 
+>> appear to tolerate the sequence number modification.
+>>
+>> I think it would be clearer to either add a return value or output 
+>> parameter to mptcp_incoming_options() to explicitly tell the caller 
+>> that a reset has been sent and tcp_done() called. Then it would be 
+>> clearer in tcp_data_queue() that the packet is being discarded due to 
+>> mptcp header content.
+>>
 >
+> If a reset has been sent and tcp_done() called in 
+> check_fully_established(), the sk_state will be TCP_CLOSE, how about 
+> just do (sk_state == TCP_CLOSE) check in tcp_data_queue() as it did in 
+> the V1 of this patch?
 
-Thanks for the information! We hadn't seen the failures with the self 
-tests so it's good to know that wrk and webfsd were useful for stress 
-testing.
+Oh, I see now that Paolo suggested the the end_seq assignment in order to 
+only modify MPTCP code.
+
+I still think it's better to make it clear that we're discarding a packet 
+due to the mptcp headers - using the existing sequence check (intended to 
+detect acks) in tcp_data_queue() seems sneaky to me.
+
+Something like
+
+if (sk_is_mptcp(sk) && !mptcp_incoming_options(sk, skb)) {
+ 	__kfree_skb(skb);
+ 	return;
+}
+
+seems both compact and clear. Does that seem ok Paolo?
+
+The optimizer would probably share instructions with the following 
+"end_seq == seq" condition for the kfree+return path anyway.
+
+
+>
+>> (It also looks like it unexpected behavior may be possible if we get a 
+>> strange TCP_RST + MP_JOIN packet when not fully established, but that's 
+>> unrelated to this patch. Maybe I'll try to create a packetdrill test to 
+>> see what happens)
+>>
+>>>     mptcp_subflow_reset(ssk);
+>>>     return false;
+>>> }
 
 --
 Mat Martineau
 Intel
+--0-508769315-1624406427=:21759--
