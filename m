@@ -1,86 +1,170 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87992173
-	for <mptcp@lists.linux.dev>; Wed, 23 Jun 2021 15:54:20 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id r7so4115795edv.12
-        for <mptcp@lists.linux.dev>; Wed, 23 Jun 2021 08:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=4bxO0k0m65YA5hh76Lf34S8VirNEVw67a7q8V95d8Bc=;
-        b=uFwccyiIYNU9w2rFE2dGiCUygGBLuZZDsfM5kwrXKfYFOHAPtMxgptglDp7HFJd6OG
-         61IrlcwbiRmRDh3PnUWnb/rqMxS9JL8l81J6o1ucolc3VUr+lFLWfUXvz6VSdO0FQg/m
-         hPUWLEHOrV6/pmC/mh895V0+ZMyGP/BCpytkZNG4YaCajdycZTVmKlMN+gDvCqnwmOIV
-         cSyl/+ojva6IgBz86F4tZ5m5KJQC1mfxM0Nnyiml7U//XD7v2hUYQn4pS4zd41Dso6iw
-         mOBkJ82MsEA08iKEIHkXO9/XdqmGbO58MuHlrH7fv2InZdY1/PpchSjonp2MJDEj8uL7
-         Opog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=4bxO0k0m65YA5hh76Lf34S8VirNEVw67a7q8V95d8Bc=;
-        b=F/HnqbCr219mtQhAXP1VYa3WiA6oXtCFDnCQ969snV9cD/VZZouVFSJdSxBB9o265p
-         TyjAP6M2kLhdyiLxvRDnofzrWjUWv50wi5f0vPzT66RGtWni2/XfWjUJ6LVoRN/qoFF6
-         Ic3WwiXFtrI7dugWpEZKOGeu1QqPajyGytGaCXJj9N15BPZyfVx8kfxz6Dk15b04LJRJ
-         B424U8KCv8mibbEsbJ5ZP4mFuI+3xjhY7dUoBRlmXaOrAPscol+y//qbvfBnPmGPdPZi
-         zRTZ60/vIUH3YhwbmnuQN08jUUOeCJX1psyPTSqIOlUK9AxPmzf3f3+SkhmaRN25zVCX
-         xYDQ==
-X-Gm-Message-State: AOAM5337iEoJs0EWiJ/BD8XFrjH2q7r1d5Oe7Yc5ia90LuRy/NCs/uCC
-	vqEfWnvq0Y+ybwUDLNlWtiZDMOc8cR0Zu3GJ
-X-Google-Smtp-Source: ABdhPJxBydJNkHRqgf0kR3+FC6hqZtLOlNNm0s/QMxWn5OAPKCA0hCpS8EJHLV+QJ4bUj1ICa/3WHw==
-X-Received: by 2002:aa7:d8d4:: with SMTP id k20mr521587eds.143.1624463658656;
-        Wed, 23 Jun 2021 08:54:18 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:565a:bb24:983f:7054])
-        by smtp.gmail.com with ESMTPSA id q9sm265201edv.31.2021.06.23.08.54.17
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Jun 2021 08:54:18 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Weekly meeting - 24 June 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-Message-ID: <4ba054a5-53a9-806c-0d14-a3b1bd96edcd@tessares.net>
-Date: Wed, 23 Jun 2021 17:54:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+Received: from m12-15.163.com (m12-15.163.com [220.181.12.15])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40D6670
+	for <mptcp@lists.linux.dev>; Thu, 24 Jun 2021 02:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=eIsRh
+	WoPHGXw/OHb/Tgt8ofEK3HNWIfTTqx3+lxWUBc=; b=GwVX+mnoTuirfeJcoupmJ
+	nuaYNfZOKinA4AWyAvGnMMuKinUDiZF5Dzt4qvU/yxqNdDi27JmwvCiG+p/OiLdT
+	GPmNZ1Ai5t/8DDFDUr4H+3HywfhlWsPZtnRhTbegDH/3VparM5Yis73Au0l6OxSr
+	zza4hGBlof36RyHUaUo+lE=
+Received: from [10.8.2.10] (unknown [36.111.140.26])
+	by smtp11 (Coremail) with SMTP id D8CowADHzYEJ6dNgrT8tAQ--.37S2;
+	Thu, 24 Jun 2021 10:09:13 +0800 (CST)
+Subject: Re: [PATCH v5 3/4] mptcp: fix syncookie process if mptcp can
+ not_accept new subflow
+From: Jianguo Wu <wujianguo106@163.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
+References: <1623840570-42004-1-git-send-email-wujianguo106@163.com>
+ <1623840570-42004-4-git-send-email-wujianguo106@163.com>
+ <3cdb43ff-a2c2-6599-4e8-3cb569e1a26a@linux.intel.com>
+ <cebfba8a-7576-3b9a-2017-66ab276d1f06@163.com>
+Message-ID: <20b9b6cc-0527-90ae-0fa7-61842d50ad39@163.com>
+Date: Thu, 24 Jun 2021 10:08:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
+Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <cebfba8a-7576-3b9a-2017-66ab276d1f06@163.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-
-Hello everybody!
-
-
-
-Our public MPTCP upstreaming weekly web conference is scheduled for
-
-tomorrow.
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:D8CowADHzYEJ6dNgrT8tAQ--.37S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJw18Zw4UGF1Uury3ZFW8WFg_yoWruF4kpr
+	W8Ja17tr48XFy3GF1Syr4UXr109r4ayrZxXw15K347Awn0vwn3Kry8KF1jgry7CFs7KFyF
+	yr4xt3ZIq3WDAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jG1vsUUUUU=
+X-Originating-IP: [36.111.140.26]
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiJxO7kF5u+1GIGAABsU
 
 
 
-The list of topics is available here:
+On 2021/6/21 14:24, Jianguo Wu wrote:
+> 
+> Hi Mat,
+> 
+> On 2021/6/19 7:19, Mat Martineau wrote:
+>> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
+>>
+>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>>
+>>> Lots of "TCP: tcp_fin: Impossible, sk->sk_state=7" in client side
+>>> when doing stress testing.
+>>
+>> Hi Jianguo -
+>>
+>> Like patch 1, do the existing syncookie selftests trigger this sometimes?
+>>
+>> Or are there selftests that could be added to this series, or packetdrill tests, to do such syncookie stress tests?
+>>
+> 
+> This is triggered by the same test in patch 1,
+> I will try selftests too, or add selftest if necessary.
+> 
+>> Thanks,
+>>
+>> Mat
+>>
+>>
+>>>
+>>> There are at least two cases may trigger this warning:
+>>> 1.mptcp is in syncookie, and server recv MP_JOIN SYN request,
+>>>  in subflow_check_req(), the mptcp_can_accept_new_subflow()
+>>>  return false, so subflow_init_req_cookie_join_save() isn't
+>>>  called, i.e. not store the data present in the MP_JOIN syn
+>>>  request and the random nonce in hash table - join_entries[],
+>>>  but still send synack. When recv 3rd-ack,
+>>>  mptcp_token_join_cookie_init_state() will return false, and
+>>>  3rd-ack is dropped, then if mptcp conn is closed by client,
+>>>  client will send a DATA_FIN and a MPTCP FIN, the DATA_FIN
+>>>  doesn't have MP_CAPABLE or MP_JOIN,
+>>>  so mptcp_subflow_init_cookie_req() will return 0, and pass
+>>>  the cookie check, MP_JOIN request is fallback to normal TCP.
+>>>  Server will send a TCP FIN if closed, in client side,
+>>>  when process TCP FIN, it will do reset, the code path is:
+>>>    tcp_data_queue()->mptcp_incoming_options()
+>>>      ->check_fully_established()->mptcp_subflow_reset().
+>>>  mptcp_subflow_reset() will set sock state to TCP_CLOSE,
+>>>  so tcp_fin will hit TCP_CLOSE, and print the warning.
+>>> 2.mptcp is in syncookie, and server recv 3rd-ack, in
+>>>  mptcp_subflow_init_cookie_req(), mptcp_can_accept_new_subflow()
+>>>  return false, and subflow_req->mp_join is not set to 1,
+>>>  so in subflow_syn_recv_sock() will not reset the MP_JOIN
+>>>  subflow, but fallback to normal TCP, and then the same thing
+>>>  happens when server will send a TCP FIN if closed.
+>>>
+>>> For case1, subflow_check_req() return -EPERM,
+>>> then tcp_conn_request() will drop MP_JOIN SYN.
+>>>
 
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210624
+Hi Mat,
 
+As MP_JOIN SYN is dropped, no SYN/ACK will be replied, So test case "subflows limited by server w cookies" in mptcp_join.sh should be updated,
+like this:
 
-Feel free to add/modify topics!
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 523c7797f30a..37b7da3cd5ca 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1398,7 +1398,7 @@ syncookies_tests()
+        ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+        ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+        run_tests $ns1 $ns2 10.0.1.1
+-       chk_join_nr "subflows limited by server w cookies" 2 2 1
++       chk_join_nr "subflows limited by server w cookies" 2 1 1
 
+        # test signal address with cookies
+        reset_with_cookies
 
+Is this OK?
 
-Anybody can join the meeting using Google Meet website/app/phone:
+Jianguo,
+Thanks
 
-https://meet.google.com/edk-rkrk-vaj
+>>> For case2, let subflow_syn_recv_sock() call mptcp_can_accept_new_subflow(),
+>>> and do fatal fallback, send reset.
+>>>
+>>> Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use")
+>>> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>> ---
+>>> net/mptcp/subflow.c | 6 +++---
+>>> 1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>>> index 75ed530706c0..6d98e19a20aa 100644
+>>> --- a/net/mptcp/subflow.c
+>>> +++ b/net/mptcp/subflow.c
+>>> @@ -224,6 +224,8 @@ static int subflow_check_req(struct request_sock *req,
+>>>         if (unlikely(req->syncookie)) {
+>>>             if (mptcp_can_accept_new_subflow(subflow_req->msk))
+>>>                 subflow_init_req_cookie_join_save(subflow_req, skb);
+>>> +            else
+>>> +                return -EPERM;
+>>>         }
+>>>
+>>>         pr_debug("token=%u, remote_nonce=%u msk=%p", subflow_req->token,
+>>> @@ -263,9 +265,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+>>>         if (!mptcp_token_join_cookie_init_state(subflow_req, skb))
+>>>             return -EINVAL;
+>>>
+>>> -        if (mptcp_can_accept_new_subflow(subflow_req->msk))
+>>> -            subflow_req->mp_join = 1;
+>>> -
+>>> +        subflow_req->mp_join = 1;
+>>>         subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq - 1;
+>>>     }
+>>>
+>>> -- 
+>>> 1.8.3.1
+>>>
+>>>
+>>>
+>>
+>> -- 
+>> Mat Martineau
+>> Intel
+> 
 
-
-
-See/Speak to you tomorrow!
-
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
