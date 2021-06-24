@@ -1,175 +1,143 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA9270
-	for <mptcp@lists.linux.dev>; Thu, 24 Jun 2021 22:36:55 +0000 (UTC)
-IronPort-SDR: Gc+H5L//N1A0Fl1PmuxZn7y7Lxi5wRdv1S99n4RbKbZkrv4i4C9oMOHQxLLTFA3VW19yskvN5s
- 4KCk5q+DZEOg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10025"; a="207607950"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B3D70
+	for <mptcp@lists.linux.dev>; Thu, 24 Jun 2021 22:38:42 +0000 (UTC)
+IronPort-SDR: bNE8bW/BjUO03yUI5gxiDlT9pw3l/i5gqgA9TVyLq30ZqswtocBGb+gRxv7/W1+t8mjh76UzdY
+ gDtj2F6ieOsg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10025"; a="207507998"
 X-IronPort-AV: E=Sophos;i="5.83,297,1616482800"; 
-   d="scan'208";a="207607950"
+   d="scan'208";a="207507998"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2021 15:36:54 -0700
-IronPort-SDR: ZsEzbSB2Ebkl8uhugqhFfXk7ur7YwpO/jPh8T3tFKhXklm33DsT0tcT6lw2BxsGVfsgi8+7Nul
- shJlpUdP0HAA==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2021 15:38:41 -0700
+IronPort-SDR: MB1iUqgRU1ERFXLU3gOmQwYvp8hYt7QqwLGmE+Y/EwVYgf4Wcr2cpUpprCUNRX5Cv5eUiW2YqF
+ 04fG2tlM722g==
 X-IronPort-AV: E=Sophos;i="5.83,297,1616482800"; 
-   d="scan'208";a="487942735"
+   d="scan'208";a="487942981"
 Received: from vedsingh-mobl1.amr.corp.intel.com ([10.212.254.114])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2021 15:36:53 -0700
-Date: Thu, 24 Jun 2021 15:36:53 -0700 (PDT)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2021 15:38:40 -0700
+Date: Thu, 24 Jun 2021 15:38:40 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Jianguo Wu <wujianguo106@163.com>
-cc: mptcp@lists.linux.dev, pabeni@redhat.com, fw@strlen.de
-Subject: Re: [PATCH v5 3/4] mptcp: fix syncookie process if mptcp can not_accept
- new subflow
-In-Reply-To: <20b9b6cc-0527-90ae-0fa7-61842d50ad39@163.com>
-Message-ID: <993edc23-401e-6c2f-63c9-983826c551f1@linux.intel.com>
-References: <1623840570-42004-1-git-send-email-wujianguo106@163.com> <1623840570-42004-4-git-send-email-wujianguo106@163.com> <3cdb43ff-a2c2-6599-4e8-3cb569e1a26a@linux.intel.com> <cebfba8a-7576-3b9a-2017-66ab276d1f06@163.com>
- <20b9b6cc-0527-90ae-0fa7-61842d50ad39@163.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: Jianguo Wu <wujianguo106@163.com>, mptcp@lists.linux.dev, fw@strlen.de
+Subject: Re: [PATCH v5 4/4] mptcp: avoid processing packet if a subflow
+ reset
+In-Reply-To: <7c26d28d7249536615bf945b09d683f81eb06be0.camel@redhat.com>
+Message-ID: <88512964-7469-83e0-99e6-a9311ed0f770@linux.intel.com>
+References: <1623840570-42004-1-git-send-email-wujianguo106@163.com>  <1623840570-42004-5-git-send-email-wujianguo106@163.com>  <45dcfe4c-1918-2d78-accf-141bb4af2c5b@linux.intel.com>  <b568316c-d0f9-9315-692d-ea83b2d49b85@163.com> 
+ <2024b917-84de-4dea-2244-5dce7a7f2495@linux.intel.com>  <1ac0561c290bf87aa54277bc6b458a859b8ff080.camel@redhat.com>  <f7e8a4f2-1725-72c3-b54e-5f6dc1af0a24@163.com> <7c26d28d7249536615bf945b09d683f81eb06be0.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-361432297-1624574213=:99274"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 24 Jun 2021, Paolo Abeni wrote:
 
---0-361432297-1624574213=:99274
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-
-On Thu, 24 Jun 2021, Jianguo Wu wrote:
-
->
->
-> On 2021/6/21 14:24, Jianguo Wu wrote:
+> On Thu, 2021-06-24 at 09:57 +0800, Jianguo Wu wrote:
 >>
->> Hi Mat,
+>> On 2021/6/23 17:48, Paolo Abeni wrote:
+>>> On Tue, 2021-06-22 at 17:00 -0700, Mat Martineau wrote:
+>>>> On Mon, 21 Jun 2021, Jianguo Wu wrote:
+>>>>
+>>>>> Hi Mat,
+>>>>>
+>>>>> On 2021/6/19 8:19, Mat Martineau wrote:
+>>>>>> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
+>>>>>>
+>>>>>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>>>>>>
+>>>>>>> If check_fully_established() causes a subflow reset, it should not
+>>>>>>> continue to process the packet in tcp_data_queue().
+>>>>>>>
+>>>>>>> setting:
+>>>>>>>     TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
+>>>>>>>
+>>>>>>> so that the following check will drop the pkt in
+>>>>>>> tcp_data_queue():
+>>>>>>>  if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
+>>>>>>>     __kfree_skb(skb);
+>>>>>>>     return;
+>>>>>>>  }
+>>>>>>>
+>>>>>>> Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
+>>>>>>> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
+>>>>>>> ---
+>>>>>>> net/mptcp/options.c | 6 ++++++
+>>>>>>> 1 file changed, 6 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>>>>>> index 1aec01686c1a..be435c5421cd 100644
+>>>>>>> --- a/net/mptcp/options.c
+>>>>>>> +++ b/net/mptcp/options.c
+>>>>>>> @@ -926,6 +926,12 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+>>>>>>>     return true;
+>>>>>>>
+>>>>>>> reset:
+>>>>>>> +    /* If a subflow is reset, the packet should not continue to be
+>>>>>>> +     * processed in tcp_data_queue(), so setting: end_seq = seq,
+>>>>>>> +     * then tcp_data_queue() will drop the packet.
+>>>>>>> +     */
+>>>>>>> +    TCP_SKB_CB(skb)->end_seq = TCP_SKB_CB(skb)->seq;
+>>>>>>> +
+>>>>>>
+>>>>>> This does have the desired effect when mptcp_incoming_options() is
+>>>>>> called from tcp_data_queue(), but mptcp_incoming_options() is also
+>>>>>> called from tcp_reset() and tcp_rcv_state_process(). The other callers
+>>>>>> appear to tolerate the sequence number modification.
+>>>>>>
+>>>>>> I think it would be clearer to either add a return value or output
+>>>>>> parameter to mptcp_incoming_options() to explicitly tell the caller
+>>>>>> that a reset has been sent and tcp_done() called. Then it would be
+>>>>>> clearer in tcp_data_queue() that the packet is being discarded due to
+>>>>>> mptcp header content.
+>>>>>>
+>>>>>
+>>>>> If a reset has been sent and tcp_done() called in
+>>>>> check_fully_established(), the sk_state will be TCP_CLOSE, how about
+>>>>> just do (sk_state == TCP_CLOSE) check in tcp_data_queue() as it did in
+>>>>> the V1 of this patch?
+>>>>
+>>>> Oh, I see now that Paolo suggested the the end_seq assignment in order to
+>>>> only modify MPTCP code.
+>>>>
+>>>> I still think it's better to make it clear that we're discarding a packet
+>>>> due to the mptcp headers - using the existing sequence check (intended to
+>>>> detect acks) in tcp_data_queue() seems sneaky to me.
+>>>>
+>>>> Something like
+>>>>
+>>>> if (sk_is_mptcp(sk) && !mptcp_incoming_options(sk, skb)) {
+>>>>  	__kfree_skb(skb);
+>>>>  	return;
+>>>> }
+>>>>
+>>>> seems both compact and clear. Does that seem ok Paolo?
+>>>
+>>> Uhmmm... we need to touch every mptcp_incoming_options() call site, and
+>>> in tcp_reset() the above chunk looks a bit strange to me. Probably we
+>>> could just ignore the mptcp_incoming_options() return value there.
+>>>
+>>> Otherwise no big objections - not sure about upstream ;)
+>>>
 >>
->> On 2021/6/19 7:19, Mat Martineau wrote:
->>> On Wed, 16 Jun 2021, wujianguo106@163.com wrote:
->>>
->>>> From: Jianguo Wu <wujianguo@chinatelecom.cn>
->>>>
->>>> Lots of "TCP: tcp_fin: Impossible, sk->sk_state=7" in client side
->>>> when doing stress testing.
->>>
->>> Hi Jianguo -
->>>
->>> Like patch 1, do the existing syncookie selftests trigger this sometimes?
->>>
->>> Or are there selftests that could be added to this series, or packetdrill tests, to do such syncookie stress tests?
->>>
+>> Hi Mat and Paolo,
 >>
->> This is triggered by the same test in patch 1,
->> I will try selftests too, or add selftest if necessary.
->>
->>> Thanks,
->>>
->>> Mat
->>>
->>>
->>>>
->>>> There are at least two cases may trigger this warning:
->>>> 1.mptcp is in syncookie, and server recv MP_JOIN SYN request,
->>>>  in subflow_check_req(), the mptcp_can_accept_new_subflow()
->>>>  return false, so subflow_init_req_cookie_join_save() isn't
->>>>  called, i.e. not store the data present in the MP_JOIN syn
->>>>  request and the random nonce in hash table - join_entries[],
->>>>  but still send synack. When recv 3rd-ack,
->>>>  mptcp_token_join_cookie_init_state() will return false, and
->>>>  3rd-ack is dropped, then if mptcp conn is closed by client,
->>>>  client will send a DATA_FIN and a MPTCP FIN, the DATA_FIN
->>>>  doesn't have MP_CAPABLE or MP_JOIN,
->>>>  so mptcp_subflow_init_cookie_req() will return 0, and pass
->>>>  the cookie check, MP_JOIN request is fallback to normal TCP.
->>>>  Server will send a TCP FIN if closed, in client side,
->>>>  when process TCP FIN, it will do reset, the code path is:
->>>>    tcp_data_queue()->mptcp_incoming_options()
->>>>      ->check_fully_established()->mptcp_subflow_reset().
->>>>  mptcp_subflow_reset() will set sock state to TCP_CLOSE,
->>>>  so tcp_fin will hit TCP_CLOSE, and print the warning.
->>>> 2.mptcp is in syncookie, and server recv 3rd-ack, in
->>>>  mptcp_subflow_init_cookie_req(), mptcp_can_accept_new_subflow()
->>>>  return false, and subflow_req->mp_join is not set to 1,
->>>>  so in subflow_syn_recv_sock() will not reset the MP_JOIN
->>>>  subflow, but fallback to normal TCP, and then the same thing
->>>>  happens when server will send a TCP FIN if closed.
->>>>
->>>> For case1, subflow_check_req() return -EPERM,
->>>> then tcp_conn_request() will drop MP_JOIN SYN.
->>>>
+>> If you both agree, I will send a new version that mptcp_incoming_options() add a return value, and only check return value in tcp_data_queue(),
+>> ignore the return value in other call site.
 >
-> Hi Mat,
+> Even the hook in tcp_rcv_state_process() can be followed by
+> tcp_data_queue().
 >
-> As MP_JOIN SYN is dropped, no SYN/ACK will be replied, So test case "subflows limited by server w cookies" in mptcp_join.sh should be updated,
-> like this:
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 523c7797f30a..37b7da3cd5ca 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1398,7 +1398,7 @@ syncookies_tests()
->        ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
->        ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
->        run_tests $ns1 $ns2 10.0.1.1
-> -       chk_join_nr "subflows limited by server w cookies" 2 2 1
-> +       chk_join_nr "subflows limited by server w cookies" 2 1 1
->
->        # test signal address with cookies
->        reset_with_cookies
->
-> Is this OK?
+> I *think* it's better ignoring the return value of
+> mptcp_incoming_options() only in tcp_reset(), adding there a comment -
+> something alike "mptcp can't tell us to ignore reset pkts".
 >
 
-Hi Jianguo -
-
-Yes, you should include a selftest patch in the series to make the change, 
-since the expected behavior is changing.
-
--Mat
-
-
->
->>>> For case2, let subflow_syn_recv_sock() call mptcp_can_accept_new_subflow(),
->>>> and do fatal fallback, send reset.
->>>>
->>>> Fixes: 9466a1ccebbe("mptcp: enable JOIN requests even if cookies are in use")
->>>> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
->>>> ---
->>>> net/mptcp/subflow.c | 6 +++---
->>>> 1 file changed, 3 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->>>> index 75ed530706c0..6d98e19a20aa 100644
->>>> --- a/net/mptcp/subflow.c
->>>> +++ b/net/mptcp/subflow.c
->>>> @@ -224,6 +224,8 @@ static int subflow_check_req(struct request_sock *req,
->>>>         if (unlikely(req->syncookie)) {
->>>>             if (mptcp_can_accept_new_subflow(subflow_req->msk))
->>>>                 subflow_init_req_cookie_join_save(subflow_req, skb);
->>>> +            else
->>>> +                return -EPERM;
->>>>         }
->>>>
->>>>         pr_debug("token=%u, remote_nonce=%u msk=%p", subflow_req->token,
->>>> @@ -263,9 +265,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
->>>>         if (!mptcp_token_join_cookie_init_state(subflow_req, skb))
->>>>             return -EINVAL;
->>>>
->>>> -        if (mptcp_can_accept_new_subflow(subflow_req->msk))
->>>> -            subflow_req->mp_join = 1;
->>>> -
->>>> +        subflow_req->mp_join = 1;
->>>>         subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq - 1;
->>>>     }
->>>>
->>>> --
+This sounds like a good approach, thanks.
 
 --
 Mat Martineau
 Intel
---0-361432297-1624574213=:99274--
