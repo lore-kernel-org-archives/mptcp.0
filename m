@@ -1,87 +1,143 @@
-Received: from m12-18.163.com (m12-18.163.com [220.181.12.18])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 102FF177
-	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 09:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=7bhD8
-	HOwCRlor/8hh1jng0nsWweUfxmNywHn6AIFdpo=; b=fRtVz8B+mSIcHWolNKpCa
-	NkIaCOhRtQgI8CA66UxeWf/vpjFarvpPuRkl+t0TF2NjpdV7IhiAzLmeuQjiDoeJ
-	scJMPNogjQWrJzhabeAYewf2ew/+30opHh64jHw6vK1f7LTD3jFyI2z+W9XcRVPE
-	uyXD8+Hgp5304QoUxdCa/I=
-Received: from [10.8.0.206] (unknown [36.111.140.26])
-	by smtp14 (Coremail) with SMTP id EsCowABHSuLhpdVgZ2qcrQ--.56372S2;
-	Fri, 25 Jun 2021 17:46:10 +0800 (CST)
-Subject: Re: [PATCH mptcp-net v7 4/5] mptcp: avoid processing packet if a
- subflow reset
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Cc: pabeni@redhat.com, mathew.j.martineau@linux.intel.com,
- Geliang Tang <geliangtang@gmail.com>
-References: <1624609559-6786-1-git-send-email-wujianguo106@163.com>
- <1624609559-6786-5-git-send-email-wujianguo106@163.com>
- <a3caa434-2e3a-3370-c3d5-466023923436@tessares.net>
-From: Jianguo Wu <wujianguo106@163.com>
-Message-ID: <e8085dfd-9151-049e-cc1e-3267236a1b2d@163.com>
-Date: Fri, 25 Jun 2021 17:46:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C8A177
+	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 10:02:06 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id c7-20020a17090ad907b029016faeeab0ccso7668358pjv.4
+        for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 03:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pGv6RKhxQnw/hGMRrk/dP3dYhF21XbZbExqYr+dDo2M=;
+        b=PcVt2Q7dJgu61cQY8g755AArnkxueb12V4ZXn53Rmx49p7rwuVf7D/k1vjOUPNt7mS
+         OUXDlNutEbajfCgbcmlz7vXxlklJqzsVh7cLKCGpcZmDuZDPtPCXsJ8DoHz4py9kVjji
+         PqqAZZAD4A3u7dCqB5jJKOFV3SpJ/yPXcQBaUk2GFzk0mxIuGLTjAyR3BTyRvMcuR76g
+         qQ8WBDoAg2o2xzZto3UXdu7zaHJLCKEGQLbdC5J+5YCIHY/zmqu2iQWZeZI9y9yNpeIO
+         kHXnA1YvfB2qPlHUGv9ndKZgE+SYO4xmfS5LPb40c/9pg+VV2dbu3arMTB9V2tHY5nam
+         Fk0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pGv6RKhxQnw/hGMRrk/dP3dYhF21XbZbExqYr+dDo2M=;
+        b=cju1XuFDayLBQjO14gxLS2BLhOjyX60WeBe5ekS2MHufg9bEI2ZFj09t2D/JM7HVjc
+         68jpt3UP5TKa3ysbkqwop9gMZAPtTUPHd+pAI6p9/5Zo/YyH3judChSTAlP9+uh1brWT
+         DzQUrRg5M5xViTztF5hxPTJNz7hBUzxQKEFvuSKqcD3cUFl8UZROslqekNKuFHGu8RFA
+         JZtsDZN8IQXAP9u5QZzgaUiEXt0jCt9w3nsS2TMYf2reOzVk5sYyE9zR1RB7KRCwp9xN
+         /lmeMTJXNdyXUOMewqtW+cRTmL6u/Ajk5pCI+82bMwIlbV1Wa0icU9D9SDor1W3Adw0e
+         zfNA==
+X-Gm-Message-State: AOAM530B13/OuedOP2tnMNH6fhIEvLjC5z3EkcNFheLJ5Ro/hhSFAvWU
+	n44i1Ej8m7nYfIYYZiy1fFD2JWRade3o9Ud/CkA=
+X-Google-Smtp-Source: ABdhPJzWnJI3ujQeSn6yGtur/knLq86kGQuHo0qUsB1FlurtPvoO05D9S0g55snbI0yB5MxITyqAqjF5H4DAtR59Y24=
+X-Received: by 2002:a17:90b:3449:: with SMTP id lj9mr20889199pjb.123.1624615326033;
+ Fri, 25 Jun 2021 03:02:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a3caa434-2e3a-3370-c3d5-466023923436@tessares.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:EsCowABHSuLhpdVgZ2qcrQ--.56372S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWrZr4fZF13Gw1kCw4UKw48WFg_yoW8JryDpr
-	WUGayUAwsYvF1xtrWUAF48ZryrurZxXrs8J3Z8X3Z2yanxWrsavr1jg3s0gFyrCFn7C3WU
-	Xr4xJa95ZFy5KFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jLBM_UUUUU=
-X-Originating-IP: [36.111.140.26]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbBSQK8kFaD-Bi7hwAAsq
+References: <1624337135-149084-1-git-send-email-liyonglong@chinatelecom.cn> <1624337135-149084-5-git-send-email-liyonglong@chinatelecom.cn>
+In-Reply-To: <1624337135-149084-5-git-send-email-liyonglong@chinatelecom.cn>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Fri, 25 Jun 2021 18:01:54 +0800
+Message-ID: <CA+WQbwvEu+7BUyumARc57QLcye5sYdzZxavSq72-BFCfzy9Jaw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
+To: Yonglong Li <liyonglong@chinatelecom.cn>
+Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B46=E6=9C=8822=
+=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8812:46=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> there not need MPTCP_ADD_ADDR_PORT and MPTCP_ADD_ADDR_PORT, we can
+> get these info from pm.addr or pm.remote
+
+There's no pm.addr, do you mean pm.local?
 
 
-
-On 2021/6/25 17:07, Matthieu Baerts wrote:
-> Hi Jianguo,
-> 
-> Thank you for working on that!
-> 
-> On 25/06/2021 10:25, wujianguo106@163.com wrote:
->> From: Jianguo Wu <wujianguo@chinatelecom.cn>
->>
->> If check_fully_established() causes a subflow reset, it should not
->> continue to process the packet in tcp_data_queue().
->> Add a return value to mptcp_incoming_options(), and return 0 if a
->> subflow has been reset, else return 1.
-> 
-> A small detail but it looks strange to me to return +1.
-> Maybe clearer to return -1 in case of error or return a boolean?
-> 
-
-Hi Mat and Geliang,
-
-Based on your comments, I will use boolean type as return value, return false if a subflow has been reset.
-Thanks for your review!
-
-> If you decide to return -1, please check for '< 0':
-> 
->   if (mptcp_incoming_options(...) < 0) // error: we discard
->       goto discard;
-> 
-> and not:
-> 
->   if (mptcp_incoming_options(...)) // no error but we discard??
->       goto discard;
-> 
-> (Or replace subflow_is_rst by subflow_is_accepted and return this
-> variable but it might be strange to return that if you don't have a DSS,
-> etc.)
-> 
-> But if it is only me who find "strange" to return 0/+1, fine not to
-> change but it looks uncommon and maybe a source of misinterpretation :)
-> 
-> Cheers,
-> Matt
-> 
-
+>
+> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+> ---
+>  net/mptcp/pm.c         |  4 ----
+>  net/mptcp/pm_netlink.c |  6 ++----
+>  net/mptcp/protocol.h   | 12 ------------
+>  3 files changed, 2 insertions(+), 20 deletions(-)
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index a62d4a5..f051e48 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -35,10 +35,6 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+>                 msk->pm.local =3D *addr;
+>                 add_addr |=3D BIT(MPTCP_ADD_ADDR_SIGNAL);
+>         }
+> -       if (addr->family =3D=3D AF_INET6)
+> -               add_addr |=3D BIT(MPTCP_ADD_ADDR_IPV6);
+> -       if (addr->port)
+> -               add_addr |=3D BIT(MPTCP_ADD_ADDR_PORT);
+>         WRITE_ONCE(msk->pm.addr_signal, add_addr);
+>         return 0;
+>  }
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 0f302d2..bfa9d6d 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -543,10 +543,8 @@ void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *ms=
+k)
+>                 bool slow;
+>
+>                 spin_unlock_bh(&msk->pm.lock);
+> -               pr_debug("send ack for %s%s%s",
+> -                        mptcp_pm_should_add_signal(msk) ? "add_addr" : "=
+rm_addr",
+> -                        mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]"=
+ : "",
+> -                        mptcp_pm_should_add_signal_port(msk) ? " [port]"=
+ : "");
+> +               pr_debug("send ack for %s",
+> +                        mptcp_pm_should_add_signal(msk) ? "add_addr" : "=
+rm_addr");
+>
+>                 slow =3D lock_sock_fast(ssk);
+>                 tcp_send_ack(ssk);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 90fb532..71e747c 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -176,8 +176,6 @@ enum mptcp_pm_status {
+>  enum mptcp_addr_signal_status {
+>         MPTCP_ADD_ADDR_SIGNAL,
+>         MPTCP_ADD_ADDR_ECHO,
+> -       MPTCP_ADD_ADDR_IPV6,
+> -       MPTCP_ADD_ADDR_PORT,
+>         MPTCP_RM_ADDR_SIGNAL,
+>  };
+>
+> @@ -723,16 +721,6 @@ static inline bool mptcp_pm_should_add_signal_echo(s=
+truct mptcp_sock *msk)
+>         return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
+>  }
+>
+> -static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *ms=
+k)
+> -{
+> -       return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
+> -}
+> -
+> -static inline bool mptcp_pm_should_add_signal_port(struct mptcp_sock *ms=
+k)
+> -{
+> -       return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_PORT);
+> -}
+> -
+>  static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+>  {
+>         return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL)=
+;
+> --
+> 1.8.3.1
+>
