@@ -1,17 +1,17 @@
 Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118966D0E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670616D0F
 	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 09:31:23 +0000 (UTC)
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 99EC02006EA;
-	Fri, 25 Jun 2021 11:24:34 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F002C200701;
+	Fri, 25 Jun 2021 11:24:39 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 32B1E200694;
-	Fri, 25 Jun 2021 11:24:34 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 889632006E4;
+	Fri, 25 Jun 2021 11:24:39 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 1EC70183ACDC;
-	Fri, 25 Jun 2021 17:24:32 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 1CDB2183AC99;
+	Fri, 25 Jun 2021 17:24:37 +0800 (+08)
 From: Yangbo Lu <yangbo.lu@nxp.com>
 To: netdev@vger.kernel.org
 Cc: Yangbo Lu <yangbo.lu@nxp.com>,
@@ -29,9 +29,9 @@ Cc: Yangbo Lu <yangbo.lu@nxp.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Rui Sousa <rui.sousa@nxp.com>,
 	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: [net-next, v4, 03/11] ptp: track available ptp vclocks information
-Date: Fri, 25 Jun 2021 17:35:05 +0800
-Message-Id: <20210625093513.38524-4-yangbo.lu@nxp.com>
+Subject: [net-next, v4, 06/11] ptp: add kernel API ptp_convert_timestamp()
+Date: Fri, 25 Jun 2021 17:35:08 +0800
+Message-Id: <20210625093513.38524-7-yangbo.lu@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210625093513.38524-1-yangbo.lu@nxp.com>
 References: <20210625093513.38524-1-yangbo.lu@nxp.com>
@@ -42,151 +42,103 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Track available ptp vclocks information. Record index values
-of available ptp vclocks during registering and unregistering.
-
-This is preparation for supporting ptp vclocks info query
-through ethtool.
+Add kernel API ptp_convert_timestamp() to convert raw hardware timestamp
+to a specified ptp vclock time.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
+Changes for v2:
+	- Split from v1 patch #1 and #2.
+	- Fixed build warning.
 Changes for v3:
-	- Added this patch.
+	- Converted HW timestamps to PHC bound, instead of previous
+	  binding domain value to PHC idea.
 Changes for v4:
-	- Dynamically allocated memory for vclock index storage.
+	- Fixed build issue.
 ---
- drivers/ptp/ptp_clock.c   | 15 ++++++++++++++-
- drivers/ptp/ptp_private.h |  1 +
- drivers/ptp/ptp_sysfs.c   | 28 +++++++++++++++++++++++++---
- 3 files changed, 40 insertions(+), 4 deletions(-)
+ drivers/ptp/ptp_vclock.c         | 34 ++++++++++++++++++++++++++++++++
+ include/linux/ptp_clock_kernel.h | 13 ++++++++++++
+ 2 files changed, 47 insertions(+)
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index 9fa8fea13616..3ded22b4a062 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -196,6 +196,7 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- {
- 	struct ptp_clock *ptp;
- 	int err = 0, index, major = MAJOR(ptp_devt);
-+	size_t size;
- 
- 	if (info->n_alarm > PTP_MAX_ALARMS)
- 		return ERR_PTR(-EINVAL);
-@@ -236,9 +237,17 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- 	if (parent->class && strcmp(parent->class->name, "ptp") == 0)
- 		ptp->is_virtual_clock = true;
- 
--	if (!ptp->is_virtual_clock)
+diff --git a/drivers/ptp/ptp_vclock.c b/drivers/ptp/ptp_vclock.c
+index cefab29a0592..e0f87c57749a 100644
+--- a/drivers/ptp/ptp_vclock.c
++++ b/drivers/ptp/ptp_vclock.c
+@@ -183,3 +183,37 @@ int ptp_get_vclocks_index(int pclock_index, int **vclock_index)
+ 	return num;
+ }
+ EXPORT_SYMBOL(ptp_get_vclocks_index);
++
++void ptp_convert_timestamp(struct skb_shared_hwtstamps *hwtstamps,
++			   int vclock_index)
++{
++	char name[PTP_CLOCK_NAME_LEN] = "";
++	struct ptp_vclock *vclock;
++	struct ptp_clock *ptp;
++	unsigned long flags;
++	struct device *dev;
++	u64 ns;
++
++	snprintf(name, PTP_CLOCK_NAME_LEN, "ptp%d", vclock_index);
++	dev = class_find_device_by_name(ptp_class, name);
++	if (!dev)
++		return;
++
++	ptp = dev_get_drvdata(dev);
 +	if (!ptp->is_virtual_clock) {
- 		ptp->max_vclocks = PTP_DEFAULT_MAX_VCLOCKS;
- 
-+		size = sizeof(int) * ptp->max_vclocks;
-+		ptp->vclock_index = kzalloc(size, GFP_KERNEL);
-+		if (!ptp->vclock_index) {
-+			err = -ENOMEM;
-+			goto no_mem_for_vclocks;
-+		}
++		put_device(dev);
++		return;
 +	}
 +
- 	err = ptp_populate_pin_groups(ptp);
- 	if (err)
- 		goto no_pin_groups;
-@@ -283,6 +292,8 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- no_pps:
- 	ptp_cleanup_pin_groups(ptp);
- no_pin_groups:
-+	kfree(ptp->vclock_index);
-+no_mem_for_vclocks:
- 	if (ptp->kworker)
- 		kthread_destroy_worker(ptp->kworker);
- kworker_err:
-@@ -307,6 +318,8 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
- 	ptp->defunct = 1;
- 	wake_up_interruptible(&ptp->tsev_wq);
- 
-+	kfree(ptp->vclock_index);
++	vclock = info_to_vclock(ptp->info);
 +
- 	if (ptp->kworker) {
- 		kthread_cancel_delayed_work_sync(&ptp->aux_work);
- 		kthread_destroy_worker(ptp->kworker);
-diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
-index 87cb55953b69..f75fadd9b244 100644
---- a/drivers/ptp/ptp_private.h
-+++ b/drivers/ptp/ptp_private.h
-@@ -49,6 +49,7 @@ struct ptp_clock {
- 	struct kthread_delayed_work aux_work;
- 	unsigned int max_vclocks;
- 	unsigned int n_vclocks;
-+	int *vclock_index;
- 	struct mutex n_vclocks_mux; /* protect concurrent n_vclocks access */
- 	bool is_virtual_clock;
- };
-diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
-index 0c6411409a18..53353f015662 100644
---- a/drivers/ptp/ptp_sysfs.c
-+++ b/drivers/ptp/ptp_sysfs.c
-@@ -213,6 +213,9 @@ static ssize_t n_vclocks_store(struct device *dev,
- 			if (!vclock)
- 				goto out;
- 
-+			*(ptp->vclock_index + ptp->n_vclocks + i) =
-+				vclock->clock->index;
++	ns = ktime_to_ns(hwtstamps->hwtstamp);
 +
- 			dev_info(dev, "new virtual clock ptp%d\n",
- 				 vclock->clock->index);
- 		}
-@@ -223,6 +226,9 @@ static ssize_t n_vclocks_store(struct device *dev,
- 		i = ptp->n_vclocks - num;
- 		device_for_each_child_reverse(dev, &i,
- 					      unregister_vclock);
++	spin_lock_irqsave(&vclock->lock, flags);
++	ns = timecounter_cyc2time(&vclock->tc, ns);
++	spin_unlock_irqrestore(&vclock->lock, flags);
 +
-+		for (i = 1; i <= ptp->n_vclocks - num; i++)
-+			*(ptp->vclock_index + ptp->n_vclocks - i) = -1;
- 	}
++	put_device(dev);
++	hwtstamps->hwtstamp = ns_to_ktime(ns);
++}
++EXPORT_SYMBOL(ptp_convert_timestamp);
+diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
+index 300a984fec87..71fac9237725 100644
+--- a/include/linux/ptp_clock_kernel.h
++++ b/include/linux/ptp_clock_kernel.h
+@@ -12,6 +12,7 @@
+ #include <linux/pps_kernel.h>
+ #include <linux/ptp_clock.h>
+ #include <linux/timecounter.h>
++#include <linux/skbuff.h>
  
- 	if (num == 0)
-@@ -256,6 +262,9 @@ static ssize_t max_vclocks_store(struct device *dev,
- 				const char *buf, size_t count)
- {
- 	struct ptp_clock *ptp = dev_get_drvdata(dev);
-+	unsigned int *vclock_index;
-+	int err = -EINVAL;
-+	size_t size;
- 	u32 max;
+ #define PTP_CLOCK_NAME_LEN	32
+ /**
+@@ -318,6 +319,15 @@ void ptp_cancel_worker_sync(struct ptp_clock *ptp);
+  */
+ int ptp_get_vclocks_index(int pclock_index, int **vclock_index);
  
- 	if (kstrtou32(buf, 0, &max) || max == 0)
-@@ -267,16 +276,29 @@ static ssize_t max_vclocks_store(struct device *dev,
- 	if (mutex_lock_interruptible(&ptp->n_vclocks_mux))
- 		return -ERESTARTSYS;
- 
--	if (max < ptp->n_vclocks) {
--		mutex_unlock(&ptp->n_vclocks_mux);
--		return -EINVAL;
-+	if (max < ptp->n_vclocks)
-+		goto out;
++/**
++ * ptp_convert_timestamp() - convert timestamp to a ptp vclock time
++ *
++ * @hwtstamps:    skb_shared_hwtstamps structure pointer
++ * @vclock_index: phc index of ptp vclock.
++ */
++void ptp_convert_timestamp(struct skb_shared_hwtstamps *hwtstamps,
++			   int vclock_index);
 +
-+	size = sizeof(int) * max;
-+	vclock_index = kzalloc(size, GFP_KERNEL);
-+	if (!vclock_index) {
-+		err = -ENOMEM;
-+		goto out;
- 	}
+ #else
+ static inline struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ 						   struct device *parent)
+@@ -339,6 +349,9 @@ static inline void ptp_cancel_worker_sync(struct ptp_clock *ptp)
+ { }
+ static inline int ptp_get_vclocks_index(int pclock_index, int **vclock_index)
+ { return 0; }
++static inline void ptp_convert_timestamp(struct skb_shared_hwtstamps *hwtstamps,
++					 int vclock_index)
++{ }
  
-+	size = sizeof(int) * ptp->n_vclocks;
-+	memcpy(vclock_index, ptp->vclock_index, size);
-+
-+	kfree(ptp->vclock_index);
-+	ptp->vclock_index = vclock_index;
- 	ptp->max_vclocks = max;
- 
- 	mutex_unlock(&ptp->n_vclocks_mux);
- 
- 	return count;
-+out:
-+	mutex_unlock(&ptp->n_vclocks_mux);
-+	return err;
- }
- static DEVICE_ATTR_RW(max_vclocks);
+ #endif
  
 -- 
 2.25.1
