@@ -1,371 +1,86 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A922168
-	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 11:43:39 +0000 (UTC)
-Received: by mail-pf1-f179.google.com with SMTP id s14so6559741pfg.0
-        for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 04:43:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15663168
+	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 11:53:36 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id gn32so14734177ejc.2
+        for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 04:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=duKjyscV+OVtUVz47nGKcFkj70F/7ozxgYVUI5eGLdQ=;
-        b=scr7XwaKfYd7hLWCaGUyfhGQPH0G5gb1IrYnjX6O0FwneiyG3Wo1jOiUip9G2CoEJP
-         eLInQKgILFPtoE1ZNDVgkqa39tbV0f75sNBOVUXIcwHyzBYcvy1vm9sS5V3nJTttGQ7P
-         RsALs/3XEWLQfwrnaPucGJbTIya2X0qcqrPCPzESunUEsEeoSRZyCI7FLt4ouG/Bf/1E
-         SSZ109h4sZZbRoxIIhe//BlqLU8airJcxc4pzU23T995rxZMrHj2wpvfhdYYGvRwGcap
-         h1e0Zqv2SQKF/bdmuigwel1tZsqSDeKYq/cskNtVZHk+ejN8VNm1fE2gBlQjkvsuCb0o
-         pQnQ==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GYbe3SdY41ma8c3XS+/9kwCjP5lF+nhigkSASwnSSjI=;
+        b=MqDZzyKBbposn9wdtBKdZLWakCajrRuLoM7HBK3iZ+v3lx5aAvlkuhwUSWQQrkhk3f
+         Z1pwqqViZGbneRuSKbMkyK48p/TZ0URlt0B7XRKv/yGfQjxlzIGjzSdmfFt6DrOGfvHt
+         02rhe49Ag4kJ7pXsUen41NaEglQQ7eyImbxYG4Eq/PKLztlBXaiTp+0Ya+/wzvQr9dkT
+         kXDRWNUWYb+ksbJEvoLv8zirqCMMWz9bOh20oRpb/F2Z3pTMws7BC3htuy18sF66d66K
+         DnsFax35QVU2Pa6T4twzKk8BrqmVeUG+9Ltoj8e+PRLsjwXcIZaFWRq1gam+5pC7fEiG
+         BQ9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=duKjyscV+OVtUVz47nGKcFkj70F/7ozxgYVUI5eGLdQ=;
-        b=B7izKbWYtOoZphTNP5sOnIOpe1kRq5J7+70Avkd+Vi4o2/eXA6dAc1NDjEEmHjaCGm
-         TWAzXIuznfnsGd2iEoke5pJN9rtgeBWqRujVE0GNefgnmuhzyVooWY7HEolrh8LoyFTQ
-         y78qtNryI7AwxmNXvyZwgrVALGyPIJORBmmI7JjusfccPTBVW9nbDfS7Cg21Kea3is1A
-         T3f2mYz4ZDe1R3l4l61jQ4GljCuwCi7OAd67Ffl+UVZv+o0gjXlb17Vvc1GYyVdlbXmN
-         2pSBu/cwXghdp9ZsxOd6jHbE2FC5kE2hcRRjlcMNmLgohrRW4GNw7o5ADNOZBtogKW/l
-         NJRA==
-X-Gm-Message-State: AOAM530TOJcLkcvVCVg25DOJKWCdRvMdy33RQ7XLZWu3U6U1JUAb+yGH
-	+pSLkprGAnxgHfAB+i4TlUMbhqK5PYjrH4l3mqE=
-X-Google-Smtp-Source: ABdhPJzvlFI4J5fetCv3n1O/GDoKgdBfbECg+BrZKerxF1MD0/7rq3kU6fkBv+eFeW0NbWcLShQoPEC39WkWAabCAZE=
-X-Received: by 2002:aa7:8d01:0:b029:2f0:88da:1821 with SMTP id
- j1-20020aa78d010000b02902f088da1821mr9989851pfe.67.1624621419060; Fri, 25 Jun
- 2021 04:43:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GYbe3SdY41ma8c3XS+/9kwCjP5lF+nhigkSASwnSSjI=;
+        b=admQlDSbr9veKTNamcSvH7PKm+A6TifjyxY8WYWnHd3a2d+lUtS5cWYvkqIKd3VzxM
+         T5nSWBZyT+SY8Vls+sGuLSy6QQFR0l9r1yyZdSR4g2L4WSBkqDmK2z2LpF5tPWDqjcGE
+         34/ErD0urIAoU6p/xxeqfrH+vxW4PNsXcE56Hd2lLHKQQ9aSyPjLdEMUCGXRNEj3f3y3
+         +ZFics6W8n4RAGH0q5OqWYsOvybAxBvH9isgxgjgWgKfhuoKwfxwpXgA5ayVhZDqwgjH
+         PaqtcWUK4Ws0x5YJWEs0BVEYVCYRS5s3Ib7Nw1AL4HrBuj1MFjHr0qguMKrFkVmA6Fj0
+         n57w==
+X-Gm-Message-State: AOAM533nASl0J4gJtDsFzM4YbkSVEvO1s2iNfj/qyIXNb0IdrtJIwV99
+	HOqJaNRdLputE145/ee8v+9ROLMTGRPQ/wUPIB8=
+X-Google-Smtp-Source: ABdhPJyDwUmqYzFghmpkpJLIyEfh+R/zUJtwzfRQkEZH+xwyeESvZCTu1MIoXEK0xHZIEJ/W4/4K7A==
+X-Received: by 2002:a17:906:ce4f:: with SMTP id se15mr10711993ejb.232.1624622015210;
+        Fri, 25 Jun 2021 04:53:35 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id u17sm3756998edt.67.2021.06.25.04.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Jun 2021 04:53:34 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH mptcp-next] mptcp: fix 'masking a bool' warning
+Date: Fri, 25 Jun 2021 13:53:29 +0200
+Message-Id: <20210625115329.858684-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1624337135-149084-1-git-send-email-liyonglong@chinatelecom.cn> <1624337135-149084-4-git-send-email-liyonglong@chinatelecom.cn>
-In-Reply-To: <1624337135-149084-4-git-send-email-liyonglong@chinatelecom.cn>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 25 Jun 2021 19:43:27 +0800
-Message-ID: <CA+WQbwtF32DDSZzNqGkPWjJ4zUPMO6U=0sA+UkEfUz6jBnnTWQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] mptcp: build ADD_ADDR/echo-ADD_ADDR option
- according pm.add_signal
-To: Yonglong Li <liyonglong@chinatelecom.cn>
-Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B46=E6=9C=8822=
-=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8812:46=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> according MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO flag build
-> ADD_ADDR/echo-ADD_ADDR option
->
-> add a suboptions type OPTION_MPTCP_ADD_ECHO to mark as echo option
->
-> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
-> ---
->  include/net/mptcp.h  |   2 +-
->  net/mptcp/options.c  | 105 ++++++++++++++++++++++++++++++---------------=
-------
->  net/mptcp/pm.c       |  30 +++++----------
->  net/mptcp/protocol.h |  13 ++++---
->  4 files changed, 80 insertions(+), 70 deletions(-)
->
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 637e90b..d2c6ebe 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -61,7 +61,7 @@ struct mptcp_out_options {
->         u64 sndr_key;
->         u64 rcvr_key;
->         u64 ahmac;
-> -       struct mptcp_addr_info addr;
-> +       struct mptcp_addr_info local;
->         struct mptcp_addr_info remote;
->         struct mptcp_rm_list rm_list;
->         u8 join_id;
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1aec016..a1fafed 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -655,13 +655,19 @@ static bool mptcp_established_options_add_addr(stru=
-ct sock *sk, struct sk_buff *
->         struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
->         bool drop_other_suboptions =3D false;
->         unsigned int opt_size =3D *size;
-> -       bool echo;
-> -       bool port;
-> -       int len;
-> +       struct mptcp_addr_info remote;
-> +       struct mptcp_addr_info local;
-> +       u8 add_addr, flags =3D 0xff;
-> +       int len =3D 0;
->
-> -       if ((mptcp_pm_should_add_signal_ipv6(msk) ||
-> -            mptcp_pm_should_add_signal_port(msk) ||
-> -            mptcp_pm_should_add_signal_echo(msk)) &&
-> +       if (!mptcp_pm_should_add_signal(msk))
-> +               return false;
-> +
-> +       mptcp_pm_add_addr_signal(msk, &local, &remote, &add_addr);
-> +       if ((mptcp_pm_should_add_signal_echo(msk) ||
-> +            (!mptcp_pm_should_add_signal_echo(msk) &&
+Dan Carpenter reported an issue introduced in
+commit fde56eea01f9 ("mptcp: refine mptcp_cleanup_rbuf") where a new
+boolean (ack_pending) is masked with 0x9.
 
-I think this '!mptcp_pm_should_add_signal_echo(msk) &&' could be dropped,
-WDYT?
+This is not the intention to ignore values by using a boolean. This
+variable should have a 'bool' type but we should keep the 'u8' to allow
+this comparison.
 
--Geliang
+Fixes: fde56eea01f9 ("mptcp: refine mptcp_cleanup_rbuf")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +             mptcp_pm_should_add_signal_addr(msk) &&
-> +             (local.family =3D=3D AF_INET6 || local.port))) &&
->             skb && skb_is_tcp_pure_ack(skb)) {
->                 pr_debug("drop other suboptions");
->                 opts->suboptions =3D 0;
-> @@ -671,25 +677,35 @@ static bool mptcp_established_options_add_addr(stru=
-ct sock *sk, struct sk_buff *
->                 drop_other_suboptions =3D true;
->         }
->
-> -       if (!mptcp_pm_should_add_signal(msk) ||
-> -           !(mptcp_pm_add_addr_signal(msk, remaining, &opts->addr, &echo=
-, &port)))
-> -               return false;
-> -
-> -       len =3D mptcp_add_addr_len(opts->addr.family, echo, port);
-> -       if (remaining < len)
-> -               return false;
-> +       if (mptcp_pm_should_add_signal_echo(msk)) {
-> +               len =3D mptcp_add_addr_len(remote.family, true, !!remote.=
-port);
-> +               if (remaining < len)
-> +                       return false;
-> +               opts->remote =3D remote;
-> +               flags =3D (u8)~BIT(MPTCP_ADD_ADDR_ECHO);
-> +               opts->suboptions |=3D OPTION_MPTCP_ADD_ECHO;
-> +       } else {
-> +               len =3D mptcp_add_addr_len(local.family, false, !!local.p=
-ort);
-> +               if (remaining < len)
-> +                       return false;
-> +               opts->local =3D local;
-> +               opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
-> +                                                    msk->remote_key,
-> +                                                    &opts->local);
-> +               opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> +               flags =3D (u8)~BIT(MPTCP_ADD_ADDR_SIGNAL);
-> +       }
->
->         *size =3D len;
->         if (drop_other_suboptions)
->                 *size -=3D opt_size;
-> -       opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> -       if (!echo) {
-> -               opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
-> -                                                    msk->remote_key,
-> -                                                    &opts->addr);
-> -       }
-> -       pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d",
-> -                opts->addr.id, opts->ahmac, echo, ntohs(opts->addr.port)=
-);
-> +       spin_lock_bh(&msk->pm.lock);
-> +       WRITE_ONCE(msk->pm.addr_signal, flags & msk->pm.addr_signal);
-> +       spin_unlock_bh(&msk->pm.lock);
-> +
-> +       pr_debug("addr_signal:%x, echo=3D%d, local_addr_id=3D%d, ahmac=3D=
-%llu, local_port=3D%d, remote_addr_id=3D%d, remote_port=3D%d",
-> +                add_addr, mptcp_pm_should_add_signal_echo(msk), opts->lo=
-cal.id,
-> +                opts->ahmac, ntohs(opts->local.port), opts->remote.id, n=
-tohs(opts->remote.port));
->
->         return true;
->  }
-> @@ -1228,45 +1244,51 @@ void mptcp_write_options(__be32 *ptr, const struc=
-t tcp_sock *tp,
->         }
->
->  mp_capable_done:
-> -       if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> -               u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> -               u8 echo =3D MPTCP_ADDR_ECHO;
-> +       if ((OPTION_MPTCP_ADD_ADDR | OPTION_MPTCP_ADD_ECHO) & opts->subop=
-tions) {
-> +               struct mptcp_addr_info *addr_info;
-> +               u8 len =3D 0;
-> +               u8 echo =3D 0;
-> +
-> +               if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> +                       len +=3D sizeof(opts->ahmac);
-> +                       addr_info =3D &opts->local;
-> +               } else {
-> +                       echo =3D MPTCP_ADDR_ECHO;
-> +                       addr_info =3D &opts->remote;
-> +               }
->
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -               if (opts->addr.family =3D=3D AF_INET6)
-> -                       len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> +               if (addr_info->family =3D=3D AF_INET6)
-> +                       len +=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> +               else
->  #endif
-> +                       len +=3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
->
-> -               if (opts->addr.port)
-> +               if (addr_info->port)
->                         len +=3D TCPOLEN_MPTCP_PORT_LEN;
->
-> -               if (opts->ahmac) {
-> -                       len +=3D sizeof(opts->ahmac);
-> -                       echo =3D 0;
-> -               }
-> -
->                 *ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> -                                     len, echo, opts->addr.id);
-> -               if (opts->addr.family =3D=3D AF_INET) {
-> -                       memcpy((u8 *)ptr, (u8 *)&opts->addr.addr.s_addr, =
-4);
-> +                                     len, echo, addr_info->id);
-> +               if (addr_info->family =3D=3D AF_INET) {
-> +                       memcpy((u8 *)ptr, (u8 *)&addr_info->addr.s_addr, =
-4);
->                         ptr +=3D 1;
->                 }
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -               else if (opts->addr.family =3D=3D AF_INET6) {
-> -                       memcpy((u8 *)ptr, opts->addr.addr6.s6_addr, 16);
-> +               else if (addr_info->family =3D=3D AF_INET6) {
-> +                       memcpy((u8 *)ptr, addr_info->addr6.s6_addr, 16);
->                         ptr +=3D 4;
->                 }
->  #endif
->
-> -               if (!opts->addr.port) {
-> -                       if (opts->ahmac) {
-> +               if (!addr_info->port) {
-> +                       if (!echo) {
->                                 put_unaligned_be64(opts->ahmac, ptr);
->                                 ptr +=3D 2;
->                         }
->                 } else {
-> -                       u16 port =3D ntohs(opts->addr.port);
-> +                       u16 port =3D ntohs(addr_info->port);
->
-> -                       if (opts->ahmac) {
-> +                       if (!echo) {
->                                 u8 *bptr =3D (u8 *)ptr;
->
->                                 put_unaligned_be16(port, bptr);
-> @@ -1275,7 +1297,6 @@ void mptcp_write_options(__be32 *ptr, const struct =
-tcp_sock *tp,
->                                 bptr +=3D 8;
->                                 put_unaligned_be16(TCPOPT_NOP << 8 |
->                                                    TCPOPT_NOP, bptr);
-> -
->                                 ptr +=3D 3;
->                         } else {
->                                 put_unaligned_be32(port << 16 |
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 107a5a2..a62d4a5 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -22,7 +22,8 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
->
->         lockdep_assert_held(&msk->pm.lock);
->
-> -       if (add_addr) {
-> +       if (add_addr &
-> +           (echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL)=
-)) {
->                 pr_warn("addr_signal error, add_addr=3D%d", add_addr);
->                 return -EINVAL;
->         }
-> @@ -252,32 +253,19 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 =
-bkup)
->
->  /* path manager helpers */
->
-> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remai=
-ning,
-> -                             struct mptcp_addr_info *saddr, bool *echo, =
-bool *port)
-> +void mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_addr_=
-info *saddr,
-> +                             struct mptcp_addr_info *daddr, u8 *add_addr=
-)
->  {
-> -       u8 add_addr;
-> -       int ret =3D false;
-> -
->         spin_lock_bh(&msk->pm.lock);
->
-> -       /* double check after the lock is acquired */
-> -       if (!mptcp_pm_should_add_signal(msk))
-> -               goto out_unlock;
-> -
-> -       *echo =3D mptcp_pm_should_add_signal_echo(msk);
-> -       *port =3D mptcp_pm_should_add_signal_port(msk);
-> -
-> -       if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo, *=
-port))
-> -               goto out_unlock;
-> -
->         *saddr =3D msk->pm.local;
-> -       add_addr =3D msk->pm.addr_signal & ~(BIT(MPTCP_ADD_ADDR_SIGNAL) |=
- BIT(MPTCP_ADD_ADDR_ECHO));
-> -       WRITE_ONCE(msk->pm.addr_signal, add_addr);
-> -       ret =3D true;
-> +       *daddr =3D msk->pm.remote;
-> +       *add_addr =3D msk->pm.addr_signal;
->
-> -out_unlock:
->         spin_unlock_bh(&msk->pm.lock);
-> -       return ret;
-> +
-> +       if ((mptcp_pm_should_add_signal_echo(msk)) && (mptcp_pm_should_ad=
-d_signal_addr(msk)))
-> +               mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
->  }
->
->  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index a0b0ec0..90fb532 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -22,10 +22,11 @@
->  #define OPTION_MPTCP_MPJ_SYNACK        BIT(4)
->  #define OPTION_MPTCP_MPJ_ACK   BIT(5)
->  #define OPTION_MPTCP_ADD_ADDR  BIT(6)
-> -#define OPTION_MPTCP_RM_ADDR   BIT(7)
-> -#define OPTION_MPTCP_FASTCLOSE BIT(8)
-> -#define OPTION_MPTCP_PRIO      BIT(9)
-> -#define OPTION_MPTCP_RST       BIT(10)
-> +#define OPTION_MPTCP_ADD_ECHO  BIT(7)
-> +#define OPTION_MPTCP_RM_ADDR   BIT(8)
-> +#define OPTION_MPTCP_FASTCLOSE BIT(9)
-> +#define OPTION_MPTCP_PRIO      BIT(10)
-> +#define OPTION_MPTCP_RST       BIT(11)
->
->  /* MPTCP option subtypes */
->  #define MPTCPOPT_MP_CAPABLE    0
-> @@ -760,8 +761,8 @@ static inline int mptcp_rm_addr_len(const struct mptc=
-p_rm_list *rm_list)
->         return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) +=
- 1;
->  }
->
-> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remai=
-ning,
-> -                             struct mptcp_addr_info *saddr, bool *echo, =
-bool *port);
-> +void mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_addr_=
-info *saddr,
-> +                             struct mptcp_addr_info *daddr, u8 *add_addr=
-);
->  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
->                              struct mptcp_rm_list *rm_list);
->  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *sk=
-c);
-> --
-> 1.8.3.1
->
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ddce5b7bbefd..199a36fe4f69 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -455,7 +455,7 @@ static void mptcp_subflow_cleanup_rbuf(struct sock *ssk)
+ static bool mptcp_subflow_could_cleanup(const struct sock *ssk, bool rx_empty)
+ {
+ 	const struct inet_connection_sock *icsk = inet_csk(ssk);
+-	bool ack_pending = READ_ONCE(icsk->icsk_ack.pending);
++	u8 ack_pending = READ_ONCE(icsk->icsk_ack.pending);
+ 	const struct tcp_sock *tp = tcp_sk(ssk);
+ 
+ 	return (ack_pending & ICSK_ACK_SCHED) &&
+-- 
+2.31.1
+
