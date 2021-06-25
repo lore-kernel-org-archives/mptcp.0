@@ -1,98 +1,171 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA454177
-	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 09:07:23 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id i5so12481618eds.1
-        for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 02:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HHQ3srj+Qr4MqU6yvmiottlBYfGGUzRueeE71PA89lc=;
-        b=u6vtXxU49nDWxLDLBgTBxmFnjHgugfS702n8nlzoGpZP/C0LBTTEvmgg++qykHm3xq
-         LNy4qoFgZL543ay8NlTkGtosgcpXCvCpovi01LgKK7R/bW4swqfG9CfJt8OHZ76sGXCn
-         uRaIXECueMVDmjLPWZY6T7cBobAQoZEqbGUWI8mrawMk2xHKb8EhL9rjsOa71BVMGlF9
-         GbuOYTaB+ZuJAMsAEX5ucz4B+S3qQ5KGTToBIwULVrrNo5dAGhsR6NYOueumBPYjVzWt
-         ejZMukKtkLcL9Szz7KLX4Cua2YLfzmMcRrEMf5NQ8eP1L/sdXfY6iSL800qpupwPdxCb
-         DtfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HHQ3srj+Qr4MqU6yvmiottlBYfGGUzRueeE71PA89lc=;
-        b=Iy6xsx+T94OA5ahvcBq1zlUVWVPZWiEM7Y29PUVfBf2Nt3BDe47ubsJaTnXxy+Z+74
-         Jv6pAjFHwmhomHpWoXeKvS8xxNB5xBmF56k57t8onpl35rf/pZ3LpV4iGugM5P3SmgzO
-         ZlC3307ySYi2ahq0NaILwPVRzvQR0yZtW9Ly6uwmSzQSnbSb4LmIDDGnHP17auaZq6rT
-         BzVgpZ7cb8D93TpJr5nhKVhXENwqHEYdXV5303jNNMB34Bc7/zLmXjT2GrzauyH/eEwU
-         uHlKhiZJVY7gZZMmePE2Kc2SLDNSUfCDb9zbs13sdCDfsT8QYJ0G7OUJnnpyb+LA/hsa
-         jfNA==
-X-Gm-Message-State: AOAM530HNekartDM4buc/3NzsZtYqrzZ+a0nlALYix+7BpaGskFi8c0n
-	FnWDy5NIQItYh5CG9CEMEb4nlQ==
-X-Google-Smtp-Source: ABdhPJxLQjSkbzI8++df5tbsUl7hOsVyVvfJnlSYv69aZWcEY65Rv7ctLt7xt4fVo3X7vqJRbhlTrA==
-X-Received: by 2002:aa7:d751:: with SMTP id a17mr1499095eds.324.1624612042259;
-        Fri, 25 Jun 2021 02:07:22 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:3f3:57d7:aba5:347d])
-        by smtp.gmail.com with ESMTPSA id dj24sm3539483edb.21.2021.06.25.02.07.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Jun 2021 02:07:22 -0700 (PDT)
-To: wujianguo106@163.com, mptcp@lists.linux.dev
-Cc: pabeni@redhat.com, mathew.j.martineau@linux.intel.com
-References: <1624609559-6786-1-git-send-email-wujianguo106@163.com>
- <1624609559-6786-5-git-send-email-wujianguo106@163.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-net v7 4/5] mptcp: avoid processing packet if a
- subflow reset
-Message-ID: <a3caa434-2e3a-3370-c3d5-466023923436@tessares.net>
-Date: Fri, 25 Jun 2021 11:07:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A74177
+	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 09:24:37 +0000 (UTC)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 461941A16CD;
+	Fri, 25 Jun 2021 11:24:36 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D37FD1A045A;
+	Fri, 25 Jun 2021 11:24:35 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id B3479183AC99;
+	Fri, 25 Jun 2021 17:24:33 +0800 (+08)
+From: Yangbo Lu <yangbo.lu@nxp.com>
+To: netdev@vger.kernel.org
+Cc: Yangbo Lu <yangbo.lu@nxp.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	Richard Cochran <richardcochran@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Michal Kubecek <mkubecek@suse.cz>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Rui Sousa <rui.sousa@nxp.com>,
+	Sebastien Laveze <sebastien.laveze@nxp.com>
+Subject: [net-next, v4, 04/11] ptp: add kernel API ptp_get_vclocks_index()
+Date: Fri, 25 Jun 2021 17:35:06 +0800
+Message-Id: <20210625093513.38524-5-yangbo.lu@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210625093513.38524-1-yangbo.lu@nxp.com>
+References: <20210625093513.38524-1-yangbo.lu@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <1624609559-6786-5-git-send-email-wujianguo106@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
 
-Hi Jianguo,
+Add kernel API ptp_get_vclocks_index() to get all ptp
+vclocks index on pclock.
 
-Thank you for working on that!
+This is preparation for supporting ptp vclocks info query
+through ethtool.
 
-On 25/06/2021 10:25, wujianguo106@163.com wrote:
-> From: Jianguo Wu <wujianguo@chinatelecom.cn>
-> 
-> If check_fully_established() causes a subflow reset, it should not
-> continue to process the packet in tcp_data_queue().
-> Add a return value to mptcp_incoming_options(), and return 0 if a
-> subflow has been reset, else return 1.
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+---
+Changes for v3:
+	- Added this patch.
+Changes for v4:
+	- Dynamically allocated memory for vclock index getting.
+---
+ drivers/ptp/ptp_clock.c          |  3 ++-
+ drivers/ptp/ptp_private.h        |  2 ++
+ drivers/ptp/ptp_vclock.c         | 35 ++++++++++++++++++++++++++++++++
+ include/linux/ptp_clock_kernel.h | 14 +++++++++++++
+ 4 files changed, 53 insertions(+), 1 deletion(-)
 
-A small detail but it looks strange to me to return +1.
-Maybe clearer to return -1 in case of error or return a boolean?
-
-If you decide to return -1, please check for '< 0':
-
-  if (mptcp_incoming_options(...) < 0) // error: we discard
-      goto discard;
-
-and not:
-
-  if (mptcp_incoming_options(...)) // no error but we discard??
-      goto discard;
-
-(Or replace subflow_is_rst by subflow_is_accepted and return this
-variable but it might be strange to return that if you don't have a DSS,
-etc.)
-
-But if it is only me who find "strange" to return 0/+1, fine not to
-change but it looks uncommon and maybe a source of misinterpretation :)
-
-Cheers,
-Matt
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index 3ded22b4a062..dfbddb0b4ab0 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -24,10 +24,11 @@
+ #define PTP_PPS_EVENT PPS_CAPTUREASSERT
+ #define PTP_PPS_MODE (PTP_PPS_DEFAULTS | PPS_CANWAIT | PPS_TSFMT_TSPEC)
+ 
++struct class *ptp_class;
++
+ /* private globals */
+ 
+ static dev_t ptp_devt;
+-static struct class *ptp_class;
+ 
+ static DEFINE_IDA(ptp_clocks_map);
+ 
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index f75fadd9b244..dba6be477067 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -96,6 +96,8 @@ static inline bool ptp_vclock_in_use(struct ptp_clock *ptp)
+ 	return in_use;
+ }
+ 
++extern struct class *ptp_class;
++
+ /*
+  * see ptp_chardev.c
+  */
+diff --git a/drivers/ptp/ptp_vclock.c b/drivers/ptp/ptp_vclock.c
+index fc9205cc504d..cefab29a0592 100644
+--- a/drivers/ptp/ptp_vclock.c
++++ b/drivers/ptp/ptp_vclock.c
+@@ -148,3 +148,38 @@ void ptp_vclock_unregister(struct ptp_vclock *vclock)
+ 	ptp_clock_unregister(vclock->clock);
+ 	kfree(vclock);
+ }
++
++int ptp_get_vclocks_index(int pclock_index, int **vclock_index)
++{
++	char name[PTP_CLOCK_NAME_LEN] = "";
++	struct ptp_clock *ptp;
++	struct device *dev;
++	int num = 0;
++
++	if (pclock_index < 0)
++		return num;
++
++	snprintf(name, PTP_CLOCK_NAME_LEN, "ptp%d", pclock_index);
++	dev = class_find_device_by_name(ptp_class, name);
++	if (!dev)
++		return num;
++
++	ptp = dev_get_drvdata(dev);
++
++	if (mutex_lock_interruptible(&ptp->n_vclocks_mux)) {
++		put_device(dev);
++		return num;
++	}
++
++	*vclock_index = kzalloc(sizeof(int) * ptp->n_vclocks, GFP_KERNEL);
++	if (!(*vclock_index))
++		goto out;
++
++	memcpy(*vclock_index, ptp->vclock_index, sizeof(int) * ptp->n_vclocks);
++	num = ptp->n_vclocks;
++out:
++	mutex_unlock(&ptp->n_vclocks_mux);
++	put_device(dev);
++	return num;
++}
++EXPORT_SYMBOL(ptp_get_vclocks_index);
+diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
+index b6fb771ee524..300a984fec87 100644
+--- a/include/linux/ptp_clock_kernel.h
++++ b/include/linux/ptp_clock_kernel.h
+@@ -306,6 +306,18 @@ int ptp_schedule_worker(struct ptp_clock *ptp, unsigned long delay);
+  */
+ void ptp_cancel_worker_sync(struct ptp_clock *ptp);
+ 
++/**
++ * ptp_get_vclocks_index() - get all vclocks index on pclock, and
++ *                           caller is responsible to free memory
++ *                           of vclock_index
++ *
++ * @pclock_index: phc index of ptp pclock.
++ * @vclock_index: pointer to pointer of vclock index.
++ *
++ * return number of vclocks.
++ */
++int ptp_get_vclocks_index(int pclock_index, int **vclock_index);
++
+ #else
+ static inline struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ 						   struct device *parent)
+@@ -325,6 +337,8 @@ static inline int ptp_schedule_worker(struct ptp_clock *ptp,
+ { return -EOPNOTSUPP; }
+ static inline void ptp_cancel_worker_sync(struct ptp_clock *ptp)
+ { }
++static inline int ptp_get_vclocks_index(int pclock_index, int **vclock_index)
++{ return 0; }
+ 
+ #endif
+ 
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.25.1
+
