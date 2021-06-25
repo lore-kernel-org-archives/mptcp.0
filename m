@@ -1,32 +1,30 @@
 Received: from m12-17.163.com (m12-17.163.com [220.181.12.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6B32FB3
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BFE72FB6
 	for <mptcp@lists.linux.dev>; Fri, 25 Jun 2021 03:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=LtwwSfKH64AUddqgd7
-	0rafjih+T5w5SjpqFt6dRKttM=; b=SbAZgQfK6qQc8svC2QdDh8BNeYftGeN5W6
-	jxTyfOIwYzthKu7zvN0x7lPPnnxHGlHDdpC3qTnCbJGPovwvNk16gMF9CixXFg6G
-	aA7zQVkMgxxxmOMHA9tlakA+56VAE5+iXsfq/AEtkrVumtPH61CUzSNYtOCZ/voC
-	v7gqagKAg=
+	s=s110527; h=From:Subject:Date:Message-Id; bh=MGN69EACMW/G389m5i
+	Ll2R/wggJjJQpG3KOXr/WvGgo=; b=G0Rf5eIVVMYJ0yBBJShHAdzFcM4Uf/YaT3
+	wxcn6F3UgwzhsuOwqA21EqNVq2rHCeA8fJLeaYf4DxQOj4FHJU5L3Xm885ASods1
+	H7X/sc1k0BpCUHxUSX251DeWYnBk8P31gtCUG3iIfKZVnQpkA3lAJOxF+Bp54ugn
+	rzTzz8xnw=
 Received: from localhost.localdomain (unknown [36.111.140.26])
-	by smtp13 (Coremail) with SMTP id EcCowACntjoSRNVg6_a69Q--.41874S4;
-	Fri, 25 Jun 2021 10:48:54 +0800 (CST)
+	by smtp13 (Coremail) with SMTP id EcCowACntjoSRNVg6_a69Q--.41874S2;
+	Fri, 25 Jun 2021 10:48:52 +0800 (CST)
 From: wujianguo106@163.com
 To: mptcp@lists.linux.dev
 Cc: pabeni@redhat.com,
 	mathew.j.martineau@linux.intel.com
-Subject: [PATCH mptcp-net v6 2/5] mptcp: remove redundant req destruct in subflow_check_req()
-Date: Fri, 25 Jun 2021 10:48:47 +0800
-Message-Id: <1624589330-2579-3-git-send-email-wujianguo106@163.com>
+Subject: [PATCH mptcp-net v6 0/5] Fix some mptcp syncookie process bugs
+Date: Fri, 25 Jun 2021 10:48:45 +0800
+Message-Id: <1624589330-2579-1-git-send-email-wujianguo106@163.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1624589330-2579-1-git-send-email-wujianguo106@163.com>
-References: <1624589330-2579-1-git-send-email-wujianguo106@163.com>
-X-CM-TRANSID:EcCowACntjoSRNVg6_a69Q--.41874S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr4Dtw47WFWrtryktF4ktFb_yoW8GrWfpr
-	sxXw1YyrZxZFyakF4rJF4DZrn0gayFvFn5GFyY93sxJr4qqws3KF1UWF48uFy3Aan7Kay7
-	GFsxtFnxX3ZF9aUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j3l19UUUUU=
+X-CM-TRANSID:EcCowACntjoSRNVg6_a69Q--.41874S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr1UJr4fKrWfuF1xGFW5Awb_yoW8XFy8pF
+	Z3CrW5Xr4rAFW3XFy3Ar48Xr1F9a1rKrZ8Jay7tw1Yvr1qy3Z8Gr1xtr1rCFW7GFZ3K34a
+	qr47Aa1kCw1UZ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnHUDUUUUU=
 X-Originating-IP: [36.111.140.26]
-X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB+Aa8kF2MZX7gtwAAsP
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/1tbiJxS8kF5u+1+Y7QAAs+
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,37 +33,48 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 From: Jianguo Wu <wujianguo@chinatelecom.cn>
 
-In subflow_check_req(), if subflow sport is mismatch, will put msk,
-destroy token, and destruct req, then return -EPERM, which can be
-done by subflow_req_destructor() via:
-  tcp_conn_request()
-    |--__reqsk_free()
-      |--subflow_req_destructor()
-So we should remove these redundant code, otherwise will call
-tcp_v4_reqsk_destructor() twice, and may double free inet_rsk(req)->ireq_opt.
+v5->v6:
+ - patch1: describe the testing tools in the commit log
+ - patch4: add return value to mptcp_incoming_options(), return 0 if
+	   a subflow has been reset, else return 1, and drop the packet
+	   in tcp_data_queue()/tcp_rcv_state_process() if the return
+	   value is 0
+ - patch5: update selftest case "multiple subflows limited by server",
+	   since the expected behavior is changed by patch4
 
-Fixes: 5bc56388c74f ("mptcp: add port number check for MP_JOIN")
-Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
----
- net/mptcp/subflow.c | 5 -----
- 1 file changed, 5 deletions(-)
+v4->v5:
+ - patch4: add comment 
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6b1cd4257edf..75ed530706c0 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -213,11 +213,6 @@ static int subflow_check_req(struct request_sock *req,
- 				 ntohs(inet_sk(sk_listener)->inet_sport),
- 				 ntohs(inet_sk((struct sock *)subflow_req->msk)->inet_sport));
- 			if (!mptcp_pm_sport_in_anno_list(subflow_req->msk, sk_listener)) {
--				sock_put((struct sock *)subflow_req->msk);
--				mptcp_token_destroy_request(req);
--				tcp_request_sock_ops.destructor(req);
--				subflow_req->msk = NULL;
--				subflow_req->mp_join = 0;
- 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTSYNRX);
- 				return -EPERM;
- 			}
+v3->v4:
+ - patch1: using seq and sport/dport for hashing, and ignore network
+	   headers altogether, as suggest by Florian
+
+v2->v3:
+ - patch1: directly use inet6_ehashfn() for IPv6
+ - patch4: add Fixes tag.
+
+v1->v2:
+ - patch1: handle ipv6 sockets/addresses,
+	   always use 4-tuple drived hash and never look at skb->hash
+ - patch3: split into 2 patches.
+ - patch4: new added.
+
+Jianguo Wu (5):
+  mptcp: fix warning in __skb_flow_dissect() when do syn cookie for
+    subflow join
+  mptcp: remove redundant req destruct in subflow_check_req()
+  mptcp: fix syncookie process if mptcp can not_accept new subflow
+  mptcp: avoid processing packet if a subflow reset
+  selftests: mptcp: fix case multiple subflows limited by server
+
+ include/net/mptcp.h                             |  2 +-
+ net/ipv4/tcp_input.c                            | 19 +++++++++++++++----
+ net/mptcp/options.c                             | 22 ++++++++++++++--------
+ net/mptcp/subflow.c                             | 11 +++--------
+ net/mptcp/syncookies.c                          | 16 +++++++++++++++-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  2 +-
+ 6 files changed, 49 insertions(+), 23 deletions(-)
+
 -- 
 1.8.3.1
 
