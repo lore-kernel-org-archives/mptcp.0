@@ -1,50 +1,50 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD8070
-	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 04:29:24 +0000 (UTC)
-Received: by mail-pj1-f48.google.com with SMTP id cs1-20020a17090af501b0290170856e1a8aso1463437pjb.3
-        for <mptcp@lists.linux.dev>; Sun, 27 Jun 2021 21:29:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA3B70
+	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 04:29:26 +0000 (UTC)
+Received: by mail-pj1-f49.google.com with SMTP id z3-20020a17090a3983b029016bc232e40bso9563366pjb.4
+        for <mptcp@lists.linux.dev>; Sun, 27 Jun 2021 21:29:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=m54x0HVDmaxOauQrqPLoASp592a00Wh5lH4Bi/c8WqU=;
-        b=XXHvmUAQXRtJGdOOUBaN8H7GdZP820htkF/Xq982svxm6jnsw5p0b3tAl1e2K8Bxhs
-         +TSwMo7bOfmZgqB0sm9JxN00eoj6C+nv4xXm3tzNNexxzQ0yX7CxeFE4gGEkqmdCuTJf
-         Q2yiFR9H4mFkgShLMQD8x1Rnfk6MFGCgexnT2OFpd/NZ+ezFzHrdgZMB09E0NZXfEVs7
-         QU8eWM5QLqA5AwqIT4FEM3xqr85iDl9bTuSBYO/kReNiljSFVbCaaCpcazEl4Q0rY8W+
-         kTSCAllfpyxG+rPVN/g/1b3q9IVyEWfjLD6sdyUioVtD/ZWAlqO1NFyufXpq4c8eTYNk
-         8m9A==
+        bh=MxaQ+GJRqHodaj6AytjciXjP/G8uW18Xv1J4KH2BDF0=;
+        b=iL5MaumUvsHshUwcMt3jsnn0xBhy51vqEQgiKYMRWJ2OLNoKVDL/Ysr4gdsBL/bjm5
+         6eKq0a39IjTInI4OJ31W6PuO7JTRM1VHWmO4HYxwGDmzB8fC1kS7wbFq2jH99QFa+/aB
+         Stn+QlQO1elBHKbfNl2uF65XINUeu5rLAr4g6rSEQ7J9aGBBJEo3X3BjrHM3fqnr6ed1
+         s/+dB02fQfOp65z5fS8rVJ2YqKpZR33N0Hx+og4an+dzp+zM5CiJM7Q4dY0kKUZOSytf
+         K6efcQq8zasdE90pYpAcgz4ytK53oJQRhAa5Ph0wBbX3s/xnHK0Q/OsLEXgA1zbozCWv
+         PjzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=m54x0HVDmaxOauQrqPLoASp592a00Wh5lH4Bi/c8WqU=;
-        b=TqgsJe2YK7zjSTIWbyJqd9ipwc8XzsdpGl58UaDSem1NieY12f5ffpRSpU08Rg6+8W
-         ZzaYzEcJ6tW4dFmc0WXbXJMwK4SZMNSvoe37WrnXjOJGwTefIlgXt+coSzfUcmxMiDEQ
-         AtyHormE+S9b1o0WWiBwueF9eojj0EyoKbJbnwwyTZkCb4KaSaVfmGjxzUWZWZ4brNki
-         9MQIAoUdPKoyS+41IzKJBYwNTDNTCR5qYIxdW/I2KWwbnGMGrZRp2+Dyn3C3jZPY2fsg
-         +nX1aKUZ/wVFpg9zXyfX60n414AsYzl/irLeEjHqA/WcI8QuYotq7hHKQXxZnbmp2TNy
-         Opvw==
-X-Gm-Message-State: AOAM532MPPw0Vs7ovzFO/10nTGYpPb/aQJAXBjtcTFwW8VGvuBCN5Gck
-	jFRFnpDrtbe8fvvpVkUs3I+MdCWnkJsGeg==
-X-Google-Smtp-Source: ABdhPJyuziw1NaW+NudS20j7zMaHDTDakQinUDO8aAMohiaO7B5VCgOTLLcOtmQSbB0rEhrKaiIQWg==
-X-Received: by 2002:a17:902:aa92:b029:127:a70e:3197 with SMTP id d18-20020a170902aa92b0290127a70e3197mr16436873plr.30.1624854564423;
-        Sun, 27 Jun 2021 21:29:24 -0700 (PDT)
+        bh=MxaQ+GJRqHodaj6AytjciXjP/G8uW18Xv1J4KH2BDF0=;
+        b=kaUzljFZKmym0tNfS/5f/cdB4GcnW/aVOjRcN53IrAnWrHvdiqWFvUgPOC9+H4i+Tk
+         G57v7W3Zu7aLHuIPBEr1K2nUxDvy3uoqrRNRuBsGsWbbZ/XMgauzp+4UWU/llMJQbSiw
+         N5aY6l8YDGQUy6JTdb8NatpQdvuq7zUS0HBpSAwBz2IUGqxldI0BdDQ0hxnMB6MqfOaq
+         SgfT8hgZashowBZMLzB+vqW/y0x2w2jZCJXl1lwaeZ93x8pZijzNrAh6HU9tR815mlg4
+         NL1c3P4IDm7zioROp/YIdACSGXnza69/Y34/pGfDhvicWcicr64CJP0rPDVrhq8OiSO4
+         oOBg==
+X-Gm-Message-State: AOAM5316ll+vyTe56VmUYNJh+SnECCCIJP8IqSN93+6D24uLXiIqwUqc
+	BZH6E2HsSas2pQnJx2jDX581jTIRr8WuKA==
+X-Google-Smtp-Source: ABdhPJzigM09Y+q0h3AMFW0HLz8/wgBifVLAw8VWuGO7JoNabY4ouAGcTpuQWmSdHbnfH4iw4rCOmw==
+X-Received: by 2002:a17:902:ff0c:b029:11d:3e9e:41ec with SMTP id f12-20020a170902ff0cb029011d3e9e41ecmr20892803plj.1.1624854565954;
+        Sun, 27 Jun 2021 21:29:25 -0700 (PDT)
 Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id g8sm12837391pgo.10.2021.06.27.21.29.23
+        by smtp.gmail.com with ESMTPSA id g8sm12837391pgo.10.2021.06.27.21.29.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Jun 2021 21:29:24 -0700 (PDT)
+        Sun, 27 Jun 2021 21:29:25 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v3 mptcp-next 6/8] mptcp: infinite mapping sending
-Date: Mon, 28 Jun 2021 12:29:02 +0800
-Message-Id: <0e01e10358c89896ad265d9b57cfe4995965e445.1624854005.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v3 mptcp-next 7/8] mptcp: infinite mapping receiving
+Date: Mon, 28 Jun 2021 12:29:03 +0800
+Message-Id: <699d4e2d58c11360fd7244e4e4aee8c7f01ef189.1624854005.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <926e95605f1d2a7cdc02b99a1701a1dddf1e6424.1624854005.git.geliangtang@gmail.com>
-References: <cover.1624854005.git.geliangtang@gmail.com> <3cc57b70ec147b4c77610737241aeadf4150f323.1624854005.git.geliangtang@gmail.com> <d10ab4b89d053ba9a3debc9c7f6bdab0ca0d95bd.1624854005.git.geliangtang@gmail.com> <30a102a69a09fe644776dbddc93a1a3710c0fd51.1624854005.git.geliangtang@gmail.com> <fd3ac7612efa93564019e8542bf67ed38ef06627.1624854005.git.geliangtang@gmail.com> <926e95605f1d2a7cdc02b99a1701a1dddf1e6424.1624854005.git.geliangtang@gmail.com>
+In-Reply-To: <0e01e10358c89896ad265d9b57cfe4995965e445.1624854005.git.geliangtang@gmail.com>
+References: <cover.1624854005.git.geliangtang@gmail.com> <3cc57b70ec147b4c77610737241aeadf4150f323.1624854005.git.geliangtang@gmail.com> <d10ab4b89d053ba9a3debc9c7f6bdab0ca0d95bd.1624854005.git.geliangtang@gmail.com> <30a102a69a09fe644776dbddc93a1a3710c0fd51.1624854005.git.geliangtang@gmail.com> <fd3ac7612efa93564019e8542bf67ed38ef06627.1624854005.git.geliangtang@gmail.com> <926e95605f1d2a7cdc02b99a1701a1dddf1e6424.1624854005.git.geliangtang@gmail.com> <0e01e10358c89896ad265d9b57cfe4995965e445.1624854005.git.geliangtang@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -53,137 +53,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added the infinite mapping sending logic.
+This patch added the infinite mapping receiving logic.
 
-Added a new flag snd_infinite_mapping_enable in mptcp_sock. Set it true
-when echoing the MP_FAIL in mptcp_pm_mp_fail_received.
+Added a new struct member infinite_mapping_received in struct
+mptcp_subflow_context, set it true when the infinite mapping is
+received.
 
-In mptcp_established_options_dss, if this flag is true, call the new
-function mptcp_write_infinite_mapping to set the infiniting mapping and
-sent it out.
+In subflow_check_data_avail, if this flag is set, fallback to a regular
+TCP.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/options.c  | 23 +++++++++++++++++++++--
- net/mptcp/pm.c       |  1 +
- net/mptcp/protocol.c |  1 +
- net/mptcp/protocol.h |  6 ++++++
- 4 files changed, 29 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.h | 1 +
+ net/mptcp/subflow.c  | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 9c2e122f1a6e..1fce6fddb6ab 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -572,8 +572,21 @@ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
- 	}
- }
- 
-+static void mptcp_write_infinite_mapping(struct mptcp_subflow_context *subflow,
-+					 struct mptcp_ext *ext)
-+{
-+	pr_debug("fail_seq=%llu", subflow->fail_seq);
-+
-+	if (ext->use_map) {
-+		ext->data_seq = subflow->fail_seq;
-+		ext->data_len = 0;
-+		WRITE_ONCE(msk->snd_infinite_mapping_enable, false);
-+	}
-+}
-+
- static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 					  bool snd_data_fin_enable,
-+					  bool snd_infinite_mapping_enable,
- 					  unsigned int *size,
- 					  unsigned int remaining,
- 					  struct mptcp_out_options *opts)
-@@ -589,7 +602,8 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
- 	mpext = skb ? mptcp_get_ext(skb) : NULL;
- 
--	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
-+	if (!skb || (mpext && mpext->use_map) ||
-+	    snd_data_fin_enable || snd_infinite_mapping_enable) {
- 		unsigned int map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
- 
- 		if (mpext) {
-@@ -603,6 +617,8 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 		dss_size = map_size;
- 		if (skb && snd_data_fin_enable)
- 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
-+		if (skb && snd_infinite_mapping_enable)
-+			mptcp_write_infinite_mapping(subflow, &opts->ext_copy);
- 		ret = true;
- 	}
- 
-@@ -811,6 +827,7 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	unsigned int opt_size = 0;
-+	bool snd_infinite_mapping;
- 	bool snd_data_fin;
- 	bool ret = false;
- 
-@@ -831,9 +848,11 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 	}
- 
- 	snd_data_fin = mptcp_data_fin_enabled(msk);
-+	snd_infinite_mapping = mptcp_infinite_mapping_enabled(msk);
- 	if (mptcp_established_options_mp(sk, skb, snd_data_fin, &opt_size, remaining, opts))
- 		ret = true;
--	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, &opt_size, remaining, opts)) {
-+	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, snd_infinite_mapping,
-+					       &opt_size, remaining, opts)) {
- 		ret = true;
- 		if (opts->ext_copy.use_ack) {
- 			if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 539fc2892191..1b3b815f1eca 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -257,6 +257,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
- 
- 	if (!msk->pm.subflows) {
- 		if (!subflow->mp_fail_need_echo) {
-+			WRITE_ONCE(msk->snd_infinite_mapping_enable, true);
- 			subflow->send_mp_fail = 1;
- 			subflow->fail_seq = fail_seq;
- 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 199a36fe4f69..f1d057ee5887 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2727,6 +2727,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 	WRITE_ONCE(msk->fully_established, false);
- 	if (mp_opt->csum_reqd)
- 		WRITE_ONCE(msk->csum_enabled, true);
-+	WRITE_ONCE(msk->snd_infinite_mapping_enable, false);
- 
- 	msk->write_seq = subflow_req->idsn + 1;
- 	msk->snd_nxt = msk->write_seq;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7a49454c77a6..fff2f5021619 100644
+index fff2f5021619..4ee97e9ceece 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -244,6 +244,7 @@ struct mptcp_sock {
- 	bool		fully_established;
- 	bool		rcv_data_fin;
- 	bool		snd_data_fin_enable;
-+	bool		snd_infinite_mapping_enable;
- 	bool		rcv_fastclose;
- 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
- 	bool		csum_enabled;
-@@ -656,6 +657,11 @@ static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
- 	       READ_ONCE(msk->write_seq) == READ_ONCE(msk->snd_nxt);
- }
+@@ -424,6 +424,7 @@ struct mptcp_subflow_context {
+ 		send_mp_prio : 1,
+ 		send_mp_fail : 1,
+ 		mp_fail_need_echo : 1,
++		infinite_mapping_received : 1,
+ 		rx_eof : 1,
+ 		can_ack : 1,        /* only after processing the remote a key */
+ 		disposable : 1;	    /* ctx can be free at ulp release time */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index d46c171ef9b0..987fb6b55145 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -965,7 +965,9 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
  
-+static inline bool mptcp_infinite_mapping_enabled(const struct mptcp_sock *msk)
-+{
-+	return READ_ONCE(msk->snd_infinite_mapping_enable);
-+}
+ 	data_len = mpext->data_len;
+ 	if (data_len == 0) {
++		pr_debug("infinite mapping received, data_seq=%llu", mpext->data_seq);
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
++		subflow->infinite_mapping_received = 1;
+ 		return MAPPING_INVALID;
+ 	}
+ 
+@@ -1179,6 +1181,13 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		}
+ 	}
+ 
++	if (subflow->infinite_mapping_received) {
++		pr_fallback(msk);
++		__mptcp_do_fallback(msk);
++		subflow->infinite_mapping_received = 0;
++		return true;
++	}
 +
- static inline bool mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
- {
- 	if ((sk->sk_userlocks & SOCK_SNDBUF_LOCK) || ssk->sk_sndbuf <= READ_ONCE(sk->sk_sndbuf))
+ 	if (subflow->mp_join || subflow->fully_established) {
+ 		/* fatal protocol error, close the socket.
+ 		 * subflow_error_report() will introduce the appropriate barriers
 -- 
 2.31.1
 
