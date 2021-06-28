@@ -1,105 +1,67 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2FE70
-	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 16:45:49 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id bg14so31002995ejb.9
-        for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 09:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ffK6KdgxDQ0O7nup8iYnyRkcTkZ/cmhe7JPcIzmSvsw=;
-        b=RoI2vAW8UBmnJrx6scOeqfISunbXe/26Bzk+yjAc7vyKvs7N4h049cXB1nlX6uN5D5
-         P+XpsPIX8c3VVR5s7bsQvieuVg2LZAjVcYk9We6PWc85bTDrpQgg2WwwcYVmCIpdIvlO
-         Pg+oatxKwjvxvKzky58Rnr/1XRtSbXsrn9H6gtwj5qLdA1YRLSMOHsCqTP56dfv3DiJ7
-         3Y/+7y+xEXD8lrURhoqlh4dZXRjTMQNBynyzTlPOQRupSMca8rBMaZYxv1k/XZW5qcAb
-         +l9hAB+TcMqW5Cn7vfjhQup84qjPUCw0DJR/iZj1NaYxM2slA2KWVUYPhnYEePamwi03
-         YJmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ffK6KdgxDQ0O7nup8iYnyRkcTkZ/cmhe7JPcIzmSvsw=;
-        b=oFD5xDJd1z0tePaWIR4oR81aC14YcnWtOe2neMGEeZS6vrQCAmOD34jZfqeZW57Bvj
-         8+AiXgVQwwPKkpNcdxwxcWrjOLA0+6JikkjAFOUn0UZ6/m1gB3ZoPoxy88VL96ZZkwFj
-         w4Yjn8nmzvDs1PObo9u07rKqtvV0S+tSW8wss+sLaoAnzgz425gdVMLUF7rwx85IqE0+
-         4Qtjit2ROC+nbCxsM8LIiHhKJmjnDpSt9f4mw4IPVoodCDrPoumzGpuCTpPF4cq8iLxx
-         WGR15HbMzOIDwO6lbFkGCfePF1dopRHXRTrU8HFkY1Y/EHT6dMEfevPmAEr2rVK+KWZ1
-         ZxPQ==
-X-Gm-Message-State: AOAM533hdkWh+PoWl93xBLxwdlAHpjGCTLiuCtQR6EXNhIrODVey1Elo
-	jiomJfCpttnIwS3g9B9k2yLUZw==
-X-Google-Smtp-Source: ABdhPJzUaVxe4SfxRglUjpUpHDSkPsPRNQ0WQtkHaW5ByKNxXZEQk7Qu1xwKNzuES23Xez4dtT1gJQ==
-X-Received: by 2002:a17:906:cc87:: with SMTP id oq7mr25233389ejb.193.1624898747596;
-        Mon, 28 Jun 2021 09:45:47 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:9e05:d9d8:5ebb:93ff])
-        by smtp.gmail.com with ESMTPSA id hx18sm7072522ejc.82.2021.06.28.09.45.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Jun 2021 09:45:47 -0700 (PDT)
-To: Geliang Tang <geliangtang@gmail.com>, Jianguo Wu <wujianguo106@163.com>
-Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <1624698998-9029-1-git-send-email-wujianguo106@163.com>
- <1624698998-9029-5-git-send-email-wujianguo106@163.com>
- <CA+WQbwuJ64zQcCnOAwqw9_Mxud6BRJu300sP4pWFOeU7FH8nEA@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-net v8 4/5] mptcp: avoid processing packet if a
- subflow reset
-Message-ID: <02fdfd28-812d-0242-e354-9cd629288bcd@tessares.net>
-Date: Mon, 28 Jun 2021 18:45:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4901C177
+	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 20:10:06 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4C23561CC7;
+	Mon, 28 Jun 2021 20:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1624911005;
+	bh=tlDEp28ND5UAGXHGJOa+/XW57qA85/PNnwUUKeMzxaM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=oE16RwWRxh7bx7ZwyOV7BCjtd1TgQqSMLr3dxeM945E4HncFD5J/fs086mVdczTp9
+	 H+i0BOX5NmxklpY8wFl/uyughRQ1rf6aQTCsH1j1getIdmhsbsXvQZKZ6wXx96/MPF
+	 IxLBidVGY4i0HFJoBGLMLvsZ0YyK3xReOS1oyr7P8VfevV1v86Z7d15PWbvgLv4SuG
+	 tnS8o7DiLJILi8RmO39Hg/KM3j2QqTYj6ImgMXtudD495qQK5d6qCIiAvI1v0K8jnB
+	 gA6faZce3HkWcUtDPT5W3+w0U71cSGFgb1TIGKX7jOjwinr2uG3Bj8bRd8h7H3XhgG
+	 O74KZs8MpDQNQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 4688260D02;
+	Mon, 28 Jun 2021 20:10:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CA+WQbwuJ64zQcCnOAwqw9_Mxud6BRJu300sP4pWFOeU7FH8nEA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] mptcp: fix 'masking a bool' warning
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <162491100528.2562.743940781000501523.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Jun 2021 20:10:05 +0000
+References: <20210625212522.264000-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210625212522.264000-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, matthieu.baerts@tessares.net, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, mptcp@lists.linux.dev,
+ dan.carpenter@oracle.com
 
-Hi Jianguo, Geliang,
+Hello:
 
-On 28/06/2021 10:35, Geliang Tang wrote:
-> Thank you for this new patch set!
+This patch was applied to netdev/net-next.git (refs/heads/master):
+
+On Fri, 25 Jun 2021 14:25:22 -0700 you wrote:
+> From: Matthieu Baerts <matthieu.baerts@tessares.net>
 > 
-> There are three checkpatch.pl warnings in this patch set, please fix them.
-> And a minor comment below.
+> Dan Carpenter reported an issue introduced in
+> commit fde56eea01f9 ("mptcp: refine mptcp_cleanup_rbuf") where a new
+> boolean (ack_pending) is masked with 0x9.
+> 
+> This is not the intention to ignore values by using a boolean. This
+> variable should not have a 'bool' type: we should keep the 'u8' to allow
+> this comparison.
+> 
+> [...]
 
-As pointed out by Paolo on IRC, these modifications are required but
-they are minor. Because it is already your v8 and your first major
-series, we did these small modifications for you ;)
+Here is the summary with links:
+  - [net-next] mptcp: fix 'masking a bool' warning
+    https://git.kernel.org/netdev/net-next/c/c4512c63b119
 
-Note that we didn't change the "goto" just to return "true".
-Also, I didn't add any Acked-by or RvB tags because none were given but
-I can easily add them later if I get any but I guess Mat will send these
-patches later to netdev with his SoB.
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-- 6bb69e9b2123: mptcp: fix warning in __skb_flow_dissect() when do syn
-cookie for subflow join
 
-- ee4bcc0a7a64: mptcp: remove redundant req destruct in subflow_check_req()
-
-- f0056198a479: mptcp: fix syncookie process if mptcp can not_accept new
-subflow
-
-- b65e3f889d44: mptcp: avoid processing packet if a subflow reset
-
-- fc66a740c7c7: selftests: mptcp: fix case multiple subflows limited by
-server
-
-- Results: 31aa314277b1..60851d13158d
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210628T164431
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210628T164431
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
