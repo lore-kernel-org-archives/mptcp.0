@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041DF70
-	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 16:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7EF70
+	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 16:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1624896467;
+	s=mimecast20190719; t=1624896468;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wqR2LavF/5vzTaRIvKRrUdNHpt2CpaD8EO3O0yVGOi0=;
-	b=ceS1y/FffeWoT31THDuAY1gbDn71kAuOwBm4TTTewg75SSlifAjPXZys7VDYI3a4VKHgXV
-	ZP0jGTN4vJJIKHzFjlKypmWsXIylrxNCw8m4fLkB31RVLgXWoIOyzCUVQMQO8T6Q3NOtTz
-	m54TWOWeqcSVzbhg1XT59iOtP4zQKhA=
+	bh=GEOf2pPEkg8/r1sGO30RWKkBXSRiD7jL96r5YNmS6iU=;
+	b=REZpsQkotn1mn5NwPpKPTOKokUtQfvHATDDsjAhpfMtxORWyf2E+u9NQurm0/abpBsbU/6
+	VfdDO10FWFJhzDVsimXq1Fu3vIK6Nfxz246naeD7ygZD7syNmBvE+Bfy2lxeZu9KGVJuYA
+	fWbfyeW05MBodbVrLaS7iHbkV/YM21s=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-593-ecBZ-BNCPz6gSAt1W-HPPw-1; Mon, 28 Jun 2021 12:07:45 -0400
-X-MC-Unique: ecBZ-BNCPz6gSAt1W-HPPw-1
+ us-mta-530-mKmusJ4pNzS5oDHYLy02eA-1; Mon, 28 Jun 2021 12:07:47 -0400
+X-MC-Unique: mKmusJ4pNzS5oDHYLy02eA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA014101F7A8
-	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 15:54:26 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D074C1063C09
+	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 15:54:27 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-114-129.ams2.redhat.com [10.36.114.129])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0722D60875;
-	Mon, 28 Jun 2021 15:54:25 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1A0C460875;
+	Mon, 28 Jun 2021 15:54:26 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: fwestpha@redhat.com
-Subject: [PATCH mptcp-next 1/7] mptcp: more accurate timeout
-Date: Mon, 28 Jun 2021 17:54:05 +0200
-Message-Id: <730d62f1c48b6ce0e736722583cc9cea8c58694c.1624895054.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 2/7] mptcp: less aggressive retransmission stragegy
+Date: Mon, 28 Jun 2021 17:54:06 +0200
+Message-Id: <61a90dcbb54b9477b4ef3539e35fa7499c0b2c83.1624895054.git.pabeni@redhat.com>
 In-Reply-To: <cover.1624895054.git.pabeni@redhat.com>
 References: <cover.1624895054.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,151 +47,129 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-As reported by Maxim, we have a lot of MPTCP-level
-retransmissions when multilple links with different latencies
-are in use.
+The current mptcp re-inject strategy is very aggressive,
+we have mptcp-level retransmissions even on single subflow
+connection, if the link in-use is lossy.
 
-This patch refactor the mptcp-level timeout accounting so that
-the maximum of all the active subflow timeout is used. To avoid
-traversing the subflow list multiple times, the update is
-perfomed inside the packet scheduler.
+Let's be a little more conservative: we do retransmission
+only if at least a subflow has write and rtx queue empty.
 
-Additionally clean-up a bit timeout handling.
+Additionally use the backup subflows only if the active
+subflows are stale - no progresses in at least an rtx period.
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/207
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 34 ++++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ net/mptcp/pm.c       | 17 +++++++++++++++++
+ net/mptcp/protocol.c | 22 ++++++++++++++--------
+ net/mptcp/protocol.h |  5 ++++-
+ 3 files changed, 35 insertions(+), 9 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4cc94ee425e4..291f0e2279a8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -411,13 +411,8 @@ static void mptcp_set_datafin_timeout(const struct sock *sk)
- 				       TCP_RTO_MIN << icsk->icsk_retransmits);
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 639271e09604..9ff17c5205ce 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -308,6 +308,23 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ 	return mptcp_pm_nl_get_local_id(msk, skc);
  }
  
--static void mptcp_set_timeout(const struct sock *sk, const struct sock *ssk)
-+static void mptcp_set_timeout(struct sock *sk, long tout)
- {
--	long tout = ssk && inet_csk(ssk)->icsk_pending ?
--				      inet_csk(ssk)->icsk_timeout - jiffies : 0;
--
--	if (tout <= 0)
--		tout = mptcp_sk(sk)->timer_ival;
- 	mptcp_sk(sk)->timer_ival = tout > 0 ? tout : TCP_RTO_MIN;
- }
- 
-@@ -531,7 +526,6 @@ static bool mptcp_check_data_fin(struct sock *sk)
- 		}
- 
- 		ret = true;
--		mptcp_set_timeout(sk, NULL);
- 		mptcp_send_ack(msk);
- 		mptcp_close_wake_up(sk);
- 	}
-@@ -791,10 +785,7 @@ static void mptcp_reset_timer(struct sock *sk)
- 	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
- 		return;
- 
--	/* should never be called with mptcp level timer cleared */
--	tout = READ_ONCE(mptcp_sk(sk)->timer_ival);
--	if (WARN_ON_ONCE(!tout))
--		tout = TCP_RTO_MIN;
-+	tout = mptcp_sk(sk)->timer_ival;
- 	sk_reset_timer(sk, &icsk->icsk_retransmit_timer, jiffies + tout);
- }
- 
-@@ -1366,20 +1357,32 @@ struct subflow_send_info {
- 	u64 ratio;
- };
- 
-+static long mptcp_timeout_from_ssk(const struct sock *ssk)
++void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
 +{
-+	return inet_csk(ssk)->icsk_pending ? inet_csk(ssk)->icsk_timeout - jiffies : 0;
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
++	u32 rcv_tstamp = READ_ONCE(tcp_sk(ssk)->rcv_tstamp);
++
++	/* keep track of rtx periods with no progress */
++	if (!subflow->stale_count) {
++		subflow->stale_rcv_tstamp = rcv_tstamp;
++		subflow->stale_count++;
++	} else if (subflow->stale_rcv_tstamp == rcv_tstamp) {
++		if (subflow->stale_count < U8_MAX)
++			subflow->stale_count++;
++	} else {
++		subflow->stale_count = 0;
++	}
 +}
 +
-+/* implement the mptcp packet scheduler;
-+ * returns the subflow that will transmit the next DSS
-+ * additionally updates the rtx timeout
-+ */
- static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ void mptcp_pm_data_init(struct mptcp_sock *msk)
  {
- 	struct subflow_send_info send_info[2];
+ 	msk->pm.add_addr_signaled = 0;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 291f0e2279a8..51f608831fae 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2088,8 +2088,9 @@ static void mptcp_timeout_timer(struct timer_list *t)
+  */
+ static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
+ {
++	struct sock *backup = NULL, *pick = NULL;
  	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
- 	int i, nr_active = 0;
- 	struct sock *ssk;
-+	long tout = 0;
- 	u64 ratio;
- 	u32 pace;
+-	struct sock *backup = NULL;
++	int min_stale_count = INT_MAX;
  
--	sock_owned_by_me((struct sock *)msk);
-+	sock_owned_by_me(sk);
+ 	sock_owned_by_me((const struct sock *)msk);
  
- 	if (__mptcp_check_fallback(msk)) {
- 		if (!msk->first)
- 			return NULL;
-+		mptcp_set_timeout(sk, mptcp_timeout_from_ssk(msk->first));
- 		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
- 	}
- 
-@@ -1400,6 +1403,7 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+@@ -2102,11 +2103,11 @@ static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
  		if (!mptcp_subflow_active(subflow))
  			continue;
  
-+		tout = max(tout, mptcp_timeout_from_ssk(ssk));
- 		nr_active += !subflow->backup;
- 		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
- 			continue;
-@@ -1415,6 +1419,7 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 			send_info[subflow->backup].ratio = ratio;
+-		/* still data outstanding at TCP level?  Don't retransmit. */
+-		if (!tcp_write_queue_empty(ssk)) {
+-			if (inet_csk(ssk)->icsk_ca_state >= TCP_CA_Loss)
+-				continue;
+-			return NULL;
++		/* still data outstanding at TCP level? skip this */
++		if (!tcp_rtx_and_write_queues_empty(ssk)) {
++			mptcp_pm_subflow_chk_stale(msk, ssk);
++			min_stale_count = min_t(int, min_stale_count, subflow->stale_count);
++			continue;
  		}
- 	}
-+	mptcp_set_timeout(sk, tout);
  
- 	/* pick the best backup if no other subflow is active */
- 	if (!nr_active)
-@@ -1433,7 +1438,6 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- static void mptcp_push_release(struct sock *sk, struct sock *ssk,
- 			       struct mptcp_sendmsg_info *info)
- {
--	mptcp_set_timeout(sk, ssk);
- 	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
- 	release_sock(ssk);
+ 		if (subflow->backup) {
+@@ -2115,10 +2116,15 @@ static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
+ 			continue;
+ 		}
+ 
+-		return ssk;
++		if (!pick)
++			pick = ssk;
+ 	}
+ 
+-	return backup;
++	if (pick)
++		return pick;
++
++	/* use backup only if there are no progresses anywhere */
++	return min_stale_count > 1 ? backup : NULL;
  }
-@@ -1567,7 +1571,6 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 	 */
- 	__mptcp_update_wmem(sk);
- 	if (copied) {
--		mptcp_set_timeout(sk, ssk);
- 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
- 			 info.size_goal);
- 		if (!mptcp_timer_pending(sk))
-@@ -2313,7 +2316,6 @@ static void __mptcp_retrans(struct sock *sk)
- 			 info.size_goal);
- 	}
  
--	mptcp_set_timeout(sk, ssk);
- 	release_sock(ssk);
+ static void mptcp_dispose_initial_subflow(struct mptcp_sock *msk)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0f0c026c5f8b..6a3cbdb597e2 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -439,11 +439,13 @@ struct mptcp_subflow_context {
+ 	u8	reset_seen:1;
+ 	u8	reset_transient:1;
+ 	u8	reset_reason:4;
++	u8	stale_count;
  
- reset_timer:
-@@ -2384,6 +2386,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	msk->wmem_reserved = 0;
- 	WRITE_ONCE(msk->rmem_released, 0);
- 	msk->tx_pending_data = 0;
-+	msk->timer_ival = TCP_RTO_MIN;
+ 	long	delegated_status;
+ 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
  
- 	msk->first = NULL;
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-@@ -2476,7 +2479,6 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
- 			tcp_shutdown(ssk, how);
- 		} else {
- 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
--			mptcp_set_timeout(sk, ssk);
- 			tcp_send_ack(ssk);
- 			if (!mptcp_timer_pending(sk))
- 				mptcp_reset_timer(sk);
+-	u32 setsockopt_seq;
++	u32	setsockopt_seq;
++	u32	stale_rcv_tstamp;
+ 
+ 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
+ 	struct	sock *conn;	    /* parent mptcp_sock */
+@@ -690,6 +692,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hmac);
+ 
+ void __init mptcp_pm_init(void);
+ void mptcp_pm_data_init(struct mptcp_sock *msk);
++void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int server_side);
+ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk, gfp_t gfp);
+ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
 -- 
 2.26.3
 
