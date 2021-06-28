@@ -1,87 +1,297 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A440970
-	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 08:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1624868574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hfbf0q6N4YJ3ZB/zpvQoM2U9tRNz7A0FXI1DCovCZlQ=;
-	b=d4IzihVmgaQQW2wYIMEg0pxUlXTwY7Jf1xLmFlknSZatlCO9R2s8d8XSqnMmAk4ZXEmFRf
-	xlOmJile0y5xflp6zUMeoD4jOCxKSDl2MuioWjO3tk8pnoAGuK5/4QFv4EMnmXcR3IPmcZ
-	0XrWN5kP1VpR3G+jGpTd48f+qdZML50=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-525-kMZq9SphMBao6s9EWFWOkQ-1; Mon, 28 Jun 2021 04:22:52 -0400
-X-MC-Unique: kMZq9SphMBao6s9EWFWOkQ-1
-Received: by mail-wr1-f69.google.com with SMTP id h104-20020adf90710000b029010de8455a3aso4327354wrh.12
-        for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 01:22:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE3A70
+	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 08:35:55 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id s14so12235050pfg.0
+        for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 01:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TWqRdvosDHQQOHY7nZ555ofpwHF33DkHkDvoFiPbgUI=;
+        b=WWMARKW3LTdwAETT92bI2hzVhe4b1E1NcN1nnL/JL4rH37GZl0babYq1PGIf1qNIt+
+         Agz/q/8kPQEcO43WYuwrfD/pthUB26cugiaGH9nkHronuBUKR6/5fyRjRVH1p46vqiZX
+         S9GcEAAACsJo9R4Bcnx0+7SzgAMqCHC9y1xfT5CU/K9wN5KdNC1L6FivWZr+5FiilMjk
+         n8LubVKfswKIqsQT7UvJNXj96mcqtA8yC/XE32411YzW8UfYjJPO7uk6lE6h7hjMTKju
+         v54aN5W34tczpaDsXmBeS0+MUM7slUvHXis3DvzVdNdk7OuszjteuuJ45SVGvxhoSlsS
+         ntHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Hfbf0q6N4YJ3ZB/zpvQoM2U9tRNz7A0FXI1DCovCZlQ=;
-        b=bpZWtDPGCUz0Jeg+8EZ7+KekLmzthBr2+UvJ6J06jbiSwMMoUqFzAum68oQuoHTJu+
-         BwbgL+AK5GDSHf9DDwIqb2mdnGvgI5EhP3xXUau4Uv67+sGWT887AFxXWn0Vq+6lDSvJ
-         FbagRwVU9HeJM9tD2Dg9Y+ol7yztlFnb7kvQ9THIEMFX9qYyzKdLsd1pKsAFLfmWa95r
-         5AYOhdNPPVKK0u3Kia7jivyl/DV8fzWbmB846G/lGB+z3+1v3LjnQJJWH1R9ORSlp7tm
-         SxmZEcoVK80PV4DmVr1T0gVURUG/gu0yOgEm/7YBPwcIXX1713YEGGEo+AAEwKCJxcAC
-         QGZA==
-X-Gm-Message-State: AOAM5316ozLnzvqtoYY9OSKVpswa7PW9arNGp2JHkyf/4CwAf7YI/rUS
-	ln6sMgeK7zfylDh9CiFV6Cq51ylIOoSRQp1JY3SLZn0f0KNwFzH8lPgn8P/yy3X5P+CIB/ME5hm
-	afjfj0CWoN4fNzm8=
-X-Received: by 2002:a1c:e907:: with SMTP id q7mr25143313wmc.1.1624868571634;
-        Mon, 28 Jun 2021 01:22:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz/im28MAWluQn9OsVs7Z3xj/WK+OmNVFNYJtVqrY9eJACxlCeFAB/EBM3dI/1j9qXOGGfrYQ==
-X-Received: by 2002:a1c:e907:: with SMTP id q7mr25143303wmc.1.1624868571499;
-        Mon, 28 Jun 2021 01:22:51 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-109-224.dyn.eolo.it. [146.241.109.224])
-        by smtp.gmail.com with ESMTPSA id a24sm18722086wmj.30.2021.06.28.01.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jun 2021 01:22:51 -0700 (PDT)
-Message-ID: <5a265895487d8f61c30b9495bada893f92a8baf7.camel@redhat.com>
-Subject: Re: [PATCH net-next] mptcp: fix 'masking a bool' warning
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, 
-	netdev@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, davem@davemloft.net, 
- kuba@kernel.org, mptcp@lists.linux.dev, Dan Carpenter
- <dan.carpenter@oracle.com>
-Date: Mon, 28 Jun 2021 10:22:50 +0200
-In-Reply-To: <20210625212522.264000-1-mathew.j.martineau@linux.intel.com>
-References: <20210625212522.264000-1-mathew.j.martineau@linux.intel.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TWqRdvosDHQQOHY7nZ555ofpwHF33DkHkDvoFiPbgUI=;
+        b=pp5MtU6E1MNgOil/WJeb6qWtBuGiC0lsGi8y2Csv5bf7jxoiBfYufP4jbeEk/23ghx
+         S0r0tWwGbI87X5VgGfsqlcPfwWdsgK0v0ywMoHMSkLrawIhk4Lo60JW8oSWAH3SFJ7Sk
+         tV9ZEj19DkGA7dL26Rf4OziCGnyVHHudJJ+b9RgD8knrDZAYhuiL31qNCl283ZaapjUT
+         OnRUqEcnHZHN8sW0Nj8nrmUOttnZkQIzOQFN3MCe02LedSwstxpPidU7UC8Wajc7jFib
+         SOhQLzwmUzc8NmYZYky3Wo3/dtzDLVFWUXZ2jKWWGxaa55Dn6rErAqaX/1SuaW7r5waM
+         6hQA==
+X-Gm-Message-State: AOAM532lPYPglr7I3m0S+QJEkujBivme8fgfxiCwBtUVoVRF4tEA1rY6
+	CXvG00rikxTQ7HBiM4DrcPibszxpfT3eU1fFNl8=
+X-Google-Smtp-Source: ABdhPJwTbL7P5BUf/9/PT46U4JMoBBsLoEPz7sUMY4hEMjNX0QBxh97D0CpknTXpX8Bs3zTehn+s28iVeuTeOS6WWAE=
+X-Received: by 2002:a63:f751:: with SMTP id f17mr16116929pgk.373.1624869354520;
+ Mon, 28 Jun 2021 01:35:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <1624698998-9029-1-git-send-email-wujianguo106@163.com> <1624698998-9029-5-git-send-email-wujianguo106@163.com>
+In-Reply-To: <1624698998-9029-5-git-send-email-wujianguo106@163.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Mon, 28 Jun 2021 16:35:43 +0800
+Message-ID: <CA+WQbwuJ64zQcCnOAwqw9_Mxud6BRJu300sP4pWFOeU7FH8nEA@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net v8 4/5] mptcp: avoid processing packet if a
+ subflow reset
+To: Jianguo Wu <wujianguo106@163.com>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>, 
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2021-06-25 at 14:25 -0700, Mat Martineau wrote:
-> From: Matthieu Baerts <matthieu.baerts@tessares.net>
-> 
-> Dan Carpenter reported an issue introduced in
-> commit fde56eea01f9 ("mptcp: refine mptcp_cleanup_rbuf") where a new
-> boolean (ack_pending) is masked with 0x9.
-> 
-> This is not the intention to ignore values by using a boolean. This
-> variable should not have a 'bool' type: we should keep the 'u8' to allow
-> this comparison.
-> 
-> Fixes: fde56eea01f9 ("mptcp: refine mptcp_cleanup_rbuf")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Hi Jianguo,
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Thank you for this new patch set!
 
+There are three checkpatch.pl warnings in this patch set, please fix them.
+And a minor comment below.
+
+---------------------------------------------------------------
+0001-mptcp-fix-warning-in-__skb_flow_dissect-when-do-syn-.patch
+---------------------------------------------------------------
+WARNING: Possible unwrapped commit description (prefer a maximum 75
+chars per line)
+#7:
+I did stress test with wrk(https://github.com/wg/wrk) and
+webfsd(https://github.com/ourway/webfsd)
+
+total: 0 errors, 1 warnings, 0 checks, 22 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplac=
+e.
+
+0001-mptcp-fix-warning-in-__skb_flow_dissect-when-do-syn-.patch has
+style problems, please review.
+---------------------------------------------------------------
+0002-mptcp-remove-redundant-req-destruct-in-subflow_check.patch
+---------------------------------------------------------------
+WARNING: Possible unwrapped commit description (prefer a maximum 75
+chars per line)
+#14:
+tcp_v4_reqsk_destructor() twice, and may double free inet_rsk(req)->ireq_op=
+t.
+
+total: 0 errors, 1 warnings, 0 checks, 11 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplac=
+e.
+
+0002-mptcp-remove-redundant-req-destruct-in-subflow_check.patch has
+style problems, please review.
+---------------------------------------------------------------
+0005-selftests-mptcp-fix-case-multiple-subflows-limited-b.patch
+---------------------------------------------------------------
+WARNING: Possible unwrapped commit description (prefer a maximum 75
+chars per line)
+#7:
+After patch "mptcp: fix syncookie process if mptcp can not_accept new subfl=
+ow",
+
+total: 0 errors, 1 warnings, 8 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplac=
+e.
+
+0005-selftests-mptcp-fix-case-multiple-subflows-limited-b.patch has
+style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+
+<wujianguo106@163.com> =E4=BA=8E2021=E5=B9=B46=E6=9C=8826=E6=97=A5=E5=91=A8=
+=E5=85=AD =E4=B8=8B=E5=8D=885:17=E5=86=99=E9=81=93=EF=BC=9A
+>
+> From: Jianguo Wu <wujianguo@chinatelecom.cn>
+>
+> If check_fully_established() causes a subflow reset, it should not
+> continue to process the packet in tcp_data_queue().
+> Add a return value to mptcp_incoming_options(), and return false if a
+> subflow has been reset, else return true. Then drop the packet in
+> tcp_data_queue()/tcp_rcv_state_process() if mptcp_incoming_options()
+> return false.
+>
+> Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
+> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
+> ---
+>  include/net/mptcp.h  |  5 +++--
+>  net/ipv4/tcp_input.c | 19 +++++++++++++++----
+>  net/mptcp/options.c  | 19 +++++++++++++------
+>  3 files changed, 31 insertions(+), 12 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index cb580b0..8b5af68 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -105,7 +105,7 @@ bool mptcp_synack_options(const struct request_sock *=
+req, unsigned int *size,
+>  bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>                                unsigned int *size, unsigned int remaining=
+,
+>                                struct mptcp_out_options *opts);
+> -void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
+> +bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
+>
+>  void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>                          struct mptcp_out_options *opts);
+> @@ -227,9 +227,10 @@ static inline bool mptcp_established_options(struct =
+sock *sk,
+>         return false;
+>  }
+>
+> -static inline void mptcp_incoming_options(struct sock *sk,
+> +static inline bool mptcp_incoming_options(struct sock *sk,
+>                                           struct sk_buff *skb)
+>  {
+> +       return true;
+>  }
+>
+>  static inline void mptcp_skb_ext_move(struct sk_buff *to,
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 7d5e59f..4bacd7d 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -4247,6 +4247,9 @@ void tcp_reset(struct sock *sk, struct sk_buff *skb=
+)
+>  {
+>         trace_tcp_receive_reset(sk);
+>
+> +       /* mptcp can't tell us to ignore reset pkts,
+> +        * so just ignore the return value of mptcp_incoming_options().
+> +        */
+>         if (sk_is_mptcp(sk))
+>                 mptcp_incoming_options(sk, skb);
+>
+> @@ -4941,8 +4944,13 @@ static void tcp_data_queue(struct sock *sk, struct=
+ sk_buff *skb)
+>         bool fragstolen;
+>         int eaten;
+>
+> -       if (sk_is_mptcp(sk))
+> -               mptcp_incoming_options(sk, skb);
+> +       /* If a subflow has been reset, the packet should not continue
+> +        * to be processed, drop the packet.
+> +        */
+> +       if (sk_is_mptcp(sk) && !mptcp_incoming_options(sk, skb)) {
+> +               __kfree_skb(skb);
+> +               return;
+> +       }
+>
+>         if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
+>                 __kfree_skb(skb);
+> @@ -6523,8 +6531,11 @@ int tcp_rcv_state_process(struct sock *sk, struct =
+sk_buff *skb)
+>         case TCP_CLOSING:
+>         case TCP_LAST_ACK:
+>                 if (!before(TCP_SKB_CB(skb)->seq, tp->rcv_nxt)) {
+> -                       if (sk_is_mptcp(sk))
+> -                               mptcp_incoming_options(sk, skb);
+> +                       /* If a subflow has been reset, the packet should=
+ not
+> +                        * continue to be processed, drop the packet.
+> +                        */
+> +                       if (sk_is_mptcp(sk) && !mptcp_incoming_options(sk=
+, skb))
+> +                               goto discard;
+>                         break;
+>                 }
+>                 fallthrough;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index b5850af..4452455 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1035,7 +1035,8 @@ static bool add_addr_hmac_valid(struct mptcp_sock *=
+msk,
+>         return hmac =3D=3D mp_opt->ahmac;
+>  }
+>
+> -void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+> +/* Return false if a subflow has been reset, else return true */
+> +bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+>  {
+>         struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+>         struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> @@ -1053,12 +1054,16 @@ void mptcp_incoming_options(struct sock *sk, stru=
+ct sk_buff *skb)
+>                         __mptcp_check_push(subflow->conn, sk);
+>                 __mptcp_data_acked(subflow->conn);
+>                 mptcp_data_unlock(subflow->conn);
+> -               return;
+> +               return true;
+>         }
+>
+>         mptcp_get_options(sk, skb, &mp_opt);
+> +
+> +       /* The subflow can be in close state only if check_fully_establis=
+hed()
+> +        * just sent a reset. If so, tell the caller to ignore the curren=
+t packet.
+> +        */
+>         if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+> -               return;
+> +               return sk->sk_state !=3D TCP_CLOSE;
+>
+>         if (mp_opt.fastclose &&
+>             msk->local_key =3D=3D mp_opt.rcvr_key) {
+> @@ -1100,7 +1105,7 @@ void mptcp_incoming_options(struct sock *sk, struct=
+ sk_buff *skb)
+>         }
+>
+>         if (!mp_opt.dss)
+> -               return;
+> +               return true;
+>
+>         /* we can't wait for recvmsg() to update the ack_seq, otherwise
+>          * monodirectional flows will stuck
+> @@ -1119,12 +1124,12 @@ void mptcp_incoming_options(struct sock *sk, stru=
+ct sk_buff *skb)
+>                     schedule_work(&msk->work))
+>                         sock_hold(subflow->conn);
+>
+> -               return;
+> +               return true;
+>         }
+>
+>         mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
+>         if (!mpext)
+> -               return;
+> +               return true;
+>
+>         memset(mpext, 0, sizeof(*mpext));
+>
+> @@ -1153,6 +1158,8 @@ void mptcp_incoming_options(struct sock *sk, struct=
+ sk_buff *skb)
+>                 if (mpext->csum_reqd)
+>                         mpext->csum =3D mp_opt.csum;
+>         }
+> +
+
+How about adding a label 'out:' here, and all above 'return true' can use
+'goto out' instead. This is more like the kernel code style. WDYT?
+
+-Geliang
+
+> +       return true;
+>  }
+>
+>  static void mptcp_set_rwin(const struct tcp_sock *tp)
+> --
+> 1.8.3.1
+>
+>
+>
