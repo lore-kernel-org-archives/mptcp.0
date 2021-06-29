@@ -1,67 +1,127 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4901C177
-	for <mptcp@lists.linux.dev>; Mon, 28 Jun 2021 20:10:06 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4C23561CC7;
-	Mon, 28 Jun 2021 20:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1624911005;
-	bh=tlDEp28ND5UAGXHGJOa+/XW57qA85/PNnwUUKeMzxaM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oE16RwWRxh7bx7ZwyOV7BCjtd1TgQqSMLr3dxeM945E4HncFD5J/fs086mVdczTp9
-	 H+i0BOX5NmxklpY8wFl/uyughRQ1rf6aQTCsH1j1getIdmhsbsXvQZKZ6wXx96/MPF
-	 IxLBidVGY4i0HFJoBGLMLvsZ0YyK3xReOS1oyr7P8VfevV1v86Z7d15PWbvgLv4SuG
-	 tnS8o7DiLJILi8RmO39Hg/KM3j2QqTYj6ImgMXtudD495qQK5d6qCIiAvI1v0K8jnB
-	 gA6faZce3HkWcUtDPT5W3+w0U71cSGFgb1TIGKX7jOjwinr2uG3Bj8bRd8h7H3XhgG
-	 O74KZs8MpDQNQ==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 4688260D02;
-	Mon, 28 Jun 2021 20:10:05 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.228])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB78970
+	for <mptcp@lists.linux.dev>; Tue, 29 Jun 2021 01:42:03 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.48:33510.417183281
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.9?logid-5a0c242f35f34769876aa48fc24ed7bb (unknown [172.18.0.48])
+	by chinatelecom.cn (HERMES) with SMTP id B9772280109;
+	Tue, 29 Jun 2021 09:41:59 +0800 (CST)
+X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.48])
+	by app0024 with ESMTP id f82f81f5382d4dd9a627412ee2eddff8 for mptcp@lists.linux.dev;
+	Tue Jun 29 09:41:58 2021
+X-Transaction-ID: f82f81f5382d4dd9a627412ee2eddff8
+X-filter-score:
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.48
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+To: mptcp@lists.linux.dev
+Cc: mathew.j.martineau@linux.intel.com,
+	geliangtang@gmail.com,
+	Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: [PATCH v6 2/4] mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
+Date: Tue, 29 Jun 2021 09:41:37 +0800
+Message-Id: <1624930899-99623-3-git-send-email-liyonglong@chinatelecom.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1624930899-99623-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1624930899-99623-1-git-send-email-liyonglong@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] mptcp: fix 'masking a bool' warning
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162491100528.2562.743940781000501523.git-patchwork-notify@kernel.org>
-Date: Mon, 28 Jun 2021 20:10:05 +0000
-References: <20210625212522.264000-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210625212522.264000-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, matthieu.baerts@tessares.net, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, mptcp@lists.linux.dev,
- dan.carpenter@oracle.com
 
-Hello:
+MPTCP_ADD_ADDR_SIGNAL only for action of sending ADD_ADDR
+MPTCP_ADD_ADDR_ECHO only for action of sending echo ADD_ADDR
+add a mptcp_addr_info in struct mptcp_out_options for echo ADD_ADDR
 
-This patch was applied to netdev/net-next.git (refs/heads/master):
+to prepare for the next patch.
 
-On Fri, 25 Jun 2021 14:25:22 -0700 you wrote:
-> From: Matthieu Baerts <matthieu.baerts@tessares.net>
-> 
-> Dan Carpenter reported an issue introduced in
-> commit fde56eea01f9 ("mptcp: refine mptcp_cleanup_rbuf") where a new
-> boolean (ack_pending) is masked with 0x9.
-> 
-> This is not the intention to ignore values by using a boolean. This
-> variable should not have a 'bool' type: we should keep the 'u8' to allow
-> this comparison.
-> 
-> [...]
+Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+---
+ net/mptcp/pm.c         | 16 ++++++++++------
+ net/mptcp/pm_netlink.c |  4 ++--
+ net/mptcp/protocol.h   |  6 ++++++
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-Here is the summary with links:
-  - [net-next] mptcp: fix 'masking a bool' warning
-    https://git.kernel.org/netdev/net-next/c/c4512c63b119
-
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 6c427c8..cf873e9 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -18,19 +18,23 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ {
+ 	u8 add_addr = READ_ONCE(msk->pm.addr_signal);
+ 
+-	pr_debug("msk=%p, local_id=%d", msk, addr->id);
++	pr_debug("msk=%p, local_id=%d, echo:%d", msk, addr->id, echo);
+ 
+ 	lockdep_assert_held(&msk->pm.lock);
+ 
+-	if (add_addr) {
+-		pr_warn("addr_signal error, add_addr=%d", add_addr);
++	if (add_addr &
++	    (echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL))) {
++		pr_warn("addr_signal error, add_addr=%d, echo=%d", add_addr, echo);
+ 		return -EINVAL;
+ 	}
+ 
+-	msk->pm.local = *addr;
+-	add_addr |= BIT(MPTCP_ADD_ADDR_SIGNAL);
+-	if (echo)
++	if (echo) {
++		msk->pm.remote = *addr;
+ 		add_addr |= BIT(MPTCP_ADD_ADDR_ECHO);
++	} else {
++		msk->pm.local = *addr;
++		add_addr |= BIT(MPTCP_ADD_ADDR_SIGNAL);
++	}
+ 	if (addr->family == AF_INET6)
+ 		add_addr |= BIT(MPTCP_ADD_ADDR_IPV6);
+ 	if (addr->port)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d4732a4..0f302d2 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -317,14 +317,14 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	if (!entry->addr.id)
+ 		return;
+ 
+-	if (mptcp_pm_should_add_signal(msk)) {
++	if (mptcp_pm_should_add_signal_addr(msk)) {
+ 		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX / 8);
+ 		goto out;
+ 	}
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 
+-	if (!mptcp_pm_should_add_signal(msk)) {
++	if (!mptcp_pm_should_add_signal_addr(msk)) {
+ 		pr_debug("retransmit ADD_ADDR id=%d", entry->addr.id);
+ 		mptcp_pm_announce_addr(msk, &entry->addr, false);
+ 		mptcp_pm_add_addr_send_ack(msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 160c2ab..a0b0ec0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -708,6 +708,12 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
++	return READ_ONCE(msk->pm.addr_signal) &
++		(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO));
++}
++
++static inline bool mptcp_pm_should_add_signal_addr(struct mptcp_sock *msk)
++{
+ 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
+ }
+ 
+-- 
+1.8.3.1
 
