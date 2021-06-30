@@ -1,17 +1,17 @@
 Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.227])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DFF177
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AEB529CA
 	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 10:24:28 +0000 (UTC)
 HMM_SOURCE_IP:172.18.0.218:42528.526440819
 HMM_ATTACHE_NUM:0000
 HMM_SOURCE_TYPE:SMTP
 Received: from clientip-36.111.140.9?logid-820477ffa95041328a8565b948a69907 (unknown [172.18.0.218])
-	by chinatelecom.cn (HERMES) with SMTP id 693EA2800A7;
-	Wed, 30 Jun 2021 18:24:20 +0800 (CST)
+	by chinatelecom.cn (HERMES) with SMTP id 63B242800A6;
+	Wed, 30 Jun 2021 18:24:28 +0800 (CST)
 X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
 Received: from  ([172.18.0.218])
-	by app0025 with ESMTP id 820477ffa95041328a8565b948a69907 for mptcp@lists.linux.dev;
-	Wed Jun 30 18:24:19 2021
-X-Transaction-ID: 820477ffa95041328a8565b948a69907
+	by app0025 with ESMTP id 47639ce69a024a67b9ac4f5c15107fdb for mptcp@lists.linux.dev;
+	Wed Jun 30 18:24:27 2021
+X-Transaction-ID: 47639ce69a024a67b9ac4f5c15107fdb
 X-filter-score:
 X-Real-From: liyonglong@chinatelecom.cn
 X-Receive-IP: 172.18.0.218
@@ -22,10 +22,12 @@ To: mptcp@lists.linux.dev
 Cc: mathew.j.martineau@linux.intel.com,
 	geliangtang@gmail.com,
 	Yonglong Li <liyonglong@chinatelecom.cn>
-Subject: [PATCH v7 0/4] mptcp: fix conflicts when using pm.add_signal in ADD_ADDR/echo and RM_ADDR process
-Date: Wed, 30 Jun 2021 18:24:08 +0800
-Message-Id: <1625048653-6825-1-git-send-email-liyonglong@chinatelecom.cn>
+Subject: [PATCH v7 2/5] mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
+Date: Wed, 30 Jun 2021 18:24:10 +0800
+Message-Id: <1625048653-6825-3-git-send-email-liyonglong@chinatelecom.cn>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1625048653-6825-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1625048653-6825-1-git-send-email-liyonglong@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,63 +37,91 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-fix issue: ADD_ADDR and RM_ADDR use pm.add_signal to mark event, so 
-in some case pm.add_signal will be flush when ADD_ADDR/RM_ADDR in 
-process.
+MPTCP_ADD_ADDR_SIGNAL only for action of sending ADD_ADDR
+MPTCP_ADD_ADDR_ECHO only for action of sending echo ADD_ADDR
+add a mptcp_addr_info in struct mptcp_out_options for echo ADD_ADDR
 
-fix issue: if ADD_ADDR and ADD_ADDR-echo process at the same time, 
-only one event can write pm.add_signal. so ADD_ADDR will process 
-after add_timer timeout or ADD_ADDR-echo will not be process.
+to prepare for the next patch.
 
-Patch 1 fix ADD_ADDR and RM_ADDR maybe clear addr_signal each other.
+Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+---
+ net/mptcp/pm.c         | 16 ++++++++++------
+ net/mptcp/pm_netlink.c |  4 ++--
+ net/mptcp/protocol.h   |  6 ++++++
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-Patch 2 and 3 deal ADD_ADDR and ADD_ADDR-echo with separately to fix 
-conflicts in using pm.addr_signal porcess.
-
-Patch 4 MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT is not necessary.
-
-v1->v2:
- - remove READ_ONCE under the pm spin lock.
-
-v2->v3:
- - Patch 2: mptcp_pm_should_add_addr => mptcp_pm_should_add_signal_addr
- - Patch 3: avoid read-modify-write of msk->pm.addr_signal and change  
-   mptcp_pm_add_addr_signal to return void.
-
-v3->v4:
- - Patch 1: use ~(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO)) 
-   instead of BIT(MPTCP_RM_ADDR_SIGNAL)
- - Patch 3: simple the code; init flags; fix wrong goto logic code; 
-
-v4->v5:
- - Patch 3: simple the code of 'mptcp_established_options_add_addr'
-
-v5->v6:
- - Patch2: fix fails of 'mptcp_join.sh -t'. In mptcp_pm_add_addr_send_ack 
-   without MPTCP_ADD_ADDR_SIGNAL check so pure ack can not be sent for 
-   ADD_ADDR. That cause ADD_ADDR can not be sent in time.
- - Patch3: refactor some code according Geliang's suggestions.
- - Patch4: modify commit comment
-
-v6->v7:
- - Patch1: use reverse xmas tree order for variables definition
- - Patch3: refactor some code according Geliang's suggestions.
- - add a Patch4: remove some double-check
-
-Yonglong Li (5):
-  mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
-  mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
-  mptcp: build ADD_ADDR/echo-ADD_ADDR option according pm.add_signal
-  mptcp: remove some double-check
-  mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
-
- include/net/mptcp.h    |  3 ++-
- net/mptcp/options.c    | 64 ++++++++++++++++++++++-------------------------
- net/mptcp/pm.c         | 68 +++++++++++++++++++++++++++++++-------------------
- net/mptcp/pm_netlink.c | 10 +++-----
- net/mptcp/protocol.h   | 45 +++++++++++++++++----------------
- 5 files changed, 103 insertions(+), 87 deletions(-)
-
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 50079e5..0dc9021 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -18,19 +18,23 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ {
+ 	u8 add_addr = READ_ONCE(msk->pm.addr_signal);
+ 
+-	pr_debug("msk=%p, local_id=%d", msk, addr->id);
++	pr_debug("msk=%p, local_id=%d, echo:%d", msk, addr->id, echo);
+ 
+ 	lockdep_assert_held(&msk->pm.lock);
+ 
+-	if (add_addr) {
+-		pr_warn("addr_signal error, add_addr=%d", add_addr);
++	if (add_addr &
++	    (echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL))) {
++		pr_warn("addr_signal error, add_addr=%d, echo=%d", add_addr, echo);
+ 		return -EINVAL;
+ 	}
+ 
+-	msk->pm.local = *addr;
+-	add_addr |= BIT(MPTCP_ADD_ADDR_SIGNAL);
+-	if (echo)
++	if (echo) {
++		msk->pm.remote = *addr;
+ 		add_addr |= BIT(MPTCP_ADD_ADDR_ECHO);
++	} else {
++		msk->pm.local = *addr;
++		add_addr |= BIT(MPTCP_ADD_ADDR_SIGNAL);
++	}
+ 	if (addr->family == AF_INET6)
+ 		add_addr |= BIT(MPTCP_ADD_ADDR_IPV6);
+ 	if (addr->port)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d4732a4..0f302d2 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -317,14 +317,14 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	if (!entry->addr.id)
+ 		return;
+ 
+-	if (mptcp_pm_should_add_signal(msk)) {
++	if (mptcp_pm_should_add_signal_addr(msk)) {
+ 		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX / 8);
+ 		goto out;
+ 	}
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 
+-	if (!mptcp_pm_should_add_signal(msk)) {
++	if (!mptcp_pm_should_add_signal_addr(msk)) {
+ 		pr_debug("retransmit ADD_ADDR id=%d", entry->addr.id);
+ 		mptcp_pm_announce_addr(msk, &entry->addr, false);
+ 		mptcp_pm_add_addr_send_ack(msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 160c2ab..a0b0ec0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -708,6 +708,12 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
++	return READ_ONCE(msk->pm.addr_signal) &
++		(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO));
++}
++
++static inline bool mptcp_pm_should_add_signal_addr(struct mptcp_sock *msk)
++{
+ 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
+ }
+ 
 -- 
 1.8.3.1
 
