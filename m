@@ -1,561 +1,166 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C10670
-	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 06:50:45 +0000 (UTC)
-HMM_SOURCE_IP:172.18.0.48:46862.2093433314
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.26?logid-e0ed0723f93d4461997cf30eba791fbb (unknown [172.18.0.48])
-	by chinatelecom.cn (HERMES) with SMTP id 68DB228008A;
-	Wed, 30 Jun 2021 14:50:33 +0800 (CST)
-X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
-Received: from  ([172.18.0.48])
-	by app0024 with ESMTP id e0ed0723f93d4461997cf30eba791fbb for mathew.j.martineau@linux.intel.com;
-	Wed Jun 30 14:50:37 2021
-X-Transaction-ID: e0ed0723f93d4461997cf30eba791fbb
-X-filter-score:
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.0.48
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-Subject: Re: [PATCH v6 3/4] mptcp: build ADD_ADDR/echo-ADD_ADDR option
- according pm.add_signal
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <1624930899-99623-1-git-send-email-liyonglong@chinatelecom.cn>
- <1624930899-99623-4-git-send-email-liyonglong@chinatelecom.cn>
- <CA+WQbwvCWgCog4jxVjpQxvJ0_ojms8ND=gP1WJUA=0B-zGB-=A@mail.gmail.com>
- <3ab57409-8d5b-981a-7656-fc2f1f6167ad@chinatelecom.cn>
- <CA+WQbwtW-H6NoHFV=xqfVsGJ4Z5YwQkOd8vu=JSiuJyztx3Kzg@mail.gmail.com>
- <2f36e070-496f-c7a7-cb5a-26787db05dbd@chinatelecom.cn>
- <CA+WQbwuAkExnpvCMLQAQ=Z2uKApJJ+tZZb4p06Zf+YPznovOWw@mail.gmail.com>
- <14a8296f-cd3e-dc1d-68fe-b0f0e67930d4@chinatelecom.cn>
- <CA+WQbwunnhpGRD8BCvRmHGd4e4vB06PcgRBHR-Ko8RPbLQ33yg@mail.gmail.com>
-From: Yonglong Li <liyonglong@chinatelecom.cn>
-Message-ID: <dedbe672-ad80-b620-b9ba-b409cc78c8d5@chinatelecom.cn>
-Date: Wed, 30 Jun 2021 14:50:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EAF70
+	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 08:01:26 +0000 (UTC)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 18FBC2030A9;
+	Wed, 30 Jun 2021 10:01:19 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A3C93202677;
+	Wed, 30 Jun 2021 10:01:18 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9414D183ACCB;
+	Wed, 30 Jun 2021 16:01:16 +0800 (+08)
+From: Yangbo Lu <yangbo.lu@nxp.com>
+To: netdev@vger.kernel.org
+Cc: Yangbo Lu <yangbo.lu@nxp.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	Richard Cochran <richardcochran@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Michal Kubecek <mkubecek@suse.cz>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Rui Sousa <rui.sousa@nxp.com>,
+	Sebastien Laveze <sebastien.laveze@nxp.com>
+Subject: [net-next, v5, 00/11] ptp: support virtual clocks and timestamping
+Date: Wed, 30 Jun 2021 16:11:51 +0800
+Message-Id: <20210630081202.4423-1-yangbo.lu@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <CA+WQbwunnhpGRD8BCvRmHGd4e4vB06PcgRBHR-Ko8RPbLQ33yg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+
+Current PTP driver exposes one PTP device to user which binds network
+interface/interfaces to provide timestamping. Actually we have a way
+utilizing timecounter/cyclecounter to virtualize any number of PTP
+clocks based on a same free running physical clock for using.
+The purpose of having multiple PTP virtual clocks is for user space
+to directly/easily use them for multiple domains synchronization.
+
+user
+space:     ^                                  ^
+           | SO_TIMESTAMPING new flag:        | Packets with
+           | SOF_TIMESTAMPING_BIND_PHC        | TX/RX HW timestamps
+           v                                  v
+         +--------------------------------------------+
+sock:    |     sock (new member sk_bind_phc)          |
+         +--------------------------------------------+
+           ^                                  ^
+           | ethtool_get_phc_vclocks          | Convert HW timestamps
+           |                                  | to sk_bind_phc
+           v                                  v
+         +--------------+--------------+--------------+
+vclock:  | ptp1         | ptp2         | ptpN         |
+         +--------------+--------------+--------------+
+pclock:  |             ptp0 free running              |
+         +--------------------------------------------+
+
+The block diagram may explain how it works. Besides the PTP virtual
+clocks, the packet HW timestamp converting to the bound PHC is also
+done in sock driver. For user space, PTP virtual clocks can be
+created via sysfs, and extended SO_TIMESTAMPING API (new flag
+SOF_TIMESTAMPING_BIND_PHC) can be used to bind one PTP virtual clock
+for timestamping.
+
+The test tool timestamping.c (together with linuxptp phc_ctl tool) can
+be used to verify:
+
+  # echo 4 > /sys/class/ptp/ptp0/n_vclocks
+  [  129.399472] ptp ptp0: new virtual clock ptp2
+  [  129.404234] ptp ptp0: new virtual clock ptp3
+  [  129.409532] ptp ptp0: new virtual clock ptp4
+  [  129.413942] ptp ptp0: new virtual clock ptp5
+  [  129.418257] ptp ptp0: guarantee physical clock free running
+  #
+  # phc_ctl /dev/ptp2 set 10000
+  # phc_ctl /dev/ptp3 set 20000
+  #
+  # timestamping eno0 2 SOF_TIMESTAMPING_TX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+  # timestamping eno0 2 SOF_TIMESTAMPING_RX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+  # timestamping eno0 3 SOF_TIMESTAMPING_TX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+  # timestamping eno0 3 SOF_TIMESTAMPING_RX_HARDWARE SOF_TIMESTAMPING_RAW_HARDWARE SOF_TIMESTAMPING_BIND_PHC
+
+Changes for v2:
+	- Converted to num_vclocks for creating virtual clocks.
+	- Guranteed physical clock free running when using virtual
+	  clocks.
+	- Fixed build warning.
+	- Updated copyright.
+Changes for v3:
+	- Supported PTP virtual clock in default in PTP driver.
+	- Protected concurrency of ptp->num_vclocks accessing.
+	- Supported PHC vclocks query via ethtool.
+	- Extended SO_TIMESTAMPING API for PHC binding.
+	- Converted HW timestamps to PHC bound, instead of previous
+	  binding domain value to PHC idea.
+	- Other minor fixes.
+Changes for v4:
+	- Used do_aux_work callback for vclock refreshing instead.
+	- Used unsigned int for vclocks number, and max_vclocks
+	  for limitiation.
+	- Fixed mutex locking.
+	- Dynamically allocated memory for vclock index storage.
+	- Removed ethtool ioctl command for vclocks getting.
+	- Updated doc for ethtool phc vclocks get.
+	- Converted to mptcp_setsockopt_sol_socket_timestamping().
+	- Passed so_timestamping for sock_set_timestamping.
+	- Fixed checkpatch/build.
+	- Other minor fixed.
+Changes for v5:
+	- Fixed checkpatch/build/bug reported by test robot.
+
+Yangbo Lu (11):
+  ptp: add ptp virtual clock driver framework
+  ptp: support ptp physical/virtual clocks conversion
+  ptp: track available ptp vclocks information
+  ptp: add kernel API ptp_get_vclocks_index()
+  ethtool: add a new command for getting PHC virtual clocks
+  ptp: add kernel API ptp_convert_timestamp()
+  mptcp: setsockopt: convert to
+    mptcp_setsockopt_sol_socket_timestamping()
+  net: sock: extend SO_TIMESTAMPING for PHC binding
+  net: socket: support hardware timestamp conversion to PHC bound
+  selftests/net: timestamping: support binding PHC
+  MAINTAINERS: add entry for PTP virtual clock driver
+
+ Documentation/ABI/testing/sysfs-ptp          |  20 ++
+ Documentation/networking/ethtool-netlink.rst |  22 ++
+ MAINTAINERS                                  |   7 +
+ drivers/ptp/Makefile                         |   2 +-
+ drivers/ptp/ptp_clock.c                      |  42 +++-
+ drivers/ptp/ptp_private.h                    |  39 ++++
+ drivers/ptp/ptp_sysfs.c                      | 160 ++++++++++++++
+ drivers/ptp/ptp_vclock.c                     | 219 +++++++++++++++++++
+ include/linux/ethtool.h                      |  10 +
+ include/linux/ptp_clock_kernel.h             |  31 ++-
+ include/net/sock.h                           |   8 +-
+ include/uapi/linux/ethtool_netlink.h         |  15 ++
+ include/uapi/linux/net_tstamp.h              |  17 +-
+ net/core/sock.c                              |  65 +++++-
+ net/ethtool/Makefile                         |   2 +-
+ net/ethtool/common.c                         |  14 ++
+ net/ethtool/netlink.c                        |  10 +
+ net/ethtool/netlink.h                        |   2 +
+ net/ethtool/phc_vclocks.c                    |  94 ++++++++
+ net/mptcp/sockopt.c                          |  68 ++++--
+ net/socket.c                                 |  19 +-
+ tools/testing/selftests/net/timestamping.c   |  55 +++--
+ 22 files changed, 867 insertions(+), 54 deletions(-)
+ create mode 100644 drivers/ptp/ptp_vclock.c
+ create mode 100644 net/ethtool/phc_vclocks.c
 
 
-
-On 2021/6/30 10:05, Geliang Tang wrote:
-> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月30日周三 上午9:30写道：
->>
->>
->>
->> On 2021/6/29 16:25, Geliang Tang wrote:
->>> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月29日周二 下午3:54写道：
->>>>
->>>>
->>>>
->>>> On 2021/6/29 15:35, Geliang Tang wrote:
->>>>> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月29日周二 下午3:02写道：
->>>>>>
->>>>>>
->>>>>> Hi Geiliang, Thanks for your reviews.
->>>>>>
->>>>>> On 2021/6/29 13:58, Geliang Tang wrote:
->>>>>>> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月29日周二 上午9:42写道：
->>>>>>>>
->>>>>>>> according MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO flag build
->>>>>>>> ADD_ADDR/echo-ADD_ADDR option
->>>>>>>>
->>>>>>>> add a suboptions type OPTION_MPTCP_ADD_ECHO to mark as echo option
->>>>>>>>
->>>>>>>> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
->>>>>>>> ---
->>>>>>>>  include/net/mptcp.h  |  3 ++-
->>>>>>>>  net/mptcp/options.c  | 65 +++++++++++++++++++++++++++++++---------------------
->>>>>>>>  net/mptcp/pm.c       | 33 +++++++++++---------------
->>>>>>>>  net/mptcp/protocol.h | 23 ++++++++++++-------
->>>>>>>>  4 files changed, 69 insertions(+), 55 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->>>>>>>> index d61bbbf..d2c6ebe 100644
->>>>>>>> --- a/include/net/mptcp.h
->>>>>>>> +++ b/include/net/mptcp.h
->>>>>>>> @@ -61,7 +61,8 @@ struct mptcp_out_options {
->>>>>>>>         u64 sndr_key;
->>>>>>>>         u64 rcvr_key;
->>>>>>>>         u64 ahmac;
->>>>>>>> -       struct mptcp_addr_info addr;
->>>>>>>> +       struct mptcp_addr_info local;
->>>>>>>> +       struct mptcp_addr_info remote;
->>>>>>>>         struct mptcp_rm_list rm_list;
->>>>>>>>         u8 join_id;
->>>>>>>>         u8 backup;
->>>>>>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>>>>>>> index 1aec016..1707bec 100644
->>>>>>>> --- a/net/mptcp/options.c
->>>>>>>> +++ b/net/mptcp/options.c
->>>>>>>> @@ -655,13 +655,15 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
->>>>>>>>         struct mptcp_sock *msk = mptcp_sk(subflow->conn);
->>>>>>>>         bool drop_other_suboptions = false;
->>>>>>>>         unsigned int opt_size = *size;
->>>>>>>> -       bool echo;
->>>>>>>> -       bool port;
->>>>>>>> -       int len;
->>>>>>>> +       u8 add_addr, flags = 0xff;
->>>>>>>> +       int len = 0;
->>>>>>>>
->>>>>>>> -       if ((mptcp_pm_should_add_signal_ipv6(msk) ||
->>>>>>>> -            mptcp_pm_should_add_signal_port(msk) ||
->>>>>>>> -            mptcp_pm_should_add_signal_echo(msk)) &&
->>>>>>>> +       if (!mptcp_pm_add_addr_signal(msk, opts, &add_addr))
->>>>>>>> +               return false;
->>>>>>>
->>>>>>> This add_addr argument is useless, let's drop it.
->>>>>>>
->>>>>> we can use add_addr use in debug log.
->>>>>
->>>>> I think it's not worth adding a new argument just for debugging.
->>>> agree.
->>>>
->>>>>
->>>>>>
->>>>>>> And here add back mptcp_pm_should_add_signal check here. The original code
->>>>>>> called mptcp_pm_should_add_signal twice for double check, once out of pm
->>>>>>> lock, once under pm lock. We should keep it.
->>>>>> Sorry, I think double check is not necessary. does we need double check?
->>>>>
->>>>> I think we should keep the original logic here. If we want to drop this
->>>>> double check or something, we should do it in another patch, don't mix too
->>>>> much things in one patch.
->>>> agree.
->>>>
->>>>>
->>>>>>
->>>>>>>
->>>>>>>> +
->>>>>>>> +       if ((mptcp_pm_should_add_signal_echo(msk) ||
->>>>>>>> +            (mptcp_pm_should_add_signal_addr(msk) &&
->>>>>>>> +             (opts->local.family == AF_INET6 || opts->local.port))) &&
->>>>>>>>             skb && skb_is_tcp_pure_ack(skb)) {
->>>>>>>>                 pr_debug("drop other suboptions");
->>>>>>>>                 opts->suboptions = 0;
->>>>>>>> @@ -671,11 +673,17 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
->>>>>>>>                 drop_other_suboptions = true;
->>>>>>>>         }
->>>>>>>>
->>>>>>>> -       if (!mptcp_pm_should_add_signal(msk) ||
->>>>>>>> -           !(mptcp_pm_add_addr_signal(msk, remaining, &opts->addr, &echo, &port)))
->>>>>>>> -               return false;
->>>>>>>>
->>>>>>>> -       len = mptcp_add_addr_len(opts->addr.family, echo, port);
->>>>>>>> +       if (mptcp_pm_should_add_signal_echo(msk)) {
->>>>>>>> +               flags = (u8)~BIT(MPTCP_ADD_ADDR_ECHO);
->>>>>>>> +       } else {
->>>>>>>> +               opts->ahmac = add_addr_generate_hmac(msk->local_key,
->>>>>>>> +                                                    msk->remote_key,
->>>>>>>> +                                                    &opts->local);
->>>>>>>
->>>>>>> Keep this ahmac generating code after opts->suboptions set just like the
->>>>>>> original code, since ahmac is the more expensive to populate. If remaining
->>>>>>> length isn't enough, no need to set ahmac.
->>>>>>
->>>>>> because mptcp_add_addr_len(opts) will use ahmac to calculate len of opts, so I think Keep this ahmac
->>>>>> generating code after opts->suboptions set is not ok.
->>>>>
->>>>> So we should use mptcp_pm_should_add_signal_addr instead of opts->ahmac in
->>>>> mptcp_add_addr_len.
->>>> agree.
->>>>
->>>>>
->>>>>>
->>>>>>>
->>>>>>>> +               flags = (u8)~BIT(MPTCP_ADD_ADDR_SIGNAL);
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       len = mptcp_add_addr_len(opts);
->>>>>>>>         if (remaining < len)
->>>>>>>>                 return false;
->>>>>>>>
->>>>>>>> @@ -683,13 +691,14 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
->>>>>>>>         if (drop_other_suboptions)
->>>>>>>>                 *size -= opt_size;
->>>>>>>>         opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
->>>>>>>> -       if (!echo) {
->>>>>>>> -               opts->ahmac = add_addr_generate_hmac(msk->local_key,
->>>>>>>> -                                                    msk->remote_key,
->>>>>>>> -                                                    &opts->addr);
->>>>>>>> -       }
->>>>>>>> -       pr_debug("addr_id=%d, ahmac=%llu, echo=%d, port=%d",
->>>>>>>> -                opts->addr.id, opts->ahmac, echo, ntohs(opts->addr.port));
->>>>>>>> +
->>>>>>>> +       spin_lock_bh(&msk->pm.lock);
->>>>>>>> +       WRITE_ONCE(msk->pm.addr_signal, flags & msk->pm.addr_signal);
->>>>>>>> +       spin_unlock_bh(&msk->pm.lock);
->>>>>>>
->>>>>>> addr_signal has been set in mptcp_pm_add_addr_signal in patch 1, no need to
->>>>>>> set it again. I thinks this trunk and all the flags set above should be
->>>>>>> dropped.
->>>>>>
->>>>>> Because MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO maybe set at the same time.
->>>>>> So i think we should only unset one flag.
->>>>>
->>>>> We can only unset one flag in mptcp_pm_add_addr_signal, see my comment in
->>>>> patch 1.
->>>>
->>>> if change like this. there is a issue: if remaining len checking is not ok and return false, The ADD_ADDR/ECHO event will
->>>> be clear. So I think we should make sure ADD_ADDR/ECHO option will add in packet before clean flags. WDYT?
->>>>
->>>
->>> You're right, let's clear it in mptcp_established_options_add_addr.
->>> Furthermore, we should do the same thing for RM_ADDR, clear rm_addr in
->>> mptcp_established_options_rm_addr too.
->>>
->>> If so, patch 1 will become useless. Let's drop it.
->>>
->>> -Geliang
->>> I think RM_ADDR doesn't have this issue. Because mptcp_pm_rm_addr_signal() check the failed case.
-> 
-> If so, how about doing the same thing as RM_ADDR to check the failed case
-> in mptcp_pm_add_addr_signal too.
-> 
-> I think we should use the same logic for ADD_ADDR and RM_ADDR.
-
-Agree. I will prepare next patch.
-
-> 
->>
->>>
->>>
->>>>>
->>>>> -Geliang
->>>>>
->>>>>>
->>>>>>>
->>>>>>>> +
->>>>>>>> +       pr_debug("addr_signal:%x, echo=%d, local_addr_id=%d, ahmac=%llu, local_port=%d, remote_addr_id=%d, remote_port=%d",
->>>>>>>> +                add_addr, (opts->ahmac == 0), opts->local.id,
->>>>>>>> +                opts->ahmac, ntohs(opts->local.port), opts->remote.id, ntohs(opts->remote.port));
->>>>>>>>
->>>>>>>>         return true;
->>>>>>>>  }
->>>>>>>
->>>>>>> The whole function is something like this:
->>>>>>> '''
->>>>>>>         struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
->>>>>>>         struct mptcp_sock *msk = mptcp_sk(subflow->conn);
->>>>>>>         bool drop_other_suboptions = false;
->>>>>>>         unsigned int opt_size = *size;
->>>>>>>         int len;
->>>>>>>
->>>>>>>         if (!mptcp_pm_should_add_signal(msk) ||
->>>>>>>             !mptcp_pm_add_addr_signal(msk, remaining, opts))
->>>>>>>                 return false;
->>>>>>>
->>>>>>>         if ((mptcp_pm_should_add_signal_echo(msk) ||
->>>>>>>              (mptcp_pm_should_add_signal_addr(msk) &&
->>>>>>>               (opts->local.family == AF_INET6 || opts->local.port))) &&
->>>>>>>             skb && skb_is_tcp_pure_ack(skb)) {
->>>>>>>                 pr_debug("drop other suboptions");
->>>>>>>                 opts->suboptions = 0;
->>>>>>>                 opts->ext_copy.use_ack = 0;
->>>>>>>                 opts->ext_copy.use_map = 0;
->>>>>>>                 remaining += opt_size;
->>>>>>>                 drop_other_suboptions = true;
->>>>>>>         }
->>>>>>>
->>>>>>>         len = mptcp_add_addr_len(opts);
->>>>>>>         if (remaining < len)
->>>>>>>                 return false;
->>>>>>>
->>>>>>>         *size = len;
->>>>>>>         if (drop_other_suboptions)
->>>>>>>                 *size -= opt_size;
->>>>>>>         opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
->>>>>>>         if (mptcp_pm_should_add_signal_addr(msk)) {
->>>>>>>                 opts->ahmac = add_addr_generate_hmac(msk->local_key,
->>>>>>>                                                      msk->remote_key,
->>>>>>>                                                      &opts->local);
->>>>>>>         }
->>>>>>>
->>>>>>>         pr_debug("addr_signal:%x, echo=%d, local_addr_id=%d,
->>>>>>> ahmac=%llu, local_port=%d, remote_addr_id=%d, remote_port=%d",
->>>>>>>                  msk->pm.addr_signal, (opts->ahmac == 0), opts->local.id,
->>>>>>>                  opts->ahmac, ntohs(opts->local.port),
->>>>>>> opts->remote.id, ntohs(opts->remote.port));
->>>>>>>
->>>>>>>         return true;
->>>>>>> '''
->>>>>>>
->>>>>>>> @@ -1229,15 +1238,19 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
->>>>>>>>
->>>>>>>>  mp_capable_done:
->>>>>>>>         if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
->>>>>>>> +               struct mptcp_addr_info *addr = &opts->remote;
->>>>>>>
->>>>>>> We can simplify it like this:
->>>>>>>          struct mptcp_addr_info *addr = opts->ahmac ? &opts->local :
->>>>>>> &opts->remote;
->>>>>>>
->>>>>>>>                 u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
->>>>>>>>                 u8 echo = MPTCP_ADDR_ECHO;
->>>>>>>>
->>>>>>>> +               if (opts->ahmac)
->>>>>>>> +                       addr = &opts->local;
->>>>>>>
->>>>>>> And this trunk can be dropped.
->>>>>>>
->>>>>>>> +
->>>>>>>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->>>>>>>> -               if (opts->addr.family == AF_INET6)
->>>>>>>> +               if (addr->family == AF_INET6)
->>>>>>>>                         len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
->>>>>>>>  #endif
->>>>>>>>
->>>>>>>> -               if (opts->addr.port)
->>>>>>>> +               if (addr->port)
->>>>>>>>                         len += TCPOLEN_MPTCP_PORT_LEN;
->>>>>>>>
->>>>>>>>                 if (opts->ahmac) {
->>>>>>>> @@ -1246,25 +1259,25 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
->>>>>>>>                 }
->>>>>>>>
->>>>>>>>                 *ptr++ = mptcp_option(MPTCPOPT_ADD_ADDR,
->>>>>>>> -                                     len, echo, opts->addr.id);
->>>>>>>> -               if (opts->addr.family == AF_INET) {
->>>>>>>> -                       memcpy((u8 *)ptr, (u8 *)&opts->addr.addr.s_addr, 4);
->>>>>>>> +                                     len, echo, addr->id);
->>>>>>>> +               if (addr->family == AF_INET) {
->>>>>>>> +                       memcpy((u8 *)ptr, (u8 *)&addr->addr.s_addr, 4);
->>>>>>>>                         ptr += 1;
->>>>>>>>                 }
->>>>>>>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->>>>>>>> -               else if (opts->addr.family == AF_INET6) {
->>>>>>>> -                       memcpy((u8 *)ptr, opts->addr.addr6.s6_addr, 16);
->>>>>>>> +               else if (addr->family == AF_INET6) {
->>>>>>>> +                       memcpy((u8 *)ptr, addr->addr6.s6_addr, 16);
->>>>>>>>                         ptr += 4;
->>>>>>>>                 }
->>>>>>>>  #endif
->>>>>>>>
->>>>>>>> -               if (!opts->addr.port) {
->>>>>>>> +               if (!addr->port) {
->>>>>>>>                         if (opts->ahmac) {
->>>>>>>>                                 put_unaligned_be64(opts->ahmac, ptr);
->>>>>>>>                                 ptr += 2;
->>>>>>>>                         }
->>>>>>>>                 } else {
->>>>>>>> -                       u16 port = ntohs(opts->addr.port);
->>>>>>>> +                       u16 port = ntohs(addr->port);
->>>>>>>>
->>>>>>>>                         if (opts->ahmac) {
->>>>>>>>                                 u8 *bptr = (u8 *)ptr;
->>>>>>>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->>>>>>>> index cf873e9..9c621293 100644
->>>>>>>> --- a/net/mptcp/pm.c
->>>>>>>> +++ b/net/mptcp/pm.c
->>>>>>>> @@ -253,32 +253,25 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
->>>>>>>>
->>>>>>>>  /* path manager helpers */
->>>>>>>>
->>>>>>>> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
->>>>>>>> -                             struct mptcp_addr_info *saddr, bool *echo, bool *port)
->>>>>>>> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_out_options *opts,
->>>>>>>> +                             u8 *add_addr)
->>>>>>>
->>>>>>> Drop this add_addr argument.
->>>>>>>
->>>>>>>>  {
->>>>>>>> -       u8 add_addr;
->>>>>>>> -       int ret = false;
->>>>>>>> -
->>>>>>>>         spin_lock_bh(&msk->pm.lock);
->>>>>>>>
->>>>>>>> -       /* double check after the lock is acquired */
->>>>>>>> -       if (!mptcp_pm_should_add_signal(msk))
->>>>>>>> -               goto out_unlock;
->>>>>>>
->>>>>>> Keep this double check code.
->>>>>>>
->>>>>>>> -
->>>>>>>> -       *echo = mptcp_pm_should_add_signal_echo(msk);
->>>>>>>> -       *port = mptcp_pm_should_add_signal_port(msk);
->>>>>>>> -
->>>>>>>> -       if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo, *port))
->>>>>>>> -               goto out_unlock;
->>>>>>>
->>>>>>> Keep this length double check code too.
->>>>>>>
->>>>>>>> +       if (!mptcp_pm_should_add_signal(msk)) {
->>>>>>>> +               spin_unlock_bh(&msk->pm.lock);
->>>>>>>> +               return false;
->>>>>>>> +       }
->>>>>>>>
->>>>>>>> -       *saddr = msk->pm.local;
->>>>>>>> -       add_addr = msk->pm.addr_signal & ~(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO));
->>>>>>> -       WRITE_ONCE(msk->pm.addr_signal, add_addr);
->>>>>>>
->>>>>>> This code is just added in patch 1, I think we should keep it. And no need
->>>>>>> to write addr_signal again in mptcp_established_options_add_addr.
->>>>>>>
->>>>>>>> -       ret = true;
->>>>>>>> +       opts->local = msk->pm.local;
->>>>>>>> +       opts->remote = msk->pm.remote;
->>>>>>>> +       *add_addr = msk->pm.addr_signal;
->>>>>>>>
->>>>>>>> -out_unlock:
->>>>>>>>         spin_unlock_bh(&msk->pm.lock);
->>>>>>>> -       return ret;
->>>>>>>
->>>>>>> Keep this out_unlock code.
->>>>>>>
->>>>>>>> +
->>>>>>>> +       if ((mptcp_pm_should_add_signal_echo(msk)) && (mptcp_pm_should_add_signal_addr(msk)))
->>>>>>>> +               mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
->>>>>>>
->>>>>>> Could we use mptcp_pm_add_addr_send_ack here instead of open coding?
->>>>>>>
->>>>>>> I'm no sure why we need this two lines, and why you use '&&' here. Do you
->>>>>>> mean set MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO at the same time?
-> 
-> Please move these two lines into a new patch, and describe why we need it
-> in the commit log.
-> 
-> Thanks.
-> -Geliang
-> 
->>>>>>>
->>>>>>>> +       return true;
->>>>>>>>  }
->>>>>>>
->>>>>>> The whole function is something like this:
->>>>>>> '''
->>>>>>>         int ret = false;
->>>>>>>         u8 add_addr;
->>>>>>>
->>>>>>>         spin_lock_bh(&msk->pm.lock);
->>>>>>>
->>>>>>>         /* double check after the lock is acquired */
->>>>>>>         if (!mptcp_pm_should_add_signal(msk))
->>>>>>>                 goto out_unlock;
->>>>>>>
->>>>>>>         if (remaining < mptcp_add_addr_len(opts))
->>>>>>>                 goto out_unlock;
->>>>>>>
->>>>>>>         opts->local = msk->pm.local;
->>>>>>>         opts->remote = msk->pm.remote;
->>>>>>>         if (mptcp_pm_should_add_signal_echo(msk))
->>>>>>>                 add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
->>>>>>>         else
->>>>>>>                 add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
->>>>>>>         WRITE_ONCE(msk->pm.addr_signal, add_addr);
->>>>>>>         ret = true;
->>>>>>>
->>>>>>> out_unlock:
->>>>>>>         spin_unlock_bh(&msk->pm.lock);
->>>>>>>         if (ret && mptcp_pm_should_add_signal_echo(msk) &&
->>>>>>> mptcp_pm_should_add_signal_addr(msk))
->>>>>>>                 mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
->>>>>>>         return ret;
->>>>>>> '''
->>>>>>>
->>>>>>>>
->>>>>>>>  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
->>>>>>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>>>>>>> index a0b0ec0..0bfbbdef 100644
->>>>>>>> --- a/net/mptcp/protocol.h
->>>>>>>> +++ b/net/mptcp/protocol.h
->>>>>>>> @@ -737,16 +737,23 @@ static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
->>>>>>>>         return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
->>>>>>>>  }
->>>>>>>>
->>>>>>>> -static inline unsigned int mptcp_add_addr_len(int family, bool echo, bool port)
->>>>>>>> +static inline unsigned int mptcp_add_addr_len(struct mptcp_out_options *opts)
->>>>>>>>  {
->>>>>>>> -       u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
->>>>>>>> +       u8 len = 0;
->>>>>>>> +       struct mptcp_addr_info *addr = &opts->remote;
->>>>>>>
->>>>>>> We can simplify it like this:
->>>>>>>          struct mptcp_addr_info *addr = opts->ahmac ? &opts->local :
->>>>>>> &opts->remote;
->>>>>>>
->>>>>>> And keep the orignal code unchanged.
->>>>>>>
->>>>>>>>
->>>>>>>> -       if (family == AF_INET6)
->>>>>>>> -               len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
->>>>>>>> -       if (!echo)
->>>>>>>> +       if (opts->ahmac) {
->>>>>>>> +               addr = &opts->local;
->>>>>>>>                 len += MPTCPOPT_THMAC_LEN;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       if (addr->family == AF_INET6)
->>>>>>>> +               len += TCPOLEN_MPTCP_ADD_ADDR6_BASE;
->>>>>>>> +       else
->>>>>>>> +               len += TCPOLEN_MPTCP_ADD_ADDR_BASE;
->>>>>>>> +
->>>>>>>>         /* account for 2 trailing 'nop' options */
->>>>>>>> -       if (port)
->>>>>>>> +       if (addr->port)
->>>>>>>>                 len += TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
->>>>>>>>
->>>>>>>>         return len;
->>>>>>>
->>>>>>> The whole function is something like this:
->>>>>>> '''
->>>>>>>         struct mptcp_addr_info *addr = opts->ahmac ? &opts->local :
->>>>>>> &opts->remote;
->>>>>>>         u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
->>>>>>>
->>>>>>>         if (addr->family == AF_INET6)
->>>>>>>                 len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
->>>>>>>         if (opts->ahmac)
->>>>>>>                 len += MPTCPOPT_THMAC_LEN;
->>>>>>>         /* account for 2 trailing 'nop' options */
->>>>>>>         if (addr->port)
->>>>>>>                 len += TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
->>>>>>>
->>>>>>>         return len;
->>>>>>> '''
->>>>>>>
->>>>>>> Thanks.
->>>>>>> -Geliang
->>>>>>>
->>>>>>>> @@ -760,8 +767,8 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
->>>>>>>>         return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) + 1;
->>>>>>>>  }
->>>>>>>>
->>>>>>>> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
->>>>>>>> -                             struct mptcp_addr_info *saddr, bool *echo, bool *port);
->>>>>>>> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_out_options *opts,
->>>>>>>> +                             u8 *add_addr);
->>>>>>>>  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
->>>>>>>>                              struct mptcp_rm_list *rm_list);
->>>>>>>>  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
->>>>>>>> --
->>>>>>>> 1.8.3.1
->>>>>>>>
->>>>>>>>
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> --
->>>>>> Li YongLong
->>>>>
->>>>
->>>> --
->>>> Li YongLong
->>>>
->>>
->>
->> --
->> Li YongLong
-> 
-
+base-commit: b6df00789e2831fff7a2c65aa7164b2a4dcbe599
 -- 
-Li YongLong
+2.25.1
+
