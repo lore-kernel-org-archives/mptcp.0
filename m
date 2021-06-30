@@ -1,645 +1,561 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3325E70
-	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 02:06:05 +0000 (UTC)
-Received: by mail-pj1-f43.google.com with SMTP id cs1-20020a17090af501b0290170856e1a8aso3208472pjb.3
-        for <mptcp@lists.linux.dev>; Tue, 29 Jun 2021 19:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=u+GRdIVTjc/wBeSRPDZE4SajUQ5WZFjTu24MW+cESeg=;
-        b=Y91LhrxTutClr2UsnwhSi2EMB3lWXk5hnCNaBRw8Ul8itfARQDbkHOV9GkF5LR7dIu
-         IhO1UYM3KwZ3I2J+qRusZty9xD6W08I2YKcvwrwSYfbxjArE6HqkCRU9o+T2cxZEuE/r
-         CZj5mevdb9DK0/guod1YuPGV4evF9LOh3sa6TO/ZLGy8d6Ewfs2fwA1JGgqVvd2w+ZH0
-         Ri1LPZvivhvOtygCf5529n8zWByaIcA3RWrK7vrqvQXOiQBUwCqe8OR6h0UoSHBfJdBB
-         W8xFDIDh06PnQ8kNld4aWXGsNMNVNgaMH6IftnA7ItxUdwFJIERJS8CYhlfsf0ohZcEl
-         ofRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=u+GRdIVTjc/wBeSRPDZE4SajUQ5WZFjTu24MW+cESeg=;
-        b=GKI/bgDPCE6mO0YHE26lPo3B/+GV5edQ/FaiK+pF+Ah4znTSkEOf01Q89OzihPRHxa
-         v4GLYs4WLjE+g+v2xHo9jcbygLjiZ++rH+oi8u+UMWtL1HWhWBg30Wo8NRy6rps5e6jW
-         +qCJ78POLH4oj15I3LGCqAKAcpcT3DjapkGeyZc84mOlkXWiOgWcDsG7H3BT8L98TTI1
-         8g6HXOaQe8AApamIkDy/SGBmM6SP6blk/1dJ97eLgvTDwiFT4dCwBsMKAowWpKS++RIn
-         MGyRbvM9tqnk6qbQJYTMyx4jT7V2oTVBhiBuGrDW3GOWSUu0KU/chWBdEqQTowaE6c2a
-         x89w==
-X-Gm-Message-State: AOAM533UhA7GDjIetWaRg90eqSVdx35A0DKtRTsfmfga8ZkiPlVSGmC9
-	eL/NyU0tM6mMqcbAo0qn6Ic72JaVn54B014PlC4=
-X-Google-Smtp-Source: ABdhPJxKGMNOLlFc+2PzIHvA3OX7tyKTCF6T/pYYVkXeLOg9k4yO+WPMs+L3nmcUibAcnyKW65SxZTm0BmFjA8P795o=
-X-Received: by 2002:a17:90b:33c6:: with SMTP id lk6mr1949268pjb.6.1625018764639;
- Tue, 29 Jun 2021 19:06:04 -0700 (PDT)
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C10670
+	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 06:50:45 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.48:46862.2093433314
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.26?logid-e0ed0723f93d4461997cf30eba791fbb (unknown [172.18.0.48])
+	by chinatelecom.cn (HERMES) with SMTP id 68DB228008A;
+	Wed, 30 Jun 2021 14:50:33 +0800 (CST)
+X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.48])
+	by app0024 with ESMTP id e0ed0723f93d4461997cf30eba791fbb for mathew.j.martineau@linux.intel.com;
+	Wed Jun 30 14:50:37 2021
+X-Transaction-ID: e0ed0723f93d4461997cf30eba791fbb
+X-filter-score:
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.48
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+Subject: Re: [PATCH v6 3/4] mptcp: build ADD_ADDR/echo-ADD_ADDR option
+ according pm.add_signal
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <1624930899-99623-1-git-send-email-liyonglong@chinatelecom.cn>
+ <1624930899-99623-4-git-send-email-liyonglong@chinatelecom.cn>
+ <CA+WQbwvCWgCog4jxVjpQxvJ0_ojms8ND=gP1WJUA=0B-zGB-=A@mail.gmail.com>
+ <3ab57409-8d5b-981a-7656-fc2f1f6167ad@chinatelecom.cn>
+ <CA+WQbwtW-H6NoHFV=xqfVsGJ4Z5YwQkOd8vu=JSiuJyztx3Kzg@mail.gmail.com>
+ <2f36e070-496f-c7a7-cb5a-26787db05dbd@chinatelecom.cn>
+ <CA+WQbwuAkExnpvCMLQAQ=Z2uKApJJ+tZZb4p06Zf+YPznovOWw@mail.gmail.com>
+ <14a8296f-cd3e-dc1d-68fe-b0f0e67930d4@chinatelecom.cn>
+ <CA+WQbwunnhpGRD8BCvRmHGd4e4vB06PcgRBHR-Ko8RPbLQ33yg@mail.gmail.com>
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+Message-ID: <dedbe672-ad80-b620-b9ba-b409cc78c8d5@chinatelecom.cn>
+Date: Wed, 30 Jun 2021 14:50:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1624930899-99623-1-git-send-email-liyonglong@chinatelecom.cn>
- <1624930899-99623-4-git-send-email-liyonglong@chinatelecom.cn>
- <CA+WQbwvCWgCog4jxVjpQxvJ0_ojms8ND=gP1WJUA=0B-zGB-=A@mail.gmail.com>
- <3ab57409-8d5b-981a-7656-fc2f1f6167ad@chinatelecom.cn> <CA+WQbwtW-H6NoHFV=xqfVsGJ4Z5YwQkOd8vu=JSiuJyztx3Kzg@mail.gmail.com>
- <2f36e070-496f-c7a7-cb5a-26787db05dbd@chinatelecom.cn> <CA+WQbwuAkExnpvCMLQAQ=Z2uKApJJ+tZZb4p06Zf+YPznovOWw@mail.gmail.com>
- <14a8296f-cd3e-dc1d-68fe-b0f0e67930d4@chinatelecom.cn>
-In-Reply-To: <14a8296f-cd3e-dc1d-68fe-b0f0e67930d4@chinatelecom.cn>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Wed, 30 Jun 2021 10:05:53 +0800
-Message-ID: <CA+WQbwunnhpGRD8BCvRmHGd4e4vB06PcgRBHR-Ko8RPbLQ33yg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] mptcp: build ADD_ADDR/echo-ADD_ADDR option
- according pm.add_signal
-To: Yonglong Li <liyonglong@chinatelecom.cn>
-Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CA+WQbwunnhpGRD8BCvRmHGd4e4vB06PcgRBHR-Ko8RPbLQ33yg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B46=E6=9C=8830=
-=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=889:30=E5=86=99=E9=81=93=EF=BC=
-=9A
->
->
->
-> On 2021/6/29 16:25, Geliang Tang wrote:
-> > Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B46=E6=9C=
-=8829=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=883:54=E5=86=99=E9=81=93=
-=EF=BC=9A
-> >>
-> >>
-> >>
-> >> On 2021/6/29 15:35, Geliang Tang wrote:
-> >>> Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B46=E6=
-=9C=8829=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=883:02=E5=86=99=E9=81=
-=93=EF=BC=9A
-> >>>>
-> >>>>
-> >>>> Hi Geiliang, Thanks for your reviews.
-> >>>>
-> >>>> On 2021/6/29 13:58, Geliang Tang wrote:
-> >>>>> Yonglong Li <liyonglong@chinatelecom.cn> =E4=BA=8E2021=E5=B9=B46=E6=
-=9C=8829=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=889:42=E5=86=99=E9=81=
-=93=EF=BC=9A
-> >>>>>>
-> >>>>>> according MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO flag build
-> >>>>>> ADD_ADDR/echo-ADD_ADDR option
-> >>>>>>
-> >>>>>> add a suboptions type OPTION_MPTCP_ADD_ECHO to mark as echo option
-> >>>>>>
-> >>>>>> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
-> >>>>>> ---
-> >>>>>>  include/net/mptcp.h  |  3 ++-
-> >>>>>>  net/mptcp/options.c  | 65 +++++++++++++++++++++++++++++++--------=
--------------
-> >>>>>>  net/mptcp/pm.c       | 33 +++++++++++---------------
-> >>>>>>  net/mptcp/protocol.h | 23 ++++++++++++-------
-> >>>>>>  4 files changed, 69 insertions(+), 55 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> >>>>>> index d61bbbf..d2c6ebe 100644
-> >>>>>> --- a/include/net/mptcp.h
-> >>>>>> +++ b/include/net/mptcp.h
-> >>>>>> @@ -61,7 +61,8 @@ struct mptcp_out_options {
-> >>>>>>         u64 sndr_key;
-> >>>>>>         u64 rcvr_key;
-> >>>>>>         u64 ahmac;
-> >>>>>> -       struct mptcp_addr_info addr;
-> >>>>>> +       struct mptcp_addr_info local;
-> >>>>>> +       struct mptcp_addr_info remote;
-> >>>>>>         struct mptcp_rm_list rm_list;
-> >>>>>>         u8 join_id;
-> >>>>>>         u8 backup;
-> >>>>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> >>>>>> index 1aec016..1707bec 100644
-> >>>>>> --- a/net/mptcp/options.c
-> >>>>>> +++ b/net/mptcp/options.c
-> >>>>>> @@ -655,13 +655,15 @@ static bool mptcp_established_options_add_ad=
-dr(struct sock *sk, struct sk_buff *
-> >>>>>>         struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-> >>>>>>         bool drop_other_suboptions =3D false;
-> >>>>>>         unsigned int opt_size =3D *size;
-> >>>>>> -       bool echo;
-> >>>>>> -       bool port;
-> >>>>>> -       int len;
-> >>>>>> +       u8 add_addr, flags =3D 0xff;
-> >>>>>> +       int len =3D 0;
-> >>>>>>
-> >>>>>> -       if ((mptcp_pm_should_add_signal_ipv6(msk) ||
-> >>>>>> -            mptcp_pm_should_add_signal_port(msk) ||
-> >>>>>> -            mptcp_pm_should_add_signal_echo(msk)) &&
-> >>>>>> +       if (!mptcp_pm_add_addr_signal(msk, opts, &add_addr))
-> >>>>>> +               return false;
-> >>>>>
-> >>>>> This add_addr argument is useless, let's drop it.
-> >>>>>
-> >>>> we can use add_addr use in debug log.
-> >>>
-> >>> I think it's not worth adding a new argument just for debugging.
-> >> agree.
-> >>
-> >>>
-> >>>>
-> >>>>> And here add back mptcp_pm_should_add_signal check here. The origin=
-al code
-> >>>>> called mptcp_pm_should_add_signal twice for double check, once out =
-of pm
-> >>>>> lock, once under pm lock. We should keep it.
-> >>>> Sorry, I think double check is not necessary. does we need double ch=
-eck?
-> >>>
-> >>> I think we should keep the original logic here. If we want to drop th=
-is
-> >>> double check or something, we should do it in another patch, don't mi=
-x too
-> >>> much things in one patch.
-> >> agree.
-> >>
-> >>>
-> >>>>
-> >>>>>
-> >>>>>> +
-> >>>>>> +       if ((mptcp_pm_should_add_signal_echo(msk) ||
-> >>>>>> +            (mptcp_pm_should_add_signal_addr(msk) &&
-> >>>>>> +             (opts->local.family =3D=3D AF_INET6 || opts->local.p=
-ort))) &&
-> >>>>>>             skb && skb_is_tcp_pure_ack(skb)) {
-> >>>>>>                 pr_debug("drop other suboptions");
-> >>>>>>                 opts->suboptions =3D 0;
-> >>>>>> @@ -671,11 +673,17 @@ static bool mptcp_established_options_add_ad=
-dr(struct sock *sk, struct sk_buff *
-> >>>>>>                 drop_other_suboptions =3D true;
-> >>>>>>         }
-> >>>>>>
-> >>>>>> -       if (!mptcp_pm_should_add_signal(msk) ||
-> >>>>>> -           !(mptcp_pm_add_addr_signal(msk, remaining, &opts->addr=
-, &echo, &port)))
-> >>>>>> -               return false;
-> >>>>>>
-> >>>>>> -       len =3D mptcp_add_addr_len(opts->addr.family, echo, port);
-> >>>>>> +       if (mptcp_pm_should_add_signal_echo(msk)) {
-> >>>>>> +               flags =3D (u8)~BIT(MPTCP_ADD_ADDR_ECHO);
-> >>>>>> +       } else {
-> >>>>>> +               opts->ahmac =3D add_addr_generate_hmac(msk->local_=
-key,
-> >>>>>> +                                                    msk->remote_k=
-ey,
-> >>>>>> +                                                    &opts->local)=
-;
-> >>>>>
-> >>>>> Keep this ahmac generating code after opts->suboptions set just lik=
-e the
-> >>>>> original code, since ahmac is the more expensive to populate. If re=
-maining
-> >>>>> length isn't enough, no need to set ahmac.
-> >>>>
-> >>>> because mptcp_add_addr_len(opts) will use ahmac to calculate len of =
-opts, so I think Keep this ahmac
-> >>>> generating code after opts->suboptions set is not ok.
-> >>>
-> >>> So we should use mptcp_pm_should_add_signal_addr instead of opts->ahm=
-ac in
-> >>> mptcp_add_addr_len.
-> >> agree.
-> >>
-> >>>
-> >>>>
-> >>>>>
-> >>>>>> +               flags =3D (u8)~BIT(MPTCP_ADD_ADDR_SIGNAL);
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>> +       len =3D mptcp_add_addr_len(opts);
-> >>>>>>         if (remaining < len)
-> >>>>>>                 return false;
-> >>>>>>
-> >>>>>> @@ -683,13 +691,14 @@ static bool mptcp_established_options_add_ad=
-dr(struct sock *sk, struct sk_buff *
-> >>>>>>         if (drop_other_suboptions)
-> >>>>>>                 *size -=3D opt_size;
-> >>>>>>         opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> >>>>>> -       if (!echo) {
-> >>>>>> -               opts->ahmac =3D add_addr_generate_hmac(msk->local_=
-key,
-> >>>>>> -                                                    msk->remote_k=
-ey,
-> >>>>>> -                                                    &opts->addr);
-> >>>>>> -       }
-> >>>>>> -       pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d=
-",
-> >>>>>> -                opts->addr.id, opts->ahmac, echo, ntohs(opts->add=
-r.port));
-> >>>>>> +
-> >>>>>> +       spin_lock_bh(&msk->pm.lock);
-> >>>>>> +       WRITE_ONCE(msk->pm.addr_signal, flags & msk->pm.addr_signa=
-l);
-> >>>>>> +       spin_unlock_bh(&msk->pm.lock);
-> >>>>>
-> >>>>> addr_signal has been set in mptcp_pm_add_addr_signal in patch 1, no=
- need to
-> >>>>> set it again. I thinks this trunk and all the flags set above shoul=
-d be
-> >>>>> dropped.
-> >>>>
-> >>>> Because MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO maybe set at t=
-he same time.
-> >>>> So i think we should only unset one flag.
-> >>>
-> >>> We can only unset one flag in mptcp_pm_add_addr_signal, see my commen=
-t in
-> >>> patch 1.
-> >>
-> >> if change like this. there is a issue: if remaining len checking is no=
-t ok and return false, The ADD_ADDR/ECHO event will
-> >> be clear. So I think we should make sure ADD_ADDR/ECHO option will add=
- in packet before clean flags. WDYT?
-> >>
-> >
-> > You're right, let's clear it in mptcp_established_options_add_addr.
-> > Furthermore, we should do the same thing for RM_ADDR, clear rm_addr in
-> > mptcp_established_options_rm_addr too.
-> >
-> > If so, patch 1 will become useless. Let's drop it.
-> >
-> > -Geliang
-> > I think RM_ADDR doesn't have this issue. Because mptcp_pm_rm_addr_signa=
-l() check the failed case.
 
-If so, how about doing the same thing as RM_ADDR to check the failed case
-in mptcp_pm_add_addr_signal too.
 
-I think we should use the same logic for ADD_ADDR and RM_ADDR.
+On 2021/6/30 10:05, Geliang Tang wrote:
+> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月30日周三 上午9:30写道：
+>>
+>>
+>>
+>> On 2021/6/29 16:25, Geliang Tang wrote:
+>>> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月29日周二 下午3:54写道：
+>>>>
+>>>>
+>>>>
+>>>> On 2021/6/29 15:35, Geliang Tang wrote:
+>>>>> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月29日周二 下午3:02写道：
+>>>>>>
+>>>>>>
+>>>>>> Hi Geiliang, Thanks for your reviews.
+>>>>>>
+>>>>>> On 2021/6/29 13:58, Geliang Tang wrote:
+>>>>>>> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年6月29日周二 上午9:42写道：
+>>>>>>>>
+>>>>>>>> according MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO flag build
+>>>>>>>> ADD_ADDR/echo-ADD_ADDR option
+>>>>>>>>
+>>>>>>>> add a suboptions type OPTION_MPTCP_ADD_ECHO to mark as echo option
+>>>>>>>>
+>>>>>>>> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+>>>>>>>> ---
+>>>>>>>>  include/net/mptcp.h  |  3 ++-
+>>>>>>>>  net/mptcp/options.c  | 65 +++++++++++++++++++++++++++++++---------------------
+>>>>>>>>  net/mptcp/pm.c       | 33 +++++++++++---------------
+>>>>>>>>  net/mptcp/protocol.h | 23 ++++++++++++-------
+>>>>>>>>  4 files changed, 69 insertions(+), 55 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+>>>>>>>> index d61bbbf..d2c6ebe 100644
+>>>>>>>> --- a/include/net/mptcp.h
+>>>>>>>> +++ b/include/net/mptcp.h
+>>>>>>>> @@ -61,7 +61,8 @@ struct mptcp_out_options {
+>>>>>>>>         u64 sndr_key;
+>>>>>>>>         u64 rcvr_key;
+>>>>>>>>         u64 ahmac;
+>>>>>>>> -       struct mptcp_addr_info addr;
+>>>>>>>> +       struct mptcp_addr_info local;
+>>>>>>>> +       struct mptcp_addr_info remote;
+>>>>>>>>         struct mptcp_rm_list rm_list;
+>>>>>>>>         u8 join_id;
+>>>>>>>>         u8 backup;
+>>>>>>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>>>>>>> index 1aec016..1707bec 100644
+>>>>>>>> --- a/net/mptcp/options.c
+>>>>>>>> +++ b/net/mptcp/options.c
+>>>>>>>> @@ -655,13 +655,15 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+>>>>>>>>         struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+>>>>>>>>         bool drop_other_suboptions = false;
+>>>>>>>>         unsigned int opt_size = *size;
+>>>>>>>> -       bool echo;
+>>>>>>>> -       bool port;
+>>>>>>>> -       int len;
+>>>>>>>> +       u8 add_addr, flags = 0xff;
+>>>>>>>> +       int len = 0;
+>>>>>>>>
+>>>>>>>> -       if ((mptcp_pm_should_add_signal_ipv6(msk) ||
+>>>>>>>> -            mptcp_pm_should_add_signal_port(msk) ||
+>>>>>>>> -            mptcp_pm_should_add_signal_echo(msk)) &&
+>>>>>>>> +       if (!mptcp_pm_add_addr_signal(msk, opts, &add_addr))
+>>>>>>>> +               return false;
+>>>>>>>
+>>>>>>> This add_addr argument is useless, let's drop it.
+>>>>>>>
+>>>>>> we can use add_addr use in debug log.
+>>>>>
+>>>>> I think it's not worth adding a new argument just for debugging.
+>>>> agree.
+>>>>
+>>>>>
+>>>>>>
+>>>>>>> And here add back mptcp_pm_should_add_signal check here. The original code
+>>>>>>> called mptcp_pm_should_add_signal twice for double check, once out of pm
+>>>>>>> lock, once under pm lock. We should keep it.
+>>>>>> Sorry, I think double check is not necessary. does we need double check?
+>>>>>
+>>>>> I think we should keep the original logic here. If we want to drop this
+>>>>> double check or something, we should do it in another patch, don't mix too
+>>>>> much things in one patch.
+>>>> agree.
+>>>>
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>> +
+>>>>>>>> +       if ((mptcp_pm_should_add_signal_echo(msk) ||
+>>>>>>>> +            (mptcp_pm_should_add_signal_addr(msk) &&
+>>>>>>>> +             (opts->local.family == AF_INET6 || opts->local.port))) &&
+>>>>>>>>             skb && skb_is_tcp_pure_ack(skb)) {
+>>>>>>>>                 pr_debug("drop other suboptions");
+>>>>>>>>                 opts->suboptions = 0;
+>>>>>>>> @@ -671,11 +673,17 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+>>>>>>>>                 drop_other_suboptions = true;
+>>>>>>>>         }
+>>>>>>>>
+>>>>>>>> -       if (!mptcp_pm_should_add_signal(msk) ||
+>>>>>>>> -           !(mptcp_pm_add_addr_signal(msk, remaining, &opts->addr, &echo, &port)))
+>>>>>>>> -               return false;
+>>>>>>>>
+>>>>>>>> -       len = mptcp_add_addr_len(opts->addr.family, echo, port);
+>>>>>>>> +       if (mptcp_pm_should_add_signal_echo(msk)) {
+>>>>>>>> +               flags = (u8)~BIT(MPTCP_ADD_ADDR_ECHO);
+>>>>>>>> +       } else {
+>>>>>>>> +               opts->ahmac = add_addr_generate_hmac(msk->local_key,
+>>>>>>>> +                                                    msk->remote_key,
+>>>>>>>> +                                                    &opts->local);
+>>>>>>>
+>>>>>>> Keep this ahmac generating code after opts->suboptions set just like the
+>>>>>>> original code, since ahmac is the more expensive to populate. If remaining
+>>>>>>> length isn't enough, no need to set ahmac.
+>>>>>>
+>>>>>> because mptcp_add_addr_len(opts) will use ahmac to calculate len of opts, so I think Keep this ahmac
+>>>>>> generating code after opts->suboptions set is not ok.
+>>>>>
+>>>>> So we should use mptcp_pm_should_add_signal_addr instead of opts->ahmac in
+>>>>> mptcp_add_addr_len.
+>>>> agree.
+>>>>
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>> +               flags = (u8)~BIT(MPTCP_ADD_ADDR_SIGNAL);
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       len = mptcp_add_addr_len(opts);
+>>>>>>>>         if (remaining < len)
+>>>>>>>>                 return false;
+>>>>>>>>
+>>>>>>>> @@ -683,13 +691,14 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+>>>>>>>>         if (drop_other_suboptions)
+>>>>>>>>                 *size -= opt_size;
+>>>>>>>>         opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
+>>>>>>>> -       if (!echo) {
+>>>>>>>> -               opts->ahmac = add_addr_generate_hmac(msk->local_key,
+>>>>>>>> -                                                    msk->remote_key,
+>>>>>>>> -                                                    &opts->addr);
+>>>>>>>> -       }
+>>>>>>>> -       pr_debug("addr_id=%d, ahmac=%llu, echo=%d, port=%d",
+>>>>>>>> -                opts->addr.id, opts->ahmac, echo, ntohs(opts->addr.port));
+>>>>>>>> +
+>>>>>>>> +       spin_lock_bh(&msk->pm.lock);
+>>>>>>>> +       WRITE_ONCE(msk->pm.addr_signal, flags & msk->pm.addr_signal);
+>>>>>>>> +       spin_unlock_bh(&msk->pm.lock);
+>>>>>>>
+>>>>>>> addr_signal has been set in mptcp_pm_add_addr_signal in patch 1, no need to
+>>>>>>> set it again. I thinks this trunk and all the flags set above should be
+>>>>>>> dropped.
+>>>>>>
+>>>>>> Because MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO maybe set at the same time.
+>>>>>> So i think we should only unset one flag.
+>>>>>
+>>>>> We can only unset one flag in mptcp_pm_add_addr_signal, see my comment in
+>>>>> patch 1.
+>>>>
+>>>> if change like this. there is a issue: if remaining len checking is not ok and return false, The ADD_ADDR/ECHO event will
+>>>> be clear. So I think we should make sure ADD_ADDR/ECHO option will add in packet before clean flags. WDYT?
+>>>>
+>>>
+>>> You're right, let's clear it in mptcp_established_options_add_addr.
+>>> Furthermore, we should do the same thing for RM_ADDR, clear rm_addr in
+>>> mptcp_established_options_rm_addr too.
+>>>
+>>> If so, patch 1 will become useless. Let's drop it.
+>>>
+>>> -Geliang
+>>> I think RM_ADDR doesn't have this issue. Because mptcp_pm_rm_addr_signal() check the failed case.
+> 
+> If so, how about doing the same thing as RM_ADDR to check the failed case
+> in mptcp_pm_add_addr_signal too.
+> 
+> I think we should use the same logic for ADD_ADDR and RM_ADDR.
 
->
-> >
-> >
-> >>>
-> >>> -Geliang
-> >>>
-> >>>>
-> >>>>>
-> >>>>>> +
-> >>>>>> +       pr_debug("addr_signal:%x, echo=3D%d, local_addr_id=3D%d, a=
-hmac=3D%llu, local_port=3D%d, remote_addr_id=3D%d, remote_port=3D%d",
-> >>>>>> +                add_addr, (opts->ahmac =3D=3D 0), opts->local.id,
-> >>>>>> +                opts->ahmac, ntohs(opts->local.port), opts->remot=
-e.id, ntohs(opts->remote.port));
-> >>>>>>
-> >>>>>>         return true;
-> >>>>>>  }
-> >>>>>
-> >>>>> The whole function is something like this:
-> >>>>> '''
-> >>>>>         struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx=
-(sk);
-> >>>>>         struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-> >>>>>         bool drop_other_suboptions =3D false;
-> >>>>>         unsigned int opt_size =3D *size;
-> >>>>>         int len;
-> >>>>>
-> >>>>>         if (!mptcp_pm_should_add_signal(msk) ||
-> >>>>>             !mptcp_pm_add_addr_signal(msk, remaining, opts))
-> >>>>>                 return false;
-> >>>>>
-> >>>>>         if ((mptcp_pm_should_add_signal_echo(msk) ||
-> >>>>>              (mptcp_pm_should_add_signal_addr(msk) &&
-> >>>>>               (opts->local.family =3D=3D AF_INET6 || opts->local.po=
-rt))) &&
-> >>>>>             skb && skb_is_tcp_pure_ack(skb)) {
-> >>>>>                 pr_debug("drop other suboptions");
-> >>>>>                 opts->suboptions =3D 0;
-> >>>>>                 opts->ext_copy.use_ack =3D 0;
-> >>>>>                 opts->ext_copy.use_map =3D 0;
-> >>>>>                 remaining +=3D opt_size;
-> >>>>>                 drop_other_suboptions =3D true;
-> >>>>>         }
-> >>>>>
-> >>>>>         len =3D mptcp_add_addr_len(opts);
-> >>>>>         if (remaining < len)
-> >>>>>                 return false;
-> >>>>>
-> >>>>>         *size =3D len;
-> >>>>>         if (drop_other_suboptions)
-> >>>>>                 *size -=3D opt_size;
-> >>>>>         opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> >>>>>         if (mptcp_pm_should_add_signal_addr(msk)) {
-> >>>>>                 opts->ahmac =3D add_addr_generate_hmac(msk->local_k=
-ey,
-> >>>>>                                                      msk->remote_ke=
-y,
-> >>>>>                                                      &opts->local);
-> >>>>>         }
-> >>>>>
-> >>>>>         pr_debug("addr_signal:%x, echo=3D%d, local_addr_id=3D%d,
-> >>>>> ahmac=3D%llu, local_port=3D%d, remote_addr_id=3D%d, remote_port=3D%=
-d",
-> >>>>>                  msk->pm.addr_signal, (opts->ahmac =3D=3D 0), opts-=
->local.id,
-> >>>>>                  opts->ahmac, ntohs(opts->local.port),
-> >>>>> opts->remote.id, ntohs(opts->remote.port));
-> >>>>>
-> >>>>>         return true;
-> >>>>> '''
-> >>>>>
-> >>>>>> @@ -1229,15 +1238,19 @@ void mptcp_write_options(__be32 *ptr, cons=
-t struct tcp_sock *tp,
-> >>>>>>
-> >>>>>>  mp_capable_done:
-> >>>>>>         if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> >>>>>> +               struct mptcp_addr_info *addr =3D &opts->remote;
-> >>>>>
-> >>>>> We can simplify it like this:
-> >>>>>          struct mptcp_addr_info *addr =3D opts->ahmac ? &opts->loca=
-l :
-> >>>>> &opts->remote;
-> >>>>>
-> >>>>>>                 u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> >>>>>>                 u8 echo =3D MPTCP_ADDR_ECHO;
-> >>>>>>
-> >>>>>> +               if (opts->ahmac)
-> >>>>>> +                       addr =3D &opts->local;
-> >>>>>
-> >>>>> And this trunk can be dropped.
-> >>>>>
-> >>>>>> +
-> >>>>>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> >>>>>> -               if (opts->addr.family =3D=3D AF_INET6)
-> >>>>>> +               if (addr->family =3D=3D AF_INET6)
-> >>>>>>                         len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> >>>>>>  #endif
-> >>>>>>
-> >>>>>> -               if (opts->addr.port)
-> >>>>>> +               if (addr->port)
-> >>>>>>                         len +=3D TCPOLEN_MPTCP_PORT_LEN;
-> >>>>>>
-> >>>>>>                 if (opts->ahmac) {
-> >>>>>> @@ -1246,25 +1259,25 @@ void mptcp_write_options(__be32 *ptr, cons=
-t struct tcp_sock *tp,
-> >>>>>>                 }
-> >>>>>>
-> >>>>>>                 *ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> >>>>>> -                                     len, echo, opts->addr.id);
-> >>>>>> -               if (opts->addr.family =3D=3D AF_INET) {
-> >>>>>> -                       memcpy((u8 *)ptr, (u8 *)&opts->addr.addr.s=
-_addr, 4);
-> >>>>>> +                                     len, echo, addr->id);
-> >>>>>> +               if (addr->family =3D=3D AF_INET) {
-> >>>>>> +                       memcpy((u8 *)ptr, (u8 *)&addr->addr.s_addr=
-, 4);
-> >>>>>>                         ptr +=3D 1;
-> >>>>>>                 }
-> >>>>>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> >>>>>> -               else if (opts->addr.family =3D=3D AF_INET6) {
-> >>>>>> -                       memcpy((u8 *)ptr, opts->addr.addr6.s6_addr=
-, 16);
-> >>>>>> +               else if (addr->family =3D=3D AF_INET6) {
-> >>>>>> +                       memcpy((u8 *)ptr, addr->addr6.s6_addr, 16)=
-;
-> >>>>>>                         ptr +=3D 4;
-> >>>>>>                 }
-> >>>>>>  #endif
-> >>>>>>
-> >>>>>> -               if (!opts->addr.port) {
-> >>>>>> +               if (!addr->port) {
-> >>>>>>                         if (opts->ahmac) {
-> >>>>>>                                 put_unaligned_be64(opts->ahmac, pt=
-r);
-> >>>>>>                                 ptr +=3D 2;
-> >>>>>>                         }
-> >>>>>>                 } else {
-> >>>>>> -                       u16 port =3D ntohs(opts->addr.port);
-> >>>>>> +                       u16 port =3D ntohs(addr->port);
-> >>>>>>
-> >>>>>>                         if (opts->ahmac) {
-> >>>>>>                                 u8 *bptr =3D (u8 *)ptr;
-> >>>>>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> >>>>>> index cf873e9..9c621293 100644
-> >>>>>> --- a/net/mptcp/pm.c
-> >>>>>> +++ b/net/mptcp/pm.c
-> >>>>>> @@ -253,32 +253,25 @@ void mptcp_pm_mp_prio_received(struct sock *=
-sk, u8 bkup)
-> >>>>>>
-> >>>>>>  /* path manager helpers */
-> >>>>>>
-> >>>>>> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned in=
-t remaining,
-> >>>>>> -                             struct mptcp_addr_info *saddr, bool =
-*echo, bool *port)
-> >>>>>> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptc=
-p_out_options *opts,
-> >>>>>> +                             u8 *add_addr)
-> >>>>>
-> >>>>> Drop this add_addr argument.
-> >>>>>
-> >>>>>>  {
-> >>>>>> -       u8 add_addr;
-> >>>>>> -       int ret =3D false;
-> >>>>>> -
-> >>>>>>         spin_lock_bh(&msk->pm.lock);
-> >>>>>>
-> >>>>>> -       /* double check after the lock is acquired */
-> >>>>>> -       if (!mptcp_pm_should_add_signal(msk))
-> >>>>>> -               goto out_unlock;
-> >>>>>
-> >>>>> Keep this double check code.
-> >>>>>
-> >>>>>> -
-> >>>>>> -       *echo =3D mptcp_pm_should_add_signal_echo(msk);
-> >>>>>> -       *port =3D mptcp_pm_should_add_signal_port(msk);
-> >>>>>> -
-> >>>>>> -       if (remaining < mptcp_add_addr_len(msk->pm.local.family, *=
-echo, *port))
-> >>>>>> -               goto out_unlock;
-> >>>>>
-> >>>>> Keep this length double check code too.
-> >>>>>
-> >>>>>> +       if (!mptcp_pm_should_add_signal(msk)) {
-> >>>>>> +               spin_unlock_bh(&msk->pm.lock);
-> >>>>>> +               return false;
-> >>>>>> +       }
-> >>>>>>
-> >>>>>> -       *saddr =3D msk->pm.local;
-> >>>>>> -       add_addr =3D msk->pm.addr_signal & ~(BIT(MPTCP_ADD_ADDR_SI=
-GNAL) | BIT(MPTCP_ADD_ADDR_ECHO));
-> >>>>> -       WRITE_ONCE(msk->pm.addr_signal, add_addr);
-> >>>>>
-> >>>>> This code is just added in patch 1, I think we should keep it. And =
-no need
-> >>>>> to write addr_signal again in mptcp_established_options_add_addr.
-> >>>>>
-> >>>>>> -       ret =3D true;
-> >>>>>> +       opts->local =3D msk->pm.local;
-> >>>>>> +       opts->remote =3D msk->pm.remote;
-> >>>>>> +       *add_addr =3D msk->pm.addr_signal;
-> >>>>>>
-> >>>>>> -out_unlock:
-> >>>>>>         spin_unlock_bh(&msk->pm.lock);
-> >>>>>> -       return ret;
-> >>>>>
-> >>>>> Keep this out_unlock code.
-> >>>>>
-> >>>>>> +
-> >>>>>> +       if ((mptcp_pm_should_add_signal_echo(msk)) && (mptcp_pm_sh=
-ould_add_signal_addr(msk)))
-> >>>>>> +               mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND=
-_ACK);
-> >>>>>
-> >>>>> Could we use mptcp_pm_add_addr_send_ack here instead of open coding=
-?
-> >>>>>
-> >>>>> I'm no sure why we need this two lines, and why you use '&&' here. =
-Do you
-> >>>>> mean set MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO at the same =
-time?
+Agree. I will prepare next patch.
 
-Please move these two lines into a new patch, and describe why we need it
-in the commit log.
+> 
+>>
+>>>
+>>>
+>>>>>
+>>>>> -Geliang
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>> +
+>>>>>>>> +       pr_debug("addr_signal:%x, echo=%d, local_addr_id=%d, ahmac=%llu, local_port=%d, remote_addr_id=%d, remote_port=%d",
+>>>>>>>> +                add_addr, (opts->ahmac == 0), opts->local.id,
+>>>>>>>> +                opts->ahmac, ntohs(opts->local.port), opts->remote.id, ntohs(opts->remote.port));
+>>>>>>>>
+>>>>>>>>         return true;
+>>>>>>>>  }
+>>>>>>>
+>>>>>>> The whole function is something like this:
+>>>>>>> '''
+>>>>>>>         struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+>>>>>>>         struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+>>>>>>>         bool drop_other_suboptions = false;
+>>>>>>>         unsigned int opt_size = *size;
+>>>>>>>         int len;
+>>>>>>>
+>>>>>>>         if (!mptcp_pm_should_add_signal(msk) ||
+>>>>>>>             !mptcp_pm_add_addr_signal(msk, remaining, opts))
+>>>>>>>                 return false;
+>>>>>>>
+>>>>>>>         if ((mptcp_pm_should_add_signal_echo(msk) ||
+>>>>>>>              (mptcp_pm_should_add_signal_addr(msk) &&
+>>>>>>>               (opts->local.family == AF_INET6 || opts->local.port))) &&
+>>>>>>>             skb && skb_is_tcp_pure_ack(skb)) {
+>>>>>>>                 pr_debug("drop other suboptions");
+>>>>>>>                 opts->suboptions = 0;
+>>>>>>>                 opts->ext_copy.use_ack = 0;
+>>>>>>>                 opts->ext_copy.use_map = 0;
+>>>>>>>                 remaining += opt_size;
+>>>>>>>                 drop_other_suboptions = true;
+>>>>>>>         }
+>>>>>>>
+>>>>>>>         len = mptcp_add_addr_len(opts);
+>>>>>>>         if (remaining < len)
+>>>>>>>                 return false;
+>>>>>>>
+>>>>>>>         *size = len;
+>>>>>>>         if (drop_other_suboptions)
+>>>>>>>                 *size -= opt_size;
+>>>>>>>         opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
+>>>>>>>         if (mptcp_pm_should_add_signal_addr(msk)) {
+>>>>>>>                 opts->ahmac = add_addr_generate_hmac(msk->local_key,
+>>>>>>>                                                      msk->remote_key,
+>>>>>>>                                                      &opts->local);
+>>>>>>>         }
+>>>>>>>
+>>>>>>>         pr_debug("addr_signal:%x, echo=%d, local_addr_id=%d,
+>>>>>>> ahmac=%llu, local_port=%d, remote_addr_id=%d, remote_port=%d",
+>>>>>>>                  msk->pm.addr_signal, (opts->ahmac == 0), opts->local.id,
+>>>>>>>                  opts->ahmac, ntohs(opts->local.port),
+>>>>>>> opts->remote.id, ntohs(opts->remote.port));
+>>>>>>>
+>>>>>>>         return true;
+>>>>>>> '''
+>>>>>>>
+>>>>>>>> @@ -1229,15 +1238,19 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>>>>>>>>
+>>>>>>>>  mp_capable_done:
+>>>>>>>>         if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+>>>>>>>> +               struct mptcp_addr_info *addr = &opts->remote;
+>>>>>>>
+>>>>>>> We can simplify it like this:
+>>>>>>>          struct mptcp_addr_info *addr = opts->ahmac ? &opts->local :
+>>>>>>> &opts->remote;
+>>>>>>>
+>>>>>>>>                 u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
+>>>>>>>>                 u8 echo = MPTCP_ADDR_ECHO;
+>>>>>>>>
+>>>>>>>> +               if (opts->ahmac)
+>>>>>>>> +                       addr = &opts->local;
+>>>>>>>
+>>>>>>> And this trunk can be dropped.
+>>>>>>>
+>>>>>>>> +
+>>>>>>>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>>>>>>>> -               if (opts->addr.family == AF_INET6)
+>>>>>>>> +               if (addr->family == AF_INET6)
+>>>>>>>>                         len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+>>>>>>>>  #endif
+>>>>>>>>
+>>>>>>>> -               if (opts->addr.port)
+>>>>>>>> +               if (addr->port)
+>>>>>>>>                         len += TCPOLEN_MPTCP_PORT_LEN;
+>>>>>>>>
+>>>>>>>>                 if (opts->ahmac) {
+>>>>>>>> @@ -1246,25 +1259,25 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>>>>>>>>                 }
+>>>>>>>>
+>>>>>>>>                 *ptr++ = mptcp_option(MPTCPOPT_ADD_ADDR,
+>>>>>>>> -                                     len, echo, opts->addr.id);
+>>>>>>>> -               if (opts->addr.family == AF_INET) {
+>>>>>>>> -                       memcpy((u8 *)ptr, (u8 *)&opts->addr.addr.s_addr, 4);
+>>>>>>>> +                                     len, echo, addr->id);
+>>>>>>>> +               if (addr->family == AF_INET) {
+>>>>>>>> +                       memcpy((u8 *)ptr, (u8 *)&addr->addr.s_addr, 4);
+>>>>>>>>                         ptr += 1;
+>>>>>>>>                 }
+>>>>>>>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>>>>>>>> -               else if (opts->addr.family == AF_INET6) {
+>>>>>>>> -                       memcpy((u8 *)ptr, opts->addr.addr6.s6_addr, 16);
+>>>>>>>> +               else if (addr->family == AF_INET6) {
+>>>>>>>> +                       memcpy((u8 *)ptr, addr->addr6.s6_addr, 16);
+>>>>>>>>                         ptr += 4;
+>>>>>>>>                 }
+>>>>>>>>  #endif
+>>>>>>>>
+>>>>>>>> -               if (!opts->addr.port) {
+>>>>>>>> +               if (!addr->port) {
+>>>>>>>>                         if (opts->ahmac) {
+>>>>>>>>                                 put_unaligned_be64(opts->ahmac, ptr);
+>>>>>>>>                                 ptr += 2;
+>>>>>>>>                         }
+>>>>>>>>                 } else {
+>>>>>>>> -                       u16 port = ntohs(opts->addr.port);
+>>>>>>>> +                       u16 port = ntohs(addr->port);
+>>>>>>>>
+>>>>>>>>                         if (opts->ahmac) {
+>>>>>>>>                                 u8 *bptr = (u8 *)ptr;
+>>>>>>>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>>>>>>>> index cf873e9..9c621293 100644
+>>>>>>>> --- a/net/mptcp/pm.c
+>>>>>>>> +++ b/net/mptcp/pm.c
+>>>>>>>> @@ -253,32 +253,25 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
+>>>>>>>>
+>>>>>>>>  /* path manager helpers */
+>>>>>>>>
+>>>>>>>> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>>>>>>> -                             struct mptcp_addr_info *saddr, bool *echo, bool *port)
+>>>>>>>> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_out_options *opts,
+>>>>>>>> +                             u8 *add_addr)
+>>>>>>>
+>>>>>>> Drop this add_addr argument.
+>>>>>>>
+>>>>>>>>  {
+>>>>>>>> -       u8 add_addr;
+>>>>>>>> -       int ret = false;
+>>>>>>>> -
+>>>>>>>>         spin_lock_bh(&msk->pm.lock);
+>>>>>>>>
+>>>>>>>> -       /* double check after the lock is acquired */
+>>>>>>>> -       if (!mptcp_pm_should_add_signal(msk))
+>>>>>>>> -               goto out_unlock;
+>>>>>>>
+>>>>>>> Keep this double check code.
+>>>>>>>
+>>>>>>>> -
+>>>>>>>> -       *echo = mptcp_pm_should_add_signal_echo(msk);
+>>>>>>>> -       *port = mptcp_pm_should_add_signal_port(msk);
+>>>>>>>> -
+>>>>>>>> -       if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo, *port))
+>>>>>>>> -               goto out_unlock;
+>>>>>>>
+>>>>>>> Keep this length double check code too.
+>>>>>>>
+>>>>>>>> +       if (!mptcp_pm_should_add_signal(msk)) {
+>>>>>>>> +               spin_unlock_bh(&msk->pm.lock);
+>>>>>>>> +               return false;
+>>>>>>>> +       }
+>>>>>>>>
+>>>>>>>> -       *saddr = msk->pm.local;
+>>>>>>>> -       add_addr = msk->pm.addr_signal & ~(BIT(MPTCP_ADD_ADDR_SIGNAL) | BIT(MPTCP_ADD_ADDR_ECHO));
+>>>>>>> -       WRITE_ONCE(msk->pm.addr_signal, add_addr);
+>>>>>>>
+>>>>>>> This code is just added in patch 1, I think we should keep it. And no need
+>>>>>>> to write addr_signal again in mptcp_established_options_add_addr.
+>>>>>>>
+>>>>>>>> -       ret = true;
+>>>>>>>> +       opts->local = msk->pm.local;
+>>>>>>>> +       opts->remote = msk->pm.remote;
+>>>>>>>> +       *add_addr = msk->pm.addr_signal;
+>>>>>>>>
+>>>>>>>> -out_unlock:
+>>>>>>>>         spin_unlock_bh(&msk->pm.lock);
+>>>>>>>> -       return ret;
+>>>>>>>
+>>>>>>> Keep this out_unlock code.
+>>>>>>>
+>>>>>>>> +
+>>>>>>>> +       if ((mptcp_pm_should_add_signal_echo(msk)) && (mptcp_pm_should_add_signal_addr(msk)))
+>>>>>>>> +               mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
+>>>>>>>
+>>>>>>> Could we use mptcp_pm_add_addr_send_ack here instead of open coding?
+>>>>>>>
+>>>>>>> I'm no sure why we need this two lines, and why you use '&&' here. Do you
+>>>>>>> mean set MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO at the same time?
+> 
+> Please move these two lines into a new patch, and describe why we need it
+> in the commit log.
+> 
+> Thanks.
+> -Geliang
+> 
+>>>>>>>
+>>>>>>>> +       return true;
+>>>>>>>>  }
+>>>>>>>
+>>>>>>> The whole function is something like this:
+>>>>>>> '''
+>>>>>>>         int ret = false;
+>>>>>>>         u8 add_addr;
+>>>>>>>
+>>>>>>>         spin_lock_bh(&msk->pm.lock);
+>>>>>>>
+>>>>>>>         /* double check after the lock is acquired */
+>>>>>>>         if (!mptcp_pm_should_add_signal(msk))
+>>>>>>>                 goto out_unlock;
+>>>>>>>
+>>>>>>>         if (remaining < mptcp_add_addr_len(opts))
+>>>>>>>                 goto out_unlock;
+>>>>>>>
+>>>>>>>         opts->local = msk->pm.local;
+>>>>>>>         opts->remote = msk->pm.remote;
+>>>>>>>         if (mptcp_pm_should_add_signal_echo(msk))
+>>>>>>>                 add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
+>>>>>>>         else
+>>>>>>>                 add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
+>>>>>>>         WRITE_ONCE(msk->pm.addr_signal, add_addr);
+>>>>>>>         ret = true;
+>>>>>>>
+>>>>>>> out_unlock:
+>>>>>>>         spin_unlock_bh(&msk->pm.lock);
+>>>>>>>         if (ret && mptcp_pm_should_add_signal_echo(msk) &&
+>>>>>>> mptcp_pm_should_add_signal_addr(msk))
+>>>>>>>                 mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
+>>>>>>>         return ret;
+>>>>>>> '''
+>>>>>>>
+>>>>>>>>
+>>>>>>>>  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>>>>>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>>>>>>>> index a0b0ec0..0bfbbdef 100644
+>>>>>>>> --- a/net/mptcp/protocol.h
+>>>>>>>> +++ b/net/mptcp/protocol.h
+>>>>>>>> @@ -737,16 +737,23 @@ static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+>>>>>>>>         return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>> -static inline unsigned int mptcp_add_addr_len(int family, bool echo, bool port)
+>>>>>>>> +static inline unsigned int mptcp_add_addr_len(struct mptcp_out_options *opts)
+>>>>>>>>  {
+>>>>>>>> -       u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
+>>>>>>>> +       u8 len = 0;
+>>>>>>>> +       struct mptcp_addr_info *addr = &opts->remote;
+>>>>>>>
+>>>>>>> We can simplify it like this:
+>>>>>>>          struct mptcp_addr_info *addr = opts->ahmac ? &opts->local :
+>>>>>>> &opts->remote;
+>>>>>>>
+>>>>>>> And keep the orignal code unchanged.
+>>>>>>>
+>>>>>>>>
+>>>>>>>> -       if (family == AF_INET6)
+>>>>>>>> -               len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+>>>>>>>> -       if (!echo)
+>>>>>>>> +       if (opts->ahmac) {
+>>>>>>>> +               addr = &opts->local;
+>>>>>>>>                 len += MPTCPOPT_THMAC_LEN;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       if (addr->family == AF_INET6)
+>>>>>>>> +               len += TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+>>>>>>>> +       else
+>>>>>>>> +               len += TCPOLEN_MPTCP_ADD_ADDR_BASE;
+>>>>>>>> +
+>>>>>>>>         /* account for 2 trailing 'nop' options */
+>>>>>>>> -       if (port)
+>>>>>>>> +       if (addr->port)
+>>>>>>>>                 len += TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
+>>>>>>>>
+>>>>>>>>         return len;
+>>>>>>>
+>>>>>>> The whole function is something like this:
+>>>>>>> '''
+>>>>>>>         struct mptcp_addr_info *addr = opts->ahmac ? &opts->local :
+>>>>>>> &opts->remote;
+>>>>>>>         u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
+>>>>>>>
+>>>>>>>         if (addr->family == AF_INET6)
+>>>>>>>                 len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+>>>>>>>         if (opts->ahmac)
+>>>>>>>                 len += MPTCPOPT_THMAC_LEN;
+>>>>>>>         /* account for 2 trailing 'nop' options */
+>>>>>>>         if (addr->port)
+>>>>>>>                 len += TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
+>>>>>>>
+>>>>>>>         return len;
+>>>>>>> '''
+>>>>>>>
+>>>>>>> Thanks.
+>>>>>>> -Geliang
+>>>>>>>
+>>>>>>>> @@ -760,8 +767,8 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
+>>>>>>>>         return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) + 1;
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>>>>>>> -                             struct mptcp_addr_info *saddr, bool *echo, bool *port);
+>>>>>>>> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptcp_out_options *opts,
+>>>>>>>> +                             u8 *add_addr);
+>>>>>>>>  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>>>>>>>>                              struct mptcp_rm_list *rm_list);
+>>>>>>>>  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+>>>>>>>> --
+>>>>>>>> 1.8.3.1
+>>>>>>>>
+>>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>> --
+>>>>>> Li YongLong
+>>>>>
+>>>>
+>>>> --
+>>>> Li YongLong
+>>>>
+>>>
+>>
+>> --
+>> Li YongLong
+> 
 
-Thanks.
--Geliang
-
-> >>>>>
-> >>>>>> +       return true;
-> >>>>>>  }
-> >>>>>
-> >>>>> The whole function is something like this:
-> >>>>> '''
-> >>>>>         int ret =3D false;
-> >>>>>         u8 add_addr;
-> >>>>>
-> >>>>>         spin_lock_bh(&msk->pm.lock);
-> >>>>>
-> >>>>>         /* double check after the lock is acquired */
-> >>>>>         if (!mptcp_pm_should_add_signal(msk))
-> >>>>>                 goto out_unlock;
-> >>>>>
-> >>>>>         if (remaining < mptcp_add_addr_len(opts))
-> >>>>>                 goto out_unlock;
-> >>>>>
-> >>>>>         opts->local =3D msk->pm.local;
-> >>>>>         opts->remote =3D msk->pm.remote;
-> >>>>>         if (mptcp_pm_should_add_signal_echo(msk))
-> >>>>>                 add_addr =3D msk->pm.addr_signal & ~BIT(MPTCP_ADD_A=
-DDR_ECHO);
-> >>>>>         else
-> >>>>>                 add_addr =3D msk->pm.addr_signal & ~BIT(MPTCP_ADD_A=
-DDR_SIGNAL);
-> >>>>>         WRITE_ONCE(msk->pm.addr_signal, add_addr);
-> >>>>>         ret =3D true;
-> >>>>>
-> >>>>> out_unlock:
-> >>>>>         spin_unlock_bh(&msk->pm.lock);
-> >>>>>         if (ret && mptcp_pm_should_add_signal_echo(msk) &&
-> >>>>> mptcp_pm_should_add_signal_addr(msk))
-> >>>>>                 mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_=
-ACK);
-> >>>>>         return ret;
-> >>>>> '''
-> >>>>>
-> >>>>>>
-> >>>>>>  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int=
- remaining,
-> >>>>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> >>>>>> index a0b0ec0..0bfbbdef 100644
-> >>>>>> --- a/net/mptcp/protocol.h
-> >>>>>> +++ b/net/mptcp/protocol.h
-> >>>>>> @@ -737,16 +737,23 @@ static inline bool mptcp_pm_should_rm_signal=
-(struct mptcp_sock *msk)
-> >>>>>>         return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_=
-SIGNAL);
-> >>>>>>  }
-> >>>>>>
-> >>>>>> -static inline unsigned int mptcp_add_addr_len(int family, bool ec=
-ho, bool port)
-> >>>>>> +static inline unsigned int mptcp_add_addr_len(struct mptcp_out_op=
-tions *opts)
-> >>>>>>  {
-> >>>>>> -       u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> >>>>>> +       u8 len =3D 0;
-> >>>>>> +       struct mptcp_addr_info *addr =3D &opts->remote;
-> >>>>>
-> >>>>> We can simplify it like this:
-> >>>>>          struct mptcp_addr_info *addr =3D opts->ahmac ? &opts->loca=
-l :
-> >>>>> &opts->remote;
-> >>>>>
-> >>>>> And keep the orignal code unchanged.
-> >>>>>
-> >>>>>>
-> >>>>>> -       if (family =3D=3D AF_INET6)
-> >>>>>> -               len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> >>>>>> -       if (!echo)
-> >>>>>> +       if (opts->ahmac) {
-> >>>>>> +               addr =3D &opts->local;
-> >>>>>>                 len +=3D MPTCPOPT_THMAC_LEN;
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>> +       if (addr->family =3D=3D AF_INET6)
-> >>>>>> +               len +=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> >>>>>> +       else
-> >>>>>> +               len +=3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> >>>>>> +
-> >>>>>>         /* account for 2 trailing 'nop' options */
-> >>>>>> -       if (port)
-> >>>>>> +       if (addr->port)
-> >>>>>>                 len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PO=
-RT_ALIGN;
-> >>>>>>
-> >>>>>>         return len;
-> >>>>>
-> >>>>> The whole function is something like this:
-> >>>>> '''
-> >>>>>         struct mptcp_addr_info *addr =3D opts->ahmac ? &opts->local=
- :
-> >>>>> &opts->remote;
-> >>>>>         u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> >>>>>
-> >>>>>         if (addr->family =3D=3D AF_INET6)
-> >>>>>                 len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> >>>>>         if (opts->ahmac)
-> >>>>>                 len +=3D MPTCPOPT_THMAC_LEN;
-> >>>>>         /* account for 2 trailing 'nop' options */
-> >>>>>         if (addr->port)
-> >>>>>                 len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_POR=
-T_ALIGN;
-> >>>>>
-> >>>>>         return len;
-> >>>>> '''
-> >>>>>
-> >>>>> Thanks.
-> >>>>> -Geliang
-> >>>>>
-> >>>>>> @@ -760,8 +767,8 @@ static inline int mptcp_rm_addr_len(const stru=
-ct mptcp_rm_list *rm_list)
-> >>>>>>         return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - =
-1, 4) + 1;
-> >>>>>>  }
-> >>>>>>
-> >>>>>> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned in=
-t remaining,
-> >>>>>> -                             struct mptcp_addr_info *saddr, bool =
-*echo, bool *port);
-> >>>>>> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct mptc=
-p_out_options *opts,
-> >>>>>> +                             u8 *add_addr);
-> >>>>>>  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int=
- remaining,
-> >>>>>>                              struct mptcp_rm_list *rm_list);
-> >>>>>>  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_com=
-mon *skc);
-> >>>>>> --
-> >>>>>> 1.8.3.1
-> >>>>>>
-> >>>>>>
-> >>>>>
-> >>>>>
-> >>>>
-> >>>> --
-> >>>> Li YongLong
-> >>>
-> >>
-> >> --
-> >> Li YongLong
-> >>
-> >
->
-> --
-> Li YongLong
+-- 
+Li YongLong
