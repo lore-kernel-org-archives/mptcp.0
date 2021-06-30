@@ -1,40 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9610C168
-	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 11:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1625053347;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4KGNnxSjVoiRIXSLGapbo97A6hT+lwVaG9rqf5CJVY0=;
-	b=NYMAqNwwwFdQPMGYxb18Qqx6qfYTaO13aet7gEQHlB5FxdoVbq+WiXzeotEndBmBqs8Hzi
-	T1FMM+LvneLLuWc/t4uEiBpq/MfeyC8vm7CagwHYrh/Ddi+Rfa8jbXCZbvsICVl8yBsvPX
-	v1Mvv+lbG/2DNziBFss6Y+d2woaMUvE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-oAHFK9YIOe-6XKZUBGui3g-1; Wed, 30 Jun 2021 07:42:26 -0400
-X-MC-Unique: oAHFK9YIOe-6XKZUBGui3g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8229804141;
-	Wed, 30 Jun 2021 11:42:24 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-115-108.ams2.redhat.com [10.36.115.108])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 94F636788B;
-	Wed, 30 Jun 2021 11:42:22 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	mptcp@lists.linux.dev
-Subject: [PATCH net] tcp: consistently disable header prediction for mptcp
-Date: Wed, 30 Jun 2021 13:42:13 +0200
-Message-Id: <7f941e06e6434902ea4a0a572392f65cd2745447.1625053058.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D317017F
+	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 12:52:23 +0000 (UTC)
+Received: by mail-pj1-f44.google.com with SMTP id g6-20020a17090adac6b029015d1a9a6f1aso3795912pjx.1
+        for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 05:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3psc4Kyq0qz6osLXuUBVCLtvFDcEH/tTivNBgiI6LYU=;
+        b=mRA7XhvAakk/AupTnNiP1Ca8EWQ2OqFWpU6/Lu4RvonchA+PJoUe/swxwXlOKnRepK
+         rVz9f3yivsvxEi1mf/Djzu8wb6rEqs5wf8sJJpJLOjoWIW6WxKAkxgCA1rn//oFLkLFf
+         dYhoh0KcMbgxtKsvmnS7U0u1lp4uccCr/gGt2h1rYI5d8m7f70ATbIX4zPJFITI8HbV6
+         qzMwMk0G6BWFE8kr3iuYsqYQ1Pp4TwgBQ9VS6ja8MuLWpuqsopw/M6XrU2ISfMzmsQyZ
+         2SAGftxl7SACRHduZ4E81PC1qy2rnKXlkBKEXZNCjZk9D5IMG5eRCvHpjHPsokMVpKt9
+         2aGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3psc4Kyq0qz6osLXuUBVCLtvFDcEH/tTivNBgiI6LYU=;
+        b=AgeJGmEH0Z79kQnKs/827LjFqIitwE2X8CfQf6n90jOoC9r7a7NLlm4zOgcCZxThe9
+         0ia+WE/KukG7S8b1WClMKENBrmvJo2zWtowOtrSICiGlnZqe5663h4jq3giIRiiECVM2
+         SfkZOXhB10IZQL2r2yPbJD04TPscL1Ki12oFBrcg4lyf+lH26AaVeoCffYXoTXcvPj3b
+         cWYXfvoDqg0jwWBcQMbbxJzscjuedtWIMP+GkAi1264TwCr7dc4t+hjLCOnRNeve2S9L
+         hv1sTaM4EB0u6u7hlisUC0PuG1D0xeKN90K+DOaNDFFlAnsJNviTf/9qqhacPEVZ1wle
+         LF8A==
+X-Gm-Message-State: AOAM533uRUvn3MMAhUsVN06Y0/qcLddplv0wrUU78opbDT6xRniJNRQ+
+	DR4Yi4+X6qQS3cgU8nFIDhkZ496zr9Csqg==
+X-Google-Smtp-Source: ABdhPJx20EcRyPsTvRo8pDBV+Rr40Sn47zfIXuAskSHWerPmIOuuufesQXTToWRqmLgyvEg9Ojtu5w==
+X-Received: by 2002:a17:903:1c1:b029:125:b183:7989 with SMTP id e1-20020a17090301c1b0290125b1837989mr31417830plh.57.1625057542100;
+        Wed, 30 Jun 2021 05:52:22 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id i188sm10672175pfe.30.2021.06.30.05.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Jun 2021 05:52:21 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: send out MP_FAIL when data checksum fail"
+Date: Wed, 30 Jun 2021 20:52:17 +0800
+Message-Id: <8f13271510c7d2289e34e4a72deee2e291a5da2a.1625057469.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,51 +50,35 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 
-The MPTCP receive path is hooked only into the TCP slow-path.
-The DSS presence allows plain MPTCP traffic to hit that
-consistently.
+Just set the sk_state of the subsocket to TCP_CLOSE, then the flag
+MPTCP_WORK_CLOSE_SUBFLOW will be set in subflow_sched_work_if_closed,
+and the subflow will be closed.
 
-Since commit e1ff9e82e2ea ("net: mptcp: improve fallback to TCP"),
-when an MPTCP socket falls back to TCP, it can hit the TCP receive
-fast-path, and delay or stop triggering the event notification.
+mptcp_subflow_reset is somehow duplicate here.
 
-Address the issue explicitly disabling the header prediction
-for MPTCP sockets.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/200
-Fixes: e1ff9e82e2ea ("net: mptcp: improve fallback to TCP")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
-Notes:
-- I'm unable to disable header prediction consistently for MPTCP
-  sockets touching only MPTCP code
-- possible alternatives could be:
-  - hook MPTCP in the TCP fastpath, too
-  - try to pull again commit 45f119bf936b ("tcp: remove header prediction")
-    avoiding the regression noded in 31770e34e43d ("tcp: Revert "tcp: remove
-    header prediction"")
-  I choose this option as the hopefully less invasive one.
----
- include/net/tcp.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/mptcp/subflow.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d05193cb0d99..b42b3e6731ed 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -682,6 +682,10 @@ static inline u32 __tcp_set_rto(const struct tcp_sock *tp)
- 
- static inline void __tcp_fast_path_on(struct tcp_sock *tp, u32 snd_wnd)
- {
-+	/* mptcp hooks are only on the slow path */
-+	if (sk_is_mptcp((struct sock *)tp))
-+		return;
-+
- 	tp->pred_flags = htonl((tp->tcp_header_len << 26) |
- 			       ntohl(TCP_FLAG_ACK) |
- 			       snd_wnd);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index d297b941586d..cbf91e22574c 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1159,7 +1159,11 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 	/* RFC 8684 section 3.7. */
+ 	if (subflow->send_mp_fail) {
+ 		if (mptcp_has_another_subflow_established(ssk)) {
+-			mptcp_subflow_reset(ssk);
++			ssk->sk_err = EBADMSG;
++			tcp_set_state(ssk, TCP_CLOSE);
++			subflow->reset_transient = 0;
++			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
++			tcp_send_active_reset(ssk, GFP_ATOMIC);
+ 			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+ 				sk_eat_skb(ssk, skb);
+ 			WRITE_ONCE(subflow->data_avail, 0);
 -- 
-2.26.3
+2.31.1
 
