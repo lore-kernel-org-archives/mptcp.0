@@ -1,17 +1,17 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095F92F80
-	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 08:01:32 +0000 (UTC)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 23DC91A16B5;
-	Wed, 30 Jun 2021 10:01:25 +0200 (CEST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245032FAD
+	for <mptcp@lists.linux.dev>; Wed, 30 Jun 2021 08:01:33 +0000 (UTC)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C502F200698;
+	Wed, 30 Jun 2021 10:01:31 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AF4041A16C4;
-	Wed, 30 Jun 2021 10:01:24 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C83220264D;
+	Wed, 30 Jun 2021 10:01:31 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id B24ED183AC99;
-	Wed, 30 Jun 2021 16:01:22 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 1E5F8183ACDD;
+	Wed, 30 Jun 2021 16:01:29 +0800 (+08)
 From: Yangbo Lu <yangbo.lu@nxp.com>
 To: netdev@vger.kernel.org
 Cc: Yangbo Lu <yangbo.lu@nxp.com>,
@@ -29,9 +29,9 @@ Cc: Yangbo Lu <yangbo.lu@nxp.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Rui Sousa <rui.sousa@nxp.com>,
 	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: [net-next, v5, 04/11] ptp: add kernel API ptp_get_vclocks_index()
-Date: Wed, 30 Jun 2021 16:11:55 +0800
-Message-Id: <20210630081202.4423-5-yangbo.lu@nxp.com>
+Subject: [net-next, v5, 08/11] net: sock: extend SO_TIMESTAMPING for PHC binding
+Date: Wed, 30 Jun 2021 16:11:59 +0800
+Message-Id: <20210630081202.4423-9-yangbo.lu@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210630081202.4423-1-yangbo.lu@nxp.com>
 References: <20210630081202.4423-1-yangbo.lu@nxp.com>
@@ -42,131 +42,287 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Add kernel API ptp_get_vclocks_index() to get all ptp
-vclocks index on pclock.
+Since PTP virtual clock support is added, there can be
+several PTP virtual clocks based on one PTP physical
+clock for timestamping.
 
-This is preparation for supporting ptp vclocks info query
-through ethtool.
+This patch is to extend SO_TIMESTAMPING API to support
+PHC (PTP Hardware Clock) binding by adding a new flag
+SOF_TIMESTAMPING_BIND_PHC. When PTP virtual clocks are
+in use, user space can configure to bind one for
+timestamping, but PTP physical clock is not supported
+and not needed to bind.
+
+This patch is preparation for timestamp conversion from
+raw timestamp to a specific PTP virtual clock time in
+core net.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v3:
 	- Added this patch.
 Changes for v4:
-	- Dynamically allocated memory for vclock index getting.
+	- Passed so_timestamping for sock_set_timestamping.
 Changes for v5:
-	- None.
+	- Fixed build.
 ---
- drivers/ptp/ptp_clock.c          |  3 ++-
- drivers/ptp/ptp_private.h        |  2 ++
- drivers/ptp/ptp_vclock.c         | 35 ++++++++++++++++++++++++++++++++
- include/linux/ptp_clock_kernel.h | 14 +++++++++++++
- 4 files changed, 53 insertions(+), 1 deletion(-)
+ include/net/sock.h              |  8 +++-
+ include/uapi/linux/net_tstamp.h | 17 ++++++++-
+ net/core/sock.c                 | 65 +++++++++++++++++++++++++++++++--
+ net/ethtool/common.c            |  1 +
+ net/mptcp/sockopt.c             | 23 +++++++++---
+ 5 files changed, 101 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index 9205a9362a9d..f012fa581cf4 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -24,10 +24,11 @@
- #define PTP_PPS_EVENT PPS_CAPTUREASSERT
- #define PTP_PPS_MODE (PTP_PPS_DEFAULTS | PPS_CANWAIT | PPS_TSFMT_TSPEC)
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 8bdd80027ffb..f23cb259b0e2 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -316,7 +316,9 @@ struct bpf_local_storage;
+   *	@sk_timer: sock cleanup timer
+   *	@sk_stamp: time stamp of last packet received
+   *	@sk_stamp_seq: lock for accessing sk_stamp on 32 bit architectures only
+-  *	@sk_tsflags: SO_TIMESTAMPING socket options
++  *	@sk_tsflags: SO_TIMESTAMPING flags
++  *	@sk_bind_phc: SO_TIMESTAMPING bind PHC index of PTP virtual clock
++  *	              for timestamping
+   *	@sk_tskey: counter to disambiguate concurrent tstamp requests
+   *	@sk_zckey: counter to order MSG_ZEROCOPY notifications
+   *	@sk_socket: Identd and reporting IO signals
+@@ -493,6 +495,7 @@ struct sock {
+ 	seqlock_t		sk_stamp_seq;
+ #endif
+ 	u16			sk_tsflags;
++	int			sk_bind_phc;
+ 	u8			sk_shutdown;
+ 	u32			sk_tskey;
+ 	atomic_t		sk_zckey;
+@@ -2755,7 +2758,8 @@ void sock_def_readable(struct sock *sk);
  
-+struct class *ptp_class;
-+
- /* private globals */
+ int sock_bindtoindex(struct sock *sk, int ifindex, bool lock_sk);
+ void sock_set_timestamp(struct sock *sk, int optname, bool valbool);
+-int sock_set_timestamping(struct sock *sk, int optname, int val);
++int sock_set_timestamping(struct sock *sk, int optname,
++			  struct so_timestamping timestamping);
  
- static dev_t ptp_devt;
--static struct class *ptp_class;
+ void sock_enable_timestamps(struct sock *sk);
+ void sock_no_linger(struct sock *sk);
+diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
+index 7ed0b3d1c00a..fcc61c73a666 100644
+--- a/include/uapi/linux/net_tstamp.h
++++ b/include/uapi/linux/net_tstamp.h
+@@ -13,7 +13,7 @@
+ #include <linux/types.h>
+ #include <linux/socket.h>   /* for SO_TIMESTAMPING */
  
- static DEFINE_IDA(ptp_clocks_map);
+-/* SO_TIMESTAMPING gets an integer bit field comprised of these values */
++/* SO_TIMESTAMPING flags */
+ enum {
+ 	SOF_TIMESTAMPING_TX_HARDWARE = (1<<0),
+ 	SOF_TIMESTAMPING_TX_SOFTWARE = (1<<1),
+@@ -30,8 +30,9 @@ enum {
+ 	SOF_TIMESTAMPING_OPT_STATS = (1<<12),
+ 	SOF_TIMESTAMPING_OPT_PKTINFO = (1<<13),
+ 	SOF_TIMESTAMPING_OPT_TX_SWHW = (1<<14),
++	SOF_TIMESTAMPING_BIND_PHC = (1 << 15),
  
-diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
-index f75fadd9b244..dba6be477067 100644
---- a/drivers/ptp/ptp_private.h
-+++ b/drivers/ptp/ptp_private.h
-@@ -96,6 +96,8 @@ static inline bool ptp_vclock_in_use(struct ptp_clock *ptp)
- 	return in_use;
- }
- 
-+extern struct class *ptp_class;
-+
- /*
-  * see ptp_chardev.c
-  */
-diff --git a/drivers/ptp/ptp_vclock.c b/drivers/ptp/ptp_vclock.c
-index fc9205cc504d..cefab29a0592 100644
---- a/drivers/ptp/ptp_vclock.c
-+++ b/drivers/ptp/ptp_vclock.c
-@@ -148,3 +148,38 @@ void ptp_vclock_unregister(struct ptp_vclock *vclock)
- 	ptp_clock_unregister(vclock->clock);
- 	kfree(vclock);
- }
-+
-+int ptp_get_vclocks_index(int pclock_index, int **vclock_index)
-+{
-+	char name[PTP_CLOCK_NAME_LEN] = "";
-+	struct ptp_clock *ptp;
-+	struct device *dev;
-+	int num = 0;
-+
-+	if (pclock_index < 0)
-+		return num;
-+
-+	snprintf(name, PTP_CLOCK_NAME_LEN, "ptp%d", pclock_index);
-+	dev = class_find_device_by_name(ptp_class, name);
-+	if (!dev)
-+		return num;
-+
-+	ptp = dev_get_drvdata(dev);
-+
-+	if (mutex_lock_interruptible(&ptp->n_vclocks_mux)) {
-+		put_device(dev);
-+		return num;
-+	}
-+
-+	*vclock_index = kzalloc(sizeof(int) * ptp->n_vclocks, GFP_KERNEL);
-+	if (!(*vclock_index))
-+		goto out;
-+
-+	memcpy(*vclock_index, ptp->vclock_index, sizeof(int) * ptp->n_vclocks);
-+	num = ptp->n_vclocks;
-+out:
-+	mutex_unlock(&ptp->n_vclocks_mux);
-+	put_device(dev);
-+	return num;
-+}
-+EXPORT_SYMBOL(ptp_get_vclocks_index);
-diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
-index b6fb771ee524..300a984fec87 100644
---- a/include/linux/ptp_clock_kernel.h
-+++ b/include/linux/ptp_clock_kernel.h
-@@ -306,6 +306,18 @@ int ptp_schedule_worker(struct ptp_clock *ptp, unsigned long delay);
-  */
- void ptp_cancel_worker_sync(struct ptp_clock *ptp);
+-	SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_OPT_TX_SWHW,
++	SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_BIND_PHC,
+ 	SOF_TIMESTAMPING_MASK = (SOF_TIMESTAMPING_LAST - 1) |
+ 				 SOF_TIMESTAMPING_LAST
+ };
+@@ -46,6 +47,18 @@ enum {
+ 					 SOF_TIMESTAMPING_TX_SCHED | \
+ 					 SOF_TIMESTAMPING_TX_ACK)
  
 +/**
-+ * ptp_get_vclocks_index() - get all vclocks index on pclock, and
-+ *                           caller is responsible to free memory
-+ *                           of vclock_index
++ * struct so_timestamping - SO_TIMESTAMPING parameter
 + *
-+ * @pclock_index: phc index of ptp pclock.
-+ * @vclock_index: pointer to pointer of vclock index.
-+ *
-+ * return number of vclocks.
++ * @flags:	SO_TIMESTAMPING flags
++ * @bind_phc:	Index of PTP virtual clock bound to sock. This is available
++ *		if flag SOF_TIMESTAMPING_BIND_PHC is set.
 + */
-+int ptp_get_vclocks_index(int pclock_index, int **vclock_index);
++struct so_timestamping {
++	int flags;
++	int bind_phc;
++};
 +
- #else
- static inline struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- 						   struct device *parent)
-@@ -325,6 +337,8 @@ static inline int ptp_schedule_worker(struct ptp_clock *ptp,
- { return -EOPNOTSUPP; }
- static inline void ptp_cancel_worker_sync(struct ptp_clock *ptp)
- { }
-+static inline int ptp_get_vclocks_index(int pclock_index, int **vclock_index)
-+{ return 0; }
+ /**
+  * struct hwtstamp_config - %SIOCGHWTSTAMP and %SIOCSHWTSTAMP parameter
+  *
+diff --git a/net/core/sock.c b/net/core/sock.c
+index ba1c0f75cd45..06bba0e3c207 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -139,6 +139,8 @@
+ #include <net/tcp.h>
+ #include <net/busy_poll.h>
  
- #endif
++#include <linux/ethtool.h>
++
+ static DEFINE_MUTEX(proto_list_mutex);
+ static LIST_HEAD(proto_list);
+ 
+@@ -810,8 +812,47 @@ void sock_set_timestamp(struct sock *sk, int optname, bool valbool)
+ 	}
+ }
+ 
+-int sock_set_timestamping(struct sock *sk, int optname, int val)
++static int sock_timestamping_bind_phc(struct sock *sk, int phc_index)
+ {
++	struct net *net = sock_net(sk);
++	struct net_device *dev = NULL;
++	bool match = false;
++	int *vclock_index;
++	int i, num;
++
++	if (sk->sk_bound_dev_if)
++		dev = dev_get_by_index(net, sk->sk_bound_dev_if);
++
++	if (!dev) {
++		pr_err("%s: sock not bind to device\n", __func__);
++		return -EOPNOTSUPP;
++	}
++
++	num = ethtool_get_phc_vclocks(dev, &vclock_index);
++	for (i = 0; i < num; i++) {
++		if (*(vclock_index + i) == phc_index) {
++			match = true;
++			break;
++		}
++	}
++
++	if (num > 0)
++		kfree(vclock_index);
++
++	if (!match)
++		return -EINVAL;
++
++	sk->sk_bind_phc = phc_index;
++
++	return 0;
++}
++
++int sock_set_timestamping(struct sock *sk, int optname,
++			  struct so_timestamping timestamping)
++{
++	int val = timestamping.flags;
++	int ret;
++
+ 	if (val & ~SOF_TIMESTAMPING_MASK)
+ 		return -EINVAL;
+ 
+@@ -832,6 +873,12 @@ int sock_set_timestamping(struct sock *sk, int optname, int val)
+ 	    !(val & SOF_TIMESTAMPING_OPT_TSONLY))
+ 		return -EINVAL;
+ 
++	if (val & SOF_TIMESTAMPING_BIND_PHC) {
++		ret = sock_timestamping_bind_phc(sk, timestamping.bind_phc);
++		if (ret)
++			return ret;
++	}
++
+ 	sk->sk_tsflags = val;
+ 	sock_valbool_flag(sk, SOCK_TSTAMP_NEW, optname == SO_TIMESTAMPING_NEW);
+ 
+@@ -907,6 +954,7 @@ EXPORT_SYMBOL(sock_set_mark);
+ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 		    sockptr_t optval, unsigned int optlen)
+ {
++	struct so_timestamping timestamping;
+ 	struct sock_txtime sk_txtime;
+ 	struct sock *sk = sock->sk;
+ 	int val;
+@@ -1073,7 +1121,15 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 
+ 	case SO_TIMESTAMPING_NEW:
+ 	case SO_TIMESTAMPING_OLD:
+-		ret = sock_set_timestamping(sk, optname, val);
++		if (optlen == sizeof(timestamping)) {
++			if (copy_from_sockptr(&timestamping, optval,
++					      sizeof(timestamping)))
++				return -EFAULT;
++		} else {
++			memset(&timestamping, 0, sizeof(timestamping));
++			timestamping.flags = val;
++		}
++		ret = sock_set_timestamping(sk, optname, timestamping);
+ 		break;
+ 
+ 	case SO_RCVLOWAT:
+@@ -1348,6 +1404,7 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
+ 		struct __kernel_old_timeval tm;
+ 		struct  __kernel_sock_timeval stm;
+ 		struct sock_txtime txtime;
++		struct so_timestamping timestamping;
+ 	} v;
+ 
+ 	int lv = sizeof(int);
+@@ -1451,7 +1508,9 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
+ 		break;
+ 
+ 	case SO_TIMESTAMPING_OLD:
+-		v.val = sk->sk_tsflags;
++		lv = sizeof(v.timestamping);
++		v.timestamping.flags = sk->sk_tsflags;
++		v.timestamping.bind_phc = sk->sk_bind_phc;
+ 		break;
+ 
+ 	case SO_RCVTIMEO_OLD:
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 798231b07676..c63e0739dc6a 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -398,6 +398,7 @@ const char sof_timestamping_names[][ETH_GSTRING_LEN] = {
+ 	[const_ilog2(SOF_TIMESTAMPING_OPT_STATS)]    = "option-stats",
+ 	[const_ilog2(SOF_TIMESTAMPING_OPT_PKTINFO)]  = "option-pktinfo",
+ 	[const_ilog2(SOF_TIMESTAMPING_OPT_TX_SWHW)]  = "option-tx-swhw",
++	[const_ilog2(SOF_TIMESTAMPING_BIND_PHC)]     = "bind-phc",
+ };
+ static_assert(ARRAY_SIZE(sof_timestamping_names) == __SOF_TIMESTAMPING_CNT);
+ 
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index ea38cbcd2ad4..8c03afac5ca0 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -207,14 +207,25 @@ static int mptcp_setsockopt_sol_socket_timestamping(struct mptcp_sock *msk,
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk = (struct sock *)msk;
+-	int val, ret;
++	struct so_timestamping timestamping;
++	int ret;
+ 
+-	ret = mptcp_get_int_option(msk, optval, optlen, &val);
+-	if (ret)
+-		return ret;
++	if (optlen == sizeof(timestamping)) {
++		if (copy_from_sockptr(&timestamping, optval,
++				      sizeof(timestamping)))
++			return -EFAULT;
++	} else if (optlen == sizeof(int)) {
++		memset(&timestamping, 0, sizeof(timestamping));
++
++		if (copy_from_sockptr(&timestamping.flags, optval, sizeof(int)))
++			return -EFAULT;
++	} else {
++		return -EINVAL;
++	}
+ 
+ 	ret = sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname,
+-			      KERNEL_SOCKPTR(&val), sizeof(val));
++			      KERNEL_SOCKPTR(&timestamping),
++			      sizeof(timestamping));
+ 	if (ret)
+ 		return ret;
+ 
+@@ -224,7 +235,7 @@ static int mptcp_setsockopt_sol_socket_timestamping(struct mptcp_sock *msk,
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 		bool slow = lock_sock_fast(ssk);
+ 
+-		sock_set_timestamping(sk, optname, val);
++		sock_set_timestamping(sk, optname, timestamping);
+ 		unlock_sock_fast(ssk, slow);
+ 	}
  
 -- 
 2.25.1
