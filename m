@@ -1,86 +1,178 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447B270
-	for <mptcp@lists.linux.dev>; Mon,  5 Jul 2021 18:44:05 +0000 (UTC)
-Received: by mail-pf1-f177.google.com with SMTP id b12so16242381pfv.6
-        for <mptcp@lists.linux.dev>; Mon, 05 Jul 2021 11:44:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q9B674I/+/MTqKFyAT06vY9UMY1nLlYo82cmty5TYFU=;
-        b=U76TMLXOV4pdFDQFVwfpz4YW7eAM3VMSh+sg+dkwJDnf5Wyu2diLJptad2GOzoaJhj
-         9K27nXn0+L6f/KD5uuiR7ez//OnVNMSyK77IQ7ytOlmH6cDgOYcefVnITNhc4efdDhmC
-         eW6mYSiUh26B1kMlcJ1VZJOWZpWRL+cIs4OkuPEut6GN8jaSsojbfSIZBXruzABLFXa4
-         LXn+hPgjIIVsIsCTY0uNkwbuX0fmjFuYJ/urIhLx7BrAhzSDiCVBqg46y7GXL4uKG+Jw
-         QoFDNEJwBjUrGaPSLLNZ1YASrGV/MQOMNJgLldQCac4k880XzGqFMF110w+TKtJHHDdC
-         oO9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q9B674I/+/MTqKFyAT06vY9UMY1nLlYo82cmty5TYFU=;
-        b=Yce14IP/qV0a4m5o2g6eyFuwU9tRmNfYe2md1R219ldtZ6cbZWsCwP/Fn4cpd0iQbd
-         85wwj3QLwued6IAq1/xNMxB0hilSQx6orkHCzJxx24UwzqADzgR6b+HHBQ4nuQjyGpqo
-         10xk2aCaE1wEruO3Y9TG+wmJlSNA9AmWXZwxJxtcDDlsPUKP3og8NXCFOgV0SkghdNmD
-         xfMsxLvudT7S4flQkvNh4+XDXSYTt3mYopieqrtZGdw5x+Rhgm7MrTMjyV4S8Snl75Cd
-         yedks7fcbbB5I5vwBeXrfy/W8YjkQQLjbVLIgjMu0C1CsI/Vd4EWEMay3G8rmzTQH4S1
-         +T7g==
-X-Gm-Message-State: AOAM530YTALnGoa0TIDDUyDXBFbFPeF0NhtQlpYHbhB68yqWkzk+dUq+
-	P0wi/WN50HZOuk2v8CrgfKU=
-X-Google-Smtp-Source: ABdhPJyFPZFlKa0i+0rwZcF+zTp1p31HnTBY1c4ty+efUwLDX1BzuLrPZs1aVYGImcZW2oWQ6iM2Jg==
-X-Received: by 2002:a63:dd51:: with SMTP id g17mr17197215pgj.238.1625510644823;
-        Mon, 05 Jul 2021 11:44:04 -0700 (PDT)
-Received: from hoboy.vegasvil.org ([2601:645:c000:35:e2d5:5eff:fea5:802f])
-        by smtp.gmail.com with ESMTPSA id 31sm4292038pgu.17.2021.07.05.11.44.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jul 2021 11:44:04 -0700 (PDT)
-Date: Mon, 5 Jul 2021 11:44:01 -0700
-From: Richard Cochran <richardcochran@gmail.com>
-To: "Y.b. Lu" <yangbo.lu@nxp.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Shuah Khan <shuah@kernel.org>, Michal Kubecek <mkubecek@suse.cz>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>, Rui Sousa <rui.sousa@nxp.com>,
-	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: Re: [net-next, v5, 08/11] net: sock: extend SO_TIMESTAMPING for PHC
- binding
-Message-ID: <20210705184401.GA16128@hoboy.vegasvil.org>
-References: <20210630081202.4423-1-yangbo.lu@nxp.com>
- <20210630081202.4423-9-yangbo.lu@nxp.com>
- <20210704133331.GA4268@hoboy.vegasvil.org>
- <DB7PR04MB50174906EE8CCEB4A02F4C17F81C9@DB7PR04MB5017.eurprd04.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118EE72
+	for <mptcp@lists.linux.dev>; Tue,  6 Jul 2021 22:34:29 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10037"; a="196372425"
+X-IronPort-AV: E=Sophos;i="5.83,329,1616482800"; 
+   d="scan'208";a="196372425"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 15:34:22 -0700
+X-IronPort-AV: E=Sophos;i="5.83,329,1616482800"; 
+   d="scan'208";a="410374328"
+Received: from tmtoksta-mobl.amr.corp.intel.com ([10.209.95.113])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 15:34:22 -0700
+Date: Tue, 6 Jul 2021 15:34:21 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-net] mptcp: properly account bulk freed memory
+In-Reply-To: <4a413026831df9aaf1d2073f9a8b5b29d4376bfe.1624894631.git.pabeni@redhat.com>
+Message-ID: <bf9b1b65-1ade-3c59-e3fd-fab589404337@linux.intel.com>
+References: <4a413026831df9aaf1d2073f9a8b5b29d4376bfe.1624894631.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR04MB50174906EE8CCEB4A02F4C17F81C9@DB7PR04MB5017.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, Jul 05, 2021 at 08:19:30AM +0000, Y.b. Lu wrote:
-> When several ptp virtual clocks are created, the ptp physical clock is guaranteed for free running.
-> 
-> What I think is, for timestamping, if no flag SOF_TIMESTAMPING_BIND_PHC, the timestamping keeps using ptp physical clock.
-> If application wants to bind one ptp virtual clock for timestamping, the flag SOF_TIMESTAMPING_BIND_PHC should be set and clock index should be provided.
-> After all, several ptp virtual clocks created are likely for different timescale/use case. There should be a method for any of applications to select the right one to use.
-> 
-> Does it make sense?
+On Mon, 28 Jun 2021, Paolo Abeni wrote:
 
-Yes, indeed.  I totally forgot that the user space PTP stack has
-network sockets bond to interfaces, and they are completely separate
-from the PHC clockid_t.  Need more sleep...
+> After commit 879526030c8b ("mptcp: protect the rx path with
+> the msk socket spinlock") the rmem currently used by a given
+> msk is really sk_rmem_alloc - rmem_released.
+>
+> The safety check in mptcp_data_ready() does not take the above
+> in due account, as a result legit incoming data is keept in
+> subflow receive queue with no reason, delaying or blocking
+> MPTCP-level ack generation.
+>
+> This change addresses the issue introducing a new helper to fetch
+> the rmem memory and using it as needed. Additionally add a MIB
+> counter for the exceptional event described above - the peer is
+> misbehaving.
+>
+> Finally update introduce the required annotation when rmem_released
+> is updated.
+>
+> Fixes: 879526030c8b ("mptcp: protect the rx path with the msk socket spinlock")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/211
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+> - use WRITE_ONCE to update rmem_released (Mat)
+> - introuce __mptcp_rmem() helper
 
-Thanks,
-Richard
+Thanks for the v2 Paolo. Looks good to me, build & test are successful 
+on my system too.
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+
+> ---
+> net/mptcp/mib.c      |  1 +
+> net/mptcp/mib.h      |  1 +
+> net/mptcp/protocol.c | 12 +++++++-----
+> net/mptcp/protocol.h | 10 +++++++++-
+> 4 files changed, 18 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index 52ea2517e856..ff2cc0e3273d 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+> @@ -44,6 +44,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+> 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
+> 	SNMP_MIB_ITEM("MPPrioTx", MPTCP_MIB_MPPRIOTX),
+> 	SNMP_MIB_ITEM("MPPrioRx", MPTCP_MIB_MPPRIORX),
+> +	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
+> 	SNMP_MIB_SENTINEL
+> };
+>
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 193466c9b549..0663cb12b448 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -37,6 +37,7 @@ enum linux_mptcp_mib_field {
+> 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
+> 	MPTCP_MIB_MPPRIOTX,		/* Transmit a MP_PRIO */
+> 	MPTCP_MIB_MPPRIORX,		/* Received a MP_PRIO */
+> +	MPTCP_MIB_RCVPRUNED,		/* Incoming packet dropped due to memory limit */
+> 	__MPTCP_MIB_MAX
+> };
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ddce5b7bbefd..4cc94ee425e4 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -474,7 +474,7 @@ static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
+> 	bool cleanup, rx_empty;
+>
+> 	cleanup = (space > 0) && (space >= (old_space << 1));
+> -	rx_empty = !atomic_read(&sk->sk_rmem_alloc);
+> +	rx_empty = !__mptcp_rmem(sk);
+>
+> 	mptcp_for_each_subflow(msk, subflow) {
+> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> @@ -720,8 +720,10 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+> 		sk_rbuf = ssk_rbuf;
+>
+> 	/* over limit? can't append more skbs to msk, Also, no need to wake-up*/
+> -	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
+> +	if (__mptcp_rmem(sk) > sk_rbuf) {
+> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
+> 		return;
+> +	}
+>
+> 	/* Wake-up the reader only for in-sequence data */
+> 	mptcp_data_lock(sk);
+> @@ -1754,7 +1756,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+> 		if (!(flags & MSG_PEEK)) {
+> 			/* we will bulk release the skb memory later */
+> 			skb->destructor = NULL;
+> -			msk->rmem_released += skb->truesize;
+> +			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
+> 			__skb_unlink(skb, &msk->receive_queue);
+> 			__kfree_skb(skb);
+> 		}
+> @@ -1873,7 +1875,7 @@ static void __mptcp_update_rmem(struct sock *sk)
+>
+> 	atomic_sub(msk->rmem_released, &sk->sk_rmem_alloc);
+> 	sk_mem_uncharge(sk, msk->rmem_released);
+> -	msk->rmem_released = 0;
+> +	WRITE_ONCE(msk->rmem_released, 0);
+> }
+>
+> static void __mptcp_splice_receive_queue(struct sock *sk)
+> @@ -2380,7 +2382,7 @@ static int __mptcp_init_sock(struct sock *sk)
+> 	msk->out_of_order_queue = RB_ROOT;
+> 	msk->first_pending = NULL;
+> 	msk->wmem_reserved = 0;
+> -	msk->rmem_released = 0;
+> +	WRITE_ONCE(msk->rmem_released, 0);
+> 	msk->tx_pending_data = 0;
+>
+> 	msk->first = NULL;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 426ed80fe72f..0f0c026c5f8b 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -296,9 +296,17 @@ static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
+> 	return (struct mptcp_sock *)sk;
+> }
+>
+> +/* the msk socket don't use the backlog, also account for the bulk
+> + * free memory
+> + */
+> +static inline int __mptcp_rmem(const struct sock *sk)
+> +{
+> +	return atomic_read(&sk->sk_rmem_alloc) - READ_ONCE(mptcp_sk(sk)->rmem_released);
+> +}
+> +
+> static inline int __mptcp_space(const struct sock *sk)
+> {
+> -	return tcp_space(sk) + READ_ONCE(mptcp_sk(sk)->rmem_released);
+> +	return tcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) - __mptcp_rmem(sk));
+> }
+>
+> static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *sk)
+> -- 
+> 2.26.3
+>
+>
+>
+
+--
+Mat Martineau
+Intel
