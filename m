@@ -1,50 +1,50 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AEF72
-	for <mptcp@lists.linux.dev>; Fri,  9 Jul 2021 11:04:53 +0000 (UTC)
-Received: by mail-pf1-f174.google.com with SMTP id 21so8426816pfp.3
-        for <mptcp@lists.linux.dev>; Fri, 09 Jul 2021 04:04:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839AA72
+	for <mptcp@lists.linux.dev>; Fri,  9 Jul 2021 11:04:54 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id m83so738782pfd.0
+        for <mptcp@lists.linux.dev>; Fri, 09 Jul 2021 04:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QGl9RCzLxsOqjpEyQAo7nw9KAWLxczFkorvZrudZFEQ=;
-        b=qQV5Dp9QT/Lam1eSLRpMq2ZzUSgjpwTRf8Tt3jebpsRJ1sLUSqpu8fypuK+bNvVkST
-         wqh4gaTjjmYTHw7HBWILsev3yRrvvLOMissYRvNYUjBULCClaOYUORv5aNG167Kb1x/a
-         AG0lHk2Zxn5JMrsvNa2weJmrmfwOt89Ecr0OIJb6BzuvXd7Ye28lbnNWO9vZv5ujQ2Mt
-         v8jJPGpCY2zZJP3pu50HEwUc+kslUxPkDyAqZB6yc/TBWW8sDOzzjMk9YCwus+jN5eeJ
-         F2GBGyC4CS4g28VAfjFdpzkqhh1lBaYg8sn4nJO+0wMqNNL420z+LjDC1DaCP0QxuXvM
-         Y0JQ==
+        bh=InCShVtN5s01HKMN71bHgEGxUy0XcvdEkHUWxQaN7cw=;
+        b=qkXWvqCF03GxZSbrKqXHkPhbLTbKoHoFVAxXOLkiFC0DNX8O4WOXSon03RTI84j+oR
+         MpgUSXclaTqmB3nh0dpeyhGV1qI+Lz5cmlSbGlyQ0pr6egY8gjwrvNsn+K8/xzLg+4vx
+         uB+sAt/N/WOI5nNBFRuuHpkCi1iW50LQ5JLrKdQt3zHiZov4zDaCjVPSVj/2WpTAOK4x
+         aT70kh4SKlC4uBA2dK14Xw1xt5vVnFnxjKjO1KQLVUoxc7maJXtwtryYQw6wbMG3Y16O
+         jV/if0gELGxdE2mWKkfw5n9Qbe1P02GnTs08VEFJAkTTS92Sx1Ngmwmb7F08czxTSOI+
+         eegA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QGl9RCzLxsOqjpEyQAo7nw9KAWLxczFkorvZrudZFEQ=;
-        b=GdALsKZ2nAFj9P5WJG+VWESiiqlQ3EivVV5rNdRrV5xWD/TwAU+l15GEb0cb8FSBSI
-         4fPiVHGNpWSFRyddAeuJPN2eHJ91NLdCKykmWUJ6nlt9IwXsqV/ZqCJVlOB9n5eJ/nkq
-         mcNw/YvihZMfsgTiTmBTU0HIDZwdU5Ty/8LU0dEBr/jN1ZmYLRgHighBe5l4gLsus+Ap
-         9Wcb3hCUIZcSEX/JYxj6yyIPEPS13qDX70oedrghFveXP2b0krMOXvqm651z7+P1+0rj
-         cQSkdFwhriDSWjFA5DCYUo5FapN3uiJFDoKxqyxmfDAnIOJkTwG+EMri7J7dBNDgdlZ0
-         H53Q==
-X-Gm-Message-State: AOAM5327qFHzbnrQgZ7MEzKo4593+jEyqY7BYIZt80D2oyKXMt0LnjM+
-	bu5AiDRgYgGKXR35ZSwD1LY4DmNn9xK9+Q==
-X-Google-Smtp-Source: ABdhPJxovcfnZCWun4vL+PK9RHmZaXQ3xRMw4eCUKmWQ1sOmojGcZigwk7614EMrZEMP8oJ5Yhk/sQ==
-X-Received: by 2002:a63:f556:: with SMTP id e22mr37346743pgk.189.1625828692600;
-        Fri, 09 Jul 2021 04:04:52 -0700 (PDT)
+        bh=InCShVtN5s01HKMN71bHgEGxUy0XcvdEkHUWxQaN7cw=;
+        b=dyx38Eelp1lOg0y66XBcA7dJGu+AGBhB4BhGG7rz5C1wGGNiwCuGPKQrZoy7fCdSqN
+         dTxSQpfKHUdaqVjaPaVWDkwOmRvgTVC47ohcDLvGoBEHOczpribbhOTCx+b65hCsfOum
+         jbKRLfXXWFNMniVqTDvznixa6z/vQEDV8xJY/vsSKfASmBiAvnwcztAWmu+9KkESjkKf
+         XvsrbSRhGTuoFSfzVcFu8VxhUh+UzCZ7vRF0pD953dfn/urL99Gttwx/5P40CMeniuoO
+         GyNPDOyc1ZoCgsDGNiN8lTQX740+VyslPc8y7VxnqjjqSGbqXrpYULHHX20cGyJMYEpT
+         z8RQ==
+X-Gm-Message-State: AOAM5325+ojuUS/VYJMzWkV+q6sa7vd12VTiP7BK413FmRLvvBn3V+o6
+	kjg51nH+LW+JddVdZVvIwlyAXWXwzYoc0g==
+X-Google-Smtp-Source: ABdhPJwo3aopz0+TfRQs36pN5Z1d1g/xpBJ7L/DiUxE+fk0iWOvyHDYArlaVSJnBeaRc8jF1L3uj9g==
+X-Received: by 2002:a63:5c55:: with SMTP id n21mr35542800pgm.166.1625828694114;
+        Fri, 09 Jul 2021 04:04:54 -0700 (PDT)
 Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id s15sm6247902pfu.97.2021.07.09.04.04.51
+        by smtp.gmail.com with ESMTPSA id s15sm6247902pfu.97.2021.07.09.04.04.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 04:04:52 -0700 (PDT)
+        Fri, 09 Jul 2021 04:04:53 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next 7/9] mptcp: add netdev down event handler
-Date: Fri,  9 Jul 2021 19:04:34 +0800
-Message-Id: <9761e92041968743463b3e3836cc54d063e296b6.1625825505.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next 8/9] mptcp: add proc file mptcp_fullmesh
+Date: Fri,  9 Jul 2021 19:04:35 +0800
+Message-Id: <cac9bd939a1d5ef71627de0c3cdad94431a73016.1625825505.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <077d3ff80fa785e602669724bb4fed9789a98e70.1625825505.git.geliangtang@gmail.com>
-References: <cover.1625825505.git.geliangtang@gmail.com> <974215e2c4ec6e953bd28882820507b0638c3a8a.1625825505.git.geliangtang@gmail.com> <b699c90050c80f3c79b5fa42d1d9c18c46a21014.1625825505.git.geliangtang@gmail.com> <8b000137623aa94ab4f7c6b883c2003d91f3d147.1625825505.git.geliangtang@gmail.com> <3a4cae1a5964f864bc7cb74d311c014cda279a2a.1625825505.git.geliangtang@gmail.com> <f4ea9c590e22735421bf6a4f11628bbbb493da16.1625825505.git.geliangtang@gmail.com> <077d3ff80fa785e602669724bb4fed9789a98e70.1625825505.git.geliangtang@gmail.com>
+In-Reply-To: <9761e92041968743463b3e3836cc54d063e296b6.1625825505.git.geliangtang@gmail.com>
+References: <cover.1625825505.git.geliangtang@gmail.com> <974215e2c4ec6e953bd28882820507b0638c3a8a.1625825505.git.geliangtang@gmail.com> <b699c90050c80f3c79b5fa42d1d9c18c46a21014.1625825505.git.geliangtang@gmail.com> <8b000137623aa94ab4f7c6b883c2003d91f3d147.1625825505.git.geliangtang@gmail.com> <3a4cae1a5964f864bc7cb74d311c014cda279a2a.1625825505.git.geliangtang@gmail.com> <f4ea9c590e22735421bf6a4f11628bbbb493da16.1625825505.git.geliangtang@gmail.com> <077d3ff80fa785e602669724bb4fed9789a98e70.1625825505.git.geliangtang@gmail.com> <9761e92041968743463b3e3836cc54d063e296b6.1625825505.git.geliangtang@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -53,188 +53,85 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added the net device DOWN event handler function named
-mptcp_fm_cmd_del_addr. In it, traverse the local address list to find
-the deleting address entry, pass this entry to mptcp_pm_free_addr_entry,
-then start the rcu_work to remove the subflow and signal the RM_ADDR
-suboption.
+This patch added a proc file /proc/net/mptcp_fullmesh to show all the
+addresses on the local address list.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/pm_fullmesh.c | 105 ++++++++++++++++++++++++++++++++++++++++
- net/mptcp/pm_netlink.c  |   2 +-
- net/mptcp/protocol.h    |   1 +
- 3 files changed, 107 insertions(+), 1 deletion(-)
+ net/mptcp/pm_fullmesh.c | 42 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/net/mptcp/pm_fullmesh.c b/net/mptcp/pm_fullmesh.c
-index 1ef268d34360..a48287ff4cc0 100644
+index a48287ff4cc0..290ca06e565f 100644
 --- a/net/mptcp/pm_fullmesh.c
 +++ b/net/mptcp/pm_fullmesh.c
-@@ -102,6 +102,17 @@ static void mptcp_pm_fm_subflow_established(struct mptcp_sock *msk)
- 	mptcp_pm_fm_create_subflow(msk);
- }
+@@ -4,6 +4,9 @@
  
-+static void mptcp_pm_fm_rm_addr_received(struct mptcp_sock *msk)
-+{
-+	mptcp_pm_nl_rm_addr_received(msk);
-+}
-+
-+static void mptcp_pm_fm_rm_subflow_received(struct mptcp_sock *msk,
-+					    const struct mptcp_rm_list *rm_list)
-+{
-+	mptcp_pm_nl_rm_subflow_received(msk, rm_list);
-+}
-+
- void mptcp_pm_fm_work(struct mptcp_sock *msk)
- {
- 	struct mptcp_pm_data *pm = &msk->pm;
-@@ -111,6 +122,10 @@ void mptcp_pm_fm_work(struct mptcp_sock *msk)
- 	spin_lock_bh(&msk->pm.lock);
+ #include <linux/kernel.h>
+ #include <linux/inetdevice.h>
++#ifdef CONFIG_PROC_FS
++#include <linux/proc_fs.h>
++#endif
+ #include <net/tcp.h>
+ #include <net/addrconf.h>
+ #include <net/netns/generic.h>
+@@ -352,10 +355,46 @@ static struct notifier_block mptcp_pm_addr6_notifier = {
  
- 	pr_debug("msk=%p status=%x", msk, pm->status);
-+	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
-+		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
-+		mptcp_pm_fm_rm_addr_received(msk);
-+	}
- 	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
- 		pm->status &= ~BIT(MPTCP_PM_ESTABLISHED);
- 		mptcp_pm_fm_fully_established(msk);
-@@ -173,6 +188,93 @@ static int mptcp_fm_cmd_add_addr(struct net *net, const struct mptcp_addr_info *
- 	return 0;
- }
+ #endif
  
-+static int mptcp_fm_remove_subflow_and_signal_addr(struct net *net, struct mptcp_addr_info *addr)
++#ifdef CONFIG_PROC_FS
++
++/* Output /proc/net/mptcp_fullmesh */
++static int mptcp_fm_seq_show(struct seq_file *seq, void *v)
 +{
-+	struct mptcp_rm_list list = { .nr = 0 };
-+	long s_slot = 0, s_num = 0;
-+	struct mptcp_sock *msk;
++	const struct net *net = seq->private;
++	struct mptcp_fm_addr_entry *cur;
++	struct pm_fm_pernet *pernet;
 +
-+	list.ids[list.nr++] = addr->id;
++	pernet = net_generic(net, pm_fm_pernet_id);
 +
-+	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
-+		struct sock *sk = (struct sock *)msk;
-+		bool remove_subflow;
-+
-+		if (list_empty(&msk->conn_list))
-+			goto next;
-+
-+		lock_sock(sk);
-+		remove_subflow = lookup_subflow_by_saddr(&msk->conn_list, addr);
-+		if (remove_subflow) {
-+			spin_lock_bh(&msk->pm.lock);
-+			mptcp_pm_remove_addr(msk, &list);
-+			mptcp_pm_fm_rm_subflow_received(msk, &list);
-+			spin_unlock_bh(&msk->pm.lock);
-+		}
-+		release_sock(sk);
-+
-+next:
-+		sock_put(sk);
-+		cond_resched();
-+	}
-+	return 0;
-+}
-+
-+struct addr_entry_release_work {
-+	struct rcu_work rwork;
-+	struct net *net;
-+	struct mptcp_fm_addr_entry *entry;
-+};
-+
-+static void mptcp_pm_release_addr_entry(struct work_struct *work)
-+{
-+	struct addr_entry_release_work *w;
-+	struct mptcp_fm_addr_entry *entry;
-+	struct net *net;
-+
-+	w = container_of(to_rcu_work(work), struct addr_entry_release_work, rwork);
-+	net = w->net;
-+	entry = w->entry;
-+	if (entry) {
-+		mptcp_fm_remove_subflow_and_signal_addr(net, &entry->addr);
-+		kfree(entry);
-+	}
-+	kfree(w);
-+}
-+
-+static void mptcp_pm_free_addr_entry(struct net *net, struct mptcp_fm_addr_entry *entry)
-+{
-+	struct addr_entry_release_work *w;
-+
-+	w = kmalloc(sizeof(*w), GFP_ATOMIC);
-+	if (w) {
-+		INIT_RCU_WORK(&w->rwork, mptcp_pm_release_addr_entry);
-+		w->net = net;
-+		w->entry = entry;
-+		queue_rcu_work(system_wq, &w->rwork);
-+	}
-+}
-+
-+static int mptcp_fm_cmd_del_addr(struct net *net, struct mptcp_addr_info *addr)
-+{
-+	struct pm_fm_pernet *pernet = net_generic(net, pm_fm_pernet_id);
-+	struct mptcp_fm_addr_entry *entry, *tmp;
++	seq_puts(seq, "ID, Family, Address\n");
 +
 +	spin_lock_bh(&pernet->lock);
-+	list_for_each_entry_safe(entry, tmp, &pernet->local_addr_list, list) {
-+		if (addresses_equal(&entry->addr, addr, false)) {
-+			list_del_rcu(&entry->list);
-+			spin_unlock_bh(&pernet->lock);
-+			mptcp_pm_free_addr_entry(net, entry);
 +
-+			return 0;
-+		}
++	list_for_each_entry(cur, &pernet->local_addr_list, list) {
++		seq_printf(seq, "%u, %u, ", cur->addr.id, cur->addr.family);
++		if (cur->addr.family == AF_INET)
++			seq_printf(seq, "%pI4\n", &cur->addr.addr);
++		else if (cur->addr.family == AF_INET6)
++			seq_printf(seq, "%pI6\n", &cur->addr.addr6);
 +	}
++
 +	spin_unlock_bh(&pernet->lock);
 +
 +	return 0;
 +}
 +
- static int mptcp_fm_cmd_mod_addr(struct net *net, const struct mptcp_addr_info *addr)
++#endif
++
+ static int __net_init pm_fm_init_net(struct net *net)
  {
- 	return 0;
-@@ -183,6 +285,8 @@ static void addr_event_handler(unsigned long event, struct net *net,
- {
- 	if (event == NETDEV_UP)
- 		mptcp_fm_cmd_add_addr(net, addr);
-+	else if (event == NETDEV_DOWN)
-+		mptcp_fm_cmd_del_addr(net, addr);
- 	else if (event == NETDEV_CHANGE)
- 		mptcp_fm_cmd_mod_addr(net, addr);
- }
-@@ -267,6 +371,7 @@ static void __flush_addrs(struct net *net, struct list_head *list)
- 		cur = list_entry(list->next,
- 				 struct mptcp_fm_addr_entry, list);
- 		list_del_rcu(&cur->list);
-+		mptcp_pm_free_addr_entry(net, cur);
+ 	struct pm_fm_pernet *pernet = net_generic(net, pm_fm_pernet_id);
+ 
++#ifdef CONFIG_PROC_FS
++	if (!proc_create_net_single("mptcp_fullmesh", 0444, net->proc_net,
++				    mptcp_fm_seq_show, NULL))
++		return -1;
++#endif
++
+ 	spin_lock_init(&pernet->lock);
+ 	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
+ 	pernet->next_id = 1;
+@@ -383,6 +422,9 @@ static void __net_exit pm_fm_exit_net(struct list_head *net_list)
+ 		struct pm_fm_pernet *pernet = net_generic(net, pm_fm_pernet_id);
+ 
+ 		__flush_addrs(net, &pernet->local_addr_list);
++#ifdef CONFIG_PROC_FS
++		remove_proc_entry("mptcp_fullmesh", net->proc_net);
++#endif
  	}
  }
  
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index debec16e9209..dea4dc4ad36e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -642,7 +642,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 	}
- }
- 
--static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
-+void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
- {
- 	mptcp_pm_nl_rm_addr_or_subflow(msk, &msk->pm.rm_list_rx, MPTCP_MIB_RMADDR);
- }
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ea93bd1b4fde..fabadfd10af3 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -792,6 +792,7 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
- void mptcp_pm_nl_work(struct mptcp_sock *msk);
-+void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk);
- void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
- 				     const struct mptcp_rm_list *rm_list);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
 -- 
 2.31.1
 
