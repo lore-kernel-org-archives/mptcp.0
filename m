@@ -1,17 +1,17 @@
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5891972
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A4D177
 	for <mptcp@lists.linux.dev>; Sat, 10 Jul 2021 00:20:59 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10040"; a="190179055"
+X-IronPort-AV: E=McAfee;i="6200,9189,10040"; a="190179057"
 X-IronPort-AV: E=Sophos;i="5.84,228,1620716400"; 
-   d="scan'208";a="190179055"
+   d="scan'208";a="190179057"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2021 17:20:58 -0700
 X-IronPort-AV: E=Sophos;i="5.84,228,1620716400"; 
-   d="scan'208";a="462343537"
+   d="scan'208";a="462343541"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.240.68])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2021 17:20:57 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2021 17:20:58 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Jianguo Wu <wujianguo@chinatelecom.cn>,
@@ -19,11 +19,13 @@ Cc: Jianguo Wu <wujianguo@chinatelecom.cn>,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	pabeni@redhat.com,
+	fw@strlen.de,
 	mptcp@lists.linux.dev,
+	kernel test robot <oliver.sang@intel.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 4/6] mptcp: avoid processing packet if a subflow reset
-Date: Fri,  9 Jul 2021 17:20:49 -0700
-Message-Id: <20210710002051.216010-5-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 5/6] selftests: mptcp: fix case multiple subflows limited by server
+Date: Fri,  9 Jul 2021 17:20:50 -0700
+Message-Id: <20210710002051.216010-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210710002051.216010-1-mathew.j.martineau@linux.intel.com>
 References: <20210710002051.216010-1-mathew.j.martineau@linux.intel.com>
@@ -37,157 +39,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Jianguo Wu <wujianguo@chinatelecom.cn>
 
-If check_fully_established() causes a subflow reset, it should not
-continue to process the packet in tcp_data_queue().
-Add a return value to mptcp_incoming_options(), and return false if a
-subflow has been reset, else return true. Then drop the packet in
-tcp_data_queue()/tcp_rcv_state_process() if mptcp_incoming_options()
-return false.
+After patch "mptcp: fix syncookie process if mptcp can not_accept new
+subflow", if subflow is limited, MP_JOIN SYN is dropped, and no SYN/ACK
+will be replied.
 
-Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
+So in case "multiple subflows limited by server", the expected SYN/ACK
+number should be 1.
+
+Fixes: 00587187ad30 ("selftests: mptcp: add test cases for mptcp join tests with syn cookies")
+Reported-by: kernel test robot <oliver.sang@intel.com>
 Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- include/net/mptcp.h  |  5 +++--
- net/ipv4/tcp_input.c | 19 +++++++++++++++----
- net/mptcp/options.c  | 19 +++++++++++++------
- 3 files changed, 31 insertions(+), 12 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index cb580b06152f..8b5af683a818 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -105,7 +105,7 @@ bool mptcp_synack_options(const struct request_sock *req, unsigned int *size,
- bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 			       unsigned int *size, unsigned int remaining,
- 			       struct mptcp_out_options *opts);
--void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
-+bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 9a191c1a5de8..f02f4de2f3a0 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1409,7 +1409,7 @@ syncookies_tests()
+ 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ 	run_tests $ns1 $ns2 10.0.1.1
+-	chk_join_nr "subflows limited by server w cookies" 2 2 1
++	chk_join_nr "subflows limited by server w cookies" 2 1 1
  
- void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 			 struct mptcp_out_options *opts);
-@@ -227,9 +227,10 @@ static inline bool mptcp_established_options(struct sock *sk,
- 	return false;
- }
- 
--static inline void mptcp_incoming_options(struct sock *sk,
-+static inline bool mptcp_incoming_options(struct sock *sk,
- 					  struct sk_buff *skb)
- {
-+	return true;
- }
- 
- static inline void mptcp_skb_ext_move(struct sk_buff *to,
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index a5a8d0a378b2..149ceb5c94ff 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4247,6 +4247,9 @@ void tcp_reset(struct sock *sk, struct sk_buff *skb)
- {
- 	trace_tcp_receive_reset(sk);
- 
-+	/* mptcp can't tell us to ignore reset pkts,
-+	 * so just ignore the return value of mptcp_incoming_options().
-+	 */
- 	if (sk_is_mptcp(sk))
- 		mptcp_incoming_options(sk, skb);
- 
-@@ -4941,8 +4944,13 @@ static void tcp_data_queue(struct sock *sk, struct sk_buff *skb)
- 	bool fragstolen;
- 	int eaten;
- 
--	if (sk_is_mptcp(sk))
--		mptcp_incoming_options(sk, skb);
-+	/* If a subflow has been reset, the packet should not continue
-+	 * to be processed, drop the packet.
-+	 */
-+	if (sk_is_mptcp(sk) && !mptcp_incoming_options(sk, skb)) {
-+		__kfree_skb(skb);
-+		return;
-+	}
- 
- 	if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
- 		__kfree_skb(skb);
-@@ -6523,8 +6531,11 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
- 	case TCP_CLOSING:
- 	case TCP_LAST_ACK:
- 		if (!before(TCP_SKB_CB(skb)->seq, tp->rcv_nxt)) {
--			if (sk_is_mptcp(sk))
--				mptcp_incoming_options(sk, skb);
-+			/* If a subflow has been reset, the packet should not
-+			 * continue to be processed, drop the packet.
-+			 */
-+			if (sk_is_mptcp(sk) && !mptcp_incoming_options(sk, skb))
-+				goto discard;
- 			break;
- 		}
- 		fallthrough;
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b5850afea343..4452455aef7f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1035,7 +1035,8 @@ static bool add_addr_hmac_valid(struct mptcp_sock *msk,
- 	return hmac == mp_opt->ahmac;
- }
- 
--void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
-+/* Return false if a subflow has been reset, else return true */
-+bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-@@ -1053,12 +1054,16 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 			__mptcp_check_push(subflow->conn, sk);
- 		__mptcp_data_acked(subflow->conn);
- 		mptcp_data_unlock(subflow->conn);
--		return;
-+		return true;
- 	}
- 
- 	mptcp_get_options(sk, skb, &mp_opt);
-+
-+	/* The subflow can be in close state only if check_fully_established()
-+	 * just sent a reset. If so, tell the caller to ignore the current packet.
-+	 */
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
--		return;
-+		return sk->sk_state != TCP_CLOSE;
- 
- 	if (mp_opt.fastclose &&
- 	    msk->local_key == mp_opt.rcvr_key) {
-@@ -1100,7 +1105,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 	}
- 
- 	if (!mp_opt.dss)
--		return;
-+		return true;
- 
- 	/* we can't wait for recvmsg() to update the ack_seq, otherwise
- 	 * monodirectional flows will stuck
-@@ -1119,12 +1124,12 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		    schedule_work(&msk->work))
- 			sock_hold(subflow->conn);
- 
--		return;
-+		return true;
- 	}
- 
- 	mpext = skb_ext_add(skb, SKB_EXT_MPTCP);
- 	if (!mpext)
--		return;
-+		return true;
- 
- 	memset(mpext, 0, sizeof(*mpext));
- 
-@@ -1153,6 +1158,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		if (mpext->csum_reqd)
- 			mpext->csum = mp_opt.csum;
- 	}
-+
-+	return true;
- }
- 
- static void mptcp_set_rwin(const struct tcp_sock *tp)
+ 	# test signal address with cookies
+ 	reset_with_cookies
 -- 
 2.32.0
 
