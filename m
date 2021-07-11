@@ -1,47 +1,47 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F868168
-	for <mptcp@lists.linux.dev>; Sun, 11 Jul 2021 15:15:43 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id b5so7706483plg.2
-        for <mptcp@lists.linux.dev>; Sun, 11 Jul 2021 08:15:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048C229CA
+	for <mptcp@lists.linux.dev>; Sun, 11 Jul 2021 15:15:44 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id a127so13705694pfa.10
+        for <mptcp@lists.linux.dev>; Sun, 11 Jul 2021 08:15:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=G1Px624SNrsY9lGXI/ctGYKAOiJEYhxszMEApOAhIR4=;
-        b=nK3KAg0xi6HPV1z6EZiw+S/pqw/7uoWyGBZdOBIzfLmJduq1PhXXsjKrEdBONxU6bf
-         JajPrdug4yO9TeHgCDqbsrMwxWWNaHObUDUbfAw2st5bZ6eu7/3H7BMF3/7gA2iMzg+I
-         7wAxxPcjl0+eUk+PCXYATJQWNIs/MMR6G9qHjcMd2Nu7DmTXqa5Zzs98Bcv55lq0aaUY
-         wX79CGiIKXW+orVDcd5gEzyNkXeillItpLpwIUZsJlBQ2XgoADQK++c0JVvSfN13RPcR
-         HuJfyoSiTW8mcqlljcG/iQrXJpM1s+/M0vvntoAuYxmq3WXk7wLhHdcMuNk5N1nTP/n0
-         toBQ==
+        bh=I25fEshtDqe0JE0WrNYNCm5YzHiaYd1BDVOg9a4KWIM=;
+        b=fJxzeSyctSFa1PRXd57P4msupEtsFdMEvoXHAOAuCyq2Ru3AJ0tUjoiwNHjgmacXA0
+         4bNlFUKbhVwcQvHeiMkjifvYXQtIGxFeZ+MAZ7/MMytzu/26ozdMWlWMcj4/WoFNgJob
+         W9+1sISmg0SxL6EfytP9/Ond9TfnR3RiI+iSpLxA4y0adHYC2wjmnaybvmW95jm8fyV3
+         fQn8hYkeXCI6LaVEvboRS4Ef+VQKCl/6cYdJdsuF8oOfRnX7e+sxUUTguyVYed9tvi5v
+         0zfz6B00v169J1m2i/IkLnWX0aNgB2m0RQ3k5/YAH6Gn/tVEo0aX6LkLOIHXutB6y0ZK
+         sF1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=G1Px624SNrsY9lGXI/ctGYKAOiJEYhxszMEApOAhIR4=;
-        b=R/vzNBj09yq8A3u7LjGU9bdgtwkjdugwWxIU/TdJvQ5dP+QW8oo12jMPSzVu91qLRI
-         Jt+9Q56PvYXkYQG/GNZU2OVAPRJwDngeUqGqiV23/Xi9+ixe1fCFnTn1hln090670deQ
-         dzgC3U6sYBsEPNDR02AnVesJPvy6OIJh7Md8HeZmUouPmSwn+ezLzQuWQHgd2Ed8JB5C
-         WtmkJUZQq5HdML0jDXYrPv+H96Es6EsG6f+4CCm7ttUaDEeJyvoxn3dZXMvuK/BvR4Ht
-         rtTJfu6x4tTQlfRKggmCqw+lqN1wGz2RJlr7go0ll2Uq7KIauGYDcIQT39+qdWJiHvEJ
-         hrXw==
-X-Gm-Message-State: AOAM533ikNXOZd2rtcDZTlQWpSLG0UmDgG6HjB16iML6oOBxxlQbo456
-	bcDaD7fgYDR68ZrlYLI95+a/T8EhLPsbGQ==
-X-Google-Smtp-Source: ABdhPJxH3VF2NxC7lBZr0rFfboW4FXY2YLJGpEkyJmGJmGkLewfNp3oOC76pDQkLrAu9TzAXoqb22A==
-X-Received: by 2002:a17:90a:708d:: with SMTP id g13mr9559737pjk.81.1626016542905;
-        Sun, 11 Jul 2021 08:15:42 -0700 (PDT)
+        bh=I25fEshtDqe0JE0WrNYNCm5YzHiaYd1BDVOg9a4KWIM=;
+        b=q9YigyicGZ1tLjmiOlRa2f+i76VY3GqUdr4zdr1GinN04gDjINnpoJcxsg+T4uPjWC
+         U8SfkVJAmaaP3UKKxloAEahsSO+TSc8liBaKN8RfmrTntgOF74Yybq0sCSUOdAdW8Pfr
+         22ioMVp/97FIs2LOHpVH5B5E9FWjDn78ILTFf1V3qRvwYvkMbH8fbYiG+rWDCh7eZ8/+
+         sJDYmrnyZiwFCl+Ugpm1j/Ttj/CrX4A0zaHAGdovNRu24kOx/SDq6w1PysH5cGKp90NU
+         Vvj9XScsMFoqL0L8wuOfZ/MsszGGnZIr/Ggiz6jIhoJenYjzc+jZbCzkau/cikhiLjwv
+         69oA==
+X-Gm-Message-State: AOAM530sYzIDpP2l4baPcvcsAwuXWYkG812pmW75PPmwjlMjBVWszTjF
+	TKfBU4skhxL8ynnApFU5nrAZNV4VoQqyiA==
+X-Google-Smtp-Source: ABdhPJyaMjMnnhul8jX0PZjWXmy98gf7d6D+RT4iXs47eirKW/I5MMVUZvmKKHhCwLBOVUIMcIMmrg==
+X-Received: by 2002:a62:bd05:0:b029:30a:dc6:88b7 with SMTP id a5-20020a62bd050000b029030a0dc688b7mr49396408pff.51.1626016544417;
+        Sun, 11 Jul 2021 08:15:44 -0700 (PDT)
 Received: from MiBook.mioffice.cn ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id 10sm12139641pjc.41.2021.07.11.08.15.41
+        by smtp.gmail.com with ESMTPSA id 10sm12139641pjc.41.2021.07.11.08.15.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jul 2021 08:15:42 -0700 (PDT)
+        Sun, 11 Jul 2021 08:15:44 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other"
-Date: Sun, 11 Jul 2021 23:15:35 +0800
-Message-Id: <5802c6e8aac9d3a6502fd3a8e9cdda01f658dbcf.1626016245.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: build ADD_ADDR/echo-ADD_ADDR option according pm.add_signal"
+Date: Sun, 11 Jul 2021 23:15:36 +0800
+Message-Id: <80fa33a249c2ecc7edd9d0047dd84f163307cee7.1626016292.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <9365b79b245b8a87af18ca458c67820d47de2515.1626016228.git.geliangtang@gmail.com>
 References: <9365b79b245b8a87af18ca458c67820d47de2515.1626016228.git.geliangtang@gmail.com>
@@ -53,55 +53,204 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add READ_ONCE() for reading msk->pm.addr_signal.
+I think there're still some issues in v8:
 
-Use mptcp_pm_should_add_signal_echo instead of open coding.
+The remaining value is incorrect since "remaining += opt_size;" in the
+"drop other suboptions" checks has been called twice in
+mptcp_pm_add_addr_signal and mptcp_established_options_add_addr.
 
-Use '&=' to clear flag.
+opts->local and opts->remote in mptcp_pm_add_addr_signal need be
+populate after the length chech, not before the check.
+
+The squash-to patch keeped the more orignal code unchanged, and just do
+the least, necessary modifications.
+
+Drop the "drop other suboptions" check in mptcp_pm_add_addr_signal.
+
+Change arguments of mptcp_pm_add_addr_signal.
+
+Keep mptcp_add_addr_len unchanged.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/pm.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/mptcp/options.c  | 35 +++++++++++++++++------------------
+ net/mptcp/pm.c       | 23 +++++++++--------------
+ net/mptcp/protocol.h | 27 +++++++++------------------
+ 3 files changed, 35 insertions(+), 50 deletions(-)
 
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 5c0ad9b90866..93ad7b134f74 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -663,16 +663,14 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+ 	bool drop_other_suboptions = false;
+ 	unsigned int opt_size = *size;
+-	u8 add_addr;
++	bool echo;
++	bool port;
++	u8 family;
+ 	int len;
+ 
+-	if (!mptcp_pm_should_add_signal(msk) ||
+-	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, opts, &add_addr))
+-		return false;
+-
+-	if (((add_addr & BIT(MPTCP_ADD_ADDR_ECHO)) ||
+-	     ((add_addr & BIT(MPTCP_ADD_ADDR_SIGNAL)) &&
+-	      (opts->local.family == AF_INET6 || opts->local.port))) &&
++	if ((mptcp_pm_should_add_signal_echo(msk) ||
++	     (mptcp_pm_should_add_signal_addr(msk) &&
++	      (msk->pm.local.family == AF_INET6 || msk->pm.local.port))) &&
+ 	    skb && skb_is_tcp_pure_ack(skb)) {
+ 		pr_debug("drop other suboptions");
+ 		opts->suboptions = 0;
+@@ -682,7 +680,12 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 		drop_other_suboptions = true;
+ 	}
+ 
+-	len = mptcp_add_addr_len(opts, add_addr);
++	if (!mptcp_pm_should_add_signal(msk) ||
++	    !mptcp_pm_add_addr_signal(msk, remaining, &opts->local, &opts->remote, &echo, &port))
++		return false;
++
++	family = echo ? opts->remote.family : opts->local.family;
++	len = mptcp_add_addr_len(family, echo, port);
+ 	if (remaining < len)
+ 		return false;
+ 
+@@ -690,15 +693,14 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 	if (drop_other_suboptions)
+ 		*size -= opt_size;
+ 	opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
+-	if (!(add_addr & BIT(MPTCP_ADD_ADDR_ECHO)) &&
+-	    (add_addr & BIT(MPTCP_ADD_ADDR_SIGNAL))) {
++	if (!echo) {
+ 		opts->ahmac = add_addr_generate_hmac(msk->local_key,
+ 						     msk->remote_key,
+ 						     &opts->local);
+ 	}
+-	pr_debug("addr_signal:%x, echo=%d, local_addr_id=%d, ahmac=%llu, local_port=%d, remote_addr_id=%d, remote_port=%d",
+-		 add_addr, (opts->ahmac == 0), opts->local.id, opts->ahmac,
+-		 ntohs(opts->local.port), opts->remote.id, ntohs(opts->remote.port));
++	pr_debug("local_id=%d, local_port=%d, remote_id=%d, remote_port=%d, ahmac=%llu, echo=%d",
++		 opts->local.id, ntohs(opts->local.port), opts->remote.id,
++		 ntohs(opts->remote.port), opts->ahmac, echo);
+ 
+ 	return true;
+ }
+@@ -1253,13 +1255,10 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 
+ mp_capable_done:
+ 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+-		struct mptcp_addr_info *addr = &opts->remote;
++		struct mptcp_addr_info *addr = opts->ahmac ? &opts->local : &opts->remote;
+ 		u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
+ 		u8 echo = MPTCP_ADDR_ECHO;
+ 
+-		if (opts->ahmac)
+-			addr = &opts->local;
+-
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 		if (addr->family == AF_INET6)
+ 			len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c9622696716e..be16da2dcb6b 100644
+index 264f522af530..399b59cb7563 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -257,6 +257,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
+@@ -253,12 +253,13 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
+ 
+ /* path manager helpers */
+ 
+-bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+-			      unsigned int opt_size, unsigned int remaining,
+-			      struct mptcp_out_options *opts,  u8 *add_addr)
++bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
++			      struct mptcp_addr_info *saddr, struct mptcp_addr_info *daddr,
++			      bool *echo, bool *port)
  {
  	int ret = false;
-+	u8 add_addr;
+ 	u8 add_addr;
++	u8 family;
  
  	spin_lock_bh(&msk->pm.lock);
  
-@@ -271,10 +272,12 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+@@ -266,21 +267,15 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+ 	if (!mptcp_pm_should_add_signal(msk))
+ 		goto out_unlock;
+ 
+-	opts->local = msk->pm.local;
+-	opts->remote = msk->pm.remote;
+-	*add_addr = msk->pm.addr_signal;
++	*echo = mptcp_pm_should_add_signal_echo(msk);
++	*port = !!(*echo ? msk->pm.remote.port : msk->pm.local.port);
+ 
+-	if (((msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_ECHO)) ||
+-	     ((msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_SIGNAL)) &&
+-	      (msk->pm.local.family == AF_INET6 || msk->pm.local.port))) &&
+-	    skb && skb_is_tcp_pure_ack(skb)) {
+-		remaining += opt_size;
+-	}
+-
+-	if (remaining < mptcp_add_addr_len(opts, *add_addr))
++	family = *echo ? msk->pm.remote.family : msk->pm.local.family;
++	if (remaining < mptcp_add_addr_len(family, *echo, *port))
  		goto out_unlock;
  
  	*saddr = msk->pm.local;
--	if ((msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_ECHO)))
--		WRITE_ONCE(msk->pm.addr_signal, msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO));
-+	add_addr = READ_ONCE(msk->pm.addr_signal);
-+	if (mptcp_pm_should_add_signal_echo(msk))
-+		add_addr &= ~BIT(MPTCP_ADD_ADDR_ECHO);
- 	else
--		WRITE_ONCE(msk->pm.addr_signal, msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL));
-+		add_addr &= ~BIT(MPTCP_ADD_ADDR_SIGNAL);
-+	WRITE_ONCE(msk->pm.addr_signal, add_addr);
- 	ret = true;
++	*daddr = msk->pm.remote;
+ 	add_addr = READ_ONCE(msk->pm.addr_signal);
+ 	if (mptcp_pm_should_add_signal_echo(msk))
+ 		add_addr &= ~BIT(MPTCP_ADD_ADDR_ECHO);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 937e0309e340..4b63cc6079fa 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -766,25 +766,16 @@ static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+ 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
+ }
  
- out_unlock:
-@@ -294,7 +297,8 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 	if (!mptcp_pm_should_rm_signal(msk))
- 		goto out_unlock;
+-static inline unsigned int mptcp_add_addr_len(struct mptcp_out_options *opts,
+-					      u8 add_addr)
++static inline unsigned int mptcp_add_addr_len(int family, bool echo, bool port)
+ {
+-	struct mptcp_addr_info *addr = &opts->remote;
+-	u8 len = 0;
++	u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
  
--	rm_addr = msk->pm.addr_signal & ~BIT(MPTCP_RM_ADDR_SIGNAL);
-+	rm_addr = READ_ONCE(msk->pm.addr_signal);
-+	rm_addr &= ~BIT(MPTCP_RM_ADDR_SIGNAL);
- 	len = mptcp_rm_addr_len(&msk->pm.rm_list_tx);
- 	if (len < 0) {
- 		WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+-	if (!(add_addr & BIT(MPTCP_ADD_ADDR_ECHO)) &&
+-	    (add_addr & BIT(MPTCP_ADD_ADDR_SIGNAL))) {
+-		addr = &opts->local;
++	if (family == AF_INET6)
++		len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
++	if (!echo)
+ 		len += MPTCPOPT_THMAC_LEN;
+-	}
+-
+-	if (addr->family == AF_INET6)
+-		len += TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+-	else
+-		len += TCPOLEN_MPTCP_ADD_ADDR_BASE;
+-
+ 	/* account for 2 trailing 'nop' options */
+-	if (addr->port)
++	if (port)
+ 		len += TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
+ 
+ 	return len;
+@@ -798,9 +789,9 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
+ 	return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) + 1;
+ }
+ 
+-bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+-			      unsigned int opt_size, unsigned int remaining,
+-			      struct mptcp_out_options *opts,  u8 *add_addr);
++bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
++			      struct mptcp_addr_info *saddr, struct mptcp_addr_info *daddr,
++			      bool *echo, bool *port);
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			     struct mptcp_rm_list *rm_list);
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
 -- 
 2.31.1
 
