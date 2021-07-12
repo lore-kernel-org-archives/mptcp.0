@@ -1,63 +1,63 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.188.207])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16D4168
-	for <mptcp@lists.linux.dev>; Mon, 12 Jul 2021 16:55:55 +0000 (UTC)
-Received: from netfilter.org (unknown [90.77.255.23])
-	by mail.netfilter.org (Postfix) with ESMTPSA id C052A61657;
-	Mon, 12 Jul 2021 18:48:51 +0200 (CEST)
-Date: Mon, 12 Jul 2021 18:49:04 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Yajun Deng <yajun.deng@linux.dev>
-Cc: davem@davemloft.net, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
-	kuba@kernel.org, mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net, kadlec@netfilter.org, fw@strlen.de,
-	vyasevich@gmail.com, nhorman@tuxdriver.com,
-	marcelo.leitner@gmail.com, johannes.berg@intel.com, ast@kernel.org,
-	yhs@fb.com, 0x7f454c46@gmail.com, aahringo@redhat.com,
-	rdunlap@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	linux-sctp@vger.kernel.org
-Subject: Re: [PATCH] net: Use nlmsg_unicast() instead of netlink_unicast()
-Message-ID: <20210712164904.GA16733@salvia>
-References: <20210712125301.14248-1-yajun.deng@linux.dev>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2436272
+	for <mptcp@lists.linux.dev>; Mon, 12 Jul 2021 22:10:36 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10043"; a="197246374"
+X-IronPort-AV: E=Sophos;i="5.84,235,1620716400"; 
+   d="scan'208";a="197246374"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 15:10:35 -0700
+X-IronPort-AV: E=Sophos;i="5.84,235,1620716400"; 
+   d="scan'208";a="502474365"
+Received: from archidas-mobl1.amr.corp.intel.com ([10.212.129.5])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 15:10:35 -0700
+Date: Mon, 12 Jul 2021 15:10:34 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliangtang@gmail.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: make MPTCP_ADD_ADDR_SIGNAL
+ and MPTCP_ADD_ADDR_ECHO separate"
+In-Reply-To: <9365b79b245b8a87af18ca458c67820d47de2515.1626016228.git.geliangtang@gmail.com>
+Message-ID: <bb55d96e-dc98-baf3-697e-c872b88fed69@linux.intel.com>
+References: <9365b79b245b8a87af18ca458c67820d47de2515.1626016228.git.geliangtang@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210712125301.14248-1-yajun.deng@linux.dev>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, Jul 12, 2021 at 08:53:01PM +0800, Yajun Deng wrote:
-> diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
-> index 639c337c885b..aa3397eec330 100644
-> --- a/net/netfilter/nft_compat.c
-> +++ b/net/netfilter/nft_compat.c
-> @@ -683,10 +683,8 @@ static int nfnl_compat_get_rcu(struct sk_buff *skb,
->  		goto out_put;
->  	}
->  
-> -	ret = netlink_unicast(info->sk, skb2, NETLINK_CB(skb).portid,
-> -			      MSG_DONTWAIT);
-> -	if (ret > 0)
-> -		ret = 0;
-> +	ret = nlmsg_unicast(info->sk, skb2, NETLINK_CB(skb).portid);
+On Sun, 11 Jul 2021, Geliang Tang wrote:
 
-netfilter needs nfnetlink_unicast to deal with EAGAIN, see e0241ae6ac59
+> A small cleanup.
+>
+> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> ---
+> net/mptcp/pm.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 30deb76fa5d0..1eeecd68f159 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -18,7 +18,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+> {
+> 	u8 add_addr = READ_ONCE(msk->pm.addr_signal);
+>
+> -	pr_debug("msk=%p, local_id=%d, echo:%d", msk, addr->id, echo);
+> +	pr_debug("msk=%p, local_id=%d, echo=%d", msk, addr->id, echo);
+>
+> 	lockdep_assert_held(&msk->pm.lock);
+>
+> -- 
+> 2.31.1
 
-So either:
+Thanks for catching this detail!
 
-a) use nfnetlink_unicast.
-b) remove this chunk and I'll route a patch to fix this in the
-   netfilter tree.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Pick one at your choice.
-
-Thanks.
-
->  out_put:
->  	rcu_read_lock();
->  	module_put(THIS_MODULE);
+--
+Mat Martineau
+Intel
