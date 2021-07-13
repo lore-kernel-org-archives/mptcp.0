@@ -1,35 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254AC2FAF
-	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 21:13:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B442FAF
+	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 21:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1626210837;
+	s=mimecast20190719; t=1626210839;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LQn0/gTnQegzSLVGIcVmsl4xkMWRJBh7ya7kxDTOGBI=;
-	b=LCkdB8uCaFtQX7/wuAMTjYAfC7yBhhQpC3MAFoy0PKJV/pnyy1lulxZVv98y4Ck1V0fEi2
-	I6jp5KxyIlbWL3EJohGL588mL66dpqGmwZ8vLyvn6L5u9ktNV5+rJUr5gLYf9EFyAHLgFH
-	vSsZjnnCXqFrL00/p9YOIibdlFRGkUI=
+	bh=K2N6Fn/N7ABq3u76utru/yFxxfiVTI3Y393H9vjWKgU=;
+	b=XgJF607ck2yNlBmkLDR85LUHi3K3m9kUJz0+RhABA6ZpFylglkuKGvA3y877hZM7eG+n0q
+	8dsrFd/cyjoInTg5OFH4nTC2jhz5lMm+juZJO39/LvQhNwT0wwQ4B8WWbP+N1N2gJ6QVMe
+	WIo0ZcKCLf9XPxFtUfP/Br8Ui/2pnHE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-TckjFWM9NW2bhU1pRZtIAg-1; Tue, 13 Jul 2021 17:13:55 -0400
-X-MC-Unique: TckjFWM9NW2bhU1pRZtIAg-1
+ us-mta-544-OqITF5wcOyShzamvVuX6dw-1; Tue, 13 Jul 2021 17:13:57 -0400
+X-MC-Unique: OqITF5wcOyShzamvVuX6dw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFB0A8015C6
-	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 21:13:54 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE931804140
+	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 21:13:56 +0000 (UTC)
 Received: from gerbillo.redhat.com (ovpn-113-114.ams2.redhat.com [10.36.113.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0064360C5F
-	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 21:13:53 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 66DB860C5F
+	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 21:13:56 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 4/8] mptcp: cleanup sysctl data and helpers
-Date: Tue, 13 Jul 2021 23:13:34 +0200
-Message-Id: <5bb122d59fd6476c3317dc3d6e10a26141e49d87.1626210682.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-next 6/8] mptcp: add mibs for stale subflows processing
+Date: Tue, 13 Jul 2021 23:13:36 +0200
+Message-Id: <31dc07338af1eb3a6be4d562354c1e132ecb45c8.1626210682.git.pabeni@redhat.com>
 In-Reply-To: <cover.1626210682.git.pabeni@redhat.com>
 References: <cover.1626210682.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,80 +46,81 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Reorder the data in mptcp_pernet to avoid wasting space
-with no reasons and constify the access helpers.
-
-No functional changes intended.
+This allows monitoring exceptional events like
+active backup scenarios.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/ctrl.c     | 12 ++++++------
- net/mptcp/protocol.h |  8 ++++----
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ net/mptcp/mib.c        | 2 ++
+ net/mptcp/mib.h        | 2 ++
+ net/mptcp/pm.c         | 2 ++
+ net/mptcp/pm_netlink.c | 1 +
+ net/mptcp/protocol.c   | 1 +
+ 5 files changed, 8 insertions(+)
 
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 7d738bd06f2c..63bba9d8e289 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -21,33 +21,33 @@ struct mptcp_pernet {
- 	struct ctl_table_header *ctl_table_hdr;
- #endif
- 
--	u8 mptcp_enabled;
- 	unsigned int add_addr_timeout;
-+	u8 mptcp_enabled;
- 	u8 checksum_enabled;
- 	u8 allow_join_initial_addr_port;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index ff2cc0e3273d..3a7c4e7b2d79 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -45,6 +45,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPPrioTx", MPTCP_MIB_MPPRIOTX),
+ 	SNMP_MIB_ITEM("MPPrioRx", MPTCP_MIB_MPPRIORX),
+ 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
++	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
++	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
+ 	SNMP_MIB_SENTINEL
  };
  
--static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
-+static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
- {
- 	return net_generic(net, mptcp_pernet_id);
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 0663cb12b448..8ec16c991aac 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -38,6 +38,8 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_MPPRIOTX,		/* Transmit a MP_PRIO */
+ 	MPTCP_MIB_MPPRIORX,		/* Received a MP_PRIO */
+ 	MPTCP_MIB_RCVPRUNED,		/* Incoming packet dropped due to memory limit */
++	MPTCP_MIB_SUBFLOWSTALE,		/* Subflows entered 'stale' status */
++	MPTCP_MIB_SUBFLOWRECOVER,	/* Subflows returned to active status after being stale */
+ 	__MPTCP_MIB_MAX
+ };
+ 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index d8a85fe92360..0ed3e565f8f8 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -10,6 +10,8 @@
+ #include <net/mptcp.h>
+ #include "protocol.h"
+ 
++#include "mib.h"
++
+ /* path manager command handlers */
+ 
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index eb1f5cf89423..3d4fa2dd2cea 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -924,6 +924,7 @@ void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ss
+ 			if (!tcp_rtx_and_write_queues_empty(ssk)) {
+ 				subflow->stale = 1;
+ 				push = __mptcp_retransmit_pending_data(sk);
++				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_SUBFLOWSTALE);
+ 			}
+ 			unlock_sock_fast(ssk, slow);
+ 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e936b88d340d..8eb2626503d7 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1397,6 +1397,7 @@ void mptcp_subflow_set_active(struct mptcp_subflow_context *subflow)
+ 		return;
+ 
+ 	subflow->stale = 0;
++	MPTCP_INC_STATS(sock_net(mptcp_subflow_tcp_sock(subflow)), MPTCP_MIB_SUBFLOWRECOVER);
  }
  
--int mptcp_is_enabled(struct net *net)
-+int mptcp_is_enabled(const struct net *net)
- {
- 	return mptcp_get_pernet(net)->mptcp_enabled;
- }
- 
--unsigned int mptcp_get_add_addr_timeout(struct net *net)
-+unsigned int mptcp_get_add_addr_timeout(const struct net *net)
- {
- 	return mptcp_get_pernet(net)->add_addr_timeout;
- }
- 
--int mptcp_is_checksum_enabled(struct net *net)
-+int mptcp_is_checksum_enabled(const struct net *net)
- {
- 	return mptcp_get_pernet(net)->checksum_enabled;
- }
- 
--int mptcp_allow_join_id0(struct net *net)
-+int mptcp_allow_join_id0(const struct net *net)
- {
- 	return mptcp_get_pernet(net)->allow_join_initial_addr_port;
- }
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6f55784a2efd..43ff6c5baddc 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -556,10 +556,10 @@ static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *su
- 	clear_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status);
- }
- 
--int mptcp_is_enabled(struct net *net);
--unsigned int mptcp_get_add_addr_timeout(struct net *net);
--int mptcp_is_checksum_enabled(struct net *net);
--int mptcp_allow_join_id0(struct net *net);
-+int mptcp_is_enabled(const struct net *net);
-+unsigned int mptcp_get_add_addr_timeout(const struct net *net);
-+int mptcp_is_checksum_enabled(const struct net *net);
-+int mptcp_allow_join_id0(const struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
+ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
 -- 
 2.26.3
 
