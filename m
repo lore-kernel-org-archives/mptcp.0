@@ -1,47 +1,48 @@
-Received: from out0.migadu.com (out0.migadu.com [94.23.1.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632A872
-	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 02:48:52 +0000 (UTC)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1626144530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lStPFj8qvcgCwMoBQwKRWxIuDXA8OI5V+DDbWuXsQ9U=;
-	b=XzYsqY3+/nv4P9vUmEQymCL4lGnzA57LHW8zpl3Y/doBSkAOzY76fsHZI/0sWM0RM1R3vT
-	UdN99HvXA36JVXmUCg+Y1B2VrO25234DF61j2zoglEoKOff1WtkkXb2y7hxp9WbQJnzauq
-	OHM95gDhuL1iftdz9mXvLYFoGRoECnA=
-From: Yajun Deng <yajun.deng@linux.dev>
-To: davem@davemloft.net,
-	yoshfuji@linux-ipv6.org,
-	dsahern@kernel.org,
-	kuba@kernel.org,
-	mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net,
-	pablo@netfilter.org,
-	kadlec@netfilter.org,
-	fw@strlen.de,
-	vyasevich@gmail.com,
-	nhorman@tuxdriver.com,
-	marcelo.leitner@gmail.com,
-	johannes.berg@intel.com,
-	ast@kernel.org,
-	yhs@fb.com,
-	0x7f454c46@gmail.com,
-	yajun.deng@linux.dev,
-	aahringo@redhat.com,
-	rdunlap@infradead.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	linux-sctp@vger.kernel.org
-Subject: [PATCH v2] net: Use nlmsg_unicast() instead of netlink_unicast()
-Date: Tue, 13 Jul 2021 10:48:24 +0800
-Message-Id: <20210713024824.14359-1-yajun.deng@linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F1370
+	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 06:44:52 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id g4-20020a17090ace84b029017554809f35so717296pju.5
+        for <mptcp@lists.linux.dev>; Mon, 12 Jul 2021 23:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Li6fufrZ4X2X7uE3ac0GnNCDmeBp8Jw1GBz771VZB8=;
+        b=lSBep65um9g4I6chk8J80kkyfD2jSxIOYuIZfiyC7qpBXcTVPPiqoP9q5gOmei+gLq
+         htsNgvT86wTbY6kiifJ3Ntf37eeIxKk+gNZz0ZTSb82xAahNEKpQYQZugjs/laaSMNDT
+         7V+FqdmSd52Yzoc8OvyC911HCug1XdOruAjCwxdDSh4kRF0d/NXuyAwn1d1eXKWT5K76
+         9b+ZKDuXXNiOy1DBvfqoz5UEkXLBCCakDPHqBB+fRTlDJA6xMAS9prVwFLPUIIeA6pfe
+         IgebAuDxSWXRfkYYmKXIuEG0mPWXnj+Ohf3UqFGgMSEGucUX+smHUqifkr0yT9UVLAqz
+         h3tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Li6fufrZ4X2X7uE3ac0GnNCDmeBp8Jw1GBz771VZB8=;
+        b=WAayuP9tmcl1Ne0oAk05AROnzq+mNcUibqqec4e0Q/cUKJxw/NkdBQzb69yFmouo+l
+         hbVnOPmv8dtpyG5f8Pe15mWsbhVvu5XwVrNI8xyAyyo4aIzbBvcFolQCzG9nwwwgZpeS
+         T9Ab3H7+2e7JSOcS5vFmg8dVlDR6J/flz09UD68xiP/Bg8lUtFa5dgijne+v6YfbkVzh
+         obfH7tTCOOjajnSw9TKZOgjeqQjDWgYt9AWLJa8Su+RSdAH3qU5WGgJZDNuOykgsFoNe
+         9U6lYtd1XQmc3RFSEABQkTZco4+EhsTaNxNTv+bvgUaCwYjgx1x3hDyJbpTvdg67Od4n
+         /Cuw==
+X-Gm-Message-State: AOAM532N96EWRCTqyS1/9xwnqlKtttqNkPCvYUPSeq12jjR65tnm7iK+
+	kFfC45fkuEUGhQwT2rMH2hC49S+6OuBIcQ==
+X-Google-Smtp-Source: ABdhPJwDPjNzRBQ9jsDNR9Xy9Pz2/cxMAZi6LcD1MP7IxJmO58puTqUtXNsMTMK2I/RtFDGMW7fpMw==
+X-Received: by 2002:a17:90a:aa14:: with SMTP id k20mr18164521pjq.88.1626158691521;
+        Mon, 12 Jul 2021 23:44:51 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id 202sm15236606pfx.75.2021.07.12.23.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jul 2021 23:44:51 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other"
+Date: Tue, 13 Jul 2021 14:44:43 +0800
+Message-Id: <756dcceaa255c54b7bd195c719ede1f7ae791eb3.1626158100.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,154 +50,54 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: yajun.deng@linux.dev
 
-It has 'if (err >0 )' statement in nlmsg_unicast(), so use nlmsg_unicast()
-instead of netlink_unicast(), this looks more concise.
+This line 'if ((msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_ECHO)))' should
+be:
+        if (msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_ECHO))
 
-v2: remove the change in netfilter.
+Since I'll keep the echo argument in mptcp_pm_add_addr_signal(), just use
+*echo here.
 
-Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+Like the 'rm_addr' variable in mptcp_pm_rm_addr_signal(), use a new
+variable 'add_addr' in mptcp_pm_add_addr_signal() too.
+
+v2:
+ - drop READ_ONCE()
+ - drop mptcp_pm_should_add_signal_echo()
+ - use & instead of &=
+
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/ipv4/fib_frontend.c  | 2 +-
- net/ipv4/inet_diag.c     | 5 +----
- net/ipv4/raw_diag.c      | 7 ++-----
- net/ipv4/udp_diag.c      | 6 ++----
- net/mptcp/mptcp_diag.c   | 6 ++----
- net/netlink/af_netlink.c | 2 +-
- net/sctp/diag.c          | 6 ++----
- net/unix/diag.c          | 6 ++----
- 8 files changed, 13 insertions(+), 27 deletions(-)
+ net/mptcp/pm.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
-index a933bd6345b1..9fe13e4f5d08 100644
---- a/net/ipv4/fib_frontend.c
-+++ b/net/ipv4/fib_frontend.c
-@@ -1376,7 +1376,7 @@ static void nl_fib_input(struct sk_buff *skb)
- 	portid = NETLINK_CB(skb).portid;      /* netlink portid */
- 	NETLINK_CB(skb).portid = 0;        /* from kernel */
- 	NETLINK_CB(skb).dst_group = 0;  /* unicast */
--	netlink_unicast(net->ipv4.fibnl, skb, portid, MSG_DONTWAIT);
-+	nlmsg_unicast(net->ipv4.fibnl, skb, portid);
- }
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index c9622696716e..792940dbe662 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -257,6 +257,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
+ {
+ 	int ret = false;
++	u8 add_addr;
  
- static int __net_init nl_fib_lookup_init(struct net *net)
-diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
-index e65f4ef024a4..ef7897226f08 100644
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@ -580,10 +580,7 @@ int inet_diag_dump_one_icsk(struct inet_hashinfo *hashinfo,
- 		nlmsg_free(rep);
- 		goto out;
- 	}
--	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
--			      MSG_DONTWAIT);
--	if (err > 0)
--		err = 0;
-+	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
+ 	spin_lock_bh(&msk->pm.lock);
  
- out:
- 	if (sk)
-diff --git a/net/ipv4/raw_diag.c b/net/ipv4/raw_diag.c
-index 1b5b8af27aaf..ccacbde30a2c 100644
---- a/net/ipv4/raw_diag.c
-+++ b/net/ipv4/raw_diag.c
-@@ -119,11 +119,8 @@ static int raw_diag_dump_one(struct netlink_callback *cb,
- 		return err;
- 	}
+@@ -271,10 +272,11 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 		goto out_unlock;
  
--	err = netlink_unicast(net->diag_nlsk, rep,
--			      NETLINK_CB(in_skb).portid,
--			      MSG_DONTWAIT);
--	if (err > 0)
--		err = 0;
-+	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
-+
- 	return err;
- }
+ 	*saddr = msk->pm.local;
+-	if ((msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_ECHO)))
+-		WRITE_ONCE(msk->pm.addr_signal, msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO));
++	if (*echo)
++		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
+ 	else
+-		WRITE_ONCE(msk->pm.addr_signal, msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL));
++		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
++	WRITE_ONCE(msk->pm.addr_signal, add_addr);
+ 	ret = true;
  
-diff --git a/net/ipv4/udp_diag.c b/net/ipv4/udp_diag.c
-index b2cee9a307d4..1ed8c4d78e5c 100644
---- a/net/ipv4/udp_diag.c
-+++ b/net/ipv4/udp_diag.c
-@@ -77,10 +77,8 @@ static int udp_dump_one(struct udp_table *tbl,
- 		kfree_skb(rep);
- 		goto out;
- 	}
--	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
--			      MSG_DONTWAIT);
--	if (err > 0)
--		err = 0;
-+	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
-+
- out:
- 	if (sk)
- 		sock_put(sk);
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index 8f88ddeab6a2..f48eb6315bbb 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -57,10 +57,8 @@ static int mptcp_diag_dump_one(struct netlink_callback *cb,
- 		kfree_skb(rep);
- 		goto out;
- 	}
--	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
--			      MSG_DONTWAIT);
--	if (err > 0)
--		err = 0;
-+	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
-+
- out:
- 	sock_put(sk);
- 
-diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-index d233ac4a91b6..380f95aacdec 100644
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -2471,7 +2471,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
- 
- 	nlmsg_end(skb, rep);
- 
--	netlink_unicast(in_skb->sk, skb, NETLINK_CB(in_skb).portid, MSG_DONTWAIT);
-+	nlmsg_unicast(in_skb->sk, skb, NETLINK_CB(in_skb).portid);
- }
- EXPORT_SYMBOL(netlink_ack);
- 
-diff --git a/net/sctp/diag.c b/net/sctp/diag.c
-index 493fc01e5d2b..760b367644c1 100644
---- a/net/sctp/diag.c
-+++ b/net/sctp/diag.c
-@@ -284,10 +284,8 @@ static int sctp_tsp_dump_one(struct sctp_transport *tsp, void *p)
- 		goto out;
- 	}
- 
--	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
--			      MSG_DONTWAIT);
--	if (err > 0)
--		err = 0;
-+	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
-+
- out:
- 	return err;
- }
-diff --git a/net/unix/diag.c b/net/unix/diag.c
-index 9ff64f9df1f3..7e7d7f45685a 100644
---- a/net/unix/diag.c
-+++ b/net/unix/diag.c
-@@ -295,10 +295,8 @@ static int unix_diag_get_exact(struct sk_buff *in_skb,
- 
- 		goto again;
- 	}
--	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
--			      MSG_DONTWAIT);
--	if (err > 0)
--		err = 0;
-+	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
-+
- out:
- 	if (sk)
- 		sock_put(sk);
+ out_unlock:
 -- 
-2.32.0
+2.31.1
 
