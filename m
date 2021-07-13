@@ -1,124 +1,202 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from out0.migadu.com (out0.migadu.com [94.23.1.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94087168
-	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 00:04:31 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10043"; a="197257188"
-X-IronPort-AV: E=Sophos;i="5.84,235,1620716400"; 
-   d="scan'208";a="197257188"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 17:04:29 -0700
-X-IronPort-AV: E=Sophos;i="5.84,235,1620716400"; 
-   d="scan'208";a="502505731"
-Received: from archidas-mobl1.amr.corp.intel.com ([10.212.129.5])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 17:04:28 -0700
-Date: Mon, 12 Jul 2021 17:04:28 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH mptcp-next 0/9] fullmesh path manager support
-In-Reply-To: <cover.1625825505.git.geliangtang@gmail.com>
-Message-ID: <f6b48327-e562-1a5a-f470-23c24be45c41@linux.intel.com>
-References: <cover.1625825505.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632A872
+	for <mptcp@lists.linux.dev>; Tue, 13 Jul 2021 02:48:52 +0000 (UTC)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1626144530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lStPFj8qvcgCwMoBQwKRWxIuDXA8OI5V+DDbWuXsQ9U=;
+	b=XzYsqY3+/nv4P9vUmEQymCL4lGnzA57LHW8zpl3Y/doBSkAOzY76fsHZI/0sWM0RM1R3vT
+	UdN99HvXA36JVXmUCg+Y1B2VrO25234DF61j2zoglEoKOff1WtkkXb2y7hxp9WbQJnzauq
+	OHM95gDhuL1iftdz9mXvLYFoGRoECnA=
+From: Yajun Deng <yajun.deng@linux.dev>
+To: davem@davemloft.net,
+	yoshfuji@linux-ipv6.org,
+	dsahern@kernel.org,
+	kuba@kernel.org,
+	mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net,
+	pablo@netfilter.org,
+	kadlec@netfilter.org,
+	fw@strlen.de,
+	vyasevich@gmail.com,
+	nhorman@tuxdriver.com,
+	marcelo.leitner@gmail.com,
+	johannes.berg@intel.com,
+	ast@kernel.org,
+	yhs@fb.com,
+	0x7f454c46@gmail.com,
+	yajun.deng@linux.dev,
+	aahringo@redhat.com,
+	rdunlap@infradead.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	linux-sctp@vger.kernel.org
+Subject: [PATCH v2] net: Use nlmsg_unicast() instead of netlink_unicast()
+Date: Tue, 13 Jul 2021 10:48:24 +0800
+Message-Id: <20210713024824.14359-1-yajun.deng@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: yajun.deng@linux.dev
 
-On Fri, 9 Jul 2021, Geliang Tang wrote:
+It has 'if (err >0 )' statement in nlmsg_unicast(), so use nlmsg_unicast()
+instead of netlink_unicast(), this looks more concise.
 
-> Implement the in-kernel fullmesh path manager like on the mptcp.org
-> kernel.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/193
->
-> Geliang Tang (9):
->  mptcp: add a new sysctl path_manager
->  mptcp: add fullmesh path manager
->  mptcp: add fullmesh worker
->  mptcp: register ipv4 addr notifier
->  mptcp: register ipv6 addr notifier
->  mptcp: add netdev up event handler
->  mptcp: add netdev down event handler
->  mptcp: add proc file mptcp_fullmesh
->  selftests: mptcp: add fullmesh testcases
->
-> Documentation/networking/mptcp-sysctl.rst     |   8 +
-> net/mptcp/Makefile                            |   2 +-
-> net/mptcp/ctrl.c                              |  16 +
-> net/mptcp/pm.c                                |   9 +-
-> net/mptcp/pm_fullmesh.c                       | 463 ++++++++++++++++++
-> net/mptcp/pm_netlink.c                        |  14 +-
-> net/mptcp/protocol.c                          |  11 +-
-> net/mptcp/protocol.h                          |  11 +
-> .../testing/selftests/net/mptcp/mptcp_join.sh |  66 ++-
-> 9 files changed, 588 insertions(+), 12 deletions(-)
-> create mode 100644 net/mptcp/pm_fullmesh.c
->
-> -- 
-> 2.31.1
+v2: remove the change in netfilter.
 
-Hi Geliang -
+Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+---
+ net/ipv4/fib_frontend.c  | 2 +-
+ net/ipv4/inet_diag.c     | 5 +----
+ net/ipv4/raw_diag.c      | 7 ++-----
+ net/ipv4/udp_diag.c      | 6 ++----
+ net/mptcp/mptcp_diag.c   | 6 ++----
+ net/netlink/af_netlink.c | 2 +-
+ net/sctp/diag.c          | 6 ++----
+ net/unix/diag.c          | 6 ++----
+ 8 files changed, 13 insertions(+), 27 deletions(-)
 
-This patch set brings up a lot of questions - many of which it would have 
-been good to address by having some design discussions before starting to 
-write the code. But the patches are here, so let's discuss!
+diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
+index a933bd6345b1..9fe13e4f5d08 100644
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -1376,7 +1376,7 @@ static void nl_fib_input(struct sk_buff *skb)
+ 	portid = NETLINK_CB(skb).portid;      /* netlink portid */
+ 	NETLINK_CB(skb).portid = 0;        /* from kernel */
+ 	NETLINK_CB(skb).dst_group = 0;  /* unicast */
+-	netlink_unicast(net->ipv4.fibnl, skb, portid, MSG_DONTWAIT);
++	nlmsg_unicast(net->ipv4.fibnl, skb, portid);
+ }
+ 
+ static int __net_init nl_fib_lookup_init(struct net *net)
+diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+index e65f4ef024a4..ef7897226f08 100644
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -580,10 +580,7 @@ int inet_diag_dump_one_icsk(struct inet_hashinfo *hashinfo,
+ 		nlmsg_free(rep);
+ 		goto out;
+ 	}
+-	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
+-			      MSG_DONTWAIT);
+-	if (err > 0)
+-		err = 0;
++	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
+ 
+ out:
+ 	if (sk)
+diff --git a/net/ipv4/raw_diag.c b/net/ipv4/raw_diag.c
+index 1b5b8af27aaf..ccacbde30a2c 100644
+--- a/net/ipv4/raw_diag.c
++++ b/net/ipv4/raw_diag.c
+@@ -119,11 +119,8 @@ static int raw_diag_dump_one(struct netlink_callback *cb,
+ 		return err;
+ 	}
+ 
+-	err = netlink_unicast(net->diag_nlsk, rep,
+-			      NETLINK_CB(in_skb).portid,
+-			      MSG_DONTWAIT);
+-	if (err > 0)
+-		err = 0;
++	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
++
+ 	return err;
+ }
+ 
+diff --git a/net/ipv4/udp_diag.c b/net/ipv4/udp_diag.c
+index b2cee9a307d4..1ed8c4d78e5c 100644
+--- a/net/ipv4/udp_diag.c
++++ b/net/ipv4/udp_diag.c
+@@ -77,10 +77,8 @@ static int udp_dump_one(struct udp_table *tbl,
+ 		kfree_skb(rep);
+ 		goto out;
+ 	}
+-	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
+-			      MSG_DONTWAIT);
+-	if (err > 0)
+-		err = 0;
++	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
++
+ out:
+ 	if (sk)
+ 		sock_put(sk);
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 8f88ddeab6a2..f48eb6315bbb 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -57,10 +57,8 @@ static int mptcp_diag_dump_one(struct netlink_callback *cb,
+ 		kfree_skb(rep);
+ 		goto out;
+ 	}
+-	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
+-			      MSG_DONTWAIT);
+-	if (err > 0)
+-		err = 0;
++	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
++
+ out:
+ 	sock_put(sk);
+ 
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index d233ac4a91b6..380f95aacdec 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2471,7 +2471,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+ 
+ 	nlmsg_end(skb, rep);
+ 
+-	netlink_unicast(in_skb->sk, skb, NETLINK_CB(in_skb).portid, MSG_DONTWAIT);
++	nlmsg_unicast(in_skb->sk, skb, NETLINK_CB(in_skb).portid);
+ }
+ EXPORT_SYMBOL(netlink_ack);
+ 
+diff --git a/net/sctp/diag.c b/net/sctp/diag.c
+index 493fc01e5d2b..760b367644c1 100644
+--- a/net/sctp/diag.c
++++ b/net/sctp/diag.c
+@@ -284,10 +284,8 @@ static int sctp_tsp_dump_one(struct sctp_transport *tsp, void *p)
+ 		goto out;
+ 	}
+ 
+-	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
+-			      MSG_DONTWAIT);
+-	if (err > 0)
+-		err = 0;
++	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
++
+ out:
+ 	return err;
+ }
+diff --git a/net/unix/diag.c b/net/unix/diag.c
+index 9ff64f9df1f3..7e7d7f45685a 100644
+--- a/net/unix/diag.c
++++ b/net/unix/diag.c
+@@ -295,10 +295,8 @@ static int unix_diag_get_exact(struct sk_buff *in_skb,
+ 
+ 		goto again;
+ 	}
+-	err = netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
+-			      MSG_DONTWAIT);
+-	if (err > 0)
+-		err = 0;
++	err = nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid);
++
+ out:
+ 	if (sk)
+ 		sock_put(sk);
+-- 
+2.32.0
 
-
-An early design goal of the upstream Linux MPTCP implementation 
-(https://github.com/multipath-tcp/mptcp_net-next/wiki/%5Barchived%5D-Initial-Design) 
-was to simplify the kernel side of MPTCP by moving functionality to 
-userspace where possible - especially the path manager.
-
-The current in-kernel path manager was designed for two main purposes: to 
-handle path management on busy servers where kernel/userspace 
-communication could become a bottleneck, and to provide basic path 
-management capability until userspace path managers were ready (like 
-mptcpd). Userspace path managers would then be the "playground" for 
-various path management algorithms.
-
-The multpath-tcp.org kernel has a variety of in-kernel path managers. 
-These are typically built as kernel modules, so unused path managers can 
-be excluded or built as modules and stay unloaded until they are needed. 
-The fullmesh PM as implemented in this patchset is always compiled and 
-using code space when CONFIG_MPTCP is enabled, and is always getting 
-address notifications and updating per-namespace address lists even if the 
-fullmesh pm isn't used.
-
-Right now, I would ask you to wait before making more changes to this 
-patch set so the MPTCP upstream community can discuss and decide what the 
-proper direction is for path management.
-
-
-Here are some path-manager-related topics I think the MPTCP upstream 
-community should discuss before moving ahead:
-
-* What's the long-term plan for in-kernel vs. userspace PM? Commit to one 
-in-kernel PM, plus userspace? Or are there use cases for more in-kernel 
-path managers?
-
-* How do those plans affect iproute2?
-
-* What are our limits or expectations for in-kernel PM complexity and 
-resource usage?
-
-* How do we structure path management to make sense to users? It could get 
-confusing to try to explain the difference between an "in-kernel fullmesh 
-PM" vs. "userspace fullmesh PM".
-
-* What are the most important path managers and PM-related development 
-tasks to prioritize?
-
-
-I think this would be a good topic for a Thursday meeting, or we could 
-schedule something at a different time.
-
-
-Thanks,
-
---
-Mat Martineau
-Intel
