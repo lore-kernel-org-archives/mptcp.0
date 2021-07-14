@@ -1,50 +1,50 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43088173
-	for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 10:42:07 +0000 (UTC)
-Received: by mail-pg1-f178.google.com with SMTP id a2so1959949pgi.6
-        for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 03:42:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A5B173
+	for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 10:42:08 +0000 (UTC)
+Received: by mail-pg1-f170.google.com with SMTP id u14so1927907pga.11
+        for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 03:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9UtxfM2rC5QXS12eiF3SCcOyviljOaQQpD9ijOTmzAo=;
-        b=epkrI6610X7tKI4Yo9hZlKZVBh3/DfpPqGYtSiGt1bBG7FWvoYi7nGYVZ5t1HP2vHT
-         ahV2mhUlz8Ks1Fc6clp3w4hfXQslwIIoE0BDxr7joVGsKZr9qGocDpQQwQBf85I3vZr6
-         TGvoHC+1Kbuy4Yu2VVjxDvvLvx0bzWaULquSk1gePGRgZz2sDBtMa8IlBA3x23l6q0Do
-         0XdjHJ7wcNDkAaO0cHwOIwwhQFZ/smtAgDaAVamw3HNpkH4i6Ukmnod9COpXuKrsuoHo
-         xapugaEoK8WDAghb3yQ/DQ17Chd2zJdUzUjr8nXtvfIk9naEUAjRq7DC321xO7kkfM9k
-         Kk4g==
+        bh=G1gMyZjPdYJnntjHOBwT9ccIYVgc6HeN11nw9AWA1Mo=;
+        b=M5rs7tUe2yH5HSLO61lTnbkEmRgi3IV26dgvimTFG9PLiJgNNN+QRyMEtjsBwWpM/z
+         Y8KyWUfyeO7hbUas8k6kXLXbleOdTTkEr61wL5RodsGf+AJ/NF3nIL5ZaBvT4je7yOrd
+         3OADcDi8gb8T/WUJXwFa4O+ghrS9WvDKo6igJrgVGvxmRxhjJ0ARtkgJemaFO265ATlu
+         ZXS3ZBfw7lhTo5dqgBkhfncB5IiuCQwA8FBXRR0yvo8PyYcxkte9nLbvsD++EUqEI/pG
+         WPvj8JUS1zAhCV6TGLQktQXSLIRorLNbD08NTtV44TviN9A0b3+9cd11B/f5XaVleREE
+         uOsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9UtxfM2rC5QXS12eiF3SCcOyviljOaQQpD9ijOTmzAo=;
-        b=Z6DalAwDQFQSBR6JayzeJZjcUazIcd1Q8JA0hH2/rqQ/xpNe6hP0rmrutZX/RzdVpo
-         tRXlzMA6gKjeHN3qTzE8VEXjRYHDeXXzXFIatBJawM2etAOEN8/YWSGX9XXHVLbCOwEK
-         mKcLKaUHx0B7X8DK7p56PCKqTg9WJJ7Ny2GiBjJrBPrGruXXrVbk9MpOkSe1JHk1/E8t
-         le0MAYgPxipPJ/t+rkV9PZFPvu5uIopelmHx/f3hJVQ/YZIrBH7+JFWUs0dymBulXzGB
-         HY5pzNW89UO2Dv/hl4e/6xDuA/UiyalHMwtfiAesBtSTxZXPRHyV4BI7u9NWOQO6Mloh
-         v4WQ==
-X-Gm-Message-State: AOAM530SHHM3zTHQSRN2T/ti4v94qM2Po/Pqew/ElCzJEXgXJusNSnso
-	QSnN+0QxHYgRcboRai71g7FSRQekTwwPkg==
-X-Google-Smtp-Source: ABdhPJwUICiso4s/2zCogWGMtvXSY9Ns9U4uMeND0/WZCn8qeBdMP/VkdEMwwaOqMFcDiEVqVgbKDw==
-X-Received: by 2002:a65:5503:: with SMTP id f3mr8990338pgr.232.1626259326796;
-        Wed, 14 Jul 2021 03:42:06 -0700 (PDT)
+        bh=G1gMyZjPdYJnntjHOBwT9ccIYVgc6HeN11nw9AWA1Mo=;
+        b=q4rBnzfOWb3Ta52JJwqIX3SLJGis+lwYr+zVLVJ+kQU0OG2h9PqUpNkNxmQW9Sg/F0
+         Qa1liJo277ljZHUBxhL+Jw056K98UGV47ueEoHW+xdXVza8puktV6xycKvpl7OCR6hCl
+         ss8/Y5XqBbrJvIzjOg5dqXECTHeZJuBsjbBx8pcr09QwRM5PR5XLv302llzAE4zSp5zT
+         K1vR1iq/GJHLehFOVWeSpx9nAqcPNv86lfWJbZKyVEKWQ7j+VBiI+FWlEANozCEPIe69
+         u4dtQjGXcP2fHlmggkPSgW4aoWMwi2DT1jZgiyr/f7lFpDSIm2bVe5CAq9mo6dpAHGKk
+         cqDA==
+X-Gm-Message-State: AOAM5304h3OOjtf4frzMBOG7gend+7onL+r/DeFj2BgZrc3yR6aRhjI2
+	knltHsfdDt51eCmOJBogofmHTcshvj5kOQ==
+X-Google-Smtp-Source: ABdhPJysvxhGyvIAdNlLPHmtLzKqDYcd8q2kFxNRJ1ABc7i4xiw6JWn6hMV62PdeYgfswmpwqKbEsQ==
+X-Received: by 2002:a65:62da:: with SMTP id m26mr8898226pgv.370.1626259328115;
+        Wed, 14 Jul 2021 03:42:08 -0700 (PDT)
 Received: from MiBook.. ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id x18sm2122904pfh.48.2021.07.14.03.42.05
+        by smtp.gmail.com with ESMTPSA id x18sm2122904pfh.48.2021.07.14.03.42.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 03:42:06 -0700 (PDT)
+        Wed, 14 Jul 2021 03:42:07 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v4 mptcp-next 4/5] mptcp: add the mibs for MP_FAIL
-Date: Wed, 14 Jul 2021 18:41:56 +0800
-Message-Id: <5df5b6ba135e5951c40056689f885e5101dd1abd.1626258797.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v4 mptcp-next 5/5] selftests: mptcp: add MP_FAIL mibs check
+Date: Wed, 14 Jul 2021 18:41:57 +0800
+Message-Id: <a10df9865250ee098305a9ea2b481455b59bd200.1626258797.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <779edc1afc2f4622d9cffbdf3f8ccccfcdfd33cb.1626258797.git.geliangtang@gmail.com>
-References: <cover.1626258797.git.geliangtang@gmail.com> <d719e2be68d4f75b1cb392f67516261a59e94c5b.1626258797.git.geliangtang@gmail.com> <c9b00f7ce8d17ea4fb6e60c09433f36cc144a2f7.1626258797.git.geliangtang@gmail.com> <779edc1afc2f4622d9cffbdf3f8ccccfcdfd33cb.1626258797.git.geliangtang@gmail.com>
+In-Reply-To: <5df5b6ba135e5951c40056689f885e5101dd1abd.1626258797.git.geliangtang@gmail.com>
+References: <cover.1626258797.git.geliangtang@gmail.com> <d719e2be68d4f75b1cb392f67516261a59e94c5b.1626258797.git.geliangtang@gmail.com> <c9b00f7ce8d17ea4fb6e60c09433f36cc144a2f7.1626258797.git.geliangtang@gmail.com> <779edc1afc2f4622d9cffbdf3f8ccccfcdfd33cb.1626258797.git.geliangtang@gmail.com> <5df5b6ba135e5951c40056689f885e5101dd1abd.1626258797.git.geliangtang@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -53,79 +53,68 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added the mibs for MP_FAIL: MPTCP_MIB_MPFAILTX and
-MPTCP_MIB_MPFAILRX.
+This patch added a function chk_fail_nr to check the mibs for MP_FAIL.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/mib.c     | 2 ++
- net/mptcp/mib.h     | 2 ++
- net/mptcp/options.c | 1 +
- net/mptcp/pm.c      | 1 +
- net/mptcp/subflow.c | 1 +
- 5 files changed, 7 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index ff2cc0e3273d..44d342c90121 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -44,6 +44,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
- 	SNMP_MIB_ITEM("MPPrioTx", MPTCP_MIB_MPPRIOTX),
- 	SNMP_MIB_ITEM("MPPrioRx", MPTCP_MIB_MPPRIORX),
-+	SNMP_MIB_ITEM("MPFailTx", MPTCP_MIB_MPFAILTX),
-+	SNMP_MIB_ITEM("MPFailRx", MPTCP_MIB_MPFAILRX),
- 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
- 	SNMP_MIB_SENTINEL
- };
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 0663cb12b448..0db62d5d4e38 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -37,6 +37,8 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
- 	MPTCP_MIB_MPPRIOTX,		/* Transmit a MP_PRIO */
- 	MPTCP_MIB_MPPRIORX,		/* Received a MP_PRIO */
-+	MPTCP_MIB_MPFAILTX,		/* Transmit a MP_FAIL */
-+	MPTCP_MIB_MPFAILRX,		/* Received a MP_FAIL */
- 	MPTCP_MIB_RCVPRUNED,		/* Incoming packet dropped due to memory limit */
- 	__MPTCP_MIB_MAX
- };
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ed9a4a645459..9a2fa52c0bf0 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1150,6 +1150,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index f02f4de2f3a0..426d99c17512 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -541,6 +541,43 @@ chk_csum_nr()
+ 	fi
+ }
  
- 	if (mp_opt.mp_fail) {
- 		mptcp_pm_mp_fail_received(sk, mp_opt.fail_seq);
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILRX);
- 		mp_opt.mp_fail = 0;
- 	}
- 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index d4c19420194a..ccabe3b9e5ee 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -9,6 +9,7 @@
- #include <net/tcp.h>
- #include <net/mptcp.h>
- #include "protocol.h"
-+#include "mib.h"
- 
- /* path manager command handlers */
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 11a719fad718..5046ae431206 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -909,6 +909,7 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
- 	if (unlikely(csum_fold(csum))) {
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
- 		subflow->send_mp_fail = 1;
-+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
- 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
- 	}
++chk_fail_nr()
++{
++	local mp_fail_nr_tx=$1
++	local mp_fail_nr_rx=$2
++	local count
++	local dump_stats
++
++	printf "%-39s %s" " " "ftx"
++	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFailTx | awk '{print $2}'`
++	[ -z "$count" ] && count=0
++	if [ "$count" != "$mp_fail_nr_tx" ]; then
++		echo "[fail] got $count MP_FAIL[s] TX expected $mp_fail_nr_tx"
++		ret=1
++		dump_stats=1
++	else
++		echo -n "[ ok ]"
++	fi
++
++	echo -n " - frx   "
++	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtMPFailRx | awk '{print $2}'`
++	[ -z "$count" ] && count=0
++	if [ "$count" != "$mp_fail_nr_rx" ]; then
++		echo "[fail] got $count MP_FAIL[s] RX expected $mp_fail_nr_rx"
++		ret=1
++		dump_stats=1
++	else
++		echo "[ ok ]"
++	fi
++
++	if [ "${dump_stats}" = 1 ]; then
++		echo Server ns stats
++		ip netns exec $ns1 nstat -as | grep MPTcp
++		echo Client ns stats
++		ip netns exec $ns2 nstat -as | grep MPTcp
++	fi
++}
++
+ chk_join_nr()
+ {
+ 	local msg="$1"
+@@ -590,6 +627,7 @@ chk_join_nr()
+ 	fi
+ 	if [ $checksum -eq 1 ]; then
+ 		chk_csum_nr
++		chk_fail_nr 0 0
+ 	fi
+ }
  
 -- 
 2.31.1
