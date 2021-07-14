@@ -1,99 +1,96 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2517570
-	for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 10:15:09 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id t2so1973969edd.13
-        for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 03:15:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA37F72
+	for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 10:42:01 +0000 (UTC)
+Received: by mail-pl1-f181.google.com with SMTP id z2so1274899plg.8
+        for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 03:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yDx+dgysG9dwtO6+gKA0ZDstwnshPAnb4riFEjzt0E0=;
-        b=aO6zEum7p6GHoFw38ZzD9T9EcqYdGMvUd6soPnM2Z0uO2Gj53nMaB3JhMT0uXrCMSH
-         k0HMOk76WwdJnaW32cY7RkVFGlepvmjFw+FH+fkZZhA2Tsx0jdDSy2p8vOfof8RJ9oBl
-         QHaxku0xRtOTG7iPkDxx5k0uTeuF+giETdT5mCAWC2TkTHqnZFDPGdKCGY+Pu0J+uzW8
-         wUMlRzpGstLsZS++aK7cP4yuZ8CFGG2HSWg/7Eb2fDDadQLHMmXbTRiXwbmJeaaT61Et
-         8V+EsJ+u6UxdnLg/X8IuXjPwMPbzrgsZTWnM/1wTmRxQFDIGBnb89c6+VdXyVsW8joDX
-         frRQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cLas7OGBs57eX222ucMB78unpBDQxho8KDaoRLVvkPA=;
+        b=lex2WZbsM7IuX+yTxE6HPYPtQhB3xeq/6uSnpc9q17FC4S6CBsPxdW5Im1ob7CO3kz
+         xK4YYO7ehK5uzC+3rgjjmBaXU8lhX+Cm5J6+YCEUAaDuNS4Z+lOqeKi1uD3lcAO/41lS
+         eOjf+gUnHG05sOD0zzPknxe5Uyp/VGNeOKs0wZrsxddqh+2dOixDUgS9aJcWtKr+9OMx
+         NAvp13wFIdKQDaVmXYyt7Hr6BCOiyCBEt4kDXuOFTyYfoHhiFr0jbO5MvxjNfSTldxO2
+         lKqlduxnTQc0pPaX7SJid/aHMDf4y5KV1ACMSDaGhg2hkrAD0dbR6kkYOT+r5ntWF+g+
+         I9RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=yDx+dgysG9dwtO6+gKA0ZDstwnshPAnb4riFEjzt0E0=;
-        b=rUaQPi4ymDVNalIg2ZtRqVBwq8dxvz6Mr1GdI7mWfnac+pgeoyHTv4daduu0ttsfIR
-         +ktq54gOnyLKZYx41nIxYteJQSdkFqGQWZIspN3JPMJYJNZbLb5ssXJ0N4eHW/iC1bJz
-         e7K6Vcy9fAKKBYERXkn1FHfjVVi/NmxyAWJxqA/LYQAqo9WYkLAzhm3jj0+TgIoAA2Og
-         hP9N3uKWMbXM2m9hcq7e5QGXZnH97an2/6qVM6136gLfXtn0J/AuILzDyKv1jARyThTq
-         xtjFdBsOo3VWa1pbuFdsCFRozobbELJEv1uqX0oy/FVqIQQuHjpzWVO3j+n1oICWEMMI
-         ueGg==
-X-Gm-Message-State: AOAM533qf2FTmfYwTu3giGBGhDlpJIiUVlRRU74/N1nRGVv7CcX/BWq6
-	k3pvjzoAeL8MDiwPC6DXBYfbOw==
-X-Google-Smtp-Source: ABdhPJz8+wtys65G7bPp9GXVekEU1TypX/JlXCGJrg37MT+yytRHoJ7i5twwPkCbTPgxsI/oL92+rA==
-X-Received: by 2002:a05:6402:26ca:: with SMTP id x10mr12561401edd.319.1626257708228;
-        Wed, 14 Jul 2021 03:15:08 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:19ab:ba02:6bfa:8cec])
-        by smtp.gmail.com with ESMTPSA id ck17sm599205ejb.54.2021.07.14.03.15.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jul 2021 03:15:07 -0700 (PDT)
-Subject: Re: [PATCH v2 mptcp-next 5/8] mptcp: faster active backup recovery
-To: Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org,
- Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: lkp@intel.com, kbuild-all@lists.01.org
-References: <202107141117.6wB0621n-lkp@intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <4daa4dc7-c30f-8125-9fdb-7e7376f05029@tessares.net>
-Date: Wed, 14 Jul 2021 12:15:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        bh=cLas7OGBs57eX222ucMB78unpBDQxho8KDaoRLVvkPA=;
+        b=G1X9thM4GB4CrHPex0dBcGUMXDrmc2fCKoRk92c6UKaGnc75fbZ/6MVVgJOvDcg0n3
+         MMJpR1RQvpKp7uH3oyKAXZ9MxFvCyYT/BVLA3dzrYyygrY0RVguh5BtgHX45R+guCJqA
+         P82SdXn5lQpGL6GOD51wIVwihWsYssr9TtMFS9zU+vKSpdTqpbWuw4aiW0Cy/PVx2MxB
+         Eaw07Sa7U/jckE+XqKRmFoK1edufM4COxBREQ29SuFZaqkPha8ilV+P7sOvRlIZOCkT2
+         /10439f6dLeGEBkL9huYFMQ15p6jZL7NYqZWtRbnWGfHapu9jTQCmimielfQvrFlwKlH
+         efmw==
+X-Gm-Message-State: AOAM531hjmC02syr/fcpBpmPZODXgG97GrxwN+grHK1OtVaDkFMOv3GA
+	l2tPlLve1bVmqOcc1Hl3+/Nrq5j5iAkyJw==
+X-Google-Smtp-Source: ABdhPJyrYyDawmVIKmstyGWQrcAZ/epX+b4iPHgsCSYMgaR8Tv7lJGsoyGTEoICqdAVh/b6E1byvkg==
+X-Received: by 2002:a17:90a:4306:: with SMTP id q6mr3119297pjg.202.1626259321325;
+        Wed, 14 Jul 2021 03:42:01 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id x18sm2122904pfh.48.2021.07.14.03.41.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jul 2021 03:42:00 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v4 mptcp-next 0/5] MP_FAIL support
+Date: Wed, 14 Jul 2021 18:41:52 +0800
+Message-Id: <cover.1626258797.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <202107141117.6wB0621n-lkp@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+v4:
+ - just deal with the multiple subflows case, put the single subflow
+   case into the new 'infinite mapping' part.
 
-On 14/07/2021 10:36, Dan Carpenter wrote:
-> Hi Paolo,
-> 
-> url:    https://github.com/0day-ci/linux/commits/Paolo-Abeni/mptcp-refactor-active-backup/20210714-051541
-> base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-> config: x86_64-randconfig-m001-20210713 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> 
-> New smatch warnings:
-> net/mptcp/pm_netlink.c:931 mptcp_pm_nl_subflow_chk_stale() error: uninitialized symbol 'push'.
+v3:
+ - respond with MP_FAIL
+ - add single subflow check
+ - add infinite mapping sending and receiving
+ - export/20210626T054902
 
+v2:
+ - MP_FAIL logic:
+   * Peer B send a DSS to peer A, and the data has been modify by the
+  middleboxes, then peer A detects the bad checksum.
+   * In the multiple subflows case, peer A sends MP_FAIL+RST back to peer B,
+  and peer A discards the data following the bad data sequence number. Peer
+  B receives this MP_FAIL+RST, and close this subflow.
+   * In the single subflow case, using the simple implementation, peer A
+  sends MP_FAIL back to peer B, and peer A fallback to a regular TCP. Peer
+  B receives this MP_FAIL, and fallback to a regular TCP.
 
-Thank you for your email!
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/52
 
+Geliang Tang (5):
+  mptcp: MP_FAIL suboption sending
+  mptcp: MP_FAIL suboption receiving
+  mptcp: send out MP_FAIL when data checksum fail
+  mptcp: add the mibs for MP_FAIL
+  selftests: mptcp: add MP_FAIL mibs check
 
+ include/net/mptcp.h                           |  5 +-
+ net/mptcp/mib.c                               |  2 +
+ net/mptcp/mib.h                               |  2 +
+ net/mptcp/options.c                           | 78 ++++++++++++++++++-
+ net/mptcp/pm.c                                |  8 ++
+ net/mptcp/protocol.h                          | 19 +++++
+ net/mptcp/subflow.c                           | 16 ++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 38 +++++++++
+ 8 files changed, 163 insertions(+), 5 deletions(-)
 
-It looks like Intel's kernel test robot spot the same issue a few hours
-ago [1] (that's good, it was very quick!).
-
-Paolo already sent a fix [2].
-
-
-[1] https://lore.kernel.org/mptcp/202107140830.4kwYyqkO-lkp@intel.com/
-[2]
-https://lore.kernel.org/mptcp/1d91265cca09bb69516907f44b5e4b72c4efabe1.1626252886.git.pabeni@redhat.com/T/#u
-
-
-Cheers,
-
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.31.1
+
