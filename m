@@ -1,171 +1,99 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37A170
-	for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 09:49:26 +0000 (UTC)
-HMM_SOURCE_IP:172.18.0.218:52512.963588333
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.26?logid-b463668f21ef42e398db77cb4c89cf2e (unknown [172.18.0.218])
-	by chinatelecom.cn (HERMES) with SMTP id C55A02800A5;
-	Wed, 14 Jul 2021 17:49:19 +0800 (CST)
-X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
-Received: from  ([172.18.0.218])
-	by app0025 with ESMTP id b463668f21ef42e398db77cb4c89cf2e for mptcp@lists.linux.dev;
-	Wed Jul 14 17:49:22 2021
-X-Transaction-ID: b463668f21ef42e398db77cb4c89cf2e
-X-filter-score:
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.0.218
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: remove
- MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT"
-To: Geliang Tang <geliangtang@gmail.com>
-References: <756dcceaa255c54b7bd195c719ede1f7ae791eb3.1626158100.git.geliangtang@gmail.com>
- <7eaa18f3391aa9862bb8274f6288ed1888af8f72.1626158161.git.geliangtang@gmail.com>
- <1e219d3d-9ea5-26ec-ae2c-dac4563bd345@chinatelecom.cn>
- <CA+WQbwtK0expftc6LPrLY701iippBZ3f7EMoTKR=WTu5p1qxjg@mail.gmail.com>
-Cc: mptcp@lists.linux.dev
-From: Yonglong Li <liyonglong@chinatelecom.cn>
-Message-ID: <f7ef8d86-d644-89c5-6153-f9fb4f31b897@chinatelecom.cn>
-Date: Wed, 14 Jul 2021 17:49:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2517570
+	for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 10:15:09 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id t2so1973969edd.13
+        for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 03:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yDx+dgysG9dwtO6+gKA0ZDstwnshPAnb4riFEjzt0E0=;
+        b=aO6zEum7p6GHoFw38ZzD9T9EcqYdGMvUd6soPnM2Z0uO2Gj53nMaB3JhMT0uXrCMSH
+         k0HMOk76WwdJnaW32cY7RkVFGlepvmjFw+FH+fkZZhA2Tsx0jdDSy2p8vOfof8RJ9oBl
+         QHaxku0xRtOTG7iPkDxx5k0uTeuF+giETdT5mCAWC2TkTHqnZFDPGdKCGY+Pu0J+uzW8
+         wUMlRzpGstLsZS++aK7cP4yuZ8CFGG2HSWg/7Eb2fDDadQLHMmXbTRiXwbmJeaaT61Et
+         8V+EsJ+u6UxdnLg/X8IuXjPwMPbzrgsZTWnM/1wTmRxQFDIGBnb89c6+VdXyVsW8joDX
+         frRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yDx+dgysG9dwtO6+gKA0ZDstwnshPAnb4riFEjzt0E0=;
+        b=rUaQPi4ymDVNalIg2ZtRqVBwq8dxvz6Mr1GdI7mWfnac+pgeoyHTv4daduu0ttsfIR
+         +ktq54gOnyLKZYx41nIxYteJQSdkFqGQWZIspN3JPMJYJNZbLb5ssXJ0N4eHW/iC1bJz
+         e7K6Vcy9fAKKBYERXkn1FHfjVVi/NmxyAWJxqA/LYQAqo9WYkLAzhm3jj0+TgIoAA2Og
+         hP9N3uKWMbXM2m9hcq7e5QGXZnH97an2/6qVM6136gLfXtn0J/AuILzDyKv1jARyThTq
+         xtjFdBsOo3VWa1pbuFdsCFRozobbELJEv1uqX0oy/FVqIQQuHjpzWVO3j+n1oICWEMMI
+         ueGg==
+X-Gm-Message-State: AOAM533qf2FTmfYwTu3giGBGhDlpJIiUVlRRU74/N1nRGVv7CcX/BWq6
+	k3pvjzoAeL8MDiwPC6DXBYfbOw==
+X-Google-Smtp-Source: ABdhPJz8+wtys65G7bPp9GXVekEU1TypX/JlXCGJrg37MT+yytRHoJ7i5twwPkCbTPgxsI/oL92+rA==
+X-Received: by 2002:a05:6402:26ca:: with SMTP id x10mr12561401edd.319.1626257708228;
+        Wed, 14 Jul 2021 03:15:08 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:19ab:ba02:6bfa:8cec])
+        by smtp.gmail.com with ESMTPSA id ck17sm599205ejb.54.2021.07.14.03.15.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Jul 2021 03:15:07 -0700 (PDT)
+Subject: Re: [PATCH v2 mptcp-next 5/8] mptcp: faster active backup recovery
+To: Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org,
+ Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: lkp@intel.com, kbuild-all@lists.01.org
+References: <202107141117.6wB0621n-lkp@intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <4daa4dc7-c30f-8125-9fdb-7e7376f05029@tessares.net>
+Date: Wed, 14 Jul 2021 12:15:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CA+WQbwtK0expftc6LPrLY701iippBZ3f7EMoTKR=WTu5p1qxjg@mail.gmail.com>
+In-Reply-To: <202107141117.6wB0621n-lkp@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Dan,
 
-On 2021/7/14 11:10, Geliang Tang wrote:
-> Hi Yonglong,
+On 14/07/2021 10:36, Dan Carpenter wrote:
+> Hi Paolo,
 > 
-> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年7月13日周二 下午6:30写道：
->>
->>
->>
->> On 2021/7/13 14:44, Geliang Tang wrote:
->>> Keep the debug info for "send ack".
->>>
->>> Don't drop mptcp_pm_should_add_signal_ipv6() and
->>> mptcp_pm_should_add_signal_port().
->>>
->>> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
->>> ---
->>>  net/mptcp/pm_netlink.c | 7 +++++--
->>>  1 file changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->>> index 3e35720317ae..2cd6caaedb08 100644
->>> --- a/net/mptcp/pm_netlink.c
->>> +++ b/net/mptcp/pm_netlink.c
->>> @@ -543,8 +543,11 @@ void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
->>>               bool slow;
->>>
->>>               spin_unlock_bh(&msk->pm.lock);
->>> -             pr_debug("send ack for %s",
->>> -                      mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr");
->>> +             pr_debug("send ack for %s%s%s",
->>> +                      mptcp_pm_should_add_signal_addr(msk) ? "add_addr" :
->>> +                      (mptcp_pm_should_add_signal_echo(msk) ? "add_echo" : "rm_addr"),
->>> +                      mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
->>> +                      mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
->>>
->>>               slow = lock_sock_fast(ssk);
->>>               tcp_send_ack(ssk);
->>>
->> Hi Geliang,
->>
->> I think the debug log will be incorrect if add_addr and add_echo events trigger at the same time.
->> WDYT?
+> url:    https://github.com/0day-ci/linux/commits/Paolo-Abeni/mptcp-refactor-active-backup/20210714-051541
+> base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+> config: x86_64-randconfig-m001-20210713 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
 > 
-> Yes, how about moving this pr_debug line under the pm lock, just swap this
-> pr_debug line with the spin_unlock_bh line?
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 > 
-> If so, no need to use READ_ONCE() in mptcp_pm_should_add_signal_ipv6/port
-> too.
-I prefer to remove ipv6 check just like v8. if you want to debug we can get more detail info
-from debug log in mptcp_established_options_add_addr.
-
-> 
-> 
-> I had tested this squash-to patches all night yesterday. And I got this
-> error in the debug log:
-> 
-> add_signal error, add_addr=2, echo=1
-> 
-> This means the race occurs, right?
-> 
-It seams like anther race case or bug? if more than one 'echo add addr' event be trigger at the same
-time this log will be show.
-
-> Does it mean that this version cannot deal with the race either? I'm not
-> sure.
-> 
-> Could you please share your test scripts to me?
-> 
-I add a test case in mptcp_join.sh, and run 'mptcp_join.sh -X -c' in a loop, if test case failed the race maybe occurs.
-and then analsys the pcap file to check the race.
-
-the test case add in mptcp_join.sh:
-
-diff --git a/mptcp_join.sh b/mptcp_join.sh
-index 523c779..162a451 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1462,6 +1462,24 @@ checksum_tests()
-        chk_csum_nr "checksum test 1 0"
- }
-
-+xxoo()
-+{
-+       reset
-+       ip netns exec $ns1 ./pm_nl_ctl limits 4 4
-+       ip netns exec $ns2 ./pm_nl_ctl limits 4 4
-+       ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags signal
-+       ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+       ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+       ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+       ip netns exec $ns2 ./pm_nl_ctl add 10.0.1.2 flags signal
-+       ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags signal
-+       ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags signal
-+       ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags signal
-+       run_tests $ns1 $ns2 10.0.1.1
-+       chk_add_nr 4 4
-+}
-+
-+
- all_tests()
- {
-        subflows_tests
-@@ -1566,6 +1584,9 @@ while getopts 'fsltra64bpkchCS' opt; do
-                S)
-                        checksum_tests
-                        ;;
-+               X)
-+                       xxoo
-+                       ;;
-                c)
-                        ;;
-                C)
+> New smatch warnings:
+> net/mptcp/pm_netlink.c:931 mptcp_pm_nl_subflow_chk_stale() error: uninitialized symbol 'push'.
 
 
-> Thanks,
-> -Geliang
-> 
-> 
-> 
->>
->> --
->> Li YongLong
-> 
-> 
+Thank you for your email!
 
+
+
+It looks like Intel's kernel test robot spot the same issue a few hours
+ago [1] (that's good, it was very quick!).
+
+Paolo already sent a fix [2].
+
+
+[1] https://lore.kernel.org/mptcp/202107140830.4kwYyqkO-lkp@intel.com/
+[2]
+https://lore.kernel.org/mptcp/1d91265cca09bb69516907f44b5e4b72c4efabe1.1626252886.git.pabeni@redhat.com/T/#u
+
+
+Cheers,
+
+Matt
 -- 
-Li YongLong
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
