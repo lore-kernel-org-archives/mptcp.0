@@ -1,25 +1,27 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BE9168
-	for <mptcp@lists.linux.dev>; Thu, 15 Jul 2021 01:20:46 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="208638108"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0BF168
+	for <mptcp@lists.linux.dev>; Thu, 15 Jul 2021 01:46:49 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="190138748"
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="208638108"
+   d="scan'208";a="190138748"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 18:20:46 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 18:46:48 -0700
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="494811393"
+   d="scan'208";a="494839196"
 Received: from ywu57-mobl2.amr.corp.intel.com ([10.212.215.166])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 18:20:45 -0700
-Date: Wed, 14 Jul 2021 18:20:44 -0700 (PDT)
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 18:46:48 -0700
+Date: Wed, 14 Jul 2021 18:46:47 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-next 0/8] mptcp: refactor active backup
-In-Reply-To: <cover.1626210682.git.pabeni@redhat.com>
-Message-ID: <9f78517b-1ce0-ef5-8e3d-9319433edbc0@linux.intel.com>
-References: <cover.1626210682.git.pabeni@redhat.com>
+Subject: Re: [MPTCP][PATCH v4 mptcp-next 3/5] mptcp: send out MP_FAIL when
+ data checksum fail
+In-Reply-To: <779edc1afc2f4622d9cffbdf3f8ccccfcdfd33cb.1626258797.git.geliangtang@gmail.com>
+Message-ID: <c1cab5c9-2ef2-7fe4-a75f-9b458a2a9a7@linux.intel.com>
+References: <cover.1626258797.git.geliangtang@gmail.com> <d719e2be68d4f75b1cb392f67516261a59e94c5b.1626258797.git.geliangtang@gmail.com> <c9b00f7ce8d17ea4fb6e60c09433f36cc144a2f7.1626258797.git.geliangtang@gmail.com>
+ <779edc1afc2f4622d9cffbdf3f8ccccfcdfd33cb.1626258797.git.geliangtang@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,72 +30,92 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 13 Jul 2021, Paolo Abeni wrote:
+On Wed, 14 Jul 2021, Geliang Tang wrote:
 
-> This series addresses a bunch of issues somewhat related to active
-> backup handling. The most visible functial issue addressed here is:
+> When a bad checksum is detected, set the send_mp_fail flag to send out
+> the MP_FAIL option.
 >
-> https://github.com/multipath-tcp/mptcp_net-next/issues/191
+> Add a new function mptcp_has_another_subflow() to check whether there's
+> only a single subflow.
 >
-> This series also add some specific self-tests, to cover both
-> active-backup switch-over and proper usage of backup link.
+> When multiple subflows are in use, close the affected subflow with a RST
+> that includes an MP_FAIL option and discard the data with the bad
+> checksum.
 >
-> A new netns parameter is introduced:
+> Set the sk_state of the subsocket to TCP_CLOSE, then the flag
+> MPTCP_WORK_CLOSE_SUBFLOW will be set in subflow_sched_work_if_closed,
+> and the subflow will be closed.
 >
-> stale_loss_cnt - the max amount of mptcp rtx timeouts with no progresses
->        and outstanding data over a single subflow needed to declare
->        such subflow 'stale': no more data will be queue until some ack
->        is observed.
+> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> ---
+> net/mptcp/protocol.h | 13 +++++++++++++
+> net/mptcp/subflow.c  | 15 +++++++++++++++
+> 2 files changed, 28 insertions(+)
 >
-> Changes from v1:
-> - stale_loss_cnt is now configurable via sysctl
-> - addressed buglet noted by Mat on v1
-> - fixed timeout update issues in patches 1-2
-> - fixed splat in __mptcp_clean_una() on reinection
->   - the new self-tests are now less unstable
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 20f8faf0543b..260920d26935 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -601,6 +601,19 @@ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+> 	inet_csk(sk)->icsk_af_ops = ctx->icsk_af_ops;
+> }
+>
+> +static inline bool mptcp_has_another_subflow(struct sock *ssk)
+> +{
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk), *tmp;
+> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +
+> +	mptcp_for_each_subflow(msk, tmp) {
+> +		if (tmp != subflow)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> void __init mptcp_proto_init(void);
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> int __init mptcp_proto_v6_init(void);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 966f777d35ce..11a719fad718 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -908,6 +908,7 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
+> 	csum = csum_partial(&header, sizeof(header), subflow->map_data_csum);
+> 	if (unlikely(csum_fold(csum))) {
+> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
+> +		subflow->send_mp_fail = 1;
+> 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
+> 	}
+>
+> @@ -1155,6 +1156,20 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>
+> fallback:
+> 	/* RFC 8684 section 3.7. */
+> +	if (subflow->send_mp_fail) {
+> +		if (mptcp_has_another_subflow(ssk)) {
+> +			ssk->sk_err = EBADMSG;
+> +			tcp_set_state(ssk, TCP_CLOSE);
+> +			subflow->reset_transient = 0;
+> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
+> +			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+> +				sk_eat_skb(ssk, skb);
+> +			WRITE_ONCE(subflow->data_avail, 0);
+> +			return true;
+> +		}
+> +	}
+> +
 
-The "less unstable" tests pass reliably for me!
+The above handles the multiple-subflow case...
 
-Ok with me to put these on the export branch, with the squash-to that 
-addresses the kbuild warning.
+> 	if (subflow->mp_join || subflow->fully_established) {
+> 		/* fatal protocol error, close the socket.
+> 		 * subflow_error_report() will introduce the appropriate barriers
 
-Regarding the "stale vs. stall" discussion on irc, I'm fine with referring 
-to the subflows as "stale".
-
-Thanks!
-
-Mat
-
-
->
-> Paolo Abeni (8):
->  mptcp: more accurate timeout
->  mptcp: less aggressive retransmission stragegy
->  mptcp: handle pending data on closed subflow
->  mptcp: cleanup sysctl data and helpers
->  mptcp: faster active backup recovery
->  mptcp: add mibs for stale subflows processing
->  mptcp: backup flag from incoming MPJ ack option
->  selftests: mptcp: add testcase for active-back
->
-> Documentation/networking/mptcp-sysctl.rst     |  12 +
-> net/mptcp/ctrl.c                              |  26 ++-
-> net/mptcp/mib.c                               |   2 +
-> net/mptcp/mib.h                               |   2 +
-> net/mptcp/options.c                           |   8 +-
-> net/mptcp/pm.c                                |  21 ++
-> net/mptcp/pm_netlink.c                        |  37 +++
-> net/mptcp/protocol.c                          | 187 +++++++++++----
-> net/mptcp/protocol.h                          |  31 ++-
-> net/mptcp/subflow.c                           |   6 +-
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 215 +++++++++++++++---
-> 11 files changed, 459 insertions(+), 88 deletions(-)
->
-> -- 
-> 2.26.3
->
->
->
+...and since the infinite-mapping code and other single-subflow logic will 
+be in a later patch set, should the single-subflow case be temporarily 
+handled here by sending MP_TCPRST instead of MP_FAIL?
 
 --
 Mat Martineau
