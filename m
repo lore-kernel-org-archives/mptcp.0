@@ -1,122 +1,150 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0BF168
-	for <mptcp@lists.linux.dev>; Thu, 15 Jul 2021 01:46:49 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="190138748"
-X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="190138748"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 18:46:48 -0700
-X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="494839196"
-Received: from ywu57-mobl2.amr.corp.intel.com ([10.212.215.166])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 18:46:48 -0700
-Date: Wed, 14 Jul 2021 18:46:47 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH v4 mptcp-next 3/5] mptcp: send out MP_FAIL when
- data checksum fail
-In-Reply-To: <779edc1afc2f4622d9cffbdf3f8ccccfcdfd33cb.1626258797.git.geliangtang@gmail.com>
-Message-ID: <c1cab5c9-2ef2-7fe4-a75f-9b458a2a9a7@linux.intel.com>
-References: <cover.1626258797.git.geliangtang@gmail.com> <d719e2be68d4f75b1cb392f67516261a59e94c5b.1626258797.git.geliangtang@gmail.com> <c9b00f7ce8d17ea4fb6e60c09433f36cc144a2f7.1626258797.git.geliangtang@gmail.com>
- <779edc1afc2f4622d9cffbdf3f8ccccfcdfd33cb.1626258797.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8586070
+	for <mptcp@lists.linux.dev>; Thu, 15 Jul 2021 03:17:53 +0000 (UTC)
+Received: by mail-pg1-f171.google.com with SMTP id s18so4593764pgq.3
+        for <mptcp@lists.linux.dev>; Wed, 14 Jul 2021 20:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RB5UdF/oiL+P/aPkxZCIC+yoXamHE09r9gsuuuPj1O0=;
+        b=FY2+Lneti7Ve+jF6yCAT8gGCFIM9XuQSHdtiQlZM/+IoHa5tgbtIWqsPRSIX4W35Nz
+         46lcEARh4cPf+XIYOAVDjH29A/urFSWExwMG7CgV/IW8YQQyytSL+h1mVt26NbxjaTVd
+         suzm8kYiMobsWj+OonmXPfxYVBhJTZEGrMlEsBawmpWozEK+L0MDmb76tvabCoBlMcyT
+         7/q4w0OK15UVZ0DEbWwo51F0xChTStM24ZRpSnmGHJI4Lm4wzU6QVyTqcm0rP8kZGaJP
+         FWd8p1j4h8Cnat+ojkqXGOH4VY5rqpnhPserTkYWMeuFskQOpEvhyDznfA/M2dtKQzEm
+         mGKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RB5UdF/oiL+P/aPkxZCIC+yoXamHE09r9gsuuuPj1O0=;
+        b=s87tOjAt5xYj9196tp6QnjRLCsnAz9JMHlpZ7aPmkzkggirNGBcA5BkUCgM+zGj2yr
+         NA+RBY4G7rY70kXRoGZk0YwMxfHZ1lcltINM2V3oYWZk5+7+YsKuq2Xunn9Esz33r63n
+         E6CNfU09x74W2cYSi3sRygqUKCy88tlc2EXyk9aAT2DnG2dbQVp8xXY58wVXHP/zXBP1
+         n7ez37e41d3Ev686UN+wkvaBVJJtSDAvqCQmCAD9CDLi5oJ9nq0pMhu4jNK/9rafgy94
+         tozK8snHRRy3BoCGsX6jhK5sPb33DVyP3EL//r2F14sgfj6cmBL9i9b8i//UHyZr1SgJ
+         xVNw==
+X-Gm-Message-State: AOAM531fVTVxwaHQQveqCIrRt56P7NeJM9SLxaZmOk4gY56zxPgl7+Ap
+	QqUh+SPIeG16F8fCHY83GhZ3M3eKTyjev+MAo+k=
+X-Google-Smtp-Source: ABdhPJwzF/6MzfcMbkuVtQ3wWIRZqBnSXPXk/Qrwxa7wj+ukcQWptVR9nusbSXy9PDM+TxZXcou3Ng3DeBotN+haaDw=
+X-Received: by 2002:a62:3344:0:b029:25e:a0a8:1c51 with SMTP id
+ z65-20020a6233440000b029025ea0a81c51mr1707741pfz.58.1626319073083; Wed, 14
+ Jul 2021 20:17:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <756dcceaa255c54b7bd195c719ede1f7ae791eb3.1626158100.git.geliangtang@gmail.com>
+ <f0920ba1126ff81aa1acbff47e805e5573c64abc.1626158123.git.geliangtang@gmail.com>
+ <CA+WQbwtGmfH7JtZUAUN7deZwVwJ=9o_7dZCk=7gC7h63sQMMZA@mail.gmail.com> <656b5aa6-f697-a35-2aa6-53ec2aec2cfc@linux.intel.com>
+In-Reply-To: <656b5aa6-f697-a35-2aa6-53ec2aec2cfc@linux.intel.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Thu, 15 Jul 2021 11:17:41 +0800
+Message-ID: <CA+WQbwu7s3B2pjpbpfcDYV_215=j=7c59A8M1XxG4m0xVOsAWg@mail.gmail.com>
+Subject: Re: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: build
+ ADD_ADDR/echo-ADD_ADDR option according pm.add_signal"
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 14 Jul 2021, Geliang Tang wrote:
+Hi Mat,
 
-> When a bad checksum is detected, set the send_mp_fail flag to send out
-> the MP_FAIL option.
+Mat Martineau <mathew.j.martineau@linux.intel.com> =E4=BA=8E2021=E5=B9=B47=
+=E6=9C=8814=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=884:39=E5=86=99=E9=
+=81=93=EF=BC=9A
 >
-> Add a new function mptcp_has_another_subflow() to check whether there's
-> only a single subflow.
+> On Tue, 13 Jul 2021, Geliang Tang wrote:
 >
-> When multiple subflows are in use, close the affected subflow with a RST
-> that includes an MP_FAIL option and discard the data with the bad
-> checksum.
+> > This squash-to patch will conflict with "mptcp: remove
+> > MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT":
+> >
+> > Auto-merging net/mptcp/protocol.h
+> > CONFLICT (content): Merge conflict in net/mptcp/protocol.h
+> > Auto-merging net/mptcp/pm.c
+> > error: could not apply bf1fec79a2bf... mptcp: remove
+> > MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
+> >
+> > Please fix it like this:
+> >
+> > <<<<<<< HEAD
+> > static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *m=
+sk)
+> > {
+> >         return (mptcp_pm_should_add_signal_addr(msk) &&
+> > msk->pm.local.family =3D=3D AF_INET6) ||
+> >                 (mptcp_pm_should_add_signal_echo(msk) &&
+> > msk->pm.remote.family =3D=3D AF_INET6);
+> > }
+> >
+> > static inline bool mptcp_pm_should_add_signal_port(struct mptcp_sock *m=
+sk)
+> > {
+> >         return (mptcp_pm_should_add_signal_addr(msk) && msk->pm.local.p=
+ort) ||
+> >                 (mptcp_pm_should_add_signal_echo(msk) && msk->pm.remote=
+.port);
+> > }
+> >
+> > =3D=3D=3D=3D=3D=3D=3D
+> > >>>>>>> bf1fec79a2bf (mptcp: remove MPTCP_ADD_ADDR_IPV6 and
+> > MPTCP_ADD_ADDR_PORT)
+> > static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+> > {
+> >         return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNA=
+L);
+> > }
+> >
+> > ->
+> >
+> > static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *m=
+sk)
+> > {
+> >         return (mptcp_pm_should_add_signal_addr(msk) &&
+> > msk->pm.local.family =3D=3D AF_INET6) ||
+> >                 (mptcp_pm_should_add_signal_echo(msk) &&
+> > msk->pm.remote.family =3D=3D AF_INET6);
+> > }
+> >
+> > static inline bool mptcp_pm_should_add_signal_port(struct mptcp_sock *m=
+sk)
+> > {
+> >         return (mptcp_pm_should_add_signal_addr(msk) && msk->pm.local.p=
+ort) ||
+> >                 (mptcp_pm_should_add_signal_echo(msk) && msk->pm.remote=
+.port);
+> > }
+> >
+> > static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+> > {
+> >         return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNA=
+L);
+> > }
+> >
+> >
 >
-> Set the sk_state of the subsocket to TCP_CLOSE, then the flag
-> MPTCP_WORK_CLOSE_SUBFLOW will be set in subflow_sched_work_if_closed,
-> and the subflow will be closed.
+> Well, it looks like I gave my Reviewed-by tag too soon. I think it would
+> be easier to get the correct results by posting more revisions of the
+> patch set - don't want to introduce mistakes when trying to resolve these
+> conflicts when applying to mptcp_net-next repo!
 >
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
-> net/mptcp/protocol.h | 13 +++++++++++++
-> net/mptcp/subflow.c  | 15 +++++++++++++++
-> 2 files changed, 28 insertions(+)
+> Geliang and Yonglong, what do you think about posting v9, possibly with
+> co-developed-by tags?
 >
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 20f8faf0543b..260920d26935 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -601,6 +601,19 @@ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
-> 	inet_csk(sk)->icsk_af_ops = ctx->icsk_af_ops;
-> }
->
-> +static inline bool mptcp_has_another_subflow(struct sock *ssk)
-> +{
-> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk), *tmp;
-> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-> +
-> +	mptcp_for_each_subflow(msk, tmp) {
-> +		if (tmp != subflow)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> void __init mptcp_proto_init(void);
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> int __init mptcp_proto_v6_init(void);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 966f777d35ce..11a719fad718 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -908,6 +908,7 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
-> 	csum = csum_partial(&header, sizeof(header), subflow->map_data_csum);
-> 	if (unlikely(csum_fold(csum))) {
-> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
-> +		subflow->send_mp_fail = 1;
-> 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
-> 	}
->
-> @@ -1155,6 +1156,20 @@ static bool subflow_check_data_avail(struct sock *ssk)
->
-> fallback:
-> 	/* RFC 8684 section 3.7. */
-> +	if (subflow->send_mp_fail) {
-> +		if (mptcp_has_another_subflow(ssk)) {
-> +			ssk->sk_err = EBADMSG;
-> +			tcp_set_state(ssk, TCP_CLOSE);
-> +			subflow->reset_transient = 0;
-> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
-> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
-> +			while ((skb = skb_peek(&ssk->sk_receive_queue)))
-> +				sk_eat_skb(ssk, skb);
-> +			WRITE_ONCE(subflow->data_avail, 0);
-> +			return true;
-> +		}
-> +	}
-> +
 
-The above handles the multiple-subflow case...
+Sounds good. I'll send a v9, with my co-developed-by tags, and keep Yonglon=
+g
+as the author, when the code is ready and the test passes.
 
-> 	if (subflow->mp_join || subflow->fully_established) {
-> 		/* fatal protocol error, close the socket.
-> 		 * subflow_error_report() will introduce the appropriate barriers
+Thanks,
+-Geliang
 
-...and since the infinite-mapping code and other single-subflow logic will 
-be in a later patch set, should the single-subflow case be temporarily 
-handled here by sending MP_TCPRST instead of MP_FAIL?
-
---
-Mat Martineau
-Intel
+>
+> --
+> Mat Martineau
+> Intel
