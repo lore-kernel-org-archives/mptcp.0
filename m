@@ -1,47 +1,47 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05E4173
-	for <mptcp@lists.linux.dev>; Wed, 21 Jul 2021 08:56:54 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id d1so650207plg.0
-        for <mptcp@lists.linux.dev>; Wed, 21 Jul 2021 01:56:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4983D70
+	for <mptcp@lists.linux.dev>; Wed, 21 Jul 2021 14:31:42 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id p36so2341216pfw.11
+        for <mptcp@lists.linux.dev>; Wed, 21 Jul 2021 07:31:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3rmI1hT+4WaFtENytVD4/IDDFUNvwqot5ki2bizVJUc=;
-        b=Rg0R7IE/gdbgopatrli3MD5q8DiqNlRxKaIKKDhkVXGP4LWZq2QNcBZUfK03n7MGv6
-         3EbEuf54B2Y2jwIij03QCSvBxHT++2py4ejzYopBYsogosuiSQaQVflDmIvkpmZtNUCM
-         VWVK+HxUmwAr/0fL8yTN/H4hC3Z7flJTyxWB3LU2trKi4bgUTfCTHKOpV5tWWCYeNoYD
-         934Wk/O0nt3moyo8sPBVCvN6KAR9H1z1R3DYGgxhy9jwux/WE9qQfanARGnRlNe2XFbg
-         WZJBuzGsmno0LxU1xyW4ZowhmvlW8LzGjCDZToKi6zPTjr9mX9cKBmXMFu7fHFVJRozD
-         XA+Q==
+        bh=59+mmcWfGLWINV3YuSZAlW/g/KmLHgckkpMk004cvxU=;
+        b=gYrlWCkI1Fa14rGyAQQ55rH8EDAaZOzYNwenPuXIC3km7QBnBzhBIDUrp7rMnNX93d
+         t1XFLdkXZ2BOICTwYwUGvGxPbH2qAC5uxi0M1CN2KVlswb7nooxpo0ZYxWlxJawDZYRt
+         j0RCWvzvf0uBZbgMd5ruscwQ8SOHfS5XlCIW/2J8uO4qlkzt/4lWH8sCCiP40Bp+anf3
+         +zPearlJfFjSY8TDAsoEvvIUFUed6o0G8iOYYX1rEGUw4KpTMrz9q7e6Tech7rN3Nmqc
+         4N4Q1+UD8umGj8SLws6WbFV93wpzoPMNYseKjDD7wkV94JoOZ8nzIE0v4gsQ0BNpkmP8
+         IMqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3rmI1hT+4WaFtENytVD4/IDDFUNvwqot5ki2bizVJUc=;
-        b=m2hu201luvRiIjD1MQ5oDU0YghSc5p3CTMZj/zXQ4gDwuTvZkciUa8fQfC2Fkv8EOL
-         ul+NK+zzTej8nbx9STNwfAyuPm0D9pScHy+BdWq9HUWQiqZ8b2kE55WRCUevTjcJImqj
-         zGeDExz4mzAuqiZPQOH/EotQkR4TjvEEe5eZp5H9HK8fUfcGHjyjXzLv5cU8WUbuvZX6
-         7EHbACX31pOaIXgih6lCfL38p66At9IoEFck747iWH4k4ZIWQqN9IsEhZvsRIzWUDEhd
-         ka+Gggsfz+2wjo2PTV1xWcygl/G4jADLioqv1kGlLdemzucItJQiOI6rO/lMlb1TlldG
-         Di7g==
-X-Gm-Message-State: AOAM531mKt6uPqxnTFmFZ6CCMF0q2LlTdMKUjjDQT2XmCzZvWgNbqQOZ
-	63C3v/oSEkxXa5X6IP6nIBnFicJ3xM+Izw==
-X-Google-Smtp-Source: ABdhPJzms2RAh7E8qqdffWQOOeLBfnUpZtUBC3ZfChJBNguQ0/DhUCM82SWN7vfB0JLIYyMvM7uksw==
-X-Received: by 2002:a17:90b:224f:: with SMTP id hk15mr2801271pjb.180.1626857814067;
-        Wed, 21 Jul 2021 01:56:54 -0700 (PDT)
-Received: from MiBook.. ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id u15sm28996250pgf.77.2021.07.21.01.56.52
+        bh=59+mmcWfGLWINV3YuSZAlW/g/KmLHgckkpMk004cvxU=;
+        b=rEUKB+RBX3llT8r2eot2JcOLCJCsEQcCtLfecXsUXqZYTm/8OWOjP/Ngr2mgtD6TPv
+         KcDNfL7D3zQ6DVVcNxR/8i/9YdDZ4MzWYgX5VN6y/TntyE4SPb2woCOyuENdnVfH4y2H
+         ogrt8Hm9O7uYw4PwMVX9Hn7iMOjdtXVxy7cEPJsKk1ydM+mijK2V44zRoC1a3ur4QiWN
+         JlnoBan5hc2Ee/LMCs4eEXe1OyWxz487YuNR/NWVikDxGvuC693IMqhWW2PpTIVFvzV7
+         IbFxK3uxhqWjL+vRF+uj8gXZ5PIswnmfl7kcHJu7d+C2AP+jT9j0wsk7OkRTSoHQ6V22
+         /Eeg==
+X-Gm-Message-State: AOAM530JscXmhbrvBTHcdgDX4gEGkX0auqDyYIjQ7GJ+rEFy4EnObtkN
+	5FGRcXBAx33z8++OCM7qEdhPJseCPyEmgg==
+X-Google-Smtp-Source: ABdhPJzoBoDwU7O5jvJ6VKNxweXOdYe2gazS5AjBDOtrIG/7J+9VofiBA4CwhAR9ODSuEPqm7cqzog==
+X-Received: by 2002:aa7:9ec3:0:b029:32b:4eb5:4bad with SMTP id r3-20020aa79ec30000b029032b4eb54badmr36644884pfq.6.1626877901699;
+        Wed, 21 Jul 2021 07:31:41 -0700 (PDT)
+Received: from MiBook.. ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id i6sm21723147pfa.44.2021.07.21.07.31.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jul 2021 01:56:53 -0700 (PDT)
+        Wed, 21 Jul 2021 07:31:41 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH mptcp-next] Squash to "selftests: mptcp: add testcase for active-back"
-Date: Wed, 21 Jul 2021 16:56:49 +0800
-Message-Id: <67cd742a1da03b8633e4837c45991860236af431.1626857584.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 00/10] fullmesh path manager support
+Date: Wed, 21 Jul 2021 22:31:24 +0800
+Message-Id: <cover.1626877655.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -51,126 +51,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Drop the debug logs and make the output aligned:
+Implement the in-kernel fullmesh path manager like on the mptcp.org
+kernel.
 
-link ns1eth3 down
-01 multiple flows, signal, link failure syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale[ ok ]
-Created /tmp/tmp.dltHx8oBcT (size 2048 KB) containing data sent by server
-link ns1eth3 down
-02 multiple flows, signal, bidirectional, link failure syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale[ ok ]
-link ns1eth1 down
-03 backup subflow unused with link failure syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        link usage [ ok ]
-link ns1eth1 down
-link ns1eth2 down
-04 backup subflow used due to multiple links failure syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale[ ok ]
-                                        link usage [ ok ]
-link ns1eth1 down
-link ns1eth2 down
-05 backup subflow in use, bidirectional, link failure syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale[ ok ]
-                                        link usage [ ok ]
+v2:
+ - Implement the fullmesh mode as an extension to the netlink PM, not a
+   standalone PM as Paolo suggested.
+ - drop duplicate code.
+ - add a new per endpoint flag MPTCP_PM_ADDR_FLAG_FULLMESH.
 
-->
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/193
 
-01 multiple flows, signal, link failure syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale             [ ok ]
-Created /tmp/tmp.JYR5OkgZ9C (size 6144 KB) containing data sent by server
-02 multi flows, signal, bidi, link fail syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale             [ ok ]
-03 backup subflow unused, link failure  syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        link usage        [ ok ]
-04 backup flow used, multi links fail   syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale             [ ok ]
-                                        link usage        [ ok ]
-05 backup flow used, bidi, link failure syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                        add[ ok ] - echo  [ ok ]
-                                        stale             [ ok ]
-                                        link usage        [ ok ]
+Geliang Tang (10):
+  mptcp: add a new sysctl fullmesh_enabled
+  mptcp: register ipv4 addr notifier
+  mptcp: register ipv6 addr notifier
+  mptcp: add netdev up event handler
+  mptcp: invoke mptcp_nl_remove_subflow_and_signal_addr in rcu_work
+  mptcp: add netdev down event handler
+  mptcp: add proc file local_addr_list
+  selftests: mptcp: print the fullmesh flag
+  selftests: mptcp: add fullmesh testcases
+  selftests: mptcp: del uncontinuous removing ids
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ Documentation/networking/mptcp-sysctl.rst     |   8 ++
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/Kconfig                             |  10 ++
+ net/mptcp/Makefile                            |   1 +
+ net/mptcp/ctrl.c                              |  16 +++
+ net/mptcp/pm.c                                |   3 +
+ net/mptcp/pm_fullmesh.c                       |  94 ++++++++++++++
+ net/mptcp/pm_netlink.c                        | 116 +++++++++++++++++-
+ net/mptcp/protocol.h                          |   6 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  91 +++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |   7 ++
+ 11 files changed, 342 insertions(+), 11 deletions(-)
+ create mode 100644 net/mptcp/pm_fullmesh.c
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 220154cb92a7..d0518487b874 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -228,7 +228,6 @@ link_failure()
- 
- 	for l in $FAILING_LINKS; do
- 		veth="ns1eth$l"
--		echo "link $veth down" 1>&2
- 		ip -net "$ns" link set "$veth" down
- 	done
- }
-@@ -634,7 +633,7 @@ chk_stale_nr()
- 	local stale_nr
- 	local recover_nr
- 
--	printf "%-39s %s" " " "stale"
-+	printf "%-39s %s" " " "stale             "
- 	stale_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowStale | awk '{print $2}'`
- 	[ -z "$stale_nr" ] && stale_nr=0
- 	recover_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowRecover | awk '{print $2}'`
-@@ -878,7 +877,7 @@ chk_link_usage()
- 	local tx_rate=$((tx_link * 100 / $tx_total))
- 	local tolerance=5
- 
--	printf "%-39s %s" " " "link usage "
-+	printf "%-39s %s" " " "link usage        "
- 	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
- 	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
- 		echo "[fail] got $tx_rate% usage, expected $expected_rate%"
-@@ -1039,7 +1038,7 @@ link_failure_tests()
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1 2
--	chk_join_nr "multiple flows, signal, bidirectional, link failure" 3 3 3
-+	chk_join_nr "multi flows, signal, bidi, link fail" 3 3 3
- 	chk_add_nr 1 1
- 	chk_stale_nr $ns2 1 -1 1
- 
-@@ -1053,7 +1052,7 @@ link_failure_tests()
- 	export FAILING_LINKS="1"
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
- 	run_tests $ns1 $ns2 10.0.1.1 1
--	chk_join_nr "backup subflow unused with link failure" 2 2 2
-+	chk_join_nr "backup subflow unused, link failure" 2 2 2
- 	chk_add_nr 1 1
- 	chk_link_usage $ns2 ns2eth3 $cinsent 0
- 
-@@ -1067,7 +1066,7 @@ link_failure_tests()
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
- 	export FAILING_LINKS="1 2"
- 	run_tests $ns1 $ns2 10.0.1.1 1
--	chk_join_nr "backup subflow used due to multiple links failure" 2 2 2
-+	chk_join_nr "backup flow used, multi links fail" 2 2 2
- 	chk_add_nr 1 1
- 	chk_stale_nr $ns2 2 4 2
- 	chk_link_usage $ns2 ns2eth3 $cinsent 50
-@@ -1081,7 +1080,7 @@ link_failure_tests()
- 	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
- 	run_tests $ns1 $ns2 10.0.1.1 2
--	chk_join_nr "backup subflow in use, bidirectional, link failure" 2 2 2
-+	chk_join_nr "backup flow used, bidi, link failure" 2 2 2
- 	chk_add_nr 1 1
- 	chk_stale_nr $ns2 1 -1 2
- 	chk_link_usage $ns2 ns2eth3 $cinsent 50
 -- 
 2.31.1
 
