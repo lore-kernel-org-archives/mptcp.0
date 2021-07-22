@@ -1,47 +1,49 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A655872
-	for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 15:53:04 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id ga14so9071132ejc.6
-        for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 08:53:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0DB168
+	for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 16:40:24 +0000 (UTC)
+Received: by mail-ej1-f42.google.com with SMTP id hr1so9325374ejc.1
+        for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 09:40:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=L0bq/fpUBWCsWnFNyiL7gcBqA4Cz4wQc2GwOscTJZKY=;
-        b=mY687GCcijRTvDjh850eItPk8q3rlpAkq5OdeVFcCMvav/sGbYwlSs4Ubit1q/dbVE
-         8cqp0VMbaJfKkOYTouZVppl3o25RZLUnDXg+l4XwSGbBvB02O/d//7S7Yx0uMXexWHe/
-         YMO8GfrvIFr4cko8/gdkFLxeIYaevz9xof3ajZEDaII+XudAGTmLqJOsJehCBAHvrZyf
-         y60OE9rbKVKnaEsOIexv+GQqhtm6KByB+kuxTybPn9qae5muMtR8qZvwxeshKMoXXvZr
-         z3OTKfmEqvofOvmtwJNl/wDBCn5XEC8qSSZ1vpdNpJCejikvM5cKwBJavKC3BUGrZdvZ
-         efnA==
+        h=to:references:from:cc:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=15iA/EdkIKwpuRmZR+N1Gq3vF4SjEZlCommuDdvmch8=;
+        b=0lFL0Q2ze6cr+DHXarHNdsdjtNEGsSJJlWY7fRymGslTSP/7uqLZk691TKsBqW9h6p
+         KqsZAoInEamDgSz+acFCr9Fc3TIDOLsC4JaYOCWBmDxR/NW54HOUPdZhki+2nv30FDhR
+         5qVTQ1FrqMMr5s4PcXFNg+EVqz288GptQHSNKiIezreMpIBinSU21hVjid+8+7kVLMqi
+         jESrldeQ1AhVVLyCkCOsEXxg+nxvBpNbtppC77yiZJII3AoxVuR+iR33SqTDaioLXtC0
+         Ys9ROsGpGYnTaF95zhD7TZj5iXvbodwgicEraLwgP5EvDAhD0mUgTfPbtKJxjCBlcYxo
+         HeYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=L0bq/fpUBWCsWnFNyiL7gcBqA4Cz4wQc2GwOscTJZKY=;
-        b=PIAxgbZXgqbFE/+iCqXU+RxYYTFGEnmG2vOVw3JJWfccoiGiW/E9Ory9/R8Aurk2vw
-         PJWpOiLqGxXOOTtqx74eFYCefhYIr22R+bjOKOyz+0vh/dy6YlNrk93w1tG+m6tv7oxd
-         jTDbF+X+5sVcUqJ1oOnlisr8Dlg19WyJL17QcS/396FWrPr2uqB5z6LgH/ztF09UK03J
-         OpC2trpf74WQ945miRvsYkH1j5xW6O0m0OAQTYo0F+vCqftYrFsv4YEuYUJ7mP49A0mV
-         EyBd7M7Rw9LndK8/retEFGFjH3jg9VQOhkbP8V5gbjK+a6EQKZaYyHqz1wnqic5vj8Qp
-         4q1g==
-X-Gm-Message-State: AOAM532zbC6XfbGbT181WaW8jcLvmLcO/h2HIJm4ev2Cn0a5sjsXeT+P
-	L7N3SgZLdiGazSiQLLyF9DxzhANesA8JzkEbUcA=
-X-Google-Smtp-Source: ABdhPJw3QjQC6Gcl+h/X2xHJnBxwElG24x8D/NInOb4BnJKlOQhzNqBPoJUYh6ccRv7bgasODXCnXw==
-X-Received: by 2002:a17:906:f84a:: with SMTP id ks10mr499304ejb.537.1626969182937;
-        Thu, 22 Jul 2021 08:53:02 -0700 (PDT)
+        h=x-gm-message-state:to:references:from:cc:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=15iA/EdkIKwpuRmZR+N1Gq3vF4SjEZlCommuDdvmch8=;
+        b=G59Mar1k3v/zq3os+U+CZpAiGVIro5ncV0GTioh3Ffvuq49eqluYnDdofyCKE5iWbJ
+         YaJSbJcHMht8FA423nFe2FJfo4mYJe1G4HSL40gtruVW1l82jPgF6+dkU+4KjAey8SZl
+         2aJzO9Ltg1rubhCXL2u6FWvQp+E1l849qJmH2pMWO720QJ5PGzulWDdKDXxi1dK5Nkfi
+         xtwqcAJcKy79EabN0LHeQzsisDOVfBUzPDXftIWLlcAfrHOWOObZILCeX+LQ4ceWiKZI
+         mxi5qKD8XP7An3sL/zyv1Jg4JSccEje3TV7hYM4sD4tpZJibudIyzH4VMz0egnqKFW/I
+         P7tA==
+X-Gm-Message-State: AOAM533d6QLKlQg7Zo0JRV1ZYe0zUfHEN6gUft0XbPOUq2GwjBOGVIe6
+	z5miW/2mq5H+eqD1Kf1FsrXaZS3sVTgP0u8FZ2c=
+X-Google-Smtp-Source: ABdhPJysbwi+TrKuBpuIiROGhf+gipnHwYC9dJ2MtSjBtx8lI5H7wgSfMK+6M0ZL32lOVwimDqe0MQ==
+X-Received: by 2002:a17:906:2bd4:: with SMTP id n20mr760978ejg.390.1626972022396;
+        Thu, 22 Jul 2021 09:40:22 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:a2dc:f69d:fe16:9f4e])
-        by smtp.gmail.com with ESMTPSA id hd30sm9582015ejc.29.2021.07.22.08.53.02
-        for <mptcp@lists.linux.dev>
+        by smtp.gmail.com with ESMTPSA id e24sm9612527ejx.100.2021.07.22.09.40.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Jul 2021 08:53:02 -0700 (PDT)
+        Thu, 22 Jul 2021 09:40:22 -0700 (PDT)
+To: Florian Westphal <fw@strlen.de>
+References: <20210722150154.10608-1-fw@strlen.de>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: [Weekly meetings] MoM - 22nd of July 2021
-Message-ID: <02aa6398-5b84-0f57-980d-9aa934a15035@tessares.net>
-Date: Thu, 22 Jul 2021 17:53:02 +0200
+Cc: mptcp@lists.linux.dev
+Subject: Re: [RFC] mptcp: add MPTCP_INFO getsockopt
+Message-ID: <ff3627c3-7e0d-b374-3532-a5d93f7455af@tessares.net>
+Date: Thu, 22 Jul 2021 18:40:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 Precedence: bulk
@@ -50,55 +52,93 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20210722150154.10608-1-fw@strlen.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 
-Hello everyone,
+Hi Florian,
 
-Today, we just had our 158th meeting with Ossama (Intel), Geliang
-(Xiaomi) and myself (Tessares).
+Thank you for looking at that!
 
+On 22/07/2021 17:01, Florian Westphal wrote:
+> Its not compatible with mptcp.org kernel one:
+> 1. mptcp.org defines 'struct mptcp_info', but we already have this for
+>    inet_diag.
+> 
+> 2. 'struct mptcp_info', as defined by mptcp.org has different layout for
+>    32/64 bit arches.
+>    This is a problem for 32bit binaries on 64bit kernels.
+> 
+> For those reasons a new 'struct mptcp_info_opt' is added which contains
+> aligned_u64 fields to store the userspace buffer addresses.
 
-We decided to make it very short: a few people were not able to join and
-there was a blackout in my village at the time of the meeting making me
-hard to follow the discussion with my phone and an apparently overloaded
-cellular connection.
+Thank you for the explanation, it makes sense!
 
+> 'struct mptcp_sub_info' is added as per mptcp.org kernel, but I don't
+> like this structure.  I think 'src' and 'dst' are confusing terms.
 
+Do you prefer 'local' and 'remote'?
+Good time to change!
 
-About the pending patches:
+> AFAICS 'src' really is 'local address' (getsockname) and 'dst' is peer
+> (getpeername).
+> 
+> Given mptcp-next has IPPROTO_MPTCP, this adds SOL_MPTCP.
+> This also gives ample space to add mptcp specific sockopts.
 
-- MP_FAIL support:
-    - Mat reviewed it, changes have been requested
-    - Geliang is working on a v5
+Very good idea!
 
-- fullmesh path manager support:
-    - Paolo and Matt reviewed it
-    - Geliang will work on v3
+> In light of this, I wonder if it would make more sense to split the
+> functionality.
 
+Would it not start to be a bit costly to get all details if the
+userspace has do a few syscalls?
+- general info
+- get subflow IDs
+- for each suflow, call subflow info + peer/sock names
 
+With the full structure, we could eventually allow userspace programs to
+set some "*_len" members to 0 not to get all info, e.g. only get the
+general info without peer/sock names for all subflows. Or without
+TCP_INFO for each subflow. No?
 
-On the CI side:
+> 
+> Examples:
+> 
+> getsockopt(fd, SOL_MPTCP, SUBFLOW_ID, subflow_ids, &count);
+> 
+> sa.sa_family = subflow_ids[0];
+> getsockopt(fd, SOL_MPTCP, SUBFLOW_GETPEERNAME, &sa, &len);
+> ..
+> sa.sa_family = subflow_ids[0];
+> getsockopt(fd, SOL_MPTCP, SUBFLOW_GETSOCKNAME, &sa, &len);
+> 
+> tcp_info.tcpi_state = subflow_ids[0];
+> getsockopt(fd, SOL_MPTCP, SUBFLOW_TCP_INFO, &tcp_info, &len);
+> 
+> ...
+> 
+> and so on.
 
-    - a couple of compilation errors introduced on net-next spot by the
-CI this week
-    - external patches have been applied in our tree (already in net-next).
+This could be interesting if there is a demand to get info only for some
+specific subflows :)
 
+> 
+> Alternatively one could overload e.g. the upper 8 bit:
+> 
+> getsockopt(fd, SOL_MPTCP, subflow_ids[0] << 24 | SUBFLOW_FOO, ...);
 
+Maybe a "cleaner" workaround to set the ID? :)
 
-Next meeting:
-    - On Thursday, the 29th of July.
-    - Usual UTC time: 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20210729
+> In any case, here is a tentative patch to add a mptcp.org-alike
+> MPTCP_INFO getsockopt.
 
+Thank you for sharing that!
 
+(I didn't check the code yet)
 
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you on Thursday,
+Cheers,
 Matt
 -- 
 Tessares | Belgium | Hybrid Access Solutions
