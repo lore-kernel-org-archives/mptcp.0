@@ -1,51 +1,52 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D034168
-	for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 09:29:37 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id dp20so7417002ejc.7
-        for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 02:29:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A21B173
+	for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 12:51:02 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id oz7so8234823ejc.2
+        for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 05:51:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:references:cc:subject:message-id:date:user-agent
+        h=to:cc:references:from:subject:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T9g1KngiAoaFh8Tq/T5PK/ZImxAJp2PRyiZIl2m0jfs=;
-        b=ZnNDPcjQmYLrzbTqCubdp9sXqz+LyYbbETqppx/LqkUdNLh6GHCEyFeNMsNoQxBDfg
-         BxeUAEtzDa65fGihdQ3CIS6Y1nTzBzf3rasGs/WsZYcIWI31qVimk0ERW/R5+deii7u/
-         soz/YI939/O4ZBw/ubfxCp4pzHn540eNw7Y66rKojXIyeOBdxnzvmw8+8ft19gWwPhvM
-         blyHm+ZMkdBPZWNOOQyxyeAbaAexrOXiJSktbT9mTOLLY84Ut8B2dOM4YFr3yRTmyglx
-         MQGZ/RcPXXKiXgaUF+vy4AbsdgC43bHq/LwmDs54rfjmgPtvaoXLt8TAOnCxEAi16vVC
-         J7Tg==
+        bh=3a2NHy+M3szyumRFwwuL3EZC/LpuDkPdX+AztTPVHI0=;
+        b=wY4gBEDuL0DrBlZ37wGHltyUYk9zX6CB4ePFv/lqHcAq4HJkPYKIx9ZkcJrT3MWKbM
+         JeUToYjvCjOsa9pqk7YXRSJHUiWCDO/GuVmbuYtaYBFa9Mbo4Zwo4Obrb2Rks/jq2Y9i
+         dVqMUU8XkIj7eLT5HC5tm6eVQc1nWxFs4F6Z/udyl+lxdRx9/itaBduS02K1LIJkdCvF
+         AyzfBi/EmkdDGdthc1awMU747CcJxQuX6+hfxCZtslqIK1srqudHH4+OwLZjDtlIldJR
+         qwdRbW5KPGjc1B2xNBTWU1V1J7za0gugMq88li4UW9h85Hh3jeZMmJCR7TZ1ia7aJv4L
+         PiGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:references:cc:subject:message-id:date
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=T9g1KngiAoaFh8Tq/T5PK/ZImxAJp2PRyiZIl2m0jfs=;
-        b=LBEIArN2jbxjLuKlhiNbWN50XoMwaPupb5UzxB4dG2VdK2it89z3JkZCY7fR+ljJ0c
-         MALJtr7fcwjN74ZHvHEP0WGLj+93rErk3dQqMUCgWcEjTzdUi/ED5Le+/qTags55fBHV
-         ZpuDoG7OgZsgTl0xY5Dm9g9vQb6LwfUEn2G/cAw1RYSQe36eCmfJNTk2o7kNtJq9KPy2
-         Wr20tOqU1yXfqxjLgiLOUTddoxc8tBE+fz8KxcVvBorOCkXDcL8YZ5SQg9BEP8ReMT/M
-         XSvkq70IMPKFXPdedcKpDxo3cFZpGrxoDkEGNIi1cQWeXUlo0CCvjcIUAbliC7ga+xEa
-         Pwvw==
-X-Gm-Message-State: AOAM53147VeI8K0mci1Bbn5pBZmq20ZodUOuglb5Wm0uT20YhR6RWGdT
-	QXKTVOhGdO4WYwE/gfjPlP/AIJ1flUsl+zb0HWE=
-X-Google-Smtp-Source: ABdhPJxUTSbC8brhvLnV0f/N5yS1DmO3oaItQ9JfH6BRp9xZvEe2qfykA5UJtTG7tlD0gfCZv65Rkg==
-X-Received: by 2002:a17:906:7302:: with SMTP id di2mr42107571ejc.409.1626946176179;
-        Thu, 22 Jul 2021 02:29:36 -0700 (PDT)
+        bh=3a2NHy+M3szyumRFwwuL3EZC/LpuDkPdX+AztTPVHI0=;
+        b=rVn8Kd3XOgoEvCSAqvYxk6dQsuBOSZq1jH3NnV+qB5SBP5Oo657ocV+VUKmwrn+ePW
+         c6P6kAiumvPCbvmp53N1Syx+5d3AEeziXNmUgl99kQIn3yDGsktiR56z/ldnvl80i7UU
+         M+kht4V3X4FOvz3QTY1m1oDwUkd7LX0th2D7R5rO4blDAENV5kTCkJw5Zrry4u9RsbjJ
+         M08oOePwH53ijIb5J+Et/vYh+2WNdOH5Ns2DgTnTP6AMp4/n9gKO483eKMJPMbp9xGy3
+         gQVx1OCnF7ks2qIRFSvgZJjYp64zaP6rRyZ5li1hHzdN/AHpNKWrIaKGyg9ZQ62TzLMz
+         TnbQ==
+X-Gm-Message-State: AOAM531pZbme/wuwvifeMKQ3PSP10tyK9pgXGE94qgdAqIeQ2zIyBLLh
+	/N4zlutzorShBcNFNsfoJ67n+9DVTQCChGEmMB0=
+X-Google-Smtp-Source: ABdhPJzMIxg12xVTCN5l0icjSbXL9beHwyS/dAeb0DQf2Hvrc+xcI5cVis1a2PLrGP7tQLcX8qUZ2A==
+X-Received: by 2002:a17:906:a2da:: with SMTP id by26mr44129177ejb.232.1626958260411;
+        Thu, 22 Jul 2021 05:51:00 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8391:ca7f:9c1b:4236])
-        by smtp.gmail.com with ESMTPSA id k14sm12053841edq.79.2021.07.22.02.29.35
+        by smtp.gmail.com with ESMTPSA id l10sm931578edr.33.2021.07.22.05.50.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Jul 2021 02:29:35 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+        Thu, 22 Jul 2021 05:51:00 -0700 (PDT)
 To: Geliang Tang <geliangtang@gmail.com>
+Cc: mptcp@lists.linux.dev
 References: <67cd742a1da03b8633e4837c45991860236af431.1626857584.git.geliangtang@gmail.com>
  <63bcc8e8-cd71-a117-cf9b-dc0054336e26@tessares.net>
-Cc: mptcp@lists.linux.dev
+ <CA+WQbwt1_O9btFtCLo+hw2JpeaX3EXtMR8scVrDW+YPtCAmgpQ@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "selftests: mptcp: add
  testcase for active-back"
-Message-ID: <5669e803-5f28-c100-082a-1e5b0ee049e7@tessares.net>
-Date: Thu, 22 Jul 2021 11:29:35 +0200
+Message-ID: <b2accdd2-367e-47df-fc20-6c44a03b4c5a@tessares.net>
+Date: Thu, 22 Jul 2021 14:50:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 Precedence: bulk
@@ -54,42 +55,58 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <63bcc8e8-cd71-a117-cf9b-dc0054336e26@tessares.net>
+In-Reply-To: <CA+WQbwt1_O9btFtCLo+hw2JpeaX3EXtMR8scVrDW+YPtCAmgpQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 22/07/2021 10:55, Matthieu Baerts wrote:
-> On 21/07/2021 10:56, Geliang Tang wrote:
->> Drop the debug logs and make the output aligned:
-
-(...)
-
->> @@ -878,7 +877,7 @@ chk_link_usage()
->>  	local tx_rate=$((tx_link * 100 / $tx_total))
->>  	local tolerance=5
->>  
->> -	printf "%-39s %s" " " "link usage "
->> +	printf "%-39s %s" " " "link usage        "
+On 22/07/2021 11:28, Geliang Tang wrote:
+> Matthieu Baerts <matthieu.baerts@tessares.net> 于2021年7月22日周四 下午4:55写道：
+>> 05 backup flow used, bidi, link failure:
+>>      syn        [ ok ]
+>>      synack     [ ok ]
+>>      ack        [ ok ]
+>>      add        [ ok ]
+>>      echo       [ ok ]
+>>      stale      [ ok ]
+>>      link usage [ ok ]
+>> 06 (...)
+>>
 > 
-> Do you mind if I change this when applying the patch to avoid plenty of
-> spaces?
+> I think the original display is much better than one item per line. Since
+> it put the related items in one line, and do the different tests in each
+> line. I think that's more clearer than one item per line. Do you agree?
 
-Thank you for the patch! Just applied with this additional small
-modification.
+If everything was on one line, ideally with one global result at the
+end, that would be fine for me. But here, when you have a long list of
+tests with multiple '[ ok ]' on the same line but in different columns,
+it is "hard" to spot the errors I think.
 
-- bef6bd8eb873: "squashed" in "selftests: mptcp: add testcase for
-active-back"
-- 8135e0128562: "Signed-off-by" + "Co-developed-by"
-- 85c4567fba08: selftests: mptcp join: avoid multiple spaces
-- Results: 3a1215522891..1180d21b724d
+Here you can see the output when it fails:
 
-Builds and tests are now in progress:
+https://api.cirrus-ci.com/v1/artifact/task/5542024628666368/tap_result/selftest_mptcp_join.tap
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210722T092910
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210722T092910
+There are three columns and I think it is not "direct" to spot where is
+the error.
+
+If you have: plenty of "[ ok ]" with nothing after, it is easy to spot a
+"[FAIL]", especially if something more is written on the right of it I
+think.
+
+An alternative would be to have one global "[ OK ]", e.g.
+
+  03 backup subflow unused, link failure:  [ OK ]
+  04 backup flow used, multi links fail:   [FAIL]
+       syn        [ ok ]
+       synack     [ ok ]
+       ack        [ ok ]
+       add        [ ok ]
+       echo       [FAIL] # extra info
+       stale      [ ok ]
+       link usage [ ok ]
+  05 backup flow used, bidi, link failure: [ OK ]
 
 Cheers,
 Matt
