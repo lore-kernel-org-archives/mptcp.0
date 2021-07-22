@@ -1,148 +1,98 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2492B168
-	for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 09:28:54 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id p4-20020a17090a9304b029016f3020d867so4654768pjo.3
-        for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 02:28:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D034168
+	for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 09:29:37 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id dp20so7417002ejc.7
+        for <mptcp@lists.linux.dev>; Thu, 22 Jul 2021 02:29:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Y9c6bt0GAIfK0d/+y4nN3bHy18xEra789xR4CFLrN48=;
-        b=jK/YFD1VQCPfRCiUkYGJgnYDmQRTYOBNlUSea8dCKJSq+FYhYF4tRiB0AYNTr6pQ3s
-         /kSKPugrRvn1GdZhPvX2Fic9bwI/Y+cNIIEYG+adJAsw/LNzOhVFxJB3nDNdaleJjlIZ
-         QWrZSOguh6uSeJ3u3Ddjah/6FUqD2aIL4FhSRZ3NYZLl+I5hNvMqPd3y1oM5a2qnu+uU
-         haglsHvM4z1D26sDJgQNfoiOUV3GDMBFGXspCVKkIsT354xjoA9Sl3I48b0AZ7MXDrOT
-         frodvt4946cMvC11hIdJG6dbdnehswthb1JticfgsC/PP3lYquyA+xeF/M62EjxkGyyx
-         gwbA==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:references:cc:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=T9g1KngiAoaFh8Tq/T5PK/ZImxAJp2PRyiZIl2m0jfs=;
+        b=ZnNDPcjQmYLrzbTqCubdp9sXqz+LyYbbETqppx/LqkUdNLh6GHCEyFeNMsNoQxBDfg
+         BxeUAEtzDa65fGihdQ3CIS6Y1nTzBzf3rasGs/WsZYcIWI31qVimk0ERW/R5+deii7u/
+         soz/YI939/O4ZBw/ubfxCp4pzHn540eNw7Y66rKojXIyeOBdxnzvmw8+8ft19gWwPhvM
+         blyHm+ZMkdBPZWNOOQyxyeAbaAexrOXiJSktbT9mTOLLY84Ut8B2dOM4YFr3yRTmyglx
+         MQGZ/RcPXXKiXgaUF+vy4AbsdgC43bHq/LwmDs54rfjmgPtvaoXLt8TAOnCxEAi16vVC
+         J7Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Y9c6bt0GAIfK0d/+y4nN3bHy18xEra789xR4CFLrN48=;
-        b=sevpVAbgt0VDWkVd+2jrXtgnN00xO6BzvFPt0Xl8Spw7PytmiRRxgpoW78NzBobjO4
-         6d4pTSqAvO5Ha1KUjtgWWzrIKTZl/J3/pVzSOceyETnVAiHQ//6qXBMJVZQ1lYUGjqL/
-         1s8zPwDZi/kobhCfRdrvk65wa98ZzjofW24s1NrHmzNbjZErFqcpnzBdVRMU/COtFzZq
-         t2ZRAi9xaz84/zaglQU8l+ekaOCDNAKKI9vNxBpdBkNyGEsmofsHuUqlvggwMh8sWTOz
-         SCLDhLzmcaS8XLF2TWT8XJ5erGe0js/enVIWZPBMy3+zinfyOQa6aKksX4qAvpb2s0JW
-         coJg==
-X-Gm-Message-State: AOAM531pvP19jhjIv6Led3CHLX+HbVTXW2/bo9Bm7LoZimscjpZBMAlS
-	veMC/s7mMIotzcp1fLSRaY/hDE8ItD4ZYjFQSiZtOpXcLi251g==
-X-Google-Smtp-Source: ABdhPJxpJq/GjefuA8XYCDkS/VkR+vU6P+/mvjnN7qhXnoBnu9LfeDYfim1E/pmb2EJ9z4R9reuzeYYC6Gi9KqAbDSI=
-X-Received: by 2002:a63:f751:: with SMTP id f17mr40114688pgk.373.1626946133616;
- Thu, 22 Jul 2021 02:28:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:references:cc:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=T9g1KngiAoaFh8Tq/T5PK/ZImxAJp2PRyiZIl2m0jfs=;
+        b=LBEIArN2jbxjLuKlhiNbWN50XoMwaPupb5UzxB4dG2VdK2it89z3JkZCY7fR+ljJ0c
+         MALJtr7fcwjN74ZHvHEP0WGLj+93rErk3dQqMUCgWcEjTzdUi/ED5Le+/qTags55fBHV
+         ZpuDoG7OgZsgTl0xY5Dm9g9vQb6LwfUEn2G/cAw1RYSQe36eCmfJNTk2o7kNtJq9KPy2
+         Wr20tOqU1yXfqxjLgiLOUTddoxc8tBE+fz8KxcVvBorOCkXDcL8YZ5SQg9BEP8ReMT/M
+         XSvkq70IMPKFXPdedcKpDxo3cFZpGrxoDkEGNIi1cQWeXUlo0CCvjcIUAbliC7ga+xEa
+         Pwvw==
+X-Gm-Message-State: AOAM53147VeI8K0mci1Bbn5pBZmq20ZodUOuglb5Wm0uT20YhR6RWGdT
+	QXKTVOhGdO4WYwE/gfjPlP/AIJ1flUsl+zb0HWE=
+X-Google-Smtp-Source: ABdhPJxUTSbC8brhvLnV0f/N5yS1DmO3oaItQ9JfH6BRp9xZvEe2qfykA5UJtTG7tlD0gfCZv65Rkg==
+X-Received: by 2002:a17:906:7302:: with SMTP id di2mr42107571ejc.409.1626946176179;
+        Thu, 22 Jul 2021 02:29:36 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8391:ca7f:9c1b:4236])
+        by smtp.gmail.com with ESMTPSA id k14sm12053841edq.79.2021.07.22.02.29.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Jul 2021 02:29:35 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Geliang Tang <geliangtang@gmail.com>
+References: <67cd742a1da03b8633e4837c45991860236af431.1626857584.git.geliangtang@gmail.com>
+ <63bcc8e8-cd71-a117-cf9b-dc0054336e26@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "selftests: mptcp: add
+ testcase for active-back"
+Message-ID: <5669e803-5f28-c100-082a-1e5b0ee049e7@tessares.net>
+Date: Thu, 22 Jul 2021 11:29:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <67cd742a1da03b8633e4837c45991860236af431.1626857584.git.geliangtang@gmail.com>
- <63bcc8e8-cd71-a117-cf9b-dc0054336e26@tessares.net>
 In-Reply-To: <63bcc8e8-cd71-a117-cf9b-dc0054336e26@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Thu, 22 Jul 2021 17:28:42 +0800
-Message-ID: <CA+WQbwt1_O9btFtCLo+hw2JpeaX3EXtMR8scVrDW+YPtCAmgpQ@mail.gmail.com>
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "selftests: mptcp: add
- testcase for active-back"
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Geliang,
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B47=E6=
-=9C=8822=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=884:55=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> Hi Geliang,
->
+On 22/07/2021 10:55, Matthieu Baerts wrote:
 > On 21/07/2021 10:56, Geliang Tang wrote:
-> > Drop the debug logs and make the output aligned:
->
-> Good idea!
->
-> > 05 backup flow used, bidi, link failure syn[ ok ] - synack[ ok ] - ack[=
- ok ]
-> >                                         add[ ok ] - echo  [ ok ]
-> >                                         stale             [ ok ]
-> >                                         link usage        [ ok ]
->
-> I wonder if it would not be even clearer to display one item per line, e.=
-g.:
->
->
-> 05 backup flow used, bidi, link failure:
->      syn        [ ok ]
->      synack     [ ok ]
->      ack        [ ok ]
->      add        [ ok ]
->      echo       [ ok ]
->      stale      [ ok ]
->      link usage [ ok ]
-> 06 (...)
->
+>> Drop the debug logs and make the output aligned:
 
-I think the original display is much better than one item per line. Since
-it put the related items in one line, and do the different tests in each
-line. I think that's more clearer than one item per line. Do you agree?
+(...)
 
-> But that is for another patch anyway. I can look at that later when
-> trying to make this test more reliable by removing fixed values for
-> "sleep" and others if nobody is already looking at that.
->
-> >
-> > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> > ---
-> >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 ++++++-------
-> >  1 file changed, 6 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/te=
-sting/selftests/net/mptcp/mptcp_join.sh
-> > index 220154cb92a7..d0518487b874 100755
-> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > @@ -228,7 +228,6 @@ link_failure()
-> >
-> >       for l in $FAILING_LINKS; do
-> >               veth=3D"ns1eth$l"
-> > -             echo "link $veth down" 1>&2
-> >               ip -net "$ns" link set "$veth" down
-> >       done
-> >  }
-> > @@ -634,7 +633,7 @@ chk_stale_nr()
-> >       local stale_nr
-> >       local recover_nr
-> >
-> > -     printf "%-39s %s" " " "stale"
-> > +     printf "%-39s %s" " " "stale             "
-> >       stale_nr=3D`ip netns exec $ns nstat -as | grep MPTcpExtSubflowSta=
-le | awk '{print $2}'`
-> >       [ -z "$stale_nr" ] && stale_nr=3D0
-> >       recover_nr=3D`ip netns exec $ns nstat -as | grep MPTcpExtSubflowR=
-ecover | awk '{print $2}'`
-> > @@ -878,7 +877,7 @@ chk_link_usage()
-> >       local tx_rate=3D$((tx_link * 100 / $tx_total))
-> >       local tolerance=3D5
-> >
-> > -     printf "%-39s %s" " " "link usage "
-> > +     printf "%-39s %s" " " "link usage        "
->
+>> @@ -878,7 +877,7 @@ chk_link_usage()
+>>  	local tx_rate=$((tx_link * 100 / $tx_total))
+>>  	local tolerance=5
+>>  
+>> -	printf "%-39s %s" " " "link usage "
+>> +	printf "%-39s %s" " " "link usage        "
+> 
 > Do you mind if I change this when applying the patch to avoid plenty of
 > spaces?
->
->   printf "%-39s %-18s" " " "stale"
->   printf "%-39s %-18s" " " "link usage"
 
-It's much better to avoid spaces like this, thanks Matt.
+Thank you for the patch! Just applied with this additional small
+modification.
 
--Geliang
+- bef6bd8eb873: "squashed" in "selftests: mptcp: add testcase for
+active-back"
+- 8135e0128562: "Signed-off-by" + "Co-developed-by"
+- 85c4567fba08: selftests: mptcp join: avoid multiple spaces
+- Results: 3a1215522891..1180d21b724d
 
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210722T092910
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210722T092910
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
