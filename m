@@ -1,52 +1,52 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE6372
-	for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 04:12:36 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id mz5-20020a17090b3785b0290176ecf64922so2025037pjb.3
-        for <mptcp@lists.linux.dev>; Sun, 25 Jul 2021 21:12:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8C472
+	for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 04:12:38 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id e5so8111413pld.6
+        for <mptcp@lists.linux.dev>; Sun, 25 Jul 2021 21:12:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Xf6twHH0dlS9sUwB1ifZ9Erd+fGc4dzVLtHyo+fRBwg=;
-        b=rFXWDsYwk5iVfUTcdjMOmNt0Op6Q10528xzhvHUOm/nF67igcxAcE2R+/Vk9jBGVsk
-         nK4XCJFQVUY/FaAzFhz6ks7ZtjhE9XJ5fCa9xY+eI7qONr8xXwaCBxsVZ19RH1Svs2nh
-         73dCQQ9MlPmDAQkgyTEMVvctdfys8H9yuXWNlhc6cobRV0Tcj7trHM/vBbRz9voZ7bCE
-         NOJF8mXx1KwJFzo+4P3IZe+C0HRxOoHRKDKxFdxNXV5K7sRvVUs55g3kIW0wqA4Sgeec
-         cHGkGZTCJqnHifNVC/Bqh0louaiA5Okx3B53TC7BLShCH6aIegdU2fvboyj46iQF0kUt
-         HgCg==
+        bh=qwzUVmV/Ns4rOlsowWueyz5335N3kUx3Uo2uSMHtx9I=;
+        b=gTzORcy/sFw1RibHwbFUvdZ7ggGp6UxrxkOENILM6VoLW8AsfKR1je1l1BCgkfdJQo
+         lWJIuP1N8u5AsVwz0Bn0tBPuzLYnQTtR0Lrp6qNAkZwgGLxAESAztZ7lbiwgmuG+rT3m
+         AAKFZw9m+nyKjhTHkZsIFMxWxPZSTL/bd4OxAvAOSrWW6DdnaSmS+LHrVrN1dsg1mHzq
+         T7gsT5XMEnZ7hif8flim7PHUbP1dzXw+9lcvNvJqGG8fI5YswHc2c0ZT7fV36adKsTy7
+         SSrrmHT/FhzhTqcefALi82TExvsWGR7/wOKFhclhuc1F6t07QZ31IVv+51AzQd+bdGra
+         7UnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Xf6twHH0dlS9sUwB1ifZ9Erd+fGc4dzVLtHyo+fRBwg=;
-        b=gsjHHn/blIm0y4TBKRWcOOGuzDcKspxOv4ouICT6TuAkoHB/qqnzdMV8Dpb9BhOMzE
-         Z+1SZCGqEXKMtso7KvzRZXZKACUmISjQu4Uj3UATuK7H9EdYVjgldyvqokFC/0ZkPe2A
-         YaNPG49Tq906itUO8HnaIRQgSitgc8mLQSPQWBbbYOygvwB9vVHv44JpqBVOXQvH3ZfS
-         k87Wo+95EjDISUIPnuXlEAzsgtLhmPAXOexXSoSTbbpbu9Doyuk6rFPJZkN+YgJC9ni/
-         PMcM4L6LCcqzRUg7yQUhDonXikca6aHr24+XD6w9BPk4gD9HvmWSMvuGCXYwGXnuxzhW
-         l4kw==
-X-Gm-Message-State: AOAM532OCxaiHJDqk+H4uwFqmZzkSzDVz/eOf5HJo6hlF70DMuhj4K7o
-	QF4ynB5mocK33RQO+foSQaVLfOn0HmFODQ==
-X-Google-Smtp-Source: ABdhPJzivFSB7w/SvkKTiKDHQ6nbBzYVbpqt2Gs59sG1mJCowsEoatZZAFV8pX/VyCpC1HMqZPjghg==
-X-Received: by 2002:a17:90a:c297:: with SMTP id f23mr15562818pjt.194.1627272756097;
-        Sun, 25 Jul 2021 21:12:36 -0700 (PDT)
+        bh=qwzUVmV/Ns4rOlsowWueyz5335N3kUx3Uo2uSMHtx9I=;
+        b=BVEh5TAp7LG4IkDWu/yPFMCQTUE/Rg+rcaCLahHTaEFe0ulnPgfZKA9YMeA3Z25vB9
+         gvoPgkclwwY1SGqReTusMH7JtNW1gBHJg9rijtj24qjmQAHgZnmly0XabuaWtKelV6df
+         8TfN8SL+uoZ2RJqR0iOB+kyhV2siM6Vd337Bo3zNjOmlZUFeEdV+MB9MJPIwjVsVp5ic
+         uRzWmq9Pc3VL+QvsX31UvZWTBAvtA68aLMy+epL5B2BQDgNlTkHa0axFOKD8HiNGOZ5Z
+         /bsQUX0fHWRBWxjJscqGN6XKGqlOB1MSc+D6XnA1CgWL7YKup+jPIpBRPo8g5YxE2fQ3
+         scAA==
+X-Gm-Message-State: AOAM533rpZFcj9ul/izRpssIN7+THw9X8iEDoHDfJPJBenVZb0epOAzV
+	84DrrRTKrKKXWY160XlfIa9qJg0wQs6Juw==
+X-Google-Smtp-Source: ABdhPJycf8KPy34pVAdbpSz1v8zxEV89i6ndXNV8vE7GGCZxJXGwOa68SYVQoNhN0jcZdIYkLLGWKw==
+X-Received: by 2002:a17:90a:bf0a:: with SMTP id c10mr15226834pjs.59.1627272757997;
+        Sun, 25 Jul 2021 21:12:37 -0700 (PDT)
 Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id f3sm2608543pfe.123.2021.07.25.21.12.34
+        by smtp.gmail.com with ESMTPSA id f3sm2608543pfe.123.2021.07.25.21.12.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Jul 2021 21:12:35 -0700 (PDT)
+        Sun, 25 Jul 2021 21:12:37 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev,
 	geliangtang@gmail.com
 Cc: Geliang Tang <geliangtang@xiaomi.com>,
 	Paolo Abeni <pabeni@redhat.com>
-Subject: [MPTCP][PATCH v3 mptcp-next 1/5] mptcp: remote addresses fullmesh
-Date: Mon, 26 Jul 2021 12:12:24 +0800
-Message-Id: <6f7aa2fec63dcaa337c7b78184a73a90d58b580f.1627272435.git.geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH v3 mptcp-next 2/5] mptcp: local addresses fullmesh
+Date: Mon, 26 Jul 2021 12:12:25 +0800
+Message-Id: <043ce3b46a70bd59ae7aaa53ed1afdf44b7f3ad2.1627272435.git.geliangtang@xiaomi.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1627272435.git.geliangtang@xiaomi.com>
-References: <cover.1627272435.git.geliangtang@xiaomi.com>
+In-Reply-To: <6f7aa2fec63dcaa337c7b78184a73a90d58b580f.1627272435.git.geliangtang@xiaomi.com>
+References: <cover.1627272435.git.geliangtang@xiaomi.com> <6f7aa2fec63dcaa337c7b78184a73a90d58b580f.1627272435.git.geliangtang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -57,111 +57,79 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-This patch added and managed a new per endpoint flag, named
-MPTCP_PM_ADDR_FLAG_FULLMESH.
+In mptcp_pm_nl_add_addr_received(), fill a temporary allocate array of
+all local address corresponding to the fullmesh endpoint. If such array
+is empty, keep the current behavior.
 
-In mptcp_pm_create_subflow_or_signal_addr(), if such flag is set, instead
-of:
-
-        remote_address((struct sock_common *)sk, &remote);
-
-fill a temporary allocated array of all known remote address. After
-releaseing the pm lock loop on such array and create a subflow for each
-remote address from the given local.
-
-Note that the we could still use an array even for non 'fullmesh'
-endpoint: with a single entry corresponding to the primary MPC subflow
-remote address.
+Elsewhere loop on such array and create a subflow for each local address
+towards the given remote address
 
 Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 ---
- include/uapi/linux/mptcp.h |  1 +
- net/mptcp/pm_netlink.c     | 46 +++++++++++++++++++++++++++++++++++---
- 2 files changed, 44 insertions(+), 3 deletions(-)
+ net/mptcp/pm_netlink.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 7b05f7102321..f66038b9551f 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -73,6 +73,7 @@ enum {
- #define MPTCP_PM_ADDR_FLAG_SIGNAL			(1 << 0)
- #define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
- #define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
-+#define MPTCP_PM_ADDR_FLAG_FULLMESH			(1 << 3)
- 
- enum {
- 	MPTCP_PM_CMD_UNSPEC,
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index ba0e1d71504d..f57db5b9a50f 100644
+index f57db5b9a50f..a03e8fd3a584 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -158,6 +158,27 @@ static bool lookup_subflow_by_daddr(const struct list_head *list,
- 	return false;
- }
+@@ -526,12 +526,17 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
  
-+static bool lookup_subflow_by_addrs(const struct list_head *list,
-+				    struct mptcp_addr_info *saddr,
-+				    struct mptcp_addr_info *daddr)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_addr_info local, remote;
-+	struct sock_common *skc;
+ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ {
++	struct mptcp_pm_addr_entry entries[MPTCP_PM_ADDR_MAX];
+ 	struct sock *sk = (struct sock *)msk;
++	struct mptcp_pm_addr_entry *entry;
+ 	unsigned int add_addr_accept_max;
++	struct mptcp_pm_addr_entry local;
+ 	struct mptcp_addr_info remote;
+-	struct mptcp_addr_info local;
++	struct pm_nl_pernet *pernet;
+ 	unsigned int subflows_max;
++	int i, n = 0;
+ 
++	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
+ 	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
+ 	subflows_max = mptcp_pm_get_subflows_max(msk);
+ 
+@@ -555,10 +560,34 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ 	if (!remote.port)
+ 		remote.port = sk->sk_dport;
+ 	memset(&local, 0, sizeof(local));
+-	local.family = remote.family;
++	local.addr.family = remote.family;
+ 
++	entries[n++] = local;
++	rcu_read_lock();
++	__mptcp_flush_join_list(msk);
++	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
++		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
++			continue;
 +
-+	list_for_each_entry(subflow, list, node) {
-+		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
++		if (entry->addr.family != sk->sk_family) {
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++			if ((entry->addr.family == AF_INET &&
++			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
++			    (sk->sk_family == AF_INET &&
++			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
++#endif
++				continue;
++		}
 +
-+		local_address(skc, &local);
-+		remote_address(skc, &remote);
-+		if (addresses_equal(&local, saddr, saddr->port) &&
-+		    addresses_equal(&remote, daddr, daddr->port))
-+			return true;
++		if (!lookup_subflow_by_addrs(&msk->conn_list, &entry->addr, &remote))
++			entries[n++] = *entry;
 +	}
-+
-+	return false;
-+}
-+
- static struct mptcp_pm_addr_entry *
- select_local_address(const struct pm_nl_pernet *pernet,
- 		     struct mptcp_sock *msk)
-@@ -455,15 +476,34 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 	    !READ_ONCE(msk->pm.remote_deny_join_id0)) {
- 		local = select_local_address(pernet, msk);
- 		if (local) {
-+			struct mptcp_addr_info addrs[MPTCP_PM_ADDR_MAX];
- 			struct mptcp_addr_info remote = { 0 };
-+			int i, n = 0;
++	rcu_read_unlock();
+ 	spin_unlock_bh(&msk->pm.lock);
+-	__mptcp_subflow_connect(sk, &local, &remote, 0, 0);
++	for (i = 0; i < n; i++) {
++		__mptcp_subflow_connect(sk, &entries[i].addr, &remote,
++					entries[i].flags, entries[i].ifindex);
++	}
+ 	spin_lock_bh(&msk->pm.lock);
  
- 			msk->pm.local_addr_used++;
- 			msk->pm.subflows++;
- 			check_work_pending(msk);
--			remote_address((struct sock_common *)sk, &remote);
-+			if (!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH)) {
-+				remote_address((struct sock_common *)sk, &remote);
-+				addrs[n++] = remote;
-+			} else {
-+				struct mptcp_subflow_context *subflow;
-+
-+				mptcp_for_each_subflow(msk, subflow) {
-+					struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+					remote_address((struct sock_common *)ssk, &remote);
-+					if (!lookup_subflow_by_addrs(&msk->conn_list,
-+								     &local->addr, &remote)) {
-+						addrs[n++] = remote;
-+					}
-+				}
-+			}
- 			spin_unlock_bh(&msk->pm.lock);
--			__mptcp_subflow_connect(sk, &local->addr, &remote,
--						local->flags, local->ifindex);
-+			for (i = 0; i < n; i++) {
-+				__mptcp_subflow_connect(sk, &local->addr, &addrs[i],
-+							local->flags, local->ifindex);
-+			}
- 			spin_lock_bh(&msk->pm.lock);
- 			return;
- 		}
+ add_addr_echo:
 -- 
 2.31.1
 
