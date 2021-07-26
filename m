@@ -1,55 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C8F70
-	for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 08:11:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F54470
+	for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 08:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1627287110;
+	s=mimecast20190719; t=1627287853;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=j8+S7VO3Nnm1Uyon5m8hHd/54ZxZeCLrs/6uqdIPfOs=;
-	b=OIfOrTxD1PbO3YazlPHg+9Aw/vs8CK/CAIOeSy/ekG8FAH/juBPNulj4geSEluehPxEKHH
-	7VncNupDMEyMEmzItxnjnywmNXTwx7aZy55pIxFpsLxNZb+w2py4H3WXrFxGwtAwewj7Fv
-	MzibWjvOzmv7rjGKNx9YzIZtoYbZDKs=
+	bh=KF9ZGGLW84SEsdJX71qZbWgIIzlZWV40oyV0aCREANo=;
+	b=X2fDNvF1tq10vtPw3GW+fXm1NNZ5q56Kh/vT2TCw039DcFYAnoIk6nAaeF6wNjv7kR0R4h
+	7RMB1dT7g3PqAahrq7QqcsBMxuehCcP1xtivSswdH3ovoAWhb2y53rXCyTamnGXyzDuLRF
+	j2UOjllDorESAZ2RpVcHf8z1QTgbmOw=
 Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
  [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-oRJHnUSYMQueOzXbm8klxA-1; Mon, 26 Jul 2021 04:11:45 -0400
-X-MC-Unique: oRJHnUSYMQueOzXbm8klxA-1
-Received: by mail-wr1-f69.google.com with SMTP id s22-20020adf97960000b02901535eae4100so2454285wrb.14
-        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 01:11:45 -0700 (PDT)
+ us-mta-496-V5zztQNTM7iWvQc0wquh_w-1; Mon, 26 Jul 2021 04:24:11 -0400
+X-MC-Unique: V5zztQNTM7iWvQc0wquh_w-1
+Received: by mail-wr1-f69.google.com with SMTP id v18-20020adfe2920000b029013bbfb19640so4392901wri.17
+        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 01:24:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=j8+S7VO3Nnm1Uyon5m8hHd/54ZxZeCLrs/6uqdIPfOs=;
-        b=Qgh50s9hLBvg5ocy3MSlag1vUqQxdEon7TFwj/0sUKjI/FV94cqKLsIf/EwORs3bN7
-         iLJ7acZ9ImR3LjdRWglC6/8fFL69ScgyiOhMfApBKjvMcrsBjB3pUNEXS7luUg1Kd9Wp
-         AMLcpEZULEzf+g0993y+0Hld8Yq4/ZU7mqUK+uyIG13tqICvm2gRFQ1ncE9mi3zkKt2D
-         3eRZ853UDl/0ocIvr26s0AfuTJZDRzZjem/0wmQdsSapTrILSJDa4P2LkM4w+Yyroh/L
-         CnouxEkWtn+QexFAOjnUCK3PoKXPDQUwpHj0MEjobLOUstmqETmoNyP1HSVZwzx/U8PT
-         8AsA==
-X-Gm-Message-State: AOAM5335kqdX6jnC9LXkMpWhDyvTIQC+iAD347em3fu6rau1oHnK1SHg
-	aQRThMJ61Pz+0ytk/QPa4TcM6KnAbiSwN5nU26es+V1bDYY2tYWjWOW53XaO2VSggSKETcfrFO6
-	VjQSbhup5uyum9ws=
-X-Received: by 2002:adf:ce82:: with SMTP id r2mr18161459wrn.161.1627287104553;
-        Mon, 26 Jul 2021 01:11:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwmPM4IWTs1x9SqhlhBpkclfjUrvvxzGkDbMV1DX11nP35pTuXsQ5vwsWiq0hJIa1TQ//Lgbw==
-X-Received: by 2002:adf:ce82:: with SMTP id r2mr18161444wrn.161.1627287104428;
-        Mon, 26 Jul 2021 01:11:44 -0700 (PDT)
+        bh=KF9ZGGLW84SEsdJX71qZbWgIIzlZWV40oyV0aCREANo=;
+        b=tG9KRbED+mLKYp9Fm/2+p6BibXKXG3P1Y0BPREwb8kEN27yRRez/6opIOh6B6pz5pu
+         baBXpqaSA4pzy6GKh1IggvFkjoTSWu3o6CPFhk3/y/ccFm+jgKx2FVi0M55NhbYdG8tY
+         Uu3urvy89DNkT7sjo25zNvQDMlsSeE/0UmUKFKCRMQ6Zys2ashEt6Ywuhs7ugswf5Da5
+         jZ+CzWZR9VWSsoVbcHO8J2vm4mHChM0S1y/vrGTnbgaKPmO/0uORcISGvL69lR7QtIRR
+         6qxacyA8+KFK7Nr+OfvJUBJ7JlrJwJKua6DzMoI2Pz5WLFqh+iaUsGzu5VaIGC25Gr0P
+         gW+Q==
+X-Gm-Message-State: AOAM530JUMgbFagJXce5zqKmxfupjVhGpPdNInsPxTcN2G6mMqoSgRt/
+	Q2Y0gLOcm7ALoJ6jL363czjhFIgT4nRmp8OWu8syWeMn3/mC+dukGJSMttbW51aodKEuynzwfHx
+	Vk4jqcV4FPDuX2TA=
+X-Received: by 2002:a7b:c846:: with SMTP id c6mr15955921wml.92.1627287850681;
+        Mon, 26 Jul 2021 01:24:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx3voQA1GF4txagT+4FlHdqirbYomOWHnGKC4waHaYYN6U1jG3YaX0dm+U2GBtikaYJnwEeXw==
+X-Received: by 2002:a7b:c846:: with SMTP id c6mr15955907wml.92.1627287850519;
+        Mon, 26 Jul 2021 01:24:10 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-97-57.dyn.eolo.it. [146.241.97.57])
-        by smtp.gmail.com with ESMTPSA id a8sm8530851wmj.8.2021.07.26.01.11.43
+        by smtp.gmail.com with ESMTPSA id a9sm41681653wrv.37.2021.07.26.01.24.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 01:11:44 -0700 (PDT)
-Message-ID: <e0dc580be2c9b8c2cc69af25ccd5bf9600cade85.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH v2 mptcp-next] Squash to "Squash-to: mptcp: build
- ADD_ADDR/echo-ADD_ADDR option according pm.add_signal"
+        Mon, 26 Jul 2021 01:24:10 -0700 (PDT)
+Message-ID: <e201da79ddf683eb0b2c6198e2b7a8c69b5a3c88.camel@redhat.com>
+Subject: Re: [MPTCP][PATCH v3 mptcp-next 2/5] mptcp: local addresses fullmesh
 From: Paolo Abeni <pabeni@redhat.com>
 To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Date: Mon, 26 Jul 2021 10:11:43 +0200
-In-Reply-To: <ba5a3eff994cf1adf069c0e708adcea0d90daedb.1627222024.git.geliangtang@xiaomi.com>
-References: <ba5a3eff994cf1adf069c0e708adcea0d90daedb.1627222024.git.geliangtang@xiaomi.com>
+Cc: Geliang Tang <geliangtang@xiaomi.com>
+Date: Mon, 26 Jul 2021 10:24:09 +0200
+In-Reply-To: <043ce3b46a70bd59ae7aaa53ed1afdf44b7f3ad2.1627272435.git.geliangtang@xiaomi.com>
+References: <cover.1627272435.git.geliangtang@xiaomi.com>
+	 <6f7aa2fec63dcaa337c7b78184a73a90d58b580f.1627272435.git.geliangtang@xiaomi.com>
+	 <043ce3b46a70bd59ae7aaa53ed1afdf44b7f3ad2.1627272435.git.geliangtang@xiaomi.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,33 +66,92 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Sun, 2021-07-25 at 22:18 +0800, Geliang Tang wrote:
-> Paolo's patch (Squash-to: "mptcp: build ADD_ADDR/echo-ADD_ADDR option
-> according pm.add_signal") reverts back to a single 'addr' field in
-> struct mptcp_addr_info.
+On Mon, 2021-07-26 at 12:12 +0800, Geliang Tang wrote:
+> From: Geliang Tang <geliangtang@xiaomi.com>
 > 
-> Then no need to change the argument of mptcp_pm_add_addr_signal to
-> mptcp_out_options and no need to modify the code in mptcp_write_options
-> now, the original code is fine.
+> In mptcp_pm_nl_add_addr_received(), fill a temporary allocate array of
+> all local address corresponding to the fullmesh endpoint. If such array
+> is empty, keep the current behavior.
 > 
-> So this patch reverts back more code.
+> Elsewhere loop on such array and create a subflow for each local address
+> towards the given remote address
 > 
-> And the commit log needs to be updated:
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+> ---
+>  net/mptcp/pm_netlink.c | 35 ++++++++++++++++++++++++++++++++---
+>  1 file changed, 32 insertions(+), 3 deletions(-)
 > 
-> '''
-> According to the MPTCP_ADD_ADDR_SIGNAL or MPTCP_ADD_ADDR_ECHO flag, build
-> the ADD_ADDR/ADD_ADDR_ECHO option.
-> 
-> In mptcp_pm_add_addr_signal(), use opts->addr to save the announced
-> ADD_ADDR or ADD_ADDR_ECHO address.
-> '''
-> 
-> v2:
-> - rename the 'saddr' argument of mptcp_pm_add_addr_signal to 'addr'.
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index f57db5b9a50f..a03e8fd3a584 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -526,12 +526,17 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+>  
+>  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>  {
+> +	struct mptcp_pm_addr_entry entries[MPTCP_PM_ADDR_MAX];
+>  	struct sock *sk = (struct sock *)msk;
+> +	struct mptcp_pm_addr_entry *entry;
+>  	unsigned int add_addr_accept_max;
+> +	struct mptcp_pm_addr_entry local;
+>  	struct mptcp_addr_info remote;
+> -	struct mptcp_addr_info local;
+> +	struct pm_nl_pernet *pernet;
+>  	unsigned int subflows_max;
+> +	int i, n = 0;
+>  
+> +	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
+>  	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
+>  	subflows_max = mptcp_pm_get_subflows_max(msk);
+>  
+> @@ -555,10 +560,34 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>  	if (!remote.port)
+>  		remote.port = sk->sk_dport;
+>  	memset(&local, 0, sizeof(local));
+> -	local.family = remote.family;
+> +	local.addr.family = remote.family;
+>  
+> +	entries[n++] = local;
 
-Oops, I did not notice that datail! Good catch!
+If I read correctly, I think this entry should be added only if the
+full-mesh selection below find no other entries. Otherwise, e.g. in the
+simple scenario with 2 locals address, 3 subflows will be created.
 
-LGTM (again :)
+> +	rcu_read_lock();
+> +	__mptcp_flush_join_list(msk);
+> +	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+> +		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
+> +			continue;
+> +
+> +		if (entry->addr.family != sk->sk_family) {
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +			if ((entry->addr.family == AF_INET &&
+> +			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
+> +			    (sk->sk_family == AF_INET &&
+> +			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
+> +#endif
+> +				continue;
+> +		}
+> +
+> +		if (!lookup_subflow_by_addrs(&msk->conn_list, &entry->addr, &remote))
+> +			entries[n++] = *entry;
 
-/P
+I guess the loop should stop when:
+
+ n + <number of already existing subflows> = mptcp_pm_get_subflows_max()
+
+Even the previous patch need a similar check.
+
+Additional minor nit, what about encapsualting the above chunk in a new
+helper - fill_source_addresses_vec() or something similar? It gets the
+current pm and net as input arguments, the address vector as an output
+arg, and returns the number of addresses filled into the array
+(enforcing the above constraint).
+
+This also applies to the previous patch.
+
+Cheers,
+
+Paolo
 
