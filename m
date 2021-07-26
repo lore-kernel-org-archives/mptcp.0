@@ -1,115 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7EC177
-	for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 10:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1627296946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sTTbMFAM/gPHAtgO1T9HcAyr56Vq9PCdpqUl0CfxrRU=;
-	b=Gc9gJsKHnKfZ59FY7C+iIZIlFAftlnNSm7wb6rBTfqkwBoytca87AFvvoG3B52s5MEePV4
-	y74TiPn/dxGFDbMVsV0Zt7XIkDS1AzRQc1wxOq4rmwWq5zQZLKqr2lVr/IOkKa1QuFedV0
-	g8AyyM5xBqOQN0yk+So5jTButRGu+Go=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-551-aOaOECREOnCH8FxLdpn8Vg-1; Mon, 26 Jul 2021 06:55:44 -0400
-X-MC-Unique: aOaOECREOnCH8FxLdpn8Vg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D47121936B65;
-	Mon, 26 Jul 2021 10:55:43 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-113-71.ams2.redhat.com [10.36.113.71])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1E78E1970E;
-	Mon, 26 Jul 2021 10:55:42 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH v3 mptcp-next 3/3] mptcp: shrink mptcp_out_options struct
-Date: Mon, 26 Jul 2021 12:55:29 +0200
-Message-Id: <b16f81f297f84c8cd9c575fde823baa4eb54ea95.1627296764.git.pabeni@redhat.com>
-In-Reply-To: <cover.1627296764.git.pabeni@redhat.com>
-References: <cover.1627296764.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9509168
+	for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 11:08:31 +0000 (UTC)
+Received: by mail-pj1-f49.google.com with SMTP id m1so12400293pjv.2
+        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 04:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QRtdLQPlhi0CPveWaM1Y2ugnAVwaKIFHKhTFIxHyRWQ=;
+        b=Q+bzPROGRQKA5lJntKnR4Nu0haBS7Ie36usKv/a6/VXSrBsv39RvC2W3JFvh95RBYA
+         k1GhPtRWox6qV0q6dj7yg3wTyMvuCTYTohtok++K8S7A0sFQG1QWEryi/uNiAGlUM0XR
+         iTJKfYvhXYJPdjNi2lXt0nf8Su180NLGhkcb7O1FhIrtmAA/K+o+lv2Sv6lqS5hmG9gb
+         MP5bGbDp7R/AuYE5k9ARSMRWpeGutYnVrdJTYdx0+h1pkv+3KV3SdmxkODTHJO78457z
+         SDCzoILry1QngfexC6e+OXiktX2lbD0jWo8DBlwRnbGlXrXqVnZapiNooa2C4eHoz93/
+         7Jzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QRtdLQPlhi0CPveWaM1Y2ugnAVwaKIFHKhTFIxHyRWQ=;
+        b=jtsn1s2SNlvgvt/Ntt+gukJ3POKLMpPEXyMgHe+E3yJGRMskpbXWfo8O+NLKEuxNP5
+         6elXC9SmuOeqwI0jrKIfnkJnsjcm/EAcVvoEfTJiPdH2bHrNE19N1gIxo2KC6sRD+pOz
+         tJtZJQ6NlDH/1Tu6p2IQN0Mk7c1hWNWAy2Pxw1noO0P8Xo6kDOjUsHOPVMGXXO9LDrBa
+         q54nqaAZfEH7CGt9c2o1MvDxUJU2yGUoxrAyXp7wZnyHH4gtD26OnzeJ/3lTYYIdZPcP
+         P/vukHyJue5T8TgECapd2tZDq+m8jVPVGJXPh+prsLtC43XzrvQ/n9LFvowe3zSROcq2
+         VdgQ==
+X-Gm-Message-State: AOAM532zaX7XisXwUHMgKMAoR71zhOnstE3nb01Z6nIfOQcFiQbv4LBw
+	iVLZLgtQgnAFg38my7wK0545njYm9oJzoA==
+X-Google-Smtp-Source: ABdhPJxBFvNyqoe+DrMPsAqRUJHeUZOZI6n4BkkJ3Wr44OOAs0nTw+JmUmbqxb0ePMPI0os/k6IcHg==
+X-Received: by 2002:a62:8f86:0:b029:32e:33d7:998b with SMTP id n128-20020a628f860000b029032e33d7998bmr17929997pfd.64.1627297711173;
+        Mon, 26 Jul 2021 04:08:31 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id e30sm50282700pga.63.2021.07.26.04.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 04:08:30 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev,
+	geliangtang@gmail.com
+Cc: Geliang Tang <geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH v4 mptcp-next 0/5] fullmesh path manager support
+Date: Mon, 26 Jul 2021 19:08:21 +0800
+Message-Id: <cover.1627297096.git.geliangtang@xiaomi.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-After the previous patch we can alias with an union several
-fields in mptcp_out_options. Such struct is stack allocated and
-memset() for each plain TCP out packet. Every saved byted counts.
+From: Geliang Tang <geliangtang@xiaomi.com>
 
-Before:
-pahole -EC mptcp_out_options
-# ...
-/* size: 136, cachelines: 3, members: 17 */
+v4:
+ - add new helpers, fill_local/remote_addresses_vec
+ - add max_subflows checks
+ - add 'local' into the local addresses array only when no fullmesh
+   entry found.
+ - add signal,fullmesh check
 
-After:
-pahole -EC mptcp_out_options
-# ...
-/* size: 56, cachelines: 1, members: 9 */
+v3:
+ - the in-kernel fullmesh path manager has been dropped from this
+   patchset, only keep the fullmesh flag support code.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- include/net/mptcp.h | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+v2:
+ - Implement the fullmesh mode as an extension to the netlink PM, not a
+   standalone PM as Paolo suggested.
+ - drop duplicate code.
+ - add a new per endpoint flag MPTCP_PM_ADDR_FLAG_FULLMESH.
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 8b5af683a818..3236010afa29 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -58,10 +58,6 @@ struct mptcp_addr_info {
- struct mptcp_out_options {
- #if IS_ENABLED(CONFIG_MPTCP)
- 	u16 suboptions;
--	u64 sndr_key;
--	u64 rcvr_key;
--	u64 ahmac;
--	struct mptcp_addr_info addr;
- 	struct mptcp_rm_list rm_list;
- 	u8 join_id;
- 	u8 backup;
-@@ -69,11 +65,23 @@ struct mptcp_out_options {
- 	   reset_transient:1,
- 	   csum_reqd:1,
- 	   allow_join_id0:1;
--	u32 nonce;
--	u64 thmac;
--	u32 token;
--	u8 hmac[20];
--	struct mptcp_ext ext_copy;
-+	union {
-+		struct {
-+			u64 sndr_key;
-+			u64 rcvr_key;
-+		};
-+		struct {
-+			struct mptcp_addr_info addr;
-+			u64 ahmac;
-+		};
-+		struct mptcp_ext ext_copy;
-+		struct {
-+			u32 nonce;
-+			u32 token;
-+			u64 thmac;
-+			u8 hmac[20];
-+		};
-+	};
- #endif
- };
- 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/193
+
+Geliang Tang (5):
+  mptcp: remote addresses fullmesh
+  mptcp: local addresses fullmesh
+  selftests: mptcp: set and print the fullmesh flag
+  selftests: mptcp: add fullmesh testcases
+  selftests: mptcp: delete uncontinuous removing ids
+
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/pm_netlink.c                        | 125 ++++++++++++++++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  59 +++++++--
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  16 ++-
+ 4 files changed, 181 insertions(+), 20 deletions(-)
+
 -- 
-2.26.3
+2.31.1
 
