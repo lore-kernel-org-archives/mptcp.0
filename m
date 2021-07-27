@@ -1,57 +1,60 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5251A70
-	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 09:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D3F70
+	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 10:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1627379566;
+	s=mimecast20190719; t=1627380208;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZrNXODH1kfmRCXD/VFYWITQEOQZpJmJcXAWdXgZXGG8=;
-	b=YYRfGXe3XuGifvohTndZdfb8CwG02YfrSvsPpzukdsxbVaqmr6FkR52tsPuV6U3LtwOp3g
-	Idw6HxPvyLeFoQp1JgbwTq14l1ctKf5gnTSmYKoNqn5WLjpfxEsLeTsApgShXwf4QZJNen
-	vdZSGDQd6cWy0PoXOf19X4vcxQmUwhM=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400-NTtBjbpcOuuuOB3ubIhK-Q-1; Tue, 27 Jul 2021 05:52:44 -0400
-X-MC-Unique: NTtBjbpcOuuuOB3ubIhK-Q-1
-Received: by mail-wr1-f69.google.com with SMTP id s22-20020adf97960000b02901535eae4100so3843538wrb.14
-        for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 02:52:44 -0700 (PDT)
+	bh=3BW1HJxzy208tTCXU1eA2SbQlM2lWN2+TWyoVGFDDco=;
+	b=Ha5VxVoVweMHRm1QLnnpY8JQ3IIUjqVs+97GrDQ4LplNo1rgXT9zTPNKn+KRdUpGDcTlHL
+	TVFWGxucS3XsTuslxua+8fpbKzLwyEhD/8NLgjd0Q20LIIjn4UOA41vZ9NVz/pGUgz5sGL
+	PQ8dz9hdcOvEgAxCOKM34cxdH/e1ajI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-jgiFELr9OYyesi_EK8xWWQ-1; Tue, 27 Jul 2021 06:03:27 -0400
+X-MC-Unique: jgiFELr9OYyesi_EK8xWWQ-1
+Received: by mail-wm1-f71.google.com with SMTP id c41-20020a05600c4a29b0290253935d0f82so497434wmp.9
+        for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 03:03:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ZrNXODH1kfmRCXD/VFYWITQEOQZpJmJcXAWdXgZXGG8=;
-        b=XniTLkJhlN+DLNiwarksUmycnYPqI7H0B4sPSyzNS4jNqaPaWUuxCon2Sz+crTnKr0
-         hqlcDhLLUcgfREu8SSLIh4DTwcgNLmL7UfXV+Puyl3m/1loKEbraayrme1+ze3tiFwXu
-         4lLQ3IVCBuW6uwA5NWtRIKB8we2mVUrBH6deYaZcOe7oZSw8rU4S/76tYqR8PcogVAan
-         nzKiffmRGaQj1R9mdErcyLl4HXgwRlARldN5nEtmZykNToXUtQGZqdrVNIcuOViUJj4u
-         tU94fWeSogqWQypRUf+fPnxu+UJr0bEIscWvUaaPHcRh+sR4geBx3GyqYIq1zylCqgmh
-         OFJw==
-X-Gm-Message-State: AOAM531xeZojtaidLSSdZ0OrLgEVcamPd9NjDpMcd1s9jkQd+9sekU5i
-	/jJqrZfO/w0zm0YSSW0F5SqWlUCDo0sft8NMKaqGm5agZrRyJb0C4wv6uPMCC1EBGt5VhShmiBZ
-	LRpXfEW7b0CE5W0g=
-X-Received: by 2002:a05:600c:4fca:: with SMTP id o10mr19382695wmq.189.1627379563102;
-        Tue, 27 Jul 2021 02:52:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyypA3R6t5EPGO3ZUbve3omsa4YTjY4t20FylP8l4LSq7gkGE8YiHZAlpOq4DXXiw3WWYB1jw==
-X-Received: by 2002:a05:600c:4fca:: with SMTP id o10mr19382680wmq.189.1627379562837;
-        Tue, 27 Jul 2021 02:52:42 -0700 (PDT)
+        bh=3BW1HJxzy208tTCXU1eA2SbQlM2lWN2+TWyoVGFDDco=;
+        b=Jq5it+BaJsrQmR86L8Ry3Uza/klYtbLkDSmRl06iQaxsf64Hg/yKhN7DmXlwZ1Ge12
+         V6PejKtKJdIP5qtaVLb+ctpxCfgCR1C5MlxmveUYzmcgQSnuO17kJ7/31ZuIJ8YjdC4a
+         PmPrB5wq2MyQLx147YUMMVsrKIVtWWagPD6R5W6K+FHoAOGAtQrllkwX1z0/gvpgqdHU
+         +mb8hHuBDuVPe3q+UcZErPLCMuzvIJtwuzxM423fYFt9okuzGd8WWXXPQ08phEbFTwLl
+         7OsDlQHBhdeRXDmW8te26FXBojq2gw5v2cPP/qixSTbg+ADDPfMK9lDe+dufV+TDerKG
+         ZGsg==
+X-Gm-Message-State: AOAM5323xFE11V5l040kjZ9RnD/3m+Tp6HXog/dF2lVSEcUe3BKvQlLY
+	iY0wXrge5WXGaWD3zAwsWHugAmXkWXzk8XsGp6/wt51zj4VPBK9mIjOtTclxyVj9T7j/0eGyDoa
+	Buh3v0gJbgmUJtD0=
+X-Received: by 2002:a1c:3b07:: with SMTP id i7mr3271949wma.7.1627380205838;
+        Tue, 27 Jul 2021 03:03:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJya4sYyZZH4LVTfQByzYyUv9AVjsvNvGvsNSBr1iQ191duwpwH8KKiumaEVXfkr5TcROK4iug==
+X-Received: by 2002:a1c:3b07:: with SMTP id i7mr3271925wma.7.1627380205580;
+        Tue, 27 Jul 2021 03:03:25 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-97-57.dyn.eolo.it. [146.241.97.57])
-        by smtp.gmail.com with ESMTPSA id d203sm2477753wmd.38.2021.07.27.02.52.42
+        by smtp.gmail.com with ESMTPSA id d15sm2857221wri.39.2021.07.27.03.03.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 02:52:42 -0700 (PDT)
-Message-ID: <a642a08ee7444cf6607946010a4eabadcdc12535.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH v5 mptcp-next 2/5] mptcp: local addresses fullmesh
+        Tue, 27 Jul 2021 03:03:25 -0700 (PDT)
+Message-ID: <16669ae198f1f0eb21bf9383d6630cb692b6f3e2.camel@redhat.com>
+Subject: Re: [MPTCP][PATCH v5 mptcp-next 4/5] selftests: mptcp: add fullmesh
+ testcases
 From: Paolo Abeni <pabeni@redhat.com>
 To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Date: Tue, 27 Jul 2021 11:52:41 +0200
-In-Reply-To: <bde1048019780ecc5f2e553bbb4eb21213f76ba7.1627372396.git.geliangtang@xiaomi.com>
+Date: Tue, 27 Jul 2021 12:03:24 +0200
+In-Reply-To: <78d86feae19ea4efd7061a9e92b81475ed035323.1627372396.git.geliangtang@xiaomi.com>
 References: <cover.1627372396.git.geliangtang@xiaomi.com>
 	 <b8af3a77da2fcd8e16e8b5d6b63c7c8386abcbac.1627372396.git.geliangtang@xiaomi.com>
 	 <bde1048019780ecc5f2e553bbb4eb21213f76ba7.1627372396.git.geliangtang@xiaomi.com>
+	 <69eb44fdf9899ec5eab342fa1f3b62d12ab2598e.1627372396.git.geliangtang@xiaomi.com>
+	 <78d86feae19ea4efd7061a9e92b81475ed035323.1627372396.git.geliangtang@xiaomi.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -69,98 +72,153 @@ Content-Transfer-Encoding: 7bit
 On Tue, 2021-07-27 at 15:58 +0800, Geliang Tang wrote:
 > From: Geliang Tang <geliangtang@xiaomi.com>
 > 
-> In mptcp_pm_nl_add_addr_received(), fill a temporary allocate array of
-> all local address corresponding to the fullmesh endpoint. If such array
-> is empty, keep the current behavior.
+> This patch added the testcases for the fullmesh address flag of the path
+> manager.
 > 
-> Elsewhere loop on such array and create a subflow for each local address
-> towards the given remote address
-> 
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
 > Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 > ---
->  net/mptcp/pm_netlink.c | 60 ++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 55 insertions(+), 5 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 57 ++++++++++++++++++-
+>  1 file changed, 54 insertions(+), 3 deletions(-)
 > 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 2259c424485f..a85bac950f3b 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -554,13 +554,62 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
->  	mptcp_pm_create_subflow_or_signal_addr(msk);
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 937e861e9490..ca19762b9c6e 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -367,7 +367,13 @@ do_transfer()
+>  	fi
+>  
+>  	if [ $addr_nr_ns2 -gt 0 ]; then
+> -		let add_nr_ns2=addr_nr_ns2
+> +		if [ $addr_nr_ns2 -gt 10 ]; then
+> +			let add_nr_ns2=addr_nr_ns2-10
+> +			flags=subflow,fullmesh
+> +		else
+> +			let add_nr_ns2=addr_nr_ns2
+> +			flags=subflow
+> +		fi
+>  		counter=3
+>  		sleep 1
+>  		while [ $add_nr_ns2 -gt 0 ]; do
+> @@ -377,7 +383,7 @@ do_transfer()
+>  			else
+>  				addr="10.0.$counter.2"
+>  			fi
+> -			ip netns exec $ns2 ./pm_nl_ctl add $addr flags subflow
+> +			ip netns exec $ns2 ./pm_nl_ctl add $addr flags $flags
+>  			let counter+=1
+>  			let add_nr_ns2-=1
+>  		done
+> @@ -1697,6 +1703,46 @@ deny_join_id0_tests()
+>  	chk_join_nr "subflow and address allow join id0 2" 1 1 1
 >  }
 >  
-> +static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
-> +					     struct mptcp_addr_info *remote,
-> +					     struct mptcp_pm_addr_entry *entries)
-
-Minor nit: some comments here before the function describing it would
-be helpful, thanks!
-
-Also 'remote' could be 'const', I think.
-
+> +fullmesh_tests()
 > +{
-> +	struct mptcp_pm_addr_entry local, *entry;
-> +	struct sock *sk = (struct sock *)msk;
-> +	struct pm_nl_pernet *pernet;
-> +	unsigned int subflows_max;
-> +	int i = 0;
+> +	# fullmesh 1
+> +	reset
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
+> +	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
+> +	chk_join_nr "fullmesh test 1" 2 2 2
+> +	chk_add_nr 1 1
 > +
-> +	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
-> +	subflows_max = mptcp_pm_get_subflows_max(msk);
+> +	# fullmesh 2
+> +	reset
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,fullmesh
+> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
+> +	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
+> +	chk_join_nr "fullmesh test 2" 4 4 4
+> +	chk_add_nr 1 1
+
+This 2 tests are a bit redundand, I think. With a single remote known
+address, the final topology will be the same as with non-fullmesh
+subflows. Perhaps we can keep just one of this cases?
+
 > +
-> +	rcu_read_lock();
-> +	__mptcp_flush_join_list(msk);
-> +	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> +		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
-> +			continue;
+> +	# fullmesh 3
+> +	reset
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+
+Here I think we need at least one 'fullmesh' subflow in ns2? Otherwise
+this will be a non-fullmesh topology.
+
+> +	run_tests $ns1 $ns2 10.0.1.1 0 0 11 slow
+> +	chk_join_nr "fullmesh test 3" 3 3 3
+> +	chk_add_nr 1 1
 > +
-> +		if (entry->addr.family != sk->sk_family) {
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +			if ((entry->addr.family == AF_INET &&
-> +			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
-> +			    (sk->sk_family == AF_INET &&
-> +			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
-> +#endif
-> +				continue;
-> +		}
-> +
-> +		if (!lookup_subflow_by_addrs(&msk->conn_list, &entry->addr, remote) &&
-> +		    msk->pm.subflows < subflows_max) {
-> +			msk->pm.subflows++;
-> +			entries[i++] = *entry;
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +
-> +	if (!i) {
-> +		memset(&local, 0, sizeof(local));
-> +		local.addr.family = remote->family;
-> +
-> +		msk->pm.subflows++;
-> +		entries[i++] = local;
-> +	}
-> +
-> +	return i;
+> +	# fullmesh 4
+> +	reset
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
+> +	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+
+And perhaps here 2 'fullmesh' subflows? So we test explicitly the most
+expected conf:
+
+Client		Server
+C1 ----------->	S1
+    \       /->
+     \     /
+    - \ --/
+   /   \
+  /     \
+ /       ----->
+C2 ----------->	S2
+
+(not sure how much the above "graph" will be readable :)
+
+Additionally it would be nice to explicitly test a fullmesh topology
+where we hit the max_subflows limit, e.g. 2 local address 3 remote ones
+and max_subflows=4
+
+
+
+> +	run_tests $ns1 $ns2 10.0.1.1 0 0 12 slow
+> +	chk_join_nr "fullmesh test 4" 5 5 5
+> +	chk_add_nr 1 1
 > +}
 > +
->  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>  all_tests()
 >  {
-> +	struct mptcp_pm_addr_entry entries[MPTCP_PM_ADDR_MAX];
-
-mptcp_pm_addr_entry is quite larger than mptcp_addr_info (should be 64
-bytes vs 24). 64 * 8 == 512 bytes could be a bit too much storage for
-the stack. What about using instead:
-
-struct mptcp_pm_addr_info addresses[MPTCP_PM_ADDR_MAX];
-u8 flags[MPTCP_PM_ADDR_MAX];
-
-?
-
-And than pass the 2 arguments to fill_local_addresses_vec(), instead of
-the single 'entries' arg.
-
-Cheers,
-
-Paolo
+>  	subflows_tests
+> @@ -1712,6 +1758,7 @@ all_tests()
+>  	syncookies_tests
+>  	checksum_tests
+>  	deny_join_id0_tests
+> +	fullmesh_tests
+>  }
+>  
+>  usage()
+> @@ -1730,6 +1777,7 @@ usage()
+>  	echo "  -k syncookies_tests"
+>  	echo "  -S checksum_tests"
+>  	echo "  -d deny_join_id0_tests"
+> +	echo "  -m fullmesh_tests"
+>  	echo "  -c capture pcap files"
+>  	echo "  -C enable data checksum"
+>  	echo "  -h help"
+> @@ -1765,7 +1813,7 @@ if [ $do_all_tests -eq 1 ]; then
+>  	exit $ret
+>  fi
+>  
+> -while getopts 'fsltra64bpkdchCS' opt; do
+> +while getopts 'fsltra64bpkdmchCS' opt; do
+>  	case $opt in
+>  		f)
+>  			subflows_tests
+> @@ -1806,6 +1854,9 @@ while getopts 'fsltra64bpkdchCS' opt; do
+>  		d)
+>  			deny_join_id0_tests
+>  			;;
+> +		m)
+> +			fullmesh_tests
+> +			;;
+>  		c)
+>  			;;
+>  		C)
 
