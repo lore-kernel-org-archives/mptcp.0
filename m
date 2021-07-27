@@ -1,51 +1,51 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F26072
-	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 07:58:36 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id u9-20020a17090a1f09b029017554809f35so2938305pja.5
-        for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 00:58:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5644E72
+	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 07:58:38 +0000 (UTC)
+Received: by mail-pj1-f45.google.com with SMTP id l19so16715703pjz.0
+        for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 00:58:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9uVkT+m7WPLMhw9sVvKma6vPeDedSq1FQRGC1Jx73GA=;
-        b=oIHDZZrcoJDiIrBLnJjkqGKcdh7Hqx7tDvGnGzvEX+3oB6ElsEJ9cgaqKfCz3Emh8K
-         TBO7BVgWtHyeeUmjD5gUXNXwELYdOg3Lropbxb+RJENrPw95H+chDHW+gMFNZ9QDWGHQ
-         N2mSyKjn0NkLjYDUGTeF3dEFVLsxLE6MRdD4+nq2rC5izy5gXsfkG+tDrZ+6roIVhrBC
-         Fk6LGAeFY+znEMmekqwF/KD/c+ORP8jBpkMlrJwUPi/0KFFgxF57iZIlGG3WWT79Ryko
-         jhq12OnGbnXV7V5L/9RseaPcAcQ1uWzo9ptr/Om2vlxyHZmgll/+eksV/Ml7wg86YOcx
-         D99A==
+        bh=ILtYiU70BEcQ5rGiFqRTWS4xoybjP0cjfByRLsh1n10=;
+        b=bcPRSHBHVxpS/zdCqNzRoqRu898xrBLpd71u//6tkm6cLqXmHll6QRZkklSTME8OLS
+         CNmY5Q4HiRFH6ZAwVIWCW8ChGCrznlUaPTPeUQc2tqOGmKQ2FvYKY+E5iHnijBYYB6zi
+         YUWuDwxNdL0zwZN9n4goTJXdXA/4C35314z93yg1iJkqKqVIBVThvE3W/2oPf9MuKPXO
+         HwGLt0rIQyJR1s80VckCPrlh08fjwRGXCAPBaMw5Wmpe6jUBftpLZS0F9W5j2SgQJTKH
+         zXXdhqOTdZfSeQOiSMSYH3zm4YqRbFoYMEMuoKjVXXBuWXGumySSXFO8z92TIrjcxSeJ
+         iCfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9uVkT+m7WPLMhw9sVvKma6vPeDedSq1FQRGC1Jx73GA=;
-        b=msQeRofZ1ncgn5HF0YNfBaKnOKL3C+gsj7Rpr+creYgcP561mxFUCyJONiilKibpkm
-         huA2kCPsMj7+FKGQ4qdgn6/j38JjMWmgGzs1wp0KiO6tdWLe+NfhbCGDmfCAneEnMlpV
-         FIW4YiXVYR5sX4NLRhcz0debFhIMWY4c6oQ+25EZEinPn16wHpw7rew7ScpGnkk8pJIi
-         BQ+bK7SMrHM+FcHagHl82e3yexFQANXEOG7zSX2jHSPBdh4HZtlEY5y5EmeFDD/TrhqR
-         cnd6XYAcK49eCLZRbeK6yezAwGSkr/GJA+UCx1RxrGcgWE9RB94ROYvAsA+2UOqanPhf
-         /ABw==
-X-Gm-Message-State: AOAM533mL2R4mwBUojG9S4GrL1A4pNlANfsX80A+v+nk8pe+wCqRvRJa
-	5OqW4RFJLv3S2Ad/PX6Owm36L9UTsa0=
-X-Google-Smtp-Source: ABdhPJwGqtpqVhLy6mVHIloLX6EOPYc5/5Q6Lqep7MUiOx44kWWXnTlXgw9Y0qNq7Bm4oqMyN6Zjxw==
-X-Received: by 2002:a63:5815:: with SMTP id m21mr19458044pgb.363.1627372716172;
-        Tue, 27 Jul 2021 00:58:36 -0700 (PDT)
+        bh=ILtYiU70BEcQ5rGiFqRTWS4xoybjP0cjfByRLsh1n10=;
+        b=ulCYAV/p5uCrdq+LPiDQRKEeUSB89ET9hypZNcDdJ3wKjc8nvjGYyBys+E+svdSfdT
+         znIJX3V35/eIgE0kgHqxV8NbFpOcCJZXY2kfNfa6NbNVEvOwzCoV0HBGObnf1OXEg3Z+
+         eJfDqtXLY1U4AkBDqBNpJZcxWB8VnmSCjEuWT0OR5zsk71h09EKl28P3ChbUEOQGVSeu
+         jYwcvuGkBGjOsQtxyAaVlEBIC+1Rb5oEjhFVT4YrU/UnUxGLCzacQjVILsliIaBgTaqQ
+         62wcZsePRjOlIgs6esI/3a0WMVcZIuApiYFVxmOCwutHQbm7fiSIW8RSxEpe1iU4h6LZ
+         emDA==
+X-Gm-Message-State: AOAM530U98Vcc9gVJ1guKcszIhdGsRT+aIT5PcFGLRrr94Pf8g6Hfjfz
+	1xRR0ykh4G2m5lPQEIWqzHvYiN5JbKw=
+X-Google-Smtp-Source: ABdhPJyrLqvxauzoZ8kiDkWY4sCftvfHSJVg+2Zd6wgCFS5ZDRRBzill0bNzamEI2MwaPkNk7nnLbQ==
+X-Received: by 2002:a17:90a:dc15:: with SMTP id i21mr21697109pjv.139.1627372717888;
+        Tue, 27 Jul 2021 00:58:37 -0700 (PDT)
 Received: from MiBook.. ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id v9sm2544537pfn.22.2021.07.27.00.58.34
+        by smtp.gmail.com with ESMTPSA id v9sm2544537pfn.22.2021.07.27.00.58.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 00:58:35 -0700 (PDT)
+        Tue, 27 Jul 2021 00:58:37 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev,
 	geliangtang@gmail.com
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [MPTCP][PATCH v5 mptcp-next 4/5] selftests: mptcp: add fullmesh testcases
-Date: Tue, 27 Jul 2021 15:58:21 +0800
-Message-Id: <78d86feae19ea4efd7061a9e92b81475ed035323.1627372396.git.geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH v5 mptcp-next 5/5] selftests: mptcp: delete uncontinuous removing ids
+Date: Tue, 27 Jul 2021 15:58:22 +0800
+Message-Id: <0e5e3e180f352cb7ba875e30f94b0d81c789ca72.1627372396.git.geliangtang@xiaomi.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <69eb44fdf9899ec5eab342fa1f3b62d12ab2598e.1627372396.git.geliangtang@xiaomi.com>
-References: <cover.1627372396.git.geliangtang@xiaomi.com> <b8af3a77da2fcd8e16e8b5d6b63c7c8386abcbac.1627372396.git.geliangtang@xiaomi.com> <bde1048019780ecc5f2e553bbb4eb21213f76ba7.1627372396.git.geliangtang@xiaomi.com> <69eb44fdf9899ec5eab342fa1f3b62d12ab2598e.1627372396.git.geliangtang@xiaomi.com>
+In-Reply-To: <78d86feae19ea4efd7061a9e92b81475ed035323.1627372396.git.geliangtang@xiaomi.com>
+References: <cover.1627372396.git.geliangtang@xiaomi.com> <b8af3a77da2fcd8e16e8b5d6b63c7c8386abcbac.1627372396.git.geliangtang@xiaomi.com> <bde1048019780ecc5f2e553bbb4eb21213f76ba7.1627372396.git.geliangtang@xiaomi.com> <69eb44fdf9899ec5eab342fa1f3b62d12ab2598e.1627372396.git.geliangtang@xiaomi.com> <78d86feae19ea4efd7061a9e92b81475ed035323.1627372396.git.geliangtang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -56,124 +56,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-This patch added the testcases for the fullmesh address flag of the path
-manager.
+The removing addresses testcases can only deal with the continuous ids.
+This patch added the uncontinuous removing ids support.
 
+Fixes: f87744ad42446 ("selftests: mptcp: set addr id for removing testcases")
 Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 57 ++++++++++++++++++-
- 1 file changed, 54 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 937e861e9490..ca19762b9c6e 100755
+index ca19762b9c6e..3d906792e963 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -367,7 +367,13 @@ do_transfer()
- 	fi
+@@ -344,17 +344,18 @@ do_transfer()
+ 		let rm_nr_ns1=-addr_nr_ns1
+ 		if [ $rm_nr_ns1 -lt 8 ]; then
+ 			counter=1
++			pos=1
+ 			dump=(`ip netns exec ${listener_ns} ./pm_nl_ctl dump`)
+ 			if [ ${#dump[@]} -gt 0 ]; then
+-				id=${dump[1]}
+ 				sleep 1
  
- 	if [ $addr_nr_ns2 -gt 0 ]; then
--		let add_nr_ns2=addr_nr_ns2
-+		if [ $addr_nr_ns2 -gt 10 ]; then
-+			let add_nr_ns2=addr_nr_ns2-10
-+			flags=subflow,fullmesh
-+		else
-+			let add_nr_ns2=addr_nr_ns2
-+			flags=subflow
-+		fi
- 		counter=3
- 		sleep 1
- 		while [ $add_nr_ns2 -gt 0 ]; do
-@@ -377,7 +383,7 @@ do_transfer()
- 			else
- 				addr="10.0.$counter.2"
+ 				while [ $counter -le $rm_nr_ns1 ]
+ 				do
++					id=${dump[$pos]}
+ 					ip netns exec ${listener_ns} ./pm_nl_ctl del $id
+ 					sleep 1
+ 					let counter+=1
+-					let id+=1
++					let pos+=5
+ 				done
  			fi
--			ip netns exec $ns2 ./pm_nl_ctl add $addr flags subflow
-+			ip netns exec $ns2 ./pm_nl_ctl add $addr flags $flags
- 			let counter+=1
- 			let add_nr_ns2-=1
- 		done
-@@ -1697,6 +1703,46 @@ deny_join_id0_tests()
- 	chk_join_nr "subflow and address allow join id0 2" 1 1 1
- }
+ 		elif [ $rm_nr_ns1 -eq 8 ]; then
+@@ -392,17 +393,18 @@ do_transfer()
+ 		let rm_nr_ns2=-addr_nr_ns2
+ 		if [ $rm_nr_ns2 -lt 8 ]; then
+ 			counter=1
++			pos=1
+ 			dump=(`ip netns exec ${connector_ns} ./pm_nl_ctl dump`)
+ 			if [ ${#dump[@]} -gt 0 ]; then
+-				id=${dump[1]}
+ 				sleep 1
  
-+fullmesh_tests()
-+{
-+	# fullmesh 1
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
-+	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
-+	chk_join_nr "fullmesh test 1" 2 2 2
-+	chk_add_nr 1 1
-+
-+	# fullmesh 2
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,fullmesh
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
-+	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
-+	chk_join_nr "fullmesh test 2" 4 4 4
-+	chk_add_nr 1 1
-+
-+	# fullmesh 3
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 11 slow
-+	chk_join_nr "fullmesh test 3" 3 3 3
-+	chk_add_nr 1 1
-+
-+	# fullmesh 4
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 12 slow
-+	chk_join_nr "fullmesh test 4" 5 5 5
-+	chk_add_nr 1 1
-+}
-+
- all_tests()
- {
- 	subflows_tests
-@@ -1712,6 +1758,7 @@ all_tests()
- 	syncookies_tests
- 	checksum_tests
- 	deny_join_id0_tests
-+	fullmesh_tests
- }
- 
- usage()
-@@ -1730,6 +1777,7 @@ usage()
- 	echo "  -k syncookies_tests"
- 	echo "  -S checksum_tests"
- 	echo "  -d deny_join_id0_tests"
-+	echo "  -m fullmesh_tests"
- 	echo "  -c capture pcap files"
- 	echo "  -C enable data checksum"
- 	echo "  -h help"
-@@ -1765,7 +1813,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
- 
--while getopts 'fsltra64bpkdchCS' opt; do
-+while getopts 'fsltra64bpkdmchCS' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1806,6 +1854,9 @@ while getopts 'fsltra64bpkdchCS' opt; do
- 		d)
- 			deny_join_id0_tests
- 			;;
-+		m)
-+			fullmesh_tests
-+			;;
- 		c)
- 			;;
- 		C)
+ 				while [ $counter -le $rm_nr_ns2 ]
+ 				do
++					id=${dump[$pos]}
+ 					ip netns exec ${connector_ns} ./pm_nl_ctl del $id
+ 					sleep 1
+ 					let counter+=1
+-					let id+=1
++					let pos+=5
+ 				done
+ 			fi
+ 		elif [ $rm_nr_ns2 -eq 8 ]; then
 -- 
 2.31.1
 
