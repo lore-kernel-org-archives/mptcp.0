@@ -1,421 +1,105 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4088570
-	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 04:34:05 +0000 (UTC)
-Received: by mail-pj1-f42.google.com with SMTP id mz5-20020a17090b3785b0290176ecf64922so2336720pjb.3
-        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 21:34:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF9B72
+	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 06:45:35 +0000 (UTC)
+Received: by mail-pl1-f180.google.com with SMTP id e5so12706298pld.6
+        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 23:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wiEQ/1s/D9pzScgOxU1luTH7p21lz1ZXL6bXmgYkrMY=;
-        b=TxjGeTG5kVcmPLzjRkv++qeKocTnDV3iFT4RSsHEqaGU3MMGRDhzR+PB9Z+vDW7aO5
-         AJNkZbnoxcrNFHFqpVf2zIAaRoBiiY3TbL5sqtSN5p1DoGvG6bKPfxSp7PIZBpH+pWAg
-         hOFRkM/Nfxerlu9ta5VRmGhCKJHv6hG6h1biBp9pOF1wamYitGrq29ltojriNCMPpXEG
-         0M3XG8lvzYnlIKJ0hOxWv+Kv8BhC9F+4zbvuJMpGOZWe99u4fNg5jIRHtI7ikLngBkHU
-         wKTJEA5Mdl3DJw9v1+mThXgbIt74SEweip6JcS70UDN2U7GE9e+P2Mfw9zZYKwx/fHB7
-         8wYQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ydS5u/1yhGpmI6hYL2peHkgYV+9nUkBrsY4hOaTeArM=;
+        b=ebeC54Pegvy65Rh0/sTlm6kVde0vbNtESRcSOHN9IizSTXYjoK7JD8tvwcu9q009Vk
+         eke2m2RSadCeZhgR8DAcTBEu+wfFRqfFykleDc+DLV4BK/+q70a4jj1LodItyEGVoHmz
+         urYr0BFfpn0yi9g+IgI15k7a5az9MIYzdTwBKcU46SKtBYLLxdbj8dTPJ/AE5zfwkfpj
+         cP5kNt3OCaNz+1sfs8f8CbFE2EnJJ2ok4z9gexxMKLvf2lHOFaecBYYANuBrX6wMDeKq
+         T59A1nWjK7XoatkB25GRjKeZ6NtEc4a1lxDtTVnMGLyJvKdrcXh4Ccgb1Uy1H87c9Sgc
+         wU5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wiEQ/1s/D9pzScgOxU1luTH7p21lz1ZXL6bXmgYkrMY=;
-        b=mvNj+Let1v1inLiTexbgh2DQ9dbdWCKjkpdGSORt+SZRyPVp7g3OwfaLqoQKfr92bY
-         0Tv1LhxlUXbY/+K6IUj+n5PXmFfFTH6EVNTLu1sOgSNA84gefsnHVEAFaGhTwd90NUKY
-         2i5zNocKaMz6B65ahc2eEqII3kzCYUFmiSzEG6O+VziI/JD65uTe3/jhG/8hg+MmuNQI
-         lmTiMewlSAEqbnCgd+CTtrSZrGlNmhYbVo90COB0+wbS6QpgPCf35U3YUypmW89A4eoj
-         K64DM7DKJW8D0scDmwnl/IgLjp4P3aXAaxeVbf3D4ZOX5SJ0KpGqXtMlvF+iuI9xVjCw
-         LjHQ==
-X-Gm-Message-State: AOAM530RvaGHeWKSy/uW8TuVFXhtJyIbqRvO38z0AwroZT5FQ4AuPVZf
-	YXEdYFx62FwKynHHE89eOM0R9QB6xWuUwheahVU=
-X-Google-Smtp-Source: ABdhPJxwmNy3Crm3x3AdM1lffWnG2iPVHttyr6sYXCFNL7tZWZeAk3TvefY0225SVCG571grTXyN3yy5gWmY4CSaOV0=
-X-Received: by 2002:aa7:874c:0:b029:39a:56d1:6d42 with SMTP id
- g12-20020aa7874c0000b029039a56d16d42mr7404234pfo.58.1627360444689; Mon, 26
- Jul 2021 21:34:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ydS5u/1yhGpmI6hYL2peHkgYV+9nUkBrsY4hOaTeArM=;
+        b=QEsn4E2iPuj3ZS9HzugCfVSy/rTByNjKCRAcB+pkNQ613HjbGnIvahRd2cOcoXv+kd
+         Izr0Zhn6Bm4WzPo/ShyIWt0cM2R0SIoHuBiGikPXHFna8sTU8IJFRQbp3Z8hjv6SA5lm
+         oka1IWIwbwHn1D2gYcYIrXOEuwdlnnuELMtkn2iN+ns04q3Ix64KVC/+Itigx9dIivlx
+         D91pyly1gx5DLi+NPxt5F05/gZA4MzYWyMTpq33EX38y532wftG6ZlBrFjdu/oIgQMTE
+         qDK+52YHibu5/lHL4RcJScYYvWsc86XIQsEGLhqeXwedpCZJIW0Zl+iBjvYQvI4+Ti66
+         XRMw==
+X-Gm-Message-State: AOAM5336r9l8n1MhrNYpXn9YPc2nDeUgoi6DIitHsNXKI/ksAHhypwNR
+	nJraLD9V1a/9MO1TAPVyMwWfYu1DUBE=
+X-Google-Smtp-Source: ABdhPJwwVAGkbKn4ATMq0e2kb2y7z7BWYzit3W/thXtMuMZgjeeA+RcZWiVZDS0qgCCJz1FIgukpCg==
+X-Received: by 2002:aa7:9541:0:b029:32c:cefa:123f with SMTP id w1-20020aa795410000b029032ccefa123fmr21229334pfq.24.1627368334587;
+        Mon, 26 Jul 2021 23:45:34 -0700 (PDT)
+Received: from MiBook.. ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id ce15sm1631384pjb.48.2021.07.26.23.45.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 23:45:34 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev,
+	geliangtang@gmail.com
+Cc: Geliang Tang <geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "selftests: mptcp: add fullmesh testcases v4"
+Date: Tue, 27 Jul 2021 14:45:29 +0800
+Message-Id: <68af9775c12340a5812bb7d08fd723e13c2db43c.1627368162.git.geliangtang@xiaomi.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1627296764.git.pabeni@redhat.com> <31938eaa6cd1d45c22d184c1df7970f904785500.1627296764.git.pabeni@redhat.com>
-In-Reply-To: <31938eaa6cd1d45c22d184c1df7970f904785500.1627296764.git.pabeni@redhat.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue, 27 Jul 2021 12:33:53 +0800
-Message-ID: <CA+WQbwsNTPBrVQB24V6gEYSvTw8AwS9xr1cBM-_s-L2vCz4-jg@mail.gmail.com>
-Subject: Re: [PATCH v3 mptcp-next 2/3] mptcp: optimize out option generation
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2021=E5=B9=B47=E6=9C=8826=E6=97=A5=
-=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=886:55=E5=86=99=E9=81=93=EF=BC=9A
->
-> Currently we have several protocol contraint on MPTCP option
-> generation (e.g. MPC and MPJ subopt are mutually exclusive)
-> and some additionall ones required by our implementation
-> (e.g. almost all ADD_ADDR variant are mutually exclusive with
-> everything else).
->
-> We can leverage the above to optimize the out option generation:
-> we check DSS/MPC/MPJ presencence in a mutually exclusive way,
-> avoiding many unneeded conditionals in the common case.
->
-> Additionally extend the existing constraint on ADD_ADDR opt on
-> all subvariant, so that it become fully mutually exclusive with
-> the above and we can skip another conditional statement the common
-> case.
->
-> This change is also need by the next patch.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> --
-> v1 -> v2:
->  - moved the pm.c chunk into the previous patch
->  - avoid changing 'len' type - Geliang
->  - add a comment describing why we need to clear ahmac field
->  - don't clear ext_copy fields anymore in mptcp_pm_add_addr_signal()
->    not needed and confusing
->
-> side node: we could probably optimize the conditionals in
-> mptcp_established_options()
-> ---
->  net/mptcp/options.c  | 227 +++++++++++++++++++++++--------------------
->  net/mptcp/protocol.h |   1 +
->  2 files changed, 120 insertions(+), 108 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index eafdb9408f3a..c14314268b36 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -592,6 +592,7 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
->                 dss_size =3D map_size;
->                 if (skb && snd_data_fin_enable)
->                         mptcp_write_data_fin(subflow, skb, &opts->ext_cop=
-y);
-> +               opts->suboptions =3D OPTION_MPTCP_DSS;
->                 ret =3D true;
->         }
->
-> @@ -615,6 +616,7 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
->                 opts->ext_copy.ack64 =3D 0;
->         }
->         opts->ext_copy.use_ack =3D 1;
-> +       opts->suboptions =3D OPTION_MPTCP_DSS;
->         WRITE_ONCE(msk->old_wspace, __mptcp_space((struct sock *)msk));
->
->         /* Add kind/length/subtype/flag overhead if mapping is not popula=
-ted */
-> @@ -682,8 +684,13 @@ static bool mptcp_established_options_add_addr(struc=
-t sock *sk, struct sk_buff *
->         if (drop_other_suboptions) {
->                 pr_debug("drop other suboptions");
->                 opts->suboptions =3D 0;
-> -               opts->ext_copy.use_ack =3D 0;
-> -               opts->ext_copy.use_map =3D 0;
-> +
-> +               /* note that e.g. DSS could have written into the memory
-> +                * aliased by ahmac, we must reset the field here
-> +                * to avoid appending the hmac even for ADD_ADDR echo
-> +                * options
-> +                */
-> +               opts->ahmac =3D 0;
->                 *size -=3D opt_size;
->         }
->         opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> @@ -735,7 +742,12 @@ static bool mptcp_established_options_mp_prio(struct=
- sock *sk,
->  {
->         struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
->
-> -       if (!subflow->send_mp_prio)
-> +       /* can't send MP_PRIO with MPC, as they share the same option spa=
-ce:
-> +        * 'backup'. Also it makes no sense at all
-> +        */
-> +       if (!subflow->send_mp_prio ||
-> +            ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
-> +              OPTION_MPTCP_MPC_ACK) & opts->suboptions))
->                 return false;
->
->         /* account for the trailing 'nop' option */
-> @@ -1198,7 +1210,73 @@ static u16 mptcp_make_csum(const struct mptcp_ext =
-*mpext)
->  void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
->                          struct mptcp_out_options *opts)
->  {
-> -       if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
-> +       /* RST is mutually exclusive with everything else */
-> +       if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
-> +               *ptr++ =3D mptcp_option(MPTCPOPT_RST,
-> +                                     TCPOLEN_MPTCP_RST,
-> +                                     opts->reset_transient,
-> +                                     opts->reset_reason);
-> +               return;
-> +       }
-> +
-> +       /* DSS, MPC, MPJ and ADD_ADDR are mutually exclusive, see
-> +        * mptcp_established_options*()
-> +        */
-> +       if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
-> +               struct mptcp_ext *mpext =3D &opts->ext_copy;
-> +               u8 len =3D TCPOLEN_MPTCP_DSS_BASE;
-> +               u8 flags =3D 0;
-> +
-> +               if (mpext->use_ack) {
-> +                       flags =3D MPTCP_DSS_HAS_ACK;
-> +                       if (mpext->ack64) {
-> +                               len +=3D TCPOLEN_MPTCP_DSS_ACK64;
-> +                               flags |=3D MPTCP_DSS_ACK64;
-> +                       } else {
-> +                               len +=3D TCPOLEN_MPTCP_DSS_ACK32;
-> +                       }
-> +               }
-> +
-> +               if (mpext->use_map) {
-> +                       len +=3D TCPOLEN_MPTCP_DSS_MAP64;
-> +
-> +                       /* Use only 64-bit mapping flags for now, add
-> +                        * support for optional 32-bit mappings later.
-> +                        */
-> +                       flags |=3D MPTCP_DSS_HAS_MAP | MPTCP_DSS_DSN64;
-> +                       if (mpext->data_fin)
-> +                               flags |=3D MPTCP_DSS_DATA_FIN;
-> +
-> +                       if (opts->csum_reqd)
-> +                               len +=3D TCPOLEN_MPTCP_DSS_CHECKSUM;
-> +               }
-> +
-> +               *ptr++ =3D mptcp_option(MPTCPOPT_DSS, len, 0, flags);
-> +
-> +               if (mpext->use_ack) {
-> +                       if (mpext->ack64) {
-> +                               put_unaligned_be64(mpext->data_ack, ptr);
-> +                               ptr +=3D 2;
-> +                       } else {
-> +                               put_unaligned_be32(mpext->data_ack32, ptr=
-);
-> +                               ptr +=3D 1;
-> +                       }
-> +               }
-> +
-> +               if (mpext->use_map) {
-> +                       put_unaligned_be64(mpext->data_seq, ptr);
-> +                       ptr +=3D 2;
-> +                       put_unaligned_be32(mpext->subflow_seq, ptr);
-> +                       ptr +=3D 1;
-> +                       if (opts->csum_reqd) {
-> +                               put_unaligned_be32(mpext->data_len << 16 =
-|
-> +                                                  mptcp_make_csum(mpext)=
-, ptr);
-> +                       } else {
-> +                               put_unaligned_be32(mpext->data_len << 16 =
-|
-> +                                                  TCPOPT_NOP << 8 | TCPO=
-PT_NOP, ptr);
-> +                       }
-> +               }
-> +       } else if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
->              OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
->                 u8 len, flag =3D MPTCP_CAP_HMAC_SHA256;
->
-> @@ -1246,10 +1324,31 @@ void mptcp_write_options(__be32 *ptr, const struc=
-t tcp_sock *tp,
->                                            TCPOPT_NOP << 8 | TCPOPT_NOP, =
-ptr);
->                 }
->                 ptr +=3D 1;
-> -       }
->
-> -mp_capable_done:
-> -       if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> +               /* MPC is additionally mutually exclusive with MP_PRIO */
-> +               goto mp_capable_done;
-> +       } else if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
-> +               *ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
-> +                                     TCPOLEN_MPTCP_MPJ_SYN,
-> +                                     opts->backup, opts->join_id);
-> +               put_unaligned_be32(opts->token, ptr);
-> +               ptr +=3D 1;
-> +               put_unaligned_be32(opts->nonce, ptr);
-> +               ptr +=3D 1;
-> +       } else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
-> +               *ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
-> +                                     TCPOLEN_MPTCP_MPJ_SYNACK,
-> +                                     opts->backup, opts->join_id);
-> +               put_unaligned_be64(opts->thmac, ptr);
-> +               ptr +=3D 2;
-> +               put_unaligned_be32(opts->nonce, ptr);
-> +               ptr +=3D 1;
-> +       } else if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
-> +               *ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
-> +                                     TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
-> +               memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
-> +               ptr +=3D 5;
-> +       } else if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
->                 struct mptcp_addr_info *addr =3D &opts->addr;
+From: Geliang Tang <geliangtang@xiaomi.com>
 
-This will conflict with: (Squash to "Squash-to: mptcp: build ADD_ADDR/
-echo-ADD_ADDR option according pm.add_signal"), since this line is removed
-in it.
+Update testcase 1.
 
-Thanks,
--Geliang
+Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
->                 u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
->                 u8 echo =3D MPTCP_ADDR_ECHO;
-> @@ -1308,6 +1407,19 @@ void mptcp_write_options(__be32 *ptr, const struct=
- tcp_sock *tp,
->                 }
->         }
->
-> +       if (OPTION_MPTCP_PRIO & opts->suboptions) {
-> +               const struct sock *ssk =3D (const struct sock *)tp;
-> +               struct mptcp_subflow_context *subflow;
-> +
-> +               subflow =3D mptcp_subflow_ctx(ssk);
-> +               subflow->send_mp_prio =3D 0;
-> +
-> +               *ptr++ =3D mptcp_option(MPTCPOPT_MP_PRIO,
-> +                                     TCPOLEN_MPTCP_PRIO,
-> +                                     opts->backup, TCPOPT_NOP);
-> +       }
-> +
-> +mp_capable_done:
->         if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
->                 u8 i =3D 1;
->
-> @@ -1328,107 +1440,6 @@ void mptcp_write_options(__be32 *ptr, const struc=
-t tcp_sock *tp,
->                 }
->         }
->
-> -       if (OPTION_MPTCP_PRIO & opts->suboptions) {
-> -               const struct sock *ssk =3D (const struct sock *)tp;
-> -               struct mptcp_subflow_context *subflow;
-> -
-> -               subflow =3D mptcp_subflow_ctx(ssk);
-> -               subflow->send_mp_prio =3D 0;
-> -
-> -               *ptr++ =3D mptcp_option(MPTCPOPT_MP_PRIO,
-> -                                     TCPOLEN_MPTCP_PRIO,
-> -                                     opts->backup, TCPOPT_NOP);
-> -       }
-> -
-> -       if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
-> -               *ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
-> -                                     TCPOLEN_MPTCP_MPJ_SYN,
-> -                                     opts->backup, opts->join_id);
-> -               put_unaligned_be32(opts->token, ptr);
-> -               ptr +=3D 1;
-> -               put_unaligned_be32(opts->nonce, ptr);
-> -               ptr +=3D 1;
-> -       }
-> -
-> -       if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
-> -               *ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
-> -                                     TCPOLEN_MPTCP_MPJ_SYNACK,
-> -                                     opts->backup, opts->join_id);
-> -               put_unaligned_be64(opts->thmac, ptr);
-> -               ptr +=3D 2;
-> -               put_unaligned_be32(opts->nonce, ptr);
-> -               ptr +=3D 1;
-> -       }
-> -
-> -       if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
-> -               *ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
-> -                                     TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
-> -               memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
-> -               ptr +=3D 5;
-> -       }
-> -
-> -       if (OPTION_MPTCP_RST & opts->suboptions)
-> -               *ptr++ =3D mptcp_option(MPTCPOPT_RST,
-> -                                     TCPOLEN_MPTCP_RST,
-> -                                     opts->reset_transient,
-> -                                     opts->reset_reason);
-> -
-> -       if (opts->ext_copy.use_ack || opts->ext_copy.use_map) {
-> -               struct mptcp_ext *mpext =3D &opts->ext_copy;
-> -               u8 len =3D TCPOLEN_MPTCP_DSS_BASE;
-> -               u8 flags =3D 0;
-> -
-> -               if (mpext->use_ack) {
-> -                       flags =3D MPTCP_DSS_HAS_ACK;
-> -                       if (mpext->ack64) {
-> -                               len +=3D TCPOLEN_MPTCP_DSS_ACK64;
-> -                               flags |=3D MPTCP_DSS_ACK64;
-> -                       } else {
-> -                               len +=3D TCPOLEN_MPTCP_DSS_ACK32;
-> -                       }
-> -               }
-> -
-> -               if (mpext->use_map) {
-> -                       len +=3D TCPOLEN_MPTCP_DSS_MAP64;
-> -
-> -                       /* Use only 64-bit mapping flags for now, add
-> -                        * support for optional 32-bit mappings later.
-> -                        */
-> -                       flags |=3D MPTCP_DSS_HAS_MAP | MPTCP_DSS_DSN64;
-> -                       if (mpext->data_fin)
-> -                               flags |=3D MPTCP_DSS_DATA_FIN;
-> -
-> -                       if (opts->csum_reqd)
-> -                               len +=3D TCPOLEN_MPTCP_DSS_CHECKSUM;
-> -               }
-> -
-> -               *ptr++ =3D mptcp_option(MPTCPOPT_DSS, len, 0, flags);
-> -
-> -               if (mpext->use_ack) {
-> -                       if (mpext->ack64) {
-> -                               put_unaligned_be64(mpext->data_ack, ptr);
-> -                               ptr +=3D 2;
-> -                       } else {
-> -                               put_unaligned_be32(mpext->data_ack32, ptr=
-);
-> -                               ptr +=3D 1;
-> -                       }
-> -               }
-> -
-> -               if (mpext->use_map) {
-> -                       put_unaligned_be64(mpext->data_seq, ptr);
-> -                       ptr +=3D 2;
-> -                       put_unaligned_be32(mpext->subflow_seq, ptr);
-> -                       ptr +=3D 1;
-> -                       if (opts->csum_reqd) {
-> -                               put_unaligned_be32(mpext->data_len << 16 =
-|
-> -                                                  mptcp_make_csum(mpext)=
-, ptr);
-> -                       } else {
-> -                               put_unaligned_be32(mpext->data_len << 16 =
-|
-> -                                                  TCPOPT_NOP << 8 | TCPO=
-PT_NOP, ptr);
-> -                       }
-> -               }
-> -       }
-> -
->         if (tp)
->                 mptcp_set_rwin(tp);
->  }
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 34ad1c4bc29f..d960d8b8a8ce 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -26,6 +26,7 @@
->  #define OPTION_MPTCP_FASTCLOSE BIT(8)
->  #define OPTION_MPTCP_PRIO      BIT(9)
->  #define OPTION_MPTCP_RST       BIT(10)
-> +#define OPTION_MPTCP_DSS       BIT(11)
->
->  /* MPTCP option subtypes */
->  #define MPTCPOPT_MP_CAPABLE    0
-> --
-> 2.26.3
->
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 9ceb6052b513..d87e7364dcea 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -325,13 +325,7 @@ do_transfer()
+ 	cpid=$!
+ 
+ 	if [ $addr_nr_ns1 -gt 0 ]; then
+-		if [ $addr_nr_ns1 -gt 10 ]; then
+-			let add_nr_ns1=addr_nr_ns1-10
+-			flags=signal,fullmesh
+-		else
+-			let add_nr_ns1=addr_nr_ns1
+-			flags=signal
+-		fi
++		let add_nr_ns1=addr_nr_ns1
+ 		counter=2
+ 		sleep 1
+ 		while [ $add_nr_ns1 -gt 0 ]; do
+@@ -341,7 +335,7 @@ do_transfer()
+ 			else
+ 				addr="10.0.$counter.1"
+ 			fi
+-			ip netns exec $ns1 ./pm_nl_ctl add $addr flags $flags
++			ip netns exec $ns1 ./pm_nl_ctl add $addr flags signal
+ 			let counter+=1
+ 			let add_nr_ns1-=1
+ 		done
+@@ -1715,9 +1709,8 @@ fullmesh_tests()
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
+-	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
++	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
+ 	chk_join_nr "signal address fullmesh 1" 2 2 2
+ 	chk_add_nr 1 1
+ 
+-- 
+2.31.1
+
