@@ -1,57 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3070
-	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 09:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5251A70
+	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 09:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1627379468;
+	s=mimecast20190719; t=1627379566;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=unmjP2CFNwUlDFAKlcjUymuLEXT1j9JvHovTOb1pHs0=;
-	b=PLQxrNwRDBCSE7KuxBL5pA0gTGsBE98uemh3LxNo2m8IO2/E5S5RuYDazLXbb1gWHj04D5
-	mP0RsAPp58m8E3DQx6WzTurLeXoCM1SZkhZa0QkhuenDtpfYfOMV1i9DZBxfhDoIqlmDW0
-	uzz7g2FhRuRA8F4WXtS6+GYa0u6t9TM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-423-3eyMQJc1MKquL642yCOCZg-1; Tue, 27 Jul 2021 05:51:06 -0400
-X-MC-Unique: 3eyMQJc1MKquL642yCOCZg-1
-Received: by mail-wm1-f70.google.com with SMTP id n17-20020a7bc5d10000b0290228d7e174f1so927944wmk.0
-        for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 02:51:06 -0700 (PDT)
+	bh=ZrNXODH1kfmRCXD/VFYWITQEOQZpJmJcXAWdXgZXGG8=;
+	b=YYRfGXe3XuGifvohTndZdfb8CwG02YfrSvsPpzukdsxbVaqmr6FkR52tsPuV6U3LtwOp3g
+	Idw6HxPvyLeFoQp1JgbwTq14l1ctKf5gnTSmYKoNqn5WLjpfxEsLeTsApgShXwf4QZJNen
+	vdZSGDQd6cWy0PoXOf19X4vcxQmUwhM=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400-NTtBjbpcOuuuOB3ubIhK-Q-1; Tue, 27 Jul 2021 05:52:44 -0400
+X-MC-Unique: NTtBjbpcOuuuOB3ubIhK-Q-1
+Received: by mail-wr1-f69.google.com with SMTP id s22-20020adf97960000b02901535eae4100so3843538wrb.14
+        for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 02:52:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=unmjP2CFNwUlDFAKlcjUymuLEXT1j9JvHovTOb1pHs0=;
-        b=BouSUGKfTuhr5A1M6uTZal/oEVTW16yWpYPy+qp5nQqGXBbSnq+7t1K1ZsWRveRt+s
-         pb3zRQRHjR5QRnet2bJm3XDcvyXA9pnQavgl6o26cil77HJcktEGT3enhCyJgstgKidx
-         xeaK7yHOSmJ8ewnVpB1VGUJGlQil/Hojbm1+ZrBB7/roejWp/lFcgGNoItWbNB8eqDj0
-         yWSJvRV/MT0vysRGNtSfmBmLQ+HqaRj0VcNHoLYhSVcqnZ53wJuZe8I5N2WFZRtAMOWx
-         ar599Q1b2SVI+OHIm3yBB9Nf0wtcTlUOCAftdmUSNs2aLhhlvlFHn2QNcoLvNZ6E4e14
-         /ZjA==
-X-Gm-Message-State: AOAM532w0ODYvKJ1ZmHsN3x7aR4FomrAsRPDwd8aWEZ/QbRZsHxCvXCR
-	NGLp88vFi+u7NW/0ponuqPBgwAln2UOadA5ibIRSxWpBgIhWN+srvrFnsKGq0FzSmPwsPVW4Gqz
-	rye24EFfJfM1yYGc=
-X-Received: by 2002:a05:600c:21c2:: with SMTP id x2mr13779922wmj.61.1627379465841;
-        Tue, 27 Jul 2021 02:51:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyZB2fZ5xk++Bx+rG02/+VKs6npR1Q1zIuVIBkoBPICvxFdL/+TCv223FvJ2gIyG1UbS0c+sw==
-X-Received: by 2002:a05:600c:21c2:: with SMTP id x2mr13779914wmj.61.1627379465656;
-        Tue, 27 Jul 2021 02:51:05 -0700 (PDT)
+        bh=ZrNXODH1kfmRCXD/VFYWITQEOQZpJmJcXAWdXgZXGG8=;
+        b=XniTLkJhlN+DLNiwarksUmycnYPqI7H0B4sPSyzNS4jNqaPaWUuxCon2Sz+crTnKr0
+         hqlcDhLLUcgfREu8SSLIh4DTwcgNLmL7UfXV+Puyl3m/1loKEbraayrme1+ze3tiFwXu
+         4lLQ3IVCBuW6uwA5NWtRIKB8we2mVUrBH6deYaZcOe7oZSw8rU4S/76tYqR8PcogVAan
+         nzKiffmRGaQj1R9mdErcyLl4HXgwRlARldN5nEtmZykNToXUtQGZqdrVNIcuOViUJj4u
+         tU94fWeSogqWQypRUf+fPnxu+UJr0bEIscWvUaaPHcRh+sR4geBx3GyqYIq1zylCqgmh
+         OFJw==
+X-Gm-Message-State: AOAM531xeZojtaidLSSdZ0OrLgEVcamPd9NjDpMcd1s9jkQd+9sekU5i
+	/jJqrZfO/w0zm0YSSW0F5SqWlUCDo0sft8NMKaqGm5agZrRyJb0C4wv6uPMCC1EBGt5VhShmiBZ
+	LRpXfEW7b0CE5W0g=
+X-Received: by 2002:a05:600c:4fca:: with SMTP id o10mr19382695wmq.189.1627379563102;
+        Tue, 27 Jul 2021 02:52:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyypA3R6t5EPGO3ZUbve3omsa4YTjY4t20FylP8l4LSq7gkGE8YiHZAlpOq4DXXiw3WWYB1jw==
+X-Received: by 2002:a05:600c:4fca:: with SMTP id o10mr19382680wmq.189.1627379562837;
+        Tue, 27 Jul 2021 02:52:42 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-97-57.dyn.eolo.it. [146.241.97.57])
-        by smtp.gmail.com with ESMTPSA id l2sm2131635wms.21.2021.07.27.02.51.05
+        by smtp.gmail.com with ESMTPSA id d203sm2477753wmd.38.2021.07.27.02.52.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 02:51:05 -0700 (PDT)
-Message-ID: <9c137e22c92b4756f3e743a7ab7fc0c37bad57f2.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH v5 mptcp-next 1/5] mptcp: remote addresses
- fullmesh
+        Tue, 27 Jul 2021 02:52:42 -0700 (PDT)
+Message-ID: <a642a08ee7444cf6607946010a4eabadcdc12535.camel@redhat.com>
+Subject: Re: [MPTCP][PATCH v5 mptcp-next 2/5] mptcp: local addresses fullmesh
 From: Paolo Abeni <pabeni@redhat.com>
 To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Date: Tue, 27 Jul 2021 11:51:04 +0200
-In-Reply-To: <b8af3a77da2fcd8e16e8b5d6b63c7c8386abcbac.1627372396.git.geliangtang@xiaomi.com>
+Date: Tue, 27 Jul 2021 11:52:41 +0200
+In-Reply-To: <bde1048019780ecc5f2e553bbb4eb21213f76ba7.1627372396.git.geliangtang@xiaomi.com>
 References: <cover.1627372396.git.geliangtang@xiaomi.com>
 	 <b8af3a77da2fcd8e16e8b5d6b63c7c8386abcbac.1627372396.git.geliangtang@xiaomi.com>
+	 <bde1048019780ecc5f2e553bbb4eb21213f76ba7.1627372396.git.geliangtang@xiaomi.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,68 +66,99 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-
-I'm sorry for the partial feedback so far, I noticed more things
-looking at the following patches. Again, I'm sorry!
-
 On Tue, 2021-07-27 at 15:58 +0800, Geliang Tang wrote:
-> +static bool lookup_subflow_by_addrs(const struct list_head *list,
-> +				    struct mptcp_addr_info *saddr,
-> +				    struct mptcp_addr_info *daddr)
-> +{
-
-both 'saddr' and 'daddr' could be 'const', I think.
-
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_addr_info local, remote;
-> +	struct sock_common *skc;
-> +
-> +	list_for_each_entry(subflow, list, node) {
-> +		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
-> +
-> +		local_address(skc, &local);
-> +		remote_address(skc, &remote);
-> +		if (addresses_equal(&local, saddr, saddr->port) &&
-> +		    addresses_equal(&remote, daddr, daddr->port))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static struct mptcp_pm_addr_entry *
->  select_local_address(const struct pm_nl_pernet *pernet,
->  		     struct mptcp_sock *msk)
-> @@ -410,6 +431,53 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
->  	}
+> From: Geliang Tang <geliangtang@xiaomi.com>
+> 
+> In mptcp_pm_nl_add_addr_received(), fill a temporary allocate array of
+> all local address corresponding to the fullmesh endpoint. If such array
+> is empty, keep the current behavior.
+> 
+> Elsewhere loop on such array and create a subflow for each local address
+> towards the given remote address
+> 
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+> ---
+>  net/mptcp/pm_netlink.c | 60 ++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 55 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 2259c424485f..a85bac950f3b 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -554,13 +554,62 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+>  	mptcp_pm_create_subflow_or_signal_addr(msk);
 >  }
 >  
-> +static bool lookup_address_in_vec(struct mptcp_addr_info *addrs, unsigned int nr,
-> +				  struct mptcp_addr_info *addr)
+> +static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+> +					     struct mptcp_addr_info *remote,
+> +					     struct mptcp_pm_addr_entry *entries)
 
-'addr' could be 'const', I think.
+Minor nit: some comments here before the function describing it would
+be helpful, thanks!
+
+Also 'remote' could be 'const', I think.
 
 > +{
-> +	int i;
+> +	struct mptcp_pm_addr_entry local, *entry;
+> +	struct sock *sk = (struct sock *)msk;
+> +	struct pm_nl_pernet *pernet;
+> +	unsigned int subflows_max;
+> +	int i = 0;
 > +
-> +	for (i = 0; i < nr; i++) {
-> +		if (addresses_equal(&addrs[i], addr, addr->port))
-> +			return true;
+> +	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
+> +	subflows_max = mptcp_pm_get_subflows_max(msk);
+> +
+> +	rcu_read_lock();
+> +	__mptcp_flush_join_list(msk);
+> +	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+> +		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
+> +			continue;
+> +
+> +		if (entry->addr.family != sk->sk_family) {
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +			if ((entry->addr.family == AF_INET &&
+> +			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
+> +			    (sk->sk_family == AF_INET &&
+> +			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
+> +#endif
+> +				continue;
+> +		}
+> +
+> +		if (!lookup_subflow_by_addrs(&msk->conn_list, &entry->addr, remote) &&
+> +		    msk->pm.subflows < subflows_max) {
+> +			msk->pm.subflows++;
+> +			entries[i++] = *entry;
+> +		}
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	if (!i) {
+> +		memset(&local, 0, sizeof(local));
+> +		local.addr.family = remote->family;
+> +
+> +		msk->pm.subflows++;
+> +		entries[i++] = local;
 > +	}
 > +
-> +	return false;
+> +	return i;
 > +}
 > +
-> +static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
-> +					      struct mptcp_pm_addr_entry *local,
-> +					      struct mptcp_addr_info *addrs)
-> +{
+>  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>  {
+> +	struct mptcp_pm_addr_entry entries[MPTCP_PM_ADDR_MAX];
 
-'local' could be 'const', I think.
+mptcp_pm_addr_entry is quite larger than mptcp_addr_info (should be 64
+bytes vs 24). 64 * 8 == 512 bytes could be a bit too much storage for
+the stack. What about using instead:
 
-hopefully no more comments on this patch ;)
+struct mptcp_pm_addr_info addresses[MPTCP_PM_ADDR_MAX];
+u8 flags[MPTCP_PM_ADDR_MAX];
+
+?
+
+And than pass the 2 arguments to fill_local_addresses_vec(), instead of
+the single 'entries' arg.
 
 Cheers,
 
