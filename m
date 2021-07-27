@@ -1,199 +1,78 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B8170
-	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 00:31:50 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10057"; a="199523649"
-X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
-   d="scan'208";a="199523649"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 17:31:49 -0700
-X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
-   d="scan'208";a="662344416"
-Received: from jxu13-mobl.amr.corp.intel.com ([10.209.65.162])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 17:31:48 -0700
-Date: Mon, 26 Jul 2021 17:31:48 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "Squash-to: mptcp: build
- ADD_ADDR/echo-ADD_ADDR option according pm.add_signal"
-In-Reply-To: <313195dff50905ec809b66b2f195340dd80d68ff.1627219500.git.geliangtang@xiaomi.com>
-Message-ID: <e8a07d66-3e27-4423-421f-f836e58cf276@linux.intel.com>
-References: <313195dff50905ec809b66b2f195340dd80d68ff.1627219500.git.geliangtang@xiaomi.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFF972
+	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 04:06:21 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id n10so14405830plf.4
+        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 21:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=po/Yc0BE1Ja6dZC68gtNP4l/1SdyZ1NMASv9dhFwyfY=;
+        b=XWg6d+q/luHyqUDs8Ar6Iz/RuYTKZ5PzfQQSGy5IZyhVevDzLVP0mvpM/GM8CgLYm8
+         wBok+dXw2Y93jN73VSiVG7EMJFaEqBDYwu3L5WWhslungLtfx7Sb2ActvpkB8g3Xlyyg
+         7GSrkCLXXMObajf8k2/LXGlqHbQ5g07x6eH/ajq3j5oS1Z8L7g6xvjduHCVPun6HooMk
+         BLPgIr+0j91vZTN3cf2rWK/yOvi4U/j6kODGSmgyiWuU76lE0NcRVFs2WyuCvxyCZHvC
+         +hZrXM6BKYkt0R6cwlET2kmCh24Bb9z19XFLHfli2zkhyCT5DaxR2hBD0OT7EHLf2Kpz
+         qnZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=po/Yc0BE1Ja6dZC68gtNP4l/1SdyZ1NMASv9dhFwyfY=;
+        b=AAXp+iCB9Di3+kkCHmU6W/T0S0KYTOKgewQE7W2yZW8hC2rw+1bMJMylHYTAhf2NC8
+         YVWf284p8Kgja7LDeIzbekaTYgPZyoewlsjTMWYMYzOI+Tf6OU9JexlXmSQthmb6dent
+         eimk24KLQFtHo9/yRB4WbfxaeWirGTv4chQ/9P5JQq+imTLwMAF5k5qcHRdE/ZeY3o8y
+         uy3myRcDNEqajGb0rQ7+M6cZ+JFFEBn2TMs+gVWVLYVyvcuoUAzQysRdPUMN+4LHnvDh
+         +lqqVbrjoaVbzyLF7zqWZvZT3FRe6FkLehD+Hv76BS9n2KTCOu8hqWOdsv3hFVBUd1kb
+         9kGQ==
+X-Gm-Message-State: AOAM530Yv9/aqsoGa0zzn4uPTNACVsT7F+9gzG9BVlHuvCCiZT2T4cT0
+	JKvYYP0dnRmm4DoOZZba//YkOVZSmNrX+Q==
+X-Google-Smtp-Source: ABdhPJwk6o55t8xBJDcp6a+M3Yhko4Xp4xdCkjdD08TuRQGMjJvJWPwHL6u0urF3qM5xgNSxkDvOLA==
+X-Received: by 2002:a17:902:6b84:b029:ee:f966:1911 with SMTP id p4-20020a1709026b84b02900eef9661911mr17160752plk.69.1627358780643;
+        Mon, 26 Jul 2021 21:06:20 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id h18sm805136pjv.21.2021.07.26.21.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 21:06:20 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev,
+	geliangtang@gmail.com
+Cc: Geliang Tang <geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH mptcp-next] Squash to "mptcp: local addresses fullmesh v4"
+Date: Tue, 27 Jul 2021 12:06:15 +0800
+Message-Id: <8e259a61af93e5a2a66318c9515fd6f740d59c77.1627358725.git.geliangtang@xiaomi.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, 25 Jul 2021, Geliang Tang wrote:
+From: Geliang Tang <geliangtang@xiaomi.com>
 
-> Paolo's patch (Squash-to: "mptcp: build ADD_ADDR/echo-ADD_ADDR option
-> according pm.add_signal") reverts back to a single 'addr' field in struct
-> mptcp_addr_info.
->
-> Then no need to change the argument of mptcp_pm_add_addr_signal and no
-> need to modify the code in mptcp_write_options now, the original code is
-> fine.
->
-> So this patch reverts back more code.
->
-> And the commit log needs to be updated:
->
-> '''
-> According to the MPTCP_ADD_ADDR_SIGNAL or MPTCP_ADD_ADDR_ECHO flag, build
-> the ADD_ADDR/ADD_ADDR_ECHO option.
->
-> In mptcp_pm_add_addr_signal(), use opts->remote or opts->local to save the
-> announced ADD_ADDR or ADD_ADDR_ECHO address.
-> '''
->
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+pm.subflows needs to be updated in the non-fullmesh case too.
 
-Hi Geliang,
+Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+---
+ net/mptcp/pm_netlink.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for the updates to this patch. The result of squashing Paolo's 
-patch and yours to the "mptcp: build ADD_ADDR..." patch is much clearer.
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 10f09a96952b..a8d7fb99a3dd 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -581,6 +581,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 		memset(&local, 0, sizeof(local));
+ 		local.addr.family = remote->family;
+ 
++		msk->pm.subflows++;
+ 		entries[i++] = local;
+ 	}
+ 
+-- 
+2.31.1
 
-As you note here (and in your reply), the commit message also needs some 
-work. One more part of that, the commit message should say 
-"pm.addr_signal" instead of "pm.add_signal", but that is a separate fix.
-
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-
-
-> ---
-> net/mptcp/options.c  | 25 ++++++++++++-------------
-> net/mptcp/pm.c       |  6 +++---
-> net/mptcp/protocol.h |  2 +-
-> 3 files changed, 16 insertions(+), 17 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index eafdb9408f3a..cb29a5605776 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -668,7 +668,7 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
-> 	int len;
->
-> 	if (!mptcp_pm_should_add_signal(msk) ||
-> -	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, opts,
-> +	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, &opts->addr,
-> 		    &echo, &port, &drop_other_suboptions))
-> 		return false;
->
-> @@ -692,8 +692,8 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
-> 						     msk->remote_key,
-> 						     &opts->addr);
-> 	}
-> -	pr_debug("addr_id=%d, addr_port=%d, ahmac=%llu, echo=%d",
-> -		 opts->addr.id, ntohs(opts->addr.port), opts->ahmac, echo);
-> +	pr_debug("addr_id=%d, ahmac=%llu, echo=%d, port=%d",
-> +		 opts->addr.id, opts->ahmac, echo, ntohs(opts->addr.port));
->
-> 	return true;
-> }
-> @@ -1250,16 +1250,15 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
->
-> mp_capable_done:
-> 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> -		struct mptcp_addr_info *addr = &opts->addr;
-> 		u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> 		u8 echo = MPTCP_ADDR_ECHO;
->
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -		if (addr->family == AF_INET6)
-> +		if (opts->addr.family == AF_INET6)
-> 			len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> #endif
->
-> -		if (addr->port)
-> +		if (opts->addr.port)
-> 			len += TCPOLEN_MPTCP_PORT_LEN;
->
-> 		if (opts->ahmac) {
-> @@ -1268,25 +1267,25 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 		}
->
-> 		*ptr++ = mptcp_option(MPTCPOPT_ADD_ADDR,
-> -				      len, echo, addr->id);
-> -		if (addr->family == AF_INET) {
-> -			memcpy((u8 *)ptr, (u8 *)&addr->addr.s_addr, 4);
-> +				      len, echo, opts->addr.id);
-> +		if (opts->addr.family == AF_INET) {
-> +			memcpy((u8 *)ptr, (u8 *)&opts->addr.addr.s_addr, 4);
-> 			ptr += 1;
-> 		}
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -		else if (addr->family == AF_INET6) {
-> -			memcpy((u8 *)ptr, addr->addr6.s6_addr, 16);
-> +		else if (opts->addr.family == AF_INET6) {
-> +			memcpy((u8 *)ptr, opts->addr.addr6.s6_addr, 16);
-> 			ptr += 4;
-> 		}
-> #endif
->
-> -		if (!addr->port) {
-> +		if (!opts->addr.port) {
-> 			if (opts->ahmac) {
-> 				put_unaligned_be64(opts->ahmac, ptr);
-> 				ptr += 2;
-> 			}
-> 		} else {
-> -			u16 port = ntohs(addr->port);
-> +			u16 port = ntohs(opts->addr.port);
->
-> 			if (opts->ahmac) {
-> 				u8 *bptr = (u8 *)ptr;
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 5fe3805af02a..781da0885f98 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -257,7 +257,7 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
->
-> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
-> 			      unsigned int opt_size, unsigned int remaining,
-> -			      struct mptcp_out_options *opts, bool *echo,
-> +			      struct mptcp_addr_info *saddr, bool *echo,
-> 			      bool *port, bool *drop_other_suboptions)
-> {
-> 	int ret = false;
-> @@ -286,10 +286,10 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
-> 		goto out_unlock;
->
-> 	if (*echo) {
-> -		opts->addr = msk->pm.remote;
-> +		*saddr = msk->pm.remote;
-> 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
-> 	} else {
-> -		opts->addr = msk->pm.local;
-> +		*saddr = msk->pm.local;
-> 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
-> 	}
-> 	WRITE_ONCE(msk->pm.addr_signal, add_addr);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index b54335857b6e..099e3e6a4c89 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -801,7 +801,7 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
->
-> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
-> 			      unsigned int opt_size, unsigned int remaining,
-> -			      struct mptcp_out_options *opts, bool *echo,
-> +			      struct mptcp_addr_info *saddr, bool *echo,
-> 			      bool *port, bool *drop_other_suboptions);
-> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> 			     struct mptcp_rm_list *rm_list);
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
