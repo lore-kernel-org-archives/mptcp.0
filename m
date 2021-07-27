@@ -1,128 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74963168
-	for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 11:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1627297846;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ac3y4cPs88FgIXAOvqKudmWInWW98J70+thA+eMydSc=;
-	b=GO8fy5ZMW3TDoZMlE1u57q9c/hjt1yjn4K5l6nof/WuNykgIaVBw0UIwErtJKnbBJgvaGL
-	3k98d/lhtcOtz03EOxwx8Cj6XTIKrN5okbrUmnI30ZhFfvLgnIZ6TmdhUE9hKVR8m/EXeJ
-	E7gOlS14sYe85pLzJASxS4SanLTYz/0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-421-GYmUFUzsMuKkRKm8NU44Yg-1; Mon, 26 Jul 2021 07:10:45 -0400
-X-MC-Unique: GYmUFUzsMuKkRKm8NU44Yg-1
-Received: by mail-wm1-f71.google.com with SMTP id a1-20020a7bc1c10000b0290225338d8f53so3028095wmj.8
-        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 04:10:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ac3y4cPs88FgIXAOvqKudmWInWW98J70+thA+eMydSc=;
-        b=pdlfPCB17JccX/QRCOJ2xaBvM/iyJUAOI7a5g65qPPKlQLBykoU3LGEQT6Dg1uwXf9
-         KC+hmUf+Yie1znRvl3bl9Ncfg+CjKfpL4gwbQCMXuWdI2O9ZXJuXoJSxgzgD+BycyQqQ
-         0LzQCFeIugt7lioqwCZOY0e7RwTwOgVQxG7FVTS63I42/o6uIjHI2Zg16XrQSxWGUsUa
-         Zr70LO9dbduY6E8psC7q7G3y3Ekf5m0Ec2MLnU/64dT3S/+lJ8PQ4WIFCGB884BbdDUA
-         VvYTrJdsnqlB4RQZc9LVBL2pG1OQgl3GI67kFJ9ejfwzxlJCM/hAxvjGQ7q65gnwF/oZ
-         i47Q==
-X-Gm-Message-State: AOAM531+zUNfhW2NVEE9TDRUADbQyTltye08JKbV0Ud8Ip99Bb4PQeD/
-	pKgTchzPLFVZk9lhpKEMuXYSFMhi2EroOpKyhQa95H2XSC2pPheKlzUgXZKRMgMmSmFTho/dsfQ
-	jHAC/B63QoUXXVxk=
-X-Received: by 2002:a1c:20ce:: with SMTP id g197mr14406501wmg.46.1627297844030;
-        Mon, 26 Jul 2021 04:10:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz7uXYEIbwxsAGNQfINHi0ZnA1GqVxem5PtuEFiP4gIupW58zqads79DRLAV8KurpIuhkGLYQ==
-X-Received: by 2002:a1c:20ce:: with SMTP id g197mr14406492wmg.46.1627297843845;
-        Mon, 26 Jul 2021 04:10:43 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-97-57.dyn.eolo.it. [146.241.97.57])
-        by smtp.gmail.com with ESMTPSA id l23sm26221218wme.22.2021.07.26.04.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 04:10:43 -0700 (PDT)
-Message-ID: <c41c35969415639a6e09036387ebe170da6b6fa5.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH v5 mptcp-next 1/5] mptcp: MP_FAIL suboption
- sending
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@xiaomi.com>
-Date: Mon, 26 Jul 2021 13:10:42 +0200
-In-Reply-To: <fce3d982e418e791fc38dd2e9f116de84e429d21.1627281326.git.geliangtang@xiaomi.com>
-References: <cover.1627281326.git.geliangtang@xiaomi.com>
-	 <fce3d982e418e791fc38dd2e9f116de84e429d21.1627281326.git.geliangtang@xiaomi.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5AC168
+	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 00:20:49 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10057"; a="212060589"
+X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
+   d="scan'208";a="212060589"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 17:20:49 -0700
+X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
+   d="scan'208";a="662342498"
+Received: from jxu13-mobl.amr.corp.intel.com ([10.209.65.162])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 17:20:48 -0700
+Date: Mon, 26 Jul 2021 17:20:47 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@gmail.com>, 
+    Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: build ADD_ADDR/echo-ADD_ADDR
+ option according pm.add_signal"
+In-Reply-To: <4206e5473ed255fa08af48a7b5bc0edd00abb99d.1627047074.git.pabeni@redhat.com>
+Message-ID: <7e9eaade-e51a-dbd5-f4c6-94bc91c0dec9@linux.intel.com>
+References: <4206e5473ed255fa08af48a7b5bc0edd00abb99d.1627047074.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 2021-07-26 at 14:45 +0800, Geliang Tang wrote:
-> From: Geliang Tang <geliangtang@xiaomi.com>
-> 
-> This patch added the MP_FAIL suboption sending support.
-> 
-> Add a new flag named send_mp_fail in struct mptcp_subflow_context. If
-> this flag is set, send out MP_FAIL suboption.
-> 
-> Add a new member fail_seq in struct mptcp_out_options to save the data
-> sequence number to put into the MP_FAIL suboption.
-> 
-> An MP_FAIL option could be included in a RST or on the subflow-level
-> ACK.
-> 
-> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+On Fri, 23 Jul 2021, Paolo Abeni wrote:
+
+> We don't need to add a 2nd mptcp_addr_info inside out_options:
+> it's quite huge and only one of local or remote is used.
+>
+> revert back to a single 'addr' field.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
->  include/net/mptcp.h  |  5 +++-
->  net/mptcp/options.c  | 61 +++++++++++++++++++++++++++++++++++++++++---
->  net/mptcp/protocol.h |  3 +++
->  3 files changed, 64 insertions(+), 5 deletions(-)
-> 
+> include/net/mptcp.h |  3 +--
+> net/mptcp/options.c | 13 +++++--------
+> net/mptcp/pm.c      |  4 ++--
+> 3 files changed, 8 insertions(+), 12 deletions(-)
+>
 > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index d0b9e4a7121f..6c8c8592153d 100644
+> index d0b9e4a7121f..8b5af683a818 100644
 > --- a/include/net/mptcp.h
 > +++ b/include/net/mptcp.h
-> @@ -60,7 +60,10 @@ struct mptcp_out_options {
->  	u16 suboptions;
->  	u64 sndr_key;
->  	u64 rcvr_key;
-> -	u64 ahmac;
-> +	union {
-> +		u64 ahmac;
-> +		u64 fail_seq;
-> +	};
->  	struct mptcp_addr_info local;
->  	struct mptcp_addr_info remote;
->  	struct mptcp_rm_list rm_list;
+> @@ -61,8 +61,7 @@ struct mptcp_out_options {
+> 	u64 sndr_key;
+> 	u64 rcvr_key;
+> 	u64 ahmac;
+> -	struct mptcp_addr_info local;
+> -	struct mptcp_addr_info remote;
+> +	struct mptcp_addr_info addr;
+> 	struct mptcp_rm_list rm_list;
+> 	u8 join_id;
+> 	u8 backup;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 6803de5d4209..eafdb9408f3a 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -665,7 +665,6 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+> 	unsigned int opt_size = *size;
+> 	bool echo;
+> 	bool port;
+> -	u8 family;
+> 	int len;
+>
+> 	if (!mptcp_pm_should_add_signal(msk) ||
+> @@ -675,8 +674,7 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+>
+> 	if (drop_other_suboptions)
+> 		remaining += opt_size;
+> -	family = echo ? opts->remote.family : opts->local.family;
+> -	len = mptcp_add_addr_len(family, echo, port);
+> +	len = mptcp_add_addr_len(opts->addr.family, echo, port);
+> 	if (remaining < len)
+> 		return false;
+>
+> @@ -692,11 +690,10 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+> 	if (!echo) {
+> 		opts->ahmac = add_addr_generate_hmac(msk->local_key,
+> 						     msk->remote_key,
+> -						     &opts->local);
+> +						     &opts->addr);
+> 	}
+> -	pr_debug("local_id=%d, local_port=%d, remote_id=%d, remote_port=%d, ahmac=%llu, echo=%d",
+> -		 opts->local.id, ntohs(opts->local.port), opts->remote.id,
+> -		 ntohs(opts->remote.port), opts->ahmac, echo);
+> +	pr_debug("addr_id=%d, addr_port=%d, ahmac=%llu, echo=%d",
+> +		 opts->addr.id, ntohs(opts->addr.port), opts->ahmac, echo);
+>
+> 	return true;
+> }
+> @@ -1253,7 +1250,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>
+> mp_capable_done:
+> 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+> -		struct mptcp_addr_info *addr = opts->ahmac ? &opts->local : &opts->remote;
+> +		struct mptcp_addr_info *addr = &opts->addr;
+> 		u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
+> 		u8 echo = MPTCP_ADDR_ECHO;
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 692614c1f552..4d1828fd2482 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -282,10 +282,10 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+> 		goto out_unlock;
+>
+> 	if (*echo) {
+> -		opts->remote = msk->pm.remote;
+> +		opts->addr = msk->pm.remote;
+> 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
+> 	} else {
+> -		opts->local = msk->pm.local;
+> +		opts->addr = msk->pm.local;
+> 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
+> 	}
+> 	WRITE_ONCE(msk->pm.addr_signal, add_addr);
+> -- 
+> 2.26.3
 
-This will conflict with: "mptcp: shrink mptcp_out_options struct". If
-this series is merged before the "mptcp: shrink mptcp_out_options
-struct" series, I think we can just add the new field here without any
-union and do the aliasing the the shirnk' patch.
+I agree that it's worthwhile to keep the size of mptcp_out_options down.
 
-Otherwise ("mptcp: shrink mptcp_out_options struct" merged first), I
-think:
+There's already a "!mptcp_pm_should_add_signal()" check earlier in 
+mptcp_pm_add_addr_signal(), so I don't see a risk of opts->addr getting 
+accidentally clobbered now that the mptcp_addr_info storage is shared 
+again.
 
-		struct mptcp_ext ext_copy;
+Looks good to me:
 
-should be replace with:
-		struct {
-			struct mptcp_ext ext_copy;
-			u64 ahmac;
-		};
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-mptcp_out_options should not change size that way.
-
-Cheers
-
-Paolo
-
+--
+Mat Martineau
+Intel
