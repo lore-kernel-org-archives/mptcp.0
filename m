@@ -1,48 +1,48 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF9B72
-	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 06:45:35 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id e5so12706298pld.6
-        for <mptcp@lists.linux.dev>; Mon, 26 Jul 2021 23:45:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A527D72
+	for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 07:58:28 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id f13so4367482plj.2
+        for <mptcp@lists.linux.dev>; Tue, 27 Jul 2021 00:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ydS5u/1yhGpmI6hYL2peHkgYV+9nUkBrsY4hOaTeArM=;
-        b=ebeC54Pegvy65Rh0/sTlm6kVde0vbNtESRcSOHN9IizSTXYjoK7JD8tvwcu9q009Vk
-         eke2m2RSadCeZhgR8DAcTBEu+wfFRqfFykleDc+DLV4BK/+q70a4jj1LodItyEGVoHmz
-         urYr0BFfpn0yi9g+IgI15k7a5az9MIYzdTwBKcU46SKtBYLLxdbj8dTPJ/AE5zfwkfpj
-         cP5kNt3OCaNz+1sfs8f8CbFE2EnJJ2ok4z9gexxMKLvf2lHOFaecBYYANuBrX6wMDeKq
-         T59A1nWjK7XoatkB25GRjKeZ6NtEc4a1lxDtTVnMGLyJvKdrcXh4Ccgb1Uy1H87c9Sgc
-         wU5Q==
+        bh=swRjQpd6x5XEQF+ndit+HlwhNJwEGB6M2lgBLPKCfxg=;
+        b=t2ZW1NTKU9y7BDlTL0s1ObyfpJ0FbUzzWQTrXedxKRJpA4rflpbxkgnT5AuCj2QTN5
+         BpEKfKIuPDRfdTg/pdDn+fkNKjP1kVvJxeaXkblGPpyZV3U5z96poM2TwWMevR8h0WFz
+         pFsD+FnHDCd+mASKz+mJBRHKotlYcfSeHLKvYHPWEZL9ALtpAnq23EATw882fhPqbKvw
+         PFgM8MLymPJ7GuQhyOIG/WX+tpy3eI8cYhKaavQ/GVHR2ZNHwhVfSEFwcPpMBu/ryf3z
+         heeq/B4WDbfTCIl642zwux9B77WBuQ0cjqLmUmHuj9JCNI48hgN+voQ3yNIB698ZTK2w
+         9oLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ydS5u/1yhGpmI6hYL2peHkgYV+9nUkBrsY4hOaTeArM=;
-        b=QEsn4E2iPuj3ZS9HzugCfVSy/rTByNjKCRAcB+pkNQ613HjbGnIvahRd2cOcoXv+kd
-         Izr0Zhn6Bm4WzPo/ShyIWt0cM2R0SIoHuBiGikPXHFna8sTU8IJFRQbp3Z8hjv6SA5lm
-         oka1IWIwbwHn1D2gYcYIrXOEuwdlnnuELMtkn2iN+ns04q3Ix64KVC/+Itigx9dIivlx
-         D91pyly1gx5DLi+NPxt5F05/gZA4MzYWyMTpq33EX38y532wftG6ZlBrFjdu/oIgQMTE
-         qDK+52YHibu5/lHL4RcJScYYvWsc86XIQsEGLhqeXwedpCZJIW0Zl+iBjvYQvI4+Ti66
-         XRMw==
-X-Gm-Message-State: AOAM5336r9l8n1MhrNYpXn9YPc2nDeUgoi6DIitHsNXKI/ksAHhypwNR
-	nJraLD9V1a/9MO1TAPVyMwWfYu1DUBE=
-X-Google-Smtp-Source: ABdhPJwwVAGkbKn4ATMq0e2kb2y7z7BWYzit3W/thXtMuMZgjeeA+RcZWiVZDS0qgCCJz1FIgukpCg==
-X-Received: by 2002:aa7:9541:0:b029:32c:cefa:123f with SMTP id w1-20020aa795410000b029032ccefa123fmr21229334pfq.24.1627368334587;
-        Mon, 26 Jul 2021 23:45:34 -0700 (PDT)
-Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id ce15sm1631384pjb.48.2021.07.26.23.45.33
+        bh=swRjQpd6x5XEQF+ndit+HlwhNJwEGB6M2lgBLPKCfxg=;
+        b=gh0mfDXxJFLaaWoN56lSxZaBuwKiwGSzrHqdYIpjx9e2tl0/x/nVHpc7OpwJVnzGs0
+         bpkoj+u+F8tAost/+m3YPlyJk+HnktnRks6iOzIJsYgprUNUOneTT8MQdUmzaOF8KUwa
+         Y8CbRZcpewR2eeFQw07RHoRqoPU0BuKbPsb+Q0JoeaG5zTSFuZDCpgmT9Q29lU6F2Gyx
+         Wu/7w36QVwkUseUUWsGK6l1W9FP9H61ntcTE4fgYSRWb2OQeHnaLMixXubb7UXYn6ot/
+         L0tVfQ45hq3W3DPnOSHtyAfL0SXCgui+RDS0J5NEs/Wwj18lM9FZKIuHqts67YkTuUa7
+         3gig==
+X-Gm-Message-State: AOAM533gyQtxTJ2efv36GopufV7FL+mITixmnzrJessXqkzRop21GGXZ
+	QzqARKasuo+TUnpCkASbTREt3kcVJlY=
+X-Google-Smtp-Source: ABdhPJxNcmqSNh+LmCe3FqjAQ2UmJYy7wpABNUkogi2SCC3hx9vx4/aTnxTxsX06h+GcYIIdck8KVg==
+X-Received: by 2002:a17:902:b692:b029:12b:e0b8:3415 with SMTP id c18-20020a170902b692b029012be0b83415mr14209355pls.32.1627372708092;
+        Tue, 27 Jul 2021 00:58:28 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id v9sm2544537pfn.22.2021.07.27.00.58.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 23:45:34 -0700 (PDT)
+        Tue, 27 Jul 2021 00:58:27 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev,
 	geliangtang@gmail.com
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [MPTCP][PATCH mptcp-next] Squash to "selftests: mptcp: add fullmesh testcases v4"
-Date: Tue, 27 Jul 2021 14:45:29 +0800
-Message-Id: <68af9775c12340a5812bb7d08fd723e13c2db43c.1627368162.git.geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH v5 mptcp-next 0/5] fullmesh path manager support
+Date: Tue, 27 Jul 2021 15:58:17 +0800
+Message-Id: <cover.1627372396.git.geliangtang@xiaomi.com>
 X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -54,52 +54,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-Update testcase 1.
+v5:
+ - patch 1, add a new helper lookup_address_in_vec.
+ - patch 2, update pm.subflows in the non-fullmesh case.
+ - patch 4, add more tests.
+ - tag: export/20210727T054640
 
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+v4:
+ - add new helpers, fill_local/remote_addresses_vec
+ - add max_subflows checks
+ - add 'local' into the local addresses array only when no fullmesh
+   entry found.
+ - add signal,fullmesh check
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 9ceb6052b513..d87e7364dcea 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -325,13 +325,7 @@ do_transfer()
- 	cpid=$!
- 
- 	if [ $addr_nr_ns1 -gt 0 ]; then
--		if [ $addr_nr_ns1 -gt 10 ]; then
--			let add_nr_ns1=addr_nr_ns1-10
--			flags=signal,fullmesh
--		else
--			let add_nr_ns1=addr_nr_ns1
--			flags=signal
--		fi
-+		let add_nr_ns1=addr_nr_ns1
- 		counter=2
- 		sleep 1
- 		while [ $add_nr_ns1 -gt 0 ]; do
-@@ -341,7 +335,7 @@ do_transfer()
- 			else
- 				addr="10.0.$counter.1"
- 			fi
--			ip netns exec $ns1 ./pm_nl_ctl add $addr flags $flags
-+			ip netns exec $ns1 ./pm_nl_ctl add $addr flags signal
- 			let counter+=1
- 			let add_nr_ns1-=1
- 		done
-@@ -1715,9 +1709,8 @@ fullmesh_tests()
- 	reset
- 	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
- 	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
--	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
--	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
- 	chk_join_nr "signal address fullmesh 1" 2 2 2
- 	chk_add_nr 1 1
- 
+v3:
+ - the in-kernel fullmesh path manager has been dropped from this
+   patchset, only keep the fullmesh flag support code.
+
+v2:
+ - Implement the fullmesh mode as an extension to the netlink PM, not a
+   standalone PM as Paolo suggested.
+ - drop duplicate code.
+ - add a new per endpoint flag MPTCP_PM_ADDR_FLAG_FULLMESH.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/193
+
+Geliang Tang (5):
+  mptcp: remote addresses fullmesh
+  mptcp: local addresses fullmesh
+  selftests: mptcp: set and print the fullmesh flag
+  selftests: mptcp: add fullmesh testcases
+  selftests: mptcp: delete uncontinuous removing ids
+
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/pm_netlink.c                        | 140 ++++++++++++++++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  67 ++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  16 +-
+ 4 files changed, 206 insertions(+), 18 deletions(-)
+
 -- 
 2.31.1
 
