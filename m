@@ -1,120 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D6E72
-	for <mptcp@lists.linux.dev>; Wed, 28 Jul 2021 17:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1627492941;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v98DPaDmt7MKl2voGn09OYHU7/IV8cx+w+4CXaT+aNo=;
-	b=MpnQWutPuFTRCdM6N1L9JNZzFn/bobTcrO4NWiPrg9/sQbDiUi359OzStkDTmkMWZghcJi
-	/Ds51i8MHraiqsI9JgPln1we7eho62x9oI3DNZEbaQ7vb1dtr1r1XxyayIenbgpqHW+8aw
-	8pemyXHAZI1nGZlaVj0BPhWio+qQjxs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-0dKwNgAbP8Cm-dDIk1TMqA-1; Wed, 28 Jul 2021 13:22:19 -0400
-X-MC-Unique: 0dKwNgAbP8Cm-dDIk1TMqA-1
-Received: by mail-wr1-f72.google.com with SMTP id o8-20020a5d4a880000b029013a10564614so1189676wrq.15
-        for <mptcp@lists.linux.dev>; Wed, 28 Jul 2021 10:22:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F6C72
+	for <mptcp@lists.linux.dev>; Wed, 28 Jul 2021 17:41:53 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id n2so4314855eda.10
+        for <mptcp@lists.linux.dev>; Wed, 28 Jul 2021 10:41:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fUNGu9HxVSbUQuktCxJ7+TksvSemQ1jsSvLDfzzPfZ0=;
+        b=bvXpxnNZjfBgdEiZlzFN+7ObcjVQC+Lr5nFQpc2QEfBorQ439ditEk67so8ARA8fgr
+         8MyNMhLHZxQ6yPQnFUFKvGVY1p6jr4wTVQWjoMEzOPo1ajLnAmpNKiz54IPOySwvUEUP
+         iqdxk6BDL349UyqTrNwG/midNWmGvDmgA3L7wrNM6MWc1k5q/k2NSizjP4EBby9rDGbZ
+         eRCYr10oM6/wd/PyljUnWrXdSoDudvekNIvjqCG99eAoE41EqXP5mu8Xsl0TMdY5Sq5v
+         L75Y43RqKbekvp8SKYim+YaBZmj0EaTA1r10rgpnlPEJgmyfjXFDtlfcEap37X9TMOTF
+         VXsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=v98DPaDmt7MKl2voGn09OYHU7/IV8cx+w+4CXaT+aNo=;
-        b=qcorhb6EDsdUKc4iJvk4fXLte9ugpUVjxpIUp14K00l1yPhrLUA9TcA3/6NSkmZzqI
-         z+0vNzwIv0M0gifXFe9lPTF4naFG5utRUMbEEHbW97jItV03ZPuMojkoPxUG0zr8ffEJ
-         EPMOMonjdGAZ3XW98bXZ2ctMltk6IT3BsNu+g3Qxusi8MKWoU0NAn3se7OhSBWJhYUXn
-         JUTcnIRtfdFdNMaOZa+ik3xsgZefVCzSF0ZTmf5P8XbLonqirfjjkhG3Tk7z6EBlcchY
-         Asmkdvh+ghN1P/zb7OTS2ouYnVSgRtrU9DXQiJMcB0kRcnXwdjXqYD2xonIbgDRl3brF
-         xqxQ==
-X-Gm-Message-State: AOAM533rwhBLXauxCn/Pv3xtLvDkG62u6WjoOKBZ5a5iMcDSwegMv2+M
-	8hjnFQiBggowITH9QxuARdPI/bo1RMOqAAKRthHlruhAOkTj3cYJ2/qkVP2MrFTAD9a7L6UIyAy
-	h/ai8MYdrbbobHEQ=
-X-Received: by 2002:adf:90c6:: with SMTP id i64mr495913wri.168.1627492938253;
-        Wed, 28 Jul 2021 10:22:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzPjERJ2/RCK/U88YsV0Xffheeq+ZNdQHtukH5ssFpW0DpuKS2X71DA8WF0DmtJdyfUlOTORQ==
-X-Received: by 2002:adf:90c6:: with SMTP id i64mr495898wri.168.1627492938095;
-        Wed, 28 Jul 2021 10:22:18 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-97-57.dyn.eolo.it. [146.241.97.57])
-        by smtp.gmail.com with ESMTPSA id z3sm6594334wmf.6.2021.07.28.10.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 10:22:17 -0700 (PDT)
-Message-ID: <d66469c66238be5c89ab498dc1b9469f2abb478b.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH v6 mptcp-next 0/5] fullmesh path manager support
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@xiaomi.com>
-Date: Wed, 28 Jul 2021 19:22:16 +0200
-In-Reply-To: <cover.1627391588.git.geliangtang@xiaomi.com>
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fUNGu9HxVSbUQuktCxJ7+TksvSemQ1jsSvLDfzzPfZ0=;
+        b=WC658jvmXXsIh6w5PdDfvG5TwcfK7Ly1PmJNCmYRFHrb3otfBIv/uGreQ81r25+r6K
+         p4HNExV4E0wb8X2spt81Vxo+awAuA7r++eSx9cpJfsNZW3fYjjRGi/fFB9Pqjxa7d5dV
+         q/jc5xYzmxDxVfVyTOesT+Uu+lovY53lqnVFrylCz7FpiG9SChnFeK78BM2dDlSQmklJ
+         GxsNZ49MQ4pzhVB92WsRBm6TM8nDQJqY9jB8a+ZY7d3VjjBTD3pNbjhedXzsYO7eGQZl
+         ni8FynGwHE0xlcDvhhnNEebX2qc8WYisj0Q5wEjf2MfLjEIy82PMCzrQ8kmyZHHmtvZI
+         +cZw==
+X-Gm-Message-State: AOAM532lO48YbU7cjDpdYbr/0L/EBL5SOClt+kzljrpFzg//HktHgfDM
+	Bh9pFwJfpaBhPfZ2WzASWGMU65i9l/nCgg==
+X-Google-Smtp-Source: ABdhPJzYl4apl8pXoI+Y2NZdh7IaQjS6kO3lUujMhOl8mi+b+zN7BclIhnGdZSxnxxG4hG2A/U9msA==
+X-Received: by 2002:a05:6402:896:: with SMTP id e22mr1202999edy.246.1627494111950;
+        Wed, 28 Jul 2021 10:41:51 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:c852:afa0:c279:c071])
+        by smtp.gmail.com with ESMTPSA id n10sm133943ejk.86.2021.07.28.10.41.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jul 2021 10:41:51 -0700 (PDT)
+To: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliangtang@gmail.com>
+Cc: Geliang Tang <geliangtang@xiaomi.com>, mptcp@lists.linux.dev
 References: <cover.1627391588.git.geliangtang@xiaomi.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+ <703a40cb47f2f4c0ddb25bb61f97cfb4b973dc5e.1627391588.git.geliangtang@xiaomi.com>
+ <87310b54d3987e94138953e171bad7b081b63df5.1627391588.git.geliangtang@xiaomi.com>
+ <10a327d0ce8f917d17166ae7de561a8b2af23ff3.1627391588.git.geliangtang@xiaomi.com>
+ <cb461bd9ebbbfda680c2d1fea3bc7467596e3d5d.1627391588.git.geliangtang@xiaomi.com>
+ <44581bdbef617928052995d5e7ec0a6420023f9b.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [MPTCP][PATCH v6 mptcp-next 4/5] selftests: mptcp: add fullmesh
+ testcases
+Message-ID: <2e7f9ac3-0ac4-24b7-5530-192362405467@tessares.net>
+Date: Wed, 28 Jul 2021 19:41:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <44581bdbef617928052995d5e7ec0a6420023f9b.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2021-07-27 at 21:24 +0800, Geliang Tang wrote:
-> From: Geliang Tang <geliangtang@xiaomi.com>
-> 
-> v6:
->  - drop lookup_subflow_by_addrs()
->  - pass three arrays instead of 'entries' in fill_local_adresses_vec()
->  - drop the 'remote' argument of fill_local_addresses_vec
->  - drop the 'local' argument of fill_remote_addresses_vec
->  - fix the pm.subflows.
->  - add limit testcase.
-> 
-> v5:
->  - patch 1, add a new helper lookup_address_in_vec.
->  - patch 2, update pm.subflows in the non-fullmesh case.
->  - patch 4, add more tests.
->  - tag: export/20210727T054640
-> 
-> v4:
->  - add new helpers, fill_local/remote_addresses_vec
->  - add max_subflows checks
->  - add 'local' into the local addresses array only when no fullmesh
->    entry found.
->  - add signal,fullmesh check
-> 
-> v3:
->  - the in-kernel fullmesh path manager has been dropped from this
->    patchset, only keep the fullmesh flag support code.
-> 
-> v2:
->  - Implement the fullmesh mode as an extension to the netlink PM, not a
->    standalone PM as Paolo suggested.
->  - drop duplicate code.
->  - add a new per endpoint flag MPTCP_PM_ADDR_FLAG_FULLMESH.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/193
-> 
-> Geliang Tang (5):
->   mptcp: remote addresses fullmesh
->   mptcp: local addresses fullmesh
->   selftests: mptcp: set and print the fullmesh flag
->   selftests: mptcp: add fullmesh testcases
->   selftests: mptcp: delete uncontinuous removing ids
-> 
->  include/uapi/linux/mptcp.h                    |   1 +
->  net/mptcp/pm_netlink.c                        | 145 ++++++++++++++++--
->  .../testing/selftests/net/mptcp/mptcp_join.sh |  67 +++++++-
->  tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  16 +-
->  4 files changed, 206 insertions(+), 23 deletions(-)
+Hi Geliang, Paolo,
 
-LGTM, I added some minor comment on patch 4/5, but could be addressed
-later/with squash-to patches.
+Thank you for the new version.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+On 28/07/2021 19:21, Paolo Abeni wrote:
+> On Tue, 2021-07-27 at 21:24 +0800, Geliang Tang wrote:
+>> From: Geliang Tang <geliangtang@xiaomi.com>
+>>
+>> This patch added the testcases for the fullmesh address flag of the path
+>> manager.
+>>
+>> Reuse the above 10 address numbers for the fullmesh test.
+>>
+>> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+>> ---
+>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 57 ++++++++++++++++++-
+>>  1 file changed, 54 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 937e861e9490..2a27d6240f5b 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -367,7 +367,13 @@ do_transfer()
+>>  	fi
+>>  
+>>  	if [ $addr_nr_ns2 -gt 0 ]; then
+>> -		let add_nr_ns2=addr_nr_ns2
+>> +		if [ $addr_nr_ns2 -gt 10 ]; then
 
+Maybe more explicit if we pass 'fullmesh-X' where X is the number of
+addresses we need with the fullmesh flag.
+
+  local flags="subflow"
+
+  (...)
+
+  if [[ "${addr_nr_ns2}" = "fullmesh-"* ]]; then
+          flags="${flags},fullmesh"
+          addr_nr_ns2=${addr_nr_ns2:9}
+  fi
+
+  if [ $addr_nr_ns2 -gt 0 ]; then
+          counter=3
+          (...)
+
+This can also be fixed with a squash-to patch ;)
+
+>> +			let add_nr_ns2=addr_nr_ns2-10
+>> +			flags=subflow,fullmesh
+>> +		else
+>> +			let add_nr_ns2=addr_nr_ns2
+>> +			flags=subflow
+>> +		fi
+>>  		counter=3
+>>  		sleep 1
+>>  		while [ $add_nr_ns2 -gt 0 ]; do
+>> @@ -377,7 +383,7 @@ do_transfer()
+>>  			else
+>>  				addr="10.0.$counter.2"
+>>  			fi
+>> -			ip netns exec $ns2 ./pm_nl_ctl add $addr flags subflow
+>> +			ip netns exec $ns2 ./pm_nl_ctl add $addr flags $flags
+>>  			let counter+=1
+>>  			let add_nr_ns2-=1
+>>  		done
+>> @@ -1697,6 +1703,46 @@ deny_join_id0_tests()
+>>  	chk_join_nr "subflow and address allow join id0 2" 1 1 1
+>>  }
+>>  
+>> +fullmesh_tests()
+>> +{
+>> +	# fullmesh 1
+>> +	reset
+>> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 4
+>> +	ip netns exec $ns2 ./pm_nl_ctl limits 1 4
+>> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,fullmesh
+>> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
+>> +	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
+>> +	chk_join_nr "fullmesh test 1" 4 4 4
+>> +	chk_add_nr 1 1
+>> +
+>> +	# fullmesh 2
+>> +	reset
+>> +	ip netns exec $ns1 ./pm_nl_ctl limits 1 3
+>> +	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+>> +	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+>> +	run_tests $ns1 $ns2 10.0.1.1 0 0 11 slow
+> 
+> It still took me a bit follow topology creation here. I think a comment
+> is deserved, the first time this kind of argument is used.
+
+Good idea!
+
+It could be good to also rename the tests: "fullmesh test [1234]" are
+not very explicit.
+It could be nice to put the topology there, e.g. "2x2", "2x2 w/ signal"? :)
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
