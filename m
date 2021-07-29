@@ -1,98 +1,151 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610623483
-	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 11:45:11 +0000 (UTC)
-Received: by mail-pl1-f169.google.com with SMTP id d17so6627090plh.10
-        for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 04:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=htTXDEZPYb6TNXpOv8Z51bQa4fPXd04xYIV4rZegHRo=;
-        b=aC3pSmeS4Qf0p8BNoTmfO3BCZf1qK1lmL9rBvb307lxtI9VCup2gPC1LADISqgF8vr
-         94qTcfT9s62a91CWax/20u5wWuI64WYS4shtLcCPlW5WUisXSmnbx5eYLuJnw3FT060Q
-         0bwyOfWmsg4jO30NPZ0BKurTQrCIzz/DsZXAb9HJXlwLL3Yl2cI1DK/GJph1qssu/CXo
-         LWhhoMl4MuedPsdWzUm3Irs1K579gELGBRyZxlVmpgNDr+46XY6WWHwm7J+liQXPneMI
-         XGKnyg8Gk63/HA++upoeRWwaniNEuLNeDiQXDbKkfakDXfxjqcNmatlyiAmVDbhCVU3j
-         WTQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=htTXDEZPYb6TNXpOv8Z51bQa4fPXd04xYIV4rZegHRo=;
-        b=IayqCAD+CbgSn18SFAYWms9V/pKC+R/0kmW6u9GoNf9YHY6WXXPPmEjMlIw9DKkzDw
-         5aoau2RlFZdijUpcznacvZ5H1pEGlaZrDiCBgb2tTwAfEg2HODMhtv+oEwkrMpp9p3/X
-         qrftZXxDN2JFoROYun62JqxPBKwbC61+ideNIIYZBEkYOvS7P9sVAComB3pYhiHVTswg
-         zv2Cu2Zlnj4tRFLZiT0RIhe5RasT6mWd+TvDqVMK9XpsexuNh19pd9IFgP0MIWArhYCR
-         x38imSoRgqsU6pG+K7XLrKouScpSpcmkLPDbSWRF3suL98UgbMXn9gcvyro5pbjC/cPj
-         CMSA==
-X-Gm-Message-State: AOAM5305hmepRm7Dot7+V52fielevHztoEzhC39Qdp3vKfgX8SMuCk2O
-	/we7T611IV1SyMz0lmPH+9ytwO2pQ3M=
-X-Google-Smtp-Source: ABdhPJxfvpL9sJhPrtubcEXV4Hwh2Q+zMa6ao4JvO6pPiyhTRnIx9Iblw1YkfO4SApR5ydRokMYz8A==
-X-Received: by 2002:aa7:8593:0:b029:32b:c173:cd96 with SMTP id w19-20020aa785930000b029032bc173cd96mr4597615pfn.63.1627559110827;
-        Thu, 29 Jul 2021 04:45:10 -0700 (PDT)
-Received: from MiBook.. ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id x13sm3165207pjh.30.2021.07.29.04.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jul 2021 04:45:10 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev,
-	geliangtang@gmail.com
-Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [MPTCP][PATCH v4 mptcp-next] Squash to "mptcp: drop flags and ifindex arguments"
-Date: Thu, 29 Jul 2021 19:45:05 +0800
-Message-Id: <7353b0ca7f73188dbbb24b9e1fcb0fd4620a8d25.1627559076.git.geliangtang@xiaomi.com>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACBD3483
+	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 11:50:07 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1m94Y4-0005Zx-Ac
+	for mptcp@lists.linux.dev; Thu, 29 Jul 2021 13:50:00 +0200
+Date: Thu, 29 Jul 2021 13:50:00 +0200
+From: Florian Westphal <fw@strlen.de>
+To: mptcp@lists.linux.dev
+Subject: Revised mptcp_info sockopt and selftests
+Message-ID: <YQKV6GJe/RfkZh09@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Geliang Tang <geliangtang@xiaomi.com>
+Hi,
 
-Fix rcu section and add the non-zero id check.
+I have reworked the MPTCP_INFO getsockopt.
 
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
----
- net/mptcp/pm_netlink.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+I think that for now its better to focus on the UAPI rather than the
+implementation.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 94c68d6093de..47200ae451b9 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1107,16 +1107,17 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
- {
- 	struct mptcp_pm_addr_entry *entry;
- 
--	rcu_read_lock();
--	entry = __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), id);
--	rcu_read_unlock();
--
--	if (entry) {
--		*flags = entry->flags;
--		*ifindex = entry->ifindex;
--	} else {
--		*flags = 0;
--		*ifindex = 0;
-+	*flags = 0;
-+	*ifindex = 0;
-+
-+	if (id) {
-+		rcu_read_lock();
-+		entry = __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), id);
-+		if (entry) {
-+			*flags = entry->flags;
-+			*ifindex = entry->ifindex;
-+		}
-+		rcu_read_unlock();
- 	}
- 
- 	return 0;
--- 
-2.31.1
+Here is a minimal usage example to illustrate the feature:
+
+UAPI structures:
+struct mptcp_info_opt_ptr {
+	__aligned_u64	address;			/* userspace address */
+	__u32		nmemb_user;			/* number of elements in address[] */
+	__u32		size_user;			/* size of one element in address[] */
+	__u32		nmemb_kernel;			/* nmemb count kernel wanted to store */
+	__u32		size_kernel;			/* structure size in kernel */
+};
+
+struct mptcp_info_opt {
+	struct mptcp_info_opt_ptr mptcp_info;		/* struct mptcp_info */
+	struct mptcp_info_opt_ptr tcp_info;		/* struct tcp_info[] of each subflow */
+	struct mptcp_info_opt_ptr socknames;		/* struct sockaddr_storage[] */
+	struct mptcp_info_opt_ptr peernames;		/* struct sockaddr_storage[] */
+};
+
+/* Sample call, error checks removed */
+void test_info_getsockopt(int fd)
+{
+	struct sockaddr_storage remotes[16], locals[16];
+	struct mptcp_info mptcp_info;
+	struct tcp_info tcpinfo[16];
+	struct mptcp_info_opt m;
+	socklen_t optlen = sizeof(m);
+	uint32_t i;
+	int err;
+
+	memset(&m, 0, sizeof(m));
+	m.mptcp_info.size_user = sizeof(mptcp_info);
+	m.mptcp_info.address = (uint64_t)&mptcp_info;
+
+	m.tcp_info.address = (uint64_t)tcpinfo;
+	m.tcp_info.size_user = sizeof(tcpinfo[0]);
+	m.tcp_info.nmemb_user = 16;
+
+	m.socknames.size_user = sizeof(locals[0]);
+	m.socknames.nmemb_user = 16;
+	m.peernames.size_user = sizeof(remotes[0]);
+	m.peernames.nmemb_user = 16;
+	m.socknames.address = (uint64_t)locals;
+	m.peernames.address = (uint64_t)remotes;
+
+	err = getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &m, &optlen);
+
+	printf("have %u subflows, token is %x\n", mptcp_info.mptcpi_subflows, mptcp_info.mptcpi_token);
+
+	for (i = 0; i < m.socknames.nmemb_user; i++) {
+		printf("subflow %02d: ", i);
+		fprintf_mptcp_info(stdout, (void *)&locals[i], (void *)&remotes[i]);
+		printf("\n");
+	}
+
+	printf("... dumped %u of %u addresses.\n",
+			m.socknames.nmemb_user, m.socknames.nmemb_kernel);
+
+	for (i = 0; i < m.tcp_info.nmemb_user; i++)
+		dump_tcp_info(&tcpinfo[i]);
+}
+
+As you can see, I removed 'byte' based sizes, i found this to be
+unecessarily tedious as the kernel then has to subtract from a
+'remaining buffer size', while making sure that this can't underflow.
+
+With number-of-elements, its enough to 'remaining--' and "ptr += size_user".
+
+Userspace passes the address of the structure(s), the size of a single
+structure that it expects to get and the number of structures it has
+allocated (16 in above example).
+
+The kernel will:
+1. not change, or shrink the number of structures.
+   This means that, in above example, nmemb_user will be anywhere
+   between 0 and 16 inclusive.
+
+   0 would happen in the 'no subflows' case, when nothing was filled in.
+2. Not change, or shrink, size_user.  This happens for instance
+   if userspace has a larger 'struct tcp_info' than the kernel,
+   in this case size_user is updated to reflect the real element size.
+
+3. update nmemb_kernel to reflect the structure size it *WOULD* have
+   filled. For example, if userspace tcp_info struct is smaller than the
+   kernel, then size_user < size_kernel.
+
+4. update size_kernel with the number of elements it WOULD have filled
+   if there would have been more space.
+
+So, in above example, if there are 17 subflows then
+socknames.nmemb_user == 16 and socknames.nmemb_kernel == 17.
+
+Or, in short:
+The _kernel members are only filled by kernel, the value provided by
+userspace are ignored.
+
+The _user members are input/output: userspace tells kernel how much
+space it provides, kernel updates it to reflect how much it ended up
+using.
+
+Is that sane?  Any suggestions?
+
+On a related note, how should the test infra look like?
+kunit isn't useable as i would prefer to test the UAPI, so that means
+kselftest.
+
+I would prefer not to extend mptcp_connect again.
+Would you be ok with a new test program?
+
+Any preferences?  If not, i would go with mptcp_getsockopt.c +
+mptcp_getsockopt.sh.
+
+The latter would then call the former with various possible
+combinations, such as 'ipv4', 'ipv6', 'only ask for tcp_info', etc.
+
+Cheers,
+Florian
+
+
+
+
 
