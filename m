@@ -1,94 +1,99 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A4B3481
-	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 00:17:27 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="212500768"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFDE3481
+	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 00:20:57 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="276557035"
 X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="212500768"
+   d="scan'208";a="276557035"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:17:25 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:20:53 -0700
 X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="417446416"
+   d="scan'208";a="417447165"
 Received: from sghoshal-mobl.amr.corp.intel.com ([10.212.197.34])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:17:25 -0700
-Date: Wed, 28 Jul 2021 17:17:24 -0700 (PDT)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:20:53 -0700
+Date: Wed, 28 Jul 2021 17:20:53 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliangtang@gmail.com>
 cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@xiaomi.com>
-Subject: Re: [MPTCP][PATCH v6 mptcp-next 0/5] fullmesh path manager support
-In-Reply-To: <cover.1627391588.git.geliangtang@xiaomi.com>
-Message-ID: <d7953e6a-46f0-4ce7-fde0-b4e91eed8057@linux.intel.com>
-References: <cover.1627391588.git.geliangtang@xiaomi.com>
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: remote addresses
+ fullmesh"
+In-Reply-To: <f5e079bf977b0c9e05e26f6b90d8cde4bb9a6c9f.1627463618.git.geliangtang@xiaomi.com>
+Message-ID: <fee96eb-d19-1611-79b-34c580ad93c4@linux.intel.com>
+References: <f5e079bf977b0c9e05e26f6b90d8cde4bb9a6c9f.1627463618.git.geliangtang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 27 Jul 2021, Geliang Tang wrote:
+On Wed, 28 Jul 2021, Geliang Tang wrote:
 
 > From: Geliang Tang <geliangtang@xiaomi.com>
 >
-> v6:
-> - drop lookup_subflow_by_addrs()
-> - pass three arrays instead of 'entries' in fill_local_adresses_vec()
-> - drop the 'remote' argument of fill_local_addresses_vec
-> - drop the 'local' argument of fill_remote_addresses_vec
-> - fix the pm.subflows.
-> - add limit testcase.
+> Fix the checkpatch.pl warning:
+> WARNING: networking block comments don't use an empty /* line, use /* Comment...
+> #63: FILE: net/mptcp/pm_netlink.c:427:
+> +/*
+> + * Fill all the remote addresses into the array addrs[],
 >
+> And some more cleanups.
+>
+> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 
-Thanks for the revisions! Extending the netlink PM is a much better fit.
-
-I don't have any comments to add to Paolo and Mattheiu's squash-fix 
-recommendations.
+Thanks Geliang.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
--Mat
-
-> v5:
-> - patch 1, add a new helper lookup_address_in_vec.
-> - patch 2, update pm.subflows in the non-fullmesh case.
-> - patch 4, add more tests.
-> - tag: export/20210727T054640
+> ---
+> net/mptcp/pm_netlink.c | 12 ++++++------
+> 1 file changed, 6 insertions(+), 6 deletions(-)
 >
-> v4:
-> - add new helpers, fill_local/remote_addresses_vec
-> - add max_subflows checks
-> - add 'local' into the local addresses array only when no fullmesh
->   entry found.
-> - add signal,fullmesh check
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index ecf43d45711a..8eeae401c83f 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -423,8 +423,7 @@ static bool lookup_address_in_vec(struct mptcp_addr_info *addrs, unsigned int nr
+> 	return false;
+> }
 >
-> v3:
-> - the in-kernel fullmesh path manager has been dropped from this
->   patchset, only keep the fullmesh flag support code.
+> -/*
+> - * Fill all the remote addresses into the array addrs[],
+> +/* Fill all the remote addresses into the array addrs[],
+>  * and return the array size.
+>  */
+> static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullmesh,
+> @@ -440,7 +439,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+> 	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
+> 	subflows_max = mptcp_pm_get_subflows_max(msk);
 >
-> v2:
-> - Implement the fullmesh mode as an extension to the netlink PM, not a
->   standalone PM as Paolo suggested.
-> - drop duplicate code.
-> - add a new per endpoint flag MPTCP_PM_ADDR_FLAG_FULLMESH.
+> -	/* non-fullmesh, fill in the remote address */
+> +	/* Non-fullmesh endpoint, fill in the single entry
+> +	 * corresponding to the primary MPC subflow remote address
+> +	 */
+> 	if (!fullmesh) {
+> 		remote_address((struct sock_common *)sk, &remote);
+> 		msk->pm.subflows++;
+> @@ -505,14 +506,13 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+> 	    !READ_ONCE(msk->pm.remote_deny_join_id0)) {
+> 		local = select_local_address(pernet, msk);
+> 		if (local) {
+> +			bool fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
+> 			struct mptcp_addr_info addrs[MPTCP_PM_ADDR_MAX];
+> 			int i, nr;
 >
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/193
->
-> Geliang Tang (5):
->  mptcp: remote addresses fullmesh
->  mptcp: local addresses fullmesh
->  selftests: mptcp: set and print the fullmesh flag
->  selftests: mptcp: add fullmesh testcases
->  selftests: mptcp: delete uncontinuous removing ids
->
-> include/uapi/linux/mptcp.h                    |   1 +
-> net/mptcp/pm_netlink.c                        | 145 ++++++++++++++++--
-> .../testing/selftests/net/mptcp/mptcp_join.sh |  67 +++++++-
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  16 +-
-> 4 files changed, 206 insertions(+), 23 deletions(-)
->
+> 			msk->pm.local_addr_used++;
+> 			check_work_pending(msk);
+> -			nr = fill_remote_addresses_vec(msk,
+> -						       local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH,
+> -						       addrs);
+> +			nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
+> 			spin_unlock_bh(&msk->pm.lock);
+> 			for (i = 0; i < nr; i++) {
+> 				__mptcp_subflow_connect(sk, &local->addr, &addrs[i],
 > -- 
 > 2.31.1
 >
