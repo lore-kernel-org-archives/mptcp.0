@@ -1,26 +1,27 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6A43483
-	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 00:21:19 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="210890114"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435013481
+	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 00:23:32 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="234663594"
 X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="210890114"
+   d="scan'208";a="234663594"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:21:18 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:23:27 -0700
 X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="417447361"
+   d="scan'208";a="417447704"
 Received: from sghoshal-mobl.amr.corp.intel.com ([10.212.197.34])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:21:18 -0700
-Date: Wed, 28 Jul 2021 17:21:18 -0700 (PDT)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 17:23:27 -0700
+Date: Wed, 28 Jul 2021 17:23:27 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@xiaomi.com>
-Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: local addresses
- fullmesh"
-In-Reply-To: <6ace2404be8fddc3b5a0f3287ed6895ee7b23700.1627463661.git.geliangtang@xiaomi.com>
-Message-ID: <6c82cb2-9d0-e0ea-e28b-e8ccfaf3d913@linux.intel.com>
-References: <f5e079bf977b0c9e05e26f6b90d8cde4bb9a6c9f.1627463618.git.geliangtang@xiaomi.com> <6ace2404be8fddc3b5a0f3287ed6895ee7b23700.1627463661.git.geliangtang@xiaomi.com>
+cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@xiaomi.com>, 
+    Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: MP_FAIL suboption
+ sending"
+In-Reply-To: <04121bcd7e28251f4a3e1b17774b8ef5402f2431.1627470720.git.geliangtang@xiaomi.com>
+Message-ID: <95cce559-cab1-d010-cf3c-18fbef22cbcf@linux.intel.com>
+References: <04121bcd7e28251f4a3e1b17774b8ef5402f2431.1627470720.git.geliangtang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -33,63 +34,48 @@ On Wed, 28 Jul 2021, Geliang Tang wrote:
 
 > From: Geliang Tang <geliangtang@xiaomi.com>
 >
-> Fix the checkpatch.pl warning:
-> WARNING: networking block comments don't use an empty /* line, use /* Comment...
-> #28: FILE: net/mptcp/pm_netlink.c:542:
-> +/*
-> + * Fill all the local addresses into the three arrays,
+> Drop the use_ack check, and add a likely tag.
 >
-> And some more cleanups.
->
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
 > Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
-
-This one looks good to squash too.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-
 > ---
-> net/mptcp/pm_netlink.c | 8 +++++---
-> 1 file changed, 5 insertions(+), 3 deletions(-)
+> net/mptcp/options.c | 12 +++++-------
+> 1 file changed, 5 insertions(+), 7 deletions(-)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 1b6c4adc5a8a..0b9fa7e6f743 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -538,8 +538,7 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
-> 	mptcp_pm_create_subflow_or_signal_addr(msk);
-> }
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 2b15063c8009..6db24cf72ac0 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -788,7 +788,7 @@ static bool mptcp_established_options_mp_fail(struct sock *sk,
+> {
+> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
 >
-> -/*
-> - * Fill all the local addresses into the three arrays,
-> +/* Fill all the local addresses into the three arrays,
->  * addr[], flags[] and ifindex[],
->  * and return the arrays size.
->  */
-> @@ -583,7 +582,9 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+> -	if (!subflow->send_mp_fail)
+> +	if (likely(!subflow->send_mp_fail))
+> 		return false;
+>
+> 	if (remaining < TCPOLEN_MPTCP_FAIL)
+> @@ -835,12 +835,10 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> 		ret = true;
+> 	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, &opt_size, remaining, opts)) {
+> 		ret = true;
+> -		if (opts->ext_copy.use_ack) {
+> -			if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
+> -				*size += opt_size;
+> -				remaining -= opt_size;
+> -				return true;
+> -			}
+> +		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
+> +			*size += opt_size;
+> +			remaining -= opt_size;
+> +			return true;
+> 		}
 > 	}
-> 	rcu_read_unlock();
 >
-> -	/* if the array is empty, fill in the local address */
-> +	/* If the arrays are empty, fill in the single
-> +	 * 'IPADDRANY' local address
-> +	 */
-> 	if (!i) {
-> 		memset(&local, 0, sizeof(local));
-> 		local.family = msk->pm.remote.family;
-> @@ -631,6 +632,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
-> 	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
-> 	    msk->pm.subflows >= subflows_max)
-> 		WRITE_ONCE(msk->pm.accept_addr, false);
-> +
-> 	spin_unlock_bh(&msk->pm.lock);
-> 	for (i = 0; i < nr; i++)
-> 		__mptcp_subflow_connect(sk, &addr[i], &remote, flags[i], ifindex[i]);
 > -- 
 > 2.31.1
->
->
->
+
+This looks fine. Please include in future MP_FAIL revs.
 
 --
 Mat Martineau
