@@ -1,146 +1,98 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC523483
-	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 11:38:08 +0000 (UTC)
-Received: by mail-pl1-f182.google.com with SMTP id f13so6665379plj.2
-        for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 04:38:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610623483
+	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 11:45:11 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id d17so6627090plh.10
+        for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 04:45:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/EkmuqPypmn/bDDFQAj/nklpQQJNEznSVoNYG//HbGU=;
-        b=jD0OSgN5IE8ZC0B0CNzvrpKh3N2CrhXk6K9KATzwEUQM9N8oU77rjXsdLXtr1FxpCD
-         Q46lXohUyJNvYiSvWj7WbGBWg+tmlwDTKI36NxAe000Pv0pSqjRWfOZ6NiVuZeRTq+CY
-         aRXaI1ZlUmyt41LWVOhs6OGAT37M7lKBLewAP2Q3xG3NaAaqWLLYJK++mvSVoWe6GFnH
-         vZ+4z5qRMspSjZiYxFXmPhJC2cm4rspHB1w2ckOfTTQdxfr9ZKzhL1cdnDYs15gPtwyV
-         +Zt7UkcotR8N/f0V9csHDPu/L+oyD1JuFD5eA8jD8M/ceJkwWDbVPDxe07Vtoa9ea/xa
-         q1/g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=htTXDEZPYb6TNXpOv8Z51bQa4fPXd04xYIV4rZegHRo=;
+        b=aC3pSmeS4Qf0p8BNoTmfO3BCZf1qK1lmL9rBvb307lxtI9VCup2gPC1LADISqgF8vr
+         94qTcfT9s62a91CWax/20u5wWuI64WYS4shtLcCPlW5WUisXSmnbx5eYLuJnw3FT060Q
+         0bwyOfWmsg4jO30NPZ0BKurTQrCIzz/DsZXAb9HJXlwLL3Yl2cI1DK/GJph1qssu/CXo
+         LWhhoMl4MuedPsdWzUm3Irs1K579gELGBRyZxlVmpgNDr+46XY6WWHwm7J+liQXPneMI
+         XGKnyg8Gk63/HA++upoeRWwaniNEuLNeDiQXDbKkfakDXfxjqcNmatlyiAmVDbhCVU3j
+         WTQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/EkmuqPypmn/bDDFQAj/nklpQQJNEznSVoNYG//HbGU=;
-        b=SxlCPMPk3US4wLixz6qM4iGk+gk3iOSMOngHLJghNZrkm+Vgu1DTOdj0VG0D/Qj/9M
-         I78A2/SCayyrLSdy+1tQqdInBoixZ6KVlS3FNkvi1VQdv0MOK9u+STUTPs9E4KEhB6GK
-         hZHJpz880EkXAlOcnbcN/hf1szFbKplVcoovsRDCPjiDzH5mQrLBCORHYhEH2stAqHql
-         bplYgR3HDLbXbD4eEDqsSX4cxoS4CeDjWqIpqx73TBOiqtjd8jrouzsuPA52gB/3hSZp
-         1GXeLiGVYMJ3GvWSZdRm7EsOhWDt91DRXfx4u3Q95OwohWN8u/bvsjY6yFwBxrAkgqxk
-         jIXw==
-X-Gm-Message-State: AOAM531zOTtPfrwOHPMIHJeJ1xfNve51eMIScBjxXiV8rxO7KKptxp+f
-	Kc/1WeWFNjiHEXrld8UWHlsKotcfhqbEK/0usqc=
-X-Google-Smtp-Source: ABdhPJw0+qgL7iCVtrnn9s/rtbvk4uuwpbWAX4HZZKOCM74KYj/xIuFwon78qz0OU4r2iN1IkT/pB6RAvD9hlKJS0vw=
-X-Received: by 2002:a17:902:7c8d:b029:12b:793e:9f26 with SMTP id
- y13-20020a1709027c8db029012b793e9f26mr4210575pll.84.1627558688058; Thu, 29
- Jul 2021 04:38:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=htTXDEZPYb6TNXpOv8Z51bQa4fPXd04xYIV4rZegHRo=;
+        b=IayqCAD+CbgSn18SFAYWms9V/pKC+R/0kmW6u9GoNf9YHY6WXXPPmEjMlIw9DKkzDw
+         5aoau2RlFZdijUpcznacvZ5H1pEGlaZrDiCBgb2tTwAfEg2HODMhtv+oEwkrMpp9p3/X
+         qrftZXxDN2JFoROYun62JqxPBKwbC61+ideNIIYZBEkYOvS7P9sVAComB3pYhiHVTswg
+         zv2Cu2Zlnj4tRFLZiT0RIhe5RasT6mWd+TvDqVMK9XpsexuNh19pd9IFgP0MIWArhYCR
+         x38imSoRgqsU6pG+K7XLrKouScpSpcmkLPDbSWRF3suL98UgbMXn9gcvyro5pbjC/cPj
+         CMSA==
+X-Gm-Message-State: AOAM5305hmepRm7Dot7+V52fielevHztoEzhC39Qdp3vKfgX8SMuCk2O
+	/we7T611IV1SyMz0lmPH+9ytwO2pQ3M=
+X-Google-Smtp-Source: ABdhPJxfvpL9sJhPrtubcEXV4Hwh2Q+zMa6ao4JvO6pPiyhTRnIx9Iblw1YkfO4SApR5ydRokMYz8A==
+X-Received: by 2002:aa7:8593:0:b029:32b:c173:cd96 with SMTP id w19-20020aa785930000b029032bc173cd96mr4597615pfn.63.1627559110827;
+        Thu, 29 Jul 2021 04:45:10 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id x13sm3165207pjh.30.2021.07.29.04.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jul 2021 04:45:10 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev,
+	geliangtang@gmail.com
+Cc: Geliang Tang <geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH v4 mptcp-next] Squash to "mptcp: drop flags and ifindex arguments"
+Date: Thu, 29 Jul 2021 19:45:05 +0800
+Message-Id: <7353b0ca7f73188dbbb24b9e1fcb0fd4620a8d25.1627559076.git.geliangtang@xiaomi.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1627543032.git.geliangtang@xiaomi.com> <1244ff06f1715f714ccc21bb164c6c082e8a26f5.1627543032.git.geliangtang@xiaomi.com>
- <f7de86246eb6e6bbae3235f5d78307cc0015f23e.camel@redhat.com>
-In-Reply-To: <f7de86246eb6e6bbae3235f5d78307cc0015f23e.camel@redhat.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Thu, 29 Jul 2021 19:37:56 +0800
-Message-ID: <CA+WQbwvzpYfXr7n8WfY9+oqFhDVN90R+Cn4YHYvbbeTQKb4Mcw@mail.gmail.com>
-Subject: Re: [MPTCP][PATCH v7 mptcp-next 1/6] mptcp: drop flags and ifindex arguments
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2021=E5=B9=B47=E6=9C=8829=E6=97=A5=
-=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=887:12=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Thu, 2021-07-29 at 15:20 +0800, Geliang Tang wrote:
-> > From: Geliang Tang <geliangtang@xiaomi.com>
-> >
-> > This patch added a new helper mptcp_pm_get_flags_and_ifindex_by_id(),
-> > and used it in __mptcp_subflow_connect() to get the flags and ifindex
-> > values.
-> >
-> > Then the two arguments flags and ifindex of __mptcp_subflow_connect()
-> > can be dropped.
-> >
-> > Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
-> > ---
-> >  net/mptcp/pm_netlink.c | 25 ++++++++++++++++++++++---
-> >  net/mptcp/protocol.h   |  5 +++--
-> >  net/mptcp/subflow.c    |  7 +++++--
-> >  3 files changed, 30 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index ba0e1d71504d..94c68d6093de 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -462,8 +462,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(=
-struct mptcp_sock *msk)
-> >                       check_work_pending(msk);
-> >                       remote_address((struct sock_common *)sk, &remote)=
-;
-> >                       spin_unlock_bh(&msk->pm.lock);
-> > -                     __mptcp_subflow_connect(sk, &local->addr, &remote=
-,
-> > -                                             local->flags, local->ifin=
-dex);
-> > +                     __mptcp_subflow_connect(sk, &local->addr, &remote=
-);
-> >                       spin_lock_bh(&msk->pm.lock);
-> >                       return;
-> >               }
-> > @@ -518,7 +517,7 @@ static void mptcp_pm_nl_add_addr_received(struct mp=
-tcp_sock *msk)
-> >       local.family =3D remote.family;
-> >
-> >       spin_unlock_bh(&msk->pm.lock);
-> > -     __mptcp_subflow_connect(sk, &local, &remote, 0, 0);
-> > +     __mptcp_subflow_connect(sk, &local, &remote);
-> >       spin_lock_bh(&msk->pm.lock);
-> >
-> >  add_addr_echo:
-> > @@ -1103,6 +1102,26 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet,=
- unsigned int id)
-> >       return NULL;
-> >  }
-> >
-> > +int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int=
- id,
-> > +                                      u8 *flags, int *ifindex)
-> > +{
-> > +     struct mptcp_pm_addr_entry *entry;
-> > +
-> > +     rcu_read_lock();
-> > +     entry =3D __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), =
-id);
-> > +     rcu_read_unlock();
-> > +
-> > +     if (entry) {
-> > +             *flags =3D entry->flags;
-> > +             *ifindex =3D entry->ifindex;
-> > +     } else {
-> > +             *flags =3D 0;
-> > +             *ifindex =3D 0;
-> > +     }
->
-> You need to extend the RCU section after the entry reference above, or
-> on preempt-enabled build, the entry could be deleted in between the rcu
->  unlock and the later access.
+From: Geliang Tang <geliangtang@xiaomi.com>
 
-Thanks Paolo, I'll send a squash-to patch to fix this.
+Fix rcu section and add the non-zero id check.
 
->
-> I'm wondering if there are issues with the 0 id ?!?
+Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+---
+ net/mptcp/pm_netlink.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-The 0 id address isn't on the local_addr_list, we should set it's
-flags and ifindex all to 0.
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 94c68d6093de..47200ae451b9 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1107,16 +1107,17 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
+ {
+ 	struct mptcp_pm_addr_entry *entry;
+ 
+-	rcu_read_lock();
+-	entry = __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), id);
+-	rcu_read_unlock();
+-
+-	if (entry) {
+-		*flags = entry->flags;
+-		*ifindex = entry->ifindex;
+-	} else {
+-		*flags = 0;
+-		*ifindex = 0;
++	*flags = 0;
++	*ifindex = 0;
++
++	if (id) {
++		rcu_read_lock();
++		entry = __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), id);
++		if (entry) {
++			*flags = entry->flags;
++			*ifindex = entry->ifindex;
++		}
++		rcu_read_unlock();
+ 	}
+ 
+ 	return 0;
+-- 
+2.31.1
 
-I'll add a non-zero check in the squash-to patch too.
-
-Thanks,
--Geliang
-
->
-> /P
->
