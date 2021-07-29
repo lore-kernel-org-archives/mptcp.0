@@ -1,51 +1,49 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AF072
-	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 07:21:12 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id a20so5974757plm.0
-        for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 00:21:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AE570
+	for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 08:40:19 +0000 (UTC)
+Received: by mail-pj1-f45.google.com with SMTP id mt6so9318546pjb.1
+        for <mptcp@lists.linux.dev>; Thu, 29 Jul 2021 01:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jw+2gozvuH/YXEW0fIc9lgkZeSSAXLELaUD2N30a1oc=;
-        b=EU8RzYmmp//yawBwdyf2cZJiVCgEtBHo93fU5hbovx71bYMNHX8h4/s1nm/8V4seUU
-         lpRfPaBN5TjJz7nr/8pim1tQAAU916y7xNt7ZUs50yw9aTRcRN5bQdezwT3CGOD2zSfs
-         lwFJ5mabdDylsq2TeaTKDfNdYu+avnt3+3HkGf3LMpG7Rxq9uah7OH+3l5Q3S7cSPlvr
-         +TeUBVNGdCiT0Wm/qtClWC+Lg5nz8XreAcvEDrWFQUNHCdegVdxQRMQOtAjfpDH2BeEB
-         WafUEXOVf/R8EsjZtU3z6IylxwlwRN4Lv9AJUJgxmHys3FLkiPqPugJYLMSChWJZ+UbE
-         9l1g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yG47jFmmhDxo8F9loIhG1cp/o1hubwJbQFGOEDWHNYc=;
+        b=r1aqwe7z9W7k7fehNPGYm8Ec+a5mIVAxkzGaADVGvGiwYDDNXTZOezl9l4Cl6hGVjH
+         rw3tfLOVCd5CjIwzXuHuUneNWNKfz3h+Eg036+JJfxAnGzTKgL/6JdRruHH4T9Oz95WJ
+         zJUEUUZL51b6qeHRGPt0l4Nvf4N7iSq2Z2I2/BdJSPIR3UVD1Xs4Bj72++xeCyX1HKLO
+         GDebb0v/v8zc0N19Ll/RqXmDYv0JDyd0aKYW9akxBYq6Oet61TmuRL8alOt3VckF6obU
+         ZinQJUPi9xz60vooX1ZX+riIGplIqc5ToNW35n/cLAHBxq/Sf5V0Ylk5JjcMaVs52XDS
+         F31A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jw+2gozvuH/YXEW0fIc9lgkZeSSAXLELaUD2N30a1oc=;
-        b=G3XPlxGpOAbKj00g4Cz+wxL8QIq4vDnCT685WY6aB3voq9Y1CoX1U1BvXvxPVVYO9e
-         G72o6VAaxc1bmeezdWHjqqM+FB7ykSHJwjbV5CSitF7StIKeF8PxRsR9VCuKPiRcR7et
-         IdQtjiYR7Y5N/Hquu7f0qqsGN7KJjN+N7UxwVQlVWWkmxsuiLzM3zMNemhrQhK7pxiMx
-         DX4bxunPVyNoEpUH7Y+eJQi+rMFPfb6Zq3WxMLPW67lRF8uprZ9oBH+GbkeyiDyuLxrb
-         aqRCF0ntLFCk/sIX1gLV/nzAlzPHPGPoF3hK/4NRXK8R32daTGOH7DlU+8Yf8xEe2MP6
-         KgHg==
-X-Gm-Message-State: AOAM531W5urXXVxU9wJkyw8xW5t6SxZiWcnzI6p9CrHm6x5WJ2bob1XC
-	wN0wGLXVtPpPcIlT9N/tV2bu7Zd59mc=
-X-Google-Smtp-Source: ABdhPJwlxqywh4n7xk+SJqWn8IEM113CAFTofNOosf5nMkGT01m9ZpjxS47VlpoK0tsyjsBDv9osjA==
-X-Received: by 2002:a17:90b:3704:: with SMTP id mg4mr13092809pjb.201.1627543271970;
-        Thu, 29 Jul 2021 00:21:11 -0700 (PDT)
-Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id p17sm2211550pfh.33.2021.07.29.00.21.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yG47jFmmhDxo8F9loIhG1cp/o1hubwJbQFGOEDWHNYc=;
+        b=sZHvi3Pr8q9NBlteS6IgVfbdGIIPARokrz/d73/fxhNC5C1oeSYHlQH42MlGSQ+L7U
+         pLtDdkd+X2lgjDe7h9e7/n9AtfwiYyirntNURxGGmxz+yFu7Y4ecQGCsvNTfA9NOPIQY
+         GVpvQWgV0KNueU+muOgz9hMURQtVHtv2ztQg8116wyB367Ph/e8XYfHIcfmIgAap9xaM
+         y8LiKqE5py16DTEDPU0g1nAHGgNw/7S9z5tK1c7P3irMfGoe9PZtYwVuwGlxW3vDui9r
+         c/Mpn+ES4bPNW7pIrRzFmrwjaiYOzSvJOZ3t+x5iQPJrvsRbGW7ExqjzLjDkVPxP+I6C
+         nGMQ==
+X-Gm-Message-State: AOAM530Elh0SBERhXIbhlfauiPJk+aZGvHPr0ob1Hh+dOcpGCjX+4oOI
+	y4iz/tL6HRZsK78h2pnVN27MJIiyjxE=
+X-Google-Smtp-Source: ABdhPJxM3RHT6t/Loe0E2Q1ZBdMZRFzt5fB8TEzNFLLP4NZDbCFiafGVat0DVln99B01fM8rkZxwow==
+X-Received: by 2002:a05:6a00:10d0:b029:337:abdd:be39 with SMTP id d16-20020a056a0010d0b0290337abddbe39mr4025642pfu.65.1627548018550;
+        Thu, 29 Jul 2021 01:40:18 -0700 (PDT)
+Received: from MiBook.. ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id f5sm2401539pjo.23.2021.07.29.01.40.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jul 2021 00:21:11 -0700 (PDT)
+        Thu, 29 Jul 2021 01:40:18 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev,
 	geliangtang@gmail.com
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [MPTCP][PATCH v7 mptcp-next 6/6] selftests: mptcp: delete uncontinuous removing ids
-Date: Thu, 29 Jul 2021 15:20:55 +0800
-Message-Id: <d13e78a4250121ded5b1a24586972b7dea410953.1627543032.git.geliangtang@xiaomi.com>
+Subject: [MPTCP][PATCH v7 mptcp-next 0/5] MP_FAIL support
+Date: Thu, 29 Jul 2021 16:40:08 +0800
+Message-Id: <cover.1627547666.git.geliangtang@xiaomi.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <6acd8786b4c151c4c9f01a0370bd6a12aaae6107.1627543032.git.geliangtang@xiaomi.com>
-References: <cover.1627543032.git.geliangtang@xiaomi.com> <1244ff06f1715f714ccc21bb164c6c082e8a26f5.1627543032.git.geliangtang@xiaomi.com> <af7def3b48c96f1f0c68360326d2e9cfe2500826.1627543032.git.geliangtang@xiaomi.com> <349c97cf4d1091f28aa62e8200ebfe4fa0f5f2d5.1627543032.git.geliangtang@xiaomi.com> <ae4edd8c446c94e57b981c16498f4f407d6b3e78.1627543032.git.geliangtang@xiaomi.com> <6acd8786b4c151c4c9f01a0370bd6a12aaae6107.1627543032.git.geliangtang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -56,61 +54,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-The removing addresses testcases can only deal with the continuous ids.
-This patch added the uncontinuous removing ids support.
+v7:
+ - The single subflow case is handled by sending MP_FAIL + RST instead
+   of sending MP_FAIL echo.
 
-Fixes: f87744ad42446 ("selftests: mptcp: set addr id for removing testcases")
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+v6: only rebased patch 1
+ - move the struct member 'fail_seq' behind 'ext_copy'.
+ - define OPTION_MPTCP_FAIL to BIT(12), BIT(11) is used by DSS
+ - move the MP_FAIL writing code at the beginning of mptcp_write_options,
+   and add the 'unlikely' tag.
+ - tag: export/20210728T080904
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index cb5f9a43baa1..dab7fbd6813a 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -344,17 +344,18 @@ do_transfer()
- 		let rm_nr_ns1=-addr_nr_ns1
- 		if [ $rm_nr_ns1 -lt 8 ]; then
- 			counter=1
-+			pos=1
- 			dump=(`ip netns exec ${listener_ns} ./pm_nl_ctl dump`)
- 			if [ ${#dump[@]} -gt 0 ]; then
--				id=${dump[1]}
- 				sleep 1
- 
- 				while [ $counter -le $rm_nr_ns1 ]
- 				do
-+					id=${dump[$pos]}
- 					ip netns exec ${listener_ns} ./pm_nl_ctl del $id
- 					sleep 1
- 					let counter+=1
--					let id+=1
-+					let pos+=5
- 				done
- 			fi
- 		elif [ $rm_nr_ns1 -eq 8 ]; then
-@@ -392,17 +393,18 @@ do_transfer()
- 		let rm_nr_ns2=-addr_nr_ns2
- 		if [ $rm_nr_ns2 -lt 8 ]; then
- 			counter=1
-+			pos=1
- 			dump=(`ip netns exec ${connector_ns} ./pm_nl_ctl dump`)
- 			if [ ${#dump[@]} -gt 0 ]; then
--				id=${dump[1]}
- 				sleep 1
- 
- 				while [ $counter -le $rm_nr_ns2 ]
- 				do
-+					id=${dump[$pos]}
- 					ip netns exec ${connector_ns} ./pm_nl_ctl del $id
- 					sleep 1
- 					let counter+=1
--					let id+=1
-+					let pos+=5
- 				done
- 			fi
- 		elif [ $rm_nr_ns2 -eq 8 ]; then
+v5:
+ - patch 1, change "ret = true;" to "return true;"
+ - patch 3, in the single-subflow case, send MP_FAIL and receive the
+   echo, then temporarily handled by reset.
+
+v4:
+ - just deal with the multiple subflows case, put the single subflow
+   case into the new 'infinite mapping' part.
+
+v3:
+ - respond with MP_FAIL
+ - add single subflow check
+ - add infinite mapping sending and receiving
+ - export/20210626T054902
+
+v2:
+ - MP_FAIL logic:
+   * Peer B send a DSS to peer A, and the data has been modify by the
+  middleboxes, then peer A detects the bad checksum.
+   * In the multiple subflows case, peer A sends MP_FAIL+RST back to peer B,
+  and peer A discards the data following the bad data sequence number. Peer
+  B receives this MP_FAIL+RST, and close this subflow.
+   * In the single subflow case, using the simple implementation, peer A
+  sends MP_FAIL back to peer B, and peer A fallback to a regular TCP. Peer
+  B receives this MP_FAIL, and fallback to a regular TCP.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/52
+
+Geliang Tang (5):
+  mptcp: MP_FAIL suboption sending
+  mptcp: MP_FAIL suboption receiving
+  mptcp: send out MP_FAIL when data checksum fails
+  mptcp: add the mibs for MP_FAIL
+  selftests: mptcp: add MP_FAIL mibs check
+
+ include/net/mptcp.h                           |  5 +-
+ net/mptcp/mib.c                               |  2 +
+ net/mptcp/mib.h                               |  2 +
+ net/mptcp/options.c                           | 76 ++++++++++++++++++-
+ net/mptcp/pm.c                                |  5 ++
+ net/mptcp/protocol.h                          | 19 +++++
+ net/mptcp/subflow.c                           | 16 ++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 38 ++++++++++
+ 8 files changed, 158 insertions(+), 5 deletions(-)
+
 -- 
 2.31.1
 
