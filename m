@@ -1,122 +1,57 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647EE3481
-	for <mptcp@lists.linux.dev>; Sat, 31 Jul 2021 16:14:26 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10062"; a="200423684"
-X-IronPort-AV: E=Sophos;i="5.84,284,1620716400"; 
-   d="scan'208";a="200423684"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2021 09:14:25 -0700
-X-IronPort-AV: E=Sophos;i="5.84,284,1620716400"; 
-   d="scan'208";a="477622798"
-Received: from rswridgx-ivm.amr.corp.intel.com ([10.212.133.125])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2021 09:14:24 -0700
-Date: Sat, 31 Jul 2021 09:14:24 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4877372
+	for <mptcp@lists.linux.dev>; Mon,  2 Aug 2021 14:51:36 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1mAZHr-0005P0-3y; Mon, 02 Aug 2021 16:51:27 +0200
+Date: Mon, 2 Aug 2021 16:51:27 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
 Subject: Re: Revised mptcp_info sockopt and selftests
-In-Reply-To: <aa6fcfda-9b53-c258-e03c-6ce731697ff6@linux.intel.com>
-Message-ID: <b6cfc070-a0e1-b57c-759c-f0a3406b4189@linux.intel.com>
-References: <YQKV6GJe/RfkZh09@strlen.de> <aa6fcfda-9b53-c258-e03c-6ce731697ff6@linux.intel.com>
+Message-ID: <20210802145127.GK15121@breakpoint.cc>
+References: <YQKV6GJe/RfkZh09@strlen.de>
+ <aa6fcfda-9b53-c258-e03c-6ce731697ff6@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa6fcfda-9b53-c258-e03c-6ce731697ff6@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, 30 Jul 2021, Mat Martineau wrote:
-
-> On Thu, 29 Jul 2021, Florian Westphal wrote:
->
->> Hi,
->> 
->> I have reworked the MPTCP_INFO getsockopt.
->> 
->> I think that for now its better to focus on the UAPI rather than the
->> implementation.
->> 
->
-> I agree - thanks for taking this approach.
->
->> Here is a minimal usage example to illustrate the feature:
->> 
->> UAPI structures:
->> struct mptcp_info_opt_ptr {
->> 	__aligned_u64	address;			/* userspace address 
->> */
->> 	__u32		nmemb_user;			/* number of elements 
->> in address[] */
->> 	__u32		size_user;			/* size of one 
->> element in address[] */
->> 	__u32		nmemb_kernel;			/* nmemb count kernel 
->> wanted to store */
->> 	__u32		size_kernel;			/* structure size in 
->> kernel */
->> };
->> 
->
-> Will embedding multiple userspace addresses in this way be a problem for 
+Mat Martineau <mathew.j.martineau@linux.intel.com> wrote:
+> > Here is a minimal usage example to illustrate the feature:
+> > 
+> > UAPI structures:
+> > struct mptcp_info_opt_ptr {
+> > 	__aligned_u64	address;			/* userspace address */
+> > 	__u32		nmemb_user;			/* number of elements in address[] */
+> > 	__u32		size_user;			/* size of one element in address[] */
+> > 	__u32		nmemb_kernel;			/* nmemb count kernel wanted to store */
+> > 	__u32		size_kernel;			/* structure size in kernel */
+> > };
+> > 
+> 
+> Will embedding multiple userspace addresses in this way be a problem for
 > security frameworks, in-kernel sockets, BPF_CGROUP_RUN_PROG_SETSOCKOPT, etc?
->
-> While I like the flexibility this gives us, it does seem a lot more complex 
-> than any other getsockopt I can think of. The similar thing that comes to 
-> mind is iovecs, but that seems like a level of complexity that we might want 
-> to avoid (?).
->
-> What if the first field of mptcp_info_opt_ptr was an offset instead of an 
-> address? We could pass in one block of memory and still have the same 
-> flexibility. I'll elaborate more below.
->
->> struct mptcp_info_opt {
->> 	struct mptcp_info_opt_ptr mptcp_info;		/* struct mptcp_info 
->> */
->> 	struct mptcp_info_opt_ptr tcp_info;		/* struct tcp_info[] 
->> of each subflow */
->> 	struct mptcp_info_opt_ptr socknames;		/* struct 
->> sockaddr_storage[] */
->> 	struct mptcp_info_opt_ptr peernames;		/* struct 
->> sockaddr_storage[] */
->> };
->
-> If we were to use offsets instead of addresses, mptcp_info_opt could be 
-> extensible in the future by including a "num_ptrs" (or similar) field.
->
->> 
->> /* Sample call, error checks removed */
->> void test_info_getsockopt(int fd)
->> {
->> 	struct sockaddr_storage remotes[16], locals[16];
->> 	struct mptcp_info mptcp_info;
->> 	struct tcp_info tcpinfo[16];
->> 	struct mptcp_info_opt m;
->> 	socklen_t optlen = sizeof(m);
->> 	uint32_t i;
->> 	int err;
->>
->> 	memset(&m, 0, sizeof(m));
->> 	m.mptcp_info.size_user = sizeof(mptcp_info);
->> 	m.mptcp_info.address = (uint64_t)&mptcp_info;
->>
->> 	m.tcp_info.address = (uint64_t)tcpinfo;
->> 	m.tcp_info.size_user = sizeof(tcpinfo[0]);
->> 	m.tcp_info.nmemb_user = 16;
->>
->> 	m.socknames.size_user = sizeof(locals[0]);
->> 	m.socknames.nmemb_user = 16;
->> 	m.peernames.size_user = sizeof(remotes[0]);
->> 	m.peernames.nmemb_user = 16;
->> 	m.socknames.address = (uint64_t)locals;
->> 	m.peernames.address = (uint64_t)remotes;
->>
->> 	err = getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &m, &optlen);
->> 
->
+
+Yes :-/
+
+I was not aware of BPF_CGROUP_RUN_PROG_SETSOCKOPT, thanks for pointing
+this out (in this case, BPF_...GETSOCKOPT, but problem is similar).
+
+So, this approach is dead/cannot be done.
+
+[..]
+
 > With offsets, the above code could look something like:
->
+> 
 > struct my_info_opt {
 > 	struct mptcp_info_opt m; /* Has to be first */
 > 	struct mptcp_info minfo;
@@ -124,132 +59,96 @@ On Fri, 30 Jul 2021, Mat Martineau wrote:
 > 	struct sockaddr_storage locals[16];
 > 	struct sockaddr_storage remotes[16];
 > } my_info;
->
+> 
 > memset(&my_info, 0, sizeof(my_info));
 > my_info.num_ptrs = 4;
->
+> 
 > my_info.m.mptcp_info.offset = offsetof(my_info.minfo);
-
-Oops, wrong syntax for offsetof(), but hopefully the intent was clear:
-
-my_info.m.mptcp_info.offset = offsetof(struct my_info_opt, minfo);
-
 > my_info.m.mptcp_info.size_user = sizeof(my_info.minfo);
->
+> 
 > my_info.m.tcp_info.offset = offsetof(my_info.tinfo);
-
-and offsetof(struct my_info_opt, tinfo)
-
-
--Mat
-
 > /* size_user / nmemb_user same as above */
->
+> 
 > /* and so on for locals and remotes */
->
-> optlen = sizeof(my_info);
->
-> err = getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &my_info, &optlen);
->
->
-> So, it's almost the same but uses one contiguous chunk of memory rather than 
-> having to handle five different userspace addresses.
->
->
->> 	printf("have %u subflows, token is %x\n", mptcp_info.mptcpi_subflows, 
->> mptcp_info.mptcpi_token);
->>
->> 	for (i = 0; i < m.socknames.nmemb_user; i++) {
->> 		printf("subflow %02d: ", i);
->> 		fprintf_mptcp_info(stdout, (void *)&locals[i], (void 
->> *)&remotes[i]);
->> 		printf("\n");
->> 	}
->>
->> 	printf("... dumped %u of %u addresses.\n",
->> 			m.socknames.nmemb_user, m.socknames.nmemb_kernel);
->>
->> 	for (i = 0; i < m.tcp_info.nmemb_user; i++)
->> 		dump_tcp_info(&tcpinfo[i]);
->> }
->> 
->> As you can see, I removed 'byte' based sizes, i found this to be
->> unecessarily tedious as the kernel then has to subtract from a
->> 'remaining buffer size', while making sure that this can't underflow.
->> 
->> With number-of-elements, its enough to 'remaining--' and "ptr += 
->> size_user".
->> 
->> Userspace passes the address of the structure(s), the size of a single
->> structure that it expects to get and the number of structures it has
->> allocated (16 in above example).
->> 
->> The kernel will:
->> 1. not change, or shrink the number of structures.
->>   This means that, in above example, nmemb_user will be anywhere
->>   between 0 and 16 inclusive.
->>
->>   0 would happen in the 'no subflows' case, when nothing was filled in.
->> 2. Not change, or shrink, size_user.  This happens for instance
->>   if userspace has a larger 'struct tcp_info' than the kernel,
->>   in this case size_user is updated to reflect the real element size.
->> 
->> 3. update nmemb_kernel to reflect the structure size it *WOULD* have
->>   filled. For example, if userspace tcp_info struct is smaller than the
->>   kernel, then size_user < size_kernel.
->> 
->> 4. update size_kernel with the number of elements it WOULD have filled
->>   if there would have been more space.
->> 
->> So, in above example, if there are 17 subflows then
->> socknames.nmemb_user == 16 and socknames.nmemb_kernel == 17.
->> 
->> Or, in short:
->> The _kernel members are only filled by kernel, the value provided by
->> userspace are ignored.
->> 
->> The _user members are input/output: userspace tells kernel how much
->> space it provides, kernel updates it to reflect how much it ended up
->> using.
->> 
->> Is that sane?  Any suggestions?
->
-> I think it's a very flexible approach, my main suggestion is the offset vs. 
-> address thing above.
->
-> Would it be frowned upon to put some inline helper functions or macros in the 
-> mptcp.h UAPI to reduce the boilerplate code to populate the 
-> mptcp_info_opt_ptrs? It looks like some UAPI headers have that, but not many.
->
->> 
->> On a related note, how should the test infra look like?
->> kunit isn't useable as i would prefer to test the UAPI, so that means
->> kselftest.
->> 
->> I would prefer not to extend mptcp_connect again.
->> Would you be ok with a new test program?
->
-> Yes
->
->> 
->> Any preferences?  If not, i would go with mptcp_getsockopt.c +
->> mptcp_getsockopt.sh.
->> 
->
-> +1 for those names.
->
->> The latter would then call the former with various possible
->> combinations, such as 'ipv4', 'ipv6', 'only ask for tcp_info', etc.
->> 
->
-> Thanks for the proposal.
->
-> --
-> Mat Martineau
-> Intel
->
->
 
---
-Mat Martineau
-Intel
+This takes away all the flexibility. Userspace would have to
+define such struct with locals[256], remotes[256], and so on, i.e.
+specify the largest possible value that it might need.
+
+Or, create some macro magic that creates X 'struct my_info_opt_X'
+versions; one for each value of X (the size of the sub-arrays).
+
+> I think it's a very flexible approach, my main suggestion is the offset vs.
+> address thing above.
+
+See above, I think its cumbersome to use, since you can no longer do
+something like
+
+struct mptcp_info_opt x = {};
+
+/* get the required sizes */
+getsockopt(... &x);
+
+x.locals.address = calloc(sizeof(struct sockaddr_storage), x.locals.nmemb_kernel);
+...
+
+/* really get the data */
+getsockopt(... &x);
+
+What about splitting the functionality in distinct getsockopt
+operations?
+
+struct mptcp_info_opt {
+    __u32           nmemb_user;             /* number of elements stored */
+    __u32           size_user;              /* size of one element stored */
+    __u32           nmemb_kernel;           /* number of elements kernel wanted to store */
+    __u32           size_kernel;            /* structure size in kernel */
+    __aligned_u64   data[1];		    /* actual data */
+};
+
+getsockopt(..., MPTCP_GETPEERNAMES, &opt, &optlen);
+...
+getsockopt(..., MPTCP_GETSOCKNAMES, &opt, &optlen);
+
+.. but subflows can change between those two :(
+
+That brings us back to the compound structure that mptcp.org kernel has to
+wrap both local and remote addresses in a single struct.
+
+The more I think about it, the less ideas i have on how to make
+any of this work.
+
+Sctp has connectx and bindx pseudo-syscalls (its really just setsockopts),
+those all expect 'struct sockaddr *', with some extra code in the kernel
+to guess the correct size of each by looking at ->sa_family.
+
+So, with all of that in mind:
+MPTCP_INFO -> gets the mptcp info diag data, with nothing else.  Single struct
+that is exported to userspace (already is).
+
+MPTCP_TCP_INFO -> gets array of 'struct tcp_info'.
+MPTCP_SUBFLOWS -> gets array of 'struct mptcp_subflow', which has both local+remote sockaddrs.
+
+To make both of those work without a need to guess the individual element size,
+it would make sense to prepend struct mptcp_info_opt, i.e.
+
+opt = malloc(sizeof(struct mptcp_info_opt) + sizeof(struct tcp_info) * 16));
+
+opt.nmemb_user = 16;
+opt.size_user = sizeof(struct tcp_info);
+
+getsockopt(..., MPTCP_TCP_INFO, &opt, &optlen);
+
+This would still allow to fetch the rquired size, resp. retry if nmemb_kernel > nmemb_user
+after the call returns.
+
+> Would it be frowned upon to put some inline helper functions or macros in
+> the mptcp.h UAPI to reduce the boilerplate code to populate the
+> mptcp_info_opt_ptrs? It looks like some UAPI headers have that, but not
+> many.
+
+No idea.  Personally I think the kernel should only
+expose enums/defines and, if needed, structure layouts and nothing else.
+
+That said, we could certainly add helpers (e.g. cmsg-alike or whatever)
+and expose that with a libmptcp or some such.
