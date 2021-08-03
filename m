@@ -1,30 +1,36 @@
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018C370
-	for <mptcp@lists.linux.dev>; Tue,  3 Aug 2021 15:21:53 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5429D60555;
-	Tue,  3 Aug 2021 15:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FDD70
+	for <mptcp@lists.linux.dev>; Tue,  3 Aug 2021 15:59:32 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 99C5360F45;
+	Tue,  3 Aug 2021 15:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1628004113;
-	bh=vwcPVijXM8FYKwUQsl2R7tN53aZe12iOT+B9pkuKNEo=;
+	s=k20201202; t=1628006372;
+	bh=ChhPSCYwVwBW+Gw7+iatuovIf2TIbBAIu4oLOgUZzyY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OLl8FDJu4AZTA3i92j1sTJrYgFWY8msKvMlAZnNL94y0HLdywLqtbLKHswAKEdtL2
-	 ib/ZBwnJr6mWMRyFBFCBSQYNftlKwXGu22l7fjCC2GlVVCRyI9x3n4Ql6bG1Et3ge2
-	 yOAbDKFiVNOgnSHwQZV9KEL9WRWrx2uUlTZ/WaY1N5RKalSo5SSD6etIra1xG64NnO
-	 ab+G7TjZrrBwrj7HtjAKHiUFS+AvyLmFkndl6+hVEhuKQd/U3hI+VxPH2NoB9VyHcx
-	 dhcuhmkxj1tlIRgDwu/KxvxEPXvwH5nb18I0927TiOP9htt9wRVMQ764+ylTkQwaXc
-	 fV+3eQPRH1Owg==
-Date: Tue, 3 Aug 2021 08:21:52 -0700
+	b=CXEcYW8VOiRy/IqDk4w1z47ZV6TB8DMXPTzW1CYY5HfajRsDDtvi8Xev/ZUwWC48+
+	 Aa51HsvYdXIMh8yk5fPYG1VmnBomN8B/Upoq7GG5AzB6SdEhYNL0QSksUWV8kHjKX5
+	 lQuqpJzsqwsPv6M7XeD8A3Mn4C6MTFIOaDuaKGvo6egbC7csK0LzykiKuk1XGKtvwN
+	 /pNDxIDlyTL3a5/+kc1KmIonqd46lgyDOr548FG0l6EC8AcJjUWNc56z32KU1oKWbz
+	 M7higY0/dGWoOrUd7ahds/l7oZ46vMzb6IOwp0J0I6mwXo6rp+4o2jXSrek6Ya4TRD
+	 5vDGdL3cNsNPQ==
+Date: Tue, 3 Aug 2021 08:59:30 -0700
 From: Jakub Kicinski <kuba@kernel.org>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, Geliang Tang <geliangtang@gmail.com>,
- davem@davemloft.net, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
-Subject: Re: [PATCH net] mptcp: drop unused rcu member in
- mptcp_pm_addr_entry
-Message-ID: <20210803082152.259d9c2a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210802231914.54709-1-mathew.j.martineau@linux.intel.com>
-References: <20210802231914.54709-1-mathew.j.martineau@linux.intel.com>
+To: yajun.deng@linux.dev
+Cc: "kernel test robot" <lkp@intel.com>, davem@davemloft.net,
+ mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+ trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+ kbuild-all@lists.01.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, mptcp@lists.linux.dev,
+ Denis Kirjanov <kda@linux-powerpc.org>
+Subject: Re: [PATCH net-next] net: Modify sock_set_keepalive() for more
+ scenarios
+Message-ID: <20210803085930.103d37dc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <a37faefd6dcad9f01212d60f8bb32f4f@linux.dev>
+References: <202108031929.b1AMeeUj-lkp@intel.com>
+	<20210803082553.25194-1-yajun.deng@linux.dev>
+	<a37faefd6dcad9f01212d60f8bb32f4f@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,15 +40,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon,  2 Aug 2021 16:19:14 -0700 Mat Martineau wrote:
-> From: Geliang Tang <geliangtang@gmail.com>
-> 
-> kfree_rcu() had been removed from pm_netlink.c, so this rcu field in
-> struct mptcp_pm_addr_entry became useless. Let's drop it.
-> 
-> Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+On Tue, 03 Aug 2021 11:42:39 +0000 yajun.deng@linux.dev wrote:
+> The tcp_create_listen_sock() function was already dropped in commit
+> <2dc6b1158c28c3a5e86d162628810312f98d5e97> by Alexander Aring.
 
-This just removes a superfluous member, right? So could as well be
-applied to net-next?
+We don't have the commit you're quoting in the networking trees.
+
+You should modify tcp_create_listen_sock() and we'll deal with 
+the conflict during the merge window.
+
+Unless obviously you should wait and "send the patch within a context
+of other scenarios".. (I'm unclear on what Denis is referring to.)
