@@ -1,88 +1,99 @@
 Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B661E70
-	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 07:36:42 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id qk33so2306541ejc.12
-        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 00:36:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5785C70
+	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 07:37:27 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id hs10so2445641ejc.0
+        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 00:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zhuYUEY+e4Nby/3NYLPFiLpPSXqaoH419twcVE6j294=;
-        b=y3ajjTtmevFl4mEzpaUC+UqZWM/bFUI2w6jhh4khFRIID+4nrB2nQ60RapTNM97+ht
-         6P7RM77GbT9UdEufJUQ+DWXekghbu1e4QWpq2Y29eVazBpjO5k7u4ZQFkVNZwvOlOa8L
-         KoUPEXHXmsRl89Cd6ygoLjHxcgYyo9GazgveZhwo3Ho7hOLXDw0VArqqp4H+Tz0XAxRP
-         26oTzPPrVVHgdriXEzp4jIEUoynk/iq6cBKKSdqsGnE5lLM0YTH+nTz3IykuduoZSagW
-         l910VGMPmBPlQjoRfAxhahZ1SrDIPL3folcl46mb7bG+WsORLLXRv4At7Yk1KmZE3Q96
-         H6zw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ALXNeRuiZXRoNrnxupopBntGuoqgPwGx8GxWRhIFFKc=;
+        b=TpMwCKpDCKklUUmfltrm7yJOnwPeoy7y0N5rUA8jvf2BnxQCHxSx18ams9kbngGKZ8
+         /NGx6Pt/q1vsio2Z/OZpT7syG6meCF4YoOZsaF351puGbaWFfBZ31Wr0VWD9a9JlTbRR
+         zuZoY5XQE5G07ufEfq+FCaZHw+z4D5BfAaZjOnh3RCVcoeVhByD/i+kb9umIR2JgHLga
+         yIHfX97r32Rj92xsTvTA1fqyJAcw3S2wFh5nG7qImHt+JYUtMQVUX/1ITQgzDN74tUSQ
+         TFlo1YnyWiuLNF69MNeC4gDzuW2mKDmIq9/3B4dJHRlcTRJhZ1/xORlam4xAqPqjYQhh
+         go5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zhuYUEY+e4Nby/3NYLPFiLpPSXqaoH419twcVE6j294=;
-        b=qSL3aXc7HPS44Co07JTZSUGAi9RTek3DugnQz+PBZohWv6AdVx2hmOGPj1WDXnUH5F
-         88tJwEkGvg3S30bnRJTaCUdmv1G/61/ZIft6QQ+aJjVksA9Q5V/ALYr/D0DTaq0L7k6d
-         gRhxdCP55j8CGlJ6aKxHbitcye9/tUiiiStcMCiceM09yZbDswNyJOPfDQfBZDtrAA3T
-         eH6SMK+LAXHhWKg2pcrwpABBqNy9J66D6aACkKSdXLatBYN8AaztYXu0BwJjhx/UZTgk
-         3jVC4WL0vVqM2/kUcvoDDsUX0qwcVT95Tt65mxXejv4fxEta5/OBTrTAahDwlZeMq2yn
-         biOA==
-X-Gm-Message-State: AOAM532T9GehtD4JzbD4dqWfvq/g/X+tDaenkBz5gk2HVBPqwGfVIaBa
-	/fxPLU2C2nG3XMKOgkk2OBKjFw==
-X-Google-Smtp-Source: ABdhPJyHXqW5iXSAq/xtB8F4e3liCDDJPEHQ3a7/MO/8yZRVm4K6auxvK3q0TyxBjCISouq885EMKQ==
-X-Received: by 2002:a17:906:dfe5:: with SMTP id lc5mr24174576ejc.20.1628062601077;
-        Wed, 04 Aug 2021 00:36:41 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.102.61.dyn.edpnet.net. [94.105.102.61])
-        by smtp.gmail.com with ESMTPSA id m17sm400708eji.92.2021.08.04.00.36.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Aug 2021 00:36:40 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add fullmesh
- testcases"
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20210804072556.664287-1-matthieu.baerts@tessares.net>
-Cc: Geliang Tang <geliangtang@gmail.com>
+        bh=ALXNeRuiZXRoNrnxupopBntGuoqgPwGx8GxWRhIFFKc=;
+        b=KOqrurP7hjFxaTFXWItmmcWc7LrPlnqSt2tg8m6ddInXbRQo3rYnHgJZ8l/4dnDngn
+         iOhOGvoydmWR5qS1eTBHMgH/FNH3VNgPGTfoIO4sSEaD8JP3gWdUdRUR16Y5mIOZ8NUV
+         cVqdRYwbq9ZCoE7+K9rau16W1MdFHdWy1XEDSBzaPLQcz4N00o0DQoS9G5bjqAXvKzI1
+         SSMXJDpQStNpwLXOvqUztaeQ6nBcujGJxSAHqghXmkRj2HuVvuyQPWkklIsKwoD0KaL9
+         EdXFEtZ2c0lAfsSkUfG7dknyedTtMS2MYhhq9szR6I/OcB6zmqjuk3Fd0rMrRBhEQyps
+         i9og==
+X-Gm-Message-State: AOAM530rxkDfbDtxfefgScQ2BbhfLQn+9kwQ8uWOEQbr/SgFlzH9LmG4
+	qgqp1OgkZE+N9R/AYuO8I58J/zUGL4O7nYhe61g=
+X-Google-Smtp-Source: ABdhPJzd/LzWT7zvLelqsL2wMXOof2mN5a0pWYaTpMZr5zppArjKr+g0YbqDGpJN68RDMOs+10oeEA==
+X-Received: by 2002:a17:906:fb11:: with SMTP id lz17mr24610281ejb.336.1628062645519;
+        Wed, 04 Aug 2021 00:37:25 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id i6sm405098ejd.57.2021.08.04.00.37.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Aug 2021 00:37:25 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <7655f9a1-df47-cfc8-3281-cd5fbd1e3c1b@tessares.net>
-Date: Wed, 4 Aug 2021 09:36:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Jenkins Tessares <kernel-dev@tessares.net>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH mptcp-next] Squash to "mptcp: remote addresses fullmesh"
+Date: Wed,  4 Aug 2021 09:37:10 +0200
+Message-Id: <20210804073710.681267-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210804072556.664287-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This fixes 'unused-but-set-variable' warning.
 
-On 04/08/2021 09:25, Matthieu Baerts wrote:
-> To avoid using the >10 numbers for the fullmesh test cases and comments
-> around to make it a bit more clear this is a workaround, we can pass
-> 'fullmesh_X' where 'X' is the number of addresses we want to add with
-> the 'fullmesh' flag.
-> 
-> If we detect that the parameter is starting with 'fullmesh_X', we add
-> the flag and set the corresponding variable to 'X'. Then we continue
-> like before.
-> 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> 
-> Notes:
->     to be squashed in "selftests: mptcp: add fullmesh testcases"
+Jenkins Tessares reported [1] this error:
 
-I forgot to mention that we also need to update the corresponding commit
-message to remove this line:
+  net/mptcp/pm_netlink.c: In function 'fill_remote_addresses_vec':
+  net/mptcp/pm_netlink.c:435:23: error: variable 'pernet' set but not  used [-Werror=unused-but-set-variable]
+    435 |  struct pm_nl_pernet *pernet;
+        |                       ^~~~~~
+  cc1: all warnings being treated as errors
 
-  Reuse the above 10 address numbers for the fullmesh test.
+Indeed, this variable is defined and set but not used. We can remove it.
 
-Cheers,
-Matt
+[1] https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1096568275
+
+Reported-by: Jenkins Tessares <kernel-dev@tessares.net>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+
+Notes:
+    to be squashed in "mptcp: remote addresses fullmesh"
+
+ net/mptcp/pm_netlink.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index cbef50fff6e8..29ff454411b1 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -432,11 +432,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+ 	struct sock *sk = (struct sock *)msk, *ssk;
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_addr_info remote = { 0 };
+-	struct pm_nl_pernet *pernet;
+ 	unsigned int subflows_max;
+ 	int i = 0;
+ 
+-	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
+ 	subflows_max = mptcp_pm_get_subflows_max(msk);
+ 
+ 	/* Non-fullmesh endpoint, fill in the single entry
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.31.1
+
