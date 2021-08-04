@@ -1,99 +1,100 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5785C70
-	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 07:37:27 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id hs10so2445641ejc.0
-        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 00:37:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4B070
+	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 08:52:36 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id x90so2535645ede.8
+        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 01:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ALXNeRuiZXRoNrnxupopBntGuoqgPwGx8GxWRhIFFKc=;
-        b=TpMwCKpDCKklUUmfltrm7yJOnwPeoy7y0N5rUA8jvf2BnxQCHxSx18ams9kbngGKZ8
-         /NGx6Pt/q1vsio2Z/OZpT7syG6meCF4YoOZsaF351puGbaWFfBZ31Wr0VWD9a9JlTbRR
-         zuZoY5XQE5G07ufEfq+FCaZHw+z4D5BfAaZjOnh3RCVcoeVhByD/i+kb9umIR2JgHLga
-         yIHfX97r32Rj92xsTvTA1fqyJAcw3S2wFh5nG7qImHt+JYUtMQVUX/1ITQgzDN74tUSQ
-         TFlo1YnyWiuLNF69MNeC4gDzuW2mKDmIq9/3B4dJHRlcTRJhZ1/xORlam4xAqPqjYQhh
-         go5w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8F0In5K6/inkq3He40ee+kCuYW6wCigwIwnUeveNK5I=;
+        b=ArKtAuVuCo46t/o6yU6jlQM4RqBYL+Cot/UMU754fOvpvaWc57hESioseb9eOOfUdt
+         QSRlAbuol5dd0gxU993lKj8qJ7UAu4JQsEATF7rYgc889i38GituME+NVNP8MMy/U2tI
+         elzweJ1A8ghWT3Uvc2jyVFeVSAP4Dheu9VKX8r/qYPrMGLuoL4OR9U+ZsHZNin7oBw/u
+         oZ5563mw3jAG8n0ZnwPwcaheHTXqKvgWn64wiW3R/ilqnZQkLUorYAmlKEVjJDNjB/G4
+         cjsvx6Oj0uPaBi2Eu+HmBTHEW+eed4OdA5Lj4Mqii1jE801BBzuJCN1Pp0XNSPS1dNBh
+         JxMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ALXNeRuiZXRoNrnxupopBntGuoqgPwGx8GxWRhIFFKc=;
-        b=KOqrurP7hjFxaTFXWItmmcWc7LrPlnqSt2tg8m6ddInXbRQo3rYnHgJZ8l/4dnDngn
-         iOhOGvoydmWR5qS1eTBHMgH/FNH3VNgPGTfoIO4sSEaD8JP3gWdUdRUR16Y5mIOZ8NUV
-         cVqdRYwbq9ZCoE7+K9rau16W1MdFHdWy1XEDSBzaPLQcz4N00o0DQoS9G5bjqAXvKzI1
-         SSMXJDpQStNpwLXOvqUztaeQ6nBcujGJxSAHqghXmkRj2HuVvuyQPWkklIsKwoD0KaL9
-         EdXFEtZ2c0lAfsSkUfG7dknyedTtMS2MYhhq9szR6I/OcB6zmqjuk3Fd0rMrRBhEQyps
-         i9og==
-X-Gm-Message-State: AOAM530rxkDfbDtxfefgScQ2BbhfLQn+9kwQ8uWOEQbr/SgFlzH9LmG4
-	qgqp1OgkZE+N9R/AYuO8I58J/zUGL4O7nYhe61g=
-X-Google-Smtp-Source: ABdhPJzd/LzWT7zvLelqsL2wMXOof2mN5a0pWYaTpMZr5zppArjKr+g0YbqDGpJN68RDMOs+10oeEA==
-X-Received: by 2002:a17:906:fb11:: with SMTP id lz17mr24610281ejb.336.1628062645519;
-        Wed, 04 Aug 2021 00:37:25 -0700 (PDT)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id i6sm405098ejd.57.2021.08.04.00.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 00:37:25 -0700 (PDT)
+        bh=8F0In5K6/inkq3He40ee+kCuYW6wCigwIwnUeveNK5I=;
+        b=GXQEGQ3zjjV/kppiBx47wSVx+7vYj1eLV8taulPS7+X0lXjKsBDwQkg3WgXMHlkv85
+         Nsmxh6HrofpMV7596Lke+Eu+7aNrd8jt8+BUZNaNpRbPK4DXP6GnGdBnOZ4s6vCRWuBb
+         kn0kOm7ijf/dPPdh6MlsLQPz/Z9IIjCkpYWiylveAdGhsh64/aSL7GZpoDIIOHvYvNo3
+         YLSzP/zBnZ4etI6GEfOgPI0maFrmlGa5hXLNHpjLPOCUnsxEsr2fPwoJAL2wgMGX1sED
+         2eNUxBId0JdBEspaSFB/CozlmnV7fgD+BjU3nHRcwQB/iy2TUznVMQxXnrdUnkYDfDGF
+         a29w==
+X-Gm-Message-State: AOAM533mXLmWBpfuBa1DzyJwHpz+eWBvxB+rQTxcP6gK65dkJ8mz/9vt
+	uQGzJXRzTOg9uIpzpbrSDSMrpQ==
+X-Google-Smtp-Source: ABdhPJyAk+n7NRml3TM0l1jZqCdvjWzvQiDupugPUcOnAl+57Rv1f0vOUodlzIGDq4MkInSTLOYCVA==
+X-Received: by 2002:aa7:c647:: with SMTP id z7mr30430143edr.52.1628067154705;
+        Wed, 04 Aug 2021 01:52:34 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.102.61.dyn.edpnet.net. [94.105.102.61])
+        by smtp.gmail.com with ESMTPSA id nb39sm450494ejc.95.2021.08.04.01.52.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Aug 2021 01:52:34 -0700 (PDT)
+Subject: Re: [MPTCP][PATCH v7 mptcp-next 0/5] MP_FAIL support
+To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@xiaomi.com>
+References: <cover.1627547666.git.geliangtang@xiaomi.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Jenkins Tessares <kernel-dev@tessares.net>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH mptcp-next] Squash to "mptcp: remote addresses fullmesh"
-Date: Wed,  4 Aug 2021 09:37:10 +0200
-Message-Id: <20210804073710.681267-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.31.1
+Message-ID: <2d68e24d-7aa2-0a16-ebdc-e672a7065287@tessares.net>
+Date: Wed, 4 Aug 2021 10:52:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1627547666.git.geliangtang@xiaomi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-This fixes 'unused-but-set-variable' warning.
+Hi Geliang, Mat, Paolo,
 
-Jenkins Tessares reported [1] this error:
+On 29/07/2021 10:40, Geliang Tang wrote:
+> From: Geliang Tang <geliangtang@xiaomi.com>
+> 
+> v7:
+>  - The single subflow case is handled by sending MP_FAIL + RST instead
+>    of sending MP_FAIL echo.
 
-  net/mptcp/pm_netlink.c: In function 'fill_remote_addresses_vec':
-  net/mptcp/pm_netlink.c:435:23: error: variable 'pernet' set but not  used [-Werror=unused-but-set-variable]
-    435 |  struct pm_nl_pernet *pernet;
-        |                       ^~~~~~
-  cc1: all warnings being treated as errors
+(...)
 
-Indeed, this variable is defined and set but not used. We can remove it.
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/52
+> 
+> Geliang Tang (5):
+>   mptcp: MP_FAIL suboption sending
+>   mptcp: MP_FAIL suboption receiving
+>   mptcp: send out MP_FAIL when data checksum fails
+>   mptcp: add the mibs for MP_FAIL
+>   selftests: mptcp: add MP_FAIL mibs check
 
-[1] https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1096568275
+Thank you for the patches and reviews! Now in our tree with Mat's RvB tags:
 
-Reported-by: Jenkins Tessares <kernel-dev@tessares.net>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
+- 6bf0897526b8: mptcp: MP_FAIL suboption sending
+- 913f5ee5f5e8: mptcp: MP_FAIL suboption receiving
+- cce924a902eb: mptcp: send out MP_FAIL when data checksum fails
+- e14356532033: mptcp: add the mibs for MP_FAIL
+- 77405167d756: selftests: mptcp: add MP_FAIL mibs check
+- Results: 7706daf6fd74..d2d5ed438884
 
-Notes:
-    to be squashed in "mptcp: remote addresses fullmesh"
+Builds and tests are now in progress:
 
- net/mptcp/pm_netlink.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index cbef50fff6e8..29ff454411b1 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -432,11 +432,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
- 	struct sock *sk = (struct sock *)msk, *ssk;
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_addr_info remote = { 0 };
--	struct pm_nl_pernet *pernet;
- 	unsigned int subflows_max;
- 	int i = 0;
- 
--	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
- 	subflows_max = mptcp_pm_get_subflows_max(msk);
- 
- 	/* Non-fullmesh endpoint, fill in the single entry
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210804T085052
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210804T085052
+
+Cheers,
+Matt
 -- 
-2.31.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
