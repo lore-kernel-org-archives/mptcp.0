@@ -1,53 +1,51 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1BE70
-	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 11:31:17 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id o44-20020a17090a0a2fb0290176ca3e5a2fso3111130pjo.1
-        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 04:31:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E9070
+	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 11:44:45 +0000 (UTC)
+Received: by mail-pj1-f45.google.com with SMTP id a8so2526304pjk.4
+        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 04:44:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=DadLYseGks/M/E+SukNuSK1sTS7XL1UZHJDvI6ex8d0=;
-        b=TR3vPuo/wZi/H0qvEAbv4M5MSDVroVf4VKfSlD6HfgVmgfpLLUXacksKU8JlZGEnBT
-         ca0J3ylglohz2ILf2eG+8w+r2aSe9j0WbEqwHMh6YfGhTaXFscm7rA0StByXTWmoN4lx
-         KidoHMFfA+T6B3RGQ0hPfBMmALuji5On/OUt4lGc747Op7H2XX64YXHMyGt+0Cx4zR4M
-         KF0E693h1k0umLu1rWdmtcUbBT06AAxKXBVJV2Bis7U3lDoLpgc3c3xXp45wb7mbiyz1
-         jzWHs08qd1/gtfzsXu6FxGYpROWM4moEAhYmpXINFiFOJRHf6x27Gp1ltvwvK/lg6slr
-         7oxQ==
+        bh=Hrdcx63AR9EI+zy7arcmfHfdhuJJmUYoINb44RJdEsU=;
+        b=ky1ZF0lqlcCTiWc2Dp2lmmzZVr/O4eZijSYcQ8EpLBxMOqWRCX/0MiANa4aTszvBCz
+         QYX/W5PJEmUeZhWEIheUV9KMKWgB287G2WUlDVIiqItZgHiDMcjN2WwMhd2ODef/XNKb
+         +5JcQXQnrexnk5KMeoH9fbGWka8g9dY62nvEDQZVROGVYah3RInlVMx7HeMFqSv6m7mH
+         Cp2fcCbhSm20Z6AZXDeJEbPySDZiHldNgWdBGx3/11KPBg/JGtBodWHu5jfxsyJpQDqO
+         o+rVX9ip9sq+uClKXq8wHFHtFwu2ccUmeKmwWhivDtQHX++1NWRPtUI1uD+/ln9xXL8S
+         VKWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DadLYseGks/M/E+SukNuSK1sTS7XL1UZHJDvI6ex8d0=;
-        b=CCULyo9Zg4Z9bqH1S2zIfVJU05v++4Fynb6y6/VlKhnhWBNT2aTSX/V+FS6LrVGCSz
-         7ZtqAjjB9eM1mvAWV4NR68ShDS+Qlf4aESo+XiIm6CMpqqIBxsDl9YIAbVfs/YfmY/xY
-         uOWF4a7JyY7lyBtXR1wuZFSEP5UHKi0SZ/EAa4avEu82KLLGVnbVu9y/REeYEg3/oJH2
-         A6KPsUIbwSYTZlIBKmqKH0703J8lJ2zzp4xh2BOWOxCYJXFVg8GObZHVS40EkPF81b2S
-         0+KeAEv5py5InjmAgqVEjV/MM6DZ+VWWwoXwhUP1PDy7ajBsuTInaFlnnRGIX5fROuqA
-         8TcQ==
-X-Gm-Message-State: AOAM531wjXeb2h5rrQu+eRZqnvT8nrRJvmxhKx2vLrwArwl+FsQqzUVU
-	ulMxK8EEJuI5mkUsu3UGuKR9LW7ZhoC6EjF/F6k=
-X-Google-Smtp-Source: ABdhPJxqV2Lg+TFhC7XQBy15r5TrEgsrk0MAE/6la0jhfxqLtDTuYWAdb9cv9j2571Q0F1HCbr2sky9kDQTnxumJ5rQ=
-X-Received: by 2002:aa7:98c2:0:b029:3c2:fd63:2759 with SMTP id
- e2-20020aa798c20000b02903c2fd632759mr10913175pfm.58.1628076676868; Wed, 04
- Aug 2021 04:31:16 -0700 (PDT)
+        bh=Hrdcx63AR9EI+zy7arcmfHfdhuJJmUYoINb44RJdEsU=;
+        b=mqtxJtVSDE8WYtiAfAyLe0Qw7pV0jg/3a+9a6WOflPwYD0dJo5pDzXUHE35iBvVTyz
+         HiURZYVys/QTiqxj+rGbPKHduL/GrWCHSgF2qKq3EpxkGssgwMQJHRtl0naEm/HUD0WO
+         KmiD/ieyPpSXKVi9pfMy/SaDumbBqpJUbdG4eMzpTEREuPvFzmoMqJ4KL6H4hf3rV1Gt
+         q/txce/jdTWOIS870r1qhUIuJpQ1/fiRgfh+s/uPMQtSzn8DX1mrwxLrWbfd/pTs5QIp
+         idrIiWLdHFw4VP6P7EIzTWZ/ui6pQdvzrHj1FwqTUjZwEt6qfOwta6fALAp6HbcCQcHD
+         P06A==
+X-Gm-Message-State: AOAM530mFeqC2FVXOT0QAvBycxf5HY+gE5Z3QvjUJgE1IOvdmVaR7KMR
+	Xh7hkHrHC/XF8wTCA2frF/4ugFJ0dHCEQM1gzqk=
+X-Google-Smtp-Source: ABdhPJxBqks2iojWNLd0nu3Z50bjH0/MFNqvhVSXjOdZ6QJT1bbVFWvLwk5Ml6PvTPthalXCts/DNIvSfm242bbqap4=
+X-Received: by 2002:a17:90a:5d8a:: with SMTP id t10mr9580317pji.6.1628077485062;
+ Wed, 04 Aug 2021 04:44:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20210804073710.681267-1-matthieu.baerts@tessares.net>
-In-Reply-To: <20210804073710.681267-1-matthieu.baerts@tessares.net>
+References: <20210804072556.664287-1-matthieu.baerts@tessares.net> <7655f9a1-df47-cfc8-3281-cd5fbd1e3c1b@tessares.net>
+In-Reply-To: <7655f9a1-df47-cfc8-3281-cd5fbd1e3c1b@tessares.net>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Wed, 4 Aug 2021 19:31:05 +0800
-Message-ID: <CA+WQbwvhXX+T+tm2G9Jyi67Pd4sXDfhUn3dgKL_5eQ014tD8gw@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: remote addresses fullmesh"
+Date: Wed, 4 Aug 2021 19:44:33 +0800
+Message-ID: <CA+WQbws-UiT5-ZFKBPiXBAATJGt1G2AmtU=F0=cpJQm=pkWUMQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add fullmesh testcases"
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, Jenkins Tessares <kernel-dev@tessares.net>, 
-	kernel test robot <lkp@intel.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -55,59 +53,39 @@ Hi Matt,
 
 Thanks for fixing this.
 
-Acked-by: Geliang Tang <geliangtang@xiaomi.com>
+Acked-and-tested-by: Geliang Tang <geliangtang@xiaomi.com>
 
 -Geliang
 
 Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B48=E6=
-=9C=884=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=883:37=E5=86=99=E9=81=93=
+=9C=884=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=883:36=E5=86=99=E9=81=93=
 =EF=BC=9A
 >
-> This fixes 'unused-but-set-variable' warning.
+> Hello,
 >
-> Jenkins Tessares reported [1] this error:
+> On 04/08/2021 09:25, Matthieu Baerts wrote:
+> > To avoid using the >10 numbers for the fullmesh test cases and comments
+> > around to make it a bit more clear this is a workaround, we can pass
+> > 'fullmesh_X' where 'X' is the number of addresses we want to add with
+> > the 'fullmesh' flag.
+> >
+> > If we detect that the parameter is starting with 'fullmesh_X', we add
+> > the flag and set the corresponding variable to 'X'. Then we continue
+> > like before.
+> >
+> > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> > ---
+> >
+> > Notes:
+> >     to be squashed in "selftests: mptcp: add fullmesh testcases"
 >
->   net/mptcp/pm_netlink.c: In function 'fill_remote_addresses_vec':
->   net/mptcp/pm_netlink.c:435:23: error: variable 'pernet' set but not  us=
-ed [-Werror=3Dunused-but-set-variable]
->     435 |  struct pm_nl_pernet *pernet;
->         |                       ^~~~~~
->   cc1: all warnings being treated as errors
+> I forgot to mention that we also need to update the corresponding commit
+> message to remove this line:
 >
-> Indeed, this variable is defined and set but not used. We can remove it.
+>   Reuse the above 10 address numbers for the fullmesh test.
 >
-> [1] https://github.com/multipath-tcp/mptcp_net-next/actions/runs/10965682=
-75
->
-> Reported-by: Jenkins Tessares <kernel-dev@tessares.net>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->
-> Notes:
->     to be squashed in "mptcp: remote addresses fullmesh"
->
->  net/mptcp/pm_netlink.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index cbef50fff6e8..29ff454411b1 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -432,11 +432,9 @@ static unsigned int fill_remote_addresses_vec(struct=
- mptcp_sock *msk, bool fullm
->         struct sock *sk =3D (struct sock *)msk, *ssk;
->         struct mptcp_subflow_context *subflow;
->         struct mptcp_addr_info remote =3D { 0 };
-> -       struct pm_nl_pernet *pernet;
->         unsigned int subflows_max;
->         int i =3D 0;
->
-> -       pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
->         subflows_max =3D mptcp_pm_get_subflows_max(msk);
->
->         /* Non-fullmesh endpoint, fill in the single entry
+> Cheers,
+> Matt
 > --
-> 2.31.1
->
->
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
