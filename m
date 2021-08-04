@@ -1,91 +1,83 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E9070
-	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 11:44:45 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id a8so2526304pjk.4
-        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 04:44:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AFF70
+	for <mptcp@lists.linux.dev>; Wed,  4 Aug 2021 13:06:54 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id y7so3417372eda.5
+        for <mptcp@lists.linux.dev>; Wed, 04 Aug 2021 06:06:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Hrdcx63AR9EI+zy7arcmfHfdhuJJmUYoINb44RJdEsU=;
-        b=ky1ZF0lqlcCTiWc2Dp2lmmzZVr/O4eZijSYcQ8EpLBxMOqWRCX/0MiANa4aTszvBCz
-         QYX/W5PJEmUeZhWEIheUV9KMKWgB287G2WUlDVIiqItZgHiDMcjN2WwMhd2ODef/XNKb
-         +5JcQXQnrexnk5KMeoH9fbGWka8g9dY62nvEDQZVROGVYah3RInlVMx7HeMFqSv6m7mH
-         Cp2fcCbhSm20Z6AZXDeJEbPySDZiHldNgWdBGx3/11KPBg/JGtBodWHu5jfxsyJpQDqO
-         o+rVX9ip9sq+uClKXq8wHFHtFwu2ccUmeKmwWhivDtQHX++1NWRPtUI1uD+/ln9xXL8S
-         VKWQ==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u9rSKMclJUJztra+LqLqM0wxhmBRqOtb+nkLxts4INY=;
+        b=XvI8FqRNMH1eUQFB0oR0EGXo1A1cUlGrlJg/KOLLlqFYl6gqQFgNJIGveWK9LImCxo
+         9wMXMo9qlR2D8JfqF04ZWNPdZMQgl3gHnKSM0HUEyF0GZl1U1me7l1izoxWw1l6uTpTQ
+         P5vky4erqstuNRGVxWWLU+2sTY7HS9Ej9w/l9tP8XdHHpec8+Gue67NP8ZrxQMzKUOgj
+         Nh1OToPvQNwc4hYb3yMx+xm9wCunr8O2Y3KhTgLC6z4Kbw/pr+4+mParo64HMeAjc+K5
+         MXR5K9ajjLB+kB2/76KzgDU1VyFjYcA7qOOVerYuz1s9erTFGE3fZ+C/E46t+0V16dKl
+         8nJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Hrdcx63AR9EI+zy7arcmfHfdhuJJmUYoINb44RJdEsU=;
-        b=mqtxJtVSDE8WYtiAfAyLe0Qw7pV0jg/3a+9a6WOflPwYD0dJo5pDzXUHE35iBvVTyz
-         HiURZYVys/QTiqxj+rGbPKHduL/GrWCHSgF2qKq3EpxkGssgwMQJHRtl0naEm/HUD0WO
-         KmiD/ieyPpSXKVi9pfMy/SaDumbBqpJUbdG4eMzpTEREuPvFzmoMqJ4KL6H4hf3rV1Gt
-         q/txce/jdTWOIS870r1qhUIuJpQ1/fiRgfh+s/uPMQtSzn8DX1mrwxLrWbfd/pTs5QIp
-         idrIiWLdHFw4VP6P7EIzTWZ/ui6pQdvzrHj1FwqTUjZwEt6qfOwta6fALAp6HbcCQcHD
-         P06A==
-X-Gm-Message-State: AOAM530mFeqC2FVXOT0QAvBycxf5HY+gE5Z3QvjUJgE1IOvdmVaR7KMR
-	Xh7hkHrHC/XF8wTCA2frF/4ugFJ0dHCEQM1gzqk=
-X-Google-Smtp-Source: ABdhPJxBqks2iojWNLd0nu3Z50bjH0/MFNqvhVSXjOdZ6QJT1bbVFWvLwk5Ml6PvTPthalXCts/DNIvSfm242bbqap4=
-X-Received: by 2002:a17:90a:5d8a:: with SMTP id t10mr9580317pji.6.1628077485062;
- Wed, 04 Aug 2021 04:44:45 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u9rSKMclJUJztra+LqLqM0wxhmBRqOtb+nkLxts4INY=;
+        b=J8nKgzCxkSaBvpgrd4IiGhz16A0SH3p1tzWaA4gLUCBIiz1hlatlG4ROFPLe6ku/je
+         gnt5RLOy+OiQ7bl4+uPLFGHcVdWuA+VnysFbqIhcKBqMlWdzSZA2RgnfRzng3Iw04b9X
+         LxFj6Xvov6yJhvv5aZIVO9338y4eC31E++SgNzOkCF8byY68uhhN2USvf3n6YUZRywJ9
+         3JT0jXMKshyfeIcglAb4KHiEJi1ynpM7JSqBFi6Rdecn21LUBnC998XPqjbkPNwZnzp6
+         6KUQSYyjuI5MuiTWIf8f4Rh608UAXeM454Hv2DD08mcw8lqj35G+gUgJzEx0QIya+U+P
+         YsOw==
+X-Gm-Message-State: AOAM530MxvX5mxXU5lgRCmjE4CVMwK+byAHlSFScTGhuBibL4j7O9R3C
+	NjzOeoS/tKaN1PiDDKJtd7c0rw==
+X-Google-Smtp-Source: ABdhPJwEj2Ng9yPnYXkSjksSQ46ZfWM3IHppS5llx8/l0JVwAlOou0eA9Zv3tkRsnuCRwvbVFYithw==
+X-Received: by 2002:a05:6402:440e:: with SMTP id y14mr9290305eda.38.1628082412580;
+        Wed, 04 Aug 2021 06:06:52 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.102.61.dyn.edpnet.net. [94.105.102.61])
+        by smtp.gmail.com with ESMTPSA id n13sm665518ejk.97.2021.08.04.06.06.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Aug 2021 06:06:52 -0700 (PDT)
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: remote addresses fullmesh"
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: mptcp@lists.linux.dev, Jenkins Tessares <kernel-dev@tessares.net>,
+ kernel test robot <lkp@intel.com>
+References: <20210804073710.681267-1-matthieu.baerts@tessares.net>
+ <CA+WQbwvhXX+T+tm2G9Jyi67Pd4sXDfhUn3dgKL_5eQ014tD8gw@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <efdd733f-e258-d44f-2355-48235f771caa@tessares.net>
+Date: Wed, 4 Aug 2021 15:06:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20210804072556.664287-1-matthieu.baerts@tessares.net> <7655f9a1-df47-cfc8-3281-cd5fbd1e3c1b@tessares.net>
-In-Reply-To: <7655f9a1-df47-cfc8-3281-cd5fbd1e3c1b@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Wed, 4 Aug 2021 19:44:33 +0800
-Message-ID: <CA+WQbws-UiT5-ZFKBPiXBAATJGt1G2AmtU=F0=cpJQm=pkWUMQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add fullmesh testcases"
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CA+WQbwvhXX+T+tm2G9Jyi67Pd4sXDfhUn3dgKL_5eQ014tD8gw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Geliang,
 
-Thanks for fixing this.
+On 04/08/2021 13:31, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for fixing this.
+> 
+> Acked-by: Geliang Tang <geliangtang@xiaomi.com>
 
-Acked-and-tested-by: Geliang Tang <geliangtang@xiaomi.com>
+Thank you for the review!
 
--Geliang
+Now in our tree:
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B48=E6=
-=9C=884=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=883:36=E5=86=99=E9=81=93=
-=EF=BC=9A
->
-> Hello,
->
-> On 04/08/2021 09:25, Matthieu Baerts wrote:
-> > To avoid using the >10 numbers for the fullmesh test cases and comments
-> > around to make it a bit more clear this is a workaround, we can pass
-> > 'fullmesh_X' where 'X' is the number of addresses we want to add with
-> > the 'fullmesh' flag.
-> >
-> > If we detect that the parameter is starting with 'fullmesh_X', we add
-> > the flag and set the corresponding variable to 'X'. Then we continue
-> > like before.
-> >
-> > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> > ---
-> >
-> > Notes:
-> >     to be squashed in "selftests: mptcp: add fullmesh testcases"
->
-> I forgot to mention that we also need to update the corresponding commit
-> message to remove this line:
->
->   Reuse the above 10 address numbers for the fullmesh test.
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+- 40ca9c61f1b1: "squashed" in "mptcp: remote addresses fullmesh"
+- (no co-dev for that, it was reported by CIs)
+- Results: d2d5ed438884..90dec655986b
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
