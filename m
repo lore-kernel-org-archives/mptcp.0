@@ -1,86 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3499B29D6
-	for <mptcp@lists.linux.dev>; Wed, 11 Aug 2021 09:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1628673965;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=asvcO0aMEGDXgbpD9+Nu+lDxBehXUnHPbs+zA8Axu8M=;
-	b=FKujc0W3Nims15kn1Mk47grFnuTGvPuCvVoIaaNsYfQy40UDk1qdE1xJXXKP0PxGCwlI0v
-	Kxl8FvLMqxNOF741TYP/AU1h8CpbrnGTb6x/aqupVkALrO/tqwyjl23DJq4or4osgU3za1
-	XA99dWBA3FWq79Jl7DvS+2M1glSb5TY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-ISNwRBD3OsmDb2DGhfVepA-1; Wed, 11 Aug 2021 05:26:03 -0400
-X-MC-Unique: ISNwRBD3OsmDb2DGhfVepA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2559D801AEB
-	for <mptcp@lists.linux.dev>; Wed, 11 Aug 2021 09:26:03 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.5])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 907495C1B4
-	for <mptcp@lists.linux.dev>; Wed, 11 Aug 2021 09:26:02 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 1/2] Squash-to: "selftests: mptcp: add testcase for active-back"
-Date: Wed, 11 Aug 2021 11:25:51 +0200
-Message-Id: <e22d8536321afe997d8cd39f742002b659b0a514.1628673891.git.pabeni@redhat.com>
-In-Reply-To: <cover.1628673891.git.pabeni@redhat.com>
-References: <cover.1628673891.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75670177
+	for <mptcp@lists.linux.dev>; Wed, 11 Aug 2021 13:15:49 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1mDo5D-0008VB-AK; Wed, 11 Aug 2021 15:15:47 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next 2/5] mptcp: add MPTCP_INFO getsockopt
+Date: Wed, 11 Aug 2021 15:15:20 +0200
+Message-Id: <20210811131523.6339-3-fw@strlen.de>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210811131523.6339-1-fw@strlen.de>
+References: <20210811131523.6339-1-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-we need to use big-enough client file on link failure test.
+Its not compatible with mptcp.org kernel one.
 
-We compute the expected link usage assuming half of the client
-data will be sent after the link failure. The link failure
-happens after sending once the client file, and than the client
-file is sent again. After the link failure, a whole cwin amount
-of data can be re-inected: to be able to predict correctly
-the link utilization the client file size must be much greater
-then max cwin.
+1. mptcp.org defines a different 'struct mptcp_info', with embedded
+userspace addresses to store additional data such as endpoint addresses.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+2. Mat Martineau points out the mptcp.org approach doesn't work with
+BPF_CGROUP_RUN_PROG_GETSOCKOPT() which assumes that copying in
+optsize bytes from optval provides all data that got copied to
+userspace.
+
+This provides mptcp_info data for the given mptcp socket.
+
+Userspace sets optlen to the size of the structure it expects.
+The kernel updates it to contain the number of bytes that it copied.
+
+This allows to append more information to the structure later.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/linux/socket.h     |  1 +
+ include/uapi/linux/mptcp.h |  4 ++++
+ net/mptcp/sockopt.c        | 40 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index ae406b56c684..255793c5ac4f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -513,9 +513,13 @@ run_tests()
- 	# create the input file for the failure test when
- 	# the first failure test run
- 	if [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
--		size=$((RANDOM%8))
-+		# the client file must be considerably larger
-+		# of the maximum expected cwin value, or the
-+		# link utilization will be not predicable
-+		size=$((RANDOM%2))
- 		size=$((size+1))
--		size=$((size*2048))
-+		size=$((size*8192))
-+		size=$((size + ( $RANDOM % 8192) ))
+diff --git a/include/linux/socket.h b/include/linux/socket.h
+index fd9ce51582d8..a2326a963232 100644
+--- a/include/linux/socket.h
++++ b/include/linux/socket.h
+@@ -364,6 +364,7 @@ struct ucred {
+ #define SOL_KCM		281
+ #define SOL_TLS		282
+ #define SOL_XDP		283
++#define SOL_MPTCP	284
  
- 		cinfail=$(mktemp)
- 		make_file "$cinfail" "client" $size
+ /* IPX options */
+ #define IPX_TYPE	1
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index f66038b9551f..c450feba6f9c 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/const.h>
+ #include <linux/types.h>
++#include <linux/in.h>
+ 
+ #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
+ #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
+@@ -193,4 +194,7 @@ enum mptcp_event_attr {
+ #define MPTCP_RST_EBADPERF	5
+ #define MPTCP_RST_EMIDDLEBOX	6
+ 
++/* MPTCP socket options */
++#define MPTCP_INFO 1
++
+ #endif /* _UAPI_MPTCP_H */
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 54f0d521a399..eba294a071c8 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -673,10 +673,14 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
+ 	struct sock *sk = &msk->sk.icsk_inet.sk;
+-	bool slow = lock_sock_fast(sk);
+ 	u32 flags = 0;
++	bool slow;
+ 	u8 val;
+ 
++	memset(info, 0, sizeof(*info));
++
++	slow = lock_sock_fast(sk);
++
+ 	info->mptcpi_subflows = READ_ONCE(msk->pm.subflows);
+ 	info->mptcpi_add_addr_signal = READ_ONCE(msk->pm.add_addr_signaled);
+ 	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
+@@ -702,6 +706,27 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ }
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 
++static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, int __user *_u_optlen)
++{
++	struct mptcp_info m_info;
++	int len;
++
++	if (get_user(len, _u_optlen))
++		return -EFAULT;
++
++	len = min_t(unsigned int, len, sizeof(struct mptcp_info));
++
++	mptcp_diag_fill_info(msk, &m_info);
++
++	if (put_user(len, _u_optlen))
++		return -EFAULT;
++
++	if (copy_to_user(optval, &m_info, len))
++		return -EFAULT;
++
++	return 0;
++}
++
+ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    char __user *optval, int __user *optlen)
+ {
+@@ -716,6 +741,17 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
++				      char __user *optval, int __user *optlen)
++{
++	switch (optname) {
++	case MPTCP_INFO:
++		return mptcp_getsockopt_info(msk, optval, optlen);
++	}
++
++	return -EOPNOTSUPP;
++}
++
+ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 		     char __user *optval, int __user *option)
+ {
+@@ -738,6 +774,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 
+ 	if (level == SOL_TCP)
+ 		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
++	if (level == SOL_MPTCP)
++		return mptcp_getsockopt_sol_mptcp(msk, optname, optval, option);
+ 	return -EOPNOTSUPP;
+ }
+ 
 -- 
-2.26.3
+2.31.1
 
