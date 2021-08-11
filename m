@@ -1,70 +1,75 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB96E2FAF
-	for <mptcp@lists.linux.dev>; Wed, 11 Aug 2021 13:22:52 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1mDo54-0008Uu-SS; Wed, 11 Aug 2021 15:15:38 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next 0/5] mptcp: add SOL_MPTCP getsockopt support
-Date: Wed, 11 Aug 2021 15:15:18 +0200
-Message-Id: <20210811131523.6339-1-fw@strlen.de>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E04670
+	for <mptcp@lists.linux.dev>; Wed, 11 Aug 2021 15:29:49 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id r19so1019288eds.13
+        for <mptcp@lists.linux.dev>; Wed, 11 Aug 2021 08:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=HId+RTntnOwsfgR2ItS3jTYbo6bsszZtni1UqoqMOWE=;
+        b=mtEK2wzQhupE8Yy0bLf97gWX2J5ILO7rXWeUt7X9XM4+/D22o09OKXONmfBkPr6w96
+         3bQskUR8JqAMgH0aWh9YKA2GjVQZkpEFetLCvxZo9z4OFQoxFzOpHhLcCeh1TdEcCC4O
+         vzz3Y/lLFAsFXCmScAKQcx5wPkwdJ3l44NxUulehayyRllW+LR9kDBJu35JYWitJOv/R
+         /0IMneU5ErLG1E32RRqnuFhnOdpIjcwoYWN3fHis20rOMCUvvUtAAwi9MTwwimW4AMrF
+         qJrU4dfcR+VO2Dsw3aMfTgvGoR1cIY5wGqxWqyu/+SV6QJzO5Q8K6mlOR+swnk+ohG/W
+         KjhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=HId+RTntnOwsfgR2ItS3jTYbo6bsszZtni1UqoqMOWE=;
+        b=ThtOFf6vogHiVpEqhy86Bnh1T7B5xo8vqwNdHzY5zcuOoDaO2JJBc51A6UeOupZP7A
+         yWcloEf/ckUvyt6WgCaqQEznKhXeLP0cWoLZZI7SP87Zc5cixpzHZqHn5ozYh8vkAWCo
+         drcZsOz7hL5aODUnH060dtR3jLLRVqTB/Aepg7OaKoheUX3piCk0YV9jnWUpne0opQGC
+         la62isj7VvpKMQR3PU9mB1BA5QC7d0Mm4HrDTrfxEYnPJIqOdonuDj8A8gXTJWysVBoF
+         V81lI2c4EkF4ZdjAPI8H4vSBw6RLU5uLWtSudjveOgh6j3yxEhaKNIxkKl5Lc82dkAKR
+         HJ9A==
+X-Gm-Message-State: AOAM5339SFnPuMguGW3qwvjEUKG4ywG/l/35rFyfTQddTkVDjY6KM3c0
+	+W3vm6ihvXfoizrDIkXivjs1LNk4lyspkfas
+X-Google-Smtp-Source: ABdhPJxxPz+Ff+jv4Yki4dzvmbXwYTvzp5RR3SEv4Vd1eDmKJNZmQ/CQ6Vt5+2kO8fvtGPjsW+Wjjg==
+X-Received: by 2002:aa7:d90f:: with SMTP id a15mr11806797edr.9.1628695787180;
+        Wed, 11 Aug 2021 08:29:47 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([213.211.156.139])
+        by smtp.gmail.com with ESMTPSA id ee11sm8742908edb.26.2021.08.11.08.29.46
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Aug 2021 08:29:46 -0700 (PDT)
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Weekly meeting - 12 August 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm
+ CST)
+Message-ID: <865a943d-3e7b-817e-3bf4-2531d9ff574e@tessares.net>
+Date: Wed, 11 Aug 2021 17:29:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-This adds the MPTCP_INFO, MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS
-mptcp getsockopt optnames.
+Hello everybody!
 
-MPTCP_INFO exposes the mptcp_info struct as an alternative to the
-existing netlink diag interface.
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-MPTCP_TCPINFO exposes the tcp_info struct.
-Unlike SOL_TCP/TCP_INFO, this returns one struct for each active
-subflow.
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20210812
 
-MPTCP_SUBFLOW_ADDRS allows userspace to discover the ip addresses/ports
-used by the local and remote endpoints, one for each active tcp subflow.
+Feel free to add/modify topics!
 
-MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS share the same meta-header that
-needs to be pre-filled by userspace with the size of the data structures
-it expects.  This is done to allow extension of the involved structs
-later on, without breaking backwards compatibility.
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-The meta-structure can also be used to discover the required space
-to obtain all information, as kernel will fill in the number of
-active subflows even if there is not enough room for the requested info
-itself.
-
-More information is available in the individual patches.
-Last patch adds test cases for the three optnames.
-
-Florian Westphal (5):
-  mptcp: add new mptcp_fill_diag helper
-  mptcp: add MPTCP_INFO getsockopt
-  mptcp: add MPTCP_TCPINFO getsockopt support
-  mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
-  selftests: mptcp: add mptcp getsockopt test cases
-
- include/linux/socket.h                        |   1 +
- include/net/mptcp.h                           |   4 +
- include/uapi/linux/mptcp.h                    |  29 +
- net/mptcp/mptcp_diag.c                        |  26 +-
- net/mptcp/sockopt.c                           | 258 +++++++++
- tools/testing/selftests/net/mptcp/Makefile    |   4 +-
- .../selftests/net/mptcp/mptcp_sockopt.c       | 545 ++++++++++++++++++
- .../selftests/net/mptcp/mptcp_sockopt.sh      |  31 +-
- 8 files changed, 869 insertions(+), 29 deletions(-)
- create mode 100644 tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-
+See/Speak to you later!
+Matt
 -- 
-2.31.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
