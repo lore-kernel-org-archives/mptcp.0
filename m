@@ -1,165 +1,149 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE2C72
-	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 07:09:36 +0000 (UTC)
-Received: by mail-pl1-f179.google.com with SMTP id d1so6120260pll.1
-        for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 00:09:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B41672
+	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 07:09:50 +0000 (UTC)
+Received: by mail-pj1-f52.google.com with SMTP id m24-20020a17090a7f98b0290178b1a81700so9244005pjl.4
+        for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 00:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GCFLwNzF2dQ1EIO14fMCmTGoXeTnfJSOvnSm5sxwz84=;
-        b=Jin3MUZIWKNWVfnI/5utLiu2hFOQUlyPQpuovrq2iRPatcHIXKZACUCzcPNnrsIVU+
-         sF10dfECaQ7qGqhJsuIr7cm4JKd2a9YecjFOG6jYt8aSBV7wfEvWswWGGjdZr6WF4PFl
-         QyrDyFrX2/jIs0WqgMwgruK4P+0x42pPhrI7TLd/uf9pwOFf2ucikeo0TIXVZIlIbP0D
-         ZCIrpzTTihwUHx/t8neDcs3/COA+lMjZrZJVpk6xL0La8e9sXbNLunfUgAfHKflfcYAu
-         SoJR6/vopeJDK3MsQ0idGF9RsroreCjdmB5ZCmztu0R3aNyeQpEEKKIJDneQszOYwKf5
-         t0rA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rWAzgDa2iH8zJZsDE5cRIwIUMZD8oN1dxTDR3EgsqTQ=;
+        b=GWO7fxEf62dN9CMUrX2x0OPGaqs3nWp7GOElROm5RiXm+RDmKZm0mu2XGtQz57/pVs
+         WfhxLKhLDf/TSlVEFXLYAb8MhiJ8GEtFbQM8UcmxOcXBEPC8Z1NGNQ863cY4s1qKrqBH
+         GadkZj0uOe2QmMq+WQIUGBcF1H7yZ3vD5oalKv85rxHRYTDfFWjMSN+DTUUVX+2aHV2p
+         1rdNYgvnFMfcrM8fNgWF3u0iJgudkHnFOe1FHL1t1tR5CHqmWxyKtSt5DTQbTTxq+nnH
+         ZHPb6prqYJNSM8aYcIsShQo8VxSCWEZ2fd59He1/DaWUpmoL97zE3PbXyZZFOqB7wy2v
+         Ifyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GCFLwNzF2dQ1EIO14fMCmTGoXeTnfJSOvnSm5sxwz84=;
-        b=ecqdR0r/Pi588kqXPLzc7YxqK8Ts7LenSRPXhGFHYtr0rWQQvMpbxMDTUYNS4ArHZa
-         jMpfp4PdReNMnICwOHjJ+xc8aYGYvvk5RXU4e0rlcBcZRndQ6g2jHCXUn51SmZkhg7qO
-         bR/+zq1o6Be32wkwAdi6901XdlvpEzhuoHuTHfg9U0ItdDa2+pfHyabrxulXsGpeNhzh
-         gZ/guKi72ZuwsgA1lcIWsPw4diTrTMkE0Wdzzl9HVV53+Sj/Qake3G/ty+YWIOgtIfCA
-         BjU3xLavDQhJLA0E7g19sVpMhCSKBqnryS5Ze3Pl2DUqSz/VX5H63O319eof7JurVX+v
-         5Yow==
-X-Gm-Message-State: AOAM532wMMUjulYNr22l4SVH0JZYESBDtrh8QjYk39L6dCzSzvxvX0PQ
-	MDrlJkTFYWcpFY9REZNrjIUy21zjgRs=
-X-Google-Smtp-Source: ABdhPJwL79DBuwwvAHfnzk1IdZPCoYDtu+V/AKG2kXep98q9YPB3W1cqoTLIdfSHRY1rI/LNbauVTg==
-X-Received: by 2002:a63:65c5:: with SMTP id z188mr2651082pgb.35.1628752175734;
-        Thu, 12 Aug 2021 00:09:35 -0700 (PDT)
-Received: from MiBook.. ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id r9sm1578084pfh.135.2021.08.12.00.09.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 00:09:35 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev,
-	geliangtang@gmail.com
-Cc: Geliang Tang <geliangtang@xiaomi.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [MPTCP][PATCH mptcp-next] mptcp: use unlikely for non-DSS suboptions
-Date: Thu, 12 Aug 2021 15:09:29 +0800
-Message-Id: <e59a65d4bc669101b598c79e57ff425e4cf88d6e.1628752099.git.geliangtang@xiaomi.com>
-X-Mailer: git-send-email 2.31.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rWAzgDa2iH8zJZsDE5cRIwIUMZD8oN1dxTDR3EgsqTQ=;
+        b=AyeLRAy7B/3gcZzSmrgs13+Q0qHzMnd0XKnQMrmu5DsZXwZwu5Xvv/Rm1L6aB8WONZ
+         fkDH7CX/q2il3plGvcg9zMzyx8J/rOKJAaCnrYcR4F+UZjsIs5nBOPGMPaSQ8mhvVKzl
+         Zx44/p/JIXvaY9LI+8hs8gzZgJMFH4dl3hT95m79TbT0x6JwHhgD64J01RK0BP090BzC
+         EgYYFXghkcIoe3fRYh69LxkUSBZrBLwjlvd8BbjxYarX0S1xsjhwm+Lh8sXiIW3wtRWp
+         N+VfhCl6WfC//WNOH45KupbTwO12TdeYkeew5zOxkU2jydXA/axmJc5Y9C1o0Qs6SmDV
+         FmJQ==
+X-Gm-Message-State: AOAM5322ctsz+9q/cyxDoD4RDqp6Coj0sjVYDTZFvBYm4QKQjz/WZXx1
+	mHnZomzCJ7GmiGDZ/JucIE6PnccwXZ7nl6ZOD/c=
+X-Google-Smtp-Source: ABdhPJzO45vyqD9CBgpowDKtDU1qIiRnNUQ74Nk/kbbcpyAXsVeCCMyaOQjl4oTP7EhPFtEvam7Tsz3g5YIBdpO+sI0=
+X-Received: by 2002:a63:d458:: with SMTP id i24mr2632173pgj.289.1628752189892;
+ Thu, 12 Aug 2021 00:09:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1627464017.git.geliangtang@xiaomi.com> <277ac1e6d1fde4c180eba3f1bb1846ea58679915.1627464017.git.geliangtang@xiaomi.com>
+ <a39b8f2a49c2798d4ff80ed527cd8990e64f8def.1627464017.git.geliangtang@xiaomi.com>
+ <eb3602e3f2a3550e9c1c27e2b5e3428562ac1010.camel@redhat.com>
+In-Reply-To: <eb3602e3f2a3550e9c1c27e2b5e3428562ac1010.camel@redhat.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Thu, 12 Aug 2021 15:09:38 +0800
+Message-ID: <CA+WQbwt1FA-HyKLkwJ3vTSxT6ZNBdCQKyRGnZoR-KtenHK7M=w@mail.gmail.com>
+Subject: Re: [MPTCP][PATCH v6 mptcp-next 2/5] mptcp: MP_FAIL suboption receiving
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliangtang@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang@xiaomi.com>
+Hi Paolo,
 
-Usually we get a single MPTCP subopt per packet: a DSS. So we could
-optimize the other suboptions code path with something alike:
+Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2021=E5=B9=B47=E6=9C=8828=E6=97=A5=
+=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=886:36=E5=86=99=E9=81=93=EF=BC=9A
 
-        if (unlikely(any subopt other than dss is present))
-                // go checking all of them individually
+>
+> On Wed, 2021-07-28 at 17:35 +0800, Geliang Tang wrote:
+> > From: Geliang Tang <geliangtang@xiaomi.com>
+> >
+> > This patch added handling for receiving MP_FAIL suboption.
+> >
+> > Add a new members mp_fail and fail_seq in struct mptcp_options_received=
+.
+> > When MP_FAIL suboption is received, set mp_fail to 1 and save the seque=
+nce
+> > number to fail_seq.
+> >
+> > Then invoke mptcp_pm_mp_fail_received to deal with the MP_FAIL suboptio=
+n.
+> >
+> > Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+> > ---
+> >  net/mptcp/options.c  | 16 ++++++++++++++++
+> >  net/mptcp/pm.c       |  5 +++++
+> >  net/mptcp/protocol.h |  3 +++
+> >  3 files changed, 24 insertions(+)
+> >
+> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > index 2b15063c8009..cd9ec4acf127 100644
+> > --- a/net/mptcp/options.c
+> > +++ b/net/mptcp/options.c
+> > @@ -336,6 +336,16 @@ static void mptcp_parse_option(const struct sk_buf=
+f *skb,
+> >               mp_opt->reset_reason =3D *ptr;
+> >               break;
+> >
+> > +     case MPTCPOPT_MP_FAIL:
+> > +             if (opsize !=3D TCPOLEN_MPTCP_FAIL)
+> > +                     break;
+> > +
+> > +             ptr +=3D 2;
+> > +             mp_opt->mp_fail =3D 1;
+> > +             mp_opt->fail_seq =3D get_unaligned_be64(ptr);
+> > +             pr_debug("MP_FAIL: data_seq=3D%llu", mp_opt->fail_seq);
+> > +             break;
+> > +
+> >       default:
+> >               break;
+> >       }
+> > @@ -364,6 +374,7 @@ void mptcp_get_options(const struct sock *sk,
+> >       mp_opt->reset =3D 0;
+> >       mp_opt->csum_reqd =3D READ_ONCE(msk->csum_enabled);
+> >       mp_opt->deny_join_id0 =3D 0;
+> > +     mp_opt->mp_fail =3D 0;
+> >
+> >       length =3D (th->doff * 4) - sizeof(struct tcphdr);
+> >       ptr =3D (const unsigned char *)(th + 1);
+> > @@ -1147,6 +1158,11 @@ bool mptcp_incoming_options(struct sock *sk, str=
+uct sk_buff *skb)
+> >               mp_opt.mp_prio =3D 0;
+> >       }
+> >
+> > +     if (mp_opt.mp_fail) {
+> > +             mptcp_pm_mp_fail_received(sk, mp_opt.fail_seq);
+> > +             mp_opt.mp_fail =3D 0;
+> > +     }
+> > +
+>
+> Side note not specifically related to this patch: usually we get a
+> single MPTCP subopt per packet: a DSS. So we could optimize this code
+> path with something alike:
+>
+>         if (unlikely(any subopt other than dss is present))
+>                 // go checking all of them individually
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
----
- net/mptcp/options.c | 75 +++++++++++++++++++++++----------------------
- 1 file changed, 39 insertions(+), 36 deletions(-)
+How about simply doing it like this:
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index eaee69df6635..7e8019ad8542 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1123,49 +1123,52 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return sk->sk_state != TCP_CLOSE;
- 
--	if (mp_opt.fastclose &&
--	    msk->local_key == mp_opt.rcvr_key) {
--		WRITE_ONCE(msk->rcv_fastclose, true);
--		mptcp_schedule_work((struct sock *)msk);
--	}
--
--	if (mp_opt.add_addr && add_addr_hmac_valid(msk, &mp_opt)) {
--		if (!mp_opt.echo) {
--			mptcp_pm_add_addr_received(msk, &mp_opt.addr);
--			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
--		} else {
--			mptcp_pm_add_addr_echoed(msk, &mp_opt.addr);
--			mptcp_pm_del_add_timer(msk, &mp_opt.addr, true);
--			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
-+	if (unlikely(mp_opt.fastclose || mp_opt.add_addr || mp_opt.rm_addr ||
-+		     mp_opt.mp_prio || mp_opt.mp_fail || mp_opt.reset)) {
-+		if (mp_opt.fastclose &&
-+		    msk->local_key == mp_opt.rcvr_key) {
-+			WRITE_ONCE(msk->rcv_fastclose, true);
-+			mptcp_schedule_work((struct sock *)msk);
- 		}
- 
--		if (mp_opt.addr.port)
--			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_PORTADD);
-+		if (mp_opt.add_addr && add_addr_hmac_valid(msk, &mp_opt)) {
-+			if (!mp_opt.echo) {
-+				mptcp_pm_add_addr_received(msk, &mp_opt.addr);
-+				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
-+			} else {
-+				mptcp_pm_add_addr_echoed(msk, &mp_opt.addr);
-+				mptcp_pm_del_add_timer(msk, &mp_opt.addr, true);
-+				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
-+			}
- 
--		mp_opt.add_addr = 0;
--	}
-+			if (mp_opt.addr.port)
-+				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_PORTADD);
- 
--	if (mp_opt.rm_addr) {
--		mptcp_pm_rm_addr_received(msk, &mp_opt.rm_list);
--		mp_opt.rm_addr = 0;
--	}
-+			mp_opt.add_addr = 0;
-+		}
- 
--	if (mp_opt.mp_prio) {
--		mptcp_pm_mp_prio_received(sk, mp_opt.backup);
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIORX);
--		mp_opt.mp_prio = 0;
--	}
-+		if (mp_opt.rm_addr) {
-+			mptcp_pm_rm_addr_received(msk, &mp_opt.rm_list);
-+			mp_opt.rm_addr = 0;
-+		}
- 
--	if (mp_opt.mp_fail) {
--		mptcp_pm_mp_fail_received(sk, mp_opt.fail_seq);
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILRX);
--		mp_opt.mp_fail = 0;
--	}
-+		if (mp_opt.mp_prio) {
-+			mptcp_pm_mp_prio_received(sk, mp_opt.backup);
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIORX);
-+			mp_opt.mp_prio = 0;
-+		}
- 
--	if (mp_opt.reset) {
--		subflow->reset_seen = 1;
--		subflow->reset_reason = mp_opt.reset_reason;
--		subflow->reset_transient = mp_opt.reset_transient;
-+		if (mp_opt.mp_fail) {
-+			mptcp_pm_mp_fail_received(sk, mp_opt.fail_seq);
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILRX);
-+			mp_opt.mp_fail = 0;
-+		}
-+
-+		if (mp_opt.reset) {
-+			subflow->reset_seen = 1;
-+			subflow->reset_reason = mp_opt.reset_reason;
-+			subflow->reset_transient = mp_opt.reset_transient;
-+		}
- 	}
- 
- 	if (!mp_opt.dss)
--- 
-2.31.1
+       if (unlikely(mp_opt.fastclose || mp_opt.add_addr || mp_opt.rm_addr |=
+|
+                    mp_opt.mp_prio || mp_opt.mp_fail || mp_opt.reset)) {
+                  // go checking all of them individually
+       }
 
+I just sent out a patch for this named "mptcp: use unlikely for non-DSS
+suboptions" to ML. Please review it.
+
+Thanks,
+-Geliang
+
+
+>
+> To do the above we likely need to wrap all the 'mp_capable',
+> 'fastclose', 'rm_addr' flags in a single bitmask. e.v. using a union.
+>
+> /P
+>
