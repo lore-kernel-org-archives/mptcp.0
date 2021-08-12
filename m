@@ -1,104 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2D2168
-	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 16:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A872A168
+	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 16:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1628786007;
+	s=mimecast20190719; t=1628786254;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZKI1rfuSRDpdoGo0LEczCDJ0iWCTKHuMlGWZ2fW7Mzw=;
-	b=SdBvAmz1nOXwmFiFtNSiJdBZSqh7NOeG39s8Sch5CcEiZnJaZqtUQfD+xzexthoU+/aJJ/
-	gYJRfy+3Rnb6IiYUYSKAIjMpIkke0cGq7UPIkZ1YDFFskyTSYMXm5EzQs9flTt1ZiGRR8D
-	wm+YoxtzuKmD0u5CIoz1g/oCBfj75Jg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-473-4hidp11aPlGNb_NgTMMHNA-1; Thu, 12 Aug 2021 12:33:25 -0400
-X-MC-Unique: 4hidp11aPlGNb_NgTMMHNA-1
-Received: by mail-wr1-f69.google.com with SMTP id e17-20020adfa4510000b02901550e0550f3so2011900wra.11
-        for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 09:33:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ZKI1rfuSRDpdoGo0LEczCDJ0iWCTKHuMlGWZ2fW7Mzw=;
-        b=beNoxC3Cki8uv+gnMaOU0fBprq2IyT3iCB4bQtVDEMfnsntOmUVyM314Q0bOIVJT4b
-         aT77bn17qbAhrAzFJ8lBbomB6rgdp8O6KF3adb+i4TcPFLRDO0h8EmTppDYP5PyBkYNm
-         09LPOoHhLk3OtD6VUR7Y+7cLlgAWBf8gpWFbpL1BRnTSfSW+kc/fnciHKRlgNLM6YNco
-         X78YAo4e1/0baJmbp8ukA1Hy2Ru1js+9IlVtExj3Qw4SbNJAX4OxVCgKEuKDef6TbKSz
-         nhXSpdXetFSSrTYbNYMszmk0kyFWxjLR7jufnhSRFDZKuPA8N6pvHwJq4GHjZZu3VU7J
-         WkNg==
-X-Gm-Message-State: AOAM531ZxDE+Ia7eI2o9LLI+yuwoeYOzChbBygbRMlZ3aUtprXBYArD4
-	CrkKaafz8EMF81CcpQXCeK6dlgMJ0oSBOpHfL0uJvO4hAJmTs7yph1/ZSEw5qlQEBfhm4cmBFP2
-	YiJvx9QF9E4D+YPo=
-X-Received: by 2002:a5d:4742:: with SMTP id o2mr4386844wrs.296.1628786004779;
-        Thu, 12 Aug 2021 09:33:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzRiFm+ZGa8P8Efh4gQIOuz7RvXlcGnUMDmJ9bsfCPBmcxTTlzWc+OZrrCoRfc+c+3jpn/ziQ==
-X-Received: by 2002:a5d:4742:: with SMTP id o2mr4386827wrs.296.1628786004600;
-        Thu, 12 Aug 2021 09:33:24 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-224-77.dyn.eolo.it. [146.241.224.77])
-        by smtp.gmail.com with ESMTPSA id 129sm3225332wmz.26.2021.08.12.09.33.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 09:33:24 -0700 (PDT)
-Message-ID: <1674eadb3729d5c1b0a7b25b4113e31162b25d39.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: full fully established support after
- ADD_ADDR
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2e37t0DZjhZIpa7DdhNVqHLU3Zx/kPflYdZU8w6KOWI=;
+	b=hDASNt7a3qLzrvRc39kop7SXf3VCB0iFoNMYZ6JVXxKvB6N/nB5ZDyvzfZ2+2Wgij+bMgm
+	Jc30iTxK9POIs0gn1peQpQUOk3+GhMGFRCRNsm5zUQ26qCHMcUncFKgPsusYcGAZdkDNWT
+	lR6CBEztjpsyciUMQNZXtjaaxLQojzs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-598-i7L0ZSIcNm-Gq4_kcheaaA-1; Thu, 12 Aug 2021 12:37:33 -0400
+X-MC-Unique: i7L0ZSIcNm-Gq4_kcheaaA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 283C9884E47;
+	Thu, 12 Aug 2021 16:37:27 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.179])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CBE306F578;
+	Thu, 12 Aug 2021 16:37:25 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Thu, 12 Aug 2021 18:33:22 +0200
-In-Reply-To: <20210812162757.282366-1-matthieu.baerts@tessares.net>
-References: <20210812162757.282366-1-matthieu.baerts@tessares.net>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [PATCH mptcp-net] mptcp: fix memory leak on address flush
+Date: Thu, 12 Aug 2021 18:37:18 +0200
+Message-Id: <45e2a42be5357636c8c3ab3f72499b0e060d36d5.1628786192.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-On Thu, 2021-08-12 at 18:27 +0200, Matthieu Baerts wrote:
-> If directly after an MP_CAPABLE 3WHS, the client receives a valid
-> ADD_ADDR from the server, it is enough to prove exchanged MPTCP options
-> are valid. Indeed, the ADD_ADDR contains an HMAC generated using both
-> the client and server keys.
-> 
-> It was then OK to enable the fully_established flag on the MPTCP socket.
-> 
-> But that is not enough. On one hand, the path-manager has be notified
-> the state has changed. On the other hand, the fully_established flag on
-> the subflow socket should be turned on as well, not to re-send the
-> MP_CAPABLE 3rd ACK content with the next ACK.
-> 
-> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+The endpoint cleanup path is prone to a memory leak, as reported
+by syzkaller:
 
-I guess you can drop this tag, as you come-up to this patch by yourself
-;)
+ BUG: memory leak
+ unreferenced object 0xffff88810680ea00 (size 64):
+   comm "syz-executor.6", pid 6191, jiffies 4295756280 (age 24.138s)
+   hex dump (first 32 bytes):
+     58 75 7d 3c 80 88 ff ff 22 01 00 00 00 00 ad de  Xu}<....".......
+     01 00 02 00 00 00 00 00 ac 1e 00 07 00 00 00 00  ................
+   backtrace:
+     [<0000000072a9f72a>] kmalloc include/linux/slab.h:591 [inline]
+     [<0000000072a9f72a>] mptcp_nl_cmd_add_addr+0x287/0x9f0 net/mptcp/pm_netlink.c:1170
+     [<00000000f6e931bf>] genl_family_rcv_msg_doit.isra.0+0x225/0x340 net/netlink/genetlink.c:731
+     [<00000000f1504a2c>] genl_family_rcv_msg net/netlink/genetlink.c:775 [inline]
+     [<00000000f1504a2c>] genl_rcv_msg+0x341/0x5b0 net/netlink/genetlink.c:792
+     [<0000000097e76f6a>] netlink_rcv_skb+0x148/0x430 net/netlink/af_netlink.c:2504
+     [<00000000ceefa2b8>] genl_rcv+0x24/0x40 net/netlink/genetlink.c:803
+     [<000000008ff91aec>] netlink_unicast_kernel net/netlink/af_netlink.c:1314 [inline]
+     [<000000008ff91aec>] netlink_unicast+0x537/0x750 net/netlink/af_netlink.c:1340
+     [<0000000041682c35>] netlink_sendmsg+0x846/0xd80 net/netlink/af_netlink.c:1929
+     [<00000000df3aa8e7>] sock_sendmsg_nosec net/socket.c:704 [inline]
+     [<00000000df3aa8e7>] sock_sendmsg+0x14e/0x190 net/socket.c:724
+     [<000000002154c54c>] ____sys_sendmsg+0x709/0x870 net/socket.c:2403
+     [<000000001aab01d7>] ___sys_sendmsg+0xff/0x170 net/socket.c:2457
+     [<00000000fa3b1446>] __sys_sendmsg+0xe5/0x1b0 net/socket.c:2486
+     [<00000000db2ee9c7>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+     [<00000000db2ee9c7>] do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
+     [<000000005873517d>] entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-LGTM, thanks!
+We should not require an allocation to cleanup stuff.
 
-Paolo
+Rework the code a bit so that the additional RCU work is no more needed.
 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> 
-> Notes:
->     Once applied, we can close issue 221. But this patch alone is not enough
->     to fix issue 221, hence no "Closes" tag.
->     
->     Because the PM was not notified, I think it is best to send it to -net.
->     Before, I think we were overriding MPC ACK options when sending the echo
->     ADD_ADDR so the issue was not visible.
+Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/pm_netlink.c | 39 ++++++++++++---------------------------
+ 1 file changed, 12 insertions(+), 27 deletions(-)
 
-Ack!
-
-/P
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 371607dc6ff7..116009376ed7 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1300,31 +1300,12 @@ struct addr_entry_release_work {
+ 	struct mptcp_pm_addr_entry *entry;
+ };
+ 
+-static void mptcp_pm_release_addr_entry(struct work_struct *work)
++/* caller must ensure the RCU grace period is already elapsed */
++static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
+ {
+-	struct addr_entry_release_work *w;
+-	struct mptcp_pm_addr_entry *entry;
+-
+-	w = container_of(to_rcu_work(work), struct addr_entry_release_work, rwork);
+-	entry = w->entry;
+-	if (entry) {
+-		if (entry->lsk)
+-			sock_release(entry->lsk);
+-		kfree(entry);
+-	}
+-	kfree(w);
+-}
+-
+-static void mptcp_pm_free_addr_entry(struct mptcp_pm_addr_entry *entry)
+-{
+-	struct addr_entry_release_work *w;
+-
+-	w = kmalloc(sizeof(*w), GFP_ATOMIC);
+-	if (w) {
+-		INIT_RCU_WORK(&w->rwork, mptcp_pm_release_addr_entry);
+-		w->entry = entry;
+-		queue_rcu_work(system_wq, &w->rwork);
+-	}
++	if (entry->lsk)
++		sock_release(entry->lsk);
++	kfree(entry);
+ }
+ 
+ static int mptcp_nl_remove_id_zero_address(struct net *net,
+@@ -1404,7 +1385,8 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
+ 	spin_unlock_bh(&pernet->lock);
+ 
+ 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
+-	mptcp_pm_free_addr_entry(entry);
++	synchronize_rcu();
++	__mptcp_pm_release_addr_entry(entry);
+ 
+ 	return ret;
+ }
+@@ -1457,6 +1439,7 @@ static void mptcp_nl_remove_addrs_list(struct net *net,
+ 	}
+ }
+ 
++/* caller must ensure the RCU grace period is already elapsed */
+ static void __flush_addrs(struct list_head *list)
+ {
+ 	while (!list_empty(list)) {
+@@ -1465,7 +1448,7 @@ static void __flush_addrs(struct list_head *list)
+ 		cur = list_entry(list->next,
+ 				 struct mptcp_pm_addr_entry, list);
+ 		list_del_rcu(&cur->list);
+-		mptcp_pm_free_addr_entry(cur);
++		__mptcp_pm_release_addr_entry(cur);
+ 	}
+ }
+ 
+@@ -1489,6 +1472,7 @@ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info *info)
+ 	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
+ 	spin_unlock_bh(&pernet->lock);
+ 	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
++	synchronize_rcu();
+ 	__flush_addrs(&free_list);
+ 	return 0;
+ }
+@@ -2100,7 +2084,8 @@ static void __net_exit pm_nl_exit_net(struct list_head *net_list)
+ 		struct pm_nl_pernet *pernet = net_generic(net, pm_nl_pernet_id);
+ 
+ 		/* net is removed from namespace list, can't race with
+-		 * other modifiers
++		 * other modifiers, also netns core already waited for a
++		 * RCU grace period.
+ 		 */
+ 		__flush_addrs(&pernet->local_addr_list);
+ 	}
+-- 
+2.26.3
 
