@@ -1,56 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612AE70
-	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 10:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145BC173
+	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 10:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1628762960;
+	s=mimecast20190719; t=1628765890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kw44xBNuJKYEqH7dlUQ7DAu83bnmBPKRZ9tYs9E6GRs=;
-	b=gex+42XWLmyk5sSpsTVr+73WInAOGexLaXYyqQkmsLsq/bD9TvpQwVSOUieMepQysPZO4T
-	1TceCINFHWXW+iFmB2NLy2mA7/4dNo0MKRmd9S/tX2z1GwPC2NkzzfxdkKyA5QQz6lW3iS
-	X2ZJtRjWOOL/F2Ub24qXD/cuMTVLqFE=
+	bh=taoJXcm13dVXRmQLZbqIrtd0IvZr8iLCU2H8Ex4MsWQ=;
+	b=D/KjrwWVO7gXNdyZnkKeF8t3AIhtQgY6qMn+YjNZd4Asd+XhT//nS3uifpZjtObFQWfbdG
+	7R2zTNcTNe6oiEI8KLuWC+oY+uUin6kgLhq/TyxikrbOVJ6SoQ8r7MKoPZ/C2sN48IkyY9
+	jKXa24CXahsD5r9qoS3pAfpFqLYjVQk=
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
  [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-mSjbqCH2NeG_uj9evgwkpA-1; Thu, 12 Aug 2021 06:09:17 -0400
-X-MC-Unique: mSjbqCH2NeG_uj9evgwkpA-1
-Received: by mail-wm1-f70.google.com with SMTP id c2-20020a7bc8420000b0290238db573ab7so3164614wml.5
-        for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 03:09:17 -0700 (PDT)
+ us-mta-189-bI1NJnuaPWO5FvWz8GfASA-1; Thu, 12 Aug 2021 06:58:09 -0400
+X-MC-Unique: bI1NJnuaPWO5FvWz8GfASA-1
+Received: by mail-wm1-f70.google.com with SMTP id e21-20020a05600c4b95b029025b007a168dso3211714wmp.4
+        for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 03:58:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=kw44xBNuJKYEqH7dlUQ7DAu83bnmBPKRZ9tYs9E6GRs=;
-        b=AbvlWeky3aaEtLkUoYK4OiQ7UXtE7mok4L2NPcjykztjLpDWShEF9XqpzjSWqYGgan
-         m0fML9fqOMi51pzIkTECI4Oe7VqAJgSN97RTxwOpLMUMzKVBt/oi4puq88ba9aOlr0ip
-         QuNxZGHGiMYOT28l1oEdANLj1YV5MWUs5Vg7rSw38AEBRlcMle5efxkc8JqCT/gIMvY8
-         0shX1NKRvUFSfbjgnxfHiEPHAZP+pxkWNLusmwAs8E0087qqqkLrxCzaBuoZvQiqGVxP
-         rRacqLtcplFn1Vj3lMXVZR3mK9/nalZKsA1trxrTJYUI3ptdSmltCU5gmPpuJXeGLf9e
-         KH5A==
-X-Gm-Message-State: AOAM533Fqqv9s8NLJkaDbi8YMkVPZM3UF/cAKj6lymz5HIL04vBuNMXB
-	NuiRpmMSoJhEu7vehWXnuCUMuQVcq22+QO3LqRVDZzXLPo+GB6lGH292Q2dK30nLa+NpaLGNVvd
-	7ybrUOsSyuIgMEg8=
-X-Received: by 2002:a1c:2042:: with SMTP id g63mr12819927wmg.27.1628762956460;
-        Thu, 12 Aug 2021 03:09:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxFNalUFz14kvOXz+MDyLiO+Zbdnw51AQbRDT43iRAzM+YJVAXyZyQ3y3LnB5Id52BXE4vFIg==
-X-Received: by 2002:a1c:2042:: with SMTP id g63mr12819902wmg.27.1628762956166;
-        Thu, 12 Aug 2021 03:09:16 -0700 (PDT)
+        bh=taoJXcm13dVXRmQLZbqIrtd0IvZr8iLCU2H8Ex4MsWQ=;
+        b=l4xZlRWKqaFtNyyq5bvG5BccqOxGxh/pMafqR67x2r/BuU4VPJhuGpeG56uF+qTM5q
+         HD5Nj3BK/hhULYhbghKX84GEyXcaKsp1Bto3POVAvejOj/u6hVWXrIum1kf4AXgZ0E+h
+         1IoWvp4DQs72LEGXwJ5ufXIh+iMN8hhWREvWhYnCDF9EFUoji+ett7xql4Y5f3rFkhn0
+         KpcEKBxPVDqJk9BAuHnJMzcOpS9wocw6cy2HH+n8CqU58W8dMGNqVRRjhYP0oiMd+/LP
+         kmLwCKYDjR483nLqHlabjak9gTF9oEukPAZl8UMyvhwrRVyuDNS54WQq/I8m5X+OYDuu
+         7olA==
+X-Gm-Message-State: AOAM530rJ+8kNYpHBkcWXKMWWTnLOWAvWr5ZD42unt8nijnnL5TsXsR1
+	iyh8Gzl727oQvqz2i0anVx/r3FmSrNM/3IBW8CQRz4G7zAJG+mgca0b7n3g/wnRiTgOkTS5hFkm
+	okXapcK9qslzTpTc=
+X-Received: by 2002:a5d:5985:: with SMTP id n5mr3336791wri.394.1628765888423;
+        Thu, 12 Aug 2021 03:58:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy6sv8V9LbsLJnKe3b5N1B1vx7BwnK2p2SsedqlRwtszLDVIr93yyPGFV8uvf2AkrnEIpkC+A==
+X-Received: by 2002:a5d:5985:: with SMTP id n5mr3336778wri.394.1628765888164;
+        Thu, 12 Aug 2021 03:58:08 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-224-77.dyn.eolo.it. [146.241.224.77])
-        by smtp.gmail.com with ESMTPSA id e25sm2910959wra.90.2021.08.12.03.09.15
+        by smtp.gmail.com with ESMTPSA id z5sm8838783wmp.26.2021.08.12.03.58.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 03:09:15 -0700 (PDT)
-Message-ID: <a43cce07d97b0e149be63ee1aaf0c4feeccb716a.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH mptcp-next] mptcp: free entry when release_work
- allocation fails
+        Thu, 12 Aug 2021 03:58:07 -0700 (PDT)
+Message-ID: <0a040c70d57ce758a37f92cb214ee332656b3057.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 0/5] mptcp: add SOL_MPTCP getsockopt support
 From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@xiaomi.com>
-Date: Thu, 12 Aug 2021 12:09:15 +0200
-In-Reply-To: <cba51616ec99f106c50dd7b0560450812adcd581.1628739395.git.geliangtang@xiaomi.com>
-References: <cba51616ec99f106c50dd7b0560450812adcd581.1628739395.git.geliangtang@xiaomi.com>
+To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Date: Thu, 12 Aug 2021 12:58:06 +0200
+In-Reply-To: <20210811131523.6339-1-fw@strlen.de>
+References: <20210811131523.6339-1-fw@strlen.de>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -65,172 +63,63 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2021-08-12 at 11:37 +0800, Geliang Tang wrote:
-> From: Geliang Tang <geliangtang@xiaomi.com>
+Hello Florian,
+On Wed, 2021-08-11 at 15:15 +0200, Florian Westphal wrote:
+> This adds the MPTCP_INFO, MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS
+> mptcp getsockopt optnames.
 > 
-> This patch fixed this syzkaller error:
-
-Good catch!
-
->  BUG: memory leak
->  unreferenced object 0xffff88810680ea00 (size 64):
->    comm "syz-executor.6", pid 6191, jiffies 4295756280 (age 24.138s)
->    hex dump (first 32 bytes):
->      58 75 7d 3c 80 88 ff ff 22 01 00 00 00 00 ad de  Xu}<....".......
->      01 00 02 00 00 00 00 00 ac 1e 00 07 00 00 00 00  ................
->    backtrace:
->      [<0000000072a9f72a>] kmalloc include/linux/slab.h:591 [inline]
->      [<0000000072a9f72a>] mptcp_nl_cmd_add_addr+0x287/0x9f0 net/mptcp/pm_netlink.c:1170
->      [<00000000f6e931bf>] genl_family_rcv_msg_doit.isra.0+0x225/0x340 net/netlink/genetlink.c:731
->      [<00000000f1504a2c>] genl_family_rcv_msg net/netlink/genetlink.c:775 [inline]
->      [<00000000f1504a2c>] genl_rcv_msg+0x341/0x5b0 net/netlink/genetlink.c:792
->      [<0000000097e76f6a>] netlink_rcv_skb+0x148/0x430 net/netlink/af_netlink.c:2504
->      [<00000000ceefa2b8>] genl_rcv+0x24/0x40 net/netlink/genetlink.c:803
->      [<000000008ff91aec>] netlink_unicast_kernel net/netlink/af_netlink.c:1314 [inline]
->      [<000000008ff91aec>] netlink_unicast+0x537/0x750 net/netlink/af_netlink.c:1340
->      [<0000000041682c35>] netlink_sendmsg+0x846/0xd80 net/netlink/af_netlink.c:1929
->      [<00000000df3aa8e7>] sock_sendmsg_nosec net/socket.c:704 [inline]
->      [<00000000df3aa8e7>] sock_sendmsg+0x14e/0x190 net/socket.c:724
->      [<000000002154c54c>] ____sys_sendmsg+0x709/0x870 net/socket.c:2403
->      [<000000001aab01d7>] ___sys_sendmsg+0xff/0x170 net/socket.c:2457
->      [<00000000fa3b1446>] __sys_sendmsg+0xe5/0x1b0 net/socket.c:2486
->      [<00000000db2ee9c7>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
->      [<00000000db2ee9c7>] do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
->      [<000000005873517d>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+> MPTCP_INFO exposes the mptcp_info struct as an alternative to the
+> existing netlink diag interface.
 > 
->  BUG: leak checking failed
+> MPTCP_TCPINFO exposes the tcp_info struct.
+> Unlike SOL_TCP/TCP_INFO, this returns one struct for each active
+> subflow.
 > 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/223
-> Fixes: 1729cf186d8a5 (mptcp: create the listening socket for new port)
-> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
-> ---
->  net/mptcp/pm_netlink.c | 2 ++
->  1 file changed, 2 insertions(+)
+> MPTCP_SUBFLOW_ADDRS allows userspace to discover the ip addresses/ports
+> used by the local and remote endpoints, one for each active tcp subflow.
 > 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 371607dc6ff7..184a75e1c8ec 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1324,6 +1324,8 @@ static void mptcp_pm_free_addr_entry(struct mptcp_pm_addr_entry *entry)
->  		INIT_RCU_WORK(&w->rwork, mptcp_pm_release_addr_entry);
->  		w->entry = entry;
->  		queue_rcu_work(system_wq, &w->rwork);
-> +	} else {
-> +		kfree(entry);
->  	}
->  }
+> MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS share the same meta-header that
+> needs to be pre-filled by userspace with the size of the data structures
+> it expects.  This is done to allow extension of the involved structs
+> later on, without breaking backwards compatibility.
+> 
+> The meta-structure can also be used to discover the required space
+> to obtain all information, as kernel will fill in the number of
+> active subflows even if there is not enough room for the requested info
+> itself.
+> 
+> More information is available in the individual patches.
+> Last patch adds test cases for the three optnames.
+> 
+> Florian Westphal (5):
+>   mptcp: add new mptcp_fill_diag helper
+>   mptcp: add MPTCP_INFO getsockopt
+>   mptcp: add MPTCP_TCPINFO getsockopt support
+>   mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
+>   selftests: mptcp: add mptcp getsockopt test cases
+> 
+>  include/linux/socket.h                        |   1 +
+>  include/net/mptcp.h                           |   4 +
+>  include/uapi/linux/mptcp.h                    |  29 +
+>  net/mptcp/mptcp_diag.c                        |  26 +-
+>  net/mptcp/sockopt.c                           | 258 +++++++++
+>  tools/testing/selftests/net/mptcp/Makefile    |   4 +-
+>  .../selftests/net/mptcp/mptcp_sockopt.c       | 545 ++++++++++++++++++
+>  .../selftests/net/mptcp/mptcp_sockopt.sh      |  31 +-
+>  8 files changed, 869 insertions(+), 29 deletions(-)
+>  create mode 100644 tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 
-We can't invoke kfree on pointer a pointer accesed with the RCU schema.
+The patches LGTM! I have just a couple of minor curiosity. 
 
-We also should not require an allocation to free a pointer. 
+In some helper the argument that carries the option length from user
+space is named '_u_optlen', any special reason for that? Encoding the
+argument attribute into the user name looks really win32 style from the
+early 2000, afaik ;))) [no offense intended!!!]
 
-I can't recall why we did not include an rcu list entry
-into mptcp_pm_addr_entry, likely to avoid making such pointer too big.
+I don't see how the mptcp_subflow_addrs is going to change/increase the
+size with time... do you have some possible ideas/guess?
 
-I think we can both fix the leak and avoid the extra allocation with
-something alike the following. 
+Anyhow,
 
-Only build-tested, could you please give it a spin? I can't reproduce
-the leak locally ?!?
----
- net/mptcp/pm_netlink.c | 39 ++++++++++++---------------------------
- 1 file changed, 12 insertions(+), 27 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 371607dc6ff7..116009376ed7 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1300,31 +1300,12 @@ struct addr_entry_release_work {
- 	struct mptcp_pm_addr_entry *entry;
- };
- 
--static void mptcp_pm_release_addr_entry(struct work_struct *work)
-+/* caller must ensure the RCU grace period is already elapsed */
-+static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry
-*entry)
- {
--	struct addr_entry_release_work *w;
--	struct mptcp_pm_addr_entry *entry;
--
--	w = container_of(to_rcu_work(work), struct
-addr_entry_release_work, rwork);
--	entry = w->entry;
--	if (entry) {
--		if (entry->lsk)
--			sock_release(entry->lsk);
--		kfree(entry);
--	}
--	kfree(w);
--}
--
--static void mptcp_pm_free_addr_entry(struct mptcp_pm_addr_entry
-*entry)
--{
--	struct addr_entry_release_work *w;
--
--	w = kmalloc(sizeof(*w), GFP_ATOMIC);
--	if (w) {
--		INIT_RCU_WORK(&w->rwork, mptcp_pm_release_addr_entry);
--		w->entry = entry;
--		queue_rcu_work(system_wq, &w->rwork);
--	}
-+	if (entry->lsk)
-+		sock_release(entry->lsk);
-+	kfree(entry);
- }
- 
- static int mptcp_nl_remove_id_zero_address(struct net *net,
-@@ -1404,7 +1385,8 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff
-*skb, struct genl_info *info)
- 	spin_unlock_bh(&pernet->lock);
- 
- 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk),
-&entry->addr);
--	mptcp_pm_free_addr_entry(entry);
-+	synchronize_rcu();
-+	__mptcp_pm_release_addr_entry(entry);
- 
- 	return ret;
- }
-@@ -1457,6 +1439,7 @@ static void mptcp_nl_remove_addrs_list(struct net
-*net,
- 	}
- }
- 
-+/* caller must ensure the RCU grace period is already elapsed */
- static void __flush_addrs(struct list_head *list)
- {
- 	while (!list_empty(list)) {
-@@ -1465,7 +1448,7 @@ static void __flush_addrs(struct list_head *list)
- 		cur = list_entry(list->next,
- 				 struct mptcp_pm_addr_entry, list);
- 		list_del_rcu(&cur->list);
--		mptcp_pm_free_addr_entry(cur);
-+		__mptcp_pm_release_addr_entry(cur);
- 	}
- }
- 
-@@ -1489,6 +1472,7 @@ static int mptcp_nl_cmd_flush_addrs(struct
-sk_buff *skb, struct genl_info *info)
- 	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
- 	spin_unlock_bh(&pernet->lock);
- 	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
-+	synchronize_rcu();
- 	__flush_addrs(&free_list);
- 	return 0;
- }
-@@ -2100,7 +2084,8 @@ static void __net_exit pm_nl_exit_net(struct
-list_head *net_list)
- 		struct pm_nl_pernet *pernet = net_generic(net,
-pm_nl_pernet_id);
- 
- 		/* net is removed from namespace list, can't race with
--		 * other modifiers
-+		 * other modifiers, also netns core already waited for
-a
-+		 * RCU grace period.
- 		 */
- 		__flush_addrs(&pernet->local_addr_list);
- 	}
-
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
