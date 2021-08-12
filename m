@@ -1,179 +1,98 @@
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B61168
-	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 16:46:37 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="215429462"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E89F168
+	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 17:03:28 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="215433563"
 X-IronPort-AV: E=Sophos;i="5.84,316,1620716400"; 
-   d="scan'208";a="215429462"
+   d="scan'208";a="215433563"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 09:46:37 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 10:03:23 -0700
 X-IronPort-AV: E=Sophos;i="5.84,316,1620716400"; 
-   d="scan'208";a="485528917"
+   d="scan'208";a="485534099"
 Received: from cjlin-mobl.amr.corp.intel.com ([10.251.25.227])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 09:46:36 -0700
-Date: Thu, 12 Aug 2021 09:46:36 -0700 (PDT)
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 10:03:23 -0700
+Date: Thu, 12 Aug 2021 10:03:22 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Florian Westphal <fw@strlen.de>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 2/5] mptcp: add MPTCP_INFO getsockopt
-In-Reply-To: <20210811131523.6339-3-fw@strlen.de>
-Message-ID: <30294465-26b0-4f15-c39b-463cfa419f0@linux.intel.com>
-References: <20210811131523.6339-1-fw@strlen.de> <20210811131523.6339-3-fw@strlen.de>
+Subject: Re: [PATCH mptcp-next 3/5] mptcp: add MPTCP_TCPINFO getsockopt
+ support
+In-Reply-To: <20210811131523.6339-4-fw@strlen.de>
+Message-ID: <265d1dc-7ea0-d55c-957f-8aa0eb53f094@linux.intel.com>
+References: <20210811131523.6339-1-fw@strlen.de> <20210811131523.6339-4-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+
+
 
 On Wed, 11 Aug 2021, Florian Westphal wrote:
 
-> Its not compatible with mptcp.org kernel one.
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index eba294a071c8..ac8e6823db4f 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -723,6 +723,96 @@ static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, in
 >
+> 	if (copy_to_user(optval, &m_info, len))
+> 		return -EFAULT;
+> +	return 0;
+> +}
+> +
+> +static int mptcp_get_subflow_data(struct mptcp_subflow_data *sfd,
+> +				  char __user *optval, int __user *_u_optlen)
+> +{
+> +#define MIN_INFO_OPTLEN_SIZE	16
 
-One really minor comment (since I know you're working on a v2): probably 
-best to refer to "multipath-tcp.org", we've been using mptcp.org as a 
-shorthand but we don't want to send people there.
+This caught my eye on my first quick review pass, I'm not accustomed to 
+seeing inline defines like this in the kernel unless it's part of some 
+macro magic. The style guide / checkpatch don't say anything, so I'll just 
+suggest it would fit better outside the function scope (but no big deal).
 
+
+For the rest of the patch set, Paolo already covered the expanded test 
+cases, so I'll continue with a more in-depth review when you post v2. 
+This iteration of the API is looking like the right direction to me.
+
+
+Thanks,
 
 Mat
 
-> 1. mptcp.org defines a different 'struct mptcp_info', with embedded
-> userspace addresses to store additional data such as endpoint addresses.
->
-> 2. Mat Martineau points out the mptcp.org approach doesn't work with
-> BPF_CGROUP_RUN_PROG_GETSOCKOPT() which assumes that copying in
-> optsize bytes from optval provides all data that got copied to
-> userspace.
->
-> This provides mptcp_info data for the given mptcp socket.
->
-> Userspace sets optlen to the size of the structure it expects.
-> The kernel updates it to contain the number of bytes that it copied.
->
-> This allows to append more information to the structure later.
->
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
-> include/linux/socket.h     |  1 +
-> include/uapi/linux/mptcp.h |  4 ++++
-> net/mptcp/sockopt.c        | 40 +++++++++++++++++++++++++++++++++++++-
-> 3 files changed, 44 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/socket.h b/include/linux/socket.h
-> index fd9ce51582d8..a2326a963232 100644
-> --- a/include/linux/socket.h
-> +++ b/include/linux/socket.h
-> @@ -364,6 +364,7 @@ struct ucred {
-> #define SOL_KCM		281
-> #define SOL_TLS		282
-> #define SOL_XDP		283
-> +#define SOL_MPTCP	284
->
-> /* IPX options */
-> #define IPX_TYPE	1
-> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> index f66038b9551f..c450feba6f9c 100644
-> --- a/include/uapi/linux/mptcp.h
-> +++ b/include/uapi/linux/mptcp.h
-> @@ -4,6 +4,7 @@
->
-> #include <linux/const.h>
-> #include <linux/types.h>
-> +#include <linux/in.h>
->
-> #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
-> #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
-> @@ -193,4 +194,7 @@ enum mptcp_event_attr {
-> #define MPTCP_RST_EBADPERF	5
-> #define MPTCP_RST_EMIDDLEBOX	6
->
-> +/* MPTCP socket options */
-> +#define MPTCP_INFO 1
-> +
-> #endif /* _UAPI_MPTCP_H */
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 54f0d521a399..eba294a071c8 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -673,10 +673,14 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
-> void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
-> {
-> 	struct sock *sk = &msk->sk.icsk_inet.sk;
-> -	bool slow = lock_sock_fast(sk);
-> 	u32 flags = 0;
-> +	bool slow;
-> 	u8 val;
->
-> +	memset(info, 0, sizeof(*info));
-> +
-> +	slow = lock_sock_fast(sk);
-> +
-> 	info->mptcpi_subflows = READ_ONCE(msk->pm.subflows);
-> 	info->mptcpi_add_addr_signal = READ_ONCE(msk->pm.add_addr_signaled);
-> 	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
-> @@ -702,6 +706,27 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
-> }
-> EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
->
-> +static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, int __user *_u_optlen)
-> +{
-> +	struct mptcp_info m_info;
-> +	int len;
+
+> +	int len, copylen;
 > +
 > +	if (get_user(len, _u_optlen))
 > +		return -EFAULT;
 > +
-> +	len = min_t(unsigned int, len, sizeof(struct mptcp_info));
+> +	if (len <= MIN_INFO_OPTLEN_SIZE)
+> +		return -EINVAL;
 > +
-> +	mptcp_diag_fill_info(msk, &m_info);
+> +	memset(sfd, 0, sizeof(*sfd));
 > +
-> +	if (put_user(len, _u_optlen))
+> +	copylen = min_t(unsigned int, len, sizeof(*sfd));
+> +	if (copy_from_user(sfd, optval, copylen))
 > +		return -EFAULT;
 > +
-> +	if (copy_to_user(optval, &m_info, len))
-> +		return -EFAULT;
+> +	/* size_subflow_data is u32, but len is signed */
+> +	if (sfd->size_subflow_data > INT_MAX ||
+> +	    sfd->size_user > INT_MAX)
+> +		return -EINVAL;
 > +
-> +	return 0;
+> +	if (sfd->size_subflow_data < MIN_INFO_OPTLEN_SIZE ||
+> +	    sfd->size_subflow_data > len)
+> +		return -EINVAL;
+> +
+> +	if (sfd->num_subflows || sfd->size_kernel)
+> +		return -EINVAL;
+> +
+> +	return len - sfd->size_subflow_data;
 > +}
-> +
-> static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-> 				    char __user *optval, int __user *optlen)
-> {
-> @@ -716,6 +741,17 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-> 	return -EOPNOTSUPP;
-> }
->
-> +static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
-> +				      char __user *optval, int __user *optlen)
-> +{
-> +	switch (optname) {
-> +	case MPTCP_INFO:
-> +		return mptcp_getsockopt_info(msk, optval, optlen);
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> int mptcp_getsockopt(struct sock *sk, int level, int optname,
-> 		     char __user *optval, int __user *option)
-> {
-> @@ -738,6 +774,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
->
-> 	if (level == SOL_TCP)
-> 		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
-> +	if (level == SOL_MPTCP)
-> +		return mptcp_getsockopt_sol_mptcp(msk, optname, optval, option);
-> 	return -EOPNOTSUPP;
-> }
->
-> -- 
-> 2.31.1
->
->
->
 
 --
 Mat Martineau
