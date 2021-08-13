@@ -1,113 +1,90 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D276D18
-	for <mptcp@lists.linux.dev>; Thu, 12 Aug 2021 22:30:55 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="301048154"
-X-IronPort-AV: E=Sophos;i="5.84,317,1620716400"; 
-   d="scan'208";a="301048154"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 15:30:54 -0700
-X-IronPort-AV: E=Sophos;i="5.84,317,1620716400"; 
-   d="scan'208";a="571629321"
-Received: from schen9-mobl.amr.corp.intel.com ([10.209.20.135])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 15:30:54 -0700
-Date: Thu, 12 Aug 2021 15:30:53 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6662FAD
+	for <mptcp@lists.linux.dev>; Fri, 13 Aug 2021 11:06:39 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id b10so9096071eju.9
+        for <mptcp@lists.linux.dev>; Fri, 13 Aug 2021 04:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UubqOt/nH20nicFMvA+AkqDny2WcuCWyxlaJQnbLci0=;
+        b=kV/SbUfvr9pl+ItBvXvkyxRYTu0gwVvZXAX9Tmh2hyXoLFCW2Zp3GbgzKDsK+W3vra
+         r7zSTQZnVrWzM6lMjt4uyYsQDtyD9/zDNparJG4Rsp41JyOvg963zn4xw6cQd1swWwID
+         T0f5l9S2sbn4qKSacp2l/ieDCp7PO9R006TcwTxUxJQZvirVerltMMKut0PByT3v8o2t
+         XSWrIwTQbBjiXZlADNK0rSObwReuDwqjpM45cKjMpb+OEc5juQTyLbhYeDLy1fqEpI3+
+         3WLr8zjBv/QSrdn8jmz/+5oatJwFdiWPHChY0kJhAA2EvEyx1qBBQ9JKcCoRWCSmYQ0d
+         /h+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UubqOt/nH20nicFMvA+AkqDny2WcuCWyxlaJQnbLci0=;
+        b=ExWp0AFlHy6HlbfsbSVS/8RBRdEUeMvlRTdyHAbdjg3dv7QaNzMS1yIJ6KS0DQEpwp
+         vFj2oJ2PjoSaJ8orc9AwSjTWCzTtEhVE7a/SsCqcXmxNaKYLfuKRPAcm2pc1dgYHj794
+         gb1eUCdkWk3werxz4TICf5YJlymCCD6xRJWZM92i43PmQ2FJa0XKC9WgAi6uYSPdu/0e
+         ilfWd7d1zUcwW6tKzmFa0IR6jxLBfoepCwc6o/ydPJxGV6wSVukTWNsw5qsIp3Sz6nke
+         0EKmR0XvMnkG0JYMa5B2wP7u9EqI1XW8tI9TaaloO/QaPDTlhlb+/hMhfjbzkt9uKa2x
+         29PA==
+X-Gm-Message-State: AOAM533ggPTAAywizPgoZelXgK/j+M/i+EDaM0fKLZ8s7nCS0ci2Wdqf
+	3zN0pHIlgYbEdkXOQcnIerdQ+A==
+X-Google-Smtp-Source: ABdhPJzGIsmoMoxX3n5vqigiYHxtVmTBogykDDUO0ci56fzwDFrJKcgbAxKAQ8EN+GnbZVwWhzLq6w==
+X-Received: by 2002:a17:907:1b02:: with SMTP id mp2mr1861485ejc.196.1628852798361;
+        Fri, 13 Aug 2021 04:06:38 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([213.211.156.139])
+        by smtp.gmail.com with ESMTPSA id ju5sm483109ejc.8.2021.08.13.04.06.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Aug 2021 04:06:38 -0700 (PDT)
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+References: <20210812162757.282366-1-matthieu.baerts@tessares.net>
+ <cb97b91e-99d-d7b-4338-a83ddba4e83b@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Subject: Re: [PATCH mptcp-next] mptcp: full fully established support after
  ADD_ADDR
-In-Reply-To: <20210812162757.282366-1-matthieu.baerts@tessares.net>
-Message-ID: <cb97b91e-99d-d7b-4338-a83ddba4e83b@linux.intel.com>
-References: <20210812162757.282366-1-matthieu.baerts@tessares.net>
+Message-ID: <e8ce0aa4-c8a5-8907-396e-be420aec6fe4@tessares.net>
+Date: Fri, 13 Aug 2021 13:06:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <cb97b91e-99d-d7b-4338-a83ddba4e83b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Aug 2021, Matthieu Baerts wrote:
+Hi Mat,
 
-> If directly after an MP_CAPABLE 3WHS, the client receives a valid
-> ADD_ADDR from the server, it is enough to prove exchanged MPTCP options
-> are valid. Indeed, the ADD_ADDR contains an HMAC generated using both
-> the client and server keys.
+Thank you for your review!
 
-The ADD_ADDR HMAC is validated after the call to 
-check_fully_established(), so I'm not sure this condition is fully met 
-with the patch as-is. Looks like an ADD_ADDR with a bad HMAC could change 
-the fully_established flag when it shouldn't.
+On 13/08/2021 00:30, Mat Martineau wrote:
+> On Thu, 12 Aug 2021, Matthieu Baerts wrote:
+> 
+>> If directly after an MP_CAPABLE 3WHS, the client receives a valid
+>> ADD_ADDR from the server, it is enough to prove exchanged MPTCP options
+>> are valid. Indeed, the ADD_ADDR contains an HMAC generated using both
+>> the client and server keys.
+> 
+> The ADD_ADDR HMAC is validated after the call to
+> check_fully_established(), so I'm not sure this condition is fully met
+> with the patch as-is. Looks like an ADD_ADDR with a bad HMAC could
+> change the fully_established flag when it shouldn't.
+That's a very good point.
 
-Mat
+If I'm not mistaken, we have the same issue when receiving a DATA_ACK:
+here we just check if one is present, not if it is valid, no?
 
->
-> It was then OK to enable the fully_established flag on the MPTCP socket.
->
-> But that is not enough. On one hand, the path-manager has be notified
-> the state has changed. On the other hand, the fully_established flag on
-> the subflow socket should be turned on as well, not to re-send the
-> MP_CAPABLE 3rd ACK content with the next ACK.
->
-> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->
-> Notes:
->    Once applied, we can close issue 221. But this patch alone is not enough
->    to fix issue 221, hence no "Closes" tag.
->
->    Because the PM was not notified, I think it is best to send it to -net.
->    Before, I think we were overriding MPC ACK options when sending the echo
->    ADD_ADDR so the issue was not visible.
->
->    Here it is visible (and this is covered by out tests) since the
->    introduction of commit 32c3e4d50806 ("Squash-to: "mptcp: move
->    drop_other_suboptions check under pm lock"")
->
->    With this patch, the packetdrill tests are all OK!
->    (And the other selftests as well even if I still have other issues with
->     mptcp_join.sh but it doesn't seem related.)
->
-> net/mptcp/options.c | 9 ++-------
-> 1 file changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index d94ff50c29b3..175563c95c0b 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -945,20 +945,15 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
-> 		return subflow->mp_capable;
-> 	}
->
-> -	if (mp_opt->dss && mp_opt->use_ack) {
-> +	if ((mp_opt->dss && mp_opt->use_ack) || mp_opt->add_addr) {
-> 		/* subflows are fully established as soon as we get any
-> -		 * additional ack.
-> +		 * additional ack, including ADD_ADDR.
-> 		 */
-> 		subflow->fully_established = 1;
-> 		WRITE_ONCE(msk->fully_established, true);
-> 		goto fully_established;
-> 	}
->
-> -	if (mp_opt->add_addr) {
-> -		WRITE_ONCE(msk->fully_established, true);
-> -		return true;
-> -	}
-> -
-> 	/* If the first established packet does not contain MP_CAPABLE + data
-> 	 * then fallback to TCP. Fallback scenarios requires a reset for
-> 	 * MP_JOIN subflows.
-> -- 
-> 2.32.0
->
->
->
+Should we delay when we mark subflows and msks as "fully established" or
+is it not an issue to be in "fully established" too soon?
 
---
-Mat Martineau
-Intel
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
