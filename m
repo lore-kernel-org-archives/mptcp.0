@@ -1,17 +1,17 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27A26D17
-	for <mptcp@lists.linux.dev>; Fri, 13 Aug 2021 22:15:59 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="212520896"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB0F6D18
+	for <mptcp@lists.linux.dev>; Fri, 13 Aug 2021 22:16:00 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="212520906"
 X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="212520896"
+   d="scan'208";a="212520906"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 15:15:55 -0700
 X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="504320454"
+   d="scan'208";a="504320459"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.69.245])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 15:15:54 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 15:15:55 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Paolo Abeni <pabeni@redhat.com>,
@@ -19,10 +19,11 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
+	Geliang Tang <geliangtang@gmail.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/8] mptcp: handle pending data on closed subflow
-Date: Fri, 13 Aug 2021 15:15:43 -0700
-Message-Id: <20210813221548.111990-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 8/8] selftests: mptcp: add testcase for active-back
+Date: Fri, 13 Aug 2021 15:15:48 -0700
+Message-Id: <20210813221548.111990-9-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
 References: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
@@ -36,221 +37,334 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-The PM can close active subflow, e.g. due to ingress RM_ADDR
-option. Such subflow could carry data still unacked at the
-MPTCP-level, both in the write and the rtx_queue, which has
-never reached the other peer.
+Add more test-case for link failures scenario,
+including recovery from link failure using only
+backup subflows and bi-directional transfer.
 
-Currently the mptcp-level retransmission will deliver such data,
-but at a very low rate (at most 1 DSM for each MPTCP rtx interval).
+Additionally explicitly check for stale count
 
-We can speed-up the recovery a lot, moving all the unacked in the
-tcp write_queue, so that it will be pushed again via other
-subflows, at the speed allowed by them.
-
-Also make available the new helper for later patches.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/207
+Co-developed-by: Geliang Tang <geliangtang@gmail.com>
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/options.c  |  8 +++--
- net/mptcp/protocol.c | 76 +++++++++++++++++++++++++++++++++++++++++---
- net/mptcp/protocol.h |  6 ++++
- 3 files changed, 82 insertions(+), 8 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 218 +++++++++++++++---
+ 1 file changed, 187 insertions(+), 31 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 4452455aef7f..e37b6f2fb514 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -975,9 +975,11 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 	old_snd_una = msk->snd_una;
- 	new_snd_una = mptcp_expand_seq(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index f02f4de2f3a0..52762eaa2d8e 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3,8 +3,10 @@
  
--	/* ACK for data not even sent yet? Ignore. */
--	if (after64(new_snd_una, snd_nxt))
--		new_snd_una = old_snd_una;
-+	/* ACK for data not even sent yet and even above recovery bound? Ignore.*/
-+	if (unlikely(after64(new_snd_una, snd_nxt))) {
-+		if (!msk->recovery || after64(new_snd_una, msk->recovery_snd_nxt))
-+			new_snd_una = old_snd_una;
-+	}
- 
- 	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index decbb4295ae1..5fafa7a4cd69 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1055,8 +1055,14 @@ static void __mptcp_clean_una(struct sock *sk)
- 		if (after64(dfrag->data_seq + dfrag->data_len, snd_una))
- 			break;
- 
--		if (WARN_ON_ONCE(dfrag == msk->first_pending))
--			break;
-+		if (unlikely(dfrag == msk->first_pending)) {
-+			/* in recovery mode can see ack after the current snd head */
-+			if (WARN_ON_ONCE(!msk->recovery))
-+				break;
-+
-+			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-+		}
-+
- 		dfrag_clear(sk, dfrag);
- 		cleaned = true;
- 	}
-@@ -1065,8 +1071,14 @@ static void __mptcp_clean_una(struct sock *sk)
- 	if (dfrag && after64(snd_una, dfrag->data_seq)) {
- 		u64 delta = snd_una - dfrag->data_seq;
- 
--		if (WARN_ON_ONCE(delta > dfrag->already_sent))
--			goto out;
-+		/* prevent wrap around in recovery mode */
-+		if (unlikely(delta > dfrag->already_sent)) {
-+			if (WARN_ON_ONCE(!msk->recovery))
-+				goto out;
-+			if (WARN_ON_ONCE(delta > dfrag->data_len))
-+				goto out;
-+			dfrag->already_sent += delta - dfrag->already_sent;
-+		}
- 
- 		dfrag->data_seq += delta;
- 		dfrag->offset += delta;
-@@ -1077,6 +1089,10 @@ static void __mptcp_clean_una(struct sock *sk)
- 		cleaned = true;
- 	}
- 
-+	/* all retransmitted data acked, recovery completed */
-+	if (unlikely(msk->recovery) && after64(msk->snd_una, msk->recovery_snd_nxt))
-+		msk->recovery = false;
-+
- out:
- 	if (cleaned) {
- 		if (tcp_under_memory_pressure(sk)) {
-@@ -1085,7 +1101,7 @@ static void __mptcp_clean_una(struct sock *sk)
- 		}
- 	}
- 
--	if (snd_una == READ_ONCE(msk->snd_nxt)) {
-+	if (snd_una == READ_ONCE(msk->snd_nxt) && !msk->recovery) {
- 		if (mptcp_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
- 			mptcp_stop_timer(sk);
- 	} else {
-@@ -2148,6 +2164,50 @@ static void mptcp_dispose_initial_subflow(struct mptcp_sock *msk)
- 	}
+ ret=0
+ sin=""
++sinfail=""
+ sout=""
+ cin=""
++cinfail=""
+ cinsent=""
+ cout=""
+ ksft_skip=4
+@@ -76,6 +78,14 @@ init()
+ 	done
  }
  
-+bool __mptcp_retransmit_pending_data(struct sock *sk)
++init_shapers()
 +{
-+	struct mptcp_data_frag *cur, *rtx_head;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
-+	if (__mptcp_check_fallback(mptcp_sk(sk)))
-+		return false;
-+
-+	if (tcp_rtx_and_write_queues_empty(sk))
-+		return false;
-+
-+	/* the closing socket has some data untransmitted and/or unacked:
-+	 * some data in the mptcp rtx queue has not really xmitted yet.
-+	 * keep it simple and re-inject the whole mptcp level rtx queue
-+	 */
-+	mptcp_data_lock(sk);
-+	__mptcp_clean_una_wakeup(sk);
-+	rtx_head = mptcp_rtx_head(sk);
-+	if (!rtx_head) {
-+		mptcp_data_unlock(sk);
-+		return false;
-+	}
-+
-+	/* will accept ack for reijected data before re-sending them */
-+	if (!msk->recovery || after64(msk->snd_nxt, msk->recovery_snd_nxt))
-+		msk->recovery_snd_nxt = msk->snd_nxt;
-+	msk->recovery = true;
-+	mptcp_data_unlock(sk);
-+
-+	msk->first_pending = rtx_head;
-+	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
-+	msk->snd_nxt = rtx_head->data_seq;
-+	msk->snd_burst = 0;
-+
-+	/* be sure to clear the "sent status" on all re-injected fragments */
-+	list_for_each_entry(cur, &msk->rtx_queue, list) {
-+		if (!cur->already_sent)
-+			break;
-+		cur->already_sent = 0;
-+	}
-+
-+	return true;
++	for i in `seq 1 4`; do
++		tc -n $ns1 qdisc add dev ns1eth$i root netem rate 20mbit delay 1
++		tc -n $ns2 qdisc add dev ns2eth$i root netem rate 20mbit delay 1
++	done
 +}
 +
- /* subflow sockets can be either outgoing (connect) or incoming
-  * (accept).
-  *
-@@ -2160,6 +2220,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_subflow_context *subflow)
+ cleanup_partial()
  {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	bool need_push;
+ 	rm -f "$capout"
+@@ -88,8 +98,8 @@ cleanup_partial()
  
- 	list_del(&subflow->node);
- 
-@@ -2171,6 +2232,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	if (ssk->sk_socket)
- 		sock_orphan(ssk);
- 
-+	need_push = __mptcp_retransmit_pending_data(sk);
- 	subflow->disposable = 1;
- 
- 	/* if ssk hit tcp_done(), tcp_cleanup_ulp() cleared the related ops
-@@ -2198,6 +2260,9 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 
- 	if (msk->subflow && ssk == msk->subflow->sk)
- 		mptcp_dispose_initial_subflow(msk);
-+
-+	if (need_push)
-+		__mptcp_push_pending(sk, 0);
+ cleanup()
+ {
+-	rm -f "$cin" "$cout"
+-	rm -f "$sin" "$sout" "$cinsent"
++	rm -f "$cin" "$cout" "$sinfail"
++	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+ 	cleanup_partial
  }
  
- void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-@@ -2410,6 +2475,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	msk->first = NULL;
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
- 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
-+	msk->recovery = false;
+@@ -211,11 +221,15 @@ link_failure()
+ {
+ 	ns="$1"
  
- 	mptcp_pm_data_init(msk);
+-	l=$((RANDOM%4))
+-	l=$((l+1))
++	if [ -z "$FAILING_LINKS" ]; then
++		l=$((RANDOM%4))
++		FAILING_LINKS=$((l+1))
++	fi
  
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6a3cbdb597e2..6f55784a2efd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -230,12 +230,17 @@ struct mptcp_sock {
- 	struct sock	*last_snd;
- 	int		snd_burst;
- 	int		old_wspace;
-+	u64		recovery_snd_nxt;	/* in recovery mode accept up to this seq;
-+						 * recovery related fields are under data_lock
-+						 * protection
-+						 */
- 	u64		snd_una;
- 	u64		wnd_end;
- 	unsigned long	timer_ival;
- 	u32		token;
- 	int		rmem_released;
- 	unsigned long	flags;
-+	bool		recovery;		/* closing subflow write queue reinjected */
- 	bool		can_ack;
- 	bool		fully_established;
- 	bool		rcv_data_fin;
-@@ -557,6 +562,7 @@ int mptcp_is_checksum_enabled(struct net *net);
- int mptcp_allow_join_id0(struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
-+bool __mptcp_retransmit_pending_data(struct sock *sk);
- bool mptcp_subflow_data_available(struct sock *sk);
- void __init mptcp_subflow_init(void);
- void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
+-	veth="ns1eth$l"
+-	ip -net "$ns" link set "$veth" down
++	for l in $FAILING_LINKS; do
++		veth="ns1eth$l"
++		ip -net "$ns" link set "$veth" down
++	done
+ }
+ 
+ # $1: IP address
+@@ -280,10 +294,17 @@ do_transfer()
+ 		local_addr="0.0.0.0"
+ 	fi
+ 
+-	timeout ${timeout_test} \
+-		ip netns exec ${listener_ns} \
+-			$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+-				${local_addr} < "$sin" > "$sout" &
++	if [ "$test_link_fail" -eq 2 ];then
++		timeout ${timeout_test} \
++			ip netns exec ${listener_ns} \
++				$mptcp_connect -t ${timeout_poll} -l -p $port -s ${cl_proto} \
++					${local_addr} < "$sinfail" > "$sout" &
++	else
++		timeout ${timeout_test} \
++			ip netns exec ${listener_ns} \
++				$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
++					${local_addr} < "$sin" > "$sout" &
++	fi
+ 	spid=$!
+ 
+ 	sleep 1
+@@ -294,7 +315,7 @@ do_transfer()
+ 				$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+ 					$connect_addr < "$cin" > "$cout" &
+ 	else
+-		( cat "$cin" ; sleep 2; link_failure $listener_ns ; cat "$cin" ) | \
++		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
+ 			tee "$cinsent" | \
+ 			timeout ${timeout_test} \
+ 				ip netns exec ${connector_ns} \
+@@ -434,7 +455,11 @@ do_transfer()
+ 		return 1
+ 	fi
+ 
+-	check_transfer $sin $cout "file received by client"
++	if [ "$test_link_fail" -eq 2 ];then
++		check_transfer $sinfail $cout "file received by client"
++	else
++		check_transfer $sin $cout "file received by client"
++	fi
+ 	retc=$?
+ 	if [ "$test_link_fail" -eq 0 ];then
+ 		check_transfer $cin $sout "file received by server"
+@@ -477,29 +502,33 @@ run_tests()
+ 	lret=0
+ 	oldin=""
+ 
+-	if [ "$test_linkfail" -eq 1 ];then
+-		size=$((RANDOM%1024))
++	# create the input file for the failure test when
++	# the first failure test run
++	if [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
++		# the client file must be considerably larger
++		# of the maximum expected cwin value, or the
++		# link utilization will be not predicable
++		size=$((RANDOM%2))
+ 		size=$((size+1))
+-		size=$((size*128))
++		size=$((size*8192))
++		size=$((size + ( $RANDOM % 8192) ))
+ 
+-		oldin=$(mktemp)
+-		cp "$cin" "$oldin"
+-		make_file "$cin" "client" $size
++		cinfail=$(mktemp)
++		make_file "$cinfail" "client" $size
+ 	fi
+ 
+-	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
+-		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${bkup}
+-	lret=$?
++	if [ "$test_linkfail" -eq 2 -a -z "$sinfail" ]; then
++		size=$((RANDOM%16))
++		size=$((size+1))
++		size=$((size*2048))
+ 
+-	if [ "$test_linkfail" -eq 1 ];then
+-		cp "$oldin" "$cin"
+-		rm -f "$oldin"
++		sinfail=$(mktemp)
++		make_file "$sinfail" "server" $size
+ 	fi
+ 
+-	if [ $lret -ne 0 ]; then
+-		ret=$lret
+-		return
+-	fi
++	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
++		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${bkup}
++	lret=$?
+ }
+ 
+ chk_csum_nr()
+@@ -593,6 +622,46 @@ chk_join_nr()
+ 	fi
+ }
+ 
++# a negative value for 'stale_max' means no upper bound:
++# for bidirectional transfer, if one peer sleep for a while
++# - as these tests do - we can have a quite high number of
++# stale/recover conversions, proportional to
++# sleep duration/ MPTCP-level RTX interval.
++chk_stale_nr()
++{
++	local ns=$1
++	local stale_min=$2
++	local stale_max=$3
++	local stale_delta=$4
++	local dump_stats
++	local stale_nr
++	local recover_nr
++
++	printf "%-39s %-18s" " " "stale"
++	stale_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowStale | awk '{print $2}'`
++	[ -z "$stale_nr" ] && stale_nr=0
++	recover_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowRecover | awk '{print $2}'`
++	[ -z "$recover_nr" ] && recover_nr=0
++
++	if [ $stale_nr -lt $stale_min ] ||
++	   [ $stale_max -gt 0 -a $stale_nr -gt $stale_max ] ||
++	   [ $((stale_nr - $recover_nr)) -ne $stale_delta ]; then
++		echo "[fail] got $stale_nr stale[s] $recover_nr recover[s], " \
++		     " expected stale in range [$stale_min..$stale_max]," \
++		     " stale-recover delta $stale_delta "
++		ret=1
++		dump_stats=1
++	else
++		echo "[ ok ]"
++	fi
++
++	if [ "${dump_stats}" = 1 ]; then
++		echo $ns stats
++		ip netns exec $ns ip -s link show
++		ip netns exec $ns nstat -as | grep MPTcp
++	fi
++}
++
+ chk_add_nr()
+ {
+ 	local add_nr=$1
+@@ -801,6 +870,27 @@ chk_prio_nr()
+ 	fi
+ }
+ 
++chk_link_usage()
++{
++	local ns=$1
++	local link=$2
++	local out=$3
++	local expected_rate=$4
++	local tx_link=`ip netns exec $ns cat /sys/class/net/$link/statistics/tx_bytes`
++	local tx_total=`ls -l $out | awk '{print $5}'`
++	local tx_rate=$((tx_link * 100 / $tx_total))
++	local tolerance=5
++
++	printf "%-39s %-18s" " " "link usage"
++	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
++	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
++		echo "[fail] got $tx_rate% usage, expected $expected_rate%"
++		ret=1
++	else
++		echo "[ ok ]"
++	fi
++}
++
+ subflows_tests()
+ {
+ 	reset
+@@ -924,14 +1014,80 @@ link_failure_tests()
+ {
+ 	# accept and use add_addr with additional subflows and link loss
+ 	reset
++
++	# without any b/w limit each veth could spool the packets and get
++	# them acked at xmit time, so that the corresponding subflow will
++	# have almost always no outstanding pkts, the scheduler will pick
++	# always the first subflow and we will have hard time testing
++	# active backup and link switch-over.
++	# Let's set some arbitrary (low) virtual link limits.
++	init_shapers
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
+ 	run_tests $ns1 $ns2 10.0.1.1 1
+ 	chk_join_nr "multiple flows, signal, link failure" 3 3 3
+ 	chk_add_nr 1 1
++	chk_stale_nr $ns2 1 5 1
++
++	# accept and use add_addr with additional subflows and link loss
++	# for bidirectional transfer
++	reset
++	init_shapers
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 2
++	chk_join_nr "multi flows, signal, bidi, link fail" 3 3 3
++	chk_add_nr 1 1
++	chk_stale_nr $ns2 1 -1 1
++
++	# 2 subflows plus 1 backup subflow with a lossy link, backup
++	# will never be used
++	reset
++	init_shapers
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++	export FAILING_LINKS="1"
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
++	run_tests $ns1 $ns2 10.0.1.1 1
++	chk_join_nr "backup subflow unused, link failure" 2 2 2
++	chk_add_nr 1 1
++	chk_link_usage $ns2 ns2eth3 $cinsent 0
++
++	# 2 lossy links after half transfer, backup will get half of
++	# the traffic
++	reset
++	init_shapers
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
++	export FAILING_LINKS="1 2"
++	run_tests $ns1 $ns2 10.0.1.1 1
++	chk_join_nr "backup flow used, multi links fail" 2 2 2
++	chk_add_nr 1 1
++	chk_stale_nr $ns2 2 4 2
++	chk_link_usage $ns2 ns2eth3 $cinsent 50
++
++	# use a backup subflow with the first subflow on a lossy link
++	# for bidirectional transfer
++	reset
++	init_shapers
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
++	run_tests $ns1 $ns2 10.0.1.1 2
++	chk_join_nr "backup flow used, bidi, link failure" 2 2 2
++	chk_add_nr 1 1
++	chk_stale_nr $ns2 1 -1 2
++	chk_link_usage $ns2 ns2eth3 $cinsent 50
+ }
+ 
+ add_addr_timeout_tests()
 -- 
 2.32.0
 
