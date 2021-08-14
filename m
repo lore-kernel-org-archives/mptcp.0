@@ -1,98 +1,81 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED622FAF
-	for <mptcp@lists.linux.dev>; Sat, 14 Aug 2021 00:37:05 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="237696630"
-X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="237696630"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 17:37:04 -0700
-X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="639950504"
-Received: from varunjai-mobl.amr.corp.intel.com ([10.209.34.83])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 17:37:03 -0700
-Date: Fri, 13 Aug 2021 17:37:03 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] mptcp: full fully established support after
- ADD_ADDR
-In-Reply-To: <5b996b3fc540926a129c2f0c45634def94074f01.camel@redhat.com>
-Message-ID: <33124a29-dadf-4c5a-d141-7e2be538e5d4@linux.intel.com>
-References: <20210812162757.282366-1-matthieu.baerts@tessares.net>  <cb97b91e-99d-d7b-4338-a83ddba4e83b@linux.intel.com>  <e8ce0aa4-c8a5-8907-396e-be420aec6fe4@tessares.net> <5b996b3fc540926a129c2f0c45634def94074f01.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761BD6D13
+	for <mptcp@lists.linux.dev>; Sat, 14 Aug 2021 11:10:06 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 2523160F36;
+	Sat, 14 Aug 2021 11:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1628939406;
+	bh=aBU6dWQ2IKty6RaQTb9WpDdzwoX1BUKU09U+8zYkOFY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=t3gMUjsVp1ny8cUGGnzDVsETLjaRCrE4wUmCk3yT2SilCDM+D/mJ5dYlCRhTJo/SP
+	 ttRTemNqJcDlZIbiBY6BKWFr06ym8yDGJNzTO55jFqIjVrXu9GFjoQPiD1sMKEtpSB
+	 4nwINgqfgxLc7clOVCuIHdlmy/zGq/SF8DLrSHOVpxJMbEds3UPsyT0oNQmhjtMmAZ
+	 j4Zfo+f5m4KKl2SvNgaqljQEjlDydy9EJimAZp4+uHL3KB1dcDAFf1cVUmZfhFwHAg
+	 jyWsuCCf19Dr+UC8LL8ltPbzetdSEZhTSV1qotrkNgPMpcjfRdSNTuJd+kAARmif3v
+	 odJuSpTr+pR2A==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 1874260A9C;
+	Sat, 14 Aug 2021 11:10:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/8] mptcp: Improve use of backup subflows
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <162893940609.15993.1576871199881701981.git-patchwork-notify@kernel.org>
+Date: Sat, 14 Aug 2021 11:10:06 +0000
+References: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com
 
-On Fri, 13 Aug 2021, Paolo Abeni wrote:
+Hello:
 
-> On Fri, 2021-08-13 at 13:06 +0200, Matthieu Baerts wrote:
->> Hi Mat,
->>
->> Thank you for your review!
->>
->> On 13/08/2021 00:30, Mat Martineau wrote:
->>> On Thu, 12 Aug 2021, Matthieu Baerts wrote:
->>>
->>>> If directly after an MP_CAPABLE 3WHS, the client receives a valid
->>>> ADD_ADDR from the server, it is enough to prove exchanged MPTCP options
->>>> are valid. Indeed, the ADD_ADDR contains an HMAC generated using both
->>>> the client and server keys.
->>>
->>> The ADD_ADDR HMAC is validated after the call to
->>> check_fully_established(), so I'm not sure this condition is fully met
->>> with the patch as-is. Looks like an ADD_ADDR with a bad HMAC could
->>> change the fully_established flag when it shouldn't.
->> That's a very good point.
->>
->> If I'm not mistaken, we have the same issue when receiving a DATA_ACK:
->> here we just check if one is present, not if it is valid, no?
->>
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-I see Matthieu's point about validity vs. presence when using the ADD_ADDR 
-here. Maybe we had different ideas in our minds with "valid" meaning "a 
-properly formatted ADD_ADDR option w/ HMAC" vs. "an ADD_ADDR with 
-validated HMAC".
+On Fri, 13 Aug 2021 15:15:40 -0700 you wrote:
+> Multipath TCP combines multiple TCP subflows in to one stream, and the
+> MPTCP-level socket must decide which subflow to use when sending (or
+> resending) chunks of data. The choice of the "best" subflow to transmit
+> on can vary depending on the priority (normal or backup) for each
+> subflow and how well the subflow is performing.
+> 
+> In order to improve MPTCP performance when some subflows are failing,
+> this patch set changes how backup subflows are utilized and introduces
+> tracking of "stale" subflows that are still connected but not making
+> progress.
+> 
+> [...]
 
-An invalid HMAC would be like an out-of-window DATA_ACK, so we're not 
-creating a new problem if the connection becomes "fully established" due 
-to an ADD_ADDR with a bad HMAC.
+Here is the summary with links:
+  - [net-next,1/8] mptcp: more accurate timeout
+    https://git.kernel.org/netdev/net-next/c/33d41c9cd74c
+  - [net-next,2/8] mptcp: less aggressive retransmission strategy
+    https://git.kernel.org/netdev/net-next/c/71b7dec27f34
+  - [net-next,3/8] mptcp: handle pending data on closed subflow
+    https://git.kernel.org/netdev/net-next/c/1e1d9d6f119c
+  - [net-next,4/8] mptcp: cleanup sysctl data and helpers
+    https://git.kernel.org/netdev/net-next/c/6da14d74e2bd
+  - [net-next,5/8] mptcp: faster active backup recovery
+    https://git.kernel.org/netdev/net-next/c/ff5a0b421cb2
+  - [net-next,6/8] mptcp: add mibs for stale subflows processing
+    https://git.kernel.org/netdev/net-next/c/fc1b4e3b6274
+  - [net-next,7/8] mptcp: backup flag from incoming MPJ ack option
+    https://git.kernel.org/netdev/net-next/c/0460ce229f5b
+  - [net-next,8/8] selftests: mptcp: add testcase for active-back
+    https://git.kernel.org/netdev/net-next/c/7d1e6f163904
 
-
-So, if only the presence of the HMAC is important:
-
-* the patch should check for (mp_opt->add_addr && !mp_opt->echo) to ensure 
-the HMAC is present
-
-* commit message and code comments should refer to ADD_ADDR w/ HMAC being 
-"present" rather than "valid"?
-
-
->> Should we delay when we mark subflows and msks as "fully established" or
->> is it not an issue to be in "fully established" too soon?
->
-> I *think* we could/should start with this simpler implementation/fix -
-> eventually adding a comment explaining the problematic scenario.
->
-
-I basically agree, with the tweaks above.
-
-> A more correct state handling requires more extensive changes, likely
-> too invasive for a resonably timely fix.
-
-We could call add_addr_hmac_valid() from check_fully_established() to do 
-an extra HMAC validation *if* it offers any benefit - extra CPU cycles but 
-a very small addition to the code.
-
-
-Thanks,
-
+You are awesome, thank you!
 --
-Mat Martineau
-Intel
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
