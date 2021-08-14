@@ -1,370 +1,98 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB0F6D18
-	for <mptcp@lists.linux.dev>; Fri, 13 Aug 2021 22:16:00 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="212520906"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED622FAF
+	for <mptcp@lists.linux.dev>; Sat, 14 Aug 2021 00:37:05 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="237696630"
 X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="212520906"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 15:15:55 -0700
+   d="scan'208";a="237696630"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 17:37:04 -0700
 X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="504320459"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.69.245])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 15:15:55 -0700
+   d="scan'208";a="639950504"
+Received: from varunjai-mobl.amr.corp.intel.com ([10.209.34.83])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 17:37:03 -0700
+Date: Fri, 13 Aug 2021 17:37:03 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Geliang Tang <geliangtang@gmail.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 8/8] selftests: mptcp: add testcase for active-back
-Date: Fri, 13 Aug 2021 15:15:48 -0700
-Message-Id: <20210813221548.111990-9-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
-References: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, 
+    Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] mptcp: full fully established support after
+ ADD_ADDR
+In-Reply-To: <5b996b3fc540926a129c2f0c45634def94074f01.camel@redhat.com>
+Message-ID: <33124a29-dadf-4c5a-d141-7e2be538e5d4@linux.intel.com>
+References: <20210812162757.282366-1-matthieu.baerts@tessares.net>  <cb97b91e-99d-d7b-4338-a83ddba4e83b@linux.intel.com>  <e8ce0aa4-c8a5-8907-396e-be420aec6fe4@tessares.net> <5b996b3fc540926a129c2f0c45634def94074f01.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Fri, 13 Aug 2021, Paolo Abeni wrote:
 
-Add more test-case for link failures scenario,
-including recovery from link failure using only
-backup subflows and bi-directional transfer.
+> On Fri, 2021-08-13 at 13:06 +0200, Matthieu Baerts wrote:
+>> Hi Mat,
+>>
+>> Thank you for your review!
+>>
+>> On 13/08/2021 00:30, Mat Martineau wrote:
+>>> On Thu, 12 Aug 2021, Matthieu Baerts wrote:
+>>>
+>>>> If directly after an MP_CAPABLE 3WHS, the client receives a valid
+>>>> ADD_ADDR from the server, it is enough to prove exchanged MPTCP options
+>>>> are valid. Indeed, the ADD_ADDR contains an HMAC generated using both
+>>>> the client and server keys.
+>>>
+>>> The ADD_ADDR HMAC is validated after the call to
+>>> check_fully_established(), so I'm not sure this condition is fully met
+>>> with the patch as-is. Looks like an ADD_ADDR with a bad HMAC could
+>>> change the fully_established flag when it shouldn't.
+>> That's a very good point.
+>>
+>> If I'm not mistaken, we have the same issue when receiving a DATA_ACK:
+>> here we just check if one is present, not if it is valid, no?
+>>
 
-Additionally explicitly check for stale count
+I see Matthieu's point about validity vs. presence when using the ADD_ADDR 
+here. Maybe we had different ideas in our minds with "valid" meaning "a 
+properly formatted ADD_ADDR option w/ HMAC" vs. "an ADD_ADDR with 
+validated HMAC".
 
-Co-developed-by: Geliang Tang <geliangtang@gmail.com>
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 218 +++++++++++++++---
- 1 file changed, 187 insertions(+), 31 deletions(-)
+An invalid HMAC would be like an out-of-window DATA_ACK, so we're not 
+creating a new problem if the connection becomes "fully established" due 
+to an ADD_ADDR with a bad HMAC.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index f02f4de2f3a0..52762eaa2d8e 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3,8 +3,10 @@
- 
- ret=0
- sin=""
-+sinfail=""
- sout=""
- cin=""
-+cinfail=""
- cinsent=""
- cout=""
- ksft_skip=4
-@@ -76,6 +78,14 @@ init()
- 	done
- }
- 
-+init_shapers()
-+{
-+	for i in `seq 1 4`; do
-+		tc -n $ns1 qdisc add dev ns1eth$i root netem rate 20mbit delay 1
-+		tc -n $ns2 qdisc add dev ns2eth$i root netem rate 20mbit delay 1
-+	done
-+}
-+
- cleanup_partial()
- {
- 	rm -f "$capout"
-@@ -88,8 +98,8 @@ cleanup_partial()
- 
- cleanup()
- {
--	rm -f "$cin" "$cout"
--	rm -f "$sin" "$sout" "$cinsent"
-+	rm -f "$cin" "$cout" "$sinfail"
-+	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
- 	cleanup_partial
- }
- 
-@@ -211,11 +221,15 @@ link_failure()
- {
- 	ns="$1"
- 
--	l=$((RANDOM%4))
--	l=$((l+1))
-+	if [ -z "$FAILING_LINKS" ]; then
-+		l=$((RANDOM%4))
-+		FAILING_LINKS=$((l+1))
-+	fi
- 
--	veth="ns1eth$l"
--	ip -net "$ns" link set "$veth" down
-+	for l in $FAILING_LINKS; do
-+		veth="ns1eth$l"
-+		ip -net "$ns" link set "$veth" down
-+	done
- }
- 
- # $1: IP address
-@@ -280,10 +294,17 @@ do_transfer()
- 		local_addr="0.0.0.0"
- 	fi
- 
--	timeout ${timeout_test} \
--		ip netns exec ${listener_ns} \
--			$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--				${local_addr} < "$sin" > "$sout" &
-+	if [ "$test_link_fail" -eq 2 ];then
-+		timeout ${timeout_test} \
-+			ip netns exec ${listener_ns} \
-+				$mptcp_connect -t ${timeout_poll} -l -p $port -s ${cl_proto} \
-+					${local_addr} < "$sinfail" > "$sout" &
-+	else
-+		timeout ${timeout_test} \
-+			ip netns exec ${listener_ns} \
-+				$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
-+					${local_addr} < "$sin" > "$sout" &
-+	fi
- 	spid=$!
- 
- 	sleep 1
-@@ -294,7 +315,7 @@ do_transfer()
- 				$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
- 					$connect_addr < "$cin" > "$cout" &
- 	else
--		( cat "$cin" ; sleep 2; link_failure $listener_ns ; cat "$cin" ) | \
-+		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
- 			tee "$cinsent" | \
- 			timeout ${timeout_test} \
- 				ip netns exec ${connector_ns} \
-@@ -434,7 +455,11 @@ do_transfer()
- 		return 1
- 	fi
- 
--	check_transfer $sin $cout "file received by client"
-+	if [ "$test_link_fail" -eq 2 ];then
-+		check_transfer $sinfail $cout "file received by client"
-+	else
-+		check_transfer $sin $cout "file received by client"
-+	fi
- 	retc=$?
- 	if [ "$test_link_fail" -eq 0 ];then
- 		check_transfer $cin $sout "file received by server"
-@@ -477,29 +502,33 @@ run_tests()
- 	lret=0
- 	oldin=""
- 
--	if [ "$test_linkfail" -eq 1 ];then
--		size=$((RANDOM%1024))
-+	# create the input file for the failure test when
-+	# the first failure test run
-+	if [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
-+		# the client file must be considerably larger
-+		# of the maximum expected cwin value, or the
-+		# link utilization will be not predicable
-+		size=$((RANDOM%2))
- 		size=$((size+1))
--		size=$((size*128))
-+		size=$((size*8192))
-+		size=$((size + ( $RANDOM % 8192) ))
- 
--		oldin=$(mktemp)
--		cp "$cin" "$oldin"
--		make_file "$cin" "client" $size
-+		cinfail=$(mktemp)
-+		make_file "$cinfail" "client" $size
- 	fi
- 
--	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
--		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${bkup}
--	lret=$?
-+	if [ "$test_linkfail" -eq 2 -a -z "$sinfail" ]; then
-+		size=$((RANDOM%16))
-+		size=$((size+1))
-+		size=$((size*2048))
- 
--	if [ "$test_linkfail" -eq 1 ];then
--		cp "$oldin" "$cin"
--		rm -f "$oldin"
-+		sinfail=$(mktemp)
-+		make_file "$sinfail" "server" $size
- 	fi
- 
--	if [ $lret -ne 0 ]; then
--		ret=$lret
--		return
--	fi
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
-+		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${bkup}
-+	lret=$?
- }
- 
- chk_csum_nr()
-@@ -593,6 +622,46 @@ chk_join_nr()
- 	fi
- }
- 
-+# a negative value for 'stale_max' means no upper bound:
-+# for bidirectional transfer, if one peer sleep for a while
-+# - as these tests do - we can have a quite high number of
-+# stale/recover conversions, proportional to
-+# sleep duration/ MPTCP-level RTX interval.
-+chk_stale_nr()
-+{
-+	local ns=$1
-+	local stale_min=$2
-+	local stale_max=$3
-+	local stale_delta=$4
-+	local dump_stats
-+	local stale_nr
-+	local recover_nr
-+
-+	printf "%-39s %-18s" " " "stale"
-+	stale_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowStale | awk '{print $2}'`
-+	[ -z "$stale_nr" ] && stale_nr=0
-+	recover_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowRecover | awk '{print $2}'`
-+	[ -z "$recover_nr" ] && recover_nr=0
-+
-+	if [ $stale_nr -lt $stale_min ] ||
-+	   [ $stale_max -gt 0 -a $stale_nr -gt $stale_max ] ||
-+	   [ $((stale_nr - $recover_nr)) -ne $stale_delta ]; then
-+		echo "[fail] got $stale_nr stale[s] $recover_nr recover[s], " \
-+		     " expected stale in range [$stale_min..$stale_max]," \
-+		     " stale-recover delta $stale_delta "
-+		ret=1
-+		dump_stats=1
-+	else
-+		echo "[ ok ]"
-+	fi
-+
-+	if [ "${dump_stats}" = 1 ]; then
-+		echo $ns stats
-+		ip netns exec $ns ip -s link show
-+		ip netns exec $ns nstat -as | grep MPTcp
-+	fi
-+}
-+
- chk_add_nr()
- {
- 	local add_nr=$1
-@@ -801,6 +870,27 @@ chk_prio_nr()
- 	fi
- }
- 
-+chk_link_usage()
-+{
-+	local ns=$1
-+	local link=$2
-+	local out=$3
-+	local expected_rate=$4
-+	local tx_link=`ip netns exec $ns cat /sys/class/net/$link/statistics/tx_bytes`
-+	local tx_total=`ls -l $out | awk '{print $5}'`
-+	local tx_rate=$((tx_link * 100 / $tx_total))
-+	local tolerance=5
-+
-+	printf "%-39s %-18s" " " "link usage"
-+	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
-+	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
-+		echo "[fail] got $tx_rate% usage, expected $expected_rate%"
-+		ret=1
-+	else
-+		echo "[ ok ]"
-+	fi
-+}
-+
- subflows_tests()
- {
- 	reset
-@@ -924,14 +1014,80 @@ link_failure_tests()
- {
- 	# accept and use add_addr with additional subflows and link loss
- 	reset
-+
-+	# without any b/w limit each veth could spool the packets and get
-+	# them acked at xmit time, so that the corresponding subflow will
-+	# have almost always no outstanding pkts, the scheduler will pick
-+	# always the first subflow and we will have hard time testing
-+	# active backup and link switch-over.
-+	# Let's set some arbitrary (low) virtual link limits.
-+	init_shapers
- 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
--	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
- 	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
--	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1 1
- 	chk_join_nr "multiple flows, signal, link failure" 3 3 3
- 	chk_add_nr 1 1
-+	chk_stale_nr $ns2 1 5 1
-+
-+	# accept and use add_addr with additional subflows and link loss
-+	# for bidirectional transfer
-+	reset
-+	init_shapers
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 2
-+	chk_join_nr "multi flows, signal, bidi, link fail" 3 3 3
-+	chk_add_nr 1 1
-+	chk_stale_nr $ns2 1 -1 1
-+
-+	# 2 subflows plus 1 backup subflow with a lossy link, backup
-+	# will never be used
-+	reset
-+	init_shapers
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	export FAILING_LINKS="1"
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
-+	run_tests $ns1 $ns2 10.0.1.1 1
-+	chk_join_nr "backup subflow unused, link failure" 2 2 2
-+	chk_add_nr 1 1
-+	chk_link_usage $ns2 ns2eth3 $cinsent 0
-+
-+	# 2 lossy links after half transfer, backup will get half of
-+	# the traffic
-+	reset
-+	init_shapers
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
-+	export FAILING_LINKS="1 2"
-+	run_tests $ns1 $ns2 10.0.1.1 1
-+	chk_join_nr "backup flow used, multi links fail" 2 2 2
-+	chk_add_nr 1 1
-+	chk_stale_nr $ns2 2 4 2
-+	chk_link_usage $ns2 ns2eth3 $cinsent 50
-+
-+	# use a backup subflow with the first subflow on a lossy link
-+	# for bidirectional transfer
-+	reset
-+	init_shapers
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,backup
-+	run_tests $ns1 $ns2 10.0.1.1 2
-+	chk_join_nr "backup flow used, bidi, link failure" 2 2 2
-+	chk_add_nr 1 1
-+	chk_stale_nr $ns2 1 -1 2
-+	chk_link_usage $ns2 ns2eth3 $cinsent 50
- }
- 
- add_addr_timeout_tests()
--- 
-2.32.0
 
+So, if only the presence of the HMAC is important:
+
+* the patch should check for (mp_opt->add_addr && !mp_opt->echo) to ensure 
+the HMAC is present
+
+* commit message and code comments should refer to ADD_ADDR w/ HMAC being 
+"present" rather than "valid"?
+
+
+>> Should we delay when we mark subflows and msks as "fully established" or
+>> is it not an issue to be in "fully established" too soon?
+>
+> I *think* we could/should start with this simpler implementation/fix -
+> eventually adding a comment explaining the problematic scenario.
+>
+
+I basically agree, with the tweaks above.
+
+> A more correct state handling requires more extensive changes, likely
+> too invasive for a resonably timely fix.
+
+We could call add_addr_hmac_valid() from check_fully_established() to do 
+an extra HMAC validation *if* it offers any benefit - extra CPU cycles but 
+a very small addition to the code.
+
+
+Thanks,
+
+--
+Mat Martineau
+Intel
