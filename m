@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190AE2FB3
-	for <mptcp@lists.linux.dev>; Mon, 16 Aug 2021 16:31:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CF76D17
+	for <mptcp@lists.linux.dev>; Mon, 16 Aug 2021 16:31:56 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1mFfWg-0007gI-AL; Mon, 16 Aug 2021 18:31:50 +0200
+	id 1mFfWk-0007gR-JD; Mon, 16 Aug 2021 18:31:54 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next v2 1/5] mptcp: add new mptcp_fill_diag helper
-Date: Mon, 16 Aug 2021 18:26:32 +0200
-Message-Id: <20210816162636.25611-2-fw@strlen.de>
+Subject: [PATCH mptcp-next v2 2/5] mptcp: add MPTCP_INFO getsockopt
+Date: Mon, 16 Aug 2021 18:26:33 +0200
+Message-Id: <20210816162636.25611-3-fw@strlen.de>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210816162636.25611-1-fw@strlen.de>
 References: <20210816162636.25611-1-fw@strlen.de>
@@ -23,125 +23,137 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Will be re-used from getsockopt path.
-Since diag can be a module, we can't export the helper from diag, it
-needs to be moved to core.
+Its not compatible with multipath-tcp.org kernel one.
+
+1. The out-of-tree implementation defines a different 'struct mptcp_info',
+   with embedded __user addresses for additional data such as
+   endpoint addresses.
+
+2. Mat Martineau points out that embedded __user addresses doesn't work
+with BPF_CGROUP_RUN_PROG_GETSOCKOPT() which assumes that copying in
+optsize bytes from optval provides all data that got copied to userspace.
+
+This provides mptcp_info data for the given mptcp socket.
+
+Userspace sets optlen to the size of the structure it expects.
+The kernel updates it to contain the number of bytes that it copied.
+
+This allows to append more information to the structure later.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/net/mptcp.h    |  4 ++++
- net/mptcp/mptcp_diag.c | 26 +-------------------------
- net/mptcp/sockopt.c    | 32 ++++++++++++++++++++++++++++++++
- 3 files changed, 37 insertions(+), 25 deletions(-)
+ include/linux/socket.h     |  1 +
+ include/uapi/linux/mptcp.h |  4 ++++
+ net/mptcp/sockopt.c        | 40 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 6026bbefbffd..f83fa48408b3 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -12,6 +12,8 @@
- #include <linux/tcp.h>
+diff --git a/include/linux/socket.h b/include/linux/socket.h
+index fd9ce51582d8..a2326a963232 100644
+--- a/include/linux/socket.h
++++ b/include/linux/socket.h
+@@ -364,6 +364,7 @@ struct ucred {
+ #define SOL_KCM		281
+ #define SOL_TLS		282
+ #define SOL_XDP		283
++#define SOL_MPTCP	284
+ 
+ /* IPX options */
+ #define IPX_TYPE	1
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index f66038b9551f..c450feba6f9c 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/const.h>
  #include <linux/types.h>
++#include <linux/in.h>
  
-+struct mptcp_info;
-+struct mptcp_sock;
- struct seq_file;
+ #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
+ #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
+@@ -193,4 +194,7 @@ enum mptcp_event_attr {
+ #define MPTCP_RST_EBADPERF	5
+ #define MPTCP_RST_EMIDDLEBOX	6
  
- /* MPTCP sk_buff extension data */
-@@ -121,6 +123,8 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
- void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 			 struct mptcp_out_options *opts);
- 
-+void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info);
++/* MPTCP socket options */
++#define MPTCP_INFO 1
 +
- /* move the skb extension owership, with the assumption that 'to' is
-  * newly allocated
-  */
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index f48eb6315bbb..fdf0c1f15a65 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -113,37 +113,13 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_info *info = _info;
--	u32 flags = 0;
--	bool slow;
--	u8 val;
- 
- 	r->idiag_rqueue = sk_rmem_alloc_get(sk);
- 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
- 	if (!info)
- 		return;
- 
--	slow = lock_sock_fast(sk);
--	info->mptcpi_subflows = READ_ONCE(msk->pm.subflows);
--	info->mptcpi_add_addr_signal = READ_ONCE(msk->pm.add_addr_signaled);
--	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
--	info->mptcpi_local_addr_used = READ_ONCE(msk->pm.local_addr_used);
--	info->mptcpi_subflows_max = mptcp_pm_get_subflows_max(msk);
--	val = mptcp_pm_get_add_addr_signal_max(msk);
--	info->mptcpi_add_addr_signal_max = val;
--	val = mptcp_pm_get_add_addr_accept_max(msk);
--	info->mptcpi_add_addr_accepted_max = val;
--	info->mptcpi_local_addr_max = mptcp_pm_get_local_addr_max(msk);
--	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
--		flags |= MPTCP_INFO_FLAG_FALLBACK;
--	if (READ_ONCE(msk->can_ack))
--		flags |= MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
--	info->mptcpi_flags = flags;
--	info->mptcpi_token = READ_ONCE(msk->token);
--	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
--	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
--	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
--	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
--	unlock_sock_fast(sk, slow);
-+	mptcp_diag_fill_info(msk, info);
- }
- 
- static const struct inet_diag_handler mptcp_diag_handler = {
+ #endif /* _UAPI_MPTCP_H */
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 8c03afac5ca0..54f0d521a399 100644
+index 54f0d521a399..f7683c22911f 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -670,6 +670,38 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- 	return ret;
- }
+@@ -673,10 +673,14 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
+ 	struct sock *sk = &msk->sk.icsk_inet.sk;
+-	bool slow = lock_sock_fast(sk);
+ 	u32 flags = 0;
++	bool slow;
+ 	u8 val;
  
-+void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
++	memset(info, 0, sizeof(*info));
++
++	slow = lock_sock_fast(sk);
++
+ 	info->mptcpi_subflows = READ_ONCE(msk->pm.subflows);
+ 	info->mptcpi_add_addr_signal = READ_ONCE(msk->pm.add_addr_signaled);
+ 	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
+@@ -702,6 +706,27 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ }
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 
++static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, int __user *optlen)
 +{
-+	struct sock *sk = &msk->sk.icsk_inet.sk;
-+	bool slow = lock_sock_fast(sk);
-+	u32 flags = 0;
-+	u8 val;
++	struct mptcp_info m_info;
++	int len;
 +
-+	info->mptcpi_subflows = READ_ONCE(msk->pm.subflows);
-+	info->mptcpi_add_addr_signal = READ_ONCE(msk->pm.add_addr_signaled);
-+	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
-+	info->mptcpi_local_addr_used = READ_ONCE(msk->pm.local_addr_used);
-+	info->mptcpi_subflows_max = mptcp_pm_get_subflows_max(msk);
-+	val = mptcp_pm_get_add_addr_signal_max(msk);
-+	info->mptcpi_add_addr_signal_max = val;
-+	val = mptcp_pm_get_add_addr_accept_max(msk);
-+	info->mptcpi_add_addr_accepted_max = val;
-+	info->mptcpi_local_addr_max = mptcp_pm_get_local_addr_max(msk);
-+	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
-+		flags |= MPTCP_INFO_FLAG_FALLBACK;
-+	if (READ_ONCE(msk->can_ack))
-+		flags |= MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
-+	info->mptcpi_flags = flags;
-+	info->mptcpi_token = READ_ONCE(msk->token);
-+	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
-+	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
-+	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
-+	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
++	if (get_user(len, optlen))
++		return -EFAULT;
 +
-+	unlock_sock_fast(sk, slow);
++	len = min_t(unsigned int, len, sizeof(struct mptcp_info));
++
++	mptcp_diag_fill_info(msk, &m_info);
++
++	if (put_user(len, optlen))
++		return -EFAULT;
++
++	if (copy_to_user(optval, &m_info, len))
++		return -EFAULT;
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
 +
  static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
  				    char __user *optval, int __user *optlen)
  {
+@@ -716,6 +741,17 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
++				      char __user *optval, int __user *optlen)
++{
++	switch (optname) {
++	case MPTCP_INFO:
++		return mptcp_getsockopt_info(msk, optval, optlen);
++	}
++
++	return -EOPNOTSUPP;
++}
++
+ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 		     char __user *optval, int __user *option)
+ {
+@@ -738,6 +774,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 
+ 	if (level == SOL_TCP)
+ 		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
++	if (level == SOL_MPTCP)
++		return mptcp_getsockopt_sol_mptcp(msk, optname, optval, option);
+ 	return -EOPNOTSUPP;
+ }
+ 
 -- 
 2.31.1
 
