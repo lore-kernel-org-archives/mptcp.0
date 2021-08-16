@@ -1,24 +1,18 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761BD6D13
-	for <mptcp@lists.linux.dev>; Sat, 14 Aug 2021 11:10:06 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 2523160F36;
-	Sat, 14 Aug 2021 11:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1628939406;
-	bh=aBU6dWQ2IKty6RaQTb9WpDdzwoX1BUKU09U+8zYkOFY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=t3gMUjsVp1ny8cUGGnzDVsETLjaRCrE4wUmCk3yT2SilCDM+D/mJ5dYlCRhTJo/SP
-	 ttRTemNqJcDlZIbiBY6BKWFr06ym8yDGJNzTO55jFqIjVrXu9GFjoQPiD1sMKEtpSB
-	 4nwINgqfgxLc7clOVCuIHdlmy/zGq/SF8DLrSHOVpxJMbEds3UPsyT0oNQmhjtMmAZ
-	 j4Zfo+f5m4KKl2SvNgaqljQEjlDydy9EJimAZp4+uHL3KB1dcDAFf1cVUmZfhFwHAg
-	 jyWsuCCf19Dr+UC8LL8ltPbzetdSEZhTSV1qotrkNgPMpcjfRdSNTuJd+kAARmif3v
-	 odJuSpTr+pR2A==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 1874260A9C;
-	Sat, 14 Aug 2021 11:10:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEED7173
+	for <mptcp@lists.linux.dev>; Mon, 16 Aug 2021 16:26:50 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1mFfRj-0007ey-8K; Mon, 16 Aug 2021 18:26:43 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next v2 0/5] mptcp: add SOL_MPTCP getsockopt support
+Date: Mon, 16 Aug 2021 18:26:31 +0200
+Message-Id: <20210816162636.25611-1-fw@strlen.de>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,56 +20,61 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/8] mptcp: Improve use of backup subflows
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162893940609.15993.1576871199881701981.git-patchwork-notify@kernel.org>
-Date: Sat, 14 Aug 2021 11:10:06 +0000
-References: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210813221548.111990-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com
 
-Hello:
+Changes in v2:
+- move #define to start of file (Mat)
+- refer to '"multipath-tcp.org"', not mptcp.org (Mat)
+- use __kernel_sa_family_t in uapi header (test robot)
+- add test cases with invalid inputs (Paolo)
+- avoid duplicate mptcp_sockopt.h in Makefile (Paolo)
+- remove _u_optlen (Paolo)
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+original cover letter:
 
-On Fri, 13 Aug 2021 15:15:40 -0700 you wrote:
-> Multipath TCP combines multiple TCP subflows in to one stream, and the
-> MPTCP-level socket must decide which subflow to use when sending (or
-> resending) chunks of data. The choice of the "best" subflow to transmit
-> on can vary depending on the priority (normal or backup) for each
-> subflow and how well the subflow is performing.
-> 
-> In order to improve MPTCP performance when some subflows are failing,
-> this patch set changes how backup subflows are utilized and introduces
-> tracking of "stale" subflows that are still connected but not making
-> progress.
-> 
-> [...]
+This adds the MPTCP_INFO, MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS
+mptcp getsockopt optnames.
 
-Here is the summary with links:
-  - [net-next,1/8] mptcp: more accurate timeout
-    https://git.kernel.org/netdev/net-next/c/33d41c9cd74c
-  - [net-next,2/8] mptcp: less aggressive retransmission strategy
-    https://git.kernel.org/netdev/net-next/c/71b7dec27f34
-  - [net-next,3/8] mptcp: handle pending data on closed subflow
-    https://git.kernel.org/netdev/net-next/c/1e1d9d6f119c
-  - [net-next,4/8] mptcp: cleanup sysctl data and helpers
-    https://git.kernel.org/netdev/net-next/c/6da14d74e2bd
-  - [net-next,5/8] mptcp: faster active backup recovery
-    https://git.kernel.org/netdev/net-next/c/ff5a0b421cb2
-  - [net-next,6/8] mptcp: add mibs for stale subflows processing
-    https://git.kernel.org/netdev/net-next/c/fc1b4e3b6274
-  - [net-next,7/8] mptcp: backup flag from incoming MPJ ack option
-    https://git.kernel.org/netdev/net-next/c/0460ce229f5b
-  - [net-next,8/8] selftests: mptcp: add testcase for active-back
-    https://git.kernel.org/netdev/net-next/c/7d1e6f163904
+MPTCP_INFO exposes the mptcp_info struct as an alternative to the
+existing netlink diag interface.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+MPTCP_TCPINFO exposes the tcp_info struct.
+Unlike SOL_TCP/TCP_INFO, this returns one struct for each active
+subflow.
 
+MPTCP_SUBFLOW_ADDRS allows userspace to discover the ip addresses/ports
+used by the local and remote endpoints, one for each active tcp subflow.
+
+MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS share the same meta-header that
+needs to be pre-filled by userspace with the size of the data structures
+it expects.  This is done to allow extension of the involved structs
+later on, without breaking backwards compatibility.
+
+The meta-structure can also be used to discover the required space
+to obtain all information, as kernel will fill in the number of
+active subflows even if there is not enough room for the requested info
+itself.
+
+More information is available in the individual patches.
+Last patch adds test cases for the three optnames.
+
+Florian Westphal (5):
+  mptcp: add new mptcp_fill_diag helper
+  mptcp: add MPTCP_INFO getsockopt
+  mptcp: add MPTCP_TCPINFO getsockopt support
+  mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
+  selftests: mptcp: add mptcp getsockopt test cases
+
+ include/linux/socket.h                        |   1 +
+ include/net/mptcp.h                           |   4 +
+ include/uapi/linux/mptcp.h                    |  29 +
+ net/mptcp/mptcp_diag.c                        |  26 +-
+ net/mptcp/sockopt.c                           | 276 ++++++++
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 638 ++++++++++++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  31 +-
+ 8 files changed, 979 insertions(+), 28 deletions(-)
+ create mode 100644 tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+
+-- 
+2.31.1
 
