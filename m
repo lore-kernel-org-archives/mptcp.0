@@ -1,15 +1,15 @@
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922DB2FAF
-	for <mptcp@lists.linux.dev>; Tue, 17 Aug 2021 22:07:34 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10079"; a="203357971"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905D16D18
+	for <mptcp@lists.linux.dev>; Tue, 17 Aug 2021 22:07:35 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10079"; a="203357979"
 X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="203357971"
+   d="scan'208";a="203357979"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 15:07:32 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 15:07:33 -0700
 X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="573058342"
+   d="scan'208";a="573058344"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.9.45])
   by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 15:07:32 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -19,10 +19,11 @@ Cc: Geliang Tang <geliangtang@xiaomi.com>,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
+	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 1/6] mptcp: drop flags and ifindex arguments
-Date: Tue, 17 Aug 2021 15:07:22 -0700
-Message-Id: <20210817220727.192198-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 3/6] mptcp: local addresses fullmesh
+Date: Tue, 17 Aug 2021 15:07:24 -0700
+Message-Id: <20210817220727.192198-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20210817220727.192198-1-mathew.j.martineau@linux.intel.com>
 References: <20210817220727.192198-1-mathew.j.martineau@linux.intel.com>
@@ -36,127 +37,125 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-This patch added a new helper mptcp_pm_get_flags_and_ifindex_by_id(),
-and used it in __mptcp_subflow_connect() to get the flags and ifindex
-values.
+In mptcp_pm_nl_add_addr_received(), fill a temporary allocate array of
+all local address corresponding to the fullmesh endpoint. If such array
+is empty, keep the current behavior.
 
-Then the two arguments flags and ifindex of __mptcp_subflow_connect()
-can be dropped.
+Elsewhere loop on such array and create a subflow for each local address
+towards the given remote address
 
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 26 +++++++++++++++++++++++---
- net/mptcp/protocol.h   |  5 +++--
- net/mptcp/subflow.c    |  7 +++++--
- 3 files changed, 31 insertions(+), 7 deletions(-)
+ net/mptcp/pm_netlink.c | 73 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 63 insertions(+), 10 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index ac0aa6faacfa..64a39f30659f 100644
+index bf5b9b475bb7..6e3df62a87d2 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -462,8 +462,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 			check_work_pending(msk);
- 			remote_address((struct sock_common *)sk, &remote);
- 			spin_unlock_bh(&msk->pm.lock);
--			__mptcp_subflow_connect(sk, &local->addr, &remote,
--						local->flags, local->ifindex);
-+			__mptcp_subflow_connect(sk, &local->addr, &remote);
- 			spin_lock_bh(&msk->pm.lock);
- 			return;
- 		}
-@@ -518,7 +517,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	local.family = remote.family;
+@@ -534,13 +534,67 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+ 	mptcp_pm_create_subflow_or_signal_addr(msk);
+ }
+ 
++/* Fill all the local addresses into the array addrs[],
++ * and return the array size.
++ */
++static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
++					     struct mptcp_addr_info *addrs)
++{
++	struct sock *sk = (struct sock *)msk;
++	struct mptcp_pm_addr_entry *entry;
++	struct mptcp_addr_info local;
++	struct pm_nl_pernet *pernet;
++	unsigned int subflows_max;
++	int i = 0;
++
++	pernet = net_generic(sock_net(sk), pm_nl_pernet_id);
++	subflows_max = mptcp_pm_get_subflows_max(msk);
++
++	rcu_read_lock();
++	__mptcp_flush_join_list(msk);
++	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
++		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
++			continue;
++
++		if (entry->addr.family != sk->sk_family) {
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++			if ((entry->addr.family == AF_INET &&
++			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
++			    (sk->sk_family == AF_INET &&
++			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
++#endif
++				continue;
++		}
++
++		if (msk->pm.subflows < subflows_max) {
++			msk->pm.subflows++;
++			addrs[i++] = entry->addr;
++		}
++	}
++	rcu_read_unlock();
++
++	/* If the array is empty, fill in the single
++	 * 'IPADDRANY' local address
++	 */
++	if (!i) {
++		memset(&local, 0, sizeof(local));
++		local.family = msk->pm.remote.family;
++
++		msk->pm.subflows++;
++		addrs[i++] = local;
++	}
++
++	return i;
++}
++
+ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ {
++	struct mptcp_addr_info addrs[MPTCP_PM_ADDR_MAX];
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned int add_addr_accept_max;
+ 	struct mptcp_addr_info remote;
+-	struct mptcp_addr_info local;
+ 	unsigned int subflows_max;
++	int i, nr;
+ 
+ 	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
+ 	subflows_max = mptcp_pm_get_subflows_max(msk);
+@@ -552,23 +606,22 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ 	if (lookup_subflow_by_daddr(&msk->conn_list, &msk->pm.remote))
+ 		goto add_addr_echo;
+ 
+-	msk->pm.add_addr_accepted++;
+-	msk->pm.subflows++;
+-	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
+-	    msk->pm.subflows >= subflows_max)
+-		WRITE_ONCE(msk->pm.accept_addr, false);
+-
+ 	/* connect to the specified remote address, using whatever
+ 	 * local address the routing configuration will pick.
+ 	 */
+ 	remote = msk->pm.remote;
+ 	if (!remote.port)
+ 		remote.port = sk->sk_dport;
+-	memset(&local, 0, sizeof(local));
+-	local.family = remote.family;
++	nr = fill_local_addresses_vec(msk, addrs);
++
++	msk->pm.add_addr_accepted++;
++	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
++	    msk->pm.subflows >= subflows_max)
++		WRITE_ONCE(msk->pm.accept_addr, false);
  
  	spin_unlock_bh(&msk->pm.lock);
--	__mptcp_subflow_connect(sk, &local, &remote, 0, 0);
-+	__mptcp_subflow_connect(sk, &local, &remote);
+-	__mptcp_subflow_connect(sk, &local, &remote);
++	for (i = 0; i < nr; i++)
++		__mptcp_subflow_connect(sk, &addrs[i], &remote);
  	spin_lock_bh(&msk->pm.lock);
  
  add_addr_echo:
-@@ -1105,6 +1104,27 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
- 	return NULL;
- }
- 
-+int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
-+					 u8 *flags, int *ifindex)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+
-+	*flags = 0;
-+	*ifindex = 0;
-+
-+	if (id) {
-+		rcu_read_lock();
-+		entry = __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), id);
-+		if (entry) {
-+			*flags = entry->flags;
-+			*ifindex = entry->ifindex;
-+		}
-+		rcu_read_unlock();
-+	}
-+
-+	return 0;
-+}
-+
- static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 				      struct mptcp_addr_info *addr)
- {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 8bdd038def38..bc1bfd7ac9c1 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -577,8 +577,7 @@ struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
- 
- /* called with sk socket lock held */
- int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
--			    const struct mptcp_addr_info *remote,
--			    u8 flags, int ifindex);
-+			    const struct mptcp_addr_info *remote);
- int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
- void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
- 			 struct sockaddr_storage *addr,
-@@ -733,6 +732,8 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- struct mptcp_pm_add_entry *
- mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
- 				struct mptcp_addr_info *addr);
-+int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
-+					 u8 *flags, int *ifindex);
- 
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 1151926d335b..8c43aa14897a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1355,8 +1355,7 @@ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
- }
- 
- int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
--			    const struct mptcp_addr_info *remote,
--			    u8 flags, int ifindex)
-+			    const struct mptcp_addr_info *remote)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_subflow_context *subflow;
-@@ -1367,6 +1366,8 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	struct sock *ssk;
- 	u32 remote_token;
- 	int addrlen;
-+	int ifindex;
-+	u8 flags;
- 	int err;
- 
- 	if (!mptcp_is_fully_established(sk))
-@@ -1390,6 +1391,8 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 		local_id = err;
- 	}
- 
-+	mptcp_pm_get_flags_and_ifindex_by_id(sock_net(sk), local_id,
-+					     &flags, &ifindex);
- 	subflow->remote_key = msk->remote_key;
- 	subflow->local_key = msk->local_key;
- 	subflow->token = msk->token;
 -- 
 2.33.0
 
