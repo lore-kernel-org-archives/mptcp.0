@@ -1,109 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AE22FB6
-	for <mptcp@lists.linux.dev>; Tue, 17 Aug 2021 14:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1629211180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fMmaor5I8UxPx0vGzJZyUnZJ0wa09eF+lL18QGY+2kM=;
-	b=K76qSqP/6AKVaaxTGD4T13lp9tHgQanD48Tw2t7jZBJz8PIZS00b1ACOo4S9kl99Z6to48
-	KoJjWqFWyDoyGW6vMOM0urB2F+cd40km7xTk1bNvOaAWHYA00xKSN4XT1Ws3JB69c/ArwR
-	pddO4r5p2mEnpsaHzgCB8e5jRQDCfaQ=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-522-4CVtepgBNK-11DIDMm12TQ-1; Tue, 17 Aug 2021 10:39:39 -0400
-X-MC-Unique: 4CVtepgBNK-11DIDMm12TQ-1
-Received: by mail-ed1-f69.google.com with SMTP id e18-20020a0564020892b02903be9702d63eso9504609edy.17
-        for <mptcp@lists.linux.dev>; Tue, 17 Aug 2021 07:39:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4A7173
+	for <mptcp@lists.linux.dev>; Tue, 17 Aug 2021 15:18:57 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id i22so13300008edq.11
+        for <mptcp@lists.linux.dev>; Tue, 17 Aug 2021 08:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=86F7Qo542SXNMYSd8+mRVtu6j9iNIdk+nzDQ6c9pi4Q=;
+        b=dBDRRNQooigYXJjb5reM/75rtSfzR1UY7fbPAlyHKQ4HqEeJbFgUFGtUMt0WrasBfC
+         xj9a4SA75du8s1HD5lJvnBpK6W/+SkMe7/yMHKs7gNhRpLGjKqJUZu9svdXHbIOpGhoe
+         Hi5hTjGvulMNKQv9RYxgr7w+DXGuwN2pca4nKo20zU9TSR6VDK0VTx8FbcD0+F9l8aX6
+         fJtxhAHy/4oDb7OwUXiB4CoDFlxmgOJ2JF9KJG0QbqCltcMHDW8//4ukcEZYGv9UpNFv
+         H3E/KvTrnjFTAHJXWOz942W+0q1pwFPM5JDfpIPA+Ic4riLVezJyYoVsbi3lyQMmJJg3
+         PX5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=fMmaor5I8UxPx0vGzJZyUnZJ0wa09eF+lL18QGY+2kM=;
-        b=nMUzJSCf9a+EJuQ8SMGpFtMlGZ0NxkHShyxLcYK+yHsrB7/mzZHjsziM1/Yb2VI4Re
-         AG3wT/sEH4Kvm3usHCWYFicagoE5Sn9DcdMAht5cJiFp8fEiifsoJVRgowB++GSVFQeX
-         yvUNrn6FO/GjIU1TamQW64t4AgR9MflMh/FAlj3L65EM3rPO2rg4V2/l8D9N9q62ZaWU
-         KFrehgTJu2ZNIcq0MD5pvpTj+uBRm93rhn2L3nQiEIsjZ389ElcipI7FZNzqLx5jk7wa
-         HY6jlmRKNVrszR+2JnCFw8CjvXQBDyggyU3niwdwDdltNP0v0+Aw2Un62UhRSXfQRwzt
-         fD/Q==
-X-Gm-Message-State: AOAM53101Gi24FArryMf1/6+dsAy89odqCRPj9JUoI4jUoF3Fs7Znjum
-	m+waG92T9eGjdl++sTt1+VC3IRtacYpwTaBJlLVq9JvYtMzJuUQkDOrdKQsG5BbhCKbXuMbg1CZ
-	m2tzEI9Hoy7c0UPM=
-X-Received: by 2002:a17:906:d7af:: with SMTP id pk15mr4402649ejb.51.1629211177754;
-        Tue, 17 Aug 2021 07:39:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzTm8bOlDmRQObeWBPoWWY+8kXSSIkiTLqApk8yKpTp/DlQKZT9CquCoDu7Wuu2YBTGjTOMFA==
-X-Received: by 2002:a17:906:d7af:: with SMTP id pk15mr4402635ejb.51.1629211177582;
-        Tue, 17 Aug 2021 07:39:37 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-224-77.dyn.eolo.it. [146.241.224.77])
-        by smtp.gmail.com with ESMTPSA id cn16sm1171860edb.9.2021.08.17.07.39.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=86F7Qo542SXNMYSd8+mRVtu6j9iNIdk+nzDQ6c9pi4Q=;
+        b=hjMGiC3BaX4RDDf3av+TOymfiWah1d8Y9gDNiERWLqfzOVTNaZSb0nt2GFYzH4Zp3r
+         RkffR/tZWH8jO6zoMpogUb39nMkKpyuozv/pA9h4kAD7fYkRFUDm5abMN4oeo7Vmdy7w
+         SUiZ2rs3HrlG96t0U/Vcy7A6Mp9FvLW6ZeHvEQw1eRO5YEC4UEZQhsf+89g/DUhhkjwT
+         QId+IufYqwYtYoKdLhBGNMa12/RRPnfCkYmy/U5GdHDqshgG/2p0GBmLOsnU13ymV3Kc
+         jiAnX+nUKc3MxMuL8H9mgh2bKYWE/yGOaQ8WfhfYz96rtosEJR7/o5hfEFKUldFJ1Z7t
+         KN1w==
+X-Gm-Message-State: AOAM53280w20lDevyOeWL8u1/G6nxG1Fi82hW69EpPjzm+c4i6c1b5xT
+	wu/+C9jH3rUOkBn74kRZit4OJbKH0AODjf8W5gE=
+X-Google-Smtp-Source: ABdhPJzDZnYxzztom2Rdqy+n4ZT6/o8kqlZMIrhFVA7aFwuBPdch9FmVl2ibK6JUQpu8JMGC6JVTDA==
+X-Received: by 2002:a05:6402:288b:: with SMTP id eg11mr4706182edb.241.1629213535713;
+        Tue, 17 Aug 2021 08:18:55 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id n15sm1205669edw.70.2021.08.17.08.18.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 07:39:37 -0700 (PDT)
-Message-ID: <09b699930245cd1d4eb1fa431c5bbf485b527644.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: ADD_ADDR and fully_estab
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau
-	 <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Date: Tue, 17 Aug 2021 16:39:36 +0200
-In-Reply-To: <98e667a4-3b48-cb22-cd48-56e319daa514@tessares.net>
-References: <20210816172548.2339984-1-matthieu.baerts@tessares.net>
-	 <4c6a722-d7c6-64d8-ddf-cb8d869c342c@linux.intel.com>
-	 <98e667a4-3b48-cb22-cd48-56e319daa514@tessares.net>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+        Tue, 17 Aug 2021 08:18:55 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v3] mptcp: full fully established support after ADD_ADDR
+Date: Tue, 17 Aug 2021 17:18:38 +0200
+Message-Id: <20210817151838.3187999-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2021-08-17 at 08:48 +0200, Matthieu Baerts wrote:
-> Hi Mat,
-> 
-> On 17/08/2021 01:53, Mat Martineau wrote:
-> > On Mon, 16 Aug 2021, Matthieu Baerts wrote:
-> > 
-> > > This is the v2 of "mptcp: full fully established support after ADD_ADDR"
-> > > but now we also make sure the HMAC bit is present (patch 1/2, as
-> > > suggested by Mat, thanks!).
-> > > 
-> > > Matthieu Baerts (2):
-> > >  mptcp: check for HMAC presence in ADD_ADDR
-> > >  mptcp: full fully established support after ADD_ADDR
-> > > 
-> > > net/mptcp/options.c | 10 +++-------
-> > > 1 file changed, 3 insertions(+), 7 deletions(-)
-> > > 
-> > > -- 
-> > > 2.32.0
-> > 
-> > Thanks for the v2.
-> 
-> Thank you for the review!
-> 
-> > I'd prefer that these are squashed, I don't think it's important to
-> > change the single line in patch 1 that just gets deleted in patch 2. It
-> > wasn't my intent to ask for two patches in my previous review, if that
-> > was a factor.
-> 
-> Sure I can squash them. I initially had one single patch but I decided
-> to split it in two to avoid adding something like "oh and BTW, an
-> additional check has been added" in the commit message.
-> But fine to do that.
+If directly after an MP_CAPABLE 3WHS, the client receives an ADD_ADDR
+with HMAC from the server, it is enough to switch to a "fully
+established" mode because it has received more MPTCP options.
 
-+1 on squashing - if not already done ;)
+It was then OK to enable the "fully_established" flag on the MPTCP
+socket. Still, best to check if the ADD_ADDR looks valid by looking if
+it contains an HMAC (no 'echo' bit). If an ADD_ADDR echo is received
+while we are not in "fully established" mode, it is strange and then
+we should not switch to this mode now.
 
-Cheers,
+But that is not enough. On one hand, the path-manager has be notified
+the state has changed. On the other hand, the "fully_established" flag
+on the subflow socket should be turned on as well not to re-send the
+MP_CAPABLE 3rd ACK content with the next ACK.
 
-Paolo
+Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+
+Notes:
+    - v2: reword the commit message not to mention "valid" content (Mat)
+    - v3: squash the two patches together and update the commit message (Mat)
+
+ net/mptcp/options.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index d94ff50c29b3..bec3ed82e253 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -945,20 +945,16 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+ 		return subflow->mp_capable;
+ 	}
+ 
+-	if (mp_opt->dss && mp_opt->use_ack) {
++	if ((mp_opt->dss && mp_opt->use_ack) ||
++	    (mp_opt->add_addr && !mp_opt->echo)) {
+ 		/* subflows are fully established as soon as we get any
+-		 * additional ack.
++		 * additional ack, including ADD_ADDR.
+ 		 */
+ 		subflow->fully_established = 1;
+ 		WRITE_ONCE(msk->fully_established, true);
+ 		goto fully_established;
+ 	}
+ 
+-	if (mp_opt->add_addr) {
+-		WRITE_ONCE(msk->fully_established, true);
+-		return true;
+-	}
+-
+ 	/* If the first established packet does not contain MP_CAPABLE + data
+ 	 * then fallback to TCP. Fallback scenarios requires a reset for
+ 	 * MP_JOIN subflows.
+-- 
+2.32.0
 
