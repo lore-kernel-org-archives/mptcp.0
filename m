@@ -1,109 +1,94 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770552FAF
-	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 17:01:55 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10080"; a="203522981"
-X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="203522981"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2021 09:59:54 -0700
-X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="488807919"
-Received: from mvanclea-mobl1.amr.corp.intel.com ([10.212.157.75])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2021 09:59:52 -0700
-Date: Wed, 18 Aug 2021 09:59:50 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 0/5] mptcp: add SOL_MPTCP getsockopt
- support
-In-Reply-To: <20210818102756.30734-1-fw@strlen.de>
-Message-ID: <e71aceb0-299-c17d-28ec-5114ea5fc36c@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC367168
+	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 19:17:58 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id z20so7240388ejf.5
+        for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 12:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:references:cc:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QkeYWSlfI3dshXJKVk+3Blc14br2tr0ATDNCv6r1Z+8=;
+        b=wq4wzzTNeKzY4DWDvy4LhEUzrVbbx3Iy/j7xIhSr1slKs3GMwsOqZuXoxg/EaOaU5T
+         3as+Fm1bxrAmOXqoNHfgbvFNqL8tXT2sCIlXBUOL1xhwZImpkjsmNXIgZRMYvjD1lS4M
+         GFKihSu2Q/57lSqGXbsYVSUscpozRJogP5s2HHvFCNaanED9wCTmd6+JgVkch7N0slks
+         bS+C/pXr8AeT5ZDwxPDvCg3nuOmWmby0K3+qF7tb6JSP2sCDwCaPmvnYZG/0+fbQMQcy
+         3D7Wt91ziywHiWyFGPE7y/UrCmWPU8g8ARrfDzono6hHQLHm74VGI7PofQbtfrpJQeGl
+         dyFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:cc:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QkeYWSlfI3dshXJKVk+3Blc14br2tr0ATDNCv6r1Z+8=;
+        b=fGhyC6q//ffkogrDkE2FHcxNmnDq/mdOefWc388QFAp3S63V56gyDvmeKBXXrp5fwp
+         5b9v6N1aVcfqFmojnQ9lOd3fzUWuu/d7dTwf9BVuYJ1HnWUA7E+CAn6ZpX3GPdj4ieeF
+         FLdXjwDhhP/FtlkllO71oAeDZT5Fd/PrEI4YN2g5tYZTbXnDhN+4Wdoeg35O2qpHXzg4
+         HQP1FM/jl2pjsyateCXlX0iC8jDbfyW/azn296UBdjWApsX1F/bxcZ6GbMVU+vrmwe+E
+         IbQMematLKzAU4oQStbGrktfQB3ve34TCqtBDbNWINnkZcRflV+Nb3y+Qhio3FKzxxnW
+         M35g==
+X-Gm-Message-State: AOAM533zqLSySYnUeP3sD55BDbCUkazQ8sHBsZA4vgZS1R7b5fQQVfJe
+	7NCSeRciRwHhiQGvqisFSwl7gqd7YUus4A4n
+X-Google-Smtp-Source: ABdhPJyOvvupQ5WcA/XYe3A03R8ELbwAYYwR2Tx0Y/mB+/13q2I8Y1B5ch6B9XQ2/AV+56VlqxbATQ==
+X-Received: by 2002:a17:906:7714:: with SMTP id q20mr11554222ejm.551.1629314276936;
+        Wed, 18 Aug 2021 12:17:56 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([213.211.156.192])
+        by smtp.gmail.com with ESMTPSA id la23sm271536ejc.63.2021.08.18.12.17.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Aug 2021 12:17:56 -0700 (PDT)
+To: Florian Westphal <fw@strlen.de>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
 References: <20210818102756.30734-1-fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next v3 0/5] mptcp: add SOL_MPTCP getsockopt support
+Message-ID: <ec21aace-7d24-a90d-c762-81462e9650bc@tessares.net>
+Date: Wed, 18 Aug 2021 21:17:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+In-Reply-To: <20210818102756.30734-1-fw@strlen.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-On Wed, 18 Aug 2021, Florian Westphal wrote:
+Hi Florian, Mat,
 
-> Changes in v3:
-> - address comments from Mat.
->  This only affects selftest program (init 'fd' to -1).
->  Other than that, the only changes are in commit messages or
->  re-format of code (reverse xmas).
->
+On 18/08/2021 12:27, Florian Westphal wrote:
 
-Thanks for the final adjustments - looks ready for the export branch now.
+(...)
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-
-
-> Changes in v2:
-> - move #define to start of file (Mat)
-> - refer to '"multipath-tcp.org"', not mptcp.org (Mat)
-> - use __kernel_sa_family_t in uapi header (test robot)
-> - add test cases with invalid inputs (Paolo)
-> - avoid duplicate mptcp_sockopt.h in Makefile (Paolo)
-> - remove _u_optlen (Paolo)
->
-> original cover letter:
->
-> This adds the MPTCP_INFO, MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS
-> mptcp getsockopt optnames.
->
-> MPTCP_INFO exposes the mptcp_info struct as an alternative to the
-> existing netlink diag interface.
->
-> MPTCP_TCPINFO exposes the tcp_info struct.
-> Unlike SOL_TCP/TCP_INFO, this returns one struct for each active
-> subflow.
->
-> MPTCP_SUBFLOW_ADDRS allows userspace to discover the ip addresses/ports
-> used by the local and remote endpoints, one for each active tcp subflow.
->
-> MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS share the same meta-header that
-> needs to be pre-filled by userspace with the size of the data structures
-> it expects.  This is done to allow extension of the involved structs
-> later on, without breaking backwards compatibility.
->
-> The meta-structure can also be used to discover the required space
-> to obtain all information, as kernel will fill in the number of
-> active subflows even if there is not enough room for the requested info
-> itself.
->
-> More information is available in the individual patches.
-> Last patch adds test cases for the three optnames.
->
 > Florian Westphal (5):
->  mptcp: add new mptcp_fill_diag helper
->  mptcp: add MPTCP_INFO getsockopt
->  mptcp: add MPTCP_TCPINFO getsockopt support
->  mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
->  selftests: mptcp: add mptcp getsockopt test cases
->
-> include/linux/socket.h                        |   1 +
-> include/net/mptcp.h                           |   4 +
-> include/uapi/linux/mptcp.h                    |  29 +
-> net/mptcp/mptcp_diag.c                        |  26 +-
-> net/mptcp/sockopt.c                           | 276 ++++++++
-> tools/testing/selftests/net/mptcp/Makefile    |   2 +-
-> .../selftests/net/mptcp/mptcp_sockopt.c       | 644 ++++++++++++++++++
-> .../selftests/net/mptcp/mptcp_sockopt.sh      |  31 +-
-> 8 files changed, 985 insertions(+), 28 deletions(-)
-> create mode 100644 tools/testing/selftests/net/mptcp/mptcp_sockopt.c
->
-> -- 
-> 2.31.1
->
->
->
+>   mptcp: add new mptcp_fill_diag helper
+>   mptcp: add MPTCP_INFO getsockopt
+>   mptcp: add MPTCP_TCPINFO getsockopt support
+>   mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
+>   selftests: mptcp: add mptcp getsockopt test cases
 
---
-Mat Martineau
-Intel
+Thank you for the patches and the reviews!
+
+Now in our tree with Mat's RvB tags:
+
+- d6eeba5de1d0: mptcp: add new mptcp_fill_diag helper
+- d21d692880d0: mptcp: add MPTCP_INFO getsockopt
+- b3b5ec766eea: mptcp: add MPTCP_TCPINFO getsockopt support
+- efd9c3320c75: mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
+- f8d31bf4060d: selftests: mptcp: add mptcp getsockopt test cases
+- Results: e2ce4b28903e..ab36a40efeaf
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210818T191724
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210818T191724
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
