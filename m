@@ -1,24 +1,20 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7817168
-	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 09:20:06 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 61C7E6108D;
-	Wed, 18 Aug 2021 09:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1629278406;
-	bh=E34R3QMCFjgiYXKgWkhWxihDMxJtNjNnxGvDvKZjm9s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=OwmjyKOXfwyMSIzEHF/rode6uPijPJxUHyD/WNkYvlVGE5eeAZoA+dfOb3xhHkiax
-	 YKLIAUkztOassMf7qvEcoUb6V+PflKU+RJBgStKNAlRiwb/czevOgFPnSph3BuXskm
-	 bKMVzkwxf0MDvVOQxWiGIsVBYeGXoBWOyyoX43Y9GeztjYihxLBKr5n7eZigDj9dPq
-	 6fYX3q2/4QuMRchwziwU/Z6qS2dPLEMZkYW9G7i7ZQ8cooU3pu3c0fr+2fjzaascr/
-	 u5SecyxKSgQYZikxDac3I/0u4+N1CgKXfh3byXvzBMuHxvEjqOvxFmVqxFa54p43e0
-	 /z0wCgab2kHUw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 5385F60A2E;
-	Wed, 18 Aug 2021 09:20:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6F86D19
+	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:28:13 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1mGInr-000448-Rn; Wed, 18 Aug 2021 12:28:11 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH v3 mptcp-next 2/5] mptcp: add MPTCP_INFO getsockopt
+Date: Wed, 18 Aug 2021 12:27:53 +0200
+Message-Id: <20210818102756.30734-3-fw@strlen.de>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210818102756.30734-1-fw@strlen.de>
+References: <20210818102756.30734-1-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,51 +22,138 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] mptcp: Add full mesh path manager option
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162927840633.7428.12959095508156490312.git-patchwork-notify@kernel.org>
-Date: Wed, 18 Aug 2021 09:20:06 +0000
-References: <20210817220727.192198-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210817220727.192198-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, geliangtang@xiaomi.com
 
-Hello:
+Its not compatible with multipath-tcp.org kernel one.
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+1. The out-of-tree implementation defines a different 'struct mptcp_info',
+   with embedded __user addresses for additional data such as
+   endpoint addresses.
 
-On Tue, 17 Aug 2021 15:07:21 -0700 you wrote:
-> The path manager in MPTCP controls the creation of additional subflows
-> after the initial connection is created. As each peer advertises
-> available endpoints with the ADD_ADDR MPTCP option, the recipient of
-> those advertisements must decide which subflows to create from the known
-> local and remote interfaces that are available for use by MPTCP.
-> 
-> The existing in-kernel path manager will create one additional subflow
-> when an ADD_ADDR is received, or a local address is newly configured for
-> MPTCP use. The maximum number of subflows has a configurable limit.
-> 
-> [...]
+2. Mat Martineau points out that embedded __user addresses doesn't work
+with BPF_CGROUP_RUN_PROG_GETSOCKOPT() which assumes that copying in
+optsize bytes from optval provides all data that got copied to userspace.
 
-Here is the summary with links:
-  - [net-next,1/6] mptcp: drop flags and ifindex arguments
-    https://git.kernel.org/netdev/net-next/c/ee285257a9c1
-  - [net-next,2/6] mptcp: remote addresses fullmesh
-    https://git.kernel.org/netdev/net-next/c/2843ff6f36db
-  - [net-next,3/6] mptcp: local addresses fullmesh
-    https://git.kernel.org/netdev/net-next/c/1a0d6136c5f0
-  - [net-next,4/6] selftests: mptcp: set and print the fullmesh flag
-    https://git.kernel.org/netdev/net-next/c/371b90377e60
-  - [net-next,5/6] selftests: mptcp: add fullmesh testcases
-    https://git.kernel.org/netdev/net-next/c/4f49d63352da
-  - [net-next,6/6] selftests: mptcp: delete uncontinuous removing ids
-    https://git.kernel.org/netdev/net-next/c/f7713dd5d23a
+This provides mptcp_info data for the given mptcp socket.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Userspace sets optlen to the size of the structure it expects.
+The kernel updates it to contain the number of bytes that it copied.
 
+This allows to append more information to the structure later.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ include/linux/socket.h     |  1 +
+ include/uapi/linux/mptcp.h |  4 ++++
+ net/mptcp/sockopt.c        | 40 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/socket.h b/include/linux/socket.h
+index fd9ce51582d8..a2326a963232 100644
+--- a/include/linux/socket.h
++++ b/include/linux/socket.h
+@@ -364,6 +364,7 @@ struct ucred {
+ #define SOL_KCM		281
+ #define SOL_TLS		282
+ #define SOL_XDP		283
++#define SOL_MPTCP	284
+ 
+ /* IPX options */
+ #define IPX_TYPE	1
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index f66038b9551f..c450feba6f9c 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/const.h>
+ #include <linux/types.h>
++#include <linux/in.h>
+ 
+ #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
+ #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
+@@ -193,4 +194,7 @@ enum mptcp_event_attr {
+ #define MPTCP_RST_EBADPERF	5
+ #define MPTCP_RST_EMIDDLEBOX	6
+ 
++/* MPTCP socket options */
++#define MPTCP_INFO 1
++
+ #endif /* _UAPI_MPTCP_H */
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 54f0d521a399..f7683c22911f 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -673,10 +673,14 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
+ 	struct sock *sk = &msk->sk.icsk_inet.sk;
+-	bool slow = lock_sock_fast(sk);
+ 	u32 flags = 0;
++	bool slow;
+ 	u8 val;
+ 
++	memset(info, 0, sizeof(*info));
++
++	slow = lock_sock_fast(sk);
++
+ 	info->mptcpi_subflows = READ_ONCE(msk->pm.subflows);
+ 	info->mptcpi_add_addr_signal = READ_ONCE(msk->pm.add_addr_signaled);
+ 	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
+@@ -702,6 +706,27 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ }
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 
++static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, int __user *optlen)
++{
++	struct mptcp_info m_info;
++	int len;
++
++	if (get_user(len, optlen))
++		return -EFAULT;
++
++	len = min_t(unsigned int, len, sizeof(struct mptcp_info));
++
++	mptcp_diag_fill_info(msk, &m_info);
++
++	if (put_user(len, optlen))
++		return -EFAULT;
++
++	if (copy_to_user(optval, &m_info, len))
++		return -EFAULT;
++
++	return 0;
++}
++
+ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    char __user *optval, int __user *optlen)
+ {
+@@ -716,6 +741,17 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
++				      char __user *optval, int __user *optlen)
++{
++	switch (optname) {
++	case MPTCP_INFO:
++		return mptcp_getsockopt_info(msk, optval, optlen);
++	}
++
++	return -EOPNOTSUPP;
++}
++
+ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 		     char __user *optval, int __user *option)
+ {
+@@ -738,6 +774,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 
+ 	if (level == SOL_TCP)
+ 		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
++	if (level == SOL_MPTCP)
++		return mptcp_getsockopt_sol_mptcp(msk, optname, optval, option);
+ 	return -EOPNOTSUPP;
+ }
+ 
+-- 
+2.31.1
 
