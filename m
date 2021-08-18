@@ -1,34 +1,34 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B91A173
-	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A60C6D19
+	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1629282962;
+	s=mimecast20190719; t=1629282963;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=Vde1pqorxvNgBkqkogzX0iGiejEMxJHiobUeoIcwE5A=;
-	b=buIMOM1g/MH1coCduTqZhaZatamiCHLsFNL/6ylbXUy5pCku+d6OoepEQ4dd5+F4siNBlf
-	XcpKscrjCUf8MDehKbSdlQx/ifrpzVnnbOiydXD6XZrmU8ddNFVedUXiqeUkmmMIX/o/+9
-	WfncinefJysikc27+XRN78UvK9CJlyw=
+	bh=oD6KLi+8lTGkiQcXdxypZAvO8/0Rdh3O64xeuJHaGfs=;
+	b=IFZN2YAInDxs2VXjH6xsHuPYLvYXZwJ7AnjZ2wwbt0mEkc1w7mTasonbYe1U1VniZcM19t
+	QUWpuKP7hKbRf/GNI6+eW5M0vjomRnnFnb4h4b9azl9U7kFDBz73dMYBm3eQMdU6un9+jZ
+	mCD+uMb+SYJ55nKBxY+EtFjNH9X+mBM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-3FeEnggbN8y9n5pQ6J1niA-1; Wed, 18 Aug 2021 06:36:01 -0400
-X-MC-Unique: 3FeEnggbN8y9n5pQ6J1niA-1
+ us-mta-245-4eWUqJh3MbK0YcoZ4Pildw-1; Wed, 18 Aug 2021 06:36:00 -0400
+X-MC-Unique: 4eWUqJh3MbK0YcoZ4Pildw-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D90E91082924
-	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:36:00 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D12F2801B3D
+	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:35:59 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.166])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 474781036D35
-	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:36:00 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 47155100EBAD
+	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:35:59 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH net-next 1/4] mptcp: do not set unconditionally csum_reqd on incoming opt
-Date: Wed, 18 Aug 2021 12:35:46 +0200
-Message-Id: <4209d5f5217483e4c06a43afb8e3e8322566085d.1629133749.git.pabeni@redhat.com>
+Subject: [PATCH net-next 0/4] mptcp: minor receive path optimization
+Date: Wed, 18 Aug 2021 12:35:45 +0200
+Message-Id: <cover.1629282605.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,36 +43,29 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Should be set only if the ingress packets present it, otherwise
-we can confuse csum validation.
+This series aims at closing:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/options.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+https://github.com/multipath-tcp/mptcp_net-next/issues/42
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index d94ff50c29b3..b3d5547fdb61 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -355,8 +355,6 @@ void mptcp_get_options(const struct sock *sk,
- 		       const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt)
- {
--	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
--	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	const struct tcphdr *th = tcp_hdr(skb);
- 	const unsigned char *ptr;
- 	int length;
-@@ -372,7 +370,7 @@ void mptcp_get_options(const struct sock *sk,
- 	mp_opt->dss = 0;
- 	mp_opt->mp_prio = 0;
- 	mp_opt->reset = 0;
--	mp_opt->csum_reqd = READ_ONCE(msk->csum_enabled);
-+	mp_opt->csum_reqd = 0;
- 	mp_opt->deny_join_id0 = 0;
- 	mp_opt->mp_fail = 0;
- 
+The relevant code is introduced by patch 4/4.
+
+Do do the above in hopefully clean way, the series needs some
+changes to the input options struct. That means a lot of
+noise in the option-related code in the previous patches,
+anyhow no functional change is intended here.
+
+Paolo Abeni (4):
+  mptcp: do not set unconditionally csum_reqd on incoming opt
+  mptcp: better binary layout for mptcp_options_received
+  mptcp: consolidate in_opt sub-options fields in a bitmask
+  mptcp: optimize the input options processing.
+
+ net/mptcp/options.c  | 140 +++++++++++++++++++------------------------
+ net/mptcp/protocol.c |   4 +-
+ net/mptcp/protocol.h |  36 ++++++-----
+ net/mptcp/subflow.c  |  40 +++++++------
+ 4 files changed, 104 insertions(+), 116 deletions(-)
+
 -- 
 2.26.3
 
