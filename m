@@ -1,95 +1,76 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CFF2FAF
-	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 07:04:43 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id b15so2876132ejg.10
-        for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 00:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dc2CtB453bbUM7DK8SdE3kwFHhkcjPJrEC6RBtH3hAk=;
-        b=fCZ+M8YjTxyG1H/SmwVulaKIqgnEyK8qxGRxcDpOmV4ejdNY/kfhOp/LN/xUXTFhU6
-         7O5+3og/cw1CBB378g1E4ZGau5YX8efHXo3zuJxO/pX1EYHzghBRzn7N3Ub1QXZz5spv
-         412+z3TThmoHujgRLKqJraZn3eXkdDMHeOxJTCIQUuuG+xJFqFwUcd2TUdC/jyH+eh7p
-         YxF5MF6Z29QQPpwlc/uyqDGlRDfELrgk+nJzdTkUcS0jtCiQZC/V47lL2QID0tgNYmVu
-         CgvsLwurdYS/tW52PZhkfQrtPHzKqmH34Px+pvbfomXRl0j0d6rT4SerlafT1DyCMSJF
-         qWkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dc2CtB453bbUM7DK8SdE3kwFHhkcjPJrEC6RBtH3hAk=;
-        b=h7lxtIF4TP4R+RzDqwBDwQNmtNTKm+jaBmdZl+LQk0NtQYBZ5+3pCpDZBjAABvqar4
-         cUAuWlvelJHuFGPC04B3mb38x8BHG8RTQ16rehXMSNwGjFLLxiQkOwOyHdi7EB1xk403
-         2wEqFjC6YLpSI6cA+aqnjvGjS+0btI2ZCwKe/tBEz+YUggijRtCCkg6oMBlwgjcSyEwz
-         /BYbgKxiNdOD36ohX9JKMf7iN3rA+JR08DVz0keMiXgcM2mzvq7ppXcDtf6aRhBePXm/
-         p86O8U0Viok9uhh7WAcdhjy0ay+1ZPVEmXNmCxKNhKltzGS1Qx9Z4C+lYlEqk0bnDggB
-         LfXg==
-X-Gm-Message-State: AOAM532yuGbfRCN098Q1KciHA0dH+D2SMlBU8hletQO4dYe2wMd56JFB
-	wh6+q3nNcgt3XzymMptPcIYpMXZqjCDhSGWT3G8=
-X-Google-Smtp-Source: ABdhPJwqCdWpaFQORK8gImNcGpzuwlsLvXGx8m35/7f6HrDeoHsnZKZAjO6xwiM1Km6fpMGPLDqBcA==
-X-Received: by 2002:a17:906:720e:: with SMTP id m14mr8212269ejk.500.1629270281833;
-        Wed, 18 Aug 2021 00:04:41 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([213.211.156.192])
-        by smtp.gmail.com with ESMTPSA id f8sm2151179edy.57.2021.08.18.00.04.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Aug 2021 00:04:41 -0700 (PDT)
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix memory leak on address flush
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>,
- MPTCP Upstream <mptcp@lists.linux.dev>
-References: <b73d65b78787ba0ecc36ec2d5d6fc2a68415d938.1628863533.git.pabeni@redhat.com>
- <96a46335-40c7-ddbf-be45-aab07b8d3d4b@tessares.net>
- <CA+WQbwvk6uY5zajSYgb59_FdDSB4oQ+6Lz3Er3JAEdm1OvFrcQ@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <153b0dd4-3d04-e50c-c47f-24c8032a249f@tessares.net>
-Date: Wed, 18 Aug 2021 09:04:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7817168
+	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 09:20:06 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 61C7E6108D;
+	Wed, 18 Aug 2021 09:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1629278406;
+	bh=E34R3QMCFjgiYXKgWkhWxihDMxJtNjNnxGvDvKZjm9s=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=OwmjyKOXfwyMSIzEHF/rode6uPijPJxUHyD/WNkYvlVGE5eeAZoA+dfOb3xhHkiax
+	 YKLIAUkztOassMf7qvEcoUb6V+PflKU+RJBgStKNAlRiwb/czevOgFPnSph3BuXskm
+	 bKMVzkwxf0MDvVOQxWiGIsVBYeGXoBWOyyoX43Y9GeztjYihxLBKr5n7eZigDj9dPq
+	 6fYX3q2/4QuMRchwziwU/Z6qS2dPLEMZkYW9G7i7ZQ8cooU3pu3c0fr+2fjzaascr/
+	 u5SecyxKSgQYZikxDac3I/0u4+N1CgKXfh3byXvzBMuHxvEjqOvxFmVqxFa54p43e0
+	 /z0wCgab2kHUw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 5385F60A2E;
+	Wed, 18 Aug 2021 09:20:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CA+WQbwvk6uY5zajSYgb59_FdDSB4oQ+6Lz3Er3JAEdm1OvFrcQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] mptcp: Add full mesh path manager option
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <162927840633.7428.12959095508156490312.git-patchwork-notify@kernel.org>
+Date: Wed, 18 Aug 2021 09:20:06 +0000
+References: <20210817220727.192198-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210817220727.192198-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, geliangtang@xiaomi.com
 
-Hi Geliang,
+Hello:
 
-On 18/08/2021 05:16, Geliang Tang wrote:
-> Matthieu Baerts <matthieu.baerts@tessares.net> 于2021年8月17日周二 上午1:31写道：
->>
->> Hi Paolo, Mat,
->>
->> On 13/08/2021 16:05, Paolo Abeni wrote:
->>> The endpoint cleanup path is prone to a memory leak, as reported
->>> by syzkaller:
->>
->> Thank you for this patch and the review!
->>
->> Now in our tree (net) with Mat's tag:
->>
->> - bbffcd9faae3: mptcp: fix memory leak on address flush
->> - Results: a5b32fb5c3ca..55f3937bfef4
->>
->> Builds and tests are now in progress:
+This series was applied to netdev/net-next.git (refs/heads/master):
+
+On Tue, 17 Aug 2021 15:07:21 -0700 you wrote:
+> The path manager in MPTCP controls the creation of additional subflows
+> after the initial connection is created. As each peer advertises
+> available endpoints with the ADD_ADDR MPTCP option, the recipient of
+> those advertisements must decide which subflows to create from the known
+> local and remote interfaces that are available for use by MPTCP.
 > 
-> Hi Matt,
+> The existing in-kernel path manager will create one additional subflow
+> when an ADD_ADDR is received, or a local address is newly configured for
+> MPTCP use. The maximum number of subflows has a configurable limit.
 > 
-> I think we can close issue #223 now.
+> [...]
 
-Good point, I didn't notice the 'Closes' tag was missing.
-I just closed this ticket.
+Here is the summary with links:
+  - [net-next,1/6] mptcp: drop flags and ifindex arguments
+    https://git.kernel.org/netdev/net-next/c/ee285257a9c1
+  - [net-next,2/6] mptcp: remote addresses fullmesh
+    https://git.kernel.org/netdev/net-next/c/2843ff6f36db
+  - [net-next,3/6] mptcp: local addresses fullmesh
+    https://git.kernel.org/netdev/net-next/c/1a0d6136c5f0
+  - [net-next,4/6] selftests: mptcp: set and print the fullmesh flag
+    https://git.kernel.org/netdev/net-next/c/371b90377e60
+  - [net-next,5/6] selftests: mptcp: add fullmesh testcases
+    https://git.kernel.org/netdev/net-next/c/4f49d63352da
+  - [net-next,6/6] selftests: mptcp: delete uncontinuous removing ids
+    https://git.kernel.org/netdev/net-next/c/f7713dd5d23a
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
