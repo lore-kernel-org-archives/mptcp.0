@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D862E6D19
-	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6AA6D19
+	for <mptcp@lists.linux.dev>; Wed, 18 Aug 2021 10:28:22 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1mGInw-00044T-9U; Wed, 18 Aug 2021 12:28:16 +0200
+	id 1mGIo0-00044t-NG; Wed, 18 Aug 2021 12:28:20 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v3 mptcp-next 3/5] mptcp: add MPTCP_TCPINFO getsockopt support
-Date: Wed, 18 Aug 2021 12:27:54 +0200
-Message-Id: <20210818102756.30734-4-fw@strlen.de>
+Subject: [PATCH v3 mptcp-next 4/5] mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
+Date: Wed, 18 Aug 2021 12:27:55 +0200
+Message-Id: <20210818102756.30734-5-fw@strlen.de>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210818102756.30734-1-fw@strlen.de>
 References: <20210818102756.30734-1-fw@strlen.de>
@@ -23,199 +23,162 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allow users to retrieve TCP_INFO data of all subflows.
+This retrieves the address pairs of all subflows currently
+active for a given mptcp connection.
 
-Users need to pre-initialize a meta header that has to be
-prepended to the data buffer that will be filled with the tcp info data.
+It re-uses the same meta-header as for MPTCP_TCPINFO.
 
-The meta header looks like this:
+A new structure is provided to hold the subflow
+address data:
 
-struct mptcp_subflow_data {
- __u32 size_subflow_data;/* size of this structure in userspace */
- __u32 num_subflows;	/* must be 0, set by kernel */
- __u32 size_kernel;	/* must be 0, set by kernel */
- __u32 size_user;	/* size of one element in data[] */
-} __attribute__((aligned(8)));
-
-size_subflow_data has to be set to 'sizeof(struct mptcp_subflow_data)'.
-This allows to extend mptcp_subflow_data structure later on without
-breaking backwards compatibility.
-
-If the structure is extended later on, kernel knows where the
-userspace-provided meta header ends, even if userspace uses an older
-(smaller) version of the structure.
-
-num_subflows must be set to 0. If the getsockopt request succeeds (return
-value is 0), it will be updated to contain the number of active subflows
-for the given logical connection.
-
-size_kernel must be set to 0. If the getsockopt request is successful,
-it will contain the size of the 'struct tcp_info' as known by the kernel.
-This is informational only.
-
-size_user must be set to 'sizeof(struct tcp_info)'.
-
-This allows the kernel to only fill in the space reserved/expected by
-userspace.
-
-Example:
-
-struct my_tcp_info {
-  struct mptcp_subflow_data d;
-  struct tcp_info ti[2];
+struct mptcp_subflow_addrs {
+	union {
+		__kernel_sa_family_t sa_family;
+		struct sockaddr sa_local;
+		struct sockaddr_in sin_local;
+		struct sockaddr_in6 sin6_local;
+		struct sockaddr_storage ss_local;
+	};
+	union {
+		struct sockaddr sa_remote;
+		struct sockaddr_in sin_remote;
+		struct sockaddr_in6 sin6_remote;
+		struct sockaddr_storage ss_remote;
+	};
 };
-struct my_tcp_info ti;
-socklen_t olen;
 
-memset(&ti, 0, sizeof(ti));
+Usage of the new getsockopt is very similar to
+MPTCP_TCPINFO one.
 
-ti.d.size_subflow_data = sizeof(struct mptcp_subflow_data);
-ti.d.size_user = sizeof(struct tcp_info);
-olen = sizeof(ti);
+Userspace allocates a
+'struct mptcp_subflow_data', followed by one or
+more 'struct mptcp_subflow_addrs', then inits the
+mptcp_subflow_data structure as follows:
 
-ret = getsockopt(fd, SOL_MPTCP, MPTCP_TCPINFO, &ti, &olen);
-if (ret < 0)
-	die_perror("getsockopt MPTCP_TCPINFO");
+struct mptcp_subflow_addrs *sf_addr;
+struct mptcp_subflow_data *addr;
+socklen_t olen = sizeof(*addr) + (8 * sizeof(*sf_addr));
 
-mptcp_subflow_data.num_subflows is populated with the number of
-subflows that exist on the kernel side for the logical mptcp connection.
+addr = malloc(olen);
+addr->size_subflow_data = sizeof(*addr);
+addr->num_subflows = 0;
+addr->size_kernel = 0;
+addr->size_user = sizeof(struct mptcp_subflow_addrs);
 
-This allows userspace to re-try with a larger tcp_info array if the number
-of subflows was larger than the available space in the ti[] array.
+sf_addr = (struct mptcp_subflow_addrs *)(addr + 1);
 
-olen has to be set to the number of bytes that userspace has allocated to
-receive the kernel data.  It will be updated to contain the real number
-bytes that have been copied to by the kernel.
+and then retrieves the endpoint addresses via:
+ret = getsockopt(fd, SOL_MPTCP, MPTCP_SUBFLOW_ADDRS,
+		 addr, &olen);
 
-In the above example, if the number if subflows was 1, olen is equal to
-'sizeof(struct mptcp_subflow_data) + sizeof(struct tcp_info).
-For 2 or more subflows olen is equal to 'sizeof(struct my_tcp_info)'.
+If the call succeeds, kernel will have added up to 8
+endpoint addresses after the 'mptcp_subflow_data' header.
 
-If there was more data that could not be copied due to lack of space
-in the option buffer, userspace can detect this by checking
-mptcp_subflow_data->num_subflows.
+Userspace needs to re-check 'olen' value to detect how
+many bytes have been filled in by the kernel.
+
+Userspace can check addr->num_subflows to discover when
+there were more subflows that available data space.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/uapi/linux/mptcp.h |  10 +++-
- net/mptcp/sockopt.c        | 115 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 124 insertions(+), 1 deletion(-)
+ include/uapi/linux/mptcp.h | 17 +++++++
+ net/mptcp/sockopt.c        | 91 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
 
 diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index c450feba6f9c..7c368fccd83e 100644
+index 7c368fccd83e..c368c11a0ed9 100644
 --- a/include/uapi/linux/mptcp.h
 +++ b/include/uapi/linux/mptcp.h
-@@ -194,7 +194,15 @@ enum mptcp_event_attr {
- #define MPTCP_RST_EBADPERF	5
- #define MPTCP_RST_EMIDDLEBOX	6
+@@ -201,8 +201,25 @@ struct mptcp_subflow_data {
+ 	__u32		size_user;			/* size of one element in data[] */
+ } __attribute__((aligned(8)));
  
-+struct mptcp_subflow_data {
-+	__u32		size_subflow_data;		/* size of this structure in userspace */
-+	__u32		num_subflows;			/* must be 0, set by kernel */
-+	__u32		size_kernel;			/* must be 0, set by kernel */
-+	__u32		size_user;			/* size of one element in data[] */
-+} __attribute__((aligned(8)));
++struct mptcp_subflow_addrs {
++	union {
++		__kernel_sa_family_t sa_family;
++		struct sockaddr sa_local;
++		struct sockaddr_in sin_local;
++		struct sockaddr_in6 sin6_local;
++		struct sockaddr_storage ss_local;
++	};
++	union {
++		struct sockaddr sa_remote;
++		struct sockaddr_in sin_remote;
++		struct sockaddr_in6 sin6_remote;
++		struct sockaddr_storage ss_remote;
++	};
++};
 +
  /* MPTCP socket options */
--#define MPTCP_INFO 1
-+#define MPTCP_INFO		1
-+#define MPTCP_TCPINFO		2
+ #define MPTCP_INFO		1
+ #define MPTCP_TCPINFO		2
++#define MPTCP_SUBFLOW_ADDRS	3
  
  #endif /* _UAPI_MPTCP_H */
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index f7683c22911f..eb2905bfa089 100644
+index eb2905bfa089..8137cc3a4296 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -14,6 +14,8 @@
- #include <net/mptcp.h>
- #include "protocol.h"
- 
-+#define MIN_INFO_OPTLEN_SIZE	16
-+
- static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
- {
- 	sock_owned_by_me((const struct sock *)msk);
-@@ -727,6 +729,117 @@ static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, in
+@@ -840,6 +840,95 @@ static int mptcp_getsockopt_tcpinfo(struct mptcp_sock *msk, char __user *optval,
  	return 0;
  }
  
-+static int mptcp_put_subflow_data(struct mptcp_subflow_data *sfd,
-+				  char __user *optval,
-+				  u32 copied,
-+				  int __user *optlen)
++static void mptcp_get_sub_addrs(const struct sock *sk, struct mptcp_subflow_addrs *a)
 +{
-+	u32 copylen = min_t(u32, sfd->size_subflow_data, sizeof(*sfd));
++	struct inet_sock *inet = inet_sk(sk);
 +
-+	if (copied)
-+		copied += sfd->size_subflow_data;
-+	else
-+		copied = copylen;
++	memset(a, 0, sizeof(*a));
 +
-+	if (put_user(copied, optlen))
-+		return -EFAULT;
++	if (sk->sk_family == AF_INET) {
++		a->sin_local.sin_family = AF_INET;
++		a->sin_local.sin_port = inet->inet_sport;
++		a->sin_local.sin_addr.s_addr = inet->inet_rcv_saddr;
 +
-+	if (copy_to_user(optval, sfd, copylen))
-+		return -EFAULT;
++		if (!a->sin_local.sin_addr.s_addr)
++			a->sin_local.sin_addr.s_addr = inet->inet_saddr;
 +
-+	return 0;
++		a->sin_remote.sin_family = AF_INET;
++		a->sin_remote.sin_port = inet->inet_dport;
++		a->sin_remote.sin_addr.s_addr = inet->inet_daddr;
++#if IS_ENABLED(CONFIG_IPV6)
++	} else if (sk->sk_family == AF_INET6) {
++		const struct ipv6_pinfo *np = inet6_sk(sk);
++
++		a->sin6_local.sin6_family = AF_INET6;
++		a->sin6_local.sin6_port = inet->inet_sport;
++
++		if (ipv6_addr_any(&sk->sk_v6_rcv_saddr))
++			a->sin6_local.sin6_addr = np->saddr;
++		else
++			a->sin6_local.sin6_addr = sk->sk_v6_rcv_saddr;
++
++		a->sin6_remote.sin6_family = AF_INET6;
++		a->sin6_remote.sin6_port = inet->inet_dport;
++		a->sin6_remote.sin6_addr = sk->sk_v6_daddr;
++#endif
++	}
 +}
 +
-+static int mptcp_get_subflow_data(struct mptcp_subflow_data *sfd,
-+				  char __user *optval, int __user *optlen)
++static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *optval,
++					  int __user *optlen)
 +{
-+	int len, copylen;
-+
-+	if (get_user(len, optlen))
-+		return -EFAULT;
-+
-+	/* if mptcp_subflow_data size is changed, need to adjust
-+	 * this function to deal with programs using old version.
-+	 */
-+	BUILD_BUG_ON(sizeof(*sfd) != MIN_INFO_OPTLEN_SIZE);
-+
-+	if (len < MIN_INFO_OPTLEN_SIZE)
-+		return -EINVAL;
-+
-+	memset(sfd, 0, sizeof(*sfd));
-+
-+	copylen = min_t(unsigned int, len, sizeof(*sfd));
-+	if (copy_from_user(sfd, optval, copylen))
-+		return -EFAULT;
-+
-+	/* size_subflow_data is u32, but len is signed */
-+	if (sfd->size_subflow_data > INT_MAX ||
-+	    sfd->size_user > INT_MAX)
-+		return -EINVAL;
-+
-+	if (sfd->size_subflow_data < MIN_INFO_OPTLEN_SIZE ||
-+	    sfd->size_subflow_data > len)
-+		return -EINVAL;
-+
-+	if (sfd->num_subflows || sfd->size_kernel)
-+		return -EINVAL;
-+
-+	return len - sfd->size_subflow_data;
-+}
-+
-+static int mptcp_getsockopt_tcpinfo(struct mptcp_sock *msk, char __user *optval,
-+				    int __user *optlen)
-+{
-+	struct mptcp_subflow_context *subflow;
 +	struct sock *sk = &msk->sk.icsk_inet.sk;
++	struct mptcp_subflow_context *subflow;
 +	unsigned int sfcount = 0, copied = 0;
 +	struct mptcp_subflow_data sfd;
-+	char __user *infoptr;
++	char __user *addrptr;
 +	int len;
 +
 +	len = mptcp_get_subflow_data(&sfd, optval, optlen);
 +	if (len < 0)
 +		return len;
 +
-+	sfd.size_kernel = sizeof(struct tcp_info);
++	sfd.size_kernel = sizeof(struct mptcp_subflow_addrs);
 +	sfd.size_user = min_t(unsigned int, sfd.size_user,
-+			      sizeof(struct tcp_info));
++			      sizeof(struct mptcp_subflow_addrs));
 +
-+	infoptr = optval + sfd.size_subflow_data;
++	addrptr = optval + sfd.size_subflow_data;
 +
 +	lock_sock(sk);
 +
@@ -225,16 +188,16 @@ index f7683c22911f..eb2905bfa089 100644
 +		++sfcount;
 +
 +		if (len && len >= sfd.size_user) {
-+			struct tcp_info info;
++			struct mptcp_subflow_addrs a;
 +
-+			tcp_get_info(ssk, &info);
++			mptcp_get_sub_addrs(ssk, &a);
 +
-+			if (copy_to_user(infoptr, &info, sfd.size_user)) {
++			if (copy_to_user(addrptr, &a, sfd.size_user)) {
 +				release_sock(sk);
 +				return -EFAULT;
 +			}
 +
-+			infoptr += sfd.size_user;
++			addrptr += sfd.size_user;
 +			copied += sfd.size_user;
 +			len -= sfd.size_user;
 +		}
@@ -253,12 +216,12 @@ index f7683c22911f..eb2905bfa089 100644
  static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
  				    char __user *optval, int __user *optlen)
  {
-@@ -747,6 +860,8 @@ static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
- 	switch (optname) {
- 	case MPTCP_INFO:
+@@ -862,6 +951,8 @@ static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
  		return mptcp_getsockopt_info(msk, optval, optlen);
-+	case MPTCP_TCPINFO:
-+		return mptcp_getsockopt_tcpinfo(msk, optval, optlen);
+ 	case MPTCP_TCPINFO:
+ 		return mptcp_getsockopt_tcpinfo(msk, optval, optlen);
++	case MPTCP_SUBFLOW_ADDRS:
++		return mptcp_getsockopt_subflow_addrs(msk, optval, optlen);
  	}
  
  	return -EOPNOTSUPP;
