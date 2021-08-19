@@ -1,92 +1,75 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4119D6D24
-	for <mptcp@lists.linux.dev>; Thu, 19 Aug 2021 14:56:41 +0000 (UTC)
-Received: by mail-ej1-f45.google.com with SMTP id qk33so13461264ejc.12
-        for <mptcp@lists.linux.dev>; Thu, 19 Aug 2021 07:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+Aolo5HOMotnMona3VvhCs1suT7LJfR+2s6jWLZJqfw=;
-        b=suQiBHA8h19GULA7d26R+cUeQieDQb/7x9ZRu1NSQnxR6BPuqwPGgxMDhSFN0zjnAb
-         ekT13PAVbviY3FljWTMMY6IJJUtZoBQLvN3q/uAjqJW1mRU6Nofo+aa0bny1Dh6isPZe
-         hLIYBPjGjtqBfRAlERG3FLwDHCrEGySL97VYGmA/xw/R1HxE8iNuzaflGS7HxMNoFeoX
-         2kHPOhfs+cEKsCFpJRahszVzfKutuaF6HgBU07tAkfXMGcEFjhAuhWtcahIk/PFPc6zd
-         XnAAllTnO2Y3+xMIqlbKQhXOchTsg3zVS2wc7MyhmmhnudJ7uMsynv4PnWCgWHkxNiyb
-         u/kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+Aolo5HOMotnMona3VvhCs1suT7LJfR+2s6jWLZJqfw=;
-        b=ttHVp0TxDjvQgwsAkua84JoMt3XKwq38ILcbiAtJRX3FEXSpYTn6MEMXMPhVNfmP41
-         T2THm5bxRBhfQUnrtn3+RwETYzOD1IhXFIdFASnLEaHi5vSrntQPKytXAazxxN1IvMo8
-         hfRQzVWzKg5urfr3bMLU/2nHPJZdVJJegkuSaKfsMWlrXAEaHQwU6tQYg1BQwZRR1xRS
-         e8piTRo4F7SdcEp4s3op9nV0bRlletmhTGzlSOaw0IHnNte6mIaXM1ShDeug4cTxjPs6
-         KiopcFkTXo6ukOgrS3VbgwfAIvbQHbjd6HWDXiCrUxaSo+TIP2y1CZ0czBhM5FoFasT8
-         lOGw==
-X-Gm-Message-State: AOAM533n1l1Ms0H7QoFFVMQ5L9AJzFn9mtEfsDYwrpLSCPNGJsAReyhf
-	sI1j9Ny0MxOrsZPHhiKZzeO5DdV8krv/vmKW
-X-Google-Smtp-Source: ABdhPJw7KRnF/gHmDquZiW681GaPrfWHO42S5jfh1rghKEthSi5PbD0lMkq4n4Hg+EBfIXZDMXZEiw==
-X-Received: by 2002:a17:906:2642:: with SMTP id i2mr16637468ejc.323.1629385000182;
-        Thu, 19 Aug 2021 07:56:40 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([213.211.142.31])
-        by smtp.gmail.com with ESMTPSA id o17sm1823036edc.58.2021.08.19.07.56.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Aug 2021 07:56:39 -0700 (PDT)
-Subject: Re: [PATCH mptcp] selftest: wait before trasnmitting first data chunk
-To: Florian Westphal <fw@strlen.de>
-References: <20210819130040.30228-1-fw@strlen.de>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <dda5fa72-be05-cca2-6839-343b56644ab9@tessares.net>
-Date: Thu, 19 Aug 2021 16:56:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B666D24
+	for <mptcp@lists.linux.dev>; Thu, 19 Aug 2021 15:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1629386193;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5d6Kpq0bKpSIObdHA3NfrVheFjSH9QxLKFkd1saHND8=;
+	b=gVbqsnuGVNfm+fl3jRvHtDbV/0ESwENnZsZUej15OqlCmOg7OL6NUn5sd9M+J1ZhJHnScW
+	j12r73IYiqXHmOjNcDidKlyLF5SwsbyF4QAXqgS+rWzk7oKinHEsB0dyag0W9IfYyx6Ph/
+	kdNX47UjPPc9TzXv46kndcPpuT0QDs4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-602-niMzDbXzMVGetGAxhMau1w-1; Thu, 19 Aug 2021 11:16:30 -0400
+X-MC-Unique: niMzDbXzMVGetGAxhMau1w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93E96801A92
+	for <mptcp@lists.linux.dev>; Thu, 19 Aug 2021 15:16:29 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.179])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0DE9E6F97F
+	for <mptcp@lists.linux.dev>; Thu, 19 Aug 2021 15:16:28 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH v2 mptcp-next 0/4] mptcp: minor receive path optimization
+Date: Thu, 19 Aug 2021 17:16:13 +0200
+Message-Id: <cover.1629386016.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210819130040.30228-1-fw@strlen.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Florian,
+This series aims at closing:
 
-On 19/08/2021 15:00, Florian Westphal wrote:
-> Squashto: selftests: mptcp: add mptcp getsockopt test cases
-> 
-> Mathieu reports spurious failure of the selftest:
->  mptcp_sockopt.c:362: do_getsockopt_tcp_info: Assertion `ti.ti[0].tcpi_bytes_received == r' failed.
->  mptcp_sockopt.c:330: do_getsockopt_mptcp_info: Assertion `s-&gt;mi.mptcpi_rcv_nxt + r == i.mptcpi_rcv_nxt' failed.
-> 
-> This is because client and server are racing.
-> The first getsockopt() for (MP)TCP_INFO might be called when some data
-> was already received, but the mptcpi_rcv_nxt assertion relies on the
-> initial call to fetch a 'start sequence number'.
-> 
-> Extend the pipe (that was used to unblock the 'connect process' when
-> the server had bound a socket), it now tells when to connet and when
-> to send the first chunk of data.
-> 
-> In addition, its remote chance, but possible, that tx is slower
-> than expected so allow tcpinfo to wait a bit for more data to arrive.
-> 
-> After this, 20k invocations pass without failures.
+https://github.com/multipath-tcp/mptcp_net-next/issues/42
 
-Thank you for this patch! It looks good to me!
+The relevant code is introduced by patch 4/4.
 
-It is also passing multiple times without issues on my side with and
-without a debug kernel!
+Do do the above in hopefully clean way, the series needs some
+changes to the input options struct. That means a lot of
+noise in the option-related code in the previous patches,
+anyhow no functional change is intended here.
 
-Cheers,
-Matt
+v1 -> v2:
+ - fixed = -> |= (Mat)
+ - fixed bug in ADD_ADDR processing (still in 3/4)
+
+Paolo Abeni (4):
+  mptcp: do not set unconditionally csum_reqd on incoming opt
+  mptcp: better binary layout for mptcp_options_received
+  mptcp: consolidate in_opt sub-options fields in a bitmask
+  mptcp: optimize the input options processing.
+
+ net/mptcp/options.c  | 140 +++++++++++++++++++------------------------
+ net/mptcp/protocol.c |   4 +-
+ net/mptcp/protocol.h |  36 ++++++-----
+ net/mptcp/subflow.c  |  40 +++++++------
+ 4 files changed, 104 insertions(+), 116 deletions(-)
+
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.3
+
