@@ -1,26 +1,26 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F35B3FC7
-	for <mptcp@lists.linux.dev>; Thu, 19 Aug 2021 23:19:23 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="277692159"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655F42F80
+	for <mptcp@lists.linux.dev>; Thu, 19 Aug 2021 23:20:02 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="238795038"
 X-IronPort-AV: E=Sophos;i="5.84,336,1620716400"; 
-   d="scan'208";a="277692159"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 16:19:18 -0700
+   d="scan'208";a="238795038"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 16:20:01 -0700
 X-IronPort-AV: E=Sophos;i="5.84,336,1620716400"; 
-   d="scan'208";a="522644793"
+   d="scan'208";a="532694394"
 Received: from seedmund-mobl.amr.corp.intel.com ([10.212.221.18])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 16:19:17 -0700
-Date: Thu, 19 Aug 2021 16:19:16 -0700 (PDT)
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 16:20:01 -0700
+Date: Thu, 19 Aug 2021 16:20:00 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp] selftest: wait before trasnmitting first data
- chunk
-In-Reply-To: <dda5fa72-be05-cca2-6839-343b56644ab9@tessares.net>
-Message-ID: <571b2e3a-cd36-368a-4184-8cf42eb33b5@linux.intel.com>
-References: <20210819130040.30228-1-fw@strlen.de> <dda5fa72-be05-cca2-6839-343b56644ab9@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add mptcp
+ getsockopt test cases"
+In-Reply-To: <20210819134026.1155338-1-matthieu.baerts@tessares.net>
+Message-ID: <bddda8b-1340-1554-c41e-236956bcac@linux.intel.com>
+References: <20210819134026.1155338-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -31,37 +31,37 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Thu, 19 Aug 2021, Matthieu Baerts wrote:
 
-> Hi Florian,
+> selftests: mptcp: ignore mptcp_sockopt
 >
-> On 19/08/2021 15:00, Florian Westphal wrote:
->> Squashto: selftests: mptcp: add mptcp getsockopt test cases
->>
->> Mathieu reports spurious failure of the selftest:
->>  mptcp_sockopt.c:362: do_getsockopt_tcp_info: Assertion `ti.ti[0].tcpi_bytes_received == r' failed.
->>  mptcp_sockopt.c:330: do_getsockopt_mptcp_info: Assertion `s-&gt;mi.mptcpi_rcv_nxt + r == i.mptcpi_rcv_nxt' failed.
->>
->> This is because client and server are racing.
->> The first getsockopt() for (MP)TCP_INFO might be called when some data
->> was already received, but the mptcpi_rcv_nxt assertion relies on the
->> initial call to fetch a 'start sequence number'.
->>
->> Extend the pipe (that was used to unblock the 'connect process' when
->> the server had bound a socket), it now tells when to connet and when
->> to send the first chunk of data.
->>
->> In addition, its remote chance, but possible, that tx is slower
->> than expected so allow tcpinfo to wait a bit for more data to arrive.
->>
->> After this, 20k invocations pass without failures.
+> Similar to what was done for mptcp_connect and pm_nl_ctl.
 >
-> Thank you for this patch! It looks good to me!
+> (No need to add "Co-Dev" tag of course)
 >
-> It is also passing multiple times without issues on my side with and
-> without a debug kernel!
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
 >
+> Notes:
+>    to be squashed in "selftests: mptcp: add mptcp getsockopt test cases"
 
-Looks good to me as well. Ok to squash with "selftests: mptcp: add mptcp 
-getsockopt test cases"?
+Looks good, please squash!
+
+
+>
+> tools/testing/selftests/net/mptcp/.gitignore | 1 +
+> 1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
+> index 260336d5f0b1..7569d892967a 100644
+> --- a/tools/testing/selftests/net/mptcp/.gitignore
+> +++ b/tools/testing/selftests/net/mptcp/.gitignore
+> @@ -1,4 +1,5 @@
+> # SPDX-License-Identifier: GPL-2.0-only
+> mptcp_connect
+> +mptcp_sockopt
+> pm_nl_ctl
+> *.pcap
+> -- 
+> 2.32.0
 
 --
 Mat Martineau
