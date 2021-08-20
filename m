@@ -1,116 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F5E3FC1
-	for <mptcp@lists.linux.dev>; Fri, 20 Aug 2021 07:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1629446308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aZJibMhfgOMgB7Uj1Dz1mQ8Q/tzgQ/OaSWNpA1wAeBA=;
-	b=Ksp9dXCW0FrIQZyIFFg3kCzQYazQ7YENZFsKwYTXPeYgXe25eX1k7WJuNYm4mwvmZpskFV
-	XyIeoBb9oBhhF5BkpHCMgY125HIy/g5UsKqbAwecG3IsGMRJu7EEwbsyh0/OJAAEqZZcK4
-	9m2asNCMkRmxM3ova1LDQ8KO6Hd/zJM=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-565-ibZ-tU-fPlyuNMYBH7wbrw-1; Fri, 20 Aug 2021 03:58:25 -0400
-X-MC-Unique: ibZ-tU-fPlyuNMYBH7wbrw-1
-Received: by mail-ej1-f72.google.com with SMTP id h22-20020a170906719600b005bc74a33a63so3384648ejk.8
-        for <mptcp@lists.linux.dev>; Fri, 20 Aug 2021 00:58:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1E43FC1
+	for <mptcp@lists.linux.dev>; Fri, 20 Aug 2021 08:02:52 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id z20so18439399ejf.5
+        for <mptcp@lists.linux.dev>; Fri, 20 Aug 2021 01:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7S76ur/iGWesNvpZ2LdG1GIUoki3pfEFM9mgwkM1/fs=;
+        b=gQa3+okokK644U7qHfRUBTkYNr+DSEOuUc29uNR3NZ0uMtHRGIxsBDrfk6H+9blx/a
+         aRvxshKs8YEDuIOqBmgfWx9A4ZlQvD3k7KD174fTY+vcM4Djpbn4wOBTwN9Z+kHnhBAa
+         gxzoV2H6qyQTzg+bjVSmPek7aUCuPyj5vnLp/5PBisbo+CAjK2KPJsLRcfMNtbNHWq8Q
+         0gmg/I88sykzpEIdT6L3zG4k9DbdK41QO1pBcD3LPzTEFXKs7IPyGonFISxmQKvLxcvx
+         /xMzXRRT/RVRhNjdLaq2dCTozdBlDBSeMmZu9yUfuGFqrku1C9RADGW3aTGi0CNgaJQk
+         3/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=aZJibMhfgOMgB7Uj1Dz1mQ8Q/tzgQ/OaSWNpA1wAeBA=;
-        b=MDRA649MQfJahM6ecUKEZCP6rOjDxBHFDfI5VXntU6YSoAMl6A+jeZ9uJcBcyRK7zN
-         /tdaY4Bt0kt2q4T6cM2u5AWjV+rINInNL6RllT8BPYom4pmkoe6eOsgPkfrsfU/KeJ1e
-         R6x6qiYq/plUVjIfKdYRzkmF66m5oRwVjzVBlmFCP5LiGP8wscCqE/fQ81QjCc4zFbrd
-         v0ovZvfj+qSFbcbcg6pUdXGvR/tSqF48itiG2dzHQbdM4h+sNLhUwlZz84Mt0c3L98Um
-         paGA1ErU9HyXKcjWyQ+0dCSDWhVD1D6cFjRas7TSvCCSDW331PvktL8yOez1pGSWt7XI
-         cIaQ==
-X-Gm-Message-State: AOAM530gXFIsdgPAMQH+j98SWhmkFDLXpsSBuZoI045RlBMAPcE1QwaM
-	+c2sN4McyMSbMoLhLw2Z3o5EjWty/Tbb90BLwiY776c4KNvFCXfsjZUTGHb2/f+wxthKN75xVxY
-	7Xx8GUPBX7obXoco=
-X-Received: by 2002:a17:907:72ce:: with SMTP id du14mr20786141ejc.523.1629446304614;
-        Fri, 20 Aug 2021 00:58:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwc7E3iLk2wH3/spVeoArcYXqi+jnxXrXOAOmFKKOeXX02nXOnw+cC2/q8GsEISxd2IaWUjHA==
-X-Received: by 2002:a17:907:72ce:: with SMTP id du14mr20786133ejc.523.1629446304442;
-        Fri, 20 Aug 2021 00:58:24 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-224-77.dyn.eolo.it. [146.241.224.77])
-        by smtp.gmail.com with ESMTPSA id n10sm2484637ejk.86.2021.08.20.00.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 00:58:24 -0700 (PDT)
-Message-ID: <5875cffd7ed62665e7ed5770087f7094e690e828.camel@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7S76ur/iGWesNvpZ2LdG1GIUoki3pfEFM9mgwkM1/fs=;
+        b=ozZS4/tX85pW/oywxEjOLR41BmV+C6NiIwE+xfoyyxuSijOwniLKJcZcNOl3I9gYMg
+         qlBzR3EN3KiIHkgdiVLxjIbMZRNUNwjlczi8Br9WL+H+Bv09Kyw6rNCj25iRK02RKK70
+         qpu9QPlNp3tTjkD+KdmFegXKGd8sbW9YTH3raWEWtAZcLHZduuU3x9lzIH/1PUj+q+tD
+         QhQrbISU+bmkV8x3Zx4e7m72eswfoVuM1sMN6e8UyD1IWlCEAgzmKegmjpX+oqE+BmJ7
+         VT9neG02ccF+fI/2/A1q/f5o4HGeiFMBquZ0s5EHWxE1AJpcoy/P0WV1DkD0nXuaQdAq
+         JbOg==
+X-Gm-Message-State: AOAM532itOLbGwADcnoYyvCesvRTvfaT/2pogdqvvqCDx3dqQ40AFGjz
+	2NZPoyiOS2eLm7mKT2EOSaSGYopPlvkFSIgA
+X-Google-Smtp-Source: ABdhPJz/QiCB1TZJgaGM+tR2jcxPnH58Pzn6x8lP4xsZ1tU9EbP6M3+8IOzq/Oj7dR8lOKfBv/3KOg==
+X-Received: by 2002:a17:906:3486:: with SMTP id g6mr20426270ejb.71.1629446570719;
+        Fri, 20 Aug 2021 01:02:50 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([213.211.142.31])
+        by smtp.gmail.com with ESMTPSA id r6sm3107446edq.20.2021.08.20.01.02.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Aug 2021 01:02:50 -0700 (PDT)
 Subject: Re: [PATCH v2 mptcp-next 4/4] mptcp: optimize the input options
  processing.
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
 Cc: mptcp@lists.linux.dev
-Date: Fri, 20 Aug 2021 09:58:23 +0200
-In-Reply-To: <65cee750-5e3-aeb0-fd2-8342357b4ba7@linux.intel.com>
 References: <cover.1629386016.git.pabeni@redhat.com>
-	 <1eb5eb91a3cdb5d0f03e20120b1c5c109d690fc8.1629386016.git.pabeni@redhat.com>
-	 <65cee750-5e3-aeb0-fd2-8342357b4ba7@linux.intel.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+ <1eb5eb91a3cdb5d0f03e20120b1c5c109d690fc8.1629386016.git.pabeni@redhat.com>
+ <65cee750-5e3-aeb0-fd2-8342357b4ba7@linux.intel.com>
+ <5875cffd7ed62665e7ed5770087f7094e690e828.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <34844b44-b898-b4cf-195a-d73fef222909@tessares.net>
+Date: Fri, 20 Aug 2021 10:02:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5875cffd7ed62665e7ed5770087f7094e690e828.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2021-08-19 at 17:24 -0700, Mat Martineau wrote:
-> On Thu, 19 Aug 2021, Paolo Abeni wrote:
+Hi Paolo,
+
+On 20/08/2021 09:58, Paolo Abeni wrote:
+> On Thu, 2021-08-19 at 17:24 -0700, Mat Martineau wrote:
+>> On Thu, 19 Aug 2021, Paolo Abeni wrote:
+>>
+>>> Most MPTCP packets carries a single MPTCP subption: the
+>>> DSS containing the mapping for the current packet.
+>>>
+>>> Check explicitly for the above, so that is such scenario we
+>>> replace most conditional statements with a single likely() one.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>> net/mptcp/options.c | 70 +++++++++++++++++++++++----------------------
+>>> 1 file changed, 36 insertions(+), 34 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>> index 0d33c020062f..af22d76f1699 100644
+>>> --- a/net/mptcp/options.c
+>>> +++ b/net/mptcp/options.c
+>>> @@ -1111,48 +1111,50 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+>>> 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+>>> 		return sk->sk_state != TCP_CLOSE;
+>>>
+>>> -	if ((mp_opt.suboptions & OPTION_MPTCP_FASTCLOSE) &&
+>>> -	    msk->local_key == mp_opt.rcvr_key) {
+>>> -		WRITE_ONCE(msk->rcv_fastclose, true);
+>>> -		mptcp_schedule_work((struct sock *)msk);
+>>> -	}
+>>> +	if (unlikely(mp_opt.suboptions != OPTION_MPTCP_DSS)) {
+>>
+>> This diff is a lot shorter when ignoring whitespace :)
+>>
+>> One question - is it worth optimizing for the mp_opt.suboptions = 0 case 
+>> too? While our stack will send duplicate DSS mappings when the mapped data 
+>> is split across multiple TCP packets, other stacks might send each mapping 
+>> only once (hopefully not, since that will affect GRO/etc).
 > 
-> > Most MPTCP packets carries a single MPTCP subption: the
-> > DSS containing the mapping for the current packet.
-> > 
-> > Check explicitly for the above, so that is such scenario we
-> > replace most conditional statements with a single likely() one.
-> > 
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
-> > net/mptcp/options.c | 70 +++++++++++++++++++++++----------------------
-> > 1 file changed, 36 insertions(+), 34 deletions(-)
-> > 
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index 0d33c020062f..af22d76f1699 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -1111,48 +1111,50 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
-> > 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
-> > 		return sk->sk_state != TCP_CLOSE;
-> > 
-> > -	if ((mp_opt.suboptions & OPTION_MPTCP_FASTCLOSE) &&
-> > -	    msk->local_key == mp_opt.rcvr_key) {
-> > -		WRITE_ONCE(msk->rcv_fastclose, true);
-> > -		mptcp_schedule_work((struct sock *)msk);
-> > -	}
-> > +	if (unlikely(mp_opt.suboptions != OPTION_MPTCP_DSS)) {
-> 
-> This diff is a lot shorter when ignoring whitespace :)
-> 
-> One question - is it worth optimizing for the mp_opt.suboptions = 0 case 
-> too? While our stack will send duplicate DSS mappings when the mapped data 
-> is split across multiple TCP packets, other stacks might send each mapping 
-> only once (hopefully not, since that will affect GRO/etc).
+> I *think* even mptcp.org is sending DSS on every packets, to help
+> GRO/GSO.
 
-I *think* even mptcp.org is sending DSS on every packets, to help
-GRO/GSO.
+Yes it does. (or at least, that's what is expected :) )
 
-Generally speaking, with intermittent DSS, we kill both TSO and GRO. It
-does not looks like a fast path. I guess we could add that check with
-time, if we see it being useful.
+> Generally speaking, with intermittent DSS, we kill both TSO and GRO.
 
-Thanks!
+Hopefully, NIC vendors could recognise MPTCP options and aggregate
+packets if they are in-order from MPTCP point of view as well.
 
-Paolo
+> It does not looks like a fast path. I guess we could add that check with
+> time, if we see it being useful.
 
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
