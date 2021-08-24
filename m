@@ -1,90 +1,75 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25E83FC1
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 07:58:42 +0000 (UTC)
-Received: by mail-ot1-f53.google.com with SMTP id k12-20020a056830150c00b0051abe7f680bso38621555otp.1
-        for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 00:58:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qrGUvUS/KIDwQcIGab309fFc7Hn4+1ct5OaaYFM/29w=;
-        b=VK2uY5st1jpFwxGElDlSwRqwvHMQWk3FvqpkK+obuEI5jXsKB+8SdgVwl+6bPv/58v
-         l2yoQXoEmtAu06J372yv6LljhKdLHPQANcOadK505xe6S59BQ/0b+IKQ/oZOqQtHgk+G
-         xue21I2+r/Qok0h88jMeNibWgnya+7g6qCa4JOCkNZEXgYNgCKAhCtzNQHH3OU1IHbTu
-         nphEHtgUo213c8JuO0xxANIiM4zeJ4l7Zz58TLtvbknc9hmW2hkBPjX33/K8nYcLJ8c7
-         X/9t6CXKbYbggTmyHk5f/tNCnje+5QHEdtPHPGxlC2o3pObuUZAIAbOa+X5cp/7bYTAy
-         aofw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qrGUvUS/KIDwQcIGab309fFc7Hn4+1ct5OaaYFM/29w=;
-        b=eE8WdZAwxsAic4x8Ohgd1hRTAlb2S4yUI5xCX0IHLJas/SWULylRzOWCuPgF4lgJjy
-         y1uIVN0BRINSQyFVM2D9O3iue9vHrTA37qbF9aGNwMekge1jf4OHMKpfvF+UUwSZ3Q+y
-         olBc+rCz9GYFcJCpPS/z/3vY5Xv2e9ZTTYDdkvA9Qbkze37VT+OCt5Q0rxwlIE166n46
-         RifCPgnsPPKDPhDGPFbE187RtKx/feSdvJ8k5D0+er23xwQFpE3cNfN8R0NlAqs2pYTn
-         FrKoOhJdYhWK5Fbrdh/cwT1eJhwClTN30zujINqI5+7CgUltGijBMwdUuzYMxL6syBgq
-         vabA==
-X-Gm-Message-State: AOAM5327TW/3KOw6HYPSUsKs4Xg6ZHqLiG31+lqFmVBqX1mF2ryPrLXk
-	/qVRRadVcnmnc+yS6Qr0in7AlDWLcsbziDmTSnQ=
-X-Google-Smtp-Source: ABdhPJz8Zixz9iOHRSHarGwc/mp2eUt5b8i28s21bK4CCcwVBiBuR+M3l80bTbzEGALKyz9y8jy/msoSHLG5FJM0r1w=
-X-Received: by 2002:a9d:36d:: with SMTP id 100mr30558391otv.237.1629791921865;
- Tue, 24 Aug 2021 00:58:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399F472
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 08:40:08 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id C9A7E61262;
+	Tue, 24 Aug 2021 08:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1629794407;
+	bh=lkWPyRjSayK24aAOrWwv6ox2HliGIGhNCkeZx1vBdTU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=WzFSdkJvtiUXe+Dx850bFKRhpCbyQGlMNu8BcdfjaCX2QSo9blRPkap3Jv1qcpJL0
+	 fkO4XHZqIp2KdyRamS8lngOlaPFjGyV29wri9iihcj5u42on1DpM9qB4IIwiz7toRc
+	 zAjl2ASqGyaE4XlCodiNmq7lGiBlHopahApwEWcyw4gdl+EW73pFi/KnzkCNc8yKHO
+	 mkFg/a3MLtY11Z4NiLpcr0nj6cKx5asoFMnVpNZR+iBExCOCnxWnqnW4dJRgojNfoM
+	 ZjLSV0l24Gn8+kA848TybSj7OCdrTCQnUDpouEeL9poS6spjVWUeW1uG1UJ7HRB8C3
+	 AkxA7ocr40ABw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id BE71B608FC;
+	Tue, 24 Aug 2021 08:40:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20210824071926.68019-1-benbjiang@gmail.com> <fe512c8b-6f5a-0210-3f23-2c1fc75cd6e5@tessares.net>
-In-Reply-To: <fe512c8b-6f5a-0210-3f23-2c1fc75cd6e5@tessares.net>
-From: Jiang Biao <benbjiang@gmail.com>
-Date: Tue, 24 Aug 2021 15:58:31 +0800
-Message-ID: <CAPJCdBmTPW5gcO6DO5i=T+R2TNypzbaA666krk=7Duf2mt1yBw@mail.gmail.com>
-Subject: Re: [PATCH] ipv4/mptcp: fix divide error
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mathew.j.martineau@linux.intel.com, davem@davemloft.net, kuba@kernel.org, 
-	netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	linux-kernel <linux-kernel@vger.kernel.org>, Jiang Biao <benbjiang@tencent.com>, 
-	Jiang Biao <tcs_robot@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] mptcp: Refactor ADD_ADDR/RM_ADDR handling
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <162979440777.30048.9430649440436990103.git-patchwork-notify@kernel.org>
+Date: Tue, 24 Aug 2021 08:40:07 +0000
+References: <20210824010544.68600-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210824010544.68600-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
+ liyonglong@chinatelecom.cn
 
-Hi,
+Hello:
 
-On Tue, 24 Aug 2021 at 15:36, Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> Hi Jiang,
->
-> On 24/08/2021 09:19, Jiang Biao wrote:
->
-> (...)
->
-> > There is a fix divide error reported,
-> > divide error: 0000 [#1] PREEMPT SMP KASAN
-> > RIP: 0010:tcp_tso_autosize build/../net/ipv4/tcp_output.c:1975 [inline]
-> > RIP: 0010:tcp_tso_segs+0x14f/0x250 build/../net/ipv4/tcp_output.c:1992
->
-> Thank you for this patch and validating MPTCP on your side!
->
-> This issue is actively tracked on our Github project [1] and a patch is
-> already in our tree [2] but still under validation.
-> > It's introduced by non-initialized info->mss_now in __mptcp_push_pending.
-> > Fix it by adding protection in mptcp_push_release.
->
-> Indeed, you are right, info->mss_now can be set to 0 in some cases but
-> that's not normal.
->
-> Instead of adding a protection here, we preferred fixing the root cause,
-> see [2]. Do not hesitate to have a look at the other patch and comment
-> there if you don't agree with this version.
-> Except if [2] is difficult to backport, I think we don't need your extra
-> protection. WDYT?
->
-Agreed, fixing the root cause is much better.
-Thanks for the reply.
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-Regards,
-Jiang
+On Mon, 23 Aug 2021 18:05:38 -0700 you wrote:
+> This patch set changes the way MPTCP ADD_ADDR and RM_ADDR options are
+> handled to improve the reliability of sending and updating address
+> advertisements. The information used to populate outgoing advertisement
+> option headers is now stored separately to avoid rare cases where a more
+> recent request would overwrite something that had not been sent
+> yet. While the peers would recover from this, it's better to avoid the
+> problem in the first place.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/6] mptcp: move drop_other_suboptions check under pm lock
+    https://git.kernel.org/netdev/net-next/c/1f5e9e2f5fd5
+  - [net-next,2/6] mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
+    https://git.kernel.org/netdev/net-next/c/18fc1a922e24
+  - [net-next,3/6] mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
+    https://git.kernel.org/netdev/net-next/c/119c022096f5
+  - [net-next,4/6] mptcp: build ADD_ADDR/echo-ADD_ADDR option according pm.add_signal
+    https://git.kernel.org/netdev/net-next/c/f462a446384d
+  - [net-next,5/6] mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
+    https://git.kernel.org/netdev/net-next/c/c233ef139070
+  - [net-next,6/6] selftests: mptcp: add_addr and echo race test
+    https://git.kernel.org/netdev/net-next/c/33c563ad28e3
+
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
