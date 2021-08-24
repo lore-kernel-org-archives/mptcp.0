@@ -1,86 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD8A72
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 08:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E68272
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 09:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1629795578;
+	s=mimecast20190719; t=1629796586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Cav89NwWTxjoYtgoOBON341GP6biIGCsp8P4e7Q9/w=;
-	b=VQnyCkH3BGG0FcNPE+TykalIrZriPcwAktLfceyXjy+CDagD+1sn/vrsA5o0HYcKURgjBK
-	HY2YsXJ5e+f+GuXgblogr6yGXWe/S6W+ULn/Pt+II6LFpVNbznQ466aNxHQ4VMEAUVqZIa
-	MoaMl4M2obDDxC9PrH1vrnGtQLT+DCc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-uK7dW0lWMi6RCk29LEkGYQ-1; Tue, 24 Aug 2021 04:59:36 -0400
-X-MC-Unique: uK7dW0lWMi6RCk29LEkGYQ-1
-Received: by mail-wm1-f70.google.com with SMTP id z18-20020a1c7e120000b02902e69f6fa2e0so3863949wmc.9
-        for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 01:59:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=0Cav89NwWTxjoYtgoOBON341GP6biIGCsp8P4e7Q9/w=;
-        b=YKXPVU5A9jh2nrBLdPi0GH1kYTwxU1/TjtFDPfN4xZU93Rpajl0F2fK4vkLrqqSeKK
-         yh4c7RgKfkFDaF+d+kUp29glbcBDIB/PAENDyUxQShWJ27V3hNVKTtZz2cFRUvZbEVs7
-         2ufBY0fbliDl6GrIi5080HZoJnit9VS+qn53WNLSX0M41QW+GId1uB6tBkudzydpvtir
-         dquCON1xwwX6XpRCnAuvcXVXBs7v35gabD705wwlJJAnHX224HJpDpAK2x2S6qWZTez9
-         LcDNdF7TqOkh8MqWwDWgugi1guQz5e9Bt+fg2IbC/1oXUh6PsNRrRT0lPDeSBPgMw8Yq
-         cG5A==
-X-Gm-Message-State: AOAM533aJQJDSKAzh19OiqXblME1oaKUfzuwxf2d8WhyO4rHBr94byZl
-	0VuaUndq8V24ID6DT34KpL40My76xmn36rzWscy4O57++puqzmPG6jLfNongo/ZGcckmltGAfxJ
-	71Zva0Stc2mHVsXg=
-X-Received: by 2002:a1c:23d6:: with SMTP id j205mr3079388wmj.185.1629795575350;
-        Tue, 24 Aug 2021 01:59:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyqc3lIeHWPhFLIzFFeaFeJlRD7liTudpb1u7X8R6HI7vtfP4I66FJ6rMFTJVzwgPntRL3utQ==
-X-Received: by 2002:a1c:23d6:: with SMTP id j205mr3079371wmj.185.1629795575109;
-        Tue, 24 Aug 2021 01:59:35 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
-        by smtp.gmail.com with ESMTPSA id b15sm18794006wru.1.2021.08.24.01.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 01:59:34 -0700 (PDT)
-Message-ID: <a740d2b1755700420f86dce2b14267eac1ea1c5c.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: clean tmp files in
- simult_flows
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jTFPfQNQOy2loMBw5xB2esdE+kPXasHIqOX8UQHf4LY=;
+	b=EzLHehgWcDSO+OO/3/RJXTd66jcfsLpiVA6nCxZ5Vxm7DGjb/rpt8Zj1ifmhmqEo6OF8LN
+	NLhr4C+WuJ/X6hcrBLdIaXfhC0ecKKoumbBZ7b/HU8ECFzgjKVbDgb/vkZHRVCdyQNax2H
+	en37EMEgrKFL7dpgGx4VUN7e3VUTGJ0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-tZquxwO1NHqrt71RvwBVSw-1; Tue, 24 Aug 2021 05:16:25 -0400
+X-MC-Unique: tZquxwO1NHqrt71RvwBVSw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62CA1801E72
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 09:16:24 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.164])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CDCD360CC9
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 09:16:23 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Tue, 24 Aug 2021 10:59:34 +0200
-In-Reply-To: <20210824084751.3490436-1-matthieu.baerts@tessares.net>
-References: <20210824084751.3490436-1-matthieu.baerts@tessares.net>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] Squash-to: "mptcp: fix possible divide by zero"
+Date: Tue, 24 Aug 2021 11:16:19 +0200
+Message-Id: <0a5ab819684c76d5947ee91c43a1bbd75f5aa47c.1629796563.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-On Tue, 2021-08-24 at 10:47 +0200, Matthieu Baerts wrote:
-> '$cin' and '$sin' variables are local to a function: they are then not
-> available from the cleanup trap.
-> 
-> Instead, we need to use '$large' and '$small' that are not local and
-> defined just before setting the trap.
-> 
-> Without this patch, running this script in a loop might cause a:
-> 
->   write: No space left on device
-> 
-> issue.
-> 
-> Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+With the current 'can_collapse' definition, skb collapsing/coalescing
+may not happen have if can_collapse is true. Since we fill the
+tx cache only if 'can_collapse' is false, the TCP code can end-up
+allocating an skb without mptcp extension and triggering a later
+WARN
 
-Many thanks for catching this!
+Fix the issue using a much more restrictive check for collapsing, so
+that if such check is true, collapsing will happen for sure.
+Additionally change the variable name accordingly and remove a now
+erronous WARN_ON - collapsing can happen even if must_collapse is false.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Note that if by some bug we hit the opposite erroneous condition -
+collapsing did not happen even if must_collapse is true - we will hit
+the existing WARN_ON_ONCE(!mpext) check.
+
+The coming message in the squash to commit should be updated replacing:
+
+"""
+This change addresses the issue refactoring the skb allocation
+code so that skb allocation always happens after the call
+to tcp_send_mss() correctly initialize mss_now.
+"""
+
+with:
+"""
+This change addresses the issue refactoring the skb allocation
+code checking if skb collapsing will happen for sure and doing
+the skb allocation only after such check. Skb allocation will happens
+only after that the call to tcp_send_mss() correctly initializes mss_now.
+"""
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cd690794e22b..af8f677162f3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1290,7 +1290,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	bool zero_window_probe = false;
+ 	struct mptcp_ext *mpext = NULL;
+ 	struct sk_buff *skb, *tail;
+-	bool can_collapse = false;
++	bool must_collapse = false;
+ 	int size_bias = 0;
+ 	int avail_size;
+ 	size_t ret = 0;
+@@ -1310,17 +1310,21 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		 * SSN association set here
+ 		 */
+ 		mpext = skb_ext_find(skb, SKB_EXT_MPTCP);
+-		can_collapse = (info->size_goal - skb->len > 0) &&
+-			 mptcp_skb_can_collapse_to(data_seq, skb, mpext);
+-		if (!can_collapse) {
++		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
+ 			TCP_SKB_CB(skb)->eor = 1;
+-		} else {
++			goto alloc_skb;
++		}
++
++		must_collapse = (info->size_goal - skb->len > 0) &&
++				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
++		if (must_collapse) {
+ 			size_bias = skb->len;
+ 			avail_size = info->size_goal - skb->len;
+ 		}
+ 	}
+ 
+-	if (!can_collapse && !ssk->sk_tx_skb_cache &&
++alloc_skb:
++	if (!must_collapse && !ssk->sk_tx_skb_cache &&
+ 	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
+ 		return 0;
+ 
+@@ -1353,7 +1357,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	if (skb == tail) {
+ 		TCP_SKB_CB(tail)->tcp_flags &= ~TCPHDR_PSH;
+ 		mpext->data_len += ret;
+-		WARN_ON_ONCE(!can_collapse);
+ 		WARN_ON_ONCE(zero_window_probe);
+ 		goto out;
+ 	}
+-- 
+2.26.3
 
