@@ -1,32 +1,55 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E4872
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 01:05:52 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10085"; a="197456291"
-X-IronPort-AV: E=Sophos;i="5.84,346,1620716400"; 
-   d="scan'208";a="197456291"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 18:05:51 -0700
-X-IronPort-AV: E=Sophos;i="5.84,346,1620716400"; 
-   d="scan'208";a="515224413"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.11.16])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 18:05:51 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Yonglong Li <liyonglong@chinatelecom.cn>,
-	davem@davemloft.net,
-	kuba@kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36153FC1
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 07:19:41 +0000 (UTC)
+Received: by mail-pg1-f177.google.com with SMTP id s11so18952605pgr.11
+        for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 00:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bGy+Odlh1NNX+SVQo45RJ9LRSk2xxUJvjKlteUtof4o=;
+        b=qwDkdhUQgNa4eLNy5eQ42gaALhmbE8kxY4T8hAOW5WIXGk2PsV3/STX1wsdqMCvTBh
+         NIjjFt7DTtSTRmT2kSw2xKgxvKiB3IJSU+1p/rCyfu8784a8SdrX0vCS0OBmYsmc/vw7
+         oFaHyqYsglXPedUTL5WNjTTBSlI1YY6pkaz8B06hyX+6dx+0bX4KZiev5jAX0wKIWZpm
+         Zy57pWqnR6JWr8fhQcZwOv/k4oBJLftgQUN+evNSY9f01mMJrnT9bX2jSCfYN8DUBFF8
+         DD6dZcJbkqbW7jyi0piidGkwDQ/nTa+pxDV1Ps8LWIOq3jRxEdFCxcOL2YCA8+3guWNl
+         jP3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bGy+Odlh1NNX+SVQo45RJ9LRSk2xxUJvjKlteUtof4o=;
+        b=bcLf1Cvk0V/PCuut7v1M8XEovCbzaWvORjKpE+6dYB6oOSawVV2c8Dn7WvZXi9D8tq
+         Uqq9tOPe7kqTrhks8TGuuZAKtw1Ui94wkFut49xRfRbwOtGWBaK9jJTOd6qO/0gqvjl2
+         r8W/J4A2JFui7USzUSnlLrRF1lQEB2r3TNRK39m0znqeiJTXAe8l8yhU7vKl3itwPUL1
+         8EVsbuScFYCFMsJnLmkx45Z8YSYLs1J5TmvYlaRDEo/YLcV/jlVgZqCjurHXGlcfq9IY
+         bvdDCocaq/FOSLzEebf2FdnzWyVrN1HylLH2+EIsi+a/oylOM/0RwZx7Ar489J3zOjeX
+         vNBQ==
+X-Gm-Message-State: AOAM531LALtbdTQ5QYhBlvu1pDqhDi8qjD1Sz/dCV7WQy7r73Az+Vurr
+	bMD9qeQL82DlHSyvc9SPYRg=
+X-Google-Smtp-Source: ABdhPJwxrBq1c63ij1GbBbxt/Iby9FrVpNK1Mfz4X/UQbaQ2sx4Wk8WSrxRnZUZYCCoSSAKW1jIdtA==
+X-Received: by 2002:a63:df0d:: with SMTP id u13mr35067158pgg.417.1629789581510;
+        Tue, 24 Aug 2021 00:19:41 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.30])
+        by smtp.gmail.com with ESMTPSA id a4sm16868817pfa.203.2021.08.24.00.19.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Aug 2021 00:19:41 -0700 (PDT)
+From: Jiang Biao <benbjiang@gmail.com>
+To: mathew.j.martineau@linux.intel.com,
 	matthieu.baerts@tessares.net,
+	davem@davemloft.net,
+	kuba@kernel.org
+Cc: netdev@vger.kernel.org,
 	mptcp@lists.linux.dev,
-	Geliang Tang <geliangtang@gmail.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 6/6] selftests: mptcp: add_addr and echo race test
-Date: Mon, 23 Aug 2021 18:05:44 -0700
-Message-Id: <20210824010544.68600-7-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210824010544.68600-1-mathew.j.martineau@linux.intel.com>
-References: <20210824010544.68600-1-mathew.j.martineau@linux.intel.com>
+	linux-kernel@vger.kernel.org,
+	benbjiang@tencent.com,
+	Jiang Biao <tcs_robot@tencent.com>
+Subject: [PATCH] ipv4/mptcp: fix divide error
+Date: Tue, 24 Aug 2021 15:19:26 +0800
+Message-Id: <20210824071926.68019-1-benbjiang@gmail.com>
+X-Mailer: git-send-email 2.21.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,45 +58,71 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Yonglong Li <liyonglong@chinatelecom.cn>
+From: Jiang Biao <benbjiang@tencent.com>
 
-This patch added an extra test for the singal_address_tests() to do the
-ADD_ADDR and ADD_ADDR_ECHO race test.
+From: Jiang Biao <tcs_robot@tencent.com>
 
-Co-developed-by: Geliang Tang <geliangtang@gmail.com>
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+There is a fix divide error reported,
+divide error: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:tcp_tso_autosize build/../net/ipv4/tcp_output.c:1975 [inline]
+RIP: 0010:tcp_tso_segs+0x14f/0x250 build/../net/ipv4/tcp_output.c:1992
+Code: 38 d0 7c 08 84 d2 0f 85 d6 00 00 00 8b 83 8c 03 00 00 48 8d bb 9e 03 00 00 48 89 f9 2d 41 01 00 00 4c 39 e8 49 0f 47 c5 31 d2 <41> f7 f4 48 ba 00 00 00 00 00 fc ff df 39 e8 0f 42 c5 48 c1 e9 03
+RSP: 0018:ffffc9000205f558 EFLAGS: 00010246
+RAX: 000000000000febf RBX: ffff88801ed48000 RCX: ffff88801ed4839e
+RDX: 0000000000000000 RSI: ffff888102ad2340 RDI: ffff88801ed4839e
+RBP: 0000000000000002 R08: ffffffff8796862a R09: 000000000000003f
+R10: 0000000000000001 R11: 000000000000000a R12: 0000000000000000
+R13: 000000000024705b R14: 000000000000000a R15: ffff88801ed48350
+FS:  00007f923ce99700(0000) GS:ffff888023e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4f25fa3000 CR3: 0000000088b09000 CR4: 0000000000752ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ tcp_write_xmit+0x135/0x5d50 build/../net/ipv4/tcp_output.c:2623
+ __tcp_push_pending_frames+0xab/0x390 build/../net/ipv4/tcp_output.c:2874
+ tcp_push+0x473/0x6f0 build/../net/ipv4/tcp.c:736
+ mptcp_push_release.isra.32+0x17c/0x280 build/../net/mptcp/protocol.c:1437
+ __mptcp_push_pending+0x451/0x530 build/../net/mptcp/protocol.c:1478
+ mptcp_sendmsg+0x1759/0x1c00 build/../net/mptcp/protocol.c:1697
+ inet_sendmsg+0xa1/0xd0 build/../net/ipv4/af_inet.c:821
+ sock_sendmsg_nosec build/../net/socket.c:703 [inline]
+ sock_sendmsg+0xc9/0x120 build/../net/socket.c:723
+ ____sys_sendmsg+0x375/0x820 build/../net/socket.c:2392
+ ___sys_sendmsg+0x10a/0x180 build/../net/socket.c:2446
+ __sys_sendmmsg+0x193/0x470 build/../net/socket.c:2532
+ __do_sys_sendmmsg build/../net/socket.c:2561 [inline]
+ __se_sys_sendmmsg build/../net/socket.c:2558 [inline]
+ __x64_sys_sendmmsg+0x99/0x100 build/../net/socket.c:2558
+ do_syscall_x64 build/../arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x34/0xb0 build/../arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+It's introduced by non-initialized info->mss_now in __mptcp_push_pending.
+Fix it by adding protection in mptcp_push_release.
+
+Signed-off-by: Jiang Biao <tcs_robot@tencent.com>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ net/mptcp/protocol.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 8c7117e2c337..7b3e6cc56935 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1016,6 +1016,21 @@ signal_address_tests()
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "signal invalid addresses" 1 1 1
- 	chk_add_nr 3 3
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a88924947815..bfb3cd85bf19 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1433,8 +1433,10 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ static void mptcp_push_release(struct sock *sk, struct sock *ssk,
+ 			       struct mptcp_sendmsg_info *info)
+ {
++	int mss_now = info->mss_now ? info->mss_now : tcp_current_mss(ssk);
 +
-+	# signal addresses race test
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 4 4
-+	ip netns exec $ns2 ./pm_nl_ctl limits 4 4
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.1.2 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags signal
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_add_nr 4 4
+ 	mptcp_set_timeout(sk, ssk);
+-	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
++	tcp_push(ssk, 0, mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
+ 	release_sock(ssk);
  }
- 
- link_failure_tests()
--- 
-2.33.0
+
+--
+2.21.0
 
