@@ -1,29 +1,29 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B17029CA
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 23:26:33 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="214293410"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89AA3FC1
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 23:26:34 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="214293414"
 X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
-   d="scan'208";a="214293410"
+   d="scan'208";a="214293414"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:32 -0700
 X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
-   d="scan'208";a="515847896"
+   d="scan'208";a="515847900"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.40.105])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:31 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:32 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
+Cc: Geliang Tang <geliangtang@xiaomi.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	geliangtang@xiaomi.com,
+	pabeni@redhat.com,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 1/7] mptcp: optimize out option generation
-Date: Tue, 24 Aug 2021 16:26:13 -0700
-Message-Id: <20210824232619.136912-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 3/7] mptcp: MP_FAIL suboption sending
+Date: Tue, 24 Aug 2021 16:26:15 -0700
+Message-Id: <20210824232619.136912-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
 References: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
@@ -35,334 +35,175 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Geliang Tang <geliangtang@xiaomi.com>
 
-Currently we have several protocol constraints on MPTCP options
-generation (e.g. MPC and MPJ subopt are mutually exclusive)
-and some additional ones required by our implementation
-(e.g. almost all ADD_ADDR variant are mutually exclusive with
-everything else).
+This patch added the MP_FAIL suboption sending support.
 
-We can leverage the above to optimize the out option generation:
-we check DSS/MPC/MPJ presence in a mutually exclusive way,
-avoiding many unneeded conditionals in the common cases.
+Add a new flag named send_mp_fail in struct mptcp_subflow_context. If
+this flag is set, send out MP_FAIL suboption.
 
-Additionally extend the existing constraints on ADD_ADDR opt on
-all subvariants, so that it becomes fully mutually exclusive with
-the above and we can skip another conditional statement for the
-common case.
+Add a new member fail_seq in struct mptcp_out_options to save the data
+sequence number to put into the MP_FAIL suboption.
 
-This change is also needed by the next patch.
+An MP_FAIL option could be included in a RST or on the subflow-level
+ACK.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/options.c  | 229 +++++++++++++++++++++++--------------------
- net/mptcp/protocol.h |   1 +
- 2 files changed, 121 insertions(+), 109 deletions(-)
+ include/net/mptcp.h  |  5 +++-
+ net/mptcp/options.c  | 59 +++++++++++++++++++++++++++++++++++++++++---
+ net/mptcp/protocol.h |  3 +++
+ 3 files changed, 62 insertions(+), 5 deletions(-)
 
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 3236010afa29..6026bbefbffd 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -74,7 +74,10 @@ struct mptcp_out_options {
+ 			struct mptcp_addr_info addr;
+ 			u64 ahmac;
+ 		};
+-		struct mptcp_ext ext_copy;
++		struct {
++			struct mptcp_ext ext_copy;
++			u64 fail_seq;
++		};
+ 		struct {
+ 			u32 nonce;
+ 			u32 token;
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 4c37f4b215ee..1a59b3045a33 100644
+index 1a59b3045a33..f2ebdd55d3cc 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -592,6 +592,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 		dss_size = map_size;
- 		if (skb && snd_data_fin_enable)
- 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
-+		opts->suboptions = OPTION_MPTCP_DSS;
- 		ret = true;
- 	}
+@@ -767,7 +767,7 @@ static bool mptcp_established_options_mp_prio(struct sock *sk,
+ 	return true;
+ }
  
-@@ -615,6 +616,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 		opts->ext_copy.ack64 = 0;
- 	}
- 	opts->ext_copy.use_ack = 1;
-+	opts->suboptions = OPTION_MPTCP_DSS;
- 	WRITE_ONCE(msk->old_wspace, __mptcp_space((struct sock *)msk));
+-static noinline void mptcp_established_options_rst(struct sock *sk, struct sk_buff *skb,
++static noinline bool mptcp_established_options_rst(struct sock *sk, struct sk_buff *skb,
+ 						   unsigned int *size,
+ 						   unsigned int remaining,
+ 						   struct mptcp_out_options *opts)
+@@ -775,12 +775,36 @@ static noinline void mptcp_established_options_rst(struct sock *sk, struct sk_bu
+ 	const struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
  
- 	/* Add kind/length/subtype/flag overhead if mapping is not populated */
-@@ -686,8 +688,13 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
- 	if (drop_other_suboptions) {
- 		pr_debug("drop other suboptions");
- 		opts->suboptions = 0;
--		opts->ext_copy.use_ack = 0;
--		opts->ext_copy.use_map = 0;
+ 	if (remaining < TCPOLEN_MPTCP_RST)
+-		return;
++		return false;
+ 
+ 	*size = TCPOLEN_MPTCP_RST;
+ 	opts->suboptions |= OPTION_MPTCP_RST;
+ 	opts->reset_transient = subflow->reset_transient;
+ 	opts->reset_reason = subflow->reset_reason;
 +
-+		/* note that e.g. DSS could have written into the memory
-+		 * aliased by ahmac, we must reset the field here
-+		 * to avoid appending the hmac even for ADD_ADDR echo
-+		 * options
-+		 */
-+		opts->ahmac = 0;
- 		*size -= opt_size;
- 	}
- 	opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
-@@ -739,7 +746,12 @@ static bool mptcp_established_options_mp_prio(struct sock *sk,
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	return true;
++}
++
++static bool mptcp_established_options_mp_fail(struct sock *sk,
++					      unsigned int *size,
++					      unsigned int remaining,
++					      struct mptcp_out_options *opts)
++{
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++
++	if (likely(!subflow->send_mp_fail))
++		return false;
++
++	if (remaining < TCPOLEN_MPTCP_FAIL)
++		return false;
++
++	*size = TCPOLEN_MPTCP_FAIL;
++	opts->suboptions |= OPTION_MPTCP_FAIL;
++	opts->fail_seq = subflow->map_seq;
++
++	pr_debug("MP_FAIL fail_seq=%llu", opts->fail_seq);
++
++	return true;
+ }
  
--	if (!subflow->send_mp_prio)
-+	/* can't send MP_PRIO with MPC, as they share the same option space:
-+	 * 'backup'. Also it makes no sense at all
-+	 */
-+	if (!subflow->send_mp_prio ||
-+	    ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
-+	      OPTION_MPTCP_MPC_ACK) & opts->suboptions))
+ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+@@ -799,15 +823,28 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
  		return false;
  
- 	/* account for the trailing 'nop' option */
-@@ -1198,8 +1210,74 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+ 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+-		mptcp_established_options_rst(sk, skb, size, remaining, opts);
++		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
++			*size += opt_size;
++			remaining -= opt_size;
++		}
++		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
++			*size += opt_size;
++			remaining -= opt_size;
++		}
+ 		return true;
+ 	}
+ 
+ 	snd_data_fin = mptcp_data_fin_enabled(msk);
+ 	if (mptcp_established_options_mp(sk, skb, snd_data_fin, &opt_size, remaining, opts))
+ 		ret = true;
+-	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, &opt_size, remaining, opts))
++	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, &opt_size, remaining, opts)) {
+ 		ret = true;
++		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
++			*size += opt_size;
++			remaining -= opt_size;
++			return true;
++		}
++	}
+ 
+ 	/* we reserved enough space for the above options, and exceeding the
+ 	 * TCP option space would be fatal
+@@ -1210,6 +1247,20 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
  void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
  			 struct mptcp_out_options *opts)
  {
--	if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
--	     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-+	/* RST is mutually exclusive with everything else */
-+	if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
-+		*ptr++ = mptcp_option(MPTCPOPT_RST,
-+				      TCPOLEN_MPTCP_RST,
-+				      opts->reset_transient,
-+				      opts->reset_reason);
-+		return;
-+	}
-+
-+	/* DSS, MPC, MPJ and ADD_ADDR are mutually exclusive, see
-+	 * mptcp_established_options*()
-+	 */
-+	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
-+		struct mptcp_ext *mpext = &opts->ext_copy;
-+		u8 len = TCPOLEN_MPTCP_DSS_BASE;
-+		u8 flags = 0;
-+
-+		if (mpext->use_ack) {
-+			flags = MPTCP_DSS_HAS_ACK;
-+			if (mpext->ack64) {
-+				len += TCPOLEN_MPTCP_DSS_ACK64;
-+				flags |= MPTCP_DSS_ACK64;
-+			} else {
-+				len += TCPOLEN_MPTCP_DSS_ACK32;
-+			}
-+		}
-+
-+		if (mpext->use_map) {
-+			len += TCPOLEN_MPTCP_DSS_MAP64;
-+
-+			/* Use only 64-bit mapping flags for now, add
-+			 * support for optional 32-bit mappings later.
-+			 */
-+			flags |= MPTCP_DSS_HAS_MAP | MPTCP_DSS_DSN64;
-+			if (mpext->data_fin)
-+				flags |= MPTCP_DSS_DATA_FIN;
-+
-+			if (opts->csum_reqd)
-+				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
-+		}
-+
-+		*ptr++ = mptcp_option(MPTCPOPT_DSS, len, 0, flags);
-+
-+		if (mpext->use_ack) {
-+			if (mpext->ack64) {
-+				put_unaligned_be64(mpext->data_ack, ptr);
-+				ptr += 2;
-+			} else {
-+				put_unaligned_be32(mpext->data_ack32, ptr);
-+				ptr += 1;
-+			}
-+		}
-+
-+		if (mpext->use_map) {
-+			put_unaligned_be64(mpext->data_seq, ptr);
-+			ptr += 2;
-+			put_unaligned_be32(mpext->subflow_seq, ptr);
-+			ptr += 1;
-+			if (opts->csum_reqd) {
-+				put_unaligned_be32(mpext->data_len << 16 |
-+						   mptcp_make_csum(mpext), ptr);
-+			} else {
-+				put_unaligned_be32(mpext->data_len << 16 |
-+						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-+			}
-+		}
-+	} else if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
-+		    OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
- 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
- 
- 		if (OPTION_MPTCP_MPC_SYN & opts->suboptions) {
-@@ -1246,10 +1324,31 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
- 		}
- 		ptr += 1;
--	}
- 
--mp_capable_done:
--	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-+		/* MPC is additionally mutually exclusive with MP_PRIO */
-+		goto mp_capable_done;
-+	} else if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+				      TCPOLEN_MPTCP_MPJ_SYN,
-+				      opts->backup, opts->join_id);
-+		put_unaligned_be32(opts->token, ptr);
-+		ptr += 1;
-+		put_unaligned_be32(opts->nonce, ptr);
-+		ptr += 1;
-+	} else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+				      TCPOLEN_MPTCP_MPJ_SYNACK,
-+				      opts->backup, opts->join_id);
-+		put_unaligned_be64(opts->thmac, ptr);
-+		ptr += 2;
-+		put_unaligned_be32(opts->nonce, ptr);
-+		ptr += 1;
-+	} else if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+				      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
-+		memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
-+		ptr += 5;
-+	} else if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
- 		u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
- 		u8 echo = MPTCP_ADDR_ECHO;
- 
-@@ -1307,6 +1406,19 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		}
- 	}
- 
-+	if (OPTION_MPTCP_PRIO & opts->suboptions) {
++	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
 +		const struct sock *ssk = (const struct sock *)tp;
 +		struct mptcp_subflow_context *subflow;
 +
 +		subflow = mptcp_subflow_ctx(ssk);
-+		subflow->send_mp_prio = 0;
++		subflow->send_mp_fail = 0;
 +
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_PRIO,
-+				      TCPOLEN_MPTCP_PRIO,
-+				      opts->backup, TCPOPT_NOP);
++		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
++				      TCPOLEN_MPTCP_FAIL,
++				      0, 0);
++		put_unaligned_be64(opts->fail_seq, ptr);
++		ptr += 2;
 +	}
 +
-+mp_capable_done:
- 	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
- 		u8 i = 1;
- 
-@@ -1327,107 +1439,6 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		}
- 	}
- 
--	if (OPTION_MPTCP_PRIO & opts->suboptions) {
--		const struct sock *ssk = (const struct sock *)tp;
--		struct mptcp_subflow_context *subflow;
--
--		subflow = mptcp_subflow_ctx(ssk);
--		subflow->send_mp_prio = 0;
--
--		*ptr++ = mptcp_option(MPTCPOPT_MP_PRIO,
--				      TCPOLEN_MPTCP_PRIO,
--				      opts->backup, TCPOPT_NOP);
--	}
--
--	if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_SYN,
--				      opts->backup, opts->join_id);
--		put_unaligned_be32(opts->token, ptr);
--		ptr += 1;
--		put_unaligned_be32(opts->nonce, ptr);
--		ptr += 1;
--	}
--
--	if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_SYNACK,
--				      opts->backup, opts->join_id);
--		put_unaligned_be64(opts->thmac, ptr);
--		ptr += 2;
--		put_unaligned_be32(opts->nonce, ptr);
--		ptr += 1;
--	}
--
--	if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
--		memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
--		ptr += 5;
--	}
--
--	if (OPTION_MPTCP_RST & opts->suboptions)
--		*ptr++ = mptcp_option(MPTCPOPT_RST,
--				      TCPOLEN_MPTCP_RST,
--				      opts->reset_transient,
--				      opts->reset_reason);
--
--	if (opts->ext_copy.use_ack || opts->ext_copy.use_map) {
--		struct mptcp_ext *mpext = &opts->ext_copy;
--		u8 len = TCPOLEN_MPTCP_DSS_BASE;
--		u8 flags = 0;
--
--		if (mpext->use_ack) {
--			flags = MPTCP_DSS_HAS_ACK;
--			if (mpext->ack64) {
--				len += TCPOLEN_MPTCP_DSS_ACK64;
--				flags |= MPTCP_DSS_ACK64;
--			} else {
--				len += TCPOLEN_MPTCP_DSS_ACK32;
--			}
--		}
--
--		if (mpext->use_map) {
--			len += TCPOLEN_MPTCP_DSS_MAP64;
--
--			/* Use only 64-bit mapping flags for now, add
--			 * support for optional 32-bit mappings later.
--			 */
--			flags |= MPTCP_DSS_HAS_MAP | MPTCP_DSS_DSN64;
--			if (mpext->data_fin)
--				flags |= MPTCP_DSS_DATA_FIN;
--
--			if (opts->csum_reqd)
--				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
--		}
--
--		*ptr++ = mptcp_option(MPTCPOPT_DSS, len, 0, flags);
--
--		if (mpext->use_ack) {
--			if (mpext->ack64) {
--				put_unaligned_be64(mpext->data_ack, ptr);
--				ptr += 2;
--			} else {
--				put_unaligned_be32(mpext->data_ack32, ptr);
--				ptr += 1;
--			}
--		}
--
--		if (mpext->use_map) {
--			put_unaligned_be64(mpext->data_seq, ptr);
--			ptr += 2;
--			put_unaligned_be32(mpext->subflow_seq, ptr);
--			ptr += 1;
--			if (opts->csum_reqd) {
--				put_unaligned_be32(mpext->data_len << 16 |
--						   mptcp_make_csum(mpext), ptr);
--			} else {
--				put_unaligned_be32(mpext->data_len << 16 |
--						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
--			}
--		}
--	}
--
- 	if (tp)
- 		mptcp_set_rwin(tp);
- }
+ 	/* RST is mutually exclusive with everything else */
+ 	if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
+ 		*ptr++ = mptcp_option(MPTCPOPT_RST,
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7cd3d5979bcd..d276ce16f126 100644
+index d276ce16f126..3e4a79cf520a 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -26,6 +26,7 @@
- #define OPTION_MPTCP_FASTCLOSE	BIT(8)
+@@ -27,6 +27,7 @@
  #define OPTION_MPTCP_PRIO	BIT(9)
  #define OPTION_MPTCP_RST	BIT(10)
-+#define OPTION_MPTCP_DSS	BIT(11)
+ #define OPTION_MPTCP_DSS	BIT(11)
++#define OPTION_MPTCP_FAIL	BIT(12)
  
  /* MPTCP option subtypes */
  #define MPTCPOPT_MP_CAPABLE	0
+@@ -68,6 +69,7 @@
+ #define TCPOLEN_MPTCP_PRIO_ALIGN	4
+ #define TCPOLEN_MPTCP_FASTCLOSE		12
+ #define TCPOLEN_MPTCP_RST		4
++#define TCPOLEN_MPTCP_FAIL		12
+ 
+ #define TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM	(TCPOLEN_MPTCP_DSS_CHECKSUM + TCPOLEN_MPTCP_MPC_ACK_DATA)
+ 
+@@ -429,6 +431,7 @@ struct mptcp_subflow_context {
+ 		mpc_map : 1,
+ 		backup : 1,
+ 		send_mp_prio : 1,
++		send_mp_fail : 1,
+ 		rx_eof : 1,
+ 		can_ack : 1,        /* only after processing the remote a key */
+ 		disposable : 1,	    /* ctx can be free at ulp release time */
 -- 
 2.33.0
 
