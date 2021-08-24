@@ -1,128 +1,89 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36153FC1
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 07:19:41 +0000 (UTC)
-Received: by mail-pg1-f177.google.com with SMTP id s11so18952605pgr.11
-        for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 00:19:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42ED73FC1
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 07:28:38 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id cq23so30077195edb.12
+        for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 00:28:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bGy+Odlh1NNX+SVQo45RJ9LRSk2xxUJvjKlteUtof4o=;
-        b=qwDkdhUQgNa4eLNy5eQ42gaALhmbE8kxY4T8hAOW5WIXGk2PsV3/STX1wsdqMCvTBh
-         NIjjFt7DTtSTRmT2kSw2xKgxvKiB3IJSU+1p/rCyfu8784a8SdrX0vCS0OBmYsmc/vw7
-         oFaHyqYsglXPedUTL5WNjTTBSlI1YY6pkaz8B06hyX+6dx+0bX4KZiev5jAX0wKIWZpm
-         Zy57pWqnR6JWr8fhQcZwOv/k4oBJLftgQUN+evNSY9f01mMJrnT9bX2jSCfYN8DUBFF8
-         DD6dZcJbkqbW7jyi0piidGkwDQ/nTa+pxDV1Ps8LWIOq3jRxEdFCxcOL2YCA8+3guWNl
-         jP3Q==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c6GWBa06nkMUUT4xQR+i9wt0iGOaVj/Wq8jvzy7JYHI=;
+        b=c4P8lzgZL1QG2x6ktVNzCzpZaEDe7GnLO/lnXzrH0ln1rWUo+tR7/jLaUqbVeblzaC
+         kC2mvlnn7h+afpoQd1hkIp9trScThMRHb0ugyYvJn6UpjPd2eDbAywHDr4HvzEQTRDhZ
+         Y4jhdGd7IG2KMhTUVI1T31Ntg4ydHDzlLF+tQc9Si0qSSYDBnoAk8YkqYrHlJupcG9J1
+         yegjoVqY73pT6kgQVUhj/59JCAXLn8JDGrTAhb433mQaL3rFuxHFFY7P79gp8CVsbego
+         4HO1KtJsXoPsC8pawgRnWCH0J4e4j3F1eSNYmkRTBBLokoGiLeXjdmyAk31OfUD6DKeb
+         D3XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=bGy+Odlh1NNX+SVQo45RJ9LRSk2xxUJvjKlteUtof4o=;
-        b=bcLf1Cvk0V/PCuut7v1M8XEovCbzaWvORjKpE+6dYB6oOSawVV2c8Dn7WvZXi9D8tq
-         Uqq9tOPe7kqTrhks8TGuuZAKtw1Ui94wkFut49xRfRbwOtGWBaK9jJTOd6qO/0gqvjl2
-         r8W/J4A2JFui7USzUSnlLrRF1lQEB2r3TNRK39m0znqeiJTXAe8l8yhU7vKl3itwPUL1
-         8EVsbuScFYCFMsJnLmkx45Z8YSYLs1J5TmvYlaRDEo/YLcV/jlVgZqCjurHXGlcfq9IY
-         bvdDCocaq/FOSLzEebf2FdnzWyVrN1HylLH2+EIsi+a/oylOM/0RwZx7Ar489J3zOjeX
-         vNBQ==
-X-Gm-Message-State: AOAM531LALtbdTQ5QYhBlvu1pDqhDi8qjD1Sz/dCV7WQy7r73Az+Vurr
-	bMD9qeQL82DlHSyvc9SPYRg=
-X-Google-Smtp-Source: ABdhPJwxrBq1c63ij1GbBbxt/Iby9FrVpNK1Mfz4X/UQbaQ2sx4Wk8WSrxRnZUZYCCoSSAKW1jIdtA==
-X-Received: by 2002:a63:df0d:: with SMTP id u13mr35067158pgg.417.1629789581510;
-        Tue, 24 Aug 2021 00:19:41 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.30])
-        by smtp.gmail.com with ESMTPSA id a4sm16868817pfa.203.2021.08.24.00.19.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Aug 2021 00:19:41 -0700 (PDT)
-From: Jiang Biao <benbjiang@gmail.com>
-To: mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net,
-	davem@davemloft.net,
-	kuba@kernel.org
-Cc: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	benbjiang@tencent.com,
-	Jiang Biao <tcs_robot@tencent.com>
-Subject: [PATCH] ipv4/mptcp: fix divide error
-Date: Tue, 24 Aug 2021 15:19:26 +0800
-Message-Id: <20210824071926.68019-1-benbjiang@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        bh=c6GWBa06nkMUUT4xQR+i9wt0iGOaVj/Wq8jvzy7JYHI=;
+        b=X8RTdQznRp/Ekwtu4byojpsIa/WLVxC7/cw6ybEgHTcF61ueWbttSgpRwPFEKo2Lkd
+         Tdd7JCAZYCB2PN/pmLwh28ofiIBpioP6J+n3ggrPkAF/9daXxO5qZKZByxPPf5m4R0+M
+         M/8C+Gn2G8A6Zie9icTigy24bjJofb9pzVaRHgHCigjXphpQxF10EODgOpkgjIlu/G4f
+         REXcndodz1e4/+TopzOKiidCnvQsQUAOhc1hljvqHVrCUGptAX8UWnPfsf+yu5taaPF3
+         8AVpnKnc6BRoPCT19O4ibw7TWLf2kRQGyv1bZrXHI5UYP44k1YLMSumCLoLkZ04k0ocD
+         SNvQ==
+X-Gm-Message-State: AOAM533qlSeksBiwGqeB6X2QYSvPcINAI3FtZ2Tjk8RuQ9NUjvxzepSo
+	N3RJp+lCJ4i7Rd8zGPEuvOJIrw==
+X-Google-Smtp-Source: ABdhPJxvMxkPemRDNtTzqWp7w5HrDOVs/DYk2ABJjaoM7nnkc/iNCOyialGJwmgKh8QDOSuicMMyXQ==
+X-Received: by 2002:a05:6402:1b01:: with SMTP id by1mr23827223edb.2.1629790117380;
+        Tue, 24 Aug 2021 00:28:37 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id ay20sm10955243edb.91.2021.08.24.00.28.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Aug 2021 00:28:36 -0700 (PDT)
+Subject: Re: [PATCH mptcp 1/2] mptcp: fix possible divide by zero
+To: mptcp@lists.linux.dev
+References: <cover.1629481305.git.pabeni@redhat.com>
+ <286de8f451b32f60e75d3b8bcc4df515e186b930.1629481305.git.pabeni@redhat.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <e6347ff5-8c64-2467-e7db-f42b169821f9@tessares.net>
+Date: Tue, 24 Aug 2021 09:28:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <286de8f451b32f60e75d3b8bcc4df515e186b930.1629481305.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-From: Jiang Biao <benbjiang@tencent.com>
+Hello
 
-From: Jiang Biao <tcs_robot@tencent.com>
+On 20/08/2021 19:44, Paolo Abeni wrote:
+> Florian noted that if mptcp_alloc_tx_skb() allocation fails
+> in __mptcp_push_pending(), we can end-up invoking
+> mptcp_push_release()/tcp_push() with a zero mss, causing
+> a divide by 0 error.
+> 
+> This change addresses the issue refactoring the skb allocation
+> code so that skb allocation always happens after the call
+> to tcp_send_mss() correctly initialize mss_now.
+> 
+> As side bonuses we now fill the skb tx cache only when needed,
+> and this also clean-up a bit the output path.
 
-There is a fix divide error reported,
-divide error: 0000 [#1] PREEMPT SMP KASAN
-RIP: 0010:tcp_tso_autosize build/../net/ipv4/tcp_output.c:1975 [inline]
-RIP: 0010:tcp_tso_segs+0x14f/0x250 build/../net/ipv4/tcp_output.c:1992
-Code: 38 d0 7c 08 84 d2 0f 85 d6 00 00 00 8b 83 8c 03 00 00 48 8d bb 9e 03 00 00 48 89 f9 2d 41 01 00 00 4c 39 e8 49 0f 47 c5 31 d2 <41> f7 f4 48 ba 00 00 00 00 00 fc ff df 39 e8 0f 42 c5 48 c1 e9 03
-RSP: 0018:ffffc9000205f558 EFLAGS: 00010246
-RAX: 000000000000febf RBX: ffff88801ed48000 RCX: ffff88801ed4839e
-RDX: 0000000000000000 RSI: ffff888102ad2340 RDI: ffff88801ed4839e
-RBP: 0000000000000002 R08: ffffffff8796862a R09: 000000000000003f
-R10: 0000000000000001 R11: 000000000000000a R12: 0000000000000000
-R13: 000000000024705b R14: 000000000000000a R15: ffff88801ed48350
-FS:  00007f923ce99700(0000) GS:ffff888023e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f4f25fa3000 CR3: 0000000088b09000 CR4: 0000000000752ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- tcp_write_xmit+0x135/0x5d50 build/../net/ipv4/tcp_output.c:2623
- __tcp_push_pending_frames+0xab/0x390 build/../net/ipv4/tcp_output.c:2874
- tcp_push+0x473/0x6f0 build/../net/ipv4/tcp.c:736
- mptcp_push_release.isra.32+0x17c/0x280 build/../net/mptcp/protocol.c:1437
- __mptcp_push_pending+0x451/0x530 build/../net/mptcp/protocol.c:1478
- mptcp_sendmsg+0x1759/0x1c00 build/../net/mptcp/protocol.c:1697
- inet_sendmsg+0xa1/0xd0 build/../net/ipv4/af_inet.c:821
- sock_sendmsg_nosec build/../net/socket.c:703 [inline]
- sock_sendmsg+0xc9/0x120 build/../net/socket.c:723
- ____sys_sendmsg+0x375/0x820 build/../net/socket.c:2392
- ___sys_sendmsg+0x10a/0x180 build/../net/socket.c:2446
- __sys_sendmmsg+0x193/0x470 build/../net/socket.c:2532
- __do_sys_sendmmsg build/../net/socket.c:2561 [inline]
- __se_sys_sendmmsg build/../net/socket.c:2558 [inline]
- __x64_sys_sendmmsg+0x99/0x100 build/../net/socket.c:2558
- do_syscall_x64 build/../arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x34/0xb0 build/../arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
+For those who might have missed the info, a regression has been
+introduced by this patch.
 
-It's introduced by non-initialized info->mss_now in __mptcp_push_pending.
-Fix it by adding protection in mptcp_push_release.
+This is tracked on Github:
 
-Signed-off-by: Jiang Biao <tcs_robot@tencent.com>
----
- net/mptcp/protocol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+  https://github.com/multipath-tcp/mptcp_net-next/issues/227
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a88924947815..bfb3cd85bf19 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1433,8 +1433,10 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- static void mptcp_push_release(struct sock *sk, struct sock *ssk,
- 			       struct mptcp_sendmsg_info *info)
- {
-+	int mss_now = info->mss_now ? info->mss_now : tcp_current_mss(ssk);
-+
- 	mptcp_set_timeout(sk, ssk);
--	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
-+	tcp_push(ssk, 0, mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
- 	release_sock(ssk);
- }
+(Paolo already shared a patch that seems fixing the issue)
 
---
-2.21.0
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
