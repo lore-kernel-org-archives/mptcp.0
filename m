@@ -1,24 +1,48 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399F472
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 08:40:08 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id C9A7E61262;
-	Tue, 24 Aug 2021 08:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1629794407;
-	bh=lkWPyRjSayK24aAOrWwv6ox2HliGIGhNCkeZx1vBdTU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=WzFSdkJvtiUXe+Dx850bFKRhpCbyQGlMNu8BcdfjaCX2QSo9blRPkap3Jv1qcpJL0
-	 fkO4XHZqIp2KdyRamS8lngOlaPFjGyV29wri9iihcj5u42on1DpM9qB4IIwiz7toRc
-	 zAjl2ASqGyaE4XlCodiNmq7lGiBlHopahApwEWcyw4gdl+EW73pFi/KnzkCNc8yKHO
-	 mkFg/a3MLtY11Z4NiLpcr0nj6cKx5asoFMnVpNZR+iBExCOCnxWnqnW4dJRgojNfoM
-	 ZjLSV0l24Gn8+kA848TybSj7OCdrTCQnUDpouEeL9poS6spjVWUeW1uG1UJ7HRB8C3
-	 AkxA7ocr40ABw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id BE71B608FC;
-	Tue, 24 Aug 2021 08:40:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9669072
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 08:48:11 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id me10so14383200ejb.11
+        for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 01:48:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QDkt5IPLUUl9Ron+tgBjIBYJ6XKbUU8/6iCw0wz7Shg=;
+        b=sh0jc8NaU+kSIIwSMsSSX5eI8PkNO36khG3GQNXau8nYosGq53y41F8/O2LMpsLzi5
+         cQIZPAJWoTz2KJd/qnA2p+CCZWbPPN+AcMIrTMnsV/NSSmXL92KtMLNqh0p6pcGtihRh
+         9oaoYUQwwHA/NbFQMNI6YVqi+UEB8mg1VvHlRSjO1GX/t1lmq6gy3log7gppYsJDEgpk
+         xOtPQJJjt7rPPztkmreblzeBhg/JbrYWCLR6R6RZQT/dWsNpQazmIelq0McVjhb/6KEn
+         khxeMwHNyMATKWsLDg5O9wSsZnv4Sm2V8X04Z6WQQ4ImO4D2GMa6RWWTRKDsrBX/Uclz
+         KnGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QDkt5IPLUUl9Ron+tgBjIBYJ6XKbUU8/6iCw0wz7Shg=;
+        b=fCKSdA23a63LaoHT6d+oVG9JgQtpk1wnjTHVl7glJ9JmIdQt6zLxQ4+ojeOR5uWWye
+         rerUJTUH6mkEcFDbpkviWjbj1//zKBOICOrnE7fIEkIcR8eX7zIzmfv6Y5VCIIzTyjOh
+         gYRdB2HplxdpE2+D9SaIZT/UcACGIOcJMHHIfJFnsnY4qr7yxOYcT1NrdvXKDLIEQ6S5
+         YvZW9tZDqGtYdHxRA7SYTyiVEHzQwiLzQS9CLMEssAJcjmKGvFE7GnEqMxjzHNmlILS3
+         8wsy315t4lOTEP4s919K9iAwjLqYG/5OY4VfoAOgOelFV9eTeG2g3NL/wpKPhWT9+c0E
+         PkGQ==
+X-Gm-Message-State: AOAM532WR3YlpOuQCDSrHxh1/baH2CGZ1ABUDV6nXHhEz07FCEtcA5Q+
+	h/1ycNu8UjSWgRWcUry05jf/q0/7FWvvZkEFEY8=
+X-Google-Smtp-Source: ABdhPJyDrVpcHRYzSvmAX+K0BWR3w9GdWle3+OWBzJ6xpxPeD6RQ2ie/RbQFDRwX/s38T4o1Y1RCng==
+X-Received: by 2002:a17:906:4bd6:: with SMTP id x22mr40687323ejv.270.1629794889606;
+        Tue, 24 Aug 2021 01:48:09 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id r16sm11023221edt.15.2021.08.24.01.48.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Aug 2021 01:48:09 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net] selftests: mptcp: clean tmp files in simult_flows
+Date: Tue, 24 Aug 2021 10:47:51 +0200
+Message-Id: <20210824084751.3490436-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,50 +50,44 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] mptcp: Refactor ADD_ADDR/RM_ADDR handling
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162979440777.30048.9430649440436990103.git-patchwork-notify@kernel.org>
-Date: Tue, 24 Aug 2021 08:40:07 +0000
-References: <20210824010544.68600-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210824010544.68600-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
- liyonglong@chinatelecom.cn
 
-Hello:
+'$cin' and '$sin' variables are local to a function: they are then not
+available from the cleanup trap.
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+Instead, we need to use '$large' and '$small' that are not local and
+defined just before setting the trap.
 
-On Mon, 23 Aug 2021 18:05:38 -0700 you wrote:
-> This patch set changes the way MPTCP ADD_ADDR and RM_ADDR options are
-> handled to improve the reliability of sending and updating address
-> advertisements. The information used to populate outgoing advertisement
-> option headers is now stored separately to avoid rare cases where a more
-> recent request would overwrite something that had not been sent
-> yet. While the peers would recover from this, it's better to avoid the
-> problem in the first place.
-> 
-> [...]
+Without this patch, running this script in a loop might cause a:
 
-Here is the summary with links:
-  - [net-next,1/6] mptcp: move drop_other_suboptions check under pm lock
-    https://git.kernel.org/netdev/net-next/c/1f5e9e2f5fd5
-  - [net-next,2/6] mptcp: make MPTCP_ADD_ADDR_SIGNAL and MPTCP_ADD_ADDR_ECHO separate
-    https://git.kernel.org/netdev/net-next/c/18fc1a922e24
-  - [net-next,3/6] mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
-    https://git.kernel.org/netdev/net-next/c/119c022096f5
-  - [net-next,4/6] mptcp: build ADD_ADDR/echo-ADD_ADDR option according pm.add_signal
-    https://git.kernel.org/netdev/net-next/c/f462a446384d
-  - [net-next,5/6] mptcp: remove MPTCP_ADD_ADDR_IPV6 and MPTCP_ADD_ADDR_PORT
-    https://git.kernel.org/netdev/net-next/c/c233ef139070
-  - [net-next,6/6] selftests: mptcp: add_addr and echo race test
-    https://git.kernel.org/netdev/net-next/c/33c563ad28e3
+  write: No space left on device
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+issue.
 
+Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+
+Notes:
+    I hit this problem when trying to reproduce issue #227.
+
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index fd63ebfe9a2b..910d8126af8f 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -22,8 +22,8 @@ usage() {
+ 
+ cleanup()
+ {
+-	rm -f "$cin" "$cout"
+-	rm -f "$sin" "$sout"
++	rm -f "$cout" "$sout"
++	rm -f "$large" "$small"
+ 	rm -f "$capout"
+ 
+ 	local netns
+-- 
+2.32.0
 
