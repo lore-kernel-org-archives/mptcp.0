@@ -1,30 +1,32 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCED3FC1
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 23:26:32 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="214293408"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76E53FC1
+	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 23:26:33 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="214293412"
 X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
-   d="scan'208";a="214293408"
+   d="scan'208";a="214293412"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:31 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:32 -0700
 X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
-   d="scan'208";a="515847895"
+   d="scan'208";a="515847898"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.40.105])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:31 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:32 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+Cc: Paolo Abeni <pabeni@redhat.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	pabeni@redhat.com,
-	geliangtang@xiaomi.com
-Subject: [PATCH net-next 0/7] mptcp: Optimize output options and add MP_FAIL
-Date: Tue, 24 Aug 2021 16:26:12 -0700
-Message-Id: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
+	geliangtang@xiaomi.com,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 2/7] mptcp: shrink mptcp_out_options struct
+Date: Tue, 24 Aug 2021 16:26:14 -0700
+Message-Id: <20210824232619.136912-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
+References: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -33,59 +35,72 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch set contains two groups of changes that we've been testing in
-the MPTCP tree.
+From: Paolo Abeni <pabeni@redhat.com>
 
+After the previous patch we can alias with a union several
+fields in mptcp_out_options. Such struct is stack allocated and
+memset() for each plain TCP out packet. Every saved byted counts.
 
-The first optimizes the code path and data structure for populating
-MPTCP option headers when transmitting.
+Before:
+pahole -EC mptcp_out_options
+ # ...
+/* size: 136, cachelines: 3, members: 17 */
 
-Patch 1 reorganizes code to reduce the number of conditionals that need
-to be evaluated in common cases.
+After:
+pahole -EC mptcp_out_options
+ # ...
+/* size: 56, cachelines: 1, members: 9 */
 
-Patch 2 rearranges struct mptcp_out_options to save 80 bytes (on x86_64).
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ include/net/mptcp.h | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-
-The next five patches add partial support for the MP_FAIL option as
-defined in RFC 8684. MP_FAIL is an option header used to cleanly handle
-MPTCP checksum failures. When the MPTCP checksum detects an error in the
-MPTCP DSS header or the data mapped by that header, the receiver uses a
-TCP RST with MP_FAIL to close the subflow that experienced the error and
-provide associated MPTCP sequence number information to the peer. RFC
-8684 also describes how a single-subflow connection can discard corrupt
-data and remain connected under certain conditions using MP_FAIL, but
-that feature is not implemented here.
-
-Patches 3-5 implement MP_FAIL transmit and receive, and integrates with
-checksum validation.
-
-Patches 6 & 7 add MP_FAIL selftests and the MIBs required for those
-tests.
-
-
-Geliang Tang (5):
-  mptcp: MP_FAIL suboption sending
-  mptcp: MP_FAIL suboption receiving
-  mptcp: send out MP_FAIL when data checksum fails
-  mptcp: add the mibs for MP_FAIL
-  selftests: mptcp: add MP_FAIL mibs check
-
-Paolo Abeni (2):
-  mptcp: optimize out option generation
-  mptcp: shrink mptcp_out_options struct
-
- include/net/mptcp.h                           |  29 +-
- net/mptcp/mib.c                               |   2 +
- net/mptcp/mib.h                               |   2 +
- net/mptcp/options.c                           | 305 +++++++++++-------
- net/mptcp/pm.c                                |   5 +
- net/mptcp/protocol.h                          |  20 ++
- net/mptcp/subflow.c                           |  16 +
- .../testing/selftests/net/mptcp/mptcp_join.sh |  38 +++
- 8 files changed, 295 insertions(+), 122 deletions(-)
-
-
-base-commit: 3a62c333497b164868fdcd241842a1dd4e331825
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 8b5af683a818..3236010afa29 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -58,10 +58,6 @@ struct mptcp_addr_info {
+ struct mptcp_out_options {
+ #if IS_ENABLED(CONFIG_MPTCP)
+ 	u16 suboptions;
+-	u64 sndr_key;
+-	u64 rcvr_key;
+-	u64 ahmac;
+-	struct mptcp_addr_info addr;
+ 	struct mptcp_rm_list rm_list;
+ 	u8 join_id;
+ 	u8 backup;
+@@ -69,11 +65,23 @@ struct mptcp_out_options {
+ 	   reset_transient:1,
+ 	   csum_reqd:1,
+ 	   allow_join_id0:1;
+-	u32 nonce;
+-	u64 thmac;
+-	u32 token;
+-	u8 hmac[20];
+-	struct mptcp_ext ext_copy;
++	union {
++		struct {
++			u64 sndr_key;
++			u64 rcvr_key;
++		};
++		struct {
++			struct mptcp_addr_info addr;
++			u64 ahmac;
++		};
++		struct mptcp_ext ext_copy;
++		struct {
++			u32 nonce;
++			u32 token;
++			u64 thmac;
++			u8 hmac[20];
++		};
++	};
+ #endif
+ };
+ 
 -- 
 2.33.0
 
