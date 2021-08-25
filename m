@@ -1,76 +1,75 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB5D72
-	for <mptcp@lists.linux.dev>; Wed, 25 Aug 2021 10:20:09 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 0515F61222;
-	Wed, 25 Aug 2021 10:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1629886809;
-	bh=+yvj9WBCj5Yftb66ia8SReidOS9AML/FLWu14G/C9vg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=lIU1PaKx8hRdkd4Upg1egO2Yug78vMS8KThfDCG3QuyP0dr+zh1hIo8e6lQylcJ/9
-	 FWcfxLqxV7Gf9sCdcAkJ9QgkeXmfLfuvKsEjDmIIA91QNyGJ6cimly2jIwPpiFvwR1
-	 zVLo2UH8f/+aDpQkEOYPhkxawdYHKgNv49hsqyM6emOE9KlCOOa+vxHWcM5SFsGHxA
-	 vcSkt0A6Rclihye2a72XIA8QIjP/TL8tKhqbWIX0Y91anjOFLF7CcAqj/BjpxyC89X
-	 55FcZpWwsxpdYTvSui+rj3Jr0PBAmkOml9l9p1rw5sm2kV8WQM0c2Mdt+ywrQ2Xz+L
-	 HbXnZfpxv8v2A==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id ED26A60A14;
-	Wed, 25 Aug 2021 10:20:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580133FC2
+	for <mptcp@lists.linux.dev>; Wed, 25 Aug 2021 15:22:02 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id g21so37499836edw.4
+        for <mptcp@lists.linux.dev>; Wed, 25 Aug 2021 08:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=JIKqcnm3MTlQkGjVkiL6HzmvrdoCQBFHiLcF+PXOStA=;
+        b=glaCqU5r2cdSbtYsNlVUD4aB3mmRDFndGUgVQplnyadzNoA4XXYfZHTfz4IwmFB5jJ
+         FgbtIfG0otRYZ+l45em40Usij5C2pyp/v/zMSJbb9+ZXJ2VRPfuXJHe4LlufCwVQoQo9
+         qOB1baCHN3oTgFY17J/PUCIdj8VLbCN0eQeuej8YQvPd4QZ+Il+cY5Xqurq1LzOFIvcl
+         xM5sRXPkOj7Zjjp40GVLQ90/HYvH+fqKqRDxA8XJfrtxzx/ICCJg9eE0IrWc3hanupiP
+         i/flyXvcfX0lbimT4sLZz531oXIA6SvJbbJeRInWrvRaf1UqDJMheYxePvvvfUP/88b9
+         lzsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=JIKqcnm3MTlQkGjVkiL6HzmvrdoCQBFHiLcF+PXOStA=;
+        b=r/6Y06z+zSx7Yi/iLIBnQ+d3KtAZyhUf2M09pUjF+QOQfFoKFM2kMxa9lqsUqSm8XP
+         9gcQCPswl+4I7nqXK87BpPBAmGRLfXccXii+IotsHenvpRficUfHG6D9J/aaxNflj7p+
+         Y08+W10c7xWszsoYdq5aku1z63cnt2aQcqkQ9zK8adDhKmT84T00xkPkq9RqSmYwwcwS
+         z+VQSTHujaTjPVm4awaxDWJy7oOtiEsTbnKy4tVoDj3g+aFK5D7UVBHBCn+ZA0T73nHD
+         AuJqWV2N86x8qx42KYZk9LNfrOmqMl/cattrTqZStYwrU99v3F2Ad8GghaO9c+xPxC5M
+         NPJg==
+X-Gm-Message-State: AOAM531ETKaLoSm2lWFmUEsa3G9kjSM5QZbY72k4R1TY0hZUeZCTfXLu
+	g5TgJNYb1JDQ9ZWV8ZCIQApEdMfrG7z0Yqby
+X-Google-Smtp-Source: ABdhPJy0snmKQhatQSt4J2Tk6vw0bK5qlgDjzhHPfvpi1lBOIeThoZM2cfhkdwBLqMTQCjtKYLyTdg==
+X-Received: by 2002:a50:cdcb:: with SMTP id h11mr50449264edj.366.1629904921311;
+        Wed, 25 Aug 2021 08:22:01 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id r28sm166643eda.84.2021.08.25.08.22.00
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Aug 2021 08:22:00 -0700 (PDT)
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Weekly meeting - 26 August 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm
+ CST)
+Message-ID: <56ea8206-29aa-1fec-4dae-f1db714ff7a6@tessares.net>
+Date: Wed, 25 Aug 2021 17:22:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/7] mptcp: Optimize output options and add MP_FAIL
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <162988680896.8958.11835123498453806538.git-patchwork-notify@kernel.org>
-Date: Wed, 25 Aug 2021 10:20:08 +0000
-References: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com,
- geliangtang@xiaomi.com
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hello everybody!
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-On Tue, 24 Aug 2021 16:26:12 -0700 you wrote:
-> This patch set contains two groups of changes that we've been testing in
-> the MPTCP tree.
-> 
-> 
-> The first optimizes the code path and data structure for populating
-> MPTCP option headers when transmitting.
-> 
-> [...]
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20210826
 
-Here is the summary with links:
-  - [net-next,1/7] mptcp: optimize out option generation
-    https://git.kernel.org/netdev/net-next/c/1bff1e43a30e
-  - [net-next,2/7] mptcp: shrink mptcp_out_options struct
-    https://git.kernel.org/netdev/net-next/c/d7b269083786
-  - [net-next,3/7] mptcp: MP_FAIL suboption sending
-    https://git.kernel.org/netdev/net-next/c/c25aeb4e0953
-  - [net-next,4/7] mptcp: MP_FAIL suboption receiving
-    https://git.kernel.org/netdev/net-next/c/5580d41b758a
-  - [net-next,5/7] mptcp: send out MP_FAIL when data checksum fails
-    https://git.kernel.org/netdev/net-next/c/478d770008b0
-  - [net-next,6/7] mptcp: add the mibs for MP_FAIL
-    https://git.kernel.org/netdev/net-next/c/eb7f33654dc1
-  - [net-next,7/7] selftests: mptcp: add MP_FAIL mibs check
-    https://git.kernel.org/netdev/net-next/c/6bb3ab4913e9
+Feel free to add/modify topics!
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-
+See/Speak to you later!
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
