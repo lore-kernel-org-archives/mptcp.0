@@ -1,32 +1,24 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442F03FCB
-	for <mptcp@lists.linux.dev>; Tue, 24 Aug 2021 23:26:36 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="214293423"
-X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
-   d="scan'208";a="214293423"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:33 -0700
-X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
-   d="scan'208";a="515847906"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.40.105])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 16:26:33 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliangtang@xiaomi.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	pabeni@redhat.com,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 7/7] selftests: mptcp: add MP_FAIL mibs check
-Date: Tue, 24 Aug 2021 16:26:19 -0700
-Message-Id: <20210824232619.136912-8-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
-References: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB5D72
+	for <mptcp@lists.linux.dev>; Wed, 25 Aug 2021 10:20:09 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 0515F61222;
+	Wed, 25 Aug 2021 10:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1629886809;
+	bh=+yvj9WBCj5Yftb66ia8SReidOS9AML/FLWu14G/C9vg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=lIU1PaKx8hRdkd4Upg1egO2Yug78vMS8KThfDCG3QuyP0dr+zh1hIo8e6lQylcJ/9
+	 FWcfxLqxV7Gf9sCdcAkJ9QgkeXmfLfuvKsEjDmIIA91QNyGJ6cimly2jIwPpiFvwR1
+	 zVLo2UH8f/+aDpQkEOYPhkxawdYHKgNv49hsqyM6emOE9KlCOOa+vxHWcM5SFsGHxA
+	 vcSkt0A6Rclihye2a72XIA8QIjP/TL8tKhqbWIX0Y91anjOFLF7CcAqj/BjpxyC89X
+	 55FcZpWwsxpdYTvSui+rj3Jr0PBAmkOml9l9p1rw5sm2kV8WQM0c2Mdt+ywrQ2Xz+L
+	 HbXnZfpxv8v2A==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id ED26A60A14;
+	Wed, 25 Aug 2021 10:20:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,73 +26,51 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/7] mptcp: Optimize output options and add MP_FAIL
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <162988680896.8958.11835123498453806538.git-patchwork-notify@kernel.org>
+Date: Wed, 25 Aug 2021 10:20:08 +0000
+References: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210824232619.136912-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com,
+ geliangtang@xiaomi.com
 
-From: Geliang Tang <geliangtang@xiaomi.com>
+Hello:
 
-This patch added a function chk_fail_nr to check the mibs for MP_FAIL.
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
+On Tue, 24 Aug 2021 16:26:12 -0700 you wrote:
+> This patch set contains two groups of changes that we've been testing in
+> the MPTCP tree.
+> 
+> 
+> The first optimizes the code path and data structure for populating
+> MPTCP option headers when transmitting.
+> 
+> [...]
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 7b3e6cc56935..255793c5ac4f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -578,6 +578,43 @@ chk_csum_nr()
- 	fi
- }
- 
-+chk_fail_nr()
-+{
-+	local mp_fail_nr_tx=$1
-+	local mp_fail_nr_rx=$2
-+	local count
-+	local dump_stats
-+
-+	printf "%-39s %s" " " "ftx"
-+	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFailTx | awk '{print $2}'`
-+	[ -z "$count" ] && count=0
-+	if [ "$count" != "$mp_fail_nr_tx" ]; then
-+		echo "[fail] got $count MP_FAIL[s] TX expected $mp_fail_nr_tx"
-+		ret=1
-+		dump_stats=1
-+	else
-+		echo -n "[ ok ]"
-+	fi
-+
-+	echo -n " - frx   "
-+	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtMPFailRx | awk '{print $2}'`
-+	[ -z "$count" ] && count=0
-+	if [ "$count" != "$mp_fail_nr_rx" ]; then
-+		echo "[fail] got $count MP_FAIL[s] RX expected $mp_fail_nr_rx"
-+		ret=1
-+		dump_stats=1
-+	else
-+		echo "[ ok ]"
-+	fi
-+
-+	if [ "${dump_stats}" = 1 ]; then
-+		echo Server ns stats
-+		ip netns exec $ns1 nstat -as | grep MPTcp
-+		echo Client ns stats
-+		ip netns exec $ns2 nstat -as | grep MPTcp
-+	fi
-+}
-+
- chk_join_nr()
- {
- 	local msg="$1"
-@@ -627,6 +664,7 @@ chk_join_nr()
- 	fi
- 	if [ $checksum -eq 1 ]; then
- 		chk_csum_nr
-+		chk_fail_nr 0 0
- 	fi
- }
- 
--- 
-2.33.0
+Here is the summary with links:
+  - [net-next,1/7] mptcp: optimize out option generation
+    https://git.kernel.org/netdev/net-next/c/1bff1e43a30e
+  - [net-next,2/7] mptcp: shrink mptcp_out_options struct
+    https://git.kernel.org/netdev/net-next/c/d7b269083786
+  - [net-next,3/7] mptcp: MP_FAIL suboption sending
+    https://git.kernel.org/netdev/net-next/c/c25aeb4e0953
+  - [net-next,4/7] mptcp: MP_FAIL suboption receiving
+    https://git.kernel.org/netdev/net-next/c/5580d41b758a
+  - [net-next,5/7] mptcp: send out MP_FAIL when data checksum fails
+    https://git.kernel.org/netdev/net-next/c/478d770008b0
+  - [net-next,6/7] mptcp: add the mibs for MP_FAIL
+    https://git.kernel.org/netdev/net-next/c/eb7f33654dc1
+  - [net-next,7/7] selftests: mptcp: add MP_FAIL mibs check
+    https://git.kernel.org/netdev/net-next/c/6bb3ab4913e9
+
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
