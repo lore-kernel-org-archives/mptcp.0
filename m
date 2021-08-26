@@ -1,107 +1,95 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21D33FC2
-	for <mptcp@lists.linux.dev>; Thu, 26 Aug 2021 03:22:34 +0000 (UTC)
-Received: by mail-ot1-f48.google.com with SMTP id i3-20020a056830210300b0051af5666070so1718103otc.4
-        for <mptcp@lists.linux.dev>; Wed, 25 Aug 2021 20:22:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E390872
+	for <mptcp@lists.linux.dev>; Thu, 26 Aug 2021 18:24:39 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id n11so5996617edv.11
+        for <mptcp@lists.linux.dev>; Thu, 26 Aug 2021 11:24:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bUeZZcRUwgsVKTg9hbUOFpXsEAgjIJCFQuo9JR/6uzc=;
-        b=Cd+PYR/CcyaKB2Dv5SB33p47LhOGWZXNOHn1EdmwVk1xcpzdrlZ6xHmaxnv2H1iPGf
-         RWtP8SHbN3xokld1eM/pm5ttcqP5oEVT3y2TUXHs9mzHYDOL5ViUCwYYIhEstqF70Xfp
-         WJuv/0dJdP/tOW4nFPoUoYJVY8ksZK6uTBcL2dfkCvEqvr9MPxqLKenyIHOEOED7k9fP
-         mE1OcurZBALiFsM6WDqfM97C0n+lhT/e6Q4pbTF5SCAfMxtOP/qx8KGfQiJ1ujkQVkgf
-         7i9VtdHZ42y7O9CHoQnhHn5VTuFgre5r3KC01v84y3Q2g+/0/OiXLFD9PY+X/ZGfUQCJ
-         TbtA==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8vt07/l7JpvXNHABIsE6H5sQnlPJumb9Pf+eU5SuTvQ=;
+        b=rMNqAfBoUiddvVFhWSX9K1EzyOs2/dIpaZ6/uvymEr2xa78lcOUjvsqzZZKlCytMKo
+         GNLMEUOUROW+CrpD6+I+5eh/kef0llXqaK/zK2jaQxuGbLvNNAUptm9TCO9Ru3KvWQK8
+         /LZl17oQ4l42q1dc86mHJpQ68S+OYpCjLmyk0pXPWQ70IiUiq0W/6cObQwM1eimIZ7sS
+         PviJU1bgD02vnuEE3gFzkpwvRC0bu+GsBx4Qnd3Qc4haGF2O7lDRbLInuAnZdvRbALdu
+         /GirloShh5tH5d7BD1RG5iA2O+R2M26u9islU7q6xp6vnWwURfZnA851IQXRfKEMScM4
+         Rn9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bUeZZcRUwgsVKTg9hbUOFpXsEAgjIJCFQuo9JR/6uzc=;
-        b=B6XJzVWGvlpWrLJk2PHm0fb+EuzM64DE3NMVcaiAeyCPuCLj+7l8uOLERrZL9hFpNI
-         HnolzuQCLcvketki6lrGlV6aYiIS7aONSmtfGepOL5UrwrvUspQoJdRMDGankNJedlDS
-         xAnnTOBUtT150BujhsaNSN0Bsg3P9SuMU9uoZ4Nv/i7aHGop71W7FIBUhXKLvD3EUxA0
-         qHxHaZUqJYj7wTzBpMSF/mSdg7ePQwiwPDns/8Z3lbrx2HiVlN/pygm0S0gJRSsoxLZ1
-         q7FtxDwqNIRg5pyUDxU2LG+vkGm+dSHHw2M6cO0x7AtJo2uLhxV0BrwEMkOzWlvr9uGJ
-         DTqQ==
-X-Gm-Message-State: AOAM530Zh8yQchUlKa5VFRv6JeSSIJm7LB86ADGTMbKkDNv5bCxTn/X1
-	DJCUxGmgn+wk2c1qhslTg8yDYCMXY2jZ0LTGt0Q=
-X-Google-Smtp-Source: ABdhPJxgk1EqPZK7qA7ih/uquKPxaLzFqjR5sZ54uxK1N75LUQxoav/lMAWNN1uN0WKcEyzI+s06wNoInRxtLucaEAY=
-X-Received: by 2002:a05:6830:20d0:: with SMTP id z16mr1331201otq.330.1629948153918;
- Wed, 25 Aug 2021 20:22:33 -0700 (PDT)
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8vt07/l7JpvXNHABIsE6H5sQnlPJumb9Pf+eU5SuTvQ=;
+        b=mmv4a5k5rcKt6Bva6UlGyXNZlVxej2iikYkgwWAowyszK/sJPBq/0KyBNzOQojZfUZ
+         XEky8zUYlsaRzMJdHAPqa6B+D3vMu/wA5wR9dkvypj57SOJhI7gudn/heWKdKKSEgynw
+         ogbUU/jdMC86JJfAXCZISC7kez4DFM97vEmuL3HxwEcwWBrWnWM4VcJtvy2D8lvbQWdO
+         IyDfjYdMqbxcduMxLiMMlIxH2w0exuoB4pi25H8y7cr67MN46dltbSit2p0kWESdz4IF
+         53xZH8pFQoqe40rIPZgkfwoGGYxtrhr5EGAJ3DtfDJW/DM8qYi1QAUua0KdjmpUUAUw7
+         xs3g==
+X-Gm-Message-State: AOAM532AVEP8rI94vNmLWVlafVD1bGDpYxZM2b0II7rb5n0/Np6fFT3E
+	cErFwR8xVCP+wM3FXy5K0+bFmu2z4UnSP/bG
+X-Google-Smtp-Source: ABdhPJznJVt27yZwzMfiEVc2emS+Vd1JaLtdii0rukSezhJvGOecjKNweC8/fpeJ6rftBI6yR8zvNQ==
+X-Received: by 2002:a50:d088:: with SMTP id v8mr5636881edd.387.1630002277786;
+        Thu, 26 Aug 2021 11:24:37 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id di15sm647398edb.20.2021.08.26.11.24.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Aug 2021 11:24:37 -0700 (PDT)
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, pabeni@redhat.com
+Cc: geliangtang@gmail.com, mptcp@lists.linux.dev
+References: <20210826004601.196834-1-mathew.j.martineau@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-net] mptcp: Only send extra TCP acks in eligible
+ socket states
+Message-ID: <5ea0f310-8798-e436-24ae-2476b16b1813@tessares.net>
+Date: Thu, 26 Aug 2021 20:24:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20210824071926.68019-1-benbjiang@gmail.com> <fe512c8b-6f5a-0210-3f23-2c1fc75cd6e5@tessares.net>
- <CAPJCdBmTPW5gcO6DO5i=T+R2TNypzbaA666krk=7Duf2mt1yBw@mail.gmail.com> <f9b97b7f-cb48-f0bf-2dfb-a13bf1296b19@linux.intel.com>
-In-Reply-To: <f9b97b7f-cb48-f0bf-2dfb-a13bf1296b19@linux.intel.com>
-From: Jiang Biao <benbjiang@gmail.com>
-Date: Thu, 26 Aug 2021 11:22:23 +0800
-Message-ID: <CAPJCdB=MF=PY0R+a1Ka9ymDvp9EXf2HbzosAC1sUh547EcAjOA@mail.gmail.com>
-Subject: Re: [PATCH] ipv4/mptcp: fix divide error
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, davem@davemloft.net, kuba@kernel.org, 
-	netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	linux-kernel <linux-kernel@vger.kernel.org>, Jiang Biao <benbjiang@tencent.com>, 
-	Jiang Biao <tcs_robot@tencent.com>, Paolo Abeni <pabeni@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210826004601.196834-1-mathew.j.martineau@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-On Thu, 26 Aug 2021 at 01:56, Mat Martineau
-<mathew.j.martineau@linux.intel.com> wrote:
->
->
-> On Tue, 24 Aug 2021, Jiang Biao wrote:
->
-> > Hi,
-> >
-> > On Tue, 24 Aug 2021 at 15:36, Matthieu Baerts
-> > <matthieu.baerts@tessares.net> wrote:
-> >>
-> >> Hi Jiang,
-> >>
-> >> On 24/08/2021 09:19, Jiang Biao wrote:
-> >>
-> >> (...)
-> >>
-> >>> There is a fix divide error reported,
-> >>> divide error: 0000 [#1] PREEMPT SMP KASAN
-> >>> RIP: 0010:tcp_tso_autosize build/../net/ipv4/tcp_output.c:1975 [inline]
-> >>> RIP: 0010:tcp_tso_segs+0x14f/0x250 build/../net/ipv4/tcp_output.c:1992
-> >>
-> >> Thank you for this patch and validating MPTCP on your side!
-> >>
-> >> This issue is actively tracked on our Github project [1] and a patch is
-> >> already in our tree [2] but still under validation.
-> >>> It's introduced by non-initialized info->mss_now in __mptcp_push_pending.
-> >>> Fix it by adding protection in mptcp_push_release.
-> >>
-> >> Indeed, you are right, info->mss_now can be set to 0 in some cases but
-> >> that's not normal.
-> >>
-> >> Instead of adding a protection here, we preferred fixing the root cause,
-> >> see [2]. Do not hesitate to have a look at the other patch and comment
-> >> there if you don't agree with this version.
-> >> Except if [2] is difficult to backport, I think we don't need your extra
-> >> protection. WDYT?
-> >>
-> > Agreed, fixing the root cause is much better.
-> > Thanks for the reply.
-> >
->
-> Hi Jiang -
->
-> Could you try cherry-picking this commit to see if it eliminates the error
-> in your system?
->
-> https://github.com/multipath-tcp/mptcp_net-next/commit/9ef5aea5a794f4a369e26ed816e9c80cdc5a5f86
->
-ok, I'll try and give you feedback.
+Hi Mat, Paolo,
 
-Regards,
-Jiang
+On 26/08/2021 02:46, Mat Martineau wrote:
+> Recent changes exposed a bug where specifically-timed requests to the
+> path manager netlink API could trigger a divide-by-zero in
+> __tcp_select_window(), as syzkaller does:
+
+(...)
+
+Thank you for the patch, the review and the testing!
+
+This is now in our tree:
+
+- ea8a43942429: mptcp: Only send extra TCP acks in eligible socket states
+- Results: 99a16463048d..6d52100ab2ab
+
+> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/229
+> Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+
+Checkpatch is yelling at me because a SoB is not present here.
+
+@Paolo: sorry to ask this question but for the record, is it OK for you
+if I add it? :)
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210826T182120
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210826T182120
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
