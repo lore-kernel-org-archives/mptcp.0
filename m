@@ -1,29 +1,24 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6552FAF
-	for <mptcp@lists.linux.dev>; Fri, 27 Aug 2021 00:45:05 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10088"; a="198108894"
-X-IronPort-AV: E=Sophos;i="5.84,354,1620716400"; 
-   d="scan'208";a="198108894"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2021 17:45:00 -0700
-X-IronPort-AV: E=Sophos;i="5.84,354,1620716400"; 
-   d="scan'208";a="599007122"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.68.199])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2021 17:45:00 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	pabeni@redhat.com
-Subject: [PATCH net-next 0/5] mptcp: Optimize received options handling
-Date: Thu, 26 Aug 2021 17:44:49 -0700
-Message-Id: <20210827004455.286754-1-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FC572
+	for <mptcp@lists.linux.dev>; Fri, 27 Aug 2021 09:10:28 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id E4BDA60FF2;
+	Fri, 27 Aug 2021 09:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1630055427;
+	bh=DN8SIhnC2OBFgSTBBAck+YIIlkBIE+R7YpdeCAGBxew=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=D2S6+5npob4kv0D/t4Wts6b34+ZgePD8zFLMhmTIh7BgQO4ZN7vxl1f4Nww3tKRzE
+	 GWcM5UtzxAjVQ8LLCiGSDW50JPH3I4i49+l2857+Sk4nV4ZZh49TknjJKKxv5cKoBF
+	 9w2LGp48Js74mJyyYNTxwh3g5sW7P5eMFXUQxgRUWsKQFdUrxVBiHM3b8EtmOBg6Ab
+	 em7JOUfwOOTyoLz3C7ZeXe8XKzRAVjxPkcJbABEpOJ7GCrdQ72YGFjP7fDmV+LoeMe
+	 Wd13faGgdevqc2OWUT9FB1oAh8Xmb/meugWtBcwXZv8gdjtzUlhHlwj+xKWFvQ4WsG
+	 tn/lK6QQBQPlg==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id DF7EC60A27;
+	Fri, 27 Aug 2021 09:10:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -31,36 +26,46 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/5] mptcp: Optimize received options handling
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163005542791.19735.1536175440276667634.git-patchwork-notify@kernel.org>
+Date: Fri, 27 Aug 2021 09:10:27 +0000
+References: <20210827004455.286754-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210827004455.286754-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com
 
-These patches optimize received MPTCP option handling in terms of both
-storage and fewer conditionals to evaluate in common cases, and also add
-a couple of cleanup patches.
+Hello:
 
-Patches 1 and 5 do some cleanup in checksum option parsing and
-clarification of lock handling.
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-Patches 2 and 3 rearrange struct mptcp_options_received to shrink it
-slightly and consolidate frequently used fields in the same cache line.
+On Thu, 26 Aug 2021 17:44:49 -0700 you wrote:
+> These patches optimize received MPTCP option handling in terms of both
+> storage and fewer conditionals to evaluate in common cases, and also add
+> a couple of cleanup patches.
+> 
+> Patches 1 and 5 do some cleanup in checksum option parsing and
+> clarification of lock handling.
+> 
+> [...]
 
-Patch 4 optimizes incoming MPTCP option parsing to skip many extra
-comparisons in the common case where only a DSS option is present.
+Here is the summary with links:
+  - [net-next,1/5] mptcp: do not set unconditionally csum_reqd on incoming opt
+    https://git.kernel.org/netdev/net-next/c/8d548ea1dd15
+  - [net-next,2/5] mptcp: better binary layout for mptcp_options_received
+    https://git.kernel.org/netdev/net-next/c/a086aebae0eb
+  - [net-next,3/5] mptcp: consolidate in_opt sub-options fields in a bitmask
+    https://git.kernel.org/netdev/net-next/c/74c7dfbee3e1
+  - [net-next,4/5] mptcp: optimize the input options processing
+    https://git.kernel.org/netdev/net-next/c/f6c2ef59bcc7
+  - [net-next,5/5] mptcp: make the locking tx schema more readable
+    https://git.kernel.org/netdev/net-next/c/9758f40e90f7
 
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Paolo Abeni (5):
-  mptcp: do not set unconditionally csum_reqd on incoming opt
-  mptcp: better binary layout for mptcp_options_received
-  mptcp: consolidate in_opt sub-options fields in a bitmask
-  mptcp: optimize the input options processing
-  mptcp: make the locking tx schema more readable
-
- net/mptcp/options.c  | 141 +++++++++++++++++++------------------------
- net/mptcp/protocol.c |  14 +++--
- net/mptcp/protocol.h |  36 ++++++-----
- net/mptcp/subflow.c  |  40 ++++++------
- 4 files changed, 112 insertions(+), 119 deletions(-)
-
-
-base-commit: deecae7d96843fceebae06445b3f4bf8cceca31a
--- 
-2.33.0
 
