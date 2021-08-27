@@ -1,18 +1,31 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F523FCB
-	for <mptcp@lists.linux.dev>; Thu, 26 Aug 2021 23:58:48 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1mJP1x-000377-TU; Fri, 27 Aug 2021 01:43:33 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp] mptcp: do not shrink snd_nxt when recovering
-Date: Fri, 27 Aug 2021 01:43:24 +0200
-Message-Id: <20210826234324.27764-1-fw@strlen.de>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B643F72
+	for <mptcp@lists.linux.dev>; Fri, 27 Aug 2021 00:45:02 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10088"; a="205007598"
+X-IronPort-AV: E=Sophos;i="5.84,354,1620716400"; 
+   d="scan'208";a="205007598"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2021 17:45:02 -0700
+X-IronPort-AV: E=Sophos;i="5.84,354,1620716400"; 
+   d="scan'208";a="599007127"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.68.199])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2021 17:45:01 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 2/5] mptcp: better binary layout for mptcp_options_received
+Date: Thu, 26 Aug 2021 17:44:51 -0700
+Message-Id: <20210827004455.286754-3-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20210827004455.286754-1-mathew.j.martineau@linux.intel.com>
+References: <20210827004455.286754-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -21,152 +34,109 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When recovering after a link failure, snd_nxt should not be set to a
-lower value.  Else, update of snd_nxt is broken because:
+From: Paolo Abeni <pabeni@redhat.com>
 
-  msk->snd_nxt += ret; (where ret is number of bytes sent)
+This change reorder the mptcp_options_received fields
+to shrink the structure a bit and to ensure the most
+frequently used fields are all in the first cacheline.
 
-assumes that snd_nxt always moves forward.
-After reduction, its possible that snd_nxt update gets out of sync:
-dfrag we just sent might have had a data sequence number even past
-snd_nxt_recovery.
+Sub-opt specific flags are moved out of the suboptions area,
+and we must now explicitly set them when the relevant
+suboption is parsed.
 
-This change factors the common msk state update to a helper
-and updates snd_nxt based on the current dfrag data sequence number.
+There is a notable exception: 'csum_reqd' is used by both DSS
+and MPC suboptions, and keeping such field in the suboptions
+flag area will simplfy the next patch.
 
-The conditional is required for the recovery phase where we may
-re-transmit old dfrags that are before current snd_nxt.
-
-After this change, snd_nxt only moves forward and covers all in-sequence
-data that was transmitted.
-
-recovery_snd_nxt is retained to detect when recovery has completed.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- Paolo, I think this is in line with what we discussed earlier today.
-
- This does NOT resolve issues/226, but as far as i can tell the
- failure rate is cut in half: 500 runs of mptcp_join -l had 24 vs. 7
- failures.
-
- I also no longer see
-
- ack_update_msk: invalid una (96072 or 424988 bytes, 1 below write_seq, cnt 22715
-
- debug log from ack_update_msk(), printed when we ignore advertised
- new_snd_una while msk->recovery flag is set.
-
  net/mptcp/options.c  |  8 +++-----
- net/mptcp/protocol.c | 45 ++++++++++++++++++++++++++++++++------------
- 2 files changed, 36 insertions(+), 17 deletions(-)
+ net/mptcp/protocol.h | 20 ++++++++++----------
+ 2 files changed, 13 insertions(+), 15 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index f5fa8e7efd9c..12fcf7553d08 100644
+index f012a71dd996..79b68ae9ef4d 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -1019,11 +1019,9 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 	old_snd_una = msk->snd_una;
- 	new_snd_una = mptcp_expand_seq(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
+@@ -83,8 +83,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+ 			mp_opt->csum_reqd = 1;
  
--	/* ACK for data not even sent yet and even above recovery bound? Ignore.*/
--	if (unlikely(after64(new_snd_una, snd_nxt))) {
--		if (!msk->recovery || after64(new_snd_una, msk->recovery_snd_nxt))
--			new_snd_una = old_snd_una;
--	}
-+	/* ACK for data not even sent yet? Ignore.*/
-+	if (unlikely(after64(new_snd_una, snd_nxt)))
-+		new_snd_una = old_snd_una;
+-		if (flags & MPTCP_CAP_DENY_JOIN_ID0)
+-			mp_opt->deny_join_id0 = 1;
++		mp_opt->deny_join_id0 = !!(flags & MPTCP_CAP_DENY_JOIN_ID0);
  
- 	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
+ 		mp_opt->mp_capable = 1;
+ 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
+@@ -262,6 +261,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
  
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index af8f677162f3..385405cf4626 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1507,6 +1507,34 @@ static void mptcp_push_release(struct sock *sk, struct sock *ssk,
- 	release_sock(ssk);
- }
+ 		mp_opt->add_addr = 1;
+ 		mp_opt->addr.id = *ptr++;
++		mp_opt->addr.port = 0;
++		mp_opt->ahmac = 0;
+ 		if (mp_opt->addr.family == AF_INET) {
+ 			memcpy((u8 *)&mp_opt->addr.addr.s_addr, (u8 *)ptr, 4);
+ 			ptr += 4;
+@@ -363,15 +364,12 @@ void mptcp_get_options(const struct sock *sk,
+ 	mp_opt->mp_capable = 0;
+ 	mp_opt->mp_join = 0;
+ 	mp_opt->add_addr = 0;
+-	mp_opt->ahmac = 0;
+ 	mp_opt->fastclose = 0;
+-	mp_opt->addr.port = 0;
+ 	mp_opt->rm_addr = 0;
+ 	mp_opt->dss = 0;
+ 	mp_opt->mp_prio = 0;
+ 	mp_opt->reset = 0;
+ 	mp_opt->csum_reqd = 0;
+-	mp_opt->deny_join_id0 = 0;
+ 	mp_opt->mp_fail = 0;
  
-+static void mptcp_update_post_push(struct mptcp_sock *msk,
-+				   struct mptcp_data_frag *dfrag,
-+				   u32 sent)
-+{
-+	u64 snd_nxt_new = dfrag->data_seq;
-+
-+	dfrag->already_sent += sent;
-+
-+	msk->snd_burst -= sent;
-+	msk->tx_pending_data -= sent;
-+
-+	snd_nxt_new += dfrag->already_sent;
-+
-+	/* snd_nxt_new can be smaller than snd_nxt in case mptcp
-+	 * is recovering after a failover. In that event, this re-sends
-+	 * old segments.
-+	 *
-+	 * Thus compute snd_nxt_new candidate based on
-+	 * the dfrag->data_seq that was sent and the data
-+	 * that has been handed to the subflow for transmission
-+	 * and skip update in case it was old dfrag.
-+	 */
-+	if (likely(after64(snd_nxt_new, msk->snd_nxt)))
-+		msk->snd_nxt = snd_nxt_new;
-+
-+	WARN_ON_ONCE(after64(msk->snd_nxt, msk->write_seq));
-+}
-+
- void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- {
- 	struct sock *prev_ssk = NULL, *ssk = NULL;
-@@ -1550,12 +1578,10 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 			}
+ 	length = (th->doff * 4) - sizeof(struct tcphdr);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 57a50b1194a9..9a0d91f92bbc 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -140,28 +140,28 @@ struct mptcp_options_received {
+ 		add_addr : 1,
+ 		rm_addr : 1,
+ 		mp_prio : 1,
+-		mp_fail : 1,
+-		echo : 1,
+ 		csum_reqd : 1,
+-		backup : 1,
+-		deny_join_id0 : 1;
++		mp_fail : 1;
+ 	u32	token;
+ 	u32	nonce;
+-	u64	thmac;
+-	u8	hmac[MPTCPOPT_HMAC_LEN];
+-	u8	join_id;
+-	u8	use_map:1,
++	u16	use_map:1,
+ 		dsn64:1,
+ 		data_fin:1,
+ 		use_ack:1,
+ 		ack64:1,
+ 		mpc_map:1,
++		reset_reason:4,
++		reset_transient:1,
++		echo:1,
++		backup:1,
++		deny_join_id0:1,
+ 		__unused:2;
++	u8	join_id;
++	u64	thmac;
++	u8	hmac[MPTCPOPT_HMAC_LEN];
+ 	struct mptcp_addr_info addr;
+ 	struct mptcp_rm_list rm_list;
+ 	u64	ahmac;
+-	u8	reset_reason:4;
+-	u8	reset_transient:1;
+ 	u64	fail_seq;
+ };
  
- 			info.sent += ret;
--			dfrag->already_sent += ret;
--			msk->snd_nxt += ret;
--			msk->snd_burst -= ret;
--			msk->tx_pending_data -= ret;
- 			copied += ret;
- 			len -= ret;
-+
-+			mptcp_update_post_push(msk, dfrag, ret);
- 		}
- 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
- 	}
-@@ -1608,13 +1634,11 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 				goto out;
- 
- 			info.sent += ret;
--			dfrag->already_sent += ret;
--			msk->snd_nxt += ret;
--			msk->snd_burst -= ret;
--			msk->tx_pending_data -= ret;
- 			copied += ret;
- 			len -= ret;
- 			first = false;
-+
-+			mptcp_update_post_push(msk, dfrag, ret);
- 		}
- 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
- 	}
-@@ -2212,15 +2236,12 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
- 		return false;
- 	}
- 
--	/* will accept ack for reijected data before re-sending them */
--	if (!msk->recovery || after64(msk->snd_nxt, msk->recovery_snd_nxt))
--		msk->recovery_snd_nxt = msk->snd_nxt;
-+	msk->recovery_snd_nxt = msk->snd_nxt;
- 	msk->recovery = true;
- 	mptcp_data_unlock(sk);
- 
- 	msk->first_pending = rtx_head;
- 	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
--	msk->snd_nxt = rtx_head->data_seq;
- 	msk->snd_burst = 0;
- 
- 	/* be sure to clear the "sent status" on all re-injected fragments */
 -- 
-2.31.1
+2.33.0
 
