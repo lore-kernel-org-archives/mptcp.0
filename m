@@ -1,231 +1,199 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73213FC2
-	for <mptcp@lists.linux.dev>; Sat, 28 Aug 2021 00:17:47 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10089"; a="197612638"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1380D72
+	for <mptcp@lists.linux.dev>; Sat, 28 Aug 2021 00:45:15 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10089"; a="218055788"
 X-IronPort-AV: E=Sophos;i="5.84,358,1620716400"; 
-   d="scan'208";a="197612638"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:17:45 -0700
+   d="scan'208";a="218055788"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:45:11 -0700
 X-IronPort-AV: E=Sophos;i="5.84,358,1620716400"; 
-   d="scan'208";a="528512881"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.16.51])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:17:45 -0700
+   d="scan'208";a="687713103"
+Received: from jhanbaba-mobl.amr.corp.intel.com ([10.212.224.121])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:45:11 -0700
+Date: Fri, 27 Aug 2021 17:45:10 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Florian Westphal <fw@strlen.de>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 1/2] mptcp: fix possible divide by zero
-Date: Fri, 27 Aug 2021 17:17:30 -0700
-Message-Id: <20210828001731.67757-2-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210828001731.67757-1-mathew.j.martineau@linux.intel.com>
-References: <20210828001731.67757-1-mathew.j.martineau@linux.intel.com>
+To: Florian Westphal <fw@strlen.de>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp] mptcp: do not shrink snd_nxt when recovering
+In-Reply-To: <20210826234324.27764-1-fw@strlen.de>
+Message-ID: <3c905eff-8882-cfc3-6b6-a4bb1aee15f5@linux.intel.com>
+References: <20210826234324.27764-1-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Fri, 27 Aug 2021, Florian Westphal wrote:
 
-Florian noted that if mptcp_alloc_tx_skb() allocation fails
-in __mptcp_push_pending(), we can end-up invoking
-mptcp_push_release()/tcp_push() with a zero mss, causing
-a divide by 0 error.
+> When recovering after a link failure, snd_nxt should not be set to a
+> lower value.  Else, update of snd_nxt is broken because:
+>
+>  msk->snd_nxt += ret; (where ret is number of bytes sent)
+>
+> assumes that snd_nxt always moves forward.
+> After reduction, its possible that snd_nxt update gets out of sync:
+> dfrag we just sent might have had a data sequence number even past
+> snd_nxt_recovery.
 
-This change addresses the issue refactoring the skb allocation
-code checking if skb collapsing will happen for sure and doing
-the skb allocation only after such check. Skb allocation will
-now happen only after the call to tcp_send_mss() which
-correctly initializes mss_now.
+Do you mean recovery_snd_nxt?
 
-As side bonuses we now fill the skb tx cache only when needed,
-and this also clean-up a bit the output path.
+>
+> This change factors the common msk state update to a helper
+> and updates snd_nxt based on the current dfrag data sequence number.
+>
+> The conditional is required for the recovery phase where we may
+> re-transmit old dfrags that are before current snd_nxt.
+>
+> After this change, snd_nxt only moves forward and covers all in-sequence
+> data that was transmitted.
+>
+> recovery_snd_nxt is retained to detect when recovery has completed.
+>
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 
-Reported-by: Florian Westphal <fw@strlen.de>
-Fixes: 724cfd2ee8aa ("mptcp: allocate TX skbs in msk context")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 78 +++++++++++++++++++++-----------------------
- 1 file changed, 37 insertions(+), 41 deletions(-)
+Will need a Fixes tag for the -net tree.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a88924947815..0d5c1ec28508 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -994,6 +994,15 @@ static void mptcp_wmem_uncharge(struct sock *sk, int size)
- 	msk->wmem_reserved += size;
- }
- 
-+static void __mptcp_mem_reclaim_partial(struct sock *sk)
-+{
-+#ifdef CONFIG_LOCKDEP
-+	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock.slock));
-+#endif
-+	__mptcp_update_wmem(sk);
-+	sk_mem_reclaim_partial(sk);
-+}
-+
- static void mptcp_mem_reclaim_partial(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -1069,12 +1078,8 @@ static void __mptcp_clean_una(struct sock *sk)
- 	}
- 
- out:
--	if (cleaned) {
--		if (tcp_under_memory_pressure(sk)) {
--			__mptcp_update_wmem(sk);
--			sk_mem_reclaim_partial(sk);
--		}
--	}
-+	if (cleaned && tcp_under_memory_pressure(sk))
-+		__mptcp_mem_reclaim_partial(sk);
- 
- 	if (snd_una == READ_ONCE(msk->snd_nxt)) {
- 		if (msk->timer_ival && !mptcp_data_fin_enabled(msk))
-@@ -1154,6 +1159,7 @@ struct mptcp_sendmsg_info {
- 	u16 limit;
- 	u16 sent;
- 	unsigned int flags;
-+	bool data_lock_held;
- };
- 
- static int mptcp_check_allowed_size(struct mptcp_sock *msk, u64 data_seq,
-@@ -1225,17 +1231,17 @@ static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
- 	return false;
- }
- 
--static bool mptcp_must_reclaim_memory(struct sock *sk, struct sock *ssk)
-+static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
- {
--	return !ssk->sk_tx_skb_cache &&
--	       tcp_under_memory_pressure(sk);
--}
-+	gfp_t gfp = data_lock_held ? GFP_ATOMIC : sk->sk_allocation;
- 
--static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
--{
--	if (unlikely(mptcp_must_reclaim_memory(sk, ssk)))
--		mptcp_mem_reclaim_partial(sk);
--	return __mptcp_alloc_tx_skb(sk, ssk, sk->sk_allocation);
-+	if (unlikely(tcp_under_memory_pressure(sk))) {
-+		if (data_lock_held)
-+			__mptcp_mem_reclaim_partial(sk);
-+		else
-+			mptcp_mem_reclaim_partial(sk);
-+	}
-+	return __mptcp_alloc_tx_skb(sk, ssk, gfp);
- }
- 
- /* note: this always recompute the csum on the whole skb, even
-@@ -1259,7 +1265,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	bool zero_window_probe = false;
- 	struct mptcp_ext *mpext = NULL;
- 	struct sk_buff *skb, *tail;
--	bool can_collapse = false;
-+	bool must_collapse = false;
- 	int size_bias = 0;
- 	int avail_size;
- 	size_t ret = 0;
-@@ -1279,16 +1285,24 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		 * SSN association set here
- 		 */
- 		mpext = skb_ext_find(skb, SKB_EXT_MPTCP);
--		can_collapse = (info->size_goal - skb->len > 0) &&
--			 mptcp_skb_can_collapse_to(data_seq, skb, mpext);
--		if (!can_collapse) {
-+		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
- 			TCP_SKB_CB(skb)->eor = 1;
--		} else {
-+			goto alloc_skb;
-+		}
-+
-+		must_collapse = (info->size_goal - skb->len > 0) &&
-+				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
-+		if (must_collapse) {
- 			size_bias = skb->len;
- 			avail_size = info->size_goal - skb->len;
- 		}
- 	}
- 
-+alloc_skb:
-+	if (!must_collapse && !ssk->sk_tx_skb_cache &&
-+	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
-+		return 0;
-+
- 	/* Zero window and all data acked? Probe. */
- 	avail_size = mptcp_check_allowed_size(msk, data_seq, avail_size);
- 	if (avail_size == 0) {
-@@ -1318,7 +1332,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	if (skb == tail) {
- 		TCP_SKB_CB(tail)->tcp_flags &= ~TCPHDR_PSH;
- 		mpext->data_len += ret;
--		WARN_ON_ONCE(!can_collapse);
- 		WARN_ON_ONCE(zero_window_probe);
- 		goto out;
- 	}
-@@ -1470,15 +1483,6 @@ static void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 			if (ssk != prev_ssk || !prev_ssk)
- 				lock_sock(ssk);
- 
--			/* keep it simple and always provide a new skb for the
--			 * subflow, even if we will not use it when collapsing
--			 * on the pending one
--			 */
--			if (!mptcp_alloc_tx_skb(sk, ssk)) {
--				mptcp_push_release(sk, ssk, &info);
--				goto out;
--			}
--
- 			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 			if (ret <= 0) {
- 				mptcp_push_release(sk, ssk, &info);
-@@ -1512,7 +1516,9 @@ static void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
--	struct mptcp_sendmsg_info info;
-+	struct mptcp_sendmsg_info info = {
-+				 .data_lock_held = true,
-+	};
- 	struct mptcp_data_frag *dfrag;
- 	struct sock *xmit_ssk;
- 	int len, copied = 0;
-@@ -1538,13 +1544,6 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 				goto out;
- 			}
- 
--			if (unlikely(mptcp_must_reclaim_memory(sk, ssk))) {
--				__mptcp_update_wmem(sk);
--				sk_mem_reclaim_partial(sk);
--			}
--			if (!__mptcp_alloc_tx_skb(sk, ssk, GFP_ATOMIC))
--				goto out;
--
- 			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 			if (ret <= 0)
- 				goto out;
-@@ -2296,9 +2295,6 @@ static void __mptcp_retrans(struct sock *sk)
- 	info.sent = 0;
- 	info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len : dfrag->already_sent;
- 	while (info.sent < info.limit) {
--		if (!mptcp_alloc_tx_skb(sk, ssk))
--			break;
--
- 		ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 		if (ret <= 0)
- 			break;
--- 
-2.33.0
+Code looks good though, I don't have any changes to suggest.
 
+
+-Mat
+
+
+> ---
+> Paolo, I think this is in line with what we discussed earlier today.
+>
+> This does NOT resolve issues/226, but as far as i can tell the
+> failure rate is cut in half: 500 runs of mptcp_join -l had 24 vs. 7
+> failures.
+>
+> I also no longer see
+>
+> ack_update_msk: invalid una (96072 or 424988 bytes, 1 below write_seq, cnt 22715
+>
+> debug log from ack_update_msk(), printed when we ignore advertised
+> new_snd_una while msk->recovery flag is set.
+>
+> net/mptcp/options.c  |  8 +++-----
+> net/mptcp/protocol.c | 45 ++++++++++++++++++++++++++++++++------------
+> 2 files changed, 36 insertions(+), 17 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index f5fa8e7efd9c..12fcf7553d08 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1019,11 +1019,9 @@ static void ack_update_msk(struct mptcp_sock *msk,
+> 	old_snd_una = msk->snd_una;
+> 	new_snd_una = mptcp_expand_seq(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
+>
+> -	/* ACK for data not even sent yet and even above recovery bound? Ignore.*/
+> -	if (unlikely(after64(new_snd_una, snd_nxt))) {
+> -		if (!msk->recovery || after64(new_snd_una, msk->recovery_snd_nxt))
+> -			new_snd_una = old_snd_una;
+> -	}
+> +	/* ACK for data not even sent yet? Ignore.*/
+> +	if (unlikely(after64(new_snd_una, snd_nxt)))
+> +		new_snd_una = old_snd_una;
+>
+> 	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index af8f677162f3..385405cf4626 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1507,6 +1507,34 @@ static void mptcp_push_release(struct sock *sk, struct sock *ssk,
+> 	release_sock(ssk);
+> }
+>
+> +static void mptcp_update_post_push(struct mptcp_sock *msk,
+> +				   struct mptcp_data_frag *dfrag,
+> +				   u32 sent)
+> +{
+> +	u64 snd_nxt_new = dfrag->data_seq;
+> +
+> +	dfrag->already_sent += sent;
+> +
+> +	msk->snd_burst -= sent;
+> +	msk->tx_pending_data -= sent;
+> +
+> +	snd_nxt_new += dfrag->already_sent;
+> +
+> +	/* snd_nxt_new can be smaller than snd_nxt in case mptcp
+> +	 * is recovering after a failover. In that event, this re-sends
+> +	 * old segments.
+> +	 *
+> +	 * Thus compute snd_nxt_new candidate based on
+> +	 * the dfrag->data_seq that was sent and the data
+> +	 * that has been handed to the subflow for transmission
+> +	 * and skip update in case it was old dfrag.
+> +	 */
+> +	if (likely(after64(snd_nxt_new, msk->snd_nxt)))
+> +		msk->snd_nxt = snd_nxt_new;
+> +
+> +	WARN_ON_ONCE(after64(msk->snd_nxt, msk->write_seq));
+> +}
+> +
+> void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> {
+> 	struct sock *prev_ssk = NULL, *ssk = NULL;
+> @@ -1550,12 +1578,10 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> 			}
+>
+> 			info.sent += ret;
+> -			dfrag->already_sent += ret;
+> -			msk->snd_nxt += ret;
+> -			msk->snd_burst -= ret;
+> -			msk->tx_pending_data -= ret;
+> 			copied += ret;
+> 			len -= ret;
+> +
+> +			mptcp_update_post_push(msk, dfrag, ret);
+> 		}
+> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+> 	}
+> @@ -1608,13 +1634,11 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
+> 				goto out;
+>
+> 			info.sent += ret;
+> -			dfrag->already_sent += ret;
+> -			msk->snd_nxt += ret;
+> -			msk->snd_burst -= ret;
+> -			msk->tx_pending_data -= ret;
+> 			copied += ret;
+> 			len -= ret;
+> 			first = false;
+> +
+> +			mptcp_update_post_push(msk, dfrag, ret);
+> 		}
+> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+> 	}
+> @@ -2212,15 +2236,12 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
+> 		return false;
+> 	}
+>
+> -	/* will accept ack for reijected data before re-sending them */
+> -	if (!msk->recovery || after64(msk->snd_nxt, msk->recovery_snd_nxt))
+> -		msk->recovery_snd_nxt = msk->snd_nxt;
+> +	msk->recovery_snd_nxt = msk->snd_nxt;
+> 	msk->recovery = true;
+> 	mptcp_data_unlock(sk);
+>
+> 	msk->first_pending = rtx_head;
+> 	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
+> -	msk->snd_nxt = rtx_head->data_seq;
+> 	msk->snd_burst = 0;
+>
+> 	/* be sure to clear the "sent status" on all re-injected fragments */
+> -- 
+> 2.31.1
+>
+>
+>
+
+--
+Mat Martineau
+Intel
