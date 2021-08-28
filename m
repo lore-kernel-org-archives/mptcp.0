@@ -1,29 +1,31 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3123FC2
-	for <mptcp@lists.linux.dev>; Sat, 28 Aug 2021 00:17:46 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10089"; a="197612636"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1773FC4
+	for <mptcp@lists.linux.dev>; Sat, 28 Aug 2021 00:17:47 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10089"; a="197612639"
 X-IronPort-AV: E=Sophos;i="5.84,358,1620716400"; 
-   d="scan'208";a="197612636"
+   d="scan'208";a="197612639"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:17:45 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:17:46 -0700
 X-IronPort-AV: E=Sophos;i="5.84,358,1620716400"; 
-   d="scan'208";a="528512880"
+   d="scan'208";a="528512883"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.16.51])
   by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:17:45 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
 	davem@davemloft.net,
 	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	pabeni@redhat.com
-Subject: [PATCH net 0/2] mptcp: Prevent tcp_push() crash and selftest temp file buildup
-Date: Fri, 27 Aug 2021 17:17:29 -0700
-Message-Id: <20210828001731.67757-1-mathew.j.martineau@linux.intel.com>
+	pabeni@redhat.com,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 2/2] selftests: mptcp: clean tmp files in simult_flows
+Date: Fri, 27 Aug 2021 17:17:31 -0700
+Message-Id: <20210828001731.67757-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20210828001731.67757-1-mathew.j.martineau@linux.intel.com>
+References: <20210828001731.67757-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -32,28 +34,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These are two fixes for the net tree, addressing separate issues.
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Patch 1 addresses a divide-by-zero crash seen in syzkaller and also
-reported by a user on the netdev list. This changes MPTCP code so
-tcp_push() cannot be called with an invalid (0) mss_now value.
+'$cin' and '$sin' variables are local to a function: they are then not
+available from the cleanup trap.
 
-Patch 2 fixes a selftest temp file cleanup issue that consumes excessive
-disk space when running repeated tests.
+Instead, we need to use '$large' and '$small' that are not local and
+defined just before setting the trap.
 
+Without this patch, running this script in a loop might cause a:
 
-Matthieu Baerts (1):
-  selftests: mptcp: clean tmp files in simult_flows
+  write: No space left on device
 
-Paolo Abeni (1):
-  mptcp: fix possible divide by zero
+issue.
 
- net/mptcp/protocol.c                          | 78 +++++++++----------
- .../selftests/net/mptcp/simult_flows.sh       |  4 +-
- 2 files changed, 39 insertions(+), 43 deletions(-)
+Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-base-commit: 5fe2a6b4344cbb2120d6d81e371b7ec8e75f03e2
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index fd63ebfe9a2b..910d8126af8f 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -22,8 +22,8 @@ usage() {
+ 
+ cleanup()
+ {
+-	rm -f "$cin" "$cout"
+-	rm -f "$sin" "$sout"
++	rm -f "$cout" "$sout"
++	rm -f "$large" "$small"
+ 	rm -f "$capout"
+ 
+ 	local netns
 -- 
 2.33.0
 
