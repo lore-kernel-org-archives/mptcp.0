@@ -1,199 +1,175 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9BE72
+	for <mptcp@lists.linux.dev>; Sun, 29 Aug 2021 17:04:18 +0000 (UTC)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out2.suse.de (Postfix) with ESMTP id B12941FDB0;
+	Sun, 29 Aug 2021 17:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1630256656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bLgQdzP6bhd67bN1DZe9rkZ0DYRzmF2k6+soDOEtgRM=;
+	b=tBzjrgGfB1fKD2xYUDW9/X8wTMDxvMk7jozI0OmW9/OFSFAFfMTgY5UA+p+M2TlRPoLAYJ
+	NS18bVoZqTTBJgebOAicEfMBNAYhoneCL0HR1do81c3NiqoGo3T/HEJpuSCu1geO4b5b4w
+	JGDixFxjNJzyjUjN1QAyEADpmRx+JeE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1630256656;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bLgQdzP6bhd67bN1DZe9rkZ0DYRzmF2k6+soDOEtgRM=;
+	b=zbKAW/xPVH4XrPhah5ZTsWnTQTrxXGNY+f1zDGqZT5/y5bCxYMU1MtNfBYGPWUjeJsksEQ
+	GwIzFvYTNQMpBiAw==
+Received: from lion.mk-sys.cz (unknown [10.163.29.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1380D72
-	for <mptcp@lists.linux.dev>; Sat, 28 Aug 2021 00:45:15 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10089"; a="218055788"
-X-IronPort-AV: E=Sophos;i="5.84,358,1620716400"; 
-   d="scan'208";a="218055788"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:45:11 -0700
-X-IronPort-AV: E=Sophos;i="5.84,358,1620716400"; 
-   d="scan'208";a="687713103"
-Received: from jhanbaba-mobl.amr.corp.intel.com ([10.212.224.121])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 17:45:11 -0700
-Date: Fri, 27 Aug 2021 17:45:10 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp] mptcp: do not shrink snd_nxt when recovering
-In-Reply-To: <20210826234324.27764-1-fw@strlen.de>
-Message-ID: <3c905eff-8882-cfc3-6b6-a4bb1aee15f5@linux.intel.com>
-References: <20210826234324.27764-1-fw@strlen.de>
+	by relay2.suse.de (Postfix) with ESMTPS id 9800AA3BA0;
+	Sun, 29 Aug 2021 17:04:16 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+	id 7B554603F7; Sun, 29 Aug 2021 19:04:15 +0200 (CEST)
+Date: Sun, 29 Aug 2021 19:04:15 +0200
+From: Michal Kubecek <mkubecek@suse.cz>
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
+	Richard Cochran <richardcochran@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>, Rui Sousa <rui.sousa@nxp.com>,
+	Sebastien Laveze <sebastien.laveze@nxp.com>
+Subject: Re: [net-next, v4, 05/11] ethtool: add a new command for getting PHC
+ virtual clocks
+Message-ID: <20210829170415.hztnbqswszx27hvf@lion.mk-sys.cz>
+References: <20210625093513.38524-1-yangbo.lu@nxp.com>
+ <20210625093513.38524-6-yangbo.lu@nxp.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-
-On Fri, 27 Aug 2021, Florian Westphal wrote:
-
-> When recovering after a link failure, snd_nxt should not be set to a
-> lower value.  Else, update of snd_nxt is broken because:
->
->  msk->snd_nxt += ret; (where ret is number of bytes sent)
->
-> assumes that snd_nxt always moves forward.
-> After reduction, its possible that snd_nxt update gets out of sync:
-> dfrag we just sent might have had a data sequence number even past
-> snd_nxt_recovery.
-
-Do you mean recovery_snd_nxt?
-
->
-> This change factors the common msk state update to a helper
-> and updates snd_nxt based on the current dfrag data sequence number.
->
-> The conditional is required for the recovery phase where we may
-> re-transmit old dfrags that are before current snd_nxt.
->
-> After this change, snd_nxt only moves forward and covers all in-sequence
-> data that was transmitted.
->
-> recovery_snd_nxt is retained to detect when recovery has completed.
->
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-
-Will need a Fixes tag for the -net tree.
-
-Code looks good though, I don't have any changes to suggest.
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cpandjdf6zkdwu7z"
+Content-Disposition: inline
+In-Reply-To: <20210625093513.38524-6-yangbo.lu@nxp.com>
 
 
--Mat
+--cpandjdf6zkdwu7z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 25, 2021 at 05:35:07PM +0800, Yangbo Lu wrote:
+> Add an interface for getting PHC (PTP Hardware Clock)
+> virtual clocks, which are based on PHC physical clock
+> providing hardware timestamp to network packets.
+>=20
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+
+Hello,
+
+do you plan to submit also an ethtool (userspace utility) patch using
+this interface?
+
+Michal
 
 > ---
-> Paolo, I think this is in line with what we discussed earlier today.
->
-> This does NOT resolve issues/226, but as far as i can tell the
-> failure rate is cut in half: 500 runs of mptcp_join -l had 24 vs. 7
-> failures.
->
-> I also no longer see
->
-> ack_update_msk: invalid una (96072 or 424988 bytes, 1 below write_seq, cnt 22715
->
-> debug log from ack_update_msk(), printed when we ignore advertised
-> new_snd_una while msk->recovery flag is set.
->
-> net/mptcp/options.c  |  8 +++-----
-> net/mptcp/protocol.c | 45 ++++++++++++++++++++++++++++++++------------
-> 2 files changed, 36 insertions(+), 17 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index f5fa8e7efd9c..12fcf7553d08 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1019,11 +1019,9 @@ static void ack_update_msk(struct mptcp_sock *msk,
-> 	old_snd_una = msk->snd_una;
-> 	new_snd_una = mptcp_expand_seq(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
->
-> -	/* ACK for data not even sent yet and even above recovery bound? Ignore.*/
-> -	if (unlikely(after64(new_snd_una, snd_nxt))) {
-> -		if (!msk->recovery || after64(new_snd_una, msk->recovery_snd_nxt))
-> -			new_snd_una = old_snd_una;
-> -	}
-> +	/* ACK for data not even sent yet? Ignore.*/
-> +	if (unlikely(after64(new_snd_una, snd_nxt)))
-> +		new_snd_una = old_snd_una;
->
-> 	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index af8f677162f3..385405cf4626 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1507,6 +1507,34 @@ static void mptcp_push_release(struct sock *sk, struct sock *ssk,
-> 	release_sock(ssk);
-> }
->
-> +static void mptcp_update_post_push(struct mptcp_sock *msk,
-> +				   struct mptcp_data_frag *dfrag,
-> +				   u32 sent)
-> +{
-> +	u64 snd_nxt_new = dfrag->data_seq;
+> Changes for v3:
+> 	- Added this patch.
+> Changes for v4:
+> 	- Updated doc.
+> 	- Removed ioctl command.
+> 	- Replied only the number of vclock index.
+> ---
+>  Documentation/networking/ethtool-netlink.rst | 22 +++++
+>  include/linux/ethtool.h                      | 10 +++
+>  include/uapi/linux/ethtool_netlink.h         | 15 ++++
+>  net/ethtool/Makefile                         |  2 +-
+>  net/ethtool/common.c                         | 13 +++
+>  net/ethtool/netlink.c                        | 10 +++
+>  net/ethtool/netlink.h                        |  2 +
+>  net/ethtool/phc_vclocks.c                    | 94 ++++++++++++++++++++
+>  8 files changed, 167 insertions(+), 1 deletion(-)
+>  create mode 100644 net/ethtool/phc_vclocks.c
+>=20
+> diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation=
+/networking/ethtool-netlink.rst
+> index 6ea91e41593f..c86628e6a235 100644
+> --- a/Documentation/networking/ethtool-netlink.rst
+> +++ b/Documentation/networking/ethtool-netlink.rst
+> @@ -212,6 +212,7 @@ Userspace to kernel:
+>    ``ETHTOOL_MSG_FEC_SET``               set FEC settings
+>    ``ETHTOOL_MSG_MODULE_EEPROM_GET``     read SFP module EEPROM
+>    ``ETHTOOL_MSG_STATS_GET``             get standard statistics
+> +  ``ETHTOOL_MSG_PHC_VCLOCKS_GET``       get PHC virtual clocks info
+>    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  Kernel to userspace:
+> @@ -250,6 +251,7 @@ Kernel to userspace:
+>    ``ETHTOOL_MSG_FEC_NTF``                  FEC settings
+>    ``ETHTOOL_MSG_MODULE_EEPROM_GET_REPLY``  read SFP module EEPROM
+>    ``ETHTOOL_MSG_STATS_GET_REPLY``          standard statistics
+> +  ``ETHTOOL_MSG_PHC_VCLOCKS_GET_REPLY``    PHC virtual clocks info
+>    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> =20
+>  ``GET`` requests are sent by userspace applications to retrieve device
+> @@ -1477,6 +1479,25 @@ Low and high bounds are inclusive, for example:
+>   etherStatsPkts512to1023Octets 512  1023
+>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D =3D=3D=3D=3D
+> =20
+> +PHC_VCLOCKS_GET
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +	dfrag->already_sent += sent;
+> +Query device PHC virtual clocks information.
 > +
-> +	msk->snd_burst -= sent;
-> +	msk->tx_pending_data -= sent;
+> +Request contents:
 > +
-> +	snd_nxt_new += dfrag->already_sent;
+> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +  ``ETHTOOL_A_PHC_VCLOCKS_HEADER``      nested  request header
+> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +	/* snd_nxt_new can be smaller than snd_nxt in case mptcp
-> +	 * is recovering after a failover. In that event, this re-sends
-> +	 * old segments.
-> +	 *
-> +	 * Thus compute snd_nxt_new candidate based on
-> +	 * the dfrag->data_seq that was sent and the data
-> +	 * that has been handed to the subflow for transmission
-> +	 * and skip update in case it was old dfrag.
-> +	 */
-> +	if (likely(after64(snd_nxt_new, msk->snd_nxt)))
-> +		msk->snd_nxt = snd_nxt_new;
+> +Kernel response contents:
 > +
-> +	WARN_ON_ONCE(after64(msk->snd_nxt, msk->write_seq));
-> +}
-> +
-> void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> {
-> 	struct sock *prev_ssk = NULL, *ssk = NULL;
-> @@ -1550,12 +1578,10 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 			}
->
-> 			info.sent += ret;
-> -			dfrag->already_sent += ret;
-> -			msk->snd_nxt += ret;
-> -			msk->snd_burst -= ret;
-> -			msk->tx_pending_data -= ret;
-> 			copied += ret;
-> 			len -= ret;
-> +
-> +			mptcp_update_post_push(msk, dfrag, ret);
-> 		}
-> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> 	}
-> @@ -1608,13 +1634,11 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
-> 				goto out;
->
-> 			info.sent += ret;
-> -			dfrag->already_sent += ret;
-> -			msk->snd_nxt += ret;
-> -			msk->snd_burst -= ret;
-> -			msk->tx_pending_data -= ret;
-> 			copied += ret;
-> 			len -= ret;
-> 			first = false;
-> +
-> +			mptcp_update_post_push(msk, dfrag, ret);
-> 		}
-> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> 	}
-> @@ -2212,15 +2236,12 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
-> 		return false;
-> 	}
->
-> -	/* will accept ack for reijected data before re-sending them */
-> -	if (!msk->recovery || after64(msk->snd_nxt, msk->recovery_snd_nxt))
-> -		msk->recovery_snd_nxt = msk->snd_nxt;
-> +	msk->recovery_snd_nxt = msk->snd_nxt;
-> 	msk->recovery = true;
-> 	mptcp_data_unlock(sk);
->
-> 	msk->first_pending = rtx_head;
-> 	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
-> -	msk->snd_nxt = rtx_head->data_seq;
-> 	msk->snd_burst = 0;
->
-> 	/* be sure to clear the "sent status" on all re-injected fragments */
-> -- 
-> 2.31.1
->
->
->
+> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +  ``ETHTOOL_A_PHC_VCLOCKS_HEADER``      nested  reply header
+> +  ``ETHTOOL_A_PHC_VCLOCKS_NUM``         u32     PHC virtual clocks number
+> +  ``ETHTOOL_A_PHC_VCLOCKS_INDEX``       s32     PHC index array
+> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[...]
 
---
-Mat Martineau
-Intel
+--cpandjdf6zkdwu7z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmErvgkACgkQ538sG/LR
+dpUBjQgAzjPJSDO8EKxGkhwYCeYjwC8Lv8dHqiKoAD2OAdxIwq8euaCfCq0/Qcek
+6fFdwPXYkxLS17T33E/UKS/7LoVRl8FeLADMoEFmEsjVD/H+bRwSSJUs2emlgC8g
+GVgLWXiECd9wSB6OvMd7Z8SfWtmD7RTCQFz8HwVoHWUy3TK45KC8/wx7eDu6xMia
+zp1uqECkH9r7CefjL1XA7VHl9WiBU2a21Zs7OyQVtRQrn+389e8v1+CdutbHZsKD
+XIcFnSYzOOLh0MleQXRuKsg9qSEshQ5jF2Id+pv52jw2MaMIivoekAtDmxHDp9hV
+rfrgj32E5JqDphIX1x7QTf2l4T5Izw==
+=LHra
+-----END PGP SIGNATURE-----
+
+--cpandjdf6zkdwu7z--
