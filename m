@@ -1,163 +1,71 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2A03FC3
-	for <mptcp@lists.linux.dev>; Mon, 30 Aug 2021 11:17:56 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1mKfIT-0003w2-70; Mon, 30 Aug 2021 13:17:49 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v2 mptcp-next] mptcp: do not shrink snd_nxt when recovering
-Date: Mon, 30 Aug 2021 13:17:42 +0200
-Message-Id: <20210830111742.23904-1-fw@strlen.de>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5640A72
+	for <mptcp@lists.linux.dev>; Mon, 30 Aug 2021 18:10:51 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="218370886"
+X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
+   d="scan'208";a="218370886"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 11:10:50 -0700
+X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
+   d="scan'208";a="540646927"
+Received: from sahushub-mobl1.amr.corp.intel.com ([10.209.36.196])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 11:10:50 -0700
+Date: Mon, 30 Aug 2021 11:10:50 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: pabeni@redhat.com, geliangtang@gmail.com, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: Only send extra TCP acks in eligible
+ socket states
+In-Reply-To: <5ea0f310-8798-e436-24ae-2476b16b1813@tessares.net>
+Message-ID: <4f65e83-3f44-15a7-a9b8-95b4d74b745d@linux.intel.com>
+References: <20210826004601.196834-1-mathew.j.martineau@linux.intel.com> <5ea0f310-8798-e436-24ae-2476b16b1813@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-When recovering after a link failure, snd_nxt should not be set to a
-lower value.  Else, update of snd_nxt is broken because:
 
-  msk->snd_nxt += ret; (where ret is number of bytes sent)
+On Thu, 26 Aug 2021, Matthieu Baerts wrote:
 
-assumes that snd_nxt always moves forward.
-After reduction, its possible that snd_nxt update gets out of sync:
-dfrag we just sent might have had a data sequence number even past
-recovery_snd_nxt.
+> Hi Mat, Paolo,
+>
+> On 26/08/2021 02:46, Mat Martineau wrote:
+>> Recent changes exposed a bug where specifically-timed requests to the
+>> path manager netlink API could trigger a divide-by-zero in
+>> __tcp_select_window(), as syzkaller does:
+>
+> (...)
+>
+> Thank you for the patch, the review and the testing!
+>
 
-This change factors the common msk state update to a helper
-and updates snd_nxt based on the current dfrag data sequence number.
+More info on the testing: I was able to run syzkaller over the weekend, 
+and the error has not reoccurred in the last 5 days.
 
-The conditional is required for the recovery phase where we may
-re-transmit old dfrags that are before current snd_nxt.
+> This is now in our tree:
+>
+> - ea8a43942429: mptcp: Only send extra TCP acks in eligible socket states
+> - Results: 99a16463048d..6d52100ab2ab
+>
+>> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/229
+>> Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+>
+> Checkpatch is yelling at me because a SoB is not present here.
+>
+> @Paolo: sorry to ask this question but for the record, is it OK for you
+> if I add it? :)
+>
 
-After this change, snd_nxt only moves forward and covers all in-sequence
-data that was transmitted.
+Still an open question here about signoff (or changing author header) for 
+Paolo !
 
-recovery_snd_nxt is retained to detect when recovery has completed.
 
-Fixes: 1e1d9d6f119c5 ("mptcp: handle pending data on closed subflow")
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- Changes in v2:
-  - remove WARN_ON() (Paolo)
-  - fix wrong member name in commit message (Mat)
-  - add Fixes-tag (Mat)
-
- net/mptcp/options.c  |  8 +++-----
- net/mptcp/protocol.c | 43 +++++++++++++++++++++++++++++++------------
- 2 files changed, 34 insertions(+), 17 deletions(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c41273cefc51..1ec6529c4326 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1019,11 +1019,9 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 	old_snd_una = msk->snd_una;
- 	new_snd_una = mptcp_expand_seq(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
- 
--	/* ACK for data not even sent yet and even above recovery bound? Ignore.*/
--	if (unlikely(after64(new_snd_una, snd_nxt))) {
--		if (!msk->recovery || after64(new_snd_una, msk->recovery_snd_nxt))
--			new_snd_una = old_snd_una;
--	}
-+	/* ACK for data not even sent yet? Ignore.*/
-+	if (unlikely(after64(new_snd_una, snd_nxt)))
-+		new_snd_una = old_snd_una;
- 
- 	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 898485e4c1dd..61f41be1a71a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1510,6 +1510,32 @@ static void mptcp_push_release(struct sock *sk, struct sock *ssk,
- 	release_sock(ssk);
- }
- 
-+static void mptcp_update_post_push(struct mptcp_sock *msk,
-+				   struct mptcp_data_frag *dfrag,
-+				   u32 sent)
-+{
-+	u64 snd_nxt_new = dfrag->data_seq;
-+
-+	dfrag->already_sent += sent;
-+
-+	msk->snd_burst -= sent;
-+	msk->tx_pending_data -= sent;
-+
-+	snd_nxt_new += dfrag->already_sent;
-+
-+	/* snd_nxt_new can be smaller than snd_nxt in case mptcp
-+	 * is recovering after a failover. In that event, this re-sends
-+	 * old segments.
-+	 *
-+	 * Thus compute snd_nxt_new candidate based on
-+	 * the dfrag->data_seq that was sent and the data
-+	 * that has been handed to the subflow for transmission
-+	 * and skip update in case it was old dfrag.
-+	 */
-+	if (likely(after64(snd_nxt_new, msk->snd_nxt)))
-+		msk->snd_nxt = snd_nxt_new;
-+}
-+
- void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- {
- 	struct sock *prev_ssk = NULL, *ssk = NULL;
-@@ -1553,12 +1579,10 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 			}
- 
- 			info.sent += ret;
--			dfrag->already_sent += ret;
--			msk->snd_nxt += ret;
--			msk->snd_burst -= ret;
--			msk->tx_pending_data -= ret;
- 			copied += ret;
- 			len -= ret;
-+
-+			mptcp_update_post_push(msk, dfrag, ret);
- 		}
- 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
- 	}
-@@ -1611,13 +1635,11 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 				goto out;
- 
- 			info.sent += ret;
--			dfrag->already_sent += ret;
--			msk->snd_nxt += ret;
--			msk->snd_burst -= ret;
--			msk->tx_pending_data -= ret;
- 			copied += ret;
- 			len -= ret;
- 			first = false;
-+
-+			mptcp_update_post_push(msk, dfrag, ret);
- 		}
- 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
- 	}
-@@ -2215,15 +2237,12 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
- 		return false;
- 	}
- 
--	/* will accept ack for reijected data before re-sending them */
--	if (!msk->recovery || after64(msk->snd_nxt, msk->recovery_snd_nxt))
--		msk->recovery_snd_nxt = msk->snd_nxt;
-+	msk->recovery_snd_nxt = msk->snd_nxt;
- 	msk->recovery = true;
- 	mptcp_data_unlock(sk);
- 
- 	msk->first_pending = rtx_head;
- 	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
--	msk->snd_nxt = rtx_head->data_seq;
- 	msk->snd_burst = 0;
- 
- 	/* be sure to clear the "sent status" on all re-injected fragments */
--- 
-2.31.1
-
+--
+Mat Martineau
+Intel
