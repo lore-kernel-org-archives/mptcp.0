@@ -1,47 +1,49 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55843FC6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5A73FC4
 	for <mptcp@lists.linux.dev>; Mon, 30 Aug 2021 10:34:20 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id e21so30009020ejz.12
+Received: by mail-ej1-f50.google.com with SMTP id i21so30134679ejd.2
         for <mptcp@lists.linux.dev>; Mon, 30 Aug 2021 03:34:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gK7Fuk/mxZ2LNujauB2rnS4xUfiDhSH1Rspzvmwpk7k=;
-        b=CBcB4w0oHfCeN1jmxo6NnI3GqlFe9Ym649lUh3l99/E03EOvC0dZVEGq2U1EiubnFs
-         PgHWy1Ksfpgz/YoaKY3W+rpTh7Zvd6YcTqNe1omOXWQWVeLx011NAAJ+qwozomqy7yf1
-         v2Q1VxUnC4JSw4S2zBIw6AYmAja5YzXF50FVXofT/3FpJhvnxIT4YsrQymSlFO2O4qGh
-         0sAxKLVBVhJQUbnyMtFWA1RLIwrmA/m34M+5xqf/tjynvjKpZRD2Xg3dyb2YlYSy/AAB
-         qb/Jzw4tEdD8+FTFO2YogTR2GihpFt+QUglbjZXQ1ElKo8TzmBQuvgS/uHhSxt7U5pWE
-         eD7Q==
+        bh=n8Jdtbk+agUGLeH3NOrwWV95zhaiWjhRzD1IdFQ4PR8=;
+        b=b2Psqjbd3utcZP5kmZx75VuRSOR8fPH38rGXGi5UF/1dAlJGoxJmzBCcAcbX787Mta
+         MBa6hSig+zKiKHZvB+RRNXYu62BbYmEhocNaDe9ceBTUnkEoy6pEQ0428dfF4xsCJ4qF
+         GS0nZKCf3dPj2NneYupy1JHB1MnweoXcaDcvriiiZE9LEFxT1ZNJOFKsPjcwQeqRGn+q
+         IgAttT9anRsBg0Zb08uFBJjJx/JgjxHk2z6gdbruxb9jgqy9vBv/H0aO4+sq9jFVo5xt
+         UnIhJvimIlB/MSkF8fm6luxJYeB+eYg9qUGS+L9elFuMYrYkEh+KjIrTQ9IYa6KOUgek
+         cL7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gK7Fuk/mxZ2LNujauB2rnS4xUfiDhSH1Rspzvmwpk7k=;
-        b=kny+807GXte9lOU5SYxHLeOQCLEetdbRC3qmceFWTbHJhoU83Jiogz51NUvHZBHqsi
-         iCbhxk79+q9dV5j00HYRmGp6J97tc4w3bEjZ58uEHQCwDLAlYNcOCeRZYEuFZP53H8Hh
-         C4qKUfwEWvdumXC0wPrIIjEXZJ4LnDwd8nH7gZ4b+V3+pUxcBvbnfhhlS46J8GrKqFY/
-         2iGU7naYtRgGQ/nWhfGeCmNXsDecWAf7qtNzhczrik7QfZRthotjSc7iLufxAi8wxOlN
-         02kiU/QADLV8zlJ7cAlP8yUY2aqj9Cj3HjVCuftzbFS+TmTLXWH1z+Pqwb2w46ejSEab
-         thhQ==
-X-Gm-Message-State: AOAM53132lGBiqdHciGCuusSmxgc/gEYKpdsAOlaqKhs30W+eVSPPrSz
-	eKQPY5wrJS6sewbpGkhJvGN8yZECrCJ6xTSbUrY=
-X-Google-Smtp-Source: ABdhPJxAxRu7u0CGmCrtf+X9F0G9yVgazhT80OAPHxtgxcIqjkKOZcAHmxNYYRUHDDYLhcgAogEM0Q==
-X-Received: by 2002:a17:906:d94:: with SMTP id m20mr23861741eji.445.1630319659056;
-        Mon, 30 Aug 2021 03:34:19 -0700 (PDT)
+        bh=n8Jdtbk+agUGLeH3NOrwWV95zhaiWjhRzD1IdFQ4PR8=;
+        b=i+YZzO5SKSPvhv39LJ98e0p65Gjj+inVlCvIGexJ59srfaS7SkQavge/T3ACTKF71I
+         i610NqYg3moXFw/f1g9oneRWzHqcL0pRMfuEoPkTwYeOWb8eZtZ8mBbwQwSLnMh/YF7u
+         aHC/gmgFnMAbMksvhS2aWcbrxD4sxmZf6RTUjrerqq8+ewxaPVx8Lh0MTOI/KBbyEMbr
+         OTu7QW/4yP79cUYVTEsrHgotSbIGD0ZhSASsl0Ie8ZqAQSbxoo0BlbdUGXiM65OhCYJh
+         o/18J1PmeU1aw8q2MJPRTET38cEEjGlG/rfzBbDUA7O4Q5Dq3ZhtSto/qwnwVMIEaJE4
+         tY8w==
+X-Gm-Message-State: AOAM532mIuok4mDMoGPB+73rmDgSfdNJc6mH85fPxfFO7Kj88zGfHk7R
+	XkMETuvMm+xrzfq/Wyh3OoPfq0lB+95zCkrHHeg=
+X-Google-Smtp-Source: ABdhPJzGQoch3X9QzLJeO5cBa4lZkcLOo0AZZp4VX047mRKbuAJ9sz4dRdtb5j1RInqDdNGdOx9lhQ==
+X-Received: by 2002:a17:906:e1a:: with SMTP id l26mr24340471eji.45.1630319658534;
+        Mon, 30 Aug 2021 03:34:18 -0700 (PDT)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
         by smtp.gmail.com with ESMTPSA id p21sm3282755ejm.88.2021.08.30.03.34.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 30 Aug 2021 03:34:18 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 2/2] Squash to "selftests: mptcp: add mptcp getsockopt test cases"
-Date: Mon, 30 Aug 2021 12:33:57 +0200
-Message-Id: <20210830103357.3114290-3-matthieu.baerts@tessares.net>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Geliang Tang <geliangtang@gmail.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH mptcp-next 1/2] Squash to "mptcp: add MPTCP_INFO getsockopt"
+Date: Mon, 30 Aug 2021 12:33:56 +0200
+Message-Id: <20210830103357.3114290-2-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210830103357.3114290-1-matthieu.baerts@tessares.net>
 References: <20210830103357.3114290-1-matthieu.baerts@tessares.net>
@@ -53,52 +55,60 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-3 modifications have been done here:
+This fix compilation errors reported by Geliang and Intel's 0-DAY CI
+Kernel Test Service:
 
-- Use '#ifndef MPTCP_INFO' instead of '#ifndef TCP_TCPINFO'. I guess it
-  was a typo.
+   ./usr/include/linux/mptcp.h:207:19: error: field has incomplete type 'struct sockaddr'
+                   struct sockaddr sa_local;
+                                   ^
+   ./usr/include/linux/mptcp.h:209:23: error: field has incomplete type 'struct sockaddr_in6'
+                   struct sockaddr_in6 sin6_local;
+                                       ^
+   ./usr/include/linux/mptcp.h:210:27: error: field has incomplete type 'struct sockaddr_storage'
+                   struct sockaddr_storage ss_local;
+                                           ^
+   ./usr/include/linux/mptcp.h:213:19: error: field has incomplete type 'struct sockaddr'
+                   struct sockaddr sa_remote;
+                                   ^
+   ./usr/include/linux/mptcp.h:215:23: error: field has incomplete type 'struct sockaddr_in6'
+                   struct sockaddr_in6 sin6_remote;
+                                       ^
+   ./usr/include/linux/mptcp.h:216:27: error: field has incomplete type 'struct sockaddr_storage'
+                   struct sockaddr_storage ss_remote;
+                                           ^
 
-- Move 'struct mptcp_info' inside this '#ifndef' and above: same order
-  as in mptcp.h.
+Please note that socket.h should not be needed because it is included by
+in.h. Here we explicitly add it but it can be removed if needed.
 
-- Use '__kernel_sockaddr_storage' as in the parent commit.
+Also it seems we need to use __kernel_sockaddr_storage in uapi.
 
+Reported-and-tested-by: Geliang Tang <geliangtang@gmail.com>
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 40 +++++++++----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ include/uapi/linux/mptcp.h | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 66c4cee37937..417b11cafafe 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -33,7 +33,24 @@ static int pf = AF_INET;
- #define SOL_MPTCP 284
- #endif
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index c368c11a0ed9..c8cc46f80a16 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -4,7 +4,13 @@
  
--#ifndef TCP_TCPINFO
-+#ifndef MPTCP_INFO
-+struct mptcp_info {
-+	__u8	mptcpi_subflows;
-+	__u8	mptcpi_add_addr_signal;
-+	__u8	mptcpi_add_addr_accepted;
-+	__u8	mptcpi_subflows_max;
-+	__u8	mptcpi_add_addr_signal_max;
-+	__u8	mptcpi_add_addr_accepted_max;
-+	__u32	mptcpi_flags;
-+	__u32	mptcpi_token;
-+	__u64	mptcpi_write_seq;
-+	__u64	mptcpi_snd_una;
-+	__u64	mptcpi_rcv_nxt;
-+	__u8	mptcpi_local_addr_used;
-+	__u8	mptcpi_local_addr_max;
-+	__u8	mptcpi_csum_enabled;
-+};
+ #include <linux/const.h>
+ #include <linux/types.h>
+-#include <linux/in.h>
++#include <linux/in.h>		/* for sockaddr_in			*/
++#include <linux/in6.h>		/* for sockaddr_in6			*/
++#include <linux/socket.h>	/* for sockaddr_storage and sa_family	*/
 +
- struct mptcp_subflow_data {
- 	__u32		size_subflow_data;		/* size of this structure in userspace */
- 	__u32		num_subflows;			/* must be 0, set by kernel */
-@@ -47,13 +64,13 @@ struct mptcp_subflow_addrs {
++#ifndef __KERNEL__
++#include <sys/socket.h>		/* for struct sockaddr			*/
++#endif
+ 
+ #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
+ #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
+@@ -207,13 +213,13 @@ struct mptcp_subflow_addrs {
  		struct sockaddr sa_local;
  		struct sockaddr_in sin_local;
  		struct sockaddr_in6 sin6_local;
@@ -114,30 +124,6 @@ index 66c4cee37937..417b11cafafe 100644
  	};
  };
  
-@@ -62,23 +79,6 @@ struct mptcp_subflow_addrs {
- #define MPTCP_SUBFLOW_ADDRS	3
- #endif
- 
--struct mptcp_info {
--	__u8	mptcpi_subflows;
--	__u8	mptcpi_add_addr_signal;
--	__u8	mptcpi_add_addr_accepted;
--	__u8	mptcpi_subflows_max;
--	__u8	mptcpi_add_addr_signal_max;
--	__u8	mptcpi_add_addr_accepted_max;
--	__u32	mptcpi_flags;
--	__u32	mptcpi_token;
--	__u64	mptcpi_write_seq;
--	__u64	mptcpi_snd_una;
--	__u64	mptcpi_rcv_nxt;
--	__u8	mptcpi_local_addr_used;
--	__u8	mptcpi_local_addr_max;
--	__u8	mptcpi_csum_enabled;
--};
--
- struct so_state {
- 	struct mptcp_info mi;
- 	uint64_t mptcpi_rcv_delta;
 -- 
 2.32.0
 
