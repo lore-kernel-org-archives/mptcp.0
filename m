@@ -1,175 +1,113 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9BE72
-	for <mptcp@lists.linux.dev>; Sun, 29 Aug 2021 17:04:18 +0000 (UTC)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out2.suse.de (Postfix) with ESMTP id B12941FDB0;
-	Sun, 29 Aug 2021 17:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1630256656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bLgQdzP6bhd67bN1DZe9rkZ0DYRzmF2k6+soDOEtgRM=;
-	b=tBzjrgGfB1fKD2xYUDW9/X8wTMDxvMk7jozI0OmW9/OFSFAFfMTgY5UA+p+M2TlRPoLAYJ
-	NS18bVoZqTTBJgebOAicEfMBNAYhoneCL0HR1do81c3NiqoGo3T/HEJpuSCu1geO4b5b4w
-	JGDixFxjNJzyjUjN1QAyEADpmRx+JeE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1630256656;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bLgQdzP6bhd67bN1DZe9rkZ0DYRzmF2k6+soDOEtgRM=;
-	b=zbKAW/xPVH4XrPhah5ZTsWnTQTrxXGNY+f1zDGqZT5/y5bCxYMU1MtNfBYGPWUjeJsksEQ
-	GwIzFvYTNQMpBiAw==
-Received: from lion.mk-sys.cz (unknown [10.163.29.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 9800AA3BA0;
-	Sun, 29 Aug 2021 17:04:16 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-	id 7B554603F7; Sun, 29 Aug 2021 19:04:15 +0200 (CEST)
-Date: Sun, 29 Aug 2021 19:04:15 +0200
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Yangbo Lu <yangbo.lu@nxp.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
-	Richard Cochran <richardcochran@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Shuah Khan <shuah@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>, Rui Sousa <rui.sousa@nxp.com>,
-	Sebastien Laveze <sebastien.laveze@nxp.com>
-Subject: Re: [net-next, v4, 05/11] ethtool: add a new command for getting PHC
- virtual clocks
-Message-ID: <20210829170415.hztnbqswszx27hvf@lion.mk-sys.cz>
-References: <20210625093513.38524-1-yangbo.lu@nxp.com>
- <20210625093513.38524-6-yangbo.lu@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BBE3FC3
+	for <mptcp@lists.linux.dev>; Mon, 30 Aug 2021 03:32:23 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id r26so18504258oij.2
+        for <mptcp@lists.linux.dev>; Sun, 29 Aug 2021 20:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qYWX5+fW4xjujbLa4k+fgCWESUP9bq3v4p0R4RlvdMY=;
+        b=XOCZngbHRsBW/HUCfhxvU4B4g2JR9j7ubX7/gy75ocJpQaphjZpMiafmeOgxznl9C7
+         np2+76HQwlKnnfgMUZAYOks7JIKe+sgTB2ARDIBqw6Mx28m2yjUUaq3ZJLuSO6Z42px+
+         E5ErS26qdI9rCPwbOA12+19TSQ4VIewCk8aNs7GsM3keVkNjKN4BbSUDbl6Tori+JuTE
+         ARAb4/pQO27AVZET08e/SwyxwxD71WWomO/ZC3kZQxNy+JRJpEQ0GzeG1bLLGrDzzwNE
+         YUonFV667J5DJ/9ZerFosPDT5Tuh1eN9dR0h3IG46HINFMLVhENWAvFClqeYDjH3jTfF
+         e+4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qYWX5+fW4xjujbLa4k+fgCWESUP9bq3v4p0R4RlvdMY=;
+        b=leuOO/NEFMPRuZwtp8RzHQghF3d4mRbYE1wmBSdbZbOozH++bbnS7LsTQr7y+9DpHl
+         dF3N2mNyYiTUGqQdEIyiy9XzWSUqN2yXmMLBp1oOpEpJeRbvyO1U6Ib6sMJjXZhcPsBJ
+         cXZrGEoKOLD4aaE1v9QoYtTgLyWyztAvWe4U9QqZ/Foc7jIQaoZGu8lXywctYJzG+//Y
+         J2FDLCSUszNZ7NWvO1rQuxBvlIOYFp1XngQWsWyfKObcFIhdTiKE92nOaaTR+5awkyCY
+         dywjO3GGK+M6Sv0NCcWsbv0z5vN9GZBZEPyG9cqf7/q/zXpRooWs5LZHznZjegKv09mv
+         4Lvg==
+X-Gm-Message-State: AOAM530Y/bSsECZFWVZ7pGtA86OlRUXiP6EHZmRGOYzo1Q9FKWE4Lrrr
+	YC6WJ7iqNZkfBcZimDoo7sK/Ab7NX1Yh0DCfG1g=
+X-Google-Smtp-Source: ABdhPJxWRhlLd73xrWLBTdl6wz0JyREpItsaujS3cleDpZ9WEAPe3FjiUR5EgczFuYZdpsrmnerPhs/RL8X5ddyyKHE=
+X-Received: by 2002:aca:220a:: with SMTP id b10mr13980732oic.101.1630294343178;
+ Sun, 29 Aug 2021 20:32:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cpandjdf6zkdwu7z"
-Content-Disposition: inline
-In-Reply-To: <20210625093513.38524-6-yangbo.lu@nxp.com>
+References: <20210824071926.68019-1-benbjiang@gmail.com> <fe512c8b-6f5a-0210-3f23-2c1fc75cd6e5@tessares.net>
+ <CAPJCdBmTPW5gcO6DO5i=T+R2TNypzbaA666krk=7Duf2mt1yBw@mail.gmail.com> <f9b97b7f-cb48-f0bf-2dfb-a13bf1296b19@linux.intel.com>
+In-Reply-To: <f9b97b7f-cb48-f0bf-2dfb-a13bf1296b19@linux.intel.com>
+From: Jiang Biao <benbjiang@gmail.com>
+Date: Mon, 30 Aug 2021 11:32:12 +0800
+Message-ID: <CAPJCdBmqPgbxYTvViRQrzLgmNjQWc4PRmw_yScLgp0ktt-dVCQ@mail.gmail.com>
+Subject: Re: [PATCH] ipv4/mptcp: fix divide error
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, davem@davemloft.net, kuba@kernel.org, 
+	netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	linux-kernel <linux-kernel@vger.kernel.org>, Jiang Biao <benbjiang@tencent.com>, 
+	Jiang Biao <tcs_robot@tencent.com>, Paolo Abeni <pabeni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 26 Aug 2021 at 01:56, Mat Martineau
+<mathew.j.martineau@linux.intel.com> wrote:
+>
+>
+> On Tue, 24 Aug 2021, Jiang Biao wrote:
+>
+> > Hi,
+> >
+> > On Tue, 24 Aug 2021 at 15:36, Matthieu Baerts
+> > <matthieu.baerts@tessares.net> wrote:
+> >>
+> >> Hi Jiang,
+> >>
+> >> On 24/08/2021 09:19, Jiang Biao wrote:
+> >>
+> >> (...)
+> >>
+> >>> There is a fix divide error reported,
+> >>> divide error: 0000 [#1] PREEMPT SMP KASAN
+> >>> RIP: 0010:tcp_tso_autosize build/../net/ipv4/tcp_output.c:1975 [inline]
+> >>> RIP: 0010:tcp_tso_segs+0x14f/0x250 build/../net/ipv4/tcp_output.c:1992
+> >>
+> >> Thank you for this patch and validating MPTCP on your side!
+> >>
+> >> This issue is actively tracked on our Github project [1] and a patch is
+> >> already in our tree [2] but still under validation.
+> >>> It's introduced by non-initialized info->mss_now in __mptcp_push_pending.
+> >>> Fix it by adding protection in mptcp_push_release.
+> >>
+> >> Indeed, you are right, info->mss_now can be set to 0 in some cases but
+> >> that's not normal.
+> >>
+> >> Instead of adding a protection here, we preferred fixing the root cause,
+> >> see [2]. Do not hesitate to have a look at the other patch and comment
+> >> there if you don't agree with this version.
+> >> Except if [2] is difficult to backport, I think we don't need your extra
+> >> protection. WDYT?
+> >>
+> > Agreed, fixing the root cause is much better.
+> > Thanks for the reply.
+> >
+>
+> Hi Jiang -
+>
+> Could you try cherry-picking this commit to see if it eliminates the error
+> in your system?
+>
+> https://github.com/multipath-tcp/mptcp_net-next/commit/9ef5aea5a794f4a369e26ed816e9c80cdc5a5f86
+>
+Errors' gone with the patch.:)
 
---cpandjdf6zkdwu7z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 25, 2021 at 05:35:07PM +0800, Yangbo Lu wrote:
-> Add an interface for getting PHC (PTP Hardware Clock)
-> virtual clocks, which are based on PHC physical clock
-> providing hardware timestamp to network packets.
->=20
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-
-Hello,
-
-do you plan to submit also an ethtool (userspace utility) patch using
-this interface?
-
-Michal
-
-> ---
-> Changes for v3:
-> 	- Added this patch.
-> Changes for v4:
-> 	- Updated doc.
-> 	- Removed ioctl command.
-> 	- Replied only the number of vclock index.
-> ---
->  Documentation/networking/ethtool-netlink.rst | 22 +++++
->  include/linux/ethtool.h                      | 10 +++
->  include/uapi/linux/ethtool_netlink.h         | 15 ++++
->  net/ethtool/Makefile                         |  2 +-
->  net/ethtool/common.c                         | 13 +++
->  net/ethtool/netlink.c                        | 10 +++
->  net/ethtool/netlink.h                        |  2 +
->  net/ethtool/phc_vclocks.c                    | 94 ++++++++++++++++++++
->  8 files changed, 167 insertions(+), 1 deletion(-)
->  create mode 100644 net/ethtool/phc_vclocks.c
->=20
-> diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation=
-/networking/ethtool-netlink.rst
-> index 6ea91e41593f..c86628e6a235 100644
-> --- a/Documentation/networking/ethtool-netlink.rst
-> +++ b/Documentation/networking/ethtool-netlink.rst
-> @@ -212,6 +212,7 @@ Userspace to kernel:
->    ``ETHTOOL_MSG_FEC_SET``               set FEC settings
->    ``ETHTOOL_MSG_MODULE_EEPROM_GET``     read SFP module EEPROM
->    ``ETHTOOL_MSG_STATS_GET``             get standard statistics
-> +  ``ETHTOOL_MSG_PHC_VCLOCKS_GET``       get PHC virtual clocks info
->    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
->  Kernel to userspace:
-> @@ -250,6 +251,7 @@ Kernel to userspace:
->    ``ETHTOOL_MSG_FEC_NTF``                  FEC settings
->    ``ETHTOOL_MSG_MODULE_EEPROM_GET_REPLY``  read SFP module EEPROM
->    ``ETHTOOL_MSG_STATS_GET_REPLY``          standard statistics
-> +  ``ETHTOOL_MSG_PHC_VCLOCKS_GET_REPLY``    PHC virtual clocks info
->    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> =20
->  ``GET`` requests are sent by userspace applications to retrieve device
-> @@ -1477,6 +1479,25 @@ Low and high bounds are inclusive, for example:
->   etherStatsPkts512to1023Octets 512  1023
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D =3D=3D=3D=3D
-> =20
-> +PHC_VCLOCKS_GET
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Query device PHC virtual clocks information.
-> +
-> +Request contents:
-> +
-> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +  ``ETHTOOL_A_PHC_VCLOCKS_HEADER``      nested  request header
-> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Kernel response contents:
-> +
-> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +  ``ETHTOOL_A_PHC_VCLOCKS_HEADER``      nested  reply header
-> +  ``ETHTOOL_A_PHC_VCLOCKS_NUM``         u32     PHC virtual clocks number
-> +  ``ETHTOOL_A_PHC_VCLOCKS_INDEX``       s32     PHC index array
-> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[...]
-
---cpandjdf6zkdwu7z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmErvgkACgkQ538sG/LR
-dpUBjQgAzjPJSDO8EKxGkhwYCeYjwC8Lv8dHqiKoAD2OAdxIwq8euaCfCq0/Qcek
-6fFdwPXYkxLS17T33E/UKS/7LoVRl8FeLADMoEFmEsjVD/H+bRwSSJUs2emlgC8g
-GVgLWXiECd9wSB6OvMd7Z8SfWtmD7RTCQFz8HwVoHWUy3TK45KC8/wx7eDu6xMia
-zp1uqECkH9r7CefjL1XA7VHl9WiBU2a21Zs7OyQVtRQrn+389e8v1+CdutbHZsKD
-XIcFnSYzOOLh0MleQXRuKsg9qSEshQ5jF2Id+pv52jw2MaMIivoekAtDmxHDp9hV
-rfrgj32E5JqDphIX1x7QTf2l4T5Izw==
-=LHra
------END PGP SIGNATURE-----
-
---cpandjdf6zkdwu7z--
+Regards,
+Jiang
+>
+> Thanks!
+>
+> --
+> Mat Martineau
+> Intel
