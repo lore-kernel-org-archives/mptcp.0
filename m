@@ -1,26 +1,25 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5640A72
-	for <mptcp@lists.linux.dev>; Mon, 30 Aug 2021 18:10:51 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="218370886"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E273FC3
+	for <mptcp@lists.linux.dev>; Mon, 30 Aug 2021 18:40:48 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="282046133"
 X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
-   d="scan'208";a="218370886"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 11:10:50 -0700
+   d="scan'208";a="282046133"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 11:40:48 -0700
 X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
-   d="scan'208";a="540646927"
+   d="scan'208";a="518967614"
 Received: from sahushub-mobl1.amr.corp.intel.com ([10.209.36.196])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 11:10:50 -0700
-Date: Mon, 30 Aug 2021 11:10:50 -0700 (PDT)
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 11:40:47 -0700
+Date: Mon, 30 Aug 2021 11:40:47 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: pabeni@redhat.com, geliangtang@gmail.com, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: Only send extra TCP acks in eligible
- socket states
-In-Reply-To: <5ea0f310-8798-e436-24ae-2476b16b1813@tessares.net>
-Message-ID: <4f65e83-3f44-15a7-a9b8-95b4d74b745d@linux.intel.com>
-References: <20210826004601.196834-1-mathew.j.martineau@linux.intel.com> <5ea0f310-8798-e436-24ae-2476b16b1813@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 0/2] MPTCP_INFO: Fix compilation errors
+In-Reply-To: <20210830103357.3114290-1-matthieu.baerts@tessares.net>
+Message-ID: <ca22e2bc-ac5a-aa6a-b247-32359611a3@linux.intel.com>
+References: <20210830103357.3114290-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,42 +28,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
+On Mon, 30 Aug 2021, Matthieu Baerts wrote:
 
-On Thu, 26 Aug 2021, Matthieu Baerts wrote:
-
-> Hi Mat, Paolo,
+> Geliang and Intel's 0-DAY CI Kernel Test Service reported compilation errors.
+> Those are fixed in patch 1/2.
 >
-> On 26/08/2021 02:46, Mat Martineau wrote:
->> Recent changes exposed a bug where specifically-timed requests to the
->> path manager netlink API could trigger a divide-by-zero in
->> __tcp_select_window(), as syzkaller does:
->
-> (...)
->
-> Thank you for the patch, the review and the testing!
+> Patch 2/2 contains one modification needed after patch 1/2 but also 2 others.
 >
 
-More info on the testing: I was able to run syzkaller over the weekend, 
-and the error has not reoccurred in the last 5 days.
+These look ok to squash, one detail:
 
-> This is now in our tree:
->
-> - ea8a43942429: mptcp: Only send extra TCP acks in eligible socket states
-> - Results: 99a16463048d..6d52100ab2ab
->
->> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/229
->> Co-developed-by: Paolo Abeni <pabeni@redhat.com>
->
-> Checkpatch is yelling at me because a SoB is not present here.
->
-> @Paolo: sorry to ask this question but for the record, is it OK for you
-> if I add it? :)
->
+> Matthieu Baerts (2):
+>  Squash to "mptcp: add MPTCP_INFO getsockopt"
 
-Still an open question here about signoff (or changing author header) for 
-Paolo !
+The struct_subflow_addrs hunk of this one applies to "mptcp: add 
+MPTCP_SUBFLOW_ADDRS getsockopt support", but I figure you can straighten 
+that out when applying (no need to repost).
 
+>  Squash to "selftests: mptcp: add mptcp getsockopt test cases"
+>
+> include/uapi/linux/mptcp.h                    | 12 ++++--
+> .../selftests/net/mptcp/mptcp_sockopt.c       | 40 +++++++++----------
+> 2 files changed, 29 insertions(+), 23 deletions(-)
+>
+> -- 
+> 2.32.0
+>
+>
+>
 
 --
 Mat Martineau
