@@ -1,83 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F693FC2
-	for <mptcp@lists.linux.dev>; Tue, 31 Aug 2021 07:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630395614;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=skqGj8zXu/GOJRbSuByip/VQbdUsmCd7j2B+QTRoGKQ=;
-	b=asFl/juTLsIDCwxwE/O1D8wKAfynQTkHP4DiUYdcwOXI78NwtmRtLZ5kbTW/xxUtmBpTok
-	FKf21BVNZFS1tDkcuYOQ4P+g0994CwoJewEESc9EUo9kMbJL/3ncBFsA/m/m2yS2jf7txz
-	51d0Nx1KOUP1fflUQCa+GJb0ooJ5V3w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-OT7LvPobMaePWvMKY8cKqw-1; Tue, 31 Aug 2021 03:40:12 -0400
-X-MC-Unique: OT7LvPobMaePWvMKY8cKqw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1EFA18C8C0C
-	for <mptcp@lists.linux.dev>; Tue, 31 Aug 2021 07:40:11 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 38E605D6D5
-	for <mptcp@lists.linux.dev>; Tue, 31 Aug 2021 07:40:11 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH net-next] Squash-to: "mptcp: fix possible divide by zero"
-Date: Tue, 31 Aug 2021 09:40:07 +0200
-Message-Id: <87b65514b5296bbf24b50d08b5289a977fa2a31e.1630395581.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E2A3FC2
+	for <mptcp@lists.linux.dev>; Tue, 31 Aug 2021 08:14:24 +0000 (UTC)
+Received: by mail-ej1-f54.google.com with SMTP id i21so36829101ejd.2
+        for <mptcp@lists.linux.dev>; Tue, 31 Aug 2021 01:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:references:cc:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9xNzCNIb0b7Xe2yFIOwAzFUXPt3ZTXr6P+SdtwaqItg=;
+        b=iA7Q1kavSganS/Snc2HeGDhK4uCWtXk81bNys2H5KBFK3Xla4P1A2a3eMuCvMTo2K4
+         rXCVgMf81+p7lDmpUDvLFk7wb1l8BU/mPrZGowdP0UVKaQq5Iq9LtOYhjqIIY0WQ9r1R
+         nEndUGs5PZCOnypPc3aVGQrSp9phIln5Laha+IARUVR2NvzQUwL3NxedCZgQGgnGYWWX
+         39qujN936IIDrC9Sfr1RfHvhsfO8ISIaNprx9IgZFPSDI0ttvqJxW2Vu5dFI3S/Dre1E
+         jRmfsUdR0KvprbaYSO+Vd0qDUFWnV1TCEHmVgW63Ia2cKrddQwIuw+qBYozx4vfBJBZm
+         bw/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:cc:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9xNzCNIb0b7Xe2yFIOwAzFUXPt3ZTXr6P+SdtwaqItg=;
+        b=Qrdpm4ddb/VBr5yXo6EyFO3JdTXU/+cxHOaC/Wt8h7OgoHNxB6BfVGBgEqAdEJ1fAP
+         xdh7HkuiDTA1mPQqqVO+pXIi5lnB0YzrsUr6C3+OezVt9mP+kNorSoKA6ggUVH5I/grf
+         3jr09hVruOKpc8T5o8PKzWH+KND23V/9hLl8Q4Czp6SIKpXzQXnukTgl+6qXzocwjiBY
+         8Zy3djTrjgAe2LD/xA8+nZuul4t+BQjgrisGEFveF34zLw4kN32uydu/EuQl/hId71bj
+         AHk9Gu+WO9fl4hzPpc0iFWUfyLv5NVscI8V3DF7P5h7dLsS5hP2LH7+I4/kKBjCtpXrE
+         MHEQ==
+X-Gm-Message-State: AOAM532mYba5uKFagXPP9eibVLXB3ROtIVih4lOrma/LVBcNE15CYnJi
+	HnqLqo9ZNjwXUWlb6Vf01TSwSb7gpKKjd4PsQEc=
+X-Google-Smtp-Source: ABdhPJwioe9u2bSJZSxkv3xoDc4zaAu7Sup2vkXAox2tTSGcBWBE6RLi1vRWyhMpDMJhUdgz4bU1oQ==
+X-Received: by 2002:a17:906:2db1:: with SMTP id g17mr30124209eji.286.1630397662877;
+        Tue, 31 Aug 2021 01:14:22 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id h19sm7841213ejt.46.2021.08.31.01.14.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Aug 2021 01:14:22 -0700 (PDT)
+To: Paolo Abeni <pabeni@redhat.com>
+References: <87b65514b5296bbf24b50d08b5289a977fa2a31e.1630395581.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH net-next] Squash-to: "mptcp: fix possible divide by zero"
+Message-ID: <f0572f75-37f0-b563-ee31-e8c0b8561962@tessares.net>
+Date: Tue, 31 Aug 2021 10:14:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+In-Reply-To: <87b65514b5296bbf24b50d08b5289a977fa2a31e.1630395581.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-To be appended to the commit message:
+Hi Paolo,
 
-v1 -> v2:
- - use lockdep_assert_held_once() - Jakub
- - fix indentation - Jakub
+On 31/08/2021 09:40, Paolo Abeni wrote:
+> To be appended to the commit message:
+> 
+> v1 -> v2:
+>  - use lockdep_assert_held_once() - Jakub
+>  - fix indentation - Jakub
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Thank you for the patch!
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 898485e4c1dd..eda149d89f4e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1008,9 +1008,7 @@ static void mptcp_wmem_uncharge(struct sock *sk, int size)
- 
- static void __mptcp_mem_reclaim_partial(struct sock *sk)
- {
--#ifdef CONFIG_LOCKDEP
--	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock.slock));
--#endif
-+	lockdep_assert_held_once(&sk->sk_lock.slock);
- 	__mptcp_update_wmem(sk);
- 	sk_mem_reclaim_partial(sk);
- }
-@@ -1515,7 +1513,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 	struct sock *prev_ssk = NULL, *ssk = NULL;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_sendmsg_info info = {
--				.flags = flags,
-+		.flags = flags,
- 	};
- 	struct mptcp_data_frag *dfrag;
- 	int len, copied = 0;
+- b09c5f12162d: "squashed" in "mptcp: fix possible divide by zero"
+- f6abbc960435: tg:msg: update commit message after squash-to patch
+- Results: f651c564fd29..54851c6a542b
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210831T081314
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210831T081314
+
+Cheers,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
