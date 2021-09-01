@@ -1,68 +1,105 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9BC3FC1
-	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 16:02:29 +0000 (UTC)
-Received: by mail-yb1-f179.google.com with SMTP id v26so3938436ybd.9
-        for <mptcp@lists.linux.dev>; Wed, 01 Sep 2021 09:02:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C68E3FC1
+	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 16:09:55 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id j13so4507671edv.13
+        for <mptcp@lists.linux.dev>; Wed, 01 Sep 2021 09:09:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0K3Oyq5eTmkdoN2xYNtCvvot7voY0qHtA/Ba90V0kts=;
-        b=HjiiGKx103VY/SJhoVDzvuGUO+raoSLhUeJaASZftY6NXzdlXoRkXi3MImBbpnVgML
-         JxiKhvCKwVniNSh+THyacwEE3b23wLiKY7bE9HNCnOS0XooBAEjrhyJw8nYIANVDvUR3
-         OKP3uMPr/kVONQixycUYirMvycX2cOg8lgDh3r4p/R/7tIm2rxyZdiRTqOyg/ArnR2PA
-         gFtvIk8teUELlNqja7STeXCBhsisCYVcH1qXEDek18GtIt187x8Lnpojlr6jiwq5/RJ2
-         us3dQ+L3AkhpM8wjgDxqz9e+5g4PS0OR2LwfFXM1ZJBzkPvQ0rHYIn9Xy2+Jn6Mu6ijq
-         l2+w==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GuGPMy9wyhIVf9/M3dZMDi6jnPBAi1kugfgCYTmCxqg=;
+        b=CM78f/PTgP4ZKbukFuCjEabvuwnBjQo3GpzWFfkOCWh3w238Bon2mVby4eBHC/bF/I
+         PrU1fDWukyKuvHP0JSXSRvKvg+JQdfjyJSxKfVebJcyUHZidtBlKvNn6sycI8TgmSHqO
+         mGCz/MNB5krwHNWiw0Gruaxc2AOLnWFk9VhNOgf8RfHbEiHY4URNq4GNwZpECpGC3Rk6
+         ZpunKGPbGhyJFy7x3G2Z2K1XxqPGyppOTG8bGSZ4hbx6zRQPppBUtK78Y7v6Nk72Knpn
+         mos5W/0rprb9tW1cIbo3udFzXi+A+/5ooohB25AfN7fx0JI7EQfLRXchroKTIAdexKJA
+         9n6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0K3Oyq5eTmkdoN2xYNtCvvot7voY0qHtA/Ba90V0kts=;
-        b=e2h8p2b++68bSqH710FnMdkiCiTX2bkqKY1K+AyXvS7lHX6pEZr+AIQB0uip/td2Jv
-         TEi4L/G5CJiF24whNTX5J+RERMt9XdAzcxB9vDBtsBm5FNNFap3zQhtO0d0y8yt7XVJH
-         /9dacU6ydinaiUQZIRv0B8X8Qb9jCcMs7zlecfvCObzvuRYahJp9CF0wGtJJebBc61JE
-         k6sw9McnNoupLlekCkPX86/d56YVlQ/Sml7LVqratqR5fMwoCQkYZ0oYcsc9LfeZ42rR
-         zI1CjkU9qRlts4lGNyptz74gRqyR63kr5WE50Fbxtm/HSNq0nxHd+IDSU77l2NlotBsx
-         +5Dg==
-X-Gm-Message-State: AOAM532rdHhmQlx/PYHF/QsAWJFs4tSObNc5DV6mo0I1ddA7N52elicd
-	QXzn3COJ7j0k+T0YrqDckC+gskTlyrzUvYJG1fOwnw==
-X-Google-Smtp-Source: ABdhPJzKeORwXLC+ic8sTU3fSxHjhp9H+f/v8Ki8LzInVyMdQYglGhw9+1JThSy0dN1uo8r8jBQoxxMwMCeIeNozQdo=
-X-Received: by 2002:a25:6994:: with SMTP id e142mr277447ybc.364.1630512147758;
- Wed, 01 Sep 2021 09:02:27 -0700 (PDT)
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GuGPMy9wyhIVf9/M3dZMDi6jnPBAi1kugfgCYTmCxqg=;
+        b=Gg3wKEzSGfWaEM8/wurfEM2lAy2FUW4iGmAju7msu49MLMdX9g4KcCoYAtM8JnMLKR
+         MeKx05oqn010fxjBKP68Vs6HBGOyfKu1l8EbZCt9uXdKweem1PX9RYNnzXj21UTOdllO
+         wkcYw7vZ14axMt/y9UHq6WduDu1NoPncAX+MSXEm52Z/YYu0zXVTJKMuEsrP5+vvqbrs
+         A4qmsIfjEySyMIWjzMGdMTdJsJBp8Z6xbZKR4DBQHGexXF/hXMhp2skrOJrYW32ar8Vd
+         lCwIwFxwOSigtx/2DurjzCqDekQY5lVkmNqEEUUUSGe4kfQDYfO2RGFP7xMSHCwmeSov
+         j2CA==
+X-Gm-Message-State: AOAM530ZQUJ73QyLLigEEkdBV1ImkxjPQ0TD4W3c+YwM7glU/hHqOL5l
+	+FwzIxbXTuX+kQHOuJGw7pjJdAOXTwXWPw==
+X-Google-Smtp-Source: ABdhPJxKnOr7FugQb1UAr/dFaVLX7+A8XwY/3oSf5fgZqFfHxFEaEs8IGHYSuM+A0vSqBtHjEY50+w==
+X-Received: by 2002:aa7:d710:: with SMTP id t16mr392766edq.42.1630512594199;
+        Wed, 01 Sep 2021 09:09:54 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id n10sm77706ejk.86.2021.09.01.09.09.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Sep 2021 09:09:53 -0700 (PDT)
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau
+ <mathew.j.martineau@linux.intel.com>, netdev@vger.kernel.org,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20210831171926.80920-1-mathew.j.martineau@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH net v2 0/2] mptcp: Prevent tcp_push() crash and selftest
+ temp file buildup
+Message-ID: <b9fa6f74-e0b6-0f61-fc5a-954137db1314@tessares.net>
+Date: Wed, 1 Sep 2021 18:09:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1630492744-60396-1-git-send-email-linyunsheng@huawei.com>
- <9c9ef2228dfcb950b5c75382bd421c6169e547a0.camel@redhat.com>
- <CANn89iJFeM=DgcQpDbaE38uhxTEL6REMWPnVFt7Am7Nuf4wpMw@mail.gmail.com>
- <CANn89iKbgtb84Lb4UOxUCb_WGrfB6ZoD=bVH2O06-Mm6FBmwpg@mail.gmail.com>
- <c40a178110ee705b2be32272b9b3e512a40a4cae.camel@redhat.com> <59ad13bb312805bb1d183c5817d5f7b6fd6a90dd.camel@redhat.com>
-In-Reply-To: <59ad13bb312805bb1d183c5817d5f7b6fd6a90dd.camel@redhat.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 1 Sep 2021 09:02:16 -0700
-Message-ID: <CANn89iJ-Vx9V2_N6PRysNuK0W7TshMNo_crYtnEzrw=crF6OOg@mail.gmail.com>
-Subject: Re: [PATCH net-next] tcp: add tcp_tx_skb_cache_key checking in sk_stream_alloc_skb()
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Yunsheng Lin <linyunsheng@huawei.com>, David Miller <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>, netdev <netdev@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linuxarm@openeuler.org, 
-	Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>, David Ahern <dsahern@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210831171926.80920-1-mathew.j.martineau@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 1, 2021 at 9:01 AM Paolo Abeni <pabeni@redhat.com> wrote:
->
+Hi David, Jakub,
 
->
-> I think the easiest way and the one with less code duplication will
-> require accessing the tcp_mark_push() and skb_entail() helpers from the
-> MPTCP code, making them not static and exposing them e.g. in net/tcp.h.
-> Would that be acceptable or should I look for other options?
->
+On 31/08/2021 19:19, Mat Martineau wrote:
+> These are two fixes for the net tree, addressing separate issues.
+> 
+> Patch 1 addresses a divide-by-zero crash seen in syzkaller and also
+> reported by a user on the netdev list. This changes MPTCP code so
+> tcp_push() cannot be called with an invalid (0) mss_now value.
+> 
+> Patch 2 fixes a selftest temp file cleanup issue that consumes excessive
+> disk space when running repeated tests.
+> 
+> 
+> v2: Make suggested changes to lockdep check and indentation in patch 1
 
-I think this is fine, really.
+We recently noticed this series has been marked as "Not Applicable" on
+Patchwork.
+
+It looks like we can apply these patches:
+
+  $ git checkout netdev-net/master # 780aa1209f88
+  $ git-pw series apply 539963
+  Applying: mptcp: fix possible divide by zero
+  Using index info to reconstruct a base tree...
+  M       net/mptcp/protocol.c
+
+  Falling back to patching base and 3-way merge...
+  Auto-merging net/mptcp/protocol.c
+
+  Applying: selftests: mptcp: clean tmp files in simult_flows
+
+Git auto-resolves conflicts. Is it why it is considered as "Not
+Applicable" or did we miss something else?
+
+Do we just need to resend these patches after a rebase?
+
+Thank you for maintaining net!
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
