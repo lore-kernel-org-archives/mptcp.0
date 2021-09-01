@@ -1,94 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758203FC3
-	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 10:52:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630493529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lm4mR3JYlL5ip2He+sEf0zphXUTsvwT6BkT7jCH1eyc=;
-	b=ZGVYoHmBsTYdlDbrUdJjEQNfL0+FMnTEaJ/rUTjrxrO5he+3J/tfaDsKwJXSqaq/hsLIj6
-	AvzohNT1vQEcbN0GWEec/AQl2EAVuFa+LT5lE1cSo0tXXuZIjC12DqEWq61stgTxqbHMrh
-	bo+7HBtr9ip712BjNkDxcv9I3QoVgL8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-Yl_7F96SMg2KpG6RuMM5Pw-1; Wed, 01 Sep 2021 06:52:08 -0400
-X-MC-Unique: Yl_7F96SMg2KpG6RuMM5Pw-1
-Received: by mail-wm1-f72.google.com with SMTP id c2-20020a7bc8420000b0290238db573ab7so2639294wml.5
-        for <mptcp@lists.linux.dev>; Wed, 01 Sep 2021 03:52:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=lm4mR3JYlL5ip2He+sEf0zphXUTsvwT6BkT7jCH1eyc=;
-        b=Qtg2mN7XszSYdYpR3obqDiGx9eiYaHAlDuzFRsrK03tS1+QOCk6S8gJGFy22z+UT/M
-         MoSkM2qaRFMPgWEAaEi556JwB/XaD/UfNzOFNmeaVquy4sR9v6dphKv0d1FKxhbR+aJW
-         HEPJylbyCCJ5yiyN08Uls+oTyIdrB3R7A867yAmNxbcEu51kJCpJxL0hRhRpLFBjFVfK
-         XFZuR5f//nS/LViMu4SZjqHCsqZToXzp/g916YXBh54+TiBeL1PeDjdTnUbROB9LwDyT
-         ny1OYoI9/FHTKgj8V68TDz0xQWXe67ZsS97IQeS9AHy5chBgHreQO907Up70XrTbqirH
-         dzOg==
-X-Gm-Message-State: AOAM532CLO3KEq/eDsIKqOJpSxhDg47ScClms19EyLxv/ww3X35CtaWi
-	HeLxvHtrkl00UalQP6yT9cup/bPkMP3CcMV6bs58elQxkuZ2dEvaFhuD3wdgCt1bMW7my3SZdsd
-	D+AXXdqBguXTaE9U=
-X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr35464988wrw.415.1630493526918;
-        Wed, 01 Sep 2021 03:52:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwyAY00ddiyzLDaqJY4HYxreDLtYrqdI7O3mR8VxvpDttJ01uAFBJixyKRBDKpoz3ljAanyXg==
-X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr35464967wrw.415.1630493526747;
-        Wed, 01 Sep 2021 03:52:06 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
-        by smtp.gmail.com with ESMTPSA id a10sm4932882wmj.44.2021.09.01.03.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Sep 2021 03:52:06 -0700 (PDT)
-Message-ID: <9c9ef2228dfcb950b5c75382bd421c6169e547a0.camel@redhat.com>
-Subject: Re: [PATCH net-next] tcp: add tcp_tx_skb_cache_key checking in
- sk_stream_alloc_skb()
-From: Paolo Abeni <pabeni@redhat.com>
-To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
- kuba@kernel.org,  MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linuxarm@openeuler.org, edumazet@google.com, yoshfuji@linux-ipv6.org, 
-	dsahern@kernel.org
-Date: Wed, 01 Sep 2021 12:52:05 +0200
-In-Reply-To: <1630492744-60396-1-git-send-email-linyunsheng@huawei.com>
-References: <1630492744-60396-1-git-send-email-linyunsheng@huawei.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7293FC3
+	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 12:00:06 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id ACD6A60F92;
+	Wed,  1 Sep 2021 12:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1630497605;
+	bh=TJFWF6O/M89tOe5peR6syhL+AxR3eCH5u5/tmbONARo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MeUibz2+NACwzj+yYImBUDj7lXfryqKpsaSlTQD0i509zUUYu8alDFycFfxt1iR1P
+	 LaW4l79kFUPZ2/kOs6ORWyA/UUXDc/Hyao50RLQkZtmcGUPqZaHxQ+nMWzUMnpl0WT
+	 SQmdODUe1wu6fzpMfZ+IWVrbDUoau5NHwgkKslA8D9M6jQJnK5W8vXFWqb+xbm3Oz4
+	 QhkRCOZh27rSUHooyz5HjEfOTL5hFWytuw8Yoh0fqwzaLt+96Qn60b2DWsCkIRN8Lr
+	 rNL1YzdKjUOLcBbw6D8PDjNLFQ5zbMiT9E7EfqLeWsrq4wlG3vzitYn1n9ECysfzeJ
+	 Vz/UgK4uCSCxg==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 989FF609CF;
+	Wed,  1 Sep 2021 12:00:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] [v3] mptcp: Fix duplicated argument in protocol.h
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163049760562.5493.836304668668785008.git-patchwork-notify@kernel.org>
+Date: Wed, 01 Sep 2021 12:00:05 +0000
+References: <20210901031932.7734-1-wanjiabing@vivo.com>
+In-Reply-To: <20210901031932.7734-1-wanjiabing@vivo.com>
+To: Wan Jiabing <wanjiabing@vivo.com>
+Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kael_w@yeah.net
 
-On Wed, 2021-09-01 at 18:39 +0800, Yunsheng Lin wrote:
-> Since tcp_tx_skb_cache is disabled by default in:
-> commit 0b7d7f6b2208 ("tcp: add tcp_tx_skb_cache sysctl")
+Hello:
+
+This patch was applied to netdev/net.git (refs/heads/master):
+
+On Wed,  1 Sep 2021 11:19:32 +0800 you wrote:
+> Fix the following coccicheck warning:
+> ./net/mptcp/protocol.h:36:50-73: duplicated argument to & or |
 > 
-> Add tcp_tx_skb_cache_key checking in sk_stream_alloc_skb() to
-> avoid possible branch-misses.
+> The OPTION_MPTCP_MPJ_SYNACK here is duplicate.
+> Here should be OPTION_MPTCP_MPJ_ACK.
 > 
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> Fixes: 74c7dfbee3e18 ("mptcp: consolidate in_opt sub-options fields in a bitmask")
+> Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+> 
+> [...]
 
-Note that MPTCP is currently exploiting sk->sk_tx_skb_cache. If we get
-this patch goes in as-is, it will break mptcp.
+Here is the summary with links:
+  - [v3] mptcp: Fix duplicated argument in protocol.h
+    https://git.kernel.org/netdev/net/c/780aa1209f88
 
-One possible solution would be to let mptcp usage enable sk-
->sk_tx_skb_cache, but that has relevant side effects on plain TCP. 
-
-Another options would be re-work once again the mptcp xmit path to
-avoid using sk->sk_tx_skb_cache.
-
-Cheers,
-
-Paolo
-
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
