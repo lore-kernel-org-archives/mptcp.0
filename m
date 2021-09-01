@@ -1,105 +1,94 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B555E72
-	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 09:41:35 +0000 (UTC)
-Received: by mail-ej1-f54.google.com with SMTP id me10so5216626ejb.11
-        for <mptcp@lists.linux.dev>; Wed, 01 Sep 2021 02:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QNJXitcweH7oQYVKbK2KzSkQd4hQGMiQs1s35KzNSzw=;
-        b=csTOZEbUByRfSIZ8JhLwxDnvH8/Pix62gbVgEWeghs1tyi5zkbVcaiRYKFAaI2n7pI
-         Y+RbOYUsaXuQZzTKC4VhSCsGqiM7hKrZxRh/nGOqdn3Kt/nzrV4Z4aRpd4IdCAxN4OrW
-         BNRWkkKAR3GC0y91EX/Dr8XEOiINRJ19Wn20wVvnIL7gvV4B15DdSHmCDy1cyTF5ngGo
-         aA2MJUpNi91LzUJHkY2eb5HNwu60Zquw9rPyk0A8aup42uD7I6p1efto97w80D0t13ly
-         1A0Pq87NsSd9qhqTBDSuIS0CUmEVD3JeHL6YWR30NMxsUsA9Sy6gktYR6hKUW0RDzxem
-         +rew==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758203FC3
+	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 10:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1630493529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lm4mR3JYlL5ip2He+sEf0zphXUTsvwT6BkT7jCH1eyc=;
+	b=ZGVYoHmBsTYdlDbrUdJjEQNfL0+FMnTEaJ/rUTjrxrO5he+3J/tfaDsKwJXSqaq/hsLIj6
+	AvzohNT1vQEcbN0GWEec/AQl2EAVuFa+LT5lE1cSo0tXXuZIjC12DqEWq61stgTxqbHMrh
+	bo+7HBtr9ip712BjNkDxcv9I3QoVgL8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-Yl_7F96SMg2KpG6RuMM5Pw-1; Wed, 01 Sep 2021 06:52:08 -0400
+X-MC-Unique: Yl_7F96SMg2KpG6RuMM5Pw-1
+Received: by mail-wm1-f72.google.com with SMTP id c2-20020a7bc8420000b0290238db573ab7so2639294wml.5
+        for <mptcp@lists.linux.dev>; Wed, 01 Sep 2021 03:52:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QNJXitcweH7oQYVKbK2KzSkQd4hQGMiQs1s35KzNSzw=;
-        b=B6zz/zIJ9xgcoULAzERMJc77GzqQUgSGoCoz8bwD2718qbcsyXBN8U6empfubXXFMA
-         SAVpQ7synYrDSZrMYgzMcjoWC0oo8tx+yCB2HDg1yALF+CpGmbIZzS1CeiLTzztCqHrc
-         2TtWXhWegbnO7OIrtZ0IpEXtcVV217EwQG71P+2Ipb+4AdCsd5/PoVf2btfkVFJSPnRH
-         gebalsfoofMXxjruKcOvb8ohtdLYD0SlFRxy23KbT0Fl+xaal/wQIqzvNBpndVruNSEx
-         NUpw9mtC27X4ELut/wYZ0gKCLxWsCRT2UO834PtHdGnjvI+zkuVDL4KUIXYhEX8k9Qvr
-         Sz1A==
-X-Gm-Message-State: AOAM531nlGK1ySJjtdY5vDNLuJ7khZ/g5gvTOlzIrsOhEr7YYfr+YB+K
-	pV3YP1w1qbwKTt26s8BRh0lioT69N0BqTw==
-X-Google-Smtp-Source: ABdhPJz8r74MHa/bNKHk5koHfcuKz27cibnOVLjhmoxJScLpCpDvztCUdpzmSUB8nbSJVPnQrO8AtQ==
-X-Received: by 2002:a17:907:2677:: with SMTP id ci23mr35770641ejc.429.1630489293680;
-        Wed, 01 Sep 2021 02:41:33 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
-        by smtp.gmail.com with ESMTPSA id r18sm2456254edd.69.2021.09.01.02.41.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Sep 2021 02:41:33 -0700 (PDT)
-Subject: Re: [PATCH v2 mptcp-next] mptcp: do not shrink snd_nxt when
- recovering
-To: Florian Westphal <fw@strlen.de>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <20210830111742.23904-1-fw@strlen.de>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <5fcd8b63-9b6c-41c5-e6af-c1d2c7c9d199@tessares.net>
-Date: Wed, 1 Sep 2021 11:41:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=lm4mR3JYlL5ip2He+sEf0zphXUTsvwT6BkT7jCH1eyc=;
+        b=Qtg2mN7XszSYdYpR3obqDiGx9eiYaHAlDuzFRsrK03tS1+QOCk6S8gJGFy22z+UT/M
+         MoSkM2qaRFMPgWEAaEi556JwB/XaD/UfNzOFNmeaVquy4sR9v6dphKv0d1FKxhbR+aJW
+         HEPJylbyCCJ5yiyN08Uls+oTyIdrB3R7A867yAmNxbcEu51kJCpJxL0hRhRpLFBjFVfK
+         XFZuR5f//nS/LViMu4SZjqHCsqZToXzp/g916YXBh54+TiBeL1PeDjdTnUbROB9LwDyT
+         ny1OYoI9/FHTKgj8V68TDz0xQWXe67ZsS97IQeS9AHy5chBgHreQO907Up70XrTbqirH
+         dzOg==
+X-Gm-Message-State: AOAM532CLO3KEq/eDsIKqOJpSxhDg47ScClms19EyLxv/ww3X35CtaWi
+	HeLxvHtrkl00UalQP6yT9cup/bPkMP3CcMV6bs58elQxkuZ2dEvaFhuD3wdgCt1bMW7my3SZdsd
+	D+AXXdqBguXTaE9U=
+X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr35464988wrw.415.1630493526918;
+        Wed, 01 Sep 2021 03:52:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwyAY00ddiyzLDaqJY4HYxreDLtYrqdI7O3mR8VxvpDttJ01uAFBJixyKRBDKpoz3ljAanyXg==
+X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr35464967wrw.415.1630493526747;
+        Wed, 01 Sep 2021 03:52:06 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
+        by smtp.gmail.com with ESMTPSA id a10sm4932882wmj.44.2021.09.01.03.52.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Sep 2021 03:52:06 -0700 (PDT)
+Message-ID: <9c9ef2228dfcb950b5c75382bd421c6169e547a0.camel@redhat.com>
+Subject: Re: [PATCH net-next] tcp: add tcp_tx_skb_cache_key checking in
+ sk_stream_alloc_skb()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
+ kuba@kernel.org,  MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxarm@openeuler.org, edumazet@google.com, yoshfuji@linux-ipv6.org, 
+	dsahern@kernel.org
+Date: Wed, 01 Sep 2021 12:52:05 +0200
+In-Reply-To: <1630492744-60396-1-git-send-email-linyunsheng@huawei.com>
+References: <1630492744-60396-1-git-send-email-linyunsheng@huawei.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210830111742.23904-1-fw@strlen.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hi Florian, Mat,
+On Wed, 2021-09-01 at 18:39 +0800, Yunsheng Lin wrote:
+> Since tcp_tx_skb_cache is disabled by default in:
+> commit 0b7d7f6b2208 ("tcp: add tcp_tx_skb_cache sysctl")
+> 
+> Add tcp_tx_skb_cache_key checking in sk_stream_alloc_skb() to
+> avoid possible branch-misses.
+> 
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 
-On 30/08/2021 13:17, Florian Westphal wrote:
-> When recovering after a link failure, snd_nxt should not be set to a
-> lower value.  Else, update of snd_nxt is broken because:
-> 
->   msk->snd_nxt += ret; (where ret is number of bytes sent)
-> 
-> assumes that snd_nxt always moves forward.
-> After reduction, its possible that snd_nxt update gets out of sync:
-> dfrag we just sent might have had a data sequence number even past
-> recovery_snd_nxt.
-> 
-> This change factors the common msk state update to a helper
-> and updates snd_nxt based on the current dfrag data sequence number.
-> 
-> The conditional is required for the recovery phase where we may
-> re-transmit old dfrags that are before current snd_nxt.
-> 
-> After this change, snd_nxt only moves forward and covers all in-sequence
-> data that was transmitted.
-> 
-> recovery_snd_nxt is retained to detect when recovery has completed.
-> 
-> Fixes: 1e1d9d6f119c5 ("mptcp: handle pending data on closed subflow")
-> Signed-off-by: Florian Westphal <fw@strlen.de>
+Note that MPTCP is currently exploiting sk->sk_tx_skb_cache. If we get
+this patch goes in as-is, it will break mptcp.
 
-Thank you for the patch and the review!
+One possible solution would be to let mptcp usage enable sk-
+>sk_tx_skb_cache, but that has relevant side effects on plain TCP. 
 
-Now in our tree with Mat's RvB tag:
-
-- cb36f7808f0a: mptcp: do not shrink snd_nxt when recovering
-- Results: dc0af50f378d..e1015c28d860
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210901T094059
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210901T094059
+Another options would be re-work once again the mptcp xmit path to
+avoid using sk->sk_tx_skb_cache.
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+Paolo
+
+
+
