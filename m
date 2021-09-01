@@ -1,53 +1,51 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E53FC1
-	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 08:27:56 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id lc21so4872919ejc.7
-        for <mptcp@lists.linux.dev>; Wed, 01 Sep 2021 01:27:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B555E72
+	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 09:41:35 +0000 (UTC)
+Received: by mail-ej1-f54.google.com with SMTP id me10so5216626ejb.11
+        for <mptcp@lists.linux.dev>; Wed, 01 Sep 2021 02:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
+        h=subject:to:references:cc:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Yv4dWe+5zR9Eg17o3TiXVhCmDqK5uxEiNmwREZM7k+M=;
-        b=s11nzr5W2xmvSzzuoGIbKbr2b4UapW6iOYvNJkVtMT22tO5onkrO4XMOQD5EKzRg50
-         Uy3x5CYCAZbtYZ4G5cI4aPp/wV9DIrRy5B7P+cl2SDGnS1gGtqTtEbaHdDKuGOfVtv3D
-         wnCs74mKqpWprqcxymbGe0sEpgNhQ99iksZefxyDRZWSJR5w+5AdBkb1hNXv8rf81lwS
-         oZaM77z/mBalUaO58AGFlT/UQr5VkMGKz+puQEdXhElRrPKQjbBCb4hrGTtDzCvMtMO3
-         BVBEoTE4f3gKD1amwaPZhjFYGv/yAe7ruFdY3zAX9P3s0mmdY/ODEYQbQ8kGdIVe/Xdm
-         roVg==
+        bh=QNJXitcweH7oQYVKbK2KzSkQd4hQGMiQs1s35KzNSzw=;
+        b=csTOZEbUByRfSIZ8JhLwxDnvH8/Pix62gbVgEWeghs1tyi5zkbVcaiRYKFAaI2n7pI
+         Y+RbOYUsaXuQZzTKC4VhSCsGqiM7hKrZxRh/nGOqdn3Kt/nzrV4Z4aRpd4IdCAxN4OrW
+         BNRWkkKAR3GC0y91EX/Dr8XEOiINRJ19Wn20wVvnIL7gvV4B15DdSHmCDy1cyTF5ngGo
+         aA2MJUpNi91LzUJHkY2eb5HNwu60Zquw9rPyk0A8aup42uD7I6p1efto97w80D0t13ly
+         1A0Pq87NsSd9qhqTBDSuIS0CUmEVD3JeHL6YWR30NMxsUsA9Sy6gktYR6hKUW0RDzxem
+         +rew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Yv4dWe+5zR9Eg17o3TiXVhCmDqK5uxEiNmwREZM7k+M=;
-        b=iGmsu5Rajdvfsp672mP9Y4KDUNla2SjswwK6gODdwk9wJA3MbyaxdvUJYj5hXyagfB
-         Hg+aCaibSyTgFc8LXFwIpiN4RdkN9M3ySflXasABEAGNy02KGPXAQt98K0AMEUpR27vu
-         5RQC9ekmlzR8UtQQNr8kchAYkB5+/k8ZJAShLIphd9JsoTtibZne0+ZcEJ75YiuhR7ev
-         kDan4XZY2gvZD+xbvC1C+28evXidpxQxpsDgVsA7RDtf7uDagU3N5OAHbgzuu02Yxl59
-         hcKUXCT6/P/CjIroj0QFmisWjj33LiFaEMM0wyHR3CDiyj1gaJ3t0tWZjNSytNggzHP/
-         /snQ==
-X-Gm-Message-State: AOAM5310If0VG1dvK+Y3u9K7np2MXJtIevkMhTsA2V4n9kS2FnYRcFI0
-	SkI0dp7EdIeivnxK/1HEQQeoNQ==
-X-Google-Smtp-Source: ABdhPJwGSqy5H7eFISaGvwvWddFd9h/Va3PXa82CtDhJWtiUqdHbvdgm/vd+oTOeotxcnkSSwAKCqQ==
-X-Received: by 2002:a17:906:e82:: with SMTP id p2mr35579875ejf.50.1630484874379;
-        Wed, 01 Sep 2021 01:27:54 -0700 (PDT)
+        bh=QNJXitcweH7oQYVKbK2KzSkQd4hQGMiQs1s35KzNSzw=;
+        b=B6zz/zIJ9xgcoULAzERMJc77GzqQUgSGoCoz8bwD2718qbcsyXBN8U6empfubXXFMA
+         SAVpQ7synYrDSZrMYgzMcjoWC0oo8tx+yCB2HDg1yALF+CpGmbIZzS1CeiLTzztCqHrc
+         2TtWXhWegbnO7OIrtZ0IpEXtcVV217EwQG71P+2Ipb+4AdCsd5/PoVf2btfkVFJSPnRH
+         gebalsfoofMXxjruKcOvb8ohtdLYD0SlFRxy23KbT0Fl+xaal/wQIqzvNBpndVruNSEx
+         NUpw9mtC27X4ELut/wYZ0gKCLxWsCRT2UO834PtHdGnjvI+zkuVDL4KUIXYhEX8k9Qvr
+         Sz1A==
+X-Gm-Message-State: AOAM531nlGK1ySJjtdY5vDNLuJ7khZ/g5gvTOlzIrsOhEr7YYfr+YB+K
+	pV3YP1w1qbwKTt26s8BRh0lioT69N0BqTw==
+X-Google-Smtp-Source: ABdhPJz8r74MHa/bNKHk5koHfcuKz27cibnOVLjhmoxJScLpCpDvztCUdpzmSUB8nbSJVPnQrO8AtQ==
+X-Received: by 2002:a17:907:2677:: with SMTP id ci23mr35770641ejc.429.1630489293680;
+        Wed, 01 Sep 2021 02:41:33 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
-        by smtp.gmail.com with ESMTPSA id v1sm9895342ejd.31.2021.09.01.01.27.53
+        by smtp.gmail.com with ESMTPSA id r18sm2456254edd.69.2021.09.01.02.41.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Sep 2021 01:27:54 -0700 (PDT)
-To: Wan Jiabing <wanjiabing@vivo.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: kael_w@yeah.net
-References: <20210901031932.7734-1-wanjiabing@vivo.com>
+        Wed, 01 Sep 2021 02:41:33 -0700 (PDT)
+Subject: Re: [PATCH v2 mptcp-next] mptcp: do not shrink snd_nxt when
+ recovering
+To: Florian Westphal <fw@strlen.de>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <20210830111742.23904-1-fw@strlen.de>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH] [v3] mptcp: Fix duplicated argument in protocol.h
-Message-ID: <c519edd0-f263-0df0-40a3-8ba342c0a0fa@tessares.net>
-Date: Wed, 1 Sep 2021 10:27:53 +0200
+Message-ID: <5fcd8b63-9b6c-41c5-e6af-c1d2c7c9d199@tessares.net>
+Date: Wed, 1 Sep 2021 11:41:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 Precedence: bulk
@@ -56,38 +54,49 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210901031932.7734-1-wanjiabing@vivo.com>
+In-Reply-To: <20210830111742.23904-1-fw@strlen.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Wan,
+Hi Florian, Mat,
 
-On 01/09/2021 05:19, Wan Jiabing wrote:
-> Fix the following coccicheck warning:
-> ./net/mptcp/protocol.h:36:50-73: duplicated argument to & or |
+On 30/08/2021 13:17, Florian Westphal wrote:
+> When recovering after a link failure, snd_nxt should not be set to a
+> lower value.  Else, update of snd_nxt is broken because:
 > 
-> The OPTION_MPTCP_MPJ_SYNACK here is duplicate.
-> Here should be OPTION_MPTCP_MPJ_ACK.
+>   msk->snd_nxt += ret; (where ret is number of bytes sent)
 > 
-> Fixes: 74c7dfbee3e18 ("mptcp: consolidate in_opt sub-options fields in a bitmask")
-> Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+> assumes that snd_nxt always moves forward.
+> After reduction, its possible that snd_nxt update gets out of sync:
+> dfrag we just sent might have had a data sequence number even past
+> recovery_snd_nxt.
+> 
+> This change factors the common msk state update to a helper
+> and updates snd_nxt based on the current dfrag data sequence number.
+> 
+> The conditional is required for the recovery phase where we may
+> re-transmit old dfrags that are before current snd_nxt.
+> 
+> After this change, snd_nxt only moves forward and covers all in-sequence
+> data that was transmitted.
+> 
+> recovery_snd_nxt is retained to detect when recovery has completed.
+> 
+> Fixes: 1e1d9d6f119c5 ("mptcp: handle pending data on closed subflow")
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 
-Thank you for the patch!
+Thank you for the patch and the review!
 
-It looks good to me too and MPTCP selftests are still happy with this patch.
+Now in our tree with Mat's RvB tag:
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+- cb36f7808f0a: mptcp: do not shrink snd_nxt when recovering
+- Results: dc0af50f378d..e1015c28d860
 
-Just one thing: please next time mention for which "net" tree this patch
-is for. That's why you got one warning on Patchwork [1]. See [2] for
-more details.
+Builds and tests are now in progress:
 
-Here this patch is for -net: [PATCH net].
-
-[1]
-https://patchwork.kernel.org/project/netdevbpf/patch/20210901031932.7734-1-wanjiabing@vivo.com/
-[2] https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210901T094059
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210901T094059
 
 Cheers,
 Matt
