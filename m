@@ -1,186 +1,63 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mail-m17644.qiye.163.com (mail-m17644.qiye.163.com [59.111.176.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52A13FC1
-	for <mptcp@lists.linux.dev>; Tue, 31 Aug 2021 23:48:58 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10093"; a="304164247"
-X-IronPort-AV: E=Sophos;i="5.84,367,1620716400"; 
-   d="scan'208";a="304164247"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2021 16:48:57 -0700
-X-IronPort-AV: E=Sophos;i="5.84,367,1620716400"; 
-   d="scan'208";a="519951970"
-Received: from csalvo-mobl.amr.corp.intel.com ([10.212.180.240])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2021 16:48:57 -0700
-Date: Tue, 31 Aug 2021 16:48:57 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-next] mptcp: do not shrink snd_nxt when
- recovering
-In-Reply-To: <20210830111742.23904-1-fw@strlen.de>
-Message-ID: <a475338f-9a5a-fb7-6b78-78feead2799f@linux.intel.com>
-References: <20210830111742.23904-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788303FC3
+	for <mptcp@lists.linux.dev>; Wed,  1 Sep 2021 02:40:32 +0000 (UTC)
+Received: from wanjb-virtual-machine.localdomain (unknown [58.213.83.158])
+	by mail-m17644.qiye.163.com (Hmail) with ESMTPA id 84318320106;
+	Wed,  1 Sep 2021 10:32:32 +0800 (CST)
+From: Wan Jiabing <wanjiabing@vivo.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: kael_w@yeah.net,
+	Wan Jiabing <wanjiabing@vivo.com>
+Subject: [PATCH] mptcp: Fix duplicated argument in protocol.h
+Date: Wed,  1 Sep 2021 10:32:05 +0800
+Message-Id: <20210901023205.5049-1-wanjiabing@vivo.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZCBgUCR5ZQVlLVUtZV1
+	kWDxoPAgseWUFZKDYvK1lXWShZQUhPN1dZLVlBSVdZDwkaFQgSH1lBWRpLSxhWSUJOSRpJTEpMSU
+	sdVRMBExYaEhckFA4PWVdZFhoPEhUdFFlBWU9LSFVKSktISkNVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nj46Ejo*HT9NE0gMMEw8HTwp
+	NwoaCyxVSlVKTUhLT01ITk5IS09CVTMWGhIXVQwaFRESGhkSFRw7DRINFFUYFBZFWVdZEgtZQVlO
+	Q1VJSkhVQ0hVSk5DWVdZCAFZQUpDQkg3Bg++
+X-HM-Tid: 0a7b9f336ca8d99akuws84318320106
 
-On Mon, 30 Aug 2021, Florian Westphal wrote:
+./net/mptcp/protocol.h:36:50-73: duplicated argument to & or |
 
-> When recovering after a link failure, snd_nxt should not be set to a
-> lower value.  Else, update of snd_nxt is broken because:
->
->  msk->snd_nxt += ret; (where ret is number of bytes sent)
->
-> assumes that snd_nxt always moves forward.
-> After reduction, its possible that snd_nxt update gets out of sync:
-> dfrag we just sent might have had a data sequence number even past
-> recovery_snd_nxt.
->
-> This change factors the common msk state update to a helper
-> and updates snd_nxt based on the current dfrag data sequence number.
->
-> The conditional is required for the recovery phase where we may
-> re-transmit old dfrags that are before current snd_nxt.
->
-> After this change, snd_nxt only moves forward and covers all in-sequence
-> data that was transmitted.
->
-> recovery_snd_nxt is retained to detect when recovery has completed.
->
-> Fixes: 1e1d9d6f119c5 ("mptcp: handle pending data on closed subflow")
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
-> Changes in v2:
->  - remove WARN_ON() (Paolo)
->  - fix wrong member name in commit message (Mat)
->  - add Fixes-tag (Mat)
->
+The OPTION_MPTCP_MPJ_SYNACK here is duplicate.
+Here should be OPTION_MPTCP_MPJ_ACK.
 
-Looks good, thanks Florian.
+Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+---
+ net/mptcp/protocol.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d7aba1c4dc48..64c9a30e0871 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -34,7 +34,7 @@
+ #define OPTIONS_MPTCP_MPC	(OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK | \
+ 				 OPTION_MPTCP_MPC_ACK)
+ #define OPTIONS_MPTCP_MPJ	(OPTION_MPTCP_MPJ_SYN | OPTION_MPTCP_MPJ_SYNACK | \
+-				 OPTION_MPTCP_MPJ_SYNACK)
++				 OPTION_MPTCP_MPJ_ACK)
+ 
+ /* MPTCP option subtypes */
+ #define MPTCPOPT_MP_CAPABLE	0
+-- 
+2.25.1
 
-
-
-> net/mptcp/options.c  |  8 +++-----
-> net/mptcp/protocol.c | 43 +++++++++++++++++++++++++++++++------------
-> 2 files changed, 34 insertions(+), 17 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index c41273cefc51..1ec6529c4326 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1019,11 +1019,9 @@ static void ack_update_msk(struct mptcp_sock *msk,
-> 	old_snd_una = msk->snd_una;
-> 	new_snd_una = mptcp_expand_seq(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
->
-> -	/* ACK for data not even sent yet and even above recovery bound? Ignore.*/
-> -	if (unlikely(after64(new_snd_una, snd_nxt))) {
-> -		if (!msk->recovery || after64(new_snd_una, msk->recovery_snd_nxt))
-> -			new_snd_una = old_snd_una;
-> -	}
-> +	/* ACK for data not even sent yet? Ignore.*/
-> +	if (unlikely(after64(new_snd_una, snd_nxt)))
-> +		new_snd_una = old_snd_una;
->
-> 	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 898485e4c1dd..61f41be1a71a 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1510,6 +1510,32 @@ static void mptcp_push_release(struct sock *sk, struct sock *ssk,
-> 	release_sock(ssk);
-> }
->
-> +static void mptcp_update_post_push(struct mptcp_sock *msk,
-> +				   struct mptcp_data_frag *dfrag,
-> +				   u32 sent)
-> +{
-> +	u64 snd_nxt_new = dfrag->data_seq;
-> +
-> +	dfrag->already_sent += sent;
-> +
-> +	msk->snd_burst -= sent;
-> +	msk->tx_pending_data -= sent;
-> +
-> +	snd_nxt_new += dfrag->already_sent;
-> +
-> +	/* snd_nxt_new can be smaller than snd_nxt in case mptcp
-> +	 * is recovering after a failover. In that event, this re-sends
-> +	 * old segments.
-> +	 *
-> +	 * Thus compute snd_nxt_new candidate based on
-> +	 * the dfrag->data_seq that was sent and the data
-> +	 * that has been handed to the subflow for transmission
-> +	 * and skip update in case it was old dfrag.
-> +	 */
-> +	if (likely(after64(snd_nxt_new, msk->snd_nxt)))
-> +		msk->snd_nxt = snd_nxt_new;
-> +}
-> +
-> void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> {
-> 	struct sock *prev_ssk = NULL, *ssk = NULL;
-> @@ -1553,12 +1579,10 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 			}
->
-> 			info.sent += ret;
-> -			dfrag->already_sent += ret;
-> -			msk->snd_nxt += ret;
-> -			msk->snd_burst -= ret;
-> -			msk->tx_pending_data -= ret;
-> 			copied += ret;
-> 			len -= ret;
-> +
-> +			mptcp_update_post_push(msk, dfrag, ret);
-> 		}
-> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> 	}
-> @@ -1611,13 +1635,11 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
-> 				goto out;
->
-> 			info.sent += ret;
-> -			dfrag->already_sent += ret;
-> -			msk->snd_nxt += ret;
-> -			msk->snd_burst -= ret;
-> -			msk->tx_pending_data -= ret;
-> 			copied += ret;
-> 			len -= ret;
-> 			first = false;
-> +
-> +			mptcp_update_post_push(msk, dfrag, ret);
-> 		}
-> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> 	}
-> @@ -2215,15 +2237,12 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
-> 		return false;
-> 	}
->
-> -	/* will accept ack for reijected data before re-sending them */
-> -	if (!msk->recovery || after64(msk->snd_nxt, msk->recovery_snd_nxt))
-> -		msk->recovery_snd_nxt = msk->snd_nxt;
-> +	msk->recovery_snd_nxt = msk->snd_nxt;
-> 	msk->recovery = true;
-> 	mptcp_data_unlock(sk);
->
-> 	msk->first_pending = rtx_head;
-> 	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
-> -	msk->snd_nxt = rtx_head->data_seq;
-> 	msk->snd_burst = 0;
->
-> 	/* be sure to clear the "sent status" on all re-injected fragments */
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
