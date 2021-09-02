@@ -1,99 +1,80 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D49F72
-	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 09:15:34 +0000 (UTC)
-Received: by mail-pg1-f171.google.com with SMTP id 17so1269667pgp.4
-        for <mptcp@lists.linux.dev>; Thu, 02 Sep 2021 02:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YMJJy2bmAq63khQ+A0e7qbcz1Yh1BeMWuLAFMYocNOY=;
-        b=SIqbsjzBxrwj5BwxXGY1riqjj/q3qIi+vJlkl0pBkViJluXYbBznLZaCraTqVTCVZF
-         3lSYF189Zwyk8VZZzJSDEQ4EG8+Pn/dD4+BSCakZXzd75kDd+VHKxoABNLZec+ueWuPj
-         HMKkIMTOoMkLcKW8wRm2dNGCrvjjqgTQYwolIZdWLPU5v+cJN0ZsP1Ylz3FogbZdAZEF
-         J56v0YbHW2W9ZDVi7ZLvl4mqTVxkiy1G5j4Dvfc2ACLlM1qypomdjVOmo70MhYz1iFEL
-         R1QeRgyrm4z6SFtEAYd86fhC8N1HvjRf7ecnuUYEe7CRh3jVcQ13VrPzLlZlfl5FXjK2
-         36oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YMJJy2bmAq63khQ+A0e7qbcz1Yh1BeMWuLAFMYocNOY=;
-        b=hIdo+H9QbY9ttgqbthd+8C3rGtAETQ8eurh/x03jkVWw3qbxkXZXkBFK19wEjnumda
-         RFb6zALYTw8MaI3pR2Bq25ec95kdwbmadTCF1cJ4xrPnWkyeOzB7hmAEFTtQqXf61v9p
-         RwuWPRJTSxjIMPsK5OdQgmrZv/tK6gCOdY+ROCQsmeGj+l0B/M51cl6Tg9pm3mSIA1G6
-         sihWVENKukBraQZrN5l14O06s+Q5NnAMnxKupreHaqauWUlEsrfYR7SDKHEfbNaEPXoq
-         /GaMFdqHHGTnWMziXkAdKHC8krJe1LcHIlXCuSsqFcMh1M79yZJGv1arFK/riO7JF33Y
-         8xXA==
-X-Gm-Message-State: AOAM531CM3fkLRfC4l1I894KwC0xL8D5mAVq7U6wGfIP9cS3nHfF1wNF
-	2OZZAarM/14irrVHj5pBP0CRUPjeNDA=
-X-Google-Smtp-Source: ABdhPJwOB4SdyP/ZLxAGIrLw/lyqCtTT1XrS3zAaPfiLWbP6L/6RV1aN6yN1V3IXFyjpU5/lFsertQ==
-X-Received: by 2002:a63:3ec9:: with SMTP id l192mr2289842pga.141.1630574134375;
-        Thu, 02 Sep 2021 02:15:34 -0700 (PDT)
-Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id 66sm1608762pfx.29.2021.09.02.02.15.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Sep 2021 02:15:34 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev,
-	geliangtang@gmail.com
-Cc: Geliang Tang <geliangtang@xiaomi.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [MPTCP][PATCH v2 mptcp-next] mptcp: use OPTIONS_MPTCP_MPC
-Date: Thu,  2 Sep 2021 17:15:27 +0800
-Message-Id: <10d25ba91ac41cacf02608b9e9a6e884d1eae996.1630573884.git.geliangtang@xiaomi.com>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D5E3FD3
+	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 14:20:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1630592445;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CagHAmyFIUC4/jkKL3vahCAO1FvP5cLvi6nlDidtGJ4=;
+	b=UYF/hH9EtLbYg207n3/2nbsDXOE4YNcA7POolmRYSYCX0Fp0AJwnAU9zF4WbNUoG1HeHhC
+	5rWodtbl4NI9bi9FoZcMBSm+PDDDSu2miN7YYv0Y4WMAaoGvX1uPfzlUEp4nh7xWWEmIMI
+	Z1vgq/kcTydAFcab4fL5reAEXm3P/jE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-O0nnxecnPkCCEDKAXgwlUg-1; Thu, 02 Sep 2021 10:20:44 -0400
+X-MC-Unique: O0nnxecnPkCCEDKAXgwlUg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88CBD802C80
+	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 14:20:43 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.237])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EA1B11042A40
+	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 14:20:42 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 0/4] mptcp: just another xmit path refactor
+Date: Thu,  2 Sep 2021 16:20:28 +0200
+Message-Id: <cover.1630591985.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-From: Geliang Tang <geliangtang@xiaomi.com>
+Eric want to revert the tcp_tx_skb_cache. MPTCP relies on it
+for skb allocation. Before the revert we need to refactor our
+xmit path.
 
-Since OPTIONS_MPTCP_MPC has been defined, use it instead of open-coding.
+Patch 1 exposes some needed helpers (endorsed by Eric)
+Patch 2 contains the nasty new code
+Patch 3 revert some core TCP changes not needed anymore
+and patch 4 is Eric's revert.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
----
- v2:
- - switch of yoda-style in mptcp_established_options_mp_prio as Paolo
-   suggested.
- - keep yoda-style in mptcp_write_options, since the other options in
-   this fuction all use the yoda-style conditions.
----
- net/mptcp/options.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+This is only lightly tested, and I already got a slab out-of-bound,
+even if I could not reproduce it easily. Sharing early to give to
+hopefully give more testing in our CI.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1ec6529c4326..422f4acfb3e6 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -748,9 +748,7 @@ static bool mptcp_established_options_mp_prio(struct sock *sk,
- 	/* can't send MP_PRIO with MPC, as they share the same option space:
- 	 * 'backup'. Also it makes no sense at all
- 	 */
--	if (!subflow->send_mp_prio ||
--	    ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
--	      OPTION_MPTCP_MPC_ACK) & opts->suboptions))
-+	if (!subflow->send_mp_prio || (opts->suboptions & OPTIONS_MPTCP_MPC))
- 		return false;
- 
- 	/* account for the trailing 'nop' option */
-@@ -1327,8 +1325,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
- 			}
- 		}
--	} else if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
--		    OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-+	} else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
- 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
- 
- 		if (OPTION_MPTCP_MPC_SYN & opts->suboptions) {
+Eric Dumazet (1):
+  tcp: remove sk_{tr}x_skb_cache
+
+Paolo Abeni (3):
+  tcp: expose the tcp_mark_push() and skb_entail() helpers
+  mptcp: stop relaying on tcp_tx_skb_cache.
+  Partially revert "tcp: factor out tcp_build_frag()"
+
+ Documentation/networking/ip-sysctl.rst |   8 --
+ include/net/sock.h                     |  19 ----
+ include/net/tcp.h                      |   4 +-
+ net/ipv4/af_inet.c                     |   4 -
+ net/ipv4/sysctl_net_ipv4.c             |  12 --
+ net/ipv4/tcp.c                         | 147 +++++++++----------------
+ net/ipv4/tcp_ipv4.c                    |   6 -
+ net/ipv6/tcp_ipv6.c                    |   6 -
+ net/mptcp/protocol.c                   | 131 +++++++++++++---------
+ 9 files changed, 131 insertions(+), 206 deletions(-)
+
 -- 
-2.31.1
+2.26.3
 
