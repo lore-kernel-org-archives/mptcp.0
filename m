@@ -1,330 +1,203 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295E93FD3
-	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 14:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C86A3FC1
+	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 15:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630592502;
+	s=mimecast20190719; t=1630594825;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0sXuSGNUZPcTS2HU99UWlUvle8o+zTUPolerURfGs60=;
-	b=d3U8y5w6gkz2QHRJ5+vvttrl0TSz8i6xiSZuD5FxBgboGVp7l1wnoQ9Rzap+3GG74b4ruK
-	0EpRq5NuWMJbuWGmLWZhTeR2tVm9rKkk1u+9lEs6Y+k4eIDtlp1okMf57etjz/7MkaWem7
-	GuE41tQ/Po9g1BDC8UcGWfN9zMwUpYk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-j28Li_q0PwG8ltVVQz9uvA-1; Thu, 02 Sep 2021 10:21:32 -0400
-X-MC-Unique: j28Li_q0PwG8ltVVQz9uvA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30DCBDF8AE
-	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 14:20:47 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.237])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9E6661042A40
-	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 14:20:46 +0000 (UTC)
+	bh=iGC9L5aT1lS5lYgASiTQ+EYI4pG+4XlKs2qybPK/QOs=;
+	b=hCDh66/HiBm76WdRVqex8f9O/qzEJtgfqLLpSqph/k8AHZU+ob46khTrRtveFM+X6nHk3S
+	D7oqZSvKxn/pHbi1vM0cM0Jd40TCYztEIPprjFEOqNEKVx7JOei5c+I44UxiZpQoruEcqu
+	SZHKlDVfIxLbs63NHTFARjB4NDxStCo=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-oIQmO-HIP12g048400yW9w-1; Thu, 02 Sep 2021 11:00:24 -0400
+X-MC-Unique: oIQmO-HIP12g048400yW9w-1
+Received: by mail-wr1-f72.google.com with SMTP id h1-20020adffd41000000b0015931e17ccfso630911wrs.18
+        for <mptcp@lists.linux.dev>; Thu, 02 Sep 2021 08:00:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=iGC9L5aT1lS5lYgASiTQ+EYI4pG+4XlKs2qybPK/QOs=;
+        b=OC7BUDYOBnTgpGKmWZgRdgQLBH1xI62d7Z8y+JXDQsThIjgii9KaduC85CGNN4doeX
+         Cwj+Mkan+gLbIvDTxHwOJ6S5BRArAyHrLe1xOzXSHSQAM1TUi04vLX+JD2ZGH7DQd5/B
+         EiSEwBZ6TjIdyDho1UN9jGwqU8yxVJw1UNIIvqQKplkSJjtCBMXKFesiFvk4kb0eddev
+         oZ5cEOIyWrKZd/uZ7QnAVmSz1ORIRcO2h6fN/83QBrAEA3ebhC8FKLgVdeOD2MhiwfAi
+         PJ1EjgY5dsVCLuLItM5LdJ4iEC5sKPRvwZTph8fMeTzjSSf1+qshO26d6ppASIiz6eHt
+         56Rg==
+X-Gm-Message-State: AOAM531puf+fh6o/Vg1AINW7qJQNDGc739zWoubFwXjrV12lVroI1+su
+	sBbZUl3th3LbeT8PB6rMnDL+sQnVmGBoSGII2OalhIpqtePQJqLr2LcH0dQwj1FMtjJDhTvL3f5
+	y+D5vN17JP3A+v6CK7YKqMn6La1plmcjcWGkE8Oa+Nv6xKkFFAm5TgerdZuMsqfCo
+X-Received: by 2002:adf:e645:: with SMTP id b5mr4249738wrn.34.1630594823004;
+        Thu, 02 Sep 2021 08:00:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw/C3jVkoZSwhR7IWXH9BL392UrgblHYazZBETgJkSf087BjgoOAevNDrkXfhFg8mS1B/M3bA==
+X-Received: by 2002:adf:e645:: with SMTP id b5mr4249690wrn.34.1630594822719;
+        Thu, 02 Sep 2021 08:00:22 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
+        by smtp.gmail.com with ESMTPSA id k16sm2058596wrh.24.2021.09.02.08.00.22
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Sep 2021 08:00:22 -0700 (PDT)
+Message-ID: <ea1f947cc9661d26b25c3c4e8f5d5698352d91aa.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 2/4] mptcp: stop relaying on tcp_tx_skb_cache.
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 4/4] tcp: remove sk_{tr}x_skb_cache
-Date: Thu,  2 Sep 2021 16:20:32 +0200
-Message-Id: <481fab3d20248bb78d959c8e9445c091c1c14e6b.1630591985.git.pabeni@redhat.com>
-In-Reply-To: <cover.1630591985.git.pabeni@redhat.com>
+Date: Thu, 02 Sep 2021 17:00:21 +0200
+In-Reply-To: <77a77e43a30e0338a1b7a0c811b8e6451862eb02.1630591985.git.pabeni@redhat.com>
 References: <cover.1630591985.git.pabeni@redhat.com>
+	 <77a77e43a30e0338a1b7a0c811b8e6451862eb02.1630591985.git.pabeni@redhat.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Eric Dumazet <edumazet@google.com>
+On Thu, 2021-09-02 at 16:20 +0200, Paolo Abeni wrote:
+> We want to revert the skb TX cache, but MPTCP is currently
+> using it unconditionally.
+> 
+> Rework the MPTCP tx code, so that tcp_tx_skb_cache is not
+> needed anymore: do the whole coalescing check, skb allocation
+> skb initialization/update inside mptcp_sendmsg_frag(), quite
+> alike the current TCP code.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 131 +++++++++++++++++++++++++------------------
+>  1 file changed, 76 insertions(+), 55 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index faf6e7000d18..98fdb0ebd68d 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1224,6 +1224,7 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
+>  		if (likely(__mptcp_add_ext(skb, gfp))) {
+>  			skb_reserve(skb, MAX_TCP_HEADER);
+>  			skb->reserved_tailroom = skb->end - skb->tail;
+> +			INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
+>  			return skb;
+>  		}
+>  		__kfree_skb(skb);
+> @@ -1233,31 +1234,23 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
+>  	return NULL;
+>  }
+>  
+> -static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+> +static struct sk_buff *__mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+>  {
+>  	struct sk_buff *skb;
+>  
+> -	if (ssk->sk_tx_skb_cache) {
+> -		skb = ssk->sk_tx_skb_cache;
+> -		if (unlikely(!skb_ext_find(skb, SKB_EXT_MPTCP) &&
+> -			     !__mptcp_add_ext(skb, gfp)))
+> -			return false;
+> -		return true;
+> -	}
+> -
+>  	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
+>  	if (!skb)
+> -		return false;
+> +		return NULL;
+>  
+>  	if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
+> -		ssk->sk_tx_skb_cache = skb;
+> -		return true;
+> +		skb_entail(ssk, skb);
+> +		return skb;
+>  	}
+>  	kfree_skb(skb);
+> -	return false;
+> +	return NULL;
+>  }
+>  
+> -static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
+> +static struct sk_buff *mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
+>  {
+>  	gfp_t gfp = data_lock_held ? GFP_ATOMIC : sk->sk_allocation;
+>  
+> @@ -1287,23 +1280,29 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+>  			      struct mptcp_sendmsg_info *info)
+>  {
+>  	u64 data_seq = dfrag->data_seq + info->sent;
+> +	int offset = dfrag->offset + info->sent;
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  	bool zero_window_probe = false;
+>  	struct mptcp_ext *mpext = NULL;
+> -	struct sk_buff *skb, *tail;
+> -	bool must_collapse = false;
+> -	int size_bias = 0;
+> -	int avail_size;
+> -	size_t ret = 0;
+> +	bool can_coalesce = false;
+> +	bool reuse_skb = true;
+> +	struct sk_buff *skb;
+> +	size_t copy;
+> +	int i = 0;
+>  
+>  	pr_debug("msk=%p ssk=%p sending dfrag at seq=%llu len=%u already sent=%u",
+>  		 msk, ssk, dfrag->data_seq, dfrag->data_len, info->sent);
+>  
+> +	if (WARN_ON_ONCE(info->sent > info->limit ||
+> +			 info->limit > dfrag->data_len))
+> +		return 0;
+> +
+>  	/* compute send limit */
+>  	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+> -	avail_size = info->size_goal;
+> +	copy = info->size_goal;
+> +
+>  	skb = tcp_write_queue_tail(ssk);
+> -	if (skb) {
+> +	if (skb && (copy > skb->len)) {
+>  		/* Limit the write to the size available in the
+>  		 * current skb, if any, so that we create at most a new skb.
+>  		 * Explicitly tells TCP internals to avoid collapsing on later
+> @@ -1316,53 +1315,75 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+>  			goto alloc_skb;
+>  		}
+>  
+> -		must_collapse = (info->size_goal - skb->len > 0) &&
+> -				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
+> -		if (must_collapse) {
+> -			size_bias = skb->len;
+> -			avail_size = info->size_goal - skb->len;
+> +		i = skb_shinfo(skb)->nr_frags;
+> +		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
+> +		if (!can_coalesce && i >= sysctl_max_skb_frags) {
+> +			tcp_mark_push(tcp_sk(ssk), skb);
+> +			goto alloc_skb;
+>  		}
+> -	}
+>  
+> +		copy -= skb->len;
+> +	} else {
+>  alloc_skb:
+> -	if (!must_collapse && !ssk->sk_tx_skb_cache &&
+> -	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
+> -		return 0;
+> +		skb = mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held);
+> +		if (!skb)
+> +			return -ENOMEM;
+> +
+> +		reuse_skb = false;
 
-This reverts the following patches :
+Uhm... looks like I need to fetch again 'skb_shinfo(skb)->nr_frags'
+here. That could be possibly the cause of the OoB I'm observing. Will
+send a v2 soon after some more testing.
 
-2e05fcae83c41eb2df10558338dc600dc783af47 ("tcp: fix compile error if !CONFIG_SYSCTL")
-4f661542a40217713f2cee0bb6678fbb30d9d367 ("tcp: fix zerocopy and notsent_lowat issues")
-472c2e07eef045145bc1493cc94a01c87140780a ("tcp: add one skb cache for tx")
-8b27dae5a2e89a61c46c6dbc76c040c0e6d0ed4c ("tcp: add one skb cache for rx")
-
-Having a cache of one skb (in each direction) per TCP socket is fragile,
-since it can cause a significant increase of memory needs,
-and not good enough for high speed flows anyway where more than one skb
-is needed.
-
-We want instead to add a generic infrastructure, with more flexible per-cpu
-caches, for alien NUMA nodes.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
----
- Documentation/networking/ip-sysctl.rst |  8 --------
- include/net/sock.h                     | 19 -------------------
- net/ipv4/af_inet.c                     |  4 ----
- net/ipv4/sysctl_net_ipv4.c             | 12 ------------
- net/ipv4/tcp.c                         | 26 --------------------------
- net/ipv4/tcp_ipv4.c                    |  6 ------
- net/ipv6/tcp_ipv6.c                    |  6 ------
- 7 files changed, 81 deletions(-)
-
-diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index d91ab28718d4..16b8bf72feaf 100644
---- a/Documentation/networking/ip-sysctl.rst
-+++ b/Documentation/networking/ip-sysctl.rst
-@@ -989,14 +989,6 @@ tcp_challenge_ack_limit - INTEGER
- 	in RFC 5961 (Improving TCP's Robustness to Blind In-Window Attacks)
- 	Default: 1000
- 
--tcp_rx_skb_cache - BOOLEAN
--	Controls a per TCP socket cache of one skb, that might help
--	performance of some workloads. This might be dangerous
--	on systems with a lot of TCP sockets, since it increases
--	memory usage.
--
--	Default: 0 (disabled)
--
- UDP variables
- =============
- 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 66a9a90f9558..708b9de3cdbb 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -262,7 +262,6 @@ struct bpf_local_storage;
-   *	@sk_dst_cache: destination cache
-   *	@sk_dst_pending_confirm: need to confirm neighbour
-   *	@sk_policy: flow policy
--  *	@sk_rx_skb_cache: cache copy of recently accessed RX skb
-   *	@sk_receive_queue: incoming packets
-   *	@sk_wmem_alloc: transmit queue bytes committed
-   *	@sk_tsq_flags: TCP Small Queues flags
-@@ -328,7 +327,6 @@ struct bpf_local_storage;
-   *	@sk_peek_off: current peek_offset value
-   *	@sk_send_head: front of stuff to transmit
-   *	@tcp_rtx_queue: TCP re-transmit queue [union with @sk_send_head]
--  *	@sk_tx_skb_cache: cache copy of recently accessed TX skb
-   *	@sk_security: used by security modules
-   *	@sk_mark: generic packet mark
-   *	@sk_cgrp_data: cgroup data for this cgroup
-@@ -393,7 +391,6 @@ struct sock {
- 	atomic_t		sk_drops;
- 	int			sk_rcvlowat;
- 	struct sk_buff_head	sk_error_queue;
--	struct sk_buff		*sk_rx_skb_cache;
- 	struct sk_buff_head	sk_receive_queue;
- 	/*
- 	 * The backlog queue is special, it is always used with
-@@ -442,7 +439,6 @@ struct sock {
- 		struct sk_buff	*sk_send_head;
- 		struct rb_root	tcp_rtx_queue;
- 	};
--	struct sk_buff		*sk_tx_skb_cache;
- 	struct sk_buff_head	sk_write_queue;
- 	__s32			sk_peek_off;
- 	int			sk_write_pending;
-@@ -1555,18 +1551,10 @@ static inline void sk_mem_uncharge(struct sock *sk, int size)
- 		__sk_mem_reclaim(sk, 1 << 20);
- }
- 
--DECLARE_STATIC_KEY_FALSE(tcp_tx_skb_cache_key);
- static inline void sk_wmem_free_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	sk_wmem_queued_add(sk, -skb->truesize);
- 	sk_mem_uncharge(sk, skb->truesize);
--	if (static_branch_unlikely(&tcp_tx_skb_cache_key) &&
--	    !sk->sk_tx_skb_cache && !skb_cloned(skb)) {
--		skb_ext_reset(skb);
--		skb_zcopy_clear(skb, true);
--		sk->sk_tx_skb_cache = skb;
--		return;
--	}
- 	__kfree_skb(skb);
- }
- 
-@@ -2575,7 +2563,6 @@ static inline void skb_setup_tx_timestamp(struct sk_buff *skb, __u16 tsflags)
- 			   &skb_shinfo(skb)->tskey);
- }
- 
--DECLARE_STATIC_KEY_FALSE(tcp_rx_skb_cache_key);
- /**
-  * sk_eat_skb - Release a skb if it is no longer needed
-  * @sk: socket to eat this skb from
-@@ -2587,12 +2574,6 @@ DECLARE_STATIC_KEY_FALSE(tcp_rx_skb_cache_key);
- static inline void sk_eat_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	__skb_unlink(skb, &sk->sk_receive_queue);
--	if (static_branch_unlikely(&tcp_rx_skb_cache_key) &&
--	    !sk->sk_rx_skb_cache) {
--		sk->sk_rx_skb_cache = skb;
--		skb_orphan(skb);
--		return;
--	}
- 	__kfree_skb(skb);
- }
- 
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index 9dc7613e589d..63eda8cb0d26 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -133,10 +133,6 @@ void inet_sock_destruct(struct sock *sk)
- 	struct inet_sock *inet = inet_sk(sk);
- 
- 	__skb_queue_purge(&sk->sk_receive_queue);
--	if (sk->sk_rx_skb_cache) {
--		__kfree_skb(sk->sk_rx_skb_cache);
--		sk->sk_rx_skb_cache = NULL;
--	}
- 	__skb_queue_purge(&sk->sk_error_queue);
- 
- 	sk_mem_reclaim(sk);
-diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index 6f1e64d49232..6eb43dc91218 100644
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -594,18 +594,6 @@ static struct ctl_table ipv4_table[] = {
- 		.extra1		= &sysctl_fib_sync_mem_min,
- 		.extra2		= &sysctl_fib_sync_mem_max,
- 	},
--	{
--		.procname	= "tcp_rx_skb_cache",
--		.data		= &tcp_rx_skb_cache_key.key,
--		.mode		= 0644,
--		.proc_handler	= proc_do_static_key,
--	},
--	{
--		.procname	= "tcp_tx_skb_cache",
--		.data		= &tcp_tx_skb_cache_key.key,
--		.mode		= 0644,
--		.proc_handler	= proc_do_static_key,
--	},
- 	{ }
- };
- 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index caf0c50d86bc..cbb0f807be46 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -325,11 +325,6 @@ struct tcp_splice_state {
- unsigned long tcp_memory_pressure __read_mostly;
- EXPORT_SYMBOL_GPL(tcp_memory_pressure);
- 
--DEFINE_STATIC_KEY_FALSE(tcp_rx_skb_cache_key);
--EXPORT_SYMBOL(tcp_rx_skb_cache_key);
--
--DEFINE_STATIC_KEY_FALSE(tcp_tx_skb_cache_key);
--
- void tcp_enter_memory_pressure(struct sock *sk)
- {
- 	unsigned long val;
-@@ -866,18 +861,6 @@ struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp,
- {
- 	struct sk_buff *skb;
- 
--	if (likely(!size)) {
--		skb = sk->sk_tx_skb_cache;
--		if (skb) {
--			skb->truesize = SKB_TRUESIZE(skb_end_offset(skb));
--			sk->sk_tx_skb_cache = NULL;
--			pskb_trim(skb, 0);
--			INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
--			skb_shinfo(skb)->tx_flags = 0;
--			memset(TCP_SKB_CB(skb), 0, sizeof(struct tcp_skb_cb));
--			return skb;
--		}
--	}
- 	/* The TCP header must be at least 32-bit aligned.  */
- 	size = ALIGN(size, 4);
- 
-@@ -2905,11 +2888,6 @@ void tcp_write_queue_purge(struct sock *sk)
- 		sk_wmem_free_skb(sk, skb);
- 	}
- 	tcp_rtx_queue_purge(sk);
--	skb = sk->sk_tx_skb_cache;
--	if (skb) {
--		__kfree_skb(skb);
--		sk->sk_tx_skb_cache = NULL;
--	}
- 	INIT_LIST_HEAD(&tcp_sk(sk)->tsorted_sent_queue);
- 	sk_mem_reclaim(sk);
- 	tcp_clear_all_retrans_hints(tcp_sk(sk));
-@@ -2946,10 +2924,6 @@ int tcp_disconnect(struct sock *sk, int flags)
- 
- 	tcp_clear_xmit_timers(sk);
- 	__skb_queue_purge(&sk->sk_receive_queue);
--	if (sk->sk_rx_skb_cache) {
--		__kfree_skb(sk->sk_rx_skb_cache);
--		sk->sk_rx_skb_cache = NULL;
--	}
- 	WRITE_ONCE(tp->copied_seq, tp->rcv_nxt);
- 	tp->urg_data = 0;
- 	tcp_write_queue_purge(sk);
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 2e62e0d6373a..29a57bd159f0 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1941,7 +1941,6 @@ static void tcp_v4_fill_cb(struct sk_buff *skb, const struct iphdr *iph,
- int tcp_v4_rcv(struct sk_buff *skb)
- {
- 	struct net *net = dev_net(skb->dev);
--	struct sk_buff *skb_to_free;
- 	int sdif = inet_sdif(skb);
- 	int dif = inet_iif(skb);
- 	const struct iphdr *iph;
-@@ -2082,17 +2081,12 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 	tcp_segs_in(tcp_sk(sk), skb);
- 	ret = 0;
- 	if (!sock_owned_by_user(sk)) {
--		skb_to_free = sk->sk_rx_skb_cache;
--		sk->sk_rx_skb_cache = NULL;
- 		ret = tcp_v4_do_rcv(sk, skb);
- 	} else {
- 		if (tcp_add_backlog(sk, skb))
- 			goto discard_and_relse;
--		skb_to_free = NULL;
- 	}
- 	bh_unlock_sock(sk);
--	if (skb_to_free)
--		__kfree_skb(skb_to_free);
- 
- put_and_return:
- 	if (refcounted)
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 0ce52d46e4f8..8cf5ff2e9504 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1618,7 +1618,6 @@ static void tcp_v6_fill_cb(struct sk_buff *skb, const struct ipv6hdr *hdr,
- 
- INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- {
--	struct sk_buff *skb_to_free;
- 	int sdif = inet6_sdif(skb);
- 	int dif = inet6_iif(skb);
- 	const struct tcphdr *th;
-@@ -1754,17 +1753,12 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 	tcp_segs_in(tcp_sk(sk), skb);
- 	ret = 0;
- 	if (!sock_owned_by_user(sk)) {
--		skb_to_free = sk->sk_rx_skb_cache;
--		sk->sk_rx_skb_cache = NULL;
- 		ret = tcp_v6_do_rcv(sk, skb);
- 	} else {
- 		if (tcp_add_backlog(sk, skb))
- 			goto discard_and_relse;
--		skb_to_free = NULL;
- 	}
- 	bh_unlock_sock(sk);
--	if (skb_to_free)
--		__kfree_skb(skb_to_free);
- put_and_return:
- 	if (refcounted)
- 		sock_put(sk);
--- 
-2.26.3
+/P
 
