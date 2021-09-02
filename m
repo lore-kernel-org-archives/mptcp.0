@@ -1,330 +1,339 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAE02FAE
-	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 15:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630597967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0sXuSGNUZPcTS2HU99UWlUvle8o+zTUPolerURfGs60=;
-	b=YwqbZDm2zGDp2baXEO+D7piUx1BLSzNI3vHVACr5L3cc+ihyQPJAVNKn7G9Z984CTMuvSR
-	OXmH0dAxE6fZHlPMNIOQnNNOxA9sMzvuC9HacCCEGHJ6nmvaPSVFtUWtgYit3UOABkg2Fc
-	XdL2xdA4i1NkLpltSlNiN2HcNzkc90E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-Bhr7UB9DPB62cNIwhvBybA-1; Thu, 02 Sep 2021 11:52:46 -0400
-X-MC-Unique: Bhr7UB9DPB62cNIwhvBybA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF221189C444
-	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 15:52:45 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.237])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 55DA35D9DC
-	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 15:52:45 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 4/4] tcp: remove sk_{tr}x_skb_cache
-Date: Thu,  2 Sep 2021 17:52:14 +0200
-Message-Id: <8f93fb14f915b068c34f559e42d706a24792edbf.1630595171.git.pabeni@redhat.com>
-In-Reply-To: <cover.1630595171.git.pabeni@redhat.com>
-References: <cover.1630595171.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A34C3FC1
+	for <mptcp@lists.linux.dev>; Thu,  2 Sep 2021 16:03:40 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id n27so5576423eja.5
+        for <mptcp@lists.linux.dev>; Thu, 02 Sep 2021 09:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=AU4o6Rx3PJZtC6o3CEiQoEFe3L3RPLeCRhm5n7qp1H0=;
+        b=UVDllJoluT9s/S6+fi5CrH59kxGMLisCROf35ANxAXCD3bOkm0oWGUozBpSwbbuGC3
+         7vuI2KVaFVbvG26izL/6SLcHFYBpy0oX3TU/+LZhgW/HmonNCFteu9dvZcPTquJZiVjy
+         QRN4QJl9aH1xS/fNQMsthr7tsu99Raq7j/q7MTxofcnwr3NVZZhqTCbhVq72qqoGcvz4
+         1KaIY+vRmSBkUkjxfgNFSiPqHyQbTBvQa0ge/yUgi/ieMXSbAmmZ2euvQxmqraDqPO+a
+         90p36ER+6EisW05uVWYE1Tp7Rt1g4JMRxeJKZQY8lp8+cA2JH4MBQLiq0+mP9F1lO5Tr
+         KPqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=AU4o6Rx3PJZtC6o3CEiQoEFe3L3RPLeCRhm5n7qp1H0=;
+        b=H6uaoD+DWUxK6At4CdEaO7tCv3kGb0/sALDvQTSZ86v5AU1TuVDFrWIb4muiAtJ+sG
+         eefZ74V761PHQsyLn3i51UrM9olQqCn9W3BBfQYDZ0z5LIibrBdFOguTOs4gwkb5Mt8V
+         5lq06oIF9eT5Ti1rLAILuacwz3pYff9ietjX4I68d3YkEJrIM2Yu2b4n+7EzosXWfAa2
+         A8ATPqVANS9rjF+i+Y9ensqkWgl/jZamdWKLQ8oWVx76VA6Zfq0tUreMJAA346WKxL0i
+         zJaZBNo0ssW64cOasT0P90oJfgsbNJNzVK1c3NvYRB2mKM0GTvKptEuw5bvxjTUFxV0w
+         ED6Q==
+X-Gm-Message-State: AOAM530uf/ZMUL8lYkDPunFlN6k2eJS8Kq/RQTMcnqwpPXdi+Ay6FIYC
+	rGzDA9JJ4qz6ZgHgsL1PvGX8jRGy7CbjvQ==
+X-Google-Smtp-Source: ABdhPJw2gtJJ3rF6CLsV36sr4xjFwHXFBtc1BJAr1qwTztiV5dfhBrwfHDjNMTrKKr/lD4zXeAV+2Q==
+X-Received: by 2002:a17:906:3e10:: with SMTP id k16mr4750724eji.116.1630598618639;
+        Thu, 02 Sep 2021 09:03:38 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id cf11sm1477331edb.65.2021.09.02.09.03.38
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Sep 2021 09:03:38 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: [Weekly meetings] MoM - 2nd of September 2021
+Message-ID: <a9db34b4-2eab-83cc-ee63-b344cbfc6c39@tessares.net>
+Date: Thu, 2 Sep 2021 18:03:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-From: Eric Dumazet <edumazet@google.com>
+Hello everyone,
 
-This reverts the following patches :
+Today, we just had our 163rd meeting with Mat (Intel), Christoph
+(Apple), Florian, Paolo, Davide, Poorva (RedHat), Geliang (Xiaomi) and
+myself (Tessares).
 
-2e05fcae83c41eb2df10558338dc600dc783af47 ("tcp: fix compile error if !CONFIG_SYSCTL")
-4f661542a40217713f2cee0bb6678fbb30d9d367 ("tcp: fix zerocopy and notsent_lowat issues")
-472c2e07eef045145bc1493cc94a01c87140780a ("tcp: add one skb cache for tx")
-8b27dae5a2e89a61c46c6dbc76c040c0e6d0ed4c ("tcp: add one skb cache for rx")
 
-Having a cache of one skb (in each direction) per TCP socket is fragile,
-since it can cause a significant increase of memory needs,
-and not good enough for high speed flows anyway where more than one skb
-is needed.
+Thanks again for this new good meeting!
 
-We want instead to add a generic infrastructure, with more flexible per-cpu
-caches, for alien NUMA nodes.
+Here are the minutes of the meeting:
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
----
- Documentation/networking/ip-sysctl.rst |  8 --------
- include/net/sock.h                     | 19 -------------------
- net/ipv4/af_inet.c                     |  4 ----
- net/ipv4/sysctl_net_ipv4.c             | 12 ------------
- net/ipv4/tcp.c                         | 26 --------------------------
- net/ipv4/tcp_ipv4.c                    |  6 ------
- net/ipv6/tcp_ipv6.c                    |  6 ------
- 7 files changed, 81 deletions(-)
 
-diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index d91ab28718d4..16b8bf72feaf 100644
---- a/Documentation/networking/ip-sysctl.rst
-+++ b/Documentation/networking/ip-sysctl.rst
-@@ -989,14 +989,6 @@ tcp_challenge_ack_limit - INTEGER
- 	in RFC 5961 (Improving TCP's Robustness to Blind In-Window Attacks)
- 	Default: 1000
- 
--tcp_rx_skb_cache - BOOLEAN
--	Controls a per TCP socket cache of one skb, that might help
--	performance of some workloads. This might be dangerous
--	on systems with a lot of TCP sockets, since it increases
--	memory usage.
--
--	Default: 0 (disabled)
--
- UDP variables
- =============
- 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 66a9a90f9558..708b9de3cdbb 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -262,7 +262,6 @@ struct bpf_local_storage;
-   *	@sk_dst_cache: destination cache
-   *	@sk_dst_pending_confirm: need to confirm neighbour
-   *	@sk_policy: flow policy
--  *	@sk_rx_skb_cache: cache copy of recently accessed RX skb
-   *	@sk_receive_queue: incoming packets
-   *	@sk_wmem_alloc: transmit queue bytes committed
-   *	@sk_tsq_flags: TCP Small Queues flags
-@@ -328,7 +327,6 @@ struct bpf_local_storage;
-   *	@sk_peek_off: current peek_offset value
-   *	@sk_send_head: front of stuff to transmit
-   *	@tcp_rtx_queue: TCP re-transmit queue [union with @sk_send_head]
--  *	@sk_tx_skb_cache: cache copy of recently accessed TX skb
-   *	@sk_security: used by security modules
-   *	@sk_mark: generic packet mark
-   *	@sk_cgrp_data: cgroup data for this cgroup
-@@ -393,7 +391,6 @@ struct sock {
- 	atomic_t		sk_drops;
- 	int			sk_rcvlowat;
- 	struct sk_buff_head	sk_error_queue;
--	struct sk_buff		*sk_rx_skb_cache;
- 	struct sk_buff_head	sk_receive_queue;
- 	/*
- 	 * The backlog queue is special, it is always used with
-@@ -442,7 +439,6 @@ struct sock {
- 		struct sk_buff	*sk_send_head;
- 		struct rb_root	tcp_rtx_queue;
- 	};
--	struct sk_buff		*sk_tx_skb_cache;
- 	struct sk_buff_head	sk_write_queue;
- 	__s32			sk_peek_off;
- 	int			sk_write_pending;
-@@ -1555,18 +1551,10 @@ static inline void sk_mem_uncharge(struct sock *sk, int size)
- 		__sk_mem_reclaim(sk, 1 << 20);
- }
- 
--DECLARE_STATIC_KEY_FALSE(tcp_tx_skb_cache_key);
- static inline void sk_wmem_free_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	sk_wmem_queued_add(sk, -skb->truesize);
- 	sk_mem_uncharge(sk, skb->truesize);
--	if (static_branch_unlikely(&tcp_tx_skb_cache_key) &&
--	    !sk->sk_tx_skb_cache && !skb_cloned(skb)) {
--		skb_ext_reset(skb);
--		skb_zcopy_clear(skb, true);
--		sk->sk_tx_skb_cache = skb;
--		return;
--	}
- 	__kfree_skb(skb);
- }
- 
-@@ -2575,7 +2563,6 @@ static inline void skb_setup_tx_timestamp(struct sk_buff *skb, __u16 tsflags)
- 			   &skb_shinfo(skb)->tskey);
- }
- 
--DECLARE_STATIC_KEY_FALSE(tcp_rx_skb_cache_key);
- /**
-  * sk_eat_skb - Release a skb if it is no longer needed
-  * @sk: socket to eat this skb from
-@@ -2587,12 +2574,6 @@ DECLARE_STATIC_KEY_FALSE(tcp_rx_skb_cache_key);
- static inline void sk_eat_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	__skb_unlink(skb, &sk->sk_receive_queue);
--	if (static_branch_unlikely(&tcp_rx_skb_cache_key) &&
--	    !sk->sk_rx_skb_cache) {
--		sk->sk_rx_skb_cache = skb;
--		skb_orphan(skb);
--		return;
--	}
- 	__kfree_skb(skb);
- }
- 
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index 9dc7613e589d..63eda8cb0d26 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -133,10 +133,6 @@ void inet_sock_destruct(struct sock *sk)
- 	struct inet_sock *inet = inet_sk(sk);
- 
- 	__skb_queue_purge(&sk->sk_receive_queue);
--	if (sk->sk_rx_skb_cache) {
--		__kfree_skb(sk->sk_rx_skb_cache);
--		sk->sk_rx_skb_cache = NULL;
--	}
- 	__skb_queue_purge(&sk->sk_error_queue);
- 
- 	sk_mem_reclaim(sk);
-diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index 6f1e64d49232..6eb43dc91218 100644
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -594,18 +594,6 @@ static struct ctl_table ipv4_table[] = {
- 		.extra1		= &sysctl_fib_sync_mem_min,
- 		.extra2		= &sysctl_fib_sync_mem_max,
- 	},
--	{
--		.procname	= "tcp_rx_skb_cache",
--		.data		= &tcp_rx_skb_cache_key.key,
--		.mode		= 0644,
--		.proc_handler	= proc_do_static_key,
--	},
--	{
--		.procname	= "tcp_tx_skb_cache",
--		.data		= &tcp_tx_skb_cache_key.key,
--		.mode		= 0644,
--		.proc_handler	= proc_do_static_key,
--	},
- 	{ }
- };
- 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index caf0c50d86bc..cbb0f807be46 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -325,11 +325,6 @@ struct tcp_splice_state {
- unsigned long tcp_memory_pressure __read_mostly;
- EXPORT_SYMBOL_GPL(tcp_memory_pressure);
- 
--DEFINE_STATIC_KEY_FALSE(tcp_rx_skb_cache_key);
--EXPORT_SYMBOL(tcp_rx_skb_cache_key);
--
--DEFINE_STATIC_KEY_FALSE(tcp_tx_skb_cache_key);
--
- void tcp_enter_memory_pressure(struct sock *sk)
- {
- 	unsigned long val;
-@@ -866,18 +861,6 @@ struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp,
- {
- 	struct sk_buff *skb;
- 
--	if (likely(!size)) {
--		skb = sk->sk_tx_skb_cache;
--		if (skb) {
--			skb->truesize = SKB_TRUESIZE(skb_end_offset(skb));
--			sk->sk_tx_skb_cache = NULL;
--			pskb_trim(skb, 0);
--			INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
--			skb_shinfo(skb)->tx_flags = 0;
--			memset(TCP_SKB_CB(skb), 0, sizeof(struct tcp_skb_cb));
--			return skb;
--		}
--	}
- 	/* The TCP header must be at least 32-bit aligned.  */
- 	size = ALIGN(size, 4);
- 
-@@ -2905,11 +2888,6 @@ void tcp_write_queue_purge(struct sock *sk)
- 		sk_wmem_free_skb(sk, skb);
- 	}
- 	tcp_rtx_queue_purge(sk);
--	skb = sk->sk_tx_skb_cache;
--	if (skb) {
--		__kfree_skb(skb);
--		sk->sk_tx_skb_cache = NULL;
--	}
- 	INIT_LIST_HEAD(&tcp_sk(sk)->tsorted_sent_queue);
- 	sk_mem_reclaim(sk);
- 	tcp_clear_all_retrans_hints(tcp_sk(sk));
-@@ -2946,10 +2924,6 @@ int tcp_disconnect(struct sock *sk, int flags)
- 
- 	tcp_clear_xmit_timers(sk);
- 	__skb_queue_purge(&sk->sk_receive_queue);
--	if (sk->sk_rx_skb_cache) {
--		__kfree_skb(sk->sk_rx_skb_cache);
--		sk->sk_rx_skb_cache = NULL;
--	}
- 	WRITE_ONCE(tp->copied_seq, tp->rcv_nxt);
- 	tp->urg_data = 0;
- 	tcp_write_queue_purge(sk);
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 2e62e0d6373a..29a57bd159f0 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1941,7 +1941,6 @@ static void tcp_v4_fill_cb(struct sk_buff *skb, const struct iphdr *iph,
- int tcp_v4_rcv(struct sk_buff *skb)
- {
- 	struct net *net = dev_net(skb->dev);
--	struct sk_buff *skb_to_free;
- 	int sdif = inet_sdif(skb);
- 	int dif = inet_iif(skb);
- 	const struct iphdr *iph;
-@@ -2082,17 +2081,12 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 	tcp_segs_in(tcp_sk(sk), skb);
- 	ret = 0;
- 	if (!sock_owned_by_user(sk)) {
--		skb_to_free = sk->sk_rx_skb_cache;
--		sk->sk_rx_skb_cache = NULL;
- 		ret = tcp_v4_do_rcv(sk, skb);
- 	} else {
- 		if (tcp_add_backlog(sk, skb))
- 			goto discard_and_relse;
--		skb_to_free = NULL;
- 	}
- 	bh_unlock_sock(sk);
--	if (skb_to_free)
--		__kfree_skb(skb_to_free);
- 
- put_and_return:
- 	if (refcounted)
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 0ce52d46e4f8..8cf5ff2e9504 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1618,7 +1618,6 @@ static void tcp_v6_fill_cb(struct sk_buff *skb, const struct ipv6hdr *hdr,
- 
- INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- {
--	struct sk_buff *skb_to_free;
- 	int sdif = inet6_sdif(skb);
- 	int dif = inet6_iif(skb);
- 	const struct tcphdr *th;
-@@ -1754,17 +1753,12 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 	tcp_segs_in(tcp_sk(sk), skb);
- 	ret = 0;
- 	if (!sock_owned_by_user(sk)) {
--		skb_to_free = sk->sk_rx_skb_cache;
--		sk->sk_rx_skb_cache = NULL;
- 		ret = tcp_v6_do_rcv(sk, skb);
- 	} else {
- 		if (tcp_add_backlog(sk, skb))
- 			goto discard_and_relse;
--		skb_to_free = NULL;
- 	}
- 	bh_unlock_sock(sk);
--	if (skb_to_free)
--		__kfree_skb(skb_to_free);
- put_and_return:
- 	if (refcounted)
- 		sock_put(sk);
+
+Accepted patches:
+    - The list of accepted patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=3
+
+
+    netdev (if mptcp ML is in cc) (by: Mat Martineau, Wan Jiabing ):
+
+12468181  [v3] mptcp: Fix duplicated argument in protocol.h
+
+12469977  [net,v3,2/2] selftests: mptcp: clean tmp files in simult_flows
+12469981  [net,v3,1/2] mptcp: fix possible divide by zero
+
+12460895  [net-next,5/5] mptcp: make the locking tx schema more readable
+12460893  [net-next,4/5] mptcp: optimize the input options processing
+12460899  [net-next,3/5] mptcp: consolidate in_opt sub-options fields in
+a bitm...
+12460891  [net-next,2/5] mptcp: better binary layout for
+mptcp_options_received
+12460897  [net-next,1/5] mptcp: do not set unconditionally csum_reqd on
+incomin...
+
+
+    our repo (by: Florian Westphal, Mat Martineau, Matthieu Baerts,
+Paolo Abeni):
+
+12466695  [net-next] Squash-to: "mptcp: fix possible divide by zero"
+
+12465011  [v2,mptcp-next] mptcp: do not shrink snd_nxt when recovering
+
+12464899  [mptcp-next,2/2] Squash to "selftests: mptcp: add mptcp
+getsockopt te...
+12464901  [mptcp-next,1/2] Squash to "mptcp: add MPTCP_INFO getsockopt"
+
+12458723  [mptcp-net] mptcp: Only send extra TCP acks in eligible socket
+states
+
+
+
+Pending patches:
+    - The list of pending patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=*
+
+
+    netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+    our repo (by: Geliang Tang, Jiapeng Chong, Matthieu Baerts, Paolo
+Abeni):
+
+12282219: RFC: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to
+tcp.h/mptcp.h
+12282221: RFC: [RESEND,RFC,4/4] tcp: parse tcp options contained in
+reset packets:
+    - WIP
+
+12282223: RFC: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
+    - WIP
+
+12282225: RFC: [RESEND,1/5] tcp: make two mptcp helpers available to tcp
+stack
+12282227: RFC: [RESEND,5/5] mptcp: send fastclose if userspace closes
+socket with unread data:
+    - WIP
+
+12321111: Changes Requested: mptcp: Remove redundant assignment to
+remaining:
+    - TODO
+
+12471083: New: [v2,mptcp-next] mptcp: use OPTIONS_MPTCP_MPC:
+    - Already reviewed by Paolo
+
+12471789: New: [mptcp-next,1/4] tcp: expose the tcp_mark_push() and
+skb_entail() helpers
+12471791: New: [mptcp-next,2/4] mptcp: stop relaying on tcp_tx_skb_cache.
+12471793: New: [mptcp-next,3/4] Partially revert "tcp: factor out
+tcp_build_frag()"
+12471795: New: [mptcp-next,4/4] tcp: remove sk_{tr}x_skb_cache:
+    - mptcp: just another xmit path refactor
+    - Eric Dumazet would like to remove sk_{tr}x_skb_cache
+    - For that, we need to expose more code
+    - There is a small bug (out of bound access mem) but the goal is to
+have some feedback
+    - A new version (or squash-to patch) is expected for ↑ → Done
+    - Goal is to have review/feedback before sending that to Eric
+    - We are not using this cache to reduce data access but just to get
+an SKB from TCP stack. So removing it is good: less instructions.
+
+
+
+
+Issues on Github:
+    https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+
+    Recently opened (latest from last week: 229)
+
+/
+
+
+    Bugs (opened, flagged as "bug" and assigned)
+
+  226  selftests: `mptcp_join.sh -l`: copyfd_io_poll: poll timed out
+error [bug] [selftests] @fw-strlen:
+      - a patch has been share to drastically reduce the number of
+issues but doesn't fully fix it
+      - the remaining issues seem to be different
+      - Florian is looking at them ↑
+
+
+    Bugs (opened and flagged as "bug" and not assigned)
+
+  225  selftests: join: "remove subflows and signal" is unstable [bug]
+[selftests]
+  203  PM: server: accept subflows [bug]
+  181  implement data_fin ack retransmission for subflow in  TIME_WAIT
+state [bug]
+
+  137  selftests: simult_flows.sh: unbalanced bwidth tests are unstable
+[bug]:
+      - it doesn't seems to be really be a bug
+      - we probably need to change some timeout around not to give false
+positive with "slow" environments.
+
+   65  packetdrill/fixes: clearing properly the status in
+listen()/disconnect [bug]
+
+
+    In Progress (opened, new feature and assigned)
+
+  216  The infinite mapping support [enhancement] @geliangtang:
+      - It looks more complex than expected. Geliang will send messages
+if needed
+
+  194  Round-robin packet scheduler support [enhancement] @geliangtang
+  186  Add netlink command support [enhancement] @mjmartineau
+  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
+@dcaratti
+  158  iproute2: change backup mode (MP_PRIO) for active connections
+[enhancement] [iproute2] @dcaratti
+
+
+    For later (opened and not assigned)
+
+  224  support for `setsockopt(TCP_INQ)` [enhancement]
+  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
+  220  support for setsockopt(SOL_IP) [enhancement]
+  217  Support `IP_TRANSPARENT` [enhancement]
+  215  TCP Urgent pointer and MPTCP [enhancement]
+  213  add MPTCP man page [enhancement]
+  210  Accept new subflows when the listening socket is closed or bind
+to one IP? [enhancement]
+  208  better handing of ssk memory pressure in the TX path [enhancement]
+  202  Add sendmsg support for ancillary data [enhancement]
+  197  more mibs needed [enhancement]
+  180  Get an update when MPTCP fall back to TCP [enhancement]
+
+  177  improve retransmit subflow selection [enhancement]:
+      - Geliang would like to look at it
+      - With the current code, it is likely that we never retransmit on
+the same subflow so maybe we don't need to do more
+      - So probably best to check first what is needed by doing some
+experimentations before coding what is suggested.
+      - (or look at having possibilities to customise the packet
+scheduler, e.g. with BPF :) )
+
+  171  iproute2: support removing ID 0 [enhancement] [iproute2]
+  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
+port [enhancement] [packetdrill]
+  163  allow ss dumping msk socket in TCP_LISTEN status [enhancement]
+  150  remove completely workqueue usage [enhancement]
+  141  avoid acquiring mptcp_data_lock() twice in the receive path
+[enhancement]
+  133  PM: Closing the MPTCP connection when last subflow is not the
+initial one and its IP address is removed [enhancement]
+  128  When the last subflow is closed without DATA_FIN and msk
+Established, close msk (after a timeout) [enhancement]
+   79  allow 'force to MPTCP' mode: BPF [enhancement]
+   78  notify the application (userspace) when a subflow is
+added/removed [enhancement]
+   77  [gs]etsockopt: forward to new/existing SF [enhancement]
+   76  [gs]etsockopt per subflow: BPF [enhancement]
+   75  BPF: packet scheduler [enhancement]
+   74  BPF: path manager [enhancement]
+   61  move msk clone after ctx creation [enhancement]
+   59  TFO support [enhancement]
+   57  After a few attempts of failed MPTCP, directly fallback to TCP
+for new connections [enhancement]
+   48  MP_FASTCLOSE support (send part remaining) [enhancement]
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
+interface [enhancement] [syzkaller]
+   41  reduce indirect call usage [enhancement]
+   24  Revisit layout of struct mptcp_subflow_context [enhancement]
+   18  allow 'force to MPTCP' mode: sysctl [enhancement]
+
+
+    Recently closed (since last week)
+
+  229  [syzkaller] divide error in __tcp_select_window - path manager
+[bug] @mjmartineau
+  219  [syzkaller] divide error in tcp_write_xmit [bug] [syzkaller]
+
+
+
+FYI: Current Roadmap:
+    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+    - Current/Coming merge window (5.14):
+https://github.com/multipath-tcp/mptcp_net-next/projects/9
+    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+    - TODO: Matth: 5.15
+
+
+
+Patches to send to netdev:
+    - net:
+        - mptcp: Only send extra TCP acks in eligible socket states:
+            - Seems ready to be sent
+            - Mat will have a look at it
+
+    - net-next:
+        - /
+
+
+
+Extra tests:
+    - news about Syzkaller? (Christoph / Mat):
+        - → no more "divide by zero" errors \o/
+
+    - news about interop with mptcp.org/other stacks? (Christoph):
+        - /
+
+    - news about Intel's kbuild? (Mat):
+        - It is normal to see "[mptcp:export 1590/1600]" → high numbers
+        - But Mat will check just in case
+
+    - packetdrill (Davide):
+        - Poorva's PR is almost ready \o/
+
+    - Patchew (Davide):
+        - Website is working
+        - Container is ready monitoring new patches
+        - Patches are applied on a fork for the moment and the website
+is updated
+        - Idea is to check if this part is working well before pushing
+to the main repo
+        - Hopefully creating a tag without branch is enough for GH Actions
+
+    - CI (Matth):
+        - enabled: HEADERS_INSTALL / UAPI_HEADER_TEST
+        - linked to the issue reported by Intel's kbuild
+
+
+
+Next meeting:
+    - On Thursday, the 9th of September.
+    - Usual UTC time: 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20210909
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
