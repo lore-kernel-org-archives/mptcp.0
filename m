@@ -1,84 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB7F3FC1
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 14:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630680593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KqoSlox+28Xc6IWPe+MAl7EldR4ii3wl+hTK5Dge7Fs=;
-	b=ZT6n0QUuowdF58UeBBvDzQXOUBbI1uSmWua8C/yVHRyjgy8sBVdyLhguzXB9+ToazX3heZ
-	WjvEO17mwuAX4Wph6975QXJfFno/svgsr/Rw35xLmg5iQP/nZVOtAYSqclfjop5RPdOXn1
-	qj0ZtCXkFgloLxcSSut4/YZ0Fe1T18c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-P-s_erctNZ2NMRt7IbFzoA-1; Fri, 03 Sep 2021 10:49:51 -0400
-X-MC-Unique: P-s_erctNZ2NMRt7IbFzoA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F58DFC89
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 14:49:51 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9B8FF5D9D3
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 14:49:50 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next] mptcp: use lockdep_assert_held_once() instead of open-codying it
-Date: Fri,  3 Sep 2021 16:49:40 +0200
-Message-Id: <837dc50592c4843c4de722a4b9cbad6663458a07.1630680563.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2F52FAE
+	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 14:59:03 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id jg16so9517665ejc.1
+        for <mptcp@lists.linux.dev>; Fri, 03 Sep 2021 07:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N0cVL9O4W3FfniuNgxesWhTr37vcXzzhOygWpkqDcr4=;
+        b=flcgBjgaQKiaQpU75AbQRr/7SZC0QwRy8yh2lt+ne7cNKb1YnAtYOjhXg8Nqy3fSde
+         u4Z7914IzqrIIVWqUhnRckAPVy2BL+WY61dOvDiIwkkQ1G9LeM7o9Efdvs3smJBWxlvH
+         b6SE0qbTvw8Q0UomIBH84apkeMdGPVNg38bwp4qK+1VPbxibew6URZQD3Ci2mIhyJhMS
+         FEHynaxZC9lhd7XwmHYJTmLsFH2MFDeD17ku3yOvySRj0TATb3Ncuy38qqqG3Pkbervd
+         y+oztmZnpE/oB3HcioUAG4V5vsYVZPOwN5u7WXuWfEfSh4V5kGmqcQ90kpgbw2I1iOQY
+         MqOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N0cVL9O4W3FfniuNgxesWhTr37vcXzzhOygWpkqDcr4=;
+        b=O5UFbLO8cnDuHWwZrTRuOtLDY5D8AMadfS5f5EbPTUU/y9f8NqvzCo9xHshR+vL0TZ
+         df/XpLQis8IQ7OH4Hjc0LijX2ariK3tM+Qk/h5+L4flEDHWjRiqSG9TwCmhsM6NAQ713
+         DuDgYWJPRmlHdmxzSFU+1wl7oEG4oRZMQRy5ECbV2VL0m4uQaF7xuHSnM4wCC9vmf5g1
+         y1VIjT/+1SW5N5uK7w/MLdfBl0sAtxEH67K/leW65vYjWodtg65nAjnxWNdhr5VFf+/h
+         +vf1PMC7qQTVtTm6J7/YytaThZP8Dh6koGFBC1BPNiAkMR1JGK7u/5PnHYHNqKue94tH
+         ea5g==
+X-Gm-Message-State: AOAM530v37IoM0ctbghXubH1a3fuPFVpsVJW1JaGOwNfSC2u4W2pXY+t
+	x/c4EuNBVJbo7q7ibs9Ne+6b+wT+CrQOrw==
+X-Google-Smtp-Source: ABdhPJwNG6aCD1GjN1r74JBZhIMrX1bvNRw5KnD/z4PKLt05WsJFAY/ErM9R/iFJmKkf1KVMKxMbGA==
+X-Received: by 2002:a17:907:7f93:: with SMTP id qk19mr4689577ejc.433.1630681141735;
+        Fri, 03 Sep 2021 07:59:01 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id j5sm2907997ejb.96.2021.09.03.07.59.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Sep 2021 07:59:01 -0700 (PDT)
+Subject: Re: [PATCH mptcp-next] mptcp: use lockdep_assert_held_once() instead
+ of open-codying it
+To: Paolo Abeni <pabeni@redhat.com>
+References: <837dc50592c4843c4de722a4b9cbad6663458a07.1630680563.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <806f0a0c-565c-654d-7625-beb7eaad6b35@tessares.net>
+Date: Fri, 3 Sep 2021 16:59:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <837dc50592c4843c4de722a4b9cbad6663458a07.1630680563.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-We have a few more places where the mptcp code duplicates
-lockdep_assert_held_once(). Let's use the existing macro and
-avoid a bunch of compiler's conditional.
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+On 03/09/2021 16:49, Paolo Abeni wrote:
+> We have a few more places where the mptcp code duplicates
+> lockdep_assert_held_once(). Let's use the existing macro and
+> avoid a bunch of compiler's conditional.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 101e61bb2a80..472319b7e046 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -956,9 +956,7 @@ static void __mptcp_update_wmem(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
--#ifdef CONFIG_LOCKDEP
--	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock.slock));
--#endif
-+	lockdep_assert_held_once(&sk->sk_lock.slock);
- 
- 	if (!msk->wmem_reserved)
- 		return;
-@@ -1117,9 +1115,8 @@ static void __mptcp_clean_una(struct sock *sk)
- 
- static void __mptcp_clean_una_wakeup(struct sock *sk)
- {
--#ifdef CONFIG_LOCKDEP
--	WARN_ON_ONCE(!lockdep_is_held(&sk->sk_lock.slock));
--#endif
-+	lockdep_assert_held_once(&sk->sk_lock.slock);
-+
- 	__mptcp_clean_una(sk);
- 	mptcp_write_space(sk);
- }
+Good idea!
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+
+Now in our tree:
+
+- 63afb2abe5ae: mptcp: use lockdep_assert_held_once() instead of
+open-codying it
+- Results: 396fa2905e69..7755d2ada382
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210903T145841
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210903T145841
+
+Cheers,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
