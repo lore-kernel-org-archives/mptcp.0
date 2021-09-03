@@ -1,296 +1,228 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3188972
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 00:30:03 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10095"; a="219342678"
-X-IronPort-AV: E=Sophos;i="5.85,263,1624345200"; 
-   d="scan'208";a="219342678"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 17:30:03 -0700
-X-IronPort-AV: E=Sophos;i="5.85,263,1624345200"; 
-   d="scan'208";a="689376468"
-Received: from jthackl1-mobl1.amr.corp.intel.com ([10.209.37.18])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 17:30:02 -0700
-Date: Thu, 2 Sep 2021 17:30:02 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-next 2/4] mptcp: stop relaying on
- tcp_tx_skb_cache.
-In-Reply-To: <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com>
-Message-ID: <14eebc85-4164-7c1c-dece-9cf3dc9d8d9c@linux.intel.com>
-References: <cover.1630595171.git.pabeni@redhat.com> <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C560472
+	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 00:54:55 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id d3-20020a17090ae28300b0019629c96f25so2784061pjz.2
+        for <mptcp@lists.linux.dev>; Thu, 02 Sep 2021 17:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Lca39X6rvURTsp0gssNupZzTtHHtG1UchATZDWZ5nVQ=;
+        b=Twuz9BzCAkSKWnAh6Qz2Awx43kfMjg+gkxTXvQ0ZnIzCLRphyPyewuZL5YJgTI8UTv
+         DI6lSKgwZhFJoyBjSZnfbHo5A+BDS4jILZO/C1o/5Ti1kgXUIbGUfDaWnuW1bkr6ku9r
+         VV77+QYAug0cM2ar/EHDhYUj2sJY31jrC8Tp4ktYtGVrtft1D1rC+ouobrMamvYlGrnc
+         0G0kxyJ8/GP07JqJGa9ROFgnnMLjHmbg7zeGqquFQiNEWlSWIluKvJUyHvi9Fri0ib6A
+         48NLa63CUI9sEtY0GhDzUiUlP+noaZBKcAdUgJNr4GWwggEzNmcwST3ILNECmOUTAvgD
+         9KEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Lca39X6rvURTsp0gssNupZzTtHHtG1UchATZDWZ5nVQ=;
+        b=TOq/ajPSdRIS1hrfAcSUkOkhXWYKRec/gwzHb3TV/8ipJavhkH08dSTVLmCZvczGGg
+         UyKg7kSCi18emeueH6yYRtfO8gweT5rQYC6TMGtFY69a+KdAfEhE+ZZD4A0CAmaW7Wq7
+         yC6mrMs7fcjT8PfCg+XdEhRWk1g2rOYLp2cXy3rj6JCBKkjvXq7GyIXqfnwWMt0RVFIF
+         nO1oSGuwdW+9nvMyo+BcgDEjIIrH4Ygb1eDp6k+qpB09wMOKZZcI6XlvBMEtyBVOqGm+
+         QfEiIoXHa1ng+z210Ofpb1KoTfp+LaKORkp27m87mHaZxFJZ1ZNP/sqqy/S76AAC4AEv
+         r8xQ==
+X-Gm-Message-State: AOAM530a610+G+l3GMmS2Dfqhfb4YPEbkJ8Ogm64ESf59zrkuWPW6G7U
+	4FhPsNXJwpQALHBlujD1QNoqDfB+q3gkd6568Wg=
+X-Google-Smtp-Source: ABdhPJwYVaUtrPtOcocVPCPbr4B+KZJ5Kr/cR8wHXPyp1Wr47EY/q8z0daZUTzvc8kZ9JzqXwICMQAKBOLNP30tULfk=
+X-Received: by 2002:a17:90a:31b:: with SMTP id 27mr7082070pje.6.1630630495373;
+ Thu, 02 Sep 2021 17:54:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20210902185119.283187-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210902185119.283187-1-mathew.j.martineau@linux.intel.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Fri, 3 Sep 2021 08:54:44 +0800
+Message-ID: <CA+WQbwsyNse7yE4tujakK_W68sXg4GMfB-Z5545xvUWny+eG2A@mail.gmail.com>
+Subject: Re: [PATCH net] mptcp: Only send extra TCP acks in eligible socket states
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2 Sep 2021, Paolo Abeni wrote:
+Mat Martineau <mathew.j.martineau@linux.intel.com> =E4=BA=8E2021=E5=B9=B49=
+=E6=9C=883=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=882:51=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> Recent changes exposed a bug where specifically-timed requests to the
+> path manager netlink API could trigger a divide-by-zero in
+> __tcp_select_window(), as syzkaller does:
+>
+> divide error: 0000 [#1] SMP KASAN NOPTI
+> CPU: 0 PID: 9667 Comm: syz-executor.0 Not tainted 5.14.0-rc6+ #3
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubunt=
+u1.1 04/01/2014
+> RIP: 0010:__tcp_select_window+0x509/0xa60 net/ipv4/tcp_output.c:3016
+> Code: 44 89 ff e8 c9 29 e9 fd 45 39 e7 0f 8d 20 ff ff ff e8 db 28 e9 fd 4=
+4 89 e3 e9 13 ff ff ff e8 ce 28 e9 fd 44 89 e0 44 89 e3 99 <f7> 7c 24 04 29=
+ d3 e9 fc fe ff ff e8 b7 28 e9 fd 44 89 f1 48 89 ea
+> RSP: 0018:ffff888031ccf020 EFLAGS: 00010216
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000040000
+> RDX: 0000000000000000 RSI: ffff88811532c080 RDI: 0000000000000002
+> RBP: 0000000000000000 R08: ffffffff835807c2 R09: 0000000000000000
+> R10: 0000000000000004 R11: ffffed1020b92441 R12: 0000000000000000
+> R13: 1ffff11006399e08 R14: 0000000000000000 R15: 0000000000000000
+> FS:  00007fa4c8344700(0000) GS:ffff88811ae00000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2f424000 CR3: 000000003e4e2003 CR4: 0000000000770ef0
+> PKRU: 55555554
+> Call Trace:
+>  tcp_select_window net/ipv4/tcp_output.c:264 [inline]
+>  __tcp_transmit_skb+0xc00/0x37a0 net/ipv4/tcp_output.c:1351
+>  __tcp_send_ack.part.0+0x3ec/0x760 net/ipv4/tcp_output.c:3972
+>  __tcp_send_ack net/ipv4/tcp_output.c:3978 [inline]
+>  tcp_send_ack+0x7d/0xa0 net/ipv4/tcp_output.c:3978
+>  mptcp_pm_nl_addr_send_ack+0x1ab/0x380 net/mptcp/pm_netlink.c:654
+>  mptcp_pm_remove_addr+0x161/0x200 net/mptcp/pm.c:58
+>  mptcp_nl_remove_id_zero_address+0x197/0x460 net/mptcp/pm_netlink.c:1328
+>  mptcp_nl_cmd_del_addr+0x98b/0xd40 net/mptcp/pm_netlink.c:1359
+>  genl_family_rcv_msg_doit.isra.0+0x225/0x340 net/netlink/genetlink.c:731
+>  genl_family_rcv_msg net/netlink/genetlink.c:775 [inline]
+>  genl_rcv_msg+0x341/0x5b0 net/netlink/genetlink.c:792
+>  netlink_rcv_skb+0x148/0x430 net/netlink/af_netlink.c:2504
+>  genl_rcv+0x24/0x40 net/netlink/genetlink.c:803
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1314 [inline]
+>  netlink_unicast+0x537/0x750 net/netlink/af_netlink.c:1340
+>  netlink_sendmsg+0x846/0xd80 net/netlink/af_netlink.c:1929
+>  sock_sendmsg_nosec net/socket.c:704 [inline]
+>  sock_sendmsg+0x14e/0x190 net/socket.c:724
+>  ____sys_sendmsg+0x709/0x870 net/socket.c:2403
+>  ___sys_sendmsg+0xff/0x170 net/socket.c:2457
+>  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2486
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+>
+> mptcp_pm_nl_addr_send_ack() was attempting to send a TCP ACK on the
+> first subflow in the MPTCP socket's connection list without validating
+> that the subflow was in a suitable connection state. To address this,
+> always validate subflow state when sending extra ACKs on subflows
+> for address advertisement or subflow priority change.
+>
+> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
 
-> We want to revert the skb TX cache, but MPTCP is currently
-> using it unconditionally.
->
-> Rework the MPTCP tx code, so that tcp_tx_skb_cache is not
-> needed anymore: do the whole coalescing check, skb allocation
-> skb initialization/update inside mptcp_sendmsg_frag(), quite
-> alike the current TCP code.
->
+Acked-by: Geliang Tang <geliangtang@gmail.com>
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/229
+> Co-developed-by: Paolo Abeni <pabeni@redhat.com>
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 > ---
-> v1 -> v2:
-> - hopefully fix OoB, fetching nr_frags on new skbs
-> ---
-> net/mptcp/protocol.c | 132 +++++++++++++++++++++++++------------------
-> 1 file changed, 77 insertions(+), 55 deletions(-)
+>  net/mptcp/pm_netlink.c | 10 ++--------
+>  net/mptcp/protocol.c   | 21 ++++++++++++---------
+>  net/mptcp/protocol.h   |  1 +
+>  3 files changed, 15 insertions(+), 17 deletions(-)
 >
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 1e4289c507ff..c4f9a5ce3815 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -644,15 +644,12 @@ void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *m=
+sk)
+>         subflow =3D list_first_entry_or_null(&msk->conn_list, typeof(*sub=
+flow), node);
+>         if (subflow) {
+>                 struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> -               bool slow;
+>
+>                 spin_unlock_bh(&msk->pm.lock);
+>                 pr_debug("send ack for %s",
+>                          mptcp_pm_should_add_signal(msk) ? "add_addr" : "=
+rm_addr");
+>
+> -               slow =3D lock_sock_fast(ssk);
+> -               tcp_send_ack(ssk);
+> -               unlock_sock_fast(ssk, slow);
+> +               mptcp_subflow_send_ack(ssk);
+>                 spin_lock_bh(&msk->pm.lock);
+>         }
+>  }
+> @@ -669,7 +666,6 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *m=
+sk,
+>                 struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+>                 struct sock *sk =3D (struct sock *)msk;
+>                 struct mptcp_addr_info local;
+> -               bool slow;
+>
+>                 local_address((struct sock_common *)ssk, &local);
+>                 if (!addresses_equal(&local, addr, addr->port))
+> @@ -682,9 +678,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *m=
+sk,
+>
+>                 spin_unlock_bh(&msk->pm.lock);
+>                 pr_debug("send ack for mp_prio");
+> -               slow =3D lock_sock_fast(ssk);
+> -               tcp_send_ack(ssk);
+> -               unlock_sock_fast(ssk, slow);
+> +               mptcp_subflow_send_ack(ssk);
+>                 spin_lock_bh(&msk->pm.lock);
+>
+>                 return 0;
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index faf6e7000d18..101e61bb2a80 100644
+> index a4c6e37e07c9..2602f1386160 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1224,6 +1224,7 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
-> 		if (likely(__mptcp_add_ext(skb, gfp))) {
-> 			skb_reserve(skb, MAX_TCP_HEADER);
-> 			skb->reserved_tailroom = skb->end - skb->tail;
-> +			INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
-
-Is this related to tx_skb_cache? Looks like it could be a -net fix.
-
-> 			return skb;
-> 		}
-> 		__kfree_skb(skb);
-> @@ -1233,31 +1234,23 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
-> 	return NULL;
-> }
+> @@ -440,19 +440,22 @@ static bool tcp_can_send_ack(const struct sock *ssk=
+)
+>                (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLO=
+SE | TCPF_LISTEN));
+>  }
 >
-> -static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
-> +static struct sk_buff *__mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
-> {
-> 	struct sk_buff *skb;
+> +void mptcp_subflow_send_ack(struct sock *ssk)
+> +{
+> +       bool slow;
+> +
+> +       slow =3D lock_sock_fast(ssk);
+> +       if (tcp_can_send_ack(ssk))
+> +               tcp_send_ack(ssk);
+> +       unlock_sock_fast(ssk, slow);
+> +}
+> +
+>  static void mptcp_send_ack(struct mptcp_sock *msk)
+>  {
+>         struct mptcp_subflow_context *subflow;
 >
-> -	if (ssk->sk_tx_skb_cache) {
-> -		skb = ssk->sk_tx_skb_cache;
-> -		if (unlikely(!skb_ext_find(skb, SKB_EXT_MPTCP) &&
-> -			     !__mptcp_add_ext(skb, gfp)))
-> -			return false;
-> -		return true;
-> -	}
+> -       mptcp_for_each_subflow(msk, subflow) {
+> -               struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> -               bool slow;
 > -
-> 	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
-> 	if (!skb)
-> -		return false;
-> +		return NULL;
+> -               slow =3D lock_sock_fast(ssk);
+> -               if (tcp_can_send_ack(ssk))
+> -                       tcp_send_ack(ssk);
+> -               unlock_sock_fast(ssk, slow);
+> -       }
+> +       mptcp_for_each_subflow(msk, subflow)
+> +               mptcp_subflow_send_ack(mptcp_subflow_tcp_sock(subflow));
+>  }
 >
-> 	if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
-> -		ssk->sk_tx_skb_cache = skb;
-> -		return true;
-> +		skb_entail(ssk, skb);
-> +		return skb;
-> 	}
-> 	kfree_skb(skb);
-> -	return false;
-> +	return NULL;
-> }
+>  static void mptcp_subflow_cleanup_rbuf(struct sock *ssk)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 64c9a30e0871..d3e6fd1615f1 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -573,6 +573,7 @@ void __init mptcp_subflow_init(void);
+>  void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
+>  void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>                      struct mptcp_subflow_context *subflow);
+> +void mptcp_subflow_send_ack(struct sock *ssk);
+>  void mptcp_subflow_reset(struct sock *ssk);
+>  void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+>  struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
 >
-> -static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
-> +static struct sk_buff *mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
-> {
-> 	gfp_t gfp = data_lock_held ? GFP_ATOMIC : sk->sk_allocation;
->
-> @@ -1287,23 +1280,29 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 			      struct mptcp_sendmsg_info *info)
-> {
-> 	u64 data_seq = dfrag->data_seq + info->sent;
-> +	int offset = dfrag->offset + info->sent;
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> 	bool zero_window_probe = false;
-> 	struct mptcp_ext *mpext = NULL;
-> -	struct sk_buff *skb, *tail;
-> -	bool must_collapse = false;
-> -	int size_bias = 0;
-> -	int avail_size;
-> -	size_t ret = 0;
-> +	bool can_coalesce = false;
-> +	bool reuse_skb = true;
-> +	struct sk_buff *skb;
-> +	size_t copy;
-> +	int i;
->
-> 	pr_debug("msk=%p ssk=%p sending dfrag at seq=%llu len=%u already sent=%u",
-> 		 msk, ssk, dfrag->data_seq, dfrag->data_len, info->sent);
->
-> +	if (WARN_ON_ONCE(info->sent > info->limit ||
-> +			 info->limit > dfrag->data_len))
-> +		return 0;
-> +
-> 	/* compute send limit */
-> 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
-> -	avail_size = info->size_goal;
-> +	copy = info->size_goal;
-> +
-> 	skb = tcp_write_queue_tail(ssk);
-> -	if (skb) {
-> +	if (skb && (copy > skb->len)) {
-> 		/* Limit the write to the size available in the
-> 		 * current skb, if any, so that we create at most a new skb.
-> 		 * Explicitly tells TCP internals to avoid collapsing on later
-> @@ -1316,53 +1315,76 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 			goto alloc_skb;
-> 		}
->
-> -		must_collapse = (info->size_goal - skb->len > 0) &&
-> -				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
-> -		if (must_collapse) {
-> -			size_bias = skb->len;
-> -			avail_size = info->size_goal - skb->len;
-> +		i = skb_shinfo(skb)->nr_frags;
-> +		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
-> +		if (!can_coalesce && i >= sysctl_max_skb_frags) {
-> +			tcp_mark_push(tcp_sk(ssk), skb);
-> +			goto alloc_skb;
-> 		}
-> -	}
->
-> +		copy -= skb->len;
-> +	} else {
-> alloc_skb:
-> -	if (!must_collapse && !ssk->sk_tx_skb_cache &&
-> -	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
-> -		return 0;
-> +		skb = mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held);
-> +		if (!skb)
-> +			return -ENOMEM;
-> +
-> +		i = skb_shinfo(skb)->nr_frags;
-> +		reuse_skb = false;
-> +		mpext = skb_ext_find(skb, SKB_EXT_MPTCP);
-> +	}
->
-> 	/* Zero window and all data acked? Probe. */
-> -	avail_size = mptcp_check_allowed_size(msk, data_seq, avail_size);
-> -	if (avail_size == 0) {
-> +	copy = mptcp_check_allowed_size(msk, data_seq, copy);
-> +	if (copy == 0) {
-> 		u64 snd_una = READ_ONCE(msk->snd_una);
->
-> -		if (skb || snd_una != msk->snd_nxt)
-> +		if (skb || snd_una != msk->snd_nxt) {
-> +			tcp_remove_empty_skb(ssk, tcp_write_queue_tail(ssk));
-> 			return 0;
-> +		}
-> +
-> 		zero_window_probe = true;
-> 		data_seq = snd_una - 1;
-> -		avail_size = 1;
-> -	}
-> +		copy = 1;
->
-> -	if (WARN_ON_ONCE(info->sent > info->limit ||
-> -			 info->limit > dfrag->data_len))
-> -		return 0;
-> +		/* all mptcp-level data is acked, no skbs should be present into the
-> +		 * ssk write queue
-> +		 */
-> +		WARN_ON_ONCE(reuse_skb);
-> +	}
->
-> -	ret = info->limit - info->sent;
-> -	tail = tcp_build_frag(ssk, avail_size + size_bias, info->flags,
-> -			      dfrag->page, dfrag->offset + info->sent, &ret);
-> -	if (!tail) {
-> -		tcp_remove_empty_skb(sk, tcp_write_queue_tail(ssk));
-> +	copy = min_t(size_t, copy, info->limit - info->sent);
-> +	if (!sk_wmem_schedule(ssk, copy)) {
-> +		tcp_remove_empty_skb(ssk, tcp_write_queue_tail(ssk));
-> 		return -ENOMEM;
-> 	}
->
-> -	/* if the tail skb is still the cached one, collapsing really happened.
-> -	 */
-> -	if (skb == tail) {
-> -		TCP_SKB_CB(tail)->tcp_flags &= ~TCPHDR_PSH;
-> -		mpext->data_len += ret;
-> +	if (can_coalesce) {
-> +		skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
-> +	} else {
-> +		get_page(dfrag->page);
-> +		skb_fill_page_desc(skb, i, dfrag->page, offset, copy);
-> +	}
-> +
-> +	skb->len += copy;
-> +	skb->data_len += copy;
-> +	skb->truesize += copy;
-> +	sk_wmem_queued_add(ssk, copy);
-> +	sk_mem_charge(ssk, copy);
-> +	skb->ip_summed = CHECKSUM_PARTIAL;
-> +	WRITE_ONCE(tcp_sk(ssk)->write_seq, tcp_sk(ssk)->write_seq + copy);
-> +	TCP_SKB_CB(skb)->end_seq += copy;
-> +	tcp_skb_pcount_set(skb, 0);
-> +
-> +	/* on skb reuse we just need to update the DSS len */
-> +	if (reuse_skb) {
-> +		TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_PSH;
-> +		mpext->data_len += copy;
-
-Should have the WARN_ON_ONCE(!mpext) before this block - while it 
-shouldn't happen, it's slightly less impossible in the reuse_skb case.
-
-I'll start some tests running.
-
-
-Mat
-
-
-> 		WARN_ON_ONCE(zero_window_probe);
-> 		goto out;
-> 	}
->
-> -	mpext = skb_ext_find(tail, SKB_EXT_MPTCP);
-> 	if (WARN_ON_ONCE(!mpext)) {
-> 		/* should never reach here, stream corrupted */
-> 		return -EINVAL;
-> @@ -1371,7 +1393,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 	memset(mpext, 0, sizeof(*mpext));
-> 	mpext->data_seq = data_seq;
-> 	mpext->subflow_seq = mptcp_subflow_ctx(ssk)->rel_write_seq;
-> -	mpext->data_len = ret;
-> +	mpext->data_len = copy;
-> 	mpext->use_map = 1;
-> 	mpext->dsn64 = 1;
->
-> @@ -1380,18 +1402,18 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 		 mpext->dsn64);
->
-> 	if (zero_window_probe) {
-> -		mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
-> +		mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
-> 		mpext->frozen = 1;
-> 		if (READ_ONCE(msk->csum_enabled))
-> -			mptcp_update_data_checksum(tail, ret);
-> +			mptcp_update_data_checksum(skb, copy);
-> 		tcp_push_pending_frames(ssk);
-> 		return 0;
-> 	}
-> out:
-> 	if (READ_ONCE(msk->csum_enabled))
-> -		mptcp_update_data_checksum(tail, ret);
-> -	mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
-> -	return ret;
-> +		mptcp_update_data_checksum(skb, copy);
-> +	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
-> +	return copy;
-> }
->
-> #define MPTCP_SEND_BURST_SIZE		((1 << 16) - \
-> -- 
-> 2.26.3
+> base-commit: d12e1c4649883e8ca5e8ff341e1948b3b6313259
+> --
+> 2.33.0
 >
 >
->
-
---
-Mat Martineau
-Intel
