@@ -1,51 +1,24 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C232FAE
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 08:15:35 +0000 (UTC)
-Received: by mail-pg1-f177.google.com with SMTP id f129so4844704pgc.1
-        for <mptcp@lists.linux.dev>; Fri, 03 Sep 2021 01:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X0r8xkabuMTnFKOLePBis2c8/koRRx5UZF7RmXhOtk8=;
-        b=WcmfAohf4+E6+PH9nlkVaY+Hj8KWGEjXdIsX4THzsAlFOaOF6gfaPxqTy8mkpQhazq
-         m7gDIInyH/b+18ydcA16ci8okZCp9FyO/5jgFmsNdz958pCHHeGir1i5MOiYSVhyAnqT
-         25NzY/XJICxvMFilnVfcvlfhRr0LyEQjXRLKu9Od9jQ8XHHOGC/VZ0fpBoIkbW0PbtuY
-         Pzj2w2+j5t5jr7o/5wkspCNMmFLznIk3ZNQAWPtpJPG2LEyB0jEesm4CnmHioEBDZIrY
-         xC6eqmlbyIBd3a6ucIUaUftTbrfTIUXIL3FGf0OTL8gDFag37oRpRfChGEIEBqATBN01
-         bTvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X0r8xkabuMTnFKOLePBis2c8/koRRx5UZF7RmXhOtk8=;
-        b=QpvJ8DXz0t9HDxPUXQyh0q+vDCl5TP/8eTg9fxgRd3a3oJh/EmqvmrV0t6fElQDWZl
-         7LLl7cZm1s7gboFOye/wU3GRv+b12gk4XeTBnBhS9m9bEJPoCbrYEb+KJ/0odZPDHPV9
-         WNYyO66QtyHrP1Av8a4WRcwQouWZZRu0IpdXNJZOnopU8dkwb4MzxWkcZ/OHO0DigqVw
-         GOEdnlbHCApxsqmivw/mOt5zl4R8J+gk80C6zwT91Ymm2grHIBx/Phqn/zGMNRIJwtq5
-         uK2CLJITVBCmU55gPSP5BTfSo9DuZBwo9sC5rTUC6w0gj55Sy259/y3QaFzIZi8U1OJP
-         5Egw==
-X-Gm-Message-State: AOAM533YQmAVOX/PUko33+b0EMFlutbfrji2Rl8lxOjbRFyVZb+BzuGs
-	c/CygaGAE03TRahILYkTsr46gSP2VC8=
-X-Google-Smtp-Source: ABdhPJwzYZPqJPNT43We1G+U3Dn2lsng7M7Fd4/OtiGl155w9kwb5NWfAuV8Y/42pikL9DcxokdnRA==
-X-Received: by 2002:a65:6283:: with SMTP id f3mr2515774pgv.369.1630656934551;
-        Fri, 03 Sep 2021 01:15:34 -0700 (PDT)
-Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id j6sm5254452pgq.0.2021.09.03.01.15.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Sep 2021 01:15:33 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev,
-	geliangtang@gmail.com
-Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [MPTCP][PATCH RFC 5/5] DO-NOT-MERGE: mptcp: mp_fail test
-Date: Fri,  3 Sep 2021 16:15:13 +0800
-Message-Id: <a02cf200d137b30aa20fa879b0159fb2a847dcb9.1630656206.git.geliangtang@xiaomi.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <8c484be5b9db1c3b81690bdba044042f57bf14b1.1630656206.git.geliangtang@xiaomi.com>
-References: <cover.1630656206.git.geliangtang@xiaomi.com> <c9504a9a84a501016ddc53ebbf644f827233b7e0.1630656206.git.geliangtang@xiaomi.com> <7d43c0b1c5f336641d9c8edef80cd0e37b93b668.1630656206.git.geliangtang@xiaomi.com> <3a3eda61ce3b885b2c43cbe63320ecf068bf8267.1630656206.git.geliangtang@xiaomi.com> <8c484be5b9db1c3b81690bdba044042f57bf14b1.1630656206.git.geliangtang@xiaomi.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1866C3FCD
+	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 11:10:07 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 98EB9610C8;
+	Fri,  3 Sep 2021 11:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1630667406;
+	bh=YArepy833r2AStUclxTaPudv9UDRXYJrbgxsKWQ3fIw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=r85WWH4Rl67aBnSyFpuCEeCj97AcRz6BjzQ9ZmeXClpt8CHcrcg35aqipIS4j+s0r
+	 yrrbvALWv3zs1JIGzcgCfsNW+FXpAu5nGRVeEn+BKgQ28g05lVrIIssEsHcKfPkEU+
+	 4sIwOXx3nK0a0YrHrxfnlm1/4hrJvKtCllKLefAiGuhnxj9mnXdaDfYj29e22sUs7h
+	 zqfO4QfD4kkuUpBZOZNvjtw69lBZygE1UvqFTp9QmRmy6AJ85l49rktlxU3GMFV7wY
+	 XBnKk/BJFONUfagLUlfYn/DWq1Cc4In3Q7lVDkwTD3fByRfhdUXmHBAxDCvIg0PLlZ
+	 IKhMRQ3m1Cl+g==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 8F61460A3E;
+	Fri,  3 Sep 2021 11:10:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -53,72 +26,77 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] mptcp: Only send extra TCP acks in eligible socket states
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163066740658.18620.16700027396845323471.git-patchwork-notify@kernel.org>
+Date: Fri, 03 Sep 2021 11:10:06 +0000
+References: <20210902185119.283187-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210902185119.283187-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com
 
-From: Geliang Tang <geliangtang@xiaomi.com>
+Hello:
 
-./mptcp_join.sh -Cf
+This patch was applied to netdev/net.git (refs/heads/master):
 
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
----
- net/mptcp/protocol.c                           |  8 ++++++++
- .../testing/selftests/net/mptcp/mptcp_join.sh  | 18 ++++++++++++++++++
- 2 files changed, 26 insertions(+)
+On Thu,  2 Sep 2021 11:51:19 -0700 you wrote:
+> Recent changes exposed a bug where specifically-timed requests to the
+> path manager netlink API could trigger a divide-by-zero in
+> __tcp_select_window(), as syzkaller does:
+> 
+> divide error: 0000 [#1] SMP KASAN NOPTI
+> CPU: 0 PID: 9667 Comm: syz-executor.0 Not tainted 5.14.0-rc6+ #3
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+> RIP: 0010:__tcp_select_window+0x509/0xa60 net/ipv4/tcp_output.c:3016
+> Code: 44 89 ff e8 c9 29 e9 fd 45 39 e7 0f 8d 20 ff ff ff e8 db 28 e9 fd 44 89 e3 e9 13 ff ff ff e8 ce 28 e9 fd 44 89 e0 44 89 e3 99 <f7> 7c 24 04 29 d3 e9 fc fe ff ff e8 b7 28 e9 fd 44 89 f1 48 89 ea
+> RSP: 0018:ffff888031ccf020 EFLAGS: 00010216
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000040000
+> RDX: 0000000000000000 RSI: ffff88811532c080 RDI: 0000000000000002
+> RBP: 0000000000000000 R08: ffffffff835807c2 R09: 0000000000000000
+> R10: 0000000000000004 R11: ffffed1020b92441 R12: 0000000000000000
+> R13: 1ffff11006399e08 R14: 0000000000000000 R15: 0000000000000000
+> FS:  00007fa4c8344700(0000) GS:ffff88811ae00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2f424000 CR3: 000000003e4e2003 CR4: 0000000000770ef0
+> PKRU: 55555554
+> Call Trace:
+>  tcp_select_window net/ipv4/tcp_output.c:264 [inline]
+>  __tcp_transmit_skb+0xc00/0x37a0 net/ipv4/tcp_output.c:1351
+>  __tcp_send_ack.part.0+0x3ec/0x760 net/ipv4/tcp_output.c:3972
+>  __tcp_send_ack net/ipv4/tcp_output.c:3978 [inline]
+>  tcp_send_ack+0x7d/0xa0 net/ipv4/tcp_output.c:3978
+>  mptcp_pm_nl_addr_send_ack+0x1ab/0x380 net/mptcp/pm_netlink.c:654
+>  mptcp_pm_remove_addr+0x161/0x200 net/mptcp/pm.c:58
+>  mptcp_nl_remove_id_zero_address+0x197/0x460 net/mptcp/pm_netlink.c:1328
+>  mptcp_nl_cmd_del_addr+0x98b/0xd40 net/mptcp/pm_netlink.c:1359
+>  genl_family_rcv_msg_doit.isra.0+0x225/0x340 net/netlink/genetlink.c:731
+>  genl_family_rcv_msg net/netlink/genetlink.c:775 [inline]
+>  genl_rcv_msg+0x341/0x5b0 net/netlink/genetlink.c:792
+>  netlink_rcv_skb+0x148/0x430 net/netlink/af_netlink.c:2504
+>  genl_rcv+0x24/0x40 net/netlink/genetlink.c:803
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1314 [inline]
+>  netlink_unicast+0x537/0x750 net/netlink/af_netlink.c:1340
+>  netlink_sendmsg+0x846/0xd80 net/netlink/af_netlink.c:1929
+>  sock_sendmsg_nosec net/socket.c:704 [inline]
+>  sock_sendmsg+0x14e/0x190 net/socket.c:724
+>  ____sys_sendmsg+0x709/0x870 net/socket.c:2403
+>  ___sys_sendmsg+0xff/0x170 net/socket.c:2457
+>  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2486
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> 
+> [...]
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4987909991cd..2d05236ad759 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1301,6 +1301,8 @@ static void mptcp_update_infinite_mapping(struct mptcp_sock *msk, struct mptcp_e
- 		 mpext->data_seq, mpext->subflow_seq, mpext->data_len, mpext->dsn64);
- }
- 
-+static int i;
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1413,6 +1415,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	if (READ_ONCE(msk->snd_infinite_mapping_enable))
- 		mptcp_update_infinite_mapping(msk, mpext);
- 
-+	pr_debug("%s i=%d", __func__, i++);
-+	if (i == 20)
-+		tail->data_len = 1;
-+	if (i > 40)
-+		i = 0;
-+
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
- 	return ret;
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 255793c5ac4f..16fa761607e4 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -939,6 +939,24 @@ chk_link_usage()
- 
- subflows_tests()
- {
-+	# 1 subflow
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "1 subflow" 0 0 0
-+
-+	exit
-+
-+	# multiple subflows
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "multiple subflows" 2 2 2
-+
- 	reset
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "no JOIN" "0" "0" "0"
--- 
-2.31.1
+Here is the summary with links:
+  - [net] mptcp: Only send extra TCP acks in eligible socket states
+    https://git.kernel.org/netdev/net/c/340fa6667a69
+
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
