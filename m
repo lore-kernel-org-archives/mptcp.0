@@ -1,87 +1,266 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2F52FAE
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 14:59:03 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id jg16so9517665ejc.1
-        for <mptcp@lists.linux.dev>; Fri, 03 Sep 2021 07:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N0cVL9O4W3FfniuNgxesWhTr37vcXzzhOygWpkqDcr4=;
-        b=flcgBjgaQKiaQpU75AbQRr/7SZC0QwRy8yh2lt+ne7cNKb1YnAtYOjhXg8Nqy3fSde
-         u4Z7914IzqrIIVWqUhnRckAPVy2BL+WY61dOvDiIwkkQ1G9LeM7o9Efdvs3smJBWxlvH
-         b6SE0qbTvw8Q0UomIBH84apkeMdGPVNg38bwp4qK+1VPbxibew6URZQD3Ci2mIhyJhMS
-         FEHynaxZC9lhd7XwmHYJTmLsFH2MFDeD17ku3yOvySRj0TATb3Ncuy38qqqG3Pkbervd
-         y+oztmZnpE/oB3HcioUAG4V5vsYVZPOwN5u7WXuWfEfSh4V5kGmqcQ90kpgbw2I1iOQY
-         MqOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N0cVL9O4W3FfniuNgxesWhTr37vcXzzhOygWpkqDcr4=;
-        b=O5UFbLO8cnDuHWwZrTRuOtLDY5D8AMadfS5f5EbPTUU/y9f8NqvzCo9xHshR+vL0TZ
-         df/XpLQis8IQ7OH4Hjc0LijX2ariK3tM+Qk/h5+L4flEDHWjRiqSG9TwCmhsM6NAQ713
-         DuDgYWJPRmlHdmxzSFU+1wl7oEG4oRZMQRy5ECbV2VL0m4uQaF7xuHSnM4wCC9vmf5g1
-         y1VIjT/+1SW5N5uK7w/MLdfBl0sAtxEH67K/leW65vYjWodtg65nAjnxWNdhr5VFf+/h
-         +vf1PMC7qQTVtTm6J7/YytaThZP8Dh6koGFBC1BPNiAkMR1JGK7u/5PnHYHNqKue94tH
-         ea5g==
-X-Gm-Message-State: AOAM530v37IoM0ctbghXubH1a3fuPFVpsVJW1JaGOwNfSC2u4W2pXY+t
-	x/c4EuNBVJbo7q7ibs9Ne+6b+wT+CrQOrw==
-X-Google-Smtp-Source: ABdhPJwNG6aCD1GjN1r74JBZhIMrX1bvNRw5KnD/z4PKLt05WsJFAY/ErM9R/iFJmKkf1KVMKxMbGA==
-X-Received: by 2002:a17:907:7f93:: with SMTP id qk19mr4689577ejc.433.1630681141735;
-        Fri, 03 Sep 2021 07:59:01 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
-        by smtp.gmail.com with ESMTPSA id j5sm2907997ejb.96.2021.09.03.07.59.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Sep 2021 07:59:01 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] mptcp: use lockdep_assert_held_once() instead
- of open-codying it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA5072
+	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 17:07:55 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10096"; a="219484039"
+X-IronPort-AV: E=Sophos;i="5.85,265,1624345200"; 
+   d="scan'208";a="219484039"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 10:07:41 -0700
+X-IronPort-AV: E=Sophos;i="5.85,265,1624345200"; 
+   d="scan'208";a="692375667"
+Received: from gchandr2-mobl.amr.corp.intel.com ([10.209.38.180])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 10:07:40 -0700
+Date: Fri, 3 Sep 2021 10:07:40 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-References: <837dc50592c4843c4de722a4b9cbad6663458a07.1630680563.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <806f0a0c-565c-654d-7625-beb7eaad6b35@tessares.net>
-Date: Fri, 3 Sep 2021 16:59:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-next 2/4] mptcp: stop relaying on
+ tcp_tx_skb_cache.
+In-Reply-To: <dc492545d0c671f0e9ad91421eede5b9e2a1765d.camel@redhat.com>
+Message-ID: <9a9f40b5-931c-7d62-34af-53871165512@linux.intel.com>
+References: <cover.1630595171.git.pabeni@redhat.com>  <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com>  <14eebc85-4164-7c1c-dece-9cf3dc9d8d9c@linux.intel.com> <dc492545d0c671f0e9ad91421eede5b9e2a1765d.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <837dc50592c4843c4de722a4b9cbad6663458a07.1630680563.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Fri, 3 Sep 2021, Paolo Abeni wrote:
 
-On 03/09/2021 16:49, Paolo Abeni wrote:
-> We have a few more places where the mptcp code duplicates
-> lockdep_assert_held_once(). Let's use the existing macro and
-> avoid a bunch of compiler's conditional.
+> On Thu, 2021-09-02 at 17:30 -0700, Mat Martineau wrote:
+>> On Thu, 2 Sep 2021, Paolo Abeni wrote:
+>>
+>>> We want to revert the skb TX cache, but MPTCP is currently
+>>> using it unconditionally.
+>>>
+>>> Rework the MPTCP tx code, so that tcp_tx_skb_cache is not
+>>> needed anymore: do the whole coalescing check, skb allocation
+>>> skb initialization/update inside mptcp_sendmsg_frag(), quite
+>>> alike the current TCP code.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>> v1 -> v2:
+>>> - hopefully fix OoB, fetching nr_frags on new skbs
+>>> ---
+>>> net/mptcp/protocol.c | 132 +++++++++++++++++++++++++------------------
+>>> 1 file changed, 77 insertions(+), 55 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index faf6e7000d18..101e61bb2a80 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -1224,6 +1224,7 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
+>>> 		if (likely(__mptcp_add_ext(skb, gfp))) {
+>>> 			skb_reserve(skb, MAX_TCP_HEADER);
+>>> 			skb->reserved_tailroom = skb->end - skb->tail;
+>>> +			INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
+>>
+>> Is this related to tx_skb_cache? Looks like it could be a -net fix.
+>
+> Eheh you nicely noticed the relevant details as usual ;)
+>
+> No, this is not needed for -net. Before this patch, tcp_tsorted_anchor
+> initialization was performed by sk_stream_alloc_skb(), invoked by
+> tcp_build_frag(), which we are not reaching anymore now.
+>
+>>
+>>> 			return skb;
+>>> 		}
+>>> 		__kfree_skb(skb);
+>>> @@ -1233,31 +1234,23 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
+>>> 	return NULL;
+>>> }
+>>>
+>>> -static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+>>> +static struct sk_buff *__mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, gfp_t gfp)
+>>> {
+>>> 	struct sk_buff *skb;
+>>>
+>>> -	if (ssk->sk_tx_skb_cache) {
+>>> -		skb = ssk->sk_tx_skb_cache;
+>>> -		if (unlikely(!skb_ext_find(skb, SKB_EXT_MPTCP) &&
+>>> -			     !__mptcp_add_ext(skb, gfp)))
+>>> -			return false;
+>>> -		return true;
+>>> -	}
+>>> -
+>>> 	skb = __mptcp_do_alloc_tx_skb(sk, gfp);
+>>> 	if (!skb)
+>>> -		return false;
+>>> +		return NULL;
+>>>
+>>> 	if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
+>>> -		ssk->sk_tx_skb_cache = skb;
+>>> -		return true;
+>>> +		skb_entail(ssk, skb);
+>>> +		return skb;
+>>> 	}
+>>> 	kfree_skb(skb);
+>>> -	return false;
+>>> +	return NULL;
+>>> }
+>>>
+>>> -static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
+>>> +static struct sk_buff *mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
+>>> {
+>>> 	gfp_t gfp = data_lock_held ? GFP_ATOMIC : sk->sk_allocation;
+>>>
+>>> @@ -1287,23 +1280,29 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+>>> 			      struct mptcp_sendmsg_info *info)
+>>> {
+>>> 	u64 data_seq = dfrag->data_seq + info->sent;
+>>> +	int offset = dfrag->offset + info->sent;
+>>> 	struct mptcp_sock *msk = mptcp_sk(sk);
+>>> 	bool zero_window_probe = false;
+>>> 	struct mptcp_ext *mpext = NULL;
+>>> -	struct sk_buff *skb, *tail;
+>>> -	bool must_collapse = false;
+>>> -	int size_bias = 0;
+>>> -	int avail_size;
+>>> -	size_t ret = 0;
+>>> +	bool can_coalesce = false;
+>>> +	bool reuse_skb = true;
+>>> +	struct sk_buff *skb;
+>>> +	size_t copy;
+>>> +	int i;
+>>>
+>>> 	pr_debug("msk=%p ssk=%p sending dfrag at seq=%llu len=%u already sent=%u",
+>>> 		 msk, ssk, dfrag->data_seq, dfrag->data_len, info->sent);
+>>>
+>>> +	if (WARN_ON_ONCE(info->sent > info->limit ||
+>>> +			 info->limit > dfrag->data_len))
+>>> +		return 0;
+>>> +
+>>> 	/* compute send limit */
+>>> 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+>>> -	avail_size = info->size_goal;
+>>> +	copy = info->size_goal;
+>>> +
+>>> 	skb = tcp_write_queue_tail(ssk);
+>>> -	if (skb) {
+>>> +	if (skb && (copy > skb->len)) {
+>>> 		/* Limit the write to the size available in the
+>>> 		 * current skb, if any, so that we create at most a new skb.
+>>> 		 * Explicitly tells TCP internals to avoid collapsing on later
+>>> @@ -1316,53 +1315,76 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+>>> 			goto alloc_skb;
+>>> 		}
+>>>
+>>> -		must_collapse = (info->size_goal - skb->len > 0) &&
+>>> -				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
+>>> -		if (must_collapse) {
+>>> -			size_bias = skb->len;
+>>> -			avail_size = info->size_goal - skb->len;
+>>> +		i = skb_shinfo(skb)->nr_frags;
+>>> +		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
+>>> +		if (!can_coalesce && i >= sysctl_max_skb_frags) {
+>>> +			tcp_mark_push(tcp_sk(ssk), skb);
+>>> +			goto alloc_skb;
+>>> 		}
+>>> -	}
+>>>
+>>> +		copy -= skb->len;
+>>> +	} else {
+>>> alloc_skb:
+>>> -	if (!must_collapse && !ssk->sk_tx_skb_cache &&
+>>> -	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
+>>> -		return 0;
+>>> +		skb = mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held);
+>>> +		if (!skb)
+>>> +			return -ENOMEM;
+>>> +
+>>> +		i = skb_shinfo(skb)->nr_frags;
+>>> +		reuse_skb = false;
+>>> +		mpext = skb_ext_find(skb, SKB_EXT_MPTCP);
+>>> +	}
+>>>
+>>> 	/* Zero window and all data acked? Probe. */
+>>> -	avail_size = mptcp_check_allowed_size(msk, data_seq, avail_size);
+>>> -	if (avail_size == 0) {
+>>> +	copy = mptcp_check_allowed_size(msk, data_seq, copy);
+>>> +	if (copy == 0) {
+>>> 		u64 snd_una = READ_ONCE(msk->snd_una);
+>>>
+>>> -		if (skb || snd_una != msk->snd_nxt)
+>>> +		if (skb || snd_una != msk->snd_nxt) {
+>>> +			tcp_remove_empty_skb(ssk, tcp_write_queue_tail(ssk));
+>>> 			return 0;
+>>> +		}
+>>> +
+>>> 		zero_window_probe = true;
+>>> 		data_seq = snd_una - 1;
+>>> -		avail_size = 1;
+>>> -	}
+>>> +		copy = 1;
+>>>
+>>> -	if (WARN_ON_ONCE(info->sent > info->limit ||
+>>> -			 info->limit > dfrag->data_len))
+>>> -		return 0;
+>>> +		/* all mptcp-level data is acked, no skbs should be present into the
+>>> +		 * ssk write queue
+>>> +		 */
+>>> +		WARN_ON_ONCE(reuse_skb);
+>>> +	}
+>>>
+>>> -	ret = info->limit - info->sent;
+>>> -	tail = tcp_build_frag(ssk, avail_size + size_bias, info->flags,
+>>> -			      dfrag->page, dfrag->offset + info->sent, &ret);
+>>> -	if (!tail) {
+>>> -		tcp_remove_empty_skb(sk, tcp_write_queue_tail(ssk));
+>>> +	copy = min_t(size_t, copy, info->limit - info->sent);
+>>> +	if (!sk_wmem_schedule(ssk, copy)) {
+>>> +		tcp_remove_empty_skb(ssk, tcp_write_queue_tail(ssk));
+>>> 		return -ENOMEM;
+>>> 	}
+>>>
+>>> -	/* if the tail skb is still the cached one, collapsing really happened.
+>>> -	 */
+>>> -	if (skb == tail) {
+>>> -		TCP_SKB_CB(tail)->tcp_flags &= ~TCPHDR_PSH;
+>>> -		mpext->data_len += ret;
+>>> +	if (can_coalesce) {
+>>> +		skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
+>>> +	} else {
+>>> +		get_page(dfrag->page);
+>>> +		skb_fill_page_desc(skb, i, dfrag->page, offset, copy);
+>>> +	}
+>>> +
+>>> +	skb->len += copy;
+>>> +	skb->data_len += copy;
+>>> +	skb->truesize += copy;
+>>> +	sk_wmem_queued_add(ssk, copy);
+>>> +	sk_mem_charge(ssk, copy);
+>>> +	skb->ip_summed = CHECKSUM_PARTIAL;
+>>> +	WRITE_ONCE(tcp_sk(ssk)->write_seq, tcp_sk(ssk)->write_seq + copy);
+>>> +	TCP_SKB_CB(skb)->end_seq += copy;
+>>> +	tcp_skb_pcount_set(skb, 0);
+>>> +
+>>> +	/* on skb reuse we just need to update the DSS len */
+>>> +	if (reuse_skb) {
+>>> +		TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_PSH;
+>>> +		mpext->data_len += copy;
+>>
+>> Should have the WARN_ON_ONCE(!mpext) before this block - while it
+>> shouldn't happen, it's slightly less impossible in the reuse_skb case.
+>
+> I wondered about it a bit, and I *think* is not needed: we reuse the
+> skb only if mpext != NULL, see mptcp_skb_can_collapse_to().
+>
 
-Good idea!
+I missed that check, you're right that at this point in the code reuse_skb 
+== true guarantees that mpext != NULL. Since reuse_skb is only set to 
+false in a path where mpext has been successfully allocated, it makes 
+sense to drop the WARN_ON_ONCE().
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> I'll start some tests running.
 
-Now in our tree:
+I didn't see any issues in syzkaller overnight, or in a few selftest runs.
 
-- 63afb2abe5ae: mptcp: use lockdep_assert_held_once() instead of
-open-codying it
-- Results: 396fa2905e69..7755d2ada382
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210903T145841
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210903T145841
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
