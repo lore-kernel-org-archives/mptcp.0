@@ -1,102 +1,77 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1866C3FCD
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 11:10:07 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 98EB9610C8;
-	Fri,  3 Sep 2021 11:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1630667406;
-	bh=YArepy833r2AStUclxTaPudv9UDRXYJrbgxsKWQ3fIw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=r85WWH4Rl67aBnSyFpuCEeCj97AcRz6BjzQ9ZmeXClpt8CHcrcg35aqipIS4j+s0r
-	 yrrbvALWv3zs1JIGzcgCfsNW+FXpAu5nGRVeEn+BKgQ28g05lVrIIssEsHcKfPkEU+
-	 4sIwOXx3nK0a0YrHrxfnlm1/4hrJvKtCllKLefAiGuhnxj9mnXdaDfYj29e22sUs7h
-	 zqfO4QfD4kkuUpBZOZNvjtw69lBZygE1UvqFTp9QmRmy6AJ85l49rktlxU3GMFV7wY
-	 XBnKk/BJFONUfagLUlfYn/DWq1Cc4In3Q7lVDkwTD3fByRfhdUXmHBAxDCvIg0PLlZ
-	 IKhMRQ3m1Cl+g==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 8F61460A3E;
-	Fri,  3 Sep 2021 11:10:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330873FCD
+	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 11:28:37 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id jg16so8291228ejc.1
+        for <mptcp@lists.linux.dev>; Fri, 03 Sep 2021 04:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AArP9OdI4FDKpsnauDTnk7rmjVF5sNaa+jzvm19y7TY=;
+        b=ZvWTb0BhgOx0fO/nNIIXR2GG/uisVMXXpPAPof+dLNXl9BNlvk0KNCnllLupMIbp2X
+         wC2sOhgo3ccff42jb0u2qqHQ1MLRQsE7DwcpKmm9dVqaMuOHa59x3FU3YDIHAcKIjE30
+         7qni9klmPayugELhPJdHFHydy5EOSR5JCL57FYjkzglgtHT5VII5xNsfAeV2XNtb7wKH
+         zvKCm40/3gsIWsI7u9nOLLQUKfAh703vGch6HiOxmLJZt2E4OajVVYtKvBbS7y5mEr6k
+         WUsLywsFavFBYdNDNRoJyOB00J0rhQwAExeHLtX0mLiSUU7xy/Ja0FQAslV9l3AQnZLQ
+         uL1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AArP9OdI4FDKpsnauDTnk7rmjVF5sNaa+jzvm19y7TY=;
+        b=WdHMgkML1eyApo8KsLcVfs9EMR5hLkiY/PY/shTSgkqu1E46ReezK+sqKJNjfG+DXA
+         qkjVV8Uv0AAQGp5BvBKmJm7UQzhD+LMqXagGBDpo5OxiBReDO+kkhcY5rMF8q23QhILD
+         PJXZorPyI6cYb8aDJy6byPXfbkXKF7Ms/Vel0tRDheqRKSb2BR6YrpKh5smtMtpyjIGi
+         xa/XGhn/2v6DyvG4h6AyO/aC7mmbwk8uWDV5iq4OP6VUtF/rgkyhBo4RVb0RTG3GA4vB
+         ja3XMEVIezPIPE71QfjdVH00wiYZrA1ac04ZelD6eVKrOhZ/zLOBkA5Tr5+4kYRtq+TK
+         VxxA==
+X-Gm-Message-State: AOAM5319KCzigHGD5lPZ30iwBA45+I72L0F4MuzYGWG99AchQjFIizXQ
+	NSjVJBQi4e/dhZSXwCk85Hq7oDJ8pGb13Q==
+X-Google-Smtp-Source: ABdhPJzg56KdZyErB2HxNV2RSM1TtWcJ/Z1otQPs5Rk2XJpayaI3o7TsAalluGjYGGLP619LqjOp+Q==
+X-Received: by 2002:a17:906:12d8:: with SMTP id l24mr3774333ejb.126.1630668516118;
+        Fri, 03 Sep 2021 04:28:36 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id s18sm2615162ejc.52.2021.09.03.04.28.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Sep 2021 04:28:35 -0700 (PDT)
+Subject: Re: [PATCH v2 mptcp-next 2/4] mptcp: stop relaying on
+ tcp_tx_skb_cache.
+To: Paolo Abeni <pabeni@redhat.com>
+References: <cover.1630595171.git.pabeni@redhat.com>
+ <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <f01b372a-7145-3df4-6958-0eba522af05b@tessares.net>
+Date: Fri, 3 Sep 2021 13:28:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: Only send extra TCP acks in eligible socket states
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <163066740658.18620.16700027396845323471.git-patchwork-notify@kernel.org>
-Date: Fri, 03 Sep 2021 11:10:06 +0000
-References: <20210902185119.283187-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210902185119.283187-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com
+In-Reply-To: <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Paolo,
 
-This patch was applied to netdev/net.git (refs/heads/master):
+On 02/09/2021 17:52, Paolo Abeni wrote:
+> We want to revert the skb TX cache, but MPTCP is currently
+> using it unconditionally.
 
-On Thu,  2 Sep 2021 11:51:19 -0700 you wrote:
-> Recent changes exposed a bug where specifically-timed requests to the
-> path manager netlink API could trigger a divide-by-zero in
-> __tcp_select_window(), as syzkaller does:
-> 
-> divide error: 0000 [#1] SMP KASAN NOPTI
-> CPU: 0 PID: 9667 Comm: syz-executor.0 Not tainted 5.14.0-rc6+ #3
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-> RIP: 0010:__tcp_select_window+0x509/0xa60 net/ipv4/tcp_output.c:3016
-> Code: 44 89 ff e8 c9 29 e9 fd 45 39 e7 0f 8d 20 ff ff ff e8 db 28 e9 fd 44 89 e3 e9 13 ff ff ff e8 ce 28 e9 fd 44 89 e0 44 89 e3 99 <f7> 7c 24 04 29 d3 e9 fc fe ff ff e8 b7 28 e9 fd 44 89 f1 48 89 ea
-> RSP: 0018:ffff888031ccf020 EFLAGS: 00010216
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000040000
-> RDX: 0000000000000000 RSI: ffff88811532c080 RDI: 0000000000000002
-> RBP: 0000000000000000 R08: ffffffff835807c2 R09: 0000000000000000
-> R10: 0000000000000004 R11: ffffed1020b92441 R12: 0000000000000000
-> R13: 1ffff11006399e08 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007fa4c8344700(0000) GS:ffff88811ae00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2f424000 CR3: 000000003e4e2003 CR4: 0000000000770ef0
-> PKRU: 55555554
-> Call Trace:
->  tcp_select_window net/ipv4/tcp_output.c:264 [inline]
->  __tcp_transmit_skb+0xc00/0x37a0 net/ipv4/tcp_output.c:1351
->  __tcp_send_ack.part.0+0x3ec/0x760 net/ipv4/tcp_output.c:3972
->  __tcp_send_ack net/ipv4/tcp_output.c:3978 [inline]
->  tcp_send_ack+0x7d/0xa0 net/ipv4/tcp_output.c:3978
->  mptcp_pm_nl_addr_send_ack+0x1ab/0x380 net/mptcp/pm_netlink.c:654
->  mptcp_pm_remove_addr+0x161/0x200 net/mptcp/pm.c:58
->  mptcp_nl_remove_id_zero_address+0x197/0x460 net/mptcp/pm_netlink.c:1328
->  mptcp_nl_cmd_del_addr+0x98b/0xd40 net/mptcp/pm_netlink.c:1359
->  genl_family_rcv_msg_doit.isra.0+0x225/0x340 net/netlink/genetlink.c:731
->  genl_family_rcv_msg net/netlink/genetlink.c:775 [inline]
->  genl_rcv_msg+0x341/0x5b0 net/netlink/genetlink.c:792
->  netlink_rcv_skb+0x148/0x430 net/netlink/af_netlink.c:2504
->  genl_rcv+0x24/0x40 net/netlink/genetlink.c:803
->  netlink_unicast_kernel net/netlink/af_netlink.c:1314 [inline]
->  netlink_unicast+0x537/0x750 net/netlink/af_netlink.c:1340
->  netlink_sendmsg+0x846/0xd80 net/netlink/af_netlink.c:1929
->  sock_sendmsg_nosec net/socket.c:704 [inline]
->  sock_sendmsg+0x14e/0x190 net/socket.c:724
->  ____sys_sendmsg+0x709/0x870 net/socket.c:2403
->  ___sys_sendmsg+0xff/0x170 net/socket.c:2457
->  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2486
->  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
->  do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
->  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> 
-> [...]
+One one small detail if you have to resend a new version: for the title,
+s/relaying/relying/
 
-Here is the summary with links:
-  - [net] mptcp: Only send extra TCP acks in eligible socket states
-    https://git.kernel.org/netdev/net/c/340fa6667a69
+  mptcp: stop relying on tcp_tx_skb_cache
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
