@@ -1,88 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED71272
-	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 17:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630689511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8TUiVDQxciKeAEZvszhQCh3ytTH/NQeKgzLN19Mjnzk=;
-	b=KXiz0dQ99fxLj/w6CnHmluFs0HXNQC4CQg5Gawrp+2k0Ulxsk91j0ARuQrzNM8+Tp4yfdl
-	ax2Z1CkGq3NY8Hu4fbmMiJG7TNz2Ej1/nHeijTolOBZ6o7UCGt507cSYCjgONUBm93s4d2
-	2Oz0ZfCdr+CaxI687K5+7rBfpE3jukI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-sB0eEXgtMu6aNcaUyBvu-A-1; Fri, 03 Sep 2021 13:18:30 -0400
-X-MC-Unique: sB0eEXgtMu6aNcaUyBvu-A-1
-Received: by mail-wm1-f72.google.com with SMTP id p5-20020a7bcc85000000b002e7563efc4cso12319wma.4
-        for <mptcp@lists.linux.dev>; Fri, 03 Sep 2021 10:18:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CABF72
+	for <mptcp@lists.linux.dev>; Fri,  3 Sep 2021 17:47:29 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id v5so56830edc.2
+        for <mptcp@lists.linux.dev>; Fri, 03 Sep 2021 10:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=qIyPtZul2NKkHff4EQTo+IWkNiZMnHrjE6rRuHNmSzU=;
+        b=DezwmNXyBi+R3YPXIm+rDKofDDok9YGCnk5CmvmFph5C9z5cihM4RvepI8pwudatk1
+         5EnlaOYXGgzh0RDNp23Z1m2tui0gsXaaq2WmDGLy5r0CCR0ahnnXPAVokmp2ps/UJXlK
+         y9ZbSbZWOO7OfWrr/U3YAHF2ugfM4rUUFHL80znGK8DDOXB/6b86aoKL1WZgs9+qXpyR
+         o3el7ar1X4FxuFVqpOYkfZtXIJvQjXIOnz7USGrQtsB5vP/lRiOxb2kRxBC0NX6UVXbM
+         tdTkdUw+mio6ZPPaCgvKDq20/59Jbz6XpUyEtSEDOQtTx60Un3ifUrRe4rdJ8XeZkK84
+         8rOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=8TUiVDQxciKeAEZvszhQCh3ytTH/NQeKgzLN19Mjnzk=;
-        b=pt/FwQAswPntWpTI3Vx/rTiqUqOR6QvB1GlYSUfk+UyULPtfGu35YuxFLQWNgF+mks
-         RttqmpcIsdgGWBz6J2psTwmc2VWjWJFYhzp4zppvHEq+6b4mB1180mftN2DZgsMpYQEV
-         4qkKn52t+TClAhg84b/MZXnIP4MxSOvTHFdFANxLa1+LQigKpMuGhBpmJeuEKDX3Ihlr
-         8Wt+TNmQtyqRiSxweLSXZaLJ80V/4/CuYYeCGwQBee5hMkugotPGwfNAnm2H/ej/3/AL
-         2clIOJG18kpWaZ/HWlXTn2J7ORqF5/7GhoHROh/L+cnAzbUEg0hnxGn7SZrL0wUkruRG
-         zRKQ==
-X-Gm-Message-State: AOAM530KojMWtLgbt3x63vfKtn6brREgsa//Czb8PzqUrKjEBvfp2iEk
-	WdSfSfUl67/mNubuC3MikEyF1RRMRRz3eb0VRvDTjtwzWDkwYx50HR0UcunOZG7OHEzZhfmSSRG
-	ldjQoi9ekfNchmnc=
-X-Received: by 2002:a5d:554e:: with SMTP id g14mr186514wrw.48.1630689509528;
-        Fri, 03 Sep 2021 10:18:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwhk1sRsh8U8CRZkVduw0cs7nTPdPOSY9QjVCOYJDz90qVxz9bWToEUVd4yUZXOgwXg5gRpYg==
-X-Received: by 2002:a5d:554e:: with SMTP id g14mr186489wrw.48.1630689509254;
-        Fri, 03 Sep 2021 10:18:29 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
-        by smtp.gmail.com with ESMTPSA id t7sm5866933wrq.90.2021.09.03.10.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Sep 2021 10:18:28 -0700 (PDT)
-Message-ID: <fc52b567c60d4908a148dee8fd08c3d6b3ff3454.camel@redhat.com>
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=qIyPtZul2NKkHff4EQTo+IWkNiZMnHrjE6rRuHNmSzU=;
+        b=lJoys5x3EzULPHM0ToK5XCCAAODwWllf7TXgFtu6tvdXd+EpFM1HlKTYrbaaAfVrm2
+         h4b1sAZ/SFNhSN/wOhO/FHRXzNSNrmCa/hpki/VmQAdy2fvAqpS/cQbpua1BQibQ+0zP
+         8lBFGSwsPqyWsvjKttyRlMUw3Ut0dEOneXgzLPjsZbTlRLoCvmQI6F1bVp/V3+VFDmMi
+         ODX5GMdx0mlKEIHs/RsFQI4Fvm9ClEkQUCDCcSfk7Ts1uZ9htP8VXwOanCcJEImJ+bDt
+         gYPkV/kfYi+CnwtjbzXSWAjEHEokfjPmRKoxjmm3NixHgckjRYNtDuWEMRffIiIuV8Dk
+         0efQ==
+X-Gm-Message-State: AOAM532uElsmee5jGPlNOht+iGuoDntkq+MSItw63suUxjy/MmLbdZwK
+	NQUGRBQVG6jhPeEcmWSGb7gI4/q27457Lw==
+X-Google-Smtp-Source: ABdhPJzPcTpYks6rWgU3CP6H7jpAvxqM2FkGzlW96XNi8MUutYra8RzD9yI1Brqz0OPLQpxjO4UNDQ==
+X-Received: by 2002:a05:6402:4d:: with SMTP id f13mr143897edu.275.1630691247388;
+        Fri, 03 Sep 2021 10:47:27 -0700 (PDT)
+Received: from [127.0.0.1] ([185.232.21.132])
+        by smtp.gmail.com with ESMTPSA id b15sm3110721ejq.83.2021.09.03.10.47.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Sep 2021 10:47:27 -0700 (PDT)
+Date: Fri, 3 Sep 2021 17:47:24 +0000 (UTC)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Message-ID: <00868f46-7e1c-43d5-b814-fe5412cf072f@tessares.net>
+In-Reply-To: <fc52b567c60d4908a148dee8fd08c3d6b3ff3454.camel@redhat.com>
+References: <cover.1630595171.git.pabeni@redhat.com> <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com> <f01b372a-7145-3df4-6958-0eba522af05b@tessares.net> <fc52b567c60d4908a148dee8fd08c3d6b3ff3454.camel@redhat.com>
 Subject: Re: [PATCH v2 mptcp-next 2/4] mptcp: stop relaying on
  tcp_tx_skb_cache.
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Date: Fri, 03 Sep 2021 19:18:28 +0200
-In-Reply-To: <f01b372a-7145-3df4-6958-0eba522af05b@tessares.net>
-References: <cover.1630595171.git.pabeni@redhat.com>
-	 <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com>
-	 <f01b372a-7145-3df4-6958-0eba522af05b@tessares.net>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <00868f46-7e1c-43d5-b814-fe5412cf072f@tessares.net>
 
-On Fri, 2021-09-03 at 13:28 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 02/09/2021 17:52, Paolo Abeni wrote:
-> > We want to revert the skb TX cache, but MPTCP is currently
-> > using it unconditionally.
-> 
-> One one small detail if you have to resend a new version: for the title,
-> s/relaying/relying/
-> 
->   mptcp: stop relying on tcp_tx_skb_cache
+3 Sep 2021 19:18:33 Paolo Abeni <pabeni@redhat.com>:
 
-I guess/hope a repost is not needed, would a squash-to patch and/or
-direct edit while merging be enough?
+> On Fri, 2021-09-03 at 13:28 +0200, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 02/09/2021 17:52, Paolo Abeni wrote:
+>>> We want to revert the skb TX cache, but MPTCP is currently
+>>> using it unconditionally.
+>>
+>> One one small detail if you have to resend a new version: for the title,
+>> s/relaying/relying/
+>>
+>> =C2=A0 mptcp: stop relying on tcp_tx_skb_cache
+>
+> I guess/hope a repost is not needed, would a squash-to patch and/or
+> direct edit while merging be enough?
+
+Sure I can directly edit the commit title.
+
+I can apply the series if it is OK for Mat.
 
 Cheers,
-
-Paolo
-
+Matt
+--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
