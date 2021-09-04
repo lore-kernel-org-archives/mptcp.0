@@ -1,25 +1,26 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585583FC0
-	for <mptcp@lists.linux.dev>; Sat,  4 Sep 2021 00:23:19 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10096"; a="283253671"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A46A3FC1
+	for <mptcp@lists.linux.dev>; Sat,  4 Sep 2021 00:31:51 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10096"; a="217688421"
 X-IronPort-AV: E=Sophos;i="5.85,266,1624345200"; 
-   d="scan'208";a="283253671"
+   d="scan'208";a="217688421"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 17:23:18 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 17:31:50 -0700
 X-IronPort-AV: E=Sophos;i="5.85,266,1624345200"; 
-   d="scan'208";a="692509160"
+   d="scan'208";a="692524923"
 Received: from gchandr2-mobl.amr.corp.intel.com ([10.209.38.180])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 17:23:18 -0700
-Date: Fri, 3 Sep 2021 17:23:18 -0700 (PDT)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 17:31:50 -0700
+Date: Fri, 3 Sep 2021 17:31:49 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliangtang@gmail.com>
 cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@xiaomi.com>
-Subject: Re: [MPTCP][PATCH RFC 2/5] mptcp: infinite mapping sending
-In-Reply-To: <7d43c0b1c5f336641d9c8edef80cd0e37b93b668.1630656206.git.geliangtang@xiaomi.com>
-Message-ID: <a82f6587-1c90-552f-2845-5ff33cf7c770@linux.intel.com>
+Subject: Re: [MPTCP][PATCH RFC 3/5] mptcp: infinite mapping receiving
+In-Reply-To: <3a3eda61ce3b885b2c43cbe63320ecf068bf8267.1630656206.git.geliangtang@xiaomi.com>
+Message-ID: <71790a1-de87-bd6e-dcec-96214b895d42@linux.intel.com>
 References: <cover.1630656206.git.geliangtang@xiaomi.com> <c9504a9a84a501016ddc53ebbf644f827233b7e0.1630656206.git.geliangtang@xiaomi.com> <7d43c0b1c5f336641d9c8edef80cd0e37b93b668.1630656206.git.geliangtang@xiaomi.com>
+ <3a3eda61ce3b885b2c43cbe63320ecf068bf8267.1630656206.git.geliangtang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -32,152 +33,105 @@ On Fri, 3 Sep 2021, Geliang Tang wrote:
 
 > From: Geliang Tang <geliangtang@xiaomi.com>
 >
-> This patch added the infinite mapping sending logic.
+> This patch added the infinite mapping receiving logic.
 >
-> Added a new flag snd_infinite_mapping_enable in mptcp_sock. Set it true
-> when a single subflow is in use in mptcp_pm_mp_fail_received.
+> Added a new struct member infinite_mapping_received in struct
+> mptcp_subflow_context, set it true when the infinite mapping is
+> received. And added another new struct member infinite_rcv_seq to save
+> the received infinite mapping sequence number.
 >
-> In mptcp_sendmsg_frag, if this flag is true, call the new function
-> mptcp_update_infinite_mapping to set the infinite mapping.
->
-> In mptcp_write_options, send out the infinite mapping and fallback to
-> a regular TCP.
+> In subflow_check_data_avail, if the infinite_mapping_received flag is
+> set, fallback to a regular TCP.
 >
 > Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 > ---
-> net/mptcp/options.c  | 13 +++++++++++++
-> net/mptcp/pm.c       |  6 ++++++
-> net/mptcp/protocol.c | 21 +++++++++++++++++++++
-> net/mptcp/protocol.h |  1 +
-> 4 files changed, 41 insertions(+)
+> net/mptcp/protocol.h |  2 ++
+> net/mptcp/subflow.c  | 17 +++++++++++++++++
+> 2 files changed, 19 insertions(+)
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1ec6529c4326..e2df21246be7 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1326,6 +1326,19 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 				put_unaligned_be32(mpext->data_len << 16 |
-> 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-> 			}
-> +
-> +			if (mpext->data_len == 0) {
-> +				const struct sock *ssk = (const struct sock *)tp;
-> +				struct mptcp_subflow_context *subflow;
-> +				struct mptcp_sock *msk;
-> +
-> +				subflow = mptcp_subflow_ctx(ssk);
-> +				msk = mptcp_sk(subflow->conn);
-> +
-> +				pr_debug("write infinite mapping!");
-> +				pr_fallback(msk);
-> +				__mptcp_do_fallback(msk);
-> +			}
-
-The fallback action shouldn't happen inside mptcp_write_options(). I have 
-a suggestion below.
-
-> 		}
-> 	} else if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
-> 		    OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 6ab386ff3294..39f2dcda53bf 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -251,7 +251,13 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
->
-> void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
-> {
-> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-> +
-> 	pr_debug("fail_seq=%llu", fail_seq);
-> +
-> +	if (!mptcp_has_another_subflow(sk))
-> +		WRITE_ONCE(msk->snd_infinite_mapping_enable, true);
-
-Like patch 1, there needs to be a check for both "single subflow" and 
-"contiguous data".
-
-> }
->
-> /* path manager helpers */
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index faf6e7000d18..dd7738a6b7f5 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1282,6 +1282,22 @@ static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
-> 	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
-> }
->
-> +static void mptcp_update_infinite_mapping(struct mptcp_sock *msk, struct mptcp_ext *mpext)
-> +{
-> +	if (!mpext)
-> +		return;
-> +
-> +	mpext->data_seq = READ_ONCE(msk->ack_seq);
-
-RFC 8684 says the data_seq to use is "the start of the subflow sequence 
-number of the most recent segment that was known to be delivered intact 
-(i.e., was successfully DATA_ACKed)".
-
-In other words, the data_seq from the mapping that was for the *beginning* 
-of the last fully-acked data segment.
-
-This is something else that we don't specifically keep track of yet. The 
-necessary information is (all?) in the msk->rtx_queue - I think we will 
-have to add something to the msk to keep track of the 64-bit sequence 
-number of each mapping as they are acked. This would be updated in 
-__mptcp_data_acked() or __mptcp_clean_una().
-
-> +	mpext->data_len = 0;
-
-I think it might work well to add an infinite_mapping field to struct 
-mptcp_ext, and that could be checked in mptcp_established_options() to 
-allow the DSS option to be written even if the fallback flag is set.
-
-> +	if (READ_ONCE(msk->csum_enabled))
-> +		mpext->csum = 0;
-> +
-> +	WRITE_ONCE(msk->snd_infinite_mapping_enable, false);
-> +
-> +	pr_debug("infinite mapping: data_seq=%llu subflow_seq=%u data_len=%u dsn64=%d",
-> +		 mpext->data_seq, mpext->subflow_seq, mpext->data_len, mpext->dsn64);
-> +}
-> +
-> static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 			      struct mptcp_data_frag *dfrag,
-> 			      struct mptcp_sendmsg_info *info)
-> @@ -1390,6 +1406,10 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> out:
-> 	if (READ_ONCE(msk->csum_enabled))
-> 		mptcp_update_data_checksum(tail, ret);
-> +
-> +	if (READ_ONCE(msk->snd_infinite_mapping_enable))
-> +		mptcp_update_infinite_mapping(msk, mpext);
-> +
-> 	mptcp_subflow_ctx(ssk)->rel_write_seq += ret;
-> 	return ret;
-> }
-> @@ -2858,6 +2878,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
-> 	WRITE_ONCE(msk->fully_established, false);
-> 	if (mp_opt->suboptions & OPTION_MPTCP_CSUMREQD)
-> 		WRITE_ONCE(msk->csum_enabled, true);
-> +	WRITE_ONCE(msk->snd_infinite_mapping_enable, false);
->
-> 	msk->write_seq = subflow_req->idsn + 1;
-> 	msk->snd_nxt = msk->write_seq;
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 99a23fff7b03..33400fcdf1b1 100644
+> index 33400fcdf1b1..ad26e7c0a18c 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -246,6 +246,7 @@ struct mptcp_sock {
-> 	bool		fully_established;
-> 	bool		rcv_data_fin;
-> 	bool		snd_data_fin_enable;
-> +	bool		snd_infinite_mapping_enable;
-> 	bool		rcv_fastclose;
-> 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
-> 	bool		csum_enabled;
+> @@ -433,6 +433,7 @@ struct mptcp_subflow_context {
+> 		backup : 1,
+> 		send_mp_prio : 1,
+> 		send_mp_fail : 1,
+> +		infinite_mapping_received : 1,
+> 		rx_eof : 1,
+> 		can_ack : 1,        /* only after processing the remote a key */
+> 		disposable : 1,	    /* ctx can be free at ulp release time */
+> @@ -449,6 +450,7 @@ struct mptcp_subflow_context {
+> 	u8	reset_transient:1;
+> 	u8	reset_reason:4;
+> 	u8	stale_count;
+> +	u64	infinite_rcv_seq;
+>
+> 	long	delegated_status;
+> 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index dfcd84abc13e..95ea01694bb3 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -967,7 +967,10 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+>
+> 	data_len = mpext->data_len;
+> 	if (data_len == 0) {
+> +		pr_debug("infinite mapping received, data_seq=%llu", mpext->data_seq);
+> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
+> +		subflow->infinite_mapping_received = 1;
+> +		subflow->infinite_rcv_seq = mpext->data_seq;
+
+RFC 8684 doesn't seem to call for any validation of the data_seq in an 
+infinite mapping. I'm not sure we need to do anything with it, we would 
+have to keep track of recent mapping values related to the DATA_ACKs we 
+sent in order to compare. Does anyone else see this in the RFC?
+
+> 		return MAPPING_INVALID;
+> 	}
+>
+> @@ -1179,6 +1182,20 @@ static bool subflow_check_data_avail(struct sock *ssk)
+> 		return true;
+> 	}
+>
+> +	if (subflow->infinite_mapping_received) {
+> +		pr_fallback(msk);
+> +		__mptcp_do_fallback(msk);
+> +		skb = skb_peek(&ssk->sk_receive_queue);
+> +		subflow->map_valid = 1;
+> +		subflow->map_seq = subflow->infinite_rcv_seq;
+> +		subflow->map_data_len = skb->len;
+> +		subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
+> +		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
+> +		subflow->infinite_mapping_received = 0;
+> +		subflow->infinite_rcv_seq = 0;
+> +		return true;
+> +	}
+> +
+
+I don't think we should duplicate the code from later in the function, 
+maybe the code below:
+
+> 	if (subflow->mp_join || subflow->fully_established) {
+
+could be changed to this:
+
+if (subflow->mp_join || (subflow->fully_established && 
+!subflow->infinite_mapping_received)
+
+?
+
+
+I think the intent of this fallback mechanism is to not throw away any 
+data in the contiguous stream. Instead, it seems like the assumption is 
+that the checksum problem was in the MPTCP header and the 
+MP_FAIL/infinite-mapping signaling is supposed to let MPTCP do fallback 
+while still delivering all the data to the user. Anyone else read the RFC 
+the same way, or know better?
+
+
+> 		/* fatal protocol error, close the socket.
+> 		 * subflow_error_report() will introduce the appropriate barriers
 > -- 
 > 2.31.1
 >
