@@ -1,100 +1,173 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDAF72
-	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 06:06:39 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1mN7m4-0008Qs-4F; Mon, 06 Sep 2021 08:06:32 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [mptcp-next 1/2] mptcp: remove tx_pending_data
-Date: Mon,  6 Sep 2021 08:06:13 +0200
-Message-Id: <20210906060614.25217-2-fw@strlen.de>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210906060614.25217-1-fw@strlen.de>
-References: <20210906060614.25217-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3224A3FC0
+	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 07:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1630912245;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/F9RUCNJhR0YTd4dqQtXNk1LZUovURWXiVbgp4iOmx8=;
+	b=CXO5f1jiqOWwhzJR8Rnuwq9nYRBui73bBaHHRhFM3/7acl7O6rf7fdZa3zub8rKGE11TP4
+	LcI4EaoC6yTBER2jl54ulYDjF9aKd2hyeIgRmZzNCvTO0PQEM9ecFGCGjY1zFpoMWPfA/9
+	JcXtHBIBL7+Gg9FS3jUJt4uaPaOVmyI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-J4qHuy-BP2G39ThxRrRuQA-1; Mon, 06 Sep 2021 03:10:44 -0400
+X-MC-Unique: J4qHuy-BP2G39ThxRrRuQA-1
+Received: by mail-wr1-f72.google.com with SMTP id z16-20020adfdf90000000b00159083b5966so893974wrl.23
+        for <mptcp@lists.linux.dev>; Mon, 06 Sep 2021 00:10:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=/F9RUCNJhR0YTd4dqQtXNk1LZUovURWXiVbgp4iOmx8=;
+        b=Th4ZGkHLKQVXXzVYJ21iEZgGLZRBipMch4MW+o39BTgEjotBxbtmTZlm+StVYVBSXI
+         dL9Z8uJW+ebunv9dezoZ8K02nQrLn6S2eVTspOVbsQjVZrYjePTVw2GWsH0VFsTzBfeo
+         Nl0vAi+yTXOGon4krWCckFA+0BLLJKhmGTSojphAtd0R/Y1A9UozPxgtMJrvIREuZKw+
+         mXssTKdGWYZkMRsnkAMBO5DBkH/aRbu7pWM2dDxJtBn/1XtidKeFu7fhD9LLv1fAPn2X
+         AwqkzTK/8TrS1OzV1IDr6K4425WF1qHOVnezppae6JlMEBRXqP0cvLkye0JDVXD/Bz3d
+         oYmA==
+X-Gm-Message-State: AOAM532S+Q8dwnzjtpxdy64HsXwzYVtC/Y0yH4HdAkCnZ7kZ04AdwqpZ
+	fQsBvdQMera1vHGan7rwbuXFDmqq0QvnLL7vCWZ72DD7JyitknAEhhwHtNFbNyK6BZGq5wjUdao
+	Twdi1QllNL7+XGnA=
+X-Received: by 2002:a1c:2086:: with SMTP id g128mr9914702wmg.46.1630912242686;
+        Mon, 06 Sep 2021 00:10:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxoFnmfJQBGC9xjE/sqaML149CLeBqXmXi/xTnIBPHYefk9dh7vGwRc3ncA7ndoTA06Cmxpdw==
+X-Received: by 2002:a1c:2086:: with SMTP id g128mr9914687wmg.46.1630912242414;
+        Mon, 06 Sep 2021 00:10:42 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
+        by smtp.gmail.com with ESMTPSA id l15sm6192125wms.38.2021.09.06.00.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Sep 2021 00:10:42 -0700 (PDT)
+Message-ID: <0f89768f2901544563989dec7c23d880a8f833f3.camel@redhat.com>
+Subject: Re: [PATCH v2 mptcp-next 2/4] mptcp: stop relaying on
+ tcp_tx_skb_cache.
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Date: Mon, 06 Sep 2021 09:10:41 +0200
+In-Reply-To: <9f09512c-0d95-2869-57bb-ffb538ead9b9@tessares.net>
+References: <cover.1630595171.git.pabeni@redhat.com>
+	 <ae127a2e3d2fb31e6f1687cb96128d39490f6be0.1630595171.git.pabeni@redhat.com>
+	 <9f09512c-0d95-2869-57bb-ffb538ead9b9@tessares.net>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The update on recovery is not correct.
+On Sat, 2021-09-04 at 10:00 +0200, Matthieu Baerts wrote:
+> Hi Paolo,
+> 
+> On 02/09/2021 17:52, Paolo Abeni wrote:
+> > We want to revert the skb TX cache, but MPTCP is currently
+> > using it unconditionally.
+> > 
+> > Rework the MPTCP tx code, so that tcp_tx_skb_cache is not
+> > needed anymore: do the whole coalescing check, skb allocation
+> > skb initialization/update inside mptcp_sendmsg_frag(), quite
+> > alike the current TCP code.
+> 
+> (...)
+> 
+> > @@ -1287,23 +1280,29 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> >  			      struct mptcp_sendmsg_info *info)
+> >  {
+> >  	u64 data_seq = dfrag->data_seq + info->sent;
+> > +	int offset = dfrag->offset + info->sent;
+> >  	struct mptcp_sock *msk = mptcp_sk(sk);
+> >  	bool zero_window_probe = false;
+> >  	struct mptcp_ext *mpext = NULL;
+> > -	struct sk_buff *skb, *tail;
+> > -	bool must_collapse = false;
+> > -	int size_bias = 0;
+> > -	int avail_size;
+> > -	size_t ret = 0;
+> > +	bool can_coalesce = false;
+> > +	bool reuse_skb = true;
+> > +	struct sk_buff *skb;
+> > +	size_t copy;
+> > +	int i;
+> >  
+> >  	pr_debug("msk=%p ssk=%p sending dfrag at seq=%llu len=%u already sent=%u",
+> >  		 msk, ssk, dfrag->data_seq, dfrag->data_len, info->sent);
+> >  
+> > +	if (WARN_ON_ONCE(info->sent > info->limit ||
+> > +			 info->limit > dfrag->data_len))
+> > +		return 0;
+> > +
+> >  	/* compute send limit */
+> >  	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+> > -	avail_size = info->size_goal;
+> > +	copy = info->size_goal;
+> > +
+> >  	skb = tcp_write_queue_tail(ssk);
+> > -	if (skb) {
+> > +	if (skb && (copy > skb->len)) {
+> >  		/* Limit the write to the size available in the
+> >  		 * current skb, if any, so that we create at most a new skb.
+> >  		 * Explicitly tells TCP internals to avoid collapsing on later
+> > @@ -1316,53 +1315,76 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> >  			goto alloc_skb;
+> >  		}
+> >  
+> > -		must_collapse = (info->size_goal - skb->len > 0) &&
+> > -				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
+> > -		if (must_collapse) {
+> > -			size_bias = skb->len;
+> > -			avail_size = info->size_goal - skb->len;
+> > +		i = skb_shinfo(skb)->nr_frags;
+> > +		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
+> > +		if (!can_coalesce && i >= sysctl_max_skb_frags) {
+> > +			tcp_mark_push(tcp_sk(ssk), skb);
+> > +			goto alloc_skb;
+> >  		}
+> > -	}
+> >  
+> > +		copy -= skb->len;
+> > +	} else {
+> >  alloc_skb:
+> > -	if (!must_collapse && !ssk->sk_tx_skb_cache &&
+> > -	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
+> > -		return 0;
+> > +		skb = mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held);
+> > +		if (!skb)
+> > +			return -ENOMEM;
+> > +
+> > +		i = skb_shinfo(skb)->nr_frags;
+> > +		reuse_skb = false;
+> > +		mpext = skb_ext_find(skb, SKB_EXT_MPTCP);
+> > +	}
+> >  
+> >  	/* Zero window and all data acked? Probe. */
+> > -	avail_size = mptcp_check_allowed_size(msk, data_seq, avail_size);
+> > -	if (avail_size == 0) {
+> > +	copy = mptcp_check_allowed_size(msk, data_seq, copy);
+> > +	if (copy == 0) {
+> >  		u64 snd_una = READ_ONCE(msk->snd_una);
+> >  
+> > -		if (skb || snd_una != msk->snd_nxt)
+> > +		if (skb || snd_una != msk->snd_nxt) {
+> 
+> If I'm not mistaken, 'skb' will always be != NULL here.
+> 
+> Should we only have these 2 next lines if 'copy == 0'?
 
-msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
+We still need to check for 'snd_una != msk->snd_nxt'. I'll send a
+squash-to patch.
 
-will update tx_pending_data multiple times when a subflow is declared
-stale while earlier recovery is still in progress.
-This means that tx_pending_data will still be positive even after
-all data as has been transmitted.
+Thanks!
 
-Rather than fix it, remove this field: there are no consumers.
-The outstanding data byte count can be computed either via
-
- "msk->write_seq - rtx_head->data_seq" or
- "msk->write_seq - msk->snd_una".
-
-The latter is more recent/accurate estimate as rtx_head adjustment
-is deferred until mptcp lock can be acquired.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- net/mptcp/protocol.c | 4 ----
- net/mptcp/protocol.h | 1 -
- 2 files changed, 5 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2a525c7ae920..c0e0ee4cb24f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1531,7 +1531,6 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
- 	dfrag->already_sent += sent;
- 
- 	msk->snd_burst -= sent;
--	msk->tx_pending_data -= sent;
- 
- 	snd_nxt_new += dfrag->already_sent;
- 
-@@ -1761,7 +1760,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		frag_truesize += psize;
- 		pfrag->offset += frag_truesize;
- 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
--		msk->tx_pending_data += psize;
- 
- 		/* charge data on mptcp pending queue to the msk socket
- 		 * Note: we charge such data both to sk and ssk
-@@ -2254,7 +2252,6 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
- 	mptcp_data_unlock(sk);
- 
- 	msk->first_pending = rtx_head;
--	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
- 	msk->snd_burst = 0;
- 
- 	/* be sure to clear the "sent status" on all re-injected fragments */
-@@ -2525,7 +2522,6 @@ static int __mptcp_init_sock(struct sock *sk)
- 	msk->first_pending = NULL;
- 	msk->wmem_reserved = 0;
- 	WRITE_ONCE(msk->rmem_released, 0);
--	msk->tx_pending_data = 0;
- 	msk->timer_ival = TCP_RTO_MIN;
- 
- 	msk->first = NULL;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 99a23fff7b03..8416810afa8e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -254,7 +254,6 @@ struct mptcp_sock {
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
- 	struct sk_buff_head receive_queue;
--	int		tx_pending_data;
- 	struct list_head conn_list;
- 	struct list_head rtx_queue;
- 	struct mptcp_data_frag *first_pending;
--- 
-2.32.0
+Paolo
 
