@@ -1,48 +1,48 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FEB3FC0
-	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 07:58:17 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id z24-20020a17090acb1800b0018e87a24300so4023808pjt.0
-        for <mptcp@lists.linux.dev>; Mon, 06 Sep 2021 00:58:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8802F3FC0
+	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 07:58:19 +0000 (UTC)
+Received: by mail-pj1-f45.google.com with SMTP id u13-20020a17090abb0db0290177e1d9b3f7so3791437pjr.1
+        for <mptcp@lists.linux.dev>; Mon, 06 Sep 2021 00:58:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IPVAbN2Pszc3GxBgz5n1fPb7njB/Un/qvtIVtcEAhC0=;
-        b=PSFskLf+7iwKXqd/eG/hjs67AGCa8crtyrMfbIEOY2TQvEvu2aKr0qc1/Bp9iLBtgl
-         7k0QBS3kvv+fLZexSIAITrMyqlDIMcl1VBlVKDBguisuMwV6pKPJYggZ3K58vPf1tGTs
-         7NgFxC+Ylgq+1O4Y0pBindq6F0x2aT6JPOoTfKwVE9DPfqhwn2LeOdkrscISgT3b5vQZ
-         D0jY+PBBoA1VAXw+x34IKKaGFcEuNRTUdTqWJOkA3xlD9CzZCytXtVRO5oshxIB4KtYf
-         FJmSWkAn0Fsr5q8Iq7aarAvpMiHzW0iOOcYMfdigyejdjYiTQ38gjaXOko1nWEWGdqhF
-         2Vuw==
+        bh=tbR46yEwetFmr74l5qKWaXcQ1UG6B9A96OmGxbAsp+o=;
+        b=EbAXcCQyGZkW1eTrx6hA5ZWski00dP7oW4O3iP9EhaQPLJvUTHQbVOJntpPNCo8IkF
+         OeFLIiBeOB6GxXGeZLKfuAt3jvaefGz7T3nko8TzyAGCGT4m2PrwgrGBh2l53/sL8sLu
+         e1u7PVHLzPyGY3DffM2P4QJmG7+NG/s3WMIJhoIi8QCzW15bfPC9DhCWW93NRFU4+Anp
+         6z8oP+Ulei0iWC/mcnDSDHv3S+yJrxNiXwQMqmMeZRYd6qAKCFhHkOmKIAmwXm4HYzmE
+         18PA1EaFXxOP1vYguh5M6n3QMaObOFlzQQC8sMft9z5U5RhlhWls7uQ345eVSrxgYusg
+         oSfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IPVAbN2Pszc3GxBgz5n1fPb7njB/Un/qvtIVtcEAhC0=;
-        b=RggTEehoYH+hRxtS98C3xk07qX/sldkLHWzcTvfDvfgKvuNEygSgRzX4YGDNuj/5LR
-         D9ae9+VwxwoDvGQ28vSQMtEDteB6cFoT0g8VX5yvNij0pLKVMJXDJtw0Sizi+WRZcyii
-         OOuqaKhezg3c+Ay+udqpe7aGEz+LH0/PKWx8dIlGGVIQqM7SigJ4+KN5h+gTx5+c6q/D
-         cEJ0k/MB3/xTbc9oeG/wRfY30LbTuBTPH4hWN1aXPdhz6YnaM0ooLczHnZq1hBdRLtWO
-         P2Mg/yz9pZeTBAl28CUPU4ivj1z3f01P1pXWw661ByTpUDw4Qbeq7kGYG0MJru4HGFDU
-         t5Og==
-X-Gm-Message-State: AOAM532PG4GxKoBJxKPwU27jxUJShcoKUMEX3zsa+u8yZbiYz7DTTK4r
-	W399nZA4OGIa2DVHpSskFCh+LEA2Ug4=
-X-Google-Smtp-Source: ABdhPJwhcuJKEqTlfYTCWs6P/xMO2kJ1dUBCpBHKb0tiJ2H8pbDtK8jh95xBC7dEUseVWzYDeWj6Qg==
-X-Received: by 2002:a17:90a:5513:: with SMTP id b19mr13036973pji.16.1630915097249;
-        Mon, 06 Sep 2021 00:58:17 -0700 (PDT)
+        bh=tbR46yEwetFmr74l5qKWaXcQ1UG6B9A96OmGxbAsp+o=;
+        b=DpKSDSV94T3Xq4ub+MismtJq85xSPcD2aTJWL01Le5br0H9chT2eJoNwIyN52rRokv
+         8MiR7JcnFSbHI7+w1EpuObu1L9T7V42YsyRESE/RGOg+uqpZaOO/5GjKa9GB01LlxMy2
+         jC5QxwNuNZUqU2CWdJ4LYwDH4NA/D92QQeqmDKvssiz4ZwVnwrf5ku/jNwKQ21chu2Jl
+         rZklUndAASqY/RN0AuavJAgNBga/g9v6Zqi1fZRcJJekDpZt+gF1Ken9SjXib6V8WWUl
+         Tu762H+hNJdeC6Q7XTThuHp4g/d7Oe/8ZRfg427ZhJH/MIN3UAgeg0y5c0mOKOlcBkv/
+         FcxA==
+X-Gm-Message-State: AOAM533JfqYvJsgxN+7fENbEcKIT+gOxJH8LGjYLVl70i+N+DVeN01lw
+	5niKv0aWL7e7jG6XvrEuRr+u4Od80yU=
+X-Google-Smtp-Source: ABdhPJxEWCmkz/FTKK66MQGKkHB6pVa9sd089KzSAOhvWZAmWahpi0h5D5SQWy5uOYODSQU3sk/wXw==
+X-Received: by 2002:a17:90b:ec9:: with SMTP id gz9mr12642609pjb.24.1630915098998;
+        Mon, 06 Sep 2021 00:58:18 -0700 (PDT)
 Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id c24sm6895702pfd.145.2021.09.06.00.58.15
+        by smtp.gmail.com with ESMTPSA id c24sm6895702pfd.145.2021.09.06.00.58.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Sep 2021 00:58:17 -0700 (PDT)
+        Mon, 06 Sep 2021 00:58:18 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev,
 	geliangtang@gmail.com
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [PATCH mptcp-next 3/6] mptcp: infinite mapping receiving
-Date: Mon,  6 Sep 2021 15:58:04 +0800
-Message-Id: <dd69eaf87e848b1de94526a456215411184cc183.1630914699.git.geliangtang@xiaomi.com>
+Subject: [PATCH mptcp-next 4/6] mptcp: add a mib for the infinite mapping sending
+Date: Mon,  6 Sep 2021 15:58:05 +0800
+Message-Id: <792d3d4c024442df1eeac2d24e200ec34ac47cbd.1630914699.git.geliangtang@xiaomi.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1630914699.git.geliangtang@xiaomi.com>
 References: <cover.1630914699.git.geliangtang@xiaomi.com>
@@ -56,60 +56,59 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-This patch added the infinite mapping receiving logic.
-
-Added a new struct member infinite_mapping_rcv in struct
-mptcp_subflow_context, set it true when the infinite mapping is
-received.
-
-In subflow_check_data_avail, if the infinite_mapping_rcv flag is
-set, don't reset this subflow.
+This patch added a new mib named MPTCP_MIB_INFINITEMAPTX, increase it
+when a infinite mapping has been sent out.
 
 Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 ---
- net/mptcp/protocol.h | 1 +
- net/mptcp/subflow.c  | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ net/mptcp/mib.c      | 1 +
+ net/mptcp/mib.h      | 1 +
+ net/mptcp/protocol.c | 3 +++
+ 3 files changed, 5 insertions(+)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a058af61cf7c..b92b02c2ba61 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -435,6 +435,7 @@ struct mptcp_subflow_context {
- 		send_mp_prio : 1,
- 		send_mp_fail : 1,
- 		infinite_mapping_snd : 1,
-+		infinite_mapping_rcv : 1,
- 		rx_eof : 1,
- 		can_ack : 1,        /* only after processing the remote a key */
- 		disposable : 1,	    /* ctx can be free at ulp release time */
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 87f42ba7c09c..e7ede61c712a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -968,6 +968,7 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- 	data_len = mpext->data_len;
- 	if (data_len == 0) {
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
-+		subflow->infinite_mapping_rcv = 1;
- 		return MAPPING_INVALID;
- 	}
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index b21ff9be04c6..ab55afdcae22 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -24,6 +24,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
+ 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+ 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
++	SNMP_MIB_ITEM("InfiniteMapTx", MPTCP_MIB_INFINITEMAPTX),
+ 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
+ 	SNMP_MIB_ITEM("DSSNoMatchTCP", MPTCP_MIB_DSSTCPMISMATCH),
+ 	SNMP_MIB_ITEM("DataCsumErr", MPTCP_MIB_DATACSUMERR),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index ecd3d8b117e0..7901f1338d15 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -17,6 +17,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
+ 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+ 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the previous one */
++	MPTCP_MIB_INFINITEMAPTX,	/* Sent an infinite mapping */
+ 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
+ 	MPTCP_MIB_DSSTCPMISMATCH,	/* DSS-mapping did not map with TCP's sequence numbers */
+ 	MPTCP_MIB_DATACSUMERR,		/* The data checksum fail */
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3082eb367df2..b14023301975 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1276,6 +1276,8 @@ static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
  
-@@ -1181,7 +1182,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ static void mptcp_update_infinite_mapping(struct mptcp_sock *msk, struct mptcp_ext *mpext)
+ {
++	struct sock *sk = (struct sock *)msk;
++
+ 	if (!mpext)
+ 		return;
  
- 	if (subflow->mp_join ||
- 	    (subflow->fully_established &&
--	     !subflow->infinite_mapping_snd)) {
-+	     !(subflow->infinite_mapping_snd || subflow->infinite_mapping_rcv))) {
- 		/* fatal protocol error, close the socket.
- 		 * subflow_error_report() will introduce the appropriate barriers
- 		 */
-@@ -1201,6 +1202,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 	subflow->map_data_len = skb->len;
- 	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
- 	WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
-+	subflow->infinite_mapping_rcv = 0;
- 	return true;
+@@ -1283,6 +1285,7 @@ static void mptcp_update_infinite_mapping(struct mptcp_sock *msk, struct mptcp_e
+ 	if (READ_ONCE(msk->csum_enabled))
+ 		mpext->csum = 0;
+ 
++	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_INFINITEMAPTX);
+ 	WRITE_ONCE(msk->snd_infinite_mapping_enable, false);
  }
  
 -- 
