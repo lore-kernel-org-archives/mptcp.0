@@ -1,61 +1,56 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB823FC1
-	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 13:14:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7E33FC1
+	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 13:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630934094;
+	s=mimecast20190719; t=1630935631;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SR1fg+bjVtWbKAKX0dlZKOGHUEIpe4GJDEq4mzdq5ro=;
-	b=ILYD10DSer0ighp5gmlZh4Q3GXuOpvTI1+3jmnDpprWCjZ/eWUTyrHK2y9rKEWVLvd0K9j
-	vWRByc4FuAYUGfi1ofMpfgjEy9atj2qIslZm2cqLhGlTQ61eh+8eQvYr0pMuZaQKB9/2fi
-	fsrq4LLUX+71SdP7NASTYuXTpx+54lk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-WrKOtDMOOzGY_SI28nUbSw-1; Mon, 06 Sep 2021 09:14:53 -0400
-X-MC-Unique: WrKOtDMOOzGY_SI28nUbSw-1
-Received: by mail-wm1-f69.google.com with SMTP id b126-20020a1c8084000000b002f152a868a2so2169999wmd.1
-        for <mptcp@lists.linux.dev>; Mon, 06 Sep 2021 06:14:53 -0700 (PDT)
+	bh=gI5+Dlby8UR/vrXNYuXhGv9Q+ZaVYuIc/5wODKcpLAs=;
+	b=IaZeTgy/UoceFkkkoHxBRMUbfnqwP0eNA/EQMg9RK4YQJk3ozNscnk7uuqilEIboJYPwrP
+	S0G/63OlPhwPvL/4bnbPhE+OKB4LzZef1KO5g+2o3CpRo2WODsOdrWTM8QgHCxmUvzX5mb
+	bSyFSepll47bitC4d7T91PamQ/uEbUc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-FZW7vDVQPoahITcDVlSraQ-1; Mon, 06 Sep 2021 09:40:27 -0400
+X-MC-Unique: FZW7vDVQPoahITcDVlSraQ-1
+Received: by mail-wr1-f72.google.com with SMTP id h14-20020a056000000e00b001575b00eb08so1205913wrx.13
+        for <mptcp@lists.linux.dev>; Mon, 06 Sep 2021 06:40:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=SR1fg+bjVtWbKAKX0dlZKOGHUEIpe4GJDEq4mzdq5ro=;
-        b=BV+89LYlTJsbZ92g20m72D3oWFYXx9Brw4tOhw+rPoIJq3SiHZmHn+p5A0qLbnJdA5
-         Xxl1Dygf03vF/Tf0ukNuM47v/O+RhWnjOeBDZyQj5atVMeNiT1wIdxHrYb+nh0VwLF+v
-         JVN7XFRW+8ljsQ4l8rpI4Vahj3kYymzFLmuLZc4eSJ1AdcxdgFMEbP+Y9n6zKoPNBcNd
-         LbZ+19qIMHKrBoD90GP9DohscsVl5THpFny3tRG+VUYW2pNdrOzR1LMM+/pYI5HlAosd
-         IhKwYrk++4wHCcxp/Np1UQ2N0xxkXIA18Ny1YJLGne+07hhCw4CMIvwnHzxta5OoQp9o
-         rd6g==
-X-Gm-Message-State: AOAM530wf/NBDpM3v5h4XidgX2NW5MiOt3qyJlfJzPrmX34ZCJ3V4Qxo
-	L6JNlQV4tkmNx2teHh5UrnkOdkmpPKZSXv6unr4CRDySXmSszrGi/ZQrjrOw0UyECiyEEpIAwub
-	hJEpG8fLD/viFXrw=
-X-Received: by 2002:adf:e5c2:: with SMTP id a2mr2955997wrn.251.1630934092074;
-        Mon, 06 Sep 2021 06:14:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyFnjTzLuduJmJSptmbesA4lLL5dyiT7G8IZ5n8YcfwPx+XnSQ8C5h/bHyPR8AbRXoLw2C0MQ==
-X-Received: by 2002:adf:e5c2:: with SMTP id a2mr2955972wrn.251.1630934091837;
-        Mon, 06 Sep 2021 06:14:51 -0700 (PDT)
+        bh=gI5+Dlby8UR/vrXNYuXhGv9Q+ZaVYuIc/5wODKcpLAs=;
+        b=YjBejWydxLpmREBZd9Ea7nTNR1hlinlXf4JAYzr6UmpMRowguVpOE76vbpk4LmZs64
+         yV47X2sf4mNaN5JWQpXzpATns+UUhUw5AaU5P8hQD5iZhZmceyDbKFT4s1Vi2bpT4AHt
+         vYIY345lVWpDzmNSh4hdK0fay/yw1BSzqeCJ5aGQyUZStOBBToxOXgi/st/1az7rqA7w
+         E4kdwelU5CeGJRfZqD/j9yDVoq5dZCmeV8JoBx/P1vAJQtZ9MwOtZcoZE3XUVGpNQ8Hb
+         z+EM4AtLorf/JL/JlZ1lAy/LSmyiAoqXFiKF6X1tRu21gtjTlH+rNgVK61hzGgZM1USv
+         hGRQ==
+X-Gm-Message-State: AOAM5317XRJo0JrkZtNTLa/lum0OE7+4twe7ZsM5+5V8oYKQnnwCFnm1
+	+zaM6xo89/ARxuaGEmr1jmvCAqqweRYj+Ffr9LVVkF/z0fDBa2FxCi3ga4GwrBYOFELFOuzr6Ye
+	j0jGmLbtgGT2LGcxa2bPeL5KC9RQ6KgNz46+R7PUen13HeWVa7JM/7imluE1OOyRW
+X-Received: by 2002:adf:c3d4:: with SMTP id d20mr13586724wrg.358.1630935626227;
+        Mon, 06 Sep 2021 06:40:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy19JRbP35CIcG5FLmZ80QoHH2P1PeVSzssQLT1xk0l02npvVjKBKyMoUtATWMfhaI3Nu+iOw==
+X-Received: by 2002:adf:c3d4:: with SMTP id d20mr13586691wrg.358.1630935625917;
+        Mon, 06 Sep 2021 06:40:25 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
-        by smtp.gmail.com with ESMTPSA id w9sm7931283wrs.7.2021.09.06.06.14.51
+        by smtp.gmail.com with ESMTPSA id u26sm8331041wrd.32.2021.09.06.06.40.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Sep 2021 06:14:51 -0700 (PDT)
-Message-ID: <379641c2d20832800fb3fde1e516f28d2b153249.camel@redhat.com>
-Subject: Re: [mptcp-next 2/2] mptcp: re-set push-pending bit on retransmit
- failure
+        Mon, 06 Sep 2021 06:40:25 -0700 (PDT)
+Message-ID: <5c66a4912f61bfb4ad2df9677c3d2ac02f1ed1cc.camel@redhat.com>
+Subject: Re: [RFC PATCH] selftests: mptcp: tune timeout and delay for
+ simult_flows cases
 From: Paolo Abeni <pabeni@redhat.com>
-To: Florian Westphal <fw@strlen.de>
-Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 06 Sep 2021 15:14:50 +0200
-In-Reply-To: <20210906113547.GE23554@breakpoint.cc>
-References: <20210906060614.25217-1-fw@strlen.de>
-	 <20210906060614.25217-3-fw@strlen.de>
-	 <aaefcedbe475b6bf060bbb4d6266233d57d59225.camel@redhat.com>
-	 <20210906075531.GD23554@breakpoint.cc>
-	 <c0fc73caa4f52bdfc639ea76b552b1bc255eab9b.camel@redhat.com>
-	 <20210906113547.GE23554@breakpoint.cc>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Mon, 06 Sep 2021 15:40:24 +0200
+In-Reply-To: <126a63a07de5709e2702abb5f431f9128146c60a.1630922799.git.pabeni@redhat.com>
+References: <126a63a07de5709e2702abb5f431f9128146c60a.1630922799.git.pabeni@redhat.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -70,47 +65,56 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2021-09-06 at 13:35 +0200, Florian Westphal wrote:
-> Paolo Abeni <pabeni@redhat.com> wrote:
-> > On Mon, 2021-09-06 at 09:55 +0200, Florian Westphal wrote:
-> > > Because I don't think it makes sense to re-try ASAP if we could
-> > > not find a ssk, and instead defer until next firing of rtx timer.
-> > 
-> > Ok
-> > > > Do we need something similar for __mptcp_subflow_push_pending(), too?
-> > > 
-> > > I don't think so, its thats not invoked from the mptcp-release cb; 
-> > 
-> > yup, right. To be clear, with "something similar" I also referred to
-> > ensuring the rtx timer is armed.
+On Mon, 2021-09-06 at 12:08 +0200, Paolo Abeni wrote:
+> We currently have some instabilities in the simult_flows tests-case.
+> The problem boils down to the unneeded large wait introduced by the
+> tests to allow for the MPJ handshake to complete, which can also
+> introduce a quite relevant variance.
 > 
-> __mptcp_subflow_push_pending() is only called when we already have
-> pending xmit, i.e. the timer is already running and with the change in
-> this patch the timer is guaranteed to re-arm itself unless there is
-> nothing to transmit anymore.
+> Do wait on a single side of the connection, remove the delay at
+> shutdown time and tune the expected test time with the above.
 > 
-> __mptcp_push_pending is different because that is called when new data
-> is passed in via sendmsg, i.e. timer might not be running (yet).
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/137
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> Side note: the change in mptcp_connect.c may impact negativelly the
+> mp_join self-tests. In my local experiments they are still working
+> reliably, but it would be good have some spins in the slow CI/debug
+> env for more consistency
+> ---
+>  .../selftests/net/mptcp/mptcp_connect.c       |  1 -
+>  .../selftests/net/mptcp/simult_flows.sh       | 21 +++++++++++++------
+>  2 files changed, 15 insertions(+), 7 deletions(-)
 > 
-> Makes sense to you?
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index 89c4753c2760..8070e090688d 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -1010,7 +1010,6 @@ static void parse_opts(int argc, char **argv)
+>  		case 'j':
+>  			cfg_join = true;
+>  			cfg_mode = CFG_MODE_POLL;
+> -			cfg_wait = 400000;
+>  			break;
+>  		case 'r':
+>  			cfg_remove = true;
+> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> index 910d8126af8f..8af49014a604 100755
+> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> @@ -51,7 +51,7 @@ setup()
+>  	sout=$(mktemp)
+>  	cout=$(mktemp)
+>  	capout=$(mktemp)
+> -	size=$((2048 * 4096))
+> +	size=$((2048 * 4096 * 4))
 
-Yes, thanks for the explaination!
+whooops, this change is unintended, I'll drop it in later version.
 
-> > > > I'm wondering if this will cause a sort of 'spinning'/busy loop on
-> > > > above condition inside mptcp_release_cb().
-> > > 
-> > > Hmm, right, that might indeed happen.
-> > > It should be sae to remove the above clause and unconditioally wait
-> > > for the reworked rtx timer to assert pending bit again.
-> > 
-> > +1 :) (assuming s/sae/safe/ :)
-> 
-> Yep, safe.  Test has been running for a few hours now with no failures,
-> will send v2 shortly.
+@matttbe: could you please drop it in the CI, if you pick this patch
+for testing?
 
-Excellent!
+Thanks!
 
-Cheeers,
-
-Paolo
+/P
 
