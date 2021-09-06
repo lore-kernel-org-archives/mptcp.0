@@ -1,18 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8E53FC1
-	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 13:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047753FC1
+	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 13:11:00 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1mNEOk-0001oE-2Z; Mon, 06 Sep 2021 15:10:54 +0200
+	id 1mNEOo-0001oQ-8i; Mon, 06 Sep 2021 15:10:58 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v2 1/2] mptcp: remove tx_pending_data
-Date: Mon,  6 Sep 2021 15:10:44 +0200
-Message-Id: <20210906131045.18513-2-fw@strlen.de>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next v2 2/2] mptcp: re-arm retransmit timer if data is pending
+Date: Mon,  6 Sep 2021 15:10:45 +0200
+Message-Id: <20210906131045.18513-3-fw@strlen.de>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210906131045.18513-1-fw@strlen.de>
 References: <20210906131045.18513-1-fw@strlen.de>
@@ -24,81 +23,98 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The update on recovery is not correct.
+The retransmit head will be NULL in case there is no in-flight data
+(meaning all data injected into network has been acked).
 
-msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
+In that case the retransmit timer is stopped.
 
-will update tx_pending_data multiple times when a subflow is declared
-stale while earlier recovery is still in progress.
-This means that tx_pending_data will still be positive even after
-all data as has been transmitted.
+This is only correct if there is no more pending, not-yet-sent data.
 
-Rather than fix it, remove this field: there are no consumers.
-The outstanding data byte count can be computed either via
+If there is, the retransmit timer needs to set the PENDING bit again so
+that mptcp tries to send the remaining (new) data once a subflow can accept
+more data.
 
- "msk->write_seq - rtx_head->data_seq" or
- "msk->write_seq - msk->snd_una".
+Also, mptcp_subflow_get_retrans() has to be called unconditionally.
 
-The latter is more recent/accurate estimate as rtx_head adjustment
-is deferred until mptcp lock can be acquired.
+This function checks for subflows that have become unresponsive and marks
+them as stale, so in the case where the rtx queue is empty, subflows
+will never be marked stale which prevents available backup subflows from
+becoming eligible for transmit.
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/226
 Signed-off-by: Florian Westphal <fw@strlen.de>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
 ---
- No changes in v2.
+ Changes in v2:
+  - drop reset-pending conditional in __mptcp_push_pending,
+    retrans timer already takes care of this (Paolo)
+  - rename patch subject
+  - add a 'closes' tag to commit message
 
- net/mptcp/protocol.c | 4 ----
- net/mptcp/protocol.h | 1 -
- 2 files changed, 5 deletions(-)
+ net/mptcp/protocol.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2a525c7ae920..c0e0ee4cb24f 100644
+index c0e0ee4cb24f..73cb5d053785 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1531,7 +1531,6 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
- 	dfrag->already_sent += sent;
+@@ -1105,7 +1105,8 @@ static void __mptcp_clean_una(struct sock *sk)
+ 	if (cleaned && tcp_under_memory_pressure(sk))
+ 		__mptcp_mem_reclaim_partial(sk);
  
- 	msk->snd_burst -= sent;
--	msk->tx_pending_data -= sent;
+-	if (snd_una == READ_ONCE(msk->snd_nxt) && !msk->recovery) {
++	if (snd_una == READ_ONCE(msk->snd_nxt) &&
++	    snd_una == READ_ONCE(msk->write_seq)) {
+ 		if (mptcp_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
+ 			mptcp_stop_timer(sk);
+ 	} else {
+@@ -1547,6 +1548,13 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
+ 		msk->snd_nxt = snd_nxt_new;
+ }
  
- 	snd_nxt_new += dfrag->already_sent;
++static void mptcp_check_and_set_pending(struct sock *sk)
++{
++	if (mptcp_send_head(sk) &&
++	    !test_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
++		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
++}
++
+ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ {
+ 	struct sock *prev_ssk = NULL, *ssk = NULL;
+@@ -2414,6 +2422,9 @@ static void __mptcp_retrans(struct sock *sk)
+ 	int ret;
  
-@@ -1761,7 +1760,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		frag_truesize += psize;
- 		pfrag->offset += frag_truesize;
- 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
--		msk->tx_pending_data += psize;
+ 	mptcp_clean_una_wakeup(sk);
++
++	/* first check ssk: need to kick "stale" logic */
++	ssk = mptcp_subflow_get_retrans(msk);
+ 	dfrag = mptcp_rtx_head(sk);
+ 	if (!dfrag) {
+ 		if (mptcp_data_fin_enabled(msk)) {
+@@ -2426,10 +2437,12 @@ static void __mptcp_retrans(struct sock *sk)
+ 			goto reset_timer;
+ 		}
  
- 		/* charge data on mptcp pending queue to the msk socket
- 		 * Note: we charge such data both to sk and ssk
-@@ -2254,7 +2252,6 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
- 	mptcp_data_unlock(sk);
+-		return;
++		if (!mptcp_send_head(sk))
++			return;
++
++		goto reset_timer;
+ 	}
  
- 	msk->first_pending = rtx_head;
--	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
- 	msk->snd_burst = 0;
+-	ssk = mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+ 		goto reset_timer;
  
- 	/* be sure to clear the "sent status" on all re-injected fragments */
-@@ -2525,7 +2522,6 @@ static int __mptcp_init_sock(struct sock *sk)
- 	msk->first_pending = NULL;
- 	msk->wmem_reserved = 0;
- 	WRITE_ONCE(msk->rmem_released, 0);
--	msk->tx_pending_data = 0;
- 	msk->timer_ival = TCP_RTO_MIN;
+@@ -2456,6 +2469,8 @@ static void __mptcp_retrans(struct sock *sk)
+ 	release_sock(ssk);
  
- 	msk->first = NULL;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 99a23fff7b03..8416810afa8e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -254,7 +254,6 @@ struct mptcp_sock {
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
- 	struct sk_buff_head receive_queue;
--	int		tx_pending_data;
- 	struct list_head conn_list;
- 	struct list_head rtx_queue;
- 	struct mptcp_data_frag *first_pending;
+ reset_timer:
++	mptcp_check_and_set_pending(sk);
++
+ 	if (!mptcp_timer_pending(sk))
+ 		mptcp_reset_timer(sk);
+ }
 -- 
 2.32.0
 
