@@ -1,48 +1,48 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59C43FC1
-	for <mptcp@lists.linux.dev>; Tue,  7 Sep 2021 10:42:10 +0000 (UTC)
-Received: by mail-pg1-f180.google.com with SMTP id n18so9475154pgm.12
-        for <mptcp@lists.linux.dev>; Tue, 07 Sep 2021 03:42:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54E13FC1
+	for <mptcp@lists.linux.dev>; Tue,  7 Sep 2021 10:42:12 +0000 (UTC)
+Received: by mail-pg1-f173.google.com with SMTP id k24so9486111pgh.8
+        for <mptcp@lists.linux.dev>; Tue, 07 Sep 2021 03:42:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nRF453gc3LoiL+DkmEG/qr8KJt3b8ZPwvak9UGeLFkM=;
-        b=LAblFN+zHU/MP6R+KAFtj2sC3ddVaeRY6fFAKIr7sjTB2QUmvl/IgHgLO+NBvlZHH/
-         PPKjaH3236lfhTZzOoAM1lvMIvf9U2w5wnl7VyFMAJVNuMcxBGAX7QPy2q3RVAhDDeFA
-         MtEhzXFTDQaPcRIfaQAU+m0awzpS58uEIB9eeUJjilLdDi9KyBfKt53BDtu9as3gnQXC
-         2qkjWgEfki0hkp9reBC6EVJSO+57kindgsibYyp3SCe9ue2qdr811el+CCBo/qYGioil
-         d0wTR9coZdnF+d/vfKdYpz9VRmuoHDm10Rg1S6oEiHFDSMLt9WBK08wWOtARMhDq476Z
-         DcwA==
+        bh=1K7ugEhop6LCWfr4ijQCmh95fD7Pz5Fai/YV5A3EDdc=;
+        b=VkpOGbjDZLHlsNiIN61pNlaphJYMnAb5PpWHzJzWlfQXID2h1ricQgXAQaVP4f76ZV
+         A/88kM96zEaa9DqL4J1oXpeYL5/yBxXBlac7ovKiy88XOgVx3NNkgYasilUHwCqOPKpY
+         N3alTTO3DY6b+jIhir9zk1TjaT/TkECSZV5UzLQyF7V7XNa/d/3fA8ho2hTyUBmdnAzm
+         LN1Qdpd39YzkpdjK2Fsq5xpvRO5jgonn33EiHekSVejl0OEeFEzZd8SihTVFHN0LqE6S
+         wl+Wpz/EcpUnlu34aFAQgEi7rbuMzDRjmsJhqJLi1ZtUCpjMeknvu5e8yZvGLYvtcGsg
+         d4JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nRF453gc3LoiL+DkmEG/qr8KJt3b8ZPwvak9UGeLFkM=;
-        b=SBUIqRUBthnE6W4HyBYQs/nTUTw0eZh3jNeoeZd+/Hwf+7n0yZFEaYY1uqzOVVSEDV
-         B3cZLQ0Trg4b+g0v8ica+rvwE89N1mReNlxhxrL5eImm3Yg/NOaUJODPL8WdwuGd1Gj/
-         W/LUqeIM4eF/dgxI9FaLdrctzdmZC7DyyRSfNWipVMjRLMh42KPOeQUXwuGYBGuCNk14
-         l1DiU5cI5Um0jYDLTpoAwWrUkaF8Q/eLbQs+JjdYmKLq0IHwbsRSVfCNy8LLxKFzro7V
-         px+HsAUgZSt+1DMGU4gVL41FygEvX9/Uz2PoFX7/cNivfdHpet6gHo7K56Qdbqpb6TDN
-         uiQw==
-X-Gm-Message-State: AOAM5301G6fZ5C6CT5rAeKYOfaL5REgWR7XnFWPASnmOjH1z6G7O54is
-	d07KyQj+8J4jw64qVWUq5i64Yy2rcJ0=
-X-Google-Smtp-Source: ABdhPJyQlLPty/0iRY1S8pZE6y9c9upMmmMa+g7EzfNVXfaDnmzKuRwba93UzpnKp3jU1uGjd/BqsQ==
-X-Received: by 2002:aa7:9282:0:b0:3e2:800a:b423 with SMTP id j2-20020aa79282000000b003e2800ab423mr16130932pfa.21.1631011330324;
-        Tue, 07 Sep 2021 03:42:10 -0700 (PDT)
+        bh=1K7ugEhop6LCWfr4ijQCmh95fD7Pz5Fai/YV5A3EDdc=;
+        b=H3z0Fgz/WqXQpGVoMAbd8Z34VVZUOzemk/fLIM6nyR+CMZ+deHttobHrZqz4Pa811g
+         simLIgTTUnY+ukcow3Yty3U9FOPytojN/J/mPB+/vKuLk/BXNEQomi/cmir5n1XHapLb
+         oX/wHByG0z+aAlOzQphdhEIi4ODiDnIuaZkJ9UMwlRjW9NP1v2iarjtsagSlbdHc4YkA
+         StsGiYdAidgrqNf+u5w+R9y4D74592zGkS6y9JKU1VsXFnZ1/iLu7R9zIkYYSZAnUHNB
+         eEcJhns4sjGlzpq6Gqu8h6dYlFt6cCqXfpBoE92buVvrlI6My0S0xj/YEVVYnpLrDgeQ
+         n0Lw==
+X-Gm-Message-State: AOAM533uM+sKZEtdG85b4/BlysMfa3WEW1CpbNB0qUHYj0oNyroND7CQ
+	R6F3xO0vLsbyCXknmJRiYHEZXy+Dp7c=
+X-Google-Smtp-Source: ABdhPJxhr80cY3lMcP/ge53m4BivKZeJKD27FiZSXhTHbIGrJmHLYlsTU7Nr6sLApEVNwP//49+taQ==
+X-Received: by 2002:a05:6a00:d72:b0:3f7:7f03:6cfb with SMTP id n50-20020a056a000d7200b003f77f036cfbmr20476783pfv.1.1631011332158;
+        Tue, 07 Sep 2021 03:42:12 -0700 (PDT)
 Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id x189sm10571885pfc.52.2021.09.07.03.42.08
+        by smtp.gmail.com with ESMTPSA id x189sm10571885pfc.52.2021.09.07.03.42.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Sep 2021 03:42:10 -0700 (PDT)
+        Tue, 07 Sep 2021 03:42:11 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev,
 	geliangtang@gmail.com
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [PATCH RFC mptcp-next 3/4] mptcp: round-robin packet scheduler support
-Date: Tue,  7 Sep 2021 18:41:58 +0800
-Message-Id: <95d450f9694cf9d95081a77db529db2181d0d3b3.1631011068.git.geliangtang@xiaomi.com>
+Subject: [PATCH RFC mptcp-next 4/4] selftests: mptcp: add round-robin testcase
+Date: Tue,  7 Sep 2021 18:41:59 +0800
+Message-Id: <7e749e6d27fee702dfc1c6478cb426c36e84a3ac.1631011068.git.geliangtang@xiaomi.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1631011068.git.geliangtang@xiaomi.com>
 References: <cover.1631011068.git.geliangtang@xiaomi.com>
@@ -56,76 +56,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-Implement the round-robin packet scheduler like on the mptcp.org kernel.
+Add the round-robin scheduler testcase.
 
 Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 ---
- net/mptcp/Kconfig    |  7 +++++++
- net/mptcp/protocol.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index 10c97e19a7da..0df36991566a 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -23,6 +23,13 @@ config MPTCP_IPV6
- 	depends on IPV6=y
- 	default y
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 255793c5ac4f..c69b1dce95f7 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -15,6 +15,7 @@ timeout_test=$((timeout_poll * 2 + 1))
+ mptcp_connect=""
+ capture=0
+ checksum=0
++roundrobin=0
+ do_all_tests=1
  
-+config MPTCP_ROUNDROBIN
-+	tristate "MPTCP Round-Robin"
-+	default n
-+	help
-+	  This is a very simple round-robin scheduler. Probably has bad performance
-+	  but might be interesting for researchers.
-+
- config MPTCP_KUNIT_TEST
- 	tristate "This builds the MPTCP KUnit tests" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ab72a3950f2b..b78c4eb4947f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1521,6 +1521,29 @@ static struct mptcp_sched_ops mptcp_sched_default = {
- 	.owner		= THIS_MODULE,
- };
+ TEST_COUNT=0
+@@ -55,6 +56,9 @@ init()
+ 		if [ $checksum -eq 1 ]; then
+ 			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
+ 		fi
++		if [ $roundrobin -eq 1 ]; then
++			ip netns exec $netns sysctl -q net.mptcp.scheduler="roundrobin"
++		fi
+ 	done
  
-+#if IS_ENABLED(CONFIG_MPTCP_ROUNDROBIN)
-+static struct sock *rr_get_subflow(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *ssk;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		ssk = mptcp_subflow_tcp_sock(subflow);
-+		if (ssk != msk->last_snd) {
-+			pr_debug("msk=%p ssk=%p last_snd=%p", msk, ssk, msk->last_snd);
-+			msk->last_snd = ssk;
-+		}
-+	}
-+	return msk->last_snd;
-+}
-+
-+static struct mptcp_sched_ops mptcp_sched_rr = {
-+	.get_subflow	= rr_get_subflow,
-+	.name		= "roundrobin",
-+	.owner		= THIS_MODULE,
-+};
-+#endif
-+
- static DEFINE_SPINLOCK(mptcp_sched_list_lock);
- static LIST_HEAD(mptcp_sched_list);
+ 	#  ns1              ns2
+@@ -1854,9 +1858,12 @@ for arg in "$@"; do
+ 	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
+ 		checksum=1
+ 	fi
++	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"R"[0-9a-zA-Z]*$ ]]; then
++		roundrobin=1
++	fi
  
-@@ -1565,6 +1588,9 @@ static void mptcp_sched_data_init(struct mptcp_sock *msk)
- static void mptcp_sched_init(void)
- {
- 	mptcp_register_scheduler(&mptcp_sched_default);
-+#if IS_ENABLED(CONFIG_MPTCP_ROUNDROBIN)
-+	mptcp_register_scheduler(&mptcp_sched_rr);
-+#endif
- }
- 
- static void mptcp_push_release(struct sock *sk, struct sock *ssk,
+-	# exception for the capture/checksum options, the rest means: a part of the tests
+-	if [ "${arg}" != "-c" ] && [ "${arg}" != "-C" ]; then
++	# exception for the capture/checksum/roundrobin options, the rest means: a part of the tests
++	if [ "${arg}" != "-c" ] && [ "${arg}" != "-C" ] && [ "${arg}" != "-R" ]; then
+ 		do_all_tests=0
+ 	fi
+ done
 -- 
 2.31.1
 
