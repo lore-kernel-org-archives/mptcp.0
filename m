@@ -1,165 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5103FC1
-	for <mptcp@lists.linux.dev>; Mon,  6 Sep 2021 13:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1630935744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FgRJl6Ymv0EsdpibvohGwGh5m0v7JiskxtfR87+CppA=;
-	b=MSQvjdRQy/Et71Shg3TbfGKc2tl1wQD5Yyo//lrM1ZQcJ6aw7ce4TE6ldfEkWbLGbfZ9r4
-	/Rm01pZZd2EzSnz+l1m7yXeV4ByTbXKLxGeQ84srduoV31IZSIyd90xgxaFh1ABda7wlNU
-	RJ7C3hvRFsq/IlW6RKVeDv/ePiu4808=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-546-YgI83qdgN6G7zv9jChwboQ-1; Mon, 06 Sep 2021 09:42:22 -0400
-X-MC-Unique: YgI83qdgN6G7zv9jChwboQ-1
-Received: by mail-wr1-f72.google.com with SMTP id d10-20020adffbca000000b00157bc86d94eso1200331wrs.20
-        for <mptcp@lists.linux.dev>; Mon, 06 Sep 2021 06:42:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06603FC1
+	for <mptcp@lists.linux.dev>; Tue,  7 Sep 2021 10:42:05 +0000 (UTC)
+Received: by mail-pj1-f50.google.com with SMTP id w19-20020a17090aaf9300b00191e6d10a19so1790178pjq.1
+        for <mptcp@lists.linux.dev>; Tue, 07 Sep 2021 03:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lo8hnmYD4eGLyw+n7SGzxVXQdANGcg2+Qxie8+ObbQ=;
+        b=nS19Kib0PJeVajDkOGj9kyQRf1+DJjTcjXx8GNKlZ7b5P58MjOZm2byQGFTIIK4r1o
+         ZaRoDun25pVd044Bh3/7gSjaooSwGdoeem4E7f0dPv4UdGvEJqrfVY578MUBz6Q4nZPR
+         gUwlRuUlSknMquDOyF2ZDs0S7A0M28j1SqTfbPCdy7jXPmIToUS4E8cK2Nvv5nVtkE9O
+         So2FSJI2ktJPnP/+gYtcXYo0wStunhBYOQSShbDv3Fe25cRXYwI2ZVkSM+1QLIp0bqC6
+         XPaw0I0wtC8kuxXdPL+P/J5FvABUJ+pJLndV2qwyPxNzE4RCqfsVEoPNc/yk7K7Xfcmm
+         9FWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=FgRJl6Ymv0EsdpibvohGwGh5m0v7JiskxtfR87+CppA=;
-        b=BmJkSrdTwEYBC5cityxPhCahYNLX8w72rq13qdpqp4b/lRO12yIpHvzMIU5jp/QFeS
-         Neb0ryNCncCmEHHiiOwcJabroRcVQeb93MN/LIR1ERiUi03Mkh5eRPxOg4s9k4T9w8/5
-         fRmV56eYI4QSnUm3L7fwJ58+GK3B3JM3hcNmUhhpPWz1Op5SWbuCFA6b3lnXrNsZbS2d
-         33WNO+NHxYrX0PZWj2GhXhcHf7v9gEAV6YaHKbyhvHh61eoG9IJN+sMMVbJOzY/qpX9O
-         VmRPVhTd0W8IyYDc15Ecc1ji1X8sc8jVKt+4dsVH4qXp87+Q18X/OBmFfdErbBJWfnoF
-         c+5A==
-X-Gm-Message-State: AOAM531tXUFHOoa7Ofp6rntZDh629SUTSnPVyzp4Ld1svlOj9YCJZcTQ
-	OXt/CP0Ng0p7Smm8XqXIVau5YdIRYD/CJWcGoMv5eLMzN+YaBhK4gUr+Jg2ErIBkiZlQepFEkOb
-	Y/tmhXDG6WUFVX3A=
-X-Received: by 2002:adf:b7c5:: with SMTP id t5mr13383593wre.322.1630935741070;
-        Mon, 06 Sep 2021 06:42:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwfyQV3+T34+o5J3JCG2wB+eKhmsxNF7YtSvFGn5x8qmzmJqHc33aqQiyUOXrAM7ZT4bathIg==
-X-Received: by 2002:adf:b7c5:: with SMTP id t5mr13383578wre.322.1630935740878;
-        Mon, 06 Sep 2021 06:42:20 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-233-185.dyn.eolo.it. [146.241.233.185])
-        by smtp.gmail.com with ESMTPSA id r26sm7153945wmh.27.2021.09.06.06.42.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lo8hnmYD4eGLyw+n7SGzxVXQdANGcg2+Qxie8+ObbQ=;
+        b=XO/wbJxvGYCHRo+L4yd9xGmDu5fDnoyAFkVxJBg/WuggngKwpMXf2+JsfoHqb0ZWmM
+         p8V6fg85NZ7GcKQVfwXw4Q34AxvLOTFSOlt5HUh9nTs/IyK3sBmXehRfzJtrN7RBSvrS
+         wk/X6xdmRvC/SqjEBVpqibwIGmIMVNG6nqK7ZbuRpS4AdBd4nXBvW1/xeIdMvUDY9oVu
+         IdLDf+3QHP7J+uacNlxZxpcu5jROsJEyJHVffBad8FAmbpl3+CcZmACcNywdEb+3AdU7
+         6Pz2dzq8uXiyKJC3K2iAzRUyGw2Bitu5VruLPHRLuogV5GAtWJgynYIL5RwYfmbzC7fC
+         yUQQ==
+X-Gm-Message-State: AOAM5316Ibko/Ymh5WG4KrAi6Qm6YHxRGsgqAZQHC7p5rJX6D7BVD5EV
+	AqvGVNz1OUwfbd+ESgIAmrYkEUQKtRU=
+X-Google-Smtp-Source: ABdhPJzyZl20dChvNlShxgAlJlcduZ88Fn8qO3vD23Jvqbv/P8FDj/1A3XCJTHZaQSvFyGHsFCXTug==
+X-Received: by 2002:a17:90a:5d95:: with SMTP id t21mr3808531pji.77.1631011324949;
+        Tue, 07 Sep 2021 03:42:04 -0700 (PDT)
+Received: from MiBook.. ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id x189sm10571885pfc.52.2021.09.07.03.42.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Sep 2021 06:42:20 -0700 (PDT)
-Message-ID: <b813a7d19914c8ab740fd278c1056c561cddadcd.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: re-arm retransmit timer if
- data is pending
-From: Paolo Abeni <pabeni@redhat.com>
-To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Date: Mon, 06 Sep 2021 15:42:19 +0200
-In-Reply-To: <20210906131045.18513-3-fw@strlen.de>
-References: <20210906131045.18513-1-fw@strlen.de>
-	 <20210906131045.18513-3-fw@strlen.de>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+        Tue, 07 Sep 2021 03:42:04 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev,
+	geliangtang@gmail.com
+Cc: Geliang Tang <geliangtang@xiaomi.com>
+Subject: [PATCH RFC mptcp-next 0/4] round-robin packet scheduler support
+Date: Tue,  7 Sep 2021 18:41:55 +0800
+Message-Id: <cover.1631011068.git.geliangtang@xiaomi.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2021-09-06 at 15:10 +0200, Florian Westphal wrote:
-> The retransmit head will be NULL in case there is no in-flight data
-> (meaning all data injected into network has been acked).
-> 
-> In that case the retransmit timer is stopped.
-> 
-> This is only correct if there is no more pending, not-yet-sent data.
-> 
-> If there is, the retransmit timer needs to set the PENDING bit again so
-> that mptcp tries to send the remaining (new) data once a subflow can accept
-> more data.
-> 
-> Also, mptcp_subflow_get_retrans() has to be called unconditionally.
-> 
-> This function checks for subflows that have become unresponsive and marks
-> them as stale, so in the case where the rtx queue is empty, subflows
-> will never be marked stale which prevents available backup subflows from
-> becoming eligible for transmit.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/226
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
->  Changes in v2:
->   - drop reset-pending conditional in __mptcp_push_pending,
->     retrans timer already takes care of this (Paolo)
->   - rename patch subject
->   - add a 'closes' tag to commit message
-> 
->  net/mptcp/protocol.c | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index c0e0ee4cb24f..73cb5d053785 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1105,7 +1105,8 @@ static void __mptcp_clean_una(struct sock *sk)
->  	if (cleaned && tcp_under_memory_pressure(sk))
->  		__mptcp_mem_reclaim_partial(sk);
->  
-> -	if (snd_una == READ_ONCE(msk->snd_nxt) && !msk->recovery) {
-> +	if (snd_una == READ_ONCE(msk->snd_nxt) &&
-> +	    snd_una == READ_ONCE(msk->write_seq)) {
->  		if (mptcp_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
->  			mptcp_stop_timer(sk);
->  	} else {
-> @@ -1547,6 +1548,13 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
->  		msk->snd_nxt = snd_nxt_new;
->  }
->  
-> +static void mptcp_check_and_set_pending(struct sock *sk)
-> +{
-> +	if (mptcp_send_head(sk) &&
-> +	    !test_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
-> +		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-> +}
-> +
->  void __mptcp_push_pending(struct sock *sk, unsigned int flags)
->  {
->  	struct sock *prev_ssk = NULL, *ssk = NULL;
-> @@ -2414,6 +2422,9 @@ static void __mptcp_retrans(struct sock *sk)
->  	int ret;
->  
->  	mptcp_clean_una_wakeup(sk);
-> +
-> +	/* first check ssk: need to kick "stale" logic */
-> +	ssk = mptcp_subflow_get_retrans(msk);
->  	dfrag = mptcp_rtx_head(sk);
->  	if (!dfrag) {
->  		if (mptcp_data_fin_enabled(msk)) {
-> @@ -2426,10 +2437,12 @@ static void __mptcp_retrans(struct sock *sk)
->  			goto reset_timer;
->  		}
->  
-> -		return;
-> +		if (!mptcp_send_head(sk))
-> +			return;
-> +
-> +		goto reset_timer;
->  	}
->  
-> -	ssk = mptcp_subflow_get_retrans(msk);
->  	if (!ssk)
->  		goto reset_timer;
->  
-> @@ -2456,6 +2469,8 @@ static void __mptcp_retrans(struct sock *sk)
->  	release_sock(ssk);
->  
->  reset_timer:
-> +	mptcp_check_and_set_pending(sk);
-> +
->  	if (!mptcp_timer_pending(sk))
->  		mptcp_reset_timer(sk);
->  }
+From: Geliang Tang <geliangtang@xiaomi.com>
 
-LGTM, thanks Florian!
+Implement the round-robin packet scheduler, ported from the mptcp.org kernel.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/194
+
+Geliang Tang (4):
+  mptcp: add a new sysctl scheduler
+  mptcp: add struct mptcp_sched_ops
+  mptcp: round-robin packet scheduler support
+  selftests: mptcp: add round-robin testcase
+
+ Documentation/networking/mptcp-sysctl.rst     |  8 ++
+ net/mptcp/Kconfig                             |  7 ++
+ net/mptcp/ctrl.c                              | 14 +++
+ net/mptcp/protocol.c                          | 86 ++++++++++++++++++-
+ net/mptcp/protocol.h                          | 11 +++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 11 ++-
+ 6 files changed, 132 insertions(+), 5 deletions(-)
+
+-- 
+2.31.1
 
