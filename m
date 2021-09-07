@@ -1,48 +1,48 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A983FC1
-	for <mptcp@lists.linux.dev>; Tue,  7 Sep 2021 10:42:07 +0000 (UTC)
-Received: by mail-pg1-f175.google.com with SMTP id 17so9497895pgp.4
-        for <mptcp@lists.linux.dev>; Tue, 07 Sep 2021 03:42:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1959B3FC1
+	for <mptcp@lists.linux.dev>; Tue,  7 Sep 2021 10:42:09 +0000 (UTC)
+Received: by mail-pj1-f50.google.com with SMTP id fs6so6022365pjb.4
+        for <mptcp@lists.linux.dev>; Tue, 07 Sep 2021 03:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=z4ipqZ6YwAe6GdDe2f7sH0TYCUu5GsEf1qXuaqPdSx4=;
-        b=N9rLV4cajSM9s5dDghKpcLxeXPiUQer+Z41da+Nf3R/rgP9iVlfu/vjYR+ebxCalsY
-         QERBWnr32bN6uE8iPkMElkbROg2cP16fX0Syuf/SGOwkBsw/7qHwerJl1N0xWZoNcG/+
-         BU3uWdnrv7KiSa0jmOFvtcr2CbuNZsh8bunLucjCvL2eQHCn/KCpy3/d49atphsR6JHR
-         IL0ikE983iVln3qiWu4TW6oMpdwv+mjrOFocoP1FbTXaqU7Q25rRTJAG3+YVbN+jXhwF
-         qib5RK/Ih6BBQwFWIy5L3RY24aNaRbtJU5vzeuYcAcesVEwiawND2C0gxV8qBuwztUwA
-         8UJQ==
+        bh=Z7jUhcYhzYJSdo9US0yEIy+lB4N82r6XMS+6fJgmaHM=;
+        b=JeupBXqy7emI4mmIe4A5OrrBiF123Wd9JhFIcxd2wyIu4/nurBezbnVwNTg41tBH62
+         Z370PeqERyvOWSmBECVGV3ExcwGcP6GjQgfqP/XhDgy4PkTMo7hbyEOgob4m9ZYguC5B
+         TdlDyzxY6oQRu5DKwZTlnlMmCJ/bszQ8BBy98LwVPUQZKcspSG9xyI85XUd3I5qKd3iA
+         kkRpjEu5ngPdL/L3TaL8DwzVK6bKjw078g92Z4gae+aIpwH3+HMoEVfpzrr3rR6rUZkS
+         ucb9WEJUsmWJCczvUWTlmQ7aXe3qVOwS+RsVfNAvjU5wZU5hW91ztVN4lwFYlQws2vd/
+         Y4uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=z4ipqZ6YwAe6GdDe2f7sH0TYCUu5GsEf1qXuaqPdSx4=;
-        b=Jk/DiS8M9o4lYd8c51qQa2Wo/gjjxT7rFva4gowN5WMxryu/9qSIdEVrZjpTHQa03l
-         AWZxK5g8/h3sDtIsQkYF/N3GOu+JAJnYRv7sHVjE7UTEedrtrEJ/vQMsAcWkRPiOYniY
-         sGmIYENwDwzVnzdMUegiej+CBJZ2W0A09DyyaS+QHGuwPWbkTb5e/ttNXnEhe0dhoK7v
-         5lTHwbLdDwg3x33PSbO3pG/XQSWf4JOIy9v2P8js1w7FosU8Iyv+nqB+9wLQYpZ5Qwx4
-         URSUZn7z7v4tNNHZ09yhVdGVyRbU30On/Sxe68ZVMHkD9ksf5G2D/vUaFJ3vhXeTlH/I
-         qjMQ==
-X-Gm-Message-State: AOAM5307iF0yQyx1crro2ZdraZ51U0kkSUGc16Gr5cYre0SgdZ4GxmFQ
-	oe81xmXqhrvvcVaa5J3a45gcsmZa4Yk=
-X-Google-Smtp-Source: ABdhPJyhUu6Aj/NtviSFv8P0+FCLfQHY8mYhwZ7VjSbu/+7L5G5od222xHGcfoxPJ1ZSBCNadqZiEA==
-X-Received: by 2002:a62:8048:0:b0:416:2682:e56a with SMTP id j69-20020a628048000000b004162682e56amr6139567pfd.73.1631011326896;
-        Tue, 07 Sep 2021 03:42:06 -0700 (PDT)
+        bh=Z7jUhcYhzYJSdo9US0yEIy+lB4N82r6XMS+6fJgmaHM=;
+        b=JQru0QT9BOH2UhN4qnfAFFvnHkrPExUXdr0xcQcI+Y7Dvpvzy1IGK9AJOmsJwPgZ/S
+         rTh67YTD781r0CcWEwfHJNpchZJt2DJe+7QbGzdRtiAeDmBNhD3v2C1kUgE+AXIQSYtT
+         aTbQUzNWy55f9AdQAcetG8m1eR0LTpaJGQJgCh2iGXE+dKBdBvLd7KPRrwG96QQMkHiE
+         C4iT7mvxBM/i0XzYYztY4EcXJX0brdiPeoPIIlJ/g9fZruOkJVP9KPxmnE1RvKMzdRec
+         W3OZNRaooVy9z+d8eDcb9aAWh/QuW3DqrIbTwK5Ya0NiPugpnPzBDshf5HYiqVoBTDnU
+         Z+Bw==
+X-Gm-Message-State: AOAM5339OFI1zEjR6JYcV7d7KBtvX826bJrKTPnjZ3h656kGaZFg1sQl
+	5jaw5DnVA0nNnBwuMJdc2Jy8rAIbZks=
+X-Google-Smtp-Source: ABdhPJxvotBbtg5UqEdTEI8ce5BueFb6UHezuSSDfTwwyHX/yDnHIJvZ//wtXdcbHzWATHcy45en/w==
+X-Received: by 2002:a17:90a:6503:: with SMTP id i3mr3929796pjj.22.1631011328575;
+        Tue, 07 Sep 2021 03:42:08 -0700 (PDT)
 Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id x189sm10571885pfc.52.2021.09.07.03.42.05
+        by smtp.gmail.com with ESMTPSA id x189sm10571885pfc.52.2021.09.07.03.42.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Sep 2021 03:42:06 -0700 (PDT)
+        Tue, 07 Sep 2021 03:42:08 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev,
 	geliangtang@gmail.com
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Subject: [PATCH RFC mptcp-next 1/4] mptcp: add a new sysctl scheduler
-Date: Tue,  7 Sep 2021 18:41:56 +0800
-Message-Id: <268ae875a7e4546922c30a974f9d675562b632e0.1631011068.git.geliangtang@xiaomi.com>
+Subject: [PATCH RFC mptcp-next 2/4] mptcp: add struct mptcp_sched_ops
+Date: Tue,  7 Sep 2021 18:41:57 +0800
+Message-Id: <4089672c8557e031d38306ef49e26e9902e7db57.1631011068.git.geliangtang@xiaomi.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1631011068.git.geliangtang@xiaomi.com>
 References: <cover.1631011068.git.geliangtang@xiaomi.com>
@@ -56,106 +56,147 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@xiaomi.com>
 
-This patch added a new sysctl, named scheduler, to support for selection
-of different schedulers.
+This patch added struct mptcp_sched_ops. And define the scheduler
+init, register and find functions.
 
 Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 ---
- Documentation/networking/mptcp-sysctl.rst |  8 ++++++++
- net/mptcp/ctrl.c                          | 14 ++++++++++++++
- net/mptcp/protocol.h                      |  3 +++
- 3 files changed, 25 insertions(+)
+ net/mptcp/protocol.c | 60 +++++++++++++++++++++++++++++++++++++++++---
+ net/mptcp/protocol.h |  8 ++++++
+ 2 files changed, 65 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index b0d4da71e68e..ecd593c44e26 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -57,3 +57,11 @@ stale_loss_cnt - INTEGER
- 	This is a per-namespace sysctl.
- 
- 	Default: 4
-+
-+scheduler - STRING
-+	Select the scheduler of your choice.
-+
-+	Support for selection of different schedulers. This is a per-namespace
-+	sysctl.
-+
-+	Default: "default"
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 8b235468c88f..369369b0b17e 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -26,6 +26,7 @@ struct mptcp_pernet {
- 	u8 mptcp_enabled;
- 	u8 checksum_enabled;
- 	u8 allow_join_initial_addr_port;
-+	char scheduler[MPTCP_SCHED_NAME_MAX];
- };
- 
- static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
-@@ -58,6 +59,11 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net)
- 	return mptcp_get_pernet(net)->stale_loss_cnt;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2a525c7ae920..ab72a3950f2b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1515,6 +1515,58 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 	return NULL;
  }
  
-+char *mptcp_get_scheduler(struct net *net)
++static struct mptcp_sched_ops mptcp_sched_default = {
++	.get_subflow	= mptcp_subflow_get_send,
++	.name		= "default",
++	.owner		= THIS_MODULE,
++};
++
++static DEFINE_SPINLOCK(mptcp_sched_list_lock);
++static LIST_HEAD(mptcp_sched_list);
++
++static struct mptcp_sched_ops *mptcp_sched_find(const char *name)
 +{
-+	return mptcp_get_pernet(net)->scheduler;
++	struct mptcp_sched_ops *ops;
++
++	list_for_each_entry_rcu(ops, &mptcp_sched_list, list) {
++		if (!strcmp(ops->name, name))
++			return ops;
++	}
++
++	return NULL;
 +}
 +
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
++static int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
++{
++	int ret = 0;
++
++	if (!sched->get_subflow)
++		return -EINVAL;
++
++	spin_lock(&mptcp_sched_list_lock);
++	if (mptcp_sched_find(sched->name)) {
++		pr_debug("%s already registered", sched->name);
++		ret = -EEXIST;
++	} else {
++		list_add_tail_rcu(&sched->list, &mptcp_sched_list);
++		pr_debug("%s registered", sched->name);
++	}
++	spin_unlock(&mptcp_sched_list_lock);
++	return 0;
++}
++
++static void mptcp_sched_data_init(struct mptcp_sock *msk)
++{
++	struct net *net = sock_net((struct sock *)msk);
++
++	msk->sched = mptcp_sched_find(mptcp_get_scheduler(net));
++}
++
++static void mptcp_sched_init(void)
++{
++	mptcp_register_scheduler(&mptcp_sched_default);
++}
++
+ static void mptcp_push_release(struct sock *sk, struct sock *ssk,
+ 			       struct mptcp_sendmsg_info *info)
  {
- 	pernet->mptcp_enabled = 1;
-@@ -65,6 +71,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- 	pernet->checksum_enabled = 0;
- 	pernet->allow_join_initial_addr_port = 1;
- 	pernet->stale_loss_cnt = 4;
-+	strcpy(pernet->scheduler, "default");
- }
+@@ -1567,7 +1619,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
  
- #ifdef CONFIG_SYSCTL
-@@ -108,6 +115,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
- 		.mode = 0644,
- 		.proc_handler = proc_douintvec_minmax,
- 	},
-+	{
-+		.procname	= "scheduler",
-+		.maxlen		= MPTCP_SCHED_NAME_MAX,
-+		.mode		= 0644,
-+		.proc_handler	= proc_dostring,
-+	},
- 	{}
- };
+ 			prev_ssk = ssk;
+ 			mptcp_flush_join_list(msk);
+-			ssk = mptcp_subflow_get_send(msk);
++			ssk = msk->sched->get_subflow(msk);
  
-@@ -128,6 +141,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
- 	table[2].data = &pernet->checksum_enabled;
- 	table[3].data = &pernet->allow_join_initial_addr_port;
- 	table[4].data = &pernet->stale_loss_cnt;
-+	table[5].data = &pernet->scheduler;
+ 			/* First check. If the ssk has changed since
+ 			 * the last round, release prev_ssk
+@@ -1634,7 +1686,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
+ 			 * check for a different subflow usage only after
+ 			 * spooling the first chunk of data
+ 			 */
+-			xmit_ssk = first ? ssk : mptcp_subflow_get_send(mptcp_sk(sk));
++			xmit_ssk = first ? ssk : mptcp_sk(sk)->sched->get_subflow(mptcp_sk(sk));
+ 			if (!xmit_ssk)
+ 				goto out;
+ 			if (xmit_ssk != ssk) {
+@@ -2534,6 +2586,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->recovery = false;
  
- 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
- 	if (!hdr)
+ 	mptcp_pm_data_init(msk);
++	mptcp_sched_data_init(msk);
+ 
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+@@ -3005,7 +3058,7 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+ 		return;
+ 
+ 	if (!sock_owned_by_user(sk)) {
+-		struct sock *xmit_ssk = mptcp_subflow_get_send(mptcp_sk(sk));
++		struct sock *xmit_ssk = mptcp_sk(sk)->sched->get_subflow(mptcp_sk(sk));
+ 
+ 		if (xmit_ssk == ssk)
+ 			__mptcp_subflow_push_pending(sk, ssk);
+@@ -3569,6 +3622,7 @@ void __init mptcp_proto_init(void)
+ 
+ 	mptcp_subflow_init();
+ 	mptcp_pm_init();
++	mptcp_sched_init();
+ 	mptcp_token_init();
+ 
+ 	if (proto_register(&mptcp_prot, MPTCP_USE_SLAB) != 0)
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 99a23fff7b03..305d373332b7 100644
+index 305d373332b7..71237d1458ea 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -206,6 +206,8 @@ struct mptcp_pm_data {
- 	struct mptcp_rm_list rm_list_rx;
+@@ -207,6 +207,13 @@ struct mptcp_pm_data {
  };
  
-+#define MPTCP_SCHED_NAME_MAX 16
+ #define MPTCP_SCHED_NAME_MAX 16
++struct mptcp_sched_ops {
++	struct list_head list;
 +
++	struct sock *	(*get_subflow)(struct mptcp_sock *msk);
++	char		name[MPTCP_SCHED_NAME_MAX];
++	struct module	*owner;
++};
+ 
  struct mptcp_data_frag {
  	struct list_head list;
- 	u64 data_seq;
-@@ -564,6 +566,7 @@ unsigned int mptcp_get_add_addr_timeout(const struct net *net);
- int mptcp_is_checksum_enabled(const struct net *net);
- int mptcp_allow_join_id0(const struct net *net);
- unsigned int mptcp_stale_loss_cnt(const struct net *net);
-+char *mptcp_get_scheduler(struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
+@@ -264,6 +271,7 @@ struct mptcp_sock {
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+ 	struct sock	*first;
+ 	struct mptcp_pm_data	pm;
++	struct mptcp_sched_ops	*sched;
+ 	struct {
+ 		u32	space;	/* bytes copied in last measurement window */
+ 		u32	copied; /* bytes copied in this measurement window */
 -- 
 2.31.1
 
