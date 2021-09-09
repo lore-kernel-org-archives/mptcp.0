@@ -1,82 +1,66 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA9B3FF0
-	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 16:57:34 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id lc21so4957467ejc.7
-        for <mptcp@lists.linux.dev>; Thu, 09 Sep 2021 09:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BhJMW8pq3bzQNc45Co1/4BDo70HALOZH4HHOvKqOLus=;
-        b=Kn0wXgByYG4WAEpu9f9m7XbMcDjR54266RCHTryyYMWayAw/46+akCkhnvk8OgXo9T
-         zXQS1e02EXLg1Tf8Crez0KFrHseXSJ/zF1tGW6XJUvjRgx4hkmBlGZ/APyYd87I6peQ3
-         2FcWu2/+1dQZ3a1qXl8FovGDMXBuQuOQfjKkvOqM0zlAyoiI9B5I+x7/Kdc4oIecTs5C
-         LqnaZ18q66KsijuOl6E++B+a2JovNVPaeDug8TF3QCFuORdjDJjoZx/+BjC2fiIw2GeV
-         YuUMbdLbMUAku2Gi/YB0/bdZAOwFj0h+6qFXr5CNdeMNMRKdEvoJ00AvFZYtTQeq8Il/
-         6ifQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BhJMW8pq3bzQNc45Co1/4BDo70HALOZH4HHOvKqOLus=;
-        b=mXHipUoSjuzbs8gXIuj/Yraw9LqopT2X3CY8i6fOuT38CQh83tw9Djf3jsojycxOp0
-         zWOOY5CmGz+8BdICeCD4jFfSZF2MBauTsXUVltm1ViUan1pE+6J1owvNNQXhwgveeJjJ
-         ws5RLjyeVw3MEgU6UrI8sVRuEclio7P39l769SnlVhXhN2660pgN1SY70bURCKMqiTLD
-         jQddOfSZ0zuY6gXQYLu1JsVjAeBDCOcV7I1XlH1rNCeNWrEqPpXYhIpyARdUZygbLcoa
-         vaduXXKU25V5vbazervr9TsFmxBwSyPugyHzfIZr5YO7pl2GK3jdllF/ZQzmm8L2F5tb
-         sGJA==
-X-Gm-Message-State: AOAM530GHMy0XRxdNU6HPwIjPS/AfpKpY0ex6yhLrIlRjLX3No2OrrvI
-	uSfMhztjvwDDsm3r/4gaUaxqVrjCP5N8Nr8L
-X-Google-Smtp-Source: ABdhPJzgFl9NebjulQGYDFcMzNSOLzY3aRBK4ZoyS/BivHIxOPvfxEerGrrDphYs4gY8QADFcR+1jQ==
-X-Received: by 2002:a17:907:7785:: with SMTP id ky5mr4516299ejc.247.1631206652558;
-        Thu, 09 Sep 2021 09:57:32 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
-        by smtp.gmail.com with ESMTPSA id dj25sm1399532edb.51.2021.09.09.09.57.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Sep 2021 09:57:32 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: stop relying on
- tcp_tx_skb_cache"
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <a4b897af7a6c7dcf4258d2ad90ddb5a676250ea1.1630921280.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <e07a1102-9caa-c6c6-0931-55d9f3fc504d@tessares.net>
-Date: Thu, 9 Sep 2021 18:57:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39413FE2
+	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 22:33:03 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10102"; a="208037302"
+X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
+   d="scan'208";a="208037302"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 15:33:03 -0700
+X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
+   d="scan'208";a="470280978"
+Received: from jabusaid-mobl.amr.corp.intel.com ([10.255.231.212])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 15:33:03 -0700
+Date: Thu, 9 Sep 2021 15:33:02 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Sasha Levin <sashal@kernel.org>
+cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+    Yonglong Li <liyonglong@chinatelecom.cn>, 
+    Geliang Tang <geliangtang@gmail.com>, 
+    "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, 
+    mptcp@lists.linux.dev
+Subject: Re: [PATCH AUTOSEL 5.14 209/252] mptcp: fix ADD_ADDR and RM_ADDR
+ maybe flush addr_signal each other
+In-Reply-To: <20210909114106.141462-209-sashal@kernel.org>
+Message-ID: <3a6c39db-8aca-b64b-51db-cd1544daf9dc@linux.intel.com>
+References: <20210909114106.141462-1-sashal@kernel.org> <20210909114106.141462-209-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a4b897af7a6c7dcf4258d2ad90ddb5a676250ea1.1630921280.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo, Mat,
 
-On 06/09/2021 11:41, Paolo Abeni wrote:
-> A small cleanup for the tcp_tx_skb_cache removal: we don't
-> need to check for skb in zero win probe (matttbe)
+On Thu, 9 Sep 2021, Sasha Levin wrote:
 
-Thank you for the patch and the review!
+> From: Yonglong Li <liyonglong@chinatelecom.cn>
+>
+> [ Upstream commit 119c022096f5805680c79dfa74e15044c289856d ]
+>
+> ADD_ADDR shares pm.addr_signal with RM_ADDR, so after RM_ADDR/ADD_ADDR
+> has done, we should not clean ADD_ADDR/RM_ADDR's addr_signal.
+>
+> Co-developed-by: Geliang Tang <geliangtang@gmail.com>
+> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+> net/mptcp/pm.c | 13 ++++++++++---
+> 1 file changed, 10 insertions(+), 3 deletions(-)
 
-- e4bb25dfcd2d: "squashed" in "mptcp: stop relying on tcp_tx_skb_cache"
-- Results: 5fabcaa6857a..84da6403b775
+Hi Sasha,
 
-Builds and tests are now in progress:
+This patch is part of a 5-patch series, and was not intended for 
+backporting. Please drop the patch from all stable branches.
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210909T165704
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210909T165704
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Thanks!
+
+--
+Mat Martineau
+Intel
