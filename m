@@ -1,90 +1,137 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADEA3FF0
-	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 16:16:10 +0000 (UTC)
-Received: by mail-ej1-f54.google.com with SMTP id x11so4781558ejv.0
-        for <mptcp@lists.linux.dev>; Thu, 09 Sep 2021 09:16:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=DAARLv69cGsH10jK11frOW3HmXXFqcJBBx/6Z38x/48=;
-        b=J8HgWa4rnxmJtEb63gJPgYCe2wndddmzD/FWECQotef++mvh61BimkUxm0mcNCpLcl
-         pAWvQVff1y/DtmfQLFuo330316l2LXZj50jAvYVfY38SKvketmB2Z2GNR5lcegV9k2aH
-         yYV66FJkiG5R5RaZp6sCwPOOfz7/2v/wIlRw+XGhJ/PBCEVd56a2S8h8FNFvmCBz8G8Z
-         DAZun6BYxgmdxuKsEEOF6zt8cRiKCgmp5BYYxpFAGUEb/FtOpUpzv+bF9ObT6P7w/ZuQ
-         SNAgi3yG6+9PaPFUTksRcY89+ARropoffu7NaW81HeFG2j1Mu37/Z4RysKEGiShcfW4t
-         3/1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DAARLv69cGsH10jK11frOW3HmXXFqcJBBx/6Z38x/48=;
-        b=EbtsnUHWRIMOPVvpLANsGx2eHCtuwjLBzl4RQRPhTKSBT3cv9gqVe2OLeRtpVPsdD6
-         lwivI9h5Ba19ZRgHrOd1jp244sn9d0ifxo0xW8djjOJNJ9iHj7bwN00rbKTdzx+M+b8A
-         JR7fC3lu1QgwX58fQcwkofOC4SVLRb1MTODTIrY7rV4Qye81+H9GA95o6nZySxoVutfy
-         ynOff1lER5QGKyNhiErv2j36HS53jFIHDx2Aps/xMLjvyYM2reiTiAHjLKKW/9r8GkRK
-         V2rSCU3Flv7lKst2OdM6bInSbgxJF9osTGn3Ues6lDthxOMpsnf6sVPpbYRocPBEWkpE
-         kRmw==
-X-Gm-Message-State: AOAM530y3zPM7oXzFPIgC7+VQDj0Dc3/CY5SMVmQaT+1ZPLVa4mue4k8
-	+4mD89G3Fy5SBHDNw0RkRTnsLWWbU5HBZFMg
-X-Google-Smtp-Source: ABdhPJzMr/z8tQUAwzkIwL1GYr9vgfRUiQgRMH++zd/AKFUyDQV1T7MLBG5jgkT5SVcM0m8PJ6k3TQ==
-X-Received: by 2002:a17:907:75ca:: with SMTP id jl10mr4451496ejc.302.1631204168726;
-        Thu, 09 Sep 2021 09:16:08 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
-        by smtp.gmail.com with ESMTPSA id jx21sm1127962ejb.41.2021.09.09.09.16.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Sep 2021 09:16:08 -0700 (PDT)
-Subject: Re: MPTCP export branch - build errors due to -Werror
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
-References: <ddbdbbb6-ee39-40a1-c1d2-e0f1b1b3aa91@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <35134dd7-3139-fd79-d41d-e25873815f00@tessares.net>
-Date: Thu, 9 Sep 2021 18:16:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9A13FF0
+	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 16:16:40 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10101"; a="220864223"
+X-IronPort-AV: E=Sophos;i="5.85,280,1624345200"; 
+   d="scan'208";a="220864223"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 09:16:39 -0700
+X-IronPort-AV: E=Sophos;i="5.85,280,1624345200"; 
+   d="scan'208";a="513839701"
+Received: from jabusaid-mobl.amr.corp.intel.com ([10.255.231.212])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 09:16:38 -0700
+Date: Thu, 9 Sep 2021 09:16:38 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] chtls: rename skb_entail() to
+ chtls_skb_entail()
+In-Reply-To: <ed8775ab838ec39895e14b191a338e0f529dfcc0.1631176902.git.pabeni@redhat.com>
+Message-ID: <69c7acde-45b-fbb-df90-a89669f82a0@linux.intel.com>
+References: <ed8775ab838ec39895e14b191a338e0f529dfcc0.1631176902.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ddbdbbb6-ee39-40a1-c1d2-e0f1b1b3aa91@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Mat,
+On Thu, 9 Sep 2021, Paolo Abeni wrote:
 
-On 09/09/2021 18:08, Mat Martineau wrote:
-> 
-> I mentioned in the meeting today, kbuild's build step is failing due to
-> warnings being treated as errors.
-> 
-> The fix to change -Werror to be under the COMPILE_TEST config flag is
-> commit b339ec9c229aaf399296a120d7be0e34fbc355ca in Linus' tree:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b339ec9c229aaf399296a120d7be0e34fbc355ca
-> 
-> https://lore.kernel.org/all/YTfkO2PdnBXQXvsm@elver.google.com/
-> 
-> Not sure when it will show up in net-next (hopefully soon!), but it
-> would be good to cherry-pick in the export branch in the mean time.
+> The next patch will expose the core TCP helper with the same
+> name. It looks like we can't trivially re-use it in chtls, so
+> remame the driver specific's one to avoid name conflicts.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> notes:
+> - this should land before "tcp: expose the tcp_mark_push() and skb_entail()
+>  helpers"
+> - just build tested, I lack the relevant H/W to do anything better
+> - we need to CC the appropriate chelsio maintainer when submitting
+> this patch upstream
 
-Sure, good idea, just did:
+Yes, noted.
 
-- 23ec8f63bcac: kbuild: Only default to -Werror if COMPILE_TEST
-- Results: 96216d5da9df..5fabcaa6857a
+Patch looks good for the export branch, thanks!
 
-Builds and tests are now in progress:
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210909T161526
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210909T161526
+> - I did not add the reported-by buildbot tag. as there will no issue
+>  with the patch applied in order, but I guess it can be added, too
+> ---
+> .../net/ethernet/chelsio/inline_crypto/chtls/chtls.h   |  2 +-
+> .../ethernet/chelsio/inline_crypto/chtls/chtls_cm.c    |  2 +-
+> .../ethernet/chelsio/inline_crypto/chtls/chtls_io.c    | 10 +++++-----
+> 3 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
+> index 9e2378013642..4b57e58845b0 100644
+> --- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
+> +++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
+> @@ -580,7 +580,7 @@ void chtls_set_tcb_field_rpl_skb(struct sock *sk, u16 word,
+> 				 int through_l2t);
+> int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 mode, int cipher_type);
+> void chtls_set_quiesce_ctrl(struct sock *sk, int val);
+> -void skb_entail(struct sock *sk, struct sk_buff *skb, int flags);
+> +void chtls_skb_entail(struct sock *sk, struct sk_buff *skb, int flags);
+> unsigned int keyid_to_addr(int start_addr, int keyid);
+> void free_tls_keyid(struct sock *sk);
+> #endif
+> diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c
+> index bcad69c48074..dfa2bfc9638e 100644
+> --- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c
+> +++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c
+> @@ -317,7 +317,7 @@ static void chtls_close_conn(struct sock *sk)
+> 	OPCODE_TID(req) = htonl(MK_OPCODE_TID(CPL_CLOSE_CON_REQ, tid));
+>
+> 	tcp_uncork(sk);
+> -	skb_entail(sk, skb, ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
+> +	chtls_skb_entail(sk, skb, ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
+> 	if (sk->sk_state != TCP_SYN_SENT)
+> 		chtls_push_frames(csk, 1);
+> }
+> diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
+> index c320cc8ca68d..05cf45098462 100644
+> --- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
+> +++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
+> @@ -119,8 +119,8 @@ static int send_flowc_wr(struct sock *sk, struct fw_flowc_wr *flowc,
+> 		if (!skb)
+> 			return -ENOMEM;
+>
+> -		skb_entail(sk, skb,
+> -			   ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
+> +		chtls_skb_entail(sk, skb,
+> +				 ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
+> 		return 0;
+> 	}
+>
+> @@ -816,7 +816,7 @@ static int select_size(struct sock *sk, int io_len, int flags, int len)
+> 	return io_len;
+> }
+>
+> -void skb_entail(struct sock *sk, struct sk_buff *skb, int flags)
+> +void chtls_skb_entail(struct sock *sk, struct sk_buff *skb, int flags)
+> {
+> 	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
+> 	struct tcp_sock *tp = tcp_sk(sk);
+> @@ -840,7 +840,7 @@ static struct sk_buff *get_tx_skb(struct sock *sk, int size)
+> 	skb = alloc_skb(size + TX_HEADER_LEN, sk->sk_allocation);
+> 	if (likely(skb)) {
+> 		skb_reserve(skb, TX_HEADER_LEN);
+> -		skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
+> +		chtls_skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
+> 		skb_reset_transport_header(skb);
+> 	}
+> 	return skb;
+> @@ -857,7 +857,7 @@ static struct sk_buff *get_record_skb(struct sock *sk, int size, bool zcopy)
+> 	if (likely(skb)) {
+> 		skb_reserve(skb, (TX_TLSHDR_LEN +
+> 			    KEY_ON_MEM_SZ + max_ivs_size(sk, size)));
+> -		skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
+> +		chtls_skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
+> 		skb_reset_transport_header(skb);
+> 		ULP_SKB_CB(skb)->ulp.tls.ofld = 1;
+> 		ULP_SKB_CB(skb)->ulp.tls.type = csk->tlshws.type;
+> -- 
+> 2.26.3
+>
+>
+>
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
