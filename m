@@ -1,20 +1,20 @@
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014413FE1
-	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 11:45:38 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B3A7261401;
-	Thu,  9 Sep 2021 11:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0619D3FE1
+	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 11:50:32 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CCFA46134F;
+	Thu,  9 Sep 2021 11:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1631187938;
-	bh=I/M4pNGONIV9TaA3hI99k3VsD8Y6fqB+aAbLwvsHbM4=;
+	s=k20201202; t=1631188232;
+	bh=Kw790umdX6yFtTkHkFCA1RpMD2ncwavpHbPzi7OuG+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BIVZNbKzikd5eZU/X0Wk/Q2zE1zyhhbxeF2wFwgrTGe3Zvb9qMQ4Rvb2j6HHSxTi5
-	 lUjR6ey9R+scQ+2z9Fr5rOLlCTnwdigDcpO7w/me1sRkj+zcvu9pr20Qz87AQIwQJA
-	 Us2sfle0X9CDYgD4p166L6swJ4xbSS+dFjrVXMzHbum7MqDZsPpCAIemzDfg3JXQYs
-	 18Ltd914dU1dgNn++uRBQrmkvxUFrlSmNLT9aIzfdU3GIKux1Hjpk0y0UTxTNBHwt9
-	 1Zc7R9Q4GUdUYqyOxtUHNS1mJKVlpDMbdhKBLEaLa4LBk6FuFGJFuOtUm40j9jlVlO
-	 c9M4icJkXfCXA==
+	b=q7qwx8lv+oGrl5aAl2TbNxxw9m3Qy5IQyO/d6lwc0pjDMtIwGbSYzqvE5m+1PhlIO
+	 97XiR2W3vraD8JT7V7jj6rWrdQFnBK65X14A7qcmUucrwGRTCHxAIMm1R+Nl8g8Zh1
+	 201HunHIeKqDG7oCLGf49limrGkzCCPtToWWIPI4kwjb6G61+yUxPgvwByNWvnKarC
+	 j8nEv/37tW67CaAKRHI5YY9eOE8hrSVojKtly0ykxLy1P72nch7SbSokIzEPNCxBgn
+	 1GeTAKkj88YSGsVCILwRvsmqQkb+d2URl0yUhiw2ZUCo+kP9GnGCeC6kFI22jqS/Yg
+	 HHx4gjHP4XCFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -25,12 +25,12 @@ Cc: Yonglong Li <liyonglong@chinatelecom.cn>,
 	Sasha Levin <sashal@kernel.org>,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.14 209/252] mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
-Date: Thu,  9 Sep 2021 07:40:23 -0400
-Message-Id: <20210909114106.141462-209-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 184/219] mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other
+Date: Thu,  9 Sep 2021 07:46:00 -0400
+Message-Id: <20210909114635.143983-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909114106.141462-1-sashal@kernel.org>
-References: <20210909114106.141462-1-sashal@kernel.org>
+In-Reply-To: <20210909114635.143983-1-sashal@kernel.org>
+References: <20210909114635.143983-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -59,7 +59,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 639271e09604..f47b71a21b7e 100644
+index 9d00fa6d22e9..feecc3485c68 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
 @@ -253,6 +253,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
