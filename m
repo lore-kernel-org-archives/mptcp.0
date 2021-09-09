@@ -1,137 +1,82 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9A13FF0
-	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 16:16:40 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10101"; a="220864223"
-X-IronPort-AV: E=Sophos;i="5.85,280,1624345200"; 
-   d="scan'208";a="220864223"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 09:16:39 -0700
-X-IronPort-AV: E=Sophos;i="5.85,280,1624345200"; 
-   d="scan'208";a="513839701"
-Received: from jabusaid-mobl.amr.corp.intel.com ([10.255.231.212])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 09:16:38 -0700
-Date: Thu, 9 Sep 2021 09:16:38 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] chtls: rename skb_entail() to
- chtls_skb_entail()
-In-Reply-To: <ed8775ab838ec39895e14b191a338e0f529dfcc0.1631176902.git.pabeni@redhat.com>
-Message-ID: <69c7acde-45b-fbb-df90-a89669f82a0@linux.intel.com>
-References: <ed8775ab838ec39895e14b191a338e0f529dfcc0.1631176902.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA9B3FF0
+	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 16:57:34 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id lc21so4957467ejc.7
+        for <mptcp@lists.linux.dev>; Thu, 09 Sep 2021 09:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BhJMW8pq3bzQNc45Co1/4BDo70HALOZH4HHOvKqOLus=;
+        b=Kn0wXgByYG4WAEpu9f9m7XbMcDjR54266RCHTryyYMWayAw/46+akCkhnvk8OgXo9T
+         zXQS1e02EXLg1Tf8Crez0KFrHseXSJ/zF1tGW6XJUvjRgx4hkmBlGZ/APyYd87I6peQ3
+         2FcWu2/+1dQZ3a1qXl8FovGDMXBuQuOQfjKkvOqM0zlAyoiI9B5I+x7/Kdc4oIecTs5C
+         LqnaZ18q66KsijuOl6E++B+a2JovNVPaeDug8TF3QCFuORdjDJjoZx/+BjC2fiIw2GeV
+         YuUMbdLbMUAku2Gi/YB0/bdZAOwFj0h+6qFXr5CNdeMNMRKdEvoJ00AvFZYtTQeq8Il/
+         6ifQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BhJMW8pq3bzQNc45Co1/4BDo70HALOZH4HHOvKqOLus=;
+        b=mXHipUoSjuzbs8gXIuj/Yraw9LqopT2X3CY8i6fOuT38CQh83tw9Djf3jsojycxOp0
+         zWOOY5CmGz+8BdICeCD4jFfSZF2MBauTsXUVltm1ViUan1pE+6J1owvNNQXhwgveeJjJ
+         ws5RLjyeVw3MEgU6UrI8sVRuEclio7P39l769SnlVhXhN2660pgN1SY70bURCKMqiTLD
+         jQddOfSZ0zuY6gXQYLu1JsVjAeBDCOcV7I1XlH1rNCeNWrEqPpXYhIpyARdUZygbLcoa
+         vaduXXKU25V5vbazervr9TsFmxBwSyPugyHzfIZr5YO7pl2GK3jdllF/ZQzmm8L2F5tb
+         sGJA==
+X-Gm-Message-State: AOAM530GHMy0XRxdNU6HPwIjPS/AfpKpY0ex6yhLrIlRjLX3No2OrrvI
+	uSfMhztjvwDDsm3r/4gaUaxqVrjCP5N8Nr8L
+X-Google-Smtp-Source: ABdhPJzgFl9NebjulQGYDFcMzNSOLzY3aRBK4ZoyS/BivHIxOPvfxEerGrrDphYs4gY8QADFcR+1jQ==
+X-Received: by 2002:a17:907:7785:: with SMTP id ky5mr4516299ejc.247.1631206652558;
+        Thu, 09 Sep 2021 09:57:32 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.227.dyn.edpnet.net. [94.105.103.227])
+        by smtp.gmail.com with ESMTPSA id dj25sm1399532edb.51.2021.09.09.09.57.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Sep 2021 09:57:32 -0700 (PDT)
+Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: stop relying on
+ tcp_tx_skb_cache"
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <a4b897af7a6c7dcf4258d2ad90ddb5a676250ea1.1630921280.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <e07a1102-9caa-c6c6-0931-55d9f3fc504d@tessares.net>
+Date: Thu, 9 Sep 2021 18:57:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <a4b897af7a6c7dcf4258d2ad90ddb5a676250ea1.1630921280.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-On Thu, 9 Sep 2021, Paolo Abeni wrote:
+Hi Paolo, Mat,
 
-> The next patch will expose the core TCP helper with the same
-> name. It looks like we can't trivially re-use it in chtls, so
-> remame the driver specific's one to avoid name conflicts.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> notes:
-> - this should land before "tcp: expose the tcp_mark_push() and skb_entail()
->  helpers"
-> - just build tested, I lack the relevant H/W to do anything better
-> - we need to CC the appropriate chelsio maintainer when submitting
-> this patch upstream
+On 06/09/2021 11:41, Paolo Abeni wrote:
+> A small cleanup for the tcp_tx_skb_cache removal: we don't
+> need to check for skb in zero win probe (matttbe)
 
-Yes, noted.
+Thank you for the patch and the review!
 
-Patch looks good for the export branch, thanks!
+- e4bb25dfcd2d: "squashed" in "mptcp: stop relying on tcp_tx_skb_cache"
+- Results: 5fabcaa6857a..84da6403b775
 
-Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Builds and tests are now in progress:
 
-> - I did not add the reported-by buildbot tag. as there will no issue
->  with the patch applied in order, but I guess it can be added, too
-> ---
-> .../net/ethernet/chelsio/inline_crypto/chtls/chtls.h   |  2 +-
-> .../ethernet/chelsio/inline_crypto/chtls/chtls_cm.c    |  2 +-
-> .../ethernet/chelsio/inline_crypto/chtls/chtls_io.c    | 10 +++++-----
-> 3 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
-> index 9e2378013642..4b57e58845b0 100644
-> --- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
-> +++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
-> @@ -580,7 +580,7 @@ void chtls_set_tcb_field_rpl_skb(struct sock *sk, u16 word,
-> 				 int through_l2t);
-> int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 mode, int cipher_type);
-> void chtls_set_quiesce_ctrl(struct sock *sk, int val);
-> -void skb_entail(struct sock *sk, struct sk_buff *skb, int flags);
-> +void chtls_skb_entail(struct sock *sk, struct sk_buff *skb, int flags);
-> unsigned int keyid_to_addr(int start_addr, int keyid);
-> void free_tls_keyid(struct sock *sk);
-> #endif
-> diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c
-> index bcad69c48074..dfa2bfc9638e 100644
-> --- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c
-> +++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c
-> @@ -317,7 +317,7 @@ static void chtls_close_conn(struct sock *sk)
-> 	OPCODE_TID(req) = htonl(MK_OPCODE_TID(CPL_CLOSE_CON_REQ, tid));
->
-> 	tcp_uncork(sk);
-> -	skb_entail(sk, skb, ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
-> +	chtls_skb_entail(sk, skb, ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
-> 	if (sk->sk_state != TCP_SYN_SENT)
-> 		chtls_push_frames(csk, 1);
-> }
-> diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
-> index c320cc8ca68d..05cf45098462 100644
-> --- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
-> +++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
-> @@ -119,8 +119,8 @@ static int send_flowc_wr(struct sock *sk, struct fw_flowc_wr *flowc,
-> 		if (!skb)
-> 			return -ENOMEM;
->
-> -		skb_entail(sk, skb,
-> -			   ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
-> +		chtls_skb_entail(sk, skb,
-> +				 ULPCB_FLAG_NO_HDR | ULPCB_FLAG_NO_APPEND);
-> 		return 0;
-> 	}
->
-> @@ -816,7 +816,7 @@ static int select_size(struct sock *sk, int io_len, int flags, int len)
-> 	return io_len;
-> }
->
-> -void skb_entail(struct sock *sk, struct sk_buff *skb, int flags)
-> +void chtls_skb_entail(struct sock *sk, struct sk_buff *skb, int flags)
-> {
-> 	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
-> 	struct tcp_sock *tp = tcp_sk(sk);
-> @@ -840,7 +840,7 @@ static struct sk_buff *get_tx_skb(struct sock *sk, int size)
-> 	skb = alloc_skb(size + TX_HEADER_LEN, sk->sk_allocation);
-> 	if (likely(skb)) {
-> 		skb_reserve(skb, TX_HEADER_LEN);
-> -		skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
-> +		chtls_skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
-> 		skb_reset_transport_header(skb);
-> 	}
-> 	return skb;
-> @@ -857,7 +857,7 @@ static struct sk_buff *get_record_skb(struct sock *sk, int size, bool zcopy)
-> 	if (likely(skb)) {
-> 		skb_reserve(skb, (TX_TLSHDR_LEN +
-> 			    KEY_ON_MEM_SZ + max_ivs_size(sk, size)));
-> -		skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
-> +		chtls_skb_entail(sk, skb, ULPCB_FLAG_NEED_HDR);
-> 		skb_reset_transport_header(skb);
-> 		ULP_SKB_CB(skb)->ulp.tls.ofld = 1;
-> 		ULP_SKB_CB(skb)->ulp.tls.type = csk->tlshws.type;
-> -- 
-> 2.26.3
->
->
->
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210909T165704
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210909T165704
 
---
-Mat Martineau
-Intel
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
