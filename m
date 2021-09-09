@@ -1,57 +1,56 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFB73FE0
-	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 13:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FFC3FE9
+	for <mptcp@lists.linux.dev>; Thu,  9 Sep 2021 13:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1631194761;
+	s=mimecast20190719; t=1631195683;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/DjjDCmEEFW9WUt9RwU7ozgYsasj5R8ClzLf/5xBRxI=;
-	b=HKDW226XJtR41d0UDGpD28Rb1GjhX6JMzbnMgaXc1Qdj9oTiBBIPW9He4i6exWTMY9Hsnv
-	ObGOjwQsqr69oraQfxTbvo7Y1Hvcyz9q6Pkg5MuuoRVRcppJRlE01UB/D6vKznVS5hupXr
-	It0K3ixdMrX0rZzCl+USkO0ZTA/uFUI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-524-XKI24YakPO6bx422KhxMug-1; Thu, 09 Sep 2021 09:39:21 -0400
-X-MC-Unique: XKI24YakPO6bx422KhxMug-1
-Received: by mail-wm1-f69.google.com with SMTP id c203-20020a1c9ad4000000b002f8cba155ccso884802wme.4
-        for <mptcp@lists.linux.dev>; Thu, 09 Sep 2021 06:39:20 -0700 (PDT)
+	bh=/Y0fuahaFTIgtTr5m9a5GPUUSgOcs06599wkNbJxcKo=;
+	b=XcYmJifKIRz9DBi3EqhcyAtS2C1gGBnD4yKJZ2nEW3wFwvtC8FLdS2l16lkm5sKRIdvvr8
+	fvnyYJ6TZSTxjcqeKRHp3EVaArnqMHgwuJ/y7ndAy9V6OR0UQVYC4COIC7vm8Q63ojqkZj
+	R9p4fujezgLVc4dfgqWpPMUMwTbQXqY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-164-oe6uigYgMC2WpSA0RSZFZA-1; Thu, 09 Sep 2021 09:54:42 -0400
+X-MC-Unique: oe6uigYgMC2WpSA0RSZFZA-1
+Received: by mail-wr1-f72.google.com with SMTP id n1-20020a5d4c41000000b00159305d19baso534716wrt.11
+        for <mptcp@lists.linux.dev>; Thu, 09 Sep 2021 06:54:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=/DjjDCmEEFW9WUt9RwU7ozgYsasj5R8ClzLf/5xBRxI=;
-        b=Am97j2FgzYXd6XxyTv1+O7TIkzZnJUXyJ15Oq/WI+MCpxdXwZ2lwqz4BvPXqNSlHT8
-         wAzsL1gbxrSBcsy/RnwIb0EN276NOIsdgrgsMX9GcCGLFJnIfuXjlupBzkdWfTM1Q9nx
-         zq+NxDAm7/dvFbDrv7BxoY9b4TSOf6JGPdRKvzFUVWcYIKne12c2ZTYK5AikECuOSGIL
-         Ly63Z6raGS199HHW8OQ4vyMb6hhccRCON6gEXKqQxo+1g/CQHE2BblDQx5uOJwUco/5K
-         ms3oBBa2qzJKVZ8ixt1JApozIfCpNFRoY92epqIo/LT0boma0y9xXe23xzm92ZJTW4MV
-         MmfQ==
-X-Gm-Message-State: AOAM533VbC6UWSaEKHQenkTPydIdx0hdTs14cWORc+wr/koTnl3flU9z
-	ZB1YJnTWj4QaOyRlgkN142MRE5Z+kJOOnZ7pX/7S4vHrukix1UYf3qTPY3O+vbH1+Tww/dVzwJ+
-	slaejcIgp1ypxXNI=
-X-Received: by 2002:a7b:c35a:: with SMTP id l26mr3131929wmj.124.1631194759421;
-        Thu, 09 Sep 2021 06:39:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw5joIDP0BAZj08aQJhP5x11IxHykw789/dCkd0J66bYaDRPQkIKKaUMnUe2oAX3Wt2kHb3yQ==
-X-Received: by 2002:a7b:c35a:: with SMTP id l26mr3131912wmj.124.1631194759232;
-        Thu, 09 Sep 2021 06:39:19 -0700 (PDT)
+        bh=/Y0fuahaFTIgtTr5m9a5GPUUSgOcs06599wkNbJxcKo=;
+        b=kTG9nWyP1a8pMeYp8th+yVUpzm91byTMn1VxlrhIVnUtS89nyDT7MUO0Dgukj9pmgc
+         82YoXRw6ySHlS9ukSwdWm10PQspkp5dhcI6Btaf/W7xyO10WdNDjZiQZuU0rXzIC8HCy
+         opBKOyXGXMCU0iZJ2441sgIUUkstH4UrVe7rDD+MJ17czVxX0gQ9JAq1Gp2LmEZap8Xh
+         zjt7No8JMLpJkpvGsLgJKVqX+CGqs1vCoAyaS+5lfA9PEH6COUOksfaVPS8YRceYTARm
+         rMNBPNXgd/291uxIzo74CvwcTyiEBl6qtegEIHt98ZVXkTOUjeUUe8VPOXxNpdXlC8oV
+         lflQ==
+X-Gm-Message-State: AOAM5316FsSP9UKD68bHv10jQ1wKOP1NBFZmnFzvINQNhDbVvecPNelA
+	hlk7EEwAr99NalotrHmipIVDyLiAlqS/QScKouhxt4Llp5Hwza9GuRsnwClhx1Q2EbbkARson4y
+	ahKadzscVOF6AoHM=
+X-Received: by 2002:adf:a2c4:: with SMTP id t4mr3798049wra.258.1631195681022;
+        Thu, 09 Sep 2021 06:54:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwlUGklMpot5VbhOSuRof9hIWcXm9C/3afLH3EYANGnmDL9dbHk3lS+xTN6sCtj5NXTmHSH7A==
+X-Received: by 2002:adf:a2c4:: with SMTP id t4mr3798029wra.258.1631195680731;
+        Thu, 09 Sep 2021 06:54:40 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-241-2.dyn.eolo.it. [146.241.241.2])
-        by smtp.gmail.com with ESMTPSA id o26sm1609713wmc.17.2021.09.09.06.39.18
+        by smtp.gmail.com with ESMTPSA id m29sm1898574wrb.89.2021.09.09.06.54.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Sep 2021 06:39:18 -0700 (PDT)
-Message-ID: <ba53a5abbb43645efa4038eda3abfb8bb386b09b.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2 3/9] mptcp: add MAPPING_INFINITE mapping
- status
+        Thu, 09 Sep 2021 06:54:40 -0700 (PDT)
+Message-ID: <e62030507662c46ca596bb1c4d5d0f9151a74b59.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 5/9] mptcp: infinite mapping sending
 From: Paolo Abeni <pabeni@redhat.com>
 To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@xiaomi.com>
-Date: Thu, 09 Sep 2021 15:39:18 +0200
-In-Reply-To: <592427b5a91d5e64e4b96c4c8b8d06264197f1c4.1631188109.git.geliangtang@xiaomi.com>
+Date: Thu, 09 Sep 2021 15:54:39 +0200
+In-Reply-To: <e32e444b498565f85da14285dfc5a865fedc6e58.1631188109.git.geliangtang@xiaomi.com>
 References: <cover.1631188109.git.geliangtang@xiaomi.com>
-	 <592427b5a91d5e64e4b96c4c8b8d06264197f1c4.1631188109.git.geliangtang@xiaomi.com>
+	 <e32e444b498565f85da14285dfc5a865fedc6e58.1631188109.git.geliangtang@xiaomi.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -69,77 +68,68 @@ Content-Transfer-Encoding: 7bit
 On Thu, 2021-09-09 at 19:51 +0800, Geliang Tang wrote:
 > From: Geliang Tang <geliangtang@xiaomi.com>
 > 
-> This patch added a new mapping status named MAPPING_INFINITE. If the
-> MPTCP_INFINITE_DONE flag is set in get_mapping_status, return this new
-> status. And in subflow_check_data_avail, if this status is set, goto the
-> 'infinite' lable to fallback.
+> This patch added the infinite mapping sending logic.
+> 
+> Added a new flag snd_infinite_mapping_enable in mptcp_sock. Set it true
+> when a single contiguous subflow is in use in mptcp_pm_mp_fail_received.
+> In mptcp_sendmsg_frag, if this flag is true, call the new function
+> mptcp_update_infinite_mapping to set the infinite mapping.
 > 
 > Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 > ---
->  net/mptcp/subflow.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  net/mptcp/pm.c       |  6 ++++++
+>  net/mptcp/protocol.c | 18 ++++++++++++++++++
+>  net/mptcp/protocol.h |  1 +
+>  3 files changed, 25 insertions(+)
 > 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 951aafb6021e..ad8efe56eab6 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -798,6 +798,7 @@ enum mapping_status {
->  	MAPPING_INVALID,
->  	MAPPING_EMPTY,
->  	MAPPING_DATA_FIN,
-> +	MAPPING_INFINITE,
->  	MAPPING_DUMMY
->  };
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 6ab386ff3294..2830adf64f79 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -251,7 +251,13 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
 >  
-> @@ -938,6 +939,9 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
->  	if (!skb)
->  		return MAPPING_EMPTY;
->  
-> +	if (mptcp_check_infinite(ssk))
-> +		return MAPPING_INFINITE;
+>  void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+>  {
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
 > +
->  	if (mptcp_check_fallback(ssk))
->  		return MAPPING_DUMMY;
->  
-> @@ -1121,6 +1125,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
->  
->  		status = get_mapping_status(ssk, msk);
->  		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
-> +		if (unlikely(status == MAPPING_INFINITE))
-> +			goto infinite;
+>  	pr_debug("fail_seq=%llu", fail_seq);
 > +
->  		if (unlikely(status == MAPPING_INVALID))
->  			goto fallback;
+> +	if (!mptcp_has_another_subflow(sk) && !READ_ONCE(msk->noncontiguous))
+> +		WRITE_ONCE(msk->snd_infinite_mapping_enable, true);
+>  }
 >  
-> @@ -1192,6 +1199,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
->  		return false;
->  	}
+>  /* path manager helpers */
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index c7ecd3e3b537..4ebbbc6f1d01 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1278,6 +1278,21 @@ static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
+>  	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
+>  }
 >  
-> +infinite:
->  	__mptcp_do_fallback(msk);
->  	skb = skb_peek(&ssk->sk_receive_queue);
->  	subflow->map_valid = 1;
+> +static void mptcp_update_infinite_mapping(struct mptcp_sock *msk, struct mptcp_ext *mpext)
+> +{
+> +	if (!mpext)
+> +		return;
+> +
+> +	mpext->data_seq = READ_ONCE(msk->start_seq);
+> +	mpext->subflow_seq = 0;
+> +	mpext->data_len = 0;
+> +	mpext->csum = 0;
+> +
+> +	WRITE_ONCE(msk->snd_infinite_mapping_enable, false);
+> +	pr_infinite(msk);
+> +	__mptcp_do_infinite(msk);
+> +}
 
+If you move the 'snd_infinite_mapping_enable' flag at the subflow level
+(inside struct mptcp_subflow_context), all the _ONCE annotation will
+not be needed. And the flag will be already initializated to 0 at ctx
+creation time.
 
-It looks like MAPPING_INFINITE has almost the same behavior
-of MAPPING_DUMMY.
+Additionally, I'm unsure the MPTCP_INFINITE_DONE bit is required ?!?
+can we simply rely on FALLBACK ???
 
-I think we can avoid the new conditional in get_mapping_status().
-Eventually we could do all the error checking after the 'fallback:'
-label only if the msk has not fallen back yet:
-
-fallback:
-	if (!__mptcp_check_fallback(msk)) {
-		/* RFC 8684 section 3.7. */
-	        if (subflow->send_mp_fail) {
-			...
-		if (subflow->mp_join || subflow->fully_established) {
-			...
-		__mptcp_do_fallback(msk);
-	}
-
-	skb = skb_peek(&ssk->sk_receive_queue);
-	...
-WDYT?
-
+/P
 
