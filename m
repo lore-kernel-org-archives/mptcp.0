@@ -1,26 +1,27 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E603FE2
-	for <mptcp@lists.linux.dev>; Fri, 10 Sep 2021 00:00:12 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10102"; a="284648939"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14113FC2
+	for <mptcp@lists.linux.dev>; Fri, 10 Sep 2021 00:21:56 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10102"; a="220625579"
 X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
-   d="scan'208";a="284648939"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:00:09 -0700
+   d="scan'208";a="220625579"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:21:56 -0700
 X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
-   d="scan'208";a="694393354"
+   d="scan'208";a="470317464"
 Received: from jabusaid-mobl.amr.corp.intel.com ([10.255.231.212])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:00:06 -0700
-Date: Thu, 9 Sep 2021 17:00:06 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:21:56 -0700
+Date: Thu, 9 Sep 2021 17:21:55 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev, 
     Geliang Tang <geliangtang@xiaomi.com>
-Subject: Re: [PATCH mptcp-next v2 1/9] mptcp: add noncontiguous flag
-In-Reply-To: <7147f377124eaa4445aa11e8f8f4efbd72d69261.camel@redhat.com>
-Message-ID: <4e24a896-b1bf-c6ee-2db9-4d1d572c99cd@linux.intel.com>
-References: <cover.1631188109.git.geliangtang@xiaomi.com>  <138e3913108d313b11a261e6c9e3db2cc788183f.1631188109.git.geliangtang@xiaomi.com> <7147f377124eaa4445aa11e8f8f4efbd72d69261.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 3/9] mptcp: add MAPPING_INFINITE mapping
+ status
+In-Reply-To: <ba53a5abbb43645efa4038eda3abfb8bb386b09b.camel@redhat.com>
+Message-ID: <692e5742-1b6c-692d-2927-f0a5aba14ee8@linux.intel.com>
+References: <cover.1631188109.git.geliangtang@xiaomi.com>  <592427b5a91d5e64e4b96c4c8b8d06264197f1c4.1631188109.git.geliangtang@xiaomi.com> <ba53a5abbb43645efa4038eda3abfb8bb386b09b.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,100 +35,92 @@ On Thu, 9 Sep 2021, Paolo Abeni wrote:
 > On Thu, 2021-09-09 at 19:51 +0800, Geliang Tang wrote:
 >> From: Geliang Tang <geliangtang@xiaomi.com>
 >>
->> This patch added a "noncontiguous" flag in the msk to track whether the
->> data is contiguous on a subflow. When retransmission happens, we could
->> set this flag, and once all retransmissions are DATA_ACK'd that flag
->> could be cleared.
->>
->> When a bad checksum is detected and a single contiguous subflow is in
->> use, don't send RST + MP_FAIL, send data_ack + MP_FAIL instead.
+>> This patch added a new mapping status named MAPPING_INFINITE. If the
+>> MPTCP_INFINITE_DONE flag is set in get_mapping_status, return this new
+>> status. And in subflow_check_data_avail, if this status is set, goto the
+>> 'infinite' lable to fallback.
 >>
 >> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 >> ---
->>  net/mptcp/protocol.c |  7 +++++++
->>  net/mptcp/protocol.h |  2 ++
->>  net/mptcp/subflow.c  | 12 ++++++------
->>  3 files changed, 15 insertions(+), 6 deletions(-)
+>>  net/mptcp/subflow.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
 >>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index bb8a2a231479..81ea03b9fff6 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -1095,6 +1095,9 @@ static void __mptcp_clean_una(struct sock *sk)
->>
->>  		dfrag_uncharge(sk, delta);
->>  		cleaned = true;
->> +
->> +		if (dfrag->resend_count == 0)
->> +			WRITE_ONCE(msk->noncontiguous, false);
->>  	}
->>
->>  	/* all retransmitted data acked, recovery completed */
->> @@ -1171,6 +1174,7 @@ mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
->>  	dfrag->overhead = offset - orig_offset + sizeof(struct mptcp_data_frag);
->>  	dfrag->offset = offset + sizeof(struct mptcp_data_frag);
->>  	dfrag->already_sent = 0;
->> +	dfrag->resend_count = 0;
->>  	dfrag->page = pfrag->page;
->>
->>  	return dfrag;
->> @@ -2454,6 +2458,8 @@ static void __mptcp_retrans(struct sock *sk)
->>  		dfrag->already_sent = max(dfrag->already_sent, info.sent);
->>  		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
->>  			 info.size_goal);
->> +		dfrag->resend_count++;
->> +		WRITE_ONCE(msk->noncontiguous, true);
->>  	}
->>
->>  	release_sock(ssk);
->> @@ -2872,6 +2878,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
->>  	WRITE_ONCE(msk->fully_established, false);
->>  	if (mp_opt->suboptions & OPTION_MPTCP_CSUMREQD)
->>  		WRITE_ONCE(msk->csum_enabled, true);
->> +	WRITE_ONCE(msk->noncontiguous, false);
->>
->>  	msk->write_seq = subflow_req->idsn + 1;
->>  	msk->snd_nxt = msk->write_seq;
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index d3e6fd1615f1..011f84ae1593 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -213,6 +213,7 @@ struct mptcp_data_frag {
->>  	u16 offset;
->>  	u16 overhead;
->>  	u16 already_sent;
->> +	u16 resend_count;
->>  	struct page *page;
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index 951aafb6021e..ad8efe56eab6 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -798,6 +798,7 @@ enum mapping_status {
+>>  	MAPPING_INVALID,
+>>  	MAPPING_EMPTY,
+>>  	MAPPING_DATA_FIN,
+>> +	MAPPING_INFINITE,
+>>  	MAPPING_DUMMY
 >>  };
+>>
+>> @@ -938,6 +939,9 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+>>  	if (!skb)
+>>  		return MAPPING_EMPTY;
+>>
+>> +	if (mptcp_check_infinite(ssk))
+>> +		return MAPPING_INFINITE;
+>> +
+>>  	if (mptcp_check_fallback(ssk))
+>>  		return MAPPING_DUMMY;
+>>
+>> @@ -1121,6 +1125,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>>
+>>  		status = get_mapping_status(ssk, msk);
+>>  		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
+>> +		if (unlikely(status == MAPPING_INFINITE))
+>> +			goto infinite;
+>> +
+>>  		if (unlikely(status == MAPPING_INVALID))
+>>  			goto fallback;
+>>
+>> @@ -1192,6 +1199,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>>  		return false;
+>>  	}
+>>
+>> +infinite:
+>>  	__mptcp_do_fallback(msk);
+>>  	skb = skb_peek(&ssk->sk_receive_queue);
+>>  	subflow->map_valid = 1;
 >
-> Ouch, the above increases mptcp_data_frag size by 8 bytes, due to
-> holes.
 >
+> It looks like MAPPING_INFINITE has almost the same behavior
+> of MAPPING_DUMMY.
 
-What about rearranging the struct to eliminate the holes? (Full 
-disclosure: I asked Geliang to add this, but am open to other solutions)
+This is something else I asked for in the v1 review, to avoid reusing 
+MAPPING_INVALID in a confusing way :)
 
-I was also thinking it could be useful to have this information around for 
-retransmission metrics, but that doesn't seem too important.
+How about using a switch statement after get_mapping_status() instead of 4 
+if's in a row?
 
-> Is this necessary? I think the packet scheduler never reinject with a
-> single subflow. It used to do that, but it should not do anymore.
 >
-
-There may be a single subflow now, but multiple subflows (with 
-unacked reinjections) a very short time ago.
-
-> Even if the scheduler re-inject with a single subflow, can we instead
-> keep track of the last retrans sequence number - in __mptcp_retrans().
+> I think we can avoid the new conditional in get_mapping_status().
+> Eventually we could do all the error checking after the 'fallback:'
+> label only if the msk has not fallen back yet:
 >
-> msk stream is 'continuous' if and only if 'before64(last_retrnas_seq,
-> msk->snd_una)'
->
+> fallback:
+> 	if (!__mptcp_check_fallback(msk)) {
+> 		/* RFC 8684 section 3.7. */
+> 	        if (subflow->send_mp_fail) {
+> 			...
+> 		if (subflow->mp_join || subflow->fully_established) {
 
-If last_retrans_seq is checked only when msk->noncontiguous is true, I 
-think that works out. Otherwise the last_retrans_seq is stale/invalid if 
-retransmission never happened, or any retransmissions have been fully 
-acked.
+This condition also needs to check for the infinite mapping case, which is 
+why it seemed useful to have a separate MAPPING_ enum. Fallback is being 
+triggered here in response to the infinite mapping, so the subflow should 
+not be forced to close.
+
+> 			...
+> 		__mptcp_do_fallback(msk);
+> 	}
+>
+> 	skb = skb_peek(&ssk->sk_receive_queue);
+> 	...
+> WDYT?
+
 
 
 --
