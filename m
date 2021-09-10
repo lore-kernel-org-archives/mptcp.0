@@ -1,27 +1,25 @@
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14113FC2
-	for <mptcp@lists.linux.dev>; Fri, 10 Sep 2021 00:21:56 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10102"; a="220625579"
-X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
-   d="scan'208";a="220625579"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDBE3FC2
+	for <mptcp@lists.linux.dev>; Fri, 10 Sep 2021 00:39:53 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10102"; a="220628682"
+X-IronPort-AV: E=Sophos;i="5.85,282,1624345200"; 
+   d="scan'208";a="220628682"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:21:56 -0700
-X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
-   d="scan'208";a="470317464"
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:39:52 -0700
+X-IronPort-AV: E=Sophos;i="5.85,282,1624345200"; 
+   d="scan'208";a="470321076"
 Received: from jabusaid-mobl.amr.corp.intel.com ([10.255.231.212])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:21:56 -0700
-Date: Thu, 9 Sep 2021 17:21:55 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 17:39:52 -0700
+Date: Thu, 9 Sep 2021 17:39:51 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev, 
-    Geliang Tang <geliangtang@xiaomi.com>
-Subject: Re: [PATCH mptcp-next v2 3/9] mptcp: add MAPPING_INFINITE mapping
- status
-In-Reply-To: <ba53a5abbb43645efa4038eda3abfb8bb386b09b.camel@redhat.com>
-Message-ID: <692e5742-1b6c-692d-2927-f0a5aba14ee8@linux.intel.com>
-References: <cover.1631188109.git.geliangtang@xiaomi.com>  <592427b5a91d5e64e4b96c4c8b8d06264197f1c4.1631188109.git.geliangtang@xiaomi.com> <ba53a5abbb43645efa4038eda3abfb8bb386b09b.camel@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>
+cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@xiaomi.com>
+Subject: Re: [PATCH mptcp-next v2 4/9] mptcp: add start_seq in the msk
+In-Reply-To: <48b3740fe2e7339114c7aa8278e5615cdb6b997b.1631188109.git.geliangtang@xiaomi.com>
+Message-ID: <1aa2848e-81da-216-4767-999e77bf5db5@linux.intel.com>
+References: <cover.1631188109.git.geliangtang@xiaomi.com> <48b3740fe2e7339114c7aa8278e5615cdb6b997b.1631188109.git.geliangtang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -30,98 +28,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 9 Sep 2021, Paolo Abeni wrote:
+On Thu, 9 Sep 2021, Geliang Tang wrote:
 
-> On Thu, 2021-09-09 at 19:51 +0800, Geliang Tang wrote:
->> From: Geliang Tang <geliangtang@xiaomi.com>
->>
->> This patch added a new mapping status named MAPPING_INFINITE. If the
->> MPTCP_INFINITE_DONE flag is set in get_mapping_status, return this new
->> status. And in subflow_check_data_avail, if this status is set, goto the
->> 'infinite' lable to fallback.
->>
->> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
->> ---
->>  net/mptcp/subflow.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 951aafb6021e..ad8efe56eab6 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -798,6 +798,7 @@ enum mapping_status {
->>  	MAPPING_INVALID,
->>  	MAPPING_EMPTY,
->>  	MAPPING_DATA_FIN,
->> +	MAPPING_INFINITE,
->>  	MAPPING_DUMMY
->>  };
->>
->> @@ -938,6 +939,9 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
->>  	if (!skb)
->>  		return MAPPING_EMPTY;
->>
->> +	if (mptcp_check_infinite(ssk))
->> +		return MAPPING_INFINITE;
->> +
->>  	if (mptcp_check_fallback(ssk))
->>  		return MAPPING_DUMMY;
->>
->> @@ -1121,6 +1125,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>
->>  		status = get_mapping_status(ssk, msk);
->>  		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
->> +		if (unlikely(status == MAPPING_INFINITE))
->> +			goto infinite;
->> +
->>  		if (unlikely(status == MAPPING_INVALID))
->>  			goto fallback;
->>
->> @@ -1192,6 +1199,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>  		return false;
->>  	}
->>
->> +infinite:
->>  	__mptcp_do_fallback(msk);
->>  	skb = skb_peek(&ssk->sk_receive_queue);
->>  	subflow->map_valid = 1;
+> From: Geliang Tang <geliangtang@xiaomi.com>
 >
+> This patch added a new member named start_seq to the msk to keep track of
+> the beginning of the last fully-acked data segment. This would be updated
+> in __mptcp_move_skb and mptcp_pending_data_fin.
 >
-> It looks like MAPPING_INFINITE has almost the same behavior
-> of MAPPING_DUMMY.
-
-This is something else I asked for in the v1 review, to avoid reusing 
-MAPPING_INVALID in a confusing way :)
-
-How about using a switch statement after get_mapping_status() instead of 4 
-if's in a row?
-
+> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+> ---
+> net/mptcp/protocol.c | 4 ++++
+> net/mptcp/protocol.h | 1 +
+> 2 files changed, 5 insertions(+)
 >
-> I think we can avoid the new conditional in get_mapping_status().
-> Eventually we could do all the error checking after the 'fallback:'
-> label only if the msk has not fallen back yet:
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 81ea03b9fff6..c7ecd3e3b537 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -308,6 +308,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
 >
-> fallback:
-> 	if (!__mptcp_check_fallback(msk)) {
-> 		/* RFC 8684 section 3.7. */
-> 	        if (subflow->send_mp_fail) {
-> 			...
-> 		if (subflow->mp_join || subflow->fully_established) {
+> 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
+> 		/* in sequence */
+> +		WRITE_ONCE(msk->start_seq, msk->ack_seq);
 
-This condition also needs to check for the infinite mapping case, which is 
-why it seemed useful to have a separate MAPPING_ enum. Fallback is being 
-triggered here in response to the infinite mapping, so the subflow should 
-not be forced to close.
+This is tracking the previous value of ack_seq, which is not always 
+aligned with the beginning of a DSS segment. It's also recording a 
+sequence number for data received by this peer... but I think the RFC is 
+asking for the inifinite mapping sequence number to be for data *sent* by 
+this peer and acked by the other side.
 
-> 			...
-> 		__mptcp_do_fallback(msk);
+This peer has already sent acknowledgements for the data received, so 
+there's no need to send information (old rx sequence numbers) that the 
+other side already has.
+
+- Mat
+
+
+> 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
+> 		tail = skb_peek_tail(&sk->sk_receive_queue);
+> 		if (tail && mptcp_try_coalesce(sk, tail, skb))
+> @@ -523,6 +524,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
+> 	 */
+>
+> 	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
+> +		WRITE_ONCE(msk->start_seq, msk->ack_seq);
+> 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
+> 		WRITE_ONCE(msk->rcv_data_fin, 0);
+>
+> @@ -2894,6 +2896,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+> 		WRITE_ONCE(msk->ack_seq, ack_seq);
+> 		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
 > 	}
+> +	WRITE_ONCE(msk->start_seq, 0);
 >
-> 	skb = skb_peek(&ssk->sk_receive_queue);
-> 	...
-> WDYT?
-
-
+> #if !IS_ENABLED(CONFIG_KASAN)
+> 	sock_reset_flag(nsk, SOCK_RCU_FREE);
+> @@ -3141,6 +3144,7 @@ void mptcp_finish_connect(struct sock *ssk)
+> 	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
+> 	WRITE_ONCE(msk->can_ack, 1);
+> 	WRITE_ONCE(msk->snd_una, msk->write_seq);
+> +	WRITE_ONCE(msk->start_seq, 0);
+>
+> 	mptcp_pm_new_connection(msk, ssk, 0);
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 5644a361b9c7..77af55171ded 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -226,6 +226,7 @@ struct mptcp_sock {
+> 	u64		remote_key;
+> 	u64		write_seq;
+> 	u64		snd_nxt;
+> +	u64		start_seq;
+> 	u64		ack_seq;
+> 	u64		rcv_wnd_sent;
+> 	u64		rcv_data_fin_seq;
+> -- 
+> 2.31.1
+>
+>
+>
 
 --
 Mat Martineau
