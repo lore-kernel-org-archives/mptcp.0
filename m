@@ -1,94 +1,72 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287EB3FD0
-	for <mptcp@lists.linux.dev>; Sat, 11 Sep 2021 06:06:26 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id t6so4270403edi.9
-        for <mptcp@lists.linux.dev>; Fri, 10 Sep 2021 23:06:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=ifVqD9m5/UtPfyScMSQR/KgOUWvfZShwrHr5QkiJnxI=;
-        b=cnUC9LbtlIAl7HVlja9TYEHbppPoW5o1bRNjFBVoXEwqyxC6COxUmWrFRSu33DoyIa
-         hk8cNtomldCicTI5goE/T0qCAQ3n9EG5OdkYVKmPpVq31HGkNwVnAnrlXq0YCTpbpfBf
-         +UwzTTF2RUj47TwE7WwHM3MHTufjCpXOzBvltLODDpnU6lUG84Vwa2YhWmVk53ekgGEa
-         6zWBFB0wUMSfulQZthn4606tiVj0us+aO3vYVEnp6SuJl87mo+tKe7ziPl6WRPDUTD0a
-         JrDfCfs6UV8ZgH27EYkUAy87CZAX4gTp/AQPYTydR3E/+4gpbiVdLpIZgIK2EV/GmOcH
-         U30Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ifVqD9m5/UtPfyScMSQR/KgOUWvfZShwrHr5QkiJnxI=;
-        b=VYwZ3wH8vUsEc4mnRv3MyqqgjlBWuujnSb5yqvI1XFhkYOPhC10eH4dhlC+eZSZgeS
-         HHGW6sFLcMvbZbGCwaKbY+r52yhjUTOjsLZWeddt8p+wTyL9YSBb59HiAAuMLcnEVxRz
-         LiQPZWbQihpx94Scj4rDjT97NXGRRpG/7DpWpsCWR7T4COHlP1JtIaesJH2VHHXiKuf5
-         wAzY16DRpJtojxWq/yzVeGsLfBy8VqhbyJGTlrM2tdltN9gLeJmWI6k6pWFGI9cBvfDo
-         N8o1urzCkXCbOWH0pSMd7tewnhlkJcyoam6m8Yq8QTvJLgwdiCY9/d3FEd3fcXVDtgtu
-         emSA==
-X-Gm-Message-State: AOAM5311PlHMqOxs7b9cj1KMQJs/hm4Z4s126idYktsaI44gkJX9ClP0
-	y/DDrLpi6V4XVRYKzG/O3idj3u9fg0tw3E+K
-X-Google-Smtp-Source: ABdhPJx6hlHddKxLh3eJWBEdS89Ja8F/CcggEn7/8j6hcSBSm4ZV6/GlWlpmqF1hvKzU8hQN3X0YAw==
-X-Received: by 2002:aa7:d402:: with SMTP id z2mr1737320edq.291.1631340384373;
-        Fri, 10 Sep 2021 23:06:24 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.103.201.dyn.edpnet.net. [94.105.103.201])
-        by smtp.gmail.com with ESMTPSA id z8sm310988ejd.94.2021.09.10.23.06.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Sep 2021 23:06:24 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] chtls: rename skb_entail() to
- chtls_skb_entail()
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <ed8775ab838ec39895e14b191a338e0f529dfcc0.1631176902.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <9ca14b4b-3474-b1b3-7959-421b5e38032c@tessares.net>
-Date: Sat, 11 Sep 2021 08:06:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA4E3FD4
+	for <mptcp@lists.linux.dev>; Sat, 11 Sep 2021 14:37:56 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5737260FDC;
+	Sat, 11 Sep 2021 14:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1631371076;
+	bh=ZssWQoic4PisY8fQmXOLRjIwa7pajjw3kzIi0Ufi/3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A7u4Ht1KPQGsvmyBYLrHZUIUcnqWdXIB10/19PcnoUpbQk5yQEgPZRe805dJgcRSl
+	 J8PVFTJL4YY4m6rd9Q/SGu6hdFFxiAxxKodv0hoxNxAmW9G0H4EuHzCyf8PlUGfTm8
+	 zcVifwyPzNBhpatuJxLI1CqFONiUqw7zh5PS39nPPnFYzVAAKxVDTjFO0zw18dff81
+	 1rCa7i7ExmXsNBQaWbd2lVr/7klFPWIGZSmPc7ns6rT5/H6Rd4bRPi5ebzM5R6uYi9
+	 Waxcks05SQEbu42/Wc77Gkqx2TbiDKHUZJlDXFkZoP9Zh0bFrXf8kuVsITS43wYb8d
+	 WAoKDQzDNceng==
+Date: Sat, 11 Sep 2021 10:37:55 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Yonglong Li <liyonglong@chinatelecom.cn>,
+	Geliang Tang <geliangtang@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH AUTOSEL 5.14 209/252] mptcp: fix ADD_ADDR and RM_ADDR
+ maybe flush addr_signal each other
+Message-ID: <YTy/Q//PQjz6c4Ip@sashalap>
+References: <20210909114106.141462-1-sashal@kernel.org>
+ <20210909114106.141462-209-sashal@kernel.org>
+ <3a6c39db-8aca-b64b-51db-cd1544daf9dc@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ed8775ab838ec39895e14b191a338e0f529dfcc0.1631176902.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <3a6c39db-8aca-b64b-51db-cd1544daf9dc@linux.intel.com>
 
-Hi Paolo,
+On Thu, Sep 09, 2021 at 03:33:02PM -0700, Mat Martineau wrote:
+>
+>On Thu, 9 Sep 2021, Sasha Levin wrote:
+>
+>>From: Yonglong Li <liyonglong@chinatelecom.cn>
+>>
+>>[ Upstream commit 119c022096f5805680c79dfa74e15044c289856d ]
+>>
+>>ADD_ADDR shares pm.addr_signal with RM_ADDR, so after RM_ADDR/ADD_ADDR
+>>has done, we should not clean ADD_ADDR/RM_ADDR's addr_signal.
+>>
+>>Co-developed-by: Geliang Tang <geliangtang@gmail.com>
+>>Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+>>Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+>>Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>>Signed-off-by: David S. Miller <davem@davemloft.net>
+>>Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>---
+>>net/mptcp/pm.c | 13 ++++++++++---
+>>1 file changed, 10 insertions(+), 3 deletions(-)
+>
+>Hi Sasha,
+>
+>This patch is part of a 5-patch series, and was not intended for 
+>backporting. Please drop the patch from all stable branches.
 
-On 09/09/2021 10:43, Paolo Abeni wrote:
-> The next patch will expose the core TCP helper with the same
-> name. It looks like we can't trivially re-use it in chtls, so
-> remame the driver specific's one to avoid name conflicts.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> notes:
-> - this should land before "tcp: expose the tcp_mark_push() and skb_entail()
->   helpers"
-> - just build tested, I lack the relevant H/W to do anything better
-> - we need to CC the appropriate chelsio maintainer when submitting
-> this patch upstream
-> - I did not add the reported-by buildbot tag. as there will no issue
->   with the patch applied in order, but I guess it can be added, too
+Dropped, thanks!
 
-Thank you for the patch and the review! Added in our tree before "tcp:
-expose the tcp_mark_push() and skb_entail() helpers" and with Mat's ACK.
-
-- 99bd188ec0e2: chtls: rename skb_entail() to chtls_skb_entail()
-- 5f3ea6614848: tg:msg: add missing Reported-by tag
-- Results: fecd1f9bf19f..98e7006b1e5b
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210911T060609
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210911T060609
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Thanks,
+Sasha
