@@ -1,153 +1,90 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F1E3FC2
-	for <mptcp@lists.linux.dev>; Fri, 10 Sep 2021 17:22:33 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10103"; a="220800706"
-X-IronPort-AV: E=Sophos;i="5.85,283,1624345200"; 
-   d="scan'208";a="220800706"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2021 10:22:33 -0700
-X-IronPort-AV: E=Sophos;i="5.85,283,1624345200"; 
-   d="scan'208";a="470627618"
-Received: from svuppala-mobl.amr.corp.intel.com ([10.212.165.209])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2021 10:22:32 -0700
-Date: Fri, 10 Sep 2021 10:22:32 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev, 
-    Geliang Tang <geliangtang@xiaomi.com>
-Subject: Re: [PATCH mptcp-next v2 3/9] mptcp: add MAPPING_INFINITE mapping
- status
-In-Reply-To: <add72c536daafa4fadc76fab88ab437293c163d4.camel@redhat.com>
-Message-ID: <901848c-bd52-c78-756c-455a70b44e49@linux.intel.com>
-References: <cover.1631188109.git.geliangtang@xiaomi.com>   <592427b5a91d5e64e4b96c4c8b8d06264197f1c4.1631188109.git.geliangtang@xiaomi.com>  <ba53a5abbb43645efa4038eda3abfb8bb386b09b.camel@redhat.com>  <692e5742-1b6c-692d-2927-f0a5aba14ee8@linux.intel.com>
- <add72c536daafa4fadc76fab88ab437293c163d4.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883982F80
+	for <mptcp@lists.linux.dev>; Sat, 11 Sep 2021 05:56:45 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id h9so8719932ejs.4
+        for <mptcp@lists.linux.dev>; Fri, 10 Sep 2021 22:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zSBMnT4Nj8oe5zsUdQBWt4MVT9lqEAEw6jIdSDOUhHM=;
+        b=1MTpqtnkvu6dxv5Y02a94+JG9Yx/V1Al/mz+ySufMJa7G/LHZilyVMj4CQaieZSd57
+         K2nyEQRPZ1sopUEdRybsODFUxPOYdYmtzpVC9KIPxq4LW8zeGGyUSRWUyNKAjYGQwWgx
+         SSZ1j+YOfbcMtA3C2WW/3Gw3Ton/W2lt4lSUzuUNeDZF/1Sl06SfAAbkD/DIp7raWiaz
+         RwWswWLtqQYBkcWmltQnRSpJ967Z6gAjZQiJntR1wAY33BH/c5rEB+SmGwAzbr5rh1kS
+         /DdfnfCKalySgxk6+jEjGK+9RATzzMqGBHhz4bRCYK7GFHFb35TGzv1BGOJi3gnYGJgD
+         NatQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zSBMnT4Nj8oe5zsUdQBWt4MVT9lqEAEw6jIdSDOUhHM=;
+        b=4vAGX2n/JPBFiLGzLL86zbRJKw2L5570fRwnt534/O2n/nbVEZpAYLfSg3CTwI+DUc
+         lRb6MiADWNnrf4PyilZRGfCVygOoc5lq8qZA5wxlPlY/kNPWwYKdLulbW3iOqAESdrKS
+         XZpGIjOY7pw/RwIK5aqOKMb3j2SSWJxXePfz3CJGCrPk8erhZncqnSbnvXi0EauqfXPP
+         xHtxBH5deVu9HP0MM89M+qId/c2bmAQW0ljPPOwc2zlE+igTb4pvvO0Al5BDN5BXGr5L
+         4HOxK5+gLr23l+lPntJRfU7asw7abgoAED1ApL2lA0Dt4mWB97xihoqufYmQCp0858Ws
+         yeQg==
+X-Gm-Message-State: AOAM533RFaWnbn1zChhvZ9XSCjtYGT0BRWy8HjAVweArMdrxGkkEIW5H
+	O6qeoqE0/S4DhylqnYANBNm0qy6j35Tr6Ab8
+X-Google-Smtp-Source: ABdhPJxLJu9Q2YWXm7gPs7w5K/cH1nImP4TptixWrF9HhX+bTxt0KYcFhpHi1KRXkSmo2u/+84dHRQ==
+X-Received: by 2002:a17:906:2acc:: with SMTP id m12mr1331731eje.231.1631339803488;
+        Fri, 10 Sep 2021 22:56:43 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.103.201.dyn.edpnet.net. [94.105.103.201])
+        by smtp.gmail.com with ESMTPSA id hz15sm300038ejc.119.2021.09.10.22.56.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Sep 2021 22:56:43 -0700 (PDT)
+Subject: Re: [mptcp-next 0/2] Fix mptcp connection hangs after link failover
+To: Florian Westphal <fw@strlen.de>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20210906131045.18513-1-fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <d0644d80-b9c5-ad76-c588-1e09297bc173@tessares.net>
+Date: Sat, 11 Sep 2021 07:56:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+In-Reply-To: <20210906131045.18513-1-fw@strlen.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-On Fri, 10 Sep 2021, Paolo Abeni wrote:
+Hi Florian, Paolo, Mat,
 
-> On Thu, 2021-09-09 at 17:21 -0700, Mat Martineau wrote:
->> On Thu, 9 Sep 2021, Paolo Abeni wrote:
->>
->>> On Thu, 2021-09-09 at 19:51 +0800, Geliang Tang wrote:
->>>> From: Geliang Tang <geliangtang@xiaomi.com>
->>>>
->>>> This patch added a new mapping status named MAPPING_INFINITE. If the
->>>> MPTCP_INFINITE_DONE flag is set in get_mapping_status, return this new
->>>> status. And in subflow_check_data_avail, if this status is set, goto the
->>>> 'infinite' lable to fallback.
->>>>
->>>> Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
->>>> ---
->>>>  net/mptcp/subflow.c | 8 ++++++++
->>>>  1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->>>> index 951aafb6021e..ad8efe56eab6 100644
->>>> --- a/net/mptcp/subflow.c
->>>> +++ b/net/mptcp/subflow.c
->>>> @@ -798,6 +798,7 @@ enum mapping_status {
->>>>  	MAPPING_INVALID,
->>>>  	MAPPING_EMPTY,
->>>>  	MAPPING_DATA_FIN,
->>>> +	MAPPING_INFINITE,
->>>>  	MAPPING_DUMMY
->>>>  };
->>>>
->>>> @@ -938,6 +939,9 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
->>>>  	if (!skb)
->>>>  		return MAPPING_EMPTY;
->>>>
->>>> +	if (mptcp_check_infinite(ssk))
->>>> +		return MAPPING_INFINITE;
->>>> +
->>>>  	if (mptcp_check_fallback(ssk))
->>>>  		return MAPPING_DUMMY;
->>>>
->>>> @@ -1121,6 +1125,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>>>
->>>>  		status = get_mapping_status(ssk, msk);
->>>>  		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
->>>> +		if (unlikely(status == MAPPING_INFINITE))
->>>> +			goto infinite;
->>>> +
->>>>  		if (unlikely(status == MAPPING_INVALID))
->>>>  			goto fallback;
->>>>
->>>> @@ -1192,6 +1199,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>>>  		return false;
->>>>  	}
->>>>
->>>> +infinite:
->>>>  	__mptcp_do_fallback(msk);
->>>>  	skb = skb_peek(&ssk->sk_receive_queue);
->>>>  	subflow->map_valid = 1;
->>>
->>> It looks like MAPPING_INFINITE has almost the same behavior
->>> of MAPPING_DUMMY.
->>
->> This is something else I asked for in the v1 review, to avoid reusing
->> MAPPING_INVALID in a confusing way :)
->
-> I read that ;) I thought 'MAPPING_DUMMY' would be less confusing.
->
->> How about using a switch statement after get_mapping_status() instead of 4
->> if's in a row?
->
-> Will be mostly the same, from generate code perspective, I think.
->
-> What if we rename MAPPING_DUMMY into MAPPING_INFINITE, and we use only
-> a single value? MAPPING_DUMMY is currently used after a fallback to
-> implement the sort of infinite mapping we use there.
->
+On 06/09/2021 15:10, Florian Westphal wrote:
+> First patch is preparation work: tx_pending_data counter is unreliable.
+> Second patch fixes premature stop of the retransmit timer.
+> 
+> Florian Westphal (2):
+>   mptcp: remove tx_pending_data
+>   mptcp: re-set push-pending bit on retransmit failure
 
-That's fine.
+Thank you for the patches, reviews and testing!
 
->>> I think we can avoid the new conditional in get_mapping_status().
->>> Eventually we could do all the error checking after the 'fallback:'
->>> label only if the msk has not fallen back yet:
->>>
->>> fallback:
->>> 	if (!__mptcp_check_fallback(msk)) {
->>> 		/* RFC 8684 section 3.7. */
->>> 	        if (subflow->send_mp_fail) {
->>> 			...
->>> 		if (subflow->mp_join || subflow->fully_established) {
->>
->> This condition also needs to check for the infinite mapping case, which is
->> why it seemed useful to have a separate MAPPING_ enum. Fallback is being
->> triggered here in response to the infinite mapping, so the subflow should
->> not be forced to close.
->
-> My point is all about avoiding additional conditionals in the 'fast-
-> path' / default receive path.
->
-> I think we still could do that, and being able to discriminate here
-> between infinite mapping received or not:
->
-> - get_mapping_status() returns the same value in the dummy and infinite
-> mapping case.
-> - in the infinite mapping case, get_mapping_status() additionally sets
->  subflow->map_data_len to 0,
+It is now in our tree (net-next features) with Paolo's Ack and Mat's RvB
+tag:
 
-  - and in other cases, set it to nonzero.
+- 4c18199dfdd0: mptcp: remove tx_pending_data
+- 7fdafa1b84f9: mptcp: re-arm retransmit timer if data is pending
+- Results: 84da6403b775..fecd1f9bf19f
 
-> - in the above code - under 'if (!__mptcp_check_fallback(msk)) {' -
-> subflow->map_data_len == 0 implies infinite mapping received,
->
-> WDYT?
+Builds and tests are now in progress:
 
-I think it works. I'm slightly uneasy with overloading 
-subflow->map_data_len from a code readability and maintenance perspective, 
-but if the optimization pays off it's manageable with some good comments.
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210911T055615
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210911T055615
 
---
-Mat Martineau
-Intel
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
