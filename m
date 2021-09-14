@@ -1,122 +1,198 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB523FC5
-	for <mptcp@lists.linux.dev>; Tue, 14 Sep 2021 09:19:31 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id f65so11572046pfb.10
-        for <mptcp@lists.linux.dev>; Tue, 14 Sep 2021 02:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=x/61neoQuJvUboPoxEMvmqYnrY3sD4YlQp7a9H/I488=;
-        b=BndIU4gc+CixysnBvEv6aW0ZCWwjDFFO/i5TLk8I0n/qcyLw6n2AvIgNGxn5T2KYFw
-         BMwz2RK6h9YEGBbA4pmLIBog9964+g1nCEufTK20/4NLLyNyvdedbpF/GS5vwXqrJYzC
-         mJlrw8hidjHorxxFZCYhhws3yLH10/oBuSK7A5/lt7vTPCJ57PdtqZmkc1xir+pbME83
-         RQnvI4HIDbOagdJyFsvYoyHlysK4WzToOOxhpZE756CA4lRJQ7qiW5+1ujrB5+PH8jcB
-         8+qBJiudOd2kPmLtgNNlnazp5lTtEitXtfPj7oR0k7gbD9sILcXHCr2erYNeqpPgLJy5
-         sBkg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59473FD0
+	for <mptcp@lists.linux.dev>; Tue, 14 Sep 2021 15:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1631633535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4LsBYEpSFNNxqLYsuSciFZQ+BDnsOGrROIqmM4KKMbE=;
+	b=a2Be4m5cbUv3Z6Tp2TUnZ/P2L7OMJ8sAmmoGicXLMXWETKkyB4DHsMXCykNRCHqhYvg/wh
+	uYpIHCb92YKbxxWc9Vcx52vDTrg6Ld1JtDZijjDPYez2cLujpWQ75XRWJ540e1PBef0/gx
+	YEgEmPEefdOq99RXWD0fJGGLPzIhfL8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-552-wHOTRYLNOEK-Zs-04BAcXA-1; Tue, 14 Sep 2021 11:32:14 -0400
+X-MC-Unique: wHOTRYLNOEK-Zs-04BAcXA-1
+Received: by mail-wm1-f71.google.com with SMTP id c187-20020a1c35c4000000b00304b489f2d8so4786535wma.6
+        for <mptcp@lists.linux.dev>; Tue, 14 Sep 2021 08:32:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=x/61neoQuJvUboPoxEMvmqYnrY3sD4YlQp7a9H/I488=;
-        b=qaeT8WpR5Q6wfYnlumazirhpvRMjoA52AwEKDAjMyrkGvVC0BgdUmYpIkiue0RPl79
-         TRzmBNk4aL6L5GSksQliskNh9yVKSpuEpkYZe/TT3Wu9zDJGjEOQ2bxw4P0J37QTJR9a
-         K6heMU/thUJn4D6AxFYwrG8mDCZDMyumKB3h6MIf6U2e9sKPWZtYJmkn4JGAhi0Ulgmz
-         BYBAHPJx28q3zjxMaDsbGuOFi9vznq3lD4pWTG0/++2Vi1TryQYscWzV7p2h3UVSR4Ed
-         A19yU0+TiRoXz6+/DBl7AvfINgXe+KhVn8GY07gbUw25KEI2EyUsW3gYObYz7G7ZgbZn
-         9EEQ==
-X-Gm-Message-State: AOAM532MTd5OpylEwxFo7plOymuXVelfPnCTknVRHCAZAxs1m7qZg2xK
-	f6IAGwhGUDZ7Gg2B2tIFEQ2RN+IUsA8=
-X-Google-Smtp-Source: ABdhPJyTz31QHAxoxHro2/eRVw/D+gMXZ2jiJnbQWNdyDIbILuFadYPjk3hJbi6yz67ha8828zKg+g==
-X-Received: by 2002:a65:648b:: with SMTP id e11mr14544760pgv.138.1631611171270;
-        Tue, 14 Sep 2021 02:19:31 -0700 (PDT)
-Received: from MiBook.. ([209.9.72.213])
-        by smtp.gmail.com with ESMTPSA id i21sm10851317pgn.93.2021.09.14.02.19.27
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=4LsBYEpSFNNxqLYsuSciFZQ+BDnsOGrROIqmM4KKMbE=;
+        b=AdNXmsRKegH63NQ7i6FEg4/08RoRujNTvZzYAhhYujmk39DwK2dCjRFAWFPEa0S6yg
+         KjeJa5TXZ3CzCKSc9vYQXfDGcNg67FuWF1cZchdJMGhbAvgwdcdJZBcE3dKRF7T3W83z
+         gXfnXyF5d3bWQBFUmlgnqFShLiJwaQFI8VDKHgxAPD+RYcEYTmSQLhUcQgWEfmGeReli
+         bMNyPnIs7LwVMGLuhUwqbryUMjPJ9YUlqmAiAUxYKj9kAOM7VnZAF+0kI2KApR5wV6s+
+         E3k0S7taIJhE3CoNCiPcsqw/uY7Ufl1LLwoXZQ/OnhgV2E5K1+rx+NRwlINIfespUJQU
+         wn9w==
+X-Gm-Message-State: AOAM53085WFECRF78mnzSZ9sxtm9h5NOjKZpNn9srvgf2wBb6dtvnudP
+	FYQwxatv5EZOjOYeMn3Q9mjlszTYcH8coYxYIPZ4/GQ+Vxo0WN1Ucw0iZ2n1xsDSe4bRreutNok
+	CastJa5amsm9PiyU=
+X-Received: by 2002:adf:ec0d:: with SMTP id x13mr2139534wrn.38.1631633532906;
+        Tue, 14 Sep 2021 08:32:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzfc6l2pfri1klcpAtQeyoC8K02eFnVli4KyoJD5o0XGcy+3CRMyBvGrkG/X4kKrkzQAqxKSg==
+X-Received: by 2002:adf:ec0d:: with SMTP id x13mr2139495wrn.38.1631633532580;
+        Tue, 14 Sep 2021 08:32:12 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-254-211.dyn.eolo.it. [146.241.254.211])
+        by smtp.gmail.com with ESMTPSA id p21sm1527453wmi.30.2021.09.14.08.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 02:19:31 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH mptcp-next v3 8/8] DO-NOT-MERGE: mptcp: mp_fail test
-Date: Tue, 14 Sep 2021 17:19:07 +0800
-Message-Id: <c7bb8d7be4947f76df126f4878ac0c270c83e374.1631610729.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1631610729.git.geliangtang@gmail.com>
+        Tue, 14 Sep 2021 08:32:12 -0700 (PDT)
+Message-ID: <bd5b486dab66893019096ebc468a7fb873919d1a.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v3 1/8] mptcp: add mptcp_is_data_contiguous
+ helper
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
+Date: Tue, 14 Sep 2021 17:32:11 +0200
+In-Reply-To: <3610b34039bb8e73cd2eecdbc43d5a0cfbc5d2da.1631610729.git.geliangtang@gmail.com>
 References: <cover.1631610729.git.geliangtang@gmail.com>
+	 <3610b34039bb8e73cd2eecdbc43d5a0cfbc5d2da.1631610729.git.geliangtang@gmail.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-./mptcp_join.sh -Cf
+On Tue, 2021-09-14 at 17:19 +0800, Geliang Tang wrote:
+> This patch added a new member last_retrans_seq in the msk to track the
+> last retransmitting sequence number.
+> 
+> Add a new helper named mptcp_is_data_contiguous() to check whether the
+> data is contiguous on a subflow.
+> 
+> When a bad checksum is detected and a single contiguous subflow is in
+> use, don't send RST + MP_FAIL, send data_ack + MP_FAIL instead.
+> 
+> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> ---
+>  net/mptcp/protocol.c |  3 +++
+>  net/mptcp/protocol.h |  6 ++++++
+>  net/mptcp/subflow.c  | 12 ++++++------
+>  3 files changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ff574d62073f..71a5427609a9 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2464,6 +2464,7 @@ static void __mptcp_retrans(struct sock *sk)
+>  		dfrag->already_sent = max(dfrag->already_sent, info.sent);
+>  		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
+>  			 info.size_goal);
+> +		msk-> = dfrag->data_seq;
+>  	}
+>  
+>  	release_sock(ssk);
+> @@ -2889,6 +2890,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+>  	msk->snd_una = msk->write_seq;
+>  	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
+>  	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+> +	msk->last_retrans_seq = subflow_req->idsn - 1;
+>  
+>  	if (mp_opt->suboptions & OPTIONS_MPTCP_MPC) {
+>  		msk->can_ack = true;
+> @@ -3145,6 +3147,7 @@ void mptcp_finish_connect(struct sock *ssk)
+>  	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
+>  	WRITE_ONCE(msk->can_ack, 1);
+>  	WRITE_ONCE(msk->snd_una, msk->write_seq);
+> +	WRITE_ONCE(msk->last_retrans_seq, subflow->idsn - 1);
+>  
+>  	mptcp_pm_new_connection(msk, ssk, 0);
+>  
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index d516fb6578cc..eb3473d128d4 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -227,6 +227,7 @@ struct mptcp_sock {
+>  	u64		ack_seq;
+>  	u64		rcv_wnd_sent;
+>  	u64		rcv_data_fin_seq;
+> +	u64		last_retrans_seq;
+>  	int		wmem_reserved;
+>  	struct sock	*last_snd;
+>  	int		snd_burst;
+> @@ -625,6 +626,11 @@ static inline bool mptcp_has_another_subflow(struct sock *ssk)
+>  	return false;
+>  }
+>  
+> +static inline bool mptcp_is_data_contiguous(struct mptcp_sock *msk)
+> +{
+> +	return before64(msk->last_retrans_seq, msk->snd_una);
+> +}
+> +
+>  void __init mptcp_proto_init(void);
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>  int __init mptcp_proto_v6_init(void);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 1de7ce883c37..b07803ed3053 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1166,15 +1166,15 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  fallback:
+>  	/* RFC 8684 section 3.7. */
+>  	if (subflow->send_mp_fail) {
+> -		if (mptcp_has_another_subflow(ssk)) {
+> +		if (mptcp_has_another_subflow(ssk) || !mptcp_is_data_contiguous(msk)) {
+> +			ssk->sk_err = EBADMSG;
+> +			tcp_set_state(ssk, TCP_CLOSE);
+> +			subflow->reset_transient = 0;
+> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
+>  			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+>  				sk_eat_skb(ssk, skb);
+>  		}
+> -		ssk->sk_err = EBADMSG;
+> -		tcp_set_state(ssk, TCP_CLOSE);
+> -		subflow->reset_transient = 0;
+> -		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+> -		tcp_send_active_reset(ssk, GFP_ATOMIC);
+>  		WRITE_ONCE(subflow->data_avail, 0);
+>  		return true;
+>  	}
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/mptcp/protocol.c                           |  9 +++++++++
- .../testing/selftests/net/mptcp/mptcp_join.sh  | 18 ++++++++++++++++++
- 2 files changed, 27 insertions(+)
+As noted by Mat, to avoid wrap-around on 'last_retrans_seq', we also
+need to updated it in mptcp_clean_una, something alike:
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 48e0f55c9e45..0e4c2b7ab264 100644
+index
+bb8a2a231479..cc3534052227 100644
 --- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1292,6 +1292,8 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk, struct sock *ssk,
- 	__mptcp_do_fallback(msk);
- }
++++
+b/net/mptcp/protocol.c
+@@ -1102,8 +1102,13 @@ static void
+__mptcp_clean_una(struct sock *sk)
+                msk->recovery =
+false;
  
-+static int j;
+ out:
+-       if (cleaned && tcp_under_memory_pressure(sk))
+-     
+          __mptcp_mem_reclaim_partial(sk);
++       if (cleaned) {
++      
+         if (mptcp_is_data_contiguous(msk))
++                       msk-
+>last_retrans_seq = msk->snd_una - 1;
 +
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1426,6 +1428,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mptcp_update_data_checksum(skb, copy);
- 	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
- 		mptcp_update_infinite_map(msk, ssk, mpext);
-+
-+	pr_debug("%s j=%d", __func__, j++);
-+	if (j == 20)
-+		skb->data_len = 1;
-+	if (j > 40)
-+		j = 0;
-+
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
- 	return copy;
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fe0c8f3164a7..38663f6373b8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -977,6 +977,24 @@ chk_link_usage()
++               if
+(tcp_under_memory_pressure(sk))
++                       __mptcp_mem_recl
+aim_partial(sk);
++       }
  
- subflows_tests()
- {
-+	# 1 subflow
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "1 subflow" 0 0 0
-+
-+	exit
-+
-+	# multiple subflows
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "multiple subflows" 2 2 2
-+
- 	reset
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "no JOIN" "0" "0" "0"
--- 
-2.31.1
+        if (snd_una == READ_ONCE(msk-
+>snd_nxt) && !msk->recovery) {
+
+/P
 
