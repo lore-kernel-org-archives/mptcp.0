@@ -1,105 +1,231 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EE83FD0
-	for <mptcp@lists.linux.dev>; Tue, 14 Sep 2021 15:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1631634016;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r9FgLX12RT/6RV2HSFTl9VhiVpMIFIlOqgvqSHqMzKI=;
-	b=GPGpN3TZO5kS+k47PA/lDhihfKvARWNP+dYEFGjakBk7dSwgHUweOwyaMGDMIsZn783Hg9
-	x8zfhxS3JDcol9HDskrgeRGuf9NV34G5lNY9iDSUznu/uOkm0RItUpFYxughjwyuJtAzBp
-	/kx+2VhCNMlBTvM86nBv4hsOmI4SMkY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-AbYNsTExMYmUUeBkWUJbjw-1; Tue, 14 Sep 2021 11:40:14 -0400
-X-MC-Unique: AbYNsTExMYmUUeBkWUJbjw-1
-Received: by mail-wm1-f70.google.com with SMTP id x10-20020a7bc76a000000b002f8cba3fd65so860860wmk.2
-        for <mptcp@lists.linux.dev>; Tue, 14 Sep 2021 08:40:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=r9FgLX12RT/6RV2HSFTl9VhiVpMIFIlOqgvqSHqMzKI=;
-        b=CxztdLWPmLs/8w8pzoZ7LEdFE/LEgsZ/yZHSDynjUeP9lmvHcn7V9YP507Yd6aklsN
-         BDiMU6FiHXSZfycf6vCUzKzWR+5r0i8s8UhCPlcdjczaEs5aOEjgpPdSHKkP+kS+p79Q
-         KQuGlkdRrknsGjb+MQBjtJOUd6UKNu/nWVaEXXBhFEBRHy0Jxi6IU1AG6l1N0QpLBa8+
-         WyAF1l6iPKryulAwUnAUBOAUV/mYGOAP7Nmfx0BjLKDQ9XBGAW/s2hCap7UxHxY7M/Hm
-         h8CmpmsztZQw/RO6t7LsQKvaaX7RHs+4oYgYPCE+DNzj+4LLBIXTsqj25Uw476wTVf/v
-         acHw==
-X-Gm-Message-State: AOAM530owsOChL5e8JT7cDLLnqxqKQZQgHsxxBDyQGbLAEH3BEAtmOAA
-	CUy8iHJjOvMsfr5wrBk6yIHZTIV5L26L4tnxz5Xd/MtF4BO3gWZcndVRFO/ePcBSA4wsHdkvdso
-	umXFQGOrvGiZ6Hg0=
-X-Received: by 2002:adf:ef92:: with SMTP id d18mr19784868wro.264.1631634013531;
-        Tue, 14 Sep 2021 08:40:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxqwMqjMFmN+MlOUf1jmbEopO10XBly3dx+evZ9ohhvlCbjthMRg8nNRqtYhijjNpw3rrtMcA==
-X-Received: by 2002:adf:ef92:: with SMTP id d18mr19784848wro.264.1631634013325;
-        Tue, 14 Sep 2021 08:40:13 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-254-211.dyn.eolo.it. [146.241.254.211])
-        by smtp.gmail.com with ESMTPSA id f20sm1442692wmb.32.2021.09.14.08.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 08:40:12 -0700 (PDT)
-Message-ID: <fe013dceb2b12f0b346557a1dee18971ce6d5c9a.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v3 2/8] mptcp: add start_seq in the msk
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Date: Tue, 14 Sep 2021 17:40:12 +0200
-In-Reply-To: <7b4984f87a23369f9e4896d959945d01289a721d.1631610729.git.geliangtang@gmail.com>
-References: <cover.1631610729.git.geliangtang@gmail.com>
-	 <7b4984f87a23369f9e4896d959945d01289a721d.1631610729.git.geliangtang@gmail.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1263FC5
+	for <mptcp@lists.linux.dev>; Wed, 15 Sep 2021 00:37:28 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10107"; a="222226097"
+X-IronPort-AV: E=Sophos;i="5.85,292,1624345200"; 
+   d="scan'208";a="222226097"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2021 17:37:17 -0700
+X-IronPort-AV: E=Sophos;i="5.85,292,1624345200"; 
+   d="scan'208";a="472211914"
+Received: from rpopuri-mobl1.amr.corp.intel.com ([10.209.80.242])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2021 17:37:17 -0700
+Date: Tue, 14 Sep 2021 17:37:16 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliangtang@gmail.com>, Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v3 1/8] mptcp: add mptcp_is_data_contiguous
+ helper
+In-Reply-To: <bd5b486dab66893019096ebc468a7fb873919d1a.camel@redhat.com>
+Message-ID: <69c4ec57-94ed-4631-317a-617f994bc77@linux.intel.com>
+References: <cover.1631610729.git.geliangtang@gmail.com>  <3610b34039bb8e73cd2eecdbc43d5a0cfbc5d2da.1631610729.git.geliangtang@gmail.com> <bd5b486dab66893019096ebc468a7fb873919d1a.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Tue, 2021-09-14 at 17:19 +0800, Geliang Tang wrote:
-> This patch added a new member named start_seq to the msk to keep track of
-> the beginning of the last fully-acked data segment. This would be updated
-> in __mptcp_clean_una.
-> 
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
->  net/mptcp/protocol.c | 3 +++
->  net/mptcp/protocol.h | 1 +
->  2 files changed, 4 insertions(+)
-> 
+
+Hi Geliang -
+
+This patch changes more than the helper function, I suggest a subject like 
+"mptcp: Track and update contiguous data status"
+
+On Tue, 14 Sep 2021, Paolo Abeni wrote:
+
+> On Tue, 2021-09-14 at 17:19 +0800, Geliang Tang wrote:
+>> This patch added a new member last_retrans_seq in the msk to track the
+>> last retransmitting sequence number.
+>>
+>> Add a new helper named mptcp_is_data_contiguous() to check whether the
+>> data is contiguous on a subflow.
+>>
+>> When a bad checksum is detected and a single contiguous subflow is in
+>> use, don't send RST + MP_FAIL, send data_ack + MP_FAIL instead.
+>>
+>> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+>> ---
+>>  net/mptcp/protocol.c |  3 +++
+>>  net/mptcp/protocol.h |  6 ++++++
+>>  net/mptcp/subflow.c  | 12 ++++++------
+>>  3 files changed, 15 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index ff574d62073f..71a5427609a9 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -2464,6 +2464,7 @@ static void __mptcp_retrans(struct sock *sk)
+>>  		dfrag->already_sent = max(dfrag->already_sent, info.sent);
+>>  		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
+>>  			 info.size_goal);
+>> +		msk->last_retrans_seq = dfrag->data_seq;
+
+If this last_retrans_seq technique is going to work with multiple 
+retransmissions, I think the last_retrans_seq assignment would need to 
+look like:
+
+retrans_seq = dfrag->data_seq + info.set;
+if (after64(retrans_seq, msk->last_retrans_seq))
+ 	msk->last_retrans_seq = retrans_seq;
+
+This keeps track of the end of the retransmitted data.
+
+
+As I think about what could happen with multiple retransmissions, I'm not 
+sure it's enough to only track only a MPTCP-level sequence number to 
+determine a subflow stream is contiguous. See below.
+
+
+>>  	}
+>>
+>>  	release_sock(ssk);
+>> @@ -2889,6 +2890,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+>>  	msk->snd_una = msk->write_seq;
+>>  	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
+>>  	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+>> +	msk->last_retrans_seq = subflow_req->idsn - 1;
+>>
+>>  	if (mp_opt->suboptions & OPTIONS_MPTCP_MPC) {
+>>  		msk->can_ack = true;
+>> @@ -3145,6 +3147,7 @@ void mptcp_finish_connect(struct sock *ssk)
+>>  	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
+>>  	WRITE_ONCE(msk->can_ack, 1);
+>>  	WRITE_ONCE(msk->snd_una, msk->write_seq);
+>> +	WRITE_ONCE(msk->last_retrans_seq, subflow->idsn - 1);
+>>
+>>  	mptcp_pm_new_connection(msk, ssk, 0);
+>>
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index d516fb6578cc..eb3473d128d4 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -227,6 +227,7 @@ struct mptcp_sock {
+>>  	u64		ack_seq;
+>>  	u64		rcv_wnd_sent;
+>>  	u64		rcv_data_fin_seq;
+>> +	u64		last_retrans_seq;
+>>  	int		wmem_reserved;
+>>  	struct sock	*last_snd;
+>>  	int		snd_burst;
+>> @@ -625,6 +626,11 @@ static inline bool mptcp_has_another_subflow(struct sock *ssk)
+>>  	return false;
+>>  }
+>>
+>> +static inline bool mptcp_is_data_contiguous(struct mptcp_sock *msk)
+>> +{
+>> +	return before64(msk->last_retrans_seq, msk->snd_una);
+>> +}
+
+Paolo, do you think this holds true even when there are multiple 
+retransmissions in flight?
+
+Consider:
+
+1. We have a connection with two active subflows, A & B
+
+2. Data is sent on both subflows (say, with round robin scheduling)
+
+3. Some data is sent on subflow A, but the subflow goes stale 
+and that data does not get to the peer.
+
+4. MPTCP-level timeout happens, data is retransmitted on subflow B.
+
+5. Subflow A is closed, MPTCP connection is now single-subflow
+
+6. Subflow B data is delayed (TCP retransmissions, maybe?), and MPTCP 
+retransmits again with identical MPTCP-level sequence numbers.
+
+7. Finally, an MPTCP DATA_ACK arrives on subflow B based on our first 
+retransmission. snd_una has caught up to last_retrans_seq at the MPTCP 
+level.
+
+8. Then we get a checksum error and need to send MP_FAIL.
+
+
+At this point, there is still retransmitted data in flight. If we send a 
+TCP ACK with a DSS_ACK + MP_FAIL that could be processed by the peer 
+before the in-flight retransmitted data, and out-of-sequence data could 
+get in to the MPTCP-level stream.
+
+While this is not going to happen frequently, it doesn't seem impossible 
+(do correct me if I'm wrong!).
+
+
+The earlier "track number of retransmissions in mptcp_data_frag" would 
+catch this, but there are other alternatives. What about tracking the 
+32-bit TCP sequence number for the end of the last retransmission, using a 
+field in each subflow context? While it is a few extra bytes of memory per 
+subflow instead of per-MPTCP-connection, it's no more execution time to 
+keep it updated.
+
+
+WDYT?
+
+
+>> +
+>>  void __init mptcp_proto_init(void);
+>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>>  int __init mptcp_proto_v6_init(void);
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index 1de7ce883c37..b07803ed3053 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -1166,15 +1166,15 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>>  fallback:
+>>  	/* RFC 8684 section 3.7. */
+>>  	if (subflow->send_mp_fail) {
+>> -		if (mptcp_has_another_subflow(ssk)) {
+>> +		if (mptcp_has_another_subflow(ssk) || !mptcp_is_data_contiguous(msk)) {
+>> +			ssk->sk_err = EBADMSG;
+>> +			tcp_set_state(ssk, TCP_CLOSE);
+>> +			subflow->reset_transient = 0;
+>> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+>> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
+>>  			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+>>  				sk_eat_skb(ssk, skb);
+>>  		}
+>> -		ssk->sk_err = EBADMSG;
+>> -		tcp_set_state(ssk, TCP_CLOSE);
+>> -		subflow->reset_transient = 0;
+>> -		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+>> -		tcp_send_active_reset(ssk, GFP_ATOMIC);
+>>  		WRITE_ONCE(subflow->data_avail, 0);
+>>  		return true;
+>>  	}
+>
+> As noted by Mat, to avoid wrap-around on 'last_retrans_seq', we also
+> need to updated it in mptcp_clean_una, something alike:
+>
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 71a5427609a9..e804ca0ac9e1 100644
+> index bb8a2a231479..cc3534052227 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1071,6 +1071,7 @@ static void __mptcp_clean_una(struct sock *sk)
->  			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
->  		}
->  
-> +		msk->start_seq = dfrag->data_seq;
->  		dfrag_clear(sk, dfrag);
->  		cleaned = true;
->  	}
-> @@ -2891,6 +2892,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
->  	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
->  	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
->  	msk->last_retrans_seq = subflow_req->idsn - 1;
-> +	msk->start_seq = 0;
+> @@ -1102,8 +1102,13 @@ static void
+> __mptcp_clean_una(struct sock *sk)
+>                msk->recovery = false;
+>
+> out:
+> -	if (cleaned && tcp_under_memory_pressure(sk))
+> -		__mptcp_mem_reclaim_partial(sk);
+> +	if (cleaned) {
+> +		if (mptcp_is_data_contiguous(msk))
+> +                       msk->last_retrans_seq = msk->snd_una - 1;
+> +
+> +		if (tcp_under_memory_pressure(sk))
+> +			__mptcp_mem_reclaim_partial(sk);
+> +	}
+>
+>        if (snd_una == READ_ONCE(msk-> snd_nxt) && !msk->recovery) {
+>
+> /P
 
-I think 'start_seq' should be initialized to 'subflow_req->idsn - 1'.
+Paolo's diff got line-wrapped strangely on the mailing list, I tried to 
+fix it up above.
 
-The field name itself is a bit unclear to me. Something like
-'last_fully_acked_dss_start_seq' would be more expressive, but it would
-not be a better name at all ;) Any suggestion for a good alternative
-name more than welcome! (otherwise we could add some more verbose
-comment nearby the field definition)
-
-/P
-
+--
+Mat Martineau
+Intel
