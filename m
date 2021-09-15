@@ -1,231 +1,108 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1263FC5
-	for <mptcp@lists.linux.dev>; Wed, 15 Sep 2021 00:37:28 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10107"; a="222226097"
-X-IronPort-AV: E=Sophos;i="5.85,292,1624345200"; 
-   d="scan'208";a="222226097"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2021 17:37:17 -0700
-X-IronPort-AV: E=Sophos;i="5.85,292,1624345200"; 
-   d="scan'208";a="472211914"
-Received: from rpopuri-mobl1.amr.corp.intel.com ([10.209.80.242])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2021 17:37:17 -0700
-Date: Tue, 14 Sep 2021 17:37:16 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>, Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 1/8] mptcp: add mptcp_is_data_contiguous
- helper
-In-Reply-To: <bd5b486dab66893019096ebc468a7fb873919d1a.camel@redhat.com>
-Message-ID: <69c4ec57-94ed-4631-317a-617f994bc77@linux.intel.com>
-References: <cover.1631610729.git.geliangtang@gmail.com>  <3610b34039bb8e73cd2eecdbc43d5a0cfbc5d2da.1631610729.git.geliangtang@gmail.com> <bd5b486dab66893019096ebc468a7fb873919d1a.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBDC3FD0
+	for <mptcp@lists.linux.dev>; Wed, 15 Sep 2021 04:05:25 +0000 (UTC)
+Received: by mail-il1-f198.google.com with SMTP id x7-20020a920607000000b002302afca41bso1057325ilg.6
+        for <mptcp@lists.linux.dev>; Tue, 14 Sep 2021 21:05:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nBZctcuA6PoSbBL+JbZ6XlzKTsiTUDX/XLRhUzSrPzc=;
+        b=s3I4Sg7icwaBnxV/BN+d7yht3Oj/bEOaCcXiWVZYMwB0xzZgBvAAb7CpIYYcn9i9Nl
+         ieRy73MwRhCwlwyjv24K+RhVacviGaGcK71O09Iqp0utrEHwSdpD2LAm6pswj1gIXj93
+         sX6Y8QfRM0bpRtDbjjZhVVV7SK6bxxslTiXyKofscv4zM6Pu/AZnLGEnnsDmteNr2ejV
+         nF9B07mLKEhNAR7/C7VZQxdxJtXhTfuGuIOH+s5AP8hmIjWx/cU+fUtT9RU/YE3FsPgy
+         6CqFYzusm1CyELDhdEaqYZaL+1gTahkrksfbcP/lUxx9m0ufXA0izhpOqFlGVvZupW3o
+         DKhw==
+X-Gm-Message-State: AOAM532J4psHhmTKQUjzqjha7pJE8qaAm3RB5gzODofUZ2Y+F3UY3wg9
+	jjpnrvZU1pCZminkCnyEVlFqNP3fslWpwJsJwj5qv9BoHT2V
+X-Google-Smtp-Source: ABdhPJyMGSMwy5x4QqGsQDE0jQwry0QdwUVwIjXi7gFrYW8cbZlls3cakaBu+Fy5boFQjTl9UOHLHeiukPTXC7mZd37cTarhp8Ur
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-Received: by 2002:a6b:7f42:: with SMTP id m2mr17096295ioq.86.1631678724242;
+ Tue, 14 Sep 2021 21:05:24 -0700 (PDT)
+Date: Tue, 14 Sep 2021 21:05:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bf031105cc00ced8@google.com>
+Subject: [syzbot] WARNING in mptcp_sendmsg_frag
+From: syzbot <syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com>
+To: davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
+	mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    f306b90c69ce Merge tag 'smp-urgent-2021-09-12' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10694371300000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2bfb13fa4527da4e
+dashboard link: https://syzkaller.appspot.com/bug?extid=263a248eec3e875baa7b
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.1
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 810 at net/mptcp/protocol.c:1366 mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
+Modules linked in:
+CPU: 1 PID: 810 Comm: syz-executor.4 Not tainted 5.14.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
+Code: ff 4c 8b 74 24 50 48 8b 5c 24 58 e9 0f fb ff ff e8 13 44 8b f8 4c 89 e7 45 31 ed e8 98 57 2e fe e9 81 f4 ff ff e8 fe 43 8b f8 <0f> 0b 41 bd ea ff ff ff e9 6f f4 ff ff 4c 89 e7 e8 b9 8e d2 f8 e9
+RSP: 0018:ffffc9000531f6a0 EFLAGS: 00010216
+RAX: 000000000000697f RBX: 0000000000000000 RCX: ffffc90012107000
+RDX: 0000000000040000 RSI: ffffffff88eac9e2 RDI: 0000000000000003
+RBP: ffff888078b15780 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffff88eac017 R11: 0000000000000000 R12: ffff88801de0a280
+R13: 0000000000006b58 R14: ffff888066278280 R15: ffff88803c2fe9c0
+FS:  00007fd9f866e700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007faebcb2f718 CR3: 00000000267cb000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __mptcp_push_pending+0x1fb/0x6b0 net/mptcp/protocol.c:1547
+ mptcp_release_cb+0xfe/0x210 net/mptcp/protocol.c:3003
+ release_sock+0xb4/0x1b0 net/core/sock.c:3206
+ sk_stream_wait_memory+0x604/0xed0 net/core/stream.c:145
+ mptcp_sendmsg+0xc39/0x1bc0 net/mptcp/protocol.c:1749
+ inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:643
+ sock_sendmsg_nosec net/socket.c:704 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:724
+ sock_write_iter+0x2a0/0x3e0 net/socket.c:1057
+ call_write_iter include/linux/fs.h:2163 [inline]
+ new_sync_write+0x40b/0x640 fs/read_write.c:507
+ vfs_write+0x7cf/0xae0 fs/read_write.c:594
+ ksys_write+0x1ee/0x250 fs/read_write.c:647
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x4665f9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd9f866e188 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000000000056c038 RCX: 00000000004665f9
+RDX: 00000000000e7b78 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 00000000004bfcc4 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000056c038
+R13: 0000000000a9fb1f R14: 00007fd9f866e300 R15: 0000000000022000
 
 
-Hi Geliang -
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-This patch changes more than the helper function, I suggest a subject like 
-"mptcp: Track and update contiguous data status"
-
-On Tue, 14 Sep 2021, Paolo Abeni wrote:
-
-> On Tue, 2021-09-14 at 17:19 +0800, Geliang Tang wrote:
->> This patch added a new member last_retrans_seq in the msk to track the
->> last retransmitting sequence number.
->>
->> Add a new helper named mptcp_is_data_contiguous() to check whether the
->> data is contiguous on a subflow.
->>
->> When a bad checksum is detected and a single contiguous subflow is in
->> use, don't send RST + MP_FAIL, send data_ack + MP_FAIL instead.
->>
->> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
->> ---
->>  net/mptcp/protocol.c |  3 +++
->>  net/mptcp/protocol.h |  6 ++++++
->>  net/mptcp/subflow.c  | 12 ++++++------
->>  3 files changed, 15 insertions(+), 6 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index ff574d62073f..71a5427609a9 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -2464,6 +2464,7 @@ static void __mptcp_retrans(struct sock *sk)
->>  		dfrag->already_sent = max(dfrag->already_sent, info.sent);
->>  		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
->>  			 info.size_goal);
->> +		msk->last_retrans_seq = dfrag->data_seq;
-
-If this last_retrans_seq technique is going to work with multiple 
-retransmissions, I think the last_retrans_seq assignment would need to 
-look like:
-
-retrans_seq = dfrag->data_seq + info.set;
-if (after64(retrans_seq, msk->last_retrans_seq))
- 	msk->last_retrans_seq = retrans_seq;
-
-This keeps track of the end of the retransmitted data.
-
-
-As I think about what could happen with multiple retransmissions, I'm not 
-sure it's enough to only track only a MPTCP-level sequence number to 
-determine a subflow stream is contiguous. See below.
-
-
->>  	}
->>
->>  	release_sock(ssk);
->> @@ -2889,6 +2890,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
->>  	msk->snd_una = msk->write_seq;
->>  	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
->>  	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
->> +	msk->last_retrans_seq = subflow_req->idsn - 1;
->>
->>  	if (mp_opt->suboptions & OPTIONS_MPTCP_MPC) {
->>  		msk->can_ack = true;
->> @@ -3145,6 +3147,7 @@ void mptcp_finish_connect(struct sock *ssk)
->>  	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
->>  	WRITE_ONCE(msk->can_ack, 1);
->>  	WRITE_ONCE(msk->snd_una, msk->write_seq);
->> +	WRITE_ONCE(msk->last_retrans_seq, subflow->idsn - 1);
->>
->>  	mptcp_pm_new_connection(msk, ssk, 0);
->>
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index d516fb6578cc..eb3473d128d4 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -227,6 +227,7 @@ struct mptcp_sock {
->>  	u64		ack_seq;
->>  	u64		rcv_wnd_sent;
->>  	u64		rcv_data_fin_seq;
->> +	u64		last_retrans_seq;
->>  	int		wmem_reserved;
->>  	struct sock	*last_snd;
->>  	int		snd_burst;
->> @@ -625,6 +626,11 @@ static inline bool mptcp_has_another_subflow(struct sock *ssk)
->>  	return false;
->>  }
->>
->> +static inline bool mptcp_is_data_contiguous(struct mptcp_sock *msk)
->> +{
->> +	return before64(msk->last_retrans_seq, msk->snd_una);
->> +}
-
-Paolo, do you think this holds true even when there are multiple 
-retransmissions in flight?
-
-Consider:
-
-1. We have a connection with two active subflows, A & B
-
-2. Data is sent on both subflows (say, with round robin scheduling)
-
-3. Some data is sent on subflow A, but the subflow goes stale 
-and that data does not get to the peer.
-
-4. MPTCP-level timeout happens, data is retransmitted on subflow B.
-
-5. Subflow A is closed, MPTCP connection is now single-subflow
-
-6. Subflow B data is delayed (TCP retransmissions, maybe?), and MPTCP 
-retransmits again with identical MPTCP-level sequence numbers.
-
-7. Finally, an MPTCP DATA_ACK arrives on subflow B based on our first 
-retransmission. snd_una has caught up to last_retrans_seq at the MPTCP 
-level.
-
-8. Then we get a checksum error and need to send MP_FAIL.
-
-
-At this point, there is still retransmitted data in flight. If we send a 
-TCP ACK with a DSS_ACK + MP_FAIL that could be processed by the peer 
-before the in-flight retransmitted data, and out-of-sequence data could 
-get in to the MPTCP-level stream.
-
-While this is not going to happen frequently, it doesn't seem impossible 
-(do correct me if I'm wrong!).
-
-
-The earlier "track number of retransmissions in mptcp_data_frag" would 
-catch this, but there are other alternatives. What about tracking the 
-32-bit TCP sequence number for the end of the last retransmission, using a 
-field in each subflow context? While it is a few extra bytes of memory per 
-subflow instead of per-MPTCP-connection, it's no more execution time to 
-keep it updated.
-
-
-WDYT?
-
-
->> +
->>  void __init mptcp_proto_init(void);
->>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->>  int __init mptcp_proto_v6_init(void);
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 1de7ce883c37..b07803ed3053 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1166,15 +1166,15 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>  fallback:
->>  	/* RFC 8684 section 3.7. */
->>  	if (subflow->send_mp_fail) {
->> -		if (mptcp_has_another_subflow(ssk)) {
->> +		if (mptcp_has_another_subflow(ssk) || !mptcp_is_data_contiguous(msk)) {
->> +			ssk->sk_err = EBADMSG;
->> +			tcp_set_state(ssk, TCP_CLOSE);
->> +			subflow->reset_transient = 0;
->> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
->> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
->>  			while ((skb = skb_peek(&ssk->sk_receive_queue)))
->>  				sk_eat_skb(ssk, skb);
->>  		}
->> -		ssk->sk_err = EBADMSG;
->> -		tcp_set_state(ssk, TCP_CLOSE);
->> -		subflow->reset_transient = 0;
->> -		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
->> -		tcp_send_active_reset(ssk, GFP_ATOMIC);
->>  		WRITE_ONCE(subflow->data_avail, 0);
->>  		return true;
->>  	}
->
-> As noted by Mat, to avoid wrap-around on 'last_retrans_seq', we also
-> need to updated it in mptcp_clean_una, something alike:
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index bb8a2a231479..cc3534052227 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1102,8 +1102,13 @@ static void
-> __mptcp_clean_una(struct sock *sk)
->                msk->recovery = false;
->
-> out:
-> -	if (cleaned && tcp_under_memory_pressure(sk))
-> -		__mptcp_mem_reclaim_partial(sk);
-> +	if (cleaned) {
-> +		if (mptcp_is_data_contiguous(msk))
-> +                       msk->last_retrans_seq = msk->snd_una - 1;
-> +
-> +		if (tcp_under_memory_pressure(sk))
-> +			__mptcp_mem_reclaim_partial(sk);
-> +	}
->
->        if (snd_una == READ_ONCE(msk-> snd_nxt) && !msk->recovery) {
->
-> /P
-
-Paolo's diff got line-wrapped strangely on the mailing list, I tried to 
-fix it up above.
-
---
-Mat Martineau
-Intel
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
