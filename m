@@ -1,76 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB833FC3
-	for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 16:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1631808402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bEuaXyfQOu5u/+JCvqbiBHcW8UFLuVxbyVMngmczWMs=;
-	b=L1V/VE3NlnUqBXyzu0xIVMz+RL+xX605G82rgl95PBvpwnIgu78oYOt9RazX/LAWc4yNUk
-	K9/sweKtwbVP0r1x+ltFcSmbcohAeNGNkP+XYOqYyIKR6MX1V8fQjNNBRzz3jWpTDAPpG3
-	8Hw/LYevOts8OTh/I7H7BMr9rraoSi8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-ZZSo5O48PTWBQxSjiLJHsQ-1; Thu, 16 Sep 2021 12:06:41 -0400
-X-MC-Unique: ZZSo5O48PTWBQxSjiLJHsQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5D6D800FF4
-	for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 16:06:40 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.5])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 15BD35C1CF
-	for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 16:06:39 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: always provide MPTCP skb ext for tx skb
-Date: Thu, 16 Sep 2021 18:06:15 +0200
-Message-Id: <0bcf04149918792f287bf56fb5a38e4a19be4fe0.1631808364.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59263FC3
+	for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 16:21:46 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id v22so14663291edd.11
+        for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 09:21:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GDKlP/UqsPRkxeTGKCu1PIXMFQ+1mfEXMEM0x0Kkr2k=;
+        b=5I6QawT+7rdsh+u3LOOwbtjJWGlze4GDhi2iDklTZm2GwfEg1yqkGYohBIsrkXgRJ4
+         BSz1hD/b+NQw348KrisDdR58mcnHsLvOHZ6R5rneLedHQ2gBWk1UY3s+ET5l66ZHaDLS
+         WSwluEY6GURPDxqGjoiF2H/wmxuR5MBTRIu4d+NOS71I0T7OH7NWmP++ZMVTiXdalWEe
+         g5+k4Bil84PtqaPG3eFLj8B9POIWVIpHOXF4m9SA3dluNCzrwrlk2LimUsBbkmtlM1oR
+         YFk2IdTl8hSX99JwnWW/BAEYi6wvDeGE7HzFiL+0QMbc9VYeT/feDRtYcLL7/YqAMKZB
+         ajmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GDKlP/UqsPRkxeTGKCu1PIXMFQ+1mfEXMEM0x0Kkr2k=;
+        b=dF0vF1d5y4jipTeOTrqIUqpfrD3Qp6T9pwak8XhJVTRt0AANVK/rxwNfiI+d+1F3Wh
+         UomL02XhayuTd7XE4RcXuV+BHugZ3QeC2ETcogDM9iiNKGzdldq+qH93WZHGKeBpOxj6
+         C3KnBp0pBettrXCH9ubWlKGzz3BKKBr5ttPmXdGX115/j/QusH2pNklV0LhqPBpQaJOG
+         W5xePac58iBxw4V3Hc9MIe+bUM46kLyaK0x0jPI0pALJ4XnVFq9VsNTxJD9nXZhrTBzr
+         6LaBHOv52wO8Tn0Jk/pMXnKdgGzxlKwL7g0UNFHchv0O/DU548isiGjzFXQvmepVFmNq
+         V/rQ==
+X-Gm-Message-State: AOAM533WbQnXK87pElB1pAjCNkRevuT2zzYIckqJruj7/JskrtihnDhy
+	K43M+BiviHXJjT2pAnelRi97csWnevws4GpW
+X-Google-Smtp-Source: ABdhPJx7elSBG18HHjU6V/2jzAo6ShQOKkAgWoeLvV7WXdRmnUsS4GVPO6TtFll3xkhi2dAaX7H4rA==
+X-Received: by 2002:a17:906:d04d:: with SMTP id bo13mr7078437ejb.351.1631809304522;
+        Thu, 16 Sep 2021 09:21:44 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.102.72.dyn.edpnet.net. [94.105.102.72])
+        by smtp.gmail.com with ESMTPSA id c2sm1531951edk.50.2021.09.16.09.21.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Sep 2021 09:21:44 -0700 (PDT)
+Subject: Re: [PATCH mptcp] mptcp: don't return sockets in foreign netns
+To: Florian Westphal <fw@strlen.de>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <20210915121144.9891-1-fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <46aeeb66-127a-db34-eaf3-bcdb6373934c@tessares.net>
+Date: Thu, 16 Sep 2021 18:21:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20210915121144.9891-1-fw@strlen.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-The mptcp code will uses whatever skb is present into
-ssk->sk_tx_skb_cache. If the skb tx cache is enabled, the
-recycle operation will clean the MPTCP extension from the
-cached skb, and the MPTCP would hit a later WARN.
+Hi Florian, Mat,
 
-Fix the issue always invoking the mptcp skb allocation
-helper, which will safely check the cached skb for the extension
-presence.
+On 15/09/2021 14:11, Florian Westphal wrote:
+> mptcp_token_get_sock() may return a mptcp socket that is in
+> a different net namespace than the socket that received the token value.
+> 
+> The mptcp syncookie code path had an explicit check for this,
+> this moves the test intp mptcp_token_get_sock() function.
+> 
+> Eventually token.c should be converted to pernet storage, but
+> such change is not suitable for net tree.
 
-Fixes: 1094c6fe7280 ("mptcp: fix possible divide by zero")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the patch and the review!
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2602f1386160..f0673541a764 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1325,7 +1325,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	}
- 
- alloc_skb:
--	if (!must_collapse && !ssk->sk_tx_skb_cache &&
-+	if (!must_collapse &&
- 	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
- 		return 0;
- 
+Now applied in our tree (fix for -net) with Mat's RvB tag, a Fixes tag
+and without a small typo (s/intp/into).
+
+- 711ea7c216d7: mptcp: don't return sockets in foreign netns
+- Results: c76567ae64fc..f05d3f3e1d3f
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210916T162130
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210916T162130
+
+Cheers,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
