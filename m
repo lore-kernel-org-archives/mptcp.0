@@ -1,250 +1,53 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4342B3FCF
-	for <mptcp@lists.linux.dev>; Wed, 15 Sep 2021 23:28:18 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="202606330"
-X-IronPort-AV: E=Sophos;i="5.85,296,1624345200"; 
-   d="scan'208";a="202606330"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:28:17 -0700
-X-IronPort-AV: E=Sophos;i="5.85,296,1624345200"; 
-   d="scan'208";a="700422262"
-Received: from drtow-mobl.amr.corp.intel.com ([10.212.149.87])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:28:17 -0700
-Date: Wed, 15 Sep 2021 16:28:16 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778AF3FD0
+	for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 10:07:07 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1mQoIK-0001xY-Nl; Thu, 16 Sep 2021 12:07:04 +0200
+Date: Thu, 16 Sep 2021 12:07:04 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
 Subject: Re: [PATCH mptcp] mptcp: don't return sockets in foreign netns
-In-Reply-To: <20210915121144.9891-1-fw@strlen.de>
-Message-ID: <42126ef3-b46d-27ef-64d7-7a257275e188@linux.intel.com>
+Message-ID: <20210916100704.GB20414@breakpoint.cc>
 References: <20210915121144.9891-1-fw@strlen.de>
+ <42126ef3-b46d-27ef-64d7-7a257275e188@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42126ef3-b46d-27ef-64d7-7a257275e188@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+Mat Martineau <mathew.j.martineau@linux.intel.com> wrote:
+> 
+> On Wed, 15 Sep 2021, Florian Westphal wrote:
+> 
+> > mptcp_token_get_sock() may return a mptcp socket that is in
+> > a different net namespace than the socket that received the token value.
+> > 
+> > The mptcp syncookie code path had an explicit check for this,
+> > this moves the test intp mptcp_token_get_sock() function.
+> > 
+> > Eventually token.c should be converted to pernet storage, but
+> > such change is not suitable for net tree.
+> > 
+> > Signed-off-by: Florian Westphal <fw@strlen.de>
+> 
+> For the net tree, would need a Fixes tag. How about:
+> 
+> Fixes: 2c5ebd001d4f0 ("mptcp: refactor token container")
+>
+> mptcp_token_get_sock() was originally introduced in f296234c98a8f, but the
+> changes here would only apply to Paolo's refactor and KUNIT tests.
 
-On Wed, 15 Sep 2021, Florian Westphal wrote:
+Yep, f296234c98a8f is 'more correct' (day 0), but I'm fine with using
+2c5ebd001d4f0 instead.
 
-> mptcp_token_get_sock() may return a mptcp socket that is in
-> a different net namespace than the socket that received the token value.
->
-> The mptcp syncookie code path had an explicit check for this,
-> this moves the test intp mptcp_token_get_sock() function.
->
-> Eventually token.c should be converted to pernet storage, but
-> such change is not suitable for net tree.
->
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-
-For the net tree, would need a Fixes tag. How about:
-
-Fixes: 2c5ebd001d4f0 ("mptcp: refactor token container")
-
-mptcp_token_get_sock() was originally introduced in f296234c98a8f, but 
-the changes here would only apply to Paolo's refactor and KUNIT tests.
-
-
-Looks good and the kunit tests build/run fine on my system, thanks 
-Florian:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-- Mat
-
-
-> ---
-> net/mptcp/mptcp_diag.c |  2 +-
-> net/mptcp/protocol.h   |  2 +-
-> net/mptcp/subflow.c    |  2 +-
-> net/mptcp/syncookies.c | 13 +------------
-> net/mptcp/token.c      | 10 +++++++---
-> net/mptcp/token_test.c | 14 ++++++++------
-> 6 files changed, 19 insertions(+), 24 deletions(-)
->
-> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index fdf0c1f15a65..f44125dd6697 100644
-> --- a/net/mptcp/mptcp_diag.c
-> +++ b/net/mptcp/mptcp_diag.c
-> @@ -36,7 +36,7 @@ static int mptcp_diag_dump_one(struct netlink_callback *cb,
-> 	struct sock *sk;
->
-> 	net = sock_net(in_skb->sk);
-> -	msk = mptcp_token_get_sock(req->id.idiag_cookie[0]);
-> +	msk = mptcp_token_get_sock(net, req->id.idiag_cookie[0]);
-> 	if (!msk)
-> 		goto out_nosk;
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d3e6fd1615f1..dc984676c5eb 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -709,7 +709,7 @@ int mptcp_token_new_connect(struct sock *sk);
-> void mptcp_token_accept(struct mptcp_subflow_request_sock *r,
-> 			struct mptcp_sock *msk);
-> bool mptcp_token_exists(u32 token);
-> -struct mptcp_sock *mptcp_token_get_sock(u32 token);
-> +struct mptcp_sock *mptcp_token_get_sock(struct net *net, u32 token);
-> struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
-> 					 long *s_num);
-> void mptcp_token_destroy(struct mptcp_sock *msk);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 1de7ce883c37..6172f380dfb7 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -86,7 +86,7 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
-> 	struct mptcp_sock *msk;
-> 	int local_id;
->
-> -	msk = mptcp_token_get_sock(subflow_req->token);
-> +	msk = mptcp_token_get_sock(sock_net(req_to_sk(req)), subflow_req->token);
-> 	if (!msk) {
-> 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINNOTOKEN);
-> 		return NULL;
-> diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
-> index 37127781aee9..7f22526346a7 100644
-> --- a/net/mptcp/syncookies.c
-> +++ b/net/mptcp/syncookies.c
-> @@ -108,18 +108,12 @@ bool mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subfl
->
-> 	e->valid = 0;
->
-> -	msk = mptcp_token_get_sock(e->token);
-> +	msk = mptcp_token_get_sock(net, e->token);
-> 	if (!msk) {
-> 		spin_unlock_bh(&join_entry_locks[i]);
-> 		return false;
-> 	}
->
-> -	/* If this fails, the token got re-used in the mean time by another
-> -	 * mptcp socket in a different netns, i.e. entry is outdated.
-> -	 */
-> -	if (!net_eq(sock_net((struct sock *)msk), net))
-> -		goto err_put;
-> -
-> 	subflow_req->remote_nonce = e->remote_nonce;
-> 	subflow_req->local_nonce = e->local_nonce;
-> 	subflow_req->backup = e->backup;
-> @@ -128,11 +122,6 @@ bool mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subfl
-> 	subflow_req->msk = msk;
-> 	spin_unlock_bh(&join_entry_locks[i]);
-> 	return true;
-> -
-> -err_put:
-> -	spin_unlock_bh(&join_entry_locks[i]);
-> -	sock_put((struct sock *)msk);
-> -	return false;
-> }
->
-> void __init mptcp_join_cookie_init(void)
-> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-> index a98e554b034f..313a3e793e61 100644
-> --- a/net/mptcp/token.c
-> +++ b/net/mptcp/token.c
-> @@ -238,7 +238,7 @@ bool mptcp_token_exists(u32 token)
->  *
->  * returns NULL if no connection with the given token value exists.
->  */
-> -struct mptcp_sock *mptcp_token_get_sock(u32 token)
-> +struct mptcp_sock *mptcp_token_get_sock(struct net *net, u32 token)
-> {
-> 	struct hlist_nulls_node *pos;
-> 	struct token_bucket *bucket;
-> @@ -251,11 +251,15 @@ struct mptcp_sock *mptcp_token_get_sock(u32 token)
-> again:
-> 	sk_nulls_for_each_rcu(sk, pos, &bucket->msk_chain) {
-> 		msk = mptcp_sk(sk);
-> -		if (READ_ONCE(msk->token) != token)
-> +		if (READ_ONCE(msk->token) != token ||
-> +		    !net_eq(sock_net(sk), net))
-> 			continue;
-> +
-> 		if (!refcount_inc_not_zero(&sk->sk_refcnt))
-> 			goto not_found;
-> -		if (READ_ONCE(msk->token) != token) {
-> +
-> +		if (READ_ONCE(msk->token) != token ||
-> +		    !net_eq(sock_net(sk), net)) {
-> 			sock_put(sk);
-> 			goto again;
-> 		}
-> diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
-> index e1bd6f0a0676..5d984bec1cd8 100644
-> --- a/net/mptcp/token_test.c
-> +++ b/net/mptcp/token_test.c
-> @@ -11,6 +11,7 @@ static struct mptcp_subflow_request_sock *build_req_sock(struct kunit *test)
-> 			    GFP_USER);
-> 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, req);
-> 	mptcp_token_init_request((struct request_sock *)req);
-> +	sock_net_set((struct sock *)req, &init_net);
-> 	return req;
-> }
->
-> @@ -22,7 +23,7 @@ static void mptcp_token_test_req_basic(struct kunit *test)
-> 	KUNIT_ASSERT_EQ(test, 0,
-> 			mptcp_token_new_request((struct request_sock *)req));
-> 	KUNIT_EXPECT_NE(test, 0, (int)req->token);
-> -	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(req->token));
-> +	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(&init_net, req->token));
->
-> 	/* cleanup */
-> 	mptcp_token_destroy_request((struct request_sock *)req);
-> @@ -55,6 +56,7 @@ static struct mptcp_sock *build_msk(struct kunit *test)
-> 	msk = kunit_kzalloc(test, sizeof(struct mptcp_sock), GFP_USER);
-> 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, msk);
-> 	refcount_set(&((struct sock *)msk)->sk_refcnt, 1);
-> +	sock_net_set((struct sock *)msk, &init_net);
-> 	return msk;
-> }
->
-> @@ -74,11 +76,11 @@ static void mptcp_token_test_msk_basic(struct kunit *test)
-> 			mptcp_token_new_connect((struct sock *)icsk));
-> 	KUNIT_EXPECT_NE(test, 0, (int)ctx->token);
-> 	KUNIT_EXPECT_EQ(test, ctx->token, msk->token);
-> -	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(ctx->token));
-> +	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(&init_net, ctx->token));
-> 	KUNIT_EXPECT_EQ(test, 2, (int)refcount_read(&sk->sk_refcnt));
->
-> 	mptcp_token_destroy(msk);
-> -	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(ctx->token));
-> +	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(&init_net, ctx->token));
-> }
->
-> static void mptcp_token_test_accept(struct kunit *test)
-> @@ -90,11 +92,11 @@ static void mptcp_token_test_accept(struct kunit *test)
-> 			mptcp_token_new_request((struct request_sock *)req));
-> 	msk->token = req->token;
-> 	mptcp_token_accept(req, msk);
-> -	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(msk->token));
-> +	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(&init_net, msk->token));
->
-> 	/* this is now a no-op */
-> 	mptcp_token_destroy_request((struct request_sock *)req);
-> -	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(msk->token));
-> +	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(&init_net, msk->token));
->
-> 	/* cleanup */
-> 	mptcp_token_destroy(msk);
-> @@ -116,7 +118,7 @@ static void mptcp_token_test_destroyed(struct kunit *test)
->
-> 	/* simulate race on removal */
-> 	refcount_set(&sk->sk_refcnt, 0);
-> -	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(msk->token));
-> +	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(&init_net, msk->token));
->
-> 	/* cleanup */
-> 	mptcp_token_destroy(msk);
-> -- 
-> 2.32.0
->
->
->
-
---
-Mat Martineau
-Intel
+Thanks for reviewing.
