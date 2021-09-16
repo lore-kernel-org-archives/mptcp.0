@@ -1,53 +1,165 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778AF3FD0
-	for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 10:07:07 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1mQoIK-0001xY-Nl; Thu, 16 Sep 2021 12:07:04 +0200
-Date: Thu, 16 Sep 2021 12:07:04 +0200
-From: Florian Westphal <fw@strlen.de>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp] mptcp: don't return sockets in foreign netns
-Message-ID: <20210916100704.GB20414@breakpoint.cc>
-References: <20210915121144.9891-1-fw@strlen.de>
- <42126ef3-b46d-27ef-64d7-7a257275e188@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960122FAE
+	for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 14:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1631804008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5X1WyxGzxFyqToUNiUfnMNvJRCer2A9Q1/BuNT4BZq0=;
+	b=Xx0kuKUHa81Awny/mR18T+28VmotR1qCwHPe+yQ5vEJjFV6m9zcIgSsB0TLCRuVrpZVpKK
+	6bZsNNBVkr42CkmIYqaiUO399eHn22Mjo5lBVXqp78hjsFj0s7MDoahes5tMBZkzZ9m45F
+	5I9biVaNuHX/0itWQ8qe/7joFQ+pWB4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-uOImO1ZuN7aiMKh62d_CYA-1; Thu, 16 Sep 2021 10:53:25 -0400
+X-MC-Unique: uOImO1ZuN7aiMKh62d_CYA-1
+Received: by mail-wm1-f70.google.com with SMTP id c2-20020a7bc8420000b0290238db573ab7so2671790wml.5
+        for <mptcp@lists.linux.dev>; Thu, 16 Sep 2021 07:53:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5X1WyxGzxFyqToUNiUfnMNvJRCer2A9Q1/BuNT4BZq0=;
+        b=UlOyn0JIOC3amw2CM/I/LBDinPhXkj2g9WjZyqzhUnfoaweEN9Y+A6E5T7ytG4Su+n
+         mmvBgZtE33Pu6Jgiu6jeQGo6y99Dz1UmeKSMCxbaF9+5rs1l/c0wwBTZ+fDVblZAs9+8
+         vdgSX82hznoF97dys4lEXbfxuKaZ2Smlhw0Gu07wNqJt4yQd0kyFaX3lTDaDR+3OZlTE
+         SqU0/j5kCZTRcDwl2L/Q/wmqcbUIpmaiQyNCl3MGFUjINzYWREIAl/LKk1Qwrar0xbuk
+         TxP1P/kuZYebDTE3Hw9ms9Wh57WNGSYn2yUvy1pIjX/tJA/cuXilCoekPWadamR6s/Zb
+         dsNw==
+X-Gm-Message-State: AOAM531T1JGLb0x7Gmy0R9IllCOh1G7EQ+ccnzGl3qKQ5PIK8wPdmVvZ
+	lR5tMqMj0gQYZ9Ll6J/LUrd4nxdYlagAtRAJI4FYnP4O1iBFvCLll6dFdr1Z+gvVsm8Ognj7Z4v
+	3BOyvQ0z2LqVCvoo=
+X-Received: by 2002:a5d:4a46:: with SMTP id v6mr6526847wrs.262.1631804003943;
+        Thu, 16 Sep 2021 07:53:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxV5xgOkeZB5H90ZCtF/bGfzSRx+hPtuuQ4amdN6EOyU55Iwjfmfiwd7zRDOInLgxpelXGOig==
+X-Received: by 2002:a5d:4a46:: with SMTP id v6mr6526829wrs.262.1631804003721;
+        Thu, 16 Sep 2021 07:53:23 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-121-250.dyn.eolo.it. [146.241.121.250])
+        by smtp.gmail.com with ESMTPSA id l13sm3648972wrb.11.2021.09.16.07.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Sep 2021 07:53:23 -0700 (PDT)
+Message-ID: <14ce1879eeeff69a966d2583c45d22e9df0b6f5a.camel@redhat.com>
+Subject: Re: [syzbot] WARNING in mptcp_sendmsg_frag
+From: Paolo Abeni <pabeni@redhat.com>
+To: syzbot <syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com>, 
+ davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+ mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
+ mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+Date: Thu, 16 Sep 2021 16:53:22 +0200
+In-Reply-To: <000000000000bf031105cc00ced8@google.com>
+References: <000000000000bf031105cc00ced8@google.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42126ef3-b46d-27ef-64d7-7a257275e188@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 1
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Mat Martineau <mathew.j.martineau@linux.intel.com> wrote:
+On Tue, 2021-09-14 at 21:05 -0700, syzbot wrote:
+> HEAD commit:    f306b90c69ce Merge tag 'smp-urgent-2021-09-12' of git://gi..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10694371300000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2bfb13fa4527da4e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=263a248eec3e875baa7b
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.1
 > 
-> On Wed, 15 Sep 2021, Florian Westphal wrote:
+> Unfortunately, I don't have any reproducer for this issue yet.
 > 
-> > mptcp_token_get_sock() may return a mptcp socket that is in
-> > a different net namespace than the socket that received the token value.
-> > 
-> > The mptcp syncookie code path had an explicit check for this,
-> > this moves the test intp mptcp_token_get_sock() function.
-> > 
-> > Eventually token.c should be converted to pernet storage, but
-> > such change is not suitable for net tree.
-> > 
-> > Signed-off-by: Florian Westphal <fw@strlen.de>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com
 > 
-> For the net tree, would need a Fixes tag. How about:
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 810 at net/mptcp/protocol.c:1366 mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
+> Modules linked in:
+> CPU: 1 PID: 810 Comm: syz-executor.4 Not tainted 5.14.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
+> Code: ff 4c 8b 74 24 50 48 8b 5c 24 58 e9 0f fb ff ff e8 13 44 8b f8 4c 89 e7 45 31 ed e8 98 57 2e fe e9 81 f4 ff ff e8 fe 43 8b f8 <0f> 0b 41 bd ea ff ff ff e9 6f f4 ff ff 4c 89 e7 e8 b9 8e d2 f8 e9
+> RSP: 0018:ffffc9000531f6a0 EFLAGS: 00010216
+> RAX: 000000000000697f RBX: 0000000000000000 RCX: ffffc90012107000
+> RDX: 0000000000040000 RSI: ffffffff88eac9e2 RDI: 0000000000000003
+> RBP: ffff888078b15780 R08: 0000000000000000 R09: 0000000000000000
+> R10: ffffffff88eac017 R11: 0000000000000000 R12: ffff88801de0a280
+> R13: 0000000000006b58 R14: ffff888066278280 R15: ffff88803c2fe9c0
+> FS:  00007fd9f866e700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007faebcb2f718 CR3: 00000000267cb000 CR4: 00000000001506e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  __mptcp_push_pending+0x1fb/0x6b0 net/mptcp/protocol.c:1547
+>  mptcp_release_cb+0xfe/0x210 net/mptcp/protocol.c:3003
+>  release_sock+0xb4/0x1b0 net/core/sock.c:3206
+>  sk_stream_wait_memory+0x604/0xed0 net/core/stream.c:145
+>  mptcp_sendmsg+0xc39/0x1bc0 net/mptcp/protocol.c:1749
+>  inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:643
+>  sock_sendmsg_nosec net/socket.c:704 [inline]
+>  sock_sendmsg+0xcf/0x120 net/socket.c:724
+>  sock_write_iter+0x2a0/0x3e0 net/socket.c:1057
+>  call_write_iter include/linux/fs.h:2163 [inline]
+>  new_sync_write+0x40b/0x640 fs/read_write.c:507
+>  vfs_write+0x7cf/0xae0 fs/read_write.c:594
+>  ksys_write+0x1ee/0x250 fs/read_write.c:647
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> RIP: 0033:0x4665f9
+> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fd9f866e188 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 000000000056c038 RCX: 00000000004665f9
+> RDX: 00000000000e7b78 RSI: 0000000020000000 RDI: 0000000000000003
+> RBP: 00000000004bfcc4 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000056c038
+> R13: 0000000000a9fb1f R14: 00007fd9f866e300 R15: 0000000000022000
 > 
-> Fixes: 2c5ebd001d4f0 ("mptcp: refactor token container")
->
-> mptcp_token_get_sock() was originally introduced in f296234c98a8f, but the
-> changes here would only apply to Paolo's refactor and KUNIT tests.
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Yep, f296234c98a8f is 'more correct' (day 0), but I'm fine with using
-2c5ebd001d4f0 instead.
+I think (mostly wild guess), this is caused by syzbot enabling tcp skb
+tx recycling, so that in mptcp_sendmsg_frag() we end up with:
 
-Thanks for reviewing.
+ssk->sk_tx_skb_cache != NULL
+
+but:
+
+skb_ext_find(ssk->sk_tx_skb_cache, SKB_EXT_MPTCP) == NULL.
+
+Hard to say given the lack of reproducer. For -net we could do
+something alike the following (some more testing needed), while for
+net-next we have the sk_tx_skb_cache removal pending which should
+address the issue.
+
+/P
+---
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2602f1386160..f0673541a764 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1325,7 +1325,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+        }
+ 
+ alloc_skb:
+-       if (!must_collapse && !ssk->sk_tx_skb_cache &&
++       if (!must_collapse &&
+            !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
+                return 0;
+
+
