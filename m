@@ -1,71 +1,92 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397893FC3
-	for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 01:11:17 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10109"; a="202855861"
-X-IronPort-AV: E=Sophos;i="5.85,299,1624345200"; 
-   d="scan'208";a="202855861"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 18:11:14 -0700
-X-IronPort-AV: E=Sophos;i="5.85,299,1624345200"; 
-   d="scan'208";a="472968066"
-Received: from mdiqbalh-mobl1.amr.corp.intel.com ([10.209.111.216])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 18:11:14 -0700
-Date: Thu, 16 Sep 2021 18:11:14 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: allow changing the 'backup' bit when
- no sockets are open
-In-Reply-To: <db472a753375c011d3dc7b810262935473e481aa.1631821658.git.dcaratti@redhat.com>
-Message-ID: <1413a0f3-e0bf-2e2a-12e2-7e71b7ea3024@linux.intel.com>
-References: <db472a753375c011d3dc7b810262935473e481aa.1631821658.git.dcaratti@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACA13FC5
+	for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 15:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1631893146;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YRcVUlsCC8SSag0IHICYu8LmP243zJu8/RXmA/yODbw=;
+	b=LxGDYY9lPDK2pGMi6YasedHIlQrYOISTATWs19uyMJ6zHNt8P43PjrbZJJsCjmbndYVWgL
+	czf+8PpgSkpoWYJ18elNP9FAGSKheP4UzbtBUGY0nnr5AxM9qJpYUs8tphUmgCJMe7lJ3u
+	2Kv084VJ7/ue0M8B5XzkhbTssMG2zAA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-3-V2_xS9yIMrOkxKk3R5GAxg-1; Fri, 17 Sep 2021 11:39:05 -0400
+X-MC-Unique: V2_xS9yIMrOkxKk3R5GAxg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A32B1084683;
+	Fri, 17 Sep 2021 15:39:03 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.44])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9B07E69CAD;
+	Fri, 17 Sep 2021 15:39:01 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Ayush Sawal <ayush.sawal@chelsio.com>,
+	Eric Dumazet <edumazet@google.com>,
+	mptcp@lists.linux.dev
+Subject: [RFC PATCH 0/5] net: remove sk skb caches
+Date: Fri, 17 Sep 2021 17:38:35 +0200
+Message-Id: <cover.1631888517.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 
+Eric noted we would be better off reverting the sk
+skb caches.
 
-On Thu, 16 Sep 2021, Davide Caratti wrote:
+MPTCP relies on such a feature, so we need a
+little refactor of the MPTCP tx path before the mentioned
+revert.
 
-> current Linux refuses to change the 'backup' bit of MPTCP endpoints, i.e.
-> using MPTCP_PM_CMD_SET_FLAGS, unless it finds (at least) one subflow that
-> matches the endpoint address. There is no reason for that, so we can make
-> mptcp_nl_addr_backup() return without error even when 0 MPTCP sockets are
-> open and no MP_PRIO message is sent out.
->
-> Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> ---
-> net/mptcp/pm_netlink.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index c4f9a5ce3815..8a7048c5b9b4 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1678,7 +1678,7 @@ static int mptcp_nl_addr_backup(struct net *net,
-> {
-> 	long s_slot = 0, s_num = 0;
-> 	struct mptcp_sock *msk;
-> -	int ret = -EINVAL;
-> +	int ret = 0;
+The first patch avoids that the next one will cause a name
+clash. The second exposes additional TCP helpers. The 3rd patch
+changes the MPTCP code to do locally the whole skb allocation
+and updating, so it does not rely anymore on core TCP helpers
+for that nor the sk skb cache.
 
-Hi Davide & Geliang -
+As a side effect, we can drop the tcp_build_frag helper.
 
-The ret value in mptcp_nl_addr_backup() can still get set to -EINVAL if 
-mptcp_pm_nl_mp_prio_send_ack() returns that error and it happens to be the 
-last token. So the error is not consistently propagated, and it doesn't 
-seem like it's useful to propagate the -EINVAL to mptcp_nl_cmd_set_flags() 
-anyway.
+Finally, we can pull Eric's revert.
 
-How about making mptcp_nl_cmd_set_flags() ignore the value returned by 
-mptcp_nl_addr_backup()?
+Note that patch 3/5 will conflict with the pending -net fix
+for a recently reported syzkaller splat.
 
---
-Mat Martineau
-Intel
+Eric Dumazet (1):
+  tcp: remove sk_{tr}x_skb_cache
+
+Paolo Abeni (4):
+  chtls: rename skb_entail() to chtls_skb_entail()
+  tcp: expose the tcp_mark_push() and skb_entail() helpers
+  mptcp: stop relying on tcp_tx_skb_cache
+  Partially revert "tcp: factor out tcp_build_frag()"
+
+ Documentation/networking/ip-sysctl.rst        |   8 -
+ .../chelsio/inline_crypto/chtls/chtls.h       |   2 +-
+ .../chelsio/inline_crypto/chtls/chtls_cm.c    |   2 +-
+ .../chelsio/inline_crypto/chtls/chtls_io.c    |  10 +-
+ include/net/sock.h                            |  19 ---
+ include/net/tcp.h                             |   4 +-
+ net/ipv4/af_inet.c                            |   4 -
+ net/ipv4/sysctl_net_ipv4.c                    |  12 --
+ net/ipv4/tcp.c                                | 147 +++++++-----------
+ net/ipv4/tcp_ipv4.c                           |   6 -
+ net/ipv6/tcp_ipv6.c                           |   6 -
+ net/mptcp/protocol.c                          | 137 +++++++++-------
+ 12 files changed, 139 insertions(+), 218 deletions(-)
+
+-- 
+2.26.3
+
