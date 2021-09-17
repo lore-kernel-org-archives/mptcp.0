@@ -1,61 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1772F80
-	for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 17:28:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05623FC3
+	for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 17:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1631899730;
+	s=mimecast20190719; t=1631899868;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3IRX1cmUc1GC0I7v6XkLpxR1/n2INUJQ0FPY/9UWsls=;
-	b=F8s1QnSf1la2P9GkaMyj0V88mtry+DTuXlyYV/MuCtxIkTN7t8HTgc3fyXIZh5u3eiMGLl
-	SnPoRdNiu26vWiCl4pQstcvGUm2teeU6eniU++ZnIOCEdUD/57KiYjjCpiBEo9lQHXCbyC
-	Y9AtjocAVNcR49I/5wJEhHQIkJRUpOA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-JlZEqlelORa8VpUJ8nkVcw-1; Fri, 17 Sep 2021 13:28:49 -0400
-X-MC-Unique: JlZEqlelORa8VpUJ8nkVcw-1
-Received: by mail-wm1-f69.google.com with SMTP id v21-20020a05600c215500b002fa7eb53754so1904226wml.4
-        for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 10:28:48 -0700 (PDT)
+	bh=aEhlSynRz4N3FlqjKloHS3Kh6FbRHHHviXrUI8c+7hU=;
+	b=La/oUu1y450HncR6ZrR0YLrD8Lo0qf67NyXPqf9RC2+kgzZe+k4W9/L+2DtUXLxTEn2aNt
+	1BmE3BFkx+cTUrY/070W6OQG089Z13ESuSiieowYx/NWPTWZB2WNuViizdjnrnIcfPkfsf
+	h/GVHC/Oc0BZkdCzFEht7reSvfos5zY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-584-UTCX1VJlMQ-4f0VUtPs-Vg-1; Fri, 17 Sep 2021 13:31:07 -0400
+X-MC-Unique: UTCX1VJlMQ-4f0VUtPs-Vg-1
+Received: by mail-wm1-f71.google.com with SMTP id l27-20020a05600c1d1b00b00308ef9d8a98so3312455wms.9
+        for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 10:31:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=3IRX1cmUc1GC0I7v6XkLpxR1/n2INUJQ0FPY/9UWsls=;
-        b=1en7+wvz/qoBL8w5JIuPB9S+9nfK2i5RSs/PkdwsafgyDhFFN+y1memdinHOsVAbzS
-         aOjoYiPIOC7C8JdGYOef1dpzxVLs7NZoS1B5LTtWoLCCkRNQy5YRt50/qQrjvg6juMtl
-         OgrY22tOpr8AVMcndVyUq6frtXV0Om0E/HvWqe90W55VtRKBU0bst6WgbS5OZGr2/G7B
-         urBAMvKQ3tQ7rI3CzK+htgzMWX1bIDcdgmi9nM5voxxB5/CagLlwujQZxoc8C81f8b3G
-         HReQ7nmcsacbNciXF1ObgjXYPGacSjCScIvyUkooS1vS+rHsrR8lXFuU/LkGct4EIl0j
-         stAw==
-X-Gm-Message-State: AOAM5313oi3HOfghkFo2oQx0j0b123ycA78NXADcauIy8CVUlUdcQSs2
-	0YTLhrH6nSi3si68UVqDOmr1VK6oHMuoo6Y7nXjTLgEbcxSwfiT/dTTjhcWbwWOnMPZFrjfriwh
-	G308BreMPgW3iBro=
-X-Received: by 2002:adf:ecd2:: with SMTP id s18mr1364221wro.99.1631899727780;
-        Fri, 17 Sep 2021 10:28:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxniqIFXAelxLq2YgBdQk87/U3PVNKwu+CMo2ZSw+eAmh/dOxt56bsCiIunhEKJO9oRh6UuXA==
-X-Received: by 2002:adf:ecd2:: with SMTP id s18mr1364206wro.99.1631899727526;
-        Fri, 17 Sep 2021 10:28:47 -0700 (PDT)
+        bh=aEhlSynRz4N3FlqjKloHS3Kh6FbRHHHviXrUI8c+7hU=;
+        b=LqYafL3qR1MXELat8XPnsq8DWuuX/uZiZyMqJLouELWy/nAjW6Y2OEyTgwqsOiliSY
+         DpOWcBa8Vdtdd1MXXLN/nbl5rHzshT9BK3ldJ/mXipN8u0uw3Ttp8RhBKiMCGdaFHWMk
+         h9CKFzIsonT8K/GvVUxx+pT1AmgvgXHgUnPfz8x7Pq3FSyjxiGc7qg1zqcfH1XRZ3GiW
+         ij6yykcDwGX6AlvoJJ+AshuEhJyYPHJyJZsDOXZQweBDvveSyDsmPYhDU8nf3yAx71Qo
+         bc/qvSMDXXr/D+dhuZy2W8RUtBlAwork8umXCUl/dA8Jp2zx6n1f0GCv5Wx2FVb3Kf8z
+         fBkA==
+X-Gm-Message-State: AOAM531EXfQp/UGp5zCF2jVC5K37gd8jCyAuQSZMzJq88AmQauUfe+5T
+	vbg+NcRi5aVZUk7T7J8g+1SPe0ZVFpPITKR/VYKpe2mftOpfZGsQLDbML/chMHannlIp0ruD2n7
+	7kYyXv/mtAID+S6Q=
+X-Received: by 2002:a1c:f60c:: with SMTP id w12mr16611807wmc.3.1631899866388;
+        Fri, 17 Sep 2021 10:31:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxzVIUlMhzaUcH8l76E4hgTLORUq4B9hZOc19zV/fBmI/JkObBLUeLEOY5d8c74bW5TKIB7kQ==
+X-Received: by 2002:a1c:f60c:: with SMTP id w12mr16611785wmc.3.1631899866185;
+        Fri, 17 Sep 2021 10:31:06 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-244-134.dyn.eolo.it. [146.241.244.134])
-        by smtp.gmail.com with ESMTPSA id z2sm6751959wma.45.2021.09.17.10.28.46
+        by smtp.gmail.com with ESMTPSA id a72sm11730585wme.5.2021.09.17.10.31.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Sep 2021 10:28:47 -0700 (PDT)
-Message-ID: <c8fb99f0f01ccbf125b4263d954703a6b4f13b5e.camel@redhat.com>
-Subject: Re: [RFC PATCH 2/5] tcp: expose the tcp_mark_push() and
- skb_entail() helpers
+        Fri, 17 Sep 2021 10:31:05 -0700 (PDT)
+Message-ID: <ef20848328710215a2d237dbbab18ca953737c5a.camel@redhat.com>
+Subject: Re: [RFC PATCH 4/5] Partially revert "tcp: factor out
+ tcp_build_frag()"
 From: Paolo Abeni <pabeni@redhat.com>
 To: Eric Dumazet <edumazet@google.com>
 Cc: netdev <netdev@vger.kernel.org>, "David S. Miller"
  <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>, Mat Martineau
  <mathew.j.martineau@linux.intel.com>, Ayush Sawal
  <ayush.sawal@chelsio.com>, MPTCP Upstream <mptcp@lists.linux.dev>
-Date: Fri, 17 Sep 2021 19:28:46 +0200
-In-Reply-To: <CANn89iJOtSJ8JFCThtxjRpZQ9Q44LTs-dDxypEA6Hkho9KdxWQ@mail.gmail.com>
+Date: Fri, 17 Sep 2021 19:31:04 +0200
+In-Reply-To: <CANn89i+e7xVLia3epGLpSR70kxuTMyV=VtKGRp3g0m56Ee30gQ@mail.gmail.com>
 References: <cover.1631888517.git.pabeni@redhat.com>
-	 <07fd053d2c2239e70b20b105ff6f33d299dabea7.1631888517.git.pabeni@redhat.com>
-	 <CANn89iJOtSJ8JFCThtxjRpZQ9Q44LTs-dDxypEA6Hkho9KdxWQ@mail.gmail.com>
+	 <aa710c161dda06ce999e760fed7dcbe66497b28f.1631888517.git.pabeni@redhat.com>
+	 <CANn89i+e7xVLia3epGLpSR70kxuTMyV=VtKGRp3g0m56Ee30gQ@mail.gmail.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -70,18 +70,25 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2021-09-17 at 09:43 -0700, Eric Dumazet wrote:
+On Fri, 2021-09-17 at 09:41 -0700, Eric Dumazet wrote:
 > On Fri, Sep 17, 2021 at 8:39 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> > They will be used by the next patch.
+> > This is a partial revert for commit b796d04bd014 ("tcp:
+> > factor out tcp_build_frag()").
 > > 
-> > Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
+> > MPTCP was the only user of the tcp_build_frag helper, and after
+> > the previous patch MPTCP does not use the mentioned helper anymore.
+> > Let's avoid exposing TCP internals.
+> > 
+> > The revert is partial, as tcp_remove_empty_skb(), exposed
+> > by the same commit is still required.
 > > 
 > 
-> OK, but please rename skb_entail() to tcp_skb_entail() :)
+> I would simply remove the extern in include, and make this nice helper static ?
+> 
+> This would avoid code churn, and keep a clean code.
 
-ok, with that will also drop patch 1/5 - no more needed.
+I thought you would have preferred otherwise. I'll make the helper
+static in the next iteration.
 
 Thanks!
 
