@@ -1,49 +1,49 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632702F80
-	for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 16:44:03 +0000 (UTC)
-Received: by mail-qk1-f171.google.com with SMTP id 72so7572582qkk.7
-        for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 09:44:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4763FC3
+	for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 16:48:12 +0000 (UTC)
+Received: by mail-qk1-f175.google.com with SMTP id b64so19433193qkg.0
+        for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 09:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p7yZBds9lydxwwoqLr0zoPmawjAek+2Vkh5n3xlOr3o=;
-        b=X+yAZLY+uvI5S7F+pdIBcYjNLfOKZ155b4U7wi62kL61ME280kBVXMirGgqK8MrFYu
-         GsiqeImuJSevCuhrMjoEOycljj0CEvWUu8YwJ1yMGejJnn4pa4fyQJzEkbFf1p5GEiYc
-         DgNY359HMQviIJt80jeAmtptEoy8ezNYJYllRTcWHQvlgckDr2cRBuJmNOn4N2P0KCrB
-         2HCab35jq7B3uI2SM+RrFM2qSkvdl7jzp47AvvDvXQBJ3Q6cvPzhQTMF/L6mf8oYMeqa
-         mZ6lCYKV675N3jshXtz8Q0J6kekAwswr7Z2IxiOaFZw6zgHesaK2zR6OcXnr4OE1HVgT
-         ZyqA==
+        bh=wR3Cge17MmW0C/wFwIkuwW0vhWinSIKQL4zslzCVJSM=;
+        b=TOyudvBR6pecijFVuc93gHbV2tInqmXi3fFOhiyk9nAFHgfcdCUf6txaS6yXwW6HUV
+         bjgGfwKhJJj1s6kfMqeskkE8bbGqmCmAbaxT36donNMXIeJK5+J/F1OWXCiGFW9TRGJf
+         vNpNstshLKA/Yo+AnV1PHZH+gDLdnH9DSRLAjtbWf2WFXxG4dQyivSKCelFPBOxUM0OT
+         JQuzgWRfA16AlA7sBF1DXoPPHW3NBVY7b4eKRSPyjGhe4SwkeVY6MuapeFCqsnKSRzAm
+         FrUKGNTnk/ijKT3SJBDf9hvx3YKBeoIhxbq8DUrd/E0yMkjdI4HFGB+UR51qfBJwMVG5
+         DR7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p7yZBds9lydxwwoqLr0zoPmawjAek+2Vkh5n3xlOr3o=;
-        b=VUgZgc4AwGckIl/cG5jlJqqx7wAjqPvRQJdSCNT080M+Ksz2691vpfcmIxYfHCxHBW
-         8WxDqKDsrSf8XMiQdxkeDZ6vuXY/TuTxPEtD1/O8PuGwCqA9fF8HA1H4dRU/Wbx6upWm
-         lJEPDpfk5tT8P0krNjwMDDYK4SPuZSPxlFN7RP+/vi9HkMKRBkVDBsjFg1XbTwk9Ru+z
-         f0iiWSSMEGaFL3HRULIolrIY+e0FnEaDK2fvjiUxPRvzfrjIVWs+JHpu/1RiE/NCMH0N
-         MtTgSH5wB4RsTkwM40ILrQIPx/977kQf7Ud7zUUfec+K+GSueBz4MPF69RDX79em+yHD
-         54SA==
-X-Gm-Message-State: AOAM532n28PbGHaWlDlzszEGkRVZrAaoQxX9ee1xbMWs6euQCyttHXqf
-	zTNiPWZklkcIuZDeSe5aGRsgBfwCn6MrTWAcFOWZhw==
-X-Google-Smtp-Source: ABdhPJw+qhgRa7iDjf1PHndTiwVx3p4cESeItjgI93bD49ddqAM0XycaWkxQVE6vgh0rBwZLyhcFvW9+8G2GYztI7cU=
-X-Received: by 2002:a25:2b07:: with SMTP id r7mr13038210ybr.296.1631897041942;
- Fri, 17 Sep 2021 09:44:01 -0700 (PDT)
+        bh=wR3Cge17MmW0C/wFwIkuwW0vhWinSIKQL4zslzCVJSM=;
+        b=orN1VQIlumc9CIm4wSG/nGxDdJmaGnWtMkgNRazI7K1g0DdkF67bQGH5RM4S+ngcXE
+         8mWhWONY5vk9vURs3gbuNLcgKer1j29a+tt57y8H9gWywaXgstIqnxK2nLiYpXJx3ncD
+         1YffurG3qrgKQn3+4caUdthwZAPAvwxnWtYiznzF1n/UuSU5pKxaLDE3B6gcRaaYIjq/
+         Jkn7nc2CxW2SKN7FzM2zu26n4a6HuUzox7EGz+lwB+HXfb33hf+qBPejLtDLAZMvjJc4
+         I1IkM8VQ/e/UPh0yW7EOzbMpdX2XJsxWgVpJVAwdkwPB+oO/vAWx3XLGiwjQhXAYnXwB
+         b+kw==
+X-Gm-Message-State: AOAM530Fl9T2pBHRIGFkDt3dXcfR1glnmL3biycuymC1Gl5IrCVb6NkU
+	mDbiNY1PIiZ2qAHd4CZMPLgke1kpnYtM457DsOBOYw==
+X-Google-Smtp-Source: ABdhPJx/RMx7Jy1FxwshuCXU4vaskb7Aw4Mde0Qdeag3JDzQ+DzMXYmk4uDor8koAs0zFuRQ4d4o3QjbgAkCsNhpO2M=
+X-Received: by 2002:a25:47c4:: with SMTP id u187mr15755593yba.225.1631897288414;
+ Fri, 17 Sep 2021 09:48:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1631888517.git.pabeni@redhat.com> <07fd053d2c2239e70b20b105ff6f33d299dabea7.1631888517.git.pabeni@redhat.com>
-In-Reply-To: <07fd053d2c2239e70b20b105ff6f33d299dabea7.1631888517.git.pabeni@redhat.com>
+References: <cover.1631888517.git.pabeni@redhat.com>
+In-Reply-To: <cover.1631888517.git.pabeni@redhat.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 17 Sep 2021 09:43:50 -0700
-Message-ID: <CANn89iJOtSJ8JFCThtxjRpZQ9Q44LTs-dDxypEA6Hkho9KdxWQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/5] tcp: expose the tcp_mark_push() and skb_entail() helpers
+Date: Fri, 17 Sep 2021 09:47:57 -0700
+Message-ID: <CANn89iLOL0er35k=G=BeDKtOcA6Rn3n3k+pgVQX8bVFdA1w_Dw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] net: remove sk skb caches
 To: Paolo Abeni <pabeni@redhat.com>
 Cc: netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, 
 	Jakub Kicinski <kuba@kernel.org>, Mat Martineau <mathew.j.martineau@linux.intel.com>, 
@@ -52,13 +52,25 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Fri, Sep 17, 2021 at 8:39 AM Paolo Abeni <pabeni@redhat.com> wrote:
 >
-> They will be used by the next patch.
+> Eric noted we would be better off reverting the sk
+> skb caches.
 >
-> Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
+> MPTCP relies on such a feature, so we need a
+> little refactor of the MPTCP tx path before the mentioned
+> revert.
+>
+> The first patch avoids that the next one will cause a name
+> clash. The second exposes additional TCP helpers. The 3rd patch
+> changes the MPTCP code to do locally the whole skb allocation
+> and updating, so it does not rely anymore on core TCP helpers
+> for that nor the sk skb cache.
+>
+> As a side effect, we can drop the tcp_build_frag helper.
+>
+> Finally, we can pull Eric's revert.
+>
+> Note that patch 3/5 will conflict with the pending -net fix
+> for a recently reported syzkaller splat.
 >
 
-OK, but please rename skb_entail() to tcp_skb_entail() :)
-
-Thanks !
+Thanks for working on this Paolo !
