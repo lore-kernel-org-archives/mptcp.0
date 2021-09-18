@@ -1,31 +1,48 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F633FCC
-	for <mptcp@lists.linux.dev>; Fri, 17 Sep 2021 23:33:33 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10110"; a="209979874"
-X-IronPort-AV: E=Sophos;i="5.85,302,1624345200"; 
-   d="scan'208";a="209979874"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2021 16:33:30 -0700
-X-IronPort-AV: E=Sophos;i="5.85,302,1624345200"; 
-   d="scan'208";a="483228560"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.205.24])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2021 16:33:30 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Florian Westphal <fw@strlen.de>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 4/5] mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
-Date: Fri, 17 Sep 2021 16:33:21 -0700
-Message-Id: <20210917233322.271789-5-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210917233322.271789-1-mathew.j.martineau@linux.intel.com>
-References: <20210917233322.271789-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A48372
+	for <mptcp@lists.linux.dev>; Sat, 18 Sep 2021 07:22:31 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id c1so8401608pfp.10
+        for <mptcp@lists.linux.dev>; Sat, 18 Sep 2021 00:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tX1QZrSUT0S8/MMkPPauSMAtryTe1QF8XRqzwOBeC58=;
+        b=cMej6w1w5W1z6xNSnIiganCXeXCCvwUXOIG/VjqSIKGfL1Ib7ZxOcXIcgudW6tqdv/
+         IMltyFl0e0LJeF8rhhnNlu1NzMWmuqsCYeVS7ft2JB8KhbwoKesgxlRKBVBV63MSPU49
+         DttG7now4YiNpexESElZgvytnT6WswHjgGpztGaarPet5j8CG+UFiDjX0FFGvgfkRufz
+         N0yGfyhWfpcGo8CKzIIeK/PpZvxp+qrT/ZKar1TlCEuaY4UXtUszLzPyQiGiOHJRjJoj
+         Q7XX12i/eQRkW+AHiK5dtmKlEtJSL3tX+lNZAd+rnwIlJ7YB0nbybwIJbotnm+udvgod
+         buWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tX1QZrSUT0S8/MMkPPauSMAtryTe1QF8XRqzwOBeC58=;
+        b=3YWGhuyPSmdm77lLyg3IQqdU3YRijuelLCbpl70zo7HzVs932VIyKwEbPCRVXUgXso
+         QWnaQG7rPFxgEWHlE76BUf0nH8PUWzTnMey0H5evTzMsThAjrw9t8IZFOOPJCJ1mQVa0
+         Acd20xE1emh2jfR5Euv5c4Bs5Nk+6QIFVxIPggVkNFHV8TW4zW20vumSpdlG4/5U09C/
+         z0Obv7thJce7BLn3FqyU/JY6po9pW+s2UNtA8T14IL0F2hJiK/kqOP5gYPPjl7Fdi6PC
+         JQcQ4dB1LFEW0MumyqC7QGVMClG6+xHy9Qk9p3XOLsLRYf7NvswOKKSz6+3dgRo5V8xk
+         sPuw==
+X-Gm-Message-State: AOAM530yzeAJYH9EVR2YxojXohYpV/TBhIqhTEU9YZzYWBJzR/qxYOD+
+	21sDF76Kgqv04mmjR3UEABFcx6sxd+8=
+X-Google-Smtp-Source: ABdhPJxVOy3U/iBNZkCJnLg1WztfXa7bmhoLzwSlywSktiWc2vtBd9RD5agmideD3RcsGXdgewC/2A==
+X-Received: by 2002:a63:401:: with SMTP id 1mr13598995pge.166.1631949750863;
+        Sat, 18 Sep 2021 00:22:30 -0700 (PDT)
+Received: from MiBook.. ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id 77sm8040214pfu.219.2021.09.18.00.22.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Sep 2021 00:22:29 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [PATCH mptcp-next v4 0/8] The infinite mapping support
+Date: Sat, 18 Sep 2021 15:22:15 +0800
+Message-Id: <cover.1631949480.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,227 +51,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Florian Westphal <fw@strlen.de>
+v4:
+ - update patch 1 and patch 2
 
-This retrieves the address pairs of all subflows currently
-active for a given mptcp connection.
+v3:
+ - drop MPTCP_INFINITE_DONE flag
+ - drop MAPPING_INFINITE
+ - add mptcp_is_data_contiguous helper
+ - add the fallback check
+ - The u32 target testcase has not been completed yet.
 
-It re-uses the same meta-header as for MPTCP_TCPINFO.
+v2:
+ - add MPTCP_INFINITE_DONE flag
+ - add MAPPING_INFINITE mapping status
+ - add start_seq in the msk
 
-A new structure is provided to hold the subflow
-address data:
+v1:
+ - add noncontiguous flag
+ - add the mibs check
+ - tag: export/20210904T080009
 
-struct mptcp_subflow_addrs {
-	union {
-		__kernel_sa_family_t sa_family;
-		struct sockaddr sa_local;
-		struct sockaddr_in sin_local;
-		struct sockaddr_in6 sin6_local;
-		struct sockaddr_storage ss_local;
-	};
-	union {
-		struct sockaddr sa_remote;
-		struct sockaddr_in sin_remote;
-		struct sockaddr_in6 sin6_remote;
-		struct sockaddr_storage ss_remote;
-	};
-};
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/216
 
-Usage of the new getsockopt is very similar to
-MPTCP_TCPINFO one.
+Geliang Tang (8):
+  mptcp: track and update contiguous data status
+  mptcp: add last_fully_acked_dss_start_seq in the msk
+  mptcp: infinite mapping sending
+  mptcp: add the fallback check
+  mptcp: infinite mapping receiving
+  mptcp: add mib for infinite map sending
+  selftests: mptcp: add infinite map mibs check
+  DO-NOT-MERGE: mptcp: mp_fail test
 
-Userspace allocates a
-'struct mptcp_subflow_data', followed by one or
-more 'struct mptcp_subflow_addrs', then inits the
-mptcp_subflow_data structure as follows:
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/mib.c                               |  1 +
+ net/mptcp/mib.h                               |  1 +
+ net/mptcp/options.c                           |  6 +-
+ net/mptcp/pm.c                                |  6 ++
+ net/mptcp/protocol.c                          | 47 +++++++++++++++-
+ net/mptcp/protocol.h                          | 19 +++++++
+ net/mptcp/subflow.c                           | 55 +++++++++---------
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 56 +++++++++++++++++++
+ 9 files changed, 163 insertions(+), 31 deletions(-)
 
-struct mptcp_subflow_addrs *sf_addr;
-struct mptcp_subflow_data *addr;
-socklen_t olen = sizeof(*addr) + (8 * sizeof(*sf_addr));
-
-addr = malloc(olen);
-addr->size_subflow_data = sizeof(*addr);
-addr->num_subflows = 0;
-addr->size_kernel = 0;
-addr->size_user = sizeof(struct mptcp_subflow_addrs);
-
-sf_addr = (struct mptcp_subflow_addrs *)(addr + 1);
-
-and then retrieves the endpoint addresses via:
-ret = getsockopt(fd, SOL_MPTCP, MPTCP_SUBFLOW_ADDRS,
-		 addr, &olen);
-
-If the call succeeds, kernel will have added up to 8
-endpoint addresses after the 'mptcp_subflow_data' header.
-
-Userspace needs to re-check 'olen' value to detect how
-many bytes have been filled in by the kernel.
-
-Userspace can check addr->num_subflows to discover when
-there were more subflows that available data space.
-
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- include/uapi/linux/mptcp.h | 24 ++++++++++
- net/mptcp/sockopt.c        | 91 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 115 insertions(+)
-
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 3f013a513770..c8cc46f80a16 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -4,6 +4,13 @@
- 
- #include <linux/const.h>
- #include <linux/types.h>
-+#include <linux/in.h>		/* for sockaddr_in			*/
-+#include <linux/in6.h>		/* for sockaddr_in6			*/
-+#include <linux/socket.h>	/* for sockaddr_storage and sa_family	*/
-+
-+#ifndef __KERNEL__
-+#include <sys/socket.h>		/* for struct sockaddr			*/
-+#endif
- 
- #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
- #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
-@@ -200,8 +207,25 @@ struct mptcp_subflow_data {
- 	__u32		size_user;			/* size of one element in data[] */
- } __attribute__((aligned(8)));
- 
-+struct mptcp_subflow_addrs {
-+	union {
-+		__kernel_sa_family_t sa_family;
-+		struct sockaddr sa_local;
-+		struct sockaddr_in sin_local;
-+		struct sockaddr_in6 sin6_local;
-+		struct __kernel_sockaddr_storage ss_local;
-+	};
-+	union {
-+		struct sockaddr sa_remote;
-+		struct sockaddr_in sin_remote;
-+		struct sockaddr_in6 sin6_remote;
-+		struct __kernel_sockaddr_storage ss_remote;
-+	};
-+};
-+
- /* MPTCP socket options */
- #define MPTCP_INFO		1
- #define MPTCP_TCPINFO		2
-+#define MPTCP_SUBFLOW_ADDRS	3
- 
- #endif /* _UAPI_MPTCP_H */
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index eb2905bfa089..8137cc3a4296 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -840,6 +840,95 @@ static int mptcp_getsockopt_tcpinfo(struct mptcp_sock *msk, char __user *optval,
- 	return 0;
- }
- 
-+static void mptcp_get_sub_addrs(const struct sock *sk, struct mptcp_subflow_addrs *a)
-+{
-+	struct inet_sock *inet = inet_sk(sk);
-+
-+	memset(a, 0, sizeof(*a));
-+
-+	if (sk->sk_family == AF_INET) {
-+		a->sin_local.sin_family = AF_INET;
-+		a->sin_local.sin_port = inet->inet_sport;
-+		a->sin_local.sin_addr.s_addr = inet->inet_rcv_saddr;
-+
-+		if (!a->sin_local.sin_addr.s_addr)
-+			a->sin_local.sin_addr.s_addr = inet->inet_saddr;
-+
-+		a->sin_remote.sin_family = AF_INET;
-+		a->sin_remote.sin_port = inet->inet_dport;
-+		a->sin_remote.sin_addr.s_addr = inet->inet_daddr;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	} else if (sk->sk_family == AF_INET6) {
-+		const struct ipv6_pinfo *np = inet6_sk(sk);
-+
-+		a->sin6_local.sin6_family = AF_INET6;
-+		a->sin6_local.sin6_port = inet->inet_sport;
-+
-+		if (ipv6_addr_any(&sk->sk_v6_rcv_saddr))
-+			a->sin6_local.sin6_addr = np->saddr;
-+		else
-+			a->sin6_local.sin6_addr = sk->sk_v6_rcv_saddr;
-+
-+		a->sin6_remote.sin6_family = AF_INET6;
-+		a->sin6_remote.sin6_port = inet->inet_dport;
-+		a->sin6_remote.sin6_addr = sk->sk_v6_daddr;
-+#endif
-+	}
-+}
-+
-+static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *optval,
-+					  int __user *optlen)
-+{
-+	struct sock *sk = &msk->sk.icsk_inet.sk;
-+	struct mptcp_subflow_context *subflow;
-+	unsigned int sfcount = 0, copied = 0;
-+	struct mptcp_subflow_data sfd;
-+	char __user *addrptr;
-+	int len;
-+
-+	len = mptcp_get_subflow_data(&sfd, optval, optlen);
-+	if (len < 0)
-+		return len;
-+
-+	sfd.size_kernel = sizeof(struct mptcp_subflow_addrs);
-+	sfd.size_user = min_t(unsigned int, sfd.size_user,
-+			      sizeof(struct mptcp_subflow_addrs));
-+
-+	addrptr = optval + sfd.size_subflow_data;
-+
-+	lock_sock(sk);
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		++sfcount;
-+
-+		if (len && len >= sfd.size_user) {
-+			struct mptcp_subflow_addrs a;
-+
-+			mptcp_get_sub_addrs(ssk, &a);
-+
-+			if (copy_to_user(addrptr, &a, sfd.size_user)) {
-+				release_sock(sk);
-+				return -EFAULT;
-+			}
-+
-+			addrptr += sfd.size_user;
-+			copied += sfd.size_user;
-+			len -= sfd.size_user;
-+		}
-+	}
-+
-+	release_sock(sk);
-+
-+	sfd.num_subflows = sfcount;
-+
-+	if (mptcp_put_subflow_data(&sfd, optval, copied, optlen))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    char __user *optval, int __user *optlen)
- {
-@@ -862,6 +951,8 @@ static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
- 		return mptcp_getsockopt_info(msk, optval, optlen);
- 	case MPTCP_TCPINFO:
- 		return mptcp_getsockopt_tcpinfo(msk, optval, optlen);
-+	case MPTCP_SUBFLOW_ADDRS:
-+		return mptcp_getsockopt_subflow_addrs(msk, optval, optlen);
- 	}
- 
- 	return -EOPNOTSUPP;
 -- 
-2.33.0
+2.31.1
 
