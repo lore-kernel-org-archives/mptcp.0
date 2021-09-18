@@ -1,50 +1,49 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A566972
-	for <mptcp@lists.linux.dev>; Sat, 18 Sep 2021 07:22:47 +0000 (UTC)
-Received: by mail-pg1-f173.google.com with SMTP id f129so11922246pgc.1
-        for <mptcp@lists.linux.dev>; Sat, 18 Sep 2021 00:22:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF5172
+	for <mptcp@lists.linux.dev>; Sat, 18 Sep 2021 08:05:47 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id h17so38952652edj.6
+        for <mptcp@lists.linux.dev>; Sat, 18 Sep 2021 01:05:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=I2ZLfYN3oNiOEaWlZbpsbKLfQ6k89+mYkXtjSrzW7Zk=;
-        b=LZBORIYqF1xzkcHzjBKmgokjqoTcEDUesabdcRfc/uQz/E1cQcUHPqj63lKC5a4mMh
-         Y4WmktgMd/pIPsMnMTWyxSJrapV2QdYz0+kw3868RFyC5ioIkBHCqQXEe9DTZ7Lg5QKg
-         sLsUg/C7Pp3+JGqrj5KlrjSNLxLCBR/SeETKuYn7p11GpFFFm2Yx1uTwVUYe9geO9QRr
-         RoGZgK6UB9iKqL/4oUCofObhSW11Ajnk8mkPMBpUz5FLw5fqU77NHjVYeJ1CPl6O0I0l
-         4ROMGmkeXLdKL6ko5mZJhwGAwIKGxB2ouqDVlVM2uRGIGC8q8CHiDyUjF2Exk19aXfN5
-         HThQ==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=393B17tFjI0wvdXC8Fbv7zukTxL+XgmJG2QQo8dRRrk=;
+        b=UWPWdduS3B7aYUuYXYO4ZhtU06amldo0YtywLwXlvkOsLqgam5tYdwH8GgBclVfag1
+         rm+VlJVZC2wf9erCZ5ng5nvk4vGUeUNjtlkGyjAtGHub2+K6xoQafU3dGS+1fGdo4hlR
+         E59bLFr4WkNC0UYnOuCw+RfMumYGHyUMvYbYv/AiA5oZNHOpheYu7KJTrmuL8nMyua5t
+         UxtWHy+dlZ7cjHPLyi+8giy9wp9DMZjgR2pTWpISO/SLXphbD7YHozC3z0g9W29CzgAp
+         S5SzJqScwq82Ihd1C8rFlvZhiO9QerN0aoXaIAaMpEVKYR/xj23ap/JIJK8J/zUicRMf
+         DnAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=I2ZLfYN3oNiOEaWlZbpsbKLfQ6k89+mYkXtjSrzW7Zk=;
-        b=xCftNq1Mxg4ELEqmZOxpMzabWZk0UTZNQhA2COcxNV7pd+WNnmwi7fyFnCaS6x94EA
-         xl9ckpmGIorVKIau6I9uO56Iw9WEqC4wFISiH6sT9lgVvMbrV4bSwDviajWd4wZS4geQ
-         Y1ZLO02ciDWw+kPXGzYicXMliu4HWlEQoAZcta1xS7Zt6iceRhqOAVqpvFIlVMhv0lIM
-         RJDDRk+V68mJHoTHI0YtzwEUmiEmkGmXZaGfrHfaX2EwewsdmDrBU/EzL0hTP/y71wBP
-         B+1/uOEacgLfoSSp8fg5AyJ9Hs6KNXfUfmuVPrWnN9Dxhn4zHOzlEt1bUVJHfAxC01IY
-         jn+w==
-X-Gm-Message-State: AOAM5335dG3X8DSFwH4jv2FvpPiYlQneVvFVLrjJf+B5GaDyCJzNWHj5
-	h7phjVMIWQDoBocgqphhDOYsLYgBcmw=
-X-Google-Smtp-Source: ABdhPJzPAquE0sP63Hn3NIRYSEG8si3IPwF4polXAZrnJiYel5Iw+5jamRAdsG3XXniUAWu3yWu0ng==
-X-Received: by 2002:a63:1262:: with SMTP id 34mr13456392pgs.356.1631949767136;
-        Sat, 18 Sep 2021 00:22:47 -0700 (PDT)
-Received: from MiBook.. ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id 77sm8040214pfu.219.2021.09.18.00.22.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=393B17tFjI0wvdXC8Fbv7zukTxL+XgmJG2QQo8dRRrk=;
+        b=71YCqIFUN+Q+9bVR6fIZqrbLeZJdTshGh6RJecwfYl5LCTQ1ntvFeS+oU0pfmiDMmb
+         iULPT27JcHWITas6IhPZ7tIL8ZhVe+Y4CHDIIKh8wEFLrjNzJItmnNOx3+KjCw246LJ9
+         mkKAy/0eqxq2tmodi057s5LPQSCBpyQ5Ep5EVpjNGZAL5G7h/iQItJ+wJa/UONhcw0DX
+         +rW21ebKW4lqGIorBW9eJfiVcMiEV+XqBjMNRIF+ohCF/JMAAnrnAyESn3iiaOctVwDj
+         Rl6+Au3OmzThOlVCx5xCHd01XnqORJmfax0dAF9/9pStbJK727l21baayuRWrtCt+AI2
+         mi0A==
+X-Gm-Message-State: AOAM533IvKl1v2+yvwekgexalPerSEBl4c5q/2c1kdlaJSrWK6LOCC4T
+	UbQ9znup40Tp1hw/aQ2YQsgtylOANGoV8KMsPgc=
+X-Google-Smtp-Source: ABdhPJz1FTNK2QIE/747g15SJZ6c3FVeexV4xOGhrEsXaOJsZy0nGyBAJNtDBN3YO5dexsZlI9jwcw==
+X-Received: by 2002:a17:906:180a:: with SMTP id v10mr17070930eje.112.1631952345735;
+        Sat, 18 Sep 2021 01:05:45 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id mq25sm3245201ejc.71.2021.09.18.01.05.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Sep 2021 00:22:46 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
+        Sat, 18 Sep 2021 01:05:45 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH mptcp-next v4 8/8] DO-NOT-MERGE: mptcp: mp_fail test
-Date: Sat, 18 Sep 2021 15:22:23 +0800
-Message-Id: <54f45be86bfb22cbe8b1af851054c28eed9461cf.1631949480.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1631949480.git.geliangtang@gmail.com>
-References: <cover.1631949480.git.geliangtang@gmail.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next] Squash to "mptcp: don't return sockets in foreign netns"
+Date: Sat, 18 Sep 2021 10:05:39 +0200
+Message-Id: <20210918080539.2051616-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -53,70 +52,38 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-./mptcp_join.sh -Cf
+Add missing doc for the new 'net' parameter.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+'make W=1' returned this warning:
+
+  net/mptcp/token.c:242: warning: Function parameter or member 'net' not described in 'mptcp_token_get_sock'
+
+This caused the failure reported by Github Action job:
+
+  https://github.com/multipath-tcp/mptcp_net-next/runs/3623640967?check_suite_focus=true
+
+Cc: Florian Westphal <fw@strlen.de>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/protocol.c                           |  9 +++++++++
- .../testing/selftests/net/mptcp/mptcp_join.sh  | 18 ++++++++++++++++++
- 2 files changed, 27 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d035119b41cb..5be8023f27ca 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1297,6 +1297,8 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk, struct sock *ssk,
- 	__mptcp_do_fallback(msk);
- }
+Notes:
+    to be squashed in "mptcp: don't return sockets in foreign netns"
+
+ net/mptcp/token.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 313a3e793e61..e581b341c5be 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -231,6 +231,7 @@ bool mptcp_token_exists(u32 token)
  
-+static int j;
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1431,6 +1433,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mptcp_update_data_checksum(skb, copy);
- 	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
- 		mptcp_update_infinite_map(msk, ssk, mpext);
-+
-+	pr_debug("%s j=%d", __func__, j++);
-+	if (j == 20)
-+		skb->data_len = 1;
-+	if (j > 40)
-+		j = 0;
-+
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
- 	return copy;
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fe0c8f3164a7..38663f6373b8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -977,6 +977,24 @@ chk_link_usage()
- 
- subflows_tests()
- {
-+	# 1 subflow
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "1 subflow" 0 0 0
-+
-+	exit
-+
-+	# multiple subflows
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "multiple subflows" 2 2 2
-+
- 	reset
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "no JOIN" "0" "0" "0"
+ /**
+  * mptcp_token_get_sock - retrieve mptcp connection sock using its token
++ * @net: restrict to this namespace
+  * @token: token of the mptcp connection to retrieve
+  *
+  * This function returns the mptcp connection structure with the given token.
 -- 
-2.31.1
+2.32.0
 
