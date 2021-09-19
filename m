@@ -1,73 +1,84 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC0F2FB3
-	for <mptcp@lists.linux.dev>; Sat, 18 Sep 2021 13:30:07 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 90AA961353;
-	Sat, 18 Sep 2021 13:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1631971807;
-	bh=bySlvwCav4Ttv+uFQJi8sgKtCicRVJ/thbrcPXi8+zk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=VeFP+EGun06czHyPPTIX2VzLTU0uLJk+43gzLIHgVKPKgkctJQbDxDfB0sG+SXyRS
-	 9emA+FWbBHJ9X5YnyI2uGzKkDyebUqx3Gq9EzxGF3zzUKnrIr8L791RBv1GF7PpMka
-	 tavxQ1dvanTGQYIpDemxjP/lmglRasOlvuM0o5snQ6dQizDVdk9gPDKlK119F/ol2X
-	 4YUu4rietxMkWXyhwUbMM+QppdCUtRLacgF6+IMqBPwv2J2wiv/tRXVC2LyoN8czs8
-	 Kem8TD32xhfUF/e+reibG4c+PZxXo5R/KqDCf6nRv4SMaQrgG8jC9t/tZl0xP3yaV/
-	 M8AMXot+hKGrQ==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 838C260965;
-	Sat, 18 Sep 2021 13:30:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1999D72
+	for <mptcp@lists.linux.dev>; Sun, 19 Sep 2021 07:06:42 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id q3so47634076edt.5
+        for <mptcp@lists.linux.dev>; Sun, 19 Sep 2021 00:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YK9Fu/ftHFDUXYWloMdkPkiZpj2M26Dqhv2LhnrHnTk=;
+        b=zf5634dIiZ4UDpViH+k6zROvz1e+KLbiHsvVIk0WbajFcUdcoEV3G/yBrM2lpw+yGN
+         5Y0/GvbKPdTqlQDniS3bYnnB4i3cmHqB5t99Jvsic9vs765NijDRxMvr01RUlj29l/kF
+         xSRy79aQkneWhUApZuunObmYdpxTg9864Ta+U6PuB9nSAucNDh+FKMG2EbTV72QTjI3m
+         XflOyR3Szf9oR7udtxJ6lrdSPtpOQK509A89e/vZn/H3SLdU+ubS+HAV1i9Kz1IabPcE
+         rhBYlu2Yd02G6tG2waOkY9fUbqoAgQPL492R79dXZeZUvxL7Tc6hRvlLsmGD+wOMdnpB
+         pg9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YK9Fu/ftHFDUXYWloMdkPkiZpj2M26Dqhv2LhnrHnTk=;
+        b=yHtPhEMfcthUSiDVerX51gVQ3JvfvRd8M3yrUUbdy+9FMrULNdJgDFNHbE10a3Ih+H
+         8J1HKP8HMurNNOavMVwVFiISxlSbSL+bXBzwriuvDmaDUuSz2go98I4x6eY3tRWt4L6p
+         fUJy/RiJ/I5LWZxocL7y+HGZsPk2GF4rBXmcWAljSuhsK5qsJZyo14HB5fZG0MogmAfa
+         ywN8HcCcqx1Pl7V7JM4cEvKLZfybrCA7YN23vPqc+Ze7a2/8D2ocHrSc1QsQ2MKpncZK
+         x/YKInFuNdarhgn3SuGfNlubw5PXMB8tqXD7KYJIYc0Ps4IHj13fDlSm+ex2/6RBK11o
+         58dQ==
+X-Gm-Message-State: AOAM533IbG4soQOgS7FCe3lHSjcysXJjBiEEzZy4c859d2QSl2Fw4ZzF
+	DjWtvK14AOkW5CH1XEAs2xwg6BwitAe1QUFpoqM=
+X-Google-Smtp-Source: ABdhPJxVlp9RG/3TxXoypZCeP15Iu5Jc0qhtG5dYVERcjCpP8tVlP2vf7cA200VHzih/rSdpwBFRew==
+X-Received: by 2002:a05:6402:906:: with SMTP id g6mr22168123edz.19.1632035201184;
+        Sun, 19 Sep 2021 00:06:41 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net (94.105.102.72.dyn.edpnet.net. [94.105.102.72])
+        by smtp.gmail.com with ESMTPSA id k12sm4530479ejk.63.2021.09.19.00.06.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Sep 2021 00:06:40 -0700 (PDT)
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: don't return sockets in
+ foreign netns"
+To: mptcp@lists.linux.dev
+Cc: Florian Westphal <fw@strlen.de>
+References: <20210918080539.2051616-1-matthieu.baerts@tessares.net>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <968e27b5-1316-e2b2-53a3-13938202a36f@tessares.net>
+Date: Sun, 19 Sep 2021 09:06:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] mptcp: Add SOL_MPTCP getsockopt support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <163197180753.27784.6426845271823052999.git-patchwork-notify@kernel.org>
-Date: Sat, 18 Sep 2021 13:30:07 +0000
-References: <20210917233322.271789-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210917233322.271789-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, fw@strlen.de
+In-Reply-To: <20210918080539.2051616-1-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Florian,
 
-This series was applied to netdev/net-next.git (refs/heads/master):
-
-On Fri, 17 Sep 2021 16:33:17 -0700 you wrote:
-> Here's the first new MPTCP feature for the v5.16 cycle, and I'll defer
-> to Florian's helpful description of the series implementing some new
-> MPTCP socket options:
+On 18/09/2021 10:05, Matthieu Baerts wrote:
+> Add missing doc for the new 'net' parameter.
 > 
-> ========
+> 'make W=1' returned this warning:
 > 
-> This adds the MPTCP_INFO, MPTCP_TCPINFO and MPTCP_SUBFLOW_ADDRS
-> mptcp getsockopt optnames.
-> 
-> [...]
+>   net/mptcp/token.c:242: warning: Function parameter or member 'net' not described in 'mptcp_token_get_sock'
 
-Here is the summary with links:
-  - [net-next,1/5] mptcp: add new mptcp_fill_diag helper
-    https://git.kernel.org/netdev/net-next/c/61bc6e82f92e
-  - [net-next,2/5] mptcp: add MPTCP_INFO getsockopt
-    https://git.kernel.org/netdev/net-next/c/55c42fa7fa33
-  - [net-next,3/5] mptcp: add MPTCP_TCPINFO getsockopt support
-    https://git.kernel.org/netdev/net-next/c/06f15cee3695
-  - [net-next,4/5] mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support
-    https://git.kernel.org/netdev/net-next/c/c11c5906bc0a
-  - [net-next,5/5] selftests: mptcp: add mptcp getsockopt test cases
-    https://git.kernel.org/netdev/net-next/c/ce9979129a0b
+Thank you for the review! Now in our tree:
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+- 91017a33fdaf: "squashed" in "mptcp: don't return sockets in foreign netns"
+- Without co-dev tags for just that
+- Results: 9362f2920995..3d2c77807730
 
+Builds are now in progress:
 
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210919T070621
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
