@@ -1,84 +1,110 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1999D72
-	for <mptcp@lists.linux.dev>; Sun, 19 Sep 2021 07:06:42 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id q3so47634076edt.5
-        for <mptcp@lists.linux.dev>; Sun, 19 Sep 2021 00:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YK9Fu/ftHFDUXYWloMdkPkiZpj2M26Dqhv2LhnrHnTk=;
-        b=zf5634dIiZ4UDpViH+k6zROvz1e+KLbiHsvVIk0WbajFcUdcoEV3G/yBrM2lpw+yGN
-         5Y0/GvbKPdTqlQDniS3bYnnB4i3cmHqB5t99Jvsic9vs765NijDRxMvr01RUlj29l/kF
-         xSRy79aQkneWhUApZuunObmYdpxTg9864Ta+U6PuB9nSAucNDh+FKMG2EbTV72QTjI3m
-         XflOyR3Szf9oR7udtxJ6lrdSPtpOQK509A89e/vZn/H3SLdU+ubS+HAV1i9Kz1IabPcE
-         rhBYlu2Yd02G6tG2waOkY9fUbqoAgQPL492R79dXZeZUvxL7Tc6hRvlLsmGD+wOMdnpB
-         pg9Q==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A79372
+	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 15:42:56 +0000 (UTC)
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E45173F320
+	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 15:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1632152563;
+	bh=OcpxhdBlzejp2v0C2MQE07mgZm7uaKlgWhogNvtB6Bg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=jYU4h74b7zZgjrw963sCoErSuOmZSuTt+c4340SlhueniovejZ9dM3qYxl2QNeFtm
+	 GREH3Coih0Fg2Y0bOy0D/6MmQO4hqM9/edDiShqM60eYXraAk1OeV2l9ZbCB/5/8xB
+	 4EPjU8EPnX8BBCrIeEuXRX2fKiIT14B7BzZ0nlySjLc41Wg51swarqb8uGQm4MOApA
+	 9AiujQSrJFpUgOEekQcHCrE7jT6M5aDt0/RxCIcE0W5o6sQBcCGvGAPUqWJ+JO9N4D
+	 Pk25/vSV80laY3XItzNapYNRpucFh5xcxKu4kxCx76ufJikaUY0MshKBT32L4hIY8I
+	 cxQVScqLXxMvw==
+Received: by mail-pg1-f198.google.com with SMTP id q22-20020a63e956000000b002524787adb1so15160830pgj.3
+        for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 08:42:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YK9Fu/ftHFDUXYWloMdkPkiZpj2M26Dqhv2LhnrHnTk=;
-        b=yHtPhEMfcthUSiDVerX51gVQ3JvfvRd8M3yrUUbdy+9FMrULNdJgDFNHbE10a3Ih+H
-         8J1HKP8HMurNNOavMVwVFiISxlSbSL+bXBzwriuvDmaDUuSz2go98I4x6eY3tRWt4L6p
-         fUJy/RiJ/I5LWZxocL7y+HGZsPk2GF4rBXmcWAljSuhsK5qsJZyo14HB5fZG0MogmAfa
-         ywN8HcCcqx1Pl7V7JM4cEvKLZfybrCA7YN23vPqc+Ze7a2/8D2ocHrSc1QsQ2MKpncZK
-         x/YKInFuNdarhgn3SuGfNlubw5PXMB8tqXD7KYJIYc0Ps4IHj13fDlSm+ex2/6RBK11o
-         58dQ==
-X-Gm-Message-State: AOAM533IbG4soQOgS7FCe3lHSjcysXJjBiEEzZy4c859d2QSl2Fw4ZzF
-	DjWtvK14AOkW5CH1XEAs2xwg6BwitAe1QUFpoqM=
-X-Google-Smtp-Source: ABdhPJxVlp9RG/3TxXoypZCeP15Iu5Jc0qhtG5dYVERcjCpP8tVlP2vf7cA200VHzih/rSdpwBFRew==
-X-Received: by 2002:a05:6402:906:: with SMTP id g6mr22168123edz.19.1632035201184;
-        Sun, 19 Sep 2021 00:06:41 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.102.72.dyn.edpnet.net. [94.105.102.72])
-        by smtp.gmail.com with ESMTPSA id k12sm4530479ejk.63.2021.09.19.00.06.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Sep 2021 00:06:40 -0700 (PDT)
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: don't return sockets in
- foreign netns"
+        bh=OcpxhdBlzejp2v0C2MQE07mgZm7uaKlgWhogNvtB6Bg=;
+        b=DPZM+7Pe4BAswhHCSO73vM/YDx12ZTNPYhuIC5/n7OJrBGe7ZPfKGkuZUottz5Ynqt
+         wyfFrz395FiBagb8RU0+oqqWUGlLzjO45Hul6majJeZvQzTzc1kfcMhkyMHT3VqqmfwN
+         9VIkqLb7J7SfpIwXdvXdeXk2PRfn8jstm/auVM+odQilFOS0su/8JQgxtx6qc0eMJf9k
+         g0jw7amcE2lV2jVj8JKG/XFF3uKACKYdioon3IiCCOXX1T0orK8O4AHHUxZ4SlIfhS5h
+         U79WfqKq5MH7FOP14CwTyLMKfNUGBb6oJaazkpIsSegfJ6+Pajz/sE342a73PhxtSdhe
+         +rrg==
+X-Gm-Message-State: AOAM531+3pScEiCuALluFFIYHdGxU/Cgd6K/RnrBoY7J647nnk6t1dhB
+	11Ubq17GIV4797ZxqS6JZDABTMrjn/VJoQAEWop7MoXbeuXJoRqtWHi6Yd8pcpxdRrilZQnoXZs
+	/XHMqaPLkKm1Bb5IP170BTbcip6VO8xLU
+X-Received: by 2002:a17:90a:7a8b:: with SMTP id q11mr29895646pjf.35.1632152562060;
+        Mon, 20 Sep 2021 08:42:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyN+ikGFNNGkvQl7+s28E1V/m0S/lNnypEIpSFEkQjJp9P34/1b21IXIFSgIWBwJnHVvmXx7g==
+X-Received: by 2002:a17:90a:7a8b:: with SMTP id q11mr29895618pjf.35.1632152561766;
+        Mon, 20 Sep 2021 08:42:41 -0700 (PDT)
+Received: from localhost.localdomain ([69.163.84.166])
+        by smtp.gmail.com with ESMTPSA id h18sm6260556pfr.89.2021.09.20.08.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Sep 2021 08:42:41 -0700 (PDT)
+From: Tim Gardner <tim.gardner@canonical.com>
 To: mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-References: <20210918080539.2051616-1-matthieu.baerts@tessares.net>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <968e27b5-1316-e2b2-53a3-13938202a36f@tessares.net>
-Date: Sun, 19 Sep 2021 09:06:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+Cc: tim.gardner@canonical.com,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] mptcp: Avoid NULL dereference in mptcp_getsockopt_subflow_addrs()
+Date: Mon, 20 Sep 2021 09:42:32 -0600
+Message-Id: <20210920154232.15494-1-tim.gardner@canonical.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210918080539.2051616-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Florian,
+Coverity complains of a possible NULL dereference in
+mptcp_getsockopt_subflow_addrs():
 
-On 18/09/2021 10:05, Matthieu Baerts wrote:
-> Add missing doc for the new 'net' parameter.
-> 
-> 'make W=1' returned this warning:
-> 
->   net/mptcp/token.c:242: warning: Function parameter or member 'net' not described in 'mptcp_token_get_sock'
+861        } else if (sk->sk_family == AF_INET6) {
+    	3. returned_null: inet6_sk returns NULL. [show details]
+    	4. var_assigned: Assigning: np = NULL return value from inet6_sk.
+ 862                const struct ipv6_pinfo *np = inet6_sk(sk);
 
-Thank you for the review! Now in our tree:
+Fix this by checking for NULL.
 
-- 91017a33fdaf: "squashed" in "mptcp: don't return sockets in foreign netns"
-- Without co-dev tags for just that
-- Results: 9362f2920995..3d2c77807730
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
+Cc: mptcp@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
 
-Builds are now in progress:
+[ I'm not at all sure this is the right thing to do since the final result is to
+return garbage to user space in mptcp_getsockopt_subflow_addrs(). Is this one
+of those cases where inet6_sk() can't fail ?]
+---
+ net/mptcp/sockopt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210919T070621
-
-Cheers,
-Matt
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 8137cc3a4296..c89f2bedce79 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -861,6 +861,9 @@ static void mptcp_get_sub_addrs(const struct sock *sk, struct mptcp_subflow_addr
+ 	} else if (sk->sk_family == AF_INET6) {
+ 		const struct ipv6_pinfo *np = inet6_sk(sk);
+ 
++		if (!np)
++			return;
++
+ 		a->sin6_local.sin6_family = AF_INET6;
+ 		a->sin6_local.sin6_port = inet->inet_sport;
+ 
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.33.0
+
