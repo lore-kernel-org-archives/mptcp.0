@@ -1,34 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADF33FC0
-	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 17:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E233FCB
+	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 17:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632158683;
+	s=mimecast20190719; t=1632158685;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1gt1sThQpZWdDplh+33EJcLQE1R69AEBdu+daZ3trKo=;
-	b=gdJlQvxmbPZPbcahNgsKOe90J6WufH9OYPRmXnOyMST6iANC040Dv85X5KOZt/paa2Ucea
-	X4CvaOcA7Jh9Ri16ivHk4Sp1r6aZtc9Qu01VDiXaf5UNVNbGBgaqZVxdwU74RkpRvhRFhJ
-	b4HESk1IW5aJtchrIiMrKDcke6fIFOI=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jHJuP6TU+3CSIWM10S4+0yoR3zKV97SHbHfLlIweF6M=;
+	b=PL1ByMO/mJzBUiihFtsnVIbfHXilRrV/YG6xqUMUOtJ2mw96ZH1Z9z4dd6A3Ag+w5ITmrX
+	XPniSqcSFIksxvheUj3cGYgAYzBShwPU23/6jiId13wRVtgHY/oJZ7QgcT2d+UwMapa7wy
+	FWIHxz5F/kojMEHvJn78eG4UUrGa/R0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-oJXBuBbcMwCA22KLDCxtEA-1; Mon, 20 Sep 2021 13:24:41 -0400
-X-MC-Unique: oJXBuBbcMwCA22KLDCxtEA-1
+ us-mta-304-YRTxEMcwP5qEL1qOWgCqYQ-1; Mon, 20 Sep 2021 13:24:43 -0400
+X-MC-Unique: YRTxEMcwP5qEL1qOWgCqYQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E5351923767
-	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 17:24:40 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D56751923767
+	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 17:24:42 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.11])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9AEC66060F
-	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 17:24:39 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4D1FE1B400
+	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 17:24:42 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 0/3] mptcp: tx refactor update
-Date: Mon, 20 Sep 2021 19:24:26 +0200
-Message-Id: <cover.1632158356.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 3/3] tcp: make tcp_build_frag() static
+Date: Mon, 20 Sep 2021 19:24:29 +0200
+Message-Id: <1949660e9af338adc8913b7cdf8c632401d6d6e0.1632158356.git.pabeni@redhat.com>
+In-Reply-To: <cover.1632158356.git.pabeni@redhat.com>
+References: <cover.1632158356.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,21 +46,66 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-This are updates to the tx refactor patches as asked by Eric.
-Note that patch 3/3 should replace completely the existing
-'Partially revert "tcp: factor out tcp_build_frag()"'
-patch. I opted for this solution as the git repo mangling looked
-easier this way; @matttbe: please tell me if other options are
-preferred instead.
+After the previous patch the mentioned helper is
+used only inside its compilation unit: let's make
+it static.
 
-Additionally patch "chtls: rename skb_entail() to chtls_skb_entail()"
-should be dropped.
+RFC -> v1:
+ - preserve the tcp_build_frag() helper (Eric)
 
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+Note:
+this should _replace_:
+"""
+Partially revert "tcp: factor out tcp_build_frag()"
+"""
 
- include/net/tcp.h | 2 +-
- net/ipv4/tcp.c    | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+I did not opted for a squash to patch, as it would
+still require conflicts resolution after the previous
+squash-to patch. @matttbe: please let me know if you
+prefer otherwise.
+---
+ include/net/tcp.h | 2 --
+ net/ipv4/tcp.c    | 5 ++---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 4a96f6e0f6f8..673c3b01e287 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -330,8 +330,6 @@ int tcp_sendpage(struct sock *sk, struct page *page, int offset, size_t size,
+ 		 int flags);
+ int tcp_sendpage_locked(struct sock *sk, struct page *page, int offset,
+ 			size_t size, int flags);
+-struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
+-			       struct page *page, int offset, size_t *size);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
+ int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index c592454625e1..4ae43222d71f 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -963,8 +963,8 @@ void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
+ 	}
+ }
+ 
+-struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
+-			       struct page *page, int offset, size_t *size)
++static struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
++				      struct page *page, int offset, size_t *size)
+ {
+ 	struct sk_buff *skb = tcp_write_queue_tail(sk);
+ 	struct tcp_sock *tp = tcp_sk(sk);
+@@ -1064,7 +1064,6 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		size_t copy = size;
+ 
+ 		skb = tcp_build_frag(sk, size_goal, flags, page, offset, &copy);
+-		if (!skb)
+ 			goto wait_for_space;
+ 
+ 		if (!copied)
 -- 
 2.26.3
 
