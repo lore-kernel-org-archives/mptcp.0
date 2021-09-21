@@ -1,35 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBA23FC2
-	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFD22FAE
+	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632224381;
+	s=mimecast20190719; t=1632224380;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=itGcEwyjOs6Bt2rWM6D9pm2ZYUhnjp9s3RQJk57xkOo=;
-	b=Hub10yDhUzNkQQDEEL2g52TlgNotwefxfJUAE1D7UHyykbXCbkb4cd00zQaJK0C8VbOQez
-	jCSAkK4FU7d3mzXYuddp8Y7+oum/Wul1kz3cz0X2SENtZqRjRKypmdkhQWZaeiMM1gtR9U
-	t9jvH+JdrUw6Gw26JVLjuCiF/EDXtpA=
+	bh=02oLvmsxDylXifmWi/t243YphWofM9PNvpTCGshx69c=;
+	b=J3vE7TPQ2xY/WmfI8ayxb5PYTcuMgpKsfgPkoM+pzL+r0Y1XsrwMj321LuswTacvu9OM+u
+	h7a7M6LXBmu4eUwGc8WbNflfTzXOtNrXXweE4ItbMAxvF3UwfyICGVag8xQi4kZ/YZMuey
+	w8SJMyyWgZlkXHzFjnRNx2H5Ou1idLw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-HypfdXYhNc2UZXaHJpvhHQ-1; Tue, 21 Sep 2021 07:39:40 -0400
-X-MC-Unique: HypfdXYhNc2UZXaHJpvhHQ-1
+ us-mta-131-qDTcoXKYMOySP9EPAz-3Yw-1; Tue, 21 Sep 2021 07:39:39 -0400
+X-MC-Unique: qDTcoXKYMOySP9EPAz-3Yw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2B49BBEE0
-	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:39 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2F20108468A
+	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:38 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.195.132])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2883660C17
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3A9B560C17
 	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:38 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 2/3] Squash-to: "mptcp: stop relying on tcp_tx_skb_cache"
-Date: Tue, 21 Sep 2021 13:39:26 +0200
-Message-Id: <b0574a5a499744d3815bc2c52aa41cb128c6ea6f.1632217366.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 1/3] Squash-to: "tcp: expose the tcp_mark_push() and skb_entail() helpers"
+Date: Tue, 21 Sep 2021 13:39:25 +0200
+Message-Id: <9934d3a84518fac74119c18044baeb4241c13e98.1632217366.git.pabeni@redhat.com>
 In-Reply-To: <cover.1632217366.git.pabeni@redhat.com>
 References: <cover.1632217366.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,26 +46,71 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-fix build after helper rename
+Also change the commit title and message to:
+
+"""
+tcp: expose the tcp_mark_push() and tcp_skb_entail() helpers
+
+the tcp_skb_entail() helper actually skb_entail(), renamed
+to provide proper scope.
+
+    The two helper will be used by the next patch.
+
+RFC -> v1:
+ - rename skb_entail to tcp_skb_entail (Eric)
+
+"""
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/tcp.h | 2 +-
+ net/ipv4/tcp.c    | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 48e0e3a945e4..87ee409d68ab 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1240,7 +1240,7 @@ static struct sk_buff *__mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, g
- 		return NULL;
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index dc52ea8adfc7..4a96f6e0f6f8 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -581,7 +581,7 @@ __u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mss);
+ #endif
+ /* tcp_output.c */
  
- 	if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
--		skb_entail(ssk, skb);
-+		tcp_skb_entail(ssk, skb);
- 		return skb;
+-void skb_entail(struct sock *sk, struct sk_buff *skb);
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb);
+ void tcp_mark_push(struct tcp_sock *tp, struct sk_buff *skb);
+ void __tcp_push_pending_frames(struct sock *sk, unsigned int cur_mss,
+ 			       int nonagle);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 7a3e632b0048..c592454625e1 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -658,7 +658,7 @@ static inline bool forced_push(const struct tcp_sock *tp)
+ 	return after(tp->write_seq, tp->pushed_seq + (tp->max_window >> 1));
+ }
+ 
+-void skb_entail(struct sock *sk, struct sk_buff *skb)
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	struct tcp_skb_cb *tcb = TCP_SKB_CB(skb);
+@@ -985,7 +985,7 @@ struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
+ #ifdef CONFIG_TLS_DEVICE
+ 		skb->decrypted = !!(flags & MSG_SENDPAGE_DECRYPTED);
+ #endif
+-		skb_entail(sk, skb);
++		tcp_skb_entail(sk, skb);
+ 		copy = size_goal;
  	}
- 	kfree_skb(skb);
+ 
+@@ -1314,7 +1314,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 			process_backlog++;
+ 			skb->ip_summed = CHECKSUM_PARTIAL;
+ 
+-			skb_entail(sk, skb);
++			tcp_skb_entail(sk, skb);
+ 			copy = size_goal;
+ 
+ 			/* All packets are restored as if they have
 -- 
 2.26.3
 
