@@ -1,52 +1,107 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC6D29CA
-	for <mptcp@lists.linux.dev>; Mon, 20 Sep 2021 22:04:43 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10113"; a="202739745"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E10172
+	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 00:05:20 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10113"; a="245671132"
 X-IronPort-AV: E=Sophos;i="5.85,309,1624345200"; 
-   d="scan'208";a="202739745"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2021 15:04:38 -0700
+   d="scan'208";a="245671132"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2021 17:05:19 -0700
 X-IronPort-AV: E=Sophos;i="5.85,309,1624345200"; 
-   d="scan'208";a="701311423"
+   d="scan'208";a="473985725"
 Received: from nkhakpas-mobl.amr.corp.intel.com ([10.212.134.160])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2021 15:04:37 -0700
-Date: Mon, 20 Sep 2021 15:04:36 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2021 17:05:19 -0700
+Date: Mon, 20 Sep 2021 17:05:19 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: tx refactor update
-In-Reply-To: <cover.1632158356.git.pabeni@redhat.com>
-Message-ID: <cc5dafef-7974-1ab7-497f-c55669eac93a@linux.intel.com>
-References: <cover.1632158356.git.pabeni@redhat.com>
+To: Tim Gardner <tim.gardner@canonical.com>
+cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] mptcp: Avoid NULL dereference in
+ mptcp_getsockopt_subflow_addrs()
+In-Reply-To: <20210920154232.15494-1-tim.gardner@canonical.com>
+Message-ID: <149982aa-720-35be-4866-39259b92884d@linux.intel.com>
+References: <20210920154232.15494-1-tim.gardner@canonical.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Mon, 20 Sep 2021, Paolo Abeni wrote:
+On Mon, 20 Sep 2021, Tim Gardner wrote:
 
-> This are updates to the tx refactor patches as asked by Eric.
-> Note that patch 3/3 should replace completely the existing
-> 'Partially revert "tcp: factor out tcp_build_frag()"'
-> patch. I opted for this solution as the git repo mangling looked
-> easier this way; @matttbe: please tell me if other options are
-> preferred instead.
+> Coverity complains of a possible NULL dereference in
+> mptcp_getsockopt_subflow_addrs():
 >
-> Additionally patch "chtls: rename skb_entail() to chtls_skb_entail()"
-> should be dropped.
+> 861        } else if (sk->sk_family == AF_INET6) {
+>    	3. returned_null: inet6_sk returns NULL. [show details]
+>    	4. var_assigned: Assigning: np = NULL return value from inet6_sk.
+> 862                const struct ipv6_pinfo *np = inet6_sk(sk);
 >
+> Fix this by checking for NULL.
 >
-> include/net/tcp.h | 2 +-
-> net/ipv4/tcp.c    | 6 +++---
-> 2 files changed, 4 insertions(+), 4 deletions(-)
+> Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: mptcp@lists.linux.dev
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
 >
+> [ I'm not at all sure this is the right thing to do since the final result is to
+> return garbage to user space in mptcp_getsockopt_subflow_addrs(). Is this one
+> of those cases where inet6_sk() can't fail ?]
 
-Patches 1 & 2 are ok to squash, patch 3 has an issue (see separate reply).
+Hi Tim -
+
+Thanks for noticing this and proposing a fix.
+
+As you commented, this isn't the right change to merge since 
+mptcp_getsockopt_subflow_addrs() would copy garbage.
+
+This block of code already checks that CONFIG_IPV6 is enabled, so the 
+question is whether sk_fullsock() would return false because the subflow 
+is in TCP_TIME_WAIT or TCP_NEW_SYN_RECV. The caller is iterating over 
+sockets in the MPTCP socket's conn_list, which does not contain 
+request_socks (so there are no sockets in the TCP_NEW_SYN_RECV state).
+
+TCP subflow sockets are normally removed from the conn_list before they 
+are closed by their parent MPTCP socket, but I need to double-check for 
+corner cases. I created a github issue to track this: 
+https://github.com/multipath-tcp/mptcp_net-next/issues/231
+
+
+Thanks,
+
+Mat
+
+
+> ---
+> net/mptcp/sockopt.c | 3 +++
+> 1 file changed, 3 insertions(+)
+>
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 8137cc3a4296..c89f2bedce79 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -861,6 +861,9 @@ static void mptcp_get_sub_addrs(const struct sock *sk, struct mptcp_subflow_addr
+> 	} else if (sk->sk_family == AF_INET6) {
+> 		const struct ipv6_pinfo *np = inet6_sk(sk);
+>
+> +		if (!np)
+> +			return;
+> +
+> 		a->sin6_local.sin6_family = AF_INET6;
+> 		a->sin6_local.sin6_port = inet->inet_sport;
+>
+> -- 
+> 2.33.0
+>
+>
 
 --
 Mat Martineau
