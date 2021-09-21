@@ -1,35 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFD22FAE
-	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814653FCD
+	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632224380;
+	s=mimecast20190719; t=1632224382;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=02oLvmsxDylXifmWi/t243YphWofM9PNvpTCGshx69c=;
-	b=J3vE7TPQ2xY/WmfI8ayxb5PYTcuMgpKsfgPkoM+pzL+r0Y1XsrwMj321LuswTacvu9OM+u
-	h7a7M6LXBmu4eUwGc8WbNflfTzXOtNrXXweE4ItbMAxvF3UwfyICGVag8xQi4kZ/YZMuey
-	w8SJMyyWgZlkXHzFjnRNx2H5Ou1idLw=
+	bh=cVopC3MwRdoidOVDTHAv0XPH/07fSiWFiO19TOP4P5A=;
+	b=NFYMMakBQuPZgfHYEqlcENL7ThmbsQKZucq9nNVP5REN0IN5kpxfb9RYwchyFQZyzhp64q
+	52tjX9NfCQS8f/czVWnbqez1QHA+WB2hHnJpqqbUu1KAeIsEVFtOoU69i0TMNVOtDUKcEj
+	uVDJC6jr4d2X6tw+MZMaZWTquPVRSlY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-131-qDTcoXKYMOySP9EPAz-3Yw-1; Tue, 21 Sep 2021 07:39:39 -0400
-X-MC-Unique: qDTcoXKYMOySP9EPAz-3Yw-1
+ us-mta-333-zObhymfcM8yiJCOFOZfEsg-1; Tue, 21 Sep 2021 07:39:41 -0400
+X-MC-Unique: zObhymfcM8yiJCOFOZfEsg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2F20108468A
-	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:38 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99B89BBEE3
+	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:40 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.195.132])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3A9B560C17
-	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:38 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1138E60C17
+	for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 11:39:39 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 1/3] Squash-to: "tcp: expose the tcp_mark_push() and skb_entail() helpers"
-Date: Tue, 21 Sep 2021 13:39:25 +0200
-Message-Id: <9934d3a84518fac74119c18044baeb4241c13e98.1632217366.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 3/3] tcp: make tcp_build_frag() static
+Date: Tue, 21 Sep 2021 13:39:27 +0200
+Message-Id: <4be7c77b82fd1de877ee60377aeb6afe249797d8.1632217366.git.pabeni@redhat.com>
 In-Reply-To: <cover.1632217366.git.pabeni@redhat.com>
 References: <cover.1632217366.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,71 +46,58 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Also change the commit title and message to:
-
-"""
-tcp: expose the tcp_mark_push() and tcp_skb_entail() helpers
-
-the tcp_skb_entail() helper actually skb_entail(), renamed
-to provide proper scope.
-
-    The two helper will be used by the next patch.
+After the previous patch the mentioned helper is
+used only inside its compilation unit: let's make
+it static.
 
 RFC -> v1:
- - rename skb_entail to tcp_skb_entail (Eric)
-
-"""
+ - preserve the tcp_build_frag() helper (Eric)
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- include/net/tcp.h | 2 +-
- net/ipv4/tcp.c    | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Note:
+this should _replace_:
+"""
+Partially revert "tcp: factor out tcp_build_frag()"
+"""
+
+I did not opted for a squash to patch, as it would
+still require conflicts resolution after the previous
+squash-to patch. @matttbe: please let me know if you
+prefer otherwise.
+---
+ include/net/tcp.h | 2 --
+ net/ipv4/tcp.c    | 4 ++--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/include/net/tcp.h b/include/net/tcp.h
-index dc52ea8adfc7..4a96f6e0f6f8 100644
+index 4a96f6e0f6f8..673c3b01e287 100644
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -581,7 +581,7 @@ __u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mss);
- #endif
- /* tcp_output.c */
- 
--void skb_entail(struct sock *sk, struct sk_buff *skb);
-+void tcp_skb_entail(struct sock *sk, struct sk_buff *skb);
- void tcp_mark_push(struct tcp_sock *tp, struct sk_buff *skb);
- void __tcp_push_pending_frames(struct sock *sk, unsigned int cur_mss,
- 			       int nonagle);
+@@ -330,8 +330,6 @@ int tcp_sendpage(struct sock *sk, struct page *page, int offset, size_t size,
+ 		 int flags);
+ int tcp_sendpage_locked(struct sock *sk, struct page *page, int offset,
+ 			size_t size, int flags);
+-struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
+-			       struct page *page, int offset, size_t *size);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
+ int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
 diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 7a3e632b0048..c592454625e1 100644
+index c592454625e1..29cb7bf9dc1c 100644
 --- a/net/ipv4/tcp.c
 +++ b/net/ipv4/tcp.c
-@@ -658,7 +658,7 @@ static inline bool forced_push(const struct tcp_sock *tp)
- 	return after(tp->write_seq, tp->pushed_seq + (tp->max_window >> 1));
+@@ -963,8 +963,8 @@ void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
+ 	}
  }
  
--void skb_entail(struct sock *sk, struct sk_buff *skb)
-+void tcp_skb_entail(struct sock *sk, struct sk_buff *skb)
+-struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
+-			       struct page *page, int offset, size_t *size)
++static struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
++				      struct page *page, int offset, size_t *size)
  {
+ 	struct sk_buff *skb = tcp_write_queue_tail(sk);
  	struct tcp_sock *tp = tcp_sk(sk);
- 	struct tcp_skb_cb *tcb = TCP_SKB_CB(skb);
-@@ -985,7 +985,7 @@ struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
- #ifdef CONFIG_TLS_DEVICE
- 		skb->decrypted = !!(flags & MSG_SENDPAGE_DECRYPTED);
- #endif
--		skb_entail(sk, skb);
-+		tcp_skb_entail(sk, skb);
- 		copy = size_goal;
- 	}
- 
-@@ -1314,7 +1314,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
- 			process_backlog++;
- 			skb->ip_summed = CHECKSUM_PARTIAL;
- 
--			skb_entail(sk, skb);
-+			tcp_skb_entail(sk, skb);
- 			copy = size_goal;
- 
- 			/* All packets are restored as if they have
 -- 
 2.26.3
 
