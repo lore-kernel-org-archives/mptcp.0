@@ -1,38 +1,24 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7321D3FC8
-	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 11:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632309213;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=6MJLzs3RgOnGd2L26lolcdYpa0Z0q7F8vXIXjzaJmCk=;
-	b=ZAsNvscnqk2bTH2MEkITn7GyX/hHJ0hh3LjVD2J3Mn56/CveqCIgOI6m/sffeirl/LrxqB
-	Y6KSnGwpsFPdC+0bxS3xhxzurNKzkfld3wJ4a+RH7Gtqah0ef1ZkS/v0JOzDaDv/FMaLoq
-	eEaoo0Csc+GEYVKuWx0Ae61coHAp1lE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-403-3y-DDXdjMzqehddmkTJ4lQ-1; Wed, 22 Sep 2021 07:13:31 -0400
-X-MC-Unique: 3y-DDXdjMzqehddmkTJ4lQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63021108468D;
-	Wed, 22 Sep 2021 11:13:30 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.36])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D392B12D4A;
-	Wed, 22 Sep 2021 11:13:28 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	mptcp@lists.linux.dev
-Subject: [PATCH net] mptcp: ensure tx skbs always have the MPTCP ext
-Date: Wed, 22 Sep 2021 13:12:17 +0200
-Message-Id: <706c577fde04fbb8285c8fc078a2c6d0a4bf9564.1632309038.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F88672
+	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 13:50:07 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 02EEB610A1;
+	Wed, 22 Sep 2021 13:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1632318607;
+	bh=ec2tiGE5YvoGjFWX5FtXYz0pmxudhLJ2ENq2Qy6TPy8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=lF34YDzp3d5KXgRZy3JtDudIr+kSCgd9PkHD/tlPx0EYMJpbBTtFTQCRTGZrYl8y4
+	 5hFNNIeSBWLuW6Z6mhSRm6QbdNYfRpFNIzxS9J1KI4QkXFdR30eFQosRChQIdd1Fsh
+	 ffukVqADvsuj5mlQDDxzZ+lzmFeOWrb3Sa7DSq/S23w19SqvY2Fvd8C0UlPeWrGA6U
+	 TCWuXL3RoIc5kobLiESfctGgmj49VvWn17e6ZfvhOAMRoIHFD2Mfg0wzBa5vjFSgI9
+	 qp6DbJ4wNwe1vMQLfXJKpekds/dRK92qsk3usNnpj3Y57I9keVMgawpWVM9g8sHAlt
+	 SgTvt50nSC6Cw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id ED33760A7C;
+	Wed, 22 Sep 2021 13:50:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,97 +26,40 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Subject: Re: [PATCH net] mptcp: ensure tx skbs always have the MPTCP ext
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163231860696.30033.15490074655889330874.git-patchwork-notify@kernel.org>
+Date: Wed, 22 Sep 2021 13:50:06 +0000
+References: <706c577fde04fbb8285c8fc078a2c6d0a4bf9564.1632309038.git.pabeni@redhat.com>
+In-Reply-To: <706c577fde04fbb8285c8fc078a2c6d0a4bf9564.1632309038.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, mathew.j.martineau@linux.intel.com,
+ davem@davemloft.net, kuba@kernel.org, mptcp@lists.linux.dev
 
-Due to signed/unsigned comparison, the expression:
+Hello:
 
-	info->size_goal - skb->len > 0
+This patch was applied to netdev/net.git (refs/heads/master):
 
-evaluates to true when the size goal is smaller than the
-skb size. That results in lack of tx cache refill, so that
-the skb allocated by the core TCP code lacks the required
-MPTCP skb extensions.
+On Wed, 22 Sep 2021 13:12:17 +0200 you wrote:
+> Due to signed/unsigned comparison, the expression:
+> 
+> 	info->size_goal - skb->len > 0
+> 
+> evaluates to true when the size goal is smaller than the
+> skb size. That results in lack of tx cache refill, so that
+> the skb allocated by the core TCP code lacks the required
+> MPTCP skb extensions.
+> 
+> [...]
 
-Due to the above, syzbot is able to trigger the following WARN_ON():
+Here is the summary with links:
+  - [net] mptcp: ensure tx skbs always have the MPTCP ext
+    https://git.kernel.org/netdev/net/c/977d293e23b4
 
-WARNING: CPU: 1 PID: 810 at net/mptcp/protocol.c:1366 mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
-Modules linked in:
-CPU: 1 PID: 810 Comm: syz-executor.4 Not tainted 5.14.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
-Code: ff 4c 8b 74 24 50 48 8b 5c 24 58 e9 0f fb ff ff e8 13 44 8b f8 4c 89 e7 45 31 ed e8 98 57 2e fe e9 81 f4 ff ff e8 fe 43 8b f8 <0f> 0b 41 bd ea ff ff ff e9 6f f4 ff ff 4c 89 e7 e8 b9 8e d2 f8 e9
-RSP: 0018:ffffc9000531f6a0 EFLAGS: 00010216
-RAX: 000000000000697f RBX: 0000000000000000 RCX: ffffc90012107000
-RDX: 0000000000040000 RSI: ffffffff88eac9e2 RDI: 0000000000000003
-RBP: ffff888078b15780 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffff88eac017 R11: 0000000000000000 R12: ffff88801de0a280
-R13: 0000000000006b58 R14: ffff888066278280 R15: ffff88803c2fe9c0
-FS:  00007fd9f866e700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007faebcb2f718 CR3: 00000000267cb000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __mptcp_push_pending+0x1fb/0x6b0 net/mptcp/protocol.c:1547
- mptcp_release_cb+0xfe/0x210 net/mptcp/protocol.c:3003
- release_sock+0xb4/0x1b0 net/core/sock.c:3206
- sk_stream_wait_memory+0x604/0xed0 net/core/stream.c:145
- mptcp_sendmsg+0xc39/0x1bc0 net/mptcp/protocol.c:1749
- inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:643
- sock_sendmsg_nosec net/socket.c:704 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:724
- sock_write_iter+0x2a0/0x3e0 net/socket.c:1057
- call_write_iter include/linux/fs.h:2163 [inline]
- new_sync_write+0x40b/0x640 fs/read_write.c:507
- vfs_write+0x7cf/0xae0 fs/read_write.c:594
- ksys_write+0x1ee/0x250 fs/read_write.c:647
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x4665f9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fd9f866e188 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 000000000056c038 RCX: 00000000004665f9
-RDX: 00000000000e7b78 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 00000000004bfcc4 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000056c038
-R13: 0000000000a9fb1f R14: 00007fd9f866e300 R15: 0000000000022000
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Fix the issue rewriting the relevant expression to avoid
-sign-related problems - note: size_goal is always >= 0.
-
-Additionally, ensure that the skb in the tx cache always carries
-the relevant extension.
-
-Reported-and-tested-by: syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com
-Fixes: 1094c6fe7280 ("mptcp: fix possible divide by zero")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2602f1386160..dbcebf56798f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1316,7 +1316,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			goto alloc_skb;
- 		}
- 
--		must_collapse = (info->size_goal - skb->len > 0) &&
-+		must_collapse = (info->size_goal > skb->len) &&
- 				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
- 		if (must_collapse) {
- 			size_bias = skb->len;
-@@ -1325,7 +1325,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	}
- 
- alloc_skb:
--	if (!must_collapse && !ssk->sk_tx_skb_cache &&
-+	if (!must_collapse &&
- 	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
- 		return 0;
- 
--- 
-2.26.3
 
