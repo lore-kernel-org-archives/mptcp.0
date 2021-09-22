@@ -1,60 +1,55 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEDD3FCB
-	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 17:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286173FCB
+	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 17:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632330502;
+	s=mimecast20190719; t=1632331559;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vWqUMA4PsVlJ2pPT1/p24HsUIkcdO8iEjqhCU7s0cfo=;
-	b=f1+Rvw9UwV2BGT5ZLavd7P8gXyT2jLvsvxf7U+avazDiS4PSSFnJERAFiIuFJY8WySsifa
-	gfYxB2rnDTYlmz1gyY4wMp4bb5ziqvzZ6b0OBARxP67/Z5uqCXlUo18byim++EvwkmDS7w
-	0wNoCFkapSSLyFMZ6fNdE1EMzIWVSY4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-aXnSVRM8M5-4P7ypEin_Gw-1; Wed, 22 Sep 2021 13:08:21 -0400
-X-MC-Unique: aXnSVRM8M5-4P7ypEin_Gw-1
-Received: by mail-wr1-f72.google.com with SMTP id c2-20020adfa302000000b0015e4260febdso2732460wrb.20
-        for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 10:08:21 -0700 (PDT)
+	bh=f9MyPudOdAh2dEC6TPwE89En3S5alJWsezcNDH4/Pg8=;
+	b=TlWEi9TAS3Rl8do9FgfMYOe9YTPYr0yMGZ5BeHGna1ZuAftbxTpJHUxecDEHonWubzJKb0
+	pgARL27rR/Vsm3BQ108x8T8UM8WOBhb5M6biX9sf8rlRYFKMLkOxYInQYaYgyw5HPPSLM+
+	xBv/oV4JpeeT+PfCjK1kfn9lgzmI/+c=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-2pmIHnoePjuNAC4C5U4skw-1; Wed, 22 Sep 2021 13:25:48 -0400
+X-MC-Unique: 2pmIHnoePjuNAC4C5U4skw-1
+Received: by mail-wr1-f70.google.com with SMTP id k2-20020adfc702000000b0016006b2da9bso2832360wrg.1
+        for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 10:25:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=vWqUMA4PsVlJ2pPT1/p24HsUIkcdO8iEjqhCU7s0cfo=;
-        b=TdlWmRUkzO6V6MWlTWhNSIhpV2FD23eNRAn6esAoGpG1xJmQSlYdHDPVrVUAixOsfz
-         y8i+Y/gOMBWWlozzGJifYvCRPxaG7xRdVmHNYYynWXhq4do1ygKWRR/Pj+OUddnc5C0Y
-         Qc92xDcDjXof2cKRERyxQ43RZnVt3GJ2ebLLYQri0JgO7/RZ8+6NExdDMvdHnS3AOf/5
-         85kT7TiZ+KDZrP1wJxMchMuC2dKRu6Uo794xncIFO4kJpPkZk1ALNAZ1JY6ImigaC0In
-         zI5VT+aBjFrr1ReO5UmP/C+PYP23q1oHBD+ABJGVwg/jgA41DTFFgy7O8T/tHz5++lsK
-         dY6w==
-X-Gm-Message-State: AOAM533k8LiDDVcBJTNf5XvxjcZbHsF4TS4my8CQKhlhAvVTXALHQAyQ
-	RjQYUB59GAkHparQ3wak7RY4f8YR1YGHfSuhnwjMKdANNb+8pU1WNmx8IvaM2W5r71OhmH3/kCg
-	IS+wsfUbqEZGvSU4=
-X-Received: by 2002:a5d:6545:: with SMTP id z5mr67137wrv.90.1632330499528;
-        Wed, 22 Sep 2021 10:08:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzEoCMdETBf0ZFsulv49iZD/disD0Q/Hgy56XYmufPeu3oyo6LTtFACq/qEWxa6hE3xyuys2Q==
-X-Received: by 2002:a5d:6545:: with SMTP id z5mr67076wrv.90.1632330499184;
-        Wed, 22 Sep 2021 10:08:19 -0700 (PDT)
+        bh=f9MyPudOdAh2dEC6TPwE89En3S5alJWsezcNDH4/Pg8=;
+        b=W9SP3OEPPLS5Uiz4u6X2+DAu3TIj96hKGwGt6cFIfm5liwXlVGg8Pr5m5raV2rNpXn
+         Wq/+qFiKr+mO40RiwkqyiTGVAJcBEaLBTnCX3EQ4FgE6SvpOAwh2syVKlrVp2Zr5MQI+
+         14iGxNGcW6+rzNuUkY4C1BsBe8cctxrF84ln3Ty2KXazAnlk1+qK5HeqD7TlubHiW8LQ
+         WJN+k/x4yaylaYQSCsyiYUf/yLTEXyVHBGGbYpRseOt5YSAgC48hESNwfutC9aGVDjK0
+         RbQj4Ec0FXQiplj09/uq66ppFCHXQhpEGVquJVX/HJsfz1MkcHBkUg+LCgxwwiayFjVr
+         jk+w==
+X-Gm-Message-State: AOAM533EgUu5YdePupSEA35hu4oMVZ/TN5SOOO4GbVpaX2F2W7hs4YFH
+	aqPWiJW7Td1GvnJSFVgIbkDlYqpWl0U7Xcr/InNWM+dlg4frKZuyn3p2xd5a9cz6EcTRWUbeGee
+	BhyolK2e3xnRIyvk=
+X-Received: by 2002:a05:600c:5109:: with SMTP id o9mr11703147wms.90.1632331547022;
+        Wed, 22 Sep 2021 10:25:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwyimQ+bg5WVzyl1sFTdtW+OJhicFwhXonbhYDpJzv32bpY7pEWmWQxWKZkw4Wk/92zl+ZkxA==
+X-Received: by 2002:a05:600c:5109:: with SMTP id o9mr11703122wms.90.1632331546710;
+        Wed, 22 Sep 2021 10:25:46 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-102-46.dyn.eolo.it. [146.241.102.46])
-        by smtp.gmail.com with ESMTPSA id g22sm6079241wmp.39.2021.09.22.10.08.18
+        by smtp.gmail.com with ESMTPSA id q11sm2766324wrn.65.2021.09.22.10.25.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 10:08:18 -0700 (PDT)
-Message-ID: <4e6db6e09ed2baa536f2badf2798daf3591bbd5a.camel@redhat.com>
-Subject: Re: [syzbot] possible deadlock in mptcp_close
+        Wed, 22 Sep 2021 10:25:46 -0700 (PDT)
+Message-ID: <2df6fec0e28411f2caedb117965041f1d9d03992.camel@redhat.com>
+Subject: Re: [syzbot] INFO: rcu detected stall in sys_recvmmsg
 From: Paolo Abeni <pabeni@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, syzbot
- <syzbot+1dd53f7a89b299d59eaf@syzkaller.appspotmail.com>,
- davem@davemloft.net,  edumazet@google.com, fw@strlen.de, kuba@kernel.org,
- linux-kernel@vger.kernel.org,  mathew.j.martineau@linux.intel.com,
- matthieu.baerts@tessares.net,  mptcp@lists.linux.dev,
- netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,  Peter Zijlstra
- <peterz@infradead.org>
-Date: Wed, 22 Sep 2021 19:07:56 +0200
-In-Reply-To: <87zgs4habc.ffs@tglx>
-References: <0000000000005183b005cc74779a@google.com> <87zgs4habc.ffs@tglx>
+To: syzbot <syzbot+3360da629681aa0d22fe@syzkaller.appspotmail.com>, 
+	mptcp@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Date: Wed, 22 Sep 2021 19:25:45 +0200
+In-Reply-To: <0000000000003216d705cc8a62d6@google.com>
+References: <0000000000003216d705cc8a62d6@google.com>
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,68 +59,272 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
+X-Mimecast-Spam-Score: 1
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2021-09-22 at 17:57 +0200, Thomas Gleixner wrote:
-> On Mon, Sep 20 2021 at 15:04, syzbot wrote:
-> > The issue was bisected to:
-> > 
-> > commit 2dcb96bacce36021c2f3eaae0cef607b5bb71ede
-> > Author: Thomas Gleixner <tglx@linutronix.de>
-> > Date:   Sat Sep 18 12:42:35 2021 +0000
-> > 
-> >     net: core: Correct the sock::sk_lock.owned lockdep annotations
+On Tue, 2021-09-21 at 17:13 -0700, syzbot wrote:
+> Hello,
 > 
-> Shooting the messenger...
+> syzbot found the following issue on:
 > 
-> > MPTCP: kernel_bind error, err=-98
-> > ============================================
-> > WARNING: possible recursive locking detected
-> > 5.15.0-rc1-syzkaller #0 Not tainted
-> > --------------------------------------------
-> > syz-executor998/6520 is trying to acquire lock:
-> > ffff8880795718a0 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close+0x267/0x7b0 net/mptcp/protocol.c:2738
-> > 
-> > but task is already holding lock:
-> > ffff8880787c8c60 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1612 [inline]
-> > ffff8880787c8c60 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close+0x23/0x7b0 net/mptcp/protocol.c:2720
+> HEAD commit:    1f77990c4b79 Add linux-next specific files for 20210920
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1383891d300000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ab1346371f2e6884
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3360da629681aa0d22fe
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1625f1ab300000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17eb1b3b300000
 > 
-> So this is a lock nesting issue and looking at the stack trace this
-> comes from:
+> The issue was bisected to:
 > 
-> >  lock_sock_fast+0x36/0x100 net/core/sock.c:3229
+> commit 020250f31c4c75ac7687a673e29c00786582a5f4
+> Author: Dmitry Kadashev <dkadashev@gmail.com>
+> Date:   Thu Jul 8 06:34:43 2021 +0000
 > 
-> which does not support lockdep nesting. So from a lockdep POV this is
-> recursive locking the same lock class. And it's the case I was worried
-> about that lockdep testing never takes the slow path. The original
-> lockdep annotation would have produced exactly the same splat in the
-> slow path case.
+>     namei: make do_linkat() take struct filename
 > 
-> So it's not a new problem. It's just visible by moving the lockdep
-> annotations to a place where they actually can detect issues which were
-> not reported before.
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15f5ef77300000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=17f5ef77300000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13f5ef77300000
 > 
-> See also https://lore.kernel.org/lkml/874kacu248.ffs@tglx/
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+3360da629681aa0d22fe@syzkaller.appspotmail.com
+> Fixes: 020250f31c4c ("namei: make do_linkat() take struct filename")
 > 
-> There are two ways to address this mptcp one:
+> rcu: INFO: rcu_preempt self-detected stall on CPU
+> rcu: 	0-...!: (10499 ticks this GP) idle=0af/1/0x4000000000000000 softirq=10678/10678 fqs=1 
+> 	(t=10500 jiffies g=13089 q=109)
+> rcu: rcu_preempt kthread starved for 10497 jiffies! g13089 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
+> rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+> rcu: RCU grace-period kthread stack dump:
+> task:rcu_preempt     state:R  running task     stack:28696 pid:   14 ppid:     2 flags:0x00004000
+> Call Trace:
+>  context_switch kernel/sched/core.c:4955 [inline]
+>  __schedule+0x940/0x26f0 kernel/sched/core.c:6236
+>  schedule+0xd3/0x270 kernel/sched/core.c:6315
+>  schedule_timeout+0x14a/0x2a0 kernel/time/timer.c:1881
+>  rcu_gp_fqs_loop+0x186/0x810 kernel/rcu/tree.c:1955
+>  rcu_gp_kthread+0x1de/0x320 kernel/rcu/tree.c:2128
+>  kthread+0x405/0x4f0 kernel/kthread.c:327
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
+> rcu: Stack dump where RCU GP kthread last ran:
+> Sending NMI from CPU 0 to CPUs 1:
+> NMI backtrace for cpu 1
+> CPU: 1 PID: 8510 Comm: syz-executor827 Not tainted 5.15.0-rc2-next-20210920-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:84 [inline]
+> RIP: 0010:memory_is_nonzero mm/kasan/generic.c:102 [inline]
+> RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:128 [inline]
+> RIP: 0010:memory_is_poisoned mm/kasan/generic.c:159 [inline]
+> RIP: 0010:check_region_inline mm/kasan/generic.c:180 [inline]
+> RIP: 0010:kasan_check_range+0xc8/0x180 mm/kasan/generic.c:189
+> Code: 38 00 74 ed 48 8d 50 08 eb 09 48 83 c0 01 48 39 d0 74 7a 80 38 00 74 f2 48 89 c2 b8 01 00 00 00 48 85 d2 75 56 5b 5d 41 5c c3 <48> 85 d2 74 5e 48 01 ea eb 09 48 83 c0 01 48 39 d0 74 50 80 38 00
+> RSP: 0018:ffffc9000cd676c8 EFLAGS: 00000283
+> RAX: ffffed100e9a110e RBX: ffffed100e9a110f RCX: ffffffff88ea062a
+> RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff888074d08870
+> RBP: ffffed100e9a110e R08: 0000000000000001 R09: ffff888074d08877
+> R10: ffffed100e9a110e R11: 0000000000000000 R12: ffff888074d08000
+> R13: ffff888074d08000 R14: ffff888074d08088 R15: ffff888074d08000
+> FS:  0000555556d8e300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000180 CR3: 0000000068909000 CR4: 00000000001506e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  instrument_atomic_read_write include/linux/instrumented.h:101 [inline]
+>  test_and_clear_bit include/asm-generic/bitops/instrumented-atomic.h:83 [inline]
+>  mptcp_release_cb+0x14a/0x210 net/mptcp/protocol.c:3016
+>  release_sock+0xb4/0x1b0 net/core/sock.c:3204
+>  mptcp_wait_data net/mptcp/protocol.c:1770 [inline]
+>  mptcp_recvmsg+0xfd1/0x27b0 net/mptcp/protocol.c:2080
+>  inet6_recvmsg+0x11b/0x5e0 net/ipv6/af_inet6.c:659
+>  sock_recvmsg_nosec net/socket.c:944 [inline]
+>  ____sys_recvmsg+0x527/0x600 net/socket.c:2626
+>  ___sys_recvmsg+0x127/0x200 net/socket.c:2670
+>  do_recvmmsg+0x24d/0x6d0 net/socket.c:2764
+>  __sys_recvmmsg net/socket.c:2843 [inline]
+>  __do_sys_recvmmsg net/socket.c:2866 [inline]
+>  __se_sys_recvmmsg net/socket.c:2859 [inline]
+>  __x64_sys_recvmmsg+0x20b/0x260 net/socket.c:2859
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> RIP: 0033:0x7fc200d2dc39
+> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffc5758e5a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc200d2dc39
+> RDX: 0000000000000002 RSI: 00000000200017c0 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000f0b5ff
+> R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000000003
+> R13: 00007ffc5758e5d0 R14: 00007ffc5758e5c0 R15: 0000000000000003
+> INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.444 msecs
+> NMI backtrace for cpu 0
+> CPU: 0 PID: 8509 Comm: syz-executor827 Not tainted 5.15.0-rc2-next-20210920-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  <IRQ>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0xcd/0x134 lib/dump_stack.c:106
+>  nmi_cpu_backtrace.cold+0x47/0x144 lib/nmi_backtrace.c:105
+>  nmi_trigger_cpumask_backtrace+0x1ae/0x220 lib/nmi_backtrace.c:62
+>  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+>  rcu_dump_cpu_stacks+0x25e/0x3f0 kernel/rcu/tree_stall.h:343
+>  print_cpu_stall kernel/rcu/tree_stall.h:627 [inline]
+>  check_cpu_stall kernel/rcu/tree_stall.h:711 [inline]
+>  rcu_pending kernel/rcu/tree.c:3878 [inline]
+>  rcu_sched_clock_irq.cold+0x9d/0x746 kernel/rcu/tree.c:2597
+>  update_process_times+0x16d/0x200 kernel/time/timer.c:1785
+>  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:226
+>  tick_sched_timer+0x1b0/0x2d0 kernel/time/tick-sched.c:1428
+>  __run_hrtimer kernel/time/hrtimer.c:1685 [inline]
+>  __hrtimer_run_queues+0x1c0/0xe50 kernel/time/hrtimer.c:1749
+>  hrtimer_interrupt+0x31c/0x790 kernel/time/hrtimer.c:1811
+>  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1086 [inline]
+>  __sysvec_apic_timer_interrupt+0x146/0x530 arch/x86/kernel/apic/apic.c:1103
+>  sysvec_apic_timer_interrupt+0x8e/0xc0 arch/x86/kernel/apic/apic.c:1097
+>  </IRQ>
+>  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:638
+> RIP: 0010:lock_release+0x3f1/0x720 kernel/locking/lockdep.c:5633
+> Code: 7e 83 f8 01 0f 85 8d 01 00 00 9c 58 f6 c4 02 0f 85 78 01 00 00 48 f7 04 24 00 02 00 00 74 01 fb 48 b8 00 00 00 00 00 fc ff df <48> 01 c5 48 c7 45 00 00 00 00 00 c7 45 08 00 00 00 00 48 8b 84 24
+> RSP: 0018:ffffc9000cde7660 EFLAGS: 00000206
+> RAX: dffffc0000000000 RBX: 70dbee1ebc366ab9 RCX: ffffc9000cde76b0
+> RDX: 1ffff11003a0bc2b RSI: 0000000000000201 RDI: 0000000000000000
+> RBP: 1ffff920019bcece R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000001 R11: 0000000000000443 R12: 0000000000000001
+> R13: 0000000000000002 R14: ffff88801d05e160 R15: ffff88801d05d700
+>  __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:174 [inline]
+>  _raw_spin_unlock_bh+0x12/0x30 kernel/locking/spinlock.c:210
+>  spin_unlock_bh include/linux/spinlock.h:413 [inline]
+>  unlock_sock_fast include/net/sock.h:1644 [inline]
+>  unlock_sock_fast include/net/sock.h:1636 [inline]
+>  mptcp_subflow_cleanup_rbuf net/mptcp/protocol.c:468 [inline]
+>  mptcp_cleanup_rbuf net/mptcp/protocol.c:499 [inline]
+>  mptcp_recvmsg+0xb8b/0x27b0 net/mptcp/protocol.c:2027
+>  inet6_recvmsg+0x11b/0x5e0 net/ipv6/af_inet6.c:659
+>  sock_recvmsg_nosec net/socket.c:944 [inline]
+>  ____sys_recvmsg+0x527/0x600 net/socket.c:2626
+>  ___sys_recvmsg+0x127/0x200 net/socket.c:2670
+>  do_recvmmsg+0x24d/0x6d0 net/socket.c:2764
+>  __sys_recvmmsg net/socket.c:2843 [inline]
+>  __do_sys_recvmmsg net/socket.c:2866 [inline]
+>  __se_sys_recvmmsg net/socket.c:2859 [inline]
+>  __x64_sys_recvmmsg+0x20b/0x260 net/socket.c:2859
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> RIP: 0033:0x7fc200d2dc39
+> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffc5758e5a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc200d2dc39
+> RDX: 0000000000000002 RSI: 00000000200017c0 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000f0b5ff
+> R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000000003
+> R13: 00007ffc5758e5d0 R14: 00007ffc5758e5c0 R15: 0000000000000003
+> ----------------
+> Code disassembly (best guess):
+>    0:	38 00                	cmp    %al,(%rax)
+>    2:	74 ed                	je     0xfffffff1
+>    4:	48 8d 50 08          	lea    0x8(%rax),%rdx
+>    8:	eb 09                	jmp    0x13
+>    a:	48 83 c0 01          	add    $0x1,%rax
+>    e:	48 39 d0             	cmp    %rdx,%rax
+>   11:	74 7a                	je     0x8d
+>   13:	80 38 00             	cmpb   $0x0,(%rax)
+>   16:	74 f2                	je     0xa
+>   18:	48 89 c2             	mov    %rax,%rdx
+>   1b:	b8 01 00 00 00       	mov    $0x1,%eax
+>   20:	48 85 d2             	test   %rdx,%rdx
+>   23:	75 56                	jne    0x7b
+>   25:	5b                   	pop    %rbx
+>   26:	5d                   	pop    %rbp
+>   27:	41 5c                	pop    %r12
+>   29:	c3                   	retq
+> * 2a:	48 85 d2             	test   %rdx,%rdx <-- trapping instruction
+>   2d:	74 5e                	je     0x8d
+>   2f:	48 01 ea             	add    %rbp,%rdx
+>   32:	eb 09                	jmp    0x3d
+>   34:	48 83 c0 01          	add    $0x1,%rax
+>   38:	48 39 d0             	cmp    %rdx,%rax
+>   3b:	74 50                	je     0x8d
+>   3d:	80 38 00             	cmpb   $0x0,(%rax)
 > 
->   1) Teach lock_sock_fast() about lock nesting
 > 
->   2) Use lock_sock_nested() in mptcp_close() as that should not be
->      really a hotpath. See patch below.
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-Thank you for looking into this! I agree this specific case is not
-fastpath, so definitely the proposed patch LGTM.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-I fear there could be other similar cases in the MPTCP code, in more
-time critical paths, and perhaps there are other relevant use-case, so
-I'd like to experiment too with a lock_sock_fast_nested() variant - if
-I find enough coffee ;)
+for net-next we should likely consider dropping the DATA_READY flag at
+all, but that looks too invasive and error prone for a fix
+---
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index dbcebf56798f..6b334f9b6242 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1759,11 +1759,32 @@ static int mptcp_sendmsg(struct sock *sk,
+struct msghdr *msg, size_t len)
+ 	return copied ? : ret;
+ }
+ 
++static bool __mptcp_move_skbs(struct mptcp_sock *msk);
++
++static void mptcp_update_ready_flag(struct sock *sk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++
++	if (skb_queue_empty_lockless(&sk->sk_receive_queue) &&
++	    skb_queue_empty(&msk->receive_queue)) {
++		/* entire backlog drained, clear DATA_READY. */
++		clear_bit(MPTCP_DATA_READY, &msk->flags);
++
++		/* .. race-breaker: ssk might have gotten new data
++		 * after last __mptcp_move_skbs() returned false.
++		 */
++		if (unlikely(__mptcp_move_skbs(msk)))
++			set_bit(MPTCP_DATA_READY, &msk->flags);
++	}
++}
++
+ static void mptcp_wait_data(struct sock *sk, long *timeo)
+ {
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
++	mptcp_update_ready_flag(sk);
++
+ 	add_wait_queue(sk_sleep(sk), &wait);
+ 	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+ 
+@@ -2080,17 +2101,7 @@ static int mptcp_recvmsg(struct sock *sk, struct
+msghdr *msg, size_t len,
+ 		mptcp_wait_data(sk, &timeo);
+ 	}
+ 
+-	if (skb_queue_empty_lockless(&sk->sk_receive_queue) &&
+-	    skb_queue_empty(&msk->receive_queue)) {
+-		/* entire backlog drained, clear DATA_READY. */
+-		clear_bit(MPTCP_DATA_READY, &msk->flags);
+-
+-		/* .. race-breaker: ssk might have gotten new data
+-		 * after last __mptcp_move_skbs() returned false.
+-		 */
+-		if (unlikely(__mptcp_move_skbs(msk)))
+-			set_bit(MPTCP_DATA_READY, &msk->flags);
+-	}
++	mptcp_update_ready_flag(sk);
+ 
+ out_err:
+ 	if (cmsg_flags && copied >= 0) {
 
-Thanks,
-
-Paolo
 
