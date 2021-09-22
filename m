@@ -1,176 +1,183 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154A93FC8
-	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 00:42:09 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10114"; a="220295185"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0526C29CA
+	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 00:43:32 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10114"; a="220295358"
 X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
-   d="scan'208";a="220295185"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 17:42:09 -0700
+   d="scan'208";a="220295358"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 17:43:32 -0700
 X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
-   d="scan'208";a="474326715"
+   d="scan'208";a="701882954"
 Received: from wjwiegan-mobl.amr.corp.intel.com ([10.255.231.88])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 17:42:09 -0700
-Date: Tue, 21 Sep 2021 17:42:08 -0700 (PDT)
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 17:43:32 -0700
+Date: Tue, 21 Sep 2021 17:43:31 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliangtang@gmail.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 1/8] mptcp: track and update contiguous
- data status
-In-Reply-To: <60448fc4985b38f168394a8029f74dcba7b81fb6.1631949480.git.geliangtang@gmail.com>
-Message-ID: <845a8a5-c067-0a-b0cc-da49227da9da@linux.intel.com>
-References: <cover.1631949480.git.geliangtang@gmail.com> <60448fc4985b38f168394a8029f74dcba7b81fb6.1631949480.git.geliangtang@gmail.com>
+Subject: Re: [PATCH mptcp-next v4 3/8] mptcp: infinite mapping sending
+In-Reply-To: <00acc9c10fe938ac26eaec0ed5454e32adf4aecd.1631949480.git.geliangtang@gmail.com>
+Message-ID: <e1168c61-f74-f048-ffd9-a2a082624135@linux.intel.com>
+References: <cover.1631949480.git.geliangtang@gmail.com> <00acc9c10fe938ac26eaec0ed5454e32adf4aecd.1631949480.git.geliangtang@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Sat, 18 Sep 2021, Geliang Tang wrote:
 
-> This patch added a new member last_retrans_seq in the msk to track the
-> last retransmitting sequence number.
+> This patch added the infinite mapping sending logic.
 >
-> Add a new helper named mptcp_is_data_contiguous() to check whether the
-> data is contiguous on a subflow.
+> Added a new flag send_infinite_map in struct mptcp_subflow_context. Set
+> it true when a single contiguous subflow is in use in
+> mptcp_pm_mp_fail_received.
 >
-> When a bad checksum is detected and a single contiguous subflow is in
-> use, don't send RST + MP_FAIL, send data_ack + MP_FAIL instead.
+> In mptcp_sendmsg_frag, if this flag is true, call the new function
+> mptcp_update_infinite_map to set the infinite mapping.
 >
 > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 > ---
-> net/mptcp/protocol.c | 15 +++++++++++++--
-> net/mptcp/protocol.h |  6 ++++++
-> net/mptcp/subflow.c  | 12 ++++++------
-> 3 files changed, 25 insertions(+), 8 deletions(-)
+> include/net/mptcp.h  |  3 ++-
+> net/mptcp/options.c  |  6 ++++--
+> net/mptcp/pm.c       |  6 ++++++
+> net/mptcp/protocol.c | 19 +++++++++++++++++++
+> net/mptcp/protocol.h | 12 ++++++++++++
+> 5 files changed, 43 insertions(+), 3 deletions(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ff574d62073f..b766b36e6c93 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1102,8 +1102,13 @@ static void __mptcp_clean_una(struct sock *sk)
-> 		msk->recovery = false;
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index f83fa48408b3..29e930540ea2 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -35,7 +35,8 @@ struct mptcp_ext {
+> 			frozen:1,
+> 			reset_transient:1;
+> 	u8		reset_reason:4,
+> -			csum_reqd:1;
+> +			csum_reqd:1,
+> +			infinite_map:1;
+> };
 >
-> out:
-> -	if (cleaned && tcp_under_memory_pressure(sk))
-> -		__mptcp_mem_reclaim_partial(sk);
-> +	if (cleaned) {
-> +		if (mptcp_is_data_contiguous(msk))
-> +			msk->last_retrans_seq = msk->snd_una - 1;
-> +
-> +		if (tcp_under_memory_pressure(sk))
-> +			__mptcp_mem_reclaim_partial(sk);
+> #define MPTCP_RM_IDS_MAX	8
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 422f4acfb3e6..9c175c298ff6 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -816,8 +816,10 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>
+> 	opts->suboptions = 0;
+>
+> -	if (unlikely(__mptcp_check_fallback(msk)))
+> -		return false;
+> +	if (unlikely(__mptcp_check_fallback(msk))) {
+> +		if (!mptcp_check_infinite_map(skb))
+> +			return false;
 > +	}
+
+This could be
+
+if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
+...
+
+(line-wrapped as needed)
+
+rather than nesting the if's.
+
+
+Mat
+
+
 >
-> 	if (snd_una == READ_ONCE(msk->snd_nxt) &&
-> 	    snd_una == READ_ONCE(msk->write_seq)) {
-> @@ -2419,6 +2424,7 @@ static void __mptcp_retrans(struct sock *sk)
-> 	struct mptcp_data_frag *dfrag;
-> 	size_t copied = 0;
-> 	struct sock *ssk;
-> +	u64 retrans_seq;
-> 	int ret;
+> 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+> 		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 6ab386ff3294..4fad1fe8ba10 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -251,7 +251,13 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
 >
-> 	mptcp_clean_una_wakeup(sk);
-> @@ -2464,6 +2470,9 @@ static void __mptcp_retrans(struct sock *sk)
-> 		dfrag->already_sent = max(dfrag->already_sent, info.sent);
-> 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
-> 			 info.size_goal);
-> +		retrans_seq = dfrag->data_seq + info.sent;
-> +		if (after64(retrans_seq, msk->last_retrans_seq))
-> +			msk->last_retrans_seq = retrans_seq;
-> 	}
->
-> 	release_sock(ssk);
-> @@ -2889,6 +2898,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
-> 	msk->snd_una = msk->write_seq;
-> 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
-> 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
-> +	msk->last_retrans_seq = subflow_req->idsn - 1;
->
-> 	if (mp_opt->suboptions & OPTIONS_MPTCP_MPC) {
-> 		msk->can_ack = true;
-> @@ -3145,6 +3155,7 @@ void mptcp_finish_connect(struct sock *ssk)
-> 	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
-> 	WRITE_ONCE(msk->can_ack, 1);
-> 	WRITE_ONCE(msk->snd_una, msk->write_seq);
-> +	WRITE_ONCE(msk->last_retrans_seq, subflow->idsn - 1);
->
-> 	mptcp_pm_new_connection(msk, ssk, 0);
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d516fb6578cc..eb3473d128d4 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -227,6 +227,7 @@ struct mptcp_sock {
-> 	u64		ack_seq;
-> 	u64		rcv_wnd_sent;
-> 	u64		rcv_data_fin_seq;
-> +	u64		last_retrans_seq;
-> 	int		wmem_reserved;
-> 	struct sock	*last_snd;
-> 	int		snd_burst;
-> @@ -625,6 +626,11 @@ static inline bool mptcp_has_another_subflow(struct sock *ssk)
-> 	return false;
+> void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+> {
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +
+> 	pr_debug("fail_seq=%llu", fail_seq);
+> +
+> +	if (!mptcp_has_another_subflow(sk) && mptcp_is_data_contiguous(msk))
+> +		subflow->send_infinite_map = 1;
 > }
 >
-> +static inline bool mptcp_is_data_contiguous(struct mptcp_sock *msk)
+> /* path manager helpers */
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index b056672541df..ffef7e1f061b 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1279,6 +1279,23 @@ static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
+> 	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
+> }
+>
+> +static void mptcp_update_infinite_map(struct mptcp_sock *msk, struct sock *ssk,
+> +				      struct mptcp_ext *mpext)
 > +{
-> +	return before64(msk->last_retrans_seq, msk->snd_una);
-> +}
-
-As I mentioned in 
-https://lore.kernel.org/mptcp/69c4ec57-94ed-4631-317a-617f994bc77@linux.intel.com/ 
-I don't think this is enough to be sure the subflow stream is fully 
-contiguous (the one remaining subflow has flushed out all MPTCP-level 
-retransmissions).
-
-MPTCP can do multiple retransmissions of the same MPTCP-level data, so it 
-seems necessary to track the last sequence number using the 32-bit TCP 
-sequence number on the subflow. For example, storing a copy of 
-tcp_sk(ssk)->snd_nxt after the tcp_push() call in __mptcp_retrans(). Then 
-in mptcp_data_ready() we can compare that retransmitted snd_nxt copy with 
-tcp_sk(ssk)->snd_una, very similar to the code added to 
-__mptcp_clean_una() above.
-
-Anyone have a simpler idea?
-
-- Mat
-
-
+> +	if (!mpext)
+> +		return;
 > +
-> void __init mptcp_proto_init(void);
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> int __init mptcp_proto_v6_init(void);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 1de7ce883c37..b07803ed3053 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1166,15 +1166,15 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> fallback:
-> 	/* RFC 8684 section 3.7. */
-> 	if (subflow->send_mp_fail) {
-> -		if (mptcp_has_another_subflow(ssk)) {
-> +		if (mptcp_has_another_subflow(ssk) || !mptcp_is_data_contiguous(msk)) {
-> +			ssk->sk_err = EBADMSG;
-> +			tcp_set_state(ssk, TCP_CLOSE);
-> +			subflow->reset_transient = 0;
-> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
-> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
-> 			while ((skb = skb_peek(&ssk->sk_receive_queue)))
-> 				sk_eat_skb(ssk, skb);
-> 		}
-> -		ssk->sk_err = EBADMSG;
-> -		tcp_set_state(ssk, TCP_CLOSE);
-> -		subflow->reset_transient = 0;
-> -		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
-> -		tcp_send_active_reset(ssk, GFP_ATOMIC);
-> 		WRITE_ONCE(subflow->data_avail, 0);
-> 		return true;
-> 	}
+> +	mpext->infinite_map = 1;
+> +	mpext->data_seq = READ_ONCE(msk->last_fully_acked_dss_start_seq);
+> +	mpext->subflow_seq = 0;
+> +	mpext->data_len = 0;
+> +	mpext->csum = 0;
+> +
+> +	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
+> +	pr_fallback(msk);
+> +	__mptcp_do_fallback(msk);
+> +}
+> +
+> static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> 			      struct mptcp_data_frag *dfrag,
+> 			      struct mptcp_sendmsg_info *info)
+> @@ -1411,6 +1428,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> out:
+> 	if (READ_ONCE(msk->csum_enabled))
+> 		mptcp_update_data_checksum(skb, copy);
+> +	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
+> +		mptcp_update_infinite_map(msk, ssk, mpext);
+> 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
+> 	return copy;
+> }
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 2f8a8589668c..cb26183aec9b 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -433,6 +433,7 @@ struct mptcp_subflow_context {
+> 		backup : 1,
+> 		send_mp_prio : 1,
+> 		send_mp_fail : 1,
+> +		send_infinite_map : 1,
+> 		rx_eof : 1,
+> 		can_ack : 1,        /* only after processing the remote a key */
+> 		disposable : 1,	    /* ctx can be free at ulp release time */
+> @@ -874,6 +875,17 @@ static inline void mptcp_do_fallback(struct sock *sk)
+>
+> #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)", __func__, a)
+>
+> +static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
+> +{
+> +	struct mptcp_ext *mpext;
+> +
+> +	mpext = skb ? mptcp_get_ext(skb) : NULL;
+> +	if (mpext && mpext->infinite_map)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> static inline bool subflow_simultaneous_connect(struct sock *sk)
+> {
+> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
 > -- 
 > 2.31.1
 >
