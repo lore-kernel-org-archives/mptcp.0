@@ -1,330 +1,119 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286173FCB
-	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 17:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D8E3FCB
+	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 17:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632331559;
+	s=mimecast20190719; t=1632331622;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f9MyPudOdAh2dEC6TPwE89En3S5alJWsezcNDH4/Pg8=;
-	b=TlWEi9TAS3Rl8do9FgfMYOe9YTPYr0yMGZ5BeHGna1ZuAftbxTpJHUxecDEHonWubzJKb0
-	pgARL27rR/Vsm3BQ108x8T8UM8WOBhb5M6biX9sf8rlRYFKMLkOxYInQYaYgyw5HPPSLM+
-	xBv/oV4JpeeT+PfCjK1kfn9lgzmI/+c=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-2pmIHnoePjuNAC4C5U4skw-1; Wed, 22 Sep 2021 13:25:48 -0400
-X-MC-Unique: 2pmIHnoePjuNAC4C5U4skw-1
-Received: by mail-wr1-f70.google.com with SMTP id k2-20020adfc702000000b0016006b2da9bso2832360wrg.1
-        for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 10:25:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=f9MyPudOdAh2dEC6TPwE89En3S5alJWsezcNDH4/Pg8=;
-        b=W9SP3OEPPLS5Uiz4u6X2+DAu3TIj96hKGwGt6cFIfm5liwXlVGg8Pr5m5raV2rNpXn
-         Wq/+qFiKr+mO40RiwkqyiTGVAJcBEaLBTnCX3EQ4FgE6SvpOAwh2syVKlrVp2Zr5MQI+
-         14iGxNGcW6+rzNuUkY4C1BsBe8cctxrF84ln3Ty2KXazAnlk1+qK5HeqD7TlubHiW8LQ
-         WJN+k/x4yaylaYQSCsyiYUf/yLTEXyVHBGGbYpRseOt5YSAgC48hESNwfutC9aGVDjK0
-         RbQj4Ec0FXQiplj09/uq66ppFCHXQhpEGVquJVX/HJsfz1MkcHBkUg+LCgxwwiayFjVr
-         jk+w==
-X-Gm-Message-State: AOAM533EgUu5YdePupSEA35hu4oMVZ/TN5SOOO4GbVpaX2F2W7hs4YFH
-	aqPWiJW7Td1GvnJSFVgIbkDlYqpWl0U7Xcr/InNWM+dlg4frKZuyn3p2xd5a9cz6EcTRWUbeGee
-	BhyolK2e3xnRIyvk=
-X-Received: by 2002:a05:600c:5109:: with SMTP id o9mr11703147wms.90.1632331547022;
-        Wed, 22 Sep 2021 10:25:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwyimQ+bg5WVzyl1sFTdtW+OJhicFwhXonbhYDpJzv32bpY7pEWmWQxWKZkw4Wk/92zl+ZkxA==
-X-Received: by 2002:a05:600c:5109:: with SMTP id o9mr11703122wms.90.1632331546710;
-        Wed, 22 Sep 2021 10:25:46 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-102-46.dyn.eolo.it. [146.241.102.46])
-        by smtp.gmail.com with ESMTPSA id q11sm2766324wrn.65.2021.09.22.10.25.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 10:25:46 -0700 (PDT)
-Message-ID: <2df6fec0e28411f2caedb117965041f1d9d03992.camel@redhat.com>
-Subject: Re: [syzbot] INFO: rcu detected stall in sys_recvmmsg
+	bh=ocBV2wXfiOTn1O2w09aLkS14Tww2/enRy19+rxA+SrQ=;
+	b=DqPSD1usAhK2wGQaS5+PxB6ptvZuNdTr8e/0OVDNFx1v6+qxERZ4jLUEeLp8gbXtRZtkOj
+	fKYkNKHoc1Z8Ffk3hs9HZ4Widj60Y/cK1YTP/6zdqaWkqLOYY3qINrnvi08GtVG+8WLuAa
+	CHrEOcGnOZL8iMs0x3qvZ77xkKYwfnM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-yBKxnveKPI-3xBWZUA5Fsg-1; Wed, 22 Sep 2021 13:27:00 -0400
+X-MC-Unique: yBKxnveKPI-3xBWZUA5Fsg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AD6210151E1;
+	Wed, 22 Sep 2021 17:26:59 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.36])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1CED019724;
+	Wed, 22 Sep 2021 17:26:57 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: syzbot <syzbot+3360da629681aa0d22fe@syzkaller.appspotmail.com>, 
-	mptcp@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Date: Wed, 22 Sep 2021 19:25:45 +0200
-In-Reply-To: <0000000000003216d705cc8a62d6@google.com>
-References: <0000000000003216d705cc8a62d6@google.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Eric Dumazet <edumazet@google.com>,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 1/4] tcp: expose the tcp_mark_push() and tcp_skb_entail() helpers
+Date: Wed, 22 Sep 2021 19:26:40 +0200
+Message-Id: <c7a97cc05d33a43991f5789469f254f78aa78ebf.1632318035.git.pabeni@redhat.com>
+In-Reply-To: <cover.1632318035.git.pabeni@redhat.com>
+References: <cover.1632318035.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 1
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 
-On Tue, 2021-09-21 at 17:13 -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    1f77990c4b79 Add linux-next specific files for 20210920
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1383891d300000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ab1346371f2e6884
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3360da629681aa0d22fe
-> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1625f1ab300000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17eb1b3b300000
-> 
-> The issue was bisected to:
-> 
-> commit 020250f31c4c75ac7687a673e29c00786582a5f4
-> Author: Dmitry Kadashev <dkadashev@gmail.com>
-> Date:   Thu Jul 8 06:34:43 2021 +0000
-> 
->     namei: make do_linkat() take struct filename
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15f5ef77300000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=17f5ef77300000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13f5ef77300000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+3360da629681aa0d22fe@syzkaller.appspotmail.com
-> Fixes: 020250f31c4c ("namei: make do_linkat() take struct filename")
-> 
-> rcu: INFO: rcu_preempt self-detected stall on CPU
-> rcu: 	0-...!: (10499 ticks this GP) idle=0af/1/0x4000000000000000 softirq=10678/10678 fqs=1 
-> 	(t=10500 jiffies g=13089 q=109)
-> rcu: rcu_preempt kthread starved for 10497 jiffies! g13089 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
-> rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-> rcu: RCU grace-period kthread stack dump:
-> task:rcu_preempt     state:R  running task     stack:28696 pid:   14 ppid:     2 flags:0x00004000
-> Call Trace:
->  context_switch kernel/sched/core.c:4955 [inline]
->  __schedule+0x940/0x26f0 kernel/sched/core.c:6236
->  schedule+0xd3/0x270 kernel/sched/core.c:6315
->  schedule_timeout+0x14a/0x2a0 kernel/time/timer.c:1881
->  rcu_gp_fqs_loop+0x186/0x810 kernel/rcu/tree.c:1955
->  rcu_gp_kthread+0x1de/0x320 kernel/rcu/tree.c:2128
->  kthread+0x405/0x4f0 kernel/kthread.c:327
->  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
-> rcu: Stack dump where RCU GP kthread last ran:
-> Sending NMI from CPU 0 to CPUs 1:
-> NMI backtrace for cpu 1
-> CPU: 1 PID: 8510 Comm: syz-executor827 Not tainted 5.15.0-rc2-next-20210920-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:84 [inline]
-> RIP: 0010:memory_is_nonzero mm/kasan/generic.c:102 [inline]
-> RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:128 [inline]
-> RIP: 0010:memory_is_poisoned mm/kasan/generic.c:159 [inline]
-> RIP: 0010:check_region_inline mm/kasan/generic.c:180 [inline]
-> RIP: 0010:kasan_check_range+0xc8/0x180 mm/kasan/generic.c:189
-> Code: 38 00 74 ed 48 8d 50 08 eb 09 48 83 c0 01 48 39 d0 74 7a 80 38 00 74 f2 48 89 c2 b8 01 00 00 00 48 85 d2 75 56 5b 5d 41 5c c3 <48> 85 d2 74 5e 48 01 ea eb 09 48 83 c0 01 48 39 d0 74 50 80 38 00
-> RSP: 0018:ffffc9000cd676c8 EFLAGS: 00000283
-> RAX: ffffed100e9a110e RBX: ffffed100e9a110f RCX: ffffffff88ea062a
-> RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff888074d08870
-> RBP: ffffed100e9a110e R08: 0000000000000001 R09: ffff888074d08877
-> R10: ffffed100e9a110e R11: 0000000000000000 R12: ffff888074d08000
-> R13: ffff888074d08000 R14: ffff888074d08088 R15: ffff888074d08000
-> FS:  0000555556d8e300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000180 CR3: 0000000068909000 CR4: 00000000001506e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  instrument_atomic_read_write include/linux/instrumented.h:101 [inline]
->  test_and_clear_bit include/asm-generic/bitops/instrumented-atomic.h:83 [inline]
->  mptcp_release_cb+0x14a/0x210 net/mptcp/protocol.c:3016
->  release_sock+0xb4/0x1b0 net/core/sock.c:3204
->  mptcp_wait_data net/mptcp/protocol.c:1770 [inline]
->  mptcp_recvmsg+0xfd1/0x27b0 net/mptcp/protocol.c:2080
->  inet6_recvmsg+0x11b/0x5e0 net/ipv6/af_inet6.c:659
->  sock_recvmsg_nosec net/socket.c:944 [inline]
->  ____sys_recvmsg+0x527/0x600 net/socket.c:2626
->  ___sys_recvmsg+0x127/0x200 net/socket.c:2670
->  do_recvmmsg+0x24d/0x6d0 net/socket.c:2764
->  __sys_recvmmsg net/socket.c:2843 [inline]
->  __do_sys_recvmmsg net/socket.c:2866 [inline]
->  __se_sys_recvmmsg net/socket.c:2859 [inline]
->  __x64_sys_recvmmsg+0x20b/0x260 net/socket.c:2859
->  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
->  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
->  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> RIP: 0033:0x7fc200d2dc39
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffc5758e5a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc200d2dc39
-> RDX: 0000000000000002 RSI: 00000000200017c0 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000f0b5ff
-> R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000000003
-> R13: 00007ffc5758e5d0 R14: 00007ffc5758e5c0 R15: 0000000000000003
-> INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.444 msecs
-> NMI backtrace for cpu 0
-> CPU: 0 PID: 8509 Comm: syz-executor827 Not tainted 5.15.0-rc2-next-20210920-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  <IRQ>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0xcd/0x134 lib/dump_stack.c:106
->  nmi_cpu_backtrace.cold+0x47/0x144 lib/nmi_backtrace.c:105
->  nmi_trigger_cpumask_backtrace+0x1ae/0x220 lib/nmi_backtrace.c:62
->  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
->  rcu_dump_cpu_stacks+0x25e/0x3f0 kernel/rcu/tree_stall.h:343
->  print_cpu_stall kernel/rcu/tree_stall.h:627 [inline]
->  check_cpu_stall kernel/rcu/tree_stall.h:711 [inline]
->  rcu_pending kernel/rcu/tree.c:3878 [inline]
->  rcu_sched_clock_irq.cold+0x9d/0x746 kernel/rcu/tree.c:2597
->  update_process_times+0x16d/0x200 kernel/time/timer.c:1785
->  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:226
->  tick_sched_timer+0x1b0/0x2d0 kernel/time/tick-sched.c:1428
->  __run_hrtimer kernel/time/hrtimer.c:1685 [inline]
->  __hrtimer_run_queues+0x1c0/0xe50 kernel/time/hrtimer.c:1749
->  hrtimer_interrupt+0x31c/0x790 kernel/time/hrtimer.c:1811
->  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1086 [inline]
->  __sysvec_apic_timer_interrupt+0x146/0x530 arch/x86/kernel/apic/apic.c:1103
->  sysvec_apic_timer_interrupt+0x8e/0xc0 arch/x86/kernel/apic/apic.c:1097
->  </IRQ>
->  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:638
-> RIP: 0010:lock_release+0x3f1/0x720 kernel/locking/lockdep.c:5633
-> Code: 7e 83 f8 01 0f 85 8d 01 00 00 9c 58 f6 c4 02 0f 85 78 01 00 00 48 f7 04 24 00 02 00 00 74 01 fb 48 b8 00 00 00 00 00 fc ff df <48> 01 c5 48 c7 45 00 00 00 00 00 c7 45 08 00 00 00 00 48 8b 84 24
-> RSP: 0018:ffffc9000cde7660 EFLAGS: 00000206
-> RAX: dffffc0000000000 RBX: 70dbee1ebc366ab9 RCX: ffffc9000cde76b0
-> RDX: 1ffff11003a0bc2b RSI: 0000000000000201 RDI: 0000000000000000
-> RBP: 1ffff920019bcece R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000001 R11: 0000000000000443 R12: 0000000000000001
-> R13: 0000000000000002 R14: ffff88801d05e160 R15: ffff88801d05d700
->  __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:174 [inline]
->  _raw_spin_unlock_bh+0x12/0x30 kernel/locking/spinlock.c:210
->  spin_unlock_bh include/linux/spinlock.h:413 [inline]
->  unlock_sock_fast include/net/sock.h:1644 [inline]
->  unlock_sock_fast include/net/sock.h:1636 [inline]
->  mptcp_subflow_cleanup_rbuf net/mptcp/protocol.c:468 [inline]
->  mptcp_cleanup_rbuf net/mptcp/protocol.c:499 [inline]
->  mptcp_recvmsg+0xb8b/0x27b0 net/mptcp/protocol.c:2027
->  inet6_recvmsg+0x11b/0x5e0 net/ipv6/af_inet6.c:659
->  sock_recvmsg_nosec net/socket.c:944 [inline]
->  ____sys_recvmsg+0x527/0x600 net/socket.c:2626
->  ___sys_recvmsg+0x127/0x200 net/socket.c:2670
->  do_recvmmsg+0x24d/0x6d0 net/socket.c:2764
->  __sys_recvmmsg net/socket.c:2843 [inline]
->  __do_sys_recvmmsg net/socket.c:2866 [inline]
->  __se_sys_recvmmsg net/socket.c:2859 [inline]
->  __x64_sys_recvmmsg+0x20b/0x260 net/socket.c:2859
->  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
->  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
->  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> RIP: 0033:0x7fc200d2dc39
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffc5758e5a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc200d2dc39
-> RDX: 0000000000000002 RSI: 00000000200017c0 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000f0b5ff
-> R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000000003
-> R13: 00007ffc5758e5d0 R14: 00007ffc5758e5c0 R15: 0000000000000003
-> ----------------
-> Code disassembly (best guess):
->    0:	38 00                	cmp    %al,(%rax)
->    2:	74 ed                	je     0xfffffff1
->    4:	48 8d 50 08          	lea    0x8(%rax),%rdx
->    8:	eb 09                	jmp    0x13
->    a:	48 83 c0 01          	add    $0x1,%rax
->    e:	48 39 d0             	cmp    %rdx,%rax
->   11:	74 7a                	je     0x8d
->   13:	80 38 00             	cmpb   $0x0,(%rax)
->   16:	74 f2                	je     0xa
->   18:	48 89 c2             	mov    %rax,%rdx
->   1b:	b8 01 00 00 00       	mov    $0x1,%eax
->   20:	48 85 d2             	test   %rdx,%rdx
->   23:	75 56                	jne    0x7b
->   25:	5b                   	pop    %rbx
->   26:	5d                   	pop    %rbp
->   27:	41 5c                	pop    %r12
->   29:	c3                   	retq
-> * 2a:	48 85 d2             	test   %rdx,%rdx <-- trapping instruction
->   2d:	74 5e                	je     0x8d
->   2f:	48 01 ea             	add    %rbp,%rdx
->   32:	eb 09                	jmp    0x3d
->   34:	48 83 c0 01          	add    $0x1,%rax
->   38:	48 39 d0             	cmp    %rdx,%rax
->   3b:	74 50                	je     0x8d
->   3d:	80 38 00             	cmpb   $0x0,(%rax)
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this issue, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+the tcp_skb_entail() helper is actually skb_entail(), renamed
+to provide proper scope.
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+    The two helper will be used by the next patch.
 
-for net-next we should likely consider dropping the DATA_READY flag at
-all, but that looks too invasive and error prone for a fix
+RFC -> v1:
+ - rename skb_entail to tcp_skb_entail (Eric)
+
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index dbcebf56798f..6b334f9b6242 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1759,11 +1759,32 @@ static int mptcp_sendmsg(struct sock *sk,
-struct msghdr *msg, size_t len)
- 	return copied ? : ret;
+ include/net/tcp.h | 2 ++
+ net/ipv4/tcp.c    | 8 ++++----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 3166dc15d7d6..4a96f6e0f6f8 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -581,6 +581,8 @@ __u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mss);
+ #endif
+ /* tcp_output.c */
+ 
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb);
++void tcp_mark_push(struct tcp_sock *tp, struct sk_buff *skb);
+ void __tcp_push_pending_frames(struct sock *sk, unsigned int cur_mss,
+ 			       int nonagle);
+ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index e8b48df73c85..c592454625e1 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -647,7 +647,7 @@ int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ }
+ EXPORT_SYMBOL(tcp_ioctl);
+ 
+-static inline void tcp_mark_push(struct tcp_sock *tp, struct sk_buff *skb)
++void tcp_mark_push(struct tcp_sock *tp, struct sk_buff *skb)
+ {
+ 	TCP_SKB_CB(skb)->tcp_flags |= TCPHDR_PSH;
+ 	tp->pushed_seq = tp->write_seq;
+@@ -658,7 +658,7 @@ static inline bool forced_push(const struct tcp_sock *tp)
+ 	return after(tp->write_seq, tp->pushed_seq + (tp->max_window >> 1));
  }
  
-+static bool __mptcp_move_skbs(struct mptcp_sock *msk);
-+
-+static void mptcp_update_ready_flag(struct sock *sk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
-+	if (skb_queue_empty_lockless(&sk->sk_receive_queue) &&
-+	    skb_queue_empty(&msk->receive_queue)) {
-+		/* entire backlog drained, clear DATA_READY. */
-+		clear_bit(MPTCP_DATA_READY, &msk->flags);
-+
-+		/* .. race-breaker: ssk might have gotten new data
-+		 * after last __mptcp_move_skbs() returned false.
-+		 */
-+		if (unlikely(__mptcp_move_skbs(msk)))
-+			set_bit(MPTCP_DATA_READY, &msk->flags);
-+	}
-+}
-+
- static void mptcp_wait_data(struct sock *sk, long *timeo)
+-static void skb_entail(struct sock *sk, struct sk_buff *skb)
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb)
  {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
-+	mptcp_update_ready_flag(sk);
-+
- 	add_wait_queue(sk_sleep(sk), &wait);
- 	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
- 
-@@ -2080,17 +2101,7 @@ static int mptcp_recvmsg(struct sock *sk, struct
-msghdr *msg, size_t len,
- 		mptcp_wait_data(sk, &timeo);
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	struct tcp_skb_cb *tcb = TCP_SKB_CB(skb);
+@@ -985,7 +985,7 @@ struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
+ #ifdef CONFIG_TLS_DEVICE
+ 		skb->decrypted = !!(flags & MSG_SENDPAGE_DECRYPTED);
+ #endif
+-		skb_entail(sk, skb);
++		tcp_skb_entail(sk, skb);
+ 		copy = size_goal;
  	}
  
--	if (skb_queue_empty_lockless(&sk->sk_receive_queue) &&
--	    skb_queue_empty(&msk->receive_queue)) {
--		/* entire backlog drained, clear DATA_READY. */
--		clear_bit(MPTCP_DATA_READY, &msk->flags);
--
--		/* .. race-breaker: ssk might have gotten new data
--		 * after last __mptcp_move_skbs() returned false.
--		 */
--		if (unlikely(__mptcp_move_skbs(msk)))
--			set_bit(MPTCP_DATA_READY, &msk->flags);
--	}
-+	mptcp_update_ready_flag(sk);
+@@ -1314,7 +1314,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 			process_backlog++;
+ 			skb->ip_summed = CHECKSUM_PARTIAL;
  
- out_err:
- 	if (cmsg_flags && copied >= 0) {
-
+-			skb_entail(sk, skb);
++			tcp_skb_entail(sk, skb);
+ 			copy = size_goal;
+ 
+ 			/* All packets are restored as if they have
+-- 
+2.26.3
 
