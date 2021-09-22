@@ -1,169 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044103FC8
-	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 10:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632306782;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eSL0RGR02+ETLFprPy9AGNzZ8i/AOq/enLbPN5MAacg=;
-	b=huLeZAQUoY11Q6ylHbMB1npRSnT31o2GjKUp4HL6f2V7hR2YSGtIWPtmSYh0V4jEKAW/Gg
-	CwkqSvyQNkoNBXNz9yBkP7xVCEFspHQQbuPSWX9OONzLZhO/SfK2J4i3n9FUY3nxUvWEvi
-	LaJA1JydHOBoKEWV/IO2BKWSrKefraM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-c9o3RQYdPteGMXeKWgIfPA-1; Wed, 22 Sep 2021 06:33:00 -0400
-X-MC-Unique: c9o3RQYdPteGMXeKWgIfPA-1
-Received: by mail-wr1-f72.google.com with SMTP id s14-20020adff80e000000b001601b124f50so1746534wrp.5
-        for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 03:33:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940113FC8
+	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 10:58:07 +0000 (UTC)
+Received: by mail-il1-f200.google.com with SMTP id i11-20020a92540b000000b0025456903645so2162487ilb.11
+        for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 03:58:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=eSL0RGR02+ETLFprPy9AGNzZ8i/AOq/enLbPN5MAacg=;
-        b=FJ4BGsM9tc0WMnYzWpKyMTIVDOONIULqcuzAHk0Uk4kZP17KIubDP6XmFa6518HnGH
-         3SObWzCKSxzxHjSh6L7rox28w14NnLchrb7AuqkiTpPgl+O+goD8X/mAMmWrW0dkgtjI
-         4deuhQHxgDBjsQCwcR6GJnX6A9C8yEScbyOPIweAp8i7l4EzsoJyWO2qi8tLsViGYKk6
-         pcgYVpPzv59n5O1zCRacb4qyo90j766H8P5b+cgKjFBAm6VKaZP3HYOydIDVwJ4cBx+Q
-         U5Gv6iQwNVm3c40Bq+3RNrTfoQIOx4ED0kXZ6TLfQf5C8QyBXsLiHocLmFMWi3+rCamr
-         aHiA==
-X-Gm-Message-State: AOAM532pFKLujrQH+sFEYeXsgk5qQ9sVshWU+/X+1cI2PFqE6qhbGTMN
-	jhFmbaAZYeKHViArSQVC3K1JFrsxmyAvmsmzXV6oLLN+khJgQ1gVGL9jbndJ82Jcq0U5Z/rYdDh
-	JB3doHmc8Vjp7DFo=
-X-Received: by 2002:a5d:404b:: with SMTP id w11mr40359293wrp.437.1632306778479;
-        Wed, 22 Sep 2021 03:32:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzCNKW1oFUoHevtzLoWvSCH7OLS39ZQzOJ4rhBh7tlsl9vJfben8sgiyRTsICuwBK7jRIBY2g==
-X-Received: by 2002:a5d:404b:: with SMTP id w11mr40359269wrp.437.1632306778237;
-        Wed, 22 Sep 2021 03:32:58 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-102-46.dyn.eolo.it. [146.241.102.46])
-        by smtp.gmail.com with ESMTPSA id y197sm6589927wmc.18.2021.09.22.03.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 03:32:57 -0700 (PDT)
-Message-ID: <7de92627f85522bf5640defe16eee6c8825f5c55.camel@redhat.com>
-Subject: Re: [syzbot] WARNING in mptcp_sendmsg_frag
-From: Paolo Abeni <pabeni@redhat.com>
-To: syzbot <syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com>, 
- davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
- mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
- mptcp@lists.linux.dev, netdev@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-Date: Wed, 22 Sep 2021 12:32:56 +0200
-In-Reply-To: <00000000000015991c05cc43a736@google.com>
-References: <00000000000015991c05cc43a736@google.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=sIEI9uk0jXLPg5tRngu0deQrqbcmRIPtQjNY17o0nVQ=;
+        b=IKBmj3HLduLD8GIKJIDLYeYrwdqgY8cQjK/nTpG6RjrXPma7/9O7mFy/K6qGC/yVPo
+         QMT05MOitB8exJIK3KNVnYPPA51Q7bJ7On9JaELFh9AL8L31gunRNdTy7Zexgp1X1/4z
+         iygt9uDpibC++ijKjQZcvrb4GB8uztbfVO023fq1sin4luK43vhHLYrg3JVe9VY8gvZV
+         yC3XfKPrXvFJvB7ZHfxQgWOx2ha2XJvO2qdLgs6ybzfW5U7u6jEPQN9KXr/drb7tR48p
+         d20fdt103PZsJO5l+zR6NcK0nxh5LLiiNKJ+mG7h06iaSx2D+uOJcHIRIXN78mOy4yqx
+         FIUg==
+X-Gm-Message-State: AOAM5311QwUv0xoROsccvHB3Z82VTpBR7N5lT6Qc78xRWF5QOXDHIHr3
+	yVnP2rnJbRfhHgRZnHo1s1OfPyJR5+rkdumoorrns+iKBcUY
+X-Google-Smtp-Source: ABdhPJzrupLFuHWEUbPmU68bVPECDv0uWyy/kVwXi6sss4UKhYlFnfSOJL8EuF/CcQqBBCx0RPY2ctH++ZBK03DFe9VBkJalyAc3
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 1
-X-Mimecast-Originator: redhat.com
+X-Received: by 2002:a5d:9958:: with SMTP id v24mr3929152ios.201.1632308286875;
+ Wed, 22 Sep 2021 03:58:06 -0700 (PDT)
+Date: Wed, 22 Sep 2021 03:58:06 -0700
+In-Reply-To: <7de92627f85522bf5640defe16eee6c8825f5c55.camel@redhat.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009a729905cc93635a@google.com>
+Subject: Re: [syzbot] WARNING in mptcp_sendmsg_frag
+From: syzbot <syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com>
+To: davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
+	mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Sat, 2021-09-18 at 04:50 -0700, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    02319bf15acf net: dsa: bcm_sf2: Fix array overrun in bcm_s..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=170f9e27300000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6d93fe4341f98704
-> dashboard link: https://syzkaller.appspot.com/bug?extid=263a248eec3e875baa7b
-> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1507cd8d300000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=174c8017300000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 7032 at net/mptcp/protocol.c:1366 mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
-> Modules linked in:
-> CPU: 1 PID: 7032 Comm: syz-executor845 Not tainted 5.15.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:mptcp_sendmsg_frag+0x1362/0x1bc0 net/mptcp/protocol.c:1366
-> Code: ff 4c 8b 74 24 50 48 8b 5c 24 58 e9 0f fb ff ff e8 83 40 8b f8 4c 89 e7 45 31 ed e8 88 57 2e fe e9 81 f4 ff ff e8 6e 40 8b f8 <0f> 0b 41 bd ea ff ff ff e9 6f f4 ff ff 4c 89 e7 e8 b9 89 d2 f8 e9
-> RSP: 0018:ffffc90003acf830 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: ffff888072918000 RSI: ffffffff88eacb72 RDI: 0000000000000003
-> RBP: ffff88807a182580 R08: 0000000000000000 R09: 0000000000000000
-> R10: ffffffff88eac1a7 R11: 0000000000000000 R12: ffff88801a08a000
-> R13: 0000000000000000 R14: ffff888018cb9b80 R15: ffff88801b4f2340
-> FS:  000055555723b300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000380 CR3: 000000007bebe000 CR4: 00000000001506e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  __mptcp_push_pending+0x1fb/0x6b0 net/mptcp/protocol.c:1547
->  mptcp_sendmsg+0xc29/0x1bc0 net/mptcp/protocol.c:1748
->  inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:643
->  sock_sendmsg_nosec net/socket.c:704 [inline]
->  sock_sendmsg+0xcf/0x120 net/socket.c:724
->  sock_write_iter+0x2a0/0x3e0 net/socket.c:1057
->  call_write_iter include/linux/fs.h:2163 [inline]
->  new_sync_write+0x40b/0x640 fs/read_write.c:507
->  vfs_write+0x7cf/0xae0 fs/read_write.c:594
->  ksys_write+0x1ee/0x250 fs/read_write.c:647
->  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
->  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
->  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> RIP: 0033:0x7f40ee3c4fb9
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffd96b7a0f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f40ee3c4fb9
-> RDX: 00000000000e7b78 RSI: 0000000020000000 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000f0b5ff R09: 0000000000f0b5ff
-> R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000012096
-> R13: 00007ffd96b7a120 R14: 00007ffd96b7a110 R15: 00007ffd96b7a104
+Hello,
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-The debug code helped a bit. It looks like we have singed/unsigned
-comparisons issue
+Reported-and-tested-by: syzbot+263a248eec3e875baa7b@syzkaller.appspotmail.com
 
-Tentative patch, plus debug code
----
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2602f1386160..c38506c5ea05 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1316,7 +1316,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			goto alloc_skb;
- 		}
- 
--		must_collapse = (info->size_goal - skb->len > 0) &&
-+		must_collapse = (info->size_goal > skb->len) &&
- 				(skb_shinfo(skb)->nr_frags < sysctl_max_skb_frags);
- 		if (must_collapse) {
- 			size_bias = skb->len;
-@@ -1325,7 +1325,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	}
- 
- alloc_skb:
--	if (!must_collapse && !ssk->sk_tx_skb_cache &&
-+	if (!must_collapse &&
- 	    !mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held))
- 		return 0;
- 
-@@ -1363,6 +1363,10 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	}
- 
- 	mpext = skb_ext_find(tail, SKB_EXT_MPTCP);
-+	if (!mpext)
-+		pr_warn("must_collapse=%d old skb=%p:%d avail_size=%d:%d state=%d",
-+			must_collapse, skb, skb ? skb->len:0, info->size_goal, avail_size,
-+			ssk->sk_state);
- 	if (WARN_ON_ONCE(!mpext)) {
- 		/* should never reach here, stream corrupted */
- 		return -EINVAL;
+Tested on:
 
+commit:         92477dd1 Merge tag 's390-5.15-ebpf-jit-fixes' of git:/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e917f3dfc452c977
+dashboard link: https://syzkaller.appspot.com/bug?extid=263a248eec3e875baa7b
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=142df1ab300000
 
-
-
+Note: testing is done by a robot and is best-effort only.
