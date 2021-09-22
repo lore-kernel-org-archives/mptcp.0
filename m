@@ -1,189 +1,81 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0526C29CA
-	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 00:43:32 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10114"; a="220295358"
-X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
-   d="scan'208";a="220295358"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 17:43:32 -0700
-X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
-   d="scan'208";a="701882954"
-Received: from wjwiegan-mobl.amr.corp.intel.com ([10.255.231.88])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 17:43:32 -0700
-Date: Tue, 21 Sep 2021 17:43:31 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 3/8] mptcp: infinite mapping sending
-In-Reply-To: <00acc9c10fe938ac26eaec0ed5454e32adf4aecd.1631949480.git.geliangtang@gmail.com>
-Message-ID: <e1168c61-f74-f048-ffd9-a2a082624135@linux.intel.com>
-References: <cover.1631949480.git.geliangtang@gmail.com> <00acc9c10fe938ac26eaec0ed5454e32adf4aecd.1631949480.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576EB3FC7
+	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 03:50:58 +0000 (UTC)
+Received: by mail-pj1-f48.google.com with SMTP id me1so1071864pjb.4
+        for <mptcp@lists.linux.dev>; Tue, 21 Sep 2021 20:50:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Vgs54cWwBJXwIebazowEyEZdCzRM9o6K1jCaFpSF2tw=;
+        b=h1EyC/JQSg5Gtvkrpdxmo8ZsCjlPzAr6kDT+37k54Om4+iyzfg2QV5YUr7Xu8Gd1x9
+         4/vhDGU/l6tT20PvDmXcj/PXjbN4YzPGeTf8OZ5HRqjNMLvcZ0yWkVSw4AKvdBY3pkJP
+         TXt4jZZF4+Dt/+cY8pOIk8FF4cOWVzTYkGAYi6BvIC7ahWkapfCzqG7aZ1Hd75RYMBrA
+         bcyzdb39rFKn1KPLX4bCMpGaT6aKWMc0wdrwrOTs2VW0AXSdhraacIMtuFtlVlTKnLFf
+         +ZR4q4ICNuptaQ4379hl1ikdRluwa3gChYVv0WTwwXVBKf2xCRuoFM9+Xg6DHFrsJrGp
+         oRzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Vgs54cWwBJXwIebazowEyEZdCzRM9o6K1jCaFpSF2tw=;
+        b=i+3G1FC7B01Ue+K5OVBnhN6NHILhhSaID3L3WuB1cmUwTGua3p7Fumgr3oBR7oeHk7
+         TH7jBAsSPnebGgLdODMWeYa+casV6yt1b+ByB6GvzgMMlqpGmIdQJiP+CLkNm5Q68soi
+         M3IiAN1l23KSEYXaKYr8Xz+/0f6jm0/dIXdp4OOyZ/X+bX892+dGTufYqLKJ/0IZmkZI
+         WCMQQw/4GRXBSA/LlWVDaJ7tSxRGcCrgHc+ncyihz7V/fa0MByzRlPsnkdjzfMG9tN6y
+         nNdnt8V5HJaJuW6L79/ETIgUQGPWxg2zuUaCz9Tq2ZcgyvtERhWIzMaJRrgCWiU0k14Q
+         dGbA==
+X-Gm-Message-State: AOAM533B92EdjdTvvIM/6JU1zkzpgF1yL7E+cUBakckZ9zo01SXxOfm+
+	+2V4kv9hgvDBe1jidN3JZqIvyGj3T1PfpRwcT4g=
+X-Google-Smtp-Source: ABdhPJyNTuTHcUf4QLowT6B5UoDqjUR5PN5WvOJjXAZI0a9Wcdk80rprb/Ijh2M11dSAmqxA8nFEZScM0dXZQ8MVDdE=
+X-Received: by 2002:a17:90b:1bd1:: with SMTP id oa17mr9016520pjb.82.1632282657849;
+ Tue, 21 Sep 2021 20:50:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <cover.1631188109.git.geliangtang@xiaomi.com> <5afb788b507a63f31f390c512fb5eedb464dd01e.1631188109.git.geliangtang@xiaomi.com>
+ <3a1f4fdab51c7b451fe05a76f181853237774500.camel@redhat.com>
+In-Reply-To: <3a1f4fdab51c7b451fe05a76f181853237774500.camel@redhat.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Wed, 22 Sep 2021 11:50:46 +0800
+Message-ID: <CA+WQbwshbrEcHUfMCH3XGeS+2sV7MRn2Rrt9t7exy8gg=0R0zw@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v2 9/9] DO-NOT-MERGE: mptcp: mp_fail test
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliangtang@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 18 Sep 2021, Geliang Tang wrote:
+Hi Paolo,
 
-> This patch added the infinite mapping sending logic.
+Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2021=E5=B9=B49=E6=9C=889=E6=97=A5=
+=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:23=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Added a new flag send_infinite_map in struct mptcp_subflow_context. Set
-> it true when a single contiguous subflow is in use in
-> mptcp_pm_mp_fail_received.
+> On Thu, 2021-09-09 at 19:51 +0800, Geliang Tang wrote:
+> > From: Geliang Tang <geliangtang@xiaomi.com>
+> >
+> > ./mptcp_join.sh -Cf
+> >
+> > Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
 >
-> In mptcp_sendmsg_frag, if this flag is true, call the new function
-> mptcp_update_infinite_map to set the infinite mapping.
->
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
-> include/net/mptcp.h  |  3 ++-
-> net/mptcp/options.c  |  6 ++++--
-> net/mptcp/pm.c       |  6 ++++++
-> net/mptcp/protocol.c | 19 +++++++++++++++++++
-> net/mptcp/protocol.h | 12 ++++++++++++
-> 5 files changed, 43 insertions(+), 3 deletions(-)
->
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index f83fa48408b3..29e930540ea2 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -35,7 +35,8 @@ struct mptcp_ext {
-> 			frozen:1,
-> 			reset_transient:1;
-> 	u8		reset_reason:4,
-> -			csum_reqd:1;
-> +			csum_reqd:1,
-> +			infinite_map:1;
-> };
->
-> #define MPTCP_RM_IDS_MAX	8
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 422f4acfb3e6..9c175c298ff6 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -816,8 +816,10 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->
-> 	opts->suboptions = 0;
->
-> -	if (unlikely(__mptcp_check_fallback(msk)))
-> -		return false;
-> +	if (unlikely(__mptcp_check_fallback(msk))) {
-> +		if (!mptcp_check_infinite_map(skb))
-> +			return false;
-> +	}
+> I'm wondering if we could use the u32 target to replace all the TCP
+> options with u32 if find a DSS (tcp header len =3D=3D 38, IIRC) and the D=
+SS
+> len is not zero (checking 2 bytes at a fixed offset).
 
-This could be
+Please give me more help about how to use the u32 target to replace the TCP
+options.
 
-if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
-...
-
-(line-wrapped as needed)
-
-rather than nesting the if's.
-
-
-Mat
-
+Thanks,
+-Geliang
 
 >
-> 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
-> 		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 6ab386ff3294..4fad1fe8ba10 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -251,7 +251,13 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
+> That will corrupt che tcp csum, but IIRC the csum is not really checked
+> over veth with default nic config.
 >
-> void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
-> {
-> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-> +
-> 	pr_debug("fail_seq=%llu", fail_seq);
-> +
-> +	if (!mptcp_has_another_subflow(sk) && mptcp_is_data_contiguous(msk))
-> +		subflow->send_infinite_map = 1;
-> }
+> /P
 >
-> /* path manager helpers */
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index b056672541df..ffef7e1f061b 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1279,6 +1279,23 @@ static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
-> 	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
-> }
->
-> +static void mptcp_update_infinite_map(struct mptcp_sock *msk, struct sock *ssk,
-> +				      struct mptcp_ext *mpext)
-> +{
-> +	if (!mpext)
-> +		return;
-> +
-> +	mpext->infinite_map = 1;
-> +	mpext->data_seq = READ_ONCE(msk->last_fully_acked_dss_start_seq);
-> +	mpext->subflow_seq = 0;
-> +	mpext->data_len = 0;
-> +	mpext->csum = 0;
-> +
-> +	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
-> +	pr_fallback(msk);
-> +	__mptcp_do_fallback(msk);
-> +}
-> +
-> static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 			      struct mptcp_data_frag *dfrag,
-> 			      struct mptcp_sendmsg_info *info)
-> @@ -1411,6 +1428,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> out:
-> 	if (READ_ONCE(msk->csum_enabled))
-> 		mptcp_update_data_checksum(skb, copy);
-> +	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
-> +		mptcp_update_infinite_map(msk, ssk, mpext);
-> 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
-> 	return copy;
-> }
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 2f8a8589668c..cb26183aec9b 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -433,6 +433,7 @@ struct mptcp_subflow_context {
-> 		backup : 1,
-> 		send_mp_prio : 1,
-> 		send_mp_fail : 1,
-> +		send_infinite_map : 1,
-> 		rx_eof : 1,
-> 		can_ack : 1,        /* only after processing the remote a key */
-> 		disposable : 1,	    /* ctx can be free at ulp release time */
-> @@ -874,6 +875,17 @@ static inline void mptcp_do_fallback(struct sock *sk)
->
-> #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)", __func__, a)
->
-> +static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
-> +{
-> +	struct mptcp_ext *mpext;
-> +
-> +	mpext = skb ? mptcp_get_ext(skb) : NULL;
-> +	if (mpext && mpext->infinite_map)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> static inline bool subflow_simultaneous_connect(struct sock *sk)
-> {
-> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
