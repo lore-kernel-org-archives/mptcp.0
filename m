@@ -1,83 +1,55 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6278072
-	for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 22:33:06 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10115"; a="246161388"
-X-IronPort-AV: E=Sophos;i="5.85,315,1624345200"; 
-   d="scan'208";a="246161388"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2021 15:32:51 -0700
-X-IronPort-AV: E=Sophos;i="5.85,315,1624345200"; 
-   d="scan'208";a="513170137"
-Received: from vtallapa-mobl.amr.corp.intel.com ([10.212.134.230])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2021 15:32:50 -0700
-Date: Wed, 22 Sep 2021 15:32:50 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliangtang@gmail.com>
-Subject: Re: [PATCH mptcp-net v2] mptcp: allow changing the 'backup' bit when
- no sockets are open
-In-Reply-To: <6fada33a17044e54f0ba5b3a5dc35987cbea3b54.1632318877.git.dcaratti@redhat.com>
-Message-ID: <6f5df69-cffa-6d5d-a957-f93f2ff0e9b6@linux.intel.com>
-References: <6fada33a17044e54f0ba5b3a5dc35987cbea3b54.1632318877.git.dcaratti@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0C43FCD
+	for <mptcp@lists.linux.dev>; Thu, 23 Sep 2021 01:19:06 +0000 (UTC)
+Received: by mail-io1-f69.google.com with SMTP id o18-20020a0566022e1200b005c3adb2571fso4419467iow.3
+        for <mptcp@lists.linux.dev>; Wed, 22 Sep 2021 18:19:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=BtVl/a0FY8JKH/FSgWRHy3yJPdYUXkTtU6Y13UXQm6k=;
+        b=UvHnX7k+pgNHFa0JvB7pJZZYa1h5pCGA2OckMKjuysSqE7+JthxrO7+t9PQc8w7rIZ
+         BhWTXjI4h42CSDwSb0y+FHDPFbOl/B9fT/lZYciy4GF8IazmDvHdQ3ZebUMUSBFiN+Vi
+         FDESquqp0n9Y+6/psB+goei25HrKsn5UJrNI1nC4RgcFhH+1V14/gmHsFDTUxeQdzrrI
+         fXrHB7bgPpzhMn87/Us3PvKxjwIJmTl8tvZG3NTQFhCoMa7BIw1YI5DHYdwRQgeQ+w8o
+         wl47GDRcGVJfugT5NXpFwwTJSrBMJaAdO55aAYwawjRO6XCVybNNMSdw6A2ekQkZZqmp
+         jTWg==
+X-Gm-Message-State: AOAM532+0+XQ8BIq44RbwjR+pNmtMu9DriOFtTmsEB3+5ZOJS5ogsMJQ
+	tilhStncYJd+u+KLEu8rRTuSd3URSHEO9kmgiRXow+Ug70bA
+X-Google-Smtp-Source: ABdhPJybG0wzvcdwqti358tmNLYHxPWpJf4CpeobC1WLwXv3xZrbrB86bltfA0STUGAD9uXR7BvV/6+UpTelcA73qi5nXa0D3zLu
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Received: by 2002:a92:b703:: with SMTP id k3mr1524987ili.95.1632359945648;
+ Wed, 22 Sep 2021 18:19:05 -0700 (PDT)
+Date: Wed, 22 Sep 2021 18:19:05 -0700
+In-Reply-To: <f8b3bfc6173a9dca9b72ead1681cd6d052350170.camel@redhat.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b4bfdb05cc9f6a61@google.com>
+Subject: Re: [syzbot] possible deadlock in mptcp_close
+From: syzbot <syzbot+1dd53f7a89b299d59eaf@syzkaller.appspotmail.com>
+To: mptcp@lists.linux.dev, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 22 Sep 2021, Davide Caratti wrote:
+Hello,
 
-> current Linux refuses to change the 'backup' bit of MPTCP endpoints, i.e.
-> using MPTCP_PM_CMD_SET_FLAGS, unless it finds (at least) one subflow that
-> matches the endpoint address. There is no reason for that, so we can just
-> ignore the return value of mptcp_nl_addr_backup(). In this way, endpoints
-> can reconfigure their 'backup' flag even if no MPTCP sockets are open (or
-> more generally, in case the MP_PRIO message is not sent out).
->
-> Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> ---
->
-> Notes:
->    v2:
->     - ignore the return value of mptcp_nl_addr_backup() rather than just
->       gixing the case of 0 open sockets, from Mat Martineau
->
-> net/mptcp/pm_netlink.c | 5 +----
-> 1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index c4f9a5ce3815..c3722eedc671 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1718,10 +1718,7 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
->
-> 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> 		if (addresses_equal(&entry->addr, &addr.addr, true)) {
-> -			ret = mptcp_nl_addr_backup(net, &entry->addr, bkup);
-> -			if (ret)
-> -				return ret;
-> -
-> +			mptcp_nl_addr_backup(net, &entry->addr, bkup);
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Strictly speaking, should leave a blank line before this 'if' statement, 
-but other than that it looks good. I can fix it up before sending to 
-netdev.
+Reported-and-tested-by: syzbot+1dd53f7a89b299d59eaf@syzkaller.appspotmail.com
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Tested on:
 
-> 			if (bkup)
-> 				entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> 			else
-> -- 
-> 2.31.1
->
->
+commit:         977d293e mptcp: ensure tx skbs always have the MPTCP ext
+git tree:       net
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6d93fe4341f98704
+dashboard link: https://syzkaller.appspot.com/bug?extid=1dd53f7a89b299d59eaf
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=132bc1d7300000
 
---
-Mat Martineau
-Intel
+Note: testing is done by a robot and is best-effort only.
