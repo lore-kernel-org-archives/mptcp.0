@@ -1,29 +1,29 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47773FCC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36583FD4
 	for <mptcp@lists.linux.dev>; Fri, 24 Sep 2021 21:12:48 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10117"; a="246639634"
+X-IronPort-AV: E=McAfee;i="6200,9189,10117"; a="246639639"
 X-IronPort-AV: E=Sophos;i="5.85,321,1624345200"; 
-   d="scan'208";a="246639634"
+   d="scan'208";a="246639639"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2021 14:12:45 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2021 14:12:46 -0700
 X-IronPort-AV: E=Sophos;i="5.85,321,1624345200"; 
-   d="scan'208";a="704320282"
+   d="scan'208";a="704320286"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.52.210])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2021 14:12:44 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2021 14:12:46 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliangtang@xiaomi.com>,
+Cc: Florian Westphal <fw@strlen.de>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	pabeni@redhat.com,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 2/5] mptcp: use OPTIONS_MPTCP_MPC
-Date: Fri, 24 Sep 2021 14:12:35 -0700
-Message-Id: <20210924211238.162509-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 4/5] mptcp: remove tx_pending_data
+Date: Fri, 24 Sep 2021 14:12:37 -0700
+Message-Id: <20210924211238.162509-5-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20210924211238.162509-1-mathew.j.martineau@linux.intel.com>
 References: <20210924211238.162509-1-mathew.j.martineau@linux.intel.com>
@@ -35,42 +35,82 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliangtang@xiaomi.com>
+From: Florian Westphal <fw@strlen.de>
 
-Since OPTIONS_MPTCP_MPC has been defined, use it instead of open-coding.
+The update on recovery is not correct.
+
+msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
+
+will update tx_pending_data multiple times when a subflow is declared
+stale while earlier recovery is still in progress.
+This means that tx_pending_data will still be positive even after
+all data as has been transmitted.
+
+Rather than fix it, remove this field: there are no consumers.
+The outstanding data byte count can be computed either via
+
+ "msk->write_seq - rtx_head->data_seq" or
+ "msk->write_seq - msk->snd_una".
+
+The latter is more recent/accurate estimate as rtx_head adjustment
+is deferred until mptcp lock can be acquired.
 
 Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliangtang@xiaomi.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/options.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ net/mptcp/protocol.c | 4 ----
+ net/mptcp/protocol.h | 1 -
+ 2 files changed, 5 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1ec6529c4326..422f4acfb3e6 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -748,9 +748,7 @@ static bool mptcp_established_options_mp_prio(struct sock *sk,
- 	/* can't send MP_PRIO with MPC, as they share the same option space:
- 	 * 'backup'. Also it makes no sense at all
- 	 */
--	if (!subflow->send_mp_prio ||
--	    ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
--	      OPTION_MPTCP_MPC_ACK) & opts->suboptions))
-+	if (!subflow->send_mp_prio || (opts->suboptions & OPTIONS_MPTCP_MPC))
- 		return false;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 87ee409d68ab..5b0ed64c5cd2 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1531,7 +1531,6 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
+ 	dfrag->already_sent += sent;
  
- 	/* account for the trailing 'nop' option */
-@@ -1327,8 +1325,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
- 			}
- 		}
--	} else if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
--		    OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-+	} else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
- 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
+ 	msk->snd_burst -= sent;
+-	msk->tx_pending_data -= sent;
  
- 		if (OPTION_MPTCP_MPC_SYN & opts->suboptions) {
+ 	snd_nxt_new += dfrag->already_sent;
+ 
+@@ -1761,7 +1760,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		frag_truesize += psize;
+ 		pfrag->offset += frag_truesize;
+ 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
+-		msk->tx_pending_data += psize;
+ 
+ 		/* charge data on mptcp pending queue to the msk socket
+ 		 * Note: we charge such data both to sk and ssk
+@@ -2254,7 +2252,6 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
+ 	mptcp_data_unlock(sk);
+ 
+ 	msk->first_pending = rtx_head;
+-	msk->tx_pending_data += msk->snd_nxt - rtx_head->data_seq;
+ 	msk->snd_burst = 0;
+ 
+ 	/* be sure to clear the "sent status" on all re-injected fragments */
+@@ -2525,7 +2522,6 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->first_pending = NULL;
+ 	msk->wmem_reserved = 0;
+ 	WRITE_ONCE(msk->rmem_released, 0);
+-	msk->tx_pending_data = 0;
+ 	msk->timer_ival = TCP_RTO_MIN;
+ 
+ 	msk->first = NULL;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d3e6fd1615f1..d516fb6578cc 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -254,7 +254,6 @@ struct mptcp_sock {
+ 	struct sk_buff  *ooo_last_skb;
+ 	struct rb_root  out_of_order_queue;
+ 	struct sk_buff_head receive_queue;
+-	int		tx_pending_data;
+ 	struct list_head conn_list;
+ 	struct list_head rtx_queue;
+ 	struct mptcp_data_frag *first_pending;
 -- 
 2.33.0
 
