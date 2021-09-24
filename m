@@ -1,63 +1,67 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656F63FCB
-	for <mptcp@lists.linux.dev>; Fri, 24 Sep 2021 08:10:33 +0000 (UTC)
-Received: by mail-lf1-f42.google.com with SMTP id u8so36245572lff.9
-        for <mptcp@lists.linux.dev>; Fri, 24 Sep 2021 01:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=FrdliSsvNyfWLu67z8nCyI7LU73GefRzRXgWMXuPrVw=;
-        b=CaOsB9KswUv8/+9/6AQ4jDhmMhS4OB8u6IM9JU8wdHqNfUv8iRTEfXKQ7xU8p+/xg6
-         nHolQsd+oftEf/XwazIyQ/WBAq5b8BQKq0aVYkgGxAAT3EOAnZldFswk8ewAg2Hrx+QU
-         Zv2CmOjAEyZvA3Y4F8eNmWHAeHsjdhLMxp0EBmFBeROWlTpkHoz8ZtPZmdBNlfEunJGH
-         2F01RkTrEKECPVQnWMWYjuPiHm31qTEug08UDaWQIrOI+8v4thpKBT91iyowN+CWJfkV
-         nMuPSRU9ozTiFvgeivtEuLik2Xw9sCBkwPAoVW+lVz1KSCjXQrRRDjnN+FEvyiH2yUJL
-         3vtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=FrdliSsvNyfWLu67z8nCyI7LU73GefRzRXgWMXuPrVw=;
-        b=ZrrcpWeaaGfWgwYP0P02EHYC6dj/TcRyvhxqtMQAqFmsBP6CZ5He2IcLz9Z5HaTuAD
-         ZgOPngwd3BkOnMFyd7CqS43gx8Qv7M3u9s7eA+W4pjchxtSPEdgR/Sm2QDfYVB4aPtGF
-         +etR5D1nfluv+df2nwNruNKrozxeiCqG0CiQSNxS7ksIsgJi3FCXhTUGCCRxY6C4vddX
-         GIza3TEkf2kp3CDyQeR9LG2FWkb4Fj5Uoiet4iBGS/wVy1fapbe83duIpo9uKQzZhghb
-         y2oZGsv/ceSxuaufLPdOsRO6lIKxpRJff81Xx8GzAKNsCtJbjIkvfaP58eR+GbG18+t1
-         CpTw==
-X-Gm-Message-State: AOAM531iYtER0Ad3ZJsGxkuVDuY061gD8vuFVcHhU54BGN8rOAJRTOMA
-	mTLu9dy4Cixob+0VOJcfT26uZiz60ZIbLrIHBhMRRCDEv0NqYA==
-X-Google-Smtp-Source: ABdhPJw7BiwkPiRsGwl709+BsZqgRC9DnEjZ7IEoFeXhdaMzsNGcmFIp3GrchOoD0H79zJ+nl5kbUNlmmppyaCRZZ0w=
-X-Received: by 2002:a05:6512:3f86:: with SMTP id x6mr8262528lfa.389.1632471031256;
- Fri, 24 Sep 2021 01:10:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FA73FC8
+	for <mptcp@lists.linux.dev>; Fri, 24 Sep 2021 10:00:07 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 98000610CF;
+	Fri, 24 Sep 2021 10:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1632477607;
+	bh=gUxJcpu1rnGRxe3SNb2x9mWZ3EnqhsShJKrhT43DLGA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=EsxXjBXOLhBgtpLfWfWWqvBZxpUiiOhrV7gB8Bkf+nZnrE7dLER0lrW0Oy/DT+stl
+	 6e6jcNypj+iP9bqTnqcbzXFD7vuTSPzfFQeuA5m/odX3madgqfDOo3LSITEKUzRu6e
+	 PQ19leLbHZnDK1Wj1QAISV7PDo6vt5JRGhX35UtjKoAY1wY6vUyiH8ow7T53oWTLbo
+	 TybFqBp9cwDv1Lkrzj3tRc/hJ1fWfKPzPpwaPCp9skfRZl+Hh71AfiqWm7Gd0KXVtb
+	 NLaF/NHGS6wKGEXuCiQAz7dMAR2WZTHCFvTQAKxfJcPVwCp9UYRB2Ufkh4TS69dLhQ
+	 jGTOOf80PI+eg==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 8B98A60AA4;
+	Fri, 24 Sep 2021 10:00:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: parthaz lokesh <parthazlokesh@gmail.com>
-Date: Fri, 24 Sep 2021 00:10:17 -0800
-Message-ID: <CAJck1w3K8uzVbgmk_UHPPA-T7xh7Gcj_4zdUn-mL-vLZXPoHNQ@mail.gmail.com>
-Subject: Help with MPTCPV1 server setup
-To: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/2] mptcp: Bug fixes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163247760756.4339.13788840891692093277.git-patchwork-notify@kernel.org>
+Date: Fri, 24 Sep 2021 10:00:07 +0000
+References: <20210924000413.89902-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210924000413.89902-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, fw@strlen.de,
+ dcaratti@redhat.com, pabeni@redhat.com, geliangtang@gmail.com
 
-Hello,
+Hello:
 
-I am trying to set up a ubuntu server with MPTCPV1(5.14v kernel). I am
-not seeing mp_capable in the syn packet after setting
-/proc/sy/net/mptcp/enabled value to 1. Is this expected behaviour?   I
-assume ip mptcp commands don't need to be executed for initial
-mpcapable subflow. In MPTCPV0 it used to work after setting it to 1.
+This series was applied to netdev/net.git (refs/heads/master):
 
-Mptcp Wi-ki page redirected to this systemtap script. script
-https://github.com/multipath-tcp/mptcp_net-next/issues/18#issuecomment-650529642.
-But unable to install debug symbol packages(required for above script
-to work) for 5.14kernel in ubuntu.
+On Thu, 23 Sep 2021 17:04:10 -0700 you wrote:
+> This patch set includes two separate fixes for the net tree:
+> 
+> Patch 1 makes sure that MPTCP token searches are always limited to the
+> appropriate net namespace.
+> 
+> Patch 2 allows userspace to always change the backup settings for
+> configured endpoints even if those endpoints are not currently in use.
+> 
+> [...]
 
-Is there an easy way to enable mptcp system wide and send mpcapable
-without tapping the socket with IPPROTO_MPTCP?
+Here is the summary with links:
+  - [net,1/2] mptcp: don't return sockets in foreign netns
+    https://git.kernel.org/netdev/net/c/ea1300b9df7c
+  - [net,2/2] mptcp: allow changing the 'backup' bit when no sockets are open
+    https://git.kernel.org/netdev/net/c/3f4a08909e2c
 
-Thanks,
-parthaz
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
