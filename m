@@ -1,83 +1,72 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1D63FCB
-	for <mptcp@lists.linux.dev>; Sat, 25 Sep 2021 08:18:08 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id v24so45560608eda.3
-        for <mptcp@lists.linux.dev>; Sat, 25 Sep 2021 01:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IIneLnUe0h5J1xTCRxILAeudrvtK/rzSYWc/wXRBZDU=;
-        b=JWxQH8AMicx++ReRZCiE3NxGYNrJajNk5dbIBxNSEoNvuwLh5xV6ov635iniEdqQW9
-         9vXJqy41Zhqzs0qyVtofQ50e1dChKRzVpFGWVCGSAC7U3WrkCSE8WLvU9C3/KLlKPFKW
-         v1rv2ETStAf86MUacUM5QVH0FatTfZID2i6g65MMKtWsepDDkeD9KDyqwHmPIPSQWIzp
-         xqLbu7BdTmIWhvsdwlNS49TNcYG7ekZssTDsqyDtLuyEbqLKsNsPjgo55oN34vGaKhML
-         ecKQYqfqtl57Xh41/R9vv8sIgms/OuxbIams06ONHdul1JDZ4eNuuCkluiOcSV+m81B3
-         SzlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IIneLnUe0h5J1xTCRxILAeudrvtK/rzSYWc/wXRBZDU=;
-        b=6XUkO9OhLtjgsS9l3g+eU6rrUgvz3GvJKVA+pOj9UQIXZd280rEvYZCdVophnkk3eo
-         lAnkVqd8LryWXCSO62wBDnwgNWlSjgQJt6KX/J804yjltcBdxt2AN/RCaojBMz2ULcN0
-         w0kn3c+teLIcbASDRqIQUPRYiTqeje1H7lt6aSgimkH2NR0Ve8TMDkQdFrw5Avq4OI6i
-         isJuM6sgTPjP4m7R74KSqbRWndxo35JfPyZfb8GACHlEb1VUQ3f++iabLsrrqYGWl2ev
-         mj8jx3qF+mm7xmkYR4NHt3wrqyEtf9zrxIO65LcVqZXb3A1h2ki7XIDKto0N1pCVH2Vx
-         SFcA==
-X-Gm-Message-State: AOAM533doqN1EN10SdyioNac7MChX1TDDQ/wHcMrC+La1+MhNhfCJGs6
-	+yFilVYISDeqbuhAZQl4N9B3XJ86H8kDffu5
-X-Google-Smtp-Source: ABdhPJxLXtpC6v9c3VRdBudz37oiINqW4OFL4xLpz5Tu+JVC1HQsYaUXTV9tSSQZWQyAfW3p/7KLwA==
-X-Received: by 2002:a17:907:1df1:: with SMTP id og49mr15855237ejc.35.1632557886803;
-        Sat, 25 Sep 2021 01:18:06 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.102.72.dyn.edpnet.net. [94.105.102.72])
-        by smtp.gmail.com with ESMTPSA id e7sm7817741edk.3.2021.09.25.01.18.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Sep 2021 01:18:06 -0700 (PDT)
-Subject: Re: [PATCH v2 mptcp-net] net: introduce and use
- lock_sock_fast_nested()
-To: Paolo Abeni <pabeni@redhat.com>
-References: <46317e271da725006df9916b2b2c3d334d3616e1.1632490917.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <8ff12847-cdf0-ba97-91c8-325c1819a829@tessares.net>
-Date: Sat, 25 Sep 2021 10:18:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB62772
+	for <mptcp@lists.linux.dev>; Sat, 25 Sep 2021 10:40:09 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 617B161041;
+	Sat, 25 Sep 2021 10:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1632566409;
+	bh=KdXe+7JL4i+wsQItX1IQqBsoUnBXaxZp3DQjAStl/s0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=OUanBE/Uc16M/9j/KyRNgyVy/pdmUcariZHH7uVjJCR8o43I0IE9LEn/c+OGIRDAh
+	 mPvqtu/Q4jur41YKSxmaiDErPHZz62NNc0q/e9dKlFKUr0cy6pSsf+wNcRzlDfVuvg
+	 9AmZMHTSHXqDBJIee/3yzDn8GmHOTX7GaMuT1MEQtA8c9EyhHu7ILRU7J7JML53Iv3
+	 eCXIEYD0I3pYv0OyI5CTPBmk3c+WsK7bmMYbgLRwFGu5c8M/ekI0sfvNFh7xCmIYl4
+	 fXeSbFuVKUR81WIR/37VnqZ94ZSFCHgjxl5aQB0mdigXOzZ88F4vtrJG9d4VTdfjb6
+	 rxf51T/z+tuxg==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 58B7560989;
+	Sat, 25 Sep 2021 10:40:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <46317e271da725006df9916b2b2c3d334d3616e1.1632490917.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/5] mptcp: Miscellaneous fixes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163256640935.24365.17356076433637422358.git-patchwork-notify@kernel.org>
+Date: Sat, 25 Sep 2021 10:40:09 +0000
+References: <20210924211238.162509-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210924211238.162509-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com
 
-Hi Paolo, Mat,
+Hello:
 
-On 24/09/2021 15:42, Paolo Abeni wrote:
-> Syzkaller reported a false positive deadlock involving
-> the nl socket lock and the subflow socket lock:
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-Thank you for the patch and the review!
+On Fri, 24 Sep 2021 14:12:33 -0700 you wrote:
+> Here are five changes we've collected and tested in the mptcp-tree:
+> 
+> Patch 1 changes handling of the MPTCP-level snd_next value during the
+> recovery phase after a subflow link failure.
+> 
+> Patches 2 and 3 are some small refactoring changes to replace some
+> open-coded bits.
+> 
+> [...]
 
-Now in our tree (fixes for -net) with Mat's ACK and without a few typos.
+Here is the summary with links:
+  - [net-next,1/5] mptcp: do not shrink snd_nxt when recovering
+    https://git.kernel.org/netdev/net-next/c/0d199e4363b4
+  - [net-next,2/5] mptcp: use OPTIONS_MPTCP_MPC
+    https://git.kernel.org/netdev/net-next/c/13ac17a32bf1
+  - [net-next,3/5] mptcp: use lockdep_assert_held_once() instead of open-coding it
+    https://git.kernel.org/netdev/net-next/c/765ff425528f
+  - [net-next,4/5] mptcp: remove tx_pending_data
+    https://git.kernel.org/netdev/net-next/c/9e65b6a5aaa3
+  - [net-next,5/5] mptcp: re-arm retransmit timer if data is pending
+    https://git.kernel.org/netdev/net-next/c/3241a9c02934
 
-- f3e1b10ba958: net: introduce and use lock_sock_fast_nested()
-- Results: 9c66f209e7f2..2224c01350eb
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20210925T081746
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20210925T081746
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
