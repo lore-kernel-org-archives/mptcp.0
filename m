@@ -1,47 +1,47 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DEB3FCB
-	for <mptcp@lists.linux.dev>; Sun, 26 Sep 2021 14:29:49 +0000 (UTC)
-Received: by mail-pj1-f46.google.com with SMTP id k23so10528193pji.0
-        for <mptcp@lists.linux.dev>; Sun, 26 Sep 2021 07:29:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB93FCB
+	for <mptcp@lists.linux.dev>; Sun, 26 Sep 2021 14:29:50 +0000 (UTC)
+Received: by mail-pg1-f170.google.com with SMTP id n18so15164737pgm.12
+        for <mptcp@lists.linux.dev>; Sun, 26 Sep 2021 07:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aImpRo1tXFoohxU2lmnLZDP4zK7ys+eyhb6HmIPSZ9Q=;
-        b=AsACY/ZJPBF0eCOU3jV3Oz8/1o9MgPPWlqQbncWIrYbc3qcPd9tFDW/M8BapmDyMxG
-         N/mqU6Mrd71gFsGIk6lV0HrylVL6FFnPHhr44L+ufq3pLgWO/fFHTVFZRvP8OOqOUOrM
-         8qCz7apVw++Y8G+uzU5QktCSi9YvVtczrGDQBlzlJOMiF+W3ZlN1jGSSqn7DcQMKhdO4
-         bhusM5e0wh8vmg0kCp8BvZKK6iTP7gzeAnY0inEcvqDAraBS+SmKONkyTS0FKNJgYbXn
-         dxyqrkKq/NYAuv7CNuIJ8aBGoZAT30fxaNxHhtHB/USdThFMD+fxBaF6vNdYMmK/dIbO
-         svAg==
+        bh=l/Nh0mUkMfSp5wC9uccppV20cTh8J8w06paeI+Ik/IQ=;
+        b=F7ttpSB3USTI6/Ksz8B22w4JTvgcYYfR44Pdsxy9p18TRtlCl0uOc6Dokt0L2lLkYs
+         MLbhH3J08UXRsMonMXMVM4r6dShmwMe+8dfgcg3FEIa8lGweUBDd01hcKko15czOVD6k
+         mqziFOihmQP/cwDCuytskADuhbf6kJSk/qbY8WkVPd4IGuDtDsSzCh5ZicqY/Csd1Tk2
+         wZ4qKTFttJCbLE1nVZt6aHcT5o9QeeFY7Qvq8IArDHcm4bHbLnO+wuq9e9t8NvWPppPZ
+         KkXAAW9xpy/mVaF9art8y/ev+a2mpSmOm8XzDPuKxK7YK05ICSgDm7bJIR27hal9A6Ax
+         0eZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aImpRo1tXFoohxU2lmnLZDP4zK7ys+eyhb6HmIPSZ9Q=;
-        b=3vrWQraxtf9watgN7xR7zEEsWigK+A2gJSYfmx5jGdU/tfOWFyeBH8pXXr0NS2MvZ7
-         lr0v4X65BsiBcvee9DgV7xO1AqJFsWHFkbevRmAWV5XT4Bgp4TcoiEZsLDZq5kLSX2xG
-         AkaOrcMD3relXw84PMcoyx1C1451feFu858lwiibkyD+f9gf8Qz8eqOQhaLG3S2W+EG4
-         NUlk71tvnSeVCYqJrGjHsllYNvr1wZ3bjU96j+r4S3iLA0aTXNnCGGtvxUm9Oio9tSfw
-         V0TpQcTn/LaNPb2g0cDMeY33JvEP6BagMTmEk/QKlX1X7yl6Jf5YbBmsAf5aYtP4PH/V
-         sf3A==
-X-Gm-Message-State: AOAM5319gE/2Wi7h9P+2atKCIRVbW87ff40BQL9q0LycDwaTHZ0CW3/B
-	5t2vx5BR7radlXbRH4KImO3qMBK8FNA=
-X-Google-Smtp-Source: ABdhPJwYxvtGpu4YdJe9nrgcWTQb/GxEEba0oBsg336RW4KbyPzmytsOODye+w8+xGq+3N/j7uT8bg==
-X-Received: by 2002:a17:90a:c712:: with SMTP id o18mr12351714pjt.124.1632666588636;
-        Sun, 26 Sep 2021 07:29:48 -0700 (PDT)
+        bh=l/Nh0mUkMfSp5wC9uccppV20cTh8J8w06paeI+Ik/IQ=;
+        b=tqGmXwqPg+6y5CuEL83z2VrCCJYb4UDut9GC8hhqJGeCzJCYtHuXGw92sEWU68hVDi
+         ZuoX2T5n7Sq20bLapJuHiKaFIO5OTPkXIkjoBopKPYSPIBOg7CSbWDeYAGqC+uQ+QJ55
+         anlV0cKAPlsJB8oCd1+Bwy12amZ7uh+rYL8ki7TPNh0/aVNUb7PgbPQiomyMzaOXUcDY
+         woJQSg1bRfX2cFYyz9ZlCjUP4t3BZ1BMLGPlNxgYdqq5jDmIjo8t9GsYNoQx48nqM8o8
+         ZKRZi4AvUBr0aC5Y3RoeO7Rx37IdRH5gyxOEVPiEdXvZHTs+EnLUEVZ2j9Wn5upqcprD
+         QtOA==
+X-Gm-Message-State: AOAM532cHVHLjsT/RQzkknFfLeJ9nH3eHfSopEME7mdbn/TQZGntSg4V
+	WDRJ+xTap8EftU0zDso25moei9uZtWI=
+X-Google-Smtp-Source: ABdhPJw24JREICmeRtoqlNjBrPyzsP4nE32aotIdIqwKRZ4OnS4yG11z3Z59NctQnY794xQ8tOg3Kg==
+X-Received: by 2002:a63:f913:: with SMTP id h19mr12734111pgi.351.1632666590238;
+        Sun, 26 Sep 2021 07:29:50 -0700 (PDT)
 Received: from MiBook.mioffice.cn ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id x9sm2421082pjr.44.2021.09.26.07.29.47
+        by smtp.gmail.com with ESMTPSA id x9sm2421082pjr.44.2021.09.26.07.29.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Sep 2021 07:29:48 -0700 (PDT)
+        Sun, 26 Sep 2021 07:29:50 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH mptcp-next v5 2/8] mptcp: add last_fully_acked_dss_start_seq in the msk
-Date: Sun, 26 Sep 2021 22:29:32 +0800
-Message-Id: <d30c647d6795c98797d3734e618016a30d7db13d.1632666254.git.geliangtang@gmail.com>
+Subject: [PATCH mptcp-next v5 3/8] mptcp: infinite mapping sending
+Date: Sun, 26 Sep 2021 22:29:33 +0800
+Message-Id: <ccd77c87a8a73c7ecac8be52e894568147deeeb3.1632666254.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1632666254.git.geliangtang@gmail.com>
 References: <cover.1632666254.git.geliangtang@gmail.com>
@@ -53,56 +53,135 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added a new member named last_fully_acked_dss_start_seq to the
-msk to keep track of the beginning of the last fully-acked data segment.
-This would be updated in __mptcp_clean_una.
+This patch added the infinite mapping sending logic.
+
+Added a new flag send_infinite_map in struct mptcp_subflow_context. Set
+it true when a single contiguous subflow is in use in
+mptcp_pm_mp_fail_received.
+
+In mptcp_sendmsg_frag, if this flag is true, call the new function
+mptcp_update_infinite_map to set the infinite mapping.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/protocol.c | 3 +++
- net/mptcp/protocol.h | 1 +
- 2 files changed, 4 insertions(+)
+ include/net/mptcp.h  |  3 ++-
+ net/mptcp/options.c  |  2 +-
+ net/mptcp/pm.c       |  5 +++++
+ net/mptcp/protocol.c | 19 +++++++++++++++++++
+ net/mptcp/protocol.h | 12 ++++++++++++
+ 5 files changed, 39 insertions(+), 2 deletions(-)
 
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index f83fa48408b3..29e930540ea2 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -35,7 +35,8 @@ struct mptcp_ext {
+ 			frozen:1,
+ 			reset_transient:1;
+ 	u8		reset_reason:4,
+-			csum_reqd:1;
++			csum_reqd:1,
++			infinite_map:1;
+ };
+ 
+ #define MPTCP_RM_IDS_MAX	8
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 422f4acfb3e6..f4591421ed22 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -816,7 +816,7 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 
+ 	opts->suboptions = 0;
+ 
+-	if (unlikely(__mptcp_check_fallback(msk)))
++	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
+ 		return false;
+ 
+ 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 6ab386ff3294..27d43a613e9a 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -251,7 +251,12 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
+ 
+ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+ {
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++
+ 	pr_debug("fail_seq=%llu", fail_seq);
++
++	if (!mptcp_has_another_subflow(sk) && mptcp_is_data_contiguous(sk))
++		subflow->send_infinite_map = 1;
+ }
+ 
+ /* path manager helpers */
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cf8cccfefb51..1cf43073845a 100644
+index 1cf43073845a..60953b61b3c9 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1074,6 +1074,7 @@ static void __mptcp_clean_una(struct sock *sk)
- 			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
- 		}
+@@ -1277,6 +1277,23 @@ static void mptcp_update_data_checksum(struct sk_buff *skb, int added)
+ 	mpext->csum = csum_fold(csum_block_add(csum, skb_checksum(skb, offset, added, 0), offset));
+ }
  
-+		msk->last_fully_acked_dss_start_seq = dfrag->data_seq;
- 		dfrag_clear(sk, dfrag);
- 		cleaned = true;
- 	}
-@@ -2895,6 +2896,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 	msk->snd_una = msk->write_seq;
- 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
- 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
-+	msk->last_fully_acked_dss_start_seq = subflow_req->idsn - 1;
- 
- 	if (mp_opt->suboptions & OPTIONS_MPTCP_MPC) {
- 		msk->can_ack = true;
-@@ -3151,6 +3153,7 @@ void mptcp_finish_connect(struct sock *ssk)
- 	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
- 	WRITE_ONCE(msk->can_ack, 1);
- 	WRITE_ONCE(msk->snd_una, msk->write_seq);
-+	WRITE_ONCE(msk->last_fully_acked_dss_start_seq, subflow->idsn - 1);
- 
- 	mptcp_pm_new_connection(msk, ssk, 0);
- 
++static void mptcp_update_infinite_map(struct mptcp_sock *msk, struct sock *ssk,
++				      struct mptcp_ext *mpext)
++{
++	if (!mpext)
++		return;
++
++	mpext->infinite_map = 1;
++	mpext->data_seq = READ_ONCE(msk->last_fully_acked_dss_start_seq);
++	mpext->subflow_seq = 0;
++	mpext->data_len = 0;
++	mpext->csum = 0;
++
++	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
++	pr_fallback(msk);
++	__mptcp_do_fallback(msk);
++}
++
+ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 			      struct mptcp_data_frag *dfrag,
+ 			      struct mptcp_sendmsg_info *info)
+@@ -1409,6 +1426,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ out:
+ 	if (READ_ONCE(msk->csum_enabled))
+ 		mptcp_update_data_checksum(skb, copy);
++	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
++		mptcp_update_infinite_map(msk, ssk, mpext);
+ 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
+ 	return copy;
+ }
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e090a9244f8b..e9064fec0ed2 100644
+index e9064fec0ed2..005c18e81e18 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -224,6 +224,7 @@ struct mptcp_sock {
- 	u64		remote_key;
- 	u64		write_seq;
- 	u64		snd_nxt;
-+	u64		last_fully_acked_dss_start_seq;
- 	u64		ack_seq;
- 	u64		rcv_wnd_sent;
- 	u64		rcv_data_fin_seq;
+@@ -433,6 +433,7 @@ struct mptcp_subflow_context {
+ 		backup : 1,
+ 		send_mp_prio : 1,
+ 		send_mp_fail : 1,
++		send_infinite_map : 1,
+ 		rx_eof : 1,
+ 		can_ack : 1,        /* only after processing the remote a key */
+ 		disposable : 1,	    /* ctx can be free at ulp release time */
+@@ -876,6 +877,17 @@ static inline void mptcp_do_fallback(struct sock *sk)
+ 
+ #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)", __func__, a)
+ 
++static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
++{
++	struct mptcp_ext *mpext;
++
++	mpext = skb ? mptcp_get_ext(skb) : NULL;
++	if (mpext && mpext->infinite_map)
++		return true;
++
++	return false;
++}
++
+ static inline bool subflow_simultaneous_connect(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
 -- 
 2.31.1
 
