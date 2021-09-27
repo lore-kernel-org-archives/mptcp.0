@@ -1,122 +1,107 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB28F3FCB
-	for <mptcp@lists.linux.dev>; Sun, 26 Sep 2021 14:29:57 +0000 (UTC)
-Received: by mail-pj1-f46.google.com with SMTP id bj3-20020a17090b088300b0019e6603fe89so9791002pjb.4
-        for <mptcp@lists.linux.dev>; Sun, 26 Sep 2021 07:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jt1KMRIAZMC1n0qcBDwo+awr5yycCMAD2SaHZUIXMV0=;
-        b=ODCkjHueSb4z6GxTUE2KyMZnPYfO1ldvqw88PND/6EmCXXTlyXQVMQHqvo5eUb1j8w
-         UeiFykoaFdAfRHHuE2R0LavRMl27soowsg196olt7yYMy/piMQ3PWayHLHkOUqWr2SS6
-         vlA0J0PHw2GjaGzYYZLu3huw95ew0fzExTr7kgxvijhLeqXag2z20cMYbOz6wdOTqgjF
-         0ya77wamcRx9TL2yYkwn/RHlXCUF7e+TwVM98BqX7uEh9fit9X7ui1zezpn7PThocHqZ
-         NoGTtb5KyEYq6bntiq9weZk0RNRC0JLKduP5KjYsYwtAukmxwvzkItd6YX8CUzIXY3Rd
-         9Jtg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295CE3FC7
+	for <mptcp@lists.linux.dev>; Mon, 27 Sep 2021 08:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1632730559;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FOXnhLBubBGTJ+saj6Tv88lQ1Psl3I1X1D5Yr8z8ToQ=;
+	b=VRTroFDVxnyORSj6A91dC3gSmqD7t+dwyhM2FmiPAmC0VKCBWhI6ms8Z0Bi4M5CV5m7krz
+	GVD2hmORXbN/7PhBxIhLA2h+VEbpTdo1sg0Af69UjLUmSsVQlo8+EJcTVU2UFDKNzwiGiS
+	aEDDYKBYNAtsK7q2wOeDEoTuPtqPweE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-470-voMcILwHN9SYwu3cucIjvw-1; Mon, 27 Sep 2021 04:15:57 -0400
+X-MC-Unique: voMcILwHN9SYwu3cucIjvw-1
+Received: by mail-wr1-f72.google.com with SMTP id a17-20020adfed11000000b00160525e875aso6104201wro.23
+        for <mptcp@lists.linux.dev>; Mon, 27 Sep 2021 01:15:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jt1KMRIAZMC1n0qcBDwo+awr5yycCMAD2SaHZUIXMV0=;
-        b=3z9gaeIlI5kkg2OIWldAueuu1+745jTrRgAg+9beyeoqfG1DFFrDEKz0+aBumA4nUU
-         eTnngcUmI7zfEvWkzzH8U28kqIo2t3JyaSe9kQPwRBBT8L1Y/maeINIgeOg4ffTrIygc
-         B3/DovFQJWA5yTJNGVC1SC6C+rfgXutamZUb/Sdz2dbb1FacbM3CWtDsGFw85vy+yhJG
-         U+TyvpT18SeKH+TeNw0JoRFX2BZBeLu/uKqaS91NX9tm982afAGi7Ff7ckSq3sf+ZiGg
-         P3Dn1fpRN5QdTuSmbLX65x/9DRuOrlBqAh68k5obORoKrmk7WkbCoTudYXAIY52EnB4V
-         gNOQ==
-X-Gm-Message-State: AOAM531oHYN29ojOT47ho8Are8q7nIsLE3bavpUvqG1vk4wUvak97zHB
-	KI6zoMbPsdxv5nqMU43oGXvDFAr3Bq4=
-X-Google-Smtp-Source: ABdhPJy7TEv3nx5sLsdV1k6PxAm6gS8Gnbn62TnacE5Ta2DG4Rha6qajtnxK4KnCfsCXb7cdvccs1Q==
-X-Received: by 2002:a17:902:c789:b0:13c:a112:6383 with SMTP id w9-20020a170902c78900b0013ca1126383mr18291300pla.42.1632666597364;
-        Sun, 26 Sep 2021 07:29:57 -0700 (PDT)
-Received: from MiBook.mioffice.cn ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id x9sm2421082pjr.44.2021.09.26.07.29.56
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=FOXnhLBubBGTJ+saj6Tv88lQ1Psl3I1X1D5Yr8z8ToQ=;
+        b=zQKYT51BCvCOk83ewyZXeg2+E0QJ9AzEWTP7tRAj6dAc5s+KaLRpfKbgzH98IKw7xb
+         V3rKGQBwnHZcBjJ9INDcWcJYkuajdsWflYuU4J/Li/jOvpHp7ojo14wS7BwpXOZ2Ympr
+         THVVQKW8J077s6+P13sFIzJvkXx4symJ5OzukGyoq9bx9SGqMMyv0n1uXdJrrQhG7urF
+         Ofsw7xwjSTw35rhMM7k5O3CZNN3pucNQwb1v+A1fByHraAs0J6vTJgCMYtsE8c6u0Y4Q
+         M+bNCMlSN1Q8POwUA6i9UKrM+CpOr39Hi2ycVvZDazdRFRW5DGmt963uRycInQcbjrBB
+         XK2g==
+X-Gm-Message-State: AOAM530PKYq7r3PpJFRlbfEBMnocD5PAjdDsby9vqVGQZeoVFyvla6SN
+	8M445ZKfptTSTAhEGkgCA5qliMpy5u5n4MUmXeRvvW0ZH8uMb2A4rLjQmg0euK9wQoIozQu1xiX
+	ffOsQ6qjNOUqqnzc=
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr25975434wrs.316.1632730556449;
+        Mon, 27 Sep 2021 01:15:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy1tbzbGG9xwVNkyem1no9h8O1rReArGUjjl63nf3FveYU7VC0mKqQT6TmxeqL50vqY8+2nfA==
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr25975419wrs.316.1632730556227;
+        Mon, 27 Sep 2021 01:15:56 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-101-84.dyn.eolo.it. [146.241.101.84])
+        by smtp.gmail.com with ESMTPSA id u14sm14226251wml.24.2021.09.27.01.15.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Sep 2021 07:29:57 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH mptcp-next v5 8/8] DO-NOT-MERGE: mptcp: mp_fail test
-Date: Sun, 26 Sep 2021 22:29:38 +0800
-Message-Id: <20b70e7c602d039f1b073321ec1e87a3641315e7.1632666254.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1632666254.git.geliangtang@gmail.com>
-References: <cover.1632666254.git.geliangtang@gmail.com>
+        Mon, 27 Sep 2021 01:15:55 -0700 (PDT)
+Message-ID: <e4f697a4da0dd4f0c063792c12f2d8e4d5a01ebd.camel@redhat.com>
+Subject: Re: [PATCH v2 mptcp-net] net: introduce and use
+ lock_sock_fast_nested()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Date: Mon, 27 Sep 2021 10:15:52 +0200
+In-Reply-To: <6485e648-1038-736e-4da6-c513efb21ebf@linux.intel.com>
+References: <46317e271da725006df9916b2b2c3d334d3616e1.1632490917.git.pabeni@redhat.com>
+	 <6485e648-1038-736e-4da6-c513efb21ebf@linux.intel.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-./mptcp_join.sh -Cf
+On Fri, 2021-09-24 at 11:51 -0700, Mat Martineau wrote:
+> On Fri, 24 Sep 2021, Paolo Abeni wrote:
+> 
+> > Syzkaller reported a false positive deadlock involving
+> > the nl socket lock and the subflow socket lock:
+> > 
+> 
+> ...
+> 
+> > the problem originates from uncorrect lock annotation in the mptcp
+> > code and is only visible since commit 2dcb96bacce3 ("net: core: Correct
+> > the sock::sk_lock.owned lockdep annotations"), but is present since
+> > the port-based endpoint support initial implementation.
+> > 
+> > This patch addresses the issue introducing a nested variant of
+> > lock_sock_fast() and using it in the relevant code path.
+> > 
+> > Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
+> > Fixes: 2dcb96bacce3 ("net: core: Correct the sock::sk_lock.owned lockdep annotations")
+> > Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> > Reported-and-tested-by: syzbot+1dd53f7a89b299d59eaf@syzkaller.appspotmail.com
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > v1 -> v2:
+> > - fix a typo into a comment (Mat)
+> 
+> Thanks for the v2 and the answers about inline functions vs. exported 
+> symbols.
+> 
+> Ok with me to merge in the export branch and/or upstream. I'm guessing you 
+> might want to send this one to netdev yourself?
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/mptcp/protocol.c                           |  9 +++++++++
- .../testing/selftests/net/mptcp/mptcp_join.sh  | 18 ++++++++++++++++++
- 2 files changed, 27 insertions(+)
+I'm fine doing that. I'll send it after somo more staging into the
+export branch.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c735adc6b835..dec87c05361b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1295,6 +1295,8 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk, struct sock *ssk,
- 	__mptcp_do_fallback(msk);
- }
- 
-+static int j;
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1429,6 +1431,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mptcp_update_data_checksum(skb, copy);
- 	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
- 		mptcp_update_infinite_map(msk, ssk, mpext);
-+
-+	pr_debug("%s j=%d", __func__, j++);
-+	if (j == 20)
-+		skb->data_len = 1;
-+	if (j > 40)
-+		j = 0;
-+
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
- 	return copy;
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fe0c8f3164a7..38663f6373b8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -977,6 +977,24 @@ chk_link_usage()
- 
- subflows_tests()
- {
-+	# 1 subflow
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "1 subflow" 0 0 0
-+
-+	exit
-+
-+	# multiple subflows
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "multiple subflows" 2 2 2
-+
- 	reset
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "no JOIN" "0" "0" "0"
--- 
-2.31.1
+Thanks!
+
+Paolo
 
