@@ -1,228 +1,350 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF0C3FCB
-	for <mptcp@lists.linux.dev>; Tue, 28 Sep 2021 02:19:52 +0000 (UTC)
-Received: by mail-pg1-f171.google.com with SMTP id s11so19572881pgr.11
-        for <mptcp@lists.linux.dev>; Mon, 27 Sep 2021 19:19:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uGqw8K1+BVjNYS2TM9vsKlmr19KBIKAjiukI2+f+fb8=;
-        b=S+lM/RHB1oJxIAmSFdkzD2m+o1Vzkb3hRmMrlE9RC/QvR3WWt+h9KFRZCYiq4GrXOS
-         8iW3juyG+SnWkoXaU1I7fLUs8yOuQxaOaHriTJfaRy0vrtb7PmfItFN8qAqY6M7h+E+X
-         eOq3ZaVxefPbYq/8Nrxtfu+BDg2nJyFfozGgfSoDSzAmi7+aafWIg+hiQfmVdFfOkz8/
-         RoqqWBsKhqsSl9MaIZ5GXLYRdfXN2EHaOHtXEn0vPlSJAkB6KQ4IHd1638ZWi++MpNmv
-         ra7kYrSY24+Ix5y97NMKHKzdb07dKsVvd5sTX830hLACFReOpLaNy9sclUOctCgI79vP
-         AWCA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52F43FCC
+	for <mptcp@lists.linux.dev>; Tue, 28 Sep 2021 08:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1632819207;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hORiUeeTxsmnPt6U8F7qpmuRgBxNTdiRLakSfML5EG8=;
+	b=a24LIAWFV7nyJAo/ydZkC722jhogaO6VL1V/uVnD9Diy4H9uylR/XUFYHb5ivFJVNjN8tz
+	/P6yYcu2SagOhtD2cFYR4ZXj7nnsrK/EQbeCqAEpJ/NAcSz8DohYErFrtlUq400FXpkpa9
+	0uJzs7cIqthba0zPx9LTx+hIW2rglxs=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-JivWydySPraBVb_sexZ5Yg-1; Tue, 28 Sep 2021 04:53:26 -0400
+X-MC-Unique: JivWydySPraBVb_sexZ5Yg-1
+Received: by mail-wr1-f72.google.com with SMTP id p12-20020a5d4e0c000000b001605e330b62so5030942wrt.5
+        for <mptcp@lists.linux.dev>; Tue, 28 Sep 2021 01:53:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uGqw8K1+BVjNYS2TM9vsKlmr19KBIKAjiukI2+f+fb8=;
-        b=wfOtOoEd5wolj3B5risZa1g6idNreIsqtEy5ssO6a49DTsriTsLpxaiLsHG5T6Sq3q
-         8NnrQ6+E4iDbNuPpYy+AfGXI9BgzMrvf/q0fyanEvKCCMTuhe93YHtIc3zsfYOqeXjTH
-         c3zS/3rS/jEk6ZHrb4iYbrRgCOex6EX8F+osnJWLhT+CgAdapcmFq8cwrND/JYLN+J/d
-         fIvOZ9dX/70aMywLbU9uTzktoSsjLrLeANknPp84wqQi9uknS/+AfV3xkds4ea3lAsF1
-         /QApUnpC8XwrQ/Ov5Zp/chJu7ZWQZU+odYCMNZ2SQsCqAud5e2Ik2fyDp3Ld0e523EWV
-         i5IA==
-X-Gm-Message-State: AOAM5323TCl7G5vjlwlCv0NayYWP7b9yJH1KS3T0blB45ktReC559EIG
-	wzlXNQ7WhPSarfK8bVUDnJFXGp2sJ/IKOP4UlAg=
-X-Google-Smtp-Source: ABdhPJzcmef38s7Kj0x+o8/uv3Q1ENWcShlSXmJyWRCrEMGwuRRLiOVRlZztrSK/KKhZIetfRcyvFRc2+8LvzI+ZxwU=
-X-Received: by 2002:a63:1606:: with SMTP id w6mr473817pgl.253.1632795591770;
- Mon, 27 Sep 2021 19:19:51 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=hORiUeeTxsmnPt6U8F7qpmuRgBxNTdiRLakSfML5EG8=;
+        b=PWGIZuQadafJS8yTxYlHmYgs8fMfqiM6df4WRYL39S/P95kobvN5OG/FO+y+IReP+p
+         WlUmQ+5o4nStuxumMoPv7urR/CQHqVolH2EJ4vXl0Ak+nq+kzBkWfd9c5CC4WCJVLxDr
+         kFwl0A7s7ohVNEqSg8VTADjE967VU90c8llbg+HeVhDYgleCLJaW49I1567tuXsMI6u6
+         zZAyp+qjrNmdVEP+cKQHgCqeEfI/ICKsVz03TPWS+GFr71TTd3ryViavYsbNH4lgiccI
+         6yPy2z+piLMe8yi0w1LjXdv55mWYoAlTR+RV1cUdf5LiI6MocKuig2B0P1s5QrYMnNXc
+         228A==
+X-Gm-Message-State: AOAM532ww4tzu0u6+pj9DWbqb1Ztahb/TWL61eq9g7E5Rxa5sZeYQhli
+	p/ZmJUhgv9HDG9sfrxNPfAlE/1gp0T/RVSt5sN7chNjpf4/zTO75q3tEcaOzy0j8J2CjypmA+K4
+	aZ4fzzYlkt+yQntA=
+X-Received: by 2002:a7b:cc8d:: with SMTP id p13mr3435777wma.10.1632819204452;
+        Tue, 28 Sep 2021 01:53:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJybKVV+ptvzjBVT6JMSL9ytNt6rFh3WHIqaYTjNjXx+rZyvDLx7dGGrl/FwSP1Vh7rwbUitQQ==
+X-Received: by 2002:a7b:cc8d:: with SMTP id p13mr3435755wma.10.1632819204112;
+        Tue, 28 Sep 2021 01:53:24 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-101-84.dyn.eolo.it. [146.241.101.84])
+        by smtp.gmail.com with ESMTPSA id k18sm18771929wrh.68.2021.09.28.01.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Sep 2021 01:53:23 -0700 (PDT)
+Message-ID: <8cdaae61060467ade9e6ad15adcf4115514123d0.camel@redhat.com>
+Subject: Re: [PATCH v2 mptcp-net] mptcp: fix possible stall on recvmsg()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev,
+ fwestpha@redhat.com
+Date: Tue, 28 Sep 2021 10:53:22 +0200
+In-Reply-To: <9fb619b-d119-e22c-cba4-7d9a83d74b3@linux.intel.com>
+References: <9052bd061a82d1527fa34a74939c0df7f69cdf54.1632490689.git.pabeni@redhat.com>
+	  <f63866d0-f43f-3941-73f0-c3ec59236589@linux.intel.com>
+	 <1f7e7654046b8176e822a36d3c60810462f2a0eb.camel@redhat.com>
+	 <9fb619b-d119-e22c-cba4-7d9a83d74b3@linux.intel.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1632666254.git.geliangtang@gmail.com> <50885831cb65affbe180d3d9be3ba879f8e331f2.1632666254.git.geliangtang@gmail.com>
- <ccd12bb9-df4b-e646-9a65-e8de219e15c2@linux.intel.com>
-In-Reply-To: <ccd12bb9-df4b-e646-9a65-e8de219e15c2@linux.intel.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue, 28 Sep 2021 10:19:40 +0800
-Message-ID: <CA+WQbwuQ_J2r6JmunhUX4z7jb3V3PPotertyUwFMCoS51fj+dQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v5 1/8] mptcp: track and update contiguous data status
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, 
-	Matthieu Baerts <matthieu.baerts@tessares.net>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Mat Martineau <mathew.j.martineau@linux.intel.com> =E4=BA=8E2021=E5=B9=B49=
-=E6=9C=8828=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=888:52=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> On Sun, 26 Sep 2021, Geliang Tang wrote:
->
-> > This patch added a new member last_retrans_seq in mptcp_subflow_context
-> > to track the last retransmitting sequence number.
-> >
-> > Add a new helper named mptcp_is_data_contiguous() to check whether the
-> > data is contiguous on a subflow.
-> >
-> > When a bad checksum is detected and a single contiguous subflow is in u=
-se,
-> > don't send RST + MP_FAIL, send data_ack + MP_FAIL instead.
-> >
-> > Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
->
-> Hi Geliang -
->
-> I know there's been a lot of churn in this part of the patch series,
-> hopefully we can simplify a little to allow us to merge the first step of
-> infinite mapping send/recv.
+On Mon, 2021-09-27 at 11:05 -0700, Mat Martineau wrote:
+> On Mon, 27 Sep 2021, Paolo Abeni wrote:
+> 
+> > On Fri, 2021-09-24 at 15:01 -0700, Mat Martineau wrote:
+> > > On Fri, 24 Sep 2021, Paolo Abeni wrote:
+> > > 
+> > > > recvmsg() can enter an infinite loop if the caller provides the
+> > > > MSG_WAITALL, the data present in the receive queue is not
+> > > > sufficient to fulfill the request and no more data is received by
+> > > > the peer.
+> > > > 
+> > > > When the above happens, mptcp_wait_data() will always return with
+> > > > no wait, as the MPTCP_DATA_READY flag checked by such function is
+> > > > set and never cleared in such code path.
+> > > > 
+> > > > Leveraging the above syzbot was able to trigger an RCU stall:
+> > > > 
+> > > > rcu: INFO: rcu_preempt self-detected stall on CPU
+> > > > rcu:    0-...!: (10499 ticks this GP) idle=0af/1/0x4000000000000000 softirq=10678/10678 fqs=1
+> > > >        (t=10500 jiffies g=13089 q=109)
+> > > > rcu: rcu_preempt kthread starved for 10497 jiffies! g13089 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
+> > > > rcu:    Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+> > > > rcu: RCU grace-period kthread stack dump:
+> > > > task:rcu_preempt     state:R  running task     stack:28696 pid:   14 ppid:     2 flags:0x00004000
+> > > > Call Trace:
+> > > > context_switch kernel/sched/core.c:4955 [inline]
+> > > > __schedule+0x940/0x26f0 kernel/sched/core.c:6236
+> > > > schedule+0xd3/0x270 kernel/sched/core.c:6315
+> > > > schedule_timeout+0x14a/0x2a0 kernel/time/timer.c:1881
+> > > > rcu_gp_fqs_loop+0x186/0x810 kernel/rcu/tree.c:1955
+> > > > rcu_gp_kthread+0x1de/0x320 kernel/rcu/tree.c:2128
+> > > > kthread+0x405/0x4f0 kernel/kthread.c:327
+> > > > ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
+> > > > rcu: Stack dump where RCU GP kthread last ran:
+> > > > Sending NMI from CPU 0 to CPUs 1:
+> > > > NMI backtrace for cpu 1
+> > > > CPU: 1 PID: 8510 Comm: syz-executor827 Not tainted 5.15.0-rc2-next-20210920-syzkaller #0
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > > RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:84 [inline]
+> > > > RIP: 0010:memory_is_nonzero mm/kasan/generic.c:102 [inline]
+> > > > RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:128 [inline]
+> > > > RIP: 0010:memory_is_poisoned mm/kasan/generic.c:159 [inline]
+> > > > RIP: 0010:check_region_inline mm/kasan/generic.c:180 [inline]
+> > > > RIP: 0010:kasan_check_range+0xc8/0x180 mm/kasan/generic.c:189
+> > > > Code: 38 00 74 ed 48 8d 50 08 eb 09 48 83 c0 01 48 39 d0 74 7a 80 38 00 74 f2 48 89 c2 b8 01 00 00 00 48 85 d2 75 56 5b 5d 41 5c c3 <48> 85 d2 74 5e 48 01 ea eb 09 48 83 c0 01 48 39 d0 74 50 80 38 00
+> > > > RSP: 0018:ffffc9000cd676c8 EFLAGS: 00000283
+> > > > RAX: ffffed100e9a110e RBX: ffffed100e9a110f RCX: ffffffff88ea062a
+> > > > RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff888074d08870
+> > > > RBP: ffffed100e9a110e R08: 0000000000000001 R09: ffff888074d08877
+> > > > R10: ffffed100e9a110e R11: 0000000000000000 R12: ffff888074d08000
+> > > > R13: ffff888074d08000 R14: ffff888074d08088 R15: ffff888074d08000
+> > > > FS:  0000555556d8e300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+> > > > S:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > CR2: 0000000020000180 CR3: 0000000068909000 CR4: 00000000001506e0
+> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > Call Trace:
+> > > > instrument_atomic_read_write include/linux/instrumented.h:101 [inline]
+> > > > test_and_clear_bit include/asm-generic/bitops/instrumented-atomic.h:83 [inline]
+> > > > mptcp_release_cb+0x14a/0x210 net/mptcp/protocol.c:3016
+> > > > release_sock+0xb4/0x1b0 net/core/sock.c:3204
+> > > > mptcp_wait_data net/mptcp/protocol.c:1770 [inline]
+> > > > mptcp_recvmsg+0xfd1/0x27b0 net/mptcp/protocol.c:2080
+> > > > inet6_recvmsg+0x11b/0x5e0 net/ipv6/af_inet6.c:659
+> > > > sock_recvmsg_nosec net/socket.c:944 [inline]
+> > > > ____sys_recvmsg+0x527/0x600 net/socket.c:2626
+> > > > ___sys_recvmsg+0x127/0x200 net/socket.c:2670
+> > > > do_recvmmsg+0x24d/0x6d0 net/socket.c:2764
+> > > > __sys_recvmmsg net/socket.c:2843 [inline]
+> > > > __do_sys_recvmmsg net/socket.c:2866 [inline]
+> > > > __se_sys_recvmmsg net/socket.c:2859 [inline]
+> > > > __x64_sys_recvmmsg+0x20b/0x260 net/socket.c:2859
+> > > > do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+> > > > do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+> > > > entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > > > RIP: 0033:0x7fc200d2dc39
+> > > > Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+> > > > RSP: 002b:00007ffc5758e5a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+> > > > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc200d2dc39
+> > > > RDX: 0000000000000002 RSI: 00000000200017c0 RDI: 0000000000000003
+> > > > RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000f0b5ff
+> > > > R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000000003
+> > > > R13: 00007ffc5758e5d0 R14: 00007ffc5758e5c0 R15: 0000000000000003
+> > > > 
+> > > > Fix the issue replacing the MPTCP_DATA_READY bit
+> > > 
+> > > for incoming data
+> > > 
+> > > > with direct
+> > > > inspection of the msk receive queue.
+> > > 
+> > > (since MPTCP_DATA_READY is still used for incoming connections)
+> > > 
+> > > > Reported-and-tested-by: syzbot+3360da629681aa0d22fe@syzkaller.appspotmail.com
+> > > > Fixes: 7a6a6cbc3e59 ("mptcp: recvmsg() can drain data from multiple subflow")
+> > > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > > > ---
+> > > > v1 -> v2:
+> > > > - instead of do more fiddling with the DATA_READY bit, just
+> > > >   check sk_receive_queue
+> > > > ---
+> > > > net/mptcp/protocol.c | 52 ++++++++++----------------------------------
+> > > > 1 file changed, 12 insertions(+), 40 deletions(-)
+> > > > 
+> > > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > > > index e5df0b5971c8..cc996e8973b3 100644
+> > > > --- a/net/mptcp/protocol.c
+> > > > +++ b/net/mptcp/protocol.c
+> > > > @@ -528,7 +528,6 @@ static bool mptcp_check_data_fin(struct sock *sk)
+> > > > 
+> > > > 		sk->sk_shutdown |= RCV_SHUTDOWN;
+> > > > 		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> > > > -		set_bit(MPTCP_DATA_READY, &msk->flags);
+> > > > 
+> > > > 		switch (sk->sk_state) {
+> > > > 		case TCP_ESTABLISHED:
+> > > > @@ -742,10 +741,9 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+> > > > 
+> > > > 	/* Wake-up the reader only for in-sequence data */
+> > > > 	mptcp_data_lock(sk);
+> > > > -	if (move_skbs_to_msk(msk, ssk)) {
+> > > > -		set_bit(MPTCP_DATA_READY, &msk->flags);
+> > > > +	if (move_skbs_to_msk(msk, ssk))
+> > > > 		sk->sk_data_ready(sk);
+> > > > -	}
+> > > > +
+> > > > 	mptcp_data_unlock(sk);
+> > > > }
+> > > > 
+> > > > @@ -847,7 +845,6 @@ static void mptcp_check_for_eof(struct mptcp_sock *msk)
+> > > > 		sk->sk_shutdown |= RCV_SHUTDOWN;
+> > > > 
+> > > > 		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> > > > -		set_bit(MPTCP_DATA_READY, &msk->flags);
+> > > > 		sk->sk_data_ready(sk);
+> > > > 	}
+> > > > 
+> > > > @@ -1759,21 +1756,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> > > > 	return copied ? : ret;
+> > > > }
+> > > > 
+> > > > -static void mptcp_wait_data(struct sock *sk, long *timeo)
+> > > > -{
+> > > > -	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+> > > > -	struct mptcp_sock *msk = mptcp_sk(sk);
+> > > > -
+> > > > -	add_wait_queue(sk_sleep(sk), &wait);
+> > > > -	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+> > > > -
+> > > > -	sk_wait_event(sk, timeo,
+> > > > -		      test_bit(MPTCP_DATA_READY, &msk->flags), &wait);
+> > > > -
+> > > > -	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+> > > > -	remove_wait_queue(sk_sleep(sk), &wait);
+> > > > -}
+> > > > -
+> > > > static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+> > > > 				struct msghdr *msg,
+> > > > 				size_t len, int flags,
+> > > > @@ -2077,19 +2059,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+> > > > 		}
+> > > > 
+> > > > 		pr_debug("block timeout %ld", timeo);
+> > > > -		mptcp_wait_data(sk, &timeo);
+> > > > -	}
+> > > > -
+> > > > -	if (skb_queue_empty_lockless(&sk->sk_receive_queue) &&
+> > > > -	    skb_queue_empty(&msk->receive_queue)) {
+> > > > -		/* entire backlog drained, clear DATA_READY. */
+> > > > -		clear_bit(MPTCP_DATA_READY, &msk->flags);
+> > > > -
+> > > > -		/* .. race-breaker: ssk might have gotten new data
+> > > > -		 * after last __mptcp_move_skbs() returned false.
+> > > > -		 */
+> > > > -		if (unlikely(__mptcp_move_skbs(msk)))
+> > > > -			set_bit(MPTCP_DATA_READY, &msk->flags);
+> > > > +		sk_wait_data(sk, &timeo, NULL);
+> > > > 	}
+> > > > 
+> > > > out_err:
+> > > > @@ -2098,9 +2068,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+> > > > 			tcp_recv_timestamp(msg, sk, &tss);
+> > > > 	}
+> > > > 
+> > > > -	pr_debug("msk=%p data_ready=%d rx queue empty=%d copied=%d",
+> > > > -		 msk, test_bit(MPTCP_DATA_READY, &msk->flags),
+> > > > -		 skb_queue_empty_lockless(&sk->sk_receive_queue), copied);
+> > > > +	pr_debug("msk=%p rx queue empty=%d:%d copied=%d",
+> > > > +		 msk, skb_queue_empty_lockless(&sk->sk_receive_queue),
+> > > > +		 skb_queue_empty(&msk->receive_queue), copied);
+> > > > 	if (!(flags & MSG_PEEK))
+> > > > 		mptcp_rcv_space_adjust(msk, copied);
+> > > > 
+> > > > @@ -2368,7 +2338,6 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+> > > > 	inet_sk_state_store(sk, TCP_CLOSE);
+> > > > 	sk->sk_shutdown = SHUTDOWN_MASK;
+> > > > 	smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> > > > -	set_bit(MPTCP_DATA_READY, &msk->flags);
+> > > > 	set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags);
+> > > > 
+> > > > 	mptcp_close_wake_up(sk);
+> > > > @@ -3385,8 +3354,11 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+> > > > 
+> > > > static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
+> > > > {
+> > > > -	return test_bit(MPTCP_DATA_READY, &msk->flags) ? EPOLLIN | EPOLLRDNORM :
+> > > > -	       0;
+> > > > +	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue) &&
+> > > > +            skb_queue_empty_lockless(&msk->receive_queue))
+> > > 
+> > > This is the tricky bit, as it has potential to be racy. I _think_ it works
+> > > out ok because skbs are moved from the msk->sk_receive_queue to
+> > > msk->receive_queue by skb_queue_splice_tail_init().
+> > > 
+> > > skb_queue_splice_tail_init() will reinitialize sk_receive_queue only after
+> > > the splice is complete (although __skb_queue_head_init() unfortunately
+> > > doesn't use WRITE_ONCE()). If both sk_receive_queue and receive_queue
+> > > appear to be non-empty while a splice is in progress, that's not a problem
+> > > since the code above will bypass the second check and still correctly
+> > > return EPOLLIN | EPOLLRDNORM.
+> > > 
+> > > Do you agree? Seems like this should be explained in a comment in
+> > > mptcp_check_readable() too.
+> > 
+> > Yes, this part is a bit tricky. Still I think avoding MPTCP_DATA_READY
+> > usage in this case simplifies the code make the receive path more
+> > clear.
+> > 
+> 
+> I agree, it's clearer.
+> 
+> > My understanding is that poll() is not supposed to work reliably when
+> > another process is doing a concurrent read operation on the same socket
+> > - AFAICS, it can't without locking.
+> > 
+> > Only a concurrent read() can remove packets from sk_receive_queue()
+> > and/or from msk->receive_queue(). So my take is that we can just ignore
+> > such scenario.
+> > 
+> 
+> To clarify, my concern was not so much with concurrent reads but with the 
+> splice that happens in mptcp_data_ready() when data arrives on a subflow. 
 
-Hi Mat, Paolo, Matt,
+uhm... I don't see that splice in the receive path?!?
+skb_queue_splice_tail_init() is called only by mptcp_destroy_common()
+and __mptcp_splice_receive_queue(). The latter is invoked by only
+mptcp_recvmsg() and __mptcp_move_skbs(). Finally __mptcp_move_skbs() is
+invoked only by mptcp_recvmsg().
 
-I prefer to continue doing more iterations of this series instead of
-merging part of them first. There's still some work to do in it, but it's
-nearly finished. I'll send a v6 recently.
+To splice the sk_receive_queue into msk->receive_queue, we need both
+the msk socket lock and the msk data lock, so we can't do that from the
+plain receive path (data lock only acquired).
 
-And the infinite mapping support is the last issue assigned to me on
-GitHub. So I'm thinking about what should I do next. Could you give me
-some suggestions?
+> If the splice implementation were to clear the source queue before 
+> updating the destination, or if receive_queue was checked before 
+> sk_receive_queue, the lockless poll could "see" two empty queues even 
+> though there was data to read.
+> 
+> Both the ordering in the code above and the implentation of the 
+> splice/init make sure that the only slight weirdness due to concurrency 
+> would be to see two non-empty queues - which is fine for polling.
+> 
+> > As for an additional comment:
+> > 
+> > 	/* both queues can be empty only when a concurrent read splices
+> > 	 * sk_receive_queue into receive_queue
+> > 	 */
+> > 
+> > WDYT?
+> 
+> How about "Concurrent splices from sk_receive_queue into receive_queue 
+> will always show at least one non-empty queue when checked in this order." 
+> ?
 
-Thanks,
--Geliang
+Fine by me.
 
->
-> In v3 and v4 reviews, I suggested tracking the subflow sequence number
-> like you do in this patch. After the discussion in the 2021-09-23 meeting=
-,
-> proper tracking of contiguous data appeared even more complicated, so
-> Paolo had a suggestion to allow fallback in one simple-to-check case: Onl=
-y
-> do infinite mapping fallback if there is a single subflow AND there have
-> been no retransmissions AND there have never been any MP_JOINs.
->
-> That can be tracked with a "allow_infinite_fallback" bool in mptcp_sock,
-> which gets initialized to 'true' when the connection begins and is set to
-> 'false' on any retransmit or successful MP_JOIN.
->
-> Paolo, is that an accurate summary?
->
->
-> It's important that this type of fallback only happens when it is
-> guaranteed that the stream is fully in-sequence, otherwise the
-> application's data gets corrupted. The above suggestion lets us merge
-> working infinite mapping code, and then figure out the more complicated
-> "fallback after retransmissions or join" logic in a separate patch series=
-.
->
->
-> Thanks,
->
-> Mat
->
->
->
-> > ---
-> > net/mptcp/protocol.c |  6 ++++++
-> > net/mptcp/protocol.h |  8 ++++++++
-> > net/mptcp/subflow.c  | 12 ++++++------
-> > 3 files changed, 20 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index f8ad049d6941..cf8cccfefb51 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -729,6 +729,9 @@ void mptcp_data_ready(struct sock *sk, struct sock =
-*ssk)
-> >       if (unlikely(subflow->disposable))
-> >               return;
-> >
-> > +     if (!subflow->last_retrans_seq || mptcp_is_data_contiguous(ssk))
-> > +             subflow->last_retrans_seq =3D tcp_sk(ssk)->snd_una - 1;
-> > +
-> >       ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
-> >       sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
-> >       if (unlikely(ssk_rbuf > sk_rbuf))
-> > @@ -2415,6 +2418,7 @@ static void mptcp_check_fastclose(struct mptcp_so=
-ck *msk)
-> > static void __mptcp_retrans(struct sock *sk)
-> > {
-> >       struct mptcp_sock *msk =3D mptcp_sk(sk);
-> > +     struct mptcp_subflow_context *subflow;
-> >       struct mptcp_sendmsg_info info =3D {};
-> >       struct mptcp_data_frag *dfrag;
-> >       size_t copied =3D 0;
-> > @@ -2464,6 +2468,8 @@ static void __mptcp_retrans(struct sock *sk)
-> >               dfrag->already_sent =3D max(dfrag->already_sent, info.sen=
-t);
-> >               tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
-> >                        info.size_goal);
-> > +             subflow =3D mptcp_subflow_ctx(ssk);
-> > +             subflow->last_retrans_seq =3D tcp_sk(ssk)->snd_nxt;
-> >       }
-> >
-> >       release_sock(ssk);
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 7379ab580a7e..e090a9244f8b 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -416,6 +416,7 @@ struct mptcp_subflow_context {
-> >       u32     map_data_len;
-> >       __wsum  map_data_csum;
-> >       u32     map_csum_len;
-> > +     u32     last_retrans_seq;
-> >       u32     request_mptcp : 1,  /* send MP_CAPABLE */
-> >               request_join : 1,   /* send MP_JOIN */
-> >               request_bkup : 1,
-> > @@ -625,6 +626,13 @@ static inline bool mptcp_has_another_subflow(struc=
-t sock *ssk)
-> >       return false;
-> > }
-> >
-> > +static inline bool mptcp_is_data_contiguous(struct sock *ssk)
-> > +{
-> > +     struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-> > +
-> > +     return before(subflow->last_retrans_seq, tcp_sk(ssk)->snd_una);
-> > +}
-> > +
-> > void __init mptcp_proto_init(void);
-> > #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> > int __init mptcp_proto_v6_init(void);
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index 6172f380dfb7..a8f46a48feb1 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -1166,15 +1166,15 @@ static bool subflow_check_data_avail(struct soc=
-k *ssk)
-> > fallback:
-> >       /* RFC 8684 section 3.7. */
-> >       if (subflow->send_mp_fail) {
-> > -             if (mptcp_has_another_subflow(ssk)) {
-> > +             if (mptcp_has_another_subflow(ssk) || !mptcp_is_data_cont=
-iguous(ssk)) {
-> > +                     ssk->sk_err =3D EBADMSG;
-> > +                     tcp_set_state(ssk, TCP_CLOSE);
-> > +                     subflow->reset_transient =3D 0;
-> > +                     subflow->reset_reason =3D MPTCP_RST_EMIDDLEBOX;
-> > +                     tcp_send_active_reset(ssk, GFP_ATOMIC);
-> >                       while ((skb =3D skb_peek(&ssk->sk_receive_queue))=
-)
-> >                               sk_eat_skb(ssk, skb);
-> >               }
-> > -             ssk->sk_err =3D EBADMSG;
-> > -             tcp_set_state(ssk, TCP_CLOSE);
-> > -             subflow->reset_transient =3D 0;
-> > -             subflow->reset_reason =3D MPTCP_RST_EMIDDLEBOX;
-> > -             tcp_send_active_reset(ssk, GFP_ATOMIC);
-> >               WRITE_ONCE(subflow->data_avail, 0);
-> >               return true;
-> >       }
-> > --
-> > 2.31.1
-> >
-> >
-> >
->
-> --
-> Mat Martineau
-> Intel
->
+Thanks!
+
+Paolo
+
