@@ -1,67 +1,108 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446952F80
-	for <mptcp@lists.linux.dev>; Tue, 28 Sep 2021 21:18:44 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10121"; a="221602983"
-X-IronPort-AV: E=Sophos;i="5.85,330,1624345200"; 
-   d="scan'208";a="221602983"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2021 14:18:25 -0700
-X-IronPort-AV: E=Sophos;i="5.85,330,1624345200"; 
-   d="scan'208";a="478900570"
-Received: from snanja-mobl.amr.corp.intel.com ([10.212.220.56])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2021 14:18:25 -0700
-Date: Tue, 28 Sep 2021 14:18:24 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: parthaz lokesh <parthazlokesh@gmail.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: Help with MPTCPV1 server setup
-In-Reply-To: <CAJck1w3K8uzVbgmk_UHPPA-T7xh7Gcj_4zdUn-mL-vLZXPoHNQ@mail.gmail.com>
-Message-ID: <c318f8eb-5def-a41f-36b2-260736679c1@linux.intel.com>
-References: <CAJck1w3K8uzVbgmk_UHPPA-T7xh7Gcj_4zdUn-mL-vLZXPoHNQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01947173
+	for <mptcp@lists.linux.dev>; Wed, 29 Sep 2021 07:35:12 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id k26so1215771pfi.5
+        for <mptcp@lists.linux.dev>; Wed, 29 Sep 2021 00:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FV4VBygAKqfce6atRfm7MM7VKRPKrhvvjxIwES2bKMs=;
+        b=JmlM15e4eIKHxjL03S2CRF3vfcrE6s92mfNIercW78daeHOdYwLdKxeq/XQAq2jjqc
+         I1MrgSYFT7CdYRrC+ocDgQV3LB+kaZBtbojWr4jeC8LyVtnCMYdVSuQTDVoTjVVQhO1v
+         elNJ/T7xqkQ+YOboiOjibqFUqxcSbSIfM+soDMk8QNFSfoTHDqkx8GH1IDZUI6CAVXlA
+         CHEOdN9FGWyFvTVogCJDFEhB7nUhRyhpN0szQ1HTqoMyl1tKMtat7z6GoKttKarfwK4m
+         qpcwgON+BKOaEDmYExO5aP7UpjZBIRWuUlOIA43kgVHOz/YAtD9Hu2EcPf53Lb+DJiD8
+         yYVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FV4VBygAKqfce6atRfm7MM7VKRPKrhvvjxIwES2bKMs=;
+        b=WE1kcPEh0LvPUjF3LuOMbeh09kmYuvqyFktlNejULODUuPqo2TAOjnttujETZ9Ql1Z
+         U3mAmvzJX/7yLhqkG9xZwnBXPcQ7a94z7pI7bUtT2CoSgpxhKaJJK3aFwc55lYwrbuqW
+         BKmfAg0QLo0PL0FH4Hgp6ZKndhvQAgJOQilhZWCuolireAMcyBzSL2gP2vNycTJTsMZE
+         e95OOlsNc/e2IEvIuBkQt/vGvhe+KLNcQLy2r2vS2l7DxMfPGcsWQvz9BJOnxXnnp4+r
+         I1utcFTbDkeiRw4cXdqDMVsbSihPsN7oaX19GnApUDf9sS7I4Xsr6Lqdk5VRAFWJrjut
+         Fm7g==
+X-Gm-Message-State: AOAM530GTpneMAUid1wm58dGFCnES9fg1k5psGypTVRvVgQByKIzuTq2
+	5K3DUgWsB7VDmIQUWByDlIHATUkyRUl4zQ==
+X-Google-Smtp-Source: ABdhPJzDolYtf4LVNUPAz7zUSQo9XfoaVJ/DaKNHQtfRhUrzGc/RHioMXuAOKJvS1NMrbGlqduXHaA==
+X-Received: by 2002:a63:da54:: with SMTP id l20mr8410014pgj.341.1632900912280;
+        Wed, 29 Sep 2021 00:35:12 -0700 (PDT)
+Received: from MiBook.mioffice.cn ([209.9.72.212])
+        by smtp.gmail.com with ESMTPSA id gn11sm937853pjb.36.2021.09.29.00.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Sep 2021 00:35:11 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [PATCH mptcp-next v6 0/9] The infinite mapping support
+Date: Wed, 29 Sep 2021 15:34:58 +0800
+Message-Id: <cover.1632900306.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
+v6:
+ - use allow_infinite_fallback instead of last_retrans_seq.
+ - rename mptcp_is_data_contiguous to mptcp_allow_infinite_fallback.
+ - rename last_fully_acked_dss_start_seq to last_ack_dss_start.
 
-On Fri, 24 Sep 2021, parthaz lokesh wrote:
+v5:
+ - move last_retrans_seq from msk to mptcp_subflow_context
 
-> Hello,
->
-> I am trying to set up a ubuntu server with MPTCPV1(5.14v kernel). I am
-> not seeing mp_capable in the syn packet after setting
-> /proc/sy/net/mptcp/enabled value to 1. Is this expected behaviour?   I
-> assume ip mptcp commands don't need to be executed for initial
-> mpcapable subflow. In MPTCPV0 it used to work after setting it to 1.
->
-> Mptcp Wi-ki page redirected to this systemtap script. script
-> https://github.com/multipath-tcp/mptcp_net-next/issues/18#issuecomment-650529642.
-> But unable to install debug symbol packages(required for above script
-> to work) for 5.14kernel in ubuntu.
->
-> Is there an easy way to enable mptcp system wide and send mpcapable
-> without tapping the socket with IPPROTO_MPTCP?
+v4:
+ - update patch 1 and patch 2
 
-Hi Parthaz -
+v3:
+ - drop MPTCP_INFINITE_DONE flag
+ - drop MAPPING_INFINITE
+ - add mptcp_is_data_contiguous helper
+ - add the fallback check
+ - The u32 target testcase has not been completed yet.
 
-There is not a way to force all TCP sockets to use MPTCP in the upstream 
-kernel (v5.6 and later), since these kernels have a completely separate 
-IPPROTO_MPTCP socket type for MPTCP connections. The multipath-tcp.org 
-kernel (for MPTCP v0) has a different design with significant changes 
-to the TCP core.
+v2:
+ - add MPTCP_INFINITE_DONE flag
+ - add MAPPING_INFINITE mapping status
+ - add start_seq in the msk
 
-mptcpd v0.8 (just released) has a 'mptcpize' utility that might work for 
-you. It allows you to run legacy binaries (that use TCP sockets) with 
-MPTCP enabled by using LD_PRELOAD to remap TCP sockets to IPPROTO_MPTCP. 
-More information at https://github.com/intel/mptcpd#multipath-tcp-daemon
+v1:
+ - add noncontiguous flag
+ - add the mibs check
+ - tag: export/20210904T080009
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/216
 
+Geliang Tang (9):
+  mptcp: don't send RST for single subflow
+  mptcp: add the fallback check
+  mptcp: track and update contiguous data status
+  mptcp: add last_ack_dss_start in the msk
+  mptcp: infinite mapping sending
+  mptcp: infinite mapping receiving
+  mptcp: add mib for infinite map sending
+  selftests: mptcp: add infinite map mibs check
+  DO-NOT-MERGE: mptcp: mp_fail test
 
---
-Mat Martineau
-Intel
+ include/net/mptcp.h                           |  3 +-
+ net/mptcp/mib.c                               |  1 +
+ net/mptcp/mib.h                               |  1 +
+ net/mptcp/options.c                           |  2 +-
+ net/mptcp/pm.c                                |  5 ++
+ net/mptcp/protocol.c                          | 34 +++++++++++
+ net/mptcp/protocol.h                          | 23 +++++++-
+ net/mptcp/subflow.c                           | 54 +++++++++---------
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 56 +++++++++++++++++++
+ 9 files changed, 149 insertions(+), 30 deletions(-)
+
+-- 
+2.31.1
+
