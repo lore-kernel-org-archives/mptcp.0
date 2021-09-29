@@ -1,50 +1,39 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746B93FCB
-	for <mptcp@lists.linux.dev>; Wed, 29 Sep 2021 07:35:26 +0000 (UTC)
-Received: by mail-pl1-f179.google.com with SMTP id y1so896894plk.10
-        for <mptcp@lists.linux.dev>; Wed, 29 Sep 2021 00:35:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D1czgHb4cqajH/gvizEF6+XERd/QJi5ZDToHi+OE9hM=;
-        b=ZnDQTgs81IdWfWskA+NAcKbgVzYiRHa/wH1YlbtvkY1nSO0dwob2OxZrhvBT0agi8U
-         BnZmkHF9EgiE4/IR2eCeQAS3eaZHT7IAnZZGudlEAaKYnTa0tq5jhS1JpEu98iSLFhh8
-         1IisqwsO16tKd8nQX88PCfOELzmDsZyqwcNMw0ZxiQcG1A+6fSl1NIW0mwGJvWYck9Dp
-         vTycjVoYQtpbCT/sOOIU41YU9wducjt5fKTaG60Bc6NsNbVrmnww7t8+eDADxod3PTad
-         EAvOl2ADbkhdjYiYNPeYbP/hDVyv44TqqfkLXdNUz2C64BGS8TNw4S2QNQiOUIN8gnsq
-         jUOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D1czgHb4cqajH/gvizEF6+XERd/QJi5ZDToHi+OE9hM=;
-        b=Ilia9pLSxag22gxc+wJsFvGBOKhOGUy9cvkYXfBxoKV4Tj6yMKCt+wHLiNnlk00/gR
-         IdZ9FPtr7n1nA8ldcu5KYZ6hkBwzu897VC4lkVxYbmb0LFN6hdZw9kZP07fWsKN7cVQe
-         H3LEYJl4d9Kpq9CW5EEeK5R0eWosIjJFpUydo1h+5ynXvHr04LVu2MpOuoKf63hG8vLK
-         fZhUEl/v5PVamKLZjxya623JS6aIFxhr/m2f6k6c3B/y10tbYjJPXSCvr+xG46SuiNwY
-         Ql7jlm/wWjv4gmnk5S7970OWgs+5TWQhyrdrfHyAgU/K0mlGlumwkBr57IRrgHYmWsAm
-         4SHw==
-X-Gm-Message-State: AOAM532LZCEbxHNOZP+Y/kKG+AtlwYLkabhUbhM3vYn6aCumwGQKeSlX
-	0ZW90CzlJ0R7zA+uOHbTJ5FUFwTQzaIH3A==
-X-Google-Smtp-Source: ABdhPJy5qLO4nUIdv7Ifk8SQLT+Sxxoz63rSB1/E1IVz7tLCOd6pM7TwJBrMLFaFbWzIUSbIG+EwOg==
-X-Received: by 2002:a17:902:8488:b029:129:97e8:16e7 with SMTP id c8-20020a1709028488b029012997e816e7mr8876300plo.39.1632900925942;
-        Wed, 29 Sep 2021 00:35:25 -0700 (PDT)
-Received: from MiBook.mioffice.cn ([209.9.72.212])
-        by smtp.gmail.com with ESMTPSA id gn11sm937853pjb.36.2021.09.29.00.35.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Sep 2021 00:35:25 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH mptcp-next v6 9/9] DO-NOT-MERGE: mptcp: mp_fail test
-Date: Wed, 29 Sep 2021 15:35:07 +0800
-Message-Id: <7c583cc5d31ad60063ea3a6b81e8cd60248c5dbd.1632900306.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1632900306.git.geliangtang@gmail.com>
-References: <cover.1632900306.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE67A72
+	for <mptcp@lists.linux.dev>; Wed, 29 Sep 2021 10:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1632909599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CMt5cESAQqdqr3kE5ppHxwsk+SWy6HsnArTKU39z6eA=;
+	b=gxy+jQQH/yd6ZlCYu7ZJ0eq0giQaCVo21LedZvvLK9CJo2SGkoayI2HJO+P8UMSQIA+CQE
+	YOq3YZ8ZpGldZ0ZUIVXUwloKTNYVqs+1TbYAdlVnZ3sLKfjzrTcgExLevGbUi8JzkxYeV7
+	Fb0/R1HfaHdLYsIN4bBE9k/h6DIY8qw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-aa-NocLDOIeE-qP4YDPgow-1; Wed, 29 Sep 2021 05:59:58 -0400
+X-MC-Unique: aa-NocLDOIeE-qP4YDPgow-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D91E19067E1;
+	Wed, 29 Sep 2021 09:59:57 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.195.217])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5F57660854;
+	Wed, 29 Sep 2021 09:59:55 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	mptcp@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Eric Dumazet <edumazet@google.com>
+Subject: [PATCH net] net: introduce and use lock_sock_fast_nested()
+Date: Wed, 29 Sep 2021 11:59:17 +0200
+Message-Id: <59164fda628b5169d2dac9ecf7e85d3d6f9690f5.1632909427.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -52,71 +41,213 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 
-./mptcp_join.sh -Cf
+Syzkaller reported a false positive deadlock involving
+the nl socket lock and the subflow socket lock:
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+MPTCP: kernel_bind error, err=-98
+============================================
+WARNING: possible recursive locking detected
+5.15.0-rc1-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor998/6520 is trying to acquire lock:
+ffff8880795718a0 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close+0x267/0x7b0 net/mptcp/protocol.c:2738
+
+but task is already holding lock:
+ffff8880787c8c60 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1612 [inline]
+ffff8880787c8c60 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close+0x23/0x7b0 net/mptcp/protocol.c:2720
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(k-sk_lock-AF_INET);
+  lock(k-sk_lock-AF_INET);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by syz-executor998/6520:
+ #0: ffffffff8d176c50 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:802
+ #1: ffffffff8d176d08 (genl_mutex){+.+.}-{3:3}, at: genl_lock net/netlink/genetlink.c:33 [inline]
+ #1: ffffffff8d176d08 (genl_mutex){+.+.}-{3:3}, at: genl_rcv_msg+0x3e0/0x580 net/netlink/genetlink.c:790
+ #2: ffff8880787c8c60 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1612 [inline]
+ #2: ffff8880787c8c60 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close+0x23/0x7b0 net/mptcp/protocol.c:2720
+
+stack backtrace:
+CPU: 1 PID: 6520 Comm: syz-executor998 Not tainted 5.15.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xcd/0x134 lib/dump_stack.c:106
+ print_deadlock_bug kernel/locking/lockdep.c:2944 [inline]
+ check_deadlock kernel/locking/lockdep.c:2987 [inline]
+ validate_chain kernel/locking/lockdep.c:3776 [inline]
+ __lock_acquire.cold+0x149/0x3ab kernel/locking/lockdep.c:5015
+ lock_acquire kernel/locking/lockdep.c:5625 [inline]
+ lock_acquire+0x1ab/0x510 kernel/locking/lockdep.c:5590
+ lock_sock_fast+0x36/0x100 net/core/sock.c:3229
+ mptcp_close+0x267/0x7b0 net/mptcp/protocol.c:2738
+ inet_release+0x12e/0x280 net/ipv4/af_inet.c:431
+ __sock_release net/socket.c:649 [inline]
+ sock_release+0x87/0x1b0 net/socket.c:677
+ mptcp_pm_nl_create_listen_socket+0x238/0x2c0 net/mptcp/pm_netlink.c:900
+ mptcp_nl_cmd_add_addr+0x359/0x930 net/mptcp/pm_netlink.c:1170
+ genl_family_rcv_msg_doit+0x228/0x320 net/netlink/genetlink.c:731
+ genl_family_rcv_msg net/netlink/genetlink.c:775 [inline]
+ genl_rcv_msg+0x328/0x580 net/netlink/genetlink.c:792
+ netlink_rcv_skb+0x153/0x420 net/netlink/af_netlink.c:2504
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:803
+ netlink_unicast_kernel net/netlink/af_netlink.c:1314 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1340
+ netlink_sendmsg+0x86d/0xdb0 net/netlink/af_netlink.c:1929
+ sock_sendmsg_nosec net/socket.c:704 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:724
+ sock_no_sendpage+0x101/0x150 net/core/sock.c:2980
+ kernel_sendpage.part.0+0x1a0/0x340 net/socket.c:3504
+ kernel_sendpage net/socket.c:3501 [inline]
+ sock_sendpage+0xe5/0x140 net/socket.c:1003
+ pipe_to_sendpage+0x2ad/0x380 fs/splice.c:364
+ splice_from_pipe_feed fs/splice.c:418 [inline]
+ __splice_from_pipe+0x43e/0x8a0 fs/splice.c:562
+ splice_from_pipe fs/splice.c:597 [inline]
+ generic_splice_sendpage+0xd4/0x140 fs/splice.c:746
+ do_splice_from fs/splice.c:767 [inline]
+ direct_splice_actor+0x110/0x180 fs/splice.c:936
+ splice_direct_to_actor+0x34b/0x8c0 fs/splice.c:891
+ do_splice_direct+0x1b3/0x280 fs/splice.c:979
+ do_sendfile+0xae9/0x1240 fs/read_write.c:1249
+ __do_sys_sendfile64 fs/read_write.c:1314 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1300 [inline]
+ __x64_sys_sendfile64+0x1cc/0x210 fs/read_write.c:1300
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x7f215cb69969
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 14 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc96bb3868 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007f215cbad072 RCX: 00007f215cb69969
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000005
+RBP: 0000000000000000 R08: 00007ffc96bb3a08 R09: 00007ffc96bb3a08
+R10: 0000000100000002 R11: 0000000000000246 R12: 00007ffc96bb387c
+R13: 431bde82d7b634db R14: 0000000000000000 R15: 0000000000000000
+
+the problem originates from uncorrect lock annotation in the mptcp
+code and is only visible since commit 2dcb96bacce3 ("net: core: Correct
+the sock::sk_lock.owned lockdep annotations"), but is present since
+the port-based endpoint support initial implementation.
+
+This patch addresses the issue introducing a nested variant of
+lock_sock_fast() and using it in the relevant code path.
+
+Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
+Fixes: 2dcb96bacce3 ("net: core: Correct the sock::sk_lock.owned lockdep annotations")
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Reported-and-tested-by: syzbot+1dd53f7a89b299d59eaf@syzkaller.appspotmail.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c                           |  9 +++++++++
- .../testing/selftests/net/mptcp/mptcp_join.sh  | 18 ++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ include/net/sock.h   | 31 ++++++++++++++++++++++++++++++-
+ net/core/sock.c      | 20 ++------------------
+ net/mptcp/protocol.c |  2 +-
+ 3 files changed, 33 insertions(+), 20 deletions(-)
 
+diff --git a/include/net/sock.h b/include/net/sock.h
+index c005c3c750e8..dc3f8169312e 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1623,7 +1623,36 @@ void release_sock(struct sock *sk);
+ 				SINGLE_DEPTH_NESTING)
+ #define bh_unlock_sock(__sk)	spin_unlock(&((__sk)->sk_lock.slock))
+ 
+-bool lock_sock_fast(struct sock *sk) __acquires(&sk->sk_lock.slock);
++bool __lock_sock_fast(struct sock *sk) __acquires(&sk->sk_lock.slock);
++
++/**
++ * lock_sock_fast - fast version of lock_sock
++ * @sk: socket
++ *
++ * This version should be used for very small section, where process wont block
++ * return false if fast path is taken:
++ *
++ *   sk_lock.slock locked, owned = 0, BH disabled
++ *
++ * return true if slow path is taken:
++ *
++ *   sk_lock.slock unlocked, owned = 1, BH enabled
++ */
++static inline bool lock_sock_fast(struct sock *sk)
++{
++	/* The sk_lock has mutex_lock() semantics here. */
++	mutex_acquire(&sk->sk_lock.dep_map, 0, 0, _RET_IP_);
++
++	return __lock_sock_fast(sk);
++}
++
++/* fast socket lock variant for caller already holding a [different] socket lock */
++static inline bool lock_sock_fast_nested(struct sock *sk)
++{
++	mutex_acquire(&sk->sk_lock.dep_map, SINGLE_DEPTH_NESTING, 0, _RET_IP_);
++
++	return __lock_sock_fast(sk);
++}
+ 
+ /**
+  * unlock_sock_fast - complement of lock_sock_fast
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 512e629f9780..7060d183216e 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3210,24 +3210,8 @@ void release_sock(struct sock *sk)
+ }
+ EXPORT_SYMBOL(release_sock);
+ 
+-/**
+- * lock_sock_fast - fast version of lock_sock
+- * @sk: socket
+- *
+- * This version should be used for very small section, where process wont block
+- * return false if fast path is taken:
+- *
+- *   sk_lock.slock locked, owned = 0, BH disabled
+- *
+- * return true if slow path is taken:
+- *
+- *   sk_lock.slock unlocked, owned = 1, BH enabled
+- */
+-bool lock_sock_fast(struct sock *sk) __acquires(&sk->sk_lock.slock)
++bool __lock_sock_fast(struct sock *sk) __acquires(&sk->sk_lock.slock)
+ {
+-	/* The sk_lock has mutex_lock() semantics here. */
+-	mutex_acquire(&sk->sk_lock.dep_map, 0, 0, _RET_IP_);
+-
+ 	might_sleep();
+ 	spin_lock_bh(&sk->sk_lock.slock);
+ 
+@@ -3256,7 +3240,7 @@ bool lock_sock_fast(struct sock *sk) __acquires(&sk->sk_lock.slock)
+ 	spin_unlock_bh(&sk->sk_lock.slock);
+ 	return true;
+ }
+-EXPORT_SYMBOL(lock_sock_fast);
++EXPORT_SYMBOL(__lock_sock_fast);
+ 
+ int sock_gettstamp(struct socket *sock, void __user *userstamp,
+ 		   bool timeval, bool time32)
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5122c4ea4350..d3b9f6894eb1 100644
+index dbcebf56798f..e5df0b5971c8 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1292,6 +1292,8 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk, struct sock *ssk,
- 	__mptcp_do_fallback(msk);
- }
+@@ -2735,7 +2735,7 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32;
+ 	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+-		bool slow = lock_sock_fast(ssk);
++		bool slow = lock_sock_fast_nested(ssk);
  
-+static int j;
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1426,6 +1428,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mptcp_update_data_checksum(skb, copy);
- 	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
- 		mptcp_update_infinite_map(msk, ssk, mpext);
-+
-+	pr_debug("%s j=%d", __func__, j++);
-+	if (j == 20)
-+		skb->data_len = 1;
-+	if (j > 40)
-+		j = 0;
-+
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
- 	return copy;
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fe0c8f3164a7..38663f6373b8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -977,6 +977,24 @@ chk_link_usage()
- 
- subflows_tests()
- {
-+	# 1 subflow
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "1 subflow" 0 0 0
-+
-+	exit
-+
-+	# multiple subflows
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "multiple subflows" 2 2 2
-+
- 	reset
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "no JOIN" "0" "0" "0"
+ 		sock_orphan(ssk);
+ 		unlock_sock_fast(ssk, slow);
 -- 
-2.31.1
+2.26.3
 
