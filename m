@@ -1,381 +1,141 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0E772
-	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 17:04:53 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id dn26so24652850edb.13
-        for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 10:04:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7052F29CA
+	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 21:48:37 +0000 (UTC)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18UL6jdF001187
+	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 21:48:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : from : subject :
+ message-id : date : content-type : content-transfer-encoding :
+ mime-version; s=corp-2021-07-09;
+ bh=wjunn4+x2QEs4HRrQcozT7INn2DM0lGSHIZkmkDz3T0=;
+ b=phffLHoHzE8bYvBPaPOhKdOhj2ingPLDMXMi2bgebTywgmynBAaAgnrwTqGXqgakJDqB
+ Muclk3vd1zbh+yFiOPGNCjejDYtDNhiGrByX2R76SeyRDziDJUF4b4HpabKwdaTUUsbO
+ DG9nOi22xt8TfVoj+oRTA2OZw4bCA78MHxLDaDsvbUZoF9CN9KT6eAlG/gxz/+IcugFU
+ bm4A+DcsICwWdSk+1u+x9jFaYNiU0I7QruWYoB8Xonb27zMcicOcXJQBw7YCJIgnODgP
+ We/bvQAAI6XlH/2yiFAJ9S9Rr66TlxwYEFRS0zDjw3S6Ef57YWua0KMQtRrN8OjM2jtI Hg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+	by mx0b-00069f02.pphosted.com with ESMTP id 3bdds83es7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 21:48:36 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+	by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18ULdosf102910
+	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 21:48:35 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2043.outbound.protection.outlook.com [104.47.73.43])
+	by aserp3020.oracle.com with ESMTP id 3bceu7qxut-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 21:48:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d+SB3eNWZ4Fh1BKOU4hAzX261cTDlHPiyMxg6b01iJACMnB+LFm9uRxbDfo26sM77mkUSEhbQV0jFoiX//nNrMP5VLgTeFUulsPrywulzaKgpRK11le7Gn2fxhirXTmznGspGKj4Gawm7Bo8RG8aWs+xyYgsO3if2dDGyUZtti40cw8aqJb1d35lS8kV0f8mARKCLe73MlYx30otnfRJx7XzPNyR5ynvzDgW+TsyKqQYvU16sn/AJVbpHT2TDzQYSeMm8Ol2lM+ckk2TvbdQsc0DCZNYrKnWoI/5uDIzL935FVygXI0at1F9UUwKOfHwph6dlTsiigWiY5uxrdZMew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wjunn4+x2QEs4HRrQcozT7INn2DM0lGSHIZkmkDz3T0=;
+ b=lWTCMHRRiQtPnJz2zZ1N9Y5DfcKRuhUu0kblWB2hWlrGA5t+n5AVuAP7LqfJLK4azsGcW/HuBfaaT/VU8GTbzlPSlb/tLyUSSP7hTNTVcdRxdaBiO+QCYOJSvgxAZkQc6w5BRqLJmlG12+JTQuX5YtvJGCvUc3h2yJtf+TcR3wooI1k4RhGyn2GbaftK257JFlHniD9IVOaumtpAtszNUhw5ArpYMTNHdI2mveY1WQ4IAOD6vJFbRcJdJVyMbz16/MKZJhnEmnHQHAgdk1WUxvms1ucaxCrexFvQ5eXpFsynmANxBa7LZ1g4wPCiOi5nYx0HeTpdqm0Wob64SyTLow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=IM3adpfnOnm7U7qvr9bQAokPWUxePDw3L3p9tS+cKRI=;
-        b=chnftYx+lPx/FXozVmYcmQEA0QImY16zE5l3FJszDfkRwG7cpY1LoPvz3ps50JkHxy
-         7x1qVxG5EWUHv7aqANEjwml5zzhwReI9R4MHiRD7a38EYSqTNWmmrVGGlZ1ul/X39Mss
-         lYfToBJY4BqtRbeetYuEssma3q4803IPJPOBlP6tQKtJT/n0yUlDi1/DcRYm7JQlXPu3
-         eEFxtqmHb6z2PEcIddbyd0hiEQBJUv9IYEEAm5KSJH3RVjrkO3FCta8oiQgYu+Rjrwld
-         /ctpYp72kcQpMVIeJMqRfkmWLCYZaRIFA/Z+d31qwAdqwKCd79QFz9QguHNdHLdHnhDP
-         weKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=IM3adpfnOnm7U7qvr9bQAokPWUxePDw3L3p9tS+cKRI=;
-        b=DLEEjVd6Rux94lWkGEpkSYWj9yvdJV81D8ZaionvmlAg9sK2VAL/W6GcjwZmbcW4Mr
-         iOHQTWuN+8Uw72Il6ba0s+d+9U1rm8URc57llPcUrFnd+c1n7OATJ5xiC1PpMY/LaJvs
-         bP392pUKC25pun2ukh/9f7otGTrkqBXBRqAEOYtuNdwzHeezO3JBrEi6DGr93wmPbHtH
-         BHWabGdCu2UdTxL8h9GnmaVDbokS4390seBtultp+8UrRpEesfXQznaY8hqT7N6szs7U
-         hkACcoYfvsWn3/Zhbh33HH3no078VOESaCO28Xf7PLpHgD44DD5/WMXafRDM7m0xnNJH
-         fqww==
-X-Gm-Message-State: AOAM531oXsXZb8UehyXXm8+IaIktO73lou03ZrsJKDvTsDAdtQ4okQg+
-	b0gos1QYM2DsxL5eodmTcQwwEDeVwZMsWg==
-X-Google-Smtp-Source: ABdhPJyR8FL/yEqCNu2uuuo641nsDAXpwV5iventuPdMawYuYoMawbnpSbVh+sLCtyUY+gbmNhE9AA==
-X-Received: by 2002:a50:cf4d:: with SMTP id d13mr8350703edk.50.1633021491652;
-        Thu, 30 Sep 2021 10:04:51 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net (94.105.102.72.dyn.edpnet.net. [94.105.102.72])
-        by smtp.gmail.com with ESMTPSA id o3sm1700472eju.123.2021.09.30.10.04.51
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Sep 2021 10:04:51 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wjunn4+x2QEs4HRrQcozT7INn2DM0lGSHIZkmkDz3T0=;
+ b=pIIiQXmDfcm7wiQ3yx7AiNQntYQdKkHr2NBl52TYX7moW/3WzrLqZG19YFdaDFujLO8nC8GrbD/7jxOWIoA4YARnssSEhoogSVtvK7P9dbhnIhn8X0o0VbLVgXInCusCEd8FTeB7gKx1wvQH+kLKDfv+ML5xw8pCJobFMOfAA6Y=
+Authentication-Results: lists.linux.dev; dkim=none (message not signed)
+ header.d=none;lists.linux.dev; dmarc=none action=none header.from=oracle.com;
+Received: from SJ0PR10MB4494.namprd10.prod.outlook.com (2603:10b6:a03:2d4::12)
+ by BYAPR10MB3141.namprd10.prod.outlook.com (2603:10b6:a03:154::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.15; Thu, 30 Sep
+ 2021 21:48:33 +0000
+Received: from SJ0PR10MB4494.namprd10.prod.outlook.com
+ ([fe80::d41c:d8ff:89d6:8457]) by SJ0PR10MB4494.namprd10.prod.outlook.com
+ ([fe80::d41c:d8ff:89d6:8457%7]) with mapi id 15.20.4566.016; Thu, 30 Sep 2021
+ 21:48:33 +0000
 To: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: [Weekly meetings] MoM - 30th of September 2021
-Message-ID: <a95ba730-0ece-595b-01c4-e4ac6f285b08@tessares.net>
-Date: Thu, 30 Sep 2021 19:04:50 +0200
+From: Shoaib Rao <rao.shoaib@oracle.com>
+Subject: unsubscribe
+Message-ID: <c40812c1-f16e-59d2-6839-8b1713831acd@oracle.com>
+Date: Thu, 30 Sep 2021 14:48:30 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+ Thunderbird/78.14.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: SA9PR10CA0016.namprd10.prod.outlook.com
+ (2603:10b6:806:a7::21) To SJ0PR10MB4494.namprd10.prod.outlook.com
+ (2603:10b6:a03:2d4::12)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Received: from [IPv6:2606:b400:2001:91:8000::f51] (2606:b400:8024:1010::17c6) by SA9PR10CA0016.namprd10.prod.outlook.com (2603:10b6:806:a7::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14 via Frontend Transport; Thu, 30 Sep 2021 21:48:33 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 52be2e91-467d-4aee-1227-08d9845c0ccf
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3141:
+X-Microsoft-Antispam-PRVS: 
+	<BYAPR10MB314174E6D39C6AF3FDF1A4B7EFAA9@BYAPR10MB3141.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Ek7MQhtRBL5GFSPPHJX2BWy0qQ4eXwdrbIuf8iag7QWcMDvrRXkma3pEY/yl1bgNd8CScduNw2Nuo1O7I412m5/oFiXKH1B6VZ7mSbfwR3vqPzOTG6RIdSF1RklPD2wIF6wTd85xytxz2dJWOdg3k2FWojkmkkojSDcUuZUNVBD2hikxP5bNX5ZL7O4p+r7ehJosYouUssOdim70dyMtfjz3svGVtrnLZXVIAbzVDncc1g0Yx774dqJ2mCJAW7n2RB/z9TceUXAtrUDBVYfIWRoFIl0BmNB6JgFTSq6HWwR/6b7VJJ/wJ189vdCK03Aa/kZ1gPM9slMyOuYaXKzu7QmaaRVBpvIXiOM3SyBVWyo4gISKC33COdRey85pH5lvEnIBDZ6hh0nyv3CAMkjPDBzaL+S9WNzSg9Qjuo4hqmtyABs82NsqPrD/iy2V4EcOqRc7olZyL8KHsTFG63bDH/8QjqnEaeVsE7HxDWqw9TXS5YPb22z3JsVc2gnKw33cySrVtyTB/wHH9QKbbiLq0qIH6pulO5ksEQV2F+s7zSpSIrUXFYESu52vtTuJ/VPQEm7Gb9ZpiJ4sldy6BMB0nEx4G4wPxhIWy7yz/GpylL/zEaoVFP3D4WHC/BrSXYyHOYlqaqBDwvGihWlEeEl2GHZdpAFaQoK7xA4X2E8v/lUKVNaVD8pMoFB8b8iOPZYxUxXg2viiTirJoYjU5FGfwwFpxNZGOvKDwaO8G4MzqKXslOnDFHOk0OVtMuQ+CDkYnDaTOVxaLxDUjsQwgjKQc+Vp2FqVJ9Y6laCbRwi7MFmpOAgaLMZsGE56KKA/l9yovOF7/EoUjWcj9EYL6+c/iwI30c44dCDuQA7s8l/IUDeW04XDbnr7c8HxvugE8iOB
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4494.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(36756003)(558084003)(38100700002)(31696002)(316002)(6486002)(8676002)(6916009)(2906002)(31686004)(508600001)(8936002)(66556008)(186003)(66476007)(19618925003)(66946007)(7116003)(3480700007)(86362001)(2616005)(166393002)(220243001)(45980500001)(43740500002)(239884005)(425394004)(19559445001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?WHZQM1hqajJ1SlZObmt2SDJlYzhmTE9NQlh2YzF5UzFqWDJtM3dUY3JPOFg3?=
+ =?utf-8?B?Z3Z0U2NOLytXVWsxY0FOd2tONzlNYjNHYllYZkxyYk5NZGoya2RRUG1FSlZU?=
+ =?utf-8?B?MVlDeUpMYUZTc3RYYU9DdmhkNGhRVndxeWE5SG5jUEhJR1ZLMGNoUitTZW0v?=
+ =?utf-8?B?N0Yzamw5dHl2aWQxWVdLN00rQTBraS9la0lyVVYrdmQ3ZEFKTXdySjVQbFZK?=
+ =?utf-8?B?SlZPdEhQVi9aK3d2OXlKWTM3RnVoRjJoUjMyS2VwdjJ1RGR0ajBHVjBabm9y?=
+ =?utf-8?B?NTRIN2RVV1c0d2R4V2VjdGNJakxVcENwMjFydnFQWHowcnpQY014cWJkajNG?=
+ =?utf-8?B?eFU3Y3F1SzdTait2bHBQcjlqNllMcG1xY3pYVUxyYm9EVVE0RGtaczdiWjh0?=
+ =?utf-8?B?VlJaazQwbnVPZm1LZnNOditoVTFnL29jVEhnR3dMRzhWR0czTUU0Q1E2dnNG?=
+ =?utf-8?B?ODlPdWNqa3c0M3lTR2hycUFmZndKdFR5ZllzUmhUTUtrSlBWRHRycTJ5aHdF?=
+ =?utf-8?B?NSt1M3laUEwxeEg5TU5UakQ4VnBJUWZyNzlzVkd0RjVNQTJCaWJEQVl1SGUy?=
+ =?utf-8?B?dFA1N0xJMC8vWmdxRnVjajVjMWRDQks2anFKNUttWlhhYngwQmw5RDh1NnFS?=
+ =?utf-8?B?TUtXUDg3Z3RwMU5HTkt0WUNBMGpYTmlKZDlXelJXMGR0Ukg0NG8wYko4SEFF?=
+ =?utf-8?B?WlphYzBrMVdDMW5MNk9kbXZmaVdocDF4bGpOVFdqV1VKMXdQVjE1R0REVjB2?=
+ =?utf-8?B?TElGbHZNQ3R1dm5JdzlpYUdJd0VNYkU5VkptcGFRTlVkMGFBVE9wQWhuRlhm?=
+ =?utf-8?B?MGo0RVZIMnNOdDY1cEJHNDhxWnE0WEI1cEMwM1N1VGNNYnoxNDFMMUJlTVBG?=
+ =?utf-8?B?am1GdUp3YkdZQ0JLRUdJanZEVHlTQXFOSVEvNWZhRVZvem8xYmhuTnd2WW1B?=
+ =?utf-8?B?K3g5bkUrQitPeFFndjQydUtROUxOcGtobzl6VTlTRGlMR0xLMUpJa1BZaWd2?=
+ =?utf-8?B?QTl5UEFDclhQV04rYVNSb0grSmphT280ZWQwMm9lMnIxUHcwWDU1aGU1d05J?=
+ =?utf-8?B?RG1aalRtOWFHOS9UWE1Rd3hHZ01ITVRjUURxVXlYdHl3Q085YVBBSFlOand1?=
+ =?utf-8?B?aGh2Wk5ya09NUFlmaHF6UFE2cDMvckgwcS9BRSttRVBxR0RyNFpLUFo1djZi?=
+ =?utf-8?B?M2pzUEcvWngrQ1N5VGhQei9XczdqYllmMFlGWlFhZERDdjZ4MkpTS2dhTDly?=
+ =?utf-8?B?dUpvQTJhTTRTSWZ6Mll4TmZOdTJsWjRucmhPL2ladkMvNjlnc21xY1FUci9C?=
+ =?utf-8?B?b1RSYmt1S1VRWlRaNDgzQ0JsQVU0YTNPSEtyRC8vUm5Da3Jjem4ycHRNUHdT?=
+ =?utf-8?B?d05RU25kc3A2ZVdlbDVtYnVQeFExOVMwZkEwY0VrdGd3cGhaQ1pHdG9jTWlE?=
+ =?utf-8?B?bWlIa01LWFdScklkbTl0NFpaOGZYNUJWcG9CTER4dmNqcHJoQWtHd3drRGhZ?=
+ =?utf-8?B?RlhWa2Y2TWJXUkpuTWNNenBVL25YTmZWcHZlemRQaExURC9EODM0dEpQdWJ3?=
+ =?utf-8?B?eGg2MG5JQzYzQUYvL1pOMW12VkxYSlorZkVlUWtjMitzUkM5dzYwdCtTb2JL?=
+ =?utf-8?B?RE9mN3U1SWV5R1FYTTBXblNDeWFKL2xYd1QvT0s4THVFcGRYUG05MUJ5RTVu?=
+ =?utf-8?B?ZGFpWnJ6anJoaGRyMlJlRGxGby8zYmxQTkg2MjE3TmlnMkd0VHZZejkrbnZs?=
+ =?utf-8?B?eHhVZ1daVEtUM2M1VTJnRDRYaTYxUFQraVkrWStkVTF2MDZCdUd4aVFiTVZr?=
+ =?utf-8?Q?QU6NPkj24LlFRYTgl5YdLZm6BWOmUUrIhTHTs=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52be2e91-467d-4aee-1227-08d9845c0ccf
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4494.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2021 21:48:33.7675
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qmvGUta6lIgPJtH/qg7b/AxG02nrCK848kbJn1lqFZUUzEKVyPMLHrEEvbcLJSohUhf3ZyvOOj3ZvH9USiZJgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3141
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10123 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ adultscore=0 bulkscore=0 mlxscore=0 malwarescore=0 mlxlogscore=764
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
+ definitions=main-2109300134
+X-Proofpoint-GUID: JazN6gomHujNfKjv4lmJWHMcbCk0kjhB
+X-Proofpoint-ORIG-GUID: JazN6gomHujNfKjv4lmJWHMcbCk0kjhB
+
+unsubscribe
 
-Hello everyone,
-
-Last Thursday, we had our 167th meeting with Mat, Ossama, Kishen
-(Intel), Florian, Paolo, Davide, Poorva (Red Hat), Geliang (Xiaomi) and
-myself (Tessares).
-
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-    - The list of accepted patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=3
-
-
-    netdev (if mptcp ML is in cc) (by: Mat Martineau, Paolo Abeni):
-
-12525181  [net] net: introduce and use lock_sock_fast_nested()
-
-12516843  [net-next,5/5] mptcp: re-arm retransmit timer if data is pending
-12516841  [net-next,4/5] mptcp: remove tx_pending_data
-12516835  [net-next,3/5] mptcp: use lockdep_assert_held_once() instead
-of open-...
-12516839  [net-next,2/5] mptcp: use OPTIONS_MPTCP_MPC
-12516837  [net-next,1/5] mptcp: do not shrink snd_nxt when recovering
-
-12513785  [net,2/2] mptcp: allow changing the 'backup' bit when no
-sockets are ...
-12513787  [net,1/2] mptcp: don't return sockets in foreign netns
-
-
-
-    our repo (by: Davide Caratti, Paolo Abeni):
-
-12515579  [v2,mptcp-net] net: introduce and use lock_sock_fast_nested()
-
-12510723  [mptcp-net,v2] mptcp: allow changing the 'backup' bit when no
-sockets...
-
-12507729  [mptcp-next,v2,3/3] tcp: make tcp_build_frag() static
-12507725  [mptcp-next,v2,2/3] Squash-to: "mptcp: stop relying on
-tcp_tx_skb_cac...
-12507727  [mptcp-next,v2,1/3] Squash-to: "tcp: expose the
-tcp_mark_push() and s...
-
-
-
-Pending patches:
-    - The list of pending patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=*
-
-
-    netdev (if mptcp ML is in cc) (by: /):
-
-/
-
-
-    our repo (by: Geliang Tang, Jiapeng Chong, Matthieu Baerts, Paolo
-Abeni, Tim Gardner):
-
-12282219: RFC: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to
-tcp.h/mptcp.h
-12282221: RFC: [RESEND,RFC,4/4] tcp: parse tcp options contained in
-reset packets:
-    - WIP
-
-12282223: RFC: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
-    - WIP
-
-12282225: RFC: [RESEND,1/5] tcp: make two mptcp helpers available to tcp
-stack
-12282227: RFC: [RESEND,5/5] mptcp: send fastclose if userspace closes
-socket with unread data:
-    - WIP
-
-12321111: Changes Requested: mptcp: Remove redundant assignment to
-remaining:
-    - TODO
-
-12476757: RFC: [RFC] selftests: mptcp: tune timeout and delay for
-simult_flows cases:
-    - WIP
-
-12505753: Changes Requested: [next] mptcp: Avoid NULL dereference in
-mptcp_getsockopt_subflow_addrs():
-    - TODO → see ticket #231
-
-12523681: Queued: [v3,mptcp-net] mptcp: fix possible stall on recvmsg():
-    - Matth: TODO → Done
-
-12524801: Changes Requested: [mptcp-next,v6,1/9] mptcp: don't send RST
-for single subflow
-12524803: Changes Requested: [mptcp-next,v6,2/9] mptcp: add the fallback
-check
-12524805: Changes Requested: [mptcp-next,v6,3/9] mptcp: track and update
-contiguous data status
-12524807: Changes Requested: [mptcp-next,v6,4/9] mptcp: add
-last_ack_dss_start in the msk
-12524809: Changes Requested: [mptcp-next,v6,5/9] mptcp: infinite mapping
-sending
-12524811: Changes Requested: [mptcp-next,v6,6/9] mptcp: infinite mapping
-receiving
-12524813: Changes Requested: [mptcp-next,v6,7/9] mptcp: add mib for
-infinite map sending
-12524815: Changes Requested: [mptcp-next,v6,8/9] selftests: mptcp: add
-infinite map mibs check
-12524817: Changes Requested: [mptcp-next,v6,9/9] DO-NOT-MERGE: mptcp:
-mp_fail test:
-    - The infinite mapping support
-    - New version expected
-    - v7 is nearly ready, but it will be delayed because of National Day
-holiday next week.
-
-
-
-Issues on Github:
-    https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-
-    Recently opened (latest from last week: 231)
-
-  232  Kernel Compilation failed:
-      - Not related to MPTCP
-      - TODO: Matth: Can be closed, the fix will land soon in net-next →
-Done
-      - (or we can add it in export branch if blocking)
-
-
-    Bugs (opened, flagged as "bug" and assigned)
-
-  231  Static analysis - possible NULL dereference in
-mptcp_get_sub_addrs() [bug] @mjmartineau:
-      - Paolo gave some advices
-      - Mat will look at that
-
-
-    Bugs (opened and flagged as "bug" and not assigned)
-
-  230  selftests: mptcp_connect: poll timed_out [bug] [selftests]
-  225  selftests: join: "remove subflows and signal" is unstable [bug]
-[selftests]
-  203  PM: server: accept subflows [bug]
-  181  implement data_fin ack retransmission for subflow in  TIME_WAIT
-state [bug]
-  137  selftests: simult_flows.sh: unbalanced bwidth tests are unstable
-[bug]
-   65  packetdrill/fixes: clearing properly the status in
-listen()/disconnect [bug]
-
-
-    In Progress (opened, new feature and assigned)
-
-  216  The infinite mapping support [enhancement] @geliangtang
-
-  194  Round-robin packet scheduler support [enhancement] @geliangtang:
-      - TODO: Matth: close this one, see notes from last week → Done
-
-  186  Add netlink command support [enhancement] @mjmartineau:
-      - for ADD_ADDR, we need to handle ECHO ones
-      - for the moment, we only handle the retransmission of one ADD_ADDR:
-          - either we have a new events to tell the userspace when to
-send the next one (when the echo has been received)
-          - or the userspace is in charge of the retransmissions
-          - or we keep a list of ADD_ADDR to retransmit (can be done as
-a second step)
-      - We decided to let the kernel managing that: no need to add a new
-event for that
-      - (if needed, managing a list of ADD_ADDR can be done later)
-
-  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
-@dcaratti
-  158  iproute2: change backup mode (MP_PRIO) for active connections
-[enhancement] [iproute2] @dcaratti
-
-    For later (opened and not assigned assigned)
-
-  232  Kernel Compilation failed
-  224  support for `setsockopt(TCP_INQ)` [enhancement]
-  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
-  220  support for setsockopt(SOL_IP) [enhancement]
-  217  Support `IP_TRANSPARENT` [enhancement]
-  215  TCP Urgent pointer and MPTCP [enhancement]
-  213  add MPTCP man page [enhancement]
-  210  Accept new subflows when the listening socket is closed or bind
-to one IP? [enhancement]
-  208  better handing of ssk memory pressure in the TX path [enhancement]
-  202  Add sendmsg support for ancillary data [enhancement]
-  197  more mibs needed [enhancement]
-  180  Get an update when MPTCP fall back to TCP [enhancement]
-  177  improve retransmit subflow selection [enhancement]
-  171  iproute2: support removing ID 0 [enhancement] [iproute2]
-  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
-port [enhancement] [packetdrill]
-  163  allow ss dumping msk socket in TCP_LISTEN status [enhancement]
-  150  remove completely workqueue usage [enhancement]
-  141  avoid acquiring mptcp_data_lock() twice in the receive path
-[enhancement]
-  133  PM: Closing the MPTCP connection when last subflow is not the
-initial one and its IP address is removed [enhancement]
-  128  When the last subflow is closed without DATA_FIN and msk
-Established, close msk (after a timeout) [enhancement]
-   79  allow 'force to MPTCP' mode: BPF [enhancement]
-   78  notify the application (userspace) when a subflow is
-added/removed [enhancement]
-   77  [gs]etsockopt: forward to new/existing SF [enhancement]
-   76  [gs]etsockopt per subflow: BPF [enhancement]
-   75  BPF: packet scheduler [enhancement]
-   74  BPF: path manager [enhancement]
-   61  move msk clone after ctx creation [enhancement]
-   59  TFO support [enhancement]
-   57  After a few attempts of failed MPTCP, directly fallback to TCP
-for new connections [enhancement]
-   48  MP_FASTCLOSE support (send part remaining) [enhancement]
-   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
-interface [enhancement] [syzkaller]
-   41  reduce indirect call usage [enhancement]
-   24  Revisit layout of struct mptcp_subflow_context [enhancement]
-   18  allow 'force to MPTCP' mode: sysctl [enhancement]
-
-    Recently closed (since last week)
-
-None.
-
-
-PM: default settings:
-    - Would be good to increase the default values for additional
-subflows allowed
-    - Not the announced add-address and how to react when we receive one
-    - for both client and server
-    - → Paolo will look at that
-
-
-FYI: Current Roadmap:
-    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
-    - Current/Coming merge window (5.16):
-https://github.com/multipath-tcp/mptcp_net-next/projects/11
-    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
-    - TODO: changelog: Matth
-
-
-
-Patches to send to netdev:
-    - net:
-        - /
-
-    - net-next:
-        - /
-
-
-
-Extra tests:
-    - news about Syzkaller? (Christoph / Mat):
-        - Syzkaller found something but not clear if it is related to
-MPTCP (subflow) or not.
-        - Mat will look at that
-
-    - news about interop with mptcp.org/other stacks? (Christoph):
-        - /
-
-    - news about Intel's kbuild? (Mat):
-        - Some issues on kbuild's side but not related to MPTCP
-        - Looks like first build in some time is in progress but has
-stalled in non-MPTCP selftests
-
-    - packetdrill (Davide):
-        - One issue fixed by Davide, found by the public CI
-        - Some issues with ADD_ADDR, Davide is looking at that, maybe we
-need to allow more delay
-        - Davide is looking at the RM_ADDR handling but facing
-        - MPC with data and checksum (outbound packets):
-            - the server key is overwritten → kernel issue
-            - the TCP option are not aligned → packetdrill issue
-            - → Poorva is going to open 2 separated tickets for that
-
-    - Patchew (Davide):
-        - Migrated to the official repo
-        - Patchew is showing when the tag applied (+ link)
-        - If you follow the link, on Github you can see the test results
-
-        - For Cirrus:
-            - if tests are failing, the build will likely be marked as
-success (except if there is a crash or compilation issue, etc.)
-            - In this case, it should report unstable tests but it
-doesn't always work
-            - Best to look at the "summary" file for the moment.
-
-        - Next steps:
-            - We need a GH Action to set the test results on Patchew
-            - and it should also send a notification, e.g. an email on
-the ML
-            - but we also need to fix tests...
-
-    - CI (Matth):
-        - Had warning before applying "net: introduce and use
-lock_sock_fast_nested()"
-        - But that's normal: bug visible since the introduction of
-another patch, see commit message of ↑
-
-
-
-mptcpd 0.8:
-    - New release \o/
-    - Paolo tested it with an upstream kernel and it seems working well
-
-
-
-Next meeting:
-    - On Thursday, the 7th of October.
-    - Usual UTC time: 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20211007
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you on Thursday,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
