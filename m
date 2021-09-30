@@ -1,47 +1,47 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3767072
-	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 16:48:19 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id x7so23604963edd.6
-        for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 09:48:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D602172
+	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 16:48:25 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id l7so863568edq.3
+        for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 09:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:message-id:date:user-agent:mime-version
          :content-language:content-transfer-encoding;
         bh=cIA2Yd5U8+crre7PuHhqSBv0Cr0aBT/JeNsodpjNrVc=;
-        b=JCRAc5iNaM8Acf2GEXlZdGujufMy16b2nYXG0fIilYiT2/L0Kb0b3hm3PRm5bVRPXB
-         OesX2W8msZiVNHDKMdgHmqpFvULN0LhbJ6uRFm52PwkS+DNdqdkOz9WL/sRMabgBA+Oe
-         xEoCJfN3s1p7t+cr2XIsEa6HnSr0gTC8sgQSu+3TUiophDcx/xQbAOst3yOzkNoxZdmV
-         JgzyzvlJYsaY5Ajb0Dv+s0bje1Welz0aumLfoNbw+qDbXQpB628qvWhFBMGsHuXFf5PU
-         uy7isF8BEpL5xJ0NuDH2N66VqgnJ2hrYyQoS2nodWlEhmWbPWEFX/oz2wW4L1FcboTL1
-         b5RQ==
+        b=uvaO13OKshhIv3uY3YUAqmLmWsVDVUEIwwQQajFIbNDeQyJYZcUtKLg73qtJdCvMHo
+         U8NiYI0/gGotBRQt5yPNksb7a5wF6XWJIY2Sf9flKj1gQB5POTrb3GHn7wtvqjG2c5ny
+         bDNswOAKMuqYslHgo9nFhfE2J4v428MkiDI5VC8r4AEY7lfALDdfaVPwY6aG1JsrI3K6
+         oTLc/l2hSi4nlqRXH9B5Lfsy9PbfHjxmTxiSEYDmCHmlPYEorCnhX+nVGhKNgHiiXCfs
+         tfAcg/d3j75VQyuDEoNn3se1wvXx8v51gQ4hxp0n8JI880yY7b7Is5//LNvGkvic6xfN
+         91Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:message-id:date:user-agent
          :mime-version:content-language:content-transfer-encoding;
         bh=cIA2Yd5U8+crre7PuHhqSBv0Cr0aBT/JeNsodpjNrVc=;
-        b=YyIT7M4IoZA+W9GHDDDqBaGSHRTKhVfh6G3LxTNCzuR94bnlL+4uXmYuX/1AZN7jBe
-         pQHjJJ7/TtUQZ7H+2Ahj2r8qajmNZ1dotvbaPWYlGKLKBaX9Cu/vtv+9PjQxlRTzhdlF
-         tYeFO1zKHg6XhRh4lo8wf8RrBbt78ZBuvrYVo/kAcZfkW1Q1hQcty7QWldUH6MLCN52U
-         aTyyH+ufFbo1TuX8QhVG8qifPIBN997ciuk4SLI7vbOYK8R2nVhDtqdK1gxXKq8ADbp/
-         l+p6QpF1ZoZ0gxs0FCwLQvlfFSlOvEjjsuIO68pOF1kwZaJNNm+o7YVHt9gVuIeZqaRI
-         3L+Q==
-X-Gm-Message-State: AOAM532yT/mDdmN1PQkiukt69vuc+0cCkEMnzFXtr9SKeLgtZnax1lyG
-	hKeTYRsXRYQ9jyv1XJ1BJsVInjQbLLjisg==
-X-Google-Smtp-Source: ABdhPJyRIa7+Fdp5GPZWd3CvwfYDV1lEMWgCfcvbjVyIDAUVaAze/wSx7kjx7AKvtpUE1zQwrIbONQ==
-X-Received: by 2002:aa7:d0c5:: with SMTP id u5mr8211030edo.130.1633020495813;
-        Thu, 30 Sep 2021 09:48:15 -0700 (PDT)
+        b=2yHDTqWgniPrXURN37CdR+TLc+vzovmcDtqYlufLHadAUDR5O5FSIOaTOiLqTjW09z
+         /cPQKT0bqbUDPnuqtK7QMYFdUWJ2PqkFeWqpEl84frUVTlsVGhHJ602+O0Wt+p9lzHOH
+         EHSBVcm8UHkXqgFy3wSmOTl2iFt5GVEaEAAmiD6tGvTU88kHijh+IhH5c1Pwzlkececg
+         7gQK6c7H2FO5uL/H3BYFH4yOlDWzbqRjkUpQHJZL4ew9FeCiUjor7QgfYOAaFf9c77Zp
+         HQ59McLVqzKQ53QFPrkiWBeNAjJlujfkucdYEB4Ae7G1ssjfQnXvY1oxagG5c0Xp29zy
+         yLGQ==
+X-Gm-Message-State: AOAM531mdHKxi0q57JYfs5jd5nKgl8rKxyUvMpbMEvZ3OWJK7hFXElsk
+	aF65wcQRX2J5C1S0OEDBEC8cNDt3RIGujw==
+X-Google-Smtp-Source: ABdhPJyp0HQi3jd7sSo0jOaYNegd0wayUD6oFtUkr6bKDxNaD3DvHjQr7dHbcD4xUOaj+9KSFwhiFQ==
+X-Received: by 2002:a50:9d02:: with SMTP id v2mr8260356ede.105.1633020503805;
+        Thu, 30 Sep 2021 09:48:23 -0700 (PDT)
 Received: from tsr-lap-08.nix.tessares.net (94.105.102.72.dyn.edpnet.net. [94.105.102.72])
-        by smtp.gmail.com with ESMTPSA id t6sm1773250edr.87.2021.09.30.09.48.14
+        by smtp.gmail.com with ESMTPSA id e7sm140496edv.39.2021.09.30.09.48.23
         for <mptcp@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Sep 2021 09:48:15 -0700 (PDT)
+        Thu, 30 Sep 2021 09:48:23 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Subject: [Weekly meetings] MoM - 23rd of September 2021
-Message-ID: <440b1c39-f411-4e5a-22a8-50c78c478c65@tessares.net>
-Date: Thu, 30 Sep 2021 18:48:14 +0200
+Message-ID: <2e71717f-7d11-d479-913d-8ed70db9068d@tessares.net>
+Date: Thu, 30 Sep 2021 18:48:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 Precedence: bulk
