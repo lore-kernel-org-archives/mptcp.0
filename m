@@ -1,128 +1,80 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427A2168
-	for <mptcp@lists.linux.dev>; Thu, 30 Sep 2021 23:14:37 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="223418733"
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="223418733"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 16:14:36 -0700
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="477156623"
-Received: from amitprak-mobl1.amr.corp.intel.com ([10.209.88.116])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 16:14:36 -0700
-Date: Thu, 30 Sep 2021 16:14:36 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Tim Gardner <tim.gardner@canonical.com>
-cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
-    "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH][next] mptcp: Avoid NULL dereference in
- mptcp_getsockopt_subflow_addrs()
-In-Reply-To: <149982aa-720-35be-4866-39259b92884d@linux.intel.com>
-Message-ID: <96389960-fd3-616d-c829-203d2414ffe@linux.intel.com>
-References: <20210920154232.15494-1-tim.gardner@canonical.com> <149982aa-720-35be-4866-39259b92884d@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F8E3FCC
+	for <mptcp@lists.linux.dev>; Fri,  1 Oct 2021 09:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1633080928;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=62HnbEByMpo+5iYUyz8UqEO7WQkRy8RAvP2IpsNVBck=;
+	b=JLV5ddK0lo9q4xDV/TjgnKNouH9f4jfrMtR1o+il3V9VXKZwU24pE9nkKCuBbWKBFXHaaT
+	NqbI8Wqe8iJRlIIzhvm/q6j9Icvc9+mvHBlvWT10Ab8OWNQuQNKXHzFS2sRjW9Lm59LnLL
+	NVIa1tYve1+l7kAMfIQ52T1X1jGk06M=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-535--m3bMdDsMbSL-i0GKKpUDw-1; Fri, 01 Oct 2021 05:35:27 -0400
+X-MC-Unique: -m3bMdDsMbSL-i0GKKpUDw-1
+Received: by mail-ed1-f70.google.com with SMTP id ec14-20020a0564020d4e00b003cf5630c190so9835758edb.3
+        for <mptcp@lists.linux.dev>; Fri, 01 Oct 2021 02:35:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=62HnbEByMpo+5iYUyz8UqEO7WQkRy8RAvP2IpsNVBck=;
+        b=EGOgLt8z6jIiO1hQgY1EZjNYG9m772RFs+xC4b5u4CFxSDgIl9uyeLuWGjsWld+KK3
+         KnJqXkNcbe4kts7cjelxrotuo/gQTAhtSyT7SQZhFiRVphX6+nJw1Pz/zuYcjTcAkBtU
+         xoSB8gJPMzj1x7J0TILEpq6N7A15dHWIWMmC+sozU2K5E62679to9V5161HKpdmdhGif
+         XK4Iu3FSO0Csfo6th8j0lEmmBmDXO+cyhgpRNTt1K2316RiXs8xUBwsuvEz1gZ3ofr2L
+         OZThMZbffgUtHxCEsyJEHr3a5IIrjPs+D7Ks7YFoE6jVtMocpWOIuPrWqAjlBFK/kOaz
+         /o6Q==
+X-Gm-Message-State: AOAM532l78qB6HE/asU3Y+0g5sGcASNVkk3UwXdWVzXJR8dPlr9qCEU1
+	NoAwqCx/WkWMfOk0/fM01HXVKsjgAn9IyjkIHR2sbG+HWsPjAsLOvkN/Vh74cxDp1WViYab6l3t
+	28wry3rxB57/UdrY=
+X-Received: by 2002:a17:907:7704:: with SMTP id kw4mr5255982ejc.23.1633080926226;
+        Fri, 01 Oct 2021 02:35:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwR64401oRxVuEAIm4flgW54utF5jUXZZC1wDHVcs5AUPGuc3oGx2MuvnH0BRPHxu3M1GMk6Q==
+X-Received: by 2002:a17:907:7704:: with SMTP id kw4mr5255970ejc.23.1633080926060;
+        Fri, 01 Oct 2021 02:35:26 -0700 (PDT)
+Received: from localhost ([37.162.39.158])
+        by smtp.gmail.com with ESMTPSA id h9sm2730106ejx.78.2021.10.01.02.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Oct 2021 02:35:25 -0700 (PDT)
+Date: Fri, 1 Oct 2021 11:35:21 +0200
+From: Andrea Claudi <aclaudi@redhat.com>
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: pabeni@redhat.com, Stephen Hemminger <stephen@networkplumber.org>,
+	mptcp@lists.linux.dev, netdev@vger.kernel.org
+Subject: Re: [PATCH iproute2] mptcp: unbreak JSON endpoint list
+Message-ID: <YVbWWcM4wAVtbiED@renaissance-vector>
+References: <b526544bc745535f72c76752bbd850df5a0ac2e4.1633004460.git.dcaratti@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <b526544bc745535f72c76752bbd850df5a0ac2e4.1633004460.git.dcaratti@redhat.com>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=aclaudi@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 20 Sep 2021, Mat Martineau wrote:
+On Thu, Sep 30, 2021 at 05:19:25PM +0200, Davide Caratti wrote:
+> the following command:
+> 
+>  # ip -j mptcp endpoint show
+> 
+> prints a JSON array that misses the terminating bracket. Fix this calling
+> delete_json_obj() to balance the call to new_json_obj().
+> 
+> Fixes: 7e0767cd862b ("add support for mptcp netlink interface")
+> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> ---
 
-> On Mon, 20 Sep 2021, Tim Gardner wrote:
->
->> Coverity complains of a possible NULL dereference in
->> mptcp_getsockopt_subflow_addrs():
->> 
->> 861        } else if (sk->sk_family == AF_INET6) {
->>    	3. returned_null: inet6_sk returns NULL. [show details]
->>    	4. var_assigned: Assigning: np = NULL return value from inet6_sk.
->> 862                const struct ipv6_pinfo *np = inet6_sk(sk);
->> 
->> Fix this by checking for NULL.
->> 
->> Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
->> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Jakub Kicinski <kuba@kernel.org>
->> Cc: netdev@vger.kernel.org
->> Cc: mptcp@lists.linux.dev
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
->> 
->> [ I'm not at all sure this is the right thing to do since the final result is to
->> return garbage to user space in mptcp_getsockopt_subflow_addrs(). Is this one
->> of those cases where inet6_sk() can't fail ?]
->
-> Hi Tim -
->
-> Thanks for noticing this and proposing a fix.
->
-> As you commented, this isn't the right change to merge since 
-> mptcp_getsockopt_subflow_addrs() would copy garbage.
->
-> This block of code already checks that CONFIG_IPV6 is enabled, so the 
-> question is whether sk_fullsock() would return false because the subflow is 
-> in TCP_TIME_WAIT or TCP_NEW_SYN_RECV. The caller is iterating over sockets in 
-> the MPTCP socket's conn_list, which does not contain request_socks (so there 
-> are no sockets in the TCP_NEW_SYN_RECV state).
->
-> TCP subflow sockets are normally removed from the conn_list before they are 
-> closed by their parent MPTCP socket, but I need to double-check for corner 
-> cases. I created a github issue to track this: 
-> https://github.com/multipath-tcp/mptcp_net-next/issues/231
->
+LGTM.
+Acked-by: Andrea Claudi <aclaudi@redhat.com>
 
-Tim,
-
-Could you submit a v2 of this patch? Paolo took a look and the condition 
-should not happen, but adding the NULL check would be a good idea and 
-returning early as your patch does is ok. The data copied after the early 
-return will be zeroed and look like the address family is AF_UNSPEC.
-
-Could you add a
-
-Fixes: https://github.com/multipath-tcp/mptcp_net-next/issues/231
-
-tag and make the one change below?
-
->
->> ---
->> net/mptcp/sockopt.c | 3 +++
->> 1 file changed, 3 insertions(+)
->> 
->> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
->> index 8137cc3a4296..c89f2bedce79 100644
->> --- a/net/mptcp/sockopt.c
->> +++ b/net/mptcp/sockopt.c
->> @@ -861,6 +861,9 @@ static void mptcp_get_sub_addrs(const struct sock *sk, 
->> struct mptcp_subflow_addr
->> 	} else if (sk->sk_family == AF_INET6) {
->> 		const struct ipv6_pinfo *np = inet6_sk(sk);
->> 
->> +		if (!np)
-
-This could be
-
-if (WARN_ON_ONCE(!np))
-
-(as suggested by Paolo) to make it clear the condition is unexpected.
-
->> +			return;
->> +
->> 		a->sin6_local.sin6_family = AF_INET6;
->> 		a->sin6_local.sin6_port = inet->inet_sport;
->> 
->> -- 
->> 2.33.0
-
-Thanks,
-
---
-Mat Martineau
-Intel
