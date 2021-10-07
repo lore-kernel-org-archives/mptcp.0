@@ -1,24 +1,24 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7A82C88
-	for <mptcp@lists.linux.dev>; Thu,  7 Oct 2021 04:37:19 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="249476773"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFFA2C8B
+	for <mptcp@lists.linux.dev>; Thu,  7 Oct 2021 04:37:20 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="249476777"
 X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
-   d="scan'208";a="249476773"
+   d="scan'208";a="249476777"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 21:37:19 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 21:37:20 -0700
 X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
-   d="scan'208";a="568443835"
+   d="scan'208";a="568443839"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 21:37:19 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 21:37:20 -0700
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: mptcp@lists.linux.dev,
 	mathew.j.martineau@linux.intel.com,
 	kishen.maloor@intel.com
-Subject: [RFC PATCH 1/4] mptcp: pm_netlink: Add MPTCP_PM_CMD_ANNOUNCE
-Date: Thu,  7 Oct 2021 00:36:53 -0400
-Message-Id: <20211007043656.261552-2-kishen.maloor@intel.com>
+Subject: [RFC PATCH 2/4] mptcp: selftests: MPTCP_PM_CMD_ANNOUNCE
+Date: Thu,  7 Oct 2021 00:36:54 -0400
+Message-Id: <20211007043656.261552-3-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211007043656.261552-1-kishen.maloor@intel.com>
 References: <20211007043656.261552-1-kishen.maloor@intel.com>
@@ -30,109 +30,164 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change adds a MPTCP netlink interface command for issuing
-ADD_ADDR advertisements over the chosen MPTCP connection from a
-userspace path manager.
+This change updates the "pm_nl_ctl" testing sample with an "ann" (announce)
+option to support the newly added netlink interface command
+MPTCP_PM_CMD_ANNOUNCE to issue ADD_ADDR advertisements over the
+chosen MPTCP connection.
 
-The command requires the following parameters:
-{token, {loc_id, family, saddr4 | saddr6 [, sport]} }.
+E.g. ./pm_nl_ctl ann 192.168.122.75 token 823274047 id 2345 dev enp1s0
 
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
- include/uapi/linux/mptcp.h |  2 ++
- net/mptcp/pm_netlink.c     | 45 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index c8cc46f80a16..e22e891016e3 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -55,6 +55,7 @@ enum {
- 	MPTCP_PM_ATTR_ADDR,				/* nested address */
- 	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
- 	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
-+	MPTCP_PM_ATTR_TOKEN,				/* u32 */
- 
- 	__MPTCP_PM_ATTR_MAX
- };
-@@ -92,6 +93,7 @@ enum {
- 	MPTCP_PM_CMD_SET_LIMITS,
- 	MPTCP_PM_CMD_GET_LIMITS,
- 	MPTCP_PM_CMD_SET_FLAGS,
-+	MPTCP_PM_CMD_ANNOUNCE,
- 
- 	__MPTCP_PM_CMD_AFTER_LAST
- };
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 2a3589b67768..1b41bbc70529 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1028,6 +1028,7 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_PM_ATTR_MAX + 1] = {
- 					NLA_POLICY_NESTED(mptcp_pm_addr_policy),
- 	[MPTCP_PM_ATTR_RCV_ADD_ADDRS]	= { .type	= NLA_U32,	},
- 	[MPTCP_PM_ATTR_SUBFLOWS]	= { .type	= NLA_U32,	},
-+	[MPTCP_PM_ATTR_TOKEN]		= { .type	= NLA_U32,	},
- };
- 
- void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
-@@ -1735,6 +1736,45 @@ static int mptcp_nl_addr_backup(struct net *net,
- 	return ret;
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 354784512748..47c2667ad676 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -26,6 +26,7 @@ static void syntax(char *argv[])
+ {
+ 	fprintf(stderr, "%s add|get|set|del|flush|dump|accept [<args>]\n", argv[0]);
+ 	fprintf(stderr, "\tadd [flags signal|subflow|backup|fullmesh] [id <nr>] [dev <name>] <ip>\n");
++	fprintf(stderr, "\tann <ip> token <token> [port <port>] [id <nr>] [dev <name>]\n");
+ 	fprintf(stderr, "\tdel <id> [<ip>]\n");
+ 	fprintf(stderr, "\tget <id>\n");
+ 	fprintf(stderr, "\tset <ip> [flags backup|nobackup]\n");
+@@ -170,6 +171,124 @@ static int resolve_mptcp_pm_netlink(int fd)
+ 	return genl_parse_getfamily((void *)data);
  }
  
-+static int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
++int announce_addr(int fd, int pm_family, int argc, char *argv[])
 +{
-+	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR],
-+		*token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-+	struct mptcp_sock *msk;
-+	struct mptcp_pm_addr_entry _addr;
-+	u32 _token;
-+	int err;
++	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
++		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
++		  1024];
++	struct rtattr *rta, *addr;
++	struct nlmsghdr *nh;
++	u_int32_t flags = 0;
++	u_int16_t family;
++	u_int32_t token;
++	int addr_start;
++	u_int8_t id, got_token = 0;
++	int off = 0;
++	int arg;
 +
-+	if (!addr || !token) {
-+		GENL_SET_ERR_MSG(info, "missing announce info");
-+		return -EINVAL;
++	memset(data, 0, sizeof(data));
++	nh = (void *)data;
++	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_ANNOUNCE,
++			    MPTCP_PM_VER);
++
++	if (argc < 5)
++		syntax(argv);
++
++	/* addr header */
++	addr_start = off;
++	addr = (void *)(data + off);
++	addr->rta_type = NLA_F_NESTED | MPTCP_PM_ATTR_ADDR;
++	addr->rta_len = RTA_LENGTH(0);
++	off += NLMSG_ALIGN(addr->rta_len);
++
++	/* addr data */
++	rta = (void *)(data + off);
++	if (inet_pton(AF_INET, argv[2], RTA_DATA(rta))) {
++		family = AF_INET;
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR4;
++		rta->rta_len = RTA_LENGTH(4);
++	} else if (inet_pton(AF_INET6, argv[2], RTA_DATA(rta))) {
++		family = AF_INET6;
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR6;
++		rta->rta_len = RTA_LENGTH(16);
++	} else
++		error(1, errno, "can't parse ip %s", argv[2]);
++	off += NLMSG_ALIGN(rta->rta_len);
++
++	/* family */
++	rta = (void *)(data + off);
++	rta->rta_type = MPTCP_PM_ADDR_ATTR_FAMILY;
++	rta->rta_len = RTA_LENGTH(2);
++	memcpy(RTA_DATA(rta), &family, 2);
++	off += NLMSG_ALIGN(rta->rta_len);
++
++	flags |= MPTCP_PM_ADDR_FLAG_SIGNAL;
++
++	for (arg = 3; arg < argc; arg++) {
++		if (!strcmp(argv[arg], "id")) {
++			if (++arg >= argc)
++				error(1, 0, " missing id value");
++
++			id = atoi(argv[arg]);
++			rta = (void *)(data + off);
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_ID;
++			rta->rta_len = RTA_LENGTH(1);
++			memcpy(RTA_DATA(rta), &id, 1);
++			off += NLMSG_ALIGN(rta->rta_len);
++		} else if (!strcmp(argv[arg], "dev")) {
++			int32_t ifindex;
++
++			if (++arg >= argc)
++				error(1, 0, " missing dev name");
++
++			ifindex = if_nametoindex(argv[arg]);
++			if (!ifindex)
++				error(1, errno, "unknown device %s", argv[arg]);
++
++			rta = (void *)(data + off);
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_IF_IDX;
++			rta->rta_len = RTA_LENGTH(4);
++			memcpy(RTA_DATA(rta), &ifindex, 4);
++			off += NLMSG_ALIGN(rta->rta_len);
++		} else if (!strcmp(argv[arg], "port")) {
++			u_int16_t port;
++
++			if (++arg >= argc)
++				error(1, 0, " missing port value");
++			if (!(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
++				error(1, 0, " flags must be signal when using port");
++
++			port = atoi(argv[arg]);
++			rta = (void *)(data + off);
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_PORT;
++			rta->rta_len = RTA_LENGTH(2);
++			memcpy(RTA_DATA(rta), &port, 2);
++			off += NLMSG_ALIGN(rta->rta_len);
++		} else if (!strcmp(argv[arg], "token")) {
++			if (++arg >= argc)
++				error(1, 0, " missing token value");
++			token = atoi(argv[arg]);
++			got_token = 1;
++		} else
++			error(1, 0, "unknown keyword %s", argv[arg]);
 +	}
++	addr->rta_len = off - addr_start;
 +
-+	err = mptcp_pm_parse_addr(addr, info, true, &_addr);
-+	if (err < 0)
-+		return err;
++	if (!got_token)
++		error(1, 0, " missing token value");
 +
-+	_token = nla_get_u32(token);
++	/* token */
++	rta = (void *)(data + off);
++	rta->rta_type = MPTCP_PM_ATTR_TOKEN;
++	rta->rta_len = RTA_LENGTH(4);
++	memcpy(RTA_DATA(rta), &token, 4);
++	off += NLMSG_ALIGN(rta->rta_len);
 +
-+	msk = mptcp_token_get_sock(sock_net(skb->sk), _token);
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
-+		return -EINVAL;
-+	}
-+
-+	lock_sock((struct sock *)msk);
-+	spin_lock_bh(&msk->pm.lock);
-+
-+	msk->pm.userspace = true;
-+	mptcp_pm_announce_addr(msk, &_addr.addr, false);
-+	mptcp_pm_nl_addr_send_ack(msk);
-+
-+	spin_unlock_bh(&msk->pm.lock);
-+	release_sock((struct sock *)msk);
++	do_nl_req(fd, nh, off, 0);
 +
 +	return 0;
 +}
 +
- static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
+ int add_addr(int fd, int pm_family, int argc, char *argv[])
  {
- 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-@@ -2067,6 +2107,11 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
- 		.doit   = mptcp_nl_cmd_set_flags,
- 		.flags  = GENL_ADMIN_PERM,
- 	},
-+	{
-+		.cmd    = MPTCP_PM_CMD_ANNOUNCE,
-+		.doit   = mptcp_nl_cmd_announce,
-+		.flags  = GENL_ADMIN_PERM,
-+	},
- };
+ 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+@@ -744,6 +863,8 @@ int main(int argc, char *argv[])
  
- static struct genl_family mptcp_genl_family __ro_after_init = {
+ 	if (!strcmp(argv[1], "add"))
+ 		return add_addr(fd, pm_family, argc, argv);
++	else if (!strcmp(argv[1], "ann"))
++		return announce_addr(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "del"))
+ 		return del_addr(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "flush"))
 -- 
 2.31.1
 
