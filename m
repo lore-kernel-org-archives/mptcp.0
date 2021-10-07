@@ -1,184 +1,263 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345D12C80
-	for <mptcp@lists.linux.dev>; Thu,  7 Oct 2021 16:35:30 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="213440086"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878CD2C83
+	for <mptcp@lists.linux.dev>; Thu,  7 Oct 2021 22:05:35 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="207187866"
 X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="213440086"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 09:26:41 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="207187866"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 15:05:09 -0700
 X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="713389390"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Oct 2021 09:26:40 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Thu, 7 Oct 2021 09:26:40 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12 via Frontend Transport; Thu, 7 Oct 2021 09:26:40 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.12; Thu, 7 Oct 2021 09:26:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WaexoZ0fwTLADoYq7yrbaS/s26XTVfoM8XtMvRAQOB+P98NXhNOZe688P9DauSD8z7JyZ591DsY4xnoU/a0l7/fblk1FFJkFCeLytuLUOsuOcyN6lJVepDQ6Wg7g35f0QgOg9ek/TRpyNKaFWoSp5qCF82nVj4Radyu9gv12yzgpBp40qOigeSoZPKbYjlmRUEv/4n3eSnCmNiafRK9fxm/C5nogkxwK7rk4pZkKCHuAFzdWQ6PI4ajdy27v5fYy42rdJWkqZ9F5P5jVZT37YkmfPrffPIsDpocR2sX+EOXagH3TnNok23ab5jmVsM3aHdmjOJ1vIoHBJedvJNp86g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8uCP09Uc8wizN4a84UTToVc8lQfiu/NZdfhrjrP090o=;
- b=K55P5pRTjuJm5pQ5+KNmY2VHf7Ti45kxvnrjp10ikua2eD59xTTvySG6kPcu5LvtNSZ/+xco3ZrT6udcwtUdAMg3qWPEEQ1AR72QGkSKgUV01AfY3RCxv2QfrKDCjm2qMwUnu3/cOCMmMKq3aIxX2O8HZ2dD+EeSmjjt9erzmiJ0T7ybbbgayUxlJo6zlLbH0zDQqI2XGuTltS/yxEwoVpDvzpaijr/At1jdACA7WQS7ZDZOAab0eZXjgxAn8OICgikQy9kLnIA0ocD0GyQ4DuJzSEluG8pWzYVGDS0N8IgRUsKeBbehF/x7OaqSI5qPB4nvf3lG0YwxpN79pGbzWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8uCP09Uc8wizN4a84UTToVc8lQfiu/NZdfhrjrP090o=;
- b=gh3Fy3DQmxI6ryPjLRw8tngQvAacDIfRe3qDPsbe0LsbRqs88p4L0nhy7CAC59ZO5xi86mNVBcLALPeoZU4XPksqaLaHNWOqSqAHHJWjKoWQsjcQO8OH4MTHwNJn4xcyC/PNAx7P7LSWVARo8+XPyJw2C0h35JTBqHqufUsrBgY=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-Received: from CO1PR11MB5140.namprd11.prod.outlook.com (2603:10b6:303:95::6)
- by CO1PR11MB4931.namprd11.prod.outlook.com (2603:10b6:303:9d::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.19; Thu, 7 Oct
- 2021 16:26:38 +0000
-Received: from CO1PR11MB5140.namprd11.prod.outlook.com
- ([fe80::3134:f32f:19c8:324f]) by CO1PR11MB5140.namprd11.prod.outlook.com
- ([fe80::3134:f32f:19c8:324f%3]) with mapi id 15.20.4587.020; Thu, 7 Oct 2021
- 16:26:38 +0000
-Subject: Re: [RFC PATCH 0/4] mptcp: Update netlink interface for userspace PM
-To: Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>
-CC: <mptcp@lists.linux.dev>, <mathew.j.martineau@linux.intel.com>
-References: <20211007043656.261552-1-kishen.maloor@intel.com>
- <20211007083218.GA7333@breakpoint.cc>
- <927307c6be705ab82341f8923842eb6687c253cc.camel@redhat.com>
-From: Kishen Maloor <kishen.maloor@intel.com>
-Message-ID: <279ff57e-2bc5-5609-2599-48bc917c1118@intel.com>
-Date: Thu, 7 Oct 2021 09:26:36 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
-In-Reply-To: <927307c6be705ab82341f8923842eb6687c253cc.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR2201CA0043.namprd22.prod.outlook.com
- (2603:10b6:301:16::17) To CO1PR11MB5140.namprd11.prod.outlook.com
- (2603:10b6:303:95::6)
+   d="scan'208";a="489193334"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.67.146])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 15:05:09 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev,
+	syzbot+3360da629681aa0d22fe@syzkaller.appspotmail.com,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net] mptcp: fix possible stall on recvmsg()
+Date: Thu,  7 Oct 2021 15:05:00 -0700
+Message-Id: <20211007220500.280862-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: from jgaid-MOBL1.amr.corp.intel.com (76.105.224.234) by MWHPR2201CA0043.namprd22.prod.outlook.com (2603:10b6:301:16::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18 via Frontend Transport; Thu, 7 Oct 2021 16:26:37 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 01fa0ab3-0454-42c3-d0e3-08d989af3ca5
-X-MS-TrafficTypeDiagnostic: CO1PR11MB4931:
-X-Microsoft-Antispam-PRVS: <CO1PR11MB4931D3907368D285C55CD724E1B19@CO1PR11MB4931.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cDH43bq1cibugFFyiJztv1o9qY3cm7k89+vRVLrXiohAUlmMRcoCfzQSuRJUslfQww6B7ViPrwAELdEzIWoD7ZUvY1RsRV5/INae1SxACk2GgHNU7vBENjHr1XnMOfdqySLyQj/m6lthAg+YAgS7Ox9/D2zow+KeKZrHFd7882L6bR/Zi2cH1gA7nvYI8uJE27tTEm9csgBt5bq4XreLFUUapx7QGQQ4GrIME8nI80rqNXN1grJe9quzEMQIxnEskO/JM5/wAjdJ4lPYxVdOhFRI+ty6bivwo/yLl7PKyItVzWA9RuRMs+cEymWoGS9g1yV6oq54CCjJ4JwIF17lrR9TqB2Y4jfPwstfMpSR7CXAql2x8XqzUJJ8i+PLL7dvwe+WdaCMotqvo2viK60e/IrfchPJ7RJBHKbMcQCi9s/FpZKv4+3FeP3ra9Y6ThIdNiWfbJKNSoCL0Kayc3bjhre8zHGu4YftTNWnQQtGok2CDKZzwZ0O+ejk/yOa2P8Sg1oxROOkOymRbcGc/wvDkw61Jy/VyxaadJEpZ0XD8/ABfeHD38U8cTcST7aoByZsQcs6NP/6Tffr5jxqTvnZfHQVY1PZIPuIWLGwSE7gufTzDUZheQFfgKSzrc0WZP6MSioAOZWztAvQgjq+X4uFKDjEdEUQQeDxkmnTHLkbtavxitWohgb+S7DrxUsUlcVpKBr7gvFcBtpftrvUqxde235dhu60grR4uV2zlDaVMhHNi7a0+5mJIA1PfJZpFeSDNnVo4vXjMhgGiJIXfH60y9VGg+5LPIR2N2zBZYE7kBNmA/lym9mI6o/ufri6nYAK
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5140.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(31696002)(966005)(2906002)(8936002)(53546011)(6486002)(508600001)(66476007)(86362001)(66946007)(66556008)(44832011)(5660300002)(7696005)(8676002)(186003)(83380400001)(36756003)(31686004)(15650500001)(316002)(956004)(110136005)(38100700002)(26005)(2616005)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WWJxOGhyQTFsZXkrdFRVT1VwNlZZSjJRMk02K1luekljUm1DbzgxK2pOdGFt?=
- =?utf-8?B?dXluaE5UeUxndjhCbWxNWWdyYUJqWVF1ZkJidi85bndNUWh1ZE5CWmhoZzNm?=
- =?utf-8?B?enQ0TWxUN2NGbmNZQnRTQlBGY1hYVjlMZ2d1S1A1ZWVRUXpHY0NsRTVwOXdF?=
- =?utf-8?B?SlRVajFTSmZid2VNeGUzNVJXM2VTSVNOeFNQelV5cXl4UTVwZWZLdm1ZbXdp?=
- =?utf-8?B?S0E2eW5KNjJYUEJ4Qi9SQktGOFMvUDBkOUF4TmRQSU5qbjBPR1plUzk4VUww?=
- =?utf-8?B?RmJXSGtsV2F0TDk0WjNucXBvejVML3JKZHlyZkNKaDlIUWszSXU5bkptSUk2?=
- =?utf-8?B?Q0xlcy9jM21TejQ1R213RWd3TVk5SlpPdUVCQ1NTVVErWG82ZlNmbEhZWTJa?=
- =?utf-8?B?OC9nQWgydEkySDhtT3l4aWtRNnBvdDdVenlyYXh2RWROdlFZbWZXaVlxVHVF?=
- =?utf-8?B?eTVUNXVTa1pUTlh3UGtxYjdRR2RKMUR6dmpBUURyOUp3R250bHZRZzVEQ1k2?=
- =?utf-8?B?aTYxRjZPNFp2ZmVnTU1xb0Z4QzlCalBkeFErVTl3M3N1dlVTRHRHdDdBRndL?=
- =?utf-8?B?Rll0Z3lZNVc2UFJuOHQwaFM4QURwZEIzUm9hb01hb21wSWh4aHMwekxkcGZz?=
- =?utf-8?B?N3UyY0ZiTHg1UUU1VldOTm9YSGVvaFlSMjk5R29XZStXS3JvMUJ3V21zRDQ4?=
- =?utf-8?B?SVRHQ0hZZkdYQlNIMFVYNXI3ck42WG96bTJGdDRuZStSMHJkM3BBcVVrMkZ4?=
- =?utf-8?B?Z2Y5V000U1ZyRWEzV29qdUlzQkVNU3VzdXZDNWtTQ1RRTEVZZTAxdU9GMWxN?=
- =?utf-8?B?K1BHWDZlSnRMcC8rallEUnNJcTREOXdPZkppc3ppc29wZmlrdzkxUXNya0lj?=
- =?utf-8?B?OEZrZWRhcjlnUVBTbHpBN2t3OHk3b3R3b1ZHaThvRzZzOUplNmFQdCtRTEVF?=
- =?utf-8?B?bDlpZFlLMDdEZ1YxTnZtTi9nNzZwcS9QTldEVXdIVEkwRHVJZ21CYktGMzFL?=
- =?utf-8?B?RkxudnhEdGlEbU1pTDBnanpmRHdhckN4UnZQRm4yUUVXMnN0TE5PWCtZOXhv?=
- =?utf-8?B?aitEdGwzUXJ0ZzgyNWdYWmpHUmJvaVFQa1lrSS9yVGdBZW9FQStPWG9mT2pR?=
- =?utf-8?B?RGw4di9FN0o1cTBldVY2WnJ0Mk5aNkg4MHpSbVh5RzZ6KzRONHNsaHZnaGQz?=
- =?utf-8?B?THZPV2ZEL2xWSmxaZkk4UkoweVpPa044Ym9SRUx1RnhsTG13YlpHcjl4dEtX?=
- =?utf-8?B?VEppRDQ3QmVwcVA4bVVNMVJIbkNYeDFJeTB5bnluZU1XQ3JHYy81ZEZTRHBT?=
- =?utf-8?B?U3AwQ0Y1U0kxL1Irc1NhUnRYME5nS0YwK25tQm5vOWVHTWpRa0Z3VTNZR2FX?=
- =?utf-8?B?MUF0a1NuTzhmUWtaVUZEZ01kKzV0NFk0U29WcGIwUzhsdlpySWZyTzVldlEy?=
- =?utf-8?B?NEpkMUZrb2szZGhNbHdXaTU3WmJ5cy81ZXNBZ3ZtTlhqaTRDbGVxQTl1SWVo?=
- =?utf-8?B?bzkxWnh5NFcyV3crOXExYzFLSXRvdVJnRlp6L29iVWNhMVVPMTBHZVJUM3VU?=
- =?utf-8?B?dkNpUW9tWllZQUphYTQ2RElZK1NGT3Q2aWk3RU5RblVkdDlUT3VyaGV4YmNK?=
- =?utf-8?B?RW1pSEpzcW9ObU9WSzI1ZGsza2ROUGlTV0FTSjU1RHljMTY4eEdZTnU4QUhw?=
- =?utf-8?B?T0tkbmpIeFNQUGRtV2Y2VGRsUmdPODVsS3FNMHN6amtxQ2dNUlE4MzVWbXAv?=
- =?utf-8?Q?5I3+0vOOJlW+vuIxpZ+CMzHP5zTMj+GTKiINdlj?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01fa0ab3-0454-42c3-d0e3-08d989af3ca5
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5140.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2021 16:26:38.0921
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zkkGdSY97D52kCJ2uf07FcGIu7ecDRKeG2X1UUh9NAXFcIkbr0qf6iXPfvk/9rgIuy19wk/ODXY0lET9IgyXvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4931
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On 10/7/21 4:26 AM, Paolo Abeni wrote:
-> On Thu, 2021-10-07 at 10:32 +0200, Florian Westphal wrote:
->> Kishen Maloor <kishen.maloor@intel.com> wrote:
->>> This patch series marks the beginning of an attempt to update the MPTCP
->>> netlink interface with commands to support the offloading of path management 
->>> decisions to userspace path managers.
->>>
->>> Specifically, the commits in this series introduce the following commands:
->>>
->>> * MPTCP_PM_CMD_ANNOUNCE: Issue an ADD_ADDR advertisement over the selected MPTCP
->>>   connection.
->>
->> Looks like you guys are further ahead than me.
->> I've pushed my work here:
->>
->> iproute2:
->> https://git.breakpoint.cc/cgit/fw/iproute2.git/log/?h=mptcp_sf_03
->>
->> kernel:
->> https://git.breakpoint.cc/cgit/fw/mptcp_net-next.git/log/?h=netlink_cmd_07
->>
+From: Paolo Abeni <pabeni@redhat.com>
 
-Thank you. Just so its clear, I'd picked up this Github issue assigned to Mat mostly to avoid such overlap :)
+recvmsg() can enter an infinite loop if the caller provides the
+MSG_WAITALL, the data present in the receive queue is not sufficient to
+fulfill the request, and no more data is received by the peer.
 
->> I had planned to work on packetdrill tests next but to avoid
->> further duplicate work I will refrain from doing so.
+When the above happens, mptcp_wait_data() will always return with
+no wait, as the MPTCP_DATA_READY flag checked by such function is
+set and never cleared in such code path.
 
-I can say that you won't see any duplication here specifically :)
+Leveraging the above syzbot was able to trigger an RCU stall:
 
->>
->> Feel free to take what you need and/or mangle and discard this at will.
-> 
-> It looks like your patch:
-> 
-> mptcp: netlink: allow userspace-driven subflow establishment
-> 
-> implements feature not available here, while:
-> 
-> mptcp: netlink: allow userspace to perform address announcements
-> 
-> overlaps with this effort.
-> 
-> I think we can merge the 2 series into a single one dropping only the
-> later patch, if there is agreement.
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu:    0-...!: (10499 ticks this GP) idle=0af/1/0x4000000000000000 softirq=10678/10678 fqs=1
+        (t=10500 jiffies g=13089 q=109)
+rcu: rcu_preempt kthread starved for 10497 jiffies! g13089 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
+rcu:    Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+rcu: RCU grace-period kthread stack dump:
+task:rcu_preempt     state:R  running task     stack:28696 pid:   14 ppid:     2 flags:0x00004000
+Call Trace:
+ context_switch kernel/sched/core.c:4955 [inline]
+ __schedule+0x940/0x26f0 kernel/sched/core.c:6236
+ schedule+0xd3/0x270 kernel/sched/core.c:6315
+ schedule_timeout+0x14a/0x2a0 kernel/time/timer.c:1881
+ rcu_gp_fqs_loop+0x186/0x810 kernel/rcu/tree.c:1955
+ rcu_gp_kthread+0x1de/0x320 kernel/rcu/tree.c:2128
+ kthread+0x405/0x4f0 kernel/kthread.c:327
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
+rcu: Stack dump where RCU GP kthread last ran:
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 8510 Comm: syz-executor827 Not tainted 5.15.0-rc2-next-20210920-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:84 [inline]
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:102 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:128 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:159 [inline]
+RIP: 0010:check_region_inline mm/kasan/generic.c:180 [inline]
+RIP: 0010:kasan_check_range+0xc8/0x180 mm/kasan/generic.c:189
+Code: 38 00 74 ed 48 8d 50 08 eb 09 48 83 c0 01 48 39 d0 74 7a 80 38 00 74 f2 48 89 c2 b8 01 00 00 00 48 85 d2 75 56 5b 5d 41 5c c3 <48> 85 d2 74 5e 48 01 ea eb 09 48 83 c0 01 48 39 d0 74 50 80 38 00
+RSP: 0018:ffffc9000cd676c8 EFLAGS: 00000283
+RAX: ffffed100e9a110e RBX: ffffed100e9a110f RCX: ffffffff88ea062a
+RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff888074d08870
+RBP: ffffed100e9a110e R08: 0000000000000001 R09: ffff888074d08877
+R10: ffffed100e9a110e R11: 0000000000000000 R12: ffff888074d08000
+R13: ffff888074d08000 R14: ffff888074d08088 R15: ffff888074d08000
+FS:  0000555556d8e300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+S:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000180 CR3: 0000000068909000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ instrument_atomic_read_write include/linux/instrumented.h:101 [inline]
+ test_and_clear_bit include/asm-generic/bitops/instrumented-atomic.h:83 [inline]
+ mptcp_release_cb+0x14a/0x210 net/mptcp/protocol.c:3016
+ release_sock+0xb4/0x1b0 net/core/sock.c:3204
+ mptcp_wait_data net/mptcp/protocol.c:1770 [inline]
+ mptcp_recvmsg+0xfd1/0x27b0 net/mptcp/protocol.c:2080
+ inet6_recvmsg+0x11b/0x5e0 net/ipv6/af_inet6.c:659
+ sock_recvmsg_nosec net/socket.c:944 [inline]
+ ____sys_recvmsg+0x527/0x600 net/socket.c:2626
+ ___sys_recvmsg+0x127/0x200 net/socket.c:2670
+ do_recvmmsg+0x24d/0x6d0 net/socket.c:2764
+ __sys_recvmmsg net/socket.c:2843 [inline]
+ __do_sys_recvmmsg net/socket.c:2866 [inline]
+ __se_sys_recvmmsg net/socket.c:2859 [inline]
+ __x64_sys_recvmmsg+0x20b/0x260 net/socket.c:2859
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x7fc200d2dc39
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 41 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc5758e5a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc200d2dc39
+RDX: 0000000000000002 RSI: 00000000200017c0 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000f0b5ff
+R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000000003
+R13: 00007ffc5758e5d0 R14: 00007ffc5758e5c0 R15: 0000000000000003
 
-Yup, we can look into this.
+Fix the issue by replacing the MPTCP_DATA_READY bit with direct
+inspection of the msk receive queue.
 
-> 
-> Cheers,
-> 
-> Paolo
-> 
+Reported-and-tested-by: syzbot+3360da629681aa0d22fe@syzkaller.appspotmail.com
+Fixes: 7a6a6cbc3e59 ("mptcp: recvmsg() can drain data from multiple subflow")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+
+We've reviewed and tested this in the MPTCP tree, no regressions have
+come up and the issue is resolved as described above. Looks like it's
+ready for the net tree.
+
+Thanks,
+
+Mat
+
+---
+ net/mptcp/protocol.c | 55 ++++++++++++--------------------------------
+ 1 file changed, 15 insertions(+), 40 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e5df0b5971c8..d073b2111382 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -528,7 +528,6 @@ static bool mptcp_check_data_fin(struct sock *sk)
+ 
+ 		sk->sk_shutdown |= RCV_SHUTDOWN;
+ 		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+-		set_bit(MPTCP_DATA_READY, &msk->flags);
+ 
+ 		switch (sk->sk_state) {
+ 		case TCP_ESTABLISHED:
+@@ -742,10 +741,9 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 
+ 	/* Wake-up the reader only for in-sequence data */
+ 	mptcp_data_lock(sk);
+-	if (move_skbs_to_msk(msk, ssk)) {
+-		set_bit(MPTCP_DATA_READY, &msk->flags);
++	if (move_skbs_to_msk(msk, ssk))
+ 		sk->sk_data_ready(sk);
+-	}
++
+ 	mptcp_data_unlock(sk);
+ }
+ 
+@@ -847,7 +845,6 @@ static void mptcp_check_for_eof(struct mptcp_sock *msk)
+ 		sk->sk_shutdown |= RCV_SHUTDOWN;
+ 
+ 		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+-		set_bit(MPTCP_DATA_READY, &msk->flags);
+ 		sk->sk_data_ready(sk);
+ 	}
+ 
+@@ -1759,21 +1756,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	return copied ? : ret;
+ }
+ 
+-static void mptcp_wait_data(struct sock *sk, long *timeo)
+-{
+-	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-
+-	add_wait_queue(sk_sleep(sk), &wait);
+-	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+-
+-	sk_wait_event(sk, timeo,
+-		      test_bit(MPTCP_DATA_READY, &msk->flags), &wait);
+-
+-	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+-	remove_wait_queue(sk_sleep(sk), &wait);
+-}
+-
+ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 				struct msghdr *msg,
+ 				size_t len, int flags,
+@@ -2077,19 +2059,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		}
+ 
+ 		pr_debug("block timeout %ld", timeo);
+-		mptcp_wait_data(sk, &timeo);
+-	}
+-
+-	if (skb_queue_empty_lockless(&sk->sk_receive_queue) &&
+-	    skb_queue_empty(&msk->receive_queue)) {
+-		/* entire backlog drained, clear DATA_READY. */
+-		clear_bit(MPTCP_DATA_READY, &msk->flags);
+-
+-		/* .. race-breaker: ssk might have gotten new data
+-		 * after last __mptcp_move_skbs() returned false.
+-		 */
+-		if (unlikely(__mptcp_move_skbs(msk)))
+-			set_bit(MPTCP_DATA_READY, &msk->flags);
++		sk_wait_data(sk, &timeo, NULL);
+ 	}
+ 
+ out_err:
+@@ -2098,9 +2068,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			tcp_recv_timestamp(msg, sk, &tss);
+ 	}
+ 
+-	pr_debug("msk=%p data_ready=%d rx queue empty=%d copied=%d",
+-		 msk, test_bit(MPTCP_DATA_READY, &msk->flags),
+-		 skb_queue_empty_lockless(&sk->sk_receive_queue), copied);
++	pr_debug("msk=%p rx queue empty=%d:%d copied=%d",
++		 msk, skb_queue_empty_lockless(&sk->sk_receive_queue),
++		 skb_queue_empty(&msk->receive_queue), copied);
+ 	if (!(flags & MSG_PEEK))
+ 		mptcp_rcv_space_adjust(msk, copied);
+ 
+@@ -2368,7 +2338,6 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ 	sk->sk_shutdown = SHUTDOWN_MASK;
+ 	smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+-	set_bit(MPTCP_DATA_READY, &msk->flags);
+ 	set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags);
+ 
+ 	mptcp_close_wake_up(sk);
+@@ -3385,8 +3354,14 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 
+ static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
+ {
+-	return test_bit(MPTCP_DATA_READY, &msk->flags) ? EPOLLIN | EPOLLRDNORM :
+-	       0;
++	/* Concurrent splices from sk_receive_queue into receive_queue will
++	 * always show at least one non-empty queue when checked in this order.
++	 */
++	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue) &&
++	    skb_queue_empty_lockless(&msk->receive_queue))
++		return 0;
++
++	return EPOLLIN | EPOLLRDNORM;
+ }
+ 
+ static __poll_t mptcp_check_writeable(struct mptcp_sock *msk)
+@@ -3421,7 +3396,7 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 	state = inet_sk_state_load(sk);
+ 	pr_debug("msk=%p state=%d flags=%lx", msk, state, msk->flags);
+ 	if (state == TCP_LISTEN)
+-		return mptcp_check_readable(msk);
++		return test_bit(MPTCP_DATA_READY, &msk->flags) ? EPOLLIN | EPOLLRDNORM : 0;
+ 
+ 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
+ 		mask |= mptcp_check_readable(msk);
+
+base-commit: 8d6c414cd2fb74aa6812e9bfec6178f8246c4f3a
+-- 
+2.33.0
 
