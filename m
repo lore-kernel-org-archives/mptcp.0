@@ -1,135 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8F62C80
-	for <mptcp@lists.linux.dev>; Wed, 13 Oct 2021 14:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1634136903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0CDK9A6zioZRUiPAWZP6TZG2FZFhqFBxn2b5EcVSQuE=;
-	b=gEVnR22Qf7Pz8HpTw+E/3hQWkHZUIa2XDpEBexVpG7BicDBdkUBcuvUkDrG+MSqc17OaSU
-	xCFSJbI33mM5CAmgvGD/iTYsiuDft2ipeZSBo8iJ+xkUf+CHlaszowdm8QzL5dUKVHjyy9
-	PS8DBtXE/ZZHTp4c7GFw7z/TxdpwXCo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-gdrPCMaXO-qHOiVg6cMZ_Q-1; Wed, 13 Oct 2021 10:55:02 -0400
-X-MC-Unique: gdrPCMaXO-qHOiVg6cMZ_Q-1
-Received: by mail-wr1-f69.google.com with SMTP id d13-20020adf9b8d000000b00160a94c235aso2219479wrc.2
-        for <mptcp@lists.linux.dev>; Wed, 13 Oct 2021 07:55:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BDF2C80
+	for <mptcp@lists.linux.dev>; Wed, 13 Oct 2021 15:16:50 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id t16so11680237eds.9
+        for <mptcp@lists.linux.dev>; Wed, 13 Oct 2021 08:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=pQBDukMFvp9fRExYqsRTphhRzAr8BHrdYP1jBGZmw+U=;
+        b=Zd3AQxg0gJgm4f90412UdiaxzKgEAGti6mhnBuPt1znWZyzI5ROXOps+jeDV4ETF6h
+         3R6jx+w5Pnl1JwEsHFvFTyJyIpyQSiPaaxEopgszwDfavsajTIhWXUN1hBLbxrhbA07z
+         iw1ZK9KRaYgiZndi1KW4mcjNpqLjzsW/wHe0jvfJhe3tuAd0H5o+heYRbVuVdxvL+hyc
+         Q5hIZIWDXICohpy5SxVOM5ryH7K9VZ2Hl1YXGADODVPorGfNvxGKXl+cLm/2eEyENcZG
+         nEE7c8NYjmCChYk9M804nh8+ODRIuOBr/UGLgqwzTr99D2hWXQQW4mDiganLNz3nY3nl
+         ft1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=0CDK9A6zioZRUiPAWZP6TZG2FZFhqFBxn2b5EcVSQuE=;
-        b=IRo76bGXg/6HUz+OumkYaFYbcK/Ndc5cv82KPbziVtT4MI4Gvb3V9Scs5mG/wH1T8G
-         D8EnazliHyTpYsR7eifwpOAzBs+/0uoLeZxGK59pD5SKiMQwlRDSILnoi/5zgowhbpYh
-         pQ1clozW88JZHkrBh66OG9Eva6IDpd2L3paE7GU6g6UUtj9NiyYlv1N6Hh/p1qFzTPKq
-         HpA+joF7sctJ96A+Ve48VBYcStqBP5mTAtyVcKlCFkcbV9VWxTCYbqsotlqtWle/oZfO
-         K9qS8JpIayzxjGwN9VKipom9Et5xlE1G+QJP3097TK8hylLewFqT30n1GV/ystCrENFq
-         i6xw==
-X-Gm-Message-State: AOAM530Wot75sxUFtZqu3je42xpOoMj4tzcdVsRra5+qWsY0miy5Nn2T
-	kG6Do+Mf7buetdKLO6RViicJM/VtYa0kA83wZYuQl+gkzzn0erl/3GLwtJT/7AZP1Esom2tOspi
-	UxMN6Qz0YDo7VF4s=
-X-Received: by 2002:a05:6000:1869:: with SMTP id d9mr19296870wri.161.1634136900961;
-        Wed, 13 Oct 2021 07:55:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyh2n64hHKufx8wpAXk4XB1MVn3JtA0DOXG73x805OGWR29CcnoQE8ZJH02V2Cwu8rvG2Qf5g==
-X-Received: by 2002:a05:6000:1869:: with SMTP id d9mr19296851wri.161.1634136900723;
-        Wed, 13 Oct 2021 07:55:00 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-231-16.dyn.eolo.it. [146.241.231.16])
-        by smtp.gmail.com with ESMTPSA id w1sm5543893wmc.19.2021.10.13.07.55.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Oct 2021 07:55:00 -0700 (PDT)
-Message-ID: <f9860e6de0d54d4644a4a7eb94748ee2a1cb0fab.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: increase default max additional
- subflows to 2
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Wed, 13 Oct 2021 16:54:59 +0200
-In-Reply-To: <ed428aeb-8d9f-90c8-60cf-5c714b3460e5@tessares.net>
-References: <b7e5c73d59113afe32eec831b620997c86b56460.1633712415.git.pabeni@redhat.com>
-	 <ed428aeb-8d9f-90c8-60cf-5c714b3460e5@tessares.net>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=pQBDukMFvp9fRExYqsRTphhRzAr8BHrdYP1jBGZmw+U=;
+        b=WbFHBsMULRsTHG0rdVwY82IAhTAK7id13r5mpXiva1ykUx84gOOSG/PmP4oEvDksSt
+         b09zSTzrCeyAKkxrKB+Hamm2Ofpul7Jn2EBXfjDFU0d3G9E3y/Eo0Lwtl/m83DOZqXk8
+         O5LOxPKILbZ48xaRcNYcPuTLvRDjgpxWN7HVSF6XAuemnBZxzALFBVhxAVtGMYcN009x
+         goobulvzS60RhHTpxaXkAijM3/LdAc7kVa9DVfgK8IKiwLJmCBloNJnD8rj9alddjxGX
+         1E/ruFwAVM+kKtFIjR4CxqM1vjAhYh6vEd7nTaGdvvLKu67eocm2AclnCcc+doIG48zX
+         KYkA==
+X-Gm-Message-State: AOAM532taMd/5uKQxy0K3nRR+JcL5uOZVx2NXP4ukqF+OP7tJFvAiGWU
+	mUM13MTx7hNbabeIee4GIEooXMjXOv+LyoNP5gtHJL0Tr14=
+X-Google-Smtp-Source: ABdhPJxLP4q6zpaMDlvZrIuk97SdRKDiNtB904NB16WXoRt/9kjAtF2tm2Uepf9UDeyTWM0rRtd0EIpLYjsl4I25NyA=
+X-Received: by 2002:a05:6402:4309:: with SMTP id m9mr10769499edc.272.1634138209268;
+ Wed, 13 Oct 2021 08:16:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <CACry=t6JVP+5AUUs7KggjMhQirQvyQsVhJiXgM38xK1v=6qh9w@mail.gmail.com>
+In-Reply-To: <CACry=t6JVP+5AUUs7KggjMhQirQvyQsVhJiXgM38xK1v=6qh9w@mail.gmail.com>
+From: Paolo Abeni <paolo.abeni@gmail.com>
+Date: Wed, 13 Oct 2021 17:16:38 +0200
+Message-ID: <CAAHOsNv41B45ahxYsC1Xq7Ri3Hryt5m8GscFd51fY=S1NT8ccA@mail.gmail.com>
+Subject: Re: MPTCP with Python issue
+To: Robert Bowyer <robert.bowyer@flylogix.com>, mptcp@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2021-10-11 at 18:09 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 08/10/2021 19:27, Paolo Abeni wrote:
-> > The current default does not allowing additional subflows, mostly
-> > as a safety restriction to avoid uncontrolled resource consumption
-> > on busy servers.
-> > 
-> > Still the system admin and/or the application have to opt-in to
-> > MPTCP explicitly. After that, they need to change (increase) the
-> > default maximum number of additional subflows.
-> > 
-> > Let set that to reasonable default, and make end-users life easier.
-> > 
-> > Additionally we need to update some self-tests accordingly.
-> > 
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
-> >  net/mptcp/pm_netlink.c                          | 3 +++
-> >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 ++++-
-> >  tools/testing/selftests/net/mptcp/pm_netlink.sh | 6 +++---
-> >  3 files changed, 10 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index 050eea231528..f7d33a9abd57 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -2052,6 +2052,9 @@ static int __net_init pm_nl_init_net(struct net *net)
-> >  	struct pm_nl_pernet *pernet = net_generic(net, pm_nl_pernet_id);
-> >  
-> >  	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
-> > +
-> > +	/* Cit. 2 subflows ought to be enough for anybody. */
-> > +	pernet->subflows_max = 2;
-> 
-> Sorry for the late reply, I just thought about something when looking at
-> applying this: let say that in a typical setup we would have 2 subflows
-> per connections because the client has 2 interfaces and connect to a
-> server not announcing other addresses. With this setup, could we arrive
-> in situations where we would (internally) have 3 subflows?
-> 
-> I mean, could we arrive in a situation where 1 (or 0) subflow is OK, 1
-> is being deleted (network reconnection?) and the PM is already trying to
-> create a new one? In this case and because of the limit, the PM might
-> not try to create this 3rd subflow and might not retry when the dying
-> subflow is actually being deleted? Or maybe the PM already wait for the
-> full deletion before re-trying to establish a new subflow?
+Hello,
 
-If I understand correctly, your fear is that we can end-up with 2
-additional subflows even if there are only 2 different local IP
-addresses/interface, is that correct?
+On Wed, Oct 13, 2021 at 3:16 PM Robert Bowyer
+<robert.bowyer@flylogix.com> wrote:
+> Hope this finds you well and hope it is ok to contact you directly.
 
-Anyhow the above scenario is not possible with the in-kernel path
-manager: it will create new subflows only for local addresses not
-already used by the mptcp connection.
+Please, use the mptcp devel mailing list for this kind of question
+(just cc-ed) or the github issue tracker at:
 
-Unless the 'fullmash' flag is set, but in that case user really wants
-multiple subflows per local address.
+https://github.com/multipath-tcp/mptcp_net-next/issues
 
-Please let me know if the above solves your doubts.
+> I am really struggling to get MPTCP working on Linux 5.10.68 with Python =
+3.9.5 asyncio and seek your guidance:
 
-Side note: the in-kernel path manager takes no additional action when a
-subflow is closed.
+This kernel version is quite old, and lacks quite a few features. I
+suggest moving to a newer one, if possible.
+Have a look at the "changelog" section in:
+
+https://github.com/multipath-tcp/mptcp_net-next/wiki
+
+for the details of what you are missing.
+
+> 1. I used eBPF mptcp.stap on the server to override __sys_socket() as per=
+ https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/h=
+tml/configuring_and_managing_networking/getting-started-with-multipath-tcp_=
+configuring-and-managing-networking
+>
+> 2.  I don't have system tap on by embedded system so made a simple lib to=
+ do same:
+> /* Define pointer to original socket function */
+> int (*orig_socket)( int family, int type, int protocol );
+
+You can also use the mptcpize command line tool, bundled with the
+mptcpd package, see:
+
+https://github.com/intel/mptcpd
+https://github.com/intel/mptcpd/blob/master/src/mptcpize.c
+https://github.com/intel/mptcpd/blob/master/man/mptcpize.8.in
+
+[...]
+> 4. But if I use python asyncio
+> conn =3D asyncio.open_connection(config.FX_TCP_SERVER_ADDR, config.FX_TCP=
+_SERVER_PORT, ssl=3Dssl_ctx)
+>
+> I get an initial MPTCP override and the it reverts to TCP:
+
+[ image removed; wireshark shows syn+MPC from the client and syn+ack
+_without_ MPC from the server]
+
+[...]
+> It would appear the system is not able to handle  TCP_NODELAY option   se=
+tsockopt(6, SOL_TCP, TCP_NODELAY, [1], 4) =3D 0
+>
+> Do you know if this is fixed in later kernels or if there is a better way=
+ to do this ?
+
+TCP_NODELAY is still unsupported for MPTCP sockets. The setsockopt is
+successful, but has no effect. Feel free to open an issue on the
+github tracker at:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues
+
+about that. I don't think this is the root of the TCP fallback you are
+observing.
+
+> Any help greatly appreciated as am really stuck !
+
+WRT to the failing MPC handshake, It looks like the python client is
+MPTCP-enabled, but the server is not. Are you doing syscall hijacking
+on the server, too? Try to attach the strace tool on the server
+program, too. And look at the MIB counters just before and just after
+the connection:
+
+nstat MPTcp*
+# do the connect
+nstat MPTcp*
+
+If you could provide a pcap trace with the first few pkts in the
+connection, that could be helpful.
+
+Additionally, feel free to open a tracker for this specific issue (a
+different one WRT the TCP_NODELAY one).
 
 Cheers,
 
 Paolo
-
