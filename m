@@ -1,98 +1,86 @@
-Received: from mail-io1-f68.google.com (mail-io1-f68.google.com [209.85.166.68])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0833A2C80
-	for <mptcp@lists.linux.dev>; Thu, 14 Oct 2021 17:53:24 +0000 (UTC)
-Received: by mail-io1-f68.google.com with SMTP id z69so1632895iof.9
-        for <mptcp@lists.linux.dev>; Thu, 14 Oct 2021 10:53:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ADD2C80
+	for <mptcp@lists.linux.dev>; Thu, 14 Oct 2021 18:20:16 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id t16so27684239eds.9
+        for <mptcp@lists.linux.dev>; Thu, 14 Oct 2021 11:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=f68ZSqMXkucF3xoEdVOR1QI8AJ3sLK9WMnDTiCbagO0=;
-        b=c890a+tdrPIanXicTeqbe+AK0hVKmwb0VsdcNzTISxpJbN2w91km73oWqXrBIFEE3n
-         LuMWnqrXiV/JwoI0lrH3cEJ04K6Tkrc8SlS/VBJSF0OZyhCBZY1eLmNlT1lIPEMGFEOR
-         XAtHozcsyx6RC5kj7rDIgPsMwIA/WZF2C5HzBvdHFhsDQOU83NE02Qt1JzPR3SRMhx0g
-         e5OFd+xq8M0TWqnNJ4PsuwdV45SEbt7Ihq99lKG4qZ9Sb3XKgVnDsx94THn2P5F6nqIx
-         XWes9CVhZAeqqUMyX/mbH2vGxk8//Z+COnfqKyNpXqWX3dM+YoYhy3xTlXwknQ782bCy
-         2IWA==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=Dx7lo8NS1XI+yBCgaADdj79HkAlwyjhmhTU42NvxSrg=;
+        b=ROci52+7Vs+257AyMGpk1psblUJpSEML8/aTcdSYzF72iRp9VXCj8Te6SPDN/1znvh
+         dsR34S7Q6+Qxwow7Cx5VzxOMGhRPzjkGVC2CnQy1AZtww9+arGIo52LYXNvXLQWY1d+m
+         57GmKUXc3FFfZL63xWQCwUctqzRqNg66vlkfPf0nd749PyJ0M+kDSzhA2QuxJBoPRwXA
+         dy5OYLh68EIwH0ycQdgbUaQj4Kyd8yxVLMB2zzYAWuP+7R5P6n9KyIKI+NVyren291hF
+         ofkhSKgk48WuRKLPFudejlGqJvv96w58p2TgNTa93lkdsBJtCMIHXdCry/+aVCIoZ3wh
+         NcUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=f68ZSqMXkucF3xoEdVOR1QI8AJ3sLK9WMnDTiCbagO0=;
-        b=7FG0YymIQkBq1VUOeEQYcjdWEGuwF+d7QQUcUjzWpdJO4f7dOGNiqba28XomuPavZz
-         gQMD4s4g6JiI5vY5LzcAss/ZnZuRlug0EBfEhUkqgn0rttT7u/Y9nv2nnQts+uEBEwZm
-         CUbO1PNG7VZv9HzezudZAXu6LEAiwWIkHmP44KrgJsrU1yKvkTXOuoAwmZwlnfHBKb8q
-         Hg5nk/uuUcLegofssP51c6WJNgm+A2u7KHgyT5x2UVzhe0j7N/VpRGqlVIHUGqxMqryt
-         YFwRhgTQOFG0WbnzVBz8M1mqdP/uIp5tudV3iDEgeG981uy2ih+P2Ov4FpbOr8HBMIcL
-         M/cg==
-X-Gm-Message-State: AOAM531PPf1lYmEJjo2klqqsD3CYJ2yTHitGF+G8dcQyN6K22GMHGEee
-	T+firDoafMvc7KBhWbleguEGiiMqxgBvMvM=
-X-Google-Smtp-Source: ABdhPJxvutJcgNbIsurFkG4wS31darHAtbtS3IdAfj7c4GsAzkZ+YIyj50/ElOZGnVLfy4nCtjhS7A==
-X-Received: by 2002:a02:6987:: with SMTP id e129mr5146332jac.136.1634234003992;
-        Thu, 14 Oct 2021 10:53:23 -0700 (PDT)
-Received: from [127.0.0.1] ([52.173.188.45])
-        by smtp.gmail.com with ESMTPSA id q205sm1524134ioq.41.2021.10.14.10.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Oct 2021 10:53:23 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <cf3710062ecac93e469306b3ed59a70688d36620.1633451893.git.pabeni@redhat.com>
-References:
- <cf3710062ecac93e469306b3ed59a70688d36620.1633451893.git.pabeni@redhat.com>
-Subject: Re: mptcp: allocate fwd memory separatelly on the rx and tx path:
- Tests Results
-Message-ID: <b105b411-1c0e-719e-00a0-9debbab19c14@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 Oct 2021 17:53:22 +0000
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Dx7lo8NS1XI+yBCgaADdj79HkAlwyjhmhTU42NvxSrg=;
+        b=6V46qLqDwM9C/66Ud5tjFnNj5SNK9I+ZLqyOUXdxx+CINbR/f/ND/Q2sfOY0U8I+IV
+         /EhXlvXQVmbc25nv5zQy5bFL9+h1wAj5F3KTLURIm4prpOY346sDAH2whwsrQjP0Wkgx
+         C8nEk10u3NAjeS0xQ0c0OxXysWoWoKBq0HAHUErNqXqQ+elamMyl0WPtpZqvCX+BT1b0
+         coO06+ANG2jU20AeSMmr8OciyLPOOo7DG6MmR567bqZNjKYS3aANQShSyi8uCiVPejGq
+         0KpfYwHTLPLcJYqUxj9dqlSuZmOlrhf4x12GaKAxqPf6xEPWZzXsD7BE3Ofbw+5+qRhv
+         Aj5w==
+X-Gm-Message-State: AOAM532SvMytZa5TnWQsoR3FBsTSZR0uSJ5iC6xmzHcGJ5i1BeFQJmS4
+	ZjFwkGJRsuUe1BcjjhU4D6zVwQTginR9bQ==
+X-Google-Smtp-Source: ABdhPJw6v//NV70bL/7Fsr/SyeevrbkiD+n2c9sjBFPzUfme7S1wLwqVHYuP8KKr7cA7Ld6Sp9m3lg==
+X-Received: by 2002:aa7:cb10:: with SMTP id s16mr11397202edt.311.1634235614629;
+        Thu, 14 Oct 2021 11:20:14 -0700 (PDT)
+Received: from [192.168.178.46] ([213.211.156.121])
+        by smtp.gmail.com with ESMTPSA id z18sm2445113ejl.67.2021.10.14.11.20.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Oct 2021 11:20:14 -0700 (PDT)
+Message-ID: <b26740d0-b49e-007c-1c9d-e980eb3ea12f@tessares.net>
+Date: Thu, 14 Oct 2021 20:20:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH mptcp-next] mptcp: Make mptcp_pm_nl_mp_prio_send_ack()
+ static
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <20211007000645.213221-1-mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20211007000645.213221-1-mathew.j.martineau@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo Abeni,
+Hi Mat,
 
-Thank you for your modifications, that's great!
+On 07/10/2021 02:06, Mat Martineau wrote:
+> This function is only used within pm_netlink.c now.
 
-Our CI did some validations and here is its report:
+Thank you for your patch!
 
-- KVM Validation: normal: Unstable: 2 failed test(s): selftest_mptcp_join =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/4843090516115456
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4843090516115456/summary/summary.txt
+Now in our tree (for net-next) with the Fixes tag and my RvB one:
 
-- KVM Validation: debug: Unstable: 3 failed test(s): selftest_diag =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5968990422958080
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5968990422958080/su=
-mmary/summary.txt
+- 7f101302f759: mptcp: Make mptcp_pm_nl_mp_prio_send_ack() static
 
-Initiator: ghost
-Ref: patchew/cf3710062ecac93e469306b3ed=
-59a70688d36620.1633451893.git.pabeni@redhat.com
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/patchew/cf3710062ecac93e469306b3ed=
-59a70688d36620.1633451893.git.pabeni@redhat.com
-Tree: https://github.=
-com/multipath-tcp/mptcp_net-next/tree/patchew/cf3710062ecac93e469306b3ed59a=
-70688d36620.1633451893.git.pabeni@redhat.com
+- Results: 944d8c159e22..ca8552485b9e
 
-Please note that some efforts=
- might still be needed to stabilise the tests
-suite when ran on a public CI=
- like here. It is then possible some reported
-issues are not due to your =
-modifications. Do not hesitate to help us
-improving that ;-)
+Builds and tests are now in progress:
+
+
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211014T181928
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20211014T181928
 
 Cheers,
-MPTCP GH Action bot
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
