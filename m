@@ -1,35 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0BD29CA
-	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4CF29CA
+	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1634312441;
+	s=mimecast20190719; t=1634312443;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1egjQgvve1wj1U6ZexQM4//Hlh3iOTX1wIEtAwnp8o0=;
-	b=OdtjLLwytzDisVpsQ4/OAk2npz8wvO3XR1SLSWAUqBJ4wKHZeOCgUvfZwby2FFfW9uPWwZ
-	EBqEdd50G8BCMJ8Qvwqu8FpYdXAg/zV6MzqlAjrViXpTbqad0+ZKKpCRvssgbS3oWnpviF
-	u/WEScea7AcBdQhIvkA5c0FuD3zWIeI=
+	bh=9CfqUPu7O1w8W4v6WD5zHDCxWC8uPzyP6pFLYQwAak8=;
+	b=B8TkBWx+B6a/p09tdxU7dFI4INqBTUpzTFGwN5fLChCWiWV1E0lWHSGLXw76VOpetQ9bQp
+	v+KpkrgAFyZ7COHMDTkPni8Lw1HzlOPsG52knoSD8ibrKLqsIwoYOV2jjaOsbuyv+lZRzD
+	LL7HgSKKW0B3bFsEZi4J1ffaW+TE88M=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-548-yuEhtIX-NIuFVIY-9twvOw-1; Fri, 15 Oct 2021 11:40:40 -0400
-X-MC-Unique: yuEhtIX-NIuFVIY-9twvOw-1
+ us-mta-540-zxh6IL-WOMm6BXkoqP9hkQ-1; Fri, 15 Oct 2021 11:40:41 -0400
+X-MC-Unique: zxh6IL-WOMm6BXkoqP9hkQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA2F8801AFC
-	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:39 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25EF91271
+	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:40 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.85])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 30B07ADD7
-	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:38 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1A4A9ADD7
+	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:39 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 1/3] tcp: define macros for a couple reclaim thresholds
-Date: Fri, 15 Oct 2021 17:39:37 +0200
-Message-Id: <0d3f747f3a1dcdc67e71fc93cc1d64eee9e6b803.1634312286.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 2/3] net: introduce sk_forward_alloc_get()
+Date: Fri, 15 Oct 2021 17:39:38 +0200
+Message-Id: <944348e29bd564a3e45d7ab6683c4e64ef48aec1.1634312286.git.pabeni@redhat.com>
 In-Reply-To: <cover.1634312286.git.pabeni@redhat.com>
 References: <cover.1634312286.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,45 +46,108 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-A following patch is going to implment for the MPTCP protocol
-a similar reclaim schema, with different locking.
+A later patch will change the mptcp memory accounting schema
+in such a way that MPTCP sockets will encode total amount of
+forward allocated memory in two separate fields (one for tx
+ and one for rx).
 
-Let's define a couple of macros for the used thresholds, so
-that the latter code will be more easily maintainable.
+MPTCP sockets will use their own helper to provide the accurate
+amount of fwd alloced memory.
+
+To allow the above, this patch adds a new, optional, sk method to
+fetch the fwd memory, wrap the call in a new helper and use it
+where apprioriate.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- include/net/sock.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+This schema was suggested long time ago by Eric in a completely
+different context:
+
+https://marc.info/?l=linux-netdev&m=147516056204838&w=2
+
+I'm unsure if that is still applicable/valid.
+---
+ include/net/sock.h   | 11 +++++++++++
+ net/ipv4/af_inet.c   |  2 +-
+ net/ipv4/inet_diag.c |  2 +-
+ net/sched/em_meta.c  |  2 +-
+ 4 files changed, 14 insertions(+), 3 deletions(-)
 
 diff --git a/include/net/sock.h b/include/net/sock.h
-index d08ab55fa4a0..9c5d0502090f 100644
+index 9c5d0502090f..86ea60df6e84 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -1568,6 +1568,12 @@ static inline void sk_mem_charge(struct sock *sk, int size)
- 	sk->sk_forward_alloc -= size;
- }
+@@ -1205,6 +1205,8 @@ struct proto {
+ 	unsigned int		inuse_idx;
+ #endif
  
-+/* the following macros control control memory reclaiming in
-+ * sk_mem_uncharge()
-+ */
-+#define SK_RECLAIM_THRESHOLD	(1 << 21)
-+#define SK_RECLAIM_CHUNK	(1 << 20)
++	int			(*forward_alloc_get)(const struct sock *sk);
 +
- static inline void sk_mem_uncharge(struct sock *sk, int size)
+ 	bool			(*stream_memory_free)(const struct sock *sk, int wake);
+ 	bool			(*stream_memory_read)(const struct sock *sk);
+ 	/* Memory pressure */
+@@ -1212,6 +1214,7 @@ struct proto {
+ 	void			(*leave_memory_pressure)(struct sock *sk);
+ 	atomic_long_t		*memory_allocated;	/* Current allocated memory. */
+ 	struct percpu_counter	*sockets_allocated;	/* Current number of sockets. */
++
+ 	/*
+ 	 * Pressure flag: try to collapse.
+ 	 * Technical note: it is used by multiple contexts non atomically.
+@@ -1289,6 +1292,14 @@ static inline void sk_refcnt_debug_release(const struct sock *sk)
+ 
+ INDIRECT_CALLABLE_DECLARE(bool tcp_stream_memory_free(const struct sock *sk, int wake));
+ 
++static inline int sk_forward_alloc_get(const struct sock *sk)
++{
++	if (!sk->sk_prot->forward_alloc_get)
++		return sk->sk_forward_alloc;
++
++	return sk->sk_prot->forward_alloc_get(sk);
++}
++
+ static inline bool __sk_stream_memory_free(const struct sock *sk, int wake)
  {
- 	int reclaimable;
-@@ -1584,8 +1590,8 @@ static inline void sk_mem_uncharge(struct sock *sk, int size)
- 	 * If we reach 2 MBytes, reclaim 1 MBytes right now, there is
- 	 * no need to hold that much forward allocation anyway.
- 	 */
--	if (unlikely(reclaimable >= 1 << 21))
--		__sk_mem_reclaim(sk, 1 << 20);
-+	if (unlikely(reclaimable >= SK_RECLAIM_THRESHOLD))
-+		__sk_mem_reclaim(sk, SK_RECLAIM_CHUNK);
+ 	if (READ_ONCE(sk->sk_wmem_queued) >= READ_ONCE(sk->sk_sndbuf))
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 37e69fd9246c..55f862abe811 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -150,7 +150,7 @@ void inet_sock_destruct(struct sock *sk)
+ 	WARN_ON(atomic_read(&sk->sk_rmem_alloc));
+ 	WARN_ON(refcount_read(&sk->sk_wmem_alloc));
+ 	WARN_ON(sk->sk_wmem_queued);
+-	WARN_ON(sk->sk_forward_alloc);
++	WARN_ON(sk_forward_alloc_get(sk));
+ 
+ 	kfree(rcu_dereference_protected(inet->inet_opt, 1));
+ 	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+index ef7897226f08..c8fa6e7f7d12 100644
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -271,7 +271,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+ 		struct inet_diag_meminfo minfo = {
+ 			.idiag_rmem = sk_rmem_alloc_get(sk),
+ 			.idiag_wmem = READ_ONCE(sk->sk_wmem_queued),
+-			.idiag_fmem = sk->sk_forward_alloc,
++			.idiag_fmem = sk_forward_alloc_get(sk),
+ 			.idiag_tmem = sk_wmem_alloc_get(sk),
+ 		};
+ 
+diff --git a/net/sched/em_meta.c b/net/sched/em_meta.c
+index 46254968d390..0a04468b7314 100644
+--- a/net/sched/em_meta.c
++++ b/net/sched/em_meta.c
+@@ -457,7 +457,7 @@ META_COLLECTOR(int_sk_fwd_alloc)
+ 		*err = -1;
+ 		return;
+ 	}
+-	dst->value = sk->sk_forward_alloc;
++	dst->value = sk_forward_alloc_get(sk);
  }
  
- static inline void sk_wmem_free_skb(struct sock *sk, struct sk_buff *skb)
+ META_COLLECTOR(int_sk_sndbuf)
 -- 
 2.26.3
 
