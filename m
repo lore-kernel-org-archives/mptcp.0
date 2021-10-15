@@ -1,34 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE422C81
-	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0BD29CA
+	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1634312440;
+	s=mimecast20190719; t=1634312441;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=y1Qp2gue/qgzLs9eRX8D41y229lD9w3ZmXVVqDS42RM=;
-	b=AAeCnshWMkMpujlvzAxesEJStjYFdKoWNUhzJPJjlpED6BvLKJExLmkcKdrNiNSL0VPVvS
-	HrHazFzU6VdoDR6/VJdPvcjlprN/jAMLvQYoKGE+WtZ+6a3Roqk3i0AtY6DL6H4HGBtyDF
-	ezFpxeo5ylfypugtMEAHtVN4imKu46Q=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1egjQgvve1wj1U6ZexQM4//Hlh3iOTX1wIEtAwnp8o0=;
+	b=OdtjLLwytzDisVpsQ4/OAk2npz8wvO3XR1SLSWAUqBJ4wKHZeOCgUvfZwby2FFfW9uPWwZ
+	EBqEdd50G8BCMJ8Qvwqu8FpYdXAg/zV6MzqlAjrViXpTbqad0+ZKKpCRvssgbS3oWnpviF
+	u/WEScea7AcBdQhIvkA5c0FuD3zWIeI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-g-n-thQJMCq2lt2DVvD-5A-1; Fri, 15 Oct 2021 11:40:39 -0400
-X-MC-Unique: g-n-thQJMCq2lt2DVvD-5A-1
+ us-mta-548-yuEhtIX-NIuFVIY-9twvOw-1; Fri, 15 Oct 2021 11:40:40 -0400
+X-MC-Unique: yuEhtIX-NIuFVIY-9twvOw-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCBC68015C7
-	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:38 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA2F8801AFC
+	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:39 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.85])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2743CADD9
-	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:37 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 30B07ADD7
+	for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 15:40:38 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 0/3] mptcp: refactor memory accounting
-Date: Fri, 15 Oct 2021 17:39:36 +0200
-Message-Id: <cover.1634312286.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 1/3] tcp: define macros for a couple reclaim thresholds
+Date: Fri, 15 Oct 2021 17:39:37 +0200
+Message-Id: <0d3f747f3a1dcdc67e71fc93cc1d64eee9e6b803.1634312286.git.pabeni@redhat.com>
+In-Reply-To: <cover.1634312286.git.pabeni@redhat.com>
+References: <cover.1634312286.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,22 +46,45 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-This iteration address a fwd alloc memory leak.
-Please see the patch 3/3 changelog for the details.
+A following patch is going to implment for the MPTCP protocol
+a similar reclaim schema, with different locking.
 
-Paolo Abeni (3):
-  tcp: define macros for a couple reclaim thresholds
-  net: introduce sk_forward_alloc_get()
-  mptcp: allocate fwd memory separatelly on the rx and tx path
+Let's define a couple of macros for the used thresholds, so
+that the latter code will be more easily maintainable.
 
- include/net/sock.h   |  21 +++-
- net/ipv4/af_inet.c   |   2 +-
- net/ipv4/inet_diag.c |   2 +-
- net/mptcp/protocol.c | 225 ++++++++++++++++++-------------------------
- net/mptcp/protocol.h |  15 +--
- net/sched/em_meta.c  |   2 +-
- 6 files changed, 117 insertions(+), 150 deletions(-)
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ include/net/sock.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
+diff --git a/include/net/sock.h b/include/net/sock.h
+index d08ab55fa4a0..9c5d0502090f 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1568,6 +1568,12 @@ static inline void sk_mem_charge(struct sock *sk, int size)
+ 	sk->sk_forward_alloc -= size;
+ }
+ 
++/* the following macros control control memory reclaiming in
++ * sk_mem_uncharge()
++ */
++#define SK_RECLAIM_THRESHOLD	(1 << 21)
++#define SK_RECLAIM_CHUNK	(1 << 20)
++
+ static inline void sk_mem_uncharge(struct sock *sk, int size)
+ {
+ 	int reclaimable;
+@@ -1584,8 +1590,8 @@ static inline void sk_mem_uncharge(struct sock *sk, int size)
+ 	 * If we reach 2 MBytes, reclaim 1 MBytes right now, there is
+ 	 * no need to hold that much forward allocation anyway.
+ 	 */
+-	if (unlikely(reclaimable >= 1 << 21))
+-		__sk_mem_reclaim(sk, 1 << 20);
++	if (unlikely(reclaimable >= SK_RECLAIM_THRESHOLD))
++		__sk_mem_reclaim(sk, SK_RECLAIM_CHUNK);
+ }
+ 
+ static inline void sk_wmem_free_skb(struct sock *sk, struct sk_buff *skb)
 -- 
 2.26.3
 
