@@ -1,91 +1,70 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7507F2C80
-	for <mptcp@lists.linux.dev>; Sat, 16 Oct 2021 00:57:08 +0000 (UTC)
-Received: by mail-qt1-f178.google.com with SMTP id c28so10338547qtv.11
-        for <mptcp@lists.linux.dev>; Fri, 15 Oct 2021 17:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=GYtKpefEmSJvlcdFZqBR0/41EQwN8p+6Ny5o8iS2DuU=;
-        b=KK7BknLMutAEyKig2ZV5SwdmKmF8z2/umEOPPm2QP7Wx3zjxzcRdffbjgZp1glR7C/
-         Gr27srKFbia1pVyL2F0Fz2KryHbrozI+A7eJqJ9uGNNuvKxGXrSPnW8P1TTc1UKp1M6Z
-         61lJJB/yUBqU+PXfSKwWhGkQGfXe2Q+cmbcx9BApBWoqzVlzr2zfb4D+JjYLf+JfMzAN
-         vgQBEf3AGyPEvtANp5v8UAryWii3y30rwAAWJyoBcXTqCtRp8sh5aqkz9hVrmzJsswzo
-         H2wBJVf4/oHmquhsWYPg1DXOBptO4dwNBfQnKg+UGKPBg9wXzBQkrYGzbrx1+paKNnCa
-         nzXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=GYtKpefEmSJvlcdFZqBR0/41EQwN8p+6Ny5o8iS2DuU=;
-        b=LuiESdI18IJGASq/K1IJrkmjaosBmvT6Vj1bJRfTdhyRlNpr08Xylj6QpS2CjUd/QX
-         Iswy2xNlYmWJ8k7rW2OV2pXFikthReYKE4Qc6+P0TLTIA1JAT5FuBtwuKXqv4HpPbii/
-         fDNmJAAvsaCDnpTyT2svZr/Du9cZSyHLa66EzhXDGeS497bgUU1xD4SRQT0/uSGhjLi7
-         KYJgl8GNMS4m9VrdGQwKuRrjyt3lJQNaIb9Om1rKGpgxJ6XXASyRM7RmO+RDg01di414
-         iH9oCGVe2/Gy/gRrB1dZk5jKY7qIS6HrXSALdbHh7F6NCLf463i361wwqF7qqLg0ojsq
-         qvBw==
-X-Gm-Message-State: AOAM530IsPVRAO58V98eDWdfxXH7ZOpdIiYJHfgpdjRcDayEPhta9aAZ
-	zBJu+PeEncv61lDZDlB0lg==
-X-Google-Smtp-Source: ABdhPJz4WQZJmMM/3puOwZxHiYDUTarc1fXpdzBxKW7adkK8lVCrdEHUS8fIObDX85Z6p4soR/PkTQ==
-X-Received: by 2002:a05:622a:3c9:: with SMTP id k9mr16967051qtx.170.1634345827502;
-        Fri, 15 Oct 2021 17:57:07 -0700 (PDT)
-Received: from [127.0.0.1] ([52.146.40.220])
-        by smtp.gmail.com with ESMTPSA id m68sm3388529qkb.105.2021.10.15.17.57.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Oct 2021 17:57:07 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <cd8cca4fbfa3bc1528ed6923cb4b660fd20e8e88.1634312286.git.pabeni@redhat.com>
-References:
- <cd8cca4fbfa3bc1528ed6923cb4b660fd20e8e88.1634312286.git.pabeni@redhat.com>
-Subject: Re: mptcp: allocate fwd memory separatelly on the rx and tx path:
- Tests Results
-Message-ID: <926abe8d-71f5-3ce9-2eb1-7338d52ce715@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 16 Oct 2021 00:57:06 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4492C82
+	for <mptcp@lists.linux.dev>; Sat, 16 Oct 2021 08:00:15 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 025C661244;
+	Sat, 16 Oct 2021 08:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1634371215;
+	bh=ZEPn5OsqZu5MnpAkh37F3xxeNxYG4z8TyOIfCOg1IfY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=TkUORlTK2am4sGHkKqgSj4/QAbrXkAVAoPDOGvgc1vkL5ft2GmQ3p5URnZezZvWts
+	 g3A4tuZES9juuHJKLedv+bD5NdFTXjed9xKDTvye+VJq7F8J/X1irPcjOg8I3GFpn3
+	 9XosoTi74HyWyadFYNsYjLzGN5oAAvr3C830GTBJhH35zupLBdm34tOiouPawPMyUd
+	 JdSoD3NpnXuO1gfKPCeWWPZQwn2Jr+Iq325sMyMX8DueTCD+2ekzsi5ocwZwx6Nfa+
+	 GPDypn6bk8OhDZzfSmBpZib4SigFl2Xe75eAxWt6Ngbq/oy9fo1qZt+c0uvuTJIc49
+	 RYmXODtAUhOQQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id EC18F60A45;
+	Sat, 16 Oct 2021 08:00:14 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/3] mptcp: A few fixes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163437121496.28528.18174688104216932985.git-patchwork-notify@kernel.org>
+Date: Sat, 16 Oct 2021 08:00:14 +0000
+References: <20211015230552.24119-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20211015230552.24119-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hi Paolo,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Our CI did some validations and here is its report:
+On Fri, 15 Oct 2021 16:05:49 -0700 you wrote:
+> This set has three separate changes for the net-next tree:
+> 
+> Patch 1 guarantees safe handling and a warning if a NULL value is
+> encountered when gathering subflow data for the MPTCP_SUBFLOW_ADDRS
+> socket option.
+> 
+> Patch 2 increases the default number of subflows allowed per MPTCP
+> connection.
+> 
+> [...]
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/4939983434809344
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4939983434809344/summary/summary.txt
+Here is the summary with links:
+  - [net-next,1/3] mptcp: Avoid NULL dereference in mptcp_getsockopt_subflow_addrs()
+    https://git.kernel.org/netdev/net-next/c/29211e7db28a
+  - [net-next,2/3] mptcp: increase default max additional subflows to 2
+    https://git.kernel.org/netdev/net-next/c/72bcbc46a5c3
+  - [net-next,3/3] mptcp: Make mptcp_pm_nl_mp_prio_send_ack() static
+    https://git.kernel.org/netdev/net-next/c/3828c514726f
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6065883341651968
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6065883341651968/su=
-mmary/summary.txt
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/69bf715aa905c228e0d41db8ec96
 
-Please note that some efforts might still be needed to stabilise the tests
-suite when ran on a public CI like here. It is then possible some reported
-issues are not due to your modifications. Do not hesitate to help us
-improving that ;-)
-
-Cheers,
-MPTCP GH Action bot
