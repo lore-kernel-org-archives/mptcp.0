@@ -1,448 +1,168 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7BD2C81
-	for <mptcp@lists.linux.dev>; Mon, 18 Oct 2021 10:24:58 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id y30so51109781edi.0
-        for <mptcp@lists.linux.dev>; Mon, 18 Oct 2021 03:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=xQLx9m4T5c9qwI2P9d/3KMs6OPZ4cEb2AJturDLKZdc=;
-        b=qd7p/49kghZSPzIcMEoBf6Zbqke2sUF1Hqxzq67MtNCqfgNuTuPFxTXNoHFzam2Ikb
-         POEQvKu0eERMtvZKhuiCWWrQYytT1eTIKaVWWxXYcj+xL9HmtYbo9nntrCee31msN/JR
-         J0qpNPzkBJDd/pMx/kxC/ok75X1itnZuAUyxr9a8kXZoy6Ml7aB2YXkH8h8IVbD1mmJe
-         IKe3HAjW0rcKRGUVonv/9ieF3A6iaqsp+ireMdWDOjELzfDhXTHDCot4pfmtTuV4b1bS
-         o6kh4ehRUVvQiQl2bNwDpOxn01rEyHHPT5/oqLwCQcJH16vI5Kkj3goX1gKK8MM74AZw
-         OfgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=xQLx9m4T5c9qwI2P9d/3KMs6OPZ4cEb2AJturDLKZdc=;
-        b=FuV/eLgfjOvzVLrxiv+VcyduDG7Kvl7lUK8NRqr4ipA2iEtk1Vm3o2BR44x34d+syq
-         BLOus2vZtQ2XJCHg775RHVSi43hAV+dimbG76MTk9DyFhb7ueJGUNummmvMiiGcfhpBw
-         5HQNxpqlY9QxqF2Q1iKt+daOMEepzcGebdQ+qyuY7fIcNJQhRjBH0gitUz2rHz+xSrdo
-         Kt+obHDlK9CqMenbi6ZhUUFHkmtoSkUUnEIKaIkMAmF9BFi2W2pGA7NbG8TJFjSJuag3
-         QpEjhQRDmT/jtu1/EaaDBqbOtU9tDDmolCy3HiAgp/+bns3tX90KX4TsDjjKWzs3G7LB
-         QRGQ==
-X-Gm-Message-State: AOAM533ZsppbxlrJ584jra0Xia1ALMrGHrQlHdQbXUTgX9pVXB93ACwT
-	FOCL3Hdze/TfgamqHnhHpJrLsHUYkRC8IXa4MtA=
-X-Google-Smtp-Source: ABdhPJyUIpn0zqUSe/S8MYoKw9QqPG6WH0b9fL69YrRP8UrKXKvZ2B3F7zr7cyC7DMC8vhjX8ewa/Q==
-X-Received: by 2002:a17:906:4d08:: with SMTP id r8mr28988463eju.388.1634552696536;
-        Mon, 18 Oct 2021 03:24:56 -0700 (PDT)
-Received: from [10.120.18.87] ([84.17.46.26])
-        by smtp.gmail.com with ESMTPSA id fx4sm8589605ejb.113.2021.10.18.03.24.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Oct 2021 03:24:56 -0700 (PDT)
-Message-ID: <1fe3d619-370f-d5bb-6d6f-af6890f9fc43@tessares.net>
-Date: Mon, 18 Oct 2021 12:24:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56312C80
+	for <mptcp@lists.linux.dev>; Mon, 18 Oct 2021 11:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1634557237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Wmu0BcY0IOMtR4CQmsNaf5xJfJGmQD7/ba5vfN8/q+U=;
+	b=m8YLDClNbzBda1UOiIA6BLi5MRTkf7mfyk4UxRI6h8mVmZSRUAttK7ydDmDGFqD+sOoWiP
+	joaNiwIgUnKh2mzBBusqPpg7Kn60AnM9JxDzs/7MXUJPZeCWGEgoa/A40rGioUuKGeqdqX
+	w0/hvo9sS2aqSKXFVXCMi38GVGdLUiE=
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+ (mail-am6eur05lp2105.outbound.protection.outlook.com [104.47.18.105])
+ (Using TLS) by relay.mimecast.com with ESMTP id
+ de-mta-20-mRpsaXROPn-yM49-FKnmKw-1; Mon, 18 Oct 2021 13:40:36 +0200
+X-MC-Unique: mRpsaXROPn-yM49-FKnmKw-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zp0pctB3qzzsaZV4CqzcJpZVlTcfuWsXh7WvE3/7ufre47M4OUIVScjwESUqI70AmYmIOSLtyH6dyhojP6ErPmq8BRxrvm7lS3UW71drvmqB+eoNYXZSYv5mXP5mUPdR+MsM12BLpuPHC8jQuXf948uGSJeHbkiT4t3LctTaDQpQ3BQ+uITwfCBHg7bNHeZf2czSC9c9FHWjVD2ar+BVyV+lZtyAtNDDecZb3CborLqa2VoV/FK7hiT9t/jpGBTc5oNjNEsdjRJXNA0YAphfEjrf4JAtLm7TBpY8mlUQP3LrC92Z96ECiz9OSl1qWFVvHxAegxx97a0dNRL+RmuTpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hS0VAP/Kswv72LeNrfr0vUGw6B9InQSWIphqeo3BG0M=;
+ b=SUk0UPmteHi34Xl5Dvxf+BpRwanjDU8ggA3v3B3HSHda6GBrFT2qDUqIhamsTGx3jb11pFj3moHaT7hvFyDDnNKmrg3gJ8TVZ8KBfcyoDLDrNm3iympmN6nUSRHPHmrEZ5X1eT2YsIL4KPv+/7BOJBVAXeLx0+34lLeXmpBMruh5cvRGoazTDlItuxdv3eqSIpI2X/cBzim/2sYX5HcLjtWI42e9G5LfZDBnZwWIBSq6ulYEFR2VJ6S6AzCkGGAhAKGp72WnTDqQC3XqKz6+9ZKPBBMViPtLBt79+OBohf0GF/6YXwL82LDAAV5fRGU4+0wCym273mBh5EnsbRq2/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: lists.linux.dev; dkim=none (message not signed)
+ header.d=none;lists.linux.dev; dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by HE1PR0401MB2508.eurprd04.prod.outlook.com (2603:10a6:3:82::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.17; Mon, 18 Oct
+ 2021 11:40:33 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::15cd:f2b4:6acf:99af]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::15cd:f2b4:6acf:99af%6]) with mapi id 15.20.4608.018; Mon, 18 Oct 2021
+ 11:40:33 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next] mptcp: drop unused sk in mptcp_push_release
+Date: Mon, 18 Oct 2021 11:39:51 +0800
+Message-ID: <0177e007bc31fd8e5783b115b66c6b18d3dd2387.1634528367.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR03CA0106.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::22) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-Subject: Re: [RFC PATCH v2] selftests: mptcp: more stable simult_flows tests
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <9d66028a72b6807d4dc3397bb70f028cbc78161d.1634310418.git.pabeni@redhat.com>
- <32692122-28e1-4028-36c4-43649e2fa629@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <32692122-28e1-4028-36c4-43649e2fa629@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: from localhost (111.192.100.101) by HK0PR03CA0106.apcprd03.prod.outlook.com (2603:1096:203:b0::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.18 via Frontend Transport; Mon, 18 Oct 2021 11:40:31 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 29755d0f-4a3f-4bc7-7ed3-08d9922c1815
+X-MS-TrafficTypeDiagnostic: HE1PR0401MB2508:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS:
+	<HE1PR0401MB25085ABE9BF735B5702DBCD5F8BC9@HE1PR0401MB2508.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1002;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	zvwKU45F4Kvtq+LaMflqD65eXJuRKKiVYMCPRO+mlevTIwsyPNQf0wgIBJK4GRGoZ3ehy/9iFQVocz53RQOCrvUaa9PdAwaHYysbPasfu6tNJQ3k70LKpaHBCsrnLGYr6eh5u+TZaTCtkzuHXYy3lhyGNLIRPgpil8wPy8SjlO3F9SLtIuEI0XlJMnXOjM7SQGxHs+WhVOR25R6G4gl0m1YP6ybaoq5bMYCZgVZr196YJudZTYgviJrdWx0ZFyiDbZy4F/3DhYXLZ594WaI6SE4pgZfsVorOJSOJ6js8QLpZ21JSwZyUSFbloEGTQz50WIE6Vf+GzG2zcRQ07oqmaI539HCw+y+GemnE2P3jFkPYptU2hv9HuBNwT/A02Yau+Kfnq7PpRTUPQhpCD4KdWoeAe2rz4W2HV8IHNJzyRniYKYoMCOuMoV1BbOcpG3QgNl4JHTHi1+i16c80Mi0r15DKm0K6XF+wkQhz6CT/MJsn6QqOJ0lJzYhrG3irGcGwGRME53EYjYtRlNW9gHaxHVgz52XblnX5U+4IeKAIKAH2DKNDXMhlYDT9YmLPCawCc/lkXq+gJzc92JOQiEQMHe9qggRmh13qzoBhGCauMtgWj8DsoCQ+Yx4XibnNehWOgCeHuMvApwEsaRIiyV7edfrjWoKN+weUrRWBVUNg5qRLIVZiZOWGeAlJGTvcqL66
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(508600001)(6496006)(36756003)(2616005)(66946007)(316002)(6916009)(4326008)(6486002)(107886003)(66556008)(66476007)(86362001)(6666004)(956004)(8936002)(44832011)(5660300002)(8676002)(26005)(186003)(38100700002)(83380400001)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jLRiFjZPyOOJgvyBI89kqSHUy0gtafzyDwHvzkB+Q36euwpvsLq+ZX6zKhsN?=
+ =?us-ascii?Q?OOL6wpKBsN0sRG4gqWBeJIuVSfh+9EgsuT5UE856MbcIdLEDTeCwsFytwZKj?=
+ =?us-ascii?Q?BuU0SajF+aCzkHNCQa3imyVjfVo+rva6CMZo+ANDdna62CfCV1NrlNiDv94u?=
+ =?us-ascii?Q?AFcPircDd6q2Oqf1pd+46XvEhWlyc/ukPeeYG3oYDfR2TEoDUzLhd7nOiWII?=
+ =?us-ascii?Q?bvSKFAKnQk2Ufk+6f8poTHQM2KYTaO4WDzRH331mjZKy1nmcutl3+6kL0FcQ?=
+ =?us-ascii?Q?55+q3xkMcrkqPGBqLqCc1vAULwnlyMne4FAEl4fFs1VK1wmIn8tRKi+6n20S?=
+ =?us-ascii?Q?BVk9s/3FUBXMuzdAqVSh+6/AlkN9hw5rsp1tCCoo7VlNBuAQljBrgKVpKV1Z?=
+ =?us-ascii?Q?J32cZB3XjNLNl6TQL5nXHqsShfN5STz4UB9qOFlXwhgmy/R82NXZfn8vewkr?=
+ =?us-ascii?Q?cEnGPDmVh3Gg6JEIDTGQFZGzOiPQp1pwRgLcnjc07zPcVz478Q/QeyZYISzt?=
+ =?us-ascii?Q?hg51uuenBFmTYwWLmbhQsKLOaR0QJMumQlWbFnafzuv+wMqMpyh2NWuLdNZm?=
+ =?us-ascii?Q?lXkQoTA1P5OkYY4C54n5RzopKehoknnv1tA/2RVI6N00AJlb/zhMwu6F/i3H?=
+ =?us-ascii?Q?YlJJuDkxxIviMQ+UojpA0ujteM++vgkj3k/NbNQr+2/kKg4bbR1FZUp7CtP7?=
+ =?us-ascii?Q?EMcVuq85+TpPuuwO2Uo1Nfiu/feOcV/F03pWlOs9MSMz7L2SXqnxlsrCdVcd?=
+ =?us-ascii?Q?s4V/Dt+Dpqh16yNYq7IuXDAyt58/AN+yl4uZQosKykS0vi8ot0geCxafVVYh?=
+ =?us-ascii?Q?Vs/kYZ2pkkncIVQl+NOJr+hrHYlm27UGUB7w6QDvDcoKngA+pzpUpQXkrrA3?=
+ =?us-ascii?Q?/IHL0zIAG3w1Zhm/UfJP6xcOHildSlo6yCqBow68JBawy0stAJYXboi6w/+l?=
+ =?us-ascii?Q?sJDQFzbGy9BV8ki2i6UtcUXX5U5L7H+PI3RwSj2b2MJiF+QozIEWGJbRNzEQ?=
+ =?us-ascii?Q?8w521GACEpqQU52U5S22CC+yJRMgK6bnKD5J1gzaWvhmGcwJsC6lfhgQ+Tdn?=
+ =?us-ascii?Q?BEg94+/b3kyrleUu2lHwUl3rqPGjaPK3hGLVWgs5CQNEAy1zPQy0wTPxg3Yc?=
+ =?us-ascii?Q?WEWCOWZlqJn5Ao+LGv8dvqwVuPig2KuDNp9ThjeEj9/78SXjQFdNye0cKjYL?=
+ =?us-ascii?Q?M+Vv+Bd4XhxcD7+c29MDby1iXFbQM8ndFVihXY99bXUds1PvZVDyacQg9OiK?=
+ =?us-ascii?Q?hSAlPL8LTeGp1RjtSAvGTonPOTEmC25z0acX686WbhfV7cxrsgdDq/XHJIBt?=
+ =?us-ascii?Q?jdZXd/144TRGsbgizMKSyFiM?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29755d0f-4a3f-4bc7-7ed3-08d9922c1815
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2021 11:40:33.4111
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JnsyvvTbS3x0LL+TMhMZw3jKEwrNuw+0gEgqxk/RuptcT/9DfD5PMBJiqgX9BEME/L6b4LJBVVPtr8TmH2jV+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2508
+
+Since mptcp_set_timeout() had removed from mptcp_push_release() in
+commit 33d41c9cd74c5 ("mptcp: more accurate timeout"), the argument
+sk in mptcp_push_release() became useless. Let's drop it.
+
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
+ net/mptcp/protocol.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 33b94f705096..7803b0dbb1be 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1469,8 +1469,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
+cp_sock *msk)
+ 	return NULL;
+ }
+=20
+-static void mptcp_push_release(struct sock *sk, struct sock *ssk,
+-			       struct mptcp_sendmsg_info *info)
++static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info=
+ *info)
+ {
+ 	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
+ 	release_sock(ssk);
+@@ -1533,7 +1532,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned i=
+nt flags)
+ 			 * the last round, release prev_ssk
+ 			 */
+ 			if (ssk !=3D prev_ssk && prev_ssk)
+-				mptcp_push_release(sk, prev_ssk, &info);
++				mptcp_push_release(prev_ssk, &info);
+ 			if (!ssk)
+ 				goto out;
+=20
+@@ -1546,7 +1545,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned i=
+nt flags)
+=20
+ 			ret =3D mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+ 			if (ret <=3D 0) {
+-				mptcp_push_release(sk, ssk, &info);
++				mptcp_push_release(ssk, &info);
+ 				goto out;
+ 			}
+=20
+@@ -1561,7 +1560,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned i=
+nt flags)
+=20
+ 	/* at this point we held the socket lock for the last subflow we used */
+ 	if (ssk)
+-		mptcp_push_release(sk, ssk, &info);
++		mptcp_push_release(ssk, &info);
+=20
+ out:
+ 	/* ensure the rtx timer is running */
+--=20
+2.31.1
 
-Hi Paolo, Mat,
-
-On 16/10/2021 02:12, Mat Martineau wrote:
-> On Fri, 15 Oct 2021, Paolo Abeni wrote:
-> 
->> Currently the simult_flows.sh self-tests are not very
->> stables, expecially when running on slow VM.
->>
->> The tests mesures runtime for transfers on multiple subflows
->> and check that the time is nearby the theoretical maximum.
->>
->> The current test infra introduces a bit of jitter in test
->> runtime, due to multiple explicit delays. Additionally the
->> runtime is measured by the shell script wrapper. On slow
->> VM, the script overhead is measurable and subject to relevant
->> jitter.
->>
->> One solution to make the test more stable would be adding more
->> slack to the expected time; that could possibly hide reall
->> regressions. Instead move the measurement inside the command
->> doint the transfer, and drop most unneeded sleep.
-
-Thank you for looking at that!
-
-It is indeed more stable: with a debug kernel and a "slow host", the
-test fails almost all the time. Now I got 3 failures in X attempts, not
-bad! (and I stopped after the last failure)
-
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> @matttbe: could you please double check this makes simult_flows
->> tests really more stable in your testbed?
->>
->> Now the slack is really quite tight, I think we can raise it a
->> little more, without loosing the ability of catching regressions
-> 
-> 
-> I still get occasional failures on my slow desktop VM (lots of debug
-> features turned on), but a little more slack would help. Most of the
-> time all cases succeed. If I see a failure, it's just one test out of
-> the batch. These are each from separate runs of simult_flows.sh:
-> 
-> unbalanced bwidth                                           transfer
-> slower than expected! runtime 4500 ms, expected 4005 ms max 4005       
-> [ fail ]
-> 
-> 
-> unbalanced bwidth with opposed, unbalanced delay            transfer
-> slower than expected! runtime 4632 ms, expected 4005 ms max 4005       
-> [ fail ]
-> 
-> 
-> Curious to see Matthieu's results!
-
-
-I also have issues with unbalanced bwidth tests. In a normal situation,
-I'm also very closed under the expected time so maybe we can increase
-the thresholds.
-
-Here is what I have when the tests are succeeding:
-
-
-> balanced bwidth                                             7404 max
-7561       [ OK ]
-
-> balanced bwidth - reverse direction                         7422 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay                       7428 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay - reverse direction   7406 max
-7561       [ OK ]
-
-> unbalanced bwidth                                           3837 max
-4005       [ OK ]
-
-> unbalanced bwidth - reverse direction                       3808 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay                     3880 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay - reverse direction 3845 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay            3881 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay - reverse
-direction3834 max 4005       [ OK ]
-
-
-
-
-
-> balanced bwidth                                             7413 max
-7561       [ OK ]
-
-> balanced bwidth - reverse direction                         [
-195.535235] hrtimer: interrupt took 19400 ns
-
-7406 max 7561       [ OK ]
-
-> balanced bwidth with unbalanced delay                       7388 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay - reverse direction   7415 max
-7561       [ OK ]
-
-> unbalanced bwidth                                           3853 max
-4005       [ OK ]
-
-> unbalanced bwidth - reverse direction                       3869 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay                     3887 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay - reverse direction 3826 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay            3880 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay - reverse
-direction3826 max 4005       [ OK ]
-
-
-
-
-
-> balanced bwidth                                             7441 max
-7561       [ OK ]
-
-> balanced bwidth - reverse direction                         7439 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay                       7414 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay - reverse direction   7432 max
-7561       [ OK ]
-
-> unbalanced bwidth                                           3803 max
-4005       [ OK ]
-
-> unbalanced bwidth - reverse direction                       3810 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay                     3792 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay - reverse direction 3796 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay            3839 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay - reverse
-direction3809 max 4005       [ OK ]
-
-
-
-
-
-
-
-Now when they are failing:
-
-
-
-> balanced bwidth                                             7397 max
-7561       [ OK ]
-
-> balanced bwidth - reverse direction                         7386 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay                       7401 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay - reverse direction   7403 max
-7561       [ OK ]
-
-> unbalanced bwidth                                           transfer
-slower than expected! runtime 4039 ms, expected 4005 ms max 4005
-[ fail ]
-
-> client exit code 1, server 0
-
->
-
-> netns ns3-0-BaDnIV socket stat for 10005:
-
-> State     Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
-
-> TIME-WAIT 0      0           10.0.3.3:10005     10.0.2.1:39479
-timer:(timewait,59sec,0)
-
->
-
-> TIME-WAIT 0      0           10.0.3.3:10005     10.0.1.1:49984
-timer:(timewait,59sec,0)
-
->
-
->
-
-> netns ns1-0-BaDnIV socket stat for 10005:
-
-> State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
-
-> -rw------- 1 root root 16777216 Oct 18 09:33 /tmp/tmp.JugE78zTog
-
-> -rw------- 1 root root 16777216 Oct 18 09:34 /tmp/tmp.SPV6oen3hT
-
-> -rw------- 1 root root 81920 Oct 18 09:33 /tmp/tmp.7SJVlib0CM
-
-> -rw------- 1 root root 81920 Oct 18 09:34 /tmp/tmp.QvimZ7jK8i
-
-> unbalanced bwidth - reverse direction                       3808 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay                     3798 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay - reverse direction 3844 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay            3937 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay - reverse
-direction3810 max 4005       [ OK ]
-
-
-
-
-
-> balanced bwidth                                             7391 max
-7561       [ OK ]
-
-> balanced bwidth - reverse direction                         7380 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay                       7424 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay - reverse direction   7412 max
-7561       [ OK ]
-
-> unbalanced bwidth                                           3894 max
-4005       [ OK ]
-
-> unbalanced bwidth - reverse direction                       3884 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay                     3848 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay - reverse direction 3896 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay            transfer
-slower than expected! runtime 4039 ms, expected 4005 ms max 4005
-[ fail ]
-
-> client exit code 1, server 0
-
->
-
-> netns ns3-0-4o5MrN socket stat for 10009:
-
-> State     Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
-
-> TIME-WAIT 0      0           10.0.3.3:10009     10.0.1.1:51946
-timer:(timewait,59sec,0)
-
->
-
-> TIME-WAIT 0      0           10.0.3.3:10009     10.0.2.1:40567
-timer:(timewait,59sec,0)
-
->
-
->
-
-> netns ns1-0-4o5MrN socket stat for 10009:
-
-> State     Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
-
-> TIME-WAIT 0      0           10.0.1.1:51946     10.0.3.3:10009
-timer:(timewait,58sec,0)
-
->
-
-> -rw------- 1 root root 16777216 Oct 18 09:41 /tmp/tmp.TZc6AFBB9s
-
-> -rw------- 1 root root 16777216 Oct 18 09:43 /tmp/tmp.fwjA2UfvqJ
-
-> -rw------- 1 root root 81920 Oct 18 09:41 /tmp/tmp.4XRtDSnt3Z
-
-> -rw------- 1 root root 81920 Oct 18 09:42 /tmp/tmp.nqFmtr1ZHk
-
-> unbalanced bwidth with opposed, unbalanced delay - reverse
-direction3876 max 4005       [ OK ]
-
-
-
-
-
-> balanced bwidth                                             7415 max
-7561       [ OK ]
-
-> balanced bwidth - reverse direction                         7391 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay                       7436 max
-7561       [ OK ]
-
-> balanced bwidth with unbalanced delay - reverse direction   7389 max
-7561       [ OK ]
-
-> unbalanced bwidth                                           3797 max
-4005       [ OK ]
-
-> unbalanced bwidth - reverse direction                       3797 max
-4005       [ OK ]
-
-> unbalanced bwidth with unbalanced delay                     transfer
-slower than expected! runtime 4324 ms, expected 4005 mstransfer slower
-than expected! runtime 4421 ms, expected 4005 ms max 4005        [ fail ]
-
-> client exit code 1, server 1
-
->
-
-> netns ns3-0-CL5xtY socket stat for 10007:
-
-> State     Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
-
-> TIME-WAIT 0      0           10.0.3.3:10007     10.0.1.1:57566
-timer:(timewait,59sec,0)
-
->
-
->
-
-> netns ns1-0-CL5xtY socket stat for 10007:
-
-> State     Recv-Q Send-Q    Local Address:Port  Peer Address:Port Process
-
-> TIME-WAIT 0      0              10.0.1.1:57566     10.0.3.3:10007
-timer:(timewait,59sec,0)
-
->
-
-> TIME-WAIT 0      0      10.0.2.1%ns1eth2:47275     10.0.3.3:10007
-timer:(timewait,59sec,0)
-
->
-
-> -rw------- 1 root root 16777216 Oct 18 09:56 /tmp/tmp.2Fm5JWJ2Gm
-
-> -rw------- 1 root root 16777216 Oct 18 09:55 /tmp/tmp.myCVbJlKF1
-
-> -rw------- 1 root root 81920 Oct 18 09:55 /tmp/tmp.GJRGytXcM1
-
-> -rw------- 1 root root 81920 Oct 18 09:56 /tmp/tmp.WUONy22LUi
-
-> unbalanced bwidth with unbalanced delay - reverse direction 3906 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay            3823 max
-4005       [ OK ]
-
-> unbalanced bwidth with opposed, unbalanced delay - reverse
-direction3810 max 4005       [ OK ]
-
-
-Please tell me if you need anything else!
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
