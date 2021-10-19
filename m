@@ -1,86 +1,116 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520B72C81
-	for <mptcp@lists.linux.dev>; Mon, 18 Oct 2021 17:04:24 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id y12so2165542eda.4
-        for <mptcp@lists.linux.dev>; Mon, 18 Oct 2021 10:04:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=ULVG8/SWOO1QSLB+nShgf+NV6sAA3qhcJLLwzGtdjZM=;
-        b=zW7DcGE21btlvRQ3G7EzE2kLFmdliOxBckcMIs8CWWClupOqjcIw5qUSEyhALyqc9J
-         01ePkQapSDWbtaEv1U9nsaDTx4DGo8Fn2hX+d0BBL78YBwI1aWB3MJI9FR2ViwOAtn9s
-         PsnTHAKauMW6CotokBG0wl5RLtWKOJLG9NwqW+EQWksyN/tKgWlOIlnuTmN5Yemdl0t/
-         KaNsF42nwtcywvjUViAWXze/rd02nCGoh9heu542gpSPPsRZ4Sv3aM0bi2flosJkcE2T
-         P98Ms0qqShDooDddZQS4IHneuGoMBo4PSSg7Kkf2G553A+TBQKdRiNyDaoxNZIBezpdN
-         iygQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ULVG8/SWOO1QSLB+nShgf+NV6sAA3qhcJLLwzGtdjZM=;
-        b=HhbMlETE0j3O6N3MaaEmNTvfPaAzuGIpOO8XUqdSXDHGbY0qurZOJdKqsZ5rxqj15o
-         Mfr0fZLHhIKIsg5n7iSOZ7Zkbk4kGOF2txsiHiznhtBG7b6Dk+MYAoj/rKKG0SGLQ320
-         p0lVCBcsNl7fG5bGgSWXXQbo75TCIdsUOMkA0CuqPgl4I3EHimmDvtgn+8Mij1NyxpB6
-         XrxI5SR84wJbPKqPPRjBmpJXJGWbEVUvfaMPcr8zzNeMBG+aiYdchzTfW07b7gh+r4S1
-         fmZIYt0Ra68/yQj0LZFPkXeF/M0pWlsIbkN8ECVr+f2CNlfuC8TCBpwane+niZhY8Vsh
-         pp2A==
-X-Gm-Message-State: AOAM533Ra0jSl+PNk6Sh59DnQ8uM4eg+mn/gaE5MnzD5DOdnod91rbDM
-	42fTIU8amkGh3HRdoEclltjiRtmBqMAv1wvzEZY=
-X-Google-Smtp-Source: ABdhPJxgbRXutStvmAlpddoCPWnCUNsPdvqzprj0hA3AnT7mGTFflO+aGzipzfHdn07Y+e1KCTvHLw==
-X-Received: by 2002:aa7:c783:: with SMTP id n3mr45845589eds.122.1634576663149;
-        Mon, 18 Oct 2021 10:04:23 -0700 (PDT)
-Received: from ?IPV6:2a02:578:85b0:e00:549e:a93:d8e8:be6e? ([2a02:578:85b0:e00:549e:a93:d8e8:be6e])
-        by smtp.gmail.com with ESMTPSA id a1sm9918369edu.43.2021.10.18.10.04.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Oct 2021 10:04:22 -0700 (PDT)
-Message-ID: <f93520a8-d05b-f278-f61f-11fd3dfb21a1@tessares.net>
-Date: Mon, 18 Oct 2021 19:04:21 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968502C80
+	for <mptcp@lists.linux.dev>; Tue, 19 Oct 2021 00:50:34 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10141"; a="215561689"
+X-IronPort-AV: E=Sophos;i="5.85,382,1624345200"; 
+   d="scan'208";a="215561689"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2021 17:50:33 -0700
+X-IronPort-AV: E=Sophos;i="5.85,382,1624345200"; 
+   d="scan'208";a="629404760"
+Received: from phamal-mobl.amr.corp.intel.com ([10.252.131.17])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2021 17:50:33 -0700
+Date: Mon, 18 Oct 2021 17:50:32 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v7 8/8] DO-NOT-MERGE: mptcp: mp_fail test
+In-Reply-To: <2e9a15d32cd39483dd1e18174d6c73b33e0566b5.1634531093.git.geliang.tang@suse.com>
+Message-ID: <7e1c37e5-a636-68f1-aaa-329f951b2c55@linux.intel.com>
+References: <cover.1634531093.git.geliang.tang@suse.com> <2e9a15d32cd39483dd1e18174d6c73b33e0566b5.1634531093.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-Subject: Re: [PATCH mptcp-next] mptcp: drop unused sk in mptcp_push_release
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
-References: <0177e007bc31fd8e5783b115b66c6b18d3dd2387.1634528367.git.geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <0177e007bc31fd8e5783b115b66c6b18d3dd2387.1634528367.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Geliang,
+On Mon, 18 Oct 2021, Geliang Tang wrote:
 
-On 18/10/2021 05:39, Geliang Tang wrote:
-> Since mptcp_set_timeout() had removed from mptcp_push_release() in
-> commit 33d41c9cd74c5 ("mptcp: more accurate timeout"), the argument
-> sk in mptcp_push_release() became useless. Let's drop it.
+> ./mptcp_join.sh -Cf
 
-Good catch and thank you for the patch!
-It is now in our tree (for net-next) with a Fixes tag.
+When I tried running this as './mptcp_join.sh -Cfc', I'm not seeing 
+fallback in the packet trace (no data level len == 0, and the packets all 
+have DSS headers until disconnect). Is the test working on your system?
 
-- 04e012677aa1: mptcp: drop unused sk in mptcp_push_release
+Also, I know that you had asked about other ways to intentionally corrupt 
+the checksum that would be ok to merge. Do you still need more information 
+on that?
 
-- Results: 2c9a91c34b69..cec4678228e9
+Mat
 
-Builds and tests are now in progress:
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/protocol.c                           |  9 +++++++++
+> .../testing/selftests/net/mptcp/mptcp_join.sh  | 18 ++++++++++++++++++
+> 2 files changed, 27 insertions(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 2283efda1bc9..fc3a4fb81fbb 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1243,6 +1243,8 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
+> 	__mptcp_do_fallback(msk);
+> }
+>
+> +static int j;
+> +
+> static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> 			      struct mptcp_data_frag *dfrag,
+> 			      struct mptcp_sendmsg_info *info)
+> @@ -1377,6 +1379,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> 		mptcp_update_data_checksum(skb, copy);
+> 	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
+> 		mptcp_update_infinite_map(msk, ssk, mpext);
+> +
+> +	pr_debug("%s j=%d", __func__, j++);
+> +	if (j == 20)
+> +		skb->data_len = 1;
+> +	if (j > 40)
+> +		j = 0;
+> +
+> 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
+> 	return copy;
+> }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index b3b351b868f9..3339633e87d4 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -977,6 +977,24 @@ chk_link_usage()
+>
+> subflows_tests()
+> {
+> +	# 1 subflow
+> +	reset
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+> +	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+> +	chk_join_nr "1 subflow" 0 0 0
+> +
+> +	exit
+> +
+> +	# multiple subflows
+> +	reset
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+> +	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+> +	chk_join_nr "multiple subflows" 2 2 2
+> +
+> 	reset
+> 	run_tests $ns1 $ns2 10.0.1.1
+> 	chk_join_nr "no JOIN" "0" "0" "0"
+> -- 
+> 2.31.1
+>
+>
+>
 
-
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211018T170406
-
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export/20211018T170406
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
