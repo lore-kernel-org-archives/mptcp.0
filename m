@@ -1,130 +1,140 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949DA2C85
-	for <mptcp@lists.linux.dev>; Wed, 20 Oct 2021 17:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E1D72
+	for <mptcp@lists.linux.dev>; Wed, 20 Oct 2021 19:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1634751788;
+	s=mimecast20190719; t=1634759804;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rd66419CkS7TyO5/ue/fPjEHRIaCDDPh60rdR/R59vI=;
-	b=SrzBvfjnIVi5gEvShcRqWx+SaOgr2COTwk0t6RY37mYLmI9p/mm9d/PrNtN3K3QJA+tki5
-	XJ0cr+yXR8L2tniKDucI2ETUcHY+XFoE8W/eRSu0Bl9a5ONrUlk2KLpqLJqhFjRPqbzvIJ
-	LBOd0dcbwzjja0pDQV3eQREevjq5QWk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-515-ltwUfiySOKiDzO1OZTPe4w-1; Wed, 20 Oct 2021 13:43:07 -0400
-X-MC-Unique: ltwUfiySOKiDzO1OZTPe4w-1
-Received: by mail-wm1-f69.google.com with SMTP id z26-20020a05600c221a00b0030da55bc454so4609703wml.4
-        for <mptcp@lists.linux.dev>; Wed, 20 Oct 2021 10:43:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=rd66419CkS7TyO5/ue/fPjEHRIaCDDPh60rdR/R59vI=;
-        b=1NzGkT274RMuC0WFxDvV/OuvAEDVL/jE/H1w8oV9+vkyni4woYHrRK9Ke7Mo0REEu5
-         JnQnzpaZ5//UNzW9cFry2AeZsIfeHPdU0cO8nVBErqGRJifGP4N9zbLz7LHzYybtFHlL
-         cTR5muisZgm7ISu18oJAGvX2swCJUedq7pgUp4LxmJfeh7/fCPO8MEj1/Gi+DJebiUeO
-         GCU4sjDrWjQSRes9J6clfDYqiRbOZeOJlYYWhThOqWctYf2mIrwHcAgN1LgKgZ7N0Czd
-         4LMf0f9aWnnT+tad+SOA15fr3URJH+clYFVrJmbu2t7Flvq7OWvG7x46NCAN5TMbMVjq
-         t61g==
-X-Gm-Message-State: AOAM5320SYnGQfn+YBaa/wtrWxuHu+a7s9eN8z9pmL6ufjW0/G0uK7eh
-	jH0S1aAWNpXfLgn8CJdlVxg3Hp6ZaJnY4AS7O2nG9lLGy/CoT+FVTmXSpHQSj3os95keDO3+ksb
-	uUFJ2CbD8XoeLKa0=
-X-Received: by 2002:a1c:a712:: with SMTP id q18mr742449wme.23.1634751785763;
-        Wed, 20 Oct 2021 10:43:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwb5LQzWW7zzEWo8RikqHHgHQRnCrP8gUWo2olawn8hcs/ox4ON2ygJaadtTm1PHO93K4Z6fQ==
-X-Received: by 2002:a1c:a712:: with SMTP id q18mr742430wme.23.1634751785524;
-        Wed, 20 Oct 2021 10:43:05 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-240-164.dyn.eolo.it. [146.241.240.164])
-        by smtp.gmail.com with ESMTPSA id p11sm6739305wmi.0.2021.10.20.10.43.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 10:43:05 -0700 (PDT)
-Message-ID: <1050afc1272cfbc66e91e653ef66462963436c0d.camel@redhat.com>
-Subject: Re: [RFC PATCH v2] selftests: mptcp: more stable simult_flows tests
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 20 Oct 2021 19:43:03 +0200
-In-Reply-To: <32692122-28e1-4028-36c4-43649e2fa629@linux.intel.com>
-References: <9d66028a72b6807d4dc3397bb70f028cbc78161d.1634310418.git.pabeni@redhat.com>
-	 <32692122-28e1-4028-36c4-43649e2fa629@linux.intel.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+	 to:to:cc:cc:content-type:content-type;
+	bh=WQtrsjIFoB7ijExUec1g9gasg0XP+c/vsJtJ1rHZezo=;
+	b=DPs8cYFXC6jbYkuLeX78P7spFNfv06o+p4zLx6YKVYLb139Ctd8mbPpEQnhjfnLXQcvILC
+	nKgCyVYBYSja42DjGFX7bHvGUqPZGnGy5S1t+WesjIoHKz0rwtwo2UgXBqiqw19ZJyI3iX
+	54j1ZhFqslbIFGzjea2qz7i/JdYK32w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-SW45Gq9sOZSJQOdNqFWVwQ-1; Wed, 20 Oct 2021 15:56:40 -0400
+X-MC-Unique: SW45Gq9sOZSJQOdNqFWVwQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7801802575
+	for <mptcp@lists.linux.dev>; Wed, 20 Oct 2021 19:56:39 +0000 (UTC)
+Received: from nst.lab.eng.brq.redhat.com (nst.lab.eng.brq.redhat.com [10.37.153.171])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 25596100238C;
+	Wed, 20 Oct 2021 19:56:38 +0000 (UTC)
+From: Poorva Sonparote <psonparo@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: dcaratti@redhat.com
+Subject: [PATCH RFC] Support for SOL_IP for MPTCP setsockopt
+Date: Wed, 20 Oct 2021 19:56:01 +0000
+Message-Id: <0c05b2c0bfb6cd5b6788d00c7f61474d0cd5a747.1634749192.git.psonparo@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=psonparo@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="US-ASCII"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Fri, 2021-10-15 at 17:12 -0700, Mat Martineau wrote:
-> On Fri, 15 Oct 2021, Paolo Abeni wrote:
-> 
-> > Currently the simult_flows.sh self-tests are not very
-> > stables, expecially when running on slow VM.
-> > 
-> > The tests mesures runtime for transfers on multiple subflows
-> > and check that the time is nearby the theoretical maximum.
-> > 
-> > The current test infra introduces a bit of jitter in test
-> > runtime, due to multiple explicit delays. Additionally the
-> > runtime is measured by the shell script wrapper. On slow
-> > VM, the script overhead is measurable and subject to relevant
-> > jitter.
-> > 
-> > One solution to make the test more stable would be adding more
-> > slack to the expected time; that could possibly hide reall
-> > regressions. Instead move the measurement inside the command
-> > doint the transfer, and drop most unneeded sleep.
-> > 
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
-> > @matttbe: could you please double check this makes simult_flows
-> > tests really more stable in your testbed?
-> > 
-> > Now the slack is really quite tight, I think we can raise it a
-> > little more, without loosing the ability of catching regressions
-> 
-> I still get occasional failures on my slow desktop VM (lots of debug 
-> features turned on), but a little more slack would help. Most of the time 
-> all cases succeed. If I see a failure, it's just one test out of the 
-> batch. These are each from separate runs of simult_flows.sh:
-> 
-> unbalanced bwidth                                           transfer slower than expected! runtime 4500 ms, expected 4005 ms max 4005        [ fail ]
-> 
-> 
-> unbalanced bwidth with opposed, unbalanced delay            transfer slower than expected! runtime 4632 ms, expected 4005 ms max 4005        [ fail ]
+Hello!
 
-Let me elaborate a bit more here.
+I have been working on adding support for IP_TOS for setsockopt(). I
+am attaching the packetdrill test and the patch but it  still won't set the TOS value
+for the subflows that are created after the setsockopt() call.
 
-Before this patch, I observed 2 different kind of failures:
+https://github.com/multipath-tcp/mptcp_net-next/issues/220#issuecomment-947863717
 
-- off by few ms. The root cause was the jitter introduced by the
-VM/scripts/tests env. That should be resolved now.
+Thanks,
+Poorva
 
-- off by a few hundred ms. The root cause is a little more uncertain,
-but I think it's due to HoL blocking for the faster subflow. I observe
-this kind of failure only when the subflows have different speeds.
 
-Looking at the pcap traces with wireshark, and doing the time-sequence
-stream graph (Stevens), the slower subflow has a pretty much constant
-slope, while the faster one has some smallish periods with a lower
-slope.
 
-I'm experimenting a patch doing HoL blocking estimation in a similar
-way to blest. It looks like it improves the situation, but I need do to
- more experiments.
 
-Cheers,
+This patch adds support for IP_TOS for setsockopt(.. ,SOL_IP, ..)
+https://github.com/multipath-tcp/mptcp_net-next/issues/220
 
-Paolo
+Currently, any new subflows that are created after the setsockopt()
+call are not being updated with the set IP_TOS value.
 
+Signed-off-by: Poorva Sonparote <psonparo@redhat.com>
+---
+ net/mptcp/sockopt.c | 39 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 8137cc3a4296..f5ee49660902 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -598,6 +598,40 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
+ 	return ret;
+ }
+ 
++static int mptcp_setsockopt_sol_ip_set_tos(struct mptcp_sock *msk, int optname,
++					   sockptr_t optval, unsigned int optlen)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	int ret, err;
++	int val = 0;
++
++	err = ip_setsockopt(sk, SOL_IP, optname, optval, optlen);
++	val = inet_sk(sk)->tos;
++
++	if (err != 0)
++		return err;
++	lock_sock(sk);
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++
++		ip_sock_set_tos(ssk, val);
++	}
++	release_sock(sk);
++	return ret;
++}
++
++static int mptcp_setsockopt_sol_ip(struct mptcp_sock *msk, int optname,
++				   sockptr_t optval, unsigned int optlen)
++{
++	switch (optname) {
++	case IP_TOS:
++		return  mptcp_setsockopt_sol_ip_set_tos(msk, optname, optval, optlen);
++	}
++
++	return -EOPNOTSUPP;
++}
++
+ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    sockptr_t optval, unsigned int optlen)
+ {
+@@ -637,12 +671,14 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
+ 	if (ssk)
+ 		return tcp_setsockopt(ssk, level, optname, optval, optlen);
+ 
++	if (level == SOL_IP)
++		return mptcp_setsockopt_sol_ip(msk, optname, optval, optlen);
++
+ 	if (level == SOL_IPV6)
+ 		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
+ 
+ 	if (level == SOL_TCP)
+ 		return mptcp_setsockopt_sol_tcp(msk, optname, optval, optlen);
+-
+ 	return -EOPNOTSUPP;
+ }
+ 
+@@ -1000,6 +1036,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	ssk->sk_priority = sk->sk_priority;
+ 	ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
+ 	ssk->sk_incoming_cpu = sk->sk_incoming_cpu;
++	ip_sock_set_tos(ssk, inet_sk(sk)->tos);
+ 
+ 	if (sk->sk_userlocks & tx_rx_locks) {
+ 		ssk->sk_userlocks |= sk->sk_userlocks & tx_rx_locks;
+-- 
+2.18.2
 
