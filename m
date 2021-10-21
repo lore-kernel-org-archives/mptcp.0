@@ -1,44 +1,44 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D80D2C8B
-	for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 06:43:57 +0000 (UTC)
-Received: by mail-wm1-f50.google.com with SMTP id 84-20020a1c0457000000b003232b0f78f8so634136wme.0
-        for <mptcp@lists.linux.dev>; Wed, 20 Oct 2021 23:43:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D1B2C80
+	for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 08:54:36 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id t16so798852eds.9
+        for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 01:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=prx/aRbrP5RsATfxqgrRBvFqnTyVywAozpyC6SHaVuw=;
-        b=oJqIjzgKBrD2FZeCf27C0HSWjaIOrfQqzTvrYDvikGkI1FD8e2O2JgC88VZRXroUBG
-         AV6dwOrLQetsWLHryn7cO9b4OOJrmTD3cEFXTRYawqSTXzkKWv3HVPD/mEFh9o8dHCm5
-         5LFmr97OoXWZYm6IgmcJTp6hLgXaUXPbT3PQTBPGSP51JA9FkaT8HF2qbWXQWKmRT78N
-         fNwxkWEGrUZy1PMKUwYr+5qV2ZcW0x1r1rgV/XzN08PXPHyn2qxFskG1zYeM+hXfcBnw
-         guBlKKzLxEtWhXi1GPN39t7jEeRUHW6YDY5lLcM52BVO1VUgXLqJ/24E94H99hXoqRKk
-         GO5A==
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=UxIcxXNtZRil1ruthp61xq7FXyWauu5TCGaDK844KaA=;
+        b=WymFFhWCBJ7lZPSukt3K1k+ZW16irnGn9hX0d3kue3ZGHLYU5S9nXgX80rcElKFhTD
+         AmWmnAReGoDhj/jwuCdDRAp3W+vk9xmoVJzFlyf3Vu0VFaq/Qmmbf8y89mEQcP4lvmeT
+         5zFp1Q5dHX7stgmFnMXUV+HXDpjbou9vSwN8jRfxuAbJVdXA6HGhXxfnlQ/xuIDFnC7A
+         p7VB1I8ccVUhUN5iTxXnoZaJMYBWxTjXrbHKVcPjXKj7qk17/wCKmnGNOM9XKVsPYsCw
+         IhdvFhLaDdDxJUTreZCwQKQ3VI2hs3A+GKloDuyjWSxEWQAoL4yEzuR9c3sMC5LXb93p
+         4d/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=prx/aRbrP5RsATfxqgrRBvFqnTyVywAozpyC6SHaVuw=;
-        b=s0n4wAnsl2h3UF8JGzzFBeJ5i81gGXmolnUU/rFd+LAArEzhJcWAELYR2vfSA5N9c0
-         nJ4fSqwrINme1VrcKRjlqruvRo5AMElod8GngtninGdidSCqhqwW4PLumHBgRPF9Us3r
-         YEypyQVCyjUoJgqKnPiBFY+zGj+JRU4d1+EbPcxMadp03Msw5VDLi4lrmSFl3MZ6OBYu
-         2ONvYDmXUNAHPaCpnW/ooAh20OSKQcyR0ycEfnh1wyI1QjJDxSpO9A29KVLZl8Uyztu/
-         fvvVRvREm+WX5uctVgNyzhBp57hUmeWR/4qutDgf/mdwEx3ZC8gBp9AmBuUghP+odGeL
-         Vuhw==
-X-Gm-Message-State: AOAM530ojMFjAqv4+VL6HeGSTLbfta3zAQaT3GpeDuoZqTVdzI8sOghr
-	bzkmKZPVk9EVM531M7+seJCsbDcjdfBCXmhwqQU=
-X-Google-Smtp-Source: ABdhPJyEV82YD3xv0S7CL1OqtIlAqbRyZqBS/Z6hxmF0tmUj4vw2oME944jzRkqBlAXOIIYI4+yscA==
-X-Received: by 2002:a05:600c:2c4a:: with SMTP id r10mr18862321wmg.166.1634798635967;
-        Wed, 20 Oct 2021 23:43:55 -0700 (PDT)
-Received: from [10.115.214.32] ([185.232.21.142])
-        by smtp.gmail.com with ESMTPSA id u16sm6190666wmc.21.2021.10.20.23.43.54
+        bh=UxIcxXNtZRil1ruthp61xq7FXyWauu5TCGaDK844KaA=;
+        b=Lno3sNoYXxeMrbfaosl7jFcawz6KyUyRu2qNRZxSKlCagLAk13zZ+o27DgRwSUyN7R
+         1eAnCtgx+72vFZdYo377wGTVj7QXuF6GV8P2tEU1jlpOsewRDmPWXXB+dZx3uSdUJVeM
+         TZhJHo0hyj5iQX+Ly1sBDszgb6lKEAcx3SHM3RyG40HmhD+A8ohbG9sR1dytwyruq8Ph
+         Ro76QOreAycAklq2APKwbw9Xf2f/RFh5tNkEFsQL4mO0NI53M3cQ5jrqTpXSiPD8RKX8
+         S84i8BoLNRBX9wRvGVUTgMubueMc6kAMJg+Ph8rrCihyeoS5+PHkt6rQK6SJ3yVqs2dX
+         SXmQ==
+X-Gm-Message-State: AOAM533AY1sTdXfd+9mQdfCAWHLm5GlNT4rBsRqwbWi5LZqwoNbFXyfH
+	wgsdYn76F7Kct1O4pMBMFmlHBMBjdqGQFXMBLqA=
+X-Google-Smtp-Source: ABdhPJywjiGUGqSqaTXgYhcJKTYCgAjnK8Ra+9j83kkW95mr0NNXTCAHlv22Qvg+I76PcCRn4LGgHA==
+X-Received: by 2002:a17:906:b796:: with SMTP id dt22mr5943593ejb.456.1634806474699;
+        Thu, 21 Oct 2021 01:54:34 -0700 (PDT)
+Received: from [10.44.1.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id o3sm2146596eju.123.2021.10.21.01.54.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Oct 2021 23:43:55 -0700 (PDT)
-Message-ID: <61f650a3-196c-b4f7-ca81-7500e3480d67@tessares.net>
-Date: Thu, 21 Oct 2021 08:43:51 +0200
+        Thu, 21 Oct 2021 01:54:34 -0700 (PDT)
+Message-ID: <a4e38a35-8839-0827-498c-44ab1b724c83@tessares.net>
+Date: Thu, 21 Oct 2021 10:54:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,30 +47,82 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.1.2
-Subject: Re: Squash to "mptcp: infinite mapping receiving": Build Failure
+Subject: Re: [RFC PATCH v2] selftests: mptcp: more stable simult_flows tests
 Content-Language: en-GB
-To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-References: <39044f0b1da24b4228ed186a751b893a94e9d56b.1634796076.git.geliang.tang@suse.com>
- <d4f7f2e7-c837-c5bd-a6b9-da4a74ead0a8@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <9d66028a72b6807d4dc3397bb70f028cbc78161d.1634310418.git.pabeni@redhat.com>
+ <32692122-28e1-4028-36c4-43649e2fa629@linux.intel.com>
+ <1050afc1272cfbc66e91e653ef66462963436c0d.camel@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <d4f7f2e7-c837-c5bd-a6b9-da4a74ead0a8@gmail.com>
+In-Reply-To: <1050afc1272cfbc66e91e653ef66462963436c0d.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Paolo,
 
-On 21/10/2021 08:16, MPTCP CI wrote:
-> Hi Geliang,
+On 20/10/2021 19:43, Paolo Abeni wrote:
+> On Fri, 2021-10-15 at 17:12 -0700, Mat Martineau wrote:
+>> On Fri, 15 Oct 2021, Paolo Abeni wrote:
+>>
+>>> Currently the simult_flows.sh self-tests are not very
+>>> stables, expecially when running on slow VM.
+>>>
+>>> The tests mesures runtime for transfers on multiple subflows
+>>> and check that the time is nearby the theoretical maximum.
+>>>
+>>> The current test infra introduces a bit of jitter in test
+>>> runtime, due to multiple explicit delays. Additionally the
+>>> runtime is measured by the shell script wrapper. On slow
+>>> VM, the script overhead is measurable and subject to relevant
+>>> jitter.
+>>>
+>>> One solution to make the test more stable would be adding more
+>>> slack to the expected time; that could possibly hide reall
+>>> regressions. Instead move the measurement inside the command
+>>> doint the transfer, and drop most unneeded sleep.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>> @matttbe: could you please double check this makes simult_flows
+>>> tests really more stable in your testbed?
+>>>
+>>> Now the slack is really quite tight, I think we can raise it a
+>>> little more, without loosing the ability of catching regressions
+>>
+>> I still get occasional failures on my slow desktop VM (lots of debug 
+>> features turned on), but a little more slack would help. Most of the time 
+>> all cases succeed. If I see a failure, it's just one test out of the 
+>> batch. These are each from separate runs of simult_flows.sh:
+>>
+>> unbalanced bwidth                                           transfer slower than expected! runtime 4500 ms, expected 4005 ms max 4005        [ fail ]
+>>
+>>
+>> unbalanced bwidth with opposed, unbalanced delay            transfer slower than expected! runtime 4632 ms, expected 4005 ms max 4005        [ fail ]
 > 
-> Thank you for your modifications, that's great!
+> Let me elaborate a bit more here.
 > 
-> But sadly, our CI spotted some issues with it when trying to build it.
+> Before this patch, I observed 2 different kind of failures:
+> 
+> - off by few ms. The root cause was the jitter introduced by the
+> VM/scripts/tests env. That should be resolved now.
 
-That's expected as Patchew applied this patch on top of the export
-branch -- and surprisingly, there was no conflict! -- not on top of
-Geliang's "Infinite mapping" series.
+Should we already apply your RFC patch in the export branch then?
 
-So please ignore this report from the CI ;-)
+> - off by a few hundred ms. The root cause is a little more uncertain,
+> but I think it's due to HoL blocking for the faster subflow. I observe
+> this kind of failure only when the subflows have different speeds.
+> 
+> Looking at the pcap traces with wireshark, and doing the time-sequence
+> stream graph (Stevens), the slower subflow has a pretty much constant
+> slope, while the faster one has some smallish periods with a lower
+> slope.
+> 
+> I'm experimenting a patch doing HoL blocking estimation in a similar
+> way to blest. It looks like it improves the situation, but I need do to
+>  more experiments.
+
+Thank you for looking at that!
 
 Cheers,
 Matt
