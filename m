@@ -1,125 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DDB2C80
-	for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 09:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1634807437;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ah3BT0g3o5HlGFpj2Y+aySnR3Jr/KPY5KEU7KCltwms=;
-	b=P+HXZEBJQCsMmfnNeCALc6LRWw2GPmj7fiS+J72+x3NuTX5Pol9SAwcjSyJhp4aEBIdUPF
-	bZ66NYmFgizYRsjxtCwCzHCm85rllfv8llye949pPSb531kqLD01sTX5QK9t8sOMXTvGKn
-	em6udT28NC8+Zf5VAYC6kZiZpXn/NFU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-HSd6gfU3PsSo_mwVZk_a_g-1; Thu, 21 Oct 2021 05:10:36 -0400
-X-MC-Unique: HSd6gfU3PsSo_mwVZk_a_g-1
-Received: by mail-wm1-f72.google.com with SMTP id v10-20020a1cf70a000000b00318203a6bd1so25741wmh.6
-        for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 02:10:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63332C80
+	for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 09:17:14 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id kk10so77672pjb.1
+        for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 02:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=E94L2TkoJSgfmZ2JI+fCDzpKWVpxXeI3vnmutCMU9jc=;
+        b=Z2NyfGbOQ5bs5ESYVWWbfVPefH0s7Rbrz4oQs4cwvbPHG7Lx9GeC/gJeJD9fxoOClz
+         p2fKsIscTqQcxS6C+shXVk8/fUAEdS//envPgToL6RfrmkaDc/No418MmHrlnIQ8C5s5
+         M/uVppQXePxdG7pTcMr+dEVL1kNiSe5XIkOkuLXixes/xxe+JZJ4xN7Q3WyJhGmF8byW
+         z3XrdAade0xnYqevq/B698eYMU0bFGD3TjrfRER8sPXm9Fotpokr+G4TxOsu1vrT4NwB
+         9IDtGSBOeaKmO5sd50lIRfl9JEjQVq5llaM3/LaOBFpWT+O7sM+nheyBw6k1nPg1HyIG
+         4LQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Ah3BT0g3o5HlGFpj2Y+aySnR3Jr/KPY5KEU7KCltwms=;
-        b=IYAkPuas7bH9T0ZJYlx/tEQVYC7Bwa24Q/j4tWXtTwOR1O2ISBrxlIUKPTudjXROl8
-         RM21qRCKJUdaFt8P7yfeiies8WwiK5kpI8s8UiOSSNObxeXTBAFBzS9IVGafeW3EN9kM
-         ZzCrI165aH418bD9dzWCa6Jw2OikRgK1+AXnvLFjIOo7/5iINLQCSMx7x/Fn4HrrvvvP
-         RVmlHNOkDI7iTIDRSPbnvCCnPr1fatF1GVpBOhiNWTkzNNxWXJJEOzDFun0gRXc9w70T
-         fJR6g544+patwhLXXQ6dFliuTc1hF0cOX5Hp31XQDaO6iQZxFOL24MWYFLMV5772IXZR
-         42Bw==
-X-Gm-Message-State: AOAM53014xOxdl8+jnU+XmUQqljIKSYkGELC+IFYCd+9CJ0K6DyEyPUc
-	WPOcusqYKprN86ggPKyjx14+R0Mz7FEbVta/mjkgQH/PsHP232Og/JmE/IJhJVq24NYOUQhOe8A
-	5Dfrb69OF/qBs2UA=
-X-Received: by 2002:a05:600c:22d0:: with SMTP id 16mr19983388wmg.35.1634807434937;
-        Thu, 21 Oct 2021 02:10:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyBVRO3m54CZn4rIs69IwowX8lmbeNfN7ijJKoK9l4cyEH4bPN1Kz2BnJ4AO9TRKYT2APOU/A==
-X-Received: by 2002:a05:600c:22d0:: with SMTP id 16mr19983368wmg.35.1634807434689;
-        Thu, 21 Oct 2021 02:10:34 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-240-164.dyn.eolo.it. [146.241.240.164])
-        by smtp.gmail.com with ESMTPSA id o10sm4844222wmq.46.2021.10.21.02.10.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 02:10:34 -0700 (PDT)
-Message-ID: <6596df94bacc77a9c0a2411817ffae101b4ae30b.camel@redhat.com>
-Subject: Re: [RFC PATCH v2] selftests: mptcp: more stable simult_flows tests
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
-Date: Thu, 21 Oct 2021 11:10:33 +0200
-In-Reply-To: <a4e38a35-8839-0827-498c-44ab1b724c83@tessares.net>
-References: <9d66028a72b6807d4dc3397bb70f028cbc78161d.1634310418.git.pabeni@redhat.com>
-	 <32692122-28e1-4028-36c4-43649e2fa629@linux.intel.com>
-	 <1050afc1272cfbc66e91e653ef66462963436c0d.camel@redhat.com>
-	 <a4e38a35-8839-0827-498c-44ab1b724c83@tessares.net>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=E94L2TkoJSgfmZ2JI+fCDzpKWVpxXeI3vnmutCMU9jc=;
+        b=OtEMLN+CzbNht0Dh4N4Tqjm8vVjKnXRB0X/afAlm8tcL4NMzv/RQc4JfRiIxpAEYnU
+         C3xJ15Y/jLpPKk7iMy0lWGfigQic4fD8OIgbmNEqQgYa92Wk6V/lStrg/+Tlqa8esECE
+         G0hI9x4GIBo25QrFhyXrrbNCW+rL0Nh6e2d76NtzWhwN0GkO6Qt2jM7TU4c0HqrkHo7L
+         QOMCZ3ki6ftq74zC/VSE1JNsH9t6L0nPrhcywkvRcTSksCTkKwePFswvqyZOWLueVORF
+         oUzY4x+t8vKTY3RQ2cRNaDyZHlFeXQALE5GzbtSka04aHBtrfIXEVNjdWVwIbMZ56eX1
+         prAQ==
+X-Gm-Message-State: AOAM5307X8qNlCVhm0Lcs8bttvT/Nnig19U3iGNm5a395PUX873UF/M4
+	5BrMj257G2AK8INAw9BLB7Ju6xxVd8O44bMYA1c=
+X-Google-Smtp-Source: ABdhPJzI1K4/PEFZ/8CxUqCm8y7yjxRKEPfWoXBZhssWhaIfCUBQCHvx838ALf6FvyCyKeeK7nKoxAQFB47pVu0yqjQ=
+X-Received: by 2002:a17:90a:f013:: with SMTP id bt19mr5548231pjb.82.1634807834314;
+ Thu, 21 Oct 2021 02:17:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <cover.1634531093.git.geliang.tang@suse.com> <2e9a15d32cd39483dd1e18174d6c73b33e0566b5.1634531093.git.geliang.tang@suse.com>
+ <7e1c37e5-a636-68f1-aaa-329f951b2c55@linux.intel.com> <CA+WQbwt4dk5vQyoPgxv7=ctsaNetcbt855Md+SL6juFZcLUPgA@mail.gmail.com>
+ <YW6BzNwiyR9i8KSQ@dcaratti.users.ipa.redhat.com> <f61714c1-09cb-e4a0-f78c-5294bcaea890@tessares.net>
+ <CAKa-r6vQo+=tQDMRkyG2xczR8wMYPufRD4LU7Xj9+xbP2zVWGw@mail.gmail.com> <8d7963f3-1983-0086-dcbe-16e950230f0a@tessares.net>
+In-Reply-To: <8d7963f3-1983-0086-dcbe-16e950230f0a@tessares.net>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Thu, 21 Oct 2021 17:17:03 +0800
+Message-ID: <CA+WQbwu2O_trJ2=3rjT9aVASThDPaFd73Mi5Wq3LMJzonPA-TQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v7 8/8] DO-NOT-MERGE: mptcp: mp_fail test
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Davide Caratti <dcaratti@redhat.com>, Geliang Tang <geliang.tang@suse.com>, 
+	Mat Martineau <mathew.j.martineau@linux.intel.com>, MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2021-10-21 at 10:54 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 20/10/2021 19:43, Paolo Abeni wrote:
-> > On Fri, 2021-10-15 at 17:12 -0700, Mat Martineau wrote:
-> > > On Fri, 15 Oct 2021, Paolo Abeni wrote:
-> > > 
-> > > > Currently the simult_flows.sh self-tests are not very
-> > > > stables, expecially when running on slow VM.
-> > > > 
-> > > > The tests mesures runtime for transfers on multiple subflows
-> > > > and check that the time is nearby the theoretical maximum.
-> > > > 
-> > > > The current test infra introduces a bit of jitter in test
-> > > > runtime, due to multiple explicit delays. Additionally the
-> > > > runtime is measured by the shell script wrapper. On slow
-> > > > VM, the script overhead is measurable and subject to relevant
-> > > > jitter.
-> > > > 
-> > > > One solution to make the test more stable would be adding more
-> > > > slack to the expected time; that could possibly hide reall
-> > > > regressions. Instead move the measurement inside the command
-> > > > doint the transfer, and drop most unneeded sleep.
-> > > > 
-> > > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > > > ---
-> > > > @matttbe: could you please double check this makes simult_flows
-> > > > tests really more stable in your testbed?
-> > > > 
-> > > > Now the slack is really quite tight, I think we can raise it a
-> > > > little more, without loosing the ability of catching regressions
-> > > 
-> > > I still get occasional failures on my slow desktop VM (lots of debug 
-> > > features turned on), but a little more slack would help. Most of the time 
-> > > all cases succeed. If I see a failure, it's just one test out of the 
-> > > batch. These are each from separate runs of simult_flows.sh:
-> > > 
-> > > unbalanced bwidth                                           transfer slower than expected! runtime 4500 ms, expected 4005 ms max 4005        [ fail ]
-> > > 
-> > > 
-> > > unbalanced bwidth with opposed, unbalanced delay            transfer slower than expected! runtime 4632 ms, expected 4005 ms max 4005        [ fail ]
-> > 
-> > Let me elaborate a bit more here.
-> > 
-> > Before this patch, I observed 2 different kind of failures:
-> > 
-> > - off by few ms. The root cause was the jitter introduced by the
-> > VM/scripts/tests env. That should be resolved now.
-> 
-> Should we already apply your RFC patch in the export branch then?
+Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B410=E6=
+=9C=8820=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=8810:49=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> Hi Davide,
+>
+> On 20/10/2021 13:33, Davide Caratti wrote:
+> > hi,
+> >
+> > On Wed, Oct 20, 2021 at 12:40 PM Matthieu Baerts
+> > <matthieu.baerts@tessares.net> wrote:
+> >>
+> > [...]
+> >
+> >>>
+> >>> I had a script that used TC flower and gact + pedit + csum actions to=
+ flip the 'PSH'
+> >>> bit in the TCP header, I promised myself to change it to corrupt the =
+DSS option.
+> >
+> > FTR, that script was:
+> >
+> > # convert PSH,ACK into ACK
+> > # tc filter add dev vetha egress protocol ip prio 1000 flower ip_proto
+> > tcp tcp_flags 0x18/0xff action pedit ex munge tcp flags set 0x10 pipe
+> > csum tcp reclassify
+> > # convert ACK into PSH,ACK, 1 each 10 packets
+> > # tc filter add dev vetha egress protocol ip prio 1001 flower ip_proto
+> > tcp tcp_flags 0x10/0xff action pass random determ pipe 10 pedit ex
+> > munge tcp flags add 0x8 pipe csum tcp
+>
+> Thank you for sharing that.
+>
+> I managed to change the content of a TCP packet using:
+>
+>   $ tc -n <ns> qdisc add dev <iface> root handle 1: htb
+>
+>   $ tc -n <ns> filter add dev <iface> parent 1: protocol ip prio 1000
+> flower ip_proto tcp action pedit munge offset 148 u32 invert pipe csum tc=
+p
+>
+> It looks like nothing happen for packets smaller than 148 bytes.
+>
+> Note that I had to add these to the config file:
+>
+> CONFIG_NET_SCH_HTB=3Dm
+>
+> CONFIG_NET_ACT_CSUM=3Dm
+>
+> CONFIG_NET_ACT_GACT=3Dm
+>
+> CONFIG_GACT_PROB=3Dy
+>
+> CONFIG_NET_ACT_PEDIT=3Dm
+>
+> CONFIG_NET_CLS_FLOWER=3Dm
+>
+>
+> @Geliang: do you think you could use this command?
 
-I'm not 110% sure it has not side effect on the mptcp_join.sh self-
-tests. I guess we can go ahead and check that :)
+Hi Matt, Davide,
 
-/P
+Thanks for your help. It works on my system. I'll write new MP_FAIL
+selftest cases using tc to trigger the checksum failure as you suggested.
 
+Thanks,
+-Geliang
+
+>
+> >>> The problem with this approach is, we can't assume that the DSS optio=
+n has a fixed
+> >>> offset from the IP header. So, the test might start corrupting other =
+options that
+> >>> are not MPTCP.
+> >>
+> >> If we corrupt any data in TCP Options or data and update the TCP
+> >> Checksum, that's enough to corrupt the DSS. For example, we could flip
+> >> the last bit of the TCP payload (if tcp.len > 0). Would it be possible
+> >> to do this by adapting your script?
+> >
+> > it's easier if it's the first bit, then...
+> >
+> >> For mptcp.org, I told someone to use netfilterqueue + scapy. He had so=
+me
+> >> issues but also shared a working version:
+> >>
+> >> https://github.com/multipath-tcp/mptcp/issues/420#issuecomment-8257715=
+87
+> >>
+> >> I guess we cannot depend on Python and Scapy for selftests. I don't kn=
+ow
+> >> if we can also easily depend on eBPF either :)
+> >
+> > 'bpf' kselftests (and also tc-testing)  already depend on eBPF, so for
+> > linux this is a no-problem.
+>
+> Yes indeed but that increases the complexity to launch selftests. I mean
+> you need to add a bit of dependences (and "recent" ones) for 'bpf'
+> selftests.
+> It could be optional but it still needs to be supported by our CI.
+>
+> >> And using simple solutions like "tc netem corrupt" will be detectable =
+by
+> >> TCP csum.
+> >
+> > this can be easily workarounded using the 'csum' TC action after the
+> > netem dequeue.
+>
+> Good point! So we would need to create a tree with first "netem" then
+> "csum" action?
+>
+> The only thing is that netem will introduce errors at random positions,
+> maybe in IP/TCP headers but it is maybe not an issue. If the TC filter
+> command is enough, it might help to produce more controlled tests.
+>
+> >
+> >> So maybe your way is better if we can corrupt anything, e.g. using a
+> >> fixed offset like 120 or the last bit (if it is not an ACK). WDYT?
+> >
+> > I redirected this question to some friends working on eBPF, and they
+> > told me it's doable and cool at the same time :)
+> > There is an eBPF program that parses the "timestamp" option [1], we
+> > can change it easily to corrupt the DSS and recompute the TCP checksum
+> > like in Matteo's RHD article.
+> >
+> > WDYT?
+>
+> Indeed it looks like it is doable but if we could not add new
+> dependences, I think that would be easier for us :)
+>
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
