@@ -1,197 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8141C2C80
-	for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 09:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1634807973;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374F02C80
+	for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 09:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1634809896;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O/dEnibUQIJlaw49LNrQKP5yKf2NgVM2MRyp6BpqAnA=;
-	b=gNeHKaSNHw/px5FY/C/fPIySfoDCInVxzB4wY5e84Qz742HLJJ4Vsow/22mnbGFk1UJD3S
-	4v+eaaerpMiAYE2A8+4JNGO/B1wjNRj3J+I4RW8lSc3G4TfeH3XVsFKNVJkbLFdmo42fJM
-	vvGWnJz6byzISnrs89JdgwtfonUyY/4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-442-OhtEAuQEPQix-OKRoiAIDw-1; Thu, 21 Oct 2021 05:19:32 -0400
-X-MC-Unique: OhtEAuQEPQix-OKRoiAIDw-1
-Received: by mail-ed1-f71.google.com with SMTP id s12-20020a50dacc000000b003dbf7a78e88so20651452edj.2
-        for <mptcp@lists.linux.dev>; Thu, 21 Oct 2021 02:19:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O/dEnibUQIJlaw49LNrQKP5yKf2NgVM2MRyp6BpqAnA=;
-        b=hjLeZZRKnONFmodUPcULak1urDEutri7PDEnwhTPpeRtCTXkjECasEkbNYebA+5bFF
-         gv+R5POnBobAwacMUz31pjwGPpL6eixAZ3VyaHrqqvEDxx1JPndFcHpKAY7OsbYh4bCi
-         8qiNKA2hE8cZTt0NgICEgeqlFFyTpxXwqMDfCA6YJd5fdi15A9rzotEqYzG3BUWlbH0u
-         QYvCRcN4zL7RyGBcXC2rP4crSDeJqPIAr8lBAtzycklqFJh1SlRVtTZQ461r2FctvvSZ
-         hOiW8UeE2CcTrytl0fx75Ksmx1GkGjZgeu6L7iD7zX0YWAAR06wVXLxOnY67StgfIEUN
-         tx1A==
-X-Gm-Message-State: AOAM531VVu6WfYAiU6NTcFIwhkxN4Nhjihwrb0ittyc6yUp2PhB7FaCP
-	1BmnUvaZWDqdvjOWMW+mdK0NdtOWVYWJBdNn5CBN87xT+sCFxGNXoINbyTJMv5MBWPSQZciCKfO
-	mE/bcrFH0/2gPBDY=
-X-Received: by 2002:a05:6402:120b:: with SMTP id c11mr6018822edw.397.1634807970653;
-        Thu, 21 Oct 2021 02:19:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJysB0WOA+GcSw7MOeSKySaJR3J/qCzA0iddgEvFoRmDo6hty3Xep7DE+xUVF8cKAa/tAi6SJQ==
-X-Received: by 2002:a05:6402:120b:: with SMTP id c11mr6018793edw.397.1634807970388;
-        Thu, 21 Oct 2021 02:19:30 -0700 (PDT)
-Received: from localhost (net-188-218-17-84.cust.vodafonedsl.it. [188.218.17.84])
-        by smtp.gmail.com with ESMTPSA id r3sm2280852ejr.79.2021.10.21.02.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 02:19:30 -0700 (PDT)
-Date: Thu, 21 Oct 2021 11:19:29 +0200
-From: Davide Caratti <dcaratti@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	Geliang Tang <geliangtang@gmail.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-next v7 8/8] DO-NOT-MERGE: mptcp: mp_fail test
-Message-ID: <YXEwoTyTQxN3dcQx@dcaratti.users.ipa.redhat.com>
-References: <cover.1634531093.git.geliang.tang@suse.com>
- <2e9a15d32cd39483dd1e18174d6c73b33e0566b5.1634531093.git.geliang.tang@suse.com>
- <7e1c37e5-a636-68f1-aaa-329f951b2c55@linux.intel.com>
- <CA+WQbwt4dk5vQyoPgxv7=ctsaNetcbt855Md+SL6juFZcLUPgA@mail.gmail.com>
- <YW6BzNwiyR9i8KSQ@dcaratti.users.ipa.redhat.com>
- <f61714c1-09cb-e4a0-f78c-5294bcaea890@tessares.net>
- <CAKa-r6vQo+=tQDMRkyG2xczR8wMYPufRD4LU7Xj9+xbP2zVWGw@mail.gmail.com>
- <8d7963f3-1983-0086-dcbe-16e950230f0a@tessares.net>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cmQXP7x2GcOTwYHKpMwNb2ehFEM+RYfw1UGVnFDIr0g=;
+	b=SL6HApMLd1If1djoFbNwwXqx/wa4YiR9n0oRjntW6GHOrX4TWG1+utQ3l7XMoyKS/qACAH
+	oUAFknGx7YL+pDY/HVwEo8XMypazI0PlnhpAkpiEr7AWit4tFY4SwB3U+/ySnE39+joaMT
+	iUfdtXEUo3YfFMKuhUDMDWig7mm3hbI=
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+ (mail-am6eur05lp2112.outbound.protection.outlook.com [104.47.18.112])
+ (Using TLS) by relay.mimecast.com with ESMTP id
+ de-mta-4-7Mnld6XXNoKvGc5Aukt5GA-1; Thu, 21 Oct 2021 11:51:35 +0200
+X-MC-Unique: 7Mnld6XXNoKvGc5Aukt5GA-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bn1NJwumkfZ0RvtpikSQG8f2v2wlIYNYBJDGCP+GIZ+6HzkYXK1zh7ddFLjUwfR6LMy997ebCkuNhNnsEv9YHXaEpL1dyP/kO1QwRLiPZURJGJyLTgddM6w1uiFUvqnF4uUVkoJyPZzprq2KDK+9lFR27ClWZ0+kQVQdE+Tev5qvirciNyhTxp8srJtHhw/YHH1vbDktkgew07MeemG7AMzRPnjriuUk1E5mfcS9rWxbvwJJQnPq0F1v2YMyeVegM3b/5lqvSzG6z3BL2NQllze2Z7wARFUQ/Cu0XWL02T/+u/JeFDNXOnn1A2sz95QNkCMHBNARYnwVMZzqjmzyOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dOyUMRBx49xbQ70XjZlZfLvoWARlmb9baySsptdBrns=;
+ b=i0M8tq6xWcopxeI+aeJMx2/xXu6SAeO2WoOrtUg1YL55zeBaLrCQxiZ1mz/BFFeifU3Qu2F3BSFf4GHbVKYbLZ8DiBR+hdvtkk/M70/PypSdjZl2DzKKCtc4wraJSxEThqNmG30pzDVOc/Abl6w2r+1LiQ2Tapeeg2beime0ynvCzsc3LuPsTERpOQ1Kc6374mVIdMAzDDF3oLHYotw5ULxze+xTbuF+1Bt4rESZh9WOW9mQv8xR2R51IZLceJra1pP+0lfX3rhX3XO0TG18X/kMusE1JwGpjuz1+44U4gMypiFACohIRIjJbc9YlJE2ZX2eKudGyYU2Y2Igdi+Cyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by HE1PR0402MB3514.eurprd04.prod.outlook.com (2603:10a6:7:83::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16; Thu, 21 Oct
+ 2021 09:51:33 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::15cd:f2b4:6acf:99af]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::15cd:f2b4:6acf:99af%6]) with mapi id 15.20.4628.018; Thu, 21 Oct 2021
+ 09:51:33 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next] selftests: mptcp: fix proto type in link_failure tests
+Date: Thu, 21 Oct 2021 17:51:16 +0800
+Message-ID: <73206a1932f3f6baab8cfe5bf210fb6fe4cc06cc.1634809754.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.26.2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0217.apcprd02.prod.outlook.com
+ (2603:1096:201:20::29) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <8d7963f3-1983-0086-dcbe-16e950230f0a@tessares.net>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Received: from localhost (60.251.47.115) by HK2PR02CA0217.apcprd02.prod.outlook.com (2603:1096:201:20::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend Transport; Thu, 21 Oct 2021 09:51:32 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 920362b9-63c5-416b-8734-08d994785d41
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3514:
+X-Microsoft-Antispam-PRVS:
+	<HE1PR0402MB35140B952993BFC5769A839FF8BF9@HE1PR0402MB3514.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:454;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/Mw0Ru2hgItIkHovniGBi2w+B6Q/awJ7KcJgT+YBAmgGqvpriUkpZrydzoBbfd+csJmS3liqH4z35eorQ5VRgjrgBecC8egsSQ/Vzrt1RCKT673DwHWpziCWSEfCyTmN/gUw3eEbrvLDU+F/uXiOHTSIUav5lCy82CGYkv8m2VI/wJ+Xj5AixBDBOu/EU3lC7tBmnCVE6x/IDfRm4jd3vLRln7/sV+ym5FVRP+pgxuCnx0UPxNtgduXtLmC1zcVZnXjyYIwefOHF6wetxKqy98QabXKaFiIA3L6tHkUoEkTzluDCr4VgEG1Vs8jq2qtHRTe4KS5UkqjWeyejpI9g5SegjIS0VrAfdGpiesY9aozaI+P70KTr4+Pb2qETnqG1+fLJVXmAQO1I5mmUKziaVinVnW92ShUfaJv/U0iSxBR59alz/EHk4Er5LPi20EZjuW3m9KCkYh6zM0KjWkCNLcEh+nwS/Bc01ntMbAb9I8vkKt9LVjACFuHVN8fV4pL8PNbEGJJKo7A81apJVDtWoRrmBGvYd3Eg/ngqxsBE9/tJAWdtDVJADCXn+UgfpoL1wYHL/SRZCt0zYxs2IIqfsUDXtm/yOCP8IM5i49miBbcJpbaGBYOybv3oVScN8bldzgvFejkB0UTFsxC5MHy+wQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(6496006)(8936002)(2906002)(55236004)(8676002)(83380400001)(6916009)(5660300002)(44832011)(86362001)(2616005)(6486002)(107886003)(26005)(186003)(956004)(4744005)(4326008)(316002)(6666004)(36756003)(508600001)(66556008)(38100700002)(66476007)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dgFIblzOZBfQFMKZNQLdtC17pA0v6ZFe5/uOXEBQdMbCbqQ01VJOX3MUs89X?=
+ =?us-ascii?Q?+4NJjN6bcr+YEe7jSsKjQXZ8Kodw8SR5jzRk18HehhCElBOr5Uw3ILIau1VP?=
+ =?us-ascii?Q?QXrutNKiBzSm+a8+d1T8j8H5nyGRbjwIVW3YNzdHKoXz2CsDRA3dxFm9JTyo?=
+ =?us-ascii?Q?VGbxdG3vLKq1d2NXMOgi3ewspZ7dglSjhQEQjvJ6xbhj1WBcfcXc9ISvFnZ1?=
+ =?us-ascii?Q?uQayFD210uxSwfLtkW/Dx08ehjZjQj7HCDWnz8mE0znXOwxPCNKRdloKp6mI?=
+ =?us-ascii?Q?IJiRK5MQ2ZzCW1t2xxLCj0/sw6og0sY/6hCzGNiB0l6KREAgqTRjOoDEAQ/j?=
+ =?us-ascii?Q?fCU7LTEgxBSvMkCVmOcg6ZIw2HMigIoM4FfVb4LOwkEwa2X5XtgHbNJau1b1?=
+ =?us-ascii?Q?qEWseiR5V/IaSHtW/C3L3igBqEI3n1kQ8iTvX5kwccNQszM/pEI3BaRwABx1?=
+ =?us-ascii?Q?Ic5zjLj8jge8jRSZYbG/MqXaSjdT3x7FhFxvAKMNm3br5pA4JgKCTXCtZXrZ?=
+ =?us-ascii?Q?LaPEN0Y/4R2wMOi29fx+T7omdbtevrWpuQPgN9pdz/GB3kLo68Uy8kmzwFbE?=
+ =?us-ascii?Q?Ze+2trSBSJXGVHdXhoovrqqOLFGeul18Km1RA2gQFDmRqp4ZJSmQyVumzf8r?=
+ =?us-ascii?Q?3AOdXW8SlKspgj4T5vZpdmVyRL1qSIPUO/1HtIsopTvvhHHJQnaPkSRmUUh4?=
+ =?us-ascii?Q?RxMm1jQlZffdSxxIGWT88g9VeJxgvTFpzw15DY/arPZOscxaA2UIcTaTBIAA?=
+ =?us-ascii?Q?QFtEOCD9p4CHpjw1z9DkAFGdyJDJ4hhFLwVHm+a1IaqKIw4jF1OzRPtU5nQC?=
+ =?us-ascii?Q?PyIlOjbelEY7jvcUeG5R0xJLufchqkTM1wwlIqIPzrESg2fUUARCSlc8jqu9?=
+ =?us-ascii?Q?8VcGyaxe43Gwj+Hfu61qBtp5XyJqoXyL4S4XMFpIgDbwdJ+tqmxwtxoL6FB7?=
+ =?us-ascii?Q?/97tLgpMtDZsskeFtB2wT1eJjhKo2dbulAXkSQVJZTQMJDacAL889OQ7gcIa?=
+ =?us-ascii?Q?0Kep0zsGhqzbNAG5rqe6J3d+eUlYfpj4jo4MRcilGADAUqIE++XRgAcIR8jV?=
+ =?us-ascii?Q?tA25mcFWrtBGiYIMd5z2XD1Ir5WMncsQqnqTvR+pMLbK26vz6RTd3+lQs6X2?=
+ =?us-ascii?Q?r/pQMo3haXE9EWFKjXIqoXS2XXfFvzxZAl9IqugYKCqgydDyb/0OzDzgLe5k?=
+ =?us-ascii?Q?4UgETan+hdn7unxu91l0Dasx24EvvrNSfpGJi/BRJjLZ2KRizAbv2I52whUx?=
+ =?us-ascii?Q?X5WZEY8d+I1e79HzXbXX7wgGEyXFXHcagInBxRTHzQOeIZC5/JTU4fdRuzBi?=
+ =?us-ascii?Q?XL0XCIy9asx13ZADkThhRfaxSpvz31MwEnTPb5d2aka7Pe+o9Ag0yra8UqkP?=
+ =?us-ascii?Q?QQm+lq45B/5Tp7h8yMAU9M2QKJrFRBFVtebOgEKMZZzL0XQe0QN49BL8HqT5?=
+ =?us-ascii?Q?l2qSctPuQc4=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 920362b9-63c5-416b-8734-08d994785d41
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2021 09:51:33.2327
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: geliang.tang@suse.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB3514
 
-On Wed, Oct 20, 2021 at 04:49:35PM +0200, Matthieu Baerts wrote:
-> Hi Davide,
-> 
-> On 20/10/2021 13:33, Davide Caratti wrote:
-> > hi,
-> > 
-> > On Wed, Oct 20, 2021 at 12:40 PM Matthieu Baerts
-> > <matthieu.baerts@tessares.net> wrote:
-> >>
-> > [...]
-> > 
-> >>>
-> >>> I had a script that used TC flower and gact + pedit + csum actions to flip the 'PSH'
-> >>> bit in the TCP header, I promised myself to change it to corrupt the DSS option.
-> > 
-> > FTR, that script was:
-> > 
-> > # convert PSH,ACK into ACK
-> > # tc filter add dev vetha egress protocol ip prio 1000 flower ip_proto
-> > tcp tcp_flags 0x18/0xff action pedit ex munge tcp flags set 0x10 pipe
-> > csum tcp reclassify
-> > # convert ACK into PSH,ACK, 1 each 10 packets
-> > # tc filter add dev vetha egress protocol ip prio 1001 flower ip_proto
-> > tcp tcp_flags 0x10/0xff action pass random determ pipe 10 pedit ex
-> > munge tcp flags add 0x8 pipe csum tcp
-> 
-> Thank you for sharing that.
-> 
-> I managed to change the content of a TCP packet using:
-> 
->   $ tc -n <ns> qdisc add dev <iface> root handle 1: htb
-> 
->   $ tc -n <ns> filter add dev <iface> parent 1: protocol ip prio 1000
-> flower ip_proto tcp action pedit munge offset 148 u32 invert pipe csum tcp
-> 
-> It looks like nothing happen for packets smaller than 148 bytes.
-> 
-> Note that I had to add these to the config file:
-> 
+In listener_ns, we should pass srv_proto argument to mptcp_connect command,
+not cl_proto.
 
-> CONFIG_NET_SCH_HTB=m
+Fixes: 7d1e6f1639044 ("selftests: mptcp: add testcase for active-back")
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I assume you are using HTB because it's a classful qdisc and it's used to
-attach the flower classifier. You don't need it, just use the clsact
-qdisc (CONFIG_NET_CLS_ACT=y + CONFIG_NET_SCH_INGRESS=y), it will allow
-you inserting filters+actions even if no root qdisc is in place.
-
-# tc qdisc add dev eth0 clsact
-# tc filter add dev eth0 egress matchall action simple sdata "hello"
-
-> 
-> CONFIG_NET_ACT_CSUM=m
-> 
-> CONFIG_NET_ACT_GACT=m
-> 
-> CONFIG_GACT_PROB=y
-> 
-> CONFIG_NET_ACT_PEDIT=m
-> 
-> CONFIG_NET_CLS_FLOWER=m
-> 
-> 
-> @Geliang: do you think you could use this command?
-> 
-> >>> The problem with this approach is, we can't assume that the DSS option has a fixed
-> >>> offset from the IP header. So, the test might start corrupting other options that
-> >>> are not MPTCP.
-> >>
-> >> If we corrupt any data in TCP Options or data and update the TCP
-> >> Checksum, that's enough to corrupt the DSS. For example, we could flip
-> >> the last bit of the TCP payload (if tcp.len > 0). Would it be possible
-> >> to do this by adapting your script?
-> > 
-> > it's easier if it's the first bit, then...
-> >
-[...] 
- 
-> >> And using simple solutions like "tc netem corrupt" will be detectable by
-> >> TCP csum.
-> > 
-> > this can be easily workarounded using the 'csum' TC action after the
-> > netem dequeue.
-> 
-> Good point! So we would need to create a tree with first "netem" then
-> "csum" action?
-
-the problem is, netem acts *after* TC actions. But probably in your
-setup you can overcome this by making netem corrupt when xmitting, and
-install the TCP csum  at  the receiver ingress (also here clsact is
-helpful):
-
-# ip link add name vetha type veth peer name vethb
-# tc qdisc add dev vetha root netem <...>
-# tc qdisc a dev vethb clsact
-# tc filter add dev vethb ingress protocol ip flower ip_proto tcp action csum tcp
-
-> 
-> The only thing is that netem will introduce errors at random positions,
-> maybe in IP/TCP headers but it is maybe not an issue. If the TC filter
-> command is enough, it might help to produce more controlled tests.
-
-maybe TC flower + action is even more accurate then netem: because it leaves
-you the freedom to "corrupt" only packets after the 3WHS (or only the 3WHS,
-depending on the match arguments of flower).
-You can obtain the same randomization as netem by using TC "act_gact" random
-feature ("CONFIG_GACT_PROB=y")
-
- # tc filter add dev vetha egress protocol ip prio 1001 flower \
-  > ip_proto tcp \
-  > tcp_flags 0x10/0xff \ <-- only the ACK BIT is set 
-  > action pass random determ pipe 10 \    <-- 1 packet every 10 goes to pedit, others go out unmodified
-  > pedit munge offset 148 u32 invert pipe csum tcp <-- corrupt the payload and recompute checksum
-
- 
-> Indeed it looks like it is doable but if we could not add new
-> dependences, I think that would be easier for us :)
-
-Whatever works, it's good also for me :)
-
--- 
-davide
- 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index b3b351b868f9..129c859c6e3e 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -297,7 +297,7 @@ do_transfer()
+ 	if [ "$test_link_fail" -eq 2 ];then
+ 		timeout ${timeout_test} \
+ 			ip netns exec ${listener_ns} \
+-				$mptcp_connect -t ${timeout_poll} -l -p $port -s ${cl_proto} \
++				$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+ 					${local_addr} < "$sinfail" > "$sout" &
+ 	else
+ 		timeout ${timeout_test} \
+--=20
+2.26.2
 
