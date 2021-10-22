@@ -1,44 +1,44 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3517072
-	for <mptcp@lists.linux.dev>; Fri, 22 Oct 2021 09:22:34 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id y12so1186581eda.4
-        for <mptcp@lists.linux.dev>; Fri, 22 Oct 2021 02:22:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D6F2C9F
+	for <mptcp@lists.linux.dev>; Fri, 22 Oct 2021 11:25:32 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id g10so263894edj.1
+        for <mptcp@lists.linux.dev>; Fri, 22 Oct 2021 04:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=qiwTbfb0Uua4BcipzbYnAikvz0krQoZ1Xo4dSLmHjqY=;
-        b=U68urpyHyk2GH8jIGiiSwtz2avNfPNnKlOqzrmVKKtLtvmCtiT5ch9Ob6/sSctZBOE
-         H1rLzSBN/riDepWuJpd3srXH5P27o9JkAusz/kAC0dQrLEs44k8puwg00EjLGOudyf1z
-         BmZ9xvNxEc4JNLgU8ongZk0Rj3ZqgwrT/lkvCjxh5DD544gDhkXYPk37OxfN7C6VVV1d
-         CwyYJDcciLYGaIb8W2LhPzH3vgHGTmKRsBKfXEOLRCy7lVMUhJgOiu/2NSeVkj6Ul2m6
-         rYq4t9P0IEm7u8IjqT5ozLbxbKwOajYINALX4jQZ6p40+8pZfocorl+JGKGXMFkyUYDK
-         0b5g==
+        bh=evOW/91lHPzDl/JMN2MfEH/jLbeBJxzFqKTK/uNFH4s=;
+        b=BJf+SNqV2tvYGjHnCNNX3PZxBr8P+Jnw9XhgmHVS1OplWmTAQxLXEz/xMWT1oLgjLu
+         8R3CDEdoRF7wzJvjsJ/lLS/IKjphLzNiigdBsStO1TlWGL6plZwTJ3gtkeJbRW7Obzau
+         HcmSHNDbZ3BBBRQdxPDjxV07zi5V79oXIqrJLoIiM2pKvPE0nPELd03t8zlfDVRphqTI
+         UmILEMO+qRs42Puv3ziNaNvplWgr8fgMX6weCwl4LwuRa+yFTxQYziysZbn3e47u0JaT
+         YDPI37OeDVFLRmyu9MMduOOXZVaFWnGeW1xZfFLtWu/SFiUbDXhsgFdjA15DXphZ0Ufe
+         vr3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=qiwTbfb0Uua4BcipzbYnAikvz0krQoZ1Xo4dSLmHjqY=;
-        b=jb6O5iVo9VfhfWTF/gsZ36lSRAmOicFqGAKyzWsXmJ6VG3Qrq9EA2o3OfyICF6UoRU
-         v9GmXU8jOKCBiefssaTciG9VVNX9cEJFNAWPhMytKSBr1I7+41nRMgD/04PQ0mR+xzgW
-         E67iTdvjCyOsNj4WivtllEJs5ghE5nB2eCr6AGFE469hlHMhLfE6RfExnfi7tZCYdZWZ
-         oIZ+FIwv7Mvr6ZYF9NuQZTiGRkRDWPZ5kZmpxIw1HW/eYCPX8OzvmYJYJ8aSi2adAn0w
-         zABFwQbdcW5TsU/I6NGYlm0XbGZlEv9/Fo1IcDrqPWnwJJQ08cGoZ4cDOJrtaj5ztlQI
-         4AGg==
-X-Gm-Message-State: AOAM531bKJcjXEs8uo/uXgiDOxXR+lpRKDhZdO0JvQL+MMhOxvkutEy7
-	QiKlKxovRq4pTHyDREe7mfIU739LAiYSbg==
-X-Google-Smtp-Source: ABdhPJynVTUpjFnG7lz4GzpBx8vgz8YI7XkdjEFtpGfRNrhPVgNMssXCBac+q2AUFV5obwJNSMmoWg==
-X-Received: by 2002:a17:906:2f16:: with SMTP id v22mr13900189eji.126.1634894552937;
-        Fri, 22 Oct 2021 02:22:32 -0700 (PDT)
+        bh=evOW/91lHPzDl/JMN2MfEH/jLbeBJxzFqKTK/uNFH4s=;
+        b=HDFO/6T3zdADFeNXqEW1Q061aHo8sxn1CZ+7Xl9frmDsD2yp/5jDgFq5Z4zIw7wON6
+         T9OUbmXPmAwB8M+hJWwd7Ute/vgF+7f8YmFbnFQ7eNLI3oWBL9XI+6sSGJ5BLQJ1Bh2C
+         VazKMU6arHX270qURnKVvqIkzH5WvrNn601Z/xcEk0KhPOq7VGu2sxy10rJlncOddO1w
+         uWX104AQIWeYO965bKIO8TCjZYTmrPx66quW8ZiLaDDyN8iWUpc8fyE4wnUHJiAg7fxw
+         QHSlAO4ObUL7ZMRT/kLPdbREIAVVfz1J0lajPZaisnkU9VtAPe6tJ7XA8Swq+q6fhqQK
+         i7GQ==
+X-Gm-Message-State: AOAM531vJo+Jjjgfi8KcF68O5Bfnn+3CeHxhZgU1s+row2l55qpWn2Cs
+	TbVcyOIF0NAgatOZrLXfAV7MYfu+6Oo=
+X-Google-Smtp-Source: ABdhPJwPacl+qC7fOoP9UkYmvkOgDC9V29xOnWvOvMAftiHqI97LWiqbAc1Yi3TTb025M3LfyojynA==
+X-Received: by 2002:a05:6402:1390:: with SMTP id b16mr15898953edv.166.1634901930554;
+        Fri, 22 Oct 2021 04:25:30 -0700 (PDT)
 Received: from [192.168.178.46] ([213.211.156.121])
-        by smtp.gmail.com with ESMTPSA id c8sm3818319edt.55.2021.10.22.02.22.32
+        by smtp.gmail.com with ESMTPSA id n23sm4362625edw.75.2021.10.22.04.25.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Oct 2021 02:22:32 -0700 (PDT)
-Message-ID: <a52c4e6d-8463-6328-c786-9cb8b71ac62e@tessares.net>
-Date: Fri, 22 Oct 2021 11:22:31 +0200
+        Fri, 22 Oct 2021 04:25:29 -0700 (PDT)
+Message-ID: <304c130a-41ea-8e0a-4d88-d22edb14ef9f@tessares.net>
+Date: Fri, 22 Oct 2021 13:25:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,190 +47,73 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.1.2
-Subject: Re: [PATCH net-next v1] net: mptcp, Fast Open Mechanism
+Subject: Re: [PATCH mptcp-next v7 8/8] DO-NOT-MERGE: mptcp: mp_fail test
 Content-Language: en-GB
-To: Dmytro Shytyi <dmytro@shytyi.net>
-Cc: mptcp <mptcp@lists.linux.dev>,
- mathewjmartineau <mathew.j.martineau@linux.intel.com>
-References: <17ca66cd439.10a0a3ce11621928.1543611905599720914@shytyi.net>
+To: Geliang Tang <geliangtang@gmail.com>, Davide Caratti <dcaratti@redhat.com>
+Cc: Geliang Tang <geliang.tang@suse.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <cover.1634531093.git.geliang.tang@suse.com>
+ <2e9a15d32cd39483dd1e18174d6c73b33e0566b5.1634531093.git.geliang.tang@suse.com>
+ <7e1c37e5-a636-68f1-aaa-329f951b2c55@linux.intel.com>
+ <CA+WQbwt4dk5vQyoPgxv7=ctsaNetcbt855Md+SL6juFZcLUPgA@mail.gmail.com>
+ <YW6BzNwiyR9i8KSQ@dcaratti.users.ipa.redhat.com>
+ <f61714c1-09cb-e4a0-f78c-5294bcaea890@tessares.net>
+ <CAKa-r6vQo+=tQDMRkyG2xczR8wMYPufRD4LU7Xj9+xbP2zVWGw@mail.gmail.com>
+ <8d7963f3-1983-0086-dcbe-16e950230f0a@tessares.net>
+ <YXEwoTyTQxN3dcQx@dcaratti.users.ipa.redhat.com>
+ <a025ed1d-eb63-b5df-9f38-77487f72d5e0@tessares.net>
+ <CA+WQbwsM-27sNRKbb-whDWbA-+Gg1H=mtjS83ELn3Y+m4Wx=oQ@mail.gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <17ca66cd439.10a0a3ce11621928.1543611905599720914@shytyi.net>
+In-Reply-To: <CA+WQbwsM-27sNRKbb-whDWbA-+Gg1H=mtjS83ELn3Y+m4Wx=oQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Dmytro,
+Hi Geliang, Davide,
 
-(without netdev ML and net maintainers)
+On 22/10/2021 09:37, Geliang Tang wrote:
+> Matthieu Baerts <matthieu.baerts@tessares.net> 于2021年10月21日周四 下午8:51写道：
+>> On 21/10/2021 11:19, Davide Caratti wrote:
+>>> On Wed, Oct 20, 2021 at 04:49:35PM +0200, Matthieu Baerts wrote:
 
-On 22/10/2021 07:15, Dmytro Shytyi wrote:
-> This set of patches will bring "Fast Open" Option support to MPTCP.
-> The aim of Fast Open Mechanism is to eliminate one round trip 
-> time from a TCP conversation by allowing data to be included as 
-> part of the SYN segment that initiates the connection. 
+(...)
+
+>>>> The only thing is that netem will introduce errors at random positions,
+>>>> maybe in IP/TCP headers but it is maybe not an issue. If the TC filter
+>>>> command is enough, it might help to produce more controlled tests.
+>>>
+>>> maybe TC flower + action is even more accurate then netem: because it leaves
+>>> you the freedom to "corrupt" only packets after the 3WHS (or only the 3WHS,
+>>> depending on the match arguments of flower).
+>>> You can obtain the same randomization as netem by using TC "act_gact" random
+>>> feature ("CONFIG_GACT_PROB=y")
+>>>
+>>>  # tc filter add dev vetha egress protocol ip prio 1001 flower \
+>>>   > ip_proto tcp \
+>>>   > tcp_flags 0x10/0xff \ <-- only the ACK BIT is set
+>>>   > action pass random determ pipe 10 \    <-- 1 packet every 10 goes to pedit, others go out unmodified
+>>>   > pedit munge offset 148 u32 invert pipe csum tcp <-- corrupt the payload and recompute checksum
+>>
+>> Good point!
+>> I don't know if Geliang wants to have all packets transporting data that
+>> are being corrupted or a random one out of X packets or only a specific one.
 > 
-> IETF RFC 8684: Appendix B.  TCP Fast Open and MPTCP.
-> 
-> [PATCH v1] includes "client" partial support for :
-> 1. send request for cookie;
-> 2. send syn+data+cookie.
-> 
-> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+> I want to have only a specific packet to be corrupted, like sending 10
+> unmodified packets, then sending 1 corrupted packet, then sending 10
+> unmodified packets. How can I do this?
 
-Again, thank you for looking at that!
+I didn't find any man page about TC GAct, I guess we would need to look
+at that code to have a "statistic way" like you want.
 
-Here is a very quick review about the code style, just to get that out
-from under our feet and not being distracted by that later ;-)
-This review is not about the "logic" behind, more about how the code
-should look like.
+A workaround could be to insert the rule after the creation of the
+connection, no? In this case, you don't need "pass random determ pipe
+10": all packets carrying data would be corrupted.
+Or maybe "one every 10 packets" is enough?
 
-> ---
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index cd6b11c9b54d..1f9ef060e980 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1686,6 +1686,68 @@ static void mptcp_set_nospace(struct sock *sk)
->         set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
+Then you can remove the rule if you need to send unmodified packets but
+I don't think you need this, do you?
 
-It looks like the patch has not been formatting properly: we can see all
-tabs have been converted to spaces.
-The documentation about how to submit patches [1] is quite long but most
-of the time these two commands can be enough to send one patch to MPTCP ML:
-
-  $ git format-patch --subject-prefix="PATCH mptcp-next" -v2 -1
-  $ git send-email --annotate --to "mptcp@lists.linux.dev" <file|dir>
-
-[1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-
->  }
-> 
-> +static int mptcp_sendmsg_fastopen_cookie_req(struct sock *sk, struct msghdr *msg,
-> +                                            size_t *copied, size_t size,
-> +                                            struct ubuf_info *uarg)
-> +{
-> +       struct mptcp_sock *msk = mptcp_sk(sk);
-> +       struct socket *ssk = __mptcp_nmpc_socket(msk);
-
-For variables declaration in the net tree, we have to follow the
-"reversed xmas tree" order: ordered by char size, longest lines first.
-So you need to flip the two lines above. Same for the two lines below
-and in the next function.
-
-Sadly, checkpatch doesn't warn you about that.
-
-> +       struct tcp_sock *tp = tcp_sk(ssk->sk);
-> +       struct sockaddr *uaddr = msg->msg_name;
-> +       struct tcp_fastopen_context *ctx;
-> +       const struct iphdr *iph;
-> +       struct sk_buff *skb;
-> +       int err;
-> +
-> +       skb = sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
-> +       iph = ip_hdr(skb);
-> +       tcp_fastopen_init_key_once(sock_net(ssk->sk));
-> +       ctx = tcp_fastopen_get_ctx(ssk->sk);
-
-It looks like you don't use it. Does the compiler not complain about that?
-
-> +       tp->fastopen_req = kzalloc(sizeof(*tp->fatopen_req),
-> +                                  ssk->sk->sk_allocation);
-
-After something got allocated, you need to check if you got what you
-wanted. If not, you need to revert some actions, usually done at the end
-of a function with goto: you can look around in this file for some examples.
-In general, you need to look for all possible errors if the function you
-call can return some.
-
-Also, Do not hesitate to create "logical blocks" of code separated by
-empty lines, e.g. assigning values in tp->fastopen_req can be done in
-one block, the 'return' part in another one, allocating a new skb in
-another one, etc. Do not hesitate to look at how it is done around.
-
-> +       tp->fastopen_req->data = msg;
-> +       tp->fastopen_req->size = size;
-> +       tp->fastopen_req->uarg = uarg;
-> +       err = mptcp_stream_connect(sk->sk_socket, uaddr, msg->msg_namelen, msg->msg_flags);
-> +       return err;
-
-Maybe clearer not to use 'err' if you don't do anything special with it.
-
-> +}
-> +
-> +static int mptcp_sendmsg_fastopen_cookie_send(struct sock *sk, struct msghdr *msg,
-> +                                             size_t *copied, size_t size,
-> +                                             struct ubuf_info *uarg)
-> +{
-> +       struct tcp_fastopen_cookie *fastopen_cookie = kmalloc(sizeof(*fastopen_cookie),
-> +                                                             GFP_KERNEL);
-> +       struct mptcp_sock *msk = mptcp_sk(sk);
-> +       struct socket *ssk = __mptcp_nmpc_socket(msk);
-> +       struct tcp_sock *tp = tcp_sk(ssk->sk);
-> +       struct sockaddr *uaddr = msg->msg_name;
-> +       struct tcp_fastopen_context *ctx;
-> +       const struct iphdr *iph;
-> +       struct sk_buff *skb;
-> +       int err;
-> +
-> +       skb = sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
-> +       iph = ip_hdr(skb);
-> +       tcp_fastopen_init_key_once(sock_net(ssk->sk));
-> +       ctx = tcp_fastopen_get_ctx(ssk->sk);
-> +
-> +       fastopen_cookie->val[0] = cpu_to_le64(siphash(&iph->saddr,
-> +                                             sizeof(iph->saddr) +
-> +                                             sizeof(iph->daddr),
-> +                                             &ctx->key[0]));
-> +       fastopen_cookie->len = TCP_FASTOPEN_COOKIE_SIZE;
-> +
-> +       tp->fastopen_req = kzalloc(sizeof(*tp->fastopen_req),
-> +                                  ssk->sk->sk_allocation);
-> +       tp->fastopen_req->data = msg;
-> +       tp->fastopen_req->size = size;
-> +       tp->fastopen_req->uarg = uarg;
-> +       memcpy(&tp->fastopen_req->cookie, fastopen_cookie, sizeof(tp->fastopen_req->cookie));
-> +       err = mptcp_stream_connect(sk->sk_socket, uaddr, msg->msg_namelen, msg->msg_flags);
-> +       return err;
-
-(Most of the comments above apply to the code here too. Also, please
-check if it is not possible to avoid code duplication by creating other
-static functions.)
-
-> +}
-> +
->  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->  {
->         struct mptcp_sock *msk = mptcp_sk(sk);
-> @@ -1694,9 +1756,22 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->         int ret = 0;
->         long timeo;
-> 
-> -       /* we don't support FASTOPEN yet */
-> -       if (msg->msg_flags & MSG_FASTOPEN)
-> -               return -EOPNOTSUPP;
-> +       /* we don't fully support FASTOPEN yet */
-> +
-> +       if (msg->msg_flags & MSG_FASTOPEN) {
-> +               struct socket *ssk = __mptcp_nmpc_socket(msk);
-> +               struct tcp_sock *tp = tcp_sk(ssk->sk);
-> +
-> +               if (tp && tp->fastopen_req && tp->fastopen_req->cookie.len != 0) {
-> +                       // send cookie
-
-C++-style comments are usually not allowed in the kernel. I thought
-checkpatch was saying something about that but maybe it doesn't :)
-
-> +                       ret = mptcp_sendmsg_fastopen_cookie_send(sk, msg, &copied, len, uarg);
-> +               } else {
-> +                       struct tcp_fastopen_request *fastopen = tp->fastopen_req;
-> +                       //requests a cookie
-> +                       ret = mptcp_sendmsg_fastopen_cookie_req(sk, msg, &copied, len, uarg);
-> +               }
-> +       return ret;
-
-The alignement is not OK here.
-Please also add a new line before to clearly identify the 'return' part
-after the 'if/else'.
-
-I hope this might help reviewing the new versions ;-)
+Or maybe Davide has a better idea or knows how TC GAct works? :)
 
 Cheers,
 Matt
