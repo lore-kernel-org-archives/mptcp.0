@@ -1,159 +1,101 @@
-Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3B02C81
-	for <mptcp@lists.linux.dev>; Fri, 22 Oct 2021 05:15:46 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1634879728; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=SOqQFsoInBLCAqMgkT1CRHnU1kP0mFJ7Nftv5X22dS4MMS6v/DLTEEz2gEvPtoTC6TLjYYBDwRWGfA/lfPFczAKHkLdB20wR+jdp2LoRsgHfTf7kfjOOQml+wCzrjArfKihneouThUO/8CsOYoxuDr4Gvs9nS3SCanncAWprnQQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1634879728; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-	bh=rWjzXhTDsdsfrOukOYlP1JvzxPVzK3mbCkYG8xgK8jk=; 
-	b=Ds7H05Q1cj3domzLWssc6pKASp1aeOziZ3HeR1nrwLDzCdVebbgNXdIVVuWGJlogsyLGqk4/hj3ttmdSu5Cqf12KbbBCIzrsk8br4AtcfyDCbWsdagDD7hIvJnIMx+8MDEkHTSoZmA0WKNzVC8UuwN1XRrQjAyYATydu9qfMxOk=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=shytyi.net;
-	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
-	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1634879728;
-	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=rWjzXhTDsdsfrOukOYlP1JvzxPVzK3mbCkYG8xgK8jk=;
-	b=Qgq/UwynQWI/3GiiZwpEqd5i1+FlqTL5GgadidUtIgcdOb9UsRrCOqqwq1Ltbunk
-	vsBOTei/ePuIQG6lBMG7dejHWKOnpfZBQqCXJLZXKbeA+CfYafj2kS0OW3Q/cpTtfYo
-	zzcqFCC6lbnHRIjKRn7W92yx1jsW2JX5Ih9wL5bg=
-Received: from mail.zoho.eu by mx.zoho.eu
-	with SMTP id 1634879722555685.0241726852904; Fri, 22 Oct 2021 07:15:22 +0200 (CEST)
-Date: Fri, 22 Oct 2021 07:15:22 +0200
-From: Dmytro Shytyi <dmytro@shytyi.net>
-To: "mathewjmartineau" <mathew.j.martineau@linux.intel.com>,
-	""matthieubaerts" <" <matthieu.baerts@tessares.net>
-Cc: "Davem" <davem@davemloft.net>, "Kuba" <kuba@kernel.org>,
-	"mptcp" <mptcp@lists.linux.dev>, "netdev" <netdev@vger.kernel.org>
-Message-ID: <17ca66cd439.10a0a3ce11621928.1543611905599720914@shytyi.net>
-In-Reply-To: 
-Subject: [PATCH net-next v1] net: mptcp, Fast Open Mechanism
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C2D68
+	for <mptcp@lists.linux.dev>; Fri, 22 Oct 2021 07:22:08 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id a25so3581386edx.8
+        for <mptcp@lists.linux.dev>; Fri, 22 Oct 2021 00:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=RbxGn8rvlnJonem+I51mG2O5Nb4QJa213IRNxjEHDzc=;
+        b=idoDBpxK3g/Y8jwFbbjLfCUbrdl3cfF4/Xt4dK/+g6y/v8Pm7vzJ1gjVy4+sGAGD3W
+         RbMqC4MPYDKCXbTnyrEn1wR9qgqxcVHXVphUXHK2XhECVKm85EcVVSVIWrzH+q29ZpkL
+         fubwFEEpamJCjVIDBqXmZfdp/1TB9e5+ZqIx9UzW4CP1Ce6U6+4IfUldbLP6kxxvMcH5
+         HMM/pDb2wn02KOWQK/ryIPnM2E/DPc0qfJr0fT74HWwJH1zn53Mvi8dGbzVeV40ko7Zd
+         VoYuDuzW0cOzCeV5QTkWYCcvT5i9pB89UkAPkBs1aG1zNfB79fok/K9mrllQIzIqeddA
+         8HoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=RbxGn8rvlnJonem+I51mG2O5Nb4QJa213IRNxjEHDzc=;
+        b=zrrJGunA5m07svr56f3FZZ2cpE2OVuO92u7Qm5HK6FZk6kb7sX+tNYjVU6EXuguk0T
+         YjDa4bHiVMCJIapBBxFWXgWAHrKNHuXFI3BgY+CFM/9gvjIFbXtTxWlIIeDPOu8zJOst
+         lHItpOypVt+2ceMWvPJDuy9trE9SSk2zkXisWh7lOdLT+X/Hz4bkpAkxDNkTM6wzagDo
+         IYdCaWHNJIT0noDleeMgcuJoeUGw1yJ6IfovRsfnux5QuhFOE0AYg9bwXW/izFE8cEZU
+         0Sw9gWVauOw5pb8BUpisCCTFxeFt50ZdbnXV2L+L9Xkgdffyqny7nBso1sHFACkY48Cs
+         9JAg==
+X-Gm-Message-State: AOAM533kFfipkjcBfRQPjgzhrTk7CjrhoEABSyGcdwsQzxmZtxRpW437
+	Ft1xRaeE1GV7uf3yhxGHoFZS5A==
+X-Google-Smtp-Source: ABdhPJwyL+UItn/YEDXHshQ+g0TJKkj60vQsd6GMIX84mKyStSO7wVN78j7AE77Ap/h6l+ACVM7I5A==
+X-Received: by 2002:a05:6402:4308:: with SMTP id m8mr14709732edc.188.1634887327088;
+        Fri, 22 Oct 2021 00:22:07 -0700 (PDT)
+Received: from [192.168.178.46] ([213.211.156.121])
+        by smtp.gmail.com with ESMTPSA id j21sm3824944edr.64.2021.10.22.00.22.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Oct 2021 00:22:06 -0700 (PDT)
+Message-ID: <7323f833-08e7-5b90-6175-c88696b73e63@tessares.net>
+Date: Fri, 22 Oct 2021 09:22:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH net-next v1] net: mptcp, Fast Open Mechanism
+Content-Language: en-GB
+To: Dmytro Shytyi <dmytro@shytyi.net>,
+ mathewjmartineau <mathew.j.martineau@linux.intel.com>
+Cc: Davem <davem@davemloft.net>, Kuba <kuba@kernel.org>,
+ mptcp <mptcp@lists.linux.dev>, netdev <netdev@vger.kernel.org>
+References: <17ca66cd439.10a0a3ce11621928.1543611905599720914@shytyi.net>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <17ca66cd439.10a0a3ce11621928.1543611905599720914@shytyi.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
 
-This set of patches will bring "Fast Open" Option support to MPTCP.
-The aim of Fast Open Mechanism is to eliminate one round trip 
-time from a TCP conversation by allowing data to be included as 
-part of the SYN segment that initiates the connection. 
+Hi Dmytro,
 
-IETF RFC 8684: Appendix B.  TCP Fast Open and MPTCP.
+On 22/10/2021 07:15, Dmytro Shytyi wrote:
+> This set of patches will bring "Fast Open" Option support to MPTCP.
+> The aim of Fast Open Mechanism is to eliminate one round trip 
+> time from a TCP conversation by allowing data to be included as 
+> part of the SYN segment that initiates the connection. 
+> 
+> IETF RFC 8684: Appendix B.  TCP Fast Open and MPTCP.
+> 
+> [PATCH v1] includes "client" partial support for :
+> 1. send request for cookie;
+> 2. send syn+data+cookie.
 
-[PATCH v1] includes "client" partial support for :
-1. send request for cookie;
-2. send syn+data+cookie.
+Thank you for working on that and sharing this patch with us!
 
-Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
----
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cd6b11c9b54d..1f9ef060e980 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1686,6 +1686,68 @@ static void mptcp_set_nospace(struct sock *sk)
-        set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
- }
+It looks like some modifications are going to be needed, e.g. after a
+very quick look, it seems all tabs have been converted to spaces causing
+the patch not being applicable on git[1]: did you not use git
+format-patch to generate it? Also, some issues will be reported by
+checkpatch.pl, the "reversed XMas tree" order is not respected for
+variables declaration, etc.
 
-+static int mptcp_sendmsg_fastopen_cookie_req(struct sock *sk, struct msghdr *msg,
-+                                            size_t *copied, size_t size,
-+                                            struct ubuf_info *uarg)
-+{
-+       struct mptcp_sock *msk = mptcp_sk(sk);
-+       struct socket *ssk = __mptcp_nmpc_socket(msk);
-+       struct tcp_sock *tp = tcp_sk(ssk->sk);
-+       struct sockaddr *uaddr = msg->msg_name;
-+       struct tcp_fastopen_context *ctx;
-+       const struct iphdr *iph;
-+       struct sk_buff *skb;
-+       int err;
-+
-+       skb = sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
-+       iph = ip_hdr(skb);
-+       tcp_fastopen_init_key_once(sock_net(ssk->sk));
-+       ctx = tcp_fastopen_get_ctx(ssk->sk);
-+       tp->fastopen_req = kzalloc(sizeof(*tp->fatopen_req),
-+                                  ssk->sk->sk_allocation);
-+       tp->fastopen_req->data = msg;
-+       tp->fastopen_req->size = size;
-+       tp->fastopen_req->uarg = uarg;
-+       err = mptcp_stream_connect(sk->sk_socket, uaddr, msg->msg_namelen, msg->msg_flags);
-+       return err;
-+}
-+
-+static int mptcp_sendmsg_fastopen_cookie_send(struct sock *sk, struct msghdr *msg,
-+                                             size_t *copied, size_t size,
-+                                             struct ubuf_info *uarg)
-+{
-+       struct tcp_fastopen_cookie *fastopen_cookie = kmalloc(sizeof(*fastopen_cookie),
-+                                                             GFP_KERNEL);
-+       struct mptcp_sock *msk = mptcp_sk(sk);
-+       struct socket *ssk = __mptcp_nmpc_socket(msk);
-+       struct tcp_sock *tp = tcp_sk(ssk->sk);
-+       struct sockaddr *uaddr = msg->msg_name;
-+       struct tcp_fastopen_context *ctx;
-+       const struct iphdr *iph;
-+       struct sk_buff *skb;
-+       int err;
-+
-+       skb = sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
-+       iph = ip_hdr(skb);
-+       tcp_fastopen_init_key_once(sock_net(ssk->sk));
-+       ctx = tcp_fastopen_get_ctx(ssk->sk);
-+
-+       fastopen_cookie->val[0] = cpu_to_le64(siphash(&iph->saddr,
-+                                             sizeof(iph->saddr) +
-+                                             sizeof(iph->daddr),
-+                                             &ctx->key[0]));
-+       fastopen_cookie->len = TCP_FASTOPEN_COOKIE_SIZE;
-+
-+       tp->fastopen_req = kzalloc(sizeof(*tp->fastopen_req),
-+                                  ssk->sk->sk_allocation);
-+       tp->fastopen_req->data = msg;
-+       tp->fastopen_req->size = size;
-+       tp->fastopen_req->uarg = uarg;
-+       memcpy(&tp->fastopen_req->cookie, fastopen_cookie, sizeof(tp->fastopen_req->cookie));
-+       err = mptcp_stream_connect(sk->sk_socket, uaddr, msg->msg_namelen, msg->msg_flags);
-+       return err;
-+}
-+
- static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- {
-        struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -1694,9 +1756,22 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-        int ret = 0;
-        long timeo;
+Do you mind if we continue the discussion on MPTCP mailing list only? In
+other words, without Netdev mailing list and Net maintainers, not to
+bother everybody for MPTCP specific stuff?
 
--       /* we don't support FASTOPEN yet */
--       if (msg->msg_flags & MSG_FASTOPEN)
--               return -EOPNOTSUPP;
-+       /* we don't fully support FASTOPEN yet */
-+
-+       if (msg->msg_flags & MSG_FASTOPEN) {
-+               struct socket *ssk = __mptcp_nmpc_socket(msk);
-+               struct tcp_sock *tp = tcp_sk(ssk->sk);
-+
-+               if (tp && tp->fastopen_req && tp->fastopen_req->cookie.len != 0) {
-+                       // send cookie
-+                       ret = mptcp_sendmsg_fastopen_cookie_send(sk, msg, &copied, len, uarg);
-+               } else {
-+                       struct tcp_fastopen_request *fastopen = tp->fastopen_req;
-+                       //requests a cookie
-+                       ret = mptcp_sendmsg_fastopen_cookie_req(sk, msg, &copied, len, uarg);
-+               }
-+       return ret;
-+       }
+Our usual way of working for MPTCP patches is to have the code review on
+MPTCP ML only, then apply accepted patches in our tree first and once a
+validation has been done, send patches later to Netdev ML for inclusion
+in the -net or net-next tree.
 
-        /* silently ignore everything else */
-        msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
+Cheers,
+Matt
 
+[1]
+https://patchew.org/logs/17ca66cd439.10a0a3ce11621928.1543611905599720914@shytyi.net/git/
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
