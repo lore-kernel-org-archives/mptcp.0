@@ -1,218 +1,154 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC14772
-	for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 09:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1635241348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YifkauvL8mqeFIzNrIl2oEUnPlFjIbawwgu22jFfot8=;
-	b=MujTcVGHZRRdde5Qa1l6siFKKP9BUNJfUgqojljAV2Qyyrl4wndJpyDflM7Mlk43e1qqxU
-	LnYX7GxWhC8ecOHasFL/c+UHr+DEWzZm6LiX8zT/dFeqQhrKcEAtd9ethj3SLq65fHBYwM
-	UCxWsruR6jKcmz033Tzgh5tSUOnfHNc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-580-rHhgdOBHNMiBPnf6oCmK0A-1; Tue, 26 Oct 2021 05:42:20 -0400
-X-MC-Unique: rHhgdOBHNMiBPnf6oCmK0A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B320779
-	for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 09:42:19 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.196])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E437B5BAE5
-	for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 09:42:18 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next] mptcp: enforce HoL-blocking estimation
-Date: Tue, 26 Oct 2021 11:42:12 +0200
-Message-Id: <d3477a25f27b733d33a85800713949dae0e1ea4a.1635241330.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED0B2CA8
+	for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 10:33:15 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id g10so11838907edj.1
+        for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 03:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=OUxES1KARLuMLYnhC1yg9KtFZlrVaEf7sEdNrsgIwGY=;
+        b=f8/G8oRZMWoeLfBhTkyt8Iwr2lvNLUNI0Mmbz84BnLiHpHd/cr6zhz0qTjcXpC5sby
+         0wxi0N4dSXJxpaoT0P89lBYt7Bwd2sn/kHE9xCTxTzx1mMGvGXo4pOfN+v2T3LDPrD5I
+         wrCastE1BqOqjEIvHbmPYH/I0QvnN6jhdby3syYdZhFLEBYcukWxRqMjBpe7TP2Wo70w
+         Mppk2Yty7JoS4m7JmuSaRw0JkNvCDoQH15xR9pyPMIL3/HieXViFDEJ+AWgTefXuPDT7
+         LUfuCdqoxdPlamEtvXeHSXOQdV6vSpvWQxs0guv9C1Gu7An78z6UREDlDzNtzfcDRBHZ
+         l2qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=OUxES1KARLuMLYnhC1yg9KtFZlrVaEf7sEdNrsgIwGY=;
+        b=KhuedNN6zgiaIogXtGbYSALiqyTRbDE5MSsaVmll1ySODyKaYkAa5hPmpcBtkgDGrn
+         GPHmurQFliFjBzw/NsdiSPGRae35AGKySqvRjiZfi/zn6tXki/ddcpLe/XtCtTIKg+Q6
+         CUPRg9aPMUV0iHBtynTw43O0QJpTRYQn4BkC19ApTi7UhUMmcmpeExmNshTSTm/oNrAj
+         SV3AVdBJYeBvTF75DGExezYCBZsCDZ+JkFsQ1Nrq2ILQmcY1ADNRUI5NpgzGC4nTiK5C
+         0Q2XD4/U5pZzV9MIBnhKoGDMnEF6KJDUHKdP4VPAVbf/nz/deVAAqbCnTkigC+s/MgMX
+         pmew==
+X-Gm-Message-State: AOAM532q2YGg+1S7msg7ofUy7cETsoFYESvAPVvrk+hw5TPhKUPJDY4y
+	P6A54WOLxvNmAx83yUADE4sripba6EWQk/Rvi7A=
+X-Google-Smtp-Source: ABdhPJxN8mqmvYBzm9tpjcgKnU8WTXTU8oAOGNq+UVtmFwFRze4xSJ8cyqoNOF8BfNHdbxRFexlGXQ==
+X-Received: by 2002:a17:906:a217:: with SMTP id r23mr19321982ejy.548.1635244393856;
+        Tue, 26 Oct 2021 03:33:13 -0700 (PDT)
+Received: from [10.120.18.78] ([84.17.46.24])
+        by smtp.gmail.com with ESMTPSA id q2sm9030867eje.118.2021.10.26.03.33.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Oct 2021 03:33:13 -0700 (PDT)
+Message-ID: <385babc2-96fb-441a-fae3-bb6a186a1b4f@tessares.net>
+Date: Tue, 26 Oct 2021 12:33:12 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH mptcp net-next] Support for SOL_IP for MPTCP setsockopt
+Content-Language: en-GB
+To: Poorva Sonparote <psonparo@redhat.com>
+Cc: mathew.j.martineau@linux.intel.com, mptcp@lists.linux.dev
+References: <51fa50ca9158e5b72a8f41ba9fcd1e449638dbc5.1635194315.git.psonparo@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <51fa50ca9158e5b72a8f41ba9fcd1e449638dbc5.1635194315.git.psonparo@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The MPTCP packet scheduler has sub-optimal behavior with asymmetric
-subflows: if the faster subflow-level cwin is closed, the packet
-scheduler can enqueue "too much" data on a slower subflow.
+Hi Poorva,
 
-When all the data on the faster subflow is acked, if the mptcp-level
-cwin is closed, and link utilization becomes suboptimal.
+In addition to Mat's review, here is a few notes from my side.
 
-The solution is implementing blest-like[1] HoL-blocking estimation,
-transmitting only on the subflow with the shorter estimated time to
-flush the queued memory. If such subflows cwin is closed, we wait
-even if other subflows are available.
+On 25/10/2021 23:01, Poorva Sonparote wrote:
+> This patch adds support for IP_TOS for setsockopt(.. ,SOL_IP, ..)
 
-This is quite simpler than the original blest implementation, as we
-leverage the pacing rate provided by the TCP socket. To get a more
-accurate estimation for the subflow linger-time, we maintain a
-per-subflow weighted average of such info.
+Small detail: in the subject, you mention 'SOL_IP'. Maybe clearer to set
+'IP_TOS' like here because you don't add support for all SOL_IP options, no?
 
-Additionally drop magic numbers usage in favor of newly defined
-macros and use more meaningful names for status variable.
+> https://github.com/multipath-tcp/mptcp_net-next/issues/220
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/220
+> 
+> Signed-off-by: Poorva Sonparote <psonparo@redhat.com>
 
-[1] http://dl.ifip.org/db/conf/networking/networking2016/1570234725.pdf
+Small detail for your next version: there should be no blank lines
+between tags. In other words, we should have this without blank lines in
+betweeen:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v1 -> v2:
- - fix checkpatch issue (mat)
- - rename ratio as linger_time (mat)
----
- net/mptcp/protocol.c | 72 +++++++++++++++++++++++++++++---------------
- net/mptcp/protocol.h |  1 +
- 2 files changed, 48 insertions(+), 25 deletions(-)
+  Closes: (...)
+  Signed-off-by: (...)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7803b0dbb1be..582f5f88d6ef 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1370,7 +1370,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 
- struct subflow_send_info {
- 	struct sock *ssk;
--	u64 ratio;
-+	u64 linger_time;
- };
- 
- void mptcp_subflow_set_active(struct mptcp_subflow_context *subflow)
-@@ -1395,20 +1395,24 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
- 	return __mptcp_subflow_active(subflow);
- }
- 
-+#define SSK_MODE_ACTIVE	0
-+#define SSK_MODE_BACKUP	1
-+#define SSK_MODE_MAX	2
-+
- /* implement the mptcp packet scheduler;
-  * returns the subflow that will transmit the next DSS
-  * additionally updates the rtx timeout
-  */
- static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- {
--	struct subflow_send_info send_info[2];
-+	struct subflow_send_info send_info[SSK_MODE_MAX];
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
-+	u32 pace, burst, wmem;
- 	int i, nr_active = 0;
- 	struct sock *ssk;
-+	u64 linger_time;
- 	long tout = 0;
--	u64 ratio;
--	u32 pace;
- 
- 	sock_owned_by_me(sk);
- 
-@@ -1427,10 +1431,11 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	}
- 
- 	/* pick the subflow with the lower wmem/wspace ratio */
--	for (i = 0; i < 2; ++i) {
-+	for (i = 0; i < SSK_MODE_MAX; ++i) {
- 		send_info[i].ssk = NULL;
--		send_info[i].ratio = -1;
-+		send_info[i].linger_time = -1;
- 	}
-+
- 	mptcp_for_each_subflow(msk, subflow) {
- 		trace_mptcp_subflow_get_send(subflow);
- 		ssk =  mptcp_subflow_tcp_sock(subflow);
-@@ -1439,34 +1444,51 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 
- 		tout = max(tout, mptcp_timeout_from_subflow(subflow));
- 		nr_active += !subflow->backup;
--		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
--			continue;
--
--		pace = READ_ONCE(ssk->sk_pacing_rate);
--		if (!pace)
--			continue;
-+		pace = subflow->avg_pacing_rate;
-+		if (unlikely(!pace)) {
-+			/* init pacing rate from socket */
-+			subflow->avg_pacing_rate = READ_ONCE(ssk->sk_pacing_rate);
-+			pace = subflow->avg_pacing_rate;
-+			if (!pace)
-+				continue;
-+		}
- 
--		ratio = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
--				pace);
--		if (ratio < send_info[subflow->backup].ratio) {
-+		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
-+		if (linger_time < send_info[subflow->backup].linger_time) {
- 			send_info[subflow->backup].ssk = ssk;
--			send_info[subflow->backup].ratio = ratio;
-+			send_info[subflow->backup].linger_time = linger_time;
- 		}
- 	}
- 	__mptcp_set_timeout(sk, tout);
- 
- 	/* pick the best backup if no other subflow is active */
- 	if (!nr_active)
--		send_info[0].ssk = send_info[1].ssk;
--
--	if (send_info[0].ssk) {
--		msk->last_snd = send_info[0].ssk;
--		msk->snd_burst = min_t(int, MPTCP_SEND_BURST_SIZE,
--				       tcp_sk(msk->last_snd)->snd_wnd);
--		return msk->last_snd;
--	}
-+		send_info[SSK_MODE_ACTIVE].ssk = send_info[SSK_MODE_BACKUP].ssk;
-+
-+	/* According to the blest algorithm, to avoid HoL blocking for the
-+	 * faster flow, we need to:
-+	 * - estimate the faster flow linger time
-+	 * - use the above to estimate the amount of byte transferred
-+	 *   by the faster flow
-+	 * - check that the amount of queued data is greter than the above,
-+	 *   otherwise do not use the picked, slower, subflow
-+	 * We select the subflow with the shorter estimated time to flush
-+	 * the queued mem, which basically ensure the above. We just need
-+	 * to check that subflow has a non empty cwin.
-+	 */
-+	ssk = send_info[SSK_MODE_ACTIVE].ssk;
-+	if (!ssk || !sk_stream_memory_free(ssk) || !tcp_sk(ssk)->snd_wnd)
-+		return NULL;
- 
--	return NULL;
-+	burst = min_t(int, MPTCP_SEND_BURST_SIZE, tcp_sk(ssk)->snd_wnd);
-+	wmem = READ_ONCE(ssk->sk_wmem_queued);
-+	subflow = mptcp_subflow_ctx(ssk);
-+	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
-+					   READ_ONCE(ssk->sk_pacing_rate) * burst,
-+					   burst + wmem);
-+	msk->last_snd = ssk;
-+	msk->snd_burst = burst;
-+	return ssk;
- }
- 
- static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 67a61ac48b20..46691acdea24 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -391,6 +391,7 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- /* MPTCP subflow context */
- struct mptcp_subflow_context {
- 	struct	list_head node;/* conn_list of subflows */
-+	unsigned long avg_pacing_rate; /* protected by msk socket lock */
- 	u64	local_key;
- 	u64	remote_key;
- 	u64	idsn;
+
+While at it, it is always nice to add some useful info in the commit
+message:
+
+- the reason: not always obvious when looking at the diff. Here it is
+maybe clear but still good to give a short recap on what SOL_IP is.
+
+- what you are doing: always useful for the reviewer to check if you did
+what you said you wanted to do, e.g. here you accept a first SOL_IP
+option, you set the same value to each subflow, you export a function
+from ipv4 stack (for a dedicated commit as Mat said), etc..
+
+- particularities: e.g. it seems you don't check if the subflows are in
+v4 when you go through the list of subflows to set something v4 specific
+(it is v4 specific, no?). Always good to mention that in the commit
+message if it is OK to do that (and a comment in the code).
+
+- Any other info that can be useful for other devs and reviewers, e.g.
+how you tested it, if you had an interesting issue during the dev,
+possible alternatives, etc.
+
+Do not hesitate to look at other commit messages for inspiration ;-)
+
+> ---
+> 
+> Notes:
+>     - This patch addresses previous suggestions.
+>     - The TOS value is now being set successfully for subflows
+>       created after setsockopt().
+
+Is it enough to cover this only in packetdrill and not in selftests? I
+think it is but just raising the point just in case ;-)
+
+(...)
+
+> +static int mptcp_setsockopt_sol_ip(struct mptcp_sock *msk, int optname,
+> +				   sockptr_t optval, unsigned int optlen)
+> +{
+> +	switch (optname) {
+> +	case IP_TOS:
+> +		return  mptcp_setsockopt_sol_ip_set_tos(msk, optname, optval, optlen);
+
+detail: please avoid double spaces after "return"
+
+> +	}
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+>  static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>  				    sockptr_t optval, unsigned int optlen)
+>  {
+> @@ -637,6 +674,9 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
+>  	if (ssk)
+>  		return tcp_setsockopt(ssk, level, optname, optval, optlen);
+>  
+> +	if (level == SOL_IP)
+> +		return mptcp_setsockopt_sol_ip(msk, optname, optval, optlen);
+
+Maybe clearer to use mptcp_setsockopt_v4() for the name to imitate the
+_v6 version below:
+
+> +
+>  	if (level == SOL_IPV6)
+>  		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
+>  
+
+Cheers,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
