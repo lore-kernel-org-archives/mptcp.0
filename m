@@ -1,154 +1,185 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED0B2CA8
-	for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 10:33:15 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id g10so11838907edj.1
-        for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 03:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=OUxES1KARLuMLYnhC1yg9KtFZlrVaEf7sEdNrsgIwGY=;
-        b=f8/G8oRZMWoeLfBhTkyt8Iwr2lvNLUNI0Mmbz84BnLiHpHd/cr6zhz0qTjcXpC5sby
-         0wxi0N4dSXJxpaoT0P89lBYt7Bwd2sn/kHE9xCTxTzx1mMGvGXo4pOfN+v2T3LDPrD5I
-         wrCastE1BqOqjEIvHbmPYH/I0QvnN6jhdby3syYdZhFLEBYcukWxRqMjBpe7TP2Wo70w
-         Mppk2Yty7JoS4m7JmuSaRw0JkNvCDoQH15xR9pyPMIL3/HieXViFDEJ+AWgTefXuPDT7
-         LUfuCdqoxdPlamEtvXeHSXOQdV6vSpvWQxs0guv9C1Gu7An78z6UREDlDzNtzfcDRBHZ
-         l2qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=OUxES1KARLuMLYnhC1yg9KtFZlrVaEf7sEdNrsgIwGY=;
-        b=KhuedNN6zgiaIogXtGbYSALiqyTRbDE5MSsaVmll1ySODyKaYkAa5hPmpcBtkgDGrn
-         GPHmurQFliFjBzw/NsdiSPGRae35AGKySqvRjiZfi/zn6tXki/ddcpLe/XtCtTIKg+Q6
-         CUPRg9aPMUV0iHBtynTw43O0QJpTRYQn4BkC19ApTi7UhUMmcmpeExmNshTSTm/oNrAj
-         SV3AVdBJYeBvTF75DGExezYCBZsCDZ+JkFsQ1Nrq2ILQmcY1ADNRUI5NpgzGC4nTiK5C
-         0Q2XD4/U5pZzV9MIBnhKoGDMnEF6KJDUHKdP4VPAVbf/nz/deVAAqbCnTkigC+s/MgMX
-         pmew==
-X-Gm-Message-State: AOAM532q2YGg+1S7msg7ofUy7cETsoFYESvAPVvrk+hw5TPhKUPJDY4y
-	P6A54WOLxvNmAx83yUADE4sripba6EWQk/Rvi7A=
-X-Google-Smtp-Source: ABdhPJxN8mqmvYBzm9tpjcgKnU8WTXTU8oAOGNq+UVtmFwFRze4xSJ8cyqoNOF8BfNHdbxRFexlGXQ==
-X-Received: by 2002:a17:906:a217:: with SMTP id r23mr19321982ejy.548.1635244393856;
-        Tue, 26 Oct 2021 03:33:13 -0700 (PDT)
-Received: from [10.120.18.78] ([84.17.46.24])
-        by smtp.gmail.com with ESMTPSA id q2sm9030867eje.118.2021.10.26.03.33.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Oct 2021 03:33:13 -0700 (PDT)
-Message-ID: <385babc2-96fb-441a-fae3-bb6a186a1b4f@tessares.net>
-Date: Tue, 26 Oct 2021 12:33:12 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29CC2C81
+	for <mptcp@lists.linux.dev>; Tue, 26 Oct 2021 14:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1635258542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pV3hjagxhvTO/jY8KxafZdsOS71mEN4q53KquOaYJVY=;
+	b=S8KV0i9VZ43u8FilBTlNEuqyFUkJLrmmLmn1eYAIBZIChfnBzKvEFb3SQnbEhIJvbbmsUV
+	g5mx5gj7Rmcv7PH2L7bQ/+JuQFeRIrvmP16oRze+7R8lFPxmwpIbN0JYT2TPi1LYMsyNKC
+	RTwo8hUrv1Nl+pUfeuQn8um1KwrMCIo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-513-OXNAvaENMIuodDCofHrKzA-1; Tue, 26 Oct 2021 10:28:56 -0400
+X-MC-Unique: OXNAvaENMIuodDCofHrKzA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 662DD9126B;
+	Tue, 26 Oct 2021 14:28:55 +0000 (UTC)
+Received: from dcaratti.users.ipa.redhat.com (unknown [10.40.194.195])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C64B1100EBAD;
+	Tue, 26 Oct 2021 14:28:53 +0000 (UTC)
+From: Davide Caratti <dcaratti@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	mptcp@lists.linux.dev
+Cc: psonparo@redhat.com
+Subject: [PATCH mptcp-net v2] mptcp: fix corrupt receiver key in MPC + data + checksum
+Date: Tue, 26 Oct 2021 16:27:35 +0200
+Message-Id: <0ad4620ed5034e9267e579f71c060b312b3e2eee.1635258393.git.dcaratti@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-Subject: Re: [PATCH mptcp net-next] Support for SOL_IP for MPTCP setsockopt
-Content-Language: en-GB
-To: Poorva Sonparote <psonparo@redhat.com>
-Cc: mathew.j.martineau@linux.intel.com, mptcp@lists.linux.dev
-References: <51fa50ca9158e5b72a8f41ba9fcd1e449638dbc5.1635194315.git.psonparo@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <51fa50ca9158e5b72a8f41ba9fcd1e449638dbc5.1635194315.git.psonparo@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Poorva,
+using packetdrill it's possible to observe that the receiver key contains
+random values when clients transmit MP_CAPABLE with data and checksum (as
+specified in RFC8684 §3.1). Fix the layout of mptcp_out_options, to avoid
+using the skb extension copy when writing the MP_CAPABLE sub-option.
 
-In addition to Mat's review, here is a few notes from my side.
+Fixes: d7b269083786 ("mptcp: shrink mptcp_out_options struct")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/233
+Reported-by: Poorva Sonparote <psonparo@redhat.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+---
 
-On 25/10/2021 23:01, Poorva Sonparote wrote:
-> This patch adds support for IP_TOS for setsockopt(.. ,SOL_IP, ..)
+Notes:
+    v1:
+     - fix metadata in the commit message (Mat Martineau)
+     - adjust comment in mptcp_established_options_mp() (Mat Martineau)
+     - fix sparse warning in __mptcp_make_csum() (Mat Martineau / patchew CI)
 
-Small detail: in the subject, you mention 'SOL_IP'. Maybe clearer to set
-'IP_TOS' like here because you don't add support for all SOL_IP options, no?
+ include/net/mptcp.h |  4 ++++
+ net/mptcp/options.c | 39 ++++++++++++++++++++++++---------------
+ 2 files changed, 28 insertions(+), 15 deletions(-)
 
-> https://github.com/multipath-tcp/mptcp_net-next/issues/220
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/220
-> 
-> Signed-off-by: Poorva Sonparote <psonparo@redhat.com>
-
-Small detail for your next version: there should be no blank lines
-between tags. In other words, we should have this without blank lines in
-betweeen:
-
-  Closes: (...)
-  Signed-off-by: (...)
-
-
-While at it, it is always nice to add some useful info in the commit
-message:
-
-- the reason: not always obvious when looking at the diff. Here it is
-maybe clear but still good to give a short recap on what SOL_IP is.
-
-- what you are doing: always useful for the reviewer to check if you did
-what you said you wanted to do, e.g. here you accept a first SOL_IP
-option, you set the same value to each subflow, you export a function
-from ipv4 stack (for a dedicated commit as Mat said), etc..
-
-- particularities: e.g. it seems you don't check if the subflows are in
-v4 when you go through the list of subflows to set something v4 specific
-(it is v4 specific, no?). Always good to mention that in the commit
-message if it is OK to do that (and a comment in the code).
-
-- Any other info that can be useful for other devs and reviewers, e.g.
-how you tested it, if you had an interesting issue during the dev,
-possible alternatives, etc.
-
-Do not hesitate to look at other commit messages for inspiration ;-)
-
-> ---
-> 
-> Notes:
->     - This patch addresses previous suggestions.
->     - The TOS value is now being set successfully for subflows
->       created after setsockopt().
-
-Is it enough to cover this only in packetdrill and not in selftests? I
-think it is but just raising the point just in case ;-)
-
-(...)
-
-> +static int mptcp_setsockopt_sol_ip(struct mptcp_sock *msk, int optname,
-> +				   sockptr_t optval, unsigned int optlen)
-> +{
-> +	switch (optname) {
-> +	case IP_TOS:
-> +		return  mptcp_setsockopt_sol_ip_set_tos(msk, optname, optval, optlen);
-
-detail: please avoid double spaces after "return"
-
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
->  static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  				    sockptr_t optval, unsigned int optlen)
->  {
-> @@ -637,6 +674,9 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
->  	if (ssk)
->  		return tcp_setsockopt(ssk, level, optname, optval, optlen);
->  
-> +	if (level == SOL_IP)
-> +		return mptcp_setsockopt_sol_ip(msk, optname, optval, optlen);
-
-Maybe clearer to use mptcp_setsockopt_v4() for the name to imitate the
-_v6 version below:
-
-> +
->  	if (level == SOL_IPV6)
->  		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
->  
-
-Cheers,
-Matt
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 6026bbefbffd..3214848402ec 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -69,6 +69,10 @@ struct mptcp_out_options {
+ 		struct {
+ 			u64 sndr_key;
+ 			u64 rcvr_key;
++			u64 data_seq;
++			u32 subflow_seq;
++			u16 data_len;
++			__sum16 csum;
+ 		};
+ 		struct {
+ 			struct mptcp_addr_info addr;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index c41273cefc51..f0f22eb4fd5f 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -485,11 +485,11 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
+ 		mpext = mptcp_get_ext(skb);
+ 		data_len = mpext ? mpext->data_len : 0;
+ 
+-		/* we will check ext_copy.data_len in mptcp_write_options() to
++		/* we will check ops->data_len in mptcp_write_options() to
+ 		 * discriminate between TCPOLEN_MPTCP_MPC_ACK_DATA and
+ 		 * TCPOLEN_MPTCP_MPC_ACK
+ 		 */
+-		opts->ext_copy.data_len = data_len;
++		opts->data_len = data_len;
+ 		opts->suboptions = OPTION_MPTCP_MPC_ACK;
+ 		opts->sndr_key = subflow->local_key;
+ 		opts->rcvr_key = subflow->remote_key;
+@@ -505,9 +505,9 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
+ 			len = TCPOLEN_MPTCP_MPC_ACK_DATA;
+ 			if (opts->csum_reqd) {
+ 				/* we need to propagate more info to csum the pseudo hdr */
+-				opts->ext_copy.data_seq = mpext->data_seq;
+-				opts->ext_copy.subflow_seq = mpext->subflow_seq;
+-				opts->ext_copy.csum = mpext->csum;
++				opts->data_seq = mpext->data_seq;
++				opts->subflow_seq = mpext->subflow_seq;
++				opts->csum = mpext->csum;
+ 				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
+ 			}
+ 			*size = ALIGN(len, 4);
+@@ -1227,7 +1227,7 @@ static void mptcp_set_rwin(const struct tcp_sock *tp)
+ 		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
+ }
+ 
+-static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
++static u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __sum16 sum)
+ {
+ 	struct csum_pseudo_header header;
+ 	__wsum csum;
+@@ -1237,15 +1237,21 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+ 	 * always the 64-bit value, irrespective of what length is used in the
+ 	 * DSS option itself.
+ 	 */
+-	header.data_seq = cpu_to_be64(mpext->data_seq);
+-	header.subflow_seq = htonl(mpext->subflow_seq);
+-	header.data_len = htons(mpext->data_len);
++	header.data_seq = cpu_to_be64(data_seq);
++	header.subflow_seq = htonl(subflow_seq);
++	header.data_len = htons(data_len);
+ 	header.csum = 0;
+ 
+-	csum = csum_partial(&header, sizeof(header), ~csum_unfold(mpext->csum));
++	csum = csum_partial(&header, sizeof(header), ~csum_unfold(sum));
+ 	return (__force u16)csum_fold(csum);
+ }
+ 
++static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
++{
++	return __mptcp_make_csum(mpext->data_seq, mpext->subflow_seq, mpext->data_len,
++				 mpext->csum);
++}
++
+ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 			 struct mptcp_out_options *opts)
+ {
+@@ -1337,7 +1343,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 			len = TCPOLEN_MPTCP_MPC_SYN;
+ 		} else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions) {
+ 			len = TCPOLEN_MPTCP_MPC_SYNACK;
+-		} else if (opts->ext_copy.data_len) {
++		} else if (opts->data_len) {
+ 			len = TCPOLEN_MPTCP_MPC_ACK_DATA;
+ 			if (opts->csum_reqd)
+ 				len += TCPOLEN_MPTCP_DSS_CHECKSUM;
+@@ -1366,14 +1372,17 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 
+ 		put_unaligned_be64(opts->rcvr_key, ptr);
+ 		ptr += 2;
+-		if (!opts->ext_copy.data_len)
++		if (!opts->data_len)
+ 			goto mp_capable_done;
+ 
+ 		if (opts->csum_reqd) {
+-			put_unaligned_be32(opts->ext_copy.data_len << 16 |
+-					   mptcp_make_csum(&opts->ext_copy), ptr);
++			put_unaligned_be32(opts->data_len << 16 |
++					   __mptcp_make_csum(opts->data_seq,
++							     opts->subflow_seq,
++							     opts->data_len,
++							     opts->csum), ptr);
+ 		} else {
+-			put_unaligned_be32(opts->ext_copy.data_len << 16 |
++			put_unaligned_be32(opts->data_len << 16 |
+ 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+ 		}
+ 		ptr += 1;
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.31.1
+
