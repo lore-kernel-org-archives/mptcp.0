@@ -1,245 +1,121 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0085A72
-	for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 14:30:57 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1mfjx9-0005Yx-Rq; Wed, 27 Oct 2021 16:30:55 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next 2/2] selftests: mptcp: add tproxy test case
-Date: Wed, 27 Oct 2021 16:30:41 +0200
-Message-Id: <20211027143041.28449-3-fw@strlen.de>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211027143041.28449-1-fw@strlen.de>
-References: <20211027143041.28449-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5B072
+	for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 14:31:42 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id g10so11256258edj.1
+        for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 07:31:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=MGMgmYgQIPx2BODc81oAkcZsISJemnVWwEKbpE9/Qj0=;
+        b=BEZcFieeXriVBFHVixWdiGvSXIYfrsKRck42uIKPeWDL40XwetgZ4JvWBBCPZ9Y1Rg
+         2XG06TnLD858zczO0mT4YjVmO8B+n4eaqiSYnr+voy1u2JAKgtuH4PPZxKg7uIm05AP8
+         mz9NajZJEOYH8MyYwsFxgp8E7A0Pp8ftGrrPaDFafXsHnsctZL2eb2n86TRoxw2dqg1x
+         N+mtK343PNJTLfxKNmA+aUdPaPt/+Kmwi2gk8WrafjfV33CGx4LNYWQfgxkj3YCOsssT
+         VlDoG0MhA4nSWppAYdySM7vMZOqpRmiFAKYzMC9KEZyIyvqS8tzPXdJnN/oB04g2FIY4
+         5Vsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=MGMgmYgQIPx2BODc81oAkcZsISJemnVWwEKbpE9/Qj0=;
+        b=25iZiCzHlv0t2k8GzeuPkxtUKJkGgVn/SCOK+kBd7y0zKCvildkM5BpC9lG1Wb4CSM
+         mW/MJ0Uta8pJKZvBgbawbq3PPl6w+/6JivJlt9er2nK0XWPBv9Ds3o8G+3WtjhDm5EW0
+         BPUjdwxZWMbBF5IGRnM0hZ5MogRWpD5XwSEgFBTvPPfUpj7xetGPimQxo3zE4JCD+wpE
+         xnyJWKTj1qrqBDpzK+k/XAk6lFICW2CUBsNWPbYRv8B/UKh53M3XK6q/Nu31gdstiGNM
+         UHbWvCYtCLIwbhOHvj5HtSoLW0jcFMz+G70ubTysbPJEqzN8+ToDzMyBjx/mQyjt77Ks
+         vOJA==
+X-Gm-Message-State: AOAM53120DLz/6qbMAarnTD6zD4XKWzFgdtHbr34TCk91oNYs9dbyYzM
+	RhWKARbZaULH0JIWb5Ch2PyVPPYMmljncg==
+X-Google-Smtp-Source: ABdhPJwRSjj/H8Tb95PaOz0GMJdylKbqAPgdXK98kUefpXlDEbr72AzNAMKcPrPjUrhrx0SZ2v6fzA==
+X-Received: by 2002:a17:906:a1da:: with SMTP id bx26mr39857974ejb.558.1635345089720;
+        Wed, 27 Oct 2021 07:31:29 -0700 (PDT)
+Received: from [192.168.178.46] ([213.211.156.121])
+        by smtp.gmail.com with ESMTPSA id x22sm120360edv.14.2021.10.27.07.31.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Oct 2021 07:31:29 -0700 (PDT)
+Message-ID: <3c5ff5d8-187c-e97b-b229-8b721c9ec40a@tessares.net>
+Date: Wed, 27 Oct 2021 16:31:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: mptcpd and (default) routes
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: "Othman, Ossama" <ossama.othman@intel.com>
+References: <8db4b664f4fe0e102df6da03e57459c3a8c61677.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <8db4b664f4fe0e102df6da03e57459c3a8c61677.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-No hard dependencies here, just skip if test environ lacks
-nft binary or the needed kernel config options.
+Hi Paolo,
 
-The test case spawns listener in ns2 but ns1 will connect
-to the ip address of ns4.
+On 26/10/2021 18:49, Paolo Abeni wrote:
+> Hello,
+> 
+> I'm still experimenting with mptcpd. It looks like the current
+> 'addr_adv' could be improved.
+> 
+> Currently it creates endpoints as soon as new non-link-local addresses
+> are available in the host, and that in turn causes new subflow creation
+> using such IP as source.
+> 
+> In a client system, usually we have this sequence of events:
+> 
+> 1) <interface X goes up>
+> 2) <dhcp start>
+> 3) <interface X get new ip>
+> 4) <new [default] route is added to X>
+> 
+> Just after 3) mptcpd creates the new endpoint and the kernel tries to
+> create the new subflows. The kernel can try to create the subflows
+> before the route (required to reach the server from the relevant
+> interface) is available.
+> 
+> A possible solution would be let mptcp listen even for route-related NL
+> events and let the 'addr_adv' plugin create the endpoint only when
+> there is a new address and a default route using such address/the
+> underlaying interface.
+> 
+> There are a couple of downside:
+> - the above condition is quite restrictive - e.g. a network specific
+> route could be enough, but we can't do a generic check for that. Adding
+> a configuration flag to enable the above check should suffice/cover
+> this point
+> - will be quite invasive for mptcpd
+> 
+> Are there any other options?
 
-policy routing + tproxy rule will redirect packets to ns2 instead
-of forward.
+Could it be enough to do a route validation after 3) until 4) is done?
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 51 +++++++++++-
- .../selftests/net/mptcp/mptcp_connect.sh      | 80 +++++++++++++++++++
- 2 files changed, 130 insertions(+), 1 deletion(-)
+I mean: if I understood your problem correctly, what is important is to
+make sure that if you send something from the new IP of one interface,
+it will go through this interface. Routes are then certainly OK for
+MPTCP's PM to create new subflows using this IP. In other words, we
+validate the user has configured routes like:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 95e81d557b08..ada9b80774d4 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -75,7 +75,12 @@ struct cfg_cmsg_types {
- 	unsigned int timestampns:1;
- };
- 
-+struct cfg_sockopt_types {
-+	unsigned int transparent:1;
-+};
-+
- static struct cfg_cmsg_types cfg_cmsg_types;
-+static struct cfg_sockopt_types cfg_sockopt_types;
- 
- static void die_usage(void)
- {
-@@ -93,6 +98,7 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
- 	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
-+	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
- 	fprintf(stderr,
- 		"\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket\n");
- 	exit(1);
-@@ -185,6 +191,22 @@ static void set_mark(int fd, uint32_t mark)
- 	}
- }
- 
-+static void set_transparent(int fd, int pf)
-+{
-+	int one = 1;
-+
-+	switch (pf) {
-+	case AF_INET:
-+		if (-1 == setsockopt(fd, SOL_IP, IP_TRANSPARENT, &one, sizeof(one)))
-+			perror("IP_TRANSPARENT");
-+		break;
-+	case AF_INET6:
-+		if (-1 == setsockopt(fd, IPPROTO_IPV6, IPV6_TRANSPARENT, &one, sizeof(one)))
-+			perror("IPV6_TRANSPARENT");
-+		break;
-+	}
-+}
-+
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
- {
-@@ -212,6 +234,9 @@ static int sock_listen_mptcp(const char * const listenaddr,
- 				     sizeof(one)))
- 			perror("setsockopt");
- 
-+		if (cfg_sockopt_types.transparent)
-+			set_transparent(sock, pf);
-+
- 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
- 			break; /* success */
- 
-@@ -944,6 +969,27 @@ static void parse_cmsg_types(const char *type)
- 	exit(1);
- }
- 
-+static void parse_setsock_options(const char *name)
-+{
-+	char *next = strchr(name, ',');
-+	unsigned int len = 0;
-+
-+	if (next) {
-+		parse_setsock_options(next + 1);
-+		len = next - name;
-+	} else {
-+		len = strlen(name);
-+	}
-+
-+	if (strncmp(name, "TRANSPARENT", len) == 0) {
-+		cfg_sockopt_types.transparent = 1;
-+		return;
-+	}
-+
-+	fprintf(stderr, "Unrecognized setsockopt option %s\n", name);
-+	exit(1);
-+}
-+
- int main_loop(void)
- {
- 	int fd;
-@@ -1047,7 +1093,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:T:m:S:R:w:M:P:c:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:T:m:S:R:w:M:P:c:o:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -1108,6 +1154,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'c':
- 			parse_cmsg_types(optarg);
- 			break;
-+		case 'o':
-+			parse_setsock_options(optarg);
-+			break;
- 		}
- 	}
- 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 559173a8e387..205e9f0c4296 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -671,6 +671,82 @@ run_tests()
- 	run_tests_lo $1 $2 $3 0
- }
- 
-+run_test_transparent()
-+{
-+	local connect_addr="$1"
-+	local msg="$2"
-+
-+	local connector_ns="$ns1"
-+	local listener_ns="$ns2"
-+	local lret=0
-+	local r6flag=""
-+
-+	# skip if we don't want v6
-+	if ! $ipv6 && is_v6 "${connect_addr}"; then
-+		return 0
-+	fi
-+
-+ip netns exec "$listener_ns" nft -f /dev/stdin <<"EOF"
-+flush ruleset
-+table inet mangle {
-+	chain divert {
-+		type filter hook prerouting priority -150;
-+
-+		meta l4proto tcp socket transparent 1 meta mark set 1 accept
-+		tcp dport 20000 tproxy to :20000 meta mark set 1 accept
-+	}
-+}
-+EOF
-+	if [ $? -ne 0 ]; then
-+		echo "SKIP: $msg"
-+		return
-+	fi
-+
-+	local local_addr
-+	if is_v6 "${connect_addr}"; then
-+		local_addr="::"
-+		r6flag="-6"
-+	else
-+		local_addr="0.0.0.0"
-+	fi
-+
-+	ip -net "$listener_ns" $r6flag rule add fwmark 1 lookup 100
-+	if [ $? -ne 0 ]; then
-+		ip netns exec "$listener_ns" nft flush ruleset
-+		echo "SKIP: $msg"
-+		return
-+	fi
-+
-+	ip -net "$listener_ns" route add local $local_addr/0 dev lo table 100
-+	if [ $? -ne 0 ]; then
-+		ip netns exec "$listener_ns" nft flush ruleset
-+		ip -net "$listener_ns" $r6flag rule del fwmark 1 lookup 100
-+		echo "SKIP: $msg"
-+		return
-+	fi
-+
-+	echo "INFO: test $msg"
-+
-+	TEST_COUNT=10000
-+	local extra_args="-o TRANSPARENT"
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
-+		    ${connect_addr} ${local_addr} "${extra_args}"
-+	lret=$?
-+
-+	ip netns exec "$listener_ns" nft flush ruleset
-+	ip -net "$listener_ns" $r6flag rule del fwmark 1 lookup 100
-+	ip -net "$listener_ns" route del local $local_addr/0 dev lo table 100
-+
-+	if [ $lret -ne 0 ]; then
-+		echo "FAIL: $msg" 1>&2
-+		ret=$lret
-+		return 1
-+	fi
-+
-+	echo "PASS: $msg"
-+	return 0
-+}
-+
- run_tests_peekmode()
- {
- 	local peekmode="$1"
-@@ -794,5 +870,9 @@ run_tests_peekmode "saveWithPeek"
- run_tests_peekmode "saveAfterPeek"
- stop_if_error "Tests with peek mode have failed"
- 
-+# connect to ns4 ip address, ns2 should intercept/proxy
-+run_test_transparent 10.0.3.1 "tproxy ipv4"
-+run_test_transparent dead:beef:3::1 "tproxy ipv6"
-+
- display_time
- exit $ret
+ $ ip rule add from <IP> table <X>
+ $ ip route add default via <NEXT HOP> dev <DEV> table <X>
+
+This check can be done with NL.
+
+> Apropos, I don't see any routing related code in mptcpd, so I guess
+> even the out-of-tree kernel could be subject to some similar
+> race/critical scenario?!?
+
+It would make sense if it is.
+
+Cheers,
+Matt
 -- 
-2.32.0
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
