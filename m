@@ -1,103 +1,245 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF242C81
-	for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 13:12:34 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id h7so10373839ede.8
-        for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 06:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=2yHwVrSFNuqlkG3lA1boffwxIt2SWeciZXkOoTOOWk8=;
-        b=irHtIppU0goRenhg+uOkMvnuQFYoR5NyPy81RoTf8mT/oSaTWMgJSkqvIe47YtkgNE
-         qfLm5e2V/n3PzzJFlIluWA+8yVyNVBUVGcXpqdmdvqjq6QZbeATKZgGKXGtOFM0S9iA0
-         8DuR28Xn1A02VkBg+m8ZUEhF/1budhYqgrAjVOcMsRGTXpHU7y7NgwMMUrRiH7rpMvE7
-         P+H+y//wsuv6lCwtDSrCkgs9lt4Uz0ZumEoRviYuexZRD4sm0mqzC7lCHqBM3H+F/Y9/
-         R03LlZbsgn0yl1VrDHNg8kN78WcxNgvK7S/6LDrj5Z5VDzOLgkbY+WsbMRo/knVM7uQI
-         zhWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=2yHwVrSFNuqlkG3lA1boffwxIt2SWeciZXkOoTOOWk8=;
-        b=BMz0gLS6HxG2yXEAPyTiPRJ1NbDBw7y9zCBl7En6ptOG8BUxp1wx/EXDeUAg2L5dTk
-         bc52KOQf1TXXGtGkLhoigxqid/TVtdEgnxxZhXHsJfkyZIpzVzfW6bTG0FSrKrNumhcB
-         xS/REjE2lBJ+atMOIY6gSLMXkCvvKucnmFwMJJi8YM4mW3ksQ3sxzsyriaNHX5TwwW6Q
-         2ID273DhzoiuZhCPWSqYR18TyAcJejabUJZnliQcEJBMKjpTMZB4bv6NgRMa33Q+r3kn
-         5JtgAx5YFgYvl0y3qdM7Yta+AMdCYOtZp9IF6mysklWXXsSKV3ohbo+aqTLtB/DuBMMH
-         2hRw==
-X-Gm-Message-State: AOAM532yPw8Om1kOc7jkCrOFLSERPhZR4AmuruiHZ+Sq2EAsvDGQ7nxk
-	9Sm+uDj/T8RP7cf6NRH5IBkvRw==
-X-Google-Smtp-Source: ABdhPJzNfskc1DdUwLMl+a3klShXxV6oz0haDe+POSdcchEK4zRBU+Q86qsgHaavlFffrYLDgBeA5A==
-X-Received: by 2002:a50:e184:: with SMTP id k4mr44823445edl.217.1635340352350;
-        Wed, 27 Oct 2021 06:12:32 -0700 (PDT)
-Received: from [192.168.178.46] ([213.211.156.121])
-        by smtp.gmail.com with ESMTPSA id nb1sm6080599ejc.56.2021.10.27.06.12.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Oct 2021 06:12:32 -0700 (PDT)
-Message-ID: <a53df65d-9a09-0a90-b49d-5e529da05d31@tessares.net>
-Date: Wed, 27 Oct 2021 15:12:31 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0085A72
+	for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 14:30:57 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1mfjx9-0005Yx-Rq; Wed, 27 Oct 2021 16:30:55 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next 2/2] selftests: mptcp: add tproxy test case
+Date: Wed, 27 Oct 2021 16:30:41 +0200
+Message-Id: <20211027143041.28449-3-fw@strlen.de>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20211027143041.28449-1-fw@strlen.de>
+References: <20211027143041.28449-1-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: add mp_fail testcases
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
-References: <98ce131530c3ae91bf2ca29e6566ca1f7debe202.1635330390.git.geliang.tang@suse.com>
- <0014ae81-c8b1-e3d1-4580-40bb299c17f4@tessares.net>
- <20211027130800.GA3518@bogon>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20211027130800.GA3518@bogon>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+No hard dependencies here, just skip if test environ lacks
+nft binary or the needed kernel config options.
 
-On 27/10/2021 15:08, Geliang Tang wrote:
-> On Wed, Oct 27, 2021 at 01:07:20PM +0200, Matthieu Baerts wrote:
->> On 27/10/2021 12:26, Geliang Tang wrote:
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>> index 7ef639a9d4a6..8bf38db1d54c 100755
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>> @@ -232,6 +232,20 @@ link_failure()
->>>  	done
->>>  }
->>>  
->>> +checksum_failure()
->>> +{
->>> +	tc -n $ns2 qdisc add dev ns2eth2 clsact
->>> +	tc -n $ns2 filter add dev ns2eth2 egress \
->>> +		protocol ip prio 1000 \
->>> +		flower ip_proto tcp \
->>> +		action pedit munge offset 148 u32 invert \
->>> +		pipe csum tcp
->>> +
->>> +	sleep 1
->>
->> This looks dangerous to me. We should probably check tc counters to see
->> if the pedit action did something, no?
-> 
-> I don't know how to use tc counters, could you please tell me?
+The test case spawns listener in ns2 but ns1 will connect
+to the ip address of ns4.
 
-Davide suggested to use something like:
+policy routing + tproxy rule will redirect packets to ns2 instead
+of forward.
 
-  tc -n $ns2 -s action show action pedit
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ .../selftests/net/mptcp/mptcp_connect.c       | 51 +++++++++++-
+ .../selftests/net/mptcp/mptcp_connect.sh      | 80 +++++++++++++++++++
+ 2 files changed, 130 insertions(+), 1 deletion(-)
 
-But I didn't try.
-
-Thank you for having looked at the other points!
-
-Cheers,
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 95e81d557b08..ada9b80774d4 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -75,7 +75,12 @@ struct cfg_cmsg_types {
+ 	unsigned int timestampns:1;
+ };
+ 
++struct cfg_sockopt_types {
++	unsigned int transparent:1;
++};
++
+ static struct cfg_cmsg_types cfg_cmsg_types;
++static struct cfg_sockopt_types cfg_sockopt_types;
+ 
+ static void die_usage(void)
+ {
+@@ -93,6 +98,7 @@ static void die_usage(void)
+ 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
+ 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
+ 	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
++	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
+ 	fprintf(stderr,
+ 		"\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket\n");
+ 	exit(1);
+@@ -185,6 +191,22 @@ static void set_mark(int fd, uint32_t mark)
+ 	}
+ }
+ 
++static void set_transparent(int fd, int pf)
++{
++	int one = 1;
++
++	switch (pf) {
++	case AF_INET:
++		if (-1 == setsockopt(fd, SOL_IP, IP_TRANSPARENT, &one, sizeof(one)))
++			perror("IP_TRANSPARENT");
++		break;
++	case AF_INET6:
++		if (-1 == setsockopt(fd, IPPROTO_IPV6, IPV6_TRANSPARENT, &one, sizeof(one)))
++			perror("IPV6_TRANSPARENT");
++		break;
++	}
++}
++
+ static int sock_listen_mptcp(const char * const listenaddr,
+ 			     const char * const port)
+ {
+@@ -212,6 +234,9 @@ static int sock_listen_mptcp(const char * const listenaddr,
+ 				     sizeof(one)))
+ 			perror("setsockopt");
+ 
++		if (cfg_sockopt_types.transparent)
++			set_transparent(sock, pf);
++
+ 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
+ 			break; /* success */
+ 
+@@ -944,6 +969,27 @@ static void parse_cmsg_types(const char *type)
+ 	exit(1);
+ }
+ 
++static void parse_setsock_options(const char *name)
++{
++	char *next = strchr(name, ',');
++	unsigned int len = 0;
++
++	if (next) {
++		parse_setsock_options(next + 1);
++		len = next - name;
++	} else {
++		len = strlen(name);
++	}
++
++	if (strncmp(name, "TRANSPARENT", len) == 0) {
++		cfg_sockopt_types.transparent = 1;
++		return;
++	}
++
++	fprintf(stderr, "Unrecognized setsockopt option %s\n", name);
++	exit(1);
++}
++
+ int main_loop(void)
+ {
+ 	int fd;
+@@ -1047,7 +1093,7 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ 
+-	while ((c = getopt(argc, argv, "6jr:lp:s:hut:T:m:S:R:w:M:P:c:")) != -1) {
++	while ((c = getopt(argc, argv, "6jr:lp:s:hut:T:m:S:R:w:M:P:c:o:")) != -1) {
+ 		switch (c) {
+ 		case 'j':
+ 			cfg_join = true;
+@@ -1108,6 +1154,9 @@ static void parse_opts(int argc, char **argv)
+ 		case 'c':
+ 			parse_cmsg_types(optarg);
+ 			break;
++		case 'o':
++			parse_setsock_options(optarg);
++			break;
+ 		}
+ 	}
+ 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 559173a8e387..205e9f0c4296 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -671,6 +671,82 @@ run_tests()
+ 	run_tests_lo $1 $2 $3 0
+ }
+ 
++run_test_transparent()
++{
++	local connect_addr="$1"
++	local msg="$2"
++
++	local connector_ns="$ns1"
++	local listener_ns="$ns2"
++	local lret=0
++	local r6flag=""
++
++	# skip if we don't want v6
++	if ! $ipv6 && is_v6 "${connect_addr}"; then
++		return 0
++	fi
++
++ip netns exec "$listener_ns" nft -f /dev/stdin <<"EOF"
++flush ruleset
++table inet mangle {
++	chain divert {
++		type filter hook prerouting priority -150;
++
++		meta l4proto tcp socket transparent 1 meta mark set 1 accept
++		tcp dport 20000 tproxy to :20000 meta mark set 1 accept
++	}
++}
++EOF
++	if [ $? -ne 0 ]; then
++		echo "SKIP: $msg"
++		return
++	fi
++
++	local local_addr
++	if is_v6 "${connect_addr}"; then
++		local_addr="::"
++		r6flag="-6"
++	else
++		local_addr="0.0.0.0"
++	fi
++
++	ip -net "$listener_ns" $r6flag rule add fwmark 1 lookup 100
++	if [ $? -ne 0 ]; then
++		ip netns exec "$listener_ns" nft flush ruleset
++		echo "SKIP: $msg"
++		return
++	fi
++
++	ip -net "$listener_ns" route add local $local_addr/0 dev lo table 100
++	if [ $? -ne 0 ]; then
++		ip netns exec "$listener_ns" nft flush ruleset
++		ip -net "$listener_ns" $r6flag rule del fwmark 1 lookup 100
++		echo "SKIP: $msg"
++		return
++	fi
++
++	echo "INFO: test $msg"
++
++	TEST_COUNT=10000
++	local extra_args="-o TRANSPARENT"
++	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
++		    ${connect_addr} ${local_addr} "${extra_args}"
++	lret=$?
++
++	ip netns exec "$listener_ns" nft flush ruleset
++	ip -net "$listener_ns" $r6flag rule del fwmark 1 lookup 100
++	ip -net "$listener_ns" route del local $local_addr/0 dev lo table 100
++
++	if [ $lret -ne 0 ]; then
++		echo "FAIL: $msg" 1>&2
++		ret=$lret
++		return 1
++	fi
++
++	echo "PASS: $msg"
++	return 0
++}
++
+ run_tests_peekmode()
+ {
+ 	local peekmode="$1"
+@@ -794,5 +870,9 @@ run_tests_peekmode "saveWithPeek"
+ run_tests_peekmode "saveAfterPeek"
+ stop_if_error "Tests with peek mode have failed"
+ 
++# connect to ns4 ip address, ns2 should intercept/proxy
++run_test_transparent 10.0.3.1 "tproxy ipv4"
++run_test_transparent dead:beef:3::1 "tproxy ipv6"
++
+ display_time
+ exit $ret
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.32.0
+
