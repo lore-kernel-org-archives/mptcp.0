@@ -1,83 +1,79 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3912C87
-	for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 10:32:28 +0000 (UTC)
-Received: by mail-qk1-f178.google.com with SMTP id br18so1942791qkb.1
-        for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 03:32:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C952C87
+	for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 10:47:52 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id m17so8438605edc.12
+        for <mptcp@lists.linux.dev>; Wed, 27 Oct 2021 03:47:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=b/RLyerJs0fWtOp4aIp6JkFvPw++OBy/1CMlq+1SgZc=;
-        b=ox905zEC47ZLrTnA7DGAl9Siq0yf9mGjAN4NrkbnuiIAwBIDfxAD2T+cq+cYjytYqH
-         L8n2/U6/NuzUUT1SwrXNbi+9n/RmZsY9AKspHowilsZiDtO+yvpvLLA9ZKYP2lGT940+
-         k7YeaQZmzTjTrUtM+RNqtZyn5AM2nSK6Fq26zyPV0ENx1X01vXcSL6ZR+Lm1d3EARwoK
-         +pvFrUqi2H9lVVkU4phqbe5I+gRHpye5BJzlXjOfckkzZQbKM+UDm5kgbCmpLs4gDh88
-         7zes3FE3X6UXPFzvujw+/AHeJoX2bNcMmcfiS3GakNyRj17aBqijmML5cmDh6SH2B/Fy
-         GWTg==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=JDT9rPHlVfbSJ+liUvqv4kYrMPkG4E0FdOgBPzE2DYY=;
+        b=TDTlXttcmR5DMT94ogtjkR4Pm+QyRVUZK7iYJWsAcyh55yK7OWi2dc9KfCl+6eLhbt
+         mqMSdmVZ5cYp7CYDXxTLPxm7F18qc3rWdI0YSipArlRrYN4/rqnwU7OjmLtfE1C7ghvt
+         JBQ8blhUkKvtlAe1DabSyGxeKVPAOxlq0EGQOFmjTRFbMP9zWBbfZN+Mte7rhQYOuqPW
+         JK6waefd9KRvHh4EpArgT4JcqM+vVdoChGqZzKO0TWK62RyCkRaRn4GMNhZ+jE8W6KNo
+         rZOkVsQKI0xVYQhMv7EpJCCs8dl4kbBkPONLOrhZ9XGDC1YFJp2NaI5hyNPp0uXAYQDg
+         eVQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=b/RLyerJs0fWtOp4aIp6JkFvPw++OBy/1CMlq+1SgZc=;
-        b=h7xgCl4rvJ9hvjRIQ24pHZw78ccLxT7/h6mPac4R22YBuNjTmteq1TpPdhjQGGSOnI
-         rAebE2X6AK8jzo4OEB+/S+v13mBTOPlgsCTcTxKgpvj0T+Id18F9L8jda+l0CgTR+5uD
-         syWSOF176FT2r4B8BX1iJmlf+g1fVXkagPOYG17VXY/M1kazHGiAbiOjm27UPgGNrPy8
-         dX+eeYHrz1MuwZ3OE2p3DKPpgya1uaBwEuyhIwkZzFSH/0YnpAqE7dvtTyCFRChqnmVr
-         yJljsrUBeehB/9FsMzS9I1zv8MwmAyBMfYKn0yL2JXYJELe5chHaFt+Of19qNVfJe8Lv
-         ibKQ==
-X-Gm-Message-State: AOAM532H7QneWHHMBlSlIXMhUsgO6dbLP9UhX9XGbX9NbDZ37SiZ9zd1
-	cfiuSOC7Lk0MHEty/sW3zkXPGJI0tQ==
-X-Google-Smtp-Source: ABdhPJxyb6v0RmiFe4FHiBwesPvMS5/lb6kT1yMM3T2oUE5F2FHqpOgKv7YBZ/fkKX+QvHEMFPCTXQ==
-X-Received: by 2002:a05:620a:4411:: with SMTP id v17mr22537327qkp.431.1635330747116;
-        Wed, 27 Oct 2021 03:32:27 -0700 (PDT)
-Received: from [127.0.0.1] ([104.209.238.248])
-        by smtp.gmail.com with ESMTPSA id d6sm12126385qkj.11.2021.10.27.03.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 03:32:26 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <98ce131530c3ae91bf2ca29e6566ca1f7debe202.1635330390.git.geliang.tang@suse.com>
-References:
- <98ce131530c3ae91bf2ca29e6566ca1f7debe202.1635330390.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: add mp_fail testcases: Build Failure
-Message-ID: <4474733d-0a7e-1ddc-d05d-9a9cdaa9ace5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 Oct 2021 10:32:26 +0000
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=JDT9rPHlVfbSJ+liUvqv4kYrMPkG4E0FdOgBPzE2DYY=;
+        b=UCFKhH3DFcbgkzqKVVS75UBiZKbpoTjCObHdkkptZCcwe90eDe5CREVPwzopTtJd0i
+         DufGYI9v4SDP4wmb9JOT3/tygLvcb866Ct668VJuOBd2D9jvcTrfSm7gm7rG3fLgiIOR
+         M9H/kq8qWBztJddABeGeQ81lfpXB4fz68mt7J3DTtT0nqMCFNiIG7oTKmbUugXxeNsZr
+         4e23MT6A/wBensgOvZr4tAY6W4tsXTXDe4on/ZV9pNut6xvvFGN8JTQatyZCDXEwIxKK
+         OPW+tSdBqQ23B9rj8MjzSSPtaZzHVDHJzHGZMgXaiYeTxue1FQ2U7x+Ibz3zob20pm6p
+         bH8g==
+X-Gm-Message-State: AOAM53094HLTZPJChNpgIOPdIzLxGL4PnvfNUTt3f93U4keRXlU275db
+	UcAQoDzJvj/6OUSuSZtTVSgr5uVgx3+A73lx
+X-Google-Smtp-Source: ABdhPJwIs0LlzIlNwpcHM3kn8yT50ZojYQ6CstSd9oV8JsXEYnmtgifmg810xPVbVp4N89ojmBk6PQ==
+X-Received: by 2002:a17:906:a041:: with SMTP id bg1mr37859304ejb.470.1635331670483;
+        Wed, 27 Oct 2021 03:47:50 -0700 (PDT)
+Received: from [192.168.178.46] ([213.211.156.121])
+        by smtp.gmail.com with ESMTPSA id e6sm6212635ejs.112.2021.10.27.03.47.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Oct 2021 03:47:50 -0700 (PDT)
+Message-ID: <a0fcc873-c6aa-9d17-302e-bae59a20630c@tessares.net>
+Date: Wed, 27 Oct 2021 12:47:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: selftests: mptcp: add mp_fail testcases: Build Failure
+Content-Language: en-GB
+To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
+References: <98ce131530c3ae91bf2ca29e6566ca1f7debe202.1635330390.git.geliang.tang@suse.com>
+ <4474733d-0a7e-1ddc-d05d-9a9cdaa9ace5@gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <4474733d-0a7e-1ddc-d05d-9a9cdaa9ace5@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 27/10/2021 12:32, MPTCP CI wrote:
+> Hi Geliang,
+> 
+> Thank you for your modifications, that's great!
+> 
+> But sadly, our CI spotted some issues with it when trying to build it.
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Please ignore this. The build was OK but when trying to publish the
+results on Patchwork, an error happened because Patchwork didn't proceed
+the patch yet.
 
-You can find more details there:
-
-  https://patchwork.kernel.=
-org/project/mptcp/patch/98ce131530c3ae91bf2ca29e6566ca1f7debe202.1635330390=
-.git.geliang.tang@suse.com/
-  https://github.com/multipath-tcp/mptcp_net-ne=
-xt/actions/runs/1389695481
-
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/f1240fddd1=
-e2
-
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+In other words, patchew + build were faster than Patchwork.
 
 Cheers,
-MPTCP GH Action bot
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
