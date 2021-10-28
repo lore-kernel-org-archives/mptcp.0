@@ -1,272 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205222C8E
-	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 13:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1635426524;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EEL7dSBhMDJ5HgGkCAFTX3dotRFWXKIiHItes1YHKWc=;
-	b=TlmCo2iYQ+1VSPk+ewCS+sLTT6QiL2ECI3UW+IzsXIcwiPBm8VhTC5Qo45fJXJvDyvF0LJ
-	GwgZ1T3KUGLkCJsWTXSjJSEDwwk4rPlVAdzZ+idO5XJdECbxxQREQjtWKORLsTA1cskorJ
-	kssgY4sLosVo04A3U15gAQsmzA+Ztds=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-LF8Khtx1PJ6Rsf-2qr4g3g-1; Thu, 28 Oct 2021 09:08:42 -0400
-X-MC-Unique: LF8Khtx1PJ6Rsf-2qr4g3g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 293ED802B7A
-	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 13:08:42 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.218])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 63B7419D9F
-	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 13:08:41 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp <mptcp@lists.linux.dev>
-Subject: [PATCH mptcp-net 2/2] mptcp: use delegate action to schedule 3rd ack retrans
-Date: Thu, 28 Oct 2021 15:08:33 +0200
-Message-Id: <2a28807616445b389496dc0f172e206180f5a099.1635426465.git.pabeni@redhat.com>
-In-Reply-To: <cover.1635426465.git.pabeni@redhat.com>
-References: <cover.1635426465.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973B22C83
+	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 13:22:00 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id ee16so11813783edb.10
+        for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 06:22:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=x4TBmrazBa8kgQQGLJmEMMo+i7Ila0oACrFGJkXNFdU=;
+        b=pMh4GpsOlksvavcKFbiBPbU0qbyKRdlw9qnlv0w0oBzAn/YHvP93D1Grw2D68asmkK
+         hHEBlR+/kGfdXVJ/Zq3wtAyeJdaDB4eTwZbawOWPaHV+APGD1vFVpkFGdAhNwEXtUAlJ
+         tvl7lDAGjUwNECdEktMA3oLRGoBSWx4aL4bZprD2sU558Zs+jZZ2dhxiJ3tpc47RPjCS
+         uBugzdaCSiAH+Z6TmjPyqgUOGMHTti9qfDyjyKAs6MYZ4j4w+XVLTgPWDGVNTwYiyQ1O
+         vuwsrDRk33dEZx3LVuQJLPkZCeI8c44XVFyV5agRiZIKWNkQB25/M8rxQA5atLtiuCy2
+         R/Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=x4TBmrazBa8kgQQGLJmEMMo+i7Ila0oACrFGJkXNFdU=;
+        b=1NMXfsbPW0coJKMMXDbdcmyniAnoLlLMgJ6bXgQq9AeRcJnBc6x49an+nt8SMFGZQU
+         /fQqrZugxZeSnsOv0ylTxG4pn6rcxipfyR6KP+LDDAhoJx4/L/a2ZKATHoDj9RNJ3Koo
+         DkECn3tvzGZNrraMaW8kjgOyPE0yVgJ7H66z404Pp+yzX50O6CrqltpyXiYLy9tYrphL
+         uaeubtSfUT14tBMhx1+1L+M1sQe3sxriQLI2Ejdryus8uMC5o4f4GTFE9JwwmqZVQq6a
+         gn2XYMemxTQNdtix1MQeYEnxOWhSWas21OTt0ROGPbGAgUGtlBqpLC35ce8w0mg+qJIz
+         asyA==
+X-Gm-Message-State: AOAM533Lq6nMwmfjbNVjcTY0JCofx4E4lryiAOwVL/XO0jYB1RxQ339z
+	eNULo1n48o/SwTVrcVZhZSQ2HRpSEHHxQQ==
+X-Google-Smtp-Source: ABdhPJyRthd9prnfehXbOfoBPnkZFVA5aHRTy4NlZfmi20hVaKPVLhbEz7jBTgk/tOOziKYXC0WNOA==
+X-Received: by 2002:a17:907:96a5:: with SMTP id hd37mr5402760ejc.423.1635427316543;
+        Thu, 28 Oct 2021 06:21:56 -0700 (PDT)
+Received: from [10.44.1.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id oz40sm1427207ejc.82.2021.10.28.06.21.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Oct 2021 06:21:56 -0700 (PDT)
+Message-ID: <0ea55f5c-df3a-2848-a9f4-a830cba876c1@tessares.net>
+Date: Thu, 28 Oct 2021 15:21:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: add mp_fail testcases
+Content-Language: en-GB
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: Geliang Tang <geliang.tang@suse.com>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <bfa01f99cbb0479029ad284b020dbb250d19b941.1635390811.git.geliang.tang@suse.com>
+ <20211028092338.GA6915@dhcp-10-157-36-190>
+ <CAKa-r6srprPPPhUCXW3YnsQEL0ewFBptQFvUo_9mwtw_mD7DOQ@mail.gmail.com>
+ <de15a4e9-0140-2b18-7a5a-c010980eedc2@tessares.net>
+ <CAKa-r6t_ajhpvO2PnGyL2E-0FuV+r9D1i31vO9J71M8XiajnkQ@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CAKa-r6t_ajhpvO2PnGyL2E-0FuV+r9D1i31vO9J71M8XiajnkQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Scheduling a delack in mptcp_established_options_mp() is
-not a good idea: such function is called by tcp_send_ack() and
-the pending delayed ack will be cleared shortly after by the
-tcp_event_ack_sent() call in __tcp_transmit_skb().
+Hi Davide,
 
-Instead use the mptcp delegated action infrastructure to
-schedule the delayed ack after the current bh processing completes.
+On 28/10/2021 14:24, Davide Caratti wrote:
+> On Thu, Oct 28, 2021 at 1:21 PM Matthieu Baerts
+> <matthieu.baerts@tessares.net> wrote:
+>>
+>> Hi Davide, Geliang,
+>>
+>> On 28/10/2021 13:01, Davide Caratti wrote:
+>>> On Thu, Oct 28, 2021 at 11:23 AM Geliang Tang <geliang.tang@suse.com> wrote:
+>>>>
+>>>> On Thu, Oct 28, 2021 at 11:16:12AM +0800, Geliang Tang wrote:
+>>>>> Added the test cases for MP_FAIL, use 'tc' command to trigger the
+>>>>> checksum failure.
+>>>>>
+>>>>> Suggested-by: Davide Caratti <dcaratti@redhat.com>
+>>>>> Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>>>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>
+>> Thank you for the new version!
+>>
+>>>>> ---
+>>>>>  tools/testing/selftests/net/mptcp/config      |  5 ++
+>>>>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 60 ++++++++++++++++---
+>>>>>  2 files changed, 58 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+>>>>> index 0faaccd21447..f522288b2204 100644
+>>>>> --- a/tools/testing/selftests/net/mptcp/config
+>>>>> +++ b/tools/testing/selftests/net/mptcp/config
+>>>>> @@ -15,3 +15,8 @@ CONFIG_NETFILTER_XTABLES=m
+>>>>>  CONFIG_NETFILTER_XT_MATCH_BPF=m
+>>>>>  CONFIG_NF_TABLES_IPV4=y
+>>>>>  CONFIG_NF_TABLES_IPV6=y
+>>>>> +CONFIG_NET_ACT_CSUM=m
+>>>>> +CONFIG_NET_ACT_PEDIT=m
+>>>>> +CONFIG_NET_CLS_ACT=m
+>>>>> +CONFIG_NET_CLS_FLOWER=m
+>>>>> +CONFIG_NET_SCH_INGRESS=m
+>>>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>>>> index 7ef639a9d4a6..95bac447f857 100755
+>>>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>>>> @@ -232,6 +232,29 @@ link_failure()
+>>>>>       done
+>>>>>  }
+>>>>>
+>>>>> +checksum_failure()
+>>>>> +{
+>>>>> +     i="$1"
+>>>>> +
+>>>>> +     tc -n $ns2 qdisc add dev ns2eth$i clsact
+>>>>> +     tc -n $ns2 filter add dev ns2eth$i egress \
+>>>>> +             protocol ip prio 1000 \
+>>>>> +             flower ip_proto tcp \
+>>>>> +             action pedit munge offset 148 u32 invert \
+>>>>> +             pipe csum tcp \
+>>>>> +             index 100
+>>>>> +
+>>>>> +     while true; do
+>>>>> +             local pkt=`tc -n $ns2 -j -s action show action csum index 100 | \
+>>>>> +                     awk -F ',' '{ print $12 }' | \
+>>>>> +                     awk -F ':' '{ print $2 }'`
+>>
+>> (small detail if you have to send a new version: it is often recommended
+>> to use "$(cmd)" form instead of `cmd`: more visible, allow nested
+>> commands, quotes, etc.)
+> 
+> also, please consider using jq rather than awk. Specially if you are
+> planning to use more than one counter. For reference, see [1]
 
-Additionally moves the schedule_3rdack_retransmission() helper
-into protocol.c to avoid making it visible in a different compilation
-unit.
+Good idea, I didn't know jq was used in other selftests. But then we
+would need to check if 'jq' is installed. *Maybe* if we only need once
+to retrieve 2 counters, it would be "easier" to use awk?
 
-Fixes: ec3edaa7ca6ce02f ("mptcp: Add handling of outgoing MP_JOIN requests")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-side note:
- Why we already see 3rd ack retransimssion in pcap traces even if the delack timer
-was broken sice the beginning?!? I guess that is due to pure ack generated
-by mptcp_recvmsg() and pushed on all the subflow. mptcp_send_ack() only
-checks for the TCP status and not the MPTCP one. When landing on MPJ
-subflows not already fully established, such data-ack will be converted in MPJ
-3rd ack by the MPTCP output path/out options building, as the MPJ option
-has higher priority than DSS
----
- net/mptcp/options.c  | 33 ++++++++---------------------
- net/mptcp/protocol.c | 50 ++++++++++++++++++++++++++++++++++++--------
- net/mptcp/protocol.h | 17 ++++++++-------
- 3 files changed, 59 insertions(+), 41 deletions(-)
+> [...]
+>>>
+>>>> How can I fix this?
+>>> is that a problem? maybe we can just ignore it.
+>>
+>> Do you have this message once or one for each packet?
+>> Does it increment the counter you are monitoring when the warning is
+>> printed?
+>>
+>> If I understand the code, it might print that once per packet and once
+>> but also increment the counter which is not good for us. But another
+>> counter -- "overlimits" -- seems to be incremented too, maybe we can use
+>> the two counters.
+>>
+>>> Otherwise, a possibility is to add a more narrow filter (e.g. flower),
+>>>  to only mangle packets that have the ack flag but not the syn or
+>>> push. We might also try corrupting the TCP payload to a smaller
+>>> offset, so that more packets are impacted.
+>>
+>> Yes, maybe good to narrow a bit the filter by using:
+>>
+>>   flower ip_proto tcp tcp_flags 0x10/0xff
+>>
+>> Or is there another filter to specify a minimum size?
+> 
+> unfortunately we can't do that with TC filters (unless using the eBPF
+> classifier for this (and I'm still not 100% the verifier would be
+> happy _ but that's still in my long-term todo list :) ). I know there
+> are ongoing efforts to introduce a "check_pkt_larger" (because this
+> check is actually a possible openflow action) , but that won't happen
+> in the short period.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 465d4143d555..12ffee025373 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -422,29 +422,6 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 	return false;
- }
- 
--/* MP_JOIN client subflow must wait for 4th ack before sending any data:
-- * TCP can't schedule delack timer before the subflow is fully established.
-- * MPTCP uses the delack timer to do 3rd ack retransmissions
-- */
--static void schedule_3rdack_retransmission(struct sock *sk)
--{
--	struct inet_connection_sock *icsk = inet_csk(sk);
--	struct tcp_sock *tp = tcp_sk(sk);
--	unsigned long timeout;
--
--	/* reschedule with a timeout above RTT, as we must look only for drop */
--	if (tp->srtt_us)
--		timeout = usecs_to_jiffies(tp->srtt_us >> (3-1));
--	else
--		timeout = TCP_TIMEOUT_INIT;
--	timeout += jiffies;
--
--	WARN_ON_ONCE(icsk->icsk_ack.pending & ICSK_ACK_TIMER);
--	icsk->icsk_ack.pending |= ICSK_ACK_SCHED | ICSK_ACK_TIMER;
--	icsk->icsk_ack.timeout = timeout;
--	sk_reset_timer(sk, &icsk->icsk_delack_timer, timeout);
--}
--
- static void clear_3rdack_retransmission(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
-@@ -527,7 +504,15 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
- 		*size = TCPOLEN_MPTCP_MPJ_ACK;
- 		pr_debug("subflow=%p", subflow);
- 
--		schedule_3rdack_retransmission(sk);
-+		/* we can use the full delegate action helper only from BH context
-+		 * If we are in process context - sk is flushing the backlog at
-+		 * socket lock release time - just set the appropriate flag, will
-+		 * be handled by the release callback
-+		 */
-+		if (sock_owned_by_user(sk))
-+			set_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status);
-+		else
-+			mptcp_subflow_delegate(subflow, MPTCP_DELEGATE_ACK);
- 		return true;
- 	}
- 	return false;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 582f5f88d6ef..cd00f8998375 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1619,7 +1619,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 			if (!xmit_ssk)
- 				goto out;
- 			if (xmit_ssk != ssk) {
--				mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk));
-+				mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk), MPTCP_DELEGATE_SEND);
- 				goto out;
- 			}
- 
-@@ -2972,7 +2972,7 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- 		if (xmit_ssk == ssk)
- 			__mptcp_subflow_push_pending(sk, ssk);
- 		else if (xmit_ssk)
--			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk));
-+			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk), MPTCP_DELEGATE_SEND);
- 	} else {
- 		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
- 	}
-@@ -3022,18 +3022,50 @@ static void mptcp_release_cb(struct sock *sk)
- 	__mptcp_update_rmem(sk);
- }
- 
-+/* MP_JOIN client subflow must wait for 4th ack before sending any data:
-+ * TCP can't schedule delack timer before the subflow is fully established.
-+ * MPTCP uses the delack timer to do 3rd ack retransmissions
-+ */
-+static void schedule_3rdack_retransmission(struct sock *ssk)
-+{
-+	struct inet_connection_sock *icsk = inet_csk(ssk);
-+	struct tcp_sock *tp = tcp_sk(ssk);
-+	unsigned long timeout;
-+
-+	if (mptcp_subflow_ctx(ssk)->fully_established)
-+		return;
-+
-+	/* reschedule with a timeout above RTT, as we must look only for drop */
-+	if (tp->srtt_us)
-+		timeout = usecs_to_jiffies(tp->srtt_us >> (3-1));
-+	else
-+		timeout = TCP_TIMEOUT_INIT;
-+	timeout += jiffies;
-+
-+	WARN_ON_ONCE(icsk->icsk_ack.pending & ICSK_ACK_TIMER);
-+	icsk->icsk_ack.pending |= ICSK_ACK_SCHED | ICSK_ACK_TIMER;
-+	icsk->icsk_ack.timeout = timeout;
-+	sk_reset_timer(ssk, &icsk->icsk_delack_timer, timeout);
-+}
-+
- void mptcp_subflow_process_delegated(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 	struct sock *sk = subflow->conn;
- 
--	mptcp_data_lock(sk);
--	if (!sock_owned_by_user(sk))
--		__mptcp_subflow_push_pending(sk, ssk);
--	else
--		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
--	mptcp_data_unlock(sk);
--	mptcp_subflow_delegated_done(subflow);
-+	if (test_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status)) {
-+		mptcp_data_lock(sk);
-+		if (!sock_owned_by_user(sk))
-+			__mptcp_subflow_push_pending(sk, ssk);
-+		else
-+			set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-+		mptcp_data_unlock(sk);
-+		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SEND);
-+	}
-+	if (test_bit(MPTCP_DELEGATE_ACK, &subflow->delegated_status)) {
-+		schedule_3rdack_retransmission(ssk);
-+		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_ACK);
-+	}
- }
- 
- static int mptcp_hash(struct sock *sk)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 46691acdea24..f6f4054e19ee 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -387,6 +387,7 @@ struct mptcp_delegated_action {
- DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- 
- #define MPTCP_DELEGATE_SEND		0
-+#define MPTCP_DELEGATE_ACK		1
- 
- /* MPTCP subflow context */
- struct mptcp_subflow_context {
-@@ -493,23 +494,23 @@ static inline void mptcp_add_pending_subflow(struct mptcp_sock *msk,
- 
- void mptcp_subflow_process_delegated(struct sock *ssk);
- 
--static inline void mptcp_subflow_delegate(struct mptcp_subflow_context *subflow)
-+static inline void mptcp_subflow_delegate(struct mptcp_subflow_context *subflow, int action)
- {
- 	struct mptcp_delegated_action *delegated;
- 	bool schedule;
- 
-+	/* the caller held the subflow bh socket lock */
-+	lockdep_assert_in_softirq();
-+
- 	/* The implied barrier pairs with mptcp_subflow_delegated_done(), and
- 	 * ensures the below list check sees list updates done prior to status
- 	 * bit changes
- 	 */
--	if (!test_and_set_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status)) {
-+	if (!test_and_set_bit(action, &subflow->delegated_status)) {
- 		/* still on delegated list from previous scheduling */
- 		if (!list_empty(&subflow->delegated_node))
- 			return;
- 
--		/* the caller held the subflow bh socket lock */
--		lockdep_assert_in_softirq();
--
- 		delegated = this_cpu_ptr(&mptcp_delegated_actions);
- 		schedule = list_empty(&delegated->head);
- 		list_add_tail(&subflow->delegated_node, &delegated->head);
-@@ -534,16 +535,16 @@ mptcp_subflow_delegated_next(struct mptcp_delegated_action *delegated)
- 
- static inline bool mptcp_subflow_has_delegated_action(const struct mptcp_subflow_context *subflow)
- {
--	return test_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status);
-+	return !!READ_ONCE(subflow->delegated_status);
- }
- 
--static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *subflow)
-+static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *subflow, int action)
- {
- 	/* pairs with mptcp_subflow_delegate, ensures delegate_node is updated before
- 	 * touching the status bit
- 	 */
- 	smp_wmb();
--	clear_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status);
-+	clear_bit(action, &subflow->delegated_status);
- }
- 
- int mptcp_is_enabled(const struct net *net);
+That's a shame but then better to restrict to ACK flag to omit a few
+packets.
+
+Cheers,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
