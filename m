@@ -1,263 +1,113 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2336772
-	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 09:39:21 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1mg1sV-0001gG-EX; Thu, 28 Oct 2021 11:39:19 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next v2 2/2] selftests: mptcp: add tproxy test case
-Date: Thu, 28 Oct 2021 11:39:02 +0200
-Message-Id: <20211028093902.8685-3-fw@strlen.de>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211028093902.8685-1-fw@strlen.de>
-References: <20211028093902.8685-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E9072
+	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 10:12:05 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id 5so22015394edw.7
+        for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 03:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=nKi2DpdZmCWkX9HM3C1tqv2L8uAnnVSV85/6XCx28w4=;
+        b=rDU3ueKf51nT+K8hWwfZISbM11byXfPp8z3M6IubGXinfEp75OcmzOo5Xz0k8AVZre
+         jY0Glw6ejW/vtV9D6c8oEdkfF/jcP4Wp1MoEjEXGICJj6olqQIw4mXgt5zb/9B5SGwB5
+         T+ogDKIcqhpEZ2fs5Gt3tJEx2NHv6Cs0AbdLSUBnt/GbGC7emYw6iTsYyaFY+YTW1UrH
+         M2nci0P3sN6AOIABIOk9riPBXCY9UF3Enw/37LrZ5Jikr5mZHxajpWRgCg2LggMtEyCb
+         emDrRQ0wugik05cIJ1QqfCgXGXB2AX14aw91fj+JxmzJKK1AAg58ts5W3tKBDLWuTc+T
+         dDOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nKi2DpdZmCWkX9HM3C1tqv2L8uAnnVSV85/6XCx28w4=;
+        b=XsJIiCjRWfEa4WSh9SMXzFKybu0wun9ey0P6jnWa2PZHyqcp0KD1ftEeRWSmm8q9bL
+         U3FpNHblxkuzhhX3KfoiNa427WpImh2w3FPwVi3+Z3knJO22Zg0KI9RwXv/EwFGljh2E
+         CpMP9FO3v1VVVOtzEXytp5Y2V7DwWqpZr0o2FVOpniZPSZkh3X/hUK06yyrGHnqmJ38C
+         TAEiKSoqw+Lsvwreh1TuXXPKf2fzZQPn5gDlwoQ4ttJ0FKv0mXz4cxn4g3O1gfiAin2V
+         nyuTz2GIkGaL+v9a4lwWQRZzItUC1qQKBLFmRbQbhy6Hfnz1OoJlhJbGUmAFlgraI8no
+         5/Sg==
+X-Gm-Message-State: AOAM533cjlIr+Sc3OQAKG0hLkJGLXR0/gcC+rCyP2bC0gWiwwky1Cf3+
+	8NrHJlqwapoKpRMFzyrwm9FCoA==
+X-Google-Smtp-Source: ABdhPJxBd7qMDWG5mBQ7lPT5qB1dNn9jPBmRG2iPyZYBOu0HfK4TWkpbbNhRvxFWUj+3ViFBu7RsTg==
+X-Received: by 2002:a05:6402:cba:: with SMTP id cn26mr4786117edb.201.1635415921062;
+        Thu, 28 Oct 2021 03:12:01 -0700 (PDT)
+Received: from [10.44.1.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id bq4sm1121464ejb.43.2021.10.28.03.12.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Oct 2021 03:12:00 -0700 (PDT)
+Message-ID: <90ac2577-1542-b286-732c-4c179ebbd998@tessares.net>
+Date: Thu, 28 Oct 2021 12:12:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH mptcp-next v4 0/2] Splitting commits for IP_TOS support in
+ setsockopt()
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Poorva Sonparote <psonparo@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1635367735.git.psonparo@redhat.com>
+ <119548f6-ee97-48c3-ccf9-3ce623371c58@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <119548f6-ee97-48c3-ccf9-3ce623371c58@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-No hard dependencies here, just skip if test environ lacks
-nft binary or the needed kernel config options.
+Hi Poorva, Mat,
 
-The test case spawns listener in ns2 but ns1 will connect
-to the ip address of ns4.
+On 28/10/2021 02:50, Mat Martineau wrote:
+> On Wed, 27 Oct 2021, Poorva Sonparote wrote:
+> 
+>> - patch 1/2 Add Support for IP_TOS for MPTCP setsockopt()
+>> - patch 2/2 Exposing  __ip_sock_set_tos() in ip.h
+>>
+>> Poorva Sonparote (2):
+>>  Exposing __ip_sock_set_tos() in ip.h
+>>  Support for IP_TOS for MPTCP setsockopt()
 
-policy routing + tproxy rule will redirect packets to ns2 instead
-of forward.
+Thank you for the patches and the reviews!
 
-v2: update mptcp/config (Mat Martineau)
+> Thanks! Looks like this is ready for the export branch:
+> 
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- tools/testing/selftests/net/mptcp/config      |  7 +-
- .../selftests/net/mptcp/mptcp_connect.c       | 51 +++++++++++-
- .../selftests/net/mptcp/mptcp_connect.sh      | 80 +++++++++++++++++++
- 3 files changed, 135 insertions(+), 3 deletions(-)
+Now in our tree (features for net-next) + added prefixes in your patches
+("ipv4:" and "mptcp:"):
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 0faaccd21447..8a45ee6b54e8 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -13,5 +13,8 @@ CONFIG_NFT_COUNTER=m
- CONFIG_NFT_COMPAT=m
- CONFIG_NETFILTER_XTABLES=m
- CONFIG_NETFILTER_XT_MATCH_BPF=m
--CONFIG_NF_TABLES_IPV4=y
--CONFIG_NF_TABLES_IPV6=y
-+CONFIG_NF_TABLES_INET=y
-+CONFIG_NFT_TPROXY=m
-+CONFIG_NFT_SOCKET=m
-+CONFIG_IP_ADVANCED_ROUTER=y
-+CONFIG_IP_MULTIPLE_TABLES=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 95e81d557b08..ada9b80774d4 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -75,7 +75,12 @@ struct cfg_cmsg_types {
- 	unsigned int timestampns:1;
- };
- 
-+struct cfg_sockopt_types {
-+	unsigned int transparent:1;
-+};
-+
- static struct cfg_cmsg_types cfg_cmsg_types;
-+static struct cfg_sockopt_types cfg_sockopt_types;
- 
- static void die_usage(void)
- {
-@@ -93,6 +98,7 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
- 	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
-+	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
- 	fprintf(stderr,
- 		"\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket\n");
- 	exit(1);
-@@ -185,6 +191,22 @@ static void set_mark(int fd, uint32_t mark)
- 	}
- }
- 
-+static void set_transparent(int fd, int pf)
-+{
-+	int one = 1;
-+
-+	switch (pf) {
-+	case AF_INET:
-+		if (-1 == setsockopt(fd, SOL_IP, IP_TRANSPARENT, &one, sizeof(one)))
-+			perror("IP_TRANSPARENT");
-+		break;
-+	case AF_INET6:
-+		if (-1 == setsockopt(fd, IPPROTO_IPV6, IPV6_TRANSPARENT, &one, sizeof(one)))
-+			perror("IPV6_TRANSPARENT");
-+		break;
-+	}
-+}
-+
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
- {
-@@ -212,6 +234,9 @@ static int sock_listen_mptcp(const char * const listenaddr,
- 				     sizeof(one)))
- 			perror("setsockopt");
- 
-+		if (cfg_sockopt_types.transparent)
-+			set_transparent(sock, pf);
-+
- 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
- 			break; /* success */
- 
-@@ -944,6 +969,27 @@ static void parse_cmsg_types(const char *type)
- 	exit(1);
- }
- 
-+static void parse_setsock_options(const char *name)
-+{
-+	char *next = strchr(name, ',');
-+	unsigned int len = 0;
-+
-+	if (next) {
-+		parse_setsock_options(next + 1);
-+		len = next - name;
-+	} else {
-+		len = strlen(name);
-+	}
-+
-+	if (strncmp(name, "TRANSPARENT", len) == 0) {
-+		cfg_sockopt_types.transparent = 1;
-+		return;
-+	}
-+
-+	fprintf(stderr, "Unrecognized setsockopt option %s\n", name);
-+	exit(1);
-+}
-+
- int main_loop(void)
- {
- 	int fd;
-@@ -1047,7 +1093,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:T:m:S:R:w:M:P:c:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:T:m:S:R:w:M:P:c:o:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -1108,6 +1154,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'c':
- 			parse_cmsg_types(optarg);
- 			break;
-+		case 'o':
-+			parse_setsock_options(optarg);
-+			break;
- 		}
- 	}
- 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 559173a8e387..205e9f0c4296 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -671,6 +671,82 @@ run_tests()
- 	run_tests_lo $1 $2 $3 0
- }
- 
-+run_test_transparent()
-+{
-+	local connect_addr="$1"
-+	local msg="$2"
-+
-+	local connector_ns="$ns1"
-+	local listener_ns="$ns2"
-+	local lret=0
-+	local r6flag=""
-+
-+	# skip if we don't want v6
-+	if ! $ipv6 && is_v6 "${connect_addr}"; then
-+		return 0
-+	fi
-+
-+ip netns exec "$listener_ns" nft -f /dev/stdin <<"EOF"
-+flush ruleset
-+table inet mangle {
-+	chain divert {
-+		type filter hook prerouting priority -150;
-+
-+		meta l4proto tcp socket transparent 1 meta mark set 1 accept
-+		tcp dport 20000 tproxy to :20000 meta mark set 1 accept
-+	}
-+}
-+EOF
-+	if [ $? -ne 0 ]; then
-+		echo "SKIP: $msg"
-+		return
-+	fi
-+
-+	local local_addr
-+	if is_v6 "${connect_addr}"; then
-+		local_addr="::"
-+		r6flag="-6"
-+	else
-+		local_addr="0.0.0.0"
-+	fi
-+
-+	ip -net "$listener_ns" $r6flag rule add fwmark 1 lookup 100
-+	if [ $? -ne 0 ]; then
-+		ip netns exec "$listener_ns" nft flush ruleset
-+		echo "SKIP: $msg"
-+		return
-+	fi
-+
-+	ip -net "$listener_ns" route add local $local_addr/0 dev lo table 100
-+	if [ $? -ne 0 ]; then
-+		ip netns exec "$listener_ns" nft flush ruleset
-+		ip -net "$listener_ns" $r6flag rule del fwmark 1 lookup 100
-+		echo "SKIP: $msg"
-+		return
-+	fi
-+
-+	echo "INFO: test $msg"
-+
-+	TEST_COUNT=10000
-+	local extra_args="-o TRANSPARENT"
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
-+		    ${connect_addr} ${local_addr} "${extra_args}"
-+	lret=$?
-+
-+	ip netns exec "$listener_ns" nft flush ruleset
-+	ip -net "$listener_ns" $r6flag rule del fwmark 1 lookup 100
-+	ip -net "$listener_ns" route del local $local_addr/0 dev lo table 100
-+
-+	if [ $lret -ne 0 ]; then
-+		echo "FAIL: $msg" 1>&2
-+		ret=$lret
-+		return 1
-+	fi
-+
-+	echo "PASS: $msg"
-+	return 0
-+}
-+
- run_tests_peekmode()
- {
- 	local peekmode="$1"
-@@ -794,5 +870,9 @@ run_tests_peekmode "saveWithPeek"
- run_tests_peekmode "saveAfterPeek"
- stop_if_error "Tests with peek mode have failed"
- 
-+# connect to ns4 ip address, ns2 should intercept/proxy
-+run_test_transparent 10.0.3.1 "tproxy ipv4"
-+run_test_transparent dead:beef:3::1 "tproxy ipv6"
-+
- display_time
- exit $ret
+- f80cd2ae7b35: Exposing __ip_sock_set_tos() in ip.h
+- dcb0d4eb4318: Support for IP_TOS for MPTCP setsockopt()
+- 758c711752bb: tg:msg: prefix with ipv4 and add Mat's ACK
+- 76fecc38fcfb: tg:msg: prefix with mptcp and add Mat's RvB
+- Results: 4af534378cb0..a1638f497c0c
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211028T092928
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+> It's not necessary to use getsockopt to implement a test for this, you
+> could also use 'ss --tos' to see the tos value on the mptcp socket and
+> the subflows. Would be good to have a selftest for this before upstreaming.
+
+Should we add something in the selftests for each "simple" sockopt? I
+mean: it can be quite "heavy" to create E2E connections, wait for them
+to be created and be long enough, check for an output with external
+tool(s), etc.
+
+For more "complex" sockopts like MPTCP_INFO, it makes sense because it
+would imply a lot of modifications on packetdrill side.
+
+Should we discuss about that at our weekly meeting?
+
+Cheers,
+Matt
 -- 
-2.32.0
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
