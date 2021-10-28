@@ -1,113 +1,142 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E9072
-	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 10:12:05 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id 5so22015394edw.7
-        for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 03:12:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=nKi2DpdZmCWkX9HM3C1tqv2L8uAnnVSV85/6XCx28w4=;
-        b=rDU3ueKf51nT+K8hWwfZISbM11byXfPp8z3M6IubGXinfEp75OcmzOo5Xz0k8AVZre
-         jY0Glw6ejW/vtV9D6c8oEdkfF/jcP4Wp1MoEjEXGICJj6olqQIw4mXgt5zb/9B5SGwB5
-         T+ogDKIcqhpEZ2fs5Gt3tJEx2NHv6Cs0AbdLSUBnt/GbGC7emYw6iTsYyaFY+YTW1UrH
-         M2nci0P3sN6AOIABIOk9riPBXCY9UF3Enw/37LrZ5Jikr5mZHxajpWRgCg2LggMtEyCb
-         emDrRQ0wugik05cIJ1QqfCgXGXB2AX14aw91fj+JxmzJKK1AAg58ts5W3tKBDLWuTc+T
-         dDOg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47C02C81
+	for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 11:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1635418889;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NP+BCkeX5HMU4jaVhTr17DOZh51sxhrwjjfC6dSXwv4=;
+	b=Jv191AnRAgAtV7kAUAZIew8PUbNgH4Bk+4GrfXT/73Xzfl3TOl3GLCQVHIVB6ShGxMJ+iP
+	vKjtdX688ueaL8AbAj50jPdsaASWCfaU/tjmzK/5M8/kZsVmcVsuh60Jutyok2ORWA83kH
+	FR+GuNtMGdYCsi14wEqOQIzOTBHw4w0=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-oOJ-ESrENkS37Df1Ooiobw-1; Thu, 28 Oct 2021 07:01:26 -0400
+X-MC-Unique: oOJ-ESrENkS37Df1Ooiobw-1
+Received: by mail-yb1-f197.google.com with SMTP id g36-20020a25ae64000000b005c1f46f7ee6so932129ybe.8
+        for <mptcp@lists.linux.dev>; Thu, 28 Oct 2021 04:01:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=nKi2DpdZmCWkX9HM3C1tqv2L8uAnnVSV85/6XCx28w4=;
-        b=XsJIiCjRWfEa4WSh9SMXzFKybu0wun9ey0P6jnWa2PZHyqcp0KD1ftEeRWSmm8q9bL
-         U3FpNHblxkuzhhX3KfoiNa427WpImh2w3FPwVi3+Z3knJO22Zg0KI9RwXv/EwFGljh2E
-         CpMP9FO3v1VVVOtzEXytp5Y2V7DwWqpZr0o2FVOpniZPSZkh3X/hUK06yyrGHnqmJ38C
-         TAEiKSoqw+Lsvwreh1TuXXPKf2fzZQPn5gDlwoQ4ttJ0FKv0mXz4cxn4g3O1gfiAin2V
-         nyuTz2GIkGaL+v9a4lwWQRZzItUC1qQKBLFmRbQbhy6Hfnz1OoJlhJbGUmAFlgraI8no
-         5/Sg==
-X-Gm-Message-State: AOAM533cjlIr+Sc3OQAKG0hLkJGLXR0/gcC+rCyP2bC0gWiwwky1Cf3+
-	8NrHJlqwapoKpRMFzyrwm9FCoA==
-X-Google-Smtp-Source: ABdhPJxBd7qMDWG5mBQ7lPT5qB1dNn9jPBmRG2iPyZYBOu0HfK4TWkpbbNhRvxFWUj+3ViFBu7RsTg==
-X-Received: by 2002:a05:6402:cba:: with SMTP id cn26mr4786117edb.201.1635415921062;
-        Thu, 28 Oct 2021 03:12:01 -0700 (PDT)
-Received: from [10.44.1.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id bq4sm1121464ejb.43.2021.10.28.03.12.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Oct 2021 03:12:00 -0700 (PDT)
-Message-ID: <90ac2577-1542-b286-732c-4c179ebbd998@tessares.net>
-Date: Thu, 28 Oct 2021 12:12:00 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NP+BCkeX5HMU4jaVhTr17DOZh51sxhrwjjfC6dSXwv4=;
+        b=i1X7HnKFvRbcp0GWQxLO6wa/0FFw3kEf/q687jDHUmVkvSQOpBtueTPDXDjALorvB6
+         douoKxcTJbApIvH1t14AlhYNGcBpl4e0If4+lTDHrWf23fhC27U/Q9DcAUdKFONlJQal
+         /C7mYe8E+xtK4CUzr8s7NUwUhLv+sufGQLQbjFBfvcra5pw63OaezRYXOYdEHeFWjgpK
+         q70rm0A9+wTGzyBcEhD0tamzHj3+jWT437zmBLwa0RPpFRA8BG662uyTRibT+pVm6qHs
+         n3dI/41GlPT8J4gxQubXqFXvRnFWDEYIb52tDByVbCNOzoIS3cqpyHheAsLIfYm14xxw
+         g3xA==
+X-Gm-Message-State: AOAM531t3OUn1xFU3oafNKn2mUVNlfTMhpbRAM8UTVGcUsvel5cO15Ik
+	FhRAIKr1ldL8s3pceGscBAwxASjPd/xGP8t17rBFfwCjIBTFCkV314O7bfJ5zII2wO9tnYniYA2
+	tcNS0RQEEvHORB6DSPhEvfAfMSVcGNJg=
+X-Received: by 2002:a25:c046:: with SMTP id c67mr3928324ybf.135.1635418886266;
+        Thu, 28 Oct 2021 04:01:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwTN0IvSsFHS2bVn6Ml4Ilxzkl0cr4qDBrrJLcuWHiXuX5JIp2sOHOD9pLSHgJ6aZ1BzVTVoCXahPqtCj1Bny0=
+X-Received: by 2002:a25:c046:: with SMTP id c67mr3928293ybf.135.1635418885966;
+ Thu, 28 Oct 2021 04:01:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-Subject: Re: [PATCH mptcp-next v4 0/2] Splitting commits for IP_TOS support in
- setsockopt()
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Poorva Sonparote <psonparo@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1635367735.git.psonparo@redhat.com>
- <119548f6-ee97-48c3-ccf9-3ce623371c58@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <119548f6-ee97-48c3-ccf9-3ce623371c58@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <bfa01f99cbb0479029ad284b020dbb250d19b941.1635390811.git.geliang.tang@suse.com>
+ <20211028092338.GA6915@dhcp-10-157-36-190>
+In-Reply-To: <20211028092338.GA6915@dhcp-10-157-36-190>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Thu, 28 Oct 2021 13:01:15 +0200
+Message-ID: <CAKa-r6srprPPPhUCXW3YnsQEL0ewFBptQFvUo_9mwtw_mD7DOQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: add mp_fail testcases
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Matthieu Baerts <matthieu.baerts@tessares.net>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Poorva, Mat,
+On Thu, Oct 28, 2021 at 11:23 AM Geliang Tang <geliang.tang@suse.com> wrote:
+>
+> On Thu, Oct 28, 2021 at 11:16:12AM +0800, Geliang Tang wrote:
+> > Added the test cases for MP_FAIL, use 'tc' command to trigger the
+> > checksum failure.
+> >
+> > Suggested-by: Davide Caratti <dcaratti@redhat.com>
+> > Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> > ---
+> >  tools/testing/selftests/net/mptcp/config      |  5 ++
+> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 60 ++++++++++++++++---
+> >  2 files changed, 58 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+> > index 0faaccd21447..f522288b2204 100644
+> > --- a/tools/testing/selftests/net/mptcp/config
+> > +++ b/tools/testing/selftests/net/mptcp/config
+> > @@ -15,3 +15,8 @@ CONFIG_NETFILTER_XTABLES=m
+> >  CONFIG_NETFILTER_XT_MATCH_BPF=m
+> >  CONFIG_NF_TABLES_IPV4=y
+> >  CONFIG_NF_TABLES_IPV6=y
+> > +CONFIG_NET_ACT_CSUM=m
+> > +CONFIG_NET_ACT_PEDIT=m
+> > +CONFIG_NET_CLS_ACT=m
+> > +CONFIG_NET_CLS_FLOWER=m
+> > +CONFIG_NET_SCH_INGRESS=m
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > index 7ef639a9d4a6..95bac447f857 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > @@ -232,6 +232,29 @@ link_failure()
+> >       done
+> >  }
+> >
+> > +checksum_failure()
+> > +{
+> > +     i="$1"
+> > +
+> > +     tc -n $ns2 qdisc add dev ns2eth$i clsact
+> > +     tc -n $ns2 filter add dev ns2eth$i egress \
+> > +             protocol ip prio 1000 \
+> > +             flower ip_proto tcp \
+> > +             action pedit munge offset 148 u32 invert \
+> > +             pipe csum tcp \
+> > +             index 100
+> > +
+> > +     while true; do
+> > +             local pkt=`tc -n $ns2 -j -s action show action csum index 100 | \
+> > +                     awk -F ',' '{ print $12 }' | \
+> > +                     awk -F ':' '{ print $2 }'`
+> > +             if [ $pkt -gt 0 ]; then
+> > +                     tc -n $ns2 qdisc del dev ns2eth$i clsact
+> > +                     break
+> > +             fi
+> > +     done
+> > +}
+>
+> I got this log in the dmesg output:
+>
+> [ 2495.182631] tc action pedit offset 162 out of bounds
+>
+> It looks like something wrong with tc.
 
-On 28/10/2021 02:50, Mat Martineau wrote:
-> On Wed, 27 Oct 2021, Poorva Sonparote wrote:
-> 
->> - patch 1/2 Add Support for IP_TOS for MPTCP setsockopt()
->> - patch 2/2 Exposing  __ip_sock_set_tos() in ip.h
->>
->> Poorva Sonparote (2):
->>  Exposing __ip_sock_set_tos() in ip.h
->>  Support for IP_TOS for MPTCP setsockopt()
+this is a packet too small to be edited by pedit:
 
-Thank you for the patches and the reviews!
+https://elixir.bootlin.com/linux/latest/source/net/sched/act_pedit.c#L368
 
-> Thanks! Looks like this is ready for the export branch:
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+when this happens, pedit gives up mangling and passes the packet to
+the next action (csum in your case, but it's useless)
 
-Now in our tree (features for net-next) + added prefixes in your patches
-("ipv4:" and "mptcp:"):
+> How can I fix this?
+is that a problem? maybe we can just ignore it.
 
-- f80cd2ae7b35: Exposing __ip_sock_set_tos() in ip.h
-- dcb0d4eb4318: Support for IP_TOS for MPTCP setsockopt()
-- 758c711752bb: tg:msg: prefix with ipv4 and add Mat's ACK
-- 76fecc38fcfb: tg:msg: prefix with mptcp and add Mat's RvB
-- Results: 4af534378cb0..a1638f497c0c
+Otherwise, a possibility is to add a more narrow filter (e.g. flower),
+ to only mangle packets that have the ack flag but not the syn or
+push. We might also try corrupting the TCP payload to a smaller
+offset, so that more packets are impacted.
 
-Builds and tests are now in progress:
+--
+davide
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211028T092928
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-> It's not necessary to use getsockopt to implement a test for this, you
-> could also use 'ss --tos' to see the tos value on the mptcp socket and
-> the subflows. Would be good to have a selftest for this before upstreaming.
-
-Should we add something in the selftests for each "simple" sockopt? I
-mean: it can be quite "heavy" to create E2E connections, wait for them
-to be created and be long enough, check for an output with external
-tool(s), etc.
-
-For more "complex" sockopts like MPTCP_INFO, it makes sense because it
-would imply a lot of modifications on packetdrill side.
-
-Should we discuss about that at our weekly meeting?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
