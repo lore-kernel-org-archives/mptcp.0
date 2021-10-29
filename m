@@ -1,58 +1,57 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424F92C81
-	for <mptcp@lists.linux.dev>; Fri, 29 Oct 2021 13:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67612C81
+	for <mptcp@lists.linux.dev>; Fri, 29 Oct 2021 13:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1635513720;
+	t=1635513813;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=amecmnDVg0BZZAwd10iuO1yNQyo6EpMEDR7vUqQy/K8=;
-	b=Qvis2+/oc02I0P3Off6YPV2MeFARyTXMHHCuRV0m81LMGvLNUwnJNcD5pOyyRiLBSdRC71
-	cDJcQVguFtc4jkRbz07EqH11Qz2lFXlGcNgdo1TrSfJ5Ze5srzbBfOZSFgzmz17nn1hTxD
-	Ds7ppJ/+acObFaT54D5q1mf3L6sdtNs=
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com
- (mail-db3eur04lp2058.outbound.protection.outlook.com [104.47.12.58]) (Using
- TLS) by relay.mimecast.com with ESMTP id de-mta-4-hj9IIRoaNAKqVhDMFjgltA-1;
- Fri, 29 Oct 2021 15:21:59 +0200
-X-MC-Unique: hj9IIRoaNAKqVhDMFjgltA-1
+	bh=oaw85ZLEuoCmmDpMiEkHY1LHy5VshN9cBM+wEjCYOUQ=;
+	b=Atsotsbvi4zXhCxbEoVSqqZvjx4NcuggjsDXDkNyriESJEV568XDjD6jwl0ii7GDYH9v02
+	5Xm8TEXtMOR89EytviHiYJDK2R7DukWqBTFrk6G66g9x/YL/DEZglGmqyQPRu1mEEAvvz7
+	xYnap6BpBPyQI7OXEx5XCyXgngFMhFo=
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com
+ (mail-ve1eur01lp2052.outbound.protection.outlook.com [104.47.1.52]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-25-FDq32pmBPsaSMWCKyM023g-1; Fri, 29 Oct 2021 15:23:32 +0200
+X-MC-Unique: FDq32pmBPsaSMWCKyM023g-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ruz7Y8gEtCinKNn/PRZX0+touEV40PLyjy2r3eiU4fD62zrdaOZBZEaknWrAlua2xlw7y2/QbJplZXFluzGjJLxhdxrFlrlsPxhsuHjUp4SHTpA0R3K1hxPFe69cYJSpUehBkWdbiDt9yc339oTvXrK16OZgjx68TV4PACS9p4nN8Fy1yXHPSlwRkkxUVQpCq1gxK5dp9Q8y1NvtEALi9ChhgmFHtqUCDOKSBgATizjjdRYh5MebCcqEg8PzCoDw2iABNlfh/Q9quA0ZxmvpNblE3UdwsjMLJBTTvBQ/dnrbgl5sIjq34Exvy0+vgA7zhLLB+tj6Hm4LBPa0/VaTIg==
+ b=cF1Rac2CZDoujcYN5gfQjr8AZQIC3J7wwj49g+6LnQQ0KRLUo6Umcfi6BEwntr7IbHJOXkZ8CWkIKf3QzLHMoo5RUcSjc+ZYITSh9eJKwNxqrXit9mgBEhDKCUEdFRD3hnSiVDOYU4n9riQy98b977/Ftfsej97YR9TZ60LWcqoXoezA+ywjUZeiJryybKXSXAW9bzWZMWtL2aKSYB3IFnzjplOCjm4xxOyraIJtxMcDg8fDHbaQOW7P+raVKgMQrdR8idi48E+2HjyZ2g5Dm1kKWGePrwc5gdSAgQ9Aa84g9D9a75q+pSzSdJzwGHg8h6YaQsuBqJz7V/NOU/BKEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=amecmnDVg0BZZAwd10iuO1yNQyo6EpMEDR7vUqQy/K8=;
- b=SGoRO0olIegrIqgGL+QgTADByfdR7EGpFdbthNdjLjhCtWkelcTBPD2T/nC3bdK4E3uQb3qetvrZmMiRVMZ9kqQcrQmvFN2NRHjv6ql7o4jXwKiKprGr3cQ0We5qigZ7/SobIIKWwzoT7JPsw4Q3JQoEbx/HXHAA5BzZkHKzIoM2+qEmD0R9S8QB0AZ3xZGvzx3TSJjZjbwcbdqCcfko90eOvIjrpjSvsgbKHUeMfH/eXEiVogSY9kCZA2ytf8sConllG0dZPljx5g6EqD8NCZp/5ElwrPAwnTKhg4wMwO/otqVyGo05m2TIkNKzu1yFF3dbHO1yDoIBlmQMazR1vw==
+ bh=oaw85ZLEuoCmmDpMiEkHY1LHy5VshN9cBM+wEjCYOUQ=;
+ b=m5AEDsThrLH1Ys1UKnVsp32w91LVsxIJimJW6E7vs4AKVYFC705+8whZ2RKFaQXVUerI/Dr099bhg2k6iVV76zCxk0w6RG7PQS51d40824dLiLb88Qlm4TBmsSun7aqZuFWKm0eAEkzTHtsa+HEKUOTZw9xqHzR1L8Mfs+q9e6hlnvSPy4irVsP35F9YYYdsv68KCsvlaYvyXfviRZNf+q0Gyu67mV5VXBFgITciL0iFAkWdQPyAe6imzpIk5JGpJXm1aVeZgjF3yFN53DqMnwFl+60Z8f6lEoZNGyDLcEnrzkMAzoa4T31koG5mtrWwM3aBe6BcJFWX5wtcZFTcCw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
-Authentication-Results: tessares.net; dkim=none (message not signed)
- header.d=none;tessares.net; dmarc=none action=none header.from=suse.com;
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by HE1PR0402MB3482.eurprd04.prod.outlook.com (2603:10a6:7:8e::24) with
+ by HE1PR04MB3001.eurprd04.prod.outlook.com (2603:10a6:7:22::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.26; Fri, 29 Oct
- 2021 13:21:57 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.20; Fri, 29 Oct
+ 2021 13:23:30 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::15cd:f2b4:6acf:99af]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::15cd:f2b4:6acf:99af%6]) with mapi id 15.20.4649.015; Fri, 29 Oct 2021
- 13:21:57 +0000
-Date: Fri, 29 Oct 2021 21:21:55 +0800
+ 13:23:30 +0000
+Date: Fri, 29 Oct 2021 21:23:29 +0800
 From: Geliang Tang <geliang.tang@suse.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v8 8/8] selftests: mptcp: add mp_fail testcases
-Message-ID: <20211029132155.GA4144@bogon>
+Subject: Re: [PATCH mptcp-next v8 0/8] The infinite mapping support
+Message-ID: <20211029132329.GB4144@bogon>
 References: <cover.1635481641.git.geliang.tang@suse.com>
- <ff613391540609e31cf4aff5abefaa03fbd63278.1635481641.git.geliang.tang@suse.com>
- <04774993-d824-0f62-c55d-bd21e46b99fb@tessares.net>
+ <8c3e2143bcd123e81d4a7d339ee2e7c6b46ba92d.camel@redhat.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <04774993-d824-0f62-c55d-bd21e46b99fb@tessares.net>
+In-Reply-To: <8c3e2143bcd123e81d4a7d339ee2e7c6b46ba92d.camel@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: HK2PR0401CA0015.apcprd04.prod.outlook.com
- (2603:1096:202:2::25) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: HK0PR03CA0100.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::16) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -60,170 +59,136 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: from localhost (2408:8207:2546:b4d0:c652:b659:7170:192c) by HK2PR0401CA0015.apcprd04.prod.outlook.com (2603:1096:202:2::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14 via Frontend Transport; Fri, 29 Oct 2021 13:21:56 +0000
+Received: from localhost (2408:8207:2546:b4d0:c652:b659:7170:192c) by HK0PR03CA0100.apcprd03.prod.outlook.com (2603:1096:203:b0::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.22 via Frontend Transport; Fri, 29 Oct 2021 13:23:28 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: da87c558-74f0-4f0d-f310-08d99adf14e3
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3482:
+X-MS-Office365-Filtering-Correlation-Id: a9ddf0d8-de58-4e91-616a-08d99adf4c4c
+X-MS-TrafficTypeDiagnostic: HE1PR04MB3001:
 X-Microsoft-Antispam-PRVS:
-	<HE1PR0402MB34820A182CF81FD755685C85F8879@HE1PR0402MB3482.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+	<HE1PR04MB3001BAFFEB4CEBE3451FCEE7F8879@HE1PR04MB3001.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	LTO6F4fGTJ4dxBqk6UQsm2rukIPzTGvc8SWSzpvdFWkdTL0vgK+mr3mAoLUt7VkIfrN20NcVLD0ATGi9F6Y3tp620+1rVLOpTX2TrJnTs/6G0vHNausfph7Yz3nb9tkWJO3+l10LSuxSDSB+llfPVIwiCaRJ31j3sY6cY4bqgO2uqXwIL0aaYYziTzUoBURF616W8X5k/rqlD5Aei0IyUn1sWmMc8Pf1tP2hUSGHCRd7VmtQv/xSLE3HB9blJOihGB5OzR2sA01cNXoGrPI9jM5mPpwUL7sJ5N8Phb/1P4OiPiOiFj9N01qv7RvGtGPiPedmHEyb0X7ERF/KYn4mCOhAcbz2HdPxPrpwbPpVOHQVvyRPwwGDaW1jEDwAuTcDQRDIXxV7vazp771mWANvBMju2Vz9/1WIN5x+1Ru9zWz46UvfQ7uZGvvIQcgAdZ75BTyGcUlyL789ZQ53dzxa6xMOOFD3qrIq+FWYzITg8JAR0hgr1/EIasnEpiSX8I6KG0UZMCWqr+iaFjAjoIA+FQnxTWBUa07rJ7xFBFHSZ1PBSn3mHQTfLQf/QdKVp6Id3PJMcr6dGrycjrMnDk5njF1E6RttzCvNapB+FO5MRL0JacoHIGgyDr5nvk6O5Lz4IDsS6heHlrwZiXgRyt5b4QE8nNLzq105OiP79V9SsixS1Q+GFazxcJ8RFIgtzHKBIc9srwG0c56FqH/ke04YFg==
+	0PlfccsWCswQU3dW/YESZCCTXrBlDirkD3kpzJ4nYd6EMUO8o1spPRL6bnPbdQ0yLw1oiwCWYPaBSkKN5fSvcn88VNYFaBg5dzXusYd9waZpTE3Zdfjiee5vHyQztmpyGm2rtDemRlRpwx3XQJFweaEHE0KKz2+gEiMozCq3PmRk0f++p5wow5EtSGNE1Hq64WUQGq3IddYl+U0O/GJxTnjTNjDOStLNf53aNQrX+08+aH3TFjgg5tBQEwnyKhu6vGKIizyExntxFNQ464z+1XXHedgVhmKeBEy8iWRMAbpInuRO/qK2Wa0+ywi/9dGJzPHc7cfWndviQUS1hwRFEPHQceKT6zQeboqHBugOujqnVBmIcGbd2oFtMhxYduwHW5aUiXnWl7+zI2+rLprx2Yc8591Tm85/tSYnj8MJBScXSgyRn9b78tOY/PmNdo5sraj4IyjhMMKpGKFOTPpbrj8ow/C3llbZp37y6KLvRMTz6PLeJ8G3NYgDSxvhKm8GKt/igDtRpTL0UKYRz47EeLQ2MOX4Q0BcYhxlgouOchbGDJStJ7rXBMviXyL0jfiJ1D4YKu3hImYbqQTG94VOCpjTifvIYkwVVwty06aBAsyD0qAuyf+BkhvN+aC4a+USQpaA0NS7+6KGbe5SFN8xvN2wDGC7Ne/g2ccQqdRyLwmsbPFdB1n5uBiN7K0vlvd/mOi6cuHEYDqNIFhBGRimeWAD5fsYsZX1vmGFKbgC7x0=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(316002)(1076003)(15974865002)(44832011)(6486002)(83380400001)(966005)(66476007)(33656002)(2906002)(186003)(5660300002)(6916009)(53546011)(9686003)(6496006)(38100700002)(33716001)(4326008)(8676002)(508600001)(66946007)(86362001)(8936002)(66556008);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(38100700002)(316002)(8936002)(6486002)(83380400001)(186003)(66556008)(66476007)(33716001)(6916009)(86362001)(508600001)(66946007)(33656002)(6496006)(2906002)(4001150100001)(44832011)(1076003)(8676002)(966005)(4326008)(9686003)(5660300002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8rEGyj51d5YPwDD58dRlf0wc4pbUYW9mvwmOJ6lzUX9OyARmyD2TBau50Gz+?=
- =?us-ascii?Q?Lj+TctE3KfK0TIVNlJqVs7ffSRv19nxdev+jjq79jKBet4KgDXE9zuIX6E/E?=
- =?us-ascii?Q?UdvPD+RJcmNPqT0KU3R44J14sv9ern3Z4EOVsz6qu/O9nDNiqe78fWHwhuEf?=
- =?us-ascii?Q?dKrVxvV/xukgmPMF26TRXZCzBlVV+hfnmFNoyEXaM/DypY6AVze0MP0fKZlx?=
- =?us-ascii?Q?ZibDRwQuLdoLaG5VGQq0aSb0O/IoND0LrxiSrDLHDfhhgVwOKxisjdVPqfak?=
- =?us-ascii?Q?pVLxY+EE/1JwVrM65MdxyaxqfWrARF4sDdF5iZZfcSO60bUV+Mmn9O1HCkIq?=
- =?us-ascii?Q?7b9qxUro15F0cvJWbQwJJ+u4pHCGV+ZaoiijqBy6oYVIucTcX6xBXtQOZYL8?=
- =?us-ascii?Q?7dD9oMUe0mHqlIUAKfCm1LJ912v3ZZm6TvqZ0qAQkQAsNwPxqUeRpWhTAN1X?=
- =?us-ascii?Q?LZjwgcaKhVqK+x1bD4G+14lMSJFdznwuZHsE07xshQf2LFoDlDPqo50rDdDT?=
- =?us-ascii?Q?O4Ri2ScyWdVJliJ6uUOfuQVy2sBckyzR9jkto64szoS3NSySq8QiXEBTob6l?=
- =?us-ascii?Q?oGAMDIXTNO84rB/V2faKIBpgJqPemeGo9RDlUe6rM59TjchJPHwdzxrfRm51?=
- =?us-ascii?Q?N0YwJNuTx4L7ONbPKYf+c83CMjHG+eWUpMUG5EA6ItkS0Ep6xeYKevLsH6MA?=
- =?us-ascii?Q?zDHeo/a/0ND+EGYxhsZdL49lTIYT6S5jvRgMiFaG/O7r8i1pkErg1NzkOaqk?=
- =?us-ascii?Q?0VDqOTgbWqTN82G1o/dTWDCLZn2W3bymk7k44v0qGD1101kL8PWPWk3ogDZw?=
- =?us-ascii?Q?j5fM+iMgQa9qEpaH2NUU1TxZtZ595LfSbQt6M/i6hkSXCbcoMeXA1cWZn/tY?=
- =?us-ascii?Q?g3oq0RA1//UfRP53W9ZNopymND8B+tv6fm8bUZeQfNB11cVnXs+FDti6kvLo?=
- =?us-ascii?Q?QLdR72f4GZtLeUVVqykpetRllHfHSBJ2Qq4b030E7b2e6T1umf3Uwhrp5E5K?=
- =?us-ascii?Q?G5a6BwU+7vAAUzduv7fDMotVU7IVUP9ur2LPpg9d7lBuXIvC4XwLrDYk/18s?=
- =?us-ascii?Q?MHOM2Cnqm2iq+fJf4DcshaWorcbfTOz83iHRTmEabDWQ6fZEwTBAFc/f+S3f?=
- =?us-ascii?Q?jbF4Jk+o+uQphA1P47/2BYddj3Kk9+sB9kCTrZkd+ApQ0uvjEvb/PYSFlNSS?=
- =?us-ascii?Q?Yz+AeIgkPwDV58Y2j56QKN0vI11LNgMURnlGcPvhb8Hn7dmMDTqSp6sA058D?=
- =?us-ascii?Q?86CCZemsD8vxqOBHfftlcURHko4pW3MNjanqGSmLkH1a8b6obkWbXv4zoh4Q?=
- =?us-ascii?Q?z4LmDbOLw9+AQx5nviuZvCGPgz7t8NZhB/vjI0NhGSMdtiusQ4jmtNLqSkj9?=
- =?us-ascii?Q?IRElxSon9pPwwjRgQLwPBBBbKa0q?=
+	=?us-ascii?Q?TtwhPUkz88ANAqtkgunDGOmlwRwbKRPg4WDGZ7ZXHciC5cG8uslma97Rq7OW?=
+ =?us-ascii?Q?wWOCfKTrN9i06qBdHTO3Q2jSmgNmmt+bXsmy/QehKtUxGIgpTlDq/5/aqM9r?=
+ =?us-ascii?Q?gQ6k/R5ierb+zMxD0t+I++5/+jgbYL/ZkSvodZ+ylX3BLogJQ06EQNyL6Vd7?=
+ =?us-ascii?Q?+EnnqOYo5YvHJ4AB3eCB5tn6kTBYiM8pcPRfGLErnTM043aKkRUXTvlyBsIi?=
+ =?us-ascii?Q?vc8FfgIEW6eSnmUuTXhLfpXi5ijYumdDUgKWCHUPeuqofWddsAGBoSxpY142?=
+ =?us-ascii?Q?8EbWkpXe3s+0+4ERhMocNYdNPiQraNfNjQVbn+bdq9niTiPBeCeOhbhtQcOc?=
+ =?us-ascii?Q?5IK6cDhAi1HNHrbyG9/o3dpNdC5Xkh/z19wwXmFZWHU9ihYkRMBHLOTceZRD?=
+ =?us-ascii?Q?6kwgbAIQws25L6mBx312RPJpro8SUPtBrY/u2id8ILwotO0Q5z1g9IGLtvQI?=
+ =?us-ascii?Q?FZvnWYF0GX4j0IxK4SacS9bE4IuE36yC/KOrhO6THcKuwGrvtYJztuKBhIdF?=
+ =?us-ascii?Q?6Br5Da2leDB0uAsnqHfonnKocUJMJDvEFl156uMZpmLgbyypXf/KGrxZv3W4?=
+ =?us-ascii?Q?zhHzs0VRWLRZQAV4HuxIsTvQOOxqwEFfGF21dP5bSahyLH+KvwZfpSvjMffO?=
+ =?us-ascii?Q?p/M1cvLmFMcbY3l24t7XjMBpBjxkmuG9n9tLOKQAYYgx3jJBRTv4AvedoFP6?=
+ =?us-ascii?Q?5lQH0dTLvJzn6Rzv0doSagXUFesPhng9pJbSBs65NpXupzWW8T7y5QKOFvep?=
+ =?us-ascii?Q?MMJgYz6lcHct3hb1t+RF41PhEzi9ODJ6i1d0FOKxr/AUKh3/VoKOqpbD0UQ3?=
+ =?us-ascii?Q?+nw7NuoB/2YzomMBI6xSIi34OJCk7XPco1rAcs6MHTLIdK4e7VfzKfMXLD6d?=
+ =?us-ascii?Q?B5FXQ9SXy/NmyyLhJZj5EtzlSkMu1vmaG4ZGLPwjHiG33xP3OXlPvNFqnahf?=
+ =?us-ascii?Q?ues97TuyNBJ7pXW6VVwU6Nv9kp7qcJ09W/X7x/gRSU+Fud5UIUE4avFpYePO?=
+ =?us-ascii?Q?cX2x9hNhyJke6ZmcjIoMDMCyS8vzU05LBZBpvj+Vo967uNYS0nSYKdsg+EEE?=
+ =?us-ascii?Q?dYJwN/PyVJKY6xR1LMFFC2TOivC54xaNj3Vy+XBSffmwfEbxOMulDrRm/r/d?=
+ =?us-ascii?Q?+oN6s3aYWFcgiEzQM5Of8JSkoYYAtbSB+8QPglzm50xy5Ss3lUDt5FuPIQt4?=
+ =?us-ascii?Q?UI+ZgFa1hEP8fC7YJtWtGuDn17ZNPAtPYny4R7ds5qHcM31HF3e3hjBBekRB?=
+ =?us-ascii?Q?Sw8+IbEjuLFH4KjuTCJFDV4GvBYLEQPqEP12cyAjFj6L/r1uXdSOfLAfu/41?=
+ =?us-ascii?Q?zouJk9sxSWR5fz9jcjZUO3N0wTLAFMX7AtuxQflScVXC9o/IwZbPdEJbd+Os?=
+ =?us-ascii?Q?G3RqJ+bLzi/jLOwoZFZTGGx5WxDnqlt3k+DpOxqANjCSKTACrAaAeYpYFRIL?=
+ =?us-ascii?Q?PDU69zdv0WGsop5onF5nEfTVLCYmXqcO+cySpJhZlYC+g2pgnfuBB0+SkQ0O?=
+ =?us-ascii?Q?7JnLXb3rAPR78vEPRlqegksqj047bFxh+qDhUQKbOr+GgAzsc9o0Rn4SLMLx?=
+ =?us-ascii?Q?X98DrMPpesp3QhkTYbjwHa2P+oqTm+j+rQ0+9nW9iNT2ybSxJMna3/cjpHVI?=
+ =?us-ascii?Q?gOaKpN4U+6IJDf56TYHVjiYgPd+HxPUlt8mm1JShyNrYp9dGW8tg4K0Iz253?=
+ =?us-ascii?Q?8WutbweksN54unQ8nt0KonzuCRU=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da87c558-74f0-4f0d-f310-08d99adf14e3
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9ddf0d8-de58-4e91-616a-08d99adf4c4c
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2021 13:21:57.0564
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2021 13:23:29.9357
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q2pKzQssI81FJwmOTlx10CdzMEAZOdwslo07xaQTQAId6xdpIRF0IdosytfHHDgC4HTqVI3TAEEgRoYRUPjVaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB3482
+X-MS-Exchange-CrossTenant-UserPrincipalName: zmGUIqIv0b2/Ji4bkkanIYS2UCMbwMrPWwj5nr9g3ZVgrA/7HiqFT95R1fvW34tezaPJyXJC5p4/YqEH4P75xg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR04MB3001
 
-Hi Matt,
-
-On Fri, Oct 29, 2021 at 12:02:47PM +0200, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for the new version.
-> 
-> On 29/10/2021 06:40, Geliang Tang wrote:
-> > Added the test cases for MP_FAIL, use 'tc' command to trigger the
-> > checksum failure.
+On Fri, Oct 29, 2021 at 10:17:13AM +0200, Paolo Abeni wrote:
+> On Fri, 2021-10-29 at 12:40 +0800, Geliang Tang wrote:
+> > v8:
+> >  - Patches 1-6 are unchanged, only updated the selftests scripts.
+> >  - The patch (Squash to "mptcp: infinite mapping receiving" for v7) is
+> > dropped too. Since this series only implemented MP_FAIL in one direction.
+> > The TODO items, "MP_FAIL echo" and "MP_FAIL retrans", will implement later
+> > as new patches.
 > > 
-> > Suggested-by: Davide Caratti <dcaratti@redhat.com>
-> > Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> > ---
-> >  tools/testing/selftests/net/mptcp/config      |  5 ++
-> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 75 +++++++++++++++++--
-> >  2 files changed, 72 insertions(+), 8 deletions(-)
+> > v7:
+> >  - drop the patch "mptcp: add last_ack_dss_start in the msk" in v6
+> >  - set allow_infinite_fallback to false in __mptcp_subflow_connect and
+> >    mptcp_finish_join.
 > > 
-> > diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-> > index 0faaccd21447..f522288b2204 100644
-> > --- a/tools/testing/selftests/net/mptcp/config
-> > +++ b/tools/testing/selftests/net/mptcp/config
-> > @@ -15,3 +15,8 @@ CONFIG_NETFILTER_XTABLES=m
-> >  CONFIG_NETFILTER_XT_MATCH_BPF=m
-> >  CONFIG_NF_TABLES_IPV4=y
-> >  CONFIG_NF_TABLES_IPV6=y
-> > +CONFIG_NET_ACT_CSUM=m
-> > +CONFIG_NET_ACT_PEDIT=m
-> > +CONFIG_NET_CLS_ACT=m
-> > +CONFIG_NET_CLS_FLOWER=m
-> > +CONFIG_NET_SCH_INGRESS=m
-> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > index 2684ef9c0d42..d33cb5ce0ff3 100755
-> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > @@ -178,6 +178,12 @@ if [ $? -ne 0 ];then
-> >  	exit $ksft_skip
-> >  fi
-> >  
-> > +jq -V > /dev/null 2>&1
-> > +if [ $? -ne 0 ];then
-> > +	echo "SKIP: Could not run all tests without jq tool"
-> > +	exit $ksft_skip
-> > +fi
-> > +
-> >  print_file_err()
-> >  {
-> >  	ls -l "$1" 1>&2
-> > @@ -232,6 +238,28 @@ link_failure()
-> >  	done
-> >  }
-> >  
-> > +checksum_failure()
-> > +{
-> > +	i="$1"
-> > +
-> > +	tc -n $ns2 qdisc add dev ns2eth$i clsact
-> > +	tc -n $ns2 filter add dev ns2eth$i egress \
-> > +		protocol ip prio 1000 \
-> > +		flower ip_proto tcp \
-> > +		action pedit munge offset 148 u32 invert \
-> > +		pipe csum tcp \
-> > +		index 100
-> > +
-> > +	while true; do
-> > +		local pkt=$(tc -n $ns2 -j -s action show action csum index 100 |
-> > +				jq '.[1].actions[0].stats.packets')
-> > +		if [ $pkt -gt 0 ]; then
-> The CI [1] is complaining about that line:
+> > v6:
+> >  - use allow_infinite_fallback instead of last_retrans_seq.
+> >  - rename mptcp_is_data_contiguous to mptcp_allow_infinite_fallback.
+> >  - rename last_fully_acked_dss_start_seq to last_ack_dss_start.
+> > 
+> > v5:
+> >  - move last_retrans_seq from msk to mptcp_subflow_context
+> > 
+> > v4:
+> >  - update patch 1 and patch 2
+> > 
+> > v3:
+> >  - drop MPTCP_INFINITE_DONE flag
+> >  - drop MAPPING_INFINITE
+> >  - add mptcp_is_data_contiguous helper
+> >  - add the fallback check
+> >  - The u32 target testcase has not been completed yet.
+> > 
+> > v2:
+> >  - add MPTCP_INFINITE_DONE flag
+> >  - add MAPPING_INFINITE mapping status
+> >  - add start_seq in the msk
+> > 
+> > v1:
+> >  - add noncontiguous flag
+> >  - add the mibs check
+> >  - tag: export/20210904T080009
+> > 
+> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/216
+> > 
+> > Geliang Tang (8):
+> >   mptcp: don't send RST for single subflow
+> >   mptcp: add the fallback check
+> >   mptcp: track and update contiguous data status
+> >   mptcp: infinite mapping sending
+> >   mptcp: infinite mapping receiving
+> >   mptcp: add mib for infinite map sending
+> >   selftests: mptcp: add infinite map mibs check
+> >   selftests: mptcp: add mp_fail testcases
+> > 
+> >  include/net/mptcp.h                           |   3 +-
+> >  net/mptcp/mib.c                               |   1 +
+> >  net/mptcp/mib.h                               |   1 +
+> >  net/mptcp/options.c                           |   2 +-
+> >  net/mptcp/pm.c                                |   6 +
+> >  net/mptcp/protocol.c                          |  22 ++++
+> >  net/mptcp/protocol.h                          |  13 ++
+> >  net/mptcp/subflow.c                           |  56 +++++----
+> >  tools/testing/selftests/net/mptcp/config      |   5 +
+> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 111 ++++++++++++++++--
+> >  10 files changed, 186 insertions(+), 34 deletions(-)
 > 
-> [09:34:44.063] # RTNETLINK answers: Operation not supported
-> [09:34:44.107] # ./mptcp_join.sh: line 256: [: null: integer expression
-> expected
-> [09:34:44.267] # RTNETLINK answers: Operation not supported
-> [09:34:44.332] # ./mptcp_join.sh: line 256: [: null: integer expression
-> expected
-> (...)
-> 
-> This is displayed in a loop as it is a "while true".
-> 
-> But just before the first one, we had this:
-> 
-> [09:34:43.859] # Error: Cannot find ingress queue for specified device.
-> [09:34:43.955] # Error: Parent Qdisc doesn't exists.
-> [09:34:43.959] # We have an error talking to the kernel
-> 
-> I guess the previous "tc" command failed and I also guess you don't have
-> that on your side, right?
+> I haven't reviewed the patch yet, but I have to say: nice new email
+> address :)
 
-Yes, it works on my side.
+Thanks :)
 
-> 
-> Maybe a missing kconfig?
-
-I think so. How can I get the kconfig of the CI?
-
-> 
-> I guess it is "safer" to abort if one of the tc command fails.
-
-I just sent a squash-to patch to fix this.
-
-Thanks,
 -Geliang
-
 > 
-> Cheers,
-> Matt
-> 
-> [1] https://cirrus-ci.com/task/6502115922149376
-> -- 
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+> /P
 > 
 
