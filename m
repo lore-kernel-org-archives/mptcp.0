@@ -1,59 +1,62 @@
 Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FA572
-	for <mptcp@lists.linux.dev>; Fri, 29 Oct 2021 04:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2490E72
+	for <mptcp@lists.linux.dev>; Fri, 29 Oct 2021 04:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1635482496;
+	t=1635483231;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hXNM/YXN8K1PeAkM3YsTjrYAZv15tZMooEMHa/CLziQ=;
-	b=mQmUxS9Jw92t2uRenCzIthFslhIXgsoXBOhC+d9SgEXRUyTpsuFI6pwWapVCY3gzggCmq9
-	M31QDSplayXkYhDbntWi+KkNPOa2GZ/1knnTRw6R9I6EWWoLiUeDQ0NYYzai1sOtGcWzJf
-	Q552dTQJ7zKeMjX8HtynWmyHCbOUt9A=
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
- (mail-am6eur05lp2106.outbound.protection.outlook.com [104.47.18.106])
- (Using TLS) by relay.mimecast.com with ESMTP id
- de-mta-10-T528rcd7OHqrXH_lVxxVGA-1; Fri, 29 Oct 2021 06:41:35 +0200
-X-MC-Unique: T528rcd7OHqrXH_lVxxVGA-1
+	bh=yMLlvTpjw6GiqcUuXIw6a+juFUX39Hptosfn5c6IFTQ=;
+	b=JVx+P+G3uFVxZwayCLxlwsBmDGegBpts0cvA7i3qc8uk4hVX67izKhGRxN4T1wM356Hz1W
+	xHroqzhNA/Thzz9bKg7BV+m99i7d3e/W1h+vATEByQQIDMDrqm5jCVQ7XRzfIcGWRlfKwj
+	PUjj0B8SBYKH2n9JT0+KqcT9dp5Nf28=
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com
+ (mail-ve1eur03lp2053.outbound.protection.outlook.com [104.47.9.53]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-34-s1jNfYtJPpuhe2yyR0Z_qw-1; Fri, 29 Oct 2021 06:53:50 +0200
+X-MC-Unique: s1jNfYtJPpuhe2yyR0Z_qw-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EbWqRnOSvKozjMi5CFpKLQ74Ij4V2nz/8R8Gjz5T0l3Ei72ixqJiDwtO+1FY6QBZL25HSoDzrLFMSG69fJuMjMMokXG9jVMy2pu3fPD/YS2lCk4xeL95icu8yQ9tlOu0fTAAshaXEW3HQ3G0FAvBf6A3kHkId81XPNcyLdIHi6eSdKu0IRlpsd0Jz/IznkPzqdriGwbJjWsiA8o332tSRCvqv9kwwhAv+6/5Sn0yJGuUpiJIXxzjoEeVEzUI/vDBRzszvr1DzGNu5bwWmPqxuB8yQiVCU/oKWgy5FGgxIV6L7jNfOW+SlnQf7uBUYUyvd3Rf3pQPJub91Z4ogyUsPw==
+ b=nUjSDfHpMSFnsWeMHPvre8UhV2XKhBycXra5n3SHmh1qsLWqRozdDphCQDXf2XRhYkP1+ldD6ySCLi90O5TEWtGqCIhmpG4JHDT8lU/OxSCqxRNGGwUTs2Iudg52fOdm0xgf0ftfOtpwMZEe832HZyhuCgfxWvax5hCj1Q0kCWBSKmtRo/9lNveD91TI+MLSC3fGx6Ww1I1kFkufTUzlJ95Zs+neh3DMoituZ9MDbnbJVtmC32EWQjX82Pa5mqmbL6AX0+1uC1V5IaOiyib6vqmW7IwUk01Fp+NJgldKYhltHsOYdbcKHVRIBXQxya3r/azz5fb20wq5hruTIP7URA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OqEHyzgkLpnFPm+YwgANN06MLwa2C8ytrg2A5A0Ut7g=;
- b=lPua7bk1FYRQYqd+5vKN6F/Mue26B1ln8Z4i7XcCz5u1eFHpvDHGV7Y/gzZRRXBSUaeEIcFzVPTL9QjwhA1wUbV4PPWIaTjT1yfZWp98jA67Ntdq0FFbzqEr7mTqqG2RzfHoIxjhiUOHcVpIJhO4gbFoKoXDcAdciK6a3V6VIfzgomctcaoFmp09GvS1TC3BizeBueaOttiwHPBB1xfrwpPS+BJJYwO1kUQVz6pdGyRmi3cVe9e1F7CpoBYaXR/rHtpYuW52OLkanCTfEfKwR6dFnmyGJaoJfckPINap2V/Wg7n/XE/lxF08FL8VFJMtPbbGVJ1jIlX+p/o5OY0g8Q==
+ bh=yMLlvTpjw6GiqcUuXIw6a+juFUX39Hptosfn5c6IFTQ=;
+ b=P/duRKbtGbhHz4x8MchcDhRt9aKhSwGS5KjPDAhzocqR4Iy0Ju7FU+tC7SYT9HW7qAIViSdH8EdxJUH0rvnfsHRGsDygNeRIe2HrGpoYgYKf762AtlE/2FVurzQtYWYTuiIm3tWWnJlOPdq9qHOkIr/VSlK5T+wJEltaTAJBqTqfcLMgGVxmE/stBs43X2N9Jsvh6qdOMpmCXoG+BgW8ww2hqn9sybCkfUUOXdKlMtC4M3w1KQE2KLkbKiK2ecmsDyvhVUs5aMfW8xEXAV3RrgoG+5Ykf/Ucp416fxS/+4nz016/1mgj8362wZnNTZA9yNEv4NbcqBYyn2m6QcxNbQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by HE1PR0401MB2652.eurprd04.prod.outlook.com (2603:10a6:3:83::17) with
+ by HE1PR0401MB2345.eurprd04.prod.outlook.com (2603:10a6:3:1e::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.20; Fri, 29 Oct
- 2021 04:41:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Fri, 29 Oct
+ 2021 04:53:48 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::15cd:f2b4:6acf:99af]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::15cd:f2b4:6acf:99af%6]) with mapi id 15.20.4649.015; Fri, 29 Oct 2021
- 04:41:34 +0000
+ 04:53:47 +0000
+Date: Fri, 29 Oct 2021 12:53:47 +0800
 From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v8 8/8] selftests: mptcp: add mp_fail testcases
-Date: Fri, 29 Oct 2021 12:40:18 +0800
-Message-ID: <ff613391540609e31cf4aff5abefaa03fbd63278.1635481641.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1635481641.git.geliang.tang@suse.com>
-References: <cover.1635481641.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2P15301CA0011.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::21) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: add mp_fail testcases
+Message-ID: <20211029045347.GA4583@localhost.localdomain>
+References: <bfa01f99cbb0479029ad284b020dbb250d19b941.1635390811.git.geliang.tang@suse.com>
+ <20211028092338.GA6915@dhcp-10-157-36-190>
+ <CAKa-r6srprPPPhUCXW3YnsQEL0ewFBptQFvUo_9mwtw_mD7DOQ@mail.gmail.com>
+ <de15a4e9-0140-2b18-7a5a-c010980eedc2@tessares.net>
+ <CAKa-r6t_ajhpvO2PnGyL2E-0FuV+r9D1i31vO9J71M8XiajnkQ@mail.gmail.com>
+ <0ea55f5c-df3a-2848-a9f4-a830cba876c1@tessares.net>
+ <cd55aaac-ea6f-e09c-489d-34112e3ceb39@tessares.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd55aaac-ea6f-e09c-489d-34112e3ceb39@tessares.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: HK2PR04CA0052.apcprd04.prod.outlook.com
+ (2603:1096:202:14::20) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -61,260 +64,209 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: from localhost (60.251.47.115) by HK2P15301CA0011.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.2 via Frontend Transport; Fri, 29 Oct 2021 04:41:33 +0000
+Received: from localhost (60.251.47.115) by HK2PR04CA0052.apcprd04.prod.outlook.com (2603:1096:202:14::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14 via Frontend Transport; Fri, 29 Oct 2021 04:53:46 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 14cc7c9e-9ddc-4bd7-ab32-08d99a9662d2
-X-MS-TrafficTypeDiagnostic: HE1PR0401MB2652:
+X-MS-Office365-Filtering-Correlation-Id: 5d5883fe-d892-4f6c-396e-08d99a9817c6
+X-MS-TrafficTypeDiagnostic: HE1PR0401MB2345:
 X-Microsoft-Antispam-PRVS:
-	<HE1PR0401MB26525451F94A69E99BB5F601F8879@HE1PR0401MB2652.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:449;
+	<HE1PR0401MB23455AF642AB4BAA2A4A31FEF8879@HE1PR0401MB2345.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	9yvjSjxYXrWqdY1bW+NKgEMY37aEgPN44quP3QCHIAvtoK9yGdm/iTr0PrIcPCv6WDP5YnS1PqvMTTK4JDK51UQR5T1GNSaV6tv05mzC6Fb/aquhM1ta/ZfMpqK7i32ExYoBR75mGoC1v+wlC8CiWPmJkanHpGnihe+CvP+6e138bb8hutkTHvYPepE92Hyw7Ra3oQnU2WtWuLlSq0IjWZgnYjpu/tJfflkrcga4XZPNVVKKe5xgG3wtNxLn2tFulOHutfYecFl2FmLQoxk7Rx86Ll74dn5wQAsPBohpmpA4CdQ7/myYPoz+14XiNB3nXQ+99BjrMbm6vWoPhVhY3EfQ/iN3flJJVTpla35Z7elStoRj8E5TWnRxZn6d6KpH33wWRTlueFy7NgXiRaYdEdEeDrOgJrZnOsSgbqP8G6hRDQSO02Ll686FgozqVOu9yRS1De6yM3T7W9BQWCGIcx4jMLsAsGTwuTItzxpYJBckUFyPEdp5GT1WGR0F+hH7cXRVAUZsQ+c7QogLjHNOnNnI7dJoxuewEIcAjyvJttTxewBsWAhnTbUYBAfyqEU9dd9DttKErY51G4egO+WLaJdInj3FQfsi8SzqMP1Pz5374PqkE1n+uH86VoQ7Gl4T83W3ve/wq+DMQUo0mRo1zQ==
+	ah0dtJhaZHDIterZb8U/BnpIDyZ7S18QSTyntweKig+k8I0E4I7nWZch6nl+Eb9+36LWHZS1PEFZbEzMO4wGQj3nZmad4Hojz2sDyeEnoCycCIt2rn/ceAcN5TT24CV3nzs/LhdJ5r4WaHuLm1pHrkcKrI+t0uzAplMukDedC9uQnrDsvG6umHBSvIqc1qVq4rVp7nyE3vAullmEvljEdA7+EN93Ylb9sRo3pX/kjM1fGCKQTkp9jLP5BCCkA/GGSTSlnQDKiGQbD4F7S9zI+bL65T5KWfVn1I1HQXtGIBGRemzLlRzoBDmt+XGsilC5ynnmjLY8IzcaP5E7wKfk5HFmkfgiFNwtuF2qpOOBAY0uZmqiYZbys4yoE79xrYbGLpDsnsIyS8ZI7oNDEAH3muKtpdcyVeXLojg2qc7XOnlPQ5wylQzOWlnfNI4feGdTRYd5RAItRW5OsGOTj1JOeoD11HnOC8KbC8ymdYbH0q3yAhjVgAqIq0GfIsefxem3b1ZKLdNjJG6iagISsINh+m+HZLwExbzN2HGNZQP98EnVa5ZoDQKu4MJKBCY0taIWNDt/5gjba1yR5if5fZ5vqPfHkZIi7UxMwH/5cJaTZhUc2vgHD6rEpCM6DEiWJSihrFoMRp3zm8Z3gpYmSP5+9SLNbFzlcA8Q8Spd2okHD+7P+4gt3ElEdg6vxHCbU0IMjf72wbJrQagFNQBYavfa47HNxaQ+1aSiZJ7v4iS7k80=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(54906003)(508600001)(4326008)(66946007)(316002)(6496006)(83380400001)(55236004)(8676002)(66556008)(6916009)(6666004)(2906002)(44832011)(66476007)(86362001)(956004)(6486002)(8936002)(2616005)(26005)(36756003)(5660300002)(186003)(38100700002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(316002)(26005)(44832011)(186003)(66946007)(508600001)(1076003)(66556008)(66476007)(6916009)(83380400001)(6486002)(8676002)(55236004)(5660300002)(33656002)(15974865002)(956004)(6496006)(9686003)(8936002)(38100700002)(86362001)(53546011)(2906002)(4326008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Jxr6+J36mbMONs+0ZT6YsYI6BOvI8o3SrB3FrW87gQx8cU3NLtNIetVEOEfr?=
- =?us-ascii?Q?PvjHaHvMevOrRccyxehBb0xToVjxXvtL2Ro3xb+gG1g5O5ZmPocOVBjMweCV?=
- =?us-ascii?Q?6VzqcJusLATfwjTH4WK7eCCBA1TjXJo5Voi8KINXcru0o6RPKRUJR95bUbzC?=
- =?us-ascii?Q?H7W9yLYpV7KQupW8wXabNR0nHbDuqLSXZ7mJPVQbHrTP/yuvc/oSMfXW94Hx?=
- =?us-ascii?Q?3pWJfpbja9lo8hJjv1SWOGW8QRN5kAaXMq8XclD7G+kL+fdfCAv4Ek8L4kEs?=
- =?us-ascii?Q?chmjedCqErmaziHN6dZ7x66iIjoOS2Ez+AWHNqkZTth1wJGhtf+NvPEpdCIP?=
- =?us-ascii?Q?PObGZ/p54llbcOQEd+9o4n9bcxjpTNNiU/jvQPDURehLuCl7hqNfD1pFbMFL?=
- =?us-ascii?Q?fiR2cKzs6SLDZ8l3cLOUcx3HcFz/c+Wgg/kkqOHw+0AP0rL4mKlPDgKmgwvr?=
- =?us-ascii?Q?rIcsNIr5kmvem+KF0oDT7pKoY5H54e1GJQYn4mbQudQ3CZpR1kPCUGSdYgbU?=
- =?us-ascii?Q?meUfE39hrYsT/wMef0oT0YOcvohgy1pFBB5K2joRndG/b5fzm2TTRu0PudIv?=
- =?us-ascii?Q?7jq6VFINMnajD0G3iKn546Vp37rX7WGGAtZMqES1OPCVncY0pM+MDAaSQxQ1?=
- =?us-ascii?Q?QE3AJWlr336bP2BHKVrG31g9VKdyjz/o3k1yhHxUUHxMMOG/7pZYUFWMKys7?=
- =?us-ascii?Q?dwGepTQQYcsjb/Kp0AtrDFR+B2Lb8oPRSCLc8dPsUYSLWunQTNBlXdPX4PvM?=
- =?us-ascii?Q?k9Fr6lzARJev9gArCeS5kqb6z8ZP5cjG/+X6F6hSTqe/aeJPTI7gOnpj2OaP?=
- =?us-ascii?Q?m8Ei9nIPNPmDvxWx0fclDF9l/9bcLhbL5RkOgVMzx2aWkhkI+bRPWyqw1MpE?=
- =?us-ascii?Q?njaW+dao7y/SVM2KwIggeWNe7gT78WAjAvUwvlR1tSE0WKbNq3ZeqNLBQ6jz?=
- =?us-ascii?Q?tjzj6hWvPUHnHulU65UI34ntskj2aN8YwtoBWmLHiBs4ROJtgUlqjQ+ou1W8?=
- =?us-ascii?Q?WQTPRkV80vkdOAYMoa0oTtU25NWNkmEagKE9hUd2Z2HTKhkkJGzJ+jXTNJX7?=
- =?us-ascii?Q?9jHBIpr4ocvWUFeSTuFjMKR25/yXpwvCwGrs48CjptovBdx2xrUK8993cQmT?=
- =?us-ascii?Q?iIkPgqk/Vyf7l5lOI2dhE2cDkT29xNvLIWvWvF7d8CafFxCVswesM2kSF5em?=
- =?us-ascii?Q?gqhjPcnTI8AZAmJPAHr+XBQxBncpnC4XZVPrLoSOmQ663PrpON6tuY8t1KYl?=
- =?us-ascii?Q?tOipt8TdaU6MrlFTkgZWqrChR29nX5hO6z2mlv/9ftkD1RgV31g770TW9Q2c?=
- =?us-ascii?Q?OO2zo1bWyYKcoc9wHOJX5bkhvA87AaNvBwLTT9qB5izJ34pOhIrMAcKk4wL8?=
- =?us-ascii?Q?HDrCOU7MOvTUQt81OLchiUEmHFE5FzQpBVw8kMYSAHxF2sC74rJX2BbtuX8e?=
- =?us-ascii?Q?9GemFiS1T93J4bz66pW7FusOlSFcybWYg5yEbLrA1mcsfJexwwWQzfCBNn/T?=
- =?us-ascii?Q?pLrr8Wj+rGp0QSSXDFh1EbgnmvMBRYALLzcXt6PXReSVDDTcgeSKCh7M/Ojt?=
- =?us-ascii?Q?dErUJahqQYCLccNgw1OALLylRYk6lYjNhqj71Xp3ZOY9g09ryfHjCGDEqZ/d?=
- =?us-ascii?Q?fA+V80NJkRRXJ40KFGLueqc=3D?=
+	=?us-ascii?Q?GsLRTFWHONwwUBvDWO8l9UOIRJoLfLCGzd54LQ3kIwEG/NONtzz32R/l0db9?=
+ =?us-ascii?Q?tE9fjru8H2JyTp7oPhEVhCb8ezel4DIcEDds/vULV4u19dqJWFdfzDSYUJdc?=
+ =?us-ascii?Q?dF8DRVNN3otEVF5KKFaRmv5+Qzc84GzN2VZ5wc8SZtxfp3TeafDacrQgS5jT?=
+ =?us-ascii?Q?8oI4bh8scd1SO2MJdhxK89A/hwX1rtXj9wsdrSgSye2WTACo5F4Z3YyjwEVs?=
+ =?us-ascii?Q?IUXuTjzk63BVrSxe3R+C9RtTy0LarTlORRoS0caURga8rUFk1Th0dko8x0LV?=
+ =?us-ascii?Q?zR8Ozw7MUUdu/bKbLf5BGJQ3BQ6u+3TEO3RyrSlrOIGkx+LyrKfMVFoCXGxP?=
+ =?us-ascii?Q?+jDS6YQ18WUyEqkY94yMnla+HerhWNfjBvYPnIj+1YKqOX/6Ykiz5QKJjdp6?=
+ =?us-ascii?Q?N5gNcHDrPskgzugoZ4kTQocvkTYL58ss14PLj0vot/WrllLBcPXwD1f+zxhU?=
+ =?us-ascii?Q?vFJlGdmUTtHCXelaYUjitXhwZS4lQxNMUtxPRSGBP04yFFmyBCXM/I+F6EQ1?=
+ =?us-ascii?Q?M0A/pJf2adnMP07VoeazVFWMUo6XOCQ3losBBWh7pok1lPNgTBScigepVSkm?=
+ =?us-ascii?Q?Y2l3TuzdPsJT19lMsNpJpf2VUrvTSTu1b9m82pUX1Y1V7Yoky2I0nzmFmER4?=
+ =?us-ascii?Q?Mgec+ycvLv+8I3U1rjvR10U4TAO4xJjBx6oCUw6QBuHwL515trbkiyga8H7z?=
+ =?us-ascii?Q?jLxWKSfMTIixVpF0kJm9vmXtS3UGF8UBiT+fySazdMpiWXWF8k+RGO/j+BHj?=
+ =?us-ascii?Q?/ck17rRe2xLVcP2KfRpUCOP0OsHQhAX25sctSVcHIruT5Oi364/tm6vVnIxE?=
+ =?us-ascii?Q?RyA4BAxLoBV346qyaPIvQW+o4I2zwcI+223PBh0gPEhavFeZUnQNcDKta/OB?=
+ =?us-ascii?Q?nD1v/ZArQf1kuo930mk5jk4tJ+K6UbeeltG6y4ZoE4oq0zsBXSZsoJxl8x9F?=
+ =?us-ascii?Q?nu0LjRdUUXSF8Xx80tFzzN1e+wQTDUhXGgBg0MvRFz1waxx6tKL2FEKiFhCQ?=
+ =?us-ascii?Q?0zI/G2Eg6lvJqAPY2NBwGXf6NwFa8pggRM0W+zWSNVgZDLSt++nKBb9IbzmS?=
+ =?us-ascii?Q?TQppxDAvPOXF0soYbLuNyy2llxLFfHuuXsCF4t179xXAbfoWZgu0kD23jwfv?=
+ =?us-ascii?Q?BOZZQe/lOg4llF8BdNumvVMD3NbynLFBbyTDaoPmcON194eolW9CBNjL5yDi?=
+ =?us-ascii?Q?pYbEkI+Hdg3S8ioOw4F9rXyLQONvr75dD6CTaK00a27QAJrtMxkIaVRoXvD9?=
+ =?us-ascii?Q?7qZKWEL3rvj1yFFeAqt1alqjezvRtklKSPfOdBmcjO7QCMpmV4e//uQrFRK+?=
+ =?us-ascii?Q?OkCzreLCP9iJR4DaY3auff69mxojnKYfDVug7ymtCBmw/p3E+FxXDiiYmUaY?=
+ =?us-ascii?Q?TWOMAHfwy/pMeusMinqX1qC83ThQM8tLCsG0rPT1afR4qmstppK7T65/jBVp?=
+ =?us-ascii?Q?RUnIZybtob0EQZPIfWmOSledwcuoX6OzWdW2O9Hvbq9XxmuOkdWY8em2Zgvo?=
+ =?us-ascii?Q?mN6CPPvBLUKghEBmM8ZFxi0JGWJIJRNFDoSUAOI9s2MmwB24IRCgKAKfNlY7?=
+ =?us-ascii?Q?rsAl4jDf3qx4GkJvH5Ke7/R7pV21HkGBV/IUUzxNBFUnMGKPlnxuGiw3D+sX?=
+ =?us-ascii?Q?vihou9SJniz6iOkKFQJVCaQ=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14cc7c9e-9ddc-4bd7-ab32-08d99a9662d2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d5883fe-d892-4f6c-396e-08d99a9817c6
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2021 04:41:34.6545
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2021 04:53:47.8406
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 38EyxMITZmdWTY1w+6dNvh1SyDs/wY5A/74uK8aFeiRXq39XiGqXiXcQesDO9osuiXIeIL58jFeu/fqLnL0xtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2652
+X-MS-Exchange-CrossTenant-UserPrincipalName: jrPo7e7OyYJ2m2+nwmls62IKXSco1pztae7aB8XF4R4K5qgb6pZlDYLdjtekBZFJHP8fsqb5RG/oDrV8aM0qug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2345
 
-Added the test cases for MP_FAIL, use 'tc' command to trigger the
-checksum failure.
+Hi Matt, Davide,
 
-Suggested-by: Davide Caratti <dcaratti@redhat.com>
-Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- tools/testing/selftests/net/mptcp/config      |  5 ++
- .../testing/selftests/net/mptcp/mptcp_join.sh | 75 +++++++++++++++++--
- 2 files changed, 72 insertions(+), 8 deletions(-)
+V3 of this patch was put into the infinite map series v8.
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selft=
-ests/net/mptcp/config
-index 0faaccd21447..f522288b2204 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -15,3 +15,8 @@ CONFIG_NETFILTER_XTABLES=3Dm
- CONFIG_NETFILTER_XT_MATCH_BPF=3Dm
- CONFIG_NF_TABLES_IPV4=3Dy
- CONFIG_NF_TABLES_IPV6=3Dy
-+CONFIG_NET_ACT_CSUM=3Dm
-+CONFIG_NET_ACT_PEDIT=3Dm
-+CONFIG_NET_CLS_ACT=3Dm
-+CONFIG_NET_CLS_FLOWER=3Dm
-+CONFIG_NET_SCH_INGRESS=3Dm
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 2684ef9c0d42..d33cb5ce0ff3 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -178,6 +178,12 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
-=20
-+jq -V > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run all tests without jq tool"
-+	exit $ksft_skip
-+fi
-+
- print_file_err()
- {
- 	ls -l "$1" 1>&2
-@@ -232,6 +238,28 @@ link_failure()
- 	done
- }
-=20
-+checksum_failure()
-+{
-+	i=3D"$1"
-+
-+	tc -n $ns2 qdisc add dev ns2eth$i clsact
-+	tc -n $ns2 filter add dev ns2eth$i egress \
-+		protocol ip prio 1000 \
-+		flower ip_proto tcp \
-+		action pedit munge offset 148 u32 invert \
-+		pipe csum tcp \
-+		index 100
-+
-+	while true; do
-+		local pkt=3D$(tc -n $ns2 -j -s action show action csum index 100 |
-+				jq '.[1].actions[0].stats.packets')
-+		if [ $pkt -gt 0 ]; then
-+			tc -n $ns2 qdisc del dev ns2eth$i clsact
-+			break
-+		fi
-+	done
-+}
-+
- # $1: IP address
- is_v6()
- {
-@@ -371,6 +399,9 @@ do_transfer()
- 	if [[ "${addr_nr_ns2}" =3D "fullmesh_"* ]]; then
- 		flags=3D"${flags},fullmesh"
- 		addr_nr_ns2=3D${addr_nr_ns2:9}
-+	elif [[ "${addr_nr_ns2}" =3D "fail_"* ]]; then
-+		checksum_failure ${addr_nr_ns2:5}
-+		addr_nr_ns2=3D0
- 	fi
-=20
- 	if [ $addr_nr_ns2 -gt 0 ]; then
-@@ -542,6 +573,8 @@ run_tests()
- chk_csum_nr()
- {
- 	local msg=3D${1:-""}
-+	local csum_ns1=3D${2:-0}
-+	local csum_ns2=3D${3:-0}
- 	local count
- 	local dump_stats
-=20
-@@ -553,8 +586,8 @@ chk_csum_nr()
- 	printf " %-36s %s" "$msg" "sum"
- 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{=
-print $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D 0 ]; then
--		echo "[fail] got $count data checksum error[s] expected 0"
-+	if [ "$count" !=3D $csum_ns1 ]; then
-+		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
- 		ret=3D1
- 		dump_stats=3D1
- 	else
-@@ -563,8 +596,8 @@ chk_csum_nr()
- 	echo -n " - csum  "
- 	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{=
-print $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D 0 ]; then
--		echo "[fail] got $count data checksum error[s] expected 0"
-+	if [ "$count" !=3D $csum_ns2 ]; then
-+		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
- 		ret=3D1
- 		dump_stats=3D1
- 	else
-@@ -658,6 +691,8 @@ chk_join_nr()
- 	local syn_nr=3D$2
- 	local syn_ack_nr=3D$3
- 	local ack_nr=3D$4
-+	local fail_nr=3D${5:-0}
-+	local infi_nr=3D${6:-0}
- 	local count
- 	local dump_stats
-=20
-@@ -700,9 +735,9 @@ chk_join_nr()
- 		ip netns exec $ns2 nstat -as | grep MPTcp
- 	fi
- 	if [ $checksum -eq 1 ]; then
--		chk_csum_nr
--		chk_fail_nr 0 0
--		chk_infi_nr 0 0
-+		chk_csum_nr "" $fail_nr
-+		chk_fail_nr $fail_nr $fail_nr
-+		chk_infi_nr $infi_nr $infi_nr
- 	fi
- }
-=20
-@@ -1837,6 +1872,25 @@ fullmesh_tests()
- 	chk_add_nr 1 1
- }
-=20
-+fail_tests()
-+{
-+	# 1 subflow
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	run_tests $ns1 $ns2 10.0.1.1 2 0 "fail_1" fast
-+	chk_join_nr "MP_FAIL test, 1 subflow" 0 0 0 1 1
-+
-+	# multiple subflows
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 dev ns2eth2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 2 0 "fail_2" fast
-+	chk_join_nr "MP_FAIL test, multiple subflows" 2 2 2 1
-+}
-+
- all_tests()
- {
- 	subflows_tests
-@@ -1853,6 +1907,7 @@ all_tests()
- 	checksum_tests
- 	deny_join_id0_tests
- 	fullmesh_tests
-+	fail_tests
- }
-=20
- usage()
-@@ -1872,6 +1927,7 @@ usage()
- 	echo "  -S checksum_tests"
- 	echo "  -d deny_join_id0_tests"
- 	echo "  -m fullmesh_tests"
-+	echo "  -F fail_tests"
- 	echo "  -c capture pcap files"
- 	echo "  -C enable data checksum"
- 	echo "  -h help"
-@@ -1907,7 +1963,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
-=20
--while getopts 'fsltra64bpkdmchCS' opt; do
-+while getopts 'fsltra64bpkdmchCSF' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1951,6 +2007,9 @@ while getopts 'fsltra64bpkdmchCS' opt; do
- 		m)
- 			fullmesh_tests
- 			;;
-+		F)
-+			fail_tests
-+			;;
- 		c)
- 			;;
- 		C)
---=20
-2.26.2
+On Thu, Oct 28, 2021 at 06:46:52PM +0200, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 28/10/2021 15:21, Matthieu Baerts wrote:
+> > Hi Davide,
+> > 
+> > On 28/10/2021 14:24, Davide Caratti wrote:
+> >> On Thu, Oct 28, 2021 at 1:21 PM Matthieu Baerts
+> >> <matthieu.baerts@tessares.net> wrote:
+> >>>
+> >>> Hi Davide, Geliang,
+> >>>
+> >>> On 28/10/2021 13:01, Davide Caratti wrote:
+> >>>> On Thu, Oct 28, 2021 at 11:23 AM Geliang Tang <geliang.tang@suse.com> wrote:
+> >>>>>
+> >>>>> On Thu, Oct 28, 2021 at 11:16:12AM +0800, Geliang Tang wrote:
+> >>>>>> Added the test cases for MP_FAIL, use 'tc' command to trigger the
+> >>>>>> checksum failure.
+> >>>>>>
+> >>>>>> Suggested-by: Davide Caratti <dcaratti@redhat.com>
+> >>>>>> Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> >>>>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> >>>
+> >>> Thank you for the new version!
+> >>>
+> >>>>>> ---
+> >>>>>>  tools/testing/selftests/net/mptcp/config      |  5 ++
+> >>>>>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 60 ++++++++++++++++---
+> >>>>>>  2 files changed, 58 insertions(+), 7 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+> >>>>>> index 0faaccd21447..f522288b2204 100644
+> >>>>>> --- a/tools/testing/selftests/net/mptcp/config
+> >>>>>> +++ b/tools/testing/selftests/net/mptcp/config
+> >>>>>> @@ -15,3 +15,8 @@ CONFIG_NETFILTER_XTABLES=m
+> >>>>>>  CONFIG_NETFILTER_XT_MATCH_BPF=m
+> >>>>>>  CONFIG_NF_TABLES_IPV4=y
+> >>>>>>  CONFIG_NF_TABLES_IPV6=y
+> >>>>>> +CONFIG_NET_ACT_CSUM=m
+> >>>>>> +CONFIG_NET_ACT_PEDIT=m
+> >>>>>> +CONFIG_NET_CLS_ACT=m
+> >>>>>> +CONFIG_NET_CLS_FLOWER=m
+> >>>>>> +CONFIG_NET_SCH_INGRESS=m
+> >>>>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> >>>>>> index 7ef639a9d4a6..95bac447f857 100755
+> >>>>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> >>>>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> >>>>>> @@ -232,6 +232,29 @@ link_failure()
+> >>>>>>       done
+> >>>>>>  }
+> >>>>>>
+> >>>>>> +checksum_failure()
+> >>>>>> +{
+> >>>>>> +     i="$1"
+> >>>>>> +
+> >>>>>> +     tc -n $ns2 qdisc add dev ns2eth$i clsact
+> >>>>>> +     tc -n $ns2 filter add dev ns2eth$i egress \
+> >>>>>> +             protocol ip prio 1000 \
+> >>>>>> +             flower ip_proto tcp \
+> >>>>>> +             action pedit munge offset 148 u32 invert \
+> >>>>>> +             pipe csum tcp \
+> >>>>>> +             index 100
+> >>>>>> +
+> >>>>>> +     while true; do
+> >>>>>> +             local pkt=`tc -n $ns2 -j -s action show action csum index 100 | \
+> >>>>>> +                     awk -F ',' '{ print $12 }' | \
+> >>>>>> +                     awk -F ':' '{ print $2 }'`
+> >>>
+> >>> (small detail if you have to send a new version: it is often recommended
+> >>> to use "$(cmd)" form instead of `cmd`: more visible, allow nested
+> >>> commands, quotes, etc.)
+
+Updated.
+
+> >>
+> >> also, please consider using jq rather than awk. Specially if you are
+> >> planning to use more than one counter. For reference, see [1]
+> > 
+> > Good idea, I didn't know jq was used in other selftests. But then we
+> > would need to check if 'jq' is installed. *Maybe* if we only need once
+> > to retrieve 2 counters, it would be "easier" to use awk?
+
+I used jq in the new version, since awk will get wrong values
+sometimes.
+
+> > 
+> >> [...]
+> >>>>
+> >>>>> How can I fix this?
+> >>>> is that a problem? maybe we can just ignore it.
+> >>>
+> >>> Do you have this message once or one for each packet?
+> >>> Does it increment the counter you are monitoring when the warning is
+> >>> printed?
+> >>>
+> >>> If I understand the code, it might print that once per packet and once
+> >>> but also increment the counter which is not good for us. But another
+> >>> counter -- "overlimits" -- seems to be incremented too, maybe we can use
+> >>> the two counters.
+> >>>
+> >>>> Otherwise, a possibility is to add a more narrow filter (e.g. flower),
+> >>>>  to only mangle packets that have the ack flag but not the syn or
+> >>>> push. We might also try corrupting the TCP payload to a smaller
+> >>>> offset, so that more packets are impacted.
+> >>>
+> >>> Yes, maybe good to narrow a bit the filter by using:
+> >>>
+> >>>   flower ip_proto tcp tcp_flags 0x10/0xff
+
+This dosen't work in my test, so I didn't include it in the new
+version.
+
+Thanks,
+-Geliang
+
+> >>>
+> >>> Or is there another filter to specify a minimum size?
+> >>
+> >> unfortunately we can't do that with TC filters (unless using the eBPF
+> >> classifier for this (and I'm still not 100% the verifier would be
+> >> happy _ but that's still in my long-term todo list :) ). I know there
+> >> are ongoing efforts to introduce a "check_pkt_larger" (because this
+> >> check is actually a possible openflow action) , but that won't happen
+> >> in the short period.
+> > 
+> > That's a shame but then better to restrict to ACK flag to omit a few
+> > packets.
+> 
+> As discussed at the last meeting, we should reduce the number of kernel
+> message (pr_info for each packet not matched by the pedit action). For that:
+> - best to restrict to TCP packets with ACK flag only:
+> 
+>     flower ip_proto tcp tcp_flags 0x10/0xff
+> 
+> - and send only in one direction to reduce the chance to have "pure ACKs".
+> 
+> Having a few pr_info message is OK but plenty messages in dmesg/serial
+> will likely cause other issues (flooding logs, slowing down stuff, etc.)
+> 
+> Cheers,
+> Matt
+> -- 
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+> 
 
