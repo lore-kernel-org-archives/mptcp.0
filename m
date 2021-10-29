@@ -1,26 +1,26 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBFB2C87
-	for <mptcp@lists.linux.dev>; Fri, 29 Oct 2021 20:15:14 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="229471280"
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="229471280"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 13:15:14 -0700
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="636930429"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F09F2C81
+	for <mptcp@lists.linux.dev>; Fri, 29 Oct 2021 23:36:41 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="294234112"
+X-IronPort-AV: E=Sophos;i="5.87,194,1631602800"; 
+   d="scan'208";a="294234112"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 16:36:40 -0700
+X-IronPort-AV: E=Sophos;i="5.87,194,1631602800"; 
+   d="scan'208";a="499110629"
 Received: from feiyang2-mobl.amr.corp.intel.com ([10.209.25.152])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 13:15:14 -0700
-Date: Fri, 29 Oct 2021 13:15:13 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 16:36:40 -0700
+Date: Fri, 29 Oct 2021 16:36:40 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 0/2] mptcp: add freebind & transparent
- sockopt
-In-Reply-To: <20211029110927.12315-1-fw@strlen.de>
-Message-ID: <56d63cc2-cc8b-c55-1d6a-673ce3937f7b@linux.intel.com>
-References: <20211029110927.12315-1-fw@strlen.de>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-net 2/2] mptcp: use delegate action to schedule
+ 3rd ack retrans
+In-Reply-To: <2a28807616445b389496dc0f172e206180f5a099.1635426465.git.pabeni@redhat.com>
+Message-ID: <b3ce1954-ad3-71b6-92af-870e63f40c3@linux.intel.com>
+References: <cover.1635426465.git.pabeni@redhat.com> <2a28807616445b389496dc0f172e206180f5a099.1635426465.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,38 +29,93 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, 29 Oct 2021, Florian Westphal wrote:
+On Thu, 28 Oct 2021, Paolo Abeni wrote:
 
-> First patch adds ipv4/ipv6 TRANSPARENT and FREEBIND, second
-> patch adds a selftest to mptcp_connect.sh.
+> Scheduling a delack in mptcp_established_options_mp() is
+> not a good idea: such function is called by tcp_send_ack() and
+> the pending delayed ack will be cleared shortly after by the
+> tcp_event_ack_sent() call in __tcp_transmit_skb().
 >
-> Only change is in patch 2 which has more verbose SKIP messages
-> and an updated mptcp/config to account for IPV6_MULTIPLE_TABLES
-> and other toggles required for the tproxy test case.
+> Instead use the mptcp delegated action infrastructure to
+> schedule the delayed ack after the current bh processing completes.
 >
-> Florian Westphal (2):
->  mptcp: sockopt: add SOL_IP freebind & transparent options
->  selftests: mptcp: add tproxy test case
+> Additionally moves the schedule_3rdack_retransmission() helper
+> into protocol.c to avoid making it visible in a different compilation
+> unit.
 >
-> net/mptcp/sockopt.c                           | 66 ++++++++++++++-
-> net/mptcp/subflow.c                           |  3 +-
-> .../selftests/net/mptcp/config                |  7 ++-
-> .../selftests/net/mptcp/mptcp_connect.c       | 51 +++++++++++-
-> .../selftests/net/mptcp/mptcp_connect.sh      | 80 +++++++++++++++++++
-> 5 files changed, 202 insertions(+), 5 deletions(-)
-> -- 
-> 2.32.0
+> Fixes: ec3edaa7ca6ce02f ("mptcp: Add handling of outgoing MP_JOIN requests")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> side note:
+> Why we already see 3rd ack retransimssion in pcap traces even if the delack timer
+> was broken sice the beginning?!? I guess that is due to pure ack generated
+> by mptcp_recvmsg() and pushed on all the subflow. mptcp_send_ack() only
+> checks for the TCP status and not the MPTCP one. When landing on MPJ
+> subflows not already fully established, such data-ack will be converted in MPJ
+> 3rd ack by the MPTCP output path/out options building, as the MPJ option
+> has higher priority than DSS
+> ---
+> net/mptcp/options.c  | 33 ++++++++---------------------
+> net/mptcp/protocol.c | 50 ++++++++++++++++++++++++++++++++++++--------
+> net/mptcp/protocol.h | 17 ++++++++-------
+> 3 files changed, 59 insertions(+), 41 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 465d4143d555..12ffee025373 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -422,29 +422,6 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+> 	return false;
+> }
+>
+> -/* MP_JOIN client subflow must wait for 4th ack before sending any data:
+> - * TCP can't schedule delack timer before the subflow is fully established.
+> - * MPTCP uses the delack timer to do 3rd ack retransmissions
+> - */
+> -static void schedule_3rdack_retransmission(struct sock *sk)
+> -{
+> -	struct inet_connection_sock *icsk = inet_csk(sk);
+> -	struct tcp_sock *tp = tcp_sk(sk);
+> -	unsigned long timeout;
+> -
+> -	/* reschedule with a timeout above RTT, as we must look only for drop */
+> -	if (tp->srtt_us)
+> -		timeout = usecs_to_jiffies(tp->srtt_us >> (3-1));
+> -	else
+> -		timeout = TCP_TIMEOUT_INIT;
+> -	timeout += jiffies;
+> -
+> -	WARN_ON_ONCE(icsk->icsk_ack.pending & ICSK_ACK_TIMER);
+> -	icsk->icsk_ack.pending |= ICSK_ACK_SCHED | ICSK_ACK_TIMER;
+> -	icsk->icsk_ack.timeout = timeout;
+> -	sk_reset_timer(sk, &icsk->icsk_delack_timer, timeout);
+> -}
+> -
+> static void clear_3rdack_retransmission(struct sock *sk)
+> {
+> 	struct inet_connection_sock *icsk = inet_csk(sk);
+> @@ -527,7 +504,15 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
+> 		*size = TCPOLEN_MPTCP_MPJ_ACK;
+> 		pr_debug("subflow=%p", subflow);
+>
+> -		schedule_3rdack_retransmission(sk);
+> +		/* we can use the full delegate action helper only from BH context
+> +		 * If we are in process context - sk is flushing the backlog at
+> +		 * socket lock release time - just set the appropriate flag, will
+> +		 * be handled by the release callback
+> +		 */
+> +		if (sock_owned_by_user(sk))
+> +			set_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status);
 
-Looks good to me, thanks for tracking down the missing config.
+I believe you intended MPTCP_DELEGATE_ACK here
 
-It seemed a little odd at first that sync_socket_options() copies the 
-transparent/freebind values without considering whether the protocol (v4 
-or v6) used in the setsockopt matches the subflow being synced, but the IP 
-code doesn't really care for historical reasons. Looks like ipv6 used to 
-just use the SOL_IP options for these anyway, until someone noticed it 
-didn't work on AF_INET6 SOCK_RAW sockets.
+> +		else
+> +			mptcp_subflow_delegate(subflow, MPTCP_DELEGATE_ACK);
+> 		return true;
+> 	}
+> 	return false;
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+The rest looks good.
 
 --
 Mat Martineau
