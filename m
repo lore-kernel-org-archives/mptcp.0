@@ -1,67 +1,89 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD042C86
-	for <mptcp@lists.linux.dev>; Mon,  1 Nov 2021 13:30:09 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 815DA61077;
-	Mon,  1 Nov 2021 13:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1635773408;
-	bh=u6qsewV29FajH+7TPyp3k0O+qeUww4RvWgV1CYd7V1o=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MoDRGePspJvXqVLXctLMTTLADOFsRf5buVrx+qiXAigKtD3uysHF5ZnmEiigmEF+Z
-	 gYdrG7zqyCEg/R75vdrOhKddrRoc+oPYTHLdVO8f/x91s0ALBPbCaxT3mqeExNFRbB
-	 Yu06WiGCsGRebie4hiVZBBrzK1m0Xy5ITxF7ZhbzbnRquhtJDzmgBDAMPqB3QxIets
-	 NSBfy+tobIgYEM+LKZ1BZ5YTxW2aSTLJWrEygxWgQp9fx7D1mlAeBCZip+XdG1FBKL
-	 N0tYT38e0IhKmo09RLmxRlG71GYZWsvZOpNjvrjEvvjW3P3qVdnRl33EmZOQGR3ey+
-	 XZi3Gc1R2pUtA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 7797D60BD0;
-	Mon,  1 Nov 2021 13:30:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370C668
+	for <mptcp@lists.linux.dev>; Tue,  2 Nov 2021 09:44:46 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id 5so72766587edw.7
+        for <mptcp@lists.linux.dev>; Tue, 02 Nov 2021 02:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=cfnDaOMcwQ/4fCuj5iZHh7VhZCNIBzBRAeLefGbVNEw=;
+        b=GgAg2IlGTAFrEn7rfChlYi/IjwwO34Ezh862eNt4hb0HPjDJPBAISeL5b7GitCrdaz
+         rV/hQJJ9CVV7SpS7COaWmjTnCOt5BzSB3twLYQQtbVwk7W3YouW1vLEqJxqkv8b8W/Sf
+         vioU4D+a48oAG+C0tUvaK0xKdgbBbNauPhlWmv0Fh8j1jlcsc8wDcmMPpo9JyiDeDnI+
+         59DD8Ci1/0H4qdzRhTSxtXe4KfHRHoOzFRAcxy2j8zC9H28Czdz+az3NFwZnoSC6X2iP
+         57iDKWWOBHiGeyGEgJwOO2OJX4cqyypGsdwycHQxUYSPJamMbot7Vbn3VOkkIm9kC0Tp
+         7SaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=cfnDaOMcwQ/4fCuj5iZHh7VhZCNIBzBRAeLefGbVNEw=;
+        b=P4WYtbAS9DFUQH9QEOnI4g3LyoTaSjHlWK7JDsyq09pVRBokiqf7w3G3rqRDO/UjjB
+         xw6Y+5cq9u6LWn2UXRO4i9HAtsENg31ymxyh1m25YY6526eU+jSLoh4jbyDlsX/H6wU1
+         T18/lugTdLZKTnsX7akGqpRuiNeszDGLq5hTMlkEkp2D7uP3wH6jHCS2S7hUmjatvRtl
+         gpO8Ql5VHJYOsS5qyLvocbAkr6ig9gBNTDLDhPT1wbF1wDvF0d6H3Y8quw+D9HMLnSv6
+         54NclaZ+BmlsYgHYlaUgRMz/XOw7tOYiUaXEOLtrYlHZo5MQmJwltwPYhz7EMAEQ6MnR
+         20ng==
+X-Gm-Message-State: AOAM5311JE6dgmMfxffdgdOOVuHe7eSva5ztohKOxt6R7B8OM4YeT1tr
+	VvlqtHz4mTUavh/qYFTWlDQnjYH3pr16jA==
+X-Google-Smtp-Source: ABdhPJxbleuABqVGlBHxD4RXwxdc326axHdvG92f0FJMMMq2i31fVijYlxwNqnuioFUFKxjrv6/X7g==
+X-Received: by 2002:a17:906:a4e:: with SMTP id x14mr42425299ejf.1.1635846284364;
+        Tue, 02 Nov 2021 02:44:44 -0700 (PDT)
+Received: from [192.168.178.46] ([213.211.156.121])
+        by smtp.gmail.com with ESMTPSA id q23sm8084388ejr.0.2021.11.02.02.44.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Nov 2021 02:44:44 -0700 (PDT)
+Message-ID: <5400d9f1-8a1e-ddb0-73ba-f4647b1bc565@tessares.net>
+Date: Tue, 2 Nov 2021 10:44:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] mptcp: Some selftest improvements
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <163577340848.3113.12246193029907596147.git-patchwork-notify@kernel.org>
-Date: Mon, 01 Nov 2021 13:30:08 +0000
-References: <20211029235559.246858-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20211029235559.246858-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, pabeni@redhat.com, mptcp@lists.linux.dev
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH mptcp-next v3 0/2] mptcp: add freebind & transparent
+ sockopt
+Content-Language: en-GB
+To: Florian Westphal <fw@strlen.de>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <20211029110927.12315-1-fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20211029110927.12315-1-fw@strlen.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Florian, Mat,
 
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri, 29 Oct 2021 16:55:57 -0700 you wrote:
-> Here are a couple of selftest changes for MPTCP.
+On 29/10/2021 13:09, Florian Westphal wrote:
+> First patch adds ipv4/ipv6 TRANSPARENT and FREEBIND, second
+> patch adds a selftest to mptcp_connect.sh.
 > 
-> Patch 1 fixes a mistake where the wrong protocol (TCP vs MPTCP) could be
-> requested on the listening socket in some link failure tests.
-> 
-> Patch 2 refactors the simulataneous flow tests to improve timing
-> accuracy and give more consistent results.
-> 
-> [...]
+> Only change is in patch 2 which has more verbose SKIP messages
+> and an updated mptcp/config to account for IPV6_MULTIPLE_TABLES
+> and other toggles required for the tproxy test case.
 
-Here is the summary with links:
-  - [net-next,1/2] selftests: mptcp: fix proto type in link_failure tests
-    https://git.kernel.org/netdev/net-next/c/7c909a98042c
-  - [net-next,2/2] selftests: mptcp: more stable simult_flows tests
-    https://git.kernel.org/netdev/net-next/c/b6ab64b074f2
+Thank you for these patches and reviews!
 
-You are awesome, thank you!
+Applied in our tree (features for net-next) with Mat's RvB tags:
+
+- 509d313fffc4: mptcp: sockopt: add SOL_IP freebind & transparent options
+- fe37d7b3122b: selftests: mptcp: add tproxy test case
+- Results: d271a2e8d559..4538021f6a78
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211102T094419
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
