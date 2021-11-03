@@ -1,115 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578F72C98
-	for <mptcp@lists.linux.dev>; Wed,  3 Nov 2021 17:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1635961377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=q5PS9Xot1aGC0oE41fMYmTmdBkde45aIIIn6WNtLgnQ=;
-	b=cbG2P6XVoFjpidCCd5qT2M+k7Y6xy5p7v0a0qU0O/1tizA/k3YtR099chMkPmmIefEK1yi
-	K7bkcmacToReTrXem3rLgparNRSHyMgWMFr/i6EjZNddsll3g/cR7jLjffmUq2pM0W1ULj
-	+EpqdCecy13HL9Yz+BVR9nYeZkAa9c0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-DW5crJgyN_eCI7ByHI_O6Q-1; Wed, 03 Nov 2021 13:42:52 -0400
-X-MC-Unique: DW5crJgyN_eCI7ByHI_O6Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E9458042A8
-	for <mptcp@lists.linux.dev>; Wed,  3 Nov 2021 17:42:52 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.195.53])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6CFE460843
-	for <mptcp@lists.linux.dev>; Wed,  3 Nov 2021 17:42:51 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: fix race between close() and accept()
-Date: Wed,  3 Nov 2021 18:42:47 +0100
-Message-Id: <beea1c3bd7e3fc9b8bc309874cec2597766d7fba.1635958931.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AC468
+	for <mptcp@lists.linux.dev>; Wed,  3 Nov 2021 18:55:29 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10157"; a="218762879"
+X-IronPort-AV: E=Sophos;i="5.87,206,1631602800"; 
+   d="scan'208";a="218762879"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2021 11:55:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,206,1631602800"; 
+   d="scan'208";a="450173500"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 03 Nov 2021 11:55:27 -0700
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1miLPy-0005mx-Fe; Wed, 03 Nov 2021 18:55:26 +0000
+Date: Thu, 04 Nov 2021 02:55:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ b98e1b93fdd5f7daab4985fc9c1736f7fb462d26
+Message-ID: <6182db11.mDl6a53w48KYEtNv%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-The current implementation of mptcp_accept() is prone to the
-following race vs mptcp_close():
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: b98e1b93fdd5f7daab4985fc9c1736f7fb462d26  DO-NOT-MERGE: mptcp: enabled by default
 
-(on CPU 0)
-listen(msk)
-accept(msk)
-  |-> mptcp_stream_accept(msk)
-        |-> <listen status check successful>
+elapsed time: 754m
 
-(preempted or on CPU 1)
-close(msk)
-  |-> <msk->sk_state = TCP_CLOSE, ssk is orphaned, ssk state is unchanged>
+configs tested: 145
+configs skipped: 4
 
-(preempted or on CPU 0, continuing accept())
-  |-> mptcp_accept()
-        |-> inet_csk_accept()
-              |-> <ssk status check is successful even if ssk is orphaned: oops>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The solution is atomically close the listener subflow at mptcp_close()
-time.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211103
+powerpc                   motionpro_defconfig
+ia64                        generic_defconfig
+powerpc                     tqm8560_defconfig
+m68k                        m5307c3_defconfig
+arc                      axs103_smp_defconfig
+arm                        spear6xx_defconfig
+i386                                defconfig
+arm                         lpc18xx_defconfig
+sh                         ecovec24_defconfig
+mips                       lemote2f_defconfig
+sh                          kfr2r09_defconfig
+nios2                            allyesconfig
+mips                     loongson1c_defconfig
+powerpc                  storcenter_defconfig
+powerpc                     tqm8555_defconfig
+m68k                       m5475evb_defconfig
+mips                     loongson1b_defconfig
+powerpc                        fsp2_defconfig
+m68k                         amcore_defconfig
+powerpc                      cm5200_defconfig
+mips                         mpc30x_defconfig
+powerpc                        icon_defconfig
+sh                           se7721_defconfig
+powerpc                 mpc837x_rdb_defconfig
+sh                               j2_defconfig
+powerpc                         wii_defconfig
+arm                          badge4_defconfig
+mips                      maltaaprp_defconfig
+sh                        edosk7760_defconfig
+sh                               allmodconfig
+openrisc                            defconfig
+powerpc                      arches_defconfig
+powerpc                     ppa8548_defconfig
+openrisc                  or1klitex_defconfig
+sh                          rsk7269_defconfig
+m68k                        mvme16x_defconfig
+powerpc                 mpc8560_ads_defconfig
+arc                                 defconfig
+nios2                         3c120_defconfig
+arm64                            alldefconfig
+arm                           stm32_defconfig
+powerpc                     tqm8548_defconfig
+sh                           se7780_defconfig
+m68k                            q40_defconfig
+mips                           jazz_defconfig
+arm                        mvebu_v7_defconfig
+powerpc                      pmac32_defconfig
+sh                     sh7710voipgw_defconfig
+powerpc                    sam440ep_defconfig
+arm                     eseries_pxa_defconfig
+arm                       imx_v6_v7_defconfig
+riscv                    nommu_virt_defconfig
+h8300                    h8300h-sim_defconfig
+arc                          axs101_defconfig
+mips                      maltasmvp_defconfig
+sh                         microdev_defconfig
+riscv             nommu_k210_sdcard_defconfig
+sh                            shmin_defconfig
+powerpc                    adder875_defconfig
+ia64                          tiger_defconfig
+arm                        vexpress_defconfig
+arm                  randconfig-c002-20211103
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+arc                              allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                                defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a012-20211103
+x86_64               randconfig-a015-20211103
+x86_64               randconfig-a016-20211103
+x86_64               randconfig-a011-20211103
+x86_64               randconfig-a013-20211103
+x86_64               randconfig-a014-20211103
+i386                 randconfig-a014-20211103
+i386                 randconfig-a016-20211103
+i386                 randconfig-a013-20211103
+i386                 randconfig-a015-20211103
+i386                 randconfig-a011-20211103
+i386                 randconfig-a012-20211103
+arc                  randconfig-r043-20211103
+riscv                randconfig-r042-20211103
+s390                 randconfig-r044-20211103
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+clang tested configs:
+mips                 randconfig-c004-20211103
+s390                 randconfig-c005-20211103
+powerpc              randconfig-c003-20211103
+riscv                randconfig-c006-20211103
+arm                  randconfig-c002-20211103
+i386                 randconfig-c001-20211103
+x86_64               randconfig-c007-20211103
+x86_64               randconfig-a006-20211103
+x86_64               randconfig-a004-20211103
+x86_64               randconfig-a001-20211103
+x86_64               randconfig-a002-20211103
+x86_64               randconfig-a005-20211103
+x86_64               randconfig-a003-20211103
+i386                 randconfig-a005-20211103
+i386                 randconfig-a003-20211103
+i386                 randconfig-a001-20211103
+i386                 randconfig-a004-20211103
+i386                 randconfig-a006-20211103
+i386                 randconfig-a002-20211103
+hexagon              randconfig-r041-20211103
+hexagon              randconfig-r045-20211103
+
 ---
-Note: this should close:
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/239
-
-but without a repro I can't be sure...
----
- net/mptcp/protocol.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1ee3530ac2a3..4c96a9eb2142 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2712,18 +2712,25 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	lock_sock(sk);
- 	sk->sk_shutdown = SHUTDOWN_MASK;
- 
--	if ((1 << sk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE)) {
--		inet_sk_state_store(sk, TCP_CLOSE);
-+	if (sk->sk_state == TCP_LISTEN) {
-+		struct socket *listener;
-+
-+		listener = __mptcp_nmpc_socket(mptcp_sk(sk));
-+		if (listener)
-+			__mptcp_close_ssk(sk, listener->sk, mptcp_subflow_ctx(listener->sk));
- 		goto cleanup;
- 	}
- 
-+	if (sk->sk_state == TCP_CLOSE)
-+		goto cleanup;
-+
- 	if (mptcp_close_state(sk))
- 		__mptcp_wr_shutdown(sk);
- 
- 	sk_stream_wait_close(sk, timeout);
- 
- cleanup:
--	/* orphan all the subflows */
-+	/* orphan all the non listener subflows */
- 	inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32;
- 	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--- 
-2.26.3
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
