@@ -1,106 +1,131 @@
-Received: from router.helenandmark.org (vps-eefd1937.vps.ovh.net [51.38.38.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704E02C9B
-	for <mptcp@lists.linux.dev>; Fri,  5 Nov 2021 11:00:17 +0000 (UTC)
-Received: from smtpclient.apple (unknown [192.168.1.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: mark@helenandmark.org)
-	by router.helenandmark.org (Postfix) with ESMTPSA id 50DEC14187A;
-	Fri,  5 Nov 2021 12:00:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=helenandmark.org;
-	s=mail; t=1636110015;
-	bh=+rwgT3ySddp5Ruzi4veQb9j8HV/tTFqwiZ93FfAXf6k=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=DRPt5Znk540l5W8vWnosrfTmSDdklzI+k8de7nX9+HzZe0KPpPMgEh4F8uXatM1pP
-	 TcDAnIs0JhuxZrh8fxwhHOV7xdf+CV489gX+K4mkWRGTRnhswa59WSUZlggVW1XdOO
-	 OJQK/wQt5E21pBOJbQQFBddGJS2sZfMfAaSUyt/g=
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3AC68
+	for <mptcp@lists.linux.dev>; Fri,  5 Nov 2021 13:05:55 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id x15so1605736edv.1
+        for <mptcp@lists.linux.dev>; Fri, 05 Nov 2021 06:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=ci5xVJMFhSxK4FB7pbCVvm5fCbOrTqoXTaIjPAwe75w=;
+        b=mfi+vlZyyWnaUxCIRN/vC5V95ntK9STzihUYpgm1MZI6qW74te0o7YxbLGVD+l0U/W
+         dcILCtSbJnDRoORZsqefXfzMkSp1gMeW8GX5/4eVq19lDpizFdNqvIF9SPBxiqF5cIz+
+         IO/6CVL+TYzZHLgrVIBbuF04zT6YXFxMYo2mAL/zNHkeX1cIgBnMyuWuES0lyBrq6ZJV
+         zGES2KICDifWm0qxofuV9cT6SQKVp+k0rAr+vzBcKU5sJ5wDfBB6BfWeVFwptM7WkBNP
+         ERPfNksLK8yBBnFhSwESzdZ7b4BSNHzPdBCigikhjCs55wb6BF7MXxPvXHMT35uDHxFq
+         PtCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ci5xVJMFhSxK4FB7pbCVvm5fCbOrTqoXTaIjPAwe75w=;
+        b=4RJnZy9njdVKU/Y/dv/RV61ugSMqN1IBLEbtopXnV9DNhQis4PCDt6SPRgCl8DywVC
+         mo2ws3YuHO3ANu04DmkuLUwEhyljhr2Fm4lCMjMCPBn23QHpzn7+IfA0UMb7ASdeBGbx
+         KSPEBUN1JPnichflm1sf/YYzDcmrMSEDrZ6d/d8EMA29VFS5GNSLBB+npvmBvl5dsnzo
+         ga0CCCDJKvCScl5lQiaZzFsA3li5m4zYFVY+VvrcGm1oN0TazUYvho3A66poo89WWIN7
+         d6o9J340uPfNjEuI+bC3vIWGReqI7wPBDRw9x5MT0DTxwIesTjfP6EY4ITGVZssoYyHk
+         p/5Q==
+X-Gm-Message-State: AOAM5306CLQBKkH+Ux7zZZbWkbASzYp9grw9CgaKB5cABwcu/kpII/XS
+	25YvRUiWcbO1Q3HiomuKJYsz/NzqvarycQ==
+X-Google-Smtp-Source: ABdhPJwhK9XecoCuRNKBZDaPbMHUk46DvlU6OuOBh8hGGJHrqK2doEmJqGt+Xkkx6d7lrRVxRQ1HZQ==
+X-Received: by 2002:a05:6402:350b:: with SMTP id b11mr20769549edd.184.1636117553441;
+        Fri, 05 Nov 2021 06:05:53 -0700 (PDT)
+Received: from [192.168.178.46] ([213.211.156.121])
+        by smtp.gmail.com with ESMTPSA id go10sm2076356ejc.115.2021.11.05.06.05.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Nov 2021 06:05:53 -0700 (PDT)
+Message-ID: <5ee8402c-64a8-98f4-54d1-c2605578b616@tessares.net>
+Date: Fri, 5 Nov 2021 14:05:52 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: Linux 5.15 + v2ray + mptcp
-From: Mark Burton <mark@helenandmark.org>
-In-Reply-To: <8141891e5388b61b8f07371dcd6e4b253e6213d1.camel@redhat.com>
-Date: Fri, 5 Nov 2021 11:59:09 +0100
-Cc: mptcp@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5C4D8D7F-FB89-4F8A-8CC4-DDB0250A7FA7@helenandmark.org>
-References: <8DB8DCC4-A85C-4A1A-8A82-5D53F256C09A@helenandmark.org>
- <8141891e5388b61b8f07371dcd6e4b253e6213d1.camel@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH mptcp-next v8 0/8] The infinite mapping support
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+References: <cover.1635481641.git.geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1635481641.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi Geliang, Mat,
+
+On 29/10/2021 06:40, Geliang Tang wrote:
+> v8:
+>  - Patches 1-6 are unchanged, only updated the selftests scripts.
+>  - The patch (Squash to "mptcp: infinite mapping receiving" for v7) is
+> dropped too. Since this series only implemented MP_FAIL in one direction.
+> The TODO items, "MP_FAIL echo" and "MP_FAIL retrans", will implement later
+> as new patches.
+
+(...)
+
+Thank you for the patches and the reviews!
+
+As discussed at the meeting yesterday, to help you moving forward, I
+applied the first seven patches (without Mat's RvB tag for the moment).
+
+What is then left to do if I'm not mistaken:
+
+- drop more data from the receive queue c.f. discussions with Mat and
+Christoph on the ML on v7
+
+- Improvements around the tests for patch 8/8:
+  - Comment around the TC command
+  - Add 'tcp_flags 0x10/0xff'
+  - Comment around the parsing (example of what you are parsing)
+  - Break if jq returns 'null' or nothing.
+  - Sleep in the while loop for "tc show"
+  - Look for "pedit" counter ("packets" - "overlimits")
+  - Not compare the output file if it is normal they are different
+  - Remove/Reduce data sent by the host not having the tc command (send
+only in one direction)
+  - Insert the TC rules, then start the test, then look at counters
+  - Force checksum=1 for "fail_tests()"
 
 
+And for later:
 
-> On 5 Nov 2021, at 11:48, Paolo Abeni <pabeni@redhat.com> wrote:
->=20
-> Hello,
->=20
-> On Thu, 2021-11-04 at 12:10 +0100, Mark Burton wrote:
->> Just a very brief note to say I have this working with good results:
->>=20
->> Kernel 5.15.0-rc6
->>=20
->> V2Ray - I hacked the =E2=80=98go=E2=80=99 library as follows:
->> diff -s go/src/net/ipsock_posix.go go1.17.1/src/net/ipsock_posix.go
->> 138,139d137
->> <         family, ipv6only :=3D favoriteAddrFamily(net, laddr, raddr,
->> mode)
->> <=20
->> 143,145c141
->> < 	if (sotype =3D=3D syscall.SOCK_STREAM && !laddr.isWildcard()) {
->> <             return socket(ctx, net, family, sotype,
->> syscall.IPPROTO_TCP+256, false , laddr, raddr, ctrlFn)
->> <         }
->> ---
->>> 	family, ipv6only :=3D favoriteAddrFamily(net, laddr, raddr, =
-mode)
->>=20
->> This is far from a good fix, but for testing purposes it suffices.=20
->=20
-> Thanks for sharing your experience. Note that alternatively you can =
-use
-> the mptcpize command available in the mptcpd project:
->=20
+- "MP_FAIL echo"
 
-Yes - agreed.
+- "MP_FAIL retrans"
 
-> https://github.com/intel/mptcpd
->=20
-> for the details, please, see the related man-page.
->=20
->> NOTE v2ray must listen to the correct endpoint address, not just
->> 0.0.0.0 or [::]
->=20
-> I'm unsure I read the above correctly?!? do you mean that while
-> listening on 0.0.0.0 the v2ray server using mptcp does not accept
-> incoming subflows and/or does not signal the addresses ?!?
->=20
-
-This is purely a result of the =E2=80=98hack=E2=80=99 above.  Basically =
-the code above only requests a MPTCP socket in the (one) case that V2Ray =
-is setting up sockets that will be used for the tunnel itself, and it =
-does so by checking the address being used isn=E2=80=99t a wildcard. In =
-other words, it=E2=80=99s a crap hack.
-
-I wanted to try to be =E2=80=98clean=E2=80=99 about which sockets were =
-MPTCP and which were not - in the end, that =E2=80=98cleanliness=E2=80=99 =
-comes with a lot of =E2=80=98dirtiness=E2=80=99 :-))))
-
-Cheers
-Mark.
+Did I miss anything?
 
 
-> If so, that is quite unexpected...
->=20
-> Cheers,
->=20
-> Paolo
->=20
+The first patches are now in our tree (features for net-next):
 
+- 19ca240f0cdf: mptcp: don't send RST for single subflow
+- 89de2a435c1e: mptcp: add the fallback check
+- df3d448153f1: mptcp: track and update contiguous data status
+- 44b73ea648cc: mptcp: infinite mapping sending
+- e35a1a951132: mptcp: infinite mapping receiving
+- 9feb4bc20bf6: mptcp: add mib for infinite map sending
+- ac67c5b1d612: selftests: mptcp: add infinite map mibs check
+- Results: c1d29ad013b4..0fad1b3cf9ef
+
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211105T130530
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/216
+
+Because there are still stuff to implement, this ticket has not been closed.
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
