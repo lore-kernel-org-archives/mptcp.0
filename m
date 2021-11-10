@@ -1,25 +1,25 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C922C82
-	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 01:11:02 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10163"; a="230039393"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC35C29CA
+	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 01:19:03 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10163"; a="232420426"
+X-IronPort-AV: E=Sophos;i="5.87,222,1631602800"; 
+   d="scan'208";a="232420426"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2021 17:18:51 -0800
 X-IronPort-AV: E=Sophos;i="5.87,221,1631602800"; 
-   d="scan'208";a="230039393"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2021 17:11:01 -0800
-X-IronPort-AV: E=Sophos;i="5.87,221,1631602800"; 
-   d="scan'208";a="642361689"
+   d="scan'208";a="503745136"
 Received: from ticede-or-153.amr.corp.intel.com ([10.212.186.57])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2021 17:11:01 -0800
-Date: Tue, 9 Nov 2021 17:11:00 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2021 17:18:51 -0800
+Date: Tue, 9 Nov 2021 17:18:51 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Florian Westphal <fw@strlen.de>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 1/3] mptcp: add TCP_INQ cmsg support
-In-Reply-To: <20211108105711.16200-2-fw@strlen.de>
-Message-ID: <add0921a-4ce2-a3d4-d4d-442d4e88365f@linux.intel.com>
-References: <20211108105711.16200-1-fw@strlen.de> <20211108105711.16200-2-fw@strlen.de>
+Subject: Re: [PATCH mptcp-next 2/3] selftests: mptcp: add TCP_INQ support
+In-Reply-To: <20211108105711.16200-3-fw@strlen.de>
+Message-ID: <634cff10-1c91-2a68-74cd-3c48da807528@linux.intel.com>
+References: <20211108105711.16200-1-fw@strlen.de> <20211108105711.16200-3-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -30,203 +30,200 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Mon, 8 Nov 2021, Florian Westphal wrote:
 
-> Support the TCP_INQ setsockopt.
-> This is a boolean that tells recvmsg path to include the remaining
-> in-sequence bytes into a cmsg data.
+> Do checks on the returned inq counter.
+> Fail on:
+> 1. Huge value (>= 1 megabyte, test case files are 1 MB)
+> 2. last hint larger than returned bytes when read was short
+> 3. erroenous indication of EOF.
 >
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/224
+> 3) happens when a hint of X bytes reads X-1 on next call
+>   but next recvmsg returns more data (instead of EOF).
+>
+
+Is it possible to do a more deterministic test? Like: one peer sends X 
+bytes, other peer waits and then reads X-Y bytes, then checks that the inq 
+value is Y?
+
+
 > Signed-off-by: Florian Westphal <fw@strlen.de>
 > ---
-> net/mptcp/protocol.c | 33 +++++++++++++++++++++++++++++++++
-> net/mptcp/protocol.h |  1 +
-> net/mptcp/sockopt.c  | 37 +++++++++++++++++++++++++++++++++++++
-> 3 files changed, 71 insertions(+)
+> .../selftests/net/mptcp/mptcp_connect.c       | 56 ++++++++++++++++++-
+> .../selftests/net/mptcp/mptcp_sockopt.sh      | 10 ++--
+> 2 files changed, 60 insertions(+), 6 deletions(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index b0bfe20d6bb0..b4263bf821ac 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -46,6 +46,7 @@ struct mptcp_skb_cb {
->
-> enum {
-> 	MPTCP_CMSG_TS = BIT(0),
-> +	MPTCP_CMSG_INQ = BIT(1),
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index ada9b80774d4..e3e4338d610f 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -73,12 +73,20 @@ static uint32_t cfg_mark;
+> struct cfg_cmsg_types {
+> 	unsigned int cmsg_enabled:1;
+> 	unsigned int timestampns:1;
+> +	unsigned int tcp_inq:1;
 > };
 >
-> static struct percpu_counter mptcp_sockets_allocated;
-> @@ -2006,6 +2007,29 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
-> 	return !skb_queue_empty(&msk->receive_queue);
+> struct cfg_sockopt_types {
+> 	unsigned int transparent:1;
+> };
+>
+> +struct tcp_inq_state {
+> +	unsigned int last;
+> +	bool expect_eof;
+> +};
+> +
+> +static struct tcp_inq_state tcp_inq;
+> +
+> static struct cfg_cmsg_types cfg_cmsg_types;
+> static struct cfg_sockopt_types cfg_sockopt_types;
+>
+> @@ -389,7 +397,9 @@ static size_t do_write(const int fd, char *buf, const size_t len)
+> static void process_cmsg(struct msghdr *msgh)
+> {
+> 	struct __kernel_timespec ts;
+> +	bool inq_found = false;
+> 	bool ts_found = false;
+> +	unsigned int inq = 0;
+> 	struct cmsghdr *cmsg;
+>
+> 	for (cmsg = CMSG_FIRSTHDR(msgh); cmsg ; cmsg = CMSG_NXTHDR(msgh, cmsg)) {
+> @@ -398,12 +408,27 @@ static void process_cmsg(struct msghdr *msgh)
+> 			ts_found = true;
+> 			continue;
+> 		}
+> +		if (cmsg->cmsg_level == IPPROTO_TCP && cmsg->cmsg_type == TCP_CM_INQ) {
+> +			memcpy(&inq, CMSG_DATA(cmsg), sizeof(inq));
+> +			inq_found = true;
+> +			continue;
+> +		}
+> +
+> 	}
+>
+> 	if (cfg_cmsg_types.timestampns) {
+> 		if (!ts_found)
+> 			xerror("TIMESTAMPNS not present\n");
+> 	}
+> +
+> +	if (cfg_cmsg_types.tcp_inq) {
+> +		if (!inq_found)
+> +			xerror("TCP_INQ not present\n");
+> +
+> +		if (inq >= 1 * 1024 * 1024)
+> +			xerror("tcp_inq is larger than one mbyte\n", inq);
+
+Looks like you intended to print the value of inq here but there's no 
+format specifier in the format string.
+
+- Mat
+
+> +		tcp_inq.last = inq;
+> +	}
 > }
 >
-> +static unsigned int mptcp_inq_hint(const struct sock *sk)
-> +{
-> +	const struct mptcp_sock *msk = mptcp_sk(sk);
-> +	const struct sk_buff *skb;
-> +	u64 acked = msk->ack_seq;
-> +	u64 hint_val = 0;
+> static ssize_t do_recvmsg_cmsg(const int fd, char *buf, const size_t len)
+> @@ -420,10 +445,23 @@ static ssize_t do_recvmsg_cmsg(const int fd, char *buf, const size_t len)
+> 		.msg_controllen = sizeof(msg_buf),
+> 	};
+> 	int flags = 0;
+> +	unsigned int last_hint = tcp_inq.last;
+> 	int ret = recvmsg(fd, &msg, flags);
+>
+> -	if (ret <= 0)
+> +	if (ret <= 0) {
+> +		if (ret == 0 && tcp_inq.expect_eof)
+> +			return ret;
 > +
-> +	skb = skb_peek(&msk->receive_queue);
-> +	if (skb) {
-> +		u64 map_seq = MPTCP_SKB_CB(skb)->map_seq + MPTCP_SKB_CB(skb)->offset;
-
-MPTCP_SKB_CB(skb)->offset is an offset within the skb payload, not related 
-to the map_seq.
-
-I think MPTCP_SKB_CB(skb)->end_seq has the sequence number you need for 
-hint_val?
-
-I did run in to a selftest failure, but could not reproduce:
-
-$ sudo ./mptcp_sockopt.sh
-Created /tmp/tmp.Kj9eQSvhn3 (size 1024 KB) containing data sent by client
-Created /tmp/tmp.qOpE4X43Jp (size 1024 KB) containing data sent by server
-tcp_inq is larger than one mbyte
-copyfd_io_poll: poll timed out (events: POLLIN 0, POLLOUT 4)
-  client exit code 1, server 2
-
-netns ns1-0-IRJkco socket stat for 12001:
-Netid  State     Recv-Q  Send-Q     Local Address:Port      Peer Address:Port   Process 
-tcp    ESTAB     0       0               10.0.2.1:12001         10.0.2.2:52141   ino:0 sk:1 fwmark:0x1 <->
- 	 ts sack cubic wscale:7,7 rto:201 rtt:0.427/0.261 ato:40 mss:1448 pmtu:1500 rcvmss:1420 advmss:1448 cwnd:10 ssthresh:56 bytes_sent:163620 bytes_acked:163620 bytes_received:65332 segs_out:131 segs_in:68 data_segs_out:117 data_segs_in:50 send 271288056bps lastsnd:30052 lastrcv:30057 lastack:30051 pacing_rate 1821988992bps delivery_rate 1488222216bps delivered:118 busy:3ms rcv_rtt:1 rcv_space:14600 rcv_ssthresh:148470 minrtt:0.122 tcp-ulp-mptcp flags:Jec token:0000(id:0)/5a7e8206(id:3) seq:a590dda83727410f sfseq:e0cd ssnoff:db8b95cc maplen:1e68
-tcp    ESTAB     0       0               10.0.1.1:12001         10.0.1.2:48520   ino:0 sk:2 fwmark:0x1 <->
- 	 ts sack cubic wscale:7,7 rto:201 rtt:0.279/0.037 ato:40 mss:1448 pmtu:1500 rcvmss:1420 advmss:1448 cwnd:10 ssthresh:20 bytes_sent:426076 bytes_acked:426076 bytes_received:114892 segs_out:368 segs_in:278 data_segs_out:336 data_segs_in:86 send 415197133bps lastsnd:105 lastrcv:30055 lastack:105 pacing_rate 496678872bps delivery_rate 41078008bps delivered:337 busy:9ms rwnd_limited:1ms(11.1%) sndbuf_limited:1ms(11.1%) rcv_rtt:1 rcv_space:14600 rcv_ssthresh:189558 minrtt:0.082 tcp-ulp-mptcp flags:Mec token:0000(id:0)/5a7e8206(id:0) seq:a590dda83728010f sfseq:1a0cd ssnoff:511e5d9a maplen:2000
-tcp    ESTAB     0       0               10.0.3.1:12001         10.0.3.2:49725   ino:0 sk:3 fwmark:0x1 <->
- 	 ts sack cubic wscale:7,7 rto:201 rtt:1/0.5 mss:1448 pmtu:1500 rcvmss:536 advmss:1448 cwnd:10 segs_out:2 segs_in:3 send 115840000bps lastsnd:30055 lastrcv:30055 lastack:30053 pacing_rate 231680000bps delivered:1 rcv_space:14600 rcv_ssthresh:64076 minrtt:1 tcp-ulp-mptcp flags:Jec token:0000(id:0)/5a7e8206(id:5) seq:a590dda83728210f sfseq:0 ssnoff:1bb4388 maplen:0
-mptcp  LAST-ACK  0       0               10.0.1.1:12001         10.0.1.2:48520   timer:(keepalive,59sec,0) ino:0 sk:4 fwmark:0x1 ---
- 	 subflows:7 add_addr_signal:8 add_addr_accepted:5 subflows_max:8 add_addr_signal_max:8 add_addr_accepted_max:8 remote_key token:5a7e8206 write_seq:cf6523e6d02cad72 snd_una:cf6523e6d027a6cd rcv_nxt:a590dda837282110
-
-netns ns2-0-IRJkco socket stat for 12001:
-Netid  State       Recv-Q  Send-Q   Local Address:Port      Peer Address:Port   Process 
-tcp    ESTAB       230756  0             10.0.1.2:48520         10.0.1.1:12001   ino:0 sk:5 fwmark:0x2 <->
- 	 ts sack cubic wscale:7,7 rto:201 rtt:0.414/0.368 ato:40 mss:1448 pmtu:1500 rcvmss:1168 advmss:1448 cwnd:27 ssthresh:27 bytes_sent:114892 bytes_acked:114893 bytes_received:426076 segs_out:278 segs_in:369 data_segs_out:86 data_segs_in:336 send 755478261bps lastsnd:30074 lastrcv:123 lastack:123 pacing_rate 906573912bps delivery_rate 8849496bps delivered:87 busy:5ms rcv_rtt:0.888 rcv_space:14480 rcv_ssthresh:163912 minrtt:0.082 tcp-ulp-mptcp flags:Mmec token:0000(id:0)/af0717b9(id:0) seq:cf6523e6d028ec4d sfseq:2e479 ssnoff:3f01671c maplen:1680
-tcp    ESTAB       0       0             10.0.3.2:49725         10.0.3.1:12001   ino:0 sk:6 fwmark:0x2 <->
- 	 ts sack cubic wscale:7,7 rto:201 rtt:0.48/0.24 mss:1448 pmtu:1500 rcvmss:536 advmss:1448 cwnd:10 bytes_acked:1 segs_out:3 segs_in:3 send 241333333bps lastsnd:30073 lastrcv:30073 lastack:30071 pacing_rate 482666664bps delivered:1 rcv_space:14480 rcv_ssthresh:64088 minrtt:0.48 tcp-ulp-mptcp flags:Jjec token:5a7e8206(id:5)/af0717b9(id:0) seq:0 sfseq:0 ssnoff:a5831809 maplen:0
-tcp    ESTAB       52444   0             10.0.2.2:52141         10.0.2.1:12001   ino:0 sk:7 fwmark:0x2 <->
- 	 ts sack cubic wscale:7,7 rto:201 rtt:0.167/0.105 ato:40 mss:1448 pmtu:1500 rcvmss:1420 advmss:1448 cwnd:15 bytes_sent:65332 bytes_acked:65333 bytes_received:163620 segs_out:68 segs_in:132 data_segs_out:50 data_segs_in:117 send 1040479042bps lastsnd:30075 lastrcv:30070 lastack:30070 pacing_rate 2079401640bps delivery_rate 868800000bps delivered:51 busy:3ms rcv_rtt:0.184 rcv_space:14480 rcv_ssthresh:152552 minrtt:0.077 tcp-ulp-mptcp flags:Jjec token:5a7e8206(id:3)/af0717b9(id:0) seq:cf6523e6d027e4ed sfseq:13841 ssnoff:21898d30 maplen:7a08
-mptcp  FIN-WAIT-2  108184  0             10.0.1.2:48520         10.0.1.1:12001   timer:(keepalive,29sec,0) ino:0 sk:8 fwmark:0x2 ---
- 	 subflows:7 add_addr_signal:8 add_addr_accepted:7 subflows_max:8 add_addr_signal_max:8 add_addr_accepted_max:8 remote_key token:af0717b9 write_seq:a590dda837282110 snd_una:a590dda837282110 rcv_nxt:cf6523e6d027a6cd
-
+> +		if (ret == 0 && cfg_cmsg_types.tcp_inq)
+> +			if (last_hint != 1 && last_hint != 0)
+> +				xerror("EOF but last tcp_inq hint was %u\n", last_hint);
 > +
-> +		hint_val = acked - map_seq;
-> +
-> +		if (hint_val >= INT_MAX)
-> +			hint_val = INT_MAX - 1;
+> 		return ret;
 > +	}
 > +
-> +	if (hint_val == 0 && sock_flag(sk, SOCK_DONE))
-> +		hint_val = 1;
-> +
-> +	return (unsigned int)hint_val;
-> +}
-> +
-> static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-> 			 int nonblock, int flags, int *addr_len)
-> {
-> @@ -2030,6 +2054,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-> 	len = min_t(size_t, len, INT_MAX);
-> 	target = sock_rcvlowat(sk, flags & MSG_WAITALL, len);
+> +	if (tcp_inq.expect_eof)
+> +		xerror("expected EOF, last_hint %u, now %u\n",
+> +			last_hint, tcp_inq.last);
 >
-> +	if (unlikely(msk->recvmsg_inq))
-> +		cmsg_flags = MPTCP_CMSG_INQ;
-> +
-> 	while (copied < len) {
-> 		int bytes_read;
+> 	if (msg.msg_controllen && !cfg_cmsg_types.cmsg_enabled)
+> 		xerror("got %lu bytes of cmsg data, expected 0\n",
+> @@ -435,6 +473,15 @@ static ssize_t do_recvmsg_cmsg(const int fd, char *buf, const size_t len)
+> 	if (msg.msg_controllen)
+> 		process_cmsg(&msg);
 >
-> @@ -2103,6 +2130,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-> 	if (cmsg_flags && copied >= 0) {
-> 		if (cmsg_flags & MPTCP_CMSG_TS)
-> 			tcp_recv_timestamp(msg, sk, &tss);
-> +
-> +		if (cmsg_flags & MPTCP_CMSG_INQ) {
-> +			unsigned int inq = mptcp_inq_hint(sk);
-> +
-> +			put_cmsg(msg, SOL_TCP, TCP_CM_INQ, sizeof(inq), &inq);
+> +	if (cfg_cmsg_types.tcp_inq) {
+> +		if ((size_t)ret < len && last_hint > (unsigned int)ret) {
+> +			if (ret + 1 != (int)last_hint)
+> +				xerror("read %u of %u, last_hint was %u\n", ret, (unsigned int)len, last_hint);
+> +			else
+> +				tcp_inq.expect_eof = true;
 > +		}
-> 	}
->
-> 	pr_debug("msk=%p rx queue empty=%d:%d copied=%d",
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 906509c6cde5..e77de7662df0 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -250,6 +250,7 @@ struct mptcp_sock {
-> 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
-> 	bool		csum_enabled;
-> 	bool		allow_infinite_fallback;
-> +	u8		recvmsg_inq:1;
-> 	spinlock_t	join_list_lock;
-> 	struct work_struct work;
-> 	struct sk_buff  *ooo_last_skb;
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index b818e91f2e09..7405152691e0 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -557,6 +557,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
-> 		case TCP_TIMESTAMP:
-> 		case TCP_NOTSENT_LOWAT:
-> 		case TCP_TX_DELAY:
-> +		case TCP_INQ:
-> 			return true;
-> 		}
->
-> @@ -698,7 +699,21 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
-> static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-> 				    sockptr_t optval, unsigned int optlen)
-> {
-> +	struct sock *sk = (void *)msk;
-> +	int ret, val;
+> +	}
 > +
-> 	switch (optname) {
-> +	case TCP_INQ:
-> +		ret = mptcp_get_int_option(msk, optval, optlen, &val);
-> +		if (ret)
-> +			return ret;
-> +		if (val < 0 || val > 1)
-> +			return -EINVAL;
-> +
-> +		lock_sock(sk);
-> +		msk->recvmsg_inq = !!val;
-> +		release_sock(sk);
-> +		return 0;
-> 	case TCP_ULP:
-> 		return -EOPNOTSUPP;
-> 	case TCP_CONGESTION:
-> @@ -1032,6 +1047,26 @@ static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *o
-> 	return 0;
+> 	return ret;
 > }
 >
-> +static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
-> +				int __user *optlen, int val)
-> +{
-> +	int len;
-> +
-> +	if (get_user(len, optlen))
-> +		return -EFAULT;
-> +
-> +	len = min_t(unsigned int, len, sizeof(int));
-> +	if (len < 0)
-> +		return -EINVAL;
-> +
-> +	if (put_user(len, optlen))
-> +		return -EFAULT;
-> +	if (copy_to_user(optval, &val, len))
-> +		return -EFAULT;
-> +
-> +	return 0;
-> +}
-> +
-> static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-> 				    char __user *optval, int __user *optlen)
-> {
-> @@ -1042,6 +1077,8 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-> 	case TCP_CC_INFO:
-> 		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
-> 						      optval, optlen);
-> +	case TCP_INQ:
-> +		return mptcp_put_int_option(msk, optval, optlen, msk->recvmsg_inq);
-> 	}
-> 	return -EOPNOTSUPP;
+> @@ -944,6 +991,8 @@ static void apply_cmsg_types(int fd, const struct cfg_cmsg_types *cmsg)
+>
+> 	if (cmsg->timestampns)
+> 		xsetsockopt(fd, SOL_SOCKET, SO_TIMESTAMPNS_NEW, &on, sizeof(on));
+> +	if (cmsg->tcp_inq)
+> +		xsetsockopt(fd, IPPROTO_TCP, TCP_INQ, &on, sizeof(on));
 > }
+>
+> static void parse_cmsg_types(const char *type)
+> @@ -965,6 +1014,11 @@ static void parse_cmsg_types(const char *type)
+> 		return;
+> 	}
+>
+> +	if (strncmp(type, "TCPINQ", len) == 0) {
+> +		cfg_cmsg_types.tcp_inq = 1;
+> +		return;
+> +	}
+> +
+> 	fprintf(stderr, "Unrecognized cmsg option %s\n", type);
+> 	exit(1);
+> }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index 41de643788b8..75af784cc62a 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> @@ -167,7 +167,7 @@ do_transfer()
+> 	:> "$cout"
+> 	:> "$sout"
+>
+> -	mptcp_connect="./mptcp_connect -r 20"
+> +	mptcp_connect="./mptcp_connect"
+>
+> 	local local_addr
+> 	if is_v6 "${connect_addr}"; then
+> @@ -178,7 +178,7 @@ do_transfer()
+>
+> 	timeout ${timeout_test} \
+> 		ip netns exec ${listener_ns} \
+> -			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c TIMESTAMPNS \
+> +			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c TIMESTAMPNS,TCPINQ \
+> 				${local_addr} < "$sin" > "$sout" &
+> 	spid=$!
+>
+> @@ -186,7 +186,7 @@ do_transfer()
+>
+> 	timeout ${timeout_test} \
+> 		ip netns exec ${connector_ns} \
+> -			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c TIMESTAMPNS \
+> +			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c TIMESTAMPNS,TCPINQ \
+> 				$connect_addr < "$cin" > "$cout" &
+>
+> 	cpid=$!
+> @@ -284,8 +284,8 @@ sout=$(mktemp)
+> cin=$(mktemp)
+> cout=$(mktemp)
+> init
+> -make_file "$cin" "client" 1
+> -make_file "$sin" "server" 1
+> +make_file "$cin" "client" 1024
+> +make_file "$sin" "server" 1024
+> trap cleanup EXIT
+>
+> run_tests $ns1 $ns2 10.0.1.1
 > -- 
 > 2.32.0
 >
