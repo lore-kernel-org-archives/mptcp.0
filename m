@@ -1,34 +1,37 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA332C87
-	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C7C2C87
+	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1636547549;
+	s=mimecast20190719; t=1636547551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5suMMttX3N8nlATW//vfI1dJrjTSgADUa5U9D7iSEmI=;
-	b=O8hN204dpNTlO6xX/WrCs6Lq+EJ8kVUQvbQJrxvGHYfs6lvnCxHG5Ne+zK/s038CaPISkn
-	IaaFloQvMybkCqjnJA4UXkNG0Ha7/NSRWdBykJQXW8aysYNnSPcx9qV0Kd8Cg+My18PE+X
-	fzZuXcRKJ+Ss6s1P/Qohrj/e31jG98g=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=whhtw1wtO2TwCb5lOlSeMmrnWekTycE0TPNqmlGOwCo=;
+	b=jJ6NygjC7eyW7SI3gDdY4U0SSXkniW1PwReyBqLkFsUPu+e8AFbtvQC2wrnamg3YIt/ehx
+	S1J2FXgB85OT3/TsXN2GXcDZ8kZ2tWKltWiJL6JxSKbWA5vjFoXDcmF9CRCWaR0SnybYEC
+	SuTsoSFjaPRqt267qilmDA7EMELvkTQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-XJh9QEdGN46MG0e6y7i7Fw-1; Wed, 10 Nov 2021 07:32:28 -0500
-X-MC-Unique: XJh9QEdGN46MG0e6y7i7Fw-1
+ us-mta-52-o3BVDU5xPKW4VlKyIA_7Ow-1; Wed, 10 Nov 2021 07:32:30 -0500
+X-MC-Unique: o3BVDU5xPKW4VlKyIA_7Ow-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60B44102CB34
-	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:27 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74AB81006AA0
+	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:29 +0000 (UTC)
 Received: from gerbillo.fritz.box (unknown [10.39.194.200])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C64F960854
-	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:26 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C4C0660843
+	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:28 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH net-next 0/7] mptcp: improve accept() and disconnect()
-Date: Wed, 10 Nov 2021 13:31:33 +0100
-Message-Id: <cover.1636545174.git.pabeni@redhat.com>
+Subject: [PATCH net-next 2/7] mptcp: never allow the PM to close a listener subflow
+Date: Wed, 10 Nov 2021 13:31:35 +0100
+Message-Id: <a9591ae891c942a134ac37c614a63f9d77be2a7f.1636545174.git.pabeni@redhat.com>
+In-Reply-To: <cover.1636545174.git.pabeni@redhat.com>
+References: <cover.1636545174.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,47 +46,35 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-As outlined in the public mtg, mptcp_accept() is currently quite
-suboptimal, both from performance and code complexity
+Currently, when deleting an endpoint the netlink PM treverses
+all the local MPTCP sockets, regardless of their status.
 
-This series tries to clean it up, enforcing a wider lifetime for
-the initial subflow, so that we don't need to acquire additional
-references there.
+If an MPTCP listener socket is bound to the IP matching the
+delete endpoint, the listener TCP socket will be closed.
+That is unexpected, the PM should only affect data subflows.
 
-To reach such goal we need to properly define the disconnect()
-behavior, which is currently quite incomplete. Additionally allow
-user-space to really disconnect established connections.
+Fix the issue explicitly skipping MPTCP socket in TCP_LISTEN
+status.
 
-Disconnect() needs in turn an egress FASTCLOSE implementation,
-added here according to option R (reset - the simpler form).
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/pm_netlink.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Finally, the self-tests need as pre-req Florian's patches implementing
-SIOCOUTQ
-
-RFC -> v1:
- - added patches 1/7, 3/7, 6/7, 7/7
- - added a few missing bits in patch 4/7
-
-Paolo Abeni (7):
-  mptcp: keep snd_una updated for fallback socket
-  mptcp: never allow the PM to close a listener subflow
-  mptcp: implement fastclose xmit path
-  mptcp: full disconnect implementation
-  mptcp: cleanup accept and poll
-  mptcp: implement support for user-space disconnect
-  mptcp: add disconnect selftests
-
- net/mptcp/options.c                           |  57 +++++--
- net/mptcp/pm.c                                |  10 +-
- net/mptcp/pm_netlink.c                        |   3 +
- net/mptcp/protocol.c                          | 144 ++++++++++++------
- net/mptcp/protocol.h                          |  16 +-
- net/mptcp/subflow.c                           |   1 -
- net/mptcp/token.c                             |   1 +
- .../selftests/net/mptcp/mptcp_connect.c       | 119 +++++++++++++--
- .../selftests/net/mptcp/mptcp_connect.sh      |  38 ++++-
- 9 files changed, 304 insertions(+), 85 deletions(-)
-
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 7b96be1e9f14..f523051f5aef 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -700,6 +700,9 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+ 
+ 	msk_owned_by_me(msk);
+ 
++	if (sk->sk_state == TCP_LISTEN)
++		return;
++
+ 	if (!rm_list->nr)
+ 		return;
+ 
 -- 
 2.33.1
 
