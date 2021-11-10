@@ -1,35 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323592C8B
-	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7B12C88
+	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1636547552;
+	s=mimecast20190719; t=1636547553;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2vrRq51JyO0I8j9iK839of93i0SLamlXsDgfHfpob7Q=;
-	b=dAFWTY3PqrYafKAakjSKq/yEsFzmmDgWLOpUKXJu4AZbjIBdmNWsPTZe0qRf1h3UQY2ib5
-	+naul5o6l1VDQqXNxQOyl9aefc+TgekqHZZWPZDDqO8rfL1yufwEonseTQh/kBarOOxl9f
-	dr3jaPiknPklIWXDZdAFYk2lw+zB4BA=
+	bh=f0oMTytNnpjGVPn6sIMjvirU1X39jV9Pq17avPHWWMk=;
+	b=VVqotgRtyaHjs6u61gCx9vask8Pt4/v9oTOYxSkv8aL0bgITx9f1ehaqRhbi1zkAg1wxzh
+	9q8o587ZAXtk9SrpjXJZIH5hVR7LenzKxVGYcMgJRlWRd6gAb4v3ThE3MH+UKb+nMBAGXM
+	AvxTagBHmQs6Y16VYjOedARNQo2Ng6c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-A53M_wnxNluRHU55ORI9sw-1; Wed, 10 Nov 2021 07:32:31 -0500
-X-MC-Unique: A53M_wnxNluRHU55ORI9sw-1
+ us-mta-191-UAZqqBZ-NGer-80e8v68wA-1; Wed, 10 Nov 2021 07:32:32 -0500
+X-MC-Unique: UAZqqBZ-NGer-80e8v68wA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50D7A1006AA1
-	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:30 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 422451006AA0
+	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:31 +0000 (UTC)
 Received: from gerbillo.fritz.box (unknown [10.39.194.200])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B790060854
-	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:29 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A571160854
+	for <mptcp@lists.linux.dev>; Wed, 10 Nov 2021 12:32:30 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH net-next 3/7] mptcp: implement fastclose xmit path
-Date: Wed, 10 Nov 2021 13:31:36 +0100
-Message-Id: <dc8842b8b170840c6c878088bc546b88e8db735b.1636545174.git.pabeni@redhat.com>
+Subject: [PATCH net-next 4/7] mptcp: full disconnect implementation
+Date: Wed, 10 Nov 2021 13:31:37 +0100
+Message-Id: <fd169b5c3c651ab786ad996f43aa9fe794991014.1636545174.git.pabeni@redhat.com>
 In-Reply-To: <cover.1636545174.git.pabeni@redhat.com>
 References: <cover.1636545174.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,119 +46,331 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Allow the MPTCP xmit path to add MP_FASTCLOSE suboption
-on RST egress packets.
+The current mptcp_disconnect() implementation lacks several
+steps, we additionally need to reset the msk socket state
+and flush the subflow list.
 
-Additionally reorder related options writing to reduce
-the number of conditionals required in the fast path.
+Factor out the needed helper to avoid code duplication.
+
+Additionally ensure that the initial subflow is disposed
+only after mptcp_close(), just reset it at disconnect time.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/options.c  | 57 +++++++++++++++++++++++++++++++-------------
- net/mptcp/protocol.h |  1 +
- 2 files changed, 42 insertions(+), 16 deletions(-)
+v1 -> v2:
+ - fix compile warning (CI)
+ - reset first subflow socket state on disconnect
+ - use fast-close on disconnect
+---
+ net/mptcp/pm.c       |  10 +++--
+ net/mptcp/protocol.c | 101 ++++++++++++++++++++++++++++++++-----------
+ net/mptcp/protocol.h |  14 ++++++
+ net/mptcp/token.c    |   1 +
+ 4 files changed, 98 insertions(+), 28 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 68a9a1c79200..8a1020e4285c 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -768,6 +768,28 @@ static noinline bool mptcp_established_options_rst(struct sock *sk, struct sk_bu
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 86b38a830b4c..761995a34124 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -362,7 +362,7 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+ 	}
+ }
+ 
+-void mptcp_pm_data_init(struct mptcp_sock *msk)
++void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ {
+ 	msk->pm.add_addr_signaled = 0;
+ 	msk->pm.add_addr_accepted = 0;
+@@ -377,10 +377,14 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
+ 	msk->pm.status = 0;
+ 
++	mptcp_pm_nl_data_init(msk);
++}
++
++void mptcp_pm_data_init(struct mptcp_sock *msk)
++{
+ 	spin_lock_init(&msk->pm.lock);
+ 	INIT_LIST_HEAD(&msk->pm.anno_list);
+-
+-	mptcp_pm_nl_data_init(msk);
++	mptcp_pm_data_reset(msk);
+ }
+ 
+ void __init mptcp_pm_init(void)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3fef1b4e7780..84a3df43a38d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2271,6 +2271,10 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
  	return true;
  }
  
-+static bool mptcp_established_options_fastclose(struct sock *sk,
-+						unsigned int *size,
-+						unsigned int remaining,
-+						struct mptcp_out_options *opts)
-+{
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-+	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
++/* flags for __mptcp_close_ssk() */
++#define MPTCP_CF_PUSH		BIT(1)
++#define MPTCP_CF_FASTCLOSE	BIT(2)
 +
-+	if (likely(!subflow->send_fastclose))
-+		return false;
+ /* subflow sockets can be either outgoing (connect) or incoming
+  * (accept).
+  *
+@@ -2280,22 +2284,37 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
+  * parent socket.
+  */
+ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+-			      struct mptcp_subflow_context *subflow)
++			      struct mptcp_subflow_context *subflow,
++			      unsigned int flags)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+-	bool need_push;
++	bool need_push, dispose_it;
+ 
+-	list_del(&subflow->node);
++	dispose_it = !msk->subflow || ssk != msk->subflow->sk;
++	if (dispose_it)
++		list_del(&subflow->node);
+ 
+ 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+ 
++	if (flags & MPTCP_CF_FASTCLOSE)
++		subflow->send_fastclose = 1;
 +
-+	if (remaining < TCPOLEN_MPTCP_FASTCLOSE)
-+		return false;
++	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
++	if (!dispose_it) {
++		tcp_disconnect(ssk, 0);
++		msk->subflow->state = SS_UNCONNECTED;
++		mptcp_subflow_ctx_reset(subflow);
++		release_sock(ssk);
 +
-+	*size = TCPOLEN_MPTCP_FASTCLOSE;
-+	opts->suboptions |= OPTION_MPTCP_FASTCLOSE;
-+	opts->rcvr_key = msk->remote_key;
++		goto out;
++	}
 +
-+	pr_debug("FASTCLOSE key=%llu", opts->rcvr_key);
-+	return true;
+ 	/* if we are invoked by the msk cleanup code, the subflow is
+ 	 * already orphaned
+ 	 */
+ 	if (ssk->sk_socket)
+ 		sock_orphan(ssk);
+ 
+-	need_push = __mptcp_retransmit_pending_data(sk);
+ 	subflow->disposable = 1;
+ 
+ 	/* if ssk hit tcp_done(), tcp_cleanup_ulp() cleared the related ops
+@@ -2315,14 +2334,12 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 
+ 	sock_put(ssk);
+ 
+-	if (ssk == msk->last_snd)
+-		msk->last_snd = NULL;
+-
+ 	if (ssk == msk->first)
+ 		msk->first = NULL;
+ 
+-	if (msk->subflow && ssk == msk->subflow->sk)
+-		mptcp_dispose_initial_subflow(msk);
++out:
++	if (ssk == msk->last_snd)
++		msk->last_snd = NULL;
+ 
+ 	if (need_push)
+ 		__mptcp_push_pending(sk, 0);
+@@ -2333,7 +2350,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ {
+ 	if (sk->sk_state == TCP_ESTABLISHED)
+ 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
+-	__mptcp_close_ssk(sk, ssk, subflow);
++	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
+ }
+ 
+ static unsigned int mptcp_sync_mss(struct sock *sk, u32 pmtu)
+@@ -2557,9 +2574,20 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	return 0;
+ }
+ 
+-static int mptcp_init_sock(struct sock *sk)
++static void mptcp_ca_reset(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
++
++	tcp_assign_congestion_control(sk);
++	strcpy(mptcp_sk(sk)->ca_name, icsk->icsk_ca_ops->name);
++
++	/* no need to keep a reference to the ops, the name will suffice */
++	tcp_cleanup_congestion_control(sk);
++	icsk->icsk_ca_ops = NULL;
 +}
 +
- static bool mptcp_established_options_mp_fail(struct sock *sk,
- 					      unsigned int *size,
- 					      unsigned int remaining,
-@@ -806,11 +828,9 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 		return false;
++static int mptcp_init_sock(struct sock *sk)
++{
+ 	struct net *net = sock_net(sk);
+ 	int ret;
  
- 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
--		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
--			*size += opt_size;
--			remaining -= opt_size;
--		}
--		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
-+		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
-+		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
-+		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
- 			*size += opt_size;
- 			remaining -= opt_size;
- 		}
-@@ -1251,17 +1271,8 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		ptr += 2;
- 	}
- 
--	/* RST is mutually exclusive with everything else */
--	if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
--		*ptr++ = mptcp_option(MPTCPOPT_RST,
--				      TCPOLEN_MPTCP_RST,
--				      opts->reset_transient,
--				      opts->reset_reason);
--		return;
--	}
--
--	/* DSS, MPC, MPJ and ADD_ADDR are mutually exclusive, see
--	 * mptcp_established_options*()
-+	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
-+	 * see mptcp_established_options*()
+@@ -2580,12 +2608,7 @@ static int mptcp_init_sock(struct sock *sk)
+ 	/* fetch the ca name; do it outside __mptcp_init_sock(), so that clone will
+ 	 * propagate the correct value
  	 */
- 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
- 		struct mptcp_ext *mpext = &opts->ext_copy;
-@@ -1447,6 +1458,20 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 				ptr += 1;
- 			}
- 		}
-+	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
-+		/* RST is mutually exclusive with everything else */
-+		*ptr++ = mptcp_option(MPTCPOPT_RST,
-+				      TCPOLEN_MPTCP_RST,
-+				      opts->reset_transient,
-+				      opts->reset_reason);
-+		return;
-+	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
-+		/* FASTCLOSE is mutually exclusive with everything else */
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
-+				      TCPOLEN_MPTCP_FASTCLOSE,
-+				      0, 0);
-+		put_unaligned_be64(opts->rcvr_key, ptr);
-+		return;
+-	tcp_assign_congestion_control(sk);
+-	strcpy(mptcp_sk(sk)->ca_name, icsk->icsk_ca_ops->name);
+-
+-	/* no need to keep a reference to the ops, the name will suffice */
+-	tcp_cleanup_congestion_control(sk);
+-	icsk->icsk_ca_ops = NULL;
++	mptcp_ca_reset(sk);
+ 
+ 	sk_sockets_allocated_inc(sk);
+ 	sk->sk_rcvbuf = sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
+@@ -2744,9 +2767,13 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 	sk_stop_timer(sk, &sk->sk_timer);
+ 	msk->pm.status = 0;
+ 
++	/* clears msk->subflow, allowing the following loop to close
++	 * even the initial subflow
++	 */
++	mptcp_dispose_initial_subflow(msk);
+ 	list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+-		__mptcp_close_ssk(sk, ssk, subflow);
++		__mptcp_close_ssk(sk, ssk, subflow, 0);
  	}
  
- 	if (OPTION_MPTCP_PRIO & opts->suboptions) {
+ 	sk->sk_prot->destroy(sk);
+@@ -2757,7 +2784,6 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 	xfrm_sk_free_policy(sk);
+ 
+ 	sk_refcnt_debug_release(sk);
+-	mptcp_dispose_initial_subflow(msk);
+ 	sock_put(sk);
+ }
+ 
+@@ -2793,6 +2819,9 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 
+ 	sock_hold(sk);
+ 	pr_debug("msk=%p state=%d", sk, sk->sk_state);
++	if (mptcp_sk(sk)->token)
++		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
++
+ 	if (sk->sk_state == TCP_CLOSE) {
+ 		__mptcp_destroy_sock(sk);
+ 		do_cancel_work = true;
+@@ -2803,9 +2832,6 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	if (do_cancel_work)
+ 		mptcp_cancel_work(sk);
+ 
+-	if (mptcp_sk(sk)->token)
+-		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
+-
+ 	sock_put(sk);
+ }
+ 
+@@ -2839,13 +2865,36 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 
+ 	mptcp_do_flush_join_list(msk);
+ 
++	inet_sk_state_store(sk, TCP_CLOSE);
++
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+-		lock_sock(ssk);
+-		tcp_disconnect(ssk, flags);
+-		release_sock(ssk);
++		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
+ 	}
++
++	sk_stop_timer(sk, &msk->sk.icsk_retransmit_timer);
++	sk_stop_timer(sk, &sk->sk_timer);
++
++	if (mptcp_sk(sk)->token)
++		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
++
++	mptcp_destroy_common(msk);
++	msk->last_snd = NULL;
++	msk->flags = 0;
++	msk->recovery = false;
++	msk->can_ack = false;
++	msk->fully_established = false;
++	msk->rcv_data_fin = false;
++	msk->snd_data_fin_enable = false;
++	msk->rcv_fastclose = false;
++	msk->use_64bit_ack = false;
++	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
++	mptcp_pm_data_reset(msk);
++	mptcp_ca_reset(sk);
++
++	sk->sk_shutdown = 0;
++	sk_error_report(sk);
+ 	return 0;
+ }
+ 
+@@ -2985,9 +3034,11 @@ void mptcp_destroy_common(struct mptcp_sock *msk)
+ 	__mptcp_clear_xmit(sk);
+ 
+ 	/* move to sk_receive_queue, sk_stream_kill_queues will purge it */
++	mptcp_data_lock(sk);
+ 	skb_queue_splice_tail_init(&msk->receive_queue, &sk->sk_receive_queue);
+ 	__skb_queue_purge(&sk->sk_receive_queue);
+ 	skb_rbtree_purge(&msk->out_of_order_queue);
++	mptcp_data_unlock(sk);
+ 
+ 	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
+ 	 * inet_sock_destruct() will dispose it
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e77de7662df0..cee323de1a1c 100644
+index cee323de1a1c..f8ed68c5ef9d 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -422,6 +422,7 @@ struct mptcp_subflow_context {
- 		backup : 1,
- 		send_mp_prio : 1,
- 		send_mp_fail : 1,
-+		send_fastclose : 1,
- 		send_infinite_map : 1,
- 		rx_eof : 1,
- 		can_ack : 1,        /* only after processing the remote a key */
+@@ -394,6 +394,9 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+ /* MPTCP subflow context */
+ struct mptcp_subflow_context {
+ 	struct	list_head node;/* conn_list of subflows */
++
++	char	reset_start[0];
++
+ 	unsigned long avg_pacing_rate; /* protected by msk socket lock */
+ 	u64	local_key;
+ 	u64	remote_key;
+@@ -442,6 +445,9 @@ struct mptcp_subflow_context {
+ 	u8	stale_count;
+ 
+ 	long	delegated_status;
++
++	char	reset_end[0];
++
+ 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
+ 
+ 	u32	setsockopt_seq;
+@@ -473,6 +479,13 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
+ 	return subflow->tcp_sock;
+ }
+ 
++static inline void
++mptcp_subflow_ctx_reset(struct mptcp_subflow_context *subflow)
++{
++	memset(subflow->reset_start, 0, subflow->reset_end - subflow->reset_start);
++	subflow->request_mptcp = 1;
++}
++
+ static inline u64
+ mptcp_subflow_get_map_offset(const struct mptcp_subflow_context *subflow)
+ {
+@@ -712,6 +725,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hmac);
+ 
+ void __init mptcp_pm_init(void);
+ void mptcp_pm_data_init(struct mptcp_sock *msk);
++void mptcp_pm_data_reset(struct mptcp_sock *msk);
+ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int server_side);
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index e581b341c5be..f52ee7b26aed 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -384,6 +384,7 @@ void mptcp_token_destroy(struct mptcp_sock *msk)
+ 		bucket->chain_len--;
+ 	}
+ 	spin_unlock_bh(&bucket->lock);
++	WRITE_ONCE(msk->token, 0);
+ }
+ 
+ void __init mptcp_token_init(void)
 -- 
 2.33.1
 
