@@ -1,35 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB162C85
-	for <mptcp@lists.linux.dev>; Thu, 11 Nov 2021 16:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C1D2C81
+	for <mptcp@lists.linux.dev>; Thu, 11 Nov 2021 16:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1636647716;
+	s=mimecast20190719; t=1636647718;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W50QpIb8FFp5BdkNVsVte2qDaRpQrfS5Es27d7tAdwA=;
-	b=C0WF1KwdfF9uVow3SC0IMZsAGa59ZYzYsN4otAyAuoYMYLQFWW8Iaa5Lhuq958OhrNNIsn
-	UfYSEo5Lnc8VpArdnKi7iWKS93aeVVOAdqZeP5QH7K2agwOsKWYlnPIcBbfE91KXfEtEgC
-	2GnS+l2ARSQFPmzR2dQiRrFZWJ6Bo8k=
+	bh=44DfOAC6I6ruJeti5Ujr/kwA8RUOK+Jd1rYbql/5lMM=;
+	b=ENqlE8aRtCr4DLhvjxuUmBXC7JGetwQIBbvfuXJG3z51yX9zm8N9VoGkBMFkHLfhPZ3ReP
+	uHyl+8nMEEWB9KGQ4bVooJcHbpCNO4vQF6qUGG5l0gifiHvuJ0kyqwKXa4di/AlOHAgvR7
+	hfYFf1wDIFJtp7rWsYxwXpC8WP9lqMg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-x0WYAA5KMYu2ehXWUFtp8Q-1; Thu, 11 Nov 2021 11:21:55 -0500
-X-MC-Unique: x0WYAA5KMYu2ehXWUFtp8Q-1
+ us-mta-585-lXkPt4MIPDuL5vEEdYVBKQ-1; Thu, 11 Nov 2021 11:21:56 -0500
+X-MC-Unique: lXkPt4MIPDuL5vEEdYVBKQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 015B61030C20
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB682A40C0
 	for <mptcp@lists.linux.dev>; Thu, 11 Nov 2021 16:21:55 +0000 (UTC)
 Received: from gerbillo.fritz.box (unknown [10.39.194.197])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6686F5D6B1
-	for <mptcp@lists.linux.dev>; Thu, 11 Nov 2021 16:21:54 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 594EA5D6B1
+	for <mptcp@lists.linux.dev>; Thu, 11 Nov 2021 16:21:55 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 5/7] mptcp: cleanup accept and poll
-Date: Thu, 11 Nov 2021 17:21:40 +0100
-Message-Id: <1bb810c54d43e268c570f894f74850c8226ffff8.1636647623.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-next 6/7] mptcp: implement support for user-space disconnect
+Date: Thu, 11 Nov 2021 17:21:41 +0100
+Message-Id: <3ca2682745f315b4106c2041a85e58b325eed03b.1636647623.git.pabeni@redhat.com>
 In-Reply-To: <cover.1636647623.git.pabeni@redhat.com>
 References: <cover.1636647623.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,97 +46,52 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-After the previous patch,  msk->subflow will never be deleted during
-the whole msk lifetime. We don't need anymore to acquire references to
-it in mptcp_stream_accept() and we can use the listener subflow accept
-queue to simplify mptcp_poll() for listener socket.
-
-Overall this removes a lock pair and 4 more atomic operations per accept().
+Handle explicitly AF_UNSPEC in mptcp_stream_connnect() to
+allow user-space to disconnect established MPTCP connections
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 25 +++++++------------------
- net/mptcp/protocol.h |  1 -
- net/mptcp/subflow.c  |  1 -
- 3 files changed, 7 insertions(+), 20 deletions(-)
+ net/mptcp/protocol.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 84a3df43a38d..ee2a5169c13a 100644
+index ee2a5169c13a..8319db8ae3ed 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3517,17 +3517,9 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+@@ -3428,9 +3428,20 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
+ 	struct mptcp_subflow_context *subflow;
+ 	struct socket *ssock;
+-	int err;
++	int err = -EINVAL;
  
- 	pr_debug("msk=%p", msk);
- 
--	lock_sock(sock->sk);
--	if (sock->sk->sk_state != TCP_LISTEN)
--		goto unlock_fail;
--
- 	ssock = __mptcp_nmpc_socket(msk);
- 	if (!ssock)
--		goto unlock_fail;
--
--	clear_bit(MPTCP_DATA_READY, &msk->flags);
--	sock_hold(ssock->sk);
--	release_sock(sock->sk);
-+		return -EINVAL;
- 
- 	err = ssock->ops->accept(sock, newsock, flags, kern);
- 	if (err == 0 && !mptcp_is_tcpsk(newsock->sk)) {
-@@ -3567,14 +3559,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 		release_sock(newsk);
- 	}
- 
--	if (inet_csk_listen_poll(ssock->sk))
--		set_bit(MPTCP_DATA_READY, &msk->flags);
--	sock_put(ssock->sk);
- 	return err;
--
--unlock_fail:
--	release_sock(sock->sk);
--	return -EINVAL;
- }
- 
- static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
-@@ -3620,8 +3605,12 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 
- 	state = inet_sk_state_load(sk);
- 	pr_debug("msk=%p state=%d flags=%lx", msk, state, msk->flags);
--	if (state == TCP_LISTEN)
--		return test_bit(MPTCP_DATA_READY, &msk->flags) ? EPOLLIN | EPOLLRDNORM : 0;
-+	if (state == TCP_LISTEN) {
-+		if (WARN_ON_ONCE(!msk->subflow || !msk->subflow->sk))
-+			return 0;
+ 	lock_sock(sock->sk);
++	if (uaddr) {
++		if (addr_len < sizeof(uaddr->sa_family))
++			goto unlock;
 +
-+		return inet_csk_listen_poll(msk->subflow->sk);
++		if (uaddr->sa_family == AF_UNSPEC) {
++			err = mptcp_disconnect(sock->sk, flags);
++			sock->state = err ? SS_DISCONNECTING : SS_UNCONNECTED;
++			goto unlock;
++		}
 +	}
- 
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
- 		mask |= mptcp_check_readable(msk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f8ed68c5ef9d..a6a4bd7de5b4 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -111,7 +111,6 @@
- #define MPTCP_RST_TRANSIENT	BIT(0)
- 
- /* MPTCP socket flags */
--#define MPTCP_DATA_READY	0
- #define MPTCP_NOSPACE		1
- #define MPTCP_WORK_RTX		2
- #define MPTCP_WORK_EOF		3
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 12c49f898e28..2aea7935019e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1298,7 +1298,6 @@ static void subflow_data_ready(struct sock *sk)
- 		if (reqsk_queue_empty(&inet_csk(sk)->icsk_accept_queue))
- 			return;
- 
--		set_bit(MPTCP_DATA_READY, &msk->flags);
- 		parent->sk_data_ready(parent);
- 		return;
++
+ 	if (sock->state != SS_UNCONNECTED && msk->subflow) {
+ 		/* pending connection or invalid state, let existing subflow
+ 		 * cope with that
+@@ -3440,10 +3451,8 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
  	}
+ 
+ 	ssock = __mptcp_nmpc_socket(msk);
+-	if (!ssock) {
+-		err = -EINVAL;
++	if (!ssock)
+ 		goto unlock;
+-	}
+ 
+ 	mptcp_token_destroy(msk);
+ 	inet_sk_state_store(sock->sk, TCP_SYN_SENT);
 -- 
 2.33.1
 
