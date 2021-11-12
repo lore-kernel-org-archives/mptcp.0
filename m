@@ -1,26 +1,26 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7027E72
-	for <mptcp@lists.linux.dev>; Fri, 12 Nov 2021 00:09:18 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="256757488"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC415168
+	for <mptcp@lists.linux.dev>; Fri, 12 Nov 2021 01:03:18 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="219941269"
 X-IronPort-AV: E=Sophos;i="5.87,227,1631602800"; 
-   d="scan'208";a="256757488"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 16:09:17 -0800
+   d="scan'208";a="219941269"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 17:03:18 -0800
 X-IronPort-AV: E=Sophos;i="5.87,227,1631602800"; 
-   d="scan'208";a="643277229"
+   d="scan'208";a="452956999"
 Received: from neelchat-mobl2.amr.corp.intel.com ([10.209.109.125])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 16:09:13 -0800
-Date: Thu, 11 Nov 2021 16:09:13 -0800 (PST)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 17:03:18 -0800
+Date: Thu, 11 Nov 2021 17:03:17 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] mptcp: allow changing the "backup" bit by
- endpoint id
-In-Reply-To: <434d58757c972252e5af7ac2574c3791a9778441.1636628783.git.dcaratti@redhat.com>
-Message-ID: <f468c1e1-ec26-763a-bc3-0b080b7a9db@linux.intel.com>
-References: <434d58757c972252e5af7ac2574c3791a9778441.1636628783.git.dcaratti@redhat.com>
+To: Florian Westphal <fw@strlen.de>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-next 3/4] mptcp: add SIOCINQ, OUTQ and OUTQNSD
+ ioctls
+In-Reply-To: <20211111151418.17276-4-fw@strlen.de>
+Message-ID: <246033df-61f-5b44-d7fd-9cd95cf8dc6b@linux.intel.com>
+References: <20211111151418.17276-1-fw@strlen.de> <20211111151418.17276-4-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,72 +29,119 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 11 Nov 2021, Davide Caratti wrote:
+On Thu, 11 Nov 2021, Florian Westphal wrote:
 
-> a non-zero 'id' is sufficient to identify MPTCP endpoints: allow changing
-> the value of 'backup' bit by simply specifying the endpoint id.
+> Allows to query in-sequence data ready for read(), total bytes in
+> write queue and total bytes in write queue that have not yet been sent.
 >
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> v2: remove unneeded READ_ONCE() (Paolo Abeni)
+>
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 > ---
-> net/mptcp/pm_netlink.c | 19 +++++++++++++++----
-> 1 file changed, 15 insertions(+), 4 deletions(-)
+> net/mptcp/protocol.c | 54 ++++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 54 insertions(+)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 7b96be1e9f14..b4c647e67930 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1700,24 +1700,35 @@ static int mptcp_nl_addr_backup(struct net *net,
-> 	return ret;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 61047d04e849..1c4604283b00 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -22,6 +22,7 @@
+> #endif
+> #include <net/mptcp.h>
+> #include <net/xfrm.h>
+> +#include <asm/ioctls.h>
+> #include "protocol.h"
+> #include "mib.h"
+>
+> @@ -3260,6 +3261,58 @@ static int mptcp_forward_alloc_get(const struct sock *sk)
+> 	return sk->sk_forward_alloc + mptcp_sk(sk)->rmem_fwd_alloc;
 > }
 >
-> +static int mptcp_nl_set_flags_idzero(u8 flags)
+> +static int mptcp_ioctl_outq(const struct mptcp_sock *msk, u64 v)
 > +{
-> +	return -EOPNOTSUPP;
+> +	const struct sock *sk = (void *)msk;
+> +	u64 delta;
+> +
+> +	if (sk->sk_state == TCP_LISTEN)
+> +		return -EINVAL;
+> +
+> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
+> +		return 0;
+> +
+> +	delta = msk->write_seq - v;
+> +	if (delta > INT_MAX)
+> +		delta = INT_MAX;
+> +
+> +	return (int)delta;
 > +}
+> +
+> +static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	int answ;
+> +	bool slow;
 
-Hi Davide -
+Reverse-xmas issue here.
 
-Is the above function added as a placeholder for something in the future? 
-Seems like a direct return below would be clearer.
+> +
+> +	switch (cmd) {
+> +	case SIOCINQ:
+> +		if (sk->sk_state == TCP_LISTEN)
+> +			return -EINVAL;
+> +
+> +		lock_sock(sk);
+> +		if (skb_queue_empty(&msk->receive_queue))
+
+I'm guessing that the idea here is that answering with a nonzero value is 
+enough to get the userspace program to do another read, rather than always 
+imposing overhead to dig through the subflow rx buffers and 
+sk->sk_receive_queue? That does seem like a good way to go, at least with 
+regard to calling __mptcp_move_skbs().
+
+Would it be useful to check sk->sk_receive_queue and splice if non-empty 
+(which is relatively cheap) to get a slightly more accurate inq number? 
+To maybe answer this question for myself - the socket lock was just 
+acquired so it's unlikely for skbs to have been added to sk_receive_queue, 
+and the extra complexity may not be worth it.
 
 - Mat
 
 
-> +
-> static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
-> {
-> +	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, }, *entry;
-> 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-> 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
-> -	struct mptcp_pm_addr_entry addr, *entry;
-> 	struct net *net = sock_net(skb->sk);
-> -	u8 bkup = 0;
-> +	u8 bkup = 0, lookup_by_id = 0;
-> 	int ret;
->
-> -	ret = mptcp_pm_parse_addr(attr, info, true, &addr);
-> +	ret = mptcp_pm_parse_addr(attr, info, false, &addr);
-> 	if (ret < 0)
-> 		return ret;
->
-> 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> 		bkup = 1;
-> +	if (addr.addr.family == AF_UNSPEC) {
-> +		lookup_by_id = 1;
-> +		if (!addr.addr.id)
-> +			return mptcp_nl_set_flags_idzero(addr.flags);
+> +			__mptcp_move_skbs(msk);
+> +		answ = mptcp_inq_hint(sk);
+> +		release_sock(sk);
+> +		break;
+> +	case SIOCOUTQ:
+> +		slow = lock_sock_fast(sk);
+> +		answ = mptcp_ioctl_outq(msk, READ_ONCE(msk->snd_una));
+> +		unlock_sock_fast(sk, slow);
+> +		break;
+> +	case SIOCOUTQNSD:
+> +		slow = lock_sock_fast(sk);
+> +		answ = mptcp_ioctl_outq(msk, msk->snd_nxt);
+> +		unlock_sock_fast(sk, slow);
+> +		break;
+> +	default:
+> +		return -ENOIOCTLCMD;
 > +	}
->
-> 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> -		if (addresses_equal(&entry->addr, &addr.addr, true)) {
-> +		if ((!lookup_by_id && addresses_equal(&entry->addr, &addr.addr, true)) ||
-> +		    (lookup_by_id && entry->addr.id == addr.addr.id)) {
-> 			mptcp_nl_addr_backup(net, &entry->addr, bkup);
->
-> 			if (bkup)
+> +
+> +	return put_user(answ, (int __user *)arg);
+> +}
+> +
+> static struct proto mptcp_prot = {
+> 	.name		= "MPTCP",
+> 	.owner		= THIS_MODULE,
+> @@ -3272,6 +3325,7 @@ static struct proto mptcp_prot = {
+> 	.shutdown	= mptcp_shutdown,
+> 	.destroy	= mptcp_destroy,
+> 	.sendmsg	= mptcp_sendmsg,
+> +	.ioctl		= mptcp_ioctl,
+> 	.recvmsg	= mptcp_recvmsg,
+> 	.release_cb	= mptcp_release_cb,
+> 	.hash		= mptcp_hash,
 > -- 
-> 2.31.1
+> 2.32.0
+>
 >
 >
 
