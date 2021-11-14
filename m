@@ -1,136 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A2468
-	for <mptcp@lists.linux.dev>; Fri, 12 Nov 2021 15:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1636731634;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l6yTan/NIasIPZrqJwzd0PkpU/TwztFR25BapQWGd9A=;
-	b=YgprxMlr8RvVcC9T3MwvIas4iPtlz+38H/QX+CjgZi4CVyczvetFpvcJSPvrendKbXv/hr
-	2gdoT0WC0+EpUzI22f1DhqfxR64FzhsyCLmoGwOHSK8Be0ngxYNGa0CLcRuHeWCdFTpuXE
-	ELsc7SQxnD9ZKa2X5KtAamBlsMJdGvM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-Lcu9HHH0ND-FCZ4pI8pFUQ-1; Fri, 12 Nov 2021 10:40:31 -0500
-X-MC-Unique: Lcu9HHH0ND-FCZ4pI8pFUQ-1
-Received: by mail-wr1-f70.google.com with SMTP id k8-20020a5d5248000000b001763e7c9ce5so1657621wrc.22
-        for <mptcp@lists.linux.dev>; Fri, 12 Nov 2021 07:40:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=l6yTan/NIasIPZrqJwzd0PkpU/TwztFR25BapQWGd9A=;
-        b=NB0EEZTBDXBEl+wFmY9/iF8YZBta2LSqnSIb7XHvW+xzc6mEQtwTTT20w68uJuSTdG
-         wprGDzTKEky8DAvV0nP76w6EavZEZRWq1d3rhKeVVca4U2CWR9oaHhgl1YsTxP9RlvvZ
-         p9raZvDvA2jYMIa3d91lyFY+RfUeB5DSYhIDhuTlywd+kdRXOVP+soW8h8xBNECCZghi
-         ni1yiQnm3R7OuzL9w+pb0CT7hPCxBVenGMtfPwffKT3ShAa9CUtgED4kJT74cqtzZlEi
-         VgmsWEjsE8Buo0IryH3gFhIcBrMA/ErzmynJ1cN4rhnOpag+Ll2iMVXIQtX/veHsitup
-         ZErA==
-X-Gm-Message-State: AOAM5323QjnrgxzZ6frUdRZt59wZ1k783ICru7uePxAjEk6aT5bucDuR
-	9ETbvc8+l14MPo9hiRoV3+x5nJuIhYAxkBCVIp94qWaPBezdFrn2anXswML3E5ig4yNftEYChku
-	0dY/c5gX7poo6LAM=
-X-Received: by 2002:a7b:c197:: with SMTP id y23mr18745128wmi.44.1636731629983;
-        Fri, 12 Nov 2021 07:40:29 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx4B3kdcl0Qx0r1Rh4WEIKO3txKMMMAuEs5ho70ybzsetrb5ASiYeizbhEzIBV+uU0PR4n0QA==
-X-Received: by 2002:a7b:c197:: with SMTP id y23mr18745102wmi.44.1636731629756;
-        Fri, 12 Nov 2021 07:40:29 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-224-97.dyn.eolo.it. [146.241.224.97])
-        by smtp.gmail.com with ESMTPSA id q84sm13851388wme.3.2021.11.12.07.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 07:40:29 -0800 (PST)
-Message-ID: <3ffc052c1d4f086397620b0a1f220c76245e0fd8.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: allow changing the "backup" bit by
- endpoint id
-From: Paolo Abeni <pabeni@redhat.com>
-To: Davide Caratti <dcaratti@redhat.com>, Mat Martineau
-	 <mathew.j.martineau@linux.intel.com>
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Fri, 12 Nov 2021 16:40:27 +0100
-In-Reply-To: <YY6C5wrG94WYonzg@dcaratti.users.ipa.redhat.com>
-References: <434d58757c972252e5af7ac2574c3791a9778441.1636628783.git.dcaratti@redhat.com>
-	 <f468c1e1-ec26-763a-bc3-0b080b7a9db@linux.intel.com>
-	 <YY6C5wrG94WYonzg@dcaratti.users.ipa.redhat.com>
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0B72C82
+	for <mptcp@lists.linux.dev>; Sun, 14 Nov 2021 05:35:30 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10167"; a="319508452"
+X-IronPort-AV: E=Sophos;i="5.87,233,1631602800"; 
+   d="scan'208";a="319508452"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2021 21:35:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,233,1631602800"; 
+   d="scan'208";a="453624821"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 13 Nov 2021 21:35:28 -0800
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1mm8Ap-000KzZ-NZ; Sun, 14 Nov 2021 05:35:27 +0000
+Date: Sun, 14 Nov 2021 13:35:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ aadccf14af5add5f0a7c20368f42a4e43b93b92f
+Message-ID: <6190a01b.XJnIC1l4ISSWKlcy%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2021-11-12 at 16:06 +0100, Davide Caratti wrote:
-> hello Mat, thanks for reading,
-> 
-> On Thu, Nov 11, 2021 at 04:09:13PM -0800, Mat Martineau wrote:
-> > On Thu, 11 Nov 2021, Davide Caratti wrote:
-> > 
-> > > a non-zero 'id' is sufficient to identify MPTCP endpoints: allow changing
-> > > the value of 'backup' bit by simply specifying the endpoint id.
-> > > 
-> > > Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
-> > > Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> > > ---
-> > > net/mptcp/pm_netlink.c | 19 +++++++++++++++----
-> > > 1 file changed, 15 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > > index 7b96be1e9f14..b4c647e67930 100644
-> > > --- a/net/mptcp/pm_netlink.c
-> > > +++ b/net/mptcp/pm_netlink.c
-> > > @@ -1700,24 +1700,35 @@ static int mptcp_nl_addr_backup(struct net *net,
-> > > 	return ret;
-> > > }
-> > > 
-> > > +static int mptcp_nl_set_flags_idzero(u8 flags)
-> > > +{
-> > > +	return -EOPNOTSUPP;
-> > > +}
-> > 
-> > Hi Davide -
-> > 
-> > Is the above function added as a placeholder for something in the future?
-> 
-> yes it's meant to be a placeholder, and I should have mentioned it in the
-> commit message. Any advice on what should happen from the functional
-> point of view when we change the "backup" bit for id=0 ?
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: aadccf14af5add5f0a7c20368f42a4e43b93b92f  DO-NOT-MERGE: mptcp: enabled by default
 
-IMHO explicitly forbidding the switch of the backup flag on id 0 is the
-correct thing to do. I guess/expect the backup flag will change in
-response to some "meta-change" on the related link.
+elapsed time: 1408m
 
-e.g. the end-user has free 5g connectivity when attached to the home's
-cell, and turn off backup flag on the address[es] attaches to the 5G
-link.
+configs tested: 135
+configs skipped: 3
 
-I don't easily see an use-case for id 0
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-BTW:
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211113
+powerpc                   motionpro_defconfig
+powerpc                     asp8347_defconfig
+arm                           omap1_defconfig
+powerpc                    gamecube_defconfig
+powerpc                     tqm8548_defconfig
+arm                         cm_x300_defconfig
+arm                        spear6xx_defconfig
+riscv                            alldefconfig
+sh                             espt_defconfig
+m68k                         amcore_defconfig
+mips                        jmr3927_defconfig
+h8300                            allyesconfig
+riscv                    nommu_k210_defconfig
+arm                         lpc18xx_defconfig
+powerpc                      ppc44x_defconfig
+arm                          imote2_defconfig
+powerpc                 mpc837x_rdb_defconfig
+x86_64                           allyesconfig
+powerpc                   lite5200b_defconfig
+powerpc                       eiger_defconfig
+arm                        trizeps4_defconfig
+arm                        shmobile_defconfig
+nds32                             allnoconfig
+mips                        omega2p_defconfig
+powerpc                        fsp2_defconfig
+sh                           sh2007_defconfig
+ia64                             allmodconfig
+m68k                       m5249evb_defconfig
+m68k                       bvme6000_defconfig
+powerpc                 mpc837x_mds_defconfig
+mips                      loongson3_defconfig
+powerpc                      pmac32_defconfig
+m68k                        mvme16x_defconfig
+arm                          ep93xx_defconfig
+mips                             allmodconfig
+mips                         bigsur_defconfig
+microblaze                          defconfig
+powerpc                 mpc85xx_cds_defconfig
+arm                            zeus_defconfig
+powerpc                       maple_defconfig
+arm                           viper_defconfig
+sh                         ap325rxa_defconfig
+openrisc                  or1klitex_defconfig
+mips                           ip32_defconfig
+arm                  randconfig-c002-20211113
+arm                  randconfig-c002-20211114
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+m68k                                defconfig
+nios2                            allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+s390                                defconfig
+parisc                           allyesconfig
+s390                             allmodconfig
+s390                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+mips                             allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a015-20211114
+x86_64               randconfig-a013-20211114
+x86_64               randconfig-a012-20211114
+x86_64               randconfig-a011-20211114
+x86_64               randconfig-a016-20211114
+x86_64               randconfig-a014-20211114
+i386                 randconfig-a014-20211114
+i386                 randconfig-a016-20211114
+i386                 randconfig-a012-20211114
+i386                 randconfig-a013-20211114
+i386                 randconfig-a011-20211114
+i386                 randconfig-a015-20211114
+arc                  randconfig-r043-20211114
+s390                 randconfig-r044-20211114
+riscv                randconfig-r042-20211114
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-> +	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, }, *entry; 
+clang tested configs:
+x86_64               randconfig-c007-20211114
+i386                 randconfig-c001-20211114
+arm                  randconfig-c002-20211114
+riscv                randconfig-c006-20211114
+powerpc              randconfig-c003-20211114
+s390                 randconfig-c005-20211114
+mips                 randconfig-c004-20211114
+i386                 randconfig-a006-20211114
+i386                 randconfig-a003-20211114
+i386                 randconfig-a005-20211114
+i386                 randconfig-a001-20211114
+i386                 randconfig-a004-20211114
+i386                 randconfig-a002-20211114
+x86_64               randconfig-a005-20211114
+x86_64               randconfig-a003-20211114
+x86_64               randconfig-a001-20211114
+x86_64               randconfig-a002-20211114
+x86_64               randconfig-a006-20211114
+x86_64               randconfig-a004-20211114
+i386                 randconfig-a016-20211113
+i386                 randconfig-a014-20211113
+i386                 randconfig-a012-20211113
+i386                 randconfig-a013-20211113
+i386                 randconfig-a011-20211113
+i386                 randconfig-a015-20211113
+hexagon              randconfig-r045-20211114
+hexagon              randconfig-r041-20211114
 
-Is checkpatch happy about the above? I would move '*entry' on a
-different line for readability's sake
-
-> > Seems like a direct return below would be clearer.
-> 
-> with a TODO comment, also. But just aesthetic, because probably the
-> compiler should make no difference and inline the call to
-> mptcp_nl_set_flags_idzero().
-
-Yep, generated-code wise would be the same. If we choose to forbid the
-id 0, I think it will made the code more readable.
-
-Cheers,
-
-Paolo
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
