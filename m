@@ -1,23 +1,23 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE4A2C83
-	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 01:30:16 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10171"; a="231577912"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02862C99
+	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 01:30:17 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10171"; a="231577918"
 X-IronPort-AV: E=Sophos;i="5.87,243,1631602800"; 
-   d="scan'208";a="231577912"
+   d="scan'208";a="231577918"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 17:30:14 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 17:30:15 -0800
 X-IronPort-AV: E=Sophos;i="5.87,243,1631602800"; 
-   d="scan'208";a="568294743"
+   d="scan'208";a="568294753"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.27.251])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 17:30:14 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 17:30:15 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-next 2/6] mptcp: Add a member to mptcp_pm_data to track kernel vs userspace mode
-Date: Wed, 17 Nov 2021 17:30:01 -0800
-Message-Id: <20211118013005.263660-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH mptcp-next 6/6] selftests: mptcp: Add tests for userspace PM type
+Date: Wed, 17 Nov 2021 17:30:05 -0800
+Message-Id: <20211118013005.263660-7-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.0
 In-Reply-To: <20211118013005.263660-1-mathew.j.martineau@linux.intel.com>
 References: <20211118013005.263660-1-mathew.j.martineau@linux.intel.com>
@@ -29,58 +29,131 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When adding support for netlink path management commands, the kernel
-needs to know whether paths are being controlled by the in-kernel path
-manager or a userspace PM.
+These tests ensure that the in-kernel path manager is bypassed when
+the userspace path manager is configured. Kernel code is still
+responsible for ADD_ADDR echo, so also make sure that's working.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm.c       | 4 ++++
- net/mptcp/protocol.h | 9 +++++++++
- 2 files changed, 13 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 467fbb2a4eba..3a3800771aca 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -373,6 +373,10 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	pm->subflows = 0;
- 	pm->rm_list_tx.nr = 0;
- 	pm->rm_list_rx.nr = 0;
-+	WRITE_ONCE(pm->pm_type, MPTCP_PM_TYPE_KERNEL);
-+	/* pm->work_pending must be only be set to 'true' when
-+	 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
-+	 */
- 	WRITE_ONCE(pm->work_pending,
- 		   (!!mptcp_pm_get_local_addr_max(msk) && subflows_allowed) ||
- 		   !!mptcp_pm_get_add_addr_signal_max(msk));
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 092cb77a64d8..edaf0cc75474 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -178,6 +178,14 @@ enum mptcp_pm_status {
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
- };
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 2684ef9c0d42..7df9ddb307a8 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -50,6 +50,7 @@ init()
+ 		ip netns add $netns || exit $ksft_skip
+ 		ip -net $netns link set lo up
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
++		ip netns exec $netns sysctl -q net.mptcp.pm_type=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
+ 		if [ $checksum -eq 1 ]; then
+@@ -1837,6 +1838,68 @@ fullmesh_tests()
+ 	chk_add_nr 1 1
+ }
  
-+enum mptcp_pm_type {
-+	MPTCP_PM_TYPE_KERNEL = 0,
-+	MPTCP_PM_TYPE_USERSPACE,
++userspace_tests()
++{
++	# userspace pm type prevents add_addr
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type prevents add_addr" 0 0 0
++	chk_add_nr 0 0
 +
-+	__MPTCP_PM_TYPE_NR,
-+	__MPTCP_PM_TYPE_MAX = __MPTCP_PM_TYPE_NR - 1,
-+};
++	# userspace pm type echoes add_addr
++	reset
++	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type echoes add_addr" 0 0 0
++	chk_add_nr 1 1
 +
- enum mptcp_addr_signal_status {
- 	MPTCP_ADD_ADDR_SIGNAL,
- 	MPTCP_ADD_ADDR_ECHO,
-@@ -200,6 +208,7 @@ struct mptcp_pm_data {
- 	u8		add_addr_signaled;
- 	u8		add_addr_accepted;
- 	u8		local_addr_used;
-+	u8		pm_type;
- 	u8		subflows;
- 	u8		status;
- 	struct mptcp_rm_list rm_list_tx;
++	# userspace pm type rejects join
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type rejects join" 1 1 0
++
++	# userspace pm type does not send join
++	reset
++	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type does not send join" 0 0 0
++
++	# userspace pm type prevents mp_prio
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
++	chk_join_nr "userspace pm type prevents mp_prio" 1 1 0
++	chk_prio_nr 0 0
++
++	# userspace pm type prevents rm_addr
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
++	chk_join_nr "userspace pm type prevents rm_addr" 0 0 0
++	chk_rm_nr 0 0
++}
++
+ all_tests()
+ {
+ 	subflows_tests
+@@ -1853,6 +1916,7 @@ all_tests()
+ 	checksum_tests
+ 	deny_join_id0_tests
+ 	fullmesh_tests
++	userspace_tests
+ }
+ 
+ usage()
+@@ -1872,6 +1936,7 @@ usage()
+ 	echo "  -S checksum_tests"
+ 	echo "  -d deny_join_id0_tests"
+ 	echo "  -m fullmesh_tests"
++	echo "  -u userspace_tests"
+ 	echo "  -c capture pcap files"
+ 	echo "  -C enable data checksum"
+ 	echo "  -h help"
+@@ -1907,7 +1972,7 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
+ 
+-while getopts 'fsltra64bpkdmchCS' opt; do
++while getopts 'fsltra64bpkdmuchCS' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+@@ -1951,6 +2016,9 @@ while getopts 'fsltra64bpkdmchCS' opt; do
+ 		m)
+ 			fullmesh_tests
+ 			;;
++		u)
++			userspace_tests
++			;;
+ 		c)
+ 			;;
+ 		C)
 -- 
 2.34.0
 
