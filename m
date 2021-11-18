@@ -1,159 +1,167 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02862C99
-	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 01:30:17 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10171"; a="231577918"
-X-IronPort-AV: E=Sophos;i="5.87,243,1631602800"; 
-   d="scan'208";a="231577918"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 17:30:15 -0800
-X-IronPort-AV: E=Sophos;i="5.87,243,1631602800"; 
-   d="scan'208";a="568294753"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.27.251])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 17:30:15 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D8B68
+	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 12:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1637238696;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6w3oL6uqLGyeAGEohe6FtRqd8YJ/NkldKwZz64ohDHk=;
+	b=ca8SaIbOOF5UAXfTdGsB+lSbydaCEYM/GTjx7T5RbU9spJlXfscq1i2W3BovxtS7Osnlyp
+	3rtX/waHcR886y7bzw2jug5VRRLrwzDjseezDbmFUP4+JrhGYpTYssEs6Z2JFXl1CODspS
+	kSjhbRjf0czQatwV3GJJACGEnihjgbM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-336-_xh_oI2LMpaZwkMDmbFWpg-1; Thu, 18 Nov 2021 07:31:35 -0500
+X-MC-Unique: _xh_oI2LMpaZwkMDmbFWpg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3029310168F4
+	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 12:31:34 +0000 (UTC)
+Received: from gerbillo.fritz.box (unknown [10.39.194.63])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8D982608BA
+	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 12:31:33 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-next 6/6] selftests: mptcp: Add tests for userspace PM type
-Date: Wed, 17 Nov 2021 17:30:05 -0800
-Message-Id: <20211118013005.263660-7-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.34.0
-In-Reply-To: <20211118013005.263660-1-mathew.j.martineau@linux.intel.com>
-References: <20211118013005.263660-1-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH iproute2-next] mptcp: add support for fullmesh flag
+Date: Thu, 18 Nov 2021 13:31:15 +0100
+Message-Id: <e82f1c57baf4bab35018177cf82de224655fcb8b.1637238533.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-These tests ensure that the in-kernel path manager is bypassed when
-the userspace path manager is configured. Kernel code is still
-responsible for ADD_ADDR echo, so also make sure that's working.
+The link kernel supports this endpoint flag since v5.15, let's
+expose it to user-space. It allows creation on fullmesh topolgy
+via MPTCP subflow.
 
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Additionally update the related man-page, clarifying the behavior
+of related options.
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
- 1 file changed, 69 insertions(+), 1 deletion(-)
+notes:
+- currently sent only to mptcp ML, looking for "editorial" reviews :)
+- as a side doc-update effect, this could possibly close issue/237
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2684ef9c0d42..7df9ddb307a8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -50,6 +50,7 @@ init()
- 		ip netns add $netns || exit $ksft_skip
- 		ip -net $netns link set lo up
- 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
-+		ip netns exec $netns sysctl -q net.mptcp.pm_type=0
- 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
- 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
- 		if [ $checksum -eq 1 ]; then
-@@ -1837,6 +1838,68 @@ fullmesh_tests()
- 	chk_add_nr 1 1
+---
+ ip/ipmptcp.c        |  3 ++-
+ man/man8/ip-mptcp.8 | 47 ++++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 38 insertions(+), 12 deletions(-)
+
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index 0f5b6e2d..433fa68d 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -31,7 +31,7 @@ static void usage(void)
+ 		"	ip mptcp limits show\n"
+ 		"	ip mptcp monitor\n"
+ 		"FLAG-LIST := [ FLAG-LIST ] FLAG\n"
+-		"FLAG  := [ signal | subflow | backup ]\n");
++		"FLAG  := [ signal | subflow | backup | fullmesh ]\n");
+ 
+ 	exit(-1);
  }
+@@ -53,6 +53,7 @@ static const struct {
+ 	{ "signal",		MPTCP_PM_ADDR_FLAG_SIGNAL },
+ 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
+ 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
++	{ "fullmesh",		MPTCP_PM_ADDR_FLAG_FULLMESH },
+ };
  
-+userspace_tests()
-+{
-+	# userspace pm type prevents add_addr
-+	reset
-+	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "userspace pm type prevents add_addr" 0 0 0
-+	chk_add_nr 0 0
-+
-+	# userspace pm type echoes add_addr
-+	reset
-+	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "userspace pm type echoes add_addr" 0 0 0
-+	chk_add_nr 1 1
-+
-+	# userspace pm type rejects join
-+	reset
-+	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "userspace pm type rejects join" 1 1 0
-+
-+	# userspace pm type does not send join
-+	reset
-+	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "userspace pm type does not send join" 0 0 0
-+
-+	# userspace pm type prevents mp_prio
-+	reset
-+	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
-+	chk_join_nr "userspace pm type prevents mp_prio" 1 1 0
-+	chk_prio_nr 0 0
-+
-+	# userspace pm type prevents rm_addr
-+	reset
-+	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
-+	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
-+	chk_join_nr "userspace pm type prevents rm_addr" 0 0 0
-+	chk_rm_nr 0 0
-+}
-+
- all_tests()
- {
- 	subflows_tests
-@@ -1853,6 +1916,7 @@ all_tests()
- 	checksum_tests
- 	deny_join_id0_tests
- 	fullmesh_tests
-+	userspace_tests
- }
+ static void print_mptcp_addr_flags(unsigned int flags)
+diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+index 22335b61..367ecc64 100644
+--- a/man/man8/ip-mptcp.8
++++ b/man/man8/ip-mptcp.8
+@@ -53,6 +53,8 @@ ip-mptcp \- MPTCP path manager configuration
+ .B subflow
+ .RB "|"
+ .B backup
++.RB "|"
++.B fullmesh
+ .RB  "]"
  
- usage()
-@@ -1872,6 +1936,7 @@ usage()
- 	echo "  -S checksum_tests"
- 	echo "  -d deny_join_id0_tests"
- 	echo "  -m fullmesh_tests"
-+	echo "  -u userspace_tests"
- 	echo "  -c capture pcap files"
- 	echo "  -C enable data checksum"
- 	echo "  -h help"
-@@ -1907,7 +1972,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
+ .ti -8
+@@ -103,22 +105,36 @@ is a unique numeric identifier for the given endpoint
  
--while getopts 'fsltra64bpkdmchCS' opt; do
-+while getopts 'fsltra64bpkdmuchCS' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1951,6 +2016,9 @@ while getopts 'fsltra64bpkdmchCS' opt; do
- 		m)
- 			fullmesh_tests
- 			;;
-+		u)
-+			userspace_tests
-+			;;
- 		c)
- 			;;
- 		C)
+ .TP
+ .BR signal
+-the endpoint will be announced/signalled to each peer via an ADD_ADDR MPTCP
+-sub-option
++the endpoint will be announced/signaled to each peer via an ADD_ADDR MPTCP
++sub-option. Upon reception of an ADD_ADDR option, the peer can try to create
++additional subflows, see
++.BR ADD_ADDR_ACCEPTED_NR.
+ 
+ .TP
+ .BR subflow
+-if additional subflow creation is allowed by MPTCP limits, the endpoint will
+-be used as the source address to create an additional subflow after that
+-the MPTCP connection is established.
++if additional subflow creation is allowed by MPTCP limits, after that the
++MPTCP connection is established, the MPTCP path manager will try to create
++an additional subflow using this endpoint as the source address.
+ 
+ .TP
+ .BR backup
+-the endpoint will be announced as a backup address, if this is a
+-.BR signal
+-endpoint, or the subflow will be created as a backup one if this is a
++if this is a
++.BR subflow
++endpoint, the subflows created using this endpoint will be backup ones.
++Backup subflows are used only when all non-backup subflows are unavailable.
++
++.TP
++.BR fullmesh
++if this is a
++.BR subflow
++endpoint, if additional subflow creation is allowed by MPTCP limits, after that the
++each MPTCP connection is established, the MPTCP path manager will try to create
++an additional subflow for each known server address using this endpoint as
++the source address. If the peer did not announce any additional address via
++ADD_ADDR MPTCP sub-option, this has no additional effect compared to a plain
+ .BR subflow
+-endpoint
++endpoint. Otherwise, this will create an additional subflow for each received
++ADD_ADDR, generating a fullmesh topology.
+ 
+ .sp
+ .PP
+@@ -143,8 +159,17 @@ endpoints, additional subflows started by the peer.
+ .TP
+ .IR ADD_ADDR_ACCEPTED_NR
+ specifies the maximum number of ADD_ADDR suboptions accepted for each MPTCP
+-connection. The MPTCP path manager will try to create a new subflow for
+-each accepted ADD_ADDR option, respecting the
++connection. When and ADD_ADDR suboption is accepted, if there are no local
++.BR fullmesh
++endpoint, the MPTCP path manager will try to create a new subflow towards the
++address specified by the ADD_ADDR option, using as source the local address
++obtained by the routing resolution. Otherwise, the MPTCP path manager will try
++to create a new subflow for each
++.BR fullmesh
++endpoint, using the fullmesh endpoint as the source address and the address
++specified by the ADD_ADDR option as the destination. In both cases the MPTCP
++path manager enforces
++the
+ .IR SUBFLOW_NR
+ limit.
+ 
 -- 
-2.34.0
+2.33.1
 
