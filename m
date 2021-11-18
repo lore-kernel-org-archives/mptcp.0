@@ -1,102 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74CD68
-	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 14:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1637244015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2joO8jS3Ie5xpyBkZ2g+0qXY750ulN41DKRAm1lQerQ=;
-	b=TJwF2jvpNmgc1Bm8CNxpTkzi+MyFDqv71dMnuuXgEx2uZeHihzwmte0nzoVg7bk/QyKxe5
-	xysOLFHlXRo4dVPxFhIa/0hH63AikeCuob/3oPF+TUA6VyFahgPrbukY+NXtc9jf/qg6ft
-	VnyQ/P+Nw266xvBEBlMJIZ3vYcYsG4A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-451-Kyk_iGlsMpO38Od1Up-t0g-1; Thu, 18 Nov 2021 09:00:10 -0500
-X-MC-Unique: Kyk_iGlsMpO38Od1Up-t0g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92B8F10247A8;
-	Thu, 18 Nov 2021 14:00:09 +0000 (UTC)
-Received: from dcaratti.users.ipa.redhat.com (unknown [10.40.194.144])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 616F560CC4;
-	Thu, 18 Nov 2021 14:00:08 +0000 (UTC)
-From: Davide Caratti <dcaratti@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v2] mptcp: allow changing the "backup" bit by endpoint id
-Date: Thu, 18 Nov 2021 15:00:02 +0100
-Message-Id: <bc909f9556f6696220611f4691913329624f0edc.1637243913.git.dcaratti@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FADF68
+	for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 14:24:46 +0000 (UTC)
+Received: by mail-oi1-f179.google.com with SMTP id be32so14530105oib.11
+        for <mptcp@lists.linux.dev>; Thu, 18 Nov 2021 06:24:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=+qB3WTTQ7V7t/ubsonAurwEBzdcnwoGqqp6kCxHyge0=;
+        b=DylsOXFp6d+/iBOWqZR4urYNWGgQgickI+q2GokX6MqkQJxxSH2fDKOizOYPc7piF7
+         EbQHElG2ahtT6EuFcGyMYlQAlQTwq2leIMAJL0hkW4C/zKliTV2epphEGY273nRM8c1V
+         /yjLKnk3CIhEkIqR3wSTYIKlBYVArjMg72limfjbzUSpuxz3F2rA01YSTD8YnBJ+3OFm
+         NcWxXWwkrZWglWT7OUBn0lDaHCSqbWsppqHhRK1793GdYLo6ASZUjM8D9HgT4KJ2/nG5
+         2fwx6q4ZEw+xvoDinWVWXEDuPXXKf/fmS7oqZwvFX7MFK/hhVrL702IJazAFizyweXbY
+         fViQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=+qB3WTTQ7V7t/ubsonAurwEBzdcnwoGqqp6kCxHyge0=;
+        b=vSZZ0iFFaVI9XIelusvHhHIJSYN72EPzBNyTn8AzfiUM/4lrQNgORzV6oJurIvToke
+         6XYM0PsVr36zvit1d9FUuoXCf/eUTvtc1unDV3fB++A9Vt0Bf3jwBEkhy1f5WWLxYNjg
+         b8KDduZt+K0yHT34Va63XL2BT/TkVyBFb3wGyeIgmUH74UFfRIcsI4xEhl2NQN0OX49I
+         oefi2axXO+wWeDeNxvpt2ilu3laYW77qfj60YNE6ISZe4w4IX4Y+j7GxyAoKY1Cdnhz0
+         0svDJ3wwpJ2CVJpihIZxN27VfrJ7WtA3qON3hSc5Qi35gFujqdhghCavl1lu47Gxe877
+         kDYA==
+X-Gm-Message-State: AOAM531i2b1qXV+vPLGryxHFIJTSxzWYGarf7eGkHCBZ/BizjRwtp99P
+	viy4x9zP/eFT2O+j2aYnl3se5/UKPw==
+X-Google-Smtp-Source: ABdhPJyhj5LyaTtzp+piM6MCy6FQXZ5YX1o9eqzDMZk81B8GBrpKJVmyX6F2xnTjnuiJ4VYRdTHfHw==
+X-Received: by 2002:a05:6808:1485:: with SMTP id e5mr8394331oiw.156.1637245485610;
+        Thu, 18 Nov 2021 06:24:45 -0800 (PST)
+Received: from [127.0.0.1] ([13.65.136.219])
+        by smtp.gmail.com with ESMTPSA id n20sm562389ooe.7.2021.11.18.06.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 06:24:45 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20211118013005.263660-7-mathew.j.martineau@linux.intel.com>
+References: <20211118013005.263660-7-mathew.j.martineau@linux.intel.com>
+Subject: Re: selftests: mptcp: Add tests for userspace PM type: Build
+ Failure
+Message-ID: <dcb8fd55-8373-e842-29c5-d1a90b9904c8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 18 Nov 2021 14:24:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-a non-zero 'id' is sufficient to identify MPTCP endpoints: allow changing
-the value of 'backup' bit by simply specifying the endpoint id.
+Hi Mat,
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
----
+Thank you for your modifications, that's great!
 
-Notes:
-    v2:
-     - remove poltergeist that handles id zero
+But sadly, our CI spotted some issues with it when trying to build it.
 
- net/mptcp/pm_netlink.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+You can find more details there:
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 7b96be1e9f14..4ff8d55cbe82 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1702,22 +1702,28 @@ static int mptcp_nl_addr_backup(struct net *net,
- 
- static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
- {
-+	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, }, *entry;
- 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
--	struct mptcp_pm_addr_entry addr, *entry;
- 	struct net *net = sock_net(skb->sk);
--	u8 bkup = 0;
-+	u8 bkup = 0, lookup_by_id = 0;
- 	int ret;
- 
--	ret = mptcp_pm_parse_addr(attr, info, true, &addr);
-+	ret = mptcp_pm_parse_addr(attr, info, false, &addr);
- 	if (ret < 0)
- 		return ret;
- 
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
-+	if (addr.addr.family == AF_UNSPEC) {
-+		lookup_by_id = 1;
-+		if (!addr.addr.id)
-+			return -EOPNOTSUPP;
-+	}
- 
- 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if (addresses_equal(&entry->addr, &addr.addr, true)) {
-+		if ((!lookup_by_id && addresses_equal(&entry->addr, &addr.addr, true)) ||
-+		    (lookup_by_id && entry->addr.id == addr.addr.id)) {
- 			mptcp_nl_addr_backup(net, &entry->addr, bkup);
- 
- 			if (bkup)
--- 
-2.31.1
+  https://patchwork.kernel.=
+org/project/mptcp/patch/20211118013005.263660-7-mathew.j.martineau@linux.=
+intel.com/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1=
+476796774
 
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/7a651678e6=
+19
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
