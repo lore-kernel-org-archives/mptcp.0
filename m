@@ -1,79 +1,74 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5372A2C82
-	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 17:13:26 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id g191-20020a1c9dc8000000b0032fbf912885so8030600wme.4
-        for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 09:13:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06F62C82
+	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 17:16:11 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id w1so45503842edc.6
+        for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 09:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CdoRGe7QzQf4GJF65efRVKXx9/UiDMH6cLZkmHp5PPI=;
-        b=i6R61xy9qHvj/D2h6PLKRVNoOeV9/27r6zOg0+RtPWV2INlRoO3nmN8CdmwBw9lLhX
-         m/2Hqw4Qm/8FyTQb2sfdV3DVHMYnIl5llNSJWPyTWU561Rub61u5D8xXovjsNV+iDj5n
-         KavXmTbso0QV+hcF3U/qnm+McPQcrNhwFGn3YqaLmxb7c+fRvrQJYd4KuiEu8igBniha
-         nHgkKYZxpMDvT+3KwGMlkFDwelnPlqXaUjwVxdjE+GN2W4DZ3SzqrZEpJqc8dDtLFJ7h
-         /vie1PGj0xPch3leJHo4MkXUI/ksvFk5G2icC9TDFdCp1KBoSlW1cGXoCPDNgnBhz4Le
-         syvg==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=ivPxeAuf3MnMd/50FGI/jhiQsthLEl45vbwAY1RMFoI=;
+        b=VO0Xwid9gZ7GwIy5KlDDXdknWIkUllcmL7P9jbDfwKlrMPjwzZg/mjkcGPZfmQYoij
+         iKL8MIF3pEe3XTcUPEhwQR2MgYfRu/xCEg51/QKjXCdiuLs6r2R4WQIvdm+NxmTWQeGD
+         knZJSDQnKzS3WL0aeOADwBFohhIhKY3yAAPyqm81/Iv5N6/pNS4KDJiFC1TbSKAgYrVa
+         LKOw/qD5vc8CU4AWvxhY31yVwYQ1/2BZQainLvzrISWj8PwDp4g/wI/vBvxBfjRGI4qz
+         AOkF69OTVk9U1+wMKGBJNTh+RoCtaKdzwy5eJGa+0D/CKPEv5AWP/0E8ohRvmOtd5C6t
+         U4NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=CdoRGe7QzQf4GJF65efRVKXx9/UiDMH6cLZkmHp5PPI=;
-        b=CE00IOnU/di1S39bzCOWKeacP2edAlS6aSgDgW6aqlr3priyfpFCFM0dnBKxURSQ2T
-         E18RtqcCdmmigz7WUQS+dtP2OQd5rrFCT3x2V03c8yTQ3a5ggU57kbry03FYOi0nKLL0
-         LUc/cKj/2fa19QCrFOR4NClDFkYbY1OEQLiftRsR3mdlMoXazyocXwjjvi64Orao41P4
-         JA1yfy4AxXkyPkPCDo8RhdolMNYt+IyqRI9we4e5MKgX48LbXU3IkT/rN1V8m2u0IPiv
-         GLILG151VCzL+c59SbENGe834gD8drammI8qllNmU24YktCHPWw7RxsPANN3LtzaFOJK
-         oUKQ==
-X-Gm-Message-State: AOAM533e2XVG0RWo8BQtpSbxKSMoimsKMo12sorLzFLFJv5c39wTnvh/
-	jHj8dQUEjRY1QnirhYAiYk+fqKbKY4CuGgTQ
-X-Google-Smtp-Source: ABdhPJw2ikVit45WUjZZ/eHcyvXV0ByEgo0vpAvai7cdHA1anjOkD59xUkQ6zyvwVECN1Mr6YyDh5Q==
-X-Received: by 2002:a1c:1d48:: with SMTP id d69mr1395411wmd.143.1637342004502;
-        Fri, 19 Nov 2021 09:13:24 -0800 (PST)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id q8sm285882wrx.71.2021.11.19.09.13.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Nov 2021 09:13:24 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next] Squash to "mptcp: add TCP_INQ cmsg support"
-Date: Fri, 19 Nov 2021 18:13:04 +0100
-Message-Id: <20211119171304.4028221-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.32.0
+        bh=ivPxeAuf3MnMd/50FGI/jhiQsthLEl45vbwAY1RMFoI=;
+        b=r1kJEvcNnqeCwQiz+hU54cocQdwkZRjuJ6ftdbG8E49cX68sZ+a15iAlAjBL1yIsln
+         LlIBmf914jHPMg+gHaX0O7SSgjIHvXdzPLVb9NouzXq2k5c3J6T+CPsXho5G6EpNg6za
+         K/oy7ff+nzWBz7Q2m0BhuGQBR13RPZmJPWNaC+ZlViTTI3WHRG+LNwhyq4+0/ww+VDkX
+         MApxC6csxe7CViaGLppv0IQiW4/7uD0OOjZIaH+bIrC6lToBkSwWTr3bIhqz4VLH4ft9
+         LA89b6iKNeQzJ+GsVLjJpkNqR2LuwT9/L3tyQ3cBvg/Hde+c75mp5QjbaC9qUarBnISv
+         DyWQ==
+X-Gm-Message-State: AOAM531dG89g4FINQHwNZTzjBTdFzT7+DX1NjW15A9MT4vk6wahcr8vV
+	HR0ww3NwYtiMF3o/PlMTSseLS/AR/Hj8eLsM
+X-Google-Smtp-Source: ABdhPJxjrAhmkQcmm71Rgdt889Was9hGEDkavKkeZUEWHFUrA9gv4S8mF7v8Hh7hXHF5Q79/XU1BMw==
+X-Received: by 2002:a17:907:3f8a:: with SMTP id hr10mr9595276ejc.527.1637342170032;
+        Fri, 19 Nov 2021 09:16:10 -0800 (PST)
+Received: from [192.168.178.33] ([213.211.139.36])
+        by smtp.gmail.com with ESMTPSA id kx3sm175604ejc.112.2021.11.19.09.16.09
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Nov 2021 09:16:09 -0800 (PST)
+Message-ID: <b5bfef35-8883-c1c0-c167-2240763fb59f@tessares.net>
+Date: Fri, 19 Nov 2021 18:16:09 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add TCP_INQ cmsg support"
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20211119171304.4028221-1-matthieu.baerts@tessares.net>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20211119171304.4028221-1-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-We can remove this old comment now that its support has been added.
+Hello
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
+On 19/11/2021 18:13, Matthieu Baerts wrote:
+> We can remove this old comment now that its support has been added.
 
-Notes:
-    to be squashed in "mptcp: add TCP_INQ cmsg support"
+I guess there was no objection for this very simple patch. Now in our tree:
 
- net/mptcp/sockopt.c | 1 -
- 1 file changed, 1 deletion(-)
+- 72eed6226983: "squashed" in "mptcp: add TCP_INQ cmsg support"
+- No Co-Dev tag added for that of course
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 0295d6d9207e..11cda8629993 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -569,7 +569,6 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN TCP_FASTOPEN_CONNECT, TCP_FASTOPEN_NO_COOKIE,
- 		 * are not supported fastopen is currently unsupported
- 		 */
--		/* TCP_INQ is currently unsupported, needs some recvmsg work */
- 	}
- 	return false;
- }
+Cheers,
+Matt
 -- 
-2.32.0
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
