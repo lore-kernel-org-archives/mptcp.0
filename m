@@ -1,98 +1,237 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D35F68
-	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 00:45:36 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="234276238"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4822168
+	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 01:31:39 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="215048358"
 X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
-   d="scan'208";a="234276238"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 16:45:36 -0800
+   d="scan'208";a="215048358"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 17:31:38 -0800
 X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
-   d="scan'208";a="550870548"
+   d="scan'208";a="495654287"
 Received: from asalter-mobl.amr.corp.intel.com ([10.209.63.232])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 16:45:24 -0800
-Date: Thu, 18 Nov 2021 16:45:23 -0800 (PST)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 17:31:37 -0800
+Date: Thu, 18 Nov 2021 17:31:37 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-next v2] mptcp: allow changing the "backup" bit by
- endpoint id
-In-Reply-To: <bc909f9556f6696220611f4691913329624f0edc.1637243913.git.dcaratti@redhat.com>
-Message-ID: <e38fcef-ef5c-c875-732b-f06502b7c65@linux.intel.com>
-References: <bc909f9556f6696220611f4691913329624f0edc.1637243913.git.dcaratti@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH iproute2-next] mptcp: add support for fullmesh flag
+In-Reply-To: <e82f1c57baf4bab35018177cf82de224655fcb8b.1637238533.git.pabeni@redhat.com>
+Message-ID: <cb4e18f4-a3fe-fb46-2ab-eb37e29f573d@linux.intel.com>
+References: <e82f1c57baf4bab35018177cf82de224655fcb8b.1637238533.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 18 Nov 2021, Davide Caratti wrote:
+On Thu, 18 Nov 2021, Paolo Abeni wrote:
 
-> a non-zero 'id' is sufficient to identify MPTCP endpoints: allow changing
-> the value of 'backup' bit by simply specifying the endpoint id.
+> The link kernel supports this endpoint flag since v5.15, let's
+> expose it to user-space. It allows creation on fullmesh topolgy
+> via MPTCP subflow.
 >
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> Additionally update the related man-page, clarifying the behavior
+> of related options.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
+> notes:
+> - currently sent only to mptcp ML, looking for "editorial" reviews :)
+> - as a side doc-update effect, this could possibly close issue/237
 >
-> Notes:
->    v2:
->     - remove poltergeist that handles id zero
+> ---
+> ip/ipmptcp.c        |  3 ++-
+> man/man8/ip-mptcp.8 | 47 ++++++++++++++++++++++++++++++++++-----------
+> 2 files changed, 38 insertions(+), 12 deletions(-)
+>
+> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+> index 0f5b6e2d..433fa68d 100644
+> --- a/ip/ipmptcp.c
+> +++ b/ip/ipmptcp.c
+> @@ -31,7 +31,7 @@ static void usage(void)
+> 		"	ip mptcp limits show\n"
+> 		"	ip mptcp monitor\n"
+> 		"FLAG-LIST := [ FLAG-LIST ] FLAG\n"
+> -		"FLAG  := [ signal | subflow | backup ]\n");
+> +		"FLAG  := [ signal | subflow | backup | fullmesh ]\n");
+>
+> 	exit(-1);
+> }
+> @@ -53,6 +53,7 @@ static const struct {
+> 	{ "signal",		MPTCP_PM_ADDR_FLAG_SIGNAL },
+> 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
+> 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
+> +	{ "fullmesh",		MPTCP_PM_ADDR_FLAG_FULLMESH },
+> };
+>
+> static void print_mptcp_addr_flags(unsigned int flags)
+> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+> index 22335b61..367ecc64 100644
+> --- a/man/man8/ip-mptcp.8
+> +++ b/man/man8/ip-mptcp.8
+> @@ -53,6 +53,8 @@ ip-mptcp \- MPTCP path manager configuration
+> .B subflow
+> .RB "|"
+> .B backup
+> +.RB "|"
+> +.B fullmesh
+> .RB  "]"
+>
+> .ti -8
+> @@ -103,22 +105,36 @@ is a unique numeric identifier for the given endpoint
+>
+> .TP
+> .BR signal
+> -the endpoint will be announced/signalled to each peer via an ADD_ADDR MPTCP
+> -sub-option
+> +the endpoint will be announced/signaled to each peer via an ADD_ADDR MPTCP
 
-Thanks Davide - this patch looks good to me. I just noticed today that I 
-missed your reply to my v1 comment last Friday, sorry about that. The 
-change I requested to the id 0 case was mostly about readability.
+    ^^^
+Suggest capitalizing the first "The" since the preceeding "signal" is not 
+part of the sentence.
+
+> +sub-option. Upon reception of an ADD_ADDR option, the peer can try to create
+> +additional subflows, see
+> +.BR ADD_ADDR_ACCEPTED_NR.
+>
+> .TP
+> .BR subflow
+> -if additional subflow creation is allowed by MPTCP limits, the endpoint will
+> -be used as the source address to create an additional subflow after that
+> -the MPTCP connection is established.
+> +if additional subflow creation is allowed by MPTCP limits, after that the
+
+    ^^
+Capitalize here too.
+
+> +MPTCP connection is established, the MPTCP path manager will try to create
+> +an additional subflow using this endpoint as the source address.
+
+I would rearrange this one:
+
+If additional subflow creation is allowed by the MPTCP limits, the MPTCP
+path manager will try to create an additional subflow using this endpoint
+as the source address after the MPTCP connection is established.
+
+>
+> .TP
+> .BR backup
+> -the endpoint will be announced as a backup address, if this is a
+> -.BR signal
+> -endpoint, or the subflow will be created as a backup one if this is a
+> +if this is a
+
+    ^^
+
+Capitalize.
+
+> +.BR subflow
+> +endpoint, the subflows created using this endpoint will be backup ones.
+> +Backup subflows are used only when all non-backup subflows are unavailable.
+> +
+
+Suggestion:
+
+If this is a
+.BR subflow
+
+endpoint, the subflows created using this endpoint will have the backup 
+flag set during the connection process. This flag instructs the peer to 
+only send data on a given subflow when all non-backup subflows are 
+unavailable. This does not affect outgoing data, where subflow priority 
+is determined by the backup/non-backup flag received from the peer.
 
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> +.TP
+> +.BR fullmesh
+> +if this is a
+
+    ^^
+"If"
+
+> +.BR subflow
+> +endpoint, if additional subflow creation is allowed by MPTCP limits, after that the
+> +each MPTCP connection is established, the MPTCP path manager will try to create
+> +an additional subflow for each known server address using this endpoint as
+> +the source address. If the peer did not announce any additional address via
+> +ADD_ADDR MPTCP sub-option, this has no additional effect compared to a plain
+> .BR subflow
+> -endpoint
+> +endpoint. Otherwise, this will create an additional subflow for each received
+> +ADD_ADDR, generating a fullmesh topology.
+
+Suggestion:
+
+If this is a
+.BR subflow
+endpoint and additional subflow creation is allowed by the MPTCP limits, 
+the MPTCP path manager will try to create an additional subflow for each 
+known peer address, using this endpoint as the source address. This will 
+occur after the MPTCP connection is established. If the peer did not 
+announce any additional addresses using the ADD_ADDR MPTCP sub-option, 
+this will behave the same as a plain
+.BR subflow
+endpoint. When the peer does announce addresses, each received ADD_ADDR 
+will trigger creation of an additional subflow to generate a full mesh 
+topology.
 
 
 >
-> net/mptcp/pm_netlink.c | 14 ++++++++++----
-> 1 file changed, 10 insertions(+), 4 deletions(-)
+> .sp
+> .PP
+> @@ -143,8 +159,17 @@ endpoints, additional subflows started by the peer.
+> .TP
+> .IR ADD_ADDR_ACCEPTED_NR
+> specifies the maximum number of ADD_ADDR suboptions accepted for each MPTCP
+> -connection. The MPTCP path manager will try to create a new subflow for
+> -each accepted ADD_ADDR option, respecting the
+> +connection.
+
+splitting here for edits
+
+> When and ADD_ADDR suboption is accepted, if there are no local
+> +.BR fullmesh
+> +endpoint, the MPTCP path manager will try to create a new subflow towards the
+> +address specified by the ADD_ADDR option, using as source the local address
+> +obtained by the routing resolution.
+
+"When an ADD_ADDR sub-option is received and there are no local fullmesh 
+endpoints, the MPTCP path manager will try to create a new subflow using 
+the address in the ADD_ADDR as the destination address and a source 
+address determined using local routing resolution. When fullmesh endpoints 
+are available, the MPTCP path manager will try to create new subflows 
+using each fullmesh endpoint as a source address and the peer's ADD_ADDR 
+address as the destination. In both cases the SUBFLOW_NR limit is 
+enforced."
+
+(I hope I kept the intended meaning here?)
+
+
+I think there is a mix of "ADD_ADDR option", "ADD_ADDR suboption", and 
+"ADD_ADDR sub-option" above, even after my edits. Should probably choose 
+one and be consistent with it!
+
+
+-Mat
+
+
+> Otherwise, the MPTCP path manager will try
+> +to create a new subflow for each
+> +.BR fullmesh
+> +endpoint, using the fullmesh endpoint as the source address and the address
+> +specified by the ADD_ADDR option as the destination. In both cases the MPTCP
+> +path manager enforces
+> +the
+> .IR SUBFLOW_NR
+> limit.
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 7b96be1e9f14..4ff8d55cbe82 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1702,22 +1702,28 @@ static int mptcp_nl_addr_backup(struct net *net,
->
-> static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
-> {
-> +	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, }, *entry;
-> 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-> 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
-> -	struct mptcp_pm_addr_entry addr, *entry;
-> 	struct net *net = sock_net(skb->sk);
-> -	u8 bkup = 0;
-> +	u8 bkup = 0, lookup_by_id = 0;
-> 	int ret;
->
-> -	ret = mptcp_pm_parse_addr(attr, info, true, &addr);
-> +	ret = mptcp_pm_parse_addr(attr, info, false, &addr);
-> 	if (ret < 0)
-> 		return ret;
->
-> 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> 		bkup = 1;
-> +	if (addr.addr.family == AF_UNSPEC) {
-> +		lookup_by_id = 1;
-> +		if (!addr.addr.id)
-> +			return -EOPNOTSUPP;
-> +	}
->
-> 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> -		if (addresses_equal(&entry->addr, &addr.addr, true)) {
-> +		if ((!lookup_by_id && addresses_equal(&entry->addr, &addr.addr, true)) ||
-> +		    (lookup_by_id && entry->addr.id == addr.addr.id)) {
-> 			mptcp_nl_addr_backup(net, &entry->addr, bkup);
->
-> 			if (bkup)
 > -- 
-> 2.31.1
+> 2.33.1
+>
 >
 >
 
