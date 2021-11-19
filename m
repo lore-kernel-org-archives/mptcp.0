@@ -1,107 +1,186 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788F42C82
-	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 16:47:14 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id o20so717863eds.10
-        for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 08:47:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=9eKx7ivAuz37C3V++mkTxZCsSYh+eWRb7wuHFlQ1kIc=;
-        b=7P88jPNiQTpsTJR0GP/ZaRcuO1QBK0eXUOZ+k3BwOTHdg7bCc8vE3QEywL4sZxhT4K
-         JuoVS7xD1ISqQ5Tww9kaEf0uB+Uc60Q9viu+DfQD20CK0//u2Qu0DHG0R+0uaMwJK2yN
-         uomi7yystCiiB2P0BRuzuybJAj8lryam/E0tcHme2VKG6MN+mQ0+twpZnwM9E6yj9KDR
-         y/IIkO0aJgdJezjM5yBiKbLJMa+fdT2bqS6XY0Jr2nPfrHHcA40g2kBf67wdPa618G3h
-         QtjnKJ/g+qaCQz9+F9ZSiMYHp19yJ+vGD4jRFP1uIzaJ2dg/6tu7Rb0swW76c+AaSzZZ
-         B7+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=9eKx7ivAuz37C3V++mkTxZCsSYh+eWRb7wuHFlQ1kIc=;
-        b=r2N7VS7BSy1/cBrWD8vEGizQ91Nzv05eY/fFZjCS9fSjD5n0QyWiJZgh4Qo3/d1cYl
-         u1gvX4v/uIAYkywmmH9t3q1TCAKX3KIrowWQMkJeUq+QNGId/msdNTFOZf/NMDhJXeu2
-         EfHwZatX3IslRilhgEUx80RWoyocQn+HGXqOAIed58A0LVJJYNZTjDu+Gqy6d44XAx+I
-         dln+XVsr78H6pCRhxWzx4A9aqGjFRw85Aj4BNOSd39bfgfLekeE7+fLxKKn5f5gUno7u
-         0hkuLmkQ4dOQmTE9LvkmJDF2OREVTL1AmYFqyH/ES7xxOgTO784hnYmaI6kMNF7nx3lJ
-         dIyQ==
-X-Gm-Message-State: AOAM531GGO58vEE313qAhKqnKKB3NDaAaSZc2qdy7sDs1+mD7q94W7Je
-	z/5jYfPZSJ/bvWSj1Hn0l3vxVQ==
-X-Google-Smtp-Source: ABdhPJza8cDLc9kGAQXnm4QR8d8IG3vXfU0Nm6gTvSkjfixj5bK6s7BmDoNKXQcJeDZx8hv9cqyaLw==
-X-Received: by 2002:a17:906:af1a:: with SMTP id lx26mr9694507ejb.44.1637340432760;
-        Fri, 19 Nov 2021 08:47:12 -0800 (PST)
-Received: from [192.168.178.33] ([213.211.139.36])
-        by smtp.gmail.com with ESMTPSA id gn16sm164694ejc.67.2021.11.19.08.47.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Nov 2021 08:47:12 -0800 (PST)
-Message-ID: <c84024e6-9a4e-9e5c-6f9f-e4c750f9aaf6@tessares.net>
-Date: Fri, 19 Nov 2021 17:47:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874752C82
+	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 17:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1637341893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ewqttHNSUu4MXADPwSdcMLgleHd9rCii9NHDwbjtjFE=;
+	b=BSEWDlt7PVKVEmpWjJvEfmiLQoLoU1lIiXgOj1hqdt+1yvNvBh1DcZk+4/vEHpZj3R3QlF
+	aDsou4YDcdrzB2JEQOXAyNhzg310l0fLQQrfZP7DqESYvKDnaqbekBVtzppMnkwovmPzAE
+	grkq2TsVoW+ziKKZFUxdzT/VoeOTaAg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-62-Go5Ldpd0MYS-lAoQPt-oRA-1; Fri, 19 Nov 2021 12:11:31 -0500
+X-MC-Unique: Go5Ldpd0MYS-lAoQPt-oRA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3438910144E1
+	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 17:11:30 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.42])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 99AC95DAA5
+	for <mptcp@lists.linux.dev>; Fri, 19 Nov 2021 17:11:29 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH iproute2-next v2] mptcp: add support for fullmesh flag
+Date: Fri, 19 Nov 2021 18:11:24 +0100
+Message-Id: <3cf6dedcf575552e4c28f153b5b59ba4ac606953.1637341866.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH v2 mptcp-next 0/7] mptcp: improve accept() and
- disconnect()
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <cover.1636647623.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1636647623.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Paolo, Mat,
+The link kernel supports this endpoint flag since v5.15, let's
+expose it to user-space. It allows creation on fullmesh topolgy
+via MPTCP subflow.
 
-On 11/11/2021 17:21, Paolo Abeni wrote:
-> As outlined in the public mtg, mptcp_accept() is currently quite
-> suboptimal, both from performance and code complexity
-> 
-> This series tries to clean it up, enforcing a wider lifetime for
-> the initial subflow, so that we don't need to acquire additional
-> references there.
-> 
-> To reach such goal we need to properly define the disconnect()
-> behavior, which is currently quite incomplete. Additionally allow
-> user-space to really disconnect established connections.
-> 
-> Disconnect() needs in turn an egress FASTCLOSE implementation,
-> added here according to option R (reset - the simpler form).
-> 
-> Finally, the self-tests need as pre-req Florian's patches implementing
-> SIOCOUTQ
+Additionally update the related man-page, clarifying the behavior
+of related options.
 
-Thank you for the patches and reviews!
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v1 -> v2:
+ - included Mat's suggestions
+ - extended ADD_ADDR_ACCEPTED_NR description
+---
+ ip/ipmptcp.c        |  3 ++-
+ man/man8/ip-mptcp.8 | 61 ++++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 49 insertions(+), 15 deletions(-)
 
-Now that Florian's patches are in our tree, we can apply this series
-too. Patches are now in our tree with Mat's RvB tags and without some
-warnings reported by checkpatch in selftests (except the ones not to
-split strings to different lines, so just some small things):
-
-- be5470135e9c: mptcp: keep snd_una updated for fallback socket
-- 3dd1385ee6a2: mptcp: never allow the PM to close a listener subflow
-- b382fb5fa27c: mptcp: implement fastclose xmit path
-- 445bf9531ef7: mptcp: full disconnect implementation
-- a2fcf84f7b73: mptcp: cleanup accept and poll
-- c999f3f089c7: mptcp: implement support for user-space disconnect
-- 707b9bbf2820: mptcp: add disconnect selftests
-- Results: 3ebf8b8d1426..736c6532dd92
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211119T164652
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index 0f5b6e2d..433fa68d 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -31,7 +31,7 @@ static void usage(void)
+ 		"	ip mptcp limits show\n"
+ 		"	ip mptcp monitor\n"
+ 		"FLAG-LIST := [ FLAG-LIST ] FLAG\n"
+-		"FLAG  := [ signal | subflow | backup ]\n");
++		"FLAG  := [ signal | subflow | backup | fullmesh ]\n");
+ 
+ 	exit(-1);
+ }
+@@ -53,6 +53,7 @@ static const struct {
+ 	{ "signal",		MPTCP_PM_ADDR_FLAG_SIGNAL },
+ 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
+ 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
++	{ "fullmesh",		MPTCP_PM_ADDR_FLAG_FULLMESH },
+ };
+ 
+ static void print_mptcp_addr_flags(unsigned int flags)
+diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+index 22335b61..5a486ad1 100644
+--- a/man/man8/ip-mptcp.8
++++ b/man/man8/ip-mptcp.8
+@@ -53,6 +53,8 @@ ip-mptcp \- MPTCP path manager configuration
+ .B subflow
+ .RB "|"
+ .B backup
++.RB "|"
++.B fullmesh
+ .RB  "]"
+ 
+ .ti -8
+@@ -103,22 +105,41 @@ is a unique numeric identifier for the given endpoint
+ 
+ .TP
+ .BR signal
+-the endpoint will be announced/signalled to each peer via an ADD_ADDR MPTCP
+-sub-option
++The endpoint will be announced/signaled to each peer via an MPTCP ADD_ADDR
++sub-option. Upon reception of an ADD_ADDR sub-option, the peer can try to
++create additional subflows, see
++.BR ADD_ADDR_ACCEPTED_NR.
+ 
+ .TP
+ .BR subflow
+-if additional subflow creation is allowed by MPTCP limits, the endpoint will
+-be used as the source address to create an additional subflow after that
+-the MPTCP connection is established.
++If additional subflow creation is allowed by the MPTCP limits, the MPTCP
++path manager will try to create an additional subflow using this endpoint
++as the source address after the MPTCP connection is established.
+ 
+ .TP
+ .BR backup
+-the endpoint will be announced as a backup address, if this is a
+-.BR signal
+-endpoint, or the subflow will be created as a backup one if this is a
++If this is a
++.BR subflow
++endpoint, the subflows created using this endpoint will have the backup
++flag set during the connection process. This flag instructs the peer to
++only send data on a given subflow when all non-backup subflows are
++unavailable. This does not affect outgoing data, where subflow priority
++is determined by the backup/non-backup flag received from the peer
++
++.TP
++.BR fullmesh
++If this is a
++.BR subflow
++endpoint and additional subflow creation is allowed by the MPTCP limits,
++the MPTCP path manager will try to create an additional subflow for each
++known peer address, using this endpoint as the source address. This will
++occur after the MPTCP connection is established. If the peer did not
++announce any additional addresses using the MPTCP ADD_ADDR sub-option,
++this will behave the same as a plain
+ .BR subflow
+-endpoint
++endpoint. When the peer does announce addresses, each received ADD_ADDR
++sub-option will trigger creation of an additional subflow to generate a
++full mesh topology.
+ 
+ .sp
+ .PP
+@@ -136,17 +157,29 @@ ip mptcp limits set	change the MPTCP subflow creation limits
+ .IR SUBFLOW_NR
+ specifies the maximum number of additional subflows allowed for each MPTCP
+ connection. Additional subflows can be created due to: incoming accepted
+-ADD_ADDR option, local
++ADD_ADDR sub-option, local
+ .BR subflow
+ endpoints, additional subflows started by the peer.
+ 
+ .TP
+ .IR ADD_ADDR_ACCEPTED_NR
+-specifies the maximum number of ADD_ADDR suboptions accepted for each MPTCP
+-connection. The MPTCP path manager will try to create a new subflow for
+-each accepted ADD_ADDR option, respecting the
++specifies the maximum number of incoming ADD_ADDR sub-options accepted for
++each MPTCP connection. After receiving the specificed number of ADD_ADDR
++sub-options, any other incoming one will be ignored for the MPTCP connection
++lifetime. When and ADD_ADDR sub-option is accepted and there are no local
++.IR fullmesh
++endpoints, the MPTCP path manager will try to create a new subflow using the
++address in the ADD_ADDR sub-option as the destination address and a source
++address determined using local routing resolution.
++When 
++.IR fullmesh
++endpoints are available, the MPTCP path manager will try to create new subflows 
++using each 
++.IR fullmesh
++endpoint as a source address and the peer's ADD_ADDR address as the destination.
++In both cases the
+ .IR SUBFLOW_NR
+-limit.
++limit is enforced.
+ 
+ .sp
+ .PP
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.33.1
+
