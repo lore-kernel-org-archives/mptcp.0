@@ -1,246 +1,71 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6EC2C82
-	for <mptcp@lists.linux.dev>; Sat, 20 Nov 2021 05:56:51 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="232017244"
-X-IronPort-AV: E=Sophos;i="5.87,249,1631602800"; 
-   d="scan'208";a="232017244"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 21:56:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,249,1631602800"; 
-   d="scan'208";a="605782062"
-Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 19 Nov 2021 21:56:49 -0800
-Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1moJMm-0005QY-Lr; Sat, 20 Nov 2021 05:56:48 +0000
-Date: Sat, 20 Nov 2021 13:56:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- 7a71f5b628afed7ecc7c3fef5ed0970801d010e1
-Message-ID: <61988dfa.QjFgXJaTJyZV6MUJ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0906C2C81
+	for <mptcp@lists.linux.dev>; Sat, 20 Nov 2021 14:20:09 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4312E60EB4;
+	Sat, 20 Nov 2021 14:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1637418009;
+	bh=TviKUduyPWy3hQMPSXU7nTU8lDtLdBGCSJ+Eg7jG+sQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Bojb8fZ6DHsI/87iosC4jtOtCjJt2PY1odnHZaynNh2A1xpas87zXJ7pwN7WjdvnJ
+	 jw+el5QHZ/nzxapyyr820JJmsmycF5lskYix5ohrjl2vr8ezHp8FXTz2/vWMSmPEGZ
+	 KX10SF32RAd2Q1luVCiXpDcW4dfkupRHfmeG+blTg+fvNxMNX+IBnVtDRar40lQ0aR
+	 iK4gyynX96iXzBox2pa+gSxzFfQCKn3Z/zYPsR7FVYSb1RgqVlZY1nyyV6lvs48W+1
+	 KAVZpnoalok++Sam/eqKnKxJekCwtcSVeq8/sb7/uA/fhC5YkHhI8Ct0m2abOCfLZ9
+	 0N/B0QoX4Ei9A==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 33935609D9;
+	Sat, 20 Nov 2021 14:20:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/4] mptcp: More socket option support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163741800920.1892.3156527522899532998.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Nov 2021 14:20:09 +0000
+References: <20211119204137.415733-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20211119204137.415733-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: 7a71f5b628afed7ecc7c3fef5ed0970801d010e1  DO-NOT-MERGE: mptcp: enabled by default
+Hello:
 
-elapsed time: 728m
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-configs tested: 188
-configs skipped: 3
+On Fri, 19 Nov 2021 12:41:33 -0800 you wrote:
+> These patches add MPTCP socket support for a few additional socket
+> options: IP_TOS, IP_FREEBIND, IP_TRANSPARENT, IPV6_FREEBIND, and
+> IPV6_TRANSPARENT.
+> 
+> Patch 1 exposes __ip_sock_set_tos() for use in patch 2.
+> 
+> Patch 2 adds IP_TOS support.
+> 
+> [...]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Here is the summary with links:
+  - [net-next,1/4] ipv4: Exposing __ip_sock_set_tos() in ip.h
+    https://git.kernel.org/netdev/net-next/c/4f47d5d507d6
+  - [net-next,2/4] mptcp: Support for IP_TOS for MPTCP setsockopt()
+    https://git.kernel.org/netdev/net-next/c/ffcacff87cd6
+  - [net-next,3/4] mptcp: sockopt: add SOL_IP freebind & transparent options
+    https://git.kernel.org/netdev/net-next/c/c9406a23c116
+  - [net-next,4/4] selftests: mptcp: add tproxy test case
+    https://git.kernel.org/netdev/net-next/c/5fb62e9cd3ad
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211118
-i386                 randconfig-c001-20211119
-mips                 randconfig-c004-20211118
-arm                        spear6xx_defconfig
-powerpc                     tqm8555_defconfig
-xtensa                       common_defconfig
-sh                        dreamcast_defconfig
-powerpc                        cell_defconfig
-powerpc                      walnut_defconfig
-mips                             allyesconfig
-arm                        mvebu_v5_defconfig
-mips                         mpc30x_defconfig
-powerpc                      acadia_defconfig
-s390                          debug_defconfig
-powerpc                 mpc8540_ads_defconfig
-mips                malta_qemu_32r6_defconfig
-arm                           omap1_defconfig
-arm                         palmz72_defconfig
-arc                     nsimosci_hs_defconfig
-sh                           se7750_defconfig
-powerpc                   bluestone_defconfig
-mips                     loongson2k_defconfig
-arc                         haps_hs_defconfig
-arc                 nsimosci_hs_smp_defconfig
-mips                           jazz_defconfig
-sh                          r7785rp_defconfig
-parisc                generic-64bit_defconfig
-sparc                       sparc32_defconfig
-xtensa                  cadence_csp_defconfig
-powerpc                      chrp32_defconfig
-powerpc                     tqm8541_defconfig
-powerpc                 mpc834x_itx_defconfig
-arm                         s5pv210_defconfig
-m68k                        stmark2_defconfig
-sh                           se7705_defconfig
-mips                        maltaup_defconfig
-arm                      footbridge_defconfig
-arc                           tb10x_defconfig
-x86_64                              defconfig
-powerpc                     pseries_defconfig
-arc                        nsim_700_defconfig
-arm                         s3c2410_defconfig
-sh                                  defconfig
-m68k                         amcore_defconfig
-mips                    maltaup_xpa_defconfig
-arm                     am200epdkit_defconfig
-sh                           se7343_defconfig
-powerpc                  mpc885_ads_defconfig
-powerpc                      pasemi_defconfig
-powerpc                     rainier_defconfig
-sparc64                             defconfig
-riscv             nommu_k210_sdcard_defconfig
-arm                          collie_defconfig
-m68k                             alldefconfig
-arc                     haps_hs_smp_defconfig
-sh                   sh7770_generic_defconfig
-mips                       bmips_be_defconfig
-m68k                            mac_defconfig
-h8300                     edosk2674_defconfig
-arm                             mxs_defconfig
-sh                               allmodconfig
-arm                           stm32_defconfig
-arm                            hisi_defconfig
-mips                  cavium_octeon_defconfig
-m68k                        m5407c3_defconfig
-arm                        vexpress_defconfig
-powerpc                 mpc837x_mds_defconfig
-mips                          rm200_defconfig
-sh                          sdk7786_defconfig
-arm                        oxnas_v6_defconfig
-sh                           se7780_defconfig
-arm                           tegra_defconfig
-ia64                            zx1_defconfig
-arm                         hackkit_defconfig
-arm                     eseries_pxa_defconfig
-sh                        sh7763rdp_defconfig
-mips                           rs90_defconfig
-arm                         mv78xx0_defconfig
-ia64                             alldefconfig
-sh                        sh7785lcr_defconfig
-arm                  randconfig-c002-20211119
-arm                  randconfig-c002-20211118
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                              debian-10.3
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20211119
-x86_64               randconfig-a003-20211119
-x86_64               randconfig-a002-20211119
-x86_64               randconfig-a001-20211119
-x86_64               randconfig-a006-20211119
-x86_64               randconfig-a004-20211119
-i386                 randconfig-a006-20211119
-i386                 randconfig-a003-20211119
-i386                 randconfig-a001-20211119
-i386                 randconfig-a005-20211119
-i386                 randconfig-a004-20211119
-i386                 randconfig-a002-20211119
-x86_64               randconfig-a015-20211118
-x86_64               randconfig-a012-20211118
-x86_64               randconfig-a011-20211118
-x86_64               randconfig-a013-20211118
-x86_64               randconfig-a016-20211118
-x86_64               randconfig-a014-20211118
-i386                 randconfig-a016-20211118
-i386                 randconfig-a014-20211118
-i386                 randconfig-a012-20211118
-i386                 randconfig-a011-20211118
-i386                 randconfig-a013-20211118
-i386                 randconfig-a015-20211118
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-clang tested configs:
-i386                 randconfig-c001-20211118
-x86_64               randconfig-c007-20211118
-arm                  randconfig-c002-20211118
-s390                 randconfig-c005-20211118
-powerpc              randconfig-c003-20211118
-riscv                randconfig-c006-20211118
-mips                 randconfig-c004-20211118
-i386                 randconfig-c001-20211119
-x86_64               randconfig-c007-20211119
-arm                  randconfig-c002-20211119
-s390                 randconfig-c005-20211119
-powerpc              randconfig-c003-20211119
-riscv                randconfig-c006-20211119
-x86_64               randconfig-a005-20211118
-x86_64               randconfig-a003-20211118
-x86_64               randconfig-a001-20211118
-x86_64               randconfig-a002-20211118
-x86_64               randconfig-a006-20211118
-x86_64               randconfig-a004-20211118
-i386                 randconfig-a006-20211118
-i386                 randconfig-a003-20211118
-i386                 randconfig-a001-20211118
-i386                 randconfig-a005-20211118
-i386                 randconfig-a004-20211118
-i386                 randconfig-a002-20211118
-x86_64               randconfig-a015-20211119
-x86_64               randconfig-a011-20211119
-x86_64               randconfig-a012-20211119
-x86_64               randconfig-a013-20211119
-x86_64               randconfig-a016-20211119
-x86_64               randconfig-a014-20211119
-hexagon              randconfig-r045-20211119
-hexagon              randconfig-r041-20211119
-riscv                randconfig-r042-20211119
-s390                 randconfig-r044-20211119
-hexagon              randconfig-r045-20211118
-hexagon              randconfig-r041-20211118
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
