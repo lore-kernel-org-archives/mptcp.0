@@ -1,23 +1,23 @@
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0906C2C81
-	for <mptcp@lists.linux.dev>; Sat, 20 Nov 2021 14:20:09 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4312E60EB4;
-	Sat, 20 Nov 2021 14:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB242C87
+	for <mptcp@lists.linux.dev>; Sat, 20 Nov 2021 14:30:09 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 367B660EB6;
+	Sat, 20 Nov 2021 14:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1637418009;
-	bh=TviKUduyPWy3hQMPSXU7nTU8lDtLdBGCSJ+Eg7jG+sQ=;
+	s=k20201202; t=1637418609;
+	bh=M62l5V/1BeqynnU8skdniMlIN8KUQWZNjEHcNLzqIJA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Bojb8fZ6DHsI/87iosC4jtOtCjJt2PY1odnHZaynNh2A1xpas87zXJ7pwN7WjdvnJ
-	 jw+el5QHZ/nzxapyyr820JJmsmycF5lskYix5ohrjl2vr8ezHp8FXTz2/vWMSmPEGZ
-	 KX10SF32RAd2Q1luVCiXpDcW4dfkupRHfmeG+blTg+fvNxMNX+IBnVtDRar40lQ0aR
-	 iK4gyynX96iXzBox2pa+gSxzFfQCKn3Z/zYPsR7FVYSb1RgqVlZY1nyyV6lvs48W+1
-	 KAVZpnoalok++Sam/eqKnKxJekCwtcSVeq8/sb7/uA/fhC5YkHhI8Ct0m2abOCfLZ9
-	 0N/B0QoX4Ei9A==
+	b=cP/ZW4AOfJd+2FVvgbN4xNM7WFpNUIPJ36FFc8jOHzp1N3wys5fCuKiTLFRBYLRie
+	 A+PIRqUOj8Z1b20PLFFxIoepOB2QXnB79DFha/etC8GinDvdgitTb/FbwCLonuBP1L
+	 43Uf+XhgWZvL2KBa473JRV/BOLjsxlOF0ClfIksiGJRMM7M67Fbsw050wCO/bUf32q
+	 ULF8UTYzVf9xHeSS36CxF2l08ALxoJnXJ1HQ2oJgd0bSBcPwzXtlZLrK3eUmAzPBtT
+	 SyNpRiVgK0AcMHKMlgt7i0LLT0udl+bafvprQAYRxI2FhB/WdHFDFwdM1dauRHcFNM
+	 p30zTMSIA/DsA==
 Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 33935609D9;
-	Sat, 20 Nov 2021 14:20:09 +0000 (UTC)
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 2A29E609D9;
+	Sat, 20 Nov 2021 14:30:09 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -26,42 +26,36 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/4] mptcp: More socket option support
+Subject: Re: [PATCH net 0/2] mptcp: fix 3rd ack rtx timer
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <163741800920.1892.3156527522899532998.git-patchwork-notify@kernel.org>
-Date: Sat, 20 Nov 2021 14:20:09 +0000
-References: <20211119204137.415733-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20211119204137.415733-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+ <163741860916.5842.15570006728892792463.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Nov 2021 14:30:09 +0000
+References: <cover.1637331462.git.pabeni@redhat.com>
+In-Reply-To: <cover.1637331462.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, edumazet@google.com
 
 Hello:
 
-This series was applied to netdev/net-next.git (master)
+This series was applied to netdev/net.git (master)
 by David S. Miller <davem@davemloft.net>:
 
-On Fri, 19 Nov 2021 12:41:33 -0800 you wrote:
-> These patches add MPTCP socket support for a few additional socket
-> options: IP_TOS, IP_FREEBIND, IP_TRANSPARENT, IPV6_FREEBIND, and
-> IPV6_TRANSPARENT.
+On Fri, 19 Nov 2021 15:27:53 +0100 you wrote:
+> Eric noted that the MPTCP code do the wrong thing to schedule
+> the MPJ 3rd ack timer. He also provided a patch to address the
+> issues (patch 1/2).
 > 
-> Patch 1 exposes __ip_sock_set_tos() for use in patch 2.
-> 
-> Patch 2 adds IP_TOS support.
+> To fix for good the MPJ 3rd ack retransmission timer, we additionally
+> need to set it after the current ack is transmitted (patch 2/2)
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/4] ipv4: Exposing __ip_sock_set_tos() in ip.h
-    https://git.kernel.org/netdev/net-next/c/4f47d5d507d6
-  - [net-next,2/4] mptcp: Support for IP_TOS for MPTCP setsockopt()
-    https://git.kernel.org/netdev/net-next/c/ffcacff87cd6
-  - [net-next,3/4] mptcp: sockopt: add SOL_IP freebind & transparent options
-    https://git.kernel.org/netdev/net-next/c/c9406a23c116
-  - [net-next,4/4] selftests: mptcp: add tproxy test case
-    https://git.kernel.org/netdev/net-next/c/5fb62e9cd3ad
+  - [net,1/2] mptcp: fix delack timer
+    https://git.kernel.org/netdev/net/c/ee50e67ba0e1
+  - [net,2/2] mptcp: use delegate action to schedule 3rd ack retrans
+    https://git.kernel.org/netdev/net/c/bcd97734318d
 
 You are awesome, thank you!
 -- 
