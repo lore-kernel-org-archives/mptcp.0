@@ -1,242 +1,220 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D8968
-	for <mptcp@lists.linux.dev>; Sat, 20 Nov 2021 17:47:46 +0000 (UTC)
-Received: from smtpclient.apple ([86.159.109.142]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.163]) with ESMTPSA (Nemesis) id
- 1MW9zm-1n8rog3zEw-00XbJh; Sat, 20 Nov 2021 18:47:29 +0100
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1887F72
+	for <mptcp@lists.linux.dev>; Sat, 20 Nov 2021 18:53:16 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10174"; a="234542172"
+X-IronPort-AV: E=Sophos;i="5.87,251,1631602800"; 
+   d="scan'208";a="234542172"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2021 10:53:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,251,1631602800"; 
+   d="scan'208";a="473920886"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 20 Nov 2021 10:53:15 -0800
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1moVUA-00069U-8T; Sat, 20 Nov 2021 18:53:14 +0000
+Date: Sun, 21 Nov 2021 02:52:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ 3dff4f3fa24c7aa1e9a634a9fb12a2658d622460
+Message-ID: <61994405.rizDKCSYsUmJX7Zc%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: Subflow Creation / Management Issues
-From: Phil Greenland <phil@quantulum.co.uk>
-In-Reply-To: <e34629ee-034-1544-163b-368d3ad9641@linux.intel.com>
-Date: Sat, 20 Nov 2021 17:47:27 +0000
-Cc: mptcp@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <431BA531-B8F7-4617-B416-CBFB2B9380A9@quantulum.co.uk>
-References: <EF21766C-4DF4-4F06-8076-16391C7D56D5@quantulum.co.uk>
- <e34629ee-034-1544-163b-368d3ad9641@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- pabeni@redhat.com
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-Provags-ID: V03:K1:8sOshjYgmefsBLk9gOnwV3RZgVMWFJwUiai+2n4rNo4Pntbhvy3
- r0oEY699uejR/qFFgcxDaLSk0ZQZ5lpGQB0qP+3q/BbczRtXwegBqh1wejoba+MTW8Qltrc
- TjvmjRgqz17EV2Y/Kyf8+Szuos+PkXeYVF5UoY9H9tnZ6/raGt7nsWkhXgnC6RLVi/eV6YP
- 7ECYKIQmguD2RrYDj9WHA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:u/YCebLka6g=:7iEj8D9xPMLmgw76RroGcx
- 1OSwEMw2MBJK91xBrSdrPMq0YoednQSx0erHMLiSkzwMscPOAJ1EuYyDi7jnY38kxB5rRVOaO
- WXJM2kfQyjzAVvnco5UTkybY5TlphyhdngoXW+jJz1EPso3JtRRkNUxTm1eSbmnXrwPrn3/Ce
- ymc9eMPVoRRQBpCrVOWm/OgFp3Q5bjCCDHSE/jz0DFfHdB2IgAlOkt/8F7xWZlAlFMOjD5brX
- PqpL5cekOfoBKun3FQedfKJZDEsAI5uJTjny0MHjmpBck5jATUw40xM/aIYTR6H6qEjnZII1f
- yqt6ZSOW2q7hElS6sJk90RTIDHAUfqfGZfGXdMBKLpOFo46+72r5st/jkbxpxjA7M/6ufKxf8
- yL6PXDCRfDu6ywtIIalunJvgZkCfth7bPcs2k/8GQi3hswicuAXkTkq5kLaK6UZpiTB+1u2Mi
- f9Y1okQ/QZ6thcpVn2wlH4rAGk8VawPsKrN++YJMzYPYWbYFIyXZChmbdsnWRbQprYCGJAiqJ
- D8KqLcjrW8PR2AFzOHuLeALTafwbSSrrpk2fcI4eS+0FycxF8QanGNIY1QYaaEj3HSOCkwhnW
- JZn13r4YJ4TX5uBeTSqttuuohLcztFyd5/uSpgME6U+MEzYUQexTnD9qg74G5dRD2vPrA8DL8
- kuqC4R9ae7rv8PT/UhcHMiNdQ8ERh8Go5cwmCe1mjPOWKEzjMfeBvProB+yUE4L4t6R0=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-Hi Mat and Paolo,
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: 3dff4f3fa24c7aa1e9a634a9fb12a2658d622460  DO-NOT-MERGE: mptcp: enabled by default
 
-I=E2=80=99ve raised an issue for scenario 1+3 =
-(https://github.com/multipath-tcp/mptcp_net-next/issues/242) with a =
-packet capture and hopefully detailed enough notes to reproduce. I=E2=80=99=
-ve not mentioned scenario 3 specifically but from my nosing at the code =
-it appears to be a follow on from the behaviour described.
+elapsed time: 722m
 
-I=E2=80=99ve added a comment to the other ticket on the subflow =
-management front.
+configs tested: 165
+configs skipped: 3
 
-Userspace path management wise, I built the daemon a while ago, before =
-spotting that it was the out-of-tree kernel that had support for subflow =
-management and it was still in the pipeline for in-tree implementation =
-(think I=E2=80=99m right there?).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-When it comes along it would certainly be one way of achieving our =
-re-connection goals.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211119
+i386                 randconfig-c001-20211120
+arm                            pleb_defconfig
+xtensa                              defconfig
+xtensa                           alldefconfig
+mips                       lemote2f_defconfig
+s390                          debug_defconfig
+powerpc                 mpc8540_ads_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                           omap1_defconfig
+arm                         palmz72_defconfig
+arc                     nsimosci_hs_defconfig
+m68k                       m5475evb_defconfig
+mips                         bigsur_defconfig
+powerpc                 mpc837x_mds_defconfig
+m68k                        m5272c3_defconfig
+alpha                            allyesconfig
+powerpc                      chrp32_defconfig
+powerpc                     tqm8541_defconfig
+powerpc                 mpc834x_itx_defconfig
+arm                         s5pv210_defconfig
+m68k                        stmark2_defconfig
+powerpc                   bluestone_defconfig
+arm                         socfpga_defconfig
+arm64                            alldefconfig
+powerpc                     tqm8560_defconfig
+mips                   sb1250_swarm_defconfig
+powerpc                     pseries_defconfig
+arc                        nsim_700_defconfig
+powerpc                     tqm8555_defconfig
+arm                         s3c2410_defconfig
+h8300                     edosk2674_defconfig
+arm                             mxs_defconfig
+sh                               allmodconfig
+arm                           stm32_defconfig
+arm                            hisi_defconfig
+powerpc                         ps3_defconfig
+powerpc                    sam440ep_defconfig
+sh                                  defconfig
+arc                        vdk_hs38_defconfig
+arm                            dove_defconfig
+s390                       zfcpdump_defconfig
+um                           x86_64_defconfig
+powerpc                      ppc40x_defconfig
+powerpc                        icon_defconfig
+mips                           rs90_defconfig
+arm                         mv78xx0_defconfig
+ia64                             alldefconfig
+sh                        sh7785lcr_defconfig
+arm                  randconfig-c002-20211119
+arm                  randconfig-c002-20211120
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20211119
+x86_64               randconfig-a003-20211119
+x86_64               randconfig-a002-20211119
+x86_64               randconfig-a001-20211119
+x86_64               randconfig-a006-20211119
+x86_64               randconfig-a004-20211119
+i386                 randconfig-a006-20211119
+i386                 randconfig-a003-20211119
+i386                 randconfig-a001-20211119
+i386                 randconfig-a005-20211119
+i386                 randconfig-a004-20211119
+i386                 randconfig-a002-20211119
+x86_64               randconfig-a001-20211121
+x86_64               randconfig-a006-20211121
+x86_64               randconfig-a003-20211121
+x86_64               randconfig-a004-20211121
+x86_64               randconfig-a005-20211121
+x86_64               randconfig-a002-20211121
+x86_64               randconfig-a015-20211118
+x86_64               randconfig-a012-20211118
+x86_64               randconfig-a011-20211118
+x86_64               randconfig-a013-20211118
+x86_64               randconfig-a016-20211118
+x86_64               randconfig-a014-20211118
+x86_64               randconfig-a011-20211120
+x86_64               randconfig-a014-20211120
+x86_64               randconfig-a012-20211120
+x86_64               randconfig-a016-20211120
+x86_64               randconfig-a013-20211120
+x86_64               randconfig-a015-20211120
+i386                 randconfig-a016-20211118
+i386                 randconfig-a014-20211118
+i386                 randconfig-a012-20211118
+i386                 randconfig-a011-20211118
+i386                 randconfig-a013-20211118
+i386                 randconfig-a015-20211118
+arc                  randconfig-r043-20211120
+s390                 randconfig-r044-20211120
+riscv                randconfig-r042-20211120
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-As mentioned in my GitHub comment our use case is pretty simple. =
-Creating a limited number of connections from the client, over =
-unreliable links, with subflows up and connected whenever possible. If =
-the kernel could support a basic reconnection strategy this would be our =
-preferred option initially.
+clang tested configs:
+i386                 randconfig-c001-20211119
+x86_64               randconfig-c007-20211119
+arm                  randconfig-c002-20211119
+s390                 randconfig-c005-20211119
+powerpc              randconfig-c003-20211119
+riscv                randconfig-c006-20211119
+i386                 randconfig-c001-20211118
+x86_64               randconfig-c007-20211118
+arm                  randconfig-c002-20211118
+s390                 randconfig-c005-20211118
+powerpc              randconfig-c003-20211118
+riscv                randconfig-c006-20211118
+mips                 randconfig-c004-20211118
+i386                 randconfig-a006-20211118
+i386                 randconfig-a003-20211118
+i386                 randconfig-a001-20211118
+i386                 randconfig-a005-20211118
+i386                 randconfig-a004-20211118
+i386                 randconfig-a002-20211118
+x86_64               randconfig-a005-20211118
+x86_64               randconfig-a003-20211118
+x86_64               randconfig-a001-20211118
+x86_64               randconfig-a002-20211118
+x86_64               randconfig-a006-20211118
+x86_64               randconfig-a004-20211118
+hexagon              randconfig-r045-20211118
+hexagon              randconfig-r041-20211118
 
-Down the line we were looking to setup something slightly more =
-elaborate.
-
-At present we=E2=80=99ve got a low bandwidth stream of critical control =
-data, which should be allowed to travel over any and all available =
-interfaces, although prefer our faster / lower cost ones when possible =
-(we=E2=80=99re hoping to use the subflow backup option for this=E2=80=A6.n=
-ot quite got there yet though).
-
-We=E2=80=99d like to add a high bandwidth stream of additional =
-telemetry, which should only be allowed to create subflows over specific =
-interfaces (our fast, low cost ones, avoiding a slow and comparatively =
-expensive link).
-
-This scenario would likely benefit from user space path management.
-
-It seems that this would be completely achievable via a custom mptcpd =
-plugin expressing our rules, once the in-tree kernel supports userspace =
-subflow management.
-
-A generic configuration file driven, rules based plugin would be the =
-dream, to save me writing my own=E2=80=A6although I=E2=80=99m not sure =
-what the rules would look like, so possibly a bit of a stretch :-P.
-
-Thanks for the advice and super fast replies!
-
-Regards,
-
-Phil
-
-> On 17 Nov 2021, at 01:22, Mat Martineau =
-<mathew.j.martineau@linux.intel.com> wrote:
->=20
->=20
-> Hello Phil,
->=20
-> On Mon, 15 Nov 2021, Phil Greenland wrote:
->=20
->> Hi,
->>=20
->> I=E2=80=99m currently working with a client, integrating MPTCP into =
-their platform, with a goal of achieving reliable connectivity over a =
-mix of WAN technologies.
->>=20
->> We started using 5.14 but were having problems getting MPTCP to =
-handover between subflows when connectivity on individual links became =
-poor.
->>=20
->> Updating to 5.15 brought a massive improvement. With the scheduler =
-updates (stale subflow detection) handovers between links are now =
-virtually seamless. Great work :-)
->>=20
->> We=E2=80=99ve started looking at corner cases that we might =
-experience in the field.
->>=20
->> In our use case all connections originate from the client, to a =
-server on the internet. The client has multiple endpoint addresses =
-registered via =E2=80=9Cip mptcp=E2=80=9D, over which multiple subflows =
-are created.
->>=20
->> =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=
-=E2=80=94=E2=80=94=E2=80=94
->>=20
->> Scenario 1)
->>=20
->> If we take network links up and down, adding and removing endpoint =
-addresses as we do so, everything appears to work well, subflows are =
-connected and disconnected as expected.
->>=20
->> However if a subflow fails, for example due to reception of a TCP RST =
-from a NAT this seems to cause problems.
->>=20
->> The next time a link is taken down (a link other than the failing =
-one), the associated subflow is disconnected as expected.
->>=20
->> When the link is brought back up, more often than not the failed =
-subflow (the one stopped by a TCP RST) it re-connected and the newly =
-added endpoint address, associated with the interface that was just =
-brought up is not used.
->>=20
->> I believe this behaviour is due to an interaction between the =
-local_addr_used variable within the MPTCP meta socket pm structure and =
-the logic in select_local_address.
->>=20
->> The variable is incremented and decremented on subflow connection / =
-disconnection (following endpoint addition / removal), but it's not =
-decremented following the failure of a subflow.
->>=20
->> The select_local_address function only seems to check if a local =
-address is currently in use before returning it.
->>=20
->> Therefore when an address is removed / re-added a single new subflow =
-is permitted to be created (due to local_addr_used < local_addr_max), =
-however the select_local_address function returns the first available =
-address.
->>=20
->> Scenario 2)
->>=20
->> Following the initial MPTCP flow creation (with id 0?), if a subflow =
-connection fails to be established, due to a connect timeout for =
-example, no further subflows are established for the connection.
->>=20
->> It appears that the subflow connection success handler =
-mptcp_pm_nl_subflow_established triggers the establishment of the next. =
-Such that once the chain is broken by a failed connection no further =
-subflows are established, even if unused endpoint addresses remain.
->>=20
->> Scenario 3)
->>=20
->> As a continuation of scenario 1, if for some strange reason all =
-subflows were to fail, all at once, or over time. I'm left with just the =
-MPTCP meta socket. The application believes it's still connected but =
-there=E2=80=99s no way it seems to recover the connection. Other than =
-adding a new endpoint address, which will trigger one of the subflows =
-(again not necessarily the new endpoint) to be re-connected.
->>=20
->> =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=
-=E2=80=94=E2=80=94=E2=80=94
->>=20
->=20
-> First, thank you for the feedback - it's very helpful to know how this =
-MPTCP implementation is getting used and what issues people are running =
-in to.
->=20
-> Paolo covered your questions well in relation to the existing =
-in-kernel path manager that's responsible for controlling subflow =
-establishment. (Thanks Paolo!)
->=20
->> Is there anything on your roadmap that might help address these few =
-issues above?
->>=20
->=20
-> I think we may have something in development that will fit your needs =
-better on the client side: userspace path management.
->=20
-> The existing in-kernel path manager is best suited to server-side use =
-cases. We can still improve it to better handle the issues you've =
-observed, and Paolo's advice on github issues =
-(https://github.com/multipath-tcp/mptcp_net-next/issues) will help with =
-that.
->=20
-> Userspace path management will add more netlink calls that allow a =
-userspace program like mptcpd (https://github.com/intel/mptcpd) to =
-control the establishement of subflows - and to customize path =
-management without requiring changes to the kernel. The tradeoff is the =
-overhead of using the netlink API, so this is better suited to client =
-devices with a smaller number of connections, as opposed to a server =
-with hundreds or thousands of connections.
->=20
-> Does that sound like a fit for what you're doing on the client side?
->=20
->> I=E2=80=99ve been considering a temporary hack, which I hope would =
-address all three. Adding a netlink call, based heavily on your add =
-address handler, to walk the meta socket list, and try to reconnect any =
-/ all failed subflows. Which I can call periodically or in response to =
-network events.
->>=20
->> I=E2=80=99d happily attempt to develop a more formal fix, with some =
-guidance, but haven=E2=80=99t done lot of Linux kernel development in =
-the past.
->>=20
->> Apologies for the long email / keep up the great work! It=E2=80=99s =
-really good to see MPTCP make it into the mainline kernel.
->>=20
->=20
-> Thanks again for the long email and the encouragement!
->=20
->=20
-> --
-> Mat Martineau
-> Intel
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
