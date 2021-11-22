@@ -1,181 +1,92 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3928672
-	for <mptcp@lists.linux.dev>; Sun, 21 Nov 2021 18:05:01 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="234914916"
-X-IronPort-AV: E=Sophos;i="5.87,253,1631602800"; 
-   d="scan'208";a="234914916"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2021 10:05:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,253,1631602800"; 
-   d="scan'208";a="508649863"
-Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 21 Nov 2021 10:04:59 -0800
-Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1morD0-00075P-VY; Sun, 21 Nov 2021 18:04:58 +0000
-Date: Mon, 22 Nov 2021 02:04:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- 9ab77fab7bf0a4241948923c03a374f92577b334
-Message-ID: <619a8a2d.aScpqD9nqWVZ63cm%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0612C81
+	for <mptcp@lists.linux.dev>; Mon, 22 Nov 2021 11:22:23 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1mp7Oo-0001QC-P4; Mon, 22 Nov 2021 12:22:14 +0100
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next 1/2] mptcp: getsockopt: add support for IP_TOS
+Date: Mon, 22 Nov 2021 12:22:04 +0100
+Message-Id: <20211122112205.16752-1-fw@strlen.de>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: 9ab77fab7bf0a4241948923c03a374f92577b334  DO-NOT-MERGE: mptcp: enabled by default
+earlier patch added IP_TOS setsockopt support, this allows to get
+the value set by earlier setsockopt.
 
-elapsed time: 720m
-
-configs tested: 127
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                              allyesconfig
-arm                              allmodconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm64                               defconfig
-nds32                            alldefconfig
-powerpc                       maple_defconfig
-h8300                     edosk2674_defconfig
-mips                     cu1000-neo_defconfig
-arm                            pleb_defconfig
-arm                       spear13xx_defconfig
-sh                           se7722_defconfig
-sh                          rsk7264_defconfig
-mips                      fuloong2e_defconfig
-mips                     loongson1b_defconfig
-arm                          simpad_defconfig
-sh                     sh7710voipgw_defconfig
-s390                                defconfig
-mips                  cavium_octeon_defconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                         db1xxx_defconfig
-mips                        bcm47xx_defconfig
-arm                        multi_v5_defconfig
-powerpc                     tqm8541_defconfig
-sh                               alldefconfig
-powerpc                 mpc832x_mds_defconfig
-riscv                    nommu_virt_defconfig
-powerpc                      obs600_defconfig
-arm                          iop32x_defconfig
-xtensa                       common_defconfig
-powerpc                     stx_gp3_defconfig
-sh                        sh7785lcr_defconfig
-powerpc                  mpc885_ads_defconfig
-powerpc                    ge_imp3a_defconfig
-arm                         assabet_defconfig
-mips                        vocore2_defconfig
-sh                          urquell_defconfig
-sh                        apsh4ad0a_defconfig
-nios2                               defconfig
-arm                             pxa_defconfig
-arm                          pxa3xx_defconfig
-sh                          rsk7269_defconfig
-arm                             rpc_defconfig
-powerpc                      ppc40x_defconfig
-powerpc                      pcm030_defconfig
-riscv                            allyesconfig
-sh                          r7785rp_defconfig
-arm                  randconfig-c002-20211121
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-m68k                                defconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                          allyesconfig
-x86_64               randconfig-a001-20211121
-x86_64               randconfig-a006-20211121
-x86_64               randconfig-a003-20211121
-x86_64               randconfig-a004-20211121
-x86_64               randconfig-a005-20211121
-x86_64               randconfig-a002-20211121
-i386                 randconfig-a001-20211121
-i386                 randconfig-a002-20211121
-i386                 randconfig-a005-20211121
-i386                 randconfig-a006-20211121
-i386                 randconfig-a004-20211121
-i386                 randconfig-a003-20211121
-arc                  randconfig-r043-20211121
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                          rv32_defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                    rhel-8.3-kselftests
-
-clang tested configs:
-i386                 randconfig-c001-20211121
-powerpc              randconfig-c003-20211121
-arm                  randconfig-c002-20211121
-x86_64               randconfig-c007-20211121
-mips                 randconfig-c004-20211121
-s390                 randconfig-c005-20211121
-riscv                randconfig-c006-20211121
-x86_64               randconfig-a011-20211121
-x86_64               randconfig-a012-20211121
-x86_64               randconfig-a013-20211121
-x86_64               randconfig-a014-20211121
-x86_64               randconfig-a016-20211121
-x86_64               randconfig-a015-20211121
-i386                 randconfig-a015-20211121
-i386                 randconfig-a012-20211121
-i386                 randconfig-a013-20211121
-i386                 randconfig-a014-20211121
-i386                 randconfig-a011-20211121
-i386                 randconfig-a016-20211121
-hexagon              randconfig-r045-20211121
-s390                 randconfig-r044-20211121
-hexagon              randconfig-r041-20211121
-riscv                randconfig-r042-20211121
-
+Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ net/mptcp/sockopt.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 11cda8629993..5626b49c0270 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1066,6 +1066,24 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+ 	return 0;
+ }
+ 
++static int mptcp_put_int8_option(struct mptcp_sock *msk, char __user *optval,
++				 int __user *optlen, u8 val)
++{
++	int len;
++
++	if (get_user(len, optlen))
++		return -EFAULT;
++
++	if (len) {
++		if (put_user(1, optlen))
++			return -EFAULT;
++		if (copy_to_user(optval, &val, 1))
++			return -EFAULT;
++	}
++
++	return 0;
++}
++
+ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    char __user *optval, int __user *optlen)
+ {
+@@ -1082,6 +1100,19 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
++			       char __user *optval, int __user *optlen)
++{
++	struct sock *sk = (void *)msk;
++
++	switch (optname) {
++	case IP_TOS:
++		return mptcp_put_int8_option(msk, optval, optlen, inet_sk(sk)->tos);
++	}
++
++	return -EOPNOTSUPP;
++}
++
+ static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
+ 				      char __user *optval, int __user *optlen)
+ {
+@@ -1117,6 +1148,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 	if (ssk)
+ 		return tcp_getsockopt(ssk, level, optname, optval, option);
+ 
++	if (level == SOL_IP)
++		return mptcp_getsockopt_v4(msk, optname, optval, option);
+ 	if (level == SOL_TCP)
+ 		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
+ 	if (level == SOL_MPTCP)
+-- 
+2.32.0
+
