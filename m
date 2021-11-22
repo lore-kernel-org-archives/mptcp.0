@@ -1,120 +1,111 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E328E2C81
-	for <mptcp@lists.linux.dev>; Mon, 22 Nov 2021 11:22:26 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1mp7Os-0001QL-TZ; Mon, 22 Nov 2021 12:22:18 +0100
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next 2/2] selftests: mptcp: check IP_TOS in/out are the same
-Date: Mon, 22 Nov 2021 12:22:05 +0100
-Message-Id: <20211122112205.16752-2-fw@strlen.de>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211122112205.16752-1-fw@strlen.de>
-References: <20211122112205.16752-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34E168
+	for <mptcp@lists.linux.dev>; Mon, 22 Nov 2021 14:36:02 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id r11so77837811edd.9
+        for <mptcp@lists.linux.dev>; Mon, 22 Nov 2021 06:36:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=L/HcTTwaiYDVqlK+n41ZEgJuitsholfkyhfrQQubNL8=;
+        b=PHozfD0euT68rQuDTDwL7X8nACuyzFLQkkaN+GHAccCeic1fdnEgkT8SAMdoSUUbxc
+         RiTlJ05gVzOwNRXoA0tbvzkwTepOVw086XN0zxEadWnPiLRv8GVux72hlwvEHBjYRO0h
+         qg/g6k5lbYvN1FHQRo2P7usboaOh+5m4d5DCOyMT+Djj0JUVnCa9NoG6so4eTYXudDzA
+         4jPTMgplO5NTVk8ue7Mzcux3N/JPWO0syY6rwU8UJCC4/q64BlQRC9bpumS4vKEPr+vi
+         3z9z7a1jVWjnFz4QJX0m7muzJnBjY82udV7QAF3AzpLDLvXWf8/tHKXMZeET46N3HguZ
+         el3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=L/HcTTwaiYDVqlK+n41ZEgJuitsholfkyhfrQQubNL8=;
+        b=8Rh9b5XSl7gVFUZyAgv+ggSYckVYJnNApJzaxT5ij6dAOKG5br1whMYGPZDu6/4QN4
+         hU6EZ+JZjtr2L7XvcUlP7D18H4Wb8zZsfFIFs2+gw4e+Mx3SPVAJOtikj9cBNCI0x+eJ
+         m2Mi8Qleuw3eM6Lag2o/f1hfRPpLFH352jsEYJ3Qwvg5VYl1iPG/f72wH9fHcbPW3Teg
+         DrQ0sy3SfDt+xleIA2nSYqSJdJLkAXGbXqygKkLTm0P8ULFE9yTMjP9ARYTZodmipU+H
+         5Fb4lNyIwBpnfT+ChB2UgTlW9yuMjaLYCil3MNSi507HigXVHBqko1XLRs9WFZowlqtK
+         u3rg==
+X-Gm-Message-State: AOAM533V1SvZgxaAO5UlK920eiIjuaJ41pLtGRh72jQ+5qBKMm1Lg8QC
+	yg4REyYgyUiutSFsHZ5p/SQjsA==
+X-Google-Smtp-Source: ABdhPJyPwEeZzNM/s3Rm974Gz56G+NUDOG+OwIUyF3UG2EL6aLkPTGnam8+oRgwNVaB0vZNRzMjSLQ==
+X-Received: by 2002:a17:907:2d12:: with SMTP id gs18mr41355857ejc.126.1637591760401;
+        Mon, 22 Nov 2021 06:36:00 -0800 (PST)
+Received: from [192.168.178.33] ([213.211.139.36])
+        by smtp.gmail.com with ESMTPSA id gn26sm3945831ejc.14.2021.11.22.06.35.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Nov 2021 06:36:00 -0800 (PST)
+Message-ID: <b9951397-8ca2-0ceb-3f99-28957a2791bb@tessares.net>
+Date: Mon, 22 Nov 2021 15:35:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: getsockopt: add support for IP_TOS
+Content-Language: en-GB
+To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+References: <20211122112205.16752-1-fw@strlen.de>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20211122112205.16752-1-fw@strlen.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Check that getsockopt(IP_TOS) returns what setsockopt(IP_TOS) did set
-right before.
+Hi Florian,
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- .../selftests/net/mptcp/mptcp_sockopt.c       | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
+On 22/11/2021 12:22, Florian Westphal wrote:
+> earlier patch added IP_TOS setsockopt support, this allows to get
+> the value set by earlier setsockopt.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 417b11cafafe..87ed6d050e67 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -4,6 +4,7 @@
- 
- #include <assert.h>
- #include <errno.h>
-+#include <fcntl.h>
- #include <limits.h>
- #include <string.h>
- #include <stdarg.h>
-@@ -594,6 +595,30 @@ static int server(int pipefd)
- 	return 0;
- }
- 
-+static void test_ip_tos_sockopt(int fd)
-+{
-+	uint8_t tos_in, tos_out;
-+	socklen_t s;
-+	int r;
-+
-+	tos_in = rand() & 0xfc;
-+	r = setsockopt(fd, SOL_IP, IP_TOS, &tos_in, sizeof(tos_out));
-+	if (r != 0)
-+		die_perror("setsockopt IP_TOS");
-+
-+	tos_out = 0;
-+	s = sizeof(tos_out);
-+	r = getsockopt(fd, SOL_IP, IP_TOS, &tos_out, &s);
-+	if (r != 0)
-+		die_perror("getsockopt IP_TOS");
-+
-+	if (tos_in != tos_out)
-+		xerror("tos %x != %x\n", tos_in, tos_out);
-+
-+	if (s != 1)
-+		xerror("tos should be 1 byte");
-+}
-+
- static int client(int pipefd)
- {
- 	int fd = -1;
-@@ -611,6 +636,8 @@ static int client(int pipefd)
- 		xerror("Unknown pf %d\n", pf);
- 	}
- 
-+	test_ip_tos_sockopt(fd);
-+
- 	connect_one_server(fd, pipefd);
- 
- 	return 0;
-@@ -642,6 +669,22 @@ static int rcheck(int wstatus, const char *what)
- 	return 111;
- }
- 
-+static void init_rng(void)
-+{
-+	int fd = open("/dev/urandom", O_RDONLY);
-+	unsigned int foo;
-+
-+	if (fd > 0) {
-+		int ret = read(fd, &foo, sizeof(foo));
-+
-+		if (ret < 0)
-+			srand(fd + foo);
-+		close(fd);
-+	}
-+
-+	srand(foo);
-+}
-+
- int main(int argc, char *argv[])
- {
- 	int e1, e2, wstatus;
-@@ -650,6 +693,8 @@ int main(int argc, char *argv[])
- 
- 	parse_opts(argc, argv);
- 
-+	init_rng();
-+
- 	e1 = pipe(pipefds);
- 	if (e1 < 0)
- 		die_perror("pipe");
+Thank you for sharing the patches, good idea to add this!
+
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 11cda8629993..5626b49c0270 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -1066,6 +1066,24 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+>  	return 0;
+>  }
+>  
+> +static int mptcp_put_int8_option(struct mptcp_sock *msk, char __user *optval,
+> +				 int __user *optlen, u8 val)
+> +{
+> +	int len;
+> +
+> +	if (get_user(len, optlen))
+> +		return -EFAULT;
+> +
+> +	if (len) {
+
+What can be the possible values of 'len' here? Can it be negative?
+
+I'm asking this question because when I'm looking at similar code in
+mptcp/sockopt.c, I see different behaviours:
+
+- mptcp_getsockopt_info(): no additional check but we suppose 'len' is
+unsigned
+
+- mptcp_put_int_option(): same but we return an error if len < 0
+
+- mptcp_get_subflow_data(): we check if len is not < the expected size
+
+In ipv4/ip_sockglue.c, we check if len < 0
+
+I don't know if we should uniform that and always do:
+
+    if (len < 0 (or expected value))
+        return (...);
+
+But I'm fine with the current version if we would never have a negative
+value.
+
+Cheers,
+Matt
 -- 
-2.32.0
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
