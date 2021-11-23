@@ -1,44 +1,44 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2DF68
-	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 15:42:45 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id x6so81718256edr.5
-        for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 07:42:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5768
+	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 16:09:17 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id r25so57368923edq.7
+        for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 08:09:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=QW4JtPctxwuLBL05rHonJ9CH18qFn/y56hNUt5F452g=;
-        b=leQ0R2BCYexcM1MR2s0oxVKkxC4Uy7rPuI5GjITZ+Z0FFLHOUI3T4HxQfeAH9xQBjq
-         dCT7oniChbkuHwg4QSaEJ0NP1P5fzqaL7s7cn8lZDkhVfJgxtoqqp26ie3beJpT7WIJd
-         nYQZnsxgS74KzfjMTivC5nGnaDaA2AIbe8BSoPvdspfEwNPu5aclwPK8uKvyufjDebb9
-         fsY4eom9KPM7nz+Y7IwF+SgR0cxJjAVZFp+1STQJ76yMDoZFpg69qrPFchpUGSu9PwHM
-         9XUApJAMiyUuaSqiRFOuGCdRHc6S0Ds+B6ZA7KjQcwOiA4Kja+O+sKsuthPkahfe2hgR
-         GmHw==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=nWFavH5B1lfHIVrhPimeng9aeLrPRUMJCK9jgZwuUH0=;
+        b=19qlr/f2r+3ZSJx/mv5za8Tmn60DDaz3cj/mjpz36Uq4nO2CpsCIG/u9LaSTG0/iKV
+         K30G4Mp50yJyYlAGQxf3JM6/jLfjTkcNqHRz2q5g2hBTDcHOKDQhPwsXyhsLbLECNGdC
+         M7fxPR1UHfozC2BVRm7o33BLQBTeNIjds/h6aQtAXaELmM3ixFLsR0KfEdDYbF3frJkq
+         uVNykQncqLXzYiuCTD6RvG1dZVhlWEn8NRdl55+PL3wJQYVHgp86FR8pfAMYYP0MuwdG
+         wslx/2T9jTaRS+jYOsbXb4mKV2rCdchEPNLyYSY/fJpSIa75GKlqCqaitxzz+lz3wCSG
+         xraA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=QW4JtPctxwuLBL05rHonJ9CH18qFn/y56hNUt5F452g=;
-        b=I9YIurmchfNyocgkdD1yN7XBE6KdPWlxoaGsYo5CVhWInX4RmsQ+Ld+y7runWLZVL3
-         Wp+b73ubCStDn+pJ485DrFM2l6ZQ8lUTFFmZfv2SryzOMtnaWTM3i04gQ0/OgQRhQo72
-         04iWQxGswCh4Z7/wCEsgpGcPO2n6wv+VG2ngsYhajfdP8+eOp3jEusNONSsjZ9yp2e3o
-         ruv83ZxaBBnDwWTxwG6PoJ4zQl2as+vltaVYQkb0QtyQwD+pyBQ6B3vxEgy/c3fYKAku
-         5DKo7B0NWEedlotEm+53eW0ADSPUVdpK0nlcAj5frHqHf0Q/P9K/FYPx2FYRvTPgen0j
-         Fa1w==
-X-Gm-Message-State: AOAM531XwiAGUK5iCAOvgCChNQ+vfhtiNafWKd0QEnqbfpU9HDeQuFVi
-	oqQlgLr3PdpRPIijqbK/uFnpiK5LdOoEXA==
-X-Google-Smtp-Source: ABdhPJwXqknJh0HWQqvpG6cBgx6GnocPqvXO+p0mFVAWntXVr/Ad9jAH8k/Z4aRnK3LiBiBwXwhMVg==
-X-Received: by 2002:aa7:c313:: with SMTP id l19mr10594831edq.209.1637682163206;
-        Tue, 23 Nov 2021 07:42:43 -0800 (PST)
+        bh=nWFavH5B1lfHIVrhPimeng9aeLrPRUMJCK9jgZwuUH0=;
+        b=IG0reYNh7P3TFO0MOPXQiFHmGCii5RsmidqpH8NBtokqnYis0FQkta7S1fI///qqo9
+         v4QIXADa5yLZg1sDfLLa7nXIOLhe/fZLeqTPBgKhBj15zsQGN1apCYdP6/a9ajcrCp7X
+         9RX/8awv5QsDbUR2sPgTfjCtFr9L2q4xEYRJ+io7YKhjTQHnYtNXZks8yI6gNAbp1PBN
+         t3DtEdvRMM+poK6dI8IjC7YYVOc5YE0iDEZQRkplL397YdEQ+t4F3fPNi6RdPp7h+U5G
+         nrqvrJtE7DdP3v1gTwAH/AXznVE6rw3AP4s3C+jYpbAeuRH9f4tmRxrrCaGS4XhF//wW
+         E5Tg==
+X-Gm-Message-State: AOAM530ScUEaHzg94aAVE+Q9H6iIB6moiz+TtwN9yTyu+XzQ9QDDirmL
+	ChePtt222JIryNaPf0G8s/of+w==
+X-Google-Smtp-Source: ABdhPJyq8Je2TvtNUTm5/98+t/pBAuxRaBsfCsGTj5njv4e9UboQTqvsfWvG2x9fWAyvhSpW4577BQ==
+X-Received: by 2002:a05:6402:170a:: with SMTP id y10mr10978763edu.324.1637683755443;
+        Tue, 23 Nov 2021 08:09:15 -0800 (PST)
 Received: from [192.168.178.33] ([213.211.139.36])
-        by smtp.gmail.com with ESMTPSA id d1sm6296315edn.56.2021.11.23.07.42.41
+        by smtp.gmail.com with ESMTPSA id bd12sm6006653edb.11.2021.11.23.08.09.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Nov 2021 07:42:42 -0800 (PST)
-Message-ID: <2b7e51e4-6c39-d6a0-51d1-44f425a18701@tessares.net>
-Date: Tue, 23 Nov 2021 16:42:41 +0100
+        Tue, 23 Nov 2021 08:09:14 -0800 (PST)
+Message-ID: <50e883b0-9776-c440-8b8d-1f9024c50a31@tessares.net>
+Date: Tue, 23 Nov 2021 17:09:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,44 +47,64 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.2
-Subject: Re: [PATCH v2 mptcp-next 2/2] selftests: mptcp: check IP_TOS in/out
- are the same
+Subject: Re: [PATCH mptcp-next 3/3] mptcp: support TCP_CORK and TCP_NODELAY
 Content-Language: en-GB
-To: Florian Westphal <fw@strlen.de>
-References: <20211122152651.28466-1-fw@strlen.de>
- <20211122152651.28466-2-fw@strlen.de>
-Cc: mptcp@lists.linux.dev
+To: Paolo Abeni <pabeni@redhat.com>, Maxim Galaganov <max@internet.ru>,
+ mptcp@lists.linux.dev
+References: <20211123070708.2897469-1-max@internet.ru>
+ <20211123070708.2897469-4-max@internet.ru>
+ <65424687fe3f108285b6b42669d28e61254349f1.camel@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20211122152651.28466-2-fw@strlen.de>
+In-Reply-To: <65424687fe3f108285b6b42669d28e61254349f1.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Florian,
+Hi Max, Paolo,
 
-On 22/11/2021 16:26, Florian Westphal wrote:
-> Check that getsockopt(IP_TOS) returns what setsockopt(IP_TOS) did set
-> right before.
+On 23/11/2021 13:21, Paolo Abeni wrote:
+> On Tue, 2021-11-23 at 10:07 +0300, Maxim Galaganov wrote:
+>> First, add cork and nodelay fields to the mptcp_sock structure
+>> so they can be used in sync_socket_options(), and fill them on setsockopt
+>> while holding the msk socket lock.
+>>
+>> Then, on setsockopt set proper tcp_sk(ssk)->nonagle values for subflows
+>> by calling __tcp_sock_set_cork() or __tcp_sock_set_nodelay() on the ssk
+>> while holding the ssk socket lock.
+>>
+>> tcp_push_pending_frames() will be invoked on the ssk if a cork was cleared
+>> or nodelay was set. Also set MPTCP_PUSH_PENDING bit by calling
+>> mptcp_check_and_set_pending(). This will lead to __mptcp_push_pending()
+>> being called inside mptcp_release_cb() with new tcp_sk(ssk)->nonagle.
+>>
+>> Also add getsockopt support for TCP_CORK and TCP_NODELAY.
+
+Thank you for looking at that!
+
+>> Signed-off-by: Maxim Galaganov <max@internet.ru>
+>> ---
+>> I've tested this by doing single-byte writes and looking at the length
+>> of packets in tcpdump, also this is now running on my tproxy setup.
+>> Enabling nodelay on a tproxy gave a decrease in latency to first byte
+>> and lead to improved user experience in web browsing and voip
+>> applications. Existing selftests run passed on a debug config, I'll add
+>> coverage for new sockopts once I grasp how to do it.
 > 
-> Also check that socklen_t == 0 and -1 input values match those
-> of normal tcp sockets.
+> self-tests should be doable with pktdrill, see:
+> 
+> https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/mptcp/sockopts/sockopt_set_ip_tos_valid_v4.pkt
 
-Again, thank you for the patches!
+You can also imitate what is done with the Packetdrill upstream's TCP
+Nagle tests:
 
-Now in our tree (feat. for next):
+https://github.com/multipath-tcp/packetdrill/tree/mptcp-net-next/gtests/net/tcp/nagle
 
-- 920d96a81032: mptcp: getsockopt: add support for IP_TOS
+Testing with packetdrill might be more reliable than with an E2E test in
+selftests if your test needs to look at expected time to get data from
+the other side. Indeed, some CI environments might be quite slow or busy
+with parallel tasks.
 
-- 2a48dce13e02: selftests: mptcp: check IP_TOS in/out are the same
-
-- Results: c0fa7477e85c..4d2c9db8443e
-
-Builds and tests are now in progress:
-
-
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211123T154225
-
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+Do you mind if we wait a bit to have these tests before applying your
+patches?
 
 Cheers,
 Matt
