@@ -1,113 +1,80 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5768
-	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 16:09:17 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id r25so57368923edq.7
-        for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 08:09:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=nWFavH5B1lfHIVrhPimeng9aeLrPRUMJCK9jgZwuUH0=;
-        b=19qlr/f2r+3ZSJx/mv5za8Tmn60DDaz3cj/mjpz36Uq4nO2CpsCIG/u9LaSTG0/iKV
-         K30G4Mp50yJyYlAGQxf3JM6/jLfjTkcNqHRz2q5g2hBTDcHOKDQhPwsXyhsLbLECNGdC
-         M7fxPR1UHfozC2BVRm7o33BLQBTeNIjds/h6aQtAXaELmM3ixFLsR0KfEdDYbF3frJkq
-         uVNykQncqLXzYiuCTD6RvG1dZVhlWEn8NRdl55+PL3wJQYVHgp86FR8pfAMYYP0MuwdG
-         wslx/2T9jTaRS+jYOsbXb4mKV2rCdchEPNLyYSY/fJpSIa75GKlqCqaitxzz+lz3wCSG
-         xraA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=nWFavH5B1lfHIVrhPimeng9aeLrPRUMJCK9jgZwuUH0=;
-        b=IG0reYNh7P3TFO0MOPXQiFHmGCii5RsmidqpH8NBtokqnYis0FQkta7S1fI///qqo9
-         v4QIXADa5yLZg1sDfLLa7nXIOLhe/fZLeqTPBgKhBj15zsQGN1apCYdP6/a9ajcrCp7X
-         9RX/8awv5QsDbUR2sPgTfjCtFr9L2q4xEYRJ+io7YKhjTQHnYtNXZks8yI6gNAbp1PBN
-         t3DtEdvRMM+poK6dI8IjC7YYVOc5YE0iDEZQRkplL397YdEQ+t4F3fPNi6RdPp7h+U5G
-         nrqvrJtE7DdP3v1gTwAH/AXznVE6rw3AP4s3C+jYpbAeuRH9f4tmRxrrCaGS4XhF//wW
-         E5Tg==
-X-Gm-Message-State: AOAM530ScUEaHzg94aAVE+Q9H6iIB6moiz+TtwN9yTyu+XzQ9QDDirmL
-	ChePtt222JIryNaPf0G8s/of+w==
-X-Google-Smtp-Source: ABdhPJyq8Je2TvtNUTm5/98+t/pBAuxRaBsfCsGTj5njv4e9UboQTqvsfWvG2x9fWAyvhSpW4577BQ==
-X-Received: by 2002:a05:6402:170a:: with SMTP id y10mr10978763edu.324.1637683755443;
-        Tue, 23 Nov 2021 08:09:15 -0800 (PST)
-Received: from [192.168.178.33] ([213.211.139.36])
-        by smtp.gmail.com with ESMTPSA id bd12sm6006653edb.11.2021.11.23.08.09.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Nov 2021 08:09:14 -0800 (PST)
-Message-ID: <50e883b0-9776-c440-8b8d-1f9024c50a31@tessares.net>
-Date: Tue, 23 Nov 2021 17:09:14 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A836C2C82
+	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 16:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1637685455;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7UqYbY0sugTamfHJPVEdwLZ0Zb52IEDyLo87DaliwU4=;
+	b=N+dKMM2fQdkJ9K6I2Ft18fyux4yJYt+dNDkvMJPZGU0ybp8aTxCYsrzBRa96mWRw1w0Hxv
+	JX3Em4MU23PsgU5fq/zCPJjUAqPP2li7LLMTJ/hRtYSxE3V5yLyXPeGmyLc1zOclj6KK/k
+	9Ht4ROrv5HUZtC0i6xcr7i0PkCuVRBU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-564-KsQaMdisN_2rbv_vRAkH-w-1; Tue, 23 Nov 2021 11:37:32 -0500
+X-MC-Unique: KsQaMdisN_2rbv_vRAkH-w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04F8087D541;
+	Tue, 23 Nov 2021 16:37:31 +0000 (UTC)
+Received: from gerbillo.fritz.box (unknown [10.39.194.149])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 29B1D1981F;
+	Tue, 23 Nov 2021 16:37:29 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Phil Greenland <phil@quantulum.co.uk>
+Subject: [PATCH mptcp-next 0/3] mptcp: improve subflow creation on errors
+Date: Tue, 23 Nov 2021 17:37:09 +0100
+Message-Id: <cover.1637684792.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH mptcp-next 3/3] mptcp: support TCP_CORK and TCP_NODELAY
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, Maxim Galaganov <max@internet.ru>,
- mptcp@lists.linux.dev
-References: <20211123070708.2897469-1-max@internet.ru>
- <20211123070708.2897469-4-max@internet.ru>
- <65424687fe3f108285b6b42669d28e61254349f1.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <65424687fe3f108285b6b42669d28e61254349f1.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Max, Paolo,
+Currently when a subflow connection fails - either the TCP
+connection is reset by the peer, or the MPJ handshake never
+completes - the in kernel PM don't perform any further action.
+Notably no additional subflow creation is attempted.
 
-On 23/11/2021 13:21, Paolo Abeni wrote:
-> On Tue, 2021-11-23 at 10:07 +0300, Maxim Galaganov wrote:
->> First, add cork and nodelay fields to the mptcp_sock structure
->> so they can be used in sync_socket_options(), and fill them on setsockopt
->> while holding the msk socket lock.
->>
->> Then, on setsockopt set proper tcp_sk(ssk)->nonagle values for subflows
->> by calling __tcp_sock_set_cork() or __tcp_sock_set_nodelay() on the ssk
->> while holding the ssk socket lock.
->>
->> tcp_push_pending_frames() will be invoked on the ssk if a cork was cleared
->> or nodelay was set. Also set MPTCP_PUSH_PENDING bit by calling
->> mptcp_check_and_set_pending(). This will lead to __mptcp_push_pending()
->> being called inside mptcp_release_cb() with new tcp_sk(ssk)->nonagle.
->>
->> Also add getsockopt support for TCP_CORK and TCP_NODELAY.
+This series is aimed at improving the in-kernel path manager
+behavior in the above scenario: on failure we try to move
+to the next subflow, if any.
 
-Thank you for looking at that!
+The first patch is minor cleanup, the feature is implemented
+by patch 2/3. The last patch adds a specific self-tests.
 
->> Signed-off-by: Maxim Galaganov <max@internet.ru>
->> ---
->> I've tested this by doing single-byte writes and looking at the length
->> of packets in tcpdump, also this is now running on my tproxy setup.
->> Enabling nodelay on a tproxy gave a decrease in latency to first byte
->> and lead to improved user experience in web browsing and voip
->> applications. Existing selftests run passed on a debug config, I'll add
->> coverage for new sockopts once I grasp how to do it.
-> 
-> self-tests should be doable with pktdrill, see:
-> 
-> https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/mptcp/sockopts/sockopt_set_ip_tos_valid_v4.pkt
+This should possibly address/close:
+https://github.com/multipath-tcp/mptcp_net-next/issues/235
+https://github.com/multipath-tcp/mptcp_net-next/issues/242
 
-You can also imitate what is done with the Packetdrill upstream's TCP
-Nagle tests:
+@Phil: could you please have a spin in your testbed and
+see if this is enough to fit you?
 
-https://github.com/multipath-tcp/packetdrill/tree/mptcp-net-next/gtests/net/tcp/nagle
+Paolo Abeni (3):
+  mptcp: clean-up MPJ option writing.
+  mptcp: do not block subflows creation on errors
+  selftests: mptcp: add tests for subflow creation failure
 
-Testing with packetdrill might be more reliable than with an E2E test in
-selftests if your test needs to look at expected time to get data from
-the other side. Indeed, some CI environments might be quite slow or busy
-with parallel tasks.
+ net/mptcp/options.c                           | 63 ++++++++++++-------
+ net/mptcp/protocol.h                          |  1 +
+ net/mptcp/subflow.c                           | 12 +++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 10 +++
+ 4 files changed, 61 insertions(+), 25 deletions(-)
 
-Do you mind if we wait a bit to have these tests before applying your
-patches?
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.33.1
+
