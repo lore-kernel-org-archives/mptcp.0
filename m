@@ -1,143 +1,106 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
+Received: from fallback21.mail.ru (fallback21.m.smailru.net [94.100.176.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9592C86
-	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 01:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1637630642;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fuwNzEblkHYq4u6dE9B0vesqafy65S5eQBURfQIqlB8=;
-	b=mHXGQplY4BlH8OJEWjGzNOlfS0pzY+FDMIfifi+CP6P9phKb5RTk2LlAX/dYAL6dSjRDAT
-	syrC4OSp0xAfPh/RnVfQK0i3JmIDlsbzDdTVeRTycbevAe87Hp4YHreEARoEZBnm+l7t+l
-	iOdoRHQ9qsDgdIdiHozedYyaSB82QTc=
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
- (mail-db8eur05lp2110.outbound.protection.outlook.com [104.47.17.110]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-29-D-Oe7PrDP_OF3kZhR2BK0w-1; Tue, 23 Nov 2021 02:24:00 +0100
-X-MC-Unique: D-Oe7PrDP_OF3kZhR2BK0w-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K8VlVvth2MXsFTcOw6+FzeyNguAj53AkbZQ/UDn8E14nqMRQvUGA0xXEJNSybuPYzxS3Fiy3I2PrE48fZVYugQl/yk2Xi0Bp1bDqAv7edNPLfObxNzb58EG+klLoY5kxr+rKXRGe9i9hXNZlyqDnhOWSRoLTQqP/hSKopHjVtuoExpD3gFrygTRQzg5EqL7h3yVyERamT0TS72xrxpbPKxq5iuo+PXzQXhEOHtjD8DubaUcfxaXv4g1TRFvhCVUMAdO2WY2ucdwKgHQpGp4f4T7hy7wE7l7pq76mJreJteoUDYOoW0nfLUt7JXmsIpEaPAyP3vl4JXgEEPQy7oeq2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aMlso0P4DkZv1g74HoKEzZ0DsC/Isy8aZ9cahIz/u6w=;
- b=N82fyM4qcMwjfr4PI+mn4074QFSSluj6YCUTUD6FTL2gQrQojmadwpYBImIVit1WOxNv0Qzy5XR6diNIiGGErVoKg8a12NMPQENZGL1Y4c1tSvN4RvHrJxHR4w1JcSjbqjvQLLBa9kofkLjQWLHkd90xZniAa+q7WFpupMC+M2EMMQg9XNJzUbTMRREzd6SJM985VTTg427M8bkhHUKEgic5Tn52/MCqpPKOUjWi/TGNIaJNzJbnYofhklYbuJexJqscwvq4d6K2JlH4aEXiQeVZdWrmX1eBbu4Iw4Hu+ZrnsjLDkwHWL9Wgz7mq1VJkWve9PptaAQQXbh+QAA5YDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by HE1PR0401MB2571.eurprd04.prod.outlook.com (2603:10a6:3:84::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.22; Tue, 23 Nov
- 2021 01:23:58 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::4d5a:e54e:9ad7:e79a]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::4d5a:e54e:9ad7:e79a%7]) with mapi id 15.20.4713.024; Tue, 23 Nov 2021
- 01:23:58 +0000
-From: Geliang Tang <geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E86A2C81
+	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 07:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
+	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=JFpH451qVQIpmhaB2CuQoc06D60uYrD5sVAzZLlvCNw=;
+	t=1637652580;x=1638257980; 
+	b=jl7QoFWfoHxTb/zywrAFCYzSxqfDB2SRHYayXPFAJRy7QLX2rUmOHuHImMpibpMaAZdX3ia5sH4gJkC4Rgf6/cEMWsJtTjxqDMfqOaWPf9QROQb/SgG9A03z/BFZtfXDQwyOzKq+IHP8uhx1pvFVa+31WhXFoXp3SjefA9sWqxI=;
+Received: from [10.161.64.43] (port=48050 helo=smtp35.i.mail.ru)
+	by fallback21.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
+	id 1mpPtv-0007Pl-C3
+	for mptcp@lists.linux.dev; Tue, 23 Nov 2021 10:07:35 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=JFpH451qVQIpmhaB2CuQoc06D60uYrD5sVAzZLlvCNw=;
+	t=1637651255;x=1638256655; 
+	b=mr7UQfjwBOcICm6EV3tOJnYQHshvHWBUosm62EQ16n6tm1s9ccWfAfiEc3G+ZYrmDHVYfSL6/xNNpl8dWHm/41Y904crWyZYNQpW5O2xXZGH7vRVAHdnJVhpD2oDhrg82iAffkYgEIIEakcR1VMWc+RliTXU2gSxNwVEaWD309b5y1e//Hfk08tnuKjBdxdTYuiqqAYwlmbPl0dhnMxQrxnEwG0IAsCTBStTLZVh2qIHkc9IJ0wvWhTW7v5Fz/rGuxa6DiFDGTiYKYWIyMCaoY9ZG46wzRkgHJHTiksWkowkF4qlIedsLYBCI27GhO0clC+I5Hkru/8W6wXG8ngDKg==;
+Received: by smtp35.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
+	id 1mpPtm-0002NB-Pv; Tue, 23 Nov 2021 10:07:27 +0300
+From: Maxim Galaganov <max@internet.ru>
 To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next 2/2] mptcp: print out reset_reason of MP_RST
-Date: Tue, 23 Nov 2021 09:23:53 +0800
-Message-ID: <f7d8547fa832c5d20c13ca950966d6a5222f0e72.1637630218.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1637630218.git.geliang.tang@suse.com>
-References: <cover.1637630218.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0187.apcprd02.prod.outlook.com
- (2603:1096:201:21::23) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+Cc: Maxim Galaganov <max@internet.ru>
+Subject: [PATCH mptcp-next 1/3] tcp: expose __tcp_sock_set_cork and __tcp_sock_set_nodelay
+Date: Tue, 23 Nov 2021 10:07:06 +0300
+Message-Id: <20211123070708.2897469-2-max@internet.ru>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20211123070708.2897469-1-max@internet.ru>
+References: <20211123070708.2897469-1-max@internet.ru>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: from localhost (2408:8207:254f:fa90:ffd7:b378:8b95:8f44) by HK2PR02CA0187.apcprd02.prod.outlook.com (2603:1096:201:21::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19 via Frontend Transport; Tue, 23 Nov 2021 01:23:57 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4f504f30-3b9d-4180-42de-08d9ae1fecaf
-X-MS-TrafficTypeDiagnostic: HE1PR0401MB2571:
-X-Microsoft-Antispam-PRVS:
-	<HE1PR0401MB25711571A7100F1D4EA4384BF8609@HE1PR0401MB2571.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	MTHARDa7bO0/CVCxlm3ILr5Ljmzc5/RegjO3K29gAcZxt9cfrO+RyD2D/KMutl+obm6q8O6zk1JSAVNB6E1Cp8Xi+jygSNJ7pfmZWUOWKyaw6iMBvLX3VePK8vRmgCmT0HqYle6KgJBxDfyGiHcJM5EkMSNqroZFtt6Thh9LsVIV2qhcjH0OhzTSEt9Dp0ZdPWaiEcOZ+6pvLUFMmZUPIhsWYdg807wO3F39wyDOWkRWC5yPMat+hSK2uGsN7sYReaasGBGbWPTjgm0O79Guy79V7ZSf9dg6GVNtSzKnAWeAMm3H2sQwvYNNniQ0oZ5/mXsHf17c28+kk/2bainEK7xuTzdVlgjTawZJeNA/qwIKxmZ4K/vsJ4i10O6OsEgYN3VazgLOYNW3wlj/r3MlLHhyDJpzvrMcO7P7BR0r7EL8g21BjqgJ8n6cHy5kpuFYP/Y6qTZRwMYaIvuRr4vXrj0UmLRijTZDAC/LuAJh2BKUtzH6JL2YIGCJE2jHmMpm+Nb3hd0oOT5C+sdeR0IYYOLNozE4aX9fbs2B5A0SpE+7arPivXqYygeaECxqN9Ji/OrfjOFulJsNkrXAZSqV78WRCi98EZApvfsJ4kf6d//a4AuYOdHqJUWJyJf81SWHOloO7KzfnOc67GICT+dR+A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(36756003)(6666004)(316002)(186003)(4744005)(66476007)(66556008)(5660300002)(6486002)(66946007)(8936002)(4326008)(44832011)(107886003)(2616005)(6496006)(2906002)(86362001)(8676002)(38100700002)(6916009)(508600001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4Tn/lqsSjmgGGItIfUULxVyLJxm47dqQQfXpXDzGfAF8oBF4Vzy16tCntKoZ?=
- =?us-ascii?Q?BM5kxjIsfeUFY0uEJzhEZTMMVDORWBxuHI6Vf5ehmYm8CV0n8b1dB7WG6XBY?=
- =?us-ascii?Q?MeMl73Uwn1TLKQ6RBZXKkt3Z3vfJH13DNOKYIom+iuiUEaDwD8t9AclEYux2?=
- =?us-ascii?Q?7Vo6Y+px4Uo89rSTO1ELSEzQGXskNT2u4D/zAAAT04Te5s//JZaEtMInSqYt?=
- =?us-ascii?Q?vX6NoIqKvyWnd8IT9dFatFUrxrcGbJPyWF/z7AUa+G9H1SAEVjXQDnfDvT/3?=
- =?us-ascii?Q?nLAu54HYfLVAUgKVw0uRf8JgpUUn/kIv5waiqNh/v6OXSc0Rj0mIL1r6dqP1?=
- =?us-ascii?Q?if3brRPSF1iPGRhxYqKkh9UWJBfgwS5Hx1n2zHK/bbNkk2EmDcxlpBoTwW6W?=
- =?us-ascii?Q?H/Ib61hAWHe4qUltDebJsGqlG2eJNuejCogwOjn3kDqYEAjgIPBii16eoNNG?=
- =?us-ascii?Q?JR7np1DITRcDN+3oo5k4x34nBY6ZomyKINE+q5pFFw6kTiHOUccOXYge68dZ?=
- =?us-ascii?Q?9dbsHs2KgSaX6OBIgrNjCujvy8zTP/XZkiKouNalWHvNTHxg0dXHvxNqfXn8?=
- =?us-ascii?Q?ZYDky3iyy5gCUvgtuFiFRcO6zNAzNfoJ1rfG/MuXpqIvu4FJPgmjb/fIUrkZ?=
- =?us-ascii?Q?5i2ZqIc9Z4ebqRT4MapaXKkAnVGf0Z34lVHIXaBnkPB0rOPLOVnMzVT0aX9B?=
- =?us-ascii?Q?QjcxBKx/KKC1FelMKBrbJTq+ATeS2iINg+cS5C7h3iMdQUFuOcg9zdP0qixz?=
- =?us-ascii?Q?nviZ1lDScpUCRLcFFk7V2WLTJ7EdEtavNjQZW1S5kLLBJmNOzoKa7xaztQHC?=
- =?us-ascii?Q?5+sy2TP6XLPVH4pF71mHLROKXOxC7rBm+HgV46Q/6YGaT51xLzTiqNoMhekk?=
- =?us-ascii?Q?9EJi1ZuoyutZNMxnG2NSvHYIFVeESPEjU3WnJfndVDm/ljrwOt6ZexsWotyE?=
- =?us-ascii?Q?kGz6XJKW3/G4fdr0pZbrz0MfQiS+ZH4VyQZDBmbKk2tIwQjIGr0SswFIs2KG?=
- =?us-ascii?Q?7YBCG52fUIOwZAOJ/5CKgs2loOeDJ68+XtkzQn9lJ1wuxiuLMom68IyWxKwe?=
- =?us-ascii?Q?37lhcspBJMMduWzJ7BgINFdBLUtcxLXtzpusvitElpbi49ypMoawtY59yI8T?=
- =?us-ascii?Q?r7aJHWVLuaTveMSuaOqmX+iatpC8aotrYqN+vWv5vusSQQkIkdmR4Kzm9oiu?=
- =?us-ascii?Q?XJeHOxW+pbiUgt2Xc+S2H4R1CdZAM1nsKI2SJTVd9OXVH24HQIHXAVnhjqyi?=
- =?us-ascii?Q?px0SYoMLhIB8Z4yvJKS4D/N1z/6hI2peQR8bluvb9QdDboFA/narTuPqmcSz?=
- =?us-ascii?Q?dKp/AuirtN3mgnbi9UOkWMlSJlJgtfUWNLwcPMprm+mKUW9hs9KxwYgxkIuF?=
- =?us-ascii?Q?+B6d2nIac1SHwjHZbMjrU4w6WcsFa9ywxQhx991nulaiJDcb/rCjsrDO+Y3J?=
- =?us-ascii?Q?O8LU7L774NBYW4krWsvTRPKE+b28fIM2Xd+wtDKk8pbNJlL4Y1pj3kV7F+1P?=
- =?us-ascii?Q?fuNfLkPpeO/oz43F920K0v4cTvj+wbknioeNjaTa2Ow1lZpcs39ebz/DejFC?=
- =?us-ascii?Q?/PgGXrIu84wUZoPEv1vKR27t8X5zHw6xorlEB6CD+UD1qFQf2u70y02LGOHM?=
- =?us-ascii?Q?R2Jo8GzMSABV+iX5zJqkmKnjmKdpyBww7wuQfudWYpSocj+0gK63Nnlw3UKQ?=
- =?us-ascii?Q?vejIGpoIdubN/uPhUsKsoVqxAk0=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f504f30-3b9d-4180-42de-08d9ae1fecaf
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2021 01:23:58.8923
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S5Wmawoai00lnecnFZvH+UhLa+SUDLSCZf5/d17skAm/9yx77pIkuRB01MXWUFvjIM0t+ohd7lTad6dzon5TwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2571
+Content-Transfer-Encoding: 8bit
+X-7564579A: EEAE043A70213CC8
+X-77F55803: 4F1203BC0FB41BD9BAEAA343CB33328DA8790EF48BADF8FC9BC3B7F78ECA59C01313CFAB8367EF908E2BE116634AD74DFA91160A32AED89F00E47A53542FF964503835FA8921BE82386F63046B3269FA
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7D9C4478D0B876341EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006374C960BD2D03BF0BDEA1F7E6F0F101C6723150C8DA25C47586E58E00D9D99D84E1BDDB23E98D2D38BBCA57AF85F7723F2298879DF6EF9B279F5C190A68771658220879F7C8C5043D14489FFFB0AA5F4BF176DF2183F8FC7C0F6FAE79CA2B8C2908941B15DA834481FA18204E546F3947CC2B5EEE3591E0D35F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F7900637D0FEED2715E18529389733CBF5DBD5E9B5C8C57E37DE458BD9DD9810294C998ED8FC6C240DEA76428AA50765F7900637FBE64AAB3768209ED81D268191BDAD3DBD4B6F7A4D31EC0BEA7A3FFF5B025636D81D268191BDAD3D78DA827A17800CE70CF55DB4244C8E6DEC76A7562686271EEC990983EF5C03292E808ACE2090B5E14AD6D5ED66289B5259CC434672EE63711DD303D21008E298D5E8D9A59859A8B6B372FE9A2E580EFC725E5C173C3A84C30DA41C7A345C8AA635872C767BF85DA2F004C90652538430E4A6367B16DE6309
+X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CC559E5F89E84DC551CFF3744A19F65B4263FFC94CE09EBEF9C2B6934AE262D3EE7EAB7254005DCED7532B743992DF240BDC6A1CF3F042BAD6DF99611D93F60EF25DC386152A6764A699F904B3F4130E343918A1A30D5E7FCCB5012B2E24CD356
+X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D3498910055B812BD9C1D028FBEA98AAB6EBBA6F9415EB0999AE3904D1EC225F91300937A57798A16C11D7E09C32AA3244CDABF505EB3B59690E3863AE0EE5EF9F160759606DA2E136A729B2BEF169E0186
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojutWt0++zX5RZhiJO0QOIbA==
+X-Mailru-Sender: 6B47EA55652F5E70849B49CCF28A6C3B0D9917215D464370DF4334CDCC15A839DE14DD44AED48F92AA92DCB28147B367B60569B44082A3A3CC338593878DF048773EBFF2F43C11D60D4ABDE8C577C2ED
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4EE34287C01580B602FF54B759B37932376D1D705F9140037049FFFDB7839CE9E53879DFD0F690E42985CA9BFA032FB517DF7427598097752325AF9F0306C3DBA
+X-7FA49CB5: 0D63561A33F958A5B9566FE4271BBB8646D1CD13ED556AFF6476F9A76BA6B735CACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F79006375D86F985788DC295389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8E3C0F74373B9C9F4F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C5DA91C8160F4BAA02D242C3BD2E3F4C64AD6D5ED66289B52698AB9A7B718F8C442539A7722CA490CD5E8D9A59859A8B634381CAC65D01DA6089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
+X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CC559E5F89E84DC5560D5CD9F6948F78C7C6C33A47156DB659C2B6934AE262D3EE7EAB7254005DCED8DA55E71E02F9FC08E8E86DC7131B365E7726E8460B7C23C
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojutWt0++zX5TVWWM7u2k2Cg==
+X-Mailru-MI: 800
+X-Mailru-Sender: A5480F10D64C90059EC859477DBBED747FBA404D6491E8E314BCF26445B63B3AF7F5837242FA16B284390AFDD794B14678274A4A9E9E44FD5B858845640BC0C1AB428D199E4977E267EA787935ED9F1B
+X-Mras: Ok
 
-This patch printed out the reset_reason of MP_RST in mptcp_parse_option()
-to show that MP_RST is received.
+Expose __tcp_sock_set_cork() and __tcp_sock_set_nodelay() for use in
+MPTCP setsockopt code -- namely for syncing MPTCP socket options with
+subflows inside sync_socket_options() while already holding the subflow
+socket lock.
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Maxim Galaganov <max@internet.ru>
 ---
- net/mptcp/options.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/tcp.h | 2 ++
+ net/ipv4/tcp.c      | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index dc998a14f4cb..085d11666fd6 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -336,6 +336,7 @@ static void mptcp_parse_option(const struct sk_buff *sk=
-b,
- 		flags =3D *ptr++;
- 		mp_opt->reset_transient =3D flags & MPTCP_RST_TRANSIENT;
- 		mp_opt->reset_reason =3D *ptr;
-+		pr_debug("MP_RST: reset_reason=3D%u", mp_opt->reset_reason);
- 		break;
-=20
- 	case MPTCPOPT_MP_FAIL:
---=20
-2.26.2
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 48d8a363319e..78b91bb92f0d 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -512,11 +512,13 @@ static inline u16 tcp_mss_clamp(const struct tcp_sock *tp, u16 mss)
+ int tcp_skb_shift(struct sk_buff *to, struct sk_buff *from, int pcount,
+ 		  int shiftlen);
+ 
++void __tcp_sock_set_cork(struct sock *sk, bool on);
+ void tcp_sock_set_cork(struct sock *sk, bool on);
+ int tcp_sock_set_keepcnt(struct sock *sk, int val);
+ int tcp_sock_set_keepidle_locked(struct sock *sk, int val);
+ int tcp_sock_set_keepidle(struct sock *sk, int val);
+ int tcp_sock_set_keepintvl(struct sock *sk, int val);
++void __tcp_sock_set_nodelay(struct sock *sk, bool on);
+ void tcp_sock_set_nodelay(struct sock *sk);
+ void tcp_sock_set_quickack(struct sock *sk, int val);
+ int tcp_sock_set_syncnt(struct sock *sk, int val);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 6ab82e1a1d41..20054618c87e 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3207,7 +3207,7 @@ static void tcp_enable_tx_delay(void)
+  * TCP_CORK can be set together with TCP_NODELAY and it is stronger than
+  * TCP_NODELAY.
+  */
+-static void __tcp_sock_set_cork(struct sock *sk, bool on)
++void __tcp_sock_set_cork(struct sock *sk, bool on)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 
+@@ -3235,7 +3235,7 @@ EXPORT_SYMBOL(tcp_sock_set_cork);
+  * However, when TCP_NODELAY is set we make an explicit push, which overrides
+  * even TCP_CORK for currently queued segments.
+  */
+-static void __tcp_sock_set_nodelay(struct sock *sk, bool on)
++void __tcp_sock_set_nodelay(struct sock *sk, bool on)
+ {
+ 	if (on) {
+ 		tcp_sk(sk)->nonagle |= TCP_NAGLE_OFF|TCP_NAGLE_PUSH;
+-- 
+2.33.1
 
