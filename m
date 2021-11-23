@@ -1,92 +1,80 @@
-Received: from fallback24.mail.ru (fallback24.m.smailru.net [94.100.187.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423F62C81
-	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 07:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=itA0Lg1o+QF8e6XofYDQDd8GTKrQCEPOJRuPlc9CtAk=;
-	t=1637653791;x=1638259191; 
-	b=FfLBcvyJ4lEmi6TO8p2klSnw4Oq1+edNjSlFDup2kOoYxi6PC6HC2AhhYGW6N4uxg2oBcT123p8e5mqGfzIHr/xO8OQi2Jf5N0Rexh2wQCG0bi8siQEBoR2iP1CcFJJX6Coy2M6GJF4q5HI4LqoqLI4pFFAAZVE1j9Z+FS4oWQE=;
-Received: from [10.161.64.43] (port=53214 helo=smtp35.i.mail.ru)
-	by fallback24.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
-	id 1mpPtw-0007Mn-Po
-	for mptcp@lists.linux.dev; Tue, 23 Nov 2021 10:07:37 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=itA0Lg1o+QF8e6XofYDQDd8GTKrQCEPOJRuPlc9CtAk=;
-	t=1637651256;x=1638256656; 
-	b=pBFRsiq3/k5kROky6vpnc9a80sUIEljuupJQFCxMhSo0lYly7U9cW5GvkTf2HXHVLEKndlW2SjJgjJaMVg/ww9QWh+zMKXtvIZqzOU/ZXasFfoa7wfOtg5Y2b7P8Ojbtd8a4NsXQ+GTr8dbwSpzmeyaloho/plmtIqK+BDaLaeK21uXRjHzMboLZ4922paskuyGuLS/ww3pT88Wrg4Qo4ZyCbadbMjLMFNuwnDrd+aJY1w1cNXvMI9q9Vz+BpZqZlKImbKnaQIH6dCrGwfC19sziIBp3kHH2nyguXjOWuCC5mYGXr9O3slzCJtGWEUBIa057Qt7+jNc5BeytPDRctQ==;
-Received: by smtp35.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
-	id 1mpPto-0002NB-8F; Tue, 23 Nov 2021 10:07:28 +0300
-From: Maxim Galaganov <max@internet.ru>
-To: mptcp@lists.linux.dev
-Cc: Maxim Galaganov <max@internet.ru>
-Subject: [PATCH mptcp-next 2/3] mptcp: expose mptcp_check_and_set_pending
-Date: Tue, 23 Nov 2021 10:07:07 +0300
-Message-Id: <20211123070708.2897469-3-max@internet.ru>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211123070708.2897469-1-max@internet.ru>
-References: <20211123070708.2897469-1-max@internet.ru>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981B22C94
+	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 11:11:42 +0000 (UTC)
+Received: by mail-pj1-f51.google.com with SMTP id np6-20020a17090b4c4600b001a90b011e06so2588353pjb.5
+        for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 03:11:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=MyhRuSyjyp3rZ0qud8m6ScUOVb4rsNRckrTFPD70q3g=;
+        b=hDHQ5z0zlL8hiIEOXYVV2ODdaT8jqWuQRT1BlnwimvtVD+uPCzi3SQJZ7hFzAw8zrs
+         kTNusCtvxYHAePSX8LLioVtaOAy8Bq8CFCPPKeZV3+PabSGd8QK9/9qYf8w2s+WRY+7c
+         V32WT1oQOjtleV4qFeMiPcjUGU3UZNxWkiiwGPg8X+er19/H0j9B88uGhgxiIUV25Zhc
+         dbpz0zPhqDeuYie8DkOFRXGwoNANKFt7rVrbYGO4SeCr8lcdkqC5KXVrj/eX6b67JofZ
+         NqOvOCeMzaHRrRiTFUVs8hpDdS+Y9kOdRHmXk+TfeT1YosvbAHA6gDcUOmO+TGPwjsXU
+         1RBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=MyhRuSyjyp3rZ0qud8m6ScUOVb4rsNRckrTFPD70q3g=;
+        b=HFmYoO8NiRaDkGNnOu8kggiGtBzwFtCRCo9UA59dr+JeFxyduzcw/k+Lm3lWEwKAB3
+         e0xqIlJZ0yNXEHbnR8xTKIvBQFurIHxgpb0yujjDq+3AZkcImu3nUpJaMBPbYndozRI+
+         lrAGRjA2npRLDywtW99FPoVMg4M2591zq1Os5r7pdIUUt/IChOSkypl5AwRyV+c/BWS4
+         d8j/bfb20fBTi7Jmf1rQ5SvZJ1Y7uDKM/0ZLk/nCWGd3ATrwkq83LXUZOkm6OgaEgKz7
+         Mypj1vMqSztFcuLpNTnzZQi1h9bRszEXULoBrAkbcKpuBwlBg/O3QIQEJxUdtaIXw1/H
+         vxrA==
+X-Gm-Message-State: AOAM532vEOo9ullNKRFOzed8RFw2kJ9Sy0UqT2CqSbYRmkcQt0RYFgyq
+	1DNhpPufVzWvtt2pjPtxRw==
+X-Google-Smtp-Source: ABdhPJw7Z5jIiQG87C3Z8io8RiHrU45aRTvteuUSSRdN0TPs+/NPdq0AeuVkHBUPHu2cvgN7c4TzSQ==
+X-Received: by 2002:a17:902:f691:b0:142:2f7a:308e with SMTP id l17-20020a170902f69100b001422f7a308emr5752464plg.19.1637665902128;
+        Tue, 23 Nov 2021 03:11:42 -0800 (PST)
+Received: from [127.0.0.1] ([20.114.21.81])
+        by smtp.gmail.com with ESMTPSA id a13sm14321168pfv.99.2021.11.23.03.11.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Nov 2021 03:11:41 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Florian Westphal <fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20211122152651.28466-2-fw@strlen.de>
+References: <20211122152651.28466-2-fw@strlen.de>
+Subject: Re: selftests: mptcp: check IP_TOS in/out are the same: Build
+ Failure
+Message-ID: <fb1fd660-ad41-92c3-bb3b-2e0aad740dc4@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 23 Nov 2021 11:11:41 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD9FE0487E502468146A248A7B8B31062F80ED88F6A42059E94182A05F538085040A17612D49855C4EAEFCB8B15D71D31E3B33987CE173C74A8BCBB9588D3293F00
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE73F64378C139886A6EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637DD81BB19E5DE3F6B8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D89A236BCCF3E7C2032BDAAFADB7AC29896F9789CCF6C18C3F8528715B7D10C86859CC434672EE6371117882F4460429724CE54428C33FAD305F5C1EE8F4F765FCAA867293B0326636D2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BAA867293B0326636D2E47CDBA5A96583BA9C0B312567BB2376E601842F6C81A19E625A9149C048EED76C6ED7039589DE4D0DA9BD313A0613D8FC6C240DEA7642DBF02ECDB25306B2B78CF848AE20165D0A6AB1C7CE11FEE365B78C30F681404D6136E347CC761E07C4224003CC836476EA7A3FFF5B025636E2021AF6380DFAD1A18204E546F3947CB11811A4A51E3B096D1867E19FE1407959CC434672EE6371089D37D7C0E48F6C8AA50765F790063765DCC2E2BEE1D191EFF80C71ABB335746BA297DBC24807EABDAD6C7F3747799A
-X-B7AD71C0: AC4F5C86D027EB782CDD5689AFBDA7A213B5FB47DCBC3458834459D11680B505A64F04A8DA58D1F3BEA22B05E692540E
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CC559E5F89E84DC5533A3247875A6B42D682CCD3E23EF5DEA9C2B6934AE262D3EE7EAB7254005DCED114C52B35DBB74F4E7EAB7254005DCEDA5DF9383870C0FED1E0A4E2319210D9B64D260DF9561598F01A9E91200F654B0F19FF8B1531DFD348E8E86DC7131B365E7726E8460B7C23C
-X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D34AA8975497C7004E81D063032481F5C5AE2DD8E335876593BF3205D295A4C9A343ECD47821245636C1D7E09C32AA3244C12DC3B51243BAA82E3C56BB22C4ED78635DA7DC5AF9B58C0729B2BEF169E0186
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojutWt0++zX5RYzT7T1i/N8g==
-X-Mailru-Sender: 6B47EA55652F5E70849B49CCF28A6C3BB9446911DC695EA1DF4334CDCC15A8392E9D602AF0DE6B62AA92DCB28147B367B60569B44082A3A3CC338593878DF048773EBFF2F43C11D60D4ABDE8C577C2ED
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4EE34287C01580B602FF54B759B3793237725B0DEDCB309BE049FFFDB7839CE9E53879DFD0F690E42C0E285ED9F614C4C001D30098B559495967915647A064788
-X-7FA49CB5: 0D63561A33F958A5E763DFB9ED1B3C554C53E27C707B8CB5DF2D5792EF1B63A7CACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F79006372D3B7B5A639A2778389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC898A01D7C647FC0B3F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C706E30CA5231861903F1AB874ED890284AD6D5ED66289B52698AB9A7B718F8C442539A7722CA490CD5E8D9A59859A8B634381CAC65D01DA6089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CC559E5F89E84DC554F4D5A5EB640F4AC36A5D970377CDCF39C2B6934AE262D3EE7EAB7254005DCED114C52B35DBB74F4E7EAB7254005DCEDA5DF9383870C0FED699F904B3F4130E343918A1A30D5E7FCCB5012B2E24CD356
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojutWt0++zX5QIFJQCOptVlA==
-X-Mailru-MI: 800
-X-Mailru-Sender: A5480F10D64C90059EC859477DBBED74C1BDCA8CFB3078E443E0E52E5BA5E17638066306E4938E9F84390AFDD794B14678274A4A9E9E44FD5B858845640BC0C1AB428D199E4977E267EA787935ED9F1B
-X-Mras: Ok
 
-Expose the mptcp_check_and_set_pending() function for use inside MPTCP
-sockopt code. The next patch will call it when TCP_CORK is cleared or
-TCP_NODELAY is set on the MPTCP socket in order to push pending data
-from mptcp_release_cb().
+Hi Florian,
 
-Signed-off-by: Maxim Galaganov <max@internet.ru>
----
- net/mptcp/protocol.c | 2 +-
- net/mptcp/protocol.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ef2125798e64..8b49866bcc25 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1543,7 +1543,7 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
- 		msk->snd_nxt = snd_nxt_new;
- }
- 
--static void mptcp_check_and_set_pending(struct sock *sk)
-+void mptcp_check_and_set_pending(struct sock *sk)
- {
- 	if (mptcp_send_head(sk) &&
- 	    !test_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a6a4bd7de5b4..7f199fb720ff 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -571,6 +571,7 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
-+void mptcp_check_and_set_pending(struct sock *sk);
- void __mptcp_push_pending(struct sock *sk, unsigned int flags);
- bool mptcp_subflow_data_available(struct sock *sk);
- void __init mptcp_subflow_init(void);
--- 
-2.33.1
+But sadly, our CI spotted some issues with it when trying to build it.
 
+You can find more details there:
+
+  https://patchwork.kernel.=
+org/project/mptcp/patch/20211122152651.28466-2-fw@strlen.de/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1494450178
+
+Status: failure
+Initiator: matttbe
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/65da757c6e14
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
