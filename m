@@ -1,37 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258952C83
-	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 16:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C3D2C82
+	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 16:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1637685456;
+	s=mimecast20190719; t=1637685457;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=R1mY7UFdQVRSDeafvZWZ10zEPnX1i9Jjr2qNMeJH7g8=;
-	b=h+dAQHRSZ90ZJEQn2TW3/4mtEqDJYRjAmTSXay9JDMXKwnXF6vxxYx7AbMkCkgMJl4jeHQ
-	1dsYZ1FmMg34oNTJapcVlqgpDcYkurjbsko2ShWM0QkuPEsb0CLK5OjOCrxK+3IE606Dy1
-	x3a0SYphRVTZquRaLlbR2H1RcBnTMug=
+	bh=GPsqPmUhjdtr+Ypa7O1h7KtrXKdXWPHMHE/CBn+qgTw=;
+	b=dxMngdmZ1cUZH90Bc/140tNgc0viKrXjj0N5YpOtTGSMfeLT8qJ5f1xv+LK8T83gNw5YVv
+	RkRcMg2bYBYOQMWG+zjFoc8T8F6HiV65PejUNuhvnQYScZoAZP+oj+gwbRypwGHPFHPe6Q
+	Rk2AR4QpBDGUcGi4aH+LYETzFcGYj78=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-330-70fgiZ7cM_qaZ7APdJ6Rxg-1; Tue, 23 Nov 2021 11:37:33 -0500
-X-MC-Unique: 70fgiZ7cM_qaZ7APdJ6Rxg-1
+ us-mta-367-sPMZ4IYQP8-4hdTunXjCmQ-1; Tue, 23 Nov 2021 11:37:35 -0500
+X-MC-Unique: sPMZ4IYQP8-4hdTunXjCmQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E95C102CB2E;
-	Tue, 23 Nov 2021 16:37:32 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25FD425C8;
+	Tue, 23 Nov 2021 16:37:34 +0000 (UTC)
 Received: from gerbillo.fritz.box (unknown [10.39.194.149])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 63EFA67842;
-	Tue, 23 Nov 2021 16:37:31 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DA7D557CAD;
+	Tue, 23 Nov 2021 16:37:33 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Phil Greenland <phil@quantulum.co.uk>
-Subject: [PATCH mptcp-next 1/3] mptcp: clean-up MPJ option writing.
-Date: Tue, 23 Nov 2021 17:37:10 +0100
-Message-Id: <5e98a57b75ff1d45305bc5b6ba7fcbd24d355b65.1637684792.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 3/3] selftests: mptcp: add tests for subflow creation failure
+Date: Tue, 23 Nov 2021 17:37:12 +0100
+Message-Id: <425cdb61dc939d86534843617150634869778909.1637684792.git.pabeni@redhat.com>
 In-Reply-To: <cover.1637684792.git.pabeni@redhat.com>
 References: <cover.1637684792.git.pabeni@redhat.com>
 Precedence: bulk
@@ -48,72 +48,36 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Check for all MPJ variant at once, this reduces the number
-of conditionals traversed on average and will simplify the
-next patch.
-
-No functional change intended.
+Verify that, when multiple endpoints are available, subflows
+creation proceed even when the first additional subflow creation
+fails - due to packet drop on the relevant link
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/options.c | 44 +++++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 21 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8a1020e4285c..7a6a39b71633 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1381,27 +1381,29 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 2684ef9c0d42..dd4488746151 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1023,6 +1023,16 @@ subflows_tests()
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "multiple subflows, limited by server" 2 2 1
  
- 		/* MPC is additionally mutually exclusive with MP_PRIO */
- 		goto mp_capable_done;
--	} else if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_SYN,
--				      opts->backup, opts->join_id);
--		put_unaligned_be32(opts->token, ptr);
--		ptr += 1;
--		put_unaligned_be32(opts->nonce, ptr);
--		ptr += 1;
--	} else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_SYNACK,
--				      opts->backup, opts->join_id);
--		put_unaligned_be64(opts->thmac, ptr);
--		ptr += 2;
--		put_unaligned_be32(opts->nonce, ptr);
--		ptr += 1;
--	} else if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
--		memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
--		ptr += 5;
-+	} else if (OPTIONS_MPTCP_MPJ & opts->suboptions) {
-+		if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
-+			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+					      TCPOLEN_MPTCP_MPJ_SYN,
-+					      opts->backup, opts->join_id);
-+			put_unaligned_be32(opts->token, ptr);
-+			ptr += 1;
-+			put_unaligned_be32(opts->nonce, ptr);
-+			ptr += 1;
-+		} else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
-+			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+					      TCPOLEN_MPTCP_MPJ_SYNACK,
-+					      opts->backup, opts->join_id);
-+			put_unaligned_be64(opts->thmac, ptr);
-+			ptr += 2;
-+			put_unaligned_be32(opts->nonce, ptr);
-+			ptr += 1;
-+		} else {
-+			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+					      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
-+			memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
-+			ptr += 5;
-+		}
- 	} else if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
- 		u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
- 		u8 echo = MPTCP_ADDR_ECHO;
++	# multiple subflows, with subflow creation error
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "multiple subflows, with failing subflow" 1 1 1
++
+ 	# single subflow, dev
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- 
 2.33.1
 
