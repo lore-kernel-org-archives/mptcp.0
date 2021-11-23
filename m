@@ -1,82 +1,80 @@
-Received: from fallback11.mail.ru (fallback11.mail.ru [94.100.179.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B122C81
-	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 07:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
-	h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=rL4mzGGpbxGwChaxZYEQsPrDUPAnMAbHWmgrW4g3fIs=;
-	t=1637652672;x=1638258072; 
-	b=F3Oc2SJ3L96C4W/hRa5kFXcDYW7bQdWBfGuWWN+4Ra6CoL3dOVPLV/29gT7VNY7C4WeztqMouUO7wY1wX7jSjVho4GbuX9rqUsq4+QtfKkQP4uxgqWvY1OOiTvlOOh91pEQicY+qZMYiORS53MctmhjgE4+nknGTbrcYElUyw7o=;
-Received: from [10.161.64.43] (port=59700 helo=smtp35.i.mail.ru)
-	by fallback11.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
-	id 1mpPtu-0001sg-43
-	for mptcp@lists.linux.dev; Tue, 23 Nov 2021 10:07:34 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=rL4mzGGpbxGwChaxZYEQsPrDUPAnMAbHWmgrW4g3fIs=;
-	t=1637651254;x=1638256654; 
-	b=qPY8iya2czz+NgMMBzk+Z+p/bfxc3STL30vNZgE6Ef0eSSgp+TPAONXHsGC2BVLfwETvIIB9YJidPI6vvsxAhklOmYsXlndLEIrC3QWRTfTeT9g2TAxiqMa/diFBZy5gX5LXB5ljfU/NPFv4SkZLXC12oBPdBPwyIBHNnx9DECXNlXfSqvtARtJXSoIbJ3tsFqC3N/qGgR1SxhJ5v7ZCPGY9Luftxt7WmAKFQAmi4bbvV/zdzxlq6+onzHIMNvc4BeGx71Uaz5kyonJ4m2FINrdG/WOgFQ9lPGLgfn/zaYNQbH4qmT7Yv4P1GA1OQIaUrKpc0lYebpuS0i0PjNE1lA==;
-Received: by smtp35.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
-	id 1mpPtl-0002NB-J5; Tue, 23 Nov 2021 10:07:26 +0300
-From: Maxim Galaganov <max@internet.ru>
-To: mptcp@lists.linux.dev
-Cc: Maxim Galaganov <max@internet.ru>
-Subject: [PATCH mptcp-next 0/3] mptcp: support disabling Nagle's algorithm
-Date: Tue, 23 Nov 2021 10:07:05 +0300
-Message-Id: <20211123070708.2897469-1-max@internet.ru>
-X-Mailer: git-send-email 2.33.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515C82C81
+	for <mptcp@lists.linux.dev>; Tue, 23 Nov 2021 07:49:12 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id z5so88374952edd.3
+        for <mptcp@lists.linux.dev>; Mon, 22 Nov 2021 23:49:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:cc:in-reply-to:content-transfer-encoding;
+        bh=jwVrd8Xq4uWEvEWlYyXIuX84Cj6LEdY/xYjiHS7Lzm0=;
+        b=1EnuXe8qJltHGuCnarEnspcv0gUEiD2v0uRPmU65qz/wGHEYq3ieGU+0bKFgaqMzc3
+         g8pyXr4KONzI/aw8H/Go/wLLMFTbgUGfZyHMpCQRIdetLJMGcrxRH/zUt6rZJNTh8Fox
+         4uNsu1R8Up7BfuZat+Vci6NNejx9XGoJ0up+Wj/7baObB6I9Yk6+eUbxx2VwKx1bZlD9
+         xvLjm/hbqt39btz4brZyPd/njOyTi+Kl5QVL9xOzTTzOFJZfbxAxziYmJLWz0hKnkzCo
+         3pdcW/WEuO/XhjI4GvaJuDp52/lUmZKiqTRUIy7CTNml5pz4id0cQzTX3GHEPRDNPXPv
+         Jtmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:cc:in-reply-to
+         :content-transfer-encoding;
+        bh=jwVrd8Xq4uWEvEWlYyXIuX84Cj6LEdY/xYjiHS7Lzm0=;
+        b=k9IxDsFSTlicnRr3F3E3COVQr6WAioKHr6ANtksLM7cnM+1KW6kNHDV0Wvp9Eowr3t
+         vMKi5otkmujfzKaPTQ2qNZXI45DNv9A1uGVg7S1qBXhnGPy2lKy5G7l9ywUBl2utG3u8
+         1BnzMlVIRl3T7X3yfGUkU1Aq9+rE1F0DXVy6u0CPv4T28C2TLrCedJXWGHBg4HUocMrV
+         VzL/VSWeMjZz44hnblk48KsifgGKx8ASrG+qwmn1q8w96FabYkuGzA4CSDrEwBm+SeB7
+         KJSGGaEpLDz3EUhV+Q/keDBr2hvBw/9nSzTiBcYoI/V57xIatLMss8awVd8ZwSlhQM3b
+         Nk4Q==
+X-Gm-Message-State: AOAM532XLZrVg3RyBo8FEIDT5Ehbq6FR4RvJjwQWa45glrGj8d2CkEy4
+	HkNV3ZYGZEP0j3wND2BWSbQbJgktZSE5U9U/aWk=
+X-Google-Smtp-Source: ABdhPJy7YFz/BS8ZBRpEXO4bOHDYT25p5K4UHl1F2O7nyOLGDGcdpBb4ZWtbhehI2Z7ps27WdL/PpA==
+X-Received: by 2002:a17:906:8c3:: with SMTP id o3mr5157885eje.10.1637653751105;
+        Mon, 22 Nov 2021 23:49:11 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:98d4:755:5048:fe8c? ([2a02:578:8593:1200:98d4:755:5048:fe8c])
+        by smtp.gmail.com with ESMTPSA id i8sm5685395edc.12.2021.11.22.23.49.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Nov 2021 23:49:10 -0800 (PST)
+Message-ID: <9283af18-054b-b362-4494-ed811fcc3141@tessares.net>
+Date: Tue, 23 Nov 2021 08:49:09 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD9FE0487E502468146B8787A579DD4BF53FBE1400F6FA43E0D182A05F5380850407152637A4444F27338EB32AE0476756CC695117277F77C59D001DDDAD2A6750C
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE78E8764B5BC580342EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063732727FD5A4355FD18638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8FEFFBA13DD947EDE9D5CB86FB85AEB646F9789CCF6C18C3F8528715B7D10C86859CC434672EE6371117882F4460429724CE54428C33FAD305F5C1EE8F4F765FC8C7ADC89C2F0B2A5A471835C12D1D9774AD6D5ED66289B52BA9C0B312567BB23117882F44604297287769387670735209ECD01F8117BC8BEA471835C12D1D977C4224003CC836476EB9C4185024447017B076A6E789B0E975F5C1EE8F4F765FC6884488A76F81C923AA81AA40904B5D9CF19DD082D7633A078D18283394535A93AA81AA40904B5D98AA50765F79006376BE4D8471E1D7069EC76A7562686271EEC990983EF5C03292E808ACE2090B5E14AD6D5ED66289B5259CC434672EE63711DD303D21008E298D5E8D9A59859A8B6B372FE9A2E580EFC725E5C173C3A84C30DA41C7A345C8AA635872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-B7AD71C0: AC4F5C86D027EB782CDD5689AFBDA7A213B5FB47DCBC3458834459D11680B505A64F04A8DA58D1F319660083886D68C5
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CC559E5F89E84DC55B6A4D7219EA45C0AB165903A01E4288C9C2B6934AE262D3EE7EAB7254005DCEDB737A621A10BC7931E0A4E2319210D9B64D260DF9561598F01A9E91200F654B0B66DA94168EAEAEF8E8E86DC7131B365E7726E8460B7C23C
-X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D3438212F20E1E78D8E89B50E42DB160E78D0C50FB77C7887C275420A77DA3307837D33DC988B08C5D21D7E09C32AA3244C4BEDE7C73AEF36244191E414EDD55D8505AB220A9D022EBC729B2BEF169E0186
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojutWt0++zX5SpFhWaQYy9tA==
-X-Mailru-Sender: 6B47EA55652F5E70849B49CCF28A6C3B1BA0FB1E9C176DC8DF4334CDCC15A839099E27FC09108893AA92DCB28147B367B60569B44082A3A3CC338593878DF048773EBFF2F43C11D60D4ABDE8C577C2ED
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4EE34287C01580B602FF54B759B37932376D1D705F9140037049FFFDB7839CE9E53879DFD0F690E42EE9A0FE5AD53C63326BFC78CA1B08AA74C35CA13E4B96C64
-X-7FA49CB5: 0D63561A33F958A5C8CA5C67FB2107C334EB3C0CE4BDF4E847305EDF7B1C5D6CCACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F7900637E12249F0E86D8F40389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8540F9B2D9BA47D56F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C5DA91C8160F4BAA02D242C3BD2E3F4C64AD6D5ED66289B52698AB9A7B718F8C442539A7722CA490CD5E8D9A59859A8B634381CAC65D01DA6089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CC559E5F89E84DC5566B11E1F578253E35BD8F6AD4AC028E29C2B6934AE262D3EE7EAB7254005DCEDB737A621A10BC793699F904B3F4130E343918A1A30D5E7FCCB5012B2E24CD356
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojutWt0++zX5TUDEdKDhyzgQ==
-X-Mailru-MI: 800
-X-Mailru-Sender: A5480F10D64C90059EC859477DBBED745775CC1A55189FE5CEE66259F7CD2750F7F5837242FA16B284390AFDD794B14678274A4A9E9E44FD5B858845640BC0C1AB428D199E4977E267EA787935ED9F1B
-X-Mras: Ok
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v2 mptcp-next 1/2] mptcp: getsockopt: add support for
+ IP_TOS
+Content-Language: en-GB
+To: Florian Westphal <fw@strlen.de>
+References: <20211122152651.28466-1-fw@strlen.de>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20211122152651.28466-1-fw@strlen.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Clients for MPTCP-enabled transparent proxies may experience unwanted
-delays when Nagle's algorithm combines small packets into larger ones.
+Hi Florian,
 
-This series adds support for TCP_NODELAY socket option in [gs]etsockopt
-for MPTCP sockets. It also adds TCP_CORK support since the two are
-closely coupled.
+On 22/11/2021 16:26, Florian Westphal wrote:
+> earlier patch added IP_TOS setsockopt support, this allows to get
+> the value set by earlier setsockopt.
+> 
+> Extends mptcp_put_int_option to handle u8 input/output by
+> adding required cast.
 
-Patch 1 exposes __tcp_sock_set_cork() and __tcp_sock_set_nodelay() for
-use in patch 3.
+(apparently I missed sending this yesterday)
 
-Patch 2 exposes mptcp_check_and_set_pending() for setting the
-MPTCP_PUSH_PENDING bit when cork is cleared or nodelay is set.
+Good idea to make it similar to what is in ip_sockglue.c!
 
-Patch 3 adds support for getting and setting the cork and nodelay
-sockopts.
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Maxim Galaganov (3):
-  tcp: expose __tcp_sock_set_cork and __tcp_sock_set_nodelay
-  mptcp: expose mptcp_check_and_set_pending
-  mptcp: support TCP_CORK and TCP_NODELAY
-
- include/linux/tcp.h  |  2 ++
- net/ipv4/tcp.c       |  4 +--
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h |  5 +++-
- net/mptcp/sockopt.c  | 70 ++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 79 insertions(+), 4 deletions(-)
-
+Cheers,
+Matt
 -- 
-2.33.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
