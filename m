@@ -1,84 +1,81 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA6868
-	for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 20:21:06 +0000 (UTC)
-Received: by mail-oi1-f169.google.com with SMTP id 7so7641268oip.12
-        for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 12:21:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=kjmF+ozHonvp6kdpHAqX2+X5xhM/4bBR9oHWX4ar8ew=;
-        b=U7vXgC/y29YSgoGY55gplLpMHhI3S4T8/TnslyGZskhBm7YdaNmPrK18FuuS4+O8YB
-         4X8y9xL5JFOH2At0sGKofB6rg9XymQnxKrfXaZo7e+8Q6q01Y1UY7gAiy0mESz8tlFwm
-         EOvOxSuf7PV7PvPoGjws0Ah9Nb3ba30GC2UaBQrfPCN4dBHM4xgWXmLCmv05O26BQ/Gh
-         jOw3EEHVP2HvyGPhMAbtdB1eLQDlcntWYB97+UVa4yQBnAyNOz5nLaGXpkeryARy3U9T
-         gWg1kuDVa3AvFf8Ldk7f0rCioPKZLEfjUaL5R3sEOLLEjos4OugRaoNr7sR6MOGc+zUc
-         cMZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=kjmF+ozHonvp6kdpHAqX2+X5xhM/4bBR9oHWX4ar8ew=;
-        b=vnWtn2CLPgXFpqCeliO8FfnDSAkorPMJjGWqmSgegGTqi3Uen2F25lMP/qKpSHZWCd
-         2zug5q46oZcGpE5hR7rBwGcHQeIAgwQ7cfIt+2I7XEMqUIrNglebjYrISjAAHSzd4Hyj
-         qBc41urRhm2SpemG0fGm+/zAynqyOyKkK00ic10b5DEYlSy+2cOgltuZsQc7soLuhtzI
-         sJ0ESdBHtB7DkmZdWKguURC1revmYoC7u/oLVMx64YiOmaF+CCkK07IGwRxaGoig/rIE
-         wsQZO4CjVoFMus/qI36xdKZGdDOs1PBKudARfGRDdOqy6lCIe2iAmrixC5JloAsKPNhf
-         09wA==
-X-Gm-Message-State: AOAM5301/HkA1T6dBW4gHWSi1KfLXQsONLmua2cKS8Q9kK0DxbOcIR1c
-	iMM0iLKw20BSkCnO6jGzBw==
-X-Google-Smtp-Source: ABdhPJykzZs5etyifUgp3fniCGE+cLxvLPZY/gdsFREzKXbXRoTnlwxfGzIasaQFRdzcWr/Cxs38Uw==
-X-Received: by 2002:a05:6808:15a:: with SMTP id h26mr9330531oie.123.1637785265612;
-        Wed, 24 Nov 2021 12:21:05 -0800 (PST)
-Received: from [127.0.0.1] ([157.55.80.28])
-        by smtp.gmail.com with ESMTPSA id e14sm163826oie.7.2021.11.24.12.21.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 12:21:05 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <44593f9acfe286b9d18973e13877c1e48a15706c.1637770883.git.pabeni@redhat.com>
-References:
- <44593f9acfe286b9d18973e13877c1e48a15706c.1637770883.git.pabeni@redhat.com>
-Subject: Re: selftests: mptcp: add tests for subflow creation failure:
- Build Failure
-Message-ID: <8367f9e5-2d14-2cd0-621e-d3cebedad680@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 24 Nov 2021 20:21:04 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BF929CA
+	for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 22:53:07 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10178"; a="216103885"
+X-IronPort-AV: E=Sophos;i="5.87,261,1631602800"; 
+   d="scan'208";a="216103885"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2021 14:53:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,261,1631602800"; 
+   d="scan'208";a="591761553"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Nov 2021 14:53:05 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1mq18S-0005Se-BI; Wed, 24 Nov 2021 22:53:04 +0000
+Date: Thu, 25 Nov 2021 06:52:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: kbuild-all@lists.01.org, Phil Greenland <phil@quantulum.co.uk>
+Subject: Re: [PATCH mptcp-next v2 3/4] mptcp: do not block subflows creation
+ on errors
+Message-ID: <202111250633.wEMz7JQe-lkp@intel.com>
+References: <574156bd514d855a159add3e1c54caa9b2c5f880.1637770883.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <574156bd514d855a159add3e1c54caa9b2c5f880.1637770883.git.pabeni@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+Thank you for the patch! Perhaps something to improve:
 
-But sadly, our CI spotted some issues with it when trying to build it.
+[auto build test WARNING on mptcp/export]
+[cannot apply to shuah-kselftest/next linus/master v5.16-rc2 next-20211124]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-You can find more details there:
+url:    https://github.com/0day-ci/linux/commits/Paolo-Abeni/mptcp-improve-subflow-creation-on-errors/20211125-005137
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20211125/202111250633.wEMz7JQe-lkp@intel.com/config)
+compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/0day-ci/linux/commit/6af8e28040c093866aa60ede3f980b53ab3594a5
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Paolo-Abeni/mptcp-improve-subflow-creation-on-errors/20211125-005137
+        git checkout 6af8e28040c093866aa60ede3f980b53ab3594a5
+        # save the config file to linux build tree
+        make W=1 ARCH=um SUBARCH=i386
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/44593f9acfe286b9d18973e13877c1e48a15706c.1637770883=
-.git.pabeni@redhat.com/
-  https://github.com/multipath-tcp/mptcp_net-next/a=
-ctions/runs/1501022122
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/37cb636d6d=
-72
+All warnings (new ones prefixed by >>):
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+>> net/mptcp/pm.c:203:6: warning: no previous prototype for 'mptcp_pm_subflow_closed' [-Wmissing-prototypes]
+     203 | void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~
 
-Cheers,
-MPTCP GH Action bot
+
+vim +/mptcp_pm_subflow_closed +203 net/mptcp/pm.c
+
+6af8e28040c093 Paolo Abeni   2021-11-24  202  
+1b1c7a0ef7f323 Peter Krystad 2020-03-27 @203  void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
+1b1c7a0ef7f323 Peter Krystad 2020-03-27  204  {
+1b1c7a0ef7f323 Peter Krystad 2020-03-27  205  	pr_debug("msk=%p", msk);
+1b1c7a0ef7f323 Peter Krystad 2020-03-27  206  }
+1b1c7a0ef7f323 Peter Krystad 2020-03-27  207  
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
