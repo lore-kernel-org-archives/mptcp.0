@@ -1,37 +1,37 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0912C83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE1472
 	for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 16:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1637770956;
+	s=mimecast20190719; t=1637770957;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jD308C1QiczBhX/LAxWPZcxwrxlTOMg31rQYGjXNCDY=;
-	b=M2d9YShNrTnsfac/UGwSVn5FliXfaQP1eGdWti3yRi/1JhrubowA+xwyR5lo2/H8LJDpIg
-	xndqE4jEokixekRQAbhdb5PIj6xrHgUulNYmehCpFXKqXXaJjwOo6Io1lRaV65H3Nu6i4m
-	BByapRcR27ks/btyn4gU2lOYf9aaRYI=
+	bh=h4z8wCUS89CcyUEM+0LmMvqsYXS2sjkIU3n6Pg//daQ=;
+	b=UP5P0pxVpH3Hy5kmEOs1ELZaQPX2ycc8/hUfofueXrf/eXBgYWs/rxMSY3ZsQ++a1Sg5Ti
+	PyWIwoRpYVwxSHrDVX5lZi3fv6vvcpSxFCrJU611bZ1iJQxmeaYShumdP/qC+3XWb0QFHr
+	NSxlPklwd+Rqv28+rulplxSxB4+bU/M=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-71-heUqkpEuMZimMbPvFqdIWA-1; Wed, 24 Nov 2021 11:22:32 -0500
-X-MC-Unique: heUqkpEuMZimMbPvFqdIWA-1
+ us-mta-499-CEKDtGh4PIuG9viWk7Vguw-1; Wed, 24 Nov 2021 11:22:34 -0500
+X-MC-Unique: CEKDtGh4PIuG9viWk7Vguw-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A49D801B04;
-	Wed, 24 Nov 2021 16:22:31 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8011193578B;
+	Wed, 24 Nov 2021 16:22:33 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.176])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 898361002388;
-	Wed, 24 Nov 2021 16:22:30 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 05A1B100EBBF;
+	Wed, 24 Nov 2021 16:22:32 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Phil Greenland <phil@quantulum.co.uk>
-Subject: [PATCH mptcp-next v2 2/4] mptcp: keep track of used local endpoint
-Date: Wed, 24 Nov 2021 17:22:12 +0100
-Message-Id: <233bddeb188c32873a14a59e4d8ede1a7f3873f7.1637770883.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 4/4] selftests: mptcp: add tests for subflow creation failure
+Date: Wed, 24 Nov 2021 17:22:14 +0100
+Message-Id: <44593f9acfe286b9d18973e13877c1e48a15706c.1637770883.git.pabeni@redhat.com>
 In-Reply-To: <cover.1637770883.git.pabeni@redhat.com>
 References: <cover.1637770883.git.pabeni@redhat.com>
 Precedence: bulk
@@ -48,79 +48,138 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-So that we can skip already used endpoint at local address
-selection time.
-This allows for fair local endpoints usage in case of subflow
-failure.
-
-As a side effect, this patch also enforces that each endpoint
-is used at most once for each mptcp connection.
+Verify that, when multiple endpoints are available, subflows
+creation proceed even when the first additional subflow creation
+fails - due to packet drop on the relevant link
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/pm.c         | 1 +
- net/mptcp/pm_netlink.c | 8 +++++++-
- net/mptcp/protocol.h   | 1 +
- 3 files changed, 9 insertions(+), 1 deletion(-)
+v1 -> v2:
+ - add missing NF kconfig
+ - add more test-cases (drop, later subflow creation)
+---
+ tools/testing/selftests/net/mptcp/config      |  1 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 65 ++++++++++++++++++-
+ 2 files changed, 65 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 761995a34124..1ff856dd92c4 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -376,6 +376,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	WRITE_ONCE(msk->pm.accept_subflow, false);
- 	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
- 	msk->pm.status = 0;
-+	bitmap_zero(msk->pm.endpoint_usage_mask, 256);
- 
- 	mptcp_pm_nl_data_init(msk);
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 419e71560fd1..41e94e004bdc 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -18,4 +18,5 @@ CONFIG_NFT_TPROXY=m
+ CONFIG_NFT_SOCKET=m
+ CONFIG_IP_ADVANCED_ROUTER=y
+ CONFIG_IP_MULTIPLE_TABLES=y
++CONFIG_IP_NF_TARGET_REJECT=m
+ CONFIG_IPV6_MULTIPLE_TABLES=y
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 2684ef9c0d42..6d342f9985b8 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -975,6 +975,22 @@ chk_link_usage()
+ 	fi
  }
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 3186d33b5208..78b68a8216b6 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -173,6 +173,9 @@ select_local_address(const struct pm_nl_pernet *pernet,
- 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
- 			continue;
  
-+		if (test_bit(entry->addr.id, msk->pm.endpoint_usage_mask))
-+			continue;
++wait_for_tw()
++{
++	local timeout_ms=$((timeout_poll * 1000))
++	local time=0
++	local ns=$1
 +
- 		if (entry->addr.family != sk->sk_family) {
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 			if ((entry->addr.family == AF_INET &&
-@@ -512,8 +515,10 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 			check_work_pending(msk);
- 			nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
- 			spin_unlock_bh(&msk->pm.lock);
--			for (i = 0; i < nr; i++)
-+			for (i = 0; i < nr; i++) {
-+				set_bit(local->addr.id, msk->pm.endpoint_usage_mask);
- 				__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
-+			}
- 			spin_lock_bh(&msk->pm.lock);
- 			return;
- 		}
-@@ -1282,6 +1287,7 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow);
- 		if (remove_subflow)
- 			mptcp_pm_remove_subflow(msk, &list);
-+		clear_bit(addr->id, msk->pm.endpoint_usage_mask);
- 		release_sock(sk);
++	while [ $time -lt $timeout_ms ]; do
++		local cnt=`ip netns exec $ns ss -t state time-wait |wc -l`
++
++		[ "$cnt" = 1 ] && return 1
++		time=$((time + 100))
++		sleep 0.1
++	done
++	return 1
++}
++
+ subflows_tests()
+ {
+ 	reset
+@@ -1032,6 +1048,48 @@ subflows_tests()
+ 	chk_join_nr "single subflow, dev" 1 1 1
+ }
  
- next:
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a6a4bd7de5b4..d384f285b6c1 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -190,6 +190,7 @@ struct mptcp_pm_data {
++subflows_error_tests()
++{
++	# multiple subflows, with subflow creation error
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
++	chk_join_nr "multiple subflows, with failing subflow" 1 1 1
++
++	# multiple subflows, with subflow timeout on MPJ
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j DROP
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
++	chk_join_nr "multiple subflows, with subflow timeout" 1 1 1
++
++	# multiple subflows, check that the endpoint corresponding to
++	# closed subflow (due to reset) is not reused if additional
++	# subflows are added later
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
++
++	# mpj subflow will be in TW after the reset
++	wait_for_tw $ns2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	wait
++
++	# additional subflow could be created only if the PM select
++	# the later endpoint, skipping the already used one
++	chk_join_nr "multiple subflows, fair usage on close" 1 1 1
++}
++
+ signal_address_tests()
+ {
+ 	# add_address, unused
+@@ -1840,6 +1898,7 @@ fullmesh_tests()
+ all_tests()
+ {
+ 	subflows_tests
++	subflows_error_tests
+ 	signal_address_tests
+ 	link_failure_tests
+ 	add_addr_timeout_tests
+@@ -1859,6 +1918,7 @@ usage()
+ {
+ 	echo "mptcp_join usage:"
+ 	echo "  -f subflows_tests"
++	echo "  -f subflows_error_tests"
+ 	echo "  -s signal_address_tests"
+ 	echo "  -l link_failure_tests"
+ 	echo "  -t add_addr_timeout_tests"
+@@ -1907,11 +1967,14 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
  
- 	spinlock_t	lock;		/*protects the whole PM data */
- 
-+	DECLARE_BITMAP(endpoint_usage_mask, 256);
- 	u8		addr_signal;
- 	bool		server_side;
- 	bool		work_pending;
+-while getopts 'fsltra64bpkdmchCS' opt; do
++while getopts 'fesltra64bpkdmchCS' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+ 			;;
++		e)
++			subflows_error_tests
++			;;
+ 		s)
+ 			signal_address_tests
+ 			;;
 -- 
 2.33.1
 
