@@ -1,109 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863C968
-	for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 10:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1637748663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QKdWXp0h/l/7Qm0sf1iuEefpFBqpNeigWVKwXjAp0yI=;
-	b=Nwv8D1+FuWPAZ21jbphWFNyowZiiwcvQM8q/X23LKBLAbbqTbH1w3EpTXJvuuYtEefVEzF
-	Ak+yFLZyQS5BHg8mrXPquEQi2cDirUOOZHMxdMJFJwPZ49lezVpJ+x9h0rrV12s+up9PPv
-	b35QrKSE/pFVbjD5o5Nj2YkX+wCmV0o=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-432-T_ozMhqPPl6rB90xL1dzlg-1; Wed, 24 Nov 2021 05:11:01 -0500
-X-MC-Unique: T_ozMhqPPl6rB90xL1dzlg-1
-Received: by mail-wm1-f72.google.com with SMTP id j193-20020a1c23ca000000b003306ae8bfb7so1067334wmj.7
-        for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 02:11:01 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB2D2C82
+	for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 12:23:56 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id v1so9612882edx.2
+        for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 04:23:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=jKe5JRUg+NXquqEWUn6yAiUJxGQtiLquJHEwiyrF99c=;
+        b=6aFSmBPMA9sSZRR882m4GMGVFAUoM5ng7GtHnm9JRQHVu0t/MWFy1VFAUAAWgt/u9K
+         FgGQ+q7bNanaoUrRottL1ufhIR2dyV4nJ+rneuNqr+RF74immkQFJUv19nLvNV7P53RY
+         DMnZ7UbI5A36WfGL/P8JOuBJqNIHxVIm2JbIvR31/RsG4XyiKUVbQxXkUUdZd1fdIrKo
+         cZN0oEvLZA1amcz2KA8tZLWHGfH25n0rpIKBkhxckYcrPQxhnZiCT0PybMhRbDfUVfEZ
+         hMnICVkVydMBMjHTYmT9EiAAeCyCLWR5hZ9bvy+MlFhvNm9V+UfpDq24nSG7zyoFtpIX
+         C4fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=QKdWXp0h/l/7Qm0sf1iuEefpFBqpNeigWVKwXjAp0yI=;
-        b=bJazWQHKWunA4jnQcABfvf/WZOLKuKxWBWBKJKTKYz0nNSsIUQb18UykPmUmGlLnDN
-         OBYyIDfpuB7ZAKHBdR0nKq3NXhI8z7dBHmoye9iPa2zS554UtcEvClt5YmKi143RaTf8
-         9whbOcUE1o4IKUknQqEEB2zIulNvd38iiBOYKPjluRIu7S+A2J/yPCNGKMyeLjhs6Pcg
-         AF0f6O/hAwcc+Wq5/nFvLbPj5D7K5+PBiLMQLQtfiHhjLCeHVP/b01Qe5UqFWoSS4++3
-         kcGsjbIoYF4uASvjAFacF0ufyh46wOZmBeCScLzYrij6Bi+dXbVrCP0mq6kGEaJY8TeO
-         uthQ==
-X-Gm-Message-State: AOAM533d6a8ECSZSXe82G43u7i5Pojs5lCvgxNJapXLW2JNS8q6rGA4T
-	o7SYydTA0018vPZAcEf79F6wqXg1bdoOgacwmZVFv3z1cTplTjD7kUKTYc+KBj2KclJVawpTnwM
-	DS4h91Yb5X6evDHI=
-X-Received: by 2002:a5d:40cf:: with SMTP id b15mr17161054wrq.161.1637748660438;
-        Wed, 24 Nov 2021 02:11:00 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzdM1WWXrpqalPimYsTlVLB0cVe+ASShRVo+Yl4Cfhbk5piepnxuMaKhi2LoXMvNN1HTyG2Pw==
-X-Received: by 2002:a5d:40cf:: with SMTP id b15mr17161026wrq.161.1637748660239;
-        Wed, 24 Nov 2021 02:11:00 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-229-135.dyn.eolo.it. [146.241.229.135])
-        by smtp.gmail.com with ESMTPSA id p62sm4050455wmp.10.2021.11.24.02.10.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 02:11:00 -0800 (PST)
-Message-ID: <a10382334ba560c868e1284591d62ca0ae66a6b5.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add tests for subflow
- creation failure
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Cc: Phil Greenland <phil@quantulum.co.uk>
-Date: Wed, 24 Nov 2021 11:10:59 +0100
-In-Reply-To: <18e9514a-7cd1-97b7-9ebc-901f89f76612@tessares.net>
-References: <cover.1637684792.git.pabeni@redhat.com>
-	 <425cdb61dc939d86534843617150634869778909.1637684792.git.pabeni@redhat.com>
-	 <18e9514a-7cd1-97b7-9ebc-901f89f76612@tessares.net>
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=jKe5JRUg+NXquqEWUn6yAiUJxGQtiLquJHEwiyrF99c=;
+        b=as9Cf+MkggiqKcgI+ZjMApPwgACFFCUsgJkGfrtT7ELYHVs5DSqzDlJ5yqTM5BtiKw
+         bJ5Uc4ZEX4ri67BjunhKl+07gQdI8CJMpAfGcjiYHhDz0Zgsq7IyiSET/YRbqKIr0YoY
+         7D69Bq2R93PmR/d7CGFX6j5B9udiK0QPF3URFIqweJx+TEhrHCSOqGax/mo2DxRVCpFo
+         tqn8AQGysMKK4Xp5Dfkc+JP+qranFDqdB3nuKB/AO5UtwxZr9sst+Cocl1iks7VZtCMN
+         rThjUUZFbd4xnFxFMDjGOFCIlnN+T61H69LFt6/+bUC6VBjJYdgO5MCz8w4k7vUqQEf1
+         BMkA==
+X-Gm-Message-State: AOAM5312Aiu/NycHw0f0DlrOqfGq4s9AhREZniQ2J2jzlUvDh2IkSmcg
+	oCdgyN0yCJ/+FncOE3QHjh701Q==
+X-Google-Smtp-Source: ABdhPJxyFK7KeGQu4UB9Xj2aBag10aUeRVcpArVpAyc59A+pZdwjyTdreXaVs8GBS07IjYisiDW11g==
+X-Received: by 2002:a05:6402:8:: with SMTP id d8mr25294588edu.61.1637756634874;
+        Wed, 24 Nov 2021 04:23:54 -0800 (PST)
+Received: from [192.168.178.33] ([213.211.139.36])
+        by smtp.gmail.com with ESMTPSA id sb19sm7027962ejc.120.2021.11.24.04.23.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Nov 2021 04:23:53 -0800 (PST)
+Message-ID: <a715c06d-ed74-8f89-7b5b-eed734efff95@tessares.net>
+Date: Wed, 24 Nov 2021 13:23:51 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH mptcp-next 2/3] mptcp: do not block subflows creation on
+ errors
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Phil Greenland <phil@quantulum.co.uk>, mptcp@lists.linux.dev
+References: <cover.1637684792.git.pabeni@redhat.com>
+ <c080cc1785cbe3bb3c049a683f2cc6d55f95f17a.1637684792.git.pabeni@redhat.com>
+ <39669a68-eb6f-6602-1469-886266346e48@tessares.net>
+ <d6eb410eafef719adefb61bb584eef1e40c01184.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <d6eb410eafef719adefb61bb584eef1e40c01184.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2021-11-24 at 10:56 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
+On 24/11/2021 11:09, Paolo Abeni wrote:
+> On Wed, 2021-11-24 at 10:55 +0100, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 23/11/2021 17:37, Paolo Abeni wrote:
+>>> If the MPTCP configuration allows for multiple subflows
+>>> creation, and the first additional subflows never reach
+>>> the fully established status - e.g. due to packets drop or
+>>> reset - the in kernel path manager do not move to the
+>>> next subflow.
+>>
+>> Thank you for looking at that!
+>>
+>> Why the PM could not try to establish all possible paths "in parallel"?
+>> Is it because we have this limit of allowed subflows and we wait to know
+>> if a path is established to count it as used subflow?
 > 
-> On 23/11/2021 17:37, Paolo Abeni wrote:
-> > Verify that, when multiple endpoints are available, subflows
-> > creation proceed even when the first additional subflow creation
-> > fails - due to packet drop on the relevant link
+> IIRC, that design choice is to avoid that an MPTCP endpoint could
+> easily become a DDoS bot, generating "a lot" of syn in response to
+> action from possibly untrusted peer.
+
+The endpoint will only be able to produce a very few SYN+MPJ depending
+on the limit that is in place.
+
+Should we maybe do a distinction between local addresses and remote
+ones? I mean when the MPTCP connection is established, the PM could open
+all paths using different local addresses and then the remote ones one
+at a time?
+>>> +				/* we are not established yet and "a lot" of time passed
+>>> +				 * e.g. due to syn retranmissions. We can attempt next
+>>> +				 * subflow creation
+>>
+>> That's strange to tell the PM "yes, the subflow is established now"
+>> while there is potentially (or clearly in case of error (RST) below) an
+>> issue :)
+>>
+>> Should we eventually have another function name doing the same and
+>> resetting the stamp variable?
 > 
-> Here you don't drop the packet but you reset it. Should we have a test
-> for both (REJECT/DROP) (or with an additional subflow where packets are
-> dropped)?
+> Yes, in v2 I'll add another pm helper for that.
 
-I'll try to see if a drop test case will fit our infra. 
+Thank you!
 
-> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > index 2684ef9c0d42..dd4488746151 100755
-> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > @@ -1023,6 +1023,16 @@ subflows_tests()
-> >  	run_tests $ns1 $ns2 10.0.1.1
-> >  	chk_join_nr "multiple subflows, limited by server" 2 2 1
-> >  
-> > +	# multiple subflows, with subflow creation error
-> > +	reset
-> > +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> > +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-> > +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> > +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-> > +	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
+> Side note: do we still need the pm -> pm_netlink additional layering?
+> That was initially introduced to allow multiple in-kernel PM, but
+> afaics we are now considering a single in kernel one and e.v. an user-
+> space one. Perhpas we can remove some intermediate abstraction?
+
+I think we should keep it. It still makes sense to have a PM controlled
+with eBPF for servers having to support a lot of connections and always
+doing the same action. Maybe the in-kernel PM can already cover all use
+cases for a server, mainly announcing addresses. Or maybe more might be
+needed, e.g. announcing an IP or another depending on the initial one,
+etc. and in this case, a controlled with eBPF would be interesting (but
+could be done as an extension of the in-kernel PM one?)
+
+> (not in this series!)
+
+Of course!
+
+>>> +				 */
+>>> +				mptcp_pm_subflow_established(mptcp_sk(subflow->conn));
+>>> +				subflow->start_stamp = 0;
+>>> +			}
+>>> +		}
+>>> +
+>>>  		if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
+>>>  			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
+>>>  					      TCPOLEN_MPTCP_MPJ_SYN,
+>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>>> index 0f90bd61de01..85986f3b58ed 100644
+>>> --- a/net/mptcp/subflow.c
+>>> +++ b/net/mptcp/subflow.c
+>>> @@ -1273,7 +1273,16 @@ void __mptcp_error_report(struct sock *sk)
+>>>  
+>>>  static void subflow_error_report(struct sock *ssk)
+>>>  {
+>>> -	struct sock *sk = mptcp_subflow_ctx(ssk)->conn;
+>>> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+>>> +	struct sock *sk = subflow->conn;
+>>> +
+>>> +	/* subflow aborted before reaching the fully_established status
+>>> +	 * attempt the creation of the next subflow
+>>> +	 */
+>>> +	if (unlikely(!subflow->fully_established && subflow->start_stamp)) {
+>>> +		mptcp_pm_subflow_established(mptcp_sk(sk));
+>>> +		subflow->start_stamp = 0;
+>>
+>> Detail: do you need to set it to 0 here?
 > 
-> I guess we should then add "CONFIG_IP_NF_TARGET_REJECT" in the config
-> file :)
+> So we call mptcp_pm_subflow_established() at most once due to subflow
+> timeout or reset. I feared a malicius peer could trigger a lot of
+> activity with a e.g. a burst of icmp unreachable.
 
-Will add in v2.
+Good point, thank you for your reply. I thought subflow_error_report()
+would be called only once per ssk but then yes, safer to add this check.
 
-Thanks!
-
-Paolo
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
