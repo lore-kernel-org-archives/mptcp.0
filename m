@@ -1,84 +1,89 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D19E2C80
-	for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 23:01:51 +0000 (UTC)
-Received: by mail-qk1-f180.google.com with SMTP id d2so5869913qki.12
-        for <mptcp@lists.linux.dev>; Wed, 24 Nov 2021 15:01:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=DZ5/4jYstvd3d7pNzJRhxiIaflhRKyL23nZ7V33IOto=;
-        b=RFpiq07lJojv9zt40AakZyMn0JoPr3DSxvcLepmLfRPitzuJ592GEiJiOc973AOVsY
-         tiFPM0RtHL3DCbHigGV/RiXXInkeXaS/0qCqhSwKE+vSPM6WFj/GBe8nwUyGbPwAzE7c
-         k+kmwtfmQQasAOhkZ22TTW/DpDU4tMAeU6lEBUu0nehiD2RRKmfDkfG5bUvBydtzwzpw
-         t6gbWJdDjuoWm+11DIj+ul1SBjoVpEP44iSTVjnfaIPui/xl/jcoS3C9paOJ4NjBxGNs
-         tH/ynNTHOaLOT/1Q4GR3K2cF5hUUI5o2o5YxbTPj90pLqNuEs4L9EBKVisgSBJ5pC7JH
-         EDEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=DZ5/4jYstvd3d7pNzJRhxiIaflhRKyL23nZ7V33IOto=;
-        b=LucXXPwmceZSdw/SQz08+llGk4trO2TsQWRwVM7Bkfoo2bjHMnkE8vZ7N5rJL661en
-         B6bufTz9YaR07nMKX1v5I+nEg7QhmC+EP6P8M7EdvcUkAN+DWWc5qwJrUHp62K/AQwcy
-         u7fY72Ou8diU9wxv2d6k35iQNPByhbfgrGBTYhDuATyJx7+3AXsdVM6yfe87hvNr7FpW
-         svVuaoMZDSmTkToOJohJnwOUAZBzd9ErTDic1jOK2/BRTvMQXZV85qM6QuooMfVVmx40
-         TVC294RgRFC5b6ZP6V0W3IX6IkSQoBNJh3Lhetd3P/Gkf64m/3DMMySfkJAT3DIJaEAe
-         O08A==
-X-Gm-Message-State: AOAM532AT33Gx74RBE56ZjijJNQ/VkyfoF8vTUN6Q/9x6hY3+OcC8Ts/
-	+YvLXZhTdOb78QLRgOWeKg==
-X-Google-Smtp-Source: ABdhPJxpuS8hStIX2kOy20SxgQzdQM2/UK1XwPioFn8UQrZelFPiDROyteSJfm6gi1kXOSogDqsQGw==
-X-Received: by 2002:a05:620a:4441:: with SMTP id w1mr2161634qkp.619.1637794911008;
-        Wed, 24 Nov 2021 15:01:51 -0800 (PST)
-Received: from [127.0.0.1] ([20.124.100.162])
-        by smtp.gmail.com with ESMTPSA id j21sm539991qkk.27.2021.11.24.15.01.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 15:01:50 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <44593f9acfe286b9d18973e13877c1e48a15706c.1637770883.git.pabeni@redhat.com>
-References:
- <44593f9acfe286b9d18973e13877c1e48a15706c.1637770883.git.pabeni@redhat.com>
-Subject: Re: selftests: mptcp: add tests for subflow creation failure:
- Build Failure
-Message-ID: <79a736a8-6ebd-390f-b108-fdb440b919a8@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 24 Nov 2021 23:01:50 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B2B72;
+	Thu, 25 Nov 2021 02:26:16 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10178"; a="232918807"
+X-IronPort-AV: E=Sophos;i="5.87,261,1631602800"; 
+   d="scan'208";a="232918807"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2021 18:26:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,261,1631602800"; 
+   d="scan'208";a="607401973"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga004.jf.intel.com with ESMTP; 24 Nov 2021 18:26:14 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1mq4Sj-0005cR-Oe; Thu, 25 Nov 2021 02:26:13 +0000
+Date: Thu, 25 Nov 2021 10:25:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org,
+	Phil Greenland <phil@quantulum.co.uk>
+Subject: Re: [PATCH mptcp-next v2 3/4] mptcp: do not block subflows creation
+ on errors
+Message-ID: <202111251042.JLoJ33k0-lkp@intel.com>
+References: <574156bd514d855a159add3e1c54caa9b2c5f880.1637770883.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <574156bd514d855a159add3e1c54caa9b2c5f880.1637770883.git.pabeni@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+Thank you for the patch! Perhaps something to improve:
 
-But sadly, our CI spotted some issues with it when trying to build it.
+[auto build test WARNING on mptcp/export]
+[cannot apply to shuah-kselftest/next linus/master v5.16-rc2 next-20211124]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-You can find more details there:
+url:    https://github.com/0day-ci/linux/commits/Paolo-Abeni/mptcp-improve-subflow-creation-on-errors/20211125-005137
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+config: i386-randconfig-a002-20211124 (https://download.01.org/0day-ci/archive/20211125/202111251042.JLoJ33k0-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 67a1c45def8a75061203461ab0060c75c864df1c)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/6af8e28040c093866aa60ede3f980b53ab3594a5
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Paolo-Abeni/mptcp-improve-subflow-creation-on-errors/20211125-005137
+        git checkout 6af8e28040c093866aa60ede3f980b53ab3594a5
+        # save the config file to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 ARCH=i386 
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/44593f9acfe286b9d18973e13877c1e48a15706c.1637770883=
-.git.pabeni@redhat.com/
-  https://github.com/multipath-tcp/mptcp_net-next/a=
-ctions/runs/1501462418
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e6316e20ae=
-3b
+All warnings (new ones prefixed by >>):
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+>> net/mptcp/pm.c:203:6: warning: no previous prototype for function 'mptcp_pm_subflow_closed' [-Wmissing-prototypes]
+   void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
+        ^
+   net/mptcp/pm.c:203:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
+   ^
+   static 
+   1 warning generated.
 
-Cheers,
-MPTCP GH Action bot
+
+vim +/mptcp_pm_subflow_closed +203 net/mptcp/pm.c
+
+6af8e28040c0938 Paolo Abeni   2021-11-24  202  
+1b1c7a0ef7f323f Peter Krystad 2020-03-27 @203  void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
+1b1c7a0ef7f323f Peter Krystad 2020-03-27  204  {
+1b1c7a0ef7f323f Peter Krystad 2020-03-27  205  	pr_debug("msk=%p", msk);
+1b1c7a0ef7f323f Peter Krystad 2020-03-27  206  }
+1b1c7a0ef7f323f Peter Krystad 2020-03-27  207  
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
