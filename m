@@ -1,123 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fallback25.mail.ru (fallback25.m.smailru.net [94.100.189.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C0F2C80
-	for <mptcp@lists.linux.dev>; Thu, 25 Nov 2021 08:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1637828917;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UshZFRpLRyqLt9YYkgRKZXj37baEMoIIX3aR9HIOnvc=;
-	b=iL9082nYDIEiOfTsqtlbIQrlEngcIxVpH33OY3MbPGaOyuFRey4ZmCJD2IDFhPa2hTKzkw
-	Q0ZtPyYeczkQqRZ1SLhxuqsDPqLyZ4OBLuq0BeiXU+zqkz6T+yBoSLaK90OPeqINjVtF0K
-	xEedMLewfasFIrTRCUFA4s6KG53P7RQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-281-AUiNfU5nM2WkTYWV1HJKyw-1; Thu, 25 Nov 2021 03:28:34 -0500
-X-MC-Unique: AUiNfU5nM2WkTYWV1HJKyw-1
-Received: by mail-wm1-f71.google.com with SMTP id g11-20020a1c200b000000b003320d092d08so2799006wmg.9
-        for <mptcp@lists.linux.dev>; Thu, 25 Nov 2021 00:28:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=UshZFRpLRyqLt9YYkgRKZXj37baEMoIIX3aR9HIOnvc=;
-        b=6KjKKVwIwSRGqaj0to0J9/UDfuRVEO4rhcNMGC5j0sTNi6xP1wjiDouS9a5RpyHoj9
-         P548j7Mn4pipt8t/nW5jPliNOFJUyVnMpGkvVPVTEipOWA4vrMDVGHOd4elAOGttHlQH
-         rNZB+CY4eYGey8heLk2NFfPivcwGeOni2BPwLMPJjKaxeK8xrsZ84BCZ/ydg/Sacllor
-         K4uIgJs2TdE+CfvE0tCTNbIIJsfXEOwkVpgRROD+qcMzcTnJNDYFKOodnMKxSJ1PlkNE
-         Z9/p8SJLhXG9HZ3Ckvi0iBtaZ5BLLzy/xyw8IeMqWpMKoaj5wPgeGO9YXq7NpaMJp2id
-         fuaA==
-X-Gm-Message-State: AOAM5301Y59a/FQkwgWCbe6z2FMUp3DgazyG0wJGTqhC8oXQYzpYdHKh
-	lHWF7ty5tj20+UCzkHtct7R9KyLy5d8EPhno9E7rf+5fBpRiWkPetSnSwZG8f/RutOUOvzFSXit
-	i3t74OVZkaTNYNKc=
-X-Received: by 2002:a1c:9d48:: with SMTP id g69mr5264907wme.188.1637828913268;
-        Thu, 25 Nov 2021 00:28:33 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyD71kXE2ebJYXT1vMbW3/gjEuk0F50CcXWm026izdoq8ypYu05C+LLNitAGZv1BhdirbKvDQ==
-X-Received: by 2002:a1c:9d48:: with SMTP id g69mr5264883wme.188.1637828913050;
-        Thu, 25 Nov 2021 00:28:33 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-229-135.dyn.eolo.it. [146.241.229.135])
-        by smtp.gmail.com with ESMTPSA id j8sm2054632wrh.16.2021.11.25.00.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Nov 2021 00:28:32 -0800 (PST)
-Message-ID: <be97b6085557540a9cf71e5ca6aac4556e1f7653.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2 3/4] mptcp: do not block subflows creation
- on errors
-From: Paolo Abeni <pabeni@redhat.com>
-To: kernel test robot <lkp@intel.com>, mptcp@lists.linux.dev, Matthieu
- Baerts <matthieu.baerts@tessares.net>
-Cc: kbuild-all@lists.01.org, Phil Greenland <phil@quantulum.co.uk>
-Date: Thu, 25 Nov 2021 09:28:31 +0100
-In-Reply-To: <202111250633.wEMz7JQe-lkp@intel.com>
-References: <574156bd514d855a159add3e1c54caa9b2c5f880.1637770883.git.pabeni@redhat.com>
-	 <202111250633.wEMz7JQe-lkp@intel.com>
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09F072
+	for <mptcp@lists.linux.dev>; Thu, 25 Nov 2021 12:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=PowwAv5LT0rqc+rUQgbD1+Skwiv1dFCX5TqB+jm9a1s=;
+	t=1637842506;x=1638447906; 
+	b=IhQl+ZU5AF1K3VIiwCAb+RF1VV3lH6v4VciW1hnm2Fi3Pm2gTW5UkjKLNvKxqG9MWv45su79gFH4Z2fn5sIHWMyCLQscvRF2RuWfC4Gt4nndjY2w5jFGt8bnRIM/nFrVafteFr80n7ZJeqm6Lk0mdq5ZPu+YqnD/4/DoqrJr42E=;
+Received: from [10.161.64.42] (port=41898 helo=smtp34.i.mail.ru)
+	by fallback25.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
+	id 1mqD14-00076O-Ox
+	for mptcp@lists.linux.dev; Thu, 25 Nov 2021 14:34:15 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=PowwAv5LT0rqc+rUQgbD1+Skwiv1dFCX5TqB+jm9a1s=;
+	t=1637840054;x=1638445454; 
+	b=r+LgJ4aQ+G6WfjnyUiPjOHQya1rjORj0fnNfYXvpOIzQB2tRejbsG/ELQIcuscafL4eMt6CSNjWWzkaQizRyaN58NNWJboBety/4wYFNMWc/r05HJakg4CB5g3MQPcA3o7cdAWLDxTT9mtuo0/yTpNGbLY3EI0cr9/K/vmJ0HEtAQ64fzP9+fg7BXXmJzyoeXMl1rAnU2SHBkW8U5rWAMxK9GOVD9KBzB9A7RvDrkeu2RLdXkt816tNWYvroonAi7MhCoDnu+lT2OGdOLPmeVFxvabR5n8QKV3j18oQyy+bcvOPyoQTc7QWmWiKDdlYr9lU5tVYQ0d8tTaeIYOv2oA==;
+Received: by smtp34.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
+	id 1mqD0w-0006bg-PU; Thu, 25 Nov 2021 14:34:07 +0300
+Message-ID: <eeb792d0-5039-2dd7-79c9-86b00bf235b3@internet.ru>
+Date: Thu, 25 Nov 2021 14:34:05 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH mptcp-next 3/3] mptcp: support TCP_CORK and TCP_NODELAY
+Content-Language: en-US
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+References: <20211123070708.2897469-1-max@internet.ru>
+ <20211123070708.2897469-4-max@internet.ru>
+ <65424687fe3f108285b6b42669d28e61254349f1.camel@redhat.com>
+ <50e883b0-9776-c440-8b8d-1f9024c50a31@tessares.net>
+ <e8e6a28c-6062-44d7-1718-42715596f9d3@internet.ru>
+ <70d81be5-f9f4-ce03-56c0-60bacb40d5da@tessares.net>
+From: Maxim Galaganov <max@internet.ru>
+In-Reply-To: <70d81be5-f9f4-ce03-56c0-60bacb40d5da@tessares.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-4EC0790: 10
+X-7564579A: B8F34718100C35BD
+X-77F55803: 4F1203BC0FB41BD9FE0487E50246814697FE70F94637C0E3A7B9BB53A0E4B962182A05F5380850403AC88E4CBD3CEF9C4420F1A53F2017A8A7D4BC7B55F25D2044F07DEF8C437A26
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7548C33FFD72831AFEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063750965CC5CDB672DE8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D800C3E1CB890EFD0A3ED805CF0396BB406F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE7212612128AA291179FA2833FD35BB23D9E625A9149C048EE9ECD01F8117BC8BEA471835C12D1D9774AD6D5ED66289B52BA9C0B312567BB23117882F446042972877693876707352033AC447995A7AD18618001F51B5FD3F9D2E47CDBA5A96583BA9C0B312567BB2376E601842F6C81A19E625A9149C048EEC65AC60A1F0286FE1AD9CA79AA6DBBDDD8FC6C240DEA7642DBF02ECDB25306B2B78CF848AE20165D0A6AB1C7CE11FEE3724336BCC0EE1BA8040F9FF01DFDA4A8C4224003CC836476EA7A3FFF5B025636E2021AF6380DFAD18AA50765F790063735872C767BF85DA227C277FBC8AE2E8B914107497A506B4975ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-C1DE0DAB: 0D63561A33F958A5B93657487F8DC06E015309470A7697C9EF830F5447CB01CBD59269BC5F550898D99A6476B3ADF6B47008B74DF8BB9EF7333BD3B22AA88B938A852937E12ACA75BF6B963DD989C0FC410CA545F18667F91A7EA1CDA0B5A7A0
+X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D345CB6DE26F1654667419380583D3FEE6261A89916C691024D415EC24215031251BC0B8065A81CECCA1D7E09C32AA3244C33871B3EF57FAC8389996468E5417434408A6A02710B7304729B2BEF169E0186
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojycNqkYkaYULOvx8TDJzxCw==
+X-Mailru-Sender: 5E616C0FE969A7091F44B545DDE3CF7BC7F3180201B83F597FC6DBD737B10195ED4E62DB5F18DD7FA3A8141CB4B74D41CE269884D3BD092EDB8B09C36E528D9AA9AB2EA8CC3FBC19B4A721A3011E896F
+X-Mras: Ok
+X-7564579A: 78E4E2B564C1792B
+X-77F55803: 6242723A09DB00B4EE34287C01580B602FF54B759B37932364C605A2F552B1F0049FFFDB7839CE9EC926AA826E71F66ED133F543C1358B7AA361A16756438DE846B203629A17B3A2
+X-7FA49CB5: 0D63561A33F958A5C87DC17FD991F8A9BEB2A1BC2780592EFA123973F1B27ECDCACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F7900637D2AD7660D07C2C48389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8632EDEA9CD5989A3F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CDB8A315C1FF4794D76E601842F6C81A12EF20D2F80756B5F7E9C4E3C761E06A7089D37D7C0E48F6C8AA50765F7900637258009BF11B1E570EFF80C71ABB335746BA297DBC24807EABDAD6C7F3747799A
+X-C1DE0DAB: 0D63561A33F958A5C87DC17FD991F8A9BEB2A1BC2780592ECAC590C4B0059823D59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojycNqkYkaYULwPGg20VhcUQ==
+X-Mailru-MI: 800
+X-Mailru-Sender: A5480F10D64C90056DE2D996C7A1955680B5E4CC36EB97672BD7D094E07F1799BA0848438379BFCE84390AFDD794B14678274A4A9E9E44FD5B858845640BC0C1AB428D199E4977E267EA787935ED9F1B
+X-Mras: Ok
 
-On Thu, 2021-11-25 at 06:52 +0800, kernel test robot wrote:
-> Hi Paolo,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on mptcp/export]
-> [cannot apply to shuah-kselftest/next linus/master v5.16-rc2 next-20211124]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Paolo-Abeni/mptcp-improve-subflow-creation-on-errors/20211125-005137
-> base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-> config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20211125/202111250633.wEMz7JQe-lkp@intel.com/config)
-> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-> reproduce (this is a W=1 build):
->         # https://github.com/0day-ci/linux/commit/6af8e28040c093866aa60ede3f980b53ab3594a5
->         git remote add linux-review https://github.com/0day-ci/linux
->         git fetch --no-tags linux-review Paolo-Abeni/mptcp-improve-subflow-creation-on-errors/20211125-005137
->         git checkout 6af8e28040c093866aa60ede3f980b53ab3594a5
->         # save the config file to linux build tree
->         make W=1 ARCH=um SUBARCH=i386
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> > > net/mptcp/pm.c:203:6: warning: no previous prototype for 'mptcp_pm_subflow_closed' [-Wmissing-prototypes]
->      203 | void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
->          |      ^~~~~~~~~~~~~~~~~~~~~~~
-> 
-> 
-> vim +/mptcp_pm_subflow_closed +203 net/mptcp/pm.c
-> 
-> 6af8e28040c093 Paolo Abeni   2021-11-24  202  
-> 1b1c7a0ef7f323 Peter Krystad 2020-03-27 @203  void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
-> 1b1c7a0ef7f323 Peter Krystad 2020-03-27  204  {
-> 1b1c7a0ef7f323 Peter Krystad 2020-03-27  205  	pr_debug("msk=%p", msk);
-> 1b1c7a0ef7f323 Peter Krystad 2020-03-27  206  }
-> 1b1c7a0ef7f323 Peter Krystad 2020-03-27  207  
+Hi Matt!
 
-All the CI warning are caused by this function lacking a declaration.
-The solution would be just dropping 'mptcp_pm_subflow_closed()', as
-mptcp_pm_subflow_check_next() is already doing the real work.
+On 24.11.2021 12:18, Matthieu Baerts wrote:
+> Hi Max,
+> 
+> On 24/11/2021 02:44, Maxim Galaganov wrote:
+>> On 23.11.2021 19:09, Matthieu Baerts wrote:
+>>> Do you mind if we wait a bit to have these tests before applying your
+>>> patches?
+>>>
+>>
+>> I don't mind at all and I think it's preferable to add more test
+>> coverage before applying this series. Though it may take some time to
+>> get ahold of the tool.
+> 
+> Great!
 
-@Mat: assuming there are no other issues, could you please do that in
-patchwork or do you prefer me to post a v3?
+I've opened a pull request into the packetdrill repo with tests for 
+TCP_CORK and TCP_NODELAY.
 
-Thanks!
-
-Paolo
-
+Link: https://github.com/multipath-tcp/packetdrill/pull/75
