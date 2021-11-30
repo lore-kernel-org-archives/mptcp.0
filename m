@@ -1,82 +1,185 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8662D2C80
-	for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 17:02:30 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id r2so21928113ilb.10
-        for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 09:02:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=tiDK+mYxgU3dzpR9AhbRosH9v1523pULEQ/lrC4Ghkk=;
-        b=a5qRRjcBvlfXB4TydGtzhc4SHGrwGSQwfKkYVd8b6oP8GFuJysHc+HbOJmAgag3nab
-         TyZgUnA+oomT9JXmwaxQoim9mftzm+CMJTASNhjrsRzTsJaSntCLx9QUqYT9DjHxROFT
-         pR8B3uS06qzmWqhIrcTnVUv/SU9+3BLIX5wPWrfkNiaddaDJKWDBc6UZFSuHZGyJAPcf
-         5Px0vycs9y2u+QsbwTDGhB2sJ7d8T7od96YfS8csFyjL/BDA/0KtM7Uw/OG88/5wcgGH
-         3FRr41uGxeQDsXE+yPsSo1d842R1DAMIaJU/msbukaK8vglwl/nJX0F8WocnMP5DewK2
-         b0sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=tiDK+mYxgU3dzpR9AhbRosH9v1523pULEQ/lrC4Ghkk=;
-        b=mR3AZNxCrzQavU0yQA0Gg1iNsrmdaVzp1ejNAvYknMwjfTpl4rRZxbvPAc9rm88VwY
-         vWbelwdJ+iRwM3q7I8IKkNt91NDPhyf/vfIWnBvK5ZsbFh5EzgX4uZeEgfrQLjHpmV9a
-         XEcGX1J84Vyil222L9VdvHjBTtQTQnEa9oPnahElp6wLqe2pxJGQNQpXVM+CkqRhIOEd
-         xKTvFjabUcfAJnP/9tIaYahsNxuuMKulQJV/Rb+hbQJIIW0bxNhs59YtQPzG5rGtOg0V
-         kOt2CMP2tffr3A6dqZHGL0Ihs9aHxe503CRerkagW2E/9XG+zIHR806zWnarvHYeYN57
-         vU9A==
-X-Gm-Message-State: AOAM530CRkRJVzFL61MA4Un58IFFR3dgVbgOGNjALyrfgwGITIoixAs9
-	TyPaydFPa8a7NnAHu3YY4dRx6JVb32JL
-X-Google-Smtp-Source: ABdhPJzKMPTGudJjPvrYJxSRmF4CcBjo/NvoINhQEgJB8Y5C9ocTnNJZkPyh/AkP85iz143EttDU4w==
-X-Received: by 2002:a05:6e02:20cb:: with SMTP id 11mr240095ilq.262.1638291749682;
-        Tue, 30 Nov 2021 09:02:29 -0800 (PST)
-Received: from [127.0.0.1] ([52.176.160.242])
-        by smtp.gmail.com with ESMTPSA id x5sm9983627iov.50.2021.11.30.09.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Nov 2021 09:02:28 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689192CA1
+	for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 19:06:08 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10184"; a="223528045"
+X-IronPort-AV: E=Sophos;i="5.87,276,1631602800"; 
+   d="scan'208";a="223528045"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2021 11:06:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,276,1631602800"; 
+   d="scan'208";a="499901625"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 30 Nov 2021 11:06:06 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1ms8S5-000Dg4-70; Tue, 30 Nov 2021 19:06:05 +0000
+Date: Wed, 01 Dec 2021 03:05:16 +0800
+From: kernel test robot <lkp@intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20211130165527.1506827-1-matthieu.baerts@tessares.net>
-References: <20211130165527.1506827-1-matthieu.baerts@tessares.net>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22mptcp=3A_implement_fa?=
- =?UTF-8?Q?stclose_xmit_path=22=3A_Build_Failure?=
-Message-ID: <c87b5b40-f844-31e8-105e-dda1fa0068a4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Nov 2021 17:02:28 +0000
+Subject: [mptcp:export] BUILD SUCCESS
+ 11e07797314e452f2222c9c9f0558ab787e22726
+Message-ID: <61a675ec.TfORcYzBYqPBC1ES%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: 11e07797314e452f2222c9c9f0558ab787e22726  DO-NOT-MERGE: mptcp: enabled by default
 
-Thank you for your modifications, that's great!
+elapsed time: 732m
 
-But sadly, our CI spotted some issues with it when trying to build it.
+configs tested: 132
+configs skipped: 3
 
-You can find more details there:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20211130165527.1506827-1-matthieu.baerts@tessares.=
-net/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1521989=
-225
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211128
+arm                    vt8500_v6_v7_defconfig
+mips                          malta_defconfig
+arm                          ep93xx_defconfig
+xtensa                       common_defconfig
+arm                         s3c2410_defconfig
+powerpc                     kilauea_defconfig
+arm                            xcep_defconfig
+mips                      loongson3_defconfig
+arm                      integrator_defconfig
+arm                        multi_v7_defconfig
+mips                           ip28_defconfig
+mips                  maltasmvp_eva_defconfig
+m68k                        m5407c3_defconfig
+arc                        nsim_700_defconfig
+arm                         lubbock_defconfig
+sh                     magicpanelr2_defconfig
+arc                            hsdk_defconfig
+arm                          ixp4xx_defconfig
+arm                          pxa168_defconfig
+arm                  randconfig-c002-20211128
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20211130
+i386                 randconfig-a002-20211130
+i386                 randconfig-a006-20211130
+i386                 randconfig-a004-20211130
+i386                 randconfig-a003-20211130
+i386                 randconfig-a001-20211130
+i386                 randconfig-a001-20211129
+i386                 randconfig-a002-20211129
+i386                 randconfig-a006-20211129
+i386                 randconfig-a005-20211129
+i386                 randconfig-a004-20211129
+i386                 randconfig-a003-20211129
+x86_64               randconfig-a001-20211130
+x86_64               randconfig-a006-20211130
+x86_64               randconfig-a003-20211130
+x86_64               randconfig-a004-20211130
+x86_64               randconfig-a005-20211130
+x86_64               randconfig-a002-20211130
+x86_64               randconfig-a011-20211128
+x86_64               randconfig-a014-20211128
+x86_64               randconfig-a012-20211128
+x86_64               randconfig-a016-20211128
+x86_64               randconfig-a013-20211128
+x86_64               randconfig-a015-20211128
+arc                  randconfig-r043-20211128
+s390                 randconfig-r044-20211128
+riscv                randconfig-r042-20211128
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6efac2b03aba
+clang tested configs:
+i386                 randconfig-a001-20211128
+i386                 randconfig-a002-20211128
+i386                 randconfig-a003-20211128
+i386                 randconfig-a004-20211128
+i386                 randconfig-a005-20211128
+i386                 randconfig-a006-20211128
+x86_64               randconfig-a014-20211130
+x86_64               randconfig-a016-20211130
+x86_64               randconfig-a013-20211130
+x86_64               randconfig-a012-20211130
+x86_64               randconfig-a015-20211130
+x86_64               randconfig-a011-20211130
+i386                 randconfig-a011-20211130
+i386                 randconfig-a015-20211130
+i386                 randconfig-a012-20211130
+i386                 randconfig-a013-20211130
+i386                 randconfig-a014-20211130
+i386                 randconfig-a016-20211130
+i386                 randconfig-a015-20211129
+i386                 randconfig-a016-20211129
+i386                 randconfig-a013-20211129
+i386                 randconfig-a012-20211129
+i386                 randconfig-a014-20211129
+i386                 randconfig-a011-20211129
+hexagon              randconfig-r045-20211129
+hexagon              randconfig-r041-20211129
+s390                 randconfig-r044-20211129
+riscv                randconfig-r042-20211129
+hexagon              randconfig-r045-20211128
+hexagon              randconfig-r041-20211128
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
