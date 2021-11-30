@@ -1,141 +1,189 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEE62C80
-	for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 16:52:47 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id g14so89520718edb.8
-        for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 08:52:47 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ADE2C80
+	for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 16:55:41 +0000 (UTC)
+Received: by mail-wm1-f46.google.com with SMTP id n33-20020a05600c502100b0032fb900951eso20057980wmr.4
+        for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 08:55:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=FVIvY2PQLCC4AwaZG2KGGUIdVhk+r7Tzj0ajWWQc3II=;
-        b=yBjjUHPHI8DqJB1NIND4KJmQ9QhaO4/yQItAbpbENctQ9aDvq2nSjPVfLr+Vt+O4q3
-         SVhmMQIJgoEVzKeRCJPFduAvwWoLtrqRyi21KWXhIZMAXgn087ZEKN31Mpc56pqQ7ukU
-         zR7Wjz600NFAWrNxa/LzONA7B5GBHSS5NYatRT5nQydhh1pAu/dBBNVwadur83TvsWct
-         n7ij1x/FsRwaghgZzIKPASCO4DYe9IzWzniDsjmMJn5iJ0YT27DAFIquTg8oBvrvcreN
-         JMyDdYx6jL8mTVwEN7+CAacxdRgMJLV6I0MpMRhxaevPMAPjgDO4dmK7MrGfWr6MHq2k
-         piQA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CXkIPBO2RK5jCjLXEJRFPslWxnaegU1Uqwva8W7upAk=;
+        b=MhwNnXfu9NiP2WJhwG3wN9iznnJcuhp0Z7e3+3A5FipGzXkXgyGpehPexgir6QN0xD
+         xZWBBuMYLcxXVERShRF5uUgr5fnzOQ+hpuqBndHQ5ZD0MaUI6KIvbPnAG8CWJh6+4UUH
+         GrULNyi8oFO1OXC6Fimv5TmXtvRqjGY1pDkmFVN0568QiTxXADZx17npOhWouXiXNOCM
+         IZwdznxmrLw7CaBvn04zTROCpaA5PkJpB2lkFtWM+4CvbmdbNi264VCQWhIOTCKRgOPV
+         I+z0vJyHaa7GfxAPYETW8vEcvy/wSdwZl2mcXmQUGRlyOdKqsrWetKoppn5UWuECG3tu
+         xknA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=FVIvY2PQLCC4AwaZG2KGGUIdVhk+r7Tzj0ajWWQc3II=;
-        b=FhJKhdOariuA9tMeGMX9Vth/Ls7azncbb7/NnT2GrzgxynitXtYd5GO1WB5ilmUcMz
-         9BIcIpyX+2xlFW/bWlgQazjcwNlwVRkJiZuveGiZHPci+I8IZ94WAkkYqqfHlOAAwrqB
-         yE9tGMx058q4HYbxaqkD5uMQa0Wkxf3pzqQYxznPrGZA3hI/lSrHPZ72bUikW9TUDsiy
-         fXkBzxpTYZTBREiyyzNbYS3T4xW2NBz3vqYaF6CYfP30g2Pot6JjHGpnQ+P2f1OiFVb5
-         x6Z9cHG4FjfWWnPdctH3OP6ee0S/Juvsk8JeySOAelvqN6ZGrx1dDBRV/W8+OFsNGNUT
-         JLwg==
-X-Gm-Message-State: AOAM532vGuXa1OQPXKJXt6nV8XkH6TTC9tqLPcpOnecxzM+h1alDAWOn
-	Tt6OpUNcw3dibufWar/jalRqJg==
-X-Google-Smtp-Source: ABdhPJyfABIoRxHKXp5cnWMqZcohKeOyJ47sp4yKtFnKdfIDwLHwZK7vEOOTnhDYVvjqfY0bIuXeow==
-X-Received: by 2002:a05:6402:2152:: with SMTP id bq18mr153095edb.105.1638291166029;
-        Tue, 30 Nov 2021 08:52:46 -0800 (PST)
-Received: from [192.168.178.33] ([213.211.142.51])
-        by smtp.gmail.com with ESMTPSA id u23sm12034211edi.88.2021.11.30.08.52.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Nov 2021 08:52:45 -0800 (PST)
-Message-ID: <e7427851-a812-05b7-6441-cb9e6f61e65c@tessares.net>
-Date: Tue, 30 Nov 2021 17:52:45 +0100
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CXkIPBO2RK5jCjLXEJRFPslWxnaegU1Uqwva8W7upAk=;
+        b=vVkVykK6amYdta3RZs6AuJieVX5MCb94twNWvpAdE8OTVRiQykZbJGthVAErgtIpGQ
+         SISw2Bd1HLwcKhdULb79KDirIXXWcMzuvxHgfM5v0EFGDUSXXXv+Cw2SNanfHpQERoT1
+         mDytyvzVXiR9626tBU3kzET/PKQ7rd658lJL3OIw2zR6rQV5SwzbODcpXYD4KoJVxxyC
+         fmg1+i8f4qPFndGaga5WOn6ews2GfSYAn5vozfUuW6niMLZ+5JtvVfnAVvD/FZASKZ7n
+         fCBs/T4VcfAyDDFN4GDHa7Rz8GUUBbToym38UIfF1U2UKlQ0LMeidgC8LorS3f/JOQDX
+         OEHg==
+X-Gm-Message-State: AOAM531c31bn2cK+agw/98/LMKJYFanSoXsH7MBoFx5NSZMrPyRBqfo+
+	u3J/PT7puRa1453s2+mL0mBzVXjnMYiehwVD
+X-Google-Smtp-Source: ABdhPJxdriKJLxRzGRa0K65ASe8TXyz9Yh2DAMpriRSFPKC0DeBLW61G+2XuuQS0g/zqrkKk9bLwsQ==
+X-Received: by 2002:a05:600c:5101:: with SMTP id o1mr727971wms.81.1638291340219;
+        Tue, 30 Nov 2021 08:55:40 -0800 (PST)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id z14sm18012570wrp.70.2021.11.30.08.55.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Nov 2021 08:55:39 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next] Squash to "mptcp: implement fastclose xmit path"
+Date: Tue, 30 Nov 2021 17:55:27 +0100
+Message-Id: <20211130165527.1506827-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <e7427851-a812-05b7-6441-cb9e6f61e65c@tessares.net>
+References: <e7427851-a812-05b7-6441-cb9e6f61e65c@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH mptcp-next v3 1/2] Squash to "mptcp: implement fastclose
- xmit path"
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
-References: <cover.1638242181.git.geliang.tang@suse.com>
- <a3d0dcbe4167eb77b7a275e113abb484d3cdfab0.1638242181.git.geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <a3d0dcbe4167eb77b7a275e113abb484d3cdfab0.1638242181.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+This is linked to Geliang's patch with the same title.
 
-Adding Paolo in cc as he wrote the original commit.
+If I understand the RFC properly, we can use MP_RST with an MP_FASTCLOSE
+and an MP_FAIL (or none of them) but we cannot use MP_FASTCLOSE and
+MP_FAIL together.
 
-On 30/11/2021 04:21, Geliang Tang wrote:
-> As described in RFC8684, 3.7 Fallback:
-> 
-> '''
-> Therefore, it is not possible to recover the subflow, and the affected
-> subflow must be immediately closed with a RST that includes an MP_FAIL
-> option (Figure 16), which defines the data sequence number at the start
-> of the segment (defined by the Data Sequence Mapping) that had the
-> checksum failure.
-> '''
-> 
-> MP_FAIL could be sent with MP_RST at the same time. This patch fixed it.
-> 
-> This patch also did a small cleanup, to keep the options order in
-> mptcp_write_options() as this comment said:
-> 
-> '''
-> /* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
-> '''
-> 
-> This order matches the options order in RFC8684, 7.2. MPTCP Option Subtypes
-> too.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  net/mptcp/options.c | 19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 8a1020e4285c..35425fb4b179 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -828,8 +828,11 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->  		return false;
->  
->  	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
-> +		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
-> +			*size += opt_size;
-> +			remaining -= opt_size;
-> +		}
->  		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
-> -		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
->  		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
+This patch implements this logic in both mptcp_established_options() and
+mptcp_write_options(). Before this patch, the first function was not
+allowing any of these 3 options to be used at the same time while the
+second one was allowing MP_FAIL to be used with either MP_FASTCLOSE or
+MP_RST.
 
-Thank you for the new version.
+Small note: I tried to keep Paolo's idea of reducing conditions for
+"normal" options by moving MP_RST at the end and allow to jump there
+from MP_FAIL and MP_FASTCLOSE but I'm not sure it makes it easy to read
+and really improves perfs. We can also move MP_RST check at the
+beginning.
 
-This is now aligned with what we can find in mptcp_write_options() but
-is it correct?
+@Geliang: feel free to re-use this patch if it looks OK to you.
 
-Here you say:
+PS: I didn't try this patch, just quickly wrote it to better explain
+what I had in mind.
 
-* FAIL + RST:    OK
-* FAIL + FCLOSE: OK
-* RST  + FCLOSE: KO
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
 
-But is it correct? Is it not:
+Notes:
+    to be squashed in "mptcp: implement fastclose xmit path"
 
-* FAIL + RST:    OK
-* FAIL + FCLOSE: KO
-* RST  + FCLOSE: OK
+ net/mptcp/options.c | 62 +++++++++++++++++++++++++++------------------
+ 1 file changed, 37 insertions(+), 25 deletions(-)
 
-No? It sounds more logic to me to add more info (MP_RST) in an MP_FAIL
-or MP_FASTCLOSE if there is room. Can we have both an MP_FAIL and an
-MP_FASTCLOSE in the same packet?
-
-This really shows we need a packetdrill test to agree on that and
-validate this behaviour :)
-
-Let me send a patch of what I have in mind. (it is too long to be
-readable here I think).
-
-Cheers,
-Matt
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 8a1020e4285c..07091971a51a 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -829,11 +829,17 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 
+ 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+ 		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
+-		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
+-		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
++		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
+ 			*size += opt_size;
+ 			remaining -= opt_size;
+ 		}
++
++		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
++		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
++			*size += opt_size;
++			remaining -= opt_size;
++		}
++
+ 		return true;
+ 	}
+ 
+@@ -1257,21 +1263,7 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 			 struct mptcp_out_options *opts)
+ {
+-	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
+-		const struct sock *ssk = (const struct sock *)tp;
+-		struct mptcp_subflow_context *subflow;
+-
+-		subflow = mptcp_subflow_ctx(ssk);
+-		subflow->send_mp_fail = 0;
+-
+-		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
+-				      TCPOLEN_MPTCP_FAIL,
+-				      0, 0);
+-		put_unaligned_be64(opts->fail_seq, ptr);
+-		ptr += 2;
+-	}
+-
+-	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
++	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
+ 	 * see mptcp_established_options*()
+ 	 */
+ 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
+@@ -1458,19 +1450,39 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 				ptr += 1;
+ 			}
+ 		}
+-	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
+-		/* RST is mutually exclusive with everything else */
+-		*ptr++ = mptcp_option(MPTCPOPT_RST,
+-				      TCPOLEN_MPTCP_RST,
+-				      opts->reset_transient,
+-				      opts->reset_reason);
+-		return;
+ 	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
+-		/* FASTCLOSE is mutually exclusive with everything else */
++		/* FASTCLOSE is mutually exclusive with others except RST */
+ 		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
+ 				      TCPOLEN_MPTCP_FASTCLOSE,
+ 				      0, 0);
+ 		put_unaligned_be64(opts->rcvr_key, ptr);
++
++		if (OPTION_MPTCP_RST & opts->suboptions)
++			goto mp_rst;
++		return;
++	} else if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
++		/* MP_FAIL is mutually exclusive with others except RST */
++		const struct sock *ssk = (const struct sock *)tp;
++		struct mptcp_subflow_context *subflow;
++
++		subflow = mptcp_subflow_ctx(ssk);
++		subflow->send_mp_fail = 0;
++
++		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
++				      TCPOLEN_MPTCP_FAIL,
++				      0, 0);
++		put_unaligned_be64(opts->fail_seq, ptr);
++		ptr += 2;
++
++		if (OPTION_MPTCP_RST & opts->suboptions)
++			goto mp_rst;
++		return
++	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
++mp_rst:
++		*ptr++ = mptcp_option(MPTCPOPT_RST,
++				      TCPOLEN_MPTCP_RST,
++				      opts->reset_transient,
++				      opts->reset_reason);
+ 		return;
+ 	}
+ 
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.32.0
+
