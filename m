@@ -1,185 +1,74 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689192CA1
-	for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 19:06:08 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10184"; a="223528045"
-X-IronPort-AV: E=Sophos;i="5.87,276,1631602800"; 
-   d="scan'208";a="223528045"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2021 11:06:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,276,1631602800"; 
-   d="scan'208";a="499901625"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 30 Nov 2021 11:06:06 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1ms8S5-000Dg4-70; Tue, 30 Nov 2021 19:06:05 +0000
-Date: Wed, 01 Dec 2021 03:05:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- 11e07797314e452f2222c9c9f0558ab787e22726
-Message-ID: <61a675ec.TfORcYzBYqPBC1ES%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45102C99
+	for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 23:52:49 +0000 (UTC)
+Received: from smtpclient.apple ([86.159.109.142]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.179]) with ESMTPSA (Nemesis) id
+ 1MjSwu-1mBgIc1oWg-00ky6U for <mptcp@lists.linux.dev>; Wed, 01 Dec 2021
+ 00:47:36 +0100
+From: Phil Greenland <phil@quantulum.co.uk>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Marking initial connection as a backup subflow
+Message-Id: <7028B7EA-64DF-42C8-8065-24C879A71231@quantulum.co.uk>
+Date: Tue, 30 Nov 2021 23:47:35 +0000
+To: mptcp@lists.linux.dev
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-Provags-ID: V03:K1:xia40LIjkBQD6uvvOTd8gfn00IKI0GD0nF492/csjMeWPmVvh41
+ UKI2SQLixN89CTXoJH7ED5r7qd4Qg/FLpWqnUDAO9h+cWg2E50BH2jEE4GRVQfG7Vtfs9bO
+ TNPNhVpW2sYWM3WG6NI25ThGsiXX5U5AxCEd5ddZJYcdFE8MhHTX10cqUiBL2UcLcTOnZP1
+ chpgdXZjS1dUxTT5fxiEg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LBtIHP6W4Hs=:HXkr3xfTFVDT47qEmgMK+h
+ NHcLeL0tAO2e0gDOfPYbQe6GgXFkO2hi7b7nBmcSOhQiDkgTVymHW1kqtn3eRdbo8dzc6mQh/
+ uw0kvwVaZN3d1FgcDobQ4KTKBynDRrbHvnaeZOZSeP9cb9XwWFkQJbEL6IF/47hBwmtWFVX8p
+ L5J6MsbCLHJIkjwZ0+/dW55I34Ah/L1giECIQc8y5Wte0Pw3un2OhTTZHo0LiM++MxLmL5mzK
+ cxyV98nBGVx3yjz9pHoxsj7ZX5maM8g/xurTaDnGZnxOuPi7gMAaI2TF4UT3FboZZPgpUt+SZ
+ RjVlkpfoTh483BVPS0kBQlFRDASZicBDocbAJYuhRfTgA+oO5ao8UQSKqAxMZW0hYMzXjAYEk
+ uZuzfikCBLNuUBBIO6+z7pqGxzMdQ14b3Hdmgw93igFzPEfojB6pdvdXPSynJAgJAKmypFbvz
+ NKftk5HtN4d7JvBkQCfhNgbe5sX8M2n6r2G3OudB6T245qYy2154kj3zDZZ0MaATNW8fSXbf0
+ UW7Xcq3mck80W8dF6y9khB3BPjMczCXqeJr8IW5kgsBvh7aOihhBVpn3c5CaafphfnCTvIEoM
+ 6EHx5CPz0FNiIGCa+TPMuk85Jz+E4huIfW3CiAhV8b8JrYlbhEWKJaeVfwnDs1dAgX7X2kwnm
+ aRr32dBVGWIj1MinzWqzKsvAb3V17oFPlG7wIYohJLyxCrb8fkcHHByXijmG6pvrLSjU=
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: 11e07797314e452f2222c9c9f0558ab787e22726  DO-NOT-MERGE: mptcp: enabled by default
+Hi,
 
-elapsed time: 732m
+I=E2=80=99ve just started looking into marking endpoints as backup =
+subflows.
 
-configs tested: 132
-configs skipped: 3
+I may have found a slightly odd corner case I could do with some advice =
+on.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I=E2=80=99ve got a three links, two of which aren=E2=80=99t always =
+available but should be preferred when they are available. One is almost =
+always available but should be treated as a backup.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211128
-arm                    vt8500_v6_v7_defconfig
-mips                          malta_defconfig
-arm                          ep93xx_defconfig
-xtensa                       common_defconfig
-arm                         s3c2410_defconfig
-powerpc                     kilauea_defconfig
-arm                            xcep_defconfig
-mips                      loongson3_defconfig
-arm                      integrator_defconfig
-arm                        multi_v7_defconfig
-mips                           ip28_defconfig
-mips                  maltasmvp_eva_defconfig
-m68k                        m5407c3_defconfig
-arc                        nsim_700_defconfig
-arm                         lubbock_defconfig
-sh                     magicpanelr2_defconfig
-arc                            hsdk_defconfig
-arm                          ixp4xx_defconfig
-arm                          pxa168_defconfig
-arm                  randconfig-c002-20211128
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20211130
-i386                 randconfig-a002-20211130
-i386                 randconfig-a006-20211130
-i386                 randconfig-a004-20211130
-i386                 randconfig-a003-20211130
-i386                 randconfig-a001-20211130
-i386                 randconfig-a001-20211129
-i386                 randconfig-a002-20211129
-i386                 randconfig-a006-20211129
-i386                 randconfig-a005-20211129
-i386                 randconfig-a004-20211129
-i386                 randconfig-a003-20211129
-x86_64               randconfig-a001-20211130
-x86_64               randconfig-a006-20211130
-x86_64               randconfig-a003-20211130
-x86_64               randconfig-a004-20211130
-x86_64               randconfig-a005-20211130
-x86_64               randconfig-a002-20211130
-x86_64               randconfig-a011-20211128
-x86_64               randconfig-a014-20211128
-x86_64               randconfig-a012-20211128
-x86_64               randconfig-a016-20211128
-x86_64               randconfig-a013-20211128
-x86_64               randconfig-a015-20211128
-arc                  randconfig-r043-20211128
-s390                 randconfig-r044-20211128
-riscv                randconfig-r042-20211128
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+I=E2=80=99ve therefore added endpoints for each of them, with the last =
+one also having the backup flag set.
 
-clang tested configs:
-i386                 randconfig-a001-20211128
-i386                 randconfig-a002-20211128
-i386                 randconfig-a003-20211128
-i386                 randconfig-a004-20211128
-i386                 randconfig-a005-20211128
-i386                 randconfig-a006-20211128
-x86_64               randconfig-a014-20211130
-x86_64               randconfig-a016-20211130
-x86_64               randconfig-a013-20211130
-x86_64               randconfig-a012-20211130
-x86_64               randconfig-a015-20211130
-x86_64               randconfig-a011-20211130
-i386                 randconfig-a011-20211130
-i386                 randconfig-a015-20211130
-i386                 randconfig-a012-20211130
-i386                 randconfig-a013-20211130
-i386                 randconfig-a014-20211130
-i386                 randconfig-a016-20211130
-i386                 randconfig-a015-20211129
-i386                 randconfig-a016-20211129
-i386                 randconfig-a013-20211129
-i386                 randconfig-a012-20211129
-i386                 randconfig-a014-20211129
-i386                 randconfig-a011-20211129
-hexagon              randconfig-r045-20211129
-hexagon              randconfig-r041-20211129
-s390                 randconfig-r044-20211129
-riscv                randconfig-r042-20211129
-hexagon              randconfig-r045-20211128
-hexagon              randconfig-r041-20211128
+My main routing table is configured to use the backup link as the =
+system=E2=80=99s default route (given its availability is higher than =
+the others).
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+When all three links are available and subflows established, more often =
+than not the backup subflow is used in preference to the others.
+
+Looking at the subflow selection logic, the non-backups should be =
+preferred over a backup if available.
+
+Given that my initial subflow is connected over the backup link, will it =
+inherit the backup flag from the endpoint configuration?
+
+Would appreciate any advice you can give me.
+
+Regards,
+
+Phil=
