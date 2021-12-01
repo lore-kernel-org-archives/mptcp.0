@@ -1,120 +1,199 @@
-Received: from fallback9.mail.ru (fallback9.mail.ru [94.100.178.49])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAFE2C80
-	for <mptcp@lists.linux.dev>; Wed,  1 Dec 2021 21:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
-	h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=6xF+XAk61bQjJDYSKOa5NQW7zRuqD/Qo/kSGgGfv1r8=;
-	t=1638394786;x=1639000186; 
-	b=AnNnWY+609DvU7IdZ7qnn+iosCmrw3r6C+3RrUaIVCskd6T1Y2FL+gGjsKwisrVFa3Txv/roqeOAMcsr3+YaYeDzR4iYSIwWZ2NUZNyTBq7J1/AoY458EV7S8hEkaE5iS5vuAZBtvcwzuVeqXyqikhHYH0mtUATr/IknCdVL2no=;
-Received: from [10.161.64.45] (port=40394 helo=smtp37.i.mail.ru)
-	by fallback9.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
-	id 1msWy7-0001AT-DY
-	for mptcp@lists.linux.dev; Thu, 02 Dec 2021 00:16:47 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=6xF+XAk61bQjJDYSKOa5NQW7zRuqD/Qo/kSGgGfv1r8=;
-	t=1638393407;x=1638998807; 
-	b=GcxZVHaQgi6MrzQlKe9O38eFMb9mMIBfiugXpkGLgEDQYvLALF5o4D4FT+60QZDCykdwZYCUY1kJ3f97n44C//UrVsmXWnwIQVQNmWXO0D78MiQBXF+NBUQMHax0mPiNJTVIOh96udExgc6q7wv7bYXfKr5zWgn9mqVLetV6DaRanQ60QUpshPmRBzsCCWsUX9U037Wis+sy72fXCBMd7SRxdsQ5bfUBACELVLU2BTrwpb6wZY+gyPXeZxwkqJMrxzUFw1TviPBVLUZ9nEYR+oHGHJfAMiSo9cQPYxGp5mnAulyDRkAc892KmHWl2+fWfLMhRuBLbrTL0Q5rW+vZhA==;
-Received: by smtp37.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
-	id 1msWxy-0006GB-7N; Thu, 02 Dec 2021 00:16:38 +0300
-From: Maxim Galaganov <max@internet.ru>
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	Maxim Galaganov <max@internet.ru>,
-	Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-net] mptcp: fix deadlock in __mptcp_push_pending()
-Date: Thu,  2 Dec 2021 00:15:23 +0300
-Message-Id: <20211201211523.7155-1-max@internet.ru>
-X-Mailer: git-send-email 2.33.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AFF2C82
+	for <mptcp@lists.linux.dev>; Wed,  1 Dec 2021 23:12:55 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="216593392"
+X-IronPort-AV: E=Sophos;i="5.87,280,1631602800"; 
+   d="scan'208";a="216593392"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 15:12:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,280,1631602800"; 
+   d="scan'208";a="460222824"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 01 Dec 2021 15:12:53 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1msYmS-000FVQ-Sp; Wed, 01 Dec 2021 23:12:52 +0000
+Date: Thu, 02 Dec 2021 07:12:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ 7efd6f5c53fb8e55fb71d5dea9e934de9b9b766b
+Message-ID: <61a80169.HUgqe3wWuOrKpwUj%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-7564579A: EEAE043A70213CC8
-X-77F55803: 4F1203BC0FB41BD93822B471089FF64D020547DF80E0E2B5409BB8EA89449007182A05F53808504026B9F2720765351FF943DD7AD2FA2CE322886719BCE2ACA87DA79A5476131AFA
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7C4246EADEF98B8F1EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063706922F90966A37BA8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8A694362DCAA39CFBE14E27B3E1988CC96F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE7850F8B975A76562C9FA2833FD35BB23D9E625A9149C048EE1E561CDFBCA1751FC26CFBAC0749D213D2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BF80095D1E57F4578A471835C12D1D977C4224003CC836476EB9C4185024447017B076A6E789B0E975F5C1EE8F4F765FCC5F0C3701798AAD63AA81AA40904B5D9CF19DD082D7633A078D18283394535A93AA81AA40904B5D98AA50765F790063703A99C803C4C6BCED81D268191BDAD3D698AB9A7B718F8C4D1B931868CE1C5781A620F70A64A45A98AA50765F79006372E808ACE2090B5E1725E5C173C3A84C3C5EA940A35A165FF2DBA43225CD8A89F29C2079CDE5AC9806D8C47C27EEC5E9FB5C8C57E37DE458BEDA766A37F9254B7
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CBD1FC2C1415E7E9D97854AEE9E8DC60A99B0A5C18DA0FC729C2B6934AE262D3EE7EAB7254005DCED37767D8BB9CF519C1E0A4E2319210D9B64D260DF9561598F01A9E91200F654B038889A5EF59567618E8E86DC7131B365E7726E8460B7C23C
-X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D3435BBF0AC4E3A921CBA045B0B207BFA4CA62A5E476B05DD04AAECD0AC30CBC63815D93E6EB13E51961D7E09C32AA3244C3470E4B142E07DE9BB897B99D2D0112669B6CAE0477E908D927AC6DF5659F194
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojLBs75AcgWjNJJEJJpURolA==
-X-Mailru-Sender: 5E616C0FE969A7091F44B545DDE3CF7BE9818E72C1BAED2871FF86D7CCBDF9EA81F2B93D9F570E5CA3A8141CB4B74D41CE269884D3BD092EDB8B09C36E528D9AA9AB2EA8CC3FBC19B4A721A3011E896F
-X-Mras: Ok
-X-7564579A: EEAE043A70213CC8
-X-77F55803: 6242723A09DB00B4297D9AD4AAE60BCB73DCF6C1D8861912403EA7C376CDF3DC049FFFDB7839CE9E5E34638419BF5A1948625F7A4034B3AABF92CFD6038B586B6D82897BAEB95C8A
-X-7FA49CB5: 0D63561A33F958A505FD0722228E26CE7C59501B4B6BA63B661106011D3658F0CACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F790063712DA689F6FAFEB22389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC899F46359F0B3699FF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CBFD98ABA943BD70B302FCEF25BFAB3454AD6D5ED66289B52698AB9A7B718F8C442539A7722CA490CD5E8D9A59859A8B66649B166647023D4089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CBD1FC2C1415E7E9D8A77B7FD20AD8908D4AAEBC7ABC650529C2B6934AE262D3EE7EAB7254005DCED37767D8BB9CF519C699F904B3F4130E343918A1A30D5E7FCCB5012B2E24CD356
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojLBs75AcgWjOZBEEZk1VWBQ==
-X-Mailru-MI: 800
-X-Mailru-Sender: A5480F10D64C90051485E593308544757DD695CD07B920A7C9FAECA9598134DBE28E2421BF3B429A84390AFDD794B14678274A4A9E9E44FD5B858845640BC0C1AB428D199E4977E267EA787935ED9F1B
-X-Mras: Ok
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-__mptcp_push_pending() may call mptcp_flush_join_list() with subflow
-socket lock held. If such call hits mptcp_sockopt_sync_all() then
-subsequently __mptcp_sockopt_sync() could try to lock the subflow
-socket for itself, causing a deadlock.
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: 7efd6f5c53fb8e55fb71d5dea9e934de9b9b766b  DO-NOT-MERGE: mptcp: enabled by default
 
-sysrq: Show Blocked State
-task:ss-server       state:D stack:    0 pid:  938 ppid:     1 flags:0x00000000
-Call Trace:
- <TASK>
- __schedule+0x2d6/0x10c0
- ? __mod_memcg_state+0x4d/0x70
- ? csum_partial+0xd/0x20
- ? _raw_spin_lock_irqsave+0x26/0x50
- schedule+0x4e/0xc0
- __lock_sock+0x69/0x90
- ? do_wait_intr_irq+0xa0/0xa0
- __lock_sock_fast+0x35/0x50
- mptcp_sockopt_sync_all+0x38/0xc0
- __mptcp_push_pending+0x105/0x200
- mptcp_sendmsg+0x466/0x490
- sock_sendmsg+0x57/0x60
- __sys_sendto+0xf0/0x160
- ? do_wait_intr_irq+0xa0/0xa0
- ? fpregs_restore_userregs+0x12/0xd0
- __x64_sys_sendto+0x20/0x30
- do_syscall_64+0x38/0x90
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f9ba546c2d0
-RSP: 002b:00007ffdc3b762d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00007f9ba56c8060 RCX: 00007f9ba546c2d0
-RDX: 000000000000077a RSI: 0000000000e5e180 RDI: 0000000000000234
-RBP: 0000000000cc57f0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9ba56c8060
-R13: 0000000000b6ba60 R14: 0000000000cc7840 R15: 41d8685b1d7901b8
- </TASK>
+elapsed time: 1031m
 
-Fix the issue by using __mptcp_flush_join_list() instead of plain
-mptcp_flush_join_list() inside __mptcp_push_pending(), as suggested by
-Florian. The sockopt sync will be deferred to the workqueue.
+configs tested: 146
+configs skipped: 3
 
-Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/244
-Suggested-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Maxim Galaganov <max@internet.ru>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211128
+i386                 randconfig-c001-20211201
+arm                       netwinder_defconfig
+arm                       versatile_defconfig
+arm                        magician_defconfig
+powerpc                   currituck_defconfig
+mips                           rs90_defconfig
+sh                               alldefconfig
+arc                         haps_hs_defconfig
+arm                          exynos_defconfig
+arm                          ixp4xx_defconfig
+xtensa                              defconfig
+arm                       mainstone_defconfig
+sh                        sh7763rdp_defconfig
+powerpc                 canyonlands_defconfig
+powerpc                       maple_defconfig
+arm                  randconfig-c002-20211129
+arm                  randconfig-c002-20211128
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20211130
+i386                 randconfig-a002-20211130
+i386                 randconfig-a006-20211130
+i386                 randconfig-a004-20211130
+i386                 randconfig-a003-20211130
+i386                 randconfig-a001-20211130
+i386                 randconfig-a001-20211129
+i386                 randconfig-a002-20211129
+i386                 randconfig-a005-20211129
+i386                 randconfig-a004-20211129
+i386                 randconfig-a003-20211129
+i386                 randconfig-a006-20211129
+x86_64               randconfig-a011-20211128
+x86_64               randconfig-a014-20211128
+x86_64               randconfig-a012-20211128
+x86_64               randconfig-a016-20211128
+x86_64               randconfig-a013-20211128
+x86_64               randconfig-a015-20211128
+i386                 randconfig-a015-20211128
+i386                 randconfig-a016-20211128
+i386                 randconfig-a013-20211128
+i386                 randconfig-a012-20211128
+i386                 randconfig-a014-20211128
+i386                 randconfig-a011-20211128
+x86_64               randconfig-a006-20211201
+x86_64               randconfig-a005-20211201
+x86_64               randconfig-a001-20211201
+x86_64               randconfig-a002-20211201
+x86_64               randconfig-a004-20211201
+x86_64               randconfig-a003-20211201
+arc                  randconfig-r043-20211129
+arc                  randconfig-r043-20211128
+s390                 randconfig-r044-20211128
+riscv                randconfig-r042-20211128
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a001-20211128
+x86_64               randconfig-a003-20211128
+x86_64               randconfig-a002-20211128
+x86_64               randconfig-a004-20211128
+x86_64               randconfig-a006-20211128
+x86_64               randconfig-a005-20211128
+i386                 randconfig-a001-20211128
+i386                 randconfig-a002-20211128
+i386                 randconfig-a006-20211128
+i386                 randconfig-a005-20211128
+i386                 randconfig-a004-20211128
+i386                 randconfig-a003-20211128
+x86_64               randconfig-a014-20211130
+x86_64               randconfig-a016-20211130
+x86_64               randconfig-a013-20211130
+x86_64               randconfig-a012-20211130
+x86_64               randconfig-a015-20211130
+x86_64               randconfig-a011-20211130
+i386                 randconfig-a011-20211130
+i386                 randconfig-a015-20211130
+i386                 randconfig-a012-20211130
+i386                 randconfig-a013-20211130
+i386                 randconfig-a014-20211130
+i386                 randconfig-a016-20211130
+i386                 randconfig-a015-20211129
+i386                 randconfig-a016-20211129
+i386                 randconfig-a013-20211129
+i386                 randconfig-a012-20211129
+i386                 randconfig-a014-20211129
+i386                 randconfig-a011-20211129
+i386                 randconfig-a013-20211201
+i386                 randconfig-a016-20211201
+i386                 randconfig-a011-20211201
+i386                 randconfig-a014-20211201
+i386                 randconfig-a012-20211201
+i386                 randconfig-a015-20211201
+hexagon              randconfig-r045-20211129
+hexagon              randconfig-r041-20211129
+s390                 randconfig-r044-20211129
+riscv                randconfig-r042-20211129
+
 ---
-This is now running on my tproxy setup without any visible trouble.
-Could take a week or two to validate though, given how rarely the issue
-manifested itself.
-
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8b49866bcc25..8319e601bc2d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1568,7 +1568,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 			int ret = 0;
- 
- 			prev_ssk = ssk;
--			mptcp_flush_join_list(msk);
-+			__mptcp_flush_join_list(msk);
- 			ssk = mptcp_subflow_get_send(msk);
- 
- 			/* First check. If the ssk has changed since
--- 
-2.33.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
