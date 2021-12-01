@@ -1,180 +1,120 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from fallback9.mail.ru (fallback9.mail.ru [94.100.178.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7AA68
-	for <mptcp@lists.linux.dev>; Wed,  1 Dec 2021 18:39:04 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="234029172"
-X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="234029172"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:34:47 -0800
-X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="512156086"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.209.83.143])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:34:47 -0800
-Date: Wed, 1 Dec 2021 10:34:42 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang.tang@suse.com>, 
-    mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: implement fastclose xmit
- path"
-In-Reply-To: <bc4304c9-12f3-3961-de6a-7549034eb932@tessares.net>
-Message-ID: <6cdf99-1cbd-baca-4dc1-2d7149f9a9d9@linux.intel.com>
-References: <e7427851-a812-05b7-6441-cb9e6f61e65c@tessares.net> <20211130165527.1506827-1-matthieu.baerts@tessares.net> <05864fd724521fcde2e7e40b95a825f5e21a3e2c.camel@redhat.com> <bc4304c9-12f3-3961-de6a-7549034eb932@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAFE2C80
+	for <mptcp@lists.linux.dev>; Wed,  1 Dec 2021 21:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail3;
+	h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=6xF+XAk61bQjJDYSKOa5NQW7zRuqD/Qo/kSGgGfv1r8=;
+	t=1638394786;x=1639000186; 
+	b=AnNnWY+609DvU7IdZ7qnn+iosCmrw3r6C+3RrUaIVCskd6T1Y2FL+gGjsKwisrVFa3Txv/roqeOAMcsr3+YaYeDzR4iYSIwWZ2NUZNyTBq7J1/AoY458EV7S8hEkaE5iS5vuAZBtvcwzuVeqXyqikhHYH0mtUATr/IknCdVL2no=;
+Received: from [10.161.64.45] (port=40394 helo=smtp37.i.mail.ru)
+	by fallback9.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
+	id 1msWy7-0001AT-DY
+	for mptcp@lists.linux.dev; Thu, 02 Dec 2021 00:16:47 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=6xF+XAk61bQjJDYSKOa5NQW7zRuqD/Qo/kSGgGfv1r8=;
+	t=1638393407;x=1638998807; 
+	b=GcxZVHaQgi6MrzQlKe9O38eFMb9mMIBfiugXpkGLgEDQYvLALF5o4D4FT+60QZDCykdwZYCUY1kJ3f97n44C//UrVsmXWnwIQVQNmWXO0D78MiQBXF+NBUQMHax0mPiNJTVIOh96udExgc6q7wv7bYXfKr5zWgn9mqVLetV6DaRanQ60QUpshPmRBzsCCWsUX9U037Wis+sy72fXCBMd7SRxdsQ5bfUBACELVLU2BTrwpb6wZY+gyPXeZxwkqJMrxzUFw1TviPBVLUZ9nEYR+oHGHJfAMiSo9cQPYxGp5mnAulyDRkAc892KmHWl2+fWfLMhRuBLbrTL0Q5rW+vZhA==;
+Received: by smtp37.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
+	id 1msWxy-0006GB-7N; Thu, 02 Dec 2021 00:16:38 +0300
+From: Maxim Galaganov <max@internet.ru>
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	Maxim Galaganov <max@internet.ru>,
+	Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-net] mptcp: fix deadlock in __mptcp_push_pending()
+Date: Thu,  2 Dec 2021 00:15:23 +0300
+Message-Id: <20211201211523.7155-1-max@internet.ru>
+X-Mailer: git-send-email 2.33.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+X-7564579A: EEAE043A70213CC8
+X-77F55803: 4F1203BC0FB41BD93822B471089FF64D020547DF80E0E2B5409BB8EA89449007182A05F53808504026B9F2720765351FF943DD7AD2FA2CE322886719BCE2ACA87DA79A5476131AFA
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7C4246EADEF98B8F1EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063706922F90966A37BA8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8A694362DCAA39CFBE14E27B3E1988CC96F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE7850F8B975A76562C9FA2833FD35BB23D9E625A9149C048EE1E561CDFBCA1751FC26CFBAC0749D213D2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BF80095D1E57F4578A471835C12D1D977C4224003CC836476EB9C4185024447017B076A6E789B0E975F5C1EE8F4F765FCC5F0C3701798AAD63AA81AA40904B5D9CF19DD082D7633A078D18283394535A93AA81AA40904B5D98AA50765F790063703A99C803C4C6BCED81D268191BDAD3D698AB9A7B718F8C4D1B931868CE1C5781A620F70A64A45A98AA50765F79006372E808ACE2090B5E1725E5C173C3A84C3C5EA940A35A165FF2DBA43225CD8A89F29C2079CDE5AC9806D8C47C27EEC5E9FB5C8C57E37DE458BEDA766A37F9254B7
+X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CBD1FC2C1415E7E9D97854AEE9E8DC60A99B0A5C18DA0FC729C2B6934AE262D3EE7EAB7254005DCED37767D8BB9CF519C1E0A4E2319210D9B64D260DF9561598F01A9E91200F654B038889A5EF59567618E8E86DC7131B365E7726E8460B7C23C
+X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D3435BBF0AC4E3A921CBA045B0B207BFA4CA62A5E476B05DD04AAECD0AC30CBC63815D93E6EB13E51961D7E09C32AA3244C3470E4B142E07DE9BB897B99D2D0112669B6CAE0477E908D927AC6DF5659F194
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojLBs75AcgWjNJJEJJpURolA==
+X-Mailru-Sender: 5E616C0FE969A7091F44B545DDE3CF7BE9818E72C1BAED2871FF86D7CCBDF9EA81F2B93D9F570E5CA3A8141CB4B74D41CE269884D3BD092EDB8B09C36E528D9AA9AB2EA8CC3FBC19B4A721A3011E896F
+X-Mras: Ok
+X-7564579A: EEAE043A70213CC8
+X-77F55803: 6242723A09DB00B4297D9AD4AAE60BCB73DCF6C1D8861912403EA7C376CDF3DC049FFFDB7839CE9E5E34638419BF5A1948625F7A4034B3AABF92CFD6038B586B6D82897BAEB95C8A
+X-7FA49CB5: 0D63561A33F958A505FD0722228E26CE7C59501B4B6BA63B661106011D3658F0CACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F790063712DA689F6FAFEB22389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC899F46359F0B3699FF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CBFD98ABA943BD70B302FCEF25BFAB3454AD6D5ED66289B52698AB9A7B718F8C442539A7722CA490CD5E8D9A59859A8B66649B166647023D4089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
+X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975CBD1FC2C1415E7E9D8A77B7FD20AD8908D4AAEBC7ABC650529C2B6934AE262D3EE7EAB7254005DCED37767D8BB9CF519C699F904B3F4130E343918A1A30D5E7FCCB5012B2E24CD356
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojLBs75AcgWjOZBEEZk1VWBQ==
+X-Mailru-MI: 800
+X-Mailru-Sender: A5480F10D64C90051485E593308544757DD695CD07B920A7C9FAECA9598134DBE28E2421BF3B429A84390AFDD794B14678274A4A9E9E44FD5B858845640BC0C1AB428D199E4977E267EA787935ED9F1B
+X-Mras: Ok
 
-On Wed, 1 Dec 2021, Matthieu Baerts wrote:
+__mptcp_push_pending() may call mptcp_flush_join_list() with subflow
+socket lock held. If such call hits mptcp_sockopt_sync_all() then
+subsequently __mptcp_sockopt_sync() could try to lock the subflow
+socket for itself, causing a deadlock.
 
-> Hi Paolo, Geliang,
->
-> On 01/12/2021 11:40, Paolo Abeni wrote:
->> On Tue, 2021-11-30 at 17:55 +0100, Matthieu Baerts wrote:
->>> This is linked to Geliang's patch with the same title.
->>>
->>> If I understand the RFC properly, we can use MP_RST with an MP_FASTCLOSE
->>> and an MP_FAIL (or none of them) but we cannot use MP_FASTCLOSE and
->>> MP_FAIL together.
->>>
->>> This patch implements this logic in both mptcp_established_options() and
->>> mptcp_write_options(). Before this patch, the first function was not
->>> allowing any of these 3 options to be used at the same time while the
->>> second one was allowing MP_FAIL to be used with either MP_FASTCLOSE or
->>> MP_RST.
->>>
->>> Small note: I tried to keep Paolo's idea of reducing conditions for
->>> "normal" options by moving MP_RST at the end and allow to jump there
->>> from MP_FAIL and MP_FASTCLOSE but I'm not sure it makes it easy to read
->>> and really improves perfs. We can also move MP_RST check at the
->>> beginning.
->>>
->>> @Geliang: feel free to re-use this patch if it looks OK to you.
->>>
->>> PS: I didn't try this patch, just quickly wrote it to better explain
->>> what I had in mind.
->>>
->>> Cc: Paolo Abeni <pabeni@redhat.com>
->>> Cc: Geliang Tang <geliang.tang@suse.com>
->>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->>> ---
->>>
->>> Notes:
->>>     to be squashed in "mptcp: implement fastclose xmit path"
->>>
->>>  net/mptcp/options.c | 62 +++++++++++++++++++++++++++------------------
->>>  1 file changed, 37 insertions(+), 25 deletions(-)
->>>
->>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>> index 8a1020e4285c..07091971a51a 100644
->>> --- a/net/mptcp/options.c
->>> +++ b/net/mptcp/options.c
->>> @@ -829,11 +829,17 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->>>
->>>  	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
->>>  		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
->>> -		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
->>> -		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
->>> +		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
->>>  			*size += opt_size;
->>>  			remaining -= opt_size;
->>>  		}
->>> +
->>> +		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
->>> +		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
->>> +			*size += opt_size;
->>> +			remaining -= opt_size;
->>> +		}
->>> +
->>>  		return true;
->>>  	}
->>>
->>> @@ -1257,21 +1263,7 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
->>>  void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
->>>  			 struct mptcp_out_options *opts)
->>>  {
->>> -	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
->>> -		const struct sock *ssk = (const struct sock *)tp;
->>> -		struct mptcp_subflow_context *subflow;
->>> -
->>> -		subflow = mptcp_subflow_ctx(ssk);
->>> -		subflow->send_mp_fail = 0;
->>> -
->>> -		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
->>> -				      TCPOLEN_MPTCP_FAIL,
->>> -				      0, 0);
->>> -		put_unaligned_be64(opts->fail_seq, ptr);
->>> -		ptr += 2;
->>> -	}
->>> -
->>> -	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
->>> +	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
->>>  	 * see mptcp_established_options*()
->>>  	 */
->>>  	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
->>> @@ -1458,19 +1450,39 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
->>>  				ptr += 1;
->>>  			}
->>>  		}
->>> -	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
->>> -		/* RST is mutually exclusive with everything else */
->>> -		*ptr++ = mptcp_option(MPTCPOPT_RST,
->>> -				      TCPOLEN_MPTCP_RST,
->>> -				      opts->reset_transient,
->>> -				      opts->reset_reason);
->>> -		return;
->>>  	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
->>> -		/* FASTCLOSE is mutually exclusive with everything else */
->>> +		/* FASTCLOSE is mutually exclusive with others except RST */
->>>  		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
->>>  				      TCPOLEN_MPTCP_FASTCLOSE,
->>>  				      0, 0);
->>>  		put_unaligned_be64(opts->rcvr_key, ptr);
->>> +
->>> +		if (OPTION_MPTCP_RST & opts->suboptions)
->>> +			goto mp_rst;
->>> +		return;
->>> +	} else if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
->>> +		/* MP_FAIL is mutually exclusive with others except RST */
->>> +		const struct sock *ssk = (const struct sock *)tp;
->>> +		struct mptcp_subflow_context *subflow;
->>> +
->>> +		subflow = mptcp_subflow_ctx(ssk);
->>> +		subflow->send_mp_fail = 0;
->>> +
->>> +		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
->>> +				      TCPOLEN_MPTCP_FAIL,
->>> +				      0, 0);
->>> +		put_unaligned_be64(opts->fail_seq, ptr);
->>> +		ptr += 2;
->>> +
->>> +		if (OPTION_MPTCP_RST & opts->suboptions)
->>> +			goto mp_rst;
->>> +		return
->>
->> As the CI spotted, missing ';' here.
->
-> Yes sorry, I quickly did it before having to go.
->
->> Otherwise LGTM!
->
-> Thank you for the review!
->
-> @Geliang: do you prefer to use this diff -- without the missing ';' --
-> in a new version or do you prefer if I apply it with the fix directly?
->
+sysrq: Show Blocked State
+task:ss-server       state:D stack:    0 pid:  938 ppid:     1 flags:0x00000000
+Call Trace:
+ <TASK>
+ __schedule+0x2d6/0x10c0
+ ? __mod_memcg_state+0x4d/0x70
+ ? csum_partial+0xd/0x20
+ ? _raw_spin_lock_irqsave+0x26/0x50
+ schedule+0x4e/0xc0
+ __lock_sock+0x69/0x90
+ ? do_wait_intr_irq+0xa0/0xa0
+ __lock_sock_fast+0x35/0x50
+ mptcp_sockopt_sync_all+0x38/0xc0
+ __mptcp_push_pending+0x105/0x200
+ mptcp_sendmsg+0x466/0x490
+ sock_sendmsg+0x57/0x60
+ __sys_sendto+0xf0/0x160
+ ? do_wait_intr_irq+0xa0/0xa0
+ ? fpregs_restore_userregs+0x12/0xd0
+ __x64_sys_sendto+0x20/0x30
+ do_syscall_64+0x38/0x90
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x7f9ba546c2d0
+RSP: 002b:00007ffdc3b762d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00007f9ba56c8060 RCX: 00007f9ba546c2d0
+RDX: 000000000000077a RSI: 0000000000e5e180 RDI: 0000000000000234
+RBP: 0000000000cc57f0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9ba56c8060
+R13: 0000000000b6ba60 R14: 0000000000cc7840 R15: 41d8685b1d7901b8
+ </TASK>
 
-Matthieu -
+Fix the issue by using __mptcp_flush_join_list() instead of plain
+mptcp_flush_join_list() inside __mptcp_push_pending(), as suggested by
+Florian. The sockopt sync will be deferred to the workqueue.
 
-Since you were handling Geliang's revisions of this series while I was 
-away, I assume you are not waiting to hear from me, but anyway: these 
-changes (plus ';') combined with Geliang's v3 all look good to me too.
+Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/244
+Suggested-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Maxim Galaganov <max@internet.ru>
+---
+This is now running on my tproxy setup without any visible trouble.
+Could take a week or two to validate though, given how rarely the issue
+manifested itself.
 
---
-Mat Martineau
-Intel
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 8b49866bcc25..8319e601bc2d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1568,7 +1568,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 			int ret = 0;
+ 
+ 			prev_ssk = ssk;
+-			mptcp_flush_join_list(msk);
++			__mptcp_flush_join_list(msk);
+ 			ssk = mptcp_subflow_get_send(msk);
+ 
+ 			/* First check. If the ssk has changed since
+-- 
+2.33.1
+
