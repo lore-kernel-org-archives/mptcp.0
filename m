@@ -1,74 +1,86 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45102C99
-	for <mptcp@lists.linux.dev>; Tue, 30 Nov 2021 23:52:49 +0000 (UTC)
-Received: from smtpclient.apple ([86.159.109.142]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.179]) with ESMTPSA (Nemesis) id
- 1MjSwu-1mBgIc1oWg-00ky6U for <mptcp@lists.linux.dev>; Wed, 01 Dec 2021
- 00:47:36 +0100
-From: Phil Greenland <phil@quantulum.co.uk>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5F568
+	for <mptcp@lists.linux.dev>; Wed,  1 Dec 2021 02:08:32 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10184"; a="233866996"
+X-IronPort-AV: E=Sophos;i="5.87,277,1631602800"; 
+   d="scan'208";a="233866996"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2021 18:08:25 -0800
+X-IronPort-AV: E=Sophos;i="5.87,277,1631602800"; 
+   d="scan'208";a="500034337"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.212.229.172])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2021 18:08:25 -0800
+Date: Tue, 30 Nov 2021 18:08:25 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: add missing documented NL params
+In-Reply-To: <20211130162026.1455269-1-matthieu.baerts@tessares.net>
+Message-ID: <4a76c2f6-83e6-8fdd-cbdc-68938a20bc4c@linux.intel.com>
+References: <20211130162026.1455269-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Marking initial connection as a backup subflow
-Message-Id: <7028B7EA-64DF-42C8-8065-24C879A71231@quantulum.co.uk>
-Date: Tue, 30 Nov 2021 23:47:35 +0000
-To: mptcp@lists.linux.dev
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-Provags-ID: V03:K1:xia40LIjkBQD6uvvOTd8gfn00IKI0GD0nF492/csjMeWPmVvh41
- UKI2SQLixN89CTXoJH7ED5r7qd4Qg/FLpWqnUDAO9h+cWg2E50BH2jEE4GRVQfG7Vtfs9bO
- TNPNhVpW2sYWM3WG6NI25ThGsiXX5U5AxCEd5ddZJYcdFE8MhHTX10cqUiBL2UcLcTOnZP1
- chpgdXZjS1dUxTT5fxiEg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LBtIHP6W4Hs=:HXkr3xfTFVDT47qEmgMK+h
- NHcLeL0tAO2e0gDOfPYbQe6GgXFkO2hi7b7nBmcSOhQiDkgTVymHW1kqtn3eRdbo8dzc6mQh/
- uw0kvwVaZN3d1FgcDobQ4KTKBynDRrbHvnaeZOZSeP9cb9XwWFkQJbEL6IF/47hBwmtWFVX8p
- L5J6MsbCLHJIkjwZ0+/dW55I34Ah/L1giECIQc8y5Wte0Pw3un2OhTTZHo0LiM++MxLmL5mzK
- cxyV98nBGVx3yjz9pHoxsj7ZX5maM8g/xurTaDnGZnxOuPi7gMAaI2TF4UT3FboZZPgpUt+SZ
- RjVlkpfoTh483BVPS0kBQlFRDASZicBDocbAJYuhRfTgA+oO5ao8UQSKqAxMZW0hYMzXjAYEk
- uZuzfikCBLNuUBBIO6+z7pqGxzMdQ14b3Hdmgw93igFzPEfojB6pdvdXPSynJAgJAKmypFbvz
- NKftk5HtN4d7JvBkQCfhNgbe5sX8M2n6r2G3OudB6T245qYy2154kj3zDZZ0MaATNW8fSXbf0
- UW7Xcq3mck80W8dF6y9khB3BPjMczCXqeJr8IW5kgsBvh7aOihhBVpn3c5CaafphfnCTvIEoM
- 6EHx5CPz0FNiIGCa+TPMuk85Jz+E4huIfW3CiAhV8b8JrYlbhEWKJaeVfwnDs1dAgX7X2kwnm
- aRr32dBVGWIj1MinzWqzKsvAb3V17oFPlG7wIYohJLyxCrb8fkcHHByXijmG6pvrLSjU=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi,
+On Tue, 30 Nov 2021, Matthieu Baerts wrote:
 
-I=E2=80=99ve just started looking into marking endpoints as backup =
-subflows.
+> 'loc_id' and 'rem_id' are set in all events linked to subflows but those
+> were missing in the events description in the comments.
+>
+> Fixes: b911c97c7dc7 ("mptcp: add netlink event support")
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+> include/uapi/linux/mptcp.h | 18 ++++++++++--------
+> 1 file changed, 10 insertions(+), 8 deletions(-)
+>
 
-I may have found a slightly odd corner case I could do with some advice =
-on.
+Thanks for the fix Matthieu, looks good to me.
 
-I=E2=80=99ve got a three links, two of which aren=E2=80=99t always =
-available but should be preferred when they are available. One is almost =
-always available but should be treated as a backup.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-I=E2=80=99ve therefore added endpoints for each of them, with the last =
-one also having the backup flag set.
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index c8cc46f80a16..f106a3941cdf 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -136,19 +136,21 @@ struct mptcp_info {
+>  * MPTCP_EVENT_REMOVED: token, rem_id
+>  * An address has been lost by the peer.
+>  *
+> - * MPTCP_EVENT_SUB_ESTABLISHED: token, family, saddr4 | saddr6,
+> - *                              daddr4 | daddr6, sport, dport, backup,
+> - *                              if_idx [, error]
+> + * MPTCP_EVENT_SUB_ESTABLISHED: token, family, loc_id, rem_id,
+> + *                              saddr4 | saddr6, daddr4 | daddr6, sport,
+> + *                              dport, backup, if_idx [, error]
+>  * A new subflow has been established. 'error' should not be set.
+>  *
+> - * MPTCP_EVENT_SUB_CLOSED: token, family, saddr4 | saddr6, daddr4 | daddr6,
+> - *                         sport, dport, backup, if_idx [, error]
+> + * MPTCP_EVENT_SUB_CLOSED: token, family, loc_id, rem_id, saddr4 | saddr6,
+> + *                         daddr4 | daddr6, sport, dport, backup, if_idx
+> + *                         [, error]
+>  * A subflow has been closed. An error (copy of sk_err) could be set if an
+>  * error has been detected for this subflow.
+>  *
+> - * MPTCP_EVENT_SUB_PRIORITY: token, family, saddr4 | saddr6, daddr4 | daddr6,
+> - *                           sport, dport, backup, if_idx [, error]
+> - *       The priority of a subflow has changed. 'error' should not be set.
+> + * MPTCP_EVENT_SUB_PRIORITY: token, family, loc_id, rem_id, saddr4 | saddr6,
+> + *                           daddr4 | daddr6, sport, dport, backup, if_idx
+> + *                           [, error]
+> + * The priority of a subflow has changed. 'error' should not be set.
+>  */
+> enum mptcp_event_type {
+> 	MPTCP_EVENT_UNSPEC = 0,
+> -- 
+> 2.32.0
 
-My main routing table is configured to use the backup link as the =
-system=E2=80=99s default route (given its availability is higher than =
-the others).
-
-When all three links are available and subflows established, more often =
-than not the backup subflow is used in preference to the others.
-
-Looking at the subflow selection logic, the non-backups should be =
-preferred over a backup if available.
-
-Given that my initial subflow is connected over the backup link, will it =
-inherit the backup flag from the endpoint configuration?
-
-Would appreciate any advice you can give me.
-
-Regards,
-
-Phil=
+--
+Mat Martineau
+Intel
