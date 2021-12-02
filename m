@@ -1,91 +1,86 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E203B2C9D
-	for <mptcp@lists.linux.dev>; Thu,  2 Dec 2021 17:50:38 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id w1so1226177edc.6
-        for <mptcp@lists.linux.dev>; Thu, 02 Dec 2021 09:50:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=FeZA6KXPPLMLAhwsXdrVAfsphPk3QwlUovbLy9uHkeU=;
-        b=Kuyjw5zRpUXcHbqVFsZk2y3jQ+UKdkt3bxKZiDwiwQM7h/k89aOvUcknOFxQ7CWidu
-         21RiR4UPJubsgEvo9/VKcoGXMyweHIfra8CcwsycAYTmT1L5hSWJi6yRYvOxrsBz0zzJ
-         iORmzMq1RQAH9yI4OlBbZqqb3Sc1yo0Fjkt3dWov+Nn1WBL+GY14drX/0gqZiANkeXH/
-         MYA1Wb7k+sXkEDLCdE7I5e0qOdJDJEosSYwRCeovR3BZYsbm1oWgrd0vm5fR+NEi/B5M
-         dSlumegK39cS/Gaow3zT/MYaXdBCx+c+nbGJEfnkYKgHEALAtD2BYt1In5RZ19QGXDF7
-         JrGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=FeZA6KXPPLMLAhwsXdrVAfsphPk3QwlUovbLy9uHkeU=;
-        b=n7PiBG8ts5bDY25UrlHMHn11KKzm1r5B5enOfkJt/AlC1hUbWBCRBRtfzdLNfnKHnP
-         six//ZYuEg3lrD6y+Lvz2AI+FHmesMHmwrEt5Tr94B7qI0TDZ5GSLVGutVjApVEU92RG
-         o+1/Z2k+59TKpS7gq1PB2L4ddsfwYt/oZNHDPjx1BYEIgLJSEl1m1vgXAV7YYHUvOwG8
-         2pDOE6wRrupf5INhEB7VuHAU1YkOPk3IN4SFS0Knmq6cAKXdGeWqww78Ct1Dta7XYDT7
-         ntSex2LEZvxpiuBW4h2ZsQHoF1PrF6zgL9u0ZA37mARBoEp7YyIsGfSq5tmbP5YjERKN
-         Xsbw==
-X-Gm-Message-State: AOAM530YPhAzdYBWI/HJwueY8ZRd5EiZLoffG1JyF/AXWlkKChgmtBfl
-	F4FeQAkcyyNXbF2/NFYXL1G40SAsIDt2E7XTCI0=
-X-Google-Smtp-Source: ABdhPJzrKPP6M+iTXXud5LQCwC5YBwZaGTKP5NYeRZG0jHxL2D1nHTWC4nZ2ntyD5k54fMCeZGahlg==
-X-Received: by 2002:a17:907:7f9e:: with SMTP id qk30mr17105977ejc.313.1638467437192;
-        Thu, 02 Dec 2021 09:50:37 -0800 (PST)
-Received: from [192.168.178.33] ([213.211.142.51])
-        by smtp.gmail.com with ESMTPSA id dy4sm251719edb.92.2021.12.02.09.50.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Dec 2021 09:50:36 -0800 (PST)
-Message-ID: <7a5ebdb0-8dbc-71fc-c215-c9465ce4f39c@tessares.net>
-Date: Thu, 2 Dec 2021 18:50:36 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CF22C9D
+	for <mptcp@lists.linux.dev>; Thu,  2 Dec 2021 17:52:26 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="217450041"
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="217450041"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 09:52:26 -0800
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="477988883"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.209.65.201])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 09:52:26 -0800
+Date: Thu, 2 Dec 2021 09:52:20 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 1/2] Squash to "selftests: mptcp: check IP_TOS
+ in/out are the same"
+In-Reply-To: <20211202173216.2982478-1-matthieu.baerts@tessares.net>
+Message-ID: <825d1f7f-26d4-fd53-f1-198aa0c7da87@linux.intel.com>
+References: <20211202173216.2982478-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH mptcp-net] mptcp: fix deadlock in __mptcp_push_pending()
-Content-Language: en-GB
-To: Maxim Galaganov <max@internet.ru>, Florian Westphal <fw@strlen.de>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20211201211523.7155-1-max@internet.ru>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20211201211523.7155-1-max@internet.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Maxim, Florian, Mat,
+On Thu, 2 Dec 2021, Matthieu Baerts wrote:
 
-On 01/12/2021 22:15, Maxim Galaganov wrote:
-> __mptcp_push_pending() may call mptcp_flush_join_list() with subflow
-> socket lock held. If such call hits mptcp_sockopt_sync_all() then
-> subsequently __mptcp_sockopt_sync() could try to lock the subflow
-> socket for itself, causing a deadlock.
+> Fixing a -Wunused-result error:
+>
+>  $ make -C tools/testing/selftests/net/mptcp
+>  (...)
+>  gcc -Wall -Wl,--no-as-needed -O2 -g  -I../../../../../usr/include    mptcp_sockopt.c  -o tools/testing/selftests/net/mptcp/mptcp_sockopt
+>  mptcp_sockopt.c: In function 'init_rng':
+>  mptcp_sockopt.c:695:9: warning: ignoring return value of 'read', declared with attribute warn_unused_result [-Wunused-result]
+>    695 |   (void)read(fd, &foo, sizeof(foo));
+>        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> It seems adding "(void)" is not enough. As a workaround, we can also
+> simply the output of 'read()'.
+>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+>
+> Notes:
+>    to be squashed in "selftests: mptcp: check IP_TOS in/out are the same"
+>
 
-Thank you for the patch and the review!
+Looks good to squash, thanks.
 
-Now in our tree (fix for -net) with Florian and Mat's RvB tags:
+-Mat
 
-- 4607ae5cd560: mptcp: fix deadlock in __mptcp_push_pending()
+> tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index 5b87e162e704..ac9a4d9c1764 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -690,9 +690,11 @@ static void init_rng(void)
+>
+> 	if (fd >= 0) {
+> 		unsigned int foo;
+> +		ssize_t ret;
+>
+> 		/* can't fail */
+> -		(void)read(fd, &foo, sizeof(foo));
+> +		ret = read(fd, &foo, sizeof(foo));
+> +		assert(ret == sizeof(foo));
+>
+> 		close(fd);
+> 		srand(foo);
+> -- 
+> 2.32.0
+>
+>
+>
 
-- Results: afbf49f90abe..3fca3bddffca
-
-(Thanks for the Closes tag :) )
-
-Builds and tests are now in progress:
-
-
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211202T175024
-
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
