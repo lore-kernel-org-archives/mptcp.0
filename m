@@ -1,30 +1,31 @@
 Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615BF68
-	for <mptcp@lists.linux.dev>; Thu,  2 Dec 2021 07:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1FE68
+	for <mptcp@lists.linux.dev>; Thu,  2 Dec 2021 07:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1638430215;
+	t=1638430222;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CPEJ0mkrYbjeaP7NDt+hWxw4uvwTMUP36udlYOPq618=;
-	b=mx2AFgH8pScwWLTRWrxTmqymn4IruQvyfqGfzc2agVrmnENLzQzdvmyB3R6QnRE2lSn4I6
-	zvOSOcMS+by3IVhqiS3/oqFhosgmEh8+nQfuD+o6ilNm9IgNCRaPdlTLUeVEJDWKrDLCri
-	Qbh9h8BQEGAiFkV9Ycew7mFLdq+SUvA=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h4MxoOC5Biz5Za6BV8UxCUnH3+FTWfdIbZ6m0rxDZZ4=;
+	b=Zlf31Ab6PXVWLzbM2IEBYn4OhJ5yYffnjIorN7rWgE4isgCQ3kJ2WgHDVtq3wEI4PfQXpl
+	/uUqf4jjAEvvaDUSkSzFoLui5nb0QmBBfDFX25IAvfq5mGQ7xLiJFlVlyTU6Tj1DKzHNJb
+	lVRGRWtksmwxEOBKzJ5Nzqmdc72iZdg=
 Received: from EUR03-VE1-obe.outbound.protection.outlook.com
- (mail-ve1eur03lp2052.outbound.protection.outlook.com [104.47.9.52]) by
+ (mail-ve1eur03lp2056.outbound.protection.outlook.com [104.47.9.56]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-33-xhHzVXB_NL-CrMNDLfyYow-1; Thu, 02 Dec 2021 08:30:14 +0100
-X-MC-Unique: xhHzVXB_NL-CrMNDLfyYow-1
+ de-mta-11-QGEfQV2SOmuFuUbcWsKZcQ-1; Thu, 02 Dec 2021 08:30:21 +0100
+X-MC-Unique: QGEfQV2SOmuFuUbcWsKZcQ-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=el8x/vhiYShnROPDzwECnjwT2/eO5DB+gNby0QSjeCLQmQdpOlYex1BhjSkxau9djMFJULVlVrajJu4O7WqqXZ+nzquMWWgP78e2y2ZADr4cRs5JlRz9Yq5v9Xxfd8Ticflgznm4x6JmF2+qkFLn2r7GLDGhhgv2Rab8weL92whcfx4vtccrzXAETgHUkOyOamWN2iJ0i5xwJ0F7tWCzKbh+7QEmdXGf/qiCMvMawiGeBOXwRMfmgCp/kKwlGz3StoKtOAQU6ZEjShIcS/79Yf6C1U9nTLblGay/QwWvfLGx1UO1izSFCoQalbTeGNs+nNjSV2YnGaAzgdiyhEqGJg==
+ b=Okj9jCYRe5FLaQaMDSzxPNYHYTEKdmXGjnohgGjEdpYhn48KVmnhLTIJkWDIBhGMtZHq0BvX5ISyWldchwa8cHfDlpLazhUcgh3GCzM8hZhIuZZOlVbW6R2XjBtTJ+E9twYm96wZvIpJeo6X5qMBbYb7tJWmGzd1lBAerre7rAYdol6Sxbc5ZJkzUNzyzfAaVrWV+G6loPRXCM62wdtjsI2SqcbKABoGIGr4XmibBJa3LqZoC7x3bXGnKzCPxml5/iAMKSfRJYPe7nOHnbIs8BCH43EEzl0Uq0HbVPkYCa7O6gX0oE/oIHE1sVJinI6Jq0u7PhwalmYddBLQXLrk2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VTcR6a/GMOoiYRmCyIZsItLVXkSP9A95zR+NFmr+kBI=;
- b=cCa9DYWcEMuiyNQW2hPnO7mONfyKw98BZWk8OOJUkkSzzPp43qaboM9hbNqh9o2F4OUFoSM+rgpqdk+ZbsZc1uf0daHFZXSF+vuRF7uzjrN6NczhRQ2xCc1G5yYSun6+KDFEKrG17a9ZYIB8HSxs68t/Blove6y+yZQTthr4LvoXFBQoqKwn1+lhwoUrujzDTOVtU/04GX71zpk4r6tojxhA4w/gY0Xr9CMYBYb6nimdb9MwgDKUKEoPZkHNNdw9N4gHdqVt9GSGvM7+GYN+99SFVL09OL5pKoDWex0H8+SFei5ved5Q1n9fRUfSLnE9dulz5lF5jaP0ysLidWfn6A==
+ bh=yRucKG0R3GAOFkbHiYzrvE+h/HItKmZTGQ7/YBzi4Hg=;
+ b=hsf0dwx3vI18ssYdYXyubLYsNF7SalNv9yEeXhlcOYMgXjOlgZZur91Z+NqIgywVfFimIoiHB6bpP7K3yFrOlwPYefI9/kUZw7D+ZHVb9sohINj39B8qxQvBTnAERJtw7+5NM931mu/rQk6faOh3he8PYOS9gR+8+hOjgWiHK6VNpzxRh6iKAO5rXoHzFzW4bUOTRTGGPJ98397MCodEEJu0HKmqObSJivgqUNIwpqs/5RCuNUJPVTuf2FZc5v1BB3T1AavWbrzfBXJcL5D4YYyj6zSS6wO3KjmGm5VC9g8w+hODgaUWM0brFL44zLMF8yEVQDSebxacQBzPAflW5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
@@ -34,22 +35,26 @@ Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by HE1PR0402MB2698.eurprd04.prod.outlook.com (2603:10a6:3:dc::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Thu, 2 Dec
- 2021 07:30:12 +0000
+ 2021 07:30:20 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::59a0:4185:3e03:7366]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::59a0:4185:3e03:7366%6]) with mapi id 15.20.4734.024; Thu, 2 Dec 2021
- 07:30:12 +0000
+ 07:30:20 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v5 0/2] send MP_FAIL with MP_RST and others
-Date: Thu,  2 Dec 2021 15:29:58 +0800
-Message-ID: <cover.1638429740.git.geliang.tang@suse.com>
+CC: Geliang Tang <geliang.tang@suse.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v5 1/2] Squash to "mptcp: implement fastclose xmit path"
+Date: Thu,  2 Dec 2021 15:29:59 +0800
+Message-ID: <41e52e743ee397180dab0ad4a980e2b8d532bfe2.1638429740.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1638429740.git.geliang.tang@suse.com>
+References: <cover.1638429740.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0001.apcprd02.prod.outlook.com
- (2603:1096:3:17::13) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SG2PR02CA0009.apcprd02.prod.outlook.com
+ (2603:1096:3:17::21) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -57,89 +62,144 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: from localhost (60.251.47.115) by SG2PR02CA0001.apcprd02.prod.outlook.com (2603:1096:3:17::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22 via Frontend Transport; Thu, 2 Dec 2021 07:30:11 +0000
+Received: from localhost (60.251.47.115) by SG2PR02CA0009.apcprd02.prod.outlook.com (2603:1096:3:17::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23 via Frontend Transport; Thu, 2 Dec 2021 07:30:20 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4cdb33ee-6e85-46b8-8c49-08d9b56593be
+X-MS-Office365-Filtering-Correlation-Id: 1396cc26-5ec7-4a05-b36a-08d9b565989b
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB2698:
 X-Microsoft-Antispam-PRVS:
-	<HE1PR0402MB2698DF6DA0B32E53B7938468F8699@HE1PR0402MB2698.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+	<HE1PR0402MB26982D8198E0322D30E5664CF8699@HE1PR0402MB2698.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	qe0K7LGuSp4Racw8Rhr23AUxnx4U99/SHfFkAQziPVYcPFqZBYxPvuz2TlsS/dgNMkm92aI//0r8G17viCdz/wxgUZQ8y6Gso/QZz0zmseM/kVp8WUnvd1yk+K0FL7HrhhKR+0c6WNy3Ecl8IEjmgAbHTikyQegJ2GnUUP3JVcI3/snjvLCKu+6pozcM7KxW6/V8d3QyZAi0n8CXM8XiKxwzZJoKO+BfpkAexTt9fagAzIkKeWXuya4UsZ27T4cz6Xgp9uSuwIhRjIteL3HsmWeZcx3Zu/lj6zbmWewZNVveYJfX4eYU1MZ1PBILEIHkYoaT9D6m27NiJ2os2xO0qTD2thP+k3bnMLfPg18n41hsT3SAT6VMp5u4U8pKgbgIYNQFLx5cSL8aRqxTZmHI8EyTfUSxDFfEljC77VE5DBResMZDi/A3Om7bZ0rkBxsvtHk3TBJ8LjjIfe/sh8LS7RcMRk1KxGhCJvLGn+ycaufYaoWUkNPwvZGr9VDdMHDBuXNocruHmcHhCz+nTVkFM1DckzvF1jshJRK+OUSQ7IPCYRzHoE4YgVZQn2V9DXpJc0rnicT4fGdikYN4Skr3XpBbqkMZu6QdaMgH5Tfd+vzf8QxsJ8y9+BU+hrZr8CunHW4pMnKIxfBPfIYUMD7z3Q==
+	Dgj6DdXm5WW8o6ixyn8IaxhNvPpLCMFd7zR+4s/QeDZpZHkPPYRIZTCPoQWE89RKn/C749AS5XVlwG3bTF99tBgH+AkqhvaIikKUmKJd3WyMOEUnAUHF66Oe6I1kRtYJJWI/VuvmTmpkNiuBoxuxAo/NBXHT6DiGhHkSzW7dk2q1s2wKfojwnr/cs/NMYDuguqxIlCbZ8pwPiEBf65xiSv/a3XmhKCuIS0hQVhbNprd2AzrVfbnz2yLerFyzpf3J3sKUWByIsOBkbHOGGs9bg2kyJ9Mred7cpJLuFpY5FpqS7I7OIzOCTUNXXw9CVF4v5FHj/TaWkP0btcUDysXgy+TLkUcXuTP/miSA2keL4QSJE7QLj3WAnAtrojD16h/6oJK/vnyA6VGeeFEG3flQvs2uDsIsUV/Zc28V38rUPhJ0UgsiZ54SZqXSKcfrLGJZvXh0o2nYuhnuiPJnTMbceiA/ao2wHsDr/wLinFc/cNgcTndxPuNbCnlTAXfFDBiFsGquT7tjVZ+SPXAbcoavxxGTlELiqruxdeNkWRBy9TRZt07TvyXgZdneofI0LsIhbC8v/Nf5/TuGW/H9qrsxhBE8ol/W0griXwGvJjcW+ZsUhoQmRV+HBKD4iqT5jFnIQ8X7ZKsU1LyITWx+j+UhWg==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(956004)(66476007)(44832011)(66556008)(6666004)(86362001)(2906002)(316002)(66946007)(508600001)(5660300002)(36756003)(55236004)(6496006)(6916009)(186003)(8676002)(6486002)(83380400001)(107886003)(26005)(38100700002)(2616005)(4744005)(4326008)(8936002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(956004)(66476007)(44832011)(66556008)(6666004)(86362001)(54906003)(2906002)(316002)(66946007)(508600001)(5660300002)(36756003)(55236004)(6496006)(6916009)(186003)(8676002)(6486002)(83380400001)(26005)(38100700002)(2616005)(4326008)(8936002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HeOkyij9xLFQSy3McI9/3xgB04ULaFRHw+0RNAaIppTxO8GqEDtlrs8jXPqY?=
- =?us-ascii?Q?kVh7/GQWCoV6ggbLh04P2e6O1eDhatpydykhEvaJHCkPUbL2XaaUuTRw8YGc?=
- =?us-ascii?Q?UKMksnt/Q/XQowtsNiaJTKMBT7iV7gJNVC9sx9H1WlooxVY84wiYMWNzV/oy?=
- =?us-ascii?Q?NbJceF1RT1VkCNy5GZyV+MGn9HcCsVbKvaOXCa7JjOb3DEDR4xZwLv/EXYAC?=
- =?us-ascii?Q?OCeVzmaqtuap3Lzs2/0G0YMXk6XEXl2kFQ9UZpbvb0aL5qfoX8Ad+nLG4g+7?=
- =?us-ascii?Q?hboZqwfQiekWCg1fmwOcvEaORQImWq59qWXMPbdC0XZVB1NsbHnCIJGGi2BA?=
- =?us-ascii?Q?SnKryYtOw9x4oVUBpo+N8Aknw6JApsyZv3slTJFZuGTf6kl7cdpWxO2XXb22?=
- =?us-ascii?Q?nFwBvqTW4iNDRiJMHsyeJtlv0bMSWXvin/QDqXq3bh5hII0imaaalh7/QONi?=
- =?us-ascii?Q?rBhH0oGN2jmWJsdsohzM27LKD45RE0/CNDp6EFUoJIbPE+0Z+v6Tw7/kNbUb?=
- =?us-ascii?Q?fHfzHHJzuDDF7xiqPA4wBIFEFcUdvG/dAeXfyBxha4zh+sbav9rd3RnCk94F?=
- =?us-ascii?Q?W2VyfwSEjWq5gLNLXDVjF49meP7tvzf3I9eW8Jc52O/llnwU3IkEb+CqkCrL?=
- =?us-ascii?Q?LxPYFc7p6G6XW64eoWImIIraTY23ZuqA70qdXi157L8hH4P6ywylcS7WK4CB?=
- =?us-ascii?Q?FXrq80GH1C+3EfZCvJy8aImkcO+dvu8gjiQMGrY8+GCxbvto4AeaEq5rV1eO?=
- =?us-ascii?Q?q/ATf6Sp1H2DsoyBGDHYIO9S6M9SIg4QdNq7zKrrplRjJn+Dn5Z9o+kiUQvp?=
- =?us-ascii?Q?8ZyfbZfgymM7UpXwW9ky7Gk+ZZ0J7TkpjlAu8NrBzmWT2d13Y59a/LzG42Wg?=
- =?us-ascii?Q?u7AHXvretN77SzqFSBCccwWJtiGpYNJmy8fuyD42aRBl+VV8H6jR6BbThP/6?=
- =?us-ascii?Q?bSgL3pd4wu298b+Ukj8DZgkPRWKznsFYHzx+kC7/ywhzIX4R/BQ0VnVDGo7s?=
- =?us-ascii?Q?23mnUNg9Pdok+PdyVizg+Q8RtRXgcN1eZmQYYu8Ip5xX5vzPSsX2KmFYC86h?=
- =?us-ascii?Q?L+6FV6IolTZZIUG1v4q2l485ygI8e5Q6qe6SYdCAKWmQwT7ElvZVGkPtM4x/?=
- =?us-ascii?Q?Ox6+2QoT7g/KXrztoP83rIwA1F7RhpsbHURtF9CSJaB7LoirHDK7j6BaE/Wj?=
- =?us-ascii?Q?L7Ml1U5lHIDubOVaGgN+YqjuOZWBzB3oEDEoc7SW8e6DBNCApHGqYDPI13bE?=
- =?us-ascii?Q?k2wRbEQ2srprNs/22QjM3uxU1x6b9l9kplkUEFlCR5er/5aU0TVMEFmHgyRn?=
- =?us-ascii?Q?iU8a6tnDlU1uV7mVaM5f/Ef39ORdBQbEdmC4K6kkXkekQf24WruB3khSNYJ0?=
- =?us-ascii?Q?WXcUmrACYQgJdQZLgGdTC4u3wlpCX21uoo5Qt9fBft+cCwmkluqXHUdriKZ4?=
- =?us-ascii?Q?yj63KHDhOh44qNYXkgvEn0aZpDpHB3TLratDBiVvkZmvVB8OF1aFR9nkyOWu?=
- =?us-ascii?Q?N0W0lkU1XdTewDqUfXclD8lifjkTSFAUrnzpt5JLrF0T1HXBHZHlEEqW3DGe?=
- =?us-ascii?Q?J/6j+iUDtZkGt0C77mvVF+iebjXmloNHooPKbWyOs3wd3hY15iQ15goBuKsY?=
- =?us-ascii?Q?ZOGV34WaGomi2jAzqPZirfQ=3D?=
+	=?us-ascii?Q?TUa8lkW5kcv7ttydExu5M59L6Ow5OoWibx8FH3ael/wvQJRCQn3Yxm1EC+CS?=
+ =?us-ascii?Q?Gygml7j/AkJ399M1AOnQoyaWbrammR678gKbXs7R4nq8dif0Uk1Fqpr8BVGY?=
+ =?us-ascii?Q?qlLvZ4Wm7m3s0xeq/Vw/Uj3vrc/9iUNWOWyQC3PwXeUAIXChP3L7yfHF8cjB?=
+ =?us-ascii?Q?VwmlHEQs8ntxVI3mGc9XWP0h+gAXU5CymRdMyzxK8poyGIVaxiX1pR8pzHb6?=
+ =?us-ascii?Q?WTyvmQC2Gx3pLVB8+yRQkFoiPH44KA5K/ekwMuBgGBixavU0TYnXbyN+ym59?=
+ =?us-ascii?Q?pORgxMmwxOin04at+i4EAycVqljExEh5wbiQoji3orxfSo+XuCMJkN7q2ee5?=
+ =?us-ascii?Q?RtXeqFpfFY04reCdo6Kgic1OvNCyua+YIP4QmM2BZSXzAq3GKyMxMDX4Aibd?=
+ =?us-ascii?Q?qlgPHuHvIjgGU+dnKEbNiSdAmir3tOZpd6OT3fh34ciuTUKTRfLuDS4e7V+1?=
+ =?us-ascii?Q?3dhhi6x3cXen+qA5PfsOlJY2L1TxTPKW44KCwa2IqnjbaK2DNntGUwzKzTrZ?=
+ =?us-ascii?Q?ZKXDYVS219ILlEvj1yux3fWmBTiP28im0u3JIA61+DYq6LMVQX2EdaD+5ozn?=
+ =?us-ascii?Q?0w5sGN5Q915geGhiVSEMh1Vq8ivIeKVxKZ9nRCar+EpMTIddwAaeLiZOWYZ+?=
+ =?us-ascii?Q?swwKDNZz897qNHDTaRAmuNcGp4IMmlF/qaVSTXx/0BbPFZefnDMhqoTQwOtl?=
+ =?us-ascii?Q?0gu/Nl+3FCK8GgWdSzLIE6FbcumAVRecQZn9eOJPXJQ5m69D5l4FHd3A9U8K?=
+ =?us-ascii?Q?YCsZgf0NgaEpm3Fe8sr1DKPi1w9neNnADjFCFJelg81Xuu26SOemt48LHbMR?=
+ =?us-ascii?Q?UwF0HUhMUYkdRxN1uc6eJo6+irrtztrunqjQIcC/74J9UpUOVIVWYWqeLFaD?=
+ =?us-ascii?Q?1LxzacMVWE3K9/Mk5maFCIsA3ZIywO+k0Z+RT/avXmWLpkpoBfysMDfg5uEG?=
+ =?us-ascii?Q?dHw0a+CTsE0XsIdOeyjGhqfKXVOY5mZ58WmEhAuKq1gRFPsAIFVgsYnQXsq8?=
+ =?us-ascii?Q?63PmWTte1blvETnwgtxkzLT2ilhsG42zFF/MBoNsgAkwZ/2+Ap6mjMAtPDUH?=
+ =?us-ascii?Q?3+zY0PQLTl6PJ3a6Dz+/GvCR8MtWoqDKwzTIn8KcTMIX1dittbiRqzgEkJYq?=
+ =?us-ascii?Q?ORZulR6l0WAfH06v2qEunh8XDX56YEuJHfJWFTxv/Y++vuVErU/IzF+rcVbV?=
+ =?us-ascii?Q?IIL5Ol+Xxvl3/ouf1ANAOn494r2kZL4EnFB2Ae99SK8oi1NXLj7PWlp0TLHI?=
+ =?us-ascii?Q?ZhnaIGW3njd2RurfRls0WZCVy4gc8dYbW9nTRVek7WItUZiP5X5jVbEQNzsZ?=
+ =?us-ascii?Q?FdeiHvGnqHUyMAJePg7FJcmrsWiOSexECOk9X9n/zzilNk6wt15bekwZ9KuM?=
+ =?us-ascii?Q?88WiuVbszRpOPBKEEDoks0L8tKY2QOQQe9CBrecfkVdReA/k/Db5l+gXMP2J?=
+ =?us-ascii?Q?zgav2siX8TREO5Z754dWcWWlUGgXzyZub5KIpWJrw4lcaeJm+kbno5s3tz8h?=
+ =?us-ascii?Q?2/LsKvFLyaFVNy/154jyaQo5zEzZp9nTOOeG5uT65LRIQs/XnWSbcryL5kkw?=
+ =?us-ascii?Q?KDTsYCk8MCVj9S6mb9cnwwKqdJMu56f0wJyOPfXwQ1kWbn9uVFdVbuohJSmv?=
+ =?us-ascii?Q?GTOHiQmgesNECZp0aqpce7w=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cdb33ee-6e85-46b8-8c49-08d9b56593be
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1396cc26-5ec7-4a05-b36a-08d9b565989b
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2021 07:30:12.5718
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2021 07:30:20.8929
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r8TNvfF/L7JohcPqSN98QOBYOQ1UhJBWBNh3DzrE62yAACBD+9V9Ooa99IRbqjkev9UlVIeE+EMTe9abxuSbMg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: UyqW/EmVNfCFzCi1KOKmvADFRi+j0Km5jyc3CpFQkvJYbKsauPNPr/scn5WbESAHdPdxzXp2KvjvXAuO+2v/MQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB2698
 
-v5:
- - Since MP_FAIL could be sent with MP_RST and DSS, and MP_RST could be
-sent with MP_FAIL and FASTCLOSE, this patch fixed the MP_RST sending in
-mptcp_established_options() and mptcp_write_options().
+MP_FAIL could be sent with MP_RST at the same time, fix this in
+mptcp_established_options().
 
-v4:
- - add Matt's patch, fix the missing ";" in it, dropped two empty lines
-and added my Tested-by tag.
+MP_RST could be sent with FASTCLOSE at the same time, fix this in
+mptcp_write_options().
 
-v3:
- - update patch 1 as Matt suggested.
- - do more cleanups in patch 1.
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
+ net/mptcp/options.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-v2:
- - rename patch 1 as a squash-to patch.
- - print out reset_transient in patch 2 too. Please keep patch 2 as a
-standalone patch, not a squash-to patch.
-
-Two small patches about sending MP_FAIL with MP_RST.
-
-Geliang Tang (2):
-  Squash to "mptcp: implement fastclose xmit path"
-  mptcp: print out reset infos of MP_RST
-
- net/mptcp/options.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
-
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 8a1020e4285c..73242304ada5 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -829,8 +829,12 @@ bool mptcp_established_options(struct sock *sk, struct=
+ sk_buff *skb,
+=20
+ 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+ 		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) =
+||
+-		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
+-		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) =
+{
++		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
++			*size +=3D opt_size;
++			remaining -=3D opt_size;
++		}
++		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
++		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) =
+{
+ 			*size +=3D opt_size;
+ 			remaining -=3D opt_size;
+ 		}
+@@ -1257,6 +1261,7 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mp=
+ext)
+ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 			 struct mptcp_out_options *opts)
+ {
++	/* MP_FAIL is mutually exclusive with others except RST and DSS */
+ 	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
+ 		const struct sock *ssk =3D (const struct sock *)tp;
+ 		struct mptcp_subflow_context *subflow;
+@@ -1271,7 +1276,16 @@ void mptcp_write_options(__be32 *ptr, const struct t=
+cp_sock *tp,
+ 		ptr +=3D 2;
+ 	}
+=20
+-	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
++	/* RST is mutually exclusive with others except MP_FAIL and FASTCLOSE */
++	if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
++		*ptr++ =3D mptcp_option(MPTCPOPT_RST,
++				      TCPOLEN_MPTCP_RST,
++				      opts->reset_transient,
++				      opts->reset_reason);
++		return;
++	}
++
++	/* DSS, MPC, MPJ, ADD_ADDR and FASTCLOSE are mutually exclusive,
+ 	 * see mptcp_established_options*()
+ 	 */
+ 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
+@@ -1458,15 +1472,8 @@ void mptcp_write_options(__be32 *ptr, const struct t=
+cp_sock *tp,
+ 				ptr +=3D 1;
+ 			}
+ 		}
+-	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
+-		/* RST is mutually exclusive with everything else */
+-		*ptr++ =3D mptcp_option(MPTCPOPT_RST,
+-				      TCPOLEN_MPTCP_RST,
+-				      opts->reset_transient,
+-				      opts->reset_reason);
+-		return;
+ 	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
+-		/* FASTCLOSE is mutually exclusive with everything else */
++		/* FASTCLOSE is mutually exclusive with others except RST */
+ 		*ptr++ =3D mptcp_option(MPTCPOPT_MP_FASTCLOSE,
+ 				      TCPOLEN_MPTCP_FASTCLOSE,
+ 				      0, 0);
 --=20
 2.31.1
 
