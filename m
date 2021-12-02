@@ -1,364 +1,403 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D74C2C82
-	for <mptcp@lists.linux.dev>; Thu,  2 Dec 2021 11:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1638443831;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zPpIibB59Ru8ky0pHUFJ8mHIC2mzFy7LPJrQUGuFC/k=;
-	b=d3w5C7eqJVbxAJrcnjjg+omnOF/XP4HzLBobJtqfhqmQyg+iciID4HkpAQgdmKRgZWRl7W
-	a59vLwnbebs/5yj6SQxjYP5Yv729HtlBg/XKU8QwoYd/XijLP2/ltejyrsrY7yhSP6kuwJ
-	0nIVi2SH2i1WSdwckHjIsbdNt4T9//U=
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
- (mail-am6eur05lp2113.outbound.protection.outlook.com [104.47.18.113]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-20-KcN8aM-ZM2ihusT1z3K0Ug-1; Thu, 02 Dec 2021 12:17:10 +0100
-X-MC-Unique: KcN8aM-ZM2ihusT1z3K0Ug-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Guz3fEEuyrsBrN/l7BLnSInsOo5zZSCwfklkG3/i0oVQ0uqw3galXZA8ThvXLB/XYpQaTZqz/Zugz/cGq45zDRavItV5xraDskGUzJogRzH8IU710Cc3OeZnawauUEXcRuYvAJc8mUH8gjbo5PDu/2hiVy7tGCL56fmlxvc9iJZgUYjfE+Meun/8o3G7dq5KEJE3oEsHftySepnscv1WuRxzm629CitULpivvMh7dYKCjI6sYWfJWWaT6Dd2b+CgE0zWh5mOJq6sWXKpicvVemBxLmwIWnbYokQoKRq8F++s/9YT+GxTGtBmFUtolPMYGIOQuZry2iUorpaUMbig7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q7J7FfQy2GppcQgx2KxyQacpVErDS6xOCYcRFcfg4NM=;
- b=JhUS6RExt4IepLe3Q2Lh4YMiLbNSs+nny5+SvsHTuwyypCG3psUVkI5sXk/geVYG0ZmXaDxG0f8QAj6B1N3hpF3xrDoRct/IBoZ7m3mJCOqSXGJyspKD7WRIktj0ICyvgAAmxv4ZnviRkatFZsf14FKqZGtrP+tWR7zM72GdP1JEtjDO7UVLsqOUFfOKZLyqtBQZhBl7GQq5qbv6vYkanfj+zgkHWUgg651wpbGqAaQuppQ+9R4qbWR0imbN1AxdLJL+7wLCNtJkPGicNVzQj/cNLUZKoavvNaPruPzl4M6YL2KJ5hXHQDRYfhApAlRqcnN8sUnuiLcMY2+GMTvAww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by HE1PR0402MB3434.eurprd04.prod.outlook.com (2603:10a6:7:8d::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Thu, 2 Dec
- 2021 11:17:07 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::59a0:4185:3e03:7366]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::59a0:4185:3e03:7366%6]) with mapi id 15.20.4734.024; Thu, 2 Dec 2021
- 11:17:07 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v3] selftests: mptcp: add mp_fail testcases
-Date: Thu,  2 Dec 2021 19:16:49 +0800
-Message-ID: <4dd1a9febb11730329ef3486c6dcb1eac3b68d9c.1638443671.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.31.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR04CA0073.apcprd04.prod.outlook.com
- (2603:1096:202:15::17) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8758A2C82
+	for <mptcp@lists.linux.dev>; Thu,  2 Dec 2021 15:11:00 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id c4so60310203wrd.9
+        for <mptcp@lists.linux.dev>; Thu, 02 Dec 2021 07:11:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:from
+         :subject:content-transfer-encoding;
+        bh=RNr1r5N6x0O53lN1/7bBed59kh/H6pAfdeHaCCp0JJ8=;
+        b=ThIcw7dGmwSXSTLCE4MQKMYJ9XLyk+gKW5cYyywStzcFByeQxyuwon+FhE/lD7gU8D
+         s0ZDhC6EMSowoRRvNPtHfqkKEjEyD7D2EwjVaf3ctUQuM2vjV0lBnSr1vuCdevkNO/SG
+         wHLKbogIJ0XtDisomNapvDbSzb7QsQ1BxCwVpt3zB2VUWIsaFze2T7BT2H+4A7cXLC0I
+         mzwp7U41pi29vPeKgxZVHfG3b1OXsCIWnH7Ih18oGQfE74niQDpR57jFvnCmEm7eJTyY
+         R8X6X38zJ8ttMzMgV43Vvy25s28fG2wA4hltvPS6bUu+aKRbVby5nfhmULaGMy/6T3aH
+         KZqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:from:subject:content-transfer-encoding;
+        bh=RNr1r5N6x0O53lN1/7bBed59kh/H6pAfdeHaCCp0JJ8=;
+        b=xGk3c41ptQhnSjgmvSLvLQMz1XcfLoy8u99A2XewPjcdLYD9VmiJiRcoIB58BAkQnf
+         RFEJ1GTFtRrnF9STvnG6GOX36L77AsoP8Ub9m24QHAPziQu6R5lU+rGCfAXLUNbm42yt
+         UDqaAXbsPR3cWj/ufn7BP8LlYpoV6nCyVTM2oYLiZHGonlmVeHGvaTfF2tdDjCbgMQF8
+         dXt6GkdMTGiexzre2C3fkwd8v5/8e+UzdxJuflvrkkNriTpYcayi07eL6mgjQDhtKfIr
+         +z/4CJ6txNfbkBqQkUlmwFfVX4ff8uE1S5QqsGTewsuLbVRH1oLJQK1kZ6oh7i32iUG0
+         w85g==
+X-Gm-Message-State: AOAM5339V30Er701zgciSFNAkoH+hmATwYzK/FMU2HDWngjWyZsb62Nd
+	yXJ+5NJfxpxQ8yaV/XRzh8NbCTJ9X20JODAH
+X-Google-Smtp-Source: ABdhPJzTmKpBi+mcvrIAkeUixnLJSzUuQfvm18QKV1rX2H4J19NVqkD8pcuBU/FPqi8xMomaiLqZ+A==
+X-Received: by 2002:adf:fb86:: with SMTP id a6mr15118768wrr.35.1638457857902;
+        Thu, 02 Dec 2021 07:10:57 -0800 (PST)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id j134sm21984wmj.3.2021.12.02.07.10.57
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Dec 2021 07:10:57 -0800 (PST)
+Message-ID: <06d1fc76-063a-b521-0f05-197b540fddb5@tessares.net>
+Date: Thu, 2 Dec 2021 16:10:57 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: from localhost (60.251.47.115) by HK2PR04CA0073.apcprd04.prod.outlook.com (2603:1096:202:15::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23 via Frontend Transport; Thu, 2 Dec 2021 11:17:05 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0d9e4c2c-85e9-4910-2360-08d9b585466f
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3434:
-X-Microsoft-Antispam-PRVS:
-	<HE1PR0402MB34348FA2876FF61D980FB1D3F8699@HE1PR0402MB3434.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	gOHsY4IY7Jxcs26HnIhth5KJ4lMJYv+6v4HlBPzAmAetv6yjKDbvTfWy1RrB4M0o7nkjiO86icqOjklSUVecxkL77VwHj3IXgQ44Lap83KrhRpKPTcVrcHnVsWVBxtfqaxVBlsSGxhgYa0LS20yQpdsT/29q4JdSmE8Bg2N+UbH8urq4GkrTAj8fFfDJq+Opf9QnCtnjm7kY54an3Cl1RAvt1lf+/3P/xhhkvjTgjXhyU3c+Aj4FuQN2iCygPwhv+gHkuvwJz5tt99HTqlbWq/rAbQxiaX7VjEM6CQnDrz1yS2FMDZTVQ0YTpTLs+3pCl2+1vieyvlvvQfPJ1Dp6ckUo5X+yCnNuWqIBagw/g5RRkeOdVDdgLcIqvfgK37VT+61bibpdDdUYjl6JY6cWKDITiWaP3ZX8UxBUL2R9IpPyr3dTLyeemOKP09rbNNpWUctkilEPscQBrgb0kJDu8hADD+X7uR3Nbn5Fr1PPaEBnwHqSW4RMAjzMfcu9mzsg02MQvy++7h4OxiCDEhHkqwNohtHMH9auDp5jgwn3gWX6bQjJplgRN4f4s+qhadf06mdps6MUqJowLPAjKkutmBmv480sdq5Dtn10Exh5KRfbcD8f2N9mJ3t/fm4kAw1GxMmgMYPY50FiSbWmWF9nkQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(66946007)(2616005)(86362001)(5660300002)(8676002)(6666004)(956004)(66476007)(54906003)(38100700002)(44832011)(2906002)(66556008)(186003)(4326008)(36756003)(6916009)(316002)(66574015)(55236004)(508600001)(8936002)(26005)(83380400001)(6496006)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?L2LS+4w4EBK1Dyd7D9BFqzOgAPcQuWu/ZPis9hn3im0kRjdaAYfqx3+t+WHq?=
- =?us-ascii?Q?gE+ku5PVgF2TI/zD06M9nHtW+gbkG0SQeUDuQNr6UQR+4nuMV30ArrIpibnM?=
- =?us-ascii?Q?pcWhn5VTiYgVTKMzvuLR5/f7i+n05yXObWNKIteBaXnXZJuLiF7mK8zr/PAq?=
- =?us-ascii?Q?fbezxJP9q9twUNz125dWqM9VK8Vtor6PA9IuFAu3ygxFNdL89kl7rvZ4fq+c?=
- =?us-ascii?Q?uz8RscBMQruvwlltJ1hi20SF7RT9oPhpP0PKITI4AznH2ZArkf34Z9pzzZZl?=
- =?us-ascii?Q?u8WsSqXFaK/nw6RKs/f8hvEOldmWWvViqq33mK22gJHXXBuHDRIC3JxPlVEO?=
- =?us-ascii?Q?0F3LNKpC08HWLb8r8oHpCV8uq8eZk0b3BIdTuJXvO6/dZCYVKbhtd4YTxSeb?=
- =?us-ascii?Q?aRpXwiZfuj+yNjRA2ZpzgxPerVQCt/vYGqXeeZr4j+5m8BXdBVDsI6UPLVbO?=
- =?us-ascii?Q?1Uy98729c+I5E614A2s5UTK1d9y90GAsGa9yOFlXXVaCeGyEcWfa2nsMsVuK?=
- =?us-ascii?Q?n9v7ont6/GZKvhzVuVBDgCvdaeSpFUjCSbJrRSc62/9Jw1RN637NPU2qLQ/N?=
- =?us-ascii?Q?BUclHOt0onS7F2vOn4zePbNB5NtmiNlgVL1sud4r23+OUt4Ge2iCwKfcs4im?=
- =?us-ascii?Q?ehBDCHPSL+cvSzRScqWLSDLml5dJeiDZTDTmNJWla0HFpVw2oVxiXGrxbj9Y?=
- =?us-ascii?Q?9QcMT8NVTkejvh0ZH/xE1yQGHTQVzVo85oIJyBvkgeuUhxcwaTNssUGc3qyF?=
- =?us-ascii?Q?vHUjHxB6q4YjgDAd5p4on0gqIZXQVMMGeNes8PD/79ZW/3i9DJEB6wgAjHR9?=
- =?us-ascii?Q?4fCLT72ZRkaljeTlNzv/fj6ccsGAXDnxB71fQY9TGBYOmy09j9izjl0Q4s0n?=
- =?us-ascii?Q?uXp4IyaeaG8cn04+q4eq8rnHdW41dbvCtJ8InQN7Pr308F0tpo/8wdOYNsPc?=
- =?us-ascii?Q?Pfqd7GLliyCsTiatXbJRM7+vX0u6pXChYWki7xZtdu6OGxfS+DOXcAkwTNTl?=
- =?us-ascii?Q?kW18RUyXmu8eesIV8v8l6mbttFal2WR86jxpDA613rOYCi5hA3J1LGZk3zV9?=
- =?us-ascii?Q?DvA/nzLgMLzMtz1p/HX344PdkuBMyavRb3Wgom/p+OIAa9EbwFY9/kBbJIpr?=
- =?us-ascii?Q?A2KC9ricD6HclcYRvokW+CKtZJtMAZQmL8HmpM438AZLackNoASDiyB7s/db?=
- =?us-ascii?Q?vcRREXQqMjB3Jg/Z9zIHOBSdCKUevpWBVbaJKllFY+6DMBTSCWwgHcp+KFVZ?=
- =?us-ascii?Q?XuhUBUDv4l2rNhebNwjtg0wQNxbW0JJ6a3/mQgKsHZYymVyQ/YTyVjz/QJal?=
- =?us-ascii?Q?QKhYgHeW7DXSDfwCE3qx9QEYPGPSDOZK+10AuS8IqzaJYUlWvy3DfKNUWLmN?=
- =?us-ascii?Q?PZPZlV0Pu5JRmZtsNqVOqzVkOZbI4/Fs37/gg0XUqOGprQcz7gbwFGHpfD57?=
- =?us-ascii?Q?E1uWaEUpaAtjtDEbA/4zcM3GrS1M+4iF7qn5fZ0OTlrfgyO6wrWAS9j4VgD4?=
- =?us-ascii?Q?naXNEbRmWTzqVFW24A/ZrZVvbWbHAb0rLLxSE2XV14q/6Ayf/0WJB6GydR9y?=
- =?us-ascii?Q?8s1Aj2xoJv7KTurUl8VJJcmi6xznXtvv49TMilrAtpEe72ZP7t+lY+CuCI8y?=
- =?us-ascii?Q?/2AoNSnPpzaAmRYSrJHwUNc=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d9e4c2c-85e9-4910-2360-08d9b585466f
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2021 11:17:07.3318
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m/c2T8uZj2KyO3SwYI67SIPwDRFff4dFJyDh8NWgEDdE8T0C576+k4VTwWFFxwNJNWPtnKick50euE2tNhiSaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB3434
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [Weekly meetings] MoM - 18th of November 2021
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Added the test cases for MP_FAIL, use 'tc' command to trigger the
-checksum failure.
+Hello everyone,
 
-Suggested-by: Davide Caratti <dcaratti@redhat.com>
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- v3:
-  - "file received by server does not match" still there.
----
- tools/testing/selftests/net/mptcp/config      |   5 +
- .../testing/selftests/net/mptcp/mptcp_join.sh | 108 ++++++++++++++++--
- 2 files changed, 105 insertions(+), 8 deletions(-)
+Recently, we had our 173rd meeting with Mat, Ossama, Kishen (Intel),
+Paolo, Davide, Florian (Red Hat), Geliang (Suse), Giray (Parkyeri) and
+myself (Tessares).
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selft=
-ests/net/mptcp/config
-index 419e71560fd1..37124a6891b7 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -19,3 +19,8 @@ CONFIG_NFT_SOCKET=3Dm
- CONFIG_IP_ADVANCED_ROUTER=3Dy
- CONFIG_IP_MULTIPLE_TABLES=3Dy
- CONFIG_IPV6_MULTIPLE_TABLES=3Dy
-+CONFIG_NET_ACT_CSUM=3Dm
-+CONFIG_NET_ACT_PEDIT=3Dm
-+CONFIG_NET_CLS_ACT=3Dy
-+CONFIG_NET_CLS_FLOWER=3Dm
-+CONFIG_NET_SCH_INGRESS=3Dm
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 2684ef9c0d42..6de026689eff 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -160,6 +160,43 @@ reset_with_allow_join_id0()
- 	ip netns exec $ns2 sysctl -q net.mptcp.allow_join_initial_addr_port=3D$ns=
-2_enable
- }
-=20
-+# Modify TCP payload without corrupting the TCP packet
-+#
-+# This rule inverts a 32-bit word at byte offset 148 for all TCP ACK
-+# packets carrying enough data.
-+# Once it is done, the TCP Checksum field is updated so the packet
-+# is still considered as valid at the TCP level.
-+# But because the MPTCP checksum, covering the TCP options and data,
-+# has not been updated, we will detect the modification and emit an
-+# MP_FAIL: what we want to validate here.
-+#
-+# Please note that this rule will produce this pr_info() message for
-+# each TCP ACK packets not carrying enough data:
-+#
-+#     tc action pedit offset 162 out of bounds
-+#
-+# But this should be limited to a very few numbers of packets as we
-+# restrict this rule to outgoing TCP traffic with only the ACK flag
-+# + except the 3rd ACK, only packets carrying data should be seen in
-+# this direction.
-+reset_with_fail()
-+{
-+	reset
-+
-+	make_file "$cin" "client" 20480
-+	make_file "$sin" "server" 20480
-+
-+	i=3D"$1"
-+
-+	tc -n $ns2 qdisc add dev ns2eth$i clsact
-+	tc -n $ns2 filter add dev ns2eth$i egress \
-+		protocol ip prio 1000 \
-+		flower ip_proto tcp tcp_flags 0x10/0xff \
-+		action pedit munge offset 148 u32 invert \
-+		pipe csum tcp \
-+		index 100
-+}
-+
- ip -Version > /dev/null 2>&1
- if [ $? -ne 0 ];then
- 	echo "SKIP: Could not run test without ip tool"
-@@ -178,6 +215,12 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
-=20
-+jq -V > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run all tests without jq tool"
-+	exit $ksft_skip
-+fi
-+
- print_file_err()
- {
- 	ls -l "$1" 1>&2
-@@ -232,6 +275,24 @@ link_failure()
- 	done
- }
-=20
-+mp_fail_del_dev()
-+{
-+	i=3D"$1"
-+
-+	for n in `seq 1 100`; do
-+		local action=3D$(tc -n $ns2 -j -s action show action pedit index 100)
-+		local packets=3D$(echo $action | jq '.[1].actions[0].stats.packets')
-+		local overlimits=3D$(echo $action | jq '.[1].actions[0].stats.overlimits=
-')
-+
-+		let pkt=3D$packets-$overlimits
-+		if [ $pkt -gt 0 ]; then
-+			sleep .1
-+			tc -n $ns2 qdisc del dev ns2eth$i clsact
-+			break
-+		fi
-+	done
-+}
-+
- # $1: IP address
- is_v6()
- {
-@@ -371,6 +432,9 @@ do_transfer()
- 	if [[ "${addr_nr_ns2}" =3D "fullmesh_"* ]]; then
- 		flags=3D"${flags},fullmesh"
- 		addr_nr_ns2=3D${addr_nr_ns2:9}
-+	elif [[ "${addr_nr_ns2}" =3D "fail_"* ]]; then
-+		mp_fail_del_dev ${addr_nr_ns2:5}
-+		addr_nr_ns2=3D0
- 	fi
-=20
- 	if [ $addr_nr_ns2 -gt 0 ]; then
-@@ -542,6 +606,8 @@ run_tests()
- chk_csum_nr()
- {
- 	local msg=3D${1:-""}
-+	local csum_ns1=3D${2:-0}
-+	local csum_ns2=3D${3:-0}
- 	local count
- 	local dump_stats
-=20
-@@ -553,8 +619,8 @@ chk_csum_nr()
- 	printf " %-36s %s" "$msg" "sum"
- 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{=
-print $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D 0 ]; then
--		echo "[fail] got $count data checksum error[s] expected 0"
-+	if [ "$count" !=3D $csum_ns1 ]; then
-+		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
- 		ret=3D1
- 		dump_stats=3D1
- 	else
-@@ -563,8 +629,8 @@ chk_csum_nr()
- 	echo -n " - csum  "
- 	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{=
-print $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D 0 ]; then
--		echo "[fail] got $count data checksum error[s] expected 0"
-+	if [ "$count" !=3D $csum_ns2 ]; then
-+		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
- 		ret=3D1
- 		dump_stats=3D1
- 	else
-@@ -658,6 +724,8 @@ chk_join_nr()
- 	local syn_nr=3D$2
- 	local syn_ack_nr=3D$3
- 	local ack_nr=3D$4
-+	local fail_nr=3D${5:-0}
-+	local infi_nr=3D${6:-0}
- 	local count
- 	local dump_stats
-=20
-@@ -700,9 +768,9 @@ chk_join_nr()
- 		ip netns exec $ns2 nstat -as | grep MPTcp
- 	fi
- 	if [ $checksum -eq 1 ]; then
--		chk_csum_nr
--		chk_fail_nr 0 0
--		chk_infi_nr 0 0
-+		chk_csum_nr "" $fail_nr
-+		chk_fail_nr $fail_nr $fail_nr
-+		chk_infi_nr $infi_nr $infi_nr
- 	fi
- }
-=20
-@@ -1837,6 +1905,25 @@ fullmesh_tests()
- 	chk_add_nr 1 1
- }
-=20
-+fail_tests()
-+{
-+	# multiple subflows
-+	reset_with_fail 2
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 dev ns2eth2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 "fail_2"
-+	chk_join_nr "MP_FAIL test, multiple subflows" 2 2 2 1
-+
-+	# single subflow
-+	reset_with_fail 1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 "fail_1"
-+	chk_join_nr "MP_FAIL test, single subflow" 0 0 0 1 1
-+}
-+
- all_tests()
- {
- 	subflows_tests
-@@ -1853,6 +1940,7 @@ all_tests()
- 	checksum_tests
- 	deny_join_id0_tests
- 	fullmesh_tests
-+	fail_tests
- }
-=20
- usage()
-@@ -1872,6 +1960,7 @@ usage()
- 	echo "  -S checksum_tests"
- 	echo "  -d deny_join_id0_tests"
- 	echo "  -m fullmesh_tests"
-+	echo "  -F fail_tests"
- 	echo "  -c capture pcap files"
- 	echo "  -C enable data checksum"
- 	echo "  -h help"
-@@ -1907,7 +1996,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
-=20
--while getopts 'fsltra64bpkdmchCS' opt; do
-+while getopts 'fsltra64bpkdmchCSF' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1951,6 +2040,9 @@ while getopts 'fsltra64bpkdmchCS' opt; do
- 		m)
- 			fullmesh_tests
- 			;;
-+		F)
-+			fail_tests
-+			;;
- 		c)
- 			;;
- 		C)
---=20
-2.31.1
 
+Thanks again for this new good meeting!
+
+Here are the minutes of the meeting:
+
+
+
+Accepted patches:
+    - The list of accepted patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=3
+
+
+    netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+    our repo (by: Geliang Tang, Matthieu Baerts):
+
+12616517  [mptcp-next] Squash to "mptcp: sockopt: add SOL_IP freebind &
+transpa...
+12591669  [mptcp-next,v8,7/8] selftests: mptcp: add infinite map mibs check
+12591667  [mptcp-next,v8,6/8] mptcp: add mib for infinite map sending
+12591665  [mptcp-next,v8,5/8] mptcp: infinite mapping receiving
+12591663  [mptcp-next,v8,4/8] mptcp: infinite mapping sending
+12591661  [mptcp-next,v8,3/8] mptcp: track and update contiguous data status
+12591659  [mptcp-next,v8,2/8] mptcp: add the fallback check
+12591657  [mptcp-next,v8,1/8] mptcp: don't send RST for single subflow
+
+
+
+Pending patches:
+    - The list of pending patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=*
+
+
+    netdev (if mptcp ML is in cc) (by: Davide Caratti):
+
+12614499  [iproute2] mptcp: fix JSON output when dumping endpoints by id
+(accepted in iproute2.git 9bd5ab0f0913)
+
+
+
+    our repo (by: Davide Caratti, Dmytro Shytyi, Florian Westphal,
+Geliang Tang, Jiapeng Chong, Kishen Maloor, Mat Martineau, Matthieu
+Baerts, Paolo Abeni):
+
+12282219: RFC: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to
+tcp.h/mptcp.h
+12282221: RFC: [RESEND,RFC,4/4] tcp: parse tcp options contained in
+reset packets:
+    - WIP
+
+12282223: RFC: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
+    - WIP
+
+12282225: RFC: [RESEND,1/5] tcp: make two mptcp helpers available to tcp
+stack
+12282227: RFC: [RESEND,5/5] mptcp: send fastclose if userspace closes
+socket with unread data:
+    - WIP
+
+12321111: Changes Requested: mptcp: Remove redundant assignment to
+remaining:
+    - TODO (anyone?)
+
+12540931: Changes Requested: [RFC,1/4] mptcp: pm_netlink: Add
+MPTCP_PM_CMD_ANNOUNCE
+12540933: Changes Requested: [RFC,2/4] mptcp: selftests:
+MPTCP_PM_CMD_ANNOUNCE
+12540935: Changes Requested: [RFC,3/4] mptcp: pm_netlink: Add
+MPTCP_PM_CMD_REMOVE
+12540937: Changes Requested: [RFC,4/4] mptcp: selftests:
+MPTCP_PM_CMD_REMOVE:
+    - Kishen is working on it with selftests
+
+12576993: Changes Requested: [net-next,v1] net: mptcp, Fast Open Mechanism:
+    - Dmytro is working on it
+
+12591671: Changes Requested: [mptcp-next,v8,8/8] selftests: mptcp: add
+mp_fail testcases
+12592523: Changes Requested: [mptcp-next] Squash to "selftests: mptcp:
+add mp_fail testcases":
+    - Geliang is working on a new version
+
+12615445: Queued: [v2,mptcp-next,1/7] mptcp: keep snd_una updated for
+fallback socket
+12615449: Queued: [v2,mptcp-next,2/7] mptcp: never allow the PM to close
+a listener subflow
+12615451: Queued: [v2,mptcp-next,3/7] mptcp: implement fastclose xmit path
+12615453: Queued: [v2,mptcp-next,4/7] mptcp: full disconnect implementation
+12615455: Queued: [v2,mptcp-next,5/7] mptcp: cleanup accept and poll
+12615457: Queued: [v2,mptcp-next,6/7] mptcp: implement support for
+user-space disconnect
+12615459: Queued: [v2,mptcp-next,7/7] mptcp: add disconnect selftests:
+    - series: "mptcp: improve accept() and disconnect()"
+    - needs to be applied after "TCP_INQ support" series
+
+12622403: Queued: [mptcp-next,v3,1/4] mptcp: add TCP_INQ cmsg support
+12622401: Queued: [mptcp-next,v3,2/4] selftests: mptcp: add TCP_INQ support
+12622405: Queued: [mptcp-next,v3,3/4] mptcp: add SIOCINQ, OUTQ and
+OUTQNSD ioctls
+12622407: Queued: [mptcp-next,v3,4/4] selftests: mptcp: add inq test case:
+    - series: "TCP_INQ support" series
+    - do we keep or drop changelog entries?
+    - could be confusing on netdev for other maintainers but we might
+want to keep credits
+    - reviewed-by tag + drop changelog?
+
+12625823: New: [mptcp-next,1/6] mptcp: Remove redundant assignments in
+path manager init
+12625831: New: [mptcp-next,2/6] mptcp: Add a member to mptcp_pm_data to
+track kernel vs userspace mode
+12625825: New: [mptcp-next,3/6] mptcp: Bypass kernel PM when userspace
+PM is enabled
+12625827: New: [mptcp-next,4/6] mptcp: Make kernel path manager check
+for userspace-managed sockets
+12625829: New: [mptcp-next,5/6] mptcp: Add a per-namespace sysctl to set
+the default path manager type
+12625833: New: [mptcp-next,6/6] selftests: mptcp: Add tests for
+userspace PM type:
+    - mptcp: Add userspace PM mode to bypass kernel PM
+    - new version after the RFC one
+    - Needs to be reviewed
+
+12626855: New: [iproute2-next] mptcp: add support for fullmesh flag:
+    - Needs to be reviewed
+    - Good time to improve the man page about the Netlink PM and how the
+different parameters work
+
+12627073: New: [mptcp-next,v2] mptcp: allow changing the "backup" bit by
+endpoint id:
+    - Needs to be reviewed
+
+
+
+Issues on Github:
+    https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+    Recently opened (latest from last week: 239)
+
+  241  Force fallback to TCP [question]:
+      - Use case: some networks would not be "allowed" to use MPTCP, a
+fallback would then be forced from the PM
+      - Looks like it should not be done from the PM, out of scope.
+      - That's typically the job of a firewall (netfilter rules)
+      - Still: why MPTCP would be a problem in some "untrusted" networks?:
+      - except if this network is known to alter MPTCP connections.
+      - Matth: taking care of that → Done
+
+
+    Bugs (opened, flagged as "bug" and assigned)
+
+  239  [syzkaller] general protection fault in inet_csk_accept (called
+by mptcp_accept) [bug] @pabeni:
+      - hard to debug more, we need a reproducer
+
+
+    Bugs (opened and flagged as "bug" and not assigned)
+
+  225  selftests: join: "remove subflows and signal" is unstable [bug]
+[selftests]
+  203  PM: server: accept subflows [bug]
+  181  implement data_fin ack retransmission for subflow in  TIME_WAIT
+state [bug]
+   65  packetdrill/fixes: clearing properly the status in
+listen()/disconnect [bug]
+
+
+    In Progress (opened, new feature and assigned)
+
+  234  Packetdrill: Support MPC+DATA+checksum error [enhancement]
+[packetdrill] @dcaratti
+
+  224  support for `setsockopt(TCP_INQ)` [enhancement] @fw-strlen:
+      - See above
+
+  216  The infinite mapping support [enhancement] @geliangtang:
+      - See above
+
+  186  Add netlink command support [enhancement] @mjmartineau:
+      - See above
+
+  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
+@dcaratti
+  158  iproute2: change backup mode (MP_PRIO) for active connections
+[enhancement] [iproute2] @dcaratti
+   75  BPF: packet scheduler [enhancement] @geliangtang
+   74  BPF: path manager [enhancement] @geliangtang
+
+
+    For later (opened and not assigned assigned)
+
+  241  Force fallback to TCP [question]
+  237  can't create backup path  [enhancement] [documentation]
+  236  Review supported sockopts list [enhancement]
+
+  235  PM: create new subflow after one got closed [enhancement]:
+      - Phil Greenland found some issues and confusing behaviours and
+explained them on the ML
+      - Paolo would like to have a look at these issues
+      - Ideally we would need more feedback from Phil and create 2 new
+tickets
+
+  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
+  215  TCP Urgent pointer and MPTCP [enhancement]
+  213  add MPTCP man page [enhancement]
+  210  Accept new subflows when the listening socket is closed or bind
+to one IP? [enhancement]
+  208  better handing of ssk memory pressure in the TX path [enhancement]
+  202  Add sendmsg support for ancillary data [enhancement]
+  197  more mibs needed [enhancement]
+  180  Get an update when MPTCP fall back to TCP [enhancement]
+  177  improve retransmit subflow selection [enhancement]
+  171  iproute2: support removing ID 0 [enhancement] [iproute2]
+  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
+port [enhancement] [packetdrill]
+  163  allow ss dumping msk socket in TCP_LISTEN status [enhancement]
+  150  remove completely workqueue usage [enhancement]
+  141  avoid acquiring mptcp_data_lock() twice in the receive path
+[enhancement]
+  133  PM: Closing the MPTCP connection when last subflow is not the
+initial one and its IP address is removed [enhancement]
+  128  When the last subflow is closed without DATA_FIN and msk
+Established, close msk (after a timeout) [enhancement]
+   79  allow 'force to MPTCP' mode: BPF [enhancement]
+   78  notify the application (userspace) when a subflow is
+added/removed [enhancement]
+   77  [gs]etsockopt: forward to new/existing SF [enhancement]
+   76  [gs]etsockopt per subflow: BPF [enhancement]
+   61  move msk clone after ctx creation [enhancement]
+   59  TFO support [enhancement]
+   57  After a few attempts of failed MPTCP, directly fallback to TCP
+for new connections [enhancement]
+   48  MP_FASTCLOSE support (send part remaining) [enhancement]
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
+interface [enhancement] [syzkaller]
+   41  reduce indirect call usage [enhancement]
+   24  Revisit layout of struct mptcp_subflow_context [enhancement]
+   18  allow 'force to MPTCP' mode: sysctl [enhancement]
+
+
+    Recently closed (since last week)
+
+   240  Infinite retransmission on the first failed packet
+
+
+
+FYI: Current Roadmap:
+    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+    - Current/Coming merge window (5.17):
+https://github.com/multipath-tcp/mptcp_net-next/projects/12
+    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Patches to send to netdev:
+    - net:
+        - mptcp: fix delack timer:
+            - Paolo will do that
+
+    - net-next:
+        - support of new socket options (IP_TOS, freebind, transparent):
+            - Mat will look at that
+
+
+
+Extra tests:
+    - news about Syzkaller? (Christoph / Mat):
+        - Some new warning in the network stack but it looks like they
+are not related to MPTCP
+        - A lot of traces but Mat will double check if MPTCP is involved
+or not
+        - could be interesting to enable KCSAN config → it conflicts
+with KASAN
+
+    - news about interop with mptcp.org/other stacks? (Christoph):
+        - /
+
+    - news about Intel's kbuild? (Mat):
+        - Getting build report, seems all good
+        - Some reports are sent to MPTCP ML:
+            - do we want to keep them?
+            - or only to some people?
+
+    - packetdrill (Davide):
+        - Davide is working on different PR
+        - Main point is about "packets not belonging to one socket",
+annoying error
+
+    - Patchew (Davide):
+        - one pending item: not re-applying patches + recreate tags when
+a Git tag is sent in a reply (Acked-by, etc.)
+        - Matth will send a patch:
+https://github.com/patchew-project/patchew/blob/master/mods/git.py#L109
+        - Patchew importer has crashed this week but now restarted
+
+    - CI (Matth):
+        - enable KCSAN config? maybe not as it conflicts with KASAN or a
+3rd build?
+        - good it detects issues when CONFIG_SYSCTL is not set (not the
+first time)
+
+
+
+Netlink PM events:
+    - Add info (new netlink attribute) about the type of connection
+(connect/accept)
+    - The userspace PM might want to react differently for servers and
+clients and it is not "nice" to retrieve this info via another channel
+while it could be useful
+    - TODO: Matth: create a new ticket for that → issues/246
+    - Linked to https://github.com/multipath-tcp/mptcp/issues/451
+
+
+OpenEuler Summit 2021:
+    -
+https://live.issmart.com.cn/Live/issmart_live/#/pc?eventId=5482&liveId=0a15532b&lang=cn&utm_source=live
+    - There are 8 topics in it, all in Chinese, and my talk
+(Introduction to MPTCP) was the first one, about 20 minutes.
+    - TODO: Matth: add it to the wiki page → Done
+    - Many Chinese companies seem interested and would like to use it
+
+
+
+Next meeting:
+    - On Thursday, the 25th of November.
+    - Usual UTC time: 16:00 UTC (8am PST, 5pm CET, 12am CST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20211125
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
