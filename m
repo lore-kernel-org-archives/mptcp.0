@@ -1,15 +1,15 @@
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732352C9D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18322CA8
 	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 22:35:51 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10187"; a="235802946"
+X-IronPort-AV: E=McAfee;i="6200,9189,10187"; a="235802947"
 X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
-   d="scan'208";a="235802946"
+   d="scan'208";a="235802947"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 14:35:47 -0800
 X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
-   d="scan'208";a="460185310"
+   d="scan'208";a="460185311"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.18.88])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 14:35:47 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -20,9 +20,9 @@ Cc: Florian Westphal <fw@strlen.de>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 06/10] mptcp: getsockopt: add support for IP_TOS
-Date: Fri,  3 Dec 2021 14:35:37 -0800
-Message-Id: <20211203223541.69364-7-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 07/10] selftests: mptcp: check IP_TOS in/out are the same
+Date: Fri,  3 Dec 2021 14:35:38 -0800
+Message-Id: <20211203223541.69364-8-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20211203223541.69364-1-mathew.j.martineau@linux.intel.com>
 References: <20211203223541.69364-1-mathew.j.martineau@linux.intel.com>
@@ -36,83 +36,128 @@ Content-Transfer-Encoding: 8bit
 
 From: Florian Westphal <fw@strlen.de>
 
-earlier patch added IP_TOS setsockopt support, this allows to get
-the value set by earlier setsockopt.
+Check that getsockopt(IP_TOS) returns what setsockopt(IP_TOS) did set
+right before.
 
-Extends mptcp_put_int_option to handle u8 input/output by
-adding required cast.
+Also check that socklen_t == 0 and -1 input values match those
+of normal tcp sockets.
 
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/sockopt.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 11cda8629993..44e0a37c567c 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -1053,15 +1053,24 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index 417b11cafafe..ac9a4d9c1764 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -4,6 +4,7 @@
  
- 	if (get_user(len, optlen))
- 		return -EFAULT;
--
--	len = min_t(unsigned int, len, sizeof(int));
- 	if (len < 0)
- 		return -EINVAL;
+ #include <assert.h>
+ #include <errno.h>
++#include <fcntl.h>
+ #include <limits.h>
+ #include <string.h>
+ #include <stdarg.h>
+@@ -13,6 +14,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <strings.h>
++#include <time.h>
+ #include <unistd.h>
  
--	if (put_user(len, optlen))
--		return -EFAULT;
--	if (copy_to_user(optval, &val, len))
--		return -EFAULT;
-+	if (len < sizeof(int) && len > 0 && val >= 0 && val <= 255) {
-+		unsigned char ucval = (unsigned char)val;
-+
-+		len = 1;
-+		if (put_user(len, optlen))
-+			return -EFAULT;
-+		if (copy_to_user(optval, &ucval, 1))
-+			return -EFAULT;
-+	} else {
-+		len = min_t(unsigned int, len, sizeof(int));
-+		if (put_user(len, optlen))
-+			return -EFAULT;
-+		if (copy_to_user(optval, &val, len))
-+			return -EFAULT;
-+	}
- 
+ #include <sys/socket.h>
+@@ -594,6 +596,44 @@ static int server(int pipefd)
  	return 0;
  }
-@@ -1082,6 +1091,19 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	return -EOPNOTSUPP;
- }
  
-+static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
-+			       char __user *optval, int __user *optlen)
++static void test_ip_tos_sockopt(int fd)
 +{
-+	struct sock *sk = (void *)msk;
++	uint8_t tos_in, tos_out;
++	socklen_t s;
++	int r;
 +
-+	switch (optname) {
-+	case IP_TOS:
-+		return mptcp_put_int_option(msk, optval, optlen, inet_sk(sk)->tos);
-+	}
++	tos_in = rand() & 0xfc;
++	r = setsockopt(fd, SOL_IP, IP_TOS, &tos_in, sizeof(tos_out));
++	if (r != 0)
++		die_perror("setsockopt IP_TOS");
 +
-+	return -EOPNOTSUPP;
++	tos_out = 0;
++	s = sizeof(tos_out);
++	r = getsockopt(fd, SOL_IP, IP_TOS, &tos_out, &s);
++	if (r != 0)
++		die_perror("getsockopt IP_TOS");
++
++	if (tos_in != tos_out)
++		xerror("tos %x != %x socklen_t %d\n", tos_in, tos_out, s);
++
++	if (s != 1)
++		xerror("tos should be 1 byte");
++
++	s = 0;
++	r = getsockopt(fd, SOL_IP, IP_TOS, &tos_out, &s);
++	if (r != 0)
++		die_perror("getsockopt IP_TOS 0");
++	if (s != 0)
++		xerror("expect socklen_t == 0");
++
++	s = -1;
++	r = getsockopt(fd, SOL_IP, IP_TOS, &tos_out, &s);
++	if (r != -1 && errno != EINVAL)
++		die_perror("getsockopt IP_TOS did not indicate -EINVAL");
++	if (s != -1)
++		xerror("expect socklen_t == -1");
 +}
 +
- static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
- 				      char __user *optval, int __user *optlen)
+ static int client(int pipefd)
  {
-@@ -1117,6 +1139,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
- 	if (ssk)
- 		return tcp_getsockopt(ssk, level, optname, optval, option);
+ 	int fd = -1;
+@@ -611,6 +651,8 @@ static int client(int pipefd)
+ 		xerror("Unknown pf %d\n", pf);
+ 	}
  
-+	if (level == SOL_IP)
-+		return mptcp_getsockopt_v4(msk, optname, optval, option);
- 	if (level == SOL_TCP)
- 		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
- 	if (level == SOL_MPTCP)
++	test_ip_tos_sockopt(fd);
++
+ 	connect_one_server(fd, pipefd);
+ 
+ 	return 0;
+@@ -642,6 +684,25 @@ static int rcheck(int wstatus, const char *what)
+ 	return 111;
+ }
+ 
++static void init_rng(void)
++{
++	int fd = open("/dev/urandom", O_RDONLY);
++
++	if (fd >= 0) {
++		unsigned int foo;
++		ssize_t ret;
++
++		/* can't fail */
++		ret = read(fd, &foo, sizeof(foo));
++		assert(ret == sizeof(foo));
++
++		close(fd);
++		srand(foo);
++	} else {
++		srand(time(NULL));
++	}
++}
++
+ int main(int argc, char *argv[])
+ {
+ 	int e1, e2, wstatus;
+@@ -650,6 +711,8 @@ int main(int argc, char *argv[])
+ 
+ 	parse_opts(argc, argv);
+ 
++	init_rng();
++
+ 	e1 = pipe(pipefds);
+ 	if (e1 < 0)
+ 		die_perror("pipe");
 -- 
 2.34.1
 
