@@ -1,188 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D41E2CA6
-	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1638544821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xLaRfrJvXNIttTyMpF6ppBwHGuxUDeimKIRNkm4UJ78=;
-	b=EDquj4UrT2dioN2dlwIa3+17EXeJIXNBdxOpM6NhBxEisz8G6pPxCDVELepoRG9zYoSVh5
-	YTn2wFmRv7z0anI3jPQPaFPE9oaBonKHbX+qHsqfGfV+RB2mNN+NPEZtEF3Im3NGJF94pu
-	y4bI2nnktHkj1R1OzfsGCzf7h0hgxNU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-572-Mhluw2EjM2Saenjsfyj4MQ-1; Fri, 03 Dec 2021 10:20:20 -0500
-X-MC-Unique: Mhluw2EjM2Saenjsfyj4MQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78E4F101F000
-	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:20:19 +0000 (UTC)
-Received: from gerbillo.fritz.box (unknown [10.39.192.107])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D98875F4E0
-	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:20:18 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v4 5/5] selftests: mptcp: add tests for subflow creation failure
-Date: Fri,  3 Dec 2021 16:19:42 +0100
-Message-Id: <bd0c8b9c4ac5e667889f0c0a5f99da295a574cd8.1638544716.git.pabeni@redhat.com>
-In-Reply-To: <cover.1638544716.git.pabeni@redhat.com>
-References: <cover.1638544716.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94442C80
+	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 17:08:23 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id w1so14236864edc.6
+        for <mptcp@lists.linux.dev>; Fri, 03 Dec 2021 09:08:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Y+uoeN+DznTV3/Yb1Mq3oB4O/GDbGk/2PA6rVzxInq4=;
+        b=QEzpLMkGIuG3k9bVtgAL4LxF0r01buiKEaVuiIO1Mr0wC4Tk9zreFL/OJ4ry6XqdSo
+         nKbrKOP0BR32SouaM2NjfpLTTT5TbleVK9YpxVA3QkD8NGFZw+vbA4HUsdGeFrBqgW8E
+         IDgIz9A5xDP3RbfGe9U+zeX9ru6mtqYCQqmenF2WXccYyYotN+vaydqzSh2VUmovkJzi
+         RueaKO6+i6UamJGEVbC/o4FulOY9zHe6YgMrqCEXMk3mHxnnii/ZCuuRXeK0BVy/66LH
+         H4htdJsgfIe4VEwRyJIyoChB1L8HpuibW49RH0v6HaYDzsg57Ul4Kj5ZN4A2XhUi6qys
+         ApjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Y+uoeN+DznTV3/Yb1Mq3oB4O/GDbGk/2PA6rVzxInq4=;
+        b=wrQFk/bGdpgk/NGIG2IHAu8UMq2HWrqibGzQoxh8hc4M0FajGRXYh6tVv6UrYIDj25
+         FRUdzdKoMQIPgFpedGkRQLhCs3t6Gxsj1NZWlYWQBb5ZK2myUTNxET+PbS/z4ld0PfBS
+         C8YzYREF2dqilOb1Rbx0YaWOtg/jTRCqjepfzJXmXIZZAjrtO8JvUMEuFDrdu6Voc6dV
+         dxuWmZ8uCYYauhwSv6Wx3Ao79gKJIaHIFPKPhW7R/6eAP3xnVVxam4buUUh2M+nXOjbx
+         i8d2N6pW/+QfZ5zsm6vN0nuEUEorQFpoUM5AuHoWkTNXULlq+YfCctKkrZipixlTpN7B
+         cajw==
+X-Gm-Message-State: AOAM533HgXBY2Y8a9RQsR75FXNhOeMJuLszy4GYhFf60Bep8UXa2zskS
+	k6/myCM99evv7sxnPJHFDqRU8TeXNTIOnkvTQBI=
+X-Google-Smtp-Source: ABdhPJxFeJL5WarH33sAIj8Hp3By6O9zgehvlkT4hrFCNDpnZhZQuGxZkU0o6jIm29euGu6uBS5lFQ==
+X-Received: by 2002:a05:6402:5146:: with SMTP id n6mr28171308edd.126.1638551297325;
+        Fri, 03 Dec 2021 09:08:17 -0800 (PST)
+Received: from [192.168.178.33] ([213.211.142.51])
+        by smtp.gmail.com with ESMTPSA id b7sm1162364edj.24.2021.12.03.09.08.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Dec 2021 09:08:16 -0800 (PST)
+Message-ID: <f2ae3156-b247-683c-440b-999cd5f251a4@tessares.net>
+Date: Fri, 3 Dec 2021 18:08:16 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH mptcp-next 2/2] Squash to "selftests: mptcp: add inq test
+ case"
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+References: <20211202173216.2982478-1-matthieu.baerts@tessares.net>
+ <20211202173216.2982478-2-matthieu.baerts@tessares.net>
+ <87d35f49-695f-fba-3c1f-3c993fbbbf13@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <87d35f49-695f-fba-3c1f-3c993fbbbf13@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-Verify that, when multiple endpoints are available, subflows
-creation proceed even when the first additional subflow creation
-fails - due to packet drop on the relevant link
+Hi Mat,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v3 -> v4:
- - use $() where applicable - Matt
- - fix typo in help() - Matt
+On 02/12/2021 18:52, Mat Martineau wrote:
+> On Thu, 2 Dec 2021, Matthieu Baerts wrote:
+> 
+>> Fixing a -Wunused-result error:
+>>
+>>  $ make -C tools/testing/selftests/net/mptcp
+>>  (...)
+>>  $ gcc -Wall -Wl,--no-as-needed -O2 -g 
+>> -I../../../../../usr/include     mptcp_inq.c  -o
+>> tools/testing/selftests/net/mptcp/mptcp_inq
+>>  mptcp_inq.c: In function 'connect_one_server':
+>>  mptcp_inq.c:303:2: warning: ignoring return value of 'write',
+>> declared with attribute warn_unused_result [-Wunused-result]
+>>    303 |  write(fd, buf, 1);
+>>        |  ^~~~~~~~~~~~~~~~~
+>>
+>> It seems adding "(void)" is not enough. As a workaround, we can also
+>> simply the output of 'write()'.
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>>
+>> Notes:
+>>    to be squashed in "selftests: mptcp: add inq test case"
+>>
+> 
+> Also ok to squash this one.
 
-v1 -> v2:
- - add missing NF kconfig
- - add more test-cases (drop, later subflow creation)
----
- tools/testing/selftests/net/mptcp/config      |  1 +
- .../testing/selftests/net/mptcp/mptcp_join.sh | 65 ++++++++++++++++++-
- 2 files changed, 65 insertions(+), 1 deletion(-)
+Thank you for the reviews!
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 419e71560fd1..41e94e004bdc 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -18,4 +18,5 @@ CONFIG_NFT_TPROXY=m
- CONFIG_NFT_SOCKET=m
- CONFIG_IP_ADVANCED_ROUTER=y
- CONFIG_IP_MULTIPLE_TABLES=y
-+CONFIG_IP_NF_TARGET_REJECT=m
- CONFIG_IPV6_MULTIPLE_TABLES=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2684ef9c0d42..54a826ae984b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -975,6 +975,22 @@ chk_link_usage()
- 	fi
- }
- 
-+wait_for_tw()
-+{
-+	local timeout_ms=$((timeout_poll * 1000))
-+	local time=0
-+	local ns=$1
-+
-+	while [ $time -lt $timeout_ms ]; do
-+		local cnt=$(ip netns exec $ns ss -t state time-wait |wc -l)
-+
-+		[ "$cnt" = 1 ] && return 1
-+		time=$((time + 100))
-+		sleep 0.1
-+	done
-+	return 1
-+}
-+
- subflows_tests()
- {
- 	reset
-@@ -1032,6 +1048,48 @@ subflows_tests()
- 	chk_join_nr "single subflow, dev" 1 1 1
- }
- 
-+subflows_error_tests()
-+{
-+	# multiple subflows, with subflow creation error
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "multiple subflows, with failing subflow" 1 1 1
-+
-+	# multiple subflows, with subflow timeout on MPJ
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j DROP
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+	chk_join_nr "multiple subflows, with subflow timeout" 1 1 1
-+
-+	# multiple subflows, check that the endpoint corresponding to
-+	# closed subflow (due to reset) is not reused if additional
-+	# subflows are added later
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
-+
-+	# mpj subflow will be in TW after the reset
-+	wait_for_tw $ns2
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-+	wait
-+
-+	# additional subflow could be created only if the PM select
-+	# the later endpoint, skipping the already used one
-+	chk_join_nr "multiple subflows, fair usage on close" 1 1 1
-+}
-+
- signal_address_tests()
- {
- 	# add_address, unused
-@@ -1840,6 +1898,7 @@ fullmesh_tests()
- all_tests()
- {
- 	subflows_tests
-+	subflows_error_tests
- 	signal_address_tests
- 	link_failure_tests
- 	add_addr_timeout_tests
-@@ -1859,6 +1918,7 @@ usage()
- {
- 	echo "mptcp_join usage:"
- 	echo "  -f subflows_tests"
-+	echo "  -e subflows_error_tests"
- 	echo "  -s signal_address_tests"
- 	echo "  -l link_failure_tests"
- 	echo "  -t add_addr_timeout_tests"
-@@ -1907,11 +1967,14 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
- 
--while getopts 'fsltra64bpkdmchCS' opt; do
-+while getopts 'fesltra64bpkdmchCS' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
- 			;;
-+		e)
-+			subflows_error_tests
-+			;;
- 		s)
- 			signal_address_tests
- 			;;
+- 17b56c543ab5: "squashed" patch 1/2 in "selftests: mptcp: check IP_TOS
+in/out are the same"
+- 6680d9b3e2bd: "squashed" patch 2/2 in "selftests: mptcp: add inq test
+case"
+- Results: 89018cadd36b..9b3f10607961
+
+(For both patches, I removed the automatically added 'Co-dev' tags as I
+guess it doesn't make sense for this kind of fix :) )
+
+Builds and tests are now in progress:
+
+
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211203T170803
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-2.33.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
