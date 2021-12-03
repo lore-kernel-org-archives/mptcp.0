@@ -1,7 +1,7 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE102C80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE14F2CAC
 	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1638544820;
@@ -9,28 +9,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OjCcgUFDJ0xce/LzYHi1YlTD8yfZKpFWZx/UwR0YnHw=;
-	b=SqZpG1SWnVDAPMfTUHdrrByDSWBMC/9aWZvQK1LoydUToDrwvRa6PI0Ew3PU4kANdD+Whn
-	DKYh2NHCpst1mQ8YgCtNfvkTIEGOkQ6e+ouu6yvd2jOhx3gXj+Wp4coloRntE2Cbk9vHTs
-	kWV2mdJ76w2K7MPD1fwM9G5ays0FG24=
+	bh=zkMZusmujnYG8+69mD4tt9+7KekuqPJQvWZEHi/butk=;
+	b=K4/5xK6l/heESDPCUgtmQ2eV+IRtGBkKNDJ3XWClRmGyucoSt4md36Tgx7thFV+0+MVUS6
+	apX54p82X4mILVs5rK8Jkk9fQA/lxgHOLNcO94ilKAuillic080dHc01Rblfp+yu443azu
+	LsjKM286ywri7GFcVmDwghm8KPExt0E=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-532-GIlPWkhRPS-29GfazJk0xQ-1; Fri, 03 Dec 2021 10:20:19 -0500
-X-MC-Unique: GIlPWkhRPS-29GfazJk0xQ-1
+ us-mta-350-HEqlTBq3N66gm9q3jryv6Q-1; Fri, 03 Dec 2021 10:20:18 -0500
+X-MC-Unique: HEqlTBq3N66gm9q3jryv6Q-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8540280A1BD
-	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:20:18 +0000 (UTC)
-Received: from gerbillo.fritz.box (unknown [10.39.192.107])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EE95C5F4E0
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9891683DD2F
 	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:20:17 +0000 (UTC)
+Received: from gerbillo.fritz.box (unknown [10.39.192.107])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0E97E5F4E0
+	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:20:16 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v4 4/5] mptcp: do not block subflows creation on errors
-Date: Fri,  3 Dec 2021 16:19:41 +0100
-Message-Id: <6b72cd85764a7c92f99741757b1e0e2b04f11f19.1638544716.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v4 3/5] mptcp: keep track of local endpoint still available for each msk
+Date: Fri,  3 Dec 2021 16:19:40 +0100
+Message-Id: <20e1d11df9396b33ab49b07204bd8b7db2e21a01.1638544716.git.pabeni@redhat.com>
 In-Reply-To: <cover.1638544716.git.pabeni@redhat.com>
 References: <cover.1638544716.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,238 +47,212 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-If the MPTCP configuration allows for multiple subflows
-creation, and the first additional subflows never reach
-the fully established status - e.g. due to packets drop or
-reset - the in kernel path manager do not move to the
-next subflow.
+Include into the path manager status a bitmap tracking the list
+of local endpoints still available - not yet used - for the
+relavant mptcp socket.
+Keep such map updated at endpoint creation/deleteion time, so
+that we can easily skip already used endpoint at local address
+selection time.
+This allows for fair local endpoints usage in case of subflow
+failure.
 
-This patch introduces a new PM helper to cope with MPJ
-subflow creation failure and delay and hook it where appropriate.
-
-Such helper triggers additional subflow creation, as needed
-and updates the PM subflow counter, if the current one is
-closing.
-
-Note that we don't need an additional timer to catch timeout
-and/or long delay in connection completion: we just need to
-measure the time elapsed since the subflow creation every
-time we emit an MPJ sub-option.
+As a side effect, this patch also enforces that each endpoint
+is used at most once for each mptcp connection.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
 v3 -> v4:
- - fix 'subflows' underflow
-
-v2 -> v3:
- - fix compile warning (CI)
-
-v1 -> v2:
- - explicitly hook on subflow close instead of error notification
- - fix checkpatch issue (Mat)
- - introduce and use a new pm helper to cope with subflow close
- - update pm subflow counters on close
+ - track the available (not yet used) id instead of the used ones
+ - track both
+ - cleanup duplication with id_bitmap
 ---
- net/mptcp/options.c    | 21 ++++++++++++++++++---
- net/mptcp/pm.c         | 23 +++++++++++++++++++++--
- net/mptcp/pm_netlink.c | 12 ++++++++----
- net/mptcp/protocol.c   |  6 ++++++
- net/mptcp/protocol.h   |  5 ++++-
- net/mptcp/subflow.c    |  5 ++++-
- 6 files changed, 61 insertions(+), 11 deletions(-)
+ net/mptcp/pm.c         |  1 +
+ net/mptcp/pm_netlink.c | 57 ++++++++++++++++++------------------------
+ net/mptcp/protocol.h   |  3 +++
+ 3 files changed, 28 insertions(+), 33 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 7a6a39b71633..00a8697addcd 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1257,10 +1257,10 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
- void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 			 struct mptcp_out_options *opts)
- {
--	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
--		const struct sock *ssk = (const struct sock *)tp;
--		struct mptcp_subflow_context *subflow;
-+	const struct sock *ssk = (const struct sock *)tp;
-+	struct mptcp_subflow_context *subflow;
- 
-+	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
- 		subflow = mptcp_subflow_ctx(ssk);
- 		subflow->send_mp_fail = 0;
- 
-@@ -1382,6 +1382,21 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		/* MPC is additionally mutually exclusive with MP_PRIO */
- 		goto mp_capable_done;
- 	} else if (OPTIONS_MPTCP_MPJ & opts->suboptions) {
-+		if (ssk) {
-+			/* we are still in the MPJ handshake and "a lot" of time passed
-+			 * e.g. due to syn retranmissions. We can attempt next
-+			 * subflow creation
-+			 */
-+			subflow = mptcp_subflow_ctx(ssk);
-+			if (subflow->start_stamp &&
-+			    unlikely(after(tcp_jiffies32, subflow->start_stamp + HZ / 10))) {
-+				mptcp_pm_subflow_check_next(mptcp_sk(subflow->conn), ssk, subflow);
-+
-+				/* avoid triggering the PM multiple times due to timeout */
-+				subflow->start_stamp = 0;
-+			}
-+		}
-+
- 		if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
- 			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
- 					      TCPOLEN_MPTCP_MPJ_SYN,
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index d6d22f18c418..7e2c76924492 100644
+index 761995a34124..d6d22f18c418 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -172,9 +172,28 @@ void mptcp_pm_subflow_established(struct mptcp_sock *msk)
- 	spin_unlock_bh(&pm->lock);
- }
+@@ -376,6 +376,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ 	WRITE_ONCE(msk->pm.accept_subflow, false);
+ 	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
+ 	msk->pm.status = 0;
++	bitmap_fill(msk->pm.id_avail_bitmap, MAX_ADDR_ID + 1);
  
--void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
-+void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
-+				 const struct mptcp_subflow_context *subflow)
- {
--	pr_debug("msk=%p", msk);
-+	struct mptcp_pm_data *pm = &msk->pm;
-+	bool update_subflows;
-+
-+	update_subflows = (ssk->sk_state == TCP_CLOSE) &&
-+			  (subflow->request_join || subflow->mp_join);
-+	if (!READ_ONCE(pm->work_pending) && !update_subflows)
-+		return;
-+
-+	spin_lock_bh(&pm->lock);
-+	if (update_subflows)
-+		pm->subflows--;
-+
-+	/* Even if this subflow is not really established, tell the PM to try
-+	 * to pick the next one, if possible.
-+	 */
-+	if (mptcp_pm_nl_check_work_pending(msk))
-+		mptcp_pm_schedule_work(msk, MPTCP_PM_SUBFLOW_ESTABLISHED);
-+
-+	spin_unlock_bh(&pm->lock);
+ 	mptcp_pm_nl_data_init(msk);
  }
- 
- void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b3dc19fd1d37..48963ae4c610 100644
+index d18b13e3e74c..b3dc19fd1d37 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -251,14 +251,17 @@ unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
- }
- EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
+@@ -38,9 +38,6 @@ struct mptcp_pm_add_entry {
+ 	u8			retrans_times;
+ };
  
--static void check_work_pending(struct mptcp_sock *msk)
-+bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk)
- {
- 	struct pm_nl_pernet *pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+-#define MAX_ADDR_ID		255
+-#define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, BITS_PER_LONG)
+-
+ struct pm_nl_pernet {
+ 	/* protects pernet updates */
+ 	spinlock_t		lock;
+@@ -52,7 +49,7 @@ struct pm_nl_pernet {
+ 	unsigned int		local_addr_max;
+ 	unsigned int		subflows_max;
+ 	unsigned int		next_id;
+-	unsigned long		id_bitmap[BITMAP_SZ];
++	DECLARE_BITMAP(id_bitmap, MAX_ADDR_ID + 1);
+ };
  
- 	if (msk->pm.subflows == mptcp_pm_get_subflows_max(msk) ||
- 	    (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_bitmap, MAX_ADDR_ID + 1, 0) ==
--	     MAX_ADDR_ID + 1))
-+	     MAX_ADDR_ID + 1)) {
- 		WRITE_ONCE(msk->pm.work_pending, false);
-+		return false;
-+	}
-+	return true;
- }
+ #define MPTCP_PM_ADDR_MAX	8
+@@ -173,6 +170,9 @@ select_local_address(const struct pm_nl_pernet *pernet,
+ 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+ 			continue;
  
- struct mptcp_pm_add_entry *
-@@ -511,7 +514,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 			spin_lock_bh(&msk->pm.lock);
++		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
++			continue;
++
+ 		if (entry->addr.family != sk->sk_family) {
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 			if ((entry->addr.family == AF_INET &&
+@@ -183,23 +183,17 @@ select_local_address(const struct pm_nl_pernet *pernet,
+ 				continue;
  		}
+ 
+-		/* avoid any address already in use by subflows and
+-		 * pending join
+-		 */
+-		if (!lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+-			ret = entry;
+-			break;
+-		}
++		ret = entry;
++		break;
  	}
--	check_work_pending(msk);
-+	mptcp_pm_nl_check_work_pending(msk);
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+ 
+ static struct mptcp_pm_addr_entry *
+-select_signal_address(struct pm_nl_pernet *pernet, unsigned int pos)
++select_signal_address(struct pm_nl_pernet *pernet, struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
+-	int i = 0;
+ 
+ 	rcu_read_lock();
+ 	/* do not keep any additional per socket state, just signal
+@@ -208,12 +202,14 @@ select_signal_address(struct pm_nl_pernet *pernet, unsigned int pos)
+ 	 * can lead to additional addresses not being announced.
+ 	 */
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
++		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
++			continue;
++
+ 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
+ 			continue;
+-		if (i++ == pos) {
+-			ret = entry;
+-			break;
+-		}
++
++		ret = entry;
++		break;
+ 	}
+ 	rcu_read_unlock();
+ 	return ret;
+@@ -257,9 +253,11 @@ EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
+ 
+ static void check_work_pending(struct mptcp_sock *msk)
+ {
+-	if (msk->pm.add_addr_signaled == mptcp_pm_get_add_addr_signal_max(msk) &&
+-	    (msk->pm.local_addr_used == mptcp_pm_get_local_addr_max(msk) ||
+-	     msk->pm.subflows == mptcp_pm_get_subflows_max(msk)))
++	struct pm_nl_pernet *pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
++
++	if (msk->pm.subflows == mptcp_pm_get_subflows_max(msk) ||
++	    (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_bitmap, MAX_ADDR_ID + 1, 0) ==
++	     MAX_ADDR_ID + 1))
+ 		WRITE_ONCE(msk->pm.work_pending, false);
+ }
+ 
+@@ -481,21 +479,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 
+ 	/* check first for announce */
+ 	if (msk->pm.add_addr_signaled < add_addr_signal_max) {
+-		local = select_signal_address(pernet,
+-					      msk->pm.add_addr_signaled);
++		local = select_signal_address(pernet, msk);
+ 
+ 		if (local) {
+ 			if (mptcp_pm_alloc_anno_list(msk, local)) {
++				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+ 				msk->pm.add_addr_signaled++;
+ 				mptcp_pm_announce_addr(msk, &local->addr, false);
+ 				mptcp_pm_nl_addr_send_ack(msk);
+ 			}
+-		} else {
+-			/* pick failed, avoid fourther attempts later */
+-			msk->pm.local_addr_used = add_addr_signal_max;
+ 		}
+-
+-		check_work_pending(msk);
+ 	}
+ 
+ 	/* check if should create a new subflow */
+@@ -509,19 +502,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 			int i, nr;
+ 
+ 			msk->pm.local_addr_used++;
+-			check_work_pending(msk);
+ 			nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
++			if (nr)
++				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+ 			spin_unlock_bh(&msk->pm.lock);
+ 			for (i = 0; i < nr; i++)
+ 				__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
+ 			spin_lock_bh(&msk->pm.lock);
+-			return;
+ 		}
+-
+-		/* lookup failed, avoid fourther attempts later */
+-		msk->pm.local_addr_used = local_addr_max;
+-		check_work_pending(msk);
+ 	}
++	check_work_pending(msk);
  }
  
  static void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
-@@ -718,11 +721,12 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 				 i, rm_list->ids[i], subflow->local_id, subflow->remote_id);
- 			spin_unlock_bh(&msk->pm.lock);
- 			mptcp_subflow_shutdown(sk, ssk, how);
-+
-+			/* the following takes care of updating the subflows counter */
- 			mptcp_close_ssk(sk, ssk, subflow);
- 			spin_lock_bh(&msk->pm.lock);
- 
- 			removed = true;
--			msk->pm.subflows--;
+@@ -735,6 +725,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+ 			msk->pm.subflows--;
  			__MPTCP_INC_STATS(sock_net(sk), rm_type);
  		}
- 		__set_bit(rm_list->ids[1], msk->pm.id_avail_bitmap);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8b49866bcc25..c9f302169145 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2351,6 +2351,12 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- {
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
-+
-+	/* subflow aborted before reaching the fully_established status
-+	 * attempt the creation of the next subflow
-+	 */
-+	mptcp_pm_subflow_check_next(mptcp_sk(sk), ssk, subflow);
-+
- 	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
- }
++		__set_bit(rm_list->ids[1], msk->pm.id_avail_bitmap);
+ 		if (!removed)
+ 			continue;
  
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b1ab476520aa..3e7e541a013f 100644
+index 47d24478763c..b1ab476520aa 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -437,6 +437,7 @@ struct mptcp_subflow_context {
- 		stale : 1;	    /* unable to snd/rcv data, do not use for xmit */
- 	enum mptcp_data_avail data_avail;
- 	u32	remote_nonce;
-+	u32	start_stamp;
- 	u64	thmac;
- 	u32	local_nonce;
- 	u32	remote_token;
-@@ -738,7 +739,9 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk,
- bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
- void mptcp_pm_connection_closed(struct mptcp_sock *msk);
- void mptcp_pm_subflow_established(struct mptcp_sock *msk);
--void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
-+bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk);
-+void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
-+				 const struct mptcp_subflow_context *subflow);
- void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 				const struct mptcp_addr_info *addr);
- void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0f90bd61de01..76556743e952 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1273,7 +1273,8 @@ void __mptcp_error_report(struct sock *sk)
+@@ -183,6 +183,8 @@ enum mptcp_addr_signal_status {
+ 	MPTCP_RM_ADDR_SIGNAL,
+ };
  
- static void subflow_error_report(struct sock *ssk)
- {
--	struct sock *sk = mptcp_subflow_ctx(ssk)->conn;
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+	struct sock *sk = subflow->conn;
++#define MAX_ADDR_ID		255
++
+ struct mptcp_pm_data {
+ 	struct mptcp_addr_info local;
+ 	struct mptcp_addr_info remote;
+@@ -190,6 +192,7 @@ struct mptcp_pm_data {
  
- 	mptcp_data_lock(sk);
- 	if (!sock_owned_by_user(sk))
-@@ -1444,6 +1445,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	subflow->remote_id = remote_id;
- 	subflow->request_join = 1;
- 	subflow->request_bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-+	subflow->start_stamp = tcp_jiffies32;
- 	mptcp_info2sockaddr(remote, &addr, ssk->sk_family);
+ 	spinlock_t	lock;		/*protects the whole PM data */
  
- 	mptcp_add_pending_subflow(msk, subflow);
-@@ -1461,6 +1463,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	spin_lock_bh(&msk->join_list_lock);
- 	list_del(&subflow->node);
- 	spin_unlock_bh(&msk->join_list_lock);
-+	mptcp_pm_subflow_check_next(msk, ssk, subflow);
- 	sock_put(mptcp_subflow_tcp_sock(subflow));
- 
- failed:
++	DECLARE_BITMAP(id_avail_bitmap, MAX_ADDR_ID + 1);
+ 	u8		addr_signal;
+ 	bool		server_side;
+ 	bool		work_pending;
 -- 
 2.33.1
 
