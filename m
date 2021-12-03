@@ -1,135 +1,176 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580122C9E
-	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 01:48:09 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="300278045"
-X-IronPort-AV: E=Sophos;i="5.87,283,1631602800"; 
-   d="scan'208";a="300278045"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 17:48:08 -0800
-X-IronPort-AV: E=Sophos;i="5.87,283,1631602800"; 
-   d="scan'208";a="746467931"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.209.65.201])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 17:48:08 -0800
-Date: Thu, 2 Dec 2021 17:48:07 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-next v5 1/2] Squash to "mptcp: implement fastclose
- xmit path"
-In-Reply-To: <41e52e743ee397180dab0ad4a980e2b8d532bfe2.1638429740.git.geliang.tang@suse.com>
-Message-ID: <3f716c5-dc2-5852-de11-f1aad3abc5@linux.intel.com>
-References: <cover.1638429740.git.geliang.tang@suse.com> <41e52e743ee397180dab0ad4a980e2b8d532bfe2.1638429740.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B174668
+	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1638543686;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=yMhgdjQ8UHQnydBZapgt50RHTeVqcO41f2l/oc9YUvM=;
+	b=PZbxDMJCKbF+TLiJI9e5BtJfszVWcJ/64suZcs9UPcMbc+OBCbMEvVPhIvqz/ID91HB9Rd
+	d7iEH2kc1ro/qDEEb/Ij9F7EOGEv3iG3oGPGFpnzklhsj6o+Ko5WBs/zNnD7Cvemtt77QI
+	5cAyUlq6zNgzdDT70WMicgoVk9oxkmw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-396-mQaqWJxWOVaM0kqG753Ufw-1; Fri, 03 Dec 2021 10:01:20 -0500
+X-MC-Unique: mQaqWJxWOVaM0kqG753Ufw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F3E9A185303F
+	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:01:13 +0000 (UTC)
+Received: from dcaratti.station (unknown [10.40.194.166])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 573305452F
+	for <mptcp@lists.linux.dev>; Fri,  3 Dec 2021 15:01:13 +0000 (UTC)
+From: Davide Caratti <dcaratti@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH iproute2-next] mptcp: add support for changing the backup flag
+Date: Fri,  3 Dec 2021 16:01:08 +0100
+Message-Id: <cb2ddffb2211d6fdde7a8bf81879a3a83c620f00.1638542999.git.dcaratti@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-On Thu, 2 Dec 2021, Geliang Tang wrote:
+Linux supports 'MPTCP_PM_CMD_SET_FLAGS' since v5.12, and this control has
+recently been extended to allow setting flags for a given endpoint id.
+Although there is no use for changing 'signal' or 'subflow' flags, it can
+be helpful to set/clear the backup bit on existing endpoints: add the 'ip
+mptcp endpoint change <...>' command for this purpose.
 
-> MP_FAIL could be sent with MP_RST at the same time, fix this in
-> mptcp_established_options().
->
-> MP_RST could be sent with FASTCLOSE at the same time, fix this in
-> mptcp_write_options().
->
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+---
+ ip/ipmptcp.c        | 20 ++++++++++++++++----
+ man/man8/ip-mptcp.8 | 14 ++++++++++++++
+ 2 files changed, 30 insertions(+), 4 deletions(-)
 
-Matthieu -
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index 857004446aa3..7fb48a420a6b 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -25,6 +25,7 @@ static void usage(void)
+ 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
+ 		"				      [ port NR ] [ FLAG-LIST ]\n"
+ 		"	ip mptcp endpoint delete id ID\n"
++		"	ip mptcp endpoint change id ID [ backup | nobackup ]\n"
+ 		"	ip mptcp endpoint show [ id ID ]\n"
+ 		"	ip mptcp endpoint flush\n"
+ 		"	ip mptcp limits set [ subflows NR ] [ add_addr_accepted NR ]\n"
+@@ -45,6 +46,8 @@ static int genl_family = -1;
+ 	GENL_REQUEST(_req, MPTCP_BUFLEN, genl_family, 0,	\
+ 		     MPTCP_PM_VER, _cmd, _flags)
+ 
++#define MPTCP_PM_ADDR_FLAG_NOBACKUP 0x0
++
+ /* Mapping from argument to address flag mask */
+ static const struct {
+ 	const char *name;
+@@ -53,6 +56,7 @@ static const struct {
+ 	{ "signal",		MPTCP_PM_ADDR_FLAG_SIGNAL },
+ 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
+ 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
++	{ "nobackup",		MPTCP_PM_ADDR_FLAG_NOBACKUP }
+ };
+ 
+ static void print_mptcp_addr_flags(unsigned int flags)
+@@ -95,9 +99,9 @@ static int get_flags(const char *arg, __u32 *flags)
+ 	return -1;
+ }
+ 
+-static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n,
+-			 bool adding)
++static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
+ {
++	bool adding = cmd == MPTCP_PM_CMD_ADD_ADDR;
+ 	struct rtattr *attr_addr;
+ 	bool addr_set = false;
+ 	inet_prefix address;
+@@ -110,6 +114,11 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n,
+ 	ll_init_map(&rth);
+ 	while (argc > 0) {
+ 		if (get_flags(*argv, &flags) == 0) {
++			/* allow changing the 'backup' flag only */
++			if (cmd == MPTCP_PM_CMD_SET_FLAGS &&
++			    (flags & ~MPTCP_PM_ADDR_FLAG_BACKUP))
++				invarg("invalid flags\n", *argv);
++
+ 		} else if (matches(*argv, "id") == 0) {
+ 			NEXT_ARG();
+ 
+@@ -182,7 +191,7 @@ static int mptcp_addr_modify(int argc, char **argv, int cmd)
+ 	MPTCP_REQUEST(req, cmd, NLM_F_REQUEST);
+ 	int ret;
+ 
+-	ret = mptcp_parse_opt(argc, argv, &req.n, cmd == MPTCP_PM_CMD_ADD_ADDR);
++	ret = mptcp_parse_opt(argc, argv, &req.n, cmd);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -298,7 +307,7 @@ static int mptcp_addr_show(int argc, char **argv)
+ 	if (argc <= 0)
+ 		return mptcp_addr_dump();
+ 
+-	ret = mptcp_parse_opt(argc, argv, &req.n, false);
++	ret = mptcp_parse_opt(argc, argv, &req.n, MPTCP_PM_CMD_GET_ADDR);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -534,6 +543,9 @@ int do_mptcp(int argc, char **argv)
+ 		if (matches(*argv, "add") == 0)
+ 			return mptcp_addr_modify(argc-1, argv+1,
+ 						 MPTCP_PM_CMD_ADD_ADDR);
++		if (matches(*argv, "change") == 0)
++			return mptcp_addr_modify(argc-1, argv+1,
++						 MPTCP_PM_CMD_SET_FLAGS);
+ 		if (matches(*argv, "delete") == 0)
+ 			return mptcp_addr_modify(argc-1, argv+1,
+ 						 MPTCP_PM_CMD_DEL_ADDR);
+diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+index 22335b6129ae..574cb60dc7c0 100644
+--- a/man/man8/ip-mptcp.8
++++ b/man/man8/ip-mptcp.8
+@@ -34,6 +34,13 @@ ip-mptcp \- MPTCP path manager configuration
+ .BR "ip mptcp endpoint del id "
+ .I ID
+ 
++.ti -8
++.BR "ip mptcp endpoint change id "
++.I ID
++.RB "[ "
++.I BACKUP-OPT
++.RB "] "
++
+ .ti -8
+ .BR "ip mptcp endpoint show "
+ .RB "[ " id
+@@ -55,6 +62,13 @@ ip-mptcp \- MPTCP path manager configuration
+ .B backup
+ .RB  "]"
+ 
++.ti -8
++.IR BACKUP-OPT " := ["
++.B backup
++.RB "|"
++.B nobackup
++.RB  "]"
++
+ .ti -8
+ .BR "ip mptcp limits set "
+ .RB "[ "
+-- 
+2.31.1
 
-We talked about the MP_FAIL+DSS combination in the meeting this week, and 
-I think there is a case I overlooked in that discussion: When a peer 
-receives an MP_FAIL, it may need to respond with both MP_FAIL and an 
-infinite mapping (which is a DSS option). So it seems reasonable to handle 
-those in the same header.
-
-
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/options.c | 29 ++++++++++++++++++-----------
-> 1 file changed, 18 insertions(+), 11 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 8a1020e4285c..73242304ada5 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -829,8 +829,12 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->
-> 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
-> 		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
-> -		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
-> -		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
-> +		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
-> +			*size += opt_size;
-> +			remaining -= opt_size;
-> +		}
-> +		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
-> +		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
-> 			*size += opt_size;
-> 			remaining -= opt_size;
-> 		}
-> @@ -1257,6 +1261,7 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
-> void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 			 struct mptcp_out_options *opts)
-> {
-> +	/* MP_FAIL is mutually exclusive with others except RST and DSS */
-> 	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
-> 		const struct sock *ssk = (const struct sock *)tp;
-> 		struct mptcp_subflow_context *subflow;
-> @@ -1271,7 +1276,16 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 		ptr += 2;
-> 	}
->
-> -	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
-> +	/* RST is mutually exclusive with others except MP_FAIL and FASTCLOSE */
-> +	if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
-> +		*ptr++ = mptcp_option(MPTCPOPT_RST,
-> +				      TCPOLEN_MPTCP_RST,
-> +				      opts->reset_transient,
-> +				      opts->reset_reason);
-> +		return;
-> +	}
-
-Geliang -
-
-Moving this before the DSS block undoes some of Paolo's optimization for 
-DSS. It would be better to handle the mutual exclusion with FASTCLOSE in a 
-way that does not add this extra conditional in the common DSS case.
-
-> +
-> +	/* DSS, MPC, MPJ, ADD_ADDR and FASTCLOSE are mutually exclusive,
-> 	 * see mptcp_established_options*()
-> 	 */
-> 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
-> @@ -1458,15 +1472,8 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 				ptr += 1;
-> 			}
-> 		}
-> -	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
-> -		/* RST is mutually exclusive with everything else */
-> -		*ptr++ = mptcp_option(MPTCPOPT_RST,
-> -				      TCPOLEN_MPTCP_RST,
-> -				      opts->reset_transient,
-> -				      opts->reset_reason);
-> -		return;
-> 	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
-> -		/* FASTCLOSE is mutually exclusive with everything else */
-> +		/* FASTCLOSE is mutually exclusive with others except RST */
-> 		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
-> 				      TCPOLEN_MPTCP_FASTCLOSE,
-> 				      0, 0);
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
