@@ -1,267 +1,243 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B889D68
-	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 17:34:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AFE68
+	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 17:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1638812097;
+	s=mimecast20190719; t=1638812871;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iqOgRXddF588gihmpOScUBIy3djtxZknyPx0u3WZ/oU=;
-	b=JelzMk3lTZcb0pVaCwGllz+pn1qWTywWiSSu9eCZ2wTQkVF1w+s7Ovz6+/ytE2POWGiBQu
-	umSlILrB+XB0XX0Rghj5nCyuCTh/HZ2xz5Iyz4L4FNJzoXiQyUC0PQbToK5TG2N1/QLH3b
-	9xdDpIgnJ3aFWEMS2yqBjyr0Wd/4EfY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=5/6EyW1MkkWDxx0ChRQr+Ty+FVI+BG/Ly08gYzbJWb0=;
+	b=eHeEShLLkWUymLJ+4hB+AnkAjj63aVYWqERcIxSKKxmBiPvPcy8F8jrykMCQ2QjNG4bPmU
+	ji58axGrI2vnXLrKV6V/O4Cmyv6UDE/xaO2ou6X5N1us8kUto3YnexlH61ZQ5n2GWA/0CI
+	yCr6yncZGTygiFMd1K4va4Ih1fF7ups=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-568-uQolgJYMOMCQAdEnPfC0dA-1; Mon, 06 Dec 2021 12:34:56 -0500
-X-MC-Unique: uQolgJYMOMCQAdEnPfC0dA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B62DF81EE62
-	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 17:34:55 +0000 (UTC)
-Received: from gerbillo.fritz.box (unknown [10.39.194.111])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 245CD4ABAF
-	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 17:34:54 +0000 (UTC)
+ us-mta-589-LSksCAoYPh-XWJpJrsSEpQ-1; Mon, 06 Dec 2021 12:47:50 -0500
+X-MC-Unique: LSksCAoYPh-XWJpJrsSEpQ-1
+Received: by mail-wm1-f71.google.com with SMTP id ay34-20020a05600c1e2200b00337fd217772so211914wmb.4
+        for <mptcp@lists.linux.dev>; Mon, 06 Dec 2021 09:47:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5/6EyW1MkkWDxx0ChRQr+Ty+FVI+BG/Ly08gYzbJWb0=;
+        b=LaI1XK+jvnwLOcEQuCBOEfEMU+kUjktPZbYOK4WEpBpGUqmt/DV3N0TTc/Y8euQiVx
+         0HXoHWL8A9oiRGywGOod2s5nkIOC2WQcNk8QHDQ28S9ysj10ofy3jjwYtyh86HCecCpK
+         UKRcZDGdRaUIrtnlkuBuYEA37cimYUXL34QYsCBy2VvYPFi3hyymOHRijIJw95hMgW9e
+         wLrFfOKVl9j4jmhRnBCTULP3rA5dbT49JFUiO9VXjWOT0bqIpPU50Agszjj/L9Ts66Lu
+         5T2O/K09v44sjWAlYyxzMHwXtkBBqdMwV5H4Xeb1iWhJoAZYT6ECGOwqzT4nBU7+3sZD
+         0CKg==
+X-Gm-Message-State: AOAM531UZL3rU+ArVuKt3k/qB8/0l7nAcTK8Um5KqNkt56luEcsvFU+h
+	mj74102sFa3f7jiTD7wh47NNZlrwwT6KEoQRghZogE0KavSCAJnX2+YLpuSlvqCZeQMXkPx3mL9
+	MqdiVpAyFdxAOd8s=
+X-Received: by 2002:a05:6000:47:: with SMTP id k7mr43753637wrx.485.1638812868591;
+        Mon, 06 Dec 2021 09:47:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzH4v2dBfM74dEOSHUrJ1SC2/6qD0vwP0WzCUJgzBkT3YEKdZ1JczqsD21HudnACsP8dyX+eA==
+X-Received: by 2002:a05:6000:47:: with SMTP id k7mr43753610wrx.485.1638812868335;
+        Mon, 06 Dec 2021 09:47:48 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-252-1.dyn.eolo.it. [146.241.252.1])
+        by smtp.gmail.com with ESMTPSA id j18sm28390wmq.44.2021.12.06.09.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Dec 2021 09:47:48 -0800 (PST)
+Message-ID: <2190ad1b150179fb1b311aa8c89344e440d7befa.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 5/6] mptcp: Add a per-namespace sysctl to
+ set the default path manager type
 From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 2/2] mptcp: avoid atomic bit manipulation when possible
-Date: Mon,  6 Dec 2021 18:34:47 +0100
-Message-Id: <f0535e76ebd1dcaa4ec8f5e507ba8c4c5002b793.1638811854.git.pabeni@redhat.com>
-In-Reply-To: <cover.1638811854.git.pabeni@redhat.com>
-References: <cover.1638811854.git.pabeni@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>, Mat Martineau
+	 <mathew.j.martineau@linux.intel.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Date: Mon, 06 Dec 2021 18:47:47 +0100
+In-Reply-To: <CA+WQbwuwfq0E-JQj_7cDf0R+NuMJ44uq+_6VYVceAfrwjYA8BQ@mail.gmail.com>
+References: <20211202005216.154787-1-mathew.j.martineau@linux.intel.com>
+	 <20211202005216.154787-6-mathew.j.martineau@linux.intel.com>
+	 <CA+WQbwuwfq0E-JQj_7cDf0R+NuMJ44uq+_6VYVceAfrwjYA8BQ@mail.gmail.com>
+User-Agent: Evolution 3.42.1 (3.42.1-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-Currently the msk->flags bitmask carries both state for the
-mptcp_release_cb() - mostly touched under the mptcp data lock
-- and others state info touched even outside such lock scope.
+On Mon, 2021-12-06 at 15:56 +0800, Geliang Tang wrote:
+> Hi Mat,
+> 
+> Mat Martineau <mathew.j.martineau@linux.intel.com> 于2021年12月2日周四 08:52写道：
+> > 
+> > The new net.mptcp.pm_type sysctl determines which path manager will be
+> > used by each newly-created MPTCP socket.
+> > 
+> > v2: Handle builds without CONFIG_SYSCTL
+> > 
+> > Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> > ---
+> >  Documentation/networking/mptcp-sysctl.rst | 18 ++++++++++++++++++
+> >  net/mptcp/ctrl.c                          | 21 +++++++++++++++++++++
+> >  net/mptcp/pm.c                            | 13 +++++++++----
+> >  net/mptcp/protocol.h                      |  1 +
+> >  4 files changed, 49 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+> > index b0d4da71e68e..e263dfcc4b40 100644
+> > --- a/Documentation/networking/mptcp-sysctl.rst
+> > +++ b/Documentation/networking/mptcp-sysctl.rst
+> > @@ -46,6 +46,24 @@ allow_join_initial_addr_port - BOOLEAN
+> > 
+> >         Default: 1
+> > 
+> > +pm_type - INTEGER
+> > +
+> > +       Set the default path manager type to use for each new MPTCP
+> > +       socket. In-kernel path management will control subflow
+> > +       connections and address advertisements according to
+> > +       per-namespace values configured over the MPTCP netlink
+> > +       API. Userspace path management puts per-MPTCP-connection subflow
+> > +       connection decisions and address advertisements under control of
+> > +       a privileged userspace program, at the cost of more netlink
+> > +       traffic to propagate all of the related events and commands.
+> > +
+> > +       This is a per-namespace sysctl.
+> > +
+> > +       * 0 - In-kernel path manager
+> > +       * 1 - Userspace path manager
+> > +
+> > +       Default: 0
+> > +
+> >  stale_loss_cnt - INTEGER
+> >         The number of MPTCP-level retransmission intervals with no traffic and
+> >         pending outstanding data on a given subflow required to declare it stale.
+> > diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> > index 8b235468c88f..ae20b7d92e28 100644
+> > --- a/net/mptcp/ctrl.c
+> > +++ b/net/mptcp/ctrl.c
+> > @@ -16,6 +16,11 @@
+> >  #define MPTCP_SYSCTL_PATH "net/mptcp"
+> > 
+> >  static int mptcp_pernet_id;
+> > +
+> > +#ifdef CONFIG_SYSCTL
+> > +static int mptcp_pm_type_max = __MPTCP_PM_TYPE_MAX;
+> > +#endif
+> > +
+> >  struct mptcp_pernet {
+> >  #ifdef CONFIG_SYSCTL
+> >         struct ctl_table_header *ctl_table_hdr;
+> > @@ -26,6 +31,7 @@ struct mptcp_pernet {
+> >         u8 mptcp_enabled;
+> >         u8 checksum_enabled;
+> >         u8 allow_join_initial_addr_port;
+> > +       u8 pm_type;
+> >  };
+> > 
+> >  static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
+> > @@ -58,6 +64,11 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net)
+> >         return mptcp_get_pernet(net)->stale_loss_cnt;
+> >  }
+> > 
+> > +int mptcp_get_pm_type(const struct net *net)
+> > +{
+> > +       return mptcp_get_pernet(net)->pm_type;
+> > +}
+> > +
+> >  static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+> >  {
+> >         pernet->mptcp_enabled = 1;
+> > @@ -65,6 +76,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+> >         pernet->checksum_enabled = 0;
+> >         pernet->allow_join_initial_addr_port = 1;
+> >         pernet->stale_loss_cnt = 4;
+> > +       pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
+> >  }
+> > 
+> >  #ifdef CONFIG_SYSCTL
+> > @@ -108,6 +120,14 @@ static struct ctl_table mptcp_sysctl_table[] = {
+> >                 .mode = 0644,
+> >                 .proc_handler = proc_douintvec_minmax,
+> >         },
+> > +       {
+> > +               .procname = "pm_type",
+> > +               .maxlen = sizeof(u8),
+> > +               .mode = 0644,
+> > +               .proc_handler = proc_dou8vec_minmax,
+> > +               .extra1       = SYSCTL_ZERO,
+> > +               .extra2       = &mptcp_pm_type_max
+> > +       },
+> >         {}
+> >  };
+> > 
+> > @@ -128,6 +148,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+> >         table[2].data = &pernet->checksum_enabled;
+> >         table[3].data = &pernet->allow_join_initial_addr_port;
+> >         table[4].data = &pernet->stale_loss_cnt;
+> > +       table[5].data = &pernet->pm_type;
+> > 
+> >         hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
+> >         if (!hdr)
+> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> > index 451948b11030..f1fc08d89c20 100644
+> > --- a/net/mptcp/pm.c
+> > +++ b/net/mptcp/pm.c
+> > @@ -365,8 +365,12 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+> > 
+> >  void mptcp_pm_data_reset(struct mptcp_sock *msk)
+> >  {
+> > -       bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
+> > +       u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+> >         struct mptcp_pm_data *pm = &msk->pm;
+> > +       bool subflows_allowed;
+> > +
+> > +       subflows_allowed = !!mptcp_pm_get_subflows_max(msk) &&
+> > +               pm_type == MPTCP_PM_TYPE_KERNEL;
+> > 
+> >         pm->add_addr_signaled = 0;
+> >         pm->add_addr_accepted = 0;
+> > @@ -374,13 +378,14 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+> >         pm->subflows = 0;
+> >         pm->rm_list_tx.nr = 0;
+> >         pm->rm_list_rx.nr = 0;
+> > -       WRITE_ONCE(pm->pm_type, MPTCP_PM_TYPE_KERNEL);
+> > +       WRITE_ONCE(pm->pm_type, pm_type);
+> >         /* pm->work_pending must be only be set to 'true' when
+> >          * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
+> >          */
+> >         WRITE_ONCE(pm->work_pending,
+> > -                  (!!mptcp_pm_get_local_addr_max(msk) && subflows_allowed) ||
+> > -                  !!mptcp_pm_get_add_addr_signal_max(msk));
+> > +                  pm_type == MPTCP_PM_TYPE_KERNEL &&
+> > +                  ((!!mptcp_pm_get_local_addr_max(msk) && subflows_allowed) ||
+> > +                   !!mptcp_pm_get_add_addr_signal_max(msk)));
+> 
+> I think pm_type == MPTCP_PM_TYPE_KERNEL is somehow duplicate here, how
+> about use this code instead:
+> 
+>         WRITE_ONCE(pm->work_pending,
+>                    (!!mptcp_pm_get_local_addr_max(msk) && subflows_allowed) ||
+>                    (!!mptcp_pm_get_add_addr_signal_max(msk) && pm_type
+> == MPTCP_PM_TYPE_KERNEL));
 
-As a consequence, msk->flags is always manipulated with
-atomic operations.
+Still apropos making this chunk of code more readable, what about:
 
-This change splits such bitmask in two separate fields, so
-that we use plain bit oper operations when touching the
-cb-related info.
+	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
+		// [current code]
+	} else {
+		WRITE_ONCE(pm->work_pending, 0);
+		WRITE_ONCE(pm->accept_addr, 0);
+		WRITE_ONCE(pm->accept_subflow, 0); 
+	}
 
-The MPTCP_PUSH_PENDING bit needs additional care, as it is the
-only CB related field currently accessed either under the mptcp
-data lock or the mptcp socket lock.
-Let's add another mask just for such bit's sake.
+?
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 46 +++++++++++++++++++++++---------------------
- net/mptcp/protocol.h | 18 ++++++++++-------
- net/mptcp/subflow.c  |  4 ++--
- 3 files changed, 37 insertions(+), 31 deletions(-)
+Cheers,
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 38651c80b321..42c382d0eb01 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -763,7 +763,7 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
- 		if (!sock_owned_by_user(sk))
- 			__mptcp_error_report(sk);
- 		else
--			set_bit(MPTCP_ERROR_REPORT,  &msk->flags);
-+			__set_bit(MPTCP_ERROR_REPORT,  &msk->cb_flags);
- 	}
- 
- 	/* If the moves have caught up with the DATA_FIN sequence number
-@@ -1529,9 +1529,8 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
- 
- void mptcp_check_and_set_pending(struct sock *sk)
- {
--	if (mptcp_send_head(sk) &&
--	    !test_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
--		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-+	if (mptcp_send_head(sk))
-+		mptcp_sk(sk)->push_pending |= MPTCP_PUSH_PENDING;
- }
- 
- void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-@@ -2146,7 +2145,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
- 			mptcp_schedule_work(sk);
- 	} else {
- 		/* delegate our work to tcp_release_cb() */
--		set_bit(MPTCP_RETRANSMIT, &msk->flags);
-+		__set_bit(MPTCP_RETRANSMIT, &msk->cb_flags);
- 	}
- 	bh_unlock_sock(sk);
- 	sock_put(sk);
-@@ -2859,7 +2858,9 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 
- 	mptcp_destroy_common(msk);
- 	msk->last_snd = NULL;
--	msk->flags = 0;
-+	WRITE_ONCE(msk->flags, 0);
-+	msk->cb_flags = 0;
-+	msk->push_pending = 0;
- 	msk->recovery = false;
- 	msk->can_ack = false;
- 	msk->fully_established = false;
-@@ -3040,7 +3041,7 @@ void __mptcp_data_acked(struct sock *sk)
- 	if (!sock_owned_by_user(sk))
- 		__mptcp_clean_una(sk);
- 	else
--		set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->cb_flags);
- 
- 	if (mptcp_pending_data_fin_ack(sk))
- 		mptcp_schedule_work(sk);
-@@ -3059,22 +3060,22 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- 		else if (xmit_ssk)
- 			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk), MPTCP_DELEGATE_SEND);
- 	} else {
--		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
- 	}
- }
- 
-+#define MPTCP_FLAGS_PROCESS_CTX_NEED (MPTCP_PUSH_PENDING | \
-+				      MPTCP_RETRANSMIT | \
-+				      MPTCP_FLUSH_JOIN_LIST)
-+
- /* processes deferred events and flush wmem */
- static void mptcp_release_cb(struct sock *sk)
- {
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
- 	for (;;) {
--		unsigned long flags = 0;
--
--		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
--			flags |= BIT(MPTCP_PUSH_PENDING);
--		if (test_and_clear_bit(MPTCP_RETRANSMIT, &mptcp_sk(sk)->flags))
--			flags |= BIT(MPTCP_RETRANSMIT);
--		if (test_and_clear_bit(MPTCP_FLUSH_JOIN_LIST, &mptcp_sk(sk)->flags))
--			flags |= BIT(MPTCP_FLUSH_JOIN_LIST);
-+		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED) |
-+				      msk->push_pending;
- 		if (!flags)
- 			break;
- 
-@@ -3085,7 +3086,8 @@ static void mptcp_release_cb(struct sock *sk)
- 		 *    datapath acquires the msk socket spinlock while helding
- 		 *    the subflow socket lock
- 		 */
--
-+		msk->push_pending = 0;
-+		msk->cb_flags &= ~flags;
- 		spin_unlock_bh(&sk->sk_lock.slock);
- 		if (flags & BIT(MPTCP_FLUSH_JOIN_LIST))
- 			__mptcp_flush_join_list(sk);
-@@ -3101,11 +3103,11 @@ static void mptcp_release_cb(struct sock *sk)
- 	/* be sure to set the current sk state before tacking actions
- 	 * depending on sk_state
- 	 */
--	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
-+	if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
- 		__mptcp_set_connected(sk);
--	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
-+	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
- 		__mptcp_clean_una_wakeup(sk);
--	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
-+	if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
- 		__mptcp_error_report(sk);
- 
- 	__mptcp_update_rmem(sk);
-@@ -3147,7 +3149,7 @@ void mptcp_subflow_process_delegated(struct sock *ssk)
- 		if (!sock_owned_by_user(sk))
- 			__mptcp_subflow_push_pending(sk, ssk);
- 		else
--			set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-+			__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
- 		mptcp_data_unlock(sk);
- 		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SEND);
- 	}
-@@ -3267,7 +3269,7 @@ bool mptcp_finish_join(struct sock *ssk)
- 	} else {
- 		sock_hold(ssk);
- 		list_add_tail(&subflow->node, &msk->join_list);
--		set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->flags);
-+		__set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->cb_flags);
- 	}
- 	mptcp_data_unlock(parent);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4a140aec68b3..fca045f1936f 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -110,18 +110,20 @@
- /* MPTCP TCPRST flags */
- #define MPTCP_RST_TRANSIENT	BIT(0)
- 
--/* MPTCP socket flags */
-+/* MPTCP socket atomic flags */
- #define MPTCP_NOSPACE		1
- #define MPTCP_WORK_RTX		2
- #define MPTCP_WORK_EOF		3
- #define MPTCP_FALLBACK_DONE	4
- #define MPTCP_WORK_CLOSE_SUBFLOW 5
--#define MPTCP_PUSH_PENDING	6
--#define MPTCP_CLEAN_UNA		7
--#define MPTCP_ERROR_REPORT	8
--#define MPTCP_RETRANSMIT	9
--#define MPTCP_FLUSH_JOIN_LIST	10
--#define MPTCP_CONNECTED		11
-+
-+/* MPTCP socket release cb flags */
-+#define MPTCP_PUSH_PENDING	1
-+#define MPTCP_CLEAN_UNA		2
-+#define MPTCP_ERROR_REPORT	3
-+#define MPTCP_RETRANSMIT	4
-+#define MPTCP_FLUSH_JOIN_LIST	5
-+#define MPTCP_CONNECTED		6
- 
- static inline bool before64(__u64 seq1, __u64 seq2)
- {
-@@ -243,6 +245,8 @@ struct mptcp_sock {
- 	u32		token;
- 	int		rmem_released;
- 	unsigned long	flags;
-+	unsigned long	cb_flags;
-+	unsigned long	push_pending;
- 	bool		recovery;		/* closing subflow write queue reinjected */
- 	bool		can_ack;
- 	bool		fully_established;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 536a322a6fd0..09225b57c7f6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -388,7 +388,7 @@ static void mptcp_set_connected(struct sock *sk)
- 	if (!sock_owned_by_user(sk))
- 		__mptcp_set_connected(sk);
- 	else
--		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->cb_flags);
- 	mptcp_data_unlock(sk);
- }
- 
-@@ -1280,7 +1280,7 @@ static void subflow_error_report(struct sock *ssk)
- 	if (!sock_owned_by_user(sk))
- 		__mptcp_error_report(sk);
- 	else
--		set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->cb_flags);
- 	mptcp_data_unlock(sk);
- }
- 
--- 
-2.33.1
+Paolo
 
