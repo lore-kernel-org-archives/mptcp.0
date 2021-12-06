@@ -1,191 +1,102 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4798C68
-	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 08:38:06 +0000 (UTC)
-Received: by mail-pg1-f174.google.com with SMTP id r138so9719650pgr.13
-        for <mptcp@lists.linux.dev>; Mon, 06 Dec 2021 00:38:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067D568
+	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 09:44:57 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id l25so40280761eda.11
+        for <mptcp@lists.linux.dev>; Mon, 06 Dec 2021 01:44:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZsirzofDpIdgRzWb8lUoS8jV/215bG+1Jp6xRkSrgtk=;
-        b=oaiKa7c2PpsnWlKm/Vf24oMvGjC0+0lFANwqUegp3GdH9OwQ/ZcC7kKQabaKAKqzHj
-         CGW19c1u4S1Uk4XnqBAW1X7mUoZwcW9jZbJfAPw1CSjbuToNB0TocY7C9AdohguRHv4j
-         o9PGM6RcqG/0PEdOkX1W6HguiyG7wXhdedTLI4F2YaY/naQYO4jhzQEIHr/GgdcPsMW8
-         pQJDJZJAAaBlQMmCtAeG6OHqR9/qZP2DCiW8DCrJctNmVfHITzRqx/0F+g2jQC7jsIK6
-         LzUwOCsY4Cr7S1MuM634OMgMtUNdot4NqtSlJX+lu/dWX4AQ2V9b9eUWxfbIFavjpKGP
-         2qHA==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=F2EfkTq3ss+qCaUKOaiJrQOTicc1nTrvg0q9lBJ1VfE=;
+        b=KNs8r3LcQ5uMV3MRWZYo4JF7fkvLXngL/K08gmSqYodimtRB1zZoOX4QD0FjXa0UqZ
+         QPsiee6cuUHC9Uby5C5YgRFGbeyTl5Ecc3KymeYBafLMMoMryXasxdjSr1fbdZhnkHcm
+         qY1BCqm6Q41EbRfVY70NgViGCA6JV6lA1Zlmj0nW2/HOE4UL2UC9uD0poW4c9LQ6RXZ4
+         AjRLW0deP3Op1xkxcDsEJQ0EEhzsXN77HKc7Ejr6sCtSdmWU1aU886MNxIj3lH4EJrCU
+         XgOZEC6umuArWKLFpPPA3ORxPYQdJciC62ei6e8hA7rhaqhqxxet8x47fLyd+ySpgNTp
+         m0Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZsirzofDpIdgRzWb8lUoS8jV/215bG+1Jp6xRkSrgtk=;
-        b=YJbEg5LpTNbvuE9+ro4pUHoN9kdDWMuT20oTwDq8GSYciyYTsnz9uyuySov2EHe1RR
-         v6t/7wjhtUtHtMeA2+sJDTH9EY3hljoHzrKuBHAepaD2+KfExDR7YZwb7WCPyNJi/Pmn
-         pW6sUA4IDn1Lx8UjFixANtlHf077d6jvXaZDUBP5tsmzhHIETiwqNKRonOXgWWlyeW4z
-         AVhkr/44vjd65dzqN0ic+xPvwEs2u8kYDfR2Ivrc7H0Wh5FvRNFpEt0UPNNhVccoMdaU
-         3IfBvSSBsBlkgpea0rlu26h1Aby8wwjjmcNfBiEpPR/UMavVaU4blShIAQSt2zB/Eqwr
-         TwTQ==
-X-Gm-Message-State: AOAM532W2lhg8o0Ddbo6gn4D/F0kQeAvLOHf1CLfZDiuMBM1EyxchI/h
-	BQw766F6MxwrCaMdph4YVca8k7y9dxG+8bCeGbfehqfFUH0=
-X-Google-Smtp-Source: ABdhPJwvEpzhdsfJuDQKoIidylDnxL3ILpmPTFa4bZK3Tkbcu+riy6xqCxAXxvk2UUWE7lhDNycl5SMJC9uAPNGTFdc=
-X-Received: by 2002:aa7:93ce:0:b0:4a8:19fc:f024 with SMTP id
- y14-20020aa793ce000000b004a819fcf024mr35659746pff.10.1638779885759; Mon, 06
- Dec 2021 00:38:05 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=F2EfkTq3ss+qCaUKOaiJrQOTicc1nTrvg0q9lBJ1VfE=;
+        b=3bi00cN1X/AXHjlrPKyf0bPoEAT8pFDEgct5fy+JI6Sg0IMIpFciXu2oLRfSW72fsx
+         q6Zk7yKWy3FgcN1Xjdt5qwmlJTnydcgesJLzgGZ8iuWYb+ymudgBXA4RDxtKWn6NSFaj
+         qEc0MjUikekgIkMsWRwRQEqo59i6Wax/vyWdm9qKEz86YAAGqSDsvtaqKLaWH3XohfH2
+         rFXEeE2hENJK4Wv13Gf158dTuI6x4zPi/87cUf6n7oj592SgGv8y3T4SBDAV0FDCdMD8
+         ZCCIi6yvq4f/pIJPwmSmIiefNSWnsDN/wSGE4y+oszdSui81Y2JHkBov8meFPxF62oSw
+         ob+Q==
+X-Gm-Message-State: AOAM532+OD776ZmdGpRsgR/0E2oHFNvy8OC0jAMNvmPINKSuiH0ZHqxM
+	XKMinfSqQEBOUjCaM7IVXxfoO5O/Pa/ee8rw
+X-Google-Smtp-Source: ABdhPJwbEjhKEyWD+HIW9zDlp2pXlrs3/HzVzMniSbrYQKKxFLpzAemNUSSzF1ydtf+xRPtwtYqfSQ==
+X-Received: by 2002:aa7:cd5c:: with SMTP id v28mr52976668edw.6.1638783895930;
+        Mon, 06 Dec 2021 01:44:55 -0800 (PST)
+Received: from [192.168.178.33] (94.105.100.208.dyn.edpnet.net. [94.105.100.208])
+        by smtp.gmail.com with ESMTPSA id d18sm7605712edj.23.2021.12.06.01.44.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Dec 2021 01:44:55 -0800 (PST)
+Message-ID: <61ea8986-10c2-1d4f-6c35-2c910dbdcf89@tessares.net>
+Date: Mon, 6 Dec 2021 10:44:54 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211202005216.154787-1-mathew.j.martineau@linux.intel.com> <20211202005216.154787-7-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20211202005216.154787-7-mathew.j.martineau@linux.intel.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Mon, 6 Dec 2021 16:37:59 +0800
-Message-ID: <CA+WQbwtN+RoDLQ=YhDYgczHAEN2SCe7gLYGOO_oBFNb6dyBR_A@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v2 6/6] selftests: mptcp: Add tests for
- userspace PM type
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH mptcp] mptcp: remove tcp ulp setsockopt support
+Content-Language: en-GB
+To: Florian Westphal <fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+References: <00000000000040972505d24e88e3@google.com>
+ <20211205192700.25396-1-fw@strlen.de>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20211205192700.25396-1-fw@strlen.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Mat Martineau <mathew.j.martineau@linux.intel.com> =E4=BA=8E2021=E5=B9=B412=
-=E6=9C=882=E6=97=A5=E5=91=A8=E5=9B=9B 08:52=E5=86=99=E9=81=93=EF=BC=9A
->
-> These tests ensure that the in-kernel path manager is bypassed when
-> the userspace path manager is configured. Kernel code is still
-> responsible for ADD_ADDR echo, so also make sure that's working.
->
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Hi Florian,
 
-Tested-by: Geliang Tang <geliang.tang@suse.com>
+(without netdev and syzbot ML)
 
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
->  1 file changed, 69 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index 2684ef9c0d42..7df9ddb307a8 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -50,6 +50,7 @@ init()
->                 ip netns add $netns || exit $ksft_skip
->                 ip -net $netns link set lo up
->                 ip netns exec $netns sysctl -q net.mptcp.enabled=3D1
-> +               ip netns exec $netns sysctl -q net.mptcp.pm_type=3D0
->                 ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filte=
-r=3D0
->                 ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_f=
-ilter=3D0
->                 if [ $checksum -eq 1 ]; then
-> @@ -1837,6 +1838,68 @@ fullmesh_tests()
->         chk_add_nr 1 1
->  }
->
-> +userspace_tests()
-> +{
-> +       # userspace pm type prevents add_addr
-> +       reset
-> +       ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
-> +       ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> +       ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-> +       ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-> +       run_tests $ns1 $ns2 10.0.1.1
-> +       chk_join_nr "userspace pm type prevents add_addr" 0 0 0
-> +       chk_add_nr 0 0
-> +
-> +       # userspace pm type echoes add_addr
-> +       reset
-> +       ip netns exec $ns2 sysctl -q net.mptcp.pm_type=3D1
-> +       ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> +       ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-> +       ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-> +       run_tests $ns1 $ns2 10.0.1.1
-> +       chk_join_nr "userspace pm type echoes add_addr" 0 0 0
-> +       chk_add_nr 1 1
-> +
-> +       # userspace pm type rejects join
-> +       reset
-> +       ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
-> +       ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-> +       ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-> +       ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> +       run_tests $ns1 $ns2 10.0.1.1
-> +       chk_join_nr "userspace pm type rejects join" 1 1 0
-> +
-> +       # userspace pm type does not send join
-> +       reset
-> +       ip netns exec $ns2 sysctl -q net.mptcp.pm_type=3D1
-> +       ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-> +       ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-> +       ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> +       run_tests $ns1 $ns2 10.0.1.1
-> +       chk_join_nr "userspace pm type does not send join" 0 0 0
-> +
-> +       # userspace pm type prevents mp_prio
-> +       reset
-> +       ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
-> +       ip netns exec $ns1 ./pm_nl_ctl limits 1 1
-> +       ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-> +       ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> +       run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
-> +       chk_join_nr "userspace pm type prevents mp_prio" 1 1 0
-> +       chk_prio_nr 0 0
-> +
-> +       # userspace pm type prevents rm_addr
-> +       reset
-> +       ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
-> +       ip netns exec $ns2 sysctl -q net.mptcp.pm_type=3D1
-> +       ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> +       ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-> +       ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> +       run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
-> +       chk_join_nr "userspace pm type prevents rm_addr" 0 0 0
-> +       chk_rm_nr 0 0
-> +}
-> +
->  all_tests()
->  {
->         subflows_tests
-> @@ -1853,6 +1916,7 @@ all_tests()
->         checksum_tests
->         deny_join_id0_tests
->         fullmesh_tests
-> +       userspace_tests
->  }
->
->  usage()
-> @@ -1872,6 +1936,7 @@ usage()
->         echo "  -S checksum_tests"
->         echo "  -d deny_join_id0_tests"
->         echo "  -m fullmesh_tests"
-> +       echo "  -u userspace_tests"
->         echo "  -c capture pcap files"
->         echo "  -C enable data checksum"
->         echo "  -h help"
-> @@ -1907,7 +1972,7 @@ if [ $do_all_tests -eq 1 ]; then
->         exit $ret
->  fi
->
-> -while getopts 'fsltra64bpkdmchCS' opt; do
-> +while getopts 'fsltra64bpkdmuchCS' opt; do
->         case $opt in
->                 f)
->                         subflows_tests
-> @@ -1951,6 +2016,9 @@ while getopts 'fsltra64bpkdmchCS' opt; do
->                 m)
->                         fullmesh_tests
->                         ;;
-> +               u)
-> +                       userspace_tests
-> +                       ;;
->                 c)
->                         ;;
->                 C)
-> --
-> 2.34.1
->
->
+On 05/12/2021 20:27, Florian Westphal wrote:
+> TCP_ULP setsockopt cannot be used for mptcp because its already
+> used internally to plumb subflow (tcp) sockets to the mptcp layer.
+> 
+> syzbot managed to trigger a crash for mptcp connections that are
+> in fallback mode:
+> 
+> KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+> CPU: 1 PID: 1083 Comm: syz-executor.3 Not tainted 5.16.0-rc2-syzkaller #0
+> RIP: 0010:tls_build_proto net/tls/tls_main.c:776 [inline]
+> [..]
+>  __tcp_set_ulp net/ipv4/tcp_ulp.c:139 [inline]
+>  tcp_set_ulp+0x428/0x4c0 net/ipv4/tcp_ulp.c:160
+>  do_tcp_setsockopt+0x455/0x37c0 net/ipv4/tcp.c:3391
+>  mptcp_setsockopt+0x1b47/0x2400 net/mptcp/sockopt.c:638
+> 
+> Remove support for TCP_ULP setsockopt.
+
+Good catch!
+Indeed, it doesn't make sense to support TCP_ULP.
+
+> Reported-by: syzbot+1fd9b69cde42967d1add@syzkaller.appspotmail.com
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+
+I guess we need a Fixes tag here:
+
+Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported sockopt")
+
+BTW, did you send this patch to netdev ML on purpose?
+I guess this is fine but they will probably ask for the Fixes tag as it
+looks like a bug-fix. Do you want me to reply to this email on netdev
+and include this "Fixes" tag in my email?
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
