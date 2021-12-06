@@ -1,49 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83FF2C9D
-	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 18:57:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFF1C341C8;
-	Mon,  6 Dec 2021 18:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1638817045;
-	bh=kgixWDSqMcZnHwfXTjwAEg6St2LR2wH+ynRHOH3oFrU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DHlUIgjf4DhGeR5A5picVsZ7O7NSgF2Sc4GF4PiI/wvdxdRpzqUW81XA3o7HlW7Ha
-	 w7uxD//nyeZOZj7g+GK2A/RhOrhSt9fRJiC2Z138+kKbkI77ur+CKkWBXtmqNrZ1Pk
-	 1IngkEm/sxfGrbxyJi1dkBMsQiATc5PxDU5Aqr6sMAsZXeb2QE8ielRUfBv8aRaGF9
-	 8fXVd7DJoScMmq6vEskFbarGrHdydSPCRKWId4+4lx83mwxdix8Ud7g5SwET6ATOI4
-	 Jo/T4ulWl6l2XW8d/HL24+LqpFM+QsGqIYcEDNbUF6CDx9ChpIEhJsvoZNV64WO8Qi
-	 Gq31h1wVu9bcw==
-Date: Mon, 6 Dec 2021 10:57:24 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev,
- syzkaller-bugs@googlegroups.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- syzbot+1fd9b69cde42967d1add@syzkaller.appspotmail.com
-Subject: Re: [PATCH mptcp] mptcp: remove tcp ulp setsockopt support
-Message-ID: <20211206105724.0bf71c56@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <2297cabb-be69-98ef-f4fc-d9472c7820cc@linux.intel.com>
-References: <00000000000040972505d24e88e3@google.com>
-	<20211205192700.25396-1-fw@strlen.de>
-	<20211206075326.700f2078@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-	<20211206075515.3cf5b0df@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-	<2297cabb-be69-98ef-f4fc-d9472c7820cc@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4168C2C9D
+	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 19:40:04 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="237616251"
+X-IronPort-AV: E=Sophos;i="5.87,292,1631602800"; 
+   d="scan'208";a="237616251"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 11:40:03 -0800
+X-IronPort-AV: E=Sophos;i="5.87,292,1631602800"; 
+   d="scan'208";a="514891363"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.251.18.10])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 11:40:03 -0800
+Date: Mon, 6 Dec 2021 11:40:02 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Florian Westphal <fw@strlen.de>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp 1/2] mptcp: clear 'kern' flag from fallback
+ sockets
+In-Reply-To: <20211206155120.26929-2-fw@strlen.de>
+Message-ID: <d5c4d25c-7498-46c5-54b6-4fd067d075f2@linux.intel.com>
+References: <20211206155120.26929-1-fw@strlen.de> <20211206155120.26929-2-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 6 Dec 2021 10:44:16 -0800 (PST) Mat Martineau wrote:
-> If you could mark this as "Not Applicable" in netdevbpf patchwork, we'll 
-> apply it to the mptcp tree and resubmit to netdev with some related 
-> patches.
+On Mon, 6 Dec 2021, Florian Westphal wrote:
 
-For sure, I was asking because technically I added the code that hit
-the oops to tls a week or so ago, so I wanted to make sure it's not 
-my fault ;) Marked in pw appropriately now.
+> The mptcp ULP extension relies on sk->sk_sock_kern being set correctly:
+> It prevents setsockopt(fd, IPPROTO_TCP, TCP_ULP, "mptcp", 6); from
+> working for plain tcp sockets (any userspace-exposed socket).
+>
+> But in case of fallback, accept() can return a plain tcp sk.
+> In such case, sk is still tagged as 'kernel' and setsockopt will work.
+>
+> This will crash the kernel, The subflow extension has a NULL ctx->conn
+> mptcp socket:
+>
+> BUG: KASAN: null-ptr-deref in subflow_data_ready+0x181/0x2b0
+> Call Trace:
+> tcp_data_ready+0xf8/0x370
+> [..]
+>
+> Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming connections")
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+> ---
+> net/mptcp/protocol.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 8319e601bc2d..34ea4b25128e 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3025,6 +3025,7 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+> 				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
+> 	}
+>
+> +	newsk->sk_kern_sock = kern;
+> 	return newsk;
+> }
+
+Florian -
+
+There's an early return in this function where the newsk from 
+inet_csk_accept() is also used. From the WARN_ON_ONCE() for that return, 
+it shouldn't happen, and changes to subflow_syn_recv_sock() appear to make 
+it impossible and therefore dead code.
+
+Could do one of these:
+
+1. Set sk_kern_sock for the early return for this -net fix, delete the
+    dead code path in mptcp-next if needed / agreed upon
+
+2. Delete the early return now
+
+
+Option 1 seems like the safer approach for -net, do you agree?
+
+--
+Mat Martineau
+Intel
