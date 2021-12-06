@@ -1,315 +1,148 @@
-Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7A068
-	for <mptcp@lists.linux.dev>; Sun,  5 Dec 2021 20:59:33 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1638737961; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=iIFj/RNGpPnMH7vp8BDcY+r+T40s8nIft9lK0ATvYYWByFZuuOUctmPt14NFI/51NWOOFYWWb5DDRbduwx7Q0XjxXRKtHohNrqxHAaMSJChSoy0fGsr154lB/iBe22Az/pWBHqqPoqOr7W5SUsu7U7eYHyomKIOLw++SUcQbS/4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1638737961; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=LgLf9tKdqvmzd69X3uluWVTiT9bw/NDQqURTgKFpNgw=; 
-	b=KT1ALNcsPU1I0Z/8e5KYxPUOUa7GgoZz9ddlY4lQFwEZvdml6lgqoLJliqErC6voqGx36CDfuq3geVNDAhePEZiAmBcVbyOfa6wV3Ram8ZprBUhHkUFc2XcnBRSv6fkTw7rOEViDkidLngMDE31Pg8jjlCkh2XIPH4MEfnjsQHU=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=shytyi.net;
-	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
-	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1638737961;
-	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Subject:MIME-Version:Content-Type;
-	bh=LgLf9tKdqvmzd69X3uluWVTiT9bw/NDQqURTgKFpNgw=;
-	b=Bvdgwnug8lMNv0JrVjjYXFIee0iyAmvFXmuv8K01bYV+xjZ29RI61HJt68TZdONE
-	K0748AFXxfJEsuxwGE2kxip2sy6SLOF0p1aujNrgoekPsc7CmgV1W4UaI4FB69cnbzz
-	4zdT5nSM0LOtHlBQyzfIgEO+52GxIGlHfdGHCqK4=
-Received: from mail.zoho.eu by mx.zoho.eu
-	with SMTP id 1638737953890759.2495009622066; Sun, 5 Dec 2021 21:59:13 +0100 (CET)
-Date: Sun, 05 Dec 2021 21:59:13 +0100
-From: Dmytro Shytyi <dmytro@shytyi.net>
-To: "mptcp" <mptcp@lists.linux.dev>,
-	"Matthieu Baerts" <matthieu.baerts@tessares.net>
-Cc: "mathewjmartineau" <mathew.j.martineau@linux.intel.com>
-Message-Id: <17d8c64c442.11c026c79399960.5261313972320451268@shytyi.net>
-In-Reply-To: <868a9dcc-9001-cdd8-c655-dabe7b8f9222@tessares.net>
-References: <17ca66cd439.10a0a3ce11621928.1543611905599720914@shytyi.net>
- <a52c4e6d-8463-6328-c786-9cb8b71ac62e@tessares.net>
- <17cb73b1343.c752fede1729351.6463099199494289591@shytyi.net> <868a9dcc-9001-cdd8-c655-dabe7b8f9222@tessares.net>
-Subject: Re: [PATCH net-next v1] net: mptcp, Fast Open Mechanism
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD36668
+	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 03:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1638763190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=u1gNOZMY9hFV/1zq4nlugGwbYW0A0X2B1E4NefvVpB4=;
+	b=KQNK+j3P4hmbzVXKYAv+7B2t+1RyYBUtWXPftmiFMeFzhfcof0BmejJ+b7Bo3cuRn/Robb
+	ejqEVTQKQULOUV/aJKWrYAuZ3jgy4O9UWu5wBl/0N2p7KmoNjMn4zok3vNNL/MssBlpvgH
+	JH7mMfYDyjbwzp+eqeTDKCxiM6fyIZ0=
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com
+ (mail-ve1eur01lp2055.outbound.protection.outlook.com [104.47.1.55]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-38-o0QjF-KbM_ifsDpxr50BQg-1; Mon, 06 Dec 2021 04:59:49 +0100
+X-MC-Unique: o0QjF-KbM_ifsDpxr50BQg-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QGipxKAeDwkSUBLLIP6GccRcNV+5TFkLYHfEjo3SMZdEaQs2do8cVcCCEyCbkUo5ZeJ3P088v898sHKZsUOSQ2ceR6PVf87OfAgmDkphmmc0ptluKC8Dw0ANKEuUIpk77MqNlw51OLR8vUTyUYfegyOaa2yz0t4La//0OnBWTKx34XWLWwSHEzta9gSN3At1Abp38dIzaL6ki9uMb6NahgbQ5nhNZuVlrWeAXZHNKa/n8DonzIOWEXtS8d1ygVCaKZ91hQYI1GwS6nBRxhbkEK2QOwHphJoGsM+cvjNw2izKaTVD5zeri1CL6TT63nERX/J8NQKFuVIPXujdsl5pTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tAgWJT7iB3Oj4MMBeHx86JN/5Jfd/h7e+Aunaz4ZkiU=;
+ b=UIIMC6M+gpgGj7DqN5PZvbwX4J0bCC6s17RELBDooA/5m/4BOsotBcCYkkvgWE49OORagF//JphQnDyAbIKzlwUDHAh5dwc9IUorHiCFiDWs3sD8svG4oTy+HtlIODSYd9l/oCZ5qwtWHBfhC1vaxzU04IbKKh+tz/HFuQ1m8z6hYVhq3Q5k8Lpj0kMyRC4325cIHLHpCH2Jd0ghWF7BZsqvIqVBNnK1RPaW3xQ2UABktJZNE3oBAYqq4l00VuynsBeio6h3RhBcyqA6cl7VIosHrfZLdm4SFxOEz2BDG5q2RWzSkCYiylRL5n3bHU7mrllu42cIqjK5pVYK62ShXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by HE1PR04MB3065.eurprd04.prod.outlook.com (2603:10a6:7:1d::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.21; Mon, 6 Dec
+ 2021 03:59:46 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::59a0:4185:3e03:7366]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::59a0:4185:3e03:7366%7]) with mapi id 15.20.4755.021; Mon, 6 Dec 2021
+ 03:59:46 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v6 0/2] send MP_FAIL with MP_RST and others
+Date: Mon,  6 Dec 2021 11:59:33 +0800
+Message-ID: <cover.1638762825.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR01CA0069.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::33) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; 
-	boundary="----=_Part_1509344_366762433.1638737953859"
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-X-Zoho-Virus-Status: 1
+Received: from localhost (60.251.47.115) by HK0PR01CA0069.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.17 via Frontend Transport; Mon, 6 Dec 2021 03:59:45 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3e7875ad-5395-43cc-dfa1-08d9b86cd78f
+X-MS-TrafficTypeDiagnostic: HE1PR04MB3065:
+X-Microsoft-Antispam-PRVS:
+	<HE1PR04MB306593682552454F5948557CF86D9@HE1PR04MB3065.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	YphHhekRdem8fP0HCwOrbxjRgUbjOpZCy0FwrqLS/27TCVizL2V9eSTLJ+f2XBwb1P77EPsQZJH9GAnD9q7dZQ4EE2N4T0DL0yzJjc2zffH99mZKgbtbF9zTg5tOdsRo+Ae5FzfCaiAiDIFWK44OeHFQ3QR5+c8LAwXrrOBZaM/1VDdJ0QNeiRDylblkVwNuqddKTF5GDQS/Z6JHvYYWOi8m/hCJcx6DOVSx1RiDqhOKJ3DcC79HGbuctnLf+z1xuVO4tPnTybnuZ9a5Gx3PkgtRIyvv1bRlfm7L/9f28HDhQ/QEws8Ak2xSQ8Yhk5HZJNKqxII83AnI1477Hp77E/rgnX5ATQT4GaD7GwPxmA2pUXwenTkDB4nQogffTe8bKyd2sKKC5uwpiqxzmDiiefd4JTUqEbXoi3VkN0sdAkSya9lRDSluUvSWE9NQVZ5hgMhEJvk/zhI/LsXniJU6O+m1L5gGxwMVsIc8zVZ5XY0fcw0OxXktou8tyHpoglmvEXrxtxtV3j7yCO2RAnftzzfrs2sOsD4tc0j4NhsXHpBkLIJVnOl+GCTP1OPfOPip9qiKvAR4UfxMjfSbBoJ4V5+mzOBGsdCB/qXVj/sXEQwHCWOplDHXX0qO0v42aEwAcuO1NIuWZqYIQh+KtbhiBg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(107886003)(316002)(4326008)(2906002)(83380400001)(6486002)(6496006)(8936002)(38100700002)(86362001)(36756003)(956004)(2616005)(6666004)(508600001)(5660300002)(66556008)(26005)(6916009)(55236004)(8676002)(4744005)(66946007)(66476007)(44832011)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?DwTawvzIPC9UTMJL6fl6/VSZkqDqlQD0ca1nEfspzFmtKR++JW6POeFZkIA3?=
+ =?us-ascii?Q?b+a9pXe6hO8zgbOdYyqMtr9Czz0JHeFTOpJ0mIS4pI+DUNxBP/4OSD5kfMQL?=
+ =?us-ascii?Q?cu6izNVS6ZZL66oEmvFc9BEO5QLZOL/ldSi0YXhlC1zT6HLFl+4xGE9ZmJoP?=
+ =?us-ascii?Q?EbV6YGbHSbANmGyRVAvVVYjIhyfZZ+MA0XUWpuig4CaO2kBVSchKH7wkO26L?=
+ =?us-ascii?Q?FRjkkpDC/x+hi8vcESQbcfrIEkxbRjxieF0qx9Twvew26MA+9dAkNe7LYiSr?=
+ =?us-ascii?Q?l9XGPmJTS1JzKiKdMgzAe766Mdp9Im8fVbybPu+WFdw0xhQ84+HSTkTB113e?=
+ =?us-ascii?Q?nSxqK6hxJ+6TuP7n1dHPY9O7fJGfaCFCaUnN5NnQ6AEx0TicVlDtBF4ojU0k?=
+ =?us-ascii?Q?7J6lDmk7om7anPxkoiy49HwhkEw9Du9C1fqFnWnJwfKX+uwMY22haTeNwgVZ?=
+ =?us-ascii?Q?6ioRbm5sKdBeTndKakAZEiHn3N7bPekwEfslOclBtVIWqiKO+FCQBIQUEL7z?=
+ =?us-ascii?Q?EU7C7itA8BZK/SNEiWAYILyDoEb/zYar+aj+/D3REBXtmJo7fNjn5g9K3HHm?=
+ =?us-ascii?Q?WbZc9HPpj3NctuWUE+v+21QcOXI9PtXdW+yDuKzp+lbF0d9lT6ZhtBbBxa/B?=
+ =?us-ascii?Q?/AMARUkcYVOCXXFAQiCwxgoXL50iYhISfCTSqrf6IzRtiOH2/lK0aibLllYA?=
+ =?us-ascii?Q?/lncFEapCQQuQOoth5+Xu/jMixYX6j0iscF2K/bKYdWTM5N87wlxkvLCPNtl?=
+ =?us-ascii?Q?0O2bp4gqRr6gSvDH0dAcnlSspbAAH8PVBSZlj44PF0Ki95e//0TBjY6nhIU9?=
+ =?us-ascii?Q?LNusP9pktogpHMUXAzxdSdSzW8DSPQ8ZTht32umoqn29/Vuo/1Fwi43V+cRV?=
+ =?us-ascii?Q?HXpFTeL7yONjyN8lfuNUjVq5hHwp3kEfz9W6d4KMiUP7PiJE2e3uea5/wFuk?=
+ =?us-ascii?Q?OgDjxv2TmOS+r6Je3I51JExhjXiAlE2TRifD6pCWwPtu3UhJOXtQLT/a2h1p?=
+ =?us-ascii?Q?MysZ6MwyvQeC4cEQ2Koqb7bwPEm3hyH0a0K+MGqUWNWLCr+8gIw5tCCjjI5B?=
+ =?us-ascii?Q?GaUco//lC6Ij6zNUhKvucW44NYvRrvVlnSBS/iNS9l/2n3Dt9SMlZIEp4uld?=
+ =?us-ascii?Q?q7/Lgxc7BPrnDxQey5E1IbjytXp2wPGCoL7aBYnZknimBUNC18IU2EQySsOq?=
+ =?us-ascii?Q?9tzaSZrNh2bQPZDPcN3FEDePIWQ0dpXjM40el+sLYJG5FzppMZOOrYpp+SI9?=
+ =?us-ascii?Q?X5hOQHRH3aHLPSs/0+xSG1g8qau0fQ0ovIP+oAVAOOvOlfYXWf/L4YQ2X6BA?=
+ =?us-ascii?Q?AjGHC78fwAK7J+TPwtUUYTmtMcfXOumlBCEXy/CPstEefkbO7dwgmnQhqG+p?=
+ =?us-ascii?Q?Gcmc88Tz3DTuwj3K1uIxDIS7NcKE2MRk8UVleOOU8diDlI3+uC7Dc0WshXtO?=
+ =?us-ascii?Q?vKfNIXPE4qcDkqqRTyfZfnfjyPv6joq2Dyuav7NBMouxB4gZ7ehESVUjHYBy?=
+ =?us-ascii?Q?J9ay9KD9Cm3CNBOTGjWpel1tBfp2wBRYjagmDWK9mpwyGbUiM7oZvVxYubJz?=
+ =?us-ascii?Q?8tABKvm1yV58jwKbwKK6/SET5pXEpUFH0eidJpKt4MCdDgjzDcAlWyVLehac?=
+ =?us-ascii?Q?/aZOAc2yjugNf744sfVTsI8=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e7875ad-5395-43cc-dfa1-08d9b86cd78f
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2021 03:59:46.2854
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: //yuJHGbc4vISkJDQkfHiBcE90zeHsfL1YWx3AHZEW2Z00feTNwd66CK7E2v/y+eAVhQBlA4gxk04LxPdDLfvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR04MB3065
 
-------=_Part_1509344_366762433.1638737953859
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+v6:
+ - patch 1, use the same xmit logic for FASTCLOSE as MP_FAIL.
 
-Hello all,
+v5:
+ - Since MP_FAIL could be sent with MP_RST and DSS, and MP_RST could be
+sent with MP_FAIL and FASTCLOSE, this patch fixed the MP_RST sending in
+mptcp_established_options() and mptcp_write_options().
 
-I'm writing this message to post an update regarding the work on fastopen mechanism.
-Evolution of fastopen PATCH is far away from submission yet (packet retransmissions are present), but there are good signs.
-Notably I attach the pcap wireshark that includes client + server in 2 different namespaces:
- > > 1. MPTCP cookie request from client.
- > > 2. MPTCP cookie offering from server.
- > > 3. MPTCP SYN+DATA+COOKIE from client.
- > > 4. subsequent write + read on the opened socket.
-Finally the userspace application receives the data send in the SYN+DATA+COOKIE. You may find the examples in the prinf+tcpdump log on the bottom of the message as a bonus...
+v4:
+ - add Matt's patch, fix the missing ";" in it, dropped two empty lines
+and added my Tested-by tag.
 
-I'm looking what I have to adjust to fix packet retransmissions. If you have in mind some ideas/suggestions, you are welcome to provide some comments (in mailing list or maybe in private),
+v3:
+ - update patch 1 as Matt suggested.
+ - do more cleanups in patch 1.
 
-awesome@ferby:~/workspace/new-ns$ sudo ip netns exec client ./client
-info: 0
-ACCEPT_SUCCESS: Success
-SERVER_READ_SUCCESS: Success
-received z from client
-SERVER_READ_SUCCESS: Success
-received z from client
-SERVER_READ_SUCCESS: Success
-received z from client
-SERVER_READ_SUCCESS: Success
-received a from client
-SERVER_READ_SUCCESS: Success
-received f from client
+v2:
+ - rename patch 1 as a squash-to patch.
+ - print out reset_transient in patch 2 too. Please keep patch 2 as a
+standalone patch, not a squash-to patch.
 
-22:49:21.410344 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [S], seq 3325457504, win 64240, options [mss 1460,sackOK,TS val 1084403317 ecr 0,nop,wscale 7,tfo cookiereq,nop,nop,mptcp capable[bad opt]>
-22:49:21.410367 IP 10.0.0.2.7003 > 10.0.0.1.37980: Flags [S.], seq 1929681786, ack 3325457505, win 65160, options [mss 1460,sackOK,TS val 1487352723 ecr 1084403317,nop,wscale 7,tfo cookie d0f85d19,nop,nop,mptcp capable Unknown Version (1)], length 0
-22:49:21.412560 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [P.], seq 1:2, ack 1, win 502, options [nop,nop,TS val 1084403319 ecr 1487352723,mptcp capable[bad opt]>
-22:49:21.412621 IP 10.0.0.2.7003 > 10.0.0.1.37980: Flags [.], ack 2, win 510, options [nop,nop,TS val 1487352725 ecr 1084403319,mptcp dss ack 12880089298653898158], length 0
-22:49:21.413113 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084403319 ecr 1487352725,mptcp dss ack 3168804441], length 0
-22:49:21.413134 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [P.], seq 2:3, ack 1, win 502, options [nop,nop,TS val 1084403320 ecr 1487352725,mptcp dss ack 3168804441 seq 12880089298653898158 subseq 2 len 1,nop,nop], length 1
-22:49:21.413139 IP 10.0.0.2.7003 > 10.0.0.1.37980: Flags [.], ack 3, win 510, options [nop,nop,TS val 1487352726 ecr 1084403320,mptcp dss ack 12880089298653898159], length 0
-22:49:21.413394 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084403320 ecr 1487352726,mptcp dss ack 3168804441], length 0
-22:49:21.413408 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [P.], seq 3:4, ack 1, win 502, options [nop,nop,TS val 1084403320 ecr 1487352726,mptcp dss ack 3168804441 seq 12880089298653898159 subseq 3 len 1,nop,nop], length 1
-22:49:21.413411 IP 10.0.0.2.7003 > 10.0.0.1.37980: Flags [.], ack 4, win 510, options [nop,nop,TS val 1487352726 ecr 1084403320,mptcp dss ack 12880089298653898160], length 0
-22:49:21.413674 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084403320 ecr 1487352726,mptcp dss ack 3168804441], length 0
-22:49:21.413699 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [P.], seq 4:5, ack 1, win 502, options [nop,nop,TS val 1084403320 ecr 1487352726,mptcp dss ack 3168804441 seq 12880089298653898160 subseq 4 len 1,nop,nop], length 1
-22:49:21.413944 IP 10.0.0.1.37980 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084403320 ecr 1487352726,mptcp dss ack 3168804441], length 0
-22:49:21.414206 IP 10.0.0.2.7003 > 10.0.0.1.37980: Flags [.], ack 6, win 510, options [nop,nop,TS val 1487352727 ecr 1084403321,mptcp dss fin ack 12880089298653898162 seq 11302478206648458841 subseq 0 len 1,nop,nop], length 0
+Two small patches about sending MP_FAIL with MP_RST.
 
+Geliang Tang (2):
+  Squash to "mptcp: implement fastclose xmit path"
+  mptcp: print out reset infos of MP_RST
 
-awesome@ferby:~/workspace/new-ns$ sudo ip netns exec client ./client
-ACCEPT_SUCCESS: Success
-SERVER_READ_SUCCESS: Success
-received a from client <<<<<<<<<<<<<<< THIS "A" CHARACTER IS A PART OF THE SYN+DATA+COOKIE.
-info: 0
-SERVER_READ_SUCCESS: Success
-received z from client
-SERVER_READ_SUCCESS: Success
-received z from client
-SERVER_READ_SUCCESS: Success
-received z from client
-SERVER_READ_SUCCESS: Success
-received a from client
-SERVER_READ_SUCCESS: Success
-received f from client
-22:52:11.262622 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [S], seq 549537183:549537184, win 64240, options [mss 1460,sackOK,TS val 1084573169 ecr 0,nop,wscale 7,tfo cookie d0f85d19,nop,nop,mptcp capable[bad opt]>
-22:52:11.262767 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [S.], seq 4092504081, ack 549537185, win 65160, options [mss 1460,sackOK,TS val 1487522575 ecr 1084573169,nop,wscale 7,mptcp capable Unknown Version (1)], length 0
-22:52:11.262810 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573169 ecr 1487522575,mptcp capable Unknown Version (1)], length 0
-22:52:11.266377 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [P.], seq 1:2, ack 1, win 502, options [nop,nop,TS val 1084573173 ecr 1487522575,mptcp capable[bad opt]>
-22:52:11.266451 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 2, win 510, options [nop,nop,TS val 1487522579 ecr 1084573173,mptcp dss ack 12881747887342348535], length 0
-22:52:11.266904 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573173 ecr 1487522579,mptcp dss ack 3798297942], length 0
-22:52:11.267039 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [P.], seq 2:3, ack 1, win 502, options [nop,nop,TS val 1084573174 ecr 1487522579,mptcp dss ack 3798297942 seq 746326162666601844 subseq 2 len 1,nop,nop], length 1
-22:52:11.267050 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 3, win 510, options [nop,nop,TS val 1487522580 ecr 1084573174,mptcp dss ack 12881747887342348536], length 0
-22:52:11.267427 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573174 ecr 1487522580,mptcp dss ack 3798297942], length 0
-22:52:11.267454 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [P.], seq 3:4, ack 1, win 502, options [nop,nop,TS val 1084573174 ecr 1487522580,mptcp dss ack 3798297942 seq 746326162666601845 subseq 3 len 1,nop,nop], length 1
-22:52:11.267461 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 4, win 510, options [nop,nop,TS val 1487522580 ecr 1084573174,mptcp dss ack 12881747887342348537], length 0
-22:52:11.267957 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573174 ecr 1487522580,mptcp dss ack 3798297942], length 0
-22:52:11.267988 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [P.], seq 4:5, ack 1, win 502, options [nop,nop,TS val 1084573175 ecr 1487522580,mptcp dss ack 3798297942 seq 746326162666601846 subseq 4 len 1,nop,nop], length 1
-22:52:11.267995 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 5, win 510, options [nop,nop,TS val 1487522581 ecr 1084573175,mptcp dss ack 12881747887342348538], length 0
-22:52:11.268546 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573175 ecr 1487522581,mptcp dss ack 3798297942], length 0
-22:52:11.268594 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [P.], seq 5:6, ack 1, win 502, options [nop,nop,TS val 1084573175 ecr 1487522581,mptcp dss ack 3798297942 seq 746326162666601847 subseq 5 len 1,nop,nop], length 1
-22:52:11.268603 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 6, win 510, options [nop,nop,TS val 1487522581 ecr 1084573175,mptcp dss ack 12881747887342348539], length 0
-22:52:11.269735 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 6, win 510, options [nop,nop,TS val 1487522581 ecr 1084573175,mptcp dss fin ack 12881747887342348539 seq 9620565311902543190 subseq 0 len 1,nop,nop], length 0
-22:52:11.269846 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573176 ecr 1487522581,mptcp dss ack 3798297942], length 0
-22:52:11.469004 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573177 ecr 1487522583,mptcp dss fin ack 3798297943 seq 746326162666601848 subseq 0 len 1,nop,nop], length 0
-22:52:11.472189 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 6, win 510, options [nop,nop,TS val 1487522782 ecr 1084573177,mptcp dss ack 12881747887342348539], length 0
-22:53:11.672337 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 1, win 502, options [nop,nop,TS val 1084573379 ecr 1487522782,mptcp dss fin ack 3798297943 seq 746326162666601848 subseq 0 len 1,nop,nop], length 0
-22:53:11.672425 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [F.], seq 6, ack 1, win 502, options [nop,nop,TS val 1084633579 ecr 1487522782,mptcp dss fin ack 3798297943 seq 746326162666601848 subseq 0 len 1,nop,nop], length 0
-22:53:11.672461 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [.], ack 7, win 510, options [nop,nop,TS val 1487582985 ecr 1084633579,mptcp dss ack 12881747887342348539], length 0
-22:53:11.672515 IP 10.0.0.2.7003 > 10.0.0.1.37982: Flags [F.], seq 1, ack 7, win 510, options [nop,nop,TS val 1487582985 ecr 1084633579,mptcp dss ack 12881747887342348539], length 0
-22:53:11.672545 IP 10.0.0.1.37982 > 10.0.0.2.7003: Flags [.], ack 2, win 502, options [nop,nop,TS val 1084633579 ecr 1487582985], length 0
+ net/mptcp/options.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-Thanks,
-Dmytro.
-> 
-> Hi Dmytro,
->
-> On 25/10/2021 13:34, Dmytro Shytyi wrote:
-> >
-> > ---- On Fri, 22 Oct 2021 11:22:31 +0200 Matthieu Baerts <matthieu.baerts@tessares.net> wrote ----
-> >
-> > > Hi Dmytro,
-> > >
->
-> Small detail: it looks like your email client is adding unusual spaces
-> before ">" to quote the previous message. That's not a big issue but it
-> makes other email clients and even lore [1] not interpreting that as
-> quotes, e.g. on lore, you can see the quotes are in blue in my reply and
-> Mat's one but not in yours.
->
-> [1]
-> https://lore.kernel.org/mptcp/17cb73b1343.c752fede1729351.6463099199494289591@shytyi.net/T/#t
->
-> (...)
->
-> > > I hope this might help reviewing the new versions ;-)
-> >
-> > Thank you, Metthieu.
-> > I'm working on PATCH net-next v2 net: mptcp. It will include all your comments, except this one:
-> >
-> > > It looks like you don't use it. Does the compiler not complain about that?
-> > >
-> > > > + tp->fastopen_req = kzalloc(sizeof(*tp->fatopen_req),
-> > > > + ssk->sk->sk_allocation);
-> > Compiler not compalin about that because it is used in the code.
->
-> In the version you sent, in mptcp_sendmsg_fastopen_cookie_send() you are
-> indeed using it but not it in mptcp_sendmsg_fastopen_cookie_req(), no?
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
-------=_Part_1509344_366762433.1638737953859
-Content-Type: application/octet-stream; name="fastopen (1).pcap"
-Content-Transfer-Encoding: base64
-X-ZM_AttachId: 138580307538610000
-Content-Disposition: attachment; filename="fastopen (1).pcap"
-
-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
-AloyGwN7/QoAAAFeRCAk6lkKAAAC
-------=_Part_1509344_366762433.1638737953859--
+--=20
+2.31.1
 
