@@ -1,38 +1,37 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F24F2C9E
-	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 07:44:55 +0000 (UTC)
-Received: by mail-pg1-f170.google.com with SMTP id k4so9632656pgb.8
-        for <mptcp@lists.linux.dev>; Sun, 05 Dec 2021 23:44:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BD32C9E
+	for <mptcp@lists.linux.dev>; Mon,  6 Dec 2021 07:56:17 +0000 (UTC)
+Received: by mail-pf1-f180.google.com with SMTP id o4so9370687pfp.13
+        for <mptcp@lists.linux.dev>; Sun, 05 Dec 2021 23:56:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=bf90JyY17mz0lDe1G2c1xsgh5si5CPXlMga6Msc5ALc=;
-        b=q2r8qmmtH0y5iKWSD1iayhXSgsuwsbReQ4AOGDkTP6VuixVG8rCkE4RV3EaTjiXnQY
-         GNupNvf8PoiDr6DRuaEXP9dNGG33lu3Hh4D2mqh5f2INhJxLPnhKaHZ9EM6VzkolK7yX
-         G8jbUpPgDdMnKjUIgjxIxJbT9y9OkDuj1liWP/whmKVFaO5Blz01OBsySBVkTPCuFxbG
-         WFLHjZAJbKOQIO67VeRGTcsArvYsypFOVnU0UW9h0BWZN/QlwLXrYykmCDhyj2uJAx0H
-         yGgbCeG6L00+n0uN+c9OYMdlrpEmccUpxjEORkytpo0giywfe98xQDkTJZQG3dUmK+jb
-         3/hw==
+        bh=jQT+GngSD6HlyXmhS/omjadGSDae6kGX5qHeLiR971Y=;
+        b=F5YoIbW4CrQ8r877gQvUjaJ8RU/YReJ6a0BBk38tnmzFtF+GSmlHKAKK1m4E1ACOCP
+         PN2MHSlBKY5hkJ83aSGGY4ySqKeWyVWF2c/gHe8i8jmtHujlA9hHZNj+IXArUqmBKbkw
+         03OAkrteFOii1CmyDROQjgsVIr5nTbU1cfegOOEDOw5brQBRUMJcnpejHyP8xEC09cOK
+         NpOKyed5Bkv+EBEjxSFjk3Q2Xkj6Uri7CpuVvM8TjhWLVkq9SGSpvjp4BsKc7R4ZNFGS
+         kT8H47O6TycvGy0fBqr5y95fUYBcrDB/GhHS5b31y8gzyKanPus/fnqqwlGNIPFxE/Ib
+         rcCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bf90JyY17mz0lDe1G2c1xsgh5si5CPXlMga6Msc5ALc=;
-        b=RvlsMnF3KH4As1BtQu92GaX/iWUb3j/LLNUXYDSQ9d5KoNzPUuc9mnvY7shD8AatOm
-         NoCkRSmVnFWl9p40IuxxB5WDZPsfMcQgb2cFal2JwcIs4Cs3IpAjx2QEZr1NY+n2+qDr
-         l4CkbNGidUHT8SumnqHWujCI4c9IIaMNFZ5zaR5lcNjKti8T+DJ7JVMgO3scWAvWDuYA
-         XAaBZRvwlzgLcCfWyWYNh6eQena6tzEk+Z0S00H/5Tk9Z4eLHGP9OaDs+5OZ85VoUVeB
-         iUeJXqEJT2q9v0f2kRkqpvwqe23jMPJ/csamzoUDV/a25S/nsV8+c5+ybVyvQZ+OtJS5
-         n3VQ==
-X-Gm-Message-State: AOAM533fFwLKu28FukF0Un1WnX9BnVz4evK9tacf/bshBXv4a6d97Ncs
-	diImI9P6V9iGlAfflXEQ4OIQdhXNtUwvHeI9T+E=
-X-Google-Smtp-Source: ABdhPJxCrMZWYAzQiqsO8nsM33r6LwFzeDTVhl4BwvWQZNv28aS/Y5M/+TR5e44N8jfXz5NhkPvgQfEQ/FCAtOEm6rU=
-X-Received: by 2002:a05:6a00:148d:b0:49f:def7:9cfe with SMTP id
- v13-20020a056a00148d00b0049fdef79cfemr35953019pfu.69.1638776694746; Sun, 05
- Dec 2021 23:44:54 -0800 (PST)
+        bh=jQT+GngSD6HlyXmhS/omjadGSDae6kGX5qHeLiR971Y=;
+        b=npVE/6Qo9pWkwwbqNCBcMwl5osIkVpTfMdaPtu1qTXH/GY3U4Hx8IJ4HZmNeU11YSY
+         zrDvNTYSdOaLSQfSY/qUsTC1zM2zFNyyVKZZ0ce4FFYgWZ7UmJrmf2+TeIs6V37ps86J
+         mGJA7cQy2vRM9edj6PEsBqImW8tml4N0wv9Vd478JrgWgHTPccfoSFCuq2cDypSZpWrh
+         Y1H1OZ3sdlk2Ko7NuulST6yuMQsl6Eyuzk1fakK2LjisHPVYhDLAHjRT/Tbesc+CzEvv
+         HT05+Ztk6U8ShEpHFbTFVmjo/bYWp1TqZ2JG7msSNLxrASonXkPMFtylIsYZ2Nc25MFD
+         OZzg==
+X-Gm-Message-State: AOAM5304RiJrH3Nkb6JaFU+/wnu2psuD7UPzDnK2iLZgw1WuDXjt/vgq
+	/c799OicDtM69xtA/1HptEAcJi9ICU18yl/c3SM=
+X-Google-Smtp-Source: ABdhPJxO5t2y7vOb+fiA6fVhTTK9gpUHF4w19nB8v8XGadGe6vAYGfVBj2w47swII4LwwhMwtD9csqllBy/zlM7zy20=
+X-Received: by 2002:a63:903:: with SMTP id 3mr17706012pgj.356.1638777376908;
+ Sun, 05 Dec 2021 23:56:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,8 +41,8 @@ MIME-Version: 1.0
 References: <20211202005216.154787-1-mathew.j.martineau@linux.intel.com> <20211202005216.154787-6-mathew.j.martineau@linux.intel.com>
 In-Reply-To: <20211202005216.154787-6-mathew.j.martineau@linux.intel.com>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Mon, 6 Dec 2021 15:44:45 +0800
-Message-ID: <CA+WQbwvkmk+0wgDsqFnr3WKWVM_xKP28nRKx+TKgM1OxTv0CfQ@mail.gmail.com>
+Date: Mon, 6 Dec 2021 15:56:10 +0800
+Message-ID: <CA+WQbwuwfq0E-JQj_7cDf0R+NuMJ44uq+_6VYVceAfrwjYA8BQ@mail.gmail.com>
 Subject: Re: [PATCH mptcp-next v2 5/6] mptcp: Add a per-namespace sysctl to
  set the default path manager type
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -208,12 +207,17 @@ d) ||
 ed) ||
 > +                   !!mptcp_pm_get_add_addr_signal_max(msk)));
 
+I think pm_type =3D=3D MPTCP_PM_TYPE_KERNEL is somehow duplicate here, how
+about use this code instead:
 
- 12 +                  !!mptcp_pm_get_local_addr_max(msk) && subflows_allow=
-ed ||
- 13 +                  !!mptcp_pm_get_add_addr_signal_max(msk) &&
-pm_type =3D=3D MPTCP_PM_TYPE_KERNEL);
+        WRITE_ONCE(pm->work_pending,
+                   (!!mptcp_pm_get_local_addr_max(msk) && subflows_allowed)=
+ ||
+                   (!!mptcp_pm_get_add_addr_signal_max(msk) && pm_type
+=3D=3D MPTCP_PM_TYPE_KERNEL));
 
+Thanks,
+-Geliang
 
 >         WRITE_ONCE(pm->addr_signal, 0);
 >         WRITE_ONCE(pm->accept_addr,
