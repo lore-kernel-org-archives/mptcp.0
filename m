@@ -1,115 +1,84 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D022C9D
-	for <mptcp@lists.linux.dev>; Tue,  7 Dec 2021 18:34:21 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="237597943"
-X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="237597943"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 10:18:45 -0800
-X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="605818553"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.212.226.172])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 10:18:44 -0800
-Date: Tue, 7 Dec 2021 10:18:35 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 3/5] mptcp: keep track of local endpoint
- still available for each msk
-In-Reply-To: <b4d0359bad87ee5bd0431be516aa1fc1574a7851.camel@redhat.com>
-Message-ID: <983be82e-7d50-4618-2773-be94d9f428b8@linux.intel.com>
-References: <cover.1638544716.git.pabeni@redhat.com>  <20e1d11df9396b33ab49b07204bd8b7db2e21a01.1638544716.git.pabeni@redhat.com>  <e5ea098-af36-e35-1813-f97d7a187ffa@linux.intel.com>  <b17fea76ad24e5a1cc6b793427f827ba9ea3c887.camel@redhat.com>
- <b4d0359bad87ee5bd0431be516aa1fc1574a7851.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D42A2CAE
+	for <mptcp@lists.linux.dev>; Tue,  7 Dec 2021 20:40:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E9804C341C6;
+	Tue,  7 Dec 2021 20:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1638909611;
+	bh=AzmHnAtztKERAOCBEyVt+Sws9hCKYFk9wQ1nUYzSyiQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Bp3ug800lmkImhlNI5BK+/Np9zrPa1ih1rTW0K9mORjjSAL1ufMjjL/2LZJYGLh8c
+	 yoGMG3eBRL4J6ln4poIETolzWDJkrHFFMV3KO9tVUVONe2az68H8ABV1mTwkLYa0Qq
+	 db6m71wCK/opC+oPWgw3p7NdP5T3PBrG67Ic+eiaoX2tLekwqOZFyCTKsltQjUsTQd
+	 7I6w5DmBOLakm7xUp7fdfgJumXUTHM/zgZygQmvuxTo36hy9+pu8iLMRhtTw+rBdj+
+	 D/uM6mCM9mVkmxVAFcnUyqbt5nBTCh89+6Guk2UuXVTnOYj48THjiJlBNsz7Kv92Q6
+	 PVIT084LAbFgw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id B60D260A39;
+	Tue,  7 Dec 2021 20:40:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 00/10] mptcp: New features for MPTCP sockets and
+ netlink PM
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <163890961074.15220.17789966096382310478.git-patchwork-notify@kernel.org>
+Date: Tue, 07 Dec 2021 20:40:10 +0000
+References: <20211203223541.69364-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20211203223541.69364-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-On Tue, 7 Dec 2021, Paolo Abeni wrote:
+Hello:
 
-> On Mon, 2021-12-06 at 11:18 +0100, Paolo Abeni wrote:
->> On Fri, 2021-12-03 at 17:05 -0800, Mat Martineau wrote:
->>> On Fri, 3 Dec 2021, Paolo Abeni wrote:
->>>
->>>> Include into the path manager status a bitmap tracking the list
->>>> of local endpoints still available - not yet used - for the
->>>> relavant mptcp socket.
->>>> Keep such map updated at endpoint creation/deleteion time, so
->>>> that we can easily skip already used endpoint at local address
->>>> selection time.
->>>> This allows for fair local endpoints usage in case of subflow
->>>> failure.
->>>>
->>>> As a side effect, this patch also enforces that each endpoint
->>>> is used at most once for each mptcp connection.
->>>
->>> This seems like a significant change, possibly with unexpected
->>> consequences (but maybe I've misunderstood the new constraint?).
->>> Apparently the topoligies in our self tests happen to work fine!
->>
->> Uhmmm... probably less then it may looks like. We already respected the
->> above constraint in almost every scenarios. AFAICS, the only exception
->> prior to this patch was following scenario:
->>
->> 1) subflow is established endpoint A
->>
->> 2) the peer closes the additional subflow
->>
->> 2) a new local endpoint B is created
->>
->> 3) the PM will create the 2nd subflow using again endpoint A.
->>
->> which is arguibly unexpected, as reported by issues/242.
->>
->>> If you have peer A with one interface and peer B with two, it seems like
->>> this should be allowed:
->>>
->>> Peer A connects to Peer B endpoint 0
->>> Peer B announces endpoint 1
->>> Peer A sends an MP_JOIN to Peer B interface 1
->>>
->>> From the description above, it sounds like peer A would not be able to
->>> create that second subflow.
->>
->> Well, AFAICS the peer A will actually create the subflow, if the limits
->> allow that, both with or without this patch.
->> Specifically:
->>
->> 1) no endpoint configured, add_addr_accepted >=1, subflows >=1 on peer
->> A -> the subflow to peer be interface 1 will be created (with or
->> without this patch) because we don't have any other additional
->> constraint beyond the limits.
->>
->> 2) endpoint configured on peer A matching the MPC subflow source
->> address -> again the subflow towards peer B endpoint 1 will be created,
->> because that will be the first time the PM will use the peer A
->> endpoint.
->
-> Thinking again about this last scenario, I think there is something to
-> improve:
->
-> if peer A connects to peer B using the local endpoint address, it can
-> later use again such address for additional sublflows, as the MPC
-> subflow is no accounted by the current version of this patch. I'll cook
-> a v5 adding such account, too - and possibly a related self-tests
->
+This series was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Thanks Paolo, that will help.
+On Fri,  3 Dec 2021 14:35:31 -0800 you wrote:
+> This collection of patches adds MPTCP socket support for a few socket
+> options, ioctls, and one ancillary data type (specifics for each are
+> listed below). There's also a patch modifying the netlink MPTCP path
+> manager API to allow setting the backup flag on a configured interface
+> using the endpoint ID instead of the full IP address.
+> 
+> Patches 1 & 2: TCP_INQ cmsg and selftests.
+> 
+> [...]
 
-My main concern is what happens when the bitmap fills up. While 
-__mptcp_subflow_connect() can still be called from 
-mptcp_pm_nl_add_addr_received() (so, you're right, we can still create 
-multiple outgoing connections this way), it won't be called from 
-mptcp_pm_create_subflow_or_signal_addr() because select_local_address() 
-will now return NULL. The latter case doesn't seem like expected/desired 
-behavior.
+Here is the summary with links:
+  - [net-next,01/10] mptcp: add TCP_INQ cmsg support
+    https://git.kernel.org/netdev/net-next/c/2c9e77659a0c
+  - [net-next,02/10] selftests: mptcp: add TCP_INQ support
+    https://git.kernel.org/netdev/net-next/c/5cbd886ce2a9
+  - [net-next,03/10] mptcp: add SIOCINQ, OUTQ and OUTQNSD ioctls
+    https://git.kernel.org/netdev/net-next/c/644807e3e462
+  - [net-next,04/10] selftests: mptcp: add inq test case
+    https://git.kernel.org/netdev/net-next/c/b51880568f20
+  - [net-next,05/10] mptcp: allow changing the "backup" bit by endpoint id
+    https://git.kernel.org/netdev/net-next/c/602837e8479d
+  - [net-next,06/10] mptcp: getsockopt: add support for IP_TOS
+    https://git.kernel.org/netdev/net-next/c/3b1e21eb60e8
+  - [net-next,07/10] selftests: mptcp: check IP_TOS in/out are the same
+    https://git.kernel.org/netdev/net-next/c/edb596e80cee
+  - [net-next,08/10] tcp: expose __tcp_sock_set_cork and __tcp_sock_set_nodelay
+    https://git.kernel.org/netdev/net-next/c/6fadaa565882
+  - [net-next,09/10] mptcp: expose mptcp_check_and_set_pending
+    https://git.kernel.org/netdev/net-next/c/8b38217a2a98
+  - [net-next,10/10] mptcp: support TCP_CORK and TCP_NODELAY
+    https://git.kernel.org/netdev/net-next/c/4f6e14bd19d6
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---
-Mat Martineau
-Intel
