@@ -1,23 +1,24 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E7C2CA0
-	for <mptcp@lists.linux.dev>; Tue,  7 Dec 2021 10:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C992CA0
+	for <mptcp@lists.linux.dev>; Tue,  7 Dec 2021 10:21:22 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@strlen.de>)
-	id 1muXZA-0008Uj-5U; Tue, 07 Dec 2021 11:19:20 +0100
-Date: Tue, 7 Dec 2021 11:19:20 +0100
+	id 1muXb3-0008Vi-8d; Tue, 07 Dec 2021 11:21:17 +0100
+Date: Tue, 7 Dec 2021 11:21:17 +0100
 From: Florian Westphal <fw@strlen.de>
 To: Jakub Kicinski <kuba@kernel.org>
 Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	netdev@vger.kernel.org, Maxim Galaganov <max@internet.ru>,
+	netdev@vger.kernel.org, Florian Westphal <fw@strlen.de>,
 	davem@davemloft.net, matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH net-next 10/10] mptcp: support TCP_CORK and TCP_NODELAY
-Message-ID: <20211207101920.GB30918@breakpoint.cc>
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next 03/10] mptcp: add SIOCINQ, OUTQ and OUTQNSD
+ ioctls
+Message-ID: <20211207102117.GC30918@breakpoint.cc>
 References: <20211203223541.69364-1-mathew.j.martineau@linux.intel.com>
- <20211203223541.69364-11-mathew.j.martineau@linux.intel.com>
- <20211206173023.72aca8f9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20211203223541.69364-4-mathew.j.martineau@linux.intel.com>
+ <20211206171648.4608911f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,27 +27,22 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211206173023.72aca8f9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20211206171648.4608911f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
 Jakub Kicinski <kuba@kernel.org> wrote:
-> On Fri,  3 Dec 2021 14:35:41 -0800 Mat Martineau wrote:
-> > +static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t optval,
-> > +					    unsigned int optlen)
-> > +{
-> > +	struct mptcp_subflow_context *subflow;
-> > +	struct sock *sk = (struct sock *)msk;
-> > +	int val;
+> On Fri,  3 Dec 2021 14:35:34 -0800 Mat Martineau wrote:
+> > +		if (sk->sk_state == TCP_LISTEN)
+> > +			return -EINVAL;
 > > +
-> > +	if (optlen < sizeof(int))
-> > +		return -EINVAL;
-> > +
-> > +	if (copy_from_sockptr(&val, optval, sizeof(val)))
-> > +		return -EFAULT;
+> > +		lock_sock(sk);
+> > +		__mptcp_move_skbs(msk);
+> > +		answ = mptcp_inq_hint(sk);
+> > +		release_sock(sk);
 > 
-> Should we check that optval is not larger than sizeof(int) or if it is
-> that the rest of the buffer is zero? Or for the old school options we
-> should stick to the old school behavior?
+> The raciness is not harmful here?
 
-My intent was to stick to tcp behaviour, i.e. no check on > sizeof(int)
-or on "extra buffer" content.
+Can you elaborate?  We can't prevent new data
+from being queued after this, but it won't decrease
+on its own either, i.e. we only guarantee that we have at
+least answ bytes for read().
