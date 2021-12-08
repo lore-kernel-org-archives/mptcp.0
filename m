@@ -1,26 +1,26 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E842CA6
-	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 01:54:15 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="235249070"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824B02CA6
+	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 01:59:38 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="237964206"
 X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="235249070"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:54:15 -0800
+   d="scan'208";a="237964206"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:59:36 -0800
 X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="600390988"
+   d="scan'208";a="543042224"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.212.226.172])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:54:14 -0800
-Date: Tue, 7 Dec 2021 17:54:14 -0800 (PST)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:59:36 -0800
+Date: Tue, 7 Dec 2021 17:59:36 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-next v4] selftests: mptcp: add mp_fail testcases
-In-Reply-To: <cbe88a11722b5d7ce89760410a90c237870bb4f2.1638762863.git.geliang.tang@suse.com>
-Message-ID: <24eaa4fa-f2d1-afca-23-28646266c2e6@linux.intel.com>
-References: <cover.1638762825.git.geliang.tang@suse.com> <cbe88a11722b5d7ce89760410a90c237870bb4f2.1638762863.git.geliang.tang@suse.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH iproute2-next] mptcp: add support for changing the backup
+ flag
+In-Reply-To: <cb2ddffb2211d6fdde7a8bf81879a3a83c620f00.1638542999.git.dcaratti@redhat.com>
+Message-ID: <8a517-d825-f27c-1fe4-4dceae4fd2d7@linux.intel.com>
+References: <cb2ddffb2211d6fdde7a8bf81879a3a83c620f00.1638542999.git.dcaratti@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,283 +29,145 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 6 Dec 2021, Geliang Tang wrote:
+On Fri, 3 Dec 2021, Davide Caratti wrote:
 
-> Added the test cases for MP_FAIL, use 'tc' command to trigger the
-> checksum failure.
+> Linux supports 'MPTCP_PM_CMD_SET_FLAGS' since v5.12, and this control has
+> recently been extended to allow setting flags for a given endpoint id.
+> Although there is no use for changing 'signal' or 'subflow' flags, it can
+> be helpful to set/clear the backup bit on existing endpoints: add the 'ip
+> mptcp endpoint change <...>' command for this purpose.
 >
-> Suggested-by: Davide Caratti <dcaratti@redhat.com>
-> Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> v4:
-> - enable checksum in reset_with_fail().
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
+> Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Thanks for the v4. Some comments below.
+Matthieu -
 
-I also have a small request - this patch was threaded with the MP_FAIL 
-patches:
+Since you already Acked, what should be the status of this in patchwork?
 
-[PATCH mptcp-next v6 0/2] send MP_FAIL with MP_RST and others
-  2021-12-06  3:59 UTC  (4+ messages)
-` [PATCH mptcp-next v6 1/2] Squash to "mptcp: implement fastclose xmit path"
-` [PATCH mptcp-next v6 2/2] mptcp: print out reset infos of MP_RST
-` [PATCH mptcp-next v4] selftests: mptcp: add mp_fail testcases
-
-And the mix of v6 and v4 really confused the b4 tool I use to download 
-patches from lore.kernel.org. It would help to either use a 3-patch series 
-or separately format the patches to avoid combining the email threads!
-
-> ---
-> tools/testing/selftests/net/mptcp/config      |   5 +
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 113 ++++++++++++++++--
-> 2 files changed, 110 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-> index 419e71560fd1..37124a6891b7 100644
-> --- a/tools/testing/selftests/net/mptcp/config
-> +++ b/tools/testing/selftests/net/mptcp/config
-> @@ -19,3 +19,8 @@ CONFIG_NFT_SOCKET=m
-> CONFIG_IP_ADVANCED_ROUTER=y
-> CONFIG_IP_MULTIPLE_TABLES=y
-> CONFIG_IPV6_MULTIPLE_TABLES=y
-> +CONFIG_NET_ACT_CSUM=m
-> +CONFIG_NET_ACT_PEDIT=m
-> +CONFIG_NET_CLS_ACT=y
-> +CONFIG_NET_CLS_FLOWER=m
-> +CONFIG_NET_SCH_INGRESS=m
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 2684ef9c0d42..7a9dec7fa648 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -160,6 +160,48 @@ reset_with_allow_join_id0()
-> 	ip netns exec $ns2 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns2_enable
-> }
->
-> +# Modify TCP payload without corrupting the TCP packet
-> +#
-> +# This rule inverts a 32-bit word at byte offset 148 for all TCP ACK
-> +# packets carrying enough data.
-> +# Once it is done, the TCP Checksum field is updated so the packet
-> +# is still considered as valid at the TCP level.
-> +# But because the MPTCP checksum, covering the TCP options and data,
-> +# has not been updated, we will detect the modification and emit an
-> +# MP_FAIL: what we want to validate here.
-> +#
-> +# Please note that this rule will produce this pr_info() message for
-> +# each TCP ACK packets not carrying enough data:
-> +#
-> +#     tc action pedit offset 162 out of bounds
-> +#
-> +# But this should be limited to a very few numbers of packets as we
-> +# restrict this rule to outgoing TCP traffic with only the ACK flag
-> +# + except the 3rd ACK, only packets carrying data should be seen in
-> +# this direction.
-> +reset_with_fail()
-> +{
-> +	reset
-> +
-> +	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=1
-> +	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=1
-> +
-> +	checksum=1
-
-This assignment will enable checksums on all tests that run after this 
-too. Suggest adding a different global variable to compare in 
-chk_join_nr(), so you could set that here instead. For example:
-
-validate_checksum=1
-
-here, and
-
-validate_checksum=$checksum
-
-in init(). Then replace $checksum with $validate_checksum in chk_join_nr()
 
 -Mat
 
 
-> +
-> +	make_file "$cin" "client" 20480
-> +	make_file "$sin" "server" 20480
-> +
-> +	i="$1"
-> +
-> +	tc -n $ns2 qdisc add dev ns2eth$i clsact
-> +	tc -n $ns2 filter add dev ns2eth$i egress \
-> +		protocol ip prio 1000 \
-> +		flower ip_proto tcp tcp_flags 0x10/0xff \
-> +		action pedit munge offset 148 u32 invert \
-> +		pipe csum tcp \
-> +		index 100
-> +}
-> +
-> ip -Version > /dev/null 2>&1
-> if [ $? -ne 0 ];then
-> 	echo "SKIP: Could not run test without ip tool"
-> @@ -178,6 +220,12 @@ if [ $? -ne 0 ];then
-> 	exit $ksft_skip
-> fi
+
+> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> ---
+> ip/ipmptcp.c        | 20 ++++++++++++++++----
+> man/man8/ip-mptcp.8 | 14 ++++++++++++++
+> 2 files changed, 30 insertions(+), 4 deletions(-)
 >
-> +jq -V > /dev/null 2>&1
-> +if [ $? -ne 0 ];then
-> +	echo "SKIP: Could not run all tests without jq tool"
-> +	exit $ksft_skip
-> +fi
+> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+> index 857004446aa3..7fb48a420a6b 100644
+> --- a/ip/ipmptcp.c
+> +++ b/ip/ipmptcp.c
+> @@ -25,6 +25,7 @@ static void usage(void)
+> 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
+> 		"				      [ port NR ] [ FLAG-LIST ]\n"
+> 		"	ip mptcp endpoint delete id ID\n"
+> +		"	ip mptcp endpoint change id ID [ backup | nobackup ]\n"
+> 		"	ip mptcp endpoint show [ id ID ]\n"
+> 		"	ip mptcp endpoint flush\n"
+> 		"	ip mptcp limits set [ subflows NR ] [ add_addr_accepted NR ]\n"
+> @@ -45,6 +46,8 @@ static int genl_family = -1;
+> 	GENL_REQUEST(_req, MPTCP_BUFLEN, genl_family, 0,	\
+> 		     MPTCP_PM_VER, _cmd, _flags)
+>
+> +#define MPTCP_PM_ADDR_FLAG_NOBACKUP 0x0
 > +
-> print_file_err()
-> {
-> 	ls -l "$1" 1>&2
-> @@ -232,6 +280,24 @@ link_failure()
-> 	done
+> /* Mapping from argument to address flag mask */
+> static const struct {
+> 	const char *name;
+> @@ -53,6 +56,7 @@ static const struct {
+> 	{ "signal",		MPTCP_PM_ADDR_FLAG_SIGNAL },
+> 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
+> 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
+> +	{ "nobackup",		MPTCP_PM_ADDR_FLAG_NOBACKUP }
+> };
+>
+> static void print_mptcp_addr_flags(unsigned int flags)
+> @@ -95,9 +99,9 @@ static int get_flags(const char *arg, __u32 *flags)
+> 	return -1;
 > }
 >
-> +mp_fail_del_dev()
-> +{
-> +	i="$1"
-> +
-> +	for n in `seq 1 100`; do
-> +		local action=$(tc -n $ns2 -j -s action show action pedit index 100)
-> +		local packets=$(echo $action | jq '.[1].actions[0].stats.packets')
-> +		local overlimits=$(echo $action | jq '.[1].actions[0].stats.overlimits')
-> +
-> +		let pkt=$packets-$overlimits
-> +		if [ $pkt -gt 0 ]; then
-> +			sleep .1
-> +			tc -n $ns2 qdisc del dev ns2eth$i clsact
-> +			break
-> +		fi
-> +	done
-> +}
-> +
-> # $1: IP address
-> is_v6()
+> -static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n,
+> -			 bool adding)
+> +static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
 > {
-> @@ -371,6 +437,9 @@ do_transfer()
-> 	if [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
-> 		flags="${flags},fullmesh"
-> 		addr_nr_ns2=${addr_nr_ns2:9}
-> +	elif [[ "${addr_nr_ns2}" = "fail_"* ]]; then
-> +		mp_fail_del_dev ${addr_nr_ns2:5}
-> +		addr_nr_ns2=0
-> 	fi
->
-> 	if [ $addr_nr_ns2 -gt 0 ]; then
-> @@ -542,6 +611,8 @@ run_tests()
-> chk_csum_nr()
-> {
-> 	local msg=${1:-""}
-> +	local csum_ns1=${2:-0}
-> +	local csum_ns2=${3:-0}
-> 	local count
-> 	local dump_stats
->
-> @@ -553,8 +624,8 @@ chk_csum_nr()
-> 	printf " %-36s %s" "$msg" "sum"
-> 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
-> 	[ -z "$count" ] && count=0
-> -	if [ "$count" != 0 ]; then
-> -		echo "[fail] got $count data checksum error[s] expected 0"
-> +	if [ "$count" != $csum_ns1 ]; then
-> +		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
-> 		ret=1
-> 		dump_stats=1
-> 	else
-> @@ -563,8 +634,8 @@ chk_csum_nr()
-> 	echo -n " - csum  "
-> 	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
-> 	[ -z "$count" ] && count=0
-> -	if [ "$count" != 0 ]; then
-> -		echo "[fail] got $count data checksum error[s] expected 0"
-> +	if [ "$count" != $csum_ns2 ]; then
-> +		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
-> 		ret=1
-> 		dump_stats=1
-> 	else
-> @@ -658,6 +729,8 @@ chk_join_nr()
-> 	local syn_nr=$2
-> 	local syn_ack_nr=$3
-> 	local ack_nr=$4
-> +	local fail_nr=${5:-0}
-> +	local infi_nr=${6:-0}
-> 	local count
-> 	local dump_stats
->
-> @@ -700,9 +773,9 @@ chk_join_nr()
-> 		ip netns exec $ns2 nstat -as | grep MPTcp
-> 	fi
-> 	if [ $checksum -eq 1 ]; then
-> -		chk_csum_nr
-> -		chk_fail_nr 0 0
-> -		chk_infi_nr 0 0
-> +		chk_csum_nr "" $fail_nr
-> +		chk_fail_nr $fail_nr $fail_nr
-> +		chk_infi_nr $infi_nr $infi_nr
-> 	fi
-> }
->
-> @@ -1837,6 +1910,25 @@ fullmesh_tests()
-> 	chk_add_nr 1 1
-> }
->
-> +fail_tests()
-> +{
-> +	# multiple subflows
-> +	reset_with_fail 2
-> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
-> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 dev ns2eth2 flags subflow
-> +	run_tests $ns1 $ns2 10.0.1.1 0 0 "fail_2"
-> +	chk_join_nr "MP_FAIL test, multiple subflows" 2 2 2 1
+> +	bool adding = cmd == MPTCP_PM_CMD_ADD_ADDR;
+> 	struct rtattr *attr_addr;
+> 	bool addr_set = false;
+> 	inet_prefix address;
+> @@ -110,6 +114,11 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n,
+> 	ll_init_map(&rth);
+> 	while (argc > 0) {
+> 		if (get_flags(*argv, &flags) == 0) {
+> +			/* allow changing the 'backup' flag only */
+> +			if (cmd == MPTCP_PM_CMD_SET_FLAGS &&
+> +			    (flags & ~MPTCP_PM_ADDR_FLAG_BACKUP))
+> +				invarg("invalid flags\n", *argv);
 > +
-> +	# single subflow
-> +	reset_with_fail 1
-> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-> +	run_tests $ns1 $ns2 10.0.1.1 0 0 "fail_1"
-> +	chk_join_nr "MP_FAIL test, single subflow" 0 0 0 1 1
-> +}
+> 		} else if (matches(*argv, "id") == 0) {
+> 			NEXT_ARG();
+>
+> @@ -182,7 +191,7 @@ static int mptcp_addr_modify(int argc, char **argv, int cmd)
+> 	MPTCP_REQUEST(req, cmd, NLM_F_REQUEST);
+> 	int ret;
+>
+> -	ret = mptcp_parse_opt(argc, argv, &req.n, cmd == MPTCP_PM_CMD_ADD_ADDR);
+> +	ret = mptcp_parse_opt(argc, argv, &req.n, cmd);
+> 	if (ret)
+> 		return ret;
+>
+> @@ -298,7 +307,7 @@ static int mptcp_addr_show(int argc, char **argv)
+> 	if (argc <= 0)
+> 		return mptcp_addr_dump();
+>
+> -	ret = mptcp_parse_opt(argc, argv, &req.n, false);
+> +	ret = mptcp_parse_opt(argc, argv, &req.n, MPTCP_PM_CMD_GET_ADDR);
+> 	if (ret)
+> 		return ret;
+>
+> @@ -534,6 +543,9 @@ int do_mptcp(int argc, char **argv)
+> 		if (matches(*argv, "add") == 0)
+> 			return mptcp_addr_modify(argc-1, argv+1,
+> 						 MPTCP_PM_CMD_ADD_ADDR);
+> +		if (matches(*argv, "change") == 0)
+> +			return mptcp_addr_modify(argc-1, argv+1,
+> +						 MPTCP_PM_CMD_SET_FLAGS);
+> 		if (matches(*argv, "delete") == 0)
+> 			return mptcp_addr_modify(argc-1, argv+1,
+> 						 MPTCP_PM_CMD_DEL_ADDR);
+> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+> index 22335b6129ae..574cb60dc7c0 100644
+> --- a/man/man8/ip-mptcp.8
+> +++ b/man/man8/ip-mptcp.8
+> @@ -34,6 +34,13 @@ ip-mptcp \- MPTCP path manager configuration
+> .BR "ip mptcp endpoint del id "
+> .I ID
+>
+> +.ti -8
+> +.BR "ip mptcp endpoint change id "
+> +.I ID
+> +.RB "[ "
+> +.I BACKUP-OPT
+> +.RB "] "
 > +
-> all_tests()
-> {
-> 	subflows_tests
-> @@ -1853,6 +1945,7 @@ all_tests()
-> 	checksum_tests
-> 	deny_join_id0_tests
-> 	fullmesh_tests
-> +	fail_tests
-> }
+> .ti -8
+> .BR "ip mptcp endpoint show "
+> .RB "[ " id
+> @@ -55,6 +62,13 @@ ip-mptcp \- MPTCP path manager configuration
+> .B backup
+> .RB  "]"
 >
-> usage()
-> @@ -1872,6 +1965,7 @@ usage()
-> 	echo "  -S checksum_tests"
-> 	echo "  -d deny_join_id0_tests"
-> 	echo "  -m fullmesh_tests"
-> +	echo "  -F fail_tests"
-> 	echo "  -c capture pcap files"
-> 	echo "  -C enable data checksum"
-> 	echo "  -h help"
-> @@ -1907,7 +2001,7 @@ if [ $do_all_tests -eq 1 ]; then
-> 	exit $ret
-> fi
->
-> -while getopts 'fsltra64bpkdmchCS' opt; do
-> +while getopts 'fsltra64bpkdmchCSF' opt; do
-> 	case $opt in
-> 		f)
-> 			subflows_tests
-> @@ -1951,6 +2045,9 @@ while getopts 'fsltra64bpkdmchCS' opt; do
-> 		m)
-> 			fullmesh_tests
-> 			;;
-> +		F)
-> +			fail_tests
-> +			;;
-> 		c)
-> 			;;
-> 		C)
+> +.ti -8
+> +.IR BACKUP-OPT " := ["
+> +.B backup
+> +.RB "|"
+> +.B nobackup
+> +.RB  "]"
+> +
+> .ti -8
+> .BR "ip mptcp limits set "
+> .RB "[ "
 > -- 
 > 2.31.1
 >
