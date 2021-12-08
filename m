@@ -1,237 +1,135 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E102CA6
-	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 02:20:23 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="237546752"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507052C9D
+	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 03:00:14 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="298539809"
 X-IronPort-AV: E=Sophos;i="5.87,296,1631602800"; 
-   d="scan'208";a="237546752"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 18:20:23 -0800
-X-ExtLoop1: 1
+   d="scan'208";a="298539809"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 19:00:13 -0800
 X-IronPort-AV: E=Sophos;i="5.87,296,1631602800"; 
-   d="scan'208";a="461532302"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 07 Dec 2021 18:20:21 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1mumZA-000NFk-Vt; Wed, 08 Dec 2021 02:20:20 +0000
-Date: Wed, 08 Dec 2021 10:20:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- 479fbbad6fe9b77d79aa6229d7def360b5e54376
-Message-ID: <61b01654.B4cp6vPm5UMoZb7+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="606069650"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.212.226.172])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 19:00:13 -0800
+Date: Tue, 7 Dec 2021 19:00:12 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next v6 1/2] Squash to "mptcp: implement fastclose
+ xmit path"
+In-Reply-To: <9b7f1f42a7f25006e09e2484bee5643bbb13568b.1638762825.git.geliang.tang@suse.com>
+Message-ID: <c487e4-2a79-6049-5dad-18cfceae3b0@linux.intel.com>
+References: <cover.1638762825.git.geliang.tang@suse.com> <9b7f1f42a7f25006e09e2484bee5643bbb13568b.1638762825.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: 479fbbad6fe9b77d79aa6229d7def360b5e54376  DO-NOT-MERGE: mptcp: enabled by default
+On Mon, 6 Dec 2021, Geliang Tang wrote:
 
-elapsed time: 726m
+> MP_FAIL could be sent with RST or DSS, and FASTCLOSE could be sent with
+> RST or DSS too. So we should use the same xmit logic for FASTCLOSE as
+> MP_FAIL.
+>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/options.c | 28 ++++++++++++++++------------
+> 1 file changed, 16 insertions(+), 12 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 8a1020e4285c..c5c0dd983ad6 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -828,9 +828,12 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> 		return false;
+>
+> 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+> -		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
+> -		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
+> -		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
+> +		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
+> +		    mptcp_established_options_fastclose(sk, &opt_size, remaining, opts)) {
+> +			*size += opt_size;
+> +			remaining -= opt_size;
+> +		}
+> +		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
+> 			*size += opt_size;
+> 			remaining -= opt_size;
+> 		}
+> @@ -842,7 +845,8 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> 		ret = true;
+> 	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, &opt_size, remaining, opts)) {
+> 		ret = true;
+> -		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
+> +		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
+> +		    mptcp_established_options_fastclose(sk, &opt_size, remaining, opts)) {
 
-configs tested: 182
-configs skipped: 3
+Geliang -
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Did you see a case where the stack attempted to send both DSS and 
+FASTCLOSE? If so, was it just a DSS_ACK or was there a mapping and data 
+payload?
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211207
-arm                         axm55xx_defconfig
-sh                         microdev_defconfig
-mips                     loongson1c_defconfig
-s390                             allmodconfig
-sh                     sh7710voipgw_defconfig
-powerpc                  iss476-smp_defconfig
-m68k                             alldefconfig
-arc                           tb10x_defconfig
-arm                           tegra_defconfig
-powerpc                 mpc837x_rdb_defconfig
-csky                                defconfig
-h8300                            allyesconfig
-h8300                     edosk2674_defconfig
-mips                           rs90_defconfig
-mips                      maltasmvp_defconfig
-nds32                            alldefconfig
-powerpc                     redwood_defconfig
-sh                          sdk7786_defconfig
-arm                           h5000_defconfig
-powerpc                mpc7448_hpc2_defconfig
-powerpc                     ppa8548_defconfig
-mips                         tb0287_defconfig
-sh                                  defconfig
-powerpc                    mvme5100_defconfig
-sh                            shmin_defconfig
-mips                        bcm63xx_defconfig
-sh                           se7705_defconfig
-mips                           xway_defconfig
-powerpc                      cm5200_defconfig
-sparc64                             defconfig
-powerpc                         wii_defconfig
-sh                        apsh4ad0a_defconfig
-arm                         lpc32xx_defconfig
-h8300                    h8300h-sim_defconfig
-sh                   rts7751r2dplus_defconfig
-powerpc                   motionpro_defconfig
-parisc                           alldefconfig
-arm                           h3600_defconfig
-mips                      loongson3_defconfig
-sh                  sh7785lcr_32bit_defconfig
-mips                           ip22_defconfig
-arm                        shmobile_defconfig
-powerpc                 mpc8313_rdb_defconfig
-arm                           omap1_defconfig
-powerpc                       holly_defconfig
-arm                      pxa255-idp_defconfig
-mips                        workpad_defconfig
-sh                             espt_defconfig
-arm                      footbridge_defconfig
-powerpc                      acadia_defconfig
-sh                           se7721_defconfig
-arm                        mvebu_v7_defconfig
-riscv             nommu_k210_sdcard_defconfig
-sh                         ecovec24_defconfig
-arm                         orion5x_defconfig
-sh                           se7780_defconfig
-powerpc                    ge_imp3a_defconfig
-powerpc                   microwatt_defconfig
-mips                         tb0226_defconfig
-arm                          pxa910_defconfig
-i386                             allyesconfig
-mips                         db1xxx_defconfig
-arc                            hsdk_defconfig
-powerpc                      katmai_defconfig
-s390                                defconfig
-powerpc                      tqm8xx_defconfig
-parisc                generic-64bit_defconfig
-sparc64                          alldefconfig
-arm                         mv78xx0_defconfig
-mips                          ath79_defconfig
-arm                          pcm027_defconfig
-m68k                          sun3x_defconfig
-m68k                        m5272c3_defconfig
-mips                     decstation_defconfig
-powerpc                        fsp2_defconfig
-powerpc                 mpc836x_mds_defconfig
-xtensa                  nommu_kc705_defconfig
-powerpc                     powernv_defconfig
-arc                      axs103_smp_defconfig
-mips                     cu1000-neo_defconfig
-arm                        cerfcube_defconfig
-arm                  colibri_pxa270_defconfig
-powerpc                 mpc836x_rdk_defconfig
-arm                       omap2plus_defconfig
-sh                           se7722_defconfig
-arm                          moxart_defconfig
-m68k                            q40_defconfig
-nds32                             allnoconfig
-powerpc                     tqm8548_defconfig
-sh                        sh7757lcr_defconfig
-sh                 kfr2r09-romimage_defconfig
-arm                         at91_dt_defconfig
-sparc                               defconfig
-mips                       rbtx49xx_defconfig
-arm                  randconfig-c002-20211207
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20211207
-x86_64               randconfig-a005-20211207
-x86_64               randconfig-a001-20211207
-x86_64               randconfig-a002-20211207
-x86_64               randconfig-a004-20211207
-x86_64               randconfig-a003-20211207
-i386                 randconfig-a001-20211207
-i386                 randconfig-a005-20211207
-i386                 randconfig-a002-20211207
-i386                 randconfig-a003-20211207
-i386                 randconfig-a006-20211207
-i386                 randconfig-a004-20211207
-x86_64               randconfig-a016-20211208
-x86_64               randconfig-a011-20211208
-x86_64               randconfig-a013-20211208
-x86_64               randconfig-a012-20211208
-x86_64               randconfig-a015-20211208
-x86_64               randconfig-a014-20211208
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+From the RFC, it seems like FASTCLOSE is only expected on a TCP ACK or TCP 
+RST. When the FASTCLOSE is sent on all subflows (like the only code path 
+that sets send_fastclose does), it is only expected on a TCP RST. If 
+FASTCLOSE is showing up on something other than a TCP RST packet I think 
+that's a different bug that this patch doesn't address.
 
-clang tested configs:
-x86_64               randconfig-c007-20211207
-arm                  randconfig-c002-20211207
-riscv                randconfig-c006-20211207
-mips                 randconfig-c004-20211207
-i386                 randconfig-c001-20211207
-powerpc              randconfig-c003-20211207
-s390                 randconfig-c005-20211207
-x86_64               randconfig-a016-20211207
-x86_64               randconfig-a011-20211207
-x86_64               randconfig-a013-20211207
-x86_64               randconfig-a014-20211207
-x86_64               randconfig-a015-20211207
-x86_64               randconfig-a012-20211207
-i386                 randconfig-a016-20211207
-i386                 randconfig-a013-20211207
-i386                 randconfig-a011-20211207
-i386                 randconfig-a014-20211207
-i386                 randconfig-a012-20211207
-i386                 randconfig-a015-20211207
-hexagon              randconfig-r045-20211207
-s390                 randconfig-r044-20211207
-riscv                randconfig-r042-20211207
-hexagon              randconfig-r041-20211207
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+The patch has changed a lot since Paolo said "LGTM" so hopefully he can 
+comment again!
+
+
+-Mat
+
+> 			*size += opt_size;
+> 			remaining -= opt_size;
+> 			return true;
+> @@ -1269,9 +1273,16 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+> 				      0, 0);
+> 		put_unaligned_be64(opts->fail_seq, ptr);
+> 		ptr += 2;
+> +	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
+> +		/* FASTCLOSE is mutually exclusive with others except DSS and RST */
+> +		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
+> +				      TCPOLEN_MPTCP_FASTCLOSE,
+> +				      0, 0);
+> +		put_unaligned_be64(opts->rcvr_key, ptr);
+> +		ptr += 2;
+> 	}
+>
+> -	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
+> +	/* DSS, MPC, MPJ, ADD_ADDR and RST are mutually exclusive,
+> 	 * see mptcp_established_options*()
+> 	 */
+> 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
+> @@ -1465,13 +1476,6 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+> 				      opts->reset_transient,
+> 				      opts->reset_reason);
+> 		return;
+> -	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
+> -		/* FASTCLOSE is mutually exclusive with everything else */
+> -		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
+> -				      TCPOLEN_MPTCP_FASTCLOSE,
+> -				      0, 0);
+> -		put_unaligned_be64(opts->rcvr_key, ptr);
+> -		return;
+> 	}
+>
+> 	if (OPTION_MPTCP_PRIO & opts->suboptions) {
+> -- 
+> 2.31.1
+>
+>
+>
+
+--
+Mat Martineau
+Intel
