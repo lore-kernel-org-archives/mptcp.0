@@ -1,96 +1,90 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4ED2C9E
-	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 10:23:38 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id x6so6738192edr.5
-        for <mptcp@lists.linux.dev>; Wed, 08 Dec 2021 02:23:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=PwhE9uWmrp/iDjEdSM7cLt5R7Kkbd96Qt36oQGnoEwM=;
-        b=SCkXB43YXk7sd0JotbOSsrPvhWsug/JDjtvZO6P6dMsJtWuTSCeSMbuur39LDlsAbW
-         mzCg9b5tGkxWJJS6vGbg8xXcNe7u8t35EHkDdbnM8dhT2FxzLXzMzTI9f+y5ClEj2k8E
-         itYmo746twuk1iZKR7yesCOBrY26AlOa+MZQ2Apl6UyYI8I8zsJpSK8mFgR5JWZ1Vtsh
-         eXqB6IRj0C1g7bjeqce0daQTzHxx1ixUeNR7htxzdcotv1da+UwJjruQWYbiCk/qFg0k
-         L6y+LxEkYQE6ONte0zcbXq7LPIkGWG7HpriXZgmpBSJNLsAo/UDbFxEvCQC9oQN829E6
-         EMDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=PwhE9uWmrp/iDjEdSM7cLt5R7Kkbd96Qt36oQGnoEwM=;
-        b=13Xdu+xK2eQFUAThGzKLn2UMOgpAd9cS2wEzBf674JRx9Vy0QQ8B1mVT4K/aO2MJ/J
-         wqMKgeHhabUl8EGRFhR0wQRknq6ChcqfnMiLyHlTr1u3E/Ls0H2t5eWVlBmcElZuzAj+
-         V7MuY8owkzTeJ1ADDDWngiMKCJF+r9n+yvfbPmdm3EqKw1BU692X4x1Y5H2QHEMNx4uz
-         knqJ3EzeMeEgUVVJBTmPGX+j91bHqIaDAv2ds45bGsNsTtLb9JW0wzG6yNsPeIVIBn+Y
-         0hQW/osrnrBK7t9i+XkydAvVvGkaree2eKB2jcxUVJSt8M9Rulqt+mWUQOcvH0Nf+7dl
-         yr5A==
-X-Gm-Message-State: AOAM5317HQGwbijLq1vijm2T/TgcLHer9njX63ydOpC8JDAbLYPeshDB
-	NJ28NrTzlGPplg0XFjazIjHLv2OAeKQUNIpE
-X-Google-Smtp-Source: ABdhPJwyvL0vov28u999JWqhoGCzVdAo/1IRXBaYviJAEEbkW/XdZrSCmP0GMnWtijtmUs3Pq8rQuw==
-X-Received: by 2002:a05:6402:26cd:: with SMTP id x13mr18180263edd.11.1638959016889;
-        Wed, 08 Dec 2021 02:23:36 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:9dd5:a52b:99d6:b584? ([2a02:578:8593:1200:9dd5:a52b:99d6:b584])
-        by smtp.gmail.com with ESMTPSA id a3sm1339364ejd.16.2021.12.08.02.23.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Dec 2021 02:23:36 -0800 (PST)
-Message-ID: <c7c976ee-2510-858e-c075-25add945bc3b@tessares.net>
-Date: Wed, 8 Dec 2021 11:23:35 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5832CB6
+	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 10:58:42 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="298601193"
+X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
+   d="scan'208";a="298601193"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 02:58:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
+   d="scan'208";a="679850489"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 08 Dec 2021 02:58:40 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1muuem-0000RQ-3F; Wed, 08 Dec 2021 10:58:40 +0000
+Date: Wed, 8 Dec 2021 18:58:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Florian Westphal <fw@strlen.de>
+Cc: kbuild-all@lists.01.org, mptcp@lists.linux.dev,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [mptcp:export 24/34] net/mptcp/sockopt.c:1174:12: error:
+ redefinition of 'mptcp_getsockopt_v4'
+Message-ID: <202112081738.D1IpgkU6-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH iproute2-next] mptcp: add support for changing the backup
- flag
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Davide Caratti <dcaratti@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cb2ddffb2211d6fdde7a8bf81879a3a83c620f00.1638542999.git.dcaratti@redhat.com>
- <8a517-d825-f27c-1fe4-4dceae4fd2d7@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <8a517-d825-f27c-1fe4-4dceae4fd2d7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Mat, Davide
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
+head:   8d79e486d97bbdec3af4cf2f19d91fec433d437b
+commit: 48c617e1584b3190eb02338f4ef77807f433e579 [24/34] mptcp: getsockopt: add support for IP_TOS
+config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20211208/202112081738.D1IpgkU6-lkp@intel.com/config)
+compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/multipath-tcp/mptcp_net-next/commit/48c617e1584b3190eb02338f4ef77807f433e579
+        git remote add mptcp https://github.com/multipath-tcp/mptcp_net-next.git
+        git fetch --no-tags mptcp export
+        git checkout 48c617e1584b3190eb02338f4ef77807f433e579
+        # save the config file to linux build tree
+        mkdir build_dir
+        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
 
-On 08/12/2021 02:59, Mat Martineau wrote:
-> On Fri, 3 Dec 2021, Davide Caratti wrote:
-> 
->> Linux supports 'MPTCP_PM_CMD_SET_FLAGS' since v5.12, and this control has
->> recently been extended to allow setting flags for a given endpoint id.
->> Although there is no use for changing 'signal' or 'subflow' flags, it can
->> be helpful to set/clear the backup bit on existing endpoints: add the 'ip
->> mptcp endpoint change <...>' command for this purpose.
->>
->> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
->> Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> 
-> Matthieu -
-> 
-> Since you already Acked, what should be the status of this in patchwork?
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-I just set the status as "Awaiting Upstream". Is it OK for you for
-patches for other trees?
+All errors (new ones prefixed by >>):
 
-(Note: I just noticed before sending this email I already "supported"
-this case in our wiki [1] :) )
+>> net/mptcp/sockopt.c:1174:12: error: redefinition of 'mptcp_getsockopt_v4'
+    1174 | static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
+         |            ^~~~~~~~~~~~~~~~~~~
+   net/mptcp/sockopt.c:1161:12: note: previous definition of 'mptcp_getsockopt_v4' was here
+    1161 | static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
+         |            ^~~~~~~~~~~~~~~~~~~
+   net/mptcp/sockopt.c:1161:12: warning: 'mptcp_getsockopt_v4' defined but not used [-Wunused-function]
 
-@Davide: now that the linked kernel patch is in net-next, may you send
-this one to netdev please?
 
-Cheers,
-Mat
+vim +/mptcp_getsockopt_v4 +1174 net/mptcp/sockopt.c
 
-[1] https://github.com/multipath-tcp/mptcp_net-next/wiki/Patchwork
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+48c617e1584b31 Florian Westphal 2021-12-08  1173  
+3b1e21eb60e8d4 Florian Westphal 2021-12-03 @1174  static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1175  			       char __user *optval, int __user *optlen)
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1176  {
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1177  	struct sock *sk = (void *)msk;
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1178  
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1179  	switch (optname) {
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1180  	case IP_TOS:
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1181  		return mptcp_put_int_option(msk, optval, optlen, inet_sk(sk)->tos);
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1182  	}
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1183  
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1184  	return -EOPNOTSUPP;
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1185  }
+3b1e21eb60e8d4 Florian Westphal 2021-12-03  1186  
+
+:::::: The code at line 1174 was first introduced by commit
+:::::: 3b1e21eb60e8d4aa42474fed606a8ea8767b0120 mptcp: getsockopt: add support for IP_TOS
+
+:::::: TO: Florian Westphal <fw@strlen.de>
+:::::: CC: Jakub Kicinski <kuba@kernel.org>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
