@@ -1,84 +1,317 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D42A2CAE
-	for <mptcp@lists.linux.dev>; Tue,  7 Dec 2021 20:40:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E9804C341C6;
-	Tue,  7 Dec 2021 20:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1638909611;
-	bh=AzmHnAtztKERAOCBEyVt+Sws9hCKYFk9wQ1nUYzSyiQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Bp3ug800lmkImhlNI5BK+/Np9zrPa1ih1rTW0K9mORjjSAL1ufMjjL/2LZJYGLh8c
-	 yoGMG3eBRL4J6ln4poIETolzWDJkrHFFMV3KO9tVUVONe2az68H8ABV1mTwkLYa0Qq
-	 db6m71wCK/opC+oPWgw3p7NdP5T3PBrG67Ic+eiaoX2tLekwqOZFyCTKsltQjUsTQd
-	 7I6w5DmBOLakm7xUp7fdfgJumXUTHM/zgZygQmvuxTo36hy9+pu8iLMRhtTw+rBdj+
-	 D/uM6mCM9mVkmxVAFcnUyqbt5nBTCh89+6Guk2UuXVTnOYj48THjiJlBNsz7Kv92Q6
-	 PVIT084LAbFgw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id B60D260A39;
-	Tue,  7 Dec 2021 20:40:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E842CA6
+	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 01:54:15 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="235249070"
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="235249070"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:54:15 -0800
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="600390988"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.212.226.172])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:54:14 -0800
+Date: Tue, 7 Dec 2021 17:54:14 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>, 
+    Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next v4] selftests: mptcp: add mp_fail testcases
+In-Reply-To: <cbe88a11722b5d7ce89760410a90c237870bb4f2.1638762863.git.geliang.tang@suse.com>
+Message-ID: <24eaa4fa-f2d1-afca-23-28646266c2e6@linux.intel.com>
+References: <cover.1638762825.git.geliang.tang@suse.com> <cbe88a11722b5d7ce89760410a90c237870bb4f2.1638762863.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/10] mptcp: New features for MPTCP sockets and
- netlink PM
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <163890961074.15220.17789966096382310478.git-patchwork-notify@kernel.org>
-Date: Tue, 07 Dec 2021 20:40:10 +0000
-References: <20211203223541.69364-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20211203223541.69364-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello:
+On Mon, 6 Dec 2021, Geliang Tang wrote:
 
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+> Added the test cases for MP_FAIL, use 'tc' command to trigger the
+> checksum failure.
+>
+> Suggested-by: Davide Caratti <dcaratti@redhat.com>
+> Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> v4:
+> - enable checksum in reset_with_fail().
 
-On Fri,  3 Dec 2021 14:35:31 -0800 you wrote:
-> This collection of patches adds MPTCP socket support for a few socket
-> options, ioctls, and one ancillary data type (specifics for each are
-> listed below). There's also a patch modifying the netlink MPTCP path
-> manager API to allow setting the backup flag on a configured interface
-> using the endpoint ID instead of the full IP address.
-> 
-> Patches 1 & 2: TCP_INQ cmsg and selftests.
-> 
-> [...]
+Thanks for the v4. Some comments below.
 
-Here is the summary with links:
-  - [net-next,01/10] mptcp: add TCP_INQ cmsg support
-    https://git.kernel.org/netdev/net-next/c/2c9e77659a0c
-  - [net-next,02/10] selftests: mptcp: add TCP_INQ support
-    https://git.kernel.org/netdev/net-next/c/5cbd886ce2a9
-  - [net-next,03/10] mptcp: add SIOCINQ, OUTQ and OUTQNSD ioctls
-    https://git.kernel.org/netdev/net-next/c/644807e3e462
-  - [net-next,04/10] selftests: mptcp: add inq test case
-    https://git.kernel.org/netdev/net-next/c/b51880568f20
-  - [net-next,05/10] mptcp: allow changing the "backup" bit by endpoint id
-    https://git.kernel.org/netdev/net-next/c/602837e8479d
-  - [net-next,06/10] mptcp: getsockopt: add support for IP_TOS
-    https://git.kernel.org/netdev/net-next/c/3b1e21eb60e8
-  - [net-next,07/10] selftests: mptcp: check IP_TOS in/out are the same
-    https://git.kernel.org/netdev/net-next/c/edb596e80cee
-  - [net-next,08/10] tcp: expose __tcp_sock_set_cork and __tcp_sock_set_nodelay
-    https://git.kernel.org/netdev/net-next/c/6fadaa565882
-  - [net-next,09/10] mptcp: expose mptcp_check_and_set_pending
-    https://git.kernel.org/netdev/net-next/c/8b38217a2a98
-  - [net-next,10/10] mptcp: support TCP_CORK and TCP_NODELAY
-    https://git.kernel.org/netdev/net-next/c/4f6e14bd19d6
+I also have a small request - this patch was threaded with the MP_FAIL 
+patches:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+[PATCH mptcp-next v6 0/2] send MP_FAIL with MP_RST and others
+  2021-12-06  3:59 UTC  (4+ messages)
+` [PATCH mptcp-next v6 1/2] Squash to "mptcp: implement fastclose xmit path"
+` [PATCH mptcp-next v6 2/2] mptcp: print out reset infos of MP_RST
+` [PATCH mptcp-next v4] selftests: mptcp: add mp_fail testcases
+
+And the mix of v6 and v4 really confused the b4 tool I use to download 
+patches from lore.kernel.org. It would help to either use a 3-patch series 
+or separately format the patches to avoid combining the email threads!
+
+> ---
+> tools/testing/selftests/net/mptcp/config      |   5 +
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 113 ++++++++++++++++--
+> 2 files changed, 110 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+> index 419e71560fd1..37124a6891b7 100644
+> --- a/tools/testing/selftests/net/mptcp/config
+> +++ b/tools/testing/selftests/net/mptcp/config
+> @@ -19,3 +19,8 @@ CONFIG_NFT_SOCKET=m
+> CONFIG_IP_ADVANCED_ROUTER=y
+> CONFIG_IP_MULTIPLE_TABLES=y
+> CONFIG_IPV6_MULTIPLE_TABLES=y
+> +CONFIG_NET_ACT_CSUM=m
+> +CONFIG_NET_ACT_PEDIT=m
+> +CONFIG_NET_CLS_ACT=y
+> +CONFIG_NET_CLS_FLOWER=m
+> +CONFIG_NET_SCH_INGRESS=m
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 2684ef9c0d42..7a9dec7fa648 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -160,6 +160,48 @@ reset_with_allow_join_id0()
+> 	ip netns exec $ns2 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns2_enable
+> }
+>
+> +# Modify TCP payload without corrupting the TCP packet
+> +#
+> +# This rule inverts a 32-bit word at byte offset 148 for all TCP ACK
+> +# packets carrying enough data.
+> +# Once it is done, the TCP Checksum field is updated so the packet
+> +# is still considered as valid at the TCP level.
+> +# But because the MPTCP checksum, covering the TCP options and data,
+> +# has not been updated, we will detect the modification and emit an
+> +# MP_FAIL: what we want to validate here.
+> +#
+> +# Please note that this rule will produce this pr_info() message for
+> +# each TCP ACK packets not carrying enough data:
+> +#
+> +#     tc action pedit offset 162 out of bounds
+> +#
+> +# But this should be limited to a very few numbers of packets as we
+> +# restrict this rule to outgoing TCP traffic with only the ACK flag
+> +# + except the 3rd ACK, only packets carrying data should be seen in
+> +# this direction.
+> +reset_with_fail()
+> +{
+> +	reset
+> +
+> +	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=1
+> +	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=1
+> +
+> +	checksum=1
+
+This assignment will enable checksums on all tests that run after this 
+too. Suggest adding a different global variable to compare in 
+chk_join_nr(), so you could set that here instead. For example:
+
+validate_checksum=1
+
+here, and
+
+validate_checksum=$checksum
+
+in init(). Then replace $checksum with $validate_checksum in chk_join_nr()
+
+-Mat
 
 
+> +
+> +	make_file "$cin" "client" 20480
+> +	make_file "$sin" "server" 20480
+> +
+> +	i="$1"
+> +
+> +	tc -n $ns2 qdisc add dev ns2eth$i clsact
+> +	tc -n $ns2 filter add dev ns2eth$i egress \
+> +		protocol ip prio 1000 \
+> +		flower ip_proto tcp tcp_flags 0x10/0xff \
+> +		action pedit munge offset 148 u32 invert \
+> +		pipe csum tcp \
+> +		index 100
+> +}
+> +
+> ip -Version > /dev/null 2>&1
+> if [ $? -ne 0 ];then
+> 	echo "SKIP: Could not run test without ip tool"
+> @@ -178,6 +220,12 @@ if [ $? -ne 0 ];then
+> 	exit $ksft_skip
+> fi
+>
+> +jq -V > /dev/null 2>&1
+> +if [ $? -ne 0 ];then
+> +	echo "SKIP: Could not run all tests without jq tool"
+> +	exit $ksft_skip
+> +fi
+> +
+> print_file_err()
+> {
+> 	ls -l "$1" 1>&2
+> @@ -232,6 +280,24 @@ link_failure()
+> 	done
+> }
+>
+> +mp_fail_del_dev()
+> +{
+> +	i="$1"
+> +
+> +	for n in `seq 1 100`; do
+> +		local action=$(tc -n $ns2 -j -s action show action pedit index 100)
+> +		local packets=$(echo $action | jq '.[1].actions[0].stats.packets')
+> +		local overlimits=$(echo $action | jq '.[1].actions[0].stats.overlimits')
+> +
+> +		let pkt=$packets-$overlimits
+> +		if [ $pkt -gt 0 ]; then
+> +			sleep .1
+> +			tc -n $ns2 qdisc del dev ns2eth$i clsact
+> +			break
+> +		fi
+> +	done
+> +}
+> +
+> # $1: IP address
+> is_v6()
+> {
+> @@ -371,6 +437,9 @@ do_transfer()
+> 	if [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
+> 		flags="${flags},fullmesh"
+> 		addr_nr_ns2=${addr_nr_ns2:9}
+> +	elif [[ "${addr_nr_ns2}" = "fail_"* ]]; then
+> +		mp_fail_del_dev ${addr_nr_ns2:5}
+> +		addr_nr_ns2=0
+> 	fi
+>
+> 	if [ $addr_nr_ns2 -gt 0 ]; then
+> @@ -542,6 +611,8 @@ run_tests()
+> chk_csum_nr()
+> {
+> 	local msg=${1:-""}
+> +	local csum_ns1=${2:-0}
+> +	local csum_ns2=${3:-0}
+> 	local count
+> 	local dump_stats
+>
+> @@ -553,8 +624,8 @@ chk_csum_nr()
+> 	printf " %-36s %s" "$msg" "sum"
+> 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
+> 	[ -z "$count" ] && count=0
+> -	if [ "$count" != 0 ]; then
+> -		echo "[fail] got $count data checksum error[s] expected 0"
+> +	if [ "$count" != $csum_ns1 ]; then
+> +		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
+> 		ret=1
+> 		dump_stats=1
+> 	else
+> @@ -563,8 +634,8 @@ chk_csum_nr()
+> 	echo -n " - csum  "
+> 	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
+> 	[ -z "$count" ] && count=0
+> -	if [ "$count" != 0 ]; then
+> -		echo "[fail] got $count data checksum error[s] expected 0"
+> +	if [ "$count" != $csum_ns2 ]; then
+> +		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
+> 		ret=1
+> 		dump_stats=1
+> 	else
+> @@ -658,6 +729,8 @@ chk_join_nr()
+> 	local syn_nr=$2
+> 	local syn_ack_nr=$3
+> 	local ack_nr=$4
+> +	local fail_nr=${5:-0}
+> +	local infi_nr=${6:-0}
+> 	local count
+> 	local dump_stats
+>
+> @@ -700,9 +773,9 @@ chk_join_nr()
+> 		ip netns exec $ns2 nstat -as | grep MPTcp
+> 	fi
+> 	if [ $checksum -eq 1 ]; then
+> -		chk_csum_nr
+> -		chk_fail_nr 0 0
+> -		chk_infi_nr 0 0
+> +		chk_csum_nr "" $fail_nr
+> +		chk_fail_nr $fail_nr $fail_nr
+> +		chk_infi_nr $infi_nr $infi_nr
+> 	fi
+> }
+>
+> @@ -1837,6 +1910,25 @@ fullmesh_tests()
+> 	chk_add_nr 1 1
+> }
+>
+> +fail_tests()
+> +{
+> +	# multiple subflows
+> +	reset_with_fail 2
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
+> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 dev ns2eth2 flags subflow
+> +	run_tests $ns1 $ns2 10.0.1.1 0 0 "fail_2"
+> +	chk_join_nr "MP_FAIL test, multiple subflows" 2 2 2 1
+> +
+> +	# single subflow
+> +	reset_with_fail 1
+> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+> +	run_tests $ns1 $ns2 10.0.1.1 0 0 "fail_1"
+> +	chk_join_nr "MP_FAIL test, single subflow" 0 0 0 1 1
+> +}
+> +
+> all_tests()
+> {
+> 	subflows_tests
+> @@ -1853,6 +1945,7 @@ all_tests()
+> 	checksum_tests
+> 	deny_join_id0_tests
+> 	fullmesh_tests
+> +	fail_tests
+> }
+>
+> usage()
+> @@ -1872,6 +1965,7 @@ usage()
+> 	echo "  -S checksum_tests"
+> 	echo "  -d deny_join_id0_tests"
+> 	echo "  -m fullmesh_tests"
+> +	echo "  -F fail_tests"
+> 	echo "  -c capture pcap files"
+> 	echo "  -C enable data checksum"
+> 	echo "  -h help"
+> @@ -1907,7 +2001,7 @@ if [ $do_all_tests -eq 1 ]; then
+> 	exit $ret
+> fi
+>
+> -while getopts 'fsltra64bpkdmchCS' opt; do
+> +while getopts 'fsltra64bpkdmchCSF' opt; do
+> 	case $opt in
+> 		f)
+> 			subflows_tests
+> @@ -1951,6 +2045,9 @@ while getopts 'fsltra64bpkdmchCS' opt; do
+> 		m)
+> 			fullmesh_tests
+> 			;;
+> +		F)
+> +			fail_tests
+> +			;;
+> 		c)
+> 			;;
+> 		C)
+> -- 
+> 2.31.1
+>
+>
+>
+
+--
+Mat Martineau
+Intel
