@@ -1,44 +1,44 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A8F2C9E
-	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 10:17:41 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id e3so6701720edu.4
-        for <mptcp@lists.linux.dev>; Wed, 08 Dec 2021 02:17:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4ED2C9E
+	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 10:23:38 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id x6so6738192edr.5
+        for <mptcp@lists.linux.dev>; Wed, 08 Dec 2021 02:23:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=0LeQHXIMph+BYd4ryWmOykUMfJm5Zi1BU3mfux9e5e8=;
-        b=3o+3QemkSEstT07cGczLZLqYjvuloOZPMyuFNKqF18ESm4okdC9McP2oQGJCVkhyxv
-         zpo1t8I4+5tviiDgEcVXuldCt7JUbNGFSZkKmb9G4pqnZYVYs6M3a5n04B1wy//Uk4p8
-         zWZEKgmWOQ1CIwhQjQGe0HZqhtLYlEy+LbVqUiEBSaR4WJf3U4N3gW+cO1yP++xmk8Ss
-         5eBPvohBuUaEKliQrNzV+tyNDlzFHC/iKgWAH5vVdIbRSzfPs5cLmhyWPWcuJJpyOvbE
-         yx90Wr+xI4yE55PX7cTTdOXMCAPXcYarDCuVFvsaeMqV+Cngp6iLgg3xuGQ30jxvjeBj
-         7jNg==
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=PwhE9uWmrp/iDjEdSM7cLt5R7Kkbd96Qt36oQGnoEwM=;
+        b=SCkXB43YXk7sd0JotbOSsrPvhWsug/JDjtvZO6P6dMsJtWuTSCeSMbuur39LDlsAbW
+         mzCg9b5tGkxWJJS6vGbg8xXcNe7u8t35EHkDdbnM8dhT2FxzLXzMzTI9f+y5ClEj2k8E
+         itYmo746twuk1iZKR7yesCOBrY26AlOa+MZQ2Apl6UyYI8I8zsJpSK8mFgR5JWZ1Vtsh
+         eXqB6IRj0C1g7bjeqce0daQTzHxx1ixUeNR7htxzdcotv1da+UwJjruQWYbiCk/qFg0k
+         L6y+LxEkYQE6ONte0zcbXq7LPIkGWG7HpriXZgmpBSJNLsAo/UDbFxEvCQC9oQN829E6
+         EMDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=0LeQHXIMph+BYd4ryWmOykUMfJm5Zi1BU3mfux9e5e8=;
-        b=yPm+1r/OzSJ43+5k5FabUyBsmYQcU5odRvYmXjdASEBjIC5UjZ/+nlQEWP17rULVIv
-         Ix7gqOoETuqrRdo75OR9W8M2+SBWXtnnxh/DjkWlgEv8mS0xtYWc8driupM1PMeX0V5L
-         RwcSdp6zS8To42I8IIXKfEqqi47wmXjfeZxBIFz69DprEtY/7j2Dk7ZT5t8tKTIvLESc
-         0wA+1z4q4E+KC4towJayErGMulpLVFlplOqxZWj7hkmWeF6CbiVtD1nqRQbau/A5GJlU
-         A13MSQQzWHqXBOjWWudqaH26HYzgr3BjAY/DZJA6hU6TvLpWu6ORCCKNnIQd5HmGM0Uh
-         kVZQ==
-X-Gm-Message-State: AOAM533ebOY9KLMK+sBZGzlSAq53hHdnt5rQBoCjMY9sBWSGUycNY6WV
-	VUwx3Cq2A9TleqEjABq1SrZ3Gg==
-X-Google-Smtp-Source: ABdhPJzvwnne79blJ3+kreFpK3H1zg+SEkdFn6pCYIlvxQCZ2XqXZTnGTr/R7lAMVHU0AZN0pKWtQg==
-X-Received: by 2002:a05:6402:50cf:: with SMTP id h15mr18197283edb.90.1638958659393;
-        Wed, 08 Dec 2021 02:17:39 -0800 (PST)
+        bh=PwhE9uWmrp/iDjEdSM7cLt5R7Kkbd96Qt36oQGnoEwM=;
+        b=13Xdu+xK2eQFUAThGzKLn2UMOgpAd9cS2wEzBf674JRx9Vy0QQ8B1mVT4K/aO2MJ/J
+         wqMKgeHhabUl8EGRFhR0wQRknq6ChcqfnMiLyHlTr1u3E/Ls0H2t5eWVlBmcElZuzAj+
+         V7MuY8owkzTeJ1ADDDWngiMKCJF+r9n+yvfbPmdm3EqKw1BU692X4x1Y5H2QHEMNx4uz
+         knqJ3EzeMeEgUVVJBTmPGX+j91bHqIaDAv2ds45bGsNsTtLb9JW0wzG6yNsPeIVIBn+Y
+         0hQW/osrnrBK7t9i+XkydAvVvGkaree2eKB2jcxUVJSt8M9Rulqt+mWUQOcvH0Nf+7dl
+         yr5A==
+X-Gm-Message-State: AOAM5317HQGwbijLq1vijm2T/TgcLHer9njX63ydOpC8JDAbLYPeshDB
+	NJ28NrTzlGPplg0XFjazIjHLv2OAeKQUNIpE
+X-Google-Smtp-Source: ABdhPJwyvL0vov28u999JWqhoGCzVdAo/1IRXBaYviJAEEbkW/XdZrSCmP0GMnWtijtmUs3Pq8rQuw==
+X-Received: by 2002:a05:6402:26cd:: with SMTP id x13mr18180263edd.11.1638959016889;
+        Wed, 08 Dec 2021 02:23:36 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:9dd5:a52b:99d6:b584? ([2a02:578:8593:1200:9dd5:a52b:99d6:b584])
-        by smtp.gmail.com with ESMTPSA id ga37sm1224349ejc.65.2021.12.08.02.17.38
+        by smtp.gmail.com with ESMTPSA id a3sm1339364ejd.16.2021.12.08.02.23.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Dec 2021 02:17:39 -0800 (PST)
-Message-ID: <130b7af7-41fb-74dc-e6a2-7e223f062676@tessares.net>
-Date: Wed, 8 Dec 2021 11:17:38 +0100
+        Wed, 08 Dec 2021 02:23:36 -0800 (PST)
+Message-ID: <c7c976ee-2510-858e-c075-25add945bc3b@tessares.net>
+Date: Wed, 8 Dec 2021 11:23:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,40 +47,50 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH net-next] net: mptcp: clean up harmless false expressions
+Subject: Re: [PATCH iproute2-next] mptcp: add support for changing the backup
+ flag
 Content-Language: en-GB
-To: =?UTF-8?Q?J=ce=b5an_Sacren?= <sakiwit@gmail.com>,
- mathew.j.martineau@linux.intel.com
-References: <20211208024732.142541-6-sakiwit@gmail.com>
-Cc: davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
- mptcp@lists.linux.dev
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Davide Caratti <dcaratti@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <cb2ddffb2211d6fdde7a8bf81879a3a83c620f00.1638542999.git.dcaratti@redhat.com>
+ <8a517-d825-f27c-1fe4-4dceae4fd2d7@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20211208024732.142541-6-sakiwit@gmail.com>
+In-Reply-To: <8a517-d825-f27c-1fe4-4dceae4fd2d7@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Jean,
+Hi Mat, Davide
 
-On 08/12/2021 08:20, Jεan Sacren wrote:
-> From: Jean Sacren <sakiwit@gmail.com>
+On 08/12/2021 02:59, Mat Martineau wrote:
+> On Fri, 3 Dec 2021, Davide Caratti wrote:
 > 
-> entry->addr.id is u8 with a range from 0 to 255 and MAX_ADDR_ID is 255.
-> We should drop both false expressions of (entry->addr.id > MAX_ADDR_ID).
+>> Linux supports 'MPTCP_PM_CMD_SET_FLAGS' since v5.12, and this control has
+>> recently been extended to allow setting flags for a given endpoint id.
+>> Although there is no use for changing 'signal' or 'subflow' flags, it can
+>> be helpful to set/clear the backup bit on existing endpoints: add the 'ip
+>> mptcp endpoint change <...>' command for this purpose.
+>>
+>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
+>> Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> 
+> Matthieu -
+> 
+> Since you already Acked, what should be the status of this in patchwork?
 
-Good catch!
+I just set the status as "Awaiting Upstream". Is it OK for you for
+patches for other trees?
 
-I wonder if we should not define MAX_ADDR_ID to UINT8_MAX then, ideally
-with an extra comment saying it is linked to mptcp_addr_info's id field.
+(Note: I just noticed before sending this email I already "supported"
+this case in our wiki [1] :) )
 
-It would make it less like: by "coincidence", addr.id has a max value of
-255 which is the same as MAX_ADDR_ID. WDYT?
-
-If you are OK with the suggestion, please send this v2 to MPTCP's ML
-only so we can validate and apply it in our tree. Then we will take care
-of sending it to Netdev ML.
+@Davide: now that the linked kernel patch is in net-next, may you send
+this one to netdev please?
 
 Cheers,
-Matt
+Mat
+
+[1] https://github.com/multipath-tcp/mptcp_net-next/wiki/Patchwork
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
