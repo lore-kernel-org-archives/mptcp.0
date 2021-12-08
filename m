@@ -1,179 +1,237 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824B02CA6
-	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 01:59:38 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="237964206"
-X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="237964206"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:59:36 -0800
-X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="543042224"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2) ([10.212.226.172])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:59:36 -0800
-Date: Tue, 7 Dec 2021 17:59:36 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E102CA6
+	for <mptcp@lists.linux.dev>; Wed,  8 Dec 2021 02:20:23 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="237546752"
+X-IronPort-AV: E=Sophos;i="5.87,296,1631602800"; 
+   d="scan'208";a="237546752"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 18:20:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,296,1631602800"; 
+   d="scan'208";a="461532302"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 07 Dec 2021 18:20:21 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1mumZA-000NFk-Vt; Wed, 08 Dec 2021 02:20:20 +0000
+Date: Wed, 08 Dec 2021 10:20:04 +0800
+From: kernel test robot <lkp@intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH iproute2-next] mptcp: add support for changing the backup
- flag
-In-Reply-To: <cb2ddffb2211d6fdde7a8bf81879a3a83c620f00.1638542999.git.dcaratti@redhat.com>
-Message-ID: <8a517-d825-f27c-1fe4-4dceae4fd2d7@linux.intel.com>
-References: <cb2ddffb2211d6fdde7a8bf81879a3a83c620f00.1638542999.git.dcaratti@redhat.com>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ 479fbbad6fe9b77d79aa6229d7def360b5e54376
+Message-ID: <61b01654.B4cp6vPm5UMoZb7+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Fri, 3 Dec 2021, Davide Caratti wrote:
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: 479fbbad6fe9b77d79aa6229d7def360b5e54376  DO-NOT-MERGE: mptcp: enabled by default
 
-> Linux supports 'MPTCP_PM_CMD_SET_FLAGS' since v5.12, and this control has
-> recently been extended to allow setting flags for a given endpoint id.
-> Although there is no use for changing 'signal' or 'subflow' flags, it can
-> be helpful to set/clear the backup bit on existing endpoints: add the 'ip
-> mptcp endpoint change <...>' command for this purpose.
->
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/158
-> Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+elapsed time: 726m
 
-Matthieu -
+configs tested: 182
+configs skipped: 3
 
-Since you already Acked, what should be the status of this in patchwork?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211207
+arm                         axm55xx_defconfig
+sh                         microdev_defconfig
+mips                     loongson1c_defconfig
+s390                             allmodconfig
+sh                     sh7710voipgw_defconfig
+powerpc                  iss476-smp_defconfig
+m68k                             alldefconfig
+arc                           tb10x_defconfig
+arm                           tegra_defconfig
+powerpc                 mpc837x_rdb_defconfig
+csky                                defconfig
+h8300                            allyesconfig
+h8300                     edosk2674_defconfig
+mips                           rs90_defconfig
+mips                      maltasmvp_defconfig
+nds32                            alldefconfig
+powerpc                     redwood_defconfig
+sh                          sdk7786_defconfig
+arm                           h5000_defconfig
+powerpc                mpc7448_hpc2_defconfig
+powerpc                     ppa8548_defconfig
+mips                         tb0287_defconfig
+sh                                  defconfig
+powerpc                    mvme5100_defconfig
+sh                            shmin_defconfig
+mips                        bcm63xx_defconfig
+sh                           se7705_defconfig
+mips                           xway_defconfig
+powerpc                      cm5200_defconfig
+sparc64                             defconfig
+powerpc                         wii_defconfig
+sh                        apsh4ad0a_defconfig
+arm                         lpc32xx_defconfig
+h8300                    h8300h-sim_defconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                   motionpro_defconfig
+parisc                           alldefconfig
+arm                           h3600_defconfig
+mips                      loongson3_defconfig
+sh                  sh7785lcr_32bit_defconfig
+mips                           ip22_defconfig
+arm                        shmobile_defconfig
+powerpc                 mpc8313_rdb_defconfig
+arm                           omap1_defconfig
+powerpc                       holly_defconfig
+arm                      pxa255-idp_defconfig
+mips                        workpad_defconfig
+sh                             espt_defconfig
+arm                      footbridge_defconfig
+powerpc                      acadia_defconfig
+sh                           se7721_defconfig
+arm                        mvebu_v7_defconfig
+riscv             nommu_k210_sdcard_defconfig
+sh                         ecovec24_defconfig
+arm                         orion5x_defconfig
+sh                           se7780_defconfig
+powerpc                    ge_imp3a_defconfig
+powerpc                   microwatt_defconfig
+mips                         tb0226_defconfig
+arm                          pxa910_defconfig
+i386                             allyesconfig
+mips                         db1xxx_defconfig
+arc                            hsdk_defconfig
+powerpc                      katmai_defconfig
+s390                                defconfig
+powerpc                      tqm8xx_defconfig
+parisc                generic-64bit_defconfig
+sparc64                          alldefconfig
+arm                         mv78xx0_defconfig
+mips                          ath79_defconfig
+arm                          pcm027_defconfig
+m68k                          sun3x_defconfig
+m68k                        m5272c3_defconfig
+mips                     decstation_defconfig
+powerpc                        fsp2_defconfig
+powerpc                 mpc836x_mds_defconfig
+xtensa                  nommu_kc705_defconfig
+powerpc                     powernv_defconfig
+arc                      axs103_smp_defconfig
+mips                     cu1000-neo_defconfig
+arm                        cerfcube_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arm                       omap2plus_defconfig
+sh                           se7722_defconfig
+arm                          moxart_defconfig
+m68k                            q40_defconfig
+nds32                             allnoconfig
+powerpc                     tqm8548_defconfig
+sh                        sh7757lcr_defconfig
+sh                 kfr2r09-romimage_defconfig
+arm                         at91_dt_defconfig
+sparc                               defconfig
+mips                       rbtx49xx_defconfig
+arm                  randconfig-c002-20211207
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20211207
+x86_64               randconfig-a005-20211207
+x86_64               randconfig-a001-20211207
+x86_64               randconfig-a002-20211207
+x86_64               randconfig-a004-20211207
+x86_64               randconfig-a003-20211207
+i386                 randconfig-a001-20211207
+i386                 randconfig-a005-20211207
+i386                 randconfig-a002-20211207
+i386                 randconfig-a003-20211207
+i386                 randconfig-a006-20211207
+i386                 randconfig-a004-20211207
+x86_64               randconfig-a016-20211208
+x86_64               randconfig-a011-20211208
+x86_64               randconfig-a013-20211208
+x86_64               randconfig-a012-20211208
+x86_64               randconfig-a015-20211208
+x86_64               randconfig-a014-20211208
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
--Mat
+clang tested configs:
+x86_64               randconfig-c007-20211207
+arm                  randconfig-c002-20211207
+riscv                randconfig-c006-20211207
+mips                 randconfig-c004-20211207
+i386                 randconfig-c001-20211207
+powerpc              randconfig-c003-20211207
+s390                 randconfig-c005-20211207
+x86_64               randconfig-a016-20211207
+x86_64               randconfig-a011-20211207
+x86_64               randconfig-a013-20211207
+x86_64               randconfig-a014-20211207
+x86_64               randconfig-a015-20211207
+x86_64               randconfig-a012-20211207
+i386                 randconfig-a016-20211207
+i386                 randconfig-a013-20211207
+i386                 randconfig-a011-20211207
+i386                 randconfig-a014-20211207
+i386                 randconfig-a012-20211207
+i386                 randconfig-a015-20211207
+hexagon              randconfig-r045-20211207
+s390                 randconfig-r044-20211207
+riscv                randconfig-r042-20211207
+hexagon              randconfig-r041-20211207
 
-
-
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> ---
-> ip/ipmptcp.c        | 20 ++++++++++++++++----
-> man/man8/ip-mptcp.8 | 14 ++++++++++++++
-> 2 files changed, 30 insertions(+), 4 deletions(-)
->
-> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-> index 857004446aa3..7fb48a420a6b 100644
-> --- a/ip/ipmptcp.c
-> +++ b/ip/ipmptcp.c
-> @@ -25,6 +25,7 @@ static void usage(void)
-> 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
-> 		"				      [ port NR ] [ FLAG-LIST ]\n"
-> 		"	ip mptcp endpoint delete id ID\n"
-> +		"	ip mptcp endpoint change id ID [ backup | nobackup ]\n"
-> 		"	ip mptcp endpoint show [ id ID ]\n"
-> 		"	ip mptcp endpoint flush\n"
-> 		"	ip mptcp limits set [ subflows NR ] [ add_addr_accepted NR ]\n"
-> @@ -45,6 +46,8 @@ static int genl_family = -1;
-> 	GENL_REQUEST(_req, MPTCP_BUFLEN, genl_family, 0,	\
-> 		     MPTCP_PM_VER, _cmd, _flags)
->
-> +#define MPTCP_PM_ADDR_FLAG_NOBACKUP 0x0
-> +
-> /* Mapping from argument to address flag mask */
-> static const struct {
-> 	const char *name;
-> @@ -53,6 +56,7 @@ static const struct {
-> 	{ "signal",		MPTCP_PM_ADDR_FLAG_SIGNAL },
-> 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
-> 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
-> +	{ "nobackup",		MPTCP_PM_ADDR_FLAG_NOBACKUP }
-> };
->
-> static void print_mptcp_addr_flags(unsigned int flags)
-> @@ -95,9 +99,9 @@ static int get_flags(const char *arg, __u32 *flags)
-> 	return -1;
-> }
->
-> -static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n,
-> -			 bool adding)
-> +static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
-> {
-> +	bool adding = cmd == MPTCP_PM_CMD_ADD_ADDR;
-> 	struct rtattr *attr_addr;
-> 	bool addr_set = false;
-> 	inet_prefix address;
-> @@ -110,6 +114,11 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n,
-> 	ll_init_map(&rth);
-> 	while (argc > 0) {
-> 		if (get_flags(*argv, &flags) == 0) {
-> +			/* allow changing the 'backup' flag only */
-> +			if (cmd == MPTCP_PM_CMD_SET_FLAGS &&
-> +			    (flags & ~MPTCP_PM_ADDR_FLAG_BACKUP))
-> +				invarg("invalid flags\n", *argv);
-> +
-> 		} else if (matches(*argv, "id") == 0) {
-> 			NEXT_ARG();
->
-> @@ -182,7 +191,7 @@ static int mptcp_addr_modify(int argc, char **argv, int cmd)
-> 	MPTCP_REQUEST(req, cmd, NLM_F_REQUEST);
-> 	int ret;
->
-> -	ret = mptcp_parse_opt(argc, argv, &req.n, cmd == MPTCP_PM_CMD_ADD_ADDR);
-> +	ret = mptcp_parse_opt(argc, argv, &req.n, cmd);
-> 	if (ret)
-> 		return ret;
->
-> @@ -298,7 +307,7 @@ static int mptcp_addr_show(int argc, char **argv)
-> 	if (argc <= 0)
-> 		return mptcp_addr_dump();
->
-> -	ret = mptcp_parse_opt(argc, argv, &req.n, false);
-> +	ret = mptcp_parse_opt(argc, argv, &req.n, MPTCP_PM_CMD_GET_ADDR);
-> 	if (ret)
-> 		return ret;
->
-> @@ -534,6 +543,9 @@ int do_mptcp(int argc, char **argv)
-> 		if (matches(*argv, "add") == 0)
-> 			return mptcp_addr_modify(argc-1, argv+1,
-> 						 MPTCP_PM_CMD_ADD_ADDR);
-> +		if (matches(*argv, "change") == 0)
-> +			return mptcp_addr_modify(argc-1, argv+1,
-> +						 MPTCP_PM_CMD_SET_FLAGS);
-> 		if (matches(*argv, "delete") == 0)
-> 			return mptcp_addr_modify(argc-1, argv+1,
-> 						 MPTCP_PM_CMD_DEL_ADDR);
-> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-> index 22335b6129ae..574cb60dc7c0 100644
-> --- a/man/man8/ip-mptcp.8
-> +++ b/man/man8/ip-mptcp.8
-> @@ -34,6 +34,13 @@ ip-mptcp \- MPTCP path manager configuration
-> .BR "ip mptcp endpoint del id "
-> .I ID
->
-> +.ti -8
-> +.BR "ip mptcp endpoint change id "
-> +.I ID
-> +.RB "[ "
-> +.I BACKUP-OPT
-> +.RB "] "
-> +
-> .ti -8
-> .BR "ip mptcp endpoint show "
-> .RB "[ " id
-> @@ -55,6 +62,13 @@ ip-mptcp \- MPTCP path manager configuration
-> .B backup
-> .RB  "]"
->
-> +.ti -8
-> +.IR BACKUP-OPT " := ["
-> +.B backup
-> +.RB "|"
-> +.B nobackup
-> +.RB  "]"
-> +
-> .ti -8
-> .BR "ip mptcp limits set "
-> .RB "[ "
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
