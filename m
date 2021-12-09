@@ -1,35 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF932C9E
-	for <mptcp@lists.linux.dev>; Thu,  9 Dec 2021 17:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4A02C80
+	for <mptcp@lists.linux.dev>; Thu,  9 Dec 2021 17:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1639071051;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=F+XbRMhrT2H+lzR5fMcQwnyXRk0Vp6n04Elu2yAGRUM=;
-	b=Gt7QLRmaTi4bZS3fCSbzjQbm52j9KMv0oWpkPAq9G62NF2SCECtBnr7AMOpYwgtGj7AfW4
-	/rtjUwaZoCQa3ny+ogdfj86/OSOnP/C3HNf1B4QZrA8P7pyKNkOUPeTaqGo6oz/0Nbw3P9
-	Chh6o+GrpajDjgOlcXOgitjbJqf+l3s=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aMR1hYkvoUwefVKooQD8Jdkgq7b6DI69kqlt/t+9Rd8=;
+	b=Yd1/537aMtV3zeoUKWuLRkiiXv4tnyeMn8Etwi0Q8/FcAVW7R4l16OLirSIRP6Ag93DsVt
+	faBISMaYmpU86UJ3FVAP+i6FeTn5wUqMyDtz5S+XzwHbGfymB2ne1EqtPhEkiYLK5vobu0
+	7ra212NNP14UJWR0P7iyviE5lYNWfKg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-468-gjlMd7boNouZhg_359067A-1; Thu, 09 Dec 2021 12:30:48 -0500
-X-MC-Unique: gjlMd7boNouZhg_359067A-1
+ us-mta-27-ZGjfGL4BPIKO4tAb-OWM5Q-1; Thu, 09 Dec 2021 12:30:49 -0500
+X-MC-Unique: ZGjfGL4BPIKO4tAb-OWM5Q-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04749100C660
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE04014754
 	for <mptcp@lists.linux.dev>; Thu,  9 Dec 2021 17:30:48 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.216])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 69E4E5ED27
-	for <mptcp@lists.linux.dev>; Thu,  9 Dec 2021 17:30:47 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5B92D5ED2C
+	for <mptcp@lists.linux.dev>; Thu,  9 Dec 2021 17:30:48 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v5 0/5] mptcp: improve subflow creation on errors
-Date: Thu,  9 Dec 2021 18:30:37 +0100
-Message-Id: <cover.1639070864.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v5 1/5] mptcp: fix per socket endpoint accounting.
+Date: Thu,  9 Dec 2021 18:30:38 +0100
+Message-Id: <48503581612e8e8c39ab21b56d069a1170093fc1.1639070864.git.pabeni@redhat.com>
+In-Reply-To: <cover.1639070864.git.pabeni@redhat.com>
+References: <cover.1639070864.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,45 +47,62 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-This iteration adds tracking for the endpoint used by the MPC subflow,
-updated the self-tests accordingly (1 signal tests-case is affected)
-and introduces a new test case for the relevant scenario.
+Since full-mesh endpoint support, the reception of a single ADD_ADDR
+option can cause multiple subflows creation. When such option is
+accepted we increment 'add_addr_accepted' by one. When we received
+a paired RM_ADDR option, we deleted all the relevant subflows,
+decrementing 'add_addr_accepted' by one for each of them.
 
-Currently when a subflow connection fails - either the TCP
-connection is reset by the peer, or the MPJ handshake never
-completes - the in kernel PM don't perform any further action.
-Notably no additional subflow creation is attempted.
+We have a similar issue for 'local_addr_used'
 
-This series is aimed at improving the in-kernel path manager
-behavior in the above scenario:
-- each endpoint is used only once per connection (patch 2/4)
-- on failure we try to move to the next subflow, if any
-  (patch 3/4)
+Fix them moving the pm endpoint accounting outside the subflow
+traversal.
 
-The first patch is minor cleanup, and the last patch adds
-specific self-tests.
+Fixes: 1a0d6136c5f0 ("mptcp: local addresses fullmesh")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/pm_netlink.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-This should address/close:
-https://github.com/multipath-tcp/mptcp_net-next/issues/235
-https://github.com/multipath-tcp/mptcp_net-next/issues/242
-
-Paolo Abeni (5):
-  mptcp: fix per socket endpoint accounting.
-  mptcp: clean-up MPJ option writing.
-  mptcp: keep track of local endpoint still available for each msk
-  mptcp: do not block subflows creation on errors
-  selftests: mptcp: add tests for subflow creation failure
-
- net/mptcp/options.c                           |  65 +++++---
- net/mptcp/pm.c                                |  24 ++-
- net/mptcp/pm_netlink.c                        | 142 +++++++++++-------
- net/mptcp/protocol.c                          |   9 +-
- net/mptcp/protocol.h                          |  16 +-
- net/mptcp/subflow.c                           |   5 +-
- tools/testing/selftests/net/mptcp/config      |   1 +
- .../testing/selftests/net/mptcp/mptcp_join.sh |  79 +++++++++-
- 8 files changed, 254 insertions(+), 87 deletions(-)
-
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 3186d33b5208..d18b13e3e74c 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -710,6 +710,8 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+ 		return;
+ 
+ 	for (i = 0; i < rm_list->nr; i++) {
++		bool removed = false;
++
+ 		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
+@@ -729,15 +731,19 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+ 			mptcp_close_ssk(sk, ssk, subflow);
+ 			spin_lock_bh(&msk->pm.lock);
+ 
+-			if (rm_type == MPTCP_MIB_RMADDR) {
+-				msk->pm.add_addr_accepted--;
+-				WRITE_ONCE(msk->pm.accept_addr, true);
+-			} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
+-				msk->pm.local_addr_used--;
+-			}
++			removed = true;
+ 			msk->pm.subflows--;
+ 			__MPTCP_INC_STATS(sock_net(sk), rm_type);
+ 		}
++		if (!removed)
++			continue;
++
++		if (rm_type == MPTCP_MIB_RMADDR) {
++			msk->pm.add_addr_accepted--;
++			WRITE_ONCE(msk->pm.accept_addr, true);
++		} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
++			msk->pm.local_addr_used--;
++		}
+ 	}
+ }
+ 
 -- 
 2.33.1
 
