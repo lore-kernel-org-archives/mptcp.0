@@ -1,141 +1,104 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25571173
-	for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 23:04:27 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10194"; a="218492850"
-X-IronPort-AV: E=Sophos;i="5.88,196,1635231600"; 
-   d="scan'208";a="218492850"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 15:04:27 -0800
-X-IronPort-AV: E=Sophos;i="5.88,196,1635231600"; 
-   d="scan'208";a="680921093"
-Received: from dmales-mobl.amr.corp.intel.com ([10.251.4.94])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 15:04:26 -0800
-Date: Fri, 10 Dec 2021 15:04:26 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] mptcp: clear 'kern' flag from fallback sockets
-In-Reply-To: <20211210090004.GF26636@breakpoint.cc>
-Message-ID: <f89e2257-c2bd-672-ad5b-eb4e6d6cf749@linux.intel.com>
-References: <d5c4d25c-7498-46c5-54b6-4fd067d075f2@linux.intel.com> <20211206212650.1895-1-fw@strlen.de> <bf919f98-d135-fffe-e586-873810a81f4d@linux.intel.com> <6c32d24c-d4d-727d-27a9-75478838157e@linux.intel.com> <20211210090004.GF26636@breakpoint.cc>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26878173
+	for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 23:24:41 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id x10so17155800edd.5
+        for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 15:24:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k5S3SUj/OOI4UqpRFOWJDCv9zSY6mlat8akj1K847Q8=;
+        b=PJxPjQ1kg5qZxmutioMQSWj47Awen0cDzIJxWT8LgGU1FNEcZ4o3WCuboVzD+KEseG
+         MigJKeI5ugbFbjmqXQC+YGPB7JGk/bHbo+E47at3EycIY7YFPDQsp+YCfHGKsotsIsqb
+         JrmBRXFM6B79Kil2oKikHtc43Bzh93ydcAqOh7UGdQrMTlLKflBLOz7P0ocAxM7XrsE4
+         w5yvAMqNUH1jxsYG/xWNZQhmE90fLX4WWut5Z7UwfKik7oIq00LYvbT6yvnoDYXHS6E4
+         13EDIRGVibVUz5nlakAoGW/vLiSwpuHlI7DKeulDxxESXIJ9iuOwc7xLCu9LPgaOtm39
+         RREg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k5S3SUj/OOI4UqpRFOWJDCv9zSY6mlat8akj1K847Q8=;
+        b=A2cdmgrMtiLximwRhTBFyC4z5h8+TscebezcarxfTkPAJ7b81Mos6pn36Mj/wtCfoi
+         kxfqmGKOwNAS0v0irFRUArdcBE7Ed6sd6gAJ1os/90stikfgYNseUgA8vY6gPnNQDaD1
+         jNvEb2Rls7MhRZ+bcumWamoSW4BG6PdJyEGpA16f30cUVTtX2i3LrSdMQ+qsXWXBqqgq
+         OXJbx8l1gZ/dpLfWqvVHwgDk8B5MJa4Gp8yho6PCcKLEqCrAcnpZwJYZCj35M4bpDujs
+         RgCeDNTXKpca4AjU0j7iQ1JIv9nTbJE+fIi6vCtFILMRH6NVlSseXy+R8jdUGKJCG3h4
+         jL/A==
+X-Gm-Message-State: AOAM5319s1eSFQpqWN8wCewkm9BlFOMbzBbsCcRmGItYpyHaVJnzt6Ld
+	+YlsYUBHHGB2ab2tE05/9ntvEGc1gRs=
+X-Google-Smtp-Source: ABdhPJxqWUvHrayF51mlf3nfBss88hzhsLfoXM5b8OEIsc8i+IRGRa741qgQqV4qcd150Vek18Mkdw==
+X-Received: by 2002:a50:e0c9:: with SMTP id j9mr43434321edl.336.1639178679481;
+        Fri, 10 Dec 2021 15:24:39 -0800 (PST)
+Received: from localhost ([185.220.101.166])
+        by smtp.gmail.com with ESMTPSA id n16sm2039423edt.67.2021.12.10.15.24.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Dec 2021 15:24:39 -0800 (PST)
+From: =?UTF-8?q?J=CE=B5an=20Sacren?= <sakiwit@gmail.com>
+To: mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH v2 net-next] net: mptcp: clean up harmless false expressions
+Date: Fri, 10 Dec 2021 16:24:36 -0700
+Message-Id: <20211210230245.342764-1-sakiwit@gmail.com>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Fri, 10 Dec 2021, Florian Westphal wrote:
+From: Jean Sacren <sakiwit@gmail.com>
 
-> Mat Martineau <mathew.j.martineau@linux.intel.com> wrote:
->> On Mon, 6 Dec 2021, Mat Martineau wrote:
->>
->>> On Mon, 6 Dec 2021, Florian Westphal wrote:
->>>
->>>> The mptcp ULP extension relies on sk->sk_sock_kern being set correctly:
->>>> It prevents setsockopt(fd, IPPROTO_TCP, TCP_ULP, "mptcp", 6); from
->>>> working for plain tcp sockets (any userspace-exposed socket).
->>>>
->>>> But in case of fallback, accept() can return a plain tcp sk.
->>>> In such case, sk is still tagged as 'kernel' and setsockopt will work.
->>>>
->>>> This will crash the kernel, The subflow extension has a NULL ctx->conn
->>>> mptcp socket:
->>>>
->>>> BUG: KASAN: null-ptr-deref in subflow_data_ready+0x181/0x2b0
->>>> Call Trace:
->>>> tcp_data_ready+0xf8/0x370
->>>> [..]
->>>>
->>>> Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming
->>>> connections")
->>>> Signed-off-by: Florian Westphal <fw@strlen.de>
->>>> ---
->>>> v2: also handle early-return
->>>
->>> Thanks - v2 looks good to me.
->>>
->>> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
->>>
->>>>
->>>> net/mptcp/protocol.c | 4 +++-
->>>> 1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>>> index 8319e601bc2d..4a8f2476cc75 100644
->>>> --- a/net/mptcp/protocol.c
->>>> +++ b/net/mptcp/protocol.c
->>>> @@ -3013,7 +3013,7 @@ static struct sock *mptcp_accept(struct sock
->>>> *sk, int flags, int *err,
->>>> 		 */
->>>> 		if (WARN_ON_ONCE(!new_mptcp_sock)) {
->>>> 			tcp_sk(newsk)->is_mptcp = 0;
->>>> -			return newsk;
->>>> +			goto out;
->>>> 		}
->>>>
->>>> 		/* acquire the 2nd reference for the owning socket */
->>>> @@ -3025,6 +3025,8 @@ static struct sock *mptcp_accept(struct sock
->>>> *sk, int flags, int *err,
->>>> 				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
->>>> 	}
->>>>
->>>> +out:
->>>> +	newsk->sk_kern_sock = kern;
->>
->> Florian -
->>
->> I was about to upstream this for -net, but have another question first.
->>
->> Is there anything else in newsk that needs to be updated when changing
->> sk_kern_sock? sk_alloc() handles some reference counts differently for kern
->> socks, and sock_lock_init() sets things up differently for lockdep.
->
-> AFAICS no.
->
-> The tcpsk inherits these settings from its parent (listen) sk, so they
-> always have 'kern = 1'.
->
-> Even before this change, lock depclass is not correct (kernel, not user).
->
-> Need to export code from core to change this.
->
-> The netns refcount bump is not needed, but at this point it has already
-> happened so even if we undo+clear ->sk_net_refcnt it won't buy anthing.
->
+entry->addr.id is u8 with a range from 0 to 255 and MAX_ADDR_ID is 255.
+We should drop both false expressions of (entry->addr.id > MAX_ADDR_ID).
 
-Ok, thanks for the background on the refcounts. I also now see the code in 
-mtpcp_subflow_create_socket() that already adjusts the refcounts.
+We should also remove the obsolete parentheses in the first if branch.
 
-> So only alternative I see is to toss this patch and use a different
-> sk marker to block mptcp ulp on normal tcp sockets.
->
-> This would not change the incorrect lockdep class in this case of course
-> but would avoid messing with this.
->
-> tp->is_mptcp would come to mind, we only need to set it to 1 before
-> adding the mptcp ulp from inside the kernel rather than in the mptcp ulp
-> init function.
->
+Use U8_MAX for MAX_ADDR_ID and add a comment to show the link to
+mptcp_addr_info.id as suggested by Mr. Matthieu Baerts.
 
-So the question is which inconsistency is better: mismatch between the 
-lockdep class and sk_kern_sock bit (the original patch for this email 
-thread), or having a sk_kern_sock=1 socket out in usespace (the proposed 
-alternative).
+Signed-off-by: Jean Sacren <sakiwit@gmail.com>
+---
+v2:
+(1) Use U8_MAX for MAX_ADDR_ID.
+(2) Add a comment for link to mptcp_addr_info.id.
+    Thank you, Mr. Matthieu Baerts!
+ net/mptcp/pm_netlink.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Neither seems ideal, but also don't appear to have serious consequences. 
-For a -net fix now, this patch (clearing the kern bit) seems like the most 
-straightforward for backporting. The lockdep fix could be handled 
-independently, as it's a separate existing issue?
-
-
-I will plan to upstream the existing patches from the export branch on 
-Monday if there's no objection posted here!
-
-
---
-Mat Martineau
-Intel
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 4ff8d55cbe82..35cc4c64c06c 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -38,7 +38,8 @@ struct mptcp_pm_add_entry {
+ 	u8			retrans_times;
+ };
+ 
+-#define MAX_ADDR_ID		255
++/* max value of mptcp_addr_info.id */
++#define MAX_ADDR_ID		U8_MAX
+ #define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, BITS_PER_LONG)
+ 
+ struct pm_nl_pernet {
+@@ -822,14 +823,13 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ 		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
+ 						    MAX_ADDR_ID + 1,
+ 						    pernet->next_id);
+-		if ((!entry->addr.id || entry->addr.id > MAX_ADDR_ID) &&
+-		    pernet->next_id != 1) {
++		if (!entry->addr.id && pernet->next_id != 1) {
+ 			pernet->next_id = 1;
+ 			goto find_next;
+ 		}
+ 	}
+ 
+-	if (!entry->addr.id || entry->addr.id > MAX_ADDR_ID)
++	if (!entry->addr.id)
+ 		goto out;
+ 
+ 	__set_bit(entry->addr.id, pernet->id_bitmap);
