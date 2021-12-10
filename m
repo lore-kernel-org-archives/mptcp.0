@@ -1,114 +1,96 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696332C80
-	for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 09:00:12 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1mvbl6-0003t3-Ar; Fri, 10 Dec 2021 10:00:04 +0100
-Date: Fri, 10 Dec 2021 10:00:04 +0100
-From: Florian Westphal <fw@strlen.de>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] mptcp: clear 'kern' flag from fallback sockets
-Message-ID: <20211210090004.GF26636@breakpoint.cc>
-References: <d5c4d25c-7498-46c5-54b6-4fd067d075f2@linux.intel.com>
- <20211206212650.1895-1-fw@strlen.de>
- <bf919f98-d135-fffe-e586-873810a81f4d@linux.intel.com>
- <6c32d24c-d4d-727d-27a9-75478838157e@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0C92C80
+	for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 09:58:30 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id r11so27705730edd.9
+        for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 01:58:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=nduhBFxPbxmifYpnO0eOOP3C7nxBPTbeIwjsdCqiSCo=;
+        b=ojvvj0K+k6NKnozWLW2tDWy91766MZb9YsUkZZD84yq8yaH1DnzCgRGc4zW9CR+Z3E
+         2vs+BSinUml6Qjyb0MbBrOgsHOui0a02cPy0cqrIUgGcPho1kK21Vv6AOKU4syfzyGr6
+         ZSM2KKARJ2O3WXBsrc+VrUfgJgi8GAHaVHe2HKB+OvOoTqxMHIykUz6SEjjyVYLDofUT
+         4tkWQHYJ8a7xdoQKOL1TGvS9bCMzyhfSxCNiEPqsSQMJYT0YND2DBanJfy4thrcjQpsv
+         NGVyKnbVO76+lE4LNwOMA8eTPqYUhFTsWhY12krSk4lNc2nU/54euf2N4eePg1MzmHYj
+         PSKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nduhBFxPbxmifYpnO0eOOP3C7nxBPTbeIwjsdCqiSCo=;
+        b=lyq2dPN4UEI+PLZNSqaJIyLUcB+wHmyBLPq+sIJqSD62Qb81+KmPDO4h8F7JQAdeTv
+         kLqd2sEyfI+yWWmDNeZuFoZS+34xX9AipbQBvX9R2jWbc2AEBeXp0AoQm0REGqHEahPT
+         PlkGPmQ1egFOiwWAXNeu8i1fkGeWUFZKu+NBrX+5hu9r1TdShYYLY0N5bz0R3AVHgtsW
+         Fddsr7kLDWuwHULqC3v3ooUthSad+tuD8fuJDVHFHCCcokibWNRA0XtLFFb2ADNG+WjS
+         vV5Lpo1L4exkoeKwRBdnjOQkWQpXDM31uHRcY6hkwEZCdXnvDsVorS0Qkes/5dZ0FtNU
+         oQog==
+X-Gm-Message-State: AOAM532X1ls6kqeoQ5a+YuPF5vYA0VpRLxIY3rBAJe+4sGsHSyyQIMoD
+	LQcD9EUASPS920K8ysZg7MVEfA==
+X-Google-Smtp-Source: ABdhPJylHws71T7EEEhue6UdCGoV/k4VWRPPxYHA0zXkEHzMN0zoHH6zuGQNrntdBPyvVA4MsSkOUQ==
+X-Received: by 2002:a17:907:7f2a:: with SMTP id qf42mr23268059ejc.388.1639130308873;
+        Fri, 10 Dec 2021 01:58:28 -0800 (PST)
+Received: from [192.168.178.33] (94.105.100.208.dyn.edpnet.net. [94.105.100.208])
+        by smtp.gmail.com with ESMTPSA id co10sm1129754edb.83.2021.12.10.01.58.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Dec 2021 01:58:28 -0800 (PST)
+Message-ID: <ab84ca1f-0f43-d50c-c272-81f64ee31ce8@tessares.net>
+Date: Fri, 10 Dec 2021 10:58:27 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c32d24c-d4d-727d-27a9-75478838157e@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] selftests: mptcp: remove duplicate include in mptcp_inq.c
+Content-Language: en-GB
+To: cgel.zte@gmail.com, mathew.j.martineau@linux.intel.com
+Cc: davem@davemloft.net, kuba@kernel.org, shuah@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Ye Guojin <ye.guojin@zte.com.cn>, ZealRobot <zealci@zte.com.cn>
+References: <20211210071424.425773-1-ye.guojin@zte.com.cn>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20211210071424.425773-1-ye.guojin@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Mat Martineau <mathew.j.martineau@linux.intel.com> wrote:
-> On Mon, 6 Dec 2021, Mat Martineau wrote:
+Hi Ye,
+
+On 10/12/2021 08:14, cgel.zte@gmail.com wrote:
+> From: Ye Guojin <ye.guojin@zte.com.cn>
 > 
-> > On Mon, 6 Dec 2021, Florian Westphal wrote:
-> > 
-> > > The mptcp ULP extension relies on sk->sk_sock_kern being set correctly:
-> > > It prevents setsockopt(fd, IPPROTO_TCP, TCP_ULP, "mptcp", 6); from
-> > > working for plain tcp sockets (any userspace-exposed socket).
-> > > 
-> > > But in case of fallback, accept() can return a plain tcp sk.
-> > > In such case, sk is still tagged as 'kernel' and setsockopt will work.
-> > > 
-> > > This will crash the kernel, The subflow extension has a NULL ctx->conn
-> > > mptcp socket:
-> > > 
-> > > BUG: KASAN: null-ptr-deref in subflow_data_ready+0x181/0x2b0
-> > > Call Trace:
-> > > tcp_data_ready+0xf8/0x370
-> > > [..]
-> > > 
-> > > Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming
-> > > connections")
-> > > Signed-off-by: Florian Westphal <fw@strlen.de>
-> > > ---
-> > > v2: also handle early-return
-> > 
-> > Thanks - v2 looks good to me.
-> > 
-> > Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> > 
-> > > 
-> > > net/mptcp/protocol.c | 4 +++-
-> > > 1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index 8319e601bc2d..4a8f2476cc75 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -3013,7 +3013,7 @@ static struct sock *mptcp_accept(struct sock
-> > > *sk, int flags, int *err,
-> > > 		 */
-> > > 		if (WARN_ON_ONCE(!new_mptcp_sock)) {
-> > > 			tcp_sk(newsk)->is_mptcp = 0;
-> > > -			return newsk;
-> > > +			goto out;
-> > > 		}
-> > > 
-> > > 		/* acquire the 2nd reference for the owning socket */
-> > > @@ -3025,6 +3025,8 @@ static struct sock *mptcp_accept(struct sock
-> > > *sk, int flags, int *err,
-> > > 				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
-> > > 	}
-> > > 
-> > > +out:
-> > > +	newsk->sk_kern_sock = kern;
-> 
-> Florian -
-> 
-> I was about to upstream this for -net, but have another question first.
-> 
-> Is there anything else in newsk that needs to be updated when changing
-> sk_kern_sock? sk_alloc() handles some reference counts differently for kern
-> socks, and sock_lock_init() sets things up differently for lockdep.
+> 'sys/ioctl.h' included in 'mptcp_inq.c' is duplicated.
 
-AFAICS no.
+Good catch, the modification looks good to me:
 
-The tcpsk inherits these settings from its parent (listen) sk, so they
-always have 'kern = 1'.
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Even before this change, lock depclass is not correct (kernel, not user).
 
-Need to export code from core to change this.
+This patch is for "net-next" tree as it fixes an issue introduced by a
+patch only in this tree:
 
-The netns refcount bump is not needed, but at this point it has already
-happened so even if we undo+clear ->sk_net_refcnt it won't buy anthing.
+Fixes: b51880568f20 ("selftests: mptcp: add inq test case")
 
-So only alternative I see is to toss this patch and use a different
-sk marker to block mptcp ulp on normal tcp sockets.
+Regarding the commit message, please next time include the Fixes tag and
+mention for which tree it is for in the FAQ [1], e.g. [PATCH net-next].
 
-This would not change the incorrect lockdep class in this case of course
-but would avoid messing with this.
 
-tp->is_mptcp would come to mind, we only need to set it to 1 before
-adding the mptcp ulp from inside the kernel rather than in the mptcp ulp
-init function.
+@David/Jakub: do you prefer a v2 with these modifications or is it fine
+to apply this small patch directly in net-next tree?
+
+
+Cheers,
+Matt
+
+[1] https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
+Please check the "How do I indicate which tree (net vs. net-next) my
+patch should be in?" section.
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
