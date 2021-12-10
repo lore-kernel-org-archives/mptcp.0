@@ -1,148 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8069C2C99
-	for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 16:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1639155152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FDltKr+tc0V3tb+BTPpB3I0XwCBKsqwfBPRpJqCwhM8=;
-	b=WAWe9VOwfI5CFlKOcVJbYhIMbL1RkjkdPdiqxoKaby0Kb5LJnMPAfI8aWSR+vdmP3V5YmQ
-	AkbohzZjJ/sZsK81EOT8AiLCjCR5O6X7YeDw6tYWLnVJvfHdzpASLAhavsQfwHfj9OgtPM
-	jj4GCArcNrV6OLl9e2MkSkZcJ9nerIA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-592-xw1dsxRZPLOpgUipgeOZvA-1; Fri, 10 Dec 2021 11:52:27 -0500
-X-MC-Unique: xw1dsxRZPLOpgUipgeOZvA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FD0A801B0F;
-	Fri, 10 Dec 2021 16:52:26 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.172])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1314160622;
-	Fri, 10 Dec 2021 16:52:24 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: netdev@vger.kernel.org
-Cc: mptcp@lists.linux.dev,
-	Geliang Tang <geliangtang@gmail.com>
-Subject: [PATCH net] mptcp: fix NULL ptr dereference in inet_csk_accept()
-Date: Fri, 10 Dec 2021 17:51:52 +0100
-Message-Id: <299865ffd73315ea549ed4a8026783633203a237.1639155048.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072562C99
+	for <mptcp@lists.linux.dev>; Fri, 10 Dec 2021 18:00:37 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10194"; a="218425839"
+X-IronPort-AV: E=Sophos;i="5.88,196,1635231600"; 
+   d="scan'208";a="218425839"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 10:00:36 -0800
+X-IronPort-AV: E=Sophos;i="5.88,196,1635231600"; 
+   d="scan'208";a="544054225"
+Received: from dmales-mobl.amr.corp.intel.com ([10.251.4.94])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 10:00:36 -0800
+Date: Fri, 10 Dec 2021 10:00:35 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Jakub Kicinski <kuba@kernel.org>
+cc: Matthieu Baerts <matthieu.baerts@tessares.net>, cgel.zte@gmail.com, 
+    davem@davemloft.net, shuah@kernel.org, netdev@vger.kernel.org, 
+    mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, Ye Guojin <ye.guojin@zte.com.cn>, 
+    ZealRobot <zealci@zte.com.cn>
+Subject: Re: [PATCH] selftests: mptcp: remove duplicate include in
+ mptcp_inq.c
+In-Reply-To: <20211210075701.06bfced2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Message-ID: <7041cc47-3728-c033-bc97-49d86a1938b9@linux.intel.com>
+References: <20211210071424.425773-1-ye.guojin@zte.com.cn> <ab84ca1f-0f43-d50c-c272-81f64ee31ce8@tessares.net> <20211210065437.27c8fe23@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <20211210065644.192f5159@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <b6c19c9c-de6c-225c-5899-789dfd8e7ae8@tessares.net> <20211210075701.06bfced2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Since commit 740d798e8767 ("mptcp: remove id 0 address"), the PM
-can remove the MPTCP first subflow in response to the netlink DEL_ADDR
-command. At subflow removal time, the TCP subflow socket is orphaned.
+On Fri, 10 Dec 2021, Jakub Kicinski wrote:
 
-If the relevant MPTCP socket is in listening status and such
-operation races with an accept(), the kernel will access a NULL wait
-queue, as reported by syzbot:
+> On Fri, 10 Dec 2021 16:36:06 +0100 Matthieu Baerts wrote:
+>>> Actually, I take that back, let's hear from Mat, he may want to take
+>>> the patch via his tree.
+>>
+>> We "rebase" our tree on top of net-next every night. I think for such
+>> small patches with no behaviour change and sent directly to netdev ML,
+>> it is probably best to apply them directly. I can check with Mat if it
+>> is an issue if you prefer.
+>
+> Please do, I'm happy to apply the patch but Mat usually prefers to take
+> things thru MPTCP tree.
+>
 
-general protection fault, probably for non-canonical address 0xdffffc0000000003: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000018-0x000000000000001f]
-CPU: 1 PID: 6550 Comm: syz-executor122 Not tainted 5.16.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__lock_acquire+0xd7d/0x54a0 kernel/locking/lockdep.c:4897
-Code: 0f 0e 41 be 01 00 00 00 0f 86 c8 00 00 00 89 05 69 cc 0f 0e e9 bd 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 f3 2f 00 00 48 81 3b 20 75 17 8f 0f 84 52 f3 ff
-RSP: 0018:ffffc90001f2f818 EFLAGS: 00010016
-RAX: dffffc0000000000 RBX: 0000000000000018 RCX: 0000000000000000
-RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: 000000000000000a R12: 0000000000000000
-R13: ffff88801b98d700 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007f177cd3d700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f177cd1b268 CR3: 000000001dd55000 CR4: 0000000000350ee0
-Call Trace:
- <TASK>
- lock_acquire kernel/locking/lockdep.c:5637 [inline]
- lock_acquire+0x1ab/0x510 kernel/locking/lockdep.c:5602
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x39/0x50 kernel/locking/spinlock.c:162
- finish_wait+0xc0/0x270 kernel/sched/wait.c:400
- inet_csk_wait_for_connect net/ipv4/inet_connection_sock.c:464 [inline]
- inet_csk_accept+0x7de/0x9d0 net/ipv4/inet_connection_sock.c:497
- mptcp_accept+0xe5/0x500 net/mptcp/protocol.c:2865
- inet_accept+0xe4/0x7b0 net/ipv4/af_inet.c:739
- mptcp_stream_accept+0x2e7/0x10e0 net/mptcp/protocol.c:3345
- do_accept+0x382/0x510 net/socket.c:1773
- __sys_accept4_file+0x7e/0xe0 net/socket.c:1816
- __sys_accept4+0xb0/0x100 net/socket.c:1846
- __do_sys_accept net/socket.c:1864 [inline]
- __se_sys_accept net/socket.c:1861 [inline]
- __x64_sys_accept+0x71/0xb0 net/socket.c:1861
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f177cd8b8e9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 14 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f177cd3d308 EFLAGS: 00000246 ORIG_RAX: 000000000000002b
-RAX: ffffffffffffffda RBX: 00007f177ce13408 RCX: 00007f177cd8b8e9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00007f177ce13400 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f177ce1340c
-R13: 00007f177cde1004 R14: 6d705f706374706d R15: 0000000000022000
- </TASK>
+Jakub -
 
-Fix the issue explicitly preventing the PM from closing subflows
-of MPTCP socket in listener status.
+It is ok with me if you apply this now, for the reasons Matthieu cited.
 
-Reported-and-tested-by: syzbot+e4d843bb96a9431e6331@syzkaller.appspotmail.com
-Fixes: 740d798e8767 ("mptcp: remove id 0 address")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm_netlink.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The usual division of labor between Matthieu and I as MPTCP co-maintainers 
+usually has me upstreaming the patches to netdev, but I do trust 
+Matthieu's judgement on sending out Reviewed-by tags and advising direct 
+appliction to the netdev trees! Also, much like you & David, having offset 
+timezones can be helpful.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 7b96be1e9f14..afd4c6ddad0c 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1275,10 +1275,16 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 		}
- 
- 		lock_sock(sk);
-+		/* don't touch subflows for listener sockets */
-+		if (sk->sk_state == TCP_LISTEN)
-+			goto unlock_next;
-+
- 		remove_subflow = lookup_subflow_by_saddr(&msk->conn_list, addr);
- 		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow);
- 		if (remove_subflow)
- 			mptcp_pm_remove_subflow(msk, &list);
-+
-+unlock_next:
- 		release_sock(sk);
- 
- next:
-@@ -1318,10 +1324,16 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
- 			goto next;
- 
- 		lock_sock(sk);
-+		/* don't touch subflows for listener sockets */
-+		if (sk->sk_state == TCP_LISTEN)
-+			goto unlock_next;
-+
- 		spin_lock_bh(&msk->pm.lock);
- 		mptcp_pm_remove_addr(msk, &list);
- 		mptcp_pm_nl_rm_subflow_received(msk, &list);
- 		spin_unlock_bh(&msk->pm.lock);
-+
-+unlock_next:
- 		release_sock(sk);
- 
- next:
--- 
-2.33.1
+Also appreciate your awareness of the normal patch flow for MPTCP, and 
+that you're checking that we're all on the same page.
 
+
+>> I would have applied it in our MPTCP tree if we were sending PR, not to
+>> bother you for such patches but I guess it is best not to have us
+>> sending this patch a second time later :)
+>>
+>> BTW, if you prefer us sending PR over batches of patches, please tell us!
+>
+> Small preference for patches. It's good to have the code on the ML for
+> everyone to look at and mixed PR + patches are a tiny bit more clicking
+> for me.
+>
+
+Good to know.
+
+
+Thanks!
+
+--
+Mat Martineau
+Intel
