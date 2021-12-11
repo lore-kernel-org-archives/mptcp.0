@@ -1,216 +1,127 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C009C2C80
-	for <mptcp@lists.linux.dev>; Sat, 11 Dec 2021 02:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639188447; x=1670724447;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zcmTvURoN4CXSPnyviSWWdNmLjmPhyMit/AFS5E4cg8=;
-  b=Re8Imx75fAzxSztJMqlXolieUkhcJ9hP1cPxoLCSS/HlvdRacWbXq49k
-   Zhjmjl6t4zLMo8r3i3BXg3qtwx01DFniK5oztSA8gn8vt28VYN2VlVNL6
-   L6TRR+1gQO8qIt13BCwXZt7VpmUj5nO/x5oebdFPjTOceAzbL189PAMlm
-   iJcLs+nIo3PYtZXMJxRS5a+yDpVrBe4wcT7rA/T6FgyQrAdXtlsinm3Sv
-   rn2qZoUs5LJMIZ3wOZH3diPWscdhVzV98RHHg+pqIcI6EdoU8ohFZphbe
-   TWNSwlcOFR1GnvTxl9q9SZ4BW+02LgYwS8Bt23T8ppTWN7TlB38pJCUvz
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10194"; a="225771778"
-X-IronPort-AV: E=Sophos;i="5.88,197,1635231600"; 
-   d="scan'208";a="225771778"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 18:07:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,197,1635231600"; 
-   d="scan'208";a="659973324"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Dec 2021 18:07:25 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1mvrnJ-0003y1-8d; Sat, 11 Dec 2021 02:07:25 +0000
-Date: Sat, 11 Dec 2021 10:06:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- 93aecbabd4ade4a8b75ab7e99014b6d8b48e400f
-Message-ID: <61b4079f.HBpK+NmZ4GVWUNye%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EF0173
+	for <mptcp@lists.linux.dev>; Sat, 11 Dec 2021 16:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1639239108;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GQ9xh+D/1SeL383/68SRgs7GGISVsePJUy2mdr8iR3E=;
+	b=CgObJJ1R+mN11sD5tN8ys0kKPuh7lGUttR65MdYEe0pKidyS2kLaCpj6OITKxNOshNYHCt
+	MKvH1KvBiXPHYXgQTLy790dY7l9timr5x31Qzt7Uf/PMEkuRB+eVDwi+y1QwnCZJ0NItlX
+	3hin4adsGCW+DmAThNJ8CsBFLN7v4O8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-232-NqxIWm_KNP6t_V-N-iczIQ-1; Sat, 11 Dec 2021 11:11:44 -0500
+X-MC-Unique: NqxIWm_KNP6t_V-N-iczIQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B641418C8C03;
+	Sat, 11 Dec 2021 16:11:43 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.7])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7850460C17;
+	Sat, 11 Dec 2021 16:11:42 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Geliang Tang <geliangtang@gmail.com>,
+	mptcp@lists.linux.dev
+Subject: [PATCH net] mptcp: never allow the PM to close a listener subflow
+Date: Sat, 11 Dec 2021 17:11:12 +0100
+Message-Id: <ebc7594cdd420d241fb2172ddb8542ba64717657.1639238695.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: 93aecbabd4ade4a8b75ab7e99014b6d8b48e400f  DO-NOT-MERGE: mptcp: enabled by default
+Currently, when deleting an endpoint the netlink PM treverses
+all the local MPTCP sockets, regardless of their status.
 
-elapsed time: 1054m
+If an MPTCP listener socket is bound to the IP matching the
+delete endpoint, the listener TCP socket will be closed.
+That is unexpected, the PM should only affect data subflows.
 
-configs tested: 150
-configs skipped: 3
+Additionally, syzbot was able to trigger a NULL ptr dereference
+due to the above:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+general protection fault, probably for non-canonical address 0xdffffc0000000003: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000018-0x000000000000001f]
+CPU: 1 PID: 6550 Comm: syz-executor122 Not tainted 5.16.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__lock_acquire+0xd7d/0x54a0 kernel/locking/lockdep.c:4897
+Code: 0f 0e 41 be 01 00 00 00 0f 86 c8 00 00 00 89 05 69 cc 0f 0e e9 bd 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 f3 2f 00 00 48 81 3b 20 75 17 8f 0f 84 52 f3 ff
+RSP: 0018:ffffc90001f2f818 EFLAGS: 00010016
+RAX: dffffc0000000000 RBX: 0000000000000018 RCX: 0000000000000000
+RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 000000000000000a R12: 0000000000000000
+R13: ffff88801b98d700 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007f177cd3d700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f177cd1b268 CR3: 000000001dd55000 CR4: 0000000000350ee0
+Call Trace:
+ <TASK>
+ lock_acquire kernel/locking/lockdep.c:5637 [inline]
+ lock_acquire+0x1ab/0x510 kernel/locking/lockdep.c:5602
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x39/0x50 kernel/locking/spinlock.c:162
+ finish_wait+0xc0/0x270 kernel/sched/wait.c:400
+ inet_csk_wait_for_connect net/ipv4/inet_connection_sock.c:464 [inline]
+ inet_csk_accept+0x7de/0x9d0 net/ipv4/inet_connection_sock.c:497
+ mptcp_accept+0xe5/0x500 net/mptcp/protocol.c:2865
+ inet_accept+0xe4/0x7b0 net/ipv4/af_inet.c:739
+ mptcp_stream_accept+0x2e7/0x10e0 net/mptcp/protocol.c:3345
+ do_accept+0x382/0x510 net/socket.c:1773
+ __sys_accept4_file+0x7e/0xe0 net/socket.c:1816
+ __sys_accept4+0xb0/0x100 net/socket.c:1846
+ __do_sys_accept net/socket.c:1864 [inline]
+ __se_sys_accept net/socket.c:1861 [inline]
+ __x64_sys_accept+0x71/0xb0 net/socket.c:1861
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x7f177cd8b8e9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 14 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f177cd3d308 EFLAGS: 00000246 ORIG_RAX: 000000000000002b
+RAX: ffffffffffffffda RBX: 00007f177ce13408 RCX: 00007f177cd8b8e9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f177ce13400 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f177ce1340c
+R13: 00007f177cde1004 R14: 6d705f706374706d R15: 0000000000022000
+ </TASK>
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211210
-sh                          r7780mp_defconfig
-powerpc                          g5_defconfig
-arm                  colibri_pxa270_defconfig
-m68k                                defconfig
-openrisc                         alldefconfig
-powerpc                       ebony_defconfig
-arm                           h5000_defconfig
-sh                      rts7751r2d1_defconfig
-arm                       aspeed_g5_defconfig
-sparc64                             defconfig
-arm                          ixp4xx_defconfig
-sh                           se7780_defconfig
-mips                     cu1830-neo_defconfig
-powerpc                 xes_mpc85xx_defconfig
-ia64                        generic_defconfig
-arm                           sama7_defconfig
-powerpc                       holly_defconfig
-powerpc                   motionpro_defconfig
-powerpc                    mvme5100_defconfig
-sh                   sh7770_generic_defconfig
-powerpc                        icon_defconfig
-mips                        workpad_defconfig
-arm                          pxa3xx_defconfig
-sh                          sdk7786_defconfig
-powerpc                      bamboo_defconfig
-m68k                          sun3x_defconfig
-arm                      footbridge_defconfig
-h8300                       h8s-sim_defconfig
-i386                             alldefconfig
-arc                    vdk_hs38_smp_defconfig
-mips                    maltaup_xpa_defconfig
-mips                         cobalt_defconfig
-mips                        bcm63xx_defconfig
-xtensa                generic_kc705_defconfig
-m68k                            q40_defconfig
-arc                           tb10x_defconfig
-arc                     nsimosci_hs_defconfig
-mips                     loongson2k_defconfig
-um                             i386_defconfig
-powerpc                     sequoia_defconfig
-arm                         lpc32xx_defconfig
-microblaze                      mmu_defconfig
-sh                        edosk7705_defconfig
-m68k                       m5208evb_defconfig
-arc                            hsdk_defconfig
-arm                            mps2_defconfig
-sh                          rsk7203_defconfig
-m68k                         amcore_defconfig
-parisc                generic-32bit_defconfig
-powerpc                     kmeter1_defconfig
-arm                        trizeps4_defconfig
-sh                             sh03_defconfig
-ia64                                defconfig
-arm64                            alldefconfig
-mips                         rt305x_defconfig
-mips                           xway_defconfig
-arm                             ezx_defconfig
-m68k                        m5272c3_defconfig
-sh                          rsk7201_defconfig
-arm                       imx_v4_v5_defconfig
-powerpc                  mpc866_ads_defconfig
-m68k                          amiga_defconfig
-parisc                           allyesconfig
-powerpc                 mpc8540_ads_defconfig
-m68k                       bvme6000_defconfig
-powerpc                      ppc40x_defconfig
-powerpc                     tqm8541_defconfig
-riscv                            alldefconfig
-m68k                       m5275evb_defconfig
-xtensa                          iss_defconfig
-arm                  randconfig-c002-20211210
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20211210
-x86_64               randconfig-a005-20211210
-x86_64               randconfig-a001-20211210
-x86_64               randconfig-a002-20211210
-x86_64               randconfig-a003-20211210
-x86_64               randconfig-a004-20211210
-i386                 randconfig-a001-20211210
-i386                 randconfig-a002-20211210
-i386                 randconfig-a005-20211210
-i386                 randconfig-a003-20211210
-i386                 randconfig-a006-20211210
-i386                 randconfig-a004-20211210
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+Fix the issue explicitly skipping MPTCP socket in TCP_LISTEN
+status.
 
-clang tested configs:
-x86_64               randconfig-a011-20211210
-x86_64               randconfig-a012-20211210
-x86_64               randconfig-a014-20211210
-x86_64               randconfig-a013-20211210
-x86_64               randconfig-a016-20211210
-x86_64               randconfig-a015-20211210
-i386                 randconfig-a013-20211210
-i386                 randconfig-a011-20211210
-i386                 randconfig-a014-20211210
-i386                 randconfig-a012-20211210
-i386                 randconfig-a015-20211210
-i386                 randconfig-a016-20211210
-hexagon              randconfig-r045-20211210
-riscv                randconfig-r042-20211210
-s390                 randconfig-r044-20211210
-hexagon              randconfig-r041-20211210
-
+Reported-and-tested-by: syzbot+e4d843bb96a9431e6331@syzkaller.appspotmail.com
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Fixes: 740d798e8767 ("mptcp: remove id 0 address")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ net/mptcp/pm_netlink.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 7b96be1e9f14..f523051f5aef 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -700,6 +700,9 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+ 
+ 	msk_owned_by_me(msk);
+ 
++	if (sk->sk_state == TCP_LISTEN)
++		return;
++
+ 	if (!rm_list->nr)
+ 		return;
+ 
+-- 
+2.33.1
+
