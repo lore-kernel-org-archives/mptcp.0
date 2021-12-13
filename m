@@ -1,215 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E9068
-	for <mptcp@lists.linux.dev>; Mon, 13 Dec 2021 17:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1639417255;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3rp1l7y/9mrhyvJSSYlh8orVrr+xf9+N2y14Wa4NYLM=;
-	b=ZjUgrOKcHeC/156n4batiLJJt+7kc9OLkJNg9uoesNdc0XDrVCwCVBa+R8MgHgpqarVhfr
-	zyeqJeg86nDwpMftnmPv2fWAs4xDaWeanYEELl7SLhDPZZ0BJk6RauTJFMwuKoCcchTtJ7
-	vodIxaxCqWcSncnt+nMwUxE09+Qso8s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-329-tQivnLpjM8e_ZTcky9_5cw-1; Mon, 13 Dec 2021 12:40:54 -0500
-X-MC-Unique: tQivnLpjM8e_ZTcky9_5cw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25816100CC84
-	for <mptcp@lists.linux.dev>; Mon, 13 Dec 2021 17:40:53 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.194])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8C11F45D93
-	for <mptcp@lists.linux.dev>; Mon, 13 Dec 2021 17:40:52 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next] selftests: mptcp: more stable join tests-cases.
-Date: Mon, 13 Dec 2021 18:40:46 +0100
-Message-Id: <6d17baa5f8bb4dcd6b63fb3dee790743c878478e.1639417229.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EDE29CA
+	for <mptcp@lists.linux.dev>; Mon, 13 Dec 2021 18:48:18 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="226079630"
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="226079630"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:48:18 -0800
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="517877596"
+Received: from luisdsan-mobl.amr.corp.intel.com ([10.209.68.26])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:48:18 -0800
+Date: Mon, 13 Dec 2021 10:48:17 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: netdev@vger.kernel.org, Geliang Tang <geliangtang@gmail.com>, 
+    mptcp@lists.linux.dev
+Subject: Re: [PATCH net] mptcp: never allow the PM to close a listener
+ subflow
+In-Reply-To: <ebc7594cdd420d241fb2172ddb8542ba64717657.1639238695.git.pabeni@redhat.com>
+Message-ID: <cbdde89-b442-aad2-28be-c793334e61ab@linux.intel.com>
+References: <ebc7594cdd420d241fb2172ddb8542ba64717657.1639238695.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-MPTCP join self-tests are a bit fragile as they reply on
-delays instead of events to catch-up with the expected
-sockets states.
+On Sat, 11 Dec 2021, Paolo Abeni wrote:
 
-Replace the delay with state checking where possible and
-reduce the number of sleeps in the most complex scenarios.
+> Currently, when deleting an endpoint the netlink PM treverses
+> all the local MPTCP sockets, regardless of their status.
+>
+> If an MPTCP listener socket is bound to the IP matching the
+> delete endpoint, the listener TCP socket will be closed.
+> That is unexpected, the PM should only affect data subflows.
+>
+> Additionally, syzbot was able to trigger a NULL ptr dereference
+> due to the above:
+>
+> general protection fault, probably for non-canonical address 0xdffffc0000000003: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000018-0x000000000000001f]
+> CPU: 1 PID: 6550 Comm: syz-executor122 Not tainted 5.16.0-rc4-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:__lock_acquire+0xd7d/0x54a0 kernel/locking/lockdep.c:4897
+> Code: 0f 0e 41 be 01 00 00 00 0f 86 c8 00 00 00 89 05 69 cc 0f 0e e9 bd 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 f3 2f 00 00 48 81 3b 20 75 17 8f 0f 84 52 f3 ff
+> RSP: 0018:ffffc90001f2f818 EFLAGS: 00010016
+> RAX: dffffc0000000000 RBX: 0000000000000018 RCX: 0000000000000000
+> RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000001
+> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
+> R10: 0000000000000000 R11: 000000000000000a R12: 0000000000000000
+> R13: ffff88801b98d700 R14: 0000000000000000 R15: 0000000000000001
+> FS:  00007f177cd3d700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f177cd1b268 CR3: 000000001dd55000 CR4: 0000000000350ee0
+> Call Trace:
+> <TASK>
+> lock_acquire kernel/locking/lockdep.c:5637 [inline]
+> lock_acquire+0x1ab/0x510 kernel/locking/lockdep.c:5602
+> __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+> _raw_spin_lock_irqsave+0x39/0x50 kernel/locking/spinlock.c:162
+> finish_wait+0xc0/0x270 kernel/sched/wait.c:400
+> inet_csk_wait_for_connect net/ipv4/inet_connection_sock.c:464 [inline]
+> inet_csk_accept+0x7de/0x9d0 net/ipv4/inet_connection_sock.c:497
+> mptcp_accept+0xe5/0x500 net/mptcp/protocol.c:2865
+> inet_accept+0xe4/0x7b0 net/ipv4/af_inet.c:739
+> mptcp_stream_accept+0x2e7/0x10e0 net/mptcp/protocol.c:3345
+> do_accept+0x382/0x510 net/socket.c:1773
+> __sys_accept4_file+0x7e/0xe0 net/socket.c:1816
+> __sys_accept4+0xb0/0x100 net/socket.c:1846
+> __do_sys_accept net/socket.c:1864 [inline]
+> __se_sys_accept net/socket.c:1861 [inline]
+> __x64_sys_accept+0x71/0xb0 net/socket.c:1861
+> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+> do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+> entry_SYSCALL_64_after_hwframe+0x44/0xae
+> RIP: 0033:0x7f177cd8b8e9
+> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 14 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f177cd3d308 EFLAGS: 00000246 ORIG_RAX: 000000000000002b
+> RAX: ffffffffffffffda RBX: 00007f177ce13408 RCX: 00007f177cd8b8e9
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+> RBP: 00007f177ce13400 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f177ce1340c
+> R13: 00007f177cde1004 R14: 6d705f706374706d R15: 0000000000022000
+> </TASK>
+>
+> Fix the issue explicitly skipping MPTCP socket in TCP_LISTEN
+> status.
+>
+> Reported-and-tested-by: syzbot+e4d843bb96a9431e6331@syzkaller.appspotmail.com
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-This will both reduce the tests run-time and will improve
-stability.
+Just re-confirming that I'd like to see this merged for the -net branch!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 58 ++++++++++++++-----
- 1 file changed, 43 insertions(+), 15 deletions(-)
+Thanks,
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 55b0d03f485c..505745b44e02 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -238,6 +238,37 @@ is_v6()
- 	[ -z "${1##*:*}" ]
- }
- 
-+# $1: ns, $2: port
-+wait_local_port_listen()
-+{
-+	local listener_ns="${1}"
-+	local port="${2}"
-+
-+	local port_hex i
-+
-+	port_hex="$(printf "%04X" "${port}")"
-+	for i in $(seq 10); do
-+		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
-+			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
-+			break
-+		sleep 0.1
-+	done
-+}
-+
-+# $1: ns, $2: endpoint id
-+wait_address_deleted()
-+{
-+	local ns="${1}"
-+	local addr="${2}"
-+	local cnt
-+
-+	for i in $(seq 10); do
-+		cnt=$(ss -tON ${ns} state big src = ${addr} | wc -l)
-+		[ "$cnt" != 0 ] || break;
-+		sleep 0.1
-+	done
-+}
-+
- do_transfer()
- {
- 	listener_ns="$1"
-@@ -307,7 +338,7 @@ do_transfer()
- 	fi
- 	spid=$!
- 
--	sleep 1
-+	wait_local_port_listen "${listener_ns}" "${srv_port}"
- 
- 	if [ "$test_link_fail" -eq 0 ];then
- 		timeout ${timeout_test} \
-@@ -324,10 +355,13 @@ do_transfer()
- 	fi
- 	cpid=$!
- 
-+	# let the mptcp subflow be established in background before
-+	# do endpoint manipulation
-+	[ $addr_nr_ns1 = "0" -a $addr_nr_ns2 = "0" ] || sleep 1
-+
- 	if [ $addr_nr_ns1 -gt 0 ]; then
- 		let add_nr_ns1=addr_nr_ns1
- 		counter=2
--		sleep 1
- 		while [ $add_nr_ns1 -gt 0 ]; do
- 			local addr
- 			if is_v6 "${connect_addr}"; then
-@@ -339,7 +373,6 @@ do_transfer()
- 			let counter+=1
- 			let add_nr_ns1-=1
- 		done
--		sleep 1
- 	elif [ $addr_nr_ns1 -lt 0 ]; then
- 		let rm_nr_ns1=-addr_nr_ns1
- 		if [ $rm_nr_ns1 -lt 8 ]; then
-@@ -347,22 +380,18 @@ do_transfer()
- 			pos=1
- 			dump=(`ip netns exec ${listener_ns} ./pm_nl_ctl dump`)
- 			if [ ${#dump[@]} -gt 0 ]; then
--				sleep 1
--
- 				while [ $counter -le $rm_nr_ns1 ]
- 				do
- 					id=${dump[$pos]}
- 					ip netns exec ${listener_ns} ./pm_nl_ctl del $id
--					sleep 1
-+					wait_address_deleted ${listener_ns} ${dump[-1]}
- 					let counter+=1
- 					let pos+=5
- 				done
- 			fi
- 		elif [ $rm_nr_ns1 -eq 8 ]; then
--			sleep 1
- 			ip netns exec ${listener_ns} ./pm_nl_ctl flush
- 		elif [ $rm_nr_ns1 -eq 9 ]; then
--			sleep 1
- 			ip netns exec ${listener_ns} ./pm_nl_ctl del 0 ${connect_addr}
- 		fi
- 	fi
-@@ -373,10 +402,13 @@ do_transfer()
- 		addr_nr_ns2=${addr_nr_ns2:9}
- 	fi
- 
-+	# if newly added endpoints must be deleted, give the background msk
-+	# some time to created them
-+	[ $addr_nr_ns1 -gt 0 -a $addr_nr_ns2 -lt 0 ] && sleep 1
-+
- 	if [ $addr_nr_ns2 -gt 0 ]; then
- 		let add_nr_ns2=addr_nr_ns2
- 		counter=3
--		sleep 1
- 		while [ $add_nr_ns2 -gt 0 ]; do
- 			local addr
- 			if is_v6 "${connect_addr}"; then
-@@ -388,7 +420,6 @@ do_transfer()
- 			let counter+=1
- 			let add_nr_ns2-=1
- 		done
--		sleep 1
- 	elif [ $addr_nr_ns2 -lt 0 ]; then
- 		let rm_nr_ns2=-addr_nr_ns2
- 		if [ $rm_nr_ns2 -lt 8 ]; then
-@@ -396,19 +427,17 @@ do_transfer()
- 			pos=1
- 			dump=(`ip netns exec ${connector_ns} ./pm_nl_ctl dump`)
- 			if [ ${#dump[@]} -gt 0 ]; then
--				sleep 1
--
- 				while [ $counter -le $rm_nr_ns2 ]
- 				do
-+					# rm_addr are serialized, allow the previous one to complete
- 					id=${dump[$pos]}
- 					ip netns exec ${connector_ns} ./pm_nl_ctl del $id
--					sleep 1
-+					wait_address_deleted ${connector_ns} ${dump[-1]}
- 					let counter+=1
- 					let pos+=5
- 				done
- 			fi
- 		elif [ $rm_nr_ns2 -eq 8 ]; then
--			sleep 1
- 			ip netns exec ${connector_ns} ./pm_nl_ctl flush
- 		elif [ $rm_nr_ns2 -eq 9 ]; then
- 			local addr
-@@ -417,7 +446,6 @@ do_transfer()
- 			else
- 				addr="10.0.1.2"
- 			fi
--			sleep 1
- 			ip netns exec ${connector_ns} ./pm_nl_ctl del 0 $addr
- 		fi
- 	fi
--- 
-2.33.1
+Mat
 
+
+> Fixes: 740d798e8767 ("mptcp: remove id 0 address")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/pm_netlink.c | 3 +++
+> 1 file changed, 3 insertions(+)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 7b96be1e9f14..f523051f5aef 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -700,6 +700,9 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+>
+> 	msk_owned_by_me(msk);
+>
+> +	if (sk->sk_state == TCP_LISTEN)
+> +		return;
+> +
+> 	if (!rm_list->nr)
+> 		return;
+>
+> -- 
+> 2.33.1
+>
+>
+>
+
+--
+Mat Martineau
+Intel
