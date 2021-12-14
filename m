@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58812CB2
-	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB7468
+	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1639501164;
+	s=mimecast20190719; t=1639501162;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=R1mY7UFdQVRSDeafvZWZ10zEPnX1i9Jjr2qNMeJH7g8=;
-	b=gTCbeKHuU9XofQ833SJ4ySoX2FWHGwGs8Is8jV22dVkQAiUjPdXwfQkKLIwwR1SiWGg0Lv
-	48tWAT3YcKVdtqVTYjdpnZ3RlDBJdtqXDc+69E6p+hCMZJ8pisrMJqdcupIUR9pMalQLOI
-	LAQ6pm0D2xbC9LKeZEevabjqFZ0PXIc=
+	bh=aMR1hYkvoUwefVKooQD8Jdkgq7b6DI69kqlt/t+9Rd8=;
+	b=FHHlFKrVdcRJHeO3EPzdhg5Gk10FuUWt6rba86NcftiTlkf15HzracDUiNoZfi4m9uDjGG
+	RTr1ZSUsdLdDwhHiD3KAg3LTX7hRWtFBzJJtMI40r4bvRomnckqeBjzLWJeTkZxAtVDyPy
+	BjyXob/B03ToHJwciGwE0KkSv7Cac7k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-524-oxJjpXLgOXuDQ4g6ZvsdSQ-1; Tue, 14 Dec 2021 11:59:22 -0500
-X-MC-Unique: oxJjpXLgOXuDQ4g6ZvsdSQ-1
+ us-mta-76-lgZzfA32Ms6pKbAY7OGMKQ-1; Tue, 14 Dec 2021 11:59:21 -0500
+X-MC-Unique: lgZzfA32Ms6pKbAY7OGMKQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0280801AAB
-	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:21 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.135])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2706D106A7AE
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA37A760C5
 	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:20 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.135])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DC92C106A7AE
+	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:19 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v6 mptcp-next 2/7] mptcp: clean-up MPJ option writing.
-Date: Tue, 14 Dec 2021 17:58:52 +0100
-Message-Id: <ee52d7d98c27ec935090f13affd1624ef3b787e2.1639500873.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 1/7] mptcp: fix per socket endpoint accounting.
+Date: Tue, 14 Dec 2021 17:58:51 +0100
+Message-Id: <1d4b99ad2e25c5b37aa5a57314b154d41a4c401c.1639500873.git.pabeni@redhat.com>
 In-Reply-To: <cover.1639500873.git.pabeni@redhat.com>
 References: <cover.1639500873.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,72 +47,62 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-Check for all MPJ variant at once, this reduces the number
-of conditionals traversed on average and will simplify the
-next patch.
+Since full-mesh endpoint support, the reception of a single ADD_ADDR
+option can cause multiple subflows creation. When such option is
+accepted we increment 'add_addr_accepted' by one. When we received
+a paired RM_ADDR option, we deleted all the relevant subflows,
+decrementing 'add_addr_accepted' by one for each of them.
 
-No functional change intended.
+We have a similar issue for 'local_addr_used'
 
+Fix them moving the pm endpoint accounting outside the subflow
+traversal.
+
+Fixes: 1a0d6136c5f0 ("mptcp: local addresses fullmesh")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/options.c | 44 +++++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 21 deletions(-)
+ net/mptcp/pm_netlink.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8a1020e4285c..7a6a39b71633 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1381,27 +1381,29 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 3186d33b5208..d18b13e3e74c 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -710,6 +710,8 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+ 		return;
  
- 		/* MPC is additionally mutually exclusive with MP_PRIO */
- 		goto mp_capable_done;
--	} else if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_SYN,
--				      opts->backup, opts->join_id);
--		put_unaligned_be32(opts->token, ptr);
--		ptr += 1;
--		put_unaligned_be32(opts->nonce, ptr);
--		ptr += 1;
--	} else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_SYNACK,
--				      opts->backup, opts->join_id);
--		put_unaligned_be64(opts->thmac, ptr);
--		ptr += 2;
--		put_unaligned_be32(opts->nonce, ptr);
--		ptr += 1;
--	} else if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
--		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
--				      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
--		memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
--		ptr += 5;
-+	} else if (OPTIONS_MPTCP_MPJ & opts->suboptions) {
-+		if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
-+			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+					      TCPOLEN_MPTCP_MPJ_SYN,
-+					      opts->backup, opts->join_id);
-+			put_unaligned_be32(opts->token, ptr);
-+			ptr += 1;
-+			put_unaligned_be32(opts->nonce, ptr);
-+			ptr += 1;
-+		} else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
-+			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+					      TCPOLEN_MPTCP_MPJ_SYNACK,
-+					      opts->backup, opts->join_id);
-+			put_unaligned_be64(opts->thmac, ptr);
-+			ptr += 2;
-+			put_unaligned_be32(opts->nonce, ptr);
-+			ptr += 1;
-+		} else {
-+			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
-+					      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
-+			memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
-+			ptr += 5;
+ 	for (i = 0; i < rm_list->nr; i++) {
++		bool removed = false;
++
+ 		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
+@@ -729,15 +731,19 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+ 			mptcp_close_ssk(sk, ssk, subflow);
+ 			spin_lock_bh(&msk->pm.lock);
+ 
+-			if (rm_type == MPTCP_MIB_RMADDR) {
+-				msk->pm.add_addr_accepted--;
+-				WRITE_ONCE(msk->pm.accept_addr, true);
+-			} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
+-				msk->pm.local_addr_used--;
+-			}
++			removed = true;
+ 			msk->pm.subflows--;
+ 			__MPTCP_INC_STATS(sock_net(sk), rm_type);
+ 		}
++		if (!removed)
++			continue;
++
++		if (rm_type == MPTCP_MIB_RMADDR) {
++			msk->pm.add_addr_accepted--;
++			WRITE_ONCE(msk->pm.accept_addr, true);
++		} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
++			msk->pm.local_addr_used--;
 +		}
- 	} else if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
- 		u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
- 		u8 echo = MPTCP_ADDR_ECHO;
+ 	}
+ }
+ 
 -- 
 2.33.1
 
