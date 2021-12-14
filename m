@@ -1,93 +1,95 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED677168
-	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:10:32 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id x15so65734701edv.1
-        for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 08:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=pAXGjA+/HsNllXTduI38yhAL2rcTzsr2halWgzOgyZc=;
-        b=iuoNi06ki0yGOQwwJeiD+73RrDlf7pykoxV0YOafQYZh9Cocl14X4g0yDxt3voXJWs
-         Yywc3/w9xs35t0N7B6myVT65a4H43oTlQ1pTXk/wq3p8YzfyOLnm8jyMx2EI70edJQ8V
-         ytiuOMo9DyN+i0HQtDBKtMX4URubB87ZA3RvLix7KHJmy6nqvVWwrFRJ3bH1ljWqWHOm
-         MCdo6kbjXYezE/W6u/hta4Zz0wntAP+D8k8CpS4hUp+p5u5BIQK8IqMJwI7nBnmf32rg
-         4Yh6dZEYFLgyeM1BU0XTY28SLFghGWj4hV4wcFGbPzN9tQ65f8urbDc1iHxvC/OsGFFp
-         RiJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=pAXGjA+/HsNllXTduI38yhAL2rcTzsr2halWgzOgyZc=;
-        b=ZR81DZAtQeG9fH+WHJBLgTFaoGUauswbhxPJXBN8ovwJuIGnKNmZ3q7mQLFOTWfpLT
-         vM1Td4kl/pLX77/Tx9qpAm5+02DQMf5sE3ZrRp9/Eg1k3dxL7wETKWkjP9y206/juqKz
-         bea+z62taa7hikgXwZB18cwaf8vD03rOM5bVA6Tc5e2xVOZ+xhwmC+BokctbSHKM0UTc
-         MuT+ZPUxyXmQFqqS7QhuGdNlh83g6c1FaZ+K9N2HFY1nkN1Ns/UcBp/GLlgDdxmCQ5lV
-         2tNx129rHIzGrScgPDxFcPQ5X3jfoOe4ILDmUbF7KP9rH8RYfTtmZEL4aLOaMeZY0tNd
-         b+Pw==
-X-Gm-Message-State: AOAM530N3niIuCM7/VMe1MDg4UeeV+PP1NYpLw8vvTQQkBfmKIoeOIRF
-	LcGwGzklk6z0SrFGalQpBd/vgQ==
-X-Google-Smtp-Source: ABdhPJyQrockf9I2wTk3S4dUxP3IC6VMcKN8NFwD3MNsXwp2nwkZVYUhj0nwIvmYX1VQMPeAqFg0nQ==
-X-Received: by 2002:a05:6402:350e:: with SMTP id b14mr9250689edd.313.1639498230873;
-        Tue, 14 Dec 2021 08:10:30 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:6ccb:ff63:52c1:4a46? ([2a02:578:8593:1200:6ccb:ff63:52c1:4a46])
-        by smtp.gmail.com with ESMTPSA id hu7sm63010ejc.62.2021.12.14.08.10.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Dec 2021 08:10:30 -0800 (PST)
-Message-ID: <d036fee5-90f2-30f2-e4eb-e1a917f1b304@tessares.net>
-Date: Tue, 14 Dec 2021 17:10:29 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ABB2CAA
+	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1639501162;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rkSCeMcVMJb9CTAlnAiNk0vYbFw2M0zg+NHPla1e+3g=;
+	b=CypyoBN2tT9/R6B9GzJHlFLl+7+6RLbHaE9/RVcnhsYMJhWgztRiaPL+4VDKtOWgKV4/hM
+	vda5Bz2V2vJHjk6E4SPd99ZM9l/xaArE9NlC2jMqy7q3Z61bXBe0dlwe5FXhhpGvn3fQK7
+	/TCKhe/od5mWr1S8km7NrhWqv3icgfE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-196-54d1Qfu5PbC7Cad-q2ERPQ-1; Tue, 14 Dec 2021 11:59:20 -0500
+X-MC-Unique: 54d1Qfu5PbC7Cad-q2ERPQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73E9810B7440
+	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:19 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.135])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9D4CA1059112
+	for <mptcp@lists.linux.dev>; Tue, 14 Dec 2021 16:59:18 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH v6 mptcp-next 0/7] mptcp: improve subflow creation on errors
+Date: Tue, 14 Dec 2021 17:58:50 +0100
+Message-Id: <cover.1639500873.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v2 net-next] net: mptcp: clean up harmless false
- expressions
-Content-Language: en-GB
-To: =?UTF-8?Q?J=ce=b5an_Sacren?= <sakiwit@gmail.com>,
- mathew.j.martineau@linux.intel.com, mptcp@lists.linux.dev
-References: <20211210230245.342764-1-sakiwit@gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20211210230245.342764-1-sakiwit@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Jean,
+This iteration tries to add address the feedback on v5, namely
+test counter update and locking in write_options. The latter
+required quite significant changes in patch 5/7.
 
-On 11/12/2021 00:24, Jεan Sacren wrote:
-> From: Jean Sacren <sakiwit@gmail.com>
-> 
-> entry->addr.id is u8 with a range from 0 to 255 and MAX_ADDR_ID is 255.
-> We should drop both false expressions of (entry->addr.id > MAX_ADDR_ID).
+Additionally the series now includes the pending cleanup, as
+they depends on the previous patches. No changes there WRT the
+previous iteration.
 
-Thank you for the new version!
+Currently when a subflow connection fails - either the TCP
+connection is reset by the peer, or the MPJ handshake never
+completes - the in kernel PM don't perform any further action.
+Notably no additional subflow creation is attempted.
 
-Now in our tree with Mat and my RvB tag:
+This series is aimed at improving the in-kernel path manager
+behavior in the above scenario:
+- each endpoint is used only once per connection (patch 2/4)
+- on failure we try to move to the next subflow, if any
+  (patch 3/4)
 
-- 51708fedab61: net: mptcp: clean up harmless false expressions
+The first patch is minor cleanup, and the last patch adds
+specific self-tests.
 
-- d41488e31d8a: tg:msg: remove 'net:' as it is an 'mptcp' patch
-- Results: f4539ed375ce..3fa476cdb0a9
+This should address/close:
+https://github.com/multipath-tcp/mptcp_net-next/issues/235
+https://github.com/multipath-tcp/mptcp_net-next/issues/242
 
-This patch will be sent later to netdev for inclusion in net-next with
-other patches.
+Paolo Abeni (7):
+  mptcp: fix per socket endpoint accounting.
+  mptcp: clean-up MPJ option writing.
+  mptcp: keep track of local endpoint still available for each msk
+  mptcp: do not block subflows creation on errors
+  selftests: mptcp: add tests for subflow creation failure
+  mptcp: cleanup MPJ subflow list handling
+  mptcp: avoid atomic bit manipulation when possible
 
-Builds and tests are now in progress:
+ net/mptcp/options.c                           |  44 ++--
+ net/mptcp/pm.c                                |  24 ++-
+ net/mptcp/pm_netlink.c                        | 188 +++++++++++-------
+ net/mptcp/protocol.c                          | 158 +++++++--------
+ net/mptcp/protocol.h                          |  46 +++--
+ net/mptcp/sockopt.c                           |  24 +--
+ net/mptcp/subflow.c                           |   9 +-
+ tools/testing/selftests/net/mptcp/config      |   1 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  83 +++++++-
+ 9 files changed, 350 insertions(+), 227 deletions(-)
 
-
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211214T160950
-
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.33.1
+
