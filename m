@@ -1,141 +1,267 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916A468
-	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 15:15:34 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id y22so5081515edq.2
-        for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 07:15:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=WRuhRKATcY3GADdK/bttqq1afVtj1Ujj7zz+AdMD8zI=;
-        b=x0yuXlJJf2xbsTmHSO7943vS2Mx84XK8vxnu209ieXITfRiddA+FePULugrHlSDdFN
-         Gt3d7rv5Wtm92LmhM3ZSIA9xbR2eUm9I5j1HiwmiYuCrDSxUMmEarFNrbG/HOXfUhCeE
-         k8kLjEo880X7aC8AZ2GC/qP6h/K5OzuhuiR5O+7M/yR77AsZ230cSwIfT45VZoJuxsbt
-         GTly/Gwm0N9REVPmwzXknK47XsjJQNOBEGNn7kpdLntWPBOo0hh23a+ReIwrZiyD/sxp
-         y/X7AKU1oZ9X00vALQwlwG5RuQJKdxKaurn9Oe2g0H5sCrH3plbayimo2O8PBJlysQB/
-         aGtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=WRuhRKATcY3GADdK/bttqq1afVtj1Ujj7zz+AdMD8zI=;
-        b=VjyUX6cp5RHLS3mrupxSFXW1lPVeho46fhmc/lXwD8FWx8bB8MEHf0sAmaGY2MQC1r
-         xsoEZPjR1o3iYxSoDK2JPdcbbWbkLTWehIjpz5xPj/hFUl6/uy4ilGvzhnx4hpodQDxO
-         fANRXM4etQ9knMqytZPszOBrJ8gAGP81Co/NWrf+nKggegG5/y344CKQ68nVmXo8ZV2u
-         KnKIerB9oFwNjULgMIyV0SuNTuQ0kMm4pvPK3zEOpugh1HsxTZQUutx5OllP7AJZ/bFR
-         OegnnXm6BDp7fpNji0wzstTujQaQONdhFFR0wW+ehUF0jxfWHAxq6nbrGL8WtccfINTc
-         g+Fg==
-X-Gm-Message-State: AOAM533nzLNvZziiibGp0v+klHfIW050M7eMuX6miDk4DPunGYPZ0qdO
-	rOnpNGLGkAA9qOs63cS0ro6pDfUG2CWUSw==
-X-Google-Smtp-Source: ABdhPJxhpuKnMOOmsRSRNng7nco4QEMnWKRgJFYHPC9XYMuoWLnqvyzX5vykPQFSFm/eQ/UO9j3yRA==
-X-Received: by 2002:a17:906:1855:: with SMTP id w21mr285726eje.248.1639581331403;
-        Wed, 15 Dec 2021 07:15:31 -0800 (PST)
-Received: from [192.168.178.33] (94.105.100.208.dyn.edpnet.net. [94.105.100.208])
-        by smtp.gmail.com with ESMTPSA id he14sm766875ejc.55.2021.12.15.07.15.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Dec 2021 07:15:30 -0800 (PST)
-Message-ID: <651df38d-49de-6f3d-fca9-b52ccab0c3a5@tessares.net>
-Date: Wed, 15 Dec 2021 16:15:29 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E80B2CB3
+	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 15:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1639583681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LV36V4Jc6PSPhljONjLZXF5UtRgzMuFLorSaXxI8R84=;
+	b=FELECKgTgvgl3szDGuquBBA2HrGooSXClV534hG/mAYC4Fk1a+sZmC4JL+IEg5GGK993p1
+	PTsjXWLiHkpkJiLZZDvBKgXwskJT3ST1sXLhWkye96fKSbZx4yCXnM3o9T9+cNxM0zjgf3
+	5UF04p3BnatgIh9xpDcqUbgFF6hcCYA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-445-BNx_j-3aPN6_y8H0Na_sXA-1; Wed, 15 Dec 2021 10:54:40 -0500
+X-MC-Unique: BNx_j-3aPN6_y8H0Na_sXA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2739B801AAB
+	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 15:54:39 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.64])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8C5C85BD00
+	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 15:54:38 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH v6 mptcp-next] mptcp: avoid atomic bit manipulation when possible
+Date: Wed, 15 Dec 2021 16:53:37 +0100
+Message-Id: <cf505ef6fadd1ca26cdef0f65b54a250d1b280ef.1639583569.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v3 mptcp-next] selftests: mptcp: more stable join
- tests-cases.
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <dfbdb183399851cfa695fa4c965a8d146d436e52.1639567831.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <dfbdb183399851cfa695fa4c965a8d146d436e52.1639567831.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Paolo,
+Currently the msk->flags bitmask carries both state for the
+mptcp_release_cb() - mostly touched under the mptcp data lock
+- and others state info touched even outside such lock scope.
 
-On 15/12/2021 12:36, Paolo Abeni wrote:
-> MPTCP join self-tests are a bit fragile as they reply on
-> delays instead of events to catch-up with the expected
-> sockets states.
-> 
-> Replace the delay with state checking where possible and
-> reduce the number of sleeps in the most complex scenarios.
-> 
-> This will both reduce the tests run-time and will improve
-> stability.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> Note: I still see frequent failures in "remove subflow and signal IPv6",
-> but that looks unrelated from this patch: sk lookup fails on the
-> client side for the MPJ syn-ack. Funnily enough, I can't reproduce
-> the failure with pcap capture on...
+As a consequence, msk->flags is always manipulated with
+atomic operations.
 
-Thank you for the new version!
+This change splits such bitmask in two separate fields, so
+that we use plain bit oper operations when touching the
+cb-related info.
 
-I'm trying it in a loop. So far, so good!
+The MPTCP_PUSH_PENDING bit needs additional care, as it is the
+only CB related field currently accessed either under the mptcp
+data lock or the mptcp socket lock.
+Let's add another mask just for such bit's sake.
 
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v5 -> v6:
+ - use BIT() where appropriate
+---
+ net/mptcp/protocol.c | 46 +++++++++++++++++++++++---------------------
+ net/mptcp/protocol.h | 18 ++++++++++-------
+ net/mptcp/subflow.c  |  4 ++--
+ 3 files changed, 37 insertions(+), 31 deletions(-)
 
-It looks like the CI didn't spot any issues in debug mode but different
-ones in non-debug mode:
-
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
-  - Task: https://cirrus-ci.com/task/6235909728239616
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/6235909728239616/summary/summary.txt
-
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): selftest_diag 🔴:
-  - Task: https://cirrus-ci.com/task/4828534844686336
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/4828534844686336/summary/summary.txt
-
-
-I guess it is not related to that.
-
-
-> +rm_addr_count()
-> +{
-> +	ns=${1}
-
-Small detail: it is not "local". I can fix that when applying the patch
-if it helps.
-
-> +# $1: ns, $2: old rm_addr counter in $ns
-> +wait_rm_addr()
-> +{
-> +	local ns="${1}"
-> +	local old_cnt="${2}"
-> +	local cnt
-> +	local i
-> +
-> +	for i in $(seq 10); do
-> +		cnt=$(rm_addr_count ${ns})
-> +		[ "$cnt" = "${old_cnt}" ] || break
-
-I was confused by this: why do you stop if it is the same??? But then I
-realised it was "||" and not "&&" :)
-
-    [ "$cnt" != "${old_cnt}" ] && break
-
-> +dump_stats()
-> +{
-> +	echo Server ns stats
-> +	ip netns exec $ns1 nstat -as | grep Tcp
-> +	echo Client ns stats
-> +	ip netns exec $ns2 nstat -as | grep Tcp
-> +}
-
-Good idea!
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e81fd46a43c4..5a735c37cb8e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -763,7 +763,7 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+ 		if (!sock_owned_by_user(sk))
+ 			__mptcp_error_report(sk);
+ 		else
+-			set_bit(MPTCP_ERROR_REPORT,  &msk->flags);
++			__set_bit(MPTCP_ERROR_REPORT,  &msk->cb_flags);
+ 	}
+ 
+ 	/* If the moves have caught up with the DATA_FIN sequence number
+@@ -1529,9 +1529,8 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
+ 
+ void mptcp_check_and_set_pending(struct sock *sk)
+ {
+-	if (mptcp_send_head(sk) &&
+-	    !test_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
+-		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
++	if (mptcp_send_head(sk))
++		mptcp_sk(sk)->push_pending |= BIT(MPTCP_PUSH_PENDING);
+ }
+ 
+ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+@@ -2146,7 +2145,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
+ 			mptcp_schedule_work(sk);
+ 	} else {
+ 		/* delegate our work to tcp_release_cb() */
+-		set_bit(MPTCP_RETRANSMIT, &msk->flags);
++		__set_bit(MPTCP_RETRANSMIT, &msk->cb_flags);
+ 	}
+ 	bh_unlock_sock(sk);
+ 	sock_put(sk);
+@@ -2858,7 +2857,9 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 
+ 	mptcp_destroy_common(msk);
+ 	msk->last_snd = NULL;
+-	msk->flags = 0;
++	WRITE_ONCE(msk->flags, 0);
++	msk->cb_flags = 0;
++	msk->push_pending = 0;
+ 	msk->recovery = false;
+ 	msk->can_ack = false;
+ 	msk->fully_established = false;
+@@ -3041,7 +3042,7 @@ void __mptcp_data_acked(struct sock *sk)
+ 	if (!sock_owned_by_user(sk))
+ 		__mptcp_clean_una(sk);
+ 	else
+-		set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags);
++		__set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->cb_flags);
+ 
+ 	if (mptcp_pending_data_fin_ack(sk))
+ 		mptcp_schedule_work(sk);
+@@ -3060,22 +3061,22 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+ 		else if (xmit_ssk)
+ 			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk), MPTCP_DELEGATE_SEND);
+ 	} else {
+-		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
++		__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
+ 	}
+ }
+ 
++#define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
++				      BIT(MPTCP_RETRANSMIT) | \
++				      BIT(MPTCP_FLUSH_JOIN_LIST))
++
+ /* processes deferred events and flush wmem */
+ static void mptcp_release_cb(struct sock *sk)
+ {
++	struct mptcp_sock *msk = mptcp_sk(sk);
++
+ 	for (;;) {
+-		unsigned long flags = 0;
+-
+-		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
+-			flags |= BIT(MPTCP_PUSH_PENDING);
+-		if (test_and_clear_bit(MPTCP_RETRANSMIT, &mptcp_sk(sk)->flags))
+-			flags |= BIT(MPTCP_RETRANSMIT);
+-		if (test_and_clear_bit(MPTCP_FLUSH_JOIN_LIST, &mptcp_sk(sk)->flags))
+-			flags |= BIT(MPTCP_FLUSH_JOIN_LIST);
++		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED) |
++				      msk->push_pending;
+ 		if (!flags)
+ 			break;
+ 
+@@ -3086,7 +3087,8 @@ static void mptcp_release_cb(struct sock *sk)
+ 		 *    datapath acquires the msk socket spinlock while helding
+ 		 *    the subflow socket lock
+ 		 */
+-
++		msk->push_pending = 0;
++		msk->cb_flags &= ~flags;
+ 		spin_unlock_bh(&sk->sk_lock.slock);
+ 		if (flags & BIT(MPTCP_FLUSH_JOIN_LIST))
+ 			__mptcp_flush_join_list(sk);
+@@ -3102,11 +3104,11 @@ static void mptcp_release_cb(struct sock *sk)
+ 	/* be sure to set the current sk state before tacking actions
+ 	 * depending on sk_state
+ 	 */
+-	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
++	if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
+ 		__mptcp_set_connected(sk);
+-	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
++	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+ 		__mptcp_clean_una_wakeup(sk);
+-	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
++	if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
+ 		__mptcp_error_report(sk);
+ 
+ 	__mptcp_update_rmem(sk);
+@@ -3148,7 +3150,7 @@ void mptcp_subflow_process_delegated(struct sock *ssk)
+ 		if (!sock_owned_by_user(sk))
+ 			__mptcp_subflow_push_pending(sk, ssk);
+ 		else
+-			set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
++			__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
+ 		mptcp_data_unlock(sk);
+ 		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SEND);
+ 	}
+@@ -3268,7 +3270,7 @@ bool mptcp_finish_join(struct sock *ssk)
+ 	} else {
+ 		sock_hold(ssk);
+ 		list_add_tail(&subflow->node, &msk->join_list);
+-		set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->flags);
++		__set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->cb_flags);
+ 	}
+ 	mptcp_data_unlock(parent);
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 27a510b20996..0459f164dc0b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -110,18 +110,20 @@
+ /* MPTCP TCPRST flags */
+ #define MPTCP_RST_TRANSIENT	BIT(0)
+ 
+-/* MPTCP socket flags */
++/* MPTCP socket atomic flags */
+ #define MPTCP_NOSPACE		1
+ #define MPTCP_WORK_RTX		2
+ #define MPTCP_WORK_EOF		3
+ #define MPTCP_FALLBACK_DONE	4
+ #define MPTCP_WORK_CLOSE_SUBFLOW 5
+-#define MPTCP_PUSH_PENDING	6
+-#define MPTCP_CLEAN_UNA		7
+-#define MPTCP_ERROR_REPORT	8
+-#define MPTCP_RETRANSMIT	9
+-#define MPTCP_FLUSH_JOIN_LIST	10
+-#define MPTCP_CONNECTED		11
++
++/* MPTCP socket release cb flags */
++#define MPTCP_PUSH_PENDING	1
++#define MPTCP_CLEAN_UNA		2
++#define MPTCP_ERROR_REPORT	3
++#define MPTCP_RETRANSMIT	4
++#define MPTCP_FLUSH_JOIN_LIST	5
++#define MPTCP_CONNECTED		6
+ 
+ static inline bool before64(__u64 seq1, __u64 seq2)
+ {
+@@ -249,6 +251,8 @@ struct mptcp_sock {
+ 	u32		token;
+ 	int		rmem_released;
+ 	unsigned long	flags;
++	unsigned long	cb_flags;
++	unsigned long	push_pending;
+ 	bool		recovery;		/* closing subflow write queue reinjected */
+ 	bool		can_ack;
+ 	bool		fully_established;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8716b9cb8040..557ef71309b0 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -388,7 +388,7 @@ static void mptcp_set_connected(struct sock *sk)
+ 	if (!sock_owned_by_user(sk))
+ 		__mptcp_set_connected(sk);
+ 	else
+-		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
++		__set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->cb_flags);
+ 	mptcp_data_unlock(sk);
+ }
+ 
+@@ -1279,7 +1279,7 @@ static void subflow_error_report(struct sock *ssk)
+ 	if (!sock_owned_by_user(sk))
+ 		__mptcp_error_report(sk);
+ 	else
+-		set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->flags);
++		__set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->cb_flags);
+ 	mptcp_data_unlock(sk);
+ }
+ 
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.33.1
+
