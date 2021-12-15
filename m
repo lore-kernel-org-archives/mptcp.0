@@ -1,133 +1,148 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C22173
-	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 09:13:22 +0000 (UTC)
-Received: by mail-ed1-f51.google.com with SMTP id r11so71542853edd.9
-        for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 01:13:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=RC73buyjUwOD3zXBo8bXGTAYpU+L19bX0tC5HDFaXp4=;
-        b=UGywbcK4aMnzTRWe74Go/0MH5xDQkaT7Ruf4s16DW6bxJAwRJkeG3OGrKw+W3aew4Y
-         Q+26kjJMQWiZvQlJIei2JyLH4nQLntzdlVyKvdTNyb4gqTWrigHwFk4QCq8Eje1SRIZ8
-         jBtXrtw0WsWTXiNVVFCFEfLlCenNdbCXSYv5fpe++ezgkTq++d8BSlvW+kNLAeKkVhPs
-         nrOUTR0DN0bbgn5Ezv1ngEyxQnwNOp9AE8CSIgiCd9DAHaJgUq2D6xlam4Uguaj1poNA
-         97dEe2i8zbLR5GZ9iNO15Nc1EbpQ254/cBSq6TvRvdFR+e/MSUvWqCWpRRZ0bYbbNzlV
-         EM6g==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC6E173
+	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 10:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1639563813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OL+jO1niNqNzcJwxYMIURGbSqdHqGQ6HenODqC3EVvs=;
+	b=hbHF7+LzB5Yupp2Z1DCfORCD1mfsQqwtMZWvE1aebzkYf5U7XIC2nqf5mgfVCQBXw/IyzW
+	21YYbG2QXcVQijgdiwlLyJrsZlqx8rngTOrL8be239/qIWXJrSuO7DfGVYt3ZaHFiA4GKg
+	979Sw6ZdhaqO9arTa68vuoUbX5pnGGg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-569-QZaDNbMVNRWqaWSNAjn4Sg-1; Wed, 15 Dec 2021 05:23:31 -0500
+X-MC-Unique: QZaDNbMVNRWqaWSNAjn4Sg-1
+Received: by mail-wm1-f72.google.com with SMTP id ay34-20020a05600c1e2200b00337fd217772so8804578wmb.4
+        for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 02:23:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=RC73buyjUwOD3zXBo8bXGTAYpU+L19bX0tC5HDFaXp4=;
-        b=mUkQ6csPOCEgHpzb0kJNp2y6qUm485OL1VDZHUawVgufekjPvEqdPlhtTQmfSkETnN
-         1shH5Ld9UB30GDJLU7Zn9ZQhkG0f1HCqDfx0w12xrLx199YtEvrMl87q2gEGRoGxJMRk
-         pCOu+fC5JInZ5911tAxlTETQF6HDw2cmEFmZYd2PfWRfbNZiMbBz42R8UymTiAXEiX6P
-         4prM4LhCxAMbBUVqn49NklD8O3SaPf3Hk1hbZPRjJx1NO2/YzfKoP7Oixd7vve1mbJee
-         LfuVTB9RUk7En0odeZoz5w9kfcazgYs49dFDY71y8mvsYgXBvhMnI/gJZyLhtekUedNT
-         0XPw==
-X-Gm-Message-State: AOAM532oJBLFHaPispAqZ+C8fsShSLptovAQ1A4pL9xTG4MOgt5KrA5w
-	cz8En29z+n8yKNzO3oLgzAqiKnztgIbUsA==
-X-Google-Smtp-Source: ABdhPJwUwDWE9J9T/6KOtciVkS9P7cqMrgQJMtq9+ElwzkaJsZVC4z2Z8cTYofUI9UaRFWjFDhca0w==
-X-Received: by 2002:a17:907:972a:: with SMTP id jg42mr10288812ejc.398.1639559600580;
-        Wed, 15 Dec 2021 01:13:20 -0800 (PST)
-Received: from [192.168.178.33] (94.105.100.208.dyn.edpnet.net. [94.105.100.208])
-        by smtp.gmail.com with ESMTPSA id 13sm449832ejh.225.2021.12.15.01.13.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Dec 2021 01:13:20 -0800 (PST)
-Message-ID: <f529aa39-d0a5-908f-afb3-58553505bc3d@tessares.net>
-Date: Wed, 15 Dec 2021 10:13:19 +0100
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=OL+jO1niNqNzcJwxYMIURGbSqdHqGQ6HenODqC3EVvs=;
+        b=ftvOPTl9WbpiZkAG1WyWLGqE4hCZOvgrsCJwrESyR3b/XV68CXh9h/zLZzD++XpGsA
+         Zo3zQlVE1qjq2k2zt1eGqFJh4xQQLPmCupXuvQbd5QobpGASTrSvJqigOGo5Yf0d1ddE
+         sTfTzZoHJxqjSlqJyigZjsvAFsKY1vbomCdCc5DBD7hlG9vH7g0I6e7l3gYgw8zD/h8q
+         oMXtmA2WaMqszOjcQeAVK2STeCpcpvDbm7juYMY2ru4GEYPNQiDRL7/Xl6BGqUy1y/PR
+         RdeU+9Gf7WNj/lEKwFu4SB9e2dZVhhyCr410Zo1A3xOuOm8BMxCjrqXSoNXWKKeiJLMs
+         /ihQ==
+X-Gm-Message-State: AOAM5324TNKGD92ixghBl9Psyb1squ8bd86GFT8Ihnims38g1gebmh59
+	ESt75RyAeA7Og02pcW1E7iMMtAqidEY9m3w98sjBH+I0H/XAAQ8d5hlsmXCkvOh0rDkm4DbvvwW
+	AHcFmJhyUThTLzzs=
+X-Received: by 2002:a1c:7714:: with SMTP id t20mr3920380wmi.139.1639563810258;
+        Wed, 15 Dec 2021 02:23:30 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxCPG7f0LCabf3giybQUUq8GZN+jrq80o/bA4aD7g/gzbp4YPdo7ORBCOKXJWjC6zKZeFgamw==
+X-Received: by 2002:a1c:7714:: with SMTP id t20mr3920363wmi.139.1639563809969;
+        Wed, 15 Dec 2021 02:23:29 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-237-50.dyn.eolo.it. [146.241.237.50])
+        by smtp.gmail.com with ESMTPSA id m9sm1440660wmq.1.2021.12.15.02.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Dec 2021 02:23:29 -0800 (PST)
+Message-ID: <767e837adad000e70c0f00e420b22d87d564fe32.camel@redhat.com>
+Subject: Re: [PATCH v2 mptcp-next] selftests: mptcp: more stable join
+ tests-cases.
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Date: Wed, 15 Dec 2021 11:23:28 +0100
+In-Reply-To: <f86282ac-0bb4-7190-75d1-5d975016e591@tessares.net>
+References: <b6f8d2e06bfa3b15cc7fa0ac3076cfafd7448b07.1639482622.git.pabeni@redhat.com>
+	 <f86282ac-0bb4-7190-75d1-5d975016e591@tessares.net>
+User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v2 mptcp-next] selftests: mptcp: more stable join
- tests-cases.
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <b6f8d2e06bfa3b15cc7fa0ac3076cfafd7448b07.1639482622.git.pabeni@redhat.com>
- <542f3ab-d93a-4cba-3bdf-4b8b85744073@linux.intel.com>
- <aeebca24-8584-a24c-700d-b8c8776033af@tessares.net>
-In-Reply-To: <aeebca24-8584-a24c-700d-b8c8776033af@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On 15/12/2021 10:04, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
+On Wed, 2021-12-15 at 10:11 +0100, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> On 15/12/2021 02:32, Mat Martineau wrote:
->> On Tue, 14 Dec 2021, Paolo Abeni wrote:
->>
->>> MPTCP join self-tests are a bit fragile as they reply on
->>> delays instead of events to catch-up with the expected
->>> sockets states.
->>>
->>> Replace the delay with state checking where possible and
->>> reduce the number of sleeps in the most complex scenarios.
->>>
->>> This will both reduce the tests run-time and will improve
->>> stability.
+> On 14/12/2021 12:51, Paolo Abeni wrote:
+> > MPTCP join self-tests are a bit fragile as they reply on
+> > delays instead of events to catch-up with the expected
+> > sockets states.
+> > 
+> > Replace the delay with state checking where possible and
+> > reduce the number of sleeps in the most complex scenarios.
+> > 
+> > This will both reduce the tests run-time and will improve
+> > stability.
 > 
-> Thank you for looking at that :)
+> Again, thank you for looking at that!
 > 
->> Running this in my local VM I saw more failures with the patch than
->> without (this is a kernel with a lot of debug turned on):
->>
->> 27 remove single subflow                syn[ ok ] - synack[ ok ] - ack[
->> ok ]
->>                                         rm [fail] got 0 RM_ADDR[s]
->> expected 1 - sf    [ ok ]
->>
->> ...
->>
->> 37 flush invalid addresses              syn[ ok ] - synack[ ok ] - ack[
->> ok ]
->>                                         add[ ok ] - echo  [ ok ]
->>                                         rm [ ok ] - sf    [ ok ]
->> copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
->>  client exit code 2, server 0
->>
->>
->> Could have been an unlucky run on my machine :)
->>
->> Matthieu, does it improve behavior in your test environments?
+> > 
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > v1 -> v2:
+> >  - fix ipv6 addr handling
+> > ---
+> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 65 ++++++++++++++-----
+> >  1 file changed, 49 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > index 8f49bbd4a201..7014391d750e 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > @@ -238,6 +238,42 @@ is_v6()
+> >  	[ -z "${1##*:*}" ]
+> >  }
+> >  
+> > +# $1: ns, $2: port
+> > +wait_local_port_listen()
+> > +{
+> > +	local listener_ns="${1}"
+> > +	local port="${2}"
+> > +
+> > +	local port_hex i
+> > +
+> > +	port_hex="$(printf "%04X" "${port}")"
+> > +	for i in $(seq 10); do
 > 
-> I ran mptcp_join.sh test in a loop during the night.
+> I think it is safe to increase the number of iterations. Most of the
+> time, we will never reach the maximum.
+> 
+> > +		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
+> > +			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
+> > +			break
+> > +		sleep 0.1
+> > +	done
+> 
+> Probably here, we should exit with an error, no?
 
-I forgot to mention the public CI also had some issues:
+No, it's better to let the caller fail, so we get better/more
+consistent error reporting.
 
+This code is copied verbatim from mptcp_connect.sh, I think we don't
+want to introduce differences.
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): packetdrill_add_addr selftest_mptcp_join 🔴:
-  - Task: https://cirrus-ci.com/task/5809917423517696
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5809917423517696/summary/summary.txt
+> 
+> > +}
+> > +
+> > +# $1: ns, $2: endpoint id
+> > +wait_address_deleted()
+> > +{
+> > +	local ns="${1}"
+> > +	local addr="${2}"
+> > +	local cnt
+> 
+> May you declare "i" as local too please?
 
-- KVM Validation: debug:
-  - Unstable: 3 failed test(s): selftest_diag selftest_mptcp_connect
-selftest_mptcp_join 🔴:
-  - Task: https://cirrus-ci.com/task/5246967470096384
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5246967470096384/summary/summary.txt
+wait_address_deleted() is bugged and the source of the reported
+failures. I'm rewriting it.
 
-Initiator: Patchew Applier
-Commits:
-https://github.com/multipath-tcp/mptcp_net-next/commits/b3b8dde4c773
+Thanks!
 
-But it also looks like the CI was quite busy with many other tasks when
-looking at results from other tests at the same time.
+Paolo
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
