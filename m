@@ -1,97 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E60668
-	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 15:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1639581046;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mdMHzVfLiujMkYMh+oRxzH8cR9zgrwiA/9RJGLxgnsE=;
-	b=abISGOokqAdKNQ8OMxA5AIy35QRPofR1rAcqJUsr/8RT7xnNnTeJ+5CfZFyWrzKKv53zWB
-	VqjjCAXLlaEjqf1R2LU2gtihzZ/vvyF9fYfH2vmKz/HHZJCiKGO0dc0z+UTiCRWqKl91p0
-	F29aD8sWLZk/jes4I7cnH2qY6AOEiI8=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-116-XG7cgd29OrqWOyQd9iJXLA-1; Wed, 15 Dec 2021 10:10:45 -0500
-X-MC-Unique: XG7cgd29OrqWOyQd9iJXLA-1
-Received: by mail-qt1-f200.google.com with SMTP id w14-20020ac87e8e000000b002b6583adcfcso30332119qtj.0
-        for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 07:10:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916A468
+	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 15:15:34 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id y22so5081515edq.2
+        for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 07:15:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=WRuhRKATcY3GADdK/bttqq1afVtj1Ujj7zz+AdMD8zI=;
+        b=x0yuXlJJf2xbsTmHSO7943vS2Mx84XK8vxnu209ieXITfRiddA+FePULugrHlSDdFN
+         Gt3d7rv5Wtm92LmhM3ZSIA9xbR2eUm9I5j1HiwmiYuCrDSxUMmEarFNrbG/HOXfUhCeE
+         k8kLjEo880X7aC8AZ2GC/qP6h/K5OzuhuiR5O+7M/yR77AsZ230cSwIfT45VZoJuxsbt
+         GTly/Gwm0N9REVPmwzXknK47XsjJQNOBEGNn7kpdLntWPBOo0hh23a+ReIwrZiyD/sxp
+         y/X7AKU1oZ9X00vALQwlwG5RuQJKdxKaurn9Oe2g0H5sCrH3plbayimo2O8PBJlysQB/
+         aGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=mdMHzVfLiujMkYMh+oRxzH8cR9zgrwiA/9RJGLxgnsE=;
-        b=2qqCJh2Xnlf+edvFLABOicGrXrMhwZIMlR4FkcLFwrCxhGK1Tr+Vd4iyXx2Oh09Avy
-         RdumbKlj9zrUulteW1iYhJBwjE0wLVFdTjTzQNTqdUweIJVDhfvgGbvvf+MQ1j1MazKq
-         nyVqm6+bO4pU+/MmqHx2RRWPzW+QNmQGeabE5H+iNkuIHtHz7ZkWZwBPfcor+EFcOimk
-         yQG9sW+NzP85rOfY8G4Ntq5SORD9z7+AoSAVIe350IU6dgnRb+ghtGCA8DY/MELGsaaD
-         ab7QY0uLtOnQ3pWcEXRuxR8oJO2ZuUfjK+1CSbQBA6ebCMqhyXAcyEg9vqIRaTPizNOZ
-         c/LQ==
-X-Gm-Message-State: AOAM533p0Ky3UEy2DvM03QLD9bOKcfgPS85jtsK1nRBJxdRoo7lwUSXZ
-	enmtmAuyJYlenZtg7g/4kytdTjpAYyzTYuNha/cv5gyRUGZebJSgP3rtW8oNkY+bgmece10ZbTr
-	X/p3zK50Ao6+Rr/jBQnWj1MsBEmXHcLbFr24DXzlRy9ocQdiY6fCF1YDcQhcPNTdn
-X-Received: by 2002:ac8:7203:: with SMTP id a3mr12534253qtp.666.1639581044421;
-        Wed, 15 Dec 2021 07:10:44 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyfWe6bgbQiNg9tk9bBsamEDvDSdE54qYTztMjmVPhDrmSYZsMR80fWzrfqDygAb2OCDCnbSA==
-X-Received: by 2002:ac8:7203:: with SMTP id a3mr12534221qtp.666.1639581044041;
-        Wed, 15 Dec 2021 07:10:44 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-237-50.dyn.eolo.it. [146.241.237.50])
-        by smtp.gmail.com with ESMTPSA id u11sm1685057qtw.29.2021.12.15.07.10.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 07:10:43 -0800 (PST)
-Message-ID: <e18d05b18db309488061f64af8619c3cdcb37534.camel@redhat.com>
-Subject: Re: [PATCH v6 mptcp-next 7/7] mptcp: avoid atomic bit manipulation
- when possible
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 15 Dec 2021 16:10:40 +0100
-In-Reply-To: <c813c051e41153bbea3c7881acf81bb175e06fd6.1639500873.git.pabeni@redhat.com>
-References: <cover.1639500873.git.pabeni@redhat.com>
-	 <c813c051e41153bbea3c7881acf81bb175e06fd6.1639500873.git.pabeni@redhat.com>
-User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=WRuhRKATcY3GADdK/bttqq1afVtj1Ujj7zz+AdMD8zI=;
+        b=VjyUX6cp5RHLS3mrupxSFXW1lPVeho46fhmc/lXwD8FWx8bB8MEHf0sAmaGY2MQC1r
+         xsoEZPjR1o3iYxSoDK2JPdcbbWbkLTWehIjpz5xPj/hFUl6/uy4ilGvzhnx4hpodQDxO
+         fANRXM4etQ9knMqytZPszOBrJ8gAGP81Co/NWrf+nKggegG5/y344CKQ68nVmXo8ZV2u
+         KnKIerB9oFwNjULgMIyV0SuNTuQ0kMm4pvPK3zEOpugh1HsxTZQUutx5OllP7AJZ/bFR
+         OegnnXm6BDp7fpNji0wzstTujQaQONdhFFR0wW+ehUF0jxfWHAxq6nbrGL8WtccfINTc
+         g+Fg==
+X-Gm-Message-State: AOAM533nzLNvZziiibGp0v+klHfIW050M7eMuX6miDk4DPunGYPZ0qdO
+	rOnpNGLGkAA9qOs63cS0ro6pDfUG2CWUSw==
+X-Google-Smtp-Source: ABdhPJxhpuKnMOOmsRSRNng7nco4QEMnWKRgJFYHPC9XYMuoWLnqvyzX5vykPQFSFm/eQ/UO9j3yRA==
+X-Received: by 2002:a17:906:1855:: with SMTP id w21mr285726eje.248.1639581331403;
+        Wed, 15 Dec 2021 07:15:31 -0800 (PST)
+Received: from [192.168.178.33] (94.105.100.208.dyn.edpnet.net. [94.105.100.208])
+        by smtp.gmail.com with ESMTPSA id he14sm766875ejc.55.2021.12.15.07.15.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Dec 2021 07:15:30 -0800 (PST)
+Message-ID: <651df38d-49de-6f3d-fca9-b52ccab0c3a5@tessares.net>
+Date: Wed, 15 Dec 2021 16:15:29 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH v3 mptcp-next] selftests: mptcp: more stable join
+ tests-cases.
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>
+References: <dfbdb183399851cfa695fa4c965a8d146d436e52.1639567831.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <dfbdb183399851cfa695fa4c965a8d146d436e52.1639567831.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2021-12-14 at 17:58 +0100, Paolo Abeni wrote:
-> Currently the msk->flags bitmask carries both state for the
-> mptcp_release_cb() - mostly touched under the mptcp data lock
-> - and others state info touched even outside such lock scope.
+Hi Paolo,
+
+On 15/12/2021 12:36, Paolo Abeni wrote:
+> MPTCP join self-tests are a bit fragile as they reply on
+> delays instead of events to catch-up with the expected
+> sockets states.
 > 
-> As a consequence, msk->flags is always manipulated with
-> atomic operations.
+> Replace the delay with state checking where possible and
+> reduce the number of sleeps in the most complex scenarios.
 > 
-> This change splits such bitmask in two separate fields, so
-> that we use plain bit oper operations when touching the
-> cb-related info.
-> 
-> The MPTCP_PUSH_PENDING bit needs additional care, as it is the
-> only CB related field currently accessed either under the mptcp
-> data lock or the mptcp socket lock.
-> Let's add another mask just for such bit's sake.
+> This will both reduce the tests run-time and will improve
+> stability.
 > 
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> Note: I still see frequent failures in "remove subflow and signal IPv6",
+> but that looks unrelated from this patch: sk lookup fails on the
+> client side for the MPJ syn-ack. Funnily enough, I can't reproduce
+> the failure with pcap capture on...
 
-This patch has still a few issues - basically it lacks a bunch of
-BIT(). @Matt: could you please apply patches 1-6 (with modification on
-patch 5) and leave this alone? I'll try to send a new version soon.
+Thank you for the new version!
 
-Otherwise I'll re-send the whole series.
+I'm trying it in a loop. So far, so good!
 
-Thanks!
 
-Paolo
+It looks like the CI didn't spot any issues in debug mode but different
+ones in non-debug mode:
 
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
+  - Task: https://cirrus-ci.com/task/6235909728239616
+  - Summary:
+https://api.cirrus-ci.com/v1/artifact/task/6235909728239616/summary/summary.txt
+
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): selftest_diag 🔴:
+  - Task: https://cirrus-ci.com/task/4828534844686336
+  - Summary:
+https://api.cirrus-ci.com/v1/artifact/task/4828534844686336/summary/summary.txt
+
+
+I guess it is not related to that.
+
+
+> +rm_addr_count()
+> +{
+> +	ns=${1}
+
+Small detail: it is not "local". I can fix that when applying the patch
+if it helps.
+
+> +# $1: ns, $2: old rm_addr counter in $ns
+> +wait_rm_addr()
+> +{
+> +	local ns="${1}"
+> +	local old_cnt="${2}"
+> +	local cnt
+> +	local i
+> +
+> +	for i in $(seq 10); do
+> +		cnt=$(rm_addr_count ${ns})
+> +		[ "$cnt" = "${old_cnt}" ] || break
+
+I was confused by this: why do you stop if it is the same??? But then I
+realised it was "||" and not "&&" :)
+
+    [ "$cnt" != "${old_cnt}" ] && break
+
+> +dump_stats()
+> +{
+> +	echo Server ns stats
+> +	ip netns exec $ns1 nstat -as | grep Tcp
+> +	echo Client ns stats
+> +	ip netns exec $ns2 nstat -as | grep Tcp
+> +}
+
+Good idea!
+
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
