@@ -1,134 +1,270 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E9D168
-	for <mptcp@lists.linux.dev>; Wed, 15 Dec 2021 20:16:03 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="226609702"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEFC2CA4
+	for <mptcp@lists.linux.dev>; Thu, 16 Dec 2021 00:18:27 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="302739556"
 X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
-   d="scan'208";a="226609702"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 12:16:02 -0800
+   d="scan'208";a="302739556"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:18:27 -0800
 X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
-   d="scan'208";a="482541081"
+   d="scan'208";a="605232242"
 Received: from jchanse1-mobl1.amr.corp.intel.com ([10.209.70.202])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 12:16:02 -0800
-Date: Wed, 15 Dec 2021 12:16:02 -0800 (PST)
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:18:27 -0800
+Date: Wed, 15 Dec 2021 16:18:26 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Subject: Re: [PATCH v3 mptcp-next] selftests: mptcp: more stable join
- tests-cases.
-In-Reply-To: <651df38d-49de-6f3d-fca9-b52ccab0c3a5@tessares.net>
-Message-ID: <4bce77f-62f5-16ce-ec4f-51f53ebf9f2b@linux.intel.com>
-References: <dfbdb183399851cfa695fa4c965a8d146d436e52.1639567831.git.pabeni@redhat.com> <651df38d-49de-6f3d-fca9-b52ccab0c3a5@tessares.net>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v6 mptcp-next] mptcp: avoid atomic bit manipulation when
+ possible
+In-Reply-To: <cf505ef6fadd1ca26cdef0f65b54a250d1b280ef.1639583569.git.pabeni@redhat.com>
+Message-ID: <1d732278-aa40-2a7b-d41f-a7a3aa26224@linux.intel.com>
+References: <cf505ef6fadd1ca26cdef0f65b54a250d1b280ef.1639583569.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-345769877-1639599362=:85429"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 15 Dec 2021, Paolo Abeni wrote:
 
---0-345769877-1639599362=:85429
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+> Currently the msk->flags bitmask carries both state for the
+> mptcp_release_cb() - mostly touched under the mptcp data lock
+> - and others state info touched even outside such lock scope.
+>
+> As a consequence, msk->flags is always manipulated with
+> atomic operations.
+>
+> This change splits such bitmask in two separate fields, so
+> that we use plain bit oper operations when touching the
+> cb-related info.
+>
+> The MPTCP_PUSH_PENDING bit needs additional care, as it is the
+> only CB related field currently accessed either under the mptcp
+> data lock or the mptcp socket lock.
+> Let's add another mask just for such bit's sake.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v5 -> v6:
+> - use BIT() where appropriate
 
-On Wed, 15 Dec 2021, Matthieu Baerts wrote:
+Thanks for noticing that. I've double checked all the affected flag names 
+and it looks good to me now. Tests are running ok for me (just the 
+intermittent ipv6 remove subflow failure that's unrelated to this commit).
 
-> Hi Paolo,
->
-> On 15/12/2021 12:36, Paolo Abeni wrote:
->> MPTCP join self-tests are a bit fragile as they reply on
->> delays instead of events to catch-up with the expected
->> sockets states.
->>
->> Replace the delay with state checking where possible and
->> reduce the number of sleeps in the most complex scenarios.
->>
->> This will both reduce the tests run-time and will improve
->> stability.
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> Note: I still see frequent failures in "remove subflow and signal IPv6",
->> but that looks unrelated from this patch: sk lookup fails on the
->> client side for the MPJ syn-ack. Funnily enough, I can't reproduce
->> the failure with pcap capture on...
->
-> Thank you for the new version!
->
-> I'm trying it in a loop. So far, so good!
->
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Looks ok here too - just seeing the same ipv6 failure as Paolo, and also 
-that it always succeeds when trying to capture.
+Mat
 
-- Mat
 
+> ---
+> net/mptcp/protocol.c | 46 +++++++++++++++++++++++---------------------
+> net/mptcp/protocol.h | 18 ++++++++++-------
+> net/mptcp/subflow.c  |  4 ++--
+> 3 files changed, 37 insertions(+), 31 deletions(-)
 >
-> It looks like the CI didn't spot any issues in debug mode but different
-> ones in non-debug mode:
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index e81fd46a43c4..5a735c37cb8e 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -763,7 +763,7 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+> 		if (!sock_owned_by_user(sk))
+> 			__mptcp_error_report(sk);
+> 		else
+> -			set_bit(MPTCP_ERROR_REPORT,  &msk->flags);
+> +			__set_bit(MPTCP_ERROR_REPORT,  &msk->cb_flags);
+> 	}
 >
-> - KVM Validation: normal:
->  - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
->  - Task: https://cirrus-ci.com/task/6235909728239616
->  - Summary:
-> https://api.cirrus-ci.com/v1/artifact/task/6235909728239616/summary/summary.txt
+> 	/* If the moves have caught up with the DATA_FIN sequence number
+> @@ -1529,9 +1529,8 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
 >
-> - KVM Validation: debug:
->  - Unstable: 1 failed test(s): selftest_diag 🔴:
->  - Task: https://cirrus-ci.com/task/4828534844686336
->  - Summary:
-> https://api.cirrus-ci.com/v1/artifact/task/4828534844686336/summary/summary.txt
+> void mptcp_check_and_set_pending(struct sock *sk)
+> {
+> -	if (mptcp_send_head(sk) &&
+> -	    !test_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
+> -		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
+> +	if (mptcp_send_head(sk))
+> +		mptcp_sk(sk)->push_pending |= BIT(MPTCP_PUSH_PENDING);
+> }
 >
+> void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> @@ -2146,7 +2145,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
+> 			mptcp_schedule_work(sk);
+> 	} else {
+> 		/* delegate our work to tcp_release_cb() */
+> -		set_bit(MPTCP_RETRANSMIT, &msk->flags);
+> +		__set_bit(MPTCP_RETRANSMIT, &msk->cb_flags);
+> 	}
+> 	bh_unlock_sock(sk);
+> 	sock_put(sk);
+> @@ -2858,7 +2857,9 @@ static int mptcp_disconnect(struct sock *sk, int flags)
 >
-> I guess it is not related to that.
+> 	mptcp_destroy_common(msk);
+> 	msk->last_snd = NULL;
+> -	msk->flags = 0;
+> +	WRITE_ONCE(msk->flags, 0);
+> +	msk->cb_flags = 0;
+> +	msk->push_pending = 0;
+> 	msk->recovery = false;
+> 	msk->can_ack = false;
+> 	msk->fully_established = false;
+> @@ -3041,7 +3042,7 @@ void __mptcp_data_acked(struct sock *sk)
+> 	if (!sock_owned_by_user(sk))
+> 		__mptcp_clean_una(sk);
+> 	else
+> -		set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags);
+> +		__set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->cb_flags);
 >
+> 	if (mptcp_pending_data_fin_ack(sk))
+> 		mptcp_schedule_work(sk);
+> @@ -3060,22 +3061,22 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+> 		else if (xmit_ssk)
+> 			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk), MPTCP_DELEGATE_SEND);
+> 	} else {
+> -		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
+> +		__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
+> 	}
+> }
 >
->> +rm_addr_count()
->> +{
->> +	ns=${1}
+> +#define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
+> +				      BIT(MPTCP_RETRANSMIT) | \
+> +				      BIT(MPTCP_FLUSH_JOIN_LIST))
+> +
+> /* processes deferred events and flush wmem */
+> static void mptcp_release_cb(struct sock *sk)
+> {
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +
+> 	for (;;) {
+> -		unsigned long flags = 0;
+> -
+> -		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
+> -			flags |= BIT(MPTCP_PUSH_PENDING);
+> -		if (test_and_clear_bit(MPTCP_RETRANSMIT, &mptcp_sk(sk)->flags))
+> -			flags |= BIT(MPTCP_RETRANSMIT);
+> -		if (test_and_clear_bit(MPTCP_FLUSH_JOIN_LIST, &mptcp_sk(sk)->flags))
+> -			flags |= BIT(MPTCP_FLUSH_JOIN_LIST);
+> +		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED) |
+> +				      msk->push_pending;
+> 		if (!flags)
+> 			break;
 >
-> Small detail: it is not "local". I can fix that when applying the patch
-> if it helps.
+> @@ -3086,7 +3087,8 @@ static void mptcp_release_cb(struct sock *sk)
+> 		 *    datapath acquires the msk socket spinlock while helding
+> 		 *    the subflow socket lock
+> 		 */
+> -
+> +		msk->push_pending = 0;
+> +		msk->cb_flags &= ~flags;
+> 		spin_unlock_bh(&sk->sk_lock.slock);
+> 		if (flags & BIT(MPTCP_FLUSH_JOIN_LIST))
+> 			__mptcp_flush_join_list(sk);
+> @@ -3102,11 +3104,11 @@ static void mptcp_release_cb(struct sock *sk)
+> 	/* be sure to set the current sk state before tacking actions
+> 	 * depending on sk_state
+> 	 */
+> -	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
+> +	if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
+> 		__mptcp_set_connected(sk);
+> -	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
+> +	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+> 		__mptcp_clean_una_wakeup(sk);
+> -	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
+> +	if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
+> 		__mptcp_error_report(sk);
 >
->> +# $1: ns, $2: old rm_addr counter in $ns
->> +wait_rm_addr()
->> +{
->> +	local ns="${1}"
->> +	local old_cnt="${2}"
->> +	local cnt
->> +	local i
->> +
->> +	for i in $(seq 10); do
->> +		cnt=$(rm_addr_count ${ns})
->> +		[ "$cnt" = "${old_cnt}" ] || break
+> 	__mptcp_update_rmem(sk);
+> @@ -3148,7 +3150,7 @@ void mptcp_subflow_process_delegated(struct sock *ssk)
+> 		if (!sock_owned_by_user(sk))
+> 			__mptcp_subflow_push_pending(sk, ssk);
+> 		else
+> -			set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
+> +			__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
+> 		mptcp_data_unlock(sk);
+> 		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SEND);
+> 	}
+> @@ -3268,7 +3270,7 @@ bool mptcp_finish_join(struct sock *ssk)
+> 	} else {
+> 		sock_hold(ssk);
+> 		list_add_tail(&subflow->node, &msk->join_list);
+> -		set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->flags);
+> +		__set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->cb_flags);
+> 	}
+> 	mptcp_data_unlock(parent);
 >
-> I was confused by this: why do you stop if it is the same??? But then I
-> realised it was "||" and not "&&" :)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 27a510b20996..0459f164dc0b 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -110,18 +110,20 @@
+> /* MPTCP TCPRST flags */
+> #define MPTCP_RST_TRANSIENT	BIT(0)
 >
->    [ "$cnt" != "${old_cnt}" ] && break
+> -/* MPTCP socket flags */
+> +/* MPTCP socket atomic flags */
+> #define MPTCP_NOSPACE		1
+> #define MPTCP_WORK_RTX		2
+> #define MPTCP_WORK_EOF		3
+> #define MPTCP_FALLBACK_DONE	4
+> #define MPTCP_WORK_CLOSE_SUBFLOW 5
+> -#define MPTCP_PUSH_PENDING	6
+> -#define MPTCP_CLEAN_UNA		7
+> -#define MPTCP_ERROR_REPORT	8
+> -#define MPTCP_RETRANSMIT	9
+> -#define MPTCP_FLUSH_JOIN_LIST	10
+> -#define MPTCP_CONNECTED		11
+> +
+> +/* MPTCP socket release cb flags */
+> +#define MPTCP_PUSH_PENDING	1
+> +#define MPTCP_CLEAN_UNA		2
+> +#define MPTCP_ERROR_REPORT	3
+> +#define MPTCP_RETRANSMIT	4
+> +#define MPTCP_FLUSH_JOIN_LIST	5
+> +#define MPTCP_CONNECTED		6
 >
->> +dump_stats()
->> +{
->> +	echo Server ns stats
->> +	ip netns exec $ns1 nstat -as | grep Tcp
->> +	echo Client ns stats
->> +	ip netns exec $ns2 nstat -as | grep Tcp
->> +}
+> static inline bool before64(__u64 seq1, __u64 seq2)
+> {
+> @@ -249,6 +251,8 @@ struct mptcp_sock {
+> 	u32		token;
+> 	int		rmem_released;
+> 	unsigned long	flags;
+> +	unsigned long	cb_flags;
+> +	unsigned long	push_pending;
+> 	bool		recovery;		/* closing subflow write queue reinjected */
+> 	bool		can_ack;
+> 	bool		fully_established;
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 8716b9cb8040..557ef71309b0 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -388,7 +388,7 @@ static void mptcp_set_connected(struct sock *sk)
+> 	if (!sock_owned_by_user(sk))
+> 		__mptcp_set_connected(sk);
+> 	else
+> -		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
+> +		__set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->cb_flags);
+> 	mptcp_data_unlock(sk);
+> }
 >
-> Good idea!
+> @@ -1279,7 +1279,7 @@ static void subflow_error_report(struct sock *ssk)
+> 	if (!sock_owned_by_user(sk))
+> 		__mptcp_error_report(sk);
+> 	else
+> -		set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->flags);
+> +		__set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->cb_flags);
+> 	mptcp_data_unlock(sk);
+> }
 >
 > -- 
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+> 2.33.1
+>
 >
 >
 
 --
 Mat Martineau
 Intel
---0-345769877-1639599362=:85429--
