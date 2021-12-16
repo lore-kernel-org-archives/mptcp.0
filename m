@@ -1,23 +1,24 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721BE2CAF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60D02FB6
 	for <mptcp@lists.linux.dev>; Thu, 16 Dec 2021 00:33:46 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="236907569"
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="236907571"
 X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
-   d="scan'208";a="236907569"
+   d="scan'208";a="236907571"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:33:30 -0800
 X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
-   d="scan'208";a="465835393"
+   d="scan'208";a="465835394"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.72.63])
   by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:33:29 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-next v4 5/6] mptcp: Add a per-namespace sysctl to set the default path manager type
-Date: Wed, 15 Dec 2021 16:33:23 -0800
-Message-Id: <20211216003324.403195-6-mathew.j.martineau@linux.intel.com>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v4 6/6] selftests: mptcp: Add tests for userspace PM type
+Date: Wed, 15 Dec 2021 16:33:24 -0800
+Message-Id: <20211216003324.403195-7-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20211216003324.403195-1-mathew.j.martineau@linux.intel.com>
 References: <20211216003324.403195-1-mathew.j.martineau@linux.intel.com>
@@ -29,181 +30,132 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The new net.mptcp.pm_type sysctl determines which path manager will be
-used by each newly-created MPTCP socket.
+These tests ensure that the in-kernel path manager is bypassed when
+the userspace path manager is configured. Kernel code is still
+responsible for ADD_ADDR echo, so also make sure that's working.
 
-v2: Handle builds without CONFIG_SYSCTL
-v3: Clarify logic for type-specific PM init (Geliang Tang and Paolo Abeni)
-
+Tested-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- Documentation/networking/mptcp-sysctl.rst | 18 ++++++++++++
- net/mptcp/ctrl.c                          | 21 ++++++++++++++
- net/mptcp/pm.c                            | 34 +++++++++++++++--------
- net/mptcp/protocol.h                      |  1 +
- 4 files changed, 63 insertions(+), 11 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index b0d4da71e68e..e263dfcc4b40 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -46,6 +46,24 @@ allow_join_initial_addr_port - BOOLEAN
- 
- 	Default: 1
- 
-+pm_type - INTEGER
-+
-+	Set the default path manager type to use for each new MPTCP
-+	socket. In-kernel path management will control subflow
-+	connections and address advertisements according to
-+	per-namespace values configured over the MPTCP netlink
-+	API. Userspace path management puts per-MPTCP-connection subflow
-+	connection decisions and address advertisements under control of
-+	a privileged userspace program, at the cost of more netlink
-+	traffic to propagate all of the related events and commands.
-+
-+	This is a per-namespace sysctl.
-+
-+	* 0 - In-kernel path manager
-+	* 1 - Userspace path manager
-+
-+	Default: 0
-+
- stale_loss_cnt - INTEGER
- 	The number of MPTCP-level retransmission intervals with no traffic and
- 	pending outstanding data on a given subflow required to declare it stale.
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 8b235468c88f..ae20b7d92e28 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -16,6 +16,11 @@
- #define MPTCP_SYSCTL_PATH "net/mptcp"
- 
- static int mptcp_pernet_id;
-+
-+#ifdef CONFIG_SYSCTL
-+static int mptcp_pm_type_max = __MPTCP_PM_TYPE_MAX;
-+#endif
-+
- struct mptcp_pernet {
- #ifdef CONFIG_SYSCTL
- 	struct ctl_table_header *ctl_table_hdr;
-@@ -26,6 +31,7 @@ struct mptcp_pernet {
- 	u8 mptcp_enabled;
- 	u8 checksum_enabled;
- 	u8 allow_join_initial_addr_port;
-+	u8 pm_type;
- };
- 
- static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
-@@ -58,6 +64,11 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net)
- 	return mptcp_get_pernet(net)->stale_loss_cnt;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 8cbff7ce35d6..dfff017a08f6 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -50,6 +50,7 @@ init()
+ 		ip netns add $netns || exit $ksft_skip
+ 		ip -net $netns link set lo up
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
++		ip netns exec $netns sysctl -q net.mptcp.pm_type=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
+ 		if [ $checksum -eq 1 ]; then
+@@ -1911,6 +1912,68 @@ fullmesh_tests()
+ 	chk_add_nr 1 1
  }
  
-+int mptcp_get_pm_type(const struct net *net)
++userspace_tests()
 +{
-+	return mptcp_get_pernet(net)->pm_type;
++	# userspace pm type prevents add_addr
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type prevents add_addr" 0 0 0
++	chk_add_nr 0 0
++
++	# userspace pm type echoes add_addr
++	reset
++	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type echoes add_addr" 0 0 0
++	chk_add_nr 1 1
++
++	# userspace pm type rejects join
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type rejects join" 1 1 0
++
++	# userspace pm type does not send join
++	reset
++	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "userspace pm type does not send join" 0 0 0
++
++	# userspace pm type prevents mp_prio
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
++	chk_join_nr "userspace pm type prevents mp_prio" 1 1 0
++	chk_prio_nr 0 0
++
++	# userspace pm type prevents rm_addr
++	reset
++	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
++	chk_join_nr "userspace pm type prevents rm_addr" 0 0 0
++	chk_rm_nr 0 0
 +}
 +
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ all_tests()
  {
- 	pernet->mptcp_enabled = 1;
-@@ -65,6 +76,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- 	pernet->checksum_enabled = 0;
- 	pernet->allow_join_initial_addr_port = 1;
- 	pernet->stale_loss_cnt = 4;
-+	pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
+ 	subflows_tests
+@@ -1928,6 +1991,7 @@ all_tests()
+ 	checksum_tests
+ 	deny_join_id0_tests
+ 	fullmesh_tests
++	userspace_tests
  }
  
- #ifdef CONFIG_SYSCTL
-@@ -108,6 +120,14 @@ static struct ctl_table mptcp_sysctl_table[] = {
- 		.mode = 0644,
- 		.proc_handler = proc_douintvec_minmax,
- 	},
-+	{
-+		.procname = "pm_type",
-+		.maxlen = sizeof(u8),
-+		.mode = 0644,
-+		.proc_handler = proc_dou8vec_minmax,
-+		.extra1       = SYSCTL_ZERO,
-+		.extra2       = &mptcp_pm_type_max
-+	},
- 	{}
- };
+ usage()
+@@ -1948,6 +2012,7 @@ usage()
+ 	echo "  -S checksum_tests"
+ 	echo "  -d deny_join_id0_tests"
+ 	echo "  -m fullmesh_tests"
++	echo "  -u userspace_tests"
+ 	echo "  -c capture pcap files"
+ 	echo "  -C enable data checksum"
+ 	echo "  -h help"
+@@ -1983,7 +2048,7 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
  
-@@ -128,6 +148,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
- 	table[2].data = &pernet->checksum_enabled;
- 	table[3].data = &pernet->allow_join_initial_addr_port;
- 	table[4].data = &pernet->stale_loss_cnt;
-+	table[5].data = &pernet->pm_type;
- 
- 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
- 	if (!hdr)
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 47ac9651e12c..1f8878cc29e3 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -383,7 +383,7 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
- 
- void mptcp_pm_data_reset(struct mptcp_sock *msk)
- {
--	bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
-+	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
- 	struct mptcp_pm_data *pm = &msk->pm;
- 
- 	pm->add_addr_signaled = 0;
-@@ -392,17 +392,29 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	pm->subflows = 0;
- 	pm->rm_list_tx.nr = 0;
- 	pm->rm_list_rx.nr = 0;
--	WRITE_ONCE(pm->pm_type, MPTCP_PM_TYPE_KERNEL);
--	/* pm->work_pending must be only be set to 'true' when
--	 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
--	 */
--	WRITE_ONCE(pm->work_pending,
--		   (!!mptcp_pm_get_local_addr_max(msk) && subflows_allowed) ||
--		   !!mptcp_pm_get_add_addr_signal_max(msk));
-+	WRITE_ONCE(pm->pm_type, pm_type);
-+
-+	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
-+		bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
-+
-+		/* pm->work_pending must be only be set to 'true' when
-+		 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
-+		 */
-+		WRITE_ONCE(pm->work_pending,
-+			   (!!mptcp_pm_get_local_addr_max(msk) &&
-+			    subflows_allowed) ||
-+			   !!mptcp_pm_get_add_addr_signal_max(msk));
-+		WRITE_ONCE(pm->accept_addr,
-+			   !!mptcp_pm_get_add_addr_accept_max(msk) &&
-+			   subflows_allowed);
-+		WRITE_ONCE(pm->accept_subflow, subflows_allowed);
-+	} else {
-+		WRITE_ONCE(pm->work_pending, 0);
-+		WRITE_ONCE(pm->accept_addr, 0);
-+		WRITE_ONCE(pm->accept_subflow, 0);
-+	}
-+
- 	WRITE_ONCE(pm->addr_signal, 0);
--	WRITE_ONCE(pm->accept_addr,
--		   !!mptcp_pm_get_add_addr_accept_max(msk) && subflows_allowed);
--	WRITE_ONCE(pm->accept_subflow, subflows_allowed);
- 	WRITE_ONCE(pm->remote_deny_join_id0, false);
- 	pm->status = 0;
- 	bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0c680a5177eb..517f087f2b3a 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -579,6 +579,7 @@ unsigned int mptcp_get_add_addr_timeout(const struct net *net);
- int mptcp_is_checksum_enabled(const struct net *net);
- int mptcp_allow_join_id0(const struct net *net);
- unsigned int mptcp_stale_loss_cnt(const struct net *net);
-+int mptcp_get_pm_type(const struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
+-while getopts 'fesltra64bpkdmchCS' opt; do
++while getopts 'fesltra64bpkdmuchCS' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+@@ -2030,6 +2095,9 @@ while getopts 'fesltra64bpkdmchCS' opt; do
+ 		m)
+ 			fullmesh_tests
+ 			;;
++		u)
++			userspace_tests
++			;;
+ 		c)
+ 			;;
+ 		C)
 -- 
 2.34.1
 
