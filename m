@@ -1,26 +1,24 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F632C9E
-	for <mptcp@lists.linux.dev>; Thu, 16 Dec 2021 00:33:43 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="302742057"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2BA2C9E
+	for <mptcp@lists.linux.dev>; Thu, 16 Dec 2021 00:33:44 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="236907556"
 X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
-   d="scan'208";a="302742057"
+   d="scan'208";a="236907556"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:33:30 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:33:29 -0800
 X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
-   d="scan'208";a="465835392"
+   d="scan'208";a="465835388"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.72.63])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:33:29 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 16:33:28 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-next v4 4/6] mptcp: Make kernel path manager check for userspace-managed sockets
-Date: Wed, 15 Dec 2021 16:33:22 -0800
-Message-Id: <20211216003324.403195-5-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH mptcp-next v4 0/6] mptcp: Add userspace PM mode to bypass kernel PM
+Date: Wed, 15 Dec 2021 16:33:18 -0800
+Message-Id: <20211216003324.403195-1-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211216003324.403195-1-mathew.j.martineau@linux.intel.com>
-References: <20211216003324.403195-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,73 +27,56 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Userspace-managed sockets should not have their subflows or
-advertisements changed by the kernel path manager.
+One part of supporting userspace path managers is to prevent the
+in-kernel PM from acting on userspace-managed MPTCP connections.
 
-v3: Use helper function for PM mode (Paolo Abeni)
+These patches:
 
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/pm_netlink.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ * Add a per-MPTCP-socket 'pm_type'. A mix of kernel-managed and
+   userspace-managed connections are supported within each namespace.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c8977b0c6cb0..f12effa71942 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1173,7 +1173,8 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net)
- 	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
- 		struct sock *sk = (struct sock *)msk;
- 
--		if (!READ_ONCE(msk->fully_established))
-+		if (!READ_ONCE(msk->fully_established) ||
-+		    mptcp_pm_is_userspace(msk))
- 			goto next;
- 
- 		lock_sock(sk);
-@@ -1299,6 +1300,9 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 		struct sock *sk = (struct sock *)msk;
- 		bool remove_subflow;
- 
-+		if (mptcp_pm_is_userspace(msk))
-+			goto next;
-+
- 		if (list_empty(&msk->conn_list)) {
- 			mptcp_pm_remove_anno_addr(msk, addr, false);
- 			goto next;
-@@ -1340,7 +1344,7 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
- 		struct sock *sk = (struct sock *)msk;
- 		struct mptcp_addr_info msk_local;
- 
--		if (list_empty(&msk->conn_list))
-+		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
- 			goto next;
- 
- 		local_address((struct sock_common *)msk, &msk_local);
-@@ -1449,9 +1453,11 @@ static void mptcp_nl_remove_addrs_list(struct net *net,
- 	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
- 		struct sock *sk = (struct sock *)msk;
- 
--		lock_sock(sk);
--		mptcp_pm_remove_addrs_and_subflows(msk, rm_list);
--		release_sock(sk);
-+		if (!mptcp_pm_is_userspace(msk)) {
-+			lock_sock(sk);
-+			mptcp_pm_remove_addrs_and_subflows(msk, rm_list);
-+			release_sock(sk);
-+		}
- 
- 		sock_put(sk);
- 		cond_resched();
-@@ -1713,7 +1719,7 @@ static int mptcp_nl_addr_backup(struct net *net,
- 	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
- 		struct sock *sk = (struct sock *)msk;
- 
--		if (list_empty(&msk->conn_list))
-+		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
- 			goto next;
- 
- 		lock_sock(sk);
+ * Conditionally decouple incoming ADD_ADDR/RM_ADDR and subflow changes
+   from the in-kernel PM. Netlink events are still triggered, and ADD_ADDR
+   echo handling is still in kernel code even if path management is
+   otherwise handled in userspace.
+
+ * Add a sysctl for setting the per-namespace default for in-kernel vs
+   userspace path management of new MPTCP sockets. This is an integer
+   value to allow extensibility.
+
+ * Add selftests to confirm that the in-kernel PM is bypassed.
+
+RFC -> v1: Changed sysctl from a bool to an integer, added patch 1
+(cleanup) and patch 6 (selftests), fixed ADD_ADDR echo and initial
+pm->subflows_allowed settings.
+
+v1 -> v2: Rebased on latest export branch, removed extra kernel-mode
+check when receiving ADD_ADDR, and fix !CONFIG_SYSCTL build.
+
+v2 -> v3: Rebased on latest export branch, use helper function for PM
+mode, clarify initialization logic for userspace vs. kernel PM,
+add a Tested-by tag from v2 review.
+
+v3 -> v4: Rebased on latest export branch and resolved conflicts
+
+Mat Martineau (6):
+  mptcp: Remove redundant assignments in path manager init
+  mptcp: Add a member to mptcp_pm_data to track kernel vs userspace mode
+  mptcp: Bypass kernel PM when userspace PM is enabled
+  mptcp: Make kernel path manager check for userspace-managed sockets
+  mptcp: Add a per-namespace sysctl to set the default path manager type
+  selftests: mptcp: Add tests for userspace PM type
+
+ Documentation/networking/mptcp-sysctl.rst     | 18 +++++
+ net/mptcp/ctrl.c                              | 21 ++++++
+ net/mptcp/pm.c                                | 50 +++++++++----
+ net/mptcp/pm_netlink.c                        | 30 ++++----
+ net/mptcp/protocol.h                          | 16 ++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
+ 6 files changed, 170 insertions(+), 35 deletions(-)
+
+
+base-commit: 81706660508b6caa94d0fbeb8875882f155c73a9
 -- 
 2.34.1
 
