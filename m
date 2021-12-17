@@ -1,80 +1,124 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE312C9E
-	for <mptcp@lists.linux.dev>; Thu, 16 Dec 2021 22:45:00 +0000 (UTC)
-Received: by mail-qk1-f181.google.com with SMTP id d21so459037qkl.3
-        for <mptcp@lists.linux.dev>; Thu, 16 Dec 2021 14:45:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=4CUnoAu/WET8TuNzusZu5nyDNG6phQxszSI2vpNdqGY=;
-        b=RLewJcQv48rYmqUEjjvlr65QsO9PKgHQPqj+9Z4FKNi1wNjgUO8y/5DEDTHYZzB2LW
-         fU/64vzAnTmG9Nfg9nqXNOzeG8125OakCVMfCaBaKklfT3vET38MgaFtnphXkfcQ9PNo
-         lZZXhs+r/OtFhBsPKNxC1KQVuatgo6T62CPNrmUS/2FDkakLUuCCceA27YcrJ+ySpz2G
-         h88ULq4QXoJcnzSzIDD7/N0/J0vN5NdT0N2Q0D+7Yz7FXx7PTcZSUZ5kVotyxWdE47bw
-         7xcw0l0YU/Q4RJ/tz/hcvrA+XsT81u/d/h3kNpcuysSOHA4TOPnn2T87Zti02K+Zs4YM
-         PU/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=4CUnoAu/WET8TuNzusZu5nyDNG6phQxszSI2vpNdqGY=;
-        b=24hmViCgkS+KswRdr9IhAb8vrLoGsXBD324J5Qpu1WTbLqmMFa7Fg+ESb5+tcl7Xqs
-         u2m171NaDyD9ltMpw24jddirdBNywUnN/14UGmSjDSMd8lmxCAGrlJBHLvd9s+pg+Ha+
-         jj8hjBdNpvFv6R/OIIvkkdIQ2nwt4lHuaKIc2g46tVL6RbhBGjs0xUNlZQoiqkNnwZwV
-         pyfd3EaIda5G3KIZ28vtRzq/TIRDlUulpJ6IK2zgklUVEsh4uJY/KFFqunb3EIsUWFHL
-         Ed5rgu9er+Ns5T2hAFvZu/NkB/aLQ+a6eONWZW7GXft38ZyAlop3WqvjW9NVFwx3UADC
-         tSeQ==
-X-Gm-Message-State: AOAM531rJtTbWGGQGY6Zy2Xf4Q4G1pAFDWUsZJhsJjVcx8eKqzl1AkY/
-	krM2Cy9drR50f95b8J4/ZNw0uZFqUg==
-X-Google-Smtp-Source: ABdhPJxGx9prCLE44gIY+u5Ncxn+20zKcVtTdHV6Zmfc8RWS2+w1Lk7gazO5pvkuDuFjrm1ZaJPg3Q==
-X-Received: by 2002:a37:61c2:: with SMTP id v185mr139380qkb.719.1639694699198;
-        Thu, 16 Dec 2021 14:44:59 -0800 (PST)
-Received: from [127.0.0.1] ([20.122.162.103])
-        by smtp.gmail.com with ESMTPSA id j126sm3602137qke.103.2021.12.16.14.44.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 14:44:58 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20211216222314.1244708-22-kishen.maloor@intel.com>
-References: <20211216222314.1244708-22-kishen.maloor@intel.com>
-Subject: Re: selftests: mptcp: functional tests for the userspace PM type:
- Build Failure
-Message-ID: <034d8dfd-b3e0-41a8-4e0b-b6758a5544e8@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Dec 2021 22:44:58 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913502CA0
+	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 00:40:33 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="239454094"
+X-IronPort-AV: E=Sophos;i="5.88,212,1635231600"; 
+   d="scan'208";a="239454094"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 16:40:23 -0800
+X-IronPort-AV: E=Sophos;i="5.88,212,1635231600"; 
+   d="scan'208";a="464924987"
+Received: from jastump-mobl.amr.corp.intel.com ([10.251.18.211])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 16:40:22 -0800
+Date: Thu, 16 Dec 2021 16:40:22 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: cleanup MPJ subflow list
+ handling"
+In-Reply-To: <70e15da075bab481ac07ed1ce8c2adc9740403c6.1639665203.git.pabeni@redhat.com>
+Message-ID: <b4a3815b-cdb1-9f78-da0-46b0c1472e42@linux.intel.com>
+References: <70e15da075bab481ac07ed1ce8c2adc9740403c6.1639665203.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Kishen,
+On Thu, 16 Dec 2021, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> The self-tests in a loop triggered a UaF similar to:
+> 
+> https://github.com/multipath-tcp/mptcp_net-next/issues/250
+> 
+> The critical scenario is actually almost fixed by:
+> 
+> "mptcp: cleanup MPJ subflow list handling"
+> 
+> with a notable exception: if an MPJ handshake races with
+> mptcp_close(), the subflow enter the join_list and __mptcp_finish_join()
+> is processed at the msk socket lock release in mptcp_close(),
+> the subflow will preserver a danfling reference to the msk sk_socket.
+> 
+> Address the issue fragting the subflow only on successful
+                     ^^^^^^^^ grafting?
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Change looks good to squash, and the tests (other than the one ipv6 issue) 
+are ok on my local system.
 
-You can find more details there:
+> __mptcp_finish_join()
+> 
+> Note that issues/250 triggers even before
+> "mptcp: cleanup MPJ subflow list handling", as before such commit the join
+> list was not spliced by mptcp_close(). We could consider a net-only patch to
+> address that.
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20211216222314.1244708-22-kishen.maloor@intel.com/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1589719791
+Yes, definitely need something for #250 in net.
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/dbbf44c8bcca
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Cheers,
-MPTCP GH Action bot
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index e81fd46a43c4..e89d7741aa7f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -810,9 +810,17 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+>
+>  static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+>  {
+> -	if (((struct sock *)msk)->sk_state != TCP_ESTABLISHED)
+> +	struct sock *sk = (struct sock *)msk;
+> +
+> +	if (sk->sk_state != TCP_ESTABLISHED)
+>  		return false;
+> 
+> +	/* attach to msk socket only after we are sure we will deal with it
+> +	 * at close time
+> +	 */
+> +	if (sk->sk_socket && !ssk->sk_socket)
+> +		mptcp_sock_graft(ssk, sk->sk_socket);
+> +
+>  	mptcp_propagate_sndbuf((struct sock *)msk, ssk);
+>  	mptcp_sockopt_sync_locked(msk, ssk);
+>  	WRITE_ONCE(msk->allow_infinite_fallback, false);
+> @@ -3234,7 +3242,6 @@ bool mptcp_finish_join(struct sock *ssk)
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+>  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+>  	struct sock *parent = (void *)msk;
+> -	struct socket *parent_sock;
+>  	bool ret = true;
+>
+>  	pr_debug("msk=%p, subflow=%p", msk, subflow);
+> @@ -3278,13 +3285,6 @@ bool mptcp_finish_join(struct sock *ssk)
+>  		return false;
+>  	}
+> 
+> -	/* attach to msk socket only after we are sure he will deal with us
+> -	 * at close time
+> -	 */
+> -	parent_sock = READ_ONCE(parent->sk_socket);
+> -	if (parent_sock && !ssk->sk_socket)
+> -		mptcp_sock_graft(ssk, parent_sock);
+> -
+>  	subflow->map_seq = READ_ONCE(msk->ack_seq);
+>
+>  out:
+> -- 
+> 2.33.1
+> 
+> 
+>
+
+--
+Mat Martineau
+Intel
