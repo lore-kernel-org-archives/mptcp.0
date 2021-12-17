@@ -1,28 +1,28 @@
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2662CB2
-	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 23:37:08 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10201"; a="303232019"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412C02C9D
+	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 23:37:10 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10201"; a="303232022"
 X-IronPort-AV: E=Sophos;i="5.88,215,1635231600"; 
-   d="scan'208";a="303232019"
+   d="scan'208";a="303232022"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 15:37:07 -0800
 X-IronPort-AV: E=Sophos;i="5.88,215,1635231600"; 
-   d="scan'208";a="683556053"
+   d="scan'208";a="683556056"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.7.225])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 15:37:06 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 15:37:07 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
+Cc: Jean Sacren <sakiwit@gmail.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 1/3] mptcp: enforce HoL-blocking estimation
-Date: Fri, 17 Dec 2021 15:37:00 -0800
-Message-Id: <20211217233702.299461-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 3/3] mptcp: clean up harmless false expressions
+Date: Fri, 17 Dec 2021 15:37:02 -0800
+Message-Id: <20211217233702.299461-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20211217233702.299461-1-mathew.j.martineau@linux.intel.com>
 References: <20211217233702.299461-1-mathew.j.martineau@linux.intel.com>
@@ -34,177 +34,54 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Jean Sacren <sakiwit@gmail.com>
 
-The MPTCP packet scheduler has sub-optimal behavior with asymmetric
-subflows: if the faster subflow-level cwin is closed, the packet
-scheduler can enqueue "too much" data on a slower subflow.
+entry->addr.id is u8 with a range from 0 to 255 and MAX_ADDR_ID is 255.
+We should drop both false expressions of (entry->addr.id > MAX_ADDR_ID).
 
-When all the data on the faster subflow is acked, if the mptcp-level
-cwin is closed, and link utilization becomes suboptimal.
+We should also remove the obsolete parentheses in the first if branch.
 
-The solution is implementing blest-like[1] HoL-blocking estimation,
-transmitting only on the subflow with the shorter estimated time to
-flush the queued memory. If such subflows cwin is closed, we wait
-even if other subflows are available.
+Use U8_MAX for MAX_ADDR_ID and add a comment to show the link to
+mptcp_addr_info.id as suggested by Mr. Matthieu Baerts.
 
-This is quite simpler than the original blest implementation, as we
-leverage the pacing rate provided by the TCP socket. To get a more
-accurate estimation for the subflow linger-time, we maintain a
-per-subflow weighted average of such info.
-
-Additionally drop magic numbers usage in favor of newly defined
-macros and use more meaningful names for status variable.
-
-[1] http://dl.ifip.org/db/conf/networking/networking2016/1570234725.pdf
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/137
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Jean Sacren <sakiwit@gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/protocol.c | 72 +++++++++++++++++++++++++++++---------------
- net/mptcp/protocol.h |  1 +
- 2 files changed, 48 insertions(+), 25 deletions(-)
+ net/mptcp/pm_netlink.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3e549f6190c0..df5a0cf431c1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1372,7 +1372,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 
- struct subflow_send_info {
- 	struct sock *ssk;
--	u64 ratio;
-+	u64 linger_time;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 3186d33b5208..6cde58c259a8 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -38,7 +38,8 @@ struct mptcp_pm_add_entry {
+ 	u8			retrans_times;
  };
  
- void mptcp_subflow_set_active(struct mptcp_subflow_context *subflow)
-@@ -1397,20 +1397,24 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
- 	return __mptcp_subflow_active(subflow);
- }
+-#define MAX_ADDR_ID		255
++/* max value of mptcp_addr_info.id */
++#define MAX_ADDR_ID		U8_MAX
+ #define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, BITS_PER_LONG)
  
-+#define SSK_MODE_ACTIVE	0
-+#define SSK_MODE_BACKUP	1
-+#define SSK_MODE_MAX	2
-+
- /* implement the mptcp packet scheduler;
-  * returns the subflow that will transmit the next DSS
-  * additionally updates the rtx timeout
-  */
- static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- {
--	struct subflow_send_info send_info[2];
-+	struct subflow_send_info send_info[SSK_MODE_MAX];
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
-+	u32 pace, burst, wmem;
- 	int i, nr_active = 0;
- 	struct sock *ssk;
-+	u64 linger_time;
- 	long tout = 0;
--	u64 ratio;
--	u32 pace;
- 
- 	sock_owned_by_me(sk);
- 
-@@ -1429,10 +1433,11 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	}
- 
- 	/* pick the subflow with the lower wmem/wspace ratio */
--	for (i = 0; i < 2; ++i) {
-+	for (i = 0; i < SSK_MODE_MAX; ++i) {
- 		send_info[i].ssk = NULL;
--		send_info[i].ratio = -1;
-+		send_info[i].linger_time = -1;
- 	}
-+
- 	mptcp_for_each_subflow(msk, subflow) {
- 		trace_mptcp_subflow_get_send(subflow);
- 		ssk =  mptcp_subflow_tcp_sock(subflow);
-@@ -1441,34 +1446,51 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 
- 		tout = max(tout, mptcp_timeout_from_subflow(subflow));
- 		nr_active += !subflow->backup;
--		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
--			continue;
--
--		pace = READ_ONCE(ssk->sk_pacing_rate);
--		if (!pace)
--			continue;
-+		pace = subflow->avg_pacing_rate;
-+		if (unlikely(!pace)) {
-+			/* init pacing rate from socket */
-+			subflow->avg_pacing_rate = READ_ONCE(ssk->sk_pacing_rate);
-+			pace = subflow->avg_pacing_rate;
-+			if (!pace)
-+				continue;
-+		}
- 
--		ratio = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
--				pace);
--		if (ratio < send_info[subflow->backup].ratio) {
-+		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
-+		if (linger_time < send_info[subflow->backup].linger_time) {
- 			send_info[subflow->backup].ssk = ssk;
--			send_info[subflow->backup].ratio = ratio;
-+			send_info[subflow->backup].linger_time = linger_time;
+ struct pm_nl_pernet {
+@@ -825,14 +826,13 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ 		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
+ 						    MAX_ADDR_ID + 1,
+ 						    pernet->next_id);
+-		if ((!entry->addr.id || entry->addr.id > MAX_ADDR_ID) &&
+-		    pernet->next_id != 1) {
++		if (!entry->addr.id && pernet->next_id != 1) {
+ 			pernet->next_id = 1;
+ 			goto find_next;
  		}
  	}
- 	__mptcp_set_timeout(sk, tout);
  
- 	/* pick the best backup if no other subflow is active */
- 	if (!nr_active)
--		send_info[0].ssk = send_info[1].ssk;
--
--	if (send_info[0].ssk) {
--		msk->last_snd = send_info[0].ssk;
--		msk->snd_burst = min_t(int, MPTCP_SEND_BURST_SIZE,
--				       tcp_sk(msk->last_snd)->snd_wnd);
--		return msk->last_snd;
--	}
-+		send_info[SSK_MODE_ACTIVE].ssk = send_info[SSK_MODE_BACKUP].ssk;
-+
-+	/* According to the blest algorithm, to avoid HoL blocking for the
-+	 * faster flow, we need to:
-+	 * - estimate the faster flow linger time
-+	 * - use the above to estimate the amount of byte transferred
-+	 *   by the faster flow
-+	 * - check that the amount of queued data is greter than the above,
-+	 *   otherwise do not use the picked, slower, subflow
-+	 * We select the subflow with the shorter estimated time to flush
-+	 * the queued mem, which basically ensure the above. We just need
-+	 * to check that subflow has a non empty cwin.
-+	 */
-+	ssk = send_info[SSK_MODE_ACTIVE].ssk;
-+	if (!ssk || !sk_stream_memory_free(ssk) || !tcp_sk(ssk)->snd_wnd)
-+		return NULL;
+-	if (!entry->addr.id || entry->addr.id > MAX_ADDR_ID)
++	if (!entry->addr.id)
+ 		goto out;
  
--	return NULL;
-+	burst = min_t(int, MPTCP_SEND_BURST_SIZE, tcp_sk(ssk)->snd_wnd);
-+	wmem = READ_ONCE(ssk->sk_wmem_queued);
-+	subflow = mptcp_subflow_ctx(ssk);
-+	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
-+					   READ_ONCE(ssk->sk_pacing_rate) * burst,
-+					   burst + wmem);
-+	msk->last_snd = ssk;
-+	msk->snd_burst = burst;
-+	return ssk;
- }
- 
- static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e1469155fb15..0486c9f5b38b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -395,6 +395,7 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- /* MPTCP subflow context */
- struct mptcp_subflow_context {
- 	struct	list_head node;/* conn_list of subflows */
-+	unsigned long avg_pacing_rate; /* protected by msk socket lock */
- 	u64	local_key;
- 	u64	remote_key;
- 	u64	idsn;
+ 	__set_bit(entry->addr.id, pernet->id_bitmap);
 -- 
 2.34.1
 
