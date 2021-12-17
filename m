@@ -1,44 +1,44 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0990B2C9C
-	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 11:40:36 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id o20so6623452eds.10
-        for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 03:40:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B68168
+	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 16:24:08 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id j21so5431597edt.9
+        for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 08:24:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=I2hHeM+CS4D4F2v5JpMezrFzPZsBcrymhYBtMO2hpn0=;
-        b=Wf4cQ3suylfc2PjOx7MppuMiOGTBT+07NUKocJCwM1tTOnuXgTuUS1EHf+Hp0Cszed
-         9e08LaNI5EsC4pHLy7PjqQIgCnn8CAWTYYDqkMqOGJCbuV9T5q7ZWF2ouSdlW2O3WyvG
-         CzKpuoGPbgqMsC59HWQhMARZN/lDB/h5pNbte6A9gEWnwRo79AWgjmvNKFOYhgp09vKx
-         cUXOzTEoZAyH/SQQKxVdFlb6At3kEqIkqwMUSVOajyBYkAieaCIVuEKff7vXYMw+Q2w2
-         Y0u9oQVcqSLR6XfLE/NyyyUYznM8AVAEczfSSZv1dvYzX3kE3isJTbxANJ1PbfCiS/uz
-         9/zg==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=XXEgNOe4gZSWREV+OzXpNPpmJ/NmIApdZTEsOJS8xvM=;
+        b=2wPj8gMyg1/vrUyneQ90QtqtEpRbtAWGqa3KDGTAN51eai06Q/nssCHlQPx1NJzOPc
+         h04apNIXNGu8ZZLzP2yRoEpdq+jhdfYFPL3Vu8lCllnLtiyIuA6F4AccUs4JxJT9T8nZ
+         dAixEH3lDsqUUQw+xY2hCj/D719AjcOXZ4B27sHMf7EJ/yd0vCpOIpUcK9eHPJl9qF5y
+         Zqt57s1gGbuWCsppShvvgFkIPiEs+lNwKQ7I+SvM8PYiNhdA0FgBF97o04s8yBFzqq+C
+         0ysUcBUOfzmXwQ8LYEY57fmqRIQkthiUYUqaIZa/OZGRNW3aSHsNk0Z62GYjAZ8Detaj
+         hLug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=I2hHeM+CS4D4F2v5JpMezrFzPZsBcrymhYBtMO2hpn0=;
-        b=NhS4wRJ0fgJL7D8mNIOvX9FrRbMhkrltfSzBxNq8/4J+lrD47B4NSU/qioJvmSKxxv
-         DG6AoKfmsQtArxVksqN/kDDOqw9PvB4XrqcmIh6lhGsxQlIEcdcVaiyR7x1YTOFC3w87
-         Kn6eY07St+wHH88YiVpBKTK5ikzn1/acGxiU/zLzJ+krs95prPctE943DN2y12e4oesr
-         mWFVJcxLoNTzwVVmK4M877Cnid1d96AhAXY+rObN+lvNmQVhHju+UbZw2urRPo4/yiPh
-         VAXvCYNum/aH3aUVFGlsAH+Wb2OGwTVrY7BVNwljWTMcs5IZsBvw1vFKkR3WNnuY0Uxy
-         gtGw==
-X-Gm-Message-State: AOAM5310sHZL0Q4rLyH19TBR8ei5SKYeF2p0W+UeXtVvm2KZSFEz4mIM
-	KHK7ieOjGloCdGvsL6lMM1/BRL1c4yUfvQ==
-X-Google-Smtp-Source: ABdhPJzhvO/UqMYEC2RaZJ/omeHmsxFtyttPu4+oYrNkmjZwU9c6g+I9exbqD7qUdiefxZDeITzabA==
-X-Received: by 2002:a17:907:86a6:: with SMTP id qa38mr2230736ejc.286.1639741234925;
-        Fri, 17 Dec 2021 03:40:34 -0800 (PST)
+        bh=XXEgNOe4gZSWREV+OzXpNPpmJ/NmIApdZTEsOJS8xvM=;
+        b=E4uItVrJenR4Ixrv1CcuzCYZHDjU5/xQIPIJ2pfy2zE7njX6QQXnCnwzvQ5N0oRbpF
+         jiKci6GJCjyOfetvo6/u3TN/Byti9kfnraOIyNPxJHuuEgGyT2/od6pGui/4+97Y0bIh
+         0LEGn8HrWoZPrpavhIEZ+lUJfIrq1x22nRiLRpL8j1pZYhuHhsIAzrFVwJbqz4YIYOQF
+         oC4HxYSRzUNXV7j6WWUlAZ4hGBX4nrQDHPoLGoY1iZHZtISNrkOG2FlZFgLnj8wtTRLa
+         AcTdZHVSe/cs32rOREY+NkAmj4VOPJqDk5rkuF2VJuhSTxiA+9BGuzfhuM/n1rmPJedw
+         HX5Q==
+X-Gm-Message-State: AOAM530ZOako8dYNMgMsQZhc9GkPq4/CH4GLZp8BVvEPsfK5V4cNfl3D
+	D5ONaAhBk+b1frQo6mR6Jx0DwCcTvaisxw==
+X-Google-Smtp-Source: ABdhPJy9538oIpa+nuVJmaS2Hrx+3NhHKVWfyzt2AHTC08snv4RQc+JkrvF2YE/Vy3YKc7RetgvK7g==
+X-Received: by 2002:a17:906:39c8:: with SMTP id i8mr1333086eje.335.1639758246497;
+        Fri, 17 Dec 2021 08:24:06 -0800 (PST)
 Received: from [192.168.178.33] (94.105.100.208.dyn.edpnet.net. [94.105.100.208])
-        by smtp.gmail.com with ESMTPSA id y17sm3695603edd.31.2021.12.17.03.40.34
+        by smtp.gmail.com with ESMTPSA id j5sm3029122ejo.177.2021.12.17.08.24.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Dec 2021 03:40:34 -0800 (PST)
-Message-ID: <d42754d8-b911-97bb-e755-f70a40f35665@tessares.net>
-Date: Fri, 17 Dec 2021 12:40:33 +0100
+        Fri, 17 Dec 2021 08:24:06 -0800 (PST)
+Message-ID: <ef12f796-ffc6-9717-bf28-9047355c5d81@tessares.net>
+Date: Fri, 17 Dec 2021 17:24:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,54 +47,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: cleanup MPJ subflow list
- handling"
+Subject: Re: [PATCH mptcp-next 05/21] mptcp: netlink: store per namespace list
+ of refcounted listen socks
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <70e15da075bab481ac07ed1ce8c2adc9740403c6.1639665203.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
+To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
+References: <20211216222314.1244708-1-kishen.maloor@intel.com>
+ <20211216222314.1244708-6-kishen.maloor@intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <70e15da075bab481ac07ed1ce8c2adc9740403c6.1639665203.git.pabeni@redhat.com>
+In-Reply-To: <20211216222314.1244708-6-kishen.maloor@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hi Kishen,
 
-On 16/12/2021 15:33, Paolo Abeni wrote:
-> The self-tests in a loop triggered a UaF similar to:
+Thank you for looking at that!
+
+On 16/12/2021 23:22, Kishen Maloor wrote:
+> The kernel maintains listening sockets bound to announced addresses
+> via the ADD_ADDR option to be able to receive MP_JOIN requests. Path
+> managers may choose to advertise the same address over multiple
+> MPTCP connections. So this change provides a simple framework to
+> manage a list of all distinct listning sockets created in a
+> namespace by encapsulating it in a structure that is ref counted
+> and can be shared across multiple connections. The sockets (and
+> their enclosing structure) are released when there are no more
+> references.
 > 
-> https://github.com/multipath-tcp/mptcp_net-next/issues/250
+> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+> ---
+>  net/mptcp/pm_netlink.c | 76 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
 > 
-> The critical scenario is actually almost fixed by:
-> 
-> "mptcp: cleanup MPJ subflow list handling"
-> 
-> with a notable exception: if an MPJ handshake races with
-> mptcp_close(), the subflow enter the join_list and __mptcp_finish_join()
-> is processed at the msk socket lock release in mptcp_close(),
-> the subflow will preserver a danfling reference to the msk sk_socket.
-> 
-> Address the issue fragting the subflow only on successful
-> __mptcp_finish_join()
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index fc07ab9a53ba..0cb03d78e22b 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -22,6 +22,14 @@ static struct genl_family mptcp_genl_family;
+>  
+>  static int pm_nl_pernet_id;
+>  
+> +struct mptcp_local_lsk {
+> +	struct list_head        list;
+> +	struct mptcp_addr_info  addr;
+> +	struct socket           *lsk;
+> +	struct rcu_head         rcu;
+> +	refcount_t              refcount;
 
-Thank you for the patch and the review!
+Small detail before I forget: please use tabs for the alignment.
 
-Now in our tree:
+> +};
+> +
+>  struct mptcp_pm_addr_entry {
+>  	struct list_head	list;
+>  	struct mptcp_addr_info	addr;
+> @@ -41,7 +49,10 @@ struct mptcp_pm_add_entry {
+>  struct pm_nl_pernet {
+>  	/* protects pernet updates */
+>  	spinlock_t		lock;
+> +	/* protects access to pernet lsk list */
+> +	spinlock_t              lsk_list_lock;
+>  	struct list_head	local_addr_list;
+> +	struct list_head        lsk_list;
 
-- 494ff5ec1dd6: "squashed" in "mptcp: cleanup MPJ subflow list handling"
-- Results: cabf1e05f011..82c91858f45c
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20211217T113938
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-> Note that issues/250 triggers even before
-> "mptcp: cleanup MPJ subflow list handling", as before such commit the join
-> list was not spliced by mptcp_close(). We could consider a net-only patch to
-> address that.
-Please note I didn't close issues/250 for this reason.
+Same here, similar to what is done around.
 
 Cheers,
 Matt
