@@ -1,57 +1,57 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724112CAA
-	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 18:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CA02CAA
+	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 18:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1639766310;
+	s=mimecast20190719; t=1639766391;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Qv+IIsMbtUQotx2glqeX1Xen+Ulegwi+0gNI9IP880c=;
-	b=jTq3ogVYfHh+QX2A/2K3uTjTwUVBjUPxXlFTdEo4ggs0y0zfMCAbQLdto6pn8BwctP3znb
-	42NXwJBkZJkRL4JTO3T09XzusxzdL7r3Cj9TDAMj0YMW8UmXuR3qEqo4fCRUtyUsS9LJUm
-	IlWZ5+LzQ5+X9K62xaBzlt0xtPJ687c=
+	bh=7g0G8sSbZSfmKccZHmSqSRZs72qXD4R26UXM4apitao=;
+	b=P93mxb3nnNi5W/5leQ7mWCkWApz7yWFkfwvPyLo0db6s7pqy9UMgJI9Kx9QEBHlgPBR36g
+	YHDOlpwa4tNtF3QukwgmX7WbV0Trf3PACA7RYxP5UVkF3KW/WjjvK80uoy/aJv4/QDxb7+
+	Xb9kG8AcD0hu5oclRdh4q0YG1hnI5uQ=
 Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
  [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-21-NNzFe8sCPM6Cgk87YiuVyA-1; Fri, 17 Dec 2021 13:38:29 -0500
-X-MC-Unique: NNzFe8sCPM6Cgk87YiuVyA-1
-Received: by mail-qt1-f200.google.com with SMTP id a8-20020ac86108000000b002b63fc40062so3364718qtm.2
-        for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 10:38:29 -0800 (PST)
+ us-mta-195-FbubZxS-N6KDRh_NNgVjZA-1; Fri, 17 Dec 2021 13:39:49 -0500
+X-MC-Unique: FbubZxS-N6KDRh_NNgVjZA-1
+Received: by mail-qt1-f200.google.com with SMTP id s6-20020a05622a018600b002b2d93b9c73so3334068qtw.9
+        for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 10:39:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Qv+IIsMbtUQotx2glqeX1Xen+Ulegwi+0gNI9IP880c=;
-        b=I19bC/M9JpCQ9w1dz7jMbv7IYVMkPnkURe+iK7BKrGxzHtRnmdHfrjXW6hxLWJHkFz
-         pAWBQtrpQQxU2kWJoUNXxOm4X+hLHqKhgdjyvAkQX/+hjHr+lUrONIHORPaPGoKW+HFO
-         MHSWachIZgCtRTlxFi6zmGygPttUZWfYb9EI6ou8BtDvfISRSfLk7g7yLXQN+gcgu0Y4
-         RILm7Vo/9Z8N5QXjiSOwY7nAlb4qIVJis+f3oOBsMChDj25F93HSyNSdz0BrWE8aW5IT
-         SUQl14tRKlWl66BQIThyTVd/2XpsdrkRR37erwYP26OT6kpe+0odO6n8jK6bgAl1FLm2
-         tPLA==
-X-Gm-Message-State: AOAM5302AzTv7v5jl5/cAWfJBRerPy9aVHrBzUQauTFapzvfTjwhEiAw
-	j0xTE62XL0ohIoGgDqax0eSdnW2xkJ4r1OXZZh0Uf3+WMJDCyKjiKrOL0kPBwYb1SXzf8zk6Otw
-	JJXGbBcw+rD09EcQ=
-X-Received: by 2002:a05:6214:2409:: with SMTP id fv9mr3750043qvb.24.1639766308496;
-        Fri, 17 Dec 2021 10:38:28 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy8G+hzN95lZYuWwo2TduA0Fvuu+SDMIv0Xr+VnVOl4N0hCsV2w+SvrNXv1WkMUpC2XD/3pSQ==
-X-Received: by 2002:a05:6214:2409:: with SMTP id fv9mr3750025qvb.24.1639766308299;
-        Fri, 17 Dec 2021 10:38:28 -0800 (PST)
+        bh=7g0G8sSbZSfmKccZHmSqSRZs72qXD4R26UXM4apitao=;
+        b=GCsLtCtf5KfW8JYzXcg+r27XICEdNMJ5pxsrSzlDkrPc+L0Y0VGey0j93tr4/5bibP
+         /6RBS2CJfI8pnLdvlKzOb77nqwmiSth6GgucK1sbUX3wrI9O24jTWoxBOIkh5kXG1Mdb
+         4wi44YYF9xZlfvhDHmtfYrSyqVHJ7gVgdmRbmV12fNUrc1SO1oLFKpLYTImLlFfQ8/aQ
+         BRzYeBSW9uDMUHTwiK4kWeBLBEYpapRl5pvOQMZmanpDDGNMo/mxJKqiaBbukqzCgGE+
+         z6Tk1BDdmlP4GLyxTrnkH7tlp7JTSe18fH9rBiwR2dpWzBWkgyfqm3LoOkWEf0GxPy0V
+         2buw==
+X-Gm-Message-State: AOAM532PFZWknW/VsC/oDsCIzkaTFQIONMe8vFGBNxPQ6kAozWDfxzkS
+	OP+jPDkESDNIEH3en0Om5wAqBVrNE2Da0yVkgEAgqHT1aGyxkTOl4OCbJgRXTnRFKmIbzuGTZl6
+	T1a7J2cYgOykXxeI=
+X-Received: by 2002:ac8:7d08:: with SMTP id g8mr3697622qtb.142.1639766388712;
+        Fri, 17 Dec 2021 10:39:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyRn4S8RzycwWqGf1aIOju4dXfvprV/aATJXeX0Ue6S3b0Z7g4FJxtZd8nWhySFLs2yKti6hA==
+X-Received: by 2002:ac8:7d08:: with SMTP id g8mr3697603qtb.142.1639766388479;
+        Fri, 17 Dec 2021 10:39:48 -0800 (PST)
 Received: from gerbillo.redhat.com (146-241-225-60.dyn.eolo.it. [146.241.225.60])
-        by smtp.gmail.com with ESMTPSA id m4sm7068163qtu.87.2021.12.17.10.38.27
+        by smtp.gmail.com with ESMTPSA id 22sm7685676qtw.12.2021.12.17.10.39.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Dec 2021 10:38:27 -0800 (PST)
-Message-ID: <14ebb20462d681f7ec696499816187672a5985bd.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 09/21] mptcp: allow ADD_ADDR reissuance by
- userspace PMs
+        Fri, 17 Dec 2021 10:39:48 -0800 (PST)
+Message-ID: <1402a418d5101b5aa4fc6b11239c5f4d81ac90b0.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 13/21] mptcp: netlink: Add
+ MPTCP_PM_CMD_ANNOUNCE
 From: Paolo Abeni <pabeni@redhat.com>
 To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
-Date: Fri, 17 Dec 2021 19:38:25 +0100
-In-Reply-To: <20211216222314.1244708-10-kishen.maloor@intel.com>
+Date: Fri, 17 Dec 2021 19:39:45 +0100
+In-Reply-To: <20211216222314.1244708-14-kishen.maloor@intel.com>
 References: <20211216222314.1244708-1-kishen.maloor@intel.com>
-	 <20211216222314.1244708-10-kishen.maloor@intel.com>
+	 <20211216222314.1244708-14-kishen.maloor@intel.com>
 User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -67,41 +67,106 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Thu, 2021-12-16 at 17:23 -0500, Kishen Maloor wrote:
-> This change allows userspace PM implementations to reissue ADD_ADDR
-> announcements (if necessary) based on their chosen policy.
-> 
-> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 > ---
->  net/mptcp/pm_netlink.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+>  include/uapi/linux/mptcp.h |   2 +
+>  net/mptcp/pm_netlink.c     | 111 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 113 insertions(+)
 > 
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index f106a3941cdf..40380be396c8 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -55,6 +55,7 @@ enum {
+>  	MPTCP_PM_ATTR_ADDR,				/* nested address */
+>  	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
+>  	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
+> +	MPTCP_PM_ATTR_TOKEN,				/* u32 */
+>  
+>  	__MPTCP_PM_ATTR_MAX
+>  };
+> @@ -92,6 +93,7 @@ enum {
+>  	MPTCP_PM_CMD_SET_LIMITS,
+>  	MPTCP_PM_CMD_GET_LIMITS,
+>  	MPTCP_PM_CMD_SET_FLAGS,
+> +	MPTCP_PM_CMD_ANNOUNCE,
+>  
+>  	__MPTCP_PM_CMD_AFTER_LAST
+>  };
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d57e2f825728..1adaf5d14f87 100644
+> index 067a74ad7c5c..2e9ca5730b10 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -452,8 +452,16 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+> @@ -1268,6 +1268,7 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_PM_ATTR_MAX + 1] = {
+>  					NLA_POLICY_NESTED(mptcp_pm_addr_policy),
+>  	[MPTCP_PM_ATTR_RCV_ADD_ADDRS]	= { .type	= NLA_U32,	},
+>  	[MPTCP_PM_ATTR_SUBFLOWS]	= { .type	= NLA_U32,	},
+> +	[MPTCP_PM_ATTR_TOKEN]		= { .type	= NLA_U32,	},
+>  };
 >  
->  	lockdep_assert_held(&msk->pm.lock);
+>  void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+> @@ -2028,6 +2029,111 @@ static int mptcp_nl_addr_backup(struct net *net,
+>  	return ret;
+>  }
 >  
-> -	if (mptcp_lookup_anno_list_by_saddr(msk, &entry->addr))
-> -		return false;
-> +	add_entry = mptcp_lookup_anno_list_by_saddr(msk, &entry->addr);
+> +static int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
+> +{
+> +	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+> +	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+> +	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+> +	struct mptcp_pm_addr_entry addr_val;
+> +	struct mptcp_local_lsk *lsk_ref;
+> +	bool reuse_port = false;
+> +	struct mptcp_sock *msk;
+> +	struct socket *lsk;
+> +	u32 token_val;
+> +	int err;
 > +
-> +	if (add_entry) {
-> +		if (READ_ONCE(msk->pm.pm_type) == MPTCP_PM_TYPE_KERNEL)
-> +			return false;
-> +
-> +		sk_reset_timer(sk, &add_entry->add_timer,
-> +			       jiffies + mptcp_get_add_addr_timeout(net));
-> +		return true;
+> +	if (!addr || !token) {
+> +		GENL_SET_ERR_MSG(info, "missing required inputs");
+> +		return -EINVAL;
 > +	}
+> +
+> +	token_val = nla_get_u32(token);
+> +
+> +	msk = mptcp_token_get_sock(sock_net(skb->sk), token_val);
+> +	if (!msk) {
+> +		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (READ_ONCE(msk->pm.pm_type) != MPTCP_PM_TYPE_USERSPACE) {
+> +		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = mptcp_pm_parse_entry(addr, info, true, &addr_val);
+> +	if (err < 0) {
+> +		GENL_SET_ERR_MSG(info, "error parsing local address");
+> +		return err;
+> +	}
+> +
+> +	if (addr_val.addr.id == 0 || !(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
+> +		GENL_SET_ERR_MSG(info, "invalid addr id or flags");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!addr_val.addr.port) {
+> +		addr_val.addr.port =
+> +			((struct inet_sock *)inet_sk
+> +			 ((struct sock *)msk))->inet_sport;
+> +
+> +		reuse_port = true;
+> +	}
+> +
+> +	lsk_ref = lsk_list_find(pernet, &addr_val.addr);
+> +
+> +	if (!lsk_ref) {
+> +		err = mptcp_pm_nl_create_listen_socket(skb->sk, &addr_val, &lsk);
 
-I'm unsure I understand correctly the goal here ?!? retransmission on
-timeout of the announced address are already implmeneted by the
-existing code. What kind of different behaviour do you want to obtain
-here?
+I really think should be up to the user-space path PM to create this
+listener.
 
-Thanks!
+Cheers,
 
 Paolo
 
