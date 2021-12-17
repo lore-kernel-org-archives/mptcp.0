@@ -1,41 +1,41 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8D7168
-	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 02:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21186173
+	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 05:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639709557; x=1671245557;
+  t=1639720010; x=1671256010;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ngKz9PmzD5BQgF+EJGp4OAE/cycknqQdjf0mnoZHLrI=;
-  b=I/F03D81hECB/+kd1LlK2tCXEuJhabVsQaPNSJ9Ar+GXEz0RUVJRPsDO
-   oPS6qgp9E4pTe5YE7nUwM67bCjgCmmlZxhps/J5wjSV1C859t4nEcsPlR
-   5GkbH2DU664kDRB/0LTudTwbPJrShj7djSW6GjKygiXSyK86yzDY2QA8E
-   LXytPT+OVK7GV7mrGmXhRnM+hmtP5R2iWJ93f7AaVPFaArqEbZ2uJCykb
-   dh7JHq4P1YJFBpRnLTrnKspUsrW5nESOCWhq9Xtfb3qgZVCV+fvrxMzc+
-   SUnLg3tN1091H3V6d34YMuFK81O4tq98HS/sUUbOGpXW77+lX4B70A6Hx
+  bh=qY0Wwk+mzs/pA6vJJ8UEZG70IwR/pEoSFiN6S+mMw2k=;
+  b=i4B+Tu/aaP0TlWdgCLlfH3wv8QOg8+3GpqnXBQ15RfGHGL12o9F/D76s
+   XWBSs7Wdg9tiHu3rxZkGlC82KEpfSfIV6xQgJYZ6zwDslIhMGbQMjRO5y
+   rpumOzU847gZVg6piuR05JoJEwChmCf1nkkaRNRBWzJRC3IHEfy3XZ/Dd
+   R56hyTcd4kOtHSLMS0ycI9kFAABJBTBubaSbT9VwuY0TPhjV85BpudLCT
+   HkEyf5No3VVObLjYS6Edl5NnLuA2OQVw8wI6I7Rnhm+LAueD834ygLsC5
+   FzTrlnoPe6MfBmoWvx/F4g1hc9zMgnX3sji3XdN6BsvEjSqv4psgC3YIY
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="325950350"
+X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="239909355"
 X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="325950350"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 18:52:36 -0800
+   d="scan'208";a="239909355"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 21:46:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="615408511"
+   d="scan'208";a="683260096"
 Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 16 Dec 2021 18:52:34 -0800
+  by orsmga005.jf.intel.com with ESMTP; 16 Dec 2021 21:46:47 -0800
 Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
 	(envelope-from <lkp@intel.com>)
-	id 1my3MI-00048f-7l; Fri, 17 Dec 2021 02:52:34 +0000
-Date: Fri, 17 Dec 2021 10:52:17 +0800
+	id 1my64s-0004H1-Mc; Fri, 17 Dec 2021 05:46:46 +0000
+Date: Fri, 17 Dec 2021 13:46:27 +0800
 From: kernel test robot <lkp@intel.com>
 To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
 Cc: kbuild-all@lists.01.org, Florian Westphal <fw@strlen.de>
 Subject: Re: [PATCH mptcp-next 17/21] mptcp: netlink: allow userspace-driven
  subflow establishment
-Message-ID: <202112171003.GmuMEIxi-lkp@intel.com>
+Message-ID: <202112171344.Zn3aOifg-lkp@intel.com>
 References: <20211216222314.1244708-18-kishen.maloor@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -56,8 +56,8 @@ I love your patch! Yet something to improve:
 
 url:    https://github.com/0day-ci/linux/commits/Kishen-Maloor/mptcp-support-userspace-path-management/20211217-062636
 base:   f81a8b95bfe9cae8ff02739e3e263d9310422af7
-config: sparc-randconfig-r004-20211216 (https://download.01.org/0day-ci/archive/20211217/202112171003.GmuMEIxi-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 11.2.0
+config: arc-randconfig-r043-20211216 (https://download.01.org/0day-ci/archive/20211217/202112171344.Zn3aOifg-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 11.2.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -67,22 +67,118 @@ reproduce (this is a W=1 build):
         git checkout ece3dbcf3e16211dda7bdeb0f00b2450e776814d
         # save the config file to linux build tree
         mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=sparc SHELL=/bin/bash net/mptcp/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=arc SHELL=/bin/bash net/
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
+   In file included from arch/arc/include/asm/atomic.h:12,
+                    from include/linux/atomic.h:7,
+                    from include/net/net_namespace.h:8,
+                    from include/linux/inet.h:42,
+                    from net/mptcp/pm_netlink.c:9:
    net/mptcp/pm_netlink.c: In function 'mptcp_nl_find_ssk':
 >> net/mptcp/pm_netlink.c:2613:54: error: 'const struct mptcp_addr_info' has no member named 'addr6'; did you mean 'addr'?
     2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
          |                                                      ^~~~~
-         |                                                      addr
+   include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
+      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                    ^~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
    net/mptcp/pm_netlink.c:2614:55: error: 'const struct mptcp_addr_info' has no member named 'addr6'; did you mean 'addr'?
     2614 |                             !ipv6_addr_equal(&remote->addr6, &ssk->sk_v6_daddr))
          |                                                       ^~~~~
-         |                                                       addr
+   include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
+      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                    ^~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+>> include/net/sock.h:388:45: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+     388 | #define sk_v6_daddr             __sk_common.skc_v6_daddr
+         |                                             ^~~~~~~~~~~~
+   include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
+      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                    ^~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+   net/mptcp/pm_netlink.c:2614:68: note: in expansion of macro 'sk_v6_daddr'
+    2614 |                             !ipv6_addr_equal(&remote->addr6, &ssk->sk_v6_daddr))
+         |                                                                    ^~~~~~~~~~~
+>> net/mptcp/pm_netlink.c:2613:54: error: 'const struct mptcp_addr_info' has no member named 'addr6'; did you mean 'addr'?
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                                                      ^~~~~
+   include/linux/compiler.h:58:61: note: in definition of macro '__trace_if_var'
+      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                             ^~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+   net/mptcp/pm_netlink.c:2614:55: error: 'const struct mptcp_addr_info' has no member named 'addr6'; did you mean 'addr'?
+    2614 |                             !ipv6_addr_equal(&remote->addr6, &ssk->sk_v6_daddr))
+         |                                                       ^~~~~
+   include/linux/compiler.h:58:61: note: in definition of macro '__trace_if_var'
+      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                             ^~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+>> include/net/sock.h:388:45: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+     388 | #define sk_v6_daddr             __sk_common.skc_v6_daddr
+         |                                             ^~~~~~~~~~~~
+   include/linux/compiler.h:58:61: note: in definition of macro '__trace_if_var'
+      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                             ^~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+   net/mptcp/pm_netlink.c:2614:68: note: in expansion of macro 'sk_v6_daddr'
+    2614 |                             !ipv6_addr_equal(&remote->addr6, &ssk->sk_v6_daddr))
+         |                                                                    ^~~~~~~~~~~
+>> net/mptcp/pm_netlink.c:2613:54: error: 'const struct mptcp_addr_info' has no member named 'addr6'; did you mean 'addr'?
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                                                      ^~~~~
+   include/linux/compiler.h:69:10: note: in definition of macro '__trace_if_value'
+      69 |         (cond) ?                                        \
+         |          ^~~~
+   include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
+      56 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+         |                            ^~~~~~~~~~~~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+   net/mptcp/pm_netlink.c:2614:55: error: 'const struct mptcp_addr_info' has no member named 'addr6'; did you mean 'addr'?
+    2614 |                             !ipv6_addr_equal(&remote->addr6, &ssk->sk_v6_daddr))
+         |                                                       ^~~~~
+   include/linux/compiler.h:69:10: note: in definition of macro '__trace_if_value'
+      69 |         (cond) ?                                        \
+         |          ^~~~
+   include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
+      56 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+         |                            ^~~~~~~~~~~~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+>> include/net/sock.h:388:45: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+     388 | #define sk_v6_daddr             __sk_common.skc_v6_daddr
+         |                                             ^~~~~~~~~~~~
+   include/linux/compiler.h:69:10: note: in definition of macro '__trace_if_value'
+      69 |         (cond) ?                                        \
+         |          ^~~~
+   include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
+      56 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+         |                            ^~~~~~~~~~~~~~
+   net/mptcp/pm_netlink.c:2613:25: note: in expansion of macro 'if'
+    2613 |                         if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
+         |                         ^~
+   net/mptcp/pm_netlink.c:2614:68: note: in expansion of macro 'sk_v6_daddr'
+    2614 |                             !ipv6_addr_equal(&remote->addr6, &ssk->sk_v6_daddr))
+         |                                                                    ^~~~~~~~~~~
 
 
 vim +2613 net/mptcp/pm_netlink.c
