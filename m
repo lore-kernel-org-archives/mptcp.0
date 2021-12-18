@@ -1,26 +1,26 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE8E2C9D
-	for <mptcp@lists.linux.dev>; Fri, 17 Dec 2021 23:54:49 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10201"; a="239668574"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A79F2C9C
+	for <mptcp@lists.linux.dev>; Sat, 18 Dec 2021 00:30:32 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10201"; a="300634679"
 X-IronPort-AV: E=Sophos;i="5.88,215,1635231600"; 
-   d="scan'208";a="239668574"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 15:54:48 -0800
+   d="scan'208";a="300634679"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 16:30:18 -0800
 X-IronPort-AV: E=Sophos;i="5.88,215,1635231600"; 
-   d="scan'208";a="465293585"
+   d="scan'208";a="519978571"
 Received: from jasanch5-mobl1.amr.corp.intel.com ([10.212.247.3])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 15:54:48 -0800
-Date: Fri, 17 Dec 2021 15:54:48 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 16:30:18 -0800
+Date: Fri, 17 Dec 2021 16:30:18 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add tests for
- subflow creation failure"
-In-Reply-To: <82bd312f4f8ada4709d1a0d8525f1491006ec866.1639723286.git.geliang.tang@suse.com>
-Message-ID: <0a31271-11c8-1218-9ad-a578b2a2cf33@linux.intel.com>
-References: <82bd312f4f8ada4709d1a0d8525f1491006ec866.1639723286.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next 0/2] reuse __mptcp_make_csum in
+ validate_data_csum
+In-Reply-To: <cover.1639722883.git.geliang.tang@suse.com>
+Message-ID: <4608398-50e1-d053-b11a-1d937bf12282@linux.intel.com>
+References: <cover.1639722883.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -31,89 +31,29 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Fri, 17 Dec 2021, Geliang Tang wrote:
 
-> Align the output logs with others.
+> Two cleanup patches for the data checksum.
 >
-> 01 no MPC address reuse with single endpoint syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 02 multiple subflows, with failing subflow syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 03 multiple subflows, with subflow timeout syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 04 multiple subflows, fair usage on close syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 05 no JOIN                              syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 06 single subflow, limited by client    syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 07 single subflow, limited by server    syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 08 single subflow                       syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 09 multiple subflows                    syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 10 multiple subflows, limited by server syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 11 single subflow, dev                  syn[ ok ] - synack[ ok ] - ack[ ok ]
+> Geliang Tang (2):
+>  mptcp: change the parameter of __mptcp_make_csum
+>  mptcp: reuse __mptcp_make_csum in validate_data_csum
 >
-> ->
+> net/mptcp/options.c  |  8 ++++----
+> net/mptcp/protocol.h |  1 +
+> net/mptcp/subflow.c  | 15 ++++++---------
+> 3 files changed, 11 insertions(+), 13 deletions(-)
 >
-> 01 no MPC reuse with single endpoint    syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 02 multi subflows, with failing subflow syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 03 multi subflows, with subflow timeout syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 04 multi subflows, fair usage on close  syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 05 no JOIN                              syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 06 single subflow, limited by client    syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 07 single subflow, limited by server    syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 08 single subflow                       syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 09 multiple subflows                    syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 10 multiple subflows, limited by server syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 11 single subflow, dev                  syn[ ok ] - synack[ ok ] - ack[ ok ]
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-
-Looks good to me, thanks:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index d70621700281..e48ce23d2386 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1069,7 +1069,7 @@ subflows_error_tests()
-> 	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-> 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.1.2 flags subflow
-> 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-> -	chk_join_nr "no MPC address reuse with single endpoint" 0 0 0
-> +	chk_join_nr "no MPC reuse with single endpoint" 0 0 0
->
-> 	# multiple subflows, with subflow creation error
-> 	reset
-> @@ -1079,7 +1079,7 @@ subflows_error_tests()
-> 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-> 	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
-> 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-> -	chk_join_nr "multiple subflows, with failing subflow" 1 1 1
-> +	chk_join_nr "multi subflows, with failing subflow" 1 1 1
->
-> 	# multiple subflows, with subflow timeout on MPJ
-> 	reset
-> @@ -1089,7 +1089,7 @@ subflows_error_tests()
-> 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
-> 	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j DROP
-> 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-> -	chk_join_nr "multiple subflows, with subflow timeout" 1 1 1
-> +	chk_join_nr "multi subflows, with subflow timeout" 1 1 1
->
-> 	# multiple subflows, check that the endpoint corresponding to
-> 	# closed subflow (due to reset) is not reused if additional
-> @@ -1112,7 +1112,7 @@ subflows_error_tests()
->
-> 	# additional subflow could be created only if the PM select
-> 	# the later endpoint, skipping the already used one
-> -	chk_join_nr "multiple subflows, fair usage on close" 1 1 1
-> +	chk_join_nr "multi subflows, fair usage on close" 1 1 1
-> }
->
-> signal_address_tests()
 > -- 
 > 2.31.1
->
->
->
+
+
+Hi Geliang -
+
+Thanks for the cleanup patches! The changes look good to me, and all the 
+'mptcp_connect.sh -C' tests work on my system. I tested with only patch 1, 
+or both patch 1 & 2, and since both the old and new validation code work 
+we can be sure the behavior hasn't changed.
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 --
 Mat Martineau
