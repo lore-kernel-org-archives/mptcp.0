@@ -1,169 +1,120 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AED4168
-	for <mptcp@lists.linux.dev>; Tue, 21 Dec 2021 20:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640117116; x=1671653116;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hSbz2O8chqw36AcPihmylxulkpuyMyBA2P0MIb+OgYA=;
-  b=DJKp8/SrAMucCHmV7LO8H9GW3t/g5qx3cHH+Ibh8CgKHyvhIv2eGIo09
-   is26uuGOJsmzK0RQLFq4mDiHVO+syoI+SVy3TD4DCZq64Zo6yEk2Vd+9J
-   NAaSrM6Lssdo4WQbzTm8WG2bY/JNZVr4a84ZICVg5qzCkPgqCbfglvhVD
-   HOxSrk2TqlbstktYNdHhj0xO9Q/tSNHedQrgHO03kACP1QxSJcH08OwZc
-   6URrCvhsdn0vNGaPzoufMow/Heo+rH835Y8E/Y8S8swGOW7AhdwW5WhqE
-   xRQ2oS3tj4k6J5DKDrX/USdYm7li1BYJNEr4pTL8yN99O/Bk/K/c8of8e
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="220494954"
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="220494954"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 12:05:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="607177623"
-Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Dec 2021 12:05:14 -0800
-Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1mzlNp-0009Uu-Vg; Tue, 21 Dec 2021 20:05:13 +0000
-Date: Wed, 22 Dec 2021 04:04:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- 80b396a885cda13de64398dd95e698578a02b66e
-Message-ID: <61c2333d.PO2VrHcDo9+ewOHx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C769A2CA0
+	for <mptcp@lists.linux.dev>; Tue, 21 Dec 2021 23:57:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28BB5C36AE8;
+	Tue, 21 Dec 2021 23:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1640131057;
+	bh=8qvPxNI3yZtVDZ7fsJZ3PYoJdAf4RuS345z4S/1/rMY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=b3AYREoK/ee/S7sxjlGxTtt4jgr/6A4A1x6YCZEhc6knz/oTsLzOUIwwgQBzXBc9y
+	 pMAgwYg6ScjmdAddKFTO+Xwc73geMDVZ+ESYuxvSF/i6RwxKLaRIzsAcwNk2gKZehZ
+	 VEYQyMjPUVnh23UhzFZf5jC1hxubE5UmVtOqkraY=
+Date: Tue, 21 Dec 2021 15:57:36 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ syzkaller-bugs@googlegroups.com, mptcp@lists.linux.dev,
+ netdev@vger.kernel.org
+Subject: Re: [syzbot] WARNING in page_counter_cancel (3)
+Message-Id: <20211221155736.90bbc5928bcd779e76ca8f95@linux-foundation.org>
+In-Reply-To: <000000000000f1504c05d36c21ea@google.com>
+References: <00000000000021bb9b05d14bf0c7@google.com>
+	<000000000000f1504c05d36c21ea@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: 80b396a885cda13de64398dd95e698578a02b66e  DO-NOT-MERGE: mptcp: enabled by default
+On Sat, 18 Dec 2021 06:04:22 -0800 syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com> wrote:
 
-elapsed time: 793m
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    fbf252e09678 Add linux-next specific files for 20211216
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1797de99b00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7fcbb9aa19a433c8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=bc9e2d2dbcb347dd215a
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135d179db00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113edb6db00000
 
-configs tested: 103
-configs skipped: 3
+Useful to have that, thanks.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I'm suspecting that mptcp is doing something strange.  Could I as the
+developers to please take a look?
 
-gcc tested configs:
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm64                               defconfig
-arm64                            allyesconfig
-powerpc                       maple_defconfig
-arm                       imx_v4_v5_defconfig
-arm                        vexpress_defconfig
-mips                       bmips_be_defconfig
-sh                           se7712_defconfig
-arc                            hsdk_defconfig
-riscv                    nommu_virt_defconfig
-arm                         palmz72_defconfig
-sh                             shx3_defconfig
-mips                       lemote2f_defconfig
-arm                         hackkit_defconfig
-parisc                generic-64bit_defconfig
-powerpc                       eiger_defconfig
-powerpc                 mpc832x_rdb_defconfig
-sh                             sh03_defconfig
-sh                            hp6xx_defconfig
-arm                  randconfig-c002-20211220
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-m68k                                defconfig
-nds32                             allnoconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-s390                             allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                   debian-10.3-kselftests
-mips                             allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                          allyesconfig
-x86_64               randconfig-a001-20211220
-x86_64               randconfig-a003-20211220
-x86_64               randconfig-a002-20211220
-x86_64               randconfig-a004-20211220
-x86_64               randconfig-a005-20211220
-x86_64               randconfig-a006-20211220
-i386                 randconfig-a002-20211220
-i386                 randconfig-a003-20211220
-i386                 randconfig-a005-20211220
-i386                 randconfig-a001-20211220
-i386                 randconfig-a004-20211220
-i386                 randconfig-a006-20211220
-i386                 randconfig-a012-20211221
-i386                 randconfig-a011-20211221
-i386                 randconfig-a013-20211221
-i386                 randconfig-a014-20211221
-i386                 randconfig-a016-20211221
-i386                 randconfig-a015-20211221
-arc                  randconfig-r043-20211220
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                          rv32_defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64                          rhel-8.3-func
-x86_64                               rhel-8.3
-x86_64                    rhel-8.3-kselftests
 
-clang tested configs:
-x86_64               randconfig-a013-20211220
-x86_64               randconfig-a014-20211220
-x86_64               randconfig-a012-20211220
-x86_64               randconfig-a011-20211220
-x86_64               randconfig-a015-20211220
-x86_64               randconfig-a016-20211220
-i386                 randconfig-a012-20211220
-i386                 randconfig-a011-20211220
-i386                 randconfig-a014-20211220
-i386                 randconfig-a013-20211220
-hexagon              randconfig-r041-20211220
-hexagon              randconfig-r045-20211220
-riscv                randconfig-r042-20211220
-s390                 randconfig-r044-20211220
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com
+> 
+> R13: 00007ffdeb858640 R14: 00007ffdeb858680 R15: 0000000000000004
+>  </TASK>
+> ------------[ cut here ]------------
+> page_counter underflow: -4294966651 nr_pages=4294967295
+> WARNING: CPU: 1 PID: 3665 at mm/page_counter.c:56 page_counter_cancel+0xcf/0xe0 mm/page_counter.c:56 mm/page_counter.c:56
+> Modules linked in:
+> CPU: 1 PID: 3665 Comm: syz-executor933 Not tainted 5.16.0-rc5-next-20211216-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:page_counter_cancel+0xcf/0xe0 mm/page_counter.c:56 mm/page_counter.c:56
+> Code: c7 04 24 00 00 00 00 45 31 f6 eb 97 e8 ba 77 af ff 4c 89 ea 48 89 ee 48 c7 c7 60 fe b8 89 c6 05 5f b3 b5 0b 01 e8 a6 85 48 07 <0f> 0b eb a8 4c 89 e7 e8 d5 85 fa ff eb c7 0f 1f 00 41 56 41 55 49
+> RSP: 0018:ffffc90002b1f620 EFLAGS: 00010086
+> RAX: 0000000000000000 RBX: ffff88807b6e8120 RCX: 0000000000000000
+> RDX: ffff88807ad31d40 RSI: ffffffff815f4748 RDI: fffff52000563eb6
+> RBP: ffffffff00000285 R08: 0000000000000000 R09: 0000000000000001
+> R10: ffffffff815ee4ae R11: 0000000000000000 R12: ffff88807b6e8120
+> R13: 00000000ffffffff R14: 0000000000000000 R15: 0000000000000001
+> FS:  000055555596c300(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000080 CR3: 000000007f24a000 CR4: 00000000003506e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  page_counter_uncharge+0x2e/0x60 mm/page_counter.c:159 mm/page_counter.c:159
+>  drain_stock+0xc1/0x170 mm/memcontrol.c:2172 mm/memcontrol.c:2172
+>  refill_stock+0x131/0x1b0 mm/memcontrol.c:2224 mm/memcontrol.c:2224
+>  __sk_mem_reduce_allocated+0x24d/0x550 net/core/sock.c:2951 net/core/sock.c:2951
+>  __mptcp_rmem_reclaim net/mptcp/protocol.c:169 [inline]
+>  __mptcp_rmem_reclaim net/mptcp/protocol.c:169 [inline] net/mptcp/protocol.c:978
+>  __mptcp_mem_reclaim_partial+0x124/0x410 net/mptcp/protocol.c:978 net/mptcp/protocol.c:978
+>  mptcp_mem_reclaim_partial net/mptcp/protocol.c:985 [inline]
+>  mptcp_alloc_tx_skb net/mptcp/protocol.c:1215 [inline]
+>  mptcp_mem_reclaim_partial net/mptcp/protocol.c:985 [inline] net/mptcp/protocol.c:1282
+>  mptcp_alloc_tx_skb net/mptcp/protocol.c:1215 [inline] net/mptcp/protocol.c:1282
+>  mptcp_sendmsg_frag+0x1ada/0x2410 net/mptcp/protocol.c:1282 net/mptcp/protocol.c:1282
+>  __mptcp_push_pending+0x232/0x7a0 net/mptcp/protocol.c:1548 net/mptcp/protocol.c:1548
+>  mptcp_release_cb+0xfe/0x200 net/mptcp/protocol.c:3013 net/mptcp/protocol.c:3013
+>  release_sock+0xb4/0x1b0 net/core/sock.c:3312 net/core/sock.c:3312
+>  sk_stream_wait_memory+0x608/0xed0 net/core/stream.c:145 net/core/stream.c:145
+>  mptcp_sendmsg+0x8df/0x1300 net/mptcp/protocol.c:1745 net/mptcp/protocol.c:1745
+>  inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:641 net/ipv6/af_inet6.c:641
+>  sock_sendmsg_nosec net/socket.c:704 [inline]
+>  sock_sendmsg_nosec net/socket.c:704 [inline] net/socket.c:724
+>  sock_sendmsg+0xcf/0x120 net/socket.c:724 net/socket.c:724
+>  sock_write_iter+0x289/0x3c0 net/socket.c:1057 net/socket.c:1057
+>  call_write_iter include/linux/fs.h:2079 [inline]
+>  call_write_iter include/linux/fs.h:2079 [inline] fs/read_write.c:503
+>  new_sync_write+0x429/0x660 fs/read_write.c:503 fs/read_write.c:503
+>  vfs_write+0x7cd/0xae0 fs/read_write.c:590 fs/read_write.c:590
+>  ksys_write+0x1ee/0x250 fs/read_write.c:643 fs/read_write.c:643
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline] arch/x86/entry/common.c:80
+>  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> RIP: 0033:0x7f4cc423cf49
+> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 81 15 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffdeb8585f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f4cc423cf49
+> RDX: 0000000000017f88 RSI: 0000000020000000 RDI: 0000000000000003
+> RBP: 00007ffdeb858620 R08: 0000000000000001 R09: 00007ffdeb858630
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+> R13: 00007ffdeb858640 R14: 00007ffdeb858680 R15: 0000000000000004
+>  </TASK>
