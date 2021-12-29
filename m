@@ -1,46 +1,84 @@
-Received: from mail.portyid.pl (mail.portyid.pl [192.36.61.58])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A3A168
+	for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 09:31:30 +0000 (UTC)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 05FDF210F5;
+	Wed, 29 Dec 2021 09:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1640769788; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gjX2JYCUdKwjWkhra23pQM3tjKutHM/bK/bDmjsIPDU=;
+	b=tqrBwF3RX9GUX92t/0vZapYED2/vSBw2fZn1Zn9vIlF1qh0L8XXqQswGcI46ShHO0z876G
+	1UXw3I2gAszRlQJTgvi8/tzhXvg8nWv52piIs0oANEkwUmKPyeIM1Tq7Hcr8MWX+GUrjCc
+	rbQtyiQgxKzSNTG5O/qeQUQwCXRFQ9U=
+Received: from suse.cz (unknown [10.100.201.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677A1168
-	for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 09:10:55 +0000 (UTC)
-Received: by mail.portyid.pl (Postfix, from userid 1001)
-	id 1A6A541310; Wed, 29 Dec 2021 10:00:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=portyid.pl; s=mail;
-	t=1640768466; bh=RZjfFpT9KGSFHXuIOzTjcb+Gwkun4EXriv7y2I0PG0A=;
-	h=Date:From:To:Subject:From;
-	b=DPq9HQBujnIFAQFeO40Zexsy27yPkMixlruo054pDbn06Qv+CXShYSMzBTTf/Fssf
-	 9vU6xdLxXj56tKgRodkmW5d0MZI7aJtX37lSaeUV9h7Rdp5l8DIBgRb5+uRVCLCuoa
-	 FvnhG1KPkij8hPCoNwD6aQsfE2zSE4ldCzTmT6G0Byf1DgJPKUWd1sQNtLe+qRB8I8
-	 26WDUHvqkEzRxdNDxmyxeXiGOwMIVdIcw9vc2vGZ6AcSAdpdKXfqkGwhZjfHMI/I7T
-	 avHGMri0CJyCQ2kRM/EKbj7sO6zz5j0GZouIS5JeyQZ8SulYrDXOnLHalREdgYVylj
-	 2CVS13ZyhSX5w==
-Received: by mail.portyid.pl for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 09:00:28 GMT
-Message-ID: <20211229084500-0.1.w.2w1u.0.arozq8eh3m@portyid.pl>
-Date: Wed, 29 Dec 2021 09:00:28 GMT
-From: =?UTF-8?Q?"Pawe=C5=82_Jasi=C5=84ski"?= <pawel.jasinski@portyid.pl>
-To: <mptcp@lists.linux.dev>
-Subject: Wycena paneli fotowoltaicznych
-X-Mailer: mail.portyid.pl
+	by relay2.suse.de (Postfix) with ESMTPS id B984CA3B83;
+	Wed, 29 Dec 2021 09:23:07 +0000 (UTC)
+Date: Wed, 29 Dec 2021 10:23:07 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	syzkaller-bugs@googlegroups.com, mptcp@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: Re: [syzbot] WARNING in page_counter_cancel (3)
+Message-ID: <Ycwo+++dToWQ1RMR@dhcp22.suse.cz>
+References: <00000000000021bb9b05d14bf0c7@google.com>
+ <000000000000f1504c05d36c21ea@google.com>
+ <20211221155736.90bbc5928bcd779e76ca8f95@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211221155736.90bbc5928bcd779e76ca8f95@linux-foundation.org>
 
-Dzie=C5=84 dobry,
+On Tue 21-12-21 15:57:36, Andrew Morton wrote:
+> On Sat, 18 Dec 2021 06:04:22 -0800 syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com> wrote:
+> 
+> > syzbot has found a reproducer for the following issue on:
+> > 
+> > HEAD commit:    fbf252e09678 Add linux-next specific files for 20211216
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1797de99b00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=7fcbb9aa19a433c8
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=bc9e2d2dbcb347dd215a
+> > compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135d179db00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113edb6db00000
+> 
+> Useful to have that, thanks.
+> 
+> I'm suspecting that mptcp is doing something strange.
 
-dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
-irm=C4=85.
+Yes.
 
-=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
-ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
+> Could I as the
+> developers to please take a look?
+> 
+> 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com
+> > 
+> > R13: 00007ffdeb858640 R14: 00007ffdeb858680 R15: 0000000000000004
+> >  </TASK>
+> > ------------[ cut here ]------------
+> > page_counter underflow: -4294966651 nr_pages=4294967295
 
-Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
-ropozycji?
-
-
-Pozdrawiam
-Pawe=C5=82 Jasi=C5=84ski
+__mptcp_mem_reclaim_partial is trying to uncharge (via
+__sk_mem_reduce_allocated) negative amount. nr_pages has overflown when
+converted from int to unsigned int (-1). I would say that
+__mptcp_mem_reclaim_partial has evaluated
+	reclaimable = mptcp_sk(sk)->rmem_fwd_alloc - sk_unused_reserved_mem(sk)
+to 0 and __mptcp_rmem_reclaim(sk, reclaimable - 1) made it -1.
+-- 
+Michal Hocko
+SUSE Labs
