@@ -1,109 +1,219 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8418173
-	for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 14:03:20 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id b13so86638635edd.8
-        for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 06:03:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=lkuS4DTNx6mhAA3K+e/PbnavSQwTmw/jxmYeS53q5X8=;
-        b=mbLms6gXl2mi25Oe/n4jXpAQW9gb2OsxmAiJFWcPKCA28/RqMMxytOUT5BUJv2Uzbg
-         cynRK76cON0oUu4kEPaSYQ4DdU5HiXrw/wUsFQGuXuLj4QKUwF5BBMA7b7Eu/sJWqcro
-         Wyl2Dqyfou2zBVqyHSfDtehC6Yo1P6wbNyAWljgZ9vnZYqcZESIeFBOkf3UtFFXNMaho
-         8i48OCUU0qlYnoqek+OR1NXWITGikPG5M6MM7Ng8p0AhT25jCX0awlVMF5J8E3FPmFkv
-         ZcD79EQmrgd3lgrjbFmEVhsoStC/N8kICs9dHBbj39U9az3TNki/qil3wU6QUUhxMOwk
-         U/sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=lkuS4DTNx6mhAA3K+e/PbnavSQwTmw/jxmYeS53q5X8=;
-        b=ZBrKFf98+FOPS0XAx903Kh4XEkEJffLQ3Qpu2lrTZZ0ARz5AXT8XXWJ8W2ZqZ03aFh
-         MQDyE/xyX2BftqIiSGIn2GICwx8AzpgfCAxInvQt91szDgcM5uqvVNBNe74w7CXuJ86e
-         yuzPRqKkM7EFKSKcuMMTY49gZJPiRp++FoqZ3YbuKm4hskLIxtlIYf665qWIFBeqUeLt
-         DHYyOweniYOBn+VGuF5h9FB1yi6u07wK99tiQFvJsVrASaZQZiAoMHV59deSig0lGHkI
-         qNWLrN13RWzORtKniDLubWieyXbfj2FJrfbtqlL0yMedDilyjiUdpMUY1KbFquvWUixE
-         DVRQ==
-X-Gm-Message-State: AOAM532MOKbaluFS74jHSYNh2cJLD7Pp9q5oPx2+ySzAtIaD/1jfNVka
-	OmP9NZ/sJSJNquPx4VRzD7y/hlN2ovx+I6E2
-X-Google-Smtp-Source: ABdhPJx5UGUzWnweuVXP2/n0eTsQ+xsTmO4kpi4A5KnsskBUIMf/69WMBTl5KFP3EG96/Jaq3DiNTQ==
-X-Received: by 2002:a17:906:3e4d:: with SMTP id t13mr20693940eji.467.1640786598986;
-        Wed, 29 Dec 2021 06:03:18 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:4173:e151:33e7:c1de? ([2a02:578:8593:1200:4173:e151:33e7:c1de])
-        by smtp.gmail.com with ESMTPSA id s3sm6951025ejs.145.2021.12.29.06.03.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Dec 2021 06:03:18 -0800 (PST)
-Message-ID: <1d349ddc-a3bc-7d74-f626-737576af8e9a@tessares.net>
-Date: Wed, 29 Dec 2021 15:03:18 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DD1168
+	for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 18:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640801333; x=1672337333;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gOGzrV+xv435ks1dhtsxq5J9CPkMeRHjoSDZ+bc1JUY=;
+  b=ByYiwzleD8r/dYze4T5HcqG+m9L6rj+S0BnZq5DzqWdfu18tS9vgkVZ0
+   YZdYfMWwFm64rVDZgQR0Xe1TynRH8OA/ir4j6mRhAk+8tpuAIFSCKBOVX
+   T8dWwGAIa/RooBITDcy4XsfvrqsMU/fEQ0sb4XLZgvUbIh4mu4XvtoMGi
+   IGitReJ1YPQ9tPstsJerV0bSAwtmakqGydO8F/gW0XzSxbdkvt9K9DiDf
+   TgwdN2zzXjfzUKsXt1yPkUi6oGtugdDX/DJWuCxDdoD50gE0viL0pQqmE
+   5gg763UnvUAfvsksFQFCAl1EFSEaEmkQhGJ8qOLXdzjL/VGvWGVVfouox
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10212"; a="221549465"
+X-IronPort-AV: E=Sophos;i="5.88,246,1635231600"; 
+   d="scan'208";a="221549465"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2021 10:08:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,246,1635231600"; 
+   d="scan'208";a="686973509"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 29 Dec 2021 10:08:15 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1n2dN0-0009Iw-DI; Wed, 29 Dec 2021 18:08:14 +0000
+Date: Thu, 30 Dec 2021 02:07:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ ac3838835db3324605a87ee4f08b27c919724974
+Message-ID: <61cca3da.GDC5neNBLxdRevpC%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH mptcp-next 08/21] mptcp: attempt to add listening sockets
- for announced addrs
-Content-Language: en-GB
-To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
-References: <20211216222314.1244708-1-kishen.maloor@intel.com>
- <20211216222314.1244708-9-kishen.maloor@intel.com>
- <7be3ba91-232d-1357-dcb7-b55b01d46f3f@tessares.net>
- <39006fe0-fbff-f08f-4642-6ef8cdb2ad8f@intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <39006fe0-fbff-f08f-4642-6ef8cdb2ad8f@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-On 21/12/2021 08:34, Kishen Maloor wrote:
-> On 12/17/21 8:34 AM, Matthieu Baerts wrote:
->> Hi Kishen,
->>
->> On 16/12/2021 23:23, Kishen Maloor wrote:
->>> When ADD_ADDR announcements use the port associated with an
->>> active subflow, this change ensures that a listening socket is
->>> bound to the announced address and port for subsequently
->>> receiving MP_JOINs from the remote end. In case there's
->>> a recorded lsk bound to that address+port, it is reused.
->>> But if a listening socket for this address is already held by the
->>> application then no further action is taken.
->>
->> Do you think we should add an option not to do that?
-> 
-> I can't immediately see why that would be necessary. I would think that a machine that
-> wants to restrict MPJs could choose to not issue ADD_ADDR advertisements. 
-> So it could be more a matter of path management policy?
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: ac3838835db3324605a87ee4f08b27c919724974  DO-NOT-MERGE: mptcp: enabled by default
 
-Yes but likely, the PM is a daemon separated from apps creating
-connections. Maybe some apps want to add restrictions on purpose and it
-would not be practical for the PM to check what kind of lsk has been
-created to know if it has to send an ADD_ADDR (+ create a new lsk) or
-not to respect restrictions set by the linked app.
+elapsed time: 721m
 
-> However, for PMs that do issue ADD_ADDR messages, this change merely attempts to create
-> or reuse a (previously established) lsk (which was stored in the kernel context).
-> But if the lsk is held by the application, then no action is taken.
+configs tested: 151
+configs skipped: 4
 
-I didn't look what was the cost exactly -- probably a look-up in a table
-without locks? -- but maybe on a busy server, you don't want to do extra
-actions if you know they are not needed.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> There's a separate change in the series to allow subflows to be initiated from either
-> end of the connection. So in a scenario where a machine that happens to be running a MPTCP 
-> client application issues an ADD_ADDR message (and reusing the subflow port), an lsk would
-> be created as a consequence of this change.
+gcc tested configs:
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm64                               defconfig
+i386                 randconfig-c001-20211228
+powerpc              randconfig-c003-20211229
+arm                             mxs_defconfig
+arm                          simpad_defconfig
+powerpc                     mpc5200_defconfig
+m68k                        mvme16x_defconfig
+um                             i386_defconfig
+mips                         tb0226_defconfig
+arc                                 defconfig
+riscv                    nommu_virt_defconfig
+mips                        workpad_defconfig
+powerpc               mpc834x_itxgp_defconfig
+mips                           ip32_defconfig
+mips                     decstation_defconfig
+parisc                generic-32bit_defconfig
+h8300                    h8300h-sim_defconfig
+arm                         nhk8815_defconfig
+parisc                generic-64bit_defconfig
+arm                       versatile_defconfig
+arm                          pxa3xx_defconfig
+mips                      bmips_stb_defconfig
+sh                           se7343_defconfig
+sh                          urquell_defconfig
+arm                      pxa255-idp_defconfig
+csky                                defconfig
+powerpc                     kmeter1_defconfig
+mips                  cavium_octeon_defconfig
+i386                                defconfig
+ia64                            zx1_defconfig
+mips                         cobalt_defconfig
+mips                            ar7_defconfig
+powerpc                      cm5200_defconfig
+ia64                          tiger_defconfig
+powerpc                 mpc837x_rdb_defconfig
+sparc                               defconfig
+m68k                       m5249evb_defconfig
+microblaze                      mmu_defconfig
+sh                        sh7757lcr_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                 xes_mpc85xx_defconfig
+arm                            lart_defconfig
+sh                           se7750_defconfig
+mips                         tb0219_defconfig
+powerpc                 mpc832x_rdb_defconfig
+mips                    maltaup_xpa_defconfig
+arm                           sama5_defconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc                     tqm5200_defconfig
+powerpc                     sequoia_defconfig
+powerpc                 mpc836x_mds_defconfig
+arm                     davinci_all_defconfig
+mips                     loongson2k_defconfig
+powerpc                    amigaone_defconfig
+m68k                        m5272c3_defconfig
+arm                       aspeed_g4_defconfig
+arm                         at91_dt_defconfig
+arm                       cns3420vb_defconfig
+powerpc                     mpc83xx_defconfig
+arm                        spear3xx_defconfig
+arm                  randconfig-c002-20211229
+arm                  randconfig-c002-20211228
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                              debian-10.3
+i386                   debian-10.3-kselftests
+nds32                             allnoconfig
+nios2                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a015-20211229
+x86_64               randconfig-a014-20211229
+x86_64               randconfig-a013-20211229
+x86_64               randconfig-a011-20211229
+x86_64               randconfig-a012-20211229
+x86_64               randconfig-a016-20211229
+arc                  randconfig-r043-20211229
+riscv                randconfig-r042-20211229
+s390                 randconfig-r044-20211229
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Even if it looks very unusual to me to create subflows from the server
-side, it is good to have this option! Thanks for adding it!
-But we can also have an option for these two changes :)
+clang tested configs:
+riscv                randconfig-c006-20211228
+mips                 randconfig-c004-20211228
+powerpc              randconfig-c003-20211228
+arm                  randconfig-c002-20211228
+x86_64               randconfig-c007-20211228
+i386                 randconfig-c001-20211228
+x86_64               randconfig-a005-20211229
+x86_64               randconfig-a001-20211229
+x86_64               randconfig-a003-20211229
+x86_64               randconfig-a006-20211229
+x86_64               randconfig-a004-20211229
+x86_64               randconfig-a002-20211229
+i386                 randconfig-a002-20211229
+i386                 randconfig-a003-20211229
+i386                 randconfig-a001-20211229
+i386                 randconfig-a006-20211229
+i386                 randconfig-a004-20211229
+i386                 randconfig-a005-20211229
+x86_64               randconfig-a015-20211228
+x86_64               randconfig-a013-20211228
+x86_64               randconfig-a012-20211228
+x86_64               randconfig-a011-20211228
+x86_64               randconfig-a016-20211228
+x86_64               randconfig-a014-20211228
+i386                 randconfig-a012-20211228
+i386                 randconfig-a013-20211228
+i386                 randconfig-a015-20211228
+i386                 randconfig-a011-20211228
+i386                 randconfig-a014-20211228
+i386                 randconfig-a016-20211228
+riscv                randconfig-r042-20211228
+s390                 randconfig-r044-20211228
+hexagon              randconfig-r045-20211228
+hexagon              randconfig-r041-20211229
+hexagon              randconfig-r045-20211229
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
