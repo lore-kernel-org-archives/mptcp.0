@@ -1,44 +1,44 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986D5173
-	for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 13:52:54 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id z29so86537884edl.7
-        for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 05:52:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8418173
+	for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 14:03:20 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id b13so86638635edd.8
+        for <mptcp@lists.linux.dev>; Wed, 29 Dec 2021 06:03:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=72ycZt8xg2tWrzfzjy+Gr2FGCaIBLHC6zA2gD35gWI8=;
-        b=QLH3gnnoprUUe0Co6y2Nzb9wMNLWhHC+zaeWeGOaPtlSC8RL7mVp9aAHXWQtlddo7F
-         oJ320/UPVZy5SQWfum3LCFyZdlccjYrOysqBB4R3qtCj/s5y5o8+0Pcv0yDSoJYhdMgg
-         diKJYeq1F5zWSmevWbyx9H6P5OIFW8prZHtLwaCSwNUzZT4NHgbkEN8vtvcp/8Im7WYP
-         kc3vrx0FgLYlmKglI9cmO6a8edvpMS44iScVueNVJ9K9vZTap9qsV/sNTiR8kmgZ5sf2
-         0IRjitwcxR7BPQA42d8gXQF0DP/ATM1hK3Fcjg8r0SOxN368habxqWdex30uMDv44k5e
-         oZrg==
+        bh=lkuS4DTNx6mhAA3K+e/PbnavSQwTmw/jxmYeS53q5X8=;
+        b=mbLms6gXl2mi25Oe/n4jXpAQW9gb2OsxmAiJFWcPKCA28/RqMMxytOUT5BUJv2Uzbg
+         cynRK76cON0oUu4kEPaSYQ4DdU5HiXrw/wUsFQGuXuLj4QKUwF5BBMA7b7Eu/sJWqcro
+         Wyl2Dqyfou2zBVqyHSfDtehC6Yo1P6wbNyAWljgZ9vnZYqcZESIeFBOkf3UtFFXNMaho
+         8i48OCUU0qlYnoqek+OR1NXWITGikPG5M6MM7Ng8p0AhT25jCX0awlVMF5J8E3FPmFkv
+         ZcD79EQmrgd3lgrjbFmEVhsoStC/N8kICs9dHBbj39U9az3TNki/qil3wU6QUUhxMOwk
+         U/sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=72ycZt8xg2tWrzfzjy+Gr2FGCaIBLHC6zA2gD35gWI8=;
-        b=TTeF16Ofe2Hbt8aYXTWwfCrMT5Ypv2eUSkhnTjdrw8F6lnuaqXF21KnvY2700HolyA
-         Mq6iqU0YoG0aPxlgDGIpGQRYOayOGKzggPct3heOcZV+spUrIF9/UJ4ufsN4lVC9s/4/
-         Dvh2JX4G5QNwUlBLPIxD19wx/jfH8DAmxoPXkCGnTEhnfmHAKMjlBLUreV2TZ4HJGvEy
-         O61/eh3yNqXJ13WNVyKSgNEs2LbxvCSehujFw88uCZOxdcleCNspoj889tDzn/e0sPfL
-         hyTsxy2Lc5UYbPBcVOGGNumY7rd20L1uSctSH4Q+5XL/hS8W6iacdKifSGuZ3sWSEt5c
-         eKCA==
-X-Gm-Message-State: AOAM531NTSe/iyoJepFmmH+vI83/k7YxFj2iaX7XnTKeAUM/TkVEsr79
-	f75dUSfJ2HwUBzWc+04KroYcwg==
-X-Google-Smtp-Source: ABdhPJzPUrQaoda/AJx5X2xRhX/zfuPMywbil7KuDGNvGxjJkdbAIm9QzvJtZOlXc4uNm65o3njEeA==
-X-Received: by 2002:aa7:cd45:: with SMTP id v5mr26522899edw.163.1640785972625;
-        Wed, 29 Dec 2021 05:52:52 -0800 (PST)
+        bh=lkuS4DTNx6mhAA3K+e/PbnavSQwTmw/jxmYeS53q5X8=;
+        b=ZBrKFf98+FOPS0XAx903Kh4XEkEJffLQ3Qpu2lrTZZ0ARz5AXT8XXWJ8W2ZqZ03aFh
+         MQDyE/xyX2BftqIiSGIn2GICwx8AzpgfCAxInvQt91szDgcM5uqvVNBNe74w7CXuJ86e
+         yuzPRqKkM7EFKSKcuMMTY49gZJPiRp++FoqZ3YbuKm4hskLIxtlIYf665qWIFBeqUeLt
+         DHYyOweniYOBn+VGuF5h9FB1yi6u07wK99tiQFvJsVrASaZQZiAoMHV59deSig0lGHkI
+         qNWLrN13RWzORtKniDLubWieyXbfj2FJrfbtqlL0yMedDilyjiUdpMUY1KbFquvWUixE
+         DVRQ==
+X-Gm-Message-State: AOAM532MOKbaluFS74jHSYNh2cJLD7Pp9q5oPx2+ySzAtIaD/1jfNVka
+	OmP9NZ/sJSJNquPx4VRzD7y/hlN2ovx+I6E2
+X-Google-Smtp-Source: ABdhPJx5UGUzWnweuVXP2/n0eTsQ+xsTmO4kpi4A5KnsskBUIMf/69WMBTl5KFP3EG96/Jaq3DiNTQ==
+X-Received: by 2002:a17:906:3e4d:: with SMTP id t13mr20693940eji.467.1640786598986;
+        Wed, 29 Dec 2021 06:03:18 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:4173:e151:33e7:c1de? ([2a02:578:8593:1200:4173:e151:33e7:c1de])
-        by smtp.gmail.com with ESMTPSA id sc34sm6951029ejc.7.2021.12.29.05.52.51
+        by smtp.gmail.com with ESMTPSA id s3sm6951025ejs.145.2021.12.29.06.03.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Dec 2021 05:52:52 -0800 (PST)
-Message-ID: <4f968c6b-9004-8b17-6715-824bb95cb740@tessares.net>
-Date: Wed, 29 Dec 2021 14:52:51 +0100
+        Wed, 29 Dec 2021 06:03:18 -0800 (PST)
+Message-ID: <1d349ddc-a3bc-7d74-f626-737576af8e9a@tessares.net>
+Date: Wed, 29 Dec 2021 15:03:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,64 +47,60 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH mptcp-next 07/21] mptcp: netlink: process IPv6 addrs in
- creating listening sockets
+Subject: Re: [PATCH mptcp-next 08/21] mptcp: attempt to add listening sockets
+ for announced addrs
 Content-Language: en-GB
 To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
 References: <20211216222314.1244708-1-kishen.maloor@intel.com>
- <20211216222314.1244708-8-kishen.maloor@intel.com>
- <e9dd7944-6eb5-b96e-4192-d52c98decffc@tessares.net>
- <c84d9c47-0ef8-4e00-3724-b6e323c0bba4@intel.com>
+ <20211216222314.1244708-9-kishen.maloor@intel.com>
+ <7be3ba91-232d-1357-dcb7-b55b01d46f3f@tessares.net>
+ <39006fe0-fbff-f08f-4642-6ef8cdb2ad8f@intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <c84d9c47-0ef8-4e00-3724-b6e323c0bba4@intel.com>
+In-Reply-To: <39006fe0-fbff-f08f-4642-6ef8cdb2ad8f@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kishen,
-
-Thank you for your replies!
-
-On 21/12/2021 08:32, Kishen Maloor wrote:
-> On 12/17/21 8:29 AM, Matthieu Baerts wrote:
+On 21/12/2021 08:34, Kishen Maloor wrote:
+> On 12/17/21 8:34 AM, Matthieu Baerts wrote:
 >> Hi Kishen,
 >>
 >> On 16/12/2021 23:23, Kishen Maloor wrote:
->>> This change updates mptcp_pm_nl_create_listen_socket() to create
->>> listening sockets bound to IPv6 addresses (where IPv6 is supported).
+>>> When ADD_ADDR announcements use the port associated with an
+>>> active subflow, this change ensures that a listening socket is
+>>> bound to the announced address and port for subsequently
+>>> receiving MP_JOINs from the remote end. In case there's
+>>> a recorded lsk bound to that address+port, it is reused.
+>>> But if a listening socket for this address is already held by the
+>>> application then no further action is taken.
 >>
->> Should we consider this as a bug?
+>> Do you think we should add an option not to do that?
 > 
-> We could I suppose, at least for lack of completeness. But you're right that we've
-> now updated the behavior in this series in attempting to create listening sockets (lsks)
-> corresponding to every announcement, which necessitates this handling of
-> IPv6 addresses. 
-> 
-> But prior to this series: 
-> -lsk creation (through a subflow's port) did not happen in the kernel under the assumption
-> that MPTCP server applications would've established a listener,
-> -lsks were created only for port-based endpoints
+> I can't immediately see why that would be necessary. I would think that a machine that
+> wants to restrict MPJs could choose to not issue ADD_ADDR advertisements. 
+> So it could be more a matter of path management policy?
 
-Yes, that's correct.
+Yes but likely, the PM is a daemon separated from apps creating
+connections. Maybe some apps want to add restrictions on purpose and it
+would not be practical for the PM to check what kind of lsk has been
+created to know if it has to send an ADD_ADDR (+ create a new lsk) or
+not to respect restrictions set by the linked app.
 
-> which (I believe) would not work with
-> IPv6 (lack of option space), and,
+> However, for PMs that do issue ADD_ADDR messages, this change merely attempts to create
+> or reuse a (previously established) lsk (which was stored in the kernel context).
+> But if the lsk is held by the application, then no action is taken.
 
-Yes, there is enough space. We even have packetdrill tests, no?
-ADD_ADDR are sent in a dedicated ACK packet, without DSS. I think we
-started to discuss about having a dedicated ACK packet to cover this
-case and ADD_ADDRv6 + echo I think.
+I didn't look what was the cost exactly -- probably a look-up in a table
+without locks? -- but maybe on a busy server, you don't want to do extra
+actions if you know they are not needed.
 
-> -the stack did not allow incoming MP_JOINs at machines running MPTCP client 
-> applications (with this series, subflows can be established from either end so there
-> needs to be an lsk).
+> There's a separate change in the series to allow subflows to be initiated from either
+> end of the connection. So in a scenario where a machine that happens to be running a MPTCP 
+> client application issues an ADD_ADDR message (and reusing the subflow port), an lsk would
+> be created as a consequence of this change.
 
-If I'm not mistaken, that was by design: to simplify things.
-
-It is very rare and very specific when a server initiates connections. I
-think in most cases, the client would like to be in charge of initiating
-paths and would not like the server to do so.
-But as it seems not to be too complex, it is good to have a way to do
-that. But I think we would need an option to (dis)allow that.
+Even if it looks very unusual to me to create subflows from the server
+side, it is good to have this option! Thanks for adding it!
+But we can also have an option for these two changes :)
 
 Cheers,
 Matt
