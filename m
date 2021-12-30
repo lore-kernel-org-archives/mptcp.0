@@ -1,47 +1,47 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8752C80
-	for <mptcp@lists.linux.dev>; Thu, 30 Dec 2021 19:17:53 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id w16so101506453edc.11
-        for <mptcp@lists.linux.dev>; Thu, 30 Dec 2021 11:17:53 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641B02C80
+	for <mptcp@lists.linux.dev>; Thu, 30 Dec 2021 19:18:00 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id z9so31571091edm.10
+        for <mptcp@lists.linux.dev>; Thu, 30 Dec 2021 11:18:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ISRM4adwNoqkzh7B445fjcCrFszOmyg8baD6T4jy2dA=;
-        b=1aKO9SiF5D3KwrxH6wUQCO1yd6iXx41+RmVixn/2b9aUW7tSC6EcSmwH266DnWp0ka
-         qWzA9CatQFKzbNIoi7i9S52koOmoJO1853R8qYc9f/MqJZkoo4VZfZpWjazGe5sXNsq4
-         +yv6WPnfHn1Gj9idMQBy5UmWZRrRq4ymcoHgbAdfvO6DwqE8hOdjP1dg1Hbx+IaJ97NH
-         9P7Jag2kk9z0cDq4Jzs16x1kLzH9wV770ltuZplDxygD+sLhF0GTI/ec/oMLPxKWztHR
-         6pErJXZ7QR9bB5UiXvrLL3v3rfvHUeN3dov6COt5VtO+BKG42ausgmvr4DJQyIGzWOHc
-         qHFA==
+        bh=yN3NI4558XnAgcWdeQRXOWViZ0Qc4qBX0GV2hSfqTVk=;
+        b=OAEMIXENSXzlqQC5H+Ye1QJhJN2jaDu5vkAGOKtL7/Au0Zlt1TXME9HD9E3HXKyE5K
+         s2UvMQwfrX0tiqPM/5XN9LjCJrdFrImfMdMEAu9/6DXSUj/i6tnI1U/ueP56zk2V6Zgx
+         GSsyZtfay3ERxq70iKMWgF4Ip0XGxeZaVbw0JGDPjxgFjHWycOksHWydHPZm/iabsJeI
+         CEgS0lDDuy8JZ/ZudA9xvQHiAs3s2REgCCF1GFIrJnalb6Gr/PMbLHc9amN4k9vHNNWS
+         tsxQlT8bqgDi/ajwnddv39ihnGUxSE/7i3nIHDAS8bDGOy4ccpv8Jryshhbr0C3Lp470
+         qf3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ISRM4adwNoqkzh7B445fjcCrFszOmyg8baD6T4jy2dA=;
-        b=FvzlYBAnU/hLkkvAc4iQV15Ur1OTuHR7SwelHSgKP1KRsAggykdVyJw75Tuy5EdsXR
-         xOSCYcqLnzJTw1oHuR3dw7fMQtdTBZQLMcnZpzaS4VA0bnkUS7qUqEsTYjN4Sno6/P4S
-         zOjGyZZmgBKS/K7gv8ckRtbBkcwpNyGyIsm8j67zjSlhmI1wDm4Dd/rjBV8Av35XyHtK
-         4MxY9akHM49vfYBpXyVczAanelVXuJIJJlTvek25HlxMLurgI+iNxl+DzVODlbdABv+Y
-         9jQqWiCRUoj7OEERmsBysN3zoWfAQ2oDCgtCjXfRZWi8/wLp6kIaZ7GGjbVCOOdSfOYi
-         IYuQ==
-X-Gm-Message-State: AOAM533V81Qu1dYqqsJa2iREN3MO9fSQZw/NaSWTo062winJaWCv8VeE
-	R0ELYNlpj0++0TGm2ogLoMRv7Faoy29zjatU
-X-Google-Smtp-Source: ABdhPJz13+Fg0CcPZopFz4EPxAQQrMzHHU5Tl7LlJ9cKxGtYmoEvqgLMASO5frvmuT3KTjvhwXKWtg==
-X-Received: by 2002:a17:906:390c:: with SMTP id f12mr26171042eje.95.1640891871468;
-        Thu, 30 Dec 2021 11:17:51 -0800 (PST)
+        bh=yN3NI4558XnAgcWdeQRXOWViZ0Qc4qBX0GV2hSfqTVk=;
+        b=koll4rflxjUUapmzsmJoV9Ee+q3VaGFiLqGMjaY65Y1xBKUivKNkZgaRAl8HACjXRw
+         UptWMgxTgSm7zLOUEAYBT8Li7qM5xH+P0plDVJs1JjzP1z1Qf3WPPThy90rpnbu2fLpM
+         FJ+/gWgt3ssmXHRygj6Rkx5j/qy9ieyvBjWrdiib2ZB2+RzSprNSXU8cB4DN7pOP4JRX
+         fjzKgfEYueW4H3Z6WrQwR0bSFPrIV1/xiCfYbk7FMzSSxRvtfd/9JHzxBeh4498HiPc2
+         K0n13Vcg4+hlcy1O6U/Ga3xlzzEl7pcK2nhtnRGLz+VsIX1z/fTz11/W9Vk1/qo8WFpM
+         1aJQ==
+X-Gm-Message-State: AOAM5311gTd2rq4JsJ+e2pgGfxZJx3AO44oHq1I1vA6pUoXdtDKyNAsh
+	P4WNBAurn9JFx/Pln3KhkdcEHA75SNA8vZz1
+X-Google-Smtp-Source: ABdhPJyHayKTCtfVS4F93b0qcWPpQhEJLuTktX2dojBeYDYEP/ypaJayo5mhWbmjzTpUnrMhkhbeyw==
+X-Received: by 2002:a17:906:b003:: with SMTP id v3mr26153027ejy.770.1640891878502;
+        Thu, 30 Dec 2021 11:17:58 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id m6sm9918244edc.36.2021.12.30.11.17.51
+        by smtp.gmail.com with ESMTPSA id m6sm9918244edc.36.2021.12.30.11.17.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Dec 2021 11:17:51 -0800 (PST)
+        Thu, 30 Dec 2021 11:17:58 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v7 3/4] mptcp: clarify when options can be used
-Date: Thu, 30 Dec 2021 20:16:50 +0100
-Message-Id: <20211230191651.1831507-4-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v7 4/4] mptcp: allow sending both ADD_ADDR and RM_ADDR
+Date: Thu, 30 Dec 2021 20:16:51 +0100
+Message-Id: <20211230191651.1831507-5-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211230191651.1831507-1-matthieu.baerts@tessares.net>
 References: <20211230191651.1831507-1-matthieu.baerts@tessares.net>
@@ -53,58 +53,41 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RFC8684 doesn't seem to clearly specify which MPTCP options can be used
-together.
+This is mainly to be sync with what is done in mptcp_write_options()
+where after having written the ADD_ADDR option, we check if the RM_ADDR
+option also needs to be added.
 
-Some options are mutually exclusive -- e.g. MP_CAPABLE and MP_JOIN --,
-some can be used together -- e.g. DSS + MP_PRIO --, some can but we
-prefer not to -- e.g. DSS + ADD_ADDR -- and some have to be used
-together at some points -- e.g. MP_FAIL and DSS.
+But if we have room, it makes sense to write the two options in the same
+packet. So best to remove the 'else'.
 
-We need to clarify this as a base before allowing other modifications.
-
-For example, does it make sense to send a RM_ADDR with an MPC or MPJ?
-This remains open for possible future discussions.
+While at it, also mention that mptcp_established_options_add_addr() can
+remove options.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/options.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ net/mptcp/options.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 3427b31c0da7..d06855e66007 100644
+index d06855e66007..c08d4b04458b 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -1263,8 +1263,27 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
- void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 			 struct mptcp_out_options *opts)
- {
--	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
--	 * see mptcp_established_options*()
-+	/* Which options can be used together?
-+	 *
-+	 * X: mutually exclusive
-+	 * O: often used together
-+	 * C: can be used together in some cases
-+	 * P: could be used together but we prefer not to (optimisations)
-+	 *
-+	 *  Opt: | MPC  | MPJ  | DSS  | ADD  |  RM  | PRIO | FAIL |  FC  |
-+	 * ------|------|------|------|------|------|------|------|------|
-+	 *  MPC  |------|------|------|------|------|------|------|------|
-+	 *  MPJ  |  X   |------|------|------|------|------|------|------|
-+	 *  DSS  |  X   |  X   |------|------|------|------|------|------|
-+	 *  ADD  |  X   |  X   |  P   |------|------|------|------|------|
-+	 *  RM   |  C   |  C   |  C   |  C   |------|------|------|------|
-+	 *  PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
-+	 *  FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
-+	 *  FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
-+	 *  RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
-+	 * ------|------|------|------|------|------|------|------|------|
-+	 *
-+	 * The same applies in mptcp_established_options() function.
- 	 */
- 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
- 		struct mptcp_ext *mpext = &opts->ext_copy;
+@@ -863,11 +863,14 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 
+ 	*size += opt_size;
+ 	remaining -= opt_size;
++	/* Note: this can remove previously set options in some conditions */
+ 	if (mptcp_established_options_add_addr(sk, skb, &opt_size, remaining, opts)) {
+ 		*size += opt_size;
+ 		remaining -= opt_size;
+ 		ret = true;
+-	} else if (mptcp_established_options_rm_addr(sk, &opt_size, remaining, opts)) {
++	}
++
++	if (mptcp_established_options_rm_addr(sk, &opt_size, remaining, opts)) {
+ 		*size += opt_size;
+ 		remaining -= opt_size;
+ 		ret = true;
 -- 
 2.33.1
 
