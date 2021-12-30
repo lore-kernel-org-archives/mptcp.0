@@ -1,93 +1,228 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641B02C80
-	for <mptcp@lists.linux.dev>; Thu, 30 Dec 2021 19:18:00 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id z9so31571091edm.10
-        for <mptcp@lists.linux.dev>; Thu, 30 Dec 2021 11:18:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yN3NI4558XnAgcWdeQRXOWViZ0Qc4qBX0GV2hSfqTVk=;
-        b=OAEMIXENSXzlqQC5H+Ye1QJhJN2jaDu5vkAGOKtL7/Au0Zlt1TXME9HD9E3HXKyE5K
-         s2UvMQwfrX0tiqPM/5XN9LjCJrdFrImfMdMEAu9/6DXSUj/i6tnI1U/ueP56zk2V6Zgx
-         GSsyZtfay3ERxq70iKMWgF4Ip0XGxeZaVbw0JGDPjxgFjHWycOksHWydHPZm/iabsJeI
-         CEgS0lDDuy8JZ/ZudA9xvQHiAs3s2REgCCF1GFIrJnalb6Gr/PMbLHc9amN4k9vHNNWS
-         tsxQlT8bqgDi/ajwnddv39ihnGUxSE/7i3nIHDAS8bDGOy4ccpv8Jryshhbr0C3Lp470
-         qf3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yN3NI4558XnAgcWdeQRXOWViZ0Qc4qBX0GV2hSfqTVk=;
-        b=koll4rflxjUUapmzsmJoV9Ee+q3VaGFiLqGMjaY65Y1xBKUivKNkZgaRAl8HACjXRw
-         UptWMgxTgSm7zLOUEAYBT8Li7qM5xH+P0plDVJs1JjzP1z1Qf3WPPThy90rpnbu2fLpM
-         FJ+/gWgt3ssmXHRygj6Rkx5j/qy9ieyvBjWrdiib2ZB2+RzSprNSXU8cB4DN7pOP4JRX
-         fjzKgfEYueW4H3Z6WrQwR0bSFPrIV1/xiCfYbk7FMzSSxRvtfd/9JHzxBeh4498HiPc2
-         K0n13Vcg4+hlcy1O6U/Ga3xlzzEl7pcK2nhtnRGLz+VsIX1z/fTz11/W9Vk1/qo8WFpM
-         1aJQ==
-X-Gm-Message-State: AOAM5311gTd2rq4JsJ+e2pgGfxZJx3AO44oHq1I1vA6pUoXdtDKyNAsh
-	P4WNBAurn9JFx/Pln3KhkdcEHA75SNA8vZz1
-X-Google-Smtp-Source: ABdhPJyHayKTCtfVS4F93b0qcWPpQhEJLuTktX2dojBeYDYEP/ypaJayo5mhWbmjzTpUnrMhkhbeyw==
-X-Received: by 2002:a17:906:b003:: with SMTP id v3mr26153027ejy.770.1640891878502;
-        Thu, 30 Dec 2021 11:17:58 -0800 (PST)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id m6sm9918244edc.36.2021.12.30.11.17.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Dec 2021 11:17:58 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v7 4/4] mptcp: allow sending both ADD_ADDR and RM_ADDR
-Date: Thu, 30 Dec 2021 20:16:51 +0100
-Message-Id: <20211230191651.1831507-5-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211230191651.1831507-1-matthieu.baerts@tessares.net>
-References: <20211230191651.1831507-1-matthieu.baerts@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA9629CA
+	for <mptcp@lists.linux.dev>; Thu, 30 Dec 2021 19:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640892450; x=1672428450;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+o48Wg/lM37mFrscIzw3t9dJRYmlaTqy/ENA939ytDk=;
+  b=AY8sLhGIo7oW+qplC8I0NtYLXrPOVatv7dWOLUWjHv+RE8AwPDiHK7Vk
+   A2LiFz2CaNuJI83tkkxxQ6b7+pPqGy/3Jos9mYymBNMV+0lEyKXQkQ1Pl
+   lFuoFDN8beQmoyf0I8z/fG5/pLRdBXaGsNiD+DCQxiLOVbow82QVlLGFq
+   ed4SPYgMSxQju7YiFqoBVokdxa1wghjz3xmu7mtz8+Yj+MsUkDVxn64Us
+   Lhs3vkkPlwCmteI8oJ2J8T0QfOW41dgjGODnUaMzqkiKHeAhk1DeZlDs3
+   Z0bDOATDd2KSFgBbXvBgKIeJpR1O7YD6WqRDTtpoJbNl+iU2izMtu3Pt3
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10213"; a="221719497"
+X-IronPort-AV: E=Sophos;i="5.88,248,1635231600"; 
+   d="scan'208";a="221719497"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2021 11:27:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,248,1635231600"; 
+   d="scan'208";a="524491597"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 30 Dec 2021 11:27:28 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1n315D-000AWc-Nr; Thu, 30 Dec 2021 19:27:27 +0000
+Date: Fri, 31 Dec 2021 03:27:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ 6bee05f40ab1a92ac2472db09306cf8042b23018
+Message-ID: <61ce0810.B11yNQSMx+Xy2Adz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-This is mainly to be sync with what is done in mptcp_write_options()
-where after having written the ADD_ADDR option, we check if the RM_ADDR
-option also needs to be added.
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: 6bee05f40ab1a92ac2472db09306cf8042b23018  DO-NOT-MERGE: mptcp: enabled by default
 
-But if we have room, it makes sense to write the two options in the same
-packet. So best to remove the 'else'.
+elapsed time: 721m
 
-While at it, also mention that mptcp_established_options_add_addr() can
-remove options.
+configs tested: 162
+configs skipped: 3
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                            allyesconfig
+i386                 randconfig-c001-20211229
+i386                 randconfig-c001-20211228
+i386                 randconfig-c001-20211230
+arm                        mvebu_v5_defconfig
+mips                        qi_lb60_defconfig
+sh                        apsh4ad0a_defconfig
+sh                            hp6xx_defconfig
+sh                     sh7710voipgw_defconfig
+powerpc                 mpc834x_mds_defconfig
+arm                            hisi_defconfig
+riscv                             allnoconfig
+mips                       lemote2f_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                      makalu_defconfig
+sh                           se7780_defconfig
+arm                  colibri_pxa300_defconfig
+mips                           ip28_defconfig
+arm                      tct_hammer_defconfig
+arm                         s3c6400_defconfig
+powerpc                     pseries_defconfig
+arm                         lpc18xx_defconfig
+arm                     eseries_pxa_defconfig
+arc                     nsimosci_hs_defconfig
+sh                        edosk7705_defconfig
+powerpc                     akebono_defconfig
+arc                          axs101_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                    ge_imp3a_defconfig
+sh                         ap325rxa_defconfig
+arm                        oxnas_v6_defconfig
+arm                          moxart_defconfig
+powerpc                     pq2fads_defconfig
+sh                          sdk7786_defconfig
+arc                            hsdk_defconfig
+arm                        multi_v7_defconfig
+mips                     loongson2k_defconfig
+openrisc                         alldefconfig
+arm                         at91_dt_defconfig
+mips                        bcm63xx_defconfig
+sh                           se7750_defconfig
+sh                        sh7785lcr_defconfig
+arm                          pxa910_defconfig
+mips                         tb0287_defconfig
+m68k                         apollo_defconfig
+sh                ecovec24-romimage_defconfig
+arm                      integrator_defconfig
+m68k                        stmark2_defconfig
+sh                          lboxre2_defconfig
+powerpc                 mpc834x_itx_defconfig
+powerpc                       eiger_defconfig
+xtensa                          iss_defconfig
+ia64                            zx1_defconfig
+arm                       spear13xx_defconfig
+mips                   sb1250_swarm_defconfig
+sh                          landisk_defconfig
+mips                     loongson1b_defconfig
+sh                           se7721_defconfig
+h8300                       h8s-sim_defconfig
+sh                                  defconfig
+um                               alldefconfig
+mips                            gpr_defconfig
+m68k                           sun3_defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                    adder875_defconfig
+arc                        nsim_700_defconfig
+arm                           omap1_defconfig
+arm                          ixp4xx_defconfig
+arm                           sunxi_defconfig
+m68k                          atari_defconfig
+arm                         s5pv210_defconfig
+arm                        mvebu_v7_defconfig
+mips                         tb0226_defconfig
+arc                        nsimosci_defconfig
+arm                  randconfig-c002-20211230
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                             allnoconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a013-20211230
+x86_64               randconfig-a015-20211230
+x86_64               randconfig-a012-20211230
+x86_64               randconfig-a011-20211230
+x86_64               randconfig-a016-20211230
+x86_64               randconfig-a014-20211230
+i386                 randconfig-a011-20211230
+i386                 randconfig-a012-20211230
+i386                 randconfig-a013-20211230
+i386                 randconfig-a014-20211230
+i386                 randconfig-a015-20211230
+i386                 randconfig-a016-20211230
+arc                  randconfig-r043-20211230
+riscv                randconfig-r042-20211230
+s390                 randconfig-r044-20211230
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                          rhel-8.3-func
+x86_64                               rhel-8.3
+
+clang tested configs:
+x86_64               randconfig-a002-20211230
+x86_64               randconfig-a001-20211230
+x86_64               randconfig-a003-20211230
+x86_64               randconfig-a006-20211230
+x86_64               randconfig-a004-20211230
+x86_64               randconfig-a005-20211230
+i386                 randconfig-a001-20211230
+i386                 randconfig-a005-20211230
+i386                 randconfig-a004-20211230
+i386                 randconfig-a002-20211230
+i386                 randconfig-a006-20211230
+i386                 randconfig-a003-20211230
+x86_64               randconfig-a015-20211228
+x86_64               randconfig-a014-20211228
+x86_64               randconfig-a013-20211228
+x86_64               randconfig-a012-20211228
+x86_64               randconfig-a011-20211228
+x86_64               randconfig-a016-20211228
+hexagon              randconfig-r041-20211230
+hexagon              randconfig-r045-20211230
+
 ---
- net/mptcp/options.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index d06855e66007..c08d4b04458b 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -863,11 +863,14 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 
- 	*size += opt_size;
- 	remaining -= opt_size;
-+	/* Note: this can remove previously set options in some conditions */
- 	if (mptcp_established_options_add_addr(sk, skb, &opt_size, remaining, opts)) {
- 		*size += opt_size;
- 		remaining -= opt_size;
- 		ret = true;
--	} else if (mptcp_established_options_rm_addr(sk, &opt_size, remaining, opts)) {
-+	}
-+
-+	if (mptcp_established_options_rm_addr(sk, &opt_size, remaining, opts)) {
- 		*size += opt_size;
- 		remaining -= opt_size;
- 		ret = true;
--- 
-2.33.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
