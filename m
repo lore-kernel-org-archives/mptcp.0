@@ -1,91 +1,118 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F98F2C80
-	for <mptcp@lists.linux.dev>; Tue,  4 Jan 2022 16:47:38 +0000 (UTC)
-Received: by mail-ed1-f51.google.com with SMTP id m21so152013727edc.0
-        for <mptcp@lists.linux.dev>; Tue, 04 Jan 2022 08:47:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=9ymIO1NWiED1L3EhmNBWvXzV3C30YG3vvRPM4Gt6ssQ=;
-        b=BIlgVoRsEZFgf7RqQvtt6dzZetN83Og+DkR7/Yh6a0clxD7nMg3KUmV6iki+IyEUbV
-         JHPLsujID0CegzrPsW7asCDFWtbjeHD7V3moubwz0Jvhut0Dqel20XXcOC7XP5NVzemJ
-         ZvoshjgEkSwKR4Hi/JepaWEXlHiI8jr2j1e56HKpJvVl/bBTE47Ywfqbdc3iI7fkdFY1
-         Up7Zz6krZ0O139G4ufRGrBJEKCkr6w6PNnTa/n7LnNYyKSI0IWbwXCDNYBi0Eei156Ec
-         RPbq9gRino4IcuV+nH8ntOgbGAp5mmboS5HSMW4LawrAGmI+k3yk97UM766feHxr3gsW
-         F50g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=9ymIO1NWiED1L3EhmNBWvXzV3C30YG3vvRPM4Gt6ssQ=;
-        b=m9NIRW2Yp/olKiAtvS35DL2+ETvSp4tNAgikDqsMUdacL0kPQPagB449AcD2FyNuLh
-         MtyhKO9+s2WgVvyhWObvjT2oTp3CRjIrmHeGv+D4lmw/42NVe2P/MyrZIQnZenSMja3n
-         Xd4URs+I566I1tLa+CE831/bMF3JMv9tJ2HDT1XGia6zDoV/LXfsf70CdKpKr6zDzTaN
-         PxxBnNWqQZCAZ/qfvqS4NkXiU2ZCtubUy2WkUwrh7eI+23nA82oX6F/mNcUeDQMaUQBk
-         xfBoTbJdnU8DaTELnB4bYR0CpMGpcGyNoao8s2qrRLEgS/cNctX8ZziVPOXWQyfGxcXa
-         4RIw==
-X-Gm-Message-State: AOAM532oHIgoc6q+W/wgJvXteoxX2ae3W6G1CfHM027RNKj90ewKrwgP
-	B37f5HXM55kW4Aw/P9U3AQR7TQ==
-X-Google-Smtp-Source: ABdhPJwMm2hO04t5eo8OeeeRbOYSvlRSxI/DNwU2hTUhaYu59GR/yNfzavMzsEg3oP7L4MsxW9w27A==
-X-Received: by 2002:aa7:d6d6:: with SMTP id x22mr49776124edr.132.1641314856864;
-        Tue, 04 Jan 2022 08:47:36 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:eb62:5355:d611:125? ([2a02:578:8593:1200:eb62:5355:d611:125])
-        by smtp.gmail.com with ESMTPSA id sc7sm11640526ejc.87.2022.01.04.08.47.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jan 2022 08:47:36 -0800 (PST)
-Message-ID: <1982663a-58a4-fad0-8f6f-71ad3cd761bb@tessares.net>
-Date: Tue, 4 Jan 2022 17:47:35 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF1D168
+	for <mptcp@lists.linux.dev>; Tue,  4 Jan 2022 20:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641328835; x=1672864835;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XXTLxmbvEQ4mGbCsB/YqC/+dB2R2w4xkgwSmGyHfhxE=;
+  b=Gcw7jdWR24DFeaw3zZCrsHMe6r77YNIKvzJTd0duVPVrLKrCajtD60b6
+   DPCNacv9Nmp7SIw5vU9UUbyrPvjd2cHJxjUy8vJBD4rC9Pz5tESZQ+BCb
+   GDX70CuHYSvMxZBGOduulaCBXlqITLiYbxNTf9sDQ2XjZCDxwD3+v1qwn
+   Jdd1JbNo4u7zU3KSwu1dq/FN3D7xsbf99rxg1zLl9ljTsxfW/yAP93+nK
+   qxhuAN/gf7zDJH6dwknQRxvoTKUHc4P2Cx6u2B8nIP6oHNrYjc6bg6jpt
+   l+I89b9M3Evv3hb8XLoqpnr9Q00Lv4Uscxr9fGM1iU8N9Z5rlNNbg58Ow
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="266567380"
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
+   d="scan'208";a="266567380"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 12:40:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
+   d="scan'208";a="617686530"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Jan 2022 12:40:12 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1n4qbL-000Fqp-Ku; Tue, 04 Jan 2022 20:40:11 +0000
+Date: Wed, 05 Jan 2022 04:39:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ e61c25868ed1d7543307835b5bcb8312c1c461b8
+Message-ID: <61d4b093.Ip4OQqQZUAs2soUJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH mptcp-next 0/4] use 'ip mptcp' in selftests
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1641290905.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1641290905.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: e61c25868ed1d7543307835b5bcb8312c1c461b8  DO-NOT-MERGE: mptcp: enabled by default
 
-On 04/01/2022 11:11, Geliang Tang wrote:
-> This patchset replaced all the pm_nl_ctl commands in selftests with the
-> 'ip mptcp' commands.
+elapsed time: 836m
 
-Thank you for looking at that, that's a good idea!
+configs tested: 54
+configs skipped: 3
 
-I see that you are using features that are not in iproute2 yet. This
-depends on your "more patches from pm_nl_ctl" series, right?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-We can easily modify the environment of our CI but not the other ones.
-To continue having these other CIs validating MPTCP selftests, I think
-we should do two things:
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allmodconfig
+mips                             allyesconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-- check IPRoute2 version and skip the tests with a clear message if a
-too old version is used. I guess these CI uses at least the last stable
-version of IPRoute2.
-
-- wait for patches to be at least in "iproute2-next" before applying
-patches in our "export" branch: it means we can already apply the
-modifications that doesn't needs your patches for iproute2.
-
-(if it helps, we can also have an mptcp-iproute2-next repo, e.g. if we
-see we have too many IPRoute2 patches waiting to be applied upstream)
-
-WDYT?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
