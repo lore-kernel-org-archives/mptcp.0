@@ -1,88 +1,60 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC95168
-	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 03:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641353836; x=1672889836;
-  h=message-id:date:subject:to:references:from:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=Piw4/t2fezpQ/5jb0gNrr2n8Y7MNuPNj6aIowaB9mEY=;
-  b=HiotJ+qXH5JdkE/R5B/Fz+ILVpTI4fc1OIub4kL+h+v0V0+Pp5MqezQb
-   xFSXydrwZ7Xkig5UFXWbF1DbiUAL6EsbfWSS/7FonqTFpgbOeKWDRCbcY
-   1rGITO2JctggQ7gjD7GhlVmKxKFTfR4C+vhEWmSHZ1Xr2rNrNjKrDlYTS
-   n7864ieiloIP6uaUQuGPt/HbgOal0JTdBh+PSwglUG+WjlSzYlKbZ1hng
-   bWxqgXcJ5pzpFq3cr66eBc3nSohn1hQX2T0JNQrRjBMvbFxy2pn0PNJXs
-   wtI9EyxvTacOVhrro6XtQVcm8DObTFRIy1J2D7NktB4t/70r37BbzUKM3
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="222352941"
-X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
-   d="scan'208";a="222352941"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 19:37:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
-   d="scan'208";a="526473361"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by fmsmga007.fm.intel.com with ESMTP; 04 Jan 2022 19:37:15 -0800
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 4 Jan 2022 19:37:15 -0800
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 4 Jan 2022 19:37:15 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20 via Frontend Transport; Tue, 4 Jan 2022 19:37:15 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.44) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.20; Tue, 4 Jan 2022 19:37:14 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB44168
+	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 08:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1641372659;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yF3X/l7V2uQsaPIKfJtZBGLZFSuxty78N4kucJgfqco=;
+	b=R6IOoLfaLr1TJNuvM63TAzZsXJxDqaSDAQF/JiOA+aNWqi2porggJ7dHMd2B7iflz2GXP0
+	ztkhao+usyhDzM+XelheMK0/3XTl5BWyEELfEaIxaP3yGCwTp1PoBaBPbV0sob3PFhV6GL
+	T/wQwm0DsMfxitch9dsxuQRuy72BD2Y=
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com
+ (mail-he1eur01lp2058.outbound.protection.outlook.com [104.47.0.58]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-29-dt4_q3IvM_ONyJqSEP193w-1; Wed, 05 Jan 2022 09:50:58 +0100
+X-MC-Unique: dt4_q3IvM_ONyJqSEP193w-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EYNwgbA8m/440+ByhL4izcrxsJkFgBGkEA7zLZNhsBWLISrUMH3K/xytlxWrCp/hI2en8uU99crguKnhGdEyNpGfRiLY74gbXI5xWYbF8BAUWzORRXqIsbJcEoZQM9ask1edvtIke+KCis+l4fn2GOZ/N4JJfdlecwok7DlgmxAw3g2NVAepBiPN4JVmaR4ILRBPcQXfxn50Jbz8e5OAuo6uzF64X5SBygeUn+g/axFq++L4cgLcZhgLAHFDQQcDUWrpXoslxRKXGyGr6N299SDvtZ+6XQ5Xw18fRVcn6E2lwrdHJj5P/aiCtHmOppCJ9sRHjiyfmk3mXxYABYIVhw==
+ b=LjoRT/7McMfEnRVPwn9xAT0TZOAz5n7/JPFYC1cVwDK5ZUYryJnlGoqHfN8oLYpA2TLTk5RmYE6Qi6iteOups2UUDGYFbR37fEiKcKyXCUajBktWs5Bt/muhe7P+zz+MyN3QuJ/MpxBpJO6A2BD0Lc0mvE5kDU/ACBAIXwzmfip+wx+imjGGIlSoGYr6zOOXHU9ppXVKDXJCjzSd3m7v5zhBxBOQ9gAT/wxGvvxYLc7MtdGPdIBi4l/hVrY1e8vxQjt34Boywr4CU+87Srp168dMvLEElpCm9VkOHMXUMj/PcIFw/nu0isGnT9obBq/fImP16goHwCFnR01aJ9r8SQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rq7KTW6mFgsjYkNtNhPadAOss0n7oxIwo5bLs2uZg/Q=;
- b=YNkJ0W5s3GZapRLP17wRbxDViuq/aM4fD0JErS/UCrgkwIMc8vrtolQJhaJ1TfX6HSnqeWdVmZt46zwLY837n2iB15ijb9pyiQITHExD7BBHknMb4PNzFmkaH8+RslukR8IAmW1LOMUVjMngiRIVSrzHp1DkCYNp1IkPZWeIg1zYcp8owoYATDhHTzigQuu+9hszyOgCZYNPttwfj6/PitcCo7oK7g6FMyfa8LcjrJ/KKPOZBjsxqfIJklYn2ra4FQG0Dwarcknl6Z+bwuKDnZO1Ny8jBl9R8aXa/fJVAEZpeIqurPeyL8yb9J1hR+x0WR0+1llA6EZe2GJS2BESFQ==
+ bh=yF3X/l7V2uQsaPIKfJtZBGLZFSuxty78N4kucJgfqco=;
+ b=QhAPgO/Sb9KC7gMUlHuH+TBVfN2j1+9aL/2uLllmAvDhOF2TNRoH1N+pPc4rif9DtW159Z0RyWym/uoH8dPp1upM9jKB8szClzsip3CE4Wpw9rrcRDVcaZG8ecT892500e5cxRZ2pXxpgwMhC8hj4vaODAZvt5Sa6Oyqd1kK+nZ9OarkKJc3WUdAbVvPoXZTQwuUYAxrvtuOtLAlXmS1p/0xCFtOA8Zwp8DmF9tUt2b0N0PqKyPPC5hnqUJ1EDloIaeWme+FhoHHzDwTreiFilx8jgHNvnQD8nP1i+211VamB4JPVSrW4d+Q4v8JDLaxQ2EuPigDJXeHvHk9L03R8A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CO1PR11MB5140.namprd11.prod.outlook.com (2603:10b6:303:95::6)
- by MW3PR11MB4588.namprd11.prod.outlook.com (2603:10b6:303:54::19) with
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by HE1PR04MB3067.eurprd04.prod.outlook.com (2603:10a6:7:18::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.14; Wed, 5 Jan
- 2022 03:37:08 +0000
-Received: from CO1PR11MB5140.namprd11.prod.outlook.com
- ([fe80::1c3e:cd78:54b3:2432]) by CO1PR11MB5140.namprd11.prod.outlook.com
- ([fe80::1c3e:cd78:54b3:2432%5]) with mapi id 15.20.4844.016; Wed, 5 Jan 2022
- 03:37:08 +0000
-Message-ID: <b4adf3be-20ea-7a9e-7c01-c500ed7214ff@intel.com>
-Date: Tue, 4 Jan 2022 19:37:05 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: [PATCH mptcp-next 08/21] mptcp: attempt to add listening sockets
- for announced addrs
-Content-Language: en-US
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, <mptcp@lists.linux.dev>
-References: <20211216222314.1244708-1-kishen.maloor@intel.com>
- <20211216222314.1244708-9-kishen.maloor@intel.com>
- <7be3ba91-232d-1357-dcb7-b55b01d46f3f@tessares.net>
- <39006fe0-fbff-f08f-4642-6ef8cdb2ad8f@intel.com>
- <1d349ddc-a3bc-7d74-f626-737576af8e9a@tessares.net>
-From: Kishen Maloor <kishen.maloor@intel.com>
-In-Reply-To: <1d349ddc-a3bc-7d74-f626-737576af8e9a@tessares.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0031.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::6) To CO1PR11MB5140.namprd11.prod.outlook.com
- (2603:10b6:303:95::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.15; Wed, 5 Jan
+ 2022 08:50:56 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b5bf:e1b5:42fd:4dba]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b5bf:e1b5:42fd:4dba%4]) with mapi id 15.20.4844.016; Wed, 5 Jan 2022
+ 08:50:56 +0000
+Date: Wed, 5 Jan 2022 16:50:43 +0800
+From: Geliang Tang <geliang.tang@suse.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v7 1/4] Squash to "mptcp: implement fastclose
+ xmit path"
+Message-ID: <20220105085043.GA3255@dhcp-10-157-36-190>
+References: <20211230191651.1831507-1-matthieu.baerts@tessares.net>
+ <20211230191651.1831507-2-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211230191651.1831507-2-matthieu.baerts@tessares.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: HK2PR02CA0206.apcprd02.prod.outlook.com
+ (2603:1096:201:20::18) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -90,132 +62,199 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 25435744-ca90-49a7-d6c6-08d9cffca662
-X-MS-TrafficTypeDiagnostic: MW3PR11MB4588:EE_
-X-Microsoft-Antispam-PRVS: <MW3PR11MB458800AB56BE3EDBB4CF9E0CE14B9@MW3PR11MB4588.namprd11.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 51965778-7fb9-4946-42fc-08d9d0287c9f
+X-MS-TrafficTypeDiagnostic: HE1PR04MB3067:EE_
+X-Microsoft-Antispam-PRVS:
+	<HE1PR04MB306786BE6617C6E45DE8D065F84B9@HE1PR04MB3067.eurprd04.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FQNERwOIxWmXSD1ZEW09m3M/UXfq/iSr9Gj1tM5Zmj9o1VPEzbw1NDxLf+uSDlTohURcwrlqQrXToc/5Ew+wY+YzlZAX/g9zDWLaK1cWcL4RAA9iKxs89Zt39CweWpDeQiR818+K7EUSgMMqfLQhvpX0CoNH96nkebviJM6p7dy+nmymeYOypSsjqlLjtzL3O3XcTgjuiZA7hp+BWWYDBrcLsFPLU/w2Gj4sqbjJvSnHy+AQ6wch4aIhzZvVgUtOouZhRYu8kZQzpw+cTPpkrwr5XqySEmuOe0n9W0/BwHdrIKGFI/Fl2RYTyaSv0QeWpyB+OF0Rd2JUX0MILgSQJoMdwWLf8ZeKso0aeguV3c07aX6eFln69tH1vcFmP5SwxmwZpXhQDJdi777aISIOm5n+0RRMlTbhtxfmFeDQUTQX/qerONnNLE7WH+rHlSv4Ru33KqhCSh+WljzlXwYiuIAiYY84/2iJc7ydHKkR516ev7mdgXqJUsa8azkXuiRizDjPkRfX/AvyUU+T4o6Cb0AhKGol3VUxE76o+owtBdkF7BrbSAHzfJmG0F3odYNcULKWANkhvGiYoS508GD3qUM+PTmBovhRFzObqFXyxT/Z8/fLhgj6RvxPrsIoV6gignC3L7bc0zfGy3ZghgW1rKh/yxIjjLxDn5DB3O7m/gcbdnWKgljFbbiu8BCzQnY5FcAHsm6myqAAQqC7+VU1lZOXN8tUEKp2JwUXGuOZOLk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5140.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(6666004)(186003)(31686004)(38100700002)(6512007)(316002)(86362001)(5660300002)(31696002)(66946007)(66556008)(66476007)(44832011)(2616005)(26005)(508600001)(6486002)(8676002)(6506007)(36756003)(8936002)(53546011)(83380400001)(82960400001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	Txr2+HVFF5YdDAVjy60gQV4wfsY69Z1vGOf9ApYa7MoNBijgqXkP1pL4pTbNxJsD/HnhNeh3ujW+Crh9B+EFeQDLbDXDb+/MQAL/NWlyD8Jwt1KTUKGo4eIB01pF1Ml8thuCgQPWgY3y10Bh4hZCn3SwXImpvtuVgKVsu8jj/SVtz39Dn698wFzPGsVS2kx7iepsj6lm+D8pX/EKS4+jv5m7O3hFx9anl70eVE+EC2qD/r4aANq4j2yu5+XsDfbwAbIzLvVomzSeK30H/lM/bXyIhq6bSnDIZs4UwURIWmbNiPHzkL1YTp2i6Gzj09+f+nMP7ouxaqVjcM9WTyTyt1lARjJcYF8G2sYE8ZQf1c/K+sKH6ru5SNA6UCQEcwqgEgJbU5DMkJQ9UKql78ktcEbDzTE6iVTkL3zWODUgVyLYuj+bCSNn9pRU+SWGCe0iMkw4yrX83/CGzrBtNQV05Utzu4no1N8RGZ7x4uTVkAgUFGh4FkSkm/LEv3A7VvMPZOGCFuAcULYYq7uTMqHCGOPnjogb+UMPVBWXa8X9/6r0Yz4D1vA9ZSCGIlYe5qN0LtRObsMxtI/F+Q6A9EKE3MqJgvS3PokKMswNz57OEY+w4Mwlf+euvT2A6t4whiR3
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(6512007)(1076003)(6506007)(508600001)(4326008)(6666004)(316002)(66476007)(86362001)(9686003)(26005)(38100700002)(66556008)(6486002)(55236004)(83380400001)(6916009)(8676002)(5660300002)(44832011)(2906002)(66946007)(33656002)(186003)(33716001)(8936002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?amlIdkJjVlplcWFnWWxMWURmOC9DVzEzT0t2ZjJiaWs0ZHdVY3VzTE5leVVP?=
- =?utf-8?B?b1g2WE5xQmVlcG1jeTBrbkg0bTJEOHd2ZFhVR0FBdDVTWkIwNjBQM1pneTNq?=
- =?utf-8?B?K0pGdkRocWpQSlErL3VObElWWGhoU3lRQkp5QUdoY3ZhMjRYeExMQlM5Y3I4?=
- =?utf-8?B?MDZwWVNZV1lzaXJmRThMTzZsLzNOdTQ4MC95MktpR3dvWHYyY3AxaUFVT1Zq?=
- =?utf-8?B?R0hRbldRYkk3L0daTzRRbG84MkI0bzBmMkdrZ0ZrUFZjMUNidm9ackFnNFhy?=
- =?utf-8?B?RzZFZG9ZdU92ckdWaDFEdW9ZMnVoeE5kMyt0Wk1oRHRGUHg2TjZUZzVJdUZp?=
- =?utf-8?B?V3RWZ1NJQitJRTAyNFJLNEN5RE9kd3ZBRUtQZkFoTWxiRGNPK01zb2tHb2tI?=
- =?utf-8?B?WUZmSkFxZnFNdGRIWlV1ZGlMVjR1ZXhpYkg3cTJPS2hYUjhEM0pZZWFBUk55?=
- =?utf-8?B?SXRXejNEVjN4RDdSN0V3SzFGd3pCbElaV0tRYXQ4ZFJNSmNNV1RNcVdEazhI?=
- =?utf-8?B?N3o0QXhpWWJNSW1Jd0syUVRnaEMva1dGWGx0a0ZVN0xFRTZqOVFFZDdla0Jo?=
- =?utf-8?B?dnFhWjh0TG15T2RrZThmN2FIV1JyL2RLVitFblZCd0FsQUkzenVVNGtqekpv?=
- =?utf-8?B?c0RDcnVjaC9INWpRUHIwWSs1cHorckNMTW1VeHZpb3FTQUFNY3hPVWZSMTlo?=
- =?utf-8?B?RU10Z0NMNHo2NG45MkN5SG9ONkRwRkJTMUJhSkNJZnd6dzNOYndXZThjNE1E?=
- =?utf-8?B?WkQrSE1RbzA1REFlbXRrTEdYUzREZ3J6cXNSL1JwcE5FZDQ0VmM3R0RuWktZ?=
- =?utf-8?B?eFR1MHBtc0Q4VzNRaWs2V2djNCsrdUFTR3NJWGtrdG5kcnhUTHFudlEwQ3Zv?=
- =?utf-8?B?NTBNbDRDaUpQcVpld3BZY1JOZmRJMEJPMmNsc3JmKzE3bk5uajF6NDJSN2ZD?=
- =?utf-8?B?M2pXcktFYytGZDJ2MHp4Q2YwUzVFd1FKeTI3dDg1bW83N3RwbUFYMnYyNGN0?=
- =?utf-8?B?a28xQ1QxSGZhL3IvZHVHSUxTbFBTRU9uWDhzWnZqQTc1TjN6ejBJbm1JanAz?=
- =?utf-8?B?eHdjOXJ4VFIwN3VoQ2tOSThHRzJWMHRVcHVVSHM5T0pCZTZQZUl6WlJQMzlG?=
- =?utf-8?B?T04vMGFSRk1xcTNPSWVvU0ZwbUNDUVRzVnB3WGRpOWVoR29ZUnNud2pqbm4z?=
- =?utf-8?B?NGwvR2IwMVZSWkg3Kyt3RDFONDEvTlNKaVdlWVVXS0lKT3RhUXZRRVhVR0Rm?=
- =?utf-8?B?blRYRGJ1ME85dW5adk5wcFdycnIzM1cwRFdBQWYwYnRSbHB0Y3dUcms0ZFFi?=
- =?utf-8?B?ajczSlhtVGIyeEV5VVZXMHp0eEJKaEN6VXpHZDFNK09jMmNJMkJjeG1tZGFM?=
- =?utf-8?B?MEM3Z0QrQnEva0hCVU1wNFk0WVh0Tkk3eHJjd05IQzc4TFdodEY3Tkh6MWsy?=
- =?utf-8?B?YjNzYzNiQ0hBcHRBemFIcmw5dUV2TzczZHlMdC8rQk1aTEZhY0hGd0dhTHZa?=
- =?utf-8?B?LzJUN3pDeVNLZ3BJRHc1UXM0VjhpTVRRdHhCYXRaL0RXSWtmQ0MvcSswNmRt?=
- =?utf-8?B?dE51SldFY2lSNm5tT1lSME55Unhpd21ZZTlzRUNUVDlOUjQ2V2dGTjVUV29B?=
- =?utf-8?B?QnhIMkhGVFhGaGdsRmhPTXV1TTFOYlRVNWt0VUZCTXVnSDVYdzcwcm9jcGpw?=
- =?utf-8?B?N05sMFNOWEtySk1nKzd3RVBEMjZ5c25GVzBqMGV1eXVKbkJXTVdnRVVjVldR?=
- =?utf-8?B?ZTR2dEhpbWsxMXQ3SngwNzBrZkJQTXpnUDJFWEFidklYdW9HQVN0VzdtY2Fr?=
- =?utf-8?B?dVlnYnEybjNlOHhtMHoxTS9uNjNQaklTamp1Z0tDRTVuRmVpc295RWxZK0dK?=
- =?utf-8?B?U2hVY0FLMTFlRUxnMWVUWFVtbjFqN24vT01pL1RtZXovMjVwcVRkdUx3Q0p4?=
- =?utf-8?B?Y0ZmVVZSQ3hvOGdLSVVYZExJQlZsNUNPNUM3b2I3R2Q3eTY4RjlxdDNpNDRj?=
- =?utf-8?B?dm1Dc2dzQ01tSmNYTVpLNDIwRVBSRW9yc0gxMWhUY3FDcUl1bWpQcmJ6Y0hr?=
- =?utf-8?B?TDAvY3U4VndqR2Q0djRCaTEvOFR1TUJuSTBUV3AzMkRqUkFBNEYrZU1nbHRG?=
- =?utf-8?B?NVV6c3hITUNnOFc4aDZLNTJRUCs4OUZsTVh1UFB2c3NpZDU5V0JOdDBmNFZx?=
- =?utf-8?Q?qapA2kEJM2NAAeIGQCA8w9w=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25435744-ca90-49a7-d6c6-08d9cffca662
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5140.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?GfVCKg4K4XRLsaASidloZAqFWkg6PiHvI3DuU79EfUEsJdIk2UQLB2zHEyIS?=
+ =?us-ascii?Q?+ZTjSOo47ioWB2Ahz6zHRf7jApCnoy90MnEsyUEbResGWpf5ZlknMNCOozSt?=
+ =?us-ascii?Q?shLhLJArF5MLYnOKhLYuPFP8wktGpEZVoTqCGnTGg2H7LTUvhTR1PnpkHcA4?=
+ =?us-ascii?Q?VsBN7ME6RloKqr390hYP0CBcgiQsJ7HguSznReEgHEzWwVq8pnqHyi19J7Er?=
+ =?us-ascii?Q?oMp3Ncpahp6FX+T4pS0f7z0penU66y5EdkDWnhHb9/E99hIhJ8Cdi+moJAoA?=
+ =?us-ascii?Q?XVeksPUs/V2D9hUnauhsQhg6ouWtlxZprpsBIExsUH9/h5aOBEXJvAcgEoOi?=
+ =?us-ascii?Q?6E9yVxC89WWQz7lwgf1wuyWTDcM5o0yFFRkaQLsnJtGubm1UUUEMNdhY6kx2?=
+ =?us-ascii?Q?CaNX8pa8iXOmdYmgsE+MNZy2xNPnx2aFcumpFXEaXJQl3qpqsvBMKkxojoF2?=
+ =?us-ascii?Q?7DNds8mSMqNxsP99AfDSVochn6zw/AB+3Qndj72AI4pFWXv86G1FXb+RVX8V?=
+ =?us-ascii?Q?SAsbI9S6EzmulBP1bJCh3aU9upMd52Nacy1TRU1mmpTni68lVyTs/fX7xxGp?=
+ =?us-ascii?Q?+S5bp0BD9GRxhj0TLiPJMidjDUKYH7TkjK7JmenWyUyMfHRYaSRLAzKdVXe3?=
+ =?us-ascii?Q?wst5OuykrPmpNyHM/dTUHLWM66pZiYpwzzJm/GMVv0N6GF0eX9hVbeWGYTIE?=
+ =?us-ascii?Q?OjXb3b70EPQyugI1ItHGEeDnRSVYc/eyYqM1XtaCboPCwxkp4SPT9itxT2+7?=
+ =?us-ascii?Q?jkXfcPn6NEbbunesVTde/ylvD+oMaE/UEKeoVFwb0+EotKzUIFhgkm9XiPSX?=
+ =?us-ascii?Q?918JzcUDXhIYUbz4+z+7/9H1+bRL+Re4TtrBRy/lr2osGZfrhNUVXD/zUIXT?=
+ =?us-ascii?Q?Hi8a6VNW03ZpmvGEdAUmWI3RI4HDiP2CromQNg9u9Bp7UeGhZQsAxhZYfATu?=
+ =?us-ascii?Q?iIB6c+ZcEgg8rBDKnKRf3/8zIsDGjPesBGAUa490g49pR7RqKeR6CVuj4e+4?=
+ =?us-ascii?Q?GBL9QqVsvIUcmdrHgE8V8k99+Xrp1w12gCEH0IOpJscXLQEeB9f5nNSYf6ab?=
+ =?us-ascii?Q?DhG+esMOh7E8aHi2EI4iya0exhwKepfXE5GY5RyFeWj+NA+jv1ZQPS4Bz79+?=
+ =?us-ascii?Q?Ie/qqBjIzyXIdCv7hF5kmo3wO/DGZuTOavFrB5xuo4vFyWRZ5ZaSsTmvQVjP?=
+ =?us-ascii?Q?cx/TmY+r7UScXldFRS3Vl+OmkdJxgjGBfen6PglrFgQ8RM3EnWd4DCZ9pLAx?=
+ =?us-ascii?Q?YUi+4gLM70p6zCiP2kMDQ5ath8QD55WChtMeTAeFFcxeMrlJVp1G0dJ+zWqI?=
+ =?us-ascii?Q?kvSAYtbM8JNP4UtGvZDf7kXrVsuata6LDe/g8Sc4/sLIf/rMJVn9c5t5Ts0f?=
+ =?us-ascii?Q?40npzvYd7YVgN32NBIkDkihOtbzpzTNrpSzE0gIGMfbMOckVeWYMYYheUfha?=
+ =?us-ascii?Q?j2Qbl3YunkzNfz6k3/bxnsaWoE9bY5fPYWna1jz1l8+EhIOvNOLI2DLwJFfZ?=
+ =?us-ascii?Q?bHYRu9zt22GX2yjwGaEHaD79Bcdfn3hWB76/98wbxSatj/dNTF5jcHM82vVX?=
+ =?us-ascii?Q?Q080fGV/6lE5kha7V6plHAE8UqJZaI9TsiyUfApiDyMmOBKiWJaME7nTurXK?=
+ =?us-ascii?Q?2jNdFG+h3eoy2HZpHtVw1k4=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51965778-7fb9-4946-42fc-08d9d0287c9f
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2022 03:37:08.0932
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2022 08:50:56.2716
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VmZWkcmIrCccUjGJFh5G6IyJQBNIAzkOdayofuuiPKgVPkwUq0usaNiI2PDtWhaR/xwhZWIbu8fMDBJAU1ZjNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4588
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: qNH6gBoEH4bRFoHWqhYloP9wVubm5/NrujmSh5+xB1Ka5W19AUsnpz5UNaDWoQMcfFUlyyxd8vaWr9j5cdOz4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR04MB3067
 
-On 12/29/21 6:03 AM, Matthieu Baerts wrote:
-> On 21/12/2021 08:34, Kishen Maloor wrote:
->> On 12/17/21 8:34 AM, Matthieu Baerts wrote:
->>> Hi Kishen,
->>>
->>> On 16/12/2021 23:23, Kishen Maloor wrote:
->>>> When ADD_ADDR announcements use the port associated with an
->>>> active subflow, this change ensures that a listening socket is
->>>> bound to the announced address and port for subsequently
->>>> receiving MP_JOINs from the remote end. In case there's
->>>> a recorded lsk bound to that address+port, it is reused.
->>>> But if a listening socket for this address is already held by the
->>>> application then no further action is taken.
->>>
->>> Do you think we should add an option not to do that?
->>
->> I can't immediately see why that would be necessary. I would think that a machine that
->> wants to restrict MPJs could choose to not issue ADD_ADDR advertisements. 
->> So it could be more a matter of path management policy?
+On Thu, Dec 30, 2021 at 08:16:48PM +0100, Matthieu Baerts wrote:
+> From: Geliang Tang <geliang.tang@suse.com>
 > 
-> Yes but likely, the PM is a daemon separated from apps creating
-> connections. Maybe some apps want to add restrictions on purpose and it
-> would not be practical for the PM to check what kind of lsk has been
-> created to know if it has to send an ADD_ADDR (+ create a new lsk) or
-> not to respect restrictions set by the linked app.
-
-Yes, the PM daemon operates independently of the application and within the scope
-of its namespace. The PM daemon could be the enforcement point for any application-specific
-restrictions.
-
-It could expose an API that applications call into to set PM policy (e.g. don't
-advertise addresses over this connection), or may be the he admin/app deployment configures 
-the PM as such for that namespace? 
-
-The kernel PM has an API to set "limits" and I'm not sure what's its usage model wrt address
-advertisements (like who decides to not add_addr on a machine running a client application?).
-So userspace PMs could be modeled similarly but with much more fine-grained controls.
-
+> MP_FAIL could be sent with RST or DSS, and FASTCLOSE can be sent with
+> RST too. So we should use a similar xmit logic for FASTCLOSE and
+> MP_FAIL in both mptcp_write_options() and mptcp_established_options*().
 > 
->> However, for PMs that do issue ADD_ADDR messages, this change merely attempts to create
->> or reuse a (previously established) lsk (which was stored in the kernel context).
->> But if the lsk is held by the application, then no action is taken.
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  net/mptcp/options.c | 66 ++++++++++++++++++++++++++++-----------------
+>  1 file changed, 41 insertions(+), 25 deletions(-)
 > 
-> I didn't look what was the cost exactly -- probably a look-up in a table
-> without locks? -- but maybe on a busy server, you don't want to do extra
-> actions if you know they are not needed.
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index c6726e8389ec..9d2c1c9edbe6 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -829,8 +829,12 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>  
+>  	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+>  		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
+> -		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
+> -		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
+> +		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
+> +			*size += opt_size;
+> +			remaining -= opt_size;
+> +		}
+> +		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
+> +		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
+>  			*size += opt_size;
+>  			remaining -= opt_size;
+>  		}
+> @@ -1257,21 +1261,7 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+>  void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>  			 struct mptcp_out_options *opts)
+>  {
+> -	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
+> -		const struct sock *ssk = (const struct sock *)tp;
+> -		struct mptcp_subflow_context *subflow;
+> -
+> -		subflow = mptcp_subflow_ctx(ssk);
+> -		subflow->send_mp_fail = 0;
+> -
+> -		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
+> -				      TCPOLEN_MPTCP_FAIL,
+> -				      0, 0);
+> -		put_unaligned_be64(opts->fail_seq, ptr);
+> -		ptr += 2;
+> -	}
 
-When one end of a connection issues ADD_ADDR messages, an attempt is made to
-create a lsk or reuse a previously created lsk.
-If the application happens to be listening on the wildcard address (which may be most of
-the cases), then no lsk is created. 
-You could say that this change is at its core mostly covering corner cases that were previously
-left out.
+Hi Matt,
 
-If an ADD_ADDR message is not issued (based on PM policy, for e.g.), then I think essentially 
-nothing extra happens.
+Sorry, this patch doesn't work on my test. We write both DSS + MP_FAIL,
+but MP_FAIL is lost on the received side. Only DSS is received.
 
+If we write MP_FAIL + DSS like the orignal code, MP_FAIL and DSS will be
+received correctly.
+
+I haven't figured out why yet.
+
+Could we just keep this MP_FAIL writting code still at the beginning of
+the function just like the orignal code did?
+
+> -
+> -	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
+> +	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
+>  	 * see mptcp_established_options*()
+>  	 */
+>  	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
+> @@ -1328,6 +1318,10 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>  						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+>  			}
+>  		}
+> +
+> +		/* We might need to add MP_FAIL options in rare cases */
+> +		if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
+> +			goto mp_fail;
+>  	} else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
+>  		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
+>  
+> @@ -1460,19 +1454,41 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>  				ptr += 1;
+>  			}
+>  		}
+> -	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
+> -		/* RST is mutually exclusive with everything else */
+> -		*ptr++ = mptcp_option(MPTCPOPT_RST,
+> -				      TCPOLEN_MPTCP_RST,
+> -				      opts->reset_transient,
+> -				      opts->reset_reason);
+> -		return;
+>  	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
+> -		/* FASTCLOSE is mutually exclusive with everything else */
+> +		/* FASTCLOSE is mutually exclusive with others except RST */
+>  		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
+>  				      TCPOLEN_MPTCP_FASTCLOSE,
+>  				      0, 0);
+>  		put_unaligned_be64(opts->rcvr_key, ptr);
+
+Here, 'ptr += 2;' is needed.
+
+Thanks,
+-Geliang
+
+> +
+> +		if (OPTION_MPTCP_RST & opts->suboptions)
+> +			goto mp_rst;
+> +		return;
+> +	} else if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
+> +mp_fail:
+> +	{
+> +		/* MP_FAIL is mutually exclusive with others except RST */
+> +		const struct sock *ssk = (const struct sock *)tp;
+> +		struct mptcp_subflow_context *subflow;
+> +
+> +		subflow = mptcp_subflow_ctx(ssk);
+> +		subflow->send_mp_fail = 0;
+> +
+> +		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
+> +				      TCPOLEN_MPTCP_FAIL,
+> +				      0, 0);
+> +		put_unaligned_be64(opts->fail_seq, ptr);
+> +		ptr += 2;
+> +
+> +		if (OPTION_MPTCP_RST & opts->suboptions)
+> +			goto mp_rst;
+> +		return;
+> +	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
+> +mp_rst:
+> +		*ptr++ = mptcp_option(MPTCPOPT_RST,
+> +				      TCPOLEN_MPTCP_RST,
+> +				      opts->reset_transient,
+> +				      opts->reset_reason);
+>  		return;
+>  	}
+>  
+> -- 
+> 2.33.1
 > 
->> There's a separate change in the series to allow subflows to be initiated from either
->> end of the connection. So in a scenario where a machine that happens to be running a MPTCP 
->> client application issues an ADD_ADDR message (and reusing the subflow port), an lsk would
->> be created as a consequence of this change.
-> 
-> Even if it looks very unusual to me to create subflows from the server
-> side, it is good to have this option! Thanks for adding it!
-> But we can also have an option for these two changes :)
-> 
-> Cheers,
-> Matt
 
