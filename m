@@ -1,49 +1,48 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890672CA0
-	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 15:57:31 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id q14so156035748edi.3
-        for <mptcp@lists.linux.dev>; Wed, 05 Jan 2022 07:57:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FED2CA2
+	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 15:57:32 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id m21so165021747edc.0
+        for <mptcp@lists.linux.dev>; Wed, 05 Jan 2022 07:57:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1DYnJ6GiDDCb36cp6Mrm9pK+SQp1df2TyTcvRE0MlOc=;
-        b=2bZQQbMgOu1vwuqwCyg4Rlyv75t9YUQgUoWSa+m4S/fbA7VPOwOSDIF2rlvoFhEPqQ
-         eA6qhLrXWlmcYvJlcDYtK9qF7qcYs50xnMnJ7lgxMqPPoUkm9n3ABGl++7Z3Pf0jC208
-         H7RWDshjO6qgPZi5vI5Dpsajr8DbMlOS8x28uCJlduSV9JDy0RQX+yj0fh+hgeG1oKSU
-         2FHyGHGnHmOibFRLauRdtAvOXabpf2Y6WZo+qzl5UTHRAXGFyWSSOUkmdBQMyjz5KvDk
-         H2Io/BaCMxEBN4JHdng6U1lD+AYUMy1kFPd51/qAgFPvcy+Jc5r1UUkiiCvjaTKzdvWo
-         HdUA==
+        bh=pZRucwN/iu3JhRKyQBm7cwK6+MBX/OabN6ofIvRd0nQ=;
+        b=GfGgRMnvMinVLkUPdGS8nQKDqMYzbAFaQEufsu3NKUNo/lcbzLKWGvoBIxoQ+LSc/3
+         VNlwQbfLs8k+w1fsHCH53VM0cQPceGi23LfvpLSdF5Shuk44kDfuQNCUG4Fjy+uCaiWr
+         EbN/D0adfCVE6lAw6iqfYpN3MmvDGvedXDLmeh9XYz8NNz/M4skIP9RJ3Ka2QtQIEHbv
+         N/hPY63yvqPIgHXhCUwDONq1BF3tPDokdNfI6kBnREPoJyFPdE0C4tojZtwiU4kuNtLy
+         y72u6Oj+aBlXGMx2GZAIB4b1uoZqk4bdk3qFZyQKS/CdvA565gSSexDwPPdThqRECoq9
+         C9rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1DYnJ6GiDDCb36cp6Mrm9pK+SQp1df2TyTcvRE0MlOc=;
-        b=J+a0bnlUKechLe1SEAZZCuMMSDrhnh/ybbk0Mc70R5tPRXNqoE75EeV9+/ayb0veRv
-         3/VISgNlB9qBpAqPNoUpKiZHDD50QBA4SRHt5Wykwbbb6fb1/jOBhvzYiuHZEsu5Os9k
-         d5Vgn/7WlJ43OoxizCczhNcQAzQUQZnNvr9EPg4ubcvEHrk+/fbSmOT4K/NSg/95AuzY
-         l5sHiBlZfcmXGZ8ndVGiPMfAdvrmKi+pF9SmxsMwMotqsGWcQSHjOCfzXL3H1LvsRAfE
-         nAUZDo1ukeDQO5h+SgXIcaPpShJ/OTgbpIJp0tvEHIpqbmmO2pDe81+GtM1zWtT4K+K1
-         /xJw==
-X-Gm-Message-State: AOAM533n9QZDTJf2b9CT27YSHgDb3JKgSrEa1fiqvHM/QvslB5KFV1vK
-	CN/DOW39bEZyUwoGUM3HQ6JyPeLLNDLBOZEyWMg=
-X-Google-Smtp-Source: ABdhPJyc06vcNvLJSkdINem5rfeVEXoxIxzy9O7SB/vV1WLHPRJjDt6t1S40TL+fZ8WnDYaEO5piCg==
-X-Received: by 2002:aa7:c481:: with SMTP id m1mr52683100edq.204.1641398249649;
-        Wed, 05 Jan 2022 07:57:29 -0800 (PST)
+        bh=pZRucwN/iu3JhRKyQBm7cwK6+MBX/OabN6ofIvRd0nQ=;
+        b=AgyrpzCcQUtUE1iymOYSXFdsEe0zN2ixSLzq34L5HjxupmZ3EELWha7rHWQHJu67Bp
+         h/WoLKbVZeN9WCJRykFRnjqasYrqEpitGHZsWxaEFR1DBaMx9JJSgRC1HptFzrtVB7e2
+         s0cGy9qkt//NryrjtHqSgOTRr2fIHZiV82tCUlHI/y6rg9hwcmZ6tK9+NkZbPYjw9LyH
+         LfJjNb+rJ+7nTWhrnqAGbDiJe4QwmaiNy5AtFFpCxHvhK8euq1FQ1yIexZeVdEj2mMao
+         UGD7PQUbBRKObVMn3mEup5DYaZrJ0VgEFT4Ax/sd0lf6A/W20WXcUZoFKnhj0YHqiEzj
+         J4EA==
+X-Gm-Message-State: AOAM531jf6u1f8+PyZukZgljjtCVhg046VUbzC3rF12zXh5URxgu+B9u
+	60wJowZRWuNVyctsdDKg2A7CS+tbgmL5bHD9OCU=
+X-Google-Smtp-Source: ABdhPJz4fciRRhe6zdEwdh0xHXXRTwfn6OvJRjGCxAUMWdFKrspY8/Jr0qZMhUwDNqdtORvEujt+kg==
+X-Received: by 2002:a17:906:7954:: with SMTP id l20mr42833590ejo.358.1641398250744;
+        Wed, 05 Jan 2022 07:57:30 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id c30sm12399684ejj.190.2022.01.05.07.57.29
+        by smtp.gmail.com with ESMTPSA id c30sm12399684ejj.190.2022.01.05.07.57.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 07:57:29 -0800 (PST)
+        Wed, 05 Jan 2022 07:57:30 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>,
-	Paolo Abeni <pabeni@redhat.com>,
 	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v8 1/8] Squash to "mptcp: implement fastclose xmit path"
-Date: Wed,  5 Jan 2022 16:56:55 +0100
-Message-Id: <20220105155702.165123-2-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v8 3/8] mptcp: fix a DSS option writing error
+Date: Wed,  5 Jan 2022 16:56:57 +0100
+Message-Id: <20220105155702.165123-4-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20220105155702.165123-1-matthieu.baerts@tessares.net>
 References: <20220105155702.165123-1-matthieu.baerts@tessares.net>
@@ -57,76 +56,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-MP_FAIL can be sent with RST or DSS, and FASTCLOSE can be sent with
-RST too. So we should use a similar xmit logic for FASTCLOSE and
-MP_FAIL in both mptcp_write_options() and mptcp_established_options*().
+'ptr += 1;' was omitted in the original code.
 
-Cc: Paolo Abeni <pabeni@redhat.com>
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+If the DSS is the last option -- which is what we have most of the
+time -- that's not an issue.
+
+Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-
-Notes:
-    v8:
-     - 'ptr += 2;' was missing for FastClose (Geliang)
-     - moving the MP_FAIL option is now in a dedicated patch
-       ("mptcp: reduce branching when writing MP_FAIL option")
-
- net/mptcp/options.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ net/mptcp/options.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c6726e8389ec..aa3ed37bc59a 100644
+index 36ab69906af3..bbf61dedb4b5 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -829,8 +829,12 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 
- 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
- 		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
--		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts) ||
--		    mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
-+		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
-+			*size += opt_size;
-+			remaining -= opt_size;
-+		}
-+		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
-+		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
- 			*size += opt_size;
- 			remaining -= opt_size;
- 		}
-@@ -1460,19 +1464,23 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 				ptr += 1;
+@@ -1334,6 +1334,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 				put_unaligned_be32(mpext->data_len << 16 |
+ 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
  			}
++			ptr += 1;
  		}
--	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
--		/* RST is mutually exclusive with everything else */
--		*ptr++ = mptcp_option(MPTCPOPT_RST,
--				      TCPOLEN_MPTCP_RST,
--				      opts->reset_transient,
--				      opts->reset_reason);
--		return;
- 	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
--		/* FASTCLOSE is mutually exclusive with everything else */
-+		/* FASTCLOSE is mutually exclusive with others except RST */
- 		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
- 				      TCPOLEN_MPTCP_FASTCLOSE,
- 				      0, 0);
- 		put_unaligned_be64(opts->rcvr_key, ptr);
-+		ptr += 2;
-+
-+		if (OPTION_MPTCP_RST & opts->suboptions)
-+			goto mp_rst;
-+		return;
-+	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
-+mp_rst:
-+		*ptr++ = mptcp_option(MPTCPOPT_RST,
-+				      TCPOLEN_MPTCP_RST,
-+				      opts->reset_transient,
-+				      opts->reset_reason);
- 		return;
- 	}
- 
+ 	} else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
+ 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
 -- 
 2.33.1
 
