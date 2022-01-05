@@ -1,118 +1,106 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E944D168
-	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 18:22:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3DF168
+	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 23:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641406932; x=1672942932;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FexL9zKX2HF7RJ1m9iXDDOAqTed7cdrC8ckwBPrTNWg=;
-  b=Ug0yw8rVv93LcLgsDObnTW6yc1+bKKOir++pRQFeU+w8F2xI96w4zXSs
-   ITyw9vLWajnRRbSPdrxiZsZqyUTaMRl8kzkOFLzPjtFSyWTlSFZm5ZKhi
-   Ml4ODjpfgy0WlNnIURHg6NvvZh+H8aIuXzGTbP2Mye2AISFcyl1E24QM9
-   GgddiMi0J3fQhHwPJ4wu+wEB4RjcVJFKyz7OVCrDJczoUt6F5M/ODXeKM
-   viD6urTg2pz3eXxSNGlv+xVDzRdMZz5wO1OEufPjDlzhZozO0itW28x9h
-   nDTQi2XjZeG8tkGSV7JPxdN+NJbMEFSfhGbTwVPWuYj9bJZ0ct3f/90Y+
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242462604"
-X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="242462604"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 10:21:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="591115607"
-Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Jan 2022 10:21:49 -0800
-Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1n5Auy-000Gvf-Di; Wed, 05 Jan 2022 18:21:48 +0000
-Date: Thu, 06 Jan 2022 02:21:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- 9478f9d57df23cfa5caa4317e75a6efe6e782ab3
-Message-ID: <61d5e193.udR1w0T5SBGpaYZd%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+  t=1641425074; x=1672961074;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4FJD3zQMGnvNTU7llAGzSl5Ea4oS8fp1MKtkWjWUZFQ=;
+  b=UL7j9YbWNKK5d2XroTNzfGL9bQBXpu87od1EUmZpi6D6SSUM5Y6PkYEH
+   7/80M5S5pWGoTDjHdhmLwQPbnHsoXZqhkUzYwhOoDYTYMVx3IT1QYzIn3
+   bodKXk2TMmKV/peT28mQe3YUPRh1w+HkZD2FOmlThFf74AtzyzXCu2W0j
+   vQF/jH2rmuuM6BwIZEPvVMbApnYc1S5Tj3SuuqVkXPHIL8wtOAq77vuBA
+   xL8DpC+cHkYhLdV3HQpZVL8cv+jhWBE0CAUIXziu3Rpm1pzVJS4QwH3Hg
+   AOJ5841HNExbgYjQDq/j5Xu256Nj1aMF3HG2P8JIEJB9/NCm5IBuJABD0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="223238193"
+X-IronPort-AV: E=Sophos;i="5.88,265,1635231600"; 
+   d="scan'208";a="223238193"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 15:24:34 -0800
+X-IronPort-AV: E=Sophos;i="5.88,265,1635231600"; 
+   d="scan'208";a="574552369"
+Received: from rcamaril-mobl1.amr.corp.intel.com ([10.209.22.32])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 15:24:33 -0800
+Date: Wed, 5 Jan 2022 15:24:33 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com>
+cc: syzkaller-bugs@googlegroups.com, mptcp@lists.linux.dev, 
+    Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [syzbot] WARNING in page_counter_cancel (3)
+In-Reply-To: <Ycwo+++dToWQ1RMR@dhcp22.suse.cz>
+Message-ID: <9a76976-60bd-4bd-fc8f-b3b5782535b6@linux.intel.com>
+References: <00000000000021bb9b05d14bf0c7@google.com> <000000000000f1504c05d36c21ea@google.com> <20211221155736.90bbc5928bcd779e76ca8f95@linux-foundation.org> <Ycwo+++dToWQ1RMR@dhcp22.suse.cz>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: 9478f9d57df23cfa5caa4317e75a6efe6e782ab3  DO-NOT-MERGE: mptcp: enabled by default
+On Wed, 29 Dec 2021, Michal Hocko wrote:
 
-elapsed time: 723m
+> On Tue 21-12-21 15:57:36, Andrew Morton wrote:
+>> On Sat, 18 Dec 2021 06:04:22 -0800 syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com> wrote:
+>>
+>>> syzbot has found a reproducer for the following issue on:
+>>>
+>>> HEAD commit:    fbf252e09678 Add linux-next specific files for 20211216
+>>> git tree:       linux-next
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=1797de99b00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=7fcbb9aa19a433c8
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=bc9e2d2dbcb347dd215a
+>>> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135d179db00000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113edb6db00000
+>>
+>> Useful to have that, thanks.
+>>
+>> I'm suspecting that mptcp is doing something strange.
+>
+> Yes.
+>
+>> Could I as the
+>> developers to please take a look?
+>>
+>>
+>>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>>> Reported-by: syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com
+>>>
+>>> R13: 00007ffdeb858640 R14: 00007ffdeb858680 R15: 0000000000000004
+>>>  </TASK>
+>>> ------------[ cut here ]------------
+>>> page_counter underflow: -4294966651 nr_pages=4294967295
+>
+> __mptcp_mem_reclaim_partial is trying to uncharge (via
+> __sk_mem_reduce_allocated) negative amount. nr_pages has overflown when
+> converted from int to unsigned int (-1). I would say that
+> __mptcp_mem_reclaim_partial has evaluated
+> 	reclaimable = mptcp_sk(sk)->rmem_fwd_alloc - sk_unused_reserved_mem(sk)
+> to 0 and __mptcp_rmem_reclaim(sk, reclaimable - 1) made it -1.
 
-configs tested: 54
-configs skipped: 3
+Ok, formatting really fixed this time (I hope), trailing whitespace and 
+all:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allmodconfig
-s390                                defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allmodconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git master
 
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index df5a0cf431c1..8fa56b9651a2 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -975,7 +975,9 @@ static void __mptcp_mem_reclaim_partial(struct sock *sk)
+
+  	lockdep_assert_held_once(&sk->sk_lock.slock);
+
+-	__mptcp_rmem_reclaim(sk, reclaimable - 1);
++	if (reclaimable >= SK_MEM_QUANTUM)
++		__mptcp_rmem_reclaim(sk, reclaimable - 1);
++
+  	sk_mem_reclaim_partial(sk);
+  }
+
