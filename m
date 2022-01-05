@@ -1,106 +1,58 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3DF168
-	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 23:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641425074; x=1672961074;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=4FJD3zQMGnvNTU7llAGzSl5Ea4oS8fp1MKtkWjWUZFQ=;
-  b=UL7j9YbWNKK5d2XroTNzfGL9bQBXpu87od1EUmZpi6D6SSUM5Y6PkYEH
-   7/80M5S5pWGoTDjHdhmLwQPbnHsoXZqhkUzYwhOoDYTYMVx3IT1QYzIn3
-   bodKXk2TMmKV/peT28mQe3YUPRh1w+HkZD2FOmlThFf74AtzyzXCu2W0j
-   vQF/jH2rmuuM6BwIZEPvVMbApnYc1S5Tj3SuuqVkXPHIL8wtOAq77vuBA
-   xL8DpC+cHkYhLdV3HQpZVL8cv+jhWBE0CAUIXziu3Rpm1pzVJS4QwH3Hg
-   AOJ5841HNExbgYjQDq/j5Xu256Nj1aMF3HG2P8JIEJB9/NCm5IBuJABD0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="223238193"
-X-IronPort-AV: E=Sophos;i="5.88,265,1635231600"; 
-   d="scan'208";a="223238193"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 15:24:34 -0800
-X-IronPort-AV: E=Sophos;i="5.88,265,1635231600"; 
-   d="scan'208";a="574552369"
-Received: from rcamaril-mobl1.amr.corp.intel.com ([10.209.22.32])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 15:24:33 -0800
-Date: Wed, 5 Jan 2022 15:24:33 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com>
-cc: syzkaller-bugs@googlegroups.com, mptcp@lists.linux.dev, 
-    Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [syzbot] WARNING in page_counter_cancel (3)
-In-Reply-To: <Ycwo+++dToWQ1RMR@dhcp22.suse.cz>
-Message-ID: <9a76976-60bd-4bd-fc8f-b3b5782535b6@linux.intel.com>
-References: <00000000000021bb9b05d14bf0c7@google.com> <000000000000f1504c05d36c21ea@google.com> <20211221155736.90bbc5928bcd779e76ca8f95@linux-foundation.org> <Ycwo+++dToWQ1RMR@dhcp22.suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819F9168
+	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 23:26:17 +0000 (UTC)
+Received: by mail-io1-f71.google.com with SMTP id e2-20020a6bb502000000b00601c16cb405so558970iof.13
+        for <mptcp@lists.linux.dev>; Wed, 05 Jan 2022 15:26:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=TSjq2yzjfFkuT/ra58FoqgcF3Z9B/CZjdc3yhAGXQ/s=;
+        b=vCjvwxhX6IcTZiMvKpe4S6+oaDACVxScNN0wyKBqM4vfdGHjHrBAh4gyibe0si7YUK
+         7cBQr1kqJSHeiRrs8oQ9DWyilQx5dlqGQvam8TF7fG+/o4X35CmnbBmskoNbf1WNIs3X
+         7llOK9ULieJqeZemCPbHyNENAnb50vIOK721K3wBz3hQagckKjMGiICfjfdk+a+MNqwG
+         AMnvdINjtcn+k60n+8O8nckFljIEg1kjoppLCGigas38U9dHC0BvJKq74Y8L69gsXDIA
+         8AgTMY5GIQkqEnu1Hq77xVHX6xtXp9bgE3f1D322Y1gzn4K8pgUNQgq67cO1+WGkzHBh
+         m/1A==
+X-Gm-Message-State: AOAM531/dUUfBhDLv06Mvq0TFvPs3rc2wgnQrpQfudm5KI7jWm5AfC85
+	MqqsopLGFvihdBNK1U07fVHTwROaX8FAdCv/Xl87KjW7HZZO
+X-Google-Smtp-Source: ABdhPJyizpDNl7OKfwwaKA0WczyZbmsDUs0SySJJN7GjfMnCAMHe5U7cyhNMwWg36Z3V8qbojKrYiNZ6MkpZUIvBvYz8ma0IuBU+
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Received: by 2002:a02:c4d8:: with SMTP id h24mr6252486jaj.84.1641425176662;
+ Wed, 05 Jan 2022 15:26:16 -0800 (PST)
+Date: Wed, 05 Jan 2022 15:26:16 -0800
+In-Reply-To: <9a76976-60bd-4bd-fc8f-b3b5782535b6@linux.intel.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000094992d05d4de14b3@google.com>
+Subject: Re: [syzbot] WARNING in page_counter_cancel (3)
+From: syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com>
+To: mathew.j.martineau@linux.intel.com, mptcp@lists.linux.dev, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 29 Dec 2021, Michal Hocko wrote:
+Hello,
 
-> On Tue 21-12-21 15:57:36, Andrew Morton wrote:
->> On Sat, 18 Dec 2021 06:04:22 -0800 syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com> wrote:
->>
->>> syzbot has found a reproducer for the following issue on:
->>>
->>> HEAD commit:    fbf252e09678 Add linux-next specific files for 20211216
->>> git tree:       linux-next
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=1797de99b00000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=7fcbb9aa19a433c8
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=bc9e2d2dbcb347dd215a
->>> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135d179db00000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113edb6db00000
->>
->> Useful to have that, thanks.
->>
->> I'm suspecting that mptcp is doing something strange.
->
-> Yes.
->
->> Could I as the
->> developers to please take a look?
->>
->>
->>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->>> Reported-by: syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com
->>>
->>> R13: 00007ffdeb858640 R14: 00007ffdeb858680 R15: 0000000000000004
->>>  </TASK>
->>> ------------[ cut here ]------------
->>> page_counter underflow: -4294966651 nr_pages=4294967295
->
-> __mptcp_mem_reclaim_partial is trying to uncharge (via
-> __sk_mem_reduce_allocated) negative amount. nr_pages has overflown when
-> converted from int to unsigned int (-1). I would say that
-> __mptcp_mem_reclaim_partial has evaluated
-> 	reclaimable = mptcp_sk(sk)->rmem_fwd_alloc - sk_unused_reserved_mem(sk)
-> to 0 and __mptcp_rmem_reclaim(sk, reclaimable - 1) made it -1.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Ok, formatting really fixed this time (I hope), trailing whitespace and 
-all:
+failed to apply patch:
+checking file net/mptcp/protocol.c
+patch: **** unexpected end of file in patch
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git master
 
----
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index df5a0cf431c1..8fa56b9651a2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -975,7 +975,9 @@ static void __mptcp_mem_reclaim_partial(struct sock *sk)
 
-  	lockdep_assert_held_once(&sk->sk_lock.slock);
+Tested on:
 
--	__mptcp_rmem_reclaim(sk, reclaimable - 1);
-+	if (reclaimable >= SK_MEM_QUANTUM)
-+		__mptcp_rmem_reclaim(sk, reclaimable - 1);
-+
-  	sk_mem_reclaim_partial(sk);
-  }
+commit:         b9adba35 Merge git://git.kernel.org/pub/scm/linux/kern..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git master
+dashboard link: https://syzkaller.appspot.com/bug?extid=bc9e2d2dbcb347dd215a
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=168e0c07b00000
 
