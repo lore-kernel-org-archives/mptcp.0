@@ -1,39 +1,38 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0326F173
-	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 01:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4058173
+	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 01:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641344782; x=1672880782;
+  t=1641346882; x=1672882882;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ZCIpl+oZ5GfQp3RLmaPtDTPWTV7k1lOjx6+z9Po4xxQ=;
-  b=UP4m/NeObOllnwaRAdXiC5hziEBviPFpdOC7iGq16RAe3GFKY0321F1z
-   EEeMHLyPpCI56PpIQKdGMx1bBvcWIa4mbNiw3EmmUDrBYyxKnE6TtbXQi
-   YaroRbsdOqfjBzaof3CC/qcrkFi8Ikgr8vYZchHXlW+jsb2rsOMTXlifm
-   DkP4ck7KLe9sz75vmMkUagsdH8Bz6bdrjb604HwANoXLgYBchc1iNwJ9U
-   aLJ+NlfMYVdQZFMQf8qd1DN1beGGv9ndlyFt1o9HYNQe2sVN0VGLik6j7
-   Ux3axXrtJfv/WUbQt6F86ie/XUmFIj1xUhLsSGdSDHIy0tvh0OYFquCDK
+  bh=mXLiqhLM1DGLnQVtKCbBclLToYkqVxLAGaGAIraswKQ=;
+  b=njZDmOKADJwfTruYFW7YzPrSkqZabNO2XO7lb7d0U+nqsppPuQ9JVZyf
+   /mZ35OsTkbx3E5aGA6mYQgMX4FIcbs8fJaggx/q7AtQmgGNwtcRCsjOdx
+   radfTIzYfA/foc23Hgg9HOfYI8lhe4N0behzpOvfqysTJsB9e/8XfzFmH
+   jX4d+J/saYbjfWaUnBRsdKtX6Q3y73YpA56fcx2JxYT5LbO1sPbn1R4h0
+   xH3UH8cnQaKOaQJgVGIWXg7Nr3v0zjNadJQE+CldNExnEch5Imdy5JhKg
+   DYSRBZA2xktyNt5+hZ6LrYu6jfjyMChfHozv9jp/tN9YVQNuq8cw9V7hF
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="303093741"
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242303876"
 X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
-   d="scan'208";a="303093741"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 17:06:22 -0800
+   d="scan'208";a="242303876"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 17:41:22 -0800
 X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
-   d="scan'208";a="556356381"
+   d="scan'208";a="470361656"
 Received: from marcquat-mobl.amr.corp.intel.com ([10.212.247.3])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 17:06:22 -0800
-Date: Tue, 4 Jan 2022 17:06:22 -0800 (PST)
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 17:41:22 -0800
+Date: Tue, 4 Jan 2022 17:41:21 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com>
-cc: syzkaller-bugs@googlegroups.com, mptcp@lists.linux.dev, 
-    Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [syzbot] WARNING in page_counter_cancel (3)
-In-Reply-To: <Ycwo+++dToWQ1RMR@dhcp22.suse.cz>
-Message-ID: <a5728775-6a82-ba4f-5186-a237f531dd1@linux.intel.com>
-References: <00000000000021bb9b05d14bf0c7@google.com> <000000000000f1504c05d36c21ea@google.com> <20211221155736.90bbc5928bcd779e76ca8f95@linux-foundation.org> <Ycwo+++dToWQ1RMR@dhcp22.suse.cz>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 0/4] use 'ip mptcp' in selftests
+In-Reply-To: <cover.1641290905.git.geliang.tang@suse.com>
+Message-ID: <e0bd41a6-9147-e9c-5bc9-c541282127d7@linux.intel.com>
+References: <cover.1641290905.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,67 +41,38 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 29 Dec 2021, Michal Hocko wrote:
+On Tue, 4 Jan 2022, Geliang Tang wrote:
 
-> On Tue 21-12-21 15:57:36, Andrew Morton wrote:
->> On Sat, 18 Dec 2021 06:04:22 -0800 syzbot <syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com> wrote:
->>
->>> syzbot has found a reproducer for the following issue on:
->>>
->>> HEAD commit:    fbf252e09678 Add linux-next specific files for 20211216
->>> git tree:       linux-next
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=1797de99b00000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=7fcbb9aa19a433c8
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=bc9e2d2dbcb347dd215a
->>> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135d179db00000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113edb6db00000
->>
->> Useful to have that, thanks.
->>
->> I'm suspecting that mptcp is doing something strange.
+> This patchset replaced all the pm_nl_ctl commands in selftests with the
+> 'ip mptcp' commands.
 >
-> Yes.
+> Geliang Tang (4):
+>  selftests: mptcp: use 'ip mptcp' in mptcp_join.sh
+>  selftests: mptcp: use 'ip mptcp' in mptcp_sockopt.sh
+>  selftests: mptcp: use 'ip mptcp' in pm_netlink.sh
+>  selftests: mptcp: use 'ip mptcp' in simult_flows.sh
 >
->> Could I as the
->> developers to please take a look?
->>
->>
->>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->>> Reported-by: syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com
->>>
->>> R13: 00007ffdeb858640 R14: 00007ffdeb858680 R15: 0000000000000004
->>>  </TASK>
->>> ------------[ cut here ]------------
->>> page_counter underflow: -4294966651 nr_pages=4294967295
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 686 +++++++++---------
+> .../selftests/net/mptcp/mptcp_sockopt.sh      |  12 +-
+> .../testing/selftests/net/mptcp/pm_netlink.sh | 164 ++---
+> .../selftests/net/mptcp/simult_flows.sh       |   6 +-
+> 4 files changed, 432 insertions(+), 436 deletions(-)
 >
-> __mptcp_mem_reclaim_partial is trying to uncharge (via
-> __sk_mem_reduce_allocated) negative amount. nr_pages has overflown when
-> converted from int to unsigned int (-1). I would say that
-> __mptcp_mem_reclaim_partial has evaluated
-> 	reclaimable = mptcp_sk(sk)->rmem_fwd_alloc - sk_unused_reserved_mem(sk)
-> to 0 and __mptcp_rmem_reclaim(sk, reclaimable - 1) made it -1.
+> -- 
+> 2.31.1
 
-Trying again with fixed syntax for the bot:
+Hi Geliang -
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git master
+I think we had been using pm_nl_ctl to avoid possible problems with 
+varying 'ip' command versions on host systems, and to make sure we are 
+checking for kernel regressions rather than 'ip' regressions, and to be 
+able to check the netlink API in ways that might not make sense for 
+the 'ip mptcp' command.
 
----
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index df5a0cf431c1..7ed86e81181e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -975,7 +975,9 @@ static void __mptcp_mem_reclaim_partial(struct sock 
-*sk)
+Could you comment on the reasons to move away from pm_nl_ctl?
 
-         lockdep_assert_held_once(&sk->sk_lock.slock);
 
--       __mptcp_rmem_reclaim(sk, reclaimable - 1);
-+       if (reclaimable >= SK_MEM_QUANTUM )
-+               __mptcp_rmem_reclaim(sk, reclaimable - 1);
-+
-         sk_mem_reclaim_partial(sk);
-  }
+Thanks,
 
 --
 Mat Martineau
