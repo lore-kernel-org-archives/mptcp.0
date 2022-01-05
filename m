@@ -1,48 +1,47 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4758B2CA3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82F32CA0
 	for <mptcp@lists.linux.dev>; Wed,  5 Jan 2022 15:57:33 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id z29so163798399edl.7
+Received: by mail-ed1-f47.google.com with SMTP id z29so163798479edl.7
         for <mptcp@lists.linux.dev>; Wed, 05 Jan 2022 07:57:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NqeY/CeV1WVqI+B6x+o4V50N25t9dNLAiKSFr3ItOYc=;
-        b=ISuBzIEIeDbLO6R5YOPnPj3Z9l1KHSf4xFvQWhn4MoX3demSxivdqcNeuN0RgY515U
-         BKVHxzqqWMxgQDDH0FmGjoMqMz75NYhxeTu5ZaHMnz2+hvwmwEnObkv+nD3vWT4jycNQ
-         vT4Am5o/vHTZrZ4lImf4Ptokx3UquO5uGNKQoYSubmrdZVwtTg4vWd90LFyzTcnum2xf
-         29Zq7yv9Z7BU9RRPmpXaYU1tZd4Yc5UZXXXRG6VWQjsGxNXxtYhzh1g9X+bBnHio8o0Y
-         Lgy91mxzsNrL5/s94Xhqmp6MZULMiMn2/0elalSRGhGC03TLtI4cY+fzRZ5cIJMYGHgH
-         eAPQ==
+        bh=C7zGPZuJSopLvqGh8GZ6exc6w0u1cXbCYnQTOZawGT4=;
+        b=nJWwdupjnx6V321BYzulHMsGmPXE06Wf+2HCj7aEt5Oo8g/nrzin1ouFHGaWGXro4c
+         EmE3WDbbBHWWbnaUVIo3YV+daAfr55wft31DCKlYMKZEs35yUwrdkeyMrY199/b3j6jb
+         bx3SqbZYWTn7i6sAD+uKMpqV17KnvbGzj+hbGtKzycq7iXdOY/UnwCSkyLllBsakquOM
+         lUysmWQ6vHF8E2BtTPe3lytjjY7soqGCPCFbq0wBqyd03m/M4kYXiSnpAmZkx5hY76LK
+         SCNL2cuSGEH4V94EgK3pQjnGxWGSeZJyq5cz4NtzSXAEbKSfvj+UtVM1A6v6dug9Qt9+
+         cNfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NqeY/CeV1WVqI+B6x+o4V50N25t9dNLAiKSFr3ItOYc=;
-        b=Wy8Clk9Hlwe7dYza9PZMY+DxRq2piB56aTcBB4XGXVzI+Ahml1CgumD3gh60B5tCf0
-         wSlEMK9syFL6LHTdCET++yqYeyMdW/9tl1xFNZK+3WnyG9vs0yfMIrEQ4qtbx5X4K/tm
-         DbKiz+wmetswzlZT19Tdw9Tq8K1TPN6ukB//6g/9Hcj32zmEN8mrDfhQH9q3gNsrB767
-         sFt38zrbpLoiLJbXrCsz2Ummbg5naUpi3y/iuGD4JgEdA4/VqCKBMUdrW5R8r8lyXlsB
-         sXTNcKdltP+JYx73XCU9oIjLP/Nlnq9tXr2Kt3Oq0rcwWZA5IqTpWmTlRZUZIGw6sxPY
-         H/aw==
-X-Gm-Message-State: AOAM531ivMjo/MxBk9izuQLmwFJsxsnQ3RAGt7Gq3t8uzSDhnW/h9TFu
-	3RilUvSsB6sHps2CDMMsKWcmVn6XM9l+MtQzv9Y=
-X-Google-Smtp-Source: ABdhPJzwF5r7ZdWzc0vXlGixKVg9aHCThad4z5modelRmwgPTWv4Gg+f48vAhoex9XVEBy7cpc8gKA==
-X-Received: by 2002:a17:906:58c7:: with SMTP id e7mr42138947ejs.146.1641398251345;
+        bh=C7zGPZuJSopLvqGh8GZ6exc6w0u1cXbCYnQTOZawGT4=;
+        b=fIM9ptHRFkFiE92dC9yKZsXnD6stmMxwHrC4z6a8ZBiIpxnfFaG/4maGEjfx1QTjT2
+         qIaHiZVp7dh4XmOMWOluedT04Qay7DQWu2TNE/f/J5h8KnwLpOCLpGDOZxIUHlwEMppH
+         uLZOq/8kad960q0h8MgwzOuw1yb26VwuEnzLByk1RlasqXcCaA+4TOXDaFd5kStpEz69
+         EyirXxpbXya884OK0cCgwbUq5/q6u8V3toCxgDwt59Nelsx6omxgj+Mdh/hhNlRP2obF
+         lWaMCDKnXqnRGcVl7taNE4hcSnkHbm9Ixtl4W0oZNvobni21qWKeSs9O/bUIOpwu132z
+         CsvA==
+X-Gm-Message-State: AOAM533SICSgvk0McUDP4ft+4EBL+Hpxr0vYtor2HEGP8UEPumHW6bEq
+	ieeZ3/buzkYnQG+OaqINxNC8tCXXSW7zbFM40YA=
+X-Google-Smtp-Source: ABdhPJzGSLe65CqX0f/q3RMFVatdI2NwNRswJ0tt41kX9NtwbH3UMcs3KiMlHTn5E5PdaI66YxnogQ==
+X-Received: by 2002:a17:907:97ca:: with SMTP id js10mr42571051ejc.640.1641398251745;
         Wed, 05 Jan 2022 07:57:31 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id c30sm12399684ejj.190.2022.01.05.07.57.30
+        by smtp.gmail.com with ESMTPSA id c30sm12399684ejj.190.2022.01.05.07.57.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 07:57:30 -0800 (PST)
+        Wed, 05 Jan 2022 07:57:31 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v8 4/8] mptcp: reduce branching when writing MP_FAIL option
-Date: Wed,  5 Jan 2022 16:56:58 +0100
-Message-Id: <20220105155702.165123-5-matthieu.baerts@tessares.net>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v8 5/8] mptcp: clarify when options can be used
+Date: Wed,  5 Jan 2022 16:56:59 +0100
+Message-Id: <20220105155702.165123-6-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20220105155702.165123-1-matthieu.baerts@tessares.net>
 References: <20220105155702.165123-1-matthieu.baerts@tessares.net>
@@ -54,83 +53,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-MP_FAIL should be use in very rare cases, either when the TCP RST flag
-is set -- with or without an MP_RST -- or with a DSS, see
-mptcp_established_options().
+RFC8684 doesn't seem to clearly specify which MPTCP options can be used
+together.
 
-Here, we do the same in mptcp_write_options().
+Some options are mutually exclusive -- e.g. MP_CAPABLE and MP_JOIN --,
+some can be used together -- e.g. DSS + MP_PRIO --, some can but we
+prefer not to -- e.g. DSS + ADD_ADDR -- and some have to be used
+together at some points -- e.g. MP_FAIL and DSS.
 
-Co-developed-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+We need to clarify this as a base before allowing other modifications.
+
+For example, does it make sense to send a RM_ADDR with an MPC or MPJ?
+This remains open for possible future discussions.
+
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/options.c | 39 ++++++++++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+ net/mptcp/options.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index bbf61dedb4b5..2f94069808a4 100644
+index 2f94069808a4..8553b928c5bf 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -1264,21 +1264,7 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+@@ -1264,8 +1264,27 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
  void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
  			 struct mptcp_out_options *opts)
  {
--	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
--		const struct sock *ssk = (const struct sock *)tp;
--		struct mptcp_subflow_context *subflow;
--
--		subflow = mptcp_subflow_ctx(ssk);
--		subflow->send_mp_fail = 0;
--
--		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
--				      TCPOLEN_MPTCP_FAIL,
--				      0, 0);
--		put_unaligned_be64(opts->fail_seq, ptr);
--		ptr += 2;
--	}
--
--	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
-+	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
- 	 * see mptcp_established_options*()
+-	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
+-	 * see mptcp_established_options*()
++	/* Which options can be used together?
++	 *
++	 * X: mutually exclusive
++	 * O: often used together
++	 * C: can be used together in some cases
++	 * P: could be used together but we prefer not to (optimisations)
++	 *
++	 *  Opt: | MPC  | MPJ  | DSS  | ADD  |  RM  | PRIO | FAIL |  FC  |
++	 * ------|------|------|------|------|------|------|------|------|
++	 *  MPC  |------|------|------|------|------|------|------|------|
++	 *  MPJ  |  X   |------|------|------|------|------|------|------|
++	 *  DSS  |  X   |  X   |------|------|------|------|------|------|
++	 *  ADD  |  X   |  X   |  P   |------|------|------|------|------|
++	 *  RM   |  C   |  C   |  C   |  C   |------|------|------|------|
++	 *  PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
++	 *  FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
++	 *  FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
++	 *  RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
++	 * ------|------|------|------|------|------|------|------|------|
++	 *
++	 * The same applies in mptcp_established_options() function.
  	 */
  	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
-@@ -1336,6 +1322,10 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 			}
- 			ptr += 1;
- 		}
-+
-+		/* We might need to add MP_FAIL options in rare cases */
-+		if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
-+			goto mp_fail;
- 	} else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
- 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
- 
-@@ -1476,6 +1466,25 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		put_unaligned_be64(opts->rcvr_key, ptr);
- 		ptr += 2;
- 
-+		if (OPTION_MPTCP_RST & opts->suboptions)
-+			goto mp_rst;
-+		return;
-+	} else if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
-+mp_fail:
-+	{
-+		/* MP_FAIL is mutually exclusive with others except RST */
-+		const struct sock *ssk = (const struct sock *)tp;
-+		struct mptcp_subflow_context *subflow;
-+
-+		subflow = mptcp_subflow_ctx(ssk);
-+		subflow->send_mp_fail = 0;
-+
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
-+				      TCPOLEN_MPTCP_FAIL,
-+				      0, 0);
-+		put_unaligned_be64(opts->fail_seq, ptr);
-+		ptr += 2;
-+
- 		if (OPTION_MPTCP_RST & opts->suboptions)
- 			goto mp_rst;
- 		return;
+ 		struct mptcp_ext *mpext = &opts->ext_copy;
 -- 
 2.33.1
 
