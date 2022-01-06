@@ -1,138 +1,106 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36652C9E
-	for <mptcp@lists.linux.dev>; Thu,  6 Jan 2022 17:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451A1168
+	for <mptcp@lists.linux.dev>; Thu,  6 Jan 2022 18:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641491938; x=1673027938;
+  t=1641492436; x=1673028436;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=7sruAOaWkh/x/i7nrfHu+JmV6GzmYnAU9XApxEglHoE=;
-  b=YjVx9OsVFKPLQs3wNlirsFJEMQB1bUcB7JMxvIRfuhOiwJ4Z/HZZrNF5
-   bbjo08NKW+2LdkTT34jTUZo1cIvqUXgj+co5vixRoJk18AF2VmUbbEFJE
-   kXvGaMYH7MZXTiXEG7wJNT+++MhA683TmTUzBoW9TyUNGWMqjIO8VLOSu
-   Ona5gaFDSQ/BgZex08t5rQp+6QiyMt75JJSrV8Vrci+v9HeCqy5Ipai/6
-   4yEejrrh1k6vTrS9y74FqOqOB5tMgYn/OJ1rRgu6DgLpJhxoTNgLRXiZK
-   8sKfChjA5FL+pHrOFGCpRZP4yT2mwVmJQ3rhg8Ly9X8sPWZvb30B/ivIO
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="266995345"
+  bh=QlfSgwrbBIIxN7MEwy8kqYN19i5d0TJjmmyxhJAXhwU=;
+  b=Ky/Q8wgNvK3o9XRCVV3VJ1tyAlnkYF/rirYLAiFlEyquZ4Xi3vkTDTHo
+   B5yc7uU7pWNG0hTZit7odmQQv285kZThzZ+d3U/+HIzSruQ9kxppNsCdC
+   380vaW6gkC/+I8eLwTEOt5W9h+HHi5KJ137FXAWWsJ0+F9iuq+7E3LMDA
+   cXvZWINMYw7XyDMIaHp/H7vPIhIy7amcBb5iJAny7kTcElIfrs5mnhXL8
+   kiiZLtKv/uWMIgWTEGch325ZrqjjN6Uqj/bvxOL917nUajU3SS/bGPr0K
+   7WbcMSADUmwkGW4cAAs0ze0tizr6V82A6hwij+JBu+gwy7mESYNGDLvoi
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="241523913"
 X-IronPort-AV: E=Sophos;i="5.88,267,1635231600"; 
-   d="scan'208";a="266995345"
+   d="scan'208";a="241523913"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 09:58:57 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 10:07:15 -0800
 X-IronPort-AV: E=Sophos;i="5.88,267,1635231600"; 
-   d="scan'208";a="471014596"
+   d="scan'208";a="471017409"
 Received: from rahamme-mobl.amr.corp.intel.com ([10.252.138.196])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 09:58:56 -0800
-Date: Thu, 6 Jan 2022 09:58:56 -0800 (PST)
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 10:07:15 -0800
+Date: Thu, 6 Jan 2022 10:07:15 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: Geliang Tang <geliang.tang@suse.com>, 
-    MPTCP Upstream <mptcp@lists.linux.dev>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: Upstreaming to net-next
-In-Reply-To: <d816d92c328cca717b3f5576aa7a57d60b5478f9.camel@redhat.com>
-Message-ID: <b0ef9e2b-b1c8-dbf6-a9af-9a12e02f93f4@linux.intel.com>
-References: <7b9cdfb-9ae6-287e-9e3e-7cf8e67e998d@linux.intel.com> <d816d92c328cca717b3f5576aa7a57d60b5478f9.camel@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 0/4] use 'ip mptcp' in selftests
+In-Reply-To: <20220105023556.GA3356@dhcp-10-157-36-190>
+Message-ID: <3faff68f-44f5-61ee-fb52-d7b72ada2193@linux.intel.com>
+References: <cover.1641290905.git.geliang.tang@suse.com> <e0bd41a6-9147-e9c-5bc9-c541282127d7@linux.intel.com> <20220105023556.GA3356@dhcp-10-157-36-190>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-495434844-1641491936=:57347"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 5 Jan 2022, Geliang Tang wrote:
 
---0-495434844-1641491936=:57347
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-
-On Thu, 6 Jan 2022, Paolo Abeni wrote:
-
-> On Wed, 2022-01-05 at 17:54 -0800, Mat Martineau wrote:
->> As Matthieu noted in today's meeting, we need to figure out what goes
->> upstream to netdev this week:
+> On Tue, Jan 04, 2022 at 05:41:21PM -0800, Mat Martineau wrote:
+>> On Tue, 4 Jan 2022, Geliang Tang wrote:
 >>
->> On Wed, 5 Jan 2022, Matthieu Baerts wrote:
->>
->>> Patches to send to netdev:
->>>    - net:
->>>        - probably best to send:
->>>            - mptcp: fix opt size when sending DSS + MP_FAIL
->>>            - mptcp: fix a DSS option writing error → but we might need
->>> to change
->>>        - But if they are accepted after the last PR from Net maintainer
->>> to Linus would delay stuff.
->>
->> I noticed that Jakub sent a "Networking for 5.16-final" pull request to
->> Linus today, so the 5.16 ship has sailed.
->>
->>>        - So if we don't want to rush to look at the tests, we can also
->>> send to net-next for the future -net (to be check which tree is merged
->>> in which one first?
->>
->> The next pull requests from Jakub to Linus will be from net-next, so
->> that's the fastest route to Linus' tree for fixes that will be added to
->> the stable tree.
->
-> I'm a bit lost about all the above. Not sure if due to lack of mtg
-> background, lack of coffee, or lack of time to digest the above ;)
->
-
-That's ok - I'm not sure I explained it clearly in the meeting either. 
-Just trying to get fixes into Linus' tree ASAP, without getting stuck in 
-the net branch until after 5.17-rc1. This happened around a recent 
-release, maybe 5.14-ish.
-
-Anyway, I will just ask Jakub about how to best handle it.
-
-
->
->>
+>>> This patchset replaced all the pm_nl_ctl commands in selftests with the
+>>> 'ip mptcp' commands.
 >>>
->>>    - net-next:
->>>        - patches from Paolo could go there, fixing issues, see GH
->>> issues/250:
->>>            - *@Paolo*: OK for you?
+>>> Geliang Tang (4):
+>>>  selftests: mptcp: use 'ip mptcp' in mptcp_join.sh
+>>>  selftests: mptcp: use 'ip mptcp' in mptcp_sockopt.sh
+>>>  selftests: mptcp: use 'ip mptcp' in pm_netlink.sh
+>>>  selftests: mptcp: use 'ip mptcp' in simult_flows.sh
 >>>
->>>        - + checksum fixes probably
+>>> .../testing/selftests/net/mptcp/mptcp_join.sh | 686 +++++++++---------
+>>> .../selftests/net/mptcp/mptcp_sockopt.sh      |  12 +-
+>>> .../testing/selftests/net/mptcp/pm_netlink.sh | 164 ++---
+>>> .../selftests/net/mptcp/simult_flows.sh       |   6 +-
+>>> 4 files changed, 432 insertions(+), 436 deletions(-)
 >>>
->>>        - best to skip MP_FAIL series for now as we don't have a stable
->>> selftest yet
->>>
->>>        - and no need to send Mat's series as it is linked to new
->>> features in the Netlink PM part, not ready yet
+>>> --
+>>> 2.31.1
 >>
->> Here are the commits that look ready (commit ids from
->> export/20220105T054758):
+>> Hi Geliang -
 >>
->> Paolo:
+>> I think we had been using pm_nl_ctl to avoid possible problems with varying
+>> 'ip' command versions on host systems, and to make sure we are checking for
+>> kernel regressions rather than 'ip' regressions, and to be able to check the
+>> netlink API in ways that might not make sense for the 'ip mptcp' command.
 >>
->> 9f6720406819 mptcp: keep snd_una updated for fallback socket
->> 95bc19b21e00 mptcp: implement fastclose xmit path
->> 37b1cee6f04f mptcp: full disconnect implementation
->> 916957cdccd6 mptcp: cleanup accept and poll
->> 6358b829913e mptcp: implement support for user-space disconnect
->> adba2e970980 selftests: mptcp: add disconnect tests
->> afef858f5fa4 mptcp: fix per socket endpoint accounting
->> 9caba598fe7a mptcp: clean-up MPJ option writing
->> f584047ecf9a mptcp: keep track of local endpoint still available for each msk
->> fc51a4526843 mptcp: do not block subflows creation on errors
->> 893d4cb7ccb9 selftests: mptcp: add tests for subflow creation failure
->> 128e78db18bf mptcp: cleanup MPJ subflow list handling
->> e470b365da5f mptcp: avoid atomic bit manipulation when possible
+>> Could you comment on the reasons to move away from pm_nl_ctl?
 >>
->> 3cdd8e644985 selftests: mptcp: more stable join tests-cases
 >
-> ... anyhow this LGTM for net-next.
+> Hi Mat,
+>
+> How about using both pm_nl_ctl and 'ip mptcp' in the selftests? Add an
+> argument to choose which one to use. Or add the 'ip' command version check
+> to decide which one to use.
 >
 
-Ok, good! Thank you for checking in :)
+Hi Geliang -
+
+I like the idea to add a command line option to use 'ip' commands, but 
+still defaulting to pm_nl_ctl. It's important to have consistent behavior 
+across systems with the default self tests (especially with various 
+automated build systems like kbuild where we don't know or control the 
+iproute2 version).
+
+> My intention to add these patches was to check whether all the changes in
+> pm_nl_ctl have been merged into 'ip mptcp'.
+
+Yes, it's very useful to be able to run all these test cases with 'ip 
+mptcp' in addition to pm_nl_ctl.
+
+> I hesitated to use both pm_nl_ctl and 'ip mptcp' or replace pm_nl_ctl 
+> with 'ip mptcp'. The latter is easier to implement, so I chose the 
+> latter. Now I think maybe using both of them is much better.
+
+I agree!
 
 --
 Mat Martineau
 Intel
---0-495434844-1641491936=:57347--
