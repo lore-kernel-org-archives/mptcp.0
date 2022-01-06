@@ -1,57 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8266C2C80
-	for <mptcp@lists.linux.dev>; Thu,  6 Jan 2022 09:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97732C80
+	for <mptcp@lists.linux.dev>; Thu,  6 Jan 2022 09:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1641460635;
+	s=mimecast20190719; t=1641460916;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=whjniXP9lGyR9WGkpQQgpOXKhvtwhrHKe16XPS6Kx+c=;
-	b=EKIM7GGV13+0n3VJxtWWvpcPBiDBMZqy93Umo8s6O53Wrgl02EVehjEhH0AkohJVRdLdIJ
-	Dp4IR/G5GjQLhfaxZ1CgU15jLw7IFN/IG1cfEN+AUjAUIrBCckx7E4b85S/09GcfKswQey
-	nNGL7F5Vkp7POkav9LhI6MK1Ed8VIwk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=K+1rMWwsTI02g+JunHYnsHyYy+KhFYcmNYVY0LzBL44=;
+	b=AzdopGFJhAtKD5kcvXa3jm+QvWNyFziBCj+gP/5Q2G+C6OQf+WnFzjiTx/EJQRTlzgcB6x
+	PdD2ZbtkyZGYMlLagKgKccOB6xehAHtkoDOZrhmdPXnEwkaJE0wwQxh4e8YocA6g4R7F+w
+	bUK5pNzvhaWC0zUtTs0NcrifEJTlOL8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-124-BWJv8Kg_PwW1ouRCqUMTmQ-1; Thu, 06 Jan 2022 04:17:12 -0500
-X-MC-Unique: BWJv8Kg_PwW1ouRCqUMTmQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 7-20020a1c1907000000b003471d9bbe8dso127615wmz.0
-        for <mptcp@lists.linux.dev>; Thu, 06 Jan 2022 01:17:12 -0800 (PST)
+ us-mta-19-vWwEBu49MeCcpxjpbuAaKA-1; Thu, 06 Jan 2022 04:21:54 -0500
+X-MC-Unique: vWwEBu49MeCcpxjpbuAaKA-1
+Received: by mail-wr1-f69.google.com with SMTP id h12-20020adfa4cc000000b001a22dceda69so977487wrb.16
+        for <mptcp@lists.linux.dev>; Thu, 06 Jan 2022 01:21:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=whjniXP9lGyR9WGkpQQgpOXKhvtwhrHKe16XPS6Kx+c=;
-        b=6pKpypCe9hm5k144NXJAo941JOHme1xkBPnRn0ART/Edkd4HXbxJHr5VYgv/XcQvYB
-         DZatxopEIrdV8jUvsYI89S8e/yo2mAGGJxdMKDE84y3uMCQdClEYEx3LKJ1Yr3XKGyuN
-         jfcJFb2WrfVzqfaxQKZ1IebqNluzO9JH5diNRr1DZFXrCxGTLRpYTSp091kptYvFpfrr
-         FqnYcxfZMS50WxcgzDxZZyrWv9/sPyeU4W1p2YL78uhXuTdNS3EjAbUiRYAo+5/5dSe+
-         /+Rrfs/A+mntMmZ7fiic9ctO0ucmn4tx0mBVhf0KMR6iBEU4Nm7WPktBT6mzxw822oe5
-         PfMw==
-X-Gm-Message-State: AOAM531emQ7TILisN5OleXa1E1TxoPfgKP2WjVRR5kM+guf8dLSKggVs
-	GNGi3yC1wNkqMETvC+E8qStATvBTFbve9Bss+GsnslNwvJEk2pXZ++N1k93YI0pKammKNiggzpN
-	b7MqYMli0l2kne8o=
-X-Received: by 2002:a05:6000:91:: with SMTP id m17mr49471541wrx.250.1641460631707;
-        Thu, 06 Jan 2022 01:17:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxnuLrV4VHO8/qxNQJV1YN7JrHcnCIBjvqUKTLn9lYuXOqxqer9j11WuUmpR/eD/rEjpGzWZQ==
-X-Received: by 2002:a05:6000:91:: with SMTP id m17mr49471521wrx.250.1641460631449;
-        Thu, 06 Jan 2022 01:17:11 -0800 (PST)
+        bh=K+1rMWwsTI02g+JunHYnsHyYy+KhFYcmNYVY0LzBL44=;
+        b=ZRXJTNORYBH3gHoTWOeVN79tr/UVwHUj83KVya7TKTk9NKwW1Y+32Q94BA3WFjGHyP
+         4nI+WfIqunykKaiFz4AgTx9NORZaCZsdEmFDR3F/p/iNDy8GWSqzezFJGa8ypBf8hDsp
+         1G+xGZDsD52yTYNoW71bknHNtFHmsPrvHaIkWjXeQZcVsSl9DwCYuMRD1604gPSusuzu
+         wziGUQ1wuRbvdP4zkr6b18nfi2acyK/GlxTJ9ZsWqojJVlKmQ/fy4d5QjEXzKWM38XPH
+         T4qj4I0uUVj99bSHJ6rKtD2g9X/bBzcwnn4vf5QKPKIqS7AJghHZMK+HQRpi6OmVZ6jD
+         rOGQ==
+X-Gm-Message-State: AOAM531XMqUmRUXIS9xfXSOUexx55cd4bSCUr+idJ1ic2EY+tpBdsaRc
+	HrzP+KzX0XcsFFpF9TfpLthSC6QBm0GFN0USMJuMdO9cZsCPvgeYERkVSHRy62jJyCWVVIdtq72
+	P90sV34lrmgT1Y6s=
+X-Received: by 2002:a05:6000:16c4:: with SMTP id h4mr49288008wrf.312.1641460913606;
+        Thu, 06 Jan 2022 01:21:53 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyR2nJdax0dB3D8659Fm6tCprJRzLwx1hGrq++jSAVoIE8xwilvaTgZlWY6hPFI9ssplYaOOw==
+X-Received: by 2002:a05:6000:16c4:: with SMTP id h4mr49287987wrf.312.1641460913338;
+        Thu, 06 Jan 2022 01:21:53 -0800 (PST)
 Received: from gerbillo.redhat.com (146-241-97-184.dyn.eolo.it. [146.241.97.184])
-        by smtp.gmail.com with ESMTPSA id n12sm1250874wmq.30.2022.01.06.01.17.10
+        by smtp.gmail.com with ESMTPSA id p11sm1762871wru.99.2022.01.06.01.21.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 01:17:11 -0800 (PST)
-Message-ID: <da864381a8c89a2166d1704c39908de71094ba34.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v2] mptcp: Check reclaim amount before
- reducing allocation
+        Thu, 06 Jan 2022 01:21:53 -0800 (PST)
+Message-ID: <d816d92c328cca717b3f5576aa7a57d60b5478f9.camel@redhat.com>
+Subject: Re: Upstreaming to net-next
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
-Cc: syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com
-Date: Thu, 06 Jan 2022 10:17:10 +0100
-In-Reply-To: <20220106012928.158899-1-mathew.j.martineau@linux.intel.com>
-References: <20220106012928.158899-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Geliang Tang
+	 <geliang.tang@suse.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Matthieu Baerts
+	 <matthieu.baerts@tessares.net>
+Date: Thu, 06 Jan 2022 10:21:52 +0100
+In-Reply-To: <7b9cdfb-9ae6-287e-9e3e-7cf8e67e998d@linux.intel.com>
+References: <7b9cdfb-9ae6-287e-9e3e-7cf8e67e998d@linux.intel.com>
 User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,98 +65,77 @@ Authentication-Results: relay.mimecast.com;
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2022-01-05 at 17:29 -0800, Mat Martineau wrote:
-> syzbot found a page counter underflow that was triggered by MPTCP's
-> reclaim code:
+On Wed, 2022-01-05 at 17:54 -0800, Mat Martineau wrote:
+> As Matthieu noted in today's meeting, we need to figure out what goes 
+> upstream to netdev this week:
 > 
-> page_counter underflow: -4294964789 nr_pages=4294967295
-> WARNING: CPU: 2 PID: 3785 at mm/page_counter.c:56 page_counter_cancel+0xcf/0xe0 mm/page_counter.c:56
-> Modules linked in:
-> CPU: 2 PID: 3785 Comm: kworker/2:6 Not tainted 5.16.0-rc1-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.14.0-2 04/01/2014
-> Workqueue: events mptcp_worker
+> On Wed, 5 Jan 2022, Matthieu Baerts wrote:
 > 
-> RIP: 0010:page_counter_cancel+0xcf/0xe0 mm/page_counter.c:56
-> Code: c7 04 24 00 00 00 00 45 31 f6 eb 97 e8 2a 2b b5 ff 4c 89 ea 48 89 ee 48 c7 c7 00 9e b8 89 c6 05 a0 c1 ba 0b 01 e8 95 e4 4b 07 <0f> 0b eb a8 4c 89 e7 e8 25 5a fb ff eb c7 0f 1f 00 41 56 41 55 49
-> RSP: 0018:ffffc90002d4f918 EFLAGS: 00010082
+> > Patches to send to netdev:
+> >    - net:
+> >        - probably best to send:
+> >            - mptcp: fix opt size when sending DSS + MP_FAIL
+> >            - mptcp: fix a DSS option writing error → but we might need
+> > to change
+> >        - But if they are accepted after the last PR from Net maintainer
+> > to Linus would delay stuff.
 > 
-> RAX: 0000000000000000 RBX: ffff88806a494120 RCX: 0000000000000000
-> RDX: ffff8880688c41c0 RSI: ffffffff815e8f28 RDI: fffff520005a9f15
-> RBP: ffffffff000009cb R08: 0000000000000000 R09: 0000000000000000
-> R10: ffffffff815e2cfe R11: 0000000000000000 R12: ffff88806a494120
-> R13: 00000000ffffffff R14: 0000000000000000 R15: 0000000000000001
-> FS:  0000000000000000(0000) GS:ffff88802cc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2de21000 CR3: 000000005ad59000 CR4: 0000000000150ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  page_counter_uncharge+0x2e/0x60 mm/page_counter.c:160
->  drain_stock+0xc1/0x180 mm/memcontrol.c:2219
->  refill_stock+0x139/0x2f0 mm/memcontrol.c:2271
->  __sk_mem_reduce_allocated+0x24d/0x550 net/core/sock.c:2945
->  __mptcp_rmem_reclaim net/mptcp/protocol.c:167 [inline]
->  __mptcp_mem_reclaim_partial+0x124/0x410 net/mptcp/protocol.c:975
->  mptcp_mem_reclaim_partial net/mptcp/protocol.c:982 [inline]
->  mptcp_alloc_tx_skb net/mptcp/protocol.c:1212 [inline]
->  mptcp_sendmsg_frag+0x18c6/0x2190 net/mptcp/protocol.c:1279
->  __mptcp_push_pending+0x232/0x720 net/mptcp/protocol.c:1545
->  mptcp_release_cb+0xfe/0x200 net/mptcp/protocol.c:2975
->  release_sock+0xb4/0x1b0 net/core/sock.c:3306
->  mptcp_worker+0x51e/0xc10 net/mptcp/protocol.c:2443
->  process_one_work+0x9b2/0x1690 kernel/workqueue.c:2298
->  worker_thread+0x658/0x11f0 kernel/workqueue.c:2445
->  kthread+0x405/0x4f0 kernel/kthread.c:327
->  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
->  </TASK>
+> I noticed that Jakub sent a "Networking for 5.16-final" pull request to 
+> Linus today, so the 5.16 ship has sailed.
 > 
-> __mptcp_mem_reclaim_partial() could call __mptcp_rmem_reclaim() with a
-> negative value, which passed that negative value to
-> __sk_mem_reduce_allocated() and triggered the splat above.
+> >        - So if we don't want to rush to look at the tests, we can also
+> > send to net-next for the future -net (to be check which tree is merged
+> > in which one first?
 > 
-> Check for a reclaim amount that is positive and large enough for
-> __mptcp_rmem_reclaim() to actually adjust rmem_fwd_alloc (much like
-> the sk_mem_reclaim_partial() code the function is based on).
-> 
-> v2: Use '>' instead of '>=', since SK_MEM_QUANTUM - 1 would get
-> right-shifted into nothing by __mptcp_rmem_reclaim.
-> 
-> Fixes: 6511882cdd82 ("mptcp: allocate fwd memory separately on the rx and tx path")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/252
-> Cc: pabeni@redhat.com
-> Reported-and-tested-by: syzbot+bc9e2d2dbcb347dd215a@syzkaller.appspotmail.com
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> ---
->  net/mptcp/protocol.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index fccfa65517da..5d6be1dce5d6 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -967,7 +967,9 @@ static void __mptcp_mem_reclaim_partial(struct sock *sk)
->  
->  	lockdep_assert_held_once(&sk->sk_lock.slock);
->  
-> -	__mptcp_rmem_reclaim(sk, reclaimable - 1);
-> +	if (reclaimable > SK_MEM_QUANTUM)
-> +		__mptcp_rmem_reclaim(sk, reclaimable - 1);
-> +
->  	sk_mem_reclaim_partial(sk);
->  }
->  
-> 
-> base-commit: 9478f9d57df23cfa5caa4317e75a6efe6e782ab3
+> The next pull requests from Jakub to Linus will be from net-next, so 
+> that's the fastest route to Linus' tree for fixes that will be added to 
+> the stable tree.
+
+I'm a bit lost about all the above. Not sure if due to lack of mtg
+background, lack of coffee, or lack of time to digest the above ;)
 
 
-LGTM, thanks!
+> 
+> > 
+> >    - net-next:
+> >        - patches from Paolo could go there, fixing issues, see GH
+> > issues/250:
+> >            - *@Paolo*: OK for you?
+> > 
+> >        - + checksum fixes probably
+> > 
+> >        - best to skip MP_FAIL series for now as we don't have a stable
+> > selftest yet
+> > 
+> >        - and no need to send Mat's series as it is linked to new
+> > features in the Netlink PM part, not ready yet
+> 
+> Here are the commits that look ready (commit ids from 
+> export/20220105T054758):
+> 
+> Paolo:
+> 
+> 9f6720406819 mptcp: keep snd_una updated for fallback socket
+> 95bc19b21e00 mptcp: implement fastclose xmit path
+> 37b1cee6f04f mptcp: full disconnect implementation
+> 916957cdccd6 mptcp: cleanup accept and poll
+> 6358b829913e mptcp: implement support for user-space disconnect
+> adba2e970980 selftests: mptcp: add disconnect tests
+> afef858f5fa4 mptcp: fix per socket endpoint accounting
+> 9caba598fe7a mptcp: clean-up MPJ option writing
+> f584047ecf9a mptcp: keep track of local endpoint still available for each msk
+> fc51a4526843 mptcp: do not block subflows creation on errors
+> 893d4cb7ccb9 selftests: mptcp: add tests for subflow creation failure
+> 128e78db18bf mptcp: cleanup MPJ subflow list handling
+> e470b365da5f mptcp: avoid atomic bit manipulation when possible
+> 
+> 3cdd8e644985 selftests: mptcp: more stable join tests-cases
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+... anyhow this LGTM for net-next.
 
-I'm sorry, I'll be almost unreachable for a few more days.
+Thanks!
 
-/P
+Paolo
 
