@@ -1,80 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FF52C80
-	for <mptcp@lists.linux.dev>; Thu,  6 Jan 2022 09:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1641462494;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BpQ53z9hedC9ug4eIID91V7XLOtQbrcmzWzKFqi4bWc=;
-	b=W/VfQ/Fn1G7oLRFhNd3kRK99ymSN6NBrOHFvFxw9OBXadEqxY7h76PACzaxE7wP+lEf8s8
-	e8v2cIBx+gv8zbdjuQFuNKR6p3Q1oGVejnEgfjuHQLiT+cZcW0oGMo4Xizc/NannYF2tua
-	UgG58PhwWxlnJ4KQCyYCxLYKdnanL4c=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-475-JPiTO9F1NDSpXe0HMWEG8w-1; Thu, 06 Jan 2022 04:47:13 -0500
-X-MC-Unique: JPiTO9F1NDSpXe0HMWEG8w-1
-Received: by mail-wm1-f72.google.com with SMTP id b20-20020a05600c4e1400b003457da1c91eso152022wmq.4
-        for <mptcp@lists.linux.dev>; Thu, 06 Jan 2022 01:47:12 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0B02C80
+	for <mptcp@lists.linux.dev>; Thu,  6 Jan 2022 09:53:25 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id b13so7304069edd.8
+        for <mptcp@lists.linux.dev>; Thu, 06 Jan 2022 01:53:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=pRJBS6lXEZ5TxcuhMBCSIGaMcVsLmCI94jByJ5KWz18=;
+        b=dQPY+bQQapYlcg7N/j2JKBFYmTasdnAX4zIR1OYPF0yBxG8o/J4dz3RvwI9eqNp6Nx
+         7sXwewL3uPgk23FHICDGcGfutz+kMlsw1VsZVe3dZIfSYFuFL2B7wJ5YA/c/B5dA2rcN
+         OxhC3Xhj1Gthv8U6o795q9XkUBiJd4vBYbwkor2WUpLaN0KdE+3ZTE1mzqvM1y1EKj6+
+         XNZKpp4F/R1KB9gJHEaePUG+aOdvV2QQ8M2rahRS3Y7zXOjsRd6iVpLFVem2Qq/t8mZ9
+         L6t6aq4C+KZMV4DAcQq4aDEQi60N9f0MYg5slCw7kIcvAEBTxb+tb07hWtP7M6wgHpPv
+         0Nww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=BpQ53z9hedC9ug4eIID91V7XLOtQbrcmzWzKFqi4bWc=;
-        b=IUn3ZCM2skIqEUhPyOWDY38IjKuJsumalTPmi5aDNeZRlXVuRrn/gkoX2x/Opc2qWW
-         mvjfdx/Vea3ELxUxSDxL1H2aVIPiZ3a1KL2JWngGfi58IXW6EvVGxZH0U0Jose4eyoT9
-         Ci9KlEnUn0mEHeT2XXfZDrap5TFvX1/YGmMe+SKcum/L6KaoVwaKBWwW7P92lFsWFZLg
-         kcUXODRbW4zNPDcgy8F7m6bjQKvlCTz8pGPZoKI4SbcZhDVrEUHZmt7MAJrh28a38Zgm
-         ILfs7degm+r8zEc+Jlq9mRAQQPcPkFEwThiiAJQ4n0gfA7dML8i2wl+PEVOjWwa13fwX
-         0SGw==
-X-Gm-Message-State: AOAM531YNbjVvX3FcivSQiQ+Pfa6v5eujjNhr7GLeg5zUu3uj+uG7rUw
-	kcmiLthdLG6PoGWPw1VqeUYUuqujG8UxZc7ssJlvZD7EaTJ6OuV5PToFNR3zvnPpqbzXysjCrx7
-	hqPpcqEQHWD7v3sM=
-X-Received: by 2002:adf:fac4:: with SMTP id a4mr49493038wrs.66.1641462431982;
-        Thu, 06 Jan 2022 01:47:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxNUqLr9V2SDyWVYFHFmHeIDts9mtqve/3q44hRR/TvSuNyg/VfRJYYSQ5b+wd1F1H8Vy+Zpw==
-X-Received: by 2002:adf:fac4:: with SMTP id a4mr49493026wrs.66.1641462431816;
-        Thu, 06 Jan 2022 01:47:11 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-97-184.dyn.eolo.it. [146.241.97.184])
-        by smtp.gmail.com with ESMTPSA id b2sm1737133wrd.35.2022.01.06.01.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 01:47:11 -0800 (PST)
-Message-ID: <c03a4a9825e05d55db7c204e7d3b1517861f65d3.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v8 0/8] Clarify when options can be used
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>, Matthieu Baerts
-	 <matthieu.baerts@tessares.net>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Date: Thu, 06 Jan 2022 10:47:10 +0100
-In-Reply-To: <CA+WQbwuF4REjgiEveFYs6=Dz9_fzMQaqorNepNJMBjfr_fWt=g@mail.gmail.com>
-References: <20220105155702.165123-1-matthieu.baerts@tessares.net>
-	 <CA+WQbwuF4REjgiEveFYs6=Dz9_fzMQaqorNepNJMBjfr_fWt=g@mail.gmail.com>
-User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=pRJBS6lXEZ5TxcuhMBCSIGaMcVsLmCI94jByJ5KWz18=;
+        b=AR74vjIPlh3mv4+WAh3bve0hROo9EUWCFbpoZItqvyu9nGAX/3iSt9s8Q0bKLfTCUL
+         STThtnIe3TOzePfjpIrhX9fEr8BXXw7c7gS5dnHrqTk/BEp7SmkB2SLTqaAILSkoqxQo
+         emMhaq92AF1pu5KhU3RX1FGbqe7CcquClRHU5IhoyvEZOiOlS7kdqUPB+3VeciUsZj1S
+         Wd6UobDMolNode45JvDwGnC6WqWVwPXteFQ09ihn2hBwTukiID5dV6GJSB2YyDuYPjXw
+         pJWQG6vT39LjYZsvogsbsT7bs4uEBuq2duStui8ImEjx+u2ulxC5BU4YUHYnQSgqRA4s
+         SkVg==
+X-Gm-Message-State: AOAM5315B77eyJk038WHPmv20AwF1z1+1QPUX0LDpYJ+g6ujF5LJZ9yu
+	bc5rTYzymRINY0qemoIQ5uWnMphkIH1A3w3ttY0=
+X-Google-Smtp-Source: ABdhPJy9JJJYEy5/Dg6QgHnKt2qb/kUAvHkLFZVKgl+K1jlq6uMF5IJZE52w+ZDpfeBSfp4Twx816Q==
+X-Received: by 2002:a17:907:9717:: with SMTP id jg23mr49588452ejc.593.1641462803971;
+        Thu, 06 Jan 2022 01:53:23 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:f806:b935:3199:df74? ([2a02:578:8593:1200:f806:b935:3199:df74])
+        by smtp.gmail.com with ESMTPSA id ht16sm373566ejc.4.2022.01.06.01.53.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jan 2022 01:53:23 -0800 (PST)
+Message-ID: <fc3b17c5-6d28-8a38-65c8-a85ab735b9e2@tessares.net>
+Date: Thu, 6 Jan 2022 10:53:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH mptcp-next v8 0/8] Clarify when options can be used
+Content-Language: en-GB
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20220105155702.165123-1-matthieu.baerts@tessares.net>
+ <CA+WQbwuF4REjgiEveFYs6=Dz9_fzMQaqorNepNJMBjfr_fWt=g@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CA+WQbwuF4REjgiEveFYs6=Dz9_fzMQaqorNepNJMBjfr_fWt=g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2022-01-06 at 10:58 +0800, Geliang Tang wrote:
+Hi Geliang,
+
+On 06/01/2022 03:58, Geliang Tang wrote:
 > Hi Matt,
 > 
 > Thank you so much for this new version. Good catch on patch 2. It works on
 > my test and all looks good to me...
 > 
 > Acked-and-tested-by: Geliang Tang <geliang.tang@suse.com>
-> 
+
+Great, thank you for having checked that!
+
 > ... except patch 6.
 > 
 > I thinks we'd better to drop patch 6 ("mptcp: allow sending both ADD_ADDR
@@ -82,7 +77,29 @@ On Thu, 2022-01-06 at 10:58 +0800, Geliang Tang wrote:
 > efforts to let ADD_ADDR not to be sent with other subopthins. I thinks it's
 > better not to let ADD_ADDR sent with others by ourselves.
 
-+1
+ADD_ADDR suboption can be too big in some cases but not all the time.
+If I remember well, we decided to have a dedicated ACK to simplify the
+code: not having the ADD_ADDR removing the DSS options in some cases but
+not all, also simplifying packetdrill tests.
 
-/P
+Here, the idea is to add the RM_ADDR if asked and if there is room, just
+like what we do in mptcp_write_options().
 
+> On the other hand, I'm not sure our code can deal with ADD_ADDR and RM_ADDR
+> together correctly, it's not tested.
+
+Good point, we need a test validating that.
+
+I'm not even sure we can have a test because each netlink command will
+cause the corresponding option to be sent: depending on the timing, when
+the next packet is sent, we might have one or two options to be sent.
+
+If we drop patch 6, we need to replace it with a patch updating the new
+comment at the beginning of mptcp_write_options() and not allowing
+ADD_ADDR to be sent with RM_ADDR + MP_PRIO as we currently do.
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
