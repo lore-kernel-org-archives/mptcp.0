@@ -1,28 +1,28 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734872CAA
-	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848922CB1
+	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641514852; x=1673050852;
+  t=1641514853; x=1673050853;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xmpU6oESAborR1BVZEnjtiG+H88NZlprm7RU1qJL9QU=;
-  b=iwfWMTcmBIIfUwXmigBkT1iYcbIsp7jSsFv/1TaYyD++4FpRlnnyY1tR
-   vhAOJA69t7hQlfkUpybudoIRuAqHRYcUkfv3d9WnpUf1vpDPv0Hj3mMNY
-   7ftPKTRwoLDuDElAowWj85C0TQPOKNmROydvRJuPC+LYACvnCrzdrjz8T
-   QyWtPxwpsu13HibJmwucybkzAsmE4GLVqzTCzf9NMPnqtD9gMmUbSlU+N
-   q8AaMlAG4NWTzOkhB1ZswLQkYkoWnaXKg8XN8uc+YPlLWmLJ9WSB8ataP
-   UAsFWlaNXl6TSMBdeHOvNZ5ATZuclN6vmPEOhhorpmUVBO6HZh1W84cDf
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111047"
+  bh=UwyHRhqCE9vfS2IPGZKp6JoedrSmWlD+chvKutXd8no=;
+  b=i9+AA1B5aTMLwILFW0lF3lv2kOD2enE0AO6IjR5KuA9SqIhiKvDR1cy8
+   IaJMBzUAw23dYYUv5VP85Ah4Xxp04V778HTUv4tLsCGLptpODwAYjTQfk
+   iBIDVV7dGtmVtYZSkZagExUW8vb1TXIfqez1FIWupo06y35Ajw6zQoDFq
+   VL5LB0pYuvjDqOXRubridA9uXVhSRB7Mzpx5iBJdu+KDdz9L4iVnnfFw8
+   kpp08ruQtBbElz0jeTgkEt0zv2HT+/o7fAUA+oZEcen+ASC5Z3O8Qwopl
+   zwIjpSHvxiu8f7ph97m5Vuffmn8QhaFk9bEejDf51g8L8Me8YOyeJFRaJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111056"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="329111047"
+   d="scan'208";a="329111056"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:36 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:37 -0800
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="618508513"
+   d="scan'208";a="618508518"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.94.200])
   by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:36 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -32,10 +32,11 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
+	Geliang Tang <geliang.tang@suse.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 09/13] mptcp: keep track of local endpoint still available for each msk
-Date: Thu,  6 Jan 2022 16:20:22 -0800
-Message-Id: <20220107002026.375427-10-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 11/13] selftests: mptcp: add tests for subflow creation failure
+Date: Thu,  6 Jan 2022 16:20:24 -0800
+Message-Id: <20220107002026.375427-12-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
 References: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
@@ -49,396 +50,150 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Include into the path manager status a bitmap tracking the list
-of local endpoints still available - not yet used - for the
-relevant mptcp socket.
+Verify that, when multiple endpoints are available, subflows
+creation proceed even when the first additional subflow creation
+fails - due to packet drop on the relevant link
 
-Keep such map updated at endpoint creation/deletion time, so
-that we can easily skip already used endpoint at local address
-selection time.
-
-The endpoint used by the initial subflow is lazyly accounted at
-subflow creation time: the usage bitmap is be up2date before
-endpoint selection and we avoid such unneeded task in some relevant
-scenarios - e.g. busy servers accepting incoming subflows but
-not creating any additional ones nor annuncing additional addresses.
-
-Overall this allows for fair local endpoints usage in case of
-subflow failure.
-
-As a side effect, this patch also enforces that each endpoint
-is used at most once for each mptcp connection.
-
+Co-developed-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm.c                                |   1 +
- net/mptcp/pm_netlink.c                        | 125 +++++++++++-------
- net/mptcp/protocol.c                          |   3 +-
- net/mptcp/protocol.h                          |  12 +-
- .../testing/selftests/net/mptcp/mptcp_join.sh |   5 +-
- 5 files changed, 91 insertions(+), 55 deletions(-)
+ tools/testing/selftests/net/mptcp/config      |  1 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 78 ++++++++++++++++++-
+ 2 files changed, 78 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 6b2bfe89d445..e9ba9551832c 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -370,6 +370,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	WRITE_ONCE(msk->pm.accept_subflow, false);
- 	WRITE_ONCE(msk->pm.remote_deny_join_id0, false);
- 	msk->pm.status = 0;
-+	bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 
- 	mptcp_pm_nl_data_init(msk);
- }
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 27427aeeee0e..ad3dc9c6c531 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -38,10 +38,6 @@ struct mptcp_pm_add_entry {
- 	u8			retrans_times;
- };
- 
--/* max value of mptcp_addr_info.id */
--#define MAX_ADDR_ID		U8_MAX
--#define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, BITS_PER_LONG)
--
- struct pm_nl_pernet {
- 	/* protects pernet updates */
- 	spinlock_t		lock;
-@@ -53,14 +49,14 @@ struct pm_nl_pernet {
- 	unsigned int		local_addr_max;
- 	unsigned int		subflows_max;
- 	unsigned int		next_id;
--	unsigned long		id_bitmap[BITMAP_SZ];
-+	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- };
- 
- #define MPTCP_PM_ADDR_MAX	8
- #define ADD_ADDR_RETRANS_MAX	3
- 
- static bool addresses_equal(const struct mptcp_addr_info *a,
--			    struct mptcp_addr_info *b, bool use_port)
-+			    const struct mptcp_addr_info *b, bool use_port)
- {
- 	bool addr_equals = false;
- 
-@@ -174,6 +170,9 @@ select_local_address(const struct pm_nl_pernet *pernet,
- 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
- 			continue;
- 
-+		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
-+			continue;
-+
- 		if (entry->addr.family != sk->sk_family) {
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 			if ((entry->addr.family == AF_INET &&
-@@ -184,23 +183,17 @@ select_local_address(const struct pm_nl_pernet *pernet,
- 				continue;
- 		}
- 
--		/* avoid any address already in use by subflows and
--		 * pending join
--		 */
--		if (!lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
--			ret = entry;
--			break;
--		}
-+		ret = entry;
-+		break;
- 	}
- 	rcu_read_unlock();
- 	return ret;
- }
- 
- static struct mptcp_pm_addr_entry *
--select_signal_address(struct pm_nl_pernet *pernet, unsigned int pos)
-+select_signal_address(struct pm_nl_pernet *pernet, struct mptcp_sock *msk)
- {
- 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
--	int i = 0;
- 
- 	rcu_read_lock();
- 	/* do not keep any additional per socket state, just signal
-@@ -209,12 +202,14 @@ select_signal_address(struct pm_nl_pernet *pernet, unsigned int pos)
- 	 * can lead to additional addresses not being announced.
- 	 */
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-+		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
-+			continue;
-+
- 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
- 			continue;
--		if (i++ == pos) {
--			ret = entry;
--			break;
--		}
-+
-+		ret = entry;
-+		break;
- 	}
- 	rcu_read_unlock();
- 	return ret;
-@@ -258,9 +253,11 @@ EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
- 
- static void check_work_pending(struct mptcp_sock *msk)
- {
--	if (msk->pm.add_addr_signaled == mptcp_pm_get_add_addr_signal_max(msk) &&
--	    (msk->pm.local_addr_used == mptcp_pm_get_local_addr_max(msk) ||
--	     msk->pm.subflows == mptcp_pm_get_subflows_max(msk)))
-+	struct pm_nl_pernet *pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-+
-+	if (msk->pm.subflows == mptcp_pm_get_subflows_max(msk) ||
-+	    (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_bitmap,
-+			       MPTCP_PM_MAX_ADDR_ID + 1, 0) == MPTCP_PM_MAX_ADDR_ID + 1))
- 		WRITE_ONCE(msk->pm.work_pending, false);
- }
- 
-@@ -460,6 +457,35 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
- 	return i;
- }
- 
-+static struct mptcp_pm_addr_entry *
-+__lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+
-+	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+		if (entry->addr.id == id)
-+			return entry;
-+	}
-+	return NULL;
-+}
-+
-+static int
-+lookup_id_by_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+	int ret = -1;
-+
-+	rcu_read_lock();
-+	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+		if (addresses_equal(&entry->addr, addr, entry->addr.port)) {
-+			ret = entry->addr.id;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
-@@ -475,6 +501,19 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 	local_addr_max = mptcp_pm_get_local_addr_max(msk);
- 	subflows_max = mptcp_pm_get_subflows_max(msk);
- 
-+	/* do lazy endpoint usage accounting for the MPC subflows */
-+	if (unlikely(!(msk->pm.status & BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED))) && msk->first) {
-+		struct mptcp_addr_info local;
-+		int mpc_id;
-+
-+		local_address((struct sock_common *)msk->first, &local);
-+		mpc_id = lookup_id_by_addr(pernet, &local);
-+		if (mpc_id < 0)
-+			__clear_bit(mpc_id, msk->pm.id_avail_bitmap);
-+
-+		msk->pm.status |= BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED);
-+	}
-+
- 	pr_debug("local %d:%d signal %d:%d subflows %d:%d\n",
- 		 msk->pm.local_addr_used, local_addr_max,
- 		 msk->pm.add_addr_signaled, add_addr_signal_max,
-@@ -482,21 +521,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 
- 	/* check first for announce */
- 	if (msk->pm.add_addr_signaled < add_addr_signal_max) {
--		local = select_signal_address(pernet,
--					      msk->pm.add_addr_signaled);
-+		local = select_signal_address(pernet, msk);
- 
- 		if (local) {
- 			if (mptcp_pm_alloc_anno_list(msk, local)) {
-+				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
- 				msk->pm.add_addr_signaled++;
- 				mptcp_pm_announce_addr(msk, &local->addr, false);
- 				mptcp_pm_nl_addr_send_ack(msk);
- 			}
--		} else {
--			/* pick failed, avoid fourther attempts later */
--			msk->pm.local_addr_used = add_addr_signal_max;
- 		}
--
--		check_work_pending(msk);
- 	}
- 
- 	/* check if should create a new subflow */
-@@ -510,19 +544,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 			int i, nr;
- 
- 			msk->pm.local_addr_used++;
--			check_work_pending(msk);
- 			nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
-+			if (nr)
-+				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
- 			spin_unlock_bh(&msk->pm.lock);
- 			for (i = 0; i < nr; i++)
- 				__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
- 			spin_lock_bh(&msk->pm.lock);
--			return;
- 		}
--
--		/* lookup failed, avoid fourther attempts later */
--		msk->pm.local_addr_used = local_addr_max;
--		check_work_pending(msk);
- 	}
-+	check_work_pending(msk);
- }
- 
- static void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
-@@ -736,6 +767,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 			msk->pm.subflows--;
- 			__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		}
-+		__set_bit(rm_list->ids[1], msk->pm.id_avail_bitmap);
- 		if (!removed)
- 			continue;
- 
-@@ -765,6 +797,9 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk)
- 
- 	msk_owned_by_me(msk);
- 
-+	if (!(pm->status & MPTCP_PM_WORK_MASK))
-+		return;
-+
- 	spin_lock_bh(&msk->pm.lock);
- 
- 	pr_debug("msk=%p status=%x", msk, pm->status);
-@@ -810,7 +845,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	/* to keep the code simple, don't do IDR-like allocation for address ID,
- 	 * just bail when we exceed limits
- 	 */
--	if (pernet->next_id == MAX_ADDR_ID)
-+	if (pernet->next_id == MPTCP_PM_MAX_ADDR_ID)
- 		pernet->next_id = 1;
- 	if (pernet->addrs >= MPTCP_PM_ADDR_MAX)
- 		goto out;
-@@ -830,7 +865,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	if (!entry->addr.id) {
- find_next:
- 		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
--						    MAX_ADDR_ID + 1,
-+						    MPTCP_PM_MAX_ADDR_ID + 1,
- 						    pernet->next_id);
- 		if (!entry->addr.id && pernet->next_id != 1) {
- 			pernet->next_id = 1;
-@@ -1197,18 +1232,6 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
- 	return 0;
- }
- 
--static struct mptcp_pm_addr_entry *
--__lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
--{
--	struct mptcp_pm_addr_entry *entry;
--
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if (entry->addr.id == id)
--			return entry;
--	}
--	return NULL;
--}
--
- int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
- 					 u8 *flags, int *ifindex)
- {
-@@ -1467,7 +1490,7 @@ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info *info)
- 	list_splice_init(&pernet->local_addr_list, &free_list);
- 	__reset_counters(pernet);
- 	pernet->next_id = 1;
--	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
-+	bitmap_zero(pernet->id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 	spin_unlock_bh(&pernet->lock);
- 	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
- 	synchronize_rcu();
-@@ -1577,7 +1600,7 @@ static int mptcp_nl_cmd_dump_addrs(struct sk_buff *msg,
- 	pernet = net_generic(net, pm_nl_pernet_id);
- 
- 	spin_lock_bh(&pernet->lock);
--	for (i = id; i < MAX_ADDR_ID + 1; i++) {
-+	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
- 		if (test_bit(i, pernet->id_bitmap)) {
- 			entry = __lookup_addr_by_id(pernet, i);
- 			if (!entry)
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 667e153e6e24..5c956a8dc714 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2488,8 +2488,7 @@ static void mptcp_worker(struct work_struct *work)
- 
- 	mptcp_check_fastclose(msk);
- 
--	if (msk->pm.status)
--		mptcp_pm_nl_work(msk);
-+	mptcp_pm_nl_work(msk);
- 
- 	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
- 		mptcp_check_for_eof(msk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 386d1a98ff1d..2a6f0960ba27 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -173,16 +173,25 @@ enum mptcp_pm_status {
- 	MPTCP_PM_ADD_ADDR_SEND_ACK,
- 	MPTCP_PM_RM_ADDR_RECEIVED,
- 	MPTCP_PM_ESTABLISHED,
--	MPTCP_PM_ALREADY_ESTABLISHED,	/* persistent status, set after ESTABLISHED event */
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
-+	MPTCP_PM_ALREADY_ESTABLISHED,	/* persistent status, set after ESTABLISHED event */
-+	MPTCP_PM_MPC_ENDPOINT_ACCOUNTED /* persistent status, set after MPC local address is
-+					 * accounted int id_avail_bitmap
-+					 */
- };
- 
-+/* Status bits below MPTCP_PM_ALREADY_ESTABLISHED need pm worker actions */
-+#define MPTCP_PM_WORK_MASK ((1 << MPTCP_PM_ALREADY_ESTABLISHED) - 1)
-+
- enum mptcp_addr_signal_status {
- 	MPTCP_ADD_ADDR_SIGNAL,
- 	MPTCP_ADD_ADDR_ECHO,
- 	MPTCP_RM_ADDR_SIGNAL,
- };
- 
-+/* max value of mptcp_addr_info.id */
-+#define MPTCP_PM_MAX_ADDR_ID		U8_MAX
-+
- struct mptcp_pm_data {
- 	struct mptcp_addr_info local;
- 	struct mptcp_addr_info remote;
-@@ -201,6 +210,7 @@ struct mptcp_pm_data {
- 	u8		local_addr_used;
- 	u8		subflows;
- 	u8		status;
-+	DECLARE_BITMAP(id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 	struct mptcp_rm_list rm_list_tx;
- 	struct mptcp_rm_list rm_list_rx;
- };
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index d548bc139b5d..d36b7da5082a 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -17,4 +17,5 @@ CONFIG_NFT_TPROXY=m
+ CONFIG_NFT_SOCKET=m
+ CONFIG_IP_ADVANCED_ROUTER=y
+ CONFIG_IP_MULTIPLE_TABLES=y
++CONFIG_IP_NF_TARGET_REJECT=m
+ CONFIG_IPV6_MULTIPLE_TABLES=y
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 7ef639a9d4a6..bbafa4cf5453 100755
+index bbafa4cf5453..3165bd1a43cc 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1071,7 +1071,10 @@ signal_address_tests()
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags signal
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags signal
- 	run_tests $ns1 $ns2 10.0.1.1
--	chk_add_nr 4 4
-+
-+	# the server will not signal the address terminating
-+	# the MPC subflow
-+	chk_add_nr 3 3
+@@ -937,6 +937,22 @@ chk_link_usage()
+ 	fi
  }
  
- link_failure_tests()
++wait_for_tw()
++{
++	local timeout_ms=$((timeout_poll * 1000))
++	local time=0
++	local ns=$1
++
++	while [ $time -lt $timeout_ms ]; do
++		local cnt=$(ip netns exec $ns ss -t state time-wait |wc -l)
++
++		[ "$cnt" = 1 ] && return 1
++		time=$((time + 100))
++		sleep 0.1
++	done
++	return 1
++}
++
+ subflows_tests()
+ {
+ 	reset
+@@ -994,6 +1010,61 @@ subflows_tests()
+ 	chk_join_nr "single subflow, dev" 1 1 1
+ }
+ 
++subflows_error_tests()
++{
++	# If a single subflow is configured, and matches the MPC src
++	# address, no additional subflow should be created
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.1.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
++	chk_join_nr "no MPC reuse with single endpoint" 0 0 0
++
++	# multiple subflows, with subflow creation error
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
++	chk_join_nr "multi subflows, with failing subflow" 1 1 1
++
++	# multiple subflows, with subflow timeout on MPJ
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j DROP
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
++	chk_join_nr "multi subflows, with subflow timeout" 1 1 1
++
++	# multiple subflows, check that the endpoint corresponding to
++	# closed subflow (due to reset) is not reused if additional
++	# subflows are added later
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
++
++	# updates in the child shell do not have any effect here, we
++	# need to bump the test counter for the above case
++	TEST_COUNT=$((TEST_COUNT+1))
++
++	# mpj subflow will be in TW after the reset
++	wait_for_tw $ns2
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	wait
++
++	# additional subflow could be created only if the PM select
++	# the later endpoint, skipping the already used one
++	chk_join_nr "multi subflows, fair usage on close" 1 1 1
++}
++
+ signal_address_tests()
+ {
+ 	# add_address, unused
+@@ -1805,6 +1876,7 @@ fullmesh_tests()
+ all_tests()
+ {
+ 	subflows_tests
++	subflows_error_tests
+ 	signal_address_tests
+ 	link_failure_tests
+ 	add_addr_timeout_tests
+@@ -1824,6 +1896,7 @@ usage()
+ {
+ 	echo "mptcp_join usage:"
+ 	echo "  -f subflows_tests"
++	echo "  -e subflows_error_tests"
+ 	echo "  -s signal_address_tests"
+ 	echo "  -l link_failure_tests"
+ 	echo "  -t add_addr_timeout_tests"
+@@ -1872,11 +1945,14 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
+ 
+-while getopts 'fsltra64bpkdmchCS' opt; do
++while getopts 'fesltra64bpkdmchCS' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+ 			;;
++		e)
++			subflows_error_tests
++			;;
+ 		s)
+ 			signal_address_tests
+ 			;;
 -- 
 2.34.1
 
