@@ -1,31 +1,31 @@
 Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC6C2C9C
-	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 05:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6862C9C
+	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 05:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1641534742;
+	t=1641534749;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5Cb7LC4ewgL/vQ75LhaVxDWKT788NzzjQeQZm0BxCB4=;
-	b=AK3dze777phJe9V3W7TYlJWGNPwUBjvPM+77cZ7s8uj1RRBQkU6GecKph4VTKqbwulpvdk
-	PtnXMGOasRv+NzUQxkbEHDDVkjXtLoAUvbUIeI39NRHBjLOrTVuo7t/EjMoUqUf83uye9Z
-	fkO4LyMA/jinDbEwQi+0BZS2glmv5Z4=
+	bh=vbUPi5guQyale6iUXT9t7jOV1g7ngjXvsSxN5jq0Sas=;
+	b=lmV5p1eQSQ0/TH3suKF7KnmCdNyjaIXw+JUq9eLcDlOnz+VVMAtqaEygyeca9VHfRXvQsX
+	79RYTPgh4+d4ZSN2g1lqYHYbo1MvnmiOXxW+y0/mBC/H/YNUpRC5gwCOTz2jFOI2SdHGzu
+	sfAcTZvEoDmdUAaaI8qgEt7hjWWN0eo=
 Received: from EUR05-VI1-obe.outbound.protection.outlook.com
  (mail-vi1eur05lp2169.outbound.protection.outlook.com [104.47.17.169]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-6-MamCvV3qOy6rK_kbSOS8sQ-1; Fri, 07 Jan 2022 06:52:21 +0100
-X-MC-Unique: MamCvV3qOy6rK_kbSOS8sQ-1
+ de-mta-12-fhIMVixCNky66_2JCqqWdw-1; Fri, 07 Jan 2022 06:52:28 +0100
+X-MC-Unique: fhIMVixCNky66_2JCqqWdw-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k8+DYKYrnTxt1GVaicjjQs64wx0CDeY65IeBV6ilN5TuP+zHKs+n45gwDA8HeTAAL1wANI/KJJCUN9VMIauoybTFBfPZOIRHukHKoBMVIvdjnrhlWgWMT1NRRlec1F4X8QciIAlrM9seDDKhv6vKuQkHOtVxNsIQuEC20B9K7C5t1ePXs2kMg89TUM0Mb5d0/wwuJ7WiQeNEQU8TuaA6iQu0e4gpq5vjqKxdohVWHspx+5nZF8ma5gz3NzblPr/55IsvF6dpAHPyrTrA6yjmj/XfMoxU8P7eQ6olQlI9gVkBMvc2a8gLWR7n2buY9HrJc2Hbxk4B45hND6+Y256x4Q==
+ b=Nuf4Rc2wixc0+Us0DCsGJhDXSDt+qGcelDg1/hmIUJVjEzaqWHipcrsVeBRgg2rgMUpzL43OtHm1FWppSAkAZJ4WkKSfzwZ6I2y5SOC+UxZQk+IXWM6cwhKABJ9HZGMJ9ARj0CVUaou9JDinD7CozMyHCcWdk1zmoD/DqPjLR7poUd7FgFYh3oyu/a0cFusJkeoNZxuAzVPsLxBzF7FBfg7DOaVkndtKKGgjlJgf2dta9xmbLCJ9auyfeiDf1XAmYgBSxSvy3k7UKWAALVJlnkBnwoYzHcVRiClzmrv4crbA0GqNaVrOZHTOFDTjEtvfQhH9iEXUxKwkLoSXNGczCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eBGulzsGm1LwtiZLMGMyt/BKuSoMQlY7NDDb5yRlzmg=;
- b=XLw8/9Emt8095cZAXlRHM0/7PGmy7tUf9/1vthvxGyKUWlkvbwRxrELfF3t4QQcXQsqM1bP2bSbcV6uBX2eJLjyax503K1TNVcyRF3o3w4C8Fl+K1/eQHe3OS38fgsM7HszwI5dbuHeIAd1n7FBqeqWyCYWUmEBetqrOYT8VVF79FkkD2sKj1A5+a4M6CiLrKvgTkSC9b7Ve528tqubO2D0PWur4cExIqWSoCOUDzKGhiYhTyk/i0nWCGLsd9a88DKIo1BcFW0KqL3LxYMTvNp/NCrEt8sA5FbTKDtQwEIfsWXwcjeSWmJFX6OpPbgXjEGY/p94QByQkzAUi38Y5nw==
+ bh=ah+E0eVIe+nTvrqUI/VQhbolU0E1OzoM4Pfk6x7qMk8=;
+ b=bPgRwJPjhMdjR1egh3jJS54e37Z8QIq+mt+UBuF9srhWIq3wYdz29pQ05X53tATEqD1Xi74q1fmIJaafce4hgUWBm2zbEB/swAh2B37eq1ZzvIxfG6lvNfWVBrQQ9njdrvXabAIyJzPVDypScOuI7p0W7zDYltdxXyTwma0gCGI/1aRLrXprzoJEX3z4DQIDwMvfcA2xCi6EqhEdKIiMMbZINX2SQVgqhqs3lHxko1evqC3Iy/2bEuekdkno64H6D0tCFM+DlXdpLrv/dg1luTkzTdKc1cqmhtOe4k5VT70MyS+pvRkT66Ckj2he+L0CE728u4ljqtqubFv+2rvmTg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
@@ -35,24 +35,24 @@ Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by HE1PR0402MB2731.eurprd04.prod.outlook.com (2603:10a6:3:d7::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.15; Fri, 7 Jan
- 2022 05:52:18 +0000
+ 2022 05:52:25 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::b5bf:e1b5:42fd:4dba]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::b5bf:e1b5:42fd:4dba%4]) with mapi id 15.20.4844.017; Fri, 7 Jan 2022
- 05:52:18 +0000
+ 05:52:25 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2 3/9] selftests: mptcp: implement pm_nl_set_limits
-Date: Fri,  7 Jan 2022 13:51:45 +0800
-Message-ID: <f4d5d1b1122215ce7a1bb723b96206852e83e01f.1641534346.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 4/9] selftests: mptcp: implement pm_nl_add_endpoint
+Date: Fri,  7 Jan 2022 13:51:46 +0800
+Message-ID: <73fc4696a94038df411a0b1c4ed329ffb3abcd57.1641534346.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1641534346.git.geliang.tang@suse.com>
 References: <cover.1641534346.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: HKAPR04CA0017.apcprd04.prod.outlook.com
- (2603:1096:203:d0::27) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: HK2PR04CA0043.apcprd04.prod.outlook.com
+ (2603:1096:202:14::11) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -61,1127 +61,1049 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 32c7155f-bf77-473d-24af-08d9d1a1dd61
+X-MS-Office365-Filtering-Correlation-Id: c74b4f21-b4ec-490f-a30b-08d9d1a1e183
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB2731:EE_
 X-Microsoft-Antispam-PRVS:
-	<HE1PR0402MB2731C65E92E565D6B486D833F84D9@HE1PR0402MB2731.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1265;
+	<HE1PR0402MB273119F6D5C70771F4364A40F84D9@HE1PR0402MB2731.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1751;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	OZ5WWAIvHpgVI6RUWZjV+YC0e0E5WlCwnM47rONHFk06nOgRvoHigdnqPUq8f1FczNrBQ+oDKN538kya3ChEyHyrfoICs16AHxcEXnnRyHhjDLK1tgq+IJ7dmaf2PX6lfA4zbFLOaV0p0p+AdQOKBc+g5cuFB0QMIuW7v9tiWZuo62mXkElBEEK/JdEiqfvildcIYz8424NuE5aUB5dogX+kwAuTkLPG+iHP0+2rQhDmRwv3xZjF8YlhHJU8QSNmDC1H9pxGiBm7s9f/bXask5ORJ4HfEZ+CKSBpWf7NAD/2ivhD4/pJ5tLoBHxmA5jmdB/uxMVzM3cF7VrrTBKh9KSDSm4U0DOuSz2y0wjMn7sZ2UsOK4ZugmkUPQXm5NgvctspUg1F79e2t7xBjzFf2wiP2J15KVS+EyMInvm12JxN0LKSPhK7r5nlHpL3W15dhis9EEeSeEJHBe/PgbDkG2xxKiCgX/jWKuRh/IX/V4rh/srFWRL8dgV/S03avI7Vw+SH5AAsw05veJd4WoRdi8AMZIkIPnBWrFs3npWAzb/VXejFJ88+JbLB8U+dhq+n8IK7vdC9DVbaL0yij2uoeWMKIC4FnFnsSAm8DdRwNEs0hsTHo42EWcPumnF9MObP/QwC8GmdqqtMbSfdmTDAug==
+	4fsGfTVYYKRm+v8EnoZqp4vTFInyIyJwD069xYnzNBmzo7tr4htRkZKJCQ3/R3PgVgkNjZYOLPviQNcpVAcF3Dsdg8H3Y+Hf4KlnVbGMNkK5gFbUOB47gyNz6b/CXOfHHD4fwJjBaNouby/nDtz42uhevBV2b1PcTF9ZK24CXMA4T45Z8OcmT1TYwKVQ1kg/dfEMFOttKK7+Arv0vB/+KXMoArHUoIXJcHpItm5+eD8wKwfPnHu/O6EAMGgO/CNffnmwzZ+Pb9SWW1cYZosiUUKoT3hLBSwP3XRgJfeHDPIMlPBheHbvdD1BdEQWx8XapqVuVc3vMjy+9PqtdiAzAf6m0sBbYtpgO6WNXcv+zwTj1bRhIe3S5YIOClSdN7w23xhOtsrdzp2Q1AIB7g0/jjb+XibKbbJ9j8Zz7OARrqjobJ6HSoIE/KL4a15D+nocXKAg2rj8b7kYivK9nx5D3BnxEI2EdojkfO8dEZF+HsGH6ZPA+IuCEr2ZmI9FJTA3+nYv09xrHN3yWG5JZmrwHiUmGWEYJ6nG3q1S/9YEdEuoclcfBv0V1ouxEPOKFe5ip8xMxevKLzUKqlPSWRRaLtYXP5NU/HmcSExNvbq/N+gxMk4k0AbvGKKAl7PYAcuT
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(26005)(36756003)(6916009)(8676002)(107886003)(6486002)(6512007)(4326008)(186003)(2906002)(83380400001)(66556008)(8936002)(44832011)(66476007)(66946007)(2616005)(6666004)(55236004)(30864003)(5660300002)(38100700002)(316002)(6506007)(508600001)(86362001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ilK6mwS5h5poEl0zk1NVe4kywgy1Nie3jqMAahWotfFihDzwo3FvnQ7nDg1q?=
- =?us-ascii?Q?wwqGBlCNajQsJA0btlWJ/XHfUvAebl/V+0ZWlI3P9aG/YI/w/ah1MR+a1YbX?=
- =?us-ascii?Q?y2tBfqYqhrUJUfI5l/6AP92gMmcSCPnBNfWm40kzH9b7AXSWtsAB1sZ2VwFk?=
- =?us-ascii?Q?LKjJVwkIqP+CxzcuwmF1J6dfjnHDgz1bX4mvLS3dEjQk+a8NkSXezE/goTfi?=
- =?us-ascii?Q?6F7JH0XSlXw4zZ8O9GuVtoTQGTQ8NSmpA6gmT4eAeenRKrp3B1irrFRB9Jhj?=
- =?us-ascii?Q?JAe9kIwVDwbDgcK+eEKydYb9UQFMKsJ1buYd4H9to7GZiU6/nONcXt95wY5c?=
- =?us-ascii?Q?+c772RK1tath/sVCV385JtxL8cyxMiC+dVQFFZFRBiQCGcMkLyB+R2fJgyLD?=
- =?us-ascii?Q?niylmAuDypewjZjAqj/OOFII0tsHfc3PTmdyoJ9eCcJxvW11HiAE8MGeU9F+?=
- =?us-ascii?Q?W+UgiUE0To7xpSK7ig+K5q74IBUYg31f/dgxiWblu1wutHvQsPhbfBDM1qtY?=
- =?us-ascii?Q?NWn+cr3525XyF3wU2+lN5GYVrL8QjRqPMt7y+adTciNnq5vV/282Wg7zUUfO?=
- =?us-ascii?Q?ZC6w5B1E705/d+ZuV+w6JA91itx9BDtpMMKFgUGyz2ta+t/dfetIBvT+A0fX?=
- =?us-ascii?Q?OSSQ/Vc35FB+H0g4UJQt5BdEXy3yqjHSZZQWr8MJPorBB9s4NFllCakcdAiS?=
- =?us-ascii?Q?FssHvztXs9WA+ffVioO6tQ/7deM9nd78ni6EI4K8TVLral3VgJ1nCqm18LfU?=
- =?us-ascii?Q?1qLzXRWKdycu5WeeYeIcW7/TmpSO4QHsozrh9DfTPyVlhKvsdvDyczB5+zu3?=
- =?us-ascii?Q?0O2VPHZO+Dg5Hf0NVm1gJtrT0hP/DBkrwv5qhPZDsLo9Xd5Nw5bgDewu/BuE?=
- =?us-ascii?Q?xLZZTqH0Mq5KUuYTE9tQmXTPYLHI1T1MMOeaVoNmPR+C1yaxLFtponLEtyjc?=
- =?us-ascii?Q?UqdQMXo1HQx23DQytHtKVpnPHbKrJHaTWrcxbJIuZ0toXtouvJayIfTOHzMm?=
- =?us-ascii?Q?82tMBkwaprHQYG5OHvpwckNOSqd+TjvpQrx0ixkNPwIKC13YsEyxuv0ZfsAu?=
- =?us-ascii?Q?A5+8J+ifIwjNRgAFOTCkfVQ5efRDsik2AeKj6QRPBDNx5MoAP7v7IyUulrTx?=
- =?us-ascii?Q?trUynr83qbBIEWNUpQ7EfNiIMvPQeYqzTVS2oITdoY3NT8M6K9neUdPu9/FP?=
- =?us-ascii?Q?kUjq0ORzrngMSoqJv3yxYWiCyEA8VJMrioX8Nhgok2ZFEP2UZ/deyLK63dy+?=
- =?us-ascii?Q?2vdlutQqkC08YwJXbx+1FUMRjT1PRPUnZ60hm0/i31pDpA3mmlrxDPs6CAmm?=
- =?us-ascii?Q?3YkKN31xsm0rTJHZhIaNM0e2FQWYHcWWRp/5GrsIBF03FJCZMjC3pxYQaSI0?=
- =?us-ascii?Q?eW+g2X9O4g1qiqtkQKY6McK6TOH5Ym3x18/rAf3+mkrFI4albV4pcILJSmaS?=
- =?us-ascii?Q?xFjXF0RstIM1l5L11AY/kqsgLx2sC+gbmpOgBbQPQKud6h+PdpsyJCu9Dn03?=
- =?us-ascii?Q?vLMKpcjDvqau0tfkUyMsecht33i4yiusMsPzbAwP5iYj4KiAHaJlQFuRihFr?=
- =?us-ascii?Q?0bdnwEM/9mbzfa1aVjk/n5kZtxG+wbhCEDRaB0mrus9VE7i3ISOaTCWUg0nF?=
- =?us-ascii?Q?mS5ZvuT9tIxSgLQlZluyIdo=3D?=
+	=?us-ascii?Q?XU6alJqkVQ7QuVmI6vxWKwDkZUDqIxHfqcz+xOftd8NnckH7qWSdNVjpV+GN?=
+ =?us-ascii?Q?cRgLsifJ5t5lGMevUMbo4iyxAToepVExF4UORjg348OENKUKdK/1US8hxC1x?=
+ =?us-ascii?Q?HgNKFvel0nYXIXURmEkT3wS+Bv9SmVOC5/aZNQ1z6E1P98PMUngoYaen5HTr?=
+ =?us-ascii?Q?ptgN7xbfnhDX6dQnBG2rcLiJd/fCAQzDC107pus9XiXgaHpFawLWJPNv8hpU?=
+ =?us-ascii?Q?imfWv0HVaL3mC95fDwoyZ+wyss3Jrhvb3xPT84hpJeRHBX2BCYAqO9CgREay?=
+ =?us-ascii?Q?mGbAnArjt5kqZ90YQU1VNWADJliEVUh85nIVCw66cePMLhtkyDhx5CRZv8E7?=
+ =?us-ascii?Q?DmgID2HFHII27VM55r0qxzRhx2wjsENlXMWqye2r6HTyzeEUsx3OEd+4Kfcf?=
+ =?us-ascii?Q?UZwd0kAuhe1pTeEuGF6WNCwip67I/72Xl0x3GD0fSzPOF2eiBYYNhhwKA3eV?=
+ =?us-ascii?Q?vHJPYXfRYCay7QRiv+X48oGihU+v8WpqN1QI/2knUhwvZjsLsytV52ONt4nL?=
+ =?us-ascii?Q?+Ywrsf+e3U0/0b3ZtfEonRKgqIKbCREcmZ7BXlCXKze7Mp2e7JiQ+RYdmEJg?=
+ =?us-ascii?Q?qPhRDvL31ErZCDp3U2XiuD44o/1HajRk7vnPlE5PtnjTLmyywgsKA3Bj8Yhf?=
+ =?us-ascii?Q?PSR+TEr7rNBwun/eCpWVreaZbjSTOqjfsNfaK+TabRvea3RIKzw2C4WI2mQG?=
+ =?us-ascii?Q?IyFhQzTEPW2cb51PLEwW8UChy4LSqe6AXHR4+C9jPYEi+rpPPMpYYiYYLUkp?=
+ =?us-ascii?Q?8yvCcPUFaQlXsTrg05WnZZ1Zp6hOS4R7ApqNQwUzPfN/5CQJFIBc7CT213vM?=
+ =?us-ascii?Q?GpajUnp/kuPSi2U24hALCCFhunFF0vV92uOcXSIK7TQ/NXwTab+BJ1JtLR+7?=
+ =?us-ascii?Q?TozJcZ1/jPLgIMtZ6AvTmh1xG2bviDenMvYtyGybtQqIubMnmko7QogOhmJ4?=
+ =?us-ascii?Q?wVJp3IZ3XHeVn88nkoudjPSijzPf3uXi5TcFNwMd63nnaJFDyjUN3FAV6/Ir?=
+ =?us-ascii?Q?zT0OXk/zuKLNni5/nN3BrBpE64WvNxRdhy47KSlYXaaS7ARCVOAc8YghMNPd?=
+ =?us-ascii?Q?JYKIsYLimpliFdnsGZg7JN4LoPtFXI+nTufbMIS01hYtyKy0qclP8tegTMye?=
+ =?us-ascii?Q?zjr5YBXVbu9N2+0j/Pvl8ypJAk0YlMDM37Ke+VLV2v0+GNTNKyZVQAzBWN/R?=
+ =?us-ascii?Q?+ucBW2hQ+CCkiVpaBCCSKeOz48JUs/R70ZSsuikF/knlGaR8LmN+VaoR/FVl?=
+ =?us-ascii?Q?rXMmozYcaGwXu+wkku5dHUsuoZLEv29bKkUPV5TjrTKCQhcSjC2mr5jQo+52?=
+ =?us-ascii?Q?+KxvuFnusWl58qYXwoZeXxpT7kaI2xVhb0EaqvRaNP/wbYUPL91Q7sz1ghmL?=
+ =?us-ascii?Q?iM9SgC9onaHUrpDrydmqxDZJyDgTxigsQ1i+O6IZF7K8KBVec1z4WF+Vm/N3?=
+ =?us-ascii?Q?aqqbUj/YNpNRtr/n4hzm2GNWuWHe0BBUzGX8HCov8l7xPp+P54xrC1NtaVx+?=
+ =?us-ascii?Q?7odiYadgJ0RWT4W8jev7UoMHaCnu9IB4cT2BeQPwYmC6ShqF96JQYMKBl7/6?=
+ =?us-ascii?Q?ozTRDHaLMd7X++Pevo3Y4nsjSsgsMB4fYTtYtt28t565XzbzaeiJa5ehe5tm?=
+ =?us-ascii?Q?mFNdkPvsdklLT90EZN8QqDQ=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32c7155f-bf77-473d-24af-08d9d1a1dd61
+X-MS-Exchange-CrossTenant-Network-Message-Id: c74b4f21-b4ec-490f-a30b-08d9d1a1e183
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2022 05:52:18.7456
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2022 05:52:25.6825
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 63oR0fPxU1LAvx67fWoUnExYNE4SJb21fqACrEYgGEEVEjO5oBbP2Kwl1RoNsl0g2blM6hrqqWM1j+UJr62unQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: RIJ1gNPoYISAmFDAiYFy2V2wEE2KjruMNBC67ilXqoo2Z6n8ukFhHIYSAceKMRWVDpimvcg0a98hS/wvugXpTw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB2731
 
-This patch implemented a new function named pm_nl_set_limits(), wraped
+This patch implemented a new function named pm_nl_add_endpoint(), wraped
 the PM netlink commands 'ip mptcp' and 'pm_nl_ctl' in it, and used a new
-argument 'ip_mptcp' to choose which one to use for the PM limits
-setting.
+argument 'ip_mptcp' to choose which one to use for adding the PM endpoint.
 
 Used this wrapper in all the selftests in mptcp_join.sh instead of using
 the pm_nl_ctl commands directly.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 378 +++++++++---------
- 1 file changed, 196 insertions(+), 182 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 337 ++++++++++--------
+ 1 file changed, 192 insertions(+), 145 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
 g/selftests/net/mptcp/mptcp_join.sh
-index 5d8b1e475127..9a571665f7a1 100755
+index 9a571665f7a1..740258ad45b1 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -15,6 +15,7 @@ timeout_test=3D$((timeout_poll * 2 + 1))
- mptcp_connect=3D""
- capture=3D0
- checksum=3D0
-+ip_mptcp=3D0
- do_all_tests=3D1
-=20
- TEST_COUNT=3D0
-@@ -278,6 +279,19 @@ wait_rm_addr()
- 	done
+@@ -292,6 +292,53 @@ pm_nl_set_limits()
+ 	fi
  }
 =20
-+pm_nl_set_limits()
++pm_nl_add_endpoint()
 +{
 +	local ns=3D$1
-+	local nr_addrs=3D$2
-+	local nr_subflows=3D$3
++	local addr=3D$2
++	local flags
++	local port
++	local dev
++	local id
++	local nr=3D2
++
++	for p in $@
++	do
++		if [ $p =3D "flags" ]; then
++			eval _flags=3D\$"$nr"
++			if [ ! -z $_flags ]; then
++				flags=3D"flags $_flags"
++			fi
++		fi
++		if [ $p =3D "dev" ]; then
++			eval _dev=3D\$"$nr"
++			if [ ! -z $_dev ]; then
++				dev=3D"dev $_dev"
++			fi
++		fi
++		if [ $p =3D "id" ]; then
++			eval _id=3D\$"$nr"
++			if [ ! -z $_id ]; then
++				id=3D"id $_id"
++			fi
++		fi
++		if [ $p =3D "port" ]; then
++			eval _port=3D\$"$nr"
++			if [ ! -z $_port ]; then
++				port=3D"port $_port"
++			fi
++		fi
++
++		let nr+=3D1
++	done
 +
 +	if [ $ip_mptcp -eq 1 ]; then
-+		ip -n $ns mptcp limits set add_addr_accepted $nr_addrs subflows $nr_subf=
-lows
++		ip -n $ns mptcp endpoint add $addr ${_flags/,/ } $dev $id $port
 +	else
-+		ip netns exec $ns ./pm_nl_ctl limits $nr_addrs $nr_subflows
++		ip netns exec $ns ./pm_nl_ctl add $addr $flags $dev $id $port
 +	fi
 +}
 +
  do_transfer()
  {
  	listener_ns=3D"$1"
-@@ -1023,32 +1037,32 @@ subflows_tests()
-=20
- 	# subflow limited by client
+@@ -392,7 +439,7 @@ do_transfer()
+ 			else
+ 				addr=3D"10.0.$counter.1"
+ 			fi
+-			ip netns exec $ns1 ./pm_nl_ctl add $addr flags signal
++			pm_nl_add_endpoint $ns1 $addr flags signal
+ 			let counter+=3D1
+ 			let add_nr_ns1-=3D1
+ 		done
+@@ -445,7 +492,7 @@ do_transfer()
+ 			else
+ 				addr=3D"10.0.$counter.2"
+ 			fi
+-			ip netns exec $ns2 ./pm_nl_ctl add $addr flags $flags
++			pm_nl_add_endpoint $ns2 $addr flags $flags
+ 			let counter+=3D1
+ 			let add_nr_ns2-=3D1
+ 		done
+@@ -1039,7 +1086,7 @@ subflows_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 0
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 0
-+	pm_nl_set_limits $ns1 0 0
-+	pm_nl_set_limits $ns2 0 0
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 0
+ 	pm_nl_set_limits $ns2 0 0
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow, limited by client" 0 0 0
 =20
- 	# subflow limited by server
+@@ -1047,7 +1094,7 @@ subflows_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 0
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 0
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 0
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow, limited by server" 1 1 0
 =20
- 	# subflow
+@@ -1055,7 +1102,7 @@ subflows_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow" 1 1 1
 =20
- 	# multiple subflows
+@@ -1063,8 +1110,8 @@ subflows_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1056,8 +1070,8 @@ subflows_tests()
+ 	chk_join_nr "multiple subflows" 2 2 2
 =20
- 	# multiple subflows limited by server
+@@ -1072,8 +1119,8 @@ subflows_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1065,8 +1079,8 @@ subflows_tests()
+ 	chk_join_nr "multiple subflows, limited by server" 2 2 1
 =20
- 	# single subflow, dev
+@@ -1081,7 +1128,7 @@ subflows_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow dev ns2eth3
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow dev ns2eth3
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow dev ns2eth3
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow, dev" 1 1 1
-@@ -1077,16 +1091,16 @@ subflows_error_tests()
- 	# If a single subflow is configured, and matches the MPC src
- 	# address, no additional subflow should be created
+ }
+@@ -1093,7 +1140,7 @@ subflows_error_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.1.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.1.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
  	chk_join_nr "no MPC reuse with single endpoint" 0 0 0
 =20
- 	# multiple subflows, with subflow creation error
+@@ -1101,8 +1148,8 @@ subflows_error_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
  	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
-@@ -1095,8 +1109,8 @@ subflows_error_tests()
-=20
- 	# multiple subflows, with subflow timeout on MPJ
+ 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 	chk_join_nr "multi subflows, with failing subflow" 1 1 1
+@@ -1111,8 +1158,8 @@ subflows_error_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
  	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j DROP
-@@ -1107,8 +1121,8 @@ subflows_error_tests()
- 	# closed subflow (due to reset) is not reused if additional
- 	# subflows are added later
+ 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 	chk_join_nr "multi subflows, with subflow timeout" 1 1 1
+@@ -1123,7 +1170,7 @@ subflows_error_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
-@@ -1138,8 +1152,8 @@ signal_address_tests()
 =20
- 	# accept and use add_addr
+@@ -1133,7 +1180,7 @@ subflows_error_tests()
+=20
+ 	# mpj subflow will be in TW after the reset
+ 	wait_for_tw $ns2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+ 	wait
+=20
+ 	# additional subflow could be created only if the PM select
+@@ -1145,7 +1192,7 @@ signal_address_tests()
+ {
+ 	# add_address, unused
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "unused signal address" 0 0 0
+ 	chk_add_nr 1 1
+@@ -1154,7 +1201,7 @@ signal_address_tests()
+ 	reset
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal address" 1 1 1
-@@ -1151,8 +1165,8 @@ signal_address_tests()
+ 	chk_add_nr 1 1
+@@ -1164,10 +1211,10 @@ signal_address_tests()
+ 	# belong to different subnets or one of the listed local address could be
  	# used for 'add_addr' subflow
  	reset
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 1 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "subflow and signal" 2 2 2
-@@ -1160,9 +1174,9 @@ signal_address_tests()
-=20
+ 	chk_add_nr 1 1
+@@ -1175,10 +1222,10 @@ signal_address_tests()
  	# accept and use add_addr with additional subflows
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	pm_nl_set_limits $ns1 0 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1171,30 +1185,30 @@ signal_address_tests()
-=20
+ 	chk_join_nr "multiple subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1186,9 +1233,9 @@ signal_address_tests()
  	# signal addresses
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns1 3 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns2 3 3
+ 	pm_nl_set_limits $ns1 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.4.1 flags signal
+ 	pm_nl_set_limits $ns2 3 3
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal addresses" 3 3 3
- 	chk_add_nr 3 3
-=20
+@@ -1197,9 +1244,9 @@ signal_address_tests()
  	# signal invalid addresses
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns1 3 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns2 3 3
+ 	pm_nl_set_limits $ns1 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.12.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.14.1 flags signal
+ 	pm_nl_set_limits $ns2 3 3
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal invalid addresses" 1 1 1
- 	chk_add_nr 3 3
-=20
- 	# signal addresses race test
+@@ -1209,14 +1256,14 @@ signal_address_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 4 4
--	ip netns exec $ns2 ./pm_nl_ctl limits 4 4
-+	pm_nl_set_limits $ns1 4 4
-+	pm_nl_set_limits $ns2 4 4
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-@@ -1222,9 +1236,9 @@ link_failure_tests()
- 	# active backup and link switch-over.
+ 	pm_nl_set_limits $ns1 4 4
+ 	pm_nl_set_limits $ns2 4 4
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.1.2 flags signal
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags signal
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags signal
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags signal
++	pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.4.1 flags signal
++	pm_nl_add_endpoint $ns2 10.0.1.2 flags signal
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags signal
++	pm_nl_add_endpoint $ns2 10.0.4.2 flags signal
+ 	run_tests $ns1 $ns2 10.0.1.1
+=20
+ 	# the server will not signal the address terminating
+@@ -1237,10 +1284,10 @@ link_failure_tests()
  	# Let's set some arbitrary (low) virtual link limits.
  	init_shapers
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	pm_nl_set_limits $ns1 0 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
+ 	pm_nl_set_limits $ns1 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 dev ns2eth4 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 1
-@@ -1236,9 +1250,9 @@ link_failure_tests()
- 	# for bidirectional transfer
+ 	chk_join_nr "multiple flows, signal, link failure" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1251,10 +1298,10 @@ link_failure_tests()
  	reset
  	init_shapers
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	pm_nl_set_limits $ns1 0 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
+ 	pm_nl_set_limits $ns1 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 dev ns2eth4 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 dev ns2eth4 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 2
-@@ -1250,9 +1264,9 @@ link_failure_tests()
- 	# will never be used
+ 	chk_join_nr "multi flows, signal, bidi, link fail" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1265,10 +1312,10 @@ link_failure_tests()
  	reset
  	init_shapers
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns2 1 2
+ 	pm_nl_set_limits $ns1 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
+ 	pm_nl_set_limits $ns2 1 2
  	export FAILING_LINKS=3D"1"
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,bac=
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,bac=
 kup
++	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow,backup
  	run_tests $ns1 $ns2 10.0.1.1 1
-@@ -1264,9 +1278,9 @@ link_failure_tests()
- 	# the traffic
+ 	chk_join_nr "backup subflow unused, link failure" 2 2 2
+ 	chk_add_nr 1 1
+@@ -1279,9 +1326,9 @@ link_failure_tests()
  	reset
  	init_shapers
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns2 1 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,bac=
+ 	pm_nl_set_limits $ns1 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
+ 	pm_nl_set_limits $ns2 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,bac=
 kup
++	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow,backup
  	export FAILING_LINKS=3D"1 2"
  	run_tests $ns1 $ns2 10.0.1.1 1
-@@ -1279,9 +1293,9 @@ link_failure_tests()
- 	# for bidirectional transfer
+ 	chk_join_nr "backup flow used, multi links fail" 2 2 2
+@@ -1294,9 +1341,9 @@ link_failure_tests()
  	reset
  	init_shapers
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,bac=
+ 	pm_nl_set_limits $ns1 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 dev ns1eth2 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow,bac=
 kup
++	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow,backup
  	run_tests $ns1 $ns2 10.0.1.1 2
  	chk_join_nr "backup flow used, bidi, link failure" 2 2 2
-@@ -1294,8 +1308,8 @@ add_addr_timeout_tests()
- {
- 	# add_addr timeout
+ 	chk_add_nr 1 1
+@@ -1310,7 +1357,7 @@ add_addr_timeout_tests()
  	reset_with_add_addr_timeout
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
  	chk_join_nr "signal address, ADD_ADDR timeout" 1 1 1
-@@ -1303,8 +1317,8 @@ add_addr_timeout_tests()
-=20
- 	# add_addr timeout IPv6
+ 	chk_add_nr 4 0
+@@ -1319,7 +1366,7 @@ add_addr_timeout_tests()
  	reset_with_add_addr_timeout 6
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++	pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
  	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
  	chk_join_nr "signal address, ADD_ADDR6 timeout" 1 1 1
-@@ -1312,20 +1326,20 @@ add_addr_timeout_tests()
-=20
+ 	chk_add_nr 4 0
+@@ -1327,8 +1374,8 @@ add_addr_timeout_tests()
  	# signal addresses timeout
  	reset_with_add_addr_timeout
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns1 2 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns2 2 2
+ 	pm_nl_set_limits $ns1 2 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
+ 	pm_nl_set_limits $ns2 2 2
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
  	chk_join_nr "signal addresses, ADD_ADDR timeout" 2 2 2
- 	chk_add_nr 8 0
-=20
+@@ -1337,8 +1384,8 @@ add_addr_timeout_tests()
  	# signal invalid addresses timeout
  	reset_with_add_addr_timeout
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns1 2 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns2 2 2
+ 	pm_nl_set_limits $ns1 2 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.12.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
+ 	pm_nl_set_limits $ns2 2 2
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
  	chk_join_nr "invalid address, ADD_ADDR timeout" 1 1 1
- 	chk_add_nr 8 0
-@@ -1335,8 +1349,8 @@ remove_tests()
- {
- 	# single subflow, remove
+@@ -1351,7 +1398,7 @@ remove_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
  	chk_join_nr "remove single subflow" 1 1 1
-@@ -1344,8 +1358,8 @@ remove_tests()
-=20
- 	# multiple subflows, remove
+ 	chk_rm_nr 1 1
+@@ -1360,8 +1407,8 @@ remove_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 0 -2 slow
-@@ -1354,9 +1368,9 @@ remove_tests()
-=20
+ 	chk_join_nr "remove multiple subflows" 2 2 2
+ 	chk_rm_nr 2 2
+@@ -1369,7 +1416,7 @@ remove_tests()
  	# single address, remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns2 1 1
+ 	pm_nl_set_limits $ns1 0 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 1
  	run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
  	chk_join_nr "remove single address" 1 1 1
- 	chk_add_nr 1 1
-@@ -1364,9 +1378,9 @@ remove_tests()
-=20
+@@ -1379,9 +1426,9 @@ remove_tests()
  	# subflow and signal, remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns2 1 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
  	chk_join_nr "remove subflow and signal" 2 2 2
-@@ -1375,9 +1389,9 @@ remove_tests()
-=20
+ 	chk_add_nr 1 1
+@@ -1390,10 +1437,10 @@ remove_tests()
  	# subflows and signal, remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	pm_nl_set_limits $ns1 0 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 -1 -2 slow
-@@ -1387,11 +1401,11 @@ remove_tests()
-=20
+ 	chk_join_nr "remove subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1402,9 +1449,9 @@ remove_tests()
  	# addresses remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns1 3 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns2 3 3
+ 	pm_nl_set_limits $ns1 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal id 250
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.4.1 flags signal
+ 	pm_nl_set_limits $ns2 3 3
  	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
  	chk_join_nr "remove addresses" 3 3 3
- 	chk_add_nr 3 3
-@@ -1399,11 +1413,11 @@ remove_tests()
-=20
+@@ -1414,9 +1461,9 @@ remove_tests()
  	# invalid addresses remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns1 3 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns2 3 3
+ 	pm_nl_set_limits $ns1 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.12.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.14.1 flags signal
+ 	pm_nl_set_limits $ns2 3 3
  	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
  	chk_join_nr "remove invalid addresses" 1 1 1
- 	chk_add_nr 3 3
-@@ -1411,9 +1425,9 @@ remove_tests()
-=20
+@@ -1426,10 +1473,10 @@ remove_tests()
  	# subflows and signal, flush
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	pm_nl_set_limits $ns1 0 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
-@@ -1423,8 +1437,8 @@ remove_tests()
-=20
- 	# subflows flush
+ 	chk_join_nr "flush subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1439,9 +1486,9 @@ remove_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns1 3 3
-+	pm_nl_set_limits $ns2 3 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow id 150
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
-@@ -1434,11 +1448,11 @@ remove_tests()
-=20
+ 	pm_nl_set_limits $ns1 3 3
+ 	pm_nl_set_limits $ns2 3 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow id 150
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow id 150
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
+ 	chk_join_nr "flush subflows" 3 3 3
+ 	chk_rm_nr 3 3
+@@ -1449,9 +1496,9 @@ remove_tests()
  	# addresses flush
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns1 3 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns2 3 3
+ 	pm_nl_set_limits $ns1 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal id 250
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.4.1 flags signal
+ 	pm_nl_set_limits $ns2 3 3
  	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
  	chk_join_nr "flush addresses" 3 3 3
- 	chk_add_nr 3 3
-@@ -1446,11 +1460,11 @@ remove_tests()
-=20
+@@ -1461,9 +1508,9 @@ remove_tests()
  	# invalid addresses flush
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns1 3 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	pm_nl_set_limits $ns2 3 3
+ 	pm_nl_set_limits $ns1 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.12.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.14.1 flags signal
+ 	pm_nl_set_limits $ns2 3 3
  	run_tests $ns1 $ns2 10.0.1.1 0 -8 0 slow
  	chk_join_nr "flush invalid addresses" 1 1 1
- 	chk_add_nr 3 3
-@@ -1458,8 +1472,8 @@ remove_tests()
-=20
- 	# remove id 0 subflow
+@@ -1474,7 +1521,7 @@ remove_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 0 -9 slow
  	chk_join_nr "remove id 0 subflow" 1 1 1
-@@ -1467,9 +1481,9 @@ remove_tests()
-=20
+ 	chk_rm_nr 1 1
+@@ -1482,7 +1529,7 @@ remove_tests()
  	# remove id 0 address
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns2 1 1
+ 	pm_nl_set_limits $ns1 0 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 1
  	run_tests $ns1 $ns2 10.0.1.1 0 -9 0 slow
  	chk_join_nr "remove id 0 address" 1 1 1
- 	chk_add_nr 1 1
-@@ -1480,37 +1494,37 @@ add_tests()
- {
- 	# add single subflow
+@@ -1536,13 +1583,13 @@ ipv6_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow
- 	chk_join_nr "add single subflow" 1 1 1
-=20
- 	# add signal address
- 	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
- 	chk_join_nr "add signal address" 1 1 1
- 	chk_add_nr 1 1
-=20
- 	# add multiple subflows
- 	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	run_tests $ns1 $ns2 10.0.1.1 0 0 2 slow
- 	chk_join_nr "add multiple subflows" 2 2 2
-=20
- 	# add multiple subflows IPv6
- 	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	run_tests $ns1 $ns2 dead:beef:1::1 0 0 2 slow
- 	chk_join_nr "add multiple subflows IPv6" 2 2 2
-=20
- 	# add multiple addresses IPv6
- 	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 2 2
- 	run_tests $ns1 $ns2 dead:beef:1::1 0 2 0 slow
- 	chk_join_nr "add multiple addresses IPv6" 2 2 2
- 	chk_add_nr 2 2
-@@ -1520,8 +1534,8 @@ ipv6_tests()
- {
- 	# subflow IPv6
- 	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
++	pm_nl_add_endpoint $ns2 dead:beef:3::2 flags subflow
  	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
  	chk_join_nr "single subflow IPv6" 1 1 1
-@@ -1535,18 +1549,18 @@ ipv6_tests()
 =20
+ 	# add_address, unused IPv6
+ 	reset
+-	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++	pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+ 	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
+ 	chk_join_nr "unused signal address IPv6" 0 0 0
+ 	chk_add_nr 1 1
+@@ -1550,7 +1597,7 @@ ipv6_tests()
  	# signal address IPv6
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
- 	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns2 1 1
+ 	pm_nl_set_limits $ns1 0 1
+-	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++	pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+ 	pm_nl_set_limits $ns2 1 1
  	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
  	chk_join_nr "single address IPv6" 1 1 1
- 	chk_add_nr 1 1
-=20
+@@ -1559,7 +1606,7 @@ ipv6_tests()
  	# single address IPv6, remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
- 	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns2 1 1
+ 	pm_nl_set_limits $ns1 0 1
+-	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++	pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+ 	pm_nl_set_limits $ns2 1 1
  	run_tests $ns1 $ns2 dead:beef:1::1 0 -1 0 slow
  	chk_join_nr "remove single address IPv6" 1 1 1
- 	chk_add_nr 1 1
-@@ -1554,9 +1568,9 @@ ipv6_tests()
-=20
+@@ -1569,9 +1616,9 @@ ipv6_tests()
  	# subflow and signal IPv6, remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns2 1 2
- 	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++	pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+ 	pm_nl_set_limits $ns2 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
++	pm_nl_add_endpoint $ns2 dead:beef:3::2 flags subflow
  	run_tests $ns1 $ns2 dead:beef:1::1 0 -1 -1 slow
  	chk_join_nr "remove subflow and signal IPv6" 2 2 2
-@@ -1568,16 +1582,16 @@ v4mapped_tests()
- {
- 	# subflow IPv4-mapped to IPv4-mapped
+ 	chk_add_nr 1 1
+@@ -1584,7 +1631,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add "::ffff:10.0.3.2" flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add "::ffff:10.0.3.2" flags subflow
++	pm_nl_add_endpoint $ns2 "::ffff:10.0.3.2" flags subflow
  	run_tests $ns1 $ns2 "::ffff:10.0.1.1"
  	chk_join_nr "single subflow IPv4-mapped" 1 1 1
 =20
- 	# signal address IPv4-mapped with IPv4-mapped sk
+@@ -1592,7 +1639,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add "::ffff:10.0.2.1" flags signal
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add "::ffff:10.0.2.1" flags signal
++	pm_nl_add_endpoint $ns1 "::ffff:10.0.2.1" flags signal
  	run_tests $ns1 $ns2 "::ffff:10.0.1.1"
  	chk_join_nr "signal address IPv4-mapped" 1 1 1
-@@ -1585,16 +1599,16 @@ v4mapped_tests()
-=20
- 	# subflow v4-map-v6
+ 	chk_add_nr 1 1
+@@ -1601,7 +1648,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 "::ffff:10.0.1.1"
  	chk_join_nr "single subflow v4-map-v6" 1 1 1
 =20
- 	# signal address v4-map-v6
+@@ -1609,7 +1656,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 "::ffff:10.0.1.1"
  	chk_join_nr "signal address v4-map-v6" 1 1 1
-@@ -1602,16 +1616,16 @@ v4mapped_tests()
-=20
- 	# subflow v6-map-v4
+ 	chk_add_nr 1 1
+@@ -1618,7 +1665,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add "::ffff:10.0.3.2" flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add "::ffff:10.0.3.2" flags subflow
++	pm_nl_add_endpoint $ns2 "::ffff:10.0.3.2" flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow v6-map-v4" 1 1 1
 =20
- 	# signal address v6-map-v4
+@@ -1626,7 +1673,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add "::ffff:10.0.2.1" flags signal
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add "::ffff:10.0.2.1" flags signal
++	pm_nl_add_endpoint $ns1 "::ffff:10.0.2.1" flags signal
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal address v6-map-v4" 1 1 1
-@@ -1619,24 +1633,24 @@ v4mapped_tests()
-=20
- 	# no subflow IPv6 to v4 address
+ 	chk_add_nr 1 1
+@@ -1635,7 +1682,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:2::2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:2::2 flags subflow
++	pm_nl_add_endpoint $ns2 dead:beef:2::2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "no JOIN with diff families v4-v6" 0 0 0
 =20
- 	# no subflow IPv6 to v4 address even if v6 has a valid v4 at the end
+@@ -1643,7 +1690,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:2::10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:2::10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 dead:beef:2::10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "no JOIN with diff families v4-v6-2" 0 0 0
 =20
- 	# no subflow IPv4 to v6 address, no need to slow down too then
+@@ -1651,7 +1698,7 @@ v4mapped_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 dead:beef:1::1
  	chk_join_nr "no JOIN with diff families v6-v4" 0 0 0
-@@ -1646,8 +1660,8 @@ backup_tests()
- {
- 	# single subflow, backup
+ }
+@@ -1662,7 +1709,7 @@ backup_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow,backup
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow nobackup
  	chk_join_nr "single subflow, backup" 1 1 1
-@@ -1655,9 +1669,9 @@ backup_tests()
-=20
+ 	chk_prio_nr 0 1
+@@ -1670,7 +1717,7 @@ backup_tests()
  	# single address, backup
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns2 1 1
+ 	pm_nl_set_limits $ns1 0 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 1
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
  	chk_join_nr "single address, backup" 1 1 1
- 	chk_add_nr 1 1
-@@ -1668,8 +1682,8 @@ add_addr_ports_tests()
- {
- 	# signal address with port
+@@ -1684,17 +1731,17 @@ add_addr_ports_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal address with port" 1 1 1
-@@ -1678,8 +1692,8 @@ add_addr_ports_tests()
+ 	chk_add_nr 1 1 1
+=20
  	# subflow and signal with port
  	reset
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 1 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "subflow and signal with port" 2 2 2
-@@ -1687,9 +1701,9 @@ add_addr_ports_tests()
-=20
+ 	chk_add_nr 1 1 1
+@@ -1702,7 +1749,7 @@ add_addr_ports_tests()
  	# single address with port, remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns2 1 1
+ 	pm_nl_set_limits $ns1 0 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+ 	pm_nl_set_limits $ns2 1 1
  	run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
  	chk_join_nr "remove single address with port" 1 1 1
- 	chk_add_nr 1 1 1
-@@ -1697,9 +1711,9 @@ add_addr_ports_tests()
-=20
+@@ -1712,9 +1759,9 @@ add_addr_ports_tests()
  	# subflow and signal with port, remove
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns2 1 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+ 	pm_nl_set_limits $ns2 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
  	chk_join_nr "remove subflow and signal with port" 2 2 2
-@@ -1708,9 +1722,9 @@ add_addr_ports_tests()
-=20
+ 	chk_add_nr 1 1 1
+@@ -1723,10 +1770,10 @@ add_addr_ports_tests()
  	# subflows and signal with port, flush
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	pm_nl_set_limits $ns1 0 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 -8 -2 slow
-@@ -1720,20 +1734,20 @@ add_addr_ports_tests()
-=20
+ 	chk_join_nr "flush subflows and signal with port" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1735,8 +1782,8 @@ add_addr_ports_tests()
  	# multiple addresses with port
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns1 2 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10100
--	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns2 2 2
+ 	pm_nl_set_limits $ns1 2 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal port 10100
+ 	pm_nl_set_limits $ns2 2 2
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "multiple addresses with port" 2 2 2
- 	chk_add_nr 2 2 2
-=20
+@@ -1745,8 +1792,8 @@ add_addr_ports_tests()
  	# multiple addresses with ports
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns1 2 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10101
--	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns2 2 2
+ 	pm_nl_set_limits $ns1 2 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10101
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
++	pm_nl_add_endpoint $ns1 10.0.3.1 flags signal port 10101
+ 	pm_nl_set_limits $ns2 2 2
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "multiple addresses with ports" 2 2 2
- 	chk_add_nr 2 2 2
-@@ -1743,16 +1757,16 @@ syncookies_tests()
- {
- 	# single subflow, syncookies
+@@ -1759,7 +1806,7 @@ syncookies_tests()
  	reset_with_cookies
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow with syn cookies" 1 1 1
 =20
- 	# multiple subflows with syn cookies
+@@ -1767,8 +1814,8 @@ syncookies_tests()
  	reset_with_cookies
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1760,8 +1774,8 @@ syncookies_tests()
+ 	chk_join_nr "multiple subflows with syn cookies" 2 2 2
 =20
- 	# multiple subflows limited by server
+@@ -1776,8 +1823,8 @@ syncookies_tests()
  	reset_with_cookies
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1769,8 +1783,8 @@ syncookies_tests()
+ 	chk_join_nr "subflows limited by server w cookies" 2 1 1
 =20
- 	# test signal address with cookies
+@@ -1785,17 +1832,17 @@ syncookies_tests()
  	reset_with_cookies
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal address with syn cookies" 1 1 1
-@@ -1779,8 +1793,8 @@ syncookies_tests()
+ 	chk_add_nr 1 1
+=20
  	# test cookie with subflow and signal
  	reset_with_cookies
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 1 2
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "subflow and signal w cookies" 2 2 2
-@@ -1788,9 +1802,9 @@ syncookies_tests()
-=20
+ 	chk_add_nr 1 1
+@@ -1803,10 +1850,10 @@ syncookies_tests()
  	# accept and use add_addr with additional subflows
  	reset_with_cookies
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+	pm_nl_set_limits $ns1 0 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1802,29 +1816,29 @@ checksum_tests()
- {
- 	# checksum test 0 0
- 	reset_with_checksum 0 0
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_csum_nr "checksum test 0 0"
-=20
- 	# checksum test 1 1
- 	reset_with_checksum 1 1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_csum_nr "checksum test 1 1"
-=20
- 	# checksum test 0 1
- 	reset_with_checksum 0 1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_csum_nr "checksum test 0 1"
-=20
- 	# checksum test 1 0
- 	reset_with_checksum 1 0
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_csum_nr "checksum test 1 0"
- }
-@@ -1833,16 +1847,16 @@ deny_join_id0_tests()
- {
- 	# subflow allow join id0 ns1
+ 	chk_join_nr "subflows and signal w. cookies" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1849,7 +1896,7 @@ deny_join_id0_tests()
  	reset_with_allow_join_id0 1 0
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 1 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow allow join id0 ns1" 1 1 1
 =20
- 	# subflow allow join id0 ns2
+@@ -1857,7 +1904,7 @@ deny_join_id0_tests()
  	reset_with_allow_join_id0 0 1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 1 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "single subflow allow join id0 ns2" 0 0 0
-@@ -1850,8 +1864,8 @@ deny_join_id0_tests()
- 	# signal address allow join id0 ns1
- 	# ADD_ADDRs are not affected by allow_join_id0 value.
+=20
+@@ -1866,7 +1913,7 @@ deny_join_id0_tests()
  	reset_with_allow_join_id0 1 0
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 1 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal address allow join id0 ns1" 1 1 1
-@@ -1860,8 +1874,8 @@ deny_join_id0_tests()
- 	# signal address allow join id0 ns2
- 	# ADD_ADDRs are not affected by allow_join_id0 value.
+ 	chk_add_nr 1 1
+@@ -1876,7 +1923,7 @@ deny_join_id0_tests()
  	reset_with_allow_join_id0 0 1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 1 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "signal address allow join id0 ns2" 1 1 1
-@@ -1869,8 +1883,8 @@ deny_join_id0_tests()
-=20
- 	# subflow and address allow join id0 ns1
+ 	chk_add_nr 1 1
+@@ -1885,8 +1932,8 @@ deny_join_id0_tests()
  	reset_with_allow_join_id0 1 0
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns1 2 2
-+	pm_nl_set_limits $ns2 2 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 2 2
+ 	pm_nl_set_limits $ns2 2 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1878,8 +1892,8 @@ deny_join_id0_tests()
+ 	chk_join_nr "subflow and address allow join id0 1" 2 2 2
 =20
- 	# subflow and address allow join id0 ns2
+@@ -1894,8 +1941,8 @@ deny_join_id0_tests()
  	reset_with_allow_join_id0 0 1
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	pm_nl_set_limits $ns1 2 2
-+	pm_nl_set_limits $ns2 2 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 2 2
+ 	pm_nl_set_limits $ns2 2 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
-@@ -1892,8 +1906,8 @@ fullmesh_tests()
- 	# 2 fullmesh addrs in ns2, added before the connection,
- 	# 1 non-fullmesh addr in ns1, added during the connection.
+ 	chk_join_nr "subflow and address allow join id0 2" 1 1 1
+ }
+@@ -1908,8 +1955,8 @@ fullmesh_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 4
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 4
-+	pm_nl_set_limits $ns1 0 4
-+	pm_nl_set_limits $ns2 1 4
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,fullmesh
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
+ 	pm_nl_set_limits $ns1 0 4
+ 	pm_nl_set_limits $ns2 1 4
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,fullmesh
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,fullmesh
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow,fullmesh
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow,fullmesh
  	run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
-@@ -1904,8 +1918,8 @@ fullmesh_tests()
- 	# 1 non-fullmesh addr in ns1, added before the connection,
- 	# 1 fullmesh addr in ns2, added during the connection.
+ 	chk_join_nr "fullmesh test 2x1" 4 4 4
+ 	chk_add_nr 1 1
+@@ -1920,7 +1967,7 @@ fullmesh_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 3
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+	pm_nl_set_limits $ns1 1 3
-+	pm_nl_set_limits $ns2 1 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 1 3
+ 	pm_nl_set_limits $ns2 1 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1 0 0 fullmesh_1 slow
  	chk_join_nr "fullmesh test 1x1" 3 3 3
-@@ -1915,8 +1929,8 @@ fullmesh_tests()
- 	# 1 non-fullmesh addr in ns1, added before the connection,
- 	# 2 fullmesh addrs in ns2, added during the connection.
+ 	chk_add_nr 1 1
+@@ -1931,7 +1978,7 @@ fullmesh_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 5
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 5
-+	pm_nl_set_limits $ns1 2 5
-+	pm_nl_set_limits $ns2 1 5
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 2 5
+ 	pm_nl_set_limits $ns2 1 5
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1 0 0 fullmesh_2 slow
  	chk_join_nr "fullmesh test 1x2" 5 5 5
-@@ -1927,8 +1941,8 @@ fullmesh_tests()
- 	# 2 fullmesh addrs in ns2, added during the connection,
- 	# limit max_subflows to 4.
+ 	chk_add_nr 1 1
+@@ -1943,7 +1990,7 @@ fullmesh_tests()
  	reset
--	ip netns exec $ns1 ./pm_nl_ctl limits 2 4
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 4
-+	pm_nl_set_limits $ns1 2 4
-+	pm_nl_set_limits $ns2 1 4
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 2 4
+ 	pm_nl_set_limits $ns2 1 4
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1 0 0 fullmesh_2 slow
  	chk_join_nr "fullmesh test 1x2, limited" 4 4 4
-@@ -1940,8 +1954,8 @@ userspace_tests()
- 	# userspace pm type prevents add_addr
- 	reset
+ 	chk_add_nr 1 1
+@@ -1956,7 +2003,7 @@ userspace_tests()
  	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "userspace pm type prevents add_addr" 0 0 0
-@@ -1950,8 +1964,8 @@ userspace_tests()
- 	# userspace pm type echoes add_addr
- 	reset
+ 	chk_add_nr 0 0
+@@ -1966,7 +2013,7 @@ userspace_tests()
  	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=3D1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	pm_nl_set_limits $ns1 0 2
+ 	pm_nl_set_limits $ns2 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "userspace pm type echoes add_addr" 0 0 0
-@@ -1960,8 +1974,8 @@ userspace_tests()
- 	# userspace pm type rejects join
- 	reset
+ 	chk_add_nr 1 1
+@@ -1976,7 +2023,7 @@ userspace_tests()
  	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 1 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "userspace pm type rejects join" 1 1 0
-@@ -1969,8 +1983,8 @@ userspace_tests()
- 	# userspace pm type does not send join
- 	reset
+=20
+@@ -1985,7 +2032,7 @@ userspace_tests()
  	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=3D1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 1 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1
  	chk_join_nr "userspace pm type does not send join" 0 0 0
-@@ -1978,8 +1992,8 @@ userspace_tests()
- 	# userspace pm type prevents mp_prio
- 	reset
+=20
+@@ -1994,7 +2041,7 @@ userspace_tests()
  	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 1 1
+ 	pm_nl_set_limits $ns2 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
  	chk_join_nr "userspace pm type prevents mp_prio" 1 1 0
-@@ -1989,8 +2003,8 @@ userspace_tests()
- 	reset
- 	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=3D1
+ 	chk_prio_nr 0 0
+@@ -2005,7 +2052,7 @@ userspace_tests()
  	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=3D1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ 	pm_nl_set_limits $ns1 0 1
+ 	pm_nl_set_limits $ns2 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
  	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
  	chk_join_nr "userspace pm type prevents rm_addr" 0 0 0
+ 	chk_rm_nr 0 0
 --=20
 2.31.1
 
