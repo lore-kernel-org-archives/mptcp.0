@@ -1,45 +1,44 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D932CA4
-	for <mptcp@lists.linux.dev>; Thu,  6 Jan 2022 22:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27752168
+	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641506806; x=1673042806;
+  t=1641514848; x=1673050848;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rdHOfvTm/dAwcmwRlIfBvl2VIjEbWqaZR3GfUuomywo=;
-  b=njikCixZ2Rz6zwmOUpZTeZUwsNTbBvaZlJA7zp5JAfV//KfOxessyMq5
-   iQq0H2kWQ0OLTmpTFScUr+Wg/77Gkc16S7Yr9nhh9ou9DXamuS2PW+bhs
-   xwvKfWeXw5DR4VGzsISVyra+WfqFU3CnLT50Q3cSXM9K278nja/Ll9wSx
-   R36sLB/eTnSdo8GD/xa4ptBOB2t/nv5mZeOP80lYcxhfmYMbuG0e6+HFC
-   q57bpbLRZVXxcANB2KEAe2OWEDW/RhB+x3ZGZuFlAccT8SsresnzM5onX
-   9cnDDZ1lY321Ahls4WH1/lznqQI1LgVkNK+hM7CkHdyO3I6Jqy3DvO897
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="240303710"
-X-IronPort-AV: E=Sophos;i="5.88,267,1635231600"; 
-   d="scan'208";a="240303710"
+  bh=Wc56x3z89MoqMhqYjlsOIeQJY/RWfoCH4DjPm2rYDaM=;
+  b=WsMIzPyzxgfZ9Jkzm2RqCwsnZmpXfl1YDdcV+/7qRNukq6nGiJgRxMDP
+   ao+Ku1AqlPyXISd4vvHZ0ItqxrBEUUkzVDapU2yStK5LA5j9ey7gLb+YU
+   mcGWQ92jqV9ALUqnQy/7P2aI8+zGX5wb/ic54KkSFlnWIdtwXmrL9g+Me
+   jQa5sWg8JM81DyaiLqNEtawktt9CdbOpFwBlJRYo0aKv8lYxS31Vla+L0
+   1PU1dO/Qokhq3QEVMGMQooEtMORDk4RB1n/OT01U7cmKMuqFvsqXwzGf6
+   1FZVDN2CVs+nrsetSwK8NiNJ521O88hhOFkqGe68/j3EBBguSNVlCWoox
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111019"
+X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
+   d="scan'208";a="329111019"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 14:06:44 -0800
-X-IronPort-AV: E=Sophos;i="5.88,267,1635231600"; 
-   d="scan'208";a="618479818"
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:34 -0800
+X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
+   d="scan'208";a="618508492"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.94.200])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 14:06:43 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:33 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
+Cc: Paolo Abeni <pabeni@redhat.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	pabeni@redhat.com,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 2/3] mptcp: fix a DSS option writing error
-Date: Thu,  6 Jan 2022 14:06:37 -0800
-Message-Id: <20220106220638.305287-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 01/13] mptcp: keep snd_una updated for fallback socket
+Date: Thu,  6 Jan 2022 16:20:14 -0800
+Message-Id: <20220107002026.375427-2-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220106220638.305287-1-mathew.j.martineau@linux.intel.com>
-References: <20220106220638.305287-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
+References: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,34 +47,33 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliang.tang@suse.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-'ptr += 1;' was omitted in the original code.
+After shutdown, for fallback MPTCP sockets, we always have
 
-If the DSS is the last option -- which is what we have most of the
-time -- that's not an issue. But it is if we need to send something else
-after like a RM_ADDR or an MP_PRIO.
+write_seq == snd_una+1
 
-Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+The above will foul OUTQ ioctl(). Keep snd_una in sync with
+write_seq even after shutdown.
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/options.c | 1 +
+ net/mptcp/protocol.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 96c6efdd48bc..6661b1d6520f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1319,6 +1319,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 				put_unaligned_be32(mpext->data_len << 16 |
- 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
- 			}
-+			ptr += 1;
- 		}
- 	} else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
- 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index df5a0cf431c1..f6fc0f0f66f0 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2666,6 +2666,7 @@ static void __mptcp_check_send_data_fin(struct sock *sk)
+ 	 * state now
+ 	 */
+ 	if (__mptcp_check_fallback(msk)) {
++		WRITE_ONCE(msk->snd_una, msk->write_seq);
+ 		if ((1 << sk->sk_state) & (TCPF_CLOSING | TCPF_LAST_ACK)) {
+ 			inet_sk_state_store(sk, TCP_CLOSE);
+ 			mptcp_close_wake_up(sk);
 -- 
 2.34.1
 
