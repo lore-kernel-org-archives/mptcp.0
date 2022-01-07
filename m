@@ -1,45 +1,41 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB262C9D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56122CAA
 	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1641514849; x=1673050849;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=UtZL9lW6Z7vfWdyQtIYFyHhpXBqpKoVl0bB1B2rjZSc=;
-  b=QhZBFbrIyBWibl1Rt6EsJkRTONeHM1IykGUkIzc/R4uEt2rBZfNFA+R7
-   8l9ji9KRs53k3jE7h9ob5NNDzvAy3XOoAslCq8tracbA4lkZiAFGvR5JY
-   NUIGhiWPqgiLkPa68IAVl4DFYc2rgxihWe1gVbbPpWn6YGS9ENQw8ePtU
-   PtijtLzr9J6xFqimcjiHY0UJnBXae3rrSrf3Kfu+359XL3ndE96W0pYBN
-   usUYcICH4ZHtUNeQWukFE+r9+hdsO4k7a/f3LSDWhkv8HyykBHL5t0/Sd
-   7BMSRCMTo0PfQ4FxHoaongVUnlo8uMefglmN80b4T/v8ObsTencJjG1rJ
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XS9HOJad0xzPcWJfD8W7uMV6wOTUVS5GlNTngup38us=;
+  b=b1xvyn+Yp7C+GCpNUR1XX+uwKL6r6enIR1GwQnWRNcs/Ln0PpKnJ8jmS
+   K6+YBMPztxRoWQAFwLVpGat/stWJgMcN9tcQEWRUQPlvh7Dz6ceAShPcq
+   N3HtmNc+g8G3fFDZhOjS8F0vLxBMztwM+raEVqhsdZLhM77Ls8lnf1Iss
+   GBxdevQ3hXOhKVczApzBFWEhT/IwZcotx+CZhPjsNAvEU5H0/WjDhzvTj
+   DKR6ZHKknXr6VI6mTXPr6SQr9JT2uKHYpCtB/sXyksP0ogZLIMydaEGxv
+   FZGlJYdqWeEPpZ2mDrq/LXR4/D+wLIG4e+JFN0PQMuYUE96Ev6KyL5kx3
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111022"
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111017"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="329111022"
+   d="scan'208";a="329111017"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:34 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:33 -0800
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="618508494"
+   d="scan'208";a="618508489"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.94.200])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:34 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:33 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Geliang Tang <geliang.tang@suse.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 02/13] mptcp: implement fastclose xmit path
-Date: Thu,  6 Jan 2022 16:20:15 -0800
-Message-Id: <20220107002026.375427-3-mathew.j.martineau@linux.intel.com>
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 00/13] mptcp: New features and cleanup
+Date: Thu,  6 Jan 2022 16:20:13 -0800
+Message-Id: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
-References: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,129 +44,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+These patches have been tested in the MPTCP tree for a longer than usual
+time (thanks to holiday schedules), and are ready for the net-next
+branch. Changes include feature updates, small fixes, refactoring, and
+some selftest changes.
 
-Allow the MPTCP xmit path to add MP_FASTCLOSE suboption
-on RST egress packets.
+Patch 1 fixes an OUTQ ioctl issue with TCP fallback sockets.
 
-Additionally reorder related options writing to reduce
-the number of conditionals required in the fast path.
+Patches 2, 3, and 6 add support of the MPTCP fastclose option (quick
+shutdown of the full MPTCP connection, similar to TCP RST in regular
+TCP), and a related self test.
 
-Co-developed-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/options.c  | 57 ++++++++++++++++++++++++++++++++++----------
- net/mptcp/protocol.h |  1 +
- 2 files changed, 46 insertions(+), 12 deletions(-)
+Patch 4 cleans up some accept and poll code that is no longer needed
+after the fastclose changes.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index fe98e4f475ba..46d35a235f35 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -768,6 +768,28 @@ static noinline bool mptcp_established_options_rst(struct sock *sk, struct sk_bu
- 	return true;
- }
- 
-+static bool mptcp_established_options_fastclose(struct sock *sk,
-+						unsigned int *size,
-+						unsigned int remaining,
-+						struct mptcp_out_options *opts)
-+{
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-+	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-+
-+	if (likely(!subflow->send_fastclose))
-+		return false;
-+
-+	if (remaining < TCPOLEN_MPTCP_FASTCLOSE)
-+		return false;
-+
-+	*size = TCPOLEN_MPTCP_FASTCLOSE;
-+	opts->suboptions |= OPTION_MPTCP_FASTCLOSE;
-+	opts->rcvr_key = msk->remote_key;
-+
-+	pr_debug("FASTCLOSE key=%llu", opts->rcvr_key);
-+	return true;
-+}
-+
- static bool mptcp_established_options_mp_fail(struct sock *sk,
- 					      unsigned int *size,
- 					      unsigned int remaining,
-@@ -806,10 +828,12 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 		return false;
- 
- 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
--		if (mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
-+		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
-+		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
- 			*size += opt_size;
- 			remaining -= opt_size;
- 		}
-+		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
- 		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
- 			*size += opt_size;
- 			remaining -= opt_size;
-@@ -1251,17 +1275,8 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 		ptr += 2;
- 	}
- 
--	/* RST is mutually exclusive with everything else */
--	if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
--		*ptr++ = mptcp_option(MPTCPOPT_RST,
--				      TCPOLEN_MPTCP_RST,
--				      opts->reset_transient,
--				      opts->reset_reason);
--		return;
--	}
--
--	/* DSS, MPC, MPJ and ADD_ADDR are mutually exclusive, see
--	 * mptcp_established_options*()
-+	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
-+	 * see mptcp_established_options*()
- 	 */
- 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
- 		struct mptcp_ext *mpext = &opts->ext_copy;
-@@ -1447,6 +1462,24 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 				ptr += 1;
- 			}
- 		}
-+	} else if (unlikely(OPTION_MPTCP_FASTCLOSE & opts->suboptions)) {
-+		/* FASTCLOSE is mutually exclusive with others except RST */
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
-+				      TCPOLEN_MPTCP_FASTCLOSE,
-+				      0, 0);
-+		put_unaligned_be64(opts->rcvr_key, ptr);
-+		ptr += 2;
-+
-+		if (OPTION_MPTCP_RST & opts->suboptions)
-+			goto mp_rst;
-+		return;
-+	} else if (unlikely(OPTION_MPTCP_RST & opts->suboptions)) {
-+mp_rst:
-+		*ptr++ = mptcp_option(MPTCPOPT_RST,
-+				      TCPOLEN_MPTCP_RST,
-+				      opts->reset_transient,
-+				      opts->reset_reason);
-+		return;
- 	}
- 
- 	if (OPTION_MPTCP_PRIO & opts->suboptions) {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0486c9f5b38b..f177936ff67d 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -423,6 +423,7 @@ struct mptcp_subflow_context {
- 		backup : 1,
- 		send_mp_prio : 1,
- 		send_mp_fail : 1,
-+		send_fastclose : 1,
- 		rx_eof : 1,
- 		can_ack : 1,        /* only after processing the remote a key */
- 		disposable : 1,	    /* ctx can be free at ulp release time */
+Patch 5 add userspace disconnect using AF_UNSPEC, which is used when
+testing fastclose and makes the MPTCP socket's handling of AF_UNSPEC in
+connect() more TCP-like.
+
+Patches 7-11 refactor subflow creation to make better use of multiple
+local endpoints and to better handle individual connection failures when
+creating multiple subflows. Includes self test updates.
+
+Patch 12 cleans up the way subflows are added to the MPTCP connection
+list, eliminating the need for calls throughout the MPTCP code that had
+to check the intermediate "join list" for entries to shift over to the
+main "connection list".
+
+Patch 13 refactors the MPTCP release_cb flags to use separate storage
+for values only accessed with the socket lock held (no atomic ops
+needed), and for values that need atomic operations.
+
+
+Paolo Abeni (13):
+  mptcp: keep snd_una updated for fallback socket
+  mptcp: implement fastclose xmit path
+  mptcp: full disconnect implementation
+  mptcp: cleanup accept and poll
+  mptcp: implement support for user-space disconnect
+  selftests: mptcp: add disconnect tests
+  mptcp: fix per socket endpoint accounting
+  mptcp: clean-up MPJ option writing
+  mptcp: keep track of local endpoint still available for each msk
+  mptcp: do not block subflows creation on errors
+  selftests: mptcp: add tests for subflow creation failure
+  mptcp: cleanup MPJ subflow list handling
+  mptcp: avoid atomic bit manipulation when possible
+
+ net/mptcp/options.c                           | 101 ++++--
+ net/mptcp/pm.c                                |  34 +-
+ net/mptcp/pm_netlink.c                        | 197 ++++++-----
+ net/mptcp/protocol.c                          | 307 ++++++++++--------
+ net/mptcp/protocol.h                          |  63 ++--
+ net/mptcp/sockopt.c                           |  24 +-
+ net/mptcp/subflow.c                           |  10 +-
+ net/mptcp/token.c                             |   1 +
+ tools/testing/selftests/net/mptcp/config      |   1 +
+ .../selftests/net/mptcp/mptcp_connect.c       | 148 +++++++--
+ .../selftests/net/mptcp/mptcp_connect.sh      |  39 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  83 ++++-
+ 12 files changed, 683 insertions(+), 325 deletions(-)
+
+
+base-commit: 710ad98c363a66a0cd8526465426c5c5f8377ee0
 -- 
 2.34.1
 
