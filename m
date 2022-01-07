@@ -1,30 +1,30 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4632D2CAA
-	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D702CAF
+	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641514851; x=1673050851;
+  t=1641514852; x=1673050852;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nEUaOYMjQqfID6wwgBBxgtsFSt7zKq2ozbBAjHuOQhk=;
-  b=bF3RcCjOu5jQO21btATmGbLANLF8seBdUPPpzf/2mTphcqJeAdXiNimu
-   LVzHs4Owohic9qptyt3itdpdTJSr1xXo9KIPBTZnA0EFoQeo07u63V4L/
-   xctXkuEz5q5+9EWE8keQoSIzKIxBSc9A1P8hBnbppQqx/G/xEcPW+rNW7
-   53NPp90SPuCeU8qhxtdIBXDPJuTxuHJdE6mhJckxdutmRs7NJMZz3zLKg
-   NF+9jqlHrC4g4/9elhke+wfz7KVZ4+1pT0TcmCDKV9xNv+p60aAcd803M
-   EwVJ4tqfCp3z682W++UTG+QL21O9Dxp/RtnyJvjcg4OpD+O4yrTEGDvHQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111028"
+  bh=SmK4eTa7/IDy9IX+vrPbcpaVTyIuoZLG19V1MwDuTCw=;
+  b=F0fbHVxadQ3VinwM1jFc6fHrUkYdpeOYSAUf9lhiPR/CNfg4cQideSpH
+   iX/ljchU6BBLT05nIdX5YORqNxFXEjLzFNHluPNd9XLvR0dgO19zu21nE
+   ulLH001iqU+6TlTPOcEeStLk0U5AQqdSx9xhRWG+ZimgRhbqD1d5LVhX8
+   sHHDuXz2139pzzl9sc34fjcfqFIQZ4Pvn4U7IQ+3QU5pLxzY1y6oeqicH
+   ufcSucVcZ/4xxhhKrPJhpx546RJiKlbDDEyL8UcHP31h5RLvKOM1kKgOK
+   v0NJr3DYb+C+Wo5jCrVZuKfozYxF/pr2hE0dP0U/utkQWsaJvmW6cs4tN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111041"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="329111028"
+   d="scan'208";a="329111041"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:35 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:36 -0800
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="618508498"
+   d="scan'208";a="618508508"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.94.200])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:34 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:36 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Paolo Abeni <pabeni@redhat.com>,
@@ -33,9 +33,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 04/13] mptcp: cleanup accept and poll
-Date: Thu,  6 Jan 2022 16:20:17 -0800
-Message-Id: <20220107002026.375427-5-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 08/13] mptcp: clean-up MPJ option writing
+Date: Thu,  6 Jan 2022 16:20:21 -0800
+Message-Id: <20220107002026.375427-9-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
 References: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
@@ -49,99 +49,73 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-After the previous patch,  msk->subflow will never be deleted during
-the whole msk lifetime. We don't need anymore to acquire references to
-it in mptcp_stream_accept() and we can use the listener subflow accept
-queue to simplify mptcp_poll() for listener socket.
+Check for all MPJ variant at once, this reduces the number
+of conditionals traversed on average and will simplify the
+next patch.
 
-Overall this removes a lock pair and 4 more atomic operations per
-accept().
+No functional change intended.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/protocol.c | 25 +++++++------------------
- net/mptcp/protocol.h |  1 -
- net/mptcp/subflow.c  |  1 -
- 3 files changed, 7 insertions(+), 20 deletions(-)
+ net/mptcp/options.c | 44 +++++++++++++++++++++++---------------------
+ 1 file changed, 23 insertions(+), 21 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 83f6d6c3e3eb..628cd60c9d0f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3493,17 +3493,9 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 46d35a235f35..38e34a1fb2dd 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1385,27 +1385,29 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
  
- 	pr_debug("msk=%p", msk);
- 
--	lock_sock(sock->sk);
--	if (sock->sk->sk_state != TCP_LISTEN)
--		goto unlock_fail;
--
- 	ssock = __mptcp_nmpc_socket(msk);
- 	if (!ssock)
--		goto unlock_fail;
--
--	clear_bit(MPTCP_DATA_READY, &msk->flags);
--	sock_hold(ssock->sk);
--	release_sock(sock->sk);
-+		return -EINVAL;
- 
- 	err = ssock->ops->accept(sock, newsock, flags, kern);
- 	if (err == 0 && !mptcp_is_tcpsk(newsock->sk)) {
-@@ -3543,14 +3535,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 		release_sock(newsk);
- 	}
- 
--	if (inet_csk_listen_poll(ssock->sk))
--		set_bit(MPTCP_DATA_READY, &msk->flags);
--	sock_put(ssock->sk);
- 	return err;
--
--unlock_fail:
--	release_sock(sock->sk);
--	return -EINVAL;
- }
- 
- static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
-@@ -3596,8 +3581,12 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 
- 	state = inet_sk_state_load(sk);
- 	pr_debug("msk=%p state=%d flags=%lx", msk, state, msk->flags);
--	if (state == TCP_LISTEN)
--		return test_bit(MPTCP_DATA_READY, &msk->flags) ? EPOLLIN | EPOLLRDNORM : 0;
-+	if (state == TCP_LISTEN) {
-+		if (WARN_ON_ONCE(!msk->subflow || !msk->subflow->sk))
-+			return 0;
-+
-+		return inet_csk_listen_poll(msk->subflow->sk);
-+	}
- 
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
- 		mask |= mptcp_check_readable(msk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1a4ca5a202c8..386d1a98ff1d 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -111,7 +111,6 @@
- #define MPTCP_RST_TRANSIENT	BIT(0)
- 
- /* MPTCP socket flags */
--#define MPTCP_DATA_READY	0
- #define MPTCP_NOSPACE		1
- #define MPTCP_WORK_RTX		2
- #define MPTCP_WORK_EOF		3
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 24bc9d5e87be..d861307f7efe 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1293,7 +1293,6 @@ static void subflow_data_ready(struct sock *sk)
- 		if (reqsk_queue_empty(&inet_csk(sk)->icsk_accept_queue))
- 			return;
- 
--		set_bit(MPTCP_DATA_READY, &msk->flags);
- 		parent->sk_data_ready(parent);
- 		return;
- 	}
+ 		/* MPC is additionally mutually exclusive with MP_PRIO */
+ 		goto mp_capable_done;
+-	} else if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
+-		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
+-				      TCPOLEN_MPTCP_MPJ_SYN,
+-				      opts->backup, opts->join_id);
+-		put_unaligned_be32(opts->token, ptr);
+-		ptr += 1;
+-		put_unaligned_be32(opts->nonce, ptr);
+-		ptr += 1;
+-	} else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
+-		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
+-				      TCPOLEN_MPTCP_MPJ_SYNACK,
+-				      opts->backup, opts->join_id);
+-		put_unaligned_be64(opts->thmac, ptr);
+-		ptr += 2;
+-		put_unaligned_be32(opts->nonce, ptr);
+-		ptr += 1;
+-	} else if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
+-		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
+-				      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
+-		memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
+-		ptr += 5;
++	} else if (OPTIONS_MPTCP_MPJ & opts->suboptions) {
++		if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
++			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
++					      TCPOLEN_MPTCP_MPJ_SYN,
++					      opts->backup, opts->join_id);
++			put_unaligned_be32(opts->token, ptr);
++			ptr += 1;
++			put_unaligned_be32(opts->nonce, ptr);
++			ptr += 1;
++		} else if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
++			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
++					      TCPOLEN_MPTCP_MPJ_SYNACK,
++					      opts->backup, opts->join_id);
++			put_unaligned_be64(opts->thmac, ptr);
++			ptr += 2;
++			put_unaligned_be32(opts->nonce, ptr);
++			ptr += 1;
++		} else {
++			*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
++					      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
++			memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
++			ptr += 5;
++		}
+ 	} else if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+ 		u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
+ 		u8 echo = MPTCP_ADDR_ECHO;
 -- 
 2.34.1
 
