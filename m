@@ -1,100 +1,88 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC36168
-	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 11:03:02 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id m21so20907553edc.0
-        for <mptcp@lists.linux.dev>; Fri, 07 Jan 2022 03:03:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=/V4fpOsAJYUA6mEOi8ZjjeRM2Egwg2KmD11fE5oD6Zs=;
-        b=wm3w0pDQUfHy6OAlJbkBTPr5Yx9E2VCFkFRgww/DDjfa9HZZ6J9fmiuYPWq07T2/pB
-         7SVbtrLhGQfUIg4zdiJY+P1MiNahdJSyOT5zcEos5WXh3OMHkIz4dwn4xf35uO94dqGn
-         YgVn6stLbUJXEuQ6uqwdjfbSOUJOLcQ3t3QsmDVJzlzijngonSL61pSW4GI9iDVtI4W9
-         ojxHfJpZK4UyDcc/DA6OGCG2IeQqFxJ53i4xBP005pIdsXvz9u5Z2oUDh7tSpKxPKeea
-         PhL3C3rsJ8jw0aGSISaTeNNqmTrQM0JfrflaA1kvwCKOTyK1u7r6PkmdADyCfkwotve4
-         33Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=/V4fpOsAJYUA6mEOi8ZjjeRM2Egwg2KmD11fE5oD6Zs=;
-        b=Wc6Mnf4IjOUz/Tel/dIcpNDXrEVgrr/KSaad19H9kXZcGIjFk6OW9G/w/frp9dz9od
-         jgam/pQ6ldrYGJjLCFGBKpHptFFsH6m0tDNsxUYG3g+YV7IXSkLGYwcZgqaEvzvy7MMx
-         AJnrML4r02uAgDhccIg8ItX2nfW3McKlI0v35accFCylNsaXmRlh+ZPRp9ZQjucy88w5
-         qL9gdeBKupHaTUopsyQivs5BuoWourYReSObXxFuueYNHswhazjPH0fGiZWt6yOEOm0x
-         HN35GeCUJRe1qwi+0wv24Rl0XpEFy5DbtVZrsH1N2TaX4+ec6DHPyFne2jL1rVh+V8mD
-         OhwA==
-X-Gm-Message-State: AOAM531VqGEYWesQGch5rX458EOCautEusxYeSluI7feyIh47z4Pabqn
-	+sLJTWbEWRi6NL9jAtt9qHbnQlNXhR++Q0iU
-X-Google-Smtp-Source: ABdhPJyBlq1QCQ2GCFV46mVFROiajlaqhFEnKdrM9YDMuh8cXabQ3sIOnr/UWxYgZjk69JiDPrE4NA==
-X-Received: by 2002:a17:907:6ea4:: with SMTP id sh36mr49781674ejc.482.1641553381062;
-        Fri, 07 Jan 2022 03:03:01 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:5952:d10f:7cfd:375e? ([2a02:578:8593:1200:5952:d10f:7cfd:375e])
-        by smtp.gmail.com with ESMTPSA id dd6sm1297165ejc.212.2022.01.07.03.03.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jan 2022 03:03:00 -0800 (PST)
-Message-ID: <9fde3240-18c4-ceb5-903d-64c532a87992@tessares.net>
-Date: Fri, 7 Jan 2022 12:03:00 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1785F168
+	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 11:30:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BDDD4C36AEF;
+	Fri,  7 Jan 2022 11:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1641555015;
+	bh=/NN+NXtxMk5htp7s04TEB6JA93aeFS5I02JHoZAeLf0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=XThIoenY8URmNVimztVUoyo5+mwLqyZlCI6dp+rHr4Z9tpLoH6w5jbi7/Wr9ZW+EF
+	 QfrZVVjndnfzJYac9G4bIOUn550rZDRnIjgbFH/mEE1uVODFmEm58RcGgdXCzhCwUM
+	 cW/2VK4G+18sdGnzTBBvY+E5SDK+rmb4suzNNYGrH622NMS/C5NGXAGDpBzTYNMlRN
+	 YzEjfin9q3IX6Q/hJ9FI0+QXc67Ecffi36ww14HKpNietu2vsUeHf6et1GRSHM46OK
+	 FtfUlBER0MD701HhJVGIJ77yQ8APJkFyLE+z/RrJJAf5WVney4Lk3ij/wtOz1sxO9X
+	 pnZuj20WdiG/w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 998E0F79401;
+	Fri,  7 Jan 2022 11:30:15 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: more stable join
- tests-cases"
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <613b986defe37faa7298095b364d9c81d6899664.1641549011.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <613b986defe37faa7298095b364d9c81d6899664.1641549011.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 00/13] mptcp: New features and cleanup
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <164155501560.4388.12709862178008288896.git-patchwork-notify@kernel.org>
+Date: Fri, 07 Jan 2022 11:30:15 +0000
+References: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hi Geliang,
+Hello:
 
-On 07/01/2022 10:51, Geliang Tang wrote:
-> IPv6 removing test failed on my test every time, this patch fixed it.
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Thank you for looking at that!
+On Thu,  6 Jan 2022 16:20:13 -0800 you wrote:
+> These patches have been tested in the MPTCP tree for a longer than usual
+> time (thanks to holiday schedules), and are ready for the net-next
+> branch. Changes include feature updates, small fixes, refactoring, and
+> some selftest changes.
+> 
+> Patch 1 fixes an OUTQ ioctl issue with TCP fallback sockets.
+> 
+> [...]
 
-The public CI has many similar errors and maybe (hard to say) more with
-your patch, e.g.:
+Here is the summary with links:
+  - [net-next,01/13] mptcp: keep snd_una updated for fallback socket
+    https://git.kernel.org/netdev/net-next/c/58cd405b83b3
+  - [net-next,02/13] mptcp: implement fastclose xmit path
+    https://git.kernel.org/netdev/net-next/c/f284c0c77321
+  - [net-next,03/13] mptcp: full disconnect implementation
+    https://git.kernel.org/netdev/net-next/c/b29fcfb54cd7
+  - [net-next,04/13] mptcp: cleanup accept and poll
+    https://git.kernel.org/netdev/net-next/c/71ba088ce0aa
+  - [net-next,05/13] mptcp: implement support for user-space disconnect
+    https://git.kernel.org/netdev/net-next/c/3d1d6d66e156
+  - [net-next,06/13] selftests: mptcp: add disconnect tests
+    https://git.kernel.org/netdev/net-next/c/05be5e273c84
+  - [net-next,07/13] mptcp: fix per socket endpoint accounting
+    https://git.kernel.org/netdev/net-next/c/f7d6a237d742
+  - [net-next,08/13] mptcp: clean-up MPJ option writing
+    https://git.kernel.org/netdev/net-next/c/71b077e48377
+  - [net-next,09/13] mptcp: keep track of local endpoint still available for each msk
+    https://git.kernel.org/netdev/net-next/c/86e39e04482b
+  - [net-next,10/13] mptcp: do not block subflows creation on errors
+    https://git.kernel.org/netdev/net-next/c/a88c9e496937
+  - [net-next,11/13] selftests: mptcp: add tests for subflow creation failure
+    https://git.kernel.org/netdev/net-next/c/46e967d187ed
+  - [net-next,12/13] mptcp: cleanup MPJ subflow list handling
+    https://git.kernel.org/netdev/net-next/c/3e5014909b56
+  - [net-next,13/13] mptcp: avoid atomic bit manipulation when possible
+    https://git.kernel.org/netdev/net-next/c/e9d09baca676
 
-https://api.cirrus-ci.com/v1/artifact/task/5889173428109312/summary/summary.txt
-
-
-> Our CI did some validations and here is its report:
->
-> - KVM Validation: normal:
->   - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
->   - Task: https://cirrus-ci.com/task/5889173428109312
->   - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5889173428109312/summary/summary.txt
->
-> - KVM Validation: debug:
->   - Unstable: 2 failed test(s): selftest_diag selftest_mptcp_join 🔴:
->   - Task: https://cirrus-ci.com/task/5326223474688000
->   - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5326223474688000/summary/summary.txt
->
-> Initiator: Patchew Applier
-> Commits:
-https://github.com/multipath-tcp/mptcp_net-next/commits/3b5258004128
-
-Could it be linked?
-
-Should we eventually wait before and after having emitted the del
-command with different counters?
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
