@@ -1,30 +1,30 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3672C9D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4632D2CAA
 	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1641514851; x=1673050851;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pl68bDSpC4qdweZRyObhPBra8XJEPL/rbRE6WRFpyfw=;
-  b=ijzq6LcAQ8jFnZ1dVOao6nM75siC/av+sP6Fl+fmfUVZoIDeQ9mgAnMf
-   Ho88sQvtRXlloLPfPJY4tkhNH7Fgd5C0TiRd3nA8wgi0vPMf9EjxS81Ud
-   MK3E4CzkADVjhEyNeoWOHoTpNbjQxYBiWYA+GXNUmttKd/xtxs/433HvD
-   vs3AliPh4jSsKig10lkDNiKwTg/tg0bPm845GtwaPRfQJk6xNgpquJvUD
-   nDzzhV/hAkHEacAM6zTD/uVW1+7+RpScFskyeSR4cN5e6bdy00Tp6rX3s
-   TedTYjorQXvhRHOPhRNIQEsaBThIGZ3SUYy2ZiLgaVl1mq/89/41jLHux
+  bh=nEUaOYMjQqfID6wwgBBxgtsFSt7zKq2ozbBAjHuOQhk=;
+  b=bF3RcCjOu5jQO21btATmGbLANLF8seBdUPPpzf/2mTphcqJeAdXiNimu
+   LVzHs4Owohic9qptyt3itdpdTJSr1xXo9KIPBTZnA0EFoQeo07u63V4L/
+   xctXkuEz5q5+9EWE8keQoSIzKIxBSc9A1P8hBnbppQqx/G/xEcPW+rNW7
+   53NPp90SPuCeU8qhxtdIBXDPJuTxuHJdE6mhJckxdutmRs7NJMZz3zLKg
+   NF+9jqlHrC4g4/9elhke+wfz7KVZ4+1pT0TcmCDKV9xNv+p60aAcd803M
+   EwVJ4tqfCp3z682W++UTG+QL21O9Dxp/RtnyJvjcg4OpD+O4yrTEGDvHQ
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111038"
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111028"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="329111038"
+   d="scan'208";a="329111028"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:35 -0800
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="618508506"
+   d="scan'208";a="618508498"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.94.200])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:35 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:34 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Paolo Abeni <pabeni@redhat.com>,
@@ -33,9 +33,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 07/13] mptcp: fix per socket endpoint accounting
-Date: Thu,  6 Jan 2022 16:20:20 -0800
-Message-Id: <20220107002026.375427-8-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 04/13] mptcp: cleanup accept and poll
+Date: Thu,  6 Jan 2022 16:20:17 -0800
+Message-Id: <20220107002026.375427-5-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
 References: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
@@ -49,63 +49,99 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Since full-mesh endpoint support, the reception of a single ADD_ADDR
-option can cause multiple subflows creation. When such option is
-accepted we increment 'add_addr_accepted' by one. When we received
-a paired RM_ADDR option, we deleted all the relevant subflows,
-decrementing 'add_addr_accepted' by one for each of them.
+After the previous patch,  msk->subflow will never be deleted during
+the whole msk lifetime. We don't need anymore to acquire references to
+it in mptcp_stream_accept() and we can use the listener subflow accept
+queue to simplify mptcp_poll() for listener socket.
 
-We have a similar issue for 'local_addr_used'
+Overall this removes a lock pair and 4 more atomic operations per
+accept().
 
-Fix them moving the pm endpoint accounting outside the subflow
-traversal.
-
-Fixes: 1a0d6136c5f0 ("mptcp: local addresses fullmesh")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ net/mptcp/protocol.c | 25 +++++++------------------
+ net/mptcp/protocol.h |  1 -
+ net/mptcp/subflow.c  |  1 -
+ 3 files changed, 7 insertions(+), 20 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 6cde58c259a8..27427aeeee0e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -711,6 +711,8 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 		return;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 83f6d6c3e3eb..628cd60c9d0f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3493,17 +3493,9 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
  
- 	for (i = 0; i < rm_list->nr; i++) {
-+		bool removed = false;
-+
- 		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
- 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
-@@ -730,15 +732,19 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 			mptcp_close_ssk(sk, ssk, subflow);
- 			spin_lock_bh(&msk->pm.lock);
+ 	pr_debug("msk=%p", msk);
  
--			if (rm_type == MPTCP_MIB_RMADDR) {
--				msk->pm.add_addr_accepted--;
--				WRITE_ONCE(msk->pm.accept_addr, true);
--			} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
--				msk->pm.local_addr_used--;
--			}
-+			removed = true;
- 			msk->pm.subflows--;
- 			__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		}
-+		if (!removed)
-+			continue;
-+
-+		if (rm_type == MPTCP_MIB_RMADDR) {
-+			msk->pm.add_addr_accepted--;
-+			WRITE_ONCE(msk->pm.accept_addr, true);
-+		} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
-+			msk->pm.local_addr_used--;
-+		}
+-	lock_sock(sock->sk);
+-	if (sock->sk->sk_state != TCP_LISTEN)
+-		goto unlock_fail;
+-
+ 	ssock = __mptcp_nmpc_socket(msk);
+ 	if (!ssock)
+-		goto unlock_fail;
+-
+-	clear_bit(MPTCP_DATA_READY, &msk->flags);
+-	sock_hold(ssock->sk);
+-	release_sock(sock->sk);
++		return -EINVAL;
+ 
+ 	err = ssock->ops->accept(sock, newsock, flags, kern);
+ 	if (err == 0 && !mptcp_is_tcpsk(newsock->sk)) {
+@@ -3543,14 +3535,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 		release_sock(newsk);
  	}
+ 
+-	if (inet_csk_listen_poll(ssock->sk))
+-		set_bit(MPTCP_DATA_READY, &msk->flags);
+-	sock_put(ssock->sk);
+ 	return err;
+-
+-unlock_fail:
+-	release_sock(sock->sk);
+-	return -EINVAL;
  }
  
+ static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
+@@ -3596,8 +3581,12 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 
+ 	state = inet_sk_state_load(sk);
+ 	pr_debug("msk=%p state=%d flags=%lx", msk, state, msk->flags);
+-	if (state == TCP_LISTEN)
+-		return test_bit(MPTCP_DATA_READY, &msk->flags) ? EPOLLIN | EPOLLRDNORM : 0;
++	if (state == TCP_LISTEN) {
++		if (WARN_ON_ONCE(!msk->subflow || !msk->subflow->sk))
++			return 0;
++
++		return inet_csk_listen_poll(msk->subflow->sk);
++	}
+ 
+ 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
+ 		mask |= mptcp_check_readable(msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 1a4ca5a202c8..386d1a98ff1d 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -111,7 +111,6 @@
+ #define MPTCP_RST_TRANSIENT	BIT(0)
+ 
+ /* MPTCP socket flags */
+-#define MPTCP_DATA_READY	0
+ #define MPTCP_NOSPACE		1
+ #define MPTCP_WORK_RTX		2
+ #define MPTCP_WORK_EOF		3
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 24bc9d5e87be..d861307f7efe 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1293,7 +1293,6 @@ static void subflow_data_ready(struct sock *sk)
+ 		if (reqsk_queue_empty(&inet_csk(sk)->icsk_accept_queue))
+ 			return;
+ 
+-		set_bit(MPTCP_DATA_READY, &msk->flags);
+ 		parent->sk_data_ready(parent);
+ 		return;
+ 	}
 -- 
 2.34.1
 
