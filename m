@@ -1,271 +1,141 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1DE2CB1
-	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 00:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641514855; x=1673050855;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TfRLYQUUvmMscHCH67d3go38s+1HcbG004kqYoXQKCM=;
-  b=gSTZYo1E8HZIKvfMxk6NI392PXovSKd6aChioUNFu0+fREJ86VsEpbL8
-   387kIMtId/HdC75TbUARpvkuxkx0XOxjG/pPmrOTS+kBigWMAGaj0RrYJ
-   SQRHEhFGatcQBs12vVku4sdBYdiDSMXqyNZ9XGryWF30vCz6dedFlPuuN
-   iTv49YfER98NjhJWe0lJ2+4YIuVVbgZy8UeY9/kQ8fB8MjcPa2f0vS/zU
-   ndMav816FoIko/X/KZ6BcY5++F2j2beCT1oojSkRLFf7kwhYsA2uplVlE
-   UNqLiwRd9jOoXvvlNMu38MpyAMOJNt5Rkm5SbbunEYbxZFEO8HBXsirbY
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329111063"
-X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="329111063"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:37 -0800
-X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="618508521"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.94.200])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:20:37 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 13/13] mptcp: avoid atomic bit manipulation when possible
-Date: Thu,  6 Jan 2022 16:20:26 -0800
-Message-Id: <20220107002026.375427-14-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
-References: <20220107002026.375427-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113232C9C
+	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 05:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1641534721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gx3rvTZa8oQMCuYZJwaqi/mID0CKRYkYi+dF5S+vwwE=;
+	b=RhT29Ou68Cn0SY4+z58xze+8bcJKUR4T5pf900j0Y6zXUD6vbuJJ4aaIgrziq61Gz2c5+4
+	otALfwpzKY5R8fmmpXtmYkMq/Isp/IOgMG7ZFGWtUUyoCv4LS/7CAQJiZNGGvB8LV6tmVi
+	FI52+vYCtsciYy/Hd7jS8EMV7nx4W+8=
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+ (mail-he1eur04lp2052.outbound.protection.outlook.com [104.47.13.52]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-28-mjfyXcnHONWuXycT8qTZ-Q-1; Fri, 07 Jan 2022 06:51:59 +0100
+X-MC-Unique: mjfyXcnHONWuXycT8qTZ-Q-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bzfOlx9dF863+cRItoymaPgFXoZN975W4BCcgKgdFulzd3/aGab0NeL0rLLCx0ckczUNx8KuMRf3KbGc04p7MyaWcdAgDgn+QxP1u6hIUGUyQJtr47s7D9KcdzUbyCLRtpdvSZPGvdxgmljaaBrXsqhuSlm+Af19oVnFOKk/Jyh31aATLvML87VSZUFg0BbM3016Vuu/wrXWQXlPfViaScMFPx17eV+ls2KIuXgX5D/HvE7fC+muGc4pIFL2YNJUuFU2jH6a9DyFF7YOBKUzzwx8iEDUCvtZ8hDYNzzBgTJJoQ7ar9m6BqOt+VVGdkiDJMnCPJdEtcYeAkjyyPcfcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XoDTP6gRBoFZGVfrVo8CmWJav7H7k2kWMmqDo0O0THM=;
+ b=eNbJG3uu8gIssYXSxmSXUjee/LayRLz4BGnpc03Bm7f0lS3us7nD+v1NIYKOaoJo7vsCkUbFvgSiT99OtRuKrTnrLwqtxMf56CFnfqEgWn6JdH5SSO8YokuBV6q/d1K6whar9VqHjlD1JCz/IdbSOSMGZcGVE+VazgT97mIVVuhRbjL68CzYMZrlc06fV4udVWB7qb3Sbk8NRPUzcCIFnXuBiKWneuo+cUjsGeyKp/ZnfpvgNo/yerduIdg+fWt9HwJPcfLPqcMvsmXcTCdRNT3CFz6k9KJLJ3Wala8obARsqmi988i8Qdq8nWDvtv9/MvwNDNXXDLdvWDg5/Ty0zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by HE1PR0402MB2731.eurprd04.prod.outlook.com (2603:10a6:3:d7::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.15; Fri, 7 Jan
+ 2022 05:51:58 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b5bf:e1b5:42fd:4dba]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b5bf:e1b5:42fd:4dba%4]) with mapi id 15.20.4844.017; Fri, 7 Jan 2022
+ 05:51:58 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 0/9] use 'ip mptcp' in selftests
+Date: Fri,  7 Jan 2022 13:51:42 +0800
+Message-ID: <cover.1641534346.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0182.apcprd02.prod.outlook.com
+ (2603:1096:201:21::18) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 70c4a376-86da-47bb-2eb4-08d9d1a1d141
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB2731:EE_
+X-Microsoft-Antispam-PRVS:
+	<HE1PR0402MB27318C5D846FCB2F4603F5C6F84D9@HE1PR0402MB2731.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	M3U6H3yqLbFIH64XTxMNCLw9gnPBrlHAZ+lkwCWaQnD3CxpFyTAiTzc1GuP2XylR2Z4NAlSz1WMIpaZLzPnUijJoqH4ynjVAjKp6WRDIqWTwM/6D77c10wthKLwWJUTSDJjdRW/y2HSzhRsKGlHTBzTiuxTyNoFTtrpmggiQH/5eUbczPJ4RwGK7BhAjt7DfJksrNeiLjUCovQFNAt3gkl82RcJ7yxTKlQ9E9UvnOmGFhz0q9DS4dzyghIQtPJySnsncEh/5eJ0dwVMUyWKezFEoJP9LZiBZn2sf3wxk06LUgICrjhdUQkyA2KiTeNvR+nwcclw8kumwwTb1Pl0SpSIXOy+TqhKfJicGAzlslM8iXSh1+fYAtyiZ8aCC8FV+13FGk9yswhEdbav/9zFCjKIkBkRLhkh0X3CDJKS2negFx+UDLEEAIUu1WQ1TCDAbDQ4OerF2kMJSgSccNNEeV7A1hpDp68psZO8cP5GQHUmIlBkz8wx3wnrdny4Y1j7xpghuuDZqNnFE/4oVs92dcIRdL6Z4fyYvcLNAq1sYOikVlqvjgDQzIWSEVQb1TaXRK8UZJxPHGLns3M9ov50p5Q0zOn7WMIeI+skrSkTsAYtXURTGL1pjzn/2iXJMx8kneLW6eXiHO5YZpxxRzCqaNA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(26005)(4744005)(36756003)(6916009)(8676002)(107886003)(6486002)(6512007)(4326008)(186003)(2906002)(83380400001)(66556008)(8936002)(44832011)(66476007)(66946007)(2616005)(6666004)(55236004)(5660300002)(38100700002)(316002)(6506007)(508600001)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?80hOb2v/2v1XbdqfA6bToDMXhprlK1e5uNI01PeenzuzSUz/2nU+hlVw0C55?=
+ =?us-ascii?Q?cUjGhZb6vJCQKIPrBMRMsoa70zKVPzM/beH5R/wX+41GIFN3Mmt3aTi3FuJW?=
+ =?us-ascii?Q?rL+Zp9maagi//IQSolq3BuWTmm8B1mBqw5uFsLINSGlIgTJwcXfL2JVCFDIC?=
+ =?us-ascii?Q?OCn2RixO8f+Ms/Nebf86+/EAnRtmILie1oJiAIy0Hl419CBf42v5qk9t4JKx?=
+ =?us-ascii?Q?cWPSMsnWIF96nfVueTHCZk93Vx+ka5cn0jVYLN0QNbdfxxOk3O24qIpsvEFB?=
+ =?us-ascii?Q?cvYO5OxOTkJGkBNsJ00950SwJobwsGiQRpPM2EH31cWNfrjsKzyVt5huvbKo?=
+ =?us-ascii?Q?bdfVJMqhx9JuWz8syXM40TaQZTHiDS7VrPflclqrsJvwVF6HywDJBrGs5JcM?=
+ =?us-ascii?Q?uYG7F6YWbq+cZbtSHFwBZV9YnjpuzWs2ee31iXYrmH35H/W0OmXFZr9gmPUx?=
+ =?us-ascii?Q?8R37FEF9h3LrNFwkLIjK8pxvzy3PWQKsk5CtJB45BYvmHAZBvdV1kXfCYOLl?=
+ =?us-ascii?Q?Xuf+XrSqh9WftXE3o4TWkxqIh4mTVYNpwkXCprdmET3GP35OgFIX4aCYDA1k?=
+ =?us-ascii?Q?L/WydIyoDT2hFMrSqFjJNjDsXr+padVYA/YTI7CZ25lZFjIsAJlgljwRxK6R?=
+ =?us-ascii?Q?dq5US5tbAd7eMNLR518OzE+NvJ3D1JZbRSB+Z9rx7mA6F+MwqGzpZq5+K0IL?=
+ =?us-ascii?Q?WxVYP216ARtBhYRbc7xs56NFo5fp7U9UCpn/FD7INxEgl0bZR1a98iY1rv9F?=
+ =?us-ascii?Q?hXmm6R0jU3wo5Z59QECGo5CLm/1Ey4HxK5OSEywGGoS0iIQysfKletLBHOOu?=
+ =?us-ascii?Q?BUKh5tiqvSO6LmOVVIveVB9T5yfD0VRZc6b3FO3owN9daJODpmZtqjFZdwdo?=
+ =?us-ascii?Q?uM9e/qMNmsRn2ZBE/UYSe6kex2CowWPP8egZFGUmWdg1bFpE734e0MuN+PoV?=
+ =?us-ascii?Q?W9LNk+Jg99dLpqnEDTBuRM0notOVNJHPsy09oH5JELl6VKHIxF4vqybLNa6X?=
+ =?us-ascii?Q?94nx+D2AcKzjz8entHmEk5OTUd2wzEexlaTfh7sX2ZLGPJwPnfkF1O+GzXmo?=
+ =?us-ascii?Q?ZOcqTgpKsI7mc7Lq1j8xiAROVpf3digIepZi5DDbAbpU8NSIGdUlj428EtCt?=
+ =?us-ascii?Q?L9/NuzC6sqvCYSHr4gRi0Gbjr3TebKo0Pec1mT3BpjxxZTvPzxisz4Rbt9og?=
+ =?us-ascii?Q?Cbzp9cn7FF/bHpCqjadF3vxgtsOT2dJNQYg0jByf3t0tfNx0U7THWqT582EI?=
+ =?us-ascii?Q?FryFSmZzHPh0LxdmkmkWQPC3ZVWP2Bf8BophHbORWDKu1skGUbSKUR4P0vvN?=
+ =?us-ascii?Q?gID68G2Fd8UvFSyOViy/ap0nG1gbu7Fv78BbK95bqtCLJ18c3sBudQFp08ZD?=
+ =?us-ascii?Q?JOV01NG9DOxZJx0ZiHsZQ2M6rVVciyyNEZvEnjS/5crr+3AKHU6otED6OWgc?=
+ =?us-ascii?Q?JllP/xUkG9/Ek3F8OeAy/BWktvSvOg1FgMdf2yK/TvYZb5WJx6Y0Z7adn1wb?=
+ =?us-ascii?Q?Bd0Xlar64R3370FwMbmBfLHwD2xMHsKY0LAMSGr/rUO7h3gAwQ2Aa1c3oeFF?=
+ =?us-ascii?Q?Mr0hnamSQpdD0vQQs3/35TWNM8PgLiO8uRJsZPw4nM1rSgQfhJZmXeBMjPj4?=
+ =?us-ascii?Q?zeOsOmsSCtZgzV9Aoeg0MEc=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70c4a376-86da-47bb-2eb4-08d9d1a1d141
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2022 05:51:58.2316
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PnZNUiXASZxUgenNm+rynmyIvssUMIGLBJpUxc6BgM4li3qFdxqAvp2HXafcVaZkHQASL+WhqcOn847K/3Th+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB2731
 
-From: Paolo Abeni <pabeni@redhat.com>
+v2:
+ - use both ip_mptcp and pm_nl_ctl in mptcp_join.sh, instead of
+   replaceing pm_nl_ctl in v1.
+ - drop last thress patches in v1, keep using pm_nl_ctl in mptcp_sockopt.sh=
+,
+   pm_netlink.sh and simult_flows.sh
 
-Currently the msk->flags bitmask carries both state for the
-mptcp_release_cb() - mostly touched under the mptcp data lock
-- and others state info touched even outside such lock scope.
+This patchset replaced all the pm_nl_ctl commands in selftests with the
+'ip mptcp' commands.
 
-As a consequence, msk->flags is always manipulated with
-atomic operations.
+Geliang Tang (9):
+  selftests: mptcp: rewrite removing tests
+  selftests: mptcp: rewrite backup tests
+  selftests: mptcp: implement pm_nl_set_limits
+  selftests: mptcp: implement pm_nl_add_endpoint
+  selftests: mptcp: implement pm_nl_del_endpoint
+  selftests: mptcp: implement pm_nl_flush_endpoint
+  selftests: mptcp: implement pm_nl_show_endpoint
+  selftests: mptcp: implement pm_nl_set_endpoint
+  selftests: mptcp: set ip_mptcp in command line
 
-This change splits such bitmask in two separate fields, so
-that we use plain bit operations when touching the
-cb-related info.
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 865 ++++++++++--------
+ 1 file changed, 498 insertions(+), 367 deletions(-)
 
-The MPTCP_PUSH_PENDING bit needs additional care, as it is the
-only CB related field currently accessed either under the mptcp
-data lock or the mptcp socket lock.
-Let's add another mask just for such bit's sake.
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 47 +++++++++++++++++++++++---------------------
- net/mptcp/protocol.h | 18 ++++++++++-------
- net/mptcp/subflow.c  |  4 ++--
- 3 files changed, 38 insertions(+), 31 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c5f64fb0474d..62d418813503 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -763,7 +763,7 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
- 		if (!sock_owned_by_user(sk))
- 			__mptcp_error_report(sk);
- 		else
--			set_bit(MPTCP_ERROR_REPORT,  &msk->flags);
-+			__set_bit(MPTCP_ERROR_REPORT,  &msk->cb_flags);
- 	}
- 
- 	/* If the moves have caught up with the DATA_FIN sequence number
-@@ -1517,9 +1517,8 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
- 
- void mptcp_check_and_set_pending(struct sock *sk)
- {
--	if (mptcp_send_head(sk) &&
--	    !test_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
--		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-+	if (mptcp_send_head(sk))
-+		mptcp_sk(sk)->push_pending |= BIT(MPTCP_PUSH_PENDING);
- }
- 
- void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-@@ -2134,7 +2133,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
- 			mptcp_schedule_work(sk);
- 	} else {
- 		/* delegate our work to tcp_release_cb() */
--		set_bit(MPTCP_RETRANSMIT, &msk->flags);
-+		__set_bit(MPTCP_RETRANSMIT, &msk->cb_flags);
- 	}
- 	bh_unlock_sock(sk);
- 	sock_put(sk);
-@@ -2840,7 +2839,9 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 
- 	mptcp_destroy_common(msk);
- 	msk->last_snd = NULL;
--	msk->flags = 0;
-+	WRITE_ONCE(msk->flags, 0);
-+	msk->cb_flags = 0;
-+	msk->push_pending = 0;
- 	msk->recovery = false;
- 	msk->can_ack = false;
- 	msk->fully_established = false;
-@@ -3021,7 +3022,7 @@ void __mptcp_data_acked(struct sock *sk)
- 	if (!sock_owned_by_user(sk))
- 		__mptcp_clean_una(sk);
- 	else
--		set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->cb_flags);
- 
- 	if (mptcp_pending_data_fin_ack(sk))
- 		mptcp_schedule_work(sk);
-@@ -3040,22 +3041,23 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- 		else if (xmit_ssk)
- 			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk), MPTCP_DELEGATE_SEND);
- 	} else {
--		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
- 	}
- }
- 
-+#define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
-+				      BIT(MPTCP_RETRANSMIT) | \
-+				      BIT(MPTCP_FLUSH_JOIN_LIST))
-+
- /* processes deferred events and flush wmem */
- static void mptcp_release_cb(struct sock *sk)
-+	__must_hold(&sk->sk_lock.slock)
- {
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
- 	for (;;) {
--		unsigned long flags = 0;
--
--		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
--			flags |= BIT(MPTCP_PUSH_PENDING);
--		if (test_and_clear_bit(MPTCP_RETRANSMIT, &mptcp_sk(sk)->flags))
--			flags |= BIT(MPTCP_RETRANSMIT);
--		if (test_and_clear_bit(MPTCP_FLUSH_JOIN_LIST, &mptcp_sk(sk)->flags))
--			flags |= BIT(MPTCP_FLUSH_JOIN_LIST);
-+		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED) |
-+				      msk->push_pending;
- 		if (!flags)
- 			break;
- 
-@@ -3066,7 +3068,8 @@ static void mptcp_release_cb(struct sock *sk)
- 		 *    datapath acquires the msk socket spinlock while helding
- 		 *    the subflow socket lock
- 		 */
--
-+		msk->push_pending = 0;
-+		msk->cb_flags &= ~flags;
- 		spin_unlock_bh(&sk->sk_lock.slock);
- 		if (flags & BIT(MPTCP_FLUSH_JOIN_LIST))
- 			__mptcp_flush_join_list(sk);
-@@ -3082,11 +3085,11 @@ static void mptcp_release_cb(struct sock *sk)
- 	/* be sure to set the current sk state before tacking actions
- 	 * depending on sk_state
- 	 */
--	if (test_and_clear_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags))
-+	if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
- 		__mptcp_set_connected(sk);
--	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
-+	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
- 		__mptcp_clean_una_wakeup(sk);
--	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
-+	if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
- 		__mptcp_error_report(sk);
- 
- 	__mptcp_update_rmem(sk);
-@@ -3128,7 +3131,7 @@ void mptcp_subflow_process_delegated(struct sock *ssk)
- 		if (!sock_owned_by_user(sk))
- 			__mptcp_subflow_push_pending(sk, ssk);
- 		else
--			set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
-+			__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
- 		mptcp_data_unlock(sk);
- 		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SEND);
- 	}
-@@ -3247,7 +3250,7 @@ bool mptcp_finish_join(struct sock *ssk)
- 	} else {
- 		sock_hold(ssk);
- 		list_add_tail(&subflow->node, &msk->join_list);
--		set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->flags);
-+		__set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->cb_flags);
- 	}
- 	mptcp_data_unlock(parent);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 962f3b6b6a1d..a77f512d5ad7 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -110,18 +110,20 @@
- /* MPTCP TCPRST flags */
- #define MPTCP_RST_TRANSIENT	BIT(0)
- 
--/* MPTCP socket flags */
-+/* MPTCP socket atomic flags */
- #define MPTCP_NOSPACE		1
- #define MPTCP_WORK_RTX		2
- #define MPTCP_WORK_EOF		3
- #define MPTCP_FALLBACK_DONE	4
- #define MPTCP_WORK_CLOSE_SUBFLOW 5
--#define MPTCP_PUSH_PENDING	6
--#define MPTCP_CLEAN_UNA		7
--#define MPTCP_ERROR_REPORT	8
--#define MPTCP_RETRANSMIT	9
--#define MPTCP_FLUSH_JOIN_LIST	10
--#define MPTCP_CONNECTED		11
-+
-+/* MPTCP socket release cb flags */
-+#define MPTCP_PUSH_PENDING	1
-+#define MPTCP_CLEAN_UNA		2
-+#define MPTCP_ERROR_REPORT	3
-+#define MPTCP_RETRANSMIT	4
-+#define MPTCP_FLUSH_JOIN_LIST	5
-+#define MPTCP_CONNECTED		6
- 
- static inline bool before64(__u64 seq1, __u64 seq2)
- {
-@@ -250,6 +252,8 @@ struct mptcp_sock {
- 	u32		token;
- 	int		rmem_released;
- 	unsigned long	flags;
-+	unsigned long	cb_flags;
-+	unsigned long	push_pending;
- 	bool		recovery;		/* closing subflow write queue reinjected */
- 	bool		can_ack;
- 	bool		fully_established;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index a1cd39f97659..5bedc7e88977 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -388,7 +388,7 @@ static void mptcp_set_connected(struct sock *sk)
- 	if (!sock_owned_by_user(sk))
- 		__mptcp_set_connected(sk);
- 	else
--		set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->cb_flags);
- 	mptcp_data_unlock(sk);
- }
- 
-@@ -1274,7 +1274,7 @@ static void subflow_error_report(struct sock *ssk)
- 	if (!sock_owned_by_user(sk))
- 		__mptcp_error_report(sk);
- 	else
--		set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->flags);
-+		__set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->cb_flags);
- 	mptcp_data_unlock(sk);
- }
- 
--- 
-2.34.1
+--=20
+2.31.1
 
