@@ -1,24 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0322C80
-	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 14:10:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2249EC36AE5;
-	Fri,  7 Jan 2022 14:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1641564611;
-	bh=xMtQdyUpxvpipGGqnCgbzn/zNym3nTksoMNhMZJSqoU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=qQuZMqcthQ1NvGRylbBv1IL3RFv4tdNjOYvyuRJ9ni7a3LXY8r9FdS66y/FZ8Cvm9
-	 RecoHDJQjAy0N/zVOA4m2lFuaP6KZknwnMfdDKRCpmLA1yDsp66I2I6Q1Ck5J4YVyi
-	 ZJeTXWMrJwL324ShfUF/AgkZOB6m3q0/6U8pGzulowK8pUq3KywlOHydnkYwc7KymD
-	 YSrUxkhqoxUfcINyNaUHSxIn/iI/ACymwWw1W6Z7VfEJSoJVWnvbhjb5wRNPurT3mk
-	 5ZMmq/QYNxiOc1dk6VOZKcwNlqKAed87gDE3ZfSBNkZdWTaHsndtXiKBlovVCcbqld
-	 TpyArXl78WnjA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3CB4F79405;
-	Fri,  7 Jan 2022 14:10:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E61173
+	for <mptcp@lists.linux.dev>; Fri,  7 Jan 2022 19:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641583554; x=1673119554;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=C0th8gsROJI3GvC5mmzJikWkPE41uBmnF18Hw9VeCXc=;
+  b=W4e3Mr1l3FqduDgQc5vwyreHzvJWaKPDZswjqUJ1h5jv4GXcoxTAJ9f+
+   gWZpOPPZYWTLKFV70hhtZC4U3O0RqE4Ber8Fl44jReZptWrPxWlJYoKCf
+   l0Zj9BboY9nRQKd8cEtmvext0jie0rGA4R9zYvW4w9L526Lcb/LpXgWEZ
+   Ux/+127YMJX4X3zBzd7wol5Ex6Vlq7IFT0ZyKmuBj1eMoZv8jkx2SruV4
+   9rRVjaQ7D3Uq+jjxwQsWLtMYsxU4Rhu0q8wvtQkB6o9aNEubFXIOV00At
+   FWS61JqDwKjlb3Bs5G4HZ14UeJ0bkxWfVqRoZD0DTBaKp7h0HRPRxwuOI
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10219"; a="240478007"
+X-IronPort-AV: E=Sophos;i="5.88,270,1635231600"; 
+   d="scan'208";a="240478007"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 11:25:53 -0800
+X-IronPort-AV: E=Sophos;i="5.88,270,1635231600"; 
+   d="scan'208";a="527478584"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.36.93])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 11:25:53 -0800
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/3] mptcp: Refactoring for one selftest and csum validation
+Date: Fri,  7 Jan 2022 11:25:21 -0800
+Message-Id: <20220107192524.445137-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,45 +43,33 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] mptcp: Fixes for buffer reclaim and option writing
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <164156461099.16670.12145239421394821609.git-patchwork-notify@kernel.org>
-Date: Fri, 07 Jan 2022 14:10:10 +0000
-References: <20220106220638.305287-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220106220638.305287-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, pabeni@redhat.com,
- geliang.tang@suse.com
 
-Hello:
+A few more patches from the MPTCP tree for 5.17, with some refactoring
+changes.
 
-This series was applied to netdev/net.git (master)
-by David S. Miller <davem@davemloft.net>:
+Patch 1 changes the MPTCP join self tests to depend more on events
+rather than delays, so the script runs faster and has more consistent
+results.
 
-On Thu,  6 Jan 2022 14:06:35 -0800 you wrote:
-> Here are three fixes dealing with a syzkaller crash MPTCP triggers in
-> the memory manager in 5.16-rc8, and some option writing problems.
-> 
-> Patches 1 and 2 fix some corner cases in MPTCP option writing.
-> 
-> Patch 3 addresses a crash that syzkaller found a way to trigger in the mm
-> subsystem by passing an invalid value to __sk_mem_reduce_allocated().
-> 
-> [...]
+Patches 2 and 3 get rid of some duplicate code in MPTCP's checksum
+validation by modifying and leveraging an existing helper function.
 
-Here is the summary with links:
-  - [net,1/3] mptcp: fix opt size when sending DSS + MP_FAIL
-    https://git.kernel.org/netdev/net/c/04fac2cae942
-  - [net,2/3] mptcp: fix a DSS option writing error
-    https://git.kernel.org/netdev/net/c/110b6d1fe98f
-  - [net,3/3] mptcp: Check reclaim amount before reducing allocation
-    https://git.kernel.org/netdev/net/c/269bda9e7da4
 
-You are awesome, thank you!
+Geliang Tang (2):
+  mptcp: change the parameter of __mptcp_make_csum
+  mptcp: reuse __mptcp_make_csum in validate_data_csum
+
+Paolo Abeni (1):
+  selftests: mptcp: more stable join tests-cases
+
+ net/mptcp/options.c                           |   8 +-
+ net/mptcp/protocol.h                          |   1 +
+ net/mptcp/subflow.c                           |  15 +--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 120 ++++++++++--------
+ 4 files changed, 79 insertions(+), 65 deletions(-)
+
+
+base-commit: c25af830ab2608ef1dd5e4dada702ce1437ea8e7
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
