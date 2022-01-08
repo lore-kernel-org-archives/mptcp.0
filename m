@@ -1,39 +1,39 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80232C9C
-	for <mptcp@lists.linux.dev>; Sat,  8 Jan 2022 00:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F682C9C
+	for <mptcp@lists.linux.dev>; Sat,  8 Jan 2022 00:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641603290; x=1673139290;
+  t=1641603598; x=1673139598;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=hUqdGvFRIiV92BqFFU5B029B9ZledqKyeN4r90FdgDw=;
-  b=OxMw/EY20nn4uT5XV9G8PEd1DDTjy1UyvzgNTDdvLX2phb53eNgkO7lf
-   P1F8VV//MJpRd5zqnPAhfumyC+8Ui2fvtQm9TN0U5Bhqv9siJtnWqD5Gm
-   l0DCbkm2RQycTIP/wrgbSnHrSZ+99/8Sq0E82HoX4oAdryezqanmPEfOI
-   G/njqEnaKocKWTo5Xr85YjHNGVX5HDzL6z8hO3/NMKxLpcBFzhPP2EYZN
-   h6g8nleuYF61WPjkf6R/XhCfLaZ8Jv6xdVi9SK1k0JKPdA21Y5H8B3oS/
-   IevrhtoSAIywRNHSRCah9MTQLzLXk6NFgA3qlHFJikZYmLvmevMDQ+AZx
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10220"; a="243166552"
+  bh=ufj5QbeMZCY0Rp0H4OMU1g2QCJKt90YaK+WC/hPqcu8=;
+  b=efq/BoCczauLIoykSpAGbc8uDnS+Hv9ovMip/Gsgj1C2ixcB6Oar4pjn
+   kpXkWyRo1k5pui/064eLzISloV4CFa5Y0Hstrg3tQ1ihQ3ognu0xTUd8J
+   DlDOCZqm8o8uKNPaPVD1lhHgPx5mErtt2i9BdlByycTjHJ5B5hEY5UvVC
+   RA5nUz+oeXimy5CjgruMz+sgnbTXVFgiQcTTeZCzr9vKptTdrIdZzP6nu
+   q7U6W0h22nXJEu6gmFS+P0caH7ud+emYaRjp4JGmVXDBV3fFxUCqqK6pQ
+   gdmlBLpaG6jthvpW0fV0NC/cgDseRuto9Ekk2vHp1RcdkcBnFuX0vsbZN
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10220"; a="242920711"
 X-IronPort-AV: E=Sophos;i="5.88,271,1635231600"; 
-   d="scan'208";a="243166552"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 16:54:50 -0800
+   d="scan'208";a="242920711"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 16:59:43 -0800
 X-IronPort-AV: E=Sophos;i="5.88,271,1635231600"; 
-   d="scan'208";a="489455878"
+   d="scan'208";a="668935664"
 Received: from illipets-mobl.amr.corp.intel.com ([10.209.112.146])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 16:54:49 -0800
-Date: Fri, 7 Jan 2022 16:54:48 -0800 (PST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 16:59:43 -0800
+Date: Fri, 7 Jan 2022 16:59:42 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [PATCH mptcp-next v8 4/8] mptcp: reduce branching when writing
- MP_FAIL option
-In-Reply-To: <20220105155702.165123-5-matthieu.baerts@tessares.net>
-Message-ID: <ebff9b40-1e42-ec9-1cc5-6fbb8b5784dd@linux.intel.com>
-References: <20220105155702.165123-1-matthieu.baerts@tessares.net> <20220105155702.165123-5-matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v8 5/8] mptcp: clarify when options can be
+ used
+In-Reply-To: <20220105155702.165123-6-matthieu.baerts@tessares.net>
+Message-ID: <e961b574-b83a-5115-53cf-a9bcf5376b5d@linux.intel.com>
+References: <20220105155702.165123-1-matthieu.baerts@tessares.net> <20220105155702.165123-6-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,92 +44,62 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 5 Jan 2022, Matthieu Baerts wrote:
 
-> MP_FAIL should be use in very rare cases, either when the TCP RST flag
-> is set -- with or without an MP_RST -- or with a DSS, see
-> mptcp_established_options().
+> RFC8684 doesn't seem to clearly specify which MPTCP options can be used
+> together.
 >
-> Here, we do the same in mptcp_write_options().
+> Some options are mutually exclusive -- e.g. MP_CAPABLE and MP_JOIN --,
+> some can be used together -- e.g. DSS + MP_PRIO --, some can but we
+> prefer not to -- e.g. DSS + ADD_ADDR -- and some have to be used
+> together at some points -- e.g. MP_FAIL and DSS.
 >
-> Co-developed-by: Geliang Tang <geliang.tang@suse.com>
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> We need to clarify this as a base before allowing other modifications.
+>
+> For example, does it make sense to send a RM_ADDR with an MPC or MPJ?
+> This remains open for possible future discussions.
+>
 > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 > ---
-> net/mptcp/options.c | 39 ++++++++++++++++++++++++---------------
-> 1 file changed, 24 insertions(+), 15 deletions(-)
+> net/mptcp/options.c | 23 +++++++++++++++++++++--
+> 1 file changed, 21 insertions(+), 2 deletions(-)
 >
 > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index bbf61dedb4b5..2f94069808a4 100644
+> index 2f94069808a4..8553b928c5bf 100644
 > --- a/net/mptcp/options.c
 > +++ b/net/mptcp/options.c
-> @@ -1264,21 +1264,7 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+> @@ -1264,8 +1264,27 @@ static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
 > void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
 > 			 struct mptcp_out_options *opts)
 > {
-> -	if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
-> -		const struct sock *ssk = (const struct sock *)tp;
-> -		struct mptcp_subflow_context *subflow;
-> -
-> -		subflow = mptcp_subflow_ctx(ssk);
-> -		subflow->send_mp_fail = 0;
-> -
-> -		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
-> -				      TCPOLEN_MPTCP_FAIL,
-> -				      0, 0);
-> -		put_unaligned_be64(opts->fail_seq, ptr);
-> -		ptr += 2;
-> -	}
-> -
-> -	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
-> +	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
+> -	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually exclusive,
+> -	 * see mptcp_established_options*()
+> +	/* Which options can be used together?
+> +	 *
+> +	 * X: mutually exclusive
+> +	 * O: often used together
+> +	 * C: can be used together in some cases
+> +	 * P: could be used together but we prefer not to (optimisations)
+> +	 *
+> +	 *  Opt: | MPC  | MPJ  | DSS  | ADD  |  RM  | PRIO | FAIL |  FC  |
+> +	 * ------|------|------|------|------|------|------|------|------|
+> +	 *  MPC  |------|------|------|------|------|------|------|------|
+> +	 *  MPJ  |  X   |------|------|------|------|------|------|------|
+> +	 *  DSS  |  X   |  X   |------|------|------|------|------|------|
+> +	 *  ADD  |  X   |  X   |  P   |------|------|------|------|------|
+> +	 *  RM   |  C   |  C   |  C   |  C   |------|------|------|------|
+> +	 *  PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
+> +	 *  FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
+> +	 *  FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
+> +	 *  RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
+> +	 * ------|------|------|------|------|------|------|------|------|
+> +	 *
+> +	 * The same applies in mptcp_established_options() function.
 
-Seems like the comment was ok as-is? As you note in the commit message, 
-DSS and FAIL can occur together.
+This is very helpful! (and makes my comment on the previous patch 
+irrelevant :) )
 
-> 	 * see mptcp_established_options*()
 > 	 */
 > 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
-> @@ -1336,6 +1322,10 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 			}
-> 			ptr += 1;
-> 		}
-> +
-> +		/* We might need to add MP_FAIL options in rare cases */
-> +		if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
-> +			goto mp_fail;
-> 	} else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
-> 		u8 len, flag = MPTCP_CAP_HMAC_SHA256;
->
-> @@ -1476,6 +1466,25 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 		put_unaligned_be64(opts->rcvr_key, ptr);
-> 		ptr += 2;
->
-> +		if (OPTION_MPTCP_RST & opts->suboptions)
-> +			goto mp_rst;
-> +		return;
-> +	} else if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
-> +mp_fail:
-> +	{
-
-Formatting quibble: seems better to put the '{' at the end of the line 
-before the mp_fail label, like the existing code does just before the 
-mp_rst label just below this block of code.
-
-> +		/* MP_FAIL is mutually exclusive with others except RST */
-> +		const struct sock *ssk = (const struct sock *)tp;
-> +		struct mptcp_subflow_context *subflow;
-> +
-> +		subflow = mptcp_subflow_ctx(ssk);
-> +		subflow->send_mp_fail = 0;
-> +
-> +		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
-> +				      TCPOLEN_MPTCP_FAIL,
-> +				      0, 0);
-> +		put_unaligned_be64(opts->fail_seq, ptr);
-> +		ptr += 2;
-> +
-> 		if (OPTION_MPTCP_RST & opts->suboptions)
-> 			goto mp_rst;
-> 		return;
+> 		struct mptcp_ext *mpext = &opts->ext_copy;
 > -- 
 > 2.33.1
 >
