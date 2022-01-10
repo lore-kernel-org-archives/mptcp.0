@@ -1,55 +1,58 @@
 Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74A42C80
-	for <mptcp@lists.linux.dev>; Mon, 10 Jan 2022 06:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AB42C80
+	for <mptcp@lists.linux.dev>; Mon, 10 Jan 2022 06:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1641796428;
+	t=1641797191;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1u2C/6PObR0kL/zuwUHKtsuYJI9Wkbcc2D8PBe/scoI=;
-	b=NPhzkvPmAxAVgGG8pal2fR3nZhDe8IH/ce099lUPr49ZLLoT2UzQR6bK54O1YC2kLvnUIP
-	VpmmszULXwK4o6Lu3mDhC8XLri8IsZ57K/rur6zdqILU7f2hI7CsU6Q9ae28DfMSyCowMy
-	JiXipCaW9xW0YbUX26uUJrk+e9VM9xY=
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur04lp2054.outbound.protection.outlook.com [104.47.14.54]) by
+	 in-reply-to:in-reply-to:references:references;
+	bh=AyJIUl4u5TVkrPZxhWcd5ID0ardcVOXWW2uIPv46RxE=;
+	b=Em05n1lXE+PZsY1Vt0fKaodntT1cZHt8bzaMXYonTmeZH9Re5SHbXPEPlw7WKUM+WIQA5v
+	Swx+Si4BFzZiR3U5Fj47TRhjshwu60FQc4qnzJDb3+RfWYONofx0Y1W8b6xLzTAgtd4N8e
+	EoxJXfqZSacrGUzUkK8sjBvXtSDZnQA=
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com
+ (mail-db8eur05lp2108.outbound.protection.outlook.com [104.47.17.108]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-37-EqGoBZjLN3CCJKZGn1Ltmg-1; Mon, 10 Jan 2022 07:33:47 +0100
-X-MC-Unique: EqGoBZjLN3CCJKZGn1Ltmg-1
+ de-mta-35-EbMJKz_2O0uBKwNVPPRaOw-1; Mon, 10 Jan 2022 07:46:30 +0100
+X-MC-Unique: EbMJKz_2O0uBKwNVPPRaOw-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nsSEHoAtMXYfsR3WMO0QEks3JoklF5MEAB9WJX3TgcOS6bu2fp7qLfK386/Bs6HoiAhorKg2bsy2GH1xMk02xzGZgkFp1hMoYVfgY98WfZuKBPIjEv9kstTn1jOshTSr3XvTrJ+gMbzrz7XzCAzzIgZwlFOHNhXJicadOLW1dVXpSOI9hKuvNmaIgtBV1Sykt0hNaX6NSzbijJx7tEzCrMsHDGpHJ0g0j9ucQw2hLR31ulLdgY6gJNjgbs3eu9yJgjRSa2Jo/uHC+2DwvschTcgf37AHX4XhCiSS4gr+qggAr8s5MXUuz7zNmEgupbM93rDtR/9e/pYO7bltC5o8Sw==
+ b=VVmJBH2tccnmhO5VDH7Fw/ZAk//5KJiESkewPN6uoDBcs9esHK/I7vnoHP/63B/f59fQS5TJk81GGcEpyvkYnqS5Tnin62xb16F1A4/yC7LtoQnD1/L+t8G37nUFSFLWDMpIJS9EI0c49E0tvjICHYa6eE3M1BT6f0vSYmxH2qoGksVQazATEKWWpI2/XqDXU+IqHo4P03Tjdl6rWfAMh5/qVFJZA6K8zWWVtBHRuagzL8Vp+IJLyIRzsrd9zyEgFzQDOsYI+uuRYMcWEsf9OViMqWdI0hrRBF/DpyIPeSS9TsKnkZgnwuWS4fHDj7pg0UrZKy9s0J47fxx301Oy+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RGneEOzFeqnCUuwGaslqJ/jKz10I36sAUUyzuiaTUM8=;
- b=hdGB5cVedK8Q8MY5RSHWJ95aV5boUSYGZIEZumQyhkAN69OBrHY1Fo8NGjesFMTVintDSUjPX0W+6pEkQNhMZ4IW0SrJGH/oy9Zu6PyQy+/I+y5notz2Tq1dnksqIZhPNTaDmG+EIZ1RABcQMtfy40qknwC+hOMKJkplmNZjz/v9CszzoM1kFWqlAINBMYXscb/CR9JsKSg1YpM6SVlSRI1yI5vToCXNm+YRCqIKI4az0m/kV7y36TuyhFqU7/JA5lA9dg9OTGlPvYqB2ckGAeqjgWEXvXJdXxMHI8Xax3n/EdAj4e1Ma6yJsoQ3GQxFHUISVGKVyHmzp762jN19fQ==
+ bh=AyJIUl4u5TVkrPZxhWcd5ID0ardcVOXWW2uIPv46RxE=;
+ b=GZMhKuuetkTXu+pE/0N2SlpsYY+SJKdps3/wtVo2HRf28ZBkqaFYBPJdTj5cslxwEFVXGoEckbPRk1Z2AAzm7Wf/JrXU1wNrOZPtkjdiCobp/UbTtbdf2f7VbqokdgVD9YVsR4nfb5P0J8yKc/XK+0Pzw2615qRdjAIqC88O8eCyFq886l/bNEl9904inoDZ1bs9pHu2rpsScWLRhh9wWniS83fDbGLO6QRhH+0pwtkK/ka28iG5nwrr1VMKDj45SLVM0ceF020oX+G4xvUxF/dM4Wx/TPEphcfxTa8e9V6dH5CSLgI4HLG+SAD4Z6Gx+/HCLtxVjcSDxXD/cMrMfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by HE1PR0401MB2300.eurprd04.prod.outlook.com (2603:10a6:3:29::20) with
+ by HE1PR0401MB2634.eurprd04.prod.outlook.com (2603:10a6:3:87::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Mon, 10 Jan
- 2022 06:33:44 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.9; Mon, 10 Jan
+ 2022 06:46:28 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::b5bf:e1b5:42fd:4dba]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::b5bf:e1b5:42fd:4dba%4]) with mapi id 15.20.4867.011; Mon, 10 Jan 2022
- 06:33:44 +0000
+ 06:46:28 +0000
+Date: Mon, 10 Jan 2022 14:46:24 +0800
 From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH iproute2-next v2] mptcp: add id check for deleting address
-Date: Mon, 10 Jan 2022 14:33:40 +0800
-Message-ID: <7ea43a885391f9d5bc3fe207d1cb2168c14fcf4e.1641796124.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.31.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR04CA0049.apcprd04.prod.outlook.com
- (2603:1096:202:14::17) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH iproute2-next 0/3] more patches from pm_nl_ctl
+Message-ID: <20220110064624.GA21902@dhcp-10-157-36-190>
+References: <cover.1641289518.git.geliang.tang@suse.com>
+ <8de28feb-42ef-76d6-663c-32596eba1bc@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8de28feb-42ef-76d6-663c-32596eba1bc@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: HK2PR04CA0053.apcprd04.prod.outlook.com
+ (2603:1096:202:14::21) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -58,135 +61,115 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 031c54d5-dc33-4234-e423-08d9d4032624
-X-MS-TrafficTypeDiagnostic: HE1PR0401MB2300:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c7ed734-ed63-49e7-85d5-08d9d404ed75
+X-MS-TrafficTypeDiagnostic: HE1PR0401MB2634:EE_
 X-Microsoft-Antispam-PRVS:
-	<HE1PR0401MB23003932CFF43F4A1CC980FDF8509@HE1PR0401MB2300.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+	<HE1PR0401MB26341BD773B81D41ED73A132F8509@HE1PR0401MB2634.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	pHKxeeQKm2l448GChQZ6SqpGF9A4eEmW+JuNZWSVZ6pkajYhib7Kb8ji0nhbgGjt6kfuTOYDDXXMLc3cKK0HnIZPQMPgSo5jtX4Z/1C8SGuTyWNlx2RRXuyWEIiVNMzEdqOM95gegKo055ffY1O1AJ9877ytvye17MwRIhCoepDCSAIDvc1+SuB79LwQPTakIVjdUGu4kXBHqf3uywUY71/1D1+IMyIlfc8ZFSxHxE3HL5VksvLkxer2+llTMc6aJ+TjJFU8kNuZkv7RM5kD09WLRGqMSrzJYsE+TSqdyVt0C73lLartcSxKmLwRqsFDWFZWCVqDRLAnv3DSRwvNV63d05wizRadof/KiYqb9UwDgw8VpqytOdhq/gKxUSqfjm5gr+TYeG9GayEaMrPIBHn5Qo6GHI+/7xNWl9FsgEEi0ewPQ3pvEqOajOXe7gjci6PFSyD9xEGPhcL/xM3ULY/DuxIFcXIT8vDeAD2I0tEtarLlQ/Xn6wUwWAyOBhhEKlaRkL+U4R3rG5EeUpj0mGgEKmkqcts1UzNasHSR9LUrur0EbM3OzJXwqESYBTdP8gPiGOwROa15RpVQbCZZMJP2x/h9JtNU7eK7+vSOtq89izFpNOtig+jVTLi9m1QnnyMoK0aCIDgL4oaQ87+QvDi6f24nHEzOCeQYgOw2fUNwLtfilbe6LlDjfrvjdi2siMtSFzne+9DMTDMKaboODAIXJ3v7fxcVv1bleFmRcM8=
+	BtaDYZDYVZ/b1JlPvHjQuUegUNDVmMdMAOVO9s6W8DcS480+URljcQmGuT65SAbZ6ShzI5hNrXLNTF7pmECXSbNCqUlC5blky0OsyKJ9G20RcXtUtmqu/E9XufrFsnA/UeliRN1l3b56ILSXFcw4vTSjbRtgjGLVpA69vcXY+PGW2qfG+cgIpRK8qrx02HzVQ7tilikFhTWyhq1SnxmY2dmIN0hcLjXF1l5KgHDp7mLO1f3ijJEJkJeaOWBN1nK5m2Nrk5TbTK5BzcFsDlOJ67lLar/8Jz7UsuqjS5lj3iBAH4a9ymO4lf+AONvPjgGllu4G/57rpO7HgzB3jzbOnCX/KKMnTbaAm0deDjVm36r5h+oL13DCPfZl6GQrncjmThY1HFPjjjM2nWtZs6P8EZGS6WywgHBfK3q7cWzEZQEKdmcoZwbzgXbfNJRfVu364A9okOwa3D5Rba2iEwgng29LZEgG7rMWijGZu9xtox02oeuVmOpRPz+JLyiKE0ALMA5ayLzRLdD1YK73aB4ZMXbAM5BvcD3c1GpNlN5xyUEUxfRLCL4kYH4/bcEC/Q02ROXOeH8oTiSgAfs2ofMTDwbrf/a6qTCpR9AmVRXvEojnNOOV4UKfLAEXfRcAAH2H++wrmt501D+269TbtbbFYJ9VModzrXwgAv1q7g7lFIgkyTnZc+A9LiVvpAkGypbKM7dcwCW9gCn5p9a+GYde6J3CS5I+xC8TE+yNrOhSWh8=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(44832011)(966005)(66556008)(316002)(6916009)(6512007)(86362001)(5660300002)(66476007)(2906002)(66946007)(508600001)(107886003)(55236004)(8676002)(26005)(36756003)(83380400001)(38100700002)(6486002)(8936002)(186003)(4326008)(2616005)(6666004)(6506007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(6506007)(55236004)(1076003)(33656002)(4326008)(86362001)(33716001)(6512007)(83380400001)(6916009)(9686003)(966005)(2906002)(316002)(44832011)(66476007)(66556008)(508600001)(6486002)(5660300002)(38100700002)(8676002)(8936002)(6666004)(66946007)(186003)(26005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?84hOfl1B/MKKC/7FmHfIBQeDM8a4lOZ/RTRkynjQ+oc7Xu1s0IwyFXqE3qQB?=
- =?us-ascii?Q?n4zGUD9nb/cM6BT+jBumvn4/d4tfYVT1MdE0Uw98MCEBQcV4p1vmBqRSfgNZ?=
- =?us-ascii?Q?nyc/20LyNGIfUUU3PW6nfzd5F11i1ZRqhp9uLrg40zC7Yc+LfXXU0cxMvI0j?=
- =?us-ascii?Q?6JViteJsNiO7KA65YkX3dHmDzz+pvP+jLUue14qMwZdDZ4o05y+bZpNXRP7G?=
- =?us-ascii?Q?/kYYL5EG0i+Ts1Mmc+7e7suF79pHFXGsvZMOjsWDOURW/kEcK4o0xvPATJr5?=
- =?us-ascii?Q?eWE5BQkA4GsvIwi9xqQchnMgK4J3VlkGmmINBENx8/Dv1Mo4V8Y7GAQm0Hab?=
- =?us-ascii?Q?7BOTU9Oet+e1sJob54UNvtc8d5pTsq63HLLL/tQ8J6w5cUeD3Y9wcGIwfpA6?=
- =?us-ascii?Q?/cUA9QQniJn880BHlS0e0RCY/o/hdsoUffqfxBP/uQsfQWUFXrfrGI0ynT5Q?=
- =?us-ascii?Q?EGhZuyNUrFK73s9WGAqy70gSkHhHaeditW+90fSdDbIft6AAm4QykrRq0CNC?=
- =?us-ascii?Q?v80eUjrR5NK2YODxc0OqYJDFdWEWwajtxz/e0XsL/0Kp5MYFS0fmfbGPjz5y?=
- =?us-ascii?Q?ZMh593cxvjSF8ySc19LG8s/YTXR5KCjohCKtNpV5CXsldU6p7rBrbAF8rcVz?=
- =?us-ascii?Q?yOn0DFRzxSDyxNPvYWc3E3wK8BRD8TtzFr0gTYjJ9hDHMfhO0DcZxKqu+BKd?=
- =?us-ascii?Q?hU68Td7uQRBbGt5VfzjEOARoGrzpowiFQZdoP0+X4W/DO5ZRBkpZse0UO4sD?=
- =?us-ascii?Q?t/oGvbz4bgGNTaJVaH/zh8jI0w+UBjxREFxLr9jx4MulW3S1hIfTs+k+33Dv?=
- =?us-ascii?Q?K7Nf5LuFvpOVVqkX7H8sTYgAjAyTYnFH9Gz0wK8uynowei29+5z9MRMUAgLX?=
- =?us-ascii?Q?nx6ECn42bdHor4XIGu1IQI1e57b5yccm0zXKOmM+iYYwv1uqnOfT9Xe5rQw4?=
- =?us-ascii?Q?nIExX9BgqWi6AwJ+uqvISPPf2NHw4rvboYnfwwqj8a8ShxfYXc6RSh28Nx9y?=
- =?us-ascii?Q?v0BowZs8hgTohj/ODYceHCHOzzi0KYGoA8HkDErFjhiduQopZ23vi0wxO+7U?=
- =?us-ascii?Q?O5J1FcNM+yFEkB6h8LhhG8urDwucTsCccivMTnD2KO4LZ6IkEvtyIQIEE3w9?=
- =?us-ascii?Q?LEoo3pkOiUVPIIh5oBPuQGDGfeydii1wHWVK4NeHISDUvjFSZVrwx8/i6lHn?=
- =?us-ascii?Q?ZyZQ7xoTBRxsQyquRhqqpdxvZpqq+LoKg/t1KyKenuDL6OlGb6dP3S6M0VBh?=
- =?us-ascii?Q?uGaw2sfO0gews7rNbyc1Kc5Hi4D4Ri5fRkaTjC4vhRu9GH92LNrhQO8f/DqE?=
- =?us-ascii?Q?fszzTi4w0fcb10aGFS7KFnD2gj9y0J3Syi0Ocn+kh4tIt04HhWQoK55WGaxx?=
- =?us-ascii?Q?zUAC7b/xYZTVou0UyvF5OBNGy9jGjYJZWTyXsu3DKSnKC2UwPv//cRJKCq7d?=
- =?us-ascii?Q?P6J36UGIfKMsKOZ8fJyr63PDSODJ/P4gcsDZ6HCMGYZHoAvlzm/NCe/hmoVI?=
- =?us-ascii?Q?yXU5r7JSkVM+fnjcfCpzBHZAcY6OoiqCvnEwvfRkQY1/OtrE2d2eiv+9Ccy9?=
- =?us-ascii?Q?Plb8Fu7xeJ3WMs8/MWxvfEp6Mi8U16VMP+IoJJF6L1LVTKT/KzO8rlUvqwXm?=
- =?us-ascii?Q?sd97FYA0pLp5R0Kd74xcudI=3D?=
+	=?us-ascii?Q?LfvqZATRH99ailJ8aWmOY+Ksg4OtZWU2xNLXZM81R83aYq2aiQFdaBHokX7m?=
+ =?us-ascii?Q?yDiWqV2qfI17OcmDAbeX4L1mND8LUtFSkSL8Plk9t1LhrYzh2WBriApo91Wj?=
+ =?us-ascii?Q?8nyyLSovXVTuFTBJxlqDpEODw0bo2D5RCvU2zOn6Ywmd2szT+jDdpN4FEv1T?=
+ =?us-ascii?Q?qNoBJBou0lTUJFtS3g3bGzkp6psPE6C2g8oOAo7Sz0P5pbQTTHJu53/d1SdE?=
+ =?us-ascii?Q?P6x/H6fR7QCtlCXw2iyUK1rfJZa6gPJXIbk0IoHs+IraqmqTB+7LQGjgcf3O?=
+ =?us-ascii?Q?63QJGaiIK2vukRJdwwZy9Ai9NNj9g0ZXpkbLXBp5lDSlfXnaXWSSUZ648YHv?=
+ =?us-ascii?Q?h99j57BAuNScqIkRBWRGKBvZEvIW0DiEfZ0EUhUZQuPmDWJqhdc+eox/MEWb?=
+ =?us-ascii?Q?h6OOtPlNJ0myp5xhmfzIaCLKPVD/xXkCwrX9K7KbU84p4jolpP5uX2+Dvkf7?=
+ =?us-ascii?Q?LvVUTMLMr/Lja9kw4X8ry3tiIkUiE5GgJq3QD56PaQYAAldm9Hfnt2hNG7jo?=
+ =?us-ascii?Q?pEpkoVVAEjx/jn6Jgg/0m2x7drZgu76IJnYecQmmpkZDf1gQ/hota4bL6rUa?=
+ =?us-ascii?Q?/tTntsFeYY9ec1/x78SshZ+4lA31sPKQO3avwDOy1V5AZHL1ywjV8unnOYse?=
+ =?us-ascii?Q?GMktNtWj02JRelLXI5QwOKh7YONxKX5HvEwuHdzCgOdM3R2KYpa1ijkjHWRE?=
+ =?us-ascii?Q?n17VfHwGoSgSAPUud2es4u8inkLPT/zF5AKQiJqkzQz9+P+/yn/wOEqP+uEf?=
+ =?us-ascii?Q?3Etpjz6QA0t0Sw/QVNpNS4XkNRye7ZXs9Yq0qyjiB0wJNODdhLfAMqmQoV7r?=
+ =?us-ascii?Q?CnSfTOxskUSlmeuXIc3/a1+VoGEwzBxnLAReJmeum2ywueYJCjwZsddKZPzZ?=
+ =?us-ascii?Q?pu3h96Cw+PicfqIj9uRmaJV3pNMpWD0mtrMGXysjxMnVikcLrJiyGBcWEWe9?=
+ =?us-ascii?Q?IaQ1elFkb3sMuzXxu2vOciCCLavaDfAxp/LAxx3dyUyqzTmQ3PeeLNRAEx8t?=
+ =?us-ascii?Q?R02tm6YhZXJrU87CKwaMWSzKIPXoG2aDriNv7VrpxR7tbJagBX5HsVouhT9W?=
+ =?us-ascii?Q?vquMIayZvvBQ59HcHtPQJwClGc7rfQScT5VLaluAalkTIbEOnYEhHqyt+jHh?=
+ =?us-ascii?Q?N2APm3YgQd3oNs6a3YIfDGddoAcmfpidkdHABSnbJTGbY8Okhihpe+tRpTsg?=
+ =?us-ascii?Q?TubEBeplxR4ApC4WdRg11oOHwSzPHylOrEurOTCatmdOC/hBdjaYU1k6LCSO?=
+ =?us-ascii?Q?qI/RH1EABucz9dAbc4rm4FXEkXRVl60IgGL/+AxuqmZTjBz1Cz46I49kKcjX?=
+ =?us-ascii?Q?IKoggceb0XeGY+8KvWQEexgZJEz4RDY7Lg2xUyKRI3MnciGwvM3G3ugXqJLD?=
+ =?us-ascii?Q?/2RpGIqk44JN/m0KxYO75aR1vYij0t0e6vDOrT431KjNk+U5ZKp3r7sdkR+5?=
+ =?us-ascii?Q?F4uVar7YZfLtDzARDotAZvraIkDSsyJgnDbYcz1zqCQs45f+6UaKFmaLc66v?=
+ =?us-ascii?Q?EK4LryRvD4XndCQXXrBPyjBuU/DSdG0WaeU9KleY0YyGA3NLj7GwnEJt0/Hu?=
+ =?us-ascii?Q?VM8Myc5EkIs0m9FVm4qx77QkL3aB07x3HqMvqEmDPgj3rs1mD9aZ95szl661?=
+ =?us-ascii?Q?htTKucehyvV2rx80wvf4HZk=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 031c54d5-dc33-4234-e423-08d9d4032624
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c7ed734-ed63-49e7-85d5-08d9d404ed75
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2022 06:33:44.3327
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2022 06:46:27.9433
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Gbl+urkX0zaOvQWWXeDuphFwq0aenbQWUNTkdRXiCtfkFivWWlhzWPSuhGBDRqFah/9HXGcW+iAxOTcvTE0N8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2300
+X-MS-Exchange-CrossTenant-UserPrincipalName: EjuwvEYThqgAn+ICEFusJoYXbWARbnKwEX7dgcOS4um0dand7b36d+OUBTgTBUjvoZYVIqiDZ+cN6kSebZ31ZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2634
 
-This patch added the id check for deleting address in mptcp_parse_opt().
-The ADDRESS argument is invalid for the non-zero id address, only needed
-for the id 0 address.
+Hi Mat,
 
- # ip mptcp endpoint delete id 1
- # ip mptcp endpoint delete id 0 10.0.1.1
+Thanks for your review.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/171
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- v2:
- - rebase for iproute2-next.git
- - drop patch 2 & 3 in v1.
- - change ip-mptcp.8 too.
----
- ip/ipmptcp.c        | 11 +++++++++--
- man/man8/ip-mptcp.8 |  5 ++++-
- 2 files changed, 13 insertions(+), 3 deletions(-)
+On Fri, Jan 07, 2022 at 04:11:43PM -0800, Mat Martineau wrote:
+> On Tue, 4 Jan 2022, Geliang Tang wrote:
+> 
+> > This patched added id 0 address deleting, fullmesh flag and backup setting
+> > from pm_nl_ctl. With these patches, we can replace all pm_nl_ctl in the
+> > selftests with 'ip mptcp' command.
+> > 
+> > Geliang Tang (3):
+> >  mptcp: add id check for deleting address
+> >  mptcp: add the addr flag fullmesh
+> >  mptcp: add the backup flag setting
+> > 
+> > include/uapi/linux/mptcp.h |  2 ++
+> > ip/ipmptcp.c               | 31 +++++++++++++++++++++++++------
+> > 2 files changed, 27 insertions(+), 6 deletions(-)
+> > 
+> > -- 
+> > 2.31.1
+> 
+> Hi Geliang -
+> 
+> I found that this doesn't apply to
+> https://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git, but it
+> does apply to iproute2.git
+> 
+> If you check iproute2-next, there's already a patch in there from Paolo that
+> adds the fullmesh flag.
 
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-index 10dcb1ea..f85c49a8 100644
---- a/ip/ipmptcp.c
-+++ b/ip/ipmptcp.c
-@@ -24,7 +24,7 @@ static void usage(void)
- 	fprintf(stderr,
- 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
- 		"				      [ port NR ] [ FLAG-LIST ]\n"
--		"	ip mptcp endpoint delete id ID\n"
-+		"	ip mptcp endpoint delete id ID [ ADDRESS ]\n"
- 		"	ip mptcp endpoint change id ID [ backup | nobackup ]\n"
- 		"	ip mptcp endpoint show [ id ID ]\n"
- 		"	ip mptcp endpoint flush\n"
-@@ -103,6 +103,7 @@ static int get_flags(const char *arg, __u32 *flags)
- static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int =
-cmd)
- {
- 	bool adding =3D cmd =3D=3D MPTCP_PM_CMD_ADD_ADDR;
-+	bool deling =3D cmd =3D=3D MPTCP_PM_CMD_DEL_ADDR;
- 	struct rtattr *attr_addr;
- 	bool addr_set =3D false;
- 	inet_prefix address;
-@@ -156,8 +157,14 @@ static int mptcp_parse_opt(int argc, char **argv, stru=
-ct nlmsghdr *n, int cmd)
- 	if (!addr_set && adding)
- 		missarg("ADDRESS");
-=20
--	if (!id_set && !adding)
-+	if (!id_set && deling)
- 		missarg("ID");
-+	else if (id_set && deling) {
-+		if (id && addr_set)
-+			invarg("invalid for non-zero id address\n", "ADDRESS");
-+		else if (!id && !addr_set)
-+			invarg("address is needed for deleting id 0 address\n", "ID");
-+	}
-=20
- 	if (port && !(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
- 		invarg("flags must have signal when using port", "port");
-diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-index 0e6e1532..1b8b8c7c 100644
---- a/man/man8/ip-mptcp.8
-+++ b/man/man8/ip-mptcp.8
-@@ -31,8 +31,11 @@ ip-mptcp \- MPTCP path manager configuration
- .RB "] "
-=20
- .ti -8
--.BR "ip mptcp endpoint del id "
-+.BR "ip mptcp endpoint delete id "
- .I ID
-+.RB "[ "
-+.I ADDRESS
-+.RB "] "
-=20
- .ti -8
- .BR "ip mptcp endpoint change id "
---=20
-2.31.1
+Yes, v1 was against the wrong repo, not iproute2-next.git.
+
+I just noticed there's already a patch in iproute2-next from Davide that
+adds the backup flag setting too:
+ "mptcp: add support for changing the backup flag"
+
+So patch 2 and 3 in this series should be dropped.
+
+> 
+> Can you rebase the other two patches on iproute2-next for v2?
+
+I only updated patch 1 for v2.
+
+Thanks,
+-Geliang
+
+> 
+> 
+> Thanks,
+> 
+> 
+> --
+> Mat Martineau
+> Intel
+> 
 
