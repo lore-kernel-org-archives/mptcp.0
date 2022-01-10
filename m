@@ -1,138 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E312C9C
-	for <mptcp@lists.linux.dev>; Mon, 10 Jan 2022 15:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1641830371;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hg/imvlmC429uw5j6ItUp+lheVvpWgJvs/0kAMUNAN0=;
-	b=hTrZUL9AnqCosPzfmtijlBaz9LK1bwGIaVWhZlu5LZJHVTeJvKF2S07UuX/jxh6NRFEEno
-	yMS23/0KvG2J+vz7bO+K5O99KsprUQeKIIZi+9NfGBOii5kB2RX+DirG91ftPh5b6tK6+G
-	qiGRIhQGZnAOAVs97v/Vlv8iX2Jj9YM=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-34-n4oNeeHgNJixFdGKpl2g8g-1; Mon, 10 Jan 2022 10:59:30 -0500
-X-MC-Unique: n4oNeeHgNJixFdGKpl2g8g-1
-Received: by mail-qv1-f71.google.com with SMTP id kl5-20020a056214518500b004112e88962cso13544924qvb.4
-        for <mptcp@lists.linux.dev>; Mon, 10 Jan 2022 07:59:30 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB1B2C80
+	for <mptcp@lists.linux.dev>; Mon, 10 Jan 2022 17:42:34 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id q25so48036357edb.2
+        for <mptcp@lists.linux.dev>; Mon, 10 Jan 2022 09:42:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=vly6AibrbgPTMdAzZJ8MIGQjBdGPAKf3iZ7QD4IlYyg=;
+        b=k01KGTMtTURYttD/IaSzmUglEYi1L5U83qIgeoXFtCxoAaCyu028NuHiIbrq3Ek0r4
+         t19zvQjZfaTTvWkh0ztbOVlHkz9ktjv1k8W1Ggimi86TssM0h1wKheWQ7SnISgst6iKW
+         73tNPCMeu8SomkYW48MdFwoY7VGu4fWTR6umb8VObX9vWyCohCRFeuUtuf7ZfFcZC8bD
+         JepVk+2nCUcdnbAviPSrFtxqopo7gYRJ2iDr0k4nH7EnI/cHFBc4iq7VBh9fV+7qeCNg
+         7GWnUPAvnA/h6cv0bikXW9SJyEorUMmDf/7mbmxT5lr8rB7wXsEvQC4Drxv2j8D/gN6d
+         dF7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Hg/imvlmC429uw5j6ItUp+lheVvpWgJvs/0kAMUNAN0=;
-        b=1RPXhRVDfHRe5sbmnSp3JaJJXD7xiSE5N0Si8Xfv2qMYlZsbARPM9NmPmMbJfL826R
-         48MCLZ58XDNvsnAxbAfjZz/Hb09Zd9CSfxuLo6sQ+EP0de+lX00Zxq+pzzBr9DUkgVQc
-         agI0MtmoFqeoH48ZXLKLRFCaq51w/k8qVNBPjI3dlhiAYEn3PZrdBFw2yM/t3c0C9WKe
-         FuJyUNp/a+EEhd4/Nh83sWBpqFJM2puYwJVPtRhzj609qBcsZYMdmOG4SOcWbEat+fwR
-         xhjnEvvPWqJb0K9N37k/eNPkOrBu4G9mKjphhfVnnY+hv4YOZudGu88IZAOZGOGFxsol
-         ngDA==
-X-Gm-Message-State: AOAM533cY8i+22hv4ohXQ7vthiBx2ihYs1+n7eJJ8m+hhN4ukhn2J47e
-	UnbipF87fu6jtuwJ3NVtlDYYw2/zCNz3J0ilqppOCiNftmBlROu6p+CmWZBGELW6ncJ0cUSeuIx
-	vzE8kIvPcDO828KI=
-X-Received: by 2002:ad4:5aa9:: with SMTP id u9mr243719qvg.50.1641830370111;
-        Mon, 10 Jan 2022 07:59:30 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxaU7NBwYlflri9jp2T+uQrK/a+XZRlN+sE0n00qvi4o2QZ1karG9HBM/gOwwHe/UfkPOm1rA==
-X-Received: by 2002:ad4:5aa9:: with SMTP id u9mr243703qvg.50.1641830369826;
-        Mon, 10 Jan 2022 07:59:29 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id m1sm5051751qtk.34.2022.01.10.07.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jan 2022 07:59:29 -0800 (PST)
-Message-ID: <8a502217cfbf1993efcbca0bebbfc8a51d15db44.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 2/7] mptcp: add clear_flags in pm_netlink
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Date: Mon, 10 Jan 2022 16:59:26 +0100
-In-Reply-To: <20220110123502.GB3145@bogon>
-References: <cover.1641785106.git.geliang.tang@suse.com>
-	 <0132f80c0aa9f62deb00c816dab5d51d4032afb1.1641785106.git.geliang.tang@suse.com>
-	 <1b01c2a797fad9d2971d485b158d2dbd61d14fec.camel@redhat.com>
-	 <20220110123502.GB3145@bogon>
-User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=vly6AibrbgPTMdAzZJ8MIGQjBdGPAKf3iZ7QD4IlYyg=;
+        b=DQnWcbmFB7YVYJP5KPma9VtiUfrb2qJcKesWmp2sH9CTXmEL7eQ7te+n38huE1sqz+
+         fghQI9cwrmN3ce1I5RHODnY25kfumLQdWFZqn7OoD6OzPY+VXO+Sv66qJ0K7EeIGacIQ
+         MtVu2GTLHjQjLOpaA3ZHWPvZ4ID9dSCDCND7okYU0LagVwyS2OVaVG3Q6tKYfxKVzcaE
+         qYbFq1Ef5CfmMZa+xR4Ps5K40N3UsI2NwpViw6RjeWXR1cIgtF3d2Y14/6vXEoyttpqw
+         bPQMOTDtXsi4Kwpv0nnKlJ35YZqJBJVQRYM4WZNVYqxpJY+BwtDL5+ESdm2VeMs3L1lI
+         A6xg==
+X-Gm-Message-State: AOAM531ftiTUniCVYps7rk4us29uiGtjKxPA8xq4mPIWORHdlGCTJvv1
+	PEDu6615tnKs+algEM4X65nEwg==
+X-Google-Smtp-Source: ABdhPJxb79k9+9kOZrYL1r8BIBnFQzPzUR5zpuGSepgBhTiAAIF+yzbaHIGDuozDS2Vl6B2WkW7KhA==
+X-Received: by 2002:a17:907:7f9e:: with SMTP id qk30mr685680ejc.124.1641836552267;
+        Mon, 10 Jan 2022 09:42:32 -0800 (PST)
+Received: from [10.120.18.111] ([84.17.46.9])
+        by smtp.gmail.com with ESMTPSA id o22sm3924505edw.50.2022.01.10.09.42.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jan 2022 09:42:32 -0800 (PST)
+Message-ID: <051abada-0cbb-a8dc-eef7-a733bd3621d2@tessares.net>
+Date: Mon, 10 Jan 2022 18:42:30 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH mptcp-next v8 4/8] mptcp: reduce branching when writing
+ MP_FAIL option
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
+References: <20220105155702.165123-1-matthieu.baerts@tessares.net>
+ <20220105155702.165123-5-matthieu.baerts@tessares.net>
+ <ebff9b40-1e42-ec9-1cc5-6fbb8b5784dd@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <ebff9b40-1e42-ec9-1cc5-6fbb8b5784dd@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2022-01-10 at 20:35 +0800, Geliang Tang wrote:
-> On Mon, Jan 10, 2022 at 12:38:14PM +0100, Paolo Abeni wrote:
-> > Hello,
-> > 
-> > On Mon, 2022-01-10 at 11:30 +0800, Geliang Tang wrote:
-> > > Splite set_flags() into two parts, set_flags() and clear_flags(), make it
-> > > easy to add new flags to set or clear.
-> > > 
-> > > This patch added a new PM command MPTCP_PM_CMD_CLEAR_FLAGS, and a new
-> > > function mptcp_nl_cmd_clear_flags().
-> > > 
-> > > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> > > ---
-> > >  include/uapi/linux/mptcp.h |  1 +
-> > >  net/mptcp/pm_netlink.c     | 36 ++++++++++++++++++++++++++----------
-> > >  2 files changed, 27 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> > > index f106a3941cdf..1ca9b13c2ed0 100644
-> > > --- a/include/uapi/linux/mptcp.h
-> > > +++ b/include/uapi/linux/mptcp.h
-> > > @@ -92,6 +92,7 @@ enum {
-> > >  	MPTCP_PM_CMD_SET_LIMITS,
-> > >  	MPTCP_PM_CMD_GET_LIMITS,
-> > >  	MPTCP_PM_CMD_SET_FLAGS,
-> > > +	MPTCP_PM_CMD_CLEAR_FLAGS,
-> > >  
-> > >  	__MPTCP_PM_CMD_AFTER_LAST
-> > >  };
-> > 
-> > I'm unsure if this has already been discussed in some mtg I missed. If
-> > so, I'm sorry for the late feedback :(
-> > 
-> > Looking at the existing netlink interfaces, I *think* the preferred way
-> > of handling this would be adding instead a couple of MPTCP address
-> > flags:
-> > 
-> > 	MPTCP_PM_ADDR_FLAG_NOBACKUP,
-> > 	MPTCP_PM_ADDR_FLAG_NOFULLMESH
-> > 
-> > As e.g. IFA_F_NOPREFIXROUTE, IFA_F_NODAD,...
-> > 
-> > The above should require a similar amount of code and will make it
-> > clear that we can't/wan't to flip the SUBFLOW or SIGNAL flags.
-> > 
-> > WDYT?
+Hi Mat,
+
+Thank you for the review!
+
+On 08/01/2022 01:54, Mat Martineau wrote:
+> On Wed, 5 Jan 2022, Matthieu Baerts wrote:
 > 
-> Agree, will update in v2.
+>> MP_FAIL should be use in very rare cases, either when the TCP RST flag
+>> is set -- with or without an MP_RST -- or with a DSS, see
+>> mptcp_established_options().
+>>
+>> Here, we do the same in mptcp_write_options().
+>>
+>> Co-developed-by: Geliang Tang <geliang.tang@suse.com>
+>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>> net/mptcp/options.c | 39 ++++++++++++++++++++++++---------------
+>> 1 file changed, 24 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>> index bbf61dedb4b5..2f94069808a4 100644
+>> --- a/net/mptcp/options.c
+>> +++ b/net/mptcp/options.c
+>> @@ -1264,21 +1264,7 @@ static u16 mptcp_make_csum(const struct
+>> mptcp_ext *mpext)
+>> void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+>>              struct mptcp_out_options *opts)
+>> {
+>> -    if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions)) {
+>> -        const struct sock *ssk = (const struct sock *)tp;
+>> -        struct mptcp_subflow_context *subflow;
+>> -
+>> -        subflow = mptcp_subflow_ctx(ssk);
+>> -        subflow->send_mp_fail = 0;
+>> -
+>> -        *ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
+>> -                      TCPOLEN_MPTCP_FAIL,
+>> -                      0, 0);
+>> -        put_unaligned_be64(opts->fail_seq, ptr);
+>> -        ptr += 2;
+>> -    }
+>> -
+>> -    /* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually
+>> exclusive,
+>> +    /* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and FAIL are mutually
+>> exclusive,
+> 
+> Seems like the comment was ok as-is? As you note in the commit message,
+> DSS and FAIL can occur together.
 
-[ mostly C&P from IRC ]
+Yes indeed, in some conditions.
+I removed this comment after but it is true we should not modify it here.
 
-I'm sorry for being self-contradictory on this point. Think again about
-the above even the 
+I see Geliang fixed that in the v9, thanks.
 
-	MPTCP_PM_ADDR_FLAG_NOBACKUP,
-	MPTCP_PM_ADDR_FLAG_NOFULLMESH
+> 
+>>      * see mptcp_established_options*()
+>>      */
+>>     if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
+>> @@ -1336,6 +1322,10 @@ void mptcp_write_options(__be32 *ptr, const
+>> struct tcp_sock *tp,
+>>             }
+>>             ptr += 1;
+>>         }
+>> +
+>> +        /* We might need to add MP_FAIL options in rare cases */
+>> +        if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
+>> +            goto mp_fail;
+>>     } else if (OPTIONS_MPTCP_MPC & opts->suboptions) {
+>>         u8 len, flag = MPTCP_CAP_HMAC_SHA256;
+>>
+>> @@ -1476,6 +1466,25 @@ void mptcp_write_options(__be32 *ptr, const
+>> struct tcp_sock *tp,
+>>         put_unaligned_be64(opts->rcvr_key, ptr);
+>>         ptr += 2;
+>>
+>> +        if (OPTION_MPTCP_RST & opts->suboptions)
+>> +            goto mp_rst;
+>> +        return;
+>> +    } else if (unlikely(OPTION_MPTCP_FAIL & opts->suboptions))
+>> +mp_fail:
+>> +    {
+> 
+> Formatting quibble: seems better to put the '{' at the end of the line
+> before the mp_fail label, like the existing code does just before the
+> mp_rst label just below this block of code.
 
-thing does look great.
+I had to do that if I wanted to keep declaring the two "const" variables
+just below, only in case of MP_FAIL.
 
-I'm wondering if we could simply extend the current
-MPTCP_PM_ADDR_FLAG_BACKUP handling to the MPTCP_PM_ADDR_FLAG_FULLMESH
-flag? e.g. set or clear the corresponding entry->flags bit according to
-the provided address flag attribute.
+The other solution is to always declare them at the beginning of the
+function like Geliang did in the v9.
 
 Cheers,
+Matt
 
-Paolo
+> 
+>> +        /* MP_FAIL is mutually exclusive with others except RST */
+>> +        const struct sock *ssk = (const struct sock *)tp;
+>> +        struct mptcp_subflow_context *subflow;
+>> +
+>> +        subflow = mptcp_subflow_ctx(ssk);
+>> +        subflow->send_mp_fail = 0;
+>> +
+>> +        *ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
+>> +                      TCPOLEN_MPTCP_FAIL,
+>> +                      0, 0);
+>> +        put_unaligned_be64(opts->fail_seq, ptr);
+>> +        ptr += 2;
+>> +
+>>         if (OPTION_MPTCP_RST & opts->suboptions)
+>>             goto mp_rst;
+>>         return;
+>> -- 
+>> 2.33.1
+>>
+>>
+>>
+> 
+> -- 
+> Mat Martineau
+> Intel
 
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
