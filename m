@@ -1,56 +1,59 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D723173
-	for <mptcp@lists.linux.dev>; Tue, 11 Jan 2022 09:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E922C9D
+	for <mptcp@lists.linux.dev>; Tue, 11 Jan 2022 12:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1641893572;
+	s=mimecast20190719; t=1641902540;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UW0G59Vv1rrMBAjDevMl635z8tVVMdBIkiTLbjEq5aA=;
-	b=GsxQZiJTo90sVh1a9kqzkXjPzoGVspZi19TO0ZSXlV0qaEF5inMrsFjFMY/sMayh0W9klb
-	nR9lKyJfXX5VnnZsrIHphR29a0iJKTneq79AwMiqM5xWDddk3WgaTS577JJCOYLtdc4Ozn
-	3SzoVSaeb7lR0FjRlAAkdR18uL5YR8E=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=qPp8jp+Xm8CZgBHUbK6ZR0cEMcimGE4sXDZSX45tCUM=;
+	b=aM2ikMeY0qn64BMP6vQYcleOtMUfxQ8PaPT+gM4qOV5o86ivXrK2W8VtGiQm1Jhy5IRFx1
+	9HPorWaNJt9vSNWivUrAc9joF671Zt8qTcCj7vx2NVECMeU1TeGZRNnprQx9d9eeUnnTuo
+	C2+G5vziedKrG+ISrtQsQfLzLjACLlw=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-460-KwOce_9UM7GgT3ZiAG3rEg-1; Tue, 11 Jan 2022 04:32:49 -0500
-X-MC-Unique: KwOce_9UM7GgT3ZiAG3rEg-1
-Received: by mail-wr1-f70.google.com with SMTP id n4-20020adf8b04000000b001a49cff5283so4689761wra.14
-        for <mptcp@lists.linux.dev>; Tue, 11 Jan 2022 01:32:49 -0800 (PST)
+ us-mta-12-HXOwyj0eOEeHF-JmAB6m6A-1; Tue, 11 Jan 2022 07:02:19 -0500
+X-MC-Unique: HXOwyj0eOEeHF-JmAB6m6A-1
+Received: by mail-qt1-f197.google.com with SMTP id m15-20020aed27cf000000b002c3def3eefdso13030593qtg.21
+        for <mptcp@lists.linux.dev>; Tue, 11 Jan 2022 04:02:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=UW0G59Vv1rrMBAjDevMl635z8tVVMdBIkiTLbjEq5aA=;
-        b=piVxYiNwAtEM1phgiA3egPHdKRqoOTMDaVFfysSjGmkpY3q33aTl/6o1jP4yNdKAXN
-         1UlqokejdiCJhNlmjcaN8Sa2LB2awAXpMFztAMcWwkjqXCj44i/+0zQc6jum/Ek+RYIS
-         LgqTR7fZuZPpmtXFF5XVYltErIL56EAVvIV5wOQl8IK3Ys20eMGsQwViIkzxy2XFBvOB
-         7lDQXsqtSrd9gNXzaOCBMDG5SPTiCfQKRjtVgXYcbTC2L1t3famendPJu8eiuin0trbl
-         Re2ZrTwMU4wimGV7TfuhmD7UcWHjSJzHDnaKtEw08vAXRyVaPKdS6JFde4G8enTjUwQU
-         TmaQ==
-X-Gm-Message-State: AOAM530UbeL6buhgdddjfHgd+wGwarCSFS4V9Vxeuw0gzUPcypqAdYhz
-	CyojuTRp/JYsGiVmQ8syTRqRToHk5uYbJerkqtTKEKhT9obvd8p8uZmU17WdsNvDx8LlnPgVviS
-	fHTD1huJhmdiRpLQ=
-X-Received: by 2002:a05:600c:2048:: with SMTP id p8mr1646852wmg.119.1641893567962;
-        Tue, 11 Jan 2022 01:32:47 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwld+Z0gnZJDnaTlEnKFjmf2FmwaDmBrvK+mzTBPkcoy0bYgTkB/4490bBgwQJpOIi4ktnsNw==
-X-Received: by 2002:a05:600c:2048:: with SMTP id p8mr1646841wmg.119.1641893567700;
-        Tue, 11 Jan 2022 01:32:47 -0800 (PST)
+        bh=qPp8jp+Xm8CZgBHUbK6ZR0cEMcimGE4sXDZSX45tCUM=;
+        b=PTD+/xAgbkEy0StTCBNeWIDIx45ylpDLOLMHmWNffglWO2Ho7/sM3MUORIw6RcK5f6
+         ky5RKFbrejSjYjM0B1/YxXkgf3IJVz2ZDax6sffkfmpbb3SJazlCYJ/P9dher/AKQ75c
+         Rm+VgTbAMbjqQtVSbdd4Sxrjxrx8Mq9ErtIV3NZvPA88IT3b3r7db5+vyURvIU9SY4WD
+         WJJwHl7pEoBF7ohs75/qxSmOg0pJnM1nsXYukEaYYkHJ4Qqwn1Uh0lMyg1AMKtc2iWU3
+         4g/sAn7oVfGFm5hf7mJSvo34UkvszvNoMI6xqiHjagVGGvsWhvRFq/SVQm3NHCsqlWFw
+         gxlw==
+X-Gm-Message-State: AOAM530jiDIJz0SSDGeGOIm66csjaPiHPrNVjAbtHHUHQrB/+xvY6VoC
+	8GlgAI5fhR7roZXOd4QAxGhBB6moqp1cUdIN3KLxreNO5wnJy4cLHJAaPrztLO1KLEhVLF2QDYw
+	7ZPVBikBpncDoaxI=
+X-Received: by 2002:ac8:7d83:: with SMTP id c3mr3311544qtd.607.1641902538928;
+        Tue, 11 Jan 2022 04:02:18 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx6gGWY4fc9zY5zevR+/PPDrrYQc+7Y9+f9sZA2GH+FTsUoQ1mmim3ZlSDLlZi1Jv0K1f2NyA==
+X-Received: by 2002:ac8:7d83:: with SMTP id c3mr3311517qtd.607.1641902538636;
+        Tue, 11 Jan 2022 04:02:18 -0800 (PST)
 Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id a13sm8617940wrt.87.2022.01.11.01.32.47
+        by smtp.gmail.com with ESMTPSA id a16sm6480060qta.13.2022.01.11.04.02.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 01:32:47 -0800 (PST)
-Message-ID: <d573c2c51b69aefc22daead01d6ba773d1b55c5c.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2 1/3] mptcp: set fullmesh flag in pm_netlink
+        Tue, 11 Jan 2022 04:02:18 -0800 (PST)
+Message-ID: <868181f675d5372fb202b4b81be690a8572988ec.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: more stable
+ join tests-cases"
 From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Tue, 11 Jan 2022 10:32:46 +0100
-In-Reply-To: <503652e15fb983e53f4b20a95eb24dbde773e12e.1641868545.git.geliang.tang@suse.com>
-References: <cover.1641868545.git.geliang.tang@suse.com>
-	 <503652e15fb983e53f4b20a95eb24dbde773e12e.1641868545.git.geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Date: Tue, 11 Jan 2022 13:02:15 +0100
+In-Reply-To: <20220111034543.GA11026@dhcp-10-157-36-190>
+References: <613b986defe37faa7298095b364d9c81d6899664.1641549011.git.geliang.tang@suse.com>
+	 <263f77b0221bee6a9b99245e8c23f5ebafbe9137.camel@redhat.com>
+	 <20220111034543.GA11026@dhcp-10-157-36-190>
 User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -65,134 +68,153 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On Tue, 2022-01-11 at 10:42 +0800, Geliang Tang wrote:
-> This patch added the fullmesh flag setting support in pm_netlink.
+On Tue, 2022-01-11 at 11:45 +0800, Geliang Tang wrote:
+> Hi Paolo,
 > 
-> If the fullmesh flag of the address is changed, remove all the related
-> subflows, update the fullmesh flag and create subflows again.
+> On Mon, Jan 10, 2022 at 12:11:38PM +0100, Paolo Abeni wrote:
+> > Hello,
+> > 
+> > On Fri, 2022-01-07 at 17:51 +0800, Geliang Tang wrote:
+> > > IPv6 removing test failed on my test every time, this patch fixed it.
+> > > 
+> > > 12 remove subflow and signal IPv6       syn[ ok ] - synack[fail] got 1 JOIN[s] synack expected 2
+> > >  - ack[fail] got 1 JOIN[s] ack expected 2
+> > > Server ns stats
+> > > TcpPassiveOpens                 2                  0.0
+> > > TcpAttemptFails                 1                  0.0
+> > > TcpInSegs                       54                 0.0
+> > > TcpOutSegs                      58                 0.0
+> > > TcpRetransSegs                  2                  0.0
+> > > TcpExtEmbryonicRsts             1                  0.0
+> > > TcpExtDelayedACKs               15                 0.0
+> > > TcpExtTCPPureAcks               23                 0.0
+> > > TcpExtTCPTimeouts               1                  0.0
+> > > TcpExtTCPSynRetrans             2                  0.0
+> > > TcpExtTCPOrigDataSent           24                 0.0
+> > > TcpExtTCPDelivered              24                 0.0
+> > > MPTcpExtMPCapableSYNRX          1                  0.0
+> > > MPTcpExtMPCapableACKRX          1                  0.0
+> > > MPTcpExtMPJoinSynRx             2                  0.0
+> > > MPTcpExtMPJoinAckRx             1                  0.0
+> > > MPTcpExtEchoAdd                 1                  0.0
+> > > MPTcpExtRmSubflow               1                  0.0
+> > > Client ns stats
+> > > TcpActiveOpens                  3                  0.0
+> > > TcpInSegs                       58                 0.0
+> > > TcpOutSegs                      53                 0.0
+> > > TcpRetransSegs                  1                  0.0
+> > > TcpOutRsts                      3                  0.0
+> > > TcpExtDelayedACKs               3                  0.0
+> > > TcpExtTCPPureAcks               29                 0.0
+> > > TcpExtTCPTimeouts               1                  0.0
+> > > TcpExtTCPSynRetrans             1                  0.0
+> > > TcpExtTCPOrigDataSent           24                 0.0
+> > > TcpExtTCPDelivered              26                 0.0
+> > > TcpExtTcpTimeoutRehash          1                  0.0
+> > > MPTcpExtMPCapableSYNTX          1                  0.0
+> > > MPTcpExtMPCapableSYNACKRX       1                  0.0
+> > > MPTcpExtMPJoinSynAckRx          1                  0.0
+> > > MPTcpExtAddAddr                 1                  0.0
+> > > MPTcpExtRmAddr                  1                  0.0
+> > > MPTcpExtRmSubflow               1                  0.0
+> > >                                         add[ ok ] - echo  [ ok ]
+> > >                                         rm [fail] got 0 RM_ADDR[s] expected 1
+> > >  - sf    [ ok ]
+> > > Server ns stats
+> > > TcpPassiveOpens                 2                  0.0
+> > > TcpAttemptFails                 1                  0.0
+> > > TcpInSegs                       54                 0.0
+> > > TcpOutSegs                      58                 0.0
+> > > TcpRetransSegs                  2                  0.0
+> > > TcpExtEmbryonicRsts             1                  0.0
+> > > 
+> > > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> > > ---
+> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > index e48ce23d2386..41a2510e2f97 100755
+> > > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > @@ -393,8 +393,8 @@ do_transfer()
+> > >  				do
+> > >  					id=${dump[$pos]}
+> > >  					rm_addr=$(rm_addr_count ${connector_ns})
+> > > -					ip netns exec ${listener_ns} ./pm_nl_ctl del $id
+> > >  					wait_rm_addr ${connector_ns} ${rm_addr}
+> > > +					ip netns exec ${listener_ns} ./pm_nl_ctl del $id
+> > >  					let counter+=1
+> > >  					let pos+=5
+> > 
+> > Uhmm.... this is equivalent to replacing 'wait_rm_addr()' with 'sleep
+> > 1'. It defeats the purpouse of wait_rm_addr itself: reducing the delay
+> > required for 'del address' related operation. Additionally, an
+> > unconditional 'sleep 1' could impact negatively in other test-cases.
+> > 
+> > Possibly some alike:
+> > 
+> > ---
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > index e48ce23d2386..b209a303d1fe 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > @@ -366,7 +366,7 @@ do_transfer()
+> >  
+> >         # let the mptcp subflow be established in background before
+> >         # do endpoint manipulation
+> > -       [ $addr_nr_ns1 = "0" -a $addr_nr_ns2 = "0" ] || sleep 1
+> > +       [ $addr_nr_ns1 = "0" -a $addr_nr_ns2 = "0" ] || sleep 2
+> >  
+> >         if [ $addr_nr_ns1 -gt 0 ]; then
+> >                 let add_nr_ns1=addr_nr_ns1
+> > ---
 > 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  include/uapi/linux/mptcp.h |  1 +
->  net/mptcp/pm_netlink.c     | 27 ++++++++++++++++++++-------
->  2 files changed, 21 insertions(+), 7 deletions(-)
+> This patch doesn't work on my test either. I changed it to "sleep 2",
+> the "remove subflow and signal IPv6" test still failed.
 > 
-> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> index f106a3941cdf..16758e124e51 100644
-> --- a/include/uapi/linux/mptcp.h
-> +++ b/include/uapi/linux/mptcp.h
-> @@ -81,6 +81,7 @@ enum {
->  #define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
->  #define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
->  #define MPTCP_PM_ADDR_FLAG_FULLMESH			(1 << 3)
-> +#define MPTCP_PM_ADDR_FLAG_NOFULLMESH			(1 << 4)
->  
->  enum {
->  	MPTCP_PM_CMD_UNSPEC,
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 47ad00d01cf2..1cdaa774cafc 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1743,13 +1743,17 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
->  	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
->  	struct net *net = sock_net(skb->sk);
->  	u8 bkup = 0, lookup_by_id = 0;
-> +	u8 fullmesh = 0;
->  	int ret;
->  
->  	ret = mptcp_pm_parse_addr(attr, info, false, &addr);
->  	if (ret < 0)
->  		return ret;
->  
-> -	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> +	if (addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH ||
-> +	    addr.flags & MPTCP_PM_ADDR_FLAG_NOFULLMESH)
-> +		fullmesh = 1;
-> +	else if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
->  		bkup = 1;
+> > 
+> > could be more appropriate, but 2secs to complete MPC + 2 MPJ HS looks
+> > really too much...
+> > 
+> > Can you please capture a pcap trace with the failing test?
+> 
+> The pcap is attached.
 
-if I read correctly this is somewhat halfway the two ideas discussed
-yday and additionally allows to change either the backup or the
-fullmesh flag, but not both simultanusly. I think we we can support
-changing both flags with a single command and I think it's better to
-stuck with one schema. Just:
+Thank you! 
 
-	if (addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH)
-		fullmesh = 1;
+I'm really fail to understand why that happens, but the server replies
+to the subflow endpoint MPJ syn with more than 1s delay, and that
+causes the failure.
 
+The interesting part is that the ipv6 routing configuration is actually
+broken, as we lack an ipv6 route for the server on each link. The
+following addresses the issue here, but I don't see how things were
+somewhat working so far...
 
->  	if (addr.addr.family == AF_UNSPEC) {
->  		lookup_by_id = 1;
-> @@ -1760,12 +1764,21 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
->  	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-
-Here there is a pre-existing problem, I think. 'local_addr_list' is
-protected by pernet->lock or RCU, but this chunk of code does not hold
-any of them. The fix will conflict with this series.
-
->  		if ((!lookup_by_id && addresses_equal(&entry->addr, &addr.addr, true)) ||
->  		    (lookup_by_id && entry->addr.id == addr.addr.id)) {
-> -			mptcp_nl_addr_backup(net, &entry->addr, bkup);
-> -
-> -			if (bkup)
-> -				entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> -			else
-> -				entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-			
-I think here it would be better to expand the mptcp_nl_addr_backup()
-helper to cope with fullmesh, too (so we traverse the msk socket hash
-only once);
-
-static void mptcp_nl_addr_flags(struct net *net,
-                                struct mptcp_addr_info *addr,
-                                u8 bkup, u8 fullmesh)
-{
-        long s_slot = 0, s_num = 0;
-        struct mptcp_sock *msk;
-
-        while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
-                struct sock *sk = (struct sock *)msk;
-
-                if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
-                        goto next;
-
-                lock_sock(sk);
-                spin_lock_bh(&msk->pm.lock);
-                mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
-
-		/* this should create/delete subflows as needed.
-		  if 'addr' is MPTCP_PM_ADDR_FLAG_SIGNAL is a no-op 
-*/
-		mptcp_pm_nl_fullmesh(msk, addr, fullmesh);
-                spin_unlock_bh(&msk->pm.lock);
-                release_sock(sk);
-
-next:
-                sock_put(sk);
-                cond_resched();
-        }
-}
-
-
-
-> +			if (fullmesh) {
-> +				mptcp_nl_remove_subflow_and_signal_addr(net, &entry->addr);
-> +				if (addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH)
-> +					entry->flags |= MPTCP_PM_ADDR_FLAG_FULLMESH;
-> +				else
-> +					entry->flags &= ~MPTCP_PM_ADDR_FLAG_FULLMESH;
-> +				mptcp_nl_add_subflow_or_signal_addr(net);
-> +			} else {
-> +				mptcp_nl_addr_backup(net, &entry->addr, bkup);
-> +
-> +				if (bkup)
-> +					entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> +				else
-> +					entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-> +			}
->  		}
->  	}
->  
+---
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index e48ce23d2386..cdfb7da47384 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -76,6 +76,7 @@ init()
+ 
+ 		# let $ns2 reach any $ns1 address from any interface
+ 		ip -net "$ns2" route add default via 10.0.$i.1 dev ns2eth$i metric 10$i
++		ip -net "$ns2" route add default via dead:beef:$i::1 dev ns2eth$i metric 10$i
+ 	done
+ }
+ 
+@@ -1545,7 +1546,7 @@ ipv6_tests()
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ 	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 dev ns2eth3 flags subflow
+ 	run_tests $ns1 $ns2 dead:beef:1::1 0 -1 -1 slow
+ 	chk_join_nr "remove subflow and signal IPv6" 2 2 2
+ 	chk_add_nr 1 1
+---
+/P
 
