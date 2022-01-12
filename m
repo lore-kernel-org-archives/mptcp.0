@@ -1,178 +1,139 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055A22C9D
-	for <mptcp@lists.linux.dev>; Wed, 12 Jan 2022 10:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1641985057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WSsWyrjPjjH2+IhrYEuGo8p54SHH0oawUmzBjOxdvq0=;
-	b=g0h0dRGkRHyE4HYbAqUFnKyOzUEu0jqWZmixZoywuXTNv+QLAKi0ef0goyRymOJ+034G+M
-	/R2mhiSOWAel3DFo8f4XyUHiCqBhKYiYdoawP0JVWt3L3T7amYoIzGAcQ7OMpd4vndRWz0
-	xhjzXbRHm8asM+QYBvSOnHfTG/BJO58=
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com
- (mail-db3eur04lp2051.outbound.protection.outlook.com [104.47.12.51]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-18-Hw6jHqg4PYSHAWzEeHK1mw-1; Wed, 12 Jan 2022 11:57:36 +0100
-X-MC-Unique: Hw6jHqg4PYSHAWzEeHK1mw-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nyfnTRbwiadPhs/syQSuj+6+rOC9c2ODraXLE3TZawrvxy+j7oDfudZReKhou2I1bh/5GNlLyjMsFUff2qUPKGP8WSQv3j6ZQYxr1zZJRXji4BaREBkvxBSco7c55zI625nVuquN5RRSCTmecCQ29FQ3OMW/AOjXJUYbNVPAPvlQ/FrZ05KFdEKUwR2OiKGfc61cuvffunZ9za1K64cP7jg5s8dS4sndUy7cqA61Zmc8npUDiNUC/rBfb6OPtI8tH+vTD4+RbAK4zv7mDDnfzH29InJRMj7r8HxvgqrpZtWd9+7s5SFtvaUPEgLLl2ZSIF/dE981WPxgGAC/xYFI8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KyF3Qzxq2ZW2MLvOD8T1degP8A9dxLuRM/+I6oMUCQ0=;
- b=do3+pCPc6rHK0B4caKX6dC29W4PI8BcvZTTXOfeBcmtiSLNJPXWl/B1uUVVfQ7jsMzn95YJqYTfMiS6cxfm9q5fDTzKzxmojdS1+HQgCrYrm4H2vkod9cgHxhR1ztU7YNl3ywSfUlR9xBC+SrqFmd7dgiHCCu6r6+GJJrX51jEXXhDn4hKZjs1lsRp3bHV7QDdo9MDWP8I6dFjF1imoq4h+6dHQbhc97XflanVLlSL/0CO1qsE6i8QoZA1mTUroMaIlNHnmhcU0dRGYyFeP7+9gqAjY2rO4idL0Nu7ekh57KvJ70aRXRVK8noKLK+6TdM7m8phHX/HZpvplpDSLTQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by HE1PR0402MB3483.eurprd04.prod.outlook.com (2603:10a6:7:8a::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Wed, 12 Jan
- 2022 10:57:35 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::b5bf:e1b5:42fd:4dba]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::b5bf:e1b5:42fd:4dba%5]) with mapi id 15.20.4867.011; Wed, 12 Jan 2022
- 10:57:35 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH RESEND mptcp-next v3 6/6] selftests: mptcp: set ip_mptcp in command line
-Date: Wed, 12 Jan 2022 18:56:46 +0800
-Message-ID: <68c839ee370c92fbb0d27beb2e37ae41f171308c.1641984855.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1641984855.git.geliang.tang@suse.com>
-References: <cover.1641984855.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR06CA0001.apcprd06.prod.outlook.com
- (2603:1096:202:2e::13) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533672C80
+	for <mptcp@lists.linux.dev>; Wed, 12 Jan 2022 17:42:30 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id w16so12907500edc.11
+        for <mptcp@lists.linux.dev>; Wed, 12 Jan 2022 09:42:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=3yrF+lD1uXRjGSCIZxHvhCDtXerroUYgh7nI0tlMNzE=;
+        b=3ZwkpB5jJcgNei5f+FPzto+Mo6t0zxoJVwX97c10OMES8IEkBpQ+EjG5QIhlvtcDQb
+         R6efifYcfEoQ5+97VZflw3sxo5ndphIYW5wr/xFCvTbaQ0GaluCl4JtI/1ZMNEKN9KOD
+         unNh7PlGIxOLPvCB34wtnIvAUEmK5VpO7PxyJQHxb2dWDGZ9aZpABpuBPz/KZn+C3Z5B
+         wGZnMINqo3R8ZnhRZb+YsXTUGvRZmiW9m55DxZ05HPmS1P0riucNlQEg+cXlWQPGDLDu
+         uoJ0aw+uMh1UmBCmOabmCwojK2IdcmqgWWoPxMROLQ+9N5OlyqaB08P7wNNRiwtep62W
+         eDdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=3yrF+lD1uXRjGSCIZxHvhCDtXerroUYgh7nI0tlMNzE=;
+        b=3etecAKbRk5tnq8iMwuxpEmFNfBEqtDTpnP3hIms70ppNJbgkVVLG96MuUzeuh5lqa
+         6sU155s+pgzI4CGIQ732FUmgtzVF870D8SBM+tpXe3+8ixMQ6+c/oTDOR2lWS/uN4I6p
+         cq6F1rhzuK7/0c2ES+ThEtllCj/nWxdjFLWpYRAg/MvaJnV4eIjCj7JrzteWuSY7qPYd
+         vOMJajx3DL66i2rW93uGB1cZRxwJnenif1JLQOGYZyXXJr8WactusWtwCSaqcTyYegG9
+         mPc1ET7qgxnUV/6rXyRCECgxDyC5P/vrjnDUBaqt2rhs/E3H5qx17ELHGuUgH1Bhxnwf
+         e93w==
+X-Gm-Message-State: AOAM5305/Xg8jTVfXqz4UrfkH3khii5ENO301NztcYZYMJh0tK5wECqM
+	ibQZgYHQBDmd2GbzJcbnxWkFvMFzk+E6eg==
+X-Google-Smtp-Source: ABdhPJyJ8xJTKTyd569Ojm6tlnu7txhE/UxmfBOsLoCXxbyU98uRr20CWt4f3Iwir8wxSHU+F+q4mg==
+X-Received: by 2002:a05:6402:26c2:: with SMTP id x2mr687754edd.6.1642009349156;
+        Wed, 12 Jan 2022 09:42:29 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:47ae:90ef:fe3c:4c59? ([2a02:578:8593:1200:47ae:90ef:fe3c:4c59])
+        by smtp.gmail.com with ESMTPSA id sa12sm113217ejc.193.2022.01.12.09.42.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jan 2022 09:42:28 -0800 (PST)
+Message-ID: <b78dc53f-a4e6-483e-860f-a6a092c59ffc@tessares.net>
+Date: Wed, 12 Jan 2022 18:42:28 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ee5783e2-6536-42f9-03fa-08d9d5ba5736
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3483:EE_
-X-Microsoft-Antispam-PRVS:
-	<HE1PR0402MB3483E15955D40FDC6AD2D48DF8529@HE1PR0402MB3483.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	dHiCUuU4cSbt+fEv11xclNs6B1AnCyvkCQpZ7RxZUSq7Rwc7EgJC2pn4V5Pp0wNOJrk6dcIqK2u7Z3Qm/MasnuFyO1ctzMCFNnkeRhk5rqgE4HZBWQZ+pM39gv+AQgVvDBET3bl+cAg0zu2XtIjj3huww+wSdE0BSVg0zDvqfWSasH98GqqCGmovXWEHdZH931yud35EAT5i4I1ft1pOhL6/mEFkkGiRpN9NsKT4hZs18wGhXHJvSF1VMiIeDpmz0VSxij1Qnv9+9031NMRM9QVszP720tNPISlEdDABZYoTA6L8cXwSXELulOfyUQtBQ/VRb5OqpYaCzifccBP6AA32RDnxzpfRObbKfRrDRJ60zOaYjyl2w84JGBwy1WDhFLDn02mY5QPCYSWKPo9obXAuqYP+SH/KSfC6Ll0gqAt3r5DG7MJvoqviHQttuphweeTiPmga/9BPt+bJ0Noyv2DOdNEuw0nOS49z3Wwii/Hy6gJ5SL3c1qo9QF2cCRdbMdAvtziEtnY/X/QmOFxKUeLeIEZou8BmlIJARlrKMz4pQ91e6m9UXL4QWwg7L+1wO9oXKIAJXYWWAtQE9ngTAbVP+FNKNs7yFwdAM5HFsdOs13b/jS/akKRFsAL0s9mlfvkzW+mp5bY452bVJwdk3g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(55236004)(8936002)(6506007)(107886003)(6916009)(8676002)(36756003)(38100700002)(5660300002)(6666004)(4326008)(186003)(26005)(508600001)(44832011)(83380400001)(2906002)(86362001)(66476007)(316002)(66946007)(6486002)(66556008)(6512007)(2616005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OJmdko2rbPaISJzx1AFW3398gzzlGju9g1EqycDXzeGTQKe2W2JQGLC3VuHB?=
- =?us-ascii?Q?p+DtsgljJkIk0QRI40BRjskMRjooJUt/tykMfEEtcSQ3umd/h8CvFD9vSbmX?=
- =?us-ascii?Q?wknGF6flX4cPHaXFQLWEqStkebbqimV5SmW56UuS8gHxK6tDpbuzuC4hzUll?=
- =?us-ascii?Q?DGyGVZxejGKiATkhLxorqI9FARZ0XvkTM5l9RK4qelZGTA6c8BcbIPdM6U2o?=
- =?us-ascii?Q?sYs0Dlv8Zwdu+MvZCvwtGDyoNL5nPOPw6IBwgQX5xTrOqMybnpvPeRXU+Bw9?=
- =?us-ascii?Q?TbBa3UToDLtl8+CtBLo3sAASXQ+Xj/aQpM8E2SOPzMy4c7YlxpU1tuxd+TUr?=
- =?us-ascii?Q?lm7hTQCmmEyCc2k0wmAACEV7iyqZrpGNghxGkuAfqdfPTkcwgyfUGE1WpqXA?=
- =?us-ascii?Q?UQTygTSbpPmlpEC6taarvc4lQsK5AdSlFCrxiqu+x5rnWuaktO2JdWnYyYJs?=
- =?us-ascii?Q?EbL1RCd0cLplnXtNPZ03Ydu+8SpgHt+HGu6lKUpPdFvnPG4B8OYHw80PC74t?=
- =?us-ascii?Q?Ac5O5OQGycYO+O86xOfSua2XXUx4Zi5ja2Uem77fDXiPOrvvh6SXEOh/q7DU?=
- =?us-ascii?Q?MYq8HDjiOcntownAyPWh5JU/R5uTFibOjJ+Dc2nDRrf8i17a8Q7A9HmVpTpS?=
- =?us-ascii?Q?PHsd/Z14bQmNMVsvol/43O78LZSRRy3Wh+SU1aYSpTbXt/hkCMPE6YADyzCS?=
- =?us-ascii?Q?5jEHnMDcWzAmxo+LY3TMCkWhAt80teHq90zo2GK/WF+5SWyVU7ikraA9QSWY?=
- =?us-ascii?Q?0qqOsbgdWw/Ab+BBlEBgxsu2vf2TQduw6ImwFM8SrQMBAFPwb015PSjvUI/y?=
- =?us-ascii?Q?9wZ0yYgk5zjyl/eLvlKRou+poO/+q7T9dxPgCLRUO8FwlrSReVT887ZuiMs8?=
- =?us-ascii?Q?iiWQz7qpEw1uF4Qf2w+AaUpCcvOkheXI7pyqT/lObYHmmFfAZGG3M3WOnNyM?=
- =?us-ascii?Q?UV3Q5pnwT88OWOQYWt6NdSINcKbg9XkXSt13Yf7AIaGpOgghhxbTamppOzn6?=
- =?us-ascii?Q?IV7kwIniGzmna3nNjf9sLCY6oLOjuvB0eA+VPTNcMPZlh1tUxlohD0z5Ss+u?=
- =?us-ascii?Q?KhGwNFAdpQiGd7u0BRjW49/TzaonjJwxSoIZ98ynzOTcnd6yGtBi/A8+oKI3?=
- =?us-ascii?Q?DdYjTiY3NnCNFFEbM1GVVOtLZdIV4pyscZ/zGo1JLAywk5vxSALgnmq6Xlwx?=
- =?us-ascii?Q?FRCQwJU/NEq16IQ6uStvLhZWrByDBIXYF6KbcLo7wn412nVgitN/OM4/iyVX?=
- =?us-ascii?Q?OcVyDFc1qsUDMe0DxTKz/b4YpnO06Kl6/ZsR2wP27jj5400TREn/rRi2iQDG?=
- =?us-ascii?Q?TJxz37ccsjfh+p+cR7AOBTC4bPMXwY/XQg+s+UHfSaLNpoRqoIp2+QC9EksR?=
- =?us-ascii?Q?78FvyhEP0PsJOUoT0yB9cjjleZrocpeAXtdNOTxKG0C4WLouJPp/LBRhAzS9?=
- =?us-ascii?Q?iCLMiPnVRemFzCWQbUnPZp2LRv2FD7QdXiXAVX5JAsUlWuNQ+0QPQMf76rQv?=
- =?us-ascii?Q?3Nc50U4k5txC4D971HmhiSacVuZJO/odyO2frPt3vX4uWtLdtH6X+8lwPYKn?=
- =?us-ascii?Q?4fZbkSvilqYm4GSVFaPq6NW8CTOVQR/DIqGo0wMkpXKwtbethVMoiy1WCJo1?=
- =?us-ascii?Q?Zi1gPQraKbAlUTl+Q6IaYNs=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee5783e2-6536-42f9-03fa-08d9d5ba5736
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2022 10:57:35.4364
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fQTUn3IVLgiNKlaplaafm6Gv7j5FlDhBTEOT5jkW0Ea1C/e6e6AYJWtu3t0pztWHbJ2ju87yu6j5czBgKXRoIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB3483
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: more stable join
+ tests-cases"
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <613b986defe37faa7298095b364d9c81d6899664.1641549011.git.geliang.tang@suse.com>
+ <9fde3240-18c4-ceb5-903d-64c532a87992@tessares.net>
+ <20220110074343.GA4714@dhcp-10-157-36-190>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220110074343.GA4714@dhcp-10-157-36-190>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This patch added a command line option '-i' for mptcp_join.sh to use
-'ip mptcp' commands instead of using 'pm_nl_ctl' commands to deal with
-PM netlink.
+Hi Geliang,
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+On 10/01/2022 08:43, Geliang Tang wrote:
+> On Fri, Jan 07, 2022 at 12:03:00PM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 07/01/2022 10:51, Geliang Tang wrote:
+>>> IPv6 removing test failed on my test every time, this patch fixed it.
+>>
+>> Thank you for looking at that!
+>>
+>> The public CI has many similar errors and maybe (hard to say) more with
+>> your patch, e.g.:
+>>
+>> https://api.cirrus-ci.com/v1/artifact/task/5889173428109312/summary/summary.txt
+>>
+>>
+>>> Our CI did some validations and here is its report:
+>>>
+>>> - KVM Validation: normal:
+>>>   - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
+>>>   - Task: https://cirrus-ci.com/task/5889173428109312
+>>>   - Summary:
+>> https://api.cirrus-ci.com/v1/artifact/task/5889173428109312/summary/summary.txt
+>>>
+>>> - KVM Validation: debug:
+>>>   - Unstable: 2 failed test(s): selftest_diag selftest_mptcp_join 🔴:
+>>>   - Task: https://cirrus-ci.com/task/5326223474688000
+>>>   - Summary:
+>> https://api.cirrus-ci.com/v1/artifact/task/5326223474688000/summary/summary.txt
+>>>
+>>> Initiator: Patchew Applier
+>>> Commits:
+>> https://github.com/multipath-tcp/mptcp_net-next/commits/3b5258004128
+>>
+>> Could it be linked?
+> 
+> Hi Matt,
+> 
+> I tested this on my Thinkpad X1 laptop, only two failures occur. But
+> I think it's somehow linked with the commit "selftests: mptcp: more
+> stable join tests-cases", it dropped many latencies (sleep 1) in the
+> selftests.
+> 
+> The CI is runing in a KVM, right? I think we didn't tune the latencies
+> of the selftests for a KVM yet (At least for me). I think we need to login
+> into a KVM to run the selftests there and change the latencies there. I
+> think different latencies are needed. We need to make sure the selftests
+> could be passed on both a real machine and a KVM.
+> 
+> Could you tell me how to get the CI KVM image? Or could you do this
+> test?
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 512dc92a5646..647b435e4e46 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2180,6 +2180,7 @@ usage()
- 	echo "  -u userspace_tests"
- 	echo "  -c capture pcap files"
- 	echo "  -C enable data checksum"
-+	echo "  -i use ip mptcp"
- 	echo "  -h help"
- }
-=20
-@@ -2201,9 +2202,12 @@ for arg in "$@"; do
- 	if [[ "${arg}" =3D~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
- 		checksum=3D1
- 	fi
-+	if [[ "${arg}" =3D~ ^"-"[0-9a-zA-Z]*"i"[0-9a-zA-Z]*$ ]]; then
-+		ip_mptcp=3D1
-+	fi
-=20
--	# exception for the capture/checksum options, the rest means: a part of t=
-he tests
--	if [ "${arg}" !=3D "-c" ] && [ "${arg}" !=3D "-C" ]; then
-+	# exception for the capture/checksum/ip_mptcp options, the rest means: a =
-part of the tests
-+	if [ "${arg}" !=3D "-c" ] && [ "${arg}" !=3D "-C" ] && [ "${arg}" !=3D "-=
-i" ]; then
- 		do_all_tests=3D0
- 	fi
- done
-@@ -2213,7 +2217,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
-=20
--while getopts 'fesltra64bpkdmuchCS' opt; do
-+while getopts 'fesltra64bpkdmuchCSi' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -2267,6 +2271,8 @@ while getopts 'fesltra64bpkdmuchCS' opt; do
- 			;;
- 		C)
- 			;;
-+		i)
-+			;;
- 		h | *)
- 			usage
- 			;;
---=20
-2.31.1
+Sorry for the late reply.
 
+To test, it is very easy, you just need to install a recent version of
+docker before:
+
+  cd <kernel source code>
+  docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+    --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+    auto-all
+
+This will do what the CI is doing: running all tests, once without and
+once with a "debug" kernel config.
+
+There are different arguments you can give instead of "auto-all": only
+"normal" or "debug" kernel config, having a shell instead of running all
+tests, etc.. Please see:
+
+https://github.com/multipath-tcp/mptcp-upstream-virtme-docker#entrypoint-options
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
