@@ -1,80 +1,85 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5DE2C9D
-	for <mptcp@lists.linux.dev>; Wed, 12 Jan 2022 22:35:44 +0000 (UTC)
-Received: by mail-qv1-f43.google.com with SMTP id p12so4617195qvj.6
-        for <mptcp@lists.linux.dev>; Wed, 12 Jan 2022 14:35:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=USqYZkTz+gPkFo3EdrrUS721AawrRMxTCxHqTqY66wk=;
-        b=dP+bJfiJUsjgWO7ePCa+jczPu9zlFngeU9HQXVRWnsAZu+m72scf8E+7h3NsPfX2xm
-         y+3GPyjgD2QElUTGYSKAtWzPDgcVuGcUIlwJFqmSqgkCv1NfolpwLzCoAODowexhVnPV
-         5axagP7JxNLS1f3E1t/9WWvkdIQdTTohNlRLc/akCPW0HPHTMecVjifeulQ/uTIVA7k6
-         g0eJpjH0W6skRBts3ZVkgIcP2Q5ZDuG7Qovw3IrdE1aOsfpfww8mSEguCPseZO1BESsB
-         uB4181+q+7QDXhbjnl3yrBSBGl9HFb+4WfT2NP5bdcm5conMfcpxC2VYVDN/qvrkBjTh
-         D/VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=USqYZkTz+gPkFo3EdrrUS721AawrRMxTCxHqTqY66wk=;
-        b=ybCCc4xbUEitNNV0Zx2uqneBdlDW6EHMB73+7Y9GbUgcsscUk+PHzZzmQrn0jZsOEz
-         j3dmoTLZNF8+9FYbYat6e3Edhk+R7/WMi44PTGI1ZTPwzJdTMkPC8Q6T7PkD2ugG/k/Y
-         zBf+Fz6nVxuwLK6UkdzbnW94+3Bpa/uNNPcj1pFHp4y6G+hEixek4spTxo3yr/7ZlPRx
-         sRLfhWZqcmt66TsROOnZEvNd93q9Zvg6GSkpwL7kIO3c8ZXWYBdo909cQ6geUSX7Vudu
-         W/L6uOWXF5CJsO/cINBeTwR0TTNP7L65+zmiY27yawhyhJdI9HwArJzY1B+uixo9bThB
-         Ps8Q==
-X-Gm-Message-State: AOAM531aHL3vjGxFeqfW8y607jwIQTP0V1uZSuCh4qmxhHZ2Fp4Uf9k9
-	A9H85S/IylnT7PAty24zzA==
-X-Google-Smtp-Source: ABdhPJwaQVU9cZ2+akUUnyPk3HDyLGXkFebwCGDtP4/AiRvseG9M3s9Snmw/JgHne8IRurQclZO+Ng==
-X-Received: by 2002:a05:6214:21e8:: with SMTP id p8mr1918168qvj.34.1642026943766;
-        Wed, 12 Jan 2022 14:35:43 -0800 (PST)
-Received: from [127.0.0.1] ([52.177.67.36])
-        by smtp.gmail.com with ESMTPSA id v14sm880508qta.43.2022.01.12.14.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 14:35:43 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220112221523.1829397-22-kishen.maloor@intel.com>
-References: <20220112221523.1829397-22-kishen.maloor@intel.com>
-Subject: Re: selftests: mptcp: functional tests for the userspace PM type:
- Build Failure
-Message-ID: <127c8b7e-c854-7ac9-6025-544096b2702b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Jan 2022 22:35:43 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D252C9D
+	for <mptcp@lists.linux.dev>; Wed, 12 Jan 2022 23:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642030397; x=1673566397;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=DpIBuHrCGK+b25OLepS1iA4cQKFYqxA9Y0IodJeH8gg=;
+  b=CxcEy3HPnUkKFcfu6oDy9riSBmiPRAVri6LZzkpPFI9OdKiE8E+T4BgM
+   eCig7xfhcjFJlLqrd6qWAHhR2yDfb1wg3HIpAT4PxybR0pMycxKj7dj+o
+   gEMAKHwYR+XwHjMyQBoa5DdfgC8CD3VNj+vMbO3jkjxOrmHUDncMyYBwM
+   roGE7i/VVPKYHQY88qpNlmfYueJndvat0Zzab8WAoZdr1TXnBnaEXjbBn
+   aTPwCSqMsqkr/BX/m/a3BB5siVULzZIY9JlFhhaZp7DyRcGry2U0DpPsM
+   1LDWMpNqE14gikDk1Mb7RRDZ44uhNy0CjBZ+gtM63Ke/+5GE6d7iNYeTn
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="223859132"
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="223859132"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:33:16 -0800
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="670321953"
+Received: from peterwri-mobl.amr.corp.intel.com ([10.209.106.113])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:33:16 -0800
+Date: Wed, 12 Jan 2022 15:33:16 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v9 0/5] Clarify when options can be used
+In-Reply-To: <cover.1641804767.git.geliang.tang@suse.com>
+Message-ID: <35eaa787-f52a-7b0-5c99-f4ff38427ae@linux.intel.com>
+References: <cover.1641804767.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Kishen,
+On Mon, 10 Jan 2022, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> v9:
+> - drop patch 1-3 in v8, they are accepted.
+> - drop patch 6 in v8.
+> - add a new patch "move the declarations of ssk and subflow" to avoid
+>   the compiling errors when moving the mp_fail label.
+> - update patch "reduce branching when writing MP_FAIL option" as Mat
+>   suggested.
+> - Change 'ADD+RM' from 'C' to 'P' in patch "clarify when options can
+>   be used".
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Hi Geliang -
 
-You can find more details there:
+I think patches 1-4 are ok for the export branch:
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20220112221523.1829397-22-kishen.maloor@intel.com/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1689981079
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/bce46a55a41c
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+There are still some fixes we'll need to squash (or get from upstream) 
+before updating the unit tests and upstreaming, see patch 5 comments for 
+details.
 
-Cheers,
-MPTCP GH Action bot
+>
+> Geliang Tang (3):
+>  mptcp: move the declarations of ssk and subflow
+>  mptcp: print out reset infos of MP_RST
+>  selftests: mptcp: add mp_fail testcases
+>
+> Matthieu Baerts (2):
+>  mptcp: reduce branching when writing MP_FAIL option
+>  mptcp: clarify when options can be used
+>
+> net/mptcp/options.c                           |  64 +++++++---
+> tools/testing/selftests/net/mptcp/config      |   5 +
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 111 ++++++++++++++++--
+> 3 files changed, 152 insertions(+), 28 deletions(-)
+>
+
+--
+Mat Martineau
+Intel
