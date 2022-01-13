@@ -1,354 +1,258 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DBC2C82
-	for <mptcp@lists.linux.dev>; Thu, 13 Jan 2022 01:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642035993; x=1673571993;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OoKGgwRxQJ2Ft/9Fln7RNVkcf5+PXgYR1fLaMIfI/EM=;
-  b=G1H6O3LDvhOOjK7Updgq6kVOM8Vfb9bI5m9WazippsD/hm4A3tJrVnQJ
-   FK1Ka/45WbNgb6br6dDLLQsup51zNCTvmWxVDOhkonbQ3JVv92SDLyxD+
-   RejSUzF5r/k2d3Tx9ZaPtoJ38c5lJGVYTSeKNIVg/hIML5UNsrs9jnABn
-   dcgoXmMbXQv/Ew8VH5Hr22mj1md/1Hfxq1XcFun/umHFIVgOa4JTdMEYQ
-   txP/YcikM6a03qMH6/j9qeDJV7c2Boz15PpJqPd+IkUPsB2d9oCfrcZdW
-   fjwYWGI1hsqixSXOXmMzwMdos9beU8/iIGJ0/1lovgtPgKhSLQyRDGids
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="231238575"
-X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="231238575"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 17:06:32 -0800
-X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="670345326"
-Received: from peterwri-mobl.amr.corp.intel.com ([10.209.106.113])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 17:06:32 -0800
-Date: Wed, 12 Jan 2022 17:06:31 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-next v9 5/5] selftests: mptcp: add mp_fail
- testcases
-In-Reply-To: <a0f7ec766ca99a5f2e2aa27a358f45fc06f6cc78.1641804767.git.geliang.tang@suse.com>
-Message-ID: <ea44a519-11b9-175-cceb-abb69232abbd@linux.intel.com>
-References: <cover.1641804767.git.geliang.tang@suse.com> <a0f7ec766ca99a5f2e2aa27a358f45fc06f6cc78.1641804767.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C27C2CA2
+	for <mptcp@lists.linux.dev>; Thu, 13 Jan 2022 02:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1642041030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=urxYiVm6CiEom3BQGi7btWd11XYFQabyblbpt1RvYus=;
+	b=R+P+wjcD9PTMzKuR9OPZJGpmGOSUWVrM0Oug0vkixwk0vB27rBvZyzmVpWUs3OcPlU4kbQ
+	1XmalSlhsDSVbHAR5K9hgQ06hZ7xHzAnchhkKpwd1PbUFVFwoxBh/ktPBYoFxK/CjV3ru7
+	jpn439VKb0kgurSAcg7p4QuzNYgDZvo=
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com
+ (mail-am5eur03lp2057.outbound.protection.outlook.com [104.47.8.57]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-27-Lzra9T-SOCS9V5qHIwH9tQ-1; Thu, 13 Jan 2022 03:30:29 +0100
+X-MC-Unique: Lzra9T-SOCS9V5qHIwH9tQ-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hvVbSJHqSzWLF/n2eZ+IyGrCjr3JV6UxuRu4E38HIAwg4/d32yHv9OvXHqKrjusuTKywCPK6KcFvhNxHOhX28TAqdMU8XOP3UURDgBfLQxaQGsPeNheA6lGZAQNBVTc5bIrDuXEML2iq3FTTNAJAgjkJNsflZlkFBImLhTsusoaprPdgvECJ3J9IEq9J/mYw2REdZexzdupiXKYBRyo4qzUMPtJZjzVr9bXgvuX3U1cUf/XLmSxWoAQe2cDWLVuDZxzWb2o8NkLpU/5gIFMDGUqaV7Pc4bRM33kP8i5YN438rmSAbZwpbnFF2+MFR1zp50Q5RSw/lSOcQfXJqhRx4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=urxYiVm6CiEom3BQGi7btWd11XYFQabyblbpt1RvYus=;
+ b=K04JXrQM2IgW+Xpw697pNdLx13vXeYqWmzYTRe+1YxWrRM9XifJ/CdiFgJZoSse3eRu0y1Z+J/tC3ROiED5GX/WLjnsPckH94CQufjagNuIXQkAfvehdp8CbUx0+sSeBsJZNsN3m8auk2SV9jnJ+Z4Dl/8s7WftaGOgcEc/lLIEnTqXOSXJo2DiyxDMulQzOv8otMg3AjxVltDfUXNFqAZ34R8TqakVv4O4hk2kxwXNEGQ2iZFboCqBO/7QMv4PSSRdRESm94J7Cga8L7PzjnJI2dcKsVlmaCmk6qJPXA7VqYrYQB+sVnJBdjP5jQ7w+KATabB/E9yCJ9CAdHoY2mA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM6PR04MB5078.eurprd04.prod.outlook.com (2603:10a6:20b:5::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.11; Thu, 13 Jan
+ 2022 02:30:28 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b5bf:e1b5:42fd:4dba]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b5bf:e1b5:42fd:4dba%5]) with mapi id 15.20.4867.011; Thu, 13 Jan 2022
+ 02:30:27 +0000
+Date: Thu, 13 Jan 2022 10:30:21 +0800
+From: Geliang Tang <geliang.tang@suse.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH RESEND mptcp-next v2 7/9] selftests: mptcp: implement
+ pm_nl_show_endpoint
+Message-ID: <20220113023021.GA3805@dhcp-10-157-36-190>
+References: <cover.1641535880.git.geliang.tang@suse.com>
+ <47e4e94eda65b9e68ec469fb3e7309405167ec73.1641535880.git.geliang.tang@suse.com>
+ <2a75529-5ec1-9532-24-50425f67770@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a75529-5ec1-9532-24-50425f67770@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: HK2PR0401CA0012.apcprd04.prod.outlook.com
+ (2603:1096:202:2::22) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a693562c-2622-44db-04ff-08d9d63ca8dd
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5078:EE_
+X-Microsoft-Antispam-PRVS:
+	<AM6PR04MB5078AF1C05C9B0760344AAC7F8539@AM6PR04MB5078.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	2e6bEtmimRKE6Zjlb9E0wunJWu/NkKHW5ANSNUW0uw568+QvOveZiUnarbeTdJsgQmFqKDlfCjtlUJFjsOikyUUssu2jVuTQtM0uNbwExr6/VVLIM+myUBh5EtamJWJ0iOT6CPn1Lnyh5gYBYlJC8xClllIB3A7v+w7fs1M2mQVL/9PyYQeKfGk7zBr0nFOTLxoT6JsJsdW9B72opBWhqM7WKtbvTybPavdsSb3WlTdED1XqazB7PkqvpHKw+cOEejXvhIAboHkpJgI/5CxZzRw7+DRzENtXCeSrDnwXzWn2cHMZRWwkk2iTS2vRtvcbEKw1H/HOMe/bzd74iP0xk+WfwtmtQXw8R01PyFJmDC28X6jO34HeqInJdbh9JUh/l6StMQ+2rRAsZelyWkzBTFEoRCRONpqvMQvfo/i3wwq6C/52eH+cKpPOFBW53N99K6aczFRbEdpBcIDo3Epu3Bo4rCiudkDyuAqiEeOZ2Y12l96h+zHACuQNfpH4aMf9sQgt78Xgdqlj/T0+H18GazTN8CThrN7ZpSMaholxQE5ObR+i/NScPLx7dxbnHbAFFwJojinBF1z/zM92kY2ReKomo98QkmZerAtUb3racrD2RmAj607mHQHaVD5rPq6T/BQXzKtydNVgsQzdx9mAWg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(508600001)(66476007)(2906002)(1076003)(5660300002)(316002)(38100700002)(55236004)(9686003)(6512007)(26005)(66556008)(66946007)(83380400001)(6506007)(86362001)(4326008)(8676002)(33716001)(186003)(6666004)(33656002)(8936002)(6486002)(6916009)(44832011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?VO4w2KC9bn/OJRBKQ+45CId0kuKjiYqQ2G1dqPQx8Bvq+Xva5JTDcBqYiPDy?=
+ =?us-ascii?Q?eZXKa23fkzSVWBYoafr/pEc0gJ4OlPogOgJw4EMPnH3KWlo9L5PSTQv9GxKB?=
+ =?us-ascii?Q?f4w4wmCZaqORlm5PxjC9NSHM9VdgpyY8JLfGuugbx4up7D9xFUmXOY4tqvj8?=
+ =?us-ascii?Q?7dYfWUaUccyExbgmfsMCjXhvTF9MIG6rVqkhm9xpA4pq+9ZBx4pT/1SHyQfm?=
+ =?us-ascii?Q?7RAtSdatEKH2Uk2HLFVup/6znjqmo8b1IFpaINKn8RNora84bwwvrAhAg8//?=
+ =?us-ascii?Q?bohNknOcMPh6YQ4QCTW16H8iVKONB29WQc/VKtGg09t4uqbESgfYgQSdq1l5?=
+ =?us-ascii?Q?0KcVPxjklEEkflQbnxfsDbZ9bvwcJ9WJNkwhTlkxaNlvlt6ynVE4bm/T1Kb1?=
+ =?us-ascii?Q?Yvj2PJTra7NxZpeXkShCtZAm6etjozk5xvhmWax3F9Y2p5IG5t69x03GFdoY?=
+ =?us-ascii?Q?d6ZdoMNUCni6PLvAQVh+scA1t1zAiaiVuy/v4Z1YfYVmlxyNij241ibGX2oI?=
+ =?us-ascii?Q?RC5tDQisXrbmq+7nNWxG9sIV52pmpRZ6KZDAn5KPt2SosGI96JbUA0i1HzmN?=
+ =?us-ascii?Q?9H8w5EoHNDWkFVGADpKlLNFBKdytwChZ8+b7en7FMGDlcFS/U1PNMvO7JIpI?=
+ =?us-ascii?Q?VzQ43kbn7Zsnnvdc6jqs9XQybyEeva6n8Boqf4Kwm01kR7NM7rxHdm1zMDZ0?=
+ =?us-ascii?Q?Qm4v76MCbpICF63ETkRe1W92zc6g82ItRxp4SY89k8qOXU/Ukjhq5zaJjDd1?=
+ =?us-ascii?Q?TqVwQC/m9U4w+oWvHvT4ZtpnDg8TkxM9RJXcyps4ySBA9Zl8FgNRU/WjkUR2?=
+ =?us-ascii?Q?EpM5lh7A06vYvuVMj0R+q2NmKYz8yBJvAx8UoPYHhBBKP4OZu/LsU/YA50Nk?=
+ =?us-ascii?Q?8JOSB5SNHongTjRMvlVcB+a44qV1rxc1DVmPhkTl/dWZcsUamyTLWN+gsqHF?=
+ =?us-ascii?Q?Vo8o9Y/BtSW695ijTzTc5uZVBvwAnahNY3IPqngWUUs6otgPEhjUMg8oJEvM?=
+ =?us-ascii?Q?2rpSYyKY+3MS3kRdJ81zIiH/vPLRcLu9TkowUwi18mQBzHFJW9aH2TJ830Fn?=
+ =?us-ascii?Q?V0rpcH0KVl4ljTPWrMFv1lZiXRFxDOCiz9hpifzctQ0Gvyf3RHMGLGnNdcHK?=
+ =?us-ascii?Q?u06dsfq7Qt+lRvhfTQjAkK1IZg3ZQC6xL8gbFzODkOUOZim1R7s/76MoyH9r?=
+ =?us-ascii?Q?DE2ghtUTmTnVb1dVJZt/bxTOjjZyulfBJ4h87xXY7oqbUYxNF6XsMbN4ZSx1?=
+ =?us-ascii?Q?iNNTJWneXJV3KFYfOaDnCWwwTiEF5qgQdOu43KMpsN2/zEur3YUfyYRHzZG4?=
+ =?us-ascii?Q?u3B+IOh0TvdIZPm4+qfh2JoBTk0S/2iaJydhHcLEtDmtwgX3vW7Upqxro/oi?=
+ =?us-ascii?Q?FSeVUArwgpxuN5cbGT57sqniXe7TIqF3921yQPF2QcSnyb+2k3a5kydX9lVV?=
+ =?us-ascii?Q?G7568o+zn2KZsHi1gHaSRwO0ClprsrvtAA5Fo4EEZsXJx7cXrBnMlGCynXiL?=
+ =?us-ascii?Q?7GuNo5jqPyNlrogSHvPpsw71AUNq8SH/NAmhYdq7MJcPjlsIEhCZGKaQjpve?=
+ =?us-ascii?Q?T9/w5A57vXXV5R7DOw9Mn+2BIjBw1Oq/vVP5n3X9IaKj7x0z6oKdrWKdA9oj?=
+ =?us-ascii?Q?sdkI1Yxf1t02AaLiG1/zRS8=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a693562c-2622-44db-04ff-08d9d63ca8dd
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2022 02:30:27.3449
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qanh420TewHk0cyPETy72zI0fib1H91PBXrwUDAdZjuNFkoezMUtGkPwErCVqxQJ5WtF+UWs0SZhuIPya6kwtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5078
 
-On Mon, 10 Jan 2022, Geliang Tang wrote:
+Hi Mat,
 
-> Added the test cases for MP_FAIL, use 'tc' command to trigger the
-> checksum failure.
->
-> Suggested-by: Davide Caratti <dcaratti@redhat.com>
-> Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> tools/testing/selftests/net/mptcp/config      |   5 +
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 111 ++++++++++++++++--
-> 2 files changed, 107 insertions(+), 9 deletions(-)
->
+Thanks for your review.
 
-Does anyone else see the "leaked reference" errors when running these fail 
-tests with the latest export branch? Looks like the reference tracker 
-finds a tc-related error:
+On Tue, Jan 11, 2022 at 05:15:43PM -0800, Mat Martineau wrote:
+> On Fri, 7 Jan 2022, Geliang Tang wrote:
+> 
+> > This patch implemented a new function named pm_nl_show_endpoint(), wraped
+> > the PM netlink commands 'ip mptcp' and 'pm_nl_ctl' in it, and used a new
+> > argument 'ip_mptcp' to choose which one to use to show all the PM
+> > endpoints.
+> > 
+> > Used this wrapper in all the selftests in mptcp_join.sh instead of using
+> > the pm_nl_ctl commands directly.
+> > 
+> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> > ---
+> > .../testing/selftests/net/mptcp/mptcp_join.sh | 21 ++++++++++++++++---
+> > 1 file changed, 18 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > index 475867a01b83..1a92f0526a4a 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > @@ -363,6 +363,17 @@ pm_nl_flush_endpoint()
+> > 	fi
+> > }
+> > 
+> > +pm_nl_show_endpoint()
+> > +{
+> > +	local ns=$1
+> > +
+> > +	if [ $ip_mptcp -eq 1 ]; then
+> > +		ip -n $ns mptcp endpoint show
+> > +	else
+> > +		ip netns exec $ns ./pm_nl_ctl dump
+> > +	fi
+> > +}
+> > +
+> > do_transfer()
+> > {
+> > 	listener_ns="$1"
+> > @@ -471,7 +482,7 @@ do_transfer()
+> > 		let rm_nr_ns1=-addr_nr_ns1
+> > 		if [ $rm_nr_ns1 -lt 8 ]; then
+> > 			counter=0
+> > -			ip netns exec ${listener_ns} ./pm_nl_ctl dump | while read line; do
+> > +			pm_nl_show_endpoint ${listener_ns} | while read line; do
+> > 				local arr=($line)
+> > 				local nr=0
+> > 
+> > @@ -524,7 +535,7 @@ do_transfer()
+> > 		let rm_nr_ns2=-addr_nr_ns2
+> > 		if [ $rm_nr_ns2 -lt 8 ]; then
+> > 			counter=0
+> > -			ip netns exec ${connector_ns} ./pm_nl_ctl dump | while read line; do
+> > +			pm_nl_show_endpoint ${connector_ns} | while read line; do
+> > 				local arr=($line)
+> > 				local nr=0
+> > 
+> > @@ -560,11 +571,15 @@ do_transfer()
+> > 	if [ ! -z $bkup ]; then
+> > 		sleep 1
+> > 		for netns in "$ns1" "$ns2"; do
+> > -			ip netns exec $netns ./pm_nl_ctl dump | while read line; do
+> > +			pm_nl_show_endpoint $netns | while read line; do
+> > 				local arr=($line)
+> > 				# 'pm_nl_ctl' shows the address at the end
+> > 				let pos=${#arr[@]}-1
+> > 
+> > +				# 'ip mptcp' shows the address at the front
+> > +				if [ $ip_mptcp -eq 1 ]; then
+> > +					pos=0
+> > +				fi
+> 
+> Hi Geliang,
+> 
+> What do you think about modifying pm_nl_ctl to have the address in the same
+> position as 'ip mptcp' to avoid this special case?
 
-[  238.871372] leaked reference.
-[  238.872393]  fl_change+0x2db/0x2520
-[  238.873148]  tc_new_tfilter+0x6c4/0x11f0
-[  238.873959]  rtnetlink_rcv_msg+0x49f/0x640
-[  238.874798]  netlink_rcv_skb+0xc4/0x1f0
-[  238.875570]  netlink_unicast+0x2d5/0x410
-[  238.876364]  netlink_sendmsg+0x3b3/0x6c0
-[  238.877155]  sock_sendmsg+0x91/0xa0
-[  238.877890]  ____sys_sendmsg+0x3ad/0x3f0
-[  238.878684]  ___sys_sendmsg+0xdb/0x140
-[  238.879354]  __sys_sendmsg+0xae/0x120
-[  238.879947]  do_syscall_64+0x3b/0x90
-[  238.880683]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+I found it's not easy to modify the position of pm_nl_ctl, so I used
+another approach of getting addr in v3 to avoid this special case. Use a
+new function is_addr (just like is_v6) to check every possiton to find
+out the address.
 
-It doesn't look like MPTCP is to blame, but I'm curious if others see the 
-same.
+> 
+> Other than that, the series looks good and I was able to run the tests with
+> both 'pm_nl_ctl' and 'ip mptcp'.
+> 
+> There are some other selftest changes pending in patchwork, are there any
+> conflicts with this series? If there are conflicts, which series would you
+> prefer to merge first?
 
-Since this test till has the file mismatch error, I don't think it's ready 
-for the export branch yet. But I think fixing this will involve two 
-things:
+Done in v3.
 
-1. (Likely) A fix to the code that flushes the received data from the 
-subflow rx buffer, so corrupt data is dropped before it gets copied to the 
-MPTCP-level buffer. Still trying to narrow this down, and it will likely 
-involve a separate patch (maybe to squash to an existing patch in the 
-export branch, maybe not).
+---
 
-2. A way to accept the expected bit flips in the "infinite fallback" case, 
-where the checksum failure causes fallback and the data is not rejected. 
-check_transfer just uses 'cmp' right now to make sure the temp files are 
-identical. Another tool (maybe awk, maybe a small c program in our test 
-directory) could compare bytes in each file allowing either identical 
-bytes or inverted bytes:
+I just noticed that the backup selftests will fail when we use an address
+with a port number:
 
-// assuming files already mmap'd
+       # single address with port, backup
+       reset
+       pm_nl_set_limits $ns1 0 1
+       pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+       pm_nl_set_limits $ns2 1 1
+       run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
+       chk_join_nr "single address with port, backup" 1 1 1
+       chk_add_nr 1 1
+       chk_prio_nr 1 0
+       chk_rm_nr 0 0
 
-for (i = 0; i < length; i++) {
-     if ((file1[i] != file2[i]) && (file1[i] != ~file2[i]))
-         return 1;
-}
+To fix this, we need to add the port argument for pm_nl_ctl like:
 
-return 0;
+	pm_nl_ctl set 10.0.2.1 flags backup port 10100
 
-For the case where inverted bytes are valid, use the alternate comparison 
-tool.
+This fix will conflict with this series somehow. It's hard to do it as
+a squash-to patch. So I'll put it into this series and send a v4 today.
 
-- Mat
+Thanks,
+-Geliang
 
-> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-> index d36b7da5082a..26955abe49f0 100644
-> --- a/tools/testing/selftests/net/mptcp/config
-> +++ b/tools/testing/selftests/net/mptcp/config
-> @@ -19,3 +19,8 @@ CONFIG_IP_ADVANCED_ROUTER=y
-> CONFIG_IP_MULTIPLE_TABLES=y
-> CONFIG_IP_NF_TARGET_REJECT=m
-> CONFIG_IPV6_MULTIPLE_TABLES=y
-> +CONFIG_NET_ACT_CSUM=m
-> +CONFIG_NET_ACT_PEDIT=m
-> +CONFIG_NET_CLS_ACT=y
-> +CONFIG_NET_CLS_FLOWER=m
-> +CONFIG_NET_SCH_INGRESS=m
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index e48ce23d2386..535baa3c01e7 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -16,6 +16,7 @@ mptcp_connect=""
-> capture=0
-> checksum=0
-> do_all_tests=1
-> +nr_fail=0
->
-> TEST_COUNT=0
->
-> @@ -58,6 +59,8 @@ init()
-> 		fi
-> 	done
->
-> +	validate_checksum=$checksum
-> +
-> 	#  ns1              ns2
-> 	# ns1eth1    ns2eth1
-> 	# ns1eth2    ns2eth2
-> @@ -161,6 +164,45 @@ reset_with_allow_join_id0()
-> 	ip netns exec $ns2 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns2_enable
-> }
->
-> +# Modify TCP payload without corrupting the TCP packet
-> +#
-> +# This rule inverts a 32-bit word at byte offset 148 for all TCP ACK
-> +# packets carrying enough data.
-> +# Once it is done, the TCP Checksum field is updated so the packet
-> +# is still considered as valid at the TCP level.
-> +# But because the MPTCP checksum, covering the TCP options and data,
-> +# has not been updated, we will detect the modification and emit an
-> +# MP_FAIL: what we want to validate here.
-> +#
-> +# Please note that this rule will produce this pr_info() message for
-> +# each TCP ACK packets not carrying enough data:
-> +#
-> +#     tc action pedit offset 162 out of bounds
-> +#
-> +# But this should be limited to a very few numbers of packets as we
-> +# restrict this rule to outgoing TCP traffic with only the ACK flag
-> +# + except the 3rd ACK, only packets carrying data should be seen in
-> +# this direction.
-> +reset_with_fail()
-> +{
-> +	reset
-> +
-> +	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=1
-> +	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=1
-> +
-> +	validate_checksum=1
-> +	nr_fail=0
-> +	i="$1"
-> +
-> +	tc -n $ns2 qdisc add dev ns2eth$i clsact
-> +	tc -n $ns2 filter add dev ns2eth$i egress \
-> +		protocol ip prio 1000 \
-> +		flower ip_proto tcp tcp_flags 0x10/0xff \
-> +		action pedit munge offset 148 u32 invert \
-> +		pipe csum tcp \
-> +		index 100
-> +}
-> +
-> ip -Version > /dev/null 2>&1
-> if [ $? -ne 0 ];then
-> 	echo "SKIP: Could not run test without ip tool"
-> @@ -179,6 +221,12 @@ if [ $? -ne 0 ];then
-> 	exit $ksft_skip
-> fi
->
-> +jq -V > /dev/null 2>&1
-> +if [ $? -ne 0 ];then
-> +	echo "SKIP: Could not run all tests without jq tool"
-> +	exit $ksft_skip
-> +fi
-> +
-> print_file_err()
-> {
-> 	ls -l "$1" 1>&2
-> @@ -233,6 +281,21 @@ link_failure()
-> 	done
-> }
->
-> +get_nr_fail()
-> +{
-> +	i="$1"
-> +
-> +	local action=$(tc -n $ns2 -j -s action show action pedit index 100)
-> +	local packets=$(echo $action | jq '.[1].actions[0].stats.packets')
-> +	local overlimits=$(echo $action | jq '.[1].actions[0].stats.overlimits')
-> +
-> +	let pkt=$packets-$overlimits
-> +	if [ $pkt -gt 0 ]; then
-> +		nr_fail=1
-> +	fi
-> +	tc -n $ns2 qdisc del dev ns2eth$i clsact
-> +}
-> +
-> # $1: IP address
-> is_v6()
-> {
-> @@ -589,6 +652,8 @@ dump_stats()
-> chk_csum_nr()
-> {
-> 	local msg=${1:-""}
-> +	local csum_ns1=${2:-0}
-> +	local csum_ns2=${3:-0}
-> 	local count
-> 	local dump_stats
->
-> @@ -600,8 +665,8 @@ chk_csum_nr()
-> 	printf " %-36s %s" "$msg" "sum"
-> 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
-> 	[ -z "$count" ] && count=0
-> -	if [ "$count" != 0 ]; then
-> -		echo "[fail] got $count data checksum error[s] expected 0"
-> +	if [ "$count" != $csum_ns1 ]; then
-> +		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
-> 		ret=1
-> 		dump_stats=1
-> 	else
-> @@ -610,8 +675,8 @@ chk_csum_nr()
-> 	echo -n " - csum  "
-> 	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
-> 	[ -z "$count" ] && count=0
-> -	if [ "$count" != 0 ]; then
-> -		echo "[fail] got $count data checksum error[s] expected 0"
-> +	if [ "$count" != $csum_ns2 ]; then
-> +		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
-> 		ret=1
-> 		dump_stats=1
-> 	else
-> @@ -690,6 +755,8 @@ chk_join_nr()
-> 	local syn_nr=$2
-> 	local syn_ack_nr=$3
-> 	local ack_nr=$4
-> +	local fail_nr=${5:-0}
-> +	local infi_nr=${6:-0}
-> 	local count
-> 	local dump_stats
->
-> @@ -726,10 +793,10 @@ chk_join_nr()
-> 		echo "[ ok ]"
-> 	fi
-> 	[ "${dump_stats}" = 1 ] && dump_stats
-> -	if [ $checksum -eq 1 ]; then
-> -		chk_csum_nr
-> -		chk_fail_nr 0 0
-> -		chk_infi_nr 0 0
-> +	if [ $validate_checksum -eq 1 ]; then
-> +		chk_csum_nr "" $fail_nr
-> +		chk_fail_nr $fail_nr $fail_nr
-> +		chk_infi_nr $infi_nr $infi_nr
-> 	fi
-> }
->
-> @@ -1985,6 +2052,27 @@ userspace_tests()
-> 	chk_rm_nr 0 0
-> }
->
-> +fail_tests()
-> +{
-> +	# multiple subflows
-> +	reset_with_fail 2
-> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 dev ns2eth3 flags subflow
-> +	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 dev ns2eth2 flags subflow
-> +	run_tests $ns1 $ns2 10.0.1.1 2
-> +	get_nr_fail 2
-> +	chk_join_nr "$nr_fail MP_FAIL, multiple subflows" 2 2 2 $nr_fail
-> +
-> +	# single subflow
-> +	reset_with_fail 1
-> +	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> +	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-> +	run_tests $ns1 $ns2 10.0.1.1 2
-> +	get_nr_fail 1
-> +	chk_join_nr "$nr_fail MP_FAIL, single subflow" 0 0 0 $nr_fail $nr_fail
-> +}
-> +
-> all_tests()
-> {
-> 	subflows_tests
-> @@ -2003,6 +2091,7 @@ all_tests()
-> 	deny_join_id0_tests
-> 	fullmesh_tests
-> 	userspace_tests
-> +	fail_tests
-> }
->
-> usage()
-> @@ -2024,6 +2113,7 @@ usage()
-> 	echo "  -d deny_join_id0_tests"
-> 	echo "  -m fullmesh_tests"
-> 	echo "  -u userspace_tests"
-> +	echo "  -F fail_tests"
-> 	echo "  -c capture pcap files"
-> 	echo "  -C enable data checksum"
-> 	echo "  -h help"
-> @@ -2059,7 +2149,7 @@ if [ $do_all_tests -eq 1 ]; then
-> 	exit $ret
-> fi
->
-> -while getopts 'fesltra64bpkdmuchCS' opt; do
-> +while getopts 'fesltra64bpkdmuchCSF' opt; do
-> 	case $opt in
-> 		f)
-> 			subflows_tests
-> @@ -2109,6 +2199,9 @@ while getopts 'fesltra64bpkdmuchCS' opt; do
-> 		u)
-> 			userspace_tests
-> 			;;
-> +		F)
-> +			fail_tests
-> +			;;
-> 		c)
-> 			;;
-> 		C)
-> -- 
-> 2.31.1
->
->
->
+> 
+> Thanks,
+> Mat
+> 
+> > 				addr=${arr[$pos]}
+> > 				ip netns exec $netns ./pm_nl_ctl set $addr flags $bkup
+> > 			done
+> > -- 
+> > 2.31.1
+> > 
+> > 
+> > 
+> 
+> --
+> Mat Martineau
+> Intel
+> 
 
---
-Mat Martineau
-Intel
