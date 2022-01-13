@@ -1,155 +1,206 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258EF2C80
-	for <mptcp@lists.linux.dev>; Thu, 13 Jan 2022 23:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187A72C80
+	for <mptcp@lists.linux.dev>; Thu, 13 Jan 2022 23:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642115638; x=1673651638;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ws358sUkktn715RMgZSJaQqJb+bK+zDpxIRIiuc/uFk=;
-  b=PeAaqz1Qua07tVgsw1jmVH6F0DnZ9cgGm3cOC+lDPJnLF24/ISHIQfA+
-   keqhwHHmlQQpHwGm4zL6dAcBoRSI/phUhQ+9IGBO8KsL13tLi4wItWPRr
-   DX27fiV0mzfemxKPuc5tp26QlA53ZYlkxnvIGzCiaeTL6MpyUOrjoWsve
-   COOKyRUKZEPRaa9vOEBUSY8idmioMIdYH2fUZk5Mo+hX90pKp/PkmyZFJ
-   ybIYWI0Ve2dFr48GEDxDwBl65usQElZY8QwlpleXcjLYLAhVCKmfEMavA
-   s/zWDlccMp3oxxYs4l5o/o4MlmetALOtDKJz90TTpuecy6183s7rI2gQE
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10226"; a="307478245"
+  t=1642116913; x=1673652913;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=G8i0wtgVcG5x4LKUMiU9+eed+evq88Z+kDoifNU4CCc=;
+  b=FUG5gXughrcC4OVVlpoK8Tf1XxBoHl5mnwoq6sxgO4BZRskw/2lOTNmc
+   UcpmPkwQjGS4cXhfevjObENiR8miU0Pn/lq856pw9qx4YcXViKXRWu7ZO
+   EiQWO7wVmrYAg1eZtDsDNeHh1tOjN2/mQxqz9ViiayjfFSzx0oBul1qvP
+   fWgXJAc3+gcq1H6U3iF0KfnqG0Z0XipVPCRknpb3JnQrAPfUvyOf0ytxL
+   WcfQs0DFUVPd6UUlwylLF273xBmf5uwoFK/imIeZUMTiN+04dKUuOI9ZF
+   0wqsU//d6oT+YzsV7SCy3urFUCY6xh5j316BklYvqi+0Q4i9Ypua+r6d5
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10226"; a="231485492"
 X-IronPort-AV: E=Sophos;i="5.88,286,1635231600"; 
-   d="scan'208";a="307478245"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 15:13:57 -0800
+   d="scan'208";a="231485492"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 15:35:12 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,286,1635231600"; 
-   d="scan'208";a="624039487"
-Received: from pialybar-mobl.amr.corp.intel.com ([10.212.252.249])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 15:13:57 -0800
-Date: Thu, 13 Jan 2022 15:13:55 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 1/4] mptcp: set fullmesh flag in
- pm_netlink
-In-Reply-To: <d51b8fd1d4d8171369d5105b708a02d787fcc9a7.1641978967.git.geliang.tang@suse.com>
-Message-ID: <e5e7b35e-6286-48f4-67f2-7473b782d64a@linux.intel.com>
-References: <cover.1641978967.git.geliang.tang@suse.com> <d51b8fd1d4d8171369d5105b708a02d787fcc9a7.1641978967.git.geliang.tang@suse.com>
+   d="scan'208";a="529899692"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 13 Jan 2022 15:35:11 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1n89cc-0007mO-PU; Thu, 13 Jan 2022 23:35:10 +0000
+Date: Fri, 14 Jan 2022 07:34:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ 945797376d51bac7fa478a5c7569ca771a9311bd
+Message-ID: <61e0b6f6.cJ0FROI+SgfzPq0p%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Wed, 12 Jan 2022, Geliang Tang wrote:
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: 945797376d51bac7fa478a5c7569ca771a9311bd  DO-NOT-MERGE: mptcp: enabled by default
 
-> This patch added the fullmesh flag setting support in pm_netlink.
->
-> If the fullmesh flag of the address is changed, remove all the related
-> subflows, update the fullmesh flag and create subflows again.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/pm_netlink.c | 35 ++++++++++++++++++++++++++---------
-> 1 file changed, 26 insertions(+), 9 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 4c06cd6381ef..8c5a4be21e3d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1722,9 +1722,19 @@ mptcp_nl_cmd_get_limits(struct sk_buff *skb, struct genl_info *info)
-> 	return -EMSGSIZE;
-> }
->
-> -static int mptcp_nl_addr_backup(struct net *net,
-> -				struct mptcp_addr_info *addr,
-> -				u8 bkup)
-> +static void mptcp_pm_nl_fullmesh(struct mptcp_sock *msk,
-> +				 struct mptcp_addr_info *addr)
-> +{
-> +	struct mptcp_rm_list list = { .nr = 0 };
-> +
-> +	list.ids[list.nr++] = addr->id;
-> +
-> +	mptcp_pm_nl_rm_subflow_received(msk, &list);
-> +	mptcp_pm_create_subflow_or_signal_addr(msk);
-> +}
-> +
-> +static int mptcp_nl_set_flags(struct net *net,
-> +			      struct mptcp_pm_addr_entry *entry)
-> {
-> 	long s_slot = 0, s_num = 0;
-> 	struct mptcp_sock *msk;
-> @@ -1738,7 +1748,10 @@ static int mptcp_nl_addr_backup(struct net *net,
->
-> 		lock_sock(sk);
-> 		spin_lock_bh(&msk->pm.lock);
-> -		ret = mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
-> +		ret = mptcp_pm_nl_mp_prio_send_ack(msk, &entry->addr,
-> +						   entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-> +		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
-> +			mptcp_pm_nl_fullmesh(msk, &entry->addr);
+elapsed time: 720m
 
-My concern here is that if MPTCP_PM_ADDR_FLAG_SIGNAL is not set for 
-this entry, mptcp_pm_nl_fullmesh() gets called every time there's a 
-MPTCP_PM_CMD_SET_FLAGS command for a valid endpoint.
+configs tested: 137
+configs skipped: 3
 
-Would it be better to pass a mask of *changed* flags to 
-mptcp_nl_set_flags() so every change to a backup flag doesn't trigger a 
-bunch of fullmesh processing, and vice-versa?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-- Mat
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+arm                           corgi_defconfig
+ia64                        generic_defconfig
+arm                            xcep_defconfig
+powerpc                       holly_defconfig
+mips                         tb0226_defconfig
+m68k                       m5475evb_defconfig
+m68k                        m5307c3_defconfig
+arc                    vdk_hs38_smp_defconfig
+mips                       capcella_defconfig
+powerpc                     sequoia_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                               alldefconfig
+m68k                       m5208evb_defconfig
+openrisc                 simple_smp_defconfig
+sh                          sdk7780_defconfig
+sparc                       sparc32_defconfig
+arm                         axm55xx_defconfig
+arm                           h5000_defconfig
+arm                            qcom_defconfig
+arm                            pleb_defconfig
+sh                   rts7751r2dplus_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                   sh7770_generic_defconfig
+arm                          exynos_defconfig
+sh                      rts7751r2d1_defconfig
+sh                          kfr2r09_defconfig
+um                           x86_64_defconfig
+mips                        jmr3927_defconfig
+mips                         rt305x_defconfig
+powerpc                   motionpro_defconfig
+arm                         lpc18xx_defconfig
+powerpc                      ppc6xx_defconfig
+xtensa                       common_defconfig
+sh                                  defconfig
+i386                             alldefconfig
+sh                          sdk7786_defconfig
+arm                           tegra_defconfig
+sh                         microdev_defconfig
+powerpc                       ppc64_defconfig
+arm                  randconfig-c002-20220113
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                          randconfig-a003
+i386                          randconfig-a001
+i386                          randconfig-a005
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                randconfig-r042-20220113
+arc                  randconfig-r043-20220113
+s390                 randconfig-r044-20220113
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-> 		spin_unlock_bh(&msk->pm.lock);
-> 		release_sock(sk);
->
-> @@ -1756,15 +1769,13 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
-> 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-> 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
-> 	struct net *net = sock_net(skb->sk);
-> -	u8 bkup = 0, lookup_by_id = 0;
-> +	u8 lookup_by_id = 0;
-> 	int ret;
->
-> 	ret = mptcp_pm_parse_addr(attr, info, false, &addr);
-> 	if (ret < 0)
-> 		return ret;
->
-> -	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> -		bkup = 1;
-> 	if (addr.addr.family == AF_UNSPEC) {
-> 		lookup_by_id = 1;
-> 		if (!addr.addr.id)
-> @@ -1778,14 +1789,20 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
-> 		return -EINVAL;
-> 	}
->
-> -	if (bkup)
-> +	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> 		entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> 	else
-> 		entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-> +
-> +	if (addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH)
-> +		entry->flags |= MPTCP_PM_ADDR_FLAG_FULLMESH;
-> +	else
-> +		entry->flags &= ~MPTCP_PM_ADDR_FLAG_FULLMESH;
-> +
-> 	addr = *entry;
-> 	spin_unlock_bh(&pernet->lock);
->
-> -	mptcp_nl_addr_backup(net, &addr.addr, bkup);
-> +	mptcp_nl_set_flags(net, &addr);
-> 	return 0;
-> }
->
-> -- 
-> 2.31.1
->
->
->
+clang tested configs:
+arm                  randconfig-c002-20220113
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220113
+powerpc              randconfig-c003-20220113
+i386                          randconfig-c001
+mips                 randconfig-c004-20220113
+mips                           ip28_defconfig
+arm                          pxa168_defconfig
+powerpc                     mpc5200_defconfig
+mips                            e55_defconfig
+powerpc                 mpc836x_mds_defconfig
+riscv                             allnoconfig
+arm                            mmp2_defconfig
+arm                       netwinder_defconfig
+mips                           ip22_defconfig
+arm                          imote2_defconfig
+arm                              alldefconfig
+riscv                            alldefconfig
+arm                        multi_v5_defconfig
+mips                          ath25_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220113
+hexagon              randconfig-r041-20220113
 
---
-Mat Martineau
-Intel
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
