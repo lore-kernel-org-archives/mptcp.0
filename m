@@ -1,127 +1,159 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015C32C80
-	for <mptcp@lists.linux.dev>; Fri, 14 Jan 2022 22:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17D62C80
+	for <mptcp@lists.linux.dev>; Fri, 14 Jan 2022 23:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642200221; x=1673736221;
+  t=1642201501; x=1673737501;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=r/58m/5KtvjiEfiCS6VtpeyzcTURZFc4lvMbiY8REik=;
-  b=M8V6cbjqr47nUH73rgET7+0Af3fr21zCO1HY/uNwRmnCC0V/DNvXuhPv
-   uyzO5Oxc5m+Ey225ck3nreS4IzSx3STmh2B22KrSaNBqbVFk1grQ3l6f3
-   BNSJd/w7WiOGULYrO+jb1htCMU5+AAdGygZkFIr1emyCl4H2pWTL0rwoW
-   9J141rgkgC5v+N+vhjmpx6vP6dafzMPSy+6kss3NVgukLvR37NClyyTmS
-   aowOu8L+Nc2gP1E8yejyvTNUgC0NQCq5/OBeua8PaKpO8hr6m+Ch9Nofi
-   AtvyUP9UNo3u/PDasq5nV6HaQX/k2iyrD6Gvf3elW54UzqBm2C92WbsiV
+  bh=5Kasiy2aqLDi00JjVdmRkCdeUqqvLBb6C47RlHsD8Ho=;
+  b=DR758ss7Zzj2PMUZzWlvwCqBQ7KNZWtXxsLGcZ2TaVp/Ds0ucs5vy3cp
+   zSEvjmoVZe1ntT4+33gpzr3GoXC0yShMRgF2Nix/6RAmTEwUeGPKDEfWG
+   wZOJGQ7QHuhKezXnP6+OWfSdRxfx+g+EVLHTLzbLPnRARnIDcv0pSwZ26
+   PekarFbtWepz1DhOFsnr0NsFUA9ck/VLKUm7lxs2HWTk2NnLFxe39gNFG
+   xIG/d48mp3ILvyGwY69ST7m0WT2ewhsJ274If2ZKf1rdChERgjDiOfoJ6
+   u0XIu/+q9LS2nsSaK+gjP3pV+YLlJNU20miCz30V80MMH1yawxOYGyjSd
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="231693216"
-X-IronPort-AV: E=Sophos;i="5.88,289,1635231600"; 
-   d="scan'208";a="231693216"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 14:43:41 -0800
-X-IronPort-AV: E=Sophos;i="5.88,289,1635231600"; 
-   d="scan'208";a="491671626"
+X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="268714405"
+X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
+   d="scan'208";a="268714405"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 15:05:00 -0800
+X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
+   d="scan'208";a="621153900"
 Received: from shajisur-mobl.amr.corp.intel.com ([10.209.76.214])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 14:43:41 -0800
-Date: Fri, 14 Jan 2022 14:43:40 -0800 (PST)
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 15:05:00 -0800
+Date: Fri, 14 Jan 2022 15:04:59 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 04/21] mptcp: establish subflows from either
- end of connection
-In-Reply-To: <20220112221523.1829397-5-kishen.maloor@intel.com>
-Message-ID: <83f91e9b-9c20-6e83-6442-41b87139f4eb@linux.intel.com>
-References: <20220112221523.1829397-1-kishen.maloor@intel.com> <20220112221523.1829397-5-kishen.maloor@intel.com>
+Subject: Re: [PATCH iproute2-next v5] mptcp: add the fullmesh flag setting
+ support
+In-Reply-To: <9c1f1e6a704143e0d14c62dff09fc918ce1f218f.1642155488.git.geliang.tang@suse.com>
+Message-ID: <c4afb6ec-1acc-417f-d25-7c3e68178a6a@linux.intel.com>
+References: <9c1f1e6a704143e0d14c62dff09fc918ce1f218f.1642155488.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 12 Jan 2022, Kishen Maloor wrote:
+On Fri, 14 Jan 2022, Geliang Tang wrote:
 
-> This change updates internal logic to permit subflows to be
-> established from either the client or server ends of MPTCP
-> connections. This symmetry and added flexibility may be
-> harnessed by PM implementations running on either end in
-> creating new subflows.
+> This patch added the fullmesh flag setting support.
 >
-> The essence of this change lies in not relying on the
-> "server_side" flag (which continues to be available if needed).
+> ip mptcp endpoint change id 1 fullmesh
+> ip mptcp endpoint change id 1 nofullmesh
+> ip mptcp endpoint change id 1 backup fullmesh
+> ip mptcp endpoint change id 1 nobackup nofullmesh
 >
-
-After this patch, server_side is unused except for some debug output. If 
-it's really no longer referenced (see below first), may be better to just 
-remove it.
-
-> v2: check for 3rd ACK retransmission only on passive side
-> of the MPJ handshake
+> Added the fullmesh flag check for the adding address too.
 >
-> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> net/mptcp/options.c  | 2 +-
-> net/mptcp/protocol.c | 5 +----
-> net/mptcp/protocol.h | 2 --
-> 3 files changed, 2 insertions(+), 7 deletions(-)
+> v5:
+> - support to set backup and fullmesh flags together.
+> ---
+> ip/ipmptcp.c        | 17 ++++++++++++-----
+> man/man8/ip-mptcp.8 |  8 ++++++--
+> 2 files changed, 18 insertions(+), 7 deletions(-)
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index cceba8c7806d..89808816db06 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -921,7 +921,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
-> 		if (TCP_SKB_CB(skb)->seq == subflow->ssn_offset + 1 &&
-> 		    TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq &&
-> 		    subflow->mp_join && (mp_opt->suboptions & OPTIONS_MPTCP_MPJ) &&
-> -		    READ_ONCE(msk->pm.server_side))
-> +		    !subflow->request_join)
-> 			tcp_send_ack(ssk);
-> 		goto fully_established;
-> 	}
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4012f844eec1..408a05bff633 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3248,15 +3248,12 @@ bool mptcp_finish_join(struct sock *ssk)
-> 		return false;
-> 	}
+> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+> index f85c49a8..23f15219 100644
+> --- a/ip/ipmptcp.c
+> +++ b/ip/ipmptcp.c
+> @@ -25,7 +25,8 @@ static void usage(void)
+> 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
+> 		"				      [ port NR ] [ FLAG-LIST ]\n"
+> 		"	ip mptcp endpoint delete id ID [ ADDRESS ]\n"
+> -		"	ip mptcp endpoint change id ID [ backup | nobackup ]\n"
+> +		"	ip mptcp endpoint change id ID [ backup | nobackup |\n"
+> +		"					 fullmesh | nofullmesh ]\n"
+> 		"	ip mptcp endpoint show [ id ID ]\n"
+> 		"	ip mptcp endpoint flush\n"
+> 		"	ip mptcp limits set [ subflows NR ] [ add_addr_accepted NR ]\n"
+> @@ -46,7 +47,7 @@ static int genl_family = -1;
+> 	GENL_REQUEST(_req, MPTCP_BUFLEN, genl_family, 0,	\
+> 		     MPTCP_PM_VER, _cmd, _flags)
 >
-> -	if (!msk->pm.server_side)
-> +	if (!list_empty(&subflow->node))
-> 		goto out;
+> -#define MPTCP_PM_ADDR_FLAG_NOBACKUP 0x0
+> +#define MPTCP_PM_ADDR_FLAG_NONE 0x0
 >
-> 	if (!mptcp_pm_allow_new_subflow(msk))
-> 		goto err_prohibited;
+> /* Mapping from argument to address flag mask */
+> static const struct {
+> @@ -57,7 +58,8 @@ static const struct {
+> 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
+> 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
+> 	{ "fullmesh",		MPTCP_PM_ADDR_FLAG_FULLMESH },
+> -	{ "nobackup",		MPTCP_PM_ADDR_FLAG_NOBACKUP }
+> +	{ "nobackup",		MPTCP_PM_ADDR_FLAG_NONE },
+> +	{ "nofullmesh",		MPTCP_PM_ADDR_FLAG_NONE }
+> };
 >
-> -	if (WARN_ON_ONCE(!list_empty(&subflow->node)))
-> -		goto err_prohibited;
-> -
-> 	/* active connections are already on conn_list.
-> 	 * If we can't acquire msk socket lock here, let the release callback
-> 	 * handle it
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index e2a67d3469f6..c50247673c7e 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -908,10 +908,8 @@ static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
-> static inline bool subflow_simultaneous_connect(struct sock *sk)
-> {
-> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> -	struct sock *parent = subflow->conn;
->
-> 	return sk->sk_state == TCP_ESTABLISHED &&
-> -	       !mptcp_sk(parent)->pm.server_side &&
-> 	       !subflow->conn_finished;
-> }
+> static void print_mptcp_addr_flags(unsigned int flags)
+> @@ -116,9 +118,14 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
+> 	ll_init_map(&rth);
+> 	while (argc > 0) {
+> 		if (get_flags(*argv, &flags) == 0) {
+> -			/* allow changing the 'backup' flag only */
+> +			if (adding &&
+> +			    (flags & MPTCP_PM_ADDR_FLAG_SIGNAL) &&
+> +			    (flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
+> +				invarg("invalid flags\n", *argv);
+> +
+> +			/* allow changing the 'backup' and 'fullmesh' flags only */
+> 			if (cmd == MPTCP_PM_CMD_SET_FLAGS &&
+> -			    (flags & ~MPTCP_PM_ADDR_FLAG_BACKUP))
+> +			    (flags & ~MPTCP_PM_ADDR_FLAG_BACKUP & ~MPTCP_PM_ADDR_FLAG_FULLMESH))
 
-Are changes in this function needed? This code was added to address
-https://github.com/multipath-tcp/mptcp_net-next/issues/35
-which was a weird case encountered with syzkaller where a socket tried to 
-connect to itself, triggering the "simultaneous open" code path. It 
-doesn't seem to be applicable to MP_JOINs.
+I think it's more common & readable to write this as
+
+(flags & ~(MPTCP_PM_ADDR_FLAG_BACKUP | MPTCP_PM_ADDR_FLAG_FULLMESH))
+
+Even though the compiled code probably ends up the same after collapsing 
+the constants.
+
+> 				invarg("invalid flags\n", *argv);
+>
+> 		} else if (matches(*argv, "id") == 0) {
+> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+> index 0e789225..bddbff3c 100644
+> --- a/man/man8/ip-mptcp.8
+> +++ b/man/man8/ip-mptcp.8
+> @@ -41,7 +41,7 @@ ip-mptcp \- MPTCP path manager configuration
+> .BR "ip mptcp endpoint change id "
+> .I ID
+> .RB "[ "
+> -.I BACKUP-OPT
+> +.I CHANGE-OPT
+> .RB "] "
+>
+> .ti -8
+> @@ -68,10 +68,14 @@ ip-mptcp \- MPTCP path manager configuration
+> .RB  "]"
+>
+> .ti -8
+> -.IR BACKUP-OPT " := ["
+> +.IR CHANGE-OPT " := ["
+> .B backup
+> .RB "|"
+> .B nobackup
+> +.RB "|"
+> +.B fullmesh
+> +.RB "|"
+> +.B nofullmesh
+> .RB  "]"
+>
+> .ti -8
+> -- 
+> 2.31.1
+>
+>
+>
 
 --
 Mat Martineau
