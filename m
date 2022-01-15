@@ -1,39 +1,39 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3E229CA
-	for <mptcp@lists.linux.dev>; Sat, 15 Jan 2022 00:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8559729CA
+	for <mptcp@lists.linux.dev>; Sat, 15 Jan 2022 00:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642206996; x=1673742996;
+  t=1642208127; x=1673744127;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=e5pHscq2Jlkpp5kjkNYQ+Jflb5SyhoSleK/QgF7tm9w=;
-  b=I11xXtJiGRywKpHXZJNuutY9qrA1lhoBRStry9TgxY5P8As4Xw8cjY21
-   80ixktU4PUPLD1rh0wBUAmV1V71iowjObf9rrhFdnjmFR3E4ETwPYVRI5
-   zKBCdRWh2oIyrTAFrSdAbKPfXqyLUxnOVk4w9xwd1Gnd5Ow3JJBpRuyPZ
-   R+Tq9pYpNalR49gh60djGaUC3Q0n8ScKeKpYZYGTVYoHXR72NWd8fpXek
-   X1dgeKWY9PwWdR9T3H/i+Ie/+SzvFJQxDCkCKnX7NeLFLJlazZWiMEtH7
-   UeIFFNhlwKr0TnJZhkZMdyYjFH8kDAr0L+wM9u5DXrR+0BaXunYw5GhLr
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="244316515"
+  bh=uJU42//GprZp2Pb7ZmwtMyFdZwgWVt6DtS1QY0joRLE=;
+  b=OoTQ8yZdWvmAUqPQdfPuuNUTuVW+Xz2ICbFQqKA5Xn7A879bTLbff7B4
+   qBtPfLsm402L0eJaLgXiGIxUNJm5wc6fYxnA0r35a2Cz1Nmeexd0Od+S+
+   kSGGcYH4kgsKoiHbaLxqxlS4H7LwuQiSSJs/bbBN4pVeiUMdXaGweNWyi
+   iNoCFbv/xr7DM7a/WQozvlcffAQlYV2OgLFMpindM/yCAmvVRjOaOjmJq
+   rFOtIpdBrrRZqmuWTdsm5dXL67RjOqxpqb9uHOfYrlf8E+YwWyLT2ldKV
+   MduDs0L+YzJF7YOWHeZSOs55S4Wxe9OReNZtiVe3L6JlfzIgQl5CzO6gk
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="241922764"
 X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
-   d="scan'208";a="244316515"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 16:36:35 -0800
+   d="scan'208";a="241922764"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 16:55:26 -0800
 X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
-   d="scan'208";a="692418345"
+   d="scan'208";a="475971291"
 Received: from shajisur-mobl.amr.corp.intel.com ([10.209.76.214])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 16:36:35 -0800
-Date: Fri, 14 Jan 2022 16:36:35 -0800 (PST)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 16:55:26 -0800
+Date: Fri, 14 Jan 2022 16:55:26 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH iproute2-next v6] mptcp: add the fullmesh flag setting
- support
-In-Reply-To: <bf32abba571cea5301bf26921b0a8eac705e45d7.1642206093.git.geliang.tang@suse.com>
-Message-ID: <dd479e13-371a-93c-5be5-4060164dccf4@linux.intel.com>
-References: <bf32abba571cea5301bf26921b0a8eac705e45d7.1642206093.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next 10/11] selftests: mptcp: add wrapper for
+ setting flags
+In-Reply-To: <5fdfe3efa18f141a43ec07a9b01d5b679d1a4a4b.1642154579.git.geliang.tang@suse.com>
+Message-ID: <1116635-2b63-9d78-54b3-18c97890b88@linux.intel.com>
+References: <cover.1642154579.git.geliang.tang@suse.com> <5fdfe3efa18f141a43ec07a9b01d5b679d1a4a4b.1642154579.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,115 +42,93 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Sat, 15 Jan 2022, Geliang Tang wrote:
+On Fri, 14 Jan 2022, Geliang Tang wrote:
 
-> This patch added the fullmesh flag setting support.
+> This patch implemented a new function named pm_nl_set_endpoint(), wraped
+> the PM netlink commands 'ip mptcp' and 'pm_nl_ctl' in it, and used a new
+> argument 'ip_mptcp' to choose which one to use to set the flags of the PM
+> endpoint.
 >
-> ip mptcp endpoint change id 1 fullmesh
-> ip mptcp endpoint change id 1 nofullmesh
-> ip mptcp endpoint change id 1 backup fullmesh
-> ip mptcp endpoint change id 1 nobackup nofullmesh
+> 'ip mptcp' used the ID number argument to find out the address to change
+> flags, while 'pm_nl_ctl' used the address and port number arguments. So
+> we need to parse the address ID from the PM dump output as well as the
+> address and port number.
 >
-> Added the fullmesh flag check for the adding address too.
+> Used this wrapper in do_transfer() instead of using the pm_nl_ctl command
+> directly.
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> v6:
-> - update the flags check as Mat suggested.
-
-Thanks Geliang, v6 looks good to me:
-
-Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 24 ++++++++++++++++---
+> 1 file changed, 21 insertions(+), 3 deletions(-)
 >
-> v5:
-> - support to set backup and fullmesh flags together.
-> ---
-> ip/ipmptcp.c        | 18 +++++++++++++-----
-> man/man8/ip-mptcp.8 |  8 ++++++--
-> 2 files changed, 19 insertions(+), 7 deletions(-)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 24cabed18f58..4df7417013d3 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -377,6 +377,22 @@ pm_nl_show_endpoints()
+> 	fi
+> }
 >
-> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-> index 4363e753..5c8b1627 100644
-> --- a/ip/ipmptcp.c
-> +++ b/ip/ipmptcp.c
-> @@ -25,7 +25,8 @@ static void usage(void)
-> 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
-> 		"				      [ port NR ] [ FLAG-LIST ]\n"
-> 		"	ip mptcp endpoint delete id ID [ ADDRESS ]\n"
-> -		"	ip mptcp endpoint change id ID [ backup | nobackup ]\n"
-> +		"	ip mptcp endpoint change id ID [ backup | nobackup |\n"
-> +		"					 fullmesh | nofullmesh ]\n"
-> 		"	ip mptcp endpoint show [ id ID ]\n"
-> 		"	ip mptcp endpoint flush\n"
-> 		"	ip mptcp limits set [ subflows NR ] [ add_addr_accepted NR ]\n"
-> @@ -46,7 +47,7 @@ static int genl_family = -1;
-> 	GENL_REQUEST(_req, MPTCP_BUFLEN, genl_family, 0,	\
-> 		     MPTCP_PM_VER, _cmd, _flags)
->
-> -#define MPTCP_PM_ADDR_FLAG_NOBACKUP 0x0
-> +#define MPTCP_PM_ADDR_FLAG_NONE 0x0
->
-> /* Mapping from argument to address flag mask */
-> static const struct {
-> @@ -57,7 +58,8 @@ static const struct {
-> 	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
-> 	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
-> 	{ "fullmesh",		MPTCP_PM_ADDR_FLAG_FULLMESH },
-> -	{ "nobackup",		MPTCP_PM_ADDR_FLAG_NOBACKUP }
-> +	{ "nobackup",		MPTCP_PM_ADDR_FLAG_NONE },
-> +	{ "nofullmesh",		MPTCP_PM_ADDR_FLAG_NONE }
-> };
->
-> static void print_mptcp_addr_flags(unsigned int flags)
-> @@ -116,9 +118,15 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
-> 	ll_init_map(&rth);
-> 	while (argc > 0) {
-> 		if (get_flags(*argv, &flags) == 0) {
-> -			/* allow changing the 'backup' flag only */
-> +			if (adding &&
-> +			    (flags & MPTCP_PM_ADDR_FLAG_SIGNAL) &&
-> +			    (flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
-> +				invarg("invalid flags\n", *argv);
+> +pm_nl_change_endpoint()
+> +{
+> +	local ns=$1
+> +	local flags=$2
+> +	local id=$3
+> +	local addr=$4
+> +	local port=""
 > +
-> +			/* allow changing the 'backup' and 'fullmesh' flags only */
-> 			if (cmd == MPTCP_PM_CMD_SET_FLAGS &&
-> -			    (flags & ~MPTCP_PM_ADDR_FLAG_BACKUP))
-> +			    (flags & ~(MPTCP_PM_ADDR_FLAG_BACKUP |
-> +				       MPTCP_PM_ADDR_FLAG_FULLMESH)))
-> 				invarg("invalid flags\n", *argv);
+> +	if [ $ip_mptcp -eq 1 ]; then
+> +		ip -n $ns mptcp endpoint change id $id ${flags//","/" "}
+> +	else
+> +		[ ! -z $5 ]; port="port $5"
+> +		ip netns exec $ns ./pm_nl_ctl set $addr flags $flags $port
+> +	fi
+> +}
+> +
+> do_transfer()
+> {
+> 	listener_ns="$1"
+> @@ -578,7 +594,7 @@ do_transfer()
+> 				local arr=($line)
+> 				local addr
+> 				local port=0
+> -				local _port=""
+> +				local id
 >
-> 		} else if (matches(*argv, "id") == 0) {
-> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-> index 0e789225..bddbff3c 100644
-> --- a/man/man8/ip-mptcp.8
-> +++ b/man/man8/ip-mptcp.8
-> @@ -41,7 +41,7 @@ ip-mptcp \- MPTCP path manager configuration
-> .BR "ip mptcp endpoint change id "
-> .I ID
-> .RB "[ "
-> -.I BACKUP-OPT
-> +.I CHANGE-OPT
-> .RB "] "
->
-> .ti -8
-> @@ -68,10 +68,14 @@ ip-mptcp \- MPTCP path manager configuration
-> .RB  "]"
->
-> .ti -8
-> -.IR BACKUP-OPT " := ["
-> +.IR CHANGE-OPT " := ["
-> .B backup
-> .RB "|"
-> .B nobackup
-> +.RB "|"
-> +.B fullmesh
-> +.RB "|"
-> +.B nofullmesh
-> .RB  "]"
->
-> .ti -8
+> 				for i in ${arr[@]}; do
+> 					if is_addr $i; then
+> @@ -587,11 +603,13 @@ do_transfer()
+> 						# The minimum expected port number is 10000
+> 						if [ $i -gt 10000 ]; then
+> 							port=$i
+> +						# The maximum id number is 255
+> +						elif [ $i -lt 255 ]; then
+> +							id=$i
+
+Hi Geliang -
+
+Given that we control pm_nl_ctl (the default tool creating the output to 
+parse here), this seems ok to me.
+
+There's a risk that a future version of 'ip mptcp' could have a new number 
+field in the output of 'ip mptcp endpoint show' that would confuse this 
+script, but since the '-i' flag needs to be used it should be obvious that 
+the output of 'ip mptcp' needs to be examined and the comments explain 
+what's going on. (So, the 'ip mptcp' parsing is a little fragile here but 
+in a way that's not too harmful)
+
+-Mat
+
+> 						fi
+> 					fi
+> 				done
+> -				[ ! -z $port ]; _port="port $port"
+> -				ip netns exec $netns ./pm_nl_ctl set $addr flags $sflags $_port
+> +				pm_nl_change_endpoint $netns $sflags $id $addr $port
+> 			done
+> 		done
+> 	fi
 > -- 
 > 2.31.1
 >
