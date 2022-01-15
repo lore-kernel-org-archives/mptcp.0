@@ -1,140 +1,159 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8559729CA
-	for <mptcp@lists.linux.dev>; Sat, 15 Jan 2022 00:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A79168
+	for <mptcp@lists.linux.dev>; Sat, 15 Jan 2022 03:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642208127; x=1673744127;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=uJU42//GprZp2Pb7ZmwtMyFdZwgWVt6DtS1QY0joRLE=;
-  b=OoTQ8yZdWvmAUqPQdfPuuNUTuVW+Xz2ICbFQqKA5Xn7A879bTLbff7B4
-   qBtPfLsm402L0eJaLgXiGIxUNJm5wc6fYxnA0r35a2Cz1Nmeexd0Od+S+
-   kSGGcYH4kgsKoiHbaLxqxlS4H7LwuQiSSJs/bbBN4pVeiUMdXaGweNWyi
-   iNoCFbv/xr7DM7a/WQozvlcffAQlYV2OgLFMpindM/yCAmvVRjOaOjmJq
-   rFOtIpdBrrRZqmuWTdsm5dXL67RjOqxpqb9uHOfYrlf8E+YwWyLT2ldKV
-   MduDs0L+YzJF7YOWHeZSOs55S4Wxe9OReNZtiVe3L6JlfzIgQl5CzO6gk
+  t=1642216842; x=1673752842;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pz4W7TB6a4LS7RdQTmOqAnOovguEEYyILTauOHsk258=;
+  b=lhIsOMV9teOTnx/EXUOHYaZNWn5jniwr7QTGmQzmGmBW2DGUwhJTohom
+   hW+7Q5cUeSNJDMVAQq7aTp94UcxE1h3RpFPB8R8gaf7iAjKnG54v7zXle
+   FAHmgc78AcyEnNYQmCXPlgjkzs494FHIOeID/TJhih9KFdhfzaKqCfxRr
+   1CI68HyPnzu+9BRuAaiJnrxeHFcVgJb6Yubyp7su3zuV4p4VZSudY4rdh
+   6Y6iot1jQfig8Jkap9/MoFpoM6C6bV3svBfDUZZIux8zouWAJ/2zoPsMp
+   QvFedT6GngDdxl1eMIJ8gFuLt3xXoNlWAy80SM0YwJ+OoGq8s58eBYGq2
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="241922764"
+X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="224356480"
 X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
-   d="scan'208";a="241922764"
+   d="scan'208";a="224356480"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 16:55:26 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 19:20:40 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
-   d="scan'208";a="475971291"
-Received: from shajisur-mobl.amr.corp.intel.com ([10.209.76.214])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 16:55:26 -0800
-Date: Fri, 14 Jan 2022 16:55:26 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 10/11] selftests: mptcp: add wrapper for
- setting flags
-In-Reply-To: <5fdfe3efa18f141a43ec07a9b01d5b679d1a4a4b.1642154579.git.geliang.tang@suse.com>
-Message-ID: <1116635-2b63-9d78-54b3-18c97890b88@linux.intel.com>
-References: <cover.1642154579.git.geliang.tang@suse.com> <5fdfe3efa18f141a43ec07a9b01d5b679d1a4a4b.1642154579.git.geliang.tang@suse.com>
+   d="scan'208";a="475998017"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jan 2022 19:20:38 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1n8ZcL-0009K1-Tf; Sat, 15 Jan 2022 03:20:37 +0000
+Date: Sat, 15 Jan 2022 11:20:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ 5c45a004f2cc5b89606c2bb2963dc4deab9a6b37
+Message-ID: <61e23d63.gNZDE9yPJ9tlsJXv%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Fri, 14 Jan 2022, Geliang Tang wrote:
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: 5c45a004f2cc5b89606c2bb2963dc4deab9a6b37  DO-NOT-MERGE: mptcp: enabled by default
 
-> This patch implemented a new function named pm_nl_set_endpoint(), wraped
-> the PM netlink commands 'ip mptcp' and 'pm_nl_ctl' in it, and used a new
-> argument 'ip_mptcp' to choose which one to use to set the flags of the PM
-> endpoint.
->
-> 'ip mptcp' used the ID number argument to find out the address to change
-> flags, while 'pm_nl_ctl' used the address and port number arguments. So
-> we need to parse the address ID from the PM dump output as well as the
-> address and port number.
->
-> Used this wrapper in do_transfer() instead of using the pm_nl_ctl command
-> directly.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 24 ++++++++++++++++---
-> 1 file changed, 21 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 24cabed18f58..4df7417013d3 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -377,6 +377,22 @@ pm_nl_show_endpoints()
-> 	fi
-> }
->
-> +pm_nl_change_endpoint()
-> +{
-> +	local ns=$1
-> +	local flags=$2
-> +	local id=$3
-> +	local addr=$4
-> +	local port=""
-> +
-> +	if [ $ip_mptcp -eq 1 ]; then
-> +		ip -n $ns mptcp endpoint change id $id ${flags//","/" "}
-> +	else
-> +		[ ! -z $5 ]; port="port $5"
-> +		ip netns exec $ns ./pm_nl_ctl set $addr flags $flags $port
-> +	fi
-> +}
-> +
-> do_transfer()
-> {
-> 	listener_ns="$1"
-> @@ -578,7 +594,7 @@ do_transfer()
-> 				local arr=($line)
-> 				local addr
-> 				local port=0
-> -				local _port=""
-> +				local id
->
-> 				for i in ${arr[@]}; do
-> 					if is_addr $i; then
-> @@ -587,11 +603,13 @@ do_transfer()
-> 						# The minimum expected port number is 10000
-> 						if [ $i -gt 10000 ]; then
-> 							port=$i
-> +						# The maximum id number is 255
-> +						elif [ $i -lt 255 ]; then
-> +							id=$i
+elapsed time: 744m
 
-Hi Geliang -
+configs tested: 93
+configs skipped: 4
 
-Given that we control pm_nl_ctl (the default tool creating the output to 
-parse here), this seems ok to me.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-There's a risk that a future version of 'ip mptcp' could have a new number 
-field in the output of 'ip mptcp endpoint show' that would confuse this 
-script, but since the '-i' flag needs to be used it should be obvious that 
-the output of 'ip mptcp' needs to be examined and the comments explain 
-what's going on. (So, the 'ip mptcp' parsing is a little fragile here but 
-in a way that's not too harmful)
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+sh                   sh7724_generic_defconfig
+m68k                          atari_defconfig
+powerpc                        warp_defconfig
+arm                           tegra_defconfig
+sh                              ul2_defconfig
+arm                           sama5_defconfig
+x86_64                           alldefconfig
+powerpc                 mpc85xx_cds_defconfig
+m68k                       m5475evb_defconfig
+sparc                            allyesconfig
+arm                          simpad_defconfig
+arm                        mvebu_v7_defconfig
+arm                           viper_defconfig
+arm                      integrator_defconfig
+powerpc                      tqm8xx_defconfig
+arm                          iop32x_defconfig
+mips                         tb0226_defconfig
+arm                            mps2_defconfig
+arm                          lpd270_defconfig
+riscv                            allmodconfig
+arm                      footbridge_defconfig
+sh                     magicpanelr2_defconfig
+arm                  randconfig-c002-20220113
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
 
--Mat
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220113
+hexagon              randconfig-r041-20220113
 
-> 						fi
-> 					fi
-> 				done
-> -				[ ! -z $port ]; _port="port $port"
-> -				ip netns exec $netns ./pm_nl_ctl set $addr flags $sflags $_port
-> +				pm_nl_change_endpoint $netns $sflags $id $addr $port
-> 			done
-> 		done
-> 	fi
-> -- 
-> 2.31.1
->
->
->
-
---
-Mat Martineau
-Intel
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
