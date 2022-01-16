@@ -1,40 +1,40 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CFF2C82
-	for <mptcp@lists.linux.dev>; Sun, 16 Jan 2022 13:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DC52C82
+	for <mptcp@lists.linux.dev>; Sun, 16 Jan 2022 13:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642338959; x=1673874959;
+  t=1642340761; x=1673876761;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=hAQ+sdbYplGMrdYif2XrPZCmpywJLTfjziYEtUg2ZVs=;
-  b=LUgY7ueGwSgNONe9oC+4EqbRBbsIIG4Uj+Qus91yJkvb1vNY8v6ppAna
-   wKN6Icf3599dZA790gFOmBJV1oCfb9pBtfXUx9JYXxVdK8Pv5o8RoPn1Z
-   uXIzhjGu+kVbVfzWOIm9cBrORmOo9fefu24rdOIM5oTZuri798lP30rga
-   sL4d4rT59hS47E5lCD89Q8LYOz9hZ2nIJdzxPb3CRiPn63sgoK52aEQ7R
-   9eAq/tnRgarszn2XgKmMqeUUg6t9KJZHGGp6j5anpGQrqm3zVqLVZN3IN
-   xT8USKqMBUBHFy8QnVSjbtJJ5mUErQHNVSZvQb+umccTfN/TpwPkCvF7Y
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10228"; a="305221191"
+  bh=AJrT6NAIHRoJm74mfZgXLJdtFB/z6TAr5wcVG9lo1ww=;
+  b=bv0J4S/xwkL45Ne4c1C0nCbIP8BDuq8grsiykmNTNxDyow6d0NzteRWR
+   L/DndCB/MBGGBJs13BO+3SGIgELdXJ8T/evZFQaAfXdju+zXNKCD1kJsh
+   yFQg6ZV5kouZwsTy/cTRHyUI6aRFzoKGpEYo5lUs2QvAWXYIGPQddm4mj
+   sW1ylSbYgx0lwz1piviAqwgdbU9caJU6wyy+O728oUl8jpWZtl2b7OIg+
+   WASDuBPaqs18TorJKLoX2oCEqphX4KCUwik+Xvu2j2J9Krehv52Syhtrv
+   KYh8XdWF3A0dPzDYutW/WuoscAsIztEdw7nYGpYTZeSAciFgTJ4dTNu5+
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10228"; a="244445809"
 X-IronPort-AV: E=Sophos;i="5.88,293,1635231600"; 
-   d="scan'208";a="305221191"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2022 05:15:59 -0800
+   d="scan'208";a="244445809"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2022 05:46:01 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,293,1635231600"; 
-   d="scan'208";a="530985471"
+   d="scan'208";a="671313339"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 16 Jan 2022 05:15:58 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 16 Jan 2022 05:45:59 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
 	(envelope-from <lkp@intel.com>)
-	id 1n95O1-000AiB-A1; Sun, 16 Jan 2022 13:15:57 +0000
-Date: Sun, 16 Jan 2022 21:15:15 +0800
+	id 1n95r4-000Ak3-Vc; Sun, 16 Jan 2022 13:45:58 +0000
+Date: Sun, 16 Jan 2022 21:45:45 +0800
 From: kernel test robot <lkp@intel.com>
 To: Dmytro SHYTYI <dmytro@shytyi.net>, mptcp@lists.linux.dev
 Cc: kbuild-all@lists.01.org, Dmytro SHYTYI <dmytro@shytyi.net>
 Subject: Re: [PATCH net-next v2] net: mptcp, Fast Open Mechanism
-Message-ID: <202201162148.bSZpItDM-lkp@intel.com>
+Message-ID: <202201162159.uZep2msW-lkp@intel.com>
 References: <20220116001259.203319-1-dmytro@shytyi.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -49,9 +49,9 @@ User-Agent: Mutt/1.10.1 (2018-07-13)
 
 Hi Dmytro,
 
-Thank you for the patch! Perhaps something to improve:
+Thank you for the patch! Yet something to improve:
 
-[auto build test WARNING on v5.16]
+[auto build test ERROR on v5.16]
 [cannot apply to net-next/master linus/master next-20220116]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
@@ -59,7 +59,7 @@ https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/Dmytro-SHYTYI/net-mptcp-Fast-Open-Mechanism/20220116-081430
 base:    df0cc57e057f18e44dac8e6c18aba47ab53202f9
-config: i386-randconfig-a012 (https://download.01.org/0day-ci/archive/20220116/202201162148.bSZpItDM-lkp@intel.com/config)
+config: i386-randconfig-a012 (https://download.01.org/0day-ci/archive/20220116/202201162159.uZep2msW-lkp@intel.com/config)
 compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
 reproduce (this is a W=1 build):
         # https://github.com/0day-ci/linux/commit/52c7bf82e2e91eb10c89ef6169fe02e0b63a6772
@@ -68,19 +68,19 @@ reproduce (this is a W=1 build):
         git checkout 52c7bf82e2e91eb10c89ef6169fe02e0b63a6772
         # save the config file to linux build tree
         mkdir build_dir
-        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash net/mptcp/
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
    net/mptcp/protocol.c: In function 'mptcp_sendmsg_fastopen':
-   net/mptcp/protocol.c:1650:8: error: implicit declaration of function 'sk_stream_alloc_skb'; did you mean 'tcp_stream_alloc_skb'? [-Werror=implicit-function-declaration]
+>> net/mptcp/protocol.c:1650:8: error: implicit declaration of function 'sk_stream_alloc_skb'; did you mean 'tcp_stream_alloc_skb'? [-Werror=implicit-function-declaration]
     1650 |  skb = sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
          |        ^~~~~~~~~~~~~~~~~~~
          |        tcp_stream_alloc_skb
->> net/mptcp/protocol.c:1650:6: warning: assignment to 'struct sk_buff *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   net/mptcp/protocol.c:1650:6: warning: assignment to 'struct sk_buff *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
     1650 |  skb = sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
          |      ^
    cc1: some warnings being treated as errors
