@@ -1,551 +1,182 @@
-Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33EF2C9C
-	for <mptcp@lists.linux.dev>; Sun, 16 Jan 2022 00:13:10 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1642291982; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=PExaWF5gO3QIqZKjBS+6rA30XipDLNRTiwKL7v1i1UC2idPVGaG5zYWudsfc7MCN+bhs6kKq+dnFP1BzvCAQ27VlJnWwWaDtHBjpVxK7OVWWZyqlgX/T3Oa9OQJq0cIiodMuVJFRQS1XHmyzID4ihYHY8vMPolhOKqtIjbzPHRE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1642291982; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-	bh=0ET53qKKaZutSx6wVRwxFnbTzLwm420kyaKFvHN1dM8=; 
-	b=NDZIz6kVUa0OI85GbLRFxmWT/NxK9R7KoSnucfM6reYuP8GhYIF1aepWTjjAHLxZzO/rqvzprS+Pgf0Y37hDk1y791k7VtsgqMeg83iQsFQERLcn+KRDK/TsnaqD7nxVonWSMjCy5fRUYQn/IQ3oWz6G6MoKK257ibomnP8Knfg=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=shytyi.net;
-	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
-	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1642291982;
-	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-	bh=0ET53qKKaZutSx6wVRwxFnbTzLwm420kyaKFvHN1dM8=;
-	b=A6/03jsIVYt33KQNwYYX+ctzWp/hTo38Mh5vLZ+APEwa0LP+haDBbrPGIuJ7kmY1
-	U86EQRPjh2VAvHmj7sjsyhuoOnnHdFPVPrtxi9CKs7xPFcnKHRnGkYLbseBaPP6f62R
-	8tLeYU2vOot4AjwB71aqwbxWwyXhS7kujYYVkwMM=
-Received: from doris.lan (vps-f3afed4e.vps.ovh.net [198.244.151.99]) by mx.zoho.eu
-	with SMTPS id 1642291981921111.24901383148847; Sun, 16 Jan 2022 01:13:01 +0100 (CET)
-From: Dmytro SHYTYI <dmytro@shytyi.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F1529CA
+	for <mptcp@lists.linux.dev>; Sun, 16 Jan 2022 07:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1642317740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=H8VXaxYWzOUDYpedswqDdMK/Mg1nGv1SMeTR7HN9kwQ=;
+	b=gOYABSz5EvFhrk20lD+BfdBvDkkqz6cbxa0ArFxAYX8eYZ5NuAwAJ0/ooz53ja01119edZ
+	t4Q3jc2UZZ74Blgri591v8HuZGm0r7/NDH5ziLUrxj8d+IgCFLhFSXHuDJ5Wkvxatz5b8P
+	agjhbTHcGxOCkWCpwdBWpfmU60wVc9U=
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com
+ (mail-am5eur02lp2054.outbound.protection.outlook.com [104.47.4.54]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-29-RdFYllqAMdOl2u9x0V5KCQ-2; Sun, 16 Jan 2022 08:22:19 +0100
+X-MC-Unique: RdFYllqAMdOl2u9x0V5KCQ-2
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hn2qTVfyjA6dTnNIyckjq8GBswpbj32FV5Y7IXJxlqDTOPl4IJvcrQUvWsf9ilCagRpd+Nocw6MQLRbOg1W+JzMB1Yo3tZYkZ3Gee7Li8UFc5rqoK4Uw40Mf7vNdXE1Zvoq/rwZq/pQf3Y4iEjW8jGudMRDpA80uxOahSUNtTkZ2hPkVWA4hVPL0KVVI+PC3tbbZgTy0QN86ZoSAVo3peGomSHyIPTy47nU5Qw3PsRMWfTp9nJvmpTgLkHfZtto9wqEiUgAIhYXrnHn9BJdfhTDNlUqYooiCOyoBpxUs4xAnTVBdQQ92Oa5o5GntbbqQY4iH7IImZdWoeNO/D/qaaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SUE0jK70R+3qJZBR8NwWYqH8AUIG1TjJVGswBGFyqkg=;
+ b=JQWy8/b4gPgowpgoqc9u6KxiuopqTl4O1hBbjTm9GoWtFwQGPu4mqTOfEer7PDp8PVWzJROptavJoTqDrIiIsWKYoOjVyQsm73DhOhSHUnyuw5oYzv8m8CqB7oUGdUm1ciZs/R0kFMyySu95itRb/S+xDzy+ktp52M3QYhPHt1SyE3O2Lrz3nlqoX+6JIkRHtHs+mr9kVa7wBrtvlwU8GKo9asbzQkS0xlndM6g/t9rAmoJ+bLN25f6Mj8k7T+Ts7Zap32jsNlz28+kJeTSKfw88zBCmQcQjaIPjrPyjxDBysBmXzx9+TbTnByX/9yIxhFwwF4/6U0Iru4p7VY0UbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM0PR04MB6467.eurprd04.prod.outlook.com (2603:10a6:208:16c::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.11; Sun, 16 Jan
+ 2022 07:22:18 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::3837:57a2:45dc:e879]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::3837:57a2:45dc:e879%3]) with mapi id 15.20.4888.013; Sun, 16 Jan 2022
+ 07:22:18 +0000
+From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
-Cc: Dmytro SHYTYI <dmytro@shytyi.net>
-Message-ID: <20220116001259.203319-1-dmytro@shytyi.net>
-Subject: [PATCH net-next v2] net: mptcp, Fast Open Mechanism
-Date: Sun, 16 Jan 2022 00:12:59 +0000
-X-Mailer: git-send-email 2.25.1
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2] selftests: mptcp: add invert check in check_transfer
+Date: Sun, 16 Jan 2022 15:22:15 +0800
+Message-ID: <43bc1675461051df68f3ffc09d4f309b7c0ba4b6.1642317523.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR04CA0055.apcprd04.prod.outlook.com
+ (2603:1096:202:14::23) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2fe09217-6588-44ae-e72a-08d9d8c0ed5d
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6467:EE_
+X-Microsoft-Antispam-PRVS:
+	<AM0PR04MB6467C7F10C5B960CA14CA5F5F8569@AM0PR04MB6467.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	DAtT0TzP52+GjZKyO+JhU+x4CmCfIqwpa10rw32LzZzlpc5T+tf4FWwOytpqgTVxi/OseACfbrWpdeLV78oIE9yYLco2U+NDDMBki2JHY3XrOAoqEPJTdkCWBVqbi/O/HYvNLRQS487V1WSmCw3h/P/WSpnp4WbMoqoku+lZ+qHHeFGgUkhcOK5dlg2Xh30QLH92/WjcYk8suvCWw4LRj98Ir3XcBT7BAZ7SC7H/eVlXU7jLkrz3zwdoeyChPQGH5a0+fpfNu5jcS1Dp5kVUbeusWIIcKWxygHjVKnymy1yz2yuKelTriXbNFcXi20GQ10YedaQZI4Gdo/AtK7k7cmb8S9SgxGYANrExkb9JmdkReeJFps4lAnNSBQF7PyJD8lCW2BOhKWyEQH82xriEvcZfMYFeUep6KO3p83P07ySn4QSBRXiQslT1G4cxrnAy9WfzLr5J1MfNCJYtGv9pAX+OxXg4LcKmUzXk0IH13KL8AtmkfChbjY8GeRrEIglwiYfhzaRQa+6fF13kox/1I79Up54p12IxIhhRH4mKk4w3Ja56m2K68eSmKQys6LCKbVtlDaw3RF9MT6Srf9yvLBaeST/W8dLLZoDlvdB+dZPalxMDCbb5Lyfjsk8ZVnWG8cBf/y2KT8ut08eQtnDiklYyVlGmcs4gt1mq98M09mgGZf2PcX/czZeV/RPwc6B4NyZTJN6yOBDwquWRReAnoQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(44832011)(83380400001)(2906002)(6506007)(6916009)(6486002)(8936002)(8676002)(508600001)(86362001)(4326008)(66946007)(66476007)(5660300002)(66556008)(38100700002)(26005)(2616005)(316002)(107886003)(36756003)(19627235002)(6512007)(186003)(6666004)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IPbBzyzBIC+5ngscL01gvjpm5uKYGsRm38snXaiKvR/msG1GEQT8sOdF5wUn?=
+ =?us-ascii?Q?Zs7TBozfj+MyRrZTn383znRKs89Dm/Ioov+LIdCFzxxY7pM5GNjhYf0iuYIm?=
+ =?us-ascii?Q?m62oIjUcERWblogGg//eYqF/rZSdNXIx+lgA7CMQAo1viG3OLJER6IE+YkWN?=
+ =?us-ascii?Q?eAHu0D3u9lkPTwVGm5HW4UqIWP1J5l+XG4AUhVavT6RUmlLq6eXMyC3yUGzD?=
+ =?us-ascii?Q?SY4JZ1D/YhmctfnjVFmWOkc0IwZb8VHUhz4XBYbZFwY/1pipVf6BX/nzBWGC?=
+ =?us-ascii?Q?UGzIDM+msSn/1GrC6uGTY+Ayi84qJMVCZ5UNyeS/4MVt+Srh8sQKfL0ixTXa?=
+ =?us-ascii?Q?ItRbEcan7DUDFLz3LFn6CU0eqXMZOzd1bJHLFnTM72dXWr2AH2ayvd9K+7O2?=
+ =?us-ascii?Q?MzKH9+0huOEy8UdqWT81eCPanENOopQgN4rgrJqXjPhSaHN0laloj7Yo9bf4?=
+ =?us-ascii?Q?edHkMAQVsL2FOnntPbqrncckfedFENseOJcTQ+5AYEKhKy/6N24yCz9ZoEko?=
+ =?us-ascii?Q?sJmtEEFtGdrLoso4Sw2YjRDLgQ5GI+5CbcGZ/7O7m8Ok5znad3TaYHepdPXc?=
+ =?us-ascii?Q?vRAi348YAaPj9w1RNwJ5MQXhhpsiFiaW2oS9MMbHzlIQNIaT/Tm2s0OtEXzB?=
+ =?us-ascii?Q?fTUtk96ivkkJXdoPQZPb9gLeL1ebh9O/c4lgYJuh1Fih4VUxgzkH9BMx6HNX?=
+ =?us-ascii?Q?rPTz5OM5nBtz3e9uHFYHk5/TS6r6SI2y+tr39ZZ8HWXXfF5BvD7Y/4oDx3S+?=
+ =?us-ascii?Q?el6Ab1eCxU7tNVe6LCsq8aRddoplSXNy0yTvH12xGeFLS9KVUMYu4gz9aJFX?=
+ =?us-ascii?Q?Baahg5mFLw4OtWUEjoabv8BbodBRJ7nGEKgM46zHqlcz6oaC+aph93vpIlro?=
+ =?us-ascii?Q?zbi46vc7N4POEnClParCMU2A8QHSrurLZVyi6SUDlIVlqf90b5eMwfL3JZws?=
+ =?us-ascii?Q?OSFSr5HZNvr5qdFcOMlBfDQXi+u1Z0SWfxZcLDj8D9j+hNTWZMFvr/kTM+b9?=
+ =?us-ascii?Q?ZyPa+IYYbgGbhRbis4BaY6BulXHLe9HPFonexze/j4L2rDyeHDNFeaeX/78B?=
+ =?us-ascii?Q?/AX4zPUDm9oY9SdOT//mO6cyvz7/jXJPKSEkEjW6v8yQf0yUqJJ1EJVeLXKn?=
+ =?us-ascii?Q?weCnvakamFtbTPPSkXvG9l8uhpNogntmP01AulhsVU1vfYjR8icLHsFy6LLG?=
+ =?us-ascii?Q?xR9t2t22a4598fuqtzLgcTG/hBDdz0unCPuEeY6l05QgXzE0pPvofw6zb7T0?=
+ =?us-ascii?Q?cv8VczsEdoWHVnmQxanINubOrIZAxuMX+WRBhwfW2B4ubdurH9fUygcnmj3Z?=
+ =?us-ascii?Q?kOjohOWcqzH4+xPQ7J9RigXTM54FXlH79aIrjU0xbHSt4SkmosQhaM3caTXX?=
+ =?us-ascii?Q?ycThQTBHXQ8etFGcSthBhFUPcmzV+/2Hf6oMdxE4v6qsP00DhcTKvtI7lI+S?=
+ =?us-ascii?Q?vQo+orxW8xA1+h8ECTHs7gy4xSfsODRF88pssrMtk5r/4AEHk8dWV9l++f9N?=
+ =?us-ascii?Q?UHKYoErie5Dk2DjiySYEoukv4AfsrMkUcIC8y48ii9c8rwZyu5/nkXbwTWJr?=
+ =?us-ascii?Q?U6o5VEONo6PKXHzSHt6cxv+Jd+XojLbNBMFE01RgAFIzswvpvPQ28P1Gt2PT?=
+ =?us-ascii?Q?INQa9zMH9Lo++ya9qGJwjkE=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fe09217-6588-44ae-e72a-08d9d8c0ed5d
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2022 07:22:18.1841
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Iq5Czk1ynlr3I+IjQSORaP2+XvwzpqMVwXepHR9w8fI1/Q2CmpYibdI0+LryUpD4y4hOVMSSQ7Mj0EttHL5t8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6467
 
-This set of patches will bring "Fast Open" Option support to MPTCP.
-The aim of Fast Open Mechanism is to eliminate one round trip
-time from a TCP conversation by allowing data to be included as
-part of the SYN segment that initiates the connection.
+This patch added the invert bytes check for the output data in
+check_transfer().
 
-IETF RFC 8684: Appendix B.  TCP Fast Open and MPTCP.
+Instead of the file mismatch error:
 
-[PATCH v2] includes "client-server" partial support for :
-1. MPTCP cookie request from client.
-2. MPTCP cookie offering from server.
-3. MPTCP SYN+DATA+COOKIE from client.
-4. subsequent write + read on the opened socket.
+  [ FAIL ] file received by server does not match (in, out):
+  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.9xpM6Paivv
+  Trailing bytes are:
+  MPTCP_TEST_FILE_END_MARKER
+  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.wnz1Yp4u7Z
+  Trailing bytes are:
+  MPTCP_TEST_FILE_END_MARKER
 
-This patch is Work In Progress and an early draft shared due community
-request.
+Print out the inverted bytes like this:
 
-Signed-off-by: Dmytro SHYTYI <dmytro@shytyi.net>
+  file received by server has inverted bytes at 7454789 (in, out)
+  file received by server has inverted bytes at 7454790 (in, out)
+  file received by server has inverted bytes at 7454791 (in, out)
+  file received by server has inverted bytes at 7454792 (in, out)
+
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- include/linux/tcp.h             |  7 ++++
- net/ipv4/inet_connection_sock.c |  3 +-
- net/ipv4/tcp_fastopen.c         | 42 +++++++++++++++++++----
- net/ipv4/tcp_input.c            | 16 +++++----
- net/mptcp/protocol.c            | 59 ++++++++++++++++++++++++++++++---
- net/mptcp/sockopt.c             | 40 ++++++++++++++++++++++
- net/mptcp/subflow.c             | 14 ++++++++
- 7 files changed, 162 insertions(+), 19 deletions(-)
+ v2:
+ - instead of adding a new function is_invert, add the invert bytes
+   check in check_transfer().
+---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 23 ++++++++++++-------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 48d8a363319e..d7092234d442 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -54,7 +54,14 @@ static inline unsigned int tcp_optlen(const struct sk_bu=
-ff *skb)
- /* TCP Fast Open */
- #define TCP_FASTOPEN_COOKIE_MIN=094=09/* Min Fast Open Cookie size in byte=
-s */
- #define TCP_FASTOPEN_COOKIE_MAX=0916=09/* Max Fast Open Cookie size in byt=
-es */
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 2be3cad4b52b..de6589d1c541 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -193,15 +193,22 @@ check_transfer()
+ 	out=3D$2
+ 	what=3D$3
+=20
+-	cmp "$in" "$out" > /dev/null 2>&1
+-	if [ $? -ne 0 ] ;then
+-		echo "[ FAIL ] $what does not match (in, out):"
+-		print_file_err "$in"
+-		print_file_err "$out"
+-		ret=3D1
++	cmp -l "$in" "$out" | while read line; do
++		local arr=3D($line)
 +
-+#if IS_ENABLED(CONFIG_MPTCP)
-+#define TCP_FASTOPEN_COOKIE_SIZE 4=09/* the size employed by MPTCP impl. *=
-/
-+#else
- #define TCP_FASTOPEN_COOKIE_SIZE 8=09/* the size employed by this impl. */
-+#endif
-+
-+
++		let sum=3D${arr[1]}+${arr[2]}
++		# Octal 377 is 0xFF
++		if [ $sum -ne 377 ]; then
++			echo "[ FAIL ] $what does not match (in, out):"
++			print_file_err "$in"
++			print_file_err "$out"
++			ret=3D1
 =20
- /* TCP Fast Open Cookie as stored in memory */
- struct tcp_fastopen_cookie {
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_soc=
-k.c
-index f7fea3a7c5e6..4b4159c0258d 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -501,7 +501,8 @@ struct sock *inet_csk_accept(struct sock *sk, int flags=
-, int *err, bool kern)
- =09req =3D reqsk_queue_remove(queue, sk);
- =09newsk =3D req->sk;
+-		return 1
+-	fi
++			return 1
++		else
++			echo "$what has inverted bytes at ${arr[0]} (in, out)"
++		fi
++	done
 =20
--=09if (sk->sk_protocol =3D=3D IPPROTO_TCP &&
-+=09if ((sk->sk_protocol =3D=3D IPPROTO_TCP ||
-+=09     sk->sk_protocol =3D=3D IPPROTO_MPTCP) &&
- =09    tcp_rsk(req)->tfo_listener) {
- =09=09spin_lock_bh(&queue->fastopenq.lock);
- =09=09if (tcp_rsk(req)->tfo_listener) {
-diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
-index fdbcf2a6d08e..d26378983ed7 100644
---- a/net/ipv4/tcp_fastopen.c
-+++ b/net/ipv4/tcp_fastopen.c
-@@ -119,15 +119,26 @@ static bool __tcp_fastopen_cookie_gen_cipher(struct r=
-equest_sock *req,
- =09=09=09=09=09     const siphash_key_t *key,
- =09=09=09=09=09     struct tcp_fastopen_cookie *foc)
- {
-+#if IS_ENABLED(CONFIG_MPTCP)
-+=09BUILD_BUG_ON(TCP_FASTOPEN_COOKIE_SIZE !=3D sizeof(u32));
-+#else
- =09BUILD_BUG_ON(TCP_FASTOPEN_COOKIE_SIZE !=3D sizeof(u64));
-+#endif
-=20
- =09if (req->rsk_ops->family =3D=3D AF_INET) {
- =09=09const struct iphdr *iph =3D ip_hdr(syn);
-=20
-+#if IS_ENABLED(CONFIG_MPTCP)
-+=09=09foc->val[0] =3D cpu_to_le32(siphash(&iph->saddr,
-+=09=09=09=09=09=09  sizeof(iph->saddr) +
-+=09=09=09=09=09=09  sizeof(iph->daddr),
-+=09=09=09=09=09=09  key));
-+#else
- =09=09foc->val[0] =3D cpu_to_le64(siphash(&iph->saddr,
- =09=09=09=09=09  sizeof(iph->saddr) +
- =09=09=09=09=09  sizeof(iph->daddr),
- =09=09=09=09=09  key));
-+#endif
- =09=09foc->len =3D TCP_FASTOPEN_COOKIE_SIZE;
- =09=09return true;
- =09}
-@@ -149,6 +160,7 @@ static bool __tcp_fastopen_cookie_gen_cipher(struct req=
-uest_sock *req,
- /* Generate the fastopen cookie by applying SipHash to both the source and
-  * destination addresses.
-  */
-+/*
- static void tcp_fastopen_cookie_gen(struct sock *sk,
- =09=09=09=09    struct request_sock *req,
- =09=09=09=09    struct sk_buff *syn,
-@@ -162,6 +174,7 @@ static void tcp_fastopen_cookie_gen(struct sock *sk,
- =09=09__tcp_fastopen_cookie_gen_cipher(req, syn, &ctx->key[0], foc);
- =09rcu_read_unlock();
+ 	return 0
  }
-+*/
-=20
- /* If an incoming SYN or SYNACK frame contains a payload and/or FIN,
-  * queue this additional data / FIN.
-@@ -291,12 +304,12 @@ static struct sock *tcp_fastopen_create_child(struct =
-sock *sk,
- =09 */
- =09return child;
- }
--
-+/*
- static bool tcp_fastopen_queue_check(struct sock *sk)
- {
- =09struct fastopen_queue *fastopenq;
-=20
--=09/* Make sure the listener has enabled fastopen, and we don't
-+=09* Make sure the listener has enabled fastopen, and we don't
- =09 * exceed the max # of pending TFO requests allowed before trying
- =09 * to validating the cookie in order to avoid burning CPU cycles
- =09 * unnecessarily.
-@@ -305,7 +318,7 @@ static bool tcp_fastopen_queue_check(struct sock *sk)
- =09 * processing a cookie request is that clients can't differentiate
- =09 * between qlen overflow causing Fast Open to be disabled
- =09 * temporarily vs a server not supporting Fast Open at all.
--=09 */
-+=09 *
- =09fastopenq =3D &inet_csk(sk)->icsk_accept_queue.fastopenq;
- =09if (fastopenq->max_qlen =3D=3D 0)
- =09=09return false;
-@@ -327,7 +340,7 @@ static bool tcp_fastopen_queue_check(struct sock *sk)
- =09}
- =09return true;
- }
--
-+*/
- static bool tcp_fastopen_no_cookie(const struct sock *sk,
- =09=09=09=09   const struct dst_entry *dst,
- =09=09=09=09   int flag)
-@@ -346,28 +359,43 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct=
- sk_buff *skb,
- =09=09=09      struct tcp_fastopen_cookie *foc,
- =09=09=09      const struct dst_entry *dst)
- {
-+=09/*
- =09bool syn_data =3D TCP_SKB_CB(skb)->end_seq !=3D TCP_SKB_CB(skb)->seq + =
-1;
- =09int tcp_fastopen =3D sock_net(sk)->ipv4.sysctl_tcp_fastopen;
-+=09*/
- =09struct tcp_fastopen_cookie valid_foc =3D { .len =3D -1 };
- =09struct sock *child;
- =09int ret =3D 0;
-=20
- =09if (foc->len =3D=3D 0) /* Client requests a cookie */
- =09=09NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPFASTOPENCOOKIEREQD);
--
-+/*
- =09if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
- =09      (syn_data || foc->len >=3D 0) &&
- =09      tcp_fastopen_queue_check(sk))) {
- =09=09foc->len =3D -1;
- =09=09return NULL;
- =09}
--
-+*/
- =09if (tcp_fastopen_no_cookie(sk, dst, TFO_SERVER_COOKIE_NOT_REQD))
- =09=09goto fastopen;
-=20
- =09if (foc->len =3D=3D 0) {
- =09=09/* Client requests a cookie. */
--=09=09tcp_fastopen_cookie_gen(sk, req, skb, &valid_foc);
-+=09=09//tcp_fastopen_cookie_gen(sk, req, skb, &valid_foc);
-+
-+=09=09struct tcp_fastopen_context *ctx;
-+=09=09struct iphdr *iph =3D ip_hdr(skb);
-+
-+=09=09tcp_fastopen_init_key_once(sock_net(sk));
-+=09=09ctx =3D tcp_fastopen_get_ctx(sk);
-+
-+=09=09valid_foc.val[0] =3D cpu_to_le32(siphash(&iph->saddr,
-+=09=09=09=09=09=09       sizeof(iph->saddr) +
-+=09=09=09=09=09=09       sizeof(iph->daddr),
-+=09=09=09=09=09=09       &ctx->key[0]));
-+=09=09valid_foc.len =3D TCP_FASTOPEN_COOKIE_SIZE;
-+
- =09} else if (foc->len > 0) {
- =09=09ret =3D tcp_fastopen_cookie_gen_check(sk, req, skb, foc,
- =09=09=09=09=09=09    &valid_foc);
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 246ab7b5e857..915570132014 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -5908,7 +5908,6 @@ void tcp_rcv_established(struct sock *sk, struct sk_b=
-uff *skb)
- =09=09=09} else {
- =09=09=09=09tcp_update_wl(tp, TCP_SKB_CB(skb)->seq);
- =09=09=09}
--
- =09=09=09__tcp_ack_snd_check(sk, 0);
- no_ack:
- =09=09=09if (eaten)
-@@ -6229,9 +6228,10 @@ static int tcp_rcv_synsent_state_process(struct sock=
- *sk, struct sk_buff *skb,
- =09=09}
- =09=09if (fastopen_fail)
- =09=09=09return -1;
--=09=09if (sk->sk_write_pending ||
--=09=09    icsk->icsk_accept_queue.rskq_defer_accept ||
--=09=09    inet_csk_in_pingpong_mode(sk)) {
-+
-+=09=09if ((sk->sk_write_pending ||
-+=09=09     icsk->icsk_accept_queue.rskq_defer_accept ||
-+=09=09     inet_csk_in_pingpong_mode(sk)) && !th->syn) {
- =09=09=09/* Save one ACK. Data will be ready after
- =09=09=09 * several ticks, if write_pending is set.
- =09=09=09 *
-@@ -6243,9 +6243,10 @@ static int tcp_rcv_synsent_state_process(struct sock=
- *sk, struct sk_buff *skb,
- =09=09=09tcp_enter_quickack_mode(sk, TCP_MAX_QUICKACKS);
- =09=09=09inet_csk_reset_xmit_timer(sk, ICSK_TIME_DACK,
- =09=09=09=09=09=09  TCP_DELACK_MAX, TCP_RTO_MAX);
--
- discard:
- =09=09=09tcp_drop(sk, skb);
-+=09=09=09tcp_send_ack(sk);
-+
- =09=09=09return 0;
- =09=09} else {
- =09=09=09tcp_send_ack(sk);
-@@ -6425,6 +6426,7 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_=
-buff *skb)
- =09=09tcp_urg(sk, skb, th);
- =09=09__kfree_skb(skb);
- =09=09tcp_data_snd_check(sk);
-+
- =09=09return 0;
- =09}
-=20
-@@ -6901,7 +6903,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops=
-,
- =09=09=09 */
- =09=09=09pr_drop_req(req, ntohs(tcp_hdr(skb)->source),
- =09=09=09=09    rsk_ops->family);
--=09=09=09goto drop_and_release;
-+=09=09=09//goto drop_and_release;
- =09=09}
-=20
- =09=09isn =3D af_ops->init_seq(skb);
-@@ -6954,7 +6956,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops=
-,
- =09reqsk_put(req);
- =09return 0;
-=20
--drop_and_release:
-+//drop_and_release:
- =09dst_release(dst);
- drop_and_free:
- =09__reqsk_free(req);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cd6b11c9b54d..3020a9c95a31 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -52,6 +52,8 @@ static struct percpu_counter mptcp_sockets_allocated;
-=20
- static void __mptcp_destroy_sock(struct sock *sk);
- static void __mptcp_check_send_data_fin(struct sock *sk);
-+static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uadd=
-r,
-+=09=09=09=09int addr_len, int flags);
-=20
- DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- static struct net_device mptcp_napi_dev;
-@@ -1677,6 +1679,53 @@ static void __mptcp_subflow_push_pending(struct sock=
- *sk, struct sock *ssk)
- =09}
- }
-=20
-+static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
-+=09=09=09=09  size_t len, struct mptcp_sock *msk, size_t copied)
-+{
-+=09const struct iphdr *iph;
-+=09struct ubuf_info *uarg;
-+=09struct sockaddr *uaddr;
-+=09struct sk_buff *skb;
-+=09struct tcp_sock *tp;
-+=09struct socket *ssk;
-+=09int ret;
-+
-+=09ssk =3D __mptcp_nmpc_socket(msk);
-+=09if (unlikely(!ssk))
-+=09=09goto out_EFAULT;
-+=09skb =3D sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
-+=09if (unlikely(!skb))
-+=09=09goto out_EFAULT;
-+=09iph =3D ip_hdr(skb);
-+=09if (unlikely(!iph))
-+=09=09goto out_EFAULT;
-+=09uarg =3D msg_zerocopy_realloc(sk, len, skb_zcopy(skb));
-+=09if (unlikely(!uarg))
-+=09=09goto out_EFAULT;
-+=09uaddr =3D msg->msg_name;
-+
-+=09tp =3D tcp_sk(ssk->sk);
-+=09if (unlikely(!tp))
-+=09=09goto out_EFAULT;
-+=09if (!tp->fastopen_req)
-+=09=09tp->fastopen_req =3D kzalloc(sizeof(*tp->fastopen_req), ssk->sk->sk_=
-allocation);
-+
-+=09if (unlikely(!tp->fastopen_req))
-+=09=09goto out_EFAULT;
-+=09tp->fastopen_req->data =3D msg;
-+=09tp->fastopen_req->size =3D len;
-+=09tp->fastopen_req->uarg =3D uarg;
-+
-+=09/* requests a cookie */
-+=09ret =3D mptcp_stream_connect(sk->sk_socket, uaddr,
-+=09=09=09=09   msg->msg_namelen, msg->msg_flags);
-+
-+=09return ret;
-+out_EFAULT:
-+=09ret =3D -EFAULT;
-+=09return ret;
-+}
-+
- static void mptcp_set_nospace(struct sock *sk)
- {
- =09/* enable autotune */
-@@ -1694,9 +1743,9 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- =09int ret =3D 0;
- =09long timeo;
-=20
--=09/* we don't support FASTOPEN yet */
-+=09/* we don't fully support FASTOPEN yet */
- =09if (msg->msg_flags & MSG_FASTOPEN)
--=09=09return -EOPNOTSUPP;
-+=09=09ret =3D mptcp_sendmsg_fastopen(sk, msg, len, msk, copied);
-=20
- =09/* silently ignore everything else */
- =09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
-@@ -2482,10 +2531,10 @@ static void mptcp_worker(struct work_struct *work)
-=20
- =09if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
- =09=09__mptcp_close_subflow(msk);
--
-+=09/*
- =09if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- =09=09__mptcp_retrans(sk);
--
-+=09*/
- unlock:
- =09release_sock(sk);
- =09sock_put(sk);
-@@ -2589,6 +2638,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct s=
-ock *ssk, int how)
- =09case TCP_SYN_SENT:
- =09=09tcp_disconnect(ssk, O_NONBLOCK);
- =09=09break;
-+=09case TCP_ESTABLISHED:
-+=09=09break;
- =09default:
- =09=09if (__mptcp_check_fallback(mptcp_sk(sk))) {
- =09=09=09pr_debug("Fallback");
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 0f1e661c2032..0e471e31e72a 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -539,6 +539,7 @@ static bool mptcp_supported_sockopt(int level, int optn=
-ame)
- =09=09case TCP_TIMESTAMP:
- =09=09case TCP_NOTSENT_LOWAT:
- =09=09case TCP_TX_DELAY:
-+=09=09case TCP_FASTOPEN:
- =09=09=09return true;
- =09=09}
-=20
-@@ -598,6 +599,43 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct =
-mptcp_sock *msk, sockptr_t
- =09return ret;
- }
-=20
-+static int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock *msk, sockp=
-tr_t optval,
-+=09=09=09=09=09     unsigned int optlen)
-+{
-+=09struct mptcp_subflow_context *subflow;
-+=09struct sock *sk =3D (struct sock *)msk;
-+=09struct net *net =3D sock_net(sk);
-+=09int val;
-+=09int ret;
-+
-+=09ret =3D 0;
-+
-+=09if (copy_from_sockptr(&val, optval, sizeof(val)))
-+=09=09return -EFAULT;
-+
-+=09lock_sock(sk);
-+
-+=09mptcp_for_each_subflow(msk, subflow) {
-+=09=09struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+=09=09lock_sock(ssk);
-+
-+=09=09if (val >=3D 0 && ((1 << sk->sk_state) & (TCPF_CLOSE |
-+=09=09    TCPF_LISTEN))) {
-+=09=09=09tcp_fastopen_init_key_once(net);
-+=09=09=09fastopen_queue_tune(sk, val);
-+=09=09} else {
-+=09=09=09ret =3D -EINVAL;
-+=09=09}
-+
-+=09=09release_sock(ssk);
-+=09}
-+
-+=09release_sock(sk);
-+
-+=09return ret;
-+}
-+
- static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- =09=09=09=09    sockptr_t optval, unsigned int optlen)
- {
-@@ -606,6 +644,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *=
-msk, int optname,
- =09=09return -EOPNOTSUPP;
- =09case TCP_CONGESTION:
- =09=09return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
-+=09case TCP_FASTOPEN:
-+=09=09return mptcp_setsockopt_sol_tcp_fastopen(msk, optval, optlen);
- =09}
-=20
- =09return -EOPNOTSUPP;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6172f380dfb7..82976b31f2f2 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -966,6 +966,7 @@ static enum mapping_status get_mapping_status(struct so=
-ck *ssk,
- =09trace_get_mapping_status(mpext);
-=20
- =09data_len =3D mpext->data_len;
-+
- =09if (data_len =3D=3D 0) {
- =09=09MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
- =09=09return MAPPING_INVALID;
-@@ -1024,6 +1025,7 @@ static enum mapping_status get_mapping_status(struct =
-sock *ssk,
- =09=09/* If this skb data are fully covered by the current mapping,
- =09=09 * the new map would need caching, which is not supported
- =09=09 */
-+
- =09=09if (skb_is_fully_mapped(ssk, skb)) {
- =09=09=09MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSNOMATCH);
- =09=09=09return MAPPING_INVALID;
-@@ -1044,6 +1046,7 @@ static enum mapping_status get_mapping_status(struct =
-sock *ssk,
- =09subflow->map_data_csum =3D csum_unfold(mpext->csum);
-=20
- =09/* Cfr RFC 8684 Section 3.3.0 */
-+
- =09if (unlikely(subflow->map_csum_reqd !=3D csum_reqd))
- =09=09return MAPPING_INVALID;
-=20
-@@ -1180,9 +1183,19 @@ static bool subflow_check_data_avail(struct sock *ss=
-k)
- =09}
-=20
- =09if (subflow->mp_join || subflow->fully_established) {
-+=09=09skb =3D skb_peek(&ssk->sk_receive_queue);
-+=09=09subflow->map_valid =3D 1;
-+=09=09subflow->map_seq =3D READ_ONCE(msk->ack_seq);
-+=09=09subflow->map_data_len =3D skb->len;
-+=09=09subflow->map_subflow_seq =3D tcp_sk(ssk)->copied_seq - subflow->ssn_=
-offset;
-+
-+=09=09WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
-+=09=09return true;
-+
- =09=09/* fatal protocol error, close the socket.
- =09=09 * subflow_error_report() will introduce the appropriate barriers
- =09=09 */
-+=09=09/*
- =09=09ssk->sk_err =3D EBADMSG;
- =09=09tcp_set_state(ssk, TCP_CLOSE);
- =09=09subflow->reset_transient =3D 0;
-@@ -1190,6 +1203,7 @@ static bool subflow_check_data_avail(struct sock *ssk=
-)
- =09=09tcp_send_active_reset(ssk, GFP_ATOMIC);
- =09=09WRITE_ONCE(subflow->data_avail, 0);
- =09=09return false;
-+=09=09*/
- =09}
-=20
- =09__mptcp_do_fallback(msk);
 --=20
-2.25.1
-
+2.31.1
 
