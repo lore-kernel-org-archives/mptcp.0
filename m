@@ -1,37 +1,35 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9262C9E
-	for <mptcp@lists.linux.dev>; Mon, 17 Jan 2022 21:08:54 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1642453724; cv=none; 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27348173
+	for <mptcp@lists.linux.dev>; Mon, 17 Jan 2022 21:39:56 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1642455592; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=HAj5rtoEV2FepDOIMVbTT5PiktHDYr/37Td4I0PW35NkYjFnuiScWmyogwHXsCD6lHXCKWGjIgLU7Ho3W0eI6w9VP5COlA2N/aMYQ54osnlweadnVsyJ136RhvuXekhaDgwscHZAfLe5qrayjpkId+B228OcKnrlxe+lt+QijYA=
+	b=jreayqLM2xzgtyluexhUx51+WHF7fx+TzRW6MzUG/dXHNzPV1nWOUOLog2xq4UwxZiSfingIvuQ7xPT0Dy1wYWcuXDTku8wo0kBMwSkVCdmf8B1R/ZBUmhNBqUN7j5LmdKV0Lof1D4eb351Ga9kF58X8IBmf73kxTYyMY10KfnA=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1642453724; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=JC360UWy2adT7OMHTnOoXY+Q0tGPjM5XUwoG9wTfLQg=; 
-	b=OVe5l+RKx4nTxKFYcT0V6NBNAhBUbBtEzsreD5jnhIGq6pphui95p+fn05R4HXCEIRiGEbuO0qRxaH73ryE8Sxr0CQ224x05NA5KsTqkujYWthilA40k6gmoKrrqycSAKgbMwWA+Rznym2HOBG26tp4Zc3RJoXkdd7N/w5ybmB8=
+	t=1642455592; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=mvX0aJeFV4SSsh0UYhgIKp7P/WP1t29SKH+2bDWp2EQ=; 
+	b=cGTxXaT3nVdOmZ8xdk7oci8zP4XTZJ4uj0DRfIdsDrahrbz3Yfy6VT+mpBY+MPfxhx6ux6ybKvLS7rQV+0P3CHO4JFXDex8V8sgsDfxCgopEqBC3gCzyetDDh5n9IiANtrvwZjeolPzj9l3W2sHvjvH5TBD1UUFGhhEH+sV0COM=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
 	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1642453724;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1642455592;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
 	h=Subject:To:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=JC360UWy2adT7OMHTnOoXY+Q0tGPjM5XUwoG9wTfLQg=;
-	b=EUn9E6uT6cbcu7KGKAE2e0mnHbjWP7DqRzkRCNRelovfwR8bMk3pvin348pw8yne
-	M4zcgHWnMO7QAHOur3HRaXZHzpvL4S1turOrRbSOo3XXRjfWKuW0OvjMaOx+lT+pomi
-	v3k5bnuczMIjfwyYbdcUbpkI+ZVCOZ3TuAmowR44=
+	bh=mvX0aJeFV4SSsh0UYhgIKp7P/WP1t29SKH+2bDWp2EQ=;
+	b=AoC7G6xCavqUNO005w589hULiWcq9rioBtlza+39LKNCQu6TLEbuU8zPM/Gi/eFg
+	NVHH/G7Uk1f9C/SiNZPD5vE7scWUrn9aaaVTLBD9U4kiPQMvUu9AbsMRJmGRADRICc7
+	fN8aiMr4fMEbYggodrTysdWK2rkJ93VHnjk8NqZ4=
 Received: from [192.168.100.116] (vps-f3afed4e.vps.ovh.net [198.244.151.99]) by mx.zoho.eu
-	with SMTPS id 1642453720424553.4346629213071; Mon, 17 Jan 2022 22:08:40 +0100 (CET)
+	with SMTPS id 1642455590296331.7469716168074; Mon, 17 Jan 2022 22:39:50 +0100 (CET)
 Subject: Re: [PATCH net-next v2] net: mptcp, Fast Open Mechanism
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <20220116001259.203319-1-dmytro@shytyi.net>
- <202201162148.bSZpItDM-lkp@intel.com>
- <5c970a8d-008c-059f-b263-c46ee9f1a29c@shytyi.net>
- <7138d0a4-7118-481b-a88e-5232e9f951ec@tessares.net>
+ <449d3338d759e9f72f33e7c37e1b9956bdda77f4.camel@redhat.com>
 From: Dmytro SHYTYI <dmytro@shytyi.net>
-Message-ID: <20283dd8-68ba-e81e-7d31-481588f42342@shytyi.net>
-Date: Mon, 17 Jan 2022 21:08:36 +0000
+Message-ID: <449fb0ab-5155-114e-05dd-1f86a742dc4c@shytyi.net>
+Date: Mon, 17 Jan 2022 21:39:44 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 Precedence: bulk
@@ -40,61 +38,103 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <7138d0a4-7118-481b-a88e-5232e9f951ec@tessares.net>
+In-Reply-To: <449d3338d759e9f72f33e7c37e1b9956bdda77f4.camel@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-ZohoMailClient: External
 
-Hello Matthieu,
+Hello Paolo,
 
-Thanks for pointing me the Git branch that should be used.
-OK, i will add "RFC" next to "PATCH" in the title.
 
-Dmytro.
-
-On 17/01/2022 09:01, Matthieu Baerts wrote:
-> Hi Dmytro,
+On 17/01/2022 09:58, Paolo Abeni wrote:
+> Hello,
 > 
-> Thank you for sharing this new version.
-> 
-> On 16/01/2022 22:24, Dmytro SHYTYI wrote:
->> Hello,
+> On Sun, 2022-01-16 at 00:12 +0000, Dmytro SHYTYI wrote:
+>> This set of patches will bring "Fast Open" Option support to MPTCP.
+>> The aim of Fast Open Mechanism is to eliminate one round trip
+>> time from a TCP conversation by allowing data to be included as
+>> part of the SYN segment that initiates the connection.
 >>
->> I think i fixed this locally but I'm not going to submit a new patch
->> with a correction to avoid CI resource wasting. I wait until major change.
->> If you think it might be interesting to upload a new patch with this
->> minor change, please let me know.
-> 
-> Up to you. It is fine to submit a new version if you want more feedback
-> from the CI. It can also help for the reviews if people can apply the
-> patch on top of our "export" branch, please see below.
-> 
-> Just if you do re-submit, please add "RFC" next to "PATCH" in the title.
-> 
-> 
->> sk_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
->> | ^~~~~~~~~~~~~~~~~~~
->> | tcp_stream_alloc_skb
+>> IETF RFC 8684: Appendix B.  TCP Fast Open and MPTCP.
 >>
->> Also I'm curious as this patch is failed to apply to current master, but
->> I don't know the reason (which conflict do I have?)... ...locally I
->> successfully build this patch against: 5.16.0-rc8 met-next
->> Auto-merging net/mptcp/subflow.cCONFLICT (content): Merge conflict in
->> net/mptcp/subflow.c
->> Auto-merging net/mptcp/sockopt.cCONFLICT (content): Merge conflict in
->> net/mptcp/sockopt.c
+>> [PATCH v2] includes "client-server" partial support for :
+>> 1. MPTCP cookie request from client.
+>> 2. MPTCP cookie offering from server.
+>> 3. MPTCP SYN+DATA+COOKIE from client.
+>> 4. subsequent write + read on the opened socket.
+>>
+>> This patch is Work In Progress and an early draft shared due community
+>> request.
 > 
-> Your patch should be on top of our "export" branch -- or the
-> 'for-review' one, same content but a continuous Git history -- from our
-> repository on Github.
+> It looks like this is more far from an RFC status than I thought.
+
+I agree.
+
+> There are a number of tasks to be completed for that:
+> - do not comment out existing working code, expecially TCP one.
+> - split the patch in several small one, clearly documenting in the
+> individual commit message what each patch is doing and why.
+>    A possible skeleton could be:
+>    * create the needed hooks in the TCP code, providing a dummy
+>      implementation. Each hook will need a solid justification,
+>      and they should not affect the TCP critical path.
+>      The number of added hooks should be as low as possible.
+>      You should try to use the existing hooking whenever it should be
+>      possible.
+>      No patch should touch the TCP code after the hooks are created.
+>      Side note: I'm unsure if any additional hooks are really needed.
+>    * add the real MPTCP impl, possibly with separate patches for
+>      the client and the server side
+>    * add self-tests
+> - avoid introducing white-space only changes.
+
+Thank you for sharing this. I'm going to take this into account. I might 
+participate in the next MPTCP meeting to clarify some points.
+
+> There are a bunch of specific inline notes below, which are still very
+> important.
+
+Thanks!
+
+>> Signed-off-by: Dmytro SHYTYI <dmytro@shytyi.net>
+>> ---
+>>   include/linux/tcp.h             |  7 ++++
+>>   net/ipv4/inet_connection_sock.c |  3 +-
+>>   net/ipv4/tcp_fastopen.c         | 42 +++++++++++++++++++----
+>>   net/ipv4/tcp_input.c            | 16 +++++----
+>>   net/mptcp/protocol.c            | 59 ++++++++++++++++++++++++++++++---
+>>   net/mptcp/sockopt.c             | 40 ++++++++++++++++++++++
+>>   net/mptcp/subflow.c             | 14 ++++++++
+>>   7 files changed, 162 insertions(+), 19 deletions(-)
+>>
+>>   
+>>   /* TCP Fast Open Cookie as stored in memory */
+>>   struct tcp_fastopen_cookie {
+>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+>> index f7fea3a7c5e6..4b4159c0258d 100644
+>> --- a/net/ipv4/inet_connection_sock.c
+>> +++ b/net/ipv4/inet_connection_sock.c
+>> @@ -501,7 +501,8 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
+>>   	req = reqsk_queue_remove(queue, sk);
+>>   	newsk = req->sk;
+>>   
+>> -	if (sk->sk_protocol == IPPROTO_TCP &&
+>> +	if ((sk->sk_protocol == IPPROTO_TCP ||
+>> +	     sk->sk_protocol == IPPROTO_MPTCP) &&
+>>   	    tcp_rsk(req)->tfo_listener) {
+>>   		spin_lock_bh(&queue->fastopenq.lock);
+>>   		if (tcp_rsk(req)->tfo_listener) {
 > 
-> https://github.com/multipath-tcp/mptcp_net-next/wiki/Git-Branches
-> 
-> You can also see on Patchew it was not possible to apply your patch:
-> 
-> https://patchew.org/MPTCP/20220116001259.203319-1-dmytro@shytyi.net/
-> 
+> This chunk is really not needed. mptcp invokes inet_csk_accept(),
+> passing the initial subflow as the first argument. That socket is
+> really a TCP one.
+
+I agree.
+
 > Cheers,
-> Matt
 > 
+> Paolo
+> 
+Best regards,
+Dmytro
