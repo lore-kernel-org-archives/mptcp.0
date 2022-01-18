@@ -1,68 +1,31 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487AB2C9C
-	for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 11:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1642505558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gxIUZxKIctHJwL8z/L5myK/ubboYV+HhwGkSMX1RWeM=;
-	b=DNSmUkZd/7CSh+S/AW+V1uEGxrJhJSuZvXrab9/QuZqzkqSJ5mkuJ41SOuF3dqdlEbfA5D
-	d71PKVPPwazo5+UPs96Db/zzMtTQPRB68jTXEzcqMs1/+KDEYVlEcC4zd5Y3pC1s9q+VE9
-	ZV+O54g87pTS6GV3DelXB04Kec08HOU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-464-gvufhYdFNGmDro1RqQCewA-1; Tue, 18 Jan 2022 06:32:37 -0500
-X-MC-Unique: gvufhYdFNGmDro1RqQCewA-1
-Received: by mail-wm1-f70.google.com with SMTP id p7-20020a05600c1d8700b0034a0c77dad6so1876048wms.7
-        for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 03:32:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=gxIUZxKIctHJwL8z/L5myK/ubboYV+HhwGkSMX1RWeM=;
-        b=UWUhuxi8Lu3MBtTVQbzECXlBAcZO3wSuKBV1TIKnGGDZ/9+RlEuKecI9o5rAVd0uIV
-         U4eaDht8B0W98MU3jh+GeaUrMvIo7SWsbmHNdlF0gc7Yz/EnDTx+tB1mxguk2fjpZoOi
-         2reg891SUm6eOI2TYwBkJZnWuP5cu+Y31qoioA+W89fLtkkcHDi0TLpm7vCHHouT/A31
-         0gO5LgocR6B6txjgcNsFnejpWIj+41OIs8RZU9Zj+Yt/Aro2qcQ8/J9RfHBGps2baB4Q
-         7pI0T/gf8A1ZzmuJh96e6InXBhWylu9U/PhcLLBWZWUgJgJrzVCBxU/049n33AjbShll
-         LyIw==
-X-Gm-Message-State: AOAM531tBanr3wCbiozTwZkk8iVNFhGdmK/gO9M5KvUWDyFxfxjzNSr/
-	t4OCPPYXVUBRA+aiKFwpVxV/2Q1oLygEdoZSug+lLoK5QOOaC81jjYmHZSb7eBXJ825z/t5WEMB
-	FbaLHLTqLi99xKPc=
-X-Received: by 2002:adf:eec5:: with SMTP id a5mr22941933wrp.125.1642505555848;
-        Tue, 18 Jan 2022 03:32:35 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx2Z2Ir8v9YbJpsV5b8zAGMUVsvQSlizXWz0r6NetP68sBK/YKLA/n6veKoloXDcOw314VKwA==
-X-Received: by 2002:adf:eec5:: with SMTP id a5mr22941913wrp.125.1642505555610;
-        Tue, 18 Jan 2022 03:32:35 -0800 (PST)
-Received: from ?IPV6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
-        by smtp.googlemail.com with ESMTPSA id p4sm252431wrf.25.2022.01.18.03.32.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jan 2022 03:32:35 -0800 (PST)
-Message-ID: <3d46c2e7-40a7-61e1-8bb5-063bb608b26f@redhat.com>
-Date: Tue, 18 Jan 2022 12:32:33 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999072C82
+	for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 13:11:45 +0000 (UTC)
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4JdStT1zBDzMq01B;
+	Tue, 18 Jan 2022 13:36:01 +0100 (CET)
+Received: from ns3096276.ip-94-23-54.eu (unknown [23.97.221.149])
+	by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4JdStQ5z5tzlhMBj;
+	Tue, 18 Jan 2022 13:35:58 +0100 (CET)
+Message-ID: <8ea3bd61-8251-a5b6-c0b4-6d15bac4d2c5@digikod.net>
+Date: Tue, 18 Jan 2022 13:35:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 09/10] selftests: vm: Add the uapi headers include
- variable
+User-Agent:
+Content-Language: en-US
 To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
  Shuah Khan <shuah@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
  Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
  Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
  =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
- =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
  Mat Martineau <mathew.j.martineau@linux.intel.com>,
  Matthieu Baerts <matthieu.baerts@tessares.net>,
  Andrew Morton <akpm@linux-foundation.org>,
@@ -77,40 +40,68 @@ To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
  "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
 Cc: kernel@collabora.com
 References: <20220118112909.1885705-1-usama.anjum@collabora.com>
- <20220118112909.1885705-10-usama.anjum@collabora.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <20220118112909.1885705-10-usama.anjum@collabora.com>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pbonzini@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+ <20220118112909.1885705-7-usama.anjum@collabora.com>
+From: =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Subject: Re: [PATCH 06/10] selftests: landlock: Add the uapi headers include
+ variable
+In-Reply-To: <20220118112909.1885705-7-usama.anjum@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 1/18/22 12:29, Muhammad Usama Anjum wrote:
+
+On 18/01/2022 12:29, Muhammad Usama Anjum wrote:
 > Out of tree build of this test fails if relative path of the output
 > directory is specified. Remove the un-needed include paths and use
 > KHDR_INCLUDES to correctly reach the headers.
 > 
 > Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 > ---
->   tools/testing/selftests/vm/Makefile | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   tools/testing/selftests/landlock/Makefile | 11 +++--------
+>   1 file changed, 3 insertions(+), 8 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
-> index 7d100a7dc462..8dc428c8a3b0 100644
-> --- a/tools/testing/selftests/vm/Makefile
-> +++ b/tools/testing/selftests/vm/Makefile
-> @@ -23,7 +23,7 @@ MACHINE ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/' -e 's/ppc64.*/p
->   # LDLIBS.
->   MAKEFLAGS += --no-builtin-rules
+> diff --git a/tools/testing/selftests/landlock/Makefile b/tools/testing/selftests/landlock/Makefile
+> index a99596ca9882..44c724b38a37 100644
+> --- a/tools/testing/selftests/landlock/Makefile
+> +++ b/tools/testing/selftests/landlock/Makefile
+> @@ -1,6 +1,6 @@
+>   # SPDX-License-Identifier: GPL-2.0
 >   
-> -CFLAGS = -Wall -I ../../../../usr/include $(EXTRA_CFLAGS)
-> +CFLAGS = -Wall $(EXTRA_CFLAGS) $(KHDR_INCLUDES)
->   LDLIBS = -lrt -lpthread
->   TEST_GEN_FILES = compaction_test
->   TEST_GEN_FILES += gup_test
+> -CFLAGS += -Wall -O2
+> +CFLAGS += -Wall -O2 $(KHDR_INCLUDES)
+>   
+>   src_test := $(wildcard *_test.c)
+>   
+> @@ -12,13 +12,8 @@ KSFT_KHDR_INSTALL := 1
+>   OVERRIDE_TARGETS := 1
+>   include ../lib.mk
+>   
+> -khdr_dir = $(top_srcdir)/usr/include
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+This should be updated to:
+khdr_dir = ${abs_srctree}/usr/include
 
+Using a global KHDR_DIR instead of khdr_dir could be useful for others too.
+
+> -
+> -$(khdr_dir)/linux/landlock.h: khdr
+> -	@:
+
+This should be kept as is, otherwise we loose this check to rebuild the 
+headers if linux/landlock.h is updated, which is handy for development.
+KVM lost a similar behavior with this patch series.
+
+> -
+>   $(OUTPUT)/true: true.c
+>   	$(LINK.c) $< $(LDLIBS) -o $@ -static
+>   
+> -$(OUTPUT)/%_test: %_test.c $(khdr_dir)/linux/landlock.h ../kselftest_harness.h common.h
+
+This should not be changed.
+
+> -	$(LINK.c) $< $(LDLIBS) -o $@ -lcap -I$(khdr_dir)
+> +$(OUTPUT)/%_test: %_test.c ../kselftest_harness.h common.h
+> +	$(LINK.c) $< $(LDLIBS) -o $@ -lcap
+
+This doesn't work when building in the local directory because 
+$abs_srctree and $KHDR_INCLUDES are empty:
+cd tools/testing/selftests/landlock && make
