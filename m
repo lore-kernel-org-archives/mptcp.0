@@ -1,108 +1,144 @@
-Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9EA173
-	for <mptcp@lists.linux.dev>; Mon, 17 Jan 2022 21:52:14 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1642456329; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=hDc+/nhly/UH7GR2bkFK4IyJEss9gUAiYaihCCQxg0ma8up5PTk6OCzIVI2cXxVfhXLn4KTx9PbI6eMWUM1fCw1ngfo71fMdk9i0NYhd+ygff9S5YDbwq7jPdVeoMw5eh+bEbvirH7zb8JxaDNEu3zVe3yNZUBo+NqqEDOaHDQ8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1642456329; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=BvEEz6eCE5EvD3GErLa9sec6lWufbDhsXPch8+t5xJ8=; 
-	b=K3/YepFDbUZnP8xUswa4Rkh8wHfyaf+aHFNwZcM8X2k2X5LPGnU6vCKasIRy2ucBxtOmlLizBN1ycvGQNVpjNWcXpps0pGChQnRM6lHEWehL1LIpggeHcsBZbvGxs6TXAETcVA/AXT1c3tu+wKg+oWf0KnWq63ekU1VvnLygDwQ=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=shytyi.net;
-	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
-	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1642456329;
-	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=BvEEz6eCE5EvD3GErLa9sec6lWufbDhsXPch8+t5xJ8=;
-	b=avp6ov0Q7Q5I2lChf1lfQcFdUvUAlyRRTo3pNImQuX8cNVWgiOpdS+fwcwK+XrcL
-	O5NQf5WX9tuG4IsHI2F0fHVOgSBhbsZCxx73QUmajGw7kavMtvhl71sToBejDeqC6z4
-	R6d/1ZqdFa0wGv6XFxGC753J3mQXb7Zny1gzBrA0=
-Received: from [192.168.100.116] (vps-f3afed4e.vps.ovh.net [198.244.151.99]) by mx.zoho.eu
-	with SMTPS id 1642456327433324.72992795277935; Mon, 17 Jan 2022 22:52:07 +0100 (CET)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212BC168
+	for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 11:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1642503753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mUY2sCl5lvJy1fa2pdnzmeDJtZq5gM1eH1qe0mHOtW4=;
+	b=YstSvcIoG4MuFPo/SIAU8Nm08SXGQxPY5s5v17OOAZCY7/4nIMc2c3IhX1bVe+lZ3ZerYg
+	dCoioLeYqvKUZDIqHcfvQCiZbpAQOyNEJWk+ibHWGCrpLjAUwpFkn4T92DkieaXapj1iR6
+	QdquS8e693eYq5rj2z9glKBKEWMm+xU=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-652-EHdcOQnnMxifMxNKXmTU8A-1; Tue, 18 Jan 2022 06:02:31 -0500
+X-MC-Unique: EHdcOQnnMxifMxNKXmTU8A-1
+Received: by mail-qv1-f70.google.com with SMTP id ke27-20020a056214301b00b004178da03fd5so17979446qvb.17
+        for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 03:02:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=mUY2sCl5lvJy1fa2pdnzmeDJtZq5gM1eH1qe0mHOtW4=;
+        b=HZOOkpowj1cYSHkiqqqx0l8hBK4cATI47ON1L6DceL1rpwC4KGRBsd1L3E8V8ZbX6b
+         1V6hLgyBTErmXUe1r1PLP529OwGuCUtSYEvyJNjxoCUkgNNMVcKyx3cfKfo5kPKNZyP1
+         TWMA0w4LsiZtwz8cNO4hMx7iSn40vcOD1aH5BGrRERkIyTGMUp3EoaAwgB+pu6HpSK26
+         dzNEec7fSXHoPz5qq9poSIqhomOvrbXlKrQNJQXweIMtPcAnPqV4VmNnXCfKDNHfI8qn
+         xbUT498m3EWcV9jFvVJVIhCavsg7Z2ZSyytm4i+kmmp/zUCtKfL9aYdjyJYL4lb9DUGw
+         ViOw==
+X-Gm-Message-State: AOAM530v03Y4DPNBRyGH69Hz24+Qg5r4wlo32CX6JCxhKSNu6Zbocp1o
+	Pz60LPPnhnqzpx0Sj6n4iMnt3lfQXg5IdsNY3TolkrecnXO58jN2MkIaxnadpqr94iD+hi1Xo7W
+	PDvP3GHAfoAuSzNs=
+X-Received: by 2002:a37:a955:: with SMTP id s82mr17020318qke.725.1642503750377;
+        Tue, 18 Jan 2022 03:02:30 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzlDgdYoEL8ZghBYGPEAYzkDrQ/elFEyLEcUnO/BFOEkRws0ChCD6SnqpYVnkcSgw5+YHJ6hQ==
+X-Received: by 2002:a37:a955:: with SMTP id s82mr17020292qke.725.1642503750040;
+        Tue, 18 Jan 2022 03:02:30 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
+        by smtp.gmail.com with ESMTPSA id t11sm9955615qkm.77.2022.01.18.03.02.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jan 2022 03:02:29 -0800 (PST)
+Message-ID: <3f1ec9d12c7903988639689f3a7568a97ce83ef0.camel@redhat.com>
 Subject: Re: [PATCH net-next v2] net: mptcp, Fast Open Mechanism
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
- Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+From: Paolo Abeni <pabeni@redhat.com>
+To: Dmytro SHYTYI <dmytro@shytyi.net>, mptcp@lists.linux.dev
+Date: Tue, 18 Jan 2022 12:02:26 +0100
+In-Reply-To: <7d5bdd13-e565-87fd-2854-7f95487d1157@shytyi.net>
 References: <20220116001259.203319-1-dmytro@shytyi.net>
- <449d3338d759e9f72f33e7c37e1b9956bdda77f4.camel@redhat.com>
- <9f700f12472bddc0d9d899773d2a211bfe8517f6.camel@redhat.com>
- <e5c6e1a3-0963-e26c-3e0e-8d7ea7126116@tessares.net>
-From: Dmytro SHYTYI <dmytro@shytyi.net>
-Message-ID: <fc9d81f0-e2a8-70a4-6ba0-285d3306d7db@shytyi.net>
-Date: Mon, 17 Jan 2022 21:51:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	 <449d3338d759e9f72f33e7c37e1b9956bdda77f4.camel@redhat.com>
+	 <9f700f12472bddc0d9d899773d2a211bfe8517f6.camel@redhat.com>
+	 <7d5bdd13-e565-87fd-2854-7f95487d1157@shytyi.net>
+User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <e5c6e1a3-0963-e26c-3e0e-8d7ea7126116@tessares.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 
-Hello Matthieu,
-
-On 17/01/2022 10:22, Matthieu Baerts wrote:
-> Hi Dmytro,
+On Mon, 2022-01-17 at 21:48 +0000, Dmytro SHYTYI wrote:
+> Hi Paolo,
 > 
-> On 17/01/2022 11:03, Paolo Abeni wrote:
->> On Mon, 2022-01-17 at 10:58 +0100, Paolo Abeni wrote:
->>>> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
->>>> index 48d8a363319e..d7092234d442 100644
->>>> --- a/include/linux/tcp.h
->>>> +++ b/include/linux/tcp.h
->>>> @@ -54,7 +54,14 @@ static inline unsigned int tcp_optlen(const struct sk_buff *skb)
->>>>   /* TCP Fast Open */
->>>>   #define TCP_FASTOPEN_COOKIE_MIN	4	/* Min Fast Open Cookie size in bytes */
->>>>   #define TCP_FASTOPEN_COOKIE_MAX	16	/* Max Fast Open Cookie size in bytes */
->>>> +
->>>> +#if IS_ENABLED(CONFIG_MPTCP)
->>>> +#define TCP_FASTOPEN_COOKIE_SIZE 4	/* the size employed by MPTCP impl. */
->>>> +#else
->>>>   #define TCP_FASTOPEN_COOKIE_SIZE 8	/* the size employed by this impl. */
->>>> +#endif
->>>
->>> You really need to document this kind of changes in the code, possibly
->>> referring to the RFC bits requiring it.
->>
->> Note that MPC + syn currently uses 24 bytes of TCP option spaces, and
->> MPC + syn + ack is using 32 bytes, to there is enough room for 8 bytes
->> cookies.
+> AFAIK, TFO option requires more that 8 bytes, if cookie len is 8 bytes:
 > 
-> Indeed, in MPTCPv1 (RFC8684), there is more space in the MPC+SYN as
-> mentioned in the Appendix B you referred to.
+> In file /net/ipv4/tcp_output.c (line 689):
 > 
-> Also, you cannot change the value here depending on the kernel
-> configuration: that will break TFO for "plain" TCP I suppose.
-
-I agree. I might find other way to enter this particular case if needed 
-at all.
-
-> Adding this feature is quite complex because our primary goal is not to
-> have any impact on TCP connections without MPTCP. Any modification in
-> TCP code needs to be very well justified to be accepted upstream.
-
-Indeed. :)
-
-> Do not hesitate to join one of our weekly meeting and/or IRC channel [1]
-> to discuss about the implementation of this feature. Because of the
-> task's complexity, it is probably better to discuss than having long and
-> probably discouraging feedback loops by email. WDYT?
+> static void tcp_options_write(__be32 *ptr, struct tcp_sock *tp,
+>                                struct tcp_out_options *opts)
+> ....
+> {
+>          if (unlikely(OPTION_FAST_OPEN_COOKIE & options)) {
+>                  struct tcp_fastopen_cookie *foc = opts->fastopen_cookie;
+>                  u8 *p = (u8 *)ptr;
+>                  u32 len; /* Fast Open option length */
 > 
-> [1] https://github.com/multipath-tcp/mptcp_net-next/wiki#resources
-
-I will try to participate. Thank you for invitation!
-
-> Cheers,
-> Matt
+>                  if (foc->exp) {
+>                          len = TCPOLEN_EXP_FASTOPEN_BASE + foc->len;
+>                          *ptr = htonl((TCPOPT_EXP << 24) | (len << 16) |
+>                                       TCPOPT_FASTOPEN_MAGIC);
+>                          p += TCPOLEN_EXP_FASTOPEN_BASE;
+>                  } else {
+>                          len = TCPOLEN_FASTOPEN_BASE + foc->len;
+>                          *p++ = TCPOPT_FASTOPEN;
+>                          *p++ = len;
+>                  }
 > 
+>                  memcpy(p, foc->val, foc->len);
+>                  if ((len & 3) == 2) {
+>                          p[foc->len] = TCPOPT_NOP;
+>                          p[foc->len + 1] = TCPOPT_NOP;
+>                  }
+>                  ptr += (len + 3) >> 2;
+>          }
+> ...
+> 
+> Here we do have  "len = TCPOLEN_FASTOPEN_BASE + foc->len" that is 
+> slightly more than 8 bytes.
+> 
+> This is the cause of introducing 4 byte cookie for MPTCP implementation.
+> 
+> The RFC 8684 B.1. says:
+>    This is done with the TCP cookie request/response
+>     options, of 2 bytes and 6-18 bytes, respectively (depending on the
+>     chosen cookie length).
+> 
+> So in my understanding, the "selected cookie size + 
+> TCPOLEN_FASTOPEN_BASE" = 6, is not prohibited by, and in the allowed 
+> range of the RFC 8684.
 
-Best regards,
-Dmytro.
+You are right, I underlooked the TFO option writing.
+
+> As you suggested I will document the size of the cookie, if there is no 
+> objections to above information :)
+
+Shrinking the TFO cookie size has both security and functional impact:
+
+- we do not want to change the TFO cookie size for TCP connection in
+MPTCP enabled build.
+- dynamically selecting the TFO cookie size depending on the specific
+rsk type will add more complexity to the TCP code.
+
+rfc8684 suggests we could remove the TS option from the synack packet.
+I think it's worthy to try such idea.
+
+To do that, we need to change the 'mptcp_synack_options()' hook
+signature, to accept a 'struct tcp_out_options' as the 3rd argument, so
+that mptcp_synack_options() can clear the TCPOLEN_TSTAMP_ALIGNED bit
+when needed.
+
+
+Thanks
+
+Paolo
+
