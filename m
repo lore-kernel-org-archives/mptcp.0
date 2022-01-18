@@ -1,21 +1,21 @@
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83317168
-	for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 11:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E792C9C
+	for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 11:30:48 +0000 (UTC)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
 	(Authenticated sender: usama.anjum)
-	with ESMTPSA id AB34C1F43D80
+	with ESMTPSA id E62571F43E07
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1642505437;
-	bh=kufMAm/Wj7x6dHVgPDUeMEIq4cSzNUAHqpKv5RBtfqA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=C33nW21CxUr8A/lfefxHALgekm+lwm2zEx8Ka923Q5wBad9MKwb1Pt/OJnFd2+OuB
-	 q+yY/27655wkmswBdVwEfZmhxhlUHW5rxIeIg/RrPGhNG8cBRVLzCxLDAXIY9X1+nb
-	 S/v5i9xsCw+FWX909Qxv9be0n0/AcvdIAgf1COCymXW5VqMp5vDVcIs1GqPtwZG8HK
-	 I3EL70KqLGNkhwGDpzGN5kOcT77gDWobyEAr4DtaN/NE5G4+4rAIAWDr0gcACuryfE
-	 iZEzQjIPcd/ro4WInQOt+Vvm5aW6QtlLOd5NveR6EvNMvqAIfZfodbM7R4QxNnUVHt
-	 6mUTXEk1gKFIg==
+	s=mail; t=1642505447;
+	bh=gjVHu+jWyShCzwYH7u0I9MtX/la4ZTeWCA5VgFyOCk0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H5Ez+RSqJ5X1uYdxMk4VSBSDHzgIj98jIrxhiayB5u+Bf/1+/fLT/K6COMerWQlfS
+	 VW/rkRju533nMAx2e090k8UIETKYz3QclugU8+pCks9IHB6IuQkWpSVjAh3OWdhso6
+	 S5B9q/6noRCvHIWKgKph20ScEZj9ooGTIbEJemqnlrOsL3wsaJKfHZDYy43YkMJSaV
+	 bj+xXPckZj58v9uoUepZW9qEdbVxU5zVD5AV5ZElwlFEezpdkD052I5P7QjG6cniH5
+	 Js/2yfMPqi9CvG9YUju7950Nip/slm5k1tvquYSS3ciIb/FcqCCs4Ac7L6DObu+l78
+	 e2bEsfyep0R6A==
 From: Muhammad Usama Anjum <usama.anjum@collabora.com>
 To: Shuah Khan <shuah@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -41,64 +41,80 @@ To: Shuah Khan <shuah@kernel.org>,
 	linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
 Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
 	kernel@collabora.com
-Subject: [PATCH 00/10] selftests: Fix separate output directory builds
-Date: Tue, 18 Jan 2022 16:28:59 +0500
-Message-Id: <20220118112909.1885705-1-usama.anjum@collabora.com>
+Subject: [PATCH 01/10] selftests: set the BUILD variable to absolute path
+Date: Tue, 18 Jan 2022 16:29:00 +0500
+Message-Id: <20220118112909.1885705-2-usama.anjum@collabora.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220118112909.1885705-1-usama.anjum@collabora.com>
+References: <20220118112909.1885705-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Build of several selftests fail if separate output directory is
-specified by the following methods:
-1) make -C tools/testing/selftests O=<build_dir>
-2) export KBUILD_OUTPUT="build_dir"; make -C tools/testing/selftests
+The build of kselftests fails if relative path is specified through
+KBUILD_OUTPUT or O=<path> method. BUILD variable is used to determine
+the path of the output objects. When make is run from other directories
+with relative paths, the exact path of the build objects is ambiguous
+and build fails.
 
-Build fails because of several reasons:
-1) The kernel headers aren't found.
-2) The path of output objects is wrong and hence unaccessible.
+	make[1]: Entering directory '/home/usama/repos/kernel/linux_mainline2/tools/testing/selftests/alsa'
+	gcc     mixer-test.c -L/usr/lib/x86_64-linux-gnu -lasound  -o build/kselftest/alsa/mixer-test
+	/usr/bin/ld: cannot open output file build/kselftest/alsa/mixer-test
 
-These problems can be solved by:
-1) Including the correct path of uapi header files
-2) By setting the BUILD variable correctly inside Makefile
+Set the BUILD variable to the absolute path of the output directory.
+Make the logic readable and easy to follow. Use spaces instead of tabs
+for indentation as if with tab indentation is considered recipe in make.
 
-Following different build scnerios have been tested after making these
-changes:
-make -C tools/testing/selftests
-make -C tools/testing/selftests O=build
-make -C tools/testing/selftests o=/opt/build
-export KBUILD_OUTPUT="/opt/build"; make -C tools/testing/selftests
-export KBUILD_OUTPUT="build"; make -C tools/testing/selftests
-cd <any_dir>; make -C <src_path>/tools/testing/selftests
-cd <any_dir>; make -C <src_path>/tools/testing/selftests O=build
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+ tools/testing/selftests/Makefile | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-Muhammad Usama Anjum (10):
-  selftests: set the BUILD variable to absolute path
-  selftests: Add and export a kernel uapi headers path
-  selftests: Correct the headers install path
-  selftests: futex: Add the uapi headers include variable
-  selftests: kvm: Add the uapi headers include variable
-  selftests: landlock: Add the uapi headers include variable
-  selftests: net: Add the uapi headers include variable
-  selftests: mptcp: Add the uapi headers include variable
-  selftests: vm: Add the uapi headers include variable
-  selftests: vm: remove dependecy from internal kernel macros
-
- tools/testing/selftests/Makefile              | 32 +++++++++++++------
- .../selftests/futex/functional/Makefile       |  5 ++-
- tools/testing/selftests/kvm/Makefile          |  6 ++--
- tools/testing/selftests/landlock/Makefile     | 11 ++-----
- tools/testing/selftests/net/Makefile          |  2 +-
- tools/testing/selftests/net/mptcp/Makefile    |  3 +-
- tools/testing/selftests/vm/Makefile           |  2 +-
- tools/testing/selftests/vm/userfaultfd.c      |  3 ++
- 8 files changed, 35 insertions(+), 29 deletions(-)
-
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index d08fe4cfe811..a7b63860b7bc 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -114,19 +114,27 @@ ifdef building_out_of_srctree
+ override LDFLAGS =
+ endif
+ 
+-ifneq ($(O),)
+-	BUILD := $(O)/kselftest
++top_srcdir ?= ../../..
++
++ifeq ("$(origin O)", "command line")
++  KBUILD_OUTPUT := $(O)
++endif
++
++ifneq ($(KBUILD_OUTPUT),)
++  # Make's built-in functions such as $(abspath ...), $(realpath ...) cannot
++  # expand a shell special character '~'. We use a somewhat tedious way here.
++  abs_objtree := $(shell cd $(top_srcdir) && mkdir -p $(KBUILD_OUTPUT) && cd $(KBUILD_OUTPUT) && pwd)
++  $(if $(abs_objtree),, \
++    $(error failed to create output directory "$(KBUILD_OUTPUT)"))
++  # $(realpath ...) resolves symlinks
++  abs_objtree := $(realpath $(abs_objtree))
++  BUILD := $(abs_objtree)/kselftest
+ else
+-	ifneq ($(KBUILD_OUTPUT),)
+-		BUILD := $(KBUILD_OUTPUT)/kselftest
+-	else
+-		BUILD := $(shell pwd)
+-		DEFAULT_INSTALL_HDR_PATH := 1
+-	endif
++  BUILD := $(CURDIR)
++  DEFAULT_INSTALL_HDR_PATH := 1
+ endif
+ 
+ # Prepare for headers install
+-top_srcdir ?= ../../..
+ include $(top_srcdir)/scripts/subarch.include
+ ARCH           ?= $(SUBARCH)
+ export KSFT_KHDR_INSTALL_DONE := 1
 -- 
 2.30.2
 
