@@ -1,150 +1,80 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2A429CA
-	for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 21:47:31 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id q25so1619443edb.2
-        for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 13:47:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=FGas2wsR5I0Xu3XQ1U1PiZH1Bz7IfFmMtPMkpY3JwQs=;
-        b=bHC3qhzpOqwOWsCGU8nz/CY903WoUbR/4FZT4/aIJcI4EqWCgfGUrf3LyKcJeKtLid
-         Q8RY17Vn3luA9tgNnrXNKQFlw1gTVaeL+PBN1xq/WedQbqeHj4IYNfcQ+ostX61hSqb8
-         i341vsk8ERHVLt84Xex8CLe20cZFCrOnf0vqZoZWK1xnkT1M8YZ+pQey2uqK+z0+hBOs
-         rRHHHenkdNM0tjVouFF3BUCoeAEg+bHm2RsZSeceRSslAUA3KSqyKxg8XkzsgUkJiKrY
-         IxBrPVT4JI2nNFNuDKE/p3m5JSnu+WYkT9hnvaffodmZtg4QKzpeI5dLaKZRP3wnOa7n
-         Sdjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=FGas2wsR5I0Xu3XQ1U1PiZH1Bz7IfFmMtPMkpY3JwQs=;
-        b=w2VlAr2msQfO/UkBwLpQCIJIs9SFwT6gEi8XWG+mi1rdghzL9+4OFhFi8uOs8n+Rjg
-         mYL54buqh4pXoH9U4nF3RboOT2/btW6X7C4b2Dausyhi6Kj/L/wkGYdUKUPx8I7pT2cH
-         0y/AozQHxl1Pq2Ka8CGuh8K6GVXQPHiRZ97gWBaqHN28eoLTDkEYoMie8U7jvduvy2E7
-         tc/1tIbvDtQ1UMyj4zrTozsoNdkzrpuJr/MdCQdaPG+8sPhDET/BkcXcYY/56Cu/wVG9
-         BMEhGIZH31n82iiauhUKXoCXovYJeWeaaU5/gp4jQyDJqxqzUGAPbqZLTJoOamHGhq09
-         7mxA==
-X-Gm-Message-State: AOAM531vpltvAJYLqAQAlLmrsQ3onm4CAShYdYJp4ekfybAs1Fgx2coO
-	RJxN1Ig7vxiih7htabuKJF5nfg==
-X-Google-Smtp-Source: ABdhPJwWbFrKUS/lRJJq/8VFObiKd0n2aVmGnF5RHGd9FSxMEaM8KRD5ae783HnEDAP9fF1ApDdMLQ==
-X-Received: by 2002:a17:907:6d03:: with SMTP id sa3mr22717797ejc.200.1642542449232;
-        Tue, 18 Jan 2022 13:47:29 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:27ca:2fb0:c5af:41e? ([2a02:578:8593:1200:27ca:2fb0:c5af:41e])
-        by smtp.gmail.com with ESMTPSA id l25sm346996edc.20.2022.01.18.13.47.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jan 2022 13:47:28 -0800 (PST)
-Message-ID: <4d60a170-53d7-3f9f-fa48-34d6c4020346@tessares.net>
-Date: Tue, 18 Jan 2022 22:47:27 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE2629CA
+	for <mptcp@lists.linux.dev>; Tue, 18 Jan 2022 22:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642544526; x=1674080526;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=sO35kb4+VYwrnvu/IEOt0g0jqegnhiBrnr4QM3AF6kc=;
+  b=YZGaM7vnPcbmyZ5GwG5ZxCnt+WbwHDz5m/lWKQnIGCFVIB8RPzR7VhQ6
+   KUnVHVbtxq0UZ0pWbYzXK7VyGvQmlRaTHIBtNr0HmZoXXOnFCkxfpNFWx
+   cmlsAYkTZ817+C2nMMeOoThxJ92ZzF1miXLS0KZWy6MxENVsAYR3C1UFW
+   z5rVeRt21bXH9b3LL7216zr9q8Zo9xuYR/FQTrE1iKBip9kE6x2y5vZgB
+   +Y65Sl97ZswE9APAkqIiCP1o6er+SrWWVQ4RFc8W4W9fWx4MOlnz8E/w8
+   boRzzXk3ujaFRTS7i+HFdOM5BYymtULjK6Lbq66x3H16bK/KLYKw7hQ33
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="244721323"
+X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
+   d="scan'208";a="244721323"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 14:22:05 -0800
+X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
+   d="scan'208";a="671981109"
+Received: from fmaya-mobl1.amr.corp.intel.com (HELO sesloan-mobl1.amr.corp.intel.com) ([10.212.237.254])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 14:22:05 -0800
+Date: Tue, 18 Jan 2022 14:22:04 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Davide Caratti <dcaratti@redhat.com>
+cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    MPTCP Upstream <mptcp@lists.linux.dev>, 
+    Geliang Tang <geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v9 5/5] selftests: mptcp: add mp_fail
+ testcases
+In-Reply-To: <CAKa-r6t75QbV-BE3rKvUHVCBYmcO1eW2typSFUgPSA34uDFEPw@mail.gmail.com>
+Message-ID: <3acc8150-a6f4-c6a2-4e42-f4feba33be99@linux.intel.com>
+References: <cover.1641804767.git.geliang.tang@suse.com> <a0f7ec766ca99a5f2e2aa27a358f45fc06f6cc78.1641804767.git.geliang.tang@suse.com> <ea44a519-11b9-175-cceb-abb69232abbd@linux.intel.com> <a1679740-24ed-c788-46df-ad195068dd37@linux.intel.com>
+ <CAKa-r6sgL1UUES5WYryNYedLJuq0_dEsO=X1263GFPOExci6BQ@mail.gmail.com> <eb7a9238-6fda-761e-23e9-47fbe332705f@tessares.net> <CAKa-r6t75QbV-BE3rKvUHVCBYmcO1eW2typSFUgPSA34uDFEPw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 08/10] selftests: mptcp: Add the uapi headers include
- variable
-Content-Language: en-GB
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <shuah@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
- Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?=
- <mic@digikod.net>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- chiminghao <chi.minghao@zte.com.cn>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:KERNEL VIRTUAL MACHINE (KVM)" <kvm@vger.kernel.org>,
- "open list:LANDLOCK SECURITY MODULE"
- <linux-security-module@vger.kernel.org>,
- "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
- "open list:NETWORKING [MPTCP]" <mptcp@lists.linux.dev>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Cc: kernel@collabora.com
-References: <20220118112909.1885705-1-usama.anjum@collabora.com>
- <20220118112909.1885705-9-usama.anjum@collabora.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220118112909.1885705-9-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Muhammad,
+On Tue, 18 Jan 2022, Davide Caratti wrote:
 
-On 18/01/2022 12:29, Muhammad Usama Anjum wrote:
-> Out of tree build of this test fails if relative path of the output
-> directory is specified. Remove the un-needed include paths and use
-> KHDR_INCLUDES to correctly reach the headers.
+> On Tue, Jan 18, 2022 at 3:15 PM Matthieu Baerts
+> <matthieu.baerts@tessares.net> wrote:
+>>
+>> Hi Davide,
+>>
+>> On 18/01/2022 14:32, Davide Caratti wrote:
+>>> hello,
+>>>
+>>> started looking at this, but the wild-guess is that the problem should
+>>> be fixed with [1]: I'll do a quick test on my VM now.
+>>>
+>>> [1] https://lore.kernel.org/netdev/20220110094750.236478-1-eric.dumazet@gmail.com/
+>>
+>> Good point, it might be linked to that.
+>
+> hello,
+>
+> confirmed, the problem happens when kernels are built with
+> CONFIG_NET_NS_REFCNT_TRACKER=y and the problem is fixed by the
+> above-mentioned patch from Eric. It can be easily verified also with
+> tdc kselftest:
+>
+> # pushd tools/testing/selftests/tc-testing;  ./tdc.py -f
+> tc-tests/filters/tests.json ; popd
+>
 
-Thank you for looking at that!
+Thanks for tracking this down and confirming, Davide!
 
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
->  tools/testing/selftests/net/mptcp/Makefile | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-> index 0356c4501c99..fed6866d3b73 100644
-> --- a/tools/testing/selftests/net/mptcp/Makefile
-> +++ b/tools/testing/selftests/net/mptcp/Makefile
-> @@ -1,9 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
-> -top_srcdir = ../../../../..
-
-Removing this line breaks our CI validating MPTCP selftests. That's
-because this "top_srcdir" variable is needed in the "lib.mk" file which
-is included at the end of this Makefile.
-
-But that's maybe a misuse from our side. Indeed to avoid compiling
-binaries and more from the VM, our CI does that as a preparation job
-before starting the VM and run MPTCP selftests:
-
-  $ make O=(...) INSTALL_HDR_PATH=(...)/kselftest/usr headers_install
-  $ make O=(...) -C tools/testing/selftests/net/mptcp
-
-From the VM, we re-use the same source directory and we can start
-individual tests without having to compile anything else:
-
-  $ cd tools/testing/selftests/net/mptcp
-  $ ./mptcp_connect.sh
-
-We want to do that because some scripts are launched multiple times with
-different parameters.
-
-With your modifications, we can drop the headers_install instruction but
-we need to pass new parameters to the last 'make' command:
-
-  $ make O=(...) top_srcdir=../../../../.. \
-                 KHDR_INCLUDES=-I(...)/usr/include \
-         -C tools/testing/selftests/net/mptcp
-
-Or is there a better way to do that?
-Can we leave the definition of "top_srcdir" like it was or did we miss
-something else?
-
->  KSFT_KHDR_INSTALL := 1
->  
-> -CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
-> +CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g $(KHDR_INCLUDES)
->  
->  TEST_PROGS := mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh \
->  	      simult_flows.sh mptcp_sockopt.sh
-
-Note: I see there is a very long recipients list. If my issue is not
-directly due to your modifications, we can probably continue the
-discussion with a restricted audience.
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
