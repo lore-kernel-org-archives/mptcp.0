@@ -1,85 +1,56 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4223E173
-	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 01:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642555596; x=1674091596;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=JPh+fihPEKwbpWpqSt8WUzoIATHXEf01cCczsCkkRTM=;
-  b=LZG0jhSmFxJH6umIU9cXhAHBcqvEqfoauTZ04LkEptNH2KhBKkMlJikv
-   QTPGV+Tc35hvQzLjWKO2VKKmc0RwYxpeOVyFXO1VyMY2ZTADpP/boiHDS
-   J7LAC+G7oWtmlr8/BCK9oIv2sUxrqJd1Cui3Ruq/7tJu6kOGsZf0vaVfI
-   wHrYAwJsKSMs+5XStwhbA0GRiBaP+HWzcaoJ3Q+Kvom3DHSvppZLAQggf
-   6WkLwjt9fGLoS79IwEt/JdIxOG2NDFF4pQbV9VeRjh03SizlSGBWsbZKi
-   ZM43dYi0DHS6IbnEzZM+6oqrBUYuDwZBcz0sfOAfaYrY2RzzJpko+2fvb
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="232318301"
-X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
-   d="scan'208";a="232318301"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 17:26:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
-   d="scan'208";a="578639785"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Jan 2022 17:26:35 -0800
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 18 Jan 2022 17:26:35 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20 via Frontend Transport; Tue, 18 Jan 2022 17:26:35 -0800
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.48) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.20; Tue, 18 Jan 2022 17:26:34 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C1E2C80
+	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 05:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1642570936;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6w9+Za2UUVsNYUeYIQG70Yh6jFFVl4ZkT0Tx97BMQ2E=;
+	b=jo+KPakvpl7QYJyyEQ8bLjzt6omdAlziUdk9KRdS4D5FhV+kvYmJ3StmooTdle24A9/zAp
+	34xDNYAu8r+psCwsS3s+DjA9+5KmKpFFhSgPmFmO/O03gLpHVSbmnDGSADIszNT7+AtjIC
+	+FjOHo26XBLyTnxpKAHdpr1k1RO0hnE=
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com
+ (mail-ve1eur01lp2059.outbound.protection.outlook.com [104.47.1.59]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-40-1j4xgv1pOJ6A2UkW5lMGPA-1; Wed, 19 Jan 2022 06:42:15 +0100
+X-MC-Unique: 1j4xgv1pOJ6A2UkW5lMGPA-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lNe85xoKb9h9Bxit3/Ts/GkCyVlPiC4w2FXLn8sOmaXZvNsfg7Bbi+CbVOGwSKkV+w8UcAG0p/8EupKLVly2cfGZERYBGveFDkgP5juWp51zglkfwo1bUbiMPRXDDfMDG8oA6cUa0JckjCUNHWFLIudP3E0uqYwsCJKnF9fXKAhCUAvWKesIuqjC4AcuNSTpUAoi+CqF0HFwhnKBmQ/jz0PPn8kvd2yrEvyDBC5BvjJPaJCY5logPderb+VHK0qKzqNTA+VgOAwAfq1wcWO4EWrOHtXnnr+NGs4WHSUxtE+K0Ny7K3T91NdZaIKdgyL8f+xpLa2GwNAieBIFUMZe+g==
+ b=OaiudKHfEXEfEGdODCDHamSdcfjNzMEGEBgNN/DPkI0m1+8FaZvm/33sd3VxrDL7rDuQwRO0ree7P/r4723+mN6QeBjMCS/c9c5jKHBOuS5hyGKXmAAmIU7kEjuTaP0uMxdnKVrUm/7XTq+tqMkTFCOJbXceLYtf/0HY/XDcS6ddntFrdTVWweyBjDADRiRXunssW/UmD47D8VPJT7yhKYcpjXco+q11hvRohfrwASWtIhkmDB8uhbLPp908AIVT90Ho8yJetwjynqym91I2ZgsU9M5lV1PYNagnsg7ShtJOzJBGyJTb/xkKhnp8vPmESdv2pAg9U5oSuD0TDIu6jg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w3O6ZdQbKyPmTbcfaloVdj/nWtZaBnVuUB/Tgrt6wBc=;
- b=N/FMdtU7RY4N00ugz2Ik6FD9r2sQG23vXxxPBBuY3ZtjLH6sVSjuZmBx2Dynw773c7mh00guRAUC19Fdf6aHcqQRZwwTzRvr6v+A3jeEwcZ4fTwI1jGdJQ5Y8w9eGxzhRDj8b3Hbevb5bMgLCw3rrlawf0EDDaUYGE7IRTNika9jKw8Dl8CLS29XgV9+t5VTdQ+VKF2H4/z8zwd/X4zOIHGK1UxcqmDT6snysfvAoEtLeB7G328FSWL7YWTFOxtSJJg/7DY0+KdPCawTUvG/QFGvamdXpSwGhZYXBW0JElvESGh+eRFVANj9hwYDDzdSnJbbmU90zeHc16F6GASklw==
+ bh=3RTp4qZTlVi5i2IoHWW4jsRMaEn/oeTGsApopUMubXI=;
+ b=NAMHmRhyL/0Pxa8s+YhUTQaf3fyNlXML15xm9D3EzFiHtHYZi+sJ2b+laKeoszcZslVYK2CGLmFAZ1e5mASxulkF55l9Kb7V8tD/FvhUbbisHgd/y7bAuPKLE6fDne94MFRI3BjM8+SuhYJC9bZ66DYSr6VeessTdbYhLIU5fYzXk49lS129dtSQj6D0n7hwbh7mCvB56Fi9h7jtabOoriF4Id6vnN8QgCZIBkjQ4XnvKPbY3MeC7aMTX/JwGOgW3JQ48itavO1GlpQMn7WP5rItDvVJ7RsN8xq0UCpB2RMPX0zdWP1/1kisdS/UQccWppx4tbetfc91Hsy9L2nLdg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA2PR11MB5145.namprd11.prod.outlook.com (2603:10b6:806:113::6)
- by SN6PR11MB3149.namprd11.prod.outlook.com (2603:10b6:805:d5::25) with
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by HE1PR04MB3225.eurprd04.prod.outlook.com (2603:10a6:7:24::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.12; Wed, 19 Jan
- 2022 01:26:32 +0000
-Received: from SA2PR11MB5145.namprd11.prod.outlook.com
- ([fe80::992:6137:3ea3:6cfd]) by SA2PR11MB5145.namprd11.prod.outlook.com
- ([fe80::992:6137:3ea3:6cfd%4]) with mapi id 15.20.4909.007; Wed, 19 Jan 2022
- 01:26:32 +0000
-Message-ID: <d3b555e1-752a-e125-1654-3d8cbdd20e4a@intel.com>
-Date: Tue, 18 Jan 2022 17:26:29 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: [PATCH mptcp-next v2 04/21] mptcp: establish subflows from either
- end of connection
-Content-Language: en-US
-To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau
-	<mathew.j.martineau@linux.intel.com>
-CC: <mptcp@lists.linux.dev>
-References: <20220112221523.1829397-1-kishen.maloor@intel.com>
- <20220112221523.1829397-5-kishen.maloor@intel.com>
- <83f91e9b-9c20-6e83-6442-41b87139f4eb@linux.intel.com>
- <eb4affeebe3b03948a2252b0d6af852751c0ac1f.camel@redhat.com>
-From: Kishen Maloor <kishen.maloor@intel.com>
-In-Reply-To: <eb4affeebe3b03948a2252b0d6af852751c0ac1f.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CO2PR04CA0098.namprd04.prod.outlook.com
- (2603:10b6:104:6::24) To SA2PR11MB5145.namprd11.prod.outlook.com
- (2603:10b6:806:113::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Wed, 19 Jan
+ 2022 05:42:12 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::3837:57a2:45dc:e879]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::3837:57a2:45dc:e879%3]) with mapi id 15.20.4888.014; Wed, 19 Jan 2022
+ 05:42:12 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v3] selftests: mptcp: add invert check in check_transfer
+Date: Wed, 19 Jan 2022 13:42:11 +0800
+Message-ID: <ed191af941837d4c63ea37a9a863dc39904571d2.1642570570.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HKAPR04CA0017.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::27) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -87,183 +58,147 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9ba95792-b74d-43ed-1f74-08d9daeab97c
-X-MS-TrafficTypeDiagnostic: SN6PR11MB3149:EE_
-X-Microsoft-Antispam-PRVS: <SN6PR11MB3149D75EECEE7596B4214704E1599@SN6PR11MB3149.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Office365-Filtering-Correlation-Id: f47cc8e1-2f78-484b-161f-08d9db0e7126
+X-MS-TrafficTypeDiagnostic: HE1PR04MB3225:EE_
+X-Microsoft-Antispam-PRVS:
+	<HE1PR04MB32257292748C672320F85E2AF8599@HE1PR04MB3225.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NoErvKgjoLfeIZDLWeDihFRbnQ7cBDtwNa9AiqUoF4SFy5llyRcpUuezxcLp5bz2xdnRMmyQ6ugfE5CzZouBpSkaBnweqH7GeGtagsdmTdQ9F3uaaBuikFUZBR7Gwmmi7/a+XYnyNcxcNLMERxdp9y5YwFTsy2Q5U+sLkMKtEa/GOSj91s4x0LS/d6t01R6y4Nk5IVIQTqs2sxOEd1JMxzbgX8x51ZZptxLFc8p0PU2sCWv+9tC6K3oj2OQn8X/mj1HqcMBg32GuuqB03yui3R+WtDhUt35E69RU1mdJtuCLJWOHmbfbtksGUzxtzDcn+nXSHWLa58XXaD0+TY7Au9uUXTTU6hRBt8WDO1ic1LuqDyfnAFVAgbeJmuf/aQS0OzKg4RlsZHj4xEKSuq5Wu6ZvPjgZBjFYQaIwqUaK44OaNtfB1YpGACQ1/uh1mBx4orHxeWw4cMWrpp+vh4wqnhqarr8gYSOjlFNwf5zCHzohYarCnFUmUcPCNdvuri3dG8oqH89drh94y7VavQhzi8FK5LW43g0fmZo/0iZN6AiwvoDx7XwuTGSleZBwtfa641VHxcrRETyke91mKobPLutW38y4JRvYA1MrhU3AbgilY6PRowRzTJ6O12P23fEFB6E8dVzVvySgwUxXvDhEFMoGZGQE7PlPAtSRoKzD9sZ2qlOrEcRL2WXOmoCPzb5TI9a3vpuChBMrHvyUuTuQIpLsf5qD33HW09BNCT36Zsg7XbbXovgvsNu8TlNsQTOSKwK3SvtrzCOteyoalyqll3E/tIyy/rgIpgHvYbNrcAJ39CC63h7UuUAOgqU5HX2ggAzDmzzjl3SlCFU89J8lSQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR11MB5145.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(508600001)(8936002)(110136005)(36756003)(38100700002)(6506007)(53546011)(4326008)(66476007)(31686004)(6486002)(31696002)(966005)(83380400001)(316002)(6512007)(86362001)(2616005)(8676002)(66946007)(6666004)(82960400001)(5660300002)(26005)(66556008)(2906002)(44832011)(186003)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	twD5eNZ77dwr5avHaOdS/JonT+AABbEo9YceQQohKUa4qI2SXtrgIH03rgDuUUoMlwaWOTNstriiBt7LCyEGCHMeALEGfHzdcZYtovs1sV7nTM1nNXLKT4JLv5CClADTK/wFk5+8k2QNP5HoOeiz3FFJ82TkhI2FJ7nZtEc8C8OalzBpg8C3NNqLXN7J0BzPN2ZFSlgnulRjG7GQb5yqS5Poq2n1wRid6CLmTDy2+K/GOSJOnTbszF24qIiCWIF3/mRdxjiEKBgMINiq7hwnLgVN7qu5+bWzJ4Z6ZcxyPSUG7Gfoutu+tsYo0iBeb5TRwM5XWL+b0S4IdZx98GKSIxFFImZyRndzOEBbiDuPCNXa2w7+u25ifjv07hdzuG6CY9++9uVoiQJ2RN/kqJCWMQopoonL3s8I0O5W8gijEzVSPkFnZCLHsUPbBkNitmPtCSIkJtLMAerGsiKaH8+Ma6kZRYvjIUhIqcaTeDyZn3OPdw0BgU93QgyXt7YIwW5zqZPLa1+tuERHM8tbow2paXfQz8sBSMj5kNVPw4T0LHq+Ztlt4Q+KbcVDx+FJvtt8uPiz/9F2LlKIUY3go1QBXOJHUl9WCMcJLrVMp8cbKHn0H4SoguTaLru13EMLhj1w9tH5Pc1UeUmg3Nl/yvqMbQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(508600001)(26005)(55236004)(6486002)(86362001)(83380400001)(107886003)(66946007)(186003)(66556008)(66476007)(5660300002)(6506007)(19627235002)(316002)(6916009)(38100700002)(8936002)(8676002)(2906002)(4326008)(44832011)(2616005)(6512007)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WTRacFRiVFJwU2ZoOEdrMjZ4TXMyVzZBWjFOS0ZpR2k1TmN5UU92aFJMVnBt?=
- =?utf-8?B?U0tEUlVlNzFtVlFuVzVXbjA0NVpjQjJEa0YvSDNjUndnWXQ5ZlROWWlYZ2h5?=
- =?utf-8?B?bmZxTGtvZ2tKeFVYN2Fqa1pNdlUxdEpVS2Zsc0NITW96OUI4RzVnUEVDY0Ry?=
- =?utf-8?B?WWNVMTBvR1hDV0tIeFdPd1VXU2xlbzBjcTRpMW51eHZYb3l6Q2JNT3phaFBB?=
- =?utf-8?B?WUhGQ3VLcUtjeGNUYW9jaDR0d0lqK3lFZW5NMU16aHJWUEdsYnNIYjN0eERG?=
- =?utf-8?B?cUFlUmRxekdKdVg2RVFaT1hHc0VBQUZrNExEcEVxclAyUTJhRU9xZGs1azF2?=
- =?utf-8?B?bkFtSjlBZm4wM016R0JZckVSOHNkdkFxY1o5TzIwcDRNUGtML2NjaFdUSTcy?=
- =?utf-8?B?Z1FXVnFEQ0pQekpZVVZLUWYzMzFtSU5YY3p0OFdManoxVUVRaXJndUgrOFFS?=
- =?utf-8?B?ZGdhTU1GUS84U09SeDZFZllyR2dVSEdZV1RYekY3bWRRMzNEdEErNHVWRTBG?=
- =?utf-8?B?cGVoSW1WM3V5clNVV2FnbDMvRk9vWmxjMzM5UmtLN3BoUnljT0d3OWhmbzAx?=
- =?utf-8?B?YXU0Um43YXFqSHhYWEhVbW9KcU4zc29HdmhJSkhJOHYrN0NOYi8wVThZNm9S?=
- =?utf-8?B?Z2VhUk5kazY1aHU1UW95dzI5SzNseWRYeU4zeGlkN2lzcVE0TWFnb2Z3SHVp?=
- =?utf-8?B?Z3FCcGVMTHZ6andCaTVjZHl1eUh6Qk92UjF3OHdidzhJMkUrZWJ0OHM1T1RB?=
- =?utf-8?B?cTFMT2k5eTdOUXpKZXRyZmt6Y3J2Mk9NSHp2QW8xdmwxRlJDWW1jd25ON2p2?=
- =?utf-8?B?ZFppOWpCRGxrVXFoWjdIU3VYbFV6YkpTRmk0TTBEU1M1QzQ0M0lnTVE1OG1N?=
- =?utf-8?B?ZGU4YUZFMlgrSHo4NGlWTVF5WjRPVEVBY3pRUGxsNWFRMVJqYUxHV2ovVVZl?=
- =?utf-8?B?WGR0Z3J6Y3RkOGVjV3dPWE5EdW5oVzVTVlhqd3lQSU5RdXU5OE8rZDN0bHRo?=
- =?utf-8?B?Y1hBKzFBcGZrTno5UmVoYWZlQnRiNWxlVmZOUjR6bSsrcFdMeHBUdHdXbEtT?=
- =?utf-8?B?a3VPTlpDa01Fc0h1TVVrU2cyTU1EN1g2dXpwYTd0clFNVlU4Z29sbkY4L2VC?=
- =?utf-8?B?UEdRZGlmTTJtUVlKa2lyMWFrMXpkVVV2UWppU1ZUblFMdGhHWTMyRFpVYVBu?=
- =?utf-8?B?cHFTVEZwbWVqcmJmcS9GMnRaUkVlYWpsL2g3RG1RWWVEUVBhMG9XUDk5N1hB?=
- =?utf-8?B?RWZUUWd1Rmh5VXBoNGxRZ0cxbTJEa2poZjU4YnFyUlU0dFRJam1vV0xJblRw?=
- =?utf-8?B?cHBaTk1nNGN3dFBmVXc2M3BuYkhwenlTYnMwY1A4T2dkL2VQd3E3eU8zWE9n?=
- =?utf-8?B?WllXakl4N2YvN3oxcm5GQ1pxUHhOajd5V3ptbzlUWU9FMVJBQ0x1QXFTb2xS?=
- =?utf-8?B?M1Brb3QyaXR2bXR6ZUlzbmtXclJVRDN6cWp5R3lTZUNWL0ViSmdEZ2Q2WnJO?=
- =?utf-8?B?Vm4vcEdZUjluODFUaTVvNkZ4YmRtUEtKVzBKSG93cVFZK0VvTzY3NUdtMk04?=
- =?utf-8?B?T3JvS20vZGtsWUtXcFd2RlRCMFl3dS9JaHFaTGdrVDFyTGdWbGx1eDJxOTMx?=
- =?utf-8?B?OXRkUmxlOFFYaG0yQXlFOG8zT084K1M0d0NQR0JUQnlnd1RDbkRUN3ZkRitt?=
- =?utf-8?B?WEU0MWNkWXA4bFFHVHdVVjBEMTZ1a082S3dSQmtsT2Z1NFpHeUdiR2Jodi9w?=
- =?utf-8?B?TXVFUWZQRWIyK3d2S0U4anBjcFZlNzgxV2pWcWFmT3VjUFkxcS93akU1RFlh?=
- =?utf-8?B?NGtWQkZzNkRrbFFldzVwK0VEQmRLVEIzc0RVdGczR21tYlRQUDNhbDhuNzRp?=
- =?utf-8?B?TmdWRE52SUhabXpuL2lLVm10VitRQ1Z5RUQ0UlRWcVRHdW1vVWIwVWFtMDk1?=
- =?utf-8?B?R2l5R05nTGd5UklBMElGbW1hT3JWemdQeU5pNUt0Nzdtdm5VODhwN2gvTzlW?=
- =?utf-8?B?ZGZldVJ2eGtCR3ppdkhuZWtBdHBPdWEwc3ZZZ3p2Ni9KMUVMR3dTamluS2Nq?=
- =?utf-8?B?UGdUVG1oWjl0ditkSmZHYkZHc2VpMzgrOU9SNnBsOFpFNGtPbnlBekJTQmZ5?=
- =?utf-8?B?VjRpYW0reEVVMGtCL3VBNk1Wb1NjLzJGSnlJU1d3UFNUMU1CaWdmczU0VUpG?=
- =?utf-8?Q?5KNbHKKKI/o3xHSNYKW161k=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ba95792-b74d-43ed-1f74-08d9daeab97c
-X-MS-Exchange-CrossTenant-AuthSource: SA2PR11MB5145.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3fsI+jaZu9tFSV2+eD1KFRCkSJvK0BmBbuiBi/AeNw0qGgR5B8MIx+CqBVVF?=
+ =?us-ascii?Q?GAd41VYXrJuM67bEaeUEvtCOHTXrHOYcjYqmSDw8LN9eNpvRFjuMFGZm/2xS?=
+ =?us-ascii?Q?3hKsZnSFU6I4ewsToDA7Fq1b7lDTkZUrZCipEeIL4ynb/OD2+IoUwN+zg8mw?=
+ =?us-ascii?Q?6iL6Wo/rUSbS+9627tQIl4ZmDx0/67ewJUCSm0/c/fIZ6CAoUZ/FDijFZXXk?=
+ =?us-ascii?Q?PfLw43fmGZxaY56j8yHTkiNqIr8cqqML8QGrEw4NRmmh4UP3seCfJqRVz051?=
+ =?us-ascii?Q?wiNejTiZ2F0jH60TAGiHlaQdWB3GwkZfEzFMyR7h+4fWPJ7Xk0aeGvc+CCEn?=
+ =?us-ascii?Q?WEJwJubhKMLPLgiYgjqweAhAW3V+nNojtUZ1s/EADW60Q7pwlWpW6A2pNCbz?=
+ =?us-ascii?Q?thxSOyZmz1bPAd0TQzVbKZAJ0BSsmErs5uieJwnxIjR5zI+zop6u48/o2FP2?=
+ =?us-ascii?Q?1KyGbkE3szTMhtqW99viUKYYS15yj18yF5VkjIBqxa1k6sZ8vKnDumP878wc?=
+ =?us-ascii?Q?PT05KXON3a4e3kbUYjae6XbEBbOWeWOCXDQOlLCUl91QvtxpE1ThgoCyaDlE?=
+ =?us-ascii?Q?X0Fhutp9knQ82vC73NsM3sFiXLEMWVS8RrXb9Vg1kvsZy5Nxiy7003L8YLHL?=
+ =?us-ascii?Q?bv92e352ZbpwojlPRCcDigS4BZ21SaAvBuo46fAJ6E8OBXG6A4K5aHmfX1yh?=
+ =?us-ascii?Q?joB81gK1h9ggWz46wBW1oz0Zr2DmzxKP6PSQjV5nILSuVSeAMNc+WmFnbwmV?=
+ =?us-ascii?Q?StdJsJ2ZbiWuuQkuwEFAn8T3O3BT7JIfKh5NITQW21B3b04XB3RxxaDj+Lj7?=
+ =?us-ascii?Q?LBzfvXQb+dxe6V1YthAeTER+HQ+IEW2OMThsKEOW8Uh56h4h2AMOgf7Qzl2V?=
+ =?us-ascii?Q?HTZSgRt3c/7HhEuZSnB8g9DjlHhgzoe89PsUui3SQzMi0kGp3zal/jX8cYu9?=
+ =?us-ascii?Q?nRVVPDdKoq8UcDKs3iANqmkWKytA8Q4z4AMpfvGE/1/SXXy1YxGox5ziIQKw?=
+ =?us-ascii?Q?JcQwYy90KZd5wVkYnntDm4KVumZQQn4dvzaiaSYz4NICOsk7O1ukcJqWJX4T?=
+ =?us-ascii?Q?+xDdq2DbhBF4i4dnC+IEsbRd/EyhjC/yNZxtGuxapMW5FcmXOrMEIctJPy9y?=
+ =?us-ascii?Q?g1kTOogosy66+7c7vwfJgQmUue/yLubmPhPgYLJejeYfWrmfhdYOwZ4MBJIn?=
+ =?us-ascii?Q?KOH1mxZfIqXIrxGxy5zZ2E9RY8UAi1vQES2O8JIgsG2L+BislFitkMQtbhCV?=
+ =?us-ascii?Q?BoJPKZS6/e0nG9fzJw8F5WZKxi6eY5y4Tb8W5yRTlVS5b6OLFFh2n5lgaVai?=
+ =?us-ascii?Q?AHsRIVYFSIeWPw8I68vtkoElf1h346/T39/215s95+HxGJvWVdps+WBMzr0Z?=
+ =?us-ascii?Q?GmehzDYvjDcP770GWyZI0G2IojFcJA77Mmx3SK/u3K2iPcoPUpek672HXOlX?=
+ =?us-ascii?Q?ukHxchNE0tN0YW6jo4kjm3Gk+6GiGe+53NqGw8QFfNOldvYlARNcfzPMTM7J?=
+ =?us-ascii?Q?85zueZPDDTRdanvNOXR6B4AXzB5pTu2h94wFDKRlGDfMmAzqFsc7CY0UnLPa?=
+ =?us-ascii?Q?ipPPDBfifWCbGNka9t+Y3O63fuviskx1uLxONk7EsuHGAOSA9Sb0bgAZrjwN?=
+ =?us-ascii?Q?3vlniWfOtpldirCocQNqqp8=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f47cc8e1-2f78-484b-161f-08d9db0e7126
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2022 01:26:32.0176
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2022 05:42:12.5076
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JG5z8KfEGMee3aor56kdFzPBbo+99Q+aEdxeN4jzxyuwEy2xaxEroXPspNsaE5uBNZflwVCdRT/QNfUIc2dGFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3149
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: WZ4K8bKWJaTyFagFPPG8EM9uMqZj4e2W9p311BDZC+wle03li1aPdbaJkWBvXT94Jx8u7KBC8nlEI3/bDuaKCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR04MB3225
 
-On 1/17/22 12:59 AM, Paolo Abeni wrote:
-> On Fri, 2022-01-14 at 14:43 -0800, Mat Martineau wrote:
->> On Wed, 12 Jan 2022, Kishen Maloor wrote:
->>
->>> This change updates internal logic to permit subflows to be
->>> established from either the client or server ends of MPTCP
->>> connections. This symmetry and added flexibility may be
->>> harnessed by PM implementations running on either end in
->>> creating new subflows.
->>>
->>> The essence of this change lies in not relying on the
->>> "server_side" flag (which continues to be available if needed).
->>>
->>
->> After this patch, server_side is unused except for some debug output. If 
->> it's really no longer referenced (see below first), may be better to just 
->> remove it.
+This patch added the invert bytes check for the output data in
+check_transfer().
 
-I think we'll need it. 
+Instead of the file mismatch error:
 
-One possible use is to inform the PM daemon of the type of application 
-(client/server) associated with a connection.
+  [ FAIL ] file received by server does not match (in, out):
+  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.9xpM6Paivv
+  Trailing bytes are:
+  MPTCP_TEST_FILE_END_MARKER
+  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.wnz1Yp4u7Z
+  Trailing bytes are:
+  MPTCP_TEST_FILE_END_MARKER
 
-As we're discussing the idea of creating listening sockets only upon request, the 
-knowledge that we are on the client end of a connection is something a PM daemon could
-use to request creation of listening sockets whenever it advertises an address.
+Print out the inverted bytes like this:
 
->>
->>> v2: check for 3rd ACK retransmission only on passive side
->>> of the MPJ handshake
->>>
->>> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
->>> ---
->>> net/mptcp/options.c  | 2 +-
->>> net/mptcp/protocol.c | 5 +----
->>> net/mptcp/protocol.h | 2 --
->>> 3 files changed, 2 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>> index cceba8c7806d..89808816db06 100644
->>> --- a/net/mptcp/options.c
->>> +++ b/net/mptcp/options.c
->>> @@ -921,7 +921,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
->>> 		if (TCP_SKB_CB(skb)->seq == subflow->ssn_offset + 1 &&
->>> 		    TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq &&
->>> 		    subflow->mp_join && (mp_opt->suboptions & OPTIONS_MPTCP_MPJ) &&
->>> -		    READ_ONCE(msk->pm.server_side))
->>> +		    !subflow->request_join)
->>> 			tcp_send_ack(ssk);
->>> 		goto fully_established;
->>> 	}
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 4012f844eec1..408a05bff633 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -3248,15 +3248,12 @@ bool mptcp_finish_join(struct sock *ssk)
->>> 		return false;
->>> 	}
->>>
->>> -	if (!msk->pm.server_side)
->>> +	if (!list_empty(&subflow->node))
->>> 		goto out;
->>>
->>> 	if (!mptcp_pm_allow_new_subflow(msk))
->>> 		goto err_prohibited;
->>>
->>> -	if (WARN_ON_ONCE(!list_empty(&subflow->node)))
->>> -		goto err_prohibited;
->>> -
->>> 	/* active connections are already on conn_list.
->>> 	 * If we can't acquire msk socket lock here, let the release callback
->>> 	 * handle it
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index e2a67d3469f6..c50247673c7e 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>> @@ -908,10 +908,8 @@ static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
->>> static inline bool subflow_simultaneous_connect(struct sock *sk)
->>> {
->>> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
->>> -	struct sock *parent = subflow->conn;
->>>
->>> 	return sk->sk_state == TCP_ESTABLISHED &&
->>> -	       !mptcp_sk(parent)->pm.server_side &&
->>> 	       !subflow->conn_finished;
->>> }
->>
->> Are changes in this function needed? This code was added to address
->> https://github.com/multipath-tcp/mptcp_net-next/issues/35
->> which was a weird case encountered with syzkaller where a socket tried to 
->> connect to itself, triggering the "simultaneous open" code path. It 
->> doesn't seem to be applicable to MP_JOINs.
-> 
-> I *think* we can reach here even with MPJ, e.g. if we have port-based
-> endpoint matching the src address/port - possibly syzkaller could be
-> able to reach such scenario.
-> 
-> Additionally I fear dropping the '!mptcp_sk(parent)->pm.server_side &&'
-> check could re-introduce the initial issue, at least for the MPC
-> handshake.
+  file received by server has inverted byte at 7454789
+  file received by server has inverted byte at 7454790
+  file received by server has inverted byte at 7454791
+  file received by server has inverted byte at 7454792
 
-The purpose of this commit is to permit the MPJ sequence to happen at either end of 
-the connection. The change in mptcp_finish_join() had the most direct impact for enabling 
-this, so I looked at other server_side checks mostly in terms of establishing that
-bi-directional symmetry.
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
+v3:
+ - add the check_invert flag, do the invert bytes check only when this flag
+ is set.
+ - use 0xff directly.
+ - update the output log.
+=20
+v2:
+ - instead of adding a new function is_invert, add the invert bytes
+   check in check_transfer().
+---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++++++++++++------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-If the above condition holds only with MPCs, i.e. for the initial connection, then I think it would 
-be fine to preserve the server_side check. But if it also holds for MPJs, then we might
-have to account for both cases. Perhaps replace:
-
-!mptcp_sk(parent)->pm.server_side)
-
-with something like this?
-
-((subflow->request_mptcp && !mptcp_sk(parent)->pm.server_side) ||
-	subflow->request_join)
-
-> 
-> /P
-> 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 2be3cad4b52b..4f8ee8a9a8f2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -15,6 +15,7 @@ timeout_test=3D$((timeout_poll * 2 + 1))
+ mptcp_connect=3D""
+ capture=3D0
+ checksum=3D0
++check_invert=3D0
+ do_all_tests=3D1
+=20
+ TEST_COUNT=3D0
+@@ -58,6 +59,8 @@ init()
+ 		fi
+ 	done
+=20
++	check_invert=3D0
++
+ 	#  ns1              ns2
+ 	# ns1eth1    ns2eth1
+ 	# ns1eth2    ns2eth2
+@@ -193,15 +196,21 @@ check_transfer()
+ 	out=3D$2
+ 	what=3D$3
+=20
+-	cmp "$in" "$out" > /dev/null 2>&1
+-	if [ $? -ne 0 ] ;then
+-		echo "[ FAIL ] $what does not match (in, out):"
+-		print_file_err "$in"
+-		print_file_err "$out"
+-		ret=3D1
++	cmp -l "$in" "$out" | while read line; do
++		local arr=3D($line)
+=20
+-		return 1
+-	fi
++		let sum=3D0${arr[1]}+0${arr[2]}
++		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
++			echo "[ FAIL ] $what does not match (in, out):"
++			print_file_err "$in"
++			print_file_err "$out"
++			ret=3D1
++
++			return 1
++		else
++			echo "$what has inverted byte at ${arr[0]}"
++		fi
++	done
+=20
+ 	return 0
+ }
+--=20
+2.31.1
 
