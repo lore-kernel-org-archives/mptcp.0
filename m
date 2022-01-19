@@ -1,99 +1,111 @@
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E890B173
-	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 10:17:09 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(Authenticated sender: usama.anjum)
-	with ESMTPSA id AC62B1F44443
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1642587428;
-	bh=ZgAzpMGfSGdCPLE/fHhKIS82NhtSqBUPZr7WBPwkwXI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C0mGMmA7q7UPYsiXK18YhhsNEQ//QfrpSJuvfRmQUme1U5Fg4vobtB0Ao0YZiGUUk
-	 L3hEF7/vTCey+drcto8FB1II8khu5KrNSHj6tZDVDCrTS/eyExq2QqwYILoP2Qy10F
-	 8Lmdf9wO/NjKg5Xp17P9zVfjJyRzSjdWaMGg9JMiYgITkIDPxQCI6DPGYbmCiq48wl
-	 KdwbBRzvSFh0zarKFe2Y/qPcaWxXsJAdqBodS6834V2pv09q05jLvBfhen5Zoq/3Ih
-	 uJqUJrZT+o/JZh8YBKDePxlOaWJ6AvYf+Pwr482gk45PmGVBeQDczi22XKAu6KIjXv
-	 v5snzb//VssZA==
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	chiminghao <chi.minghao@zte.com.cn>,
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
-	linux-kernel@vger.kernel.org (open list),
-	kvm@vger.kernel.org (open list:KERNEL VIRTUAL MACHINE (KVM)),
-	linux-security-module@vger.kernel.org (open list:LANDLOCK SECURITY MODULE),
-	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
-	mptcp@lists.linux.dev (open list:NETWORKING [MPTCP]),
-	linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com
-Subject: [PATCH V2 10/10] selftests: vm: remove dependecy from internal kernel macros
-Date: Wed, 19 Jan 2022 15:15:31 +0500
-Message-Id: <20220119101531.2850400-11-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220119101531.2850400-1-usama.anjum@collabora.com>
-References: <20220119101531.2850400-1-usama.anjum@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12702168
+	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 10:32:36 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id f17so553056edw.2
+        for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 02:32:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=KYRn8JEKopYKrGpTqLhcS/HP0UVIvrOqoegVS3dzqDM=;
+        b=eta0lURbSqV91ezf6ziYouZ1jzRFFzhY/hL9bB2Jmn7GBezu01Mx+zHm3tQ2SDfUkc
+         /5xWr1X/mxbI8oujiTxEQMV6J3RPkYP8CHXL3oBHnAMcFvDsm5ukrTETg1o8nga3FNjv
+         vp16fUGajeQwRU6exgsRfGKKk45uAf6G6i3A3kxATPim52LIIyPJMRtVNtRZSWGOYeqW
+         j/BSNNHekDR3cGHglLFkDkK93ZOoado4MPm6MXZIXXvreqsL9Lwkeycnng2STSzxfn2S
+         XrFIpCbGA+iaEcaoEVoohhdtrrLCQomAnjNZfKHDToo2Bbf8x88o/udGIYTCf49OEB8D
+         /BWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=KYRn8JEKopYKrGpTqLhcS/HP0UVIvrOqoegVS3dzqDM=;
+        b=AI1A41cZp49pblA2nibKcfpRVoKigw0jxd1V9l90F+sdgj1tPl+QPGe8pprHBLHcIf
+         AG3xIR6DRkxivnxirOwhEH8jqGEVXGnvguMxrlJRmff+rPACxm2Exf1k7bs7JZudBwNk
+         o+gtvaY1gUpSH6vv0a3KM1q7YUixsHqCguUiRPEOMgN73ngQQSVe7hixgQlGVnuRp3Vo
+         urPsNxZIin/rrv/g+zUVbT6l1vF4z6DC1BHpWpDn2IyK+JbVCDrHAdEgnynvKaazWz4v
+         RcysHYe+tChGYBR4/uTLJWifBo5QqLw7wARuuTXsHxXv2WRLNBNTjjXildpEuZN8Zg6v
+         oF3Q==
+X-Gm-Message-State: AOAM531CFdJw7OE+MOneqlwcNATT7SotS5YFNYeDfk8UE9X7FRneq5eQ
+	fWu22EClec8NvYqfFN2LQ1OtaQ==
+X-Google-Smtp-Source: ABdhPJzp7G4v2817PUHPvmaZEmqxM1tkap59s0tbwRorD2SbTeAUcm74hKhO/lg0fLwiPQhHZjBmhw==
+X-Received: by 2002:a05:6402:40d0:: with SMTP id z16mr30318714edb.68.1642588355000;
+        Wed, 19 Jan 2022 02:32:35 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:317c:d250:a7d4:7951? ([2a02:578:8593:1200:317c:d250:a7d4:7951])
+        by smtp.gmail.com with ESMTPSA id dd6sm1824130ejc.212.2022.01.19.02.32.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jan 2022 02:32:34 -0800 (PST)
+Message-ID: <f5480b3a-1ecd-23ad-5f7b-b362acdeb7bc@tessares.net>
+Date: Wed, 19 Jan 2022 11:32:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH mptcp-next v9 5/5] selftests: mptcp: add mp_fail testcases
+Content-Language: en-GB
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang.tang@suse.com>
+References: <cover.1641804767.git.geliang.tang@suse.com>
+ <a0f7ec766ca99a5f2e2aa27a358f45fc06f6cc78.1641804767.git.geliang.tang@suse.com>
+ <ea44a519-11b9-175-cceb-abb69232abbd@linux.intel.com>
+ <a1679740-24ed-c788-46df-ad195068dd37@linux.intel.com>
+ <CAKa-r6sgL1UUES5WYryNYedLJuq0_dEsO=X1263GFPOExci6BQ@mail.gmail.com>
+ <eb7a9238-6fda-761e-23e9-47fbe332705f@tessares.net>
+ <CAKa-r6t75QbV-BE3rKvUHVCBYmcO1eW2typSFUgPSA34uDFEPw@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CAKa-r6t75QbV-BE3rKvUHVCBYmcO1eW2typSFUgPSA34uDFEPw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-The defination of swap() is used from kernel's internal header when this
-test is built in source tree. The build fails when this test is built
-out of source tree as defination of swap() isn't found. Selftests
-shouldn't depend on kernel's internal header files. They can only depend
-on uapi header files. Add the defination of swap() to fix the build
-error:
+Hi Davide,
 
-	gcc -Wall  -I/linux_mainline2/build/usr/include -no-pie    userfaultfd.c -lrt -lpthread -o /linux_mainline2/build/kselftest/vm/userfaultfd
-	userfaultfd.c: In function ‘userfaultfd_stress’:
-	userfaultfd.c:1530:3: warning: implicit declaration of function ‘swap’; did you mean ‘swab’? [-Wimplicit-function-declaration]
-	 1530 |   swap(area_src, area_dst);
-	      |   ^~~~
-	      |   swab
-	/usr/bin/ld: /tmp/cclUUH7V.o: in function `userfaultfd_stress':
-	userfaultfd.c:(.text+0x4d64): undefined reference to `swap'
-	/usr/bin/ld: userfaultfd.c:(.text+0x4d82): undefined reference to `swap'
-	collect2: error: ld returned 1 exit status
+On 18/01/2022 17:48, Davide Caratti wrote:
+> On Tue, Jan 18, 2022 at 3:15 PM Matthieu Baerts
+> <matthieu.baerts@tessares.net> wrote:
+>>
+>> Hi Davide,
+>>
+>> On 18/01/2022 14:32, Davide Caratti wrote:
+>>> hello,
+>>>
+>>> started looking at this, but the wild-guess is that the problem should
+>>> be fixed with [1]: I'll do a quick test on my VM now.
+>>>
+>>> [1] https://lore.kernel.org/netdev/20220110094750.236478-1-eric.dumazet@gmail.com/
+>>
+>> Good point, it might be linked to that.
+> 
+> hello,
+> 
+> confirmed, the problem happens when kernels are built with
+> CONFIG_NET_NS_REFCNT_TRACKER=y and the problem is fixed by the
+> above-mentioned patch from Eric.
 
-Fixes: 2c769ed7137a ("tools/testing/selftests/vm/userfaultfd.c: use swap() to make code cleaner")
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- tools/testing/selftests/vm/userfaultfd.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thank you for having checked!
 
-diff --git a/tools/testing/selftests/vm/userfaultfd.c b/tools/testing/selftests/vm/userfaultfd.c
-index d3fd24f9fae8..d2480ab93037 100644
---- a/tools/testing/selftests/vm/userfaultfd.c
-+++ b/tools/testing/selftests/vm/userfaultfd.c
-@@ -119,6 +119,9 @@ struct uffd_stats {
- 				 ~(unsigned long)(sizeof(unsigned long long) \
- 						  -  1)))
- 
-+#define swap(a, b) \
-+	do { typeof(a) __tmp = (a); (a) = (b); (b) = __tmp; } while (0)
-+
- const char *examples =
-     "# Run anonymous memory test on 100MiB region with 99999 bounces:\n"
-     "./userfaultfd anon 100 99999\n\n"
+I just added this patch in our tree:
+
+- 943a4ed011fc: net: sched: do not allocate a tracker in tcf_exts_init()
+- Results: a99ed2058930..fbaefb5453f9
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220119T102401
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+I guess I should better enable this kconfig option for the debug builds, no?
+
+Cheers,
+Matt
+
+
 -- 
-2.30.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
