@@ -1,21 +1,21 @@
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1FC2CA5
-	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 10:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371AF173
+	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 10:16:49 +0000 (UTC)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
 	(Authenticated sender: usama.anjum)
-	with ESMTPSA id 7E05B1F44434
+	with ESMTPSA id 944F31F44438
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1642587402;
-	bh=Jw6rL5aZMlTMqMdSpKS4Pzt24AHAhEIkIB28v6p/uW8=;
+	s=mail; t=1642587408;
+	bh=x8a+/rhJUZAIKALDJjBBCDWlAg+uFUzuTVsPSCbnIHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kBLsXF7uQxa2rD+wV5gFAkHNJhD1fJrcvVyaQtb7G2hYa10KRdkgi4QHES8vrTjci
-	 pWbUuIaSnZoctbDiqa2GHKHnKgMMA3aVwhf33LMNA3Jcb/w5gE3LgWsvkAsnEAcvCH
-	 sKuX3McgvQKyHKn05QTAMxK+zdw0iI9pthwHjcRnGN8WwHmFcM0aadTqHN+xT5Fo+c
-	 h6dJ8QwR4k1D+Isrw4igcDZAB3lGWMlwfzyp8ac65UuKLbv2iG/LDfq7Go7OLYkYcZ
-	 +fKswngI9xoIWSX0MWreRyOAHjc+tSprnILvMQG+hRIaA5fmavwt4ywLHfVpRLW37N
-	 pWeDKIVnzBwXw==
+	b=AgNZ5WXHijtrat3Pgh3ZOaMi2tRnMkFgvN54h8z/dIuy6z3C94f9rIegI9PkZNLyW
+	 +39iLHTOpr1enYSwhxr0yf1JwbLKHvP0rNGnKEjnxPhfry5gtoiU8RMSOgMF8t1xLs
+	 iN26p9qCQLosHnwBjUWroyA1Zwi7tfVDotoRcc2C6nZ7Sm3OdJ5/QeGuoXNxtxiezA
+	 ChphF0Y7Epi/NXBgoQ2SqM1EsPP2f+1a2iGqprWsxy9SmoQjEAers9rddnzNstVs8J
+	 1C5JmA9m58hnjzCgCDM+w/2GsSZ+4IVWfWA//obZJ+igoaGSyYwSm3K8uT79FhRtgS
+	 68e8rQwRxRZ+w==
 From: Muhammad Usama Anjum <usama.anjum@collabora.com>
 To: Shuah Khan <shuah@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -41,9 +41,9 @@ To: Shuah Khan <shuah@kernel.org>,
 	linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
 Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
 	kernel@collabora.com
-Subject: [PATCH V2 06/10] selftests: landlock: Add the uapi headers include variable
-Date: Wed, 19 Jan 2022 15:15:27 +0500
-Message-Id: <20220119101531.2850400-7-usama.anjum@collabora.com>
+Subject: [PATCH V2 07/10] selftests: net: Add the uapi headers include variable
+Date: Wed, 19 Jan 2022 15:15:28 +0500
+Message-Id: <20220119101531.2850400-8-usama.anjum@collabora.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220119101531.2850400-1-usama.anjum@collabora.com>
 References: <20220119101531.2850400-1-usama.anjum@collabora.com>
@@ -65,21 +65,22 @@ Changes in V2:
         Revert the excessive cleanup which was breaking the individual
 test build.
 ---
- tools/testing/selftests/landlock/Makefile | 2 +-
+ tools/testing/selftests/net/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/landlock/Makefile b/tools/testing/selftests/landlock/Makefile
-index a99596ca9882..0b0049e133bb 100644
---- a/tools/testing/selftests/landlock/Makefile
-+++ b/tools/testing/selftests/landlock/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
+index 9897fa9ab953..0b1488616c55 100644
+--- a/tools/testing/selftests/net/Makefile
++++ b/tools/testing/selftests/net/Makefile
+@@ -2,7 +2,7 @@
+ # Makefile for net selftests
  
--CFLAGS += -Wall -O2
-+CFLAGS += -Wall -O2 $(KHDR_INCLUDES)
+ CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g
+-CFLAGS += -I../../../../usr/include/
++CFLAGS += -I../../../../usr/include/ $(KHDR_INCLUDES)
  
- src_test := $(wildcard *_test.c)
- 
+ TEST_PROGS := run_netsocktests run_afpackettests test_bpf.sh netdevice.sh \
+ 	      rtnetlink.sh xfrm_policy.sh test_blackhole_dev.sh
 -- 
 2.30.2
 
