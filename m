@@ -1,102 +1,199 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086CF168
-	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 22:35:28 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id f21so20037821eds.11
-        for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 14:35:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=O2Z9yctDCU3gTCdFxkuOTOOVaEio5IQFlKJF8LaggTg=;
-        b=mmd9J8gXsSomU9UUNBvOuBXVlSzYbQO+nfTxl/OBRbHYFV4RvXKpHULSlKe3BzkhZs
-         6tnMwcMq5t47+WNrTTdvtUf0JBg67Wg0aCNi0CJ8xmjiX4vXLa4IlrmJmPXilREu3Yui
-         sp2/n7hwAxPyaFgHFq/KT7AU5Jw//TYUZKz/mzHMmN4UbT81SY0CQggRmIEk+Kt7SCKl
-         1gcC5o5GXI7K0Gl30ohuE4FaUyf+Tk6L3fF+zoki/vDtHdBawJSTEcBCjU73AxFTJpPC
-         L08WNim15+swmDr/BBQguYjDZ5tzZUIY6Y3wQds1cDMm36GA6ezOwNtkI5hA+nPvzBX0
-         aSCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=O2Z9yctDCU3gTCdFxkuOTOOVaEio5IQFlKJF8LaggTg=;
-        b=iLpircuoGJapqI2kQv9F9QDj6VznVQnCW4ktETr5wMGK2LJALkf7AKIP5HNs/aqhRW
-         k//IRN1pikedumO0MTIJ4Qh/T40dn5A8fgdH69GN4tL6Bz7YDxkIP9If6+CXnfsdRjjQ
-         is74QxJgppUBfoXtb8F1YLBnYCAvSJ1UbGTeNl0+0sTEKz5dPtuqbhryZCmRr363cMdU
-         pIhdvJ80qZW7TbZt4p/bnaqisqcrGYDOXsedbV1hEByK0UyVpzesYibHHOvKX6+QRevW
-         4p8mlAv4rdlUcur3yOTwPZRyDYH18ZGu1J0LV0NwBvMRc4bpiofl03msKa2B6BH0XxRa
-         U9cw==
-X-Gm-Message-State: AOAM531/E1vzZxQjfST6d9uW8uXSMbCEspiiuVNp8H2tLWuBmuHyhFNx
-	ZmPSNwGpgARHnrCYsuLEZ/ZNEA==
-X-Google-Smtp-Source: ABdhPJy1AOJWUgAkG9M0ApWVefQgFqlCHwuj5r6BLJ3Us7HRCzcOtwDzV/+W0LhRJLALaHoMOwEgMA==
-X-Received: by 2002:a17:907:60d5:: with SMTP id hv21mr26331732ejc.456.1642631726887;
-        Wed, 19 Jan 2022 14:35:26 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:f030:6649:6eec:111? ([2a02:578:8593:1200:f030:6649:6eec:111])
-        by smtp.gmail.com with ESMTPSA id o14sm403138edr.6.2022.01.19.14.35.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jan 2022 14:35:26 -0800 (PST)
-Message-ID: <853cf6e0-7890-90ef-b98d-d78bee0aba9e@tessares.net>
-Date: Wed, 19 Jan 2022 23:35:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EEE168
+	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 23:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642633725; x=1674169725;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FgzjWzmR5G1hFISwZ5AtAN44l6MR0G1yawh4enTsOEo=;
+  b=XWusgh0Ql1yxojHFmdVbI8SmX6qtEbmnjuJnCjbHt+3lwSWnXucU7CRt
+   ZuohXA7kkgoMLaHov/sxQ2GpKH/sMCksLcpmXxQu60zKmphDKDpa8smat
+   3m6da0QxR9tIh9CSOZjDvlDzbg4tgsvYmKR+e4muuBFARMTmhePNNt/lH
+   4J/hJBdDcO5kwitHzCN1s18UZ3fvL5Zb7c0Sx0V5Bopdi5GQ0dpD4u41n
+   J+b2Y8s0t+Lr0Izz0P/HYckOkYMq1wRPqnNKkvihz+4nscHPYiuxT77ly
+   tRnYunInaClrKiqgRldb0zFEIEgm/G1xzUNLUn0y3ay9ERg/v6R6J1Na3
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="232583837"
+X-IronPort-AV: E=Sophos;i="5.88,300,1635231600"; 
+   d="scan'208";a="232583837"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 15:08:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,300,1635231600"; 
+   d="scan'208";a="475317695"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 19 Jan 2022 15:08:43 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1nAK4I-000Dop-AD; Wed, 19 Jan 2022 23:08:42 +0000
+Date: Thu, 20 Jan 2022 07:08:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ e27d2e0775d0da96a5e578e072cea004896c6bf7
+Message-ID: <61e899d3.VurBo7rRwWIzBwNt%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH V2 08/10] selftests: mptcp: Add the uapi headers include
- variable
-Content-Language: en-GB
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <shuah@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
- Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?=
- <mic@digikod.net>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- chiminghao <chi.minghao@zte.com.cn>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:KERNEL VIRTUAL MACHINE (KVM)" <kvm@vger.kernel.org>,
- "open list:LANDLOCK SECURITY MODULE"
- <linux-security-module@vger.kernel.org>,
- "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
- "open list:NETWORKING [MPTCP]" <mptcp@lists.linux.dev>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Cc: kernel@collabora.com
-References: <20220119101531.2850400-1-usama.anjum@collabora.com>
- <20220119101531.2850400-9-usama.anjum@collabora.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220119101531.2850400-9-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-Hi Muhammad,
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: e27d2e0775d0da96a5e578e072cea004896c6bf7  DO-NOT-MERGE: mptcp: enabled by default
 
-On 19/01/2022 11:15, Muhammad Usama Anjum wrote:
-> Out of tree build of this test fails if relative path of the output
-> directory is specified. Add the KHDR_INCLUDES to correctly reach the
-> headers.
-> 
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
-> Changes in V2:
->         Revert the excessive cleanup which was breaking the individual
-> test build.
+elapsed time: 724m
 
-Thank you for the v2, it looks safer that way and it no longer breaks
-our CI!
+configs tested: 131
+configs skipped: 3
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+arc                        vdk_hs38_defconfig
+m68k                            q40_defconfig
+sh                ecovec24-romimage_defconfig
+mips                             allmodconfig
+sh                          kfr2r09_defconfig
+arm                           stm32_defconfig
+arm                        mvebu_v7_defconfig
+xtensa                  cadence_csp_defconfig
+m68k                          hp300_defconfig
+powerpc                        cell_defconfig
+powerpc                      chrp32_defconfig
+xtensa                         virt_defconfig
+sh                             sh03_defconfig
+sh                          sdk7780_defconfig
+csky                             alldefconfig
+arc                         haps_hs_defconfig
+sh                          r7785rp_defconfig
+x86_64                           alldefconfig
+xtensa                generic_kc705_defconfig
+ia64                          tiger_defconfig
+arm                        multi_v7_defconfig
+arm                  randconfig-c002-20220116
+arm                  randconfig-c002-20220117
+arm                  randconfig-c002-20220118
+arm                  randconfig-c002-20220119
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+s390                             allmodconfig
+s390                                defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a016-20220117
+x86_64               randconfig-a012-20220117
+x86_64               randconfig-a013-20220117
+x86_64               randconfig-a011-20220117
+x86_64               randconfig-a014-20220117
+x86_64               randconfig-a015-20220117
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+i386                 randconfig-a012-20220117
+i386                 randconfig-a014-20220117
+i386                 randconfig-a011-20220117
+i386                 randconfig-a013-20220117
+i386                 randconfig-a015-20220117
+i386                 randconfig-a016-20220117
+riscv                randconfig-r042-20220119
+riscv                randconfig-r042-20220117
+arc                  randconfig-r043-20220116
+arc                  randconfig-r043-20220117
+s390                 randconfig-r044-20220119
+s390                 randconfig-r044-20220117
+arc                  randconfig-r043-20220118
+arc                  randconfig-r043-20220119
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+arm                                 defconfig
+riscv                            alldefconfig
+arm                            mmp2_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                 xes_mpc85xx_defconfig
+i386                             allyesconfig
+powerpc               mpc834x_itxgp_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                 mpc8313_rdb_defconfig
+powerpc                      walnut_defconfig
+arm                          ep93xx_defconfig
+hexagon                             defconfig
+mips                      maltaaprp_defconfig
+powerpc                  mpc866_ads_defconfig
+x86_64               randconfig-a005-20220117
+x86_64               randconfig-a004-20220117
+x86_64               randconfig-a001-20220117
+x86_64               randconfig-a006-20220117
+x86_64               randconfig-a002-20220117
+x86_64               randconfig-a003-20220117
+i386                 randconfig-a005-20220117
+i386                 randconfig-a001-20220117
+i386                 randconfig-a006-20220117
+i386                 randconfig-a004-20220117
+i386                 randconfig-a002-20220117
+i386                 randconfig-a003-20220117
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220119
+hexagon              randconfig-r041-20220119
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
