@@ -1,196 +1,139 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613602C80
-	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 06:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1642572526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oW3W5qkGa5aQ5ZAEC6xIqMBBw+ColtJQmCGZwxJivc0=;
-	b=Utio9BjmAQn66cmWmd/t7Jtx0nLPDjUCTm7gCbd+zAk+6Cgj7+pQ83wbU4lG4YRaBQciQQ
-	l6NGbNQnFqr8I/WCX5tcL7HDgrDI0g5Kdd+3QOyHCQt1Zjli+mpYOISSKohbqFIXG1vJma
-	N132G9M+7apKxD6iCeG8Du8BmJ3aCv4=
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
- (mail-he1eur02lp2059.outbound.protection.outlook.com [104.47.5.59]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-30-XiOX8zXUNTexm4mV57kLaA-1; Wed, 19 Jan 2022 07:08:45 +0100
-X-MC-Unique: XiOX8zXUNTexm4mV57kLaA-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gh+ghdq62PCnMXr3vdaMCYVwlBjKPbSBfHgp4CwN0H2R+erhs//azjhaRLjJu7lKNRHa/CX+lE4GkxKfyAZE50zqjkq4QjztmiWZTU6a3hBfVCeUKjYws+a9vQxwV9/din05B85jF3rlZPQPT1FFe0Bi30bRf8pXpTzgw/WKd2FGO5qXKlc+PvjM5sXKrYGaX6DaDTY2fS6tXhjPGDyLB0YPJKBk0fhbCAnOdDswjxHHb/umWPU+WNiyVeRYFbik/m5STv8ZP7LkITtrbwixHGkd0cIOibyTZJuJ3TqcOaq4bnL6IsSXaUaQ1+ULcAi2cqJjLvHv1pjKGQAChbV/hA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oW3W5qkGa5aQ5ZAEC6xIqMBBw+ColtJQmCGZwxJivc0=;
- b=mnA6h6sy9S/IH9OCTIOf0MY7wGqpceQnfSZeNc0PwR666pTaQwch1B7QfSaET+q6Ym3kcDo7jhUzUSz0svOijNCjo4WvoiCoOuPs6xk85gbzmVRiuzO6vwgrOTUO23+xsf0tnWZNVzGAlutrPZkphqPFrQhDZjFHHLta3H7ou4s3MgxjnC2ri69riIFyOev4h5nTu2fo8y/7wQjX1xTSCo5l9OwONEoSqrXsfrW2oGbrm3hvV3QIyWUz0hR27h8mLQEYYRyE4YIccxcp2bCSkradGV47uBlyP2y7CcnNAtpkEalqCKccvcUhgdbk3nYfJCgNEbeWqsZ0PsvSCNhNiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DB9PR04MB9284.eurprd04.prod.outlook.com (2603:10a6:10:36c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Wed, 19 Jan
- 2022 06:08:43 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::3837:57a2:45dc:e879]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::3837:57a2:45dc:e879%3]) with mapi id 15.20.4888.014; Wed, 19 Jan 2022
- 06:08:43 +0000
-Date: Wed, 19 Jan 2022 14:08:44 +0800
-From: Geliang Tang <geliang.tang@suse.com>
-To: David Ahern <dsahern@gmail.com>
-Cc: David Ahern <dsahern@kernel.org>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	netdev@vger.kernel.org, mptcp@lists.linux.dev
-Subject: Re: [PATCH iproute2-next] mptcp: add id check for deleting address
-Message-ID: <20220119060844.GA14367@dhcp-10-157-36-190>
-References: <0e01aafaba6df6ff7adf255999d64259d7ae8d50.1642204990.git.geliang.tang@suse.com>
- <93dd20fc-e22e-2536-85f6-5442b3f19adc@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93dd20fc-e22e-2536-85f6-5442b3f19adc@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: HK2PR02CA0127.apcprd02.prod.outlook.com
- (2603:1096:202:16::11) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4012C82
+	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 08:22:38 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(Authenticated sender: usama.anjum)
+	with ESMTPSA id 3E8C21F44337
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1642580556;
+	bh=QAiGrnVKHtXCjw/54yKAb5LW6GftwIG4hgUhexVMISE=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=JohVKnqdhrmr88zSpbdIWeVwW3aFTlZUvzKGmFDgndI5DqkPMsRlz8Z96jPFtiiX0
+	 /VEFcHN1Eot2dnhZuuSiUQllmiUfT5+mkD2gM9mGlWWnt1S2TWLtumObED/Mhq+GZC
+	 drcqHoTPrLauJseDOSsl5GxyC9Z+5+eERpBMq8Bd8JUkW0mJtwjMu3/2RgHxvwIEq7
+	 pRFVMWddEY5sgUzcHQEEhqNbl+1xFwhtiaRVInPGfFIsYEl9C64wAmYfBTtq3Y70q4
+	 J4Nie9+0qLfZyJTtQbBjtMgMjJgl+Nejt2uzZGLnRgV9etJ+3P7+6JzE2pyXUQcM67
+	 8uQ3p0Sofitbg==
+Message-ID: <ccae1b7a-4888-ca86-9610-89fd4f3d714d@collabora.com>
+Date: Wed, 19 Jan 2022 13:22:26 +0500
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9c09f27a-7d61-4112-dac6-08d9db122510
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9284:EE_
-X-Microsoft-Antispam-PRVS:
-	<DB9PR04MB9284B53B8C007FE0C7345709F8599@DB9PR04MB9284.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	HX1CVjlaFviYeKqZqFRFYLmo2h8ExxbCWD3cqzZyJsaYzrJiGaJK0CabpQB0ZYMp60TFNssIQG8Rx3L61OtwrWwnXkNWrEy3jW6USm6cryRg1RCOWFDOWmxbm/lSykCGoJC2g0sT1nS7yTzJZJqoturDA5gdXLw8t5jSi4+p77kqtG9hodvhzeiDjF/wD/rpOULAAWDbghIjhRMWFCgUzuecA/6qBowaRCWM6RJo+gftSmOWmxFjR5+roI88U3pqESy6dQamrNDv/dd3pKTIBh17i3H8QT6nxULlvJXDqlSraCkFQLsaB56iKfJ2nMp6fDyzUzZzzyTaVKWh5Gr4EufDTzI65xs4SlZt8qFRzaDNZ0B4DoyqmyyNyC4Rr6a4COEUA3efcSzaQBZnQL/kAI3i7S4spP0zQinTP224+v13/EEw1vo6Sodb5imQZldJixZgs481XtEh778CeAGSMAm74VmsKAhDpS7ituWuc81zTdxzDJRGnum/odXT+BCdAXEoHUgF6yur9L6VZMl+03Zj4slLF3brO2Qb0dpzUrFVoWzV8qKJi28hdFhWm48dzARX2SqA7+Ew+zTCtCb0TwpuEqjFaiKs5qACTk6dWkWtEALNsNoyezkVvEj1WXi0kjKGuX9jxo/zgmrnPcQasoNIM6+zWwSQFmi8crY/Hnel85F3F2mO8X1NLs90cJM4mScMda0qrSja7VWA1OGrWWkteIbGB8sNjSOn7qU7zFQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(316002)(38100700002)(54906003)(83380400001)(66556008)(66476007)(66946007)(4326008)(44832011)(1076003)(8676002)(6916009)(26005)(33716001)(5660300002)(2906002)(6512007)(6506007)(508600001)(33656002)(53546011)(966005)(55236004)(9686003)(86362001)(186003)(6486002)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VzaUBp06MBOb0JjqIZsO6M+4nCf3WBmEthD5vNjprpLw7falWKIzg+EcpJvG?=
- =?us-ascii?Q?9dQf3QusIYdS3H+VPU7IXlpkXfQtHAvHvu8Q3NocMHbRHi8B4TvD4mEnmIrk?=
- =?us-ascii?Q?xOpe1IZvqevjOWpWPs+kDImOs7zg5sJ5kUo0HyQUstxPykeNbe12uqlt/wZM?=
- =?us-ascii?Q?efVtwEnPoEpLX7yPyFdqRusAUaYQn3PhKjd2ypClYMORJDch0drxkfkVBALu?=
- =?us-ascii?Q?dF0g35rgTf+MeZKiEg+LsGoapWhm8B+HRwFjkhWh5KXrwTNGv1kQT7bBZprb?=
- =?us-ascii?Q?PzAy8nT9Hu/ej4rlIXeF/qSlROl1k38yhNjPdERVl1aGvkDqiRm11eohIpvK?=
- =?us-ascii?Q?rWWTa8zzR6/rGsBKAVdl0ml9XTwHHW2crdYSO0OmDEFtMdWn8oxJdUfG8vfj?=
- =?us-ascii?Q?EAUkrVjvigDC5w4bTBHBRJobEEsns2tt+XFPxVDNwT3Ei4YfYxfhslS3nC+f?=
- =?us-ascii?Q?qLGi3jTbCM29NJiILZ8JuKPuG97mwJSFN4VAXwsYT69rBtTBjBykY3+Q9bxW?=
- =?us-ascii?Q?Z8yp5cDx1KRZxMF7w9bC0BmdI8EcLOPDI4d5DRM+qp2UvOqCLZP+kJb5hwpP?=
- =?us-ascii?Q?EdGjzN+nUYSVK2mNLh8Cz494oSzGXYyKxEvUK69YRx0MxuOs9YlD5cMArmNQ?=
- =?us-ascii?Q?pdx1BIheA4gwpYpI78jZEuagg6Fj/RvI8DC8i72f12o6trDROWQv8LsN+QEz?=
- =?us-ascii?Q?mXpxqsnuN4ny1zxqkWZ0H2oxzz3Mh4FpizNWwLSJGcmZodQq0CG3Kll08pmb?=
- =?us-ascii?Q?8g+96caHYSEHWRPj5Ea+BH2OgJ3S2IxSP6VLFtry0UPmvfkqjkYxJeswcSnk?=
- =?us-ascii?Q?Zv6/j57A3GkG6SM19/zm8Ftl/lEbbUMcIFpvtVc4YZX85oqsCX2QQk80rxql?=
- =?us-ascii?Q?EbhZg+IKa7NajcEkoWYQCbJuvCR+x6sH0KgJLUFHPJktnz0xFbEsrs7nojng?=
- =?us-ascii?Q?RzhurcoF32ePBpX7zs67QaLLKOZ3EEHSp807cwaiHK85mWb/yMdMvuZQEjJx?=
- =?us-ascii?Q?7SCwE4CwC7JPY6PoS6GKfaZyCqKb/Yym5ZnBGCqgxbWKBc4MQb84N5z1xDnR?=
- =?us-ascii?Q?Pr1sMtticGRqm7Njpp92jNm+KxHtB7vQdtD6qHals5RMt1XIpbINOxKX4dJK?=
- =?us-ascii?Q?W4mchpR2nE2FVZvnTYJqpphaKZ3BiKoAuWGzxRrxKwxhODTwnjcBDG3Gs7bL?=
- =?us-ascii?Q?vl/bFZ3Jvagb8dTjzvEUpjb8jp649c6DPtxu+hUZxV0H359AX1xTIu/8h9mM?=
- =?us-ascii?Q?TaI0INXRFAey8lDSoEnHNl9F5QgJQlAvTM4Q0a6QY5ohBJNURRyYtHaKK3dI?=
- =?us-ascii?Q?Al3bWk/SlSiP/duCasYakxxGM+0UeTDH1tJ5VAqZkSSUExyJILifTykmLUg8?=
- =?us-ascii?Q?VY039LRPvnHm2bNE+LjwnNHD0piiDRk++RF4c9iMbZQCNULERkGyGzWNqyZu?=
- =?us-ascii?Q?/KW96oAe2bMvx8rI4++TFE8ik9pt++hk9lYriIQQcHDLr01blVuuKlTAwm4k?=
- =?us-ascii?Q?+NQ2pap4KoM5ftFBIwj1wMUsKzBMTNfNIcFVSL76E7cyTQUDNZ1ddaWmO9Zf?=
- =?us-ascii?Q?/RQEFM4M9ML1KtmxTmq875DqDxjjqgP8SdJ/EUboImcFVCTGrF22ZMRoYqMF?=
- =?us-ascii?Q?hGhS7HUGxV2dv5fWP+AlyQg=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c09f27a-7d61-4112-dac6-08d9db122510
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2022 06:08:43.0203
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nhpRERizpd/9K47H5As3jfSPIxx2tQ3Dg7qeCY0L7AQSuxd5b5DLWIm/7jFrU3yQHiBe6yFVOQ/RXEs1dBOPgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9284
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Cc: usama.anjum@collabora.com, kernel@collabora.com
+Subject: Re: [PATCH 08/10] selftests: mptcp: Add the uapi headers include
+ variable
+Content-Language: en-US
+To: Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Shuah Khan <shuah@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?=
+ <mic@digikod.net>, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ chiminghao <chi.minghao@zte.com.cn>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:KERNEL VIRTUAL MACHINE (KVM)" <kvm@vger.kernel.org>,
+ "open list:LANDLOCK SECURITY MODULE"
+ <linux-security-module@vger.kernel.org>,
+ "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+ "open list:NETWORKING [MPTCP]" <mptcp@lists.linux.dev>,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+References: <20220118112909.1885705-1-usama.anjum@collabora.com>
+ <20220118112909.1885705-9-usama.anjum@collabora.com>
+ <4d60a170-53d7-3f9f-fa48-34d6c4020346@tessares.net>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <4d60a170-53d7-3f9f-fa48-34d6c4020346@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi David,
+Hi Matthieu,
 
-Thanks for your review.
+Thank you for putting details below.
 
-On Sat, Jan 15, 2022 at 08:42:25AM -0700, David Ahern wrote:
-> On 1/14/22 5:10 PM, Geliang Tang wrote:
-> > This patch added the id check for deleting address in mptcp_parse_opt().
-> > The ADDRESS argument is invalid for the non-zero id address, only needed
-> > for the id 0 address.
-> > 
-> >  # ip mptcp endpoint delete id 1
-> >  # ip mptcp endpoint delete id 0 10.0.1.1
-> > 
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/171
+On 1/19/22 2:47 AM, Matthieu Baerts wrote:
+> Hi Muhammad,
 > 
-> meaning bug fix? If so please add a Fixes tag with the commit that
-> should have required the id.
-
-This patch isn't a fix, no Fixes tag needed. I dropped the Closes tag in
-v2.
-
+> On 18/01/2022 12:29, Muhammad Usama Anjum wrote:
+>> Out of tree build of this test fails if relative path of the output
+>> directory is specified. Remove the un-needed include paths and use
+>> KHDR_INCLUDES to correctly reach the headers.
 > 
-> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> > Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> > ---
-> >  ip/ipmptcp.c        | 11 +++++++++--
-> >  man/man8/ip-mptcp.8 | 16 +++++++++++++++-
-> >  2 files changed, 24 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-> > index e7150138..4363e753 100644
-> > --- a/ip/ipmptcp.c
-> > +++ b/ip/ipmptcp.c
-> > @@ -24,7 +24,7 @@ static void usage(void)
-> >  	fprintf(stderr,
-> >  		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
-> >  		"				      [ port NR ] [ FLAG-LIST ]\n"
-> > -		"	ip mptcp endpoint delete id ID\n"
-> > +		"	ip mptcp endpoint delete id ID [ ADDRESS ]\n"
-> >  		"	ip mptcp endpoint change id ID [ backup | nobackup ]\n"
-> >  		"	ip mptcp endpoint show [ id ID ]\n"
-> >  		"	ip mptcp endpoint flush\n"
-> > @@ -103,6 +103,7 @@ static int get_flags(const char *arg, __u32 *flags)
-> >  static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
-> >  {
-> >  	bool adding = cmd == MPTCP_PM_CMD_ADD_ADDR;
-> > +	bool deling = cmd == MPTCP_PM_CMD_DEL_ADDR;
-> >  	struct rtattr *attr_addr;
-> >  	bool addr_set = false;
-> >  	inet_prefix address;
-> > @@ -156,8 +157,14 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
-> >  	if (!addr_set && adding)
-> >  		missarg("ADDRESS");
-> >  
-> > -	if (!id_set && !adding)
-> > +	if (!id_set && deling)
-> >  		missarg("ID");
-> > +	else if (id_set && deling) {
+> Thank you for looking at that!
 > 
-> brackets on the 'if () { .. }' since they are needed on the else.
-
-Updated in v2. And v2 was sent out a few days ago.
-
-Thanks,
--Geliang
-
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>>  tools/testing/selftests/net/mptcp/Makefile | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+>> index 0356c4501c99..fed6866d3b73 100644
+>> --- a/tools/testing/selftests/net/mptcp/Makefile
+>> +++ b/tools/testing/selftests/net/mptcp/Makefile
+>> @@ -1,9 +1,8 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>>  
+>> -top_srcdir = ../../../../..
 > 
-> > +		if (id && addr_set)
-> > +			invarg("invalid for non-zero id address\n", "ADDRESS");
-> > +		else if (!id && !addr_set)
-> > +			invarg("address is needed for deleting id 0 address\n", "ID");
-> > +	}
-> >  
-> >  	if (port && !(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
-> >  		invarg("flags must have signal when using port", "port");
+> Removing this line breaks our CI validating MPTCP selftests. That's
+> because this "top_srcdir" variable is needed in the "lib.mk" file which
+> is included at the end of this Makefile.
 > 
+> But that's maybe a misuse from our side. Indeed to avoid compiling
+> binaries and more from the VM, our CI does that as a preparation job
+> before starting the VM and run MPTCP selftests:
+> 
+>   $ make O=(...) INSTALL_HDR_PATH=(...)/kselftest/usr headers_install
+>   $ make O=(...) -C tools/testing/selftests/net/mptcp
+> 
+> From the VM, we re-use the same source directory and we can start
+> individual tests without having to compile anything else:
+> 
+>   $ cd tools/testing/selftests/net/mptcp
+>   $ ./mptcp_connect.sh
+> 
+> We want to do that because some scripts are launched multiple times with
+> different parameters.
+> 
+> With your modifications, we can drop the headers_install instruction but
+> we need to pass new parameters to the last 'make' command:
+> 
+>   $ make O=(...) top_srcdir=../../../../.. \
+>                  KHDR_INCLUDES=-I(...)/usr/include \
+>          -C tools/testing/selftests/net/mptcp
+> 
+> Or is there a better way to do that?
+> Can we leave the definition of "top_srcdir" like it was or did we miss
+> something else?
+> 
+It seems like I've missed this use cases where people can build only one
+individual test. It is not my intention to break individual test builds.
+I shouldn't be fixing one thing while breaking something else. I'll
+update these patches such that individual tests are also build-able. For
+this to happen, I'll just add $(KHDR_INCLUDES) to the build flags while
+leaving everything else intact. I'll send a V2.
 
+>>  KSFT_KHDR_INSTALL := 1
+>>  
+>> -CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
+>> +CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g $(KHDR_INCLUDES)
+>>  
+>>  TEST_PROGS := mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh \
+>>  	      simult_flows.sh mptcp_sockopt.sh
+> 
+> Note: I see there is a very long recipients list. If my issue is not
+> directly due to your modifications, we can probably continue the
+> discussion with a restricted audience.
+> 
+> Cheers,
+> Matt
