@@ -1,81 +1,85 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EFF173
-	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 01:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494E2173
+	for <mptcp@lists.linux.dev>; Wed, 19 Jan 2022 01:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642555298; x=1674091298;
+  t=1642555467; x=1674091467;
   h=message-id:date:subject:to:references:from:in-reply-to:
    content-transfer-encoding:mime-version;
-  bh=0NbKaJPgIJXa/26eonarDzM6GNQ4NdhXZ8r5RFDz0Ak=;
-  b=T2ZdBgx+Iy5y82TyxwZHTqzwfItjmDlFaDvligLziD7R8s9N0dty4AK/
-   +809hen39aKPsYgLjoUikhPuXbStTbw7lGMJvINYPU3Xzq9+jHuihIJjg
-   RG4yPihmTQr55wN4nIGvL8vt7ki6SmUkw4x4bbp/S9KBDzWOvXTulsg6g
-   muGmWjYOQujnLcMPUJv9K1kJv5g8H2qKYQpMQYG/vxP+r/9BC2OXfXjFU
-   i4r2KqNLzXMDvbCnBUUSdol1a+G0GSTQ7daczHJtwOWakP6Qpyts6Sxsf
-   Bs1AHRIaPQ81l8HQaGjNCYKUs3+HV5eKLAHqZs+iaiNhYOuY5KxJ/lBnY
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="305687101"
+  bh=hggh57VH2UNbB5OTNAZXvkYvgg+fYqjOQvxJ39ZR0ls=;
+  b=NyUby7rT3EAIPwGj99B21gUB8QeNYasAbYl+oXQaM2zsB17czKwW4AlG
+   2bNuv0RlSmmD7QxaoMOuYRKgO6u/LjdOANU/tQVmH2OcXLIayIKC8dQnv
+   vjYVKHChs6Xkl8DuomPZoMj1TdUEL2FDbbvAW9K12EBzSPt+M9VBaypgC
+   WOk3c1og8nl18xd6Ft+6C/rmUJYeUyDznHLNdxK+wiMYBzKmziXv2LGhE
+   bPpq+0HUTQRbtQhxqqF7UBzzbLDiqGptPxeoBXQxRW7db2zCexF9zgw58
+   /30JTKswJxfXQHnbKj1ye87PyghqQ79dQs7pOXBP8cxlas2ro33IRGANE
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="244913336"
 X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
-   d="scan'208";a="305687101"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 17:21:37 -0800
+   d="scan'208";a="244913336"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 17:24:26 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
-   d="scan'208";a="578638593"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Jan 2022 17:21:36 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="477192753"
+Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
+  by orsmga006.jf.intel.com with ESMTP; 18 Jan 2022 17:24:26 -0800
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 18 Jan 2022 17:21:36 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2308.20; Tue, 18 Jan 2022 17:24:26 -0800
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20 via Frontend Transport; Tue, 18 Jan 2022 17:21:36 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2308.20; Tue, 18 Jan 2022 17:24:25 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20 via Frontend Transport; Tue, 18 Jan 2022 17:24:25 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.20; Tue, 18 Jan 2022 17:21:35 -0800
+ 15.1.2308.20; Tue, 18 Jan 2022 17:24:25 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ElLbHZAXp0Rjilw0kLtVgtT7gG563BzZ2J+ZcP4t96YHwDCFcC568AeG8B1BPtZJ/T1VD5kOfxcaDWohtuGeqd15yjHUUbIBliSf4fBgntVz/8sJw9viGLZnrrgeUo/qbgV8YPCLU1dZErvfJbyUEtMVdG1wP5QURh/2mmJGo0sXdxHfUqIOaAbUx9dLEY+VFLVqYOz83C6aqhgSuBIpThY9zk8r2RChaRbuFJUNlzqsdWGPmCC40U7AqMXoUHYSsJB3ksyOWbLZ3FsceU0DOoiLVojlw3k9oXGRN8FKQhQ2FA62INwtK3zNn3Y4kdFIJsWymb6okh7u1tHi9fhoVQ==
+ b=Evi2asqtRAOREhMtRCywkOLRnmAMwIU9u7eILZJnvD0df3Stsd/c4ryG5uWsm+ORI+6n4t/j/tvhS3OEtYH3mugHuFfujMscrf9sNY2gdv6jOCrW4Ei8qwYsK2j3g54nbHcQOqc5lPUo4o2J42oFPFmNKaIGUA3dCvZB79pkang+nEZErKa/W9+k2K4REgAjTon5Du7Voyjmv7K2rd5qa1ncupXGUIwqqEoCuAG+u2GbwyoJdp2WvBjAmppN7uf7+qsCfk6zCAycecbmj/0VvifBMB+gaEZRSV/KBdk1sKykYKTOAJ6kasQZsc7uvqCnYUcPqJTRgLQGIChOv/iXYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UZRk1hC2e0yodlLyC5BwKmR1hXu7ccqXjP2fgQwwX0E=;
- b=HrwKxvrYbQRN3h+OSkvUmG5AwNuPEiKXGyrOaLkb5WqIyMy12oXFGFkp4Lo4xx+G3C6vF7fRQ66JCIDpI62vWa+abOZGYP9DliXpBGvGNqJcUgrshc910oIHKf6TAa5HWaeTI92920CfB+HPSx5Jlo1I8HZZDR1K/ZQLPIYDPXwjRtTMOh/caeDtseAMMHY5p/PNjciec6OuiZJvg+NxHr1LVxdXXDkI5uiKdxKNCHcQZPjofenvp5dzkBUGic1rluGh5rtjGw1Qd2X/i8+LeOtpo01LlgAtoJMmvxpsSYK4gVjodeoP/CP37wZz8y/I1est90RLuIDT7AiRu727Cw==
+ bh=D2lmv7wvl+Ivg/ErAQSIvOMEoSALIo6tPpo8htjV/5s=;
+ b=iBu11hi6GQpTGmBbqkdlEHRcgAXQF7T4gKwSA7KA3MhTMk4N+2n5zwS0itHmnKACb+iso48iYkY5NZ+DccbZM1AniUwgjwf0QeDFnT2/RZSSZ9LLC4nTdd4rnTghpqxLSbG/tDxt7S65tv6ZQt5SqKfG5/66pdkp8l5yXZNBNY8jcODDeCd5nTtiKZCvy16c+0nkc/+QYyDgQOGWjOTkGZ4HTTAINHFGThVBZTGKarP7upaOWnFfxjI+5OXF8Xh4ME1jWPLpPt0DcDyhQNW64NW4k2/aoOAVvu3l0lgT85XbRooqLGN4KBjXuYwH1rGI3kUOFz7vuKo0mHSmpZiQEQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA2PR11MB5145.namprd11.prod.outlook.com (2603:10b6:806:113::6)
- by SA1PR11MB5900.namprd11.prod.outlook.com (2603:10b6:806:238::21) with
+ by SN6PR11MB3149.namprd11.prod.outlook.com (2603:10b6:805:d5::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.9; Wed, 19 Jan
- 2022 01:21:29 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.12; Wed, 19 Jan
+ 2022 01:24:23 +0000
 Received: from SA2PR11MB5145.namprd11.prod.outlook.com
  ([fe80::992:6137:3ea3:6cfd]) by SA2PR11MB5145.namprd11.prod.outlook.com
  ([fe80::992:6137:3ea3:6cfd%4]) with mapi id 15.20.4909.007; Wed, 19 Jan 2022
- 01:21:29 +0000
-Message-ID: <a5b13036-22a1-6b2f-f40a-8171767b679a@intel.com>
-Date: Tue, 18 Jan 2022 17:21:26 -0800
+ 01:24:23 +0000
+Message-ID: <d399a1cd-39f5-244a-b88b-54c1f17b9437@intel.com>
+Date: Tue, 18 Jan 2022 17:24:20 -0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: [PATCH mptcp-next v2 13/21] mptcp: netlink: Add
- MPTCP_PM_CMD_ANNOUNCE
+Subject: Re: [PATCH mptcp-next v2 10/21] mptcp: handle local addrs announced
+ by userspace PMs
 Content-Language: en-US
 To: Paolo Abeni <pabeni@redhat.com>, <mptcp@lists.linux.dev>
 References: <20220112221523.1829397-1-kishen.maloor@intel.com>
- <20220112221523.1829397-14-kishen.maloor@intel.com>
- <e3e0f5dda757b01930c36ead9c453e99eb4bccac.camel@redhat.com>
+ <20220112221523.1829397-11-kishen.maloor@intel.com>
+ <0e4b1a7f071128a6a775b7e903dc48513a079037.camel@redhat.com>
 From: Kishen Maloor <kishen.maloor@intel.com>
-In-Reply-To: <e3e0f5dda757b01930c36ead9c453e99eb4bccac.camel@redhat.com>
+In-Reply-To: <0e4b1a7f071128a6a775b7e903dc48513a079037.camel@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CO2PR05CA0103.namprd05.prod.outlook.com
- (2603:10b6:104:1::29) To SA2PR11MB5145.namprd11.prod.outlook.com
+X-ClientProxiedBy: MW4PR03CA0258.namprd03.prod.outlook.com
+ (2603:10b6:303:b4::23) To SA2PR11MB5145.namprd11.prod.outlook.com
  (2603:10b6:806:113::6)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -84,197 +88,116 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8146580a-c5b9-426c-cf8d-08d9daea0569
-X-MS-TrafficTypeDiagnostic: SA1PR11MB5900:EE_
-X-Microsoft-Antispam-PRVS: <SA1PR11MB590056FF07FC6251D674287BE1599@SA1PR11MB5900.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-MS-Office365-Filtering-Correlation-Id: c1977a55-ebcd-4eb6-75c3-08d9daea6d08
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3149:EE_
+X-Microsoft-Antispam-PRVS: <SN6PR11MB3149F1B16DACC472C74C7CFFE1599@SN6PR11MB3149.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bwHOlKTsJnxfFArXuUROqlmLJZHbdKijbAyagj/xUXpqmFThHlBznaOWaymAiqx/mHNaYlpGuyFNnbd1Lb4zy74yTUKBgdSmnKHp1eMKUJxiDS4cz/3YgPTBU9XRDVBZ6nvNJo1o2kVnXrKF8nCu0tSu7pOw2KPsVNo6jduVd67g4sjsBaXYNoJr9lPuisiudun6yaYuEQ1oEIzwK2P0YQxPBD2gyTEZmo9mu44nwxD7Aoy873nD1bqEZWVGnu0C52xVgPsu9yVI5a6QR4mUAlSZFNrM9zCQ/BnIyuEthFpxDFyprAG15MJchb2wX1SgJxvD0OnBUPkIw5iNE8V0qZFffJAh3YpA6lAvzpt4csftb+mlfdy2CXkhwXERXWhegHQm7yuvNaOSxcLqHI7HwhHqOTWJOjlNUBftUSUXHEC5OKLhutmNAv/BAV/kq7Gw9mvW4Nu1WJEpF0g0vzH/Y0l9WVxmrgcyhZHizsLXJDKoLLT/22TWzWwbGOGBX+d6cjXkkPPEdLvtb0LgUBB3yxdW6nGAZNop4Rfc1kwESbZk9sU0A7cqb4fPe/Jls/tp3AFkYcWBLE8W2NBGSiCRrGeqGV9TjnDd/6RXQOEalZQaNKAMXCUlu0jYFTLsHRxNstKusSouoO28+oyywQh5/m7PqT9ue9QiLExlo3Wx29IasMklW4vsDj0BulIsNGWc1GF1vmdxjUTkKRsllfOJQBKb2a8d1pqFw2WF2JhanZ53UvsOBYyqSOey5ga87wmi
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR11MB5145.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(31696002)(6512007)(508600001)(8676002)(5660300002)(2616005)(6666004)(86362001)(82960400001)(316002)(186003)(2906002)(31686004)(8936002)(6486002)(36756003)(6506007)(53546011)(26005)(83380400001)(38100700002)(66476007)(66946007)(66556008)(44832011)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: YILNgHDPw8mK2GBnUOvGkGjZFA1V+rPrYwzPQNgLPjQhGdmTet4CCqhYyOEbGHyQIK/ziFuEBbxlR4z8R7VHEXEscSJt5U4VT2O03cu9Av84SowjEUBu4IUvZdDsA2OVvAiXfx2v1up8n4ylOrb6JIW0OzNFwIGvAtD4aZHucTu7D6I4w4++Xtp8+YRudLss+q5non1yjWY/acvnvT7FFGYr8JvGRL+Sxp0nOetAR3s/uzqVffKG/c0FaKUuBdVPJBPW23oMFXW5n07hqqZWfjQcyhD2vCRpqIKKKwbX76QNdTiOCGqDj3SMSp6sind8bnD+uFcMPcBb0+UQpkiUy0PzMjOldjlSOT3A4rnELcObOTCq5+tZkv31pSKFECmUy2EX1de1NIGKwy9S60zi9Awhwlu8kHXRK2y7Ysqs7/k5II4ake53ZboDJMhJhEHlWXsQFRD1fWWuEkBqnlydiP9UOJw1Fc2vTN8pbi03/3WyRTnMMtZXWtY0QYQuo6ydZTbiZiwpOzE3i9sc5Je4hyFWrSq1w6O5lRthf7ZT7cYrSm+thfMD+PpATJBWUlcR9cmRZOufbiOVTFkwCQvQ1kvaitLuRI0gKEGLHaVIUqgI3BS6KO8rM/p41v0AUU6lXMuSj234hJ/4r5O0Ruvsuu2R/c36EoZTfIyb0oOt22QgdTw+OcEp6vqAHt0LHRc8D/GKHRUpitUtLIaL3lprtwt71pnyHbbDPSLkfK/b0x4NeY3ZYk2XZW4JbuLbL8LS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR11MB5145.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(508600001)(8936002)(36756003)(38100700002)(6506007)(53546011)(66476007)(31686004)(6486002)(31696002)(83380400001)(316002)(6512007)(86362001)(2616005)(8676002)(66946007)(82960400001)(5660300002)(26005)(66556008)(2906002)(44832011)(186003)(43740500002)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RDBIbS82cWNuZzhkY2szZnpVVGVUZ3JkdVVCMmJ6c3pkUysrQ3M0MmhsYXFJ?=
- =?utf-8?B?NWNCRkJRMHpaLy9jTWJ1VWNyMytwNGVUQWMyZEhDMCtpWEJGSDJpSEZiMjA3?=
- =?utf-8?B?UUgwTlE2MnZ2VFBPOHA3S3Q0MWl4cFhUVEt3cTkxb3BrYVFpT016OCtVVDJz?=
- =?utf-8?B?WEVBV21EYkVlaExsY3NJSkV2aW9jNDVQRXpFUTE0amNoa2daSUJYTTNnb2Jq?=
- =?utf-8?B?SDFHL1RKa1AyWWF4Tm02ODhCbFRVVkVjYjZXZmVKaTI3OURid1hSWXpKRWV6?=
- =?utf-8?B?WXV5TzNpcTFoTDRnVE9rWlMvejMrVjN5SUNsaVE2MVEvRXZtdU5NVGhSMUZY?=
- =?utf-8?B?Z2xaZU4yWFcvWndUNjZodU1XQmJ0YVprWGpjNUMzTENWUi8vb0QxdWVTVU94?=
- =?utf-8?B?ckZPV0pYTk5lM3dMdFRjcWd5VW5OY1BkYUtaWW85RzFyeWN1a3VNc3FrQ1Ji?=
- =?utf-8?B?R1VWUFQzSS9ud1NDaGFNWVJNVlEyK3prZE9haE4wNU93WjFrV3NQYjJkK2lP?=
- =?utf-8?B?cFdweXRVV0txbjg2T3BCTkVQU29ZNVdsY3VPemlMN1hWd2t2VUp4OGJsdzRX?=
- =?utf-8?B?WnE3M0QyQ2xFTUt3ZzU3dE85MkVhMFc1RGNlMU9oeWlJM0RBUUZQY0p2Lzlh?=
- =?utf-8?B?OUN6aklPcDlhMXdySFkrc1B2aG5TOThrQm5YY1Z4b0cwQTJXcUhaYXRjbjFK?=
- =?utf-8?B?dFdsVHIwQUF6U3dpWldaMWNjdWpDczhmUlZ6dHpKeUt4REE0MU9BT3kzTUNW?=
- =?utf-8?B?QjZYcUJjN2F5WVhTN1JKRUl5MGtFVy80Znl5dWJObmwrQ3VnaWxwSlZONVJE?=
- =?utf-8?B?Skg3WGI4eXRNRUNtbVdzd3lxM2p6SE1jeloram1QWmJVVDZ4cTBTRTN4MnUr?=
- =?utf-8?B?cUxWSnVmVVUxK21NcXYxWDczNTRqRmV0U2ltK2p0Y0p6dkdtZVhObE95SWhS?=
- =?utf-8?B?VHZMVVIvVTYyWElrOUErU09zNnp2VG91ay81VXB6L1RPT2RhblJxendoSDhL?=
- =?utf-8?B?U0pFV1NwYVRoeE1UaUdqSVZ0TEQxYUNsTmpNZzJKNWhuKzNsQkhXdlp2RDQw?=
- =?utf-8?B?cE1STE9ibENTVlNVMnlTeCtzVmgxVnVoNVlKd0ZyV0hJY0gxaCtkLzNJakZk?=
- =?utf-8?B?Y1JjbDJ5ZHlWSlZBa05QY2ViTTRBZUxIdm1hWHNLRnA4MlpTVlhrTnN6aXNS?=
- =?utf-8?B?VmVKL1JNYlMvL1QveXd5Q3gxYnJVTkZic2t2dGp2d1MvNzJDTzVGSHlSR1h6?=
- =?utf-8?B?K1lWd2dvUGdGdXBrVS82SVNiQ2JtWloxWEdxNzJkcDhvTGFPWFpnaFFwQjZz?=
- =?utf-8?B?ZlRFdmJSQzZjNHRBYUF5VVpzV3BDV2I3cmk4ckg3a0o3clpQNTVHZ1ovR0Vp?=
- =?utf-8?B?cUFpcXBqZUdIOUw2RDU0S1VPWFpHcElEZVhaTVZzRkREaFdCNzFaY25zdFBU?=
- =?utf-8?B?NS9aY3RWR1VLazNQMFFFYlRMU1dUSWErVVovWHZ1VGMrd3BwdHk0bnBxMWtr?=
- =?utf-8?B?NXptWG50ZkRHdVA5azFqbnVad09tT0JjK1lEU3JsaWg5bmg4R1dHRm5xVmt1?=
- =?utf-8?B?ZkhoNXJENlBWZVpkd08xTjZpMHVLYXpNZXpyYzljWHpWTWdpRDl2QWxXVUFi?=
- =?utf-8?B?aDU0d21SZlN6L0NVeG9BeXlTbUFYRTVKcmI3emJtWHJNZ2x4dkhOb0sva09P?=
- =?utf-8?B?Zm1LOWhpTU5tUmZRRUxJR1Avb2RtYkVCV3N6emI5bkNwZlJMWnF6SHVCdERx?=
- =?utf-8?B?bWlhTUpTVlBwK1NxamNFREpGWWdINEZkRUVDaGdzSkRMc2luUnk2YXZoOTdl?=
- =?utf-8?B?UlZ5MVJKTENoa25zQnhFa2ZpVTFiR3h2RU5xOHQzME1Nd3Y1RVF2SUNscE5Y?=
- =?utf-8?B?aUlwN2t6L2xrS1h2d0VzREZsZmtCZjNlVUVCdW9KU3V5WXFqbjZER2UyQ29G?=
- =?utf-8?B?ZmNmZnNqd01wblJSVDZVN240KzlGQTVTRVQ3SXBqWGRiZkdTeldIcEZzMmNw?=
- =?utf-8?B?ZEV3Z1g1dnphWk5kT2d1ZnhkU0VzamdnNkRoT0lhUS9Reis2QmM1dkdKMmFY?=
- =?utf-8?B?SUJkZVliWVpiVzc5SlYxTzlLUVJQZkkwRVBxWGNsQkZaQ3M5cmNJbnZJV2ZW?=
- =?utf-8?B?RWN1UGgxQXBIeEN0aU94R2lKZGhtVCtpeXAzOUJndUdjSXhabGFMSWdBUWZ6?=
- =?utf-8?Q?PERtanhVhHoGU+cDo/g8RiY=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8146580a-c5b9-426c-cf8d-08d9daea0569
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d3lUSzNjZHB6czk5Z1J0QkxiNGYydlVOTlpvcXROUG1wM29CK3gxY1BQKzl0?=
+ =?utf-8?B?WHArYkF1NjMxZTV2dmhqZk1mQk1VU2w1azlWc2Vla3Y1SDBvQXlsQ2lUbUpu?=
+ =?utf-8?B?SFNCajVVRjdRb0E0T3R3ZjlRR1ZESHltR3VhamVZTDBnaXZ3UjViK3JhaFI4?=
+ =?utf-8?B?Y1NTVmZIZ2tQSW4yNjU1SzIyQzVZaUpCdklieU04bnpWMFhxTndOZHZIdmF6?=
+ =?utf-8?B?aWkxZHpyS3l0WVhZdHo5dHdhcTd3dzFYVUh6UUVaMkNmME9KOEZxRG5xYTk4?=
+ =?utf-8?B?L0VjcExkNHZTNGt6SzVrT3g1Q3dFb2FSNjFMQnNyRlZzNkpjNUR0d1FRV3Rs?=
+ =?utf-8?B?Wk1tck81eTNSUjJGOEtXWGpGSmN0SGhEeENwSEtSYXN1UXZ3STFKZWxWMTdH?=
+ =?utf-8?B?MTB0ZGlRbGtkRitrVUhNcXVYWkt4enJHcW9jUm5Ca1RpdWNqdXFsR09PMS9Z?=
+ =?utf-8?B?OHpLK3ZJYjIvSmhsc2RpL1BteW5pMGt1dlJIVFJqUVJjamQzMU4zRG5uNGR2?=
+ =?utf-8?B?ODExSGp0dUV4UGlzbnM1cG95RkpGai9PQm5NQlM3YXZRdklZWlYwSkNHMlYx?=
+ =?utf-8?B?TzZySnYzZFVOajlWdUEwWEZSQnJiRk03WUFOVllHREx1bkJpTC8zYXZ1ZGVj?=
+ =?utf-8?B?b3BBRlhCc2pUS2RzaXc1b05QUlVhOCtrWnRYQVVweUx2WWpCRm9uUGtoQmo0?=
+ =?utf-8?B?b3Z5c3VaRUcxT0F1UUdSdElvM1l2elF5cVBXSTVyVlpreXM4M2M1QUxid0s0?=
+ =?utf-8?B?ZWpxRW9ZQTkwWVVsbWM3Z25JdVVmM1ZMV28zY3huemYyd1owS0h0VlptREpH?=
+ =?utf-8?B?T3NPZ0pHOUlZcTM1WlBpYnROTXdJNHJxUnFrM1Y0dW0yRkVrRVB3RUx5OGln?=
+ =?utf-8?B?dHE2MFBmamRYVXVoNXRxNENPVDJZUHJ5OWdySnczYk1hdm9rM2N1MHZ3a3FT?=
+ =?utf-8?B?UHJVbUt0MlJFektMZnN5cHdra0dzbFE3Uk1hUXBrQ1B0d3Q2MlFrYXhvNE1q?=
+ =?utf-8?B?TG1RZDJNSUpKR2RjVHRrYTZ0aXJ0dWM4WEJaMnNEcWhHYWlQZ04xSnQxc2hV?=
+ =?utf-8?B?YlNGczlnMy9wNGEwdm9oRUZzSEhjZmJMczZYMXltNXd2Z0FSVmlkdjNxbXhZ?=
+ =?utf-8?B?VzR0b2tDcmxMN3hDKyttb1A1NzVzL2I0MDYvTzhZOVdLNE9zTFBwWVdNb2dE?=
+ =?utf-8?B?TWl2a0FnYlg0RDlyN3B0S24vN3V6WEYyTmgvT09QNXQ4MG1ZVGo3K0FTLzMx?=
+ =?utf-8?B?YXVLT1gxaHJkbEdpdVNpVFJJMndSNXVGNEZTOE90VHhiWlZWaWpaSC9hMUd4?=
+ =?utf-8?B?allDaWsxZnBzSXlQRDJpYVZWYlZLRklLbTFnUFlMSUF3MGdyMFJiZ0M4VER1?=
+ =?utf-8?B?VXhMQ1lDZ1BWSTh4M1pQcCtMV1QvczBsZzVBYk03OUpuRWpHVjJxdEhrSWNj?=
+ =?utf-8?B?Uk5wcWtwTXpRUmpCK1BVbFJWSmI0YVFiSmtEZS9KZDlGMUVDR25qS1hIZ0Zp?=
+ =?utf-8?B?MkFOdytLSmE4TXZKRk5PbVlheGhheERtRSs1TSt4MGZiUUpyalF3bHM4QXRv?=
+ =?utf-8?B?QWIyZGdNbzQzM3FxRkVSN3hiYnlJQlljdnhtQ1JUT2ROMUdIUjlORHp0a01Q?=
+ =?utf-8?B?cXEwNmdmMHZSZ0x3TEZka2s0WVpFL2VBUmlkN2dodzFVTjlUYkNZTk5tZlJn?=
+ =?utf-8?B?dUhEWk9nUnNvcHA3ZUxSekZOdWhyNHQ4dzdWRDlVZUJOd2hYWDZYOVUyeU9v?=
+ =?utf-8?B?cE84U2RLU3hCUzhCbGNXM1BSanY1NWJLeTJla1dHeFZtbXBGZEVISDc4emZB?=
+ =?utf-8?B?cGJ3M2pCcTR4bFdNbWs0UWdMRWM1RjlkS2IrVzduSmRBNEM3QnlTQ0tQckYw?=
+ =?utf-8?B?R25nc3VQc2hEMHF0cHRsRFhlMWFSL2d3TXgrSHdUSWIrZVBiNTBlaFVyRXVJ?=
+ =?utf-8?B?YWxjNWVHSlZlbTl0b0RuenFzL2YyMUV5UFFrQVdMUnVKbXBxYUt1Ym04dlNH?=
+ =?utf-8?B?NGNRMGRSZEI4RHo4WnFLaDNLU1grVnV3dTdmU1FMekV4RkYySVRGbjdOZG8z?=
+ =?utf-8?B?SXRVZEZCK0kzc0RxVVRERHpJbmthd0hLSW1FWjFmem0rNlhLb3p2SXhXQnJI?=
+ =?utf-8?B?U1pFMzhZTmZiOU83SStkNDlvaDNlcDhLRHE1SlpKT2NvbnJxOEppRXYrdi9R?=
+ =?utf-8?Q?GwSZrBbSnog9aimZLxcxcew=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1977a55-ebcd-4eb6-75c3-08d9daea6d08
 X-MS-Exchange-CrossTenant-AuthSource: SA2PR11MB5145.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2022 01:21:29.8439
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2022 01:24:23.7527
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9AkjBYszChb6qRG44Wek4j9w/6ghQqhXf/iyhmo1orRBnaeoR1iN+q/KLDle/6nZmvtZEpE1o7goAzT7qax/Cg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5900
+X-MS-Exchange-CrossTenant-UserPrincipalName: IkvuNvF5bEhwPwJpQLDhnFVkDQFu5eYs0HQxfUn8PmMIEqarBmROeFmN+3SUw+Wix1iop12qBiUOrmIMn/rPag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3149
 X-OriginatorOrg: intel.com
 
-On 1/14/22 9:04 AM, Paolo Abeni wrote:
+On 1/14/22 9:11 AM, Paolo Abeni wrote:
 > On Wed, 2022-01-12 at 17:15 -0500, Kishen Maloor wrote:
->> This change adds a MPTCP netlink interface for issuing
->> ADD_ADDR advertisements over the chosen MPTCP connection from a
->> userspace path manager.
+>> This change adds a new internal function to store/retrieve local
+>> addrs announced by userspace PM implementations from the kernel
+>> context. The function does not stipulate any limitation on the #
+>> of addrs, and handles the requirements of three scenarios:
+>> 1) ADD_ADDR announcements (which require that a local id be
+>> provided), 2) retrieving the local id associated with an address,
+>> also where one may need to be assigned, and 3) reissuance of
+>> ADD_ADDRs when there's a successful match of addr/id.
 >>
->> The command requires the following parameters:
->> { token, { loc_id, family, daddr4 | daddr6 [, dport] } [, if_idx],
->> flags/signal }.
->>
->> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
->> ---
->>  include/uapi/linux/mptcp.h |   2 +
->>  net/mptcp/pm_netlink.c     | 111 +++++++++++++++++++++++++++++++++++++
->>  2 files changed, 113 insertions(+)
->>
->> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
->> index f106a3941cdf..40380be396c8 100644
->> --- a/include/uapi/linux/mptcp.h
->> +++ b/include/uapi/linux/mptcp.h
->> @@ -55,6 +55,7 @@ enum {
->>  	MPTCP_PM_ATTR_ADDR,				/* nested address */
->>  	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
->>  	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
->> +	MPTCP_PM_ATTR_TOKEN,				/* u32 */
->>  
->>  	__MPTCP_PM_ATTR_MAX
->>  };
->> @@ -92,6 +93,7 @@ enum {
->>  	MPTCP_PM_CMD_SET_LIMITS,
->>  	MPTCP_PM_CMD_GET_LIMITS,
->>  	MPTCP_PM_CMD_SET_FLAGS,
->> +	MPTCP_PM_CMD_ANNOUNCE,
->>  
->>  	__MPTCP_PM_CMD_AFTER_LAST
->>  };
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 07536abab3e5..18228b2dfa2d 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -1268,6 +1268,7 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_PM_ATTR_MAX + 1] = {
->>  					NLA_POLICY_NESTED(mptcp_pm_addr_policy),
->>  	[MPTCP_PM_ATTR_RCV_ADD_ADDRS]	= { .type	= NLA_U32,	},
->>  	[MPTCP_PM_ATTR_SUBFLOWS]	= { .type	= NLA_U32,	},
->> +	[MPTCP_PM_ATTR_TOKEN]		= { .type	= NLA_U32,	},
->>  };
->>  
->>  void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
->> @@ -2028,6 +2029,111 @@ static int mptcp_nl_addr_backup(struct net *net,
->>  	return ret;
->>  }
->>  
->> +static int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
->> +{
->> +	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
->> +	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
->> +	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
->> +	struct mptcp_pm_addr_entry addr_val;
->> +	struct mptcp_local_lsk *lsk_ref;
->> +	bool reuse_port = false;
->> +	struct mptcp_sock *msk;
->> +	struct socket *lsk;
->> +	u32 token_val;
->> +	int err;
->> +
->> +	if (!addr || !token) {
->> +		GENL_SET_ERR_MSG(info, "missing required inputs");
->> +		return -EINVAL;
->> +	}
->> +
->> +	token_val = nla_get_u32(token);
->> +
->> +	msk = mptcp_token_get_sock(sock_net(skb->sk), token_val);
->> +	if (!msk) {
->> +		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (READ_ONCE(msk->pm.pm_type) != MPTCP_PM_TYPE_USERSPACE) {
->> +		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
->> +		return -EINVAL;
->> +	}
->> +
->> +	err = mptcp_pm_parse_entry(addr, info, true, &addr_val);
->> +	if (err < 0) {
->> +		GENL_SET_ERR_MSG(info, "error parsing local address");
->> +		return err;
->> +	}
->> +
->> +	if (addr_val.addr.id == 0 || !(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
->> +		GENL_SET_ERR_MSG(info, "invalid addr id or flags");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (!addr_val.addr.port) {
->> +		addr_val.addr.port =
->> +			((struct inet_sock *)inet_sk
->> +			 ((struct sock *)msk))->inet_sport;
->> +
->> +		reuse_port = true;
->> +	}
->> +
->> +	lsk_ref = lsk_list_find(pernet, &addr_val.addr);
->> +
->> +	if (!lsk_ref) {
->> +		err = mptcp_pm_nl_create_listen_socket(skb->sk, &addr_val, &lsk);
->> +		if ((err && !reuse_port) || (err && (err != -EADDRINUSE) && reuse_port)) {
->> +			GENL_SET_ERR_MSG(info, "error creating listen socket");
->> +			return err;
->> +		}
->> +
->> +		if (lsk) {
->> +			lsk_ref = lsk_list_add(pernet, &addr_val.addr, lsk);
->> +			if (!lsk_ref) {
->> +				GENL_SET_ERR_MSG(info, "can't allocate lsk ref");
->> +				sock_release(lsk);
->> +				return -ENOMEM;
->> +			}
->> +		}
->> +	}
+>> The list of all stored local addr entries is held under the
+>> MPTCP sock structure. This list, if not released by the REMOVE_ADDR
+>> flow is freed while the sock is destructed.
 > 
-> It looks like that the above chunk of code is sort of recurring. it's
-> likely worthy to factor it in some helper alike
-> "lsk_list_find_or_create()"
+> It feels strange to me that we need to maintain an additional addresses
+> list inside the kernel for the user-space PM - which should take care
+> of all the status information.
 
-The find->create_listen_sock sequence is run in 3 places, but there are deviations in
-the logic that follows a failed create_listen_sock. Hence, I did not over optimize.
-But I will check if it makes sense to refactor.
+The PM daemon will have the complete picture, but the protocol needs to know the
+local ids assigned to addresses so as such the kernel has to store addresses 
+(with their ids) regardless of PM. 
 
 > 
-> Cheers,
+> Why anno_list is not enough? Why isn't cheapest to extend it? 
+
+The anno_list is the list of addresses that were announced via the ADD_ADDR command, to
+be used specifically for doing re-transmissions.
+
+However, the implementation can also accept connections at local addresses that were not
+explicitly announced (hence not in anno_list), and in this case the kernel records the address
+and assigns it a local id unique in the scope of its connection.
+
+So basically msk->local_addr_list is the list of all known local addresses, both announced 
+and not so their ids can be later retrieved.
+
+To give you more context, in my last iteration of the code before I posted the series, I was storing local addrs
+in pernet->local_addr_list just as its done for the kernel PM, but later moved it to
+a per-msk list to eliminate contention (in accessing that list) with other userspace or kernel
+PM managed connections.
+
 > 
-> Paolo
+> Being the list unlimited a malicius (or buggy) user-space could consume
+> all the kernel memory. I think we need some limits, or at least some
+> accounting.
+
+At this point we're taking the PM daemon as a trusted entity which can issue these
+netlink commands for path management. So there is currently no configurable ceiling
+in the kernel on the size of the PM's kernel stored context.
+
+> 
+> /P
 > 
 
