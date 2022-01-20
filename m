@@ -1,39 +1,38 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199EF168
-	for <mptcp@lists.linux.dev>; Thu, 20 Jan 2022 00:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E172C82
+	for <mptcp@lists.linux.dev>; Thu, 20 Jan 2022 01:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642637188; x=1674173188;
+  t=1642640515; x=1674176515;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=HzAtL0GGZJa4oc0Iqlt3OwZGrjpH6qoKHvtFd6YfTFk=;
-  b=XcbjyhoJIYJABZQgP8bTtDWwOByEgoKllh1AhucK76fwHnzdvOPdJRrP
-   dWHP0bKnfQDryB8pb5Dz48sQlHwwsOAN+YCyK8/M2b+9T4QWXi1zLHMje
-   8imkpiKsDbfZ9+7QSx4wjQ+8zu606pMdc85Tfdn1dQkoNcMibKnBwlUv1
-   nQ/3aCkbUiU0vjilm9juO1DSSKjNC0Kr0CHPx1+4uUhKtiCQbptuuMh99
-   sD9Bjd9fJCaZPcLPC52VJIRPTAbpa1Vgnwv+Cltp8zlVrMDVImzP69wjO
-   zf+Kpf7xsD7cjv0NGWbA8kx5Slv8wbJnyNCL7vEPoiXpY9K4Zp08Re4Us
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="305962841"
+  bh=68+MpkJpkRi3Wb3SfgAmZGAFd3r1kQVs2pywEYQFONc=;
+  b=JMluYs2sY9OD8UgIjWlrSVYveAn1u9pP6pUEVxOCev6FVIV144KsKrmx
+   D0VRYFHry11yalu01uIUary+BJn0r9lkcPUy9JAbJaRzm4UwaaijQUnqB
+   1kMRaa8nwGAIfG4I6xuQ8ggVVqVLLt5YJ86GPh+gUWZe5y6ENg5Lbus8R
+   nNO0tlI6Pmin53KPXKF1yapR8k8xhy4nq+hQ4vpCZ+qKTCGQevg60n+yb
+   UlEVXvRUE+d0Hxb8GZXwCE/pMWoWMeqY49AxpRVIs2zif8m18K/VZ07id
+   nr3oFE7jyVrka5Lx2KwyDiS2wE3grVhfWhG8bIZ3rEZJMrT0D3FNC8vjv
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="244061895"
 X-IronPort-AV: E=Sophos;i="5.88,300,1635231600"; 
-   d="scan'208";a="305962841"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 16:06:27 -0800
+   d="scan'208";a="244061895"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 17:01:54 -0800
 X-IronPort-AV: E=Sophos;i="5.88,300,1635231600"; 
-   d="scan'208";a="672361553"
+   d="scan'208";a="532556706"
 Received: from anikkhan-mobl.amr.corp.intel.com ([10.212.249.54])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 16:06:26 -0800
-Date: Wed, 19 Jan 2022 16:06:26 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 17:01:53 -0800
+Date: Wed, 19 Jan 2022 17:01:53 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: add invert check in
- check_transfer
-In-Reply-To: <ed191af941837d4c63ea37a9a863dc39904571d2.1642570570.git.geliang.tang@suse.com>
-Message-ID: <d6e12420-bc8e-9369-8acf-702539b2fe87@linux.intel.com>
-References: <ed191af941837d4c63ea37a9a863dc39904571d2.1642570570.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v2 00/10] set flags and selftests
+In-Reply-To: <cover.1642320655.git.geliang.tang@suse.com>
+Message-ID: <c135c322-e71f-f525-ba83-ea53691e65f@linux.intel.com>
+References: <cover.1642320655.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,107 +41,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 19 Jan 2022, Geliang Tang wrote:
+On Sun, 16 Jan 2022, Geliang Tang wrote:
 
-> This patch added the invert bytes check for the output data in
-> check_transfer().
+> v2:
+> - use a mask of changed flags as Mat suggested.
+> - squash patch 8 and patch 9 in v1 into one.
 >
-> Instead of the file mismatch error:
->
->  [ FAIL ] file received by server does not match (in, out):
->  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.9xpM6Paivv
->  Trailing bytes are:
->  MPTCP_TEST_FILE_END_MARKER
->  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.wnz1Yp4u7Z
->  Trailing bytes are:
->  MPTCP_TEST_FILE_END_MARKER
->
-> Print out the inverted bytes like this:
->
->  file received by server has inverted byte at 7454789
->  file received by server has inverted byte at 7454790
->  file received by server has inverted byte at 7454791
->  file received by server has inverted byte at 7454792
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> v3:
-> - add the check_invert flag, do the invert bytes check only when this flag
-> is set.
-> - use 0xff directly.
-> - update the output log.
 
-Hi Geliang -
-
-Looks good to me, thanks for the updates! Please update "selftests: mptcp: 
-add mp_fail testcases" for the inversion check.
+v2 looks ready for the export branch, thanks Geliang.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
+> Geliang Tang (10):
+>  mptcp: set fullmesh flag in pm_netlink
+>  selftests: mptcp: set fullmesh flag in pm_nl_ctl
+>  selftests: mptcp: add fullmesh setting tests
+>  mptcp: allow to use port and non-signal in set_flags
+>  selftests: mptcp: add the port argument for set_flags
+>  selftests: mptcp: add backup with port testcase
+>  selftests: mptcp: add ip mptcp wrappers
+>  selftests: mptcp: add wrapper for showing addrs
+>  selftests: mptcp: add wrapper for setting flags
+>  selftests: mptcp: set ip_mptcp in command line
 >
-> v2:
-> - instead of adding a new function is_invert, add the invert bytes
->   check in check_transfer().
-> ---
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++++++++++++------
-> 1 file changed, 17 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 2be3cad4b52b..4f8ee8a9a8f2 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -15,6 +15,7 @@ timeout_test=$((timeout_poll * 2 + 1))
-> mptcp_connect=""
-> capture=0
-> checksum=0
-> +check_invert=0
-> do_all_tests=1
->
-> TEST_COUNT=0
-> @@ -58,6 +59,8 @@ init()
-> 		fi
-> 	done
->
-> +	check_invert=0
-> +
-> 	#  ns1              ns2
-> 	# ns1eth1    ns2eth1
-> 	# ns1eth2    ns2eth2
-> @@ -193,15 +196,21 @@ check_transfer()
-> 	out=$2
-> 	what=$3
->
-> -	cmp "$in" "$out" > /dev/null 2>&1
-> -	if [ $? -ne 0 ] ;then
-> -		echo "[ FAIL ] $what does not match (in, out):"
-> -		print_file_err "$in"
-> -		print_file_err "$out"
-> -		ret=1
-> +	cmp -l "$in" "$out" | while read line; do
-> +		local arr=($line)
->
-> -		return 1
-> -	fi
-> +		let sum=0${arr[1]}+0${arr[2]}
-> +		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
-> +			echo "[ FAIL ] $what does not match (in, out):"
-> +			print_file_err "$in"
-> +			print_file_err "$out"
-> +			ret=1
-> +
-> +			return 1
-> +		else
-> +			echo "$what has inverted byte at ${arr[0]}"
-> +		fi
-> +	done
->
-> 	return 0
-> }
-> -- 
-> 2.31.1
->
->
+> net/mptcp/pm_netlink.c                        |  50 +-
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 936 +++++++++++-------
+> tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  19 +-
+> 3 files changed, 616 insertions(+), 389 deletions(-)
 >
 
 --
