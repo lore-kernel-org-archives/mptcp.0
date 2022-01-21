@@ -1,28 +1,28 @@
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9EE2CA9
-	for <mptcp@lists.linux.dev>; Fri, 21 Jan 2022 00:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450C92CAD
+	for <mptcp@lists.linux.dev>; Fri, 21 Jan 2022 00:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642725339; x=1674261339;
+  t=1642725340; x=1674261340;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0BGbOTx/lurssaXCoUHuwmVPIkh6j2wbdvVsR1sRXc0=;
-  b=cOc/+usJ2BqzBcpqZ8Aq7Vi+Q1US+x7IJauqfAp7oynWVKfSpFCF598s
-   FC+mZ9eon5iTAmm2PuI8h6SxPFbLGHnwTz4bSKDeKQ9DoJMDG4XbsdVaZ
-   IqfPt/sZB1DaVVJjws8GuuPNPjUOHSDZtnDunzrw4aCQn80TrH/gfpHZ/
-   QkKaVpnxTqbE2IGPu4FXCgppLyfnt9V0sGY+UghLwurK3U/GFCzlIRj9E
-   InKOUtxySgWONBCo6OR5xZVo9zH+HJIOqWFVYOXkiKaZ/o1hXEGZU4BT+
-   aSz+qDWKln+/l0ZyUWHQtSh8OGQv8l7M3OyFH2odbdL4xJlpegQ7tJIaN
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10233"; a="232886196"
+  bh=37OiH+ekDV4sczue07YU3KYi/b272WtlcVytdrNcBoc=;
+  b=HI604TMb9tLk0QTwIAkalZ8kRViGhKo3p9bN5c7OEtcPDLcP6wg4PcHu
+   Dz6HKjJvaWn0odg90MJJzh2E5lnrE76lryvmEG3a7EGqw4a9S1batsqr8
+   yCt0DS7rOeIpxKIZhYP5DRcs9iG5MNR+IyoFnR9XprJGWB1LvVE5WAWlO
+   COK/dPivgis3sZaQvDI8rPnS/Lb+o4T0/oNaVL21TYB1tHMx2NgekrQit
+   CwIgxqu6rHCjiJhbMF50CqFhvqtM027wsx0XzlquPwjaIOZJJdXIApyNY
+   WYVSBsAxgeA89wew/ibpT1jFOckqhUAFMAdmQxbKnuNIBbK6KzjZcKzJD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10233"; a="232886198"
 X-IronPort-AV: E=Sophos;i="5.88,303,1635231600"; 
-   d="scan'208";a="232886196"
+   d="scan'208";a="232886198"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 16:35:37 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 16:35:38 -0800
 X-IronPort-AV: E=Sophos;i="5.88,303,1635231600"; 
-   d="scan'208";a="531215215"
+   d="scan'208";a="531215221"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.220.167])
   by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 16:35:37 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -31,12 +31,12 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
-	geliang.tang@suse.com,
 	mptcp@lists.linux.dev,
+	Geliang Tang <geliang.tang@suse.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 1/3] mptcp: fix msk traversal in mptcp_nl_cmd_set_flags()
-Date: Thu, 20 Jan 2022 16:35:27 -0800
-Message-Id: <20220121003529.54930-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 3/3] selftests: mptcp: fix ipv6 routing setup
+Date: Thu, 20 Jan 2022 16:35:29 -0800
+Message-Id: <20220121003529.54930-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220121003529.54930-1-mathew.j.martineau@linux.intel.com>
 References: <20220121003529.54930-1-mathew.j.martineau@linux.intel.com>
@@ -50,77 +50,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-The MPTCP endpoint list is under RCU protection, guarded by the
-pernet spinlock. mptcp_nl_cmd_set_flags() traverses the list
-without acquiring the spin-lock nor under the RCU critical section.
+MPJ ipv6 selftests currently lack per link route to the server
+net. Additionally, ipv6 subflows endpoints are created without any
+interface specified. The end-result is that in ipv6 self-tests
+subflows are created all on the same link, leading to expected delays
+and sporadic self-tests failures.
 
-This change addresses the issue performing the lookup and the endpoint
-update under the pernet spinlock.
+Fix the issue by adding the missing setup bits.
 
-Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
+Fixes: 523514ed0a99 ("selftests: mptcp: add ADD_ADDR IPv6 test cases")
+Reported-and-tested-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 37 +++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 75af1f701e1d..f17a09f7fbf9 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -478,6 +478,20 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
- 	return NULL;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 27d0eb9afdca..b8bdbec0cf69 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -75,6 +75,7 @@ init()
+ 
+ 		# let $ns2 reach any $ns1 address from any interface
+ 		ip -net "$ns2" route add default via 10.0.$i.1 dev ns2eth$i metric 10$i
++		ip -net "$ns2" route add default via dead:beef:$i::1 dev ns2eth$i metric 10$i
+ 	done
  }
  
-+static struct mptcp_pm_addr_entry *
-+__lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
-+	      bool lookup_by_id)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+
-+	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+		if ((!lookup_by_id && addresses_equal(&entry->addr, info, true)) ||
-+		    (lookup_by_id && entry->addr.id == info->id))
-+			return entry;
-+	}
-+	return NULL;
-+}
-+
- static int
- lookup_id_by_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
- {
-@@ -1763,18 +1777,21 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
- 			return -EOPNOTSUPP;
- 	}
+@@ -1476,7 +1477,7 @@ ipv6_tests()
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 dev ns2eth3 flags subflow
+ 	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
+ 	chk_join_nr "single subflow IPv6" 1 1 1
  
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if ((!lookup_by_id && addresses_equal(&entry->addr, &addr.addr, true)) ||
--		    (lookup_by_id && entry->addr.id == addr.addr.id)) {
--			mptcp_nl_addr_backup(net, &entry->addr, bkup);
--
--			if (bkup)
--				entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
--			else
--				entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
--		}
-+	spin_lock_bh(&pernet->lock);
-+	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
-+	if (!entry) {
-+		spin_unlock_bh(&pernet->lock);
-+		return -EINVAL;
- 	}
- 
-+	if (bkup)
-+		entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-+	else
-+		entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-+	addr = *entry;
-+	spin_unlock_bh(&pernet->lock);
-+
-+	mptcp_nl_addr_backup(net, &addr.addr, bkup);
- 	return 0;
- }
- 
+@@ -1511,7 +1512,7 @@ ipv6_tests()
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ 	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 dev ns2eth3 flags subflow
+ 	run_tests $ns1 $ns2 dead:beef:1::1 0 -1 -1 slow
+ 	chk_join_nr "remove subflow and signal IPv6" 2 2 2
+ 	chk_add_nr 1 1
 -- 
 2.34.1
 
