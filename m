@@ -1,101 +1,233 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450C92CAD
-	for <mptcp@lists.linux.dev>; Fri, 21 Jan 2022 00:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868FF168
+	for <mptcp@lists.linux.dev>; Fri, 21 Jan 2022 04:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642725340; x=1674261340;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=37OiH+ekDV4sczue07YU3KYi/b272WtlcVytdrNcBoc=;
-  b=HI604TMb9tLk0QTwIAkalZ8kRViGhKo3p9bN5c7OEtcPDLcP6wg4PcHu
-   Dz6HKjJvaWn0odg90MJJzh2E5lnrE76lryvmEG3a7EGqw4a9S1batsqr8
-   yCt0DS7rOeIpxKIZhYP5DRcs9iG5MNR+IyoFnR9XprJGWB1LvVE5WAWlO
-   COK/dPivgis3sZaQvDI8rPnS/Lb+o4T0/oNaVL21TYB1tHMx2NgekrQit
-   CwIgxqu6rHCjiJhbMF50CqFhvqtM027wsx0XzlquPwjaIOZJJdXIApyNY
-   WYVSBsAxgeA89wew/ibpT1jFOckqhUAFMAdmQxbKnuNIBbK6KzjZcKzJD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10233"; a="232886198"
-X-IronPort-AV: E=Sophos;i="5.88,303,1635231600"; 
-   d="scan'208";a="232886198"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 16:35:38 -0800
-X-IronPort-AV: E=Sophos;i="5.88,303,1635231600"; 
-   d="scan'208";a="531215221"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.220.167])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 16:35:37 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Geliang Tang <geliang.tang@suse.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 3/3] selftests: mptcp: fix ipv6 routing setup
-Date: Thu, 20 Jan 2022 16:35:29 -0800
-Message-Id: <20220121003529.54930-4-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220121003529.54930-1-mathew.j.martineau@linux.intel.com>
-References: <20220121003529.54930-1-mathew.j.martineau@linux.intel.com>
+  t=1642739251; x=1674275251;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1X79nRDyw6KkdAlUqihUcVZBXEhAEc/zAMFFkBnn5+I=;
+  b=fj/djepwGwuZplTDd2r1FB6LK23jYKdZjN/C/sf3rwG6W4prhLA5e9mU
+   fGlzbEs+N5da4KxxDmdgF/C+JJKJHPuZGWbmfe2eg9SDUDzWfutTJKIVz
+   WfFpe5NMwiGbQwxHFvOsUH8XvPr0UIKct8/4WqaZ5Qd5dsjjuv6wSndig
+   gkMSyTUVoKEjn1xuUTKxsDSnI3hiwjKeChPZVAY/VY23/LsuokqArI6PO
+   Td67nVA72fOCb+KQ89KjeStvJQlmw9qOZeq62Wdt7kp6dSNkDYfHJDnaj
+   utOc61ksB38ULQmpdkRS0DeD8tPmhHtdCgfextY5LTdMU1XUiq+tg8JCg
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10233"; a="331913052"
+X-IronPort-AV: E=Sophos;i="5.88,304,1635231600"; 
+   d="scan'208";a="331913052"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 20:27:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,304,1635231600"; 
+   d="scan'208";a="596009540"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Jan 2022 20:27:29 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1nAlWK-000Etq-US; Fri, 21 Jan 2022 04:27:28 +0000
+Date: Fri, 21 Jan 2022 12:27:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Subject: [mptcp:export] BUILD SUCCESS
+ e8c56cbe2875bb1495df22277e6bf0d970248a4a
+Message-ID: <61ea3617.9dK3aoaHtcQASm9z%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
+branch HEAD: e8c56cbe2875bb1495df22277e6bf0d970248a4a  DO-NOT-MERGE: mptcp: enabled by default
 
-MPJ ipv6 selftests currently lack per link route to the server
-net. Additionally, ipv6 subflows endpoints are created without any
-interface specified. The end-result is that in ipv6 self-tests
-subflows are created all on the same link, leading to expected delays
-and sporadic self-tests failures.
+elapsed time: 727m
 
-Fix the issue by adding the missing setup bits.
+configs tested: 163
+configs skipped: 4
 
-Fixes: 523514ed0a99 ("selftests: mptcp: add ADD_ADDR IPv6 test cases")
-Reported-and-tested-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+mips                 randconfig-c004-20220120
+sh                          urquell_defconfig
+sh                          sdk7780_defconfig
+sh                               j2_defconfig
+arm                           stm32_defconfig
+sh                          landisk_defconfig
+arm                           corgi_defconfig
+powerpc                       eiger_defconfig
+xtensa                       common_defconfig
+ia64                      gensparse_defconfig
+arm                     eseries_pxa_defconfig
+m68k                        m5307c3_defconfig
+powerpc                     mpc83xx_defconfig
+mips                            gpr_defconfig
+ia64                             alldefconfig
+m68k                       m5208evb_defconfig
+powerpc                     rainier_defconfig
+arm                           h5000_defconfig
+mips                     decstation_defconfig
+sparc                            allyesconfig
+mips                        bcm47xx_defconfig
+mips                 decstation_r4k_defconfig
+sh                           se7721_defconfig
+xtensa                generic_kc705_defconfig
+sh                          polaris_defconfig
+arm                       imx_v6_v7_defconfig
+m68k                          sun3x_defconfig
+sparc                       sparc32_defconfig
+powerpc                 mpc834x_mds_defconfig
+m68k                       m5475evb_defconfig
+x86_64                              defconfig
+powerpc                         wii_defconfig
+s390                          debug_defconfig
+powerpc                       maple_defconfig
+m68k                       m5275evb_defconfig
+arm                            mps2_defconfig
+powerpc                  iss476-smp_defconfig
+arm                  randconfig-c002-20220120
+arm                  randconfig-c002-20220116
+arm                  randconfig-c002-20220117
+arm                  randconfig-c002-20220118
+arm                  randconfig-c002-20220119
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64               randconfig-a016-20220117
+x86_64               randconfig-a012-20220117
+x86_64               randconfig-a013-20220117
+x86_64               randconfig-a011-20220117
+x86_64               randconfig-a014-20220117
+x86_64               randconfig-a015-20220117
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                randconfig-r042-20220121
+arc                  randconfig-r043-20220121
+s390                 randconfig-r044-20220121
+riscv                randconfig-r042-20220119
+riscv                randconfig-r042-20220117
+arc                  randconfig-r043-20220116
+arc                  randconfig-r043-20220117
+s390                 randconfig-r044-20220117
+arc                  randconfig-r043-20220118
+arc                  randconfig-r043-20220119
+s390                 randconfig-r044-20220119
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+x86_64                        randconfig-c007
+arm                  randconfig-c002-20220120
+riscv                randconfig-c006-20220120
+powerpc              randconfig-c003-20220120
+mips                 randconfig-c004-20220120
+i386                          randconfig-c001
+powerpc                     ppa8548_defconfig
+powerpc                       ebony_defconfig
+mips                        omega2p_defconfig
+x86_64                           allyesconfig
+arm                      tct_hammer_defconfig
+powerpc               mpc834x_itxgp_defconfig
+powerpc                     kmeter1_defconfig
+x86_64               randconfig-a005-20220117
+x86_64               randconfig-a004-20220117
+x86_64               randconfig-a001-20220117
+x86_64               randconfig-a006-20220117
+x86_64               randconfig-a003-20220117
+i386                 randconfig-a001-20220117
+i386                 randconfig-a006-20220117
+i386                 randconfig-a004-20220117
+i386                 randconfig-a002-20220117
+i386                 randconfig-a003-20220117
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+i386                 randconfig-a005-20220117
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64               randconfig-a002-20220117
+riscv                randconfig-r042-20220120
+hexagon              randconfig-r045-20220120
+hexagon              randconfig-r041-20220120
+riscv                randconfig-r042-20220118
+hexagon              randconfig-r045-20220116
+hexagon              randconfig-r045-20220117
+hexagon              randconfig-r045-20220118
+hexagon              randconfig-r045-20220119
+riscv                randconfig-r042-20220116
+hexagon              randconfig-r041-20220118
+hexagon              randconfig-r041-20220119
+s390                 randconfig-r044-20220118
+s390                 randconfig-r044-20220116
+hexagon              randconfig-r041-20220116
+hexagon              randconfig-r041-20220117
+
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 27d0eb9afdca..b8bdbec0cf69 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -75,6 +75,7 @@ init()
- 
- 		# let $ns2 reach any $ns1 address from any interface
- 		ip -net "$ns2" route add default via 10.0.$i.1 dev ns2eth$i metric 10$i
-+		ip -net "$ns2" route add default via dead:beef:$i::1 dev ns2eth$i metric 10$i
- 	done
- }
- 
-@@ -1476,7 +1477,7 @@ ipv6_tests()
- 	reset
- 	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- 	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 dev ns2eth3 flags subflow
- 	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
- 	chk_join_nr "single subflow IPv6" 1 1 1
- 
-@@ -1511,7 +1512,7 @@ ipv6_tests()
- 	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- 	ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
- 	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
--	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 dev ns2eth3 flags subflow
- 	run_tests $ns1 $ns2 dead:beef:1::1 0 -1 -1 slow
- 	chk_join_nr "remove subflow and signal IPv6" 2 2 2
- 	chk_add_nr 1 1
--- 
-2.34.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
