@@ -1,47 +1,48 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D162C9C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923382CA8
 	for <mptcp@lists.linux.dev>; Sat, 22 Jan 2022 09:32:03 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id d10so6768193eje.10
-        for <mptcp@lists.linux.dev>; Sat, 22 Jan 2022 01:32:02 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id s5so6756888ejx.2
+        for <mptcp@lists.linux.dev>; Sat, 22 Jan 2022 01:32:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tlDv4gZbdVacz06p8V3Lhy23EGWDxyl64uR68uWlQWo=;
-        b=RyMKsmJG3bI/EYmjyFQT2E9wZdBzPAiEJ6FrlYesHgskqHJUxuEWwatuodgojZyvw3
-         UUhHCqRiTLiU5b5igoPYCvdvlZR4gjI0aBccP1DLh+DT8/yUkRWsv4/rVBzbpQm1++Zq
-         pgBQnHt0CwNlN9hVjap+DKGqM8ujXJ8DC6ecohRMwRRI4lzo7pMaBcYxSbG9Ixw94QdJ
-         ABSGDCpF0P35hbbwiaRvmwtDz0WLXdVTTp1HxDPnFIU/EL+cnRIQO0xEMmons+OYIDP4
-         0R/i/WkFZwzXp0F06TpF14ILjjbr4afgSFAO46MfBM8FE3Rx0bRYKmweIo0SozGMG98P
-         nrVw==
+        bh=wiKxGhVxsNISAMRH82PbmIbZTtNQt0gphY/DFBwNz2M=;
+        b=l6LgnfcqWCeR0riv3Rw2Vi3dXfkI+I3ILjEKqhXZiVZq7AyQS3OEmpOGmyEouosIhY
+         QVkKrR0vLXi45kb3uchn7JRk0WQmdtalzd8QI9JBYwofYrFIQCT9Sy3egSSccKiAmb9E
+         kWqaSC4QFP/P/kWQWh9b1L4ySiGXeRE6lp3kmYlQrqRz/2dPGJCDUcIvONvBgUM3Spzb
+         ZeVQY7ocq8f7f0Nsl2ShNTNv8U9fBpcFR3NIMN16hxnMzwwaQHrWstXpErvgBk6HLeaO
+         KI17RE2QcDD0imVbqejGT45By4lNmYMoM+rKwNhuznrKEtHrr18+bR/lOyslC3AxHbhe
+         Io9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tlDv4gZbdVacz06p8V3Lhy23EGWDxyl64uR68uWlQWo=;
-        b=SApoAcqT136lnGgZmZzr8zQK5iA+Nw9EgWEfe574j3O25tSrEp8GaR+bYIv9aacmV4
-         W2byV4yE9Tkg32XbS3rnaZysWvPS5BA4LxaXSII8nO1rNKxB5uMnVc3v5sOebx46S5Y0
-         QHQw1iEMkKL+OB9bQuUf1NRBnuq2njGLyXT0BG1vO9RJ5NkTXXILA8hAwm4nxNQ3bWZK
-         9Ar69onscwA0N2JEfi4rizGKjuNpvqHrIaxWliSkemg1hoXWZCE1a6DpPFbqY4itmh+x
-         16gXMOK+hcLs+LQHP8j3AYlWNWCbKQeJ0yzjW0t/SqD61MjkozgSADA90saX2VYws+I4
-         thYQ==
-X-Gm-Message-State: AOAM530F6kozgmtZA1ktDr0QfXYKIi1Z9K9LjAT0cV5e0T+eoBzmts7S
-	p6tcjWTwuWLvUJe9zmd93rengX0tcvtUW8+M
-X-Google-Smtp-Source: ABdhPJzGuSO1XdiOnJ2kCJqd/H0kCOfMr9v2VZFPFeGiDreV8HubOoaouVppvQ9z9yUmVcQPNUVQOw==
-X-Received: by 2002:a17:906:58c7:: with SMTP id e7mr1019666ejs.42.1642843921147;
+        bh=wiKxGhVxsNISAMRH82PbmIbZTtNQt0gphY/DFBwNz2M=;
+        b=Rcn1x44UEXbeh2C6d7AgA1rgXBn1F0H6L/EtxhPSay2l68zIq/ueZHFrfMbbwweA27
+         GcL7dUfyng/R9omwMUwyURNBPoWwVqxwZpp7DLEmfix6p0ixrpxgRjJwG1DmpIDriUwh
+         edRcTEATVDPuPgOnEiu8vqyoWEICJSoa/A2h+j3MAdvVefzzugxB3GT5yfApXQC4/1oN
+         4x6JsqZdmUkXXx28v9+UTtZJmabFq7y6XpjXZaQvFoxjEeK60naNBOMn/yP4XQr+BWMj
+         MFeQtEGGrRzlu2UqFhnQiTQE9VW5tAqTLelQ5ID5bY0qoJdc1VroED/uncd0Kzp+zkMX
+         hP8w==
+X-Gm-Message-State: AOAM5322KfguMJj2Z4XoJePUk5t51HS4gOjSkrQ5Cgx59bC/u3E8ERcu
+	xAQpQZMu6CmuqvJ5nVNOL+a30Gjk6BPDZWWi
+X-Google-Smtp-Source: ABdhPJzzktRcEu1i01Tj9QDXHQCXPBo1+eAUR6nG2PSycc+XxrYIvPIDaeksp96EvRXpEK4gqlgRLA==
+X-Received: by 2002:a17:907:60d0:: with SMTP id hv16mr808347ejc.500.1642843921715;
         Sat, 22 Jan 2022 01:32:01 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id e28sm2776994ejm.94.2022.01.22.01.32.00
+        by smtp.gmail.com with ESMTPSA id e28sm2776994ejm.94.2022.01.22.01.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jan 2022 01:32:00 -0800 (PST)
+        Sat, 22 Jan 2022 01:32:01 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-net 1/2] mptcp: mptcp_parse_option is no longer exported
-Date: Sat, 22 Jan 2022 10:31:34 +0100
-Message-Id: <20220122093135.4023846-2-matthieu.baerts@tessares.net>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH mptcp-net 2/2] selftests: mptcp: add missing join check
+Date: Sat, 22 Jan 2022 10:31:35 +0100
+Message-Id: <20220122093135.4023846-3-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20220122093135.4023846-1-matthieu.baerts@tessares.net>
 References: <20220122093135.4023846-1-matthieu.baerts@tessares.net>
@@ -53,34 +54,45 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Options parsing in now done from mptcp_incoming_options().
+This function also writes the name of the test with its ID, making clear
+a new test has been executed.
 
-mptcp_parse_option() has been removed from mptcp.h when CONFIG_MPTCP is
-defined but not when it is not.
+Without that, the ADD_ADDR results from this test was appended at the
+end of the previous test causing confusions. Especially when the second
+test was failing, we had:
 
-Fixes: cfde141ea3fa ("mptcp: move option parsing into mptcp_incoming_options()")
+  17 signal invalid addresses     syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                  add[ ok ] - echo  [ ok ]
+                                  add[fail] got 2 ADD_ADDR[s] expected 3
+
+In fact, this 17th test was OK but not the 18th one.
+
+Now we have:
+
+  17 signal invalid addresses     syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                  add[ ok ] - echo  [ ok ]
+  18 signal addresses race test   syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                  add[fail] got 2 ADD_ADDR[s] expected 3
+
+Fixes: 33c563ad28e3 ("selftests: mptcp: add_addr and echo race test")
+Reported-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- include/net/mptcp.h | 6 ------
- 1 file changed, 6 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 04f53352a1c9..8b1afd6f5cc4 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -218,12 +218,6 @@ static inline bool rsk_drop_req(const struct request_sock *req)
- 	return false;
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 76c45c845d3b..67be3e1215d7 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1342,6 +1342,7 @@ signal_address_tests()
+ 	pm_nl_add_endpoint $ns2 10.0.3.2 flags signal
+ 	pm_nl_add_endpoint $ns2 10.0.4.2 flags signal
+ 	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "signal addresses race test" 3 3 3
  
--static inline void mptcp_parse_option(const struct sk_buff *skb,
--				      const unsigned char *ptr, int opsize,
--				      struct tcp_options_received *opt_rx)
--{
--}
--
- static inline bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 				     unsigned int *size,
- 				     struct mptcp_out_options *opts)
+ 	# the server will not signal the address terminating
+ 	# the MPC subflow
 -- 
 2.33.1
 
