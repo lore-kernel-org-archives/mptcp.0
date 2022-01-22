@@ -1,30 +1,31 @@
 Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785C6173
-	for <mptcp@lists.linux.dev>; Sat, 22 Jan 2022 09:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4062C9C
+	for <mptcp@lists.linux.dev>; Sat, 22 Jan 2022 09:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1642842013;
+	t=1642842019;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=W+LozFGjpQiE1vNLPqc37CRuUFtYcVKg4t7g/3f91vs=;
-	b=mDFT1h/rfmSacnf5U2p+VqtwQY/fPOVpF42c4U825IaxIpDkSeAVj5rBYry4mJdz+VaXVw
-	liOduJ+9pys+phaqYgwJGNbPJ24xB60Q96ypnZbj9MjKApDLyWRGodhCSprOnuWjW1wCky
-	W7tDwc6j6OChQzBDyQ7eUM8P1lbLUn8=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SHep4jX5OtwZ7g8+x7T1NwBT9NMnjlKvT/X5fjzUaUY=;
+	b=ZeFHwK2d5l4lM8oh2oiLTal1vnwY+cgbKGQC75U2lkKgXx6ANXlqzXF6RSUX1th4+xsahj
+	uhzQZsQuVWtrsBhHHswtGKDjzWQNvV53HrHg7ir5pIQouOTXY1R/VUZV9o7yN0rNma4NSq
+	ryTr0hySTl3D1Cq0XPtFj/lq4wqpaa0=
 Received: from EUR04-DB3-obe.outbound.protection.outlook.com
- (mail-db3eur04lp2052.outbound.protection.outlook.com [104.47.12.52]) by
+ (mail-db3eur04lp2051.outbound.protection.outlook.com [104.47.12.51]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-10-P26Vuo7xMrajcjxV9c_7rA-1; Sat, 22 Jan 2022 10:00:12 +0100
-X-MC-Unique: P26Vuo7xMrajcjxV9c_7rA-1
+ de-mta-16-zDpwyvYiOfmQ_FTuTJZCkg-1; Sat, 22 Jan 2022 10:00:18 +0100
+X-MC-Unique: zDpwyvYiOfmQ_FTuTJZCkg-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IVcuM/pr+ZJTIHFAdPDhEADiRcf0fLLVdGkAIkmzUXRfdSUw6g/walz/bWtLj6fi9l3D/RvFA4AkqRz5xBb8BCr8WMT7z0O3kSBhPak95dNn2MeOL8FkSWUMOby9KXjpnBmwQjB4LeK+HLWQaSkIWE+lEl8DMg6l+DVw9rvHGy+ZDCVQHk6ZzDn0Ew+43tngALf4vZLqU50Rq85XblN5zbudlADRncwr53ONFvBFHbs4kTO4plwCVEEqOlbHIXZQOwrSWWeYAlsFjTm87M19pr++QYFKjRS+OycugGo14NA5Gea3kx6zXecJzBmo6DiW/mF902kcihIUk2/QmHrYCQ==
+ b=CR05N3x2wEfCSKKp2074bjALi8Up24e3KmFbFJZrgnN1KLS1eMPAmVTW8NsOVqnncK4OsFv/s4UoJIIVBYCi2uOQ4C985EdQUgTqlEa4aRrAgt5N9DOAgCqJzB8lrrXcl3CwbrQHC8ZWBa/qDaVmAr4hleTojtk5PE7tWCKLTWj8svdOs4q+6JDo7XSaFvsB7olveXMwVn7x5M7qD5fQVelKCi5vyRW/adUU+b55Ux+YlCpImX/kwopIFRtDG1A0Lut8X/DxmNN3288vGKew+oeUJEApVosK0WgrQQ0qTNBAnkaScWKde84qq20d5IVJMita1DXOfStH7CUhu5o/cw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YocGaRCZBuQflGcHmXs6spD1/RSYcxRxmPm6WhVme2U=;
- b=FKK4rZMKqcUWgaKXU6ri0QcK6Z5vPUXHrZNW3cnNB3IhgGrYxOp//5KVSLWKWSk5yDybGcO5mrJXUnQhF8ZK78XhS9UrlkRQSDn7DFddBajSJZa+MMreNZFsdRbTORJP/dZQpKxahX/92vcztQeGMbA53HncY7SdfK8YPk+jIeH9ZQ1J3zQDgXkW4J+DNQpFYrfrt/ZCdxtGg8CoEX5+r6nqpI/UeqjQEE1fG275oRaLFS+6Pqs20iwWAzm4Q/LBxTlDazxWAL9IltsiauVuL5XnP4U66N1KV1coPOfd/8UIBa+87JvgOk0YsvyheLVo3Pppe1v43scaTrKDeyNCOA==
+ bh=w61FA22y3+tGFq3GJx+ao9038UGOvcUlaK9nywa/LHc=;
+ b=EVNROSkyhT3YluQcjS4GGdMejTtiUN1VIb7N/ux8AvdT1gQP3V6OZcAz15OLtRPbpu1hOCtyUjezQiJiK4oIs3dyO4nSQnvFymGs7ocyucsY42lHqCREcvDmfMRpwTXPI7IGirDcOtOSJYRvIUvZAapf/kjqBK9jSg70HK/YOvOr43GWukDzuR3PXPX8U1oPlazr2JmYsvYga06TZjIctRtdR/TXu+edmADeespWLkCH3yBSgKxSddnCmI6HF6f82Gm47vawU5CYZI0UcKHg8zOntPOrTXXHcbrIeoG0nlZTKPZBnP/7TNkunYD/aSV+Jajxoli2GPhChVYNl69AkA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Authentication-Results: dkim=none (message not signed)
@@ -33,22 +34,24 @@ Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by DU2PR04MB8854.eurprd04.prod.outlook.com (2603:10a6:10:2e1::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.14; Sat, 22 Jan
- 2022 09:00:10 +0000
+ 2022 09:00:17 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::fcd9:b39c:2b94:f13c]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::fcd9:b39c:2b94:f13c%6]) with mapi id 15.20.4909.013; Sat, 22 Jan 2022
- 09:00:10 +0000
+ 09:00:17 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2 0/2] add the id argument for set_flags
-Date: Sat, 22 Jan 2022 17:00:01 +0800
-Message-ID: <cover.1642841713.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 1/2] selftests: mptcp: add the id argument for set_flags
+Date: Sat, 22 Jan 2022 17:00:02 +0800
+Message-ID: <c008a837b1cfd578ddd689a73ce3ae0615680bb5.1642841713.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1642841713.git.geliang.tang@suse.com>
+References: <cover.1642841713.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0215.apcprd02.prod.outlook.com
- (2603:1096:201:20::27) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: HK2PR02CA0217.apcprd02.prod.outlook.com
+ (2603:1096:201:20::29) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -57,81 +60,181 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f84ba5c5-ae8a-4e21-9b62-08d9dd8597db
+X-MS-Office365-Filtering-Correlation-Id: a947d661-08b3-413d-b571-08d9dd859c1a
 X-MS-TrafficTypeDiagnostic: DU2PR04MB8854:EE_
 X-Microsoft-Antispam-PRVS:
-	<DU2PR04MB88547B62F942EFB64E882147F85C9@DU2PR04MB8854.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+	<DU2PR04MB8854969016B859DB8B2477C2F85C9@DU2PR04MB8854.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:243;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	jDAvFsacaTg3abIHWyqQq3pCWb5e59Gw/ofKNx2EYcLicyCAOJ5mkQwaBZ+aVeZ9xUZyODQLYEqXGMbsf8hd+7YtpTIrbm+ltBIjRQyL6WeVt0nLshREXVXtvzWDMLEM1EXw9FeEaBio3OtlSH9AyKIVtFiOi1fUAj2EsMhEJyWLZhigHnLNWHZXUFpONDW+t93ac0vi5R9kfEehSpCAsQEMx79WuiROjv00m5Vj7VpLqyzPEXWr8pXDHbz1ftvy4VMTAK94EjtXODYdcoHN7vRaOHbgMqOAsHV6VcO24rpouzzZdM28vm02UHjjyBnw1itklPNXY6Kkbjb0VT5B+p8oZTA0ksKmv6EGs+mfFXBPqdlnzfXimnywV997K9BtGO0n88hdaoCaAhQrMCM7NTSvSJJhOeoIc/6nzdeNPdBdYe7Rm3mELIbXybMKEJHwDUHvlgCL+viQG0rfUUkpcQzGUpgP61MHjPkK+oJR7EeNSdjptpRVc6amq+OLOrV7fdiPAg50ozIShawnnrEpeM0nt5/uiIutiRC742Au3wQqz9Qju66NrwMWTInLqL8xSMgVRCC0vQ9hvUG2ZX9zsLikpzClghhVciabugXVsQ/bSD2LkW9iRPZr+G4QhNd6y1/aMX7HYc28wz3318gax48U6UYgIXc9JkYqrF5tZBLvQk+Hjju6LEuhsxxUkbFulVWIR/KF6hcQA3qjKXy94A==
+	VFcwXvAJ6+BYqiMCkz5wKcbdCvPfjITAo6MfnwNMszkb2WK4/sT9x2Xkog4xri1lkfq/p+7rUc7nTQa6HuNGkk7g2Nm4+ocl8WcU7l01g+0obmGvSvXsXXFscWjM/fuu3tiVJqWnZyXgBBTRIqDmvIGycc2pWeNCzDzR6xBxARiGdkTalXtsiSf7UD4F7eeNkdyVs8uGjexgpVYED1W1FutH4c8O3wwsWbH4gXxcdyCfUWazgNJH+4Hm5NBXC0o6OmYzyuxQjSz4eWArBOZo5hc0Ozsh8VKmJm2vup5mnNUioRuvZqYR7qcBSjJvXPDzyda1qAEyn+tV4gAtHkfZn2//z4CEG/BxnLZ4a6WeKsxralnEptCOFi7RqkiPuPeirWP1pEw0LUL9scfMF0UW6liST9al98cI1oIW1WkP58nFWOhNgw7Mol1uOAmUs/axuijIBNSM5UBRPHW1IkEFB+ZapdYzZUMd3p7JqQZ1THcUsrRCQeHNoHZ6nLJxRcGdwnsM05k7084CyPXW1VN2OhOzoSLtGaibyoSSm8oCaVLVjbOdLxRzaQaLduiGQMOE+QXZuTzh1gJQi+QymPyLZGrvafua/bf6Zu/EQ7Fy9E0+NDV5v4NoFovdLJduMT42/HQ+fLurJ4nkSkKPcY+/3GNO1q1C2Z64y13tWYrQvLzPXwj5O5jU8JBefUw4Xzry2qPCcXM1KsR1zqPRz6dnyg==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2616005)(4744005)(6506007)(44832011)(316002)(83380400001)(5660300002)(508600001)(186003)(6916009)(4326008)(36756003)(6666004)(26005)(6486002)(2906002)(66556008)(66476007)(8936002)(66946007)(8676002)(107886003)(38100700002)(86362001)(6512007)(13296009);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2616005)(6506007)(44832011)(316002)(83380400001)(5660300002)(508600001)(186003)(6916009)(4326008)(36756003)(6666004)(26005)(6486002)(2906002)(66556008)(66476007)(8936002)(66946007)(8676002)(107886003)(38100700002)(86362001)(6512007)(13296009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0lxG+SBGDRJTV2iZsPm9aYpMGMN0rFe0DUIDP3INXf/3iEctR+4/GkYhbUcH?=
- =?us-ascii?Q?QT4PI062pqWY84BizIfESjx2+hriGkRLelILVQM3mJp+l/Wu/q9dU2jQV0tG?=
- =?us-ascii?Q?2eoWRfq03HXOdftJjhSBBnUEIftGc+fFh/kcKntGsJoxnls23qsPQWTlWDIz?=
- =?us-ascii?Q?QanhirlIGkYqX8g6rWJKVtRkaxh+tl2XYG1IR8l0HSD9bZXmFF2bBtk1hHUw?=
- =?us-ascii?Q?Jvl3+tFsJmExMaHbW1WalEd7grWuY7BBvLk6XEZ6SXQPEQDfHBfeUfHA5yIZ?=
- =?us-ascii?Q?dAAhntCYzYTzlNX/jXLBcXcarQdRchuYu+hH5h/D1jSPFXD5SycbxPVblXkN?=
- =?us-ascii?Q?ypkw6G7oCN8jzi1mQfLzwt4AtVlf7PLJcIf3gyKiGmYQK1bh7YYYXZjOQcy3?=
- =?us-ascii?Q?QwffATNgUXNr3dzo/JEdeq+gZBrLWIOjr2fQd6Usl/eRknIGGr/idETZTYJq?=
- =?us-ascii?Q?CDBNPtz9Pw4/JXpsqKFGx5jm8gAxF8uB050oF5s76bPA+nJEf67gJZS6bV0g?=
- =?us-ascii?Q?eXmns6dukrFuCpjUuKdr+aNZDCuDOi7Io/uebvinxds005DqA0dDc0w7IIeo?=
- =?us-ascii?Q?yWoIetYlWU0H5KRU8KcBOuVfjbSv4vZwPt9yfTh9rOM4pMyzBmleddjZbGGk?=
- =?us-ascii?Q?VyY9LyXibRdYFldpGNP+f10oZKk59CuHt/AxtGb2oPjJptrOGJ3HOpE9hTdu?=
- =?us-ascii?Q?Y1OZhQyZXqCUtTrVGsoIZzcY2d4gXNws5xtUqGj1P4z0gEOCUUt0Kr0ACuiy?=
- =?us-ascii?Q?IK6jGFSXdsOELV3F/Gd70TxSJQimYVZFOUf5+iXievuXOQDYgIfMsM7jVm8G?=
- =?us-ascii?Q?sq0iLG5c9UYoBOFqdK7hWJ7aeOEdgOD7vHHNdC0m+yqjjs4tETB5lwSpNdXH?=
- =?us-ascii?Q?GwT9DlzIGZi2JXYOstooMYo5Vy5JXruiG+o6wm7rjwFg+ut3d+AbwkdTHqKy?=
- =?us-ascii?Q?AMKj7T3L6sJyKRFov8dogcKfZJd0e2xmhzLZ2Xnn8242XoXwiwtoKu64gEj3?=
- =?us-ascii?Q?srQb7cyyNwGrfElJVCJQxCeDIWfoTRz7jokzDxE1gqE/2d/Jw8LRnQdyEG8M?=
- =?us-ascii?Q?j5mGnqD35ME6KnLa+5IAvOITM2u8P8Ht8jW3q0tMfPPTUFgLrGKDVWAW5EVT?=
- =?us-ascii?Q?4c9ZL5UvxQIozq/wa3n/j6xR35XyaUMYfC8vY7SEvOmlFiQvR4q56slObkKW?=
- =?us-ascii?Q?m/WsYv9jLhaASENVMweivPvMirs2DGlA7jIxSp6TrVKd7ADCQGdVS/eKH1O1?=
- =?us-ascii?Q?WUMz/6f0RmORexTmYcr5C0VuHm0gk1UOul5fCJ1ES7ZXkkfHLj7sSyn5lXp8?=
- =?us-ascii?Q?s8kch6q/ONVThvb0JUFIDREEFyUTkdVSsRLWl//iopu5GclTMhRz7E2SB8kL?=
- =?us-ascii?Q?aE6CsXZwMZj+jhTHrOrepef3XZBgBQ+/j0iJ+oKFmaOg3cNiV7uSQHgwkbra?=
- =?us-ascii?Q?/5k7mrpSRy0Lr7bxSd5hg+ubtoNAiAfmcSVnyci65KwoxzW/la8PucWdOSL8?=
- =?us-ascii?Q?oxopWyXu8TPEOl6uIf/spTEtSvY2NGq4K4aHjYfaxGtZcB3aDIAHLlC7N/tK?=
- =?us-ascii?Q?h2LOngHZlMso4L6ssqgERE3ZaMZ3uKYvKdGig7dUuv+jWE3g75J6HVU9ZNWu?=
- =?us-ascii?Q?KSsWbxtWl2Bmrjk5pVBCOgU=3D?=
+	=?us-ascii?Q?7U+6a47gTWx10L8ZpnrV+s6FwZom1D9LQOVpoKJagc/sUpcBJqRviEtxhj3Q?=
+ =?us-ascii?Q?ixNph+aO2DqjPPWoEEOgCfcjHXeLpBk4tfIjd2sPTqL/jDR4jYLH7jQuVUI9?=
+ =?us-ascii?Q?2ZXXiuLYFYFufcqC0YZmhGepEe2DPAOd+v7p7JmXRZOBREV+rg4aYb1y8ihX?=
+ =?us-ascii?Q?sDdW72o3cor+oMj14KHbeDycAKnAeMeX+NK+5bASESdxiieGKODax7Xgt51m?=
+ =?us-ascii?Q?JIUz9lKy3WjdrkGs4KrFMWJv+9PIZQldPdVh/nK2jTTtFftefrPefwHqW73V?=
+ =?us-ascii?Q?yp6lQPkFa0vhLWuYoJT6OI40qdAxAROtO584FMteWsuhNQLP7ymPKz9qIwFW?=
+ =?us-ascii?Q?i/C1brgBba5SElA2Ka/Ywusliv06SL4YwCRfG0KFIWyKmQuskLau7VHLCqO4?=
+ =?us-ascii?Q?K6xz0/z8wjoFzz0ggF1cCEoslKnfxzAQA+nFu18X27PruvzCckv/ZqkL2wlI?=
+ =?us-ascii?Q?8ns0OsoU1lDsf9ShT2n4tVonvyflaS+kDc7tJtqn7pLOSWMQuKE2pAu2TUQG?=
+ =?us-ascii?Q?LSwKUhayrWbL/Jvbx73kcL4eBoFV2FSjcfxdncVJydNMsxvUKDhxVaGFynvl?=
+ =?us-ascii?Q?XE5Pva/4wok1T6uCpLVIWZotYz6AVSCTC5Fu5c8OmaMKLo3Vw1gNTo/jQibX?=
+ =?us-ascii?Q?U2L3tV9iOudSCmHhcYUayvwo/REsfGkJ/XdJzosB1Nhy4Nvcg1we4sYDLFa/?=
+ =?us-ascii?Q?wUYeHLAacj2PDkSX7h3UIzi8g7XqdXhjildczzKfNlHgoP7fvsVwZYMKp1Pl?=
+ =?us-ascii?Q?5H+RA9xU6OaTwwnzh5R0ZfzhIPWZn1b3/c7r1LBG8425r5Nf1paaBJWuhYTW?=
+ =?us-ascii?Q?eUpCXbUu0VC7yd7mmEAUUD8FG1sRFJTMjs5DTBILEcNgaCr7/JZDDnQQ3Xg/?=
+ =?us-ascii?Q?uvbP6ARVH4MlL/cxQ/xefYpqhzZoB+hjJA2H0UCMDI6lYhotA6NoL4L5Fwy2?=
+ =?us-ascii?Q?5v++Ai3CO/axXnZtFifFb+ojC3WWrnTXdtdvlfG/7ZnqGzPmiru3LsGrrpWA?=
+ =?us-ascii?Q?x/zzAVJDIoIJnkZI/4JvaTofpUbTi7Z72K+GhPax3twFUD9DXdlCNYgJydir?=
+ =?us-ascii?Q?2SFI+eQLU9Njv3NzJ1ea4rpIhgjujoNMtqGThZDNWy/6OhR8xkx4zrqZ3RZp?=
+ =?us-ascii?Q?ivfwsO2FrRSkK1qefQzpnu7GJ2DGSRwnUYJ7oQOcaznLTFBUUmJ1ZqxA+lb0?=
+ =?us-ascii?Q?6n4eSHkUJXxVUffIRncLzisVxzKpbtdtKEO+hGkCHL8yE3YYx39dFlDwbOCP?=
+ =?us-ascii?Q?6ZIOwSfRh0Z20hFyuDbxNn9zu+TEZ5KoxwXwi+6wrYEiyfi8sm2DApC+OCM4?=
+ =?us-ascii?Q?q2ZFKlreMb5y9SasctnDrWVYZ7T4Tj1H/k5Z52F4ZKM11kNjK65R75120M8I?=
+ =?us-ascii?Q?b+GsK6yUeM/Ozr1md6JieVgTeaboqvSPC4IFdOjLnYOnqikEBmUCnmwI478F?=
+ =?us-ascii?Q?802YqA77XD98oE6TyxUWgBAnHEQgAWv7iDGQ/VWqsEjdYdtXCtPJEEW4KHoK?=
+ =?us-ascii?Q?B+hOFVMg6HbErxJpEdKDywmEs3QqebYT0jWlks1bTQ6Z2NDEwPUhDUkjeLZD?=
+ =?us-ascii?Q?QlvDg2ziKno3VM3tMKSHew2cyJteF8v1cxELs1foToPMK2NjsISgRc8kk3FH?=
+ =?us-ascii?Q?pEo9jSHMBzLyA3C3Cg02kYs=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f84ba5c5-ae8a-4e21-9b62-08d9dd8597db
+X-MS-Exchange-CrossTenant-Network-Message-Id: a947d661-08b3-413d-b571-08d9dd859c1a
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2022 09:00:09.9807
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2022 09:00:17.1676
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DcT0ldAFArMFg0NbI/fa3XLLfnGxk8+zXTbsgOouWBUi7fI8XlpyiFx0rOgKWT8u6aUVIGoxzx2owNI086STrw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Mdo8mpBKMRo/0aJ3u4Gctd+vbZgJVtfmmR8B4oZBYl97YA3FdItdPqMeY8M6JxuTz+hNGWw6+eo1cYmch56FQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8854
 
-v2:
- - make standalone patches, instead of squash-to ones.
- - add test cases in pm_netlink.sh, instead of mptcp_join.sh
+This patch added the id argument for setting the address flags in
+pm_nl_ctl.
 
-Add the id argument for 'pm_nl_ctl set', and allow to use the port keyword
-with the non-signal flags for the setting flags in 'ip mptcp endpoint
-change', more commands can be used to set the address flags:
+Usage:
 
- pm_nl_ctl set 10.0.2.1 flags backup port 10100
- pm_nl_ctl set id 1 flags backup
- ip mptcp endpoint change id 1 backup
- ip mptcp endpoint change 10.0.2.1 backup port 10100
+    pm_nl_ctl set id 1 flags backup
 
-Geliang Tang (2):
-  selftests: mptcp: add the id argument for set_flags
-  selftests: mptcp: add set_flags tests in pm_netlink.sh
-
- .../testing/selftests/net/mptcp/pm_netlink.sh | 10 +++
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
  tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 64 +++++++++++++------
- 2 files changed, 53 insertions(+), 21 deletions(-)
+ 1 file changed, 43 insertions(+), 21 deletions(-)
 
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/=
+selftests/net/mptcp/pm_nl_ctl.c
+index 2a57462764d0..e554928487f8 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -28,7 +28,8 @@ static void syntax(char *argv[])
+ 	fprintf(stderr, "\tadd [flags signal|subflow|backup|fullmesh] [id <nr>] [=
+dev <name>] <ip>\n");
+ 	fprintf(stderr, "\tdel <id> [<ip>]\n");
+ 	fprintf(stderr, "\tget <id>\n");
+-	fprintf(stderr, "\tset <ip> [flags backup|nobackup|fullmesh|nofullmesh] [=
+port <nr>]\n");
++	fprintf(stderr, "\tset [<ip>] [id <nr>] [flags backup|nobackup|fullmesh|n=
+ofullmesh]\n");
++	fprintf(stderr, "\t                                                     [=
+port <nr>]\n");
+ 	fprintf(stderr, "\tflush\n");
+ 	fprintf(stderr, "\tdump\n");
+ 	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
+@@ -657,8 +658,10 @@ int set_flags(int fd, int pm_family, int argc, char *a=
+rgv[])
+ 	u_int32_t flags =3D 0;
+ 	u_int16_t family;
+ 	int nest_start;
++	int use_id =3D 0;
++	u_int8_t id;
+ 	int off =3D 0;
+-	int arg;
++	int arg =3D 2;
+=20
+ 	memset(data, 0, sizeof(data));
+ 	nh =3D (void *)data;
+@@ -674,29 +677,45 @@ int set_flags(int fd, int pm_family, int argc, char *=
+argv[])
+ 	nest->rta_len =3D RTA_LENGTH(0);
+ 	off +=3D NLMSG_ALIGN(nest->rta_len);
+=20
+-	/* addr data */
+-	rta =3D (void *)(data + off);
+-	if (inet_pton(AF_INET, argv[2], RTA_DATA(rta))) {
+-		family =3D AF_INET;
+-		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR4;
+-		rta->rta_len =3D RTA_LENGTH(4);
+-	} else if (inet_pton(AF_INET6, argv[2], RTA_DATA(rta))) {
+-		family =3D AF_INET6;
+-		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR6;
+-		rta->rta_len =3D RTA_LENGTH(16);
++	if (!strcmp(argv[arg], "id")) {
++		if (++arg >=3D argc)
++			error(1, 0, " missing id value");
++
++		use_id =3D 1;
++		id =3D atoi(argv[arg]);
++		rta =3D (void *)(data + off);
++		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ID;
++		rta->rta_len =3D RTA_LENGTH(1);
++		memcpy(RTA_DATA(rta), &id, 1);
++		off +=3D NLMSG_ALIGN(rta->rta_len);
+ 	} else {
+-		error(1, errno, "can't parse ip %s", argv[2]);
++		/* addr data */
++		rta =3D (void *)(data + off);
++		if (inet_pton(AF_INET, argv[arg], RTA_DATA(rta))) {
++			family =3D AF_INET;
++			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR4;
++			rta->rta_len =3D RTA_LENGTH(4);
++		} else if (inet_pton(AF_INET6, argv[arg], RTA_DATA(rta))) {
++			family =3D AF_INET6;
++			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR6;
++			rta->rta_len =3D RTA_LENGTH(16);
++		} else {
++			error(1, errno, "can't parse ip %s", argv[arg]);
++		}
++		off +=3D NLMSG_ALIGN(rta->rta_len);
++
++		/* family */
++		rta =3D (void *)(data + off);
++		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_FAMILY;
++		rta->rta_len =3D RTA_LENGTH(2);
++		memcpy(RTA_DATA(rta), &family, 2);
++		off +=3D NLMSG_ALIGN(rta->rta_len);
+ 	}
+-	off +=3D NLMSG_ALIGN(rta->rta_len);
+=20
+-	/* family */
+-	rta =3D (void *)(data + off);
+-	rta->rta_type =3D MPTCP_PM_ADDR_ATTR_FAMILY;
+-	rta->rta_len =3D RTA_LENGTH(2);
+-	memcpy(RTA_DATA(rta), &family, 2);
+-	off +=3D NLMSG_ALIGN(rta->rta_len);
++	if (++arg >=3D argc)
++		error(1, 0, " missing flags keyword");
+=20
+-	for (arg =3D 3; arg < argc; arg++) {
++	for (; arg < argc; arg++) {
+ 		if (!strcmp(argv[arg], "flags")) {
+ 			char *tok, *str;
+=20
+@@ -724,6 +743,9 @@ int set_flags(int fd, int pm_family, int argc, char *ar=
+gv[])
+ 		} else if (!strcmp(argv[arg], "port")) {
+ 			u_int16_t port;
+=20
++			if (use_id)
++				error(1, 0, " port can't be used with id");
++
+ 			if (++arg >=3D argc)
+ 				error(1, 0, " missing port value");
+=20
 --=20
 2.31.1
 
