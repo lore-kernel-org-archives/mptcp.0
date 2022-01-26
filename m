@@ -1,159 +1,290 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08542CA3
-	for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 16:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1643213690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a6A2Gtofsm2HKTZH/NWhF5dXN/QL0bQRjpEmX65zn4Y=;
-	b=ZK0gSR0OvkRExsF4gJmaIlvXvQ818AuLHonNT098YTT4Y6lFccJMAEgO0Z89sTbc/G0qGm
-	+QFIsmqlxtJjY00o13rZE94acjJxTZSOf/pNWL6M4l2SckRNfK3RZLdfjMmc3eRPlGmoIM
-	skzIBj48TNRLsq6mMoRaP6pJfbhYAYk=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-177-0xnMKWyhNNiDUHdSReHghg-1; Wed, 26 Jan 2022 11:14:47 -0500
-X-MC-Unique: 0xnMKWyhNNiDUHdSReHghg-1
-Received: by mail-qv1-f70.google.com with SMTP id r12-20020a0562140c8c00b004226c4fc035so273461qvr.4
-        for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 08:14:47 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD932CA3
+	for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 16:24:48 +0000 (UTC)
+Received: by mail-yb1-f172.google.com with SMTP id m6so328899ybc.9
+        for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 08:24:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8xRDc/fe+7I02NEyVThAKAmTbuUzadaAF9mUrYsUtwo=;
+        b=tTb4vYhOFws7+CtY57vk4GxX7I8fxYqHG7+vePmqGqxF3ln1xAKByHq4JYx6HrSKnZ
+         6vzEW11meHHYHI59RuCMmykbZ9qsqupHyqiLcZL+hCNFZBV7yRukdhBVeFV+HAInfyjO
+         v8AOqJ6R9SQ9Mq6u5PCgeD1IgrtOgKpkMmvcKHVZ01qetb61rz/VTEtIZlgsRBxmrKvF
+         ab3tgERAx64077wA38fVZHpa9e7wrquqtfoFnPV580vImnW9waenCnPVQecxImIA0mTL
+         ESSJVmn9vjWXxSaWpIAeAQIdgtMBTyghPPVruugiD+Zmi70Kp3T8ikmm3zcut6NnyOWC
+         fRsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=fysXeXh1WW6YVve6gUqELrIgjARZKl2Vh28eeLnVfZQ=;
-        b=MbPbYOoG5Ca86gyDgP6hzSj/WMcgvDXzNhhi4DNtAE2RX7tphVAtvKIvJgIMfOy1X4
-         Uuk/BNkhfbu0FDIwFoDgf55LZhMvB9ibcveDRWISzIYP7gAAZgrFGcA0xFUM+z+vyicK
-         Kvc8lhNF3tSaoeIYnGDBcprW6iFfyixDpgnAynf3LwW0BF+VxFmHFbkPswbjg2U8RA8e
-         gQ+yxi/wt+LepdiSxzzG04i2rJtNDPjhiz4QSGomrhxeYFbpZpUvawES7CTB1mZvXaMT
-         tYuNqSaToVNacCwJjZwxyjQ5qjIjroeJTcBA0nttQh+7HZj/GH0LpUVkrb4CBH08ZSpn
-         Xh4Q==
-X-Gm-Message-State: AOAM532L67fIT3DU8MvZUNPrInb3ex2DQ3Fz/0IhgN4TJx2LYtfxbu7a
-	bnHdhp0q+g1rzpEg9TIZfY3w97oUANWriMl070UtQGdFCCtcsrUII0dDFzG3dwT1o9eiVCQ8nlU
-	OddH1K2v9xuwh4QI=
-X-Received: by 2002:a05:620a:4450:: with SMTP id w16mr18960194qkp.340.1643213686775;
-        Wed, 26 Jan 2022 08:14:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJybO+VZrDyMSpaH2QEaia6yUqym/IYy2hLS2N/KGMzG5CMLHY7PhfIqb74i025vJ2KJWTEnwQ==
-X-Received: by 2002:a05:620a:4450:: with SMTP id w16mr18960171qkp.340.1643213686490;
-        Wed, 26 Jan 2022 08:14:46 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id b23sm10165798qtp.94.2022.01.26.08.14.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jan 2022 08:14:45 -0800 (PST)
-Message-ID: <6cccaaa7854c98248d663f60404ab6163250107f.camel@redhat.com>
-Subject: Re: [PATCH net-next 6/6] ipv4/tcp: do not use per netns ctl sockets
-From: Paolo Abeni <pabeni@redhat.com>
-To: Eric Dumazet <eric.dumazet@gmail.com>, "David S . Miller"
-	 <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>
-Cc: netdev <netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, 
-	mptcp@lists.linux.dev
-Date: Wed, 26 Jan 2022 17:14:42 +0100
-In-Reply-To: <20220124202457.3450198-7-eric.dumazet@gmail.com>
-References: <20220124202457.3450198-1-eric.dumazet@gmail.com>
-	 <20220124202457.3450198-7-eric.dumazet@gmail.com>
-User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8xRDc/fe+7I02NEyVThAKAmTbuUzadaAF9mUrYsUtwo=;
+        b=aLE+/0/TW4HpnE23wBu8gNR45ES7mtcPlyw1Ni6/c7DqyaVUqkkjEmIoMzY4RM8+5B
+         Dl7PdyAoYMFYSl6tQSwtdKtkxD9YVKT3n4Rd310f6QWarj+uIwXZwdPGIUVqSV4nixs4
+         jC3bEaZTtEPEmAPThgHrUQgKheboNwjJdzjJtJoqKVa4tvCwjjwUdSxLz9KTCaZVxf4P
+         moR4nj/HvJwJN0fXIUQZiCnGEjQ2a4BU1x2N4HWjlmvAioIBHP8ihLh0AFv+TSSMcGqq
+         L+k2pqTPxtwuoDjiwrXWbec03EfbFIuih4MczR/0s7BzX6+Cz4tEQvZnqUi0BUi3yXKg
+         4+MA==
+X-Gm-Message-State: AOAM531SsoV5emzjYcTbGaFnGRuHcfi+525KFw1mmW8icwOv9Iavs8+b
+	gsVewI06Z17CN2DX8HPDxe3VvL1y6BlGWHCuouAutw==
+X-Google-Smtp-Source: ABdhPJxnan+tv5lv0L8ZC+eCABxhg9r3c6LMKPXtx5DdtdoqpV++8PdokEh2gMN5BmOE1huC3S2btPuSgvuxqDjU0tw=
+X-Received: by 2002:a5b:506:: with SMTP id o6mr38185042ybp.156.1643214286822;
+ Wed, 26 Jan 2022 08:24:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/mixed; boundary="=-JZLwH+BnmnbBU710Mfv4"
-
---=-JZLwH+BnmnbBU710Mfv4
+References: <20220124202457.3450198-1-eric.dumazet@gmail.com>
+ <20220124202457.3450198-7-eric.dumazet@gmail.com> <6cccaaa7854c98248d663f60404ab6163250107f.camel@redhat.com>
+In-Reply-To: <6cccaaa7854c98248d663f60404ab6163250107f.camel@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 26 Jan 2022 08:24:35 -0800
+Message-ID: <CANn89iLCdpgh9vWd_A70mPqkRgLTk9aqNY=zV2ibtVus9YLxeA@mail.gmail.com>
+Subject: Re: [PATCH net-next 6/6] ipv4/tcp: do not use per netns ctl sockets
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, netdev <netdev@vger.kernel.org>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-Hello,
-On Mon, 2022-01-24 at 12:24 -0800, Eric Dumazet wrote:
-> From: Eric Dumazet <edumazet@google.com>
-> 
-> TCP ipv4 uses per-cpu/per-netns ctl sockets in order to send
-> RST and some ACK packets (on behalf of TIMEWAIT sockets).
-> 
-> This adds memory and cpu costs, which do not seem needed.
-> Now typical servers have 256 or more cores, this adds considerable
-> tax to netns users.
-> 
-> tcp sockets are used from BH context, are not receiving packets,
-> and do not store any persistent state but the 'struct net' pointer
-> in order to be able to use IPv4 output functions.
-> 
-> Note that I attempted a related change in the past, that had
-> to be hot-fixed in commit bdbbb8527b6f ("ipv4: tcp: get rid of ugly unicast_sock")
-> 
-> This patch could very well surface old bugs, on layers not
-> taking care of sk->sk_kern_sock properly.
-> 
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
+On Wed, Jan 26, 2022 at 8:14 AM Paolo Abeni <pabeni@redhat.com> wrote:
+>
+> Hello,
+> On Mon, 2022-01-24 at 12:24 -0800, Eric Dumazet wrote:
+> > From: Eric Dumazet <edumazet@google.com>
+> >
+> > TCP ipv4 uses per-cpu/per-netns ctl sockets in order to send
+> > RST and some ACK packets (on behalf of TIMEWAIT sockets).
+> >
+> > This adds memory and cpu costs, which do not seem needed.
+> > Now typical servers have 256 or more cores, this adds considerable
+> > tax to netns users.
+> >
+> > tcp sockets are used from BH context, are not receiving packets,
+> > and do not store any persistent state but the 'struct net' pointer
+> > in order to be able to use IPv4 output functions.
+> >
+> > Note that I attempted a related change in the past, that had
+> > to be hot-fixed in commit bdbbb8527b6f ("ipv4: tcp: get rid of ugly unicast_sock")
+> >
+> > This patch could very well surface old bugs, on layers not
+> > taking care of sk->sk_kern_sock properly.
+> >
+> > Signed-off-by: Eric Dumazet <edumazet@google.com>
+>
+> We are observing UaF in our self-tests on top of this patch:
+>
+> https://github.com/multipath-tcp/mptcp_net-next/issues/256
+>
+> While I can't exclude the MPTCP code is misusing sk_net_refcnt and/or
+> sk_kern_sock, we can reproduce the issue even with plain TCP sockets[1]
+>
+> The kasan report points to:
+>
+>         struct inet_hashinfo *hashinfo = tw->tw_dr->hashinfo;
+>
+> in inet_twsk_kill(). Apparently tw->tw_dr still refers to:
+>
+>         &sock_net(sk)->ipv4.tcp_death_row
+>
+> and the owning netns has been already dismantelled, as expected.
+> I could not find any code setting tw->tw_dr to a safe value after netns
+> destruction?!? am I missing something relevant?
+>
+> Thanks!
+>
+> Paolo
+>
+> [1] patching the selftest script with the attached patch and running it
+> in a loop:
+>
+> while ./mptcp_connect.sh -t -t; do : ; done
 
-We are observing UaF in our self-tests on top of this patch:
+Hi Paolo.
 
-https://github.com/multipath-tcp/mptcp_net-next/issues/256
+I was working a fix. syzbot found the issue yesterday before I went to bed ;)
 
-While I can't exclude the MPTCP code is misusing sk_net_refcnt and/or
-sk_kern_sock, we can reproduce the issue even with plain TCP sockets[1]
+(And this is not related to MPTCP)
 
-The kasan report points to:
+My plan is to make struct inet_timewait_death_row not a sub-strutcure
+of struct netns_ipv4
 
-	struct inet_hashinfo *hashinfo = tw->tw_dr->hashinfo;
+(the atomic_t tw_count becomes a refcount_t as a bonus)
 
-in inet_twsk_kill(). Apparently tw->tw_dr still refers to:
+Thanks.
 
-	&sock_net(sk)->ipv4.tcp_death_row
+BUG: KASAN: use-after-free in inet_twsk_kill+0x358/0x3c0
+net/ipv4/inet_timewait_sock.c:46
+Read of size 8 at addr ffff88807d5f9f40 by task kworker/1:7/3690
 
-and the owning netns has been already dismantelled, as expected.
-I could not find any code setting tw->tw_dr to a safe value after netns
-destruction?!? am I missing something relevant?
+CPU: 1 PID: 3690 Comm: kworker/1:7 Not tainted 5.16.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+Workqueue: events pwq_unbound_release_workfn
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xcd/0x134 lib/dump_stack.c:106
+ print_address_description.constprop.0.cold+0x8d/0x336 mm/kasan/report.c:255
+ __kasan_report mm/kasan/report.c:442 [inline]
+ kasan_report.cold+0x83/0xdf mm/kasan/report.c:459
+ inet_twsk_kill+0x358/0x3c0 net/ipv4/inet_timewait_sock.c:46
+ call_timer_fn+0x1a5/0x6b0 kernel/time/timer.c:1421
+ expire_timers kernel/time/timer.c:1466 [inline]
+ __run_timers.part.0+0x67c/0xa30 kernel/time/timer.c:1734
+ __run_timers kernel/time/timer.c:1715 [inline]
+ run_timer_softirq+0xb3/0x1d0 kernel/time/timer.c:1747
+ __do_softirq+0x29b/0x9c2 kernel/softirq.c:558
+ invoke_softirq kernel/softirq.c:432 [inline]
+ __irq_exit_rcu+0x123/0x180 kernel/softirq.c:637
+ irq_exit_rcu+0x5/0x20 kernel/softirq.c:649
+ sysvec_apic_timer_interrupt+0x93/0xc0 arch/x86/kernel/apic/apic.c:1097
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:638
+RIP: 0010:lockdep_unregister_key+0x1c9/0x250 kernel/locking/lockdep.c:6328
+Code: 00 00 00 48 89 ee e8 46 fd ff ff 4c 89 f7 e8 5e c9 ff ff e8 09
+cc ff ff 9c 58 f6 c4 02 75 26 41 f7 c4 00 02 00 00 74 01 fb 5b <5d> 41
+5c 41 5d 41 5e 41 5f e9 19 4a 08 00 0f 0b 5b 5d 41 5c 41 5d
+RSP: 0018:ffffc90004077cb8 EFLAGS: 00000206
+RAX: 0000000000000046 RBX: ffff88807b61b498 RCX: 0000000000000001
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff888077027128 R08: 0000000000000001 R09: ffffffff8f1ea4fc
+R10: fffffbfff1ff93ee R11: 000000000000af1e R12: 0000000000000246
+R13: 0000000000000000 R14: ffffffff8ffc89b8 R15: ffffffff90157fb0
+ wq_unregister_lockdep kernel/workqueue.c:3508 [inline]
+ pwq_unbound_release_workfn+0x254/0x340 kernel/workqueue.c:3746
+ process_one_work+0x9ac/0x1650 kernel/workqueue.c:2307
+ worker_thread+0x657/0x1110 kernel/workqueue.c:2454
+ kthread+0x2e9/0x3a0 kernel/kthread.c:377
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
+ </TASK>
 
-Thanks!
+Allocated by task 3635:
+ kasan_save_stack+0x1e/0x50 mm/kasan/common.c:38
+ kasan_set_track mm/kasan/common.c:46 [inline]
+ set_alloc_info mm/kasan/common.c:437 [inline]
+ __kasan_slab_alloc+0x90/0xc0 mm/kasan/common.c:470
+ kasan_slab_alloc include/linux/kasan.h:260 [inline]
+ slab_post_alloc_hook mm/slab.h:732 [inline]
+ slab_alloc_node mm/slub.c:3230 [inline]
+ slab_alloc mm/slub.c:3238 [inline]
+ kmem_cache_alloc+0x202/0x3a0 mm/slub.c:3243
+ kmem_cache_zalloc include/linux/slab.h:705 [inline]
+ net_alloc net/core/net_namespace.c:407 [inline]
+ copy_net_ns+0x125/0x760 net/core/net_namespace.c:462
+ create_new_namespaces+0x3f6/0xb20 kernel/nsproxy.c:110
+ unshare_nsproxy_namespaces+0xc1/0x1f0 kernel/nsproxy.c:226
+ ksys_unshare+0x445/0x920 kernel/fork.c:3048
+ __do_sys_unshare kernel/fork.c:3119 [inline]
+ __se_sys_unshare kernel/fork.c:3117 [inline]
+ __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3117
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-Paolo
+The buggy address belongs to the object at ffff88807d5f9a80
+ which belongs to the cache net_namespace of size 6528
+The buggy address is located 1216 bytes inside of
+ 6528-byte region [ffff88807d5f9a80, ffff88807d5fb400)
+The buggy address belongs to the page:
+page:ffffea0001f57e00 refcount:1 mapcount:0 mapping:0000000000000000
+index:0xffff88807d5f9a80 pfn:0x7d5f8
+head:ffffea0001f57e00 order:3 compound_mapcount:0 compound_pincount:0
+memcg:ffff888070023001
+flags: 0xfff00000010200(slab|head|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000010200 ffff888010dd4f48 ffffea0001404e08 ffff8880118fd000
+raw: ffff88807d5f9a80 0000000000040002 00000001ffffffff ffff888070023001
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask
+0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC),
+pid 3634, ts 119694798460, free_ts 119693556950
+ prep_new_page mm/page_alloc.c:2434 [inline]
+ get_page_from_freelist+0xa72/0x2f50 mm/page_alloc.c:4165
+ __alloc_pages+0x1b2/0x500 mm/page_alloc.c:5389
+ alloc_pages+0x1aa/0x310 mm/mempolicy.c:2271
+ alloc_slab_page mm/slub.c:1799 [inline]
+ allocate_slab mm/slub.c:1944 [inline]
+ new_slab+0x28a/0x3b0 mm/slub.c:2004
+ ___slab_alloc+0x87c/0xe90 mm/slub.c:3018
+ __slab_alloc.constprop.0+0x4d/0xa0 mm/slub.c:3105
+ slab_alloc_node mm/slub.c:3196 [inline]
+ slab_alloc mm/slub.c:3238 [inline]
+ kmem_cache_alloc+0x35c/0x3a0 mm/slub.c:3243
+ kmem_cache_zalloc include/linux/slab.h:705 [inline]
+ net_alloc net/core/net_namespace.c:407 [inline]
+ copy_net_ns+0x125/0x760 net/core/net_namespace.c:462
+ create_new_namespaces+0x3f6/0xb20 kernel/nsproxy.c:110
+ unshare_nsproxy_namespaces+0xc1/0x1f0 kernel/nsproxy.c:226
+ ksys_unshare+0x445/0x920 kernel/fork.c:3048
+ __do_sys_unshare kernel/fork.c:3119 [inline]
+ __se_sys_unshare kernel/fork.c:3117 [inline]
+ __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3117
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+page last free stack trace:
+ reset_page_owner include/linux/page_owner.h:24 [inline]
+ free_pages_prepare mm/page_alloc.c:1352 [inline]
+ free_pcp_prepare+0x374/0x870 mm/page_alloc.c:1404
+ free_unref_page_prepare mm/page_alloc.c:3325 [inline]
+ free_unref_page+0x19/0x690 mm/page_alloc.c:3404
+ skb_free_head net/core/skbuff.c:655 [inline]
+ skb_release_data+0x65d/0x790 net/core/skbuff.c:677
+ skb_release_all net/core/skbuff.c:742 [inline]
+ __kfree_skb net/core/skbuff.c:756 [inline]
+ consume_skb net/core/skbuff.c:914 [inline]
+ consume_skb+0xc2/0x160 net/core/skbuff.c:908
+ skb_free_datagram+0x1b/0x1f0 net/core/datagram.c:325
+ netlink_recvmsg+0x636/0xea0 net/netlink/af_netlink.c:1998
+ sock_recvmsg_nosec net/socket.c:948 [inline]
+ sock_recvmsg net/socket.c:966 [inline]
+ sock_recvmsg net/socket.c:962 [inline]
+ ____sys_recvmsg+0x2c4/0x600 net/socket.c:2632
+ ___sys_recvmsg+0x127/0x200 net/socket.c:2674
+ __sys_recvmsg+0xe2/0x1a0 net/socket.c:2704
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-[1] patching the selftest script with the attached patch and running it
-in a loop:
-
-while ./mptcp_connect.sh -t -t; do : ; done
-
---=-JZLwH+BnmnbBU710Mfv4
-Content-Disposition: attachment; filename="selftests_tcp.patch"
-Content-Type: text/x-patch; name="selftests_tcp.patch"; charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25u
-ZWN0LnNoIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbmV0L21wdGNwL21wdGNwX2Nvbm5lY3Qu
-c2gKaW5kZXggY2I1ODA5Yjg5MDgxLi4xNTJkMzk1OTE2ODIgMTAwNzU1Ci0tLSBhL3Rvb2xzL3Rl
-c3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25uZWN0LnNoCisrKyBiL3Rvb2xzL3Rl
-c3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25uZWN0LnNoCkBAIC02MDksOCArNjA5
-LDggQEAgcnVuX3Rlc3RzX2xvKCkKIAkJbG9jYWxfYWRkcj0iMC4wLjAuMCIKIAlmaQogCi0JZG9f
-dHJhbnNmZXIgJHtsaXN0ZW5lcl9uc30gJHtjb25uZWN0b3JfbnN9IE1QVENQIE1QVENQIFwKLQkJ
-ICAgICR7Y29ubmVjdF9hZGRyfSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgorCSNkb190
-cmFuc2ZlciAke2xpc3RlbmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gTVBUQ1AgTVBUQ1AgXAorCSMJ
-ICAgICR7Y29ubmVjdF9hZGRyfSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgogCWxyZXQ9
-JD8KIAlpZiBbICRscmV0IC1uZSAwIF07IHRoZW4KIAkJcmV0PSRscmV0CkBAIC02MjQsMTYgKzYy
-NCwxNiBAQCBydW5fdGVzdHNfbG8oKQogCQlmaQogCWZpCiAKLQlkb190cmFuc2ZlciAke2xpc3Rl
-bmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gTVBUQ1AgVENQIFwKLQkJICAgICR7Y29ubmVjdF9hZGRy
-fSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgorCSNkb190cmFuc2ZlciAke2xpc3RlbmVy
-X25zfSAke2Nvbm5lY3Rvcl9uc30gTVBUQ1AgVENQIFwKKwkjCSAgICAke2Nvbm5lY3RfYWRkcn0g
-JHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKIAlscmV0PSQ/CiAJaWYgWyAkbHJldCAtbmUg
-MCBdOyB0aGVuCiAJCXJldD0kbHJldAogCQlyZXR1cm4gMQogCWZpCiAKLQlkb190cmFuc2ZlciAk
-e2xpc3RlbmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gVENQIE1QVENQIFwKLQkJICAgICR7Y29ubmVj
-dF9hZGRyfSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgorCSNkb190cmFuc2ZlciAke2xp
-c3RlbmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gVENQIE1QVENQIFwKKwkjCSAgICAke2Nvbm5lY3Rf
-YWRkcn0gJHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKIAlscmV0PSQ/CiAJaWYgWyAkbHJl
-dCAtbmUgMCBdOyB0aGVuCiAJCXJldD0kbHJldApAQCAtNzE2LDggKzcxNiw4IEBAIEVPRgogCiAJ
-VEVTVF9DT1VOVD0xMDAwMAogCWxvY2FsIGV4dHJhX2FyZ3M9Ii1vIFRSQU5TUEFSRU5UIgotCWRv
-X3RyYW5zZmVyICR7bGlzdGVuZXJfbnN9ICR7Y29ubmVjdG9yX25zfSBNUFRDUCBNUFRDUCBcCi0J
-CSAgICAke2Nvbm5lY3RfYWRkcn0gJHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKKwkjZG9f
-dHJhbnNmZXIgJHtsaXN0ZW5lcl9uc30gJHtjb25uZWN0b3JfbnN9IE1QVENQIE1QVENQIFwKKwkj
-CSAgICAke2Nvbm5lY3RfYWRkcn0gJHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKIAlscmV0
-PSQ/CiAKIAlpcCBuZXRucyBleGVjICIkbGlzdGVuZXJfbnMiIG5mdCBmbHVzaCBydWxlc2V0Cg==
-
---=-JZLwH+BnmnbBU710Mfv4--
-
+Memory state around the buggy address:
+ ffff88807d5f9e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88807d5f9e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88807d5f9f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                           ^
+ ffff88807d5f9f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88807d5fa000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+----------------
+Code disassembly (best guess):
+   0:   00 00                   add    %al,(%rax)
+   2:   00 48 89                add    %cl,-0x77(%rax)
+   5:   ee                      out    %al,(%dx)
+   6:   e8 46 fd ff ff          callq  0xfffffd51
+   b:   4c 89 f7                mov    %r14,%rdi
+   e:   e8 5e c9 ff ff          callq  0xffffc971
+  13:   e8 09 cc ff ff          callq  0xffffcc21
+  18:   9c                      pushfq
+  19:   58                      pop    %rax
+  1a:   f6 c4 02                test   $0x2,%ah
+  1d:   75 26                   jne    0x45
+  1f:   41 f7 c4 00 02 00 00    test   $0x200,%r12d
+  26:   74 01                   je     0x29
+  28:   fb                      sti
+  29:   5b                      pop    %rbx
+* 2a:   5d                      pop    %rbp <-- trapping instruction
+  2b:   41 5c                   pop    %r12
+  2d:   41 5d                   pop    %r13
+  2f:   41 5e                   pop    %r14
+  31:   41 5f                   pop    %r15
+  33:   e9 19 4a 08 00          jmpq   0x84a51
+  38:   0f 0b                   ud2
+  3a:   5b                      pop    %rbx
+  3b:   5d                      pop    %rbp
+  3c:   41 5c                   pop    %r12
+  3e:   41 5d                   pop    %r13
