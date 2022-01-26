@@ -1,200 +1,147 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F300F29CA
-	for <mptcp@lists.linux.dev>; Tue, 25 Jan 2022 22:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29A5173
+	for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 01:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643150486; x=1674686486;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2NoLw+E6YShE46P4WI/2FeAwQxAd7KfNhf4KqCD/ttw=;
-  b=GvIIe1Q6i7Hwc+1wMNNHcSOqIRAYItjsQxhdmT4YaTg8YmfBizCepzns
-   832BolM3Kr3SVKnNIgkFSuE/nBDQKCitGuq+LtoFKhOieZyxaUDtIQjBq
-   zVuRWzpuTBrrx7pr5Xfd9sxldnDySO8VD+Zsf5kgyT2DVX0cY+vUTjODz
-   0ndF3vPgSFxYLS7W9latfBkfY/uWo95QCJD1eXQW3dr051qK+062t289p
-   bfS+o3aWP2QcyK8xUQqlHWB0f6ekmgds2veAPPfetQphpEldjYAhFHseP
-   Nt0bFw2n0pT1OYf8zMAq3zoGm9CPYEn0gbc3hWl9Ctp1SAWCKPDozEMTd
+  t=1643160391; x=1674696391;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=std0EtPcPt+V0TLqlVSv9PyrdkigWmdAhofCREvWBFU=;
+  b=R/9Yp9re+kxmnMyiRwYyfntUWFI6+PYPxRf8PSGzUmTKXr2U9JF9pONV
+   +McqpqS9kL/Y9RhiG0SVxQEf7tsT9ZQJBDpugSVJmq3CHyN9r4uJw9241
+   kGGB/L4r3aHpmkTD/+vhTUPvEozcj7pw9h9RxskdKKS4Jgjx8H5o3xQ8a
+   k7hBW98+sqa1qpdAAe+pLLhR+cM/5S+Pzi2/JOvpH6g00PUHb6z44dL2L
+   FfDeri2fAq+ZasKQwMiaEA8weAz4sARK9/pOrsFludXO1BlrueMJ637dL
+   GBdFD9TjtB8OrYfo0zjrm0pxQ1K1+DiUzl6sMH/ffNLdKjJtrNtoEx540
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="307147684"
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="307147684"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 14:41:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="520573621"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 25 Jan 2022 14:41:24 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1nCUV9-000KWK-Tx; Tue, 25 Jan 2022 22:41:23 +0000
-Date: Wed, 26 Jan 2022 06:40:50 +0800
-From: kernel test robot <lkp@intel.com>
+X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="309772985"
+X-IronPort-AV: E=Sophos;i="5.88,316,1635231600"; 
+   d="scan'208";a="309772985"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 17:26:31 -0800
+X-IronPort-AV: E=Sophos;i="5.88,316,1635231600"; 
+   d="scan'208";a="766980116"
+Received: from vsanjeep-mobl.amr.corp.intel.com ([10.212.157.188])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 17:26:30 -0800
+Date: Tue, 25 Jan 2022 17:26:30 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- eaf44f1da65c7e76af2b8196f9b9c42497824519
-Message-ID: <61f07c72.SFPAMkbPD0DhSQkV%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+cc: Geliang Tang <geliangtang@gmail.com>, 
+    MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net 2/2] selftests: mptcp: add missing join check
+In-Reply-To: <fc920e6d-72fe-49c8-e31f-920fbd15c952@tessares.net>
+Message-ID: <3f68e731-3c0-d74-2040-28ef4485a3b@linux.intel.com>
+References: <20220122093135.4023846-1-matthieu.baerts@tessares.net> <20220122093135.4023846-3-matthieu.baerts@tessares.net> <CA+WQbwuSJ-WZuQFEjTAtD5ycodbiC0mZ7dwDWQa0VEWsOPSO=g@mail.gmail.com> <fc920e6d-72fe-49c8-e31f-920fbd15c952@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="0-1833725667-1643160390=:24422"
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: eaf44f1da65c7e76af2b8196f9b9c42497824519  DO-NOT-MERGE: mptcp: enabled by default
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-elapsed time: 749m
+--0-1833725667-1643160390=:24422
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-configs tested: 131
-configs skipped: 3
+On Mon, 24 Jan 2022, Matthieu Baerts wrote:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> Hi Geliang,
+>
+> Thank you for looking at that!
+>
+> On 22/01/2022 15:04, Geliang Tang wrote:
+>> I think in this test chk_join_nr is omitted on purpose, since it is more
+>> likely to fail. As we can see, chk_add_nr failed sometimes, if we add this
+>> chk_join_nr, it will fail more frequently.
+>
+> May you explain why this tests is likely to fail? Both the commit
+> message and the comment in the code don't explain that.
+>
+>> Matthieu Baerts <matthieu.baerts@tessares.net> 于2022年1月22日周六 17:32写道：
+>>>
+>>> This function also writes the name of the test with its ID, making clear
+>>> a new test has been executed.
+>>>
+>>> Without that, the ADD_ADDR results from this test was appended at the
+>>> end of the previous test causing confusions. Especially when the second
+>>> test was failing, we had:
+>>>
+>>>   17 signal invalid addresses     syn[ ok ] - synack[ ok ] - ack[ ok ]
+>>>                                   add[ ok ] - echo  [ ok ]
+>>>                                   add[fail] got 2 ADD_ADDR[s] expected 3
+>>>
+>>> In fact, this 17th test was OK but not the 18th one.
+>>>
+>>> Now we have:
+>>>
+>>>   17 signal invalid addresses     syn[ ok ] - synack[ ok ] - ack[ ok ]
+>>>                                   add[ ok ] - echo  [ ok ]
+>>>   18 signal addresses race test   syn[ ok ] - synack[ ok ] - ack[ ok ]
+>>>                                   add[fail] got 2 ADD_ADDR[s] expected 3
+>>
+>> I think if chk_add_nr fail here, chk_join_nr must fail too. If we got 2
+>> ADD_ADDR[s], we got 2 JOIN[s] syn too, not 3. Furthermore, if chk_add_nr
+>> passed, we can't make sure chk_join_nr will pass too. Since MP_JOIN is
+>> translated after ADD_ADDR, it may be lost.
+>
+> Indeed, to simplify the commit message, I mixed both a "success" and a
+> "failure" output. I should not have done that and only put a "success"
+> one to keep the output small.
+>
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-i386                 randconfig-c001-20220124
-powerpc              randconfig-c003-20220124
-mips                         bigsur_defconfig
-arc                 nsimosci_hs_smp_defconfig
-powerpc                     rainier_defconfig
-mips                      maltasmvp_defconfig
-sh                 kfr2r09-romimage_defconfig
-sh                           se7206_defconfig
-powerpc                     redwood_defconfig
-arm                        spear6xx_defconfig
-powerpc                mpc7448_hpc2_defconfig
-mips                         rt305x_defconfig
-arm                        mini2440_defconfig
-ia64                             alldefconfig
-arc                        nsimosci_defconfig
-alpha                            alldefconfig
-sh                           se7619_defconfig
-xtensa                          iss_defconfig
-sh                         apsh4a3a_defconfig
-um                               alldefconfig
-sh                           se7721_defconfig
-arc                    vdk_hs38_smp_defconfig
-microblaze                          defconfig
-sh                         ap325rxa_defconfig
-arm                  randconfig-c002-20220124
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-nds32                             allnoconfig
-nios2                               defconfig
-arc                              allyesconfig
-parisc                              defconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-s390                             allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a002-20220124
-x86_64               randconfig-a003-20220124
-x86_64               randconfig-a001-20220124
-x86_64               randconfig-a005-20220124
-x86_64               randconfig-a004-20220124
-x86_64               randconfig-a006-20220124
-i386                 randconfig-a002-20220124
-i386                 randconfig-a005-20220124
-i386                 randconfig-a003-20220124
-i386                 randconfig-a004-20220124
-i386                 randconfig-a001-20220124
-i386                 randconfig-a006-20220124
-arc                  randconfig-r043-20220124
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+Given that Geliang withdrew his comments, and I don't have changes to 
+request, I think this looks ok for the export branch:
 
-clang tested configs:
-arm                  randconfig-c002-20220124
-riscv                randconfig-c006-20220124
-i386                 randconfig-c001-20220124
-powerpc              randconfig-c003-20220124
-mips                 randconfig-c004-20220124
-x86_64               randconfig-c007-20220124
-mips                  cavium_octeon_defconfig
-powerpc                      ppc64e_defconfig
-arm                        vexpress_defconfig
-arm                          pxa168_defconfig
-powerpc                    socrates_defconfig
-arm                         orion5x_defconfig
-mips                           ip28_defconfig
-powerpc                   bluestone_defconfig
-mips                           mtx1_defconfig
-powerpc                     skiroot_defconfig
-powerpc                        icon_defconfig
-powerpc                      walnut_defconfig
-powerpc                        fsp2_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64               randconfig-a011-20220124
-x86_64               randconfig-a013-20220124
-x86_64               randconfig-a015-20220124
-x86_64               randconfig-a016-20220124
-x86_64               randconfig-a014-20220124
-x86_64               randconfig-a012-20220124
-i386                 randconfig-a011-20220124
-i386                 randconfig-a013-20220124
-i386                 randconfig-a014-20220124
-i386                 randconfig-a012-20220124
-i386                 randconfig-a015-20220124
-i386                 randconfig-a016-20220124
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220124
-hexagon              randconfig-r041-20220124
-riscv                randconfig-r042-20220124
-s390                 randconfig-r044-20220124
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Not sure if you want to adjust the commit message as you mention just 
+above.
+
+-Mat
+
+>>> Fixes: 33c563ad28e3 ("selftests: mptcp: add_addr and echo race test")
+>>> Reported-by: Paolo Abeni <pabeni@redhat.com>
+>>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>>> ---
+>>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> index 76c45c845d3b..67be3e1215d7 100755
+>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> @@ -1342,6 +1342,7 @@ signal_address_tests()
+>>>         pm_nl_add_endpoint $ns2 10.0.3.2 flags signal
+>>>         pm_nl_add_endpoint $ns2 10.0.4.2 flags signal
+>>>         run_tests $ns1 $ns2 10.0.1.1
+>>> +       chk_join_nr "signal addresses race test" 3 3 3
+>>
+>> I think we can omit the join numbers check, just print out the name of the
+>> test. Don't pass the join numbers to chk_join_nr, just the msg:
+>>
+>>         chk_join_nr "signal addresses race test"
+>
+> Do you mean we could have situations where ADD_ADDR have been properly
+> sent and received but we check counters just before MPJ are emitted? In
+> this case we would mark the test as failed because MPJs are not OK
+> (checked too soon in fact) while ADD_ADDR are?
+>
+> If yes and if it helps, we can also wait for the kernel to have sent
+> exactly 3 ADD_ADDR before checking the MPJ. On the other hand, do we not
+> already cover this UC where we look for MPJs emitted after having
+> received an ADD_ADDR, no?
+>
+> If we keep checking all counters, I think it might be clearer: MPJ
+> counters are not OK because we didn't receive/process the ADD_ADDR, no?
+>
+
+--
+Mat Martineau
+Intel
+--0-1833725667-1643160390=:24422--
