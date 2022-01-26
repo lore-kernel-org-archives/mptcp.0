@@ -1,155 +1,159 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF522168
-	for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 09:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1643189699;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08542CA3
+	for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 16:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1643213690;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nF84q7Jyr4yQYU6Lt834nIVePouHPZNFA6yEmDuKeNA=;
-	b=ZMdumVr1EV9bvNSoNKOHDfPUVUVfq29DPYisWJnsGl+joB++rnjFC5h4AnhKErWcsLqeIQ
-	7SRypqFHGdE7tkEB0Oq2QUAMK75lxluPTeefZGDIEfLavPlLQryCstLnG/IOqN6xOO7aX/
-	5VFKN3sGopnB5okD9/BU0ZaQ5D1OIj8=
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
- (mail-db5eur01lp2055.outbound.protection.outlook.com [104.47.2.55]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-30-EZJc3s-BPWGTC8RxQqd4_w-1; Wed, 26 Jan 2022 10:34:57 +0100
-X-MC-Unique: EZJc3s-BPWGTC8RxQqd4_w-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fWhjz7NCawarNA7uDOLInx3laD3BeoZ0V5tZXemugTwg14+/sftS9AxqfKVD0Bhq5/Lfl5ZXjwOk5gecSgq4nN6ZvlEjLroKR94eNiqScuP/c7l4cmP/X7/DhAzXZQO2uHN6kwITPHgwbUHvgLx2NNqi+ih829k+Ihw6mqlh3S+6MMzGwavQfImP5Faxe6EB8ED2zKQBujnyHZLlo/NqhHdbv4vk8zTDEMIkogwZOSY+BcJl5qfSKA1rxAZ5hwd/7KN1KvTlfM+VMr1o55ZMW52wf7kOljQ9oPh/XDXgN2h31UuErp5UjJ1ifDcB2FFbps/lDbLDI04gNgZUJeoQig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yGhq+Vh6DZzJh/yIBnfHMdAjXzhQxZxv15GasOgPdyg=;
- b=cGPxImgD3OKJHT7Lgy1InYpjWvkim1VPdJtHrhJMzIgUvsj5D8OulvcPO+rEItnfed3DNfu1ikl/NQ64zDtKYXkk9jd8zeUPCLAaf2k+iVv1I6uuMrUWB4rgkP0+/tmYPbw6TwUo/7keoNByW/1lupZFLG6ljVD5sKYSBIL4VsmmFJRZ2LgonB2VTn3EfRmPPR39MGlrqYq+3wHGhHg1GxvAUxiwu1Hep1+JUAfBoa2bt/PaovalDAkKrKU51PUgYxbJ9pb9Y4+ibUvpGb9MoAW7Zc6eiesEkV/DtYYsg5nkG7Vjby0vMCkkwRDoUZPJP1nz1jHmDXjbraoU95d0wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AS8PR04MB8088.eurprd04.prod.outlook.com (2603:10a6:20b:3f7::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.11; Wed, 26 Jan
- 2022 09:34:51 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::fcd9:b39c:2b94:f13c]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::fcd9:b39c:2b94:f13c%7]) with mapi id 15.20.4930.015; Wed, 26 Jan 2022
- 09:34:51 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] Squash to "mptcp: infinite mapping sending" part 2
-Date: Wed, 26 Jan 2022 17:34:56 +0800
-Message-ID: <016f512feb4ebf9a66808074e9b096bc1c3274d5.1643189677.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.31.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0149.apcprd02.prod.outlook.com
- (2603:1096:202:16::33) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	 in-reply-to:in-reply-to:references:references;
+	bh=a6A2Gtofsm2HKTZH/NWhF5dXN/QL0bQRjpEmX65zn4Y=;
+	b=ZK0gSR0OvkRExsF4gJmaIlvXvQ818AuLHonNT098YTT4Y6lFccJMAEgO0Z89sTbc/G0qGm
+	+QFIsmqlxtJjY00o13rZE94acjJxTZSOf/pNWL6M4l2SckRNfK3RZLdfjMmc3eRPlGmoIM
+	skzIBj48TNRLsq6mMoRaP6pJfbhYAYk=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-177-0xnMKWyhNNiDUHdSReHghg-1; Wed, 26 Jan 2022 11:14:47 -0500
+X-MC-Unique: 0xnMKWyhNNiDUHdSReHghg-1
+Received: by mail-qv1-f70.google.com with SMTP id r12-20020a0562140c8c00b004226c4fc035so273461qvr.4
+        for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 08:14:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=fysXeXh1WW6YVve6gUqELrIgjARZKl2Vh28eeLnVfZQ=;
+        b=MbPbYOoG5Ca86gyDgP6hzSj/WMcgvDXzNhhi4DNtAE2RX7tphVAtvKIvJgIMfOy1X4
+         Uuk/BNkhfbu0FDIwFoDgf55LZhMvB9ibcveDRWISzIYP7gAAZgrFGcA0xFUM+z+vyicK
+         Kvc8lhNF3tSaoeIYnGDBcprW6iFfyixDpgnAynf3LwW0BF+VxFmHFbkPswbjg2U8RA8e
+         gQ+yxi/wt+LepdiSxzzG04i2rJtNDPjhiz4QSGomrhxeYFbpZpUvawES7CTB1mZvXaMT
+         tYuNqSaToVNacCwJjZwxyjQ5qjIjroeJTcBA0nttQh+7HZj/GH0LpUVkrb4CBH08ZSpn
+         Xh4Q==
+X-Gm-Message-State: AOAM532L67fIT3DU8MvZUNPrInb3ex2DQ3Fz/0IhgN4TJx2LYtfxbu7a
+	bnHdhp0q+g1rzpEg9TIZfY3w97oUANWriMl070UtQGdFCCtcsrUII0dDFzG3dwT1o9eiVCQ8nlU
+	OddH1K2v9xuwh4QI=
+X-Received: by 2002:a05:620a:4450:: with SMTP id w16mr18960194qkp.340.1643213686775;
+        Wed, 26 Jan 2022 08:14:46 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJybO+VZrDyMSpaH2QEaia6yUqym/IYy2hLS2N/KGMzG5CMLHY7PhfIqb74i025vJ2KJWTEnwQ==
+X-Received: by 2002:a05:620a:4450:: with SMTP id w16mr18960171qkp.340.1643213686490;
+        Wed, 26 Jan 2022 08:14:46 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
+        by smtp.gmail.com with ESMTPSA id b23sm10165798qtp.94.2022.01.26.08.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jan 2022 08:14:45 -0800 (PST)
+Message-ID: <6cccaaa7854c98248d663f60404ab6163250107f.camel@redhat.com>
+Subject: Re: [PATCH net-next 6/6] ipv4/tcp: do not use per netns ctl sockets
+From: Paolo Abeni <pabeni@redhat.com>
+To: Eric Dumazet <eric.dumazet@gmail.com>, "David S . Miller"
+	 <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	mptcp@lists.linux.dev
+Date: Wed, 26 Jan 2022 17:14:42 +0100
+In-Reply-To: <20220124202457.3450198-7-eric.dumazet@gmail.com>
+References: <20220124202457.3450198-1-eric.dumazet@gmail.com>
+	 <20220124202457.3450198-7-eric.dumazet@gmail.com>
+User-Agent: Evolution 3.42.2 (3.42.2-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3837c567-b71d-4267-692d-08d9e0af1a0d
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8088:EE_
-X-Microsoft-Antispam-PRVS:
-	<AS8PR04MB8088CB9843C93A8B40026396F8209@AS8PR04MB8088.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	b5trzi8sZa2HHmGJ2WYCTBnIwi9CQ+ZbImp+ub4F/nUIL4oQ6SLxEeazRcoPLExMHT+6XbLp18Zql9i0YUFbZz2hROs1+ljXqqT6pOV1sbflGOrApJry3cKW2gDGJKrJHhqlfyua0o5eDyQQ209R38As3WPcA1LPL38zOmiz6Y9V9vJMEpzkkc8TziOA0tPfe0cjOE7R1N6DRlAYl6DXM1/5U7nZ1F4xLxmlegjlTdvauQFOwSX2b2oT+iCIqD89tfQWYFVuzMbezTRIFjBRkkTi4l+MsFvgvwwJGbZF4XRSdBro8pWsXLHyQqKEPTRHQ09Ym4zK/lPeNLyiSZL/ATajGXDrYHu8PGaD4uRvuubKiyn9vSuefLr6sI3i4jWLGLDVGZh/uksc3SfZp3sAYR9VIedqsr2pQlxiFyXP4dzLqhPfmXC4JH8nwG3ccdz+qQCuKhaYdTkaGPoNYwor3Rfw8gqG4m7JsBR9qMoOSeBWsGn4zkzjwB/K0jJ2fZP9J0tOKRZcYPlh1ZuHoBJovT+jD9Z95RZnFaQe634QtxtF95snXX2XaYJIGbaNcwSBhf5pdEApU6xmf4FHRTTYqX0ON5I4N9/J6Uo8wpoR6lieh1y3E6DDeZI8IPVNjeneIDkpYg2bBqy5nNjWdFaWzA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2616005)(8936002)(4326008)(6916009)(44832011)(83380400001)(6506007)(55236004)(5660300002)(508600001)(6486002)(86362001)(2906002)(186003)(6512007)(26005)(66946007)(107886003)(66556008)(66476007)(316002)(36756003)(8676002)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DJZsBn41ALLQrzyEjxmgLsb9Y0LamF5F3s6zboxCXjJ3AkXSY13IGlQmNtGf?=
- =?us-ascii?Q?MyAv9atxlurrN21YfiPg2zrV4wRuZj8pXbYWIFL9TxAQo8eRdw2KDqcPXi6J?=
- =?us-ascii?Q?2DiLKvDpcyKqfFFlEWSW796lh3ZwM2zNSvgHK1qXHe+BbCK9P96e8tQXb662?=
- =?us-ascii?Q?2fGFIQmuu/S7uMzXCgHnyD8hMR824H54cb9a635+eGjLS8T6k7AuS3ky5L8m?=
- =?us-ascii?Q?S4Y5yHWNeACUcHX1VDyAgjoqRI8gkCVPADZrgjiFqJKRWhg3BMHAA9vhsxjQ?=
- =?us-ascii?Q?Q7Nwl1h83OhPhAj1u49bJDs0wtvnIKOaKd09CQe3OPmXx3Uxzy7InhgMfr46?=
- =?us-ascii?Q?oGC9NFyX0Si0IRjLCsBDt/TcqmZ5SB9EEu58NziejjrZdAvA7DAeVbKAp6fe?=
- =?us-ascii?Q?tEkH5JpHm2/bNeXOyexPvFnqhfxzxEZVE/pVUml559mIX7VcuvUkiHlT2cHW?=
- =?us-ascii?Q?mlw5Ci8j8m3BbI5QxpXZ20mgEJ3nf77FtCOiccK+YSK653lgvuvbEExqbLh/?=
- =?us-ascii?Q?s0HA9T27OBaxNw9WOtEwggPxo6g9RL742nDp/WpAfViy00kiOXFfvjF6UNrv?=
- =?us-ascii?Q?sFscaIqmWxPPH3/5rwIELkw6knPFUHjjLz19pWhOwCx5yoJt10F6Ysj9oXd5?=
- =?us-ascii?Q?+I4vLQ85efvLhqg6Ig9TiKRijm5dhIIT6YAFsM3B4BaLR55C/P2PV5CA1wA/?=
- =?us-ascii?Q?SpGVBWl7vfn6tYXy5fINPjqMyqh0KTzsC8diDJVXFuGCQctOxLlIzWfpDjPB?=
- =?us-ascii?Q?6g1uZwoTSUYnjosdh91K7mx3ytSZf1GmL1fLChkb0nPshOcmlX7fFU70ZutI?=
- =?us-ascii?Q?sr1aBvm03q+YiRIIMh2oRfSZ6XPTnYjh34laFdQPxSr+viihEq3DYL+jMPKF?=
- =?us-ascii?Q?HWCA7bG9shtPBJ7lMD8WkpE8133CGXbhebQg7lN022tafSrtLhTecjjrDem1?=
- =?us-ascii?Q?bRC47Kedqwn4yRcRjGzkHug6k7h0pkaJMBHgSzDdRo3G8Jel5w9A6f/YGRiQ?=
- =?us-ascii?Q?jRhAsnctVZqx4/XcTml8QhqWRBqf5XduJQ6XF2PB0Vp//pMkVRSBKJykPxZN?=
- =?us-ascii?Q?FFTq0JYJE4Ua0U7E37vnv801LxaGbSOwNfCMInMaFG/e5uaf+tW4rcMoOUcu?=
- =?us-ascii?Q?YpXBjZTDjEvDo60HhncfNYNZYDBMMUUYp+mJ10Ds4IP7UbLUgMPqWSrRDzM0?=
- =?us-ascii?Q?VUXi/HkFSwlJa74DEBaDn+KwpH6Tce325AfQN6TWey8kvg8kF70TIwo4Ox0D?=
- =?us-ascii?Q?SDA2O0Zp/3/+v9N1zjoE8LSSz31jwt3brlOfdXd0oCGWxxVxFwwdB2f0LoxG?=
- =?us-ascii?Q?5bA70yCJcQp+eVJ53FTvMVmqAVMFD50Eh+MQoyT/uTrMoT5yExOF+FLrhS3V?=
- =?us-ascii?Q?XwUFEVWah8+b6craFOlGMAUaiJk8Vuivnw1EpMXZ8g1frG+HvgOIusiRirBA?=
- =?us-ascii?Q?NIv2hAG4KNwSKKLkDRTw0Ea2N975vvtc7bStH/Z0PjiLXr+SxP0GpDgMjIDh?=
- =?us-ascii?Q?+6kjamRhNXYA1+8KxCiMQLg+niYUUqk1qXXVbNhlNmOrGiIGrJlj18x+sV0H?=
- =?us-ascii?Q?BKYXElOCNCjK/Hrv5+6cHG2856cDqXKTClkLliYguXoQOfR21YUkpXfY2dBW?=
- =?us-ascii?Q?QxYXFnhizPXcHHzRgtHrBSQ=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3837c567-b71d-4267-692d-08d9e0af1a0d
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2022 09:34:51.1402
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hN3f3Ps5Dkjdo2s8S88DbplXGOeWbJurFF5QQFYCmsCWeVgLdxEFgbKZoFTdAgOa3EI0U47HBSIwNU8C55hc3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8088
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/mixed; boundary="=-JZLwH+BnmnbBU710Mfv4"
 
-Fix the checksum value of the infinite map.
+--=-JZLwH+BnmnbBU710Mfv4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-mptcp_make_csum() will return a non-zero value when mpext->csum is set to
-zero.
+Hello,
+On Mon, 2022-01-24 at 12:24 -0800, Eric Dumazet wrote:
+> From: Eric Dumazet <edumazet@google.com>
+> 
+> TCP ipv4 uses per-cpu/per-netns ctl sockets in order to send
+> RST and some ACK packets (on behalf of TIMEWAIT sockets).
+> 
+> This adds memory and cpu costs, which do not seem needed.
+> Now typical servers have 256 or more cores, this adds considerable
+> tax to netns users.
+> 
+> tcp sockets are used from BH context, are not receiving packets,
+> and do not store any persistent state but the 'struct net' pointer
+> in order to be able to use IPv4 output functions.
+> 
+> Note that I attempted a related change in the past, that had
+> to be hot-fixed in commit bdbbb8527b6f ("ipv4: tcp: get rid of ugly unicast_sock")
+> 
+> This patch could very well surface old bugs, on layers not
+> taking care of sk->sk_kern_sock properly.
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/options.c  | 3 ++-
- net/mptcp/protocol.c | 1 -
- 2 files changed, 2 insertions(+), 2 deletions(-)
+We are observing UaF in our self-tests on top of this patch:
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 03c82985dba1..48a805731216 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1339,7 +1339,8 @@ void mptcp_write_options(__be32 *ptr, const struct tc=
-p_sock *tp,
- 			ptr +=3D 1;
- 			if (opts->csum_reqd) {
- 				put_unaligned_be32(mpext->data_len << 16 |
--						   mptcp_make_csum(mpext), ptr);
-+						   (mpext->data_len ? mptcp_make_csum(mpext) : 0),
-+						   ptr);
- 			} else {
- 				put_unaligned_be32(mpext->data_len << 16 |
- 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 526a0f5ba415..3324e1c61576 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1231,7 +1231,6 @@ static void mptcp_update_infinite_map(struct mptcp_so=
-ck *msk,
-=20
- 	mpext->infinite_map =3D 1;
- 	mpext->data_len =3D 0;
--	mpext->csum =3D 0;
-=20
- 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
- 	mptcp_subflow_ctx(ssk)->send_infinite_map =3D 0;
---=20
-2.31.1
+https://github.com/multipath-tcp/mptcp_net-next/issues/256
+
+While I can't exclude the MPTCP code is misusing sk_net_refcnt and/or
+sk_kern_sock, we can reproduce the issue even with plain TCP sockets[1]
+
+The kasan report points to:
+
+	struct inet_hashinfo *hashinfo = tw->tw_dr->hashinfo;
+
+in inet_twsk_kill(). Apparently tw->tw_dr still refers to:
+
+	&sock_net(sk)->ipv4.tcp_death_row
+
+and the owning netns has been already dismantelled, as expected.
+I could not find any code setting tw->tw_dr to a safe value after netns
+destruction?!? am I missing something relevant?
+
+Thanks!
+
+Paolo
+
+[1] patching the selftest script with the attached patch and running it
+in a loop:
+
+while ./mptcp_connect.sh -t -t; do : ; done
+
+--=-JZLwH+BnmnbBU710Mfv4
+Content-Disposition: attachment; filename="selftests_tcp.patch"
+Content-Type: text/x-patch; name="selftests_tcp.patch"; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25u
+ZWN0LnNoIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbmV0L21wdGNwL21wdGNwX2Nvbm5lY3Qu
+c2gKaW5kZXggY2I1ODA5Yjg5MDgxLi4xNTJkMzk1OTE2ODIgMTAwNzU1Ci0tLSBhL3Rvb2xzL3Rl
+c3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25uZWN0LnNoCisrKyBiL3Rvb2xzL3Rl
+c3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25uZWN0LnNoCkBAIC02MDksOCArNjA5
+LDggQEAgcnVuX3Rlc3RzX2xvKCkKIAkJbG9jYWxfYWRkcj0iMC4wLjAuMCIKIAlmaQogCi0JZG9f
+dHJhbnNmZXIgJHtsaXN0ZW5lcl9uc30gJHtjb25uZWN0b3JfbnN9IE1QVENQIE1QVENQIFwKLQkJ
+ICAgICR7Y29ubmVjdF9hZGRyfSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgorCSNkb190
+cmFuc2ZlciAke2xpc3RlbmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gTVBUQ1AgTVBUQ1AgXAorCSMJ
+ICAgICR7Y29ubmVjdF9hZGRyfSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgogCWxyZXQ9
+JD8KIAlpZiBbICRscmV0IC1uZSAwIF07IHRoZW4KIAkJcmV0PSRscmV0CkBAIC02MjQsMTYgKzYy
+NCwxNiBAQCBydW5fdGVzdHNfbG8oKQogCQlmaQogCWZpCiAKLQlkb190cmFuc2ZlciAke2xpc3Rl
+bmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gTVBUQ1AgVENQIFwKLQkJICAgICR7Y29ubmVjdF9hZGRy
+fSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgorCSNkb190cmFuc2ZlciAke2xpc3RlbmVy
+X25zfSAke2Nvbm5lY3Rvcl9uc30gTVBUQ1AgVENQIFwKKwkjCSAgICAke2Nvbm5lY3RfYWRkcn0g
+JHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKIAlscmV0PSQ/CiAJaWYgWyAkbHJldCAtbmUg
+MCBdOyB0aGVuCiAJCXJldD0kbHJldAogCQlyZXR1cm4gMQogCWZpCiAKLQlkb190cmFuc2ZlciAk
+e2xpc3RlbmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gVENQIE1QVENQIFwKLQkJICAgICR7Y29ubmVj
+dF9hZGRyfSAke2xvY2FsX2FkZHJ9ICIke2V4dHJhX2FyZ3N9IgorCSNkb190cmFuc2ZlciAke2xp
+c3RlbmVyX25zfSAke2Nvbm5lY3Rvcl9uc30gVENQIE1QVENQIFwKKwkjCSAgICAke2Nvbm5lY3Rf
+YWRkcn0gJHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKIAlscmV0PSQ/CiAJaWYgWyAkbHJl
+dCAtbmUgMCBdOyB0aGVuCiAJCXJldD0kbHJldApAQCAtNzE2LDggKzcxNiw4IEBAIEVPRgogCiAJ
+VEVTVF9DT1VOVD0xMDAwMAogCWxvY2FsIGV4dHJhX2FyZ3M9Ii1vIFRSQU5TUEFSRU5UIgotCWRv
+X3RyYW5zZmVyICR7bGlzdGVuZXJfbnN9ICR7Y29ubmVjdG9yX25zfSBNUFRDUCBNUFRDUCBcCi0J
+CSAgICAke2Nvbm5lY3RfYWRkcn0gJHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKKwkjZG9f
+dHJhbnNmZXIgJHtsaXN0ZW5lcl9uc30gJHtjb25uZWN0b3JfbnN9IE1QVENQIE1QVENQIFwKKwkj
+CSAgICAke2Nvbm5lY3RfYWRkcn0gJHtsb2NhbF9hZGRyfSAiJHtleHRyYV9hcmdzfSIKIAlscmV0
+PSQ/CiAKIAlpcCBuZXRucyBleGVjICIkbGlzdGVuZXJfbnMiIG5mdCBmbHVzaCBydWxlc2V0Cg==
+
+--=-JZLwH+BnmnbBU710Mfv4--
 
