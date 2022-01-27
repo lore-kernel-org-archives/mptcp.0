@@ -1,39 +1,39 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187442CA9
-	for <mptcp@lists.linux.dev>; Wed, 26 Jan 2022 23:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7812C9D
+	for <mptcp@lists.linux.dev>; Thu, 27 Jan 2022 00:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643241510; x=1674777510;
+  t=1643241946; x=1674777946;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=glBhiVd1INaQPV6aoL89JDf5+u8be7p87eH1y38QxSU=;
-  b=aZXOTHhjHU4KbMODyVk38VpDYhNRFM8EKnWj5cImZfXvJwULdIp6sF4a
-   VdCPK6rlZ/WNZK0aYmnudKIEx+s/yTZ1qbW8KZ1wLccHypnqKWla/32hh
-   y/SqVC8FrigJqS7liNTVZS/CjAcQoGmBl+ZdCYLerg3XR70SBfW8JDKxc
-   Gft0sVYosVsDQgOG9pLnF8Z4nA15xV9m5U4OfuvboehmQQdv9LqkIcQlP
-   0jLO1+UWANJNXXlFHSh0khESgqWrO96z+9XC7bUqgpnVvFP1mFwlSWB0V
-   UZAL8/S8J1EqdBZGqfMjejjUBh0qpfIVXidq34qRFEYhx6opM01T4seoM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="245530165"
+  bh=5w2mbzmpqThl979PIL9B8laKD2R+P+2IDUg6PJUEaUY=;
+  b=hnCo7YBQ924MFge3SxYNmDKRs0gGHaduBzfie7qCBeFTjOfpmTiAlKZr
+   hBB9YxqBYW0Npi9dr48CsVzN/6+wW4CFE55vQwRmadMwV8Hu0bP/JZgWT
+   0Zps3nmYw6PEvmOfA8XeE8LiwHegUMkzeu0pTH3pxZhmWUFKQ+MC3mA7Y
+   XWbbJE+9ypponHcF6DFMgekozblEjvdOE7ymk4f4Tn3K8XmuvMVQ2o9WU
+   t9th7IGY7l1n/hM4AnhPEMXlHp0VTR68/kANgRgXx8Pqt3QRAvDMxOV/X
+   UCZCwXlHra4uoPgOMq50eQJ/q7CwWqnET9XXJOsjKhXzMc/GH96teNJMC
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="234070039"
 X-IronPort-AV: E=Sophos;i="5.88,319,1635231600"; 
-   d="scan'208";a="245530165"
+   d="scan'208";a="234070039"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 15:58:29 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 16:05:46 -0800
 X-IronPort-AV: E=Sophos;i="5.88,319,1635231600"; 
-   d="scan'208";a="767304084"
+   d="scan'208";a="767306144"
 Received: from dhurwitz-mobl.amr.corp.intel.com ([10.209.79.89])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 15:58:29 -0800
-Date: Wed, 26 Jan 2022 15:58:28 -0800 (PST)
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 16:05:46 -0800
+Date: Wed, 26 Jan 2022 16:05:45 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 1/3] Squash to "mptcp: infinite mapping
- sending"
-In-Reply-To: <a89164069e575fbb57a426877cc6d55e72a6834e.1643110285.git.geliang.tang@suse.com>
-Message-ID: <59de1e76-b815-e09b-d364-ffc78ab4cf2@linux.intel.com>
-References: <cover.1643110285.git.geliang.tang@suse.com> <a89164069e575fbb57a426877cc6d55e72a6834e.1643110285.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next 2/3] Squash to "mptcp: infinite mapping
+ receiving"
+In-Reply-To: <a73dc6f3911c83cc292f4caa6f94675af2e06364.1643110285.git.geliang.tang@suse.com>
+Message-ID: <d16d1a56-7874-644-b87c-9f8b6d5574b@linux.intel.com>
+References: <cover.1643110285.git.geliang.tang@suse.com> <a73dc6f3911c83cc292f4caa6f94675af2e06364.1643110285.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,89 +44,71 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Tue, 25 Jan 2022, Geliang Tang wrote:
 
-> Add a flag infinite_sent in struct mptcp_subflow_context, to make sure
-> only one infinite map is sent.
-
-Could you explain more about the extra infinite mappings you mention in 
-the cover letter? Maybe share a pcap?
-
+> Add a flag infinite_expect in struct mptcp_subflow_context, to avoid
+> resetting the subflow when the infinite map wasn't received.
 >
+
+Could you give some more details about this too? Does the reset happen 
+when the infinite mapping is lost and the peer stops sending MPTCP 
+options?
+
+I think a flag like infinite_expect may be needed, but with a bit more 
+complexity to discard in-flight data from the peer until the expected 
+infinite mapping arrives. Look back at earlier discussions about MP_FAIL 
+and dropping data:
+
+https://lore.kernel.org/mptcp/DEA13B0F-B535-42A3-95C6-595859A1CD55@apple.com/
+
+
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> net/mptcp/options.c  | 2 +-
-> net/mptcp/pm.c       | 4 +++-
-> net/mptcp/protocol.h | 9 +++++++--
-> 3 files changed, 11 insertions(+), 4 deletions(-)
+> net/mptcp/protocol.h | 1 +
+> net/mptcp/subflow.c  | 7 ++++++-
+> 2 files changed, 7 insertions(+), 1 deletion(-)
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 0d0d2eb8c8ca..03c82985dba1 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -826,7 +826,7 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->
-> 	opts->suboptions = 0;
->
-> -	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
-> +	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(subflow, skb)))
-> 		return false;
->
-> 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 1f8878cc29e3..88f0fec1bee5 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -275,8 +275,10 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
->
-> 	pr_debug("fail_seq=%llu", fail_seq);
->
-> -	if (!mptcp_has_another_subflow(sk) && READ_ONCE(msk->allow_infinite_fallback))
-> +	if (!mptcp_has_another_subflow(sk) && READ_ONCE(msk->allow_infinite_fallback)) {
-> 		subflow->send_infinite_map = 1;
-> +		subflow->infinite_sent = 0;
-> +	}
-> }
->
-> /* path manager helpers */
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index c47d69a42fcb..6bcf6cbded45 100644
+> index 6bcf6cbded45..ddaa86acadce 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -450,6 +450,7 @@ struct mptcp_subflow_context {
-> 		send_mp_fail : 1,
+> @@ -451,6 +451,7 @@ struct mptcp_subflow_context {
 > 		send_fastclose : 1,
 > 		send_infinite_map : 1,
-> +		infinite_sent : 1,
+> 		infinite_sent : 1,
+> +		infinite_expect : 1,
 > 		rx_eof : 1,
 > 		can_ack : 1,        /* only after processing the remote a key */
 > 		disposable : 1,	    /* ctx can be free at ulp release time */
-> @@ -893,13 +894,17 @@ static inline void mptcp_do_fallback(struct sock *sk)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index c8126986793e..e41161048498 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -964,7 +964,9 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
 >
-> #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)", __func__, a)
+> 	data_len = mpext->data_len;
+> 	if (data_len == 0) {
+> +		pr_debug("infinite mapping received");
+> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
+> +		subflow->infinite_expect = 0;
+> 		subflow->map_data_len = 0;
+> 		return MAPPING_INVALID;
+> 	}
+> @@ -1174,12 +1176,15 @@ static bool subflow_check_data_avail(struct sock *ssk)
+> 				tcp_send_active_reset(ssk, GFP_ATOMIC);
+> 				while ((skb = skb_peek(&ssk->sk_receive_queue)))
+> 					sk_eat_skb(ssk, skb);
+> +			} else {
+> +				subflow->infinite_expect = 1;
+> 			}
+> 			WRITE_ONCE(subflow->data_avail, 0);
+> 			return true;
+> 		}
 >
-> -static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
-> +static inline bool mptcp_check_infinite_map(struct mptcp_subflow_context *subflow,
-> +					    struct sk_buff *skb)
-> {
-> 	struct mptcp_ext *mpext;
->
-> 	mpext = skb ? mptcp_get_ext(skb) : NULL;
-> -	if (mpext && mpext->infinite_map)
-> +	if (mpext && mpext->infinite_map &&
-> +	    !subflow->infinite_sent) {
-> +		subflow->infinite_sent = 1;
-
-We don't want to have side effects in this function.
-
-Even though the check for NULL skb means that infinite_sent is not 
-modified when tcp_established_options() is called from tcp_current_mss(), 
-this doesn't seem right. If this flag is needed (I'm not sure of that 
-yet), wouldn't mptcp_update_infinite_map() be a better place for it?
-
-> 		return true;
-> +	}
->
-> 	return false;
-> }
+> -		if ((subflow->mp_join || subflow->fully_established) && subflow->map_data_len) {
+> +		if ((subflow->mp_join || subflow->fully_established) &&
+> +		    !subflow->infinite_expect && subflow->map_data_len) {
+> 			/* fatal protocol error, close the socket.
+> 			 * subflow_error_report() will introduce the appropriate barriers
+> 			 */
 > -- 
 > 2.31.1
 >
