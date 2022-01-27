@@ -1,104 +1,110 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CDE168
-	for <mptcp@lists.linux.dev>; Thu, 27 Jan 2022 16:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643300646; x=1674836646;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QdrQN8+xt4zSOyzxVEAif3n50a8JVYYkgJ7Y42L08Wc=;
-  b=bXKSEH7Y/BBF5D0DkCeT3rhVthQiNJNBoJgqfj7H6N7eY2pj8a+DPb63
-   ic31dGVBm6XV0XBs6vTOO8kseoTPzh+y2aAefq+We7Z1/m95f7nCrEsW7
-   05EAdPOtOtTaAkcLa/1IvsNWQGEAPQd3W/WmXXm0r49PvYnC4SK1UnWr5
-   efjyYB+HQU3WMUjcO33TXCXGzLs7VDkwtsM66r7RBH6OpirfYPtXmoPKo
-   FMWegXpgumPl1LXMmsWamFcl9E0oP1r0CpWaxho9B2Gn/JBdngl8PQ9jA
-   lcUm3Bsc+Ga6XYAYezEAIxc2f3Ms0FCqsymQuPL5+GUjpEOXHuEqdmEvs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="246845427"
-X-IronPort-AV: E=Sophos;i="5.88,321,1635231600"; 
-   d="scan'208";a="246845427"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 08:24:06 -0800
-X-IronPort-AV: E=Sophos;i="5.88,321,1635231600"; 
-   d="scan'208";a="477927710"
-Received: from mmambros-mobl1.amr.corp.intel.com ([10.209.64.126])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 08:24:06 -0800
-Date: Thu, 27 Jan 2022 08:24:05 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2] Squash to "mptcp: infinite mapping sending"
- - fix csum
-In-Reply-To: <f2761a60658d4f54e0d39fbf4b4fe45e387e5b32.1643250449.git.geliang.tang@suse.com>
-Message-ID: <f4a41e6-d098-13e-f085-8a9f404d8bab@linux.intel.com>
-References: <f2761a60658d4f54e0d39fbf4b4fe45e387e5b32.1643250449.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA7C29CA
+	for <mptcp@lists.linux.dev>; Thu, 27 Jan 2022 17:09:23 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id d10so7208696eje.10
+        for <mptcp@lists.linux.dev>; Thu, 27 Jan 2022 09:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=ZPHRE+C/v2gNlL2a7HeYHesyem4JYDq+ldUsKhvfG1s=;
+        b=IHyD5WRqTbUmmWI8+vLcD4Kp6ngG/OB8pKAAOgJJT1cqDAgmMAfMCxRRMAjkCmbCmK
+         BGW8YA0lugwhkzVlFTO+ZBSANh7Rtbu1d9XfrtjZmy4gfSme3QuwU4TEleL/YwPSrcp5
+         ZA/xcOCNd+GC4oEr2beUZ/SzDzx2NHWjjJ+L5hDd557MIIvVO3hsY77c1JOrxkVPCgzg
+         fWznPX0556UbEpR11kbtVVLOavD+Dxs9DAkSv5y+PJdPT2u4by8g1fMtwxIu0jeB+px+
+         XphWUOdxCfFgWr697LXR41+ykxk6Mk03fkb5J4J6wRut4+5OalmuFrReeeune1W/bJXT
+         dCUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ZPHRE+C/v2gNlL2a7HeYHesyem4JYDq+ldUsKhvfG1s=;
+        b=PojINeO5HvGehjNtqwojiXvgaRPKrijvIv+oVYUP/QwD+eqgb+hbKihogAkjaRxYk5
+         /lDLMUGLNWxRnHR0VwOrxot6mPOaP6chn62kP5WEoWq6g+1OZhHQ3IY197LneX9fwROc
+         MncWrOQ4GKYppFsr9/iNr8g0NvsMDXwOXtv7qxdx+A3L3KyaHkG1sbTUoWsCJLhSxXgY
+         ZVciJSeJA3z7nL5LnpEbpl9F5NuIcQiYy8B2oDcQUPjK6U7jccWTCYb1nDjsJP+IpIlB
+         kHU1A6WmvA4ltiF9O3lt3dQWytWcGKlAFNwUbdp2xFNq/d1/MdKwX2zTkfckG2wi9iTn
+         7e/A==
+X-Gm-Message-State: AOAM5334EirOgYXi+YOv0g5Vl5anPu/tWJtaPxcnvrcCILtA07RbQnO+
+	HKQjYsIC1GWh/h3BJmyS34BIwg==
+X-Google-Smtp-Source: ABdhPJw3UvX1SmRdPOm2ASisWcPsdzNnny+A9/yUDLRkyoFTSQ5UbF9BZr6ucKYXwfZqvt8dVzT5mw==
+X-Received: by 2002:a17:906:b116:: with SMTP id u22mr3667402ejy.427.1643303361918;
+        Thu, 27 Jan 2022 09:09:21 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:fe1f:d9d6:8db5:a255? ([2a02:578:8593:1200:fe1f:d9d6:8db5:a255])
+        by smtp.gmail.com with ESMTPSA id c1sm8927832ejs.29.2022.01.27.09.09.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jan 2022 09:09:21 -0800 (PST)
+Message-ID: <1825f5e8-6d13-a317-4a96-f4a4fcf07409@tessares.net>
+Date: Thu, 27 Jan 2022 18:09:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH net-next 3/3] net/smc: Fallback when handshake workqueue
+ congested
+Content-Language: en-GB
+To: "D. Wythe" <alibuda@linux.alibaba.com>, kgraul@linux.ibm.com
+Cc: kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <cover.1643284658.git.alibuda@linux.alibaba.com>
+ <ed4781cde8e3b9812d4a46ce676294a812c80e8f.1643284658.git.alibuda@linux.alibaba.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <ed4781cde8e3b9812d4a46ce676294a812c80e8f.1643284658.git.alibuda@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Jan 2022, Geliang Tang wrote:
+Hi,
 
-> Fix the checksum value of the infinite map.
->
-> mptcp_make_csum() will return a non-zero value when mpext->csum is set to
-> zero.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> v2:
-> - add a comment for the checksum value of the infinite mapping.
+(+cc MPTCP ML)
 
-Thanks! Looks good to me
+On 27/01/2022 13:08, D. Wythe wrote:
+> From: "D. Wythe" <alibuda@linux.alibaba.com>
+> 
+> This patch intends to provide a mechanism to allow automatic fallback to
+> TCP according to the pressure of SMC handshake process. At present,
+> frequent visits will cause the incoming connections to be backlogged in
+> SMC handshake queue, raise the connections established time. Which is
+> quite unacceptable for those applications who base on short lived
+> connections.
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+(...)
 
-> ---
-> net/mptcp/options.c  | 6 +++++-
-> net/mptcp/protocol.c | 1 -
-> 2 files changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 0d0d2eb8c8ca..7abad31c2b84 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1338,8 +1338,12 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-> 			put_unaligned_be32(mpext->subflow_seq, ptr);
-> 			ptr += 1;
-> 			if (opts->csum_reqd) {
-> +				/* data_len == 0 is reserved for the infinite mapping,
-> +				 * the checksum will also be set to 0.
-> +				 */
-> 				put_unaligned_be32(mpext->data_len << 16 |
-> -						   mptcp_make_csum(mpext), ptr);
-> +						   (mpext->data_len ? mptcp_make_csum(mpext) : 0),
-> +						   ptr);
-> 			} else {
-> 				put_unaligned_be32(mpext->data_len << 16 |
-> 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 526a0f5ba415..3324e1c61576 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1231,7 +1231,6 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
->
-> 	mpext->infinite_map = 1;
-> 	mpext->data_len = 0;
-> -	mpext->csum = 0;
->
-> 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
-> 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
-> -- 
-> 2.31.1
->
->
->
+> diff --git a/net/smc/Kconfig b/net/smc/Kconfig
+> index 1ab3c5a..1903927 100644
+> --- a/net/smc/Kconfig
+> +++ b/net/smc/Kconfig
+> @@ -19,3 +19,15 @@ config SMC_DIAG
+>  	  smcss.
+>  
+>  	  if unsure, say Y.
+> +
+> +if MPTCP
 
---
-Mat Martineau
-Intel
+After having read the code and the commit message, it is not clear to me
+ why this new feature requires to have MPTCP enabled. May you share some
+explanations about that please?
+
+> +
+> +config SMC_AUTO_FALLBACK
+> +	bool "SMC: automatic fallback to TCP"
+> +	default y
+> +	help
+> +	  Allow automatic fallback to TCP accroding to the pressure of SMC-R
+> +	  handshake process.
+> +
+> +	  If that's not what you except or unsure, say N.
+> +endif
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
