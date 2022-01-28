@@ -1,44 +1,44 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D27D2C80
-	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 17:19:56 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id d138-20020a1c1d90000000b0034e043aaac7so6057217wmd.5
-        for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 09:19:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D782C80
+	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 17:26:37 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id w11so12202256wra.4
+        for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 09:26:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=UDjVSM4aDFGybm29yIra1PvYbtIZLDOhviCgm2bXM4M=;
-        b=Z6RQ1/tH7o/eLO2ftV/l1sNRJNFzbXZhRqZJcNaPB4D7LvlB8cFCkjSHJTa9N6P5SR
-         UEEC9ogSMa+JYJT3BW2EHW3zayoyvaCYi0m+/tfaJ4ZaKeGG9omfOlErI5gorjwgmliE
-         Ezk83+6I/pSCOWIavbNx8HcF/iuNlo3jm9hMc+eoTSRs1Bi3r/EQ/UG5ZtywsK1gnklJ
-         kTWF3RJQfNrxFSeuwe5QZ5vAVAvfIzZhx3nXvHc0Oys8MbA0aYvztO9iJspjckj9aAmv
-         7pm4KbSbbnNmqTR1U2Fp3OkfV4lR9GyImHE4t96czztI35qwooWBRrhxzseN3NwVuhwn
-         BKPg==
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=VaBXPgnF+Eeh29s4XhFJXDL4wbHCqZ8Y8fOijOsB6MA=;
+        b=oWyTFk41SZDGxPdCZczqeMZUHcmuAIL07aMYVXNHQolJWTg2BAA0eXO3O2gHv5oSvX
+         c+krIW95JzAWLOFwHAcGmDUpl/QFIxiMIfMoLawfjgX9UvzTA4cP1TnF9/XckC8YCMlB
+         U1qcOTa2lQtje21oDWJuYgirWtn8HsLWo58bJk7TtOZQ5BiKC9zUVhiA+AyT7TQMTqGe
+         NrCf8GE7e7kv4YJ4ZtNoUmaylnoe6SNIFuuN3eeaKY8H1ALd0TIqbYwQNB1U/fqIpvPW
+         lGHLpFK8eOOmLpurExt6KxBa7vBFvcmt5JEwgPauXuvjbHf1KAMUpMdrFtwjthm7SYZl
+         3mdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:to:references:cc:from:in-reply-to
          :content-transfer-encoding;
-        bh=UDjVSM4aDFGybm29yIra1PvYbtIZLDOhviCgm2bXM4M=;
-        b=6BQShYqzO1I5x2zAMH9p6MAV9wpgI+Ux9KYgIF46fHg4AqAl/beSNIQ7dGEc0J4BKV
-         OLF0cgTJXwKHURECwWeAN5nX8/Sdo6dUGw3dLWGtnL3FjAcPvvVBPHAM9Pr6yuM9yLgm
-         mMh+VTzGmElx68zaPYnpwrRnQlGUqr7YUTgsW18hkxPKIq2V+9qgN9tNpRY5TKZUsVM+
-         gZXlJnMVbZtcjIvsRGGmM+m+JdfPszHFms141Q/PPJUFcQYjaHRO+eF3M0Ppid//xHhn
-         DEXMD4hj6QRXkADcAsge8CM8fx2w8EWP7suMhQzP039mKUASlCSYWBMqxm8JTbPb4j44
-         UhBQ==
-X-Gm-Message-State: AOAM530v+QmKP3wWmFcDRfGMDVZwgPE5/jeJQhUy+fKrqEAIyr1zNuEA
-	xx3xrkVlx5F0zYD0SQKnsQnstQ==
-X-Google-Smtp-Source: ABdhPJxvKhPy7cHVlN5bAWFwzE9aim5n53Fay8AD6lvlws7ERjsDgSkYbDYmr0TGera9FIcYWlXyKg==
-X-Received: by 2002:a1c:2b06:: with SMTP id r6mr16850660wmr.4.1643390394409;
-        Fri, 28 Jan 2022 09:19:54 -0800 (PST)
-Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id z1sm2322887wma.20.2022.01.28.09.19.53
+        bh=VaBXPgnF+Eeh29s4XhFJXDL4wbHCqZ8Y8fOijOsB6MA=;
+        b=4+//lyP5H8eAaeZqsM4OJ6t03Vbeu2yUpaqV0GYo0jS9rDK9XUGG7RmvmhELyQYgH2
+         1ZLRoPxInr7nEEkVslYnPdiqWAj7xiruD50ZIVtrRL3iqCi+t+/NvadjAB8Ee7G4Qtao
+         M9HlnY46rPOtQNbll7IcFCjr8+ObaCZazwk9Ky6dffqalLekp86yu7cWFyFIaAGMaDaE
+         Jfiu/B4aKxfng74m0eUCc8ppr1OF4TVBy2yviotgaz8x5LZc6yFMxFFBXXp2oe7sUlP7
+         pPtOmrHQNf5+4/rGnCKsBfrK5l9gqf5VHWNQXjMVq6+FJoSfWmfCmOWnnC/qJoW0/qrT
+         3Tyg==
+X-Gm-Message-State: AOAM531z/KM2+/Qu/AgXItEKp0s7ufa6ZsxgyXRULZWDAW70BqALK1Wu
+	Xs0RHRzjAnR6ZQnJkRXcWaItvuCwv8Adrg==
+X-Google-Smtp-Source: ABdhPJwD3wNiuk2AdZgK5jHi44h9ffepz/p2pClKLWXpHuF2Izm8p9NHmIj0AmQu9H2aEdlfals9BA==
+X-Received: by 2002:adf:f9ca:: with SMTP id w10mr8294623wrr.326.1643390795738;
+        Fri, 28 Jan 2022 09:26:35 -0800 (PST)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id f2sm5409992wri.49.2022.01.28.09.26.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jan 2022 09:19:53 -0800 (PST)
-Message-ID: <084040ae-1b2c-39c9-fa01-73733e27bd17@tessares.net>
-Date: Fri, 28 Jan 2022 18:19:53 +0100
+        Fri, 28 Jan 2022 09:26:35 -0800 (PST)
+Message-ID: <f8adf079-e371-d172-bb2a-2530cb74e293@tessares.net>
+Date: Fri, 28 Jan 2022 18:26:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,56 +47,33 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH mptcp-net v3] mptcp: netlink: process IPv6 addrs in
- creating listening sockets
+Subject: Re: [PATCH mptcp-next] mptcp: drop unused sk in mptcp_get_options
 Content-Language: en-GB
-To: Geliang Tang <geliangtang@gmail.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Kishen Maloor <kishen.maloor@intel.com>,
- MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20220128003746.2732527-1-kishen.maloor@intel.com>
- <ba1702d-2951-132b-7fda-4ed1045dcd@linux.intel.com>
- <CA+WQbwvVGsbkdZc9wNkC5DB2YLFnBqzv5hw3nDR_NTBZkqC5vg@mail.gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+References: <37eb45cba9d5702e2d8ea804216efd433c2d15fa.1643357544.git.geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CA+WQbwvVGsbkdZc9wNkC5DB2YLFnBqzv5hw3nDR_NTBZkqC5vg@mail.gmail.com>
+In-Reply-To: <37eb45cba9d5702e2d8ea804216efd433c2d15fa.1643357544.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Kishen, Mat, Geliang,
+Hi Geliang,
 
-On 28/01/2022 09:18, Geliang Tang wrote:
-> Mat Martineau <mathew.j.martineau@linux.intel.com> 于2022年1月28日周五 10:09写道：
->>
->> On Thu, 27 Jan 2022, Kishen Maloor wrote:
->>
->>> This change updates mptcp_pm_nl_create_listen_socket() to create
->>> listening sockets bound to IPv6 addresses (where IPv6 is supported).
->>>
->>> Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
-> 
-> Acked-by: Geliang Tang <geliang.tang@suse.com>
-> 
->>> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
->>> ---
->>> net/mptcp/pm_netlink.c | 8 ++++++--
->>> 1 file changed, 6 insertions(+), 2 deletions(-)
->>>
->>
->> Looks good for the export branch:
->>
->> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+On 28/01/2022 09:13, Geliang Tang wrote:
+> The parameter 'sk' became useless since the code using it was dropped
+> from mptcp_get_options() in the commit 8d548ea1dd15 ("mptcp: do not set
+> unconditionally csum_reqd on incoming opt"). Let's drop it.
 
-Thank you for having extracted the patch and the reviews!
+Thank you for the clean-up!
 
-Now in our tree (fix for -net) with Mat's RvB and Geliang's ACK tags:
+Now in our tree (feat. for net-next) with my RvB tag:
 
-- df2b5c816e23: mptcp: netlink: process IPv6 addrs in creating listening
-sockets
-- Results: fa314fbb2be0..e3f80698163c
+- f19228839ec0: mptcp: drop unused sk in mptcp_get_options
+- Results: e3f80698163c..90d554d19337
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220128T171819
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220128T172620
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
