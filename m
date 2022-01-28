@@ -1,14 +1,14 @@
 Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DD22C9D
-	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 13:55:02 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0V32luS0_1643378086;
-Received: from 192.168.1.13(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0V32luS0_1643378086)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2372C9D
+	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 14:11:02 +0000 (UTC)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0V32e-ng_1643378739;
+Received: from 192.168.1.13(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0V32e-ng_1643378739)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 28 Jan 2022 21:54:52 +0800
-Message-ID: <e0d9d02f-6863-5ee0-4353-cd4194fec1de@linux.alibaba.com>
-Date: Fri, 28 Jan 2022 21:54:45 +0800
+          Fri, 28 Jan 2022 22:05:40 +0800
+Message-ID: <0b88ed12-4f04-6c71-7210-98a71041f5cc@linux.alibaba.com>
+Date: Fri, 28 Jan 2022 22:05:39 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -31,9 +31,9 @@ In-Reply-To: <1825f5e8-6d13-a317-4a96-f4a4fcf07409@tessares.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Sorry for this mistake。 Thanks for your pointing out.
 
-This is a spelling error, which has nothing to do with MPTCP. I'll fix 
-it soon.
+Thanks again.
 
 
 在 2022/1/28 上午1:09, Matthieu Baerts 写道:
