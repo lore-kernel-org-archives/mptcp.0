@@ -1,50 +1,50 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B1F168
-	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 04:06:37 +0000 (UTC)
-Received: by mail-pg1-f181.google.com with SMTP id e16so4148519pgn.4
-        for <mptcp@lists.linux.dev>; Thu, 27 Jan 2022 20:06:37 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE3929CA
+	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 06:38:17 +0000 (UTC)
+Received: by mail-pj1-f42.google.com with SMTP id oa14-20020a17090b1bce00b001b61aed4a03so4216672pjb.5
+        for <mptcp@lists.linux.dev>; Thu, 27 Jan 2022 22:38:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=DjmvzXmpXqeT88gWWIbD0YSME1p6bx5qLP/+Ddt9yCs=;
-        b=gPtkfD6LLwJl66Sp2luFW1GMwcdOQ5fzyx2fIwVSGzrSpXIBp39mUDamaV6NDfXbjU
-         18AIoOdjqcyIQkOUCLF9LwRzZZNag55+n2eWH6+R/Ojlm1r7PAQg2WsOUlwLv09EFnfT
-         uLHrj1SsbBIa8CbORm6HIVgqwBCpg7UFB1rmql89AK7COyHlDj0Q5Na9fcdtKQppIe15
-         Q3g1f2yCUXgY1lYgIpB3wozK3ZzKWpAQGFxTXEYOMXbmgl9OCl9dqo+/+YNbItFVxJLF
-         zpEmNksGFgTEoFDa9tBP74HiGxYYHyuFhVjIwcm44HIiEwqvzFa2Lo5Me8s5n0ptoBA/
-         GxPA==
+        bh=SYpu0JpzxtC0QpDHn9r0cCAk2S34lyMRx/VjORbojGM=;
+        b=ES0gXtudWeIx8ecWcZ6b1+8oEwbU2+v3hbpskyPGm87XabacBflfZurN3q74N7GzbL
+         Wg3XNqBk7CEXgfo9+AMy2Z/y1/WNck9Gl3V0Xn71oVo5EnJAboh4trMMUhhFioyrDUSF
+         aZ66FHxZYaS8/lhLds/GGKqIDLzyalJ3H7w7FSi10XBiTGtgQZcdTodYyifXju53dCoR
+         HoZl6BijVxluRtmqst8+x3RXoRXfALLSRUir92uWjMIIqGbEDH4Fo71Tuzlh1bq5FwpY
+         0DsWTr4qN/0AIzI2leuEokJMg+/nF8qg/+jcF9svsVNyO1m9DB9JMo5TlJrwjDXJZihg
+         +Ihw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DjmvzXmpXqeT88gWWIbD0YSME1p6bx5qLP/+Ddt9yCs=;
-        b=t6pzijxbXy0DbIshKZM+tusSQ6k1mPTSI99cYKPoVswxpajwlM+eAPgZ0pyDCZ0Ez4
-         hfYO1ehEBRtWv5WO173SJBQqOD8CWlVUJ67PjabPMTO89urTryDaYzxD9IqOafgAZZHy
-         zk6nbL24WkRMKLNVRLJTqEOwetM6NwIc+jqS7GkYl6yAhkZDoXfR8u2/cioGvgNYV6C/
-         H9GqejQ0wcgDDqI3LlV3DY3oOKXkbMyGIgunPFNW5dYwV6vy55vX+RjpIxANAEXwumdp
-         fkxvIDBXD0JXM3KeJZExlCae3Tpcd6SF9AUFNT/V5wk+rT7fNumV48EB9NXelRNLsmhD
-         Mu+g==
-X-Gm-Message-State: AOAM533yShoV0+uUGS6Z5nA+dnpvTNdjH44tfQO6bcBOdU6AKBTn4uu0
-	k9jEqnfki6yDoZc3YS/XCBH4gr+EUfhAvG/bOwzlGR6vw3XNJepA
-X-Google-Smtp-Source: ABdhPJweZo3ctwPKdvI4MIy2F/M1GZyrtug+15eiKK4rnoCv8o+HrPIB3uEh/pjfuUM6/GzNhwu90oEy8Dk2hG+f7W8=
-X-Received: by 2002:a63:743:: with SMTP id 64mr5120392pgh.356.1643342796563;
- Thu, 27 Jan 2022 20:06:36 -0800 (PST)
+        bh=SYpu0JpzxtC0QpDHn9r0cCAk2S34lyMRx/VjORbojGM=;
+        b=wOAnkXpDDzB8yuxWVd7C01tjy2dX4FgBL4f45t25YQek2v51hI4Gqrx5ZWJo5IaTXe
+         HG2P7SAk0snC2g4m/GuEnglkDR3sde7/KhVjFVMepjDHKeit4z1xX8D2L6AvcKFpjAox
+         Bn/Y6uXV9dGiD8Vb20M9c9lOK4S4QV5lkxI0PmNbUqompUFi/MhJrfViSKudSBIEKFuY
+         Nc3yGmVUiaYiJ+KbxS39tszHl8oIEhD8T6fhKkNYFs2DCCLvXhTTN9Tqu8smAgbor9Z2
+         T4ZngBosytn49pGgKjzu5nHF3LcJMuuKyrRRkQroMTu5pJL4CYy16+FgLr/EUZNU9HVq
+         jAlA==
+X-Gm-Message-State: AOAM531bNTQL5/gMepgqpnOdC2VwBejrzK4WgF6FlbcyGVo209U/HP8k
+	NV13sUYHpK17EiYBARIMYsds1wOTl9reoMIG9ZIxcYn61D/OmIXd
+X-Google-Smtp-Source: ABdhPJzBK7I/P/VLnTOVlS1lqSHN8crd+ow7h8LjA7X9v+XFTzBwNRab7/r9kkonPtmvByeNCK1HNND+On+cffG1TFU=
+X-Received: by 2002:a17:902:ab43:: with SMTP id ij3mr6952632plb.25.1643351897115;
+ Thu, 27 Jan 2022 22:38:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220128003812.2732609-1-kishen.maloor@intel.com> <20220128003812.2732609-4-kishen.maloor@intel.com>
-In-Reply-To: <20220128003812.2732609-4-kishen.maloor@intel.com>
+References: <20220128003836.2732694-1-kishen.maloor@intel.com> <20220128003836.2732694-2-kishen.maloor@intel.com>
+In-Reply-To: <20220128003836.2732694-2-kishen.maloor@intel.com>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 28 Jan 2022 12:07:44 +0800
-Message-ID: <CA+WQbwsXeN-gCRksSZ_BaK8W8byzTFiqsfgc3tbcQT3=CS7V1w@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v3 3/8] mptcp: reflect remote port (not 0) in
- ANNOUNCED events
+Date: Fri, 28 Jan 2022 14:38:26 +0800
+Message-ID: <CA+WQbws7UHpc0LA3kd7wSqB_k-6aEN9HLm_JbeNSi0XzsPw=Gg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v3 01/14] mptcp: add sysctl param to limit
+ userspace PM activity
 To: Kishen Maloor <kishen.maloor@intel.com>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
@@ -53,152 +53,146 @@ Content-Transfer-Encoding: quoted-printable
 Hi Kishen,
 
 Kishen Maloor <kishen.maloor@intel.com> =E4=BA=8E2022=E5=B9=B41=E6=9C=8828=
-=E6=97=A5=E5=91=A8=E4=BA=94 08:38=E5=86=99=E9=81=93=EF=BC=9A
+=E6=97=A5=E5=91=A8=E4=BA=94 08:39=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Per RFC 8684, if no port is specified in an ADD_ADDR message, MPTCP
-> SHOULD attempt to connect to the specified address on the same port
-> as the port that is already in use by the subflow on which the
-> ADD_ADDR signal was sent.
+> This change adds a new configurable param userspace_pm_local_addr_max
+> to set a limit on the number of local addresses that may be recorded
+> by a userspace path manager in the context of any MPTCP connection.
+> Consequently, it also limits the # of subflows, i.e. to as many that
+> could be established via the bounded set of local addresses.
 >
-> To facilitate that, this change reflects the specific remote port in
-> use by that subflow in MPTCP_EVENT_ANNOUNCED events.
+> The patch also ensures that other stats inside struct mptcp_pm_data
+> that are updated along kernel code paths exercised by userspace PMs
+> remain untouched for userspace PM managed sockets.
 >
 > Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 > ---
->  net/mptcp/options.c    | 2 +-
->  net/mptcp/pm.c         | 5 +++--
->  net/mptcp/pm_netlink.c | 8 ++++++--
->  net/mptcp/protocol.h   | 6 ++++--
->  4 files changed, 14 insertions(+), 7 deletions(-)
+>  net/mptcp/ctrl.c       | 17 +++++++++++++++++
+>  net/mptcp/pm.c         |  4 +++-
+>  net/mptcp/pm_netlink.c |  3 +++
+>  net/mptcp/protocol.h   |  1 +
+>  4 files changed, 24 insertions(+), 1 deletion(-)
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 0d0d2eb8c8ca..0d3c8f7e5be6 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1132,7 +1132,7 @@ bool mptcp_incoming_options(struct sock *sk, struct=
- sk_buff *skb)
->                 if ((mp_opt.suboptions & OPTION_MPTCP_ADD_ADDR) &&
->                     add_addr_hmac_valid(msk, &mp_opt)) {
->                         if (!mp_opt.echo) {
-> -                               mptcp_pm_add_addr_received(msk, &mp_opt.a=
-ddr);
-> +                               mptcp_pm_add_addr_received(msk, &mp_opt.a=
-ddr, sk);
->                                 MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_A=
-DDADDR);
->                         } else {
->                                 mptcp_pm_add_addr_echoed(msk, &mp_opt.add=
-r);
+> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> index ae20b7d92e28..dffc2da6d713 100644
+> --- a/net/mptcp/ctrl.c
+> +++ b/net/mptcp/ctrl.c
+> @@ -19,6 +19,7 @@ static int mptcp_pernet_id;
+>
+>  #ifdef CONFIG_SYSCTL
+>  static int mptcp_pm_type_max =3D __MPTCP_PM_TYPE_MAX;
+> +static int mptcp_max_addrs =3D MPTCP_PM_MAX_ADDR_ID;
+>  #endif
+>
+>  struct mptcp_pernet {
+> @@ -32,6 +33,7 @@ struct mptcp_pernet {
+>         u8 checksum_enabled;
+>         u8 allow_join_initial_addr_port;
+>         u8 pm_type;
+> +       u8 userspace_pm_local_addr_max;
+>  };
+>
+>  static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
+> @@ -69,6 +71,11 @@ int mptcp_get_pm_type(const struct net *net)
+>         return mptcp_get_pernet(net)->pm_type;
+>  }
+>
+> +unsigned int mptcp_get_userspace_pm_local_addr_max(const struct net *net=
+)
+> +{
+> +       return mptcp_get_pernet(net)->userspace_pm_local_addr_max;
+> +}
+> +
+>  static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+>  {
+>         pernet->mptcp_enabled =3D 1;
+> @@ -77,6 +84,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pern=
+et *pernet)
+>         pernet->allow_join_initial_addr_port =3D 1;
+>         pernet->stale_loss_cnt =3D 4;
+>         pernet->pm_type =3D MPTCP_PM_TYPE_KERNEL;
+> +       pernet->userspace_pm_local_addr_max =3D 10;
+>  }
+>
+>  #ifdef CONFIG_SYSCTL
+> @@ -128,6 +136,14 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
+>                 .extra1       =3D SYSCTL_ZERO,
+>                 .extra2       =3D &mptcp_pm_type_max
+>         },
+> +       {
+> +               .procname =3D "userspace_pm_local_addr_max",
+> +               .maxlen =3D sizeof(u8),
+> +               .mode =3D 0644,
+> +               .proc_handler =3D proc_dou8vec_minmax,
+> +               .extra1       =3D SYSCTL_ONE,
+> +               .extra2       =3D &mptcp_max_addrs
+> +       },
+>         {}
+>  };
+>
+> @@ -149,6 +165,7 @@ static int mptcp_pernet_new_table(struct net *net, st=
+ruct mptcp_pernet *pernet)
+>         table[3].data =3D &pernet->allow_join_initial_addr_port;
+>         table[4].data =3D &pernet->stale_loss_cnt;
+>         table[5].data =3D &pernet->pm_type;
+> +       table[6].data =3D &pernet->userspace_pm_local_addr_max;
+>
+>         hdr =3D register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
+>         if (!hdr)
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 6b6220895929..e5d5cb847209 100644
+> index e5d5cb847209..24839cd7025c 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -200,14 +200,15 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock =
-*msk, const struct sock *ssk,
->  }
+> @@ -182,7 +182,9 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *m=
+sk, const struct sock *ssk,
+>         bool update_subflows;
 >
->  void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
-> -                               const struct mptcp_addr_info *addr)
-> +                               const struct mptcp_addr_info *addr,
-> +                               const struct sock *ssk)
+>         update_subflows =3D (ssk->sk_state =3D=3D TCP_CLOSE) &&
+> -                         (subflow->request_join || subflow->mp_join);
+> +                         (subflow->request_join || subflow->mp_join) &&
+> +                         READ_ONCE(pm->pm_type) =3D=3D MPTCP_PM_TYPE_KER=
+NEL;
 
-I think the better parameters order of this function is:
-
-(struct mptcp_sock *msk, const struct sock *ssk, const struct
-mptcp_addr_info *addr)
-
-Put the new parameter ssk just after msk.
-
-Furthermore, I think instead of adding a new parameters ssk here, it's
-better to change the parameter msk to ssk.
-
-We can get the msk from ssk like this:
-
-    struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-    struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-
->  {
->         struct mptcp_pm_data *pm =3D &msk->pm;
->
->         pr_debug("msk=3D%p remote_id=3D%d accept=3D%d", msk, addr->id,
->                  READ_ONCE(pm->accept_addr));
->
-> -       mptcp_event_addr_announced(msk, addr);
-> +       mptcp_event_addr_announced(msk, addr, ssk);
->
->         spin_lock_bh(&pm->lock);
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 93800f32fcb6..f90e77c3775d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1972,7 +1972,8 @@ void mptcp_event_addr_removed(const struct mptcp_so=
-ck *msk, uint8_t id)
->  }
->
->  void mptcp_event_addr_announced(const struct mptcp_sock *msk,
-> -                               const struct mptcp_addr_info *info)
-> +                               const struct mptcp_addr_info *info,
-> +                               const struct sock *ssk)
-
-Here change the parameter msk to ssk too.
-
->  {
->         struct net *net =3D sock_net((const struct sock *)msk);
-
-    struct net *net =3D sock_net(ssk);
-
->         struct nlmsghdr *nlh;
-> @@ -1996,7 +1997,10 @@ void mptcp_event_addr_announced(const struct mptcp=
-_sock *msk,
->         if (nla_put_u8(skb, MPTCP_ATTR_REM_ID, info->id))
->                 goto nla_put_failure;
->
-> -       if (nla_put_be16(skb, MPTCP_ATTR_DPORT, info->port))
-> +       if (nla_put_be16(skb, MPTCP_ATTR_DPORT,
-> +                        info->port  =3D=3D 0 ?
-
-Here two blanks before '=3D=3D'.
+How about using mptcp_pm_is_userspace() instead for all the
+MPTCP_PM_TYPE_KERNEL type check in this series?
 
 Thanks,
 -Geliang
 
-> +                        ((struct inet_sock *)inet_sk(ssk))->inet_dport :
-> +                        info->port))
->                 goto nla_put_failure;
+> +
+>         if (!READ_ONCE(pm->work_pending) && !update_subflows)
+>                 return;
 >
->         switch (info->family) {
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 126cc961a4fd..882988e43d76 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -933,6 +933,9 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mpt=
+cp_sock *msk,
+>                 if (!removed)
+>                         continue;
+>
+> +               if (READ_ONCE(msk->pm.pm_type) !=3D MPTCP_PM_TYPE_KERNEL)
+> +                       continue;
+> +
+>                 if (rm_type =3D=3D MPTCP_MIB_RMADDR) {
+>                         msk->pm.add_addr_accepted--;
+>                         WRITE_ONCE(msk->pm.accept_addr, true);
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index c47d69a42fcb..d20c65fcba89 100644
+> index 30006735afb7..6cfa8ec26482 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -753,7 +753,8 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_sock=
- *msk);
->  void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct so=
-ck *ssk,
->                                  const struct mptcp_subflow_context *subf=
-low);
->  void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
-> -                               const struct mptcp_addr_info *addr);
-> +                               const struct mptcp_addr_info *addr,
-> +                               const struct sock *ssk);
->  void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
->                               struct mptcp_addr_info *addr);
->  void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
-> @@ -781,7 +782,8 @@ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, c=
-onst struct mptcp_rm_list *
+> @@ -852,6 +852,7 @@ unsigned int mptcp_pm_get_add_addr_signal_max(struct =
+mptcp_sock *msk);
+>  unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
+>  unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
+>  unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
+> +unsigned int mptcp_get_userspace_pm_local_addr_max(const struct net *net=
+);
 >
->  void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *ms=
-k,
->                  const struct sock *ssk, gfp_t gfp);
-> -void mptcp_event_addr_announced(const struct mptcp_sock *msk, const stru=
-ct mptcp_addr_info *info);
-> +void mptcp_event_addr_announced(const struct mptcp_sock *msk, const stru=
-ct mptcp_addr_info *info,
-> +                               const struct sock *ssk);
->  void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
->
->  static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+>  void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
+>  void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)=
+;
 > --
 > 2.31.1
 >
