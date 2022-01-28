@@ -1,44 +1,44 @@
 Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B35F2C80
-	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 17:04:52 +0000 (UTC)
-Received: by mail-wr1-f52.google.com with SMTP id l25so12019489wrb.13
-        for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 09:04:52 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C39C2C80
+	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 17:09:20 +0000 (UTC)
+Received: by mail-wr1-f52.google.com with SMTP id w11so12114631wra.4
+        for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 09:09:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Wn4XNTj1jbjyTIKjFnut6mj31n5tQ8qtiL6syj1cWdY=;
-        b=EUmMXAWt2Fuyc/Fq0okkcM1q4uhxCCCZbF4TYpRg5faSj6VSLrFUenw6TvSMiRQ/2z
-         +u8gCKKz0OeO1feVEq9qwmxnD7pxHdWrYedMlwBBS7XWB0aM2mrPUNu80Oe56GPqrYjA
-         g+RIFYexQmKsUHOmyqPe3dGzZ56cXUoQTO3AvC30/31uEPi8JbvdNnZaNMDmPUV5EJuU
-         SxFjLNR/jvrmbicGDqoQMl4re6LE0/qEK/iuWKD83X0/dDbrGq6txYisRuBSqwM6DnlP
-         xLCEdblhSaPbO9VETtBZu6V7lJ5jx5TdTtEcM90aHx2Ld+1JW1FfWMMGa2SO/dUiwaOY
-         lv0A==
+        bh=FbE7m/AVnAUqeYdGTO5vyHO1tqpGwkwRj0EsKLaZHUA=;
+        b=COeZa8GhhvMmgRo0/zdTmYnb8Ek6PuSyhZHv5najuULdCTp59vUj5hjBfzYjwkyBKT
+         6aTCZwHkmMWfRdUPjJHBBCqGrHioBGZykiH7NX6QTpsLkXdt+YyHFN9D1a2qpUNF4i9K
+         KdHN7thRDNw8iq27BNXfhfg6qRZjNheT0OB9TcmEX+7gggs6D9g2qaK80qzF1TH+BKiG
+         m2TuHwH1F+UfcX6RoMgly+EjC2FjfHypNVgWBavn6P8/6HQ77LjBCuzZsFmbmBDrqlPa
+         tDfCCG6oO5XUvoYYRal5U/TPV9eN5qVwsOcZc/DEIMNuI7YnZ2zkUPuO21jwt4hE84n7
+         KQ9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Wn4XNTj1jbjyTIKjFnut6mj31n5tQ8qtiL6syj1cWdY=;
-        b=ouDLmw/AQzQ9B48KaW1/CyWwPaW0TGHwyKp1H+WoAPkbzafWDmwGZbCqexc7SJtRuG
-         lqY2lhc6zxzYrRFoUFrUVB6qjenO/eTxjFNWTRAH54s8jR+r4xQWLcP5oj5l2ll0W2Ob
-         cYMhQMYzKIpgbXoeL1IqoUYd4QTehKZ5J4i+64LttKhBQpCfVp4uGYsTah0oyhBhtSLW
-         TpdOFaRzeoLqr8tYflv0ULce9FlUu06Lb0VxdvZeXRNJ4AGqMO+2ih22degNy/iSH4Ro
-         ycfC5dKkHBEm8Sja5+PHHyVi5a838xncCesJ3sV5LGivnEE86vko0aik4m9NO+w0vhFJ
-         HCxg==
-X-Gm-Message-State: AOAM531iFoM7ty5WqYUPIArLUoVqsEBY8FYrl166LDpFE76VGE7JLvTn
-	poPfUx5LPvziFNV+mE68a3EByQ==
-X-Google-Smtp-Source: ABdhPJyMjmcG//Sai9Y26cBXQiTe4Lk6S4AF5ZVkBUnjZ3uQyN1V7F5G8QSn018BEEIHcJhQ4780mg==
-X-Received: by 2002:a5d:4e81:: with SMTP id e1mr7861348wru.513.1643389490591;
-        Fri, 28 Jan 2022 09:04:50 -0800 (PST)
+        bh=FbE7m/AVnAUqeYdGTO5vyHO1tqpGwkwRj0EsKLaZHUA=;
+        b=e2odzRJTGSKbQoTg75vMbZJsL6TZx423Sg6ciSam+QWifRz9LFjNfW+JtVaKWi8pG8
+         lJUvq5FTDjO2x3JHrAHA+6dT+q2pW0YAbAMzMxr7ZWRXfAHJ/SKjetpEzqL+XziaBy+k
+         bzYCW4jWTREvzM77KU8s1K0jFajIt4nyf3t2WXzntpokXVN9EYmkypLoX0jq0oRX3Fnu
+         53B34KcXur1P5QMeuk21HAYOGl+X9NcqAWaTlBcf6Hy5jcJ2iiewon4jB3VwiQ98P/ZG
+         WHukoyLC3qNh/JncwmfD7hfx8eXULbAnmItHQVDPsILLplY3kW1oQFnEqMwQvILHo3YG
+         OMbw==
+X-Gm-Message-State: AOAM530w8k1YjK8d0SQGVoFIKrxb+fV4vHhuniHHB/NL8fYUfJA1D97X
+	NifOP9kds2wGl1PaS1C4yWCJnF37v6VtPQ==
+X-Google-Smtp-Source: ABdhPJws8PPN/F2DujqRgsfs+L/7qCNKMeH91MUXDF/CjrPNmn+hIJSA1yeFNcF6FiEkX7CvwKkOQQ==
+X-Received: by 2002:adf:c3d4:: with SMTP id d20mr7737580wrg.55.1643389758659;
+        Fri, 28 Jan 2022 09:09:18 -0800 (PST)
 Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id b2sm6131286wri.88.2022.01.28.09.04.49
+        by smtp.gmail.com with ESMTPSA id i19sm2223539wmq.45.2022.01.28.09.09.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jan 2022 09:04:50 -0800 (PST)
-Message-ID: <a5500825-43a0-93c4-ba92-f3a24d4a202c@tessares.net>
-Date: Fri, 28 Jan 2022 18:04:49 +0100
+        Fri, 28 Jan 2022 09:09:18 -0800 (PST)
+Message-ID: <3e2eb3cb-3e4f-ef3b-4276-9b0b7ec0da73@tessares.net>
+Date: Fri, 28 Jan 2022 18:09:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,80 +47,44 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add mp_fail testcases
+Subject: Re: [PATCH mptcp-next v5 0/2] add the id argument for set_flags
 Content-Language: en-GB
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
  Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>
-References: <cover.1643110285.git.geliang.tang@suse.com>
- <064cfe306debc535413c1d39fcf3b8d24a959eeb.1643110285.git.geliang.tang@suse.com>
- <b4708d63-29aa-da51-f536-3b5bf5399221@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1643165468.git.geliang.tang@suse.com>
+ <d03a927-5489-66f8-f137-45a8d1c332ab@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <b4708d63-29aa-da51-f536-3b5bf5399221@linux.intel.com>
+In-Reply-To: <d03a927-5489-66f8-f137-45a8d1c332ab@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Mat, Geliang,
 
-On 27/01/2022 01:07, Mat Martineau wrote:
-> On Tue, 25 Jan 2022, Geliang Tang wrote:
+On 26/01/2022 22:45, Mat Martineau wrote:
+> On Wed, 26 Jan 2022, Geliang Tang wrote:
 > 
->> Added the test cases for MP_FAIL, use 'tc' commands to trigger the
->> checksum failures.
+>> v5:
+>> v4:
+>> - update the output of pm_netlink.sh
 >>
 > 
-> This patch is working well with the inverted byte detection, thanks!
+> Thanks for updating, patches look good to me.
+> 
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-The public CI seems quite happy with the new version, good work :)
+Thank you for the patches and the reviews!
 
-Here is its report:
+Now in our tree (feat. for net-next) with Mat's RvB tag:
 
-====== 8< ======
-Our CI did some validations and here is its report:
+- f8e513817b09: selftests: mptcp: add the id argument for set_flags
+- ec38992d3ed7: selftests: mptcp: add set_flags tests in pm_netlink.sh
+- Results: d57649f20e6e..6cf1fda75aaf
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
-  - Task: https://cirrus-ci.com/task/4993794666921984
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/4993794666921984/summary/summary.txt
+Builds and tests are now in progress:
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): selftest_diag selftest_mptcp_join 🔴:
-  - Task: https://cirrus-ci.com/task/4682233209421824
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/4682233209421824/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits:
-https://github.com/multipath-tcp/mptcp_net-next/commits/c52e51136372
-====== 8< ======
-
-But if you look at the logs [1], there are probably 3 last things to
-improve:
-
-[1] https://api.cirrus-ci.com/v1/task/4993794666921984/logs/test.log
-
-This line is repeated 90+ times:
-
-  tc action pedit offset 162 out of bounds
-
-(we talked about this one at the last meeting with ideas on how to
-reduce/get rid of them)
-
-But also this one now, repeated 40+ times with different offsets:
-
-  file received by server has inverted byte at 106565
-
-And one last thing, we can see that now we have more than 99 tests, the
-alignement is no longer OK :)
-
-
-  # 101 1 MP_FAIL, single subflow            syn[ ok ] - synack[ ok ]...
-  #                                         sum[ ok ] - csum  [ ok ]
-  #                                         ftx[ ok ] - frx   [ ok ]
-  #                                         itx[ ok ] - irx   [ ok ]
-
-A very small detail, up to you to fix it or not ;)
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220128T170856
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
 Matt
