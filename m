@@ -1,39 +1,37 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F21E2CAC
-	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 00:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F19E2CAF
+	for <mptcp@lists.linux.dev>; Fri, 28 Jan 2022 00:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643330324; x=1674866324;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=sa72yrPBqKXhPZ16dGGP/HtQ1q4TOd82BWQ+bNO9jK4=;
-  b=eo7kpJjpiU3y+T1w5/AfZT+DKk1ftlQ6Eqapc07yacrWYSnTGRL+TKjt
-   lpir/MHopTCIC31UO88BfYA4jDBwgPdH14nWKins9g31DsewDF+0BStxN
-   t9ky0nq7ALoCKGIAAsT1vWhIPLYX7+48f/kvzjFMK3+L4ke0QRajGOiTr
-   xap7n7HAx1C7/bVjU6y+ZZjmPIsAOKxzvgxfEaNUVD6NdTbYRSPHaKgs3
-   nsVJDFYHh6ehYpNqrg3prq9FGd6YhNrnYMdvtx5WOrY4qM0S+sCzZeu+2
-   KCB3+JA4UmVzGH8h9VgJfs3muhV+VpoL11BqDmQrhwJbdEAQvZ8eKGEQy
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="245846912"
+  t=1643330325; x=1674866325;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tLKe7aItYw+feBkxTepmu5DXMedE21AX0I7KY2D/WOQ=;
+  b=mNLu/RpBPhWKaF95w8qCiIow2b4JYWSPZAdYGpV7EMe+9rtCeGP+/iuv
+   yycsUIfy1QHjj7k3F3TVEbrKGEM8rSBFELLha9BEtV4En5jzE2rW3e3rv
+   OfPjppuloVP9yEtsZ4FE9WfthNvepYEJAe9CnbjsUammrUvk4vcJa+ZQd
+   jQXE6IJP50OJZpus6hHA7pOw9C7KCv2ebxHgSIC4ONcWamHd3xtd/L+JU
+   q1WKKkvFsLavy0OpEjtjqHYTtKZpT8Pc3KEM8K/VcYCXaCgYCGX76SV68
+   hg8jlxo/q9/ftmgx2gsfDKdJjewSrmYVTsxar7/ntOWa4gNF2Htd5G/PK
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="333358329"
 X-IronPort-AV: E=Sophos;i="5.88,322,1635231600"; 
-   d="scan'208";a="245846912"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:38:24 -0800
+   d="scan'208";a="333358329"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:38:41 -0800
 X-IronPort-AV: E=Sophos;i="5.88,322,1635231600"; 
-   d="scan'208";a="564000993"
+   d="scan'208";a="480527103"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:38:19 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:38:41 -0800
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v3 1/8] mptcp: do not restrict subflows with non-kernel PMs
-Date: Thu, 27 Jan 2022 19:38:05 -0500
-Message-Id: <20220128003812.2732609-2-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v3 00/14] mptcp: APIs and self-tests for userspace path management
+Date: Thu, 27 Jan 2022 19:38:22 -0500
+Message-Id: <20220128003836.2732694-1-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220128003812.2732609-1-kishen.maloor@intel.com>
-References: <20220128003812.2732609-1-kishen.maloor@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,44 +40,62 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Current limits on the # of subflows must apply only to in-kernel
-PM managed sockets. Thus this change bypasses such limitations for
-connections overseen by non-kernel (e.g. userspace) PMs.
+This patch series brings together the base functionality
+and new netlink APIs for flexible path management from userspace.
+It further extends the MPTCP self-testing framework to support the new
+netlink APIs along with the ability to capture MPTCP netlink events
+to aid in functional/behavioral validations. Lastly, it adds a new
+self-testing script with a suite of test cases covering the entire
+range of the new userspace path management capabilities.
 
-Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
----
- net/mptcp/pm.c      | 3 +++
- net/mptcp/subflow.c | 3 ++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Note: This patch series depends on the prior series "mptcp: fixes and
+enhancements related to path management".
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 1f8878cc29e3..6b6220895929 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -87,6 +87,9 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
- 	unsigned int subflows_max;
- 	int ret = 0;
- 
-+	if (READ_ONCE(pm->pm_type) != MPTCP_PM_TYPE_KERNEL)
-+		return true;
-+
- 	subflows_max = mptcp_pm_get_subflows_max(msk);
- 
- 	pr_debug("msk=%p subflows=%d max=%d allow=%d", msk, pm->subflows,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c8126986793e..a7b2d6fd1c1e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -62,7 +62,8 @@ static void subflow_generate_hmac(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
- static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
- {
- 	return mptcp_is_fully_established((void *)msk) &&
--	       READ_ONCE(msk->pm.accept_subflow);
-+	       ((READ_ONCE(msk->pm.pm_type) != MPTCP_PM_TYPE_KERNEL) ||
-+		READ_ONCE(msk->pm.accept_subflow));
- }
- 
- /* validate received token and create truncated hmac and nonce for SYN-ACK */
+v1 -> v2:
+-fixed build error when IPv6 is not enabled
+
+v2 -> v3:
+-new sysctl configurable param net.mptcp.userspace_pm_local_addr_max
+to control/bound userspace PM activity
+-new test case to verify that net.mptcp.userspace_pm_local_addr_max is
+enforced by the kernel
+-verify expected value of the server_side attribute in MPTCP connection
+events in the self-testing script
+-incorporate new addr flag MPTCP_PM_ADDR_FLAG_NO_LISTEN and helper
+lsk_list_find_or_create() in MPTCP_PM_CMD_ANNOUNCE
+-added descriptive remarks throughout the self-testing script
+(userspace_pm.sh)
+
+Florian Westphal (2):
+  mptcp: netlink: split mptcp_pm_parse_addr into two functions
+  mptcp: netlink: allow userspace-driven subflow establishment
+
+Kishen Maloor (12):
+  mptcp: add sysctl param to limit userspace PM activity
+  mptcp: allow ADD_ADDR reissuance by userspace PMs
+  mptcp: handle local addrs announced by userspace PMs
+  mptcp: read attributes of addr entries managed by userspace PMs
+  mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE
+  mptcp: selftests: support MPTCP_PM_CMD_ANNOUNCE
+  mptcp: netlink: Add MPTCP_PM_CMD_REMOVE
+  mptcp: selftests: support MPTCP_PM_CMD_REMOVE
+  mptcp: selftests: support MPTCP_PM_CMD_SUBFLOW_CREATE
+  mptcp: selftests: support MPTCP_PM_CMD_SUBFLOW_DESTROY
+  mptcp: selftests: capture netlink events
+  selftests: mptcp: functional tests for the userspace PM type
+
+ include/uapi/linux/mptcp.h                    |   7 +
+ net/mptcp/ctrl.c                              |  17 +
+ net/mptcp/pm.c                                |   4 +-
+ net/mptcp/pm_netlink.c                        | 637 +++++++++++++++--
+ net/mptcp/protocol.c                          |   2 +
+ net/mptcp/protocol.h                          |   5 +-
+ net/mptcp/subflow.c                           |   2 +-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 598 +++++++++++++++-
+ .../selftests/net/mptcp/userspace_pm.sh       | 656 ++++++++++++++++++
+ 9 files changed, 1862 insertions(+), 66 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/userspace_pm.sh
+
 -- 
 2.31.1
 
