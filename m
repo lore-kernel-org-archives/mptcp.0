@@ -1,205 +1,121 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC3929CA
-	for <mptcp@lists.linux.dev>; Sun, 30 Jan 2022 21:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643576634; x=1675112634;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jmrWN7ERRqI++LWA4WdF9LX09VOUEs+tCvHh9B4svrY=;
-  b=SGx7r0vU1sPu5B9fXL+w+RWPcB3nRhHOVJqPv3GaKN7Ofr11Sj2l3Ily
-   Q9ArVn5x8pCbQ1RiQM9Ig/cf4G65/iSsot6iT6N5LWnbY0VW+xm2Vk2iG
-   FBKP9EtVeDbrDfwc+Kxhy1NJEX65hqvXV/2iYMZYEoBwuOfhEYpcwxg+C
-   rWt5+pvOy+hbttnEoBKpXJ9sjWSY7HZrnNTLQzuuFWuLXYw9g1uK+T5mw
-   TwZcuVBl5cQR+kXwFlDjIfD+fTyrRP5g8YBgD1gyHAbp3MtUjrR3yRA5X
-   TECIcHi6PQppsy+ja9YeTWFDigDTOFT6Ug4UFcNxqYC0wOk9ObcUaJHB3
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10243"; a="247592422"
-X-IronPort-AV: E=Sophos;i="5.88,329,1635231600"; 
-   d="scan'208";a="247592422"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 13:03:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,329,1635231600"; 
-   d="scan'208";a="598678850"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Jan 2022 13:03:52 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1nEHMV-000Qz6-L4; Sun, 30 Jan 2022 21:03:51 +0000
-Date: Mon, 31 Jan 2022 05:02:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: [mptcp:export] BUILD SUCCESS
- a80dde33bf24ed704429057a638e3dc7a9dba4af
-Message-ID: <61f6fcfa.QLKOR1YPkdfLkVoB%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41B32C9C
+	for <mptcp@lists.linux.dev>; Mon, 31 Jan 2022 17:40:29 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id ka4so45204841ejc.11
+        for <mptcp@lists.linux.dev>; Mon, 31 Jan 2022 09:40:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=jrCFhvJFjkaYwOXJA7yxbcT/9cZHHgYgpYM4Hqf/6PE=;
+        b=wRKufUZMnKUFZO6QGU1FDrnp4dgzIToqJ16daFLoLH2nizgviANT7sZjdBc7XS5t6g
+         cMiY2Wh7CmrRRgiN9Ws6qCbfULeWarNX4y7xomNbV6acY23ijanHjkxfiYz1SOugXz8d
+         r22cywqbEy5XrNw2vUaoT1DcB8feme+AthI1uvoC0qi3C/JjUFrbKCmRn/NC2fiv9JaE
+         0j9AWJYXfHXqmnAq4g5KUKL65eHrs217aMNL5W3s3U7K+njJTYWLPLDS9qagwyMxmHE9
+         kClm/esniOLlz+yRq2wJb9GdgONy/fVGo0IolWcEPd+vBTc9el9KbX4x6cfcpSjiAxGi
+         PiRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=jrCFhvJFjkaYwOXJA7yxbcT/9cZHHgYgpYM4Hqf/6PE=;
+        b=cnXBvXFFH1n4r1//x2r+ahm/chZ7sNEVooKay6JYe/QoOw2A97Xm9gl3G6ENjaQDzK
+         DuQ/rsUeL/c2XEFfr04DXyeoLN/frgA5qgf7fJsuie5Q5a8mDabXMz1Mo0LuIBX6/5Pc
+         +VoBB8+C6e70byn187bmMU2XU2zDiow8p3TJ52Hgm3YpaabB5dKUPf5cvs/zSKzmR7lh
+         oMGqKkHCXr27OvWRn2ii0j31fTT8CwzJCUcAFuXcAuEuEcCO5wdiujk+oohI3/NIvJ/j
+         b7HjVXy5gU8r2bAqaUiUGID+haNqEAIJqJ56l9OmUvZzetlluCXGbHwmKXFtVv2+85Z1
+         d1yA==
+X-Gm-Message-State: AOAM531fqdoU8G9nq56b2rGy0uk5gJoHr3BRGXGEAATxENwHILcd2e4Z
+	HrAR3EQMOg8RcgG4ouFXYcQ3c2ngdPjy+g==
+X-Google-Smtp-Source: ABdhPJzMXD+pyfyd3gEaKkGF5wmJgQV0bBtT1awmiDDXqFGyj8WuFb/3GXK84sFyRg8mvyMXcXn1aA==
+X-Received: by 2002:a17:907:60cb:: with SMTP id hv11mr17804686ejc.122.1643650827797;
+        Mon, 31 Jan 2022 09:40:27 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:daf0:2a8c:b440:96c5? ([2a02:578:8593:1200:daf0:2a8c:b440:96c5])
+        by smtp.gmail.com with ESMTPSA id p11sm18138370eds.38.2022.01.31.09.40.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Jan 2022 09:40:27 -0800 (PST)
+Message-ID: <8339d9dc-4055-57c9-9c97-9ca4075c7496@tessares.net>
+Date: Mon, 31 Jan 2022 18:40:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-next] mptcp: use nla_parse_nested
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <022caed0c9e5964f525336aced8233338c29386f.1643437533.git.geliang.tang@suse.com>
+ <25250bc9-015e-df2a-582d-5b5dd3eabdcb@tessares.net>
+ <20220130043318.GA7781@dhcp-10-157-36-190>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220130043318.GA7781@dhcp-10-157-36-190>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-tree/branch: https://github.com/multipath-tcp/mptcp_net-next.git export
-branch HEAD: a80dde33bf24ed704429057a638e3dc7a9dba4af  DO-NOT-MERGE: mptcp: enabled by default
+Hi Geliang,
 
-elapsed time: 721m
+On 30/01/2022 05:33, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for your review.
+> 
+> I don't know why this commit didn't show in the patchwork. The CI seems to
+> have complained about it.
 
-configs tested: 137
-configs skipped: 3
+It seems the issue was on kernel.org side, now fixed: your patch is on
+patchwork and lore.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> On Sat, Jan 29, 2022 at 12:53:20PM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 29/01/2022 07:26, Geliang Tang wrote:
+>>> NLA_F_NESTED has been used in both 'pm_nl_ctl' and 'ip mptcp'.
+>>
+>> Was it always the case for 'ip mptcp'? I mean, we cannot break the user API.
+>>
+>> And even if it was always the case for 'ip mptcp', there could be other
+>> tools not using NLA_F_NESTED. Maybe we can ignore them in this specific
+>> case but I'm not sure.
+> 
+> I think now is the right time to switch to the new API: nla_parse_nested.
+> Since now no other tool uses our mptcp netlink yet, only 'ip mptcp' and
+> 'pm_nl_ctl'. There's no need to consider about the compatibility.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-i386                 randconfig-c001-20220131
-sh                          polaris_defconfig
-arm                     eseries_pxa_defconfig
-powerpc                 mpc8540_ads_defconfig
-m68k                       m5208evb_defconfig
-powerpc                  storcenter_defconfig
-arm                           sama5_defconfig
-parisc                generic-32bit_defconfig
-arm                             pxa_defconfig
-arc                 nsimosci_hs_smp_defconfig
-riscv                            allyesconfig
-sh                        apsh4ad0a_defconfig
-powerpc                     tqm8541_defconfig
-arm                        spear6xx_defconfig
-xtensa                           alldefconfig
-m68k                                defconfig
-powerpc                       ppc64_defconfig
-sparc                       sparc32_defconfig
-sh                            migor_defconfig
-sh                        sh7757lcr_defconfig
-powerpc                      ep88xc_defconfig
-arc                          axs103_defconfig
-sh                           se7206_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                 mpc834x_mds_defconfig
-arm                  randconfig-c002-20220130
-arm                  randconfig-c002-20220131
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20220131
-x86_64               randconfig-a003-20220131
-x86_64               randconfig-a001-20220131
-x86_64               randconfig-a006-20220131
-x86_64               randconfig-a005-20220131
-x86_64               randconfig-a002-20220131
-i386                 randconfig-a006-20220131
-i386                 randconfig-a005-20220131
-i386                 randconfig-a003-20220131
-i386                 randconfig-a002-20220131
-i386                 randconfig-a001-20220131
-i386                 randconfig-a004-20220131
-i386                          randconfig-a003
-i386                          randconfig-a001
-i386                          randconfig-a005
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                randconfig-r042-20220130
-arc                  randconfig-r043-20220130
-s390                 randconfig-r044-20220130
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+I would like to only consider Open-Source tools but I don't think we
+can. It is unlikely someone wrote a new tool not using NLA_F_NESTED but
+I don't think we can be 100% sure. This is an uAPI break to change this
+I think, no?
 
-clang tested configs:
-riscv                randconfig-c006-20220130
-x86_64                        randconfig-c007
-arm                  randconfig-c002-20220130
-powerpc              randconfig-c003-20220130
-mips                 randconfig-c004-20220130
-i386                          randconfig-c001
-powerpc                   bluestone_defconfig
-powerpc                 mpc8315_rdb_defconfig
-powerpc                    ge_imp3a_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-x86_64               randconfig-a013-20220131
-x86_64               randconfig-a015-20220131
-x86_64               randconfig-a014-20220131
-x86_64               randconfig-a016-20220131
-x86_64               randconfig-a011-20220131
-x86_64               randconfig-a012-20220131
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-riscv                randconfig-r042-20220131
-hexagon              randconfig-r045-20220130
-hexagon              randconfig-r045-20220131
-hexagon              randconfig-r041-20220130
-hexagon              randconfig-r041-20220131
+> The old
+> API - nla_parse_nested_deprecated - is reserved for the compatibility of
+> the netlinks that already have some user tools using its interface in the
+> non-NLA_F_NESTED way. We are not the case.
+> 
+> Switch to the new API can force the user tools to use the NLA_F_NESTED way
+> from now on. That makes sure no user tool uses the non-NLA_F_NESTED way for
+> our mptcp netlink. Otherwise, one day the old API will be abandoned, and
+> then if there're some user tools use the non-NLA_F_NESTED way, we will have
+> to deal with the compatibility at that time. If we switch to the new API
+> now, we can avoid this potential trouble.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+I guess the compatibility will need to be kept of a bit of time. This
+function is used in 250+ places in the kernel. I guess it has the
+"deprecated" word in the name to clearly indicate "you should not use
+that for new features" but not to say "in a few months, we will drop
+this, deal with it now.", no?
+
+It would be easier to use nla_parse_nested() instead of
+nla_parse_nested_deprecated() but I don't think we can.
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
