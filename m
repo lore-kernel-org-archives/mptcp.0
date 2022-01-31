@@ -1,121 +1,136 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41B32C9C
-	for <mptcp@lists.linux.dev>; Mon, 31 Jan 2022 17:40:29 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id ka4so45204841ejc.11
-        for <mptcp@lists.linux.dev>; Mon, 31 Jan 2022 09:40:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=jrCFhvJFjkaYwOXJA7yxbcT/9cZHHgYgpYM4Hqf/6PE=;
-        b=wRKufUZMnKUFZO6QGU1FDrnp4dgzIToqJ16daFLoLH2nizgviANT7sZjdBc7XS5t6g
-         cMiY2Wh7CmrRRgiN9Ws6qCbfULeWarNX4y7xomNbV6acY23ijanHjkxfiYz1SOugXz8d
-         r22cywqbEy5XrNw2vUaoT1DcB8feme+AthI1uvoC0qi3C/JjUFrbKCmRn/NC2fiv9JaE
-         0j9AWJYXfHXqmnAq4g5KUKL65eHrs217aMNL5W3s3U7K+njJTYWLPLDS9qagwyMxmHE9
-         kClm/esniOLlz+yRq2wJb9GdgONy/fVGo0IolWcEPd+vBTc9el9KbX4x6cfcpSjiAxGi
-         PiRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=jrCFhvJFjkaYwOXJA7yxbcT/9cZHHgYgpYM4Hqf/6PE=;
-        b=cnXBvXFFH1n4r1//x2r+ahm/chZ7sNEVooKay6JYe/QoOw2A97Xm9gl3G6ENjaQDzK
-         DuQ/rsUeL/c2XEFfr04DXyeoLN/frgA5qgf7fJsuie5Q5a8mDabXMz1Mo0LuIBX6/5Pc
-         +VoBB8+C6e70byn187bmMU2XU2zDiow8p3TJ52Hgm3YpaabB5dKUPf5cvs/zSKzmR7lh
-         oMGqKkHCXr27OvWRn2ii0j31fTT8CwzJCUcAFuXcAuEuEcCO5wdiujk+oohI3/NIvJ/j
-         b7HjVXy5gU8r2bAqaUiUGID+haNqEAIJqJ56l9OmUvZzetlluCXGbHwmKXFtVv2+85Z1
-         d1yA==
-X-Gm-Message-State: AOAM531fqdoU8G9nq56b2rGy0uk5gJoHr3BRGXGEAATxENwHILcd2e4Z
-	HrAR3EQMOg8RcgG4ouFXYcQ3c2ngdPjy+g==
-X-Google-Smtp-Source: ABdhPJzMXD+pyfyd3gEaKkGF5wmJgQV0bBtT1awmiDDXqFGyj8WuFb/3GXK84sFyRg8mvyMXcXn1aA==
-X-Received: by 2002:a17:907:60cb:: with SMTP id hv11mr17804686ejc.122.1643650827797;
-        Mon, 31 Jan 2022 09:40:27 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:daf0:2a8c:b440:96c5? ([2a02:578:8593:1200:daf0:2a8c:b440:96c5])
-        by smtp.gmail.com with ESMTPSA id p11sm18138370eds.38.2022.01.31.09.40.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Jan 2022 09:40:27 -0800 (PST)
-Message-ID: <8339d9dc-4055-57c9-9c97-9ca4075c7496@tessares.net>
-Date: Mon, 31 Jan 2022 18:40:26 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1B22CA1
+	for <mptcp@lists.linux.dev>; Mon, 31 Jan 2022 19:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643656206; x=1675192206;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=Riwx8VLJpudAzr40JBUoRpT7bRQGjuxqUAyXVR5kP28=;
+  b=CitjnDBD6MwWYXg+3TpbSi25xm24ST9jGgmVJiPBPNFUscsI7+3r9zaN
+   cwebVhOD5TpzyMXAnOcN1ijZdL9dfqZ0wKdIB5M/gGmcK9ABdPr9cm7ll
+   dIuGtG+K93ICKuV4iW/rq2KXyUAIlfh+vlInzcm7lAYv/4W4sGIZCywpI
+   OIkEFwXhny/jkjZeM3cT53LrBPMT372dQymGbob0eU0VYl9lJDjXEn/dC
+   C3mN55dTiKSVCe5THAEWKVZaMwe3vyFV+XK59ews7/sGaJbAHouRCwgW4
+   OZAxbFG/3oKbd3e6oUkaX5+utCpXO5fUcdWnWsMcAy7EQfGfiqh6smmVc
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="310840733"
+X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
+   d="scan'208";a="310840733"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 11:10:05 -0800
+X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
+   d="scan'208";a="770868854"
+Received: from abilal-mobl1.amr.corp.intel.com ([10.212.252.235])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 11:10:04 -0800
+Date: Mon, 31 Jan 2022 11:10:04 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    Paolo Abeni <pabeni@redhat.com>
+cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: Recent backport proposals from the stable team
+In-Reply-To: <90560547-a3dc-82ae-8322-65f17f5b11f7@tessares.net>
+Message-ID: <e76b4749-cc26-e7cb-1639-713f80135e82@linux.intel.com>
+References: <90560547-a3dc-82ae-8322-65f17f5b11f7@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next] mptcp: use nla_parse_nested
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-References: <022caed0c9e5964f525336aced8233338c29386f.1643437533.git.geliang.tang@suse.com>
- <25250bc9-015e-df2a-582d-5b5dd3eabdcb@tessares.net>
- <20220130043318.GA7781@dhcp-10-157-36-190>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220130043318.GA7781@dhcp-10-157-36-190>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="0-1697454789-1643655612=:8134"
+Content-ID: <253d1188-9fb0-35cd-76c9-c75297316de4@linux.intel.com>
 
-Hi Geliang,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 30/01/2022 05:33, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thanks for your review.
-> 
-> I don't know why this commit didn't show in the patchwork. The CI seems to
-> have complained about it.
+--0-1697454789-1643655612=:8134
+Content-Type: text/plain; CHARSET=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Content-ID: <afe7b418-3895-41cd-19cc-2fab7576659a@linux.intel.com>
 
-It seems the issue was on kernel.org side, now fixed: your patch is on
-patchwork and lore.
+On Mon, 31 Jan 2022, Matthieu Baerts wrote:
 
-> On Sat, Jan 29, 2022 at 12:53:20PM +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 29/01/2022 07:26, Geliang Tang wrote:
->>> NLA_F_NESTED has been used in both 'pm_nl_ctl' and 'ip mptcp'.
->>
->> Was it always the case for 'ip mptcp'? I mean, we cannot break the user API.
->>
->> And even if it was always the case for 'ip mptcp', there could be other
->> tools not using NLA_F_NESTED. Maybe we can ignore them in this specific
->> case but I'm not sure.
-> 
-> I think now is the right time to switch to the new API: nla_parse_nested.
-> Since now no other tool uses our mptcp netlink yet, only 'ip mptcp' and
-> 'pm_nl_ctl'. There's no need to consider about the compatibility.
+> Hello,
+>
+> Recently, Sasha from the stable team queued a few MPTCP patches for
+> v5.16 and v5.15.
+>
+> You can find the complete list there:
+>
+> -
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.16
+> -
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.15
+>
+>
+> Some patches are fixes with a "Fixes" tag and it makes sense to have
+> them backported.
+>
+>
+> Some are "clean up" patches without a "Fixes" tag. I guess they have
+> been selected to reduce the difference with Linus' tree and ease
+> backports. e.g.:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.16/mptcp-clean-up-harmless-false-expressions.patch
+>
+> In this case, this patch is needed to avoid conflicts with another
+> patch: "mptcp: keep track of local endpoint still available for each
+> msk", see below.
+>
 
-I would like to only consider Open-Source tools but I don't think we
-can. It is unlikely someone wrote a new tool not using NLA_F_NESTED but
-I don't think we can be 100% sure. This is an uAPI break to change this
-I think, no?
+If it's needed for a patch intended for -stable, something like this would 
+be ok. But without such a dependency the backport doesn't make sense to 
+me. The rules at 
+https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html 
+say:
 
-> The old
-> API - nla_parse_nested_deprecated - is reserved for the compatibility of
-> the netlinks that already have some user tools using its interface in the
-> non-NLA_F_NESTED way. We are not the case.
-> 
-> Switch to the new API can force the user tools to use the NLA_F_NESTED way
-> from now on. That makes sure no user tool uses the non-NLA_F_NESTED way for
-> our mptcp netlink. Otherwise, one day the old API will be abandoned, and
-> then if there're some user tools use the non-NLA_F_NESTED way, we will have
-> to deal with the compatibility at that time. If we switch to the new API
-> now, we can avoid this potential trouble.
+* It must fix a real bug that bothers people
 
-I guess the compatibility will need to be kept of a bit of time. This
-function is used in 250+ places in the kernel. I guess it has the
-"deprecated" word in the name to clearly indicate "you should not use
-that for new features" but not to say "in a few months, we will drop
-this, deal with it now.", no?
+* It must fix a problem that causes a build error (but not for things 
+marked CONFIG_BROKEN), an oops, a hang, data corruption, a real security 
+issue, or some “oh, that’s not good” issue. In short, something critical.
 
-It would be easier to use nla_parse_nested() instead of
-nla_parse_nested_deprecated() but I don't think we can.
+(among others), and this does neither.
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+>
+> But there are also new features, e.g.:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.16/mptcp-allow-changing-the-backup-bit-by-endpoint-id.patch
+>
+> I don't know why it has been selected but I don't think this is an issue
+> to have this backported, does it?
+>
+
+It seems odd to me to introduce this new feature in a stable kernel. 
+Again, something that doesn't fit the "must fix..." criteria above.
+
+>
+> The last one is a fix but slightly changing the behaviour:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.16/mptcp-keep-track-of-local-endpoint-still-available-f.patch
+>
+> I think it is good to have this fix even if I'm surprised it has been
+> selected. Do you have any objection with that?
+
+I don't think this behavior change belongs in -stable. We didn't even 
+consider it a suitable change for -net, and haven't reviewed this for 
+possible dependencies or interactions with other path manager patches. 
+What do you think Paolo?
+
+I think we give fairly careful thought to what we give a Fixes: tag, with 
+the (apparently invalid) assumption that those are the patches that are 
+eligible for the stable trees.
+
+Is the -stable criteria now "any patch under 100 lines"?
+
+
+I'm inclined to NAK these. If for some reason we do decide they belong in 
+-stable we can add them to a later release.
+
+--
+Mat Martineau
+Intel
+--0-1697454789-1643655612=:8134--
