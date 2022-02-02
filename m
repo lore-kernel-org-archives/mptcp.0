@@ -1,135 +1,116 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A8F2C9C
-	for <mptcp@lists.linux.dev>; Wed,  2 Feb 2022 01:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643764710; x=1675300710;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iMzZl9SRvkVEndcB3HMgSFta6QrOaefDIcvge24z/vg=;
-  b=WPFZMWQKqVuaZZdihAC28EmqY9SJZkb2e9D+xcuQh4pUvf026WEg0nuL
-   MXSnw1x3sOod0vpd+PA16cmBVSx7Pd3PrvQAN7HLEOOIGfaH8JHZIoPD/
-   Xpt2RsjsZTlXyJpxUqjh+Wlcb//T5LA42PuvVNtlMpjhSsl6XJutsa6FN
-   gzDi7yljN4O5v3B1Ej5wL2JSqxjM0/SyLCCSpygGYv/16Fy8MmMA8AJD2
-   QYIGEZdIdpw2dsJeIw84YYfSXxXg9XvXGmqljUakPOHYQqGGXLk6+oCA1
-   t65LviWe3wPvU5uHtEJvEC2pX7Vknsfx9VoIG7rRcCJtb8ZfJBKn1Yf/4
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="228487338"
-X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
-   d="scan'208";a="228487338"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 17:18:19 -0800
-X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
-   d="scan'208";a="676297960"
-Received: from ekebedex-mobl1.amr.corp.intel.com ([10.251.14.93])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 17:18:19 -0800
-Date: Tue, 1 Feb 2022 17:18:18 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
-    Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 7/8] mptcp: attempt to add listening sockets
- for announced addrs
-In-Reply-To: <7f32b1f1-838e-dee8-0073-e59f59c46f95@intel.com>
-Message-ID: <9c27f9d6-d0ef-f878-7193-16fdcde74977@linux.intel.com>
-References: <20220128003812.2732609-1-kishen.maloor@intel.com> <20220128003812.2732609-8-kishen.maloor@intel.com> <2a4c2a567359b839aacd3d56d8a7734af5479747.camel@redhat.com> <1b10e9d2-cc63-efe9-2488-29a66ebaaaad@tessares.net>
- <7f32b1f1-838e-dee8-0073-e59f59c46f95@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC712F21
+	for <mptcp@lists.linux.dev>; Wed,  2 Feb 2022 05:37:45 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id 9A13F5C018C;
+	Wed,  2 Feb 2022 00:37:44 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Wed, 02 Feb 2022 00:37:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; bh=YBRLObE7oipno8N9HWdhc5q6vesbsr/OWaH1CA
+	K/aQk=; b=kYgirHHwKXkRaJd44UTsTqARSODCa8xP8kayvLKbKkXuh70HSlZOhH
+	0QzZkvc52VKCBZeH2VyNAa1IBpygH70XbBRKkeg+4GWSz0o/gpRU/34vUPZ48x56
+	glG64uXfFdoyAUICldbLXd2xkCWv6cANWTiO1mkhiQFEoNNkoZmXpHlbAScxq8bN
+	h+LqL5cOHDB25WalPkKUpuUHh2rutp7sijFgz8pX2xC4HORcLU0wVxOPtHbqeXTZ
+	7cdaP929qodETW/qy5ytlZgeC7NSIuhfTw/4fkPHs84vk15GDdKw6HBY96eZBJBE
+	sShqmqIj+vVLYKnSRGTjCuhGNosQQMJw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=YBRLObE7oipno8N9H
+	Wdhc5q6vesbsr/OWaH1CAK/aQk=; b=IQPSlmwfP1gxWY8xeEZDy6XcnT19SU4qr
+	ODJhL2mRy7b8/CjxhN5+/oJLEwyoKm18ej7vJ8doYXhLesynP2ctdrazdLZ+C85l
+	Da3+go/4+J7CtxysB0X5jaZ6QpJPdgKXJjikLvG3dgQYnN56kptu4ncIGiPyM55c
+	lVUrtepd9X2zEp+t+tk84pczsdZDlwUVX7ae7xPenHWfhFLzkAxMfo+FSAqDkaJx
+	MhoS5yoU5ztIQSG7BecYWfoOziqH+YCbvCwbfbBhjxSysiGiDjd94xho/gOpvoZk
+	ghVeYOYEw7MXqRqegduacVwdJvPflkvOinB0GzsBYtzYVenlGDX/A==
+X-ME-Sender: <xms:qBj6YZCRoxqoZ_CTNbZi0-BIH0KdZYkeMRTbCmE7CtfUs55lLgJBQA>
+    <xme:qBj6YXh2IqW4n4NX8kQCBP8_MIfrRFYbaHEF5ShRIJjwGfdR2YZKNEr6ZKr1t4p97
+    zUGYGq4l2JHFg>
+X-ME-Received: <xmr:qBj6YUmZHIQg4d477IRP2VXDo2EuH5ecj7AVgsu5LXfy_2SECYxvhVTFp356EXZ0aGnGVjbuqBAOQH-sIgAuZgeaw7waH5z9>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrgeeggdekudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
+    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrd
+    gtohhm
+X-ME-Proxy: <xmx:qBj6YTxGFNQP2N21oRUoK87AttmPf2SJGAdl44gaC3wF9rV2Pl2vPw>
+    <xmx:qBj6YeSTT4e4H54KKsXjn29GmOvotPwe0vHBIfbGEA2VWWTiIvtakA>
+    <xmx:qBj6YWZs16oSiWy_Y-oLI_clQuXYr4HmYPV8WDlTIqSuyq8-zgr0sQ>
+    <xmx:qBj6YdF6WKtCA_HKbthmQE3_y2y2KLNzGN_agNrRs22k3WQNvnjYKA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 2 Feb 2022 00:37:43 -0500 (EST)
+Date: Wed, 2 Feb 2022 06:37:39 +0100
+From: Greg KH <greg@kroah.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com, stable@vger.kernel.org
+Subject: Re: [PATCH mptcp-stable] mptcp: fix msk traversal in
+ mptcp_nl_cmd_set_flags()
+Message-ID: <YfoYo7wQGVpkM464@kroah.com>
+References: <20220202004032.208848-1-mathew.j.martineau@linux.intel.com>
+ <366acfc7-cab7-8f9a-e1cc-3d7f57fecbf8@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-1596481573-1643764699=:25542"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <366acfc7-cab7-8f9a-e1cc-3d7f57fecbf8@linux.intel.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Feb 01, 2022 at 05:09:36PM -0800, Mat Martineau wrote:
+> On Tue, 1 Feb 2022, Mat Martineau wrote:
+> 
+> > commit 8e9eacad7ec7a9cbf262649ebf1fa6e6f6cc7d82 upstream.
+> > 
+> > The upstream commit had to handle a lookup_by_id variable that is only
+> > present in 5.17. This version of the patch removes that variable, so the
+> > __lookup_addr() function only handles the lookup as it is implemented in
+> > 5.15 and 5.16. It also removes one 'const' keyword to prevent a warning
+> > due to differing const-ness in the 5.17 version of addresses_equal().
+> > 
+> > The MPTCP endpoint list is under RCU protection, guarded by the
+> > pernet spinlock. mptcp_nl_cmd_set_flags() traverses the list
+> > without acquiring the spin-lock nor under the RCU critical section.
+> > 
+> > This change addresses the issue performing the lookup and the endpoint
+> > update under the pernet spinlock.
+> > 
+> > Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
+> > Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> > ---
+> > 
+> > Paolo, can I add an ack or signoff tag from you?
+> > 
+> > The upstream commit (8e9eacad7ec7) was queued for the 5.16 and 5.15
+> > stable trees, which brought along a few extra patches that didn't belong
+> > in stable. I asked Greg to drop those patches from his queue, and this
+> > particular commit required manual changes as described above (related to
+> > the lookup_by_id variable that's new in 5.16).
+> > 
+> > This patch will not apply to the export branch. I confirmed that it
+> > applies, builds, and runs on both the 5.16.5 and 5.15.19 branches. Self
+> > tests succeed too.
+> > 
+> > When I send to the stable list, I'll also include these tags:
+> > Cc: <stable@vger.kernel.org> # 5.15.x
+> > Cc: <stable@vger.kernel.org> # 5.16.x
+> 
+> So... this wasn't supposed to go to stable@vger.kernel.org yet. git
+> send-email picked up the cc lines that I had moved out of the commit
+> message. Sorry about that.
 
---0-1596481573-1643764699=:25542
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+There's nothing wrong with us seeing it as kernel development should be
+done in public :)
 
-On Tue, 1 Feb 2022, Kishen Maloor wrote:
+thanks,
 
-> On 2/1/22 9:25 AM, Matthieu Baerts wrote:
->> Hi Paolo, Kishen,
->>
->> On 01/02/2022 12:42, Paolo Abeni wrote:
->>> On Thu, 2022-01-27 at 19:38 -0500, Kishen Maloor wrote:
->>>> When ADD_ADDR announcements use the port associated with an
->>>> active subflow, this change ensures that a listening socket is bound
->>>> to the announced addr+port in the kernel for subsequently receiving
->>>> MP_JOINs. But if a listening socket for this address is already held
->>>> by the application then no action is taken.
->>>>
->>>> A listening socket is created (when there isn't a listener)
->>>> just prior to the addr advertisement. If it is desired to not create
->>>> a listening socket in the kernel for an address, then this can be
->>>> requested by including the MPTCP_PM_ADDR_FLAG_NO_LISTEN flag
->>>> with the address.
->>>>
->>>> When a listening socket is created, it is stored in
->>>> struct mptcp_pm_add_entry and released accordingly.
->>>>
->>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/203
->>>> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
->>>> ---
->>>> v2: fixed formatting
->>>> v3: added new addr flag MPTCP_PM_ADDR_FLAG_NO_LISTEN to skip creating a
->>>> listening socket in the kernel during an ADD_ADDR request, use this flag
->>>> along the in-kernel PM flow for ADD_ADDR requests (Note: listening sockets
->>>> are always created for port-based endpoints as before), use the
->>>> lsk_list_find_or_create() helper
->>>
->>> I think it's better introducing the opposite flag (e.g.
->>> 'MPTCP_PM_ADDR_FLAG_LISTEN') otherwise this will change the default
->>> behavior
->>
->> Maybe it is fine to change the behaviour. Without changing the user
->> exposed API of course.
->>
->> I mean: it all depends if we consider the fact that when the userspace
->> closes the listening socket to accept new "MPTCP" connections, it is not
->> normal (bug) to close the possibility to create new subflows → socket
->> controlled by the user vs socket controlled by the PM. If we do consider
->> this as a "bug", then that's OK to change the default behaviour, no?
->>
->> I don't know if other people are sharing my view here.
->>
->> For me, if an app closes the listening socket after having accepted a
->> new connection, it is just not to receive new "main" connections on this
->> socket but it is OK to accept new subflows as they are part of existing
->> connections (and managed by the PM).
->> We would then avoid people hitting issues like #203. If you hit this
->> issue, it is not easy to find the answer I think.
->>
->
-> I think Matthieu has clearly captured above my rationale that led to this change because
-> I did consider this a "bug".
->
->> If people know they don't need/want the creation of a listening socket
->> only to accept new subflows, they can set the NO_LISTEN flag when adding
->> an address with "ip mptcp". But if the cost is minimal most of the time
->> because no additional listening sockets will be actually created, that's
->> fine to use a "NO_LISTEN" flag I think.
->>
->
-> Yes, when the application is listening (which may be the majority of cases), no listening
-> socket is created for address announcements reusing the subflow's port. If the application
-> happens to not be listening, then a listener is established, so issues like #203 would be
-> addressed by default. Further, if the user does not want (for any reason) a listener
-> to be created, then they could supply the NO_LISTEN flag with the address.
->
-
-I concur with Matthieu and Kishen here, I think the NO_LISTEN flag gives 
-enough control that everyone will be able to get the behavior they need 
-with the least surprising defaults. It seems like keeping exactly the same 
-existing behavior in different special cases would be a less desirable 
-tradeoff.
-
---
-Mat Martineau
-Intel
---0-1596481573-1643764699=:25542--
+greg k-h
