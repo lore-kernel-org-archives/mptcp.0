@@ -1,156 +1,135 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224942F25
-	for <mptcp@lists.linux.dev>; Wed,  2 Feb 2022 01:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A8F2C9C
+	for <mptcp@lists.linux.dev>; Wed,  2 Feb 2022 01:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643764178; x=1675300178;
+  t=1643764710; x=1675300710;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=MncgW0s2mjle1dcrbBYq+e1VuG06s9XtGiZ5lRotZOE=;
-  b=AjQ0+Bhm/JlvPe4esrHKgZfSvhPxUaFSZ0FG3b4LUr5m+H3MYkISGTDY
-   f2FjaUlgokeiiyPJAI5+DIzAskffeVR6EA6myrVzgsNJ8pGmDETXCOgKG
-   5IDOQ7yk3NaU1Uady7fnkZT8UOToSbHNSSKBkauom3vYubXN5ke3MzWY4
-   ZUETpnavGvjfxp2OLp7AXughm/DibhlAK1cLkWYC8fWC/xPj5az2tqAnF
-   kv0XNyFuZ/QLfNFbaZZ0/EW14fhngr9+7xYRn1dqNnaUxlfUNt3JQOj7U
-   Hu6spGTwvKo5qA5c4VgkaIJWCEOvBkRWdO3F8kmXtcyzUqJC3Uk3QuCio
+  bh=iMzZl9SRvkVEndcB3HMgSFta6QrOaefDIcvge24z/vg=;
+  b=WPFZMWQKqVuaZZdihAC28EmqY9SJZkb2e9D+xcuQh4pUvf026WEg0nuL
+   MXSnw1x3sOod0vpd+PA16cmBVSx7Pd3PrvQAN7HLEOOIGfaH8JHZIoPD/
+   Xpt2RsjsZTlXyJpxUqjh+Wlcb//T5LA42PuvVNtlMpjhSsl6XJutsa6FN
+   gzDi7yljN4O5v3B1Ej5wL2JSqxjM0/SyLCCSpygGYv/16Fy8MmMA8AJD2
+   QYIGEZdIdpw2dsJeIw84YYfSXxXg9XvXGmqljUakPOHYQqGGXLk6+oCA1
+   t65LviWe3wPvU5uHtEJvEC2pX7Vknsfx9VoIG7rRcCJtb8ZfJBKn1Yf/4
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="247779276"
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="228487338"
 X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
-   d="scan'208";a="247779276"
+   d="scan'208";a="228487338"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 17:09:37 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 17:18:19 -0800
 X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
-   d="scan'208";a="676296027"
+   d="scan'208";a="676297960"
 Received: from ekebedex-mobl1.amr.corp.intel.com ([10.251.14.93])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 17:09:37 -0800
-Date: Tue, 1 Feb 2022 17:09:36 -0800 (PST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 17:18:19 -0800
+Date: Tue, 1 Feb 2022 17:18:18 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev, pabeni@redhat.com
-cc: stable@vger.kernel.org
-Subject: Re: [PATCH mptcp-stable] mptcp: fix msk traversal in
- mptcp_nl_cmd_set_flags()
-In-Reply-To: <20220202004032.208848-1-mathew.j.martineau@linux.intel.com>
-Message-ID: <366acfc7-cab7-8f9a-e1cc-3d7f57fecbf8@linux.intel.com>
-References: <20220202004032.208848-1-mathew.j.martineau@linux.intel.com>
+To: Kishen Maloor <kishen.maloor@intel.com>
+cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v3 7/8] mptcp: attempt to add listening sockets
+ for announced addrs
+In-Reply-To: <7f32b1f1-838e-dee8-0073-e59f59c46f95@intel.com>
+Message-ID: <9c27f9d6-d0ef-f878-7193-16fdcde74977@linux.intel.com>
+References: <20220128003812.2732609-1-kishen.maloor@intel.com> <20220128003812.2732609-8-kishen.maloor@intel.com> <2a4c2a567359b839aacd3d56d8a7734af5479747.camel@redhat.com> <1b10e9d2-cc63-efe9-2488-29a66ebaaaad@tessares.net>
+ <7f32b1f1-838e-dee8-0073-e59f59c46f95@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/mixed; boundary="0-1596481573-1643764699=:25542"
 
-On Tue, 1 Feb 2022, Mat Martineau wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> commit 8e9eacad7ec7a9cbf262649ebf1fa6e6f6cc7d82 upstream.
->
-> The upstream commit had to handle a lookup_by_id variable that is only
-> present in 5.17. This version of the patch removes that variable, so the
-> __lookup_addr() function only handles the lookup as it is implemented in
-> 5.15 and 5.16. It also removes one 'const' keyword to prevent a warning
-> due to differing const-ness in the 5.17 version of addresses_equal().
->
-> The MPTCP endpoint list is under RCU protection, guarded by the
-> pernet spinlock. mptcp_nl_cmd_set_flags() traverses the list
-> without acquiring the spin-lock nor under the RCU critical section.
->
-> This change addresses the issue performing the lookup and the endpoint
-> update under the pernet spinlock.
->
-> Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> ---
->
-> Paolo, can I add an ack or signoff tag from you?
->
-> The upstream commit (8e9eacad7ec7) was queued for the 5.16 and 5.15
-> stable trees, which brought along a few extra patches that didn't belong
-> in stable. I asked Greg to drop those patches from his queue, and this
-> particular commit required manual changes as described above (related to
-> the lookup_by_id variable that's new in 5.16).
->
-> This patch will not apply to the export branch. I confirmed that it
-> applies, builds, and runs on both the 5.16.5 and 5.15.19 branches. Self
-> tests succeed too.
->
-> When I send to the stable list, I'll also include these tags:
-> Cc: <stable@vger.kernel.org> # 5.15.x
-> Cc: <stable@vger.kernel.org> # 5.16.x
+--0-1596481573-1643764699=:25542
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-So... this wasn't supposed to go to stable@vger.kernel.org yet. git 
-send-email picked up the cc lines that I had moved out of the commit 
-message. Sorry about that.
+On Tue, 1 Feb 2022, Kishen Maloor wrote:
 
--Mat
+> On 2/1/22 9:25 AM, Matthieu Baerts wrote:
+>> Hi Paolo, Kishen,
+>>
+>> On 01/02/2022 12:42, Paolo Abeni wrote:
+>>> On Thu, 2022-01-27 at 19:38 -0500, Kishen Maloor wrote:
+>>>> When ADD_ADDR announcements use the port associated with an
+>>>> active subflow, this change ensures that a listening socket is bound
+>>>> to the announced addr+port in the kernel for subsequently receiving
+>>>> MP_JOINs. But if a listening socket for this address is already held
+>>>> by the application then no action is taken.
+>>>>
+>>>> A listening socket is created (when there isn't a listener)
+>>>> just prior to the addr advertisement. If it is desired to not create
+>>>> a listening socket in the kernel for an address, then this can be
+>>>> requested by including the MPTCP_PM_ADDR_FLAG_NO_LISTEN flag
+>>>> with the address.
+>>>>
+>>>> When a listening socket is created, it is stored in
+>>>> struct mptcp_pm_add_entry and released accordingly.
+>>>>
+>>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/203
+>>>> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+>>>> ---
+>>>> v2: fixed formatting
+>>>> v3: added new addr flag MPTCP_PM_ADDR_FLAG_NO_LISTEN to skip creating a
+>>>> listening socket in the kernel during an ADD_ADDR request, use this flag
+>>>> along the in-kernel PM flow for ADD_ADDR requests (Note: listening sockets
+>>>> are always created for port-based endpoints as before), use the
+>>>> lsk_list_find_or_create() helper
+>>>
+>>> I think it's better introducing the opposite flag (e.g.
+>>> 'MPTCP_PM_ADDR_FLAG_LISTEN') otherwise this will change the default
+>>> behavior
+>>
+>> Maybe it is fine to change the behaviour. Without changing the user
+>> exposed API of course.
+>>
+>> I mean: it all depends if we consider the fact that when the userspace
+>> closes the listening socket to accept new "MPTCP" connections, it is not
+>> normal (bug) to close the possibility to create new subflows → socket
+>> controlled by the user vs socket controlled by the PM. If we do consider
+>> this as a "bug", then that's OK to change the default behaviour, no?
+>>
+>> I don't know if other people are sharing my view here.
+>>
+>> For me, if an app closes the listening socket after having accepted a
+>> new connection, it is just not to receive new "main" connections on this
+>> socket but it is OK to accept new subflows as they are part of existing
+>> connections (and managed by the PM).
+>> We would then avoid people hitting issues like #203. If you hit this
+>> issue, it is not easy to find the answer I think.
+>>
+>
+> I think Matthieu has clearly captured above my rationale that led to this change because
+> I did consider this a "bug".
+>
+>> If people know they don't need/want the creation of a listening socket
+>> only to accept new subflows, they can set the NO_LISTEN flag when adding
+>> an address with "ip mptcp". But if the cost is minimal most of the time
+>> because no additional listening sockets will be actually created, that's
+>> fine to use a "NO_LISTEN" flag I think.
+>>
+>
+> Yes, when the application is listening (which may be the majority of cases), no listening
+> socket is created for address announcements reusing the subflow's port. If the application
+> happens to not be listening, then a listener is established, so issues like #203 would be
+> addressed by default. Further, if the user does not want (for any reason) a listener
+> to be created, then they could supply the NO_LISTEN flag with the address.
+>
 
-
->
->
-> ---
-> net/mptcp/pm_netlink.c | 34 +++++++++++++++++++++++++---------
-> 1 file changed, 25 insertions(+), 9 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 65764c8171b3..5d305fafd0e9 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -459,6 +459,18 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
-> 	return i;
-> }
->
-> +static struct mptcp_pm_addr_entry *
-> +__lookup_addr(struct pm_nl_pernet *pernet, struct mptcp_addr_info *info)
-> +{
-> +	struct mptcp_pm_addr_entry *entry;
-> +
-> +	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> +		if (addresses_equal(&entry->addr, info, true))
-> +			return entry;
-> +	}
-> +	return NULL;
-> +}
-> +
-> static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
-> {
-> 	struct sock *sk = (struct sock *)msk;
-> @@ -1725,17 +1737,21 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
-> 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> 		bkup = 1;
->
-> -	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> -		if (addresses_equal(&entry->addr, &addr.addr, true)) {
-> -			mptcp_nl_addr_backup(net, &entry->addr, bkup);
-> -
-> -			if (bkup)
-> -				entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> -			else
-> -				entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-> -		}
-> +	spin_lock_bh(&pernet->lock);
-> +	entry = __lookup_addr(pernet, &addr.addr);
-> +	if (!entry) {
-> +		spin_unlock_bh(&pernet->lock);
-> +		return -EINVAL;
-> 	}
->
-> +	if (bkup)
-> +		entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> +	else
-> +		entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-> +	addr = *entry;
-> +	spin_unlock_bh(&pernet->lock);
-> +
-> +	mptcp_nl_addr_backup(net, &addr.addr, bkup);
-> 	return 0;
-> }
->
-> -- 
-> 2.35.1
->
->
+I concur with Matthieu and Kishen here, I think the NO_LISTEN flag gives 
+enough control that everyone will be able to get the behavior they need 
+with the least surprising defaults. It seems like keeping exactly the same 
+existing behavior in different special cases would be a less desirable 
+tradeoff.
 
 --
 Mat Martineau
 Intel
+--0-1596481573-1643764699=:25542--
