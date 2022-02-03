@@ -1,173 +1,76 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9B02F26
-	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 09:46:14 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id l35-20020a05600c1d2300b0034d477271c1so1398156wms.3
-        for <mptcp@lists.linux.dev>; Thu, 03 Feb 2022 01:46:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=bkl6+5UyLL8Ef2B7hN7sSzzYnSFj3muV1/6AVf3J0bM=;
-        b=0rZVa/4KSrbxDkoy2ERDkttgkD0jI/ecuAkb/77ZEG1jh35d/0VCUBYj+RzPyMdeaF
-         eQVkRzwHsCHlkZo+qFmySYIKHW5AEcGcycfGepJeTKULi1EXHiZVACTPz6a0mwnNcaVs
-         FQhjF2kNshKlxFc+mhGEHRCOG4OQrIyTLUW+UbkFYh9sAhnJk4gS9g2p4rW9IVCqNVta
-         pb3GI3NXIqlwktBiMDTKPJBzeikvOl945Ga0rrTddyLUmc0ZB2diHWdlzQVyg84nKic+
-         lGzO10HaG0A31ANgk5EBortWbYiZmeGI6PaJ8LrFh2YXq3tscSgQNvTZeWsMOsSZRJ+9
-         tWFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=bkl6+5UyLL8Ef2B7hN7sSzzYnSFj3muV1/6AVf3J0bM=;
-        b=oqQTb4MG8tU0YoZBtHs5t1nA4/UXrzKYo1FOvLEPgiaQaVMv9h8XPzvLmIQROHNE9H
-         A22zk1+AgjzygbsJoDcYHppi9AQoo23jf/PvMId/nhzhbNc6maTeZe1WRZI4aW+0XX/8
-         7qsRn0PvWBmZNsjjYtsxKAPeHLKtZVX0IxK1OUyW+rt6IHRZ/NgLjSuj8mgGiuS6QbJw
-         c7gVhfLKD1NNp4yMSljcKKHYXZVDQlDTmcRc+rbCLdbpj8Mq1X/f6fwTrRjSs8GvPLf1
-         hRuDr5eMj0+S7kFlvkrui+yTgD3rwACqhGjTxwsoK3mUzD2FRTA5Fm5iMqf12WqxxC9H
-         7FzQ==
-X-Gm-Message-State: AOAM530xIaEXKtUSxuMLLC8AueQWZb+Sm4HQvL5wfdpl4e0EtRfQS2n/
-	6glw8Ad960pHqavqHvi3S9kd+WpRsAGQ9w==
-X-Google-Smtp-Source: ABdhPJxNm4JwUVNgKPY+gpA5ECo90z/MY3LQOeY9hchY9Y6pQd1DRhCTAgwtPnbgwKOh3YMgtczu1Q==
-X-Received: by 2002:a05:600c:3d8c:: with SMTP id bi12mr9596721wmb.109.1643881572216;
-        Thu, 03 Feb 2022 01:46:12 -0800 (PST)
-Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id h6sm7094190wmq.26.2022.02.03.01.46.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Feb 2022 01:46:11 -0800 (PST)
-Message-ID: <758fee36-4b3e-0232-0813-e4dee8e53ebc@tessares.net>
-Date: Thu, 3 Feb 2022 10:46:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608B42F24
+	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 11:50:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 109E5C340EC;
+	Thu,  3 Feb 2022 11:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1643889012;
+	bh=RDX4HjaczzVI9yiG1jeSRzCM4VMoJhOYO4aHxCaHmVg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MTBBf/O7eOl1NtU/f4AXX5iUttiaqn56tLCSs4t9rVd5Z/s8cZSP5+FDuRwFSiefb
+	 8DFIDfQmic/PkAkBSHu7PJiZb7sV34zhO0aFUvpV2/y/2qHU1n4Np65yBmnXzsO0iU
+	 5aH1rIgv5O21kSONZBCSDWv7zu1LPBzMToRkOuGGJe2LAtp14r7x4htUGb+k8I6pkb
+	 pDrurN8AZhJrDusUe3N1TurKKI17FGTVLfSqCdd9X6rR3dKitYv4+4ZdyBMGBMehNs
+	 JNZwvuwNDPwhI2QTX8WSsnRKOaTp2IXJfQeLeq+DVYgAgSeF/xZ6PqWIjt+3pNCc4c
+	 tyCI6FEO/GEIQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EE64FE6BAC6;
+	Thu,  3 Feb 2022 11:50:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next v4 5/8] mptcp: netlink: store per namespace
- list of refcounted listen socks
-Content-Language: en-GB
-To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
-References: <20220203031331.2996457-1-kishen.maloor@intel.com>
- <20220203031331.2996457-6-kishen.maloor@intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220203031331.2996457-6-kishen.maloor@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/7] mptcp: Miscellaneous changes for 5.18
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <164388901196.18714.17211200195167111456.git-patchwork-notify@kernel.org>
+Date: Thu, 03 Feb 2022 11:50:11 +0000
+References: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hi Kishen,
+Hello:
 
-On 03/02/2022 04:13, Kishen Maloor wrote:
-> The kernel can create listening sockets bound to announced addresses
-> via the ADD_ADDR option for receiving MP_JOIN requests. Path
-> managers may further choose to advertise the same addr+port over multiple
-> MPTCP connections. So this change provides a simple framework to
-> manage a list of all distinct listning sockets created in the kernel
-> over a namespace by encapsulating the socket in a structure that is
-> ref counted and can be shared across multiple connections. The sockets
-> are released when there are no more references.
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Thank you for working on that!
+On Wed,  2 Feb 2022 17:03:36 -0800 you wrote:
+> Patch 1 has some minor cleanup in mptcp_write_options().
+> 
+> Patch 2 moves a rarely-needed branch to optimize mptcp_write_options().
+> 
+> Patch 3 adds a comment explaining which combinations of MPTCP option
+> headers are expected.
+> 
+> [...]
 
-(...)
+Here is the summary with links:
+  - [net-next,1/7] mptcp: move the declarations of ssk and subflow
+    https://git.kernel.org/netdev/net-next/c/d7889cfa0b89
+  - [net-next,2/7] mptcp: reduce branching when writing MP_FAIL option
+    https://git.kernel.org/netdev/net-next/c/902c8f864882
+  - [net-next,3/7] mptcp: clarify when options can be used
+    https://git.kernel.org/netdev/net-next/c/8cca39e25171
+  - [net-next,4/7] mptcp: print out reset infos of MP_RST
+    https://git.kernel.org/netdev/net-next/c/9ddd1cac6fe1
+  - [net-next,5/7] mptcp: set fullmesh flag in pm_netlink
+    https://git.kernel.org/netdev/net-next/c/73c762c1f07d
+  - [net-next,6/7] selftests: mptcp: set fullmesh flag in pm_nl_ctl
+    https://git.kernel.org/netdev/net-next/c/c25d29be00c1
+  - [net-next,7/7] selftests: mptcp: add fullmesh setting tests
+    https://git.kernel.org/netdev/net-next/c/6a0653b96f5d
 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index ff13012178ae..3d6251baef26 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-
-(...)
-
-> @@ -83,6 +94,69 @@ static bool addresses_equal(const struct mptcp_addr_info *a,
->  	return a->port == b->port;
->  }
->  
-> +static struct mptcp_local_lsk *lsk_list_find(struct pm_nl_pernet *pernet,
-> +					     struct mptcp_addr_info *addr)
-> +{
-> +	struct mptcp_local_lsk *lsk_ref = NULL;
-> +	struct mptcp_local_lsk *i;
-> +
-> +	rcu_read_lock();
-> +
-> +	list_for_each_entry_rcu(i, &pernet->lsk_list, list) {
-> +		if (addresses_equal(&i->addr, addr, true)) {
-> +			if (refcount_inc_not_zero(&i->refcount)) {
-> +				lsk_ref = i;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +
-> +	rcu_read_unlock();
-> +
-> +	return lsk_ref;
-> +}
-> +
-> +static void lsk_list_add_ref(struct mptcp_local_lsk *lsk_ref)
-> +{
-> +	refcount_inc(&lsk_ref->refcount);
-> +}
-> +
-> +static struct mptcp_local_lsk *lsk_list_add(struct pm_nl_pernet *pernet,
-> +					    struct mptcp_addr_info *addr,
-> +					    struct socket *lsk)
-> +{
-> +	struct mptcp_local_lsk *lsk_ref;
-> +
-> +	lsk_ref = kmalloc(sizeof(*lsk_ref), GFP_ATOMIC);
-> +
-> +	if (!lsk_ref)
-> +		return NULL;
-> +
-> +	lsk_ref->lsk = lsk;
-> +	memcpy(&lsk_ref->addr, addr, sizeof(struct mptcp_addr_info));
-> +	refcount_set(&lsk_ref->refcount, 1);
-> +
-> +	spin_lock_bh(&pernet->lsk_list_lock);
-> +	list_add_rcu(&lsk_ref->list, &pernet->lsk_list);
-> +	spin_unlock_bh(&pernet->lsk_list_lock);
-> +
-> +	return lsk_ref;
-> +}
-> +
-> +static void lsk_list_release(struct pm_nl_pernet *pernet,
-
-The CI is complaining[1] because these functions are not used anywhere:
-
-
-  net/mptcp/pm_netlink.c:146:13: error: 'lsk_list_release' defined but
-not used [-Werror=unused-function]
-    146 | static void lsk_list_release(struct pm_nl_pernet *pernet,
-        |             ^~~~~~~~~~~~~~~~
-  net/mptcp/pm_netlink.c:124:32: error: 'lsk_list_add' defined but not
-used [-Werror=unused-function]
-    124 | static struct mptcp_local_lsk *lsk_list_add(struct
-pm_nl_pernet *pernet,
-        |                                ^~~~~~~~~~~~
-  net/mptcp/pm_netlink.c:119:13: error: 'lsk_list_add_ref' defined but
-not used [-Werror=unused-function]
-    119 | static void lsk_list_add_ref(struct mptcp_local_lsk *lsk_ref)
-        |             ^~~~~~~~~~~~~~~~
-  net/mptcp/pm_netlink.c:97:32: error: 'lsk_list_find' defined but not
-used [-Werror=unused-function]
-     97 | static struct mptcp_local_lsk *lsk_list_find(struct
-pm_nl_pernet *pernet,
-        |                                ^~~~~~~~~~~~~
-
-
-I don't know if it is a good practice to declare static functions and
-not use them directly in the same commit but I suppose it is fine.
-
-Cheers,
-Matt
-
-[1]
-https://github.com/multipath-tcp/mptcp_net-next/runs/5046474331?check_suite_focus=true#step:5:4215
-
+You are awesome, thank you!
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
