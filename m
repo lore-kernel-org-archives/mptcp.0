@@ -1,40 +1,42 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1852F27
-	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 01:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D9C2F2C
+	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 01:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643850232; x=1675386232;
+  t=1643850233; x=1675386233;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Lx38d9fhYiCL1gyKi+5TqLDwjarXqB2FJolRnno2uwY=;
-  b=F1hwAjsIJ8huaKGwpbc8i09QewFL96AXS7nBdt1lWeS1BNHKe7n3F7fx
-   5vPXs+mYNOTMdPGQS52DnTWrvvmjdcjxZo2bZuFKnj+/SdBHRQfF7iByR
-   a5NIXXWkh+2igh3v+KQBcmcS3ETZyPNyYb6xyjl2pAm0nVPVAAzJEqlr6
-   BmxUk8twJPKFN78xlq9JtEZVBNFmiOtt8hxfqA5vzJTld8h0XJrTBpR9K
-   IrKtS7vNkrAdBYJs5zm3i/EBRxCYhwRbpAK0S9Opk15is63dQYgHqXUiR
-   F7eCxSDWeudFAQx70DYK0nDdRGVLYyT4gz4UW5r46U4jT362AKlswNn3T
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="228023384"
+  bh=FC2LolPe1mWrv7RSaMwzaULMsfbrfUJRBuphqssZXwY=;
+  b=ZB/g3uOgi/XtGAdlcqERq8T41BwgJShgJxD0rJKgNNRS8abA9SgEosg5
+   2m5VmTZOsdlD9t8AXR8D3ZtyKjxtSG0/U/jFSUcKLoJqudchGgewcrXH2
+   oLFg8Ds/LeX+GSi2UdUpoWxRjj/iVPLJ4GcQ3gKbdLz9/DBZ65BU9luCG
+   sg1ZVMTxvVLskjg0W6wDHrEVODfw3EEocqP9YhbX2IYfv740CgCkWhlgV
+   9BiICFmlAwNtrK2PIx+DUlUcHkkBuwGXuBtzA4ScUb0vvr2LuYyHVTrDy
+   EXyp+wZTWWrIEIZy16ZduiO/F3B2b3QOi97YOrY1pRXFGsdt0ka5mTTIF
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="228023386"
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="228023384"
+   d="scan'208";a="228023386"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:49 -0800
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="483070830"
+   d="scan'208";a="483070832"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.1.6])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:48 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:49 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+Cc: Geliang Tang <geliang.tang@suse.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
+	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/7] mptcp: clarify when options can be used
-Date: Wed,  2 Feb 2022 17:03:39 -0800
-Message-Id: <20220203010343.113421-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 5/7] mptcp: set fullmesh flag in pm_netlink
+Date: Wed,  2 Feb 2022 17:03:41 -0800
+Message-Id: <20220203010343.113421-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
 References: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
@@ -46,61 +48,93 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+From: Geliang Tang <geliang.tang@suse.com>
 
-RFC8684 doesn't seem to clearly specify which MPTCP options can be used
-together.
+This patch added the fullmesh flag setting support in pm_netlink.
 
-Some options are mutually exclusive -- e.g. MP_CAPABLE and MP_JOIN --,
-some can be used together -- e.g. DSS + MP_PRIO --, some can but we
-prefer not to -- e.g. DSS + ADD_ADDR -- and some have to be used
-together at some points -- e.g. MP_FAIL and DSS.
+If the fullmesh flag of the address is changed, remove all the related
+subflows, update the fullmesh flag and create subflows again.
 
-We need to clarify this as a base before allowing other modifications.
-
-For example, does it make sense to send a RM_ADDR with an MPC or MPJ?
-This remains open for possible future discussions.
-
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/options.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ net/mptcp/pm_netlink.c | 37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ab054c389a5f..7345f28f3de1 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1267,8 +1267,27 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
- 	const struct sock *ssk = (const struct sock *)tp;
- 	struct mptcp_subflow_context *subflow;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 782b1d452269..d47795748ad7 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1728,9 +1728,20 @@ mptcp_nl_cmd_get_limits(struct sk_buff *skb, struct genl_info *info)
+ 	return -EMSGSIZE;
+ }
  
--	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
--	 * see mptcp_established_options*()
-+	/* Which options can be used together?
-+	 *
-+	 * X: mutually exclusive
-+	 * O: often used together
-+	 * C: can be used together in some cases
-+	 * P: could be used together but we prefer not to (optimisations)
-+	 *
-+	 *  Opt: | MPC  | MPJ  | DSS  | ADD  |  RM  | PRIO | FAIL |  FC  |
-+	 * ------|------|------|------|------|------|------|------|------|
-+	 *  MPC  |------|------|------|------|------|------|------|------|
-+	 *  MPJ  |  X   |------|------|------|------|------|------|------|
-+	 *  DSS  |  X   |  X   |------|------|------|------|------|------|
-+	 *  ADD  |  X   |  X   |  P   |------|------|------|------|------|
-+	 *  RM   |  C   |  C   |  C   |  P   |------|------|------|------|
-+	 *  PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
-+	 *  FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
-+	 *  FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
-+	 *  RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
-+	 * ------|------|------|------|------|------|------|------|------|
-+	 *
-+	 * The same applies in mptcp_established_options() function.
- 	 */
- 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
- 		struct mptcp_ext *mpext = &opts->ext_copy;
+-static int mptcp_nl_addr_backup(struct net *net,
+-				struct mptcp_addr_info *addr,
+-				u8 bkup)
++static void mptcp_pm_nl_fullmesh(struct mptcp_sock *msk,
++				 struct mptcp_addr_info *addr)
++{
++	struct mptcp_rm_list list = { .nr = 0 };
++
++	list.ids[list.nr++] = addr->id;
++
++	mptcp_pm_nl_rm_subflow_received(msk, &list);
++	mptcp_pm_create_subflow_or_signal_addr(msk);
++}
++
++static int mptcp_nl_set_flags(struct net *net,
++			      struct mptcp_addr_info *addr,
++			      u8 bkup, u8 changed)
+ {
+ 	long s_slot = 0, s_num = 0;
+ 	struct mptcp_sock *msk;
+@@ -1744,7 +1755,10 @@ static int mptcp_nl_addr_backup(struct net *net,
+ 
+ 		lock_sock(sk);
+ 		spin_lock_bh(&msk->pm.lock);
+-		ret = mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
++		if (changed & MPTCP_PM_ADDR_FLAG_BACKUP)
++			ret = mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
++		if (changed & MPTCP_PM_ADDR_FLAG_FULLMESH)
++			mptcp_pm_nl_fullmesh(msk, addr);
+ 		spin_unlock_bh(&msk->pm.lock);
+ 		release_sock(sk);
+ 
+@@ -1761,6 +1775,8 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, }, *entry;
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
++	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
++			   MPTCP_PM_ADDR_FLAG_FULLMESH;
+ 	struct net *net = sock_net(skb->sk);
+ 	u8 bkup = 0, lookup_by_id = 0;
+ 	int ret;
+@@ -1783,15 +1799,18 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 		spin_unlock_bh(&pernet->lock);
+ 		return -EINVAL;
+ 	}
++	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
++	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
++		spin_unlock_bh(&pernet->lock);
++		return -EINVAL;
++	}
+ 
+-	if (bkup)
+-		entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
+-	else
+-		entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
++	changed = (addr.flags ^ entry->flags) & mask;
++	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
+ 	addr = *entry;
+ 	spin_unlock_bh(&pernet->lock);
+ 
+-	mptcp_nl_addr_backup(net, &addr.addr, bkup);
++	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
+ 	return 0;
+ }
+ 
 -- 
 2.35.1
 
