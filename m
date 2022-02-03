@@ -1,38 +1,38 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7A82F21
-	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 00:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1255C2F27
+	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 00:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643847321; x=1675383321;
+  t=1643848726; x=1675384726;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=gK5+iuWGPI9DlIXKr0r65JAMvsy7m74+ssLN7MiQW0Q=;
-  b=OvfnYlrCwRZYPw4fbub2ut74OZwlmvbp+y2pNJLmeYz9yeCLp/FWU1mv
-   rVfq7MFywVQIWurZtMi3AunAxQD9H/0GiY8Qdn+Mwce+sAWanx3+jTe4m
-   4vRNYlyys0+d0kItwMQCMMpT4XJaHqq1dO7Wi9hraIL+/iw7Pu+N7NLCg
-   UaHx+dI4k61S+4MgaTJfskPvAcO+9LTOraHnesRGCEqq4Eqxu/ndhF3E7
-   ushcRIycKk79BTTdDMkO8tIct5EEvfXFs24bNjNqwV08H1Qygni5NFs6f
-   viW+TtR5Ew2GFQduR7ypPvYz9QP3klIlcGMsCiHjCFvyAJ/NwbmOTjSmv
+  bh=zi1p3dq9Q/O228UMUJlDIA2pKPVfH57qdJYq1k4kSUc=;
+  b=Ed3BOWpJyJcHlJsGIAIhdvXG60dtDZccVIOT2E9UMfe7kW1D/Z7LLePu
+   EkymYsCIAP2RQeBcg9q75dt+YgWWeRxYt7Ni8KPz5iPTAVTsN0cXuMOtx
+   fzz2O+FyY45Vyed8tGB9coxNqKHHfdZ9LAE2tUHWhiKsdj69uxhVJqW67
+   ZE70UgeWDiENnN26g1yZdYprk5GjVjEnqoMSxt2f4Uj5JFEQaJtbo99xq
+   /Yh6JGvcrOfE2jvLxlGs0hdKA+G4N9pmmodtYGg38DX8gTqG+p60oILUY
+   9DqDxzVn9sPiz1ERypIdLzpEtfXqSRfTFEfKIxrHoQDVB8klXlGacO0oc
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="247998884"
+X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="311354454"
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="247998884"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 16:15:17 -0800
+   d="scan'208";a="311354454"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 16:38:45 -0800
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="480311834"
+   d="scan'208";a="523709926"
 Received: from lddickin-mobl1.amr.corp.intel.com ([10.212.228.203])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 16:15:17 -0800
-Date: Wed, 2 Feb 2022 16:15:17 -0800 (PST)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 16:38:45 -0800
+Date: Wed, 2 Feb 2022 16:38:41 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: fix diag instability
-In-Reply-To: <8e7b626d99b8c28b8638f850841707c63deb0bb4.1643825648.git.pabeni@redhat.com>
-Message-ID: <d2e4a5f1-e7b9-349e-ba1d-e9b2b4148da3@linux.intel.com>
-References: <8e7b626d99b8c28b8638f850841707c63deb0bb4.1643825648.git.pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] mptcp: use nla_parse_nested
+In-Reply-To: <8339d9dc-4055-57c9-9c97-9ca4075c7496@tessares.net>
+Message-ID: <a83209f-7839-d87f-5d27-fd337cd972c@linux.intel.com>
+References: <022caed0c9e5964f525336aced8233338c29386f.1643437533.git.geliang.tang@suse.com> <25250bc9-015e-df2a-582d-5b5dd3eabdcb@tessares.net> <20220130043318.GA7781@dhcp-10-157-36-190> <8339d9dc-4055-57c9-9c97-9ca4075c7496@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,61 +41,70 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 2 Feb 2022, Paolo Abeni wrote:
+On Mon, 31 Jan 2022, Matthieu Baerts wrote:
 
-> Increase the time waiting for mptcp sockets to get established,
-> to cope with very slow running host, or high jitter caused by
-> VMs.
+> Hi Geliang,
 >
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> note: just to trigger the public CI, probably a better commit
-> message needed
+> On 30/01/2022 05:33, Geliang Tang wrote:
+>> Hi Matt,
+>>
+>> Thanks for your review.
+>>
+>> I don't know why this commit didn't show in the patchwork. The CI seems to
+>> have complained about it.
+>
+> It seems the issue was on kernel.org side, now fixed: your patch is on
+> patchwork and lore.
+>
+>> On Sat, Jan 29, 2022 at 12:53:20PM +0100, Matthieu Baerts wrote:
+>>> Hi Geliang,
+>>>
+>>> On 29/01/2022 07:26, Geliang Tang wrote:
+>>>> NLA_F_NESTED has been used in both 'pm_nl_ctl' and 'ip mptcp'.
+>>>
+>>> Was it always the case for 'ip mptcp'? I mean, we cannot break the user API.
+>>>
+>>> And even if it was always the case for 'ip mptcp', there could be other
+>>> tools not using NLA_F_NESTED. Maybe we can ignore them in this specific
+>>> case but I'm not sure.
+>>
+>> I think now is the right time to switch to the new API: nla_parse_nested.
+>> Since now no other tool uses our mptcp netlink yet, only 'ip mptcp' and
+>> 'pm_nl_ctl'. There's no need to consider about the compatibility.
+>
+> I would like to only consider Open-Source tools but I don't think we
+> can. It is unlikely someone wrote a new tool not using NLA_F_NESTED but
+> I don't think we can be 100% sure. This is an uAPI break to change this
+> I think, no?
+>
+>> The old
+>> API - nla_parse_nested_deprecated - is reserved for the compatibility of
+>> the netlinks that already have some user tools using its interface in the
+>> non-NLA_F_NESTED way. We are not the case.
+>>
+>> Switch to the new API can force the user tools to use the NLA_F_NESTED way
+>> from now on. That makes sure no user tool uses the non-NLA_F_NESTED way for
+>> our mptcp netlink. Otherwise, one day the old API will be abandoned, and
+>> then if there're some user tools use the non-NLA_F_NESTED way, we will have
+>> to deal with the compatibility at that time. If we switch to the new API
+>> now, we can avoid this potential trouble.
+>
+> I guess the compatibility will need to be kept of a bit of time. This
+> function is used in 250+ places in the kernel. I guess it has the
+> "deprecated" word in the name to clearly indicate "you should not use
+> that for new features" but not to say "in a few months, we will drop
+> this, deal with it now.", no?
+>
 
-Ok, noted. I also haven't seen instability in diag.sh, for what it's 
-worth.
+It seems like the meaning of "deprecated" is the former ("don't add new 
+calls to this")... but we did add our use of the function in 2020 after it 
+was already deprecated! Given the "do not break userspace" rule for kernel 
+changes, I don't expect the deprecated to go away and for now I think 
+we should leave it unchanged. When we discuss patches at this week's 
+meeting I'll see if others agree.
 
-Suggestion for the commit message, explain why the change from "-j" to "-r 
-0" when invoking mptcp_connect.
-
--Mat
-
-> ---
-> tools/testing/selftests/net/mptcp/diag.sh | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> index 2674ba20d524..baafd36c3e0e 100755
-> --- a/tools/testing/selftests/net/mptcp/diag.sh
-> +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> @@ -87,9 +87,9 @@ chk_msk_nr 0 "no msk on netns creation"
-> echo "b" | \
-> 	timeout ${timeout_test} \
-> 		ip netns exec $ns \
-> -			./mptcp_connect -p 10000 -j -t ${timeout_poll} \
-> +			./mptcp_connect -p 10000 -r 0 -t ${timeout_poll} \
-> 				127.0.0.1 >/dev/null &
-> -sleep 0.1
-> +sleep 0.4
-> chk_msk_nr 2 "after MPC handshake "
-> chk_msk_remote_key_nr 2 "....chk remote_key"
-> chk_msk_fallback_nr 0 "....chk no fallback"
-> @@ -105,9 +105,9 @@ sleep 0.1
-> echo "b" | \
-> 	timeout ${timeout_test} \
-> 		ip netns exec $ns \
-> -			./mptcp_connect -p 10001 -j -t ${timeout_poll} \
-> +			./mptcp_connect -p 10001 -r 0 -t ${timeout_poll} \
-> 				127.0.0.1 >/dev/null &
-> -sleep 0.1
-> +sleep 0.4
-> chk_msk_fallback_nr 1 "check fallback"
-> flush_pids
->
-> -- 
-> 2.34.1
->
->
+> It would be easier to use nla_parse_nested() instead of
+> nla_parse_nested_deprecated() but I don't think we can.
 >
 
 --
