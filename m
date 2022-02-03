@@ -1,42 +1,40 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170672F3F
-	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 01:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1852F27
+	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 01:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643850234; x=1675386234;
+  t=1643850232; x=1675386232;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fiZ8lVR6tJKIp1bjE+ooOoXrIV+2sSrB3mNK93hMjhE=;
-  b=Gj5BFEUDF5YnTT9gHXsZrCZtI7SaSnjipB7IHrNa4AP4oKqtVRmQ/1nJ
-   54GBDqcsS80vUFmYUyMVTOkajNzyQh49Gf8M6OCEyysIhW/Ql9sg+kodY
-   sWtrl7VrB3itQRF4V+wXQZ67aaBiCEVzW0FCex4Je2HQuOBMCIVpQlxNI
-   m1rX/5RFKbIYwVXPAYWYHyDrBzKKtFfAJ0ty0T2eMijCfGZYjCz4i2upB
-   76RLmG3AZM8iie1RReB4P1ee/b56RWGFrbFx3yf4Q9h51TQSTdYYD1bT3
-   AjekXVQFRwT3Fsrpg2RS0h1hMtow0xqqadHPm89Y4qt/16tyl2alIRpBl
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="228023387"
+  bh=Lx38d9fhYiCL1gyKi+5TqLDwjarXqB2FJolRnno2uwY=;
+  b=F1hwAjsIJ8huaKGwpbc8i09QewFL96AXS7nBdt1lWeS1BNHKe7n3F7fx
+   5vPXs+mYNOTMdPGQS52DnTWrvvmjdcjxZo2bZuFKnj+/SdBHRQfF7iByR
+   a5NIXXWkh+2igh3v+KQBcmcS3ETZyPNyYb6xyjl2pAm0nVPVAAzJEqlr6
+   BmxUk8twJPKFN78xlq9JtEZVBNFmiOtt8hxfqA5vzJTld8h0XJrTBpR9K
+   IrKtS7vNkrAdBYJs5zm3i/EBRxCYhwRbpAK0S9Opk15is63dQYgHqXUiR
+   F7eCxSDWeudFAQx70DYK0nDdRGVLYyT4gz4UW5r46U4jT362AKlswNn3T
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="228023384"
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="228023387"
+   d="scan'208";a="228023384"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:49 -0800
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="483070834"
+   d="scan'208";a="483070830"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.1.6])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:49 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:48 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
 	davem@davemloft.net,
 	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 6/7] selftests: mptcp: set fullmesh flag in pm_nl_ctl
-Date: Wed,  2 Feb 2022 17:03:42 -0800
-Message-Id: <20220203010343.113421-7-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 3/7] mptcp: clarify when options can be used
+Date: Wed,  2 Feb 2022 17:03:39 -0800
+Message-Id: <20220203010343.113421-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
 References: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
@@ -48,51 +46,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-This patch added the fullmesh flag setting and clearing support in
-pm_nl_ctl:
+RFC8684 doesn't seem to clearly specify which MPTCP options can be used
+together.
 
- # pm_nl_ctl set ip flags fullmesh
- # pm_nl_ctl set ip flags nofullmesh
+Some options are mutually exclusive -- e.g. MP_CAPABLE and MP_JOIN --,
+some can be used together -- e.g. DSS + MP_PRIO --, some can but we
+prefer not to -- e.g. DSS + ADD_ADDR -- and some have to be used
+together at some points -- e.g. MP_FAIL and DSS.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+We need to clarify this as a base before allowing other modifications.
+
+For example, does it make sense to send a RM_ADDR with an MPC or MPJ?
+This remains open for possible future discussions.
+
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/mptcp/options.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 354784512748..152b84e44d69 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -28,7 +28,7 @@ static void syntax(char *argv[])
- 	fprintf(stderr, "\tadd [flags signal|subflow|backup|fullmesh] [id <nr>] [dev <name>] <ip>\n");
- 	fprintf(stderr, "\tdel <id> [<ip>]\n");
- 	fprintf(stderr, "\tget <id>\n");
--	fprintf(stderr, "\tset <ip> [flags backup|nobackup]\n");
-+	fprintf(stderr, "\tset <ip> [flags backup|nobackup|fullmesh|nofullmesh]\n");
- 	fprintf(stderr, "\tflush\n");
- 	fprintf(stderr, "\tdump\n");
- 	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
-@@ -704,12 +704,14 @@ int set_flags(int fd, int pm_family, int argc, char *argv[])
- 			if (++arg >= argc)
- 				error(1, 0, " missing flags value");
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index ab054c389a5f..7345f28f3de1 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1267,8 +1267,27 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 	const struct sock *ssk = (const struct sock *)tp;
+ 	struct mptcp_subflow_context *subflow;
  
--			/* do not support flag list yet */
- 			for (str = argv[arg]; (tok = strtok(str, ","));
- 			     str = NULL) {
- 				if (!strcmp(tok, "backup"))
- 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
--				else if (strcmp(tok, "nobackup"))
-+				else if (!strcmp(tok, "fullmesh"))
-+					flags |= MPTCP_PM_ADDR_FLAG_FULLMESH;
-+				else if (strcmp(tok, "nobackup") &&
-+					 strcmp(tok, "nofullmesh"))
- 					error(1, errno,
- 					      "unknown flag %s", argv[arg]);
- 			}
+-	/* DSS, MPC, MPJ, ADD_ADDR, FASTCLOSE and RST are mutually exclusive,
+-	 * see mptcp_established_options*()
++	/* Which options can be used together?
++	 *
++	 * X: mutually exclusive
++	 * O: often used together
++	 * C: can be used together in some cases
++	 * P: could be used together but we prefer not to (optimisations)
++	 *
++	 *  Opt: | MPC  | MPJ  | DSS  | ADD  |  RM  | PRIO | FAIL |  FC  |
++	 * ------|------|------|------|------|------|------|------|------|
++	 *  MPC  |------|------|------|------|------|------|------|------|
++	 *  MPJ  |  X   |------|------|------|------|------|------|------|
++	 *  DSS  |  X   |  X   |------|------|------|------|------|------|
++	 *  ADD  |  X   |  X   |  P   |------|------|------|------|------|
++	 *  RM   |  C   |  C   |  C   |  P   |------|------|------|------|
++	 *  PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
++	 *  FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
++	 *  FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
++	 *  RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
++	 * ------|------|------|------|------|------|------|------|------|
++	 *
++	 * The same applies in mptcp_established_options() function.
+ 	 */
+ 	if (likely(OPTION_MPTCP_DSS & opts->suboptions)) {
+ 		struct mptcp_ext *mpext = &opts->ext_copy;
 -- 
 2.35.1
 
