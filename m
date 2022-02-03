@@ -1,45 +1,37 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD2C2F3F
-	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 01:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11FA2F24
+	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 03:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643850235; x=1675386235;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dTssO73r57l66jd0hPRkCO1bthWlqOWmAdYmrq+iykY=;
-  b=nZhTzKwJXTDs3rwrVglBgldUD+aanP9BAUPSaqAYZKSDj50tZdDvHhN+
-   EFi1fsL+pPQpc9O+eKRAon7TGm6NQxl+7Lu28TlWpVmvJqKCAB9DDCPAt
-   DwMAur61C9G07DBz6CkjYwM5UMpeR+s8PX+szE39Q3Gg3+0vAVJWFhbae
-   E/kSLB+VFKYTRUu4n0qjTw73t8x/s4LBiI4/vLiAshqspnefZFPC18WKi
-   UpFLEYKvgdRLv7eyCXtwtYFf+NGoLm/6wEaVLaNiW9EfD3kTCcoxKnnaG
-   RK1hVNvI1sdevtxDiNjME6/OK17sRkQPxzLJGpG6t5olb/2vIFqCUnXUP
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="228023389"
+  t=1643858020; x=1675394020;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QyO5XUHrX375nxLcJp9UO+PgzPy/Bh9dqWmLHtsuxNU=;
+  b=CWlIG8yMjOmcDowmbR7lysAL0XPk/W9xEjAg62Lp3dkJT8krroxoYFMS
+   8HmYor8H1XBbJM9y2JslWU1bznBX9yO1tm0OkIN/NxUd8OZPyQDQI/7Ab
+   aZnSTwed6rM/EcbwUpLU6K2C4h2H4WZlVadTCb47o9ZqVllEDnaaRFgMA
+   LhuKDjRsrVtTN/0JQffyTaFhQuzLsS47rYklppJTQpY+BeqqbuHcyZAgU
+   t9LXe/3KtQg630nnQKn8TYYUY+UZL9BDgIR0DNHJK/0SWWFfbrLXVPXrX
+   XxKdQ9dvJR5GpxMn3PiW6QeKr/rK+FJgVWSmzCdVLUCx69r/yoJXmpX/E
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="308795476"
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="228023389"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:49 -0800
+   d="scan'208";a="308795476"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 19:13:40 -0800
 X-IronPort-AV: E=Sophos;i="5.88,338,1635231600"; 
-   d="scan'208";a="483070835"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.1.6])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 17:03:49 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 7/7] selftests: mptcp: add fullmesh setting tests
-Date: Wed,  2 Feb 2022 17:03:43 -0800
-Message-Id: <20220203010343.113421-8-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
-References: <20220203010343.113421-1-mathew.j.martineau@linux.intel.com>
+   d="scan'208";a="771658247"
+Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 19:13:39 -0800
+From: Kishen Maloor <kishen.maloor@intel.com>
+To: kishen.maloor@intel.com,
+	mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v4 0/8] mptcp: fixes and enhancements related to path management
+Date: Wed,  2 Feb 2022 22:13:23 -0500
+Message-Id: <20220203031331.2996457-1-kishen.maloor@intel.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,114 +40,59 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliang.tang@suse.com>
+This patch series contains fixes and enhancements related to
+path management over MPTCP connections, particularly in support of
+out-of-kernel PMs. The changes ensure that the required bits of
+information are conveyed through MPTCP netlink events which 
+would be consumed by a path manager in making decisions, more
+flexibility in establishing paths from either end of an MPTCP
+connection, and better handling of listening sockets which serve
+in MPJ handshakes.
 
-This patch added the fullmesh setting and clearing selftests in
-mptcp_join.sh.
+v1 -> v2:
+-fixed formatting
+-check_fully_established: check for 3rd ACK retransmission only on passive
+side of the MPJ handshake
 
-Now we can set both backup and fullmesh flags, so avoid using the
-words 'backup' and 'bkup'.
+v2 -> v3:
+-subflow_simultaneous_connect: check for active subflow socket
+-new helper lsk_list_find_or_create()
+-updated mptcp_pm_nl_create_listen_socket() to take struct net* as param
+-new addr flag MPTCP_PM_ADDR_FLAG_NO_LISTEN to skip creating a
+listening socket in the kernel during an ADD_ADDR request
+-reflect the pm.server_side attribute in the MPTCP_EVENT_CREATED
+and MPTCP_EVENT_ESTABLISHED events 
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 49 ++++++++++++++++---
- 1 file changed, 43 insertions(+), 6 deletions(-)
+v3 -> v4:
+-refactor mptcp_pm_add_addr_received() and
+mptcp_event_addr_announced() to eliminate a param
+-add and use new internal API mptcp_pm_is_kernel() 
+-bypass accounting fo non-kernel PM managed connections
+-call lsk_list_find() after a failed lsk_list_find_or_create()
+for a chance to retrieve a recently created lsk by a simultaneous
+call
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b8bdbec0cf69..bd106c7ec232 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -289,7 +289,7 @@ do_transfer()
- 	addr_nr_ns1="$7"
- 	addr_nr_ns2="$8"
- 	speed="$9"
--	bkup="${10}"
-+	sflags="${10}"
- 
- 	port=$((10000+$TEST_COUNT))
- 	TEST_COUNT=$((TEST_COUNT+1))
-@@ -461,14 +461,13 @@ do_transfer()
- 		fi
- 	fi
- 
--	if [ ! -z $bkup ]; then
-+	if [ ! -z $sflags ]; then
- 		sleep 1
- 		for netns in "$ns1" "$ns2"; do
- 			dump=(`ip netns exec $netns ./pm_nl_ctl dump`)
- 			if [ ${#dump[@]} -gt 0 ]; then
- 				addr=${dump[${#dump[@]} - 1]}
--				backup="ip netns exec $netns ./pm_nl_ctl set $addr flags $bkup"
--				$backup
-+				ip netns exec $netns ./pm_nl_ctl set $addr flags $sflags
- 			fi
- 		done
- 	fi
-@@ -545,7 +544,7 @@ run_tests()
- 	addr_nr_ns1="${5:-0}"
- 	addr_nr_ns2="${6:-0}"
- 	speed="${7:-fast}"
--	bkup="${8:-""}"
-+	sflags="${8:-""}"
- 	lret=0
- 	oldin=""
- 
-@@ -574,7 +573,7 @@ run_tests()
- 	fi
- 
- 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
--		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${bkup}
-+		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${sflags}
- 	lret=$?
- }
- 
-@@ -1888,6 +1887,44 @@ fullmesh_tests()
- 	run_tests $ns1 $ns2 10.0.1.1 0 0 fullmesh_2 slow
- 	chk_join_nr "fullmesh test 1x2, limited" 4 4 4
- 	chk_add_nr 1 1
-+
-+	# set fullmesh flag
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 4 4
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl limits 4 4
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow fullmesh
-+	chk_join_nr "set fullmesh flag test" 2 2 2
-+	chk_rm_nr 0 1
-+
-+	# set nofullmesh flag
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 4 4
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags subflow,fullmesh
-+	ip netns exec $ns2 ./pm_nl_ctl limits 4 4
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 fullmesh_1 slow nofullmesh
-+	chk_join_nr "set nofullmesh flag test" 2 2 2
-+	chk_rm_nr 0 1
-+
-+	# set backup,fullmesh flags
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 4 4
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl limits 4 4
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow backup,fullmesh
-+	chk_join_nr "set backup,fullmesh flags test" 2 2 2
-+	chk_prio_nr 0 1
-+	chk_rm_nr 0 1
-+
-+	# set nobackup,nofullmesh flags
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 4 4
-+	ip netns exec $ns2 ./pm_nl_ctl limits 4 4
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,backup,fullmesh
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow nobackup,nofullmesh
-+	chk_join_nr "set nobackup,nofullmesh flags test" 2 2 2
-+	chk_prio_nr 0 1
-+	chk_rm_nr 0 1
- }
- 
- all_tests()
+Kishen Maloor (8):
+  mptcp: bypass in-kernel PM restrictions for non-kernel PMs
+  mptcp: store remote id from MP_JOIN SYN/ACK in local ctx
+  mptcp: reflect remote port (not 0) in ANNOUNCED events
+  mptcp: establish subflows from either end of connection
+  mptcp: netlink: store per namespace list of refcounted listen socks
+  mptcp: netlink: store lsk ref in mptcp_pm_addr_entry
+  mptcp: attempt to add listening sockets for announced addrs
+  mptcp: expose server_side attribute in MPTCP netlink events
+
+ include/uapi/linux/mptcp.h |   2 +
+ net/mptcp/options.c        |   4 +-
+ net/mptcp/pm.c             |  12 +-
+ net/mptcp/pm_netlink.c     | 222 ++++++++++++++++++++++++++++++++-----
+ net/mptcp/protocol.c       |   5 +-
+ net/mptcp/protocol.h       |  21 +++-
+ net/mptcp/subflow.c        |   4 +-
+ 7 files changed, 228 insertions(+), 42 deletions(-)
+
+
+base-commit: a6d509111fdeec203af494abc83af6e746d3519f
 -- 
-2.35.1
+2.31.1
 
