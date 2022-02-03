@@ -1,36 +1,36 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CB82C9D
-	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 07:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FC22C9D
+	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 07:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643873116; x=1675409116;
+  t=1643873117; x=1675409117;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=31Rn1fVGrhzOGv3WF3Z/oTSCRdUAxWa4OxdrNJxlX2M=;
-  b=dMwnQ9NKhs+9pCgDLX/HKjCOMM7YgG0OWUWe5qsfW/xJk2wddW7aYMCQ
-   iwsgArHWShwjKmu5JQqir0HAI9J6iFsEmjVjOUu5VYVNhdSdofqRzF7Ed
-   2Wg7ecXngRmMnDe6buEYCXnv1iYHGCB5dJArJtBcb1ebuy1vyZ0lfS9yU
-   BrcYlktTp8W+XE6nwUEvRUr54tsQfWJVY9MnbuW0khaflHbRoNU+xmOBx
-   zfQhila75P5uZjCezIwl/gP8qojDEEdfta9JY+nSurJmvyKv/3kBFf4kL
-   Sb8z2fA3z/c8AJoGlfiBOjuT27YFvxCFh7Z6q4TSep5dxahjd9viE1LWL
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="272580769"
+  bh=OACnXn1oJrS2hLkA30+p19VlWoYRQSzgjIal5iKRlMc=;
+  b=n2LI3hzQBmGj0mlvcnkxUZM3tQJlFAyiYS1XupP2iqIYz5/sUICDJKP7
+   x40A0S4iUPZx1TZKWUyzKNIOZVBy0zqccnxT86H/9gywQ4Jrf5+yM8JZr
+   +k+X5LX/dYym+/9aEHzRGQQBHS3/uuaLFiduveVhmu5J3AdZeI47QRxjt
+   V8OW+4Gk+arM/H+LR0kajUgobAz1W77Yte3udkwqupPRWQvwKoZmTf3F/
+   tCnt99fq+6IXvIAE+jOCgmGbJrCoDkD12nXx0gkDd4207eTgYv6/WtUMk
+   /VUr4Z1s3IWbob7cTSuFsHC9F3IwfNmGtLX+DNCP1RZbpW434dbbQdlBC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="272580773"
 X-IronPort-AV: E=Sophos;i="5.88,339,1635231600"; 
-   d="scan'208";a="272580769"
+   d="scan'208";a="272580773"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 23:25:13 -0800
 X-IronPort-AV: E=Sophos;i="5.88,339,1635231600"; 
-   d="scan'208";a="535118714"
+   d="scan'208";a="535118723"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
   by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 23:25:13 -0800
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v5 1/8] mptcp: bypass in-kernel PM restrictions for non-kernel PMs
-Date: Thu,  3 Feb 2022 02:25:01 -0500
-Message-Id: <20220203072508.3072309-2-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v5 4/8] mptcp: establish subflows from either end of connection
+Date: Thu,  3 Feb 2022 02:25:04 -0500
+Message-Id: <20220203072508.3072309-5-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220203072508.3072309-1-kishen.maloor@intel.com>
 References: <20220203072508.3072309-1-kishen.maloor@intel.com>
@@ -42,99 +42,84 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Current limits on the # of addresses/subflows must apply only to
-in-kernel PM managed sockets. Thus this change removes such
-restrictions for connections overseen by non-kernel (e.g. userspace)
-PMs.
+This change updates internal logic to permit subflows to be
+established from either the client or server ends of MPTCP
+connections. This symmetry and added flexibility may be
+harnessed by PM implementations running on either end in
+creating new subflows.
 
-This change also ensures that the kernel does not record stats inside
-struct mptcp_pm_data updated along kernel code paths when exercised
-by non-kernel PMs.
+The essence of this change lies in not relying on the
+"server_side" flag (which continues to be available if needed).
 
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
-v4: rephrased commit message, add API mptcp_pm_is_kernel(), bypass
-accounting fo non-kernel PM managed connections
+v2: check for 3rd ACK retransmission only on passive side
+of the MPJ handshake
+v3: check for active subflow socket in subflow_simultaneous_connect
 ---
- net/mptcp/pm.c         | 6 +++++-
- net/mptcp/pm_netlink.c | 3 +++
- net/mptcp/protocol.h   | 9 +++++++--
- net/mptcp/subflow.c    | 3 ++-
- 4 files changed, 17 insertions(+), 4 deletions(-)
+ net/mptcp/options.c  | 2 +-
+ net/mptcp/protocol.c | 5 +----
+ net/mptcp/protocol.h | 8 ++++++--
+ 3 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 1f8878cc29e3..3e053b759181 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -87,6 +87,9 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
- 	unsigned int subflows_max;
- 	int ret = 0;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 6dfaa8e11331..4f56e874c542 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -929,7 +929,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+ 		if (TCP_SKB_CB(skb)->seq == subflow->ssn_offset + 1 &&
+ 		    TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq &&
+ 		    subflow->mp_join && (mp_opt->suboptions & OPTIONS_MPTCP_MPJ) &&
+-		    READ_ONCE(msk->pm.server_side))
++		    !subflow->request_join)
+ 			tcp_send_ack(ssk);
+ 		goto fully_established;
+ 	}
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3324e1c61576..6142b4b25769 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3255,15 +3255,12 @@ bool mptcp_finish_join(struct sock *ssk)
+ 		return false;
+ 	}
  
-+	if (!mptcp_pm_is_kernel(msk))
-+		return true;
-+
- 	subflows_max = mptcp_pm_get_subflows_max(msk);
+-	if (!msk->pm.server_side)
++	if (!list_empty(&subflow->node))
+ 		goto out;
  
- 	pr_debug("msk=%p subflows=%d max=%d allow=%d", msk, pm->subflows,
-@@ -179,7 +182,8 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
- 	bool update_subflows;
+ 	if (!mptcp_pm_allow_new_subflow(msk))
+ 		goto err_prohibited;
  
- 	update_subflows = (ssk->sk_state == TCP_CLOSE) &&
--			  (subflow->request_join || subflow->mp_join);
-+			  (subflow->request_join || subflow->mp_join) &&
-+			  mptcp_pm_is_kernel(msk);
- 	if (!READ_ONCE(pm->work_pending) && !update_subflows)
- 		return;
- 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 93800f32fcb6..bf24c1a74e1d 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -795,6 +795,9 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 		if (!removed)
- 			continue;
- 
-+		if (!mptcp_pm_is_kernel(msk))
-+			continue;
-+
- 		if (rm_type == MPTCP_MIB_RMADDR) {
- 			msk->pm.add_addr_accepted--;
- 			WRITE_ONCE(msk->pm.accept_addr, true);
+-	if (WARN_ON_ONCE(!list_empty(&subflow->node)))
+-		goto err_prohibited;
+-
+ 	/* active connections are already on conn_list.
+ 	 * If we can't acquire msk socket lock here, let the release callback
+ 	 * handle it
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f37f087caab3..ac8b57d4f853 100644
+index 4371ac3fbde1..1a8d09796627 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -804,9 +804,14 @@ static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
- 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
+@@ -908,13 +908,17 @@ static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
+ 	return false;
  }
  
--static inline bool mptcp_pm_is_userspace(struct mptcp_sock *msk)
-+static inline bool mptcp_pm_is_userspace(const struct mptcp_sock *msk)
- {
--	return READ_ONCE(msk->pm.pm_type) != MPTCP_PM_TYPE_KERNEL;
-+	return READ_ONCE(msk->pm.pm_type) == MPTCP_PM_TYPE_USERSPACE;
++static inline bool is_active_ssk(struct mptcp_subflow_context *subflow)
++{
++	return (subflow->request_mptcp || subflow->request_join);
 +}
 +
-+static inline bool mptcp_pm_is_kernel(const struct mptcp_sock *msk)
-+{
-+	return READ_ONCE(msk->pm.pm_type) == MPTCP_PM_TYPE_KERNEL;
- }
- 
- static inline unsigned int mptcp_add_addr_len(int family, bool echo, bool port)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 88ee94adc38c..8c25a1122bfd 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -62,7 +62,8 @@ static void subflow_generate_hmac(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
- static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
+ static inline bool subflow_simultaneous_connect(struct sock *sk)
  {
- 	return mptcp_is_fully_established((void *)msk) &&
--	       READ_ONCE(msk->pm.accept_subflow);
-+		(!mptcp_pm_is_kernel(msk) ||
-+		READ_ONCE(msk->pm.accept_subflow));
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+-	struct sock *parent = subflow->conn;
+ 
+ 	return sk->sk_state == TCP_ESTABLISHED &&
+-	       !mptcp_sk(parent)->pm.server_side &&
++	       is_active_ssk(subflow) &&
+ 	       !subflow->conn_finished;
  }
  
- /* validate received token and create truncated hmac and nonce for SYN-ACK */
 -- 
 2.31.1
 
