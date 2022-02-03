@@ -1,36 +1,36 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258112CA5
-	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 07:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437B32C9D
+	for <mptcp@lists.linux.dev>; Thu,  3 Feb 2022 07:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643873118; x=1675409118;
+  t=1643873119; x=1675409119;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=gxuX5nBfNjm3eDOIguVloVSnnpRcwqw5nK5LrBxglK0=;
-  b=OObXnGMjhHdslNm3V83HkXKeYivrN7ZvBLE8hNiSFMAXr1FC5GMNSMGi
-   MPqdxTjUzgJGKHTSLeLGnTyz0wyVMxBitd6k/l85m6AyfanKO1VW0+KRR
-   oyxRfvYDmHggDB2DiddP1jhIUQK/vtlckxEpD3SUwvhBVp5H2L45NThQH
-   aKbcK6R2Aj44bkd58XQ/DVh39dCtUQCyyqtqStvIY9Z4cVSNa0bbnFuq7
-   p3VkbmooLxdnFz4lUcbIXmI5qGTDB6RPlt5cu+x0pxWQGeIosdZ2lorWG
-   oQzuG3AEL37W5AsXeonWCFI/AA9XBTTE0PAoeiDgfHuZMVpb8Nx1g2E/d
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="272580774"
+  bh=EtJNFBe+tNKy51yk4DnKNVwStlaZ9uX06yyF25qBonE=;
+  b=k4UbdTwCsJF9/yhXvKYMExTgH8Vg/UYbFI7KzWW19IbR6tFrvE6rkMMx
+   8OhoDvr80WgRGcewvri60zjyc6VF1UPATe8fZ1BuRJ/vP68eiGKO0kMLO
+   OstzROlZB6DccKsc8BL/4Y0tWPWWWaUQhhZMf2QR9DciVTgFFdQxUqEXw
+   roUG1fbbojA0DaCHymWTcUSUNnxjZelThKwVtmhRM3m3ojD2dTzhy4gpM
+   ac77ezGX55/Izk9F/xWkAwzhtFem/3L03/W2W02Lf7hpQDvTsaBpOzFxu
+   MElNyQE4YTFZ70zj6bpux0B12K5pR+qIfLNMhb9on5B8/dY+WS2+D/mgI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="272580775"
 X-IronPort-AV: E=Sophos;i="5.88,339,1635231600"; 
-   d="scan'208";a="272580774"
+   d="scan'208";a="272580775"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 23:25:13 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 23:25:14 -0800
 X-IronPort-AV: E=Sophos;i="5.88,339,1635231600"; 
-   d="scan'208";a="535118726"
+   d="scan'208";a="535118729"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 23:25:13 -0800
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 23:25:14 -0800
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v5 5/8] mptcp: netlink: store per namespace list of refcounted listen socks
-Date: Thu,  3 Feb 2022 02:25:05 -0500
-Message-Id: <20220203072508.3072309-6-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v5 6/8] mptcp: netlink: store lsk ref in mptcp_pm_addr_entry
+Date: Thu,  3 Feb 2022 02:25:06 -0500
+Message-Id: <20220203072508.3072309-7-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220203072508.3072309-1-kishen.maloor@intel.com>
 References: <20220203072508.3072309-1-kishen.maloor@intel.com>
@@ -42,137 +42,222 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kernel can create listening sockets bound to announced addresses
-via the ADD_ADDR option for receiving MP_JOIN requests. Path
-managers may further choose to advertise the same addr+port over multiple
-MPTCP connections. So this change provides a simple framework to
-manage a list of all distinct listning sockets created in the kernel
-over a namespace by encapsulating the socket in a structure that is
-ref counted and can be shared across multiple connections. The sockets
-are released when there are no more references.
+This change updates struct mptcp_pm_addr_entry to store a
+listening socket (lsk) reference, i.e. a pointer to a reference
+counted structure containing the lsk (struct socket *) instead
+of the lsk itself. Code blocks that previously operated on
+the lsk in struct mptcp_pm_addr_entry have been updated to work
+with the lsk ref instead, utilizing new helper functions.
 
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
 v2: fixed formatting
+v3: added helper lsk_list_find_or_create(), updated
+mptcp_pm_nl_create_listen_socket() to take struct net* as param
+v4: call lsk_list_find() after a failed lsk_list_find_or_create()
+for a chance to retrieve a recently created lsk by a simultaneous
+call
+v5: fixed implicit declaration error
 ---
- net/mptcp/pm_netlink.c | 76 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ net/mptcp/pm_netlink.c | 83 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 62 insertions(+), 21 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index ff13012178ae..3d6251baef26 100644
+index 3d6251baef26..a4fb9acbba51 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -22,6 +22,14 @@ static struct genl_family mptcp_genl_family;
- 
- static int pm_nl_pernet_id;
- 
-+struct mptcp_local_lsk {
-+	struct list_head	list;
-+	struct mptcp_addr_info	addr;
-+	struct socket		*lsk;
-+	struct rcu_head		rcu;
-+	refcount_t		refcount;
-+};
-+
- struct mptcp_pm_addr_entry {
- 	struct list_head	list;
+@@ -35,7 +35,7 @@ struct mptcp_pm_addr_entry {
  	struct mptcp_addr_info	addr;
-@@ -41,7 +49,10 @@ struct mptcp_pm_add_entry {
- struct pm_nl_pernet {
- 	/* protects pernet updates */
- 	spinlock_t		lock;
-+	/* protects access to pernet lsk list */
-+	spinlock_t		lsk_list_lock;
- 	struct list_head	local_addr_list;
-+	struct list_head	lsk_list;
- 	unsigned int		addrs;
- 	unsigned int		stale_loss_cnt;
- 	unsigned int		add_addr_signal_max;
-@@ -83,6 +94,69 @@ static bool addresses_equal(const struct mptcp_addr_info *a,
- 	return a->port == b->port;
+ 	u8			flags;
+ 	int			ifindex;
+-	struct socket		*lsk;
++	struct mptcp_local_lsk	*lsk_ref;
+ };
+ 
+ struct mptcp_pm_add_entry {
+@@ -66,6 +66,10 @@ struct pm_nl_pernet {
+ #define MPTCP_PM_ADDR_MAX	8
+ #define ADD_ADDR_RETRANS_MAX	3
+ 
++static int mptcp_pm_nl_create_listen_socket(struct net *net,
++					    struct mptcp_pm_addr_entry *entry,
++					    struct socket **lsk);
++
+ static bool addresses_equal(const struct mptcp_addr_info *a,
+ 			    const struct mptcp_addr_info *b, bool use_port)
+ {
+@@ -157,6 +161,33 @@ static void lsk_list_release(struct pm_nl_pernet *pernet,
+ 	}
  }
  
-+static struct mptcp_local_lsk *lsk_list_find(struct pm_nl_pernet *pernet,
-+					     struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_local_lsk *lsk_ref = NULL;
-+	struct mptcp_local_lsk *i;
-+
-+	rcu_read_lock();
-+
-+	list_for_each_entry_rcu(i, &pernet->lsk_list, list) {
-+		if (addresses_equal(&i->addr, addr, true)) {
-+			if (refcount_inc_not_zero(&i->refcount)) {
-+				lsk_ref = i;
-+				break;
-+			}
-+		}
-+	}
-+
-+	rcu_read_unlock();
-+
-+	return lsk_ref;
-+}
-+
-+static void lsk_list_add_ref(struct mptcp_local_lsk *lsk_ref)
-+{
-+	refcount_inc(&lsk_ref->refcount);
-+}
-+
-+static struct mptcp_local_lsk *lsk_list_add(struct pm_nl_pernet *pernet,
-+					    struct mptcp_addr_info *addr,
-+					    struct socket *lsk)
++static struct mptcp_local_lsk *lsk_list_find_or_create(struct net *net,
++						       struct pm_nl_pernet *pernet,
++						       struct mptcp_pm_addr_entry *entry,
++						       int *createlsk_err)
 +{
 +	struct mptcp_local_lsk *lsk_ref;
++	struct socket *lsk;
++	int err;
 +
-+	lsk_ref = kmalloc(sizeof(*lsk_ref), GFP_ATOMIC);
++	lsk_ref = lsk_list_find(pernet, &entry->addr);
 +
-+	if (!lsk_ref)
-+		return NULL;
++	if (!lsk_ref) {
++		err = mptcp_pm_nl_create_listen_socket(net, entry, &lsk);
 +
-+	lsk_ref->lsk = lsk;
-+	memcpy(&lsk_ref->addr, addr, sizeof(struct mptcp_addr_info));
-+	refcount_set(&lsk_ref->refcount, 1);
++		if (createlsk_err)
++			*createlsk_err = err;
 +
-+	spin_lock_bh(&pernet->lsk_list_lock);
-+	list_add_rcu(&lsk_ref->list, &pernet->lsk_list);
-+	spin_unlock_bh(&pernet->lsk_list_lock);
++		if (lsk)
++			lsk_ref = lsk_list_add(pernet, &entry->addr, lsk);
++
++		if (lsk && !lsk_ref)
++			sock_release(lsk);
++	}
 +
 +	return lsk_ref;
-+}
-+
-+static void lsk_list_release(struct pm_nl_pernet *pernet,
-+			     struct mptcp_local_lsk *lsk_ref)
-+{
-+	if (lsk_ref && refcount_dec_and_test(&lsk_ref->refcount)) {
-+		sock_release(lsk_ref->lsk);
-+
-+		spin_lock_bh(&pernet->lsk_list_lock);
-+		list_del_rcu(&lsk_ref->list);
-+		spin_unlock_bh(&pernet->lsk_list_lock);
-+
-+		kfree_rcu(lsk_ref, rcu);
-+	}
 +}
 +
  static bool address_zero(const struct mptcp_addr_info *addr)
  {
  	struct mptcp_addr_info zero;
-@@ -2141,12 +2215,14 @@ static int __net_init pm_nl_init_net(struct net *net)
- 	struct pm_nl_pernet *pernet = net_generic(net, pm_nl_pernet_id);
+@@ -999,8 +1030,9 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ 	return ret;
+ }
  
- 	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
-+	INIT_LIST_HEAD_RCU(&pernet->lsk_list);
+-static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+-					    struct mptcp_pm_addr_entry *entry)
++static int mptcp_pm_nl_create_listen_socket(struct net *net,
++					    struct mptcp_pm_addr_entry *entry,
++					    struct socket **lsk)
+ {
+ 	int addrlen = sizeof(struct sockaddr_in);
+ 	struct sockaddr_storage addr;
+@@ -1009,12 +1041,12 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	int backlog = 1024;
+ 	int err;
  
- 	/* Cit. 2 subflows ought to be enough for anybody. */
- 	pernet->subflows_max = 2;
- 	pernet->next_id = 1;
- 	pernet->stale_loss_cnt = 4;
- 	spin_lock_init(&pernet->lock);
-+	spin_lock_init(&pernet->lsk_list_lock);
+-	err = sock_create_kern(sock_net(sk), entry->addr.family,
+-			       SOCK_STREAM, IPPROTO_MPTCP, &entry->lsk);
++	err = sock_create_kern(net, entry->addr.family,
++			       SOCK_STREAM, IPPROTO_MPTCP, lsk);
+ 	if (err)
+ 		return err;
  
- 	/* No need to initialize other pernet fields, the struct is zeroed at
- 	 * allocation time.
+-	msk = mptcp_sk(entry->lsk->sk);
++	msk = mptcp_sk((*lsk)->sk);
+ 	if (!msk) {
+ 		err = -EINVAL;
+ 		goto out;
+@@ -1046,7 +1078,8 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	return 0;
+ 
+ out:
+-	sock_release(entry->lsk);
++	sock_release(*lsk);
++	*lsk = NULL;
+ 	return err;
+ }
+ 
+@@ -1095,7 +1128,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ 	entry->addr.port = 0;
+ 	entry->ifindex = 0;
+ 	entry->flags = 0;
+-	entry->lsk = NULL;
++	entry->lsk_ref = NULL;
+ 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
+ 	if (ret < 0)
+ 		kfree(entry);
+@@ -1304,18 +1337,25 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	*entry = addr;
+ 	if (entry->addr.port) {
+-		ret = mptcp_pm_nl_create_listen_socket(skb->sk, entry);
+-		if (ret) {
+-			GENL_SET_ERR_MSG(info, "create listen socket error");
++		entry->lsk_ref = lsk_list_find_or_create(sock_net(skb->sk), pernet, entry, &ret);
++
++		if (!entry->lsk_ref)
++			entry->lsk_ref = lsk_list_find(pernet, &entry->addr);
++
++		if (!entry->lsk_ref) {
++			GENL_SET_ERR_MSG(info, "can't create/allocate lsk");
+ 			kfree(entry);
++			ret = (ret == 0) ? -ENOMEM : ret;
+ 			return ret;
+ 		}
+ 	}
++
+ 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
++
+ 	if (ret < 0) {
+ 		GENL_SET_ERR_MSG(info, "too many addresses or duplicate one");
+-		if (entry->lsk)
+-			sock_release(entry->lsk);
++		if (entry->lsk_ref)
++			lsk_list_release(pernet, entry->lsk_ref);
+ 		kfree(entry);
+ 		return ret;
+ 	}
+@@ -1418,10 +1458,11 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+ }
+ 
+ /* caller must ensure the RCU grace period is already elapsed */
+-static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
++static void __mptcp_pm_release_addr_entry(struct pm_nl_pernet *pernet,
++					  struct mptcp_pm_addr_entry *entry)
+ {
+-	if (entry->lsk)
+-		sock_release(entry->lsk);
++	if (entry->lsk_ref)
++		lsk_list_release(pernet, entry->lsk_ref);
+ 	kfree(entry);
+ }
+ 
+@@ -1503,7 +1544,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
+ 	synchronize_rcu();
+-	__mptcp_pm_release_addr_entry(entry);
++	__mptcp_pm_release_addr_entry(pernet, entry);
+ 
+ 	return ret;
+ }
+@@ -1559,7 +1600,7 @@ static void mptcp_nl_remove_addrs_list(struct net *net,
+ }
+ 
+ /* caller must ensure the RCU grace period is already elapsed */
+-static void __flush_addrs(struct list_head *list)
++static void __flush_addrs(struct pm_nl_pernet *pernet, struct list_head *list)
+ {
+ 	while (!list_empty(list)) {
+ 		struct mptcp_pm_addr_entry *cur;
+@@ -1567,7 +1608,7 @@ static void __flush_addrs(struct list_head *list)
+ 		cur = list_entry(list->next,
+ 				 struct mptcp_pm_addr_entry, list);
+ 		list_del_rcu(&cur->list);
+-		__mptcp_pm_release_addr_entry(cur);
++		__mptcp_pm_release_addr_entry(pernet, cur);
+ 	}
+ }
+ 
+@@ -1592,7 +1633,7 @@ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info *info)
+ 	spin_unlock_bh(&pernet->lock);
+ 	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
+ 	synchronize_rcu();
+-	__flush_addrs(&free_list);
++	__flush_addrs(pernet, &free_list);
+ 	return 0;
+ }
+ 
+@@ -2242,7 +2283,7 @@ static void __net_exit pm_nl_exit_net(struct list_head *net_list)
+ 		 * other modifiers, also netns core already waited for a
+ 		 * RCU grace period.
+ 		 */
+-		__flush_addrs(&pernet->local_addr_list);
++		__flush_addrs(pernet, &pernet->local_addr_list);
+ 	}
+ }
+ 
 -- 
 2.31.1
 
