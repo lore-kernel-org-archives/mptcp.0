@@ -1,242 +1,247 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E0A2F21
-	for <mptcp@lists.linux.dev>; Fri,  4 Feb 2022 13:47:27 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id t9so2975164plg.13
-        for <mptcp@lists.linux.dev>; Fri, 04 Feb 2022 05:47:27 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340042F21
+	for <mptcp@lists.linux.dev>; Fri,  4 Feb 2022 13:51:43 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id oa14-20020a17090b1bce00b001b61aed4a03so6167280pjb.5
+        for <mptcp@lists.linux.dev>; Fri, 04 Feb 2022 05:51:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=6PkxPN8rr5DXrn1BetGGD1J81frKaa+D2o/xMnHu5Rs=;
-        b=osxIcd7cxcY5bF74AJCRmq9jg3RpXLxwZGi9WK/uXBBWDVaEFbevwGGdpwhY/EKVKM
-         HCjo2uNHGeJ8nqtsNH9Y55LfNflacydQkYuOasNiyWr+1NqHvGlrS5TkUBRJxjfkFRRm
-         wKOExCQxcDO1QDuIqFV4wQrFo0AfoO5cmGdcJZgPq3T2VK8S1uvK0IaVulR1d0Or44sv
-         aXNibDJMxxwplEi7Ex5iSHuAt8GlE2u0UHkjhySRnzRgH08kZAqDh4KdiKIOEUp8hblO
-         1xfdpnq1ko8VOQnYG6YFcFI8Z+JGeUDifljJ0DGSLN6tgFkKNdu/cg7Z+wR4+ddvDyCu
-         WVrg==
+        bh=ib1G/4n/XKefHPdbgvMAF+obPwgNXwVI4DBuE16F6RU=;
+        b=nSXG0g3/LWYj1wEz3m5HngobmH+2P+cW0IASW75V0kjchyMvjMy2polJbTj7qqaCxS
+         kUTnky6nnwQ8BYvOlYrtA3b7MXmgo3obyl/iNjx88NrfhM1CAYH83m2HHSkbB6/FVJ7o
+         vJWpZQmdrLzh+PUnGv6RL+drPhe/XDRRiHgR6gibwIjA/OVYyiXuG1l1qkgQjrOttfTA
+         sBijvi3Z9jEdEtxJxnMTtcWyaOUQiU+FZ44Q8WmpxGbeGD4DX7epNLUNcnCcO71rWvd0
+         YNdd+hB2IalEAULH/48VUzoPnJqyLV1uLd0tU1IZ1HKBoUVsevWHEUcRLQDky5qxSylz
+         sZMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6PkxPN8rr5DXrn1BetGGD1J81frKaa+D2o/xMnHu5Rs=;
-        b=UyDlWQ5UD2qBknq7lOv96oYJNB+pt0abK8gLcSpHQyBG0e4DA6ou2vrUEjOXFw1wW9
-         x7N0VijoXtbEorXYtxGJGUOj6PteAUFT2tMWkUyYUFfsduyziPXNEzX/WeUppswgyKJ5
-         rXGuvIwczIOnFTYCi69M9OHui7rlPIy4TCSLxDKCTbFjDJvwimoNs9Im8UlM0By205xp
-         IPLsrJagyxH/AzVPmKQevvTkerSLgG5Xn3vkHn8OgRpNU54YoTJE1ruQxUWlh74D3VZJ
-         xLakcctmINnfPYnjlhDVMwTlXMWSYzRXN1NXbA3vhdk7P1MwfcJP1/d4EqH6rw1YQa4J
-         Kadg==
-X-Gm-Message-State: AOAM532LagJydCMgGiwOtDZbK2Y0JqtvULaWVY1NnE5CB8gaDQ8f4g26
-	JSzZehP4YhZF+ZlenRKuNXYG4KnE4X1VEsePf5mca1GeQVttJg==
-X-Google-Smtp-Source: ABdhPJyIeXEOuyt4LWfjiYaXfl2XDbXnIBliI61E8GS3D0zSqvhWyvN10zVbd8t41GArWfKo2gn+XuOomThWNDCEbtg=
-X-Received: by 2002:a17:902:e851:: with SMTP id t17mr3058245plg.102.1643982447151;
- Fri, 04 Feb 2022 05:47:27 -0800 (PST)
+        bh=ib1G/4n/XKefHPdbgvMAF+obPwgNXwVI4DBuE16F6RU=;
+        b=Mf5dPHGo60DjTJvt8bF10VdR9NG+AvzBbPFk45IjUrZPleVWXDBVuYnO0m5weHOSro
+         Co8+pgDZ3RUT1K4P28n9J/HaV4UQORJkk0g5qqepxyfXODJguouqoypF9/VvI+VKqR30
+         rSWmdRLv95eo5zlAwtUMVyDdDzq5DuaiDDS9g2H5Oj0DpHT8FihOUJbhWA6meL9JZxhE
+         NP87s8fTdreUmnJFVLSiPeYLpVeQV2EweijZR4gkP4HyfTvIikFHrIMuWwl0xt6Kufxs
+         p7G6IL1oWoONJ5sw/oF7sL4AetCz7Eb1/gL7Tj7oB/dHtnUXdnf8vWssA5s3sjoFdo7F
+         dCMw==
+X-Gm-Message-State: AOAM532ps8K1IQZ3gZyqbtZ+S63WK8gGfvHsDNqxbUUcQkvJPbNr0LEM
+	ibudGK3gSkjjYCviJE4fjQHSq6m6baw1oz0+rHA=
+X-Google-Smtp-Source: ABdhPJwPBUPsI8IQra3qu2OV/q3N9G+BIUo4JoNN6F6n5Oi8B/P5eAWsnmf1tL6w8C0A5YjS1E81nKRZpbOitGtL+78=
+X-Received: by 2002:a17:90a:bf16:: with SMTP id c22mr3163351pjs.126.1643982702605;
+ Fri, 04 Feb 2022 05:51:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220203031403.2996549-1-kishen.maloor@intel.com> <20220203031403.2996549-4-kishen.maloor@intel.com>
-In-Reply-To: <20220203031403.2996549-4-kishen.maloor@intel.com>
+References: <20220203072508.3072309-1-kishen.maloor@intel.com> <20220203072508.3072309-8-kishen.maloor@intel.com>
+In-Reply-To: <20220203072508.3072309-8-kishen.maloor@intel.com>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 4 Feb 2022 21:47:45 +0800
-Message-ID: <CA+WQbwuM6sK5nnp6B3swJsxdnHXAxA_41H52ztPX0k-KHJHOEA@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v4 03/13] mptcp: read attributes of addr
- entries managed by userspace PMs
+Date: Fri, 4 Feb 2022 21:52:00 +0800
+Message-ID: <CA+WQbwtDRGipHoUi+v95gYzr84qDc83gWV=Jz4iVE_G7XgtWjQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v5 7/8] mptcp: attempt to add listening sockets
+ for announced addrs
 To: Kishen Maloor <kishen.maloor@intel.com>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Kishen Maloor <kishen.maloor@intel.com> =E4=BA=8E2022=E5=B9=B42=E6=9C=883=
-=E6=97=A5=E5=91=A8=E5=9B=9B 11:14=E5=86=99=E9=81=93=EF=BC=9A
+=E6=97=A5=E5=91=A8=E5=9B=9B 15:25=E5=86=99=E9=81=93=EF=BC=9A
 >
-> This change introduces a parallel path in the kernel for retrieving
-> the local id, flags, if_index for an addr entry in the context of
-> an MPTCP connection that's being managed by a userspace PM. The
-> userspace and in-kernel PM modes deviate in their procedures for
-> obtaining this information.
+> When ADD_ADDR announcements use the port associated with an
+> active subflow, this change ensures that a listening socket is bound
+> to the announced addr+port in the kernel for subsequently receiving
+> MP_JOINs. But if a listening socket for this address is already held
+> by the application then no action is taken.
 >
+> A listening socket is created (when there isn't a listener)
+> just prior to the addr advertisement. If it is desired to not create
+> a listening socket in the kernel for an address, then this can be
+> requested by including the MPTCP_PM_ADDR_FLAG_NO_LISTEN flag
+> with the address.
+>
+> When a listening socket is created, it is stored in
+> struct mptcp_pm_add_entry and released accordingly.
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/203
 > Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 > ---
->  net/mptcp/pm_netlink.c | 97 ++++++++++++++++++++++++++++--------------
->  net/mptcp/protocol.h   |  2 +-
->  net/mptcp/subflow.c    |  2 +-
->  3 files changed, 67 insertions(+), 34 deletions(-)
+> v2: fixed formatting
+> v3: added new addr flag MPTCP_PM_ADDR_FLAG_NO_LISTEN to skip creating a
+> listening socket in the kernel during an ADD_ADDR request, use this flag
+> along the in-kernel PM flow for ADD_ADDR requests (Note: listening socket=
+s
+> are always created for port-based endpoints as before), use the
+> lsk_list_find_or_create() helper
+> v4: call lsk_list_find() after a failed lsk_list_find_or_create()
+> for a chance to retrieve a recently created lsk by a simultaneous
+> call
+> ---
+>  include/uapi/linux/mptcp.h |  1 +
+>  net/mptcp/pm_netlink.c     | 46 ++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 45 insertions(+), 2 deletions(-)
 >
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index f106a3941cdf..265cabc0d7aa 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -81,6 +81,7 @@ enum {
+>  #define MPTCP_PM_ADDR_FLAG_SUBFLOW                     (1 << 1)
+>  #define MPTCP_PM_ADDR_FLAG_BACKUP                      (1 << 2)
+>  #define MPTCP_PM_ADDR_FLAG_FULLMESH                    (1 << 3)
+> +#define MPTCP_PM_ADDR_FLAG_NO_LISTEN                   (1 << 4)
+>
+>  enum {
+>         MPTCP_PM_CMD_UNSPEC,
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index ac5d152fbb77..7058d55e3a0a 100644
+> index a4fb9acbba51..9b3d871d3712 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -1230,31 +1230,47 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *m=
-sk, struct sock_common *skc)
+> @@ -43,6 +43,7 @@ struct mptcp_pm_add_entry {
+>         struct mptcp_addr_info  addr;
+>         struct timer_list       add_timer;
+>         struct mptcp_sock       *sock;
+> +       struct mptcp_local_lsk  *lsk_ref;
+>         u8                      retrans_times;
+>  };
 >
->         pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet=
-_id);
->
-> -       rcu_read_lock();
-> -       list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> -               if (addresses_equal(&entry->addr, &skc_local, entry->addr=
-.port)) {
-> -                       ret =3D entry->addr.id;
-> -                       break;
-> -               }
-> -       }
-> -       rcu_read_unlock();
-> -       if (ret >=3D 0)
-> -               return ret;
-> -
->         /* address not found, add to local list */
-
-I think this comment should be moved into 'if (mptcp_pm_is_kernel(msk))' to=
-o.
-
-> -       entry =3D kmalloc(sizeof(*entry), GFP_ATOMIC);
-> -       if (!entry)
-> -               return -ENOMEM;
-> -
-> -       entry->addr =3D skc_local;
-> -       entry->addr.id =3D 0;
-> -       entry->addr.port =3D 0;
-> -       entry->ifindex =3D 0;
-> -       entry->flags =3D 0;
-> -       entry->lsk_ref =3D NULL;
-> -       ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
-> -       if (ret < 0)
-> -               kfree(entry);
-> +       if (mptcp_pm_is_kernel(msk)) {
-> +               rcu_read_lock();
-> +               list_for_each_entry_rcu(entry, &pernet->local_addr_list, =
-list) {
-> +                       if (addresses_equal(&entry->addr, &skc_local, ent=
-ry->addr.port)) {
-> +                               ret =3D entry->addr.id;
-> +                               break;
-> +                       }
-> +               }
-> +               rcu_read_unlock();
-> +
-> +               if (ret >=3D 0)
-> +                       return ret;
-> +
-> +               entry =3D kmalloc(sizeof(*entry), GFP_ATOMIC);
-> +               if (!entry)
-> +                       return -ENOMEM;
-> +
-> +               entry->addr =3D skc_local;
-> +               entry->addr.id =3D 0;
-> +               entry->addr.port =3D 0;
-> +               entry->ifindex =3D 0;
-> +               entry->flags =3D 0;
-> +               entry->lsk_ref =3D NULL;
-> +               ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
-> +               if (ret < 0)
-> +                       kfree(entry);
-> +       } else if (mptcp_pm_is_userspace(msk)) {
-> +               struct mptcp_pm_addr_entry new_entry;
-> +               __be16 msk_sport =3D  ((struct inet_sock *)
-> +                                    inet_sk((struct sock *)msk))->inet_s=
-port;
-> +
-> +               memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry))=
-;
-> +               new_entry.addr =3D skc_local;
-> +               new_entry.addr.id =3D 0;
-> +
-> +               if (new_entry.addr.port =3D=3D msk_sport)
-> +                       new_entry.addr.port =3D 0;
-> +
-> +               ret =3D mptcp_userspace_pm_append_new_local_addr(msk, &ne=
-w_entry);
-> +       }
->
->         return ret;
->  }
-> @@ -1488,22 +1504,39 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *=
-skb, struct genl_info *info)
->         return 0;
+> @@ -469,7 +470,8 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
 >  }
 >
-> -int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int i=
-d,
-> +int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigne=
-d int id,
->                                          u8 *flags, int *ifindex)
+>  static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+> -                                    struct mptcp_pm_addr_entry *entry)
+> +                                    struct mptcp_pm_addr_entry *entry,
+> +                                    struct mptcp_local_lsk *lsk_ref)
 >  {
-> -       struct mptcp_pm_addr_entry *entry;
-> +       struct mptcp_pm_addr_entry *entry, *match =3D NULL;
-> +       struct sock *sk =3D (struct sock *)msk;
-> +       struct net *net =3D sock_net(sk);
+>         struct mptcp_pm_add_entry *add_entry =3D NULL;
+>         struct sock *sk =3D (struct sock *)msk;
+> @@ -489,6 +491,10 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_so=
+ck *msk,
+>         add_entry->addr =3D entry->addr;
+>         add_entry->sock =3D msk;
+>         add_entry->retrans_times =3D 0;
+> +       add_entry->lsk_ref =3D lsk_ref;
+> +
+> +       if (lsk_ref)
+> +               lsk_list_add_ref(lsk_ref);
 >
->         *flags =3D 0;
->         *ifindex =3D 0;
+>         timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+>         sk_reset_timer(sk, &add_entry->add_timer,
+> @@ -501,8 +507,11 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+>  {
+>         struct mptcp_pm_add_entry *entry, *tmp;
+>         struct sock *sk =3D (struct sock *)msk;
+> +       struct pm_nl_pernet *pernet;
+>         LIST_HEAD(free_list);
 >
->         if (id) {
-> -               rcu_read_lock();
-> -               entry =3D __lookup_addr_by_id(net_generic(net, pm_nl_pern=
-et_id), id);
-> -               if (entry) {
-> -                       *flags =3D entry->flags;
-> -                       *ifindex =3D entry->ifindex;
-> +               if (mptcp_pm_is_kernel(msk)) {
-> +                       rcu_read_lock();
-> +                       entry =3D __lookup_addr_by_id(net_generic(net, pm=
-_nl_pernet_id), id);
-> +                       if (entry) {
-> +                               *flags =3D entry->flags;
-> +                               *ifindex =3D entry->ifindex;
+> +       pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
+> +
+>         pr_debug("msk=3D%p", msk);
+>
+>         spin_lock_bh(&msk->pm.lock);
+> @@ -511,6 +520,8 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+>
+>         list_for_each_entry_safe(entry, tmp, &free_list, list) {
+>                 sk_stop_timer_sync(sk, &entry->add_timer);
+> +               if (entry->lsk_ref)
+> +                       lsk_list_release(pernet, entry->lsk_ref);
+>                 kfree(entry);
+>         }
+>  }
+> @@ -615,7 +626,9 @@ lookup_id_by_addr(struct pm_nl_pernet *pernet, const =
+struct mptcp_addr_info *add
+>  }
+>
+>  static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *ms=
+k)
+> +       __must_hold(&msk->pm.lock)
+>  {
+> +       struct mptcp_local_lsk *lsk_ref =3D NULL;
+>         struct sock *sk =3D (struct sock *)msk;
+>         struct mptcp_pm_addr_entry *local;
+>         unsigned int add_addr_signal_max;
+> @@ -652,12 +665,34 @@ static void mptcp_pm_create_subflow_or_signal_addr(=
+struct mptcp_sock *msk)
+>                 local =3D select_signal_address(pernet, msk);
+>
+>                 if (local) {
+> -                       if (mptcp_pm_alloc_anno_list(msk, local)) {
+> +                       if (!(local->flags & MPTCP_PM_ADDR_FLAG_NO_LISTEN=
+) &&
+> +                           !local->addr.port) {
+> +                               local->addr.port =3D
+> +                                       ((struct inet_sock *)inet_sk
+> +                                        ((struct sock *)msk))->inet_spor=
+t;
+
+How about putting them in one line:
+local->addr.port =3D ((struct inet_sock *)inet_sk(sk))->inet_sport;
+
+> +
+> +                               spin_unlock_bh(&msk->pm.lock);
+> +
+> +                               lsk_ref =3D lsk_list_find_or_create(sock_=
+net(sk), pernet,
+> +                                                                 local, =
+NULL);
+> +
+> +                               spin_lock_bh(&msk->pm.lock);
+> +
+> +                               if (!lsk_ref)
+> +                                       lsk_ref =3D lsk_list_find(pernet,=
+ &local->addr);
+> +
+> +                               local->addr.port =3D 0;
 > +                       }
-> +                       rcu_read_unlock();
-> +               } else {
-> +                       mptcp_data_lock(sk);
-> +                       list_for_each_entry(entry, &msk->local_addr_list,=
- list) {
-> +                               if (id =3D=3D entry->addr.id) {
-> +                                       match =3D entry;
-> +                                       break;
-> +                               }
-> +                       }
-> +                       mptcp_data_unlock(sk);
-> +                       if (match) {
-> +                               *flags =3D match->flags;
-> +                               *ifindex =3D match->ifindex;
-> +                       }
+> +
+> +                       if (mptcp_pm_alloc_anno_list(msk, local, lsk_ref)=
+) {
+>                                 __clear_bit(local->addr.id, msk->pm.id_av=
+ail_bitmap);
+>                                 msk->pm.add_addr_signaled++;
+>                                 mptcp_pm_announce_addr(msk, &local->addr,=
+ false);
+>                                 mptcp_pm_nl_addr_send_ack(msk);
+>                         }
+> +
+> +                       if (lsk_ref)
+> +                               lsk_list_release(pernet, lsk_ref);
 >                 }
-> -               rcu_read_unlock();
 >         }
 >
->         return 0;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 6b7e51a2bd09..b6af57d5ff5b 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -771,7 +771,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->  struct mptcp_pm_add_entry *
->  mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
->                                 struct mptcp_addr_info *addr);
-> -int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int i=
-d,
-> +int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigne=
-d int id,
->                                          u8 *flags, int *ifindex);
+> @@ -749,6 +784,7 @@ static unsigned int fill_local_addresses_vec(struct m=
+ptcp_sock *msk,
+>  }
 >
->  int mptcp_pm_announce_addr(struct mptcp_sock *msk,
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index d3691b95401a..19df5293334f 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1416,7 +1416,7 @@ int __mptcp_subflow_connect(struct sock *sk, const =
-struct mptcp_addr_info *loc,
->                 local_id =3D err;
+>  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+> +       __must_hold(&msk->pm.lock)
+>  {
+>         struct mptcp_addr_info addrs[MPTCP_PM_ADDR_MAX];
+>         struct sock *sk =3D (struct sock *)msk;
+> @@ -1389,11 +1425,17 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct n=
+et *net, unsigned int id,
+>  static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+>                                       struct mptcp_addr_info *addr)
+>  {
+> +       struct sock *sk =3D (struct sock *)msk;
+>         struct mptcp_pm_add_entry *entry;
+> +       struct pm_nl_pernet *pernet;
+> +
+> +       pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
+>
+>         entry =3D mptcp_pm_del_add_timer(msk, addr, false);
+>         if (entry) {
+>                 list_del(&entry->list);
+> +               if (entry->lsk_ref)
+> +                       lsk_list_release(pernet, entry->lsk_ref);
+>                 kfree(entry);
+>                 return true;
 >         }
->
-> -       mptcp_pm_get_flags_and_ifindex_by_id(sock_net(sk), local_id,
-> +       mptcp_pm_get_flags_and_ifindex_by_id(msk, local_id,
->                                              &flags, &ifindex);
->         subflow->remote_key =3D msk->remote_key;
->         subflow->local_key =3D msk->local_key;
 > --
 > 2.31.1
 >
