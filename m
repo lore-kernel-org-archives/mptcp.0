@@ -1,61 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0824B2F26
-	for <mptcp@lists.linux.dev>; Fri,  4 Feb 2022 10:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461922F26
+	for <mptcp@lists.linux.dev>; Fri,  4 Feb 2022 10:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1643969789;
+	s=mimecast20190719; t=1643970251;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UuXpQ2JYvbjcPk9J9L5UeKyeesZ0voJmJxYDgC6gW/Q=;
-	b=ahKfmLKTwvTH9+c/NgkR+cMR+HMU9GfTFMN5VDxVFzEOuY5ySp2gBcKH1RGemMHdHcsWUL
-	zwCslROmNmE2AceNnuvgIXma+sA2yjEbK/aYU3nr0VbfBjEXymI6szJK1WRT9P424q/6Wk
-	k9ZxZ6MaSAu7smxKGJNKgaQrUeOE1NM=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=IMhpcKff10NK4E5NidIBF+4PwEYoDyPrVi1KRq92OTA=;
+	b=YrRyoxgeN/7aGccIibidkAR4ONAV6itAydno2cCrtKPYKt0qpc9cYr/jNivGs+Xoz8rVOp
+	5Y0T98Wo4b6vFtmvWHh66FSHaJKccGB0R48A3HLsKw6NDAXMMjLBd8BWMODHYtvnAoNDh1
+	QUyW886XL65QXw5r9uYSHOz1JejAhEo=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-122-S2PMGW7COlChtvHB0BeUSQ-1; Fri, 04 Feb 2022 05:16:27 -0500
-X-MC-Unique: S2PMGW7COlChtvHB0BeUSQ-1
-Received: by mail-qk1-f199.google.com with SMTP id j66-20020a375545000000b004e0e071f37eso3225112qkb.23
-        for <mptcp@lists.linux.dev>; Fri, 04 Feb 2022 02:16:27 -0800 (PST)
+ us-mta-85-CahospDCPGq_ZvGMWbTRoA-1; Fri, 04 Feb 2022 05:24:10 -0500
+X-MC-Unique: CahospDCPGq_ZvGMWbTRoA-1
+Received: by mail-qv1-f69.google.com with SMTP id 6-20020a0562140d4600b004244d191fd4so4956024qvr.0
+        for <mptcp@lists.linux.dev>; Fri, 04 Feb 2022 02:24:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=UuXpQ2JYvbjcPk9J9L5UeKyeesZ0voJmJxYDgC6gW/Q=;
-        b=R/1CVU5D/whvKU+B+SlRJBwJiPMzF8dZggA0BNe/QvwpoQ8T75QQZDUoJltpF298L/
-         HfHDK8x8IO2WNK6cIRfm9zkqjusAjW3sGX53soLGxpEHLsToP3JV/UBNuIMABepjf4cX
-         4o3EH4oGjIJ96zkB3G1A7GqSnsZQITIC+awo6tkIDd4n7F94ef0gD8DJQZtGliGDRfFs
-         3TTenEsn/6m3SZLc0AgeTMzbTUZnnrhm4wwj9mc/iBgIdG5JQtgNRuWRBqRfQRzrjh95
-         yysXRrVySXfsZUdaG+1aiWZ1JZ7vExFaKKidqdWJSVT8uykrYQc4rwN6miBtZgRSjDKQ
-         CVAQ==
-X-Gm-Message-State: AOAM530s1hEKtRyXeesSC2tZiL8x7gl2dlOira2u8trhWxKpOfttT/ij
-	K4komDdMmjJ+ZEg/Zrkatp5D8hxA6GSkY/X1bAq8UGTRLgvGauupFXZNagksapq7c3mLKc61pgT
-	W04XYkNbfJY0wCbo=
-X-Received: by 2002:a05:622a:1304:: with SMTP id v4mr1437424qtk.359.1643969786316;
-        Fri, 04 Feb 2022 02:16:26 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy2TXJ0s1rlaWSCh2OEjH8qyroiewmKF3GllKrv2lydSpgqYh14gVmD3JrQijzeU0KpIuNH5w==
-X-Received: by 2002:a05:622a:1304:: with SMTP id v4mr1437415qtk.359.1643969786041;
-        Fri, 04 Feb 2022 02:16:26 -0800 (PST)
+        bh=IMhpcKff10NK4E5NidIBF+4PwEYoDyPrVi1KRq92OTA=;
+        b=2fXswNAvEaCVXyPN8Crxbwi6mO3a3FHgeggGDEap6IIAM06tDRL7DJ2MJ1H1OUPKMO
+         jn0k00eOFohuRmgXmKFN6WJoMcskWX2+cmnAFViky76P7KFPUxdbJWlNBYMlA0DAEnuD
+         u6uJJVlwOdxDnEzbG1Htg7EGYLu6v6C2q56hsjX1Ej6AGgeHGtxN0i8JZoD6cK8rGPO+
+         hoUo+9q0W/ig3ALBbVrH7H11BMOyDtdejWc0UZ5FncM0whfZt+qij5paMTZowhaxaPvZ
+         hVJjfY9Dg6ffE1466if03MEQxCeGsRvSWCPNsJdeOXQGSYcglK1SLgKnpBz/AXCZluVd
+         MzSA==
+X-Gm-Message-State: AOAM533oFjNwiqq+bMF8kYQgOwBy/Ft0aLszW/r/lahx8NznDkGUTAgB
+	4W+KVZ46QIKdRRejhjkd5SLJ8rFvhDrAgacb1/cFxg7oCrZwMaehDXUvyzmeuaPXRN6SUcr+mZF
+	eu+6v+R/xO3eINek=
+X-Received: by 2002:a05:6214:27e9:: with SMTP id jt9mr1306675qvb.65.1643970249788;
+        Fri, 04 Feb 2022 02:24:09 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyAtqMoIn6fBallR9B6BRc1B8yeT12HilgKV1BAD8ZmWpqaoX83jiwejQU6dcd2yFa0LUvO8A==
+X-Received: by 2002:a05:6214:27e9:: with SMTP id jt9mr1306670qvb.65.1643970249596;
+        Fri, 04 Feb 2022 02:24:09 -0800 (PST)
 Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id b16sm97103qtk.84.2022.02.04.02.16.24
+        by smtp.gmail.com with ESMTPSA id i20sm915610qtx.44.2022.02.04.02.24.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Feb 2022 02:16:25 -0800 (PST)
-Message-ID: <9c95d09f91ebbbb702261765dccaf81852d479db.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: use nla_parse_nested
+        Fri, 04 Feb 2022 02:24:09 -0800 (PST)
+Message-ID: <8303978268b465905ebfeac114577d96a26b6156.camel@redhat.com>
+Subject: Re: [PATCH mptcp-stable] mptcp: fix msk traversal in
+ mptcp_nl_cmd_set_flags()
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
-	 <matthieu.baerts@tessares.net>
-Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Fri, 04 Feb 2022 11:16:21 +0100
-In-Reply-To: <a83209f-7839-d87f-5d27-fd337cd972c@linux.intel.com>
-References: <022caed0c9e5964f525336aced8233338c29386f.1643437533.git.geliang.tang@suse.com>
-	 <25250bc9-015e-df2a-582d-5b5dd3eabdcb@tessares.net>
-	 <20220130043318.GA7781@dhcp-10-157-36-190>
-	 <8339d9dc-4055-57c9-9c97-9ca4075c7496@tessares.net>
-	 <a83209f-7839-d87f-5d27-fd337cd972c@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
+Cc: stable@vger.kernel.org
+Date: Fri, 04 Feb 2022 11:24:06 +0100
+In-Reply-To: <20220202004032.208848-1-mathew.j.martineau@linux.intel.com>
+References: <20220202004032.208848-1-mathew.j.martineau@linux.intel.com>
 User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -70,80 +66,106 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2022-02-02 at 16:38 -0800, Mat Martineau wrote:
-> On Mon, 31 Jan 2022, Matthieu Baerts wrote:
+On Tue, 2022-02-01 at 16:40 -0800, Mat Martineau wrote:
+> commit 8e9eacad7ec7a9cbf262649ebf1fa6e6f6cc7d82 upstream.
 > 
-> > Hi Geliang,
-> > 
-> > On 30/01/2022 05:33, Geliang Tang wrote:
-> > > Hi Matt,
-> > > 
-> > > Thanks for your review.
-> > > 
-> > > I don't know why this commit didn't show in the patchwork. The CI seems to
-> > > have complained about it.
-> > 
-> > It seems the issue was on kernel.org side, now fixed: your patch is on
-> > patchwork and lore.
-> > 
-> > > On Sat, Jan 29, 2022 at 12:53:20PM +0100, Matthieu Baerts wrote:
-> > > > Hi Geliang,
-> > > > 
-> > > > On 29/01/2022 07:26, Geliang Tang wrote:
-> > > > > NLA_F_NESTED has been used in both 'pm_nl_ctl' and 'ip mptcp'.
-> > > > 
-> > > > Was it always the case for 'ip mptcp'? I mean, we cannot break the user API.
-> > > > 
-> > > > And even if it was always the case for 'ip mptcp', there could be other
-> > > > tools not using NLA_F_NESTED. Maybe we can ignore them in this specific
-> > > > case but I'm not sure.
-> > > 
-> > > I think now is the right time to switch to the new API: nla_parse_nested.
-> > > Since now no other tool uses our mptcp netlink yet, only 'ip mptcp' and
-> > > 'pm_nl_ctl'. There's no need to consider about the compatibility.
-> > 
-> > I would like to only consider Open-Source tools but I don't think we
-> > can. It is unlikely someone wrote a new tool not using NLA_F_NESTED but
-> > I don't think we can be 100% sure. This is an uAPI break to change this
-> > I think, no?
-> > 
-> > > The old
-> > > API - nla_parse_nested_deprecated - is reserved for the compatibility of
-> > > the netlinks that already have some user tools using its interface in the
-> > > non-NLA_F_NESTED way. We are not the case.
-> > > 
-> > > Switch to the new API can force the user tools to use the NLA_F_NESTED way
-> > > from now on. That makes sure no user tool uses the non-NLA_F_NESTED way for
-> > > our mptcp netlink. Otherwise, one day the old API will be abandoned, and
-> > > then if there're some user tools use the non-NLA_F_NESTED way, we will have
-> > > to deal with the compatibility at that time. If we switch to the new API
-> > > now, we can avoid this potential trouble.
-> > 
-> > I guess the compatibility will need to be kept of a bit of time. This
-> > function is used in 250+ places in the kernel. I guess it has the
-> > "deprecated" word in the name to clearly indicate "you should not use
-> > that for new features" but not to say "in a few months, we will drop
-> > this, deal with it now.", no?
-> > 
+> The upstream commit had to handle a lookup_by_id variable that is only
+> present in 5.17. This version of the patch removes that variable, so the
+> __lookup_addr() function only handles the lookup as it is implemented in
+> 5.15 and 5.16. It also removes one 'const' keyword to prevent a warning
+> due to differing const-ness in the 5.17 version of addresses_equal().
 > 
-> It seems like the meaning of "deprecated" is the former ("don't add new 
-> calls to this")... but we did add our use of the function in 2020 after it 
-> was already deprecated! Given the "do not break userspace" rule for kernel 
-> changes, I don't expect the deprecated to go away and for now I think 
-> we should leave it unchanged. When we discuss patches at this week's 
-> meeting I'll see if others agree.
+> The MPTCP endpoint list is under RCU protection, guarded by the
+> pernet spinlock. mptcp_nl_cmd_set_flags() traverses the list
+> without acquiring the spin-lock nor under the RCU critical section.
+> 
+> This change addresses the issue performing the lookup and the endpoint
+> update under the pernet spinlock.
+> 
+> Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> ---
+> 
+> Paolo, can I add an ack or signoff tag from you?
+> 
+> The upstream commit (8e9eacad7ec7) was queued for the 5.16 and 5.15
+> stable trees, which brought along a few extra patches that didn't belong
+> in stable. I asked Greg to drop those patches from his queue, and this
+> particular commit required manual changes as described above (related to
+> the lookup_by_id variable that's new in 5.16).
 
-All known users (self-tests and iproute2) have NLA_F_NESTED since the
-first implementation and I doubt there are other user-space users out
-there.
- 
-Still the downside of breaking user-space are quite bad, and there are
-other in kernel users of the deprecated api added even later then
-MPTCP.
 
-I think we can keep the existing code.
+The patches LGTM. Since you did all the good work, I think is better if
+you preserve your SoB and just add:
 
-Cheers,
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-Paolo
+> 
+> This patch will not apply to the export branch. I confirmed that it
+> applies, builds, and runs on both the 5.16.5 and 5.15.19 branches. Self
+> tests succeed too.
+> 
+> When I send to the stable list, I'll also include these tags:
+> Cc: <stable@vger.kernel.org> # 5.15.x
+> Cc: <stable@vger.kernel.org> # 5.16.x
+> 
+> 
+> ---
+>  net/mptcp/pm_netlink.c | 34 +++++++++++++++++++++++++---------
+>  1 file changed, 25 insertions(+), 9 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 65764c8171b3..5d305fafd0e9 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -459,6 +459,18 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+>  	return i;
+>  }
+>  
+> +static struct mptcp_pm_addr_entry *
+> +__lookup_addr(struct pm_nl_pernet *pernet, struct mptcp_addr_info *info)
+> +{
+> +	struct mptcp_pm_addr_entry *entry;
+> +
+> +	list_for_each_entry(entry, &pernet->local_addr_list, list) {
+> +		if (addresses_equal(&entry->addr, info, true))
+> +			return entry;
+> +	}
+> +	return NULL;
+> +}
+> +
+>  static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>  {
+>  	struct sock *sk = (struct sock *)msk;
+> @@ -1725,17 +1737,21 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
+>  		bkup = 1;
+>  
+> -	list_for_each_entry(entry, &pernet->local_addr_list, list) {
+> -		if (addresses_equal(&entry->addr, &addr.addr, true)) {
+> -			mptcp_nl_addr_backup(net, &entry->addr, bkup);
+> -
+> -			if (bkup)
+> -				entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
+> -			else
+> -				entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
+> -		}
+> +	spin_lock_bh(&pernet->lock);
+> +	entry = __lookup_addr(pernet, &addr.addr);
+> +	if (!entry) {
+> +		spin_unlock_bh(&pernet->lock);
+> +		return -EINVAL;
+>  	}
+>  
+> +	if (bkup)
+> +		entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
+> +	else
+> +		entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
+> +	addr = *entry;
+> +	spin_unlock_bh(&pernet->lock);
+> +
+> +	mptcp_nl_addr_backup(net, &addr.addr, bkup);
+>  	return 0;
+>  }
+>  
 
