@@ -1,39 +1,24 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421162F25
-	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 01:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644022968; x=1675558968;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xkyVW7E/+O7tWkj/9uNn3xGmnPUBci6DZeRuJO3bhE0=;
-  b=gbHhW/Lv3C60J+MGR1i0BvFH/2bPgtJF3AhjLTWuTox+R4i0n3WcznDR
-   GCSdRTg9Mo24BFj1SY3d+Yv/QM2wZ9yWDpHT8dxlu8QnboQdPUadPLXXg
-   6erwEZ9woK9CXx87xwzOKKr32gxCyr/e6v/YyzkFeadrvOL30Obm91sZb
-   EbG3G+VDRNx6hk6PnhZ6d07HJOIPCjUa744IkYbgBAKPy2kIvOaXE750u
-   dbnACOLfhLNRdm1UF81tAXs/qhctWO4NXGrg20LsV9dmD5G4ZHOMUiLH9
-   OGDwISMBcuaCiscXYq/mQxI8U8Jtub3dHRn5OoExoaoOSQPSc/n9knhkE
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10248"; a="272977435"
-X-IronPort-AV: E=Sophos;i="5.88,344,1635231600"; 
-   d="scan'208";a="272977435"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 17:02:37 -0800
-X-IronPort-AV: E=Sophos;i="5.88,344,1635231600"; 
-   d="scan'208";a="535690177"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.231.200])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 17:02:36 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: stable@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH] mptcp: fix msk traversal in mptcp_nl_cmd_set_flags()
-Date: Fri,  4 Feb 2022 17:02:31 -0800
-Message-Id: <20220205010231.189151-1-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2212F21
+	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 06:10:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F6D1C340EC;
+	Sat,  5 Feb 2022 06:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1644041412;
+	bh=9y0hRMLG81HDrfK+/FsShH8IK6aHwlF0NfzKK/DvnuY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Q9jI//r6hmXbkQnP4kU2gl39wTcL/CbZM86QLEeXJI+6/A4KU4WWPnnpyFGt9xt8I
+	 E9aoVbX9bGCWlsHYb493FB+k+aSvADzd5M4Rf0zbPore7WMUca4+vqyx0sZrUYOBLh
+	 yI/RGxX/TgIP0+X+kOXXY2h2JxewLq2PFjOcniLIC2Eu+ZuTyy/N5V9PdVz5N2DB6o
+	 wpI49lRL1mQ7+ceOPa/vQDBox2nlB9/Dtz6T72P7eUg7ud+klZX8jevLUmMWDI3yE2
+	 EEMjjEs1ilJyPc2OLXAr0HQAnrepP/vj5fHp2++2wVCiYju7LIVJh1bEOcOFYQemtr
+	 aloWhSZ3aw7Aw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3607E5D07E;
+	Sat,  5 Feb 2022 06:10:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,85 +26,58 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/9] mptcp: Improve set-flags command and update self
+ tests
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <164404141198.19196.16444853469420129139.git-patchwork-notify@kernel.org>
+Date: Sat, 05 Feb 2022 06:10:11 +0000
+References: <20220205000337.187292-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220205000337.187292-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-commit 8e9eacad7ec7a9cbf262649ebf1fa6e6f6cc7d82 upstream.
+Hello:
 
-The upstream commit had to handle a lookup_by_id variable that is only
-present in 5.17. This version of the patch removes that variable, so the
-__lookup_addr() function only handles the lookup as it is implemented in
-5.15 and 5.16. It also removes one 'const' keyword to prevent a warning
-due to differing const-ness in the 5.17 version of addresses_equal().
+This series was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-The MPTCP endpoint list is under RCU protection, guarded by the
-pernet spinlock. mptcp_nl_cmd_set_flags() traverses the list
-without acquiring the spin-lock nor under the RCU critical section.
+On Fri,  4 Feb 2022 16:03:28 -0800 you wrote:
+> Patches 1-3 allow more flexibility in the combinations of features and
+> flags allowed with the MPTCP_PM_CMD_SET_FLAGS netlink command, and add
+> self test case coverage for the new functionality.
+> 
+> Patches 4-6 and 9 refactor the mptcp_join.sh self tests to allow them to
+> configure all of the test cases using either the pm_nl_ctl utility (part
+> of the mptcp self tests) or the 'ip mptcp' command (from iproute2). The
+> default remains to use pm_nl_ctl.
+> 
+> [...]
 
-This change addresses the issue performing the lookup and the endpoint
-update under the pernet spinlock.
+Here is the summary with links:
+  - [net-next,1/9] mptcp: allow to use port and non-signal in set_flags
+    https://git.kernel.org/netdev/net-next/c/09f12c3ab7a5
+  - [net-next,2/9] selftests: mptcp: add the port argument for set_flags
+    https://git.kernel.org/netdev/net-next/c/d6a676e0e1a8
+  - [net-next,3/9] selftests: mptcp: add backup with port testcase
+    https://git.kernel.org/netdev/net-next/c/33397b83eee6
+  - [net-next,4/9] selftests: mptcp: add ip mptcp wrappers
+    https://git.kernel.org/netdev/net-next/c/34aa6e3bccd8
+  - [net-next,5/9] selftests: mptcp: add wrapper for showing addrs
+    https://git.kernel.org/netdev/net-next/c/dda61b3dbea0
+  - [net-next,6/9] selftests: mptcp: add wrapper for setting flags
+    https://git.kernel.org/netdev/net-next/c/f01403862592
+  - [net-next,7/9] selftests: mptcp: add the id argument for set_flags
+    https://git.kernel.org/netdev/net-next/c/a224a847ae7a
+  - [net-next,8/9] selftests: mptcp: add set_flags tests in pm_netlink.sh
+    https://git.kernel.org/netdev/net-next/c/6da1dfdd037e
+  - [net-next,9/9] selftests: mptcp: set ip_mptcp in command line
+    https://git.kernel.org/netdev/net-next/c/621bd393039e
 
-Cc: <stable@vger.kernel.org> # 5.15.x
-Cc: <stable@vger.kernel.org> # 5.16.x
-Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/pm_netlink.c | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 65764c8171b3..5d305fafd0e9 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -459,6 +459,18 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
- 	return i;
- }
- 
-+static struct mptcp_pm_addr_entry *
-+__lookup_addr(struct pm_nl_pernet *pernet, struct mptcp_addr_info *info)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+
-+	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+		if (addresses_equal(&entry->addr, info, true))
-+			return entry;
-+	}
-+	return NULL;
-+}
-+
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
-@@ -1725,17 +1737,21 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
- 
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if (addresses_equal(&entry->addr, &addr.addr, true)) {
--			mptcp_nl_addr_backup(net, &entry->addr, bkup);
--
--			if (bkup)
--				entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
--			else
--				entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
--		}
-+	spin_lock_bh(&pernet->lock);
-+	entry = __lookup_addr(pernet, &addr.addr);
-+	if (!entry) {
-+		spin_unlock_bh(&pernet->lock);
-+		return -EINVAL;
- 	}
- 
-+	if (bkup)
-+		entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-+	else
-+		entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-+	addr = *entry;
-+	spin_unlock_bh(&pernet->lock);
-+
-+	mptcp_nl_addr_backup(net, &addr.addr, bkup);
- 	return 0;
- }
- 
+You are awesome, thank you!
 -- 
-2.35.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
