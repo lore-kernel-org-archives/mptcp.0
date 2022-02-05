@@ -1,83 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2212F21
-	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 06:10:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F6D1C340EC;
-	Sat,  5 Feb 2022 06:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1644041412;
-	bh=9y0hRMLG81HDrfK+/FsShH8IK6aHwlF0NfzKK/DvnuY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Q9jI//r6hmXbkQnP4kU2gl39wTcL/CbZM86QLEeXJI+6/A4KU4WWPnnpyFGt9xt8I
-	 E9aoVbX9bGCWlsHYb493FB+k+aSvADzd5M4Rf0zbPore7WMUca4+vqyx0sZrUYOBLh
-	 yI/RGxX/TgIP0+X+kOXXY2h2JxewLq2PFjOcniLIC2Eu+ZuTyy/N5V9PdVz5N2DB6o
-	 wpI49lRL1mQ7+ceOPa/vQDBox2nlB9/Dtz6T72P7eUg7ud+klZX8jevLUmMWDI3yE2
-	 EEMjjEs1ilJyPc2OLXAr0HQAnrepP/vj5fHp2++2wVCiYju7LIVJh1bEOcOFYQemtr
-	 aloWhSZ3aw7Aw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3607E5D07E;
-	Sat,  5 Feb 2022 06:10:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB362F23
+	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 10:32:58 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id og43so3023347ejc.0
+        for <mptcp@lists.linux.dev>; Sat, 05 Feb 2022 02:32:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=vtoxpIcNGK63LIMND+1ajO7DUeMMflo7muaHuvkGY4U=;
+        b=zaU3/Go6EC4fLME0WbG1ATjf3ZtvHksjwyBF8HOIG2+IY95uDKbajL3ou0N2jQZB7U
+         baP8epVjvC2q3YqaqCoPZ8IYHRBNSQ053kX4oi3LNkyx6Qj1T+FP4uzKEkMMo5+xaXhV
+         KRSD3eTy0OC5Xk/b3DHcGAyUPpXUbWzJZ6mJgPbBJFAoUlkRWoBU2jB+W+x2Ou0o23Os
+         Umr/HoiiGBP1Uz7ag118xHjP7iASRnfqKsUDQe/QIqbREW9lmgbu9s/ZW8I9o0qexwQW
+         7OqzWLPAoTHHOr/JBfeGOtQKT772gyXuIoPlFeEPAboClWqHJbbq/r4cg+2tSotY3+wM
+         yWMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=vtoxpIcNGK63LIMND+1ajO7DUeMMflo7muaHuvkGY4U=;
+        b=lIRnxQntE2mhkost6LB/kJ7u97JAKbJKbQdbQ4R0h1QzG52J1bFdIVtlgUzL7+pnV1
+         TcVWAgzi3B5mriZ4virwIwN64xTqk/JbPW5fNXE2NIEjN6ZV196H6iKSUQ0DJPEBmPX7
+         Syag5sG7R3JQab3boLLJEvXbQDaG7NxxwWB3oWJhfJCeHy/lTQLgW5853Yyl6HnoUe4f
+         Mxjek+oLc9q8kBHaBsO5FxDUKp5dPsn2cAcI33ur7hxlyucOew+OHIY6ccvg7c2jAVJQ
+         DPZ6Ck8Ydr4yCFV8zE1o01Stli8xQigfKy9AezrrUjvdrO/NqE2XjTPwURfLiuNQ3hwo
+         /jkg==
+X-Gm-Message-State: AOAM531Mp0mTNjdOf+bhgzxeBC8oqLM3CJmfUION8OB9fOH/VzqVidiV
+	ul9u9NVwlTz6MqrQjbKGxd2vqA==
+X-Google-Smtp-Source: ABdhPJzvnTrm721vUi47nwjcfNE745LedX54Tdq51fNU+f02HgrPBUikmx8fy0VtPDhQKxnzJWNrZg==
+X-Received: by 2002:a17:907:3d87:: with SMTP id he7mr2792296ejc.593.1644057176808;
+        Sat, 05 Feb 2022 02:32:56 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:a34b:82ea:44:c0a5? ([2a02:578:8593:1200:a34b:82ea:44:c0a5])
+        by smtp.gmail.com with ESMTPSA id n11sm1958522edv.52.2022.02.05.02.32.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Feb 2022 02:32:56 -0800 (PST)
+Message-ID: <002dc530-4938-725b-37ac-f46b6d8ae7ec@tessares.net>
+Date: Sat, 5 Feb 2022 11:32:55 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/9] mptcp: Improve set-flags command and update self
- tests
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <164404141198.19196.16444853469420129139.git-patchwork-notify@kernel.org>
-Date: Sat, 05 Feb 2022 06:10:11 +0000
-References: <20220205000337.187292-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220205000337.187292-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v2 mptcp-next] selftests: mptcp: fix diag instability
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <db50196c67b30e7b89d241faffc78e5ffbb04e83.1643976999.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <db50196c67b30e7b89d241faffc78e5ffbb04e83.1643976999.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Paolo, Mat,
 
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri,  4 Feb 2022 16:03:28 -0800 you wrote:
-> Patches 1-3 allow more flexibility in the combinations of features and
-> flags allowed with the MPTCP_PM_CMD_SET_FLAGS netlink command, and add
-> self test case coverage for the new functionality.
+On 04/02/2022 13:17, Paolo Abeni wrote:
+> Instead of waiting for an arbitrary amount of time for the MPTCP
+> MP_CAPABLE handshake to complete, explicitly wait for the relevant
+> socket to enter into the established status.
 > 
-> Patches 4-6 and 9 refactor the mptcp_join.sh self tests to allow them to
-> configure all of the test cases using either the pm_nl_ctl utility (part
-> of the mptcp self tests) or the 'ip mptcp' command (from iproute2). The
-> default remains to use pm_nl_ctl.
-> 
-> [...]
+> Additionally let the data transfer application use the slowest
+> transfer mode available (-r), to cope with very slow host, or
+> high jitter caused by hosting VMs.
 
-Here is the summary with links:
-  - [net-next,1/9] mptcp: allow to use port and non-signal in set_flags
-    https://git.kernel.org/netdev/net-next/c/09f12c3ab7a5
-  - [net-next,2/9] selftests: mptcp: add the port argument for set_flags
-    https://git.kernel.org/netdev/net-next/c/d6a676e0e1a8
-  - [net-next,3/9] selftests: mptcp: add backup with port testcase
-    https://git.kernel.org/netdev/net-next/c/33397b83eee6
-  - [net-next,4/9] selftests: mptcp: add ip mptcp wrappers
-    https://git.kernel.org/netdev/net-next/c/34aa6e3bccd8
-  - [net-next,5/9] selftests: mptcp: add wrapper for showing addrs
-    https://git.kernel.org/netdev/net-next/c/dda61b3dbea0
-  - [net-next,6/9] selftests: mptcp: add wrapper for setting flags
-    https://git.kernel.org/netdev/net-next/c/f01403862592
-  - [net-next,7/9] selftests: mptcp: add the id argument for set_flags
-    https://git.kernel.org/netdev/net-next/c/a224a847ae7a
-  - [net-next,8/9] selftests: mptcp: add set_flags tests in pm_netlink.sh
-    https://git.kernel.org/netdev/net-next/c/6da1dfdd037e
-  - [net-next,9/9] selftests: mptcp: set ip_mptcp in command line
-    https://git.kernel.org/netdev/net-next/c/621bd393039e
+Thank you for the patch and the review!
 
-You are awesome, thank you!
+Now in our tree (fixes for -net) with Closes, Fixes, my R&Tb and Mat's
+RvB tags:
+
+- 3b63b1552ae2: selftests: mptcp: fix diag instability
+
+- Results: 4514f808428c..3150c57070f7
+
+Builds and tests are now in progress:
+
+
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220205T103236
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
