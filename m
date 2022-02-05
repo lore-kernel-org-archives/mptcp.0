@@ -1,30 +1,30 @@
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B6C2C9C
-	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 00:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF102CA1
+	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 00:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644019425; x=1675555425;
+  t=1644019426; x=1675555426;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BIHDQ0cV+8FuNvzldY9/cMZQZYbfgj0qdBVLxCsVVjU=;
-  b=TBiZCJ02HTSDDoWcOeRmimM7zlRt9ZaGs7Av66sgMn0fzXHqTpYEC5jW
-   TG8pGsEUDqv0kGKA9MusiUMHIseOzcD8rsanJhJRO8UO0ZM70dBJWiWz4
-   XpRLowKgq3Rp8j4d0L0hEMsLRVBqzPO4U8K71uMDgIvTDSH2zSFTDgi1y
-   4p8P1GS7iMWHjw0oQuKaa2bLRkXPCBotfsOgX0vZarinIyFAAL4w3i9sZ
-   yOE8B1cLMkuph6HLAzGYuSxm+ZSUX3Ya8rQOLIBjNyLYt5e0ef8lNa/4e
-   mnmwKl196AAPEzcwX7ArX+9YoX7naRbtVqswsx2OtCZVcw2Degp6M9bTW
+  bh=5K0GkzhiVhM0zd+gJclgiynKr72PcHxICX10QYU9dw0=;
+  b=lmhS2eE2/p4DQU+ojjSftXZple+XmQlvQYQ0XrXZTvBhRh0oS+U37jGn
+   k570s14t6uFB1Mhr1r9VGEqkXZGSK9d+NsRAHCXbRX7NpEO3+loHoNR81
+   A+QzZ7AOKWf6WI+qM1S2LPebqwZoZgZxttpveiv4QFicgpiZoqrYZzcNQ
+   g56DoRSIeXcz/ocpVrRHk3G689qIErIcFfiizysvpL2sa3T3RmMQbaaSx
+   WC08httNvGvGfDcGaKQ8C0rvhv/kk/gPCfjQhDqSTJcX9z6CfyTIPZoIc
+   6B8zGkJC4GTR4zoYSs3Q175soew0taCyq9+8J1w7t/Qi7X4YtIUJYZ9Hc
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10248"; a="248678288"
+X-IronPort-AV: E=McAfee;i="6200,9189,10248"; a="248678296"
 X-IronPort-AV: E=Sophos;i="5.88,344,1635231600"; 
-   d="scan'208";a="248678288"
+   d="scan'208";a="248678296"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 16:03:44 -0800
 X-IronPort-AV: E=Sophos;i="5.88,344,1635231600"; 
-   d="scan'208";a="770097518"
+   d="scan'208";a="770097521"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.231.200])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 16:03:43 -0800
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 16:03:44 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliang.tang@suse.com>,
@@ -33,9 +33,9 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/9] selftests: mptcp: add backup with port testcase
-Date: Fri,  4 Feb 2022 16:03:31 -0800
-Message-Id: <20220205000337.187292-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 5/9] selftests: mptcp: add wrapper for showing addrs
+Date: Fri,  4 Feb 2022 16:03:33 -0800
+Message-Id: <20220205000337.187292-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220205000337.187292-1-mathew.j.martineau@linux.intel.com>
 References: <20220205000337.187292-1-mathew.j.martineau@linux.intel.com>
@@ -49,94 +49,144 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch added the backup testcase using an address with a port number.
+This patch implemented a new function named pm_nl_show_endpoints(), wrapped
+the PM netlink commands 'ip mptcp endpoint show' and 'pm_nl_ctl dump' in
+it, used a new argument 'ip_mptcp' to choose which one to use to show all
+the PM endpoints.
 
-The original backup tests only work for the output of 'pm_nl_ctl dump'
-without the port number. It chooses the last item in the dump to parse
-the address in it, and in this case, the address is showed at the end
-of the item.
+Used this wrapper in do_transfer() instead of using the pm_nl_ctl commands
+directly.
 
-But it doesn't work for the dump with the port number, in this case, the
-port number is showed at the end of the item, not the address.
+The original 'pos+=5' in the remoing tests only works for the output of
+'pm_nl_ctl show':
 
-So implemented a more flexible approach to get the address and the port
-number from the dump to fit for the port number case.
+  id 1 flags subflow 10.0.1.1
+
+It doesn't work for the output of 'ip mptcp endpoint show':
+
+  10.0.1.1 id 1 subflow
+
+So implemented a more flexible approach to get the address ID from the PM
+dump output to fit for both commands.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 44 ++++++++++++++++---
- 1 file changed, 39 insertions(+), 5 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 78 ++++++++++++-------
+ 1 file changed, 50 insertions(+), 28 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index bd106c7ec232..eb945cebbd6d 100755
+index 6ca6ed7336d0..093eb27f5c6d 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -239,6 +239,16 @@ is_v6()
- 	[ -z "${1##*:*}" ]
+@@ -365,6 +365,17 @@ pm_nl_flush_endpoint()
+ 	fi
  }
  
-+is_addr()
++pm_nl_show_endpoints()
 +{
-+	[ -z "${1##*[.:]*}" ]
++	local ns=$1
++
++	if [ $ip_mptcp -eq 1 ]; then
++		ip -n $ns mptcp endpoint show
++	else
++		ip netns exec $ns ./pm_nl_ctl dump
++	fi
 +}
 +
-+is_number()
-+{
-+	[[ $1 == ?(-)+([0-9]) ]]
-+}
-+
- # $1: ns, $2: port
- wait_local_port_listen()
+ do_transfer()
  {
-@@ -464,11 +474,25 @@ do_transfer()
+ 	listener_ns="$1"
+@@ -472,20 +483,25 @@ do_transfer()
+ 	elif [ $addr_nr_ns1 -lt 0 ]; then
+ 		let rm_nr_ns1=-addr_nr_ns1
+ 		if [ $rm_nr_ns1 -lt 8 ]; then
+-			counter=1
+-			pos=1
+-			dump=(`ip netns exec ${listener_ns} ./pm_nl_ctl dump`)
+-			if [ ${#dump[@]} -gt 0 ]; then
+-				while [ $counter -le $rm_nr_ns1 ]
+-				do
+-					id=${dump[$pos]}
+-					rm_addr=$(rm_addr_count ${connector_ns})
+-					pm_nl_del_endpoint ${listener_ns} $id
+-					wait_rm_addr ${connector_ns} ${rm_addr}
+-					let counter+=1
+-					let pos+=5
++			counter=0
++			pm_nl_show_endpoints ${listener_ns} | while read line; do
++				local arr=($line)
++				local nr=0
++
++				for i in ${arr[@]}; do
++					if [ $i = "id" ]; then
++						if [ $counter -eq $rm_nr_ns1 ]; then
++							break
++						fi
++						id=${arr[$nr+1]}
++						rm_addr=$(rm_addr_count ${connector_ns})
++						pm_nl_del_endpoint ${listener_ns} $id
++						wait_rm_addr ${connector_ns} ${rm_addr}
++						let counter+=1
++					fi
++					let nr+=1
+ 				done
+-			fi
++			done
+ 		elif [ $rm_nr_ns1 -eq 8 ]; then
+ 			pm_nl_flush_endpoint ${listener_ns}
+ 		elif [ $rm_nr_ns1 -eq 9 ]; then
+@@ -520,21 +536,27 @@ do_transfer()
+ 	elif [ $addr_nr_ns2 -lt 0 ]; then
+ 		let rm_nr_ns2=-addr_nr_ns2
+ 		if [ $rm_nr_ns2 -lt 8 ]; then
+-			counter=1
+-			pos=1
+-			dump=(`ip netns exec ${connector_ns} ./pm_nl_ctl dump`)
+-			if [ ${#dump[@]} -gt 0 ]; then
+-				while [ $counter -le $rm_nr_ns2 ]
+-				do
+-					# rm_addr are serialized, allow the previous one to complete
+-					id=${dump[$pos]}
+-					rm_addr=$(rm_addr_count ${listener_ns})
+-					pm_nl_del_endpoint ${connector_ns} $id
+-					wait_rm_addr ${listener_ns} ${rm_addr}
+-					let counter+=1
+-					let pos+=5
++			counter=0
++			pm_nl_show_endpoints ${connector_ns} | while read line; do
++				local arr=($line)
++				local nr=0
++
++				for i in ${arr[@]}; do
++					if [ $i = "id" ]; then
++						if [ $counter -eq $rm_nr_ns2 ]; then
++							break
++						fi
++						# rm_addr are serialized, allow the previous one to
++						# complete
++						id=${arr[$nr+1]}
++						rm_addr=$(rm_addr_count ${listener_ns})
++						pm_nl_del_endpoint ${connector_ns} $id
++						wait_rm_addr ${listener_ns} ${rm_addr}
++						let counter+=1
++					fi
++					let nr+=1
+ 				done
+-			fi
++			done
+ 		elif [ $rm_nr_ns2 -eq 8 ]; then
+ 			pm_nl_flush_endpoint ${connector_ns}
+ 		elif [ $rm_nr_ns2 -eq 9 ]; then
+@@ -551,7 +573,7 @@ do_transfer()
  	if [ ! -z $sflags ]; then
  		sleep 1
  		for netns in "$ns1" "$ns2"; do
--			dump=(`ip netns exec $netns ./pm_nl_ctl dump`)
--			if [ ${#dump[@]} -gt 0 ]; then
--				addr=${dump[${#dump[@]} - 1]}
--				ip netns exec $netns ./pm_nl_ctl set $addr flags $sflags
--			fi
-+			ip netns exec $netns ./pm_nl_ctl dump | while read line; do
-+				local arr=($line)
-+				local addr
-+				local port=0
-+				local _port=""
-+
-+				for i in ${arr[@]}; do
-+					if is_addr $i; then
-+						addr=$i
-+					elif is_number $i; then
-+						# The minimum expected port number is 10000
-+						if [ $i -gt 10000 ]; then
-+							port=$i
-+						fi
-+					fi
-+				done
-+				if [ $port -ne 0 ]; then _port="port $port"; fi
-+				ip netns exec $netns ./pm_nl_ctl set $addr flags $sflags $_port
-+			done
- 		done
- 	fi
- 
-@@ -1616,6 +1640,16 @@ backup_tests()
- 	chk_join_nr "single address, backup" 1 1 1
- 	chk_add_nr 1 1
- 	chk_prio_nr 1 0
-+
-+	# single address with port, backup
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
-+	chk_join_nr "single address with port, backup" 1 1 1
-+	chk_add_nr 1 1
-+	chk_prio_nr 1 0
- }
- 
- add_addr_ports_tests()
+-			ip netns exec $netns ./pm_nl_ctl dump | while read line; do
++			pm_nl_show_endpoints $netns | while read line; do
+ 				local arr=($line)
+ 				local addr
+ 				local port=0
 -- 
 2.35.1
 
