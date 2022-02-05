@@ -1,89 +1,95 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FF92F23
-	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 10:39:06 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id p15so27005821ejc.7
-        for <mptcp@lists.linux.dev>; Sat, 05 Feb 2022 02:39:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=86Zn5VlbagfP1jaTPxDYb2pZ41uzBeFYWn1l6n2MtpY=;
-        b=OQB33iJDXOZv3jKm/bkUC98UU/YHEMaa1WiDOoE1PZIroqnnrlNpAtWSRelCNmEm0X
-         FXEmX1elaxoy/G9kYDc9B4g1LYd21NGT2El8O3uWYPwPYeRXiOhb1dcNkAaf2l452Z6U
-         pgLqBu6Zlxo49Vf2hAwPGs27BxLDWbFQ+PYccOOsfARCrQQ3Iu6wPe+MM8EKhaUy1dm0
-         ZD0Foe0SpIIMSjKf0p6ctYbLc9RkoIjc3k0n+zqrvTdVTfWs2F24Ej9uot48rzVRSoKr
-         ADdxzQcl9Io/gktDqAUwpi5REiEajp5UbQhrcjGG/bFBVCRjj5i0tXbD/7VJ7lPvMdrE
-         z7AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=86Zn5VlbagfP1jaTPxDYb2pZ41uzBeFYWn1l6n2MtpY=;
-        b=oFsyHo5ezbGaQ4Qcoz8eBxH4Wzm/ytcBs2lo3xn+/Z9aEpH+jLIFdvn9oHp6iJAyg4
-         hNdxvsXnjPDNq4wWciAnUz8ZdrfmIhywAtr65Zt0ONDWKy83j8dMQ1ovq2mFWw1O5I4c
-         PJWzJ//LAt2MgWOWZ9aq/yzJpU/0vbkKk1XxcvlyAFooDw9HOG2M4k+2gI8bKoKtHAo2
-         Wdtuz4xwkZe7PYgDMTmJjL73im6i0TAo8S0SxzUSMtsxib8QgBXo+MqX542TdnW5dUKr
-         MfuBd+toLD2ebVIX62MAtZki4M7lC1gzngkcmZ/KX3hrve6Bb0usLqM6MkKfItQZlYfG
-         /EkA==
-X-Gm-Message-State: AOAM530uZ2umtasOkpZQBC4U5BFJerdCv0VNSEyDdn1CDgTyfyXLneRu
-	Hbzauw6uzjQsLz7EUE8l/3+n7jsbR1D+/hPe
-X-Google-Smtp-Source: ABdhPJwMaJLgN5osJB+IphybwNbtEYhv6bEdTXUOJA0YUypujGvRX2rL93naWRLS9LSSBx8s6tSL3w==
-X-Received: by 2002:a17:906:7310:: with SMTP id di16mr2485718ejc.511.1644057545088;
-        Sat, 05 Feb 2022 02:39:05 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:a34b:82ea:44:c0a5? ([2a02:578:8593:1200:a34b:82ea:44:c0a5])
-        by smtp.gmail.com with ESMTPSA id si16sm160084ejb.51.2022.02.05.02.39.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Feb 2022 02:39:04 -0800 (PST)
-Message-ID: <d938eba9-0bbd-8cea-9148-a36afadbb31a@tessares.net>
-Date: Sat, 5 Feb 2022 11:39:03 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E131C2F21
+	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 13:15:25 +0000 (UTC)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id E8D605C00DF;
+	Sat,  5 Feb 2022 08:15:24 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sat, 05 Feb 2022 08:15:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; bh=nEfsi3e9hJGhRVn/s3Xkclcuo+lsriGkX7loXU
+	3CYmM=; b=FnM9DhAa5TXFN3xNSI4O1qas+HzuL0rsCF/nSAS8fuRAxBmxa8MAyP
+	5HRZl05y4rOVGEMnZRWx2wndaPWYWmdx1raVIQaYY+WUCGKKzTfrKinjk8kPfKa6
+	3FGlnAxfOSyF/8vuIOX8kkTn0lzhXerB3q4dd7HyejW5pWaorZvlarVtEOVWY0XG
+	m+pJww9MQembKoVMa2E0o+20m7I4Kql2svCvRv7d4GdJ3PtwxXuwZC7vSee+gGEl
+	2Lofskbcvu2oYMPTbIXVPbDSidn/PYgCu7BdFa9Qn2MMZ66vt8BuaeiPf7sLb6Th
+	z+uFqVXROdduuZQSCxuoSAlu2KZS+Weg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=nEfsi3e9hJGhRVn/s
+	3Xkclcuo+lsriGkX7loXU3CYmM=; b=d7I9d8Td55gDVdwDyP5yETfYV2OWPVKPF
+	vff/dPoFi/B0jb+ThTc1p0pWXxHKttDs0mAm4rJIXnFVlgX1ZTanJ1ST+vXL2ggP
+	wThddAzsKCSWiDfHOwDpOuoRiiYDAsGg5eCePciBM61S0AyrHcawfzF9k0xqENBd
+	Sb3WiAcCzhOby5T+v7Ui4ljrL7njXrENFTM/nTE0Jcc78spy+85s2zAXJMjpIyON
+	mE+ECD0letZg2DvLPgV892y7HbZWgXZ8774A7VN5+iCr+eJgjZxj/NV9UkaRRdeL
+	UZdaQTXxTgdhoJ2ZOrJBWiRgQupwjY8HcPgXFTdPdJoxgWnHxULiA==
+X-ME-Sender: <xms:bHj-YeEKJ7e4eU44jR3blAKQsiQn_QzliPEhAP2zYuDKafCI8FQ5Zg>
+    <xme:bHj-YfXjx3wksdiajqehU7p5MGvZ-Nz5VK42Lh9nmzo7WYCgA2A05T_YkIYgQenPe
+    gblE7J_lE1rOQ>
+X-ME-Received: <xmr:bHj-YYKFJkuE2gZ58a_5aFo9708p_INaaw1cGzFygCrAhx9y2dsFoD8DGwOBgJ6FqOU4GW2CJ-Iroq7kA2cDr6nhw6vOTyST>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrhedugdeglecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
+    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrd
+    gtohhm
+X-ME-Proxy: <xmx:bHj-YYEQFbD_UTymjua3OkZJ4yeffV7-rYSbtrQPmKos1GHJhlXQJg>
+    <xmx:bHj-YUWx-zaeDJcdGrofrBSaeq_Al2NfG7mPtR5gPsKoqyvxRSz3sw>
+    <xmx:bHj-YbMU8UwEc1RxP9oYjVH9PpgUKt2s_5m7mB3GYNvV33B3kyho1w>
+    <xmx:bHj-YWLqYMiaz6RlCnBV1BSYztkzNGaG721d0GCzvcmci3Asj4Xq8g>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 5 Feb 2022 08:15:24 -0500 (EST)
+Date: Sat, 5 Feb 2022 14:15:22 +0100
+From: Greg KH <greg@kroah.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: stable@vger.kernel.org, mptcp@lists.linux.dev,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH] mptcp: fix msk traversal in mptcp_nl_cmd_set_flags()
+Message-ID: <Yf54auq4qLWyJ562@kroah.com>
+References: <20220205010231.189151-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: improve 'fair usage on
- close' stability
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <eb310fd3bdfe3315ff17ebb865fd2f1e2957fd02.1643999595.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <eb310fd3bdfe3315ff17ebb865fd2f1e2957fd02.1643999595.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220205010231.189151-1-mathew.j.martineau@linux.intel.com>
 
-Hi Paolo, Mat,
+On Fri, Feb 04, 2022 at 05:02:31PM -0800, Mat Martineau wrote:
+> commit 8e9eacad7ec7a9cbf262649ebf1fa6e6f6cc7d82 upstream.
+> 
+> The upstream commit had to handle a lookup_by_id variable that is only
+> present in 5.17. This version of the patch removes that variable, so the
+> __lookup_addr() function only handles the lookup as it is implemented in
+> 5.15 and 5.16. It also removes one 'const' keyword to prevent a warning
+> due to differing const-ness in the 5.17 version of addresses_equal().
+> 
+> The MPTCP endpoint list is under RCU protection, guarded by the
+> pernet spinlock. mptcp_nl_cmd_set_flags() traverses the list
+> without acquiring the spin-lock nor under the RCU critical section.
+> 
+> This change addresses the issue performing the lookup and the endpoint
+> update under the pernet spinlock.
+> 
+> Cc: <stable@vger.kernel.org> # 5.15.x
+> Cc: <stable@vger.kernel.org> # 5.16.x
+> Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
+> Acked-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> ---
+>  net/mptcp/pm_netlink.c | 34 +++++++++++++++++++++++++---------
+>  1 file changed, 25 insertions(+), 9 deletions(-)
 
-On 04/02/2022 19:33, Paolo Abeni wrote:
-> The mentioned tests has to wait for a subflow creation failure. The
-> current code looks for TCP sockets in TW state and sometimes misses
-> the relevant event. Switch to a more stable check, looking for the
-> associated mib counter.
+Now queued up, thanks.
 
-Thank you for the patch and the review!
-
-It has been running all night on my side, more than 2000 attempts,
-without issues!
-
-Now in our tree (fixes for -net) with Fixes, my R&Tb and Mat's
-RvB tags:
-
-- c43e2e4ed88d: selftests: mptcp: improve 'fair usage on close' stability
-- Results: 3150c57070f7..1baae8d646d8
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220205T103656
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+greg k-h
