@@ -1,95 +1,206 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E131C2F21
-	for <mptcp@lists.linux.dev>; Sat,  5 Feb 2022 13:15:25 +0000 (UTC)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id E8D605C00DF;
-	Sat,  5 Feb 2022 08:15:24 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sat, 05 Feb 2022 08:15:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm3; bh=nEfsi3e9hJGhRVn/s3Xkclcuo+lsriGkX7loXU
-	3CYmM=; b=FnM9DhAa5TXFN3xNSI4O1qas+HzuL0rsCF/nSAS8fuRAxBmxa8MAyP
-	5HRZl05y4rOVGEMnZRWx2wndaPWYWmdx1raVIQaYY+WUCGKKzTfrKinjk8kPfKa6
-	3FGlnAxfOSyF/8vuIOX8kkTn0lzhXerB3q4dd7HyejW5pWaorZvlarVtEOVWY0XG
-	m+pJww9MQembKoVMa2E0o+20m7I4Kql2svCvRv7d4GdJ3PtwxXuwZC7vSee+gGEl
-	2Lofskbcvu2oYMPTbIXVPbDSidn/PYgCu7BdFa9Qn2MMZ66vt8BuaeiPf7sLb6Th
-	z+uFqVXROdduuZQSCxuoSAlu2KZS+Weg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=nEfsi3e9hJGhRVn/s
-	3Xkclcuo+lsriGkX7loXU3CYmM=; b=d7I9d8Td55gDVdwDyP5yETfYV2OWPVKPF
-	vff/dPoFi/B0jb+ThTc1p0pWXxHKttDs0mAm4rJIXnFVlgX1ZTanJ1ST+vXL2ggP
-	wThddAzsKCSWiDfHOwDpOuoRiiYDAsGg5eCePciBM61S0AyrHcawfzF9k0xqENBd
-	Sb3WiAcCzhOby5T+v7Ui4ljrL7njXrENFTM/nTE0Jcc78spy+85s2zAXJMjpIyON
-	mE+ECD0letZg2DvLPgV892y7HbZWgXZ8774A7VN5+iCr+eJgjZxj/NV9UkaRRdeL
-	UZdaQTXxTgdhoJ2ZOrJBWiRgQupwjY8HcPgXFTdPdJoxgWnHxULiA==
-X-ME-Sender: <xms:bHj-YeEKJ7e4eU44jR3blAKQsiQn_QzliPEhAP2zYuDKafCI8FQ5Zg>
-    <xme:bHj-YfXjx3wksdiajqehU7p5MGvZ-Nz5VK42Lh9nmzo7WYCgA2A05T_YkIYgQenPe
-    gblE7J_lE1rOQ>
-X-ME-Received: <xmr:bHj-YYKFJkuE2gZ58a_5aFo9708p_INaaw1cGzFygCrAhx9y2dsFoD8DGwOBgJ6FqOU4GW2CJ-Iroq7kA2cDr6nhw6vOTyST>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrhedugdeglecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
-    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrd
-    gtohhm
-X-ME-Proxy: <xmx:bHj-YYEQFbD_UTymjua3OkZJ4yeffV7-rYSbtrQPmKos1GHJhlXQJg>
-    <xmx:bHj-YUWx-zaeDJcdGrofrBSaeq_Al2NfG7mPtR5gPsKoqyvxRSz3sw>
-    <xmx:bHj-YbMU8UwEc1RxP9oYjVH9PpgUKt2s_5m7mB3GYNvV33B3kyho1w>
-    <xmx:bHj-YWLqYMiaz6RlCnBV1BSYztkzNGaG721d0GCzvcmci3Asj4Xq8g>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 5 Feb 2022 08:15:24 -0500 (EST)
-Date: Sat, 5 Feb 2022 14:15:22 +0100
-From: Greg KH <greg@kroah.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: stable@vger.kernel.org, mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH] mptcp: fix msk traversal in mptcp_nl_cmd_set_flags()
-Message-ID: <Yf54auq4qLWyJ562@kroah.com>
-References: <20220205010231.189151-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4EB2F23
+	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 03:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1644202871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V7sQuz28xEf48awlILiasbMh0Piygn0oOTDsBreuWUE=;
+	b=R/b2b8nYYdSDIonhQlXFCVcD++WyrmpkYs0yCl89oM1ARYG+AtV4cFdpG9JftK7S5LGGkS
+	4Vz/kQJ41pnaEiXi1nRwtpC4CmdHlOTlGmdH75w5tkV/uXUvxDvXlJuFnBEUwue5hfARTS
+	3n7QdD0G53JmDZygq4NkmH81dwmTX7M=
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com
+ (mail-db8eur05lp2113.outbound.protection.outlook.com [104.47.17.113]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-28-ewFRjV0SM0eM82tSZy_nAA-1; Mon, 07 Feb 2022 04:01:10 +0100
+X-MC-Unique: ewFRjV0SM0eM82tSZy_nAA-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BpE6BsSOtceL7PL5jDU17RjsDKd9MK68uBvu7AxzdLSDW/mbNnIBAvVepXFnKJ9Lnwesv8zCobeKeqTJpEMobOl1UUDWkdSiPZr1fNRT+5XCwGHBndhQejflTtMlQCkb0bgPdyjXHXFj6+YZnjgMv71LY7KgezdEcR6cGD27dW3bjI4huKJtkwmFrs6HEn4htAT9ElGLw2of+lg/mc8psa0+9cWDI3T2RzeOHD10DfjDjwP2NZ2wvGo8ssuXwKPjgTgEdt9PpAzUvfliURQeE7eF2ClmwQW9Wqr9nXNMSRbumPVEZaffP/B0KUBcqIIvEry4cJtB0gJOdO5k0wsgCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V7sQuz28xEf48awlILiasbMh0Piygn0oOTDsBreuWUE=;
+ b=KqjRes6AfULxxoj0PcWAmo0gFguHP3SxiUgxzDW03bOS2qimUuR6uccHys8Conkf76omlqbuxu2N3p3ogpcJJ6fqX3vuRWwCnO8z/072dsCGmIU/qK3M8if+nqc2gO86n4S8XcNUeRQ+c92rWjVWCOv/RA97XXOrHKhSvnNtOCoWBvUFpMQz8yoEAL9mI9WVZgmhBP6nVEov8Puvl0jCugw8hYJB0Q6ho2xD2zSfdM5myy1l2TyTK7Ei/ZMKZwEFwVV4eQWrqkn3HwtakoKM+Jl4BZaoyLImG+vogjXDOpeRZZMYaV5eGNzbaOj3jf4KnhDN4k3H5A99n6itd/F1AA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM8PR04MB7955.eurprd04.prod.outlook.com (2603:10a6:20b:249::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.18; Mon, 7 Feb
+ 2022 03:01:08 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.018; Mon, 7 Feb 2022
+ 03:01:08 +0000
+Date: Mon, 7 Feb 2022 11:01:34 +0800
+From: Geliang Tang <geliang.tang@suse.com>
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: Re: [PATCH iproute2-next] mptcp: add the fullmesh flag setting
+ support
+Message-ID: <20220207030134.GA5614@dhcp-10-157-36-190>
+References: <49c0f49f6aabf0f55a16034b79d30fbceb1bc997.1643945076.git.geliang.tang@suse.com>
+ <20220204101734.1a560400@hermes.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220204101734.1a560400@hermes.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: HKAPR04CA0001.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::11) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220205010231.189151-1-mathew.j.martineau@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c698d3af-11c6-43dd-75cc-08d9e9e61668
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7955:EE_
+X-Microsoft-Antispam-PRVS:
+	<AM8PR04MB795599E51F836147F0AAF46FF82C9@AM8PR04MB7955.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1122;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	6I4RmwnHfjbaE7qRTeB6NPEb3SOQmeee75BYg2Eb8geM99cRxzWhCppEQV1NdoSwzXNQhkubTvS2MOqkpJcw+zB3ANqEAk06UHP6OWvtTfjD3rtj78u35JDhSTp6p0qvGGT2W0tcpbl496cRudCwlISmf3GV6AQGPitaakbFVlC/FGtgdkNOvf3s2hTQFrDRlwIU8tZziAGFWhWeDOiHaePv620jVQht2e6scgsQqHcbaYP0IbStPJUvLugfVX0RHCvnbomWuREJCUmGMK7tdIxEPvOaQwmPQrZdq2+iK5zCxEsAY1JKGzVMeDBEGlJ2fYbTbF3gKxjPi02qPboreT7VcicmcMIcgnpTYGFpcL9FDxwds4aR6EAsRpcBOQ48OMOBImDss1faXIYDUGxxraX2E+tU3edCxaP1LaZJjB/lbjdngZCJaQmALj3yejzY9FWfYH7sFYQNMpFF5DzvXRBKDa+Sx5P2VA9JA+LkoKE7l1HF3jx7YS7smpVK+surBKP6povMfPxIZjqJLyU0oYlNSJCqQV9b/cBgG/gqEIfmtJAaBURnSpDAUfZU7woaTohz56ZGlPtAdxdM706mDviyTmEZNanThel24lnLaESku04RJwNHJxWPovOpTi4PaFqyhMxapMHwUamVXR2V5g==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(5660300002)(6512007)(9686003)(44832011)(33716001)(6506007)(38100700002)(55236004)(86362001)(6666004)(54906003)(2906002)(6916009)(186003)(316002)(66946007)(66476007)(66556008)(8936002)(4326008)(83380400001)(26005)(6486002)(1076003)(8676002)(33656002)(508600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5vziaiYVUBJAiGisU6Z7fpb9Ct1lQZkYtoiW0VtJ/8LxK5X+Ed/EzwvNY75o?=
+ =?us-ascii?Q?7C3NTZ6yOodFEzac7cnWmJ7TA6VGrZZWj2q8J9hfU27ZEYoC6gal2jNk/2bb?=
+ =?us-ascii?Q?4SXjsfWnRCQukzl5PlA7t5LlBPbKb7sOQpl2qg1yAOZOPHocIedR9oa3FlqJ?=
+ =?us-ascii?Q?MXNhXtzOhyujoPkqgNGnQ4k3RX7yPtzwisLmu+3pT3m/uWv6CB2Em1Hf4FI5?=
+ =?us-ascii?Q?Hb7vdqI8sN+bHWOi017LC/jxZuEQDdPqXXl9aWcBLDBrAvHWAisCdunMoaYQ?=
+ =?us-ascii?Q?e/qnIzRtwd3TMCgTYQomPgg6o29+xhAgjRn0WYBHG+CylgyzO/GG9hyPrgzg?=
+ =?us-ascii?Q?U3nDvYi2zSR5EeGBgkAyARSwJ+c0uPUu8KbQjaE52E0nW1gQszf3eSsSG3Cd?=
+ =?us-ascii?Q?qcDCVL81TReN2QGM8bJd1dilgCdZdvF2sLqgtVq4qJmKKHjrMu8PiYMFmQg4?=
+ =?us-ascii?Q?jUV+t2KuKOFqJmxo+dyjK4Seuny6zuEa8Wb2x5Qhmm6j0U8VgrHkisguv23T?=
+ =?us-ascii?Q?oiDMjKJurLHHpINB2811XurdyRgS92bdW/wVzRf55K8BlfaNAoN9cYnuM583?=
+ =?us-ascii?Q?Is90u4Gkkak1Wv2ci1u4dlcB7OLpWyRPWDmPCMYjnLEeOWnCECU9D8IiFDHJ?=
+ =?us-ascii?Q?WHaq0kSduspHr2rDB9U62+RFxAa+NxOT96UZT6dEkvhwzX9Qu3BxUHKvmuDT?=
+ =?us-ascii?Q?5UNGoiLIcg3liXk7z/psd8fcoz2YnCREKexKNyQJA6CA4j1cRk2weKMl4kQV?=
+ =?us-ascii?Q?prVmmQXs2QP/4Fel3/v2sXergP5/kyIxTxUZyaBrL0OZnneXbYH9L+wq8WVp?=
+ =?us-ascii?Q?u98ZkBRj8oOxrzqkvWxaJ0reXa2v+HAIx66wbwRO70Z9jFnZ1M1/oOl6VXLu?=
+ =?us-ascii?Q?BhfmSfzH1o2M3jIlr4rYCGE71KebYi6DeyxHPA+43VMBZP3utnqdpoE9sAnr?=
+ =?us-ascii?Q?XYvTNQX8N4hoNIbjQ1gbuxcRhspkPoX/JcjJv0AeINXIsORwUaITvMmx2T1N?=
+ =?us-ascii?Q?F2aANe+WaZBV4zPVQmq13t2bG2raxpvqYcGA12EKUSpjsWKMv+yb82jgliiQ?=
+ =?us-ascii?Q?wqCCrERM/WF0rPi1kbDrSD1gyNciJVpkXL+Wt1ZBNcvHj6KHUZD1nG515Zjd?=
+ =?us-ascii?Q?c/fRIY0VE9sQA97l7qRtAD3ePTH9ulHPuYLKUwXfnlSsdl1OieakjhnGkPUW?=
+ =?us-ascii?Q?4VeZbPWiFwgE8DWMLR2shgw4Y0wdTBY479/4lkA48hKJeFS00gaO+N4Yw9Bv?=
+ =?us-ascii?Q?j0dfsAnUMUQdBFVg5Rq1vgySo1GJY5GtjFuvzPLFTq0uPEua96Z0g2kJKt4O?=
+ =?us-ascii?Q?ucqh/3KZrKy/V/kcGHg1IedXuouDacDxlMi2qqKJABDtdw5zt6NBSXgQ9ZzL?=
+ =?us-ascii?Q?iSdJG1XRhg86VBEm5RC32mubwsvfUnUz20eI/CBjp9wApR7o5vlC/nlbt3Zu?=
+ =?us-ascii?Q?JrN5Et08nq/oqQ8myHIMJOTbxFLkN4RPspAufhprDY7ycw+ETKzhpf+6eKxi?=
+ =?us-ascii?Q?jzogTZ2OtM7F/kRPx/WCDMWGllMYsKJJqDfx325ac5oxQiYEZF4y+8TZG1E3?=
+ =?us-ascii?Q?tbEDUwOKUJHaERtyPaXadToZo0BVvPUHucutKPy28dKLqT3gt2vBHMiBVAWF?=
+ =?us-ascii?Q?m2z9HT5rgCMCO2d9h3ExcRY=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c698d3af-11c6-43dd-75cc-08d9e9e61668
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2022 03:01:08.1861
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xEMRM9bXD+6/XLJQeS6UNipQsfAdv706p9VVPMliF0yakvLsm2GequOuqhkSR+gKTp7ovm2pwDeWTDoXuDN5RA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7955
 
-On Fri, Feb 04, 2022 at 05:02:31PM -0800, Mat Martineau wrote:
-> commit 8e9eacad7ec7a9cbf262649ebf1fa6e6f6cc7d82 upstream.
+On Fri, Feb 04, 2022 at 10:17:34AM -0800, Stephen Hemminger wrote:
+> On Fri,  4 Feb 2022 11:29:03 +0800
+> Geliang Tang <geliang.tang@suse.com> wrote:
 > 
-> The upstream commit had to handle a lookup_by_id variable that is only
-> present in 5.17. This version of the patch removes that variable, so the
-> __lookup_addr() function only handles the lookup as it is implemented in
-> 5.15 and 5.16. It also removes one 'const' keyword to prevent a warning
-> due to differing const-ness in the 5.17 version of addresses_equal().
+> > This patch added the fullmesh flag setting support, use it like this:
+> > 
+> >  ip mptcp endpoint change id 1 fullmesh
+> >  ip mptcp endpoint change id 1 nofullmesh
+> >  ip mptcp endpoint change id 1 backup fullmesh
+> >  ip mptcp endpoint change id 1 nobackup nofullmesh
+> > 
+> > Add the fullmesh flag check for the adding address, the fullmesh flag
+> > can't be used with the signal flag in that case.
+> > 
+> > Update the port keyword check for the setting flags, allow to use the
+> > port keyword with the non-signal flags. Don't allow to use the port
+> > keyword with the id number.
+> > 
+> > Update the usage of 'ip mptcp endpoint change', it can be used in two
+> > forms, using the address directly or the id number of the address:
+> > 
+> >  ip mptcp endpoint change id 1 fullmesh
+> >  ip mptcp endpoint change 10.0.2.1 fullmesh
+> >  ip mptcp endpoint change 10.0.2.1 port 10100 fullmesh
+> > 
+> > Acked-by: Paolo Abeni <pabeni@redhat.com>
+> > Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > 
-> The MPTCP endpoint list is under RCU protection, guarded by the
-> pernet spinlock. mptcp_nl_cmd_set_flags() traverses the list
-> without acquiring the spin-lock nor under the RCU critical section.
+> I don't see  any parts in here to show the flag settings?
 > 
-> This change addresses the issue performing the lookup and the endpoint
-> update under the pernet spinlock.
-> 
-> Cc: <stable@vger.kernel.org> # 5.15.x
-> Cc: <stable@vger.kernel.org> # 5.16.x
-> Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
-> Acked-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> ---
->  net/mptcp/pm_netlink.c | 34 +++++++++++++++++++++++++---------
->  1 file changed, 25 insertions(+), 9 deletions(-)
 
-Now queued up, thanks.
+Hi Stephen,
 
-greg k-h
+Thanks for your review.
+
+We use the 'ip mptcp endpoint change flags' command to set the flags of the
+given address. It's a little strange because we use 'set flags' in the
+kernel space (like MPTCP_PM_CMD_SET_FLAGS, mptcp_nl_cmd_set_flags), but
+'change flags' in the user space.
+
+Before applying this patch, we can only set the backup flag:
+
+> sudo ip mptcp endpoint add 10.0.2.1 subflow
+> sudo ip mptcp endpoint show
+10.0.2.1 id 1 subflow
+> sudo ip mptcp endpoint change id 1 backup
+> sudo ip mptcp endpoint show
+10.0.2.1 id 1 subflow backup 
+> sudo ip mptcp endpoint change id 1 nobackup
+> sudo ip mptcp endpoint show
+10.0.2.1 id 1 subflow
+
+The commit 73c762c1f07d ("mptcp: set fullmesh flag in pm_netlink") is
+merged to net-next recently. It added the fullmesh flag setting in the
+kernel space.
+
+We need to let the fullmesh flag not be blocked in the user space. So this
+patch added this code:
+
+ +                       /* allow changing the 'backup' and 'fullmesh' flags only */
+                         if (cmd == MPTCP_PM_CMD_SET_FLAGS &&
+ -                           (flags & ~MPTCP_PM_ADDR_FLAG_BACKUP))
+ +                           (flags & ~(MPTCP_PM_ADDR_FLAG_BACKUP |
+ +                                      MPTCP_PM_ADDR_FLAG_FULLMESH)))
+                                 invarg("invalid flags\n", *argv);
+
+Now we can set the fullmesh flag like this:
+
+> sudo ip mptcp endpoint flush
+> sudo ip mptcp endpoint add 10.0.2.1 subflow
+> sudo ip mptcp endpoint show
+10.0.2.1 id 1 subflow 
+> sudo ip mptcp endpoint change id 1 fullmesh
+> sudo ip mptcp endpoint show
+10.0.2.1 id 1 subflow fullmesh 
+> sudo ip mptcp endpoint change id 1 nofullmesh
+> sudo ip mptcp endpoint show
+10.0.2.1 id 1 subflow 
+
+This patch also added the related flags checks and updated the usage.
+
+Thanks,
+
+Geliang
+SUSE
+
