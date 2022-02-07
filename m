@@ -1,157 +1,188 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A392F25
-	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 10:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1644228352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=byGlWWJr4zCoKYrMZO+CXYt1YLM8sJbM1TZVH5L9nO4=;
-	b=Th7Uap8k6rwRD1w+Hbaf4GtPARsjxLkse87zs8qbTR1xbWIAEfaHNo1Y2M81jrZs2i4ABn
-	nMWMB2doKaiKuN570SVHE4HmNoKFAIbQ/0YzLaf/GT8A/QWORFeonULXwSgFCjiyI9yp8m
-	++/okSuuN9cheA5UOBhkAlApmGKlCeo=
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com
- (mail-ve1eur03lp2055.outbound.protection.outlook.com [104.47.9.55]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-15-dLKqIHUGO2u566zZ05YA3g-1; Mon, 07 Feb 2022 11:05:51 +0100
-X-MC-Unique: dLKqIHUGO2u566zZ05YA3g-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nh8KNwgiIpRKXKFOY1I/YrOiMVKyFZ8ngmcHk6ApspsoeRAhBqUhdk0c7g2l6zEyntZO+zu0w/N4HWlfxajJD4FSjZouPkRwoOkV3M1N1pSXQ92dlrlE/p9pWCZxOIKqHpHVqiOrbWFAi8U3sMx4XdVfL9Ch5jr3y3ZjYkzm6o9T5YupWlNFlheiswxw/Ez/FQsexLB7IuH98hNR+4vh/OIBr3M47sRm8T1YTSBQWD31OvDXKqClkeIeEMoOg4VBF3Qee4Qyp61cPUXN+HKQkOv9DF8MPloROtjVTwXSGbu5DplZMH85KxePTHKGMmKc3wvPpZgJRBJz2rrvoXHVbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ABPpALYrifrtJvcbG82SZUXwan1C6AY7v6xL8F7wQi4=;
- b=JwcmiKrlP5aBVVHmXQ8JAVJk0S5k/3M3cnjxHiZUe8miMO3WnqpZAW5tuIMr2YqIbzxKiRR7/724KA2qqVsw2dfDPZmcCGzeiOHC3qu7U/62ONz3s+c7MmG9i+PT8gABM6Dgl8gGZCYRJLBo5OznG5Fh5cyXLRX95IqgS0MhLb5MdI5FvEd1bfqjBTRdFr0GucwpiT7WvJZ4LNsaHdCDjxf5d8O3vSikk5ElzzTpbuuOvvT/2rz34NapMpcDm0vdJWGbfPzXHJqg4lteyb/14cwazVcvSt+jWwDstrSdZ6fk1z5/1kIGKS+HtIwbQ0QbXnZetIL/Pc8OaPAkZnLjEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AS8PR04MB8738.eurprd04.prod.outlook.com (2603:10a6:20b:42b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.17; Mon, 7 Feb
- 2022 10:05:50 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.018; Mon, 7 Feb 2022
- 10:05:50 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] mptcp: drop unneeded type casts for hmac
-Date: Mon,  7 Feb 2022 18:06:08 +0800
-Message-ID: <5ea29fecc4db9bc0a9a9d5d10e0f2a61d645d46c.1644228345.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.31.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0152.apcprd02.prod.outlook.com
- (2603:1096:201:1f::12) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DE52F21
+	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 10:32:08 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id f17so11822912edd.2
+        for <mptcp@lists.linux.dev>; Mon, 07 Feb 2022 02:32:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=/92UXA6uhQdPssvccHqLkhG+EYfYtHnCSVqGZLIj06U=;
+        b=hrw9jTR0NWk56xXxiM4iw2bC0xNcOXnIbIMSzz6TvnNwB9izoE2q6loF0EZ2g8wxfX
+         KycD1mID8WhRvLnlgtxHbUCtVEc3l9Z8598eUxcbOC0PNfB5Nw42CcrIrvtZRTimor74
+         FdYmmI2wQ+v8Xfmld+KziUJuOSFKlqx0uYYKYyJOd/ayGo2wDfTxj+JxcNLLeuRZBsrH
+         WYs3og7/98doGitCkAaddSo6JM6OXQU0n6Fy98/Z9MWsNKYf2MH1eZ7P6oyrSB3tVFc8
+         4MD88rpxueo9JR3gp1/xLr1gyid/zUozgq/IZH02tIQ5WXtsT7tx4Y8/+E5MoYPxYM8L
+         DiNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/92UXA6uhQdPssvccHqLkhG+EYfYtHnCSVqGZLIj06U=;
+        b=XKzq3TRHWlJj0jPU82lgHRF2E/UR0wKWfYkNo7p/aKN3MrugkRNuCFNNpdrL5Y5mjE
+         zXPJQ47cyYio9GlcQSnrwsdYrFZiK1wS+1pYH7zruYQtvDR1p+xqKSCmTOLCKLqTMJzU
+         /42cB38wV+lyFkotKZgT2DL6wxUxYS9cCm4spscJVrbWzMhYkXh696qWZzYTVO/wA9Ay
+         ZTADRO+G4A7RNyDOxVxQndxocdfarag3GzaYOgcuYUpPTogWbIG8Vyy5UpChgxpSTBOn
+         qAMxz0qWUo5WhWI4kYkihbsfEd8gDXozKDHpCWpyhdinDSxaDljrgIkhboSLiGeqaQt2
+         1Dpg==
+X-Gm-Message-State: AOAM532fCXY9fNOIQXTpg26dQ3netDTEYG1eug1r8PZwH9Dl4O9poIbZ
+	v4S1xgpDWnTut+544rUPq37P7g==
+X-Google-Smtp-Source: ABdhPJyAsPa0j5M/AiAE7jf++SuNSZ+zWYJP6zpV1/lqcTXSaGRj73OoSIb3FDOqSWhHLddqfmeFPw==
+X-Received: by 2002:a05:6402:b9c:: with SMTP id cf28mr309921edb.295.1644229926725;
+        Mon, 07 Feb 2022 02:32:06 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:94a3:2519:1aae:2576? ([2a02:578:8593:1200:94a3:2519:1aae:2576])
+        by smtp.gmail.com with ESMTPSA id bo9sm446555edb.29.2022.02.07.02.32.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Feb 2022 02:32:06 -0800 (PST)
+Message-ID: <eb33b5d3-a6e8-55d0-a149-c045ec2ecab5@tessares.net>
+Date: Mon, 7 Feb 2022 11:32:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fd7f2013-3c23-4bab-01e7-08d9ea216ac1
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8738:EE_
-X-Microsoft-Antispam-PRVS:
-	<AS8PR04MB87383778E71CBD4673D3D5A1F82C9@AS8PR04MB8738.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	33Z3dAzuUEXc3V4Bs0VlTQav3f2/dhHqQKa6Rqj1BtH+BZlk2M/FekQdT+a+sJlaWi/KfLKD7rnjFxYchNe13IW4duGm/30A6nCQu3wGVNwrEDjfFiKUglKtfznhTe9XQSkhC9RiS7kH/zI8St9LY5bQjfDMiSkH5QNKDbYHJnIgSFUM9lRvWoeVm2627+l1VWEA+bY5uAYPQa9txOIynUf5XnbjzT0pdLqs8A8gGc+YN04TYTa2DiSdKPpEzL1flZwIi19DpF4KEc88lfz6jCxGm5cnIW+/OkTYdNGX3LJYs2BgRy31asfl0/4/St52XLjHDejbWx3JpNi/L7caewewAvWtfuVs0PDapDkVlSyVbDNjia5aGOkvR23q2UU6/h3vQjRBkpN92FQCnaqivMGHXRt66SqM24LgSnHX7Jbs0kdfIj31XoGeY0bkGH0Dskj7zQ9Ize8Buwq+DJHX12upqMYrTtMrt93SfVWI8Jo89S6cpcp9RR1hXSV3WeLz1k1KB6PZEGNkTKNoSW3K5GUA3CqSdlg/itrTQ2tm/FqRB7NOWikY89KQUWZ2YXv7tiC25xWq1ZOrj/u5+mZX44G3A8G0a9w6XB5dnojx0pX6bhAMHIjc550ONgUslz/Q22+c4aiyET7HqPpOBDa/rA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(44832011)(66556008)(38100700002)(8676002)(66946007)(186003)(26005)(2616005)(66476007)(8936002)(5660300002)(55236004)(4326008)(83380400001)(86362001)(6666004)(508600001)(2906002)(6916009)(316002)(6486002)(6512007)(107886003)(36756003)(6506007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GVWPs+mHRvNXlzAi3SGH8JIE4DgESAnEPypaZaXi0qFTEuPR2WUcYn6Ik0Jw?=
- =?us-ascii?Q?WuzAQ5+gEMDoe0HDiTUvWlhGdggROP8HOujCPt8WlIa6R/2RLA6yOd5jwA85?=
- =?us-ascii?Q?lWLTu/zKW2igN1WgMTMHjW75gOHiOJbN/NlREkk90NoTB7l72oMKglLtdAfP?=
- =?us-ascii?Q?w/Hv4a3nfp9cEW4NwO5ftF6vh8bRpCZzQ0h7Tm5IPRpPiP8MpDW5nKaL/ptU?=
- =?us-ascii?Q?+1dAhcQJq+bNFpbitPhUld3HIvV3nvRMia1q02BxJVZxeCt+O8keOASGH1t2?=
- =?us-ascii?Q?9weMBLlDJ6BI48igtBUInjQ/4BkCnj02mB9FixU0QT4pn0GsdF3vkz1sYw2q?=
- =?us-ascii?Q?W+F//qYwjAnnsrgg3NwdL3JxEQzAnFezFguN/biybOgdmM4eKd0b69WuL6Om?=
- =?us-ascii?Q?vKpzVPKCacwZL7oXP1KTVzk49gYVu3GbnTUv5LNSlznzpaMwdAYRlQ9Q+M2N?=
- =?us-ascii?Q?R55UupFA1B5KsPaQjZdIhUt9VwIJVMFFcN28FelbS0PuuBR+O48GsREWxoX1?=
- =?us-ascii?Q?4Q2tWa2qAV7Se87zLZ7+9KleeZ9wYS6ebAzhnhRpxq5M7EYvMxzlZVRcpbJ7?=
- =?us-ascii?Q?n3dXepYBRQxzkHW2Z50Eo7w9Dir9XeF1WvNX6k0UCEV4YwW3Xq9bd1ORep1w?=
- =?us-ascii?Q?EMeasKftfpxQQgiVyRw8yaZb1qjootnNJ/gGgEVhQvzjZIDHaBN+abtK5Z/3?=
- =?us-ascii?Q?5XhL6X972IXO8QVE7E5FJ0OQp53qTZzLePOFlWHP9E9+8suQdpCxUcIxjzcI?=
- =?us-ascii?Q?YU+t37ggqfKFIzRgr68tYDU8QdzwOTEQAJfLYaC1BnfNcrCnUNAABWzuf7I5?=
- =?us-ascii?Q?vR0JqS6nNk9QYzcvCNor8djGGljuqFnqEKo4v1N0FOxa2aoAVKa++k+I6vDi?=
- =?us-ascii?Q?g5PqtqMiluECr/41B3xT9s0dqyYWzSeSM996fPxzmN2gPUjmAK13/v1gM+6D?=
- =?us-ascii?Q?yTcZW4SGCu+g/8/GztwROyYn9MRHPWvq48qbb29DDBHsQDQwkK9iQJ3Yhola?=
- =?us-ascii?Q?9s2kR8g0HlOjFKoCyA8hFzXXlysNwUuEa10O/nP2QJo4c4UnrquI1vHxV5xm?=
- =?us-ascii?Q?p93wrV6nsSrEeTTnDly+bpeoIWiFyF8II4EiPXhRKZalIGHO3WFgOfgTFeqQ?=
- =?us-ascii?Q?VLi832/yLhddvyM63b4m6CGOhYeCYPDu52+yRTaXcaRXNROhBxaa++/qKh/B?=
- =?us-ascii?Q?NnCHZptouGxIIAyEKeGLZZUq/RaaPOttod/tmp8LXvYg/OMCNwtl+Grl2Beh?=
- =?us-ascii?Q?9KotFr837iSmFoMSMFzguo9uFCbmj82mjnKRcZDd8fJn+kGXVFm29AWA0x1i?=
- =?us-ascii?Q?2ugFjx12X2gYOMMl+Ut1R+1W4J7yMsgZug0zbiaTfla4DTcI/PWTxHPPC3gm?=
- =?us-ascii?Q?VlXaguSsRfPhhsspnj0thuNkX3stAcjBO/zKeMzi807EjIeZwccCrjBY3est?=
- =?us-ascii?Q?11EK60DniSlM8D0WdqxdRYQu3CgFeNZO+xeJdcawhOeBg9wrKG3SsZZbvLjp?=
- =?us-ascii?Q?rMDc9TmGwj/5HQ23BoNg8kFQEs2OGsiazQdr2CDpz+aaesc2JnSX3dGnkT1T?=
- =?us-ascii?Q?Zc5CH/uOQ7Gsq0t984Rh8US+pR2HUSm7eATbVmxuRIOBnC4cqtFTus8iaEe4?=
- =?us-ascii?Q?4UCHHH/am2c3GkWfJEacAhw=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd7f2013-3c23-4bab-01e7-08d9ea216ac1
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2022 10:05:49.9708
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KSP1snuBydz25k9RM5kyWizBXF/WUKoGVP8MNWs/UWSXhuHobJ1U5YcJE3LhZoteomJuyqYkrSwUjyaN22pDoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8738
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add mp_fail testcases
+Content-Language: en-GB
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Geliang Tang <geliang.tang@suse.com>, MPTCP Upstream
+ <mptcp@lists.linux.dev>, Davide Caratti <dcaratti@redhat.com>
+References: <cover.1643110285.git.geliang.tang@suse.com>
+ <064cfe306debc535413c1d39fcf3b8d24a959eeb.1643110285.git.geliang.tang@suse.com>
+ <b4708d63-29aa-da51-f536-3b5bf5399221@linux.intel.com>
+ <a5500825-43a0-93c4-ba92-f3a24d4a202c@tessares.net>
+ <CA+WQbwtY-qKu+_yNGcq3g5wDu7ZD0WwpSDbT7n1SLdw0ZtxwrA@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CA+WQbwtY-qKu+_yNGcq3g5wDu7ZD0WwpSDbT7n1SLdw0ZtxwrA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Drop the unneeded type casts to 'unsigned long long' for printing out the
-hmac values in add_addr_hmac_valid() and subflow_thmac_valid().
+Hi Geliang,
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/options.c | 3 +--
- net/mptcp/subflow.c | 4 +---
- 2 files changed, 2 insertions(+), 5 deletions(-)
+On 07/02/2022 05:13, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Matthieu Baerts <matthieu.baerts@tessares.net> 于2022年1月29日周六 01:04写道：
+>>
+>> Hi Mat, Geliang,
+>>
+>> On 27/01/2022 01:07, Mat Martineau wrote:
+>>> On Tue, 25 Jan 2022, Geliang Tang wrote:
+>>>
+>>>> Added the test cases for MP_FAIL, use 'tc' commands to trigger the
+>>>> checksum failures.
+>>>>
+>>>
+>>> This patch is working well with the inverted byte detection, thanks!
+>>
+>> The public CI seems quite happy with the new version, good work :)
+>>
+>> Here is its report:
+>>
+>> ====== 8< ======
+>> Our CI did some validations and here is its report:
+>>
+>> - KVM Validation: normal:
+>>   - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
+>>   - Task: https://cirrus-ci.com/task/4993794666921984
+>>   - Summary:
+>> https://api.cirrus-ci.com/v1/artifact/task/4993794666921984/summary/summary.txt
+>>
+>> - KVM Validation: debug:
+>>   - Unstable: 2 failed test(s): selftest_diag selftest_mptcp_join 🔴:
+>>   - Task: https://cirrus-ci.com/task/4682233209421824
+>>   - Summary:
+>> https://api.cirrus-ci.com/v1/artifact/task/4682233209421824/summary/summary.txt
+>>
+>> Initiator: Patchew Applier
+>> Commits:
+>> https://github.com/multipath-tcp/mptcp_net-next/commits/c52e51136372
+>> ====== 8< ======
+>>
+>> But if you look at the logs [1], there are probably 3 last things to
+>> improve:
+>>
+>> [1] https://api.cirrus-ci.com/v1/task/4993794666921984/logs/test.log
+>>
+>> This line is repeated 90+ times:
+>>
+>>   tc action pedit offset 162 out of bounds
+>>
+>> (we talked about this one at the last meeting with ideas on how to
+>> reduce/get rid of them)
+>>
+> 
+> Dose 'tc + iptables' work for our case?
+> 
+> Use iptables to select the packets with enough data. Then use tc to
+> edit the selected packets only. (I don't know how to do it yet.)
+> 
+> Here's a link about this:
+> 
+> https://wiki.archlinux.org/title/advanced_traffic_control#Using_tc_+_iptables
+> .
+> '''
+> Using tc + iptables
+> 
+> Iptables has a method called fwmark that can be used to mark packets
+> across interfaces.
+> 
+> First, this makes packets marked with 6, to be processed by the 1:30 class
+> 
+> # tc filter add dev eth0 protocol ip parent 1: prio 1 handle 6 fw flowid 1:30
+> 
+> This sets that mark 6, using iptables
+> 
+> # iptables -A PREROUTING -t mangle -i eth0 -j MARK --set-mark 6
+> 
+> You can then use iptables normally to match packets and then mark them
+> with fwmark.
+> '''
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 7b615dc10897..670364cd455f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1085,8 +1085,7 @@ static bool add_addr_hmac_valid(struct mptcp_sock *ms=
-k,
- 				      &mp_opt->addr);
-=20
- 	pr_debug("msk=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
--		 msk, (unsigned long long)hmac,
--		 (unsigned long long)mp_opt->ahmac);
-+		 msk, hmac, mp_opt->ahmac);
-=20
- 	return hmac =3D=3D mp_opt->ahmac;
- }
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 88ee94adc38c..485f00dcaf84 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -344,9 +344,7 @@ static bool subflow_thmac_valid(struct mptcp_subflow_co=
-ntext *subflow)
-=20
- 	thmac =3D get_unaligned_be64(hmac);
- 	pr_debug("subflow=3D%p, token=3D%u, thmac=3D%llu, subflow->thmac=3D%llu\n=
-",
--		 subflow, subflow->token,
--		 (unsigned long long)thmac,
--		 (unsigned long long)subflow->thmac);
-+		 subflow, subflow->token, thmac, subflow->thmac);
-=20
- 	return thmac =3D=3D subflow->thmac;
- }
---=20
-2.31.1
+Good idea, probably simpler!
 
+I guess we can mark some packets in POSTROUTING and modify the egress TC
+rule.
+
+Do you need a hand for that?
+
+>> But also this one now, repeated 40+ times with different offsets:
+>>
+>>   file received by server has inverted byte at 106565
+>>
+> 
+> These inverted byte logs will not be there if we add the code to drop
+> the bad data in future. (I haven't figured out how to implement this
+> yet.) Right now, just let them be there.
+
+I see. I guess later, when the code to drop the bad data in the future
+will be ready, this "warning" will become an "error" we will no longer
+ignore.
+
+>> And one last thing, we can see that now we have more than 99 tests, the
+>> alignement is no longer OK :)
+>>
+>>
+>>   # 101 1 MP_FAIL, single subflow            syn[ ok ] - synack[ ok ]...
+>>   #                                         sum[ ok ] - csum  [ ok ]
+>>   #                                         ftx[ ok ] - frx   [ ok ]
+>>   #                                         itx[ ok ] - irx   [ ok ]
+>>
+>> A very small detail, up to you to fix it or not ;)
+>>
+> 
+> I'll update this in the next version.
+
+Thanks!
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
