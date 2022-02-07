@@ -1,104 +1,103 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881CB2C9C
-	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 20:23:58 +0000 (UTC)
-Received: by mail-ed1-f50.google.com with SMTP id f17so15565908edd.2
-        for <mptcp@lists.linux.dev>; Mon, 07 Feb 2022 12:23:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=4ph6trIdBD+9MR2S5liKDSb97sVacQQDJTgOgycAtGQ=;
-        b=s7eATdPaeRxfPiNVfpQLA5lIuz3SNy7GHZIUU5IVFCYTUDM3MO2tqOmOKVTh688c6w
-         ZtdE4luyJjJRrGtZtwUM1WP8ShiNpwGerKUZeMFPBThEEZSPmSOdNPmWfD8J6aC4Jc1n
-         M08GRfvyPtu9gcZAgUeR+7xA3TTXZaAOjn0RsEr0H36JNSMtGPUlFbm7qa61YP1dnZSk
-         6DUOTwf6YhkAG5JSBw2lG2rIByAlRF1RNFuH1P+AMTs+bBuwZZOfjjo2+1EJHc63hGWx
-         n/JOGrLDFszCVqhXeRg82IWBCL7+5WQrhHm2okKIFJUr2UmRQtRTJxlyJ4yDgHBK1xCV
-         Spyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=4ph6trIdBD+9MR2S5liKDSb97sVacQQDJTgOgycAtGQ=;
-        b=StD8Z1XDxaLzBQ0FkGfgm9VVgxl2RiO9FDQTxd0QJdmCdYn4kvbeRsnJ9a0m8Rs3vM
-         mDWRVMzbWkKGn/bU/iEI3oC9HF9o35ZXQW+uZ++NvnnsTVru7t5s370beL8bVZtgt5Kl
-         BTc4RsyNtFLaJSAMPUVRYDpkLr0wtizP2JuuMBxNuyHrmAQ+3M9FFr9bbxEuI3Zq31D5
-         IjM+tvg++5akva0N/9b5Uy/X/ld9h81nYrFQ0zwwhDE2SWimKUxuRTvUICXE07Epi9xH
-         CPNiQTZSGklwZV6cyOJdti1tXkJvxYn3yNn4W7aggNrMI5xkkc3L2aG0LnByEj57fT6m
-         AcsA==
-X-Gm-Message-State: AOAM532YnuKRVNTIMbh5oFXG8m5L5gwEb3nkYB5eTgDlk8QElDxWbVXa
-	R8Ivlq1b8ItwR1DNh+u/T84Su1sx4hEHyN/SM88=
-X-Google-Smtp-Source: ABdhPJwPDy4yx8VgWPpVtg38AWLFgmvQU4KhUtEeOccIoUnVuNYObpeE3U+iDrR1gCIJtngoPceEdg==
-X-Received: by 2002:a05:6402:34d3:: with SMTP id w19mr1162211edc.377.1644265436539;
-        Mon, 07 Feb 2022 12:23:56 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:c5d8:4d2c:64dd:bf38? ([2a02:578:8593:1200:c5d8:4d2c:64dd:bf38])
-        by smtp.gmail.com with ESMTPSA id cz12sm690834edb.30.2022.02.07.12.23.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Feb 2022 12:23:55 -0800 (PST)
-Message-ID: <785a3195-7fec-5809-f632-8a97714d84a9@tessares.net>
-Date: Mon, 7 Feb 2022 21:23:55 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7FC2F25
+	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 20:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1644266398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kKEnrjIVAYGeLAO9DikDPixTa5gigsiEuDD5Sm8ad6Y=;
+	b=YInI8qGQX/WKvUUM7MQi6D2fsI8iyPMQKcwR7DcLFrwA17lQLPzB/c/l5onS7GNGBU5CUt
+	7Fi3nmVdh/h8fgY8DBqvURVqynSTo80mkcZrrQ9zN4mVbDcQ695Wky8RQQKddOORIYu5ru
+	EIPrNyYkMyPd1+zp+WqSugrSqZLMRbQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-444-mt7ZJNLcOza21wV0SVJoMg-1; Mon, 07 Feb 2022 15:39:56 -0500
+X-MC-Unique: mt7ZJNLcOza21wV0SVJoMg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC299108087A
+	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 20:39:55 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.205])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3F5583AF4
+	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 20:39:54 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: fix race in overlapping signal events
+Date: Mon,  7 Feb 2022 21:39:49 +0100
+Message-Id: <c5d17a37b8ad315e72dd8551e148017a66987f7f.1644266387.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: increase timeout to 1 hour
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <20220207100022.3936015-1-matthieu.baerts@tessares.net>
- <4fc5f913-3a8-38a0-7898-8949472c83ec@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <4fc5f913-3a8-38a0-7898-8949472c83ec@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Mat,
+After commit a88c9e496937 ("mptcp: do not block subflows
+creation on errors"), if a signal address races with a failing
+subflow creation, the subflow creation failure control path
+can trigger the selection of the next address to be announced
+while the current announced is still pending.
 
-On 07/02/2022 20:49, Mat Martineau wrote:
-> On Mon, 7 Feb 2022, Matthieu Baerts wrote:
-> 
->> With the increase number of tests, on a slow public CI with kernel debug
->> settings, it has been observed it can easily and regularly take up to 45
->> minutes to execute all tests in this very slow environment. The slowest
->> test, mptcp_join.sh takes ~30 minutes in this case.
->>
->> In such environments, the selftests timeout set in the 'settings' file
->> is disabled. But because other similar environments can be used to run
->> MPTCP selftests, it is certainly better to increase the timeout for
->> everybody else to 1h.
->>
->> Most of the time, running all MPTCP selftests takes around 5 to 10
->> minutes on decent environments and the slowest test takes less than 10
->> minutes, the current timeout.
->>
->> The timeout could be disabled but it is always good to have an extra
->> safeguard, just in case.
->>
-> 
-> I agree that it's good to have some timeout in place for our tests. An
-> hour seems like a lot, has there been any feedback from others with CI
-> as slow as ours?
-> 
-> The largest existing selftest timeout is 1500 (net/settings), and
-> looking at the kbuild logs it takes their infrastructure 28 minutes to
-> run the net tests and 11 minutes to run the MPTCP tests. What do you
-> think about a smaller timeout increase for the MPTCP tests?
+The above will cause the unintended suppression of the ADD_ADDR
+announce.
 
-I can, it would be enough for my CI. But not for a setup like the public
-CI where mptcp_join.sh tests can take up to 30 minutes and it keeps
-increasing.
+Fix the issue skipping the to-be-suppressed announce before it
+will mark an endpoint as already used. The relevant announce
+will be triggered again when the current one will complete.
 
-But if you prefer, I can double the current value and that's enough for
-my case. What do you prefer?
+Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/pm_netlink.c                          | 10 ++++++++++
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-Cheers,
-Matt
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 93800f32fcb6..fb8d4bfcfbd6 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -546,6 +546,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 	if (msk->pm.add_addr_signaled < add_addr_signal_max) {
+ 		local = select_signal_address(pernet, msk);
+ 
++		/* due to racing events on both ends we can reach here while
++		 * previous add address is still running: if we invoke now
++		 * mptcp_pm_announce_addr(), that will fail and the
++		 * corresponding id will be marked as used.
++		 * Instead let the PM machinery reschedule us when the
++		 * current address announce will be completed.
++		 */
++		if (msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_SIGNAL))
++			return;
++
+ 		if (local) {
+ 			if (mptcp_pm_alloc_anno_list(msk, local)) {
+ 				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 007223364718..ba32ea616206 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1341,7 +1341,7 @@ signal_address_tests()
+ 	pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
+ 	pm_nl_add_endpoint $ns2 10.0.3.2 flags signal
+ 	pm_nl_add_endpoint $ns2 10.0.4.2 flags signal
+-	run_tests $ns1 $ns2 10.0.1.1
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 	chk_join_nr "signal addresses race test" 3 3 3
+ 
+ 	# the server will not signal the address terminating
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
+
