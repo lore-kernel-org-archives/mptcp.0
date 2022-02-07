@@ -1,168 +1,248 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C5B2F23
-	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 04:12:54 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id y9so3905811pjf.1
-        for <mptcp@lists.linux.dev>; Sun, 06 Feb 2022 20:12:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gv3QFX/3/rleXnqRKZrlroe9dICIgF6nDnbL97/G2Tc=;
-        b=QnCYVX/IZGVJclgXxtNWt3XJj8LA89/c6/3zvofueZHIxm47wEJH64DKZ+9FcMuux0
-         cwFkvqqXPOzxlI1mme3IibnLIsb4Ia9VAHPIBgD+tCKz7ZBVZKGZtc/lG5SJ6NnrZIFQ
-         2ggI94a2BVPR4k4ug76xqP5ZFrWYKxApmGweMCoMShRA05zrtNybxBv/ku6qPSBAUTzs
-         z/bUMVCSckPf9WgRJTht0CVWNZ/f0vu9QV7bVw6C3WOhrtFLKuA6qo/JCS/ivsm/rP74
-         WqoUpKcoATZqqJPoIuPcMrA8Cp0loSSpNn+EkNglkGJzRIglB2AaD56od66F1MiLk77C
-         H4WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gv3QFX/3/rleXnqRKZrlroe9dICIgF6nDnbL97/G2Tc=;
-        b=4dx4QY+UQsX+j3OPyTF3z2gGmfIyPHuFPgGw+7ta7TsPop9RY/D4GNSHuDKRQRvmsM
-         h3SfGMZkLCCw8WbM2Lot1KtcT7DqJAlh+uq+n3xIRyEuzn9I15rnaXBIYgrpwR7tSGJJ
-         sTGcg+EeXxyjMykIGdFb7L1k0Ea6LtLFpN9TDDPIDm60eLOEoGSktIsXRTE4M/nskiO8
-         D6zOtuQrTPTU6Lco+f6f7qhTLtoF5dTEd5pi3GDXhGRjWXKAtZSyK6py76FeeqVEpg1e
-         iaRE5EWSzQ0OVCUaHERryJpG+o3X0wKPthosMpLHiD7l0GimTA5jaBYLzk4fgOFD79fY
-         it1A==
-X-Gm-Message-State: AOAM530Yr/TwDUq0FuKF5NMFm6F/Z9muCUXzEd+BKHp24sTJjupX2kpu
-	Ii++Z5mt9pROJBhSbWFxU9nC24cmkefV/Oa7nJg=
-X-Google-Smtp-Source: ABdhPJyMy9mLob1kcfXklRdsKoTfPLhKZl+nBvCn9LJTIdp8BlzV9hR6LYyLpeeUy4kqfkXi3zpr0zAdvddGUgl9lRI=
-X-Received: by 2002:a17:90b:1806:: with SMTP id lw6mr16399289pjb.82.1644207174229;
- Sun, 06 Feb 2022 20:12:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ED72F26
+	for <mptcp@lists.linux.dev>; Mon,  7 Feb 2022 06:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1644214555;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kQ0TOix5PW0TvgCPCY+H83LucpGq0tGnWPGJ/LMqkZY=;
+	b=YdHcS8k3io0XjZuosXbSXC2BEjtT3mPbrXdNex0Jpv5mbhaY62GDwbohexjC+Fr4o1TqBG
+	igp4TjgEqBPcsjzm+7ZeSVdrmoXgVBjcdNwijeAxZ91TrD/lTofqyT8rFib/6MgWg9epdi
+	3LXBmt4hFIuGXvMFyqlAqYMRXW767c0=
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com
+ (mail-db8eur05lp2111.outbound.protection.outlook.com [104.47.17.111]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-35-kZ7DrOwWOXKD9XnmwVL20A-1; Mon, 07 Feb 2022 07:15:54 +0100
+X-MC-Unique: kZ7DrOwWOXKD9XnmwVL20A-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DdC/cZvYHeTWi4gonF+lf4ZIccVJ1qDym3WgooNFY43aYTlqPHigfkmTdkHD/EpE/fXfeKNHo0WagFWaO5oKXpUcsMw7+rP8DDGmrsRVwdJ934R6Q9f/GebNL/+4rcAvA/jYDw+pAS13PAepErhOHuhmTEFunhpOZOumkgwicINog76YrXjENA/mLnKISHK2D06cejjyZfmejH76eMDi3tFiRhposyj+Ko3ClawIshkZ7VN/X5+wrsDO220v279134ftwNGnbzoSIUetUzmnt8dDDK5TaH5cpFs/Rl3xsyZu/1gZ5SpxXNCjLVuOH4V13II5vn+5WX4N3dHF8MVOMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JLHu91fK/oKR32tnLss/vVaMG8WO670+iRD6OFQE3bg=;
+ b=jTeHIxK8Gculwtg/F4cOdwBdY1vaQru8d/U23pSaUbhszTNHOh90PoTV1HmJX4VaMBIEbxjdlvlzN4qutvamVTNBRH6gK1jkfgraVN4ca6mBxz0JgiFvTj1Z2SN8pRWmXqJILhbp5EvNmBLkBv8aRel1PrkjVZw0cKxdmX9jEfrQ3C1OIx3WgVdd3gNWdGuJTBUcYbsjvStO7plCZ62PJIIpb6Vm1NCdXK+nZEEbbGMCZfg6tqxC2fZjkDTVfiPM54AkCHT8Ay3zkAr06aY9nwh7ZVzvK/M/5wyO9IjcukC6LXcmOPNxSjy46QbuqPCoM9PYoTUV+bLzkloNjMdIyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.17; Mon, 7 Feb
+ 2022 06:15:53 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.018; Mon, 7 Feb 2022
+ 06:15:53 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next] selftests: mptcp: adjust output alignment for more tests
+Date: Mon,  7 Feb 2022 14:16:17 +0800
+Message-ID: <9ecd5de1df130bc1d5cc65de7c940ea546cf4eaf.1644214533.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR03CA0110.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::26) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1643110285.git.geliang.tang@suse.com> <064cfe306debc535413c1d39fcf3b8d24a959eeb.1643110285.git.geliang.tang@suse.com>
- <b4708d63-29aa-da51-f536-3b5bf5399221@linux.intel.com> <a5500825-43a0-93c4-ba92-f3a24d4a202c@tessares.net>
-In-Reply-To: <a5500825-43a0-93c4-ba92-f3a24d4a202c@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Mon, 7 Feb 2022 12:13:16 +0800
-Message-ID: <CA+WQbwtY-qKu+_yNGcq3g5wDu7ZD0WwpSDbT7n1SLdw0ZtxwrA@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add mp_fail testcases
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, 
-	Geliang Tang <geliang.tang@suse.com>, MPTCP Upstream <mptcp@lists.linux.dev>, 
-	Davide Caratti <dcaratti@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3f91f793-bc1b-42f2-9e67-08d9ea014b2c
+X-MS-TrafficTypeDiagnostic: VI1PR04MB5005:EE_
+X-Microsoft-Antispam-PRVS:
+	<VI1PR04MB50056683B5B5670F01311338F82C9@VI1PR04MB5005.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:556;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	dO9qLTkASAhil4ndumvylvQHQDPfSOpuRN7NRHiB2YLP1yg6WZlG92RpQt25im1b6M7UV+K7HpA2+N9N24FOOYJ/CKqU2n4SDEL2NJy07R07uZLrvviM3eHOs5VUy9zJIwKNkof1glQJPv8Yk/AYID+i8SEbzO7V1GaRrouD6PDqZ8mt1KE5sqF/8ryBZCyTD3TzAzKNDUrQEMq15o2f2kDvhUHFDS8hutGc4S/0wgdD2ML4io8F69+6SrqUKzAKc8qAZW9ZF670hjbgKtD3lLhmIC5CWtDcorsOlc2iREvocQ6ECARFJhvODiuRUlYPm25QkOKmF4/NV1QoOEFRH1Bd2P71D6SkGbvocwaQ5GEiW4dqzgODZoMnRxVOzwaDNy47DEcnBL7AnwE450NrcrQtsNBeG3whX9N16ArGm+6g71K8JrYnU0hQWSl4GEo1t/Of/1mecjUGRLpNiNzpC4ZwvEKROSjQCq+7lDXMGYa4xrTKZJtxFIBRT75XvKTvp/qUHXJL44RotpyHf/fAaOGLegKmkcVf2Myv7utru40LISU1nZ+7lRhWImaJshpak7UyjUMmOw/861lQzvd66VOpEJTiepszQmuKTVR8/dACT4CaQjrHhAW4E53nsc4HVblqQv651mxzhDfG49MLRg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(83380400001)(5660300002)(8676002)(66476007)(66556008)(8936002)(66946007)(4326008)(44832011)(38100700002)(55236004)(26005)(6486002)(2906002)(6666004)(107886003)(36756003)(2616005)(86362001)(6506007)(508600001)(316002)(186003)(6512007)(6916009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?vfw9whte1EAh7PckKV2cQYRVG3GLvG7eiHLIIht49cmk7TAICjd1WAo05Yla?=
+ =?us-ascii?Q?78ltfnsAIQ85xUPZENHmGlVdIVrLcs7vvrCTWQLwcRb5fJ/OGs3mjS2gRETN?=
+ =?us-ascii?Q?25M792a+RoAk1qJ69Z76jsrOZU9Uc+yCS9FPAPRxYsmJboj3mAAQLuZlL+Zw?=
+ =?us-ascii?Q?vSHTBHYe4K6KyCMaw/NJe9tZbTykmNxLDcmWyUDHsGPrqUUyG0y+ZAlxRHYs?=
+ =?us-ascii?Q?9fqq7oVC8O4T3XBRbI9XsaO6Dd6b8dnzZCVJE0bP8DKWGu0HnllEdq2pvDy9?=
+ =?us-ascii?Q?XXYk2IzsvWS9b3UiJ3tFqFzvy58SzFqTOTGffpj3Jm2EOUZnhzhxScdkwGq5?=
+ =?us-ascii?Q?XG04doXKaLi4nTZvI/WbFSZrVYa6F3lCZE005lQTqvxyvGqAB+2xwc4GHSvu?=
+ =?us-ascii?Q?sFqVzk5mDPA5gmB/WQ0LqDx4RM6kkEe2Dy7HXBudc0rRbkdezvjXxRfwxlT3?=
+ =?us-ascii?Q?2S7PFdglaG4X5CtI/6i0bmFkd4BOtuq9pQL4DimSzGBljLQ0Jfw8Scto7Q5+?=
+ =?us-ascii?Q?a29LEixjb/CQZbPFohzz9uvWc88qEPIXe48HAYqQIy+H/vdR5G8Pn0oLjRDa?=
+ =?us-ascii?Q?2+/2e59aZyKaU06ucqTheaIJ0rHiJsXPs1wF7spX7gQVlOzrRTtqb60Z036X?=
+ =?us-ascii?Q?oIUb3SxBZleQOobxTRabE5JxwE6iuMVFgM+5cdyA2LD543/nTNDuC9luCiHr?=
+ =?us-ascii?Q?Jx5nOl7enLNg5wmb3TJYXP2V1IEVpWawMSbOf5aglu86dCxMAgQ0NoPx+hs7?=
+ =?us-ascii?Q?iAg9vRFJ0z+VwtR8A4L+a3dBUmalemK7uUy8U6xO1sJPZOM3PlNyZS5WkWI/?=
+ =?us-ascii?Q?SOf5OFaNl6HqxItYc101wbb2SCTSj/CKA+pL5V1R5VxRll1tpV8qv0X0jo1N?=
+ =?us-ascii?Q?rky1tcoWYidW8Fo+ayymQ5rwjTkDRpRCamswp/XdaCXAl+/ApOrevf71ILjY?=
+ =?us-ascii?Q?kxo9bilxbfYeWQnHllibH6q0z2KcOucv5q1LVGKf5nqt9jvicO+5F6Gl49iK?=
+ =?us-ascii?Q?oSoa9oO8Mn5GUNzK/6Q6Kj/rskJqVCSMntIbYN7nANUL5oa7yqCH1z4lQIrC?=
+ =?us-ascii?Q?XgFqL/0nTJLgVWdCGr0MzTRa/eZEqpI8ojktymFcF9Se3rENIgS0aiPNPx2T?=
+ =?us-ascii?Q?MvxZnYP+YQ4GNrvabZl3gvvYqPzl7sx1sUgGx1AYWRbsPX0Fp1I6DkSh2Erf?=
+ =?us-ascii?Q?LnLG77pM5Z9ZIiGeLSSX8whGBdDnhRII4p/50WVRk88owEy/wbkCF4a4hjlQ?=
+ =?us-ascii?Q?rMGpi/HM+mAZ5qAOa5DYlE959xUWOm5WJJnqKGfDJ9mlTh4v5jRnPppdCm13?=
+ =?us-ascii?Q?P0XxQJH1aIDS5ZJcAOcUWYQ7wWHqUw2JzPXiiydn/uWc/N3BiwgqwF3xfSZq?=
+ =?us-ascii?Q?nfdbV5tc/1e9aZ+LKZ9UzLbhx4kBWvQA4o97UgNTmU4gFfEmhoM1YCrNVbY5?=
+ =?us-ascii?Q?oWlbhIlnegC7BVTMIf/r2ZYafjwzswGzNKeEPK7kV/4f7OsWhvsv4L1SC9w2?=
+ =?us-ascii?Q?cji/x0f04+DBb1I9427XC73Osrt1NZbiWNVIlL6Dw6mNVIBR2TFGdqd6bHYZ?=
+ =?us-ascii?Q?puKBTLAiRntVSF3BA3VoCsTMY0FQh+ARN3smpAi+E26IUSSKGj3IpxXrZwQe?=
+ =?us-ascii?Q?V1Ms2aQ5l1salidyACWIXnQ=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f91f793-bc1b-42f2-9e67-08d9ea014b2c
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2022 06:15:52.9686
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7M9GJVu0GmdJYz7SRH/30QfeTGKO+87AD2p7jot0DxILxvYltLVJRC30FgEBsLwH8TmvbblbxSOJblMf/K0qrQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5005
 
-Hi Matt,
+The number of self tests in mptcp_join.sh will soon be more than 100, the
+output alignment is no longer OK. This patch adjusted it.
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2022=E5=B9=B41=E6=
-=9C=8829=E6=97=A5=E5=91=A8=E5=85=AD 01:04=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Mat, Geliang,
->
-> On 27/01/2022 01:07, Mat Martineau wrote:
-> > On Tue, 25 Jan 2022, Geliang Tang wrote:
-> >
-> >> Added the test cases for MP_FAIL, use 'tc' commands to trigger the
-> >> checksum failures.
-> >>
-> >
-> > This patch is working well with the inverted byte detection, thanks!
->
-> The public CI seems quite happy with the new version, good work :)
->
-> Here is its report:
->
-> =3D=3D=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D=3D
-> Our CI did some validations and here is its report:
->
-> - KVM Validation: normal:
->   - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
->   - Task: https://cirrus-ci.com/task/4993794666921984
->   - Summary:
-> https://api.cirrus-ci.com/v1/artifact/task/4993794666921984/summary/summa=
-ry.txt
->
-> - KVM Validation: debug:
->   - Unstable: 2 failed test(s): selftest_diag selftest_mptcp_join =F0=9F=
-=94=B4:
->   - Task: https://cirrus-ci.com/task/4682233209421824
->   - Summary:
-> https://api.cirrus-ci.com/v1/artifact/task/4682233209421824/summary/summa=
-ry.txt
->
-> Initiator: Patchew Applier
-> Commits:
-> https://github.com/multipath-tcp/mptcp_net-next/commits/c52e51136372
-> =3D=3D=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D=3D
->
-> But if you look at the logs [1], there are probably 3 last things to
-> improve:
->
-> [1] https://api.cirrus-ci.com/v1/task/4993794666921984/logs/test.log
->
-> This line is repeated 90+ times:
->
->   tc action pedit offset 162 out of bounds
->
-> (we talked about this one at the last meeting with ideas on how to
-> reduce/get rid of them)
->
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 25 ++++++++++---------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-Dose 'tc + iptables' work for our case?
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 007223364718..2ddb373b7c1d 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -20,6 +20,7 @@ check_invert=3D0
+ do_all_tests=3D1
+=20
+ TEST_COUNT=3D0
++nr_blank=3D40
+=20
+ # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) =3D=3D 0x30) ||
+ #				  (ip6 && (ip6[74] & 0xf0) =3D=3D 0x30)'"
+@@ -743,9 +744,9 @@ chk_csum_nr()
+ 	local dump_stats
+=20
+ 	if [ ! -z "$msg" ]; then
+-		printf "%02u" "$TEST_COUNT"
++		printf "%03u" "$TEST_COUNT"
+ 	else
+-		echo -n "  "
++		echo -n "   "
+ 	fi
+ 	printf " %-36s %s" "$msg" "sum"
+ 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{=
+print $2}'`
+@@ -777,7 +778,7 @@ chk_fail_nr()
+ 	local count
+ 	local dump_stats
+=20
+-	printf "%-39s %s" " " "ftx"
++	printf "%-${nr_blank}s %s" " " "ftx"
+ 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFailTx | awk '{pri=
+nt $2}'`
+ 	[ -z "$count" ] && count=3D0
+ 	if [ "$count" !=3D "$mp_fail_nr_tx" ]; then
+@@ -809,7 +810,7 @@ chk_infi_nr()
+ 	local count
+ 	local dump_stats
+=20
+-	printf "%-39s %s" " " "itx"
++	printf "%-${nr_blank}s %s" " " "itx"
+ 	count=3D`ip netns exec $ns2 nstat -as | grep InfiniteMapTx | awk '{print =
+$2}'`
+ 	[ -z "$count" ] && count=3D0
+ 	if [ "$count" !=3D "$mp_infi_nr_tx" ]; then
+@@ -843,7 +844,7 @@ chk_join_nr()
+ 	local count
+ 	local dump_stats
+=20
+-	printf "%02u %-36s %s" "$TEST_COUNT" "$msg" "syn"
++	printf "%03u %-36s %s" "$TEST_COUNT" "$msg" "syn"
+ 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinSynRx | awk '{=
+print $2}'`
+ 	[ -z "$count" ] && count=3D0
+ 	if [ "$count" !=3D "$syn_nr" ]; then
+@@ -898,7 +899,7 @@ chk_stale_nr()
+ 	local stale_nr
+ 	local recover_nr
+=20
+-	printf "%-39s %-18s" " " "stale"
++	printf "%-${nr_blank}s %-18s" " " "stale"
+ 	stale_nr=3D`ip netns exec $ns nstat -as | grep MPTcpExtSubflowStale | awk=
+ '{print $2}'`
+ 	[ -z "$stale_nr" ] && stale_nr=3D0
+ 	recover_nr=3D`ip netns exec $ns nstat -as | grep MPTcpExtSubflowRecover |=
+ awk '{print $2}'`
+@@ -936,7 +937,7 @@ chk_add_nr()
+ 	local count
+ 	local dump_stats
+=20
+-	printf "%-39s %s" " " "add"
++	printf "%-${nr_blank}s %s" " " "add"
+ 	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtAddAddr | awk '{prin=
+t $2}'`
+ 	[ -z "$count" ] && count=3D0
+ 	if [ "$count" !=3D "$add_nr" ]; then
+@@ -970,7 +971,7 @@ chk_add_nr()
+ 			echo "[ ok ]"
+ 		fi
+=20
+-		printf "%-39s %s" " " "syn"
++		printf "%-${nr_blank}s %s" " " "syn"
+ 		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortSynRx |
+ 			awk '{print $2}'`
+ 		[ -z "$count" ] && count=3D0
+@@ -1009,7 +1010,7 @@ chk_add_nr()
+ 			echo "[ ok ]"
+ 		fi
+=20
+-		printf "%-39s %s" " " "syn"
++		printf "%-${nr_blank}s %s" " " "syn"
+ 		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortSynRx |
+ 			awk '{print $2}'`
+ 		[ -z "$count" ] && count=3D0
+@@ -1059,7 +1060,7 @@ chk_rm_nr()
+ 		subflow_ns=3D$ns1
+ 	fi
+=20
+-	printf "%-39s %s" " " "rm "
++	printf "%-${nr_blank}s %s" " " "rm "
+ 	count=3D`ip netns exec $addr_ns nstat -as | grep MPTcpExtRmAddr | awk '{p=
+rint $2}'`
+ 	[ -z "$count" ] && count=3D0
+ 	if [ "$count" !=3D "$rm_addr_nr" ]; then
+@@ -1091,7 +1092,7 @@ chk_prio_nr()
+ 	local count
+ 	local dump_stats
+=20
+-	printf "%-39s %s" " " "ptx"
++	printf "%-${nr_blank}s %s" " " "ptx"
+ 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioTx | awk '{pri=
+nt $2}'`
+ 	[ -z "$count" ] && count=3D0
+ 	if [ "$count" !=3D "$mp_prio_nr_tx" ]; then
+@@ -1127,7 +1128,7 @@ chk_link_usage()
+ 	local tx_rate=3D$((tx_link * 100 / $tx_total))
+ 	local tolerance=3D5
+=20
+-	printf "%-39s %-18s" " " "link usage"
++	printf "%-${nr_blank}s %-18s" " " "link usage"
+ 	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
+ 	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
+ 		echo "[fail] got $tx_rate% usage, expected $expected_rate%"
+--=20
+2.31.1
 
-Use iptables to select the packets with enough data. Then use tc to
-edit the selected packets only. (I don't know how to do it yet.)
-
-Here's a link about this:
-
-https://wiki.archlinux.org/title/advanced_traffic_control#Using_tc_+_iptabl=
-es
-.
-'''
-Using tc + iptables
-
-Iptables has a method called fwmark that can be used to mark packets
-across interfaces.
-
-First, this makes packets marked with 6, to be processed by the 1:30 class
-
-# tc filter add dev eth0 protocol ip parent 1: prio 1 handle 6 fw flowid 1:=
-30
-
-This sets that mark 6, using iptables
-
-# iptables -A PREROUTING -t mangle -i eth0 -j MARK --set-mark 6
-
-You can then use iptables normally to match packets and then mark them
-with fwmark.
-'''
-
-> But also this one now, repeated 40+ times with different offsets:
->
->   file received by server has inverted byte at 106565
->
-
-These inverted byte logs will not be there if we add the code to drop
-the bad data in future. (I haven't figured out how to implement this
-yet.) Right now, just let them be there.
-
-> And one last thing, we can see that now we have more than 99 tests, the
-> alignement is no longer OK :)
->
->
->   # 101 1 MP_FAIL, single subflow            syn[ ok ] - synack[ ok ]...
->   #                                         sum[ ok ] - csum  [ ok ]
->   #                                         ftx[ ok ] - frx   [ ok ]
->   #                                         itx[ ok ] - irx   [ ok ]
->
-> A very small detail, up to you to fix it or not ;)
->
-
-I'll update this in the next version.
-
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
