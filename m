@@ -1,224 +1,249 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B7F2C9C
-	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 11:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1644319001;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3asp1jeUjrDPeIEbN/1CCDI7h+O0weVURBxO7Aue4xk=;
-	b=IQYsxxEgL9777aGwKwHTI6LgKTr1BIoNkZd3BdLGFTpk46CIA+8CXWjBaw+SUAb0p/ghj3
-	ykHV3QAZQLwEd9d2VlSnnsyVq3C0v0hQyNYCVd3cKj5q+UqJoi4nUGE4JMN/BGqAdjD+Q7
-	YV7cBu0gYT7bdHY6XyBPXVPv9QEsDkw=
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur05lp2168.outbound.protection.outlook.com [104.47.17.168]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-25-9CqYKqpSO4Sc2oLeChL2vg-1; Tue, 08 Feb 2022 12:16:40 +0100
-X-MC-Unique: 9CqYKqpSO4Sc2oLeChL2vg-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YuJMxRZhuhebkI/wKsaI3xqQQxg1yoqFalTfqs187ZqJ+bMIUAUIELqazTc+MIabn3PPur/jsc0HHvi34bYowMtnfakygFzC1DkJvpfKFF4u8Lp3eXMv7WOfM0WmM1gRiWrAauotzFMivaimkem2T+7U/Hk8oOfRtcsXYzF4/W7BwU5m95QFKnB0Xsm5Axz2uUSyf18ePmL+3LVEjwCbnaZ+0ZqPEVk6f1wX09pBDEiLQOR2ERG8PfVBO3Qll+cSuHiBwTulFWkZ77L8WdnZdNxSAO41d1ITCrGCR4sTe2vguuqXbGLy2Seq1EHxrOjLnP/exVGR3PC4AU1A8KcSPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r5bENp63WciYUz0sZtk+b01FxrFd6nMY/RZ1msOtMaM=;
- b=dt+rfgeABwxfdqhOIPtohFIoE9v05Fdmjx841MKaAZ/FJQRfBuTC8J2DwTCnc1nnj0bjEc0s7wGW773cCLTP4AD8LeXBx1gvAiK/5OWQNkgzzO36F4Jm1xHB28us+TEGSe2z+DTi8wk2k2CaQrkqoEbfvvfD42K/3pyYOFVcUolKPhS0cxtzYdebQQXgVpYctyKDKQwEc4Bnah4o7BFQBYi5WbDzzL3ROsARE7KlWL3VEIQi3hiHd0ETJYuMazXSpmr5/L4xNovNp2CkvNLdAiG2CSKVY8CCEyd7UCeatMpd8nV2DLx83ZRYbsXj1TXw1eXt6lEJCKx5NABZRFiueA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by GV1PR04MB9103.eurprd04.prod.outlook.com (2603:10a6:150:22::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.18; Tue, 8 Feb
- 2022 11:16:39 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.019; Tue, 8 Feb 2022
- 11:16:39 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next 4/4] mptcp: drop echo parameter of mptcp_pm_announce_addr
-Date: Tue,  8 Feb 2022 19:16:08 +0800
-Message-ID: <3f4443708de96d22560a552c83538b5fa84a357f.1644318561.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1644318561.git.geliang.tang@suse.com>
-References: <cover.1644318561.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR03CA0059.apcprd03.prod.outlook.com
- (2603:1096:202:17::29) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B953D2C9C
+	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 12:26:13 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id eg42so21320675edb.7
+        for <mptcp@lists.linux.dev>; Tue, 08 Feb 2022 04:26:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to;
+        bh=jlKuzRLX+MDL0URDp9OziAIBp5dNkYOYuCA+46bPE+k=;
+        b=d/KMD7QAbCEc9Ij1ap+oIuLPX8x9dE7KFkdrtr+6a0HvGGHaiZtpAzVXX88syFWC8w
+         UILGclaBdgSk4Et7YZ6zM1q9IEQy978ohXEs9kNiIksPaipK4G7DVpNHmWFaL6WFO3Gq
+         uXoCbqn8eAiujLakxeuJDX8M/w6LUOMTOAXQ9Y6oxmSQ9wwt9+OYeJ0rlctKTldfLQYC
+         Bp8tqdoJAQynFcCjs6vR7WLe3v8itYUObUeOUiPn8STKibhd5yGLtK9L5aa1rcMsYm58
+         9DJMDNwAPjpHPCsA5rWbOMMg9q0wRa1KUdyR/RIX91l+TmY7XVbvPhm/wZRUuzqZK4EX
+         h8mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to;
+        bh=jlKuzRLX+MDL0URDp9OziAIBp5dNkYOYuCA+46bPE+k=;
+        b=FJM1psa8jq0V0jdQGS32uLAWIs0+nGOR0YIUhaIWL/R0XU/jMEUqho/MQOfxf54fww
+         CCKfTp6vKPMxJztDDX3W55CrOTzAIIUHx6Zknpl3yLnqHYDQM9kF6mdgSo/qNv3bB6Q8
+         xyjBegvVy4WVt5taUpqcFkM5l2Jn9ycLitIeVmgTEpdJGFX3ubQSc6mrxvfE2YBZa4Kw
+         ITh+a7fTy/Y1opNWMCq4+uZcgutgwsk3GaeolyXysf5XHtw0eUURYOlW+21nMFkMrIbX
+         D80tUGbeRS0Fnuty01bIzhfyGCsqJGFIrHuJjrgr5uptjU+G+BkrHpvz7aEzoWg8ciWh
+         rAww==
+X-Gm-Message-State: AOAM531L/B/smRdTrtyiNblAxnFnhJfXeIpztN59YUT26Cl6ClXIjAXA
+	Bb5iNmoFMEOFWxmVmhg2dW0/BlpP6YEgnxdNiQ4=
+X-Google-Smtp-Source: ABdhPJyLb1yw6S0uIDoctEJOFDHILLt8Wpfg4rrRORp3iD9kAML8vIQ/bCoSygIAFqX8vl6cxRsXuQ==
+X-Received: by 2002:a05:6402:d0d:: with SMTP id eb13mr4308595edb.92.1644323171491;
+        Tue, 08 Feb 2022 04:26:11 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:e2d4:3fdf:b2fc:a61e? ([2a02:578:8593:1200:e2d4:3fdf:b2fc:a61e])
+        by smtp.gmail.com with ESMTPSA id g8sm4734271ejt.26.2022.02.08.04.26.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Feb 2022 04:26:11 -0800 (PST)
+Content-Type: multipart/mixed; boundary="------------jJrVB0cdztPCXBEzHm4wStRa"
+Message-ID: <63c6dc9c-fa32-cf8b-2f5d-4fc5c51447b2@tessares.net>
+Date: Tue, 8 Feb 2022 13:26:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f16198c5-2549-4177-8b9e-08d9eaf479ec
-X-MS-TrafficTypeDiagnostic: GV1PR04MB9103:EE_
-X-Microsoft-Antispam-PRVS:
-	<GV1PR04MB91039A58F48E55628832EE25F82D9@GV1PR04MB9103.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	aqCX33Kcqqb/wCFG0549voG+WYJBlqkzcgd0NpkZWREmpF/iTiFffG31iV6I8j1Wd4Ugc29nZv4ff/w6jqybyo+piIAclQPMX1OeXfPdB7J3dtgR3HdOaEx2lhpEKcS4FTen58hnz/rXnHBXCdPH9bSMTg24jAHpWoegXWuKg4DAwu93+KTo9rnua+7ZBiOP25EP9yDUIlwhtNOnzKKOxV+Hr1lWQ2XVkCWWWUwJjGYpvszwN5XGI/+G91wFL8IrMQWVKIQRknj7Kb6k7Rz7rBMp8HbUKV+ZCgFe3H5BtnrIEd2Qg9g37oJ+LtWiqhUODEOTcFjcXt43qZpcSQjoGcnz0I/P9qqRrF6Og1H4q1EwuNUYwK1+W2YK71+VxrTF/0nK+1IYukV0XJZSXYc4VLGLl0JH/Y3hlkTKqo8XR7B6d9X7io2dYIX68FMi4lPcnQbXKH9uY6j8x0vRB0RPp64KeA3FylcPmnVt83EFADCWtxZHMaP6leJZk16VEGILKv2QimLsthgp6gG259cmoEYD14kQvAWRQCsuWjboOoGBIctql5BNFP920W1MUsw3KC37mtHGir6W8OrUHYNX1XX3jn+nxnUENx2ULg9Fch4taGUbkiEw2kSkzN4edoCL9Wi64Upzi2Mkxye4lmbawg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(44832011)(66946007)(316002)(186003)(4326008)(86362001)(8936002)(66476007)(2906002)(508600001)(5660300002)(83380400001)(8676002)(38100700002)(6486002)(6916009)(36756003)(26005)(6666004)(6512007)(2616005)(6506007)(55236004)(107886003)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7KoFFkkQXa1NwRasl7TU3VuSvqZNArz43MyMRMJpH1V9MenbxLbaxPbYpdaP?=
- =?us-ascii?Q?6CANq2+Zx3CcSGCksjWhRBYVAu0VyGgrqITakE1o6mA4D+z4jXkGhTj9tBD2?=
- =?us-ascii?Q?amGcCysx5e9WcZVeXbgfAZkmQHI0FAYDUh9MAvWTIVGyw/sqoNepykm6nzzj?=
- =?us-ascii?Q?LzMy/3CqlQDBAuDxaQQnb24SRWcLPZQdRuWY16OKO7qNV905NfRiwta9GKVi?=
- =?us-ascii?Q?RRFZktGyyccaFciMqPWL7012jAOSr7afyE3Oafh72BkoCkU+rRnEslMHiA7Z?=
- =?us-ascii?Q?WGbI6BlVigqjo9U7+VT6IeMUlF14Hy/rg1y6zr5nKXO78x3FQYd8Lp55XRM1?=
- =?us-ascii?Q?kSJjgzW4UGAVlK10rwW5YeYmvhBGxewPObLh+savPrlocgYLKOxzBAFyoTFp?=
- =?us-ascii?Q?O7wZ8BEV98NhfEyyJGAaTaX/dYD7BisUUF9GSg9RcifScMXDgLakjN3tbixD?=
- =?us-ascii?Q?o2t6/Ex3UkGLhkgFVuEww5MVbzaMfXq1FwX1VL7vdGbq+3a/8wNaeb4xfZLJ?=
- =?us-ascii?Q?bPyUdoX4i01GIvHgYYlofJNWSsEyEaQ5ENCatH20xTlk7WU0mFgstVFRA5Yc?=
- =?us-ascii?Q?xLgoBw6vgbFCxGMghIRdEroq3f01R+7zn6sFFUhl4SV4fiPDSTLk9ggKIIn/?=
- =?us-ascii?Q?hlrubGjJzwV04uYezHEnXOZnCOj7cLvldcOlznlBsaOvxUbeQonpDcv5r96c?=
- =?us-ascii?Q?mHEFOExFDDkQ5bnfvsC9aXelhaQcobaFxekM15d7Qh1CXlxmy9qh3sNDm7I1?=
- =?us-ascii?Q?C9+NUCPV62ogxQuGih9j54y2kG4XTJfAlftF6ojykh/RBOhvZHT6bRfvIIGI?=
- =?us-ascii?Q?S7bMRUinZlTOq+sg+DnRtqOgdiYIWSFYID0bS0OsMPodM/gWR40qA5vnFXvg?=
- =?us-ascii?Q?rizkkTfUyh0SmCxY/fFjg54Y8wmGdnQRitJaK8iARq3/uCZpst780AekZvvZ?=
- =?us-ascii?Q?L6tYzIwXDq9Taq/8n8gLN0SXU2AsOJeNot+LW55VvEn2s3RRhdRIbI1ejKVS?=
- =?us-ascii?Q?HlEVjIcWf6NrPW7HxJe1k5g71/nx81DKISyn3B0txzqYxerLKQGYNj7QWw/K?=
- =?us-ascii?Q?Nbp/g/pkgATk6aghatY3DZKeM5VmxWXCP5VDBA3kG4oogDDYhoGEJnv5Rn8u?=
- =?us-ascii?Q?q2MHnxsHH647j4cJK23tf4P/0Lp24/Nqr6oKbaXYUglw+WXZraF4H/mUpBFU?=
- =?us-ascii?Q?0c879KH4hBh9UsvZpINqsNfgXa6JUv4APUGyRG49YFhxG8El84TkjOA4guHt?=
- =?us-ascii?Q?kd7Ta9JcROwuyK4n16E1k94MhC0QHSBLBriHiF6UeA3275pys6ZueBG8lAgw?=
- =?us-ascii?Q?Q3hELNpaAdij71y/YfTFiAWuY5a1snRzJwWt3qqTwTypVBWrczirSAQGDMJY?=
- =?us-ascii?Q?a3HZivb8hE78dqnOAXvcCQhdV/P+iA+cVs5aRm7QMrhFs3IdxgzOw0AscB4t?=
- =?us-ascii?Q?beMdeml5KHgyGLnbVvVm0+d6pMOQJEQoy0sL91EZleIEr7cfvELLMvwfkCtr?=
- =?us-ascii?Q?b9Q7etbpbdJp1cTWcmS+4qLcQGJbNwZzil/Qw2QCKb57twr8QPDTaNZt6wkW?=
- =?us-ascii?Q?1QN7cGJh6FAqheE82Swv1EyW9SHeyQ1LPAQvnfdUFGeCqCMWtAtCxi6yHo1+?=
- =?us-ascii?Q?WkHMDK6SJT9gs/GAnEAVnHE=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f16198c5-2549-4177-8b9e-08d9eaf479ec
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2022 11:16:39.0913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9OeKw7xIpy1je/sWNFT0d1YIqFMBIy6wKQpHIFK08MXlQiTPdnIfinjD/s0ktaC3yPlbMl0ixtKqfTweDfJdMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9103
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add mp_fail testcases
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1643110285.git.geliang.tang@suse.com>
+ <064cfe306debc535413c1d39fcf3b8d24a959eeb.1643110285.git.geliang.tang@suse.com>
+ <b4708d63-29aa-da51-f536-3b5bf5399221@linux.intel.com>
+ <a5500825-43a0-93c4-ba92-f3a24d4a202c@tessares.net>
+ <CA+WQbwtY-qKu+_yNGcq3g5wDu7ZD0WwpSDbT7n1SLdw0ZtxwrA@mail.gmail.com>
+ <eb33b5d3-a6e8-55d0-a149-c045ec2ecab5@tessares.net>
+ <20220207140854.GA2916@localhost>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220207140854.GA2916@localhost>
 
-Since the echo bit is added in struct mptcp_addr_info, use it in
-mptcp_pm_announce_addr() instead of passing the echo parameter.
+This is a multi-part message in MIME format.
+--------------jJrVB0cdztPCXBEzHm4wStRa
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/pm.c         | 13 ++++++-------
- net/mptcp/pm_netlink.c |  6 +++---
- net/mptcp/protocol.h   |  3 +--
- 3 files changed, 10 insertions(+), 12 deletions(-)
+Hi Geliang,
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 8dd78424f86e..0bd8af167d65 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -15,22 +15,21 @@
- /* path manager command handlers */
-=20
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
--			   const struct mptcp_addr_info *addr,
--			   bool echo)
-+			   const struct mptcp_addr_info *addr)
- {
- 	u8 add_addr =3D READ_ONCE(msk->pm.addr_signal);
-=20
--	pr_debug("msk=3D%p, local_id=3D%d, echo=3D%d", msk, addr->id, echo);
-+	pr_debug("msk=3D%p, local_id=3D%d, echo=3D%d", msk, addr->id, addr->echo)=
-;
-=20
- 	lockdep_assert_held(&msk->pm.lock);
-=20
- 	if (add_addr &
--	    (echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL))) {
--		pr_warn("addr_signal error, add_addr=3D%d, echo=3D%d", add_addr, echo);
-+	    (addr->echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL)))=
- {
-+		pr_warn("addr_signal error, add_addr=3D%d, echo=3D%d", add_addr, addr->e=
-cho);
- 		return -EINVAL;
- 	}
-=20
--	if (echo) {
-+	if (addr->echo) {
- 		msk->pm.remote =3D *addr;
- 		add_addr |=3D BIT(MPTCP_ADD_ADDR_ECHO);
- 	} else {
-@@ -209,7 +208,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 	spin_lock_bh(&pm->lock);
-=20
- 	if (!READ_ONCE(pm->accept_addr) || mptcp_pm_is_userspace(msk)) {
--		mptcp_pm_announce_addr(msk, addr, true);
-+		mptcp_pm_announce_addr(msk, addr);
- 		mptcp_pm_add_addr_send_ack(msk);
- 	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
- 		pm->remote =3D *addr;
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 93800f32fcb6..8fcba8e92b5b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -326,7 +326,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer=
-)
-=20
- 	if (!mptcp_pm_should_add_signal_addr(msk)) {
- 		pr_debug("retransmit ADD_ADDR id=3D%d", entry->addr.id);
--		mptcp_pm_announce_addr(msk, &entry->addr, false);
-+		mptcp_pm_announce_addr(msk, &entry->addr);
- 		mptcp_pm_add_addr_send_ack(msk);
- 		entry->retrans_times++;
- 	}
-@@ -550,7 +550,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 			if (mptcp_pm_alloc_anno_list(msk, local)) {
- 				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
- 				msk->pm.add_addr_signaled++;
--				mptcp_pm_announce_addr(msk, &local->addr, false);
-+				mptcp_pm_announce_addr(msk, &local->addr);
- 				mptcp_pm_nl_addr_send_ack(msk);
- 			}
- 		}
-@@ -681,7 +681,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_=
-sock *msk)
- 	spin_lock_bh(&msk->pm.lock);
-=20
- add_addr_echo:
--	mptcp_pm_announce_addr(msk, &msk->pm.remote, true);
-+	mptcp_pm_announce_addr(msk, &msk->pm.remote);
- 	mptcp_pm_nl_addr_send_ack(msk);
- }
-=20
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7ee6a39a7ff9..29a8a0b2512b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -772,8 +772,7 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct net *ne=
-t, unsigned int id,
- 					 u8 *flags, int *ifindex);
-=20
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
--			   const struct mptcp_addr_info *addr,
--			   bool echo);
-+			   const struct mptcp_addr_info *addr);
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_lis=
-t *rm_list);
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, const struct mptcp_rm_=
-list *rm_list);
-=20
---=20
-2.34.1
+On 07/02/2022 15:08, Geliang Tang wrote:
+> On Mon, Feb 07, 2022 at 11:32:05AM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 07/02/2022 05:13, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> Matthieu Baerts <matthieu.baerts@tessares.net> 于2022年1月29日周六 01:04写道：
+>>>>
+>>>> Hi Mat, Geliang,
+>>>>
+>>>> On 27/01/2022 01:07, Mat Martineau wrote:
+>>>>> On Tue, 25 Jan 2022, Geliang Tang wrote:
+>>>>>
+>>>>>> Added the test cases for MP_FAIL, use 'tc' commands to trigger the
+>>>>>> checksum failures.
+>>>>>>
+>>>>>
+>>>>> This patch is working well with the inverted byte detection, thanks!
+>>>>
+>>>> The public CI seems quite happy with the new version, good work :)
+>>>>
+>>>> Here is its report:
+>>>>
+>>>> ====== 8< ======
+>>>> Our CI did some validations and here is its report:
+>>>>
+>>>> - KVM Validation: normal:
+>>>>   - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
+>>>>   - Task: https://cirrus-ci.com/task/4993794666921984
+>>>>   - Summary:
+>>>> https://api.cirrus-ci.com/v1/artifact/task/4993794666921984/summary/summary.txt
+>>>>
+>>>> - KVM Validation: debug:
+>>>>   - Unstable: 2 failed test(s): selftest_diag selftest_mptcp_join 🔴:
+>>>>   - Task: https://cirrus-ci.com/task/4682233209421824
+>>>>   - Summary:
+>>>> https://api.cirrus-ci.com/v1/artifact/task/4682233209421824/summary/summary.txt
+>>>>
+>>>> Initiator: Patchew Applier
+>>>> Commits:
+>>>> https://github.com/multipath-tcp/mptcp_net-next/commits/c52e51136372
+>>>> ====== 8< ======
+>>>>
+>>>> But if you look at the logs [1], there are probably 3 last things to
+>>>> improve:
+>>>>
+>>>> [1] https://api.cirrus-ci.com/v1/task/4993794666921984/logs/test.log
+>>>>
+>>>> This line is repeated 90+ times:
+>>>>
+>>>>   tc action pedit offset 162 out of bounds
+>>>>
+>>>> (we talked about this one at the last meeting with ideas on how to
+>>>> reduce/get rid of them)
+>>>>
+>>>
+>>> Dose 'tc + iptables' work for our case?
+>>>
+>>> Use iptables to select the packets with enough data. Then use tc to
+>>> edit the selected packets only. (I don't know how to do it yet.)
+>>>
+>>> Here's a link about this:
+>>>
+>>> https://wiki.archlinux.org/title/advanced_traffic_control#Using_tc_+_iptables
+>>> .
+>>> '''
+>>> Using tc + iptables
+>>>
+>>> Iptables has a method called fwmark that can be used to mark packets
+>>> across interfaces.
+>>>
+>>> First, this makes packets marked with 6, to be processed by the 1:30 class
+>>>
+>>> # tc filter add dev eth0 protocol ip parent 1: prio 1 handle 6 fw flowid 1:30
+>>>
+>>> This sets that mark 6, using iptables
+>>>
+>>> # iptables -A PREROUTING -t mangle -i eth0 -j MARK --set-mark 6
+>>>
+>>> You can then use iptables normally to match packets and then mark them
+>>> with fwmark.
+>>> '''
+>>
+>> Good idea, probably simpler!
+>>
+>> I guess we can mark some packets in POSTROUTING and modify the egress TC
+>> rule.
+>>
+>> Do you need a hand for that?
+>>
+> 
+> Thanks, Matt, I really need your help :)
 
+Sure.
+May you try the attached patch if you don't mind?
+
+I now have this output:
+
+001 0 MP_FAIL, multiple subflows         syn[ ok ] - synack[ ok ] - ack[
+ok ]
+                                         sum[ ok ] - csum  [ ok ]
+                                         ftx[ ok ] - frx   [ ok ]
+                                         itx[ ok ] - irx   [ ok ]
+Created /tmp/tmp.SNhvH7ucj9 (size 512 KB) containing data sent by client
+Created /tmp/tmp.RFEqEXi0bl (size 512 KB) containing data sent by server
+file received by server has inverted byte at 69
+file received by server has inverted byte at 70
+file received by server has inverted byte at 71
+file received by server has inverted byte at 72
+002 1 MP_FAIL, single subflow            syn[ ok ] - synack[ ok ] - ack[
+ok ]
+                                         sum[ ok ] - csum  [ ok ]
+                                         ftx[ ok ] - frx   [ ok ]
+                                         itx[ ok ] - irx   [ ok ]
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--------------jJrVB0cdztPCXBEzHm4wStRa
+Content-Type: text/x-patch; charset=UTF-8; name="iptables-mark.patch"
+Content-Disposition: attachment; filename="iptables-mark.patch"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9jb25maWcg
+Yi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvY29uZmlnCmluZGV4IDI2OTU1
+YWJlNDlmMC4uMzgwMjFhMGRkNTI3IDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL3NlbGZ0
+ZXN0cy9uZXQvbXB0Y3AvY29uZmlnCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL25l
+dC9tcHRjcC9jb25maWcKQEAgLTEyLDYgKzEyLDkgQEAgQ09ORklHX05GX1RBQkxFUz1tCiBD
+T05GSUdfTkZUX0NPTVBBVD1tCiBDT05GSUdfTkVURklMVEVSX1hUQUJMRVM9bQogQ09ORklH
+X05FVEZJTFRFUl9YVF9NQVRDSF9CUEY9bQorQ09ORklHX05FVEZJTFRFUl9YVF9NQVRDSF9M
+RU5HVEg9bQorQ09ORklHX05FVEZJTFRFUl9YVF9NQVRDSF9TVEFUSVNUSUM9bQorQ09ORklH
+X05FVEZJTFRFUl9YVF9UQVJHRVRfTUFSSz1tCiBDT05GSUdfTkZfVEFCTEVTX0lORVQ9eQog
+Q09ORklHX05GVF9UUFJPWFk9bQogQ09ORklHX05GVF9TT0NLRVQ9bQpAQCAtMjIsNSArMjUs
+NSBAQCBDT05GSUdfSVBWNl9NVUxUSVBMRV9UQUJMRVM9eQogQ09ORklHX05FVF9BQ1RfQ1NV
+TT1tCiBDT05GSUdfTkVUX0FDVF9QRURJVD1tCiBDT05GSUdfTkVUX0NMU19BQ1Q9eQotQ09O
+RklHX05FVF9DTFNfRkxPV0VSPW0KK0NPTkZJR19ORVRfQ0xTX0ZXPW0KIENPTkZJR19ORVRf
+U0NIX0lOR1JFU1M9bQpkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbmV0
+L21wdGNwL21wdGNwX2pvaW4uc2ggYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0
+Y3AvbXB0Y3Bfam9pbi5zaAppbmRleCBhNTFiMDkxNWI3YjEuLjUyYTBmM2RmM2IyZSAxMDA3
+NTUKLS0tIGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbmV0L21wdGNwL21wdGNwX2pvaW4u
+c2gKKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbmV0L21wdGNwL21wdGNwX2pvaW4u
+c2gKQEAgLTE4MCwxNSArMTgwLDEyIEBAIHJlc2V0X3dpdGhfYWxsb3dfam9pbl9pZDAoKQog
+IyBoYXMgbm90IGJlZW4gdXBkYXRlZCwgd2Ugd2lsbCBkZXRlY3QgdGhlIG1vZGlmaWNhdGlv
+biBhbmQgZW1pdCBhbgogIyBNUF9GQUlMOiB3aGF0IHdlIHdhbnQgdG8gdmFsaWRhdGUgaGVy
+ZS4KICMKLSMgUGxlYXNlIG5vdGUgdGhhdCB0aGlzIHJ1bGUgd2lsbCBwcm9kdWNlIHRoaXMg
+cHJfaW5mbygpIG1lc3NhZ2UgZm9yCi0jIGVhY2ggVENQIEFDSyBwYWNrZXRzIG5vdCBjYXJy
+eWluZyBlbm91Z2ggZGF0YToKKyMgVG8gYXZvaWQgaGF2aW5nIHRjIHByb2R1Y2luZyB0aGlz
+IHByX2luZm8oKSBtZXNzYWdlIGZvciBlYWNoIFRDUCBBQ0sgcGFja2V0cworIyBub3QgY2Fy
+cnlpbmcgZW5vdWdoIGRhdGE6CiAjCiAjICAgICB0YyBhY3Rpb24gcGVkaXQgb2Zmc2V0IDE2
+MiBvdXQgb2YgYm91bmRzCiAjCi0jIEJ1dCB0aGlzIHNob3VsZCBiZSBsaW1pdGVkIHRvIGEg
+dmVyeSBmZXcgbnVtYmVycyBvZiBwYWNrZXRzIGFzIHdlCi0jIHJlc3RyaWN0IHRoaXMgcnVs
+ZSB0byBvdXRnb2luZyBUQ1AgdHJhZmZpYyB3aXRoIG9ubHkgdGhlIEFDSyBmbGFnCi0jICsg
+ZXhjZXB0IHRoZSAzcmQgQUNLLCBvbmx5IHBhY2tldHMgY2FycnlpbmcgZGF0YSBzaG91bGQg
+YmUgc2VlbiBpbgotIyB0aGlzIGRpcmVjdGlvbi4KKyMgTmV0ZmlsdGVyIGlzIHVzZWQgdG8g
+bWFyayBwYWNrZXRzIHdpdGggZW5vdWdoIGRhdGEuCiByZXNldF93aXRoX2ZhaWwoKQogewog
+CXJlc2V0CkBAIC0xOTksMTIgKzE5NiwyMCBAQCByZXNldF93aXRoX2ZhaWwoKQogCWNoZWNr
+X2ludmVydD0xCiAJdmFsaWRhdGVfY2hlY2tzdW09MQogCW5yX2ZhaWw9MAotCWk9IiQxIgor
+CWxvY2FsIGk9IiQxIgorCisJaXAgbmV0bnMgZXhlYyAkbnMyIGlwdGFibGVzIFwKKwkJLXQg
+bWFuZ2xlIFwKKwkJLUEgT1VUUFVUIFwKKwkJLXAgdGNwIFwKKwkJLW0gbGVuZ3RoIC0tbGVu
+Z3RoIDE1MDo5OTk5IFwKKwkJLW0gc3RhdGlzdGljIC0tbW9kZSBudGggLS1wYWNrZXQgMCAt
+LWV2ZXJ5IDk5OTkgXAorCQktaiBNQVJLIC0tc2V0LW1hcmsgNDIKIAogCXRjIC1uICRuczIg
+cWRpc2MgYWRkIGRldiBuczJldGgkaSBjbHNhY3QKIAl0YyAtbiAkbnMyIGZpbHRlciBhZGQg
+ZGV2IG5zMmV0aCRpIGVncmVzcyBcCiAJCXByb3RvY29sIGlwIHByaW8gMTAwMCBcCi0JCWZs
+b3dlciBpcF9wcm90byB0Y3AgdGNwX2ZsYWdzIDB4MTAvMHhmZiBcCisJCWhhbmRsZSA0MiBm
+dyBcCiAJCWFjdGlvbiBwZWRpdCBtdW5nZSBvZmZzZXQgMTQ4IHUzMiBpbnZlcnQgXAogCQlw
+aXBlIGNzdW0gdGNwIFwKIAkJaW5kZXggMTAwCkBAIC0yOTYsMTQgKzMwMSwxMiBAQCBsaW5r
+X2ZhaWx1cmUoKQogCiBnZXRfbnJfZmFpbCgpCiB7Ci0JaT0iJDEiCisJbG9jYWwgaT0iJDEi
+CiAKIAlsb2NhbCBhY3Rpb249JCh0YyAtbiAkbnMyIC1qIC1zIGFjdGlvbiBzaG93IGFjdGlv
+biBwZWRpdCBpbmRleCAxMDApCiAJbG9jYWwgcGFja2V0cz0kKGVjaG8gJGFjdGlvbiB8IGpx
+ICcuWzFdLmFjdGlvbnNbMF0uc3RhdHMucGFja2V0cycpCi0JbG9jYWwgb3ZlcmxpbWl0cz0k
+KGVjaG8gJGFjdGlvbiB8IGpxICcuWzFdLmFjdGlvbnNbMF0uc3RhdHMub3ZlcmxpbWl0cycp
+CiAKLQlsZXQgcGt0PSRwYWNrZXRzLSRvdmVybGltaXRzCi0JaWYgWyAkcGt0IC1ndCAwIF07
+IHRoZW4KKwlpZiBbICRwYWNrZXRzIC1ndCAwIF07IHRoZW4KIAkJbnJfZmFpbD0xCiAJZmkK
+IAl0YyAtbiAkbnMyIHFkaXNjIGRlbCBkZXYgbnMyZXRoJGkgY2xzYWN0
+
+--------------jJrVB0cdztPCXBEzHm4wStRa--
