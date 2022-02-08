@@ -1,91 +1,99 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E6F2F24
-	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 07:47:41 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id a8so49654336ejc.8
-        for <mptcp@lists.linux.dev>; Mon, 07 Feb 2022 23:47:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45702F26
+	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 09:10:36 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id k3-20020a1ca103000000b0037bdea84f9cso1113784wme.1
+        for <mptcp@lists.linux.dev>; Tue, 08 Feb 2022 01:10:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=wgU7z5ZU4FPxga2/TFj9KChn00b7D8piSamC7DkcNB4=;
-        b=4bm5XIu3Oug6AJC/j6ifeaDFW5uFXZhEFTYVERheEFoe4ppWcitKFXEIAZkeuVHLOU
-         fhzbUgAaEnPj9KXOGEbYPoLD0DDDJRCnWIo4smtsHkwHsgNziGQSxShurTzJLDjDBQDI
-         JdWhJhgog5tctQ9KolY/pFzDYHPntwEsKuyKdf5W2as7QIxbZyaQG+zZNplL7AEnD05L
-         SAJlneJP3W9r5SJE7MyWt+J9cO3LFk8bG8BqA6s8P5w3mnNVZed5XjLG4Rsch7C7zkhI
-         Olj/NVjItUAmskq0qFtxAeAH9COWV6KvxIykhYxWE5jo7rbpxtvtghIv4FPuZZpcUwNU
-         0yRQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VJY/s0Ymy2GvPYWmhVYqLgy8IdGkR/Hi9JaHk7vDvZw=;
+        b=Zm/WdaoVimz/0PmQrjVI5RlXTYXTICxDNFur+4gkc03/OjjCzERbyefZocDoGMxnbF
+         YqCRY0MM950SHUlcmShs2lujDR7jWbdN3Uea1F+9F4+9qFMSzncHh5gkrpBL/V8Tfmvz
+         femkkCpZqwtxOLGUteOL+xEi179k3xshe5DyZrb1ELLWI56vUG0CMsEoJ8KNNhMfom3Y
+         4JGbKrK9FsUGpcMoDLTwnf+v+cznRlflglkCNrNXAO2CGOkM8WDrBL/na3edxIg/IwvH
+         xKTJdF8a2VfklbE6plLpv8yewTYjI0/CIaDvPLk9DS8t36o6aKCHOtx1BsSKKGLkeARP
+         HOLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=wgU7z5ZU4FPxga2/TFj9KChn00b7D8piSamC7DkcNB4=;
-        b=3xLSFNBtBxHjBnn2J0HbOvQt6DFfX6IhVpXDUKW/ivJ+P397eW9NnW2G6XWaT4uIU8
-         iJqP7X7zJW/ryTnuRHx5nKPSSqH5IjmfOdboO9aAVKoSMa2Re75w+DXdZTq808ZoW3zJ
-         Qk38xofd/h72ILVdJM96kUxF1gg43b4n5aH6xiPD7HlHXdZUgdg2Y5ecLvDmqOYL6J9k
-         SL+HV8QMsEu3Jk4vCXQs/Ni7oXBYTMGlN0F60bnkImPDlFhENQZ1m9JUF4NQG7YIMFj+
-         Up12G2vbiQVEieTbwYmm+fifWXN+1zRTIqLDOsjuH+OgABQpnzLQSgIZq3HdSW3Q4DYv
-         tOvQ==
-X-Gm-Message-State: AOAM533nYBeMctjwKVtcNCZbnN9GbUeTooSx0/eWYLXtj+dVjl/sa3ZR
-	ZzbIjXEiDgNOoHM1gx5peWUMUQ6VqmaT1CVXEtQ=
-X-Google-Smtp-Source: ABdhPJxhkBKp8TpAS0W1Uh7paeRU4/j3MLOdLsn/BABj2OIVCrpaiNmrqZH5vbqrC+/IPQuZKv4hpg==
-X-Received: by 2002:a17:906:4bc6:: with SMTP id x6mr2646024ejv.161.1644306459178;
-        Mon, 07 Feb 2022 23:47:39 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:ba0f:5a93:d93e:ce85? ([2a02:578:8593:1200:ba0f:5a93:d93e:ce85])
-        by smtp.gmail.com with ESMTPSA id gv34sm4441127ejc.125.2022.02.07.23.47.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Feb 2022 23:47:38 -0800 (PST)
-Message-ID: <a2f5b55d-a4ab-c274-a27c-ec1461f6f8d3@tessares.net>
-Date: Tue, 8 Feb 2022 08:47:38 +0100
+        bh=VJY/s0Ymy2GvPYWmhVYqLgy8IdGkR/Hi9JaHk7vDvZw=;
+        b=onqud1hKgXlVRmujVgM7yyqm2U2JCiSwILyA9fegwdMMiiklc6Knn15qboeqfazCCh
+         0vzgIrg8cm8WtliwbF8XvJWHnUowuRF+SomEco69Ngao1hCH0m5eLd+BLNMpWIWl9Nik
+         C7XVoNFx6xw+sbOF6IF1ErmuemhO6hBZzJ0Vw4Fkysi/4qAtvEppITY1oeyKvkAAItuW
+         QtSXQQTMhpTYLCXQXunouTfssM28INQUpQ9JTQdmD3486R+GfFE7fSyWfUHh4l54bOX7
+         emJrB9Zs59cu0+f0iLKyGBbVlAIZdRiWjUpfHtcschkZ4RxjbJacXGJeetXVsRetoovp
+         t8XA==
+X-Gm-Message-State: AOAM53158SEpxtmYmyonDW/KkWWVK1ljN231EqupnJ063hCNqbkPbq8b
+	0o306W5YJDSCYsZcIENbpt6KYmjVu0Ztn9XrbGE=
+X-Google-Smtp-Source: ABdhPJzDzbX2dgHWIHWKfncsRNOiIT2YOrHl+nl6ZR60DcTruvxrAh7e5FYWS0nRQxA0VubjQpOjmA==
+X-Received: by 2002:a05:600c:4e16:: with SMTP id b22mr235178wmq.31.1644311434520;
+        Tue, 08 Feb 2022 01:10:34 -0800 (PST)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id a15sm1100237wri.22.2022.02.08.01.10.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Feb 2022 01:10:34 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v2] selftests: mptcp: increase timeout to 20 minutes
+Date: Tue,  8 Feb 2022 10:10:13 +0100
+Message-Id: <20220208091013.749627-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-net] mptcp: fix race in overlapping signal events
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <c5d17a37b8ad315e72dd8551e148017a66987f7f.1644266387.git.pabeni@redhat.com>
- <f6abaf441e13c2f4cb6929605f67f9c0c7417e44.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <f6abaf441e13c2f4cb6929605f67f9c0c7417e44.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+With the increase number of tests, one CI instance, using a debug kernel
+config and not recent hardware, takes around 10 minutes to execute the
+slowest MPTCP test: mptcp_join.sh.
 
-On 07/02/2022 21:53, Paolo Abeni wrote:
-> On Mon, 2022-02-07 at 21:39 +0100, Paolo Abeni wrote:
->> After commit a88c9e496937 ("mptcp: do not block subflows
->> creation on errors"), if a signal address races with a failing
->> subflow creation, the subflow creation failure control path
->> can trigger the selection of the next address to be announced
->> while the current announced is still pending.
->>
->> The above will cause the unintended suppression of the ADD_ADDR
->> announce.
->>
->> Fix the issue skipping the to-be-suppressed announce before it
->> will mark an endpoint as already used. The relevant announce
->> will be triggered again when the current one will complete.
->>
->> Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Even if most CIs don't take that long to execute these tests --
+typically max 10 minutes to run all selftests -- it will helpi some of
+them if the timeout is increased.
 
-Thank you for looking at that!
+The timeout could be disabled but it is always good to have an extra
+safeguard, just in case.
 
-> Please keep this on-hold a little, it need a little more testing,
+Please note that on slow public CIs with kernel debug settings, it has
+been observed it can easily take up to 45 minutes to execute all tests
+in this very slow environment with other jobs running in parallel.
+The slowest test, mptcp_join.sh takes ~30 minutes in this case.
 
-I still have the same issue with this patch. Do not hesitate if you need
-me to provide you more debug info.
+In such environments, the selftests timeout set in the 'settings' file
+is disabled because this environment is known as being exceptionnaly
+slow. It has been decided not to take such exceptional environments into
+account and set the timeout to 20min.
 
-Cheers,
-Matt
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+
+Notes:
+    On my CI at Tessares, another machine is now used with a different host
+    kernel. mptcp_join.sh selftest is now regularly taking more than 10
+    minutes when testing with a debug kernel.
+
+    v2:
+     - from 1h to 20 min (Mat) and adapt the commit message to explain why
+       this don't cover all cases that have been observed.
+
+ tools/testing/selftests/net/mptcp/settings | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/settings b/tools/testing/selftests/net/mptcp/settings
+index a62d2fa1275c..79b65bdf05db 100644
+--- a/tools/testing/selftests/net/mptcp/settings
++++ b/tools/testing/selftests/net/mptcp/settings
+@@ -1 +1 @@
+-timeout=600
++timeout=1200
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
+
