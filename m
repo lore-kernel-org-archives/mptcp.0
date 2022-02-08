@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ADB2C9D
-	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 19:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8512CA2
+	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 19:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1644347197;
+	s=mimecast20190719; t=1644347198;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A3ARgymVTVtsiXYGKLmMNFhJnfkY/4+I36Zn1I2Cj0Q=;
-	b=PaeajB/KjIuie/Mr+kJ95EMt/ECvNafTUSYjT9slvr3NseRLrDDCXzWAb2hAHmwWmkXx21
-	oJdFVm3gODZzuU6/0TkqoyjfPsCpGKnTleAeFpJRe9E3mdEL7NtyC38XpBgDB8Ip4FEpwJ
-	Pq80TKmpms5mrSO0zHQAuTZuY7xG7Wg=
+	bh=rH5USFWdLZjhEFfoKpz9D+T6Eoe4ntVi1Mzlbs2xw60=;
+	b=UIXvKKUwgCSKbR7AyQabPBSF7xPMO6PZv8uQa1gACxOJDkNsVGsJfy8q+iFU5xh1/UEfoc
+	eTUj+0UCOl95/xf1y95CdSjVibufT5yfVHd5tbyt4rKepN1pAQTZF3+/ELWDuAX+29wtSc
+	hAdgOs82ZaDAgRzdhDIiilX7oKt9A/Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-411-Y4NZW4IIMHWIsJRvX-TwhA-1; Tue, 08 Feb 2022 14:06:36 -0500
-X-MC-Unique: Y4NZW4IIMHWIsJRvX-TwhA-1
+ us-mta-465-hFfT8i5MPamM1bpbNmGJvQ-1; Tue, 08 Feb 2022 14:06:37 -0500
+X-MC-Unique: hFfT8i5MPamM1bpbNmGJvQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D70410247A8
-	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 19:06:35 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D936802926
+	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 19:06:36 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.58])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9E6A460BF4
-	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 19:06:34 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 93B8A60BF4
+	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 19:06:35 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2 3/4] mptcp: add mibs counter for ignored incoming options
-Date: Tue,  8 Feb 2022 20:06:17 +0100
-Message-Id: <47890ba6bf9dc9cb16aa93d9cdfe0b79c78c8f11.1644346664.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net v2 4/4] selftests: mptcp: more robust signal race test
+Date: Tue,  8 Feb 2022 20:06:18 +0100
+Message-Id: <bc4d2ae72e7427d6727e03071ae9a883109da213.1644346664.git.pabeni@redhat.com>
 In-Reply-To: <cover.1644346664.git.pabeni@redhat.com>
 References: <cover.1644346664.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,87 +47,60 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-The MPTCP in kernel path manager has some constraints on incoming
-addresses annunces processing, so that in edge scenarios it can
-end-up dropping (ignoring) some of such announces.
-
-The above is not very limiting in practice since such scenarios are
-very uncommon and MPTCP will recover due to ADD_ADDR retransmissions.
-
-This patch adds a few MIBs counter to account for such drop events
-to allow easier introspection of the critical scenarios.
+The in kernel MPTCP PM implementation can process a single
+incoming add address option at any given time. In the
+mentioned test the server can surpas such limit. Let the
+setup cope with that allowing a faster add_addr retransmission.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/mib.c | 2 ++
- net/mptcp/mib.h | 2 ++
- net/mptcp/pm.c  | 8 ++++++--
- 3 files changed, 10 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index c12251cb0d44..d544b5304596 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -36,12 +36,14 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
- 	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
- 	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
-+	SNMP_MIB_ITEM("AddAddrDropped", MPTCP_MIB_ADDADDRDROP),
- 	SNMP_MIB_ITEM("MPJoinPortSynRx", MPTCP_MIB_JOINPORTSYNRX),
- 	SNMP_MIB_ITEM("MPJoinPortSynAckRx", MPTCP_MIB_JOINPORTSYNACKRX),
- 	SNMP_MIB_ITEM("MPJoinPortAckRx", MPTCP_MIB_JOINPORTACKRX),
- 	SNMP_MIB_ITEM("MismatchPortSynRx", MPTCP_MIB_MISMATCHPORTSYNRX),
- 	SNMP_MIB_ITEM("MismatchPortAckRx", MPTCP_MIB_MISMATCHPORTACKRX),
- 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
-+	SNMP_MIB_ITEM("RmAddrDrop", MPTCP_MIB_RMADDRDROP),
- 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
- 	SNMP_MIB_ITEM("MPPrioTx", MPTCP_MIB_MPPRIOTX),
- 	SNMP_MIB_ITEM("MPPrioRx", MPTCP_MIB_MPPRIORX),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 7901f1338d15..785cf751e5c0 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -29,12 +29,14 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=0 */
- 	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=1 */
- 	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with a port-number */
-+	MPTCP_MIB_ADDADDRDROP,		/* Dropped incoming ADD_ADDR */
- 	MPTCP_MIB_JOINPORTSYNRX,	/* Received a SYN MP_JOIN with a different port-number */
- 	MPTCP_MIB_JOINPORTSYNACKRX,	/* Received a SYNACK MP_JOIN with a different port-number */
- 	MPTCP_MIB_JOINPORTACKRX,	/* Received an ACK MP_JOIN with a different port-number */
- 	MPTCP_MIB_MISMATCHPORTSYNRX,	/* Received a SYN MP_JOIN with a mismatched port-number */
- 	MPTCP_MIB_MISMATCHPORTACKRX,	/* Received an ACK MP_JOIN with a mismatched port-number */
- 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
-+	MPTCP_MIB_RMADDRDROP,		/* Dropped incoming RM_ADDR */
- 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
- 	MPTCP_MIB_MPPRIOTX,		/* Transmit a MP_PRIO */
- 	MPTCP_MIB_MPPRIORX,		/* Received a MP_PRIO */
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 1f8878cc29e3..c28dd5c21cbe 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -213,6 +213,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 		mptcp_pm_add_addr_send_ack(msk);
- 	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
- 		pm->remote = *addr;
-+	} else {
-+		__MPTCP_INC_STATS(sock_net((struct sock*)msk), MPTCP_MIB_ADDADDRDROP);
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 90a6adc36490..66ac990415e6 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -915,11 +915,17 @@ chk_add_nr()
+ 	local mis_ack_nr=${8:-0}
+ 	local count
+ 	local dump_stats
++	local timeout
++
++	timeout=`ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout`
  
- 	spin_unlock_bh(&pm->lock);
-@@ -253,8 +255,10 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
- 		mptcp_event_addr_removed(msk, rm_list->ids[i]);
+ 	printf "%-${nr_blank}s %s" " " "add"
+-	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtAddAddr | awk '{print $2}'`
++	count=`ip netns exec $ns2 nstat -as MPTcpExtAddAddr | grep MPTcpExtAddAddr | awk '{print $2}'`
+ 	[ -z "$count" ] && count=0
+-	if [ "$count" != "$add_nr" ]; then
++
++	# if the test configured a short timeout tolerate greater then expected
++	# add addrs options, due to retransmissions
++	if [ "$count" != "$add_nr" ] && [ "$timeout" -gt 1 -o "$count" -lt "$add_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
+ 		ret=1
+ 		dump_stats=1
+@@ -1311,6 +1317,7 @@ signal_address_tests()
  
- 	spin_lock_bh(&pm->lock);
--	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
--	pm->rm_list_rx = *rm_list;
-+	if (mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED))
-+		pm->rm_list_rx = *rm_list;
-+	else
-+		__MPTCP_INC_STATS(sock_net((struct sock*)msk), MPTCP_MIB_RMADDRDROP);
- 	spin_unlock_bh(&pm->lock);
- }
+ 	# signal addresses race test
+ 	reset
++
+ 	pm_nl_set_limits $ns1 4 4
+ 	pm_nl_set_limits $ns2 4 4
+ 	pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
+@@ -1321,7 +1328,10 @@ signal_address_tests()
+ 	pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
+ 	pm_nl_add_endpoint $ns2 10.0.3.2 flags signal
+ 	pm_nl_add_endpoint $ns2 10.0.4.2 flags signal
+-	run_tests $ns1 $ns2 10.0.1.1
++
++	# the peer could possibly miss some addr notification, allow retransmission
++	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 	chk_join_nr "signal addresses race test" 3 3 3
  
+ 	# the server will not signal the address terminating
 -- 
 2.34.1
 
