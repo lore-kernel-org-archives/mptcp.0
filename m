@@ -1,44 +1,44 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670812F26
-	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 09:38:26 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id y3so29666355ejf.2
-        for <mptcp@lists.linux.dev>; Tue, 08 Feb 2022 01:38:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CF22F26
+	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 09:42:14 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id s21so22262092ejx.12
+        for <mptcp@lists.linux.dev>; Tue, 08 Feb 2022 01:42:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=fV0uL3K1f//JRQF6FVSmtCzngKSIZZ/dmOKvpjszyjQ=;
-        b=oNd7QvcNmL9s550ISwNXwIqwbhllNzhwbLEggchEsCN4eKu8gmxHBTn/NpJsUoNwJA
-         izvJmlYK4Xkbn1Qi8N4q0OUM+vGpRIdMEdkWB1iepAleXtRkjWeFwSaujBswCOepqMMF
-         mabf8xt0zTkClxpPjMLcWQFKUP6oA8iEkFvbMalsBWgg5S6lkx9iSUSz2zFN37U18z24
-         IdSDZEDCxQeluA+8gxHQUYiH63xlDbbclnHhpPOxL31fMogf3foc/aeVKbUzfU7c6iLL
-         xm/eChwr8MuGGwbonjqMHsZ7bC3XtAV25zFSfAA6KWXaGKzSa6no+/FoWPebwYS6ntL8
-         dq9A==
+        bh=gealWq20lu3GXxEGIb6qa8OEHK9eDtsxLq4zFwnujXE=;
+        b=ONeVrxa8/qQLT+PLoEv0Z5SY8XcO+nQJ2uzUhTXYX0G6FrFUsYKgvqL6yFi7KN7Tur
+         KGUtxQdRJ0/OjvrIycW/mE2VyBqM9rcSG100+KCuu9tpe3W9pzZ5EwrKHoZ0hHRtApCe
+         wEjNDe+vdEaUKibvzw1AqrzahJukYAMx9hXXX7Vl9pGkfMl6bSh+RiA+Gw4pd0jWXPdC
+         UZ1K7BWbTxxwqsgPQVDHMRAxRNVNCqzwMUs2Aqz3qhXZLYAVYwfiwwOG1l/Uow1Lht5m
+         Og05zQJFCYMTS56YTKrQEc+GJFK1p3852kGv1FURod6CwPZEGKjq4wUEFOyMAXLg49Dc
+         TmNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=fV0uL3K1f//JRQF6FVSmtCzngKSIZZ/dmOKvpjszyjQ=;
-        b=xRf4w66887LpZhPKs3CSE0FZs8ALr7c/56f7xJ06JGIWfgRhf2N+Spm491BbL905rX
-         o3ph55/n6/y3zwKYrYRESyRQVuSxsAeSm/7B6ZUuY8JxoraQgh2o3XazNBtnEwnxerhD
-         hado7zkfGo3xLW0n9JocgylakasrkPuhuuI0RRFaqfC/N40Xy8atPtR+qpYp9oF7fDGN
-         mePRh9Fjyvq4RE3QeW0/mb39Yo9Z1rmH77n7G91Ns3reENtpkxQ6gDJeVTkShUWYyQan
-         G600wXzy8vMFh+iLGFTO1KpEnbe9FXqWMUZgu2agxeU5ntvPKjwvuHPeEzPhsQxAKbKg
-         M4Vw==
-X-Gm-Message-State: AOAM5314EETX9SQ6CBUE/poL+Dv4NOVpQl2gfm2lSWRBJZn6qtd9BExl
-	KJVZeB4LdGAczoTH15l2XRPXEw==
-X-Google-Smtp-Source: ABdhPJw+T/mKEOQNwIGVw6yxuDcKGUJt73wnZlCG6biRFcF2grjAg/bAk6xRce8YgG+D60ovrL41/A==
-X-Received: by 2002:a17:907:6088:: with SMTP id ht8mr2776838ejc.619.1644313104524;
-        Tue, 08 Feb 2022 01:38:24 -0800 (PST)
+        bh=gealWq20lu3GXxEGIb6qa8OEHK9eDtsxLq4zFwnujXE=;
+        b=tAzAz1lff2LzDp8Ew5rxXVMtz8gxPOSnNpsBxQzQ7giRlIguEv9gk2nN3T0VUrzL4Z
+         6QjXFdm1LiVGjfxSeTq8X6pPa/F0uJVX05OnMChS4zpx+lERw/lpjfMr97TezlUsRitK
+         Lu6918Ya/0kijT03fGQ6ZKbIWP8akFFCji36sxQ7kbFAW8/gYICtqjX55uXdtkh3L6OW
+         VRgkY/Qp5gYX/sdlR0/buJwG3K8yNmZcndKbjWGCdvnAdNpm99JqGdnFsGkfvLnXCTKQ
+         w7MO63ot8f29ye+QJzJBiGSI7loDrjhHxdFl/lTbscfVbSd/U303QIxWld1pYjAv0tUG
+         i3Jw==
+X-Gm-Message-State: AOAM532Mgnswc04psO9vJgPdfizaqeIZa65ul2sAtF64yP+R51aIsn+E
+	9oyV/EWQvEsFV1UyooOhdfogP12RTSkjDH0xspA=
+X-Google-Smtp-Source: ABdhPJzv2xsMZeDys6xxnGZXIlPY+F7N+9WRHZevIKLjZo8VjYLxbRNxWoKZuCoTXStTXhY+S7eAOw==
+X-Received: by 2002:a17:907:6e91:: with SMTP id sh17mr2941120ejc.534.1644313332555;
+        Tue, 08 Feb 2022 01:42:12 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:ba0f:5a93:d93e:ce85? ([2a02:578:8593:1200:ba0f:5a93:d93e:ce85])
-        by smtp.gmail.com with ESMTPSA id y2sm3979014edt.54.2022.02.08.01.38.23
+        by smtp.gmail.com with ESMTPSA id q7sm3564628eds.78.2022.02.08.01.42.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Feb 2022 01:38:24 -0800 (PST)
-Message-ID: <c3205d30-822a-b124-f474-b72bd1588476@tessares.net>
-Date: Tue, 8 Feb 2022 10:38:23 +0100
+        Tue, 08 Feb 2022 01:42:12 -0800 (PST)
+Message-ID: <cf6369f4-b6ec-1817-8ba8-7c9faf771ec5@tessares.net>
+Date: Tue, 8 Feb 2022 10:42:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,32 +47,33 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: adjust output alignment for
- more tests
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: simplify
+ pm_nl_change_endpoint
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <9ecd5de1df130bc1d5cc65de7c940ea546cf4eaf.1644214533.git.geliang.tang@suse.com>
+References: <3172f829eeb966f7265e4740a6e3f9bdca2fe44c.1644215857.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <9ecd5de1df130bc1d5cc65de7c940ea546cf4eaf.1644214533.git.geliang.tang@suse.com>
+In-Reply-To: <3172f829eeb966f7265e4740a6e3f9bdca2fe44c.1644215857.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang, Mat,
 
-On 07/02/2022 07:16, Geliang Tang wrote:
-> The number of self tests in mptcp_join.sh will soon be more than 100, the
-> output alignment is no longer OK. This patch adjusted it.
+On 07/02/2022 07:38, Geliang Tang wrote:
+> This patch simplified pm_nl_change_endpoint(), using id-based address
+> lookups only. And dropped the fragile way of parsing 'addr' and 'id'
+> from the output of pm_nl_show_endpoints().
 
 Thank you for the patch and the review!
 
 Now in our tree (feat. for net-next) with Mat's RvB tag:
 
-- 14b3f02f7484: selftests: mptcp: adjust output alignment for more tests
-- Results: ce83a4acc66a..f092cd7abb9f
+- dbe081a3e5c2: selftests: mptcp: simplify pm_nl_change_endpoint
+- Results: f092cd7abb9f..e98f6976dd01
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220208T093806
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220208T094154
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
