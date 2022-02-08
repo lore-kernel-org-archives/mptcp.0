@@ -1,160 +1,129 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6EA2F24
-	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 21:25:51 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id ch26so999259edb.12
-        for <mptcp@lists.linux.dev>; Tue, 08 Feb 2022 13:25:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:cc:in-reply-to:content-transfer-encoding;
-        bh=XeI4S25H6a5xsUNCjjv1xDgM4A8G2d+vHBQkxu3P0pk=;
-        b=a19wv8XDqozRNfuKI7xT+3Nha2W2F6+PdkwOsbnZ9bB+Frde3S0ezuxxS+cOxS6MqO
-         xbwIPQJUKK6N42wwd3zmZZAcIFYUqWRy5veJXJGeABl6RFsFj99EhOJBAOCTY2OYVycF
-         i5nAhlkhb9H7tA5GizR/nmVvrWeWRVpVSniOmbslC6vGK+WBWZe+W0KKf1415uWpgAhu
-         N5GT4kV2bDT9RWI7PN3K+0HGBhAqi0mGsOaHZB4XjvpPkXm2zIl5CCPMJU9K+8LwB92O
-         c0IZw9EgHrVG2/qAef97vfRkG7UxIwZX2Ncf7sbQNIXUgiYGWMFXtpx43aeSeXwi+gNK
-         uhPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:cc:in-reply-to
-         :content-transfer-encoding;
-        bh=XeI4S25H6a5xsUNCjjv1xDgM4A8G2d+vHBQkxu3P0pk=;
-        b=7ZpmrXMmchLITs8HaYPiPw3DweZRjgPgfVYQWOeOIIbqU3uTylsC1NjDZ7EX9Ti0mk
-         i98cTKHvmsW1nPWwq5FM7p5dAVJYJYaav6pghloywi2lKtWkm67XW9hM9a8QDBakYvvL
-         JlSyQZgVUzcst9DXhVFZDEtxmGa0jjTxOohodX4UuEIUoUoVteYnkD7x1xdyn8Aj/9t8
-         0dItAezEskuJQH2L8vJEmhQAzXrZ0jk+Em7ndrbRZU+CpI8wqFTcKjl+GrW7fQ1wek2u
-         x9M2PKDDfVQ5NOtBcq92RVhIUsdMNLsNfsYJLAcQT0qIwEjR9DLg7vcabUT2tvuX0Awb
-         klfA==
-X-Gm-Message-State: AOAM532n1y04oaRnBmKR8rn3xXMS6HjVNv4uSK2XqLu4rTE7w388Lq5V
-	Qq4DtEktcX7k+RYCSpATq4sEcQ==
-X-Google-Smtp-Source: ABdhPJygQ2U6rTd+s5AH+H2pSzcVMIRO700W90pwSouPUAxnwgmmxxfCm+Jj2nw0tmPas2xD2fhgnA==
-X-Received: by 2002:a50:fc06:: with SMTP id i6mr6475490edr.89.1644355549474;
-        Tue, 08 Feb 2022 13:25:49 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:de24:e471:fe12:b481? ([2a02:578:8593:1200:de24:e471:fe12:b481])
-        by smtp.gmail.com with ESMTPSA id vp8sm4493104ejb.85.2022.02.08.13.25.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Feb 2022 13:25:49 -0800 (PST)
-Message-ID: <0fcbb69f-1e23-be3c-aea0-86bafb3a68fb@tessares.net>
-Date: Tue, 8 Feb 2022 22:25:47 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5412C80
+	for <mptcp@lists.linux.dev>; Tue,  8 Feb 2022 23:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1644364741;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Jo1AKAZ9SaQqhW2mYvsrGiFq6n7/kWkMoKIIrmWE2LY=;
+	b=ncMvW0yTDupIq0HlQ9e5ac+mQzApAgyFi1qfVsS39Pv+xwUJBz8whA28vQBWXju/+vKzsu
+	WcC5X26M1OfrNf9aUt8YiFZDez0CiHDoVcRbXtyPu8o/lwuJW1qPDGdf+FCro1Q9tTP9Xs
+	2Pdbg/yHz4/NTFxxwuKhJyDNe+IKqvI=
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+ (mail-he1eur04lp2050.outbound.protection.outlook.com [104.47.13.50]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-22-xdiKKTwSOlGlAVrBfyEHoQ-1; Wed, 09 Feb 2022 00:59:00 +0100
+X-MC-Unique: xdiKKTwSOlGlAVrBfyEHoQ-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U5CbKDKvIM8sucXfdUBFRgRoAMCTwXlyVe0a8mpU0oq4bJVszOLpULPUXnSoJnVyzyqBKNGgvCx1kDFakC/ayYJzzVhStv5GhqwqvhsXXxrXoaOQsNe1FvCN3Gdbn5hZcb0lj6TqJtLx04/IY6Vi+cFmYwF0BiTym9vqW31h/jCmDg8g/HM5v/rqJfpitP9aHBIC8jBMu9THKFGqx4H4abHWxXVao5r+izClvJD6X+DlMi8Ox/F0J0qK4BufUgsv9bQuXnA/eggY3MNNrIYcGWepHjv3K7DUuhJbHvcESGiGWlj3Zi6qTKdL6BISxwrlehoZ7AFCY7eTHKGIFKFkwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RnNjJiriS/B/WwTx+/fPJH8EabOgMPL4PjLZD3InRiE=;
+ b=IkqOut1DjP5MPNbdZwD2SHY6UZHL0Rd9fAIGakM9a1D46CrC0RcbIUb3qsGt/3ZhQ6U+buUOMrqDLrh54zpwpC5gyCgfY2GO2qbJbVOjGQiT/WzZwvqjGZbmZAo7Po7Jz5MaNv3zRFzV6BwPDlcROFdi6H8Q+Emcrsw3za6SHllyaIoTHNbPHB/x3g5/BgDgaYS+qyzlaGBnkEdWqpB7gi96Dvgji792nNd2F/3MPW/ofLIThqiAGPpaVjIkrsiG/+AvnI5Rgx/iN4G3kUe/9jTVEo2Aa/5COCZtd4GhPi/ned6KxQwFVhBQZH0wd0adcQ4ymuFzzZfsQacpgpFSBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by VI1PR04MB2959.eurprd04.prod.outlook.com (2603:10a6:802:8::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.11; Tue, 8 Feb
+ 2022 23:58:57 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.019; Tue, 8 Feb 2022
+ 23:58:57 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 0/2] add mp_fail testcases
+Date: Wed,  9 Feb 2022 07:59:14 +0800
+Message-ID: <cover.1644364562.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR03CA0099.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::15) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-net v2 2/4] mptcp: fix race in incoming ADD_ADDR
- option processing.
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <cover.1644346664.git.pabeni@redhat.com>
- <9055dfabebe975c34e5f741885e1c70ecb49da36.1644346664.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <9055dfabebe975c34e5f741885e1c70ecb49da36.1644346664.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0fc57c79-e815-4bfa-6e47-08d9eb5ef802
+X-MS-TrafficTypeDiagnostic: VI1PR04MB2959:EE_
+X-Microsoft-Antispam-PRVS:
+	<VI1PR04MB295972289878FCA15BF59AC4F82D9@VI1PR04MB2959.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	WpcYl+VJlWd5IEhziCytCgX+tKWp5pVPx0wb0kfHsk76BcsT3Pkk2RUx9C7aIh9rlArgKdO0S4f507ksvlP2I+BKbutHeap5Z49qF2Z4edbc0RZq3DFa9oiDP4BPKmUP/wcEMBrSdsaMO9xy6YJHk4bNOLPpoyRxkTldWV8Wb1hcaAQn9tcJcu+KCJPHuHsC9py8W2WW0aNs+XZvc2czBOwy557RIwYAQ+7RXYJU2TAPG1YcNn+GfHM0r+jCJeq1sPlHK57OxWypPKTIUE59Syfr5D1hp9oEsaZPlh2IoDT8TWRtReDWIExuRdOJ4h6cOzJxHwNjpBo+M6DKPhVtSET7O1jRGSy2+zv5axsgF2XMY3chhhW5xF8XeR0DVIZO+nah7GEMIll6YtMjWYHqzWw0gM3gP0cYNd0pBl3DXY9SCi1vi+Ovv5Ze3oeELWcfLN6INijVFk5O5a8+A48f8mQqww9kuorXgCHBWahPYvWPXK4CzDgVCvT0Bp6NU4k8+6loL8vJie+7/t/MZch5b+qtXGBJDxAih4r980qlaksqyAnsFJBBdk0BgPpQ+QXN/GNrTnmP+vxVqVvyImNYMEPWSihHS6FkV6UxxBDyuHUTcTq6SwVeFXWN+PDQduLnFS6nFB39IfSlLhg560FRDQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(8936002)(2906002)(83380400001)(2616005)(5660300002)(44832011)(107886003)(6506007)(6512007)(36756003)(38100700002)(186003)(6666004)(86362001)(66556008)(508600001)(6916009)(8676002)(4326008)(66476007)(66946007)(4744005)(6486002)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?js219n142AT8uoAnH8qmdDJr41QRCDMuohey1frdhfSPl2yvS366pGt9JWVY?=
+ =?us-ascii?Q?Xsyv5Bhwz3cGwcVIYLDTrtMKrT5Hpxnnwx6H6k6JuFyx2XTFLFcLwoyuRWet?=
+ =?us-ascii?Q?0/vGyrpQ/M57nL/dCkiyn57L44g7atX8/fEENNUHLZ9Q+efefhipstxLbOAC?=
+ =?us-ascii?Q?cgK0On/j3LFpQ+Sc86IjQx3amYwlxri4U0xxY/0WZqIpac9WYHQRK4tz3L3R?=
+ =?us-ascii?Q?Euep5qW8wJ9aIa+oKj4HkXQPVRSWd8aiAMi4H7PUF5sdy6r9Cp80d8pDOtno?=
+ =?us-ascii?Q?Lgao7jHNAE1qIAKRVK9D/eAzZRluVBxpctAsMhNFYt/B00lgjCe0agmEgcS2?=
+ =?us-ascii?Q?ysSO2zDdu1ZeWfTAPrLuDnkTtYV9Z5z8tnfeE7JNq5CEtI/oWxKv8qGjbSYw?=
+ =?us-ascii?Q?ZBeUPtlZAzY6m2e8LwRBKaUVAAI8IPTbE63+Iuoia/H7r8x5ews8nRum7H8i?=
+ =?us-ascii?Q?F61YONlUhMqYdyyNFhVNiePiNlXnQnQpgjcD1EBHG1wOlvk1D6IlMgCtEW/2?=
+ =?us-ascii?Q?HPHn1FSUgwsdwsw2IYevl6mQ2+e7ih/CDE2cPlF6LYtP7cSpwlNELmNm2Wgj?=
+ =?us-ascii?Q?/L7T/tqYf48vrKYUYkyBmexRb9v7278O++H/3uJF9egAN1AvCnpsn24pLqsD?=
+ =?us-ascii?Q?5lAmLOTaIhbt5v6k2seVP99DTd4e/wjHv7tudZhJOwqyx5uPC4+ljjz2A9bQ?=
+ =?us-ascii?Q?bFWMb+7u58zdSYf02tf1d1b7NSOuSjkMl6G8ROK4jFnnSi/9aOkXjh/2l6UL?=
+ =?us-ascii?Q?8qqkcGGqgve0pf99KucmgdKaSmhjFLL6Rr3eK1TxMdeg9BdyYTgq8D/TGRgE?=
+ =?us-ascii?Q?fEBhtWWnGkHyoz75OiaWvGKoTLa7qhDGvDuzvtLrVp+nxafQhbkbpYHcRXu3?=
+ =?us-ascii?Q?L0SWgyyEbmXnpqZjkOjNZ5XT9cZhfUywGaKN1a413ziAFMW8Nns7cC03dPmI?=
+ =?us-ascii?Q?Ia0eA0qPKPau97QVkp7FJ0+eKLvR8ZQRkhcSVTG+o3LryvnEPqH8Y6sr2+YB?=
+ =?us-ascii?Q?wViGCxrLw+HrN/dagHRTm699KF7r1B5SAPRwBH48DDMO6sGBFXtgStSs+372?=
+ =?us-ascii?Q?LikXXAtII6+0crXUoA9M3V7Q+T0DMy8/pu+jyeBZWNm0tUwWPgEVpHDn74fh?=
+ =?us-ascii?Q?wmMzmwUK8YN7CSGC+CVEqJ6LhvYScX0Hb2OSi0gbXg1ZB0OpEjQSEMIeMbIJ?=
+ =?us-ascii?Q?m4i7pItyb2UVXPP6bitNn6deOukuc/H6lGEQaCtJFjpoRFHH1J3GBk15Alaw?=
+ =?us-ascii?Q?4r3AYB4Ooc7uLJK2eZJpXsCJ65pJThujY7eoG9rTUgjf+dEVRZimFzEjYMUz?=
+ =?us-ascii?Q?hOH4pMef/ahrVQpTpYjLPaDacrbpNDBvQy14yY1WevV1UWI+Z6laJToERAj+?=
+ =?us-ascii?Q?3nkBPXaZQFNgzyGTHXz4OS7jJeBlvMRQIMgsQ78myHW+2aqiZ6zf2z98v882?=
+ =?us-ascii?Q?Lf9TGvbGNIdPfCI3w2uBos//8dGdQehM4gG1/yWUicpAlcdmyF7g1mi5nfIL?=
+ =?us-ascii?Q?xpLS1pULgR4ZaoQQrpFZnWW3cMG1odxuVgEbJq9uvpyD1eV2MvscNAfGzep8?=
+ =?us-ascii?Q?/uuWLX8n1CTUZ5NwFbgeqfK152swyp66QlvPuBKvrcBTpsuWn4v9CkwbXy2h?=
+ =?us-ascii?Q?eLcRvM/cl2QOzoatECc9YYlwGrZTRxVitZXztWJR8XbWOkAi+iN8wXOM/FUK?=
+ =?us-ascii?Q?SAwqlEPltkGlv1tRRyhXKbmWlbk=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fc57c79-e815-4bfa-6e47-08d9eb5ef802
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2022 23:58:57.1872
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H3wZxLJC2qV/3bz4tsI0jd1iSeeCHZxI0MCSaqiltgjGcV4V23TMCAUvJbKIxbV51S9ZjzMRkQV5kUYyIm7JvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB2959
 
-Hi Paolo,
+This is v12 of the mp_fail testcases with Matt's changes. It works well
+and very stable.
 
-On 08/02/2022 20:06, Paolo Abeni wrote:
-> If an MPTCP endpoint received moltiple consecutive incoming
-> ADD_ADDR options, mptcp_pm_add_addr_received() can overwrite
-> the current remote address value after the PM lock is released
-> in mptcp_pm_nl_add_addr_received() and before such address
-> is echoed.
-> 
-> Fix the issue caching the remote address value a little earlier
-> and always using the cached value after releasing the PM lock.
+Geliang Tang (2):
+  Squash to "mptcp: infinite mapping receiving"
+  selftests: mptcp: add mp_fail testcases
 
-Thank you for looking at that!
+ net/mptcp/subflow.c                           |   1 +
+ tools/testing/selftests/net/mptcp/config      |   8 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 142 ++++++++++++++++--
+ 3 files changed, 137 insertions(+), 14 deletions(-)
 
-It seems really helping for me: 500 iterations without issues! I guess
-we can add:
+--=20
+2.34.1
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/254
-
-(I guess we don't need Reported/Tested-by tags.)
-
-Not related to that but do you think we could have a similar issue with
-RM_ADDR (issues/225)?
-
-
-But one important thing: this series introduces a regression apparently:
-packetdrill ADD_ADDR tests are now failing because the port is missing
-in the echo packet:
-
----------- 8< ----------
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): packetdrill_add_addr selftest_mptcp_join 🔴:
-  - Task: https://cirrus-ci.com/task/5025097999187968
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5025097999187968/summary/summary.txt
-
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): packetdrill_add_addr 🔴:
-  - Task: https://cirrus-ci.com/task/4765935646015488
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/4765935646015488/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits:
-https://github.com/multipath-tcp/mptcp_net-next/commits/34bad3e35cbc
----------- 8< ----------
-
-This seems to be due to this patch 2/4.
-
-> 
-> Fixes: f7efc7771eac ("mptcp: drop argument port from mptcp_pm_announce_addr")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  net/mptcp/pm_netlink.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index fb8d4bfcfbd6..4b6aa89d45a5 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -660,6 +660,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
->  	unsigned int add_addr_accept_max;
->  	struct mptcp_addr_info remote;
->  	unsigned int subflows_max;
-> +	bool reset_port;
-
-I'm very surprise the compiler doesn't complain about this line because
-reset_port can be used later while not having been set before. Is it
-normal with 'bool'?
-
-
-Setting it to false by default fixes the issue with packetdrill on my side:
-
----------- 8< ----------
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 4b6aa89d45a5..98b485406afa 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -660,7 +660,7 @@ static void mptcp_pm_nl_add_addr_received(struct
-mptcp_sock *msk)
-        unsigned int add_addr_accept_max;
-        struct mptcp_addr_info remote;
-        unsigned int subflows_max;
--       bool reset_port;
-+       bool reset_port = false;
-        int i, nr;
-
-        add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
----------- 8< ----------
-
-(I can fix the issue when applying the patch if it is easier)
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
