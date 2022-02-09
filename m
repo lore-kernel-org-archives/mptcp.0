@@ -1,7 +1,7 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA2D29CA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABE62C80
 	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1644400062;
@@ -9,28 +9,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZlWhKHLLxSH3NQU7f7YpSzfHzpv6ql8uwYl1VmPivJ8=;
-	b=eoF1WnnlMZGVhAK2E/nnHMz4SrUnfhz2bMtL0iVFoxcpzekHLy67lLuj1nNQwVsYLfDE02
-	FX68sOkGcPIT+JfIr4DqTNOn3neZlnWukRpQm1J+eatA3M6x7OCv2KzsqvYM+gTfEGCuk+
-	AO+6CDRJZn2ohY82+NCDrFytq4vgpUs=
+	bh=A3ARgymVTVtsiXYGKLmMNFhJnfkY/4+I36Zn1I2Cj0Q=;
+	b=I6sXkxYtoCPX1j70xcYIHP0be8Rg5Szsho0vA9uLLhJE5Oe2Txm9SiTXmbgsbc+SH92KEw
+	gpFn7rJ5AYTdh7RB6Q4gxSeLX3/ZbImQU6YsB3RUvAO6IFdC9KOCrTUjIjqkQwzKl7akEZ
+	py6ckeMd5zvm9xYv2VyMsE5s97Yrxa0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-350-rZ514NSkO3a7bQvRJnj8qQ-1; Wed, 09 Feb 2022 04:47:40 -0500
-X-MC-Unique: rZ514NSkO3a7bQvRJnj8qQ-1
+ us-mta-520-64TOgNR8MYCJpetBCWP1fw-1; Wed, 09 Feb 2022 04:47:41 -0500
+X-MC-Unique: 64TOgNR8MYCJpetBCWP1fw-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 786B48145E0
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:47:39 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65808192AB6D
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:47:40 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.181])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DEEFD2A17B
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:47:38 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CEBCAE2C6
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:47:39 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v3 2/4] mptcp: fix race in incoming ADD_ADDR option processing.
-Date: Wed,  9 Feb 2022 10:47:31 +0100
-Message-Id: <911eab24cdc573cfce1865556aa1ec8986ea6e60.1644399915.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net v3 3/4] mptcp: add mibs counter for ignored incoming options
+Date: Wed,  9 Feb 2022 10:47:32 +0100
+Message-Id: <3ecca50d02f7d75f9f4dc166f80ebddb3d91bdfa.1644399915.git.pabeni@redhat.com>
 In-Reply-To: <cover.1644399915.git.pabeni@redhat.com>
 References: <cover.1644399915.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,72 +47,85 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-If an MPTCP endpoint received moltiple consecutive incoming
-ADD_ADDR options, mptcp_pm_add_addr_received() can overwrite
-the current remote address value after the PM lock is released
-in mptcp_pm_nl_add_addr_received() and before such address
-is echoed.
+The MPTCP in kernel path manager has some constraints on incoming
+addresses annunces processing, so that in edge scenarios it can
+end-up dropping (ignoring) some of such announces.
 
-Fix the issue caching the remote address value a little earlier
-and always using the cached value after releasing the PM lock.
+The above is not very limiting in practice since such scenarios are
+very uncommon and MPTCP will recover due to ADD_ADDR retransmissions.
 
-Fixes: f7efc7771eac ("mptcp: drop argument port from mptcp_pm_announce_addr")
+This patch adds a few MIBs counter to account for such drop events
+to allow easier introspection of the critical scenarios.
+
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v2 -> v3:
- - properly initialize reset_port - Matt
----
- net/mptcp/pm_netlink.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ net/mptcp/mib.c | 2 ++
+ net/mptcp/mib.h | 2 ++
+ net/mptcp/pm.c  | 8 ++++++--
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index fb8d4bfcfbd6..98b485406afa 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -660,6 +660,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	unsigned int add_addr_accept_max;
- 	struct mptcp_addr_info remote;
- 	unsigned int subflows_max;
-+	bool reset_port = false;
- 	int i, nr;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index c12251cb0d44..d544b5304596 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -36,12 +36,14 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
+ 	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
+ 	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
++	SNMP_MIB_ITEM("AddAddrDropped", MPTCP_MIB_ADDADDRDROP),
+ 	SNMP_MIB_ITEM("MPJoinPortSynRx", MPTCP_MIB_JOINPORTSYNRX),
+ 	SNMP_MIB_ITEM("MPJoinPortSynAckRx", MPTCP_MIB_JOINPORTSYNACKRX),
+ 	SNMP_MIB_ITEM("MPJoinPortAckRx", MPTCP_MIB_JOINPORTACKRX),
+ 	SNMP_MIB_ITEM("MismatchPortSynRx", MPTCP_MIB_MISMATCHPORTSYNRX),
+ 	SNMP_MIB_ITEM("MismatchPortAckRx", MPTCP_MIB_MISMATCHPORTACKRX),
+ 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
++	SNMP_MIB_ITEM("RmAddrDrop", MPTCP_MIB_RMADDRDROP),
+ 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
+ 	SNMP_MIB_ITEM("MPPrioTx", MPTCP_MIB_MPPRIOTX),
+ 	SNMP_MIB_ITEM("MPPrioRx", MPTCP_MIB_MPPRIORX),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 7901f1338d15..785cf751e5c0 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -29,12 +29,14 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=0 */
+ 	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=1 */
+ 	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with a port-number */
++	MPTCP_MIB_ADDADDRDROP,		/* Dropped incoming ADD_ADDR */
+ 	MPTCP_MIB_JOINPORTSYNRX,	/* Received a SYN MP_JOIN with a different port-number */
+ 	MPTCP_MIB_JOINPORTSYNACKRX,	/* Received a SYNACK MP_JOIN with a different port-number */
+ 	MPTCP_MIB_JOINPORTACKRX,	/* Received an ACK MP_JOIN with a different port-number */
+ 	MPTCP_MIB_MISMATCHPORTSYNRX,	/* Received a SYN MP_JOIN with a mismatched port-number */
+ 	MPTCP_MIB_MISMATCHPORTACKRX,	/* Received an ACK MP_JOIN with a mismatched port-number */
+ 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
++	MPTCP_MIB_RMADDRDROP,		/* Dropped incoming RM_ADDR */
+ 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
+ 	MPTCP_MIB_MPPRIOTX,		/* Transmit a MP_PRIO */
+ 	MPTCP_MIB_MPPRIORX,		/* Received a MP_PRIO */
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 1f8878cc29e3..c28dd5c21cbe 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -213,6 +213,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ 		mptcp_pm_add_addr_send_ack(msk);
+ 	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
+ 		pm->remote = *addr;
++	} else {
++		__MPTCP_INC_STATS(sock_net((struct sock*)msk), MPTCP_MIB_ADDADDRDROP);
+ 	}
  
- 	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
-@@ -669,15 +670,19 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 		 msk->pm.add_addr_accepted, add_addr_accept_max,
- 		 msk->pm.remote.family);
+ 	spin_unlock_bh(&pm->lock);
+@@ -253,8 +255,10 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+ 		mptcp_event_addr_removed(msk, rm_list->ids[i]);
  
--	if (lookup_subflow_by_daddr(&msk->conn_list, &msk->pm.remote))
-+	remote = msk->pm.remote;
-+	if (lookup_subflow_by_daddr(&msk->conn_list, &remote))
- 		goto add_addr_echo;
- 
-+	/* pick id 0 port, if none is provided the remote address */
-+	if (!remote.port) {
-+		reset_port = true;
-+		remote.port = sk->sk_dport;
-+	}
-+
- 	/* connect to the specified remote address, using whatever
- 	 * local address the routing configuration will pick.
- 	 */
--	remote = msk->pm.remote;
--	if (!remote.port)
--		remote.port = sk->sk_dport;
- 	nr = fill_local_addresses_vec(msk, addrs);
- 
- 	msk->pm.add_addr_accepted++;
-@@ -690,8 +695,12 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 		__mptcp_subflow_connect(sk, &addrs[i], &remote);
- 	spin_lock_bh(&msk->pm.lock);
- 
-+	/* be sure to echo exactly the received address */
-+	if (reset_port)
-+		remote.port = 0;
-+
- add_addr_echo:
--	mptcp_pm_announce_addr(msk, &msk->pm.remote, true);
-+	mptcp_pm_announce_addr(msk, &remote, true);
- 	mptcp_pm_nl_addr_send_ack(msk);
+ 	spin_lock_bh(&pm->lock);
+-	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
+-	pm->rm_list_rx = *rm_list;
++	if (mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED))
++		pm->rm_list_rx = *rm_list;
++	else
++		__MPTCP_INC_STATS(sock_net((struct sock*)msk), MPTCP_MIB_RMADDRDROP);
+ 	spin_unlock_bh(&pm->lock);
  }
  
 -- 
