@@ -1,39 +1,38 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36982F39
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 23:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC612C9C
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 23:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644447644; x=1675983644;
+  t=1644447682; x=1675983682;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=9+lanD1BrObRydqjJUZ054LA5iSTijJ8JSER8KTV/Ds=;
-  b=YDs1pzK46jY4ZT1r8jSNzsU4RJBS55LIrAa/JYCBJDkcQXINgSWH9VbA
-   03q0ZvDbunHzuAfGAIkEKnr3+DauqQml8ZsD5i8u7uGX15wgzlFQTIxds
-   sDKT00XzZAFUtMssTn9F4KN3pWSeL4AvNrry4sqVaB7owKRauQnNYsTrS
-   NfCoSlN7fIGwogMvjey0GReGTG6uiStBWtv7B2Q1AgOzs33HkJSNX1s1P
-   oya5Wwfu6elNge7P00Ht3kDhIx4xR7Nb2gjBF+NeMEW8zQ9CI3Y9tJLra
-   Y6Spu7LYz+sjMYbjpL475LoBPuY/sv6ESikm6PD0jhpZtviQi+/eNCrQ9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="312653882"
+  bh=gfIsuUzVfg7Xo8Jz2hc3qnzTt63v+rw73D8GPZD03bc=;
+  b=ngZEkEyTrV/mtq2kGtJemB6FIk19wLslKLje+rKXyakNSuTcTwYXUqzM
+   3knUBhdzaePaDA3OJ7Ev/iPqDsWTeYHXys37nzl3pyTYJ0bbRTJ3M/lhD
+   /lLjdN+tMHOUJBvMSwkzhXp+ZTTxkVrK3pIh7Vcyf2Pvg4q3KO/CUwi49
+   Ass6kCw4cRaGHipORcCDxsI/PI7ZqssGTeBQGU4LoeTevjEREiPeMePG8
+   mRwtabbdRd7IGGiqzQHbWS7VvhZ7buL0unTb7FDC85hF3L6cBZNPx0HtC
+   Hoe2/cYJYmdtoqwWBkv7qKRJzRV63D+hy//EefrxPiC0EC2scJ/i9+19x
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="335775486"
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="312653882"
+   d="scan'208";a="335775486"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:00:44 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:01:21 -0800
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="701448192"
+   d="scan'208";a="701448409"
 Received: from halucas-mobl3.amr.corp.intel.com ([10.212.241.159])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:00:43 -0800
-Date: Wed, 9 Feb 2022 15:00:34 -0800 (PST)
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:01:21 -0800
+Date: Wed, 9 Feb 2022 15:01:21 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: be more conservative with
- cookie MPJ limits
-In-Reply-To: <d3aaf62f955697daa23859487bfaa5f1a777b29d.1644426852.git.pabeni@redhat.com>
-Message-ID: <1afa995-966c-c694-f33a-adfea5a65df4@linux.intel.com>
-References: <d3aaf62f955697daa23859487bfaa5f1a777b29d.1644426852.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next] mptcp: constify a bunch of of helpers
+In-Reply-To: <8d4babebbd177de911a30c256b0b68742b09f607.1644400229.git.pabeni@redhat.com>
+Message-ID: <8d96fcdf-9260-ac69-6f1e-6a1ec80b434@linux.intel.com>
+References: <8d4babebbd177de911a30c256b0b68742b09f607.1644400229.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,71 +43,229 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 9 Feb 2022, Paolo Abeni wrote:
 
-> Since commit 2843ff6f36db ("mptcp: remote addresses fullmesh"), an
-> MPTCP client can attempt creating multiple MPJ subflow simultaneusly.
+> A few pm-related helpers don't touch arguments which lacking
+> the const modifier, let's constify them.
 >
-> In such scenario the server, when syncookies are enabled, could end-up
-> accepting incoming MPJ syn even above the configured subflow limit, as
-> the such limit can be enforced in a reliable way only after the subflow
-> creation. In case of syncookie, only after the 3rd ack reception.
->
-> As a consequence the related self-tests case sporadically fails, as it
-> verify that the server always accept the expected number of MPJ syn.
->
-> Address the issues relaxing the MPJ syn number constrain. Note that the
-> check on the accepted number of MPJ 3rd ack still remains intact.
->
-> Fixes: 2843ff6f36db ("mptcp: remote addresses fullmesh")
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> this fixes for me some rare failure I observe in debug build:
->
-> 072 subflows limited by server w cookies syn[ ok ] - synack[fail] got 2 JOIN[s] synack expected 1
 
-Looks good to me:
+Thanks for these improvements:
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 > ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 ++++++++++++---
-> 1 file changed, 12 insertions(+), 3 deletions(-)
+> net/mptcp/pm.c         |  4 ++--
+> net/mptcp/pm_netlink.c | 38 +++++++++++++++++++-------------------
+> net/mptcp/protocol.h   | 18 +++++++++---------
+> 3 files changed, 30 insertions(+), 30 deletions(-)
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 66ac990415e6..9bcb3653f78b 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -822,6 +822,7 @@ chk_join_nr()
-> 	local ack_nr=$4
-> 	local count
-> 	local dump_stats
-> +	local with_cookie
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index c28dd5c21cbe..f5a8796470ff 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -221,7 +221,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+> }
 >
-> 	printf "%03u %-36s %s" "$TEST_COUNT" "$msg" "syn"
-> 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinSynRx | awk '{print $2}'`
-> @@ -835,12 +836,20 @@ chk_join_nr()
-> 	fi
+> void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
+> -			      struct mptcp_addr_info *addr)
+> +			      const struct mptcp_addr_info *addr)
+> {
+> 	struct mptcp_pm_data *pm = &msk->pm;
 >
-> 	echo -n " - synack"
-> +	with_cookie=`ip netns exec $ns2 sysctl -n net.ipv4.tcp_syncookies`
-> 	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtMPJoinSynAckRx | awk '{print $2}'`
-> 	[ -z "$count" ] && count=0
-> 	if [ "$count" != "$syn_ack_nr" ]; then
-> -		echo "[fail] got $count JOIN[s] synack expected $syn_ack_nr"
-> -		ret=1
-> -		dump_stats=1
-> +		# simult connections exeeding the limit with cookie enabled could go up to
-> +		# synack validation as the conn limit can be enforced reliably only after
-> +		# the subflow creation
-> +		if [ "$with_cookie" = 2 -a "$count" -gt "$syn_ack_nr" -a "$count" -le "$syn_nr" ]; then
-> +			echo -n "[ ok ]"
-> +		else
-> +			echo "[fail] got $count JOIN[s] synack expected $syn_ack_nr"
-> +			ret=1
-> +			dump_stats=1
-> +		fi
-> 	else
-> 		echo -n "[ ok ]"
-> 	fi
+> @@ -285,7 +285,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+>
+> /* path manager helpers */
+>
+> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+> 			      unsigned int opt_size, unsigned int remaining,
+> 			      struct mptcp_addr_info *addr, bool *echo,
+> 			      bool *port, bool *drop_other_suboptions)
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 98b485406afa..46346f009485 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -120,7 +120,7 @@ static void remote_address(const struct sock_common *skc,
+> }
+>
+> static bool lookup_subflow_by_saddr(const struct list_head *list,
+> -				    struct mptcp_addr_info *saddr)
+> +				    const struct mptcp_addr_info *saddr)
+> {
+> 	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_addr_info cur;
+> @@ -138,7 +138,7 @@ static bool lookup_subflow_by_saddr(const struct list_head *list,
+> }
+>
+> static bool lookup_subflow_by_daddr(const struct list_head *list,
+> -				    struct mptcp_addr_info *daddr)
+> +				    const struct mptcp_addr_info *daddr)
+> {
+> 	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_addr_info cur;
+> @@ -157,10 +157,10 @@ static bool lookup_subflow_by_daddr(const struct list_head *list,
+>
+> static struct mptcp_pm_addr_entry *
+> select_local_address(const struct pm_nl_pernet *pernet,
+> -		     struct mptcp_sock *msk)
+> +		     const struct mptcp_sock *msk)
+> {
+> +	const struct sock *sk = (const struct sock *)msk;
+> 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
+> -	struct sock *sk = (struct sock *)msk;
+>
+> 	msk_owned_by_me(msk);
+>
+> @@ -190,7 +190,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
+> }
+>
+> static struct mptcp_pm_addr_entry *
+> -select_signal_address(struct pm_nl_pernet *pernet, struct mptcp_sock *msk)
+> +select_signal_address(struct pm_nl_pernet *pernet, const struct mptcp_sock *msk)
+> {
+> 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
+>
+> @@ -214,16 +214,16 @@ select_signal_address(struct pm_nl_pernet *pernet, struct mptcp_sock *msk)
+> 	return ret;
+> }
+>
+> -unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk)
+> +unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk)
+> {
+> -	struct pm_nl_pernet *pernet;
+> +	const struct pm_nl_pernet *pernet;
+>
+> -	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+> +	pernet = net_generic(sock_net((const struct sock *)msk), pm_nl_pernet_id);
+> 	return READ_ONCE(pernet->add_addr_signal_max);
+> }
+> EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_signal_max);
+>
+> -unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk)
+> +unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk)
+> {
+> 	struct pm_nl_pernet *pernet;
+>
+> @@ -232,7 +232,7 @@ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk)
+> }
+> EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_accept_max);
+>
+> -unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk)
+> +unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk)
+> {
+> 	struct pm_nl_pernet *pernet;
+>
+> @@ -241,7 +241,7 @@ unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk)
+> }
+> EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
+>
+> -unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
+> +unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk)
+> {
+> 	struct pm_nl_pernet *pernet;
+>
+> @@ -264,8 +264,8 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk)
+> }
+>
+> struct mptcp_pm_add_entry *
+> -mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+> -				struct mptcp_addr_info *addr)
+> +mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
+> +				const struct mptcp_addr_info *addr)
+> {
+> 	struct mptcp_pm_add_entry *entry;
+>
+> @@ -346,7 +346,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+>
+> struct mptcp_pm_add_entry *
+> mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+> -		       struct mptcp_addr_info *addr, bool check_id)
+> +		       const struct mptcp_addr_info *addr, bool check_id)
+> {
+> 	struct mptcp_pm_add_entry *entry;
+> 	struct sock *sk = (struct sock *)msk;
+> @@ -364,7 +364,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+> }
+>
+> static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+> -				     struct mptcp_pm_addr_entry *entry)
+> +				     const struct mptcp_pm_addr_entry *entry)
+> {
+> 	struct mptcp_pm_add_entry *add_entry = NULL;
+> 	struct sock *sk = (struct sock *)msk;
+> @@ -410,8 +410,8 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+> 	}
+> }
+>
+> -static bool lookup_address_in_vec(struct mptcp_addr_info *addrs, unsigned int nr,
+> -				  struct mptcp_addr_info *addr)
+> +static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned int nr,
+> +				  const struct mptcp_addr_info *addr)
+> {
+> 	int i;
+>
+> @@ -493,9 +493,9 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
+> }
+>
+> static int
+> -lookup_id_by_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
+> +lookup_id_by_addr(const struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
+> {
+> -	struct mptcp_pm_addr_entry *entry;
+> +	const struct mptcp_pm_addr_entry *entry;
+> 	int ret = -1;
+>
+> 	rcu_read_lock();
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index f37f087caab3..beb5ee38656a 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -754,7 +754,7 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
+> void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+> 				const struct mptcp_addr_info *addr);
+> void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
+> -			      struct mptcp_addr_info *addr);
+> +			      const struct mptcp_addr_info *addr);
+> void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
+> void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk);
+> void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+> @@ -765,10 +765,10 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+> bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
+> struct mptcp_pm_add_entry *
+> mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+> -		       struct mptcp_addr_info *addr, bool check_id);
+> +		       const struct mptcp_addr_info *addr, bool check_id);
+> struct mptcp_pm_add_entry *
+> -mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+> -				struct mptcp_addr_info *addr);
+> +mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
+> +				const struct mptcp_addr_info *addr);
+> int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
+> 					 u8 *flags, int *ifindex);
+>
+> @@ -832,7 +832,7 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
+> 	return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) + 1;
+> }
+>
+> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+> 			      unsigned int opt_size, unsigned int remaining,
+> 			      struct mptcp_addr_info *addr, bool *echo,
+> 			      bool *port, bool *drop_other_suboptions);
+> @@ -845,10 +845,10 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk);
+> void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
+> 				     const struct mptcp_rm_list *rm_list);
+> int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+> -unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
+> -unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
+> -unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
+> -unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
+> +unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk);
+> +unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
+> +unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
+> +unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
+>
+> void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
+> void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
 > -- 
 > 2.34.1
 >
