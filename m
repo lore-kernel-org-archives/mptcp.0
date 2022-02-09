@@ -1,47 +1,47 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99F32CA1
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 21:25:49 +0000 (UTC)
-Received: by mail-wm1-f50.google.com with SMTP id n8so2264026wmk.3
-        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 13:25:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA50D2CA6
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 21:25:50 +0000 (UTC)
+Received: by mail-wr1-f41.google.com with SMTP id d27so2415112wrb.5
+        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 13:25:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oXfXysL+qyS8a5hJddIFVQ8pfxxd4mbtDpEUFh1yN9Q=;
-        b=l2/W16xa8mLBfMpAJXxtmlm2qBHBWb01+dnvUcWlLIsiWh7EZHmqZ761jy6ppagXQX
-         UzFrQYy1bAqVy/xVah78JQwxM/dO8qeuGiFfywxrfxPs2Hs3KXgF+wH6BrfK/CNIf4yt
-         6O/Qw45UB4Z7D2DRvU+M7ADicUiiyqqwYYGFhOkX1Ka6wL1TrZQkQuR2AbwiWFck7eTu
-         xlEp3fmnSXe5+9AxuNqm4QPLnukZWUaGHR5ZBHzvzDczjNMSZYWxJj3yv2se2fhWGj82
-         0X6ftzpNBQx01iV7/qVMKVpbOzN2LF6FhNWbrbGl7MC3yyZ7e6nL/ESrUBKr1bCMLEk6
-         U1dA==
+        bh=eUbElglYi2bACeCaWgbk6XZJdRkvi8+nDJaEzVTN65s=;
+        b=cR8acegf/3BqGbW73ncdmtafdHZinJcic0UZ7/6s+GJjmW9Gzh1dgYK2hLM6aEDyZd
+         vpRccR9IWDajVP0YCEDoraAGEqCExA8lsR3wi+gKOTp3tkxYoOOOu2OnAer3cLWYA9Rp
+         CNB+BWVs0KEvO94TpTY2y8GYQ7AmZVs/QiwxqQOoaoJ/EX3LSgtESIjKjDIAtQgNwFrJ
+         PEP+ll48AzXU7ZMpQE2hB6oiM6JOjX2BemcUCadRR4OafeYKObGbmiXayJmuwwDOQwl8
+         buZ1J2JIo9Cu8zG5jNh7UUYNrD9WZOYoYoKVZhA0R94+Zev/H8/nbxfAw5aqgqcvj1ZT
+         RQqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oXfXysL+qyS8a5hJddIFVQ8pfxxd4mbtDpEUFh1yN9Q=;
-        b=xszCvg7MermQ1wN1e6IrkacYwr8H7PDsxFu8mOUhrcXPr4CfRDDtlSafbW/Pa7s1Hb
-         VBm8pt8uCvFLO+EvytysFZcfXohUqD3WjSHmMM/85DhV7xWy9zwhw6KhNyhYwQdIlZdV
-         zjh4d+KFjNjO4SvfmWHVGpLEc/ikO+zfGMuq76jKgFfdo7PI8Lg0+X/8X5H9nZ4qP5C6
-         /rJFxmEv/rrSq+KcSPJoX4MtPy0Kt2S3Ednl07x478yFMb6jb6sPmucOpQZn7q3SWTeQ
-         2YiOwV2xoY7LpKl185HiGLKiWe0qXvRk2XJ8FfrnloadcSkmoypRWPPxuLF6HZiLREfm
-         wIIQ==
-X-Gm-Message-State: AOAM531S/ASTLcHF74xn7COcTMqJNy+OJAsI7quB5ZWEL1dvuQk1ymzz
-	7O2PW76rERDvvXLCNoMLpUKa0iqdgz9UnP51
-X-Google-Smtp-Source: ABdhPJxA7U2eIKWI+ZF/Qu9AOtz8iEgTk+MLY2SnpOWrCvSjBy2iguCATRo712ItFX9nl9elpy7CQA==
-X-Received: by 2002:a05:600c:4050:: with SMTP id j16mr4382648wmm.187.1644441948099;
+        bh=eUbElglYi2bACeCaWgbk6XZJdRkvi8+nDJaEzVTN65s=;
+        b=Ix62UtVJXpWep+/NDquYb/aDoGa8HC1BrSbPLM9UvO6/XFPty+otiUbG5SQjFGMuU3
+         jFWlRvxEfSahfu04fi5lFV8zWLRomqSaC6XBHKj5paQjt+8HnLIAbmBPJRv73lg+UOAw
+         JsnZ2milzKHb0cInua0mGQomJ90lhfLE2+vau6mco/CSwZVN1gRTCENwsrAHh3KjXAFd
+         cCmaTbnAzaYNzRD3xp8+6agdBGUws1ZrxrA8PEpQ23KG+nV6n8r2+r+Ybww4UaY4cxJ7
+         zaKx4L7iaTH52ojkPpegJfyeo124sq9wjkDhE+pDgGBqIukm5VGWKppgcLOq82wc23aM
+         w8Jw==
+X-Gm-Message-State: AOAM533aO76UvHGEub0Y0NZxvON+5BNQR1MHGxXrUBqtkJ1/TGOgLFnQ
+	UTpZEbM1kB7ficE0DXM3WvbyNaehl3+1r5QI
+X-Google-Smtp-Source: ABdhPJzomyzex+RcKgmDEQGYni6QBET4WqUcUSKoBpekZLiikyoTCmHEBjGqWoVcxnoInvlyPjsq+Q==
+X-Received: by 2002:a5d:560c:: with SMTP id l12mr3791356wrv.647.1644441948643;
         Wed, 09 Feb 2022 13:25:48 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id p14sm18500730wrr.7.2022.02.09.13.25.47
+        by smtp.gmail.com with ESMTPSA id p14sm18500730wrr.7.2022.02.09.13.25.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 13:25:47 -0800 (PST)
+        Wed, 09 Feb 2022 13:25:48 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 4/9] selftests: mptcp: join: remove unused vars
-Date: Wed,  9 Feb 2022 22:25:15 +0100
-Message-Id: <20220209212520.2989291-5-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next 5/9] selftests: mptcp: join: create tmp files only if needed
+Date: Wed,  9 Feb 2022 22:25:16 +0100
+Message-Id: <20220209212520.2989291-6-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
 References: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
@@ -53,46 +53,94 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Shellcheck found that these variables were set but never used.
+These tmp files will only be created when a test will be launched.
 
-Note that rndh is no longer prefixed with '0-' but it doesn't change
-anything.
+This avoid 'dd' output when '-h' is used for example.
+
+While at it, also avoid creating netns that will be removed when
+starting the first test.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 37 ++++++++++++-------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2dc81646e326..ce3e7db30b9d 100755
+index ce3e7db30b9d..5691221ca302 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -45,7 +45,7 @@ init()
+@@ -18,6 +18,7 @@ checksum=0
+ ip_mptcp=0
+ check_invert=0
+ do_all_tests=1
++INIT=0
+ 
+ TEST_COUNT=0
+ ONLY_TESTS=()
+@@ -41,7 +42,7 @@ CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
+ 			       6 0 0 65535,
+ 			       6 0 0 0"
+ 
+-init()
++init_partial()
  {
  	capout=$(mktemp)
  
--	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
-+	rndh=$(mktemp -u XXXXXX)
- 
- 	ns1="ns1-$rndh"
- 	ns2="ns2-$rndh"
-@@ -701,8 +701,6 @@ run_tests()
- 	addr_nr_ns2="${6:-0}"
- 	speed="${7:-fast}"
- 	sflags="${8:-""}"
--	lret=0
--	oldin=""
- 
- 	# create the input file for the failure test when
- 	# the first failure test run
-@@ -730,7 +728,6 @@ run_tests()
- 
- 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
- 		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${sflags}
--	lret=$?
+@@ -104,6 +105,21 @@ cleanup_partial()
+ 	done
  }
  
- dump_stats()
++init() {
++	INIT=1
++
++	sin=$(mktemp)
++	sout=$(mktemp)
++	cin=$(mktemp)
++	cinsent=$(mktemp)
++	cout=$(mktemp)
++
++	trap cleanup EXIT
++
++	make_file "$cin" "client" 1
++	make_file "$sin" "server" 1
++}
++
+ cleanup()
+ {
+ 	rm -f "$cin" "$cout" "$sinfail"
+@@ -136,8 +152,13 @@ reset()
+ 		return 1
+ 	fi
+ 
+-	cleanup_partial
+-	init
++	if [ "${INIT}" != "1" ]; then
++		init
++	else
++		cleanup_partial
++	fi
++
++	init_partial
+ 
+ 	return 0
+ }
+@@ -2342,16 +2363,6 @@ usage()
+ 	exit ${ret}
+ }
+ 
+-sin=$(mktemp)
+-sout=$(mktemp)
+-cin=$(mktemp)
+-cinsent=$(mktemp)
+-cout=$(mktemp)
+-init
+-make_file "$cin" "client" 1
+-make_file "$sin" "server" 1
+-trap cleanup EXIT
+-
+ for arg in "$@"; do
+ 	# check for "capture/checksum" args before launching tests
+ 	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
 -- 
 2.34.1
 
