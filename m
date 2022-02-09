@@ -1,97 +1,156 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295342F28
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 00:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9F229CA
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 00:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644368059; x=1675904059;
+  t=1644368062; x=1675904062;
   h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=BMN6mZkhYQl/Z1Grx+ZylV06PC9MlzRdCWphcC24tgI=;
-  b=W/mJqRjapCpI88s6eDmc0aV1k9UZxew2slZ+5XavHk6dnt5XxJEWHKo9
-   GHKOsnS/gIlVF+f+ui+4VJTM/gKXjYb4v52kSy4JgAUoVpzSCvo8CUV7X
-   U0HCu35eyynNHQzhcYYs5qAfMxsPV/n9CFRGQ/4HCwpfXYbpYpgnHyWna
-   z6B9usLxlr2tS2267txJhLg+3OTQNUKc5BehI5jiXiqzVcKjuTobjSxSI
-   g2j0Laj+VsTXd+NakF8VoLZiNPo8Y/p1p9Khkw4XRfudPjj4vqtkamb2d
-   LLnMyRSZZJ7AbzBszEeIOLnPF3a5aL4RDSMadyUbi4W7dQhcLsx4GhBat
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10252"; a="247922756"
+   references:mime-version:content-id;
+  bh=y92FSR89Ku8H46jJsazayFmLATngUq55aQVa3tHLLvo=;
+  b=nyOJe6XXn0WqoiCxsjIbaDKCXAFjMbvP3odAjLDFIOaZ0e8OaQu3H72T
+   HHJxBksEHnb1taUr9SiUSd8zpnTNxy4Z+8QYwRagAnFdrUldDxONtHTo3
+   z1QCA6EkHrGoQAeYfGt1e1Kgkhq9vpt1Cm0XR+zEU/7lD2VtvVS26AK6A
+   B6SxnuBdM8FgGmWPYeHknI8QPm51jqO5RzGstCOurmWUqIavP2T1AM8vK
+   QZXIZmIl459duk/w+XTGWDRZfaBmpLEOoRJ7ASesfjfa8vlmGq3ps0m9j
+   pLQdXochqOxGSQhlQxPls2AluBElcEnzSflX/f3CgicuuC3jjW3CXGrsy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10252"; a="249295561"
 X-IronPort-AV: E=Sophos;i="5.88,354,1635231600"; 
-   d="scan'208";a="247922756"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 16:54:07 -0800
+   d="scan'208";a="249295561"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 16:54:19 -0800
 X-IronPort-AV: E=Sophos;i="5.88,354,1635231600"; 
-   d="scan'208";a="678294347"
+   d="scan'208";a="540861510"
 Received: from tonysun-mobl.amr.corp.intel.com ([10.212.141.113])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 16:54:07 -0800
-Date: Tue, 8 Feb 2022 16:54:06 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 16:54:17 -0800
+Date: Tue, 8 Feb 2022 16:54:17 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v2 1/4] mptcp: fix race in overlapping signal
- events
-In-Reply-To: <fe2ee45c579ea83d5aec853c80d6088aebc6ef26.1644346664.git.pabeni@redhat.com>
-Message-ID: <5b78d02e-c47c-7ecb-f0d0-8464f71ed49b@linux.intel.com>
-References: <cover.1644346664.git.pabeni@redhat.com> <fe2ee45c579ea83d5aec853c80d6088aebc6ef26.1644346664.git.pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v2 2/4] mptcp: fix race in incoming ADD_ADDR
+ option processing.
+In-Reply-To: <0fcbb69f-1e23-be3c-aea0-86bafb3a68fb@tessares.net>
+Message-ID: <4bab507-7452-b973-279a-70a3e911906f@linux.intel.com>
+References: <cover.1644346664.git.pabeni@redhat.com> <9055dfabebe975c34e5f741885e1c70ecb49da36.1644346664.git.pabeni@redhat.com> <0fcbb69f-1e23-be3c-aea0-86bafb3a68fb@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/mixed; BOUNDARY="0-1245182262-1644367732=:29478"
+Content-ID: <e3c9cb16-6813-1ac3-8ceb-f150676f1b57@linux.intel.com>
 
-On Tue, 8 Feb 2022, Paolo Abeni wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> After commit a88c9e496937 ("mptcp: do not block subflows
-> creation on errors"), if a signal address races with a failing
-> subflow creation, the subflow creation failure control path
-> can trigger the selection of the next address to be announced
-> while the current announced is still pending.
+--0-1245182262-1644367732=:29478
+Content-Type: text/plain; CHARSET=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Content-ID: <40a0bb37-be8f-d2c6-75fd-3d142514ea8@linux.intel.com>
+
+On Tue, 8 Feb 2022, Matthieu Baerts wrote:
+
+> Hi Paolo,
 >
-> The above will cause the unintended suppression of the ADD_ADDR
-> announce.
+> On 08/02/2022 20:06, Paolo Abeni wrote:
+>> If an MPTCP endpoint received moltiple consecutive incoming
+>> ADD_ADDR options, mptcp_pm_add_addr_received() can overwrite
+>> the current remote address value after the PM lock is released
+>> in mptcp_pm_nl_add_addr_received() and before such address
+>> is echoed.
+>>
+>> Fix the issue caching the remote address value a little earlier
+>> and always using the cached value after releasing the PM lock.
 >
-> Fix the issue skipping the to-be-suppressed announce before it
-> will mark an endpoint as already used. The relevant announce
-> will be triggered again when the current one will complete.
+> Thank you for looking at that!
 >
-> Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/pm_netlink.c | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
+> It seems really helping for me: 500 iterations without issues! I guess
+> we can add:
 >
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/254
+>
+> (I guess we don't need Reported/Tested-by tags.)
+>
+> Not related to that but do you think we could have a similar issue with
+> RM_ADDR (issues/225)?
+>
+>
+> But one important thing: this series introduces a regression apparently:
+> packetdrill ADD_ADDR tests are now failing because the port is missing
+> in the echo packet:
+>
+> ---------- 8< ----------
+> Our CI did some validations and here is its report:
+>
+> - KVM Validation: normal:
+>  - Unstable: 2 failed test(s): packetdrill_add_addr selftest_mptcp_join 🔴:
+>  - Task: https://cirrus-ci.com/task/5025097999187968
+>  - Summary:
+> https://api.cirrus-ci.com/v1/artifact/task/5025097999187968/summary/summary.txt
+>
+> - KVM Validation: debug:
+>  - Unstable: 1 failed test(s): packetdrill_add_addr 🔴:
+>  - Task: https://cirrus-ci.com/task/4765935646015488
+>  - Summary:
+> https://api.cirrus-ci.com/v1/artifact/task/4765935646015488/summary/summary.txt
+>
+> Initiator: Patchew Applier
+> Commits:
+> https://github.com/multipath-tcp/mptcp_net-next/commits/34bad3e35cbc
+> ---------- 8< ----------
+>
+> This seems to be due to this patch 2/4.
+>
+>>
+>> Fixes: f7efc7771eac ("mptcp: drop argument port from mptcp_pm_announce_addr")
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>>  net/mptcp/pm_netlink.c | 19 ++++++++++++++-----
+>>  1 file changed, 14 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index fb8d4bfcfbd6..4b6aa89d45a5 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -660,6 +660,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>>  	unsigned int add_addr_accept_max;
+>>  	struct mptcp_addr_info remote;
+>>  	unsigned int subflows_max;
+>> +	bool reset_port;
+>
+> I'm very surprise the compiler doesn't complain about this line because
+> reset_port can be used later while not having been set before. Is it
+> normal with 'bool'?
+>
+>
+> Setting it to false by default fixes the issue with packetdrill on my side:
+>
+> ---------- 8< ----------
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 93800f32fcb6..fb8d4bfcfbd6 100644
+> index 4b6aa89d45a5..98b485406afa 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -546,6 +546,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
-> 	if (msk->pm.add_addr_signaled < add_addr_signal_max) {
-> 		local = select_signal_address(pernet, msk);
+> @@ -660,7 +660,7 @@ static void mptcp_pm_nl_add_addr_received(struct
+> mptcp_sock *msk)
+>        unsigned int add_addr_accept_max;
+>        struct mptcp_addr_info remote;
+>        unsigned int subflows_max;
+> -       bool reset_port;
+> +       bool reset_port = false;
+>        int i, nr;
 >
-> +		/* due to racing events on both ends we can reach here while
-> +		 * previous add address is still running: if we invoke now
-> +		 * mptcp_pm_announce_addr(), that will fail and the
-> +		 * corresponding id will be marked as used.
-> +		 * Instead let the PM machinery reschedule us when the
-> +		 * current address announce will be completed.
-> +		 */
-> +		if (msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_SIGNAL))
+>        add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
+> ---------- 8< ----------
+>
+> (I can fix the issue when applying the patch if it is easier)
 
-There is a helper for this: mptcp_pm_should_add_signal_addr()
-(which also uses READ_ONCE())
+With Matthieu's reset_port fix, it's working well for me too.
 
-
-> +			return;
-> +
-> 		if (local) {
-> 			if (mptcp_pm_alloc_anno_list(msk, local)) {
-> 				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-> -- 
-> 2.34.1
 
 --
 Mat Martineau
 Intel
+--0-1245182262-1644367732=:29478--
