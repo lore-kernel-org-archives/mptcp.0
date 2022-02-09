@@ -1,267 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4973C2F25
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1644400238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zTta6WcfnQOy/Nfg122QMTpER/Ey7+Csez0DS3Vjx60=;
-	b=TFNsyXk6Sp/Q+mcim1QnbMKiLmIh/kLbpeRY07b0VG02vQVffr9VI5+fYD8nXTUj2RfT4g
-	Ti1sIZljlJ30lmPSzZt12OHpAcggOjTysqpMR/NtsVi2Z949LnBfxZl3trl3VKuNzyZXt9
-	Udk0JdqfDxBCR+R68tZHgZZBNfj7ugw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-414-q8atJQgUP-mLaF7et7KVHw-1; Wed, 09 Feb 2022 04:50:37 -0500
-X-MC-Unique: q8atJQgUP-mLaF7et7KVHw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D5D1814245
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:50:36 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.181])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C026A7B6D3
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:50:35 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next] mptcp: constify a bunch of of helpers
-Date: Wed,  9 Feb 2022 10:50:32 +0100
-Message-Id: <8d4babebbd177de911a30c256b0b68742b09f607.1644400229.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297022C80
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:59:20 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id y3so5775941ejf.2
+        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 01:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=oPCL84rhc1Ah+6I/nwO3nf/bNFU+XsRLjBkAz7Dqz/Y=;
+        b=V0zj2rfoTyDbGfsp0+Rm6r+RqFoiGylEiw/MP4mAzgFUTIfOA55G1W56vZRV943Ap4
+         5fT5YNWNmQijESLp5dn2b7xdlC/QB++uzsKf1CRMZco8DqyK//5Kj43vgvYA4JHi8xAr
+         Ue5x5o3I7dZlX9fCFn08SQGEmmNeF5GNiLL0zEAY+YbJu3KMS1A16A3QVZAqkNwwDUIr
+         O45ILgPoU+KztDWGEyCs78Nu6CrSvegj7QCc7Hlks3DbYHWIewnXyOWpiWuFwsJMKHHD
+         PK4WnHD+g9BmKYVGOSiFurL0ixmtOHDvbAE/7IK8zl8/hZe/FlvVTPHyOye4iaO0Ro/e
+         MdEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=oPCL84rhc1Ah+6I/nwO3nf/bNFU+XsRLjBkAz7Dqz/Y=;
+        b=l2EwKlS+yM4FrNteJxJat4PNliUNppWk6CltYyyKjhFqTuv6rybPObU7CSlCLcUkgY
+         s8Xd65NiBKgt1CtINP6+B0rIHfG9YxuvciBlB3jQqWYV2Qni0hk+trJTskZfcSyovE3g
+         VUlaREA4+u/qcM42hJQl4uH8Y2wpZLesGtXd63YQURNZCvafJZwtCoNGhYm3ci/mak5i
+         Ql7FrW+06ROw1fN8k/GWpOrc3iHkN1uDI3yCVOjkjE6pdZPCAPywt/7h8qTuMa3NMiX+
+         BUU6KNETdZAFOKoQkThZdNJHXkyULMmPyxWMfJiIU+IQ39+ihW8iRoRVbKYdw8Ldstys
+         mFWg==
+X-Gm-Message-State: AOAM531uvrWzNCBz67NsnTAu7KO3BKAXrtd0DqSt1ttv7ike9MWctvpr
+	gJc+ULhGbx0nKtr/r9zy1hJchL7qHtZi5zFh
+X-Google-Smtp-Source: ABdhPJzlGrbO+BqDcT6S7nLWF37HiCD6vMLCNcbS1B0aYLTKfNsugWzGhCvorfl/pg5u2luSjHchBQ==
+X-Received: by 2002:a17:907:3faa:: with SMTP id hr42mr1220969ejc.596.1644400758381;
+        Wed, 09 Feb 2022 01:59:18 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:268e:dc63:f3ef:de99? ([2a02:578:8593:1200:268e:dc63:f3ef:de99])
+        by smtp.gmail.com with ESMTPSA id n2sm5436207ejl.86.2022.02.09.01.59.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Feb 2022 01:59:18 -0800 (PST)
+Message-ID: <617b4fa8-320b-2e88-ee68-0a25e842ee21@tessares.net>
+Date: Wed, 9 Feb 2022 10:59:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-net v3 0/4] mptcp: fix races in add_addr handling
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1644399915.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1644399915.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-A few pm-related helpers don't touch arguments which lacking
-the const modifier, let's constify them.
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm.c         |  4 ++--
- net/mptcp/pm_netlink.c | 38 +++++++++++++++++++-------------------
- net/mptcp/protocol.h   | 18 +++++++++---------
- 3 files changed, 30 insertions(+), 30 deletions(-)
+On 09/02/2022 10:47, Paolo Abeni wrote:
+> the patches 1 && 2 fix actual races, even if the race addressed by
+> 2/4 is not exposed by the self-tests, afaics.
+> 
+> patch 3 introduces some mibs to detect critical scenarios we can't
+> fix without major rework
+> 
+> patch 4 updates the self-test to be graceful in above cases.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c28dd5c21cbe..f5a8796470ff 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -221,7 +221,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- }
- 
- void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
--			      struct mptcp_addr_info *addr)
-+			      const struct mptcp_addr_info *addr)
- {
- 	struct mptcp_pm_data *pm = &msk->pm;
- 
-@@ -285,7 +285,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
- 
- /* path manager helpers */
- 
--bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
-+bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- 			      unsigned int opt_size, unsigned int remaining,
- 			      struct mptcp_addr_info *addr, bool *echo,
- 			      bool *port, bool *drop_other_suboptions)
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 98b485406afa..46346f009485 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -120,7 +120,7 @@ static void remote_address(const struct sock_common *skc,
- }
- 
- static bool lookup_subflow_by_saddr(const struct list_head *list,
--				    struct mptcp_addr_info *saddr)
-+				    const struct mptcp_addr_info *saddr)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_addr_info cur;
-@@ -138,7 +138,7 @@ static bool lookup_subflow_by_saddr(const struct list_head *list,
- }
- 
- static bool lookup_subflow_by_daddr(const struct list_head *list,
--				    struct mptcp_addr_info *daddr)
-+				    const struct mptcp_addr_info *daddr)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_addr_info cur;
-@@ -157,10 +157,10 @@ static bool lookup_subflow_by_daddr(const struct list_head *list,
- 
- static struct mptcp_pm_addr_entry *
- select_local_address(const struct pm_nl_pernet *pernet,
--		     struct mptcp_sock *msk)
-+		     const struct mptcp_sock *msk)
- {
-+	const struct sock *sk = (const struct sock *)msk;
- 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
--	struct sock *sk = (struct sock *)msk;
- 
- 	msk_owned_by_me(msk);
- 
-@@ -190,7 +190,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
- }
- 
- static struct mptcp_pm_addr_entry *
--select_signal_address(struct pm_nl_pernet *pernet, struct mptcp_sock *msk)
-+select_signal_address(struct pm_nl_pernet *pernet, const struct mptcp_sock *msk)
- {
- 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
- 
-@@ -214,16 +214,16 @@ select_signal_address(struct pm_nl_pernet *pernet, struct mptcp_sock *msk)
- 	return ret;
- }
- 
--unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk)
-+unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk)
- {
--	struct pm_nl_pernet *pernet;
-+	const struct pm_nl_pernet *pernet;
- 
--	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-+	pernet = net_generic(sock_net((const struct sock *)msk), pm_nl_pernet_id);
- 	return READ_ONCE(pernet->add_addr_signal_max);
- }
- EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_signal_max);
- 
--unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk)
-+unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk)
- {
- 	struct pm_nl_pernet *pernet;
- 
-@@ -232,7 +232,7 @@ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk)
- }
- EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_accept_max);
- 
--unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk)
-+unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk)
- {
- 	struct pm_nl_pernet *pernet;
- 
-@@ -241,7 +241,7 @@ unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk)
- }
- EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
- 
--unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
-+unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk)
- {
- 	struct pm_nl_pernet *pernet;
- 
-@@ -264,8 +264,8 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk)
- }
- 
- struct mptcp_pm_add_entry *
--mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
--				struct mptcp_addr_info *addr)
-+mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
-+				const struct mptcp_addr_info *addr)
- {
- 	struct mptcp_pm_add_entry *entry;
- 
-@@ -346,7 +346,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- 
- struct mptcp_pm_add_entry *
- mptcp_pm_del_add_timer(struct mptcp_sock *msk,
--		       struct mptcp_addr_info *addr, bool check_id)
-+		       const struct mptcp_addr_info *addr, bool check_id)
- {
- 	struct mptcp_pm_add_entry *entry;
- 	struct sock *sk = (struct sock *)msk;
-@@ -364,7 +364,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- }
- 
- static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
--				     struct mptcp_pm_addr_entry *entry)
-+				     const struct mptcp_pm_addr_entry *entry)
- {
- 	struct mptcp_pm_add_entry *add_entry = NULL;
- 	struct sock *sk = (struct sock *)msk;
-@@ -410,8 +410,8 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
- 	}
- }
- 
--static bool lookup_address_in_vec(struct mptcp_addr_info *addrs, unsigned int nr,
--				  struct mptcp_addr_info *addr)
-+static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned int nr,
-+				  const struct mptcp_addr_info *addr)
- {
- 	int i;
- 
-@@ -493,9 +493,9 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
- }
- 
- static int
--lookup_id_by_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
-+lookup_id_by_addr(const struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
- {
--	struct mptcp_pm_addr_entry *entry;
-+	const struct mptcp_pm_addr_entry *entry;
- 	int ret = -1;
- 
- 	rcu_read_lock();
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f37f087caab3..beb5ee38656a 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -754,7 +754,7 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
- void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 				const struct mptcp_addr_info *addr);
- void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
--			      struct mptcp_addr_info *addr);
-+			      const struct mptcp_addr_info *addr);
- void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
- void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk);
- void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
-@@ -765,10 +765,10 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
- bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
- struct mptcp_pm_add_entry *
- mptcp_pm_del_add_timer(struct mptcp_sock *msk,
--		       struct mptcp_addr_info *addr, bool check_id);
-+		       const struct mptcp_addr_info *addr, bool check_id);
- struct mptcp_pm_add_entry *
--mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
--				struct mptcp_addr_info *addr);
-+mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
-+				const struct mptcp_addr_info *addr);
- int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
- 					 u8 *flags, int *ifindex);
- 
-@@ -832,7 +832,7 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
- 	return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) + 1;
- }
- 
--bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
-+bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- 			      unsigned int opt_size, unsigned int remaining,
- 			      struct mptcp_addr_info *addr, bool *echo,
- 			      bool *port, bool *drop_other_suboptions);
-@@ -845,10 +845,10 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk);
- void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
- 				     const struct mptcp_rm_list *rm_list);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
--unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
--unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
--unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
--unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
-+unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk);
-+unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
-+unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
-+unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
- 
- void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
+Thank you for the new version!
+
+I suggest to apply it now to have more feedback from the CIs. We can
+always end Squash-to patches later if needed.
+
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/254
+> 
+> Note: I did not attach the above tag to a specific patch, as all
+> of them will be needed to fix the issue
+
+Do not hesitate to put it on the last one so the ticket will be
+automatically closed and tracked when applying the patches on the
+different trees :)
+We can also put it on all of them or use 'Link' on the first ones and
+'Closes' on the last one.
+
+Anyway, I can also close it manually if I don't forget ;-)
+
+Cheers,
+Matt
 -- 
-2.34.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
