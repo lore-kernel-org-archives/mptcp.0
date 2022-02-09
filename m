@@ -1,123 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804332F25
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 08:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1644396847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VBs+bpwWrpBpAU74Dpj58e9HsFBpqPSscKXKMNNvxAY=;
-	b=g9PriZrQRJHRX9ts9s8AsIbRrlc2oktiTbSeKIEQ1ytCPnUJvn4N+PyTpZSUOENx7E4Zrn
-	vPTz4rwcpkO36e6CEExr/ARdNLnPoL6EsbvyCaFFYliBuNTOmjrH0puVDT57iZvHlKiBB7
-	94VKtUZ13794Qqm+xanTBYtlnfyQs/0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-30-HqbpowzuMKuQBRpZKUGy5g-1; Wed, 09 Feb 2022 03:54:04 -0500
-X-MC-Unique: HqbpowzuMKuQBRpZKUGy5g-1
-Received: by mail-wr1-f69.google.com with SMTP id h24-20020adfaa98000000b001e33eb81e71so828835wrc.9
-        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 00:54:04 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7DE2F25
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 08:56:34 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id y3so5340649ejf.2
+        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 00:56:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=8WOaXUABMjIvKuLRSMPV8Vudd+Zi3rjKkIP09Q/6KJY=;
+        b=8MIUFYaSQDty65xxjlyqE/3dI3++KtCBOPKzE8kdNHkaKk8rGbYH3nVvO5NllQW1bC
+         Kwx3jib63jvUTnTljzTkvY7+cg9pYA3kTPd4X4jb2cB7gngrd+PKrXhYOmo1N+9bn+p1
+         oxB8617TTNJlSqgBLgrkKQMdnmX9hwM57ydO6ZVYqgfiXIQozCCC8kVK56jxRAtygMZA
+         Av9GB9xBkfKhAXHYLbBNXyxtMnmIi86TeCMZ3kg/r8Vthtf5qSwRvxbBn41Q+1Grf3ua
+         vn+pH8c5WJz+dqM6R+bCaGsu5wEbGJ0TtBqJxQFRmezywbakM9qhiWVt4HJwG9/sF49L
+         868Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=VBs+bpwWrpBpAU74Dpj58e9HsFBpqPSscKXKMNNvxAY=;
-        b=q8qTYm3PqLfYPSjWvENssAnbQFS0S6nwNFSYYOhaqIfshU1D4YSSKCasyd5BuZ+elf
-         fr0BZXE/FrwAKP9b9hjUuL29DrsZ7frUs6Rpfem9LccUtli26uqV4f22LCVrWRbwZKn4
-         xY7/v55UX7qMf7rvLEUU7rOQ7ODMqrbfY4LiuzisqpWoGPRRhJ6oHdMP+eZFvesrmaEQ
-         ifmNG5/53a0I5OCTfMzpn3PHlnXRpzRFGMQ5bZOtI6aRqV05RL5sFIxlKU6oYeF/e4bP
-         AqB/xKrQlegWU3IOfY6Qj+T5/2Io0iqNyL7W7Ez5xbJB7Q8FjSRoiOFiNo1HOM3zAx+8
-         f9sQ==
-X-Gm-Message-State: AOAM531tVgjCXxp4CvZFoFVr/oAZ0BhW7ePia4vDpQQYK9xYZtI3WrM8
-	lGFSIPewsx2a6fgLeSdpvthAg1gQ/QODPSiiUJ/b+mRo0NG0JhA1MQTIthKyxpXGE+zu3UzUCaY
-	o95eJf1duNaE87NY=
-X-Received: by 2002:a5d:5402:: with SMTP id g2mr1168555wrv.146.1644396843028;
-        Wed, 09 Feb 2022 00:54:03 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzH47rWhtp7jc/a3pZ8C6ggoTupO2WjxbA6WhF3yzo4OJEFh96IS8l6I5m6A889vdCezsQ2HQ==
-X-Received: by 2002:a5d:5402:: with SMTP id g2mr1168539wrv.146.1644396842791;
-        Wed, 09 Feb 2022 00:54:02 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id k6sm6709848wms.14.2022.02.09.00.54.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 00:54:02 -0800 (PST)
-Message-ID: <53f313b91ef91c0bf7764238ec5cba2960450153.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v2 1/4] mptcp: fix race in overlapping signal
- events
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Date: Wed, 09 Feb 2022 09:54:01 +0100
-In-Reply-To: <5b78d02e-c47c-7ecb-f0d0-8464f71ed49b@linux.intel.com>
-References: <cover.1644346664.git.pabeni@redhat.com>
-	 <fe2ee45c579ea83d5aec853c80d6088aebc6ef26.1644346664.git.pabeni@redhat.com>
-	 <5b78d02e-c47c-7ecb-f0d0-8464f71ed49b@linux.intel.com>
-User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=8WOaXUABMjIvKuLRSMPV8Vudd+Zi3rjKkIP09Q/6KJY=;
+        b=TXeM0Du8FvhLuYS4T7dQjG6Ruuh5cdkQLuJ7j9zRn/MpPgsGx06Y4S148dd+r9iyTh
+         FDmfJx7IYyh3MDJSc0QSfFQQpg9nzDV2+eoK2Dedswv0eOvFuKYzfwdXqZbzPClZDe0e
+         Ud6/UKxJ4D//xX6zmzMjOblEHhVjFLJqwDiL1rXZqnquun/XuIbhta+eJ5rSlHxhqzQS
+         g9pSH2dcjBUcVA4bH1UFRzqUZmTuaoi6hKC2deA2sC1tpM6WU1q0lvmdCUlrWvRwNZ/G
+         EhMO7dOQtnQRII8ImSLp9OpiGe8Kkxuom4iMSfCv7rok8I5VT9VEMP+N+OeAL6ioZHrE
+         CGhQ==
+X-Gm-Message-State: AOAM530oW/z6t1mGXEh4zuWGQwbkX08E2QtYLat6CTnfTj53M5vLodWw
+	99MVw6we3Gsam1IvIWEXYjK38g==
+X-Google-Smtp-Source: ABdhPJy0ObR0yOejjbxvuf9Gaigu81tteWCbrvxnveC9s2TPUvjol3n6v/h6Q89RyMZ+L3oce0WQDg==
+X-Received: by 2002:a17:906:7489:: with SMTP id e9mr994585ejl.113.1644396992101;
+        Wed, 09 Feb 2022 00:56:32 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:43c2:5bca:4e2c:3c7d? ([2a02:578:8593:1200:43c2:5bca:4e2c:3c7d])
+        by smtp.gmail.com with ESMTPSA id o3sm3068101edt.67.2022.02.09.00.56.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Feb 2022 00:56:31 -0800 (PST)
+Message-ID: <0de494ee-7c30-0c08-6248-3a55f3043d4e@tessares.net>
+Date: Wed, 9 Feb 2022 09:56:31 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-next v2 2/2] selftests: mptcp: add mp_fail testcases
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>
+References: <cover.1644364562.git.geliang.tang@suse.com>
+ <846d7cac1f134fe9d3b6e8ac2b0c0ab47defc341.1644364562.git.geliang.tang@suse.com>
+ <358eb7b4-84fe-d8e5-c0fa-e172c8deb7@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <358eb7b4-84fe-d8e5-c0fa-e172c8deb7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2022-02-08 at 16:54 -0800, Mat Martineau wrote:
-> On Tue, 8 Feb 2022, Paolo Abeni wrote:
+Hi Mat,
+
+On 09/02/2022 03:10, Mat Martineau wrote:
+> On Wed, 9 Feb 2022, Geliang Tang wrote:
+
+(...)
+
+>> +    ip netns exec $ns2 iptables \
+>> +        -t mangle \
+>> +        -A OUTPUT \
+>> +        -o ns2eth$i \
+>> +        -p tcp \
+>> +        -m length --length 150:9999 \
+>> +        -m statistic --mode nth --packet 1 --every 99999 \
+>> +        -j MARK --set-mark 42
+>> +
 > 
-> > After commit a88c9e496937 ("mptcp: do not block subflows
-> > creation on errors"), if a signal address races with a failing
-> > subflow creation, the subflow creation failure control path
-> > can trigger the selection of the next address to be announced
-> > while the current announced is still pending.
-> > 
-> > The above will cause the unintended suppression of the ADD_ADDR
-> > announce.
-> > 
-> > Fix the issue skipping the to-be-suppressed announce before it
-> > will mark an endpoint as already used. The relevant announce
-> > will be triggered again when the current one will complete.
-> > 
-> > Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
-> > net/mptcp/pm_netlink.c | 10 ++++++++++
-> > 1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index 93800f32fcb6..fb8d4bfcfbd6 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -546,6 +546,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
-> > 	if (msk->pm.add_addr_signaled < add_addr_signal_max) {
-> > 		local = select_signal_address(pernet, msk);
-> > 
-> > +		/* due to racing events on both ends we can reach here while
-> > +		 * previous add address is still running: if we invoke now
-> > +		 * mptcp_pm_announce_addr(), that will fail and the
-> > +		 * corresponding id will be marked as used.
-> > +		 * Instead let the PM machinery reschedule us when the
-> > +		 * current address announce will be completed.
-> > +		 */
-> > +		if (msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_SIGNAL))
+> I think it would help to check the exit code of iptables here, my first
+> attempt was with a misconfigured kernel and it would help to fail in a
+> more informative way:
 > 
-> There is a helper for this: mptcp_pm_should_add_signal_addr()
-> (which also uses READ_ONCE())
+> $ sudo ./mptcp_join.sh -F
+> Created /tmp/tmp.P4AWbNYGQ5 (size 1 KB) containing data sent by client
+> Created /tmp/tmp.ny1Q9MWo85 (size 1 KB) containing data sent by server
+> iptables v1.8.7 (legacy): Couldn't load match `length':No such file or
+> directory
+> Try `iptables -h' or 'iptables --help' for more information.
+> Error: TC classifier not found.
+> We have an error talking to the kernel
 
-I chose to not use it, as the condition I'm really checking is: "is the
-PM already processing a signal addr?" which incidentally boils down to
-the same code, but the helper name would be misleading IMHO.
+I understand it is not good to ignore the error but just to be sure,
+here you suggest to exit with an error, right?
 
-I can adapt if there are strong opinion WRT the above. Please let me
-know.
+In Geliang's v3, the whole test is skip but I don't think that's a good
+idea.
 
-Thanks!
+I mean: we manage a kernel config file so we expect the right kernel
+config is applied. If the kconfig is not the correct one, that's an error.
+For the tools, that's different and that's why we check if iptables tool
+is available. (a plugin might be missing but no need to check everything
+I think).
 
-Paolo
+In other words, I think we should add a " || exit 1" after the IPTables
+and TC commands in this function.
 
+@Geliang: WDYT?
+
+(...)
+
+>> +get_nr_mp_fail()
+>> +{
+>> +    i="$1"
+>> +
+>> +    local action=$(tc -n $ns2 -j -s action show action pedit index 100)
+>> +    local packets=$(echo $action | jq '.[1].actions[0].stats.packets')
+>> +
+>> +    if [ $packets -gt 0 ]; then
+> 
+> This triggered a bash parsing error when I did not have the added
+> netfilter kernel config options:
+> 
+> $ sudo ./mptcp_join.sh -F
+> Created /tmp/tmp.P4AWbNYGQ5 (size 1 KB) containing data sent by client
+> Created /tmp/tmp.ny1Q9MWo85 (size 1 KB) containing data sent by server
+> iptables v1.8.7 (legacy): Couldn't load match `length':No such file or
+> directory
+> Try `iptables -h' or 'iptables --help' for more information.
+> Error: TC classifier not found.
+> We have an error talking to the kernel
+> Created /tmp/tmp.CvX8qnG1gC (size 512 KB) containing data sent by client
+> Created /tmp/tmp.wenxUAgsj8 (size 512 KB) containing data sent by server
+> ./mptcp_join.sh: line 310: [: null: integer expression expected
+
+I think we don't have to deal with this error if we already check if the
+previous TC commands were OK, no?
+
+(...)
+
+>> +fail_tests()
+>> +{
+>> +    # multiple subflows
+>> +    reset_with_fail 2
+>> +    pm_nl_set_limits $ns1 0 2
+>> +    pm_nl_set_limits $ns2 0 2
+>> +    pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
+>> +    pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
+>> +    run_tests $ns1 $ns2 10.0.1.1 3
+>> +    get_nr_mp_fail 2
+>> +    chk_join_nr "$nr_mp_fail MP_FAIL, multiple subflows, MP_RST" 2 2
+>> 2 $nr_mp_fail
+> 
+> Is the first $nr_mp_fail supposed to be in the test description? It's
+> not clear what it means in the test output.
+
+In the v3, this is written after, it can help if this test fails.
+
+But I don't think we should use it in the MP FAIL we expect. Otherwise
+we will have the same situation Mat had: IPTables and TC commands fail
+but the test showed no error :)
+
+So we should have:
+
+  chk_join_nr "MP_FAIL (...) $nr_mp_fail" 2 2 2 1
+
+No?
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
