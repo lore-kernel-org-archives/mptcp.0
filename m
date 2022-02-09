@@ -1,44 +1,44 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547132F28
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 12:52:52 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id s21so6909254ejx.12
-        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 04:52:52 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637ED2F28
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 13:22:40 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id ch26so4947727edb.12
+        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 05:22:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=gCpwBq9LhPyi/p7oS2BG5dIw4esDw8YwpJWZZ2xS3+I=;
-        b=Lj+v/q/g45oEXK4gv/rtbMIhdAKYZnssW9n9Uqk0XDpXxvpI84WyiFvJKVs4ZjXVEv
-         Xytafd6ZkJm/1eRx/kFCmaKXQEPmVeFqEsPneV05GVovAXg/ia1mxWCnBJyrDjAj2C5f
-         rgsmwl887+Kx9MTgVW/oo/ZDiFtTyxSR6hcIiiJ9qwk5DNzcGMg71tmpiAMp6Bj9CqTi
-         V3B62ZfM02iSLN9ZVinnZNBKbnFPQl/YCWMsO4Y/TM3tuu8wnxe8cjh2PpX0SHJ3d5Ib
-         dfUWfWS7U6fpqEFp5U/kbORYFrPgcbuiJVQDiBLfUBg+QHsbUW1oLgVoFcKx+Fn1eDXx
-         /d8w==
+        h=message-id:date:mime-version:user-agent:subject:content-language
+         :from:to:references:cc:in-reply-to:content-transfer-encoding;
+        bh=taEOoNwu9QdW7Uvi5uXPwuwx9LXo69jma0mtcPMn1UA=;
+        b=3LjzXtgjGZ9zsew9LWv5hzS0emdyhX4UqPMZoWUIv5p36cR802WBTobZuap5xKW7ae
+         wx20D99FD2bhOWQ1DgaPW3+LonOTqT2XbIk3e/4PWmllx4J0NgYU996HbOv1YbQ0x11M
+         ga8CgIG8cx2FxfmI1kAW/Adlm3eO5Ulyt3elQeqkfPaqkoFAvd/s5EGI9NpaPmjNEVdP
+         Nab8HJwxzn9Hu6xeXLk0UzdGLQ7WdUIon+2Xdbg2r1UgU53F2SyOLroxphMcTNW1tovg
+         rAZimIXIk07T7dw/XR5oUONaoGhH6dlD6exhCX1Ug+SFg5lycNK4IeNAagMdmi0usOqt
+         QrZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:from:to:references:cc:in-reply-to
          :content-transfer-encoding;
-        bh=gCpwBq9LhPyi/p7oS2BG5dIw4esDw8YwpJWZZ2xS3+I=;
-        b=CCZzLtPfw8u/45Qpa/tKd8VpjHmNSWUmPHWv25GUBUaHApzSKWvf3KTK539tX39jKT
-         7SfZ081+/qFSr/eGohogUtUimbzgueHJ4myvuPiPNiuq8i9lZFX7xfz0kgN9vFN/0++k
-         H/T9jL3HjFF0NyHOML2h66G2bsw5L8xTN5AYlzR9jufaYhegDyYUWpu6iGsIobaZX3iu
-         x0SbP8OUvRoN4mOB1c06i3XMi60mAM2ugRmhOgle21B08rdnfdYpJr2DYpBSaq3y64wx
-         0zNvHlFZF4TK11cozSO+PItxcgJdem8FsjafCWfieOCdoTQlD2PmozfWa15VRQvbICXN
-         8xLg==
-X-Gm-Message-State: AOAM531he60BfQvYD0DPPTmGV1miKwnbxw9r0IsEv+l/cKsmZcoNOzVN
-	9Cqh4BZjOJg1X6RkQGZVJ1krzTykjxe+xg==
-X-Google-Smtp-Source: ABdhPJx3q8f83ynsYBiyjO0sWLE5W/bgR6IddBKc2GrhG3KhLX+0hkKON0A5n8RL9mUEQGj8cBnTfQ==
-X-Received: by 2002:a17:906:6a0f:: with SMTP id qw15mr1851378ejc.66.1644411170534;
-        Wed, 09 Feb 2022 04:52:50 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:42a6:e0be:778a:86e8? ([2a02:578:8593:1200:42a6:e0be:778a:86e8])
-        by smtp.gmail.com with ESMTPSA id l16sm2351659ejz.103.2022.02.09.04.52.49
+        bh=taEOoNwu9QdW7Uvi5uXPwuwx9LXo69jma0mtcPMn1UA=;
+        b=DW8Bc6T1SHeosmfSTB/dvipeNub52k+EoIP1/G7crtyOuaZ7/2RE4C9o+Ew8hlWpqV
+         Fy1xbN7QtEeC0E3Y9uIBIH/42iJl0qQ/8JwYT+jLvmOxI7VrCGolRxtJPnnbQETfYJ3H
+         PF9w6Zg6CZzuqqOEnRayo5KAZRKsoXEDBXJDTECs1+tJUAf4RvYF3SZCWxtJQ7D1v/Pd
+         rOS/dKclMK2zMiY+xCnRYmSBt9m7t23sMSSh8ugAJ+SN3eYLRWuJZ+qFG4VdZ4OgaUu5
+         wTRWFLCthrT/1tCRwLBL8KX2LQehIzFlBWVijE2jlxTsKLFPOpfbs5WS3jdMDb1B0TjH
+         hSIg==
+X-Gm-Message-State: AOAM531YpiDidPGgI8ZIsqel6ZZWQMaJPekfG5PQmmj72GbM2non/B15
+	fhD7kgwMoOn9brA6g0sKvnSUApqP0mrXuA==
+X-Google-Smtp-Source: ABdhPJyGe3cCSReWxhWPdJ7tgxtfAoHu0Owbzhotl27i7ugQMJ3LF71QekNy4gMGqQrS6gq+YTD1mw==
+X-Received: by 2002:a05:6402:368f:: with SMTP id ej15mr2557171edb.84.1644412958439;
+        Wed, 09 Feb 2022 05:22:38 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:67e2:9861:88d7:accc? ([2a02:578:8593:1200:67e2:9861:88d7:accc])
+        by smtp.gmail.com with ESMTPSA id pj9sm4113340ejb.124.2022.02.09.05.22.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Feb 2022 04:52:50 -0800 (PST)
-Message-ID: <d7c7ef92-52b0-d2ef-5662-e9ac1ddfa68a@tessares.net>
-Date: Wed, 9 Feb 2022 13:52:49 +0100
+        Wed, 09 Feb 2022 05:22:38 -0800 (PST)
+Message-ID: <6b68c023-67b2-e574-cbc3-39363d8463f0@tessares.net>
+Date: Wed, 9 Feb 2022 14:22:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,57 +47,52 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-net v3 3/4] mptcp: add mibs counter for ignored
- incoming options
+Subject: Re: [PATCH mptcp-net v3 0/4] mptcp: fix races in add_addr handling
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1644399915.git.pabeni@redhat.com>
- <3ecca50d02f7d75f9f4dc166f80ebddb3d91bdfa.1644399915.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <3ecca50d02f7d75f9f4dc166f80ebddb3d91bdfa.1644399915.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+References: <cover.1644399915.git.pabeni@redhat.com>
+ <617b4fa8-320b-2e88-ee68-0a25e842ee21@tessares.net>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <617b4fa8-320b-2e88-ee68-0a25e842ee21@tessares.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 09/02/2022 10:47, Paolo Abeni wrote:
-> The MPTCP in kernel path manager has some constraints on incoming
-> addresses annunces processing, so that in edge scenarios it can
-> end-up dropping (ignoring) some of such announces.
+On 09/02/2022 10:59, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> The above is not very limiting in practice since such scenarios are
-> very uncommon and MPTCP will recover due to ADD_ADDR retransmissions.
+> On 09/02/2022 10:47, Paolo Abeni wrote:
+>> the patches 1 && 2 fix actual races, even if the race addressed by
+>> 2/4 is not exposed by the self-tests, afaics.
+>>
+>> patch 3 introduces some mibs to detect critical scenarios we can't
+>> fix without major rework
+>>
+>> patch 4 updates the self-test to be graceful in above cases.
 > 
-> This patch adds a few MIBs counter to account for such drop events
-> to allow easier introspection of the critical scenarios.
+> Thank you for the new version!
 > 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  net/mptcp/mib.c | 2 ++
->  net/mptcp/mib.h | 2 ++
->  net/mptcp/pm.c  | 8 ++++++--
->  3 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-> index c12251cb0d44..d544b5304596 100644
-> --- a/net/mptcp/mib.c
-> +++ b/net/mptcp/mib.c
-> @@ -36,12 +36,14 @@ static const struct snmp_mib mptcp_snmp_list[] = {
->  	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
->  	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
->  	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
-> +	SNMP_MIB_ITEM("AddAddrDropped", MPTCP_MIB_ADDADDRDROP),
+> I suggest to apply it now to have more feedback from the CIs. We can
+> always end Squash-to patches later if needed.
 
-Do you mind if I rename "AddAddrDropped" to "AddAddrDrop", similar to
-the enum name and the title for the RmAddr?
+Just applied in our tree (fixes for -net) with my RvB tags (+ Closes,
+Reported/Tested and Fixes on the patch 4/4),
+s/AddAddrDropped/AddAddrDrop/ for the MIB item without two small issues
+reported by CheckPatch ("(foo*)" should be "(foo *)"):
 
->  	SNMP_MIB_ITEM("MPJoinPortSynRx", MPTCP_MIB_JOINPORTSYNRX),
->  	SNMP_MIB_ITEM("MPJoinPortSynAckRx", MPTCP_MIB_JOINPORTSYNACKRX),
->  	SNMP_MIB_ITEM("MPJoinPortAckRx", MPTCP_MIB_JOINPORTACKRX),
->  	SNMP_MIB_ITEM("MismatchPortSynRx", MPTCP_MIB_MISMATCHPORTSYNRX),
->  	SNMP_MIB_ITEM("MismatchPortAckRx", MPTCP_MIB_MISMATCHPORTACKRX),
->  	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
-> +	SNMP_MIB_ITEM("RmAddrDrop", MPTCP_MIB_RMADDRDROP),
+- 83013c9c30e5: mptcp: fix race in overlapping signal events
+- 6a9d5a9d5ec0: mptcp: fix race in incoming ADD_ADDR option processing
+- 31a634cf1d69: mptcp: add mibs counter for ignored incoming options
+- be58c0804397: selftests: mptcp: more robust signal race test
+- 94af849fb4a6: tg: fix wrong merge resolution
+- Results: 3484d41ff4f2..be63b701c373
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220209T132143
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
 Matt
