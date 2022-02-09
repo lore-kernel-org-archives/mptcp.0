@@ -1,91 +1,100 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156A62C9C
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 23:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C62F2C9C
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 23:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644448734; x=1675984734;
+  t=1644449987; x=1675985987;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Az15SslFV3K79OjzSUWbl6lGd7V6n1Rqjz++ZmZqnqQ=;
-  b=aEd4VvRovvN1t2pIy74BXNqIvag+f4UyFfy/Qhdjw4EEnR3oVfXKIwzA
-   xMGKnMeb5W+cW09j2sUvg+fgCshKbPM4u47gz6w10+5zYy5FpkOKoEs2B
-   WUewRW3hhX5YgvfJzFRa5RVkbZrpCYDGxox3jkxrdlhXNhLbXJS8+NtbA
-   Qmk1W6xdebeJy5h7xO5h7LWMb02oXncPniikZ1ejaerFFg8z/pYi6mdKI
-   lE59mkIl/gfbGCw7BNNM5avXswNipjWQWxEpn26YaYmgNPauLzSA+mXcO
-   iC5Fl1sRPPx8m1+7agkIXLGQ7KqRajwZRn5hcK2UrJ2+YIcKFHdJOUcKF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="273911449"
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="273911449"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:18:53 -0800
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="701453281"
+  bh=fghnLF7P5Pr6ukiSKGBmibwiIfepCVy8Jn7R4XTkBD8=;
+  b=T+zqEvfScU3+2qkiS2yek8H2U1TY/HvPQ/JzyqLeMuQUpVwjuWXBGZpv
+   Lt+bSmRIVTmyfOF8aYZmHMV5CFlp0tQ7BbIgwgkV4dZ82Hft3nI7PJSWI
+   89vnTnY11y5zDVltDecLz7GGBlpND3/7txTPjmu39Qum3xRzYbgbIXtcG
+   o4hqc5EcaLfigl9u2AO6Ks32lxhHyuf79xO3h22gLxGJlDTtXG4uE3V2Y
+   cCgIIrP2HZaS0RjI/Aj8Xs27PvpKUBoRqQTpr04SEqkHl3aE/m7QTCv0S
+   8JgtbY+hbyOCJ/boKmp5bFGB4bFU+Kbk8kJSwcGFmqTWPE6liOJ0WO1yN
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="246950335"
+X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
+   d="scan'208";a="246950335"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:39:46 -0800
+X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
+   d="scan'208";a="541358131"
 Received: from halucas-mobl3.amr.corp.intel.com ([10.212.241.159])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:18:53 -0800
-Date: Wed, 9 Feb 2022 15:18:53 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:39:46 -0800
+Date: Wed, 9 Feb 2022 15:39:45 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] mptcp: mark ops structures as ro_after_init
-In-Reply-To: <20220209102933.20873-1-fw@strlen.de>
-Message-ID: <e978ec2-dd24-8bc1-f3e9-d6d8e74aa5ad@linux.intel.com>
-References: <20220209102933.20873-1-fw@strlen.de>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add mp_fail
+ testcases v5"
+In-Reply-To: <d7ae1690ad1da5e0614e239a429e91e4dbc52155.1644414480.git.geliang.tang@suse.com>
+Message-ID: <6674c36-961c-6910-881-52b4891d93eb@linux.intel.com>
+References: <d7ae1690ad1da5e0614e239a429e91e4dbc52155.1644414480.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 9 Feb 2022, Florian Westphal wrote:
+On Wed, 9 Feb 2022, Geliang Tang wrote:
 
-> These structures are initialised from the init hooks, so we can't make
-> them 'const'.  But no writes occur afterwards, so we can use ro_after_init.
+> We will get this failure in v5 in rare cases, about one percent
+> probability:
 >
-> Also, remove bogus EXPORT_SYMBOL, the only access comes from ip
-> stack, not from kernel modules.
+> Created /tmp/tmp.e4nE5Q14mj (size 1024 KB) containing data sent by client
+> Created /tmp/tmp.QwpQYClFnm (size 1024 KB) containing data sent by server
+> 001 MP_FAIL MP_RST: 0 corrupted pkts     syn[ ok ] - synack[ ok ] - ack[ ok ]
+>                                         sum[fail] got 0 data checksum error[s] expected 1
+>                                         ftx[fail] got 0 MP_FAIL[s] TX expected 1
+>                                         rtx[fail] got 0 MP_RST[s] TX expected 1
+>                                         itx[ ok ] - infirx[ ok ]
 >
-> Signed-off-by: Florian Westphal <fw@strlen.de>
+> We shouldn't always expect getting 1 MP_FAIL. If no checksum failure
+> occur, we should expect no MP_FAIL.
+
+There are two main reasons we would see no checksum failure:
+
+1. TC rules didn't produce the bit flips. In this case it seems like the 
+script should retry.
+
+2. TC rules did trigger, checksum code failed to detect it, and file 
+contents don't match. This should fail the test case. I think the test 
+should catch this.
+
+
+Since it looks like v5 plus this squash doesn't seem to handle #1 I'll 
+mark both as "Changes Requested" in patchwork.
+
+-Mat
+
+
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> net/mptcp/subflow.c | 9 ++++-----
-> 1 file changed, 4 insertions(+), 5 deletions(-)
-
-Looks good to me, thanks Florian.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
+> tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index d4b4d285ffc1..289df4fd0a73 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -482,8 +482,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
-> }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 9f5c9afc26d2..cfa5f168e6db 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -2287,7 +2287,9 @@ fail_tests()
+> 	pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
+> 	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
+> 	run_tests $ns1 $ns2 10.0.1.1 3
+> -	chk_join_nr "MP_FAIL MP_RST: $(pedit_action_pkts) corrupted pkts" 2 2 2 1 1
+> +	local pedit_action=$(pedit_action_pkts)
+> +	chk_join_nr "MP_FAIL MP_RST: $pedit_action corrupted pkts" 2 2 2 \
+> +			$((!!$pedit_action)) $((!!$pedit_action))
 >
-> struct request_sock_ops mptcp_subflow_request_sock_ops;
-> -EXPORT_SYMBOL_GPL(mptcp_subflow_request_sock_ops);
-> -static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops;
-> +static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops __ro_after_init;
->
-> static int subflow_v4_conn_request(struct sock *sk, struct sk_buff *skb)
-> {
-> @@ -504,9 +503,9 @@ static int subflow_v4_conn_request(struct sock *sk, struct sk_buff *skb)
-> }
->
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -static struct tcp_request_sock_ops subflow_request_sock_ipv6_ops;
-> -static struct inet_connection_sock_af_ops subflow_v6_specific;
-> -static struct inet_connection_sock_af_ops subflow_v6m_specific;
-> +static struct tcp_request_sock_ops subflow_request_sock_ipv6_ops __ro_after_init;
-> +static struct inet_connection_sock_af_ops subflow_v6_specific __ro_after_init;
-> +static struct inet_connection_sock_af_ops subflow_v6m_specific __ro_after_init;
-> static struct proto tcpv6_prot_override;
->
-> static int subflow_v6_conn_request(struct sock *sk, struct sk_buff *skb)
+> 	# single subflow
+> 	reset_with_fail 1
 > -- 
 > 2.34.1
 >
