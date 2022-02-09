@@ -1,93 +1,85 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297022C80
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 09:59:20 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id y3so5775941ejf.2
-        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 01:59:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=oPCL84rhc1Ah+6I/nwO3nf/bNFU+XsRLjBkAz7Dqz/Y=;
-        b=V0zj2rfoTyDbGfsp0+Rm6r+RqFoiGylEiw/MP4mAzgFUTIfOA55G1W56vZRV943Ap4
-         5fT5YNWNmQijESLp5dn2b7xdlC/QB++uzsKf1CRMZco8DqyK//5Kj43vgvYA4JHi8xAr
-         Ue5x5o3I7dZlX9fCFn08SQGEmmNeF5GNiLL0zEAY+YbJu3KMS1A16A3QVZAqkNwwDUIr
-         O45ILgPoU+KztDWGEyCs78Nu6CrSvegj7QCc7Hlks3DbYHWIewnXyOWpiWuFwsJMKHHD
-         PK4WnHD+g9BmKYVGOSiFurL0ixmtOHDvbAE/7IK8zl8/hZe/FlvVTPHyOye4iaO0Ro/e
-         MdEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=oPCL84rhc1Ah+6I/nwO3nf/bNFU+XsRLjBkAz7Dqz/Y=;
-        b=l2EwKlS+yM4FrNteJxJat4PNliUNppWk6CltYyyKjhFqTuv6rybPObU7CSlCLcUkgY
-         s8Xd65NiBKgt1CtINP6+B0rIHfG9YxuvciBlB3jQqWYV2Qni0hk+trJTskZfcSyovE3g
-         VUlaREA4+u/qcM42hJQl4uH8Y2wpZLesGtXd63YQURNZCvafJZwtCoNGhYm3ci/mak5i
-         Ql7FrW+06ROw1fN8k/GWpOrc3iHkN1uDI3yCVOjkjE6pdZPCAPywt/7h8qTuMa3NMiX+
-         BUU6KNETdZAFOKoQkThZdNJHXkyULMmPyxWMfJiIU+IQ39+ihW8iRoRVbKYdw8Ldstys
-         mFWg==
-X-Gm-Message-State: AOAM531uvrWzNCBz67NsnTAu7KO3BKAXrtd0DqSt1ttv7ike9MWctvpr
-	gJc+ULhGbx0nKtr/r9zy1hJchL7qHtZi5zFh
-X-Google-Smtp-Source: ABdhPJzlGrbO+BqDcT6S7nLWF37HiCD6vMLCNcbS1B0aYLTKfNsugWzGhCvorfl/pg5u2luSjHchBQ==
-X-Received: by 2002:a17:907:3faa:: with SMTP id hr42mr1220969ejc.596.1644400758381;
-        Wed, 09 Feb 2022 01:59:18 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:268e:dc63:f3ef:de99? ([2a02:578:8593:1200:268e:dc63:f3ef:de99])
-        by smtp.gmail.com with ESMTPSA id n2sm5436207ejl.86.2022.02.09.01.59.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Feb 2022 01:59:18 -0800 (PST)
-Message-ID: <617b4fa8-320b-2e88-ee68-0a25e842ee21@tessares.net>
-Date: Wed, 9 Feb 2022 10:59:17 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7437C2F39
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 10:11:50 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1nHjws-0002OH-0k; Wed, 09 Feb 2022 11:11:42 +0100
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next] mptcp: don't save tcp data_ready and write space callbacks
+Date: Wed,  9 Feb 2022 11:11:33 +0100
+Message-Id: <20220209101133.19514-1-fw@strlen.de>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-net v3 0/4] mptcp: fix races in add_addr handling
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1644399915.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1644399915.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Assign the helpers directly rather than save/restore in the context
+structure.
 
-On 09/02/2022 10:47, Paolo Abeni wrote:
-> the patches 1 && 2 fix actual races, even if the race addressed by
-> 2/4 is not exposed by the self-tests, afaics.
-> 
-> patch 3 introduces some mibs to detect critical scenarios we can't
-> fix without major rework
-> 
-> patch 4 updates the self-test to be graceful in above cases.
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ net/mptcp/protocol.h | 6 ++----
+ net/mptcp/subflow.c  | 4 ----
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
-Thank you for the new version!
-
-I suggest to apply it now to have more feedback from the CIs. We can
-always end Squash-to patches later if needed.
-
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/254
-> 
-> Note: I did not attach the above tag to a specific patch, as all
-> of them will be needed to fix the issue
-
-Do not hesitate to put it on the last one so the ticket will be
-automatically closed and tracked when applying the patches on the
-different trees :)
-We can also put it on all of them or use 'Link' on the first ones and
-'Closes' on the last one.
-
-Anyway, I can also close it manually if I don't forget ;-)
-
-Cheers,
-Matt
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index f37f087caab3..202004473292 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -479,9 +479,7 @@ struct mptcp_subflow_context {
+ 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
+ 	struct	sock *conn;	    /* parent mptcp_sock */
+ 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
+-	void	(*tcp_data_ready)(struct sock *sk);
+ 	void	(*tcp_state_change)(struct sock *sk);
+-	void	(*tcp_write_space)(struct sock *sk);
+ 	void	(*tcp_error_report)(struct sock *sk);
+ 
+ 	struct	rcu_head rcu;
+@@ -626,9 +624,9 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow);
+ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+ 					      struct mptcp_subflow_context *ctx)
+ {
+-	sk->sk_data_ready = ctx->tcp_data_ready;
++	sk->sk_data_ready = sock_def_readable;
+ 	sk->sk_state_change = ctx->tcp_state_change;
+-	sk->sk_write_space = ctx->tcp_write_space;
++	sk->sk_write_space = sk_stream_write_space;
+ 	sk->sk_error_report = ctx->tcp_error_report;
+ 
+ 	inet_csk(sk)->icsk_af_ops = ctx->icsk_af_ops;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 485f00dcaf84..d4b4d285ffc1 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1661,9 +1661,7 @@ static int subflow_ulp_init(struct sock *sk)
+ 	tp->is_mptcp = 1;
+ 	ctx->icsk_af_ops = icsk->icsk_af_ops;
+ 	icsk->icsk_af_ops = subflow_default_af_ops(sk);
+-	ctx->tcp_data_ready = sk->sk_data_ready;
+ 	ctx->tcp_state_change = sk->sk_state_change;
+-	ctx->tcp_write_space = sk->sk_write_space;
+ 	ctx->tcp_error_report = sk->sk_error_report;
+ 	sk->sk_data_ready = subflow_data_ready;
+ 	sk->sk_write_space = subflow_write_space;
+@@ -1719,9 +1717,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
+ 
+ 	new_ctx->conn_finished = 1;
+ 	new_ctx->icsk_af_ops = old_ctx->icsk_af_ops;
+-	new_ctx->tcp_data_ready = old_ctx->tcp_data_ready;
+ 	new_ctx->tcp_state_change = old_ctx->tcp_state_change;
+-	new_ctx->tcp_write_space = old_ctx->tcp_write_space;
+ 	new_ctx->tcp_error_report = old_ctx->tcp_error_report;
+ 	new_ctx->rel_write_seq = 1;
+ 	new_ctx->tcp_sock = newsk;
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
+
