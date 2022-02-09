@@ -1,117 +1,300 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED192F24
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 12:24:12 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id ka4so6717080ejc.11
-        for <mptcp@lists.linux.dev>; Wed, 09 Feb 2022 04:24:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=vdbJVspABOQcaXCoCvAj4ccG+htx7NQD7qym78msHro=;
-        b=BsWqIqOEyfIOuUxujOBbu3DKRQyus6vdISFa+vDW9uBLbNtuoIIHhWKDzbX52OKEg5
-         g5Ys+NtMlxRV1jhef03nlJljq7EnKcBeV2mCHKJhnMpCsUzOtCMASMYAc8hLOd3o3ZHR
-         Sv5mxtv4N+1KgvFuGj55oY4Ete+wT6Ol6lSV7jOpXYx97er9s6l+DTIGxp/hYNsy9SCH
-         ayCCGxUJ+z59MKt+qz/0bObIaZZJBBDFxQijTgCfp2Blakyl7ySvntfN5paLrhct7AjS
-         57N64CqU8dzjSpTYpukOfewtn3aOXC6G/OoJPNEEhKW91d0FWTwiOB6cKtje8h/kK1lR
-         Om6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=vdbJVspABOQcaXCoCvAj4ccG+htx7NQD7qym78msHro=;
-        b=FgqsJKU5LOYbiE/7ex1+yivIxsNa5VoGBUvXKMnUGzSnFfQD/dO1g/NuRwj8RN+qOJ
-         r+lWNSB2viMX8uIOjTZ7l2qPggHwJz6Dq0qM+0sFLH2KBC+Rs2t/7Dw1A0XVHx5jXQE9
-         tUT45A2Y1XnfQ09nJTgMTMoLHdiceTR29bQyTFRfE7N0Mo9rgg0W34R5TNjw8rwDuJse
-         LWY9DXdlBZDjMVU1ij9meGpiduh2rXpMNrcRRr0NCAU7VH/ozqSa9G55ZiSUsPRiP13Z
-         7e6xKmnKVM1zHbqrOU9Do31F4CKyJq14p9Jv8jsuIVKb1UYJv5ESbbcBAeXKr56V1sW0
-         3WTg==
-X-Gm-Message-State: AOAM532sdB01ojU0U175Ph7G9oHFLv0NBXZq/BvBl1SObrq0zkXiYlAT
-	/6tLEFgMJQHTvq1DbmBrgAMRGg==
-X-Google-Smtp-Source: ABdhPJwD8tXEGb0Q02pGABZQMKovoDU+4bajQgbl8pgQoYdPccwcUwquFKR38IE2T+q5ABFlc1RoTw==
-X-Received: by 2002:a17:906:b098:: with SMTP id x24mr1689483ejy.744.1644409450678;
-        Wed, 09 Feb 2022 04:24:10 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:42a6:e0be:778a:86e8? ([2a02:578:8593:1200:42a6:e0be:778a:86e8])
-        by smtp.gmail.com with ESMTPSA id cn15sm2822489edb.37.2022.02.09.04.24.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Feb 2022 04:24:10 -0800 (PST)
-Message-ID: <6c6de1be-eb21-76e9-a8d2-c594c8881c7d@tessares.net>
-Date: Wed, 9 Feb 2022 13:24:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033942F28
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 12:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1644409882;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ENxyM9xqac9KDqr8QqifV0XIeP5iSoHbco3i1DceoNo=;
+	b=LBUdl+tSJZFcqNOFyMhjY0aUxkFNYywLu8WpG1VuHgy8m/72a4uNSsNfB4sFLOXKFS1s1W
+	dJtK8CO8bHhNXnntrYxOxXn07mx3T32d10/oo6oVXfXrRPSk58k26yPKv5dK3FC70m+5ss
+	QuBoXS49nUIePwBGvWehwwfw2MSFWDk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-139-ZEx0P9AmOqOWss4Lj6FMoA-1; Wed, 09 Feb 2022 07:31:18 -0500
+X-MC-Unique: ZEx0P9AmOqOWss4Lj6FMoA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8161F2F4C
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 12:31:17 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.181])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CCBDA5F6DE
+	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 12:31:16 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next] mptcp: strict local address ID selection.
+Date: Wed,  9 Feb 2022 13:31:01 +0100
+Message-Id: <1d7dfcc6b0628ef009798298e0e5922513f30083.1644409809.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next 0/2] fix mptcp bpf selftest error
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1644300192.git.geliang.tang@suse.com>
- <3fa7c8c7-6210-35cd-d038-6e6975539ff9@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <3fa7c8c7-6210-35cd-d038-6e6975539ff9@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Geliang, Mat,
+The address ID selection for MPJ subflows created in response
+to incoming ADD_ADDR option is currently unreliable: it happens
+at MPJ socket creation time, when the local address could be
+unknown.
 
-On 09/02/2022 01:21, Mat Martineau wrote:
-> On Tue, 8 Feb 2022, Geliang Tang wrote:
-> 
->> Fix the mptcp bpf selftest build break.
->>
->> Geliang Tang (2):
->>  Squash to "bpf:selftests: add MPTCP test base"
->>  mptcp: add SNDTIMEO setsockopt support
->>
->> net/mptcp/sockopt.c                            | 2 ++
->> tools/testing/selftests/bpf/prog_tests/mptcp.c | 2 +-
->> 2 files changed, 3 insertions(+), 1 deletion(-)
->>
->> -- 
->> 2.34.1
-> 
-> These look good for the export branch.
-> 
-> We did talk about SO_SNDTIMEO about a year ago:
-> https://lore.kernel.org/mptcp/5e465bd5f4b3f7e883e09e3f4bc5a566edba045f.camel@redhat.com/
-> 
-> 
-> But Paolo's concern there no longer applies, because the socket option
-> changes since then will apply the sndtimeo value to the msk instead of
-> the first subflow.
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Additionally, if the no local endpoint is available for the local
+address, a new dummy endpoint is created, confusing the user-land.
 
-Thank you for the patches and the reviews!
+This change refactor the code to move the address ID seleciton inside
+the rebuild_header() helper, when the local address eventually
+selected by the route lookup is finally known. If the address used
+is not mapped by any endpoint - and thus can't be advertised/removed
+pick the id 0 instead of allocate a new endpoint.
 
-Now in our tree (feat. for net-next) with Mat's RvB tag (on patch 2/2 only):
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+Note: this should address issues/225, the root cause is that
+dummy endpoint creation causes flush being unreliable when the
+tests flush the endpoints on both sides. This patch addressed that
+avoiding dummy endpoint creation.
 
-- 9e3b7120da20: "squashed" patch 1/2 in "selftests: bpf: add MPTCP test
-base"
-- 0cc76a0dbc16: "Signed-off-by" + "Co-developed-by"
-- 0e4737981bcc: mptcp: add SNDTIMEO setsockopt support
+Beware! intentional RFC violation included ;)
 
-Also renamed the title of two patches: s/bpf:selftests:/selftests: bpf:/
+RFC -> v1:
+- don't bail if ID lookup fails, use 0 instead
+---
+ net/mptcp/pm_netlink.c | 39 ++++++----------------------
+ net/mptcp/protocol.c   |  3 +++
+ net/mptcp/protocol.h   |  3 ++-
+ net/mptcp/subflow.c    | 59 ++++++++++++++++++++++++++++++++++++------
+ 4 files changed, 64 insertions(+), 40 deletions(-)
 
-- e93e37b063eb: tg:msg: fix prefix order and space
-- 0df242af6c98: tg:msg: fix prefix order and space
-
-- Results: 56333e0f13bc..3484d41ff4f2
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220209T122329
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 46346f009485..5f6395b10fdc 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -83,16 +83,6 @@ static bool addresses_equal(const struct mptcp_addr_info *a,
+ 	return a->port == b->port;
+ }
+ 
+-static bool address_zero(const struct mptcp_addr_info *addr)
+-{
+-	struct mptcp_addr_info zero;
+-
+-	memset(&zero, 0, sizeof(zero));
+-	zero.family = addr->family;
+-
+-	return addresses_equal(addr, &zero, true);
+-}
+-
+ static void local_address(const struct sock_common *skc,
+ 			  struct mptcp_addr_info *addr)
+ {
+@@ -998,7 +988,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ 	struct mptcp_addr_info skc_local;
+ 	struct mptcp_addr_info msk_local;
+ 	struct pm_nl_pernet *pernet;
+-	int ret = -1;
++	int ret = 0;
+ 
+ 	if (WARN_ON_ONCE(!msk))
+ 		return -1;
+@@ -1011,9 +1001,6 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ 	if (addresses_equal(&msk_local, &skc_local, false))
+ 		return 0;
+ 
+-	if (address_zero(&skc_local))
+-		return 0;
+-
+ 	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ 
+ 	rcu_read_lock();
+@@ -1024,24 +1011,14 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ 		}
+ 	}
+ 	rcu_read_unlock();
+-	if (ret >= 0)
+-		return ret;
+-
+-	/* address not found, add to local list */
+-	entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
+-	if (!entry)
+-		return -ENOMEM;
+-
+-	entry->addr = skc_local;
+-	entry->addr.id = 0;
+-	entry->addr.port = 0;
+-	entry->ifindex = 0;
+-	entry->flags = 0;
+-	entry->lsk = NULL;
+-	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
+-	if (ret < 0)
+-		kfree(entry);
+ 
++	/* if src address is not mapped by any endpoint, we can't reliably pick an
++	 * ID without creating "dummy" endpoint which would unexpectly pollute the
++	 * netns.
++	 * In such case arbitrary pick the 0 id. This is an RFC violation, as the
++	 * mapping for ID 0 is not unique, but an unconsequential one: lacking the
++	 * endpoint the peer can't generate RM_ADDR for this address
++	 */
+ 	return ret;
+ }
+ 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3324e1c61576..57caf470e500 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -117,6 +117,9 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
+ 	list_add(&subflow->node, &msk->conn_list);
+ 	sock_hold(ssock->sk);
+ 	subflow->request_mptcp = 1;
++
++	/* This is the first subflow, always with id 0 */
++	subflow->local_id_valid = 1;
+ 	mptcp_sock_graft(msk->first, sk->sk_socket);
+ 
+ 	return 0;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index beb5ee38656a..f63b6f35d669 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -453,7 +453,8 @@ struct mptcp_subflow_context {
+ 		rx_eof : 1,
+ 		can_ack : 1,        /* only after processing the remote a key */
+ 		disposable : 1,	    /* ctx can be free at ulp release time */
+-		stale : 1;	    /* unable to snd/rcv data, do not use for xmit */
++		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
++		local_id_valid : 1; /* local_id is correctly initialized */
+ 	enum mptcp_data_avail data_avail;
+ 	u32	remote_nonce;
+ 	u64	thmac;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 485f00dcaf84..8d045c24da59 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -481,7 +481,45 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 	mptcp_subflow_reset(sk);
+ }
+ 
+-struct request_sock_ops mptcp_subflow_request_sock_ops;
++static int subflow_chk_local_id(struct sock *sk)
++{
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
++	int err;
++
++	if (likely(subflow->local_id_valid))
++		return 0;
++
++	err = mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
++	if (err < 0)
++		return err;
++
++	subflow->local_id = err;
++	subflow->local_id_valid = 1;
++	return 0;
++}
++
++static int subflow_rebuild_header(struct sock *sk)
++{
++	int err = subflow_chk_local_id(sk);
++
++	if (unlikely(err < 0))
++		return err;
++
++	return inet_sk_rebuild_header(sk);
++}
++
++static int subflow_v6_rebuild_header(struct sock *sk)
++{
++	int err = subflow_chk_local_id(sk);
++
++	if (unlikely(err < 0))
++		return err;
++
++	return inet6_sk_rebuild_header(sk);
++}
++
++ struct request_sock_ops mptcp_subflow_request_sock_ops;
+ EXPORT_SYMBOL_GPL(mptcp_subflow_request_sock_ops);
+ static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops;
+ 
+@@ -1404,12 +1442,9 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+ 		get_random_bytes(&subflow->local_nonce, sizeof(u32));
+ 	} while (!subflow->local_nonce);
+ 
+-	if (!local_id) {
+-		err = mptcp_pm_get_local_id(msk, (struct sock_common *)ssk);
+-		if (err < 0)
+-			goto failed;
+-
+-		local_id = err;
++	if (local_id) {
++		subflow->local_id = local_id;
++		subflow->local_id_valid = 1;
+ 	}
+ 
+ 	mptcp_pm_get_flags_and_ifindex_by_id(sock_net(sk), local_id,
+@@ -1435,7 +1470,6 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+ 	pr_debug("msk=%p remote_token=%u local_id=%d remote_id=%d", msk,
+ 		 remote_token, local_id, remote_id);
+ 	subflow->remote_token = remote_token;
+-	subflow->local_id = local_id;
+ 	subflow->remote_id = remote_id;
+ 	subflow->request_join = 1;
+ 	subflow->request_bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+@@ -1735,6 +1769,9 @@ static void subflow_ulp_clone(const struct request_sock *req,
+ 		new_ctx->token = subflow_req->token;
+ 		new_ctx->ssn_offset = subflow_req->ssn_offset;
+ 		new_ctx->idsn = subflow_req->idsn;
++
++		/* this is the first subflow, id is always 0 */
++		new_ctx->local_id_valid = 1;
+ 	} else if (subflow_req->mp_join) {
+ 		new_ctx->ssn_offset = subflow_req->ssn_offset;
+ 		new_ctx->mp_join = 1;
+@@ -1744,6 +1781,9 @@ static void subflow_ulp_clone(const struct request_sock *req,
+ 		new_ctx->remote_id = subflow_req->remote_id;
+ 		new_ctx->token = subflow_req->token;
+ 		new_ctx->thmac = subflow_req->thmac;
++
++		/* let rebuild header later get the correct ID */
++		new_ctx->local_id_valid = 0;
+ 	}
+ }
+ 
+@@ -1796,6 +1836,7 @@ void __init mptcp_subflow_init(void)
+ 	subflow_specific.conn_request = subflow_v4_conn_request;
+ 	subflow_specific.syn_recv_sock = subflow_syn_recv_sock;
+ 	subflow_specific.sk_rx_dst_set = subflow_finish_connect;
++	subflow_specific.rebuild_header = subflow_rebuild_header;
+ 
+ 	tcp_prot_override = tcp_prot;
+ 	tcp_prot_override.release_cb = tcp_release_cb_override;
+@@ -1808,6 +1849,7 @@ void __init mptcp_subflow_init(void)
+ 	subflow_v6_specific.conn_request = subflow_v6_conn_request;
+ 	subflow_v6_specific.syn_recv_sock = subflow_syn_recv_sock;
+ 	subflow_v6_specific.sk_rx_dst_set = subflow_finish_connect;
++	subflow_v6_specific.rebuild_header = subflow_v6_rebuild_header;
+ 
+ 	subflow_v6m_specific = subflow_v6_specific;
+ 	subflow_v6m_specific.queue_xmit = ipv4_specific.queue_xmit;
+@@ -1815,6 +1857,7 @@ void __init mptcp_subflow_init(void)
+ 	subflow_v6m_specific.net_header_len = ipv4_specific.net_header_len;
+ 	subflow_v6m_specific.mtu_reduced = ipv4_specific.mtu_reduced;
+ 	subflow_v6m_specific.net_frag_header_len = 0;
++	subflow_v6m_specific.rebuild_header = subflow_rebuild_header;
+ 
+ 	tcpv6_prot_override = tcpv6_prot;
+ 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
+
