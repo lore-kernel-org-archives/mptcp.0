@@ -1,59 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B56B2F28
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 09:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA12D2F28
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 10:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1644486207;
+	s=mimecast20190719; t=1644487445;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wQRhz9PZp8CS2pvZ/auJtt6ALtI8AjTUC0baNU+EznM=;
-	b=EajTdt6OS2jJAHbqV0Qz6Bp6MHgWba8Sz4Sx6vLoCpKQlVG4rZlYp6UNCkocHchFn0on0n
-	ra+eq9ey4Uo/sB+bmfmkKoa4xoMGP45pZ5sbAJTpPhP1qSGQqs+pvXRFq8bHme8He6MQ/C
-	b4ouzeFerrB8sMljOKWWTmHEuXgyJME=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9f9jsMD8ULk+6P2EooVon1q0L1RSMVamVbkPiQDRRes=;
+	b=c4aBSlwOZ6FGyM1RwSTSMkqDec8e1dmF2vVtcNJvUYrt/E3sj1/2Ljhp3KIblMZCHDSRSG
+	m2EkSTn2QNsqcWc7gp549Q72bAhuCO+HbVDSDagQjpwWsh3pLZl089IrsSSt7O9I6A4Dvb
+	9AqDib7w3i+1TuEdgDwPflkI0WlUVZ0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-471-_q8jihAIPZCrm1l5sH8liQ-1; Thu, 10 Feb 2022 04:43:26 -0500
-X-MC-Unique: _q8jihAIPZCrm1l5sH8liQ-1
-Received: by mail-qt1-f200.google.com with SMTP id j6-20020ac85f86000000b002d9c2505d01so2910463qta.15
-        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 01:43:25 -0800 (PST)
+ us-mta-564-92eLg3VGPPCbBgb24lXlvQ-1; Thu, 10 Feb 2022 05:04:04 -0500
+X-MC-Unique: 92eLg3VGPPCbBgb24lXlvQ-1
+Received: by mail-wr1-f71.google.com with SMTP id k20-20020adfc714000000b001e305cd1597so2264004wrg.19
+        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 02:04:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=wQRhz9PZp8CS2pvZ/auJtt6ALtI8AjTUC0baNU+EznM=;
-        b=SHBKwNHuV/OKLpTUS+Kghk9KXkuKFoMpXkmGz+YUAW34eCRzahEExkU49pY+IInlmD
-         BCAJzC4O5D2/tNyuxZUBnorN8b8CTXJw3V2OeHWHv66iIsOzegZiYgwTXnervbCVULpD
-         3ZaW4/wkHSZZGk5N7zELrNk+k+0uixwni8MEZIv6BoqpnW7+ALaQBYeCwjblXsukgGgM
-         r88/nISfjyFr/vhzi3jVDGjnTSH/El0NE6oW2SuhHe49hY86+0M5a8XBQkKAO8eqIMLz
-         Nijn2E4RkOShlqFqFB/TD+a7T9MvOE0K3D3FG8cjxDRaLXpZTS5GYDZMvZrxSYdDpC/a
-         /kTw==
-X-Gm-Message-State: AOAM530Dn7vGU2zkjd5fghhblR+VpIc5Oa8Ru6EN/4rnkXHKcqYucUKp
-	zBEqOhjRK1UPpyV6vclkuSULgCDAwIq4XZp2wYT4BUNXpaCMfKvkXcyicUDZMN+poQN+5CUdTrC
-	5ILPzbMTtWm6wZTg=
-X-Received: by 2002:a05:622a:15ce:: with SMTP id d14mr4159993qty.182.1644486205401;
-        Thu, 10 Feb 2022 01:43:25 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzTBdR8AUPcwvsrxz+eRb7xR04pJ0BVYwU8WGiUH+cINNJCYdDviGqNWBx1XxFaE2QOB+xwzA==
-X-Received: by 2002:a05:622a:15ce:: with SMTP id d14mr4159982qty.182.1644486205157;
-        Thu, 10 Feb 2022 01:43:25 -0800 (PST)
+        bh=9f9jsMD8ULk+6P2EooVon1q0L1RSMVamVbkPiQDRRes=;
+        b=FJYyut4/SWuDNTny0U5mVMZWcZ5OlOQSopVMXA7DOy66XhU8zT1caK9BGemyyIB8Mc
+         TGNRgdDVm8chY1ebqWnn8ZbzLZcTL4UFL9zGS9yTZO6NEObjbqp+XodHvRF9i/c3Thxm
+         uXhTKMyTONPxPVkPtxXhZBwKi75SjBNtI+Jat3kSfsn7ezMRNIox3Quw+VOekiMa3Nd3
+         bbwu33eNLN0loSRpk8tGCYfGjLuia0m2ShrJVFi2lX2DW8h7elOm/YPdJJHgBHiVmTHi
+         Ec/TQgoojV08Jqm+2Vac71pzrl/2fMqaDF0Ujsnob1GYF1JByWPoGynGaKhCGI3UIiwW
+         D33w==
+X-Gm-Message-State: AOAM530GIPB1g1FuWrwa0tUR38U4TKYRLLH/HRSWODDR7B7L138vhuP/
+	yInQHInLLQ+2CPzjxu324tMdroLtvQH3oTfSpQH0JO5uHWNaF6KMpoByky3fikUpnC9V56aLnoT
+	d+/ssLu4q4qmi0zc=
+X-Received: by 2002:a1c:a406:: with SMTP id n6mr1499647wme.113.1644487443160;
+        Thu, 10 Feb 2022 02:04:03 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwwE+/ed0g26PudGaWkJDY6D1Arbm7E1iHkV+LOrIuJCb5Dyrf5+3ACXq4yWdQ+yHNgUN57ng==
+X-Received: by 2002:a1c:a406:: with SMTP id n6mr1499632wme.113.1644487442872;
+        Thu, 10 Feb 2022 02:04:02 -0800 (PST)
 Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id i20sm10546298qtx.44.2022.02.10.01.43.23
+        by smtp.gmail.com with ESMTPSA id l26sm990200wmp.31.2022.02.10.02.04.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 01:43:24 -0800 (PST)
-Message-ID: <ea6053c01893a72d09a1a96f4cb546153e3c6d10.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: don't save tcp data_ready and write
- space callbacks
+        Thu, 10 Feb 2022 02:04:02 -0800 (PST)
+Message-ID: <066bb7a33e8f2128968c4aec5ba57c38b2f2c4cd.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 3/9] selftests: mptcp: join: option to
+ execute specific tests
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Florian Westphal
-	 <fw@strlen.de>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
+	 <matthieu.baerts@tessares.net>
 Cc: mptcp@lists.linux.dev
-Date: Thu, 10 Feb 2022 10:43:21 +0100
-In-Reply-To: <28823aca-ba8-8d18-629b-a95e18643889@linux.intel.com>
-References: <20220209101133.19514-1-fw@strlen.de>
-	 <28823aca-ba8-8d18-629b-a95e18643889@linux.intel.com>
+Date: Thu, 10 Feb 2022 11:04:01 +0100
+In-Reply-To: <199e2a26-da9-e79f-53c-50498fda97c@linux.intel.com>
+References: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
+	 <20220209212520.2989291-4-matthieu.baerts@tessares.net>
+	 <199e2a26-da9-e79f-53c-50498fda97c@linux.intel.com>
 User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -68,70 +69,178 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2022-02-09 at 15:18 -0800, Mat Martineau wrote:
-> On Wed, 9 Feb 2022, Florian Westphal wrote:
+On Wed, 2022-02-09 at 16:36 -0800, Mat Martineau wrote:
+> On Wed, 9 Feb 2022, Matthieu Baerts wrote:
 > 
-> > Assign the helpers directly rather than save/restore in the context
-> > structure.
+> > Often, it is needed to run one specific test.
 > > 
-> > Signed-off-by: Florian Westphal <fw@strlen.de>
-> > ---
-> > net/mptcp/protocol.h | 6 ++----
-> > net/mptcp/subflow.c  | 4 ----
-> > 2 files changed, 2 insertions(+), 8 deletions(-)
+> > There are options to run subgroups of tests but when only one fails, no
+> > need to run all the subgroup. So far, the solution was to edit the
+> > script to comment the tests that are not needed but that's not ideal.
 > > 
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index f37f087caab3..202004473292 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -479,9 +479,7 @@ struct mptcp_subflow_context {
-> > 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
-> > 	struct	sock *conn;	    /* parent mptcp_sock */
-> > 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
-> > -	void	(*tcp_data_ready)(struct sock *sk);
-> > 	void	(*tcp_state_change)(struct sock *sk);
-> > -	void	(*tcp_write_space)(struct sock *sk);
-> > 	void	(*tcp_error_report)(struct sock *sk);
+> > Now, it is possible to run one specific test by giving the ID of the
+> > tests that are going to be validated, e.g.
 > > 
-> > 	struct	rcu_head rcu;
-> > @@ -626,9 +624,9 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow);
-> > static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
-> > 					      struct mptcp_subflow_context *ctx)
-> > {
-> > -	sk->sk_data_ready = ctx->tcp_data_ready;
-> > +	sk->sk_data_ready = sock_def_readable;
-> > 	sk->sk_state_change = ctx->tcp_state_change;
-> > -	sk->sk_write_space = ctx->tcp_write_space;
-> > +	sk->sk_write_space = sk_stream_write_space;
-> > 	sk->sk_error_report = ctx->tcp_error_report;
+> >  ./mptcp_join.sh 36 37
 > > 
-> > 	inet_csk(sk)->icsk_af_ops = ctx->icsk_af_ops;
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index 485f00dcaf84..d4b4d285ffc1 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -1661,9 +1661,7 @@ static int subflow_ulp_init(struct sock *sk)
-> > 	tp->is_mptcp = 1;
-> > 	ctx->icsk_af_ops = icsk->icsk_af_ops;
-> > 	icsk->icsk_af_ops = subflow_default_af_ops(sk);
-> > -	ctx->tcp_data_ready = sk->sk_data_ready;
-> > 	ctx->tcp_state_change = sk->sk_state_change;
-> > -	ctx->tcp_write_space = sk->sk_write_space;
-> > 	ctx->tcp_error_report = sk->sk_error_report;
-> > 	sk->sk_data_ready = subflow_data_ready;
-> > 	sk->sk_write_space = subflow_write_space;
+> > This is cleaner and saves time.
+> > 
+> > Technically, the reset* functions now return 0 if the test can be
+> > executed. This naturally creates sections per test in the code which is
+> > also helpful to understand what a test is exactly doing.
+> > 
 > 
+> My sense is that this is primarily for development purposes since the test 
+> numbers may shift as tests are added or modified. Is it worth the churn 
+> when we have the subgroup functionality and could comment out chunks of 
+> the test script that are not useful for running specific tests in a loop?
 > 
-> Should we add any paranoid BUG_ON() checks to confirm that these sk 
-> members are still set to sock_def_readable/sk_stream_write_space by TCP?
+> I'm not set against this change, but hoping to discuss it some more to 
+> both understand the benefits (I assume for running CI in a loop?) and to 
+> see if anyone has bright ideas for avoiding the whitespace churn.
 > 
-> I don't expect those to ever change... but it seems better to not assume.
+> ("Include a bash fork in our selftest code that implements 'goto'" seems 
+> like overkill :) )
 
-Yep, better safe than sorry ;). I guess WARN_ON_ONCE() should be
-enough.
+Perhapas something alike the following ?!? Not a complete solution:
+- completely not tested
+- we will first need to add some wrapper for iptables or even beffer
+for ip netns exec, to be more generic
+- possibly more 'skip_test && return' needed, but not many, I guess.
 
-Thanks!
-
-/P
-
+I hope should be enough demonstrate the idea...
+---
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 29623d7ad415..4199d7404f10 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -113,6 +113,7 @@ reset()
+ 
+ reset_with_cookies()
+ {
++	skip_test && return
+ 	reset
+ 
+ 	for netns in "$ns1" "$ns2";do
+@@ -125,6 +126,7 @@ reset_with_add_addr_timeout()
+ 	local ip="${1:-4}"
+ 	local tables
+ 
++	skip_test && return
+ 	tables="iptables"
+ 	if [ $ip -eq 6 ]; then
+ 		tables="ip6tables"
+@@ -145,6 +147,7 @@ reset_with_checksum()
+ 	local ns1_enable=$1
+ 	local ns2_enable=$2
+ 
++	skip_test && return
+ 	reset
+ 
+ 	ip netns exec $ns1 sysctl -q
+net.mptcp.checksum_enabled=$ns1_enable
+@@ -156,6 +159,7 @@ reset_with_allow_join_id0()
+ 	local ns1_enable=$1
+ 	local ns2_enable=$2
+ 
++	skip_test && return
+ 	reset
+ 
+ 	ip netns exec $ns1 sysctl -q
+net.mptcp.allow_join_initial_addr_port=$ns1_enable
+@@ -295,6 +299,7 @@ pm_nl_set_limits()
+ 	local addrs=$2
+ 	local subflows=$3
+ 
++	skip_test && return
+ 	if [ $ip_mptcp -eq 1 ]; then
+ 		ip -n $ns mptcp limits set add_addr_accepted $addrs
+subflows $subflows
+ 	else
+@@ -312,6 +317,7 @@ pm_nl_add_endpoint()
+ 	local id
+ 	local nr=2
+ 
++	skip_test && return
+ 	for p in $@
+ 	do
+ 		if [ $p = "flags" ]; then
+@@ -689,6 +695,7 @@ run_tests()
+ 	lret=0
+ 	oldin=""
+ 
++	skip_test && return
+ 	# create the input file for the failure test when
+ 	# the first failure test run
+ 	if [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
+@@ -732,6 +739,7 @@ chk_csum_nr()
+ 	local count
+ 	local dump_stats
+ 
++	skip_test && return
+ 	if [ ! -z "$msg" ]; then
+ 		printf "%02u" "$TEST_COUNT"
+ 	else
+@@ -767,6 +775,7 @@ chk_fail_nr()
+ 	local count
+ 	local dump_stats
+ 
++	skip_test && return
+ 	printf "%-39s %s" " " "ftx"
+ 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFailTx |
+awk '{print $2}'`
+ 	[ -z "$count" ] && count=0
+@@ -801,6 +810,7 @@ chk_join_nr()
+ 	local count
+ 	local dump_stats
+ 
++	skip_test && return
+ 	printf "%02u %-36s %s" "$TEST_COUNT" "$msg" "syn"
+ 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinSynRx
+| awk '{print $2}'`
+ 	[ -z "$count" ] && count=0
+@@ -855,6 +865,7 @@ chk_stale_nr()
+ 	local stale_nr
+ 	local recover_nr
+ 
++	skip_test && return
+ 	printf "%-39s %-18s" " " "stale"
+ 	stale_nr=`ip netns exec $ns nstat -as | grep
+MPTcpExtSubflowStale | awk '{print $2}'`
+ 	[ -z "$stale_nr" ] && stale_nr=0
+@@ -893,6 +904,7 @@ chk_add_nr()
+ 	local count
+ 	local dump_stats
+ 
++	skip_test && return
+ 	printf "%-39s %s" " " "add"
+ 	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtAddAddr |
+awk '{print $2}'`
+ 	[ -z "$count" ] && count=0
+@@ -1008,6 +1020,7 @@ chk_rm_nr()
+ 	local addr_ns
+ 	local subflow_ns
+ 
++	skip_test && return
+ 	if [ -z $invert ]; then
+ 		addr_ns=$ns1
+ 		subflow_ns=$ns2
+@@ -1048,6 +1061,7 @@ chk_prio_nr()
+ 	local count
+ 	local dump_stats
+ 
++	skip_test && return
+ 	printf "%-39s %s" " " "ptx"
+ 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioTx |
+awk '{print $2}'`
+ 	[ -z "$count" ] && count=0
+@@ -1084,6 +1098,7 @@ chk_link_usage()
+ 	local tx_rate=$((tx_link * 100 / $tx_total))
+ 	local tolerance=5
+ 
++	skip_test && return
+ 	printf "%-39s %-18s" " " "link usage"
+ 	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
+ 	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
 
