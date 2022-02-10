@@ -1,91 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86142F21
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 10:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1644489382;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wEklPHjwVbdOPQPWTcXXuyvJGHa+aQrmam/AgufdBdE=;
-	b=VPeWdK8LE2v28C6zI4oljHgvAUlQohN/QEtTotworMHWaDs2U39Zw04mcjlRpx6PNf4i63
-	11ef7QxQOq2pHCUqKUuLSKHugH1EmLG2Fa1rB1LZgcO7IRxf81qDc+2qonA4y+6GuexfYp
-	WMuUfOsgjKr5GZg9Xna4qDJewn0Td3A=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-669-cLR-q-7hOfu6qIrprDsVgw-1; Thu, 10 Feb 2022 05:36:21 -0500
-X-MC-Unique: cLR-q-7hOfu6qIrprDsVgw-1
-Received: by mail-wm1-f72.google.com with SMTP id r16-20020a05600c2c5000b0037bb20c50b8so1334548wmg.3
-        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 02:36:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F79A2F21
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 10:42:36 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id bg21-20020a05600c3c9500b0035283e7a012so3636023wmb.0
+        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 02:42:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=7JD+H0ZCO12M7VuczeDxSZKvHHzxz+CCJPESahGhG4k=;
+        b=NY1LcJdr5ei3UMppF6gH79MJxZffJNo0IfHV1Krv67ECwS5uJiQCVGiQmDdSQaaeNq
+         SlxAGzoz1/+HCa26P5cPfwvcS1hX4RAcaqZjVYrbgwLB6/HnVK2klgNkvT0NtdZibpDk
+         K1bv4OUQD92e19ZWkP6p5Sr/Mo2gtv1Aam3IQKhSvFGTnG7SEHAHfquvQjkqPMHYcQ4E
+         qAQVtK2Q3nuXZ3X3UIznQ1W4Ivp1vuf8bEIQbLHnghfHm3m9ztlMu1c0kZsKd+v+sXQP
+         rG7MmfuSayvz8LOwHa7lst3u0yQWEO5YPC78fm58u73q0AHricknUOIPc+LdOazD4YwH
+         lwHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=wEklPHjwVbdOPQPWTcXXuyvJGHa+aQrmam/AgufdBdE=;
-        b=1725drIiFikqRUraq3sXWfaE9VmxU+LrkfVqpHagMH6PHQBNqddkLNfQaYWvtNIpvW
-         BL+7IIA3QpjUyxEqDx1nYsLpLTWelDjWIGbQLssLzwPb+HcqpTFVnkIRQSQwjtmBN3cV
-         ILWUmwJzdnukSl/oMy+5swKtgv4OV7LYsRdJWNxVLVRgb96+JQMGE+/oi9Mpg6IlXo7K
-         zmVKztKaYTiGAChE3ggUJQxUR8WI0fyYFiQvIVmRmFOEnmuxsTtujrSSyKxsFP01OxWx
-         xfxUkRuaDXbHSuf/7vqwH/6nl4uz5/b0xr3QDQ9LvDSjorXzCEcgH+56Hgu+P3VOZue6
-         xMnA==
-X-Gm-Message-State: AOAM533OgF6rYy2rpDxlmWVQS+A/3u/P0sNGzqcBM/pcY5oWld8GKZb9
-	oPi6aJWAWcs/Rqlc4srcxsW8kXGzAIo7M0I55I4b6NN04pNwZoXAR3NPIhQnxuipLEfft1plpwk
-	+H/4sTNkjU/fasEDBSVWyflvu55efCROZToqctNpSOp5hpJRv/a6ePZpP80hwofK0
-X-Received: by 2002:adf:c74f:: with SMTP id b15mr5965144wrh.307.1644489380206;
-        Thu, 10 Feb 2022 02:36:20 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxhf1E45HlrSiKZ21fFYw+TYHX4qCI7T5gww3XGPxy6BOLJnCeFBRrKgB1Jub0JznYEQPqq6A==
-X-Received: by 2002:adf:c74f:: with SMTP id b15mr5965125wrh.307.1644489379987;
-        Thu, 10 Feb 2022 02:36:19 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id ay38sm1660847wmb.3.2022.02.10.02.36.19
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 02:36:19 -0800 (PST)
-Message-ID: <47e854cf68fdc2a1e0b2c9e79813d4212393faac.camel@redhat.com>
-Subject: Re: [PATCH v2 mptcp-next] mptcp: strict local address ID selection.
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Date: Thu, 10 Feb 2022 11:36:18 +0100
-In-Reply-To: <75e02d63aa8b03b873ad94f5b4d901776f9a81ea.1644487551.git.pabeni@redhat.com>
-References: <75e02d63aa8b03b873ad94f5b4d901776f9a81ea.1644487551.git.pabeni@redhat.com>
-User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=7JD+H0ZCO12M7VuczeDxSZKvHHzxz+CCJPESahGhG4k=;
+        b=wT0Tf+X72TMzDdFjVeAJIRELe83svBS5Z0Gy2LVFVKMtZtEWjqWJUpHxyqh2x50mXX
+         54+c7PAthIlLHQliR0WMhO9fYHWygNFI9t3G0IlwdNjFmZFLmKNjFMxmtjogk5uvbIc1
+         nddglIrVoAk3NodK2he29SjuCz67Mh7e7kNwm7nrElLKXrhYBppmsSXufeJV4BKK02fE
+         u5gfWBOdGhUCvSYQfn+vlaxHJa6etrsI5MsjO0/A5Upa3VuLpExb90voJLAIhOL8+Kn3
+         pVLewm6h7Tl0micBRWlcp1IW0EI0Ajp++JHkuAiEF4zq/b/8Fin/kR2L5QwDydQKbA4z
+         3j7w==
+X-Gm-Message-State: AOAM530EHfi3hQvqTz5Ww0+47lB8DFIbqlIMsNsotQHA+Ddwwp5az7hj
+	4YWTrCYsU9ZketlKKe/HexWY8RuPKW+Ez3YX
+X-Google-Smtp-Source: ABdhPJxL+mKohSBZyyNtkZALvftBFkeSxFWq1xT4gAgFxBVdwTB/NNcinyLIIETOoDgA0DFywuVHKw==
+X-Received: by 2002:a05:600c:2d4b:: with SMTP id a11mr1610476wmg.44.1644489754419;
+        Thu, 10 Feb 2022 02:42:34 -0800 (PST)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id r2sm1398878wmq.24.2022.02.10.02.42.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Feb 2022 02:42:34 -0800 (PST)
+Message-ID: <8caf46ee-11b6-aefa-3edd-e17c0928efc7@tessares.net>
+Date: Thu, 10 Feb 2022 11:42:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-next 3/9] selftests: mptcp: join: option to execute
+ specific tests
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+References: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
+ <20220209212520.2989291-4-matthieu.baerts@tessares.net>
+ <199e2a26-da9-e79f-53c-50498fda97c@linux.intel.com>
+ <066bb7a33e8f2128968c4aec5ba57c38b2f2c4cd.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <066bb7a33e8f2128968c4aec5ba57c38b2f2c4cd.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2022-02-10 at 11:07 +0100, Paolo Abeni wrote:
-> The address ID selection for MPJ subflows created in response
-> to incoming ADD_ADDR option is currently unreliable: it happens
-> at MPJ socket creation time, when the local address could be
-> unknown.
-> 
-> Additionally, if the no local endpoint is available for the local
-> address, a new dummy endpoint is created, confusing the user-land.
-> 
-> This change refactor the code to move the address ID seleciton inside
-> the rebuild_header() helper, when the local address eventually
-> selected by the route lookup is finally known. If the address used
-> is not mapped by any endpoint - and thus can't be advertised/removed
-> pick the id 0 instead of allocate a new endpoint.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> Note: send v2 to address the build issue, to help the discussion
+Hi Mat, Paolo,
 
-It looks like I was too hasty and this is badly broken. Please ignore,
-I'll try to cook something better later.
+On 10/02/2022 11:04, Paolo Abeni wrote:
+> On Wed, 2022-02-09 at 16:36 -0800, Mat Martineau wrote:
+>> On Wed, 9 Feb 2022, Matthieu Baerts wrote:
+>>
+>>> Often, it is needed to run one specific test.
+>>>
+>>> There are options to run subgroups of tests but when only one fails, no
+>>> need to run all the subgroup. So far, the solution was to edit the
+>>> script to comment the tests that are not needed but that's not ideal.
+>>>
+>>> Now, it is possible to run one specific test by giving the ID of the
+>>> tests that are going to be validated, e.g.
+>>>
+>>>  ./mptcp_join.sh 36 37
+>>>
+>>> This is cleaner and saves time.
+>>>
+>>> Technically, the reset* functions now return 0 if the test can be
+>>> executed. This naturally creates sections per test in the code which is
+>>> also helpful to understand what a test is exactly doing.
+>>>
+>>
+>> My sense is that this is primarily for development purposes since the test 
+>> numbers may shift as tests are added or modified. Is it worth the churn 
+>> when we have the subgroup functionality and could comment out chunks of 
+>> the test script that are not useful for running specific tests in a loop?
 
-/P
+On my side, it would be helpful. On my side, I can edit the code but
+that's not nice, especially if you want to automate tests with and
+without a patch: you can have conflicts with the new comments, etc.
 
+On the CI, I cannot easily modify the code so I end up testing more than
+expected, that's slow and sometimes hits other issues.
+
+I guess on Paolo's side too as he complained about this missing feature :)
+
+>> I'm not set against this change, but hoping to discuss it some more to 
+>> both understand the benefits (I assume for running CI in a loop?) and to 
+>> see if anyone has bright ideas for avoiding the whitespace churn.
+>>
+>> ("Include a bash fork in our selftest code that implements 'goto'" seems 
+>> like overkill :) )
+> 
+> Perhapas something alike the following ?!? Not a complete solution:
+> - completely not tested
+> - we will first need to add some wrapper for iptables or even beffer
+> for ip netns exec, to be more generic
+> - possibly more 'skip_test && return' needed, but not many, I guess.
+> 
+> I hope should be enough demonstrate the idea...
+
+If we really want to avoid modifying existing lines in selftests, I can
+also not add new tabs after the new "if reset" and drop patches 7-9. But
+that's a shame we cannot refactor the code in the selftests :-/
+
+I don't think it is a good idea to add the skip_test everywhere: we will
+certainly forgot to add one somewhere until someone test the feature.
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
