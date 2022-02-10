@@ -1,31 +1,31 @@
 Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1572C9E
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 06:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119AB29CA
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 06:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1644472842;
+	t=1644472850;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pfrxc6uchz3LgohHyAvfl0pZcYYP4yahr5LYKiBhjwA=;
-	b=JUNqlTX8ri1ipwJdTw8GgdYqsO03fTB9Vc6oOiIgjCd8kNYa1OA2umZBUbx/f4i5Lp02Ge
-	+eodT3qPMhkM+j35z11BAgcNhkr4w122oiT1936VWDbMpq/FRi5DooLAmfSo77z8zFciFi
-	2d5YMI/wXfjfG6CbegeXnSwCRBayy04=
+	bh=waeVsRE+1w1DUZvRLvBXEPZlRbREcoydERpgQr0yRdc=;
+	b=A3qkAqoNihitwRBdexOoE/gpNBeZGPpZ4A6RjEciQ+u1ZqV6AMq7lYNTQlMgqFYaRmxeq1
+	rxEL7RAPnkupBky8HLdAGRGKgV1xkyC134cl6lmy1ukWQJkF90aES8eEzULjQLbWSZqpVu
+	gwhLKuai+1CeTtFZbu8rHKP1xFfBD5c=
 Received: from EUR02-AM5-obe.outbound.protection.outlook.com
- (mail-am5eur02lp2057.outbound.protection.outlook.com [104.47.4.57]) by
+ (mail-am5eur02lp2055.outbound.protection.outlook.com [104.47.4.55]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-12-Bm4tbY9INwSGXjgiotproQ-1; Thu, 10 Feb 2022 07:00:41 +0100
-X-MC-Unique: Bm4tbY9INwSGXjgiotproQ-1
+ de-mta-26-UCLHACIRNby6ZZ6-3VCtVg-1; Thu, 10 Feb 2022 07:00:49 +0100
+X-MC-Unique: UCLHACIRNby6ZZ6-3VCtVg-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XMMgk2a4Pt71S7Ep2WO233pnODM4mNXKWDYpscYT5c7wuky1xZhz0V4Ae9VL8NxoimgpJ+c6oGbe6Ua7cLuy3KQIu5S8viCM8aIOYrLN45APej0HSiHZQOGfYC7MxURKtZ2Y2qo++wN1nyYGeLwf/ewGm9/vD/Rfkr5/j//nejxpOMJoBBlOT+S3yreZFyNtYACTqD2ZFtBAU28WiFcXXhaPjL+syEc+n86RYIri1VrQ3t4q9q/GIuaoo2nwt5aymBL4VduqPhHv6mo+WdEGU4WVXNDeVGBwLtW+NkUKMrPA/kGHCJQ9KYOwZsEEdkpmXPB/rqTjOxKwPZ1tq6ePKA==
+ b=KT77bcacjLxt9A7eiFjwy84+pdIFsd14iqVMThQa2aRXoCuhdis2vxHYfHpFBpDNPSf/tpIK9C6Um7IST8dr50LybziMcvdoNxZPO+sTm6tn5CPLguB4LvbXN7t1AuX8AJhwCsrKrqmrRNCCp7L07PgEBxqKgmtN4Jjc+HiK6xLxsMGSYQe2QVg9vCcOdEIr6TIe7OkLIRsJCLojISBUc5/z5Ck5pjxt7PB7XZkB9bo/6Z1GIKyb+Pnv+pKUMwheq5fr9CTH7zyrFkgngl7OCCKPNBC7Dgnf/bOi0y9D9MKuqoUej6zfmJczNN+lE0sFL3T6amgHOWH35l8j6NaIRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FBm0FXgBjYAjxZinK//xryRtKDYGI/+ZZ6qchH8Ztjc=;
- b=IJGJGf1uj8VKmMpKCHwwNyp8KscYXKWDOu73VfBi5IHSEL3EzcQ50wN4CMljXWdPfIekBvmBrbAmVumgaG8ZPxF2MhUtbqV4VkCqArKUt3sNC1Q70a4bebJlWy1wlPmT40rguXL09rM94VcQBmHmSPJ9RZH/SqqhbdpBHYeu7p0NgzxCO0IALUgthatfqUEwXjNrb6S/uoPqd5KoDnvMSVhKMNruISvHxG0TQymHnfjDf4EF4yLHrhag27t4avJe8gnfskR9JT8/glEqQvcl9mPyFaLoZ31/5rYlntXoXGMc6OVFKNhcOFGlkYIRTTptxhsJUYpp4USUHTwxvTLbJg==
+ bh=7mbX+EUgrAp7GFBPVgK7J5Qth9Y+6iV8uJlYTL5eh4I=;
+ b=ftww12GHi7NU4TC6fA7zidl1powS4UeArL3Iw+iG9pf43zkZbnsK7aJe2Z0a96wbn5v2dzDkJoXyGLrSG5BvcsR3ILp+VqlvwwqOiRIz6mKapfUfFl45mlP5/qkQxpRRfy1Yn0yJoVEOf3zgHmFntgPZk3He27PoIQ9bByvmMdGiQxj52kMaaKGForYjrBqqT9sD0FTMuPoeSzLD/xrQ7481ZSPZ3ZAsO3LlL3vzyEiqU6pdKJiKtHIuCIiRMx5CevaaUrc5geZRDAxuTEfDMuFEX5zAORpKbadkGzp+27R405AEw0F5TJAxPDt18Z9ZDP5s/3mZmxeGsWtBigzZXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Authentication-Results: dkim=none (message not signed)
@@ -34,24 +34,24 @@ Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com (2603:10a6:803:d::26)
  by AM0PR04MB5761.eurprd04.prod.outlook.com (2603:10a6:208:12e::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.19; Thu, 10 Feb
- 2022 06:00:40 +0000
+ 2022 06:00:48 +0000
 Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com
  ([fe80::b823:3668:e8d8:beb]) by VI1PR0402MB3503.eurprd04.prod.outlook.com
  ([fe80::b823:3668:e8d8:beb%3]) with mapi id 15.20.4951.018; Thu, 10 Feb 2022
- 06:00:40 +0000
+ 06:00:48 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v6 5/7] selftests: mptcp: add more arguments for chk_join_nr
-Date: Thu, 10 Feb 2022 14:00:29 +0800
-Message-ID: <f92bbde8b579e7ef56223d874f2aeae300030407.1644466571.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v6 6/7] selftests: mptcp: reuse linkfail to make given size files
+Date: Thu, 10 Feb 2022 14:00:30 +0800
+Message-ID: <5c1d0827afbc4cc4c8335b447ad9d661b585b620.1644466571.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1644466570.git.geliang.tang@suse.com>
 References: <cover.1644466570.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: HK2PR06CA0012.apcprd06.prod.outlook.com
- (2603:1096:202:2e::24) To VI1PR0402MB3503.eurprd04.prod.outlook.com
+X-ClientProxiedBy: HK0PR03CA0114.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::30) To VI1PR0402MB3503.eurprd04.prod.outlook.com
  (2603:10a6:803:d::26)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -60,170 +60,142 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 817dca85-be54-402d-3efa-08d9ec5aaa87
+X-MS-Office365-Filtering-Correlation-Id: 19cf9ee2-f6cf-4fb6-1610-08d9ec5aaf85
 X-MS-TrafficTypeDiagnostic: AM0PR04MB5761:EE_
 X-Microsoft-Antispam-PRVS:
-	<AM0PR04MB57619B07CE0D3CF7B93AA52AF82F9@AM0PR04MB5761.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:813;
+	<AM0PR04MB5761508C64238D2F004C91A6F82F9@AM0PR04MB5761.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:669;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	6uNI58VxwlBdeYu/mqJYZdCDbDVt8pPVJoKzurDDQq/+u24FkyUMOi/Dsdp8bEQpTV8cJ3y41FPpn3mDlYYeJSG1S9ADU7XvfDbJWniISUYFsIUksBpvLRGceEjLfbNoKMdsEfcsl/YpBNuZjs/gdr3LGKyjW6bIxQ5Lh84dlritjojcZbhETH5GKuRB6nAHoj9Dp3kBPJWCkknFCTJgiTH4/B/YcIAlp8KYmHC/eUxFmC/T2o46seMeuFpVR3FXIPNoU9kiBR+heosxICDkFdBdgDzVywJ/H3pMNCo+E7mDblpDi7L7GZ2LFzXgallods/M97bkZsR4UdrSIJiH1bwxD0+4Q0H8iPAld/LjU8+V/14MAMkUP7wRVU84FSd7xlaU+aegi5qLxC8dmaoJfVDOq8cuFxMbOSBlAb/VjUTfwYzeXi0E3AcceLt0g366D5auLBzLkkCZOSjwT47FqdMpHNNUkgc9O9AOVAt7uMTGDNDRSnLVqxqa9CVAkA5nnxZmNRaKLWz1sMtPYqe1cwVRFXyc2u4nfXmjGat57nsFyw0do4gnG/6nlJ6MvroKjacQsG9rWaf37AhJdA1m14xCF92Y5CoGhhilCAekd2BLEfBiwQl8Lj8yWhrOeFVbKT3MGr9Yd6akTMla64tEfg==
+	dVW4PZQO9foYcDvIH4nTlN/XtNJB3w9meTaEi9gqAv7prFNG19V6bQ6hDA9jrsdxluxDulT5yJFsvB6FtShFHOFvef5UZskJPZbIuwaLavtooU5/FFfHRPCB8ob5gpHuxYyj63ng2sbhjc9G/jHO0Nr2Glvcfl/ll1Hkp8VivYljMDY6qu7qaCFkvyRQWHq/qO1DAYrIL7WDqnqplFn6GUWwCrB74wSW0GgM1rD1lmpaUPuAFXNdG8JWr9wo4vWLFSXUYAbIzDLfhiNKkVQWfAIL/71vZqI+f6QbYkVLSBEOMmHTxaS0N/R5QiV5Z8NaOUApT+qXXpkT0N9xaX7ecsO8g/3tEP9t0ckuG7cdPr0w37W1diQzhsJ2PpdqWLpfwaJPYWSicgfUuIU33ZqHS5uS0/Q2ehPt2vWrWrLlNcb8B/vFKr4/aIHh/uNvR8he350YVSsB5bl8Rlk8k5JP41VuJenC/ves1GoMbtE7c7Rd+bBDLdUWK0loRVjDs8OOtuZaaeqLusg63eLqPFOvOc/88UoFhUwF9AUX4MJYp1JENi9Xu22EC7RfdtkM/CzHB2hSKXYa0V2u+biV1+thP+oWsLv/fKOXly+AzNdIjFp1FdnzR55vCgHlEaNbn5VFP7XVgUTPPj8XRlGBRa0qpA==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3503.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(83380400001)(316002)(36756003)(86362001)(55236004)(66946007)(6512007)(6916009)(66476007)(66556008)(6506007)(8936002)(6666004)(8676002)(44832011)(4326008)(2906002)(508600001)(2616005)(26005)(5660300002)(38100700002)(6486002)(107886003)(186003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?prmqXgJxthYV5ZBKJtRVyrM5HgEnxujXOuJ/NzSKeS1MM0nKc9GtO6rkF8K/?=
- =?us-ascii?Q?8HOC5eyAmJBrf40t+y6wTQA/HrRbrNSUObftQgwKKGvGKfj9xUbhd1/+kOph?=
- =?us-ascii?Q?Cg2IkEfra1fd8hYnhYZmas+NiUnO0Z4ZdvVH55kxcOuzYrvrHbvje8PG0JIK?=
- =?us-ascii?Q?u9Vq02XCNs7oKr+Qvb0JDw3D/1Wj+1mKHHW61AEnQC/edv26/joF2XDhN0+V?=
- =?us-ascii?Q?51hm0Cc8l3vw6EN3Lqad5dp88g+shwEUkgTLuPYI1WJKbPwcgn25cn0c/T/9?=
- =?us-ascii?Q?zskYALVtAzqdw9OifJidicBCrfChGGDSlTPnpB6Az6qVVs7TOiOJASAMQAdO?=
- =?us-ascii?Q?wsV39iZ+HoaFtWjPTxhaY1kgxF+/MitMFRpEj36hTl4iq/mi2Abp8NqNTyVs?=
- =?us-ascii?Q?gqDmN+u1lr2RqveS6KUaryDs8nDc9Dld9bo4djJmDXozCcnO9vNP7Zx8L1vi?=
- =?us-ascii?Q?p1a3FstwwnCO8rnnW2nF4QE69HkxiwKth0jnxPZi23hFp1w3EaVJ70vHhCrt?=
- =?us-ascii?Q?Lpt0ZeSB+x984aV65+98lm4IP3uU6Kg3D4mrdz1JdW9KX/EOwZ9L/865jlWo?=
- =?us-ascii?Q?/Bjunovii+vga2zH0FtMqCS+uWGH5rrLZZ0tmCtXXXKiur/ewvEa0yCxhm7W?=
- =?us-ascii?Q?gW0+Y/z69DFiNdsVQxnbpYs9SaNL92rA95h7Pc4wILw0rmOedi5Ohmtxqh6j?=
- =?us-ascii?Q?fwEU+0DVrBatqlQOwxDhuystDYWc22lzbwhwthDPXZOzNcNXa4E/MX68PMWk?=
- =?us-ascii?Q?rbTU7S6kxsj2l9LjJEm6T91ZeLnawTOcq+ZhxnZcKjJcgqi+2XdjjBDLGuio?=
- =?us-ascii?Q?FARY0MIOYntYwQtFqtoqjt9UF2gBrbj5dXWjjNBsZhucnXEj9x5wmpAN7GEP?=
- =?us-ascii?Q?ACaejZkCcCWi3WQyAaN8boJ/hbIjeD7j3P7u/2jLi30JpAeyRjzgPwijQI8K?=
- =?us-ascii?Q?7WdCp+jWIzpe48A7MQnCkgKBWHUj9xfYwmCdZ6DgFw9unC28lOwvuqYBcUGx?=
- =?us-ascii?Q?Be5iCHNzLGOQAUVXB5PahoITIy7w107sd/vPNiA0Y3HGCAV/qmZLZdh12tux?=
- =?us-ascii?Q?lS2UX+u7tsbpGUA/US1GjzUMkLs+P4twJR2EcQcRiJ9R3LyJZSwcDBVr1D/Q?=
- =?us-ascii?Q?Txv4o7hr8ND0UNONExo+YJClLJPkgU+7dBZndcE+7kKoHqiNcNFi64KmF/BW?=
- =?us-ascii?Q?YpKJGq2O7LjXOb+dWgY7JynHJ3vJwP0vtCwMpNW0CXhnJvy+uossRlbz7NnP?=
- =?us-ascii?Q?ki95bl9lMLy0e8b1IARH+aqok4HWzZp7GkvMaGxh8/RCzVqZreTWqSJFRWHv?=
- =?us-ascii?Q?wXL5i3fjwOW8Lx9OkyD3lau6kJ1PGsPAMs7kE5Yq6+9fWvto7gnPn6mTqAJy?=
- =?us-ascii?Q?yCz2/PYsPk1KruLIDEunvMMKWFC5Bx42MUQ3UlTN0bqg5iVGNRqSxjz8yeCc?=
- =?us-ascii?Q?oX2eUJLs5gMPxCwEp1OO5uMRvmxUu1Kof06XH3Oa9RE3TEeFp1UT0cGZJX0Q?=
- =?us-ascii?Q?OLHxzn571O4Pmykyt6lZryZQSDVFgmqGOcI/Hc8L9s+MqKMcNV+SmFkjnh7m?=
- =?us-ascii?Q?E17N0xCx7kEfKVfuN72KZfpAky0rS+6XVTxwA+IXB9pTIbXQG2d3ReUz79qn?=
- =?us-ascii?Q?7uzPiqkN9vPnL3DrzOOKigM=3D?=
+	=?us-ascii?Q?P1fU1//SP1EAT/x02WaqqX5uckCHB3hG8vxuL6lnIw6EL9zAbyxVet57/MPa?=
+ =?us-ascii?Q?8LOdIEwUyDHn/SA4Tsc3LC/BUIQX/SeVi6T1aSfUE/lB1V9SuoNFXeJ4qztv?=
+ =?us-ascii?Q?n3k5Jw7UqAduXjUvMjPEQEFyBXfeSfRkBl7IyJa/o+f4cgegAUMyxdZ1JPD1?=
+ =?us-ascii?Q?MoYOPgtvQx6onU+znAbLovqUJTKDQCG5+eUN4NnLswTLIm1qjFjgA7cH+FDF?=
+ =?us-ascii?Q?zYV2VZH1m497i1Jnsynor5eTdIfEo6njN7QndIEocuKGweuaiYU0GoPvETrb?=
+ =?us-ascii?Q?fh5RHpG3f9xKqPfqoldYarluPq8GiMstOeNlneNIj3z9WPYrYRIwu6inn/Mi?=
+ =?us-ascii?Q?q9O4PZpC5pvZWA5KyllIg94hzUeDqjr7RmmNKD6H/f1Eiy6ZljfZJwbV3Z+d?=
+ =?us-ascii?Q?zRV1TT6R/UTkZ6syJQ/vSqleND4UAv3+qPhUUYsIMrT/V77IQI1ebikceFwO?=
+ =?us-ascii?Q?TdigL9ksABmCHFDt8zhmkZFmqpmnhHiBsD6Px2KScdtdF7K8h8Ju8M7q1tD9?=
+ =?us-ascii?Q?O0qd37X+p1Cd5lm1tmeNU6Au3oARu3k9XNpT9eFCeeaoYAe4zyytB85JMH3L?=
+ =?us-ascii?Q?nmvO9vkeHr+K/5kLA9kPj/vMCL3ndVd2lXkJyvwlb/bnC6/JfE8/W6IKGOsR?=
+ =?us-ascii?Q?LTk3I4YVl+RWBvWueTi3xO8DkoHREQglboVexz6QdI65NndK6N0UvC963c9/?=
+ =?us-ascii?Q?MimnUEsH+WunyAvugJ3MTRPfAHe3BwXynvOFyfq7SRmDdQhURrWiWTbiz3UF?=
+ =?us-ascii?Q?qY7Nn0TklVAgHTBrlOAJu6kRHX6YM/4mZeShr0/hSocM1sfUxq3mWxc1uxYK?=
+ =?us-ascii?Q?NWfC5shYFuyd/KH4KWQcFPj91eoayiSkSGnJbUd92RkTSNW2iT+NkA7Er2kv?=
+ =?us-ascii?Q?OARIQHFbQuDQ23jLfr4QAq9gyXLeoxdI0qJeoAtYBabdl05Q7o6SeUtPJ80Q?=
+ =?us-ascii?Q?5Gla6CGEPWHLeZq4rOfLAbXUQZEBkUYWqgXxqXooRidlDz4l2nF3ZHDBWpkA?=
+ =?us-ascii?Q?vSdfiBvDvX4KRs+FhjWftWmf5/545esft/1ovyjxV1h/rgrO0FLovMy2Jz23?=
+ =?us-ascii?Q?dTyycllqnpBNg7BoEUzGk8hVSKm0o10ZY2o4uXBBDUqwtI5CAHC2q8OD3QjJ?=
+ =?us-ascii?Q?XJ54usWA3AcPGQgZeE/uPYpegpzLId/BqonLY8WP05gJoVv+4GHPnMI8e5/X?=
+ =?us-ascii?Q?g7WjRKh3dxnsUX4dqkKynpi37AOGFrHi0HkVkFRTZ+R4SyZE9yQLWNKJOYwd?=
+ =?us-ascii?Q?aoFk8kCggvx6DToJVFqU1t74EB9vJNk4BUb/aS5qnuInhLl8di6eH0ZedezR?=
+ =?us-ascii?Q?v0oBDJ6q4tnUvItj3+cK2ka6x9jHMYMXl5ZN4YUPb0u/DVX135SbXdFahVaw?=
+ =?us-ascii?Q?IlNRqnwwIdpXAmu7t+yLBH1BLDpLkXyYiRhtf7EtoMH8XAwodQTSqQy81LNz?=
+ =?us-ascii?Q?86fD1U71bnxH6sQzftaVO+ibYHgIjVS11QNlkvGvXvIKHgPsLvKC/LWuJU6H?=
+ =?us-ascii?Q?Jw9UElTWPPQ26hCd9m/aWVHs8inKbJsWHJVUeKra/pvGjwESSurvxLsS4/G2?=
+ =?us-ascii?Q?OEN959v0rplWdsygwKPeZrjofcERC9sznoY1c06VK3k07cStbz/tJA/2KJhF?=
+ =?us-ascii?Q?n6D30yCoL9IG17pfuoUIRlQ=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 817dca85-be54-402d-3efa-08d9ec5aaa87
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19cf9ee2-f6cf-4fb6-1610-08d9ec5aaf85
 X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3503.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2022 06:00:40.4806
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2022 06:00:48.6051
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O2OeVStwMoGKJ+E7ka+fIEPD7oeZift/ZZcfvhWUou2EJwt8g/Kt56UtCr8FlTHoghpAmUkYPKhi0T4bWIVSbA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y2E+UaOPHiUtECTIn/CBIWuZ2KTjB0FYPJ3yzI+eO7OlwSfVn+DJCfe3zdHHNIrCX3FVshNlb7x73P8Dl3x0pA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5761
 
-This patch added three more arguments for the function chk_join_nr,
-named fail_nr, rst_nr and infi_nr, for the input numbers of MP_FAIL,
-MP_RST and the infinite map needed to check. The default values of the
-three arguments are all zero.
+This patch reused the test_linkfail values above 2 to make test files with
+the given sizes (KB) for both the client side and the server side. It will
+be used by the MP_FAIL testcases.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 35 +++++++++++--------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++++++++----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
 g/selftests/net/mptcp/mptcp_join.sh
-index 95d61c97ccad..c595b4613ddd 100755
+index c595b4613ddd..50a7f9a9b364 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -719,6 +719,8 @@ dump_stats()
- chk_csum_nr()
- {
- 	local msg=3D${1:-""}
-+	local csum_ns1=3D${2:-0}
-+	local csum_ns2=3D${3:-0}
- 	local count
- 	local dump_stats
-=20
-@@ -730,8 +732,8 @@ chk_csum_nr()
- 	printf " %-36s %s" "$msg" "sum"
- 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{=
-print $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D 0 ]; then
--		echo "[fail] got $count data checksum error[s] expected 0"
-+	if [ "$count" !=3D $csum_ns1 ]; then
-+		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
- 		ret=3D1
- 		dump_stats=3D1
- 	else
-@@ -740,8 +742,8 @@ chk_csum_nr()
- 	echo -n " - csum  "
- 	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{=
-print $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D 0 ]; then
--		echo "[fail] got $count data checksum error[s] expected 0"
-+	if [ "$count" !=3D $csum_ns2 ]; then
-+		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
- 		ret=3D1
- 		dump_stats=3D1
- 	else
-@@ -752,27 +754,27 @@ chk_csum_nr()
-=20
- chk_fail_nr()
- {
--	local mp_fail_nr_tx=3D$1
--	local mp_fail_nr_rx=3D$2
-+	local fail_tx=3D$1
-+	local fail_rx=3D$2
- 	local count
- 	local dump_stats
-=20
- 	printf "%-${nr_blank}s %s" " " "ftx"
- 	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFailTx | awk '{pri=
-nt $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D "$mp_fail_nr_tx" ]; then
--		echo "[fail] got $count MP_FAIL[s] TX expected $mp_fail_nr_tx"
-+	if [ "$count" !=3D "$fail_tx" ]; then
-+		echo "[fail] got $count MP_FAIL[s] TX expected $fail_tx"
- 		ret=3D1
- 		dump_stats=3D1
- 	else
- 		echo -n "[ ok ]"
+@@ -446,7 +446,7 @@ do_transfer()
+ 		local_addr=3D"0.0.0.0"
  	fi
 =20
--	echo -n " - frx   "
-+	echo -n " - failrx"
- 	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtMPFailRx | awk '{pri=
-nt $2}'`
- 	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D "$mp_fail_nr_rx" ]; then
--		echo "[fail] got $count MP_FAIL[s] RX expected $mp_fail_nr_rx"
-+	if [ "$count" !=3D "$fail_rx" ]; then
-+		echo "[fail] got $count MP_FAIL[s] RX expected $fail_rx"
- 		ret=3D1
- 		dump_stats=3D1
+-	if [ "$test_link_fail" -eq 2 ];then
++	if [ "$test_link_fail" -gt 1 ];then
+ 		timeout ${timeout_test} \
+ 			ip netns exec ${listener_ns} \
+ 				$mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+@@ -466,13 +466,19 @@ do_transfer()
+ 			ip netns exec ${connector_ns} \
+ 				$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+ 					$connect_addr < "$cin" > "$cout" &
+-	else
++	elif [ "$test_link_fail" -eq 1 ] || [ "$test_link_fail" -eq 2 ];then
+ 		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" )=
+ | \
+ 			tee "$cinsent" | \
+ 			timeout ${timeout_test} \
+ 				ip netns exec ${connector_ns} \
+ 					$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+ 						$connect_addr > "$cout" &
++	else
++		cat "$cinfail" | tee "$cinsent" | \
++		timeout ${timeout_test} \
++			ip netns exec ${connector_ns} \
++				$mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
++					$connect_addr > "$cout" &
+ 	fi
+ 	cpid=3D$!
+=20
+@@ -632,7 +638,7 @@ do_transfer()
+ 		return 1
+ 	fi
+=20
+-	if [ "$test_link_fail" -eq 2 ];then
++	if [ "$test_link_fail" -gt 1 ];then
+ 		check_transfer $sinfail $cout "file received by client"
  	else
-@@ -852,6 +854,9 @@ chk_join_nr()
- 	local syn_nr=3D$2
- 	local syn_ack_nr=3D$3
- 	local ack_nr=3D$4
-+	local fail_nr=3D${5:-0}
-+	local rst_nr=3D${6:-0}
-+	local infi_nr=3D${7:-0}
- 	local count
- 	local dump_stats
+ 		check_transfer $sin $cout "file received by client"
+@@ -681,7 +687,12 @@ run_tests()
 =20
-@@ -889,10 +894,10 @@ chk_join_nr()
+ 	# create the input file for the failure test when
+ 	# the first failure test run
+-	if [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
++	if [ "$test_linkfail" -gt 2 ]; then
++		if [ -z "$cinfail" ]; then
++			cinfail=3D$(mktemp)
++		fi
++		make_file "$cinfail" "client" $test_linkfail
++	elif [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
+ 		# the client file must be considerably larger
+ 		# of the maximum expected cwin value, or the
+ 		# link utilization will be not predicable
+@@ -694,7 +705,12 @@ run_tests()
+ 		make_file "$cinfail" "client" $size
  	fi
- 	[ "${dump_stats}" =3D 1 ] && dump_stats
- 	if [ $checksum -eq 1 ]; then
--		chk_csum_nr
--		chk_fail_nr 0 0
--		chk_rst_nr 0 0
--		chk_infi_nr 0 0
-+		chk_csum_nr "" $fail_nr
-+		chk_fail_nr $fail_nr $fail_nr
-+		chk_rst_nr $rst_nr $rst_nr
-+		chk_infi_nr $infi_nr $infi_nr
- 	fi
- }
 =20
+-	if [ "$test_linkfail" -eq 2 -a -z "$sinfail" ]; then
++	if [ "$test_linkfail" -gt 2 ]; then
++		if [ -z "$sinfail" ]; then
++			sinfail=3D$(mktemp)
++		fi
++		make_file "$sinfail" "server" $test_linkfail
++	elif [ "$test_linkfail" -eq 2 -a -z "$sinfail" ]; then
+ 		size=3D$((RANDOM%16))
+ 		size=3D$((size+1))
+ 		size=3D$((size*2048))
 --=20
 2.34.1
 
