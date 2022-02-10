@@ -1,44 +1,44 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7331F2C9C
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 12:03:04 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id i14so9082727wrc.10
-        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 04:03:04 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017132F21
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 12:26:06 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id j5-20020a05600c1c0500b0034d2e956aadso3794367wms.4
+        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 04:26:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=iA3CuRHMTiWKQDq5e2d9LquJ3P3l9S/LVQlbnHTKT+I=;
-        b=waQGdl7mM1VlpZvYogIJZTr5nvwuw3FvZyfGcOgalZLFwpRP5MoYVcfYEvYsA38h0t
-         2JMpt0Sqvo879Kv7GrZw9r4Yq8chR1CqMM6w0aU2e13sTrI0quLq+JyRT+T0dw6HY8K3
-         7AdsIikmgII/CnnyhYFQSsVqbYxYTaQ+Q950yHDWLl+VtJeyPwy/0K/ojRyAeHwbtdxK
-         dz4WGXKWCp3TbqIMh85Q2p3mgb9ZMdMI2sr4ZzbQahtsin//q8rdzrRcvompELSIKLnl
-         pFrjKcw3JcfTfC8sJZfLS/LF8AiNhx4PzwHmAtpdn++McNzU+LCvjiOZJUZGy4Rl85Ky
-         NOCQ==
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=5I3LTKt5KSkZK72HI2IULBet5tdMOqWU3rTwYPUPAoI=;
+        b=I6aCezqfNsNNWy1oBui3KRHR+w0/t9i4KWU8QFvlAG353uj9B+KeMoM3P0ZCo8NmwW
+         LOV+xDL0tPbKhYq03cc/T+FrCIyiJpqEKIanpDlGnD/mqlOxKiltSdLAUxyURMya4xpM
+         78QPcwIbvSxnAJukltunUviiV1pNQEztun2zdu/71n/aFv/2INMP+wTzTfZsai9vITMd
+         eUBC/cEMHH/ZphhqLXNvd4+jERDN2BnGVOLmszzaHiv8BR31yz+KGe09W00tyx6VG2Ng
+         qL++Y2Yv7aL/cHMlDNiO+G2ylOYiqgDL5OM2CirhjUpwwaBydZHva9i/4jqPFBcMTBjP
+         rnxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=iA3CuRHMTiWKQDq5e2d9LquJ3P3l9S/LVQlbnHTKT+I=;
-        b=v38N0gNS3Z54RUfvPGz8+wDxuDrEXvn0u3lVuZgJ2AFawXAqec4KliztgfH1gTH6dt
-         CxJ7E33nvC3XiCiz+X/kK4dhDZKs0JdCALhz0VmpMPLx7VoTnpNYCxMkyT+S/k4oBkGX
-         tjU0aeF4puSSMcjdn/2hikjiQyJqPZk9L5qoHY/E/ojsE/f+sUyyqqyVGekDzT+1e4qc
-         LiAtWNrhhRIWqbULS7orMd23Y+IA2CqpEJqj2P4F+iHqGFLH4fupPXBXsO5lpISkoAsB
-         qUM3Gd1RHxqKZM07Ovz0zRAANbPvc+gekyeYraiyuEu2qIUJQXp7i8SYCYKNysM91A+s
-         vg+Q==
-X-Gm-Message-State: AOAM533H0XCQbYDKOhqTsZ0RQBoE+z2QPApCpuE/w+M5Prjopb5XmPfH
-	RBrxAGkCkp6sXyOe8nVHZ6UXLKYGKJMy91pg
-X-Google-Smtp-Source: ABdhPJwYjQFb97N2olNbhr8rqA47GjlvhsRP+C4LQBowQEuznM0jLESTOQUW8HAkZq+gWC6TUeGzWw==
-X-Received: by 2002:a5d:6ca5:: with SMTP id a5mr6157533wra.140.1644494582731;
-        Thu, 10 Feb 2022 04:03:02 -0800 (PST)
-Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id e8sm4018181wru.37.2022.02.10.04.03.02
+        bh=5I3LTKt5KSkZK72HI2IULBet5tdMOqWU3rTwYPUPAoI=;
+        b=asBhpbaKXqHUWbfHMqTQPo+3k4eID9sSnomWirzdwN3XBTMXwFi2OPyk+V6Tvfugmo
+         mJv41UVFmtnRJR4lT/Og5tWxrTH7suOcS7L30ynhxobf2Omsa8g33b5imBwASd4FPr1i
+         sf/VwoS5+wdYW2Cv8lMV6u0KpMuD7yYJpfiF63qwdbq/hK5iq7Q8X2ecdhrdWXP5p2sG
+         d2URJ87fvW/SYpUQ0Kk2MP9/B3oi//sO0egcwxmTmFhmpExf1+ZpCXQxcEs+HQB3wF74
+         b9nASM02YK1CbSHG+Dj59bQJEyfgitz1CVUFbVFBK6JLCGXTEJCYNpODbep7rULqv0G5
+         ua0w==
+X-Gm-Message-State: AOAM533vH+OumXzMAVb1C586xN1Dso6Litoqs1z3adDoeyZlBY9Ze9oo
+	4uHO9kCSHtPLczWR1HDZHiNyYg==
+X-Google-Smtp-Source: ABdhPJz/LH0umyJZApdPML03cPsY0L24HzCH+7gVA00e3pVAdocu8mlsG0/+R0SHwiDDU8CVV6p/5Q==
+X-Received: by 2002:a05:600c:2211:: with SMTP id z17mr1976019wml.59.1644495965276;
+        Thu, 10 Feb 2022 04:26:05 -0800 (PST)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id c18sm9691548wro.81.2022.02.10.04.26.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Feb 2022 04:03:02 -0800 (PST)
-Message-ID: <60ef8629-d9d4-3bc2-00cb-d8c286d934aa@tessares.net>
-Date: Thu, 10 Feb 2022 13:03:01 +0100
+        Thu, 10 Feb 2022 04:26:04 -0800 (PST)
+Message-ID: <4be787ed-eba9-c3ef-9f56-93612e70d066@tessares.net>
+Date: Thu, 10 Feb 2022 13:26:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,60 +47,51 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.1
-Subject: Re: [PATCH v2 mptcp-next] mptcp: strict local address ID selection.
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: improve 'fair usage on
+ close' stability
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <75e02d63aa8b03b873ad94f5b4d901776f9a81ea.1644487551.git.pabeni@redhat.com>
- <47e854cf68fdc2a1e0b2c9e79813d4212393faac.camel@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <eb310fd3bdfe3315ff17ebb865fd2f1e2957fd02.1643999595.git.pabeni@redhat.com>
+ <d938eba9-0bbd-8cea-9148-a36afadbb31a@tessares.net>
+ <1fa1f387-d647-de45-83ee-34182e67de5d@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <47e854cf68fdc2a1e0b2c9e79813d4212393faac.camel@redhat.com>
+In-Reply-To: <1fa1f387-d647-de45-83ee-34182e67de5d@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Mat,
 
-On 10/02/2022 11:36, Paolo Abeni wrote:
-> On Thu, 2022-02-10 at 11:07 +0100, Paolo Abeni wrote:
->> The address ID selection for MPJ subflows created in response
->> to incoming ADD_ADDR option is currently unreliable: it happens
->> at MPJ socket creation time, when the local address could be
->> unknown.
->>
->> Additionally, if the no local endpoint is available for the local
->> address, a new dummy endpoint is created, confusing the user-land.
->>
->> This change refactor the code to move the address ID seleciton inside
->> the rebuild_header() helper, when the local address eventually
->> selected by the route lookup is finally known. If the address used
->> is not mapped by any endpoint - and thus can't be advertised/removed
->> pick the id 0 instead of allocate a new endpoint.
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> Note: send v2 to address the build issue, to help the discussion
+On 10/02/2022 01:55, Mat Martineau wrote:
+> On Sat, 5 Feb 2022, Matthieu Baerts wrote:
 > 
-> It looks like I was too hasty and this is badly broken. Please ignore,
-> I'll try to cook something better later.
+>> Hi Paolo, Mat,
+>>
+>> On 04/02/2022 19:33, Paolo Abeni wrote:
+>>> The mentioned tests has to wait for a subflow creation failure. The
+>>> current code looks for TCP sockets in TW state and sometimes misses
+>>> the relevant event. Switch to a more stable check, looking for the
+>>> associated mib counter.
+>>
+>> Thank you for the patch and the review!
+>>
+>> It has been running all night on my side, more than 2000 attempts,
+>> without issues!
+>>
+>> Now in our tree (fixes for -net) with Fixes, my R&Tb and Mat's
+> 
+> Hi Matthieu -
+> 
+> I noticed both this patch and "selftests: mptcp: fix diag instability"
+> were listed as mptcp-next, but queued in the export branch in the "fixes
+> net" section. Is this accidental or did I miss some discussion?
 
-Funny, the CI doesn't agree with you :)
+It was intentional:
 
---------------
-- KVM Validation: normal:
-  - Success! ✅:
-  - Task: https://cirrus-ci.com/task/5993050752155648
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5993050752155648/summary/summary.txt
+https://lore.kernel.org/mptcp/510a18db-2949-e95d-050f-942e15e9ea96@tessares.net/
 
-- KVM Validation: debug:
-  - Success! ✅:
-  - Task: https://cirrus-ci.com/task/5430100798734336
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5430100798734336/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits:
-https://github.com/multipath-tcp/mptcp_net-next/commits/d90c337f0c5a
---------------
+But it is true that it was not really clear I did the same for this one
+as well, I'm sorry for that.
 
 Cheers,
 Matt
