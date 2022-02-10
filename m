@@ -1,101 +1,64 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2197B2F20
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 15:13:57 +0000 (UTC)
-Received: by mail-wr1-f54.google.com with SMTP id q7so10070648wrc.13
-        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 07:13:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=D2cIDqAPBf4YcffLCyyak5hbGW8HPaooH2/Ex9YJ+Us=;
-        b=xoqYqikSR5fS5PxBD+ttHOh3kSlNKFgkcEBj0WuZxvT6MV+Gwq/0mTpdJ7pJScbQnC
-         IvQGcrH3Z8hOKpaJkYt+ljn5YSn4x0kmf+zTq5eiplQEWdkf8whny7mtxYPPJqk81kje
-         N6CB41+SJngKj/F6v5zVjT/jXeef5uJWDrD8kXHKHiZUY22pqDOF/HabTZsn9GZ7H6mS
-         x7KD7QUqOXzFIqI0lnoY2O+g2C9Z+SBmpju8ry+mYZLtyqV1F7/akekDLmqS3RhnsQfJ
-         CcxvYM4qywmC/2f2cJObmTTpxyE7RUEV/ExNHkUVABmAOwa0dbfgIEvLNRtOWyob2r32
-         pRzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=D2cIDqAPBf4YcffLCyyak5hbGW8HPaooH2/Ex9YJ+Us=;
-        b=Igi0zlgw0zzq1PcTXp97hjxbl8morVqxX9YW9Ni4m9mMlnTRNMw+eKs1gvZrF/MhK4
-         PvZ3EDDG4DIKxMBWbstX/k14hfjJnQhjvalG1KzagqZSfGnhF2LrC6WrbFSnUM3e578w
-         +X3uvIFU/vsok5LnAuP9dwaLaT0ybyLSAX3RMBYHDlMA2/ze04OKA1Wn6BNsVfgGE3nr
-         9q/yS0DEDr8ebVQCPmEttlJDL+LZ3vugYLtCJn21GewQEQI7NHMupu4lDDN9d7/HyJmT
-         NzyjJNezpt0fA9kp1Zw0HIGWchBPlCpkJ8LhIQoprDyJAeCg5McGd3Um0t+OCTMvvAkP
-         0NEg==
-X-Gm-Message-State: AOAM533FVtUPDzpLDTnU+cMRm8CppnW2pLS5KMp0FXrtUKsMG4fCW/hl
-	pgW+CWAVDeNCryy5LcDXC8G6pHOFkh2lB3DW
-X-Google-Smtp-Source: ABdhPJzyRKQC0rvV4htkQ41haDcpzA2lD3D+FP6SF74sTsX1Tr9bcwrjRl4TaLga5x6sbJSjKgOQmg==
-X-Received: by 2002:a05:6000:16c2:: with SMTP id h2mr6780625wrf.614.1644506035281;
-        Thu, 10 Feb 2022 07:13:55 -0800 (PST)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id ay38sm2329696wmb.3.2022.02.10.07.13.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Feb 2022 07:13:54 -0800 (PST)
-Message-ID: <344dfb9e-5b9a-b804-fea1-46ca523ca68a@tessares.net>
-Date: Thu, 10 Feb 2022 16:13:54 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E92F2F20
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 15:29:56 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1nIBOM-0003F1-Jf; Thu, 10 Feb 2022 16:29:54 +0100
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next 0/4] mptcp: replace per-addr listener sockets
+Date: Thu, 10 Feb 2022 16:29:45 +0100
+Message-Id: <20220210152949.19572-1-fw@strlen.de>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: be more conservative with
- cookie MPJ limits
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <d3aaf62f955697daa23859487bfaa5f1a777b29d.1644426852.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <d3aaf62f955697daa23859487bfaa5f1a777b29d.1644426852.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+This series introduces a hidden per-netns pseudo "listener"
+socket to handle mptcp join requests with a valid token but that
+do not match an existing listening socket.
 
-On 09/02/2022 18:15, Paolo Abeni wrote:
-> Since commit 2843ff6f36db ("mptcp: remote addresses fullmesh"), an
-> MPTCP client can attempt creating multiple MPJ subflow simultaneusly.
-> 
-> In such scenario the server, when syncookies are enabled, could end-up
-> accepting incoming MPJ syn even above the configured subflow limit, as
-> the such limit can be enforced in a reliable way only after the subflow
-> creation. In case of syncookie, only after the 3rd ack reception.
-> 
-> As a consequence the related self-tests case sporadically fails, as it
-> verify that the server always accept the expected number of MPJ syn.
-> 
-> Address the issues relaxing the MPJ syn number constrain. Note that the
-> check on the accepted number of MPJ 3rd ack still remains intact.
+First patch is a minor preparation patch: MPTCP Join requests packets
+that fail to find a suitable socket by means of standard address/port
+demultiplexing will be steered to a pseudo-listener, similar to TPROXY
+interception.
 
-Now in our tree (fix for -net) with Mat's RvB tag, without a typo
-detected by codespell and replaced
+This pseudo listener isn't bound to an address or port (all zero), so
+we need to fetch the port number from the tcp header and not the
+listener socket.
 
-  [ ... -a ... ]
+Patch two adds a stub to the tcp demux code.
+This has no functionality, its extra to make tcp datapath change
+stand out.
 
-by
+Third patch is the bulk work, it adds per netns listener and
+implements token-based socket demultiplexing.
 
-  [ ... ] && [ ... ]
+Last patch zaps the per-address sockets from mptcp, they are not
+needed anymore.
 
-(linked to my series refactoring mptcp_join.sh)
+Florian Westphal (4):
+  mptcp: prefer ip address in syn skb instead of listen sk bound address
+  tcp: add mptcp join demultiplex hooks
+  mptcp: handle join requests via pernet listen socket
+  mptcp: remove per-address listening sockets
 
-- 7c2d506acce5: selftests: mptcp: be more conservative with cookie MPJ
-limits
-- Results: af8e6fcc9de1..388ba6d7cd29
+ include/net/mptcp.h    |  15 +++
+ net/ipv4/tcp_ipv4.c    |   4 +
+ net/ipv6/tcp_ipv6.c    |  23 +++--
+ net/mptcp/ctrl.c       | 214 ++++++++++++++++++++++++++++++++++++++++-
+ net/mptcp/pm_netlink.c |  82 +++-------------
+ net/mptcp/protocol.c   |   2 +-
+ net/mptcp/protocol.h   |   4 +-
+ net/mptcp/subflow.c    |   8 +-
+ 8 files changed, 268 insertions(+), 84 deletions(-)
 
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220210T151226
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
