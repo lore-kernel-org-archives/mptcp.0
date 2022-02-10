@@ -1,105 +1,113 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C62F2C9C
-	for <mptcp@lists.linux.dev>; Wed,  9 Feb 2022 23:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E109E2F20
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 00:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644449987; x=1675985987;
+  t=1644452546; x=1675988546;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=fghnLF7P5Pr6ukiSKGBmibwiIfepCVy8Jn7R4XTkBD8=;
-  b=T+zqEvfScU3+2qkiS2yek8H2U1TY/HvPQ/JzyqLeMuQUpVwjuWXBGZpv
-   Lt+bSmRIVTmyfOF8aYZmHMV5CFlp0tQ7BbIgwgkV4dZ82Hft3nI7PJSWI
-   89vnTnY11y5zDVltDecLz7GGBlpND3/7txTPjmu39Qum3xRzYbgbIXtcG
-   o4hqc5EcaLfigl9u2AO6Ks32lxhHyuf79xO3h22gLxGJlDTtXG4uE3V2Y
-   cCgIIrP2HZaS0RjI/Aj8Xs27PvpKUBoRqQTpr04SEqkHl3aE/m7QTCv0S
-   8JgtbY+hbyOCJ/boKmp5bFGB4bFU+Kbk8kJSwcGFmqTWPE6liOJ0WO1yN
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="246950335"
+  bh=VAzVvWxUUCXnx7aB7vpWfISutoPJpOQ01AXXkEuk/ZI=;
+  b=JT/+fvapT/b9jHD/UXoCs0pvxndRTsRfzx7vsDULFviO/31tR64W0SvN
+   9nE+1yh+VvFKKfMUXO0RWu5YzkxoftyhaUf+DicXWoyGpa9xqGcYiGlXt
+   YyeW2bzHTgmxn4efY4CD3eqgyqw8cTsDuORnvmAIIIus8vE29RKOm6Yq9
+   te4k8sWzlSs8djrNjS8KQo+YTh0nVGm+3ddree9gASJ1FYG0g91L/2Bjg
+   YPsIZ0v1h+1fMw4nnq/+vP7R8gI2GfyAnE+OhZNP7qUK3CxWS39QlXoqE
+   Nun2OUNi2uTBUO18bRRE/OmLhmjwD5vLcQ7EVH+gu953U8UH5sSYldFGz
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="249128463"
 X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
-   d="scan'208";a="246950335"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:39:46 -0800
+   d="scan'208";a="249128463"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 16:22:26 -0800
 X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
-   d="scan'208";a="541358131"
+   d="scan'208";a="500189109"
 Received: from halucas-mobl3.amr.corp.intel.com ([10.212.241.159])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 15:39:46 -0800
-Date: Wed, 9 Feb 2022 15:39:45 -0800 (PST)
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 16:22:26 -0800
+Date: Wed, 9 Feb 2022 16:22:25 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add mp_fail
- testcases v5"
-In-Reply-To: <d7ae1690ad1da5e0614e239a429e91e4dbc52155.1644414480.git.geliang.tang@suse.com>
-Message-ID: <6674c36-961c-6910-881-52b4891d93eb@linux.intel.com>
-References: <d7ae1690ad1da5e0614e239a429e91e4dbc52155.1644414480.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next 0/9] Refactor mptcp_join.sh
+In-Reply-To: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
+Message-ID: <fc54b044-53bd-60ed-5aa0-6e1dc460ef8@linux.intel.com>
+References: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 9 Feb 2022, Geliang Tang wrote:
+On Wed, 9 Feb 2022, Matthieu Baerts wrote:
 
-> We will get this failure in v5 in rare cases, about one percent
-> probability:
+> I started this series to be able to launch a specific test without
+> having to modify the script to comment tests from the subgroup I didn't
+> want to validate when trying to reproduce a specific issue in a loop.
+> That's what we can find in patch 3/9.
 >
-> Created /tmp/tmp.e4nE5Q14mj (size 1024 KB) containing data sent by client
-> Created /tmp/tmp.QwpQYClFnm (size 1024 KB) containing data sent by server
-> 001 MP_FAIL MP_RST: 0 corrupted pkts     syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                         sum[fail] got 0 data checksum error[s] expected 1
->                                         ftx[fail] got 0 MP_FAIL[s] TX expected 1
->                                         rtx[fail] got 0 MP_RST[s] TX expected 1
->                                         itx[ ok ] - infirx[ ok ]
+> While at it, I:
+> - fixed one issue with the options (patch 1/9)
+> - stop if an option doesn't exist (patch 2/9)
+> - removed unused vars (patch 4/9)
+> - delay some actions to the first test not to do them if no test is
+>  launched (patches 5-6/9)
 >
-> We shouldn't always expect getting 1 MP_FAIL. If no checksum failure
-> occur, we should expect no MP_FAIL.
+> But after having seen all modified lines, why stopping there? So I:
+> - clarify local vs global variables to avoid Bash's classical pitfall
+>  (patch 7/9)
+> - fixed all issues reported by ShellCheck except one (patch 8-9/9)
+>
+> These last 3 patches (+ patch 3/9) will create a lot of conflicts. If
+> we are OK with them, probably best not to wait to long before applying
+> them to avoid big rebases.
 
-There are two main reasons we would see no checksum failure:
+I think 1, 2, 4, 5, and 6 look good for the export branch now:
 
-1. TC rules didn't produce the bit flips. In this case it seems like the 
-script should retry.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-2. TC rules did trigger, checksum code failed to detect it, and file 
-contents don't match. This should fail the test case. I think the test 
-should catch this.
+I don't have changes to suggest for 7-9, but I think it's worth talking 
+about how to manage conflicts considering the scope of those. I think it 
+would make sense to send those to net-next fairly late in the development 
+cycle, to avoid net/net-next conflicts if we send mptcp_join.sh fixes to 
+-net.
+
+To deal with that, I see a couple of options:
+
+1. Keep these at the end of the topgit queue to help with that, but that 
+makes it harder to send other mptcp_join.sh patches for mptcp-net or 
+mptcp-next.
+
+2. You update them out-of-tree until close to the 5.17 release
+
+What do you think? Might be a good meeting topic too.
 
 
-Since it looks like v5 plus this squash doesn't seem to handle #1 I'll 
-mark both as "Changes Requested" in patchwork.
-
--Mat
+I have some other questions I'll ask in a patch 3 reply.
 
 
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
+> For the patches that are already in review, I can fix the conflicts when
+> applying them.
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 9f5c9afc26d2..cfa5f168e6db 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2287,7 +2287,9 @@ fail_tests()
-> 	pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
-> 	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
-> 	run_tests $ns1 $ns2 10.0.1.1 3
-> -	chk_join_nr "MP_FAIL MP_RST: $(pedit_action_pkts) corrupted pkts" 2 2 2 1 1
-> +	local pedit_action=$(pedit_action_pkts)
-> +	chk_join_nr "MP_FAIL MP_RST: $pedit_action corrupted pkts" 2 2 2 \
-> +			$((!!$pedit_action)) $((!!$pedit_action))
+> Matthieu Baerts (9):
+>  selftests: mptcp: join: allow running -cCi
+>  selftests: mptcp: join: exit after printing usage
+>  selftests: mptcp: join: option to execute specific tests
+>  selftests: mptcp: join: remove unused vars
+>  selftests: mptcp: join: create tmp files only if needed
+>  selftests: mptcp: join: check for tools only if needed
+>  selftests: mptcp: join: clarify local/global vars
+>  selftests: mptcp: join: avoid backquotes
+>  selftests: mptcp: join: make it shellcheck compliant
 >
-> 	# single subflow
-> 	reset_with_fail 1
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 2342 +++++++++--------
+> 1 file changed, 1257 insertions(+), 1085 deletions(-)
+>
 > -- 
 > 2.34.1
->
->
->
 
 --
 Mat Martineau
