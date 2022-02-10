@@ -1,35 +1,38 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0C62C9C
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 18:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3006F2C9D
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 18:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1644518969;
+	s=mimecast20190719; t=1644518970;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9j6k3Lbik3hF8cFADqtdI01SS9fyB6GxqOtZs1yuY38=;
-	b=TGow4FKbOftg2pRjonlQmYiXEXCRDwqg/j7nX2BT+OzSOFeGHsf5X4vC8vPzeqqSFUh1Lu
-	9VSyZ524iPXjz7IIMD13/dU9N14e8dDBz1IaEGfmjg8zdTA9Cc4tLGb2x/FVbgJB3vrGBZ
-	hHWNUlXAeOvFPy1/OH4mW/OJwYe5KRY=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3UBJflAZ80wm6ItZgAyOxnQGEwFP1voeDFnm8/KOqyg=;
+	b=jUThGW0y/22X4hZ137ieN2lBc4hlsWgn2/Lhf3+JAH5g4ZpvAXF2ZYCXDN9IRkLrBLTjKD
+	zQzS7Zz7XlkkPUrue2ouaR6IO1pnjsCNzvzRVKP0MPgjbCLf+QPGyNLxi7Zdl2eU6Ux9na
+	FFq9/d2o2RMrt17qu70KDXyaMBDmzmI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-332-W7kjFCk3PUKurukH6QEMig-1; Thu, 10 Feb 2022 13:49:28 -0500
-X-MC-Unique: W7kjFCk3PUKurukH6QEMig-1
+ us-mta-390-ecHu_qElN5eVG4wPu0twwg-1; Thu, 10 Feb 2022 13:49:29 -0500
+X-MC-Unique: ecHu_qElN5eVG4wPu0twwg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B2BA51086
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 18:49:27 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40D92802B7A
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 18:49:28 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.220])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A442A106C0D2
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 18:49:26 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A5510106C0D2
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 18:49:27 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v3 mptcp-next 0/3] mptcp: more self-tests improvements
-Date: Thu, 10 Feb 2022 19:49:14 +0100
-Message-Id: <cover.1644518737.git.pabeni@redhat.com>
+Subject: [PATCH v3 mptcp-next 1/3] Squash-to: "mptcp: constify a bunch of of helpers"
+Date: Thu, 10 Feb 2022 19:49:15 +0100
+Message-Id: <f63ac7eafde9820e4a85e4f9d09630509e42119c.1644518737.git.pabeni@redhat.com>
+In-Reply-To: <cover.1644518737.git.pabeni@redhat.com>
+References: <cover.1644518737.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,27 +47,36 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-This is the new iteration of "mptcp: strict local address ID selection."
-should hopefully fix the last self-test failure.
+There are a few more helpers that can be const-ified and I missed
+in the previous patch, just squash these change into there.
 
-patch 1/3 is a somewhat related cleanup (to be squashed into existing
-patch)
-patch 2/3 should address the self-test failure
-patch 3/3 avoids RFC breakage reported into the previous iteration,
-leveraging the previois one
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/pm_netlink.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Paolo Abeni (3):
-  Squash-to: "mptcp: constify a bunch of of helpers"
-  mptcp: more careful RM_ADDR generation
-  mptcp: strict local address ID selection.
-
- include/uapi/linux/mptcp.h |  1 +
- net/mptcp/pm_netlink.c     | 44 ++++++++++++-------------
- net/mptcp/protocol.c       |  3 ++
- net/mptcp/protocol.h       |  3 +-
- net/mptcp/subflow.c        | 67 +++++++++++++++++++++++++++++++++-----
- 5 files changed, 84 insertions(+), 34 deletions(-)
-
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 46346f009485..56f5603c10f2 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1289,7 +1289,7 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
+ }
+ 
+ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+-				      struct mptcp_addr_info *addr)
++				      const struct mptcp_addr_info *addr)
+ {
+ 	struct mptcp_pm_add_entry *entry;
+ 
+@@ -1304,7 +1304,7 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+ }
+ 
+ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
+-				      struct mptcp_addr_info *addr,
++				      const struct mptcp_addr_info *addr,
+ 				      bool force)
+ {
+ 	struct mptcp_rm_list list = { .nr = 0 };
 -- 
 2.34.1
 
