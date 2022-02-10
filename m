@@ -1,44 +1,44 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA5F2F20
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 14:49:38 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id d14-20020a05600c34ce00b0037bf4d14dc7so3466507wmq.3
-        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 06:49:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238F72F20
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 14:52:49 +0000 (UTC)
+Received: by mail-wm1-f49.google.com with SMTP id j9-20020a05600c190900b0037bff8a24ebso931720wmq.4
+        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 06:52:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=VM/xURqC5Jt7vcdxFvq4vdWz7/L+rC6OEgNKlLuRAnI=;
-        b=VJUXKYS+HrwUJQFLOI4IkLa607y1dLmwDryDLGNR9solh0+7Z70nZZv/S6nj+V2i05
-         Fpc3CsCcTXPBh5gy8Xn+b9ja9i3xF0i5mOEIzZpUxOVBIDlLCR+P3PZYJquzowa6osIY
-         JKfVjdJYHxcVk0f1nc/nTYUtRmlvC2cKqG90/CRFaSBZZqsRsIAROn1xGEWcOYBwL7P2
-         MDNUGjw6aY0vSporV5zOz4Z+85NILkM6/1lVjiBkGU16ZGzjTNScuFwFAJBZmwJR3ZRY
-         xhtPraCErD0KFWycVKBnSL8y64TZOuV9LOykct9uO1HavKSlopsDmhB6+6auAt+d0mDt
-         hdgQ==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=aPG50Wew5aYjhaQELL4SJj+zpshCSawcGMQJ0fH+aNk=;
+        b=5B8um+C+DNBouBE2Wkcs2AmdWO3wzPvtrrYKvu0tnXap5R2Rq6oDh/PNWRSgrT7L8G
+         lfx9OiHSq4aGSIoh9gLOqeic6dyu6u1d8mFGULPpTVnaz5WIeIWJ9ShP9+2BcLWSPA+w
+         0MiFrPe4zyQnuxzhqlAdcta4jd9xy/5P8eaGHsx7c6xPHOR5keATej54KxTeFkGHDs2q
+         +48cYDsGUfT0z3TXHROhZV9Gy0jxmkALq5rX2Wx2Jbv8JyN6xqh4P4iuVMFpNrdjxLoe
+         Nn/JzxIP0tsVU1IgUn0f5PljWBtJDYsV3MhY4ctjeGoVSC6tFg3zbm1lIEtQu2DbGrwK
+         Slsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=VM/xURqC5Jt7vcdxFvq4vdWz7/L+rC6OEgNKlLuRAnI=;
-        b=7yOhEUZAbRgipUdu/TeunB2JTkBYPvyxbIY3owKK3dsafzo+usVtCjdwRYy/UQ4g8K
-         nQXOr0FwNu2uh/8nCdL3aG51PtFv5H+JbgwFuse9vocTclUZgP1oSZdqF7leA8gTFey0
-         LSqEE/ma8dMomoBG7/Jc8eHtq9Xzf2iwFl/ytYfR93Y89MmtTVcvZ+eubvoIhqMIz5Qw
-         KcssunT9RSymFNsq4qX4DOSoTbXuZ5+IPV5a5mrqCJZ/7J1Ralu2/GFO/DHAHzxApRPv
-         80E/ON8dQqU9f00iXuCgMUaxppl4wESreQOp8X03+i8tcsLve9kPykHgCW8CdbElzIve
-         hkqQ==
-X-Gm-Message-State: AOAM532g92d42STThnPAzqRCN1r/scI0ULRkzy3gphTrHR+c2g39gxMB
-	ncBITAaPYGp3oYQcu1dQv7supg==
-X-Google-Smtp-Source: ABdhPJx56ja1pohUWb0OO6+7WSjOmNDjTiPvSz2YoOeGgg2Wpk0VAAOlfl81molqfjVFTYTTv2TKXw==
-X-Received: by 2002:a1c:f312:: with SMTP id q18mr2507501wmq.13.1644504577345;
-        Thu, 10 Feb 2022 06:49:37 -0800 (PST)
+        bh=aPG50Wew5aYjhaQELL4SJj+zpshCSawcGMQJ0fH+aNk=;
+        b=jTUVpVi1S1c3/zHZrhSB5yzHjgXLPRHWgxbCGv5LZEKfw2yRn2k5C+dYfLkToA1OpM
+         gneMq+YVbz76y2FK7LrnWOWBvCrbQARdJ6cb++Pu4QoETlXOnkZJK5hp87va4GtYo9Jz
+         2ffaH2Ys9mfIUzf5Ib9xkiEoFada7x+SeKRZqzKxbQ2fe3T+3G2qkttRqOOsMINRw+v3
+         ZjmCcvuyCWlxWuVVLBvcKUCJX+u3kgF6GSgJBjUntWNav1mZWEMdBD8pUMDz8IK5MFfb
+         mvxcLtyCQ9POLWxRIQWsfzLK3jp8OsL/EdAmEzk6FB3QVeLJbbQJiv+cuGbkeIGYTZ2i
+         RFtQ==
+X-Gm-Message-State: AOAM533aMsB3dfBYAsByGz/ddrBGsF54qRMSe8o09lBWZ/FvYr5O1EAU
+	wnWFF47gUWBVb0q6bOyWDSeie0McP15JajTo
+X-Google-Smtp-Source: ABdhPJzZ00jMm9QPftg3Qll7LxagzJOmeQ55wisTCO6e9DlZ374sanLLj6um/+K2x/23OOqSKz4w/Q==
+X-Received: by 2002:a05:600c:3c9f:: with SMTP id bg31mr2486498wmb.86.1644504767432;
+        Thu, 10 Feb 2022 06:52:47 -0800 (PST)
 Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id p32sm1623290wms.1.2022.02.10.06.49.36
+        by smtp.gmail.com with ESMTPSA id n11sm1776985wms.13.2022.02.10.06.52.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Feb 2022 06:49:36 -0800 (PST)
-Message-ID: <53b45b01-0ef1-389b-7d84-75f2de192010@tessares.net>
-Date: Thu, 10 Feb 2022 15:49:36 +0100
+        Thu, 10 Feb 2022 06:52:47 -0800 (PST)
+Message-ID: <6c39dbc8-bd94-fedc-ad53-0a55c3aaf1f8@tessares.net>
+Date: Thu, 10 Feb 2022 15:52:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,32 +47,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next] mptcp: constify a bunch of of helpers
+Subject: Re: [PATCH mptcp-next] mptcp: mark ops structures as ro_after_init
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <8d4babebbd177de911a30c256b0b68742b09f607.1644400229.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
+To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+References: <20220209102933.20873-1-fw@strlen.de>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <8d4babebbd177de911a30c256b0b68742b09f607.1644400229.git.pabeni@redhat.com>
+In-Reply-To: <20220209102933.20873-1-fw@strlen.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hi Florian, Mat,
 
-On 09/02/2022 10:50, Paolo Abeni wrote:
-> A few pm-related helpers don't touch arguments which lacking
-> the const modifier, let's constify them.
+On 09/02/2022 11:29, Florian Westphal wrote:
+> These structures are initialised from the init hooks, so we can't make
+> them 'const'.  But no writes occur afterwards, so we can use ro_after_init.
+> 
+> Also, remove bogus EXPORT_SYMBOL, the only access comes from ip
+> stack, not from kernel modules.
 
 Thank you for the patch and the review!
 
 Now in our tree (feat. for net-next) with Mat's RvB tag:
 
-- b50db6b53771: mptcp: constify a bunch of of helpers
-- Results: 7de35173cc33..bfba92ddd537
+- 6072c8a8fe34: mptcp: mark ops structures as ro_after_init
+- Results: bfba92ddd537..af8e6fcc9de1
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220210T144922
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220210T145230
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
