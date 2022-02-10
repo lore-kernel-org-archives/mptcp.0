@@ -1,169 +1,116 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FF92F23
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 16:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1644510895;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6CA2C80
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 17:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1644514947;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=o95F4a6vJI9DHMxXuI1ysYGysTBtVztd9m89aSXOz9w=;
-	b=L8807RfjdNJWff22Sm8/XqhGcxXEXoqEZvBk0hjx6bjQzIzBRZ9hJFcFBNn3S3gcM507Nu
-	1HWcfDXmMBQ3yNvqg4Crs2ti6URddqgG/+TnUvLxM+4Ytbe2bqOz1uiP5tCPsa9J6s2X6H
-	Luhly0m0XA/bC2SrUrY8ULAoiwneaRo=
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur04lp2051.outbound.protection.outlook.com [104.47.14.51]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-2-xO7iqE71P7uHsmLlUP1y8w-1; Thu, 10 Feb 2022 17:34:54 +0100
-X-MC-Unique: xO7iqE71P7uHsmLlUP1y8w-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TbGVtZNFE3vQu5DBlFJm73hDeLyoKa1taTdUIOfCod31m+Morwg/Zw0TfUg5X3ncosc8GlwGl86ocKKJlULycJIgGIAro2/9XdJFi0SFdSir/Aj4A2D16ROeOLqhL4jx75ZaOnJlVxWvM3FHBFc4OsU4u8dmo62Xv6mV2xEtYzlqDlHOz11TAeas8YyUTmJ+2eWUWtSvi5Ry3V80nAQ39TTjA9hQ8c3UDNhcDjZEMFJaB/wjUjLxW2GiPeTH0nAbK5cSLVHsNDYgG050/xe905gth6K7WFY5xnnSW3Fn/iFZYGoOnp72cHIDFHPXGu/yl0DiLZW3Ee43GD22EgqEWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KnL//27s1Jq3+u/tcJh1s1nkg9pwCf9ECy4G/oEEa3Q=;
- b=cxSGQqkfGq5BGRIM4PYIraMPu2T+UMVbfL0iEIc8FOKDayOfLis5rzGExsoiAC8mkDEqsCu+OJpaSGmjDKQUfDk2oiuEr3eA7nPcRO0pUCaj7I/k+Q5kZGBJxc12exl6GYnyynqVJDBjf35e3onNqkUAL3OZggArH3gduzEXolM0bkCAKPXDbK+qcN392rXUGpIMh6OlJ4I7XRFjBMH7muq4RNtp8Um7MrKdf4tdHvGpvPhpKyPLU7cuqmQT158UbCLVCzo3ojC4ybA3KsWuW0jw3yXX868NtTQ5Zs8uGwNORBNla33/3gaLo71f0Gn1Uj5QePMFlQmHEVihRf+oyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DU2PR04MB8550.eurprd04.prod.outlook.com (2603:10a6:10:2d5::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.11; Thu, 10 Feb
- 2022 16:34:52 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.019; Thu, 10 Feb 2022
- 16:34:52 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] Squash to "selftests: mptcp: add the MP_FAIL testcases v6"
-Date: Fri, 11 Feb 2022 00:34:53 +0800
-Message-ID: <27265ff31ca14a679d79140e4b7d1141322b66ae.1644510882.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0187.apcprd02.prod.outlook.com
- (2603:1096:201:21::23) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M3sa0VvQ6pqdqW4G+7UDtWAA/vMl4jfi+/gWnSN81ZE=;
+	b=SXinev0A7bhfU/N9c2CGwzudn1J3gAGMi3UGeKHe2WnI+dyzW3t/V2sGMMortcFUg3M8JN
+	9ynktgr1btzI+MLtC9kDG585inXX7CXmOSmYv87mquXEfeDUi76cHjdD6RAygJnG6BQPB7
+	fGNWfL/58r+QDSRbinGIyyMZ8Ugoegw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-131-blzXpIqxPWKbPZeBfOGrBg-1; Thu, 10 Feb 2022 12:42:24 -0500
+X-MC-Unique: blzXpIqxPWKbPZeBfOGrBg-1
+Received: by mail-wm1-f71.google.com with SMTP id r187-20020a1c44c4000000b0037bb51b549aso1149198wma.4
+        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 09:42:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=M3sa0VvQ6pqdqW4G+7UDtWAA/vMl4jfi+/gWnSN81ZE=;
+        b=AmfudFc6rKcAyWtLWCCaJugzLwxlnZaDGQeGi4UGMAV/Ov7U1JrvydVrwaUhowEvfU
+         E20lsbRpZx/pD97LEKhwGvTGgGZMht1320xcmWM6bc8DvV4yiWvPI1oB6ZTluppwCusB
+         nwOVw9KuuwX/dvgyfNoGLw7U8xcJo0PyGHrgCy+jrUViiqAweC6eZ8Ig9eWY3iO+iU06
+         RBQnhTNMLKbpLlHepLmpZHAulIeGKPtU9vbFC/7C45xZOgBCQ5Z3tcV0tCZ0gRdZ7rgt
+         yQBwIFFkFvelgQcQPfQT54+TMSA/jR55j9uWKBUpCxnKD6/5XRNIK9J4jif+59UtqK//
+         KvIA==
+X-Gm-Message-State: AOAM533iPf62NC9Y/8u64nx68AUnHX62fbY7aFkRVwr+f45R2K1+0fra
+	S2UDh8uAkPXpVaZtYjpMkgcuWSbWYi97ujksZgWoU23ndKNYWJW+dLhchORwLg50u0kGttBhvhD
+	nMQ6CU1DgMry3nmk=
+X-Received: by 2002:a05:6000:1846:: with SMTP id c6mr7451221wri.438.1644514942907;
+        Thu, 10 Feb 2022 09:42:22 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx16ngdERgVTbXdq3hGwzknpFtQZg+st6rw+9iWg0OLWbN+aJA5fZ/HpgCPFfFeeZp0NQb9tg==
+X-Received: by 2002:a05:6000:1846:: with SMTP id c6mr7451216wri.438.1644514942695;
+        Thu, 10 Feb 2022 09:42:22 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
+        by smtp.gmail.com with ESMTPSA id k34sm1210299wms.35.2022.02.10.09.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 09:42:22 -0800 (PST)
+Message-ID: <21b550b62f2b2deff29375980a454a6933695329.camel@redhat.com>
+Subject: Re: [PATCH v2 mptcp-next] mptcp: strict local address ID selection.
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Date: Thu, 10 Feb 2022 18:42:21 +0100
+In-Reply-To: <2747570e9a46ee5b3d18ed9f44e73e4043be333d.camel@redhat.com>
+References: <75e02d63aa8b03b873ad94f5b4d901776f9a81ea.1644487551.git.pabeni@redhat.com>
+	 <47e854cf68fdc2a1e0b2c9e79813d4212393faac.camel@redhat.com>
+	 <60ef8629-d9d4-3bc2-00cb-d8c286d934aa@tessares.net>
+	 <2747570e9a46ee5b3d18ed9f44e73e4043be333d.camel@redhat.com>
+User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ba34ed4d-1994-4519-663f-08d9ecb3437c
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8550:EE_
-X-Microsoft-Antispam-PRVS:
-	<DU2PR04MB85504C3DAB68780B88E4442EF82F9@DU2PR04MB8550.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	DOIUMYAtLnZpsiVaYDFNQAsmLci87ZkmkZ703hjYl9O8ZX2Qbk4MimE/nRKNY5Q/DqBwGm+P1eIaEDdTcIkj4yzAs+e1QpqwZMPbCrLIruSHb0GnL+hZCLGYsRwNdiLzskEUOnwPEAKPKyami71d0wde3YTclbR0xrLEP10LIrsFXuDYr1I4sz02W4MLgnzwpbuQOetVyYHIaHgC2i1LkHSXAotum+MIW8aSqQPvA49c8sT7FJ61bqXiqoJa0ScPGoti7PvTV2o66y/UvMwF3u88IhgHtz06wGalFcvyUH0UBi0xEUthkSQGIT48akekyHocL/GCFgCbp2EfjTvkpCX8ObwxrwYO6aACzbdjoFtI80KFG4X2S4H04oyU9n2rEKaDpe8cCuNBVzi0LTXXtfYyyzWfnSccdUJqwY6yHF/c29+VWH5oyXTXGN9/JI7P3qKu3WxCQ9S5JaIAGAqY15lL3dpNv7Yo5h3gVWMe9BGoqY+hLZtC/esVhgFJECIWWj2FFxkD24Td3CzuaoAPw7Hln2/khbzNaS/J54NCYZnQIgREboNeREfJ5XqdiKiGexPhMSzusWO1SfySxzOF6Q8bA+6dgXiOCY/HsOUURzsYyCNjuYLw5ABO7+sN+ZSooQKW/O1en3AF1HtgiTgYyg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(186003)(6486002)(508600001)(36756003)(38100700002)(2616005)(107886003)(44832011)(2906002)(6512007)(86362001)(8936002)(5660300002)(6506007)(6916009)(83380400001)(316002)(4326008)(8676002)(66476007)(66946007)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fp106dobLP4bhX7uWejHU0ZiGVW/KuhOSoUnvuzzHo0Ml+nFCBsp+gsU8ODI?=
- =?us-ascii?Q?Pw3wUK7u72KzAuw7d5euwYtxGw30TK3hq5Hg3sQSHvyY76EMMTXBtBAEfL88?=
- =?us-ascii?Q?YqACPT9z373FdTgHA5X97vorkQjkvplM2ZZkvLBN884LkpvyP9fYk4wz4Wqk?=
- =?us-ascii?Q?PV8INeAHa2sltGpC9V03gPXoGD1yPWgjxvbFPhaFEmeF7tfh0NXUJxqMGCvV?=
- =?us-ascii?Q?ocFb/yxI4fUJWZdUCTDIEeWEiw5dsdWInXtTXc2vTBr4pz8AJGc7QMZDRtDp?=
- =?us-ascii?Q?LmuarjiH6JxXYwO+bAXK7zBSXHv0oiOtMoxaNnsPayiqAVYYNG6HaPCqFuv3?=
- =?us-ascii?Q?wkDk4UEbpBkTLpQP8AaS6LOL0dlChBrXvywf2So4fCRaT4uaf3hmw8Hbsx8v?=
- =?us-ascii?Q?bOKdhYdx7NihC0h7BTPRlf7takg0zCIURCefx6fCXYAiitqAg7l3PSxCplXT?=
- =?us-ascii?Q?NiBabxzBweBhiRaG4QWzBb0Lhie6ZKQfoHWVH1A4s40UCwdg/zZOjqZA0GyL?=
- =?us-ascii?Q?cWijDkMdSDX7bVdokJy6ULOO7S9D/boMTI4gqj3Dmda2MRyWxbLyxibgaKnU?=
- =?us-ascii?Q?TUhxHIHRZIYAhEekcVlIaTjX4FoVXqIoqlTVb8B0zAlywV9p0v/t7dAkfshT?=
- =?us-ascii?Q?YHpl6gC1mFtxKsoSV0OIztuFQiVFZkAhWQdf8UDejVuo5RHhCBpehTraUgp9?=
- =?us-ascii?Q?XuI6SRniC6Ozc0kZLrA00F4dQzD5JCmawsiidCqttGt+pZmZqutwMZRUtPS4?=
- =?us-ascii?Q?2eOQ4ckf//A1GeJ65gleZGx71ZpGKriaO+kXdbXVgSuTPa+wz+ppev4TQcwk?=
- =?us-ascii?Q?XZkNahs0qUoohrb1tfoWpAKXa8QUYGUHDYD7yjFzXq5gjO9/ozWIuZTKxJDw?=
- =?us-ascii?Q?Fx7eImOxzVfgyfV9Quq0QpawJl6iDvOAM6Xh3bybFq+WXZtdqqV+Q5gv3LRJ?=
- =?us-ascii?Q?pZEk5mm14YS22hV001ZZbNED0nM8FeorW3Ci0vHOBq+NQywdlFw2WU8DBfpe?=
- =?us-ascii?Q?owc+scjuo5rFPBPIIISCjsHZ+bjZGn+JzuaNbs7w45JdLF6E5jXFE+UdoYhL?=
- =?us-ascii?Q?F94l3JEJMrVhrZnsvU4inmF4h2ASFYu6JePit3p7uvtVN7gj4Q+YuGtwPlfq?=
- =?us-ascii?Q?K+bREfjG++zjmBSjUDHF2WAS+qd/zdXzRhb7QIG7Tm+WqqHXt2lSbBNDFmXh?=
- =?us-ascii?Q?ovKg0hL8nliyDmCIlkhxhbwBgjpztyRqQfCKSjt74nyzvLPeRoP9uQNi88y5?=
- =?us-ascii?Q?xh6hdV/vMFC9YJyU/DvmuOj5xF0BvhYu3jn8xkiSty6gtbRSdMlLb0NNIPnu?=
- =?us-ascii?Q?ngXOnFu0oBDHSXvswRexm3S8qy2lIlRmUC988WLFHTQ9eu2njYyfkSrXIkAp?=
- =?us-ascii?Q?1MPDh7bYH21gNoziZiajeO4gdO3D/CwSQHKh8Wz9JXGl/s6iw+M5/6CoNYH5?=
- =?us-ascii?Q?9cNJpXJB98l9ZGR6Za6gi2J/lIZ9QGXMOqAbFWtz4rODiOcVqRRqpKhZ3WuM?=
- =?us-ascii?Q?7w2v4OeDxp5gDTPknNP+fNrwOJaW+u7VVHsBl9LZzVJp8qzJn9lx8F+weZ6u?=
- =?us-ascii?Q?EN4OVLm0b2pFVxQCcOdFB8VNu3mGUaZWQ8/zuuRu+jJHUBWcznYUb6gkEufd?=
- =?us-ascii?Q?yatTTEV+MiYNt7M63E24qELqrvxk1Rju/OU9JlPkUf21T/OuBfBqon+k9w6N?=
- =?us-ascii?Q?7SaRkvpbHextnT4kUoiNLaW506E=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba34ed4d-1994-4519-663f-08d9ecb3437c
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2022 16:34:52.6725
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BX9bL/GHJXWJDXxqAKs8tzBAbJGx3/tJf3dutgL/Ok90ufyJ5BVp+KM5eIJTbRA50sYoYg9RjH5pa9rD/AHXPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8550
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Add delays and drop 'retry' in the multiple subflows test.
+On Thu, 2022-02-10 at 16:08 +0100, Paolo Abeni wrote:
+> On Thu, 2022-02-10 at 13:03 +0100, Matthieu Baerts wrote:
+> > Hi Paolo,
+> > 
+> > On 10/02/2022 11:36, Paolo Abeni wrote:
+> > > On Thu, 2022-02-10 at 11:07 +0100, Paolo Abeni wrote:
+> > > > The address ID selection for MPJ subflows created in response
+> > > > to incoming ADD_ADDR option is currently unreliable: it happens
+> > > > at MPJ socket creation time, when the local address could be
+> > > > unknown.
+> > > > 
+> > > > Additionally, if the no local endpoint is available for the local
+> > > > address, a new dummy endpoint is created, confusing the user-land.
+> > > > 
+> > > > This change refactor the code to move the address ID seleciton inside
+> > > > the rebuild_header() helper, when the local address eventually
+> > > > selected by the route lookup is finally known. If the address used
+> > > > is not mapped by any endpoint - and thus can't be advertised/removed
+> > > > pick the id 0 instead of allocate a new endpoint.
+> > > > 
+> > > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > > > ---
+> > > > Note: send v2 to address the build issue, to help the discussion
+> > > 
+> > > It looks like I was too hasty and this is badly broken. Please ignore,
+> > > I'll try to cook something better later.
+> > 
+> > Funny, the CI doesn't agree with you :)
+> 
+> Well, sometimes I don't agree even with myself ;)
+> 
+> The root cause of the breakage I mentioned above is actually pebkac: I
+> was testing an older kernel :(((
+> 
+> It looks like the self-tests are happy even here - when checking the
+> correct kernel - so in the end this patch should be valid - execept for
+> the intentional RFC breakage.
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 25 ++++++++-----------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+Following-up the past public mtg, I think I found a way to have
+stable/correct local address id generation and avoid the RFC violation
+above - with a little more patching. I hope to be able to share the
+code later today.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index dbc73e28cc06..d44508e5e1c3 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -219,6 +219,11 @@ reset_with_fail()
- 		action pedit munge offset 148 u8 invert \
- 		pipe csum tcp \
- 		index 100 || exit 1
-+
-+	if [ $i -eq 2 ]; then
-+		tc -n $ns2 qdisc add dev ns2eth1 root netem rate 20mbit delay 1
-+		tc -n $ns2 qdisc add dev ns2eth3 root netem rate 20mbit delay 1
-+	fi
- }
-=20
- ip -Version > /dev/null 2>&1
-@@ -2291,20 +2296,12 @@ pedit_action_pkts()
- fail_tests()
- {
- 	# multiple subflows
--	# If the tc rules didn't produce the bit flips, retry three times.
--	for n in `seq 1 3`; do
--		reset_with_fail 2
--		pm_nl_set_limits $ns1 0 2
--		pm_nl_set_limits $ns2 0 2
--		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
--		pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
--		run_tests $ns1 $ns2 10.0.1.1 1024
--		if [ $(pedit_action_pkts) -gt 0 ]; then
--			break
--		else
--			printf "%03u %s\n" "$TEST_COUNT" "MP_FAIL MP_RST: retry $n"
--		fi
--	done
-+	reset_with_fail 2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
-+	pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
-+	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 1024
- 	chk_join_nr "MP_FAIL MP_RST: $(pedit_action_pkts) corrupted pkts" 2 2 2 1=
- 1
-=20
- 	# single subflow
---=20
-2.34.1
+Cheers,
+
+Paolo
 
