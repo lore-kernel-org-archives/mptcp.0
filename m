@@ -1,42 +1,43 @@
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C0B2C80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19EB2C9E
 	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 01:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1644456317; x=1675992317;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ki68UMGj3/IhMfG82pNOMPf9Hgiw3imD98DaNC35q+Y=;
-  b=TJY9HZsmSMbBDsElRFpeHFcvDCahh2qqcnlJhloj1ZBWATr8Hu5aadKa
-   CbZgR27OsON2b8OrVTwAEQK0mRX5/A+gdQZnawQCn5eC89tISXrvIviIS
-   p+P8YQ9Y9o04EnDHSs5nBb7yhktrBOpHF+Oqzs+NJJrBd/NcziClxLdQs
-   bV2w2rMnKfKwFJQ6VbGocz3dbvaK2zPUtVSUllz3ayfFTgPBCrElnsvwT
-   Bieysqe1IkGdp9jzhSIcTYxPMPpUV46lScp2mpW4rTcmjB2h8qpUDXEma
-   +VPqDMvNESKzgywv0TOY/EihYvmFJcXOskx8SbPBuozyeTwB1YuHo3/0U
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="249136291"
+  bh=G0+MAlrnsf/greE/vEdVzWDF/aTaDZ7Y2QTg6LX8frg=;
+  b=K5T4istc9NtHwrMOBxIPEMzDvDPmSEaFvdBK0IPPU75ul9jixKwKokcb
+   FaOhWtRUVXdg0Txk9aBmukRDoibG+nYaJHBYN+I8rrIinW+fDNE0zRZu6
+   5Ra/PJ+/TOrhWR5iFKBtZfLIGVtlEfNXS+Ozp8JOWHtzsMVUHaIcKoyRl
+   hwEW9KRYiJmXafU2aWSkQBFdKQOCwc1Gk8xk7qRuEmcRw1Ni99Sw9hGyw
+   3kWZTgNC6EhPLf69Stuja/Uz0XPLi/012rOLyb3jjsgBlDs/8KbsjKbQk
+   LWBqpyFjzRSxBpCvLjwAKpeAVSD5d0+YiPWLsyA98ZHLykHjs7oQjK6Nd
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="249136293"
 X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
-   d="scan'208";a="249136291"
+   d="scan'208";a="249136293"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 17:25:15 -0800
 X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
-   d="scan'208";a="526263244"
+   d="scan'208";a="526263247"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.22.101])
   by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 17:25:15 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+Cc: Kishen Maloor <kishen.maloor@intel.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
-	liyonglong@chinatelecom.cn,
+	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>,
+	stable@vger.kernel.org,
+	Geliang Tang <geliang.tang@suse.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 1/2] selftests: mptcp: add missing join check
-Date: Wed,  9 Feb 2022 17:25:07 -0800
-Message-Id: <20220210012508.226880-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 2/2] mptcp: netlink: process IPv6 addrs in creating listening sockets
+Date: Wed,  9 Feb 2022 17:25:08 -0800
+Message-Id: <20220210012508.226880-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220210012508.226880-1-mathew.j.martineau@linux.intel.com>
 References: <20220210012508.226880-1-mathew.j.martineau@linux.intel.com>
@@ -48,50 +49,46 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+From: Kishen Maloor <kishen.maloor@intel.com>
 
-This function also writes the name of the test with its ID, making clear
-a new test has been executed.
+This change updates mptcp_pm_nl_create_listen_socket() to create
+listening sockets bound to IPv6 addresses (where IPv6 is supported).
 
-Without that, the ADD_ADDR results from this test was appended at the
-end of the previous test causing confusions. Especially when the second
-test was failing, we had:
-
-  17 signal invalid addresses     syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                  add[ ok ] - echo  [ ok ]
-                                  add[fail] got 2 ADD_ADDR[s] expected 3
-
-In fact, this 17th test was OK but not the 18th one.
-
-Now we have:
-
-  17 signal invalid addresses     syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                  add[ ok ] - echo  [ ok ]
-  18 signal addresses race test   syn[fail] got 2 JOIN[s] syn expected 3
-   - synack[fail] got 2 JOIN[s] synack expected
-   - ack[fail] got 2 JOIN[s] ack expected 3
-                                  add[fail] got 2 ADD_ADDR[s] expected 3
-
-Fixes: 33c563ad28e3 ("selftests: mptcp: add_addr and echo race test")
-Reported-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: stable@vger.kernel.org
+Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
+Acked-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
- 1 file changed, 1 insertion(+)
+ net/mptcp/pm_netlink.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b8bdbec0cf69..c0801df15f54 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1159,6 +1159,7 @@ signal_address_tests()
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags signal
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags signal
- 	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal addresses race test" 3 3 3
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 782b1d452269..356f596e2032 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -925,6 +925,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 					    struct mptcp_pm_addr_entry *entry)
+ {
++	int addrlen = sizeof(struct sockaddr_in);
+ 	struct sockaddr_storage addr;
+ 	struct mptcp_sock *msk;
+ 	struct socket *ssock;
+@@ -949,8 +950,11 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	}
  
- 	# the server will not signal the address terminating
- 	# the MPC subflow
+ 	mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
+-	err = kernel_bind(ssock, (struct sockaddr *)&addr,
+-			  sizeof(struct sockaddr_in));
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	if (entry->addr.family == AF_INET6)
++		addrlen = sizeof(struct sockaddr_in6);
++#endif
++	err = kernel_bind(ssock, (struct sockaddr *)&addr, addrlen);
+ 	if (err) {
+ 		pr_warn("kernel_bind error, err=%d", err);
+ 		goto out;
 -- 
 2.35.1
 
