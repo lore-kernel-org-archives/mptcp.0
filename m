@@ -1,90 +1,82 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5742F20
-	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 14:48:53 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1nIAkY-000321-8h; Thu, 10 Feb 2022 15:48:46 +0100
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v2 mptcp-next] mptcp: don't save tcp data_ready and write space callbacks
-Date: Thu, 10 Feb 2022 15:48:39 +0100
-Message-Id: <20220210144839.26742-1-fw@strlen.de>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA5F2F20
+	for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 14:49:38 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id d14-20020a05600c34ce00b0037bf4d14dc7so3466507wmq.3
+        for <mptcp@lists.linux.dev>; Thu, 10 Feb 2022 06:49:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=VM/xURqC5Jt7vcdxFvq4vdWz7/L+rC6OEgNKlLuRAnI=;
+        b=VJUXKYS+HrwUJQFLOI4IkLa607y1dLmwDryDLGNR9solh0+7Z70nZZv/S6nj+V2i05
+         Fpc3CsCcTXPBh5gy8Xn+b9ja9i3xF0i5mOEIzZpUxOVBIDlLCR+P3PZYJquzowa6osIY
+         JKfVjdJYHxcVk0f1nc/nTYUtRmlvC2cKqG90/CRFaSBZZqsRsIAROn1xGEWcOYBwL7P2
+         MDNUGjw6aY0vSporV5zOz4Z+85NILkM6/1lVjiBkGU16ZGzjTNScuFwFAJBZmwJR3ZRY
+         xhtPraCErD0KFWycVKBnSL8y64TZOuV9LOykct9uO1HavKSlopsDmhB6+6auAt+d0mDt
+         hdgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=VM/xURqC5Jt7vcdxFvq4vdWz7/L+rC6OEgNKlLuRAnI=;
+        b=7yOhEUZAbRgipUdu/TeunB2JTkBYPvyxbIY3owKK3dsafzo+usVtCjdwRYy/UQ4g8K
+         nQXOr0FwNu2uh/8nCdL3aG51PtFv5H+JbgwFuse9vocTclUZgP1oSZdqF7leA8gTFey0
+         LSqEE/ma8dMomoBG7/Jc8eHtq9Xzf2iwFl/ytYfR93Y89MmtTVcvZ+eubvoIhqMIz5Qw
+         KcssunT9RSymFNsq4qX4DOSoTbXuZ5+IPV5a5mrqCJZ/7J1Ralu2/GFO/DHAHzxApRPv
+         80E/ON8dQqU9f00iXuCgMUaxppl4wESreQOp8X03+i8tcsLve9kPykHgCW8CdbElzIve
+         hkqQ==
+X-Gm-Message-State: AOAM532g92d42STThnPAzqRCN1r/scI0ULRkzy3gphTrHR+c2g39gxMB
+	ncBITAaPYGp3oYQcu1dQv7supg==
+X-Google-Smtp-Source: ABdhPJx56ja1pohUWb0OO6+7WSjOmNDjTiPvSz2YoOeGgg2Wpk0VAAOlfl81molqfjVFTYTTv2TKXw==
+X-Received: by 2002:a1c:f312:: with SMTP id q18mr2507501wmq.13.1644504577345;
+        Thu, 10 Feb 2022 06:49:37 -0800 (PST)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id p32sm1623290wms.1.2022.02.10.06.49.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Feb 2022 06:49:36 -0800 (PST)
+Message-ID: <53b45b01-0ef1-389b-7d84-75f2de192010@tessares.net>
+Date: Thu, 10 Feb 2022 15:49:36 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-next] mptcp: constify a bunch of of helpers
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>
+References: <8d4babebbd177de911a30c256b0b68742b09f607.1644400229.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <8d4babebbd177de911a30c256b0b68742b09f607.1644400229.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Assign the helpers directly rather than save/restore in the context
-structure.
+Hi Paolo, Mat,
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- net/mptcp/protocol.h | 6 ++----
- net/mptcp/subflow.c  | 8 ++++----
- 2 files changed, 6 insertions(+), 8 deletions(-)
+On 09/02/2022 10:50, Paolo Abeni wrote:
+> A few pm-related helpers don't touch arguments which lacking
+> the const modifier, let's constify them.
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0eebfc9f39bc..3937ea3f6759 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -479,9 +479,7 @@ struct mptcp_subflow_context {
- 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
- 	struct	sock *conn;	    /* parent mptcp_sock */
- 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
--	void	(*tcp_data_ready)(struct sock *sk);
- 	void	(*tcp_state_change)(struct sock *sk);
--	void	(*tcp_write_space)(struct sock *sk);
- 	void	(*tcp_error_report)(struct sock *sk);
- 
- 	struct	rcu_head rcu;
-@@ -626,9 +624,9 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow);
- static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
- 					      struct mptcp_subflow_context *ctx)
- {
--	sk->sk_data_ready = ctx->tcp_data_ready;
-+	sk->sk_data_ready = sock_def_readable;
- 	sk->sk_state_change = ctx->tcp_state_change;
--	sk->sk_write_space = ctx->tcp_write_space;
-+	sk->sk_write_space = sk_stream_write_space;
- 	sk->sk_error_report = ctx->tcp_error_report;
- 
- 	inet_csk(sk)->icsk_af_ops = ctx->icsk_af_ops;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 485f00dcaf84..0e929aa71b18 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1661,10 +1661,12 @@ static int subflow_ulp_init(struct sock *sk)
- 	tp->is_mptcp = 1;
- 	ctx->icsk_af_ops = icsk->icsk_af_ops;
- 	icsk->icsk_af_ops = subflow_default_af_ops(sk);
--	ctx->tcp_data_ready = sk->sk_data_ready;
- 	ctx->tcp_state_change = sk->sk_state_change;
--	ctx->tcp_write_space = sk->sk_write_space;
- 	ctx->tcp_error_report = sk->sk_error_report;
-+
-+	WARN_ON_ONCE(sk->sk_data_ready != sock_def_readable);
-+	WARN_ON_ONCE(sk->sk_write_space != sk_stream_write_space);
-+
- 	sk->sk_data_ready = subflow_data_ready;
- 	sk->sk_write_space = subflow_write_space;
- 	sk->sk_state_change = subflow_state_change;
-@@ -1719,9 +1721,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
- 
- 	new_ctx->conn_finished = 1;
- 	new_ctx->icsk_af_ops = old_ctx->icsk_af_ops;
--	new_ctx->tcp_data_ready = old_ctx->tcp_data_ready;
- 	new_ctx->tcp_state_change = old_ctx->tcp_state_change;
--	new_ctx->tcp_write_space = old_ctx->tcp_write_space;
- 	new_ctx->tcp_error_report = old_ctx->tcp_error_report;
- 	new_ctx->rel_write_seq = 1;
- 	new_ctx->tcp_sock = newsk;
+Thank you for the patch and the review!
+
+Now in our tree (feat. for net-next) with Mat's RvB tag:
+
+- b50db6b53771: mptcp: constify a bunch of of helpers
+- Results: 7de35173cc33..bfba92ddd537
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220210T144922
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-2.34.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
