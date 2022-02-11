@@ -1,500 +1,261 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1772C80
-	for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 02:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644544989; x=1676080989;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iS6W5C5BH9vKtcFFhl5Wjt/LhxQoASpCbOMGiYfF84I=;
-  b=LK80HyvmO9viCvPlUEPKL8NWFQbNnuHXUk6l4Eqs09UxDU0YDSNAQicP
-   2lGmToHTgCML2F1vBgfd+Y74m6g6s1Tm0IJat+kr/Vji1Hz2LRa9OBvMy
-   9//sZMIMgz858aicSR+bhGBEOKeIT7Gvvm8BPDZgNYojWW/L7rHh94M/V
-   phHnIxAf+tCvoSU0bJpJwOJtohiV8/hFkOf9mHmwdl5eHHC2D5EGSUlJR
-   H30BkM5HfSvzDXA4N0M5AvCTviqNoCuKTEmDn4b/gJ5YAkVXdWKqhTVSo
-   lWD/Nhsf9LQZGcSpsfH5k/yIu8MNZ5BqGIL3lWXR6Q6uUYRS/fvKBe7wJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10254"; a="336061433"
-X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
-   d="scan'208";a="336061433"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 18:03:07 -0800
-X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
-   d="scan'208";a="701925357"
-Received: from dbosneag-mobl1.amr.corp.intel.com ([10.212.211.192])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 18:03:07 -0800
-Date: Thu, 10 Feb 2022 18:03:06 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 3/4] mptcp: handle join requests via pernet
- listen socket
-In-Reply-To: <20220210152949.19572-4-fw@strlen.de>
-Message-ID: <2fca6a8-62b3-9f8-d08-62bf352c071@linux.intel.com>
-References: <20220210152949.19572-1-fw@strlen.de> <20220210152949.19572-4-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4E57D
+	for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 09:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1644573171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=O3S3i/DCFDpl3AF2spU2PidFvf+OT0zz2OszZy0sa+0=;
+	b=RZfaTvigUmHmrAlFvDiciEtkZ/RtRW+csXjF0cPnjr/PRRNkXXY7eq5qCXaYgLEZ93kWEF
+	LKHcLIl/8EOIo2uCBIddY3z02pJamtLbREBZkkCu6hKJVSoRGCoaskCkBAPT2qm3vpvtN8
+	rvOq0o1nXWCyOMMyI/qUguD0JRlhFT4=
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+ (mail-he1eur04lp2051.outbound.protection.outlook.com [104.47.13.51]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-41-LHtUW6pyOTmUxg3kqPUq7A-1; Fri, 11 Feb 2022 10:52:50 +0100
+X-MC-Unique: LHtUW6pyOTmUxg3kqPUq7A-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V5OI4qdPFK1pHlzYW1PtZKx6gpseoLvwU0/pYtS9mtc3ZOAVTts+Hk/AdDM2Q3mKwlvNYHHObkRBWiDAaLjnsqLIxSrJOOzPtwK7Xgk/r8172gGS/pF0ojahutrnKgcx1CYnSpLWglCrTcWjc2eL1tNxQwZmgs4kHt3/1JH8ro+NdECU0nsue0bUEDI/XOKru7Ewh4rj8hLaz/4pcpaRvtllZskVN0JyCxQLpb5jS7Oh/j67241/7yHIvVILcL/VPzUQyD/yhyYjKwlTp+FdHFHIXwAVM8kv1YNsEV92HHlsbMk0eTSb3LvTA+zFlOSzFkC631/TtJagbA4PMd0sFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ePrvgckn8P2h57ug0NiINPXXmFp0Y1K5I4nkvd/m1Ks=;
+ b=E1mMtnXaN+AQFgYGQQxs4eho9q08dKAYl/si68riQ1WHmriCatSmsysHGvOnoCifsN8DtEqUruuVv98cZjfZPJUzTtT33KRsIWF2ddjYUwAcIxM+pDlz7auK4PSP+9bJU3kHoyFwfaputBWV8ojiHMaDL8AaPOfN8bCq53NlEeZQDNvE0Pg2qkpCvM/DHdwAURerrxstBIl7ktIPi0S+2PQypz/OtLLkSZs8sRQp8QUNvs/lVTV0V9PvJa9j8OKfGN8kB7j/Pgs3/m166Ic8VWTAcIx//Qg+xn3GtjbDDtPNvaXEvhurPcwhfr6xSzmRlOqmVin31RIlx10ZdyrPcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM9PR04MB8651.eurprd04.prod.outlook.com (2603:10a6:20b:43e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.15; Fri, 11 Feb
+ 2022 09:52:49 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.019; Fri, 11 Feb 2022
+ 09:52:49 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v7 0/7] add mp_fail testcases
+Date: Fri, 11 Feb 2022 17:52:58 +0800
+Message-ID: <cover.1644572307.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR01CA0064.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::28) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1f0883ac-1bf2-4828-6d31-08d9ed44432b
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8651:EE_
+X-Microsoft-Antispam-PRVS:
+	<AM9PR04MB86511C16868F8FADCE6F4042F8309@AM9PR04MB8651.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:826;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	bGsypWecejXxPOw3npECzEXkbkMCUOwBn/lGOrZSs+E+Ez1nhnaeZ8valQ9xvt0ZvRDzvEGsDP3DZaJ105sK6lRj37MX6DMSxemH/v0iN44XuNpkwEGEVuOc1BCulfyZfMfZnyGEsVhaNTDXCWMgccnuMdNcfvT5Bevg4gLvpJm6ILBrSRndhnUFaWF3LZ3YaCA9Ux3iyMIPgW2TneuQ7v4Lpx/JX3riaAITwCqar8SCzy/s7trOwS4UOlyFac33xU0z4RTACXcjqMbCi6vdrA0wXnXTAd59278BzKJMvOTdUcPakDdz1G1k7q4e8oN40JTaEJsUml+CuGGJwIzP2nzhcxYC9u1A9j8w10e0K39P0ZVhn5N503+5DDDU+v/EIU19f5h5DRySYcV3nLVl9XZEYHNw//6yiZoA7LXB1cHfLhQfQt0b8sNvH6mm6nd1wUaSHqcxikb1m/twhVNGyuNL+fuEWN0oJJNEjjXMdvE/waQC7hlnpPimzACQ2fpTASUWQ8K70fEIFZFav3ms93WlQ5To2sTOu4vBcLqMOIS5QB4EABjsnIYkv9sNZR8f1dzgserD9NOdtcoPLszzHWSnVX1pNNJ9/9tE+eBFbZK5oZKwv1uVrOsxe9X2HtqHk3OAso8qDWDWPm/YccBBBg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(186003)(2906002)(44832011)(26005)(83380400001)(36756003)(2616005)(5660300002)(107886003)(8936002)(38100700002)(55236004)(6512007)(6486002)(316002)(19627235002)(6916009)(6506007)(508600001)(4326008)(66476007)(66556008)(6666004)(66946007)(8676002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IRi0iXvMSWdQVc8CPvvsqS4P+/mcRsgSG7rqNpJy2fz/gRFlFLxABewlZSg9?=
+ =?us-ascii?Q?5GaVD3vQOh7N4cshH8mO5+JI9BvQUihLzW/GDLDE5BSjzrDxhUG8GciFDhky?=
+ =?us-ascii?Q?GCt/lMQ9L+dtlU37wgm7pFRnqMnGF3vEcOLiK1xMTSaszuyOeTlgZo/91Ang?=
+ =?us-ascii?Q?IJ47cx4BrGX3HxuNgEMTf+Ns3IdTrU/VpZOarLSd+y7S5S7VfKlD8u9vtFto?=
+ =?us-ascii?Q?D72t0ViyRtCVdfGmN8fP4WWqhFRBjYQeQ0qbDGJSZRALj6fztXkktUdTJBTS?=
+ =?us-ascii?Q?Nee0rqZfLCOax3+MQrdZkvJ41nrgkY7Ufm/jP4K4gtkvObqmzg/uC6RCtRrm?=
+ =?us-ascii?Q?OjYNj+KBLR0pzBsQXQqNruE3HsdQ+Jzs8ePz/3QhLCdcedq8pvOsudS7MBS/?=
+ =?us-ascii?Q?1wXzQGr2PqGAPiCdsKfxfzHFo0bHnR+GPYbdGFMZ+6H1G0WIRsHNjQpXKR3m?=
+ =?us-ascii?Q?1mHKmGrad0E8o5afLl5aRete++iJpkz8OPgZcAkHWCDrrGhC67no/FeQ7BMB?=
+ =?us-ascii?Q?DJr1JPdnQss/XAsPfbRN0YD1mkNJOliNzzj6xW+k304Cz9Z0VlmKihXN+Gy2?=
+ =?us-ascii?Q?UFedaWHjhnjs9jIAD6bq+mi4YZRlktVqSEwupnBedO7Q0mow60UWLDcgbPF3?=
+ =?us-ascii?Q?F5O+yBaPvaFfre3ZZIS1kY7i8JigYrjvvavwfqqjHMHze3eeA7FWE2Pr/V00?=
+ =?us-ascii?Q?ZPyTHQaGnFfk7TGNAsbMa1bAXc0HelzHV65rqJQHM4RkzjW/R8qGPyrVvzet?=
+ =?us-ascii?Q?v9DGMgYrcU3qJh8z5A2jPbIBoKEtfYrEZvIpbaKTvoPZt5T0m4ktttXDkWLT?=
+ =?us-ascii?Q?oH8yx/ssU6/H1C2lA5H7EeazPDuJ7gPUOFFWh/8xm11gCkmr3pDcxCvOVKPk?=
+ =?us-ascii?Q?22IhJUqtu0yEhbsy/XLdUpc2NMvrWJg5s13+mZzuSv6BTa9iEs4fC/aCYlEQ?=
+ =?us-ascii?Q?Y3WAqJy5MRJH1wjKkM6CrUtKLY6YX2+OEkRilOhk250e7HFxI+J7mgf2RjHm?=
+ =?us-ascii?Q?Jo5t3DTufqZH+QVI+N9KmdPsku2dVDmjjzQR5Zp1NWOvG7eGqcSBmn4PiYK/?=
+ =?us-ascii?Q?BpnzeTLeniZeWqh/UdT/nCKux9ZYCtmJI2tuJ/yHmnTsRQ1Cxf7JLgeykU1f?=
+ =?us-ascii?Q?72EA+nhLg/MIHzRgYxjUXib6tJawzI0tdwtOa9se4hXBq0qABgRl8rSrWTq0?=
+ =?us-ascii?Q?9JV0CwhBwAE77wMP8SWU2hsHBbuSBkPPBhlCUumf0AgNJ8pYU4C5827H5sI1?=
+ =?us-ascii?Q?dYY3HgSvOslluHGNp3lVNz77rrO/+aFtKM+RN3m9QNBx6+A+WWUnaWhqrhgY?=
+ =?us-ascii?Q?B17tD2SmqK/K/cZAEIwKYHqzIp0PYcGK81bOxMPEGVL+YeF3oj/3XeZ7/LCR?=
+ =?us-ascii?Q?VJGWCrALnSzv+N2LDgqaGkCNYdtZLE68ELxYMFjlLCJlJ0BKqNkUzVt3d5YQ?=
+ =?us-ascii?Q?lZUEs3JE3INwWcBz9v6qwXgWliRnGEKHn6MDOZwLg+1PIlqCCskdeuqJMEPd?=
+ =?us-ascii?Q?tDaKgra/9igv/o5PEx4bSFQQaT4FqbB6A27LBgXFrJnsgfgngUI8voCs2HGI?=
+ =?us-ascii?Q?qljUrNLqLlWuESHbsEufM3nm3/pArWGtlDOkty60a+HoUi0MxuwfaBwvzE82?=
+ =?us-ascii?Q?k1HrQM3H6HsChxhIyRub9oI=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f0883ac-1bf2-4828-6d31-08d9ed44432b
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2022 09:52:49.4489
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BcDLwohy2xVqMKbpKudsdJ5kSQb2WuRxIhUKX3kDvrVB1YTPnUsPUfJgGX64ZU0HNkbVQeQ61kazgY7lA+ws1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8651
 
-On Thu, 10 Feb 2022, Florian Westphal wrote:
+v7:
+ This version make the multiple subflows test more stable.
+ - Add delays and drop 'retry' in the multiple subflows test in patch 7.
+ - Don't add two addresses for the multiple subflows test in patch 7, add
+one address 10.0.2.2 is enough, this make it more stable.
+ - Add a commit in patch 6.
+ - Rebased to export/20220211T054659.
+ - A 500 times loop test log of v7 will be attached.
 
-> Currently mptcp adds kernel-based listener socket for all
-> netlink-configured mptcp address endpoints.
->
-> This has caveats because kernel may interfere with unrelated programs
-> that use same address/port pairs.
->
+v6:
+ - Split two patches from the last one.
+ - Retry the multiple subflows test three times to fix this
+"MP_FAIL MP_RST: 0 corrupted pkts" failure reported by me in v5:
 
-It looks like they still interfere with each other, but now in the 
-opposite way: TCP listeners can now be created that interfere with 
-MP_JOINs (and the MPTCP side loses).
+Created /tmp/tmp.e4nE5Q14mj (size 1024 KB) containing data sent by client
+Created /tmp/tmp.QwpQYClFnm (size 1024 KB) containing data sent by server
+001 MP_FAIL MP_RST: 0 corrupted pkts     syn[ ok ] - synack[ ok ] - ack[ ok=
+ ]
+                                         sum[fail] got 0 data checksum erro=
+r[s] expected 1
+                                         ftx[fail] got 0 MP_FAIL[s] TX expe=
+cted 1
+                                         rtx[fail] got 0 MP_RST[s] TX expec=
+ted 1
+                                         itx[ ok ] - infirx[ ok ]
 
-Since mptcp_handle_join() is only called if the listener lookup fails, if 
-a TCP listen socket has been created for an address & port advertised by 
-MPTCP, that TCP listener will be looked up, process the SYN, and send a 
-regular TCP SYN/ACK. The peer will then reject it due to lack of correct 
-MPTCP options.
+A test log of running v6 500 times is attached, named v6-loop-500-times.log=
+,
+in it, we can see retry happend 8 times (116, 136, 236, 295, 297, 402, 444,
+457), and no "0 corrupted pkts" any more.
 
-Seems like a few more TCP changes are needed to handle this listener 
-collision well for both TCP and MPTCP, and without too much overhead. Is 
-it too expensive to look for MPTCP options in every incoming TCP SYN 
-header? Or to have the MPTCP PM code setting a "check for MP_JOIN" bit on 
-TCP listener sockets that match advertised addresses?
+ - Reduce the single subflow test files size from 1024KB to 128KB to fix
+this "file received by client does not match" failure reported by CI and
+Matt in v5:
 
+# Created /tmp/tmp.crkOA4p7hr (size 1024 KB) containing data sent by client
+# Created /tmp/tmp.jFbZEAnYZa (size 1024 KB) containing data sent by server
+# file received by server has inverted byte at 195585
+# 100 MP_FAIL MP_RST: 1 corrupted pkts     syn[ ok ] - synack[ ok ] - ack[ =
+ok ]
+#                                          sum[ ok ] - csum  [ ok ]
+#                                          ftx[ ok ] - failrx[ ok ]
+#                                          rtx[ ok ] - rstrx [ ok ]
+#                                          itx[ ok ] - infirx[ ok ]
+# Created /tmp/tmp.crkOA4p7hr (size 1024 KB) containing data sent by client
+# Created /tmp/tmp.jFbZEAnYZa (size 1024 KB) containing data sent by server
+# [ FAIL ] file received by client does not match (in, out):
+# -rw------- 1 root root 1048604 Feb  9 11:37 /tmp/tmp.jFbZEAnYZa
+# Trailing bytes are:
+# MPTCP_TEST_FILE_END_MARKER
+# -rw------- 1 root root 1048606 Feb  9 11:37 /tmp/tmp.ghV0iWPhu5
+# Trailing bytes are:
+# MPTCP_TEST_FILE_END_MARKER
+# file received by server has inverted byte at 169
+# 101 Infinite map: 5 corrupted pkts       syn[ ok ] - synack[ ok ] - ack[ =
+ok ]
+#                                          sum[ ok ] - csum  [ ok ]
+#                                          ftx[ ok ] - failrx[ ok ]
+#                                          rtx[ ok ] - rstrx [ ok ]
+#                                          itx[ ok ] - infirx[ ok ]
 
--Mat
+In the attached v6-loop-500-times.log, no "file received by client does
+not match" any more.
 
-> RFC 8664 says:
-> Demultiplexing subflow SYNs MUST be done using the token; this is
-> unlike traditional TCP, where the destination port is used for
-> demultiplexing SYN packets.  Once a subflow is set up, demultiplexing
-> packets is done using the 5-tuple, as in traditional TCP.
->
-> This patch deviates from this in that it retrains the existing checks of
-> verifying the incoming requests destination vs. the list of announced
-> addresses.
->
-> This can be relaxed later if deemed appropriate.
->
-> The pernet 'listening' socket is not a listening socket from userspace
-> point of view, it is not part of any hashes and not bound to any address
-> or port.
->
-> TPROXY-like semantics apply: If tcp demux cannot find a socket, check
-> if the packet is a join request with a valid token.
->
-> If so, the pernet listener is returned and tcp processing resumes.
-> Otherwise, handling is intentical as if there is no socket.
->
-> This patch does not handle timewait sockets.
->
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
-> include/net/mptcp.h  |  10 ++
-> net/ipv6/tcp_ipv6.c  |  19 ++--
-> net/mptcp/ctrl.c     | 214 ++++++++++++++++++++++++++++++++++++++++++-
-> net/mptcp/protocol.c |   2 +-
-> net/mptcp/protocol.h |   2 +-
-> net/mptcp/subflow.c  |   3 +
-> 6 files changed, 236 insertions(+), 14 deletions(-)
->
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 5ee422b56902..49c188b978e1 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -189,6 +189,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
-> 				  struct sk_buff *skb);
->
-> __be32 mptcp_get_reset_option(const struct sk_buff *skb);
-> +struct sock *__mptcp_handle_join(int af, struct sk_buff *skb);
->
-> static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
-> {
-> @@ -199,6 +200,11 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
-> }
-> static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb)
-> {
-> +	const struct tcphdr *th = tcp_hdr(skb);
-> +
-> +	if (th->syn && !th->ack && !th->rst && !th->fin)
-> +		return __mptcp_handle_join(af, skb);
-> +
-> 	return NULL;
-> }
-> #else
-> @@ -283,9 +289,13 @@ static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb) { retu
->
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> int mptcpv6_init(void);
-> +int mptcpv6_init_net(struct net *net);
-> +void mptcpv6_exit_net(struct net *net);
-> void mptcpv6_handle_mapped(struct sock *sk, bool mapped);
-> #elif IS_ENABLED(CONFIG_IPV6)
-> static inline int mptcpv6_init(void) { return 0; }
-> +static inline int mptcpv6_init_net(struct net *net) { return 0; }
-> +static inline void mptcpv6_exit_net(struct net *net) { }
-> static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
-> #endif
->
-> diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-> index 788040db8e9e..3b8608d35dcd 100644
-> --- a/net/ipv6/tcp_ipv6.c
-> +++ b/net/ipv6/tcp_ipv6.c
-> @@ -2233,13 +2233,22 @@ static struct inet_protosw tcpv6_protosw = {
->
-> static int __net_init tcpv6_net_init(struct net *net)
-> {
-> -	return inet_ctl_sock_create(&net->ipv6.tcp_sk, PF_INET6,
-> -				    SOCK_RAW, IPPROTO_TCP, net);
-> +	int err = inet_ctl_sock_create(&net->ipv6.tcp_sk, PF_INET6,
-> +				       SOCK_RAW, IPPROTO_TCP, net);
-> +	if (err)
-> +		return err;
-> +
-> +	err = mptcpv6_init_net(net);
-> +	if (err)
-> +		inet_ctl_sock_destroy(net->ipv6.tcp_sk);
-> +
-> +	return err;
-> }
->
-> static void __net_exit tcpv6_net_exit(struct net *net)
-> {
-> 	inet_ctl_sock_destroy(net->ipv6.tcp_sk);
-> +	mptcpv6_exit_net(net);
-> }
->
-> static struct pernet_operations tcpv6_net_ops = {
-> @@ -2264,15 +2273,9 @@ int __init tcpv6_init(void)
-> 	if (ret)
-> 		goto out_tcpv6_protosw;
->
-> -	ret = mptcpv6_init();
-> -	if (ret)
-> -		goto out_tcpv6_pernet_subsys;
-> -
-> out:
-> 	return ret;
->
-> -out_tcpv6_pernet_subsys:
-> -	unregister_pernet_subsys(&tcpv6_net_ops);
-> out_tcpv6_protosw:
-> 	inet6_unregister_protosw(&tcpv6_protosw);
-> out_tcpv6_protocol:
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index ae20b7d92e28..bba345f092af 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
-> @@ -21,6 +21,12 @@ static int mptcp_pernet_id;
-> static int mptcp_pm_type_max = __MPTCP_PM_TYPE_MAX;
-> #endif
->
-> +struct mptcp_join_sk {
-> +	struct sock *sk;
-> +	struct inet_bind_bucket *tb;
-> +	struct inet_bind_hashbucket head;
-> +};
-> +
-> struct mptcp_pernet {
-> #ifdef CONFIG_SYSCTL
-> 	struct ctl_table_header *ctl_table_hdr;
-> @@ -32,6 +38,18 @@ struct mptcp_pernet {
-> 	u8 checksum_enabled;
-> 	u8 allow_join_initial_addr_port;
-> 	u8 pm_type;
-> +
-> +	/* pernet listener to handle mptcp join requests
-> +	 * based on the mptcp token.
-> +	 *
-> +	 * Has to be pernet because tcp uses
-> +	 * sock_net(sk_listener) to obtain the net namespace for
-> +	 * the syn/ack route lookup.
-> +	 */
-> +	struct mptcp_join_sk join4;
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +	struct mptcp_join_sk join6;
-> +#endif
-> };
->
-> static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
-> @@ -185,13 +203,176 @@ static void mptcp_pernet_del_table(struct mptcp_pernet *pernet) {}
->
-> #endif /* CONFIG_SYSCTL */
->
-> +struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
-> +{
-> +	struct mptcp_options_received mp_opt;
-> +	struct mptcp_pernet *pernet;
-> +	struct mptcp_sock *msk;
-> +	struct socket *ssock;
-> +	struct sock *lsk;
-> +	struct net *net;
-> +
-> +	/* paranoia check: don't allow 0 destination port,
-> +	 * else __inet_inherit_port will insert the child socket
-> +	 * into the phony hash slot of the pernet listener.
-> +	 */
-> +	if (tcp_hdr(skb)->dest == 0)
-> +		return NULL;
-> +
-> +	mptcp_get_options(skb, &mp_opt);
-> +
-> +	if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPJ))
-> +		return NULL;
-> +
-> +	net = dev_net(skb_dst(skb)->dev);
-> +	if (!mptcp_is_enabled(net))
-> +		return NULL;
-> +
-> +	/* RFC8684: If the token is unknown [..], the receiver will send
-> +	 * back a reset (RST) signal, analogous to an unknown port in TCP,
-> +	 * containing an MP_TCPRST option (Section 3.6) [..]
-> +	 */
-> +	msk = mptcp_token_get_sock(net, mp_opt.token);
-> +	if (!msk) {
-> +		struct mptcp_ext *ext = skb_ext_add(skb, SKB_EXT_MPTCP);
-> +
-> +		if (ext) {
-> +			memset(ext, 0, sizeof(*ext));
-> +			ext->reset_reason = MPTCP_RST_EMPTCP;
-> +		}
-> +		return NULL;
-> +	}
-> +
-> +	sock_put((struct sock *)msk);
-> +	pernet = mptcp_get_pernet(net);
-> +
-> +	switch (af) {
-> +	case AF_INET:
-> +		lsk = pernet->join4.sk;
-> +		break;
-> +	case AF_INET6:
-> +		lsk = pernet->join6.sk;
-> +		break;
-> +	default:
-> +		WARN_ON_ONCE(1);
-> +		return NULL;
-> +	}
-> +
-> +	msk = mptcp_sk(lsk);
-> +	ssock = __mptcp_nmpc_socket(msk);
-> +	lsk = ssock->sk;
-> +	sock_hold(lsk);
-> +	return lsk;
-> +}
-> +
-> +static struct socket *mptcp_create_join_listen_socket(struct net *net, int af)
-> +{
-> +	struct socket *s, *ssock;
-> +	int err;
-> +
-> +	err = sock_create_kern(net, af, SOCK_STREAM, IPPROTO_MPTCP, &s);
-> +	if (err)
-> +		return ERR_PTR(err);
-> +
-> +	ssock = __mptcp_nmpc_socket(mptcp_sk(s->sk));
-> +	if (!ssock) {
-> +		err = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	ssock->sk->sk_max_ack_backlog = SOMAXCONN;
-> +	inet_sk_state_store(ssock->sk, TCP_LISTEN);
-> +
-> +	s->sk->sk_max_ack_backlog = SOMAXCONN;
-> +	inet_sk_state_store(s->sk, TCP_LISTEN);
-> +
-> +	s->sk->sk_net_refcnt = 1;
-> +	get_net_track(net, &s->sk->ns_tracker, GFP_KERNEL);
-> +	sock_inuse_add(net, 1);
-> +
-> +	return s;
-> +out:
-> +	sock_release(s);
-> +	return ERR_PTR(err);
-> +}
-> +
-> +static int mptcp_init_join_sk(struct net *net, struct sock *sk, struct mptcp_join_sk *join_sk)
-> +{
-> +	struct socket *ssock = __mptcp_nmpc_socket(mptcp_sk(sk));
-> +	struct inet_hashinfo *table = ssock->sk->sk_prot->h.hashinfo;
-> +	struct inet_bind_bucket *tb;
-> +
-> +	spin_lock_init(&join_sk->head.lock);
-> +	INIT_HLIST_HEAD(&join_sk->head.chain);
-> +
-> +	/* Our "listen socket" isn't bound to any address or port.
-> +	 * Conceptually, SYN packet with mptcp join request are steered to
-> +	 * this pernet socket just like TPROXY steals arbitrary connection
-> +	 * requests to assign them to listening socket with different
-> +	 * address or port.
-> +	 *
-> +	 * The bind_bucket is needed for sake of __inet_inherit_port(),
-> +	 * so it can place the new child socket in the correct
-> +	 * bind_bucket slot.
-> +	 *
-> +	 * A phony head is used to hide this socket from normal sk loookup.
-> +	 */
-> +	tb = inet_bind_bucket_create(table->bind_bucket_cachep,
-> +				     net, &join_sk->head, 0, 0);
-> +	if (!tb)
-> +		return -ENOMEM;
-> +
-> +	inet_csk(ssock->sk)->icsk_bind_hash = tb;
-> +	return 0;
-> +}
-> +
-> static int __net_init mptcp_net_init(struct net *net)
-> {
-> 	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
-> +	struct socket *sock;
-> +	int err;
->
-> 	mptcp_pernet_set_defaults(pernet);
->
-> -	return mptcp_pernet_new_table(net, pernet);
-> +	err = mptcp_pernet_new_table(net, pernet);
-> +	if (err)
-> +		return err;
-> +
-> +	sock = mptcp_create_join_listen_socket(net, AF_INET);
-> +	if (IS_ERR(sock)) {
-> +		err = PTR_ERR(sock);
-> +		goto out_table;
-> +	}
-> +
-> +	err = mptcp_init_join_sk(net, sock->sk, &pernet->join4);
-> +	if (err) {
-> +		sock_release(sock);
-> +		goto out_table;
-> +	}
-> +
-> +	/* struct sock is still reachable via sock->sk_socket backpointer */
-> +	pernet->join4.sk = sock->sk;
-> +	return err;
-> +
-> +out_table:
-> +	if (!net_eq(net, &init_net))
-> +		mptcp_pernet_del_table(pernet);
-> +	return err;
-> +}
-> +
-> +static void __net_exit mptcp_exit_join_sk(struct mptcp_join_sk *jsk)
-> +{
-> +	struct socket *ssock = __mptcp_nmpc_socket(mptcp_sk(jsk->sk));
-> +	struct inet_bind_bucket *tb;
-> +	struct inet_hashinfo *table;
-> +
-> +	table = ssock->sk->sk_prot->h.hashinfo;
-> +
-> +	tb = inet_csk(ssock->sk)->icsk_bind_hash;
-> +	inet_bind_bucket_destroy(table->bind_bucket_cachep, tb);
-> +
-> +	ssock = jsk->sk->sk_socket;
-> +	sock_release(ssock);
-> }
->
-> /* Note: the callback will only be called per extra netns */
-> @@ -200,6 +381,7 @@ static void __net_exit mptcp_net_exit(struct net *net)
-> 	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
->
-> 	mptcp_pernet_del_table(pernet);
-> +	mptcp_exit_join_sk(&pernet->join4);
-> }
->
-> static struct pernet_operations mptcp_pernet_ops = {
-> @@ -219,12 +401,36 @@ void __init mptcp_init(void)
-> }
->
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -int __init mptcpv6_init(void)
-> +int __net_init mptcpv6_init_net(struct net *net)
-> {
-> +	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
-> +	struct socket *sock;
-> 	int err;
->
-> -	err = mptcp_proto_v6_init();
-> +	if (net_eq(net, &init_net)) {
-> +		err = mptcp_proto_v6_init();
-> +		if (err)
-> +			return err;
-> +	}
->
-> -	return err;
-> +	sock = mptcp_create_join_listen_socket(net, AF_INET6);
-> +	if (IS_ERR(sock))
-> +		return PTR_ERR(sock);
-> +
-> +	err = mptcp_init_join_sk(net, sock->sk, &pernet->join6);
-> +	if (err) {
-> +		sock_release(sock);
-> +		return err;
-> +	}
-> +
-> +	pernet->join6.sk = sock->sk;
-> +	return 0;
-> +}
-> +
-> +void __net_exit mptcpv6_exit_net(struct net *net)
-> +{
-> +	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
-> +
-> +	mptcp_exit_join_sk(&pernet->join6);
-> }
-> #endif
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3324e1c61576..980e6531bf4e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3776,7 +3776,7 @@ static struct inet_protosw mptcp_v6_protosw = {
-> 	.flags		= INET_PROTOSW_ICSK,
-> };
->
-> -int __init mptcp_proto_v6_init(void)
-> +int __net_init mptcp_proto_v6_init(void)
-> {
-> 	int err;
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 03e3880d274d..c6b2cf26bc88 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -647,7 +647,7 @@ static inline bool mptcp_has_another_subflow(struct sock *ssk)
->
-> void __init mptcp_proto_init(void);
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -int __init mptcp_proto_v6_init(void);
-> +int __net_init mptcp_proto_v6_init(void);
-> #endif
->
-> struct sock *mptcp_sk_clone(const struct sock *sk,
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index d50cf555ea40..d54c6685c036 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -116,6 +116,9 @@ static void subflow_init_req(struct request_sock *req, const struct sock *sk_lis
->
-> static bool subflow_use_different_sport(struct mptcp_sock *msk, const struct sock *sk)
-> {
-> +	if (inet_sk(sk)->inet_sport == 0)
-> +		return true;
-> +
-> 	return inet_sk(sk)->inet_sport != inet_sk((struct sock *)msk)->inet_sport;
-> }
->
-> -- 
-> 2.34.1
->
->
->
+I think this v6 is very stable, but there are still 6 tests failed in the
+500 time tests log (68 77 97 112 161 243). These failures are all due to
+get one more unexpected checksum failure:
 
---
-Mat Martineau
-Intel
+ > cat v6-loop-500-times.log  | grep "\[fail"
+                                         sum[fail] got 2 data checksum erro=
+r[s] expected 1
+                                         ftx[fail] got 2 MP_FAIL[s] TX expe=
+cted 1
+ - failrx[fail] got 2 MP_FAIL[s] RX expected 1
+                                         rtx[fail] got 2 MP_RST[s] TX expec=
+ted 1
+ - rstrx [fail] got 2 MP_RST[s] RX expected 1
+                                         sum[ ok ] - csum  [fail] got 1 dat=
+a checksum error[s] expected 0
+                                         sum[fail] got 2 data checksum erro=
+r[s] expected 1
+                                         ftx[fail] got 2 MP_FAIL[s] TX expe=
+cted 1
+ - failrx[fail] got 2 MP_FAIL[s] RX expected 1
+                                         rtx[fail] got 2 MP_RST[s] TX expec=
+ted 1
+ - rstrx [fail] got 2 MP_RST[s] RX expected 1
+                                         sum[ ok ] - csum  [fail] got 1 dat=
+a checksum error[s] expected 0
+                                         rtx[fail] got 2 MP_RST[s] TX expec=
+ted 1
+ - rstrx [fail] got 2 MP_RST[s] RX expected 1
+                                         sum[fail] got 2 data checksum erro=
+r[s] expected 1
+                                         ftx[fail] got 2 MP_FAIL[s] TX expe=
+cted 1
+ - failrx[fail] got 2 MP_FAIL[s] RX expected 1
+                                         rtx[fail] got 2 MP_RST[s] TX expec=
+ted 1
+ - rstrx [fail] got 2 MP_RST[s] RX expected 1
+
+These failures are related the checksum bug reported by me, issue #255.
+When transferring a larger file, the checksum sometimes fails. Running
+"./mptcp_connect.sh -C" in 10 times, we will the MP_FAILs. If we solve
+issue #255 in the future, this mp_fail testcases will be more stable.
+
+v5:
+ - update patch 5 as Matt suggested.
+ - use '|| exit 1'
+ - drop jq
+ - drop pedit_action
+
+v4:
+ - add the mibs for MP_RST
+ - patch 4 "selftests: mptcp: add MP_RST mibs check" uses the variable
+$nr_blank, so it depends on the commit "selftests: mptcp: adjust output
+alignment for more tests".
+
+v3:
+ - check the exit code of iptables.
+ - add ip6tables support for reset_with_fail too.
+ - add the null check for $packets
+ - rename nr_mp_fail to pedit_action and get_nr_mp_fail to
+pedit_action_happened
+
+This is v12 of the mp_fail testcases with Matt's changes. It works well
+and it's very stable.
+
+Geliang Tang (7):
+  Squash to "mptcp: infinite mapping receiving"
+  Squash to "selftests: mptcp: add infinite map mibs check"
+  mptcp: add the mibs for MP_RST
+  selftests: mptcp: add the MP_RST mibs check
+  selftests: mptcp: add more arguments for chk_join_nr
+  selftests: mptcp: reuse linkfail to make given size files
+  selftests: mptcp: add the MP_FAIL testcases
+
+ net/mptcp/mib.c                               |   2 +
+ net/mptcp/mib.h                               |   2 +
+ net/mptcp/options.c                           |   2 +
+ net/mptcp/subflow.c                           |   1 +
+ tools/testing/selftests/net/mptcp/config      |   8 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 193 +++++++++++++++---
+ 6 files changed, 180 insertions(+), 28 deletions(-)
+
+--=20
+2.34.1
+
