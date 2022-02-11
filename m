@@ -1,39 +1,39 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5C17F
-	for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 23:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239CA7F
+	for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 23:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644620687; x=1676156687;
+  t=1644621057; x=1676157057;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=nbeGTfwW75X0w25TIXjt142SvUA2lpybj1t+LP79FSs=;
-  b=m8tQmquL+t3p+yVa2Am92pJ2M5Wd5sP+1fMbjfWp0zB01Z6IdyqJrv0c
-   F6vUXa95vAkeOtpM9j/A5sC5w+REE3MJdqPEwsI8frEifMzci9Burp5ja
-   R3/B0unQYzebbmmhQh7mDlPa1fvldJ5THm7eJq52xKiflkrlY9+ARdWJ7
-   1tmG1R9BMXdDbDIsOVImfgnhCvoC1z1lsCOZbU1LmZn2OWq4yu4sR3bMa
-   WZRFrW4YBWh6qWh/gpBejpWk99qGVP2ajDeWb931igiX3YMoxvjqInjPw
-   fb6a7xpLecvVqOJUKq28Ma2INrhDsZNBMztbUHjU9ARYeqcPHXNR6SDA0
+  bh=fknXKtVA3XaiVO66ezd7bXAGBuVVS3wpDDiJa2Ww3Rg=;
+  b=l//errUk3hJhQnYQAwbVAwYuZ0cktJiksMv7CBIWEsGLu/ER8QOQjUM1
+   xbVQy97Cfp6LJRa8a3o4Y7YsUJ+qKScrAz7+e5DziuRGt2I1Pg1G6by1W
+   uUlb68LfacgsbBaHa7P6WKmldOYtrmjTA/0B5GhsgpfrHsfNh41hwGhYl
+   Eo9t0EOM0RZsXKdp/o6YdHx8rLV74yzEx1EuaFMUStLhibTAdZSVrDZth
+   uNg1D6HPy/mopBJ+RNg2JhTjc4RsNn27vrJKt7P5g4GQBV5XUFtX2pzLE
+   lyMwJ648uRwJt0F6BxXAHDbQvUmOCFgGYRf0WW1M9vcG+IJn1D/Uc+Aaz
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10255"; a="249772317"
+X-IronPort-AV: E=McAfee;i="6200,9189,10255"; a="336247344"
 X-IronPort-AV: E=Sophos;i="5.88,361,1635231600"; 
-   d="scan'208";a="249772317"
+   d="scan'208";a="336247344"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2022 15:04:47 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2022 15:10:56 -0800
 X-IronPort-AV: E=Sophos;i="5.88,361,1635231600"; 
-   d="scan'208";a="542275951"
+   d="scan'208";a="542277464"
 Received: from kpdespai-mobl.amr.corp.intel.com ([10.212.245.146])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2022 15:04:47 -0800
-Date: Fri, 11 Feb 2022 15:04:47 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2022 15:10:56 -0800
+Date: Fri, 11 Feb 2022 15:10:56 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v3 mptcp-next 3/3] mptcp: strict local address ID
- selection.
-In-Reply-To: <246389435f6d9660fee8f8c01a6544e4089f8708.1644518737.git.pabeni@redhat.com>
-Message-ID: <b46e2ccf-8fbb-a835-2daf-6bdff87ca90@linux.intel.com>
-References: <cover.1644518737.git.pabeni@redhat.com> <246389435f6d9660fee8f8c01a6544e4089f8708.1644518737.git.pabeni@redhat.com>
+Subject: Re: [PATCH v3 mptcp-next 2/3] mptcp: more careful RM_ADDR
+ generation
+In-Reply-To: <baade0ed606c745a8acd5bcb075269550cd80544.1644518737.git.pabeni@redhat.com>
+Message-ID: <b8278b6c-95b7-3c24-73e4-59a093c47f8b@linux.intel.com>
+References: <cover.1644518737.git.pabeni@redhat.com> <baade0ed606c745a8acd5bcb075269550cd80544.1644518737.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,243 +44,123 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Thu, 10 Feb 2022, Paolo Abeni wrote:
 
-> The address ID selection for MPJ subflows created in response
-> to incoming ADD_ADDR option is currently unreliable: it happens
-> at MPJ socket creation time, when the local address could be
-> unknown.
+> In some edge scenarios, an MPTCP subflows can use a local address
+> mapped by a "dummy" endpoint created by the in kernel path manager.
 >
-> Additionally, if the no local endpoint is available for the local
-> address, a new dummy endpoint is created, confusing the user-land.
+> When such endpoint is deleted, the in kernel PM sends a RM_ADDR MPTCP
+> suboption. That is somewhat unexpected, as an MPTCP listener will keep
+> accepting incoming subflows targeting such address and the unexpected
+> options can confuse some self-tests.
 >
-> This change refactor the code to move the address ID seleciton inside
-> the rebuild_header() helper, when the local address eventually
-> selected by the route lookup is finally known. If the address used
-> is not mapped by any endpoint - and thus can't be advertised/removed
-> pick the id 0 instead of allocate a new endpoint.
+> Be more conservative about RM_ADDR generation: do it only if the
+> relevant endpoint has either the SIGNAL or SUBFLOW flag - it's not a
+> dummy one.
 >
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> v2 -> v3:
-> - keep creating dummy endpoint
+> include/uapi/linux/mptcp.h |  1 +
+> net/mptcp/pm_netlink.c     | 25 +++++++++++++++++--------
+> 2 files changed, 18 insertions(+), 8 deletions(-)
 >
-> v1 -> v2:
-> - hopefully fix build issue with ipv6 disabled
-> - avoid looking-up multiple times the local_id for req sockets
-> - factor-out an helper for local_id initialization
->
-> RFC -> v1:
-> - don't bail if ID lookup fails, use 0 instead
-> ---
-> net/mptcp/pm_netlink.c | 15 +---------
-> net/mptcp/protocol.c   |  3 ++
-> net/mptcp/protocol.h   |  3 +-
-> net/mptcp/subflow.c    | 67 ++++++++++++++++++++++++++++++++++++------
-> 4 files changed, 64 insertions(+), 24 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 928ebe4949e9..ca0fb2ab1204 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -83,16 +83,6 @@ static bool addresses_equal(const struct mptcp_addr_info *a,
-> 	return a->port == b->port;
-> }
->
-> -static bool address_zero(const struct mptcp_addr_info *addr)
-> -{
-> -	struct mptcp_addr_info zero;
-> -
-> -	memset(&zero, 0, sizeof(zero));
-> -	zero.family = addr->family;
-> -
-> -	return addresses_equal(addr, &zero, true);
-> -}
-> -
-> static void local_address(const struct sock_common *skc,
-> 			  struct mptcp_addr_info *addr)
-> {
-> @@ -998,7 +988,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
-> 	struct mptcp_addr_info skc_local;
-> 	struct mptcp_addr_info msk_local;
-> 	struct pm_nl_pernet *pernet;
-> -	int ret = -1;
-> +	int ret = 0;
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index f106a3941cdf..34ca8c04f64e 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -81,6 +81,7 @@ enum {
+> #define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
+> #define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
+> #define MPTCP_PM_ADDR_FLAG_FULLMESH			(1 << 3)
+> +#define MPTCP_PM_ADDR_FLAG_DUMMY			(1 << 4)
 
-With this line changed, ret is never negative after the rcu_read_unlock() 
-in this function, so the dummy record creation code at the end is all dead 
-code. I'm guessing this needs to stay "ret = -1" for the dummy allocation 
-to work as expected.
+Since this is a public API, "DUMMY" might be a confusing / ambiguous name. 
+MPTCP_PM_ADDR_FLAG_IMPLICIT_ENDPOINT or MPTCP_PM_ADDR_FLAG_UNADVERTISED 
+maybe? (open to other ideas of course)
+
+It looks like these dummy/implicit records stay around until a flush 
+happens. What if there's a request to advertise an address that has had a 
+dummy created already? mptcp_pm_nl_append_new_local_addr() would consider 
+that a duplicate and reject it, but replacing the dummy record with a real 
+one would be better.
 
 -Mat
 
 >
-> 	if (WARN_ON_ONCE(!msk))
-> 		return -1;
-> @@ -1011,9 +1001,6 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
-> 	if (addresses_equal(&msk_local, &skc_local, false))
-> 		return 0;
->
-> -	if (address_zero(&skc_local))
-> -		return 0;
-> -
-> 	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
->
-> 	rcu_read_lock();
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3324e1c61576..57caf470e500 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -117,6 +117,9 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
-> 	list_add(&subflow->node, &msk->conn_list);
-> 	sock_hold(ssock->sk);
-> 	subflow->request_mptcp = 1;
-> +
-> +	/* This is the first subflow, always with id 0 */
-> +	subflow->local_id_valid = 1;
-> 	mptcp_sock_graft(msk->first, sk->sk_socket);
->
-> 	return 0;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index a1ce1fd005ab..663b8d83154e 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -453,7 +453,8 @@ struct mptcp_subflow_context {
-> 		rx_eof : 1,
-> 		can_ack : 1,        /* only after processing the remote a key */
-> 		disposable : 1,	    /* ctx can be free at ulp release time */
-> -		stale : 1;	    /* unable to snd/rcv data, do not use for xmit */
-> +		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
-> +		local_id_valid : 1; /* local_id is correctly initialized */
-> 	enum mptcp_data_avail data_avail;
-> 	u32	remote_nonce;
-> 	u64	thmac;
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index b53b392dd280..283e5d57e003 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -481,6 +481,51 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
-> 	mptcp_subflow_reset(sk);
-> }
->
-> +static void subflow_set_local_id(struct mptcp_subflow_context *subflow, int local_id)
-> +{
-> +	subflow->local_id = local_id;
-> +	subflow->local_id_valid = 1;
-> +}
-> +
-> +static int subflow_chk_local_id(struct sock *sk)
-> +{
-> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-> +	int err;
-> +
-> +	if (likely(subflow->local_id_valid))
-> +		return 0;
-> +
-> +	err = mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	subflow_set_local_id(subflow, err);
-> +	return 0;
-> +}
-> +
-> +static int subflow_rebuild_header(struct sock *sk)
-> +{
-> +	int err = subflow_chk_local_id(sk);
-> +
-> +	if (unlikely(err < 0))
-> +		return err;
-> +
-> +	return inet_sk_rebuild_header(sk);
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +static int subflow_v6_rebuild_header(struct sock *sk)
-> +{
-> +	int err = subflow_chk_local_id(sk);
-> +
-> +	if (unlikely(err < 0))
-> +		return err;
-> +
-> +	return inet6_sk_rebuild_header(sk);
-> +}
-> +#endif
-> +
-> struct request_sock_ops mptcp_subflow_request_sock_ops;
-> static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops __ro_after_init;
->
-> @@ -1403,13 +1448,8 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
-> 		get_random_bytes(&subflow->local_nonce, sizeof(u32));
-> 	} while (!subflow->local_nonce);
->
-> -	if (!local_id) {
-> -		err = mptcp_pm_get_local_id(msk, (struct sock_common *)ssk);
-> -		if (err < 0)
-> -			goto failed;
-> -
-> -		local_id = err;
-> -	}
-> +	if (local_id)
-> +		subflow_set_local_id(subflow, local_id);
->
-> 	mptcp_pm_get_flags_and_ifindex_by_id(sock_net(sk), local_id,
-> 					     &flags, &ifindex);
-> @@ -1434,7 +1474,6 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
-> 	pr_debug("msk=%p remote_token=%u local_id=%d remote_id=%d", msk,
-> 		 remote_token, local_id, remote_id);
-> 	subflow->remote_token = remote_token;
-> -	subflow->local_id = local_id;
-> 	subflow->remote_id = remote_id;
-> 	subflow->request_join = 1;
-> 	subflow->request_bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-> @@ -1734,15 +1773,22 @@ static void subflow_ulp_clone(const struct request_sock *req,
-> 		new_ctx->token = subflow_req->token;
-> 		new_ctx->ssn_offset = subflow_req->ssn_offset;
-> 		new_ctx->idsn = subflow_req->idsn;
-> +
-> +		/* this is the first subflow, id is always 0 */
-> +		new_ctx->local_id_valid = 1;
-> 	} else if (subflow_req->mp_join) {
-> 		new_ctx->ssn_offset = subflow_req->ssn_offset;
-> 		new_ctx->mp_join = 1;
-> 		new_ctx->fully_established = 1;
-> 		new_ctx->backup = subflow_req->backup;
-> -		new_ctx->local_id = subflow_req->local_id;
-> 		new_ctx->remote_id = subflow_req->remote_id;
-> 		new_ctx->token = subflow_req->token;
-> 		new_ctx->thmac = subflow_req->thmac;
-> +
-> +		/* the subflow req id is valid, fetched via subflow_check_req()
-> +		 * and subflow_token_join_request()
-> +		 */
-> +		subflow_set_local_id(new_ctx, subflow_req->local_id);
+> enum {
+> 	MPTCP_PM_CMD_UNSPEC,
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 56f5603c10f2..928ebe4949e9 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1036,7 +1036,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+> 	entry->addr.id = 0;
+> 	entry->addr.port = 0;
+> 	entry->ifindex = 0;
+> -	entry->flags = 0;
+> +	entry->flags = MPTCP_PM_ADDR_FLAG_DUMMY;
+> 	entry->lsk = NULL;
+> 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
+> 	if (ret < 0)
+> @@ -1238,6 +1238,11 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
+> 		return -EINVAL;
 > 	}
+>
+> +	if (addr.flags & MPTCP_PM_ADDR_FLAG_DUMMY) {
+> +		GENL_SET_ERR_MSG(info, "can't create DUMMY endpoint");
+> +		return -EINVAL;
+> +	}
+> +
+> 	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
+> 	if (!entry) {
+> 		GENL_SET_ERR_MSG(info, "can't allocate addr");
+> @@ -1322,11 +1327,12 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
 > }
 >
-> @@ -1795,6 +1841,7 @@ void __init mptcp_subflow_init(void)
-> 	subflow_specific.conn_request = subflow_v4_conn_request;
-> 	subflow_specific.syn_recv_sock = subflow_syn_recv_sock;
-> 	subflow_specific.sk_rx_dst_set = subflow_finish_connect;
-> +	subflow_specific.rebuild_header = subflow_rebuild_header;
+> static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+> -						   struct mptcp_addr_info *addr)
+> +						   const struct mptcp_pm_addr_entry *entry)
+> {
+> -	struct mptcp_sock *msk;
+> -	long s_slot = 0, s_num = 0;
+> +	const struct mptcp_addr_info *addr = &entry->addr;
+> 	struct mptcp_rm_list list = { .nr = 0 };
+> +	long s_slot = 0, s_num = 0;
+> +	struct mptcp_sock *msk;
 >
-> 	tcp_prot_override = tcp_prot;
-> 	tcp_prot_override.release_cb = tcp_release_cb_override;
-> @@ -1807,6 +1854,7 @@ void __init mptcp_subflow_init(void)
-> 	subflow_v6_specific.conn_request = subflow_v6_conn_request;
-> 	subflow_v6_specific.syn_recv_sock = subflow_syn_recv_sock;
-> 	subflow_v6_specific.sk_rx_dst_set = subflow_finish_connect;
-> +	subflow_v6_specific.rebuild_header = subflow_v6_rebuild_header;
+> 	pr_debug("remove_id=%d", addr->id);
 >
-> 	subflow_v6m_specific = subflow_v6_specific;
-> 	subflow_v6m_specific.queue_xmit = ipv4_specific.queue_xmit;
-> @@ -1814,6 +1862,7 @@ void __init mptcp_subflow_init(void)
-> 	subflow_v6m_specific.net_header_len = ipv4_specific.net_header_len;
-> 	subflow_v6m_specific.mtu_reduced = ipv4_specific.mtu_reduced;
-> 	subflow_v6m_specific.net_frag_header_len = 0;
-> +	subflow_v6m_specific.rebuild_header = subflow_rebuild_header;
+> @@ -1346,7 +1352,8 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
 >
-> 	tcpv6_prot_override = tcpv6_prot;
-> 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
+> 		lock_sock(sk);
+> 		remove_subflow = lookup_subflow_by_saddr(&msk->conn_list, addr);
+> -		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow);
+> +		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow &&
+> +						     !(entry->flags & MPTCP_PM_ADDR_FLAG_DUMMY));
+> 		if (remove_subflow)
+> 			mptcp_pm_remove_subflow(msk, &list);
+> 		release_sock(sk);
+> @@ -1443,7 +1450,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
+> 	__clear_bit(entry->addr.id, pernet->id_bitmap);
+> 	spin_unlock_bh(&pernet->lock);
+>
+> -	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
+> +	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), entry);
+> 	synchronize_rcu();
+> 	__mptcp_pm_release_addr_entry(entry);
+>
+> @@ -1458,9 +1465,11 @@ static void mptcp_pm_remove_addrs_and_subflows(struct mptcp_sock *msk,
+>
+> 	list_for_each_entry(entry, rm_list, list) {
+> 		if (lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
+> -		    alist.nr < MPTCP_RM_IDS_MAX &&
+> 		    slist.nr < MPTCP_RM_IDS_MAX) {
+> -			alist.ids[alist.nr++] = entry->addr.id;
+> +			/* skip RM_ADDR for dummy endpoints */
+> +			if (!(entry->flags & MPTCP_PM_ADDR_FLAG_DUMMY) &&
+> +			    alist.nr < MPTCP_RM_IDS_MAX)
+> +				alist.ids[alist.nr++] = entry->addr.id;
+> 			slist.ids[slist.nr++] = entry->addr.id;
+> 		} else if (remove_anno_list_by_saddr(msk, &entry->addr) &&
+> 			 alist.nr < MPTCP_RM_IDS_MAX) {
 > -- 
 > 2.34.1
 >
