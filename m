@@ -1,135 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD1E2F26
-	for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 11:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1644579848;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7K1GuSGCZr/GHWURko5EAduNpDpATOySbMNaOJpT2e4=;
-	b=fx0x7nY5IEW+fRbWQCOvAVKQp8uHgKHSKjNZsp1qE0iwcNEMRkvqCkkU18zNHYhyEe+SEQ
-	RzxNHYzdBr5zyWpHh4vmV57Zt8B1647zey2+3hM5vYyGd92uPp6dRrHyER9qWtk7XeVJVl
-	vzCP6QSMBHW+wUNXainu9QXDDoqoR3I=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-118-urj7k_w-OKOSE1r_5ACMrw-1; Fri, 11 Feb 2022 06:44:06 -0500
-X-MC-Unique: urj7k_w-OKOSE1r_5ACMrw-1
-Received: by mail-qt1-f197.google.com with SMTP id x10-20020ac8700a000000b002c3ef8fc44cso6579787qtm.8
-        for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 03:44:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3237A
+	for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 17:31:00 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id s7so17583663edd.3
+        for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 09:31:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=m9Bpe1JOhZ7o5HxdvB9DN7Ihga9XnvqaXO7wD0jAd9Q=;
+        b=Fx6JT5rcC5vinQ5CEYsqeHewQ8A50Xt9yoyTb0TXMxTdTaK0FJmsvpcSaS4C2VAJKS
+         Hw7gORfCUgdTgY01qCvtOh++9/6f05xBMyz0l0vOgof+tWyPvBDRtZLehrEdw4Lo/Rpg
+         cVArui9lFvhQg75GEjsc9gineRAkmTFUYi7z2+faCIF7+tK+clhMed3GZAoSqDbKjril
+         wJjpiecyW/Gviiq/0XGd6h5uYeOv8Oqn+KRO6TQioXjTbpOpfM4Jg2evA17VKXibYIlD
+         5KuQ/jQF5zEYPZrwHNkn7CzGi4B7eHGqpipertIlXw/doyvN7w4TJv8vKOjtdqS147l1
+         24Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=7K1GuSGCZr/GHWURko5EAduNpDpATOySbMNaOJpT2e4=;
-        b=ay0XziEXqWGJXRwJxo24V9VE33u4/gYwhCACXIUVEqfnslNaizKxyzXq9PPUuh471j
-         xcKA3ZhhEobtX/FruJasGO4zEWKDQDyPCLBbvRSSfz3CQZKHe0H2HX/qyrOWQ0Zge9Tn
-         rSKpvOd2EHD1wcAn3TocLbZke8dDedZXOgWcfWAXXf9tRowg8AqXgrd5eAgvDDmR/Iek
-         In3i54TQZNL5YXFhfGNFoNmeob4/+lNhmxYl9rbfonxyCX4mc1+voNtjSaXyhP3R4ign
-         3kJ7Xol9Enwezkd7NFZLZ3IExBTaY5se2Wgca8S7Xq7pwT9aixJRlr7O3EkaoMZVWs5P
-         oTZg==
-X-Gm-Message-State: AOAM5332nUmwlMQ4FjfkMwn6IixOQhUumv3n4T4MYm9TLtx+AxFUKluN
-	nzybxn6ASYEc6w3Ac1Vzfbiozf7tLVsPN5YJwgSo4L5xqsrZDqaMN2hcBQmQAAi1e77gt9SWT4g
-	bQRNThsILt7uRs1c=
-X-Received: by 2002:a05:6214:c89:: with SMTP id r9mr682579qvr.117.1644579845659;
-        Fri, 11 Feb 2022 03:44:05 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzaLoifVpOi/ObZactXFQC3B70EDhPZdF8pbdgGLOWNrWMSUbWRLbxD3LI/gU0SSmeqwLqXcA==
-X-Received: by 2002:a05:6214:c89:: with SMTP id r9mr682570qvr.117.1644579845435;
-        Fri, 11 Feb 2022 03:44:05 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-96-254.dyn.eolo.it. [146.241.96.254])
-        by smtp.gmail.com with ESMTPSA id s11sm12896664qtk.82.2022.02.11.03.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 03:44:05 -0800 (PST)
-Message-ID: <51d05579aeab035e459a525c605ad319abd6f016.camel@redhat.com>
-Subject: Re: [PATCH v3 mptcp-next 0/3] mptcp: more self-tests improvements
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Fri, 11 Feb 2022 12:44:02 +0100
-In-Reply-To: <ff4789e4-40d9-1374-53e3-c47954129776@tessares.net>
-References: <cover.1644518737.git.pabeni@redhat.com>
-	 <ff4789e4-40d9-1374-53e3-c47954129776@tessares.net>
-User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=m9Bpe1JOhZ7o5HxdvB9DN7Ihga9XnvqaXO7wD0jAd9Q=;
+        b=hbw3SYO9ioFkUY0uUzeiK/IPO/jOZPBJ1XDKVEAjE/YbXGPJzOrHeFc2qOtlVJ+dqL
+         /HjeV9Xq2l3IGkG0nuZgc4krtPimeMvbW3n4zV/4i2QDRu1ryWhrDSVgP36KcaHBqOxD
+         gvaCa9yK3872dh1jzHM35X+FCqyi+HEODS5s/7yfEE9Ns+GmaCRT0iOoL5uBQHq0HfoL
+         1o1vBPkXEPi5UCLaeNq+unMoZSvgIZcY9ARRBkm7Q8FJV6P2x11aVjXxySb8ErySbrEa
+         Y93Vs75IUm2MAJkOO5U4DIInrhyDLJYmvEi58S9mn0igRG/zF2oPZgcufcCgoMIT7SgI
+         Z0Ug==
+X-Gm-Message-State: AOAM533W5WBIwns6W5pvjU7DPodvErIxOAZZdMxOwVPpxftpN9TzWfzC
+	SGKWc2qxGSyNfnZBwNJpEQiTcw==
+X-Google-Smtp-Source: ABdhPJyYGOpyDZV+DQbJa+YdCUZLfRo3iP9MKwfu9yHzzU6xjaWUqNOB6NRCBNmdC14CCT0qhjygBQ==
+X-Received: by 2002:a50:fd05:: with SMTP id i5mr3066293eds.181.1644600658780;
+        Fri, 11 Feb 2022 09:30:58 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:fea5:b1fd:66cc:fe97? ([2a02:578:8593:1200:fea5:b1fd:66cc:fe97])
+        by smtp.gmail.com with ESMTPSA id eo14sm7855088edb.46.2022.02.11.09.30.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Feb 2022 09:30:58 -0800 (PST)
+Message-ID: <46a0d57f-4f9e-1313-1b29-70cfc48aab42@tessares.net>
+Date: Fri, 11 Feb 2022 18:30:57 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH mptcp-next 1/9] selftests: mptcp: join: allow running -cCi
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
+ <20220209212520.2989291-2-matthieu.baerts@tessares.net>
+ <71915c57b64e6f32480673c03a53a92a72f3fdd0.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <71915c57b64e6f32480673c03a53a92a72f3fdd0.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2022-02-11 at 11:33 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 10/02/2022 19:49, Paolo Abeni wrote:
-> > This is the new iteration of "mptcp: strict local address ID selection."
-> > should hopefully fix the last self-test failure.
-> 
-> Thank you for this v3!
-> 
-> I don't know if there is a link but the CI seems to take longer than
-> usual with these 3 patches.
-> 
-> With a debug kernel config, it even reached the timeout of 55min I set
-> to start the VM and run all tests:
-> 
-> - KVM Validation: debug:
->   - Critical: Global Timeout ❌:
->   - Task: https://cirrus-ci.com/task/6256933542821888
->   - Summary:
-> https://api.cirrus-ci.com/v1/artifact/task/6256933542821888/summary/summary.txt
-> 
-> So I restarted it and I didn't reach the timeout:
-> 
-> - KVM Validation: debug:
->   - Unstable: 1 failed test(s): selftest_mptcp_connect 🔴:
->   - Task: https://cirrus-ci.com/task/5212186606829568
->   - Summary:
-> https://api.cirrus-ci.com/v1/artifact/task/5212186606829568/summary/summary.txt
-> 
-> Still taking longer than usual I think. But that's hard to be sure about
-> that with these public CI as we don't control where it is executed and
-> which other tasks are ran in parallel.
-> Do you observe the same on your side?
+Hi Paolo,
 
-Uhmmm... I did not look closely to the running time. Nothing in the
-patch should change it significantly. The successful run for v2 took
-1h10':
-
-https://cirrus-ci.com/task/5430100798734336
-
-do you know which is the average runtime for a dbg build? It looks like
-> 50' was not uncommon at all... 
-
-I'll try to have a look at the runtime here, but not very soon.
-
-It does look something to be coped by with a suitable timeout.
-
-> BTW, you can see that on this last build, it detected an issue with
-> mptcp_connect.sh. It didn't detect that with the previous job. That's
-> probably not related to your modifications. I just noticed it is not the
-> first time we got the issue (I didn't see it due to the other issues):
+On 10/02/2022 15:53, Paolo Abeni wrote:
+> On Wed, 2022-02-09 at 22:25 +0100, Matthieu Baerts wrote:
+>> Without this patch, no tests would be ran when launching:
+>>
+>>   mptcp_join.sh -cCi
+>>
+>> In any order or a combination with 2 of these letters.
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 66ac990415e6..9bbb95837f73 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -2242,7 +2242,7 @@ for arg in "$@"; do
+>>  	fi
+>>  
+>>  	# exception for the capture/checksum/ip_mptcp options, the rest means: a part of the tests
+>> -	if [ "${arg}" != "-c" ] && [ "${arg}" != "-C" ] && [ "${arg}" != "-i" ]; then
+>> +	if ! [[ "${arg}" =~ ^"-"[cCi]+$ ]]; then
+>>  		do_all_tests=0
+>>  	fi
+>>  done
 > 
-> - https://cirrus-ci.com/task/6348125144088576
-> - https://cirrus-ci.com/task/6565756707012608
-> - https://cirrus-ci.com/task/5501584690905088
-> - https://cirrus-ci.com/task/6734301743022080
-> - https://cirrus-ci.com/task/6064315366113280
-> - etc.
+> At this point I think it would be better consolidate argument parsing
+> with getopts, and dropping the above regexp.
 > 
-> I'm going to create a new issue for that.
-> 
-uhm... too much job security hurts ;)
+> While parsing the test group selectors, we could build the list of 
+> groups to be executed (possibly a string contaning all the function to
+> be invoked), and run them after argument parsing - or run all if such
+> list (string) is empty
 
-Everyone of such failures is on disconnect test, in the fallback
-scenario.
+I just applied the patches in our tree and saw this message after, sorry
+about that.
 
-/P
+Indeed, good idea, that would be the proper way to handle options!
+It would also be good not to do anything if the -h option is given with
+others.
 
+I will try to remember about this idea next time I modify this part! I
+can also remove this commit from our tree if you prefer.
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
