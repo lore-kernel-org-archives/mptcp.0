@@ -1,90 +1,68 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B147F
-	for <mptcp@lists.linux.dev>; Fri, 11 Feb 2022 23:11:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644621093; x=1676157093;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=wGV5YsolV08D4500oMKuU3c7QMUwmbw+WWsaPsNS0DE=;
-  b=GMJG1ylCc/pVF9JlDMXnsttFKVmgO4KS6k8H0pCaJhCzBoi4hOVpmVw0
-   tRXSiOaleH7vJNKWwnQy+LmAyEx2sdLP987MVljucYKrFkziL6gRwkwbZ
-   LvVpof+TvV8u+C/bnqvGKdQGsIk2b3n1BsR0LqIKzbDw0kYfy4s0a92tn
-   VFRnGBlC1lY1wdckJW3Hh8Jq4c86m3UheHujeECFeYfUP7RoKQQwoAsqH
-   n/yeUhvFtblFenEKAgTkuA6NbWYE2oWAK6R4CIxUWo9vM28glzRD1Q6SO
-   HL1y3sGcwaXE8oRhbCCfKr5unc+wJL+p4CpZnppdwoiqjE+1gQN0wvww2
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10255"; a="249574460"
-X-IronPort-AV: E=Sophos;i="5.88,361,1635231600"; 
-   d="scan'208";a="249574460"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2022 15:11:26 -0800
-X-IronPort-AV: E=Sophos;i="5.88,361,1635231600"; 
-   d="scan'208";a="542277534"
-Received: from kpdespai-mobl.amr.corp.intel.com ([10.212.245.146])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2022 15:11:24 -0800
-Date: Fri, 11 Feb 2022 15:11:24 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v3 mptcp-next 1/3] Squash-to: "mptcp: constify a bunch
- of of helpers"
-In-Reply-To: <f63ac7eafde9820e4a85e4f9d09630509e42119c.1644518737.git.pabeni@redhat.com>
-Message-ID: <a6b82646-4beb-c5d6-b6f-f18382926470@linux.intel.com>
-References: <cover.1644518737.git.pabeni@redhat.com> <f63ac7eafde9820e4a85e4f9d09630509e42119c.1644518737.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3377F
+	for <mptcp@lists.linux.dev>; Sat, 12 Feb 2022 00:08:24 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1nIfxU-0003W3-TP; Sat, 12 Feb 2022 01:08:13 +0100
+Date: Sat, 12 Feb 2022 01:08:12 +0100
+From: Florian Westphal <fw@strlen.de>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 3/4] mptcp: handle join requests via pernet
+ listen socket
+Message-ID: <20220212000812.GB6497@breakpoint.cc>
+References: <20220210152949.19572-1-fw@strlen.de>
+ <20220210152949.19572-4-fw@strlen.de>
+ <2fca6a8-62b3-9f8-d08-62bf352c071@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fca6a8-62b3-9f8-d08-62bf352c071@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, 10 Feb 2022, Paolo Abeni wrote:
+Mat Martineau <mathew.j.martineau@linux.intel.com> wrote:
+> On Thu, 10 Feb 2022, Florian Westphal wrote:
+> 
+> > Currently mptcp adds kernel-based listener socket for all
+> > netlink-configured mptcp address endpoints.
+> > 
+> > This has caveats because kernel may interfere with unrelated programs
+> > that use same address/port pairs.
+> > 
+> 
+> It looks like they still interfere with each other, but now in the opposite
+> way: TCP listeners can now be created that interfere with MP_JOINs (and the
+> MPTCP side loses).
 
-> There are a few more helpers that can be const-ified and I missed
-> in the previous patch, just squash these change into there.
->
+Yep, I'm not sure its a good idea to announce random addresses:ports.
 
-Ok, looks good to squash. Thanks.
+> Since mptcp_handle_join() is only called if the listener lookup fails, if a
+> TCP listen socket has been created for an address & port advertised by
+> MPTCP, that TCP listener will be looked up, process the SYN, and send a
+> regular TCP SYN/ACK. The peer will then reject it due to lack of correct
+> MPTCP options.
 
--Mat
+Correct.  Its easily fixable by doing mptcp_handle_join() before the
+lookup, but that means a new conditional in tcp fastpath.
 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/pm_netlink.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 46346f009485..56f5603c10f2 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1289,7 +1289,7 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
-> }
->
-> static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
-> -				      struct mptcp_addr_info *addr)
-> +				      const struct mptcp_addr_info *addr)
-> {
-> 	struct mptcp_pm_add_entry *entry;
->
-> @@ -1304,7 +1304,7 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
-> }
->
-> static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
-> -				      struct mptcp_addr_info *addr,
-> +				      const struct mptcp_addr_info *addr,
-> 				      bool force)
-> {
-> 	struct mptcp_rm_list list = { .nr = 0 };
-> -- 
-> 2.34.1
->
->
->
+I'm not sure TCP maintainers will eat that, but its certainly doable.
+Idea would be to have __mptcp_handle_join() make a listen socket lookup
+and then assign 'skb->sk = magic_listen' if there is none, just like TPROXY.
 
---
-Mat Martineau
-Intel
+> Seems like a few more TCP changes are needed to handle this listener
+> collision well for both TCP and MPTCP, and without too much overhead. Is it
+> too expensive to look for MPTCP options in every incoming TCP SYN header?
+
+I'm not worried about that, Its just the extra
+if (th->syn && !th->ack && ...
+conditional inside mptcp_handle_join().
+
+ATM the extra conditional is hit only in the error path, not for every
+packet.
