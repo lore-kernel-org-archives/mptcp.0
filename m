@@ -1,52 +1,52 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E949C80
-	for <mptcp@lists.linux.dev>; Mon, 14 Feb 2022 20:08:07 +0000 (UTC)
-Received: by mail-qk1-f175.google.com with SMTP id de39so5865404qkb.13
-        for <mptcp@lists.linux.dev>; Mon, 14 Feb 2022 12:08:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD52B80A
+	for <mptcp@lists.linux.dev>; Mon, 14 Feb 2022 20:35:47 +0000 (UTC)
+Received: by mail-pj1-f51.google.com with SMTP id c5-20020a17090a1d0500b001b904a7046dso399159pjd.1
+        for <mptcp@lists.linux.dev>; Mon, 14 Feb 2022 12:35:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
          :content-transfer-encoding:date:mime-version;
-        bh=hL0bvhX97JeUey/t8qNvIp5vkuq2fdSJXinKhfnhQEM=;
-        b=IdXdjwzNEz7FfjzFkS6XFkZAcUYdRTzUsxZvvW/cE82Ap2+SEaqt/j9RvfIpaYdS2o
-         dxGDDP0CmD+mZHjJqQm8C3Bjo6vA3k/OMeLRoq5Z7b5rwQcYF3OfzHiX+ys4zcUOUjHQ
-         kMxkqwHdBojq3AfZnDP5r+0BeAnnPhCCXz1NMf+sU4QQx4j30qANFXmyjP6gwzqqQKBY
-         ay35Fv+kT7vnJTe1FDmBlagwIfiSgcn2N5zMNTiIaaZUmJ1cMLersi+1DxhY0MtkoZMB
-         QlLfPQOp7aaGzMc/A+mLITClKIwh8KLkMg8jWHGK6deeOQBfVcf65yUhNbaEGbiHXNWC
-         KPmA==
+        bh=fNUvThrQZBBv4ldJn9pe63OU4k5NgoNmUN+BVgmfs8o=;
+        b=KmcsSFzUCJXpFLA+esAe+qcvBe28JjCjdMtkvUJ8aHDmGa/5g2Rkr0WF5gh7rhrC7C
+         fb3npeX29Kn4vsE0OXXs15lE6xssZazy7bGLLXirENBAAYS9aqMMPCaz0zYZWIWMEPeL
+         UB/VSNmOq6LcE2mzefjrkQ8nR6Dw/1msy8mO/PXxr4R+5zkFCeqEPCTz27nwayeO/o6V
+         bKbkMyV9g7lYi/M/id53bwJDDvQi/cAcZVskVuuV2Z6OBWbVPnCrHJxu1avfGPbk0KB0
+         uLEZUckStPdhyl+m/Woz67unmEHVoOXaLnIRmRMPl5412OCKy9WVVVETgmsKugH9xkje
+         Qkfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
          :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=hL0bvhX97JeUey/t8qNvIp5vkuq2fdSJXinKhfnhQEM=;
-        b=TUTsLlbBtTjpl/ha9PEzfDGQvhoMgUPxgUDqfw3lGCeiNgebxQGOfMaFIk1VZF+NlF
-         KWGtOWVW8mzfatmzSU3Ez78iRkU5q0yoQ37FE9AsG8ViD4ruKS4uxa9JP6Pp1oyjuk6c
-         qF/tYLTHL+tTEkQCfRr55hJWC/rPid0+7+lGmNNjSh3gHYH+iNIaqEHb98jNvphjeBQc
-         +oUsOmc1N6StsFyYDhKU6PxQfph/GHzmxTdBpO/ViuSWCfd3SDuF59zyiA6Aj8JwQ7Pv
-         0olF7js9J6/VdA72VkFIRnv2hJ4vkMWC9K441CSDSD9NF1VIDrGA8gZr2SwIo9ohC80R
-         NQFA==
-X-Gm-Message-State: AOAM5336egoQO28ZQDLnQkNq7FEY+TWwq1xdMgL9z6gRFVODPnRlrHQ3
-	hhvQBSfuNjZWKcHWb6yaLHg8m0BGMA==
-X-Google-Smtp-Source: ABdhPJzfMofwcnjDrqQwbmiNWEpLGQ2Lhh/n8kpHzVXdn1RciB57M+IB9rDSWWmB3SLpfSPt8pOLAA==
-X-Received: by 2002:a37:270a:: with SMTP id n10mr352281qkn.422.1644869286286;
-        Mon, 14 Feb 2022 12:08:06 -0800 (PST)
-Received: from [127.0.0.1] ([40.121.11.31])
-        by smtp.gmail.com with ESMTPSA id f20sm19113635qte.14.2022.02.14.12.08.05
+        bh=fNUvThrQZBBv4ldJn9pe63OU4k5NgoNmUN+BVgmfs8o=;
+        b=BR+MqeOKR2vUsUHLN5UhxscZdeuiJiBypnUiFJ/1EcKC2rBbbpnu4Dp4qvtuxqgcwS
+         o2jv8tiM0djdkV6AnDaNJJerNRQMILCfr7IMHR2ypDc0J2gLx126GVMHWlg5LajdTvs+
+         FQVMhEkfbC+7N/Whd2xFdvg7LGolWPMlcjXpKlFjv7FbooNFJkvbzyo+XSp6rlIG/4AB
+         0e/uDtCb9wpJACC09C7z6gWVQbbK2vTXA+h132JaH5L5Jjxo0LZg7PgeqMHcWRzIsd1Q
+         6wVpKPYVYB+kA95OAQBb2y8Uvca7ukoqqudkbogzeN9eUe77SsI24C9c1XRLvhtbS8qm
+         Oe8g==
+X-Gm-Message-State: AOAM532tTgkp2c2Mg6YtjlsdU9h7Hki07O9botEttAWzdFWFrRlzRWiX
+	blvnsGjmWyE9e5Dg3RZY8g==
+X-Google-Smtp-Source: ABdhPJxxK9rT2XDWCwauI0g9RIm0QZ4Zw/3D1u85jVFLZeOTnHy6Noqq7K3osekT48bYZqOmM+TNiA==
+X-Received: by 2002:a17:902:6948:: with SMTP id k8mr550084plt.136.1644870947378;
+        Mon, 14 Feb 2022 12:35:47 -0800 (PST)
+Received: from [127.0.0.1] ([51.143.41.103])
+        by smtp.gmail.com with ESMTPSA id x12sm385788pgp.25.2022.02.14.12.35.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Feb 2022 12:08:06 -0800 (PST)
+        Mon, 14 Feb 2022 12:35:47 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Ivan Bornyakov <i.bornyakov@metrotek.ru>
+To: Cosmin Tanislav <demonsingur@gmail.com>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220214133835.25097-1-i.bornyakov@metrotek.ru>
-References: <20220214133835.25097-1-i.bornyakov@metrotek.ru>
-Subject: Re: fpga: microsemi-spi: add Microsemi FPGA manager: Build Failure
-Message-ID: <4c8487e0-fef3-a905-843d-99828ad4bed7@gmail.com>
+In-Reply-To: <20220214073810.781016-6-cosmin.tanislav@analog.com>
+References: <20220214073810.781016-6-cosmin.tanislav@analog.com>
+Subject: Re: iio: accel: add ADXL367 driver: Build Failure
+Message-ID: <fb02a7ec-0880-45cd-d6fd-5289391dac9d@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Feb 2022 20:08:05 +0000
+Date: Mon, 14 Feb 2022 20:35:46 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -54,7 +54,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Hi Ivan,
+Hi Cosmin,
 
 Thank you for your modifications, that's great!
 
@@ -63,13 +63,13 @@ But sadly, our CI spotted some issues with it when trying to build it.
 You can find more details there:
 
   https://patchwork.kernel.=
-org/project/mptcp/patch/20220214133835.25097-1-i.bornyakov@metrotek.ru/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1843014032
+org/project/mptcp/patch/20220214073810.781016-6-cosmin.tanislav@analog.com/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/1843131885
 
 Status: failure
 Initiator: MPTCPimporter
 Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6087ab4681ee
+com/multipath-tcp/mptcp_net-next/commits/8ad435df3a10
 
 Feel free to reply to this email if you cannot access logs, if you need
 some support to fix the error, if this doesn't seem to be caused by your
