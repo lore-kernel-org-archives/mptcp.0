@@ -1,111 +1,119 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EA8ED0
-	for <mptcp@lists.linux.dev>; Tue, 15 Feb 2022 01:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7E01164
+	for <mptcp@lists.linux.dev>; Tue, 15 Feb 2022 01:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644887982; x=1676423982;
+  t=1644889315; x=1676425315;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=tqLRAcGcxu1c/xA9XOxt7bvTi4uO0GBU4LjyRaGHoKc=;
-  b=Av68gMYIGa9baumHr0kwZ7GNdQ+n/4gtHioeeg1g+f4C54/pT92lb1Tq
-   PAZvpexZhJHRi1AyMQd/R8rpf170DVC6mXcK6GP+fsLBmfRdZ3AyprKY7
-   9HNIPUUQJgpHtNwG1GA1YhH5iu4mM9oVacCd8V5iBjgnDqF8ZM1N/C+U7
-   tb7mHZKUmOncjmiScZH/PM0ULKGqEuu7t7rWJvF/s2fzVElxw16jcVhtv
-   gc2WludhBbnF7jXgqzM/Bq4CEd6oVm5ewaBOX+BSBkmFqpS845NXTynjW
-   TyDsyjeL8/MfsedG+khQW2ByFup1krZUzgBKGyg4IZpPSORocmZUnNh5y
+  bh=AlStT0fC4X5xVzpL0QdYk/Cxsp7Y9xDSphdmrzsvrkA=;
+  b=jl8MGNjGbYZ8XnxIub0LfNpFEuWtMADbVlt7Zo2dMU3JPk7a0S6eul/6
+   U8p2hrSSW5iddzcq9XkvNiPi+I4z2n9rAcbWr+Eo6k/8+kTTSRW8CBtEe
+   RhLAIyD8Ox4sXTCroUGusSNx7s9lVAYTnwS8KV4vu1/zpmr7EtyCJm+6J
+   psI0X952dBMYH11hYVYX2BExUBFotECNtE4NF5zuo3JClsWf+451xskXK
+   aktFruqNwSR2csYRIJOyY9zFaxjuS870SmIo9n/D6QkCCj0aPYc5r9x2n
+   yckfzzgKlHw3OV0zuNriZMTSZEvRHZdQOh79VYhYu4yWw4cuU78AROk3+
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="336650905"
+X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="250173054"
 X-IronPort-AV: E=Sophos;i="5.88,369,1635231600"; 
-   d="scan'208";a="336650905"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 17:19:41 -0800
+   d="scan'208";a="250173054"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 17:41:55 -0800
 X-IronPort-AV: E=Sophos;i="5.88,369,1635231600"; 
-   d="scan'208";a="544017460"
+   d="scan'208";a="528547647"
 Received: from mdogangu-mobl.amr.corp.intel.com ([10.212.199.167])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 17:19:41 -0800
-Date: Mon, 14 Feb 2022 17:19:40 -0800 (PST)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 17:41:54 -0800
+Date: Mon, 14 Feb 2022 17:41:54 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v4 mptcp-next 2/3] mptcp: more careful RM_ADDR
- generation
-In-Reply-To: <38393366b636adfcf8b5eecf08e92c6b4394dd9a.camel@redhat.com>
-Message-ID: <5a284b53-23e5-fded-a242-3a5fbc431eae@linux.intel.com>
-References: <cover.1644852970.git.pabeni@redhat.com>  <9ac38525eac5d4e812fd11f20125e28edd8514df.1644852970.git.pabeni@redhat.com> <38393366b636adfcf8b5eecf08e92c6b4394dd9a.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: add csum mib check for
+ mptcp_connect
+In-Reply-To: <068c6ecb38fae8a5c0a67097b6a8c86896a27675.1644763024.git.geliang.tang@suse.com>
+Message-ID: <2f3426e7-73e9-f8db-f75d-66eac0de7f64@linux.intel.com>
+References: <068c6ecb38fae8a5c0a67097b6a8c86896a27675.1644763024.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Mon, 14 Feb 2022, Paolo Abeni wrote:
+On Sun, 13 Feb 2022, Geliang Tang wrote:
 
-> On Mon, 2022-02-14 at 16:38 +0100, Paolo Abeni wrote:
->> In some edge scenarios, an MPTCP subflows can use a local address
->> mapped by a "implicit" endpoint created by the in-kernel path manager.
->>
->> When such endpoint is deleted, the in kernel PM sends a RM_ADDR MPTCP
->> suboption. That is somewhat unexpected, as an MPTCP listener will keep
->> accepting incoming subflows targeting such address and the unexpected
->> options can confuse some self-tests.
->>
->> Be more conservative about RM_ADDR generation: explicitly track the
->> implicit endpoint with an appropriate flag and exclude them from the
->> RM_ADDR generation.
->>
->> Additionally allow the user-space to replace implicit endpoint with
->> user-provided data at endpoint creation time.
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> This patch added the data checksum error mib counters check for the
+> script mptcp_connect.sh when the data checksum is enabled.
 >
-> The CI still reports an issue on top of this patch:
+> In do_transfer(), got the mib counters twice, before and after running
+> the mptcp_connect commands. The latter minus the former is the actual
+> number of the data checksum mib counter.
 >
-> https://cirrus-ci.com/task/5380046008352768?logs=test#L7283
+> The output looks like this:
 >
-> Even if the symtom is the same, the root cause is different. I think
-> such failure is caused by the flush operation deleting both all
-> existing endpoints and all the existing subflows for each MPTCP socket.
+> ns1 MPTCP -> ns2 (dead:beef:1::2:10007) MPTCP   (duration    86ms) [ OK ]
+> ns1 MPTCP -> ns2 (10.0.2.1:10008      ) MPTCP   (duration    66ms) [ FAIL ]
+> server got 1 data checksum error[s]
 >
-> Even when the subflow is not attached to any known, non implicit,
-> endpoint.
->
-> When we have simult flush on both sides, deleting the subflow (with no
-> endpoint) on one end can make disappear the subflow on the other end
-> (tied to a local endpoint) before the PM could generate the relevant
-> RM_ADDR.
->
+> Fixes: 94d66ba1d8e48 ("selftests: mptcp: enable checksum in mptcp_connect.sh")
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> v2:
+> - get mib counters twice.
+> - Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/255
 
-If we aren't closing all subflows during the flush, shouldn't there be at 
-least one subflow where the RM_ADDR can be sent?
+Looks good to me.
 
-Maybe mptcp_pm_nl_addr_send_ack() needs to pick a better subflow for 
-sending the RM_ADDR. Do you think it would help to make 
-mptcp_subflow_send_ack() return a bool, and only return true if the ack 
-was sent? Then it could retry the ack on other subflows in the conn_list, 
-until it finds one that works or they all fail.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-
-> Overall the number of generated RM_ADDR become impredictable, even if
-> the testcase is quite stable, to the point I could not replicate the
-> failure reported by the CI.
+> ---
+> .../selftests/net/mptcp/mptcp_connect.sh      | 19 +++++++++++++++++++
+> 1 file changed, 19 insertions(+)
 >
-> AFAICS, there are 2 possible solutions:
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> index cb5809b89081..5b7a40d73253 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -432,6 +432,8 @@ do_transfer()
+> 	local stat_ackrx_last_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableACKRX")
+> 	local stat_cookietx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
+> 	local stat_cookierx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
+> +	local stat_csum_err_s=$(get_mib_counter "${listener_ns}" "MPTcpExtDataCsumErr")
+> +	local stat_csum_err_c=$(get_mib_counter "${connector_ns}" "MPTcpExtDataCsumErr")
 >
-> - avoid flushing both ends in test-cases "flush subflows" and "flush
-> addresses". This is very simple, but could hide other (currently
-> unknown) problems.
-> - change mptcp_nl_cmd_flush_addrs() to only delete subflows tied to
-> known, non implicit, endpoint. That is possibly a saner behavior for ip
-> mptcp endpoint flush, but will need more testcases to be adjusted and
-> is still a change of behaviour.
+> 	timeout ${timeout_test} \
+> 		ip netns exec ${listener_ns} \
+> @@ -524,6 +526,23 @@ do_transfer()
+> 		fi
+> 	fi
 >
-> Any hint on the preferred option more than welcome!
-
-
+> +	if $checksum; then
+> +		local csum_err_s=$(get_mib_counter "${listener_ns}" "MPTcpExtDataCsumErr")
+> +		local csum_err_c=$(get_mib_counter "${connector_ns}" "MPTcpExtDataCsumErr")
+> +
+> +		local csum_err_s_nr=$((csum_err_s - stat_csum_err_s))
+> +		if [ $csum_err_s_nr -gt 0 ]; then
+> +			printf "[ FAIL ]\nserver got $csum_err_s_nr data checksum error[s]"
+> +			rets=1
+> +		fi
+> +
+> +		local csum_err_c_nr=$((csum_err_c - stat_csum_err_c))
+> +		if [ $csum_err_c_nr -gt 0 ]; then
+> +			printf "[ FAIL ]\nclient got $csum_err_c_nr data checksum error[s]"
+> +			retc=1
+> +		fi
+> +	fi
+> +
+> 	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
+> 		printf "[ OK ]"
+> 	fi
+> -- 
+> 2.34.1
+>
+>
+>
 
 --
 Mat Martineau
