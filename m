@@ -1,86 +1,147 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCC81376
-	for <mptcp@lists.linux.dev>; Tue, 15 Feb 2022 10:00:24 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id z13so12893197edc.12
-        for <mptcp@lists.linux.dev>; Tue, 15 Feb 2022 02:00:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=2KPRYl5aXXw/Z34/22u0SxGR/AbVL3OFX1v9v33OZng=;
-        b=yHxfdiehlg7BU3/VXE1glxi5nIgx9qGUrT5jiotZYmD55g83GP7OcJFkfMTXyuvyCV
-         6qHtwmGHrG/rneflFfuTvh9hv7PcGnDtkWsS1RAWll77aeVaK7zBuNDV5nAzuL/txQlo
-         mUyCznGhz0lOakIbJEV/6qwyCDFzrbQfZNQemeZTcgEOQXAy50SUZ5A9CFBzXQEqRuC2
-         U+6ZwFZH0qoItezok/YR+WvRoXu1HQuj3/DTEevl8yM7aXP2vSg2MZJXR4kW/+p5bTAZ
-         KyuLgwPjbkFosiRz3yDLkEyvZN7re5oGcOiE2ZOtOohMKveHARds79dKQmP5kOx0a5xF
-         9qPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=2KPRYl5aXXw/Z34/22u0SxGR/AbVL3OFX1v9v33OZng=;
-        b=L4s5fclWxXcF8efL5sLnE0SQAWUEg9gRIAo4IrTy0x2LtKCGpxqm3w1Sqkp7KqcBBp
-         9Nm7gSLEqnXp5Sz09j2BqERtWOJXeSq9BtkN50i59UDbtU2WkjMUow7hi8iZ26kYKrih
-         2TdpnNsxPTyMbGmG/gixEGME3u7aDLJ4B8rrvHv3x38zAEEEKueRAcbFKyoNgr3pHS7X
-         m3fA4dGRQB+1qfPn/gcQjKzdwV37Ru+2QqgbI46+NKCmVHe6TkIROE1DimUX+/sI859u
-         BT7XT0AB9AOTJmVA1FTqnw/0qEeLjnmR2SddPIjYaebM9eplG+booju9Mb36wsr65sno
-         tefg==
-X-Gm-Message-State: AOAM532Kd5MjLqKTiXOKSmmwi3+XjQm/R7sgSyHzrSktLn5Qpxo0nvTD
-	Lu1Wl3uKknr7wMV8r9gy6yBoPI7xkELCVUAW
-X-Google-Smtp-Source: ABdhPJyeki41TEowjArZO+0Vc+BbRe6k7A90uGo1Gg81NpvvLhwUEg9b9EruGNYrrYQHTtn1vtZAUA==
-X-Received: by 2002:a05:6402:697:: with SMTP id f23mr3180745edy.222.1644919223146;
-        Tue, 15 Feb 2022 02:00:23 -0800 (PST)
-Received: from [10.120.18.9] ([84.17.46.7])
-        by smtp.gmail.com with ESMTPSA id 26sm2705374eja.183.2022.02.15.02.00.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Feb 2022 02:00:22 -0800 (PST)
-Message-ID: <952696b0-ce52-94bf-5ae4-a02f2562a4e6@tessares.net>
-Date: Tue, 15 Feb 2022 11:00:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62291388
+	for <mptcp@lists.linux.dev>; Tue, 15 Feb 2022 11:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1644923526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vcIQ4mTQOtuMl2IjA2R/iOE5hddFWAq1D2sM33CMMOI=;
+	b=INqTC75g/PX2/DhNcQmqQ2J4SL3tKzTIL1n3l/PmSIoQ5SnxIYjCW+gmZXHLg6ZbEtYQ8G
+	+c7djZ4ihejU+Q0zl1iKerJBj6x2RrEl+lmgOdjHdjABT/j1zK01Kha4hQiwOFuAUDeD+m
+	IqHtOvrquRblwjVm9Q4VcViCrbzY46A=
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur04lp2052.outbound.protection.outlook.com [104.47.14.52]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-33-UBhIDyJ9P9W3-TGO0Z4XRw-1; Tue, 15 Feb 2022 12:12:04 +0100
+X-MC-Unique: UBhIDyJ9P9W3-TGO0Z4XRw-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MRYWgv5yApp9cI7xSoEZmfogCB/aMb4+nBTqwNCUtSbZdD52NNSeqt44cMgBV6jLSveNCBkJ0Gsu23m96Gowk2QHB0Wn84pepGan1q4H79IKGnFbqoSWYCCrQdyjU75KWReAylohUNd+Awpw/3s465FqctyBkAyv42wGGZct0AqDLPD/CllS3J3fCCeFzjtli2YxmtZ8361xsw/Lyh3R0utKqRXl9ArkURjSlmibxD5oQ1mdG4ve5aoid/NVdchMO5QcZIfWSwF4AYuOFyEnJ3lDEcpvf/XJ/w5kfAuBQSmoMfy3Z5n4Q+ZMx4fc0u/LzULZ6yA4kf6E6oNroFPJgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mwW+cTZS/xp17ekFZ7Q1F+ZT6TX5rFak+WKb/wf4kRM=;
+ b=jmusnZz+75okgLcJjVKuaK5CdNhhZ0Ncn1ye/92OLsFsIFITR4pOz3FZp/F1CKSU+Nb9ByDBsdIpVNSkKNVnCroLwcf9it+sriNsAxsLDEtMNhI2R4QhxQNvOskRnOOuqNwJgYbWEeteRgZI1C4+dNAvHmFv21NFKZXgJjo9Vgxd45Bm5IYoUMEKXq3nUDkgQnb/YOsR47PmjiqWRP9pyTXEy5heUpO3obtGX9cAvotM7wnHAvLwtgIiJMoe6RXAGztoMECe2wGKwDddmpI5CGECyaP+l4pnHUl+oj99anhXGhq/eJ4tJ42WQOYkg0Jowc4SSwvhdHKCO2KMtMXbyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM0PR04MB3985.eurprd04.prod.outlook.com (2603:10a6:208:63::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.22; Tue, 15 Feb
+ 2022 11:12:03 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.019; Tue, 15 Feb 2022
+ 11:12:03 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v3 0/7] add fastclose testcases
+Date: Tue, 15 Feb 2022 19:12:16 +0800
+Message-ID: <cover.1644923074.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HKAPR04CA0017.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::27) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next 0/2] dump infinite_map in trace event
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1644819421.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1644819421.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e1632690-7e01-4def-3fa0-08d9f073fe5f
+X-MS-TrafficTypeDiagnostic: AM0PR04MB3985:EE_
+X-Microsoft-Antispam-PRVS:
+	<AM0PR04MB398521E51859DF14875C608EF8349@AM0PR04MB3985.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:989;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Sr3JaaZ7ElQ73F3vNZd88aHFYAReAA9lsM9MqqqDiXxgVQzPpM3d3KWeV1vf0D0jeaQhFIcry6wEabbnvNi9ZdJyISMDYMjAXZESF0SPUsjknR7u2GdzUJmA6NLauPoU4QZNavKXtlyEKDgjen6YtPbBI9Iit6C6+9rWJLeEyHHs1dRtVc+olzjX3ZaQwHJn3QTLbdvO8a1MBgUIpntvx2YJmwV24VA/IT/VnTLs5uM0q4E3ofJt9ukEJByIFerB3hDGZEsStgfiuGGgk6JUp4LeiIs1tRySmigpVyvrU3nuiLcgyrFU4WWQGXBUP7sJfGQCglm5VJIGZQ3gps1IPUkH4eG0DwlxtMgFbJNWDOS70KWPnoxiRsIbXGObT7Z7Xzy2aLyLSgj64BO6XDpcO0gTQXZJ9ec4FrUDg/51qru/sIJ3Bl2wvVJ+VHkxvR0H8cxe5LIQ9MFk5s3Rn9fOOhqJh8O5EQZnRk8Mm+D4VtSQGikjEups1lhcazXSwPNx7g4AQLlVCiqupARx3iDHGJbgD9ICA7EzO2ddWFVUyK/g57jzffGhG0w1LkxJEif9TiGDqJnwdujWF8ABIvAlzXcwWCBimWDBI546DINwsVvSwu5dCWvbU0Hp2E3aV/Ha1o6QO34LjUpTUDjX+4D8jQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(316002)(44832011)(36756003)(55236004)(38100700002)(6506007)(66476007)(66946007)(2906002)(8936002)(6666004)(4326008)(66556008)(5660300002)(6916009)(6486002)(508600001)(26005)(186003)(107886003)(83380400001)(86362001)(2616005)(8676002)(6512007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sssjH1RTXclctJOY1aEFPDq1K0rFTe5aVIKsTV9mqGuEzHzN18coPITtCgcR?=
+ =?us-ascii?Q?OACAskUWRofk+V6CPQQgBan+sBb7f2bbpWUlx5uxgLRzuAVEuDQBu9VxNP/V?=
+ =?us-ascii?Q?k4up7QlVKJsjVY+4SQC24OBQRRlw9yMTmmsD2W5FKe+7nhFelFuI7k36IH5J?=
+ =?us-ascii?Q?Bvv+2UzQBOZj++FNKJZE5+JtWvEoSrYs1qnHHwivNxEdxIw1kWGGSzEZL7cV?=
+ =?us-ascii?Q?VvvctiuoH9qYB7IxIjniKfr/vE8lYo/U9xeJXyk1beQW+ipqAxKcSTg1T8yv?=
+ =?us-ascii?Q?+jqcjUtJZdyWP/x6NosPfkJqg59l6gAMwoyQ7oCkqMYPcL+LFX27Hp41FXtm?=
+ =?us-ascii?Q?ELSEQdD0YZkIl/dJ5705p+Ly8lWyGy1kx36BBygVFfQ/f/xGfaj9MY1ZzUPJ?=
+ =?us-ascii?Q?cNwJaSCtWjVLKw7y5gqTwJHe3rQJ2zcR46dT5Z7yGmbSwN8JjFuUiaxC1/63?=
+ =?us-ascii?Q?H9BcHKjhQwI3MTZJg001Cysxnce1yVvQ0vh51s+Hc1YrMv6h+ACswaMIPYbv?=
+ =?us-ascii?Q?8xpcXn1L24Y0tuSFTWR54qLMIPNCKfP40fSZ+huvdmSVElZhnVw65Snn5Jl2?=
+ =?us-ascii?Q?XGF4rbd5ojW9jdCYGeehdmhk2ibzZnXug52EEf1uSrDZpr7VgBGh4MPNyqOO?=
+ =?us-ascii?Q?ByRCsRkgwr6BOpAFKRv716Cd8Jey+PolS1F5VRhPAPzdRmoExYM1+k2gFYf4?=
+ =?us-ascii?Q?iuf/b0p6PCdfhN4+1UMO5xPy+BbqwNW2lqsx5MGoazqsbR/Rea3lENFSoi48?=
+ =?us-ascii?Q?I/azsHbbaFArJ1u15w0RQrqGek5wsSF1KRyg89vOVaxRQqYt1/H5o/aNJPpD?=
+ =?us-ascii?Q?NGZoX/EOEG5CSGkppVS7igO/jycG2RsieNRYrgL5rMOWbzNeHdv1bOusJD/J?=
+ =?us-ascii?Q?GAelgRwrIGFjQf0u2jmJub1UWHwQTXqT6aUYL1YBob9tz+QVHnWdkjCy+SS4?=
+ =?us-ascii?Q?ce+Oae5vFqtmcyXv7Hlc1heqX3bDV3NCmnITZjCA8j28kwaG+EwSfG9vzxRo?=
+ =?us-ascii?Q?nOgk/PV2t1jKi11oup18o6uZGuLuxwAq6T3iniZTWAPFuGlavIRD55+WwuGq?=
+ =?us-ascii?Q?JH0iXvklQhMLEKle1nR7BgRHaf12HvVxWt9T8n4fxbINxdCxCD2PNbsLVA52?=
+ =?us-ascii?Q?9ZelkHBKTsO4lDDYSFD5CwGYGTO3V6r9032/blbFXIZq5ZdONYDg+KM5wHfx?=
+ =?us-ascii?Q?fbhpul2Y3jL2A3qBrvYRa1EkjuQ4mOxCDaknpLNhYWhoxLaKV2QQIQAyuMaj?=
+ =?us-ascii?Q?yZu/stDapyqKRqGO2SckDDWP8ArhiXa52LFvt/chIJhNDCD3OYoW2G9rgJTz?=
+ =?us-ascii?Q?wOemZOzhvXTK2j4Ugzpupz5o+K7jY68YnzuHh+C/SEtXn8NrT6xhELfJw3I7?=
+ =?us-ascii?Q?uz6mStV0Laalpbx8ldKzP+mwoR+pvNIkEnjzJ6i5iVzQeOZNVBTBXR3ZoWCJ?=
+ =?us-ascii?Q?BA5bs77JZqLjZLsrKhKsBA4+694UqyCAGYWWM2hLPypZdUXkE/8Ne14Z+H6O?=
+ =?us-ascii?Q?Pj1ea8l6O4o1y906eaKycmjtIpXaVCY0thTYukErLim1Uuwe5DQ9P36KpivL?=
+ =?us-ascii?Q?LcLjAEZP8ZPmqNn7bwIBXe1x2YYT/Q9CKC+dHN6bETknNMyUHBj/U2WFGPQS?=
+ =?us-ascii?Q?v7xjNXMDdJB3b6crdF5//mI=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1632690-7e01-4def-3fa0-08d9f073fe5f
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2022 11:12:03.1539
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5vAXPnDzY1aJBCc1lscrztaPhbYeyJQnGsbMI1pnLP8Xzoya/FT7HhiUyx98kIniU+kLBJ9AN1hzAmyWaBVvBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB3985
 
-Hi Geliang, Mat,
+v3:
+ - merge the squash-to patch ("Squash to "selftests: mptcp: add
+fastclose testcases v2") into v3.
+ - add a new patch to check fastclose in mptcp_connect.sh
 
-On 14/02/2022 07:23, Geliang Tang wrote:
-> Small patches for dumping newly added infinite_map in trace event.
-> 
-> Geliang Tang (2):
->   mptcp: dump infinite_map field in mptcp_dump_mpext
->   mptcp: add tracepoint in mptcp_sendmsg_frag
+base-commit: 9dff76d953f7a0fe2b27818f2aa93031c9a617cf
 
-Thank you for the patches and the reviews!
+v2:
+ - merge the squash-to patch ("Squash to "selftests: mptcp: add the
+MP_RST mibs check") into v2.
+ - update the commit logs.
 
-Just applied in our tree -- feat. for net-next, just after your infinite
-mapping series as the first patch is linked to that -- with Mat's RvB tag:
+This patchset is related to issue #48 and issue #197. The two MP_RST
+patches are moved from the "add mp_fail testcases" series.
 
-- c1def824105b: mptcp: dump infinite_map field in mptcp_dump_mpext
-- d40888c52c52: mptcp: add tracepoint in mptcp_sendmsg_frag
-- Results: 49fef9d3e44a..19d141cf146b
+Geliang Tang (7):
+  mptcp: add the mibs for MP_FASTCLOSE
+  selftests: mptcp: add the MP_FASTCLOSE mibs check
+  mptcp: add the mibs for MP_RST
+  selftests: mptcp: add the MP_RST mibs check
+  selftests: mptcp: add extra_args in do_transfer
+  selftests: mptcp: add fastclose testcases
+  selftests: mptcp: fastclose check in mptcp_connect
 
-Builds and tests are now in progress:
+ net/mptcp/mib.c                               |   4 +
+ net/mptcp/mib.h                               |   4 +
+ net/mptcp/options.c                           |   5 +
+ .../selftests/net/mptcp/mptcp_connect.sh      |  37 +++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 134 ++++++++++++++++--
+ 5 files changed, 171 insertions(+), 13 deletions(-)
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220215T100005
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+--=20
+2.34.1
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
