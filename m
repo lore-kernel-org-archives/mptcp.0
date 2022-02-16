@@ -1,41 +1,41 @@
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463351FA8
-	for <mptcp@lists.linux.dev>; Wed, 16 Feb 2022 02:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1B81FA3
+	for <mptcp@lists.linux.dev>; Wed, 16 Feb 2022 02:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644977513; x=1676513513;
+  t=1644977514; x=1676513514;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gjydlaEKpBxwKt2pe7JF2Jr38ug0drglZmF5L56WW7k=;
-  b=NWD9KZfuxanHa1RO+bpWqvnXQAk0BRWYU4UM96/IvCuYKIdslNhy/vAF
-   1SQieuR9urCc0+34HBPwgASKWcc0OyxLIQpgxqAK5WI6kR964Qjdq8JsM
-   v0qVJnY9bbxV7CsY3FxL3gvRBJo1jcqZfLktiMUZd+tRzxJhHACpgU1zP
-   SuIJVI+oAY1rhMZoR2k6F2+IF05MrKqoneWGqc65Go3ruHvscmtmp5zO/
-   2ykKHPmFn78Obv3JltS34NGiqgXr1CQfaL3mmFjxRWMawEUyMsIsmOogF
-   SxK6lbCrAD8FWlijYmJ7fZoQHLywAe+P7m5C1jEsOtGm4iMULCy2PFGX1
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10259"; a="313778520"
+  bh=9coNeKhRTejFQymmRpYR46T6Esk/19HCpyspAWEHY5w=;
+  b=S+8vXQ1lKVqtDLnD7bsubRDgH89YhA3wy0m1Lwnz6mF4vn7n322s+erc
+   9T+aa8vcuP0kjRqMMuuSF29RSYm9HYO7XE8UZQ9o8i87KGERfaf/GMqkM
+   PM5jt18jWT2xH3Vm1GFSxcxRwmY9SMSJmfPqAor7f98bVckeipsmi9FEV
+   NXn+WPYR3/R+ph9xjEvFo4MlGp6R2ofEXhNrFnSayRUOngqUhY/u9ixRn
+   XytOU9YewN03aPfxv3GtF6zQEpv/61o+Hg+pOz12LCFEouNKKW7yky2sr
+   PDwLN13ZzB1hwKFlVgrFwU/bak0n35hv4WzGtLBbtGty0sOno1Me+2ug/
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10259"; a="313778517"
 X-IronPort-AV: E=Sophos;i="5.88,371,1635231600"; 
-   d="scan'208";a="313778520"
+   d="scan'208";a="313778517"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 18:11:37 -0800
 X-IronPort-AV: E=Sophos;i="5.88,371,1635231600"; 
-   d="scan'208";a="571088826"
+   d="scan'208";a="571088823"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.9.181])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 18:11:37 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Florian Westphal <fw@strlen.de>,
+Cc: Geliang Tang <geliang.tang@suse.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 7/8] mptcp: mark ops structures as ro_after_init
-Date: Tue, 15 Feb 2022 18:11:29 -0800
-Message-Id: <20220216021130.171786-8-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 5/8] mptcp: drop port parameter of mptcp_pm_add_addr_signal
+Date: Tue, 15 Feb 2022 18:11:27 -0800
+Message-Id: <20220216021130.171786-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220216021130.171786-1-mathew.j.martineau@linux.intel.com>
 References: <20220216021130.171786-1-mathew.j.martineau@linux.intel.com>
@@ -47,74 +47,90 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Florian Westphal <fw@strlen.de>
+From: Geliang Tang <geliang.tang@suse.com>
 
-These structures are initialised from the init hooks, so we can't make
-them 'const'.  But no writes occur afterwards, so we can use ro_after_init.
+Drop the port parameter of mptcp_pm_add_addr_signal() and reflect it to
+avoid passing too many parameters.
 
-Also, remove bogus EXPORT_SYMBOL, the only access comes from ip
-stack, not from kernel modules.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/subflow.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ net/mptcp/options.c  | 5 ++---
+ net/mptcp/pm.c       | 7 ++++---
+ net/mptcp/protocol.h | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8cf85684c88f..740cb4763461 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -482,8 +482,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- }
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 5a14420b77c8..ac10a04ccd7c 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -652,7 +652,6 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 	bool drop_other_suboptions = false;
+ 	unsigned int opt_size = *size;
+ 	bool echo;
+-	bool port;
+ 	int len;
  
- struct request_sock_ops mptcp_subflow_request_sock_ops;
--EXPORT_SYMBOL_GPL(mptcp_subflow_request_sock_ops);
--static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops;
-+static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops __ro_after_init;
+ 	/* add addr will strip the existing options, be sure to avoid breaking
+@@ -661,12 +660,12 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 	if (!mptcp_pm_should_add_signal(msk) ||
+ 	    (opts->suboptions & (OPTION_MPTCP_MPJ_ACK | OPTION_MPTCP_MPC_ACK)) ||
+ 	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, &opts->addr,
+-		    &echo, &port, &drop_other_suboptions))
++		    &echo, &drop_other_suboptions))
+ 		return false;
  
- static int subflow_v4_conn_request(struct sock *sk, struct sk_buff *skb)
+ 	if (drop_other_suboptions)
+ 		remaining += opt_size;
+-	len = mptcp_add_addr_len(opts->addr.family, echo, port);
++	len = mptcp_add_addr_len(opts->addr.family, echo, !!opts->addr.port);
+ 	if (remaining < len)
+ 		return false;
+ 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 696b2c4613a7..ef6e4adeb0e5 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -278,11 +278,12 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+ 			      unsigned int opt_size, unsigned int remaining,
+ 			      struct mptcp_addr_info *addr, bool *echo,
+-			      bool *port, bool *drop_other_suboptions)
++			      bool *drop_other_suboptions)
  {
-@@ -504,9 +503,9 @@ static int subflow_v4_conn_request(struct sock *sk, struct sk_buff *skb)
- }
+ 	int ret = false;
+ 	u8 add_addr;
+ 	u8 family;
++	bool port;
  
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--static struct tcp_request_sock_ops subflow_request_sock_ipv6_ops;
--static struct inet_connection_sock_af_ops subflow_v6_specific;
--static struct inet_connection_sock_af_ops subflow_v6m_specific;
-+static struct tcp_request_sock_ops subflow_request_sock_ipv6_ops __ro_after_init;
-+static struct inet_connection_sock_af_ops subflow_v6_specific __ro_after_init;
-+static struct inet_connection_sock_af_ops subflow_v6m_specific __ro_after_init;
- static struct proto tcpv6_prot_override;
+ 	spin_lock_bh(&msk->pm.lock);
  
- static int subflow_v6_conn_request(struct sock *sk, struct sk_buff *skb)
-@@ -788,7 +787,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 	return child;
- }
+@@ -300,10 +301,10 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+ 	}
  
--static struct inet_connection_sock_af_ops subflow_specific;
-+static struct inet_connection_sock_af_ops subflow_specific __ro_after_init;
- static struct proto tcp_prot_override;
+ 	*echo = mptcp_pm_should_add_signal_echo(msk);
+-	*port = !!(*echo ? msk->pm.remote.port : msk->pm.local.port);
++	port = !!(*echo ? msk->pm.remote.port : msk->pm.local.port);
  
- enum mapping_status {
-@@ -1309,7 +1308,7 @@ static void subflow_write_space(struct sock *ssk)
- 	mptcp_write_space(sk);
- }
+ 	family = *echo ? msk->pm.remote.family : msk->pm.local.family;
+-	if (remaining < mptcp_add_addr_len(family, *echo, *port))
++	if (remaining < mptcp_add_addr_len(family, *echo, port))
+ 		goto out_unlock;
  
--static struct inet_connection_sock_af_ops *
-+static const struct inet_connection_sock_af_ops *
- subflow_default_af_ops(struct sock *sk)
- {
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-@@ -1324,7 +1323,7 @@ void mptcpv6_handle_mapped(struct sock *sk, bool mapped)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct inet_connection_sock *icsk = inet_csk(sk);
--	struct inet_connection_sock_af_ops *target;
-+	const struct inet_connection_sock_af_ops *target;
- 
- 	target = mapped ? &subflow_v6m_specific : subflow_default_af_ops(sk);
- 
+ 	if (*echo) {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a23694ad69e7..e381054910d0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -818,7 +818,7 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
+ 			      unsigned int opt_size, unsigned int remaining,
+ 			      struct mptcp_addr_info *addr, bool *echo,
+-			      bool *port, bool *drop_other_suboptions);
++			      bool *drop_other_suboptions);
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			     struct mptcp_rm_list *rm_list);
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
 -- 
 2.35.1
 
