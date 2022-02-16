@@ -1,165 +1,167 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7CF187C
-	for <mptcp@lists.linux.dev>; Wed, 16 Feb 2022 15:50:41 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id y17so4606086edd.10
-        for <mptcp@lists.linux.dev>; Wed, 16 Feb 2022 07:50:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=DGyhS7z1bnlGvTTRspLh1LIla+M2hsjmX00+DPehJCA=;
-        b=KclbQ3fLanLGFAy71vnfuqvzgXnvZzG5Ky24UKE7NG7uew2YPEbbx1Gy9+8mCsnsM9
-         4O/0BJ/aBeLHmldqqGHxQUGYMmvMrxyGj+4Sk/iCPDG1Vh+V/hjiyv+OEb7V2n/pSUd7
-         aqt3aYvbCn+1pqzMiDe/CGV5rIWCuKMr9Zn0OT9tW7SVLrSvH11b6sxEDrLyl+uP7x7o
-         wzlvkFRbrh1Qbi94pEmqSzkDs3wtDo2uSaxyT6Db0Yf6gZtOprZwiFemFBfiCdZW2L/Y
-         iyaHEBgLDtYyxocKkBqGG77NfPVJ6RAEI2MNzko9+y64CjXhowMlUxPphGIvtkqiarFo
-         4wfw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45573678
+	for <mptcp@lists.linux.dev>; Wed, 16 Feb 2022 18:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1645036718;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8qE2piSYPvgHCQ4U7bqY59hfFiMSFrtpANxMOBjPJFQ=;
+	b=Xog347xeXt4LCTgJnjZl4+G25RdxvTBT9D4pqciEGjLrgeUrv6GYMtpBZ1z76YupeAcxkh
+	UKQgXj5dw5fArMj8U8MgmKXTQd6lnio1u8EM3/nxo0EM/UBNFGLkOTSqztla6XXzCnUESW
+	tyOc3T3XXn4i7YAyuffRXsXwWesAT7M=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-288-H59NrGySMEW_BF3eY7mySA-1; Wed, 16 Feb 2022 13:38:37 -0500
+X-MC-Unique: H59NrGySMEW_BF3eY7mySA-1
+Received: by mail-wm1-f71.google.com with SMTP id i188-20020a1c3bc5000000b0037bb9f6feeeso3231579wma.5
+        for <mptcp@lists.linux.dev>; Wed, 16 Feb 2022 10:38:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=DGyhS7z1bnlGvTTRspLh1LIla+M2hsjmX00+DPehJCA=;
-        b=VyGR1tZKatXIo8g/Ih+DnQH3aCk0hJYqX2PS/YZb/o/BzGKgSOsgq8AMmiT7agS24L
-         s28wWkcugRpox3iOEdCwkOG1Zn3+YuJdj7ucsUAQGk3yoFtt6Ih2TKZVPZi4W/de2vqM
-         VMvOxbxO5BnABBeFnbDtXDPNjG2ZHWKg4/tzUSUiMtPR7GsHbFD3/9J+ZTidwS2iNWT3
-         O0/O1kCdlNQwytKxHUbWhS/oe6qOYBa6Bg8g7wc971+zFpI1FvyToj4VkN3KZCfIfbVy
-         rp5gaNhJSz7wMnsgmYE0b0sY3dLIMBiPMwXqgOfp8Frd50OEfBouJk9Xotr4Fy7Rhzkm
-         16kw==
-X-Gm-Message-State: AOAM530SWO1wN9NQlGCedX6w7v68U9fEmC47baTd/EYG39ysgs/9//2k
-	XlLZKLydNFjTPvIZ+MJ2QuJ0qw==
-X-Google-Smtp-Source: ABdhPJwYcwyUbCcfgtp38dH3LGgbbtWRkXxoIZGqR9chmaCLgcpr4zyLthlqSPrCZe99yJApsbk3gg==
-X-Received: by 2002:aa7:d999:0:b0:40e:fdf0:38c with SMTP id u25-20020aa7d999000000b0040efdf0038cmr3630288eds.419.1645026639619;
-        Wed, 16 Feb 2022 07:50:39 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:f860:24ec:64c5:373a? ([2a02:578:8593:1200:f860:24ec:64c5:373a])
-        by smtp.gmail.com with ESMTPSA id i27sm22260ejo.214.2022.02.16.07.50.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Feb 2022 07:50:39 -0800 (PST)
-Message-ID: <5bfeecaa-da36-c8f1-4115-c170547b19fd@tessares.net>
-Date: Wed, 16 Feb 2022 16:50:38 +0100
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=8qE2piSYPvgHCQ4U7bqY59hfFiMSFrtpANxMOBjPJFQ=;
+        b=O6m1YY6WWltLM/DFRVzd2+KzdTVflZzqZoe+DiqKtWTpnP71OYIk53OgjylUr0gg/F
+         q8oNUUElRYOOkiSi0+nLoVZSsTXIjgaumFNr1+kk8rtQDgqSbBkLAxrcge2WQqBViLzL
+         b+WEDV3ZmIStwnhvu48zSh93EAAvsiOLBTKD5cTCbzFja1glLPrecvY+sKateSu3vnah
+         dU8O+G59QKiOYY34cW+Ysyuv4UM67JDUtausChjWN/vxcpHImVSZAd253wYSULzhyFh2
+         rHXehpW722Z7zNrCukc1p7DkkML46UpiCHcl7NPUDNZ80FvXhWzB6sP//TFQzxL66XMx
+         vL5g==
+X-Gm-Message-State: AOAM532nW6DyVTT+d814ioAFHZsacmj7TES9XssBAPgJLKPkXnar7AGx
+	4wp7wIF4ZaW6DYUrUAKFwhAyd7C1654Bkxmyek2+FW72XSqk3j5u2QFKKmIW3vDNO6vae1v8nNz
+	R2LDXqxT1HjpjZsM=
+X-Received: by 2002:a5d:4ccc:0:b0:1e3:222b:40fc with SMTP id c12-20020a5d4ccc000000b001e3222b40fcmr3223926wrt.296.1645036715693;
+        Wed, 16 Feb 2022 10:38:35 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy0wiXj/Hqb0Y9GgzRfzvOrIt0BvRLxQUYxfr/SAM/8Z1qFt3Re71db6NVX8MfnXPX7uyBSrQ==
+X-Received: by 2002:a5d:4ccc:0:b0:1e3:222b:40fc with SMTP id c12-20020a5d4ccc000000b001e3222b40fcmr3223918wrt.296.1645036715388;
+        Wed, 16 Feb 2022 10:38:35 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-112-206.dyn.eolo.it. [146.241.112.206])
+        by smtp.gmail.com with ESMTPSA id u3sm22813116wmm.0.2022.02.16.10.38.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Feb 2022 10:38:35 -0800 (PST)
+Message-ID: <965a43a6d37214f16db59a035ea2969bfa8a6bd3.camel@redhat.com>
+Subject: Re: [PATCH v4 mptcp-next 2/3] mptcp: more careful RM_ADDR generation
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Date: Wed, 16 Feb 2022 19:38:33 +0100
+In-Reply-To: <79c7eb81-a894-a5cf-433-7bffade2b215@linux.intel.com>
+References: <cover.1644852970.git.pabeni@redhat.com>
+	   <9ac38525eac5d4e812fd11f20125e28edd8514df.1644852970.git.pabeni@redhat.com>
+	  <38393366b636adfcf8b5eecf08e92c6b4394dd9a.camel@redhat.com>
+	  <5a284b53-23e5-fded-a242-3a5fbc431eae@linux.intel.com>
+	 <1db883cd0e1c8849a64ab2c0acb0204c9e82469f.camel@redhat.com>
+	 <79c7eb81-a894-a5cf-433-7bffade2b215@linux.intel.com>
+User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH mptcp-next 3/9] selftests: mptcp: join: option to execute
- specific tests
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <20220209212520.2989291-1-matthieu.baerts@tessares.net>
- <20220209212520.2989291-4-matthieu.baerts@tessares.net>
- <199e2a26-da9-e79f-53c-50498fda97c@linux.intel.com>
- <066bb7a33e8f2128968c4aec5ba57c38b2f2c4cd.camel@redhat.com>
- <8caf46ee-11b6-aefa-3edd-e17c0928efc7@tessares.net>
- <2ed54f9b4f33163372f368a881a31e71175ca475.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <2ed54f9b4f33163372f368a881a31e71175ca475.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
-
-On 10/02/2022 16:11, Paolo Abeni wrote:
-> On Thu, 2022-02-10 at 11:42 +0100, Matthieu Baerts wrote:
->> On 10/02/2022 11:04, Paolo Abeni wrote:
->>> On Wed, 2022-02-09 at 16:36 -0800, Mat Martineau wrote:
->>>> On Wed, 9 Feb 2022, Matthieu Baerts wrote:
->>>>
->>>>> Often, it is needed to run one specific test.
->>>>>
->>>>> There are options to run subgroups of tests but when only one fails, no
->>>>> need to run all the subgroup. So far, the solution was to edit the
->>>>> script to comment the tests that are not needed but that's not ideal.
->>>>>
->>>>> Now, it is possible to run one specific test by giving the ID of the
->>>>> tests that are going to be validated, e.g.
->>>>>
->>>>>  ./mptcp_join.sh 36 37
->>>>>
->>>>> This is cleaner and saves time.
->>>>>
->>>>> Technically, the reset* functions now return 0 if the test can be
->>>>> executed. This naturally creates sections per test in the code which is
->>>>> also helpful to understand what a test is exactly doing.
->>>>>
->>>>
->>>> My sense is that this is primarily for development purposes since the test 
->>>> numbers may shift as tests are added or modified. Is it worth the churn 
->>>> when we have the subgroup functionality and could comment out chunks of 
->>>> the test script that are not useful for running specific tests in a loop?
->>
->> On my side, it would be helpful. On my side, I can edit the code but
->> that's not nice, especially if you want to automate tests with and
->> without a patch: you can have conflicts with the new comments, etc.
->>
->> On the CI, I cannot easily modify the code so I end up testing more than
->> expected, that's slow and sometimes hits other issues.
->>
->> I guess on Paolo's side too as he complained about this missing feature :)
->>
->>>> I'm not set against this change, but hoping to discuss it some more to 
->>>> both understand the benefits (I assume for running CI in a loop?) and to 
->>>> see if anyone has bright ideas for avoiding the whitespace churn.
->>>>
->>>> ("Include a bash fork in our selftest code that implements 'goto'" seems 
->>>> like overkill :) )
->>>
->>> Perhapas something alike the following ?!? Not a complete solution:
->>> - completely not tested
->>> - we will first need to add some wrapper for iptables or even beffer
->>> for ip netns exec, to be more generic
->>> - possibly more 'skip_test && return' needed, but not many, I guess.
->>>
->>> I hope should be enough demonstrate the idea...
->>
->> If we really want to avoid modifying existing lines in selftests, I can
->> also not add new tabs after the new "if reset" and drop patches 7-9. But
->> that's a shame we cannot refactor the code in the selftests :-/
->>
->> I don't think it is a good idea to add the skip_test everywhere: we will
->> certainly forgot to add one somewhere until someone test the feature.
+On Tue, 2022-02-15 at 11:15 -0800, Mat Martineau wrote:
+> On Tue, 15 Feb 2022, Paolo Abeni wrote:
 > 
-> skip_test will be needed "only" in the helper called directly from the
-> test body. I think the shared chunk already touches all the existing
-> one.
+> > On Mon, 2022-02-14 at 17:19 -0800, Mat Martineau wrote:
+> > > On Mon, 14 Feb 2022, Paolo Abeni wrote:
+> > > 
+> > > > On Mon, 2022-02-14 at 16:38 +0100, Paolo Abeni wrote:
+> > > > > In some edge scenarios, an MPTCP subflows can use a local address
+> > > > > mapped by a "implicit" endpoint created by the in-kernel path manager.
+> > > > > 
+> > > > > When such endpoint is deleted, the in kernel PM sends a RM_ADDR MPTCP
+> > > > > suboption. That is somewhat unexpected, as an MPTCP listener will keep
+> > > > > accepting incoming subflows targeting such address and the unexpected
+> > > > > options can confuse some self-tests.
+> > > > > 
+> > > > > Be more conservative about RM_ADDR generation: explicitly track the
+> > > > > implicit endpoint with an appropriate flag and exclude them from the
+> > > > > RM_ADDR generation.
+> > > > > 
+> > > > > Additionally allow the user-space to replace implicit endpoint with
+> > > > > user-provided data at endpoint creation time.
+> > > > > 
+> > > > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > > > 
+> > > > The CI still reports an issue on top of this patch:
+> > > > 
+> > > > https://cirrus-ci.com/task/5380046008352768?logs=test#L7283
+> > > > 
+> > > > Even if the symtom is the same, the root cause is different. I think
+> > > > such failure is caused by the flush operation deleting both all
+> > > > existing endpoints and all the existing subflows for each MPTCP socket.
+> > > > 
+> > > > Even when the subflow is not attached to any known, non implicit,
+> > > > endpoint.
+> > > > 
+> > > > When we have simult flush on both sides, deleting the subflow (with no
+> > > > endpoint) on one end can make disappear the subflow on the other end
+> > > > (tied to a local endpoint) before the PM could generate the relevant
+> > > > RM_ADDR.
+> > > > 
+> > > 
+> > > If we aren't closing all subflows during the flush, shouldn't there be at
+> > > least one subflow where the RM_ADDR can be sent?
+> > > 
+> > > Maybe mptcp_pm_nl_addr_send_ack() needs to pick a better subflow for
+> > > sending the RM_ADDR. Do you think it would help to make
+> > > mptcp_subflow_send_ack() return a bool, and only return true if the ack
+> > > was sent? Then it could retry the ack on other subflows in the conn_list,
+> > > until it finds one that works or they all fail.
+> > 
+> > I'm sorry it looks like I was unclear.
+> > 
+> > What I mean is that in the following scenario:
+> > 
+> > Client					Server
+> > [endpoint1] ------- MPTCP-subflow ----> [addr0/no endpoint]
+> > [endpoint2] ------- subflow 1  -------> [addr0/no endpoint]
+> > [endpoint3] ------- subflow 2  -------> [addr0/no endpoint]
+> > 
+> > if we flush simultaneusly the endpoints on both the server and the
+> > client (which is what the failing selftest is currently doing), the
+> > number of RM_ADDR generated by the client is unpredictable.
+> > 
+> > On endpoint flush the server will try to delete all the subflows,
+> > regardless of no endpoints attached there. The server can delete the
+> > subflow 1 and/or the subflow 2 before the client processes the relevant
+> > endpoint on the other side. If that happens, the client will not
+> > generate (correctly) the related RM_ADDR.
 > 
-> Validating should be simple (assuming the current number of mpj
-> testacase is 100): 
-> 
-> ---
-> for I in $(seq 1 100); do
-> 	./mptcp_join.sh $I
-> done > out
-> 
-> test=$(grep -c "\d\d\d " out)
-> if [ $test = 100 ]; then
-> 	echo ok
-> else
-> 	echo paolo is dumb!
-> fi
-> ---
+> I'm not sure that's correct, though. Even if subflows 1 and/or 2 have been 
+> closed, if the client has sent an ADD_ADDR to advertise endpoints 2 and 3, 
+> it should send RM_ADDR to "unadvertise" them on the remaining open 
+> subflow. 
 
-I hope it is OK but I prefer to stick with the 'if reset; then'.
+If the peer sent ADD_ADDR for a given address, it will generate the
+RM_ADDR, regardless of the related subflow being already closed. We
+don't have bugs - al least not shown by the current self-tests failures
+- in that situation. 
 
-The main reason is that I don't want to run this validation you gave
-here and have the second and totally wrong "echo" printed in my terminal :-/
+The criticial scenario is a bit different: the client created the
+subflows, but it did not avertize any address with ADD_ADDR (the client
+endpoints have the 'SUBFLOW' flag, not the 'SIGNAL' one).
+	
+If I read correctly the discussion about ADD_ADDR handling, a correct
+and simple solution would be sending RM_ADDR only for 'SIGNAL'
+endpoints, and update the test-cases accordingly.
 
-Even if it is clearly less important than that, another reason is that
-there are still a few direct commands "ip netns exec (...)". I could
-move them in a new helper but anyway Geliang did a lot of modifications
-in the "tests" part recently to allow running the tests with 'ip'
-instead of 'pm_nl_ctl'. So probably fine to do a bit more modifications,
-no? :)
+It's not clear to me if in case of 'endpoint flush', we should keep
+deleting all the subflows - including the ones not tied to 'SIGNAL'
+endpoints on any end.
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+P
+
