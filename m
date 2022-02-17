@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B443291C
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 14:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C368A291C
+	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 14:25:57 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1nKhj9-0004Da-Qv; Thu, 17 Feb 2022 15:25:47 +0100
+	id 1nKhjI-0004Ds-3j; Thu, 17 Feb 2022 15:25:56 +0100
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next v2 1/5] mptcp: check netns in mptcp_token_exists
-Date: Thu, 17 Feb 2022 15:25:34 +0100
-Message-Id: <20220217142538.7849-2-fw@strlen.de>
+Subject: [PATCH mptcp-next v2 3/5] tcp: add mptcp join demultiplex hooks
+Date: Thu, 17 Feb 2022 15:25:36 +0100
+Message-Id: <20220217142538.7849-4-fw@strlen.de>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220217142538.7849-1-fw@strlen.de>
 References: <20220217142538.7849-1-fw@strlen.de>
@@ -23,74 +23,78 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This will be used by a followup patch to check if the token
-specified in mp_join option exists in the current netns.
+Split from the next patch to make core tcp changes more obvious:
+add a dummy function that gets called after tcp socket demux came up
+empty.
 
-At this time, tokens are unique across all namespaces, but
-we need to treat a token that exists in netns x as 'does not exist'
-when doing existence check from netns y.
+This will be used by mptcp to check if a tcp syn contains an mptcp
+join option with a valid token (connection id).
+
+If so, a hidden pernet mptcp listener socket is returned and packet
+resumes normally.
+
+This patch series does not cover timewait sockets so far.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- net/mptcp/protocol.h | 2 +-
- net/mptcp/subflow.c  | 4 +++-
- net/mptcp/token.c    | 5 +++--
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ include/net/mptcp.h | 5 +++++
+ net/ipv4/tcp_ipv4.c | 4 ++++
+ net/ipv6/tcp_ipv6.c | 4 ++++
+ 3 files changed, 13 insertions(+)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 18ca0248c084..c43ca46dbc27 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -725,7 +725,7 @@ void mptcp_token_destroy_request(struct request_sock *req);
- int mptcp_token_new_connect(struct sock *sk);
- void mptcp_token_accept(struct mptcp_subflow_request_sock *r,
- 			struct mptcp_sock *msk);
--bool mptcp_token_exists(u32 token);
-+bool mptcp_token_exists(const struct net *net, u32 token);
- struct mptcp_sock *mptcp_token_get_sock(struct net *net, u32 token);
- struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
- 					 long *s_num);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e727d838da0e..be43077fe76e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -176,10 +176,12 @@ static int subflow_check_req(struct request_sock *req,
- 		} while (subflow_req->local_key == 0);
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 8b1afd6f5cc4..5ee422b56902 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -197,6 +197,10 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
  
- 		if (unlikely(req->syncookie)) {
-+			const struct net *net = read_pnet(&inet_rsk(req)->ireq_net);
-+
- 			mptcp_crypto_key_sha(subflow_req->local_key,
- 					     &subflow_req->token,
- 					     &subflow_req->idsn);
--			if (mptcp_token_exists(subflow_req->token)) {
-+			if (mptcp_token_exists(net, subflow_req->token)) {
- 				if (retries-- > 0)
- 					goto again;
- 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_TOKENFALLBACKINIT);
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index f52ee7b26aed..0593c83385e0 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -203,7 +203,7 @@ void mptcp_token_accept(struct mptcp_subflow_request_sock *req,
- 	spin_unlock_bh(&bucket->lock);
+ 	return htonl(0u);
+ }
++static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb)
++{
++	return NULL;
++}
+ #else
+ 
+ static inline void mptcp_init(void)
+@@ -274,6 +278,7 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
  }
  
--bool mptcp_token_exists(u32 token)
-+bool mptcp_token_exists(const struct net *net, u32 token)
- {
- 	struct hlist_nulls_node *pos;
- 	struct token_bucket *bucket;
-@@ -216,7 +216,8 @@ bool mptcp_token_exists(u32 token)
- again:
- 	sk_nulls_for_each_rcu(sk, pos, &bucket->msk_chain) {
- 		msk = mptcp_sk(sk);
--		if (READ_ONCE(msk->token) == token)
-+		if (READ_ONCE(msk->token) == token &&
-+		    net_eq(sock_net(sk), net))
- 			goto found;
- 	}
- 	if (get_nulls_value(pos) != (token & token_mask))
+ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
++static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb) { return NULL; }
+ #endif /* CONFIG_MPTCP */
+ 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 6873f46fc8ba..6e6675a09443 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -2140,6 +2140,10 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ 	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
+ 		goto discard_it;
+ 
++	sk = mptcp_handle_join(AF_INET, skb);
++	if (sk)
++		goto process;
++
+ 	tcp_v4_fill_cb(skb, iph, th);
+ 
+ 	if (tcp_checksum_complete(skb)) {
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 0c648bf07f39..788040db8e9e 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1782,6 +1782,10 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
+ 	if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb))
+ 		goto discard_it;
+ 
++	sk = mptcp_handle_join(AF_INET6, skb);
++	if (sk)
++		goto process;
++
+ 	tcp_v6_fill_cb(skb, hdr, th);
+ 
+ 	if (tcp_checksum_complete(skb)) {
 -- 
 2.34.1
 
