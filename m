@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D21FD3
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 21:44:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A214625
+	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 21:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1645134297;
+	s=mimecast20190719; t=1645134298;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QBQR2Q/3YGZHJOkOX0gjkQLxVWn2naaTBsFiPscPD8c=;
-	b=UwU+fxQjz1GTDCJBBB0z1SVq6u/Z09IHSbmXeJP6kexVGWx6EDY6FM18Uigs002MxaDjcj
-	B+41xRg+Pf92I3n+GiqxwQlfG0mzeXCIqv5i2/zMeIIDS+VzjS2Hi8SCJ7V2lq4I8+tBnl
-	sC4t+b/6GQ6WOGvVUj9o+dT7Ual7u4c=
+	bh=MDxtmpkjdaEaEPOBBZxTL283xP61OodFJWQs9REG3b8=;
+	b=HhPyLC1YGw+JsYXRUZivV/GdjO8hZ4S1MXRn6SOoEd9fun3OCp/UZ1VxtKyQRG+f+0GTr5
+	BHM7TawLYKb2+bQpP2i8NtBYoDZQiGgT7KFFlMyNnLZPN6llX2f5r9zo5l0a70bUq4yzI6
+	UEWIUvhe2LxMb8H1fqBsX+YTZ3dS/Yo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-611--P_97MFjMqGEHoY5pxBrsg-1; Thu, 17 Feb 2022 16:44:55 -0500
-X-MC-Unique: -P_97MFjMqGEHoY5pxBrsg-1
+ us-mta-52-LkQWin9RM3C77-8NLGaddw-1; Thu, 17 Feb 2022 16:44:56 -0500
+X-MC-Unique: LkQWin9RM3C77-8NLGaddw-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23CA015720
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 21:44:54 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C0FF18C8C00
+	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 21:44:56 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.122])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4776445312
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 21:44:53 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6FEF95E26B
+	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 21:44:55 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v5 mptcp-next 2/4] mptcp: introduce implicit endpoints
-Date: Thu, 17 Feb 2022 22:44:12 +0100
-Message-Id: <c61d182cc55806cbc6379aeb42d8722c54b1b386.1645134065.git.pabeni@redhat.com>
+Subject: [PATCH v5 mptcp-next 4/4] selftests: mptcp: add implicit endpoint test case
+Date: Thu, 17 Feb 2022 22:44:14 +0100
+Message-Id: <25749985f541eff90e537d56abeff5c289639384.1645134065.git.pabeni@redhat.com>
 In-Reply-To: <cover.1645134065.git.pabeni@redhat.com>
 References: <cover.1645134065.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,194 +47,183 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"
 
-In some edge scenarios, an MPTCP subflows can use a local address
-mapped by a "implicit" endpoint created by the in-kernel path manager.
-
-Such endpoints presence can be confusing, as it's creation is hard
-to track and will prevent the later endpoint creation from the user-space
-using the same address.
-
-Define a new endpoint flag to mark implicit endpoints and allow the
-user-space to replace implicit them with user-provided data at endpoint
-creation time.
+Ensure implicit endpoint are created when expected and
+that the user-space can update them
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v4 -> v5:
- - fixed a few book-keeping issues detected by the paired self-test
----
- include/uapi/linux/mptcp.h                    |  1 +
- net/mptcp/pm_netlink.c                        | 61 +++++++++++++------
- .../testing/selftests/net/mptcp/mptcp_join.sh |  4 +-
- 3 files changed, 47 insertions(+), 19 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 111 +++++++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |   7 ++
+ 2 files changed, 117 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index f106a3941cdf..9690efedb5fa 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -81,6 +81,7 @@ enum {
- #define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
- #define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
- #define MPTCP_PM_ADDR_FLAG_FULLMESH			(1 << 3)
-+#define MPTCP_PM_ADDR_FLAG_IMPLICIT			(1 << 4)
- 
- enum {
- 	MPTCP_PM_CMD_UNSPEC,
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 619746611110..3bbc5f9b1983 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -877,10 +877,18 @@ static bool address_use_port(struct mptcp_pm_addr_entry *entry)
- 		MPTCP_PM_ADDR_FLAG_SIGNAL;
- }
- 
-+/* caller must ensure the RCU grace period is already elapsed */
-+static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
-+{
-+	if (entry->lsk)
-+		sock_release(entry->lsk);
-+	kfree(entry);
-+}
-+
- static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 					     struct mptcp_pm_addr_entry *entry)
- {
--	struct mptcp_pm_addr_entry *cur;
-+	struct mptcp_pm_addr_entry *cur, *del_entry = NULL;
- 	unsigned int addr_max;
- 	int ret = -EINVAL;
- 
-@@ -901,8 +909,22 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	list_for_each_entry(cur, &pernet->local_addr_list, list) {
- 		if (addresses_equal(&cur->addr, &entry->addr,
- 				    address_use_port(entry) &&
--				    address_use_port(cur)))
--			goto out;
-+				    address_use_port(cur))) {
-+			/* allow replacing the exiting endpoint only if such
-+			 * endpoint is an implicit one and the user-space
-+			 * did not provide an endpoint id
-+			 */
-+			if (!(cur->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT))
-+				goto out;
-+			if (entry->addr.id)
-+				goto out;
-+
-+			pernet->addrs--;
-+			entry->addr.id = cur->addr.id;
-+			list_del_rcu(&cur->list);
-+			del_entry = cur;
-+			break;
-+		}
- 	}
- 
- 	if (!entry->addr.id) {
-@@ -938,6 +960,12 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 
- out:
- 	spin_unlock_bh(&pernet->lock);
-+
-+	/* just replaced an existing entry, free it */
-+	if (del_entry) {
-+		synchronize_rcu();
-+		__mptcp_pm_release_addr_entry(del_entry);
-+	}
- 	return ret;
- }
- 
-@@ -1036,7 +1064,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
- 	entry->addr.id = 0;
- 	entry->addr.port = 0;
- 	entry->ifindex = 0;
--	entry->flags = 0;
-+	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
- 	entry->lsk = NULL;
- 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
- 	if (ret < 0)
-@@ -1238,6 +1266,11 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
- 		return -EINVAL;
- 	}
- 
-+	if (addr.flags & MPTCP_PM_ADDR_FLAG_IMPLICIT) {
-+		GENL_SET_ERR_MSG(info, "can't create IMPLICIT endpoint");
-+		return -EINVAL;
-+	}
-+
- 	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
- 	if (!entry) {
- 		GENL_SET_ERR_MSG(info, "can't allocate addr");
-@@ -1322,11 +1355,12 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
- }
- 
- static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
--						   struct mptcp_addr_info *addr)
-+						   const struct mptcp_pm_addr_entry *entry)
- {
--	struct mptcp_sock *msk;
--	long s_slot = 0, s_num = 0;
-+	const struct mptcp_addr_info *addr = &entry->addr;
- 	struct mptcp_rm_list list = { .nr = 0 };
-+	long s_slot = 0, s_num = 0;
-+	struct mptcp_sock *msk;
- 
- 	pr_debug("remove_id=%d", addr->id);
- 
-@@ -1346,7 +1380,8 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 
- 		lock_sock(sk);
- 		remove_subflow = lookup_subflow_by_saddr(&msk->conn_list, addr);
--		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow);
-+		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow &&
-+					  !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
- 		if (remove_subflow)
- 			mptcp_pm_remove_subflow(msk, &list);
- 		release_sock(sk);
-@@ -1359,14 +1394,6 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 	return 0;
- }
- 
--/* caller must ensure the RCU grace period is already elapsed */
--static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
--{
--	if (entry->lsk)
--		sock_release(entry->lsk);
--	kfree(entry);
--}
--
- static int mptcp_nl_remove_id_zero_address(struct net *net,
- 					   struct mptcp_addr_info *addr)
- {
-@@ -1443,7 +1470,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
- 	__clear_bit(entry->addr.id, pernet->id_bitmap);
- 	spin_unlock_bh(&pernet->lock);
- 
--	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
-+	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), entry);
- 	synchronize_rcu();
- 	__mptcp_pm_release_addr_entry(entry);
- 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 6f16337409e3..913866d5d570 100755
+index 913866d5d570..9414a1c62fe0 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1819,7 +1819,7 @@ backup_tests()
- 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
- 	chk_join_nr "single address, backup" 1 1 1
- 	chk_add_nr 1 1
--	chk_prio_nr 1 0
-+	chk_prio_nr 1 1
- 
- 	# single address with port, backup
- 	reset
-@@ -1829,7 +1829,7 @@ backup_tests()
- 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
- 	chk_join_nr "single address with port, backup" 1 1 1
- 	chk_add_nr 1 1
--	chk_prio_nr 1 0
-+	chk_prio_nr 1 1
+@@ -413,6 +413,76 @@ pm_nl_change_endpoint()
+ 	fi
  }
  
- add_addr_ports_tests()
++pm_nl_check_endpoint()
++{
++	local line expected_line
++	local msg="$1"
++	local addr=$3
++	local ns=$2
++	local _flags=""
++	local flags
++	local _port
++	local port
++	local dev
++	local _id
++	local id
++
++	TEST_COUNT=$((TEST_COUNT + 1))
++	printf "%03u %-40s" "$TEST_COUNT" "$msg"
++
++	shift 3
++	while [ -n "$1" ]; do
++		if [ $1 = "flags" ]; then
++			_flags=$2
++			[ ! -z $_flags ]; flags="flags $_flags"
++			shift
++		elif [ $1 = "dev" ]; then
++			[ ! -z $2 ]; dev="dev $1"
++			shift
++		elif [ $1 = "id" ]; then
++			_id=$2
++			[ ! -z $_id ]; id="id $_id"
++			shift
++		elif [ $1 = "port" ]; then
++			_port=$2
++			[ ! -z $_port ]; port=" port $_port"
++			shift
++		fi
++
++		shift
++	done
++
++	if [ -z "$id" ]; then
++		echo "[skip] bad test - missing endpoint id"
++		return
++	fi
++
++	if [ $ip_mptcp -eq 1 ]; then
++		line=$(ip -n $ns mptcp endpoint show $id)
++		# the dump order is: address id flags port dev
++		expected_line="$addr"
++		[ -n "$addr" ] && expected_line="$expected_line $addr"
++		expected_line="$expected_line $id"
++		[ -n "$_flags" ] && expected_line="$expected_line ${_flags//","/" "}"
++		[ -n "$dev" ] && expected_line="$expected_line $dev"
++		[ -n "$port" ] && expected_line="$expected_line $port"
++	else
++		line=$(ip netns exec $ns ./pm_nl_ctl get $_id)
++		# the dump order is: id flags dev address port
++		expected_line="$id"
++		[ -n "$flags" ] && expected_line="$expected_line $flags"
++		[ -n "$dev" ] && expected_line="$expected_line $dev"
++		[ -n "$addr" ] && expected_line="$expected_line $addr"
++		[ -n "$_port" ] && expected_line="$expected_line $_port"
++	fi
++	if [ "$line" = "$expected_line" ]; then
++		echo "[ ok ]"
++	else
++		echo "[fail] expected '$expected_line' found '$line'"
++		ret=1
++	fi
++}
++
+ do_transfer()
+ {
+ 	listener_ns="$1"
+@@ -2203,6 +2273,41 @@ userspace_tests()
+ 	chk_rm_nr 0 0
+ }
+ 
++wait_mpj()
++{
++	local ns="${1}"
++	local old_cnt=$(ip netns exec ${ns} nstat -as | grep MPJoinAckRx | awk '{print $2}')
++
++	for i in $(seq 10); do
++		cnt=$(ip netns exec ${ns} nstat -as | grep MPJoinAckRx | awk '{print $2}')
++		[ "$cnt" = "${old_cnt}" ] || break
++		sleep 0.1
++	done
++}
++
++implicit_tests()
++{
++	# userspace pm type prevents add_addr
++	reset
++	pm_nl_set_limits $ns1 2 2
++	pm_nl_set_limits $ns2 2 2
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
++
++	wait_mpj $ns1
++	pm_nl_check_endpoint "implicit EP creation" \
++		$ns2 10.0.2.2 id 1 flags implicit
++
++	pm_nl_add_endpoint $ns2 10.0.2.2 id 33
++	pm_nl_check_endpoint "implicit EP ID change is prevented" \
++		$ns2 10.0.2.2 id 1 flags implicit
++
++	pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
++	pm_nl_check_endpoint "implicit EP modification is allowed" \
++		$ns2 10.0.2.2 id 1 flags signal
++	wait
++}
++
+ all_tests()
+ {
+ 	subflows_tests
+@@ -2221,6 +2326,7 @@ all_tests()
+ 	deny_join_id0_tests
+ 	fullmesh_tests
+ 	userspace_tests
++	implicit_tests
+ }
+ 
+ # [$1: error message]
+@@ -2279,7 +2385,7 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
+ 
+-while getopts 'fesltra64bpkdmuchCSi' opt; do
++while getopts 'fesltra64bpkdmuchCSiI' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+@@ -2335,6 +2441,9 @@ while getopts 'fesltra64bpkdmuchCSi' opt; do
+ 			;;
+ 		i)
+ 			;;
++		I)
++			implicit_tests
++			;;
+ 		h)
+ 			usage
+ 			;;
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 22a5ec1e128e..a75a68ad652e 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -436,6 +436,13 @@ static void print_addr(struct rtattr *attrs, int len)
+ 					printf(",");
+ 			}
+ 
++			if (flags & MPTCP_PM_ADDR_FLAG_IMPLICIT) {
++				printf("implicit");
++				flags &= ~MPTCP_PM_ADDR_FLAG_IMPLICIT;
++				if (flags)
++					printf(",");
++			}
++
+ 			/* bump unknown flags, if any */
+ 			if (flags)
+ 				printf("0x%x", flags);
 -- 
 2.34.1
 
