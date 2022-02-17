@@ -1,39 +1,38 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4031B38D1
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 00:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4DC38EA
+	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 01:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645057070; x=1676593070;
+  t=1645060897; x=1676596897;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=1ymPaUf0waYNqfRXogzpt4PxfRKxM9lT1Aznz3MZKAM=;
-  b=KK210XIRf9IM0HUOeUHY2qhhieojmJZlcSzgWPXFhNGKigiRbbOGcAn0
-   aDoai0lR7Nbm05Goy2+sBAue5hnNdLG8QJ4g7ok8a2avpHOvkP08/YomB
-   0zRcbMs2DNyqm4dPB734znoPuMiF/UhnFzJiNhDANrMbfj8P4OLcsZKnk
-   12NizICb4WuMg+2zJn+IqVZYU10vIYyJZns1vN1KmMYiHRR7utOo/4mFu
-   RuErTM/rXGkef1HXcgjs8KBKgO7tDlJlhkpskILvTVMeW6CCL4UrHY8FP
-   AQxvP9Jr90gah/jyjYrKfCbuMmvaylOfu66uKj14y0J590vxP8OUa4rbi
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10260"; a="231377715"
+  bh=7rGTmA6d0wOc65sPkDd2Itwkmtq4jvVPi3vgED+7U80=;
+  b=QWN8XHxqj4KHhI2RlxJ2lZSLNkitZjTtEZTno9Z86Ynp7MdGpnCs/GB7
+   Gdk7aozNVqGkLqWuiguWTGS9VLf1Nz2C3vqZ6usGnopccVxGz4Tykd8by
+   29LnTTtw7UWEP8B+V1glcn7wHlALy4574PyN3Bp4tLsDG4nxLl1oYW4S2
+   GChd9zJ4QN3P/mBaRxtSyU6LGGRMcR5bTuhvaljTA0uCdbkLvg2DEIM8L
+   J90tJNXNNy32hsf8Qv+5ECBZv5LK52Rxv6hhC5q6YXaGnzvJZW8p34QZb
+   jRB6Kcj5YyLF48QoxaM3BHXXP8j06FY0d4day3ve9zxeLQpp+yueMix+g
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10260"; a="234297216"
 X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
-   d="scan'208";a="231377715"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 16:17:49 -0800
+   d="scan'208";a="234297216"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 17:21:36 -0800
 X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
-   d="scan'208";a="704525462"
+   d="scan'208";a="681752043"
 Received: from hasaeed-mobl.amr.corp.intel.com ([10.209.58.207])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 16:17:49 -0800
-Date: Wed, 16 Feb 2022 16:17:48 -0800 (PST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 17:21:36 -0800
+Date: Wed, 16 Feb 2022 17:21:35 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: update output info of
- chk_rm_nr
-In-Reply-To: <ea86b05ef31336262889bbb02a0da28e40f86907.1644979837.git.geliang.tang@suse.com>
-Message-ID: <781c6678-5a6e-5253-acb8-39899068cee2@linux.intel.com>
-References: <ea86b05ef31336262889bbb02a0da28e40f86907.1644979837.git.geliang.tang@suse.com>
+Subject: Re: [RFC mptcp-next 0/6] MP_FAIL echo and retrans
+In-Reply-To: <cover.1645009373.git.geliang.tang@suse.com>
+Message-ID: <bf2f5d27-fe3f-9b6a-6533-ed82982c6298@linux.intel.com>
+References: <cover.1645009373.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,77 +43,121 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Wed, 16 Feb 2022, Geliang Tang wrote:
 
-> This patch updated the output info of chk_rm_nr. Renamed 'sf' to 'rmsf',
-> which means 'remove subflow'. Added the display of whether the inverted
-> namespaces has been used to check the mib counters.
+> This patchset added MP_FAIL echo and retrans support. Except the last
+> patch, others work well.
 >
-> The new output looks like this:
+> Here I have some questions about it.
 >
-> 002 remove multiple subflows          syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                       rm [ ok ] - rmsf  [ ok ]
-> 003 remove single address             syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                       add[ ok ] - echo  [ ok ]
->                                       rm [ ok ] - rmsf  [ ok ]   invert
+> 1. How to distinguish an MP_FAIL packet and an MP_FAIL echo packet?
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++--------
-> 1 file changed, 9 insertions(+), 8 deletions(-)
+> Unlike ADD_ADDR, there's no echo bit in a MP_FAIL packet. Patch 1 used
+> simple method to distinguish them.
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c664565aa8b1..37b3d00b2dcb 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1242,15 +1242,14 @@ chk_rm_nr()
-> 	local invert=${3:-""}
-> 	local count
-> 	local dump_stats
-> -	local addr_ns
-> -	local subflow_ns
-> +	local addr_ns=$ns1
-> +	local subflow_ns=$ns2
-> +	local extra_msg=""
->
-> -	if [ -z $invert ]; then
-> -		addr_ns=$ns1
-> -		subflow_ns=$ns2
-> -	elif [ $invert = "invert" ]; then
-> +	if [[ $invert = "invert" ]]; then
-> 		addr_ns=$ns2
-> 		subflow_ns=$ns1
-> +		extra_msg="   invert"
-> 	fi
->
-> 	printf "%-${nr_blank}s %s" " " "rm "
-> @@ -1264,7 +1263,7 @@ chk_rm_nr()
-> 		echo -n "[ ok ]"
-> 	fi
->
-> -	echo -n " - sf    "
-> +	echo -n " - rmsf  "
-> 	count=`ip netns exec $subflow_ns nstat -as | grep MPTcpExtRmSubflow | awk '{print $2}'`
-> 	[ -z "$count" ] && count=0
-> 	if [ "$count" != "$rm_subflow_nr" ]; then
-> @@ -1272,9 +1271,11 @@ chk_rm_nr()
-> 		ret=1
-> 		dump_stats=1
-> 	else
-> -		echo "[ ok ]"
-> +		echo -n "[ ok ]"
-> 	fi
->
-> +	echo "$extra_msg"
+> MP_FAIL carries the data sequence number of the checksum failure.
 
-If the 'if' statement above went down the [fail] path, this will output 
-either an extra empty line or "   invert" on its own line. But the output 
-formatting gets messy with failures anyway so it's not a big deal (also 
-happens in chk_rst_nr()), and it's still clear where the failure was.
+The RFC says (after Figure 16):
 
-Reviewed by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+"The receiver of this option MUST discard all data following the data 
+sequence number specified."
 
-> +
-> 	[ "${dump_stats}" = 1 ] && dump_stats
-> }
+So MP_FAIL carries the sequence number of the last "good" byte received.
+
+> MP_FAIL echo carries the received data sequence number of a MP_FAIL.
+
+I'm assuming by "MP_FAIL echo" you're referring to the MP_FAIL response 
+mentioned in RFC 8684 section 3.7: "While in theory paths may only be 
+damaged in one direction -- and the MP_FAIL signal affects only one 
+direction of traffic -- for simplicity of implementation, the receiver of 
+an MP_FAIL MUST also respond with an MP_FAIL in the reverse direction and 
+entirely revert to a regular TCP session."
+
+The MP_FAIL sent in response doesn't contain the received data sequence 
+number of an MP_FAIL, as I've read the RFC (if I missed something please 
+point me to it). As I read the sentence above, the MP_FAIL sent in 
+response just contains the sequence number of the last "good" byte 
+received *by this peer*. The difference is that this MP_FAIL was triggered 
+by a received MP_FAIL instead of a checksum failure.
+
+
+> 2. For the multiple subflow case, MP_FAIL echo is sent on another subflow,
+> not the subflow receiving this MP_FAIL. Since the receiving subflow will
+> be closed by MP_RST after a while.
+>
+
+If there are multiple subflows, MP_FAIL is only sent with TCP RST. The 
+subflow is immediately disconnected and there is no need to send MP_FAIL 
+on any other subflows since they are still working properly and can handle 
+MPTCP-level retransmissions to recover the data stream.
+
+A MP_FAIL sent in response to another MP_FAIL only happens in the "single 
+subflow with checksum error and contiguous data" special case.
+
+> 3. Patch 5 added mp_fail_timer as a struct member of struct
+> mptcp_subflow_context. Is there a better place to add this timer?
+>
+
+I'm not sure a separate timer is needed?
+
+There's no need to retransmit MP_FAIL when there are multiple subflows, or 
+a single subflow with noncontiguous data.
+
+In the remaining case (single subflow with contiguous data), the 
+connection is trying to fall back so there's no need to use 
+msk->timer_ival for MPTCP-level retransmits or DATA_FIN retransmits. 
+msk->timer_ival is available to trigger a check if we have not received a 
+response from the peer after sending MP_FAIL.
+
+I don't think we should put a lot of work in to recovering from lost 
+MP_FAILs - if the peer doesn't respond properly it's an option to just 
+give up and reset the connection.
+
+
+-Mat
+
+
+
+> 4. Just like the way of dropping the ADD_ADDR packets in the ADD_ADDR
+> timeout testcases, patch 6 tried to use iptables bpf to drop the MP_FAIL
+> packets too. But it doesn't work.
+>
+> Drop ADD_ADDR packets using this bpf rule:
+>
+> "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
+>                 (ip6 && (ip6[74] & 0xf0) == 0x30)'"
+>
+> I used a similar rule to drop MP_FAIL packets:
+>
+> "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x60) ||
+>                 (ip6 && (ip6[74] & 0xf0) == 0x60)'"
+>
+> I thinks the offset shouldn't be 54 or 74 here. Matt, could you please
+> give me some help about how to get the right offset values?
+>
+> Thanks.
+> -Geliang
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/261
+> Depends on: the "add mp_fail testcases" series.
+>
+> Geliang Tang (6):
+>  mptcp: add MP_FAIL echo support
+>  mptcp: add mibs for MP_FAIL echo
+>  selftests: mptcp: add MP_FAIL echo mibs check
+>  mptcp: add a new sysctl mp_fail_timeout
+>  mptcp: add MP_FAIL retrans support
+>  selftests: mptcp: MP_FAIL timeout testcases TODO
+>
+> Documentation/networking/mptcp-sysctl.rst     | 10 +++
+> net/mptcp/ctrl.c                              | 14 ++++
+> net/mptcp/mib.c                               |  2 +
+> net/mptcp/mib.h                               |  2 +
+> net/mptcp/options.c                           | 23 ++++-
+> net/mptcp/pm.c                                | 41 ++++++++-
+> net/mptcp/protocol.c                          |  1 +
+> net/mptcp/protocol.h                          |  7 ++
+> net/mptcp/subflow.c                           | 30 ++++++-
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 84 +++++++++++++++++++
+> 10 files changed, 207 insertions(+), 7 deletions(-)
 >
 > -- 
 > 2.34.1
