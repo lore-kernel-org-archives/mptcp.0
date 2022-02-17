@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C368A291C
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 14:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01310291C
+	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 14:26:02 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1nKhjI-0004Ds-3j; Thu, 17 Feb 2022 15:25:56 +0100
+	id 1nKhjM-0004EG-94; Thu, 17 Feb 2022 15:26:00 +0100
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next v2 3/5] tcp: add mptcp join demultiplex hooks
-Date: Thu, 17 Feb 2022 15:25:36 +0100
-Message-Id: <20220217142538.7849-4-fw@strlen.de>
+Subject: [PATCH mptcp-next v2 4/5] mptcp: handle join requests via pernet listen socket
+Date: Thu, 17 Feb 2022 15:25:37 +0100
+Message-Id: <20220217142538.7849-5-fw@strlen.de>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220217142538.7849-1-fw@strlen.de>
 References: <20220217142538.7849-1-fw@strlen.de>
@@ -23,78 +23,435 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Split from the next patch to make core tcp changes more obvious:
-add a dummy function that gets called after tcp socket demux came up
-empty.
+Currently mptcp adds kernel-based listener socket for all
+netlink-configured mptcp address endpoints.
 
-This will be used by mptcp to check if a tcp syn contains an mptcp
-join option with a valid token (connection id).
+This has caveats because kernel may interfere with unrelated programs
+that use same address/port pairs.
 
-If so, a hidden pernet mptcp listener socket is returned and packet
-resumes normally.
+RFC 8684 says:
+ Demultiplexing subflow SYNs MUST be done using the token; this is
+ unlike traditional TCP, where the destination port is used for
+ demultiplexing SYN packets.  Once a subflow is set up, demultiplexing
+ packets is done using the 5-tuple, as in traditional TCP.
 
-This patch series does not cover timewait sockets so far.
+This patch deviates from this in that it retrains the existing checks of
+verifying the incoming requests destination vs. the list of announced
+addresses.
+
+This can be relaxed later if deemed appropriate.
+
+Furthermore, TCP-only listeners take precedence: An MPTCP peer
+MUST NOT announce address:port pairs that are already in use by a
+non-mptcp listener.
+This could be changed, but it requires move of mptcp_handle_join()
+hook *before* the tcp port demux, i.e. an additional conditional in
+hotpath.  As-is, the additional conditional (syn && !rst && ...) is
+in the 'no socket found' path.
+
+The pernet 'listening' socket is hidden from userspace.
+It is not part of any hashes and not bound to any address or port.
+
+TPROXY-like semantics apply: If tcp demux cannot find a port for a given
+packet, check if the packet is a syn packet with a valid join token.
+
+If so, the pernet listener is returned and tcp processing resumes.
+Otherwise, handling is intentical.
+
+This patch does not cover timewait sockets.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/net/mptcp.h | 5 +++++
- net/ipv4/tcp_ipv4.c | 4 ++++
- net/ipv6/tcp_ipv6.c | 4 ++++
- 3 files changed, 13 insertions(+)
+ include/net/mptcp.h  |  10 ++
+ net/ipv6/tcp_ipv6.c  |  19 ++--
+ net/mptcp/ctrl.c     | 211 ++++++++++++++++++++++++++++++++++++++++++-
+ net/mptcp/protocol.c |   2 +-
+ net/mptcp/protocol.h |   2 +-
+ net/mptcp/subflow.c  |   3 +
+ 6 files changed, 233 insertions(+), 14 deletions(-)
 
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 8b1afd6f5cc4..5ee422b56902 100644
+index 5ee422b56902..49c188b978e1 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -197,6 +197,10 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
+@@ -189,6 +189,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ 				  struct sk_buff *skb);
  
- 	return htonl(0u);
+ __be32 mptcp_get_reset_option(const struct sk_buff *skb);
++struct sock *__mptcp_handle_join(int af, struct sk_buff *skb);
+ 
+ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
+ {
+@@ -199,6 +200,11 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
  }
-+static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb)
-+{
-+	return NULL;
-+}
+ static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb)
+ {
++	const struct tcphdr *th = tcp_hdr(skb);
++
++	if (th->syn && !th->ack && !th->rst && !th->fin)
++		return __mptcp_handle_join(af, skb);
++
+ 	return NULL;
+ }
  #else
- 
- static inline void mptcp_init(void)
-@@ -274,6 +278,7 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
- }
- 
- static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
-+static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb) { return NULL; }
- #endif /* CONFIG_MPTCP */
+@@ -283,9 +289,13 @@ static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb) { retu
  
  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 6873f46fc8ba..6e6675a09443 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -2140,6 +2140,10 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
- 		goto discard_it;
+ int mptcpv6_init(void);
++int mptcpv6_init_net(struct net *net);
++void mptcpv6_exit_net(struct net *net);
+ void mptcpv6_handle_mapped(struct sock *sk, bool mapped);
+ #elif IS_ENABLED(CONFIG_IPV6)
+ static inline int mptcpv6_init(void) { return 0; }
++static inline int mptcpv6_init_net(struct net *net) { return 0; }
++static inline void mptcpv6_exit_net(struct net *net) { }
+ static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
+ #endif
  
-+	sk = mptcp_handle_join(AF_INET, skb);
-+	if (sk)
-+		goto process;
-+
- 	tcp_v4_fill_cb(skb, iph, th);
- 
- 	if (tcp_checksum_complete(skb)) {
 diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 0c648bf07f39..788040db8e9e 100644
+index 788040db8e9e..3b8608d35dcd 100644
 --- a/net/ipv6/tcp_ipv6.c
 +++ b/net/ipv6/tcp_ipv6.c
-@@ -1782,6 +1782,10 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 	if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb))
- 		goto discard_it;
+@@ -2233,13 +2233,22 @@ static struct inet_protosw tcpv6_protosw = {
  
-+	sk = mptcp_handle_join(AF_INET6, skb);
-+	if (sk)
-+		goto process;
+ static int __net_init tcpv6_net_init(struct net *net)
+ {
+-	return inet_ctl_sock_create(&net->ipv6.tcp_sk, PF_INET6,
+-				    SOCK_RAW, IPPROTO_TCP, net);
++	int err = inet_ctl_sock_create(&net->ipv6.tcp_sk, PF_INET6,
++				       SOCK_RAW, IPPROTO_TCP, net);
++	if (err)
++		return err;
 +
- 	tcp_v6_fill_cb(skb, hdr, th);
++	err = mptcpv6_init_net(net);
++	if (err)
++		inet_ctl_sock_destroy(net->ipv6.tcp_sk);
++
++	return err;
+ }
  
- 	if (tcp_checksum_complete(skb)) {
+ static void __net_exit tcpv6_net_exit(struct net *net)
+ {
+ 	inet_ctl_sock_destroy(net->ipv6.tcp_sk);
++	mptcpv6_exit_net(net);
+ }
+ 
+ static struct pernet_operations tcpv6_net_ops = {
+@@ -2264,15 +2273,9 @@ int __init tcpv6_init(void)
+ 	if (ret)
+ 		goto out_tcpv6_protosw;
+ 
+-	ret = mptcpv6_init();
+-	if (ret)
+-		goto out_tcpv6_pernet_subsys;
+-
+ out:
+ 	return ret;
+ 
+-out_tcpv6_pernet_subsys:
+-	unregister_pernet_subsys(&tcpv6_net_ops);
+ out_tcpv6_protosw:
+ 	inet6_unregister_protosw(&tcpv6_protosw);
+ out_tcpv6_protocol:
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index ae20b7d92e28..6358c803ba12 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -21,6 +21,12 @@ static int mptcp_pernet_id;
+ static int mptcp_pm_type_max = __MPTCP_PM_TYPE_MAX;
+ #endif
+ 
++struct mptcp_join_sk {
++	struct sock *sk;
++	struct inet_bind_bucket *tb;
++	struct inet_bind_hashbucket head;
++};
++
+ struct mptcp_pernet {
+ #ifdef CONFIG_SYSCTL
+ 	struct ctl_table_header *ctl_table_hdr;
+@@ -32,6 +38,18 @@ struct mptcp_pernet {
+ 	u8 checksum_enabled;
+ 	u8 allow_join_initial_addr_port;
+ 	u8 pm_type;
++
++	/* pernet listener to handle mptcp join requests
++	 * based on the mptcp token.
++	 *
++	 * Has to be pernet because tcp uses
++	 * sock_net(sk_listener) to obtain the net namespace for
++	 * the syn/ack route lookup.
++	 */
++	struct mptcp_join_sk join4;
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	struct mptcp_join_sk join6;
++#endif
+ };
+ 
+ static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
+@@ -185,13 +203,173 @@ static void mptcp_pernet_del_table(struct mptcp_pernet *pernet) {}
+ 
+ #endif /* CONFIG_SYSCTL */
+ 
++struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
++{
++	struct mptcp_options_received mp_opt;
++	struct mptcp_pernet *pernet;
++	struct socket *ssock;
++	struct sock *lsk;
++	struct net *net;
++
++	/* paranoia check: don't allow 0 destination port,
++	 * else __inet_inherit_port will insert the child socket
++	 * into the phony hash slot of the pernet listener.
++	 */
++	if (tcp_hdr(skb)->dest == 0)
++		return NULL;
++
++	mptcp_get_options(skb, &mp_opt);
++
++	if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPJ))
++		return NULL;
++
++	net = dev_net(skb_dst(skb)->dev);
++	if (!mptcp_is_enabled(net))
++		return NULL;
++
++	/* RFC8684: If the token is unknown [..], the receiver will send
++	 * back a reset (RST) signal, analogous to an unknown port in TCP,
++	 * containing an MP_TCPRST option (Section 3.6) [..]
++	 */
++	if (!mptcp_token_exists(net, mp_opt.token)) {
++		struct mptcp_ext *ext = skb_ext_add(skb, SKB_EXT_MPTCP);
++
++		if (ext) {
++			memset(ext, 0, sizeof(*ext));
++			ext->reset_reason = MPTCP_RST_EMPTCP;
++		}
++		return NULL;
++	}
++
++	pernet = mptcp_get_pernet(net);
++
++	switch (af) {
++	case AF_INET:
++		lsk = pernet->join4.sk;
++		break;
++	case AF_INET6:
++		lsk = pernet->join6.sk;
++		break;
++	default:
++		WARN_ON_ONCE(1);
++		return NULL;
++	}
++
++	ssock = __mptcp_nmpc_socket(mptcp_sk(lsk));
++	if (WARN_ON(!ssock))
++		return NULL;
++
++	return ssock->sk;
++}
++
++static struct socket *mptcp_create_join_listen_socket(struct net *net, int af)
++{
++	struct socket *s, *ssock;
++	int err;
++
++	err = sock_create_kern(net, af, SOCK_STREAM, IPPROTO_MPTCP, &s);
++	if (err)
++		return ERR_PTR(err);
++
++	ssock = __mptcp_nmpc_socket(mptcp_sk(s->sk));
++	if (!ssock) {
++		err = -EINVAL;
++		goto out;
++	}
++
++	ssock->sk->sk_max_ack_backlog = SOMAXCONN;
++	inet_sk_state_store(ssock->sk, TCP_LISTEN);
++
++	s->sk->sk_max_ack_backlog = SOMAXCONN;
++	inet_sk_state_store(s->sk, TCP_LISTEN);
++
++	s->sk->sk_net_refcnt = 1;
++	get_net_track(net, &s->sk->ns_tracker, GFP_KERNEL);
++	sock_inuse_add(net, 1);
++
++	return s;
++out:
++	sock_release(s);
++	return ERR_PTR(err);
++}
++
++static int mptcp_init_join_sk(struct net *net, struct sock *sk, struct mptcp_join_sk *join_sk)
++{
++	struct socket *ssock = __mptcp_nmpc_socket(mptcp_sk(sk));
++	struct inet_hashinfo *table = ssock->sk->sk_prot->h.hashinfo;
++	struct inet_bind_bucket *tb;
++
++	spin_lock_init(&join_sk->head.lock);
++	INIT_HLIST_HEAD(&join_sk->head.chain);
++
++	/* Our "listen socket" isn't bound to any address or port.
++	 * Conceptually, SYN packet with mptcp join request are steered to
++	 * this pernet socket just like TPROXY steals arbitrary connection
++	 * requests to assign them to listening socket with different
++	 * address or port.
++	 *
++	 * The bind_bucket is needed for sake of __inet_inherit_port(),
++	 * so it can place the new child socket in the correct
++	 * bind_bucket slot.
++	 *
++	 * A phony head is used to hide this socket from normal sk loookup.
++	 */
++	tb = inet_bind_bucket_create(table->bind_bucket_cachep,
++				     net, &join_sk->head, 0, 0);
++	if (!tb)
++		return -ENOMEM;
++
++	inet_csk(ssock->sk)->icsk_bind_hash = tb;
++	return 0;
++}
++
+ static int __net_init mptcp_net_init(struct net *net)
+ {
+ 	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
++	struct socket *sock;
++	int err;
+ 
+ 	mptcp_pernet_set_defaults(pernet);
+ 
+-	return mptcp_pernet_new_table(net, pernet);
++	err = mptcp_pernet_new_table(net, pernet);
++	if (err)
++		return err;
++
++	sock = mptcp_create_join_listen_socket(net, AF_INET);
++	if (IS_ERR(sock)) {
++		err = PTR_ERR(sock);
++		goto out_table;
++	}
++
++	err = mptcp_init_join_sk(net, sock->sk, &pernet->join4);
++	if (err) {
++		sock_release(sock);
++		goto out_table;
++	}
++
++	/* struct sock is still reachable via sock->sk_socket backpointer */
++	pernet->join4.sk = sock->sk;
++	return err;
++
++out_table:
++	if (!net_eq(net, &init_net))
++		mptcp_pernet_del_table(pernet);
++	return err;
++}
++
++static void __net_exit mptcp_exit_join_sk(struct mptcp_join_sk *jsk)
++{
++	struct socket *ssock = __mptcp_nmpc_socket(mptcp_sk(jsk->sk));
++	struct inet_bind_bucket *tb;
++	struct inet_hashinfo *table;
++
++	table = ssock->sk->sk_prot->h.hashinfo;
++
++	tb = inet_csk(ssock->sk)->icsk_bind_hash;
++	inet_bind_bucket_destroy(table->bind_bucket_cachep, tb);
++
++	ssock = jsk->sk->sk_socket;
++	sock_release(ssock);
+ }
+ 
+ /* Note: the callback will only be called per extra netns */
+@@ -200,6 +378,7 @@ static void __net_exit mptcp_net_exit(struct net *net)
+ 	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
+ 
+ 	mptcp_pernet_del_table(pernet);
++	mptcp_exit_join_sk(&pernet->join4);
+ }
+ 
+ static struct pernet_operations mptcp_pernet_ops = {
+@@ -219,12 +398,36 @@ void __init mptcp_init(void)
+ }
+ 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-int __init mptcpv6_init(void)
++int __net_init mptcpv6_init_net(struct net *net)
+ {
++	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
++	struct socket *sock;
+ 	int err;
+ 
+-	err = mptcp_proto_v6_init();
++	if (net_eq(net, &init_net)) {
++		err = mptcp_proto_v6_init();
++		if (err)
++			return err;
++	}
+ 
+-	return err;
++	sock = mptcp_create_join_listen_socket(net, AF_INET6);
++	if (IS_ERR(sock))
++		return PTR_ERR(sock);
++
++	err = mptcp_init_join_sk(net, sock->sk, &pernet->join6);
++	if (err) {
++		sock_release(sock);
++		return err;
++	}
++
++	pernet->join6.sk = sock->sk;
++	return 0;
++}
++
++void __net_exit mptcpv6_exit_net(struct net *net)
++{
++	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
++
++	mptcp_exit_join_sk(&pernet->join6);
+ }
+ #endif
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4599bde215b2..5b54e3c8efea 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3777,7 +3777,7 @@ static struct inet_protosw mptcp_v6_protosw = {
+ 	.flags		= INET_PROTOSW_ICSK,
+ };
+ 
+-int __init mptcp_proto_v6_init(void)
++int __net_init mptcp_proto_v6_init(void)
+ {
+ 	int err;
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 7bd064b68b51..6a81e2a21301 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -647,7 +647,7 @@ static inline bool mptcp_has_another_subflow(struct sock *ssk)
+ 
+ void __init mptcp_proto_init(void);
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-int __init mptcp_proto_v6_init(void);
++int __net_init mptcp_proto_v6_init(void);
+ #endif
+ 
+ struct sock *mptcp_sk_clone(const struct sock *sk,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8be20f7b76df..4696d27a8994 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -116,6 +116,9 @@ static void subflow_init_req(struct request_sock *req, const struct sock *sk_lis
+ 
+ static bool subflow_use_different_sport(struct mptcp_sock *msk, const struct sock *sk)
+ {
++	if (inet_sk(sk)->inet_sport == 0)
++		return true;
++
+ 	return inet_sk(sk)->inet_sport != inet_sk((struct sock *)msk)->inet_sport;
+ }
+ 
 -- 
 2.34.1
 
