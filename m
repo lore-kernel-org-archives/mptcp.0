@@ -1,41 +1,42 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E964602
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 19:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3324602;
+	Thu, 17 Feb 2022 19:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645127223; x=1676663223;
+  t=1645127284; x=1676663284;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Kn+UzVML9pqGVrkwI37ngsZqD1bMeYVrIviaAWO9JAg=;
-  b=UKLboR5hJkXWFxWpvxPDzXq+KLzvCk9bAYT26tKZyT6twqzgcpIqVCnF
-   Hb6HXIRygFRYXc2dMDtCVZKzi+GvI2deEp4vxPceREtV6oSHfxf3IIn2L
-   3zGEqAAEn314SLBEL+mIwQEuHpDKfvWBq+x3BcRd52SEqkFNxTcKDc5eU
-   1CD8IDfDrDdYBAhcguTEGBnE5hqq//1ggfW27mt0Ud4HL0GXtGbrJYlQW
-   7lT2Z8ar8XkXhwr5LWKdEkptXXG/wZitVl/QklAytB0j0C4pJCEz92QN8
-   Mpnf3SJT4ns6BFcZTQs/s/RU6noXrvyaD2rS7DfI1/S3wIPc4X4fB/dQ9
+  bh=bpi+oHOSMDPBQC6ViVXTHYfdH0PvJnsPA9Shv9NkaWg=;
+  b=GiKeJ67NCdgnnZZoswfUxzYu6McGKHv5IhWQkYNm4/DRSRMR51YHcU98
+   t2KJ45mJhCpyvQ1rbIN6sK7h10TyWDRy9SkAgo3rYYhUmwFF98PgCzNcc
+   m1QuUMX6pnLHMprSweqo/Nckd0EAuJAz/l1TQvuR5pOVYDijhMJC0BaOZ
+   ozxqjvnc8ETT4a8spx4WQkKyQ7oUC2dsb43fEcCvInDwQHdrIdTZURnYO
+   ei6QC7x8ltwupkne8eYaq/V1l9Sh80ft9FPqFzqENx7Q60gxNk3iAWzHg
+   Wysnp027q2OgzO66lXEbuqseLavMJ1m25+uJ2Bo1DDfyc1IJ3ALzq3FoG
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="250903346"
+X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="275553304"
 X-IronPort-AV: E=Sophos;i="5.88,376,1635231600"; 
-   d="scan'208";a="250903346"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 11:47:03 -0800
+   d="scan'208";a="275553304"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 11:48:03 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,376,1635231600"; 
-   d="scan'208";a="774876551"
+   d="scan'208";a="626225493"
 Received: from lkp-server01.sh.intel.com (HELO 6f05bf9e3301) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Feb 2022 11:47:01 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Feb 2022 11:48:02 -0800
 Received: from kbuild by 6f05bf9e3301 with local (Exim 4.92)
 	(envelope-from <lkp@intel.com>)
-	id 1nKmk1-0000Tp-0D; Thu, 17 Feb 2022 19:47:01 +0000
-Date: Fri, 18 Feb 2022 03:46:34 +0800
+	id 1nKmkz-0000XR-C2; Thu, 17 Feb 2022 19:48:01 +0000
+Date: Fri, 18 Feb 2022 03:47:04 +0800
 From: kernel test robot <lkp@intel.com>
 To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Cc: kbuild-all@lists.01.org, Florian Westphal <fw@strlen.de>
+Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org,
+	Florian Westphal <fw@strlen.de>
 Subject: Re: [PATCH mptcp-next v2 4/5] mptcp: handle join requests via pernet
  listen socket
-Message-ID: <202202180141.4Rse3JCH-lkp@intel.com>
+Message-ID: <202202180141.VfybVriM-lkp@intel.com>
 References: <20220217142538.7849-5-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -60,27 +61,34 @@ https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/Florian-Westphal/mptcp-replace-per-addr-listener-sockets/20220217-222844
 base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20220218/202202180141.4Rse3JCH-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+config: mips-buildonly-randconfig-r002-20220217 (https://download.01.org/0day-ci/archive/20220218/202202180141.VfybVriM-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project d271fc04d5b97b12e6b797c6067d3c96a8d7470e)
 reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install mips cross compiling tool for clang build
+        # apt-get install binutils-mips-linux-gnu
         # https://github.com/0day-ci/linux/commit/044982520ba41e284eebe48421fad7feb55f2106
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review Florian-Westphal/mptcp-replace-per-addr-listener-sockets/20220217-222844
         git checkout 044982520ba41e284eebe48421fad7feb55f2106
         # save the config file to linux build tree
         mkdir build_dir
-        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash net/mptcp/
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
-   net/mptcp/ctrl.c: In function '__mptcp_handle_join':
->> net/mptcp/ctrl.c:251:17: error: 'struct mptcp_pernet' has no member named 'join6'; did you mean 'join4'?
-     251 |   lsk = pernet->join6.sk;
-         |                 ^~~~~
-         |                 join4
+>> net/mptcp/ctrl.c:251:17: error: no member named 'join6' in 'struct mptcp_pernet'; did you mean 'join4'?
+                   lsk = pernet->join6.sk;
+                                 ^~~~~
+                                 join4
+   net/mptcp/ctrl.c:49:23: note: 'join4' declared here
+           struct mptcp_join_sk join4;
+                                ^
+   1 error generated.
 
 
 vim +251 net/mptcp/ctrl.c
