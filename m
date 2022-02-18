@@ -1,183 +1,130 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E145D463D
-	for <mptcp@lists.linux.dev>; Thu, 17 Feb 2022 23:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3AE460E
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 00:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645141946; x=1676677946;
+  t=1645144389; x=1676680389;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ipLSik9rn9Gd8PhfKigKCsfp+RUzqfmQQwoIfQO79jg=;
-  b=LFaijXJZHSFLCTY7YJhAba6bIlznuPAvBGdDCeOGe7gQkM1XFQkWeTCX
-   Ry7haBlels5jaGZ4Y++LJdIUptWTf/WMYUkvzD08U18FSCy4xXuCQDTPZ
-   /oYvrNc2FhFnPeHr4sWsXU4dt1UcUnQQEi37pvVpipeYZcobBNu0jnIFE
-   5axsn6ZAU0bmozInVeD6Fx96hwGotH9HJMsPj8IdycD6krnWuOhd3DBpT
-   cH+zHsYUIYrSdVD9+V0oiDur4BArHF+G6w5kfCn2tiecFrGIfzSZLBivA
-   aExWlFLgSxhvW3t3pvC9har873/DDRY1yUKSqufF6txJDMjt6O40Oh9AR
+  bh=yQnHGoAd56d6AHfLMm0ipNb7ZnKvcd6ViJOl0N/EeqM=;
+  b=BIunvregid/eWDcxZ6YYV/MCzyTOYbysE0drePPCOisfgmuMaq3FFDus
+   rOZvhUEtAWoKMiHPxcCXva2AiVUP6bMdho0RzTfMysTcanPU3iV6AFtd8
+   SGoZPQn6g9oQcXlXUd+nXcKQnGpsgITPGXU3uWJjI7tPJMt0sLWwvkFRr
+   QJaueLxHLmnRJUBdsCnpFprWPL23JbloIxk9q49JtGufUPHJQEW494VNk
+   EOTrTyXDUabumYI0GCQGFo4bpqjqENKNMpIdeR4hLysRnmT3nRqAmiJKs
+   XJjTvX3xLFewCziuQbc6qmrBKFmfWZXlrD+U0uEd51T9Kuu2ssD74o/qJ
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="234537353"
+X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="251211290"
 X-IronPort-AV: E=Sophos;i="5.88,377,1635231600"; 
-   d="scan'208";a="234537353"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 15:52:19 -0800
+   d="scan'208";a="251211290"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 16:33:02 -0800
 X-IronPort-AV: E=Sophos;i="5.88,377,1635231600"; 
-   d="scan'208";a="503754610"
+   d="scan'208";a="545984963"
 Received: from pjayapal-mobl1.amr.corp.intel.com ([10.212.185.200])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 15:52:19 -0800
-Date: Thu, 17 Feb 2022 15:52:18 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 16:33:02 -0800
+Date: Thu, 17 Feb 2022 16:33:02 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 4/5] mptcp: handle join requests via pernet
- listen socket
-In-Reply-To: <20220217142538.7849-5-fw@strlen.de>
-Message-ID: <5cbaa9-26e5-4ce0-7950-3ff131f9f3f8@linux.intel.com>
-References: <20220217142538.7849-1-fw@strlen.de> <20220217142538.7849-5-fw@strlen.de>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v2 0/9] Refactor mptcp_join.sh
+In-Reply-To: <20220217174329.826430-1-matthieu.baerts@tessares.net>
+Message-ID: <ffdf6780-5cc7-bde4-586e-eb36c7a409d@linux.intel.com>
+References: <20220217174329.826430-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 17 Feb 2022, Florian Westphal wrote:
+On Thu, 17 Feb 2022, Matthieu Baerts wrote:
 
-> Currently mptcp adds kernel-based listener socket for all
-> netlink-configured mptcp address endpoints.
+> A few patches from the v1 have already been applied.
 >
-> This has caveats because kernel may interfere with unrelated programs
-> that use same address/port pairs.
+> Compared to the v1, this series comes with new patches and updated ones.
 >
-> RFC 8684 says:
-> Demultiplexing subflow SYNs MUST be done using the token; this is
-> unlike traditional TCP, where the destination port is used for
-> demultiplexing SYN packets.  Once a subflow is set up, demultiplexing
-> packets is done using the 5-tuple, as in traditional TCP.
+> Patch 1/9 was suggested by Paolo: bigger than the original one but following the
+> standard way of using getopt. This is also clearer and avoid regexes.
 >
-> This patch deviates from this in that it retrains the existing checks of
-
-Typo: retains
-
-> verifying the incoming requests destination vs. the list of announced
-> addresses.
+> Patch 2/9: while working on patch 1/9, I was annoyed by having the tests groups
+> defined multiple times. And I think it already happened to have missed the
+> update of one of them :)
 >
-> This can be relaxed later if deemed appropriate.
->
-> Furthermore, TCP-only listeners take precedence: An MPTCP peer
-> MUST NOT announce address:port pairs that are already in use by a
-> non-mptcp listener.
-> This could be changed, but it requires move of mptcp_handle_join()
-> hook *before* the tcp port demux, i.e. an additional conditional in
-> hotpath.  As-is, the additional conditional (syn && !rst && ...) is
-> in the 'no socket found' path.
->
-> The pernet 'listening' socket is hidden from userspace.
-> It is not part of any hashes and not bound to any address or port.
->
-> TPROXY-like semantics apply: If tcp demux cannot find a port for a given
-> packet, check if the packet is a syn packet with a valid join token.
->
-> If so, the pernet listener is returned and tcp processing resumes.
-> Otherwise, handling is intentical.
-
-Typo: identical
-
->
-> This patch does not cover timewait sockets.
+> Patch 3/9 is "safer" but also needed with the new options to execute specific
+> tests.
 >
 
-Can you elaborate on what properly covering timewait sockets would look 
-like? Does the approach used by multipath-tcp.org (handling token lookup 
-after inet_lookup_listener() / case TCP_TW_SYN in tcp_v4_rcv()) fit?
+Patches 1-3 look good to apply now:
 
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-I have one more comment below, but other than that the code that's here is 
-looking good and the big outstanding questions are the things you noted as 
-not-yet-changed in the cover letter (MP_JOIN token lookup for established 
-or TCP listening sockets). We did discuss that in today's meeting so I 
-won't rehash here.
-
-
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
-> include/net/mptcp.h  |  10 ++
-> net/ipv6/tcp_ipv6.c  |  19 ++--
-> net/mptcp/ctrl.c     | 211 ++++++++++++++++++++++++++++++++++++++++++-
-> net/mptcp/protocol.c |   2 +-
-> net/mptcp/protocol.h |   2 +-
-> net/mptcp/subflow.c  |   3 +
-> 6 files changed, 233 insertions(+), 14 deletions(-)
+> Patch 4/9 is the updated version of the previous patch 3/9 from v1: mainly
+> rebased. I only added one line in the "usage()" function and use lower cases for
+> only_tests variable.
+>
+> Patch 5/9 is new and similar to the previous patch: another way to execute a
+> specific test, useful when using 'git blame'. Also help to have patch 6/9.
 >
 
-...
+These are running fine for me, it's just the issue of 2000+ lines of churn 
+and the potential (or even likely) net/net-next merge conflicts if we need 
+to modify mptcp_join.sh after the 5.18 merge window. Hopefully all the 
+work we're doing now to stabilize the tests means we will not have as many 
+-net mptcp_join.sh changes in the next cycle, but we would still probably 
+run in to some headaches. If we do apply these it would need to be right 
+before net-next closes for 5.18.
 
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index ae20b7d92e28..6358c803ba12 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
+Since you've put this much work into this patch it implies that you think 
+the merge headaches would be worth it for the 5.18 development cycle :) 
+For the way I use the test script the ability to test by number is not 
+that critical - is anyone else (Paolo?) thinking you'll use this feature?
 
-...
 
-> @@ -185,13 +203,173 @@ static void mptcp_pernet_del_table(struct mptcp_pernet *pernet) {}
+> Patch 6/9 is a handy feature when trying to find which tests had issues when
+> executed on a CI or locally.
 >
-> #endif /* CONFIG_SYSCTL */
+
+I like this! Highly dependent on previous patches though.
+
+> Patch 7/9 was present in the v1. Non local variables have no longer been renamed
+> + a there were a few missing 'local' keywords.
 >
-> +struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
-> +{
-> +	struct mptcp_options_received mp_opt;
-> +	struct mptcp_pernet *pernet;
-> +	struct socket *ssock;
-> +	struct sock *lsk;
-> +	struct net *net;
-> +
-> +	/* paranoia check: don't allow 0 destination port,
-> +	 * else __inet_inherit_port will insert the child socket
-> +	 * into the phony hash slot of the pernet listener.
-> +	 */
-> +	if (tcp_hdr(skb)->dest == 0)
-> +		return NULL;
-> +
-> +	mptcp_get_options(skb, &mp_opt);
-> +
-> +	if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPJ))
-> +		return NULL;
-> +
-> +	net = dev_net(skb_dst(skb)->dev);
-> +	if (!mptcp_is_enabled(net))
-> +		return NULL;
-> +
-> +	/* RFC8684: If the token is unknown [..], the receiver will send
-> +	 * back a reset (RST) signal, analogous to an unknown port in TCP,
-> +	 * containing an MP_TCPRST option (Section 3.6) [..]
-> +	 */
-> +	if (!mptcp_token_exists(net, mp_opt.token)) {
-> +		struct mptcp_ext *ext = skb_ext_add(skb, SKB_EXT_MPTCP);
-> +
-> +		if (ext) {
-> +			memset(ext, 0, sizeof(*ext));
-> +			ext->reset_reason = MPTCP_RST_EMPTCP;
-> +		}
-> +		return NULL;
-> +	}
-> +
-> +	pernet = mptcp_get_pernet(net);
-> +
-> +	switch (af) {
-> +	case AF_INET:
-> +		lsk = pernet->join4.sk;
-> +		break;
-> +	case AF_INET6:
-> +		lsk = pernet->join6.sk;
-> +		break;
 
-As kbuild noted, missing an
+This seems a lot more manageable than v1, thanks.
 
-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-check here.
+> Patch 8/9 and 9/9 are the same as in v1 but rebased. We are still ShellCheck
+> compliant.
+>
 
+These look good too:
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+> Matthieu Baerts (9):
+>  Squash to "selftests: mptcp: join: allow running -cCi"
+>  selftests: mptcp: join: define tests groups once
+>  selftests: mptcp: join: reset failing links
+>  selftests: mptcp: join: option to execute specific tests
+>  selftests: mptcp: join: alt. to exec specific tests
+>  selftests: mptcp: join: list failure at the end
+>  selftests: mptcp: join: clarify local/global vars
+>  selftests: mptcp: join: avoid backquotes
+>  selftests: mptcp: join: make it shellcheck compliant
+>
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 2248 +++++++++--------
+> 1 file changed, 1202 insertions(+), 1046 deletions(-)
+>
+> -- 
+> 2.34.1
+>
+>
+>
 
 --
 Mat Martineau
