@@ -1,39 +1,38 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057AD4C6D
-	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 18:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAAE4C68
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 20:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645210798; x=1676746798;
+  t=1645216555; x=1676752555;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=yEXM5MGaqWxSrsOOC7htaSGsvPd3usiDm0yGH+lLZe0=;
-  b=cQxPpZRLpmBdEp2C0ljQw/IrQhkUPRrcIQCRW+rhoDAcSsBOXLbXzTQ1
-   mC5k6vjgnnuFWjIiUNCKB9GncxjmjAJy5TIYdoeBhupw1yk7LgGMMlwG+
-   w2XQ+tBvva6PyKhbyYZZtiDz1HM/yWgzv4qBCOrGAS5vO29k42/ZwGLJW
-   yY+btvdoD6/ILS3PA9DezkGDhQZP41hJ+awRLQgganGHClnz1g5RO0BFh
-   hFkpHhcY+Ny1e1rpUeoqdl57kY1jfZbIijNGa7LGTOQcUnAJ22EV78K6l
-   +xfLNFtWcjuQD5G1Bdc8wKha3iJaSDr5FoWBLCPkeqNoSpcWGASlVNbTu
+  bh=W+wXDZJ5Avml2vqDJodmKpvCfp0yKQ2rmd4zmrGYmyo=;
+  b=lTx0V5vcEtGdCh961q6tRzitI1Gp/ML9491MQQpGClJDwUGJvzfbioCa
+   glzHJCWDGrrgp0wWma7868NTHF9IPpIFmaNqKSFP0Ldnoyq9AHPGO+9Kr
+   jRrN3QjCSQShRFzvKJAV3PkqSLEgzoPgJSt286WsAnKymdzqblFNK6j58
+   45To1tKK+7Sw4Pu0udAhuAmpR9FcCVrM3P9GFfRHqbPU8sq5Gqa8WOsgi
+   T75cKHO6ZG4R9dBWwLO/85WAMSU9frFB0VVRQFrbYe0mwb3PHqcHv2sqZ
+   1LmrvVO+pGYyHN9nsKdUlrvfShCgBFjqSSOnF73M35YUZy5NYpJ8fWbWG
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="231825509"
+X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="250969693"
 X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="231825509"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 10:59:57 -0800
+   d="scan'208";a="250969693"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 12:35:54 -0800
 X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="546398408"
+   d="scan'208";a="504131067"
 Received: from yungjihy-mobl1.amr.corp.intel.com ([10.209.64.253])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 10:59:56 -0800
-Date: Fri, 18 Feb 2022 10:59:56 -0800 (PST)
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 12:33:54 -0800
+Date: Fri, 18 Feb 2022 12:33:54 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 0/9] Refactor mptcp_join.sh
-In-Reply-To: <a58fd624f7261abfe417f27b92dc906aab5fb22f.camel@redhat.com>
-Message-ID: <b53e8f70-dfb9-b587-5ac2-76d2e92272f1@linux.intel.com>
-References: <20220217174329.826430-1-matthieu.baerts@tessares.net>  <ffdf6780-5cc7-bde4-586e-eb36c7a409d@linux.intel.com>  <808f443ae9db49c2e5bc69a2285f230d5369853c.camel@redhat.com> <a58fd624f7261abfe417f27b92dc906aab5fb22f.camel@redhat.com>
+Subject: Re: [PATCH v5 mptcp-next 0/4] mptcp: more self-tests improvements
+In-Reply-To: <5098f08134c9cb059b32bcce363f466bd1f2df2f.camel@redhat.com>
+Message-ID: <e1a0afb0-ea3c-e6ed-827b-481960f49cd5@linux.intel.com>
+References: <cover.1645134065.git.pabeni@redhat.com>  <7a175aba-a3d9-f2d0-fee8-5f616c999013@linux.intel.com> <5098f08134c9cb059b32bcce363f466bd1f2df2f.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,59 +43,60 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Fri, 18 Feb 2022, Paolo Abeni wrote:
 
-> On Fri, 2022-02-18 at 12:04 +0100, Paolo Abeni wrote:
->> On Thu, 2022-02-17 at 16:33 -0800, Mat Martineau wrote:
->>>> Patch 4/9 is the updated version of the previous patch 3/9 from v1: mainly
->>>> rebased. I only added one line in the "usage()" function and use lower cases for
->>>> only_tests variable.
->>>>
->>>> Patch 5/9 is new and similar to the previous patch: another way to execute a
->>>> specific test, useful when using 'git blame'. Also help to have patch 6/9.
->>>>
->>>
->>> These are running fine for me, it's just the issue of 2000+ lines of churn
->>> and the potential (or even likely) net/net-next merge conflicts if we need
->>> to modify mptcp_join.sh after the 5.18 merge window. Hopefully all the
->>> work we're doing now to stabilize the tests means we will not have as many
->>> -net mptcp_join.sh changes in the next cycle, but we would still probably
->>> run in to some headaches. If we do apply these it would need to be right
->>> before net-next closes for 5.18.
->>>
->>> Since you've put this much work into this patch it implies that you think
->>> the merge headaches would be worth it for the 5.18 development cycle :)
->>> For the way I use the test script the ability to test by number is not
->>> that critical - is anyone else (Paolo?) thinking you'll use this feature?
+> On Thu, 2022-02-17 at 17:35 -0800, Mat Martineau wrote:
+>> On Thu, 17 Feb 2022, Paolo Abeni wrote:
 >>
->> That feature would have saved a significant amount of my time in the
->> past weeks. I think the diffstat is a bit too much, and I still would
->> prefer the other approach of filtering out the test in each helper used
->> by the test themself.
+>>> This iteration tries to address the feedback from Mat on v4.
+>>>
+>>> patch 1/4 is new and tries to address the problem behind issues/225 with
+>>> stricted RFC compliance
+>>> patch 2 and 3 clean-up endpoint management as per past discussion
+>>> patch 4 introduce new self-tests, as deserved the previous patch
+>>>
+>>
+>> Hi Paolo -
+>>
+>> These changes and tests are working well on my system and fits with what
+>> we discussed on the previous revisions - thanks!
+>>
+>> I was taking another look at the RFC and saw this paragraph:
+>>
+>>     The MP_JOIN option includes an "Address ID".  This is an identifier
+>>     generated by the sender of the option, used to identify the source
+>>     address of this packet, even if the IP header has been changed in
+>>     transit by a middlebox.  The numeric value of this field is generated
+>>     by the sender and must map uniquely to a source IP address for the
+>>     sending host.  The Address ID allows address removal (Section 3.4.2)
+>>     without needing to know what the source address at the receiver is,
+>>     thus allowing address removal through NATs.  The Address ID also
+>>     allows correlation between new subflow setup attempts and address
+>>     signaling (Section 3.4.1), to prevent setting up duplicate subflows
+>>     on the same path, if an MP_JOIN and ADD_ADDR are sent at the same
+>>     time.
+>>
+>> That made me wonder if we are supposed to treat this address ID as a type
+>> of advertisement which would require us to not reuse id 0? I think the
+>> answer is "no" because nothing in the REMOVE_ADDR section (3.4.2) seems to
+>> apply to joins, and it's also pretty permissive about not sending
+>> REMOVE_ADDR. We also won't be sending REMOVE_ADDR for id 0, so the new
+>> code seems safe in that regard.
 >
-> Uhmmm... my main argument vs the current version of patch 4 is defeated
-> by patches 5 && 6, which look useful. So I'm ok with patch 4 as is...
+> Double checking if I parsed the above correctly. The main
+> point/question is: which ID should use additional MPJ subflows with the
+> same source address of the initial MPC subflow? My answer/what the
+> current code is doing prior and after this patch is 'id 0'. I read the
+> above as this is also your answer.
+>
+> Please correct me if I misinterpret something!
 >
 
-Ok, thanks for the insight! I do like the features, just wanted to make 
-sure there's enough interest to justify the conflict resolution work we're 
-signing up for. And it does seem like the payoff is worth it. At least 
-it's a selftest script and not kernel code that could be disrupted by 
-incorrect git conflict resolution here :)
+That's part of it. I also wasn't sure if the MPJ syn could also be sent 
+with addr id 0 if the kernel picked some other interface for sending that 
+syn that had not been configured in the path manager - a corner case that 
+I thought had been mentioned earlier in discussion of this patch series.
 
->> Additionally, I think it would be nice replace the 'bare' ip netns exec
->> ...' we still have in some the userspace tests with the appropriate
->> helpers - possibly worth a separate, independent patch.
->
-> ... still think it would be nice (almost necessary) cover the above ->
-> migrate all direct ip netns exec... usage to the appropriate helper.
->
-
-Sure, that would be good too.
-
-Matthieu, I think it would be good to delay adding 4/5/6 to the export 
-branch until mptcp_join.sh has stabilized in -net and been merged back to 
-net-next - what do you think? Once these changes go in to the export 
-branch we have a lot less flexibility in the order that patches go to 
-net-next.
+If the outgoing MPJ only has addr id 0 if the MPC source addr is used then 
+that's definitely not any kind of problem.
 
 --
 Mat Martineau
