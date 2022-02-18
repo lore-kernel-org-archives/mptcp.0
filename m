@@ -1,150 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AC048C6
-	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 11:04:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2B028E2
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 15:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1645182280;
+	s=mimecast20190719; t=1645197454;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A8UFOZxmcbDIkM4mvLmIEaRdcKbZWjehPTqxetHDgak=;
-	b=BnYYOmw54lZ5rK8+OIwowcgrfzqOpONPmJGI2JoIQd62EcZMaDSndVpjtkGrSSCU9qskyF
-	qs9pXISYaVq60yNY5MAEwQG9H3nN3cWXXollbmowAnOzi+IYFtIo1/ezy0Q7gkHTu5KVj4
-	Tgtv6VNq5Mi4P9Fk+xgSaL0ecL76aLA=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aCpK9pKKU/TSVm+7KGPAZKzrLPVATbu7aT2mbTOZbO8=;
+	b=Yn3iSq/l79wC4aAkktC1qI0HE0FR7BC8WvPkSSR4P6hXjcjCRtO8p0CjTmG9PLsm4R/hs+
+	TylGN0BvfeT9vndkngDCU8YLFk7lEXGqsFSWhkABSBLrx766Iz9lLBajstoIWOknmVFToY
+	eEiFOqwiurfGY1/igJDE1PH5XoIFt5c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-641-7BNJcBxnNcC8jHARzEfnzA-1; Fri, 18 Feb 2022 06:04:39 -0500
-X-MC-Unique: 7BNJcBxnNcC8jHARzEfnzA-1
-Received: by mail-qv1-f70.google.com with SMTP id k6-20020ad45be6000000b0042c82bd64deso8415306qvc.22
-        for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 03:04:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=A8UFOZxmcbDIkM4mvLmIEaRdcKbZWjehPTqxetHDgak=;
-        b=jKdtJAfwz0oiHF0DEuZwB7ilsCP2Y97wraGhyYjLCCInIygols0Nw637k7TmnRlGhN
-         3ax3UrXbE0mdbJilsRC0vZfyjA8rtxR8xlo5zJjNKCUa5uefNGiD7QGaephpKo3noYnL
-         37es3INxUHnSROm6LFRtXuG/xirfI5S55zCStx2rCpWfMiuyV8PuLdqWTP//X08wkhFu
-         jcxPF4+DPPbwE71T4pFpL7TQr4gY/0gXtldF36SAu7pPXAJj+4q0qbf7Coom9s5vFdEt
-         k5Q7v7igir9fACyT+kqSI4GQ3GBaQyT7y2P5ZjIN+sx3gJzMqRGZ7XWNJZtYjgFwp8KP
-         fvNQ==
-X-Gm-Message-State: AOAM5332NZ8j+w3uXSY66zRR0tIlTeokJMyryc81tCTiP1Znlz4HS/jK
-	ddtlgU+Nnj4IVap13fvu/exQc3tiaghL6QCBJmI81qradFdiHFWuTj5p6G174U3CyecqfxEX7H9
-	aSWIP8DhchSL6s4M=
-X-Received: by 2002:ac8:7c4b:0:b0:2d1:bff6:e9ef with SMTP id o11-20020ac87c4b000000b002d1bff6e9efmr6192859qtv.22.1645182278857;
-        Fri, 18 Feb 2022 03:04:38 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyaXklQHn8WvBRPs1+8lLsph7MUuDEfE/KXoWKrB9vqc4HHxVe19d0Pc1wwR8WDL51490KKSA==
-X-Received: by 2002:ac8:7c4b:0:b0:2d1:bff6:e9ef with SMTP id o11-20020ac87c4b000000b002d1bff6e9efmr6192834qtv.22.1645182278550;
-        Fri, 18 Feb 2022 03:04:38 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-112-206.dyn.eolo.it. [146.241.112.206])
-        by smtp.gmail.com with ESMTPSA id bs16sm21594668qkb.69.2022.02.18.03.04.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Feb 2022 03:04:38 -0800 (PST)
-Message-ID: <808f443ae9db49c2e5bc69a2285f230d5369853c.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2 0/9] Refactor mptcp_join.sh
+ us-mta-50-RmvuEb0nMYKcDG0rGmOQAA-1; Fri, 18 Feb 2022 10:17:31 -0500
+X-MC-Unique: RmvuEb0nMYKcDG0rGmOQAA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5CA9801AC5
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 15:17:30 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.232])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2D6117CADB
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 15:17:29 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
-	 <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Date: Fri, 18 Feb 2022 12:04:35 +0100
-In-Reply-To: <ffdf6780-5cc7-bde4-586e-eb36c7a409d@linux.intel.com>
-References: <20220217174329.826430-1-matthieu.baerts@tessares.net>
-	 <ffdf6780-5cc7-bde4-586e-eb36c7a409d@linux.intel.com>
-User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net 0/2] mptcp: fix ioctl on fallback
+Date: Fri, 18 Feb 2022 16:17:19 +0100
+Message-Id: <cover.1645196974.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-On Thu, 2022-02-17 at 16:33 -0800, Mat Martineau wrote:
-> > Patch 4/9 is the updated version of the previous patch 3/9 from v1: mainly
-> > rebased. I only added one line in the "usage()" function and use lower cases for
-> > only_tests variable.
-> > 
-> > Patch 5/9 is new and similar to the previous patch: another way to execute a
-> > specific test, useful when using 'git blame'. Also help to have patch 6/9.
-> > 
-> 
-> These are running fine for me, it's just the issue of 2000+ lines of churn 
-> and the potential (or even likely) net/net-next merge conflicts if we need 
-> to modify mptcp_join.sh after the 5.18 merge window. Hopefully all the 
-> work we're doing now to stabilize the tests means we will not have as many 
-> -net mptcp_join.sh changes in the next cycle, but we would still probably 
-> run in to some headaches. If we do apply these it would need to be right 
-> before net-next closes for 5.18.
-> 
-> Since you've put this much work into this patch it implies that you think 
-> the merge headaches would be worth it for the 5.18 development cycle :) 
-> For the way I use the test script the ability to test by number is not 
-> that critical - is anyone else (Paolo?) thinking you'll use this feature?
+The first patch fixes the issue, hopefully closing:
 
-That feature would have saved a significant amount of my time in the
-past weeks. I think the diffstat is a bit too much, and I still would
-prefer the other approach of filtering out the test in each helper used
-by the test themself.
+https://github.com/multipath-tcp/mptcp_net-next/issues/260
 
-Additionally, I think it would be nice replace the 'bare' ip netns exec
-...' we still have in some the userspace tests with the appropriate
-helpers - possibly worth a separate, independent patch.
+the 2nd patch is self-test cleanup
 
-/P
-> 
-> 
-> > Patch 6/9 is a handy feature when trying to find which tests had issues when
-> > executed on a CI or locally.
-> > 
-> 
-> I like this! Highly dependent on previous patches though.
-> 
-> > Patch 7/9 was present in the v1. Non local variables have no longer been renamed
-> > + a there were a few missing 'local' keywords.
-> > 
-> 
-> This seems a lot more manageable than v1, thanks.
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> 
-> > Patch 8/9 and 9/9 are the same as in v1 but rebased. We are still ShellCheck
-> > compliant.
-> > 
-> 
-> These look good too:
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> 
-> > Matthieu Baerts (9):
-> >  Squash to "selftests: mptcp: join: allow running -cCi"
-> >  selftests: mptcp: join: define tests groups once
-> >  selftests: mptcp: join: reset failing links
-> >  selftests: mptcp: join: option to execute specific tests
-> >  selftests: mptcp: join: alt. to exec specific tests
-> >  selftests: mptcp: join: list failure at the end
-> >  selftests: mptcp: join: clarify local/global vars
-> >  selftests: mptcp: join: avoid backquotes
-> >  selftests: mptcp: join: make it shellcheck compliant
-> > 
-> > .../testing/selftests/net/mptcp/mptcp_join.sh | 2248 +++++++++--------
-> > 1 file changed, 1202 insertions(+), 1046 deletions(-)
-> > 
-> > -- 
-> > 2.34.1
-> > 
-> > 
-> > 
-> 
-> --
-> Mat Martineau
-> Intel
-> 
+Paolo Abeni (2):
+  mptcp: accurate SIOCOUTQ for fallback socket
+  selftests: mptcp: do complete cleanup at exit
+
+ net/mptcp/protocol.c                               | 11 +++++++++++
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  4 ++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+-- 
+2.34.1
 
