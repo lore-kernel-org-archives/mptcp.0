@@ -1,70 +1,78 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE584C68
-	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 21:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA8C4C68
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 21:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645218677; x=1676754677;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=49l+h9GGDgxCNq05ZKomwkRuE3d7P7AafHeX/aW9WC4=;
-  b=gCWIViGEekBZVvuzHh6KWanDnUOZdQ1dSp+wmyp75UvGSmPeDxlfGhD8
-   WfnJgUwEJHGYJ6NR7SfP5d+9Rn2BHFQyh1UlLRFOcQDPUAYdQ3KU6kq6r
-   OFRPlRb+kP86+SWOPtL4H3dtU15eZo0/RU57WnD0xfxUOjjnxvg9OND93
-   VAq1QsLvQzlE4bjJRmRDWWhESvSzVC3QYSyaj2GjrVjfScYz4Mxu5yJKM
-   rKqCB8o/w23Irl+4p2aKkM68iCgLM4cxY/0F5aDW492yJi62eTwrmcKHs
-   0LJqo4nrc0fWMafn8qDnqFFIhygG+OLns37qgfmty38tOvrnKTkENqUS1
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="231193104"
+  t=1645220151; x=1676756151;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uyPc/EBgzWTl0ZgbPCImCzWB00l72z32DRJocdmpAs8=;
+  b=YirxUeFvONBNemusauTkycQwX0/rMrQ3qNQDNiBeL4eH7obKV3HUUj36
+   3F83y4ETHhAdzoXSl5OYPDiPde2FL7GYp32tbPT9+iPnAUB/15UU7I6p1
+   Ma3TwG0yFTK9YaymNZklI1apZNDMJq3P1Zwc2UqLwvAk2GmoZiy68n7xp
+   InCKwSWu1dnls5MvV0m17zb6kjzQ+fanNADrl8cRqnleJPZyeiNN4TosN
+   KPij4sYa7a98f/f4xkUa8+k+nSXB89fhxbnDCp4t6LbuM7aBRzHWX1viz
+   HuigupfTsp0ogFuO2rbUl4rTo99nYpi98Xz6i1NLQAUNtb+b5rjS2Q88U
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="238639215"
 X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="231193104"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:11:16 -0800
+   d="scan'208";a="238639215"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:35:50 -0800
 X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="778112574"
-Received: from yungjihy-mobl1.amr.corp.intel.com ([10.209.64.253])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:11:16 -0800
-Date: Fri, 18 Feb 2022 13:11:15 -0800 (PST)
+   d="scan'208";a="605664067"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.65.242])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:35:50 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net 0/2] mptcp: fix ioctl on fallback
-In-Reply-To: <cover.1645196974.git.pabeni@redhat.com>
-Message-ID: <287ee9a7-e9a8-3e7e-87da-c03c5c87cf1@linux.intel.com>
-References: <cover.1645196974.git.pabeni@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	pabeni@redhat.com,
+	geliang.tang@suse.com,
+	mptcp@lists.linux.dev
+Subject: [PATCH net 0/7] mptcp: Fix address advertisement races and stabilize tests
+Date: Fri, 18 Feb 2022 13:35:37 -0800
+Message-Id: <20220218213544.70285-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 18 Feb 2022, Paolo Abeni wrote:
+Patches 1, 2, and 7 modify two self tests to give consistent, accurate
+results by fixing timing issues and accounting for syncookie behavior.
 
-> The first patch fixes the issue, hopefully closing:
->
-> https://github.com/multipath-tcp/mptcp_net-next/issues/260
->
-> the 2nd patch is self-test cleanup
->
-> Paolo Abeni (2):
->  mptcp: accurate SIOCOUTQ for fallback socket
->  selftests: mptcp: do complete cleanup at exit
->
-> net/mptcp/protocol.c                               | 11 +++++++++++
-> tools/testing/selftests/net/mptcp/mptcp_connect.sh |  4 ++--
-> 2 files changed, 13 insertions(+), 2 deletions(-)
->
-> -- 
-> 2.34.1
-
-Looks good for the export branch, thanks Paolo.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Paches 3-6 fix two races in overlapping address advertisement send and
+receive. Associated self tests are updated, including addition of two
+MIBs to enable testing and tracking dropped address events.
 
 
---
-Mat Martineau
-Intel
+Paolo Abeni (7):
+  selftests: mptcp: fix diag instability
+  selftests: mptcp: improve 'fair usage on close' stability
+  mptcp: fix race in overlapping signal events
+  mptcp: fix race in incoming ADD_ADDR option processing
+  mptcp: add mibs counter for ignored incoming options
+  selftests: mptcp: more robust signal race test
+  selftests: mptcp: be more conservative with cookie MPJ limits
+
+ net/mptcp/mib.c                               |  2 +
+ net/mptcp/mib.h                               |  2 +
+ net/mptcp/pm.c                                |  8 +++-
+ net/mptcp/pm_netlink.c                        | 29 +++++++++---
+ tools/testing/selftests/net/mptcp/diag.sh     | 44 ++++++++++++++++---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 32 +++++++++++---
+ 6 files changed, 96 insertions(+), 21 deletions(-)
+
+
+base-commit: b352c3465bb808ab700d03f5bac2f7a6f37c5350
+-- 
+2.35.1
+
