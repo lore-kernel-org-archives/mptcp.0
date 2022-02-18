@@ -1,30 +1,30 @@
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51AB4C90
-	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 21:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99BD3202
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 21:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645220152; x=1676756152;
+  t=1645220153; x=1676756153;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=25BcXDQQWkP0Aa2PBvrQgF9AqV4OGrfUZbGVafZBSaY=;
-  b=jUHgCoGcHG69ABVk4sgVEJ5Cof48GxLNBMiefNKuhQwuqo0iKz9MmOg5
-   oLULevu87TY3TMTR5QMrU4E1pok3Xf9bIkHCCZGQqOmD0tRxAJD82bjLc
-   cPDJj0/qdYN5sD5+DEr0EXhbc1Mvs7v2+SOMhHzyyQ87Jz1nwWUzpUbpp
-   79u+Fa7Bw+L/39ZW6wRHMI/k2+r84zSiARKxHSgWIa5f+Gn1OQgDxlwLP
-   pyfX2ltup5ucO43A8uT6MqmbVeXlnuWNBsCgVH9cdSD7EBPEKmEP+gJ0h
-   8MwETieXPoy3Lwyb+NU5VzDEoG7VxJLK75P+f1WnL9DJXoqx+ZPN5O4hp
+  bh=d8l5H47MHhe5BUeljIGKZzmWZdlEJw5PRfTCL4x7u9o=;
+  b=n+vFTi8Eb06jrTUNYsRWfzv/pI8kK1+/2KhtA4f4Q8nGil/5+QQ6KzxL
+   C6m23nyrKtx2HnHhnqbaEAtFiuU7+2OAlKIchsTLZX4f+dRrBhGlfoxiv
+   yT3LkOXKTWEMOjCDR6QaoYjsU6K8eIitGGOGfBepAHkVEfrRQ424bI1n3
+   qTJtBALxCWh6xdR4J8bjv20RFkCoS5Bxr9h4OAA2XMWfVzDVhNSLXxSRd
+   ZbV8IfFNWrIotdbSU5UXlQ8p220gI+M6eXtu4vC66O/3SjWxdiTMYpzc9
+   O1FIPQUNiZ7QdTAJRRSsJSEbpOpebMW8BZz74SU/TkvGqrFV0Qk+Ucc+0
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="238639216"
+X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="238639220"
 X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="238639216"
+   d="scan'208";a="238639220"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:35:51 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:35:52 -0800
 X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="605664068"
+   d="scan'208";a="605664073"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.65.242])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:35:50 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 13:35:51 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Paolo Abeni <pabeni@redhat.com>,
@@ -34,9 +34,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	geliang.tang@suse.com,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 1/7] selftests: mptcp: fix diag instability
-Date: Fri, 18 Feb 2022 13:35:38 -0800
-Message-Id: <20220218213544.70285-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 3/7] mptcp: fix race in overlapping signal events
+Date: Fri, 18 Feb 2022 13:35:40 -0800
+Message-Id: <20220218213544.70285-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220218213544.70285-1-mathew.j.martineau@linux.intel.com>
 References: <20220218213544.70285-1-mathew.j.martineau@linux.intel.com>
@@ -50,109 +50,48 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Instead of waiting for an arbitrary amount of time for the MPTCP
-MP_CAPABLE handshake to complete, explicitly wait for the relevant
-socket to enter into the established status.
+After commit a88c9e496937 ("mptcp: do not block subflows
+creation on errors"), if a signal address races with a failing
+subflow creation, the subflow creation failure control path
+can trigger the selection of the next address to be announced
+while the current announced is still pending.
 
-Additionally let the data transfer application use the slowest
-transfer mode available (-r), to cope with very slow host, or
-high jitter caused by hosting VMs.
+The above will cause the unintended suppression of the ADD_ADDR
+announce.
 
-Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/258
-Reported-and-tested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Fix the issue skipping the to-be-suppressed announce before it
+will mark an endpoint as already used. The relevant announce
+will be triggered again when the current one will complete.
+
+Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- tools/testing/selftests/net/mptcp/diag.sh | 44 +++++++++++++++++++----
- 1 file changed, 37 insertions(+), 7 deletions(-)
+ net/mptcp/pm_netlink.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 2674ba20d524..ff821025d309 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -71,6 +71,36 @@ chk_msk_remote_key_nr()
- 		__chk_nr "grep -c remote_key" $*
- }
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 356f596e2032..82f82a513f5b 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -546,6 +546,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 	if (msk->pm.add_addr_signaled < add_addr_signal_max) {
+ 		local = select_signal_address(pernet, msk);
  
-+# $1: ns, $2: port
-+wait_local_port_listen()
-+{
-+	local listener_ns="${1}"
-+	local port="${2}"
++		/* due to racing events on both ends we can reach here while
++		 * previous add address is still running: if we invoke now
++		 * mptcp_pm_announce_addr(), that will fail and the
++		 * corresponding id will be marked as used.
++		 * Instead let the PM machinery reschedule us when the
++		 * current address announce will be completed.
++		 */
++		if (msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_SIGNAL))
++			return;
 +
-+	local port_hex i
-+
-+	port_hex="$(printf "%04X" "${port}")"
-+	for i in $(seq 10); do
-+		ip netns exec "${listener_ns}" cat /proc/net/tcp | \
-+			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
-+			break
-+		sleep 0.1
-+	done
-+}
-+
-+wait_connected()
-+{
-+	local listener_ns="${1}"
-+	local port="${2}"
-+
-+	local port_hex i
-+
-+	port_hex="$(printf "%04X" "${port}")"
-+	for i in $(seq 10); do
-+		ip netns exec ${listener_ns} grep -q " 0100007F:${port_hex} " /proc/net/tcp && break
-+		sleep 0.1
-+	done
-+}
- 
- trap cleanup EXIT
- ip netns add $ns
-@@ -81,15 +111,15 @@ echo "a" | \
- 		ip netns exec $ns \
- 			./mptcp_connect -p 10000 -l -t ${timeout_poll} \
- 				0.0.0.0 >/dev/null &
--sleep 0.1
-+wait_local_port_listen $ns 10000
- chk_msk_nr 0 "no msk on netns creation"
- 
- echo "b" | \
- 	timeout ${timeout_test} \
- 		ip netns exec $ns \
--			./mptcp_connect -p 10000 -j -t ${timeout_poll} \
-+			./mptcp_connect -p 10000 -r 0 -t ${timeout_poll} \
- 				127.0.0.1 >/dev/null &
--sleep 0.1
-+wait_connected $ns 10000
- chk_msk_nr 2 "after MPC handshake "
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
-@@ -101,13 +131,13 @@ echo "a" | \
- 		ip netns exec $ns \
- 			./mptcp_connect -p 10001 -l -s TCP -t ${timeout_poll} \
- 				0.0.0.0 >/dev/null &
--sleep 0.1
-+wait_local_port_listen $ns 10001
- echo "b" | \
- 	timeout ${timeout_test} \
- 		ip netns exec $ns \
--			./mptcp_connect -p 10001 -j -t ${timeout_poll} \
-+			./mptcp_connect -p 10001 -r 0 -t ${timeout_poll} \
- 				127.0.0.1 >/dev/null &
--sleep 0.1
-+wait_connected $ns 10001
- chk_msk_fallback_nr 1 "check fallback"
- flush_pids
- 
-@@ -119,7 +149,7 @@ for I in `seq 1 $NR_CLIENTS`; do
- 				./mptcp_connect -p $((I+10001)) -l -w 10 \
- 					-t ${timeout_poll} 0.0.0.0 >/dev/null &
- done
--sleep 0.1
-+wait_local_port_listen $ns $((NR_CLIENTS + 10001))
- 
- for I in `seq 1 $NR_CLIENTS`; do
- 	echo "b" | \
+ 		if (local) {
+ 			if (mptcp_pm_alloc_anno_list(msk, local)) {
+ 				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
 -- 
 2.35.1
 
