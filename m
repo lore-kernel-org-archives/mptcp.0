@@ -1,106 +1,150 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BEB48A3
-	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 10:40:07 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id a8so13990557ejc.8
-        for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 02:40:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=3no1OkXIcYGVoCLgg6Tz6L9gjdFetgcwVXZ9QnK/ut8=;
-        b=k3zOYWwb3zwFz9xHmNUeGtvLiO09Tee+vx04jvBePPTGCsl8bxZzlZ3qri5Loj7hE8
-         MIlSLQWLGhH8M5ffubRY8fvy/GQNf+ufzZ7yIQ8ftzl3RL94BC547dLjbecSS5SwI57T
-         rim2vqbE/uLjS9h4jC/tbb0Gwg2D8s0LPAaI9H+Fj8apRE8Lrj2nsKEG2t/SMTrR5pap
-         iV75x7VPLyS5zV+gh4kpyxTGXqngIYs0yRysrDa1n+0ZZ7lLzXcGwqZr8JIwMcnnRxJz
-         0LHXbvs9NIbL27J/vlMRuqJsgmghwL2SyBhbEQPh3EWhCfgTnUrKtUQl1ztCz7N8QTB4
-         bMxw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AC048C6
+	for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 11:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1645182280;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A8UFOZxmcbDIkM4mvLmIEaRdcKbZWjehPTqxetHDgak=;
+	b=BnYYOmw54lZ5rK8+OIwowcgrfzqOpONPmJGI2JoIQd62EcZMaDSndVpjtkGrSSCU9qskyF
+	qs9pXISYaVq60yNY5MAEwQG9H3nN3cWXXollbmowAnOzi+IYFtIo1/ezy0Q7gkHTu5KVj4
+	Tgtv6VNq5Mi4P9Fk+xgSaL0ecL76aLA=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-641-7BNJcBxnNcC8jHARzEfnzA-1; Fri, 18 Feb 2022 06:04:39 -0500
+X-MC-Unique: 7BNJcBxnNcC8jHARzEfnzA-1
+Received: by mail-qv1-f70.google.com with SMTP id k6-20020ad45be6000000b0042c82bd64deso8415306qvc.22
+        for <mptcp@lists.linux.dev>; Fri, 18 Feb 2022 03:04:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=3no1OkXIcYGVoCLgg6Tz6L9gjdFetgcwVXZ9QnK/ut8=;
-        b=OsLZlhRcz/WKkviT5MG0sLueq6NDrFlD3yyh87oEVmhWHiAbj1SThTH3hK+l5B0yV2
-         FEfbphy6GNJV7QyYiKeyet7xg0wqKrJg4Zp/rVYafoaza/Odb86O4umdwqVXm9zroAoF
-         GBC0pJgwLPqwyvDPhBk3OiKkNUoWIdBpi4tmJnGWgO8YhrfV0dxXUJGWMJuVG5g//H7Z
-         LQxOAzOsR9embNXbO1efkjkHXNOfz8Ybtk0hcfRyDEB9jlWkehksd3G8O2PAAWuETyGw
-         doFchPV30flmMBAVRJL07pGoNHzt9DGbtbBTRIPW7YO2hkNfh0wETphgSMA2A4+4iSuc
-         PP9g==
-X-Gm-Message-State: AOAM530yJTDuz+3r9y2ujegnAxZH/CI7u0Bv3tw8g1qYXgvbMraJq0EI
-	PBnn2hpDcHa+LZvPBhDCtt5NgUhPHGDNL+lr
-X-Google-Smtp-Source: ABdhPJxsM2xJHGKkzM4XQuAhsqIrTL6V41hWryZASSJegZWDhgqLefu98w4Qg8NOlp28FQSD0A/AHw==
-X-Received: by 2002:a17:907:2bd1:b0:6ce:484:f653 with SMTP id gv17-20020a1709072bd100b006ce0484f653mr5847049ejc.391.1645180805611;
-        Fri, 18 Feb 2022 02:40:05 -0800 (PST)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id p12sm1601845edc.49.2022.02.18.02.40.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Feb 2022 02:40:05 -0800 (PST)
-Message-ID: <1bd2f732-a158-ebc9-3360-61a2ff115e00@tessares.net>
-Date: Fri, 18 Feb 2022 11:40:04 +0100
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=A8UFOZxmcbDIkM4mvLmIEaRdcKbZWjehPTqxetHDgak=;
+        b=jKdtJAfwz0oiHF0DEuZwB7ilsCP2Y97wraGhyYjLCCInIygols0Nw637k7TmnRlGhN
+         3ax3UrXbE0mdbJilsRC0vZfyjA8rtxR8xlo5zJjNKCUa5uefNGiD7QGaephpKo3noYnL
+         37es3INxUHnSROm6LFRtXuG/xirfI5S55zCStx2rCpWfMiuyV8PuLdqWTP//X08wkhFu
+         jcxPF4+DPPbwE71T4pFpL7TQr4gY/0gXtldF36SAu7pPXAJj+4q0qbf7Coom9s5vFdEt
+         k5Q7v7igir9fACyT+kqSI4GQ3GBaQyT7y2P5ZjIN+sx3gJzMqRGZ7XWNJZtYjgFwp8KP
+         fvNQ==
+X-Gm-Message-State: AOAM5332NZ8j+w3uXSY66zRR0tIlTeokJMyryc81tCTiP1Znlz4HS/jK
+	ddtlgU+Nnj4IVap13fvu/exQc3tiaghL6QCBJmI81qradFdiHFWuTj5p6G174U3CyecqfxEX7H9
+	aSWIP8DhchSL6s4M=
+X-Received: by 2002:ac8:7c4b:0:b0:2d1:bff6:e9ef with SMTP id o11-20020ac87c4b000000b002d1bff6e9efmr6192859qtv.22.1645182278857;
+        Fri, 18 Feb 2022 03:04:38 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyaXklQHn8WvBRPs1+8lLsph7MUuDEfE/KXoWKrB9vqc4HHxVe19d0Pc1wwR8WDL51490KKSA==
+X-Received: by 2002:ac8:7c4b:0:b0:2d1:bff6:e9ef with SMTP id o11-20020ac87c4b000000b002d1bff6e9efmr6192834qtv.22.1645182278550;
+        Fri, 18 Feb 2022 03:04:38 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-112-206.dyn.eolo.it. [146.241.112.206])
+        by smtp.gmail.com with ESMTPSA id bs16sm21594668qkb.69.2022.02.18.03.04.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Feb 2022 03:04:38 -0800 (PST)
+Message-ID: <808f443ae9db49c2e5bc69a2285f230d5369853c.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 0/9] Refactor mptcp_join.sh
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
+	 <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Date: Fri, 18 Feb 2022 12:04:35 +0100
+In-Reply-To: <ffdf6780-5cc7-bde4-586e-eb36c7a409d@linux.intel.com>
+References: <20220217174329.826430-1-matthieu.baerts@tessares.net>
+	 <ffdf6780-5cc7-bde4-586e-eb36c7a409d@linux.intel.com>
+User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH mptcp-next v2 5/9] selftests: mptcp: join: alt. to exec
- specific tests
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <20220217174329.826430-1-matthieu.baerts@tessares.net>
- <20220217174329.826430-6-matthieu.baerts@tessares.net>
- <5a7dabe8-c4bf-99d0-4b8e-96c6823ba8f7@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <5a7dabe8-c4bf-99d0-4b8e-96c6823ba8f7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
-
-On 18/02/2022 01:35, Mat Martineau wrote:
-> On Thu, 17 Feb 2022, Matthieu Baerts wrote:
+On Thu, 2022-02-17 at 16:33 -0800, Mat Martineau wrote:
+> > Patch 4/9 is the updated version of the previous patch 3/9 from v1: mainly
+> > rebased. I only added one line in the "usage()" function and use lower cases for
+> > only_tests variable.
+> > 
+> > Patch 5/9 is new and similar to the previous patch: another way to execute a
+> > specific test, useful when using 'git blame'. Also help to have patch 6/9.
+> > 
 > 
->> Running a specific test by giving the ID is often what we want: the CI
->> reports an issue with the Nth test, it is reproduceable with
-
-(should be "reproducible")
-
->> ./mptcp_join.sh N
->>
->> But this doesn't work when a test is unstable and it is needed to find
->> since when it is unstable because the ID is a counter and new tests can
->> be added before changing the ID of a specific test.
->>
+> These are running fine for me, it's just the issue of 2000+ lines of churn 
+> and the potential (or even likely) net/net-next merge conflicts if we need 
+> to modify mptcp_join.sh after the 5.18 merge window. Hopefully all the 
+> work we're doing now to stabilize the tests means we will not have as many 
+> -net mptcp_join.sh changes in the next cycle, but we would still probably 
+> run in to some headaches. If we do apply these it would need to be right 
+> before net-next closes for 5.18.
 > 
-> Could you rephrase or split up this sentence to make it easier to parse?
+> Since you've put this much work into this patch it implies that you think 
+> the merge headaches would be worth it for the 5.18 development cycle :) 
+> For the way I use the test script the ability to test by number is not 
+> that critical - is anyone else (Paolo?) thinking you'll use this feature?
 
-Wow, I was really tired when I wrote and even reviewed that :)
+That feature would have saved a significant amount of my time in the
+past weeks. I think the diffstat is a bit too much, and I still would
+prefer the other approach of filtering out the test in each helper used
+by the test themself.
 
-I hope the following text is better:
+Additionally, I think it would be nice replace the 'bare' ip netns exec
+...' we still have in some the userspace tests with the appropriate
+helpers - possibly worth a separate, independent patch.
 
- But this might not work when there is a need to find which commit has
-
- introduced a regression making a test unstable: failing from time to
-
- time. Indeed, a specific test is not attached to one ID: the ID is in
-
- fact a counter. It means the same test can have a different ID if other
-
- tests have been added/removed before this unstable one.
-
+/P
 > 
->> Remembering the current test can also help listing failed tests at the
->> end.
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> 
+> > Patch 6/9 is a handy feature when trying to find which tests had issues when
+> > executed on a CI or locally.
+> > 
+> 
+> I like this! Highly dependent on previous patches though.
+> 
+> > Patch 7/9 was present in the v1. Non local variables have no longer been renamed
+> > + a there were a few missing 'local' keywords.
+> > 
+> 
+> This seems a lot more manageable than v1, thanks.
+> 
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> 
+> > Patch 8/9 and 9/9 are the same as in v1 but rebased. We are still ShellCheck
+> > compliant.
+> > 
+> 
+> These look good too:
+> 
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> 
+> > Matthieu Baerts (9):
+> >  Squash to "selftests: mptcp: join: allow running -cCi"
+> >  selftests: mptcp: join: define tests groups once
+> >  selftests: mptcp: join: reset failing links
+> >  selftests: mptcp: join: option to execute specific tests
+> >  selftests: mptcp: join: alt. to exec specific tests
+> >  selftests: mptcp: join: list failure at the end
+> >  selftests: mptcp: join: clarify local/global vars
+> >  selftests: mptcp: join: avoid backquotes
+> >  selftests: mptcp: join: make it shellcheck compliant
+> > 
+> > .../testing/selftests/net/mptcp/mptcp_join.sh | 2248 +++++++++--------
+> > 1 file changed, 1202 insertions(+), 1046 deletions(-)
+> > 
+> > -- 
+> > 2.34.1
+> > 
+> > 
+> > 
+> 
+> --
+> Mat Martineau
+> Intel
+> 
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
