@@ -1,39 +1,38 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCB64F21
-	for <mptcp@lists.linux.dev>; Sat, 19 Feb 2022 00:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561F44F21
+	for <mptcp@lists.linux.dev>; Sat, 19 Feb 2022 00:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645228805; x=1676764805;
+  t=1645228962; x=1676764962;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=RVO/lzwi03GfOeTxn3XVs9t4aW+vgFxmpdBkmX7PnHc=;
-  b=iC6++QVCDbOu0Hd8+34mO+SjLBk5ul0irHAk+Tz550pSPe1o5/pdA9G4
-   uGEqCssZcWNA2NuRGLGyY1ieGZB4YHVPSLcNhaEjtt7Hjt26bmusu+h/t
-   9M5+VBnNE/5T5joT6SA6sYgMRRt+M/glEWhF1patpDdKqluqdHJAgdCQX
-   TdNigtlaXtYJ7zcgjpQsvChjup9SXBta/VhqrGseUIclax73YMfi/KWRK
-   VuLG4jRTSkJsI9b3/Vm44v+qsfjJcAm64b/QHfXKVOA3bxy6ASq7FNJm3
-   h4JafJhEqJjX8hvHrBlvBED+rAoy3bsqYYHnF7WKTUuxoJ7GHXOZkVKT1
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="231218230"
+  bh=KMOAhz+r5WvgSkqfDJENwD4n0mswPrREtfWbmbuvCow=;
+  b=eXaGUqK0qUD45JovK/IFX8q34wQ/RGz4BdUMwKYYja29RFmIDHM/+jNv
+   DWNcxQv6WXCXAViwgGRt5gV1M6/cXwxd+lYi0u5Qgom9JcSrkNgmMUxHL
+   Pd+H8DSGYprC85aE7OkYpGtZKSuA5M0Mjb3sAHx0eq5XxDMuxTufSmgdv
+   uUF7Di/EYBBpqcwuGwKXsGIl7lOwA3R0u1f6fdEu0RHysPM/2weRqRwjr
+   kXzwrqaIdBUKfSmMBIKMrgEIKOIYUYsc1LOmjVRWnfsADeLKkhxuGMahD
+   EWQZ24KT/JS2W8ZtTzZbkEziK8MV9Pxeuwug0JQfuzRDDg6EE4+UIkQO+
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="234787316"
 X-IronPort-AV: E=Sophos;i="5.88,380,1635231600"; 
-   d="scan'208";a="231218230"
+   d="scan'208";a="234787316"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 16:00:04 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 16:02:41 -0800
 X-IronPort-AV: E=Sophos;i="5.88,380,1635231600"; 
-   d="scan'208";a="705573892"
+   d="scan'208";a="705575582"
 Received: from yungjihy-mobl1.amr.corp.intel.com ([10.209.64.253])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 16:00:04 -0800
-Date: Fri, 18 Feb 2022 16:00:03 -0800 (PST)
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 16:02:40 -0800
+Date: Fri, 18 Feb 2022 16:02:40 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add fastclose
- testcases"
-In-Reply-To: <22588887e5e516015f7f7b9d09112efc679fecf7.1645159759.git.geliang.tang@suse.com>
-Message-ID: <bf71c5e-2814-9774-69c8-e938b67db35c@linux.intel.com>
-References: <22588887e5e516015f7f7b9d09112efc679fecf7.1645159759.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v3 0/7] add fastclose testcases
+In-Reply-To: <cover.1644923074.git.geliang.tang@suse.com>
+Message-ID: <cc8eee29-4877-e81e-1b55-b99f28da18ac@linux.intel.com>
+References: <cover.1644923074.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,190 +41,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Fri, 18 Feb 2022, Geliang Tang wrote:
+On Tue, 15 Feb 2022, Geliang Tang wrote:
 
-> This patch makes the fastclose testcase more stable. I had tested it
-> over 10,000 times, no failures occurred.
+> v3:
+> - merge the squash-to patch ("Squash to "selftests: mptcp: add
+> fastclose testcases v2") into v3.
+> - add a new patch to check fastclose in mptcp_connect.sh
 >
+> base-commit: 9dff76d953f7a0fe2b27818f2aa93031c9a617cf
 
-It seems mostly stable to me too.
+With the two squash-to patches:
 
-The first time I tried "./mptcp_join.sh -zC" I got a failure! I have not 
-been able to reproduce it.
+https://patchwork.kernel.org/project/mptcp/patch/22588887e5e516015f7f7b9d09112efc679fecf7.1645159759.git.geliang.tang@suse.com/
+https://patchwork.kernel.org/project/mptcp/patch/0ecb29a09e1b2768ef1166a33dc089e1fa3ae339.1645180743.git.geliang.tang@suse.com/
 
-The output:
+v3 looks good for the export branch:
 
-001 fastclose test                       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                          sum[ ok ] - csum  [ ok ]
-                                          ftx[ ok ] - failrx[ ok ]
-                                          rtx[ ok ] - rstrx [ ok ]
-                                          itx[ ok ] - infirx[ ok ]
-                                          ctx[ ok ] - fclzrx[fail] got 0 MP_FASTCLOSE[s] RX expected 1
-Server ns stats
-TcpPassiveOpens                 2                  0.0
-TcpInSegs                       361                0.0
-TcpOutSegs                      917                0.0
-TcpExtTW                        1                  0.0
-TcpExtTCPPureAcks               130                0.0
-TcpExtTCPBacklogCoalesce        4                  0.0
-TcpExtTCPOrigDataSent           786                0.0
-TcpExtTCPHystartTrainDetect     1                  0.0
-TcpExtTCPHystartTrainCwnd       26                 0.0
-TcpExtTCPDelivered              785                0.0
-MPTcpExtMPCapableSYNRX          2                  0.0
-MPTcpExtMPCapableACKRX          2                  0.0
-Client ns stats
-TcpActiveOpens                  2                  0.0
-TcpEstabResets                  1                  0.0
-TcpInSegs                       344                0.0
-TcpOutSegs                      926                0.0
-TcpOutRsts                      2                  0.0
-TcpExtTCPPureAcks               122                0.0
-TcpExtTCPBacklogCoalesce        7                  0.0
-TcpExtTCPOrigDataSent           788                0.0
-TcpExtTCPHystartTrainDetect     1                  0.0
-TcpExtTCPHystartTrainCwnd       27                 0.0
-TcpExtTCPDelivered              790                0.0
-MPTcpExtMPCapableSYNTX          2                  0.0
-MPTcpExtMPCapableSYNACKRX       2                  0.0
-MPTcpExtMPFastcloseTx           1                  0.0
-MPTcpExtMPRstTx                 1                  0.0
-                                          rtx[ ok ] - rstrx [fail] got 0 MP_RST[s] RX expected 1
-Server ns stats
-TcpPassiveOpens                 2                  0.0
-TcpInSegs                       361                0.0
-TcpOutSegs                      917                0.0
-TcpExtTW                        1                  0.0
-TcpExtTCPPureAcks               130                0.0
-TcpExtTCPBacklogCoalesce        4                  0.0
-TcpExtTCPOrigDataSent           786                0.0
-TcpExtTCPHystartTrainDetect     1                  0.0
-TcpExtTCPHystartTrainCwnd       26                 0.0
-TcpExtTCPDelivered              785                0.0
-MPTcpExtMPCapableSYNRX          2                  0.0
-MPTcpExtMPCapableACKRX          2                  0.0
-Client ns stats
-TcpActiveOpens                  2                  0.0
-TcpEstabResets                  1                  0.0
-TcpInSegs                       344                0.0
-TcpOutSegs                      926                0.0
-TcpOutRsts                      2                  0.0
-TcpExtTCPPureAcks               122                0.0
-TcpExtTCPBacklogCoalesce        7                  0.0
-TcpExtTCPOrigDataSent           788                0.0
-TcpExtTCPHystartTrainDetect     1                  0.0
-TcpExtTCPHystartTrainCwnd       27                 0.0
-TcpExtTCPDelivered              790                0.0
-MPTcpExtMPCapableSYNTX          2                  0.0
-MPTcpExtMPCapableSYNACKRX       2                  0.0
-MPTcpExtMPFastcloseTx           1                  0.0
-MPTcpExtMPRstTx                 1                  0.0
-    invert
-
-Given that I can't repro, I'm still ok with squashing this.
-
-> 1. Drop "fastclose test 2". The two tests are somewhat repetitive, and
-> test 2 is more likely to fail than test 1.
-
-Ok. It didn't seem to add much coverage, I agree.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 >
-> And patch 7 in this series ("selftests: mptcp: fastclose check in
-> mptcp_connect") should be dropped too. It may break mptcp_connect.sh.
+> v2:
+> - merge the squash-to patch ("Squash to "selftests: mptcp: add the
+> MP_RST mibs check") into v2.
+> - update the commit logs.
 >
-
-I marked it as "Rejected" in patchwork.
-
-> 2. Use the test_linkfail value to make 1024KB test files. So patch 4
-> in the "add mp_fail testcases" series ("selftests: mptcp: reuse linkfail
-> to make given size files") and its squash-to patch (Squash to "selftests:
-> mptcp: reuse linkfail to make given size files v8") need to be moved into
-> this series, just before the commit ("selftests: mptcp: add fastclose
-> testcases").
+> This patchset is related to issue #48 and issue #197. The two MP_RST
+> patches are moved from the "add mp_fail testcases" series.
 >
-> The order of all the mp_fastclose and mp_fail testcases patches in my
-> tree looks like this:
+> Geliang Tang (7):
+>  mptcp: add the mibs for MP_FASTCLOSE
+>  selftests: mptcp: add the MP_FASTCLOSE mibs check
+>  mptcp: add the mibs for MP_RST
+>  selftests: mptcp: add the MP_RST mibs check
+>  selftests: mptcp: add extra_args in do_transfer
+>  selftests: mptcp: add fastclose testcases
+>  selftests: mptcp: fastclose check in mptcp_connect
 >
-> pick a854ead2766e mptcp: add the mibs for MP_FASTCLOSE
-> pick 57f50b740bdc selftests: mptcp: add the MP_FASTCLOSE mibs check
-> pick 12ae36a6ccc1 mptcp: add the mibs for MP_RST
-> pick fc3da2c8bcbc selftests: mptcp: add the MP_RST mibs check
-> pick 963f2f26574e Squash to "selftests: mptcp: add the MP_RST mibs check v3"
-> pick 46680be81472 selftests: mptcp: add extra_args in do_transfer
-> pick 81803638389d selftests: mptcp: reuse linkfail to make given size files
-> pick fe9ed20f6bdc Squash to "selftests: mptcp: reuse linkfail to make given size files v8"
-> pick 24ba919394f9 selftests: mptcp: add fastclose testcases
-> pick fb989057969a Squash to "selftests: mptcp: add fastclose testcases"
-> pick 9985ed286b3a Squash to "mptcp: infinite mapping receiving"
-> pick 0d5bc6ecc54d Squash to "selftests: mptcp: add infinite map mibs check"
-> pick 2ed9ce9e914b selftests: mptcp: add more arguments for chk_join_nr
-> pick 82435d67b9e8 Squash to "selftests: mptcp: add more arguments for chk_join_nr v8"
-> pick bcc0e73c5acb selftests: mptcp: add the MP_FAIL testcases
+> net/mptcp/mib.c                               |   4 +
+> net/mptcp/mib.h                               |   4 +
+> net/mptcp/options.c                           |   5 +
+> .../selftests/net/mptcp/mptcp_connect.sh      |  37 +++++
+> .../testing/selftests/net/mptcp/mptcp_join.sh | 134 ++++++++++++++++--
+> 5 files changed, 171 insertions(+), 13 deletions(-)
 >
-> If it's better to resend the whole series, please let me know.
->
-
-Everything applied ok for me without conflicts. Matthieu would you prefer 
-a resend?
-
-
--Mat
-
-
-> 3. Please update the subject:
->
-> '''
-> selftests: mptcp: add fastclose testcase
-> '''
->
-> And update the commit log:
->
-> '''
-> This patch added the self test for MP_FASTCLOSE. Reused the argment
-> addr_nr_ns2 of do_transfer() to pass the extra argments '-I 2' to
-> mptcp_connect commands. Then mptcp_connect disconnected the
-> connections to trigger the MP_FASTCLOSE sending and receiving. Used
-> chk_fclose_nr to check the MP_FASTCLOSE mibs and used chk_rst_nr to
-> check the MP_RST mibs. This test used the test_linkfail value to make
-> 1024KB test files.
->
-> The output looks like this:
->
-> Created /tmp/tmp.XB8sfv1hJ0 (size 1024 KB) containing data sent by client
-> Created /tmp/tmp.RtTDbzqrXI (size 1024 KB) containing data sent by server
-> 001 fastclose test                syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                  ctx[ ok ] - fclzrx[ ok ]
->                                  rtx[ ok ] - rstrx [ ok ]   invert
-> '''
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++--------
-> 1 file changed, 2 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 2e95a8d321ab..1ef0119d7b7a 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2289,16 +2289,10 @@ userspace_tests()
-> fastclose_tests()
-> {
-> 	reset
-> -	run_tests $ns1 $ns2 10.0.1.1 0 0 fastclose_2
-> -	chk_join_nr "fastclose test 1" 0 0 0
-> +	run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_2
-> +	chk_join_nr "fastclose test" 0 0 0
-> 	chk_fclose_nr 1 1
-> 	chk_rst_nr 1 1 invert
-> -
-> -	reset
-> -	run_tests $ns1 $ns2 10.0.1.1 0 0 fastclose_3 slow
-> -	chk_join_nr "fastclose test 2" 0 0 0
-> -	chk_fclose_nr 2 2
-> -	chk_rst_nr 2 2 invert
-> }
->
-> all_tests()
 > -- 
 > 2.34.1
 >
