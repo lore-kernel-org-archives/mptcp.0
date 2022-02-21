@@ -1,162 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A015C2569
-	for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 16:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1645462473;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wHxivpAhOyJTP0gmeN2cbQpML6aHErtOTYK8YfzgirM=;
-	b=VbQwwiFW9kzMe4k5YYqPJkX8LiJgdo0ktEt5NpvDr1Z6dqcxrd6NBEX3awVFxUWf0+b2g0
-	58ObVGp0osBkBsQnaXcKRFtiIaA91TxCAA74egWEYl0O2Mv0J/+QDR+QuMzcwqXpFtzY3A
-	oJVqGPe/E+IN8vgxTrPP6CT0IJcy/PM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-635-ZKvErc5aMq2CGcrqUWEkyw-1; Mon, 21 Feb 2022 11:54:32 -0500
-X-MC-Unique: ZKvErc5aMq2CGcrqUWEkyw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E556814243
-	for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 16:54:31 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D585284A29
-	for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 16:54:30 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next] Squash-to: "mptcp: more careful RM_ADDR generation"
-Date: Mon, 21 Feb 2022 17:54:13 +0100
-Message-Id: <a38625a058afb93ca629e300124cfc07a0bc43fa.1645462092.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC842569
+	for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 16:59:14 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id bg10so34879749ejb.4
+        for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 08:59:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=rwSyi+PK7aQ5xa5fQTG5XaqHavQAXdZqupvr0USgQ/M=;
+        b=X9fsG6XGdypoVuxK/R9oJpdrE3fA3P1c3d253+Qz3EcwpoeqoPXAlTujDCOSsnguxK
+         Cm3EtsyzkII5sw9sr303arrlW/qM4/Cgx+rVLbxVxabynsh4ieq0p8me51yY0uz7PO57
+         3bHhWsYWYGHWibarNnjUyltgb1uNx5KvXUZXPEMsFajapVWH9+sTtgbvqIb/ITXL/jOs
+         sjTMvZh6BIXYyczNWopSj57T1PPR+o3aUvNnbnWlx8z/74DZXFyUOaeAe6TQqUrihh2V
+         9D11h7eH/g7+n4G8NVTwjBYzxi/4mRtfP1YqVx2ViLeD86GGiUY2IJTYiRgyONGiIvFH
+         suWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=rwSyi+PK7aQ5xa5fQTG5XaqHavQAXdZqupvr0USgQ/M=;
+        b=r+KCS6TmFECdvI5ZSiPUxl76zBU1qP8SyF0r1cfwS3+RHtnQc0AbYG3rdpK4S0NbU3
+         LyM95xQlbek4UyZXVtO/TXDJCfW1pdmf+ELU//2F9IR+GviLqaoijjCGMqASqwTBeSz9
+         jobGgaVUZrUeFF3Im05TDA3gvVKtV+tuicqYDP5g/VWKfrSrhppN5BpTdbMWbnWTdY5q
+         FNF+r56C/Txwg7ztb4J1k0H+f6lI2DuAPFLSEXxGCKplhZ05BsgZMLksLTcYnTsGWIR7
+         oAs0amDNtfeG0veFpm3WjL8/HxhSJtnrzbVDWiHMqGUAPxWJBStg/sABEQISdGNJ7cX5
+         97+Q==
+X-Gm-Message-State: AOAM532yqcd4tzg7HJC7SE9lQ580aQYjC7NcwMDkSl0+j4XleuhOKDDy
+	jg+TDUwAGli8iikOstPygbZWcw==
+X-Google-Smtp-Source: ABdhPJzT40K0JWbrN1fxqWgMUTy4AYaIHJzO2M01DdHJhR9LL/Kolz3WCyY2ZIRno92EbiqNDx8HYA==
+X-Received: by 2002:a17:906:2a85:b0:6ce:36bd:bcd9 with SMTP id l5-20020a1709062a8500b006ce36bdbcd9mr16286487eje.318.1645462752873;
+        Mon, 21 Feb 2022 08:59:12 -0800 (PST)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id gs35sm5285859ejc.208.2022.02.21.08.59.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Feb 2022 08:59:12 -0800 (PST)
+Message-ID: <eb708225-721a-7e7b-8503-fdd449833a16@tessares.net>
+Date: Mon, 21 Feb 2022 17:59:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: more careful RM_ADDR
+ generation"
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <a38625a058afb93ca629e300124cfc07a0bc43fa.1645462092.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <a38625a058afb93ca629e300124cfc07a0bc43fa.1645462092.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When the self-tests flushed the subflows on both sides of
-the MPTCP connections, the number of subflows actually deleted
-on each side is unreliable.
+Hi Paolo,
 
-The test code always flushes  first the client side, but the
-actual delete operations is performed asynchronously, and one
-on more subflows could be processed after that the other end
-already deleted it.
+On 21/02/2022 17:54, Paolo Abeni wrote:
+> When the self-tests flushed the subflows on both sides of
+> the MPTCP connections, the number of subflows actually deleted
+> on each side is unreliable.
+> 
+> The test code always flushes  first the client side, but the
+> actual delete operations is performed asynchronously, and one
+> on more subflows could be processed after that the other end
+> already deleted it.
+> 
+> The grand total of the deleted subflows is expected to be
+> in the [nr_subflows: 2* nr_subflows] range.
+> 
+> Address the issue checking the total number of deleted subflows
+> in the simult flush cases and enforcing the above constraint
 
-The grand total of the deleted subflows is expected to be
-in the [nr_subflows: 2* nr_subflows] range.
+Thank you for the patch!
 
-Address the issue checking the total number of deleted subflows
-in the simult flush cases and enforcing the above constraint
+It seems fixing the issue 262 on my side: the modified tests have been
+running for a couple of hours without issues!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 39 ++++++++++++++++---
- 1 file changed, 33 insertions(+), 6 deletions(-)
+Tested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 8e6a5292175a..58320856a392 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1130,16 +1130,24 @@ chk_rm_nr()
- {
- 	local rm_addr_nr=$1
- 	local rm_subflow_nr=$2
--	local invert=${3:-""}
-+	local invert
-+	local simult
- 	local count
- 	local dump_stats
- 	local addr_ns
- 	local subflow_ns
- 
-+	shift 2
-+	while [ -n "$1" ]; do
-+		[ "$1" = "invert" ] && invert=true
-+		[ "$1" = "simult" ] && simult=true
-+		shift
-+	done
-+
- 	if [ -z $invert ]; then
- 		addr_ns=$ns1
- 		subflow_ns=$ns2
--	elif [ $invert = "invert" ]; then
-+	elif [ $invert = "true" ]; then
- 		addr_ns=$ns2
- 		subflow_ns=$ns1
- 	fi
-@@ -1158,6 +1166,25 @@ chk_rm_nr()
- 	echo -n " - sf    "
- 	count=`ip netns exec $subflow_ns nstat -as | grep MPTcpExtRmSubflow | awk '{print $2}'`
- 	[ -z "$count" ] && count=0
-+	if [ -n "$simult" ]; then
-+		local cnt=$(ip netns exec $addr_ns nstat -as | grep MPTcpExtRmSubflow | awk '{print $2}')
-+		local suffix
-+
-+		# in case of simult flush, the subflow removal count on each side is
-+		# unreliable
-+		[ -z "$cnt" ] && cnt=0
-+		count=$((count + cnt))
-+		[ "$count" != "$rm_subflow_nr" ] && suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]"
-+		if [ $count -ge "$rm_subflow_nr" ] && \
-+		   [ "$count" -le "$((rm_subflow_nr *2 ))" ]; then
-+			echo "[ ok ] $suffix"
-+		else
-+			echo "[fail] got $count RM_SUBFLOW[s] expected in range [$rm_subflow_nr:$((rm_subflow_nr*2))]"
-+			ret=1
-+			dump_stats=1
-+		fi
-+		return
-+	fi
- 	if [ "$count" != "$rm_subflow_nr" ]; then
- 		echo "[fail] got $count RM_SUBFLOW[s] expected $rm_subflow_nr"
- 		ret=1
-@@ -1646,7 +1673,7 @@ remove_tests()
- 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
- 	chk_join_nr "flush subflows and signal" 3 3 3
- 	chk_add_nr 1 1
--	chk_rm_nr 1 1 invert
-+	chk_rm_nr 1 3 invert simult
- 
- 	# subflows flush
- 	reset
-@@ -1657,7 +1684,7 @@ remove_tests()
- 	pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
- 	chk_join_nr "flush subflows" 3 3 3
--	chk_rm_nr 0 3
-+	chk_rm_nr 0 3 simult
- 
- 	# addresses flush
- 	reset
-@@ -1669,7 +1696,7 @@ remove_tests()
- 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
- 	chk_join_nr "flush addresses" 3 3 3
- 	chk_add_nr 3 3
--	chk_rm_nr 3 3 invert
-+	chk_rm_nr 3 3 invert simult
- 
- 	# invalid addresses flush
- 	reset
-@@ -1953,7 +1980,7 @@ add_addr_ports_tests()
- 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -2 slow
- 	chk_join_nr "flush subflows and signal with port" 3 3 3
- 	chk_add_nr 1 1
--	chk_rm_nr 1 1 invert
-+	chk_rm_nr 1 3 invert simult
- 
- 	# multiple addresses with port
- 	reset
+Cheers,
+Matt
 -- 
-2.34.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
