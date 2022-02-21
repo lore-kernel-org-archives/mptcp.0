@@ -1,44 +1,44 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35D12568
-	for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 09:31:06 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id gb39so31659767ejc.1
-        for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 01:31:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD3E2568
+	for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 09:39:57 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id hw13so31519144ejc.9
+        for <mptcp@lists.linux.dev>; Mon, 21 Feb 2022 01:39:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=nWQUbYsaVFQh7At0QgRYnX2LVoD6nSPCoNP90nQcN8c=;
-        b=taP+WOnoX7lD2tQI1hBbtzIMivDdgKJ4p83iqQD9oVcIztNTLDYpXbszhS4xROdIXY
-         Jea07HhCxg3bEOZAqReNq5vNuradr1uU34Js59DEf81sVaPM4xX2H4wrqmyhAlUBiM49
-         Vem0NYeWTs/XuKiVT1r4qBfMWkM4MNiRknGy1emjmwKyKc5KCa268/iHel4sr/89LhS7
-         YDrcWQWbt4/ZnZd/Ehhmw7FOZ14zgXPYCeuCX1NcXCtxFvgKpCsMbtuEg2mindSMACNH
-         WoFtb8MsU9EJUr+ElzlhI2mWKpmsTegsIJs4rLHbDh7DIFoshHRG4m8pV+TmpiYgiwTQ
-         5yAg==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=zbUMYka4ufAcq6RcwKqfrBUs4SxXRpmE8rIaw6iErXo=;
+        b=xFLYBpE3Z95f61Vakr61Qdxs9dAwMFaidLA+FOCB7NUOwN+9zcEH0tAuaoTOlmGYvj
+         mqaK9fwNj/SwQh1jRleCD8oamlGrSrLpj6YOBCWuIr3bvj8ItmP9Pzbz5VqoceW3FPuu
+         y4TPyRaw0JqNBvEtDmfkyQ6YlrT/OhMGvr0UMIlKKS/RhABQTKOkAD4rDc/wqkH7OiEG
+         BjOZuZPwcJcPMDWWfiRt/Isq/gTqY2yuy6JaGixDQ6+ygUwg9yGbjGSd3dgTLAE7JJY3
+         kvbAGEGizodyQiIt7uSNs/nxQOeT+bCLwH1IN33cRLi6MWZr1pA8uqta1Hjb2zq7UkKq
+         QH2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=nWQUbYsaVFQh7At0QgRYnX2LVoD6nSPCoNP90nQcN8c=;
-        b=2KKcoNNTikv+BxnPM3dpF7MDAsdoM6mVMGRwbnBiO/9RhQeIOEFgLfnt4SQk10TnxI
-         OtXDnwHiKZpQXWmgCd9D5E8CJyon7gXYZCcfoC0qiOYc14qqDdQSKl2hud3l3NJSKyqX
-         Qa8nlhb0FDhwyXxEQASFu9KRfuAwIuLsKyMhetJbDXc6Uv2EGfX4w/k3mlCIotJx6rLp
-         IBeEw6oexPG71SWb2Hen0W9CFOwjasoAbUfJHtBKhVaX4/57Qyck2XOVVco/v91GWnIy
-         weK83HJs/jD3GyLypMvG81OE7PvmRrcX020xvtrKovaPlk650ppwhXQqn2+0IlJF76GA
-         iWJg==
-X-Gm-Message-State: AOAM5316E7dlaW9y+Paj4Sk+5lj0zUSl1xbEmNZRcVwo7Lt70iSJ85mD
-	rvUZNQb2TP/4ww7ex8nY08iaFNd+GqBWEg==
-X-Google-Smtp-Source: ABdhPJw2z0NJ0MjOsizjG3Ku32Mk4Qwz0YIS4oNCAME8zMDt52GjsthaYWpwJBBxs9/FgxtN9cj4rg==
-X-Received: by 2002:a17:906:2b93:b0:6cf:bb48:5a80 with SMTP id m19-20020a1709062b9300b006cfbb485a80mr14695178ejg.681.1645435864573;
-        Mon, 21 Feb 2022 01:31:04 -0800 (PST)
+        bh=zbUMYka4ufAcq6RcwKqfrBUs4SxXRpmE8rIaw6iErXo=;
+        b=lxWLA6J6FDht7vBVfCNsRTSd6JSdb1q7EgbE3vVXDcrwjKBLxIVEGznMiQg4vmzmXK
+         MX4u/x8WBFmxBDGOYb5K6h1uQ4M1g/VPwqUd4JZ+5/S5VFW+z3jAqGBwRTOrFmxxn6W5
+         uNgY5KTHgCQGRX+LB9mEmR4XwQUE9bkO/+76LsFZQ234rrPBPUJE7in/x9eLi7v1L54L
+         lrm9S6ZltiPbcBJK2BeMqKZl9GHD9C4DlrFot5mbBXW8iwexGLSY5v089kz0VAennwN4
+         2DlP2vL2/BulWqi5sK1VgUI1B6t8zD0EQ3XRmInJy0MiY88kn6nkBWMHEFSv6xucCxrT
+         EaAg==
+X-Gm-Message-State: AOAM533q7RAduBMPwrh/461d/3zMb/oxV+ot+W0CkLeCgi8qU0xZKZHN
+	x/KrHJ03QVevX2x7LzP9L4az2Q==
+X-Google-Smtp-Source: ABdhPJwj1Z/biIDA4OhRQVrmCjnb6H7AM4VICtHIKhupTjhxbd6mQo/LAUfV/FCf5StGiRbibdm8og==
+X-Received: by 2002:a17:906:53c7:b0:6ce:6f32:ce53 with SMTP id p7-20020a17090653c700b006ce6f32ce53mr15143779ejo.352.1645436395534;
+        Mon, 21 Feb 2022 01:39:55 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:6601:25da:b9c7:38ca? ([2a02:578:8593:1200:6601:25da:b9c7:38ca])
-        by smtp.gmail.com with ESMTPSA id i16sm1004356edu.52.2022.02.21.01.31.04
+        by smtp.gmail.com with ESMTPSA id r3sm5047451ejd.129.2022.02.21.01.39.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Feb 2022 01:31:04 -0800 (PST)
-Message-ID: <90badc30-bca5-d7c9-2be3-b272e7df96a2@tessares.net>
-Date: Mon, 21 Feb 2022 10:30:46 +0100
+        Mon, 21 Feb 2022 01:39:55 -0800 (PST)
+Message-ID: <3a55fd1f-b87a-88f5-ea55-fa3498b1f793@tessares.net>
+Date: Mon, 21 Feb 2022 10:39:53 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,48 +47,27 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH mptcp-next] Squash to "bpf: add 'bpf_mptcp_sock' structure
- and helper"
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add implicit
+ endpoint test case"
 Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <3ea291cb4de94c65127fb78200fe4a121d584748.1645326965.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-References: <8b35b6817474d6b5ea0a3e5c8be617af6d130867.1644491001.git.geliang.tang@suse.com>
- <1f8efee6-d9db-8779-14ca-65d744b5991b@tessares.net>
- <20220221090554.GA4912@dhcp-10-157-36-190>
- <426e80c2-781e-7968-cb07-90bb4e4e10bc@tessares.net>
-In-Reply-To: <426e80c2-781e-7968-cb07-90bb4e4e10bc@tessares.net>
+In-Reply-To: <3ea291cb4de94c65127fb78200fe4a121d584748.1645326965.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/02/2022 10:12, Matthieu Baerts wrote:
-> On 21/02/2022 10:05, Geliang Tang wrote:
+Hi Geliang,
 
-(...)
+On 20/02/2022 04:17, Geliang Tang wrote:
+> Use the newly defined nr_blank.
 
->> We can't drop RET_PTR_TO_MPTCP_SOCK_OR_NULL as Alexei suggested, it will
->> break this userspace tests.
-> 
-> I don't remember what these userspace tests were doing
+Good catch!
 
-The idea was to be able to use the different hooks for TCP and
+Just applied:
 
-- have a way to identify the socket is in fact an MPTCP subflow
-
-- be able to link this subflow with others of the same MPTCP connections
-
-With the implementation from the export branch, it is possible to get
-the msk from the ssk. From the msk, it is possible to get the token and
-use it as a key in a hashmap. For some use cases, it might be needed to
-retrieve other subflow sk from this msk.
-
-To validate that, a different mark was set per subflow: all first
-subflows had a mark of 1, then it was incremented for each subflow.
-Also, a different TCP CC algorithm was set only on the first subflow.
-Also just to check if everything was OK there.
-
-If it is still possible to do that without RET_PTR_TO_MPTCP_SOCK_OR_NULL
-but differently, that's perfectly fine and everybody is happy :)
+- 3707ddbee062: "squashed" in "selftests: mptcp: add implicit endpoint
+test case"
 
 Cheers,
 Matt
