@@ -1,44 +1,44 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F136AC8
-	for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 21:01:30 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id p9so17418ejd.6
-        for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 13:01:30 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BFA6AC8
+	for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 21:06:52 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id q17so104559edd.4
+        for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 13:06:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=PXq7mvGkGGkPUkI4BV3e4s+9YWCUsd0G1tHjSYW7Sw4=;
-        b=4N8ZUTtUEMp3KI5CR93MD3bHQactaMYz6hrcw2lDepWzraZgYD7Dz7ZWMiwQMHYdC+
-         jZ6q8TRuXo86d3w79sMC6L+fRYeWn+QfNf7GF3DXCv+5hyH48f17JNIMBgcFhzqeUhk2
-         VeqQKvzmsEnEcuTqSQNeO2tioGpr4U3bSHmygMDR8Vi3vvK+EE3Dw2wWnhvyDhUgs5a1
-         VpJcDYJUS2AORToRR4YWNZaWW2SKVaMuKrsKujGnmE8X++9E6BEEb87OOzciBcm7UOra
-         hNlA8f9Y7FQPTN5ndLltjRFsWSC2elm/wsxaKgcU5S8N+0vhYnrOxtp9NoSwfCXscJd4
-         LFxg==
+        bh=OBnOTmyjjw4w5TIv77dFch8VZru0MTCPZGQRz6Ax25M=;
+        b=tLEaQGoJAFPhN0Xly8QXtR+Hx1Jit1WHlaUBOCiih/5H7SMk+OK/R7JTZG5PuJ0yFR
+         0j2Lj7rSyYqqdDs0ETpWukuGHnV9qmuCx+Qh9NyIe6EQUL7A96ZOQlVZH4fzUsiCDYOw
+         Apz2gngirqBdHP84Hu4FFZutHg62D+9IPfTX08uhW7huV0j+pxSFmscVfm/+Jf1OSwoK
+         +yz/cMyqTL5lkOTaC5vb6dIbpEO8sRRNijpeIZswvqawGQNheSN5FxIpeRkC4A9CMrEl
+         OVf+bZnlWeWqk6+JdkFecp/M2HrZU5pLHAu3zz7eWZiqFYha1pdagK7AdKNn914cIpuY
+         AxhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=PXq7mvGkGGkPUkI4BV3e4s+9YWCUsd0G1tHjSYW7Sw4=;
-        b=Tpl5g7RIi801f2QbuO5OjLx8HlzixAz5iFkui1mgTBWi+PT+uOJLMRs3FI/0KGmzIA
-         m6aShnxF4FvvcDbwoo3RZbfLqvArh9sNGLLal9uOoxcpMOv+jH1lHWhfiitihw+TM7Xw
-         H5atziMr3+0Vs7kAHySgyr+mdnTKx0NmFSkY7+l/NvAdDJGIimB3OrhuDP+zvEpkbUQW
-         ojWygYb3zYkB7uDXOTllmh206GzMkE7Jl7rTeF9ZurDgs5KtLrBp1T1RDeSv1zfLKJ95
-         nV64gIT6EoWEkSuU3p3+zM2rjF3UP5vMubfzwhlz0PqAx3Kl36caVVs8eyiz8Wzokn2B
-         A4MA==
-X-Gm-Message-State: AOAM533IBa2zoVW98cMrkQF4Hv05k0It9j3N8YsCG0w9dA/GoE5gXT2k
-	XL6pvZ74opeyfDMeYQTkPaA9dA==
-X-Google-Smtp-Source: ABdhPJx2HZ7f1vSyW6wllEkgPS/Yz9LuePgJyLEtIBPItidLmq4ADz2zf8EHaJu/1XdISyLx+7zIlA==
-X-Received: by 2002:a17:906:6693:b0:6cf:3cb:89c9 with SMTP id z19-20020a170906669300b006cf03cb89c9mr1169388ejo.23.1645650089069;
-        Wed, 23 Feb 2022 13:01:29 -0800 (PST)
+        bh=OBnOTmyjjw4w5TIv77dFch8VZru0MTCPZGQRz6Ax25M=;
+        b=s5i5mczmUVR5KaCRXemPRRfrDuVbZuZ1foqNcXLIffwjeac/wFq8VT+WKFBV+srj4M
+         35A/4CbngmPjUWhV09rcLKno2gbL8S1xXfYXayAiCuOqvKjisgnHbHrnKI5AIS11nVy/
+         3QoUcV2xceApD6SX6XinxLVHxB9zXdeCDmq/qgklVu1TeKVIDwoWgH9ByV8Md3JQHSNH
+         FpLy8Yy9n/3784DCpUP+q0jngmmfeTfH8sPKlpK3A7Zyfx5bQX1e32aZLkANFmAPG0bH
+         lon60d7XhiE4a9f/jBjEGusERa+C3xDBmwcfoF0BExtWjpty1LZZnQ9/KUU8HySwxWEh
+         0ZGQ==
+X-Gm-Message-State: AOAM533jW/+QVWT5zkNBcebBEKnLOgiMp4Y/pORQr1ZLv0xPCOH1ZU/b
+	s04cv8PR/I5dSg4qSWOu1Oio4J6KkVBixkje
+X-Google-Smtp-Source: ABdhPJwg1vRmLcc/R6KK5ydhVAjOeEMxrVoTBvdx5FV48nlLWK+DBygULdmjU178xWTeQlnh5x4vNQ==
+X-Received: by 2002:a50:8d1e:0:b0:413:492b:2c86 with SMTP id s30-20020a508d1e000000b00413492b2c86mr1225515eds.140.1645650411074;
+        Wed, 23 Feb 2022 13:06:51 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:1d50:f5b0:90f5:6f43? ([2a02:578:8593:1200:1d50:f5b0:90f5:6f43])
-        by smtp.gmail.com with ESMTPSA id vs2sm300367ejb.64.2022.02.23.13.01.28
+        by smtp.gmail.com with ESMTPSA id 23sm318466ejf.175.2022.02.23.13.06.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 13:01:28 -0800 (PST)
-Message-ID: <95c31835-f6e9-ff75-0f9b-2edb78d8e455@tessares.net>
-Date: Wed, 23 Feb 2022 22:01:27 +0100
+        Wed, 23 Feb 2022 13:06:50 -0800 (PST)
+Message-ID: <ce0b1ad0-7399-15b3-d83d-e6ad3215315a@tessares.net>
+Date: Wed, 23 Feb 2022 22:06:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,97 +47,31 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH RESEND mptcp-next v2 00/12] fclose and mp_fail testcases
+Subject: Re: [PATCH mptcp-next] mptcp: add fullmesh flag check for adding
+ address
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1645325178.git.geliang.tang@suse.com>
+References: <02d082c77c58ed6400d319d40e719a4ebe4e7942.1645419055.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1645325178.git.geliang.tang@suse.com>
+In-Reply-To: <02d082c77c58ed6400d319d40e719a4ebe4e7942.1645419055.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang, Mat,
 
-On 20/02/2022 03:59, Geliang Tang wrote:
-> v2:
->  - keep the order of the applied patches. Drop the revert patches in v1.
-> 
-> v1:
-> Resend all my queued patches in the patchwork. The sequence of 4 applied
-> patches is adjusted and rebased. No code modified.
-> 
-> Geliang Tang (12):
->   mptcp: add the mibs for MP_FASTCLOSE
->   selftests: mptcp: add the MP_FASTCLOSE mibs check
->   mptcp: add the mibs for MP_RST
->   selftests: mptcp: add the MP_RST mibs check
->   selftests: mptcp: add extra_args in do_transfer
->   selftests: mptcp: reuse linkfail to make given size files
->   selftests: mptcp: add fastclose testcase
->   Squash to "mptcp: infinite mapping receiving"
->   Squash to "selftests: mptcp: add infinite map mibs check"
->   selftests: mptcp: add more arguments for chk_join_nr
->   selftests: mptcp: add the MP_FAIL testcases
->   selftests: mptcp: update output info of chk_rm_nr
+On 21/02/2022 05:51, Geliang Tang wrote:
+> The fullmesh flag mustn't be used with the signal flag when adding an
+> address. This patch added the necessary flags check for this case.
 
-Thank you for this patches and the reviews!
+Thank you for the patch and the review!
 
-Now applied in our tree (feat. for net-next):
-
-* Before the "infinite mapping support" series:
-
-- ca9cbbff446b: mptcp: add the mibs for MP_FASTCLOSE
-- e9d3d6700269: selftests: mptcp: add the MP_FASTCLOSE mibs check
-- 7b6ed57c70dc: mptcp: add the mibs for MP_RST
-- b1dd7c48a10f: selftests: mptcp: add the MP_RST mibs check
-- 481e87d3e23b: selftests: mptcp: add extra_args in do_transfer
-- 6609f1c808dd: selftests: mptcp: reuse linkfail to make given size files
-- 28ac700c6369: selftests: mptcp: add fastclose testcase
-- bd4f93690fa6: conflict in t/selftests-mptcp-add-infinite-map-mibs-check
-- 4e668db2d842: conflict in
-t/selftests-mptcp-Add-tests-for-userspace-PM-type
-- 519eb3313dc7: conflict in
-t/selftests-mptcp-adjust-output-alignment-for-more-tests
-- 5b26053898fa: conflict in
-t/selftests-mptcp-add-implicit-endpoint-test-case
-- Results: d7649a6f4e25..dd86303a6117
-
-* In the "infinite mapping support" series:
-
-- a901b62afb52: "squashed" patch 08/12 in "mptcp: infinite mapping
-receiving"
-- ed1ec3a2223c: "squashed" (with conflicts) patch 09/12 in "selftests:
-mptcp: add infinite map mibs check"
-- Results: dd86303a6117..2198a66cca7d
-
-* After the "infinite mapping support" series:
-
-- 0954244ea41e: selftests: mptcp: add more arguments for chk_join_nr
-- 0c0217635548: selftests: mptcp: add the MP_FAIL testcases
-- f2b1c0bab9a7: selftests: mptcp: update output info of chk_rm_nr
-- 66fe2565137c: conflict in
-t/selftests-mptcp-Add-tests-for-userspace-PM-type
-- 725730b4cb61: conflict in t/mptcp-more-careful-RM_ADDR-generation
-- ea63fb2b5f25: conflict in
-t/selftests-mptcp-add-implicit-endpoint-test-case
-- Results: 2198a66cca7d..5d3058e05cc9
-
-* Extra fix:
-
-- 649d88fdc3c5: tg: fix wrong conflict resolution
-- 4ec880a22963: conflict in
-t/selftests-mptcp-add-more-arguments-for-chk_join_nr
-- Results: 5d3058e05cc9..067a741aa5fb
-
-Hopefully everything has been applied as expected! Do not hesitate to
-double-check!
-
+- a52bfb47e95a: mptcp: add fullmesh flag check for adding address
+- Results: 067a741aa5fb..5db573b4c7ff
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220223T205717
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220223T210614
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
 
 Cheers,
 Matt
