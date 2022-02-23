@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B22A57
-	for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 11:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EAAA57
+	for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 11:08:50 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1nMpVn-0005hz-9S; Wed, 23 Feb 2022 12:08:47 +0100
+	id 1nMpVi-0005hk-Tj; Wed, 23 Feb 2022 12:08:42 +0100
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH 2/4] tcp: add mptcp join demultiplex hooks
-Date: Wed, 23 Feb 2022 12:08:30 +0100
-Message-Id: <20220223110832.29357-3-fw@strlen.de>
+Subject: [PATCH 1/4] mptcp: prefer ip address in syn skb instead of listen sk bound address
+Date: Wed, 23 Feb 2022 12:08:29 +0100
+Message-Id: <20220223110832.29357-2-fw@strlen.de>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220223110832.29357-1-fw@strlen.de>
 References: <20220223110832.29357-1-fw@strlen.de>
@@ -23,96 +23,90 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Split from the next patch to make core tcp changes more obvious:
-add a dummy function that gets called after tcp socket demux came up
-empty.
+Once we change mptcp to use tproxy-like scheme to steer mptcp join
+requests to a special pernet socket, the 'sk bound address' becomes
+meaningless because it will never be identical to the tcp dport/ip daddr
+of the on-wire packet.
 
-This will be used by mptcp to check if a tcp syn contains an mptcp
-join option with a valid token (connection id).
-
-If so, a hidden pernet mptcp listener socket is returned and packet
-resumes normally.
+Prepare for this: pass the skbuff and use the packet data instead of
+the address the listener socket is bound to.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- include/net/mptcp.h | 5 +++++
- net/ipv4/tcp_ipv4.c | 7 +++++++
- net/ipv6/tcp_ipv6.c | 7 +++++++
- 3 files changed, 19 insertions(+)
+ net/mptcp/pm_netlink.c | 17 +++++++++++++++--
+ net/mptcp/protocol.h   |  2 +-
+ net/mptcp/subflow.c    |  5 +++--
+ 3 files changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 8b1afd6f5cc4..5ee422b56902 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -197,6 +197,10 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
- 
- 	return htonl(0u);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index a0e7d5b7e22f..ed923b573c1c 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -269,13 +269,26 @@ mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
+ 	return NULL;
  }
-+static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb)
+ 
+-bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk)
++static void skb_fetch_src_address(const struct sk_buff *skb,
++				  struct mptcp_addr_info *addr)
 +{
-+	return NULL;
++	addr->port = tcp_hdr(skb)->dest;
++	if (addr->family == AF_INET)
++		addr->addr.s_addr = ip_hdr(skb)->daddr;
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	else if (addr->family == AF_INET6)
++		addr->addr6 = ipv6_hdr(skb)->daddr;
++#endif
 +}
- #else
- 
- static inline void mptcp_init(void)
-@@ -274,6 +278,7 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
- }
- 
- static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
-+static inline struct sock *mptcp_handle_join(int af, struct sk_buff *skb) { return NULL; }
- #endif /* CONFIG_MPTCP */
- 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index d42824aedc36..06e5bdf53278 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -2155,6 +2155,10 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
- 		goto discard_it;
- 
-+	sk = mptcp_handle_join(AF_INET, skb);
-+	if (sk)
-+		goto process;
 +
- 	tcp_v4_fill_cb(skb, iph, th);
++bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, int af, const struct sk_buff *skb)
+ {
+ 	struct mptcp_pm_add_entry *entry;
+ 	struct mptcp_addr_info saddr;
+ 	bool ret = false;
  
- 	if (tcp_checksum_complete(skb)) {
-@@ -2201,6 +2205,9 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 							iph->daddr, th->dest,
- 							inet_iif(skb),
- 							sdif);
-+		if (!sk2)
-+			sk2 = mptcp_handle_join(AF_INET, skb);
-+
- 		if (sk2) {
- 			inet_twsk_deschedule_put(inet_twsk(sk));
- 			sk = sk2;
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 749de8529c83..8ae0db599f56 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1800,6 +1800,10 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 	if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb))
- 		goto discard_it;
+-	local_address((struct sock_common *)sk, &saddr);
++	saddr.family = af;
++	skb_fetch_src_address(skb, &saddr);
  
-+	sk = mptcp_handle_join(AF_INET6, skb);
-+	if (sk)
-+		goto process;
-+
- 	tcp_v6_fill_cb(skb, hdr, th);
- 
- 	if (tcp_checksum_complete(skb)) {
-@@ -1849,6 +1853,9 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 					    ntohs(th->dest),
- 					    tcp_v6_iif_l3_slave(skb),
- 					    sdif);
-+		if (!sk2)
-+			sk2 = mptcp_handle_join(AF_INET6, skb);
-+
- 		if (sk2) {
- 			struct inet_timewait_sock *tw = inet_twsk(sk);
- 			inet_twsk_deschedule_put(tw);
+ 	spin_lock_bh(&msk->pm.lock);
+ 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index c8bada4537e2..6b2d7f60c8ad 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -761,7 +761,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
+ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq);
+ void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+-bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
++bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, int af, const struct sk_buff *skb);
+ struct mptcp_pm_add_entry *
+ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ 		       const struct mptcp_addr_info *addr, bool check_id);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index c05c19f92532..1fa096086f82 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -216,7 +216,8 @@ static int subflow_check_req(struct request_sock *req,
+ 			pr_debug("syn inet_sport=%d %d",
+ 				 ntohs(inet_sk(sk_listener)->inet_sport),
+ 				 ntohs(inet_sk((struct sock *)subflow_req->msk)->inet_sport));
+-			if (!mptcp_pm_sport_in_anno_list(subflow_req->msk, sk_listener)) {
++			if (!mptcp_pm_sport_in_anno_list(subflow_req->msk,
++							 sk_listener->sk_family, skb)) {
+ 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTSYNRX);
+ 				return -EPERM;
+ 			}
+@@ -793,7 +794,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 				pr_debug("ack inet_sport=%d %d",
+ 					 ntohs(inet_sk(sk)->inet_sport),
+ 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
+-				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
++				if (!mptcp_pm_sport_in_anno_list(owner, sk->sk_family, skb)) {
+ 					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
+ 					goto dispose_child;
+ 				}
 -- 
 2.34.1
 
