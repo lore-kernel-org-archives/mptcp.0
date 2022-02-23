@@ -1,71 +1,141 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FEA7EC
-	for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 03:09:03 +0000 (UTC)
-Received: by mail-pf1-f176.google.com with SMTP id x18so14028283pfh.5
-        for <mptcp@lists.linux.dev>; Tue, 22 Feb 2022 19:09:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T8hvzWHJX2wv2hbF8sfBZ7kL3wC7nPTxJ8uMv2KMD0Q=;
-        b=cp3pz3XauUayBjMLKZsZ0hOjwUTeaUpvuNsgrbBzCPNeOBgCqtGv9CmTq9II1uO6ZR
-         hweiE+6JlLrTPaOCLZxr/YgJ/OIoe2Tcma5Vmurig7a7HSz2Q/sJSPcGParIzrMnHEFb
-         nVc650sQmsyCM3cis4iD4gRxeP/pVIHTZgL4PSr+l/21pYcV1XwG1OJsaStMsIvs95xi
-         2b6RI/w33se/I6PIWkcO6+8MeAMvXesgDRVfwKMhxqAHnpjQ4l4AcxuZINdM2sj2EADm
-         XiMlEt1fdKwLKD4x6LE1/ZogauDGTUWKMdHh5lN+ViKuEhaTYqAXqApAHm6IHUJffhrk
-         jNSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T8hvzWHJX2wv2hbF8sfBZ7kL3wC7nPTxJ8uMv2KMD0Q=;
-        b=tX1SylgNNq6vyIySOCt9E10es36ldm4yxashSI7vXVEeE+DITLtDk2E3Z65ANT9rrg
-         wNxbuj2YpXx32FThuhL4Y1sSJcZFo1Z6rOH0Teqz+/1rIPCZmIlKEp4FxEriBmBoXlxJ
-         0U49W1eCyTyqKLA9xlnBmHMJ6iLt3+hiK30lyx65yV+jVnpPZoC4JbxqRUX6sY2t7qou
-         ozC4M6OF+kvHD16PHR6WXLI88vwHytnyKQa2fJRl0x3e3c8fzwdLsRFqaA26yuuTCkFd
-         QB0sw7B+hKGdWPJtFzAIbCrRlEz14i370fnGnYq+NYLBRO8prLm1qQ7FrwsAUGefthdf
-         1h0A==
-X-Gm-Message-State: AOAM530tUFqihhIKmS01pUhNeJuHll2Kil9MpK4QfHOnXncNJ+/eDz1f
-	u+YIPWkQBQiSrqiKdc1nZP7hfpD9aKz0wm2V
-X-Google-Smtp-Source: ABdhPJx5TnLcAA4LYZ/U6t5AmQeVu4NOHVepbx9KQ5exCO5gyAwo8fkUzTiFxCUdQdJqU3zBxJjtlw==
-X-Received: by 2002:a05:6a00:244f:b0:4cc:a2ba:4cd8 with SMTP id d15-20020a056a00244f00b004cca2ba4cd8mr28145180pfj.74.1645585742854;
-        Tue, 22 Feb 2022 19:09:02 -0800 (PST)
-Received: from hermes.local (204-195-112-199.wavecable.com. [204.195.112.199])
-        by smtp.gmail.com with ESMTPSA id m16sm18288197pfc.156.2022.02.22.19.09.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Feb 2022 19:09:02 -0800 (PST)
-Date: Tue, 22 Feb 2022 19:08:59 -0800
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: Re: [PATCH iproute2-next v2 1/3] mptcp: add fullmesh check for
- adding address
-Message-ID: <20220222190859.4b79cbf4@hermes.local>
-In-Reply-To: <295a693ecc4ec1c3c241db0999d97d8718b7d992.1645584573.git.geliang.tang@suse.com>
-References: <cover.1645584573.git.geliang.tang@suse.com>
-	<295a693ecc4ec1c3c241db0999d97d8718b7d992.1645584573.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC47A
+	for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 06:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1645598798;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NQZU8kfBVTzTUlBU1tSeuL7dyuBijWTPXpm5KvkUvAc=;
+	b=CUSglJKLZfZx1rfK2wo3QSPmMDeormAjVszRrBQ+wDiMKn9q+NswfzC2bYr6PtinU5IQwj
+	Y7bzgvMlAeUQhbVF/IY2fSE+tpUzVff6xSkYmaXao8hDtXdudzjAJMI2k11tqYgy6oKpYr
+	hU9o9GhQuL+TIT2F/5hBYSVnoKUJJ/A=
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur01lp2050.outbound.protection.outlook.com [104.47.2.50]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-2-7xc6fIHUM_uyL0RhSbW3UQ-1; Wed, 23 Feb 2022 07:46:37 +0100
+X-MC-Unique: 7xc6fIHUM_uyL0RhSbW3UQ-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CDmYhxUJdl100Y78SplUMEDHgvlbDdIOgdvinohDSF1RHkccfrZ4mUQLPtpYmUILreidp5b50/2bVVhZbBDWjQLLhMBnpOnGkGNEZH/mz+J6RAmNGxzrsh11IAL07mQQjU9eYnXj0etU9KBL+dcYNIjjPGdnwmFnGPY6MYS8P+1S2D5IRCK8OI7PonKXzWLViaedJJ58FXl6S3p27R1fF1rrh345dauwusj5p12Y6cUHqtCUOO3AQDqY493f/avqCtnXSiYKvf6vkje6rTEYb+oakwxLYLcwvQLZPgSx3narcsp8seRuw4+2NAf4HbtFEXLrMuuUd/4iTUd5CgDOkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7azOuiEaDsvcOh5nf6xeWLHtB66bL30pyan+xZXH5co=;
+ b=hRGyTquHj9c1rJ/s/Ms9AXJ8nZWM4OTFuPiwhcQ7ZBALCTNNiRLgV2qlGfFUCVk1epOPeQGGaFwe8KrC5SvDh3wWOwgmNO8wPOaYG7Nlp5meOLGbLNVqsoJbih/A5fW0mqdUh9eQgnkVwWN4DgmdDN5CEFi8RVOJjmPW5XdJ634GMH2C70dvVrDEQtN5jVxXnfNf1G97DLWI5BclzdQgJDNlpO/GHxMlVO+HtBzFf1O5n+ZoBOHgnmRhPOw9IOVbj2sLY5X0mkkGH7Rfj/XW30Hd78ZvRoc4a8u9bQRYXlXM4V44a6B6Dyq+nIfDE26kE3RLGyIufUUDU8G4SghLlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by DU2PR04MB8808.eurprd04.prod.outlook.com (2603:10a6:10:2e3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Wed, 23 Feb
+ 2022 06:46:34 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.019; Wed, 23 Feb 2022
+ 06:46:34 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: Stephen Hemminger <stephen@networkplumber.org>,
+	David Ahern <dsahern@kernel.org>
+CC: Geliang Tang <geliang.tang@suse.com>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v3 0/3] mptcp: add the fullmesh flag setting support
+Date: Wed, 23 Feb 2022 14:47:05 +0800
+Message-ID: <cover.1645598438.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR0302CA0008.apcprd03.prod.outlook.com
+ (2603:1096:202::18) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d78953c9-9f2f-4421-9383-08d9f6983b6c
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8808:EE_
+X-Microsoft-Antispam-PRVS:
+	<DU2PR04MB8808AFACB320505C2028473AF83C9@DU2PR04MB8808.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	CzFf6B4cIa4ZckMUp8UHLQeBGlIvG3kX4A5LsOi4E7lsu3WSk6e53fOeAwfLvRrbFM0V1udJnDfWPPYhd0q0BCGtKeoXr2SXE8SHP3aykyFV9EOZV1dmo+jjRZ/+RPMQzYBbnc3SRmCsyonegn4X2/ChfeyE/umi30g88ENUza6f5mQYaKTZTAJ3AumlZcY0Fox8ERYr8ETcQA8bPjRBuLvO0weZ3yWgXibblWTyg9aquXv7pKj/WaUwwMUhliA+cG2Z6oDCbqU62O+RVedhgueJBB9ZhTsaqX5bH5hdkR+2xKBDE1BuOKger6dwZmCC1UOt2A/hG+E1lf+XA+mL8E0+xsyx5K4AM4QtTtUgcon4v5wkRVVU/7/AgSaNf1L7t36E9FAA1woftETnGT3KJrLsnPK5Dqwr3HTbSDBQoM6PpUVmtUjQr8H7jSYDjNEdE5hmgQm3zcK6V2cnvsBo5ncITQq1d6SAlQJppE5Ds+Pjrl81jjj5cNACNtaEJ9/KGU3kPqT/uq0J1c3DWD12OpZA8G6QjB942TzKA/BfQISRC2WG8AfiogjgasIkXNpFOsXkVFz2Elv4forbbsAwoz0C4l0UtYehskc3jMmoZ216gYbP8wXV3RMsSy1C+iLIk2iVZhdaM+nLyGvZz5jB0Q==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(8936002)(83380400001)(44832011)(5660300002)(4744005)(6506007)(110136005)(55236004)(508600001)(6512007)(6666004)(6486002)(36756003)(66556008)(66946007)(4326008)(8676002)(316002)(2616005)(26005)(186003)(66476007)(38100700002)(86362001)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LQGVlWgSbIKk9aYqOUorIxkV8F8K+kHfbmHvHwwB1UyxjufwR8QpzqRAB7zj?=
+ =?us-ascii?Q?9SLHAI5SK5STLIHLdQsg6B5TgqEEyTmOo3q8FTn/2cg52jyao1o8CM5XIcn1?=
+ =?us-ascii?Q?A7Jl3+dT8KtM9HlgUAQ+qu9MgJZ4VfV/4RBTXRZ8dAR1iUm1K6UwGW5LmwNn?=
+ =?us-ascii?Q?8aPBdL4zfS3zrHBjC+Srl4YjAxwVmozM11lQPhZA9N9tXcDBiPn0tyDqW9gq?=
+ =?us-ascii?Q?hut2G7naB+kdDoJUbaQpSkTMYS/1M0lOQ4y9+OCkaRGXQIcnabqIcueUIGGE?=
+ =?us-ascii?Q?RKPePpOo5z2vmOr4uamTg+56uCeOm2gfRWnutSwPMPP4gr4Ha5HP5U3pbl/Q?=
+ =?us-ascii?Q?ypfqfBJH/giAJ/9gQXTU9LSjIavLbNyPd1vq1p5SDBtebgC8x7zAHlJ+QY24?=
+ =?us-ascii?Q?eXx6bLgHZ+48Npp8Ga5xEmoVeyeYqyHr8MtZ1/21fzsuI6wy1UduSycx6PHe?=
+ =?us-ascii?Q?mrwX0Qm7ggjEOi7OpqljPZ7LSmgOvWpMbfYzJlbizQqzQjZgCa01PE7PigQq?=
+ =?us-ascii?Q?Ed9aLjew1KbfeYcTmW2OmQsgqS/NUYaWGOu2Si6UnmBC5UXQXwxYCDsuxWML?=
+ =?us-ascii?Q?d2ISEM0HCCnohaT6E2nX+rZRlCGwsoFX3VrIT9XjLcgCH2RXDsqCzjfpIDWN?=
+ =?us-ascii?Q?iyy/z8h/1FHB/Z9sHuWBg8UD9QZuHCFt1FOPVUNjTSfxfvDZHkzshVkB+DbR?=
+ =?us-ascii?Q?d1vU7wPFPZCXKoNSzeEQHZa15y9gZB5Tj4pYQDqAsnnXK9i4jS4nbwByoi6a?=
+ =?us-ascii?Q?areLUWjR0FVwUNx1Fra3+9VlXWYf3dXXdB8Zfw15vLW5yJB3hnTD44ajMZwF?=
+ =?us-ascii?Q?1SkWEggBNbHwrhnz2F9gkfBGAb+hRouMj1Lxp0IoxI7iWzWJTnh0KhwRAUVL?=
+ =?us-ascii?Q?0J1x4oUZESPc4sBvFFRubAibOHGVIfoiEbI6RGBxZ3w08CyMQ7auEzA75D3A?=
+ =?us-ascii?Q?vjvUnnBEHX6as4wpbAFCo2zThTzMD/2aOlrdnR9A32VPQBsX23v+VlURnb7X?=
+ =?us-ascii?Q?QrO0YWSFAZIMgTBTxALDnnJROF+/KmK3MNTglTwtnkZRC+/6KU4iTyI2cWg5?=
+ =?us-ascii?Q?MVlEKiXf2YE0GC3o/Vj+kZNHpp0GEY6Tyej34Odrx51iCBg7xLBRuXqlD0UL?=
+ =?us-ascii?Q?mwHdKyRuIzU3XP2kPdf0itzPal+ppDZ7KQfPmokHVhDwkBBWSkKWxG+IyZNC?=
+ =?us-ascii?Q?lZAlL97QcZm7aaCVl570S5WZMxPvSie9JQ0CJeVQ7lLvM87F4FxSHlGWAt/4?=
+ =?us-ascii?Q?ARhSByxJldWitEXUn3GF+gWAMn7OFA//agzwnCEbOS+PMLEVDmfyekD2jPVP?=
+ =?us-ascii?Q?oPH+nxZPkWoR7cNZ4AvQ5el1ZV5qKpDPKd0wCXHEGLEcsDRSnNYGeLsWFbZW?=
+ =?us-ascii?Q?KDCzWk4sCFLGhf7hO93ECtNtXkCaDBchvz3zNbT6yEW0OMRQ2Lfmqain15fh?=
+ =?us-ascii?Q?UFLXoc+JXt27hDrTaZSgfZi+ec3YaDZrShPgFh3PiIdm1P3HLFu20d2QtMLf?=
+ =?us-ascii?Q?M/w6b6VOOTRtxkxloqkRUHPFEagFdvlth1v8A+H3PmRVv9L7e6gKXUEI4Mvj?=
+ =?us-ascii?Q?OF7ibJcahPZQIlpo4q5Y2xzryLHsVzxuToYSDUsSMs0x9euhi/fqycoLsihd?=
+ =?us-ascii?Q?QmmTuCB4v2EyFtjB1frDBGo=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d78953c9-9f2f-4421-9383-08d9f6983b6c
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2022 06:46:34.4256
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WzLEPP7nD5B2HBTgXZoCq2L2OYZq4ybCFv0PDRfkeeE3z1r2igHAEP7WyXnT28PsLiAr9ZioUIj4k2J/rTjmMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8808
 
-On Wed, 23 Feb 2022 10:59:47 +0800
-Geliang Tang <geliang.tang@suse.com> wrote:
+This patchset added the fullmesh flags setting, the related flags checks
+and updated the usage.
 
-> +			if (adding &&
-> +			    (flags & MPTCP_PM_ADDR_FLAG_SIGNAL) &&
-> +			    (flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
-> +				invarg("invalid flags\n", *argv)
+base-commit: e8fd4d4b8448c1e1dfe56b260af50c191a3f4cdd
 
-There is a duplicate newline here, the message already gets newline from invarg().
-If possible could you give explanation to the user.
+v3:
+ - drop duplicate newlines for invarg.
+ - give more explanation to the user for invarg.
 
-Looks like mptcp has this in lots of places, and would be helpful
-to give better response.
+v2:
+ - split into three patches, each one does one thing.
+ - update the commit log.
+
+Geliang Tang (3):
+  mptcp: add fullmesh check for adding address
+  mptcp: add fullmesh support for setting flags
+  mptcp: add port support for setting flags
+
+ ip/ipmptcp.c        | 30 +++++++++++++++++++++---------
+ man/man8/ip-mptcp.8 | 17 ++++++++++++-----
+ 2 files changed, 33 insertions(+), 14 deletions(-)
+
+--=20
+2.34.1
+
