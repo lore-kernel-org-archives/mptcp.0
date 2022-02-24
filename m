@@ -1,85 +1,101 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27E61B62
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 14:21:09 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id e13so1842210plh.3
-        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 06:21:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FF6747C
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 14:22:27 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id a23so4705169eju.3
+        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 06:22:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XftleM3qc0CDR7U6Of4NZr6N6mxS7NengZsfkzPx5/0=;
-        b=ELCMTrNy3ZtYE51JtWyu9+hvVqcQLkrvy/30nNsswoTpkl2d5Z3sljeaMOviouO2RX
-         +0aEqT/sq/I2l5azsF2fe9Srl4ylJ3us+x37C2r7/BjQhzslfSF9w5J6Gg2swXDg8g5T
-         ShhN5xr64HEXON51tEIi3jUiR8LocAmWFM7IljmEUS+/KyXCXeU9rvJTR1bF0rGPn51R
-         h2Wbre31DCYgcE9KDUtFAa2vpm/Sgw+6Y7SqjEMtVl5pppv8vTFZOrm7/zrU5xnGdOmC
-         l9Y4ApO5vUJByBGfkBQbWCUwBXgJ/Qo5495D+U1zrNdckUv+NqnIjuJK5fUtl5OrzNHb
-         XFEA==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=g4s7ptUFQqpPnCvzH98Auj86H8ogkXbRDxZbyKHQslI=;
+        b=p1Kw5zA/ZRbtN0dcqr73ymaShVwrBAuUX7AgU8sQbLu4VQoACBdtrArI9k/n9XBUjt
+         LHyRpPPplL1+5YI2iD1KZOubJ5lHABclhA+mRb9g5O5/xnxepTaHgzMzY1iXefI1WZi7
+         QpEX589SArCCHczj8sNXe+oe4jqYYkshTE9QzdHPfDCYLJUfLjsBvFhQyY/1Mg45ZQdZ
+         3hYdv34pLMQS/PLGqsXl8FaWXbqO6moeupXUIuZWtS7vaQ3iKjRP4hT7MeqyI9Oj15fg
+         XTK+OrjCIQC6M4EjoguGPBYqM64NevMq/xTKjhbvFOsDWYAhNjBilBvu4kBunoPAD2le
+         GR1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XftleM3qc0CDR7U6Of4NZr6N6mxS7NengZsfkzPx5/0=;
-        b=KjHb3sV9atp5ckvdOD169DDCUv3+IURDJuXvLvfZhqwi2Y2yNr9cRl682Ppv7Csf9+
-         /J7T6fm8i4YsBRBaFAMSNALI5mZTeEJUxCZm+y8GTAq0z6nF/sNE/GZCQTfbgLa25H9Z
-         Vip18ibjiP497mRo5E9MfUG+IlidYnuuiheZJPUynbUpCb/bNOQq5skOi/5IN4Z6FK2Y
-         c5LQ+kmSx/fYXcXrm1AJnZq/0w9Og4QfnbxEIIAKiZYhs0fGWm7uilQpvK4nquq4cZ+h
-         wXq1WLGsA2FUeUorkVytqrI3HcrRAIsqSEc48KmjMGObYazuPfo5sJTwcQQ+XsMG89gq
-         CDWw==
-X-Gm-Message-State: AOAM531KLiFOqB8a+aslHRBjEusWvZIvZ6jggKRnFI43cgq3yrDfbSpS
-	WR4bYKxwcbFlYXxR0eQYLY7B2yD5qVRLQkzCd+w=
-X-Google-Smtp-Source: ABdhPJzAKBg+LRBx9THrSM9l0Yb9fFP4qSkDePxjHFn+ePt59e0tfPgMQQhAoRC4eIBSk5nOju16jZEIE+Et80doxVU=
-X-Received: by 2002:a17:902:6acc:b0:149:8f60:a526 with SMTP id
- i12-20020a1709026acc00b001498f60a526mr2838071plt.25.1645712469240; Thu, 24
- Feb 2022 06:21:09 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=g4s7ptUFQqpPnCvzH98Auj86H8ogkXbRDxZbyKHQslI=;
+        b=NTFKLmm18aIpmsHmA9CX0Ml+57wWLuv8PYF12SRPAoSOXnD0Nid6AGgo8QOOQyth7G
+         rgc7xy8HFvrZjPTFEV40g+s/DMGwXdwveyA7i6Ef28HuznkW6GLk3MLR4/Mm+89VyHy/
+         cOdBsOljZdp48/UfiSfe3/bS70GIgSJTqre1vJOAopTTnUiL1qqO+QmckT51Mum5W/B5
+         96Swxpi6iN+JYTIHleN8yDmIKp4A/5VTRT/wxa3+SFFz3MTjBrapXW+JGCGTwXvv+RBL
+         PAFE8hp4syBafPSo+WZyGmidTXzoxh7zX+2IufVy3P459k2lzpnC4ewW/Hhve0QrmogL
+         lBOg==
+X-Gm-Message-State: AOAM533b79lSajPOJEKlo0qNYggt7KLkmtPKaHXeq7Q7c1OoEyq+tK2q
+	T5S1fO4L6d6jNSMs4uRwVqlbm3hhPmW4kNNGEAc=
+X-Google-Smtp-Source: ABdhPJx4vER8EZsBG+r9ypjxVahbiwT1p210iYRnVw7t6oRiH422N6Uil2dCIayTDNwOljuMqw13wA==
+X-Received: by 2002:a17:906:111a:b0:6d0:4fa4:8c2c with SMTP id h26-20020a170906111a00b006d04fa48c2cmr2524809eja.730.1645712545640;
+        Thu, 24 Feb 2022 06:22:25 -0800 (PST)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id s9sm1451027edj.48.2022.02.24.06.22.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Feb 2022 06:22:25 -0800 (PST)
+Message-ID: <6bfa5c29-199f-005c-6127-f9dc6df33f81@tessares.net>
+Date: Thu, 24 Feb 2022 15:22:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <4a1d63bb7976c1d61308a875132107e17272c8f8.1645519631.git.geliang.tang@suse.com>
- <140a3c63-6b10-e899-196d-d396b5536c21@tessares.net>
-In-Reply-To: <140a3c63-6b10-e899-196d-d396b5536c21@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Thu, 24 Feb 2022 22:21:44 +0800
-Message-ID: <CA+WQbwt5YD64gQ-8aEtq-u-Nn5FBwD1=1r0f8p3eLuTqYG-z1g@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v4] Squash to "bpf: add 'bpf_mptcp_sock'
- structure and helper"
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Geliang Tang <geliang.tang@suse.com>, MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH mptcp-next v3 08/12] selftests: mptcp: join: list failure
+ at the end
+Content-Language: en-GB
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <20220224135619.2523272-1-matthieu.baerts@tessares.net>
+ <20220224135619.2523272-9-matthieu.baerts@tessares.net>
+ <CA+WQbwsZT-eHu_OLF06S0qEHZC3YdF7iPPVmhMo7cizD_VRM5Q@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CA+WQbwsZT-eHu_OLF06S0qEHZC3YdF7iPPVmhMo7cizD_VRM5Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2022=E5=B9=B42=E6=
-=9C=8824=E6=97=A5=E5=91=A8=E5=9B=9B 22:16=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Geliang,
->
-> On 22/02/2022 09:52, Geliang Tang wrote:
-> > This patch addressed to the comments in [1] from BPF maintainer Alexei:
->
-> Thank you for this v4!
->
-> Just to be sure it is clear: this patch is marked as "Changes Requested"
-> on patchwork because it fails to build:
->
-> https://github.com/multipath-tcp/mptcp_net-next/runs/5285534493?check_sui=
-te_focus=3Dtrue#step:5:3060
->
->   ld: net/core/filter.o: in function `bpf_mptcp_sock':
->   filter.c:(.text+0xca07): undefined reference to `msk_from_subflow'
->   make: *** [Makefile:1155: vmlinux] Error 1
+Hi Geliang,
 
-Thanks Matt, I'll fix it in v5.
+On 24/02/2022 15:19, Geliang Tang wrote:
+> Matthieu Baerts <matthieu.baerts@tessares.net> 于2022年2月24日周四 21:56写道：
 
--Geliang
+(...)
 
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
+>> @@ -2806,4 +2822,13 @@ for subtests in "${tests[@]}"; do
+>>         "${subtests}"
+>>  done
+>>
+>> +if [ ${ret} -ne 0 ]; then
+>> +       echo
+>> +       echo "${#failed_tests[@]} failure(s) has(ve) been detected:"
+> 
+> How about using:
+> 
+>         echo -e "\n${#failed_tests[@]} failure(s) has(ve) been detected:"
+
+Sure I can. But then I would prefer to use 'printf'.
+
+In fact I added an "echo" before because I added an "echo" at the end.
+
+But I can remove the extra echo and use "-e \n" if we prefer.
+
+>> +       for i in $(get_failed_tests_ids); do
+>> +               echo -e "\t- ${i}: ${failed_tests[${i}]}"
+>> +       done
+>> +       echo
+>> +fi
+>> +
+>>  exit $ret
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
