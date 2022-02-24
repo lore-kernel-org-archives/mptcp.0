@@ -1,48 +1,50 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686EB7473
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA5A1B62
 	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:56:47 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id d10so4480297eje.10
+Received: by mail-ej1-f41.google.com with SMTP id p9so4525464ejd.6
         for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 05:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T5RRJ/0oYCtVH/7XTSuDjrz7LlY/K2eG+ZlDL8+A70A=;
-        b=H99hfXBv31PVmGo719drvsLuu/0VTMvp9S5VmiMbXE5uH2Ek8I8f4PbuA+fb/13Ulh
-         ZrAMu9jmIhrrf6/2GJqiHHaIYoa5RYqSdP2I0vH5djZZ3+xckMxNlfDciakBabaRlqP4
-         UHgmtam57GujfQ+wJqYXaNxAfmQIerd0ChXJKkI6K8ABqwcmn9BC/SrcyILxn0E4bi0w
-         QjIJ/12E/laaAeHJKpB4dOolRkriSysr9mP4Ub6X5xf9Kzal8vWRBevEsBPkzWudfy+x
-         J4NrlzSmWm/iI8QrH0+T+EeAEyW+HIV/JO9tmpgCkfGstGtxKxR/Q042Nb3ATwmxHYyl
-         ApTA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mpqepvshfNyt6d2vM3maMlSAvOqiJZn5oGOXwOrcldE=;
+        b=RKch9nfPVIht74tNF5yexDqMFfOzlVeiE00hSjZd0CdNNVOXeIS2o2UFsew6Vtp3uP
+         /CoHCBYsbo+dibqSQBp4cCEAH/L9RntLB969nLa9CWSTwLDyBM++Lyyu4h81PgAUVCgM
+         CGFOpqYcL4TwacfXRkAnCHwrmNOQlzZzqf2zQSQxWZkdlhY5amHimCsCu1e1/Ge5bxDO
+         GFpq8dNZump7KGpH/ygWkyMS2NyuUqDTUy0za4IciTZjmDcWTjxjUtTdyjIaqzZlq4DJ
+         CA5m+On2LTZiVx8X9kGfME44T7dkYSOy/znK9gE02PjPoS3Hd16uLz2YgchpjyN/dP5f
+         DsrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T5RRJ/0oYCtVH/7XTSuDjrz7LlY/K2eG+ZlDL8+A70A=;
-        b=03eBlrgxeBzXxJJ91PH1Z+JI/iiv7LRnehHEAsPYke3ADO7ysJ5DyUEcg75CO79cK4
-         wmRsd8/JIoya+OLFkyUtGslbvR7G9cVl+SDvW1DzvgoafIbjLk6g5X3HMaKe2NCY5ugS
-         2/56PiHxW2+6/reMXl17/vQVFD2kiKSO3NbuAabwje5LcXu/mr/Pk8cR+DnFleGDh0sy
-         kA69OD1DQcyr7JKQGvr0/BWtjJ1BCblKHkov5z6eTYj5nDlaqIFMMLRana7bIYBe2gJ7
-         wSpy4sTTwrfCEmuH8xGLR0OY1GXqpM5ez1RPdl4qZA8VDxv5IRpvuQk7158Dgd7beacT
-         jNvw==
-X-Gm-Message-State: AOAM533gDYnWsthjTAybGVX+EeaPn7QOIUZB3BtHAgMPS8OUnWxPssa8
-	u3qDrNk+bykbz5clSKZhZZLbRJpwjSdeAjSiEew=
-X-Google-Smtp-Source: ABdhPJz7zXS/WvcpY/tBLCqxRQaqI9ML5Z537YHhSIIkim4yszetcZPtlv40E+IpgE/a7lZkImD5xQ==
-X-Received: by 2002:a17:906:c299:b0:6b6:baa1:e5cb with SMTP id r25-20020a170906c29900b006b6baa1e5cbmr2379266ejz.624.1645711005204;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mpqepvshfNyt6d2vM3maMlSAvOqiJZn5oGOXwOrcldE=;
+        b=ZM+NmKk3Lu7vxTHk0hXH2TUYsskG1fWYYQzX0H572qIHkUjSOmgl62Wgo9orz+DBTB
+         dncvVs825p2HCGQq5zo6zQuxVx3YRSMCdefwz+Y/kxtUaAnfk4GnmnNeWGsgINe5hDyq
+         f79sjOWUOD+2pt3ZNBw2/I3HdE8NrcgdHV2oQiw/WeDYWxdcn2nKUndhpgQ5JVa2DzcJ
+         DcsgC+wBKRcbMiFP3NIqDq1a/Tcm/teXdjisfPNrQ2460kCl5x5Ek2sdX8iSu6C2I8IB
+         qQIXPRK5G0t6bGIDA6ceuhFLI78ppdz5QekmHuGSVFYau8AHJGCRTFOYWtTZpP+Jus4V
+         RMhg==
+X-Gm-Message-State: AOAM531r7WOsPmPTwIO521Nrb9hf/qvE0lGaswhUCsalzOtEwSoBbzDb
+	Wx9NCuW2fKZ2aiXzxIsWyxGjNcD0GLQVqZe8P9I=
+X-Google-Smtp-Source: ABdhPJwz5P0FHIRXQ07Uch1OsWjwzezNGf3ecNnuXsno6Xes5CIpIS7xOkQN0/o79hBtyq0GwBFLJg==
+X-Received: by 2002:a17:906:684a:b0:6ce:c1b4:b503 with SMTP id a10-20020a170906684a00b006cec1b4b503mr2437384ejs.355.1645711005667;
         Thu, 24 Feb 2022 05:56:45 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id 7sm1360733edw.37.2022.02.24.05.56.44
+        by smtp.gmail.com with ESMTPSA id 7sm1360733edw.37.2022.02.24.05.56.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 05:56:44 -0800 (PST)
+        Thu, 24 Feb 2022 05:56:45 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v3 00/12] Refactor mptcp_join.sh
-Date: Thu, 24 Feb 2022 14:56:07 +0100
-Message-Id: <20220224135619.2523272-1-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v3 01/12] Squash to "selftests: mptcp: Add tests for userspace PM type"
+Date: Thu, 24 Feb 2022 14:56:08 +0100
+Message-Id: <20220224135619.2523272-2-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220224135619.2523272-1-matthieu.baerts@tessares.net>
+References: <20220224135619.2523272-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -51,50 +53,127 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It is very similar to the v2 but rebased and with 3 new patches.
+Commit 34aa6e3bccd8 ("selftests: mptcp: add ip mptcp wrappers") has been
+applied in net-next before this other patch.
 
-The new patches:
+It is then needed to do the same modifications in the userspace tests as
+well.
 
-- patch 1/12: 'ip mptcp' wrappers were missing in a patch which is in
-  the export branch for a bit of time now. While at it, a new helper has
-  been added to avoid long 'ip netns exec' commands as suggested by
-  Paolo.
+While at it, a new helper has been added to avoid long 'ip netns exec'
+commands as suggested by Paolo.
 
-- patch 3/12: just to move an helper with the other ones
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
 
-- patch 12/12: add new helpers to avoid long 'ip netns exec' commands,
-  also suggested by Paolo.
+Notes:
+    to be squashed in "selftests: mptcp: Add tests for userspace PM type"
 
-The rest is less interesting. There are some modification in patches
-6-8/12 because there are new tests in our tree: it was needed to modify
-more code around the new usage of 'reset' and 'ret=1' but nothing
-complex there.
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 57 +++++++++++--------
+ 1 file changed, 32 insertions(+), 25 deletions(-)
 
-In patch 6/12, I removed a new long comment that is probably not needed:
-with the indentation, it looked even harder to read. If we need the
-comment, probably best to create a dedicated function, use variables
-with a clear name or use words instead of just a series of numbers.
-
-Also in patch 13/14, there was a new shellcheck issue ("Useless cat.":
-@Paolo: did you introduce this ShellCheck rule???).
-
-Matthieu Baerts (12):
-  Squash to "selftests: mptcp: Add tests for userspace PM type"
-  Squash to "selftests: mptcp: join: allow running -cCi"
-  Squash to "selftests: mptcp: add implicit endpoint test case"
-  selftests: mptcp: join: define tests groups once
-  selftests: mptcp: join: reset failing links
-  selftests: mptcp: join: option to execute specific tests
-  selftests: mptcp: join: alt. to exec specific tests
-  selftests: mptcp: join: list failure at the end
-  selftests: mptcp: join: clarify local/global vars
-  selftests: mptcp: join: avoid backquotes
-  selftests: mptcp: join: make it shellcheck compliant
-  selftests: mptcp: join: helper to filter TCP
-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 2435 +++++++++--------
- 1 file changed, 1297 insertions(+), 1138 deletions(-)
-
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index ef57a28cf722..e2d56a5bcaf4 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1448,6 +1448,13 @@ wait_attempt_fail()
+ 	return 1
+ }
+ 
++set_userspace_pm()
++{
++	local ns=$1
++
++	ip netns exec $ns sysctl -q net.mptcp.pm_type=1
++}
++
+ subflows_tests()
+ {
+ 	reset
+@@ -2468,59 +2475,59 @@ userspace_tests()
+ {
+ 	# userspace pm type prevents add_addr
+ 	reset
+-	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
+-	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	set_userspace_pm $ns1
++	pm_nl_set_limits $ns1 0 2
++	pm_nl_set_limits $ns2 0 2
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "userspace pm type prevents add_addr" 0 0 0
+ 	chk_add_nr 0 0
+ 
+ 	# userspace pm type echoes add_addr
+ 	reset
+-	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
+-	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	set_userspace_pm $ns2
++	pm_nl_set_limits $ns1 0 2
++	pm_nl_set_limits $ns2 0 2
++	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "userspace pm type echoes add_addr" 0 0 0
+ 	chk_add_nr 1 1
+ 
+ 	# userspace pm type rejects join
+ 	reset
+-	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
+-	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	set_userspace_pm $ns1
++	pm_nl_set_limits $ns1 1 1
++	pm_nl_set_limits $ns2 1 1
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "userspace pm type rejects join" 1 1 0
+ 
+ 	# userspace pm type does not send join
+ 	reset
+-	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
+-	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	set_userspace_pm $ns2
++	pm_nl_set_limits $ns1 1 1
++	pm_nl_set_limits $ns2 1 1
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "userspace pm type does not send join" 0 0 0
+ 
+ 	# userspace pm type prevents mp_prio
+ 	reset
+-	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
+-	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	set_userspace_pm $ns1
++	pm_nl_set_limits $ns1 1 1
++	pm_nl_set_limits $ns2 1 1
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
+ 	chk_join_nr "userspace pm type prevents mp_prio" 1 1 0
+ 	chk_prio_nr 0 0
+ 
+ 	# userspace pm type prevents rm_addr
+ 	reset
+-	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
+-	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
+-	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	set_userspace_pm $ns1
++	set_userspace_pm $ns2
++	pm_nl_set_limits $ns1 0 1
++	pm_nl_set_limits $ns2 0 1
++	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
+ 	chk_join_nr "userspace pm type prevents rm_addr" 0 0 0
+ 	chk_rm_nr 0 0
 -- 
 2.34.1
 
