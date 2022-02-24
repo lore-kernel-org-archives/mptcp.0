@@ -1,48 +1,48 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA3B6AA3
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 21:35:02 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id p15so7051841ejc.7
-        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:35:02 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4DB6956
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 21:35:00 +0000 (UTC)
+Received: by mail-ej1-f42.google.com with SMTP id a23so7072595eju.3
+        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:35:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nn8BY3qhq/PfVWLIPLNgoIeFpA33i3pdez6h1ESHrig=;
-        b=Lcelo/ARs9iCUewWWNkJt3Gp6+KWv258TKQv2JYDGBOljH52B1EeeZkw9KfIbErd+6
-         iFPOgNh8nfTJ5Wbw3L6hOiGl+XRI8sBNLgZ+xOi+JPrRRMSnsrek18xjNbEPKWY5E2dX
-         Mdq8edUK69/NtVv5gCuOYvT+8z1SnP3SSaiK9lny35K4MbMOkk/GhtiyjPivhKSiNaWr
-         +/3COoxJ62G9XEvMwRbf+RyO8L8N1/HfqnkaLlk5CPodUHLgwnrm4rxJe3pBxKxRaRL2
-         xZLU38kxyfF8iDRQQ+Oy/LS/qV0bla2ynyuyzHS0HtNXIq0sAUoh0KEQzQ3nM3EEpBal
-         RqXw==
+        bh=cFHBvb0vnFY6A8dNFnbvb6YKKqLhSBV8luPX/Q0H2Q4=;
+        b=DRc/B0gbvQ1oDbXcvPJhg8V6sCB4qK9ynC4Wt+eGUxfUWoxCEBPQJN9lNAzWPRhAMh
+         CstTviymV8UWQ9WBRvPUA6XlhrlMFYcNeiUdVwQZGP0oawAdvc9Gm07tibGd4cR3GXhv
+         le1QC1Sn9+s9IYoj+Nf+5EXJ6DQvj+VwbN1CzES3PsbJlD+qspTzvcI6XgW9zjhcNhVZ
+         gLnfo0j7c3byf1/FGdteoPWG4yr6+Q5ALKbOcZEv0ABpfh4BM0PV6XFB3ODzrE5NXe4K
+         ukocLKzjFWzRtKFTcI7eKz/rrmUU4EohNTwPSkSZFkRqEa762XXp6cOgAPUJARDp3WWJ
+         jJWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nn8BY3qhq/PfVWLIPLNgoIeFpA33i3pdez6h1ESHrig=;
-        b=jO7Q3wmH6W9lNAACLuu9FPpYAxYLfARzmADndQuFvZqgoDKaujJ7+XLVQtPYozN46f
-         M2sSMsiQ2A0N7bFQ5+Usxgky7psWxk5O4R4td+2+hikEvVlObkDXN8u21WYHg0fhWfpq
-         qbfWdUlymqhh+O6pDeYY0JReeK8EXXo4us9QdfMuugCkDEQGxzcURl38hdl6L5PSbhEt
-         3T7tAR5olfkDHeTf5X0ZZZkxQg2u3uqWnxFI6qh29YdgTwDUNaCbEqkc1uo6Ngod2caE
-         QHKaSGvCa2MpWIWnO8ILZA9C/kORXGjgNUDmezv+qgtarBaLJGGjwSo3dOX+MVS42Dc/
-         GvTQ==
-X-Gm-Message-State: AOAM530dssQOAtBUgCBzY6NgkB9B40x9csUzE12MR1XOQ6S19TDHiQt1
-	TZmcaH2PG++vGa81O0hroavO4gIBIXnarpS96yc=
-X-Google-Smtp-Source: ABdhPJwrXS1Y6uhzGOt1EYPSKdinMIOw5CjuNhecgS1uPu+a2Kni763dfCZvm/qBTLmz/wtBT/Po0A==
-X-Received: by 2002:a17:906:5cb:b0:6cf:954:d84d with SMTP id t11-20020a17090605cb00b006cf0954d84dmr3995570ejt.560.1645738500879;
-        Thu, 24 Feb 2022 13:35:00 -0800 (PST)
+        bh=cFHBvb0vnFY6A8dNFnbvb6YKKqLhSBV8luPX/Q0H2Q4=;
+        b=zuiCAd64nBe2ki/xenHhQEWgX68eMJZpFOTwhPA+NwYKp3z8JPM89Rp6nS+CEy2hXq
+         0sRqCVziYbGaOPfFUPOQHgQG7LHgaphVdD8KwkO5OflDX/jGY8CtikRq36lvKuPVNJKO
+         I3FKsJLjH8z/iFyIcBzlWzIgPQ4nPtEY0Y20E6pP8vLYckH9F4k3lmiiM97Zge+syO6j
+         isCSUfUgi8g0fqP5VQ67ODcRFbko64tzwDMpLYfXROJ6LETxggsGLslJznEhayy56bHu
+         DTA794IGPDPITEHA415y0s5NbszMC1bAaqjiTXTSqLsGhW5aZPk3YL2zH5B8ges8wYpG
+         dtBg==
+X-Gm-Message-State: AOAM532py4WteKPyF/+wuzrFVhnb4feLplKjJxmIyHLpN2HpbtE40GuX
+	jWNzImQpNc5guHXI+uY0Vy3PDNjR4TvgtaoSuIY=
+X-Google-Smtp-Source: ABdhPJxJRPKrLLCUpwJ9ulzy/Puu5HieGd6sHYjmH5aPWmIGH6JCON2Uwt7kDO8jqAR9D2vv7Hf+jg==
+X-Received: by 2002:a17:906:3283:b0:6ce:78f9:fafd with SMTP id 3-20020a170906328300b006ce78f9fafdmr3782317ejw.534.1645738498705;
+        Thu, 24 Feb 2022 13:34:58 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id z22-20020a17090655d600b006d229436793sm175195ejp.223.2022.02.24.13.35.00
+        by smtp.gmail.com with ESMTPSA id z22-20020a17090655d600b006d229436793sm175195ejp.223.2022.02.24.13.34.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 13:35:00 -0800 (PST)
+        Thu, 24 Feb 2022 13:34:58 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-next v4 05/12] selftests: mptcp: join: reset failing links
-Date: Thu, 24 Feb 2022 22:33:59 +0100
-Message-Id: <20220224213406.3127061-6-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v4 02/12] Squash to "selftests: mptcp: join: allow running -cCi"
+Date: Thu, 24 Feb 2022 22:33:56 +0100
+Message-Id: <20220224213406.3127061-3-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220224213406.3127061-1-matthieu.baerts@tessares.net>
 References: <20220224213406.3127061-1-matthieu.baerts@tessares.net>
@@ -54,65 +54,171 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Best to always reset this env var before each test to avoid surprising
-behaviour depending on the order tests are running.
+The recommended way with getopt is first parse all options and then act.
 
-Also clearly set it for the last failing links test is also needed when
-only this test is executed.
+This allows to do some actions in priority, e.g. display the help menu
+and stop.
+
+But also some global variables changing the behaviour of this selftests
+-- like the ones behind -cCi options -- can be set before running the
+different tests. By doing that, we can also avoid long and unreadable
+regex.
+
+This can be squashed in "selftests: mptcp: join: allow running -cCi" and
+the commit message can be appended with what is above.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+
+Notes:
+    to be squashed in "selftests: mptcp: join: allow running -cCi"
+
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 73 ++++++++-----------
+ 1 file changed, 31 insertions(+), 42 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index aa68aeac328a..f68be7be3d1e 100755
+index e2d56a5bcaf4..02ae2692f7fc 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -23,6 +23,8 @@ declare -A all_tests
+@@ -17,7 +17,6 @@ checksum=0
+ ip_mptcp=0
+ check_invert=0
+ validate_checksum=0
+-do_all_tests=1
+ init=0
+ 
  TEST_COUNT=0
- nr_blank=40
+@@ -2630,93 +2629,75 @@ usage()
+ 	exit ${ret}
+ }
  
-+export FAILING_LINKS=""
+-for arg in "$@"; do
+-	# check for "capture/checksum" args before launching tests
+-	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
+-		capture=1
+-	fi
+-	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
+-		checksum=1
+-	fi
+-	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"i"[0-9a-zA-Z]*$ ]]; then
+-		ip_mptcp=1
+-	fi
+-
+-	# exception for the capture/checksum/ip_mptcp options, the rest means: a part of the tests
+-	if ! [[ "${arg}" =~ ^"-"[cCi]+$ ]]; then
+-		do_all_tests=0
+-	fi
+-done
+-
+-if [ $do_all_tests -eq 1 ]; then
+-	all_tests
+-	exit $ret
+-fi
+ 
++tests=()
+ while getopts 'fesltra64bpkdmchzuFICSi' opt; do
+ 	case $opt in
+ 		f)
+-			subflows_tests
++			tests+=(subflows_tests)
+ 			;;
+ 		e)
+-			subflows_error_tests
++			tests+=(subflows_error_tests)
+ 			;;
+ 		s)
+-			signal_address_tests
++			tests+=(signal_address_tests)
+ 			;;
+ 		l)
+-			link_failure_tests
++			tests+=(link_failure_tests)
+ 			;;
+ 		t)
+-			add_addr_timeout_tests
++			tests+=(add_addr_timeout_tests)
+ 			;;
+ 		r)
+-			remove_tests
++			tests+=(remove_tests)
+ 			;;
+ 		a)
+-			add_tests
++			tests+=(add_tests)
+ 			;;
+ 		6)
+-			ipv6_tests
++			tests+=(ipv6_tests)
+ 			;;
+ 		4)
+-			v4mapped_tests
++			tests+=(v4mapped_tests)
+ 			;;
+ 		b)
+-			backup_tests
++			tests+=(backup_tests)
+ 			;;
+ 		p)
+-			add_addr_ports_tests
++			tests+=(add_addr_ports_tests)
+ 			;;
+ 		k)
+-			syncookies_tests
++			tests+=(syncookies_tests)
+ 			;;
+ 		S)
+-			checksum_tests
++			tests+=(checksum_tests)
+ 			;;
+ 		d)
+-			deny_join_id0_tests
++			tests+=(deny_join_id0_tests)
+ 			;;
+ 		m)
+-			fullmesh_tests
++			tests+=(fullmesh_tests)
+ 			;;
+ 		z)
+-			fastclose_tests
++			tests+=(fastclose_tests)
+ 			;;
+ 		F)
+-			fail_tests
++			tests+=(fail_tests)
+ 			;;
+ 		u)
+-			userspace_tests
++			tests+=(userspace_tests)
+ 			;;
+ 		I)
+-			implicit_tests
++			tests+=(implicit_tests)
+ 			;;
+ 		c)
++			capture=1
+ 			;;
+ 		C)
++			checksum=1
+ 			;;
+ 		i)
++			ip_mptcp=1
+ 			;;
+ 		h)
+ 			usage
+@@ -2727,4 +2708,12 @@ while getopts 'fesltra64bpkdmchzuFICSi' opt; do
+ 	esac
+ done
+ 
++if [ ${#tests[@]} -eq 0 ]; then
++	all_tests
++else
++	for subtests in "${tests[@]}"; do
++		"${subtests}"
++	done
++fi
 +
- # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
- #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
- CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
-@@ -64,6 +66,7 @@ init_partial()
- 
- 	check_invert=0
- 	validate_checksum=$checksum
-+	FAILING_LINKS=""
- 
- 	#  ns1              ns2
- 	# ns1eth1    ns2eth1
-@@ -1716,7 +1719,7 @@ link_failure_tests()
- 	pm_nl_set_limits $ns1 0 2
- 	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
- 	pm_nl_set_limits $ns2 1 2
--	export FAILING_LINKS="1"
-+	FAILING_LINKS="1"
- 	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow,backup
- 	run_tests $ns1 $ns2 10.0.1.1 1
- 	chk_join_nr "backup subflow unused, link failure" 2 2 2
-@@ -1731,7 +1734,7 @@ link_failure_tests()
- 	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
- 	pm_nl_set_limits $ns2 1 2
- 	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow,backup
--	export FAILING_LINKS="1 2"
-+	FAILING_LINKS="1 2"
- 	run_tests $ns1 $ns2 10.0.1.1 1
- 	chk_join_nr "backup flow used, multi links fail" 2 2 2
- 	chk_add_nr 1 1
-@@ -1746,6 +1749,7 @@ link_failure_tests()
- 	pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
- 	pm_nl_set_limits $ns2 1 3
- 	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow,backup
-+	FAILING_LINKS="1 2"
- 	run_tests $ns1 $ns2 10.0.1.1 2
- 	chk_join_nr "backup flow used, bidi, link failure" 2 2 2
- 	chk_add_nr 1 1
+ exit $ret
 -- 
 2.34.1
 
