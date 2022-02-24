@@ -1,227 +1,134 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6127F7A
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 00:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF34C7B
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 00:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645662340; x=1677198340;
+  t=1645663691; x=1677199691;
   h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=EOve+BGY9oQTV9WAlpXZcrGMkfEGvP39EEoZClgMknc=;
-  b=BAPx1KmM0WYnnTMxmwrnX/R3ya0Te/0Y+TGT46Jagcu6sH9Z5zJBI6k5
-   xRsLhRLL4ANaaPqFkbI0/Oa6Gi3QwGUywiBOq3cyDssWL45BhqnC+RK90
-   u7yByBzLfUkzR62LI2APnubx5oBdORHoZ4ui6oDziSLqVToxBUNMn6xO7
-   gekRbq3fU5Sm7xIXbLzH4qmzN+2mTbXmdG5AZxOZRy3U5JsIfU7eaCMMF
-   B8SibnKi5ehLQgVHkuVhJdZDE2jTfYRNxfbdKZI9PY6jdmmZPVPtdzeOI
-   CeJ/7F8bZA4SvWmiLDfRt/aA8hbhB6pBTEYidOd0T7K7eLFapP9gSnaTY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="252307460"
+   references:mime-version;
+  bh=nq+6jYac5epLh6HiGyU3tXgYOyXw8mPDfiVQNlPXx80=;
+  b=hYdLsioUrh2m+4KM9ufCFl2syZktX6uC0JFbCzrCre28sQs7x8rF/GQe
+   ghITB2bhcomSr7PPrsiZ9pKnet5/QUC2aH7YkWC/AFHV68pAq4W75xORJ
+   7dT5WCqeT9cEIDroytmxE7YTCsKWhI/n2T+gdBQqymuHhyAMMUVRillO0
+   5fYCKQGmx/FCzslugtn2c1ohUfMAyiy5/LWsi6aAHlNLbr/gHmPiOvgrf
+   366njsbmn1lhbSI/F0n09RRKN7LK7M+0pxz6aNYmtuL/u5xv9ed5jfdCl
+   Xjtqfk2lLtbm4McNZBzvvaGPV7zqtlJQPiZbfPlJ+DadAoGyaenE1FXdx
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="315343738"
 X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
-   d="scan'208";a="252307460"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:25:39 -0800
+   d="scan'208";a="315343738"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:48:11 -0800
 X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
-   d="scan'208";a="506123225"
+   d="scan'208";a="591907414"
 Received: from ortmgvpn37.amr.corp.intel.com ([10.212.237.95])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:25:39 -0800
-Date: Wed, 23 Feb 2022 16:25:39 -0800 (PST)
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:48:11 -0800
+Date: Wed, 23 Feb 2022 16:48:10 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Florian Westphal <fw@strlen.de>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 0/3] Upstreaming cleanup
-In-Reply-To: <ec7dea0e-36cd-4a47-daf2-ae4e2cb20aa3@tessares.net>
-Message-ID: <7120fc8c-cb24-c54f-67fd-5aaa7d32f8b@linux.intel.com>
-References: <20220218221814.72026-1-mathew.j.martineau@linux.intel.com> <ec7dea0e-36cd-4a47-daf2-ae4e2cb20aa3@tessares.net>
+Subject: Re: [PATCH mptcp-next v3 0/4] mptcp: replace per-addr listener
+ sockets
+In-Reply-To: <20220223110832.29357-1-fw@strlen.de>
+Message-ID: <2cb7a320-78bb-e14-26cb-a815daab7021@linux.intel.com>
+References: <20220223110832.29357-1-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="0-32647968-1645659885=:31148"
-Content-ID: <4c637b9b-ca78-a075-1f74-a4aa19369639@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 23 Feb 2022, Florian Westphal wrote:
 
---0-32647968-1645659885=:31148
-Content-Type: text/plain; CHARSET=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Content-ID: <84bf9ed5-1d31-8378-e9e4-ba1265f8c8b1@linux.intel.com>
-
-On Sat, 19 Feb 2022, Matthieu Baerts wrote:
-
-> Hi Mat,
+> Changes since v2:
+> - drop first patch again, no longer needed
+> - move announce list check to the new join hook (Paolo)
+> - add joinhook for timewait sockets
+> - hide join6 member for !ipv6 build
 >
-> On 18/02/2022 23:18, Mat Martineau wrote:
->> The most recent patch series I upstreamed for -net needed a couple of
->> tweaks to mitigate net/net-next merge conflicts. The first two patches
->> here update the commits in "fixes net" on the export branch to match
->> what I sent upstream, and the third patch restores Paolo's function
->> rename in mptcp_join.sh.
->
-> Thank you for these patches!
->
-> I was thinking a bit about how to avoid such "issues" in the future.
-> Here are some ideas:
->
-> - there could be 2 separated trees periodically updated:
->  - one for net-next, the one we have for the moment
->  - one for -net: a new one
->  → all patches for the -net tree would be duplicated in both trees
->  → when applying patches in the -net tree, we will notice the conflicts
->  → applying the different patches can be automated with the scripts I'm
-> currently using
->
-> - there could be 2 mixed trees periodically updated:
->
->
->            top
->
->             ^
->             |
->
->    commits for net-next
->
->             ^
->             |
->
->    merge net + net-next
->
->             ^
->            / \
->               \
->    net-next    \
->                 \
->
->                commits for -net (+ commits for the CI)
->
->                   ^
->                   |
->
->                  net
->
->
->  → no duplicated -net commits
->  → the "export" branch will be on top of net and net-next
->  → "mptcp: use kmalloc on kasan build" could be cherry-picked on top of
-> the "export" branch for the -net tree not to have it "under" the ones
-> for net-next.
->
-> In both cases, it would be easy to export the different commits and have
-> different tags that can be used by the CI.
->
-> The second case looks interesting to me but there are at least two main
-> points to be careful with:
->
-> - if the "export" branch is on top of the net-next branch, it means the
-> patches we have in the tree might no longer apply as is in net-next:
-> that's the opposite situation as of today where the patches for -net are
-> on top of net-next. I think that's fine because we would have this issue
-> in any case if a patch for net-next depend on one that has been
-> queued/applied in -net but is not in net-next yet.
+> Changes since v2:
+> - avoid unneeded sk refcount inc/dec pair
+> - use more descriptive name for function name
+> - fix typo in rfc number (Mathieu)
+> - don't increment listner refcount, caller assumes noref
 >
 
-I don't think it changes the situation for the mptcp-next patches - even 
-today, they are on top of the mptcp-net patches which is what would 
-potentially cause problems sending to net-next.
+Hi Florian -
 
-Since I apply the patches to net-next and resolve conflicts before sending 
-to netdev, it's not too big of a concern. I think your proposal here is an 
-improvement because fewer adjustments will be needed when sending the -net 
-patches to netdev.
+Thanks for the v3, I think that covers the review comments on v2 for the 
+functionality covered in the previous revs.
 
+My main questions have to do with:
 
-I would adjust your diagram this way:
-
-
-            export
-
-              ^
-              |
-
-     kmalloc on ksan build
-
-              ^
-              |
-
-     commits for net-next
-
-              ^
-              |
-
-     merge net + net-next
-
-              ^
-             / \        export-net
-                \      /
-     net-next    \    kmalloc on ksan build
-     (rebase      \  /
-      daily)
-                 commits for -net (+ commits for the CI)
-
-                    ^
-                    |
-
-                   net (rebase on upstream net-next sync,
-                        as you suggest below)
-
-Then people could check out export-net when developing mptcp-net patches.
-
-> - there might be conflicts / build / validation issues from elsewhere
-> to resolve when merging net-next with -net: conflicts in non MPTCP
-> parts. They will have to be resolved before they are resolved in
-> net-next tree. Workaround is not update the "net" base in case of
-> conflicts until the sync is done by the -net maintainers: easy to put in
-> place in case of conflicts, a bit less for the build / validation issues
-> but that's probably rare. A lot of stuff are modified in the -net tree
-> with all the different protocols, drivers and BPF! It is not rare to
-> have conflicts if you look at:
->
->  $ git log --grep 'Merge
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net' net-next
+> Not changed:
+> - hook location, plain tcp sockets take precedence.
+> - per-netns listener
 >
 
-That sync-net-when-upstream-does workaround sounds good to me. I agree, 
-it's not rare for those net/net-next conflicts to happen, and since we are 
-carrying our own patches until the -net rebase anyway I think it all works 
-out. 'git merge-base net/master net-next/master' gives the relevant -net 
-commit.
+Do you have plans for either or both of these? Not sure if you have 
+work-in-process or if we (the community) need to figure out a more 
+detailed plan for TCP/MPTCP precedence and the degree of TCP changes that 
+make sense upstream. Since this week's meeting is happening real soon, we 
+can definitely sort it out there.
 
-If we wanted advance warning, the CI could attempt a rebase of the 
-mptcp-net commits on the current net/master (sort of a dry run) and notify 
-if that had any conflicts.
+With the upstream kernel at 5.17-rc5 we should also try to figure out how 
+much of the listener and userspace PM changes we want to merge to 
+net-next now vs. in the next cycle.
 
-> What do you think?
-> First, do we need a solution?
-
-It's not absolutely critical, but I think it's a worthwhile improvement.
-
-This wouldn't prevent the net/net-next conflicts that I was asking about 
-in this thread, since those were due to upstreaming some net-next patches 
-before the conflicting -net patch was even available. Normally it will be 
-better to prioritize the -net patches for upstreaming, and check for 
-net-next conflicts while there are MPTCP patches in -net that haven't been 
-synced yet. This kind of conflicting net-next patch can typically be 
-delayed until the net/net-next sync.
+-Mat
 
 
-Even so, updating the export structure is worth it given that the -net 
-patches are somewhat more sensitive (as we have less opportunity to 
-correct problems before release). This makes placing the mptcp-net commits 
-on top of the -net history a safer way to go.
-
-> Then would it be OK with the second solution, especially in case of
-> conflicts/build/validation issues? If not, would the first solution
-> helps? Or another one?
+> Global listener means other namespaces are affected in case
+> of backlog overflow. Pernet listeners avoid that, so I don't see
+> a strong argument for tcp refactoring that would allow global sk.
 >
-
-I prefer the second solution (with the adjustments for the export-net 
-branch). The way the first proposal maintains two versions of the 
-mptcp-net patches would be harder to keep track of.
+> This series introduces a hidden per-netns pseudo "listener" socket to
+> handle mptcp join requests with a valid token but that do not match an
+> existing listening socket.
+>
+> First patch is a minor preparation patch: MPTCP Join requests packets
+> that fail to find a suitable socket by means of standard address/port
+> demultiplexing will be steered to a pseudo-listener, similar to TPROXY
+> interception.
+>
+> This pseudo listener isn't bound to an address or port (all zero), so we
+> need to fetch the port number from the tcp header and not the listener sk.
+>
+> Patch two adds a stub to the tcp demux code.
+> This has no functionality, its extra to make tcp datapath change stand out.
+>
+> Third patch is the bulk work, it adds per netns listener and implements
+> token-based socket demultiplexing.
+>
+> Last patch zaps the per-address sockets from mptcp, they are not needed
+> anymore.
+>
+> Florian Westphal (4):
+>  mptcp: prefer ip address in syn skb instead of listen sk bound address
+>  tcp: add mptcp join demultiplex hooks
+>  mptcp: handle join requests via pernet listen socket
+>  mptcp: remove per-address listening sockets
+>
+> include/net/mptcp.h    |  15 +++
+> net/ipv4/tcp_ipv4.c    |   7 ++
+> net/ipv6/tcp_ipv6.c    |  26 +++--
+> net/mptcp/ctrl.c       | 229 ++++++++++++++++++++++++++++++++++++++++-
+> net/mptcp/pm_netlink.c |  82 +++------------
+> net/mptcp/protocol.c   |   2 +-
+> net/mptcp/protocol.h   |   4 +-
+> net/mptcp/subflow.c    |   9 +-
+> 8 files changed, 287 insertions(+), 87 deletions(-)
+>
+> -- 
+> 2.34.1
+>
+>
+>
 
 --
 Mat Martineau
 Intel
---0-32647968-1645659885=:31148--
