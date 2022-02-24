@@ -1,176 +1,227 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2841E7A
-	for <mptcp@lists.linux.dev>; Wed, 23 Feb 2022 23:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1645660275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AoR/ZdXqKH8g5XyAkFsHYK7H7GGzG56Yn7yDUha/9Z0=;
-	b=WkqAwGfq1X+qEoWvHHHIZVS/KKhK7Dcu0IfFKJtphNnd+se6r5T3Yb5y9W3rBVyM0pnMFV
-	Pfvg8Acvljp4QmMBPUrz6XAMYET/2xBCqn9qK6R5me4pguFxp5Hfc2/ztWY8rkMKnoN2WR
-	dCWWYv2FWilZCB2mZdwceZTAcLQ8IFA=
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com
- (mail-am5eur02lp2055.outbound.protection.outlook.com [104.47.4.55]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-28-nYV6eiQDOViFH1lEVyiUzA-2; Thu, 24 Feb 2022 00:51:14 +0100
-X-MC-Unique: nYV6eiQDOViFH1lEVyiUzA-2
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jSzwoBr5ObYOt4o7tjt6/eDhhhHgcTGL0ECHRLdtfUA8/ZUcNrN0j8eHINHQYUe44VGWcL3iapd/UXaB/UWvHCZgZqL80yaFwSOne+gs14qyNS92FEzZ8yTTIHKuWHEbMIrGsIyApsj1Qvcb3a69gBC/7nWqPkQ00kZTE5PXbkuo9Rpe5c6eeCQ6WWY8a2FsilJkhMNExVnO0u9DeBz/G51xGByD6+7qpUUj9ogeHLN28mZZMOiW1WXQtDpEpqBdOnxwI31PD4He/87wCvsoKZJGR8oE4PXRmnmuec03/AM1TTwI46k2M6ZGOtTu0xHYVZelgzSw/X+gk8zMpu4xHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AoR/ZdXqKH8g5XyAkFsHYK7H7GGzG56Yn7yDUha/9Z0=;
- b=W2Z+ss6dm3QNPhXyNGnzmXrDESJhK8px2YJBQNe7Jd901x7yizuegEOWrWfX8y/2E751SRIzfMTd17cRpQqTrZmAhknGic9IC9Jgzh+363zu0oXX6cGjkfldEcOfv1fhpxDfutNET7MCTQYryEf3rcOKYk0bB12NsKbqULxUJFuLzwyq4LKCpDRefIMUeDq/c2Rnks0MQUi3fP2pzuHYiReYwKykilskxr0pifdVSPVBuJHtfR5yoFnP+5h1TJ8Z0KSxRPkKG1XzVWrOjfXGpPTM6H45oRSAvlp9EqPLaWqAGmJErCHjDKgBrNhNoVo4x3F6eRYYYLKPsiYw+fPNQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM0PR0402MB3857.eurprd04.prod.outlook.com (2603:10a6:208:b::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Wed, 23 Feb
- 2022 23:51:12 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::60de:f804:3830:f7c5%4]) with mapi id 15.20.4951.019; Wed, 23 Feb 2022
- 23:51:12 +0000
-Date: Thu, 24 Feb 2022 07:51:46 +0800
-From: Geliang Tang <geliang.tang@suse.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] mptcp: add fullmesh flag check for adding
- address
-Message-ID: <20220223235146.GA4231@bogon>
-References: <02d082c77c58ed6400d319d40e719a4ebe4e7942.1645419055.git.geliang.tang@suse.com>
- <7cba6dc-53a-29a5-a684-6f47a39cf568@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7cba6dc-53a-29a5-a684-6f47a39cf568@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: HKAPR04CA0003.apcprd04.prod.outlook.com
- (2603:1096:203:d0::13) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6127F7A
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 00:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645662340; x=1677198340;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=EOve+BGY9oQTV9WAlpXZcrGMkfEGvP39EEoZClgMknc=;
+  b=BAPx1KmM0WYnnTMxmwrnX/R3ya0Te/0Y+TGT46Jagcu6sH9Z5zJBI6k5
+   xRsLhRLL4ANaaPqFkbI0/Oa6Gi3QwGUywiBOq3cyDssWL45BhqnC+RK90
+   u7yByBzLfUkzR62LI2APnubx5oBdORHoZ4ui6oDziSLqVToxBUNMn6xO7
+   gekRbq3fU5Sm7xIXbLzH4qmzN+2mTbXmdG5AZxOZRy3U5JsIfU7eaCMMF
+   B8SibnKi5ehLQgVHkuVhJdZDE2jTfYRNxfbdKZI9PY6jdmmZPVPtdzeOI
+   CeJ/7F8bZA4SvWmiLDfRt/aA8hbhB6pBTEYidOd0T7K7eLFapP9gSnaTY
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="252307460"
+X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
+   d="scan'208";a="252307460"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:25:39 -0800
+X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
+   d="scan'208";a="506123225"
+Received: from ortmgvpn37.amr.corp.intel.com ([10.212.237.95])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:25:39 -0800
+Date: Wed, 23 Feb 2022 16:25:39 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 0/3] Upstreaming cleanup
+In-Reply-To: <ec7dea0e-36cd-4a47-daf2-ae4e2cb20aa3@tessares.net>
+Message-ID: <7120fc8c-cb24-c54f-67fd-5aaa7d32f8b@linux.intel.com>
+References: <20220218221814.72026-1-mathew.j.martineau@linux.intel.com> <ec7dea0e-36cd-4a47-daf2-ae4e2cb20aa3@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 428a3a84-f2f3-4c59-4257-08d9f7275f22
-X-MS-TrafficTypeDiagnostic: AM0PR0402MB3857:EE_
-X-Microsoft-Antispam-PRVS:
-	<AM0PR0402MB38573F129C63CFEF03C482D1F83C9@AM0PR0402MB3857.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	T+QgVflJ4G1c5qhPjSLyyUQJjaQ3BYtcUUcw4Pc98UoBR8NG3VRdEDDG+9aI+95le1FeclPbXb7WgLCw8N8VR7X4Rbjm3Sh+CrY45t4xzvEoM6aWdK1XgnS4EykxRLCNbqNDEClKneVPWt/qGL56Mj3fg52AHlzRz/3L0EdV0Tyd899GS/94b6nlG156eyLC42DXDZzO3OAK7J3/DDZLtU0ioA/CIrOvDJw9SDMmfnqdW31KLuyhQAtE0oLNVYBlk9Fst60x94LgCG+qwKtQJDK1mmYnVfOIZvC7zO92rp+YmxrVHSpg6BHackCnZ6dIesUQcrEKGxB9C7g6R9mus9FBmXOo2yq9UekMnyVHF6AyG4g3udl/5BfxL5BZ2EeeIZZES1gR1dqoZHlKXl0l6wSQo39I32AI1wNpMOqNaBsgi8zSsrwJtZnfKVTRb/8Q5x1XoGcG3Fv5HJuP/3tOiLP7NiE2mIpMrYijpLlBdptjvIawgycboW5q41zchI0nOeeirL+jueEDPlxzmXBw+QGdKyvFYNxVFYfQCnou3Bjv1LOGBfBzGRV0S4XXy2RPT3B7tHrDTaLe62zPEw/r0vhXcXqK4igxJqSYlyiUmbdnmjdUa6S6a0IKbLK7mFloVO/PGqv0geAwxIz8LLayLg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(6916009)(86362001)(44832011)(38100700002)(316002)(8936002)(6666004)(5660300002)(6512007)(9686003)(66476007)(8676002)(4326008)(186003)(66556008)(508600001)(6506007)(33716001)(2906002)(1076003)(66946007)(6486002)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+1aNK7YT2hZmJU8AolZ11KQHUGV7cThGD+PZN2/cbr8waAIMFPSUcvnR3jlF?=
- =?us-ascii?Q?Nj0ncSAWdWuNspSmdVj2evwBqqpWbyM7Z+9fcXvZu+Odvo5CcVLzH8OetinB?=
- =?us-ascii?Q?KQYJ6ZitW7Eu+CrMos4m8XCwFR/EsS58OIBxIAQKu2P/fyGz8TBvyuMpndw5?=
- =?us-ascii?Q?mow20Fod4o/xjG5Wq3EdCOOs5KDoWl6Yg+FwoKAgDHXeyESe7fnS6hvabpeP?=
- =?us-ascii?Q?GmJkdI7va9ms30DDwuVibcxH/B5N9Ltwx8ovwjgr/h53W++eHmKWYbyu3+yg?=
- =?us-ascii?Q?QWucF5FCocup+jwN7gwXuU628mW/8QwQR5UX/a/1SLdpJvMLtj8tVpZ1RyAV?=
- =?us-ascii?Q?ohft18hOUwV8J40rLx9QP5sd7aQ6xca3UGLQg72MzaTw6SYsatMpsZs/x12U?=
- =?us-ascii?Q?GMrxgWDAAQP8ewOMY5iRuzyZbcGD1HxgeGFgN7ySaXG1f/O/gZ+4hCBEsuib?=
- =?us-ascii?Q?gLeCKcYVftHQ/8wfXYrt6G3qTi6fQEkt4Ekex11sZGxzHeFnDurf/kwkU2aa?=
- =?us-ascii?Q?4OjF3XLQ7snk836fgnZcgLYH0ZCnHe5JUad5xr78Mh3ljPTVDLfV9B/qBoNv?=
- =?us-ascii?Q?9qtNqdb80eNSWNVu21Dn1ZVztNyyGeU6RgKkrR8f620oI1LWFGMLVCqv1+J9?=
- =?us-ascii?Q?9dLw0QNjJbK+EdXar7NCUkAsUHuZMvfnfruNTT8LpACFq2nU82xvu5lAsC1J?=
- =?us-ascii?Q?/xhADue4gfHhTybaLFgEyXOnhfJJWipkdVVcQ8uIRgJXyJE0Wjg2C3pdFU6J?=
- =?us-ascii?Q?Vdkobce0IAvUa095Mj5+Sz5Tp4aIy5zbssb1/0hjwgYYAfOYW5TGQZBYOfMJ?=
- =?us-ascii?Q?ggHu9Wim9ZSwy8CNg9msY6BSlj/Y+CABGQpSQNWDGfJHC31qH6PqD14jF/Ar?=
- =?us-ascii?Q?4cDNsxgqh5nwHS0Ht3rAYlD+farT+VW/rtOxDgXM6sjJKtvUQpjgXmB9B1Ue?=
- =?us-ascii?Q?jVF237IRo11+n2A26qee5lf9PCX+zFQtMvlsDjTCUTx3ZpMQqootkhVJGD4y?=
- =?us-ascii?Q?/zgtrSgzfb3ZT68Lj4DJuZLHvlYvibQ/l99C9SQh0s49cvTS8L7P7JCsdTG1?=
- =?us-ascii?Q?ASKrhk6aH+8upQTfXVzLnjgt7qFOM+dc9Zy6SLGF1SYhL7u8JXG2h18DRblU?=
- =?us-ascii?Q?IUGXcUGLAtoP5cF9RqXatK83Lz2B8UKBC7bXWya5aPnxDYnxXcjt+IBwfAV2?=
- =?us-ascii?Q?EW5mFC83PoGj3fQGQ9zGBJoqGK/EwxwvY/zooMZqkDW0+5YmP+N0fJKZHLNx?=
- =?us-ascii?Q?FM9V2SCd4LdPIRvOWqzAWK08M4b6p6pPxfv/L3cwkFHxx7GxwIKJMNCNx2YL?=
- =?us-ascii?Q?r/VIYWlc0ZIgK0qzljKSa5DatwaLtt/6M2L7NWZSOOE8sMQivVIFi+gTlrfr?=
- =?us-ascii?Q?8INiUpgmPOfDMHmYdJ1O6ZCoTCNLOAEike7HNmTf6rJBmwJZ3KMbsTaHkAD6?=
- =?us-ascii?Q?vo03II0TJc01KCCTuipqzwUd606DjQfJH+65PavwAOPoAYZTwcQWGguagz5W?=
- =?us-ascii?Q?gIsTQLajo0GXAwJzhfzoAhnZqxxE4qoQuptwkFYOOkGYrtUHI2Cf5Th2poKZ?=
- =?us-ascii?Q?VTzou1cpQBSOXneBzeKKSA4d/TvJgiIkAV+u6AKORZcmw+B0Y48ZYrzzr95E?=
- =?us-ascii?Q?isDvw8XEOIUwbxEDjtWEJDQE44AEcC8mFj7Fi3WSA6VCnGl1xjq8zJ5hmcQZ?=
- =?us-ascii?Q?0rYMDz+XhIFo/JX8/2fEc7Fkkj4=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 428a3a84-f2f3-4c59-4257-08d9f7275f22
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2022 23:51:12.4314
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4y1dooiRK8Ts9EaLBlvR1ctWAdk2nmPXUpU6Uuuo+nQ3WCrbt+4uFTA6sPQaPe0rwrtTSZfNsMonFfpvdutwtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3857
+Content-Type: multipart/mixed; BOUNDARY="0-32647968-1645659885=:31148"
+Content-ID: <4c637b9b-ca78-a075-1f74-a4aa19369639@linux.intel.com>
 
-On Tue, Feb 22, 2022 at 04:52:40PM -0800, Mat Martineau wrote:
-> On Mon, 21 Feb 2022, Geliang Tang wrote:
-> 
-> > The fullmesh flag mustn't be used with the signal flag when adding an
-> > address. This patch added the necessary flags check for this case.
-> > 
-> 
-> Hi Geliang -
-> 
-> What happens if FULLMESH and SIGNAL are used together with the existing
-> code? Is this a patch that should go to -net with a Fixes: tag?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hi Mat,
+--0-32647968-1645659885=:31148
+Content-Type: text/plain; CHARSET=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Content-ID: <84bf9ed5-1d31-8378-e9e4-ba1265f8c8b1@linux.intel.com>
 
-If 'fullmesh' is used with 'signal', 'fullmesh' will not take effect.
-Since there's no address signal mechanism to send the fullmesh flag to
-the peer. We only deal the fullmesh flag with local addresses.
+On Sat, 19 Feb 2022, Matthieu Baerts wrote:
 
-Thanks,
--Geliang
+> Hi Mat,
+>
+> On 18/02/2022 23:18, Mat Martineau wrote:
+>> The most recent patch series I upstreamed for -net needed a couple of
+>> tweaks to mitigate net/net-next merge conflicts. The first two patches
+>> here update the commits in "fixes net" on the export branch to match
+>> what I sent upstream, and the third patch restores Paolo's function
+>> rename in mptcp_join.sh.
+>
+> Thank you for these patches!
+>
+> I was thinking a bit about how to avoid such "issues" in the future.
+> Here are some ideas:
+>
+> - there could be 2 separated trees periodically updated:
+>  - one for net-next, the one we have for the moment
+>  - one for -net: a new one
+>  → all patches for the -net tree would be duplicated in both trees
+>  → when applying patches in the -net tree, we will notice the conflicts
+>  → applying the different patches can be automated with the scripts I'm
+> currently using
+>
+> - there could be 2 mixed trees periodically updated:
+>
+>
+>            top
+>
+>             ^
+>             |
+>
+>    commits for net-next
+>
+>             ^
+>             |
+>
+>    merge net + net-next
+>
+>             ^
+>            / \
+>               \
+>    net-next    \
+>                 \
+>
+>                commits for -net (+ commits for the CI)
+>
+>                   ^
+>                   |
+>
+>                  net
+>
+>
+>  → no duplicated -net commits
+>  → the "export" branch will be on top of net and net-next
+>  → "mptcp: use kmalloc on kasan build" could be cherry-picked on top of
+> the "export" branch for the -net tree not to have it "under" the ones
+> for net-next.
+>
+> In both cases, it would be easy to export the different commits and have
+> different tags that can be used by the CI.
+>
+> The second case looks interesting to me but there are at least two main
+> points to be careful with:
+>
+> - if the "export" branch is on top of the net-next branch, it means the
+> patches we have in the tree might no longer apply as is in net-next:
+> that's the opposite situation as of today where the patches for -net are
+> on top of net-next. I think that's fine because we would have this issue
+> in any case if a patch for net-next depend on one that has been
+> queued/applied in -net but is not in net-next yet.
+>
 
-> 
-> -Mat
-> 
-> 
-> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> > ---
-> > net/mptcp/pm_netlink.c | 6 ++++++
-> > 1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index a0e7d5b7e22f..e3b0384ff79a 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -1253,6 +1253,12 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
-> > 		return -EINVAL;
-> > 	}
-> > 
-> > +	if (addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL &&
-> > +	    addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) {
-> > +		GENL_SET_ERR_MSG(info, "flags mustn't have both signal and fullmesh");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > 	if (addr.flags & MPTCP_PM_ADDR_FLAG_IMPLICIT) {
-> > 		GENL_SET_ERR_MSG(info, "can't create IMPLICIT endpoint");
-> > 		return -EINVAL;
-> > -- 
-> > 2.34.1
-> > 
-> > 
-> > 
-> 
-> --
-> Mat Martineau
-> Intel
-> 
+I don't think it changes the situation for the mptcp-next patches - even 
+today, they are on top of the mptcp-net patches which is what would 
+potentially cause problems sending to net-next.
 
+Since I apply the patches to net-next and resolve conflicts before sending 
+to netdev, it's not too big of a concern. I think your proposal here is an 
+improvement because fewer adjustments will be needed when sending the -net 
+patches to netdev.
+
+
+I would adjust your diagram this way:
+
+
+            export
+
+              ^
+              |
+
+     kmalloc on ksan build
+
+              ^
+              |
+
+     commits for net-next
+
+              ^
+              |
+
+     merge net + net-next
+
+              ^
+             / \        export-net
+                \      /
+     net-next    \    kmalloc on ksan build
+     (rebase      \  /
+      daily)
+                 commits for -net (+ commits for the CI)
+
+                    ^
+                    |
+
+                   net (rebase on upstream net-next sync,
+                        as you suggest below)
+
+Then people could check out export-net when developing mptcp-net patches.
+
+> - there might be conflicts / build / validation issues from elsewhere
+> to resolve when merging net-next with -net: conflicts in non MPTCP
+> parts. They will have to be resolved before they are resolved in
+> net-next tree. Workaround is not update the "net" base in case of
+> conflicts until the sync is done by the -net maintainers: easy to put in
+> place in case of conflicts, a bit less for the build / validation issues
+> but that's probably rare. A lot of stuff are modified in the -net tree
+> with all the different protocols, drivers and BPF! It is not rare to
+> have conflicts if you look at:
+>
+>  $ git log --grep 'Merge
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net' net-next
+>
+
+That sync-net-when-upstream-does workaround sounds good to me. I agree, 
+it's not rare for those net/net-next conflicts to happen, and since we are 
+carrying our own patches until the -net rebase anyway I think it all works 
+out. 'git merge-base net/master net-next/master' gives the relevant -net 
+commit.
+
+If we wanted advance warning, the CI could attempt a rebase of the 
+mptcp-net commits on the current net/master (sort of a dry run) and notify 
+if that had any conflicts.
+
+> What do you think?
+> First, do we need a solution?
+
+It's not absolutely critical, but I think it's a worthwhile improvement.
+
+This wouldn't prevent the net/net-next conflicts that I was asking about 
+in this thread, since those were due to upstreaming some net-next patches 
+before the conflicting -net patch was even available. Normally it will be 
+better to prioritize the -net patches for upstreaming, and check for 
+net-next conflicts while there are MPTCP patches in -net that haven't been 
+synced yet. This kind of conflicting net-next patch can typically be 
+delayed until the net/net-next sync.
+
+
+Even so, updating the export structure is worth it given that the -net 
+patches are somewhat more sensitive (as we have less opportunity to 
+correct problems before release). This makes placing the mptcp-net commits 
+on top of the -net history a safer way to go.
+
+> Then would it be OK with the second solution, especially in case of
+> conflicts/build/validation issues? If not, would the first solution
+> helps? Or another one?
+>
+
+I prefer the second solution (with the adjustments for the export-net 
+branch). The way the first proposal maintains two versions of the 
+mptcp-net patches would be harder to keep track of.
+
+--
+Mat Martineau
+Intel
+--0-32647968-1645659885=:31148--
