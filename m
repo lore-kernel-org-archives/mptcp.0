@@ -1,48 +1,48 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4DB6956
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 21:35:00 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id a23so7072595eju.3
-        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:35:00 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE8A6959
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 21:35:04 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id q17so4743907edd.4
+        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:35:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cFHBvb0vnFY6A8dNFnbvb6YKKqLhSBV8luPX/Q0H2Q4=;
-        b=DRc/B0gbvQ1oDbXcvPJhg8V6sCB4qK9ynC4Wt+eGUxfUWoxCEBPQJN9lNAzWPRhAMh
-         CstTviymV8UWQ9WBRvPUA6XlhrlMFYcNeiUdVwQZGP0oawAdvc9Gm07tibGd4cR3GXhv
-         le1QC1Sn9+s9IYoj+Nf+5EXJ6DQvj+VwbN1CzES3PsbJlD+qspTzvcI6XgW9zjhcNhVZ
-         gLnfo0j7c3byf1/FGdteoPWG4yr6+Q5ALKbOcZEv0ABpfh4BM0PV6XFB3ODzrE5NXe4K
-         ukocLKzjFWzRtKFTcI7eKz/rrmUU4EohNTwPSkSZFkRqEa762XXp6cOgAPUJARDp3WWJ
-         jJWw==
+        bh=jNrOHL1jtLgS/p1j3Ni2rsfbE859ozdpReKBEN0UcWI=;
+        b=xqrLew9Qtp2x1IcYCxDkKw4CbdbEt+30lomyFoJsHqCY2nag10d3SFLbTvKuwYVVOu
+         iEOd2k2Q9JNfPOx3I1AERcfiQsU5ifnkcNrQa/mRZatQ4TEoNcxVwdByVbY0NrtcGMjt
+         BxQ9IbC9gewr8ZPcGCe+7eOIEoLZafEtNq+tY+WmxUjYpBjLz4+p5Ka47YJa2ujbmNdu
+         +l85crl3qlmLWXtc1ZpGcC0NGGwwola0dKIkci5q92ZVg2WohZ4lgoOLeDyUyLMCWaiQ
+         w7LxpVs9uDb4QbZzMZh1ycyXDFPwXa63FCqBHmL8wzwYdgdjtNxwj8+gSl8n+CJF4tJr
+         3ZuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cFHBvb0vnFY6A8dNFnbvb6YKKqLhSBV8luPX/Q0H2Q4=;
-        b=zuiCAd64nBe2ki/xenHhQEWgX68eMJZpFOTwhPA+NwYKp3z8JPM89Rp6nS+CEy2hXq
-         0sRqCVziYbGaOPfFUPOQHgQG7LHgaphVdD8KwkO5OflDX/jGY8CtikRq36lvKuPVNJKO
-         I3FKsJLjH8z/iFyIcBzlWzIgPQ4nPtEY0Y20E6pP8vLYckH9F4k3lmiiM97Zge+syO6j
-         isCSUfUgi8g0fqP5VQ67ODcRFbko64tzwDMpLYfXROJ6LETxggsGLslJznEhayy56bHu
-         DTA794IGPDPITEHA415y0s5NbszMC1bAaqjiTXTSqLsGhW5aZPk3YL2zH5B8ges8wYpG
-         dtBg==
-X-Gm-Message-State: AOAM532py4WteKPyF/+wuzrFVhnb4feLplKjJxmIyHLpN2HpbtE40GuX
-	jWNzImQpNc5guHXI+uY0Vy3PDNjR4TvgtaoSuIY=
-X-Google-Smtp-Source: ABdhPJxJRPKrLLCUpwJ9ulzy/Puu5HieGd6sHYjmH5aPWmIGH6JCON2Uwt7kDO8jqAR9D2vv7Hf+jg==
-X-Received: by 2002:a17:906:3283:b0:6ce:78f9:fafd with SMTP id 3-20020a170906328300b006ce78f9fafdmr3782317ejw.534.1645738498705;
-        Thu, 24 Feb 2022 13:34:58 -0800 (PST)
+        bh=jNrOHL1jtLgS/p1j3Ni2rsfbE859ozdpReKBEN0UcWI=;
+        b=dYj/OF8/k8E6h8Ag7Ddc5gTaU5Ee85oTNi/dO8LSZgqVr+NUqQDkbUFjkrg80XlR65
+         2tC6KUs/cB7QOWs3j1inWPsfDeKYNxJJTVLhW/DDerCHHAwQnNGy7JD1Zk82M7mjX33W
+         /rrFSe+D+0guJFPdB/+i616VGN4Ld94POEl5okyW7V4SiPrZuSqvcW0o/6Zz7Xm0WN7T
+         42qSMBmBAuH0YR3NtThTZUGSznwSqxE4TWuAXgiHY40jFMty/ebh41MVKdfRtEb345Hg
+         CIY1c5O6AmzrNR69H0/tE5/28VsBhlqDuTRtw9ncWWSBvk16yfJ1oeLe4lWRqiX7bxiM
+         4ikQ==
+X-Gm-Message-State: AOAM5300QzN3pkHmx+dtbdv1w4M0pLALbkt7f28WNUD5IHRp4YSmL368
+	x43Ui2npAgsb8uo+xVHccvZ28/UoCQ2/TnZk8BA=
+X-Google-Smtp-Source: ABdhPJwsdwzHYYPd5nX4Dhk7m3HCmoleCs9bShdQ3l6DT/fQN9Beu8dyo7AN4PgBpf7xXz+isXZsWQ==
+X-Received: by 2002:aa7:d499:0:b0:409:4e74:92c6 with SMTP id b25-20020aa7d499000000b004094e7492c6mr4283575edr.124.1645738502956;
+        Thu, 24 Feb 2022 13:35:02 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id z22-20020a17090655d600b006d229436793sm175195ejp.223.2022.02.24.13.34.58
+        by smtp.gmail.com with ESMTPSA id z22-20020a17090655d600b006d229436793sm175195ejp.223.2022.02.24.13.35.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 13:34:58 -0800 (PST)
+        Thu, 24 Feb 2022 13:35:02 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-next v4 02/12] Squash to "selftests: mptcp: join: allow running -cCi"
-Date: Thu, 24 Feb 2022 22:33:56 +0100
-Message-Id: <20220224213406.3127061-3-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v4 08/12] selftests: mptcp: join: list failure at the end
+Date: Thu, 24 Feb 2022 22:34:02 +0100
+Message-Id: <20220224213406.3127061-9-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220224213406.3127061-1-matthieu.baerts@tessares.net>
 References: <20220224213406.3127061-1-matthieu.baerts@tessares.net>
@@ -54,168 +54,350 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The recommended way with getopt is first parse all options and then act.
+With ~100 tests, it helps to have this summary at the end not to scroll
+to find which one has failed.
 
-This allows to do some actions in priority, e.g. display the help menu
-and stop.
-
-But also some global variables changing the behaviour of this selftests
--- like the ones behind -cCi options -- can be set before running the
-different tests. By doing that, we can also avoid long and unreadable
-regex.
-
-This can be squashed in "selftests: mptcp: join: allow running -cCi" and
-the commit message can be appended with what is above.
+It is especially interseting when looking at the output produced by the
+CI where the kernel logs from the serial are mixed together.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-
-Notes:
-    to be squashed in "selftests: mptcp: join: allow running -cCi"
-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 73 ++++++++-----------
- 1 file changed, 31 insertions(+), 42 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 89 ++++++++++++-------
+ 1 file changed, 57 insertions(+), 32 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index e2d56a5bcaf4..02ae2692f7fc 100755
+index cd21170fa33e..5be9168dd7a5 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -17,7 +17,6 @@ checksum=0
- ip_mptcp=0
- check_invert=0
- validate_checksum=0
--do_all_tests=1
- init=0
- 
+@@ -22,6 +22,7 @@ init=0
+ declare -A all_tests
+ declare -a only_tests_ids
+ declare -a only_tests_names
++declare -A failed_tests
  TEST_COUNT=0
-@@ -2630,93 +2629,75 @@ usage()
- 	exit ${ret}
+ TEST_NAME=""
+ nr_blank=40
+@@ -302,6 +303,21 @@ reset_with_fail()
+ 		index 100 || exit 1
  }
  
--for arg in "$@"; do
--	# check for "capture/checksum" args before launching tests
--	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
--		capture=1
--	fi
--	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
--		checksum=1
--	fi
--	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"i"[0-9a-zA-Z]*$ ]]; then
--		ip_mptcp=1
--	fi
--
--	# exception for the capture/checksum/ip_mptcp options, the rest means: a part of the tests
--	if ! [[ "${arg}" =~ ^"-"[cCi]+$ ]]; then
--		do_all_tests=0
--	fi
--done
--
--if [ $do_all_tests -eq 1 ]; then
--	all_tests
--	exit $ret
--fi
++fail_test()
++{
++	ret=1
++	failed_tests[${TEST_COUNT}]="${TEST_NAME}"
++}
++
++get_failed_tests_ids()
++{
++	# sorted
++	local i
++	for i in "${!failed_tests[@]}"; do
++		echo "${i}"
++	done | sort -n
++}
++
+ print_file_err()
+ {
+ 	ls -l "$1" 1>&2
+@@ -323,7 +339,7 @@ check_transfer()
+ 			echo "[ FAIL ] $what does not match (in, out):"
+ 			print_file_err "$in"
+ 			print_file_err "$out"
+-			ret=1
++			fail_test
  
-+tests=()
- while getopts 'fesltra64bpkdmchzuFICSi' opt; do
- 	case $opt in
- 		f)
--			subflows_tests
-+			tests+=(subflows_tests)
- 			;;
- 		e)
--			subflows_error_tests
-+			tests+=(subflows_error_tests)
- 			;;
- 		s)
--			signal_address_tests
-+			tests+=(signal_address_tests)
- 			;;
- 		l)
--			link_failure_tests
-+			tests+=(link_failure_tests)
- 			;;
- 		t)
--			add_addr_timeout_tests
-+			tests+=(add_addr_timeout_tests)
- 			;;
- 		r)
--			remove_tests
-+			tests+=(remove_tests)
- 			;;
- 		a)
--			add_tests
-+			tests+=(add_tests)
- 			;;
- 		6)
--			ipv6_tests
-+			tests+=(ipv6_tests)
- 			;;
- 		4)
--			v4mapped_tests
-+			tests+=(v4mapped_tests)
- 			;;
- 		b)
--			backup_tests
-+			tests+=(backup_tests)
- 			;;
- 		p)
--			add_addr_ports_tests
-+			tests+=(add_addr_ports_tests)
- 			;;
- 		k)
--			syncookies_tests
-+			tests+=(syncookies_tests)
- 			;;
- 		S)
--			checksum_tests
-+			tests+=(checksum_tests)
- 			;;
- 		d)
--			deny_join_id0_tests
-+			tests+=(deny_join_id0_tests)
- 			;;
- 		m)
--			fullmesh_tests
-+			tests+=(fullmesh_tests)
- 			;;
- 		z)
--			fastclose_tests
-+			tests+=(fastclose_tests)
- 			;;
- 		F)
--			fail_tests
-+			tests+=(fail_tests)
- 			;;
- 		u)
--			userspace_tests
-+			tests+=(userspace_tests)
- 			;;
- 		I)
--			implicit_tests
-+			tests+=(implicit_tests)
- 			;;
- 		c)
-+			capture=1
- 			;;
- 		C)
-+			checksum=1
- 			;;
- 		i)
-+			ip_mptcp=1
- 			;;
- 		h)
- 			usage
-@@ -2727,4 +2708,12 @@ while getopts 'fesltra64bpkdmchzuFICSi' opt; do
- 	esac
+ 			return 1
+ 		else
+@@ -343,7 +359,7 @@ do_ping()
+ 	ip netns exec ${connector_ns} ping -q -c 1 $connect_addr >/dev/null
+ 	if [ $? -ne 0 ] ; then
+ 		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
+-		ret=1
++		fail_test
+ 	fi
+ }
+ 
+@@ -592,7 +608,7 @@ pm_nl_check_endpoint()
+ 		echo "[ ok ]"
+ 	else
+ 		echo "[fail] expected '$expected_line' found '$line'"
+-		ret=1
++		fail_test
+ 	fi
+ }
+ 
+@@ -846,7 +862,7 @@ do_transfer()
+ 		cat /tmp/${connector_ns}.out
+ 
+ 		cat "$capout"
+-		ret=1
++		fail_test
+ 		return 1
+ 	fi
+ 
+@@ -978,7 +994,7 @@ chk_csum_nr()
+ 	if [ "$count" != $csum_ns1 -a $allow_multi_errors_ns1 -eq 0 ] ||
+ 	   [ "$count" -lt $csum_ns1 -a $allow_multi_errors_ns1 -eq 1 ]; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -989,7 +1005,7 @@ chk_csum_nr()
+ 	if [ "$count" != $csum_ns2 -a $allow_multi_errors_ns2 -eq 0 ] ||
+ 	   [ "$count" -lt $csum_ns2 -a $allow_multi_errors_ns2 -eq 1 ]; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1009,7 +1025,7 @@ chk_fail_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fail_tx" ]; then
+ 		echo "[fail] got $count MP_FAIL[s] TX expected $fail_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1020,7 +1036,7 @@ chk_fail_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fail_rx" ]; then
+ 		echo "[fail] got $count MP_FAIL[s] RX expected $fail_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1041,7 +1057,7 @@ chk_fclose_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fclose_tx" ]; then
+ 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1052,7 +1068,7 @@ chk_fclose_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fclose_rx" ]; then
+ 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1083,7 +1099,7 @@ chk_rst_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$rst_tx" ]; then
+ 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1094,7 +1110,7 @@ chk_rst_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$rst_rx" ]; then
+ 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1117,7 +1133,7 @@ chk_infi_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$infi_tx" ]; then
+ 		echo "[fail] got $count infinite map[s] TX expected $infi_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1128,7 +1144,7 @@ chk_infi_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$infi_rx" ]; then
+ 		echo "[fail] got $count infinite map[s] RX expected $infi_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1162,7 +1178,7 @@ chk_join_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$syn_nr" ]; then
+ 		echo "[fail] got $count JOIN[s] syn expected $syn_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1180,7 +1196,7 @@ chk_join_nr()
+ 			echo -n "[ ok ]"
+ 		else
+ 			echo "[fail] got $count JOIN[s] synack expected $syn_ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		fi
+ 	else
+@@ -1192,7 +1208,7 @@ chk_join_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$ack_nr" ]; then
+ 		echo "[fail] got $count JOIN[s] ack expected $ack_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1233,7 +1249,7 @@ chk_stale_nr()
+ 		echo "[fail] got $stale_nr stale[s] $recover_nr recover[s], " \
+ 		     " expected stale in range [$stale_min..$stale_max]," \
+ 		     " stale-recover delta $stale_delta "
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1270,7 +1286,7 @@ chk_add_nr()
+ 	# add addrs options, due to retransmissions
+ 	if [ "$count" != "$add_nr" ] && [ "$timeout" -gt 1 -o "$count" -lt "$add_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1281,7 +1297,7 @@ chk_add_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$echo_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR echo[s] expected $echo_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1293,7 +1309,7 @@ chk_add_nr()
+ 		[ -z "$count" ] && count=0
+ 		if [ "$count" != "$port_nr" ]; then
+ 			echo "[fail] got $count ADD_ADDR[s] with a port-number expected $port_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo "[ ok ]"
+@@ -1306,7 +1322,7 @@ chk_add_nr()
+ 		if [ "$count" != "$syn_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] syn with a different \
+ 				port-number expected $syn_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo -n "[ ok ]"
+@@ -1319,7 +1335,7 @@ chk_add_nr()
+ 		if [ "$count" != "$syn_ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] synack with a different \
+ 				port-number expected $syn_ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo -n "[ ok ]"
+@@ -1332,7 +1348,7 @@ chk_add_nr()
+ 		if [ "$count" != "$ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] ack with a different \
+ 				port-number expected $ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo "[ ok ]"
+@@ -1345,7 +1361,7 @@ chk_add_nr()
+ 		if [ "$count" != "$mis_syn_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] syn with a mismatched \
+ 				port-number expected $mis_syn_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo -n "[ ok ]"
+@@ -1358,7 +1374,7 @@ chk_add_nr()
+ 		if [ "$count" != "$mis_ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] ack with a mismatched \
+ 				port-number expected $mis_ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo "[ ok ]"
+@@ -1403,7 +1419,7 @@ chk_rm_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$rm_addr_nr" ]; then
+ 		echo "[fail] got $count RM_ADDR[s] expected $rm_addr_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1426,14 +1442,14 @@ chk_rm_nr()
+ 			echo "[ ok ] $suffix"
+ 		else
+ 			echo "[fail] got $count RM_SUBFLOW[s] expected in range [$rm_subflow_nr:$((rm_subflow_nr*2))]"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		fi
+ 		return
+ 	fi
+ 	if [ "$count" != "$rm_subflow_nr" ]; then
+ 		echo "[fail] got $count RM_SUBFLOW[s] expected $rm_subflow_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1456,7 +1472,7 @@ chk_prio_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$mp_prio_nr_tx" ]; then
+ 		echo "[fail] got $count MP_PRIO[s] TX expected $mp_prio_nr_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1467,7 +1483,7 @@ chk_prio_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$mp_prio_nr_rx" ]; then
+ 		echo "[fail] got $count MP_PRIO[s] RX expected $mp_prio_nr_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1491,7 +1507,7 @@ chk_link_usage()
+ 	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
+ 	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
+ 		echo "[fail] got $tx_rate% usage, expected $expected_rate%"
+-		ret=1
++		fail_test
+ 	else
+ 		echo "[ ok ]"
+ 	fi
+@@ -2810,4 +2826,13 @@ for subtests in "${tests[@]}"; do
+ 	"${subtests}"
  done
  
-+if [ ${#tests[@]} -eq 0 ]; then
-+	all_tests
-+else
-+	for subtests in "${tests[@]}"; do
-+		"${subtests}"
++if [ ${ret} -ne 0 ]; then
++	echo
++	echo "${#failed_tests[@]} failure(s) has(ve) been detected:"
++	for i in $(get_failed_tests_ids); do
++		echo -e "\t- ${i}: ${failed_tests[${i}]}"
 +	done
++	echo
 +fi
 +
  exit $ret
