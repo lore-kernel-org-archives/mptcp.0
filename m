@@ -1,95 +1,98 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7908C6ABC
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 22:47:24 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id d187so3102157pfa.10
-        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 14:47:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=L4Sw/rmfnxtN/SiSpAx3ht5zD++HFxERmQLlp5DWdJo=;
-        b=NikHNARShu6sbDa0oQgugUxW9IRcU699UzofuBEfupbXoSK6XfiecdPapE/aWrazB5
-         NXzIwF59/9C7WBqGqw8/VdlL1FyWceirAV9aZDJwBBjnB/NrBVL4vLPk9FXhX9ws4Sm8
-         Z8AgKaYr4bQK30brt48n8HmWNOHelWD4WHAKlH4nQ++YjyatmZRa/V1LK0+a1K80w6fn
-         H+L2UkthdQDUYpEvUuLXzvvOuj6uFSQoEYTaACcvF6Dz2bzI9iWlLgWh51oAe5v1U7R4
-         s1cqzKmNAffq6yd1XenWHmjO+HurVGXgHeniEkY8CzucpOD+w6AF9SL1boVP2ZpUR8Kc
-         KB2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=L4Sw/rmfnxtN/SiSpAx3ht5zD++HFxERmQLlp5DWdJo=;
-        b=sH0T361gWGaOVJ5f/fZCue/X/BJLAqPM3JKWPXtvfiOnchLoZSfKSArursFN2YA/P/
-         0O8cv2b678OhUdWYR6yIJgUkVUcKZ8BmDOfuMwYyCopLG7Rj4l58LvJAFnqi9wkXIuLX
-         v2QQxKW6CLKcrAIDeluqWbEH+ws45dRupA6ndGClnVXTm7FtM6svCFLY6dlNgiLzQw34
-         +ZnbID1oBg0TbS63xo9rZqQGeGvxiXiVPicB1m2kgGYPqWttxA6jCOt7/QITysgJGMuP
-         9+pv5IPsY3khOG59dKb6PEGLHbRxHYmIwN5aw8YO5Ljyf16mWONJ9TId/8thsJZzYZ+R
-         Wo6Q==
-X-Gm-Message-State: AOAM530Gc/Tmy+rlF8fQk6W1ambVA8qSElcf4hr8xJcasq48BGFvfjM9
-	/Qf9uHaN2/MonmVYHuTO/CLv2LTw/Q==
-X-Google-Smtp-Source: ABdhPJzFF7xC8/aWr+drVecl3RDA1YJUTSL1whngMzKxM78dmDo0Gq0Nh1B7u5GI2Bzh9DYqJ0AYTQ==
-X-Received: by 2002:a05:6a00:14ce:b0:4ec:aa7a:53c7 with SMTP id w14-20020a056a0014ce00b004ecaa7a53c7mr4933947pfu.62.1645742843839;
-        Thu, 24 Feb 2022 14:47:23 -0800 (PST)
-Received: from [127.0.0.1] ([20.112.126.241])
-        by smtp.gmail.com with ESMTPSA id w14-20020a63af0e000000b003732348b995sm499373pge.12.2022.02.24.14.47.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 14:47:23 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220224213406.3127061-13-matthieu.baerts@tessares.net>
-References: <20220224213406.3127061-13-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: join: make it shellcheck compliant: Tests
- Results
-Message-ID: <7127ec34-9481-49ec-535a-3e23b1b0bcf0@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Feb 2022 22:47:22 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8B86ABC
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 23:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645744948; x=1677280948;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Zsza57S9iUFYXKh6lhG6QAzJasueOVD2tTe+gdP6Yis=;
+  b=niTyEkR8oTNc3oIWCMaVL1kHFC4njrKrRVxHB9NWCSAjqIRJeSmu2RCN
+   oeAnfENn3IoMB+JDPCXIa737G282L4XdQ/YzQgP3enW/UkMBJAjyK54+e
+   OtCR4VDo6MUK1pujXoJm/xQB2khcqcFZtuxlDQqPoXTuq2zBwtc7lwgAP
+   kQdmgAflGZI5fghJ3Xo2qoEHd3mTkz/pauFdFgJxQVULaZvb8fev0yD7F
+   0VPtp+zB32WqQWqNE1Z2khPpx/wMExUKIK6ddv2RU0YEe4xv/NG/XmaCl
+   9Oi6+ytteIXWbV70+N/qQ+ZZV/Ze6vI2Bg+Q7Nbm9h+zXXixkaffzaeeo
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="232998391"
+X-IronPort-AV: E=Sophos;i="5.90,134,1643702400"; 
+   d="scan'208";a="232998391"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2022 15:22:28 -0800
+X-IronPort-AV: E=Sophos;i="5.90,134,1643702400"; 
+   d="scan'208";a="491784929"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.28.67])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2022 15:22:27 -0800
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	fw@strlen.de
+Subject: [RFC PATCH mptcp-next 0/4] MP_JOIN fallback for TCP listeners
+Date: Thu, 24 Feb 2022 15:22:22 -0800
+Message-Id: <20220224232226.259304-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+In discussion of Florian's "replace per-addr listener sockets" series, I
+proposed this:
 
-Thank you for your modifications, that's great!
+    One possibility that doesn't disturb the hot path too much: Let the
+    TCP listener try to handle the SYN. In tcp_parse_options(), add just
+    enough code to set a bit in struct tcp_options_received if MP_JOIN
+    is present (don't fully parse the MPTCP option). If MP_JOIN is there
+    and MPTCP is enabled, return early from tcp_check_req() and have
+    tcp_v4_rcv() treat it similar to req_stolen==true. Instead of
+    kicking back to a regular lookup, try a token lookup.
 
-Our CI did some validations and here is its report:
+It seemed to me that the hot path impact would be minimal. To better
+show that, I put together these RFC patches. Only one conditional is
+added to the hot path, checking a bit in struct tcp_received options
+(which should be in the data cache anyway). The other hooks are:
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5258386722783232
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5258386722783232/summary/summary.txt
+ * tcp_parse_options() switch statement (only executed if a MPTCP option
+   is present).
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): =
-packetdrill_syscalls =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6384286629625856
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6384286629625856/summary/summary.txt
+ * The tcp_check_req()-returned-NULL error paths for IPv4 and IPv6.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/3aa95dbed834
+In addition, the added code in this series is almost entirely optimized
+out if CONFIG_MPTCP is not set. With one more ifdef for the
+tcp_parse_option() change, the optimized kernel binary may even be
+entirely unchanged.
 
-Please note that despite all the efforts =
-that have been already done to have a
-stable tests suite when executed on a=
- public CI like here, it is possible some
-reported issues are not due to =
-your modifications. Still, do not hesitate to
-help us improve that ;-)
+Compared to Florian's proposal (add token lookup before the listener
+lookup) this does change more lines of TCP code, but has less runtime
+impact.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Major caveat: this is very lightly tested, build and a quick check to
+make sure it didn't break TCP.
+
+This applies on top of "mptcp: replace per-addr listener sockets" v4.
+
+
+Mat Martineau (4):
+  mptcp: Move some symbols to be visible outside the MPTCP subsystem
+  tcp: Allow tcp_check_req() to return more status values
+  tcp: Check for the presence of a MP_JOIN option
+  tcp: Add TCP hooks for detecting MP_JOIN on a regular TCP listener
+
+ include/linux/tcp.h      |  3 ++-
+ include/net/mptcp.h      | 18 ++++++++++++++++++
+ include/net/tcp.h        | 10 +++++++++-
+ net/ipv4/tcp_input.c     | 12 ++++++++++--
+ net/ipv4/tcp_ipv4.c      | 13 ++++++++++---
+ net/ipv4/tcp_minisocks.c | 14 ++++++++++----
+ net/ipv6/tcp_ipv6.c      | 13 ++++++++++---
+ net/mptcp/protocol.h     | 12 ------------
+ 8 files changed, 69 insertions(+), 26 deletions(-)
+
+-- 
+2.35.1
+
