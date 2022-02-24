@@ -1,47 +1,48 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA5A1B62
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:56:47 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id p9so4525464ejd.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB121B63
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:56:48 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id w3so2940812edu.8
         for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 05:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mpqepvshfNyt6d2vM3maMlSAvOqiJZn5oGOXwOrcldE=;
-        b=RKch9nfPVIht74tNF5yexDqMFfOzlVeiE00hSjZd0CdNNVOXeIS2o2UFsew6Vtp3uP
-         /CoHCBYsbo+dibqSQBp4cCEAH/L9RntLB969nLa9CWSTwLDyBM++Lyyu4h81PgAUVCgM
-         CGFOpqYcL4TwacfXRkAnCHwrmNOQlzZzqf2zQSQxWZkdlhY5amHimCsCu1e1/Ge5bxDO
-         GFpq8dNZump7KGpH/ygWkyMS2NyuUqDTUy0za4IciTZjmDcWTjxjUtTdyjIaqzZlq4DJ
-         CA5m+On2LTZiVx8X9kGfME44T7dkYSOy/znK9gE02PjPoS3Hd16uLz2YgchpjyN/dP5f
-         DsrQ==
+        bh=cFHBvb0vnFY6A8dNFnbvb6YKKqLhSBV8luPX/Q0H2Q4=;
+        b=5Le2O2Ay5LngzgMRsKmMBzlujdsgtz5tfhMzW9Zbz7nZKyJETrIR19dlvGhglJYziL
+         NE6O3gI7zA6H6eGRMptioaoNKY+qqPdtnU8JXBei4k4Aiy14SRd41cioLad+j2cFo/vK
+         9gB0MA4EwpYJ8dB6BAbjMZUI/FyaBE2YNkeQHlE6b+SdOe4zeTfJ0qazxRe/lPuLxN/N
+         CwUMu45EneJNnzsQgWC+Vsjw1GEp5YUNoHmIuxvLCi7b8ernDKVUwmZmKtzqqsYrr6ww
+         REc5Gnh8I8hsGb03zwY3JVVs//YZYSyeoA/IXJFlB6cnxEPPRJYSiY+NOoKkre1Cy1AQ
+         L6/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mpqepvshfNyt6d2vM3maMlSAvOqiJZn5oGOXwOrcldE=;
-        b=ZM+NmKk3Lu7vxTHk0hXH2TUYsskG1fWYYQzX0H572qIHkUjSOmgl62Wgo9orz+DBTB
-         dncvVs825p2HCGQq5zo6zQuxVx3YRSMCdefwz+Y/kxtUaAnfk4GnmnNeWGsgINe5hDyq
-         f79sjOWUOD+2pt3ZNBw2/I3HdE8NrcgdHV2oQiw/WeDYWxdcn2nKUndhpgQ5JVa2DzcJ
-         DcsgC+wBKRcbMiFP3NIqDq1a/Tcm/teXdjisfPNrQ2460kCl5x5Ek2sdX8iSu6C2I8IB
-         qQIXPRK5G0t6bGIDA6ceuhFLI78ppdz5QekmHuGSVFYau8AHJGCRTFOYWtTZpP+Jus4V
-         RMhg==
-X-Gm-Message-State: AOAM531r7WOsPmPTwIO521Nrb9hf/qvE0lGaswhUCsalzOtEwSoBbzDb
-	Wx9NCuW2fKZ2aiXzxIsWyxGjNcD0GLQVqZe8P9I=
-X-Google-Smtp-Source: ABdhPJwz5P0FHIRXQ07Uch1OsWjwzezNGf3ecNnuXsno6Xes5CIpIS7xOkQN0/o79hBtyq0GwBFLJg==
-X-Received: by 2002:a17:906:684a:b0:6ce:c1b4:b503 with SMTP id a10-20020a170906684a00b006cec1b4b503mr2437384ejs.355.1645711005667;
-        Thu, 24 Feb 2022 05:56:45 -0800 (PST)
+        bh=cFHBvb0vnFY6A8dNFnbvb6YKKqLhSBV8luPX/Q0H2Q4=;
+        b=c6+pYwY6shZdSC5pXvExmAIviANfvAVUmqkwsYvaaPcKjMHHYKTO3XzfcBWehcl401
+         FaaaA4SPxRP5dbbkb/GxcC24KL/MxD6FE3UDVMbyGkGRFa1ro4VGDN33fxgzx3cXOg1t
+         EOXny06eEkt34jLVHIF9qxZEezE/viO7V4F4OnKPexmUOstI4g9BxX3uxYXAuhkresDM
+         9PAEhfFzXWEDDqhKkXHCWCBRsUJeU50aCYIlb6M9P/PlG3WJAAyc995OasgXU0sNUIk3
+         4lOn+DK32xDkrkm7u94dLuB7eyV3YO/3yEaANRftRj0xOBgSbZ3lOvFjS0xNCaaAnnYc
+         2LLA==
+X-Gm-Message-State: AOAM533D16DF1vogbwIqETmb31DSgRiRSzylHMWus7jt7v9FUEo1Wm1L
+	Nc4flLvunxFka0TAS07YjNfzovUkqfzwgbfTJEs=
+X-Google-Smtp-Source: ABdhPJyXeEST7k5G/BGUnD34u+4Yop1KxhEu3AbnNHQ8eVjh1ruhTOdDHXQeXb/GR5WhUnXnjceMtg==
+X-Received: by 2002:aa7:d2da:0:b0:410:b9f1:ff35 with SMTP id k26-20020aa7d2da000000b00410b9f1ff35mr2439956edr.217.1645711006245;
+        Thu, 24 Feb 2022 05:56:46 -0800 (PST)
 Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
         by smtp.gmail.com with ESMTPSA id 7sm1360733edw.37.2022.02.24.05.56.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 24 Feb 2022 05:56:45 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v3 01/12] Squash to "selftests: mptcp: Add tests for userspace PM type"
-Date: Thu, 24 Feb 2022 14:56:08 +0100
-Message-Id: <20220224135619.2523272-2-matthieu.baerts@tessares.net>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH mptcp-next v3 02/12] Squash to "selftests: mptcp: join: allow running -cCi"
+Date: Thu, 24 Feb 2022 14:56:09 +0100
+Message-Id: <20220224135619.2523272-3-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220224135619.2523272-1-matthieu.baerts@tessares.net>
 References: <20220224135619.2523272-1-matthieu.baerts@tessares.net>
@@ -53,127 +54,171 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 34aa6e3bccd8 ("selftests: mptcp: add ip mptcp wrappers") has been
-applied in net-next before this other patch.
+The recommended way with getopt is first parse all options and then act.
 
-It is then needed to do the same modifications in the userspace tests as
-well.
+This allows to do some actions in priority, e.g. display the help menu
+and stop.
 
-While at it, a new helper has been added to avoid long 'ip netns exec'
-commands as suggested by Paolo.
+But also some global variables changing the behaviour of this selftests
+-- like the ones behind -cCi options -- can be set before running the
+different tests. By doing that, we can also avoid long and unreadable
+regex.
 
+This can be squashed in "selftests: mptcp: join: allow running -cCi" and
+the commit message can be appended with what is above.
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
 
 Notes:
-    to be squashed in "selftests: mptcp: Add tests for userspace PM type"
+    to be squashed in "selftests: mptcp: join: allow running -cCi"
 
- .../testing/selftests/net/mptcp/mptcp_join.sh | 57 +++++++++++--------
- 1 file changed, 32 insertions(+), 25 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 73 ++++++++-----------
+ 1 file changed, 31 insertions(+), 42 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index ef57a28cf722..e2d56a5bcaf4 100755
+index e2d56a5bcaf4..02ae2692f7fc 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1448,6 +1448,13 @@ wait_attempt_fail()
- 	return 1
+@@ -17,7 +17,6 @@ checksum=0
+ ip_mptcp=0
+ check_invert=0
+ validate_checksum=0
+-do_all_tests=1
+ init=0
+ 
+ TEST_COUNT=0
+@@ -2630,93 +2629,75 @@ usage()
+ 	exit ${ret}
  }
  
-+set_userspace_pm()
-+{
-+	local ns=$1
+-for arg in "$@"; do
+-	# check for "capture/checksum" args before launching tests
+-	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
+-		capture=1
+-	fi
+-	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
+-		checksum=1
+-	fi
+-	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"i"[0-9a-zA-Z]*$ ]]; then
+-		ip_mptcp=1
+-	fi
+-
+-	# exception for the capture/checksum/ip_mptcp options, the rest means: a part of the tests
+-	if ! [[ "${arg}" =~ ^"-"[cCi]+$ ]]; then
+-		do_all_tests=0
+-	fi
+-done
+-
+-if [ $do_all_tests -eq 1 ]; then
+-	all_tests
+-	exit $ret
+-fi
+ 
++tests=()
+ while getopts 'fesltra64bpkdmchzuFICSi' opt; do
+ 	case $opt in
+ 		f)
+-			subflows_tests
++			tests+=(subflows_tests)
+ 			;;
+ 		e)
+-			subflows_error_tests
++			tests+=(subflows_error_tests)
+ 			;;
+ 		s)
+-			signal_address_tests
++			tests+=(signal_address_tests)
+ 			;;
+ 		l)
+-			link_failure_tests
++			tests+=(link_failure_tests)
+ 			;;
+ 		t)
+-			add_addr_timeout_tests
++			tests+=(add_addr_timeout_tests)
+ 			;;
+ 		r)
+-			remove_tests
++			tests+=(remove_tests)
+ 			;;
+ 		a)
+-			add_tests
++			tests+=(add_tests)
+ 			;;
+ 		6)
+-			ipv6_tests
++			tests+=(ipv6_tests)
+ 			;;
+ 		4)
+-			v4mapped_tests
++			tests+=(v4mapped_tests)
+ 			;;
+ 		b)
+-			backup_tests
++			tests+=(backup_tests)
+ 			;;
+ 		p)
+-			add_addr_ports_tests
++			tests+=(add_addr_ports_tests)
+ 			;;
+ 		k)
+-			syncookies_tests
++			tests+=(syncookies_tests)
+ 			;;
+ 		S)
+-			checksum_tests
++			tests+=(checksum_tests)
+ 			;;
+ 		d)
+-			deny_join_id0_tests
++			tests+=(deny_join_id0_tests)
+ 			;;
+ 		m)
+-			fullmesh_tests
++			tests+=(fullmesh_tests)
+ 			;;
+ 		z)
+-			fastclose_tests
++			tests+=(fastclose_tests)
+ 			;;
+ 		F)
+-			fail_tests
++			tests+=(fail_tests)
+ 			;;
+ 		u)
+-			userspace_tests
++			tests+=(userspace_tests)
+ 			;;
+ 		I)
+-			implicit_tests
++			tests+=(implicit_tests)
+ 			;;
+ 		c)
++			capture=1
+ 			;;
+ 		C)
++			checksum=1
+ 			;;
+ 		i)
++			ip_mptcp=1
+ 			;;
+ 		h)
+ 			usage
+@@ -2727,4 +2708,12 @@ while getopts 'fesltra64bpkdmchzuFICSi' opt; do
+ 	esac
+ done
+ 
++if [ ${#tests[@]} -eq 0 ]; then
++	all_tests
++else
++	for subtests in "${tests[@]}"; do
++		"${subtests}"
++	done
++fi
 +
-+	ip netns exec $ns sysctl -q net.mptcp.pm_type=1
-+}
-+
- subflows_tests()
- {
- 	reset
-@@ -2468,59 +2475,59 @@ userspace_tests()
- {
- 	# userspace pm type prevents add_addr
- 	reset
--	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	set_userspace_pm $ns1
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
-+	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "userspace pm type prevents add_addr" 0 0 0
- 	chk_add_nr 0 0
- 
- 	# userspace pm type echoes add_addr
- 	reset
--	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
--	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	set_userspace_pm $ns2
-+	pm_nl_set_limits $ns1 0 2
-+	pm_nl_set_limits $ns2 0 2
-+	pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "userspace pm type echoes add_addr" 0 0 0
- 	chk_add_nr 1 1
- 
- 	# userspace pm type rejects join
- 	reset
--	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	set_userspace_pm $ns1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
-+	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "userspace pm type rejects join" 1 1 0
- 
- 	# userspace pm type does not send join
- 	reset
--	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	set_userspace_pm $ns2
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
-+	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "userspace pm type does not send join" 0 0 0
- 
- 	# userspace pm type prevents mp_prio
- 	reset
--	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
--	ip netns exec $ns1 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
--	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	set_userspace_pm $ns1
-+	pm_nl_set_limits $ns1 1 1
-+	pm_nl_set_limits $ns2 1 1
-+	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
- 	chk_join_nr "userspace pm type prevents mp_prio" 1 1 0
- 	chk_prio_nr 0 0
- 
- 	# userspace pm type prevents rm_addr
- 	reset
--	ip netns exec $ns1 sysctl -q net.mptcp.pm_type=1
--	ip netns exec $ns2 sysctl -q net.mptcp.pm_type=1
--	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
--	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	set_userspace_pm $ns1
-+	set_userspace_pm $ns2
-+	pm_nl_set_limits $ns1 0 1
-+	pm_nl_set_limits $ns2 0 1
-+	pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
- 	chk_join_nr "userspace pm type prevents rm_addr" 0 0 0
- 	chk_rm_nr 0 0
+ exit $ret
 -- 
 2.34.1
 
