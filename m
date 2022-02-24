@@ -1,111 +1,102 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45167B
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 01:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7687B
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 01:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645666006; x=1677202006;
+  t=1645666063; x=1677202063;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=HUq4eRkpzLqmDG4kQr5+bn785+2g7lWbarvYostEoRI=;
-  b=JzU+0/BoiUuDLYuVrgTam6R3VQH+MEDJLYLftbUo+gJBWaKTvl3Yk4qr
-   n8ZUJBkxD/5D7MAE2zYetdEVpj3N3IMDLTh6gkg3XwhD8MVRqV2BuCsWy
-   wgaZUAalu+a8KIMI5h3VlUxHTSrwjP+pW+U2r+T9GGAhkCpLkySYyiNoN
-   TO9xefsDragDoLs27L+lMReA2hmn79l6jVBMy/acSASIJKUIDSOz1EVwB
-   WYkKWNSl3YW2dOxZP2dseKf2WcidcRJu1XVbQfd4in8Wwl/TFYBdlmDam
-   yU3zgRLq6ESeYCewr4EYg/WViiZTyqQWSFMjHA6ulzO77WRX9ubCyW/se
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="239516821"
+  bh=k4X3fPGOl0aih4FVEyELS22nptyF/zzJAKdNm6WupRY=;
+  b=M6GRyN7ixHqdnSU9Jy3Lsx3UUeVSJsKLWYDLVIDGPCmDgZ34fmiJL9xR
+   xjrVuIXZ9X2B5067mBKpZcbGak/AYNIybeXCIS5qk2ewNkj1FsdPJUz8R
+   kZriR4bj3CSmA5vEYJQkOM1uqXMHGsNKYDDGdBKZ7AkkNoFR9B4/LBiSI
+   2+c2ENnVYY/Hp+M7e0BUlTClDTT3LWVbH4uJerK8gn3rlqb0jq/HRy06S
+   Bq2pd+JJQjrjopu7YxUSNxOy/HdEiG8Qm8OLugGdETpzBjac/UuFuSdLo
+   0m4AsNTFOl4V07gekMu5ordiDGWbOiKQfpGYhBHMOH8XrfyZzEEUUll1z
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="252316520"
 X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
-   d="scan'208";a="239516821"
+   d="scan'208";a="252316520"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 17:26:46 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 17:27:42 -0800
 X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
-   d="scan'208";a="508673100"
+   d="scan'208";a="508673360"
 Received: from ortmgvpn37.amr.corp.intel.com ([10.212.237.95])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 17:26:46 -0800
-Date: Wed, 23 Feb 2022 17:26:46 -0800 (PST)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 17:27:42 -0800
+Date: Wed, 23 Feb 2022 17:27:42 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH 3/4] mptcp: handle join requests via pernet listen
- socket
-In-Reply-To: <20220223110832.29357-4-fw@strlen.de>
-Message-ID: <ff6fbff-8753-4a55-8aa6-9c7dff89644@linux.intel.com>
-References: <20220223110832.29357-1-fw@strlen.de> <20220223110832.29357-4-fw@strlen.de>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add the MP_FASTCLOSE
+ mibs check"
+In-Reply-To: <981a7ec4e8d14bffba4d4251d491ff70fb2eeba3.1645658270.git.geliang.tang@suse.com>
+Message-ID: <fc9dd352-2779-eea4-88e6-3acce2fe1f8c@linux.intel.com>
+References: <981a7ec4e8d14bffba4d4251d491ff70fb2eeba3.1645658270.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 23 Feb 2022, Florian Westphal wrote:
+On Thu, 24 Feb 2022, Geliang Tang wrote:
 
-> Currently mptcp adds kernel-based listener socket for all
-> netlink-configured mptcp address endpoints.
+> This following code appeared in another commit "selftests: mptcp: add infinite map
+> mibs check":
 >
-> This has caveats because kernel may interfere with unrelated programs
-> that use same address/port pairs.
+>        echo -n " - fclzrx"
+> -       count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}'`
+> +       count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
+>        [ -z "$count" ] && count=0
+>        if [ "$count" != "$fclose_rx" ]; then
+>                echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
 >
-> RFC 8684 says:
-> Demultiplexing subflow SYNs MUST be done using the token; this is
-> unlike traditional TCP, where the destination port is used for
-> demultiplexing SYN packets.  Once a subflow is set up, demultiplexing
-> packets is done using the 5-tuple, as in traditional TCP.
->
-> This patch deviates from this in that it retains the existing checks of
-> verifying the incoming requests destination vs. the list of announced
-> addresses.  If the request is to an address that was not assigned, its
-> treated like an invalid token, i.e. we send a tcp reset with mptcp
-> error specific code is returned.
->
-> The checks that do this are moved from subflow specific code to the
-> new hook, this allows us to perform the check at an earlier stage.
->
-> Furthermore, TCP-only listeners take precedence: An MPTCP peer MUST NOT
-> announce addr:port pairs that are already in use by a non-mptcp listener.
+> It's better to squash it here. With this patch, it will be dropped from the commit
+> "selftests: mptcp: add infinite map mibs check" automatically.
 >
 
-This rule seems ok to me. But there's a loophole: MPTCP can announce the 
-addr:port, then a TCP listener is created for that same addr:port and 
-starts rejecting any incoming MP_JOINs.
+Hi Geliang,
 
-> This could be changed, but it requires move of mptcp_handle_join() hook
-> *before* the tcp port demux, i.e. an additional conditional in hotpath.
->
+I agree, looks good to squash.
 
-One possibility that doesn't disturb the hot path too much: Let the TCP 
-listener try to handle the SYN. In tcp_parse_options(), add just enough 
-code to set a bit in struct tcp_options_received if MP_JOIN is present 
-(don't fully parse the MPTCP option). If MP_JOIN is there and MPTCP is 
-enabled, return early from tcp_check_req() and have tcp_v4_rcv() treat it 
-similar to req_stolen==true. Instead of kicking back to a regular lookup, 
-try a token lookup.
 
-> As-is, the additional conditional (syn && !rst && ...) is placed in the
-> 'no socket found' path.
->
-> The pernet "listening" socket is hidden from userspace, its not part of
-> any hashes and not bound to any address/port.
->
-> TPROXY-like semantics apply: If tcp demux cannot find a port for a given
-> packet, check if the packet is a syn packet with a valid join token.
->
-> If so, the pernet listener is returned and tcp processing resumes.
-> Otherwise, handling is identical.
->
-> Signed-off-by: Florian Westphal <fw@strlen.de>
+-Mat
+
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> include/net/mptcp.h  |  10 ++
-> net/ipv6/tcp_ipv6.c  |  19 ++--
-> net/mptcp/ctrl.c     | 229 ++++++++++++++++++++++++++++++++++++++++++-
-> net/mptcp/protocol.c |   2 +-
-> net/mptcp/protocol.h |   2 +-
-> net/mptcp/subflow.c  |   8 +-
-> 6 files changed, 251 insertions(+), 19 deletions(-)
+> tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 7d414cff02a0..10339a796325 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -800,7 +800,7 @@ chk_fclose_nr()
+> 	local dump_stats
+>
+> 	printf "%-${nr_blank}s %s" " " "ctx"
+> -	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}'`
+> +	count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
+> 	[ -z "$count" ] && count=0
+> 	if [ "$count" != "$fclose_tx" ]; then
+> 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
+> @@ -811,7 +811,7 @@ chk_fclose_nr()
+> 	fi
+>
+> 	echo -n " - fclzrx"
+> -	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}'`
+> +	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
+> 	[ -z "$count" ] && count=0
+> 	if [ "$count" != "$fclose_rx" ]; then
+> 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
+> -- 
+> 2.34.1
+>
+>
+>
 
 --
 Mat Martineau
