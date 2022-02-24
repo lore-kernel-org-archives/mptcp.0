@@ -1,39 +1,39 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF34C7B
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 00:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45167B
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 01:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645663691; x=1677199691;
+  t=1645666006; x=1677202006;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=nq+6jYac5epLh6HiGyU3tXgYOyXw8mPDfiVQNlPXx80=;
-  b=hYdLsioUrh2m+4KM9ufCFl2syZktX6uC0JFbCzrCre28sQs7x8rF/GQe
-   ghITB2bhcomSr7PPrsiZ9pKnet5/QUC2aH7YkWC/AFHV68pAq4W75xORJ
-   7dT5WCqeT9cEIDroytmxE7YTCsKWhI/n2T+gdBQqymuHhyAMMUVRillO0
-   5fYCKQGmx/FCzslugtn2c1ohUfMAyiy5/LWsi6aAHlNLbr/gHmPiOvgrf
-   366njsbmn1lhbSI/F0n09RRKN7LK7M+0pxz6aNYmtuL/u5xv9ed5jfdCl
-   Xjtqfk2lLtbm4McNZBzvvaGPV7zqtlJQPiZbfPlJ+DadAoGyaenE1FXdx
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="315343738"
+  bh=HUq4eRkpzLqmDG4kQr5+bn785+2g7lWbarvYostEoRI=;
+  b=JzU+0/BoiUuDLYuVrgTam6R3VQH+MEDJLYLftbUo+gJBWaKTvl3Yk4qr
+   n8ZUJBkxD/5D7MAE2zYetdEVpj3N3IMDLTh6gkg3XwhD8MVRqV2BuCsWy
+   wgaZUAalu+a8KIMI5h3VlUxHTSrwjP+pW+U2r+T9GGAhkCpLkySYyiNoN
+   TO9xefsDragDoLs27L+lMReA2hmn79l6jVBMy/acSASIJKUIDSOz1EVwB
+   WYkKWNSl3YW2dOxZP2dseKf2WcidcRJu1XVbQfd4in8Wwl/TFYBdlmDam
+   yU3zgRLq6ESeYCewr4EYg/WViiZTyqQWSFMjHA6ulzO77WRX9ubCyW/se
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="239516821"
 X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
-   d="scan'208";a="315343738"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:48:11 -0800
+   d="scan'208";a="239516821"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 17:26:46 -0800
 X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
-   d="scan'208";a="591907414"
+   d="scan'208";a="508673100"
 Received: from ortmgvpn37.amr.corp.intel.com ([10.212.237.95])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:48:11 -0800
-Date: Wed, 23 Feb 2022 16:48:10 -0800 (PST)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 17:26:46 -0800
+Date: Wed, 23 Feb 2022 17:26:46 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Florian Westphal <fw@strlen.de>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 0/4] mptcp: replace per-addr listener
- sockets
-In-Reply-To: <20220223110832.29357-1-fw@strlen.de>
-Message-ID: <2cb7a320-78bb-e14-26cb-a815daab7021@linux.intel.com>
-References: <20220223110832.29357-1-fw@strlen.de>
+Subject: Re: [PATCH 3/4] mptcp: handle join requests via pernet listen
+ socket
+In-Reply-To: <20220223110832.29357-4-fw@strlen.de>
+Message-ID: <ff6fbff-8753-4a55-8aa6-9c7dff89644@linux.intel.com>
+References: <20220223110832.29357-1-fw@strlen.de> <20220223110832.29357-4-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,90 +44,68 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 23 Feb 2022, Florian Westphal wrote:
 
-> Changes since v2:
-> - drop first patch again, no longer needed
-> - move announce list check to the new join hook (Paolo)
-> - add joinhook for timewait sockets
-> - hide join6 member for !ipv6 build
+> Currently mptcp adds kernel-based listener socket for all
+> netlink-configured mptcp address endpoints.
 >
-> Changes since v2:
-> - avoid unneeded sk refcount inc/dec pair
-> - use more descriptive name for function name
-> - fix typo in rfc number (Mathieu)
-> - don't increment listner refcount, caller assumes noref
+> This has caveats because kernel may interfere with unrelated programs
+> that use same address/port pairs.
+>
+> RFC 8684 says:
+> Demultiplexing subflow SYNs MUST be done using the token; this is
+> unlike traditional TCP, where the destination port is used for
+> demultiplexing SYN packets.  Once a subflow is set up, demultiplexing
+> packets is done using the 5-tuple, as in traditional TCP.
+>
+> This patch deviates from this in that it retains the existing checks of
+> verifying the incoming requests destination vs. the list of announced
+> addresses.  If the request is to an address that was not assigned, its
+> treated like an invalid token, i.e. we send a tcp reset with mptcp
+> error specific code is returned.
+>
+> The checks that do this are moved from subflow specific code to the
+> new hook, this allows us to perform the check at an earlier stage.
+>
+> Furthermore, TCP-only listeners take precedence: An MPTCP peer MUST NOT
+> announce addr:port pairs that are already in use by a non-mptcp listener.
 >
 
-Hi Florian -
+This rule seems ok to me. But there's a loophole: MPTCP can announce the 
+addr:port, then a TCP listener is created for that same addr:port and 
+starts rejecting any incoming MP_JOINs.
 
-Thanks for the v3, I think that covers the review comments on v2 for the 
-functionality covered in the previous revs.
-
-My main questions have to do with:
-
-> Not changed:
-> - hook location, plain tcp sockets take precedence.
-> - per-netns listener
+> This could be changed, but it requires move of mptcp_handle_join() hook
+> *before* the tcp port demux, i.e. an additional conditional in hotpath.
 >
 
-Do you have plans for either or both of these? Not sure if you have 
-work-in-process or if we (the community) need to figure out a more 
-detailed plan for TCP/MPTCP precedence and the degree of TCP changes that 
-make sense upstream. Since this week's meeting is happening real soon, we 
-can definitely sort it out there.
+One possibility that doesn't disturb the hot path too much: Let the TCP 
+listener try to handle the SYN. In tcp_parse_options(), add just enough 
+code to set a bit in struct tcp_options_received if MP_JOIN is present 
+(don't fully parse the MPTCP option). If MP_JOIN is there and MPTCP is 
+enabled, return early from tcp_check_req() and have tcp_v4_rcv() treat it 
+similar to req_stolen==true. Instead of kicking back to a regular lookup, 
+try a token lookup.
 
-With the upstream kernel at 5.17-rc5 we should also try to figure out how 
-much of the listener and userspace PM changes we want to merge to 
-net-next now vs. in the next cycle.
-
--Mat
-
-
-> Global listener means other namespaces are affected in case
-> of backlog overflow. Pernet listeners avoid that, so I don't see
-> a strong argument for tcp refactoring that would allow global sk.
+> As-is, the additional conditional (syn && !rst && ...) is placed in the
+> 'no socket found' path.
 >
-> This series introduces a hidden per-netns pseudo "listener" socket to
-> handle mptcp join requests with a valid token but that do not match an
-> existing listening socket.
+> The pernet "listening" socket is hidden from userspace, its not part of
+> any hashes and not bound to any address/port.
 >
-> First patch is a minor preparation patch: MPTCP Join requests packets
-> that fail to find a suitable socket by means of standard address/port
-> demultiplexing will be steered to a pseudo-listener, similar to TPROXY
-> interception.
+> TPROXY-like semantics apply: If tcp demux cannot find a port for a given
+> packet, check if the packet is a syn packet with a valid join token.
 >
-> This pseudo listener isn't bound to an address or port (all zero), so we
-> need to fetch the port number from the tcp header and not the listener sk.
+> If so, the pernet listener is returned and tcp processing resumes.
+> Otherwise, handling is identical.
 >
-> Patch two adds a stub to the tcp demux code.
-> This has no functionality, its extra to make tcp datapath change stand out.
->
-> Third patch is the bulk work, it adds per netns listener and implements
-> token-based socket demultiplexing.
->
-> Last patch zaps the per-address sockets from mptcp, they are not needed
-> anymore.
->
-> Florian Westphal (4):
->  mptcp: prefer ip address in syn skb instead of listen sk bound address
->  tcp: add mptcp join demultiplex hooks
->  mptcp: handle join requests via pernet listen socket
->  mptcp: remove per-address listening sockets
->
-> include/net/mptcp.h    |  15 +++
-> net/ipv4/tcp_ipv4.c    |   7 ++
-> net/ipv6/tcp_ipv6.c    |  26 +++--
-> net/mptcp/ctrl.c       | 229 ++++++++++++++++++++++++++++++++++++++++-
-> net/mptcp/pm_netlink.c |  82 +++------------
-> net/mptcp/protocol.c   |   2 +-
-> net/mptcp/protocol.h   |   4 +-
-> net/mptcp/subflow.c    |   9 +-
-> 8 files changed, 287 insertions(+), 87 deletions(-)
->
-> -- 
-> 2.34.1
->
->
->
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+> ---
+> include/net/mptcp.h  |  10 ++
+> net/ipv6/tcp_ipv6.c  |  19 ++--
+> net/mptcp/ctrl.c     | 229 ++++++++++++++++++++++++++++++++++++++++++-
+> net/mptcp/protocol.c |   2 +-
+> net/mptcp/protocol.h |   2 +-
+> net/mptcp/subflow.c  |   8 +-
+> 6 files changed, 251 insertions(+), 19 deletions(-)
 
 --
 Mat Martineau
