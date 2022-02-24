@@ -1,104 +1,100 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841C57472
-	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:36:17 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id w3so2853384edu.8
-        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 05:36:16 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686EB7473
+	for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 13:56:47 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id d10so4480297eje.10
+        for <mptcp@lists.linux.dev>; Thu, 24 Feb 2022 05:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=dtwbbQs9B59jr1u572fKw8krq7NbnUcfcrYf3N459YM=;
-        b=Cln1HLMqNloMYpyLu21rN/bOyoMdqJKg7f1r8EkGcqnDzgN1g20F8+uc3kbOX4nCIR
-         2wr9qODI9kKbKCn8xZwugfZDs1bfue0QwCN+RzglDQteWMBGRlJ2CblwB2dnmniR5S9R
-         NTTTvq0JKPm9u+FJ1vbhkX24dtn01AIRN70nRVQGhQaeVNTrQrtvfVEyZuatb9y1Owfo
-         60JgbL1R6Fbg26LVHvoCcImqsFiIj+U0/kKRd+dS+w2AeDQrioIt7UP4beOD+dfW8+Ti
-         Ja3RgYr3rqmPOlMgVQQRGbeNhY6qqwvglPSRKjv5T755dCl6I329uw09uSbHLfRj5stW
-         ulhg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T5RRJ/0oYCtVH/7XTSuDjrz7LlY/K2eG+ZlDL8+A70A=;
+        b=H99hfXBv31PVmGo719drvsLuu/0VTMvp9S5VmiMbXE5uH2Ek8I8f4PbuA+fb/13Ulh
+         ZrAMu9jmIhrrf6/2GJqiHHaIYoa5RYqSdP2I0vH5djZZ3+xckMxNlfDciakBabaRlqP4
+         UHgmtam57GujfQ+wJqYXaNxAfmQIerd0ChXJKkI6K8ABqwcmn9BC/SrcyILxn0E4bi0w
+         QjIJ/12E/laaAeHJKpB4dOolRkriSysr9mP4Ub6X5xf9Kzal8vWRBevEsBPkzWudfy+x
+         J4NrlzSmWm/iI8QrH0+T+EeAEyW+HIV/JO9tmpgCkfGstGtxKxR/Q042Nb3ATwmxHYyl
+         ApTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dtwbbQs9B59jr1u572fKw8krq7NbnUcfcrYf3N459YM=;
-        b=8GRxbK9fd2/TjSsiazJM9lCfC7YfqwtNOOb5GKFdjzjzinN72C3bBrhKhe1LmN7z6x
-         4zBS5JciIynHC4EJEZHBtUcEjBgptjRKhAbKQN7hJcATV//keq7Cfmrthf+BTFlWXR23
-         Gg+OqqyU9v5krvZDV/k+t0Kjg4vcRkGzlAguoG3iIz624wGQL9KdKD6r/8u4SSQtWlkG
-         nfhdrx0aavIHenxH1wm6Q4/HkbcK+s+dYNlykPWPdU0BUijL6mhI8emSjvhORSTjIU+D
-         aY3ljXqFAWV+QT7P3oFf9UxqEgP29BiRvO5RM37X6gZddcdjrwTbHMa1H5GATBVX2vNu
-         Nbwg==
-X-Gm-Message-State: AOAM531H6kVLCtGqiE/eQTLLLKFgbKqaAX2LPZwUkV22n/euZACiBz2X
-	Gqre91JY7Y5PIHSsdB2SVcfnItdDD+TvVpFe
-X-Google-Smtp-Source: ABdhPJwUymJrl/ORL4aykccgf2eJiSGb/0rq/uLSuXGyrJHqqYPp3uSCZOdv19znpDY3SxEN+769xg==
-X-Received: by 2002:aa7:cf06:0:b0:405:e0c8:8b5d with SMTP id a6-20020aa7cf06000000b00405e0c88b5dmr2264745edy.367.1645709775300;
-        Thu, 24 Feb 2022 05:36:15 -0800 (PST)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id z22sm1403691edd.45.2022.02.24.05.36.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Feb 2022 05:36:14 -0800 (PST)
-Message-ID: <dacfb400-0d9d-eb6a-25e2-0d952ba58bf9@tessares.net>
-Date: Thu, 24 Feb 2022 14:36:14 +0100
+        bh=T5RRJ/0oYCtVH/7XTSuDjrz7LlY/K2eG+ZlDL8+A70A=;
+        b=03eBlrgxeBzXxJJ91PH1Z+JI/iiv7LRnehHEAsPYke3ADO7ysJ5DyUEcg75CO79cK4
+         wmRsd8/JIoya+OLFkyUtGslbvR7G9cVl+SDvW1DzvgoafIbjLk6g5X3HMaKe2NCY5ugS
+         2/56PiHxW2+6/reMXl17/vQVFD2kiKSO3NbuAabwje5LcXu/mr/Pk8cR+DnFleGDh0sy
+         kA69OD1DQcyr7JKQGvr0/BWtjJ1BCblKHkov5z6eTYj5nDlaqIFMMLRana7bIYBe2gJ7
+         wSpy4sTTwrfCEmuH8xGLR0OY1GXqpM5ez1RPdl4qZA8VDxv5IRpvuQk7158Dgd7beacT
+         jNvw==
+X-Gm-Message-State: AOAM533gDYnWsthjTAybGVX+EeaPn7QOIUZB3BtHAgMPS8OUnWxPssa8
+	u3qDrNk+bykbz5clSKZhZZLbRJpwjSdeAjSiEew=
+X-Google-Smtp-Source: ABdhPJz7zXS/WvcpY/tBLCqxRQaqI9ML5Z537YHhSIIkim4yszetcZPtlv40E+IpgE/a7lZkImD5xQ==
+X-Received: by 2002:a17:906:c299:b0:6b6:baa1:e5cb with SMTP id r25-20020a170906c29900b006b6baa1e5cbmr2379266ejz.624.1645711005204;
+        Thu, 24 Feb 2022 05:56:45 -0800 (PST)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id 7sm1360733edw.37.2022.02.24.05.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 05:56:44 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v3 00/12] Refactor mptcp_join.sh
+Date: Thu, 24 Feb 2022 14:56:07 +0100
+Message-Id: <20220224135619.2523272-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH RESEND mptcp-next v2 00/12] fclose and mp_fail testcases
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1645325178.git.geliang.tang@suse.com>
- <95c31835-f6e9-ff75-0f9b-2edb78d8e455@tessares.net>
- <20220223225611.GA9540@bogon>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220223225611.GA9540@bogon>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+It is very similar to the v2 but rebased and with 3 new patches.
 
-On 23/02/2022 23:56, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thank you so much for applying all these patches. I have two extra
-> requests about the order of these patches here.
-> 
-> 1. Move the commit "selftests: mptcp: adjust output alignment for more
-> tests" before "mptcp: add the mibs for MP_FASTCLOSE". Otherwise, it'll
-> break the output alignment. Since 'nr_blank' is defined in the former,
-> and used in the fastclose series.
+The new patches:
 
-Good point. With TopGit, it is not as easy as moving commits with a 'git
-rebase -i', just easier to have something wrong when doing these
-manipulation. But that's not impossible and at the end, I'm used to.
+- patch 1/12: 'ip mptcp' wrappers were missing in a patch which is in
+  the export branch for a bit of time now. While at it, a new helper has
+  been added to avoid long 'ip netns exec' commands as suggested by
+  Paolo.
 
-- bd41af654d7f: selftests: mptcp: adjust output alignment for more tests
-- Results: 4bbd9add0797..369cbca2200f → empty: good!
+- patch 3/12: just to move an helper with the other ones
 
-> 2. Move the commit "selftests: mptcp: add infinite map mibs check" before
-> "selftests: mptcp: add invert check in check_transfer". Since the former
-> is more related to the previous commit "mptcp: add mib for infinite map
-> sending" than the latter.
+- patch 12/12: add new helpers to avoid long 'ip netns exec' commands,
+  also suggested by Paolo.
 
-- 259143ec3e7f: selftests: mptcp: add infinite map mibs check
-- Results: 369cbca2200f..287a6bb7ec08 → empty: good!
+The rest is less interesting. There are some modification in patches
+6-8/12 because there are new tests in our tree: it was needed to modify
+more code around the new usage of 'reset' and 'ret=1' but nothing
+complex there.
 
-> No conflicts occurred. And the order of them all is like this:
+In patch 6/12, I removed a new long comment that is probably not needed:
+with the indentation, it looked even harder to read. If we need the
+comment, probably best to create a dedicated function, use variables
+with a clear name or use words instead of just a series of numbers.
 
-Same, no conflicts. Should be better now!
+Also in patch 13/14, there was a new shellcheck issue ("Useless cat.":
+@Paolo: did you introduce this ShellCheck rule???).
 
-Builds and tests are now in progress:
+Matthieu Baerts (12):
+  Squash to "selftests: mptcp: Add tests for userspace PM type"
+  Squash to "selftests: mptcp: join: allow running -cCi"
+  Squash to "selftests: mptcp: add implicit endpoint test case"
+  selftests: mptcp: join: define tests groups once
+  selftests: mptcp: join: reset failing links
+  selftests: mptcp: join: option to execute specific tests
+  selftests: mptcp: join: alt. to exec specific tests
+  selftests: mptcp: join: list failure at the end
+  selftests: mptcp: join: clarify local/global vars
+  selftests: mptcp: join: avoid backquotes
+  selftests: mptcp: join: make it shellcheck compliant
+  selftests: mptcp: join: helper to filter TCP
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220224T133344
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 2435 +++++++++--------
+ 1 file changed, 1297 insertions(+), 1138 deletions(-)
 
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
+
