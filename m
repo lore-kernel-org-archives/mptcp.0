@@ -1,44 +1,44 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B7F23A1
-	for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 13:36:55 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id s14so7526465edw.0
-        for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 05:36:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2F423A1
+	for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 14:29:54 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id a8so11205389ejc.8
+        for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 06:29:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=Js8a8drVmfXGYlJBj/9woeUoGPUWPuJJhFOrR5aSSiw=;
-        b=4Qnc6iiEoelBcGRWMW3pzrQI61PjSUHoED4NeVRmFW1kzproA52WQ/DaFwsvyj9ChG
-         yl+AXpcES42c72A/zmqNcOkVqa+3hR/Ek25klIsbOdcnMjjMH00l772DWNmcwcnOBO4Q
-         Jn/e5fg2SuMvwdjWdsATYAinxaQDgvhWzTxkbEvmvHCQvmeFM5xEkqiDlYRdpFcL2/wE
-         60FjTwJ7DrmV2YKnbhYCp3b6XvvQ/EInTqa87s7hWAbNXaXq7sxdneVlD6uwKraZdS5O
-         CN4Ra9sibLe617Cs3mbk2iXSR7ll+dEiH02wbWXRoEuCJqVuO582/3WwfHPl5CUEqk4r
-         6jLw==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=6NCNS9iNKqZsyzB7pU6Hyy24pSOAaDZqfjtV+LXuJNQ=;
+        b=crMqOc20OKGVv/YZFCngd+0eTMGlRJswfO7UKe7uZIIzYecAs9ChpIJauQoh4f8s0Z
+         MXKrvq8bGo+QISgCsIexo0khs14DnqzZTpsAAkrmj6XTlb+zz/OOLvlhmAl7W/zuVn+W
+         /PGtRoY62DHHNWv5+u7mVGj8Q6ID0EeUPBzSYMyLSEkMQ8FHxhnLag8SSgTAvSgM0Awx
+         8z1fZKd0UWbKTxdWuQ0VTDJvaZw4vn2EVFfIj5BXa2fVlRZ43IOl+OnwbFwQkOuPTMBh
+         yuGN5IKZ8ng48B+zwCEg59WBRLKPaFM1+tG4pnH1NmnBnHKy7mrPYnCPgfoWrTkwY3uF
+         enEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Js8a8drVmfXGYlJBj/9woeUoGPUWPuJJhFOrR5aSSiw=;
-        b=7nKr7SOhf/DiFpqTKimfzNF2W92QbTSCcHGBDMdXcXJtx/5PBfET2v2coGTR20uwTR
-         On0iKGz/9OoZoRNxvR2jati71D3vWSF09+qUCIeT2tyw+QzkXXqcMJ+2lBPgWdzQJq5c
-         2VBN6utT2jFzE0oquVhGBmskuvRxOWQVNEoD19l+Z7v0R0XaPhDo6rIwyRKJlrc4/kmK
-         vdiTsiHGYd1hEPVvpulkq7FUkqsiwjOBnPb1Jv7vs//3+og1b9K720FlOXNbY81Xo8gg
-         hXKAAeExPkzSJlI/H54SCjvXlrFX5raxNCg08R31hZiai8nzzoL/0KyvnFul8iMz6iTQ
-         ZavQ==
-X-Gm-Message-State: AOAM533t6E0b7OPD2i2nzcXLzqZoZF6nACdPTE7ksS1Zujrf5Nvgnkuv
-	sfQBZENYcfUF8k+ebn2/r5jq+oLaGE3r7Fr4
-X-Google-Smtp-Source: ABdhPJxeDu0Lrh3556kcL8V6MEh4IEEIPHg5yIWVf9+l6EI3ypEsu5jTLi3PumqDXq+t/HbfQTZwJw==
-X-Received: by 2002:a50:aa87:0:b0:40f:28a0:d0d6 with SMTP id q7-20020a50aa87000000b0040f28a0d0d6mr7287508edc.368.1645796214187;
-        Fri, 25 Feb 2022 05:36:54 -0800 (PST)
+        bh=6NCNS9iNKqZsyzB7pU6Hyy24pSOAaDZqfjtV+LXuJNQ=;
+        b=FpfiRd44ARxLKGhVZqJ3QbIitjmREPEZ81yap+3h7XwNSMsnYwlgvZ8h75zacUTnNJ
+         4S8fnUcGvrkjxYFxCTUMWvr3xmG9OoTNysF6KDir0txwYPEFPnORHYE3u0ui9uVto0k4
+         o/IyfMV5gkD5ZEJPtxhsqXmRTQx0aj+SfOi18xOEwWyNkSx1sF87xJ84pw4pXzTDTBe1
+         qqpLSKcTDkYY8fkjdjQJwqRvLKtMMAsPRx7q9nS4iYBMwrwjWzP7ugNfERkbMbu0Mi3u
+         mIZeY+Yf3DB0VR1+xquAKVoyztJ4qS8cbgW9slWFRTH9r2XtVU4NOTrk7/278X7GolUd
+         W5iQ==
+X-Gm-Message-State: AOAM530JBwc30i0WK4krHYHlzBzCbE2HBP0DjxeslP/q9OI42R+Vjv/k
+	I9IFLSh5YzImMhgwHoKRA1Fkx16C0kaDRbe+
+X-Google-Smtp-Source: ABdhPJwO5OBCRo4G1aojJRK5TWeSAA9kMLS+0ocoFNMSNWxuh/a+RAfh03sFnZWe7nMyuHfGW8vUZw==
+X-Received: by 2002:a17:906:53d2:b0:6ce:791a:31a0 with SMTP id p18-20020a17090653d200b006ce791a31a0mr6318154ejo.59.1645799393101;
+        Fri, 25 Feb 2022 06:29:53 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:46bf:f117:2ce:9a9d? ([2a02:578:8593:1200:46bf:f117:2ce:9a9d])
-        by smtp.gmail.com with ESMTPSA id e9-20020a170906c00900b006d4a45869basm1023910ejz.199.2022.02.25.05.36.53
+        by smtp.gmail.com with ESMTPSA id my14-20020a1709065a4e00b006be97e14e5csm1066985ejc.95.2022.02.25.06.29.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Feb 2022 05:36:53 -0800 (PST)
-Message-ID: <7ea897e3-37b5-3996-ab06-b9993cf82cbc@tessares.net>
-Date: Fri, 25 Feb 2022 14:36:53 +0100
+        Fri, 25 Feb 2022 06:29:52 -0800 (PST)
+Message-ID: <51d6dcef-d37d-ab20-e708-e0a1ad262249@tessares.net>
+Date: Fri, 25 Feb 2022 15:29:51 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,69 +47,42 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH mptcp-next v4 00/12] Refactor mptcp_join.sh
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: drop msg argument of
+ chk_csum_nr
 Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <20220224213406.3127061-1-matthieu.baerts@tessares.net>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <87d043bc528d81560d964f3536fb549d3ae75a8c.1645744986.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220224213406.3127061-1-matthieu.baerts@tessares.net>
+In-Reply-To: <87d043bc528d81560d964f3536fb549d3ae75a8c.1645744986.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang,
 
-On 24/02/2022 22:33, Matthieu Baerts wrote:
-> This fixes 3 issues introduced in v3:
-> 
-> - patch 3/12 reworks more the original patch not to increment the counter
->   per subtest. See the commit message for more details.
-> 
-> - patch 7/12 modifies the new 'reset' functions recently added
-> 
-> - patch 12/12 fixes a typo reported by Geliang
-> 
-> I also move "helper to filter TCP" patch sooner, before the clean-up.
+On 25/02/2022 00:23, Geliang Tang wrote:
+> This patch dropped the msg argument of chk_csum_nr, to unify chk_csum_nr
+> with other chk_*_nr functions.
 
-Thank you for the review!
+Indeed, clearer that way.
 
-Now in our tree with your RvB tags where it was missing:
+I just applied it after having applied my series not to force having Mat
+to review a v5. I applied this patch just before my series in this
+export branch to have the conflicts only with what I modified and detail
+them here.
 
-Squash-to patches:
+Now applied in our tree (feat. for net-next) with my RvB tag:
 
-- 3cf781e00952: "squashed" patch 01/12 in "selftests: mptcp: Add tests
-for userspace PM type"
-- d2eea8383653: "Signed-off-by" + "Co-developed-by"
-- Results: 8fe46ed11c27..258cadbd8399
-
-- bdc0934aee32: "squashed" patch 02/12 in "selftests: mptcp: join: allow
-running -cCi"
-- 36f524524558: tg:msg: adapt 'selftests-mptcp-join-allow-running-cCi'
-- 3380e67af5d9: conflict in
-t/selftests-mptcp-add-implicit-endpoint-test-case
-- Results: 258cadbd8399..35ba827a8b1e
-
-- 66cc24cd88ee: "squashed" patch 03/12 in "selftests: mptcp: add
-implicit endpoint test case"
-- 5782c65ac1fa: "Signed-off-by" + "Co-developed-by"
-- Results: 35ba827a8b1e..0c1c6c50d9dd
-
-The other patches:
-
-- aca1cdceb825: selftests: mptcp: join: define tests groups once
-- b33b509b2f26: selftests: mptcp: join: reset failing links
-- 87c975a5d421: selftests: mptcp: join: option to execute specific tests
-- f5c2075414ae: selftests: mptcp: join: alt. to exec specific tests
-- 78fb82cf3c8c: selftests: mptcp: join: list failure at the end
-- ae1b2dd743aa: selftests: mptcp: join: helper to filter TCP
-- 2d273f0e7eb6: selftests: mptcp: join: clarify local/global vars
-- 96961994425b: selftests: mptcp: join: avoid backquotes
-- 054ac453676a: selftests: mptcp: join: make it shellcheck compliant
-- Results: 0c1c6c50d9dd..64843b43f8de
+- 18e3e20c00bd: selftests: mptcp: drop msg argument of chk_csum_nr
+- 8d7b2460bdcc: conflict in
+t/selftests-mptcp-join-option-to-execute-specific-tests
+- aea568a1459a: conflict in
+t/selftests-mptcp-join-alt.-to-exec-specific-tests
+- 265b6ab36dc3: conflict in t/selftests-mptcp-join-avoid-backquotes
+- Results: 64843b43f8de..bdecb241572c
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220225T133622
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220225T135310
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
