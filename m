@@ -1,95 +1,92 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BF467A
-	for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 09:01:34 +0000 (UTC)
-HMM_SOURCE_IP:172.18.0.188:59116.1625256782
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.9 (unknown [172.18.0.188])
-	by chinatelecom.cn (HERMES) with SMTP id 049BB2800DF;
-	Fri, 25 Feb 2022 16:53:59 +0800 (CST)
-X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
-Received: from  ([172.18.0.188])
-	by app0023 with ESMTP id abdff6f5ae484c348652c149af82ca1f for mptcp@lists.linux.dev;
-	Fri, 25 Feb 2022 16:53:59 CST
-X-Transaction-ID: abdff6f5ae484c348652c149af82ca1f
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.0.188
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-From: Yonglong Li <liyonglong@chinatelecom.cn>
-To: mptcp@lists.linux.dev
-Cc: mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net,
-	Yonglong Li <liyonglong@chinatelecom.cn>
-Subject: [PATCH] mptcp: send ADD_ADDR echo before create subflows
-Date: Fri, 25 Feb 2022 16:53:53 +0800
-Message-Id: <1645779233-19742-1-git-send-email-liyonglong@chinatelecom.cn>
-X-Mailer: git-send-email 1.8.3.1
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613657A
+	for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 10:13:39 +0000 (UTC)
+Received: by mail-qt1-f170.google.com with SMTP id q10so1972676qtw.4
+        for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 02:13:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=gplx67nC+w7+iPw5Dr4rvLh6N3jYqt6SNWMTN47MyQ8=;
+        b=dEDBx9fs+/MaUztS/RxcxiVsSbBoQlJjPyRhLzZ7M4xKsSpvo45J0aO3kO4vTGBv6x
+         3wKVPVA9MWs3ZCI93N8CYwcmNB7vryk5zdpXUmBKFzEzKAPg8MzTyhsxcvyVHzCdMY0D
+         7cHxWjvm2n+05R6nuXbKwWLgxoH/soRY4fQIA36ElOThRssN0nb0RYiFRkWTK9Yfn4ll
+         1hPA8OzvnYAMmOac9E3OQIovqqb31MiaduRovW+gU1QRtsJ/j4AvrmF3i/0bfDWgAyRO
+         aPkUih/VkxZ4/BDAK2aHNNF1BpBSCBICwuCI7xZgRwbTP82amZUHk1NYGw41OohwJAjz
+         2vDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=gplx67nC+w7+iPw5Dr4rvLh6N3jYqt6SNWMTN47MyQ8=;
+        b=UHlCA9zm3KEZUrlNG3OAqYvPVJT7EGNrGZrFWJL/0uasVpyCmHV2iyI/zHIGtNegNw
+         UOecqNTrE9b8IRlqogYh/SnCYKZpbG9RPJiM8+rTZLHlquy6vHDiPuoOt9K5/SoMqNxz
+         juGdW3DPK93DKsyPjdWMXroNezUqCh6L/KXEprG6n28EX24fT+nzEjuVnEe0SEcZgbKj
+         Y0nJDSkfNNlZa67pQKeYLUB7QeJvEAS2dAQlAuMj7dUcBIU07LogfkIsH1SV7BlytJVX
+         vo7la6cUiZcQU7MTPJuPKJBQ92wQPiPaWYSL3cw9aBBpYqTT6e5u5av0yikfyAwDlDkQ
+         KTzQ==
+X-Gm-Message-State: AOAM532rLW84oF4Q05pbFV1MbBozHjaPvgz2ZpCIQJo+iC1k/a6/STB2
+	+d9ERhWjI392tknuRBK9ZzaL2WNUQA==
+X-Google-Smtp-Source: ABdhPJxG7FhbZfVBjBouJy9bMBpjGhSO0q+hBVj9Q12Z6dcVsFlJ3ZrtH+98WZY+8w9w/xWP90trUw==
+X-Received: by 2002:a05:622a:1649:b0:2de:2dfd:8c89 with SMTP id y9-20020a05622a164900b002de2dfd8c89mr6078879qtj.267.1645784018253;
+        Fri, 25 Feb 2022 02:13:38 -0800 (PST)
+Received: from [127.0.0.1] ([20.122.189.114])
+        by smtp.gmail.com with ESMTPSA id l19-20020a05622a175300b002de935a94c9sm1297347qtk.8.2022.02.25.02.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Feb 2022 02:13:37 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Yonglong Li <liyonglong@chinatelecom.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <1645779233-19742-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1645779233-19742-1-git-send-email-liyonglong@chinatelecom.cn>
+Subject: Re: mptcp: send ADD_ADDR echo before create subflows: Tests
+ Results
+Message-ID: <fc8bd523-7ef3-1c8f-d5b1-6d7034b0d6aa@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 25 Feb 2022 10:13:37 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-In some corner case, It may receive ADD_ADDR retransmit package
-before created subflows done.
-It's more reasonable to send ADD_ADDR echo before creating subflows.
+Hi Yonglong,
 
-Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
----
- net/mptcp/pm_netlink.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index e3b0384..c1f4bef 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -650,7 +650,6 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	unsigned int add_addr_accept_max;
- 	struct mptcp_addr_info remote;
- 	unsigned int subflows_max;
--	bool reset_port = false;
- 	int i, nr;
- 
- 	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
-@@ -661,14 +660,15 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 		 msk->pm.remote.family);
- 
- 	remote = msk->pm.remote;
-+	mptcp_pm_announce_addr(msk, &remote, true);
-+	mptcp_pm_nl_addr_send_ack(msk);
-+
- 	if (lookup_subflow_by_daddr(&msk->conn_list, &remote))
--		goto add_addr_echo;
-+		return;
- 
- 	/* pick id 0 port, if none is provided the remote address */
--	if (!remote.port) {
--		reset_port = true;
-+	if (!remote.port)
- 		remote.port = sk->sk_dport;
--	}
- 
- 	/* connect to the specified remote address, using whatever
- 	 * local address the routing configuration will pick.
-@@ -684,14 +684,6 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	for (i = 0; i < nr; i++)
- 		__mptcp_subflow_connect(sk, &addrs[i], &remote);
- 	spin_lock_bh(&msk->pm.lock);
--
--	/* be sure to echo exactly the received address */
--	if (reset_port)
--		remote.port = 0;
--
--add_addr_echo:
--	mptcp_pm_announce_addr(msk, &remote, true);
--	mptcp_pm_nl_addr_send_ack(msk);
- }
- 
- void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
--- 
-1.8.3.1
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+packetdrill_mp_join packetdrill_sockopts =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4939098853998592
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4939098853998592/su=
+mmary/summary.txt
+
+- KVM Validation: debug:
+  - Unstable: 2 failed test(s):=
+ packetdrill_mp_join packetdrill_sockopts =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6064998760841216
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6064998760841216/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/54cb4805b853
+
+Please note that despite all the efforts that have been already done to =
+have a
+stable tests suite when executed on a public CI like here, it is =
+possible some
+reported issues are not due to your modifications. Still, do =
+not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
