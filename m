@@ -1,92 +1,147 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2F423A1
-	for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 14:29:54 +0000 (UTC)
-Received: by mail-ej1-f49.google.com with SMTP id a8so11205389ejc.8
-        for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 06:29:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=6NCNS9iNKqZsyzB7pU6Hyy24pSOAaDZqfjtV+LXuJNQ=;
-        b=crMqOc20OKGVv/YZFCngd+0eTMGlRJswfO7UKe7uZIIzYecAs9ChpIJauQoh4f8s0Z
-         MXKrvq8bGo+QISgCsIexo0khs14DnqzZTpsAAkrmj6XTlb+zz/OOLvlhmAl7W/zuVn+W
-         /PGtRoY62DHHNWv5+u7mVGj8Q6ID0EeUPBzSYMyLSEkMQ8FHxhnLag8SSgTAvSgM0Awx
-         8z1fZKd0UWbKTxdWuQ0VTDJvaZw4vn2EVFfIj5BXa2fVlRZ43IOl+OnwbFwQkOuPTMBh
-         yuGN5IKZ8ng48B+zwCEg59WBRLKPaFM1+tG4pnH1NmnBnHKy7mrPYnCPgfoWrTkwY3uF
-         enEg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C59F7C
+	for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 15:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1645802536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hDu4UpSSxEahDtHA0053u1kwdN/1ATVZLikV5OGpIcU=;
+	b=G1Ks2BPDHMh4w37n7ba/2jBvZmWxgh+kAoFFtb2W9tLR/59RSWmkljOu8PFpEzx5JiLitm
+	4/Gcp6H6OrRqNq0BDvxyGLD6p+JUlA2fUbMyqhTlYeLBYR7Igl54DT6D9VZ4nKc9j3FFxF
+	dSBclvI6dY2PUI+f9zUpT1hdCLkZBf8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-620-Ogg_cOLNPZ2RWMM7tta07Q-1; Fri, 25 Feb 2022 10:22:15 -0500
+X-MC-Unique: Ogg_cOLNPZ2RWMM7tta07Q-1
+Received: by mail-wr1-f71.google.com with SMTP id p9-20020adf9589000000b001e333885ac1so1005601wrp.10
+        for <mptcp@lists.linux.dev>; Fri, 25 Feb 2022 07:22:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=6NCNS9iNKqZsyzB7pU6Hyy24pSOAaDZqfjtV+LXuJNQ=;
-        b=FpfiRd44ARxLKGhVZqJ3QbIitjmREPEZ81yap+3h7XwNSMsnYwlgvZ8h75zacUTnNJ
-         4S8fnUcGvrkjxYFxCTUMWvr3xmG9OoTNysF6KDir0txwYPEFPnORHYE3u0ui9uVto0k4
-         o/IyfMV5gkD5ZEJPtxhsqXmRTQx0aj+SfOi18xOEwWyNkSx1sF87xJ84pw4pXzTDTBe1
-         qqpLSKcTDkYY8fkjdjQJwqRvLKtMMAsPRx7q9nS4iYBMwrwjWzP7ugNfERkbMbu0Mi3u
-         mIZeY+Yf3DB0VR1+xquAKVoyztJ4qS8cbgW9slWFRTH9r2XtVU4NOTrk7/278X7GolUd
-         W5iQ==
-X-Gm-Message-State: AOAM530JBwc30i0WK4krHYHlzBzCbE2HBP0DjxeslP/q9OI42R+Vjv/k
-	I9IFLSh5YzImMhgwHoKRA1Fkx16C0kaDRbe+
-X-Google-Smtp-Source: ABdhPJwO5OBCRo4G1aojJRK5TWeSAA9kMLS+0ocoFNMSNWxuh/a+RAfh03sFnZWe7nMyuHfGW8vUZw==
-X-Received: by 2002:a17:906:53d2:b0:6ce:791a:31a0 with SMTP id p18-20020a17090653d200b006ce791a31a0mr6318154ejo.59.1645799393101;
-        Fri, 25 Feb 2022 06:29:53 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:46bf:f117:2ce:9a9d? ([2a02:578:8593:1200:46bf:f117:2ce:9a9d])
-        by smtp.gmail.com with ESMTPSA id my14-20020a1709065a4e00b006be97e14e5csm1066985ejc.95.2022.02.25.06.29.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Feb 2022 06:29:52 -0800 (PST)
-Message-ID: <51d6dcef-d37d-ab20-e708-e0a1ad262249@tessares.net>
-Date: Fri, 25 Feb 2022 15:29:51 +0100
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=hDu4UpSSxEahDtHA0053u1kwdN/1ATVZLikV5OGpIcU=;
+        b=cDx5xCSpT3lAG2CRLRWUv/OZyzFDhtcRcb8jghTmjq7/HAREx/G68KKL+STVEoCDK8
+         1LqbAexJu1lYTeQV2JpbdG9Cmxd4hQV/hFa9u7a/Dx2uGZdGJ7vC3MveD1EZhDUq6p+b
+         m0MrwgvxYLGkG1x0GNXpjz+1IA4BcRsGHLw7Te+bq8HyLofp8XX6U8AFKcxnbKhs69zh
+         Yq6UIKMtNodacha9iTxwj7B/6FpNVjBwkTkqUz3koVQdfAtTNtQ6vmPPMzOWCwf9tyVF
+         CK/edsmm7rgHLnCsjylttqG566P/iBWLumjdNiCjPef0nIYpU8f+TlpZIe2cSCExBta7
+         Th8w==
+X-Gm-Message-State: AOAM530ROJYZHx4fHxH1pilMkIfKWRqcdf4RZcsV4OSJfyVRZZScqM3Q
+	89i4LcbYYpBLeZWzbojKom5Z4gOQrPUGN6kdYfbWJS7N7tLjo75pEgjENKOg18YaWrTUdb9OzWT
+	CSbrpGNY26bX+zRc=
+X-Received: by 2002:a7b:c099:0:b0:381:38fa:4ae6 with SMTP id r25-20020a7bc099000000b0038138fa4ae6mr2451442wmh.128.1645802533617;
+        Fri, 25 Feb 2022 07:22:13 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxb+SeVdzxJB/FpWPlHBWY95RJxHISLHlprqDh0xmapscYh1HBcpkvy857OPDKMUcws3rXcig==
+X-Received: by 2002:a7b:c099:0:b0:381:38fa:4ae6 with SMTP id r25-20020a7bc099000000b0038138fa4ae6mr2451429wmh.128.1645802533310;
+        Fri, 25 Feb 2022 07:22:13 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-242-142.dyn.eolo.it. [146.241.242.142])
+        by smtp.gmail.com with ESMTPSA id k26-20020a05600c1c9a00b0037bdeaf5d30sm3058138wms.36.2022.02.25.07.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Feb 2022 07:22:13 -0800 (PST)
+Message-ID: <f1b2e28b245f5da89de6e045a73e5baa327282bb.camel@redhat.com>
+Subject: Re: [RFC PATCH mptcp-next 4/4] tcp: Add TCP hooks for detecting
+ MP_JOIN on a regular TCP listener
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
+Cc: fw@strlen.de
+Date: Fri, 25 Feb 2022 16:22:11 +0100
+In-Reply-To: <20220224232226.259304-5-mathew.j.martineau@linux.intel.com>
+References: <20220224232226.259304-1-mathew.j.martineau@linux.intel.com>
+	 <20220224232226.259304-5-mathew.j.martineau@linux.intel.com>
+User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: drop msg argument of
- chk_csum_nr
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <87d043bc528d81560d964f3536fb549d3ae75a8c.1645744986.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <87d043bc528d81560d964f3536fb549d3ae75a8c.1645744986.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On Thu, 2022-02-24 at 15:22 -0800, Mat Martineau wrote:
+> MPTCP uses a TCP SYN packet with the MP_JOIN option to add subflows to
+> an existing MPTCP connection. This uses token lookup to match the
+> incoming SYN with the appropriate MPTCP socket instead of the port
+> number (in accordance with RFC 8684), and it is possible for a TCP
+> listener to be present at the port that the MPTCP peer is trying to
+> connect to. If the TCP listener ignores the MP_JOIN option and sends a
+> normal TCP SYN-ACK without a MP_JOIN option header, the peer will be
+> forced to send a RST.
+> 
+> Given that a peer sending MP_JOIN is guaranteed to reject a regular TCP
+> SYN-ACK, it's better to attempt a MPTCP token lookup and either let
+> MPTCP continue the handshake or immediately reject the connection
+> attempt.
+> 
+> The only new conditional in the TCP SYN handling hot path is a check of
+> the saw_mp_join bit. If that is set, tcp_check_req() returns early and
+> tcp_v4_rcv() or tcp_v6_rcv() call the MPTCP join handler in an error
+> path.
+> 
+> If MPTCP is not configured, all the code added in this commit should be
+> optimized away.
+> 
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> ---
+>  net/ipv4/tcp_ipv4.c      | 7 +++++++
+>  net/ipv4/tcp_minisocks.c | 8 +++++++-
+>  net/ipv6/tcp_ipv6.c      | 7 +++++++
+>  3 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index 73e5726af8d0..124ad393e6fb 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -2082,6 +2082,13 @@ int tcp_v4_rcv(struct sk_buff *skb)
+>  				tcp_v4_restore_cb(skb);
+>  				sock_put(sk);
+>  				goto lookup;
+> +			} else if (req_status == TCP_REQ_MP_JOIN) {
+> +				struct sock *msk = mptcp_handle_join4(skb);
+> +
+> +				if (msk) {
+> +					sk = msk;
+> +					goto process;
+> +				}
 
-On 25/02/2022 00:23, Geliang Tang wrote:
-> This patch dropped the msg argument of chk_csum_nr, to unify chk_csum_nr
-> with other chk_*_nr functions.
+If I read correctly, this will handle MPJ 3rd ack packets, we will need
+a similar chunk for incoming MPJ syn in tcp_rcv_state_process(), and
+likely something additional for syncookies.
 
-Indeed, clearer that way.
+>  			}
+>  			goto discard_and_relse;
+>  		}
+> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+> index 3d989f8676a5..4fdca31b33bb 100644
+> --- a/net/ipv4/tcp_minisocks.c
+> +++ b/net/ipv4/tcp_minisocks.c
+> @@ -572,10 +572,16 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
+>  	bool own_req;
+>  
+>  	tmp_opt.saw_tstamp = 0;
+> +	tmp_opt.saw_mp_join = 0;
+>  	if (th->doff > (sizeof(struct tcphdr)>>2)) {
+>  		tcp_parse_options(sock_net(sk), skb, &tmp_opt, 0, NULL);
+>  
+> -		if (tmp_opt.saw_tstamp) {
+> +		if (unlikely(tmp_opt.saw_mp_join) &&
+> +		    mptcp_is_enabled(sock_net(sk))) {
+> +			*req_status = TCP_REQ_MP_JOIN;
 
-I just applied it after having applied my series not to force having Mat
-to review a v5. I applied this patch just before my series in this
-export branch to have the conflicts only with what I modified and detail
-them here.
+If I read correctly, this skips all the state and sequence number check
+we have on plain TCP 3rd ack. I think we want to preserve them.
 
-Now applied in our tree (feat. for net-next) with my RvB tag:
-
-- 18e3e20c00bd: selftests: mptcp: drop msg argument of chk_csum_nr
-- 8d7b2460bdcc: conflict in
-t/selftests-mptcp-join-option-to-execute-specific-tests
-- aea568a1459a: conflict in
-t/selftests-mptcp-join-alt.-to-exec-specific-tests
-- 265b6ab36dc3: conflict in t/selftests-mptcp-join-avoid-backquotes
-- Results: 64843b43f8de..bdecb241572c
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220225T135310
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+Paolo
+
