@@ -1,96 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A261417E
-	for <mptcp@lists.linux.dev>; Tue,  1 Mar 2022 09:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1646126133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QSfKV2fX0YB1voGaAx6i6YhdnORuKIed1kOgMDFP29s=;
-	b=hBLNMuMypF0zVVMfD5O71PvnJLUsgMBaLyElIFeLI30/g6i8a0+zGltLX7+YprZYNWn0l0
-	YETwp723WIt5yFE5wkHD4RLBGFfgTJOkcciwYlthSMbUBDO3JAm9palDU7mWeU4QNzkejt
-	chm7Qmpx1MlwoZng7myRTKQR9ukYa7E=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-75-pMLTDXEUNKyCSufx6zg9QA-1; Tue, 01 Mar 2022 04:15:31 -0500
-X-MC-Unique: pMLTDXEUNKyCSufx6zg9QA-1
-Received: by mail-wr1-f69.google.com with SMTP id x15-20020a5d6b4f000000b001ee6c0aa287so3013541wrw.9
-        for <mptcp@lists.linux.dev>; Tue, 01 Mar 2022 01:15:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF455A03
+	for <mptcp@lists.linux.dev>; Tue,  1 Mar 2022 10:06:20 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id p15so30408946ejc.7
+        for <mptcp@lists.linux.dev>; Tue, 01 Mar 2022 02:06:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=voAm566RLg/qx4QuW0UWRuYk99PuDgRyYLD+Tyc0DkM=;
+        b=mtcHzvh8ox0JnKz6M2sML2tTyVBeiS2B4ggHEhrDXjVsWnyfg9AintG24PufaY0Fij
+         f4oYmBhCOsQfqIuWeR96gu72TnXHBOblCLTEqAgGbKKRUIXdNDeI6AxZEZDFfLVMSSCZ
+         6wt62nBmUMGPlVrhCp90TyGL5qiptCAUqQndCdZVPNHZPsBkLX6ixN5lC7zU7F8OV5lg
+         SXp4pgoQIp1zg1FGwkAqauZFBeHuaKHMVy9IMaG5uqyCQ5dZ7DeszAtvFI0Vnfn5mTQz
+         vXX/5rEbcXvOg7hTG8r5vJgG4v1cgGaKbY1DnaN502YgWbyWd9SSmvko5/a8tu7xarRw
+         WGgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=QSfKV2fX0YB1voGaAx6i6YhdnORuKIed1kOgMDFP29s=;
-        b=kl1B+zR0+CgnwHc1zGzBajpfCh622sI58po6liOj8H3X6BcL+9bpUk8ObBMUdM7K8s
-         bBVKtjsrvTjSBWf8oK07+pPJQ3yDJfx5KwKaQpxvTujboa9dZgNJlmFCbpcja7nxnIVT
-         1GoTQ/QsSDyDDZE40B1ysviJG5KfMzhRP/S6zM9u1l69Pt8wnefOTx4qz6YiRSV52I1p
-         0L2703+UJK7dK/ZrcO6mLU1VX5mXdhX3so1tpKfOFqFEMDblV6RNjO0wj/9eH6KbkjUb
-         B3dGHqeMg66NfzL8AGWOJEqQ1wypzUOwR5RaCBXayNFqNaODvaU2bOhpH14hrlVAOfvH
-         B6gQ==
-X-Gm-Message-State: AOAM533OkZpM+YsmntCczgFEcbTIVxVjxNs7RnJaoDYw5m4KgHxtGFB/
-	2ksntdqPikLwl8jd36Qn/QYLKxjTb6OHUgD2jjQQjUWHvgIEVTDjH/79CWpTGe3hog6iDegBzLd
-	kNvn/S/5SlVIXr8E=
-X-Received: by 2002:a1c:c912:0:b0:37b:e074:dfcb with SMTP id f18-20020a1cc912000000b0037be074dfcbmr16226239wmb.161.1646126130230;
-        Tue, 01 Mar 2022 01:15:30 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJysXdRjUpwLtMH4GpjzIuH0G1TH02rvBBW/fRtgi9l4Ud8sNWuIJ+TV+2cf/jhnKn/DVUamhA==
-X-Received: by 2002:a1c:c912:0:b0:37b:e074:dfcb with SMTP id f18-20020a1cc912000000b0037be074dfcbmr16226224wmb.161.1646126130001;
-        Tue, 01 Mar 2022 01:15:30 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-242-142.dyn.eolo.it. [146.241.242.142])
-        by smtp.gmail.com with ESMTPSA id x13-20020adfec0d000000b001e31279cc38sm12952654wrn.11.2022.03.01.01.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Mar 2022 01:15:29 -0800 (PST)
-Message-ID: <67e97880f72920d45e6ef9dbb55b7e626363a28f.camel@redhat.com>
-Subject: Re: [PATCH] mptcp: send ADD_ADDR echo before create subflows
-From: Paolo Abeni <pabeni@redhat.com>
-To: Yonglong Li <liyonglong@chinatelecom.cn>, mptcp@lists.linux.dev
-Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net
-Date: Tue, 01 Mar 2022 10:15:28 +0100
-In-Reply-To: <1645779233-19742-1-git-send-email-liyonglong@chinatelecom.cn>
-References: <1645779233-19742-1-git-send-email-liyonglong@chinatelecom.cn>
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=voAm566RLg/qx4QuW0UWRuYk99PuDgRyYLD+Tyc0DkM=;
+        b=JbACtZUMDV5//tfWtpdP/BnQ/0j1mp0h3qOAwGX5CGcpgBU0y9XRMzZlfgW8n5rX+n
+         OM/oLCjJjZnFPSFdznhDMg65lvE+OFD+l/KDzDw+KV7NceTaOB9YOUqv1R0xc3o8nNIB
+         g2ZAQ/5Q++V6uJYCJeYv6RrRdJYSbG7bgsQCbVKJ0D6TSEWsJVw2e8c7OMR6nWZOc0Hf
+         nvYOIgX9Kh6bZLUsGr3itAyqzJyWKm2cvrDwF+9f9P9m+GU8Jsz0E009hCvycMDPdOZ/
+         ankxCKf+Fmwqt1jfpRXE0eEuV7azFef33xgMJcgpB4njsI6mjogR1jx6ilGNgXcT3vFM
+         dDaA==
+X-Gm-Message-State: AOAM530mK19IffS5gT7fSP4L3ox+eLHmJYnEJzRQhZX50bLXJvS+RG4L
+	vxRNDYAWrOxA9S9tEyr41L+VTLH2tGHrezqz
+X-Google-Smtp-Source: ABdhPJyqjUwvXsUL+roJPtz1zXREe+g+Dk+6uRfmVtWnc/9CYkQvMK1afJ7GM3mAsSA0yEzEArrvKA==
+X-Received: by 2002:a17:906:9ad4:b0:6d6:e972:a9e9 with SMTP id ah20-20020a1709069ad400b006d6e972a9e9mr954027ejc.669.1646129178759;
+        Tue, 01 Mar 2022 02:06:18 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:9adc:7cd9:4239:a8d7? ([2a02:578:8593:1200:9adc:7cd9:4239:a8d7])
+        by smtp.gmail.com with ESMTPSA id z11-20020a170906814b00b006a6be1e0f86sm5132093ejw.132.2022.03.01.02.06.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Mar 2022 02:06:18 -0800 (PST)
+Message-ID: <ca21a6c9-e347-c29c-80fc-45ab4876a595@tessares.net>
+Date: Tue, 1 Mar 2022 11:06:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH mptcp-next v2 0/2] fix libbpf 0.7 deprecated warnings
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1646058641.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1646058641.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Geliang,
 
-On Fri, 2022-02-25 at 16:53 +0800, Yonglong Li wrote:
-> In some corner case, It may receive ADD_ADDR retransmit package
-> before created subflows done.
-> It's more reasonable to send ADD_ADDR echo before creating subflows.
-> 
-> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+On 28/02/2022 15:32, Geliang Tang wrote:
+> v2:
+>  - update the Makefile as Mat suggested.
+>
+> Geliang Tang (2):
+>   bpf: examples: static library link to libbpf
+>   bpf: examples: fix libbpf 0.7 deprecated warnings
 
-The patch LGTM, and beyond fixing some corner case it looks like a nice
-cleanup.
+Thank you for these two patches!
 
-I think the changelog could be clairified a bit (even if I'm possibly
-the last person to give this specific kind of adivice ;). What about
-something alike:
+Just applied in our repo ("scripts" branch)!
 
-"""
-In some corner cases, the peer handing an incoming ADD_ADDR option, can
-receive a retransmitted ADD_ADDR for the same address before the
-subflow creation completes.
+While at it, I added a few other small patches cleaning up the Makefile.
 
-We can avoid the above issue by generating and sending the ADD_ADDR
-echo before starting the MPJ subflow connection.
-"""
+For patches in this "scripts" branch and if it is easier for you, you
+can also propose a PR on GitHub.
+If you prefer continuing sending patches by email, please use
+'mptcp-scripts' instead of 'mptcp-next' to avoid confusions ;-)
 
-@Matt could you handle such change while applaying the patch?
-
-Thanks!
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
