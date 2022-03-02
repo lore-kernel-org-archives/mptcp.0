@@ -1,316 +1,217 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077F28E2
-	for <mptcp@lists.linux.dev>; Wed,  2 Mar 2022 09:45:42 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1nPLY6-0001VU-1O; Wed, 02 Mar 2022 10:45:34 +0100
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp 5/4] mptcp: handle join requests early
-Date: Wed,  2 Mar 2022 10:45:27 +0100
-Message-Id: <20220302094527.12212-1-fw@strlen.de>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220224155010.23676-5-fw@strlen.de>
-References: <20220224155010.23676-5-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ED57A
+	for <mptcp@lists.linux.dev>; Wed,  2 Mar 2022 15:45:42 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id pj17so220326ejb.2
+        for <mptcp@lists.linux.dev>; Wed, 02 Mar 2022 07:45:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language
+         :from:to:cc:references:in-reply-to:content-transfer-encoding;
+        bh=IvYqoemLgrAE9m36bR3wJa6+/kaT3Oapbcogqe4SzpY=;
+        b=DkqttKj7U5EHoCKvGrdQkSa3ZNIv/y7VXvlS4eeCY7US3xmr67xe1ymHXz5nV+EypJ
+         HsmCsrInRgudNj0JFac0JTdDCDCZlHkWjTaBbY4LuvcFM0Cx5gkUL8ik737s5nkIuBYw
+         lXG5TmCvfsL7boDIqlT78DkP7yDS6skUZ9RkwfSYb0McsFX8gh2l+zIWEOGYO7TOIHue
+         ZxuLuVGl69E5oskGXO7ItGV+MxFHxuSeWAzakr7oftLkmsIUmrZrgy2JCmZD2l8JKGWB
+         O/lAl6NBicyHH9Go9v0cP2omrW25S0wM7P0vZ2/Fid93xXylmBWjs/ggkN03UfRwbgXI
+         lQWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=IvYqoemLgrAE9m36bR3wJa6+/kaT3Oapbcogqe4SzpY=;
+        b=CZhBPYiqQWX5yeBfNnmKVW+kxdHWY+YeKc4h0VMDssTPPctdHr+U0xDSE32OAAiPbN
+         aQduY5y2hoYVpK4mZs0jklM0ZEhod9AOP6POBx0q6kyGdMPlxSlYdf94UBQ3FujFFuRN
+         f6VW185K3PG0yt0NtbXpsPQGTN49hz/Z1vFjmU5tQ+Fx64cRVvl+wnmXP4k24HA6MjSv
+         +8/pc7eU7xpWz0XqKCgZl/zmrqwMCbkCxcjhq9c/a1bqrCdeuQNHd5U64ScizypMx8e0
+         dAKTMWH2NV+AgQaZD39dCsZu+PlSKjnvVnBQ1XiTTkUfJi2S3wyKeRU1F5lkZWilCund
+         IgIg==
+X-Gm-Message-State: AOAM5311FsGxwrq45NSzjCc21FZEttDS2uXpJuzImAcCzQcGYHCMKfia
+	1++upyfVAu8pxLR+fE/CyK+FYXKAACHeDQ==
+X-Google-Smtp-Source: ABdhPJxqnHXiFr6TnwaTr4wsdkb53iX2MC4ziZhQnM4noIT8femMhX7/NZgUXOTDT6rlwBiSxQ5yXA==
+X-Received: by 2002:a17:907:3a13:b0:6cf:1186:1381 with SMTP id fb19-20020a1709073a1300b006cf11861381mr22931818ejc.539.1646235940375;
+        Wed, 02 Mar 2022 07:45:40 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:37ec:5979:97fc:8ba4? ([2a02:578:8593:1200:37ec:5979:97fc:8ba4])
+        by smtp.gmail.com with ESMTPSA id ga12-20020a170906b84c00b006bd3d11bf8csm6375222ejb.181.2022.03.02.07.45.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Mar 2022 07:45:39 -0800 (PST)
+Message-ID: <40de3558-9505-f9cd-e6ac-7b26359dc380@tessares.net>
+Date: Wed, 2 Mar 2022 16:45:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH mptcp-next 0/3] Upstreaming cleanup
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <20220218221814.72026-1-mathew.j.martineau@linux.intel.com>
+ <ec7dea0e-36cd-4a47-daf2-ae4e2cb20aa3@tessares.net>
+ <7120fc8c-cb24-c54f-67fd-5aaa7d32f8b@linux.intel.com>
+ <431c81f9-e858-46c0-a2d1-6b32445dee3d@tessares.net>
+In-Reply-To: <431c81f9-e858-46c0-a2d1-6b32445dee3d@tessares.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Relative patch to better explain whats happening, if we go this route
-then this would be squashed/replace patch #3.
+Hi Paolo,
 
-Main problem: bypasses TW infrastructure, i.e. SYN+JOIN with existing
-subflow quadruple won't work.
+On 24/02/2022 15:41, Matthieu Baerts wrote:
+> Hi Mat,
+> 
+> On 24/02/2022 01:25, Mat Martineau wrote:
+>> On Sat, 19 Feb 2022, Matthieu Baerts wrote:
+>>
+>>> Hi Mat,
+>>>
+>>> On 18/02/2022 23:18, Mat Martineau wrote:
+>>>> The most recent patch series I upstreamed for -net needed a couple of
+>>>> tweaks to mitigate net/net-next merge conflicts. The first two patches
+>>>> here update the commits in "fixes net" on the export branch to match
+>>>> what I sent upstream, and the third patch restores Paolo's function
+>>>> rename in mptcp_join.sh.
+>>>
+>>> Thank you for these patches!
+>>>
+>>> I was thinking a bit about how to avoid such "issues" in the future.
+>>> Here are some ideas:
+>>>
+>>> - there could be 2 separated trees periodically updated:
+>>>  - one for net-next, the one we have for the moment
+>>>  - one for -net: a new one
+>>>  → all patches for the -net tree would be duplicated in both trees
+>>>  → when applying patches in the -net tree, we will notice the conflicts
+>>>  → applying the different patches can be automated with the scripts I'm
+>>> currently using
+>>>
+>>> - there could be 2 mixed trees periodically updated:
+>>>
+>>>
+>>>            top
+>>>
+>>>             ^
+>>>             |
+>>>
+>>>    commits for net-next
+>>>
+>>>             ^
+>>>             |
+>>>
+>>>    merge net + net-next
+>>>
+>>>             ^
+>>>            / \
+>>>               \
+>>>    net-next    \
+>>>                 \
+>>>
+>>>                commits for -net (+ commits for the CI)
+>>>
+>>>                   ^
+>>>                   |
+>>>
+>>>                  net
+>>>
+>>>
+>>>  → no duplicated -net commits
+>>>  → the "export" branch will be on top of net and net-next
+>>>  → "mptcp: use kmalloc on kasan build" could be cherry-picked on top of
+>>> the "export" branch for the -net tree not to have it "under" the ones
+>>> for net-next.
+>>>
+>>> In both cases, it would be easy to export the different commits and have
+>>> different tags that can be used by the CI.
+>>>
+>>> The second case looks interesting to me but there are at least two main
+>>> points to be careful with:
+>>>
+>>> - if the "export" branch is on top of the net-next branch, it means the
+>>> patches we have in the tree might no longer apply as is in net-next:
+>>> that's the opposite situation as of today where the patches for -net are
+>>> on top of net-next. I think that's fine because we would have this issue
+>>> in any case if a patch for net-next depend on one that has been
+>>> queued/applied in -net but is not in net-next yet.
+>>>
+>>
+>> I don't think it changes the situation for the mptcp-next patches - even
+>> today, they are on top of the mptcp-net patches which is what would
+>> potentially cause problems sending to net-next.
+>>
+>> Since I apply the patches to net-next and resolve conflicts before
+>> sending to netdev, it's not too big of a concern. I think your proposal
+>> here is an improvement because fewer adjustments will be needed when
+>> sending the -net patches to netdev.
+>>
+>>
+>> I would adjust your diagram this way:
+>>
+>>
+>>            export
+>>
+>>              ^
+>>              |
+>>
+>>     kmalloc on ksan build
+>>
+>>              ^
+>>              |
+>>
+>>     commits for net-next
+>>
+>>              ^
+>>              |
+>>
+>>     merge net + net-next
+>>
+>>              ^
+>>             / \        export-net
+>>                \      /
+>>     net-next    \    kmalloc on ksan build
+>>     (rebase      \  /
+>>      daily)
+>>                 commits for -net (+ commits for the CI)
+>>
+>>                    ^
+>>                    |
+>>
+>>                   net (rebase on upstream net-next sync,
+>>                        as you suggest below)
+>>
+>> Then people could check out export-net when developing mptcp-net patches.
+> 
+> Yes, that's what I had in mind for the extra patches for the CI (for
+> KASAN, GitHub Actions and Cirrus).
 
-This could be resolved by duplicating considerable code from
-tcp_ipv4(6).c to mptcp_handle_join, but I don't like that either.
+I was looking at updating the tree as discussed above. I started by
+doing some tests with a new Git Project to simulate the situation.
 
-IOW, I would prefer to keep the sequence as-is, first do the standard
-port-based demux and then, if no result was found, do the join handling.
+For the moment I have something like (from 'git log --graph'):
 
-This means subflow to TCP-only listener will fail to establish, but that
-could be resolved by having a 'reserve the port' approach (mptcpd?) in
-the tooling that adds the required netlink commands.
 
-I would prefer to minimize kernel work.
+        * export
+        *   (...)
+        *   MPTCP commits for net-next
+        *   (...)
+        |\
+        | *   (...)
+        | * MPTCP commits for -net
+        | *   (...)
+        * | top of net-next branch
+        |\|
+        | * top of -net branch
+        | | (...)
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- include/net/mptcp.h | 17 +++++++-------
- net/ipv4/tcp_ipv4.c | 12 ++++------
- net/ipv6/tcp_ipv6.c |  9 ++------
- net/mptcp/ctrl.c    | 54 ++++++++++++++++++++++++++++++++++++---------
- 4 files changed, 59 insertions(+), 33 deletions(-)
+Would that work for you?
+Or do you prefer if I do some tests on a separated repo?
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index b8939d7ea12e..cc95c279a196 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -189,7 +189,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
- 				  struct sk_buff *skb);
- 
- __be32 mptcp_get_reset_option(const struct sk_buff *skb);
--struct sock *__mptcp_handle_join(int af, struct sk_buff *skb);
-+bool __mptcp_handle_join(int af, struct sk_buff *skb);
- 
- static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
- {
-@@ -199,17 +199,17 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
- 	return htonl(0u);
- }
- 
--static inline struct sock *mptcp_handle_join(struct sk_buff *skb, int af)
-+static inline bool mptcp_handle_join(struct sk_buff *skb, int af)
- {
- 	const struct tcphdr *th = tcp_hdr(skb);
- 
--	if (th->syn && !th->ack && !th->rst && !th->fin)
-+	if (unlikely(th->syn && !th->ack && !th->rst && !th->fin))
- 		return __mptcp_handle_join(af, skb);
- 
--	return NULL;
-+	return true;
- }
- 
--static inline struct sock *mptcp_handle_join4(struct sk_buff *skb)
-+static inline bool mptcp_handle_join4(struct sk_buff *skb)
- {
- 	return mptcp_handle_join(skb, AF_INET);
- }
-@@ -290,7 +290,8 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
- }
- 
- static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
--static inline struct sock *mptcp_handle_join4(struct sk_buff *skb) { return NULL; }
-+static inline bool mptcp_handle_join4(int af, struct sk_buff *skb) { return true; }
-+
- #endif /* CONFIG_MPTCP */
- 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-@@ -299,7 +300,7 @@ int mptcpv6_init_net(struct net *net);
- void mptcpv6_exit_net(struct net *net);
- void mptcpv6_handle_mapped(struct sock *sk, bool mapped);
- 
--static inline struct sock *mptcp_handle_join6(struct sk_buff *skb)
-+static inline bool mptcp_handle_join6(struct sk_buff *skb)
- {
- 	return mptcp_handle_join(skb, AF_INET6);
- }
-@@ -308,7 +309,7 @@ static inline int mptcpv6_init(void) { return 0; }
- static inline int mptcpv6_init_net(struct net *net) { return 0; }
- static inline void mptcpv6_exit_net(struct net *net) { }
- static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
--static inline struct sock *mptcp_handle_join6(struct sk_buff *skb) { return NULL; }
-+static inline bool mptcp_handle_join6(struct sk_buff *skb) { return true; }
- #endif
- 
- #endif /* __NET_MPTCP_H */
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index da9ed7b0b7f5..ba685f18a767 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1949,12 +1949,15 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 
- 	th = (const struct tcphdr *)skb->data;
- 	iph = ip_hdr(skb);
-+
-+	if (!mptcp_handle_join4(skb))
-+		goto no_tcp_socket;
-+
- lookup:
- 	sk = __inet_lookup_skb(&tcp_hashinfo, skb, __tcp_hdrlen(th), th->source,
- 			       th->dest, sdif, &refcounted);
- 	if (!sk)
- 		goto no_tcp_socket;
--
- process:
- 	if (sk->sk_state == TCP_TIME_WAIT)
- 		goto do_time_wait;
-@@ -2087,10 +2090,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
- 		goto discard_it;
- 
--	sk = mptcp_handle_join4(skb);
--	if (sk)
--		goto process;
--
- 	tcp_v4_fill_cb(skb, iph, th);
- 
- 	if (tcp_checksum_complete(skb)) {
-@@ -2137,9 +2136,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 							iph->daddr, th->dest,
- 							inet_iif(skb),
- 							sdif);
--		if (!sk2)
--			sk2 = mptcp_handle_join4(skb);
--
- 		if (sk2) {
- 			inet_twsk_deschedule_put(inet_twsk(sk));
- 			sk = sk2;
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index a8aebfbb531e..39184d7654b1 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1615,6 +1615,8 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 	th = (const struct tcphdr *)skb->data;
- 	hdr = ipv6_hdr(skb);
- 
-+	if (!mptcp_handle_join6(skb))
-+		goto no_tcp_socket;
- lookup:
- 	sk = __inet6_lookup_skb(&tcp_hashinfo, skb, __tcp_hdrlen(th),
- 				th->source, th->dest, inet6_iif(skb), sdif,
-@@ -1746,10 +1748,6 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 	if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb))
- 		goto discard_it;
- 
--	sk = mptcp_handle_join6(skb);
--	if (sk)
--		goto process;
--
- 	tcp_v6_fill_cb(skb, hdr, th);
- 
- 	if (tcp_checksum_complete(skb)) {
-@@ -1799,9 +1797,6 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 					    ntohs(th->dest),
- 					    tcp_v6_iif_l3_slave(skb),
- 					    sdif);
--		if (!sk2)
--			sk2 = mptcp_handle_join6(skb);
--
- 		if (sk2) {
- 			struct inet_timewait_sock *tw = inet_twsk(sk);
- 			inet_twsk_deschedule_put(tw);
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index c7370c5147df..bf079bb50177 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -10,6 +10,8 @@
- 
- #include <net/net_namespace.h>
- #include <net/netns/generic.h>
-+#include <net/inet_hashtables.h>
-+#include <net/inet6_hashtables.h>
- 
- #include "protocol.h"
- #include "mib.h"
-@@ -214,30 +216,54 @@ static void add_mptcp_rst(struct sk_buff *skb)
- 	}
- }
- 
--struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
-+/* return false if tcp must pretend no socket was found. */
-+bool __mptcp_handle_join(int af, struct sk_buff *skb)
- {
- 	struct mptcp_options_received mp_opt;
-+	const struct ipv6hdr *ip6h;
-+	const struct iphdr *iph;
-+	struct sock *lsk = NULL;
-+	const struct tcphdr *th;
- 	struct mptcp_pernet *pernet;
- 	struct mptcp_sock *msk;
- 	struct socket *ssock;
--	struct sock *lsk;
- 	struct net *net;
- 
- 	/* paranoia check: don't allow 0 destination port,
- 	 * else __inet_inherit_port will insert the child socket
- 	 * into the phony hash slot of the pernet listener.
- 	 */
--	if (tcp_hdr(skb)->dest == 0)
--		return NULL;
-+	if (tcp_hdr(skb)->dest == 0 || skb->sk)
-+		return true;
- 
- 	mptcp_get_options(skb, &mp_opt);
- 
- 	if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPJ))
--		return NULL;
-+		return true;
- 
- 	net = dev_net(skb_dst(skb)->dev);
- 	if (!mptcp_is_enabled(net))
--		return NULL;
-+		return true;
-+
-+	lsk = NULL;
-+	th = tcp_hdr(skb);
-+	switch (af) {
-+	case AF_INET:
-+		iph = ip_hdr(skb);
-+		lsk = inet_lookup_listener(net, &tcp_hashinfo, skb, __tcp_hdrlen(th), iph->saddr,
-+					   th->source, iph->daddr, th->dest, inet_iif(skb), inet_sdif(skb));
-+		break;
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	case AF_INET6:
-+		ip6h = ipv6_hdr(skb);
-+		lsk = inet6_lookup_listener(net, &tcp_hashinfo, skb, __tcp_hdrlen(th), &ip6h->saddr,
-+					    th->source, &ip6h->daddr, th->dest, inet6_iif(skb), inet6_sdif(skb));
-+		break;
-+#endif
-+	}
-+
-+	if (lsk && sk_is_mptcp(lsk))
-+		goto assign_sk;
- 
- 	/* RFC8684: If the token is unknown [..], the receiver will send
- 	 * back a reset (RST) signal, analogous to an unknown port in TCP,
-@@ -246,14 +272,14 @@ struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
- 	msk = mptcp_token_get_sock(net, mp_opt.token);
- 	if (!msk) {
- 		add_mptcp_rst(skb);
--		return NULL;
-+		return false; /* suppress 4-tuple based lookups */
- 	}
- 
- 	if (!mptcp_pm_sport_in_anno_list(msk, af, skb)) {
- 		sock_put((struct sock *)msk);
- 		MPTCP_INC_STATS(net, MPTCP_MIB_MISMATCHPORTSYNRX);
- 		add_mptcp_rst(skb);
--		return NULL;
-+		return false;
- 	}
- 
- 	sock_put((struct sock *)msk);
-@@ -270,14 +296,21 @@ struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
- #endif
- 	default:
- 		WARN_ON_ONCE(1);
--		return NULL;
-+		return true;
- 	}
- 
- 	ssock = __mptcp_nmpc_socket(mptcp_sk(lsk));
- 	if (WARN_ON(!ssock))
- 		return NULL;
- 
--	return ssock->sk;
-+	lsk = ssock->sk;
-+
-+assign_sk:
-+	WARN_ON_ONCE(sk_is_refcounted(lsk));
-+
-+	skb->sk = lsk;
-+	skb->destructor = sock_pfree;
-+	return true;
- }
- 
- static struct socket *mptcp_create_join_listen_socket(struct net *net, int af)
-@@ -297,6 +330,7 @@ static struct socket *mptcp_create_join_listen_socket(struct net *net, int af)
- 
- 	ssock->sk->sk_max_ack_backlog = SOMAXCONN;
- 	inet_sk_state_store(ssock->sk, TCP_LISTEN);
-+	sock_set_flag(ssock->sk, SOCK_RCU_FREE);
- 
- 	s->sk->sk_max_ack_backlog = SOMAXCONN;
- 	inet_sk_state_store(s->sk, TCP_LISTEN);
+Cheers,
+Matt
 -- 
-2.34.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
