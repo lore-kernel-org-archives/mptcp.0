@@ -1,217 +1,129 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ED57A
-	for <mptcp@lists.linux.dev>; Wed,  2 Mar 2022 15:45:42 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id pj17so220326ejb.2
-        for <mptcp@lists.linux.dev>; Wed, 02 Mar 2022 07:45:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=IvYqoemLgrAE9m36bR3wJa6+/kaT3Oapbcogqe4SzpY=;
-        b=DkqttKj7U5EHoCKvGrdQkSa3ZNIv/y7VXvlS4eeCY7US3xmr67xe1ymHXz5nV+EypJ
-         HsmCsrInRgudNj0JFac0JTdDCDCZlHkWjTaBbY4LuvcFM0Cx5gkUL8ik737s5nkIuBYw
-         lXG5TmCvfsL7boDIqlT78DkP7yDS6skUZ9RkwfSYb0McsFX8gh2l+zIWEOGYO7TOIHue
-         ZxuLuVGl69E5oskGXO7ItGV+MxFHxuSeWAzakr7oftLkmsIUmrZrgy2JCmZD2l8JKGWB
-         O/lAl6NBicyHH9Go9v0cP2omrW25S0wM7P0vZ2/Fid93xXylmBWjs/ggkN03UfRwbgXI
-         lQWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=IvYqoemLgrAE9m36bR3wJa6+/kaT3Oapbcogqe4SzpY=;
-        b=CZhBPYiqQWX5yeBfNnmKVW+kxdHWY+YeKc4h0VMDssTPPctdHr+U0xDSE32OAAiPbN
-         aQduY5y2hoYVpK4mZs0jklM0ZEhod9AOP6POBx0q6kyGdMPlxSlYdf94UBQ3FujFFuRN
-         f6VW185K3PG0yt0NtbXpsPQGTN49hz/Z1vFjmU5tQ+Fx64cRVvl+wnmXP4k24HA6MjSv
-         +8/pc7eU7xpWz0XqKCgZl/zmrqwMCbkCxcjhq9c/a1bqrCdeuQNHd5U64ScizypMx8e0
-         dAKTMWH2NV+AgQaZD39dCsZu+PlSKjnvVnBQ1XiTTkUfJi2S3wyKeRU1F5lkZWilCund
-         IgIg==
-X-Gm-Message-State: AOAM5311FsGxwrq45NSzjCc21FZEttDS2uXpJuzImAcCzQcGYHCMKfia
-	1++upyfVAu8pxLR+fE/CyK+FYXKAACHeDQ==
-X-Google-Smtp-Source: ABdhPJxqnHXiFr6TnwaTr4wsdkb53iX2MC4ziZhQnM4noIT8femMhX7/NZgUXOTDT6rlwBiSxQ5yXA==
-X-Received: by 2002:a17:907:3a13:b0:6cf:1186:1381 with SMTP id fb19-20020a1709073a1300b006cf11861381mr22931818ejc.539.1646235940375;
-        Wed, 02 Mar 2022 07:45:40 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:37ec:5979:97fc:8ba4? ([2a02:578:8593:1200:37ec:5979:97fc:8ba4])
-        by smtp.gmail.com with ESMTPSA id ga12-20020a170906b84c00b006bd3d11bf8csm6375222ejb.181.2022.03.02.07.45.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Mar 2022 07:45:39 -0800 (PST)
-Message-ID: <40de3558-9505-f9cd-e6ac-7b26359dc380@tessares.net>
-Date: Wed, 2 Mar 2022 16:45:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8296153
+	for <mptcp@lists.linux.dev>; Wed,  2 Mar 2022 23:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646265483; x=1677801483;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=J9BbiTM65LnN4afG3AeETSKGoirsKX2OeWo9C/FAtrM=;
+  b=MBAUk86wNb2lW02d056HEUbPzKRXHL86/M3qjU2x6u04flQ0FXDDr4+c
+   q2DbKaxHdGaw9Ah5QBzJU5jMSYrGV2gzdPGo2I2L5XbnKMp+50oY20/hV
+   bYaAQn3bEuavXyeLvlUzGuRWeAIvuvDQtJ4LEPuOsYwnfjdZVbR54vYTR
+   sZD0fzQ71Rtm2d4siv0VePvwfVmA9Z031Xl4r1Ub4tlZRfslSej2K5i3v
+   k+L9E14l2rwqKDHrV9H1YCyQZ3yfz+AwnJrt3wWSe5JY45/SCZq/8bv28
+   dJ1RcXY6VJ2kLiSG43iierkLbkFLgxqAUrly0RDMpea5hhmppU9GF7A+7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10274"; a="253463937"
+X-IronPort-AV: E=Sophos;i="5.90,150,1643702400"; 
+   d="scan'208";a="253463937"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2022 15:57:45 -0800
+X-IronPort-AV: E=Sophos;i="5.90,150,1643702400"; 
+   d="scan'208";a="808378820"
+Received: from ashetty-mobl1.amr.corp.intel.com ([10.209.74.124])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2022 15:57:44 -0800
+Date: Wed, 2 Mar 2022 15:57:44 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, fw@strlen.de
+Subject: Re: [RFC PATCH mptcp-next 4/4] tcp: Add TCP hooks for detecting
+ MP_JOIN on a regular TCP listener
+In-Reply-To: <f1b2e28b245f5da89de6e045a73e5baa327282bb.camel@redhat.com>
+Message-ID: <f7224fe7-5db-d6ef-6665-13ecba2aed1@linux.intel.com>
+References: <20220224232226.259304-1-mathew.j.martineau@linux.intel.com>  <20220224232226.259304-5-mathew.j.martineau@linux.intel.com> <f1b2e28b245f5da89de6e045a73e5baa327282bb.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH mptcp-next 0/3] Upstreaming cleanup
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <20220218221814.72026-1-mathew.j.martineau@linux.intel.com>
- <ec7dea0e-36cd-4a47-daf2-ae4e2cb20aa3@tessares.net>
- <7120fc8c-cb24-c54f-67fd-5aaa7d32f8b@linux.intel.com>
- <431c81f9-e858-46c0-a2d1-6b32445dee3d@tessares.net>
-In-Reply-To: <431c81f9-e858-46c0-a2d1-6b32445dee3d@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Fri, 25 Feb 2022, Paolo Abeni wrote:
 
-On 24/02/2022 15:41, Matthieu Baerts wrote:
-> Hi Mat,
-> 
-> On 24/02/2022 01:25, Mat Martineau wrote:
->> On Sat, 19 Feb 2022, Matthieu Baerts wrote:
+> On Thu, 2022-02-24 at 15:22 -0800, Mat Martineau wrote:
+>> MPTCP uses a TCP SYN packet with the MP_JOIN option to add subflows to
+>> an existing MPTCP connection. This uses token lookup to match the
+>> incoming SYN with the appropriate MPTCP socket instead of the port
+>> number (in accordance with RFC 8684), and it is possible for a TCP
+>> listener to be present at the port that the MPTCP peer is trying to
+>> connect to. If the TCP listener ignores the MP_JOIN option and sends a
+>> normal TCP SYN-ACK without a MP_JOIN option header, the peer will be
+>> forced to send a RST.
 >>
->>> Hi Mat,
->>>
->>> On 18/02/2022 23:18, Mat Martineau wrote:
->>>> The most recent patch series I upstreamed for -net needed a couple of
->>>> tweaks to mitigate net/net-next merge conflicts. The first two patches
->>>> here update the commits in "fixes net" on the export branch to match
->>>> what I sent upstream, and the third patch restores Paolo's function
->>>> rename in mptcp_join.sh.
->>>
->>> Thank you for these patches!
->>>
->>> I was thinking a bit about how to avoid such "issues" in the future.
->>> Here are some ideas:
->>>
->>> - there could be 2 separated trees periodically updated:
->>>  - one for net-next, the one we have for the moment
->>>  - one for -net: a new one
->>>  → all patches for the -net tree would be duplicated in both trees
->>>  → when applying patches in the -net tree, we will notice the conflicts
->>>  → applying the different patches can be automated with the scripts I'm
->>> currently using
->>>
->>> - there could be 2 mixed trees periodically updated:
->>>
->>>
->>>            top
->>>
->>>             ^
->>>             |
->>>
->>>    commits for net-next
->>>
->>>             ^
->>>             |
->>>
->>>    merge net + net-next
->>>
->>>             ^
->>>            / \
->>>               \
->>>    net-next    \
->>>                 \
->>>
->>>                commits for -net (+ commits for the CI)
->>>
->>>                   ^
->>>                   |
->>>
->>>                  net
->>>
->>>
->>>  → no duplicated -net commits
->>>  → the "export" branch will be on top of net and net-next
->>>  → "mptcp: use kmalloc on kasan build" could be cherry-picked on top of
->>> the "export" branch for the -net tree not to have it "under" the ones
->>> for net-next.
->>>
->>> In both cases, it would be easy to export the different commits and have
->>> different tags that can be used by the CI.
->>>
->>> The second case looks interesting to me but there are at least two main
->>> points to be careful with:
->>>
->>> - if the "export" branch is on top of the net-next branch, it means the
->>> patches we have in the tree might no longer apply as is in net-next:
->>> that's the opposite situation as of today where the patches for -net are
->>> on top of net-next. I think that's fine because we would have this issue
->>> in any case if a patch for net-next depend on one that has been
->>> queued/applied in -net but is not in net-next yet.
->>>
+>> Given that a peer sending MP_JOIN is guaranteed to reject a regular TCP
+>> SYN-ACK, it's better to attempt a MPTCP token lookup and either let
+>> MPTCP continue the handshake or immediately reject the connection
+>> attempt.
 >>
->> I don't think it changes the situation for the mptcp-next patches - even
->> today, they are on top of the mptcp-net patches which is what would
->> potentially cause problems sending to net-next.
+>> The only new conditional in the TCP SYN handling hot path is a check of
+>> the saw_mp_join bit. If that is set, tcp_check_req() returns early and
+>> tcp_v4_rcv() or tcp_v6_rcv() call the MPTCP join handler in an error
+>> path.
 >>
->> Since I apply the patches to net-next and resolve conflicts before
->> sending to netdev, it's not too big of a concern. I think your proposal
->> here is an improvement because fewer adjustments will be needed when
->> sending the -net patches to netdev.
+>> If MPTCP is not configured, all the code added in this commit should be
+>> optimized away.
 >>
+>> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>> ---
+>>  net/ipv4/tcp_ipv4.c      | 7 +++++++
+>>  net/ipv4/tcp_minisocks.c | 8 +++++++-
+>>  net/ipv6/tcp_ipv6.c      | 7 +++++++
+>>  3 files changed, 21 insertions(+), 1 deletion(-)
 >>
->> I would adjust your diagram this way:
->>
->>
->>            export
->>
->>              ^
->>              |
->>
->>     kmalloc on ksan build
->>
->>              ^
->>              |
->>
->>     commits for net-next
->>
->>              ^
->>              |
->>
->>     merge net + net-next
->>
->>              ^
->>             / \        export-net
->>                \      /
->>     net-next    \    kmalloc on ksan build
->>     (rebase      \  /
->>      daily)
->>                 commits for -net (+ commits for the CI)
->>
->>                    ^
->>                    |
->>
->>                   net (rebase on upstream net-next sync,
->>                        as you suggest below)
->>
->> Then people could check out export-net when developing mptcp-net patches.
-> 
-> Yes, that's what I had in mind for the extra patches for the CI (for
-> KASAN, GitHub Actions and Cirrus).
+>> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+>> index 73e5726af8d0..124ad393e6fb 100644
+>> --- a/net/ipv4/tcp_ipv4.c
+>> +++ b/net/ipv4/tcp_ipv4.c
+>> @@ -2082,6 +2082,13 @@ int tcp_v4_rcv(struct sk_buff *skb)
+>>  				tcp_v4_restore_cb(skb);
+>>  				sock_put(sk);
+>>  				goto lookup;
+>> +			} else if (req_status == TCP_REQ_MP_JOIN) {
+>> +				struct sock *msk = mptcp_handle_join4(skb);
+>> +
+>> +				if (msk) {
+>> +					sk = msk;
+>> +					goto process;
+>> +				}
+>
+> If I read correctly, this will handle MPJ 3rd ack packets, we will need
+> a similar chunk for incoming MPJ syn in tcp_rcv_state_process(), and
+> likely something additional for syncookies.
+>
 
-I was looking at updating the tree as discussed above. I started by
-doing some tests with a new Git Project to simulate the situation.
+I think you're correct here and below. In trying to put a quick RFC 
+together, I was thinking about what happens on this code path when trying 
+to get the TCP listener to reject, but skipped over the use of this code 
+by the MPTCP subflow listener. Handling both cases does make this approach 
+more intrusive to the TCP code.
 
-For the moment I have something like (from 'git log --graph'):
+>>  			}
+>>  			goto discard_and_relse;
+>>  		}
+>> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+>> index 3d989f8676a5..4fdca31b33bb 100644
+>> --- a/net/ipv4/tcp_minisocks.c
+>> +++ b/net/ipv4/tcp_minisocks.c
+>> @@ -572,10 +572,16 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
+>>  	bool own_req;
+>>
+>>  	tmp_opt.saw_tstamp = 0;
+>> +	tmp_opt.saw_mp_join = 0;
+>>  	if (th->doff > (sizeof(struct tcphdr)>>2)) {
+>>  		tcp_parse_options(sock_net(sk), skb, &tmp_opt, 0, NULL);
+>>
+>> -		if (tmp_opt.saw_tstamp) {
+>> +		if (unlikely(tmp_opt.saw_mp_join) &&
+>> +		    mptcp_is_enabled(sock_net(sk))) {
+>> +			*req_status = TCP_REQ_MP_JOIN;
+>
+> If I read correctly, this skips all the state and sequence number check
+> we have on plain TCP 3rd ack. I think we want to preserve them.
 
-
-        * export
-        *   (...)
-        *   MPTCP commits for net-next
-        *   (...)
-        |\
-        | *   (...)
-        | * MPTCP commits for -net
-        | *   (...)
-        * | top of net-next branch
-        |\|
-        | * top of -net branch
-        | | (...)
-
-Would that work for you?
-Or do you prefer if I do some tests on a separated repo?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
