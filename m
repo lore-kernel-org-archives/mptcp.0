@@ -1,363 +1,127 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD1336B
-	for <mptcp@lists.linux.dev>; Thu,  3 Mar 2022 01:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646271214; x=1677807214;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/NUI7jJcwV7z2zfeVnJmY1AhYg9qKOPNUh/hkXjWCJ8=;
-  b=mR8oiQwiBTE9ZHsdc2TWZ7q9fuZgk3LxC9FfW+gLjNQfLgBPVP25fncA
-   rJwMsiM/B0JOZApCdWUt54dLW27J8ws3vc6mt7jy/G3ecB0+LhrgJtOQS
-   1uA6Q/bM4xGRSrW6nVifm9o1w+earWLFuQuzSe8SpCq80Ewn6stJckw4s
-   wET0ue1cnwU9QWMqyTnuAK8XNXY1jHJ2tzorIzIWxASB5kzl0xflfb4fd
-   btHl0AczUKtZOEC/z5IEKSeNPSjC4TJt4vGwIl1z/I1VwhEjv85TrqJ1b
-   lXzwvcLrFVWu2rxAbyMFF6aYno9r9wi6VJk/CxrqcIZYGCixjNFnUtem1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10274"; a="234163820"
-X-IronPort-AV: E=Sophos;i="5.90,150,1643702400"; 
-   d="scan'208";a="234163820"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2022 17:33:32 -0800
-X-IronPort-AV: E=Sophos;i="5.90,150,1643702400"; 
-   d="scan'208";a="609403278"
-Received: from ashetty-mobl1.amr.corp.intel.com ([10.209.74.124])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2022 17:33:32 -0800
-Date: Wed, 2 Mar 2022 17:33:32 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp 5/4] mptcp: handle join requests early
-In-Reply-To: <20220302094527.12212-1-fw@strlen.de>
-Message-ID: <bf2a68e3-e373-754-cea2-d3a32bb74f5a@linux.intel.com>
-References: <20220224155010.23676-5-fw@strlen.de> <20220302094527.12212-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93D7621
+	for <mptcp@lists.linux.dev>; Thu,  3 Mar 2022 06:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1646287485;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qMaBlQjQQ5Qfb4/dyjwXJKsS22T7CXKZUWTXJhXrO44=;
+	b=Vp5pLmVbKyQV3O15kvZBiuD1iVBKey+e7tc5N4GN7ZVGmNINs3qtbi0OhKA3wyd/diClAz
+	5lFVrir7/qkaggNMNN5NQRl/3Ub05jnoXC5QH4TK0D7HD9oNK1U6sxJEdZ7HUomPaPGKqz
+	5VKlqIjFzHKFWQOlLj6jBoXwubAWO5M=
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur04lp2052.outbound.protection.outlook.com [104.47.14.52]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-39-2HbnylsCP0Gbk4Q4iCHvQA-1; Thu, 03 Mar 2022 07:04:44 +0100
+X-MC-Unique: 2HbnylsCP0Gbk4Q4iCHvQA-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sk56BshXFYCbLYKQJUxGvfEtyJATp1MT1/67psQR8BtXnva/GUoKwMlZikHUir/l/iVTvXuBvw0EMoPBxSjSYBP34a566OkJqE4wZ+k+rpMHyLo3DF4K9CImqqpLUGmykPXln5vW1KpjjHs9wD0YjQhUEc9rKZVOREtWO7LUrAplCg72xpYlrwLTaz2vhVCgc2fu2wbfitJj2lkiP/EovwQC3Yf1iICqR/yw2bpgnvuIw4id28dRJGjgBfi3m13XpksPqeplHnCY7umng4xDozRc1rRl6WicXcw9NGA1f6RoRPyS4bEpnpP4ZVYP1iAqhBZOncSfMk3qwML/IS65rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uwdK9AYb3PATCW8tcV1IXQsgRe849U0MqiLAKiiXVFI=;
+ b=XNgX77ccFOgEd6Z3VWXz2lSKnUwxS5Wg1Qf2n3xQDf4utU3656mQnpRDwHFv2CoS7VrBpTgwozkiZRUDkxQJC1aY0f8vboA5CBnQ+b5dVVnBBpA/2TosoQhA5FJlHM44tguYbX+4nW/+qe7isuVgtNGnhTEDvsCHCGMD3/bzrFjZ6KIhaspf+wCNuIa/1jfrEPWKTp3BikVt7H1exQPDrT0LXtvw2iESiVxWUDJz5lo2ZTGon6h4uhaRBs9GvcHthnbciEOsUPNqQO5nUNBNxfL7w2Rrb6YPtnFRukFPiTICPnkianYNs6NHnePqXcHtzwx0alOhtQBmznfB70LyUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM0PR04MB5041.eurprd04.prod.outlook.com (2603:10a6:208:bf::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Thu, 3 Mar
+ 2022 06:04:43 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b110:cb51:e09f:bb05]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b110:cb51:e09f:bb05%5]) with mapi id 15.20.5017.027; Thu, 3 Mar 2022
+ 06:04:43 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next 0/2] MP_FAIL echo and retrans
+Date: Thu,  3 Mar 2022 14:04:27 +0800
+Message-ID: <cover.1646287286.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: SGAP274CA0008.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::20)
+ To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a7ffb839-9950-403b-c366-08d9fcdbb5d9
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5041:EE_
+X-Microsoft-Antispam-PRVS:
+	<AM0PR04MB5041F2EA19BFA59ED189EF78F8049@AM0PR04MB5041.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	MqiSju3SLOweZVwByoWO0KDuOj+a+yxSTZsavCOwwi++N9mHv7ye6KF3PBn3Huo3+XuIKpyhyYtG/7uJu0rzMAw3nwkseVbRgN9MRDqw7jU7CD3Z0vBATIZneJoBDFC2RwvA5gUZqXYJT3vNSAkeCv3I3VXmy1u3tUiUI5CKYh+3Jnoeo+Bh0G5L5vJTY+ycQq8LEpF9Bocmgpjyf3FQw5NkMn9oSIGBG6bY5WQOGeeroBdRM+icw7wYD/g4mnXEfQFwskpy2JgOIluiDgOaXmvebKz1OaJxvPKYxwy8ZY9YVrWQFhmXy8cFoEN/L2ofXtmpPJi124n0Q+MtM9JEoRLg/tKKghng6rzl1COpbEYo9RjuF0MhUhqkVhp/5qY9q9XgIn8Pb5Y9Nq2wV8mu8yakyOaKeP5I/voDc2BmuUVFtDs3rzESVE6Z7nvnnhuf0jl+2UMaLE9K084RM9p5MdeRfiiybKN2ecKxhPQgZWL4t9xXBGwSFtL9Nh1+N02wfEo22DgoT/E+/3QHhrxLYxxez06TCNk6alTdwp+Pi2HV1X6wJ005CeVpikp6gon2i9Z8iMRrRFNwHyxx6J7A8UBnvE6noRbeR48Uvq9zrNkEaDxdSf0XLoPPxQJ846jl5S2Z0/J5B1RLKAugMkPxynxdDu/lYU3drqLiRME1nnoXBKUxyKbWeY+II/vmnv6cmSkTnPoucsUEWFTzYJUbTwh9/IcXIqsivDLoF8TYAedO0quSFq/yEyd4UMhSErQHS3RHqEn1tMSsEQIR6sGsgA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(8936002)(5660300002)(4744005)(44832011)(36756003)(186003)(38100700002)(8676002)(4326008)(2906002)(66946007)(66476007)(66556008)(26005)(6666004)(6506007)(83380400001)(966005)(6486002)(316002)(86362001)(6916009)(107886003)(6512007)(2616005)(508600001)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?rC9rw1JB93Vb9wnAO3J80NceRgf4vnY6N8AG5xFJ64lZl7dBtHWn1DWsmExS?=
+ =?us-ascii?Q?GhA0s1oStoeAFUFF2Q8IrpcwPxRhUJm0+5iW/m4McVGaMrSHjnzDg7YF02uP?=
+ =?us-ascii?Q?IY+b+JXgGuE2qGNBr+5IZFzImcuMxVE8z3jVDtYkz+dIeAInx1xlO2rf2Bec?=
+ =?us-ascii?Q?crYhkH29SYaByBPyOqSVXn7bFNdkSuO9yc6qlOIk1Cf1pdo/7PL8xJrfphKH?=
+ =?us-ascii?Q?7NFeb0QoHuB3j7xkuWw0bmGYpxghqHA1VcbdF8n3g1FytD8NpGwA79p9cqWY?=
+ =?us-ascii?Q?FiH1piMwUrgtlEJNFhqH593SH8VuXVrjjy3b2CTg+x5iYqWpuqj2sw9tt/Db?=
+ =?us-ascii?Q?Qo6ygTsnwouEIILb3IpWlzWc0bdXolY+5s6pXJks7bI0wZxXUZFXU4xX90vE?=
+ =?us-ascii?Q?uMtjn63L9ebpuMIdQlBb2sbg5+DMAQesLet1C91gcozefgM5p+UE0r++HJ8n?=
+ =?us-ascii?Q?f2eqeA1FhhwhQAdJVGh3AOB0fNMnvZX+uOz34Xmk0bGu+6ioOKuMYiDwao1v?=
+ =?us-ascii?Q?OCBPFljNpusYBMvwMru2u5qJRQJkR4Cv+kgAWBRwSoweDt2IlBnCEq2T79Oh?=
+ =?us-ascii?Q?NfMm4++S4XgtafVTFKV1Zb6y9OqA5WUIf89OXpOYs07dQgtD/KEF56c6QkrD?=
+ =?us-ascii?Q?5wNzqYjVaMuxTU9ZpxFek0uEseyYJSDcLiZykNN0tamxnNLtekF2QCrHd961?=
+ =?us-ascii?Q?JDCF9Q/2LcyjD5vryUz1/OAg8SY4ig3rCE6cWWbN6nLeaO+Icz4zFJLZAuSF?=
+ =?us-ascii?Q?E/k0wf6fP0RhQhBLHhGzNLw58487ptKXCcg4Uq37TIAvD3ra3gWOSl5c3zJ5?=
+ =?us-ascii?Q?YXsRHnZi7N0wF0rNHYi3Aj2mWbSsJSWX2YXIbqaOaqcmBI0b7PmuA9kkAmjF?=
+ =?us-ascii?Q?tSerrfzsPIvqJ8dnlUDBNnNfDu9Yf/sd2cR9HZqEMdt+36HDMLPtu082FyKw?=
+ =?us-ascii?Q?ZVdN0Wl68rvcppEu/PP0vFnZHpKZ+Y9p/FCuIGxazsE4+5xeTiylRssUC1Ti?=
+ =?us-ascii?Q?lYbkjmAf/DLBNRr2/gChOo78k3YOO8VzMaRr9qPjxbufQBtxfRlOxNW+1mX1?=
+ =?us-ascii?Q?zb6sQj9OkiaW/fJ73UnBvPJGreLNLDGKUGkH8CMUIGMxoYKA2FWwSVW9gcM1?=
+ =?us-ascii?Q?N18eBYNRLNFlQgG6cN3GzVCALThUhv0UGmDecB4BzH9N0jQzlybAtQRMozHE?=
+ =?us-ascii?Q?Avzwvg4xiib8mQYjaNp9h/flPqNpI0GRvoMKjZpnqCRJPYaSBH15oBnlf2SE?=
+ =?us-ascii?Q?2x95aZ+EYPNv2yinhXWY+VybqvyQ2Zmpvmv96KHNBfb70kTawylwoBF5cKca?=
+ =?us-ascii?Q?aoOctVGZtTDkvlU9wtdUhw1I3ZR835fIqrvgwmzbKQar2A/wmx85m4OfM/TR?=
+ =?us-ascii?Q?kP2TD8vXDRVeNA2ycwbdUzyiv4NHihqXy4w2lR/HqO5wGEqSh0TTYlp4I3b+?=
+ =?us-ascii?Q?oHmK/pIA/5WYA0ys/DqlF9BDeCXEunQ0QmeWuGNNY0/j8PIsEQQmOqokYooo?=
+ =?us-ascii?Q?4dE3p7zEjM/6pjlYRY+LpFdY2XH30ArGTUhWx91ips8+uiXTQ01wW3qqa2tG?=
+ =?us-ascii?Q?/ByJlbVIF9wMbIu5+mvD3A+N3k34R/is65ILRD5GgQaNx3fVuGP2kseJw4D7?=
+ =?us-ascii?Q?FMdkgXVyxyWrVMKNoM53Y6M=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7ffb839-9950-403b-c366-08d9fcdbb5d9
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 06:04:43.0026
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3AdWZLpbL6WdadYMK2ZVsSer9KRvxXi0EBgcQ17X9/Ctdp1vIL11QSNlY7MVM52PnpsYwzxGluC8lUIcDyS6lg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5041
 
-On Wed, 2 Mar 2022, Florian Westphal wrote:
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/261
 
-> Relative patch to better explain whats happening, if we go this route
-> then this would be squashed/replace patch #3.
->
+Geliang Tang (2):
+  mptcp: add MP_FAIL response support
+  mptcp: reset the subflow when MP_FAIL is lost
 
-Thanks for trying this out and explaining the tradeoffs. I think the 
-runtime overhead for early join handling is less than I was originally 
-thinking. This approach does seem to touch less TCP code but is a little 
-more expensive at runtime.
+ net/mptcp/pm.c       | 12 ++++++++++--
+ net/mptcp/protocol.c | 32 +++++++++++++++++++++++++++++++-
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  |  3 +++
+ 4 files changed, 46 insertions(+), 3 deletions(-)
 
-> Main problem: bypasses TW infrastructure, i.e. SYN+JOIN with existing
-> subflow quadruple won't work.
->
-> This could be resolved by duplicating considerable code from
-> tcp_ipv4(6).c to mptcp_handle_join, but I don't like that either.
->
+--=20
+2.34.1
 
-Agreed on wanting to avoid that.
-
-> IOW, I would prefer to keep the sequence as-is, first do the standard
-> port-based demux and then, if no result was found, do the join handling.
->
-> This means subflow to TCP-only listener will fail to establish, but that
-> could be resolved by having a 'reserve the port' approach (mptcpd?) in
-> the tooling that adds the required netlink commands.
->
-
-I'm not sure what this would look like? Seems like a bit of kernel work in 
-itself. Not sure if you want to explain here on this list or cover it in 
-the meeting.
-
-> I would prefer to minimize kernel work.
->
-
-I hear you :)
-
-
--Mat
-
-
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
-> include/net/mptcp.h | 17 +++++++-------
-> net/ipv4/tcp_ipv4.c | 12 ++++------
-> net/ipv6/tcp_ipv6.c |  9 ++------
-> net/mptcp/ctrl.c    | 54 ++++++++++++++++++++++++++++++++++++---------
-> 4 files changed, 59 insertions(+), 33 deletions(-)
->
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index b8939d7ea12e..cc95c279a196 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -189,7 +189,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
-> 				  struct sk_buff *skb);
->
-> __be32 mptcp_get_reset_option(const struct sk_buff *skb);
-> -struct sock *__mptcp_handle_join(int af, struct sk_buff *skb);
-> +bool __mptcp_handle_join(int af, struct sk_buff *skb);
->
-> static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
-> {
-> @@ -199,17 +199,17 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
-> 	return htonl(0u);
-> }
->
-> -static inline struct sock *mptcp_handle_join(struct sk_buff *skb, int af)
-> +static inline bool mptcp_handle_join(struct sk_buff *skb, int af)
-> {
-> 	const struct tcphdr *th = tcp_hdr(skb);
->
-> -	if (th->syn && !th->ack && !th->rst && !th->fin)
-> +	if (unlikely(th->syn && !th->ack && !th->rst && !th->fin))
-> 		return __mptcp_handle_join(af, skb);
->
-> -	return NULL;
-> +	return true;
-> }
->
-> -static inline struct sock *mptcp_handle_join4(struct sk_buff *skb)
-> +static inline bool mptcp_handle_join4(struct sk_buff *skb)
-> {
-> 	return mptcp_handle_join(skb, AF_INET);
-> }
-> @@ -290,7 +290,8 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
-> }
->
-> static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
-> -static inline struct sock *mptcp_handle_join4(struct sk_buff *skb) { return NULL; }
-> +static inline bool mptcp_handle_join4(int af, struct sk_buff *skb) { return true; }
-> +
-> #endif /* CONFIG_MPTCP */
->
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> @@ -299,7 +300,7 @@ int mptcpv6_init_net(struct net *net);
-> void mptcpv6_exit_net(struct net *net);
-> void mptcpv6_handle_mapped(struct sock *sk, bool mapped);
->
-> -static inline struct sock *mptcp_handle_join6(struct sk_buff *skb)
-> +static inline bool mptcp_handle_join6(struct sk_buff *skb)
-> {
-> 	return mptcp_handle_join(skb, AF_INET6);
-> }
-> @@ -308,7 +309,7 @@ static inline int mptcpv6_init(void) { return 0; }
-> static inline int mptcpv6_init_net(struct net *net) { return 0; }
-> static inline void mptcpv6_exit_net(struct net *net) { }
-> static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
-> -static inline struct sock *mptcp_handle_join6(struct sk_buff *skb) { return NULL; }
-> +static inline bool mptcp_handle_join6(struct sk_buff *skb) { return true; }
-> #endif
->
-> #endif /* __NET_MPTCP_H */
-> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> index da9ed7b0b7f5..ba685f18a767 100644
-> --- a/net/ipv4/tcp_ipv4.c
-> +++ b/net/ipv4/tcp_ipv4.c
-> @@ -1949,12 +1949,15 @@ int tcp_v4_rcv(struct sk_buff *skb)
->
-> 	th = (const struct tcphdr *)skb->data;
-> 	iph = ip_hdr(skb);
-> +
-> +	if (!mptcp_handle_join4(skb))
-> +		goto no_tcp_socket;
-> +
-> lookup:
-> 	sk = __inet_lookup_skb(&tcp_hashinfo, skb, __tcp_hdrlen(th), th->source,
-> 			       th->dest, sdif, &refcounted);
-> 	if (!sk)
-> 		goto no_tcp_socket;
-> -
-> process:
-> 	if (sk->sk_state == TCP_TIME_WAIT)
-> 		goto do_time_wait;
-> @@ -2087,10 +2090,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
-> 	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
-> 		goto discard_it;
->
-> -	sk = mptcp_handle_join4(skb);
-> -	if (sk)
-> -		goto process;
-> -
-> 	tcp_v4_fill_cb(skb, iph, th);
->
-> 	if (tcp_checksum_complete(skb)) {
-> @@ -2137,9 +2136,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
-> 							iph->daddr, th->dest,
-> 							inet_iif(skb),
-> 							sdif);
-> -		if (!sk2)
-> -			sk2 = mptcp_handle_join4(skb);
-> -
-> 		if (sk2) {
-> 			inet_twsk_deschedule_put(inet_twsk(sk));
-> 			sk = sk2;
-> diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-> index a8aebfbb531e..39184d7654b1 100644
-> --- a/net/ipv6/tcp_ipv6.c
-> +++ b/net/ipv6/tcp_ipv6.c
-> @@ -1615,6 +1615,8 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
-> 	th = (const struct tcphdr *)skb->data;
-> 	hdr = ipv6_hdr(skb);
->
-> +	if (!mptcp_handle_join6(skb))
-> +		goto no_tcp_socket;
-> lookup:
-> 	sk = __inet6_lookup_skb(&tcp_hashinfo, skb, __tcp_hdrlen(th),
-> 				th->source, th->dest, inet6_iif(skb), sdif,
-> @@ -1746,10 +1748,6 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
-> 	if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb))
-> 		goto discard_it;
->
-> -	sk = mptcp_handle_join6(skb);
-> -	if (sk)
-> -		goto process;
-> -
-> 	tcp_v6_fill_cb(skb, hdr, th);
->
-> 	if (tcp_checksum_complete(skb)) {
-> @@ -1799,9 +1797,6 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
-> 					    ntohs(th->dest),
-> 					    tcp_v6_iif_l3_slave(skb),
-> 					    sdif);
-> -		if (!sk2)
-> -			sk2 = mptcp_handle_join6(skb);
-> -
-> 		if (sk2) {
-> 			struct inet_timewait_sock *tw = inet_twsk(sk);
-> 			inet_twsk_deschedule_put(tw);
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index c7370c5147df..bf079bb50177 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
-> @@ -10,6 +10,8 @@
->
-> #include <net/net_namespace.h>
-> #include <net/netns/generic.h>
-> +#include <net/inet_hashtables.h>
-> +#include <net/inet6_hashtables.h>
->
-> #include "protocol.h"
-> #include "mib.h"
-> @@ -214,30 +216,54 @@ static void add_mptcp_rst(struct sk_buff *skb)
-> 	}
-> }
->
-> -struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
-> +/* return false if tcp must pretend no socket was found. */
-> +bool __mptcp_handle_join(int af, struct sk_buff *skb)
-> {
-> 	struct mptcp_options_received mp_opt;
-> +	const struct ipv6hdr *ip6h;
-> +	const struct iphdr *iph;
-> +	struct sock *lsk = NULL;
-> +	const struct tcphdr *th;
-> 	struct mptcp_pernet *pernet;
-> 	struct mptcp_sock *msk;
-> 	struct socket *ssock;
-> -	struct sock *lsk;
-> 	struct net *net;
->
-> 	/* paranoia check: don't allow 0 destination port,
-> 	 * else __inet_inherit_port will insert the child socket
-> 	 * into the phony hash slot of the pernet listener.
-> 	 */
-> -	if (tcp_hdr(skb)->dest == 0)
-> -		return NULL;
-> +	if (tcp_hdr(skb)->dest == 0 || skb->sk)
-> +		return true;
->
-> 	mptcp_get_options(skb, &mp_opt);
->
-> 	if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPJ))
-> -		return NULL;
-> +		return true;
->
-> 	net = dev_net(skb_dst(skb)->dev);
-> 	if (!mptcp_is_enabled(net))
-> -		return NULL;
-> +		return true;
-> +
-> +	lsk = NULL;
-> +	th = tcp_hdr(skb);
-> +	switch (af) {
-> +	case AF_INET:
-> +		iph = ip_hdr(skb);
-> +		lsk = inet_lookup_listener(net, &tcp_hashinfo, skb, __tcp_hdrlen(th), iph->saddr,
-> +					   th->source, iph->daddr, th->dest, inet_iif(skb), inet_sdif(skb));
-> +		break;
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +	case AF_INET6:
-> +		ip6h = ipv6_hdr(skb);
-> +		lsk = inet6_lookup_listener(net, &tcp_hashinfo, skb, __tcp_hdrlen(th), &ip6h->saddr,
-> +					    th->source, &ip6h->daddr, th->dest, inet6_iif(skb), inet6_sdif(skb));
-> +		break;
-> +#endif
-> +	}
-> +
-> +	if (lsk && sk_is_mptcp(lsk))
-> +		goto assign_sk;
->
-> 	/* RFC8684: If the token is unknown [..], the receiver will send
-> 	 * back a reset (RST) signal, analogous to an unknown port in TCP,
-> @@ -246,14 +272,14 @@ struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
-> 	msk = mptcp_token_get_sock(net, mp_opt.token);
-> 	if (!msk) {
-> 		add_mptcp_rst(skb);
-> -		return NULL;
-> +		return false; /* suppress 4-tuple based lookups */
-> 	}
->
-> 	if (!mptcp_pm_sport_in_anno_list(msk, af, skb)) {
-> 		sock_put((struct sock *)msk);
-> 		MPTCP_INC_STATS(net, MPTCP_MIB_MISMATCHPORTSYNRX);
-> 		add_mptcp_rst(skb);
-> -		return NULL;
-> +		return false;
-> 	}
->
-> 	sock_put((struct sock *)msk);
-> @@ -270,14 +296,21 @@ struct sock *__mptcp_handle_join(int af, struct sk_buff *skb)
-> #endif
-> 	default:
-> 		WARN_ON_ONCE(1);
-> -		return NULL;
-> +		return true;
-> 	}
->
-> 	ssock = __mptcp_nmpc_socket(mptcp_sk(lsk));
-> 	if (WARN_ON(!ssock))
-> 		return NULL;
->
-> -	return ssock->sk;
-> +	lsk = ssock->sk;
-> +
-> +assign_sk:
-> +	WARN_ON_ONCE(sk_is_refcounted(lsk));
-> +
-> +	skb->sk = lsk;
-> +	skb->destructor = sock_pfree;
-> +	return true;
-> }
->
-> static struct socket *mptcp_create_join_listen_socket(struct net *net, int af)
-> @@ -297,6 +330,7 @@ static struct socket *mptcp_create_join_listen_socket(struct net *net, int af)
->
-> 	ssock->sk->sk_max_ack_backlog = SOMAXCONN;
-> 	inet_sk_state_store(ssock->sk, TCP_LISTEN);
-> +	sock_set_flag(ssock->sk, SOCK_RCU_FREE);
->
-> 	s->sk->sk_max_ack_backlog = SOMAXCONN;
-> 	inet_sk_state_store(s->sk, TCP_LISTEN);
-> -- 
-> 2.34.1
->
->
->
-
---
-Mat Martineau
-Intel
