@@ -1,30 +1,30 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8A87C
-	for <mptcp@lists.linux.dev>; Fri,  4 Mar 2022 19:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7368F42BA
+	for <mptcp@lists.linux.dev>; Fri,  4 Mar 2022 19:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646422604; x=1677958604;
+  t=1646422606; x=1677958606;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=n0a7Bdid3bZzhZq3B9V6fr1g8ODVox60Jnhrg0u4Tgw=;
-  b=HZRsIktL6WpUrZkqEj2IEfAY2V0sirKQrxCWQKaagtU5akYicYpcE+o+
-   g/zF5c/VOPIrUe4rFeh7cgtYOfBIBrSrgON6wALUjUiN50M2kmK8cuxpS
-   MyEcpTYYWvpM+BdTFXq+NQ5lMm+q/OijhJhFsuB1VXvmkdLwfE4iRY4jg
-   JfBYq9mmYbCbc9zqpIOWOf7gaQ2QqzsOcFvfW4qtu4qiZ4Ebg9hMSOcbY
-   U0pxbMejJma0abp6x5XeCH3//OCnwVMA0KNGCXBGQaAexyfjUdKEmgcy5
-   jdlKpPW2HD6nSSMNDzFbPbn/53E6f0wLRnAbvjTBt/9kGvNvq4aKjN4pV
+  bh=MHl3tFpaN+fsU4kfWcfNbKp6jA3RKOG/3r8nwwPkxZQ=;
+  b=LWErbEaw8nv8HktIUCwYvqa1DGRkW0uERwf4e9qGOHroGEwUo3q5uKIm
+   /Z9yIMwAtDP/7piliIyTNWvtOGTa28kqu740SDkrEZezzV4CQUMNjCngg
+   EV+Y+mhN4x3fge9Y07FrIbGjYSc4yMDSil1uVSJQaoOrbwpRzBIYkihR3
+   DWrIci0/90Z910fQsVgc3IKG0fpKfYSfw7sJeXl6Fu8x0hnKhZvWVBJGE
+   OqsrqNJ2tBXwK26b2HwI3DqslRVFHgFRzRrh1MQBJOoC2jtELM9hfb9rh
+   caQPzPpz1UH3ZmyuNhLE4y6yaEjShdxDRVJIRZSIQDMMBoGwrAVkUdiSq
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="278739501"
+X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="278739505"
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="278739501"
+   d="scan'208";a="278739505"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:43 -0800
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="552340777"
+   d="scan'208";a="552340784"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.225.124])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:42 -0800
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:43 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliang.tang@suse.com>,
@@ -33,9 +33,9 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 01/11] selftests: mptcp: adjust output alignment for more tests
-Date: Fri,  4 Mar 2022 11:36:26 -0800
-Message-Id: <20220304193636.219315-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 04/11] mptcp: add the mibs for MP_RST
+Date: Fri,  4 Mar 2022 11:36:29 -0800
+Message-Id: <20220304193636.219315-5-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220304193636.219315-1-mathew.j.martineau@linux.intel.com>
 References: <20220304193636.219315-1-mathew.j.martineau@linux.intel.com>
@@ -49,120 +49,63 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-The number of self tests in mptcp_join.sh will soon be more than 100, the
-output alignment is no longer OK. This patch adjusted it.
+This patch added two more mibs for MP_RST, MPTCP_MIB_MPRSTTX for
+the MP_RST sending and MPTCP_MIB_MPRSTRX for the MP_RST receiving.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 23 ++++++++++---------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ net/mptcp/mib.c     | 2 ++
+ net/mptcp/mib.h     | 2 ++
+ net/mptcp/options.c | 2 ++
+ 3 files changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 77b359a49a47..88740cfe49dd 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -20,6 +20,7 @@ do_all_tests=1
- init=0
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 975d17118bfe..e55d3dfbee0c 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -50,6 +50,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPFailRx", MPTCP_MIB_MPFAILRX),
+ 	SNMP_MIB_ITEM("MPFastcloseTx", MPTCP_MIB_MPFASTCLOSETX),
+ 	SNMP_MIB_ITEM("MPFastcloseRx", MPTCP_MIB_MPFASTCLOSERX),
++	SNMP_MIB_ITEM("MPRstTx", MPTCP_MIB_MPRSTTX),
++	SNMP_MIB_ITEM("MPRstRx", MPTCP_MIB_MPRSTRX),
+ 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
+ 	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
+ 	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 8206c65297e0..00576179a619 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -43,6 +43,8 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_MPFAILRX,		/* Received a MP_FAIL */
+ 	MPTCP_MIB_MPFASTCLOSETX,	/* Transmit a MP_FASTCLOSE */
+ 	MPTCP_MIB_MPFASTCLOSERX,	/* Received a MP_FASTCLOSE */
++	MPTCP_MIB_MPRSTTX,		/* Transmit a MP_RST */
++	MPTCP_MIB_MPRSTRX,		/* Received a MP_RST */
+ 	MPTCP_MIB_RCVPRUNED,		/* Incoming packet dropped due to memory limit */
+ 	MPTCP_MIB_SUBFLOWSTALE,		/* Subflows entered 'stale' status */
+ 	MPTCP_MIB_SUBFLOWRECOVER,	/* Subflows returned to active status after being stale */
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index c3697f06faf9..325383646f5c 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -839,6 +839,7 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
+ 			*size += opt_size;
+ 			remaining -= opt_size;
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTTX);
+ 		}
+ 		return true;
+ 	}
+@@ -1161,6 +1162,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 			subflow->reset_seen = 1;
+ 			subflow->reset_reason = mp_opt.reset_reason;
+ 			subflow->reset_transient = mp_opt.reset_transient;
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTRX);
+ 		}
  
- TEST_COUNT=0
-+nr_blank=40
- 
- # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
- #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
-@@ -732,9 +733,9 @@ chk_csum_nr()
- 	local dump_stats
- 
- 	if [ ! -z "$msg" ]; then
--		printf "%02u" "$TEST_COUNT"
-+		printf "%03u" "$TEST_COUNT"
- 	else
--		echo -n "  "
-+		echo -n "   "
- 	fi
- 	printf " %-36s %s" "$msg" "sum"
- 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}'`
-@@ -766,7 +767,7 @@ chk_fail_nr()
- 	local count
- 	local dump_stats
- 
--	printf "%-39s %s" " " "ftx"
-+	printf "%-${nr_blank}s %s" " " "ftx"
- 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPFailTx | awk '{print $2}'`
- 	[ -z "$count" ] && count=0
- 	if [ "$count" != "$mp_fail_nr_tx" ]; then
-@@ -801,7 +802,7 @@ chk_join_nr()
- 	local dump_stats
- 	local with_cookie
- 
--	printf "%02u %-36s %s" "$TEST_COUNT" "$msg" "syn"
-+	printf "%03u %-36s %s" "$TEST_COUNT" "$msg" "syn"
- 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinSynRx | awk '{print $2}'`
- 	[ -z "$count" ] && count=0
- 	if [ "$count" != "$syn_nr" ]; then
-@@ -863,7 +864,7 @@ chk_stale_nr()
- 	local stale_nr
- 	local recover_nr
- 
--	printf "%-39s %-18s" " " "stale"
-+	printf "%-${nr_blank}s %-18s" " " "stale"
- 	stale_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowStale | awk '{print $2}'`
- 	[ -z "$stale_nr" ] && stale_nr=0
- 	recover_nr=`ip netns exec $ns nstat -as | grep MPTcpExtSubflowRecover | awk '{print $2}'`
-@@ -904,7 +905,7 @@ chk_add_nr()
- 
- 	timeout=`ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout`
- 
--	printf "%-39s %s" " " "add"
-+	printf "%-${nr_blank}s %s" " " "add"
- 	count=`ip netns exec $ns2 nstat -as MPTcpExtAddAddr | grep MPTcpExtAddAddr | awk '{print $2}'`
- 	[ -z "$count" ] && count=0
- 
-@@ -941,7 +942,7 @@ chk_add_nr()
- 			echo "[ ok ]"
- 		fi
- 
--		printf "%-39s %s" " " "syn"
-+		printf "%-${nr_blank}s %s" " " "syn"
- 		count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortSynRx |
- 			awk '{print $2}'`
- 		[ -z "$count" ] && count=0
-@@ -980,7 +981,7 @@ chk_add_nr()
- 			echo "[ ok ]"
- 		fi
- 
--		printf "%-39s %s" " " "syn"
-+		printf "%-${nr_blank}s %s" " " "syn"
- 		count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortSynRx |
- 			awk '{print $2}'`
- 		[ -z "$count" ] && count=0
-@@ -1030,7 +1031,7 @@ chk_rm_nr()
- 		subflow_ns=$ns1
- 	fi
- 
--	printf "%-39s %s" " " "rm "
-+	printf "%-${nr_blank}s %s" " " "rm "
- 	count=`ip netns exec $addr_ns nstat -as | grep MPTcpExtRmAddr | awk '{print $2}'`
- 	[ -z "$count" ] && count=0
- 	if [ "$count" != "$rm_addr_nr" ]; then
-@@ -1062,7 +1063,7 @@ chk_prio_nr()
- 	local count
- 	local dump_stats
- 
--	printf "%-39s %s" " " "ptx"
-+	printf "%-${nr_blank}s %s" " " "ptx"
- 	count=`ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}'`
- 	[ -z "$count" ] && count=0
- 	if [ "$count" != "$mp_prio_nr_tx" ]; then
-@@ -1098,7 +1099,7 @@ chk_link_usage()
- 	local tx_rate=$((tx_link * 100 / $tx_total))
- 	local tolerance=5
- 
--	printf "%-39s %-18s" " " "link usage"
-+	printf "%-${nr_blank}s %-18s" " " "link usage"
- 	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
- 	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
- 		echo "[fail] got $tx_rate% usage, expected $expected_rate%"
+ 		if (!(mp_opt.suboptions & OPTION_MPTCP_DSS))
 -- 
 2.35.1
 
