@@ -1,28 +1,28 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F28642BA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C1742B7
 	for <mptcp@lists.linux.dev>; Fri,  4 Mar 2022 19:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1646422608; x=1677958608;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qpWcgTy9FY6xxmHVlOf7EsIb68lZRNZlVMoMSI/G4m8=;
-  b=My2PKxV0IhDyVQQum+lsz50oe8Ni6Uz4dwVXjnoG09Wu+rSFn7ynZ3uM
-   stDWrn4D+W0uImgtSBbhm1eXG4s6rV4CYSKiAYv7vMhXZjoH0n0xsf/Ob
-   NxXnyBrK0IL9bGgD3cg+TcBypX4izMoVYrwy9uFrxU+yUlGN3C8VLIWkB
-   qXXCRutw7cUc7u4kJY3UDa/tCkLI3+LKxq5Kcz/6B2qOZGptJnorP5uVU
-   VN3dEn/wt6+WxxnuHhYZTMGGEb6aM98puBMPrV4gb0T5jWZUc6zIArljP
-   1kYGVGZWwfKimkXOOQ9xnJlx+uwG1e7M0MHYG46s23+9qvzxBdwail45b
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="278739508"
+  bh=wc9PGwvPhtaF4JiP57AOPUOF9WiO6euM1D/bIVvEp5I=;
+  b=eZkiAxMfVVXSrPcUStSrirWt3+XwMGtDU5N1M/yFB1HxAnBwEB5cQxTv
+   Wr8HTWiTKhR7xFJVTkdWM04q6Y5qABOyXVww9rgx1RBjt5svdxIIWGSZw
+   gTyjEHTFU6C5qyOXjzNgRD6EN+8SVJjRHsi+vllfAWStkIPoVuz7ahMPo
+   qhmEpK2fS6OZNpPUQoEBHwhpVPkDhkYeWsPl0Clv+NEueTVMb/uafBLch
+   wGW4To8XN2m99i8fiAhE9ZNl94lg5AZF36vW19//YYDYgkjsV2ljaVu42
+   hzU+242bu0Sml2gxyYAP+wlWqNfzIxVvaPs5qH3oRPCa3n6mRbT+I9rml
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="278739509"
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="278739508"
+   d="scan'208";a="278739509"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:43 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:44 -0800
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="552340790"
+   d="scan'208";a="552340791"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.225.124])
   by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:43 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -33,9 +33,9 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 07/11] selftests: mptcp: reuse linkfail to make given size files
-Date: Fri,  4 Mar 2022 11:36:32 -0800
-Message-Id: <20220304193636.219315-8-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 08/11] selftests: mptcp: add fastclose testcase
+Date: Fri,  4 Mar 2022 11:36:33 -0800
+Message-Id: <20220304193636.219315-9-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220304193636.219315-1-mathew.j.martineau@linux.intel.com>
 References: <20220304193636.219315-1-mathew.j.martineau@linux.intel.com>
@@ -49,95 +49,96 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch reused the test_linkfail values above 2 to make test files with
-the given sizes (KB) for both the client side and the server side. It's
-useful for the test cases using different file sizes.
+This patch added the self test for MP_FASTCLOSE. Reused the argument
+addr_nr_ns2 of do_transfer() to pass the extra arguments '-I 2' to
+mptcp_connect commands. Then mptcp_connect disconnected the
+connections to trigger the MP_FASTCLOSE sending and receiving. Used
+chk_fclose_nr to check the MP_FASTCLOSE mibs and used chk_rst_nr to
+check the MP_RST mibs. This test used the test_linkfail value to make
+1024KB test files.
+
+The output looks like this:
+
+Created /tmp/tmp.XB8sfv1hJ0 (size 1024 KB) containing data sent by client
+Created /tmp/tmp.RtTDbzqrXI (size 1024 KB) containing data sent by server
+001 fastclose test                syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                  ctx[ ok ] - fclzrx[ ok ]
+                                  rtx[ ok ] - rstrx [ ok ]   invert
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 32 ++++++++++++++++---
- 1 file changed, 27 insertions(+), 5 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 22 ++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 84c21282ee46..1fda29d5d69f 100755
+index 1fda29d5d69f..4604dd13a87e 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -459,7 +459,7 @@ do_transfer()
- 		local_addr="0.0.0.0"
+@@ -452,6 +452,12 @@ do_transfer()
+ 		extra_args="-r ${speed:6}"
  	fi
  
--	if [ "$test_link_fail" -eq 2 ];then
-+	if [ "$test_link_fail" -gt 1 ];then
- 		timeout ${timeout_test} \
- 			ip netns exec ${listener_ns} \
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
-@@ -479,13 +479,19 @@ do_transfer()
- 			ip netns exec ${connector_ns} \
- 				./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
- 					$extra_args $connect_addr < "$cin" > "$cout" &
--	else
-+	elif [ "$test_link_fail" -eq 1 ] || [ "$test_link_fail" -eq 2 ];then
- 		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
- 			tee "$cinsent" | \
- 			timeout ${timeout_test} \
- 				ip netns exec ${connector_ns} \
- 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
- 						$extra_args $connect_addr > "$cout" &
-+	else
-+		cat "$cinfail" | tee "$cinsent" | \
-+			timeout ${timeout_test} \
-+				ip netns exec ${connector_ns} \
-+					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-+						$extra_args $connect_addr > "$cout" &
- 	fi
- 	cpid=$!
- 
-@@ -645,7 +651,7 @@ do_transfer()
- 		return 1
- 	fi
- 
--	if [ "$test_link_fail" -eq 2 ];then
-+	if [ "$test_link_fail" -gt 1 ];then
- 		check_transfer $sinfail $cout "file received by client"
- 	else
- 		check_transfer $sin $cout "file received by client"
-@@ -690,9 +696,18 @@ run_tests()
- 	speed="${7:-fast}"
- 	sflags="${8:-""}"
- 
-+	# The values above 2 are reused to make test files
-+	# with the given sizes (KB)
-+	if [ "$test_linkfail" -gt 2 ]; then
-+		size=$test_linkfail
++	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
++		# disconnect
++		extra_args="$extra_args -I ${addr_nr_ns2:10}"
++		addr_nr_ns2=0
++	fi
 +
-+		if [ -z "$cinfail" ]; then
-+			cinfail=$(mktemp)
-+		fi
-+		make_file "$cinfail" "client" $size
- 	# create the input file for the failure test when
- 	# the first failure test run
--	if [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
-+	elif [ "$test_linkfail" -ne 0 -a -z "$cinfail" ]; then
- 		# the client file must be considerably larger
- 		# of the maximum expected cwin value, or the
- 		# link utilization will be not predicable
-@@ -705,7 +720,14 @@ run_tests()
- 		make_file "$cinfail" "client" $size
- 	fi
+ 	local local_addr
+ 	if is_v6 "${connect_addr}"; then
+ 		local_addr="::"
+@@ -2196,6 +2202,15 @@ fullmesh_tests()
+ 	chk_rm_nr 0 1
+ }
  
--	if [ "$test_linkfail" -eq 2 -a -z "$sinfail" ]; then
-+	if [ "$test_linkfail" -gt 2 ]; then
-+		size=$test_linkfail
++fastclose_tests()
++{
++	reset
++	run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_2
++	chk_join_nr "fastclose test" 0 0 0
++	chk_fclose_nr 1 1
++	chk_rst_nr 1 1 invert
++}
 +
-+		if [ -z "$sinfail" ]; then
-+			sinfail=$(mktemp)
-+		fi
-+		make_file "$sinfail" "server" $size
-+	elif [ "$test_linkfail" -eq 2 -a -z "$sinfail" ]; then
- 		size=$((RANDOM%16))
- 		size=$((size+1))
- 		size=$((size*2048))
+ all_tests()
+ {
+ 	subflows_tests
+@@ -2213,6 +2228,7 @@ all_tests()
+ 	checksum_tests
+ 	deny_join_id0_tests
+ 	fullmesh_tests
++	fastclose_tests
+ }
+ 
+ # [$1: error message]
+@@ -2239,6 +2255,7 @@ usage()
+ 	echo "  -S checksum_tests"
+ 	echo "  -d deny_join_id0_tests"
+ 	echo "  -m fullmesh_tests"
++	echo "  -z fastclose_tests"
+ 	echo "  -c capture pcap files"
+ 	echo "  -C enable data checksum"
+ 	echo "  -i use ip mptcp"
+@@ -2270,7 +2287,7 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
+ 
+-while getopts 'fesltra64bpkdmchCSi' opt; do
++while getopts 'fesltra64bpkdmchzCSi' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+@@ -2317,6 +2334,9 @@ while getopts 'fesltra64bpkdmchCSi' opt; do
+ 		m)
+ 			fullmesh_tests
+ 			;;
++		z)
++			fastclose_tests
++			;;
+ 		c)
+ 			;;
+ 		C)
 -- 
 2.35.1
 
