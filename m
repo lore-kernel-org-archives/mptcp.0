@@ -1,28 +1,28 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C1742B7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BC57C
 	for <mptcp@lists.linux.dev>; Fri,  4 Mar 2022 19:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1646422608; x=1677958608;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wc9PGwvPhtaF4JiP57AOPUOF9WiO6euM1D/bIVvEp5I=;
-  b=eZkiAxMfVVXSrPcUStSrirWt3+XwMGtDU5N1M/yFB1HxAnBwEB5cQxTv
-   Wr8HTWiTKhR7xFJVTkdWM04q6Y5qABOyXVww9rgx1RBjt5svdxIIWGSZw
-   gTyjEHTFU6C5qyOXjzNgRD6EN+8SVJjRHsi+vllfAWStkIPoVuz7ahMPo
-   qhmEpK2fS6OZNpPUQoEBHwhpVPkDhkYeWsPl0Clv+NEueTVMb/uafBLch
-   wGW4To8XN2m99i8fiAhE9ZNl94lg5AZF36vW19//YYDYgkjsV2ljaVu42
-   hzU+242bu0Sml2gxyYAP+wlWqNfzIxVvaPs5qH3oRPCa3n6mRbT+I9rml
+  bh=ROvep7kyVqc+GmBw/uIi6w1KfX09rcAB6oWAZ89yNz0=;
+  b=mhQFeGN5AIBJoMSyQ+7DuW0+8zcZbS/q7bHZBaE3tsvxZXLqK5zZFQ6q
+   2SH0iHAbU8PfeojZ//w1jZY/mm4UHppIvXOSayE8mulJUU4or6gsWzIUU
+   1Xw+69+5VxL5PIn66x36uIqDfv6Ky8t4CDGjvvQZpbj6NruaatI0bgwzC
+   4q36oN/aoS+Eg0vodXVmeaXPYPbOtmuzVgi+NIUXtfetV4Lc4/IdwdEHo
+   Npjo6m0iqPXmASAl87BqFq7p/iCiu3hpGQUMapCrTfqTrRjbiylw8hAek
+   SZ8VtSlYLzO08v5Do9ByM3e7evGPzaVzd7K85PD2880J78VxJCIBS/DVH
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="278739509"
+X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="278739511"
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="278739509"
+   d="scan'208";a="278739511"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:44 -0800
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="552340791"
+   d="scan'208";a="552340792"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.225.124])
   by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 11:36:43 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -33,9 +33,9 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 08/11] selftests: mptcp: add fastclose testcase
-Date: Fri,  4 Mar 2022 11:36:33 -0800
-Message-Id: <20220304193636.219315-9-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 09/11] selftests: mptcp: add invert check in check_transfer
+Date: Fri,  4 Mar 2022 11:36:34 -0800
+Message-Id: <20220304193636.219315-10-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220304193636.219315-1-mathew.j.martineau@linux.intel.com>
 References: <20220304193636.219315-1-mathew.j.martineau@linux.intel.com>
@@ -49,96 +49,83 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch added the self test for MP_FASTCLOSE. Reused the argument
-addr_nr_ns2 of do_transfer() to pass the extra arguments '-I 2' to
-mptcp_connect commands. Then mptcp_connect disconnected the
-connections to trigger the MP_FASTCLOSE sending and receiving. Used
-chk_fclose_nr to check the MP_FASTCLOSE mibs and used chk_rst_nr to
-check the MP_RST mibs. This test used the test_linkfail value to make
-1024KB test files.
+This patch added the invert bytes check for the output data in
+check_transfer().
 
-The output looks like this:
+Instead of the file mismatch error:
 
-Created /tmp/tmp.XB8sfv1hJ0 (size 1024 KB) containing data sent by client
-Created /tmp/tmp.RtTDbzqrXI (size 1024 KB) containing data sent by server
-001 fastclose test                syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                  ctx[ ok ] - fclzrx[ ok ]
-                                  rtx[ ok ] - rstrx [ ok ]   invert
+  [ FAIL ] file received by server does not match (in, out):
+  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.9xpM6Paivv
+  Trailing bytes are:
+  MPTCP_TEST_FILE_END_MARKER
+  -rw------- 1 root root 45643832 Jan 16 15:04 /tmp/tmp.wnz1Yp4u7Z
+  Trailing bytes are:
+  MPTCP_TEST_FILE_END_MARKER
+
+Print out the inverted bytes like this:
+
+  file received by server has inverted byte at 7454789
+  file received by server has inverted byte at 7454790
+  file received by server has inverted byte at 7454791
+  file received by server has inverted byte at 7454792
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++++++++++++------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 1fda29d5d69f..4604dd13a87e 100755
+index 4604dd13a87e..f4812e820acf 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -452,6 +452,12 @@ do_transfer()
- 		extra_args="-r ${speed:6}"
- 	fi
+@@ -15,6 +15,7 @@ timeout_test=$((timeout_poll * 2 + 1))
+ capture=0
+ checksum=0
+ ip_mptcp=0
++check_invert=0
+ do_all_tests=1
+ init=0
  
-+	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
-+		# disconnect
-+		extra_args="$extra_args -I ${addr_nr_ns2:10}"
-+		addr_nr_ns2=0
-+	fi
+@@ -59,6 +60,8 @@ init_partial()
+ 		fi
+ 	done
+ 
++	check_invert=0
 +
- 	local local_addr
- 	if is_v6 "${connect_addr}"; then
- 		local_addr="::"
-@@ -2196,6 +2202,15 @@ fullmesh_tests()
- 	chk_rm_nr 0 1
- }
+ 	#  ns1              ns2
+ 	# ns1eth1    ns2eth1
+ 	# ns1eth2    ns2eth2
+@@ -216,15 +219,21 @@ check_transfer()
+ 	out=$2
+ 	what=$3
  
-+fastclose_tests()
-+{
-+	reset
-+	run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_2
-+	chk_join_nr "fastclose test" 0 0 0
-+	chk_fclose_nr 1 1
-+	chk_rst_nr 1 1 invert
-+}
+-	cmp "$in" "$out" > /dev/null 2>&1
+-	if [ $? -ne 0 ] ;then
+-		echo "[ FAIL ] $what does not match (in, out):"
+-		print_file_err "$in"
+-		print_file_err "$out"
+-		ret=1
++	cmp -l "$in" "$out" | while read line; do
++		local arr=($line)
+ 
+-		return 1
+-	fi
++		let sum=0${arr[1]}+0${arr[2]}
++		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
++			echo "[ FAIL ] $what does not match (in, out):"
++			print_file_err "$in"
++			print_file_err "$out"
++			ret=1
 +
- all_tests()
- {
- 	subflows_tests
-@@ -2213,6 +2228,7 @@ all_tests()
- 	checksum_tests
- 	deny_join_id0_tests
- 	fullmesh_tests
-+	fastclose_tests
++			return 1
++		else
++			echo "$what has inverted byte at ${arr[0]}"
++		fi
++	done
+ 
+ 	return 0
  }
- 
- # [$1: error message]
-@@ -2239,6 +2255,7 @@ usage()
- 	echo "  -S checksum_tests"
- 	echo "  -d deny_join_id0_tests"
- 	echo "  -m fullmesh_tests"
-+	echo "  -z fastclose_tests"
- 	echo "  -c capture pcap files"
- 	echo "  -C enable data checksum"
- 	echo "  -i use ip mptcp"
-@@ -2270,7 +2287,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
- 
--while getopts 'fesltra64bpkdmchCSi' opt; do
-+while getopts 'fesltra64bpkdmchzCSi' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -2317,6 +2334,9 @@ while getopts 'fesltra64bpkdmchCSi' opt; do
- 		m)
- 			fullmesh_tests
- 			;;
-+		z)
-+			fastclose_tests
-+			;;
- 		c)
- 			;;
- 		C)
 -- 
 2.35.1
 
