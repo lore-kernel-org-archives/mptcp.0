@@ -1,38 +1,39 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A92FC89
-	for <mptcp@lists.linux.dev>; Sat,  5 Mar 2022 00:33:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828FEC89
+	for <mptcp@lists.linux.dev>; Sat,  5 Mar 2022 01:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646440416; x=1677976416;
+  t=1646442416; x=1677978416;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=7i1W3UChJCnTSaj6CvLdUaApbns3RVY8pwBhaynt1lQ=;
-  b=RDWekQO9FT25PTE2dAWNDdxxE7ZGZ64TmRP5dqgO7p7z+03mQ0o4ecuy
-   x8GYlAcgfVyzSMTi8ORlKq8jizX4WjWAuAk+FebQc3+sMbB9cvCAP/I1c
-   AmJldtEpXeBvHn2piVg8s51RPejoyrqDUgYnrQcZhDmuH3tbDcnx1+SHY
-   h0+1bZpEheYzOShYevDUm4MpYSttzCeElTfKvswYkuiJ5vn4ivbhR3edq
-   LV8BnAM+tUgZ6OxWaVePNFN+KYfD5TTW5fB4INsYQWfU7Me8qkLnvzdNS
-   4vNxYMJcjS7l3GsLKx2GuoyLEMSaFDaBqptoSg9CtNS6Vk1Cn/dXKSRo3
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="317328333"
+  bh=2wV5s2/+orVNmvNld/8bn21JauEDabv9IppJ/lpGNec=;
+  b=fvGN5IVHVK9mFbro+p4igg/gVcYzBIDZW5Xukeu/oY1pk4yDuhHSxQyt
+   l5Bmnve4JYVcPeZ9l0MaraYbgeemLhEnxt6414/4SJBdmoKdB/L29Hgak
+   rQgbcuGdIctAn5w+4Qimf9BMKad2zQP3Rbq36mOy5TIdPFlPtbcmdF7Z6
+   ZFpWua0zVQjg31E80GhE6in2w55MmIXaHJeA6PMVXYeLZEApwaaPhgECI
+   oEggLAogSUzr+0Zd4Wmtg5pccc1GCWUVw+rNMHi+DddjwiqV/X8St0egH
+   0XZFD4uXWO9g//oZxfzfhxk4KWR79sypn/FCDhvVVU9lJ+HNbvW4PEXLl
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="253828258"
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="317328333"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 16:33:36 -0800
+   d="scan'208";a="253828258"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 17:06:56 -0800
 X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="536461862"
+   d="scan'208";a="552431470"
 Received: from iballa-mobl2.amr.corp.intel.com ([10.251.12.232])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 16:33:35 -0800
-Date: Fri, 4 Mar 2022 16:33:35 -0800 (PST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 17:06:56 -0800
+Date: Fri, 4 Mar 2022 17:06:55 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: add MP_FAIL response support
-In-Reply-To: <87d47204cb7b125d2089abb7dfcdada8b2ce1795.1646287286.git.geliang.tang@suse.com>
-Message-ID: <9d991d11-82c8-4db3-be62-7fb5e2f1111a@linux.intel.com>
-References: <cover.1646287286.git.geliang.tang@suse.com> <87d47204cb7b125d2089abb7dfcdada8b2ce1795.1646287286.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: reset the subflow when MP_FAIL is
+ lost
+In-Reply-To: <d4b8877793e878092bd17cfd45018b0feafbace0.1646287286.git.geliang.tang@suse.com>
+Message-ID: <4b65313-b2b6-d214-3587-f626991079f@linux.intel.com>
+References: <cover.1646287286.git.geliang.tang@suse.com> <d4b8877793e878092bd17cfd45018b0feafbace0.1646287286.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,74 +44,117 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Thu, 3 Mar 2022, Geliang Tang wrote:
 
-> This patch added a new struct member mp_fail_response_expect in struct
-> mptcp_subflow_context to support MP_FAIL response. In the single subflow
-> with checksum error and contiguous data special case, a MP_FAIL sent in
-> response to another MP_FAIL.
+> This patch reuses icsk_retransmit_timer to trigger a check if we have
+> not received a response from the peer after sending MP_FAIL. If the
+> peer doesn't respond properly, reset the subflow.
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> net/mptcp/pm.c       | 11 +++++++++--
+> net/mptcp/pm.c       |  1 +
+> net/mptcp/protocol.c | 32 +++++++++++++++++++++++++++++++-
 > net/mptcp/protocol.h |  1 +
-> net/mptcp/subflow.c  |  2 ++
-> 3 files changed, 12 insertions(+), 2 deletions(-)
+> net/mptcp/subflow.c  |  1 +
+> 4 files changed, 34 insertions(+), 1 deletion(-)
 >
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index d0d31d5c198a..c9080230b800 100644
+> index c9080230b800..441f5c79b601 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -279,8 +279,15 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
->
-> 	pr_debug("fail_seq=%llu", fail_seq);
->
-> -	if (!mptcp_has_another_subflow(sk) && READ_ONCE(msk->allow_infinite_fallback))
-> -		subflow->send_infinite_map = 1;
-> +	if (!mptcp_has_another_subflow(sk) && READ_ONCE(msk->allow_infinite_fallback)) {
-> +		if (!subflow->mp_fail_response_expect) {
-> +			subflow->send_mp_fail = 1;
-> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
-> +			subflow->send_infinite_map = 1;
-> +		} else {
-> +			subflow->mp_fail_response_expect = 0;
+> @@ -285,6 +285,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+> 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
+> 			subflow->send_infinite_map = 1;
+> 		} else {
+> +			sk_stop_timer((struct sock *)msk, &msk->sk.icsk_retransmit_timer);
 
-I don't think there's any need to clear this flag. Once the MP_FAIL 
-response is received, this side is supposed to fall back and another 
-incoming MP_FAIL would be strange to see. But if one somehow propagated 
-here, it would be better to "expect" it by having the flag still set so no 
-more MP_FAILs are sent in response. I mentioned this before in my RFCv2 
-review - if you think this line of code should remain, please explain.
+mptcp_data_lock() needs to be held when manipulating the msk 
+retransmit_timer.
 
-Thanks!
+> 			subflow->mp_fail_response_expect = 0;
+> 		}
+> 	}
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3cb975227d12..59d2deec1ae8 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -866,6 +866,36 @@ static void mptcp_reset_timer(struct sock *sk)
+> 	sk_reset_timer(sk, &icsk->icsk_retransmit_timer, jiffies + tout);
+> }
+>
+> +static void mptcp_mp_fail_timer(struct timer_list *t)
+> +{
+> +	struct inet_connection_sock *icsk = from_timer(icsk, t,
+> +						       icsk_retransmit_timer);
+> +	struct sock *sk = &icsk->icsk_inet.sk, *ssk;
+> +	struct mptcp_subflow_context *subflow;
+> +
+> +	if (!sk || inet_sk_state_load(sk) == TCP_CLOSE)
+> +		return;
+> +
+> +	bh_lock_sock(sk);
+> +	subflow = mptcp_subflow_ctx(mptcp_sk(sk)->first);
+
+Right now, the code only attempts an MP_FAIL fallback if there have never 
+been any other subflows addes, so the msk->first assumption seems to work. 
+This is fragile if other code changes to support fallback in other 
+scenarios (as allowed by the RFC). Would be better to find the subflow 
+with mp_fail_response_expect set and shut that one down.
+
+> +	ssk = mptcp_subflow_tcp_sock(subflow);
+> +	pr_debug("MP_FAIL is lost, reset the subflow");
+> +	mptcp_subflow_reset(ssk);
+
+Need to handle ssk locking too.
 
 -Mat
 
-> +		}
-> +	}
-> }
+> +	bh_unlock_sock(sk);
+> +	sock_put(sk);
+> +}
+> +
+> +void mptcp_setup_mp_fail_timer(struct mptcp_sock *msk)
+> +{
+> +	struct sock *sk = (struct sock *)msk;
+> +
+> +	/* re-use the csk retrans timer for MP_FAIL retrans */
+> +	sk_stop_timer(sk, &msk->sk.icsk_retransmit_timer);
+> +	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_mp_fail_timer, 0);
+> +	__mptcp_set_timeout(sk, TCP_RTO_MAX);
+> +	mptcp_reset_timer(sk);
+> +}
+> +
+> bool mptcp_schedule_work(struct sock *sk)
+> {
+> 	if (inet_sk_state_load(sk) != TCP_CLOSE &&
+> @@ -1604,7 +1634,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
 >
-> /* path manager helpers */
+> out:
+> 	/* ensure the rtx timer is running */
+> -	if (!mptcp_timer_pending(sk))
+> +	if (!mptcp_timer_pending(sk) && !__mptcp_check_fallback(msk))
+> 		mptcp_reset_timer(sk);
+> 	if (copied)
+> 		__mptcp_check_send_data_fin(sk);
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index c8bada4537e2..39aa22595add 100644
+> index 39aa22595add..313c1a6c616f 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -448,6 +448,7 @@ struct mptcp_subflow_context {
-> 		backup : 1,
-> 		send_mp_prio : 1,
-> 		send_mp_fail : 1,
-> +		mp_fail_response_expect : 1,
-> 		send_fastclose : 1,
-> 		send_infinite_map : 1,
-> 		rx_eof : 1,
+> @@ -669,6 +669,7 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk);
+> void mptcp_data_ready(struct sock *sk, struct sock *ssk);
+> bool mptcp_finish_join(struct sock *sk);
+> bool mptcp_schedule_work(struct sock *sk);
+> +void mptcp_setup_mp_fail_timer(struct mptcp_sock *msk);
+> int mptcp_setsockopt(struct sock *sk, int level, int optname,
+> 		     sockptr_t optval, unsigned int optlen);
+> int mptcp_getsockopt(struct sock *sk, int level, int optname,
 > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 30ffb00661bb..63a256a94b65 100644
+> index 63a256a94b65..960b161b1cb2 100644
 > --- a/net/mptcp/subflow.c
 > +++ b/net/mptcp/subflow.c
-> @@ -1217,6 +1217,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
-> 				tcp_send_active_reset(ssk, GFP_ATOMIC);
-> 				while ((skb = skb_peek(&ssk->sk_receive_queue)))
+> @@ -1219,6 +1219,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
 > 					sk_eat_skb(ssk, skb);
-> +			} else {
-> +				subflow->mp_fail_response_expect = 1;
+> 			} else {
+> 				subflow->mp_fail_response_expect = 1;
+> +				mptcp_setup_mp_fail_timer(msk);
 > 			}
 > 			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
 > 			return true;
