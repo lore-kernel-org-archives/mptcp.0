@@ -1,31 +1,31 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A8348D0
-	for <mptcp@lists.linux.dev>; Tue,  8 Mar 2022 13:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3E648D0
+	for <mptcp@lists.linux.dev>; Tue,  8 Mar 2022 13:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1646745441;
+	t=1646745448;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=z0MPY+WSQNwWOyp5VgV0CTw/sHdvnUiJvFilkADeg70=;
-	b=czqAgxhzDPcRVAQUjYUjaont1vIsx1ezD/wywgZ/Nev1WyD+gA34zRXWtR5TCsr1ely7+C
-	nrIOo2bN6U5Zf3ib6B6hVD5OjjXGCk8/wJ3CBKf88o/FPq2ceYVf4gna0aLxybUdiubD6K
-	/xTk0qEXow+BOQLUgbh0j1vdu1cIaTQ=
+	bh=362WZUzmVE200dFQmnEnopUwKgSMAI+IU3fj7/NionM=;
+	b=Ra1JXUTwEGYDxy8OwTCXd9VdaMybfP++7hhhnrouQZKEw9Dy5EVkSb0s2M0QniDBA7fHgV
+	0swrBAR4uT1mTU1k8WKH8ciVn7Cz3lwod4hNJ+rvcr/fN56fiUJIALnmjVcO14U0B8s7As
+	26ePgvqEcClFmSKzTehPTttY8Dfz1h8=
 Received: from EUR03-VE1-obe.outbound.protection.outlook.com
- (mail-ve1eur03lp2053.outbound.protection.outlook.com [104.47.9.53]) by
+ (mail-ve1eur03lp2055.outbound.protection.outlook.com [104.47.9.55]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-23-H5s5UxB4Mjm5ShU0166EMQ-1; Tue, 08 Mar 2022 14:17:20 +0100
-X-MC-Unique: H5s5UxB4Mjm5ShU0166EMQ-1
+ de-mta-2-qveuI56mN16fWg1lcJRhNw-1; Tue, 08 Mar 2022 14:17:27 +0100
+X-MC-Unique: qveuI56mN16fWg1lcJRhNw-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UNHLOu3o1cOd0EsSc2VcSPE+pU1tIluq95LHovIPdorYE/SZRiwvWQ22zMNFRFu9SSSXBTRWznziog21yk3OBjd0LrMEwuqBjgpqjAnC7jrFpa3xmMs8hfvs0Dg1K5xhAhsQnDQfKkWCmtxQDk1g5M/8jv7ltz8ZNrqoCJUBVL20yxK534wjcNETGekTb7h4ljDV+mP+Zws+96H7SU6wdRlrWXF+CZXpd1ePtVJqTO0E7X9wYD/oKZEPC7ri5anMtNy+RbOdMWWJwMk1O+u3ZjtS2VG5fqmvdWw0IPrWj/GV/ONwaPFlfZjRlxvUp7UyRyl3cxpwI/biUUYW+hkFfA==
+ b=i2FRII4O7P91Bl/6C5E+cGASRVr2q8YzYYgRgJGFI04J/412lErmFSMQoApWRikkcTDRbe4OInkvZTB+Ux42UZRYAF4ZJCZBW8lOPBk++GZwBTUXqNAqLwqtLgm1Cx/bHAP0jL0qTD3VM0DzDjN2AQiiA4avlB68Kmf0yDMhshIfg/eWowXRlIJlfnZu8P0SHFklGdJhYJhH+6D8ymXuZpUniauesjMh2uWWBKBM4egw+ncQuLqSAWP/5M5/0cumERAAAKdW1iUC3j5F5rEhjSsYQCgjhiIzvJE2+pb6VqEyv4Oa4EiHXmR23/gTaAKd8uTxgnwnO65CawiMivDeeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3V/CJY3nSxaI4fRpLm5g7E3duE0JKWPCKp+lNt1FwUQ=;
- b=N57a5DdGWjL4Hc1b6w0ktDQjIPqjT0Sp6HvesKuvFzYFuaP+9zpZMguJ828ioH78eWQstWgewmw1Q57730HTNnjCMU9lRlUUlFaj382Ed8ANeFRSFl9DJvRvfpRSz7qy7mjrCBwg+JE/tHm9UPU/Ts+FsCA3mpPf9GjG9bvIRLiKr2c29xNxK1PK7OqkXYS6kGdB0/2xi+aUWEiRsNoS6uN1qOY5j8bgLUu6oaVqLSEMeYTuK/jIHEJSqvHkliYt/ZMplxJwAhJLkcvc635KlNbb3VCR9BMYpoyoXFuxzG8vOjt+ffzoSIVbFB3uTSXEpLI62DM5J2g3ApgDtjVwkg==
+ bh=4cTG0orl1M2YPlxQmqgjFLA6PYZxQl1ZAYMHpAOFUrg=;
+ b=AhOnpDiz4UJ59hnwiGrXLMKoIp2SwabKMoDdZz374aWqucpdpFcHQx51Yuonfqm3wIs62hnVtWd1bGsugA1cChBDLn4fgyygOxGViIi5TCNH997pkZkASaeaGa4bFdgFRbgkEmYt6NN6qe9EiW8nJvXtNjdEQKL487NTm49+VPafTlrwLbkMPa7KN22AAZmVOnuulzNKPsBv49fV4w76ixc8QZdWfS1wunncolERMXDUR/HqRgOUQTOKetKt4AUWfdqIz1gVESn/nH2XL448QJijfgHs21xrfbhFIWrnophDFFlXwXJopa3lfymXegianHs8Z23sHtVUu4Tvtf1QSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
@@ -35,24 +35,26 @@ Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by PAXPR04MB8142.eurprd04.prod.outlook.com (2603:10a6:102:1ce::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15; Tue, 8 Mar
- 2022 13:17:19 +0000
+ 2022 13:17:26 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::b110:cb51:e09f:bb05]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::b110:cb51:e09f:bb05%6]) with mapi id 15.20.5038.027; Tue, 8 Mar 2022
- 13:17:19 +0000
+ 13:17:26 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v9 2/5] Revert "bpf: add 'bpf_mptcp_sock' structure and helper"
-Date: Tue,  8 Mar 2022 21:16:55 +0800
-Message-ID: <5d0f38a0fb220bae4f170f2debf5a8b8a031ba7e.1646745228.git.geliang.tang@suse.com>
+CC: Geliang Tang <geliang.tang@suse.com>,
+	Nicolas Rybowski <nicolas.rybowski@tessares.net>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v9 3/5] bpf: add skc_to_mptcp_sock helper
+Date: Tue,  8 Mar 2022 21:16:56 +0800
+Message-ID: <d6d33be9899118c5f542a6ce43f868d4e9e2766b.1646745228.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1646745228.git.geliang.tang@suse.com>
 References: <cover.1646745228.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: HKAPR04CA0007.apcprd04.prod.outlook.com
- (2603:1096:203:d0::17) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: HK2PR04CA0058.apcprd04.prod.outlook.com
+ (2603:1096:202:14::26) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -61,490 +63,262 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4a76dadb-8c8a-4ad5-7ff7-08da0105f931
+X-MS-Office365-Filtering-Correlation-Id: ba206a66-097f-4e42-3be0-08da0105fd30
 X-MS-TrafficTypeDiagnostic: PAXPR04MB8142:EE_
 X-Microsoft-Antispam-PRVS:
-	<PAXPR04MB8142EA408AC26A76B8E83890F8099@PAXPR04MB8142.eurprd04.prod.outlook.com>
+	<PAXPR04MB8142D7907179C65C6CA5A28FF8099@PAXPR04MB8142.eurprd04.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	pHiuaZF45Nhor6pDzszMbKB7BXd6pSIuP77IsXiOHuVsWCw9rY0PJA3140fKBQT3EH+PEqLGKaLF211NTb6qzC6L7wFYRfcbVBXagbOGlsCTlH+XM5VqSCQEqZkcubs8HQ3xCU/1GHZROAj4NpFhwomynqE4d89vx8GfoF8qVNJgXckiMPvIGSK8d2carjgpzUxGuZ1i1DZXUqUvvvece2VYs3AuHn3pdSIkfzJGoVPV8BjdHS5jVwcn21JsgFS/CU33mvv9VvYyuFL9/dzlgcERV7Ze5JyszjcX6Xs6BkQk+Uloo5gnCrol5/iOCRKYCqSA3kcbz2JGhEp9BXHjH205/1Z3EJkw1f6+148/Q8UKYuRRBZqdi9r/ZZxUGo/6qaWD6YIFNCgIPbrUltDUw81QXGQq40xigG1itnpwtdgnXrIPwgwId5sPvxSu+fRfW+rpAXmQOsfQ8BheagFfm+n60LMK7AdyI9TNI2rUo80/jhqOnWZoj/REwZ4/VjUBLkHky8oZ3uRkAeotNeDwLr/XHu9JT/dD6l7fNAWs1j0Z4a8CAY4to9jrmbt0iozz+L+E1nR2jE7unv/0QJOTJUhNfBuRphQ9QlYxAn8PRXvj9sSBfbX8o1TFGsDFGN0VHVyuJuKJ1ys25WCpt2ROY0i+xIW/3LJrn/RlVEOC+gEB1gqyl1udfvVH4A3lyIy/gH4NaaY3juwGcqmGr+231A==
+	J5ioqhvIiHvPPVxk7ovYkDGf121JcZVhVkTmvvW0HxhlVMGrFx4WlzT9iSPySD7O67xIsyJQlGM/3gsyHZxKk9o9F/dy5iy7oLBthEDQSqMXhxaVMkHdm5u01KjRFteXw+/YSzbfxI6DqCwUaV68yirwu10aUD+LJKeXDhIcTLu6Z+Gw+6mKsVsrYBwmtuxkCs1uWPl/WDa7wk0tqUnmcE7HRaU962S8XH7SNdkQFOHl7XYQ7JwEXwRRim3MDZ8ltEFAKI67w3V+Gnuu3eXAMDFAzKVW1I+oLrKgUeg5sdETe9deFFetUmPGZjSq7BuQvI+j1hZ5+t7ah1PIQ7LUam/KO24rvnGbgbEKKEFNQ4Hrm9/n8kxGaAiUj5drGkoC2mY2bmBHBPGG+44bFyV8NQAjwEJSP7X6RHH0w5n96bmNr2accHbyLGVyvOXteI/0MLr3P6PTpw2ocQWl0n7qfFpzCKz13qX+JvZ/CasXvGi0BBdVzSZthQ9+hSTYBN0OL9vs36rZT7A0Xxkfz+3ZHUpfEzAW6gt82FrHvOctkIgb0wSmxzEbQohVEIG64qWWKgVRfPh8p9DTLv6EO58l3HceTTZSvIFFf8Zu/syvewazsrOB7dmVxSUv+NVGaLbp7CCMqffsIFMm94QVVzuoy1pIFeeJT1KClJAeXRniRmkuP/ouplQYnV22kTtVoT/x52y3oYwOAfz9L8/+xsDUSQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(186003)(316002)(6916009)(2616005)(6512007)(107886003)(44832011)(30864003)(36756003)(2906002)(8936002)(5660300002)(26005)(4326008)(66476007)(66556008)(508600001)(6666004)(66946007)(38100700002)(86362001)(6506007)(6486002)(83380400001)(8676002)(13296009);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(186003)(316002)(6916009)(2616005)(6512007)(44832011)(54906003)(36756003)(2906002)(8936002)(5660300002)(26005)(4326008)(66476007)(66556008)(508600001)(6666004)(66946007)(38100700002)(86362001)(6506007)(6486002)(83380400001)(8676002)(13296009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SGrGksL6Pv5Eg6XhwKM57bCxgUe05WilIl9e24IiznZfmQAhS+uvziChsT3P?=
- =?us-ascii?Q?ZLBpQzfF7P9btIQzdAqFw1cFo6kVGCt8WU8IeBeuYlQDJiqxCWXcLRetJWH8?=
- =?us-ascii?Q?lCKLyCJWGIOCh1MdHu2noyGfZ7TSyvkLZK7ihOm4ZcstPFMMjrDzRUBSpZSP?=
- =?us-ascii?Q?YNU2p6IfOe911Pkx30nsQC/Z4m7ZvL+aTvnbZGVFm5i/GCDnjMqtUpyCgFv+?=
- =?us-ascii?Q?vXVuwznI51TKN947w4okxFqwKrHTqQsqmhPPD6iBbXm2UIHiMmIhGOmuXK2q?=
- =?us-ascii?Q?wQgFkO37M+r2mA27kjKp8rGDba1fbRIkz9Q9yQxTanYiEUGKb9LIxzexBsvt?=
- =?us-ascii?Q?pBKvmdlq4YZgRrOPXW+XpmKTHuIkoYhy/DDDfaet7wa0hfPPuwaNzkSm2vVz?=
- =?us-ascii?Q?T2gyWRf4TIdNn/H2FfMMAy1w5T4C7WSyo6OQVL8hNrZcKBC8bUe8SBlmgcTC?=
- =?us-ascii?Q?isY61RBY8ndy4PVh/pGvB+NLJUHcXhkiV6qh8Iyun9VA7o+aILSNTmx6Fvui?=
- =?us-ascii?Q?CmlB+Vo8fS210LcC6qMXYKiAigglhFkQEVDqU18eQRLUiYzYyK4IlMOqOrXc?=
- =?us-ascii?Q?WCY4wjyAlLTj4j1gLwcH1OrMX/i9wDittgJG2NDOpZEJpiS33n9hlFUR8iyh?=
- =?us-ascii?Q?ct4+Yazak86A3MoNsMzWTYEZQCMUE9wMK64kueU+PoBXm2FkA7HOk+GupRQO?=
- =?us-ascii?Q?ycHasRQ8SUZ6ZlJWFZx0vfN+gLmA44y+v6c4Nn/hkmtHKGSfIgy3Ez5EmO1k?=
- =?us-ascii?Q?Xcd8CWCGbUs4ulnFWJyQWzePq8GhPFmx3Q0IGNBRMuCvZ82OneBsV7egpMeC?=
- =?us-ascii?Q?g+J1q5SSVA9dXcFaomh22iYk4CREZyAqAXYSJJCC0/cqN+ZTPaGEcVOYkuZ5?=
- =?us-ascii?Q?eMW1XenMv7b16qt1RYiSmCZXVrYb+KiAH8f+EA0trliMIZLR9Y0FIxs5Lxvn?=
- =?us-ascii?Q?gRVUHiPBoiTcIAzhI7hhnGlDFq8XTJCpv83ORGvLa1gAK3BvIV029qFm/tC0?=
- =?us-ascii?Q?ccmd2otbFkK9WwOaj/iWf0w55EqXQXq+0aInPydwtm8KcM7GQzPwDRU3JtQn?=
- =?us-ascii?Q?jv9SW1t/9L/O3SV7SQnDfmRxi9kN+3aXHNgFkQoum7UEM2eDzCSXYH9bejHK?=
- =?us-ascii?Q?9WIJGKTj+0sGvSul/L95ZL5rxx732XwIIsNmiPIBmuqzcdKmBOW8vS4iAY6q?=
- =?us-ascii?Q?Fq6DxiYkftKx5t2fMWeognJx4wIDATKTHj4kobnByUhRFBbVb7UQOVUs2mjN?=
- =?us-ascii?Q?98H+4i4np+IVB/GioTFkXNV/azH0SgB2hiEbT0KNoYc/sgcNFkj8JfraNdim?=
- =?us-ascii?Q?VzcKJmClIBDA7AXjPFxwClJogpFXEVqUUAnh7wZJzBx3sogAPqf+GgMFDaG5?=
- =?us-ascii?Q?KCKV2Fk+9EnW4vlJAmpESq/fFhS0JgPt7JHwNvVUwo7ZBvJjfYVeK4Dif4Ba?=
- =?us-ascii?Q?ciDC3mDMJ8bTeEbtxa28AesX2yfYFpn0a7MzFgV2sHfZWlYsC/JyDkzTyEwf?=
- =?us-ascii?Q?vLq1/O2mpTFXOdto9lbHl01VgUS9J69W1Dag72W3VAuoEdMqsC/UCRzXaoAo?=
- =?us-ascii?Q?P59s9R/SVOtyMZjoA2oq/bI0LkVuAEqYFnlJh+H1LOj4EmM/rvwQ45/PpmYn?=
- =?us-ascii?Q?73i0kYjdq1jHkbAofl27V2I=3D?=
+	=?us-ascii?Q?kP8A40A3xkmQTSjoxh+2cmZNBT58jiEbNzWXNHbDpqh3Ur+corJHlqYEl0Bs?=
+ =?us-ascii?Q?aJq+XzfCSjGCQvOMYgy3CmLDcuuPRqalnsGAQDucHo6905tlROyoJryitLYS?=
+ =?us-ascii?Q?tJDtvG3mqM8x/vWPyVDzspPkbFQIM+jTa90soAD8itX59Q8Wf67UPTt4JAzL?=
+ =?us-ascii?Q?1IbjXleoLRG+aNH09t0zHhdxmJSLJg1GPqpepeqXCN4R3c0Evx7tl/itsMeV?=
+ =?us-ascii?Q?UYqqJKuusVbKjRJ2mVCYcYi/qWmPClLLGeYm4KIioPnKuaDsP55Jp7lVgNEo?=
+ =?us-ascii?Q?b7TdpN/OmWpX71BPB2pdI6OVxCB6HbI2wf3PWtXVfzTDbMJTaxbr64GrMcoa?=
+ =?us-ascii?Q?xErpXqZIEJrIjfKcbgonfUe5eqt8XfMx87hxzU61wV+qdIv4argu8VtISRp5?=
+ =?us-ascii?Q?7tql7bm/ddyhyj/bwOlZs5ZNL2+SI5S+SyRDifs1owYmkX4Uy1/tvmvDM8xI?=
+ =?us-ascii?Q?18deoU0w3+jA1rOcSSLmtD1aCRHn+Ky4ymaOaWNnoSPlX1XkR6MaGc+tipAE?=
+ =?us-ascii?Q?gLnDHk04InoLvlZzXHPdAH6+d3f0txxs+suysG9xtIaZ+yux0214GN31n/u6?=
+ =?us-ascii?Q?zT6E4IzZ3nE5i58W2vq1sJpF83/zltlI4xnTki2GdtQE3tXEBnNLE7huIGEQ?=
+ =?us-ascii?Q?gvClu2eYdIdQ85PrXQKWkVs8Tqe3uZgocLVorokbPTyqZ5zn2SgIE/4AizaD?=
+ =?us-ascii?Q?TI1Byoedeg15l9Apb2ZKzHxmNcHDLB5k2bkl008Oh69fStF2/DksDwitxHXz?=
+ =?us-ascii?Q?tW3Zh4mm1dz5ZwCohNd9e8g7Rb6C7ZDyhxtkmDdGaQar2e91bH+SIgXVlIfN?=
+ =?us-ascii?Q?q3gANgvfTy06IUdNB9qj+rngDck6MuDrEOKibf7mkMjO77DurhICEBcJNQmR?=
+ =?us-ascii?Q?VRm+t95aynvvX85jkjocoQ9zPRaGf9N85IQPzWQu9dwe1VDCdX0iS/8ca0Rg?=
+ =?us-ascii?Q?/j9j8Fek03j2W22NQrGYjAvYv40MZ6bPXnKfVtTMuVA6lYcJVJcpVsN7cBg8?=
+ =?us-ascii?Q?tsyoawTBAGdmOlLxqSZKLKp2OdOwcfzD2i6s3isp7YL/gVO91zLaCGi/v14l?=
+ =?us-ascii?Q?1tIZBvRH0wUfAqhAojZH7vrXi7DaywaVavqGNleZ0xj1glq2W8SqFahYW9Ig?=
+ =?us-ascii?Q?UhSM1SEhHwuVGSnEdMjo+Wi88jF0i9c6mZMZiHqlmhowlTQdBCSjneUrYy1S?=
+ =?us-ascii?Q?UePsCTWZc//WCpxCQ8pEcdHhAFDTqZ1DEMyuuI30JAVkn6B6E8NZUBtL1TFQ?=
+ =?us-ascii?Q?HAKYnpBopoQzjLx6N5+8pFzbzBQ08i7HOXY9kdGkZIKNx7xnbMFmYEerbgqm?=
+ =?us-ascii?Q?EY+WFEfyOTHX3F5JOnCY1+pFRrwjEj94pYbDp72nmEVY0O9K8WoBg49h8HgA?=
+ =?us-ascii?Q?bZrLDla5nUacdL1aRigYRm2+2qv282hfFLC3Y9G8Du/F2vklSv4/C9AIHeGS?=
+ =?us-ascii?Q?0XckDvq7qCYX8nnBZRiqvABpTpReoJJLpMIPBZVan6x7b+ENxdYOgzRRu904?=
+ =?us-ascii?Q?3QeVBXuY4fpmim21am7wFVAVLnfjAp78dX5xJNfKfl2kcLkKg/3EOPhw+xAD?=
+ =?us-ascii?Q?0vCp8sQOg5KOn0ieffrkk/0hJLu7mZd4HmwedraklZKbat/d65hbnzsYDn7C?=
+ =?us-ascii?Q?I1arE9mhQmy/hERcxiEj/NI=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a76dadb-8c8a-4ad5-7ff7-08da0105f931
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba206a66-097f-4e42-3be0-08da0105fd30
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2022 13:17:19.5456
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2022 13:17:26.2638
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5Ru7McW9oy6gkiTocKkI0IEnJScMBMiDxtGXGtDrBeSGw/uqlsQxLscRoQ8r3RO09i4e2/DIjo3geoQNWW7Fcw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: t0zsMhtn5yr5zFQuU9TQ7ZsDwh2wrcv+jJiTVTeGaq27lXI9fj7OPYDw6z327TL+Kdu5NialQLugW032sUDH6A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8142
 
-This reverts commit 2ee22ce38ed4c7a416ce887eb6379aaf157634f9.
+This patch implemented bpf_skc_to_mptcp_sock helper. Defined a new bpf_id
+BTF_SOCK_TYPE_MPTCP, and added a new helper bpf_mptcp_sock_from_subflow()
+to get struct bpf_mptcp_sock from a given subflow socket.
+
+Co-developed-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
+Signed-off-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
+Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- include/linux/bpf.h            | 34 ----------------
- include/uapi/linux/bpf.h       | 13 ------
- kernel/bpf/verifier.c          | 20 ----------
- net/core/filter.c              |  4 --
- net/mptcp/Makefile             |  2 -
- net/mptcp/bpf.c                | 72 ----------------------------------
- scripts/bpf_doc.py             |  2 -
- tools/include/uapi/linux/bpf.h | 13 ------
- 8 files changed, 160 deletions(-)
- delete mode 100644 net/mptcp/bpf.c
+ include/linux/bpf.h            |  9 +++++++++
+ include/linux/btf_ids.h        |  3 ++-
+ include/uapi/linux/bpf.h       |  7 +++++++
+ net/core/filter.c              | 17 +++++++++++++++++
+ net/mptcp/Makefile             |  2 ++
+ net/mptcp/bpf.c                | 20 ++++++++++++++++++++
+ scripts/bpf_doc.py             |  2 ++
+ tools/include/uapi/linux/bpf.h |  7 +++++++
+ 8 files changed, 66 insertions(+), 1 deletion(-)
+ create mode 100644 net/mptcp/bpf.c
 
 diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 5a17c1e3a6bc..f19abc59b6cd 100644
+index f19abc59b6cd..b28b3d8c3df2 100644
 --- a/include/linux/bpf.h
 +++ b/include/linux/bpf.h
-@@ -407,7 +407,6 @@ enum bpf_return_type {
- 	RET_PTR_TO_MAP_VALUE,		/* returns a pointer to map elem value */
- 	RET_PTR_TO_SOCKET,		/* returns a pointer to a socket */
- 	RET_PTR_TO_TCP_SOCK,		/* returns a pointer to a tcp_sock */
--	RET_PTR_TO_MPTCP_SOCK,		/* returns a pointer to mptcp_sock */
- 	RET_PTR_TO_SOCK_COMMON,		/* returns a pointer to a sock_common */
- 	RET_PTR_TO_ALLOC_MEM,		/* returns a pointer to dynamically allocated memo=
-ry */
- 	RET_PTR_TO_MEM_OR_BTF_ID,	/* returns a pointer to a valid memory or a btf=
-_id */
-@@ -418,7 +417,6 @@ enum bpf_return_type {
- 	RET_PTR_TO_MAP_VALUE_OR_NULL	=3D PTR_MAYBE_NULL | RET_PTR_TO_MAP_VALUE,
- 	RET_PTR_TO_SOCKET_OR_NULL	=3D PTR_MAYBE_NULL | RET_PTR_TO_SOCKET,
- 	RET_PTR_TO_TCP_SOCK_OR_NULL	=3D PTR_MAYBE_NULL | RET_PTR_TO_TCP_SOCK,
--	RET_PTR_TO_MPTCP_SOCK_OR_NULL	=3D PTR_MAYBE_NULL | RET_PTR_TO_MPTCP_SOCK,
- 	RET_PTR_TO_SOCK_COMMON_OR_NULL	=3D PTR_MAYBE_NULL | RET_PTR_TO_SOCK_COMMO=
-N,
- 	RET_PTR_TO_ALLOC_MEM_OR_NULL	=3D PTR_MAYBE_NULL | MEM_ALLOC | RET_PTR_TO_=
-ALLOC_MEM,
- 	RET_PTR_TO_BTF_ID_OR_NULL	=3D PTR_MAYBE_NULL | RET_PTR_TO_BTF_ID,
-@@ -499,7 +497,6 @@ enum bpf_reg_type {
- 	PTR_TO_SOCKET,		 /* reg points to struct bpf_sock */
- 	PTR_TO_SOCK_COMMON,	 /* reg points to sock_common */
- 	PTR_TO_TCP_SOCK,	 /* reg points to struct tcp_sock */
--	PTR_TO_MPTCP_SOCK,	 /* reg points to struct mptcp_sock */
- 	PTR_TO_TP_BUFFER,	 /* reg points to a writable raw tp's buffer */
- 	PTR_TO_XDP_SOCK,	 /* reg points to struct xdp_sock */
- 	/* PTR_TO_BTF_ID points to a kernel struct that does not need
-@@ -528,7 +525,6 @@ enum bpf_reg_type {
- 	PTR_TO_SOCKET_OR_NULL		=3D PTR_MAYBE_NULL | PTR_TO_SOCKET,
- 	PTR_TO_SOCK_COMMON_OR_NULL	=3D PTR_MAYBE_NULL | PTR_TO_SOCK_COMMON,
- 	PTR_TO_TCP_SOCK_OR_NULL		=3D PTR_MAYBE_NULL | PTR_TO_TCP_SOCK,
--	PTR_TO_MPTCP_SOCK_OR_NULL	=3D PTR_MAYBE_NULL | PTR_TO_MPTCP_SOCK,
- 	PTR_TO_BTF_ID_OR_NULL		=3D PTR_MAYBE_NULL | PTR_TO_BTF_ID,
-=20
- 	/* This must be the last entry. Its purpose is to ensure the enum is
-@@ -2221,7 +2217,6 @@ extern const struct bpf_func_proto bpf_get_local_stor=
-age_proto;
- extern const struct bpf_func_proto bpf_strtol_proto;
- extern const struct bpf_func_proto bpf_strtoul_proto;
- extern const struct bpf_func_proto bpf_tcp_sock_proto;
--extern const struct bpf_func_proto bpf_mptcp_sock_proto;
- extern const struct bpf_func_proto bpf_jiffies64_proto;
- extern const struct bpf_func_proto bpf_get_ns_current_pid_tgid_proto;
- extern const struct bpf_func_proto bpf_event_output_data_proto;
-@@ -2309,7 +2304,6 @@ struct sk_reuseport_kern {
- 	u32 reuseport_id;
- 	bool bind_inany;
- };
--
- bool bpf_tcp_sock_is_valid_access(int off, int size, enum bpf_access_type =
-type,
- 				  struct bpf_insn_access_aux *info);
-=20
-@@ -2360,34 +2354,6 @@ static inline u32 bpf_xdp_sock_convert_ctx_access(en=
+@@ -2354,6 +2354,15 @@ static inline u32 bpf_xdp_sock_convert_ctx_access(en=
 um bpf_access_type type,
  }
  #endif /* CONFIG_INET */
 =20
--#ifdef CONFIG_MPTCP
--bool bpf_mptcp_sock_is_valid_access(int off, int size,
--				    enum bpf_access_type type,
--				    struct bpf_insn_access_aux *info);
--
--u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type type,
--				      const struct bpf_insn *si,
--				      struct bpf_insn *insn_buf,
--				      struct bpf_prog *prog,
--				      u32 *target_size);
--#else /* CONFIG_MPTCP */
--static inline bool bpf_mptcp_sock_is_valid_access(int off, int size,
--						  enum bpf_access_type type,
--						  struct bpf_insn_access_aux *info)
--{
--	return false;
--}
--
--static inline u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type t=
-ype,
--						    const struct bpf_insn *si,
--						    struct bpf_insn *insn_buf,
--						    struct bpf_prog *prog,
--						    u32 *target_size)
--{
--	return 0;
--}
--#endif /* CONFIG_MPTCP */
--
++#ifdef CONFIG_MPTCP
++struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk);
++#else /* CONFIG_MPTCP */
++static inline struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *=
+sk)
++{
++	return NULL;
++}
++#endif /* CONFIG_MPTCP */
++
  enum bpf_text_poke_type {
  	BPF_MOD_CALL,
  	BPF_MOD_JUMP,
+diff --git a/include/linux/btf_ids.h b/include/linux/btf_ids.h
+index bc5d9cc34e4c..335a19092368 100644
+--- a/include/linux/btf_ids.h
++++ b/include/linux/btf_ids.h
+@@ -178,7 +178,8 @@ extern struct btf_id_set name;
+ 	BTF_SOCK_TYPE(BTF_SOCK_TYPE_TCP6, tcp6_sock)			\
+ 	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UDP, udp_sock)			\
+ 	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UDP6, udp6_sock)			\
+-	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UNIX, unix_sock)
++	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UNIX, unix_sock)			\
++	BTF_SOCK_TYPE(BTF_SOCK_TYPE_MPTCP, mptcp_sock)
+=20
+ enum {
+ #define BTF_SOCK_TYPE(name, str) name,
 diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index f2e5c7bd4f10..3f6dcdf4b915 100644
+index 3f6dcdf4b915..a88aac4457a9 100644
 --- a/include/uapi/linux/bpf.h
 +++ b/include/uapi/linux/bpf.h
-@@ -5086,14 +5086,6 @@ union bpf_attr {
+@@ -5086,6 +5086,12 @@ union bpf_attr {
   *	Return
   *		0 on success, or a negative error in case of failure. On error
   *		*dst* buffer is zeroed out.
-- *
-- * struct bpf_mptcp_sock *bpf_mptcp_sock(struct bpf_sock *sk)
-- *	Description
-- *		This helper gets a **struct bpf_mptcp_sock** pointer from a
-- *		**struct bpf_sock** pointer.
-- *	Return
-- *		A **struct bpf_mptcp_sock** pointer on success, or **NULL** in
-- *		case of failure.
++ *
++ * struct mptcp_sock *bpf_skc_to_mptcp_sock(void *sk)
++ *	Description
++ *		Dynamically cast a *sk* pointer to a *mptcp_sock* pointer.
++ *	Return
++ *		*sk* if casting is valid, or **NULL** otherwise.
   */
  #define __BPF_FUNC_MAPPER(FN)		\
  	FN(unspec),			\
-@@ -5288,7 +5280,6 @@ union bpf_attr {
+@@ -5280,6 +5286,7 @@ union bpf_attr {
  	FN(xdp_load_bytes),		\
  	FN(xdp_store_bytes),		\
  	FN(copy_from_user_task),	\
--	FN(mptcp_sock),			\
++	FN(skc_to_mptcp_sock),		\
  	/* */
 =20
  /* integer value in 'imm' field of BPF_CALL instruction selects which help=
 er
-@@ -5637,10 +5628,6 @@ struct bpf_tcp_sock {
- 	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
-=20
--struct bpf_mptcp_sock {
--	__u32 token;		/* msk token */
--};
--
- struct bpf_sock_tuple {
- 	union {
- 		struct {
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 1bb1b5d0419d..d7473fee247c 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -430,7 +430,6 @@ static bool type_is_sk_pointer(enum bpf_reg_type type)
- 	return type =3D=3D PTR_TO_SOCKET ||
- 		type =3D=3D PTR_TO_SOCK_COMMON ||
- 		type =3D=3D PTR_TO_TCP_SOCK ||
--		type =3D=3D PTR_TO_MPTCP_SOCK ||
- 		type =3D=3D PTR_TO_XDP_SOCK;
- }
-=20
-@@ -438,7 +437,6 @@ static bool reg_type_not_null(enum bpf_reg_type type)
- {
- 	return type =3D=3D PTR_TO_SOCKET ||
- 		type =3D=3D PTR_TO_TCP_SOCK ||
--		type =3D=3D PTR_TO_MPTCP_SOCK ||
- 		type =3D=3D PTR_TO_MAP_VALUE ||
- 		type =3D=3D PTR_TO_MAP_KEY ||
- 		type =3D=3D PTR_TO_SOCK_COMMON;
-@@ -454,7 +452,6 @@ static bool reg_type_may_be_refcounted_or_null(enum bpf=
-_reg_type type)
- {
- 	return base_type(type) =3D=3D PTR_TO_SOCKET ||
- 		base_type(type) =3D=3D PTR_TO_TCP_SOCK ||
--		base_type(type) =3D=3D PTR_TO_MPTCP_SOCK ||
- 		base_type(type) =3D=3D PTR_TO_MEM ||
- 		base_type(type) =3D=3D PTR_TO_BTF_ID;
- }
-@@ -554,7 +551,6 @@ static const char *reg_type_str(struct bpf_verifier_env=
- *env,
- 		[PTR_TO_SOCKET]		=3D "sock",
- 		[PTR_TO_SOCK_COMMON]	=3D "sock_common",
- 		[PTR_TO_TCP_SOCK]	=3D "tcp_sock",
--		[PTR_TO_MPTCP_SOCK]	=3D "mptcp_sock",
- 		[PTR_TO_TP_BUFFER]	=3D "tp_buffer",
- 		[PTR_TO_XDP_SOCK]	=3D "xdp_sock",
- 		[PTR_TO_BTF_ID]		=3D "ptr_",
-@@ -2778,7 +2774,6 @@ static bool is_spillable_regtype(enum bpf_reg_type ty=
-pe)
- 	case PTR_TO_SOCKET:
- 	case PTR_TO_SOCK_COMMON:
- 	case PTR_TO_TCP_SOCK:
--	case PTR_TO_MPTCP_SOCK:
- 	case PTR_TO_XDP_SOCK:
- 	case PTR_TO_BTF_ID:
- 	case PTR_TO_BUF:
-@@ -3671,9 +3666,6 @@ static int check_sock_access(struct bpf_verifier_env =
-*env, int insn_idx,
- 	case PTR_TO_TCP_SOCK:
- 		valid =3D bpf_tcp_sock_is_valid_access(off, size, t, &info);
- 		break;
--	case PTR_TO_MPTCP_SOCK:
--		valid =3D bpf_mptcp_sock_is_valid_access(off, size, t, &info);
--		break;
- 	case PTR_TO_XDP_SOCK:
- 		valid =3D bpf_xdp_sock_is_valid_access(off, size, t, &info);
- 		break;
-@@ -3830,9 +3822,6 @@ static int check_ptr_alignment(struct bpf_verifier_en=
-v *env,
- 	case PTR_TO_TCP_SOCK:
- 		pointer_desc =3D "tcp_sock ";
- 		break;
--	case PTR_TO_MPTCP_SOCK:
--		pointer_desc =3D "mptcp_sock ";
--		break;
- 	case PTR_TO_XDP_SOCK:
- 		pointer_desc =3D "xdp_sock ";
- 		break;
-@@ -6762,9 +6751,6 @@ static int check_helper_call(struct bpf_verifier_env =
-*env, struct bpf_insn *insn
- 	} else if (base_type(ret_type) =3D=3D RET_PTR_TO_TCP_SOCK) {
- 		mark_reg_known_zero(env, regs, BPF_REG_0);
- 		regs[BPF_REG_0].type =3D PTR_TO_TCP_SOCK | ret_flag;
--	} else if (base_type(ret_type) =3D=3D RET_PTR_TO_MPTCP_SOCK) {
--		mark_reg_known_zero(env, regs, BPF_REG_0);
--		regs[BPF_REG_0].type =3D PTR_TO_MPTCP_SOCK | ret_flag;
- 	} else if (base_type(ret_type) =3D=3D RET_PTR_TO_ALLOC_MEM) {
- 		mark_reg_known_zero(env, regs, BPF_REG_0);
- 		regs[BPF_REG_0].type =3D PTR_TO_MEM | ret_flag;
-@@ -7479,7 +7465,6 @@ static int adjust_ptr_min_max_vals(struct bpf_verifie=
-r_env *env,
- 	case PTR_TO_SOCKET:
- 	case PTR_TO_SOCK_COMMON:
- 	case PTR_TO_TCP_SOCK:
--	case PTR_TO_MPTCP_SOCK:
- 	case PTR_TO_XDP_SOCK:
- 		verbose(env, "R%d pointer arithmetic on %s prohibited\n",
- 			dst, reg_type_str(env, ptr_reg->type));
-@@ -10854,7 +10839,6 @@ static bool regsafe(struct bpf_verifier_env *env, s=
-truct bpf_reg_state *rold,
- 	case PTR_TO_SOCKET:
- 	case PTR_TO_SOCK_COMMON:
- 	case PTR_TO_TCP_SOCK:
--	case PTR_TO_MPTCP_SOCK:
- 	case PTR_TO_XDP_SOCK:
- 		/* Only valid matches are exact, which memcmp() above
- 		 * would have accepted
-@@ -11385,7 +11369,6 @@ static bool reg_type_mismatch_ok(enum bpf_reg_type =
-type)
- 	case PTR_TO_SOCKET:
- 	case PTR_TO_SOCK_COMMON:
- 	case PTR_TO_TCP_SOCK:
--	case PTR_TO_MPTCP_SOCK:
- 	case PTR_TO_XDP_SOCK:
- 	case PTR_TO_BTF_ID:
- 		return false;
-@@ -12810,9 +12793,6 @@ static int convert_ctx_accesses(struct bpf_verifier=
-_env *env)
- 		case PTR_TO_TCP_SOCK:
- 			convert_ctx_access =3D bpf_tcp_sock_convert_ctx_access;
- 			break;
--		case PTR_TO_MPTCP_SOCK:
--			convert_ctx_access =3D bpf_mptcp_sock_convert_ctx_access;
--			break;
- 		case PTR_TO_XDP_SOCK:
- 			convert_ctx_access =3D bpf_xdp_sock_convert_ctx_access;
- 			break;
 diff --git a/net/core/filter.c b/net/core/filter.c
-index a07b28997ad3..f64454722a7e 100644
+index f64454722a7e..538b6db4fd76 100644
 --- a/net/core/filter.c
 +++ b/net/core/filter.c
-@@ -7850,10 +7850,6 @@ sock_ops_func_proto(enum bpf_func_id func_id, const =
-struct bpf_prog *prog)
- 	case BPF_FUNC_tcp_sock:
- 		return &bpf_tcp_sock_proto;
- #endif /* CONFIG_INET */
--#ifdef CONFIG_MPTCP
--	case BPF_FUNC_mptcp_sock:
--		return &bpf_mptcp_sock_proto;
--#endif /* CONFIG_MPTCP */
+@@ -11121,6 +11121,19 @@ const struct bpf_func_proto bpf_skc_to_unix_sock_p=
+roto =3D {
+ 	.ret_btf_id		=3D &btf_sock_ids[BTF_SOCK_TYPE_UNIX],
+ };
+=20
++BPF_CALL_1(bpf_skc_to_mptcp_sock, struct sock *, sk)
++{
++	return (unsigned long)bpf_mptcp_sock_from_subflow(sk);
++}
++
++static const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto =3D {
++	.func		=3D bpf_skc_to_mptcp_sock,
++	.gpl_only	=3D false,
++	.ret_type	=3D RET_PTR_TO_BTF_ID_OR_NULL,
++	.arg1_type	=3D ARG_PTR_TO_SOCK_COMMON,
++	.ret_btf_id	=3D &btf_sock_ids[BTF_SOCK_TYPE_MPTCP],
++};
++
+ BPF_CALL_1(bpf_sock_from_file, struct file *, file)
+ {
+ 	return (unsigned long)sock_from_file(file);
+@@ -11163,6 +11176,10 @@ bpf_sk_base_func_proto(enum bpf_func_id func_id)
+ 	case BPF_FUNC_skc_to_unix_sock:
+ 		func =3D &bpf_skc_to_unix_sock_proto;
+ 		break;
++#ifdef CONFIG_MPTCP
++	case BPF_FUNC_skc_to_mptcp_sock:
++		return &bpf_skc_to_mptcp_sock_proto;
++#endif /* CONFIG_MPTCP */
+ 	case BPF_FUNC_ktime_get_coarse_ns:
+ 		return &bpf_ktime_get_coarse_ns_proto;
  	default:
- 		return bpf_sk_base_func_proto(func_id);
- 	}
 diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index 0a0608b6b4b4..48a9d978aaeb 100644
+index 48a9d978aaeb..0a0608b6b4b4 100644
 --- a/net/mptcp/Makefile
 +++ b/net/mptcp/Makefile
-@@ -11,5 +11,3 @@ obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
+@@ -11,3 +11,5 @@ obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
  mptcp_crypto_test-objs :=3D crypto_test.o
  mptcp_token_test-objs :=3D token_test.o
  obj-$(CONFIG_MPTCP_KUNIT_TEST) +=3D mptcp_crypto_test.o mptcp_token_test.o
--
--obj-$(CONFIG_BPF) +=3D bpf.o
++
++obj-$(CONFIG_BPF) +=3D bpf.o
 diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-deleted file mode 100644
-index 5332469fbb28..000000000000
---- a/net/mptcp/bpf.c
-+++ /dev/null
-@@ -1,72 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/* Multipath TCP
-- *
-- * Copyright (c) 2020, Tessares SA.
-- *
-- * Author: Nicolas Rybowski <nicolas.rybowski@tessares.net>
-- *
-- */
--
--#include <linux/bpf.h>
--
--#include "protocol.h"
--
--bool bpf_mptcp_sock_is_valid_access(int off, int size, enum bpf_access_typ=
-e type,
--				    struct bpf_insn_access_aux *info)
--{
--	if (off < 0 || off >=3D offsetofend(struct bpf_mptcp_sock, token))
--		return false;
--
--	if (off % size !=3D 0)
--		return false;
--
--	switch (off) {
--	default:
--		return size =3D=3D sizeof(__u32);
--	}
--}
--
--u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type type,
--				      const struct bpf_insn *si,
--				      struct bpf_insn *insn_buf,
--				      struct bpf_prog *prog, u32 *target_size)
--{
--	struct bpf_insn *insn =3D insn_buf;
--
--#define BPF_MPTCP_SOCK_GET_COMMON(FIELD)							\
--	do {											\
--		BUILD_BUG_ON(sizeof_field(struct mptcp_sock, FIELD) >				\
--				sizeof_field(struct bpf_mptcp_sock, FIELD));			\
--		*insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct mptcp_sock, FIELD),		\
--							si->dst_reg, si->src_reg,		\
--							offsetof(struct mptcp_sock, FIELD));	\
--	} while (0)
--
--	if (insn > insn_buf)
--		return insn - insn_buf;
--
--	switch (si->off) {
--	case offsetof(struct bpf_mptcp_sock, token):
--		BPF_MPTCP_SOCK_GET_COMMON(token);
--		break;
--	}
--
--	return insn - insn_buf;
--}
--
--BPF_CALL_1(bpf_mptcp_sock, struct sock *, sk)
--{
--	if (sk_fullsock(sk) && sk->sk_protocol =3D=3D IPPROTO_TCP && sk_is_mptcp(=
-sk)) {
--		struct mptcp_subflow_context *mptcp_sfc =3D mptcp_subflow_ctx(sk);
--
--		return (unsigned long)mptcp_sfc->conn;
--	}
--	return (unsigned long)NULL;
--}
--
--const struct bpf_func_proto bpf_mptcp_sock_proto =3D {
--	.func           =3D bpf_mptcp_sock,
--	.gpl_only       =3D false,
--	.ret_type       =3D RET_PTR_TO_MPTCP_SOCK_OR_NULL,
--	.arg1_type      =3D ARG_PTR_TO_SOCK_COMMON,
--};
+new file mode 100644
+index 000000000000..da79dae559b2
+--- /dev/null
++++ b/net/mptcp/bpf.c
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Multipath TCP
++ *
++ * Copyright (c) 2020, Tessares SA.
++ *
++ * Author: Nicolas Rybowski <nicolas.rybowski@tessares.net>
++ *
++ */
++
++#include <linux/bpf.h>
++#include "protocol.h"
++
++struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
++{
++	if (sk && sk_fullsock(sk) && sk->sk_protocol =3D=3D IPPROTO_TCP && sk_is_=
+mptcp(sk))
++		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
++
++	return NULL;
++}
++EXPORT_SYMBOL(bpf_mptcp_sock_from_subflow);
 diff --git a/scripts/bpf_doc.py b/scripts/bpf_doc.py
-index 6ef5c44a2a9e..096625242475 100755
+index 096625242475..0e5a9e69ae59 100755
 --- a/scripts/bpf_doc.py
 +++ b/scripts/bpf_doc.py
-@@ -623,7 +623,6 @@ class PrinterHelpers(Printer):
+@@ -623,6 +623,7 @@ class PrinterHelpers(Printer):
              'struct udp6_sock',
              'struct unix_sock',
              'struct task_struct',
--            'struct bpf_mptcp_sock',
++            'struct mptcp_sock',
 =20
              'struct __sk_buff',
              'struct sk_msg_md',
-@@ -683,7 +682,6 @@ class PrinterHelpers(Printer):
+@@ -682,6 +683,7 @@ class PrinterHelpers(Printer):
              'struct socket',
              'struct file',
              'struct bpf_timer',
--            'struct bpf_mptcp_sock',
++            'struct mptcp_sock',
      }
      mapped_types =3D {
              'u8': '__u8',
 diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.=
 h
-index f2e5c7bd4f10..3f6dcdf4b915 100644
+index 3f6dcdf4b915..a88aac4457a9 100644
 --- a/tools/include/uapi/linux/bpf.h
 +++ b/tools/include/uapi/linux/bpf.h
-@@ -5086,14 +5086,6 @@ union bpf_attr {
+@@ -5086,6 +5086,12 @@ union bpf_attr {
   *	Return
   *		0 on success, or a negative error in case of failure. On error
   *		*dst* buffer is zeroed out.
-- *
-- * struct bpf_mptcp_sock *bpf_mptcp_sock(struct bpf_sock *sk)
-- *	Description
-- *		This helper gets a **struct bpf_mptcp_sock** pointer from a
-- *		**struct bpf_sock** pointer.
-- *	Return
-- *		A **struct bpf_mptcp_sock** pointer on success, or **NULL** in
-- *		case of failure.
++ *
++ * struct mptcp_sock *bpf_skc_to_mptcp_sock(void *sk)
++ *	Description
++ *		Dynamically cast a *sk* pointer to a *mptcp_sock* pointer.
++ *	Return
++ *		*sk* if casting is valid, or **NULL** otherwise.
   */
  #define __BPF_FUNC_MAPPER(FN)		\
  	FN(unspec),			\
-@@ -5288,7 +5280,6 @@ union bpf_attr {
+@@ -5280,6 +5286,7 @@ union bpf_attr {
  	FN(xdp_load_bytes),		\
  	FN(xdp_store_bytes),		\
  	FN(copy_from_user_task),	\
--	FN(mptcp_sock),			\
++	FN(skc_to_mptcp_sock),		\
  	/* */
 =20
  /* integer value in 'imm' field of BPF_CALL instruction selects which help=
 er
-@@ -5637,10 +5628,6 @@ struct bpf_tcp_sock {
- 	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
-=20
--struct bpf_mptcp_sock {
--	__u32 token;		/* msk token */
--};
--
- struct bpf_sock_tuple {
- 	union {
- 		struct {
 --=20
 2.34.1
 
