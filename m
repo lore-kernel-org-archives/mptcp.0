@@ -1,93 +1,75 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC913227
-	for <mptcp@lists.linux.dev>; Tue,  8 Mar 2022 14:38:26 +0000 (UTC)
-Received: by mail-qv1-f48.google.com with SMTP id eq14so8810274qvb.3
-        for <mptcp@lists.linux.dev>; Tue, 08 Mar 2022 06:38:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=8XsDHRrTO2FznmsUmV2zRIdZ9h4Cl7cD+YdA+vorwjA=;
-        b=cVg3Cg+M4Lx80Hlukgbb+OiHORNpHDaQ2HHk7DUWZcD3UEJOroacC971W82xAOkgmB
-         FyiCoFL2tO2WuF2xfz5zmPX7jjV4cLMGugwhq0XPfbfduN1aUngjU3BlfRfDcFHTRQL5
-         gW8mrZ5zc2o2FkfJwfbl6xnOoNyqEi6X1DQRTujMkYKtnjEi7niNLE1EPLcyZ7b3I8/s
-         3kyiBqRKkFq5SRr0e6RN/2Q3LytWoXtVgLYKX7uEL1RfGIAj9nBR39i8jfkstlcEVNec
-         Qa+oGmr/KE858FN5twlg/F2KnbBVNXLMl5Hqd5L4/Qe6fDNoeueoMFr1LL76tVzASJ8s
-         NSEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=8XsDHRrTO2FznmsUmV2zRIdZ9h4Cl7cD+YdA+vorwjA=;
-        b=TRMnyV+b6BXTVyoq2UmLXwbZKbriRLBPwwHXJ5r3dAoG6MrQL9mS6Wl7fZ4qF0QN0p
-         nwuwscunX/8sRV6sleZ4Pi/EnI7u5XmkgZC2QuaTEd5kJ2/B+z8H1pcY7ICWodDh6lkO
-         K+Lcld7bKyUcsdrMsYqr1/e+CKhk/8gUYOOdeoZ8algHHL+VA3msWJe5qsTAcx7vERn0
-         LPkXlOQTZFq86rimcZwpVbqm8qd28ydrM+WyPOo7IgAi7HbfvbuIMFv5UHxy07/NLGtl
-         EfWi70+BM1r2MlUWB/5cvUjXXMybOsNf+25ENz685GJuLa9SxSpP3XYP3gnxalFrVN2a
-         Vl4w==
-X-Gm-Message-State: AOAM531b2qW+fy0MqPIzgyc0D2oX8pgoqHgUfsd0iKQjpzv0phHGC034
-	vdwp0Y0KWMITeKsByMrhSQ==
-X-Google-Smtp-Source: ABdhPJxuv+KoaoR1q0WBD5/AP3X7sQz8xO8KYFiMIzjvNIIoNp9x33oZV3bjmGzgTGQGIIEyogzLNg==
-X-Received: by 2002:a05:6214:627:b0:435:2dcd:d6c0 with SMTP id a7-20020a056214062700b004352dcdd6c0mr12399245qvx.100.1646750305354;
-        Tue, 08 Mar 2022 06:38:25 -0800 (PST)
-Received: from [127.0.0.1] ([52.177.182.78])
-        by smtp.gmail.com with ESMTPSA id u39-20020a05622a19a700b002deadca652bsm10949719qtc.34.2022.03.08.06.38.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 06:38:24 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <72ffef207bb0a4cdbce2c1bb5bf9c892b2d9a1cb.1646745228.git.geliang.tang@suse.com>
-References:
- <72ffef207bb0a4cdbce2c1bb5bf9c892b2d9a1cb.1646745228.git.geliang.tang@suse.com>
-Subject: Re: selftests: bpf: add skc_to_mptcp_sock test: Tests Results
-Message-ID: <71fbf060-57f7-8d91-3510-91c33cc6778f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Mar 2022 14:38:24 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFF22F2F
+	for <mptcp@lists.linux.dev>; Tue,  8 Mar 2022 19:23:29 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1nRepv-0006tL-Vq; Tue, 08 Mar 2022 19:45:32 +0100
+Date: Tue, 8 Mar 2022 19:45:31 +0100
+From: Florian Westphal <fw@strlen.de>
+To: Kishen Maloor <kishen.maloor@intel.com>
+Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 3/4] mptcp: handle join requests via pernet
+ listen socket
+Message-ID: <20220308184531.GA22024@breakpoint.cc>
+References: <20220224155010.23676-1-fw@strlen.de>
+ <20220224155010.23676-4-fw@strlen.de>
+ <ab1f9296-3637-d13a-bfe3-97183f593190@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab1f9296-3637-d13a-bfe3-97183f593190@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Geliang,
+Kishen Maloor <kishen.maloor@intel.com> wrote:
+> Hi Florian, Paolo,
+> 
+> I had responded as below to v2 of this series but wondered if perhaps it got lost
+> in the barrage of emails. So thought I'd resend it as I still have questions
+> regarding our rationale here.
+> 
+> On 2/24/22 7:50 AM, Florian Westphal wrote:
+> > Currently mptcp adds kernel-based listener socket for all
+> > netlink-configured mptcp address endpoints.
+> > 
+> > This has caveats because kernel may interfere with unrelated programs
+> > that use same address/port pairs.
+> > 
+> 
+> I assume that this refers to a potential race between a kernel listener and
+> the application which Paolo had raised. But I'm not sure if these changes
+> eliminate that possibility. Pasting Paolo's example below from the prior discussion:
+> 
+> """
+> s1 = socket()
+> bind(s1, A)
+> listen(s1)
+> // at this point incoming MPTCP connection can be established on s1
+> // and ADD_ADDR sub-options could be sent back
+> 
+> s2 = socket()
+> bind(s2, B)
+> listen(s2)
+> """
+> 
+> Over a newly established MPTCP connection following listen(s1), the PM can issue an 
+> ADD_ADDR with B. In light of this change there would be no listener created for B. 
+> But if the remote endpoint immediately established a subflow in response (to the 
+> ADD_ADDR), then that would create a subflow (connection) socket at B.
+> It appears (and correct me if I'm wrong) that bind(s2, B) would fail after this point (?).
 
-Thank you for your modifications, that's great!
+Why would that fail? You can bind x:y even if there is an established
+connection from x:y to q:r.
 
-Our CI did some validations and here is its report:
+> In other words, a subflow creation at an address could race with a subsequent bind()
+> at that address causing startup issues in the application.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5592245201010688
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5592245201010688/summary/summary.txt
-
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): selftest_diag =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6718145107853312
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6718145107853312/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b210c840857b
-
-Please note that despite all the efforts that have been already done to =
-have a
-stable tests suite when executed on a public CI like here, it is =
-possible some
-reported issues are not due to your modifications. Still, do =
-not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+I don't think so.  Its fairly common to implement "graceful restart/update" via
+"close(listen); fork(); exit();"-sequence. child continues to handle existing
+connections while new process can start & to serve new clients.
