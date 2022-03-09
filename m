@@ -1,28 +1,28 @@
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934385118
-	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 19:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867F3511B
+	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 19:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646853414; x=1678389414;
+  t=1646853415; x=1678389415;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pwS+P7GhhUTjI45SEYthGKFuL5gNqe6mm6FuLnmZ+bc=;
-  b=L2Nn5GrAewz5cdBaOL7voICzXP85KqKVMGuxHnoj8EF5mUcwr/ZqF4+E
-   7dhoouxVxi+QBxkQTBZqevHEqtApKxCdeK/ePahpmQnH2xsjJaDUuSug8
-   xbMD3kEWgJ/pgHeKBh0/7pJPhLWjHgku93isDh3g1DItfI+QLxIKQI1bI
-   T1CwcVp+b+sl1bYQmVvctsZgZ2HvdfSs/NFq6G8uMG/ekgoubrRh88FYR
-   lz8qDz5pKKrTBw+HlX92FbPaJi5clWkgn2093XJYtVVGRG0egmfvpV8e6
-   uZLy039fjIPqpvfFCVzu3bp0NnbmwMPo4FFYIfz2vxqRNPQydiqVOm8Rj
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="255011990"
+  bh=GkA94p7wyl59EJq6r8G8HvFzyMcVKbG6TA+U8TjG0Sg=;
+  b=ITkth2PUVIBTPlCHpssagmS/fRE7PJlj7rluBnq+U0DURI60Gc/0LJzn
+   n3Vhc2vvMWI8FxMUeVwSGaPWY3I/5YdKFAWyYQrPMA5vdLn7/F7GghJUU
+   wzl2iY0H1oYEnD7ShrsvwwPHMcacwP2ewGFADYg3Ld5cAzPPA1vvl0+aT
+   A9DWVaSCLhAEtNoua1F3x67dJxQtX4Et8Kl7knk+USAiukBUyw4Wcqkk0
+   FkWrZL4vzT9EYQlLc65wvkRxMsXjX2ojbhVo3rBYX7gXU/x7kZtzvOZSu
+   VjgmkTUiBZnVwmwmI22WvN/AzXPhWtVmrinQNiNVmYUDGemdLj2fwiEpW
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="255011985"
 X-IronPort-AV: E=Sophos;i="5.90,168,1643702400"; 
-   d="scan'208";a="255011990"
+   d="scan'208";a="255011985"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 11:16:46 -0800
 X-IronPort-AV: E=Sophos;i="5.90,168,1643702400"; 
-   d="scan'208";a="495957063"
+   d="scan'208";a="495957061"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.194.198])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 11:16:46 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -32,9 +32,9 @@ Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
 	kuba@kernel.org,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 08/10] selftests: mptcp: join: clarify local/global vars
-Date: Wed,  9 Mar 2022 11:16:34 -0800
-Message-Id: <20220309191636.258232-9-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 06/10] selftests: mptcp: join: list failure at the end
+Date: Wed,  9 Mar 2022 11:16:32 -0800
+Message-Id: <20220309191636.258232-7-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220309191636.258232-1-mathew.j.martineau@linux.intel.com>
 References: <20220309191636.258232-1-mathew.j.martineau@linux.intel.com>
@@ -48,395 +48,335 @@ Content-Transfer-Encoding: 8bit
 
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Some vars are redefined in different places. Best to avoid this
-classical Bash pitfall where variables are accidentally overridden by
-other functions because the proper scope has not been defined.
+With ~100 tests, it helps to have this summary at the end not to scroll
+to find which one has failed.
 
-Most issues are with loops: typically 'i' is used in for-loops but if it
-is not global, calling a function from a for-loop also doing a for-loop
-with the same non local 'i' variable causes troubles because the first
-'i' will be assigned to another value. To prevent such issues, the
-iterator variable is now declared as local just before the loop. If it
-is always done like this, issues are avoided.
-
-To distinct between local and non local variables, all non local ones
-are defined at the beginning of the script. The others are now defined
-with the "local" keyword.
+It is especially interseting when looking at the output produced by the
+CI where the kernel logs from the serial are mixed together.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 135 +++++++++++-------
- 1 file changed, 83 insertions(+), 52 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 85 ++++++++++++-------
+ 1 file changed, 55 insertions(+), 30 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 5223f2a752b9..d8dc36fcdb56 100755
+index 64261c3ca320..d3038922a0d2 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -9,6 +9,9 @@ cin=""
- cinfail=""
- cinsent=""
- cout=""
-+capout=""
-+ns1=""
-+ns2=""
- ksft_skip=4
- timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
-@@ -51,12 +54,14 @@ init_partial()
- {
- 	capout=$(mktemp)
- 
-+	local rndh
- 	rndh=$(mktemp -u XXXXXX)
- 
- 	ns1="ns1-$rndh"
- 	ns2="ns2-$rndh"
- 
--	for netns in "$ns1" "$ns2";do
-+	local netns
-+	for netns in "$ns1" "$ns2"; do
- 		ip netns add $netns || exit $ksft_skip
- 		ip -net $netns link set lo up
- 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
-@@ -77,6 +82,7 @@ init_partial()
- 	# ns1eth3    ns2eth3
- 	# ns1eth4    ns2eth4
- 
-+	local i
- 	for i in `seq 1 4`; do
- 		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
- 		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
-@@ -95,6 +101,7 @@ init_partial()
- 
- init_shapers()
- {
-+	local i
- 	for i in `seq 1 4`; do
- 		tc -n $ns1 qdisc add dev ns1eth$i root netem rate 20mbit delay 1
- 		tc -n $ns2 qdisc add dev ns2eth$i root netem rate 20mbit delay 1
-@@ -105,6 +112,7 @@ cleanup_partial()
- {
- 	rm -f "$capout"
- 
-+	local netns
- 	for netns in "$ns1" "$ns2"; do
- 		ip netns del $netns
- 		rm -f /tmp/$netns.{nstat,out}
-@@ -201,7 +209,8 @@ reset_with_cookies()
- {
- 	reset "${1}" || return 1
- 
--	for netns in "$ns1" "$ns2";do
-+	local netns
-+	for netns in "$ns1" "$ns2"; do
- 		ip netns exec $netns sysctl -q net.ipv4.tcp_syncookies=2
- 	done
+@@ -22,6 +22,7 @@ init=0
+ declare -A all_tests
+ declare -a only_tests_ids
+ declare -a only_tests_names
++declare -A failed_tests
+ TEST_COUNT=0
+ TEST_NAME=""
+ nr_blank=40
+@@ -251,6 +252,21 @@ reset_with_allow_join_id0()
+ 	ip netns exec $ns2 sysctl -q net.mptcp.allow_join_initial_addr_port=$ns2_enable
  }
-@@ -276,10 +285,11 @@ print_file_err()
  
- check_transfer()
++fail_test()
++{
++	ret=1
++	failed_tests[${TEST_COUNT}]="${TEST_NAME}"
++}
++
++get_failed_tests_ids()
++{
++	# sorted
++	local i
++	for i in "${!failed_tests[@]}"; do
++		echo "${i}"
++	done | sort -n
++}
++
+ print_file_err()
  {
--	in=$1
--	out=$2
--	what=$3
-+	local in=$1
-+	local out=$2
-+	local what=$3
+ 	ls -l "$1" 1>&2
+@@ -272,7 +288,7 @@ check_transfer()
+ 			echo "[ FAIL ] $what does not match (in, out):"
+ 			print_file_err "$in"
+ 			print_file_err "$out"
+-			ret=1
++			fail_test
  
-+	local line
- 	cmp -l "$in" "$out" | while read line; do
- 		local arr=($line)
- 
-@@ -301,9 +311,9 @@ check_transfer()
- 
- do_ping()
- {
--	listener_ns="$1"
--	connector_ns="$2"
--	connect_addr="$3"
-+	local listener_ns="$1"
-+	local connector_ns="$2"
-+	local connect_addr="$3"
- 
+ 			return 1
+ 		else
+@@ -292,7 +308,7 @@ do_ping()
  	ip netns exec ${connector_ns} ping -q -c 1 $connect_addr >/dev/null
  	if [ $? -ne 0 ] ; then
-@@ -314,15 +324,16 @@ do_ping()
+ 		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
+-		ret=1
++		fail_test
+ 	fi
+ }
  
- link_failure()
- {
--	ns="$1"
-+	local ns="$1"
+@@ -541,7 +557,7 @@ pm_nl_check_endpoint()
+ 		echo "[ ok ]"
+ 	else
+ 		echo "[fail] expected '$expected_line' found '$line'"
+-		ret=1
++		fail_test
+ 	fi
+ }
  
- 	if [ -z "$FAILING_LINKS" ]; then
- 		l=$((RANDOM%4))
- 		FAILING_LINKS=$((l+1))
+@@ -795,7 +811,7 @@ do_transfer()
+ 		cat /tmp/${connector_ns}.out
+ 
+ 		cat "$capout"
+-		ret=1
++		fail_test
+ 		return 1
  	fi
  
-+	local l
- 	for l in $FAILING_LINKS; do
--		veth="ns1eth$l"
-+		local veth="ns1eth$l"
- 		ip -net "$ns" link set "$veth" down
- 	done
- }
-@@ -339,9 +350,10 @@ wait_local_port_listen()
- 	local listener_ns="${1}"
- 	local port="${2}"
- 
--	local port_hex i
--
-+	local port_hex
- 	port_hex="$(printf "%04X" "${port}")"
-+
-+	local i
- 	for i in $(seq 10); do
- 		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
- 			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
-@@ -352,7 +364,7 @@ wait_local_port_listen()
- 
- rm_addr_count()
- {
--	ns=${1}
-+	local ns=${1}
- 
- 	ip netns exec ${ns} nstat -as | grep MPTcpExtRmAddr | awk '{print $2}'
- }
-@@ -363,8 +375,8 @@ wait_rm_addr()
- 	local ns="${1}"
- 	local old_cnt="${2}"
- 	local cnt
--	local i
- 
-+	local i
- 	for i in $(seq 10); do
- 		cnt=$(rm_addr_count ${ns})
- 		[ "$cnt" = "${old_cnt}" ] || break
-@@ -404,12 +416,13 @@ pm_nl_add_endpoint()
- {
- 	local ns=$1
- 	local addr=$2
--	local flags
--	local port
--	local dev
--	local id
-+	local flags _flags
-+	local port _port
-+	local dev _dev
-+	local id _id
- 	local nr=2
- 
-+	local p
- 	for p in $@
- 	do
- 		if [ $p = "flags" ]; then
-@@ -572,24 +585,26 @@ filter_tcp_from()
- 
- do_transfer()
- {
--	listener_ns="$1"
--	connector_ns="$2"
--	cl_proto="$3"
--	srv_proto="$4"
--	connect_addr="$5"
--	test_link_fail="$6"
--	addr_nr_ns1="$7"
--	addr_nr_ns2="$8"
--	speed="$9"
--	sflags="${10}"
--
--	port=$((10000+$TEST_COUNT-1))
-+	local listener_ns="$1"
-+	local connector_ns="$2"
-+	local cl_proto="$3"
-+	local srv_proto="$4"
-+	local connect_addr="$5"
-+	local test_link_fail="$6"
-+	local addr_nr_ns1="$7"
-+	local addr_nr_ns2="$8"
-+	local speed="$9"
-+	local sflags="${10}"
-+
-+	local port=$((10000 + TEST_COUNT - 1))
-+	local cappid
- 
- 	:> "$cout"
- 	:> "$sout"
- 	:> "$capout"
- 
- 	if [ $capture -eq 1 ]; then
-+		local capuser
- 		if [ -z $SUDO_USER ] ; then
- 			capuser=""
+@@ -920,7 +936,7 @@ chk_csum_nr()
+ 	if [ "$count" != $csum_ns1 -a $allow_multi_errors_ns1 -eq 0 ] ||
+ 	   [ "$count" -lt $csum_ns1 -a $allow_multi_errors_ns1 -eq 1 ]; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -931,7 +947,7 @@ chk_csum_nr()
+ 	if [ "$count" != $csum_ns2 -a $allow_multi_errors_ns2 -eq 0 ] ||
+ 	   [ "$count" -lt $csum_ns2 -a $allow_multi_errors_ns2 -eq 1 ]; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -951,7 +967,7 @@ chk_fail_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fail_tx" ]; then
+ 		echo "[fail] got $count MP_FAIL[s] TX expected $fail_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -962,7 +978,7 @@ chk_fail_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fail_rx" ]; then
+ 		echo "[fail] got $count MP_FAIL[s] RX expected $fail_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -983,7 +999,7 @@ chk_fclose_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fclose_tx" ]; then
+ 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -994,7 +1010,7 @@ chk_fclose_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$fclose_rx" ]; then
+ 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1025,7 +1041,7 @@ chk_rst_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$rst_tx" ]; then
+ 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1036,7 +1052,7 @@ chk_rst_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$rst_rx" ]; then
+ 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1071,7 +1087,7 @@ chk_join_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$syn_nr" ]; then
+ 		echo "[fail] got $count JOIN[s] syn expected $syn_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1089,7 +1105,7 @@ chk_join_nr()
+ 			echo -n "[ ok ]"
  		else
-@@ -643,7 +658,7 @@ do_transfer()
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
- 					$extra_args ${local_addr} < "$sin" > "$sout" &
- 	fi
--	spid=$!
-+	local spid=$!
- 
- 	wait_local_port_listen "${listener_ns}" "${port}"
- 
-@@ -666,15 +681,16 @@ do_transfer()
- 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
- 						$extra_args $connect_addr > "$cout" &
- 	fi
--	cpid=$!
-+	local cpid=$!
- 
- 	# let the mptcp subflow be established in background before
- 	# do endpoint manipulation
- 	[ $addr_nr_ns1 = "0" -a $addr_nr_ns2 = "0" ] || sleep 1
- 
- 	if [ $addr_nr_ns1 -gt 0 ]; then
-+		local counter=2
-+		local add_nr_ns1
- 		let add_nr_ns1=addr_nr_ns1
--		counter=2
- 		while [ $add_nr_ns1 -gt 0 ]; do
- 			local addr
- 			if is_v6 "${connect_addr}"; then
-@@ -687,13 +703,16 @@ do_transfer()
- 			let add_nr_ns1-=1
- 		done
- 	elif [ $addr_nr_ns1 -lt 0 ]; then
-+		local rm_nr_ns1
- 		let rm_nr_ns1=-addr_nr_ns1
- 		if [ $rm_nr_ns1 -lt 8 ]; then
--			counter=0
-+			local counter=0
-+			local line
- 			pm_nl_show_endpoints ${listener_ns} | while read line; do
- 				local arr=($line)
- 				local nr=0
- 
-+				local i
- 				for i in ${arr[@]}; do
- 					if [ $i = "id" ]; then
- 						if [ $counter -eq $rm_nr_ns1 ]; then
-@@ -715,7 +734,7 @@ do_transfer()
+ 			echo "[fail] got $count JOIN[s] synack expected $syn_ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
  		fi
+ 	else
+@@ -1101,7 +1117,7 @@ chk_join_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$ack_nr" ]; then
+ 		echo "[fail] got $count JOIN[s] ack expected $ack_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1141,7 +1157,7 @@ chk_stale_nr()
+ 		echo "[fail] got $stale_nr stale[s] $recover_nr recover[s], " \
+ 		     " expected stale in range [$stale_min..$stale_max]," \
+ 		     " stale-recover delta $stale_delta "
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1178,7 +1194,7 @@ chk_add_nr()
+ 	# add addrs options, due to retransmissions
+ 	if [ "$count" != "$add_nr" ] && [ "$timeout" -gt 1 -o "$count" -lt "$add_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1189,7 +1205,7 @@ chk_add_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$echo_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR echo[s] expected $echo_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1201,7 +1217,7 @@ chk_add_nr()
+ 		[ -z "$count" ] && count=0
+ 		if [ "$count" != "$port_nr" ]; then
+ 			echo "[fail] got $count ADD_ADDR[s] with a port-number expected $port_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo "[ ok ]"
+@@ -1214,7 +1230,7 @@ chk_add_nr()
+ 		if [ "$count" != "$syn_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] syn with a different \
+ 				port-number expected $syn_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo -n "[ ok ]"
+@@ -1227,7 +1243,7 @@ chk_add_nr()
+ 		if [ "$count" != "$syn_ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] synack with a different \
+ 				port-number expected $syn_ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo -n "[ ok ]"
+@@ -1240,7 +1256,7 @@ chk_add_nr()
+ 		if [ "$count" != "$ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] ack with a different \
+ 				port-number expected $ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo "[ ok ]"
+@@ -1253,7 +1269,7 @@ chk_add_nr()
+ 		if [ "$count" != "$mis_syn_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] syn with a mismatched \
+ 				port-number expected $mis_syn_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo -n "[ ok ]"
+@@ -1266,7 +1282,7 @@ chk_add_nr()
+ 		if [ "$count" != "$mis_ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] ack with a mismatched \
+ 				port-number expected $mis_ack_nr"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		else
+ 			echo "[ ok ]"
+@@ -1311,7 +1327,7 @@ chk_rm_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$rm_addr_nr" ]; then
+ 		echo "[fail] got $count RM_ADDR[s] expected $rm_addr_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1334,14 +1350,14 @@ chk_rm_nr()
+ 			echo "[ ok ] $suffix"
+ 		else
+ 			echo "[fail] got $count RM_SUBFLOW[s] expected in range [$rm_subflow_nr:$((rm_subflow_nr*2))]"
+-			ret=1
++			fail_test
+ 			dump_stats=1
+ 		fi
+ 		return
  	fi
- 
--	flags="subflow"
-+	local flags="subflow"
- 	if [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
- 		flags="${flags},fullmesh"
- 		addr_nr_ns2=${addr_nr_ns2:9}
-@@ -726,8 +745,9 @@ do_transfer()
- 	[ $addr_nr_ns1 -gt 0 -a $addr_nr_ns2 -lt 0 ] && sleep 1
- 
- 	if [ $addr_nr_ns2 -gt 0 ]; then
-+		local add_nr_ns2
- 		let add_nr_ns2=addr_nr_ns2
--		counter=3
-+		local counter=3
- 		while [ $add_nr_ns2 -gt 0 ]; do
- 			local addr
- 			if is_v6 "${connect_addr}"; then
-@@ -740,18 +760,21 @@ do_transfer()
- 			let add_nr_ns2-=1
- 		done
- 	elif [ $addr_nr_ns2 -lt 0 ]; then
--		let rm_nr_ns2=-addr_nr_ns2
-+		local rm_nr_ns2
- 		if [ $rm_nr_ns2 -lt 8 ]; then
--			counter=0
-+			local counter=0
-+			local line
- 			pm_nl_show_endpoints ${connector_ns} | while read line; do
- 				local arr=($line)
- 				local nr=0
- 
-+				local i
- 				for i in ${arr[@]}; do
- 					if [ $i = "id" ]; then
- 						if [ $counter -eq $rm_nr_ns2 ]; then
- 							break
- 						fi
-+						local id rm_addr
- 						# rm_addr are serialized, allow the previous one to
- 						# complete
- 						id=${arr[$nr+1]}
-@@ -778,12 +801,16 @@ do_transfer()
- 
- 	if [ ! -z $sflags ]; then
- 		sleep 1
-+
-+		local netns
- 		for netns in "$ns1" "$ns2"; do
-+			local line
- 			pm_nl_show_endpoints $netns | while read line; do
- 				local arr=($line)
- 				local nr=0
- 				local id
- 
-+				local i
- 				for i in ${arr[@]}; do
- 					if [ $i = "id" ]; then
- 						id=${arr[$nr+1]}
-@@ -796,9 +823,9 @@ do_transfer()
+ 	if [ "$count" != "$rm_subflow_nr" ]; then
+ 		echo "[fail] got $count RM_SUBFLOW[s] expected $rm_subflow_nr"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1364,7 +1380,7 @@ chk_prio_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$mp_prio_nr_tx" ]; then
+ 		echo "[fail] got $count MP_PRIO[s] TX expected $mp_prio_nr_tx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo -n "[ ok ]"
+@@ -1375,7 +1391,7 @@ chk_prio_nr()
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$mp_prio_nr_rx" ]; then
+ 		echo "[fail] got $count MP_PRIO[s] RX expected $mp_prio_nr_rx"
+-		ret=1
++		fail_test
+ 		dump_stats=1
+ 	else
+ 		echo "[ ok ]"
+@@ -1399,7 +1415,7 @@ chk_link_usage()
+ 	if [ $tx_rate -lt $((expected_rate - $tolerance)) -o \
+ 	     $tx_rate -gt $((expected_rate + $tolerance)) ]; then
+ 		echo "[fail] got $tx_rate% usage, expected $expected_rate%"
+-		ret=1
++		fail_test
+ 	else
+ 		echo "[ ok ]"
  	fi
+@@ -2616,4 +2632,13 @@ for subtests in "${tests[@]}"; do
+ 	"${subtests}"
+ done
  
- 	wait $cpid
--	retc=$?
-+	local retc=$?
- 	wait $spid
--	rets=$?
-+	local rets=$?
- 
- 	if [ $capture -eq 1 ]; then
- 	    sleep 1
-@@ -848,9 +875,9 @@ do_transfer()
- 
- make_file()
- {
--	name=$1
--	who=$2
--	size=$3
-+	local name=$1
-+	local who=$2
-+	local size=$3
- 
- 	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
- 	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
-@@ -860,14 +887,16 @@ make_file()
- 
- run_tests()
- {
--	listener_ns="$1"
--	connector_ns="$2"
--	connect_addr="$3"
--	test_linkfail="${4:-0}"
--	addr_nr_ns1="${5:-0}"
--	addr_nr_ns2="${6:-0}"
--	speed="${7:-fast}"
--	sflags="${8:-""}"
-+	local listener_ns="$1"
-+	local connector_ns="$2"
-+	local connect_addr="$3"
-+	local test_linkfail="${4:-0}"
-+	local addr_nr_ns1="${5:-0}"
-+	local addr_nr_ns2="${6:-0}"
-+	local speed="${7:-fast}"
-+	local sflags="${8:-""}"
++if [ ${ret} -ne 0 ]; then
++	echo
++	echo "${#failed_tests[@]} failure(s) has(ve) been detected:"
++	for i in $(get_failed_tests_ids); do
++		echo -e "\t- ${i}: ${failed_tests[${i}]}"
++	done
++	echo
++fi
 +
-+	local size
- 
- 	# The values above 2 are reused to make test files
- 	# with the given sizes (KB)
-@@ -1437,7 +1466,9 @@ wait_attempt_fail()
- 	local ns=$1
- 
- 	while [ $time -lt $timeout_ms ]; do
--		local cnt=$(ip netns exec $ns nstat -as TcpAttemptFails | grep TcpAttemptFails | awk '{print $2}')
-+		local cnt
-+
-+		cnt=$(ip netns exec $ns nstat -as TcpAttemptFails | grep TcpAttemptFails | awk '{print $2}')
- 
- 		[ "$cnt" = 1 ] && return 1
- 		time=$((time + 100))
+ exit $ret
 -- 
 2.35.1
 
