@@ -1,110 +1,104 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE080511B
-	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 19:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646853416; x=1678389416;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YwZxpPcrUIlnY/t31Q/cysFYWVpWE5E6d7htLTusAhA=;
-  b=giLggFajy1mr/20Jhw9t6Le+kaExPrNyhzTG5jfRXk2SjUqahRLQL7in
-   UuMzUw4vgYx0Thu0TNyyCpJS+HH8f2C+jPBsbfWInjkct9g1ZoyPNtfyW
-   Yt724HyMWm6GH4c7qvpIrcev5bGvof3Fx+pJM/vqK+WraqYkiMxkg1vsX
-   GLvV0O1WtNBIYDuuPlL8GC6EaSpY9JMpbt/LpypEns0w9XFGJAvHkRB8S
-   SI1uSsjJbyiphXU4eW3n7kdcCoGlZdD6/HkWwYXLDiZkWDcexCO7Powc/
-   SzjSQhyWhyTuUy2tkCRNnoH+t4rOH3kEW16WegqnF+OiEGXZoHjM7a2sP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="255011987"
-X-IronPort-AV: E=Sophos;i="5.90,168,1643702400"; 
-   d="scan'208";a="255011987"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 11:16:46 -0800
-X-IronPort-AV: E=Sophos;i="5.90,168,1643702400"; 
-   d="scan'208";a="495957062"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.194.198])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 11:16:46 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 07/10] selftests: mptcp: join: helper to filter TCP
-Date: Wed,  9 Mar 2022 11:16:33 -0800
-Message-Id: <20220309191636.258232-8-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220309191636.258232-1-mathew.j.martineau@linux.intel.com>
-References: <20220309191636.258232-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34B35127
+	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 21:37:41 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1nS3zu-0007ux-1Y; Wed, 09 Mar 2022 22:37:30 +0100
+Date: Wed, 9 Mar 2022 22:37:30 +0100
+From: Florian Westphal <fw@strlen.de>
+To: Kishen Maloor <kishen.maloor@intel.com>
+Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 3/4] mptcp: handle join requests via pernet
+ listen socket
+Message-ID: <20220309213730.GC26501@breakpoint.cc>
+References: <20220224155010.23676-1-fw@strlen.de>
+ <20220224155010.23676-4-fw@strlen.de>
+ <ab1f9296-3637-d13a-bfe3-97183f593190@intel.com>
+ <20220308184531.GA22024@breakpoint.cc>
+ <d796fef2-d380-c92a-7516-617992a20460@intel.com>
+ <20220309125351.GB26501@breakpoint.cc>
+ <4e545ab7-7a9c-921a-0095-6a7e5803cdae@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4e545ab7-7a9c-921a-0095-6a7e5803cdae@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Kishen Maloor <kishen.maloor@intel.com> wrote:
+> On 3/9/22 4:53 AM, Florian Westphal wrote:
+> > Kishen Maloor <kishen.maloor@intel.com> wrote:
+> >>>> Over a newly established MPTCP connection following listen(s1), the =
+PM can issue an=20
+> >>>> ADD_ADDR with B. In light of this change there would be no listener =
+created for B.=20
+> >>>> But if the remote endpoint immediately established a subflow in resp=
+onse (to the=20
+> >>>> ADD_ADDR), then that would create a subflow (connection) socket at B.
+> >>>> It appears (and correct me if I'm wrong) that bind(s2, B) would fail=
+ after this point (?).
+> >>>
+> >>> Why would that fail? You can bind x:y even if there is an established
+> >>> connection from x:y to q:r.
+> >>
+> >> If I establish an MPTCP connection using mptcp_connect individually as=
+=20
+> >> Client and Server, then I am unable to bind a 3rd (new) Server process=
+ at the Client's=20
+> >> addr+port [1]. Why is this the case?
+> >=20
+> > Whats [1]?
+> > I suspect this patch series needs following addition in patch 3:
+> >=20
+> > diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> > --- a/net/mptcp/ctrl.c
+> > +++ b/net/mptcp/ctrl.c
+> > @@ -337,6 +337,8 @@ static int mptcp_init_join_sk(struct net *net, stru=
+ct sock *sk, struct mptcp_joi
+> >  	if (!tb)
+> >  		return -ENOMEM;
+> > =20
+> > +	ssock->sk->sk_reuse =3D 1;
+> > +	ssock->sk->sk_reuseport =3D 1;
+> >  	inet_csk(ssock->sk)->icsk_bind_hash =3D tb;
+> >  	return 0;
+> >  }
+> >=20
+> > After that, follwing sequence should work:
+> >=20
+> > 1. bind(0.0.0.0, p1) // listen, accept etc, initial subflow established
+> > 2. announce p2
+> > 3. receive join on addr, p2
+> > 4. bind(0.0.0.0, p2)
+> >=20
+> > 4) should work because sk used for endpoint in 3) has reuse flag set
+> > and is not in listen state.
+> >=20
+> > cf. include/net/inet_hashtables.h, line 47:
+> > 2) If all sockets have sk->sk_reuse set, and none of them
+> >    TCP_LISTEN state, the port may be shared.
+> >=20
+>=20
+> Wouldn't 4) fail if the socket being bound at the time does not have the =
+SO_REUSExxx flag(s) set?
 
-This is more readable and reduces duplicated commands.
+Yes, it needs SO_REUSEADDR set.
 
-This might also be useful to add v6 support and switch to nftables.
+> If so, that would be application level thing and in that situation we don=
+'t have a way to
+> avoid a race.  Whereas when we require an explicit listener, we could hav=
+e the kernel take a step
+> back (and not create a listener) to break the race.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Uh, what?  Sorry, I am totally lost.  I have no idea what the problem is
+that we're solving here.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index d3038922a0d2..5223f2a752b9 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -561,6 +561,15 @@ pm_nl_check_endpoint()
- 	fi
- }
- 
-+filter_tcp_from()
-+{
-+	local ns="${1}"
-+	local src="${2}"
-+	local target="${3}"
-+
-+	ip netns exec "${ns}" iptables -A INPUT -s "${src}" -p tcp -j "${target}"
-+}
-+
- do_transfer()
- {
- 	listener_ns="$1"
-@@ -1519,7 +1528,7 @@ subflows_error_tests()
- 		pm_nl_set_limits $ns2 0 2
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
--		ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
-+		filter_tcp_from $ns1 10.0.3.2 REJECT
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
- 		chk_join_nr 1 1 1
- 	fi
-@@ -1530,7 +1539,7 @@ subflows_error_tests()
- 		pm_nl_set_limits $ns2 0 2
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
--		ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j DROP
-+		filter_tcp_from $ns1 10.0.3.2 DROP
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
- 		chk_join_nr 1 1 1
- 	fi
-@@ -1542,7 +1551,7 @@ subflows_error_tests()
- 		pm_nl_set_limits $ns1 0 1
- 		pm_nl_set_limits $ns2 0 1
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
--		ip netns exec $ns1 iptables -A INPUT -s 10.0.3.2 -p tcp -j REJECT
-+		filter_tcp_from $ns1 10.0.3.2 REJECT
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
- 
- 		# mpj subflow will be in TW after the reset
--- 
-2.35.1
-
+EOD, I am out of ideas.  Feel free to toss this patchset, I have no idea
+what to do.
