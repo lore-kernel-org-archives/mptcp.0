@@ -1,263 +1,176 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9328815A3
-	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 01:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646787965; x=1678323965;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QPyJx5MWvD2XWcQ62fdj4/CIPSR7hCBmvsBi+cvHpgA=;
-  b=hCW6YBGw8R472A+G1EYoRy6lFRGWYSrd9LiRlDs9Fg8kJq5HajU5WkUi
-   aa7CFBOv+l5HbXVhLFhdlpmuTyI2giz6tnbr0H3kcwsshN2dHWN/eXxEt
-   ah0+GyUDATohP/nZ05y+58bXfRpStQMa/7gUi6caarLSur/3a0Oro4SuF
-   Kz+0vI6CDSXwojv4URCu6VSH0P8GzX+R2njkrhJpgVhDrSirkNW1KB1ef
-   XL4B4JLsDKXsnMHubQQLx9TDbE1eRk07Xb+hgkbYmsItL/g5uURTZJH7t
-   NHLuREKEkxbLw//2+2H+dDVKEH4z6egBADmPgfhsoVupx3lZf/OnLjFay
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10280"; a="234808618"
-X-IronPort-AV: E=Sophos;i="5.90,165,1643702400"; 
-   d="scan'208";a="234808618"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2022 17:06:04 -0800
-X-IronPort-AV: E=Sophos;i="5.90,165,1643702400"; 
-   d="scan'208";a="578205839"
-Received: from jhou5-mobl.amr.corp.intel.com ([10.209.115.160])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2022 17:06:04 -0800
-Date: Tue, 8 Mar 2022 17:06:04 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 3/3] mptcp: reset the subflow when MP_FAIL
- is lost
-In-Reply-To: <57e7f573-8ddc-a9db-5e17-a6916476385f@linux.intel.com>
-Message-ID: <ea55b1f1-ec7d-a24e-49f2-fe1c10f2b38a@linux.intel.com>
-References: <cover.1646657963.git.geliang.tang@suse.com> <43b328bce5479e34e1dbf78b29b8d5d7d8ed2e02.1646657963.git.geliang.tang@suse.com> <57e7f573-8ddc-a9db-5e17-a6916476385f@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8766476
+	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 03:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1646796974;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=h6NettGs2d/UanYkSFIIGAJuxlcXNnNKCS9pDyOKM/4=;
+	b=NGN4MiAC6kCy/lr5/kkq6FFJGlHYAPMbfxVQnmgR+wMUTaLLtrt6m4noama1fkCgpiUXSI
+	xJXCeJojUfr1TKtcb7cwlgIyWVrvhvKq8xFoJ1ooNMXN3Dn1oEU3vj5vBDyrjnrrqaJTwx
+	sUIPXcYMA8wJY6AuHZh35RZiw6O1EX0=
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur01lp2054.outbound.protection.outlook.com [104.47.2.54]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-33-qk5oSrrFOBubgCqxKXov6Q-1; Wed, 09 Mar 2022 04:36:13 +0100
+X-MC-Unique: qk5oSrrFOBubgCqxKXov6Q-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hs7ZpLK2MkOyMcygFzqxcDc03NDYRZ/nuhmwMDuAZ0KF1ymaYyDZoNBu+iiITw1J9rRKdTJ6jC3/nah/zBy9d5T6R2ab1C+jrU6bMaSzC20XOGSV2jLbL+Hxtte4pFHfH1mEyps8R3HdY2zfKJnrG6QWF6/lqQXP5/3Cq8WPnfo7GodVWxDTQNJKZ0iEoVKYHCkkNA3dL+ZpGu8uTclnq64XWdnjsWZDcVBOyTge5UvEi30xxAqY5J8gGZ8v2Zp+W0stbXrMq7fNQZlTonqB8bhXDfi91pmo4n/bFWBN+Fk5kzO3yatwHomQecOO/DaZlfSnZ3/5eMQA1XIlRz8YFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YIbXMSCYfKWYtdYgyD+tQMfdrNOGMqe1+jMH5eTae1Q=;
+ b=R+YCX7ftzWLs9sKN1mTCdAHznCswfviP7DRpGaa3SdoYg/+wd4TS7Scd6kXGQd0FYao0dcGam6dh3z9p4kDElCNYkE6u46XFr0dBlLugA6hzsuyaj363XtwcL5lPqOCpg70Q6nerIz7Cu8rEsQKWayVxHZe7C6KucOBXP6fmmvhALWa0gg3zrxlB1avlNDtw+m0ZLx+TevvbeAkMzTXzD38r3l1axr/DcqG8MvGjbvQdq0A3tZphH0+8hCGXj6P2q25nr+NDZHQ7GERcuvz+UAcybqZGQakCBDW5Q/eIKiVR1hPQbucsE9EvxPBQxF2XGJwY+05DQf3P7lof9LNsAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by VI1PR04MB6333.eurprd04.prod.outlook.com (2603:10a6:803:fe::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Wed, 9 Mar
+ 2022 03:36:11 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b110:cb51:e09f:bb05]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b110:cb51:e09f:bb05%6]) with mapi id 15.20.5038.027; Wed, 9 Mar 2022
+ 03:36:10 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v10 0/5] add add skc_to_mptcp_sock
+Date: Wed,  9 Mar 2022 11:35:56 +0800
+Message-ID: <cover.1646796538.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0049.apcprd02.prod.outlook.com
+ (2603:1096:4:54::13) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: da2b6f13-a137-49a6-75de-08da017df443
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6333:EE_
+X-Microsoft-Antispam-PRVS:
+	<VI1PR04MB63334C64422A33930FBDFFC4F80A9@VI1PR04MB6333.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	HvWOo4+NJEbI1itYd1yRH6yIZkjPgnc1bj3aq+E6+oQ/qUqkE+lyymsp4o+dboL/oPmY94d1UJ/6bfq9zqf18l+djZzhgyr2UdGxAE6H/aKsg5QbqW+3yllBis97bJCE0IjjcrSN5a32Fj1Bsh0bsm2Qlt5nmXWd6+4HThlodrpRalmYMxdDG+Eth313ZlM2FoGkWyFl2gSSf5RSausKvr1N6IxVUyRAmGMjH7b6ixFQNBf72qX1dmtE3m5iRwUwB5dFTFJQ9gRa40wBdO4EBnYwcaSioSIV3iU7manQ3vmr/o+5Mt8EUmi2y6mlSwHXAXlXBavRsHXM/+N8PFF/oKq2s+HYhDczmOif7Udh+vM3u0kT+Xm/hx/X9nplIOxE49TFLQDFKvSVaQozlyrSKukqeWQ09fSl4UmrunEMJFiGxmWubs42u0LC8SFi7SZ5itAsc2SiOvUM4TYBawPF2xnjBqV2rfaswsqK98KN6KJiU8nEgU4qMHL/BOJspK74MKu8OpMRP1JQS6LKjYqfPsu+J6XJJeNBMizn3GO3IgeAhB0EtoicRvebm/B/E0u7ryLbGS4y6MRITeMYDBjoYjRi0Murmcy5ABrYtMv14Ez7CXmK7srTmZEGHmec8qUpElh7QGJ8/hIp+sOL76qT4Jl+sgWh69UczEMz9NL7rhRoHn+MVVRxbHwTKY0eSbNX
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(186003)(26005)(508600001)(2616005)(107886003)(316002)(83380400001)(6916009)(66556008)(6512007)(86362001)(44832011)(66946007)(66476007)(6506007)(8676002)(4326008)(36756003)(2906002)(5660300002)(6666004)(38100700002)(6486002)(8936002)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TjoBzUr5KAtrlYUiYTj5itceNFXRljzO66lcgrQXVbzgpVDlrm9zZu9LMMfr?=
+ =?us-ascii?Q?VMJRRFjbc0H22dquyssNAhKo3SbTBFW53uQ9qGcY7NTwUtP+vCQnJcS683Ld?=
+ =?us-ascii?Q?iGT3qHCkLN6Z0VkdBvt08aIUBd0cao7pOHq2FLsccApZjXCX6EVwO2REXmy0?=
+ =?us-ascii?Q?MHhHKNj8fAlwq9E8R2UewLYsbjP26x7Xwfy6zj8F3PY25Vn/leaG7JZMYzPJ?=
+ =?us-ascii?Q?gvIrDv4IAXQ6OoOEF5JDNLXj8kj7gQTwrFS09ui8Z0YeCMjMDfw9Q+WnIHJa?=
+ =?us-ascii?Q?D6jXstDjjXdmRqzjO2qTX7YatLDV5Dpr75Wyi359w8/k4vkT1GrBvXI7CYy4?=
+ =?us-ascii?Q?C03Jh7x5L5pqKmHwosJUkRGeDlAKzNwauUky+Nm48iof8XMVHwZAqJl+BHyv?=
+ =?us-ascii?Q?+OCRQP3rOpBDHYCmez4UQykM3tnkDxgMJM2Z1jb2uXU9IACdvKrQ1o2RWKh4?=
+ =?us-ascii?Q?ZlZ5oig7rqmPcYP6x7oZiqRpJae57hIIzCKf5Tobu0c317fM+AzAhFW1QWLr?=
+ =?us-ascii?Q?6t990pC+AD9yMUHjHm/ZRjjcUgef/pL/tbdmb7vQ+yXaGyHyCKiPyIIMi/xL?=
+ =?us-ascii?Q?7szQY2b7r4qVAhzoJk9Jk5Z9aMQsjOKjN2sJ/M3dwi/K/44XrP1kaRm9QYYR?=
+ =?us-ascii?Q?wIJHnbYn4ttu+GKev+1g5sYukFagyN/pG8ZTqjZSAXrXIgjd7KVEIY9/Jawn?=
+ =?us-ascii?Q?omky2mb707XZCQA3dlSShTwCMFy2kfwcqasM8gr3JVQ9F8WRMmImDPDocFnL?=
+ =?us-ascii?Q?iEIiTYp+y9hYfF6F7xO2FxsYcbdaQ0ZazxQXQwZNoZDM6eGzR2SlfCsHIlv+?=
+ =?us-ascii?Q?EFwP4fBQjMTbm4/RmK6KaT9o44oQkK71lIowhdSI5EhHjWDXexBhAYkYzLu6?=
+ =?us-ascii?Q?tOnKH4+/qWR9umfYtjH+leVMp3usLnhPLnBErsDY7qu+eMrEBjE6vtnz47kS?=
+ =?us-ascii?Q?KxGO9xJQw3B4SnrtXif1CRCmfDURILF7RJyp33pM3xf12bGJJQSqyIUvbzl5?=
+ =?us-ascii?Q?amT6zFA3kQsGFkXmfQopppqUXnx7U+X7nm3ZmHqAk0Dmo5TR5F1An+ER3ih/?=
+ =?us-ascii?Q?hg7qHY15ip4WLpvaW1a0MSC+CbvsiwOkcp+dwPaBZ6ckbV6DkBflGBL7BGOx?=
+ =?us-ascii?Q?N1erRxYq18XFsQCVjub1pqfRBId4R1xekc9uo2ATgKoOC/1s2RJFLjAwGuZo?=
+ =?us-ascii?Q?EfsZGu5eKMGSewKkl7Bfj7OUVK4+PXks5FnVHu5xu2FjbQ/Rn8xSqo0TaGWf?=
+ =?us-ascii?Q?thk4e8JZnXySzQ7+uryreHjVn3x8zE0B+VDUGeVxEP0TgRtMYi7Y6HqhbUKz?=
+ =?us-ascii?Q?7ETiYzaCzNM/kfMiqF7cEQPEkCYF66/mIK1hF3sBZA1EFrmoMgg5j497X/aR?=
+ =?us-ascii?Q?GvTupwOLnsI73mK3fLzUAXnUojniTUEtBJNQ6MHeIl6KFu+Jab25d15FigCh?=
+ =?us-ascii?Q?ROKEyLh6Ko6TVP+rP1cvokmMJ36gXr8JRux2/ll8JA7zp1hnLpfKZn7Xy69I?=
+ =?us-ascii?Q?WicYxpYM7MRQYS//d3uwMmxKMUuD2HmQziVSAAXVIRrlGikYpEKF3+PZ2a+k?=
+ =?us-ascii?Q?2E7P9vf9L8/bCs5JQk5Q5aHNiDOVVV4umid3wRzc8zut6E94/QZpWQlbFx2I?=
+ =?us-ascii?Q?VDBPpsNETE55u8bNyaTa7ww=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da2b6f13-a137-49a6-75de-08da017df443
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2022 03:36:10.8822
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DmvCJW+blUuZh9VXJJxh6y3E7G6VYQCpZAO85gXm8EOrr0eMCfe5pItjxW3a+jAGtmYRzDLwE2Tq2lTe1OzxNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6333
 
-On Tue, 8 Mar 2022, Mat Martineau wrote:
+v10:
+ - merge the squash-to patch.
+ - update patch 3 as Matt suggested.
+ - add sync() in get_msk_token() before read().
+ - add a comment for get_msk_token().
+ - update subjects and commit logs.
 
-> On Mon, 7 Mar 2022, Geliang Tang wrote:
->
->> This patch reuses icsk_retransmit_timer to trigger a check if we have
->> not received a response from the peer after sending MP_FAIL. If the
->> peer doesn't respond properly, reset the subflow.
->> 
->> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->> ---
->> net/mptcp/pm.c       |  5 ++++
->> net/mptcp/protocol.c | 63 ++++++++++++++++++++++++++++++++++++++++++--
->> net/mptcp/protocol.h |  1 +
->> net/mptcp/subflow.c  |  1 +
->> 4 files changed, 68 insertions(+), 2 deletions(-)
->> 
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index 7aae8c2e845b..2630018786c6 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -276,6 +276,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 
->> fail_seq)
->> {
->> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
->> 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
->> +	struct sock *s = (struct sock *)msk;
->>
->> 	pr_debug("fail_seq=%llu", fail_seq);
->> 
->> @@ -284,6 +285,10 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 
->> fail_seq)
->> 			subflow->send_mp_fail = 1;
->> 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
->> 			subflow->send_infinite_map = 1;
->> +		} else {
->> +			mptcp_data_lock(s);
->> +			sk_stop_timer(s, &msk->sk.icsk_retransmit_timer);
->> +			mptcp_data_unlock(s);
->> 		}
->> 	}
->> }
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 3cb975227d12..8702f7123143 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -866,6 +866,59 @@ static void mptcp_reset_timer(struct sock *sk)
->> 	sk_reset_timer(sk, &icsk->icsk_retransmit_timer, jiffies + tout);
->> }
->> 
->> +static struct mptcp_subflow_context *
->> +mp_fail_response_expect_subflow(struct mptcp_sock *msk)
->> +{
->> +	struct mptcp_subflow_context *subflow, *ret = NULL;
->> +
->> +	mptcp_for_each_subflow(msk, subflow) {
->> +		if (subflow->mp_fail_response_expect) {
+v9:
+ - update progs/mptcp.c in patch 4 and 5
 
-One more thing: if this value is read without the subflow lock held, it 
-would be better to use READ_ONCE/WRITE_ONCE. That would also require it to 
-be a non-bitfield struct member.
+v8:
+ - update as Matt suggested.
 
-- Mat
+v7:
+ - parse msk token from the output of 'ip mptcp monitor'.
+ - add Nicolas and Matt's SoB tags.
 
->> +			ret = subflow;
->> +			break;
->> +		}
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static void mptcp_mp_fail_timer(struct timer_list *t)
->> +{
->> +	struct inet_connection_sock *icsk = from_timer(icsk, t,
->> + 
->> icsk_retransmit_timer);
->> +	struct sock *sk = &icsk->icsk_inet.sk;
->> +	struct mptcp_sock *msk = mptcp_sk(sk);
->> +	struct mptcp_subflow_context *subflow;
->> +
->> +	if (!sk || inet_sk_state_load(sk) == TCP_CLOSE)
->> +		return;
->
-> Is it possible for sk to be NULL here? mptcp_timeout_timer() and 
-> mptcp_retransmit_timer() don't check for NULL.
->
-> Also, early return leaks a refcount on the sk (a sock_put() is always 
-> needed).
->
->> +
->> +	spin_lock_bh(&msk->pm.lock);
->> +	subflow = mp_fail_response_expect_subflow(msk);
->> +	spin_unlock_bh(&msk->pm.lock);
->
-> msk->conn_list is protected by the msk lock, so the pm.lock isn't going to 
-> protect it here.
->
-> I think if you used msk->sk_timer and a msk->flags bit, the existing 
-> mptcp_timeout_timer() handler could be used and some new code in 
-> mptcp_worker() could handle resetting the subflow. This would avoid a lot of 
-> locking here in the timer handler.
->
-> The timing for a missing MP_FAIL is not strict, so it doesn't seem important 
-> to handle it all in a low-level timer callback.
->
->
->> +	if (subflow) {
->> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->> +
->> +		pr_debug("MP_FAIL is lost, reset the subflow");
->> +		bh_lock_sock(ssk);
->> +		mptcp_subflow_reset(ssk);
->> +		bh_unlock_sock(ssk);
->> +	}
->> +	sock_put(sk);
->> +}
->> +
->> +void mptcp_setup_mp_fail_timer(struct mptcp_sock *msk)
->> +{
->> +	struct sock *sk = (struct sock *)msk;
->> +
->> +	mptcp_data_lock(sk);
->> +	/* re-use the csk retrans timer for MP_FAIL retrans */
->> +	sk_stop_timer(sk, &msk->sk.icsk_retransmit_timer);
->> +	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_mp_fail_timer, 0);
->> +	__mptcp_set_timeout(sk, TCP_RTO_MAX);
->> +	mptcp_reset_timer(sk);
->> +	mptcp_data_unlock(sk);
->> +}
->> +
->> bool mptcp_schedule_work(struct sock *sk)
->> {
->> 	if (inet_sk_state_load(sk) != TCP_CLOSE &&
->> @@ -1428,6 +1481,7 @@ static struct sock *mptcp_subflow_get_send(struct 
->> mptcp_sock *msk)
->> 	struct subflow_send_info send_info[SSK_MODE_MAX];
->> 	struct mptcp_subflow_context *subflow;
->> 	struct sock *sk = (struct sock *)msk;
->> +	u8 mp_fail_response_expect = 0;
->> 	u32 pace, burst, wmem;
->> 	int i, nr_active = 0;
->> 	struct sock *ssk;
->> @@ -1442,11 +1496,15 @@ static struct sock *mptcp_subflow_get_send(struct 
->> mptcp_sock *msk)
->> 		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
->> 	}
->> 
->> +	if (mp_fail_response_expect_subflow(msk))
->> +		mp_fail_response_expect = 1;
->
-> Using sk_timer as I mention above will also make it unnecessary to add this 
-> check and all the mp_fail_response_expect logic to this function.
->
-> - Mat
->
->> +
->> 	/* re-use last subflow, if the burst allow that */
->> 	if (msk->last_snd && msk->snd_burst > 0 &&
->> 	    sk_stream_memory_free(msk->last_snd) &&
->> 	    mptcp_subflow_active(mptcp_subflow_ctx(msk->last_snd))) {
->> -		mptcp_set_timeout(sk);
->> +		if (!mp_fail_response_expect)
->> +			mptcp_set_timeout(sk);
->> 		return msk->last_snd;
->> 	}
->> 
->> @@ -1479,7 +1537,8 @@ static struct sock *mptcp_subflow_get_send(struct 
->> mptcp_sock *msk)
->> 			send_info[subflow->backup].linger_time = linger_time;
->> 		}
->> 	}
->> -	__mptcp_set_timeout(sk, tout);
->> +	if (!mp_fail_response_expect)
->> +		__mptcp_set_timeout(sk, tout);
->>
->> 	/* pick the best backup if no other subflow is active */
->> 	if (!nr_active)
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 39aa22595add..313c1a6c616f 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -669,6 +669,7 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, const 
->> struct sock *ssk);
->> void mptcp_data_ready(struct sock *sk, struct sock *ssk);
->> bool mptcp_finish_join(struct sock *sk);
->> bool mptcp_schedule_work(struct sock *sk);
->> +void mptcp_setup_mp_fail_timer(struct mptcp_sock *msk);
->> int mptcp_setsockopt(struct sock *sk, int level, int optname,
->> 		     sockptr_t optval, unsigned int optlen);
->> int mptcp_getsockopt(struct sock *sk, int level, int optname,
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 63a256a94b65..960b161b1cb2 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1219,6 +1219,7 @@ static bool subflow_check_data_avail(struct sock 
->> *ssk)
->> 					sk_eat_skb(ssk, skb);
->> 			} else {
->> 				subflow->mp_fail_response_expect = 1;
->> +				mptcp_setup_mp_fail_timer(msk);
->> 			}
->> 			WRITE_ONCE(subflow->data_avail, 
->> MPTCP_SUBFLOW_NODATA);
->> 			return true;
->> -- 
->> 2.34.1
->> 
->> 
->> 
->
-> --
-> Mat Martineau
-> Intel
->
->
+v6:
+ - add skc_to_mptcp_sock helper and test
 
---
-Mat Martineau
-Intel
+RESEND:
+ - fix the CI Build Failure.
+v5:
+ - fix incorrect token value
+ - verify the token in selftest
+
+v4:
+ - define bpf_mptcp_sock_proto as a static function, no longer export
+   it in linux/bpf.h
+
+v3:
+ - use RET_PTR_TO_BTF_ID_OR_NULL instead of RET_PTR_TO_MPTCP_SOCK_OR_NULL
+ - add a new bpf_id BTF_SOCK_TYPE_MPTCP
+
+v2:
+ - keep RET_PTR_TO_MPTCP_SOCK_OR_NULL. If we use RET_PTR_TO_BTF_ID_OR_NULL
+instead of RET_PTR_TO_MPTCP_SOCK_OR_NULL as Alexei suggested, the
+"userspace" tests developed by Nicolas will break.
+
+Geliang Tang (5):
+  Revert "selftests: bpf: add bpf_mptcp_sock() verifier tests"
+  Revert "bpf: add 'bpf_mptcp_sock' structure and helper"
+  bpf: add bpf_skc_to_mptcp_sock_proto
+  Squash to "selftests: bpf: add MPTCP test base"
+  selftests: bpf: test bpf_skc_to_mptcp_sock
+
+ include/linux/bpf.h                           |  31 +----
+ include/linux/btf_ids.h                       |   3 +-
+ include/uapi/linux/bpf.h                      |  14 +--
+ kernel/bpf/verifier.c                         |  20 ---
+ net/core/filter.c                             |  22 +++-
+ net/mptcp/bpf.c                               |  62 +---------
+ scripts/bpf_doc.py                            |   4 +-
+ tools/include/uapi/linux/bpf.h                |  14 +--
+ tools/testing/selftests/bpf/bpf_tcp_helpers.h |   6 +
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 116 +++++++++++++++---
+ tools/testing/selftests/bpf/progs/mptcp.c     |  36 ++++--
+ tools/testing/selftests/bpf/verifier/sock.c   |  63 ----------
+ 12 files changed, 172 insertions(+), 219 deletions(-)
+
+--=20
+2.34.1
+
