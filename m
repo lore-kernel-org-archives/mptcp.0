@@ -1,88 +1,92 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4614E17C0
-	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 10:27:17 +0000 (UTC)
-HMM_SOURCE_IP:172.18.0.48:59450.1719171101
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.9 (unknown [172.18.0.48])
-	by chinatelecom.cn (HERMES) with SMTP id 6B7E32800B4;
-	Wed,  9 Mar 2022 18:20:12 +0800 (CST)
-X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
-Received: from  ([172.18.0.48])
-	by app0024 with ESMTP id b086cb130e9d4f6a836c57dbf3cfb43d for mptcp@lists.linux.dev;
-	Wed, 09 Mar 2022 18:20:14 CST
-X-Transaction-ID: b086cb130e9d4f6a836c57dbf3cfb43d
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.0.48
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-From: Yonglong Li <liyonglong@chinatelecom.cn>
-To: mptcp@lists.linux.dev
-Cc: mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net,
-	Yonglong Li <liyonglong@chinatelecom.cn>
-Subject: [PATCH] mptcp: Fix crash due to tcp_tsorted_anchor was initialized before release skb
-Date: Wed,  9 Mar 2022 18:20:09 +0800
-Message-Id: <1646821209-35620-1-git-send-email-liyonglong@chinatelecom.cn>
-X-Mailer: git-send-email 1.8.3.1
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383777E
+	for <mptcp@lists.linux.dev>; Wed,  9 Mar 2022 11:55:18 +0000 (UTC)
+Received: by mail-io1-f41.google.com with SMTP id x4so2400668iop.7
+        for <mptcp@lists.linux.dev>; Wed, 09 Mar 2022 03:55:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=7xC/sP2tEQ4a8BWgX/1Gz3YmJCxXKonHAgoLOIh22wE=;
+        b=A8s46fOLFBnMwihk3q8Zvh09qYkXPgV1zynNw2jqWhd2gBx8EC1A2pnWZ7p9trKEJK
+         CNJxXXo46AE0dNHhgS+1UdBcXkFZfjpmYLbMB5DTIBGBp94OgELp+Rh+pekWoa7bskSC
+         +BFA3Wk+f/HA5Tbtpc1RxwqCQW75jvgiUI7wS5rS0zG5Ojcya8qmgpr851pTw92O2zGU
+         M5zQshBxzXIQu+dXeAAJ9LnnRZUZBLwwcP314EPryp6Ujpodi2JyUb9iXSnrJE7oqa8e
+         jHzoPH6KMIxTAUkh35D8MG28wKRcJF63ab4IlvGJcUnlrGOQDvdUpSBVDZsGyXjT+xfO
+         DhZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=7xC/sP2tEQ4a8BWgX/1Gz3YmJCxXKonHAgoLOIh22wE=;
+        b=sRoGbzWcgvoph1fCoWpqOOQM4x4w/2ZCIt/CjTQKVcCQkfUwU27XiciYh3s8H/BQ2Y
+         JcZ3iR3hGpYAjhZ1uvb3jkb1O+GsbphTUPpQ9vS9jgDRhEV37W+kaeiBk2nE++CmXqKi
+         9u/Kn5mXxMSzVycFN9lXPOtTh7dlzObRHDzDoi8eucRcSrAMvrt6Pzut4+TwJjHtsCkU
+         JsaQDZX8RmIlgkLloVV4DH66q2ZBsrhbdoxvpsv84JRYv6rnggX4ebvoOUddSB92yNY+
+         k3H/V3nPV3ifuJ/StHW7jrhwHFKjlA33ZfvhbZxeNxBYQFIEIktN7XP9ieDAryu7Uo6q
+         6fiw==
+X-Gm-Message-State: AOAM532k4tT2AsWOTXN/9/uyuO3n2YqPOLOqC8a9++x0QhlDVeGHGmn8
+	hXa9ut7n/qapqnRew4grGg==
+X-Google-Smtp-Source: ABdhPJzIIl9dbXBlajzVmGyX9tZZdbe501T3AkvY/lyV3oQYABWMY4OkQhSQfQ4WhBVoV1YxxSsYjw==
+X-Received: by 2002:a02:2a8d:0:b0:314:4128:f724 with SMTP id w135-20020a022a8d000000b003144128f724mr18901060jaw.92.1646826917231;
+        Wed, 09 Mar 2022 03:55:17 -0800 (PST)
+Received: from [127.0.0.1] ([52.173.34.126])
+        by smtp.gmail.com with ESMTPSA id l3-20020a056e020e4300b002c242b778a5sm931816ilk.74.2022.03.09.03.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Mar 2022 03:55:16 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Yonglong Li <liyonglong@chinatelecom.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <1646821209-35620-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1646821209-35620-1-git-send-email-liyonglong@chinatelecom.cn>
+Subject: Re: mptcp: Fix crash due to tcp_tsorted_anchor was initialized
+ before release skb: Tests Results
+Message-ID: <db144358-6c4f-02e5-019c-8bc5e49c2b45@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Mar 2022 11:55:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-get crash when do pressure test of mptcp:
+Hi Yonglong,
 
-===========================================================================
-dst_release: dst:ffffa06ce6e5c058 refcnt:-1
-kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-BUG: unable to handle kernel paging request at ffffa06ce6e5c058
-PGD 190a01067 P4D 190a01067 PUD 43fffb067 PMD 22e403063 PTE 8000000226e5c063
-Oops: 0011 [#1] SMP PTI
-CPU: 7 PID: 7823 Comm: kworker/7:0 Kdump: loaded Tainted: G            E
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.2.1 04/01/2014
-Call Trace:
- ? skb_release_head_state+0x68/0x100
- ? skb_release_all+0xe/0x30
- ? kfree_skb+0x32/0xa0
- ? mptcp_sendmsg_frag+0x57e/0x750
- ? __mptcp_retrans+0x21b/0x3c0
- ? __switch_to_asm+0x35/0x70
- ? mptcp_worker+0x25e/0x320
- ? process_one_work+0x1a7/0x360
- ? worker_thread+0x30/0x390
- ? create_worker+0x1a0/0x1a0
- ? kthread+0x112/0x130
- ? kthread_flush_work_fn+0x10/0x10
- ? ret_from_fork+0x35/0x40
-===========================================================================
+Thank you for your modifications, that's great!
 
-in __mptcp_alloc_tx_skb skb was alloced and skb->tcp_tsorted_anchor will be
-initialized,  in under memory pressure situation sk_wmem_schedule will
-return false and then kfree_skb. In this case skb->_skb_refdst is not null
-because_skb_refdst and tcp_tsorted_anchor are stored in the same mem, and
-kfree_skb will try to release dst and casue crash.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
----
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6222883100819456
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6222883100819456/summary/summary.txt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3cb9752..fbb14df 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1199,6 +1199,7 @@ static struct sk_buff *__mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, g
- 		tcp_skb_entail(ssk, skb);
- 		return skb;
- 	}
-+	tcp_skb_tsorted_anchor_cleanup(skb);
- 	kfree_skb(skb);
- 	return NULL;
- }
--- 
-1.8.3.1
+- KVM Validation: debug:
+  - Unstable: 2 failed test(s): selftest_diag =
+selftest_mptcp_join - Critical: Global Timeout =E2=9D=8C:
+  - Task: https://cirrus-ci.com/task/4815508217266176
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4815508217266176/su=
+mmary/summary.txt
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/7b239139921c
+
+Please note that despite all the efforts that have been already done to =
+have a
+stable tests suite when executed on a public CI like here, it is =
+possible some
+reported issues are not due to your modifications. Still, do =
+not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
