@@ -1,175 +1,96 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361E07A
-	for <mptcp@lists.linux.dev>; Thu, 10 Mar 2022 08:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1646899806;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rnn9IZtqT4kIKhVOcqxMgAMgBMJFPZzZPkyzjN4QOtM=;
-	b=Jfem7DvBGe9G4lWsyaoxajPisv3kiRdjJPMGKDTGt6gakceqhHnLvqJ6iHgy1ulJIUJMSM
-	fkRKSxLgmQHdVXDQ6urJFAVw+NXnc5giyWsql+0URQ+u3iRvGUMyh7mKVNbSDIUFWhzYNq
-	2XZgfwWFW0zISvVratr68+LKuhe8OHM=
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur04lp2051.outbound.protection.outlook.com [104.47.14.51]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-3-KbUDfW2qNKiDYUK923edQQ-1; Thu, 10 Mar 2022 09:10:05 +0100
-X-MC-Unique: KbUDfW2qNKiDYUK923edQQ-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FEFzUtDFcdvNE1xS99AAftMAX0YYiGbqov4nuSHTySmAu+1+cHoojm4lxB2jBlsGX4Ojn6PJ9it8qPWjWNF92IxgB9ul+ttdDh+lsxwYTOzCJ8EkexqCRHAKqIqbk7POOX3sXiHJeeu32CV9tKRvJ002xJghL8k1elSm/jE/kZ7o46puYod4tGaiwfWSSSXX9KzqTk37bpovV88r4l7+FOTbLDu8SyRNcqtgL5Gigo65yZjE3rzG3upMmQLz6lRFkSgIC7vrrsYY3EhnMvxm2k6HttOY8pPcYqK7GADJeIZ9xdIusp2f/stmBBDy9D4IXrkjGZwimk3TDAscoH2eGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2JqS73Y7HFpZcVVKEOxTx68bXAb6XxNNvOwtcqTbRLg=;
- b=AuWz3vXd4Ou/rQ1EG2eXsp8kd2oyBFvlFdlrEJqNnmv/jBi7+a6gk/RjTOpbVEYH/pW6Uh0A/NTuE/HVFKAP/SqecFTM1EBpnBk/FN5JLFtHPxoVwEkWSmN9P9J2Kd74zIkwunQsfjse/ynC4InpnRrxHJvPp+cS4SfSj7//3Yb2+fGqciApyap0uK/f1LZiGWTtt60dfefWCRt+Ax0JVVNwWPqFbLSV8F4v03WRo/po4qAU0hrDqtOPJ7+Xz0v0T1hwVXp7iYGwmGwfxo2wkPhYFiEDxGSOGW4+FnD+9euzH2hxdBlLRlV9o0EeSRpxT5pn5xQUcImUxVOvzmpIcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM5PR0402MB2772.eurprd04.prod.outlook.com (2603:10a6:203:99::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22; Thu, 10 Mar
- 2022 08:10:04 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::b110:cb51:e09f:bb05]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::b110:cb51:e09f:bb05%6]) with mapi id 15.20.5038.027; Thu, 10 Mar 2022
- 08:10:04 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v4 4/4] selftests: mptcp: print extra msg in chk_csum_nr
-Date: Thu, 10 Mar 2022 16:09:27 +0800
-Message-ID: <f0b54cd0233d236cc42637b0d759e7037630b23b.1646898548.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1646898548.git.geliang.tang@suse.com>
-References: <cover.1646898548.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CA17A
+	for <mptcp@lists.linux.dev>; Thu, 10 Mar 2022 09:58:33 +0000 (UTC)
+Received: by mail-oi1-f174.google.com with SMTP id j83so5395749oih.6
+        for <mptcp@lists.linux.dev>; Thu, 10 Mar 2022 01:58:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=RfyaZH2oVfYKoY6Lbx77VfeVq/swlVrtWcUgfsaAn04=;
+        b=RDf94teBiUNhVafjWuXT3TN2tGQQF6FsXdrLqYRpYLA6CYO7tkluf261RFfcMN0BYW
+         5B1GwGNqBNsr09pdMrVFa9Ci/SsidP6OLCk7QPMd9miVlJc/sc0sUoMYVVcyMH6k6dt+
+         DSIwwXEivLE/1mOiCzcLGMpmwfzp8nzXEluv4HuilRezvbusBd5Ta+ZBv1kUtcKXE+s7
+         JnpJMfw+WGI9usE1OatuThKWP9HUBNtejr3v6xY4KZ96GJcqTuYSpOn4pzS4Gy5ftjJ3
+         Ic0lqerDo5GRvhVJh8xjZPfm2w7KdNFJfIHp24fIE4cAC2GoYYGHcM7ffGSl0TFhZUra
+         zexQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=RfyaZH2oVfYKoY6Lbx77VfeVq/swlVrtWcUgfsaAn04=;
+        b=gv1p7aJ/GVuM+KVrPwwaOymUIC43yQ23oq3HrSnBYo/xaYxlbMmQGKYnRO9zc2/f3F
+         G13kGv/j4wiZcjE4L/t1JY/bpDqzTQNLYB1MZazwYlBna8VcxVY9G8toN1cgUT+5b82K
+         mI6G3sJSv/NEYNlXa1pNWocLt+iTecdsXQa5LqM4jIgBodfK4eQcDRSc6R/aX5qeuRuD
+         L01wuUQE6M/gvhmoqIDqygcpM4GILVqSh488hvBK13i67c00pkz0FXaLbkBvytwXW33X
+         JINsXT2IAxm5iI7ELCaZ5V0/EJosM0HoQvw2wFB9dWFX9RcCYuFTJXnW0ay4aB9yXkWZ
+         bXjg==
+X-Gm-Message-State: AOAM533c0RsIqlLL9jNOOcu0GEEopp8HRIZSeS4aLlxL2znHl+J+vy9t
+	NfJzoA2uEe27hEpfiZZK5Q==
+X-Google-Smtp-Source: ABdhPJwX6PKAEl7LaMSANTn4Z5+TbVNcAoV23GhJTLVgV6esx+Gt7XZvgjM6RgX5F1PUnONkhn0XGw==
+X-Received: by 2002:a05:6808:2308:b0:2da:496e:ca0d with SMTP id bn8-20020a056808230800b002da496eca0dmr3437466oib.12.1646906313064;
+        Thu, 10 Mar 2022 01:58:33 -0800 (PST)
+Received: from [127.0.0.1] ([13.85.15.252])
+        by smtp.gmail.com with ESMTPSA id p14-20020a9d744e000000b005b235f5cf92sm2073942otk.65.2022.03.10.01.58.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 01:58:32 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <f0b54cd0233d236cc42637b0d759e7037630b23b.1646898548.git.geliang.tang@suse.com>
+References:
+ <f0b54cd0233d236cc42637b0d759e7037630b23b.1646898548.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: print extra msg in chk_csum_nr: Tests
+ Results
+Message-ID: <4d1d8899-db99-0702-2ca7-33fb67e162f3@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0199.apcprd02.prod.outlook.com
- (2603:1096:201:20::11) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+Date: Thu, 10 Mar 2022 09:58:31 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8b99ea9f-fb23-4969-981b-08da026d6213
-X-MS-TrafficTypeDiagnostic: AM5PR0402MB2772:EE_
-X-Microsoft-Antispam-PRVS:
-	<AM5PR0402MB27720947F30D6E7A68EA9969F80B9@AM5PR0402MB2772.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	36mF5CCNbfwRkGRQrBBNMzRchY6TLSQGWwLMX6csrlvFSB+HgdN2Ly6CVl9nHMOHIuywiud+pWQaF6AGhdsADjWpScONfxkxBBev4CyrQREK7a8eRuRt2e6fvMGMpqiv1EGIxEMDQd7CLhB7zp9RS3HtEGAjPVMqmMbFS1pTtbv4d7UO/Am1gS+p3dVeLlAtZuYgZgdF4gAoNZiRVA/yqo3hpo6SiBqwwKZqqeOb2mu4l1XfESqWhsMuK18VHv1feWTpTsYf0ODbJTiuGU0mwn8x33VOfT1c8eg248UeYoTxumsmPGV7vB7Og3Z19mGrJh02vJLUQIgn94zIlR3fcwGlwI6K7wX9/GmZ4Q38dR/nSr5GZ+vO1l+ND2pMDiXv+qdvcJfRcmndm2WsoYnpeF3ZppWrIYsfd2otIw0acaJHBO9TNPU0YMsBrBIVlXU+MuOd4uxZN/X5lyLT8MYqUvEbZC4SgyNS6jF8LNF1c4pLHBFcHNALForK51CsizDCF5Q9wS019h+486cCzPuBEOWS8P8NGsluA16pCYVd0ry64pEYPjnY9kka9tyqb9dVB60cIYGcYwrcO6huA8r8j++gEuIhei/rfIp9VWyiX/KqcGkjKPwKfWz3yMeQMSVXQrVEBs6WGMkvtboeOrHcpwG8SZd0yiSa9+UUit889wRXaw+gGILzCnyrwY1afB4LGwwsL8qVmHR72ypCCW0jYw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(5660300002)(8936002)(66556008)(36756003)(38100700002)(2906002)(2616005)(6512007)(107886003)(86362001)(6666004)(6506007)(44832011)(508600001)(6486002)(8676002)(4326008)(316002)(6916009)(83380400001)(26005)(66476007)(66946007)(186003)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SwfsqbLYYMMF6c/LAXLhfTxrnP8cdJiiGnCB+TdijCj56kFd0UyhxUBgfbQt?=
- =?us-ascii?Q?YLLuavvm88ws1lGSsmgTFRYatfk1ZXcD5iSVzRD9/cwtnqpRveJAmOThRZ9r?=
- =?us-ascii?Q?zTqVWptd2ppz1eZARAfoBkuvHrd6XoT6p8X+8qqrJs0PFsThLpIAyQUdH/Lo?=
- =?us-ascii?Q?n9BzmKUmuzREHaJmFQm/1kuWaQATuiWSPvm8Vl130UBAxnQc68jTH3xWguQQ?=
- =?us-ascii?Q?Wev8j538HZtBXfdxQLC6yMBTOHO6A7hZtvD1WrKlIhIJvaqWcuhWMolPzGRO?=
- =?us-ascii?Q?m5RsG7B1pCpzrqJLRr7k9GKUenONThg6VrzdEuIuWdoXM8WXb2uDO87KrQNy?=
- =?us-ascii?Q?h7pDVB2MbGVmfJkv7OIvoazgu9K3vG5okU7xd/Rn+ix8y4XZeaM9wd1ZGYh0?=
- =?us-ascii?Q?cf4bOaj/moBjXLMMPIs2WgC5cZUt50ROrD0TFdebo280NZFZfa17KRM25Mjm?=
- =?us-ascii?Q?1+Ea68L0351X1kcYdGwLI2CruFeD99u68jabUWVlKXO7eBuQljsS8gSuusoD?=
- =?us-ascii?Q?EcnmyexqG+oSwPzJ/3NquZ14YCGLaavB81dUvYgbOQNwE5rf6sM8iQPf/0Qc?=
- =?us-ascii?Q?3qBw8gQrdMbhQRuRnx7s6HIMauw+geg5040JwgfxFvqqfQo/JAYf5Bzn1fDn?=
- =?us-ascii?Q?b2gcEwXKm6CJALAKZM2y3rw7teOK/25Ft+CsiEZhvZR6s5FK+ptXG/4WNjJA?=
- =?us-ascii?Q?8Tg6SMG0kuAgW6To01bAhjg6sqyulGReBFCLLABIe75KHafWpto+sV/UYmGY?=
- =?us-ascii?Q?RJkIL8uZRiokkoFzZ4EbIOnaCRCJlH9Nn2ESvs9PodyfM7YyMx9bQzrYGxVP?=
- =?us-ascii?Q?y8LmkEAC1dn3O/scpU8nA08QLbOVdKHT1yys2TVFgpyDYmcjc9VYy43H1abB?=
- =?us-ascii?Q?RyMMVcBGzsiXnquI2vikgDoLzDzYi40gezFPaSL73D+tBniaa+I+O31O/qs3?=
- =?us-ascii?Q?4B5Cyf9xxCbTNDgZ5H428tblzy806z8IDPujE1Q8rqbLcGx7SEqGxFKr5ciA?=
- =?us-ascii?Q?lKQYzHKi9+gNyC7YIkh1bUVCKiupOnGj7e7YDPKHGw88oaX5Lch7PvwSp/+L?=
- =?us-ascii?Q?bM4QoKz6bd9swHBdsbGoCtnmCYGq+w7rfTloB4b9+gyJ4DBvXzr4Zy72MoOU?=
- =?us-ascii?Q?Orif99rgc18LXWLCNQpndC/LtctxmffTylcxtXtE0rbQ/wnsgz1JLedu9uge?=
- =?us-ascii?Q?8xSRmdLjfFVpjU06Wi3zI5viu+KayOht7sqFLhSeIi7KPjeQn0Qx914kViXu?=
- =?us-ascii?Q?OJT8iR4OogiYO8vPVXJaHZIx36/ykk5u06vzfYi/2rUaihd0CeX8AScEULUM?=
- =?us-ascii?Q?HDJnE7myah+zbl6QITl5ddfneW0YQwgw8CuI7YjJ5WLu8/3hxvPdUe+YXhBv?=
- =?us-ascii?Q?pCxklyjAeL9bfeQMrW70jEwVLaVzbLx3VAfffJZPZit2DWT0zMm8wRnzeCsO?=
- =?us-ascii?Q?P0u8bFQ+ATh+5mCjfqdD+rksqCrCk95fptimNKNkxRJCy1tdKgv+8w=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b99ea9f-fb23-4969-981b-08da026d6213
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 08:10:04.7738
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7tqO6GawyHoe84LG1ZaJb7rU5kg8pPMzmUCb86n4/gK8rtgR8TRgzgPgBAvkU1AgKeC7kkUftYCFAvuJpNNDYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2772
 
-When the multiple checksum errors occur in chk_csum_nr(), print the
-numbers of the errors as an extra message.
+Hi Geliang,
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Thank you for your modifications, that's great!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 2b77576d773c..375b087edc7b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1014,6 +1014,7 @@ chk_csum_nr()
- 	local csum_ns2=3D${2:-0}
- 	local count
- 	local dump_stats
-+	local extra_msg=3D""
- 	local allow_multi_errors_ns1=3D0
- 	local allow_multi_errors_ns2=3D0
-=20
-@@ -1029,6 +1030,9 @@ chk_csum_nr()
- 	printf "%-${nr_blank}s %s" " " "sum"
- 	count=3D$(ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '=
-{print $2}')
- 	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$csum_ns1" ]; then
-+		extra_msg=3D"$extra_msg ns1=3D$count"
-+	fi
- 	if { [ "$count" !=3D $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 0 ]; } =
-||
- 	   { [ "$count" -lt $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 1 ]; }; =
-then
- 		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
-@@ -1040,15 +1044,20 @@ chk_csum_nr()
- 	echo -n " - csum  "
- 	count=3D$(ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '=
-{print $2}')
- 	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$csum_ns2" ]; then
-+		extra_msg=3D"$extra_msg ns2=3D$count"
-+	fi
- 	if { [ "$count" !=3D $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 0 ]; } =
-||
- 	   { [ "$count" -lt $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 1 ]; }; =
-then
- 		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
- 		fail_test
- 		dump_stats=3D1
- 	else
--		echo "[ ok ]"
-+		echo -n "[ ok ]"
- 	fi
- 	[ "${dump_stats}" =3D 1 ] && dump_stats
-+
-+	echo "$extra_msg"
- }
-=20
- chk_fail_nr()
---=20
-2.34.1
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5981420215599104
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5981420215599104/summary/summary.txt
+
+- KVM Validation: debug:
+  - Unstable: 2 failed test(s): selftest_diag =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5418470262177792
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5418470262177792/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/0f7e3bc359ca
+
+Please note that despite all the efforts =
+that have been already done to have a
+stable tests suite when executed on a=
+ public CI like here, it is possible some
+reported issues are not due to =
+your modifications. Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
