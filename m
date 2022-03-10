@@ -1,94 +1,56 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9037A
-	for <mptcp@lists.linux.dev>; Thu, 10 Mar 2022 01:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646875658; x=1678411658;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DMUJNYbrHYAJ5rSFJ5RJ/z4wpdCDszK/HNZLFUwPbTc=;
-  b=ZZHiFjRjtT8395g6d9SD0GOuQvidsT+LOrBS4eRLYsD+lTyiIxdoIE9H
-   dRFDUb96wIl11HitVkRuHCI31e4EGGT8bY3DoFCEiX4uAwqd+WrVNRvJH
-   qlm0WtQhKCOJF+Keh0A0AbKnSuA34XFlBQl87yQmpD9K7zgyn71arx9no
-   trgDXT+C/78BXwn+pne4ga86hND3zSb1HAU0qt+arDbrQqvNSz7hbUKYS
-   fIRKzIZpEej8BkLvZDx7WtZINy1kuHWKSkU3t9TOcNWVhvRinL0pmbBoG
-   LHh2NUojMSGrQl1rbvDZaPlaw889oNY+cq9BRQB7D8pWOFFxI4aPongJs
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="341562331"
-X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
-   d="scan'208";a="341562331"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 17:27:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
-   d="scan'208";a="688493540"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2022 17:27:38 -0800
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 9 Mar 2022 17:27:37 -0800
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 9 Mar 2022 17:27:37 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21 via Frontend Transport; Wed, 9 Mar 2022 17:27:36 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.21; Wed, 9 Mar 2022 17:27:36 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFD47A
+	for <mptcp@lists.linux.dev>; Thu, 10 Mar 2022 08:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1646899779;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=580mqVVOYQ92HzXzP0nzFrAgvZce5epSFOrBpia7Fls=;
+	b=nNlcqzFSdH0Z5w95ntVkJ9l222la4FNOkCrTpCULBnbejoZj1/8HgjjtukebWDAzBZsGwE
+	AkLKfCx7WcAytoZ21CtkpmuX4tzWubeq6SQ8OLzV7Z1VBdNhZq+ZgEJKnOmwr/T9tUTomv
+	C4bed6RIElLeCSYH8U/0WSD7l3U0UxY=
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur03lp2056.outbound.protection.outlook.com [104.47.10.56]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-25-Xw_0U0-FMiWev-x4dhuimQ-1; Thu, 10 Mar 2022 09:09:38 +0100
+X-MC-Unique: Xw_0U0-FMiWev-x4dhuimQ-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i3iG95qVjo7xZGr9m5pqHN1mdSmBai9aACWbLa4v8WG/wJONAhPir2U04C9yFV03U49BfK1Os65U2eQxIJa590UKkQZKOA09bn6J8nStfWsI8+7nKR9BqgM2BsQnMkQQ6UnyDsGhK8oIuTmQfaEl37ktqtpPSZHCik+5D44ih/kjjwL7DO+ZNbTompmQcyOr/vMCulV9qE8Mg915sBFffdSKhQMgh7TEAR0UIo338TMnQEHhKltfBUKb1Ho6wsRMi3Cokq1br4+gJVLBu0+d6jl51CBLOd9udehuoXAVZA/s8rSfpddklKleWa+jJ6I+Yk2xv1TBvTxOfSFVcd/vBQ==
+ b=GTS23KOswpwWlCmU2T3cgd6QlWu7hU/RfdQNpjNdODtV6QhFaklPzKciUcjHbNQpMA6dDFctO5YHV9NC7lm29HWjtZDZQLGeSk0qKnZpADdT4wnPc/Y0DILLX3/FA0tpUZ9zRfMxUW9zkgua6kMOlpIU2bCmgtzqhX1R8Wr4CMgv4E84w/xURI7jFxFPV6c1tU4d7KPUng0hEHFtSBLjiui3oQajuRySO3XushZxlkawpv7NuLbwerwrXbrkxh5YMjFzn45L1vW71LjAq16gKw2qWsa4iWkAS4gTbXBJ7kDd9fqIwcWWXoaFjDlcCXrD6uX6o8vuaITaeF1uMovFLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5lWP07hmetoH+yExhG+72bUpFdUd2H4altE2wV1xYcI=;
- b=i+lUyS1SwTjbB4DfzNhHpF9ZJMriqJLse7ncKnXkHFk1HzZZ7CD1QUKptpGp7MPAaeQrwkiJu/bjsCzIsktY/Qfcytoa5zJpUErH7IbknBtbZj8CR5vO/3hQu9ry0WUYVW4lHdZG4eg1DL1SUvRsWMn8ipcSwOBO7+KFMY7FdmVHJd1fcntStQHAvjcIRpSdq+xauDxGjENEVDfJCIaAdvMH3ez2TSivmgoFFE2IiyVKcEhGGLuY7FuVVFiUfO2QKnAZKy5KpJOFY3zdNd6KEQG3X7SrLpQ0HiRhZvhHL49l5FAXk6oARLNesokaKg8ybPrPjIMktXzrpfsuHv7kBg==
+ bh=wD/dMNdoBWqY0Fbp2OtGLK1EWto+zhoYqDVEgxNXMtI=;
+ b=jhNFGYtGD7Dq8ORAKGTwPgnY7YWnvebTTmUVA38BAy6/pwye5L/Gv2nfzdMyBjAL5R4dN4Rl3AJqST2mODOiryOnTa7SrxYXBxDrkQhuj2uKkuJhjkTfpRdyCYgSnOZJ36iQCRYm/Wr0DMMAXPhipNCY7tcXaTsdJ3eXPa5+OgDY3bLrpjuZoJmLKJo1h8P0OaGJxvG+bfjEJ7sFCHOtx4niiwXcsreMhNP3FRszbvkOWn6A4zacbYl3537U24y6zeXUg/r3DfLoEboFo3l2yHsyjwwPq3um5MOREImzqzlQUOKTv3kJI+Q3cGsc7YCdvE6GcZzQmgmH1ynpSGqG6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CO1PR11MB5140.namprd11.prod.outlook.com (2603:10b6:303:9e::21)
- by MWHPR11MB1374.namprd11.prod.outlook.com (2603:10b6:300:24::8) with
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM4PR0401MB2259.eurprd04.prod.outlook.com (2603:10a6:200:50::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Thu, 10 Mar
- 2022 01:27:35 +0000
-Received: from CO1PR11MB5140.namprd11.prod.outlook.com
- ([fe80::44ba:c91c:ea6c:118d]) by CO1PR11MB5140.namprd11.prod.outlook.com
- ([fe80::44ba:c91c:ea6c:118d%5]) with mapi id 15.20.5061.022; Thu, 10 Mar 2022
- 01:27:34 +0000
-Message-ID: <dac6c014-6012-ed80-6db9-61c714b14f23@intel.com>
-Date: Wed, 9 Mar 2022 17:27:32 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH mptcp-next 3/4] mptcp: handle join requests via pernet
- listen socket
-Content-Language: en-US
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-CC: Florian Westphal <fw@strlen.de>, <mptcp@lists.linux.dev>
-References: <20220224155010.23676-1-fw@strlen.de>
- <20220224155010.23676-4-fw@strlen.de>
- <ab1f9296-3637-d13a-bfe3-97183f593190@intel.com>
- <20220308184531.GA22024@breakpoint.cc>
- <d796fef2-d380-c92a-7516-617992a20460@intel.com>
- <20220309125351.GB26501@breakpoint.cc>
- <4e545ab7-7a9c-921a-0095-6a7e5803cdae@intel.com>
- <20220309213730.GC26501@breakpoint.cc>
- <642225f9-f179-9947-49d1-2ee6ce7cd40c@intel.com>
- <aa986cb4-4ba4-7924-d090-d2d615b15649@linux.intel.com>
-From: Kishen Maloor <kishen.maloor@intel.com>
-In-Reply-To: <aa986cb4-4ba4-7924-d090-d2d615b15649@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MW4P223CA0025.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:303:80::30) To CO1PR11MB5140.namprd11.prod.outlook.com
- (2603:10b6:303:9e::21)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Thu, 10 Mar
+ 2022 08:09:37 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b110:cb51:e09f:bb05]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::b110:cb51:e09f:bb05%6]) with mapi id 15.20.5038.027; Thu, 10 Mar 2022
+ 08:09:37 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v4 0/4] MP_FAIL echo and retrans
+Date: Thu, 10 Mar 2022 16:09:23 +0800
+Message-ID: <cover.1646898548.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HKAPR04CA0012.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::22) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -96,174 +58,90 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3842abfc-c770-4c6c-0285-08da0235279f
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1374:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR11MB1374AF8D21752B15772E55AFE10B9@MWHPR11MB1374.namprd11.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: e4d23092-7440-4627-de33-08da026d5146
+X-MS-TrafficTypeDiagnostic: AM4PR0401MB2259:EE_
+X-Microsoft-Antispam-PRVS:
+	<AM4PR0401MB2259279CCB221B8B14B317E9F80B9@AM4PR0401MB2259.eurprd04.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Bp3C7zsuHWV3WZ8eWqXeuY+U1TN02HD+8R5fqVz0oUfrkRBGIip4OmRRtuZBgGT3PcN7oBwjm+P827AANL/56x7cauUXmZIwep8awrDwCKYHL/lFn0l/hVlK4gl3mpijzkxOaUDZbzZGMd8pA2lZwBCOicWe1pt8kxA93wH53MSFxsMnE9HDyt+VR/oDUKn5Kscsq09oGoY6sqqUzRHAF9tffZQnl5iS2HKokHgIGqcf3ySc5KikbeW3kRtTC2q4yQdqIUU2oLQ/Y4CJFOMNBoB0e/giC3FJ1gt87S22kC1EqFyvBbM+I1c72cyS0SAFoVFgUCQh2ybtosfBbmOUeMMcJYc3E/pP8QHuaF2CfiuyI46zrAkHUjczGWPNBVsMf0m6i/OoJk/zauxmWY2ROoOfLKAEguZhC0pKZYtEFSFrz/4yMiehU6CjjqZwNA/kA1jZ8xTuRUcI0E/Dkrr97tDgUrvPjEMUXnwAJ8zyYv1qyt92SYEWSCkV7GQqa9Mw0/cBSkrvJOY7MmeKvL3AzBNQVw4rHDVN4vIH9hOcO2wxae8EdLM+hDQoP++BC4gRo39nD6S4M15Rtr95rn1WJ773XYyvK62O2X4ncXtgE1GsMku1ROW/LybIax8xPQEIZ8gy3cZCwhYcv4ms0f8qIzqpVAiEro2QTB2wOpYe6YyE8RRv6aY7f1i3cGm0xHKHTvZ+ovhrOqaiTaRGr4EGFSVwNQ5irNVQ/dfocjG/qrqAB2h905UbTgFW8X+uQ2FD
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5140.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(44832011)(82960400001)(8936002)(508600001)(86362001)(6486002)(36756003)(2906002)(31686004)(5660300002)(316002)(31696002)(53546011)(6506007)(2616005)(6916009)(4326008)(8676002)(66946007)(66556008)(66476007)(83380400001)(6512007)(186003)(26005)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	dG08gqZX+kmfNqETah7j3DAf/e9QbU5yIp2EtxXKvH0FZKPbHpBsPbIJXadcqHJBuQcoIccUS0RvV36jrtAayyNWNmzigSqvsEl7B6N8AFoPmPJ3+17aa+iHuaUQvq2rkd9flPVZ8cZGNQYl933/vUmKjT5kRblZ1ZUcBTnsoDUoASL2+Cl9WUP4HyODAqf1csQxY3f4WP3G2CDmZgfm3H12OmP09Ss8ulRdMXW9e3AQOobbeNhH0SEsfmQBDTAX55LBeGpFoUfnF4nYQex/DYEYW7laLIWbLbtCOgpNfpopCqhOgsm+LUWaBPuju7TMkYOPjp4Fg5jdp3RZACNb1Jd7eCuQf9N6EFSfrrejzhpGAJjNUppMWlj1oBuYWEZPTvTd+JGZXdT424RnPjDT87PLR1vnXjbA7sC2GJ/oPugec0MlIWOiVWZDcBwiW6eNqdoqPpJ47lCZnSqjvc7oNbjOkkzIBWMw/n+6buxt7odWukh7SCV5fMZRU85GWSHSNfv0EaxrDVTO10y36H3kM3cQ6DLENtoCCpKQOq7Wm9lFamO2ZUh1nsMVKubCnm7U2KCstjdyjBT/x+Wz5X6ucdcJJWTvTDgYujKVHcBEaWCexVDvcbbiUIRmW8/kddr/mdWUQxCPoIBDsUa6OIRch8856SBB68awjtZCWsyP7AoX8c9vvJint888m/P+4WD1T0c/yXatFXZC5Fgdrj9IAs1+hOqlYc8MuXqarPIK4/eyfDrx0H/jZIVVXZInMyww7vH4BlNO/ynaMCX5Xl5FlA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(2906002)(2616005)(107886003)(186003)(6916009)(316002)(26005)(6666004)(6512007)(6506007)(38100700002)(508600001)(86362001)(966005)(44832011)(83380400001)(5660300002)(36756003)(4326008)(8676002)(8936002)(4744005)(66946007)(6486002)(66476007)(66556008)(13296009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cy9jL2hta0MwcHZtSHRSQ2wrVDJXc3Mvdi9RbHE0MkNhcDNOWjVHSnRFRnpG?=
- =?utf-8?B?Z3RjZFZScXVXZHVUdk01cHkrTWNOeURyODF6ems3U1l0Z3RpQ2tWdzJYWGRJ?=
- =?utf-8?B?R2ZhN3lFS3RqdlNROW5wUWs4cFZkU29NSjZ0b2dIR0NVeGV4TUEwYlZUaHh5?=
- =?utf-8?B?K21TMHB2bU9VTDdBM0g3cFcyanQxa0l1dENGVXNtaWExcUt4MDdlY0F6eHhY?=
- =?utf-8?B?N3dPNm1COWNtN3lFRUJYOFRKcGo0VC9uNVJrYmxwZ3pHamNNS3R3eVRFdzZI?=
- =?utf-8?B?MFZrcmw5OENJc1JvVGpZU2dJQ2lwK2RNd3FtQ0hFaFd2L1JVeUFLaExtVVNP?=
- =?utf-8?B?RjdBcUM1UURicUcyakhXb2FKallmcm83SkwwS3pncnEvTVQ2ZWZNbjA4cTI3?=
- =?utf-8?B?QVB5VVB0S1U0V0JmZGlBMUtaczQ4YkZVaHc3Ymp1dU9GU2NzWjU1K0hRNVdj?=
- =?utf-8?B?cXlUbVRNejZSSGpnVnR5clI3QlJ4dTN2MHRSUUgxY3RWbkFEb2JjRW5oaUJN?=
- =?utf-8?B?ZFJGbFppTkhMNXkzSGRROHJpbmIycUJEYTd3a0RIOThGWG5lQ0hXMmxwbXAw?=
- =?utf-8?B?MHBCZmlXNWNyWWxSeTRpZGpXRG5TZHAzQnJrMXdUWmpqZ3dXUTV6VmsxSEJW?=
- =?utf-8?B?MWdBNFJyUGM2NUI1VHpqVEo2MXhBWU02QSsyK3NUZzk1ZUJoUXg0NFhWbGxs?=
- =?utf-8?B?ZGJNMkRoUmp6N0lJMU90QWxqTTJ4L3VLM2wrU1B1elk0L2dYd2d6UHNBYkhz?=
- =?utf-8?B?aUVqRXVNdjJ0ZXNpN2NhMjFjSnB4TENzUGdrMHZoaGh5NE5hYzVTL0gzdVFC?=
- =?utf-8?B?RTVmOW1FVGxVc3d6citjZm5hN3dJZjQydlgwSTlOSEJQTTdOdTdBVkV6Y2Ra?=
- =?utf-8?B?Tk41K29KM0swMjA1UFoxVmp2MU4wZDJpUjlaRTVET2R3Qm93UGVHbG1qSDZ3?=
- =?utf-8?B?MktwNk4zQWZDOG1nTnF2MkZDRnVSQmNzTjBzOUkxTWZkZzllK2R5Z0thZkpP?=
- =?utf-8?B?SzRhN3VaSlpXTWljSWlDdFBpdXhXaDRLYzZIYzZHK1ZBWjlKRVNwYUIzcWJs?=
- =?utf-8?B?NWZBbTMxN0ZjWFV4Mm9yYjR0Q2l4N2JCTFp5OTlIQy9LVWRFejhSY3ZTNkxN?=
- =?utf-8?B?YUtsekUyY2tGSXY0Y0FyVW9SU1FOUkU5MVdQQTYyT0s2MCs3T3VZSFRubnJ0?=
- =?utf-8?B?VEZzb1ZGTDNkUkpIUEFwSGhya0dwMnFDRVJQSGpiSjBBVHdpQzJIeXNaa01j?=
- =?utf-8?B?Sm5LaVJTc3NmdVNOWDhsOTZDK203aUFaMjlieDFhaStNdlUrR0dlam9lS0x0?=
- =?utf-8?B?RTdacHpCVmpoR1pwS3VVUVpHVllTaHhrTHNlQ0xIT0FPcGlYQXZXMFNVaStW?=
- =?utf-8?B?WEc2OWZXWHc2emY5T01oeDFXU0lxaDhxUHY0OGFxTUJJQWFkVUNLYVpqUjlH?=
- =?utf-8?B?cXFEQklqV0FPOXNJWHZnaC94ZXNldUNzQWtUY0dCZHlKeHVTNTBkOHFwN1VI?=
- =?utf-8?B?U29ab0dNbEdxdHpjWlpDbW1zMDZJNVhpUWlXbWFva2o4WGFGZ2prUGJqZ2ZO?=
- =?utf-8?B?Y1gwcTNNRE55Y3UrMml2QkpyV3ZUN2VkZ3dvdkMzblVPcWEvOGZDK01BalBp?=
- =?utf-8?B?cXRlTXNtVGgzcFB2M3lkL28zY0t4L0VLcnU3dm9McGgyQkpnZ2N1eXI4RVFr?=
- =?utf-8?B?Y2F1ZHNDcE5tcHUwMU5SUHhsRjZrZkU1K3BjOWxxbDVuTTJMY0tGWG1OUGlY?=
- =?utf-8?B?S2t0OHhXZ1NsTi94YVd1QmpoWmFJbjh5QXA2RmNDbFc3dHhkU3l3U0F3eXVY?=
- =?utf-8?B?Q3FscnE2N05lWG1mTzNmcDdLcXdqWGxYbjRPQW1jVWhsMXB4Snlid0pPTEkr?=
- =?utf-8?B?MGk0c3h6OW9UbStKNGtpa0ROTkZaaGIxeDZsL1BEN0Z6NUxZaTdrT3ZqYWRs?=
- =?utf-8?B?VE5wSnpyelE2UDhDWmpNZC9ncERJamkwVXlDbVNsaFdicFpVSitxZWZHNFhK?=
- =?utf-8?B?YnJGc0NxbGd0dmMxajRLR0lhOEc4bk56QnI0V3BnN3I2NFBTaEVNUHN0aEhB?=
- =?utf-8?B?aElGTm9UUGxaMThhVmJ0ZGc2S2hwM3VNUFQ5V1kwVHRRdlRSRmdpbjErdGxE?=
- =?utf-8?B?Y0QzaFR0YlhUSkZ6ZU1OVjJTTS90OHlhNVhyRWt2eng1QzdzUEpkZm1ERDYx?=
- =?utf-8?Q?TOFSJUWwAQbHaydw6UHd5p0=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3842abfc-c770-4c6c-0285-08da0235279f
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5140.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?qYTRynt0XM4CgmMQPLLtYUX0JMsqDmWo5fAZJ1QlEWAjlutmEfIMI2skEzww?=
+ =?us-ascii?Q?95VGDiGHnxBaOReoSWP5vVkg4WQ+JsF560s2KKW66dE/w9XjGJsc7TLs9zXC?=
+ =?us-ascii?Q?UTNhbFNIo5IkttQ6nwZoCFTjeP/aWymq0b8TNRO2IHhW+nu/rRspE1071fD3?=
+ =?us-ascii?Q?481uU3hak6sVr4qLoZsA0vYPnv4tETUEghryDCVNlbgIvnnfJgA2Dyi0Bjif?=
+ =?us-ascii?Q?TZkz9zDl5r1bq+3XBNPjpyTu+3RashRbzUw5nbv5wVL81p2qFgnffvs4gaUc?=
+ =?us-ascii?Q?jEzFuyR0WHyKKI1xo2NZ2lCdUvguuNE5W5FcYPSY7uQ7BrX3xcfPoL0zXP5+?=
+ =?us-ascii?Q?9E5d9WfTKbxQr5E6FWMYtl1T4mDA2HdOirj3/jHZ+5ErQDu+6lcxt/Osw54p?=
+ =?us-ascii?Q?MgoDND9x6jfuKMUWC8Fw9prN55SxARhts2vRyrMlY2InQllRZ8hDMi1f9Pmi?=
+ =?us-ascii?Q?UK48acW6ZVIG8/SjwyJDNsumXBKbwgF/oF0vCKPLK7lwHHvwe1NbwYEKkQvI?=
+ =?us-ascii?Q?IyT0FUddR82udMGISPcQcJb4fxeWM/j81kT3NC0S/LEiAU665YgaCh9TtZeO?=
+ =?us-ascii?Q?Azg/CYJ7W5FMVDRqk4YbLnZ3Pfnko/gl5gi8qvKra+Ar+Aad72Gz6e2JZI/V?=
+ =?us-ascii?Q?+Qu3Y1k4gj8IQNR2Z5Uv2YVA9cC32XCMyUUYje0LzxuQT0bEjbz2TN0yP+Wi?=
+ =?us-ascii?Q?3OjA+Z0ZTmu9KnVDL9BKrDszMzEdjXI2zLPIQ4W6s+pgvwN5LsgMXewMDPXe?=
+ =?us-ascii?Q?JX/lIQ8h3dnCJXegnFI0z70X6To2ICu+EoqoBhyIgVVuOTib0JUiEqQvPDkq?=
+ =?us-ascii?Q?W+qr0yYJ8C8RZ11KEYL6EkQzr8L3hvUyP6EPLV1yV6WSOhKGbH+IEn15zl4Y?=
+ =?us-ascii?Q?9PqPFQrXw2tXTkEw1XCAiY5u0BhtvSQ08Dp68AXlVEzKRpiPd6hwxWwb//q3?=
+ =?us-ascii?Q?wDVnnqIuP09Zzhw+SlgfTrSoqAKWqR0WPJCnI5yg6OfQnHRMi0vYbXT/vavl?=
+ =?us-ascii?Q?v1DI+qag5ziXUz6qThO5A7JCoNH6Ktfz6Amac3+WNKDauObN6fca/HUmZL7Z?=
+ =?us-ascii?Q?dYGSSwvTiwbP2I4HntAE1bB718hvdUBHKOpg7TroLeyByvHxVO/RqvPwu8qi?=
+ =?us-ascii?Q?2a1iN8bbDqycEiYpbXQQZ2x6zfq3cnDlIw6Z12Wmr8ddpfwGL+WqQIddCdQ5?=
+ =?us-ascii?Q?y4nk5i/VozxaU44lVRr3LTAI5IHD2JXVRFpvSA07GLyfRo+yLj/VTCegAq4k?=
+ =?us-ascii?Q?XRaJzDkRzUHpAnAhjoIMMUcPyXjxwQHALNcJUsgIeqMFb7+WtuY7tO+NLn4R?=
+ =?us-ascii?Q?9BWzk8iigZ7ROzwKjLS5YI75gwql7wkcgUlaxNoAyNcCx9U0mbByxCzMr4Jh?=
+ =?us-ascii?Q?FilQOdDcGdxVfJQG3IYvvj//TZxeU1J0ZrGPbcQiC978pvY8cg6lId8ka5C5?=
+ =?us-ascii?Q?2MztcVH5jDbAdcizwY3FCn9TgG7761U4nc/Zyp0pfSgpdUptcnD0jpGsh6SH?=
+ =?us-ascii?Q?49REyohmRS4cQhVcsB1aLMhOwpY/+DrFSFdT7GwfZ6IEl2QeJ+vhhTMCXW0B?=
+ =?us-ascii?Q?HYG7gwwKPa2/oRftEacNEumpEdhrgvekZmxTiLZlLlVO/B11zlwn/6cEu+0b?=
+ =?us-ascii?Q?8g8V6iuStWC7+cK9W48CBDo=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4d23092-7440-4627-de33-08da026d5146
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 01:27:34.9163
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 08:09:36.9323
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gVqcRBHjfzeVnBEb9xTctxZkeiBsbMDRvcXCZmK0lBrzNyETced7NjwPuGZzNKH5D3FLP3A4kbcFS5ZzylIc7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1374
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: LntA3bIxzKLIDNOMXDyGyUXLSFvhUs1gn1X53MSA+31SO3h0Tl0HzxdQ+P0i2zBFXNkZW7B7buwqZg/AKFBQUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0401MB2259
 
-On 3/9/22 4:37 PM, Mat Martineau wrote:
-> On Wed, 9 Mar 2022, Kishen Maloor wrote:
-> 
->> On 3/9/22 1:37 PM, Florian Westphal wrote:
->>> Kishen Maloor <kishen.maloor@intel.com> wrote:
->>>> On 3/9/22 4:53 AM, Florian Westphal wrote:
->>>>> Kishen Maloor <kishen.maloor@intel.com> wrote:
->>>>>>>> Over a newly established MPTCP connection following listen(s1), the PM can issue an
->>>>>>>> ADD_ADDR with B. In light of this change there would be no listener created for B.
->>>>>>>> But if the remote endpoint immediately established a subflow in response (to the
->>>>>>>> ADD_ADDR), then that would create a subflow (connection) socket at B.
->>>>>>>> It appears (and correct me if I'm wrong) that bind(s2, B) would fail after this point (?).
->>>>>>>
->>>>>>> Why would that fail? You can bind x:y even if there is an established
->>>>>>> connection from x:y to q:r.
->>>>>>
->>>>>> If I establish an MPTCP connection using mptcp_connect individually as
->>>>>> Client and Server, then I am unable to bind a 3rd (new) Server process at the Client's
->>>>>> addr+port [1]. Why is this the case?
->>>>>
->>>>> Whats [1]?
->>>>> I suspect this patch series needs following addition in patch 3:
->>>>>
->>>>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
->>>>> --- a/net/mptcp/ctrl.c
->>>>> +++ b/net/mptcp/ctrl.c
->>>>> @@ -337,6 +337,8 @@ static int mptcp_init_join_sk(struct net *net, struct sock *sk, struct mptcp_joi
->>>>>      if (!tb)
->>>>>          return -ENOMEM;
->>>>>
->>>>> +    ssock->sk->sk_reuse = 1;
->>>>> +    ssock->sk->sk_reuseport = 1;
->>>>>      inet_csk(ssock->sk)->icsk_bind_hash = tb;
->>>>>      return 0;
->>>>>  }
->>>>>
->>>>> After that, follwing sequence should work:
->>>>>
->>>>> 1. bind(0.0.0.0, p1) // listen, accept etc, initial subflow established
->>>>> 2. announce p2
->>>>> 3. receive join on addr, p2
->>>>> 4. bind(0.0.0.0, p2)
->>>>>
->>>>> 4) should work because sk used for endpoint in 3) has reuse flag set
->>>>> and is not in listen state.
->>>>>
->>>>> cf. include/net/inet_hashtables.h, line 47:
->>>>> 2) If all sockets have sk->sk_reuse set, and none of them
->>>>>    TCP_LISTEN state, the port may be shared.
->>>>>
->>>>
->>>> Wouldn't 4) fail if the socket being bound at the time does not have the SO_REUSExxx flag(s) set?
->>>
->>> Yes, it needs SO_REUSEADDR set.
->>>
->>>> If so, that would be application level thing and in that situation we don't have a way to
->>>> avoid a race.  Whereas when we require an explicit listener, we could have the kernel take a step
->>>> back (and not create a listener) to break the race.
->>>
->>> Uh, what?  Sorry, I am totally lost.  I have no idea what the problem is
->>> that we're solving here.
->>>
->>> EOD, I am out of ideas.  Feel free to toss this patchset, I have no idea
->>> what to do.
->>
->> Sorry, what isn't clear?
->>
->> This series was meant to address perceived pitfalls of kernel listeners, such as
->> race conditions which were discussed. So, I believe we are trying to assess if
->> these changes indeed do that, or if anything further needs to be done.
->>
-> 
-> Responding to both Kishen and Florian:
-> 
-> I think Kishen's summary here is accurate - the way the current PM code uses listening sockets, and the expanded use of listening sockets in the userspace PM code, led to some hard-to-troubleshoot situations where in-kernel listeners interfered with applications expecting to bind() the same addresses / ports.
-> 
-> And I think what Kishen found while testing the userspace PM patches is that the "pernet listen socket" approach still has some bind() failure corner cases that application programs (and programmers) might find surprising, and that the kernel can't solve these cases. In comparison, with the in-kernel (explicit) listener sockets, the PM code can see some of those failures and work around them to some degree.
-> 
-> 
->> It seems we've thus far identified one change as a result of this conversation to avoid a
->> race, i.e. setting the _reuse_ flags inside mptcp_init_join_sk(). Is there anything else to do, or
->> are we now confident in these changes?
-> 
-> Kishen, to be sure I'm parsing the above question correctly, "these changes" == the "replace per-addr listener sockets" series this email thread is part of?
-> 
+v4:
+ - start and stop sk_timer instead of setting and clearing msk->flags.
+ - add a new patch.
 
-That's correct. I was referring to this "replace per-addr listener sockets" series.
+v3:
+ - use msk->sk_timer and a msk->flags bit.
+ - use READ_ONCE/WRITE_ONCE for subflow->mp_fail_response_expect.
+ - update selftest.
 
-> If so, yes I think the reuse flags are part of moving forward with this, in addition to what you mention below.
-> 
->>
->> I think the group needs to make a call on our path forward (one way or the other) so that
->> we can also progress on other related work.
->>
->> On a separate note, I brought together my entire userspace PM series and this on a
->> tree to test and found a couple of glitches in this patchset. A few userspace
->> PM subflows tests would fail due to that. I can respond later on this thread with the
->> specific modifications after I clean things up on my end.
-> 
-> We will talk about it again at the 10-March meeting, but it sounds like you have some modifications to propose that might be important to consider in a final decision. Do the fixes you have to this patchset involve the bind() issues above or are they totally separate?
-> 
+v2:
+ - don't clear mp_fail_response_expect flag.
+ - add a helper mp_fail_response_expect_subflow to get the subflow,
+   instead of using msk->first.
+ - add locks as Mat suggested.
+ - add a selftest.
 
-My changes are separate and fix a couple of logical errors in this patchset to make things work.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/261
 
-The bind() related issues discussed in this thread however was just me analyzing for situations
-that could lead to races with the application, and was thinking along the lines of Paolo's prior
-assessments.
+Geliang Tang (4):
+  mptcp: add MP_FAIL response support
+  mptcp: reset subflow when MP_FAIL doesn't respond
+  selftests: mptcp: check MP_FAIL response mibs
+  selftests: mptcp: print extra msg in chk_csum_nr
 
-> 
-> -- 
-> Mat Martineau
-> Intel
+ net/mptcp/pm.c                                | 17 ++++++-
+ net/mptcp/protocol.c                          | 44 +++++++++++++++++
+ net/mptcp/protocol.h                          |  2 +
+ net/mptcp/subflow.c                           | 11 +++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 49 +++++++++++++++++--
+ 5 files changed, 118 insertions(+), 5 deletions(-)
+
+--=20
+2.34.1
 
