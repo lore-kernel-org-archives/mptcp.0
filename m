@@ -1,36 +1,36 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1843D6B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660663D6F
 	for <mptcp@lists.linux.dev>; Wed, 16 Mar 2022 23:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1647472604; x=1679008604;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=pKmhSmSgsGDyEXccKYgjKKGFzm/tsUwQ4w+2dOStpKg=;
-  b=behTHmYEVeM8ooOJPxrN2liaBBmXfSBfWlghp7eiMzbb32jKsTeCd35n
-   ONMFy0R3vwb45a24jgrFC2zwOp8USC1ZkUzZiLA/MPyUxtvMyTTgMkf7W
-   1K0tJBFUZeReIJRIBd9Ej1uVTCcBH0s0euTuFry7p4M2QNsdMxdLgUt+C
-   zlPJaIh2xAwZhZBYlPPvm9iqDGl17p0hNVPhCsBF8bGMHHwmxnsd8dskK
-   DrM5ZdV8xumVEiR6BUyR/gpgUT+MRsqOgVvcjZpAg7nrGZiPbf/w87Oya
-   tZSNax0d+ZhgQYgnrI5a6yZcsbZcB55YnmnzEnqVqf1at6NAQ+sHyin1C
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="317453505"
+  bh=+o04xQLPfR6ph1mrN9TOLw9IIeTZ0vtmCqoGxs1NsH0=;
+  b=Gh7RyCp9KRhBfg+n0RkmhGyU2BDZjMM7v8dy+Ki7+uRDIjS4c0pzroTe
+   vcWjE7kDLBFkjBJL9K3LqzksT+7/iMu4uuiXXvREWrqkIINpQzHVq8DXv
+   WlzrlBuM4IppsKiAkVsU886xz7AaDHBDHvjwnBCxk1fZ3IbK0OmWUiC9i
+   Aeny/q42Ms8bhX1EY6BnotW1WXW0yDAUbdSIrbaTsRZDTRR6muExDXwfV
+   6vJZV6fczU1ssRHLjrViiRZZWGx0fve9KnnL+Da0wWwCGVtcdy5FUGCpn
+   ZxGN2gLAgi1QaiZJUOkqBGwKB55GnOWLgr4TwxwPckLrOnTkEsQv5xKND
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="238897690"
 X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; 
-   d="scan'208";a="317453505"
+   d="scan'208";a="238897690"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:16:42 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:16:43 -0700
 X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; 
-   d="scan'208";a="613813294"
+   d="scan'208";a="613813325"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:16:42 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:16:43 -0700
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v5 01/14] mptcp: allow ADD_ADDR reissuance by userspace PMs
-Date: Wed, 16 Mar 2022 19:16:23 -0400
-Message-Id: <20220316231636.645625-2-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v5 11/14] selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_DESTROY
+Date: Wed, 16 Mar 2022 19:16:33 -0400
+Message-Id: <20220316231636.645625-12-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220316231636.645625-1-kishen.maloor@intel.com>
 References: <20220316231636.645625-1-kishen.maloor@intel.com>
@@ -42,37 +42,158 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change allows userspace PM implementations to reissue ADD_ADDR
-announcements (if necessary) based on their chosen policy.
+This change updates the "pm_nl_ctl" testing sample with a "dsf"
+(destroy subflow) option to support the newly added netlink interface
+command MPTCP_PM_CMD_SUBFLOW_DESTROY over the chosen MPTCP connection.
+
+E.g. ./pm_nl_ctl dsf lip 10.0.2.1 lport 44567 rip 10.0.2.2 rport 56789
+token 823274047
 
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
- net/mptcp/pm_netlink.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 115 ++++++++++++++++++
+ 1 file changed, 115 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 6fb84f9c377f..98e59576415b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -362,8 +362,16 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index e2437bacd133..8d74fcb04929 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -30,6 +30,7 @@ static void syntax(char *argv[])
+ 	fprintf(stderr, "\tann <local-ip> id <local-id> token <token> [port <local-port>] [dev <name>]\n");
+ 	fprintf(stderr, "\trem id <local-id> token <token>\n");
+ 	fprintf(stderr, "\tcsf lip <local-ip> lid <local-id> rip <remote-ip> rport <remote-port> token <token>\n");
++	fprintf(stderr, "\tdsf lip <local-ip> lport <local-port> rip <remote-ip> rport <remote-port> token <token>\n");
+ 	fprintf(stderr, "\tdel <id> [<ip>]\n");
+ 	fprintf(stderr, "\tget <id>\n");
+ 	fprintf(stderr, "\tset [<ip>] [id <nr>] flags [no]backup|[no]fullmesh [port <nr>]\n");
+@@ -174,6 +175,118 @@ static int resolve_mptcp_pm_netlink(int fd)
+ 	return genl_parse_getfamily((void *)data);
+ }
  
- 	lockdep_assert_held(&msk->pm.lock);
- 
--	if (mptcp_lookup_anno_list_by_saddr(msk, &entry->addr))
--		return false;
-+	add_entry = mptcp_lookup_anno_list_by_saddr(msk, &entry->addr);
++int dsf(int fd, int pm_family, int argc, char *argv[])
++{
++	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
++		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
++		  1024];
++	struct rtattr *rta, *addr;
++	u_int16_t family, port;
++	struct nlmsghdr *nh;
++	u_int32_t token;
++	int addr_start;
++	int off = 0;
++	int arg;
 +
-+	if (add_entry) {
-+		if (mptcp_pm_is_kernel(msk))
-+			return false;
++	const char *params[5];
 +
-+		sk_reset_timer(sk, &add_entry->add_timer,
-+			       jiffies + mptcp_get_add_addr_timeout(net));
-+		return true;
++	memset(params, 0, 5 * sizeof(const char *));
++
++	memset(data, 0, sizeof(data));
++	nh = (void *)data;
++	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_SUBFLOW_DESTROY,
++			    MPTCP_PM_VER);
++
++	if (argc < 12)
++		syntax(argv);
++
++	/* Params recorded in this order:
++	 * <local-ip>, <local-port>, <remote-ip>, <remote-port>, <token>
++	 */
++	for (arg = 2; arg < argc; arg++) {
++		if (!strcmp(argv[arg], "lip")) {
++			if (++arg >= argc)
++				error(1, 0, " missing local IP");
++
++			params[0] = argv[arg];
++		} else if (!strcmp(argv[arg], "lport")) {
++			if (++arg >= argc)
++				error(1, 0, " missing local port");
++
++			params[1] = argv[arg];
++		} else if (!strcmp(argv[arg], "rip")) {
++			if (++arg >= argc)
++				error(1, 0, " missing remote IP");
++
++			params[2] = argv[arg];
++		} else if (!strcmp(argv[arg], "rport")) {
++			if (++arg >= argc)
++				error(1, 0, " missing remote port");
++
++			params[3] = argv[arg];
++		} else if (!strcmp(argv[arg], "token")) {
++			if (++arg >= argc)
++				error(1, 0, " missing token");
++
++			params[4] = argv[arg];
++		} else
++			error(1, 0, "unknown keyword %s", argv[arg]);
 +	}
- 
- 	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
- 	if (!add_entry)
++
++	for (arg = 0; arg < 4; arg = arg + 2) {
++		/*  addr header */
++		addr_start = off;
++		addr = (void *)(data + off);
++		addr->rta_type = NLA_F_NESTED |
++			((arg == 0) ? MPTCP_PM_ATTR_ADDR : MPTCP_PM_ATTR_ADDR_REMOTE);
++		addr->rta_len = RTA_LENGTH(0);
++		off += NLMSG_ALIGN(addr->rta_len);
++
++		/*  addr data */
++		rta = (void *)(data + off);
++		if (inet_pton(AF_INET, params[arg], RTA_DATA(rta))) {
++			family = AF_INET;
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR4;
++			rta->rta_len = RTA_LENGTH(4);
++		} else if (inet_pton(AF_INET6, params[arg], RTA_DATA(rta))) {
++			family = AF_INET6;
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR6;
++			rta->rta_len = RTA_LENGTH(16);
++		} else
++			error(1, errno, "can't parse ip %s", params[arg]);
++		off += NLMSG_ALIGN(rta->rta_len);
++
++		/* family */
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_FAMILY;
++		rta->rta_len = RTA_LENGTH(2);
++		memcpy(RTA_DATA(rta), &family, 2);
++		off += NLMSG_ALIGN(rta->rta_len);
++
++		/*  port */
++		port = atoi(params[arg + 1]);
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_PORT;
++		rta->rta_len = RTA_LENGTH(2);
++		memcpy(RTA_DATA(rta), &port, 2);
++		off += NLMSG_ALIGN(rta->rta_len);
++
++		addr->rta_len = off - addr_start;
++	}
++
++	/* token */
++	token = atoi(params[4]);
++	rta = (void *)(data + off);
++	rta->rta_type = MPTCP_PM_ATTR_TOKEN;
++	rta->rta_len = RTA_LENGTH(4);
++	memcpy(RTA_DATA(rta), &token, 4);
++	off += NLMSG_ALIGN(rta->rta_len);
++
++	do_nl_req(fd, nh, off, 0);
++
++	return 0;
++}
++
+ int csf(int fd, int pm_family, int argc, char *argv[])
+ {
+ 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+@@ -1098,6 +1211,8 @@ int main(int argc, char *argv[])
+ 		return remove_addr(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "csf"))
+ 		return csf(fd, pm_family, argc, argv);
++	else if (!strcmp(argv[1], "dsf"))
++		return dsf(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "del"))
+ 		return del_addr(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "flush"))
 -- 
 2.31.1
 
