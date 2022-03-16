@@ -1,96 +1,100 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8264F1B75
-	for <mptcp@lists.linux.dev>; Tue, 15 Mar 2022 08:08:40 +0000 (UTC)
-Received: by mail-qk1-f177.google.com with SMTP id v15so14874711qkg.8
-        for <mptcp@lists.linux.dev>; Tue, 15 Mar 2022 01:08:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7782F2A
+	for <mptcp@lists.linux.dev>; Wed, 16 Mar 2022 15:58:04 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id r23so3363680edb.0
+        for <mptcp@lists.linux.dev>; Wed, 16 Mar 2022 08:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=42nOlJ/xfI5pax2tyUeyBO/tB1EvsYa5aTUD2QXimP8=;
-        b=i8z1k9mKRjQANagXx9rc2PrO4NXCUfU7iIj/HeofXRRaGYa7TFEm6/rc3J0qAEXkO+
-         gaq+pSlssr+okqfSGd+ZJIrJrMZqoRJz2aYaT+XZQY4NC8p/ubKojcb5LM+wWItKhBiq
-         BmPPmBGO6WiI+GJYSbP7j6gvpetP8xt2QliouVYFhWLA4StDDm/lvmNjUCT70abss1Pn
-         ZJj31c4e+T/69bEx4s0in5G7tzJKPcNnKPVdulX5geaGjIGv8PzWtUxvpNeA3cJ1v4ep
-         0bIg8iJNJ9yiKGmNPqMZGWRkC/qg8UegCRJ4ogcLuE8pLhkpuqSEACAxpHZISCxqxw8c
-         vURA==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=GHrDkHiI0WDlcIFquK8uu8odxjAgmb4HwmDgHtZoh7g=;
+        b=NBkh9bJQub6Jk5p3ypVzfJB8Kj6NFzV7RCmuS7lDl9XPV4lD4qGtTs23bIt5QzndAe
+         KBlACc/tfIGcX+ZR+d0LqUu9/dYh+kqAVR8cPMMYvle/vA4rZe6yy205GFqb4KKwKErl
+         F7w0FRVBt4TcIaoA5FcL9OT18YTJR8z/d3AJqxmfGo1Dg1xObxmhXc9gnMYZMsnzm45E
+         3FxvJ0uSXojYh8sRqXCbTQIIBghB+lbolQSLR9KZPVosTnedt/80x1rnshUZELwCy1t/
+         hk5xhWLhIUl7R97ZHps9+bXfa/kA5TREjdjjXCDvGRurdO18u1iNSSVNBWC4l3UbOUrQ
+         D4qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=42nOlJ/xfI5pax2tyUeyBO/tB1EvsYa5aTUD2QXimP8=;
-        b=nd3tmIBwfYoYwNbvfWqRJByonPyqhvjoucMO8dV9OKea705/5AhOHSqCtfdqoW3ROQ
-         52VyXW+3NGZKXak9M/pELwcZLaQOe9d1XtZEEOINUmdHQJN8dVdKM/ujlq9rN1hoeZLC
-         iEbSJI5x7q/PCZmxseLzZFkO9MWZ62U5u73AljK3OfwobHBtvisn177XOLn7LP11qX12
-         cRtoNjrIN/jZWWOydYfzFauJjJ935Ish17B7ra9AUMxz/N7srYBv0ckPEQT9Ew6Y7sp2
-         IbokUT+wyIgKJBGag2ZgQNdHmOmyt0OaY0Lmg3ECI9+mZ6XjAOyhbZ/8pTZR8dlXj8N/
-         Ddlg==
-X-Gm-Message-State: AOAM5304jnKl8ug/ui0q3BWYL5vhQFDl7gjifcUrZe37AMvE7dytEPT8
-	QkZgyZiVZbhIro5Ie4i+Ww==
-X-Google-Smtp-Source: ABdhPJxPAWEyh32QCNLFemZonX1/mbPeRlEY2puH4S+uAbzZY+SuDSVqWGpcGBHDHF7xJANn8B0+3A==
-X-Received: by 2002:a37:9c96:0:b0:67d:7293:7374 with SMTP id f144-20020a379c96000000b0067d72937374mr13814595qke.365.1647331719456;
-        Tue, 15 Mar 2022 01:08:39 -0700 (PDT)
-Received: from [127.0.0.1] ([20.119.230.151])
-        by smtp.gmail.com with ESMTPSA id p17-20020a37a611000000b0067b2b2c41fasm9176436qke.81.2022.03.15.01.08.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Mar 2022 01:08:38 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <be2f8bba76fd1a74f31e23f1fd1c5fde457e5108.1647327162.git.geliang.tang@suse.com>
-References:
- <be2f8bba76fd1a74f31e23f1fd1c5fde457e5108.1647327162.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: print extra msg in chk_csum_nr: Tests
- Results
-Message-ID: <5ca46297-e260-4e9b-9851-dcbb8f02115c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Mar 2022 08:08:38 +0000
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=GHrDkHiI0WDlcIFquK8uu8odxjAgmb4HwmDgHtZoh7g=;
+        b=HqtXwrzowMvh3tuWMzBd3t9FNFxel+bgzH0y7xhqt4hQ7yTdAEk5k4lFtGkHNgdBr3
+         Tnx6qW5HNwTosA7M2ZbqaLHq0txN+Cn7GvwmoYcsZyO7fb5IOvBAoEKlBSxVCZ+sWDN0
+         Mt6WAbVIl4QtZU0mjaPHXqOCrSGVsY8XXGUPmYl7/MGKDUOSn1JjyJTo2I5/oNIU5QSU
+         PWtM3y9CWwOlHaW6/1+tiMOD/MSIcAqJIJT+9nbuTCj0JfkWCl7L3BEHJlZF1dop2L1a
+         fCmndDY40gfGXoc1usQBuJrr0EyodtpcGoIz/VPzqeT+/Wtwt5xwXtQVAG0cg2+2KBJ0
+         jOaw==
+X-Gm-Message-State: AOAM5316JlZfgz86xYdt0LbVGTnRFTYsxw1I08XNFPBBhKqbg4j3tAwO
+	ihVHB+o1g+DhT3em6yyIgM2DnA==
+X-Google-Smtp-Source: ABdhPJxljgEeNMb91CJVUlVclfQKNT30LxhyHAppQmcAPgOg8aydehqM0ROw6cVPiki0CsOC6BVncg==
+X-Received: by 2002:a05:6402:2692:b0:416:c49a:2a2c with SMTP id w18-20020a056402269200b00416c49a2a2cmr218080edd.72.1647446282364;
+        Wed, 16 Mar 2022 08:58:02 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:c80e:ceec:7bc:494? ([2a02:578:8593:1200:c80e:ceec:7bc:494])
+        by smtp.gmail.com with ESMTPSA id q10-20020aa7cc0a000000b0040f826f09fdsm1143372edt.81.2022.03.16.08.58.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Mar 2022 08:58:01 -0700 (PDT)
+Message-ID: <032da72b-e0f9-ca70-622b-3429dbc1d494@tessares.net>
+Date: Wed, 16 Mar 2022 16:58:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH] mptcp: Fix crash due to tcp_tsorted_anchor was
+ initialized before release skb
+Content-Language: en-GB
+To: Yonglong Li <liyonglong@chinatelecom.cn>, mptcp@lists.linux.dev
+Cc: mathew.j.martineau@linux.intel.com
+References: <1646821209-35620-1-git-send-email-liyonglong@chinatelecom.cn>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <1646821209-35620-1-git-send-email-liyonglong@chinatelecom.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Yonglong, Paolo, Mat,
 
-Thank you for your modifications, that's great!
+On 09/03/2022 11:20, Yonglong Li wrote:
+> get crash when do pressure test of mptcp:
+> 
 
-Our CI did some validations and here is its report:
+(...)
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6750472991145984
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6750472991145984/summary/summary.txt
+> 
+> in __mptcp_alloc_tx_skb skb was alloced and skb->tcp_tsorted_anchor 
+> will be initialized,  in under memory pressure situation 
+> sk_wmem_schedule will return false and then kfree_skb. In this case 
+> skb->_skb_refdst is not null because_skb_refdst and 
+> tcp_tsorted_anchor are stored in the same mem, and kfree_skb will
+> try to release dst and casue crash.
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/4511867316994048
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4511867316994048/summary/summary.txt
+Thank you for the patch and the reviews!
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/3d584c2de1fc
+(sorry for the delay due to the reworking of the git repo)
 
-Please note that despite all the efforts =
-that have been already done to have a
-stable tests suite when executed on a=
- public CI like here, it is possible some
-reported issues are not due to =
-your modifications. Still, do not hesitate to
-help us improve that ;-)
+Now in our tree with Paolo and Mat's RvB tags (and without typos
+detected by 'checkpatch.pl --codespell')
+
+- 9f5c50f2e2b5: mptcp: Fix crash due to tcp_tsorted_anchor was
+initialized before release skb
+- Results (net-next): 1d99000bd70..b0d3123bdf0
+- Results (net): f8a0df6cce2..153502a63ba
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220316T155243
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220316T155243
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export-net
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
