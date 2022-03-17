@@ -1,36 +1,36 @@
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BB248A4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A10448A2
 	for <mptcp@lists.linux.dev>; Thu, 17 Mar 2022 15:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1647531306; x=1679067306;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=EgtX7OdoidfI0MVW/LMhtWa08zx5ZLwz3aDUcE5kC7U=;
-  b=HbzE4AifOgX7Xh7WrfJS0Ui0/e9s9hA1k1YGSFpLbD+jjRU5HBBzou+8
-   rb15AKe4b94xiBCqgg0dUEkCDumRgAJMPFmrKCsC6Xr69iqzl1KehMQEn
-   /CpwHl182z8Lg6l5hH4vAT/2qX1qBWWh3ksqgUXGmRJqg8MaLLHQibWP4
-   E08IC9V9Hrnbx5UZ4VsSHeGhOrC+0OH4E+eoXfQpssD6ETO3oK3nNtP2A
-   WrLDwg4DVOweflr+eDM2mV8aIJwHcsOV4daRMdj8cVCutXRnUFOOyvGZz
-   t1RlXjBeRJxV8Gyy5hcwWZz80SHWt/K15gzT5pzo/HikdI4fT7GWrndSd
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="237504880"
+  bh=Dfkdg5YKUEuC4T75Wfo2CDAcejWqGn3fTVKkOtLWEjo=;
+  b=a4EWz5z7qEHdicx2g8HQaWZDf4EoO2zvvgR7MIncfRqRRJ3/4impAsqy
+   UghDxlGUils4zz9ANSlRzxCYy1QSx5Lw3CEiGYsqiPYOt/XsW4ag6Ja2D
+   vaqwZ3/YGPcm26P7WP1lwVvZgBlDr8XXHH6XeMhQovvEFj0yjmgVLNu/B
+   cBN99VT6H/yiWyCaNpvICafI6GNf91Z8mHmVM4uOa5xhatt8fYQdNtyK0
+   UMbGe6rtnLi03MJqlnclJMzEoKm/W37lB/gshdmdnx5YnTvLPg5ogPSaG
+   TRf3PtREo07aCJ5sbzAXO25OAauapNuzLY2khcTPIMz4oMqoy3BWEUjb6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="237504881"
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="237504880"
+   d="scan'208";a="237504881"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 08:35:02 -0700
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="516804209"
+   d="scan'208";a="516804212"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
   by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 08:35:01 -0700
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v7 4/5] mptcp: establish subflows from either end of connection
-Date: Thu, 17 Mar 2022 11:34:52 -0400
-Message-Id: <20220317153453.665359-5-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v7 5/5] mptcp: expose server_side attribute in MPTCP netlink events
+Date: Thu, 17 Mar 2022 11:34:53 -0400
+Message-Id: <20220317153453.665359-6-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220317153453.665359-1-kishen.maloor@intel.com>
 References: <20220317153453.665359-1-kishen.maloor@intel.com>
@@ -42,78 +42,41 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change updates internal logic to permit subflows to be
-established from either the client or server ends of MPTCP
-connections. This symmetry and added flexibility may be
-harnessed by PM implementations running on either end in
-creating new subflows.
+This change records the 'server_side' attribute of MPTCP_EVENT_CREATED
+and MPTCP_EVENT_ESTABLISHED events to inform their recipient about the
+Client/Server role of the running MPTCP application.
 
-The essence of this change lies in not relying on the
-"server_side" flag (which continues to be available if needed).
-
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/246
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
- net/mptcp/options.c  | 2 +-
- net/mptcp/protocol.c | 5 +----
- net/mptcp/protocol.h | 8 ++++++--
- 3 files changed, 8 insertions(+), 7 deletions(-)
+ include/uapi/linux/mptcp.h | 1 +
+ net/mptcp/pm_netlink.c     | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c9625fea3ef9..e05d9458a025 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -931,7 +931,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 		if (TCP_SKB_CB(skb)->seq == subflow->ssn_offset + 1 &&
- 		    TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq &&
- 		    subflow->mp_join && (mp_opt->suboptions & OPTIONS_MPTCP_MPJ) &&
--		    READ_ONCE(msk->pm.server_side))
-+		    !subflow->request_join)
- 			tcp_send_ack(ssk);
- 		goto fully_established;
- 	}
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index fbb14dfe62b3..97b0338fe96f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3263,15 +3263,12 @@ bool mptcp_finish_join(struct sock *ssk)
- 		return false;
- 	}
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 9690efedb5fa..e41ea01a94bb 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -188,6 +188,7 @@ enum mptcp_event_attr {
+ 	MPTCP_ATTR_IF_IDX,	/* s32 */
+ 	MPTCP_ATTR_RESET_REASON,/* u32 */
+ 	MPTCP_ATTR_RESET_FLAGS, /* u32 */
++	MPTCP_ATTR_SERVER_SIDE,	/* u8 */
  
--	if (!msk->pm.server_side)
-+	if (!list_empty(&subflow->node))
- 		goto out;
+ 	__MPTCP_ATTR_AFTER_LAST
+ };
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 905f451ff0f9..6fb84f9c377f 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1974,6 +1974,9 @@ static int mptcp_event_created(struct sk_buff *skb,
+ 	if (err)
+ 		return err;
  
- 	if (!mptcp_pm_allow_new_subflow(msk))
- 		goto err_prohibited;
- 
--	if (WARN_ON_ONCE(!list_empty(&subflow->node)))
--		goto err_prohibited;
--
- 	/* active connections are already on conn_list.
- 	 * If we can't acquire msk socket lock here, let the release callback
- 	 * handle it
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 3e5c8d5273a9..9b655d049b94 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -908,13 +908,17 @@ static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
- 	return false;
- }
- 
-+static inline bool is_active_ssk(struct mptcp_subflow_context *subflow)
-+{
-+	return (subflow->request_mptcp || subflow->request_join);
-+}
++	if (nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE, READ_ONCE(msk->pm.server_side)))
++		return -EMSGSIZE;
 +
- static inline bool subflow_simultaneous_connect(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
--	struct sock *parent = subflow->conn;
- 
- 	return sk->sk_state == TCP_ESTABLISHED &&
--	       !mptcp_sk(parent)->pm.server_side &&
-+	       is_active_ssk(subflow) &&
- 	       !subflow->conn_finished;
+ 	return mptcp_event_add_subflow(skb, ssk);
  }
  
 -- 
