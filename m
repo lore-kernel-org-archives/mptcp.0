@@ -1,92 +1,109 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B586C2F31
-	for <mptcp@lists.linux.dev>; Thu, 17 Mar 2022 17:25:14 +0000 (UTC)
-Received: by mail-qk1-f178.google.com with SMTP id c7so4886941qka.7
-        for <mptcp@lists.linux.dev>; Thu, 17 Mar 2022 10:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=FkGxokrvq8Ns2IQ34j5MCDidUbI/6GPOEQW3MYxMWeU=;
-        b=VZ9/myBwIhCJTnDUfU3JqmMyJwNMZ3UWzD7UIIYsnyCpyfDwF7vx/eW80YwGskZaZk
-         xDQv5JBf+asAF7XUODj03Nkx6tzZ8rU/LvUdO9pQ1FpLc+g+kehhSBWGJ4UpPsL6z3AC
-         Aky2GiUHk4qLaNNq8lAoqDtWX56J8DWqarG566U0MbJHf8gfg0tl7BczjOrG9NszrSEx
-         wpzCnycJCGYzl7e63FzaLQz1kPl8h1Be7yFIkLBQUDs5Fb3X3jarlQnJuD15ihfhPJwm
-         qXi35NCnTiZSdCExJjYJjtyG+vdm9dQxcGDhpFd9PVDLrCpgsi5N9zXzt4gK/jaqVRdl
-         bGjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=FkGxokrvq8Ns2IQ34j5MCDidUbI/6GPOEQW3MYxMWeU=;
-        b=aFuQQa6zBT7a/OnwSAiTtkQV5FXDnQurrXTn9HoNSSh/KQwfHq5s0EjlMIRgC1HbpX
-         ws/eqpJSOjLz66tMV0n+FKnvfFA/agiGtRuWo/oapk3XuSapKCYVSjMZBRK9HdaPb1Mz
-         hdcXpmhaX9c6tjXZxJQopRSq9t0kL4Tc7ead/qPE0GUpL1COFkepzoLSXF/+8lBv4lAr
-         Fr5o100sFLNiTPoiihaRBv3PlIfIRzfCeCBeEupyDSG0E0GkZm71LmRIptRI4saS0Ci4
-         n3XSSV2G1hQ0wYLkHZ+VvFEZkeqSwzaf7iyuPiaJ/Kw+aZm8UVf9lFJjZLeTZnUEqd+b
-         Ms4g==
-X-Gm-Message-State: AOAM5320nfn+7J80lBpgHoMdiCeaPdz6WguWthlb3bNmu6bs0AjqIh4J
-	+3BUjiVtYp/g6UZ1kSYwng==
-X-Google-Smtp-Source: ABdhPJw1H6TR55pY1+rHkRb9xC5N32485gApulx9+5hgrmIHC15N3mI7ClSWD34k6CordXH5EeHguw==
-X-Received: by 2002:a05:620a:f98:b0:648:a980:5161 with SMTP id b24-20020a05620a0f9800b00648a9805161mr3529364qkn.545.1647537913490;
-        Thu, 17 Mar 2022 10:25:13 -0700 (PDT)
-Received: from [127.0.0.1] ([40.75.81.69])
-        by smtp.gmail.com with ESMTPSA id p13-20020a05622a048d00b002e1ce0c627csm4221125qtx.58.2022.03.17.10.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Mar 2022 10:25:13 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220317153453.665359-6-kishen.maloor@intel.com>
-References: <20220317153453.665359-6-kishen.maloor@intel.com>
-Subject: Re: mptcp: expose server_side attribute in MPTCP netlink events:
- Tests Results
-Message-ID: <364cbe53-99fb-f407-e1c5-cb745e598931@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Mar 2022 17:25:12 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488F94A9F
+	for <mptcp@lists.linux.dev>; Thu, 17 Mar 2022 22:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647555011; x=1679091011;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QpWbczOzLS4au3qRyyNQY/DJiO8OZbjCj8/kWLrheTM=;
+  b=S5Wju0Gfln2zWw43LDG2Odo5NKpk1BVqi2VgxXDI8lmIEHSSAeyVlRpw
+   Q47UM0i7xjUCzTposY92IydIaDRLVJ3LwG2FFbZDijRhdhwYGWVoRzcEp
+   /iDFTCdALRCsUL27Yon9Kx23NlzTU7J0s2iELBez3bBH5dyUFPSYhTumn
+   ejy5EXxKCjiGoNjvXexSWcARqaeI+EufyrZMUSljRxms9tTUB77hr6wr7
+   8goPWIs5IdsXNwO3N3Fe22AxzVlRJINzhrO9bnxnPfa1b7iK5dKqPSo6o
+   g4AGXytDw8i5EX9G7F4XozceHjsGnLIDjyfJiiItbWUTh+nZVzIki9RUy
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="320207519"
+X-IronPort-AV: E=Sophos;i="5.90,190,1643702400"; 
+   d="scan'208";a="320207519"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 15:10:10 -0700
+X-IronPort-AV: E=Sophos;i="5.90,190,1643702400"; 
+   d="scan'208";a="599259580"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.9.212])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 15:10:09 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Yonglong Li <liyonglong@chinatelecom.cn>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net] mptcp: Fix crash due to tcp_tsorted_anchor was initialized before release skb
+Date: Thu, 17 Mar 2022 15:09:53 -0700
+Message-Id: <20220317220953.426024-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Kishen,
+From: Yonglong Li <liyonglong@chinatelecom.cn>
 
-Thank you for your modifications, that's great!
+Got crash when doing pressure test of mptcp:
 
-Our CI did some validations and here is its report:
+===========================================================================
+dst_release: dst:ffffa06ce6e5c058 refcnt:-1
+kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+BUG: unable to handle kernel paging request at ffffa06ce6e5c058
+PGD 190a01067 P4D 190a01067 PUD 43fffb067 PMD 22e403063 PTE 8000000226e5c063
+Oops: 0011 [#1] SMP PTI
+CPU: 7 PID: 7823 Comm: kworker/7:0 Kdump: loaded Tainted: G            E
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.2.1 04/01/2014
+Call Trace:
+ ? skb_release_head_state+0x68/0x100
+ ? skb_release_all+0xe/0x30
+ ? kfree_skb+0x32/0xa0
+ ? mptcp_sendmsg_frag+0x57e/0x750
+ ? __mptcp_retrans+0x21b/0x3c0
+ ? __switch_to_asm+0x35/0x70
+ ? mptcp_worker+0x25e/0x320
+ ? process_one_work+0x1a7/0x360
+ ? worker_thread+0x30/0x390
+ ? create_worker+0x1a0/0x1a0
+ ? kthread+0x112/0x130
+ ? kthread_flush_work_fn+0x10/0x10
+ ? ret_from_fork+0x35/0x40
+===========================================================================
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6641200433201152
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6641200433201152/summary/summary.txt
+In __mptcp_alloc_tx_skb skb was allocated and skb->tcp_tsorted_anchor will
+be initialized, in under memory pressure situation sk_wmem_schedule will
+return false and then kfree_skb. In this case skb->_skb_refdst is not null
+because_skb_refdst and tcp_tsorted_anchor are stored in the same mem, and
+kfree_skb will try to release dst and cause crash.
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): selftest_diag =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6079457634025472
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6079457634025472/su=
-mmary/summary.txt
+Fixes: f70cad1085d1 ("mptcp: stop relying on tcp_tx_skb_cache")
+Cc: stable@vger.kernel.org
+Reviewed-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ net/mptcp/protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3e17c518d8ab
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1c72f25f083e..014c9d88f947 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1196,6 +1196,7 @@ static struct sk_buff *__mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, g
+ 		tcp_skb_entail(ssk, skb);
+ 		return skb;
+ 	}
++	tcp_skb_tsorted_anchor_cleanup(skb);
+ 	kfree_skb(skb);
+ 	return NULL;
+ }
 
-Please note that despite all the efforts that have been already done to =
-have a
-stable tests suite when executed on a public CI like here, it is =
-possible some
-reported issues are not due to your modifications. Still, do =
-not hesitate to
-help us improve that ;-)
+base-commit: 551acdc3c3d2b6bc97f11e31dcf960bc36343bfc
+-- 
+2.35.1
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
