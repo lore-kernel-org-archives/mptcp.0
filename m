@@ -1,75 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B85F48C0
-	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 11:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1647601582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BHadhpSYG4tNFoZ8yfeR2d3KInPmecFcnk0jb3oHtAg=;
-	b=K0t9TVqiHhgYJRCJ3Y7GHladdZOIa78/Hx2u7iYb0Bng/DsilQSLOZUspIdSEAgv8EOC8l
-	0nxspwrnGjeT94Tkx24nZgQvMOWXP3PaltJrz8L9/6DUM5nLgSdluAjF8AzfJtB2pHzP4a
-	jPaN2+1NbBOkIBxrOEoeMa4e5SLPwno=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-330-PMJVu6gqPje7Kn-gAIQ6Pg-1; Fri, 18 Mar 2022 07:06:21 -0400
-X-MC-Unique: PMJVu6gqPje7Kn-gAIQ6Pg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4CD141857F10
-	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 11:06:21 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.72])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D31D41454559
-	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 11:06:20 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 3/3] mptcp:  reset the packet scheduler on PRIO change
-Date: Fri, 18 Mar 2022 12:06:05 +0100
-Message-Id: <067656fe2d3628c219f7fcc4b4d99d6b5d6005c0.1647601548.git.pabeni@redhat.com>
-In-Reply-To: <6fc1ea29ae85074d626ad1cef3fea34055de37f1.1647601548.git.pabeni@redhat.com>
-References: <6fc1ea29ae85074d626ad1cef3fea34055de37f1.1647601548.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E83513E
+	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 21:20:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A06AC340F8;
+	Fri, 18 Mar 2022 21:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1647638413;
+	bh=nM6AGHeZSAIAR+giHj1rnczSD88wMAA0/RjS788l9bM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=FFOLSmm4d6EWhmr53nOqnlQibS31zRHv+KaUlvl5a915Cu1fGvlsFJL43YwmhP8fX
+	 Uw8rkHaR7TZt/l/MH1OeZ7NJ/vC5ybMwK80GUJxuCmZ8dZBgYzdN4zw6fYw4XoX9IT
+	 eJAdvWAg27gdMUmZCqjA2nRr/Vfy07VWhBVwmxfJxxGXuA8skUEzrTcutK9WC2hGT4
+	 bgYB3/P2vh8qvEXZ5oLrXN1iDgjbvykNtA+ivCKBKjqf8I7XDfMovoTA6SIEMhgE/4
+	 MXObna5YWPM2gn0MJOyqUxb6r6DhznCHtUbLa/mE4uYQvAkKq4dV8d6RVTPBFHUZVr
+	 VpOK41INDGsjA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6495AE6D44B;
+	Fri, 18 Mar 2022 21:20:13 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+Subject: Re: [PATCH net-next] mptcp: send ADD_ADDR echo before create subflows
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <164763841340.20195.7704185499588470614.git-patchwork-notify@kernel.org>
+Date: Fri, 18 Mar 2022 21:20:13 +0000
+References: <20220317221444.426335-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220317221444.426335-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, liyonglong@chinatelecom.cn, davem@davemloft.net,
+ kuba@kernel.org, matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
+ pabeni@redhat.com
 
-Similar to the previous patch, for priority changes
-requested by the local PM.
+Hello:
 
-Reported-and-suggested-by: Davide Caratti <dcaratti@redhat.com>
-Fixes: 067065422fcd ("mptcp: add the outgoing MP_PRIO support")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm_netlink.c | 2 ++
- 1 file changed, 2 insertions(+)
+This patch was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c1f4befb1e45..10a73898c8db 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -727,6 +727,8 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 		if (!addresses_equal(&local, addr, addr->port))
- 			continue;
- 
-+		if (subflow->backup != bkup)
-+			msk->last_snd = NULL;
- 		subflow->backup = bkup;
- 		subflow->send_mp_prio = 1;
- 		subflow->request_bkup = bkup;
+On Thu, 17 Mar 2022 15:14:44 -0700 you wrote:
+> From: Yonglong Li <liyonglong@chinatelecom.cn>
+> 
+> In some corner cases, the peer handing an incoming ADD_ADDR option, can
+> receive a retransmitted ADD_ADDR for the same address before the subflow
+> creation completes.
+> 
+> We can avoid the above issue by generating and sending the ADD_ADDR echo
+> before starting the MPJ subflow connection.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next] mptcp: send ADD_ADDR echo before create subflows
+    https://git.kernel.org/netdev/net-next/c/12a18341b5c3
+
+You are awesome, thank you!
 -- 
-2.35.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
