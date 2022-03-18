@@ -1,87 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545765137
-	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 21:20:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F1686C340F0;
-	Fri, 18 Mar 2022 21:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1647638413;
-	bh=1nmMWiYNcjCRu0y7t8Gr4VgP3eDKoAYhbGIR/JIpUMw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bYk3qVdCU/J8HYrU3Fl+/10r1HlgJMwlIy3TKNZZZr0UbRSwxJvZBbOFvSUTfFSZ4
-	 t7sY6owgZv2xp1yvRGpkwmjeLD1MI6lvuPeh42cL/PDon8SVwUqTI+H3iiEIqPN07q
-	 mOODBRFrjw3H7beQqm1EHkPcT6gBZRxmI5Bg9W5pg7KGP/SvXY/dMrHnTDNP9v10eW
-	 abBQbYnBG910L8xOuDaJXpc958aw29AnoYU2N9xMksjzvXw7bzAy69MmsBqH5bjcPx
-	 AydRwjLdgzHmcbGg3DjqY0KaVGjZvG/O6HwuEr6GsC1UwzNNIVovmfGS+E0nagYyzv
-	 zvtpDLzqGP1qQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D7A3AE6D44B;
-	Fri, 18 Mar 2022 21:20:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0D76444
+	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 23:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647645570; x=1679181570;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=fXqY0dnxH3g+uOn936rRx4bp3Xy3Az6/oxMx37UNQpM=;
+  b=eOGijZcBMahgmxJI0xKlY4WIhTBvXu7glrffw5rY6HvOeJIx0tTR8Q+N
+   NCSON0JLOI5VwQNlYTY7iKjk27RV6iN7DaHVd98PWd1OcEqyfMrSYmUZq
+   jeIbUgkRSt6/GiJLVaovHx8C8Ys6w0x7cTHtwMTqLw/wliZ3kIN10AN1O
+   VYYER9UiWDitSa0bilnw3B1Fwa6vPZ0H4doUNRviIXqjdQ0QT3JpbpEsK
+   xBcf48wLsXBO44twxfjPQihre0wwL//lfNmSfZKpdIiiP/fmey8+QnCO+
+   3O1FxAgC297uhlImneVBlorkHFip5A5aXo5GcuDAc9U85XKzNwt5TISMm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10290"; a="256970620"
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="256970620"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 16:19:29 -0700
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="614544189"
+Received: from iitotia-mobl1.amr.corp.intel.com ([10.209.55.150])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 16:19:29 -0700
+Date: Fri, 18 Mar 2022 16:19:28 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v5 0/6] MP_FAIL echo and retrans
+In-Reply-To: <2775913c-722b-65b9-13f4-cfdcd5217e36@linux.intel.com>
+Message-ID: <bfe8bd4-abf-5637-e2d8-a025313bd380@linux.intel.com>
+References: <cover.1647327162.git.geliang.tang@suse.com> <2775913c-722b-65b9-13f4-cfdcd5217e36@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: Fix crash due to tcp_tsorted_anchor was
- initialized before release skb
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <164763841287.20195.16890121074112773780.git-patchwork-notify@kernel.org>
-Date: Fri, 18 Mar 2022 21:20:12 +0000
-References: <20220317220953.426024-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220317220953.426024-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, liyonglong@chinatelecom.cn, davem@davemloft.net,
- kuba@kernel.org, matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
- stable@vger.kernel.org, pabeni@redhat.com
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello:
+On Wed, 16 Mar 2022, Mat Martineau wrote:
 
-This patch was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+> On Tue, 15 Mar 2022, Geliang Tang wrote:
+>
+>> v5:
+>> - re-check for TCP_CLOSE.
+>> - add a new helper mptcp_check_mp_fail_response().
+>> - add two timers cleanup patches.
+>> 
+>
+> Hi Geliang -
+>
+> v5 is looking good to me so far, but I still need to run some tests.
+>
 
-On Thu, 17 Mar 2022 15:09:53 -0700 you wrote:
-> From: Yonglong Li <liyonglong@chinatelecom.cn>
-> 
-> Got crash when doing pressure test of mptcp:
-> 
-> ===========================================================================
-> dst_release: dst:ffffa06ce6e5c058 refcnt:-1
-> kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-> BUG: unable to handle kernel paging request at ffffa06ce6e5c058
-> PGD 190a01067 P4D 190a01067 PUD 43fffb067 PMD 22e403063 PTE 8000000226e5c063
-> Oops: 0011 [#1] SMP PTI
-> CPU: 7 PID: 7823 Comm: kworker/7:0 Kdump: loaded Tainted: G            E
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.2.1 04/01/2014
-> Call Trace:
->  ? skb_release_head_state+0x68/0x100
->  ? skb_release_all+0xe/0x30
->  ? kfree_skb+0x32/0xa0
->  ? mptcp_sendmsg_frag+0x57e/0x750
->  ? __mptcp_retrans+0x21b/0x3c0
->  ? __switch_to_asm+0x35/0x70
->  ? mptcp_worker+0x25e/0x320
->  ? process_one_work+0x1a7/0x360
->  ? worker_thread+0x30/0x390
->  ? create_worker+0x1a0/0x1a0
->  ? kthread+0x112/0x130
->  ? kthread_flush_work_fn+0x10/0x10
->  ? ret_from_fork+0x35/0x40
-> ===========================================================================
-> 
-> [...]
+Ok, I got a chance to look at the packet traces from the self tests. I 
+also tested with a shorter timeout and commented out the echo, and the 
+subflow was reset as expected.
 
-Here is the summary with links:
-  - [net] mptcp: Fix crash due to tcp_tsorted_anchor was initialized before release skb
-    https://git.kernel.org/netdev/net/c/3ef3905aa3b5
+Looks good for the export branch:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
+It would be good to have a packetdrill test for this, even if it does take 
+a couple of minutes to fail. We wouldn't have to run it in the normal CI.
+
+
+Mat
+
+
+>
+>> v4:
+>> - start and stop sk_timer instead of setting and clearing msk->flags.
+>> - add a new patch.
+>> 
+>> v3:
+>> - use msk->sk_timer and a msk->flags bit.
+>> - use READ_ONCE/WRITE_ONCE for subflow->mp_fail_response_expect.
+>> - update selftest.
+>> 
+>> v2:
+>> - don't clear mp_fail_response_expect flag.
+>> - add a helper mp_fail_response_expect_subflow to get the subflow,
+>>   instead of using msk->first.
+>> - add locks as Mat suggested.
+>> - add a selftest.
+>> 
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/261
+>> 
+>> Geliang Tang (6):
+>>  mptcp: use mptcp_stop_timer
+>>  mptcp: add data lock for sk timers
+>>  mptcp: add MP_FAIL response support
+>>  mptcp: reset subflow when MP_FAIL doesn't respond
+>>  selftests: mptcp: check MP_FAIL response mibs
+>>  selftests: mptcp: print extra msg in chk_csum_nr
+>> 
+>> net/mptcp/pm.c                                | 18 +++++-
+>> net/mptcp/protocol.c                          | 64 ++++++++++++++++++-
+>> net/mptcp/protocol.h                          |  2 +
+>> net/mptcp/subflow.c                           | 13 ++++
+>> .../testing/selftests/net/mptcp/mptcp_join.sh | 49 ++++++++++++--
+>> 5 files changed, 139 insertions(+), 7 deletions(-)
+>> 
+>> -- 
+>> 2.34.1
+>> 
+>> 
+>> 
+>
+> --
+> Mat Martineau
+> Intel
+>
+>
+
+--
+Mat Martineau
+Intel
