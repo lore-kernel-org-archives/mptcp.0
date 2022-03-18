@@ -1,46 +1,91 @@
-Received: from mail.postform.pl (mail.postform.pl [195.231.64.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B652F2D
-	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 09:16:57 +0000 (UTC)
-Received: by mail.postform.pl (Postfix, from userid 1001)
-	id 68EC1ACC92; Fri, 18 Mar 2022 09:02:25 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=postform.pl; s=mail;
-	t=1647594151; bh=Cp7iEcBs6UYsUZoqwaSKv66JiG6VJnuY7Lx3D9vYwU4=;
-	h=Date:From:To:Subject:From;
-	b=vqy9OguMYGVfffp4vyRsfcRqAx2wYiBBp/wdDa0x8qlOOXZvwf0JrMGALdGClRNDk
-	 1Oom/fE2Uk95i1kylTBC0ZXSs2JeEOvLjxYYZ/Jq69qfgoPtuo1vySxxEUkcbqZK0k
-	 4e5EKeWsn34yaFewCVevc1xLsWLJVjhaJOuuI7ljeCCX57WTzxFUk37rC460tqdnjw
-	 rRWs4sR1HrRGOrDk+fRGNrSyb7OSPFKJniM70E76chcdSXc5M0Zr290ZdN4pmguwKy
-	 9BaGjwmblQLn1JcwHxtW8YH8RBYAy7i/P2h3RtC6bF9oXVkUt+TbM2LRX1gMsR1a/i
-	 gbijyzEbTS69g==
-Received: by mail.postform.pl for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 09:01:43 GMT
-Message-ID: <20220318074502-0.1.1i.k0ds.0.0g03ab7eco@postform.pl>
-Date: Fri, 18 Mar 2022 09:01:43 GMT
-From: "Norbert Karecki" <norbert.karecki@postform.pl>
-To: <mptcp@lists.linux.dev>
-Subject: Wycena paneli fotowoltaicznych
-X-Mailer: mail.postform.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AFB48B7
+	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 11:06:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1647601581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EiAyQKHEALrPLIHRw6Hj7ZzoXCy4hlsXglWnKmaPSmc=;
+	b=O6/JvRK9mg9nuAJFIxsVKULsXWvgy47nVJ9OUmsBDg7hAOV0tjfm2UfHh8ihxVZqBuM286
+	z/LOXbbVjyPdjdeXcHQY1nNZjffF6X1r1/A+wxeXTJJbP04A7o6vgKtEyVabFwa0LBrDFK
+	k4m+dgmWIMh9RJnuYNCEKblfv3m0T28=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-468-mQi2T1saP-e56GeUP-to7Q-1; Fri, 18 Mar 2022 07:06:20 -0400
+X-MC-Unique: mQi2T1saP-e56GeUP-to7Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D4A582999B4C
+	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 11:06:19 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.72])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 681411400E6F
+	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 11:06:19 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 1/3] mptcp: optimize release_cb for the common case
+Date: Fri, 18 Mar 2022 12:06:03 +0100
+Message-Id: <6fc1ea29ae85074d626ad1cef3fea34055de37f1.1647601548.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Dzie=C5=84 dobry,
+The mptcp release callback checks several flags in atomic
+context, but only MPTCP_CLEAN_UNA can be up frequently.
 
-dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
-irm=C4=85.
+Reorganize the code to avoid multiple conditionals in the
+most common scenarios.
 
-=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
-ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
+Additional clarify a related comment.
 
-Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
-ropozycji?
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index fbb14dfe62b3..bdba1ddee2a7 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3118,15 +3118,17 @@ static void mptcp_release_cb(struct sock *sk)
+ 		spin_lock_bh(&sk->sk_lock.slock);
+ 	}
+ 
+-	/* be sure to set the current sk state before tacking actions
+-	 * depending on sk_state
+-	 */
+-	if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
+-		__mptcp_set_connected(sk);
+ 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+ 		__mptcp_clean_una_wakeup(sk);
+-	if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
+-		__mptcp_error_report(sk);
++	if (unlikely(&msk->cb_flags)) {
++		/* be sure to set the current sk state before tacking actions
++		 * depending on sk_state, that is processing MPTCP_ERROR_REPORT
++		 */
++		if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
++			__mptcp_set_connected(sk);
++		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
++			__mptcp_error_report(sk);
++	}
+ 
+ 	__mptcp_update_rmem(sk);
+ }
+-- 
+2.35.1
 
-Pozdrawiam
-Norbert Karecki
