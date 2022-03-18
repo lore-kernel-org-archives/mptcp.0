@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E83513E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545765137
 	for <mptcp@lists.linux.dev>; Fri, 18 Mar 2022 21:20:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A06AC340F8;
-	Fri, 18 Mar 2022 21:20:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F1686C340F0;
+	Fri, 18 Mar 2022 21:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1647638413;
-	bh=nM6AGHeZSAIAR+giHj1rnczSD88wMAA0/RjS788l9bM=;
+	bh=1nmMWiYNcjCRu0y7t8Gr4VgP3eDKoAYhbGIR/JIpUMw=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=FFOLSmm4d6EWhmr53nOqnlQibS31zRHv+KaUlvl5a915Cu1fGvlsFJL43YwmhP8fX
-	 Uw8rkHaR7TZt/l/MH1OeZ7NJ/vC5ybMwK80GUJxuCmZ8dZBgYzdN4zw6fYw4XoX9IT
-	 eJAdvWAg27gdMUmZCqjA2nRr/Vfy07VWhBVwmxfJxxGXuA8skUEzrTcutK9WC2hGT4
-	 bgYB3/P2vh8qvEXZ5oLrXN1iDgjbvykNtA+ivCKBKjqf8I7XDfMovoTA6SIEMhgE/4
-	 MXObna5YWPM2gn0MJOyqUxb6r6DhznCHtUbLa/mE4uYQvAkKq4dV8d6RVTPBFHUZVr
-	 VpOK41INDGsjA==
+	b=bYk3qVdCU/J8HYrU3Fl+/10r1HlgJMwlIy3TKNZZZr0UbRSwxJvZBbOFvSUTfFSZ4
+	 t7sY6owgZv2xp1yvRGpkwmjeLD1MI6lvuPeh42cL/PDon8SVwUqTI+H3iiEIqPN07q
+	 mOODBRFrjw3H7beQqm1EHkPcT6gBZRxmI5Bg9W5pg7KGP/SvXY/dMrHnTDNP9v10eW
+	 abBQbYnBG910L8xOuDaJXpc958aw29AnoYU2N9xMksjzvXw7bzAy69MmsBqH5bjcPx
+	 AydRwjLdgzHmcbGg3DjqY0KaVGjZvG/O6HwuEr6GsC1UwzNNIVovmfGS+E0nagYyzv
+	 zvtpDLzqGP1qQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6495AE6D44B;
-	Fri, 18 Mar 2022 21:20:13 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D7A3AE6D44B;
+	Fri, 18 Mar 2022 21:20:12 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -26,38 +26,58 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] mptcp: send ADD_ADDR echo before create subflows
+Subject: Re: [PATCH net] mptcp: Fix crash due to tcp_tsorted_anchor was
+ initialized before release skb
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <164763841340.20195.7704185499588470614.git-patchwork-notify@kernel.org>
-Date: Fri, 18 Mar 2022 21:20:13 +0000
-References: <20220317221444.426335-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220317221444.426335-1-mathew.j.martineau@linux.intel.com>
+ <164763841287.20195.16890121074112773780.git-patchwork-notify@kernel.org>
+Date: Fri, 18 Mar 2022 21:20:12 +0000
+References: <20220317220953.426024-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220317220953.426024-1-mathew.j.martineau@linux.intel.com>
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Cc: netdev@vger.kernel.org, liyonglong@chinatelecom.cn, davem@davemloft.net,
  kuba@kernel.org, matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
- pabeni@redhat.com
+ stable@vger.kernel.org, pabeni@redhat.com
 
 Hello:
 
-This patch was applied to netdev/net-next.git (master)
+This patch was applied to netdev/net.git (master)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 17 Mar 2022 15:14:44 -0700 you wrote:
+On Thu, 17 Mar 2022 15:09:53 -0700 you wrote:
 > From: Yonglong Li <liyonglong@chinatelecom.cn>
 > 
-> In some corner cases, the peer handing an incoming ADD_ADDR option, can
-> receive a retransmitted ADD_ADDR for the same address before the subflow
-> creation completes.
+> Got crash when doing pressure test of mptcp:
 > 
-> We can avoid the above issue by generating and sending the ADD_ADDR echo
-> before starting the MPJ subflow connection.
+> ===========================================================================
+> dst_release: dst:ffffa06ce6e5c058 refcnt:-1
+> kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+> BUG: unable to handle kernel paging request at ffffa06ce6e5c058
+> PGD 190a01067 P4D 190a01067 PUD 43fffb067 PMD 22e403063 PTE 8000000226e5c063
+> Oops: 0011 [#1] SMP PTI
+> CPU: 7 PID: 7823 Comm: kworker/7:0 Kdump: loaded Tainted: G            E
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.2.1 04/01/2014
+> Call Trace:
+>  ? skb_release_head_state+0x68/0x100
+>  ? skb_release_all+0xe/0x30
+>  ? kfree_skb+0x32/0xa0
+>  ? mptcp_sendmsg_frag+0x57e/0x750
+>  ? __mptcp_retrans+0x21b/0x3c0
+>  ? __switch_to_asm+0x35/0x70
+>  ? mptcp_worker+0x25e/0x320
+>  ? process_one_work+0x1a7/0x360
+>  ? worker_thread+0x30/0x390
+>  ? create_worker+0x1a0/0x1a0
+>  ? kthread+0x112/0x130
+>  ? kthread_flush_work_fn+0x10/0x10
+>  ? ret_from_fork+0x35/0x40
+> ===========================================================================
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next] mptcp: send ADD_ADDR echo before create subflows
-    https://git.kernel.org/netdev/net-next/c/12a18341b5c3
+  - [net] mptcp: Fix crash due to tcp_tsorted_anchor was initialized before release skb
+    https://git.kernel.org/netdev/net/c/3ef3905aa3b5
 
 You are awesome, thank you!
 -- 
