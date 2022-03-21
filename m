@@ -1,55 +1,57 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2CC2F24
-	for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 09:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3755436A
+	for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 10:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1647855808;
+	s=mimecast20190719; t=1647859988;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+UBbI11cQgXH05OBJATzTVqXodvbWMt8yABBqk+BXUg=;
-	b=VwZeCEmmEoTh7LFC21dcad6Vry5psxnVwPBu0BKRdmzxMm4aKPPvHJY/SdIS4YIDqEJMlk
-	8bTFnyEkCPwJm9GSd6zdnmOFKe5E3lOwSYwyNiqDJJEeGRRPeIUDwJbl3KNORj6mP7eP4i
-	ypXO9U9Crp/rPxkOtnSjC8Z3VkwwenE=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=1A6imOIF7juc/kUiAko2FyIQFIU4X9lN1VsL9pw7I2w=;
+	b=J/DiNfNe2SMO3KuL/K07NCnj1bYYTEk3TcgrPnFAC+WgV056IBeD5rk/BfgZTlnG4+Z+64
+	2yef+BkJG9OoJ5B1sKjtyF6gw4oCjhQHqVaeycfcpw6hojELlIr+nvJpTmV86i0V4Zthkk
+	mecXhW3wHn9KpVONsOeykq4XCLK7b6s=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-327-SU6gvZA6PSeCCLXrIxkMOw-1; Mon, 21 Mar 2022 05:43:23 -0400
-X-MC-Unique: SU6gvZA6PSeCCLXrIxkMOw-1
-Received: by mail-qv1-f69.google.com with SMTP id g2-20020a0562141cc200b004123b0abe18so11270186qvd.2
-        for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 02:43:23 -0700 (PDT)
+ us-mta-203-9HNaLCzaN9aZl3IUQHK73w-1; Mon, 21 Mar 2022 06:53:05 -0400
+X-MC-Unique: 9HNaLCzaN9aZl3IUQHK73w-1
+Received: by mail-qk1-f197.google.com with SMTP id y140-20020a376492000000b0067b14129a63so9516224qkb.9
+        for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 03:53:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=+UBbI11cQgXH05OBJATzTVqXodvbWMt8yABBqk+BXUg=;
-        b=ydPAMiYVe2264vDOEBTq3SQXAhigaHAK1MUrLCNWVP4Z7xyNY0GgXWKST1g7ikM1iw
-         aT+hfcX8WRyACvjJ33GsnX12wH+XxZoBYysd7buIVqH8Xod+2J7J+Vml4TYZzn0IO2n5
-         tJyEEx+IUr0aTJbPwF+Z//VzhQznGC6GyT7ygu+FyhxraPEBbT/HgaqNX1PRq5fMyu0I
-         xB1fWRK1pX8usygfOQVVem4yNRtN7B04gYSpes9sjf/nKI/aQNFeww9BrvWsROPqMDsk
-         ISg1Y2D6h3n31P3qrUycbfnAu5+Nione7EX4Uw5nwU4UqRqaMLbrirzwdOg6/TBPBeAE
-         1+8A==
-X-Gm-Message-State: AOAM531Glwdh9keGN3d90CyPDiROKyCLS3szgeLmbR6rS1xs9J9oFzg5
-	Zfy5Np8ygB6q7ZCZijUEr0P/p9lI3n07VUyGjqaN/I/f1yzZhmTSUvVjnd99F2n/a0bN0Ms7dVw
-	FruuPMy2TyiN25Xs=
-X-Received: by 2002:a05:620a:1432:b0:67d:36cd:1f16 with SMTP id k18-20020a05620a143200b0067d36cd1f16mr11711467qkj.166.1647855802610;
-        Mon, 21 Mar 2022 02:43:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxuQAVD+N7D6QtD2sYlBNweu3wzc9WF4lHlnXoLsc0Jv8hRNVPNuJh320KTuUqFGsfaL3dj/g==
-X-Received: by 2002:a05:620a:1432:b0:67d:36cd:1f16 with SMTP id k18-20020a05620a143200b0067d36cd1f16mr11711461qkj.166.1647855802265;
-        Mon, 21 Mar 2022 02:43:22 -0700 (PDT)
+        bh=1A6imOIF7juc/kUiAko2FyIQFIU4X9lN1VsL9pw7I2w=;
+        b=NLv6bbdf/IUUuzbH89mUpDKVRKsF9QdmSE/qumoFvttu/CcBf0xaCl4uhtyjOZTY9T
+         wE5IAULW3TiOynr3TPWX7fQCUUQA1hM7xbbOwN8E1lTNqdcqguQ8OdWCWLoc/zHxW5OR
+         hCk4rJ6D2RNvkALn0Nfhw76fjPTqK33/J4mdSYmXHtSaNHirRcO4sB/0xpcf07B87Otg
+         6agaIDD76++GYDt2DFligHHR33iJ1hVLxFZeNoF/q1SIeuXJn5hF3njxCsJg0jGFJn8Q
+         a3tknhhs9nPIM0J5gifeqPZ33bGkO2Stn1fhhJelOCBGHJSAcksrcQHk7LuOmBdCVx1K
+         cuGA==
+X-Gm-Message-State: AOAM5319xChSKttwQWVXx7gWMxpyWAB0NUwrpKpqvDiy7Pj1DXeX2FpV
+	nLxJtEx7ovf/J1H0fMv9xPKp8Qz22p5nUvBa3OErd2fenWx7yGHvjy80HJsWYsbRX4EeoYHLYxU
+	hUXfdO4MTtVaGg+w=
+X-Received: by 2002:a05:6214:29ca:b0:441:1f8c:e58d with SMTP id gh10-20020a05621429ca00b004411f8ce58dmr3759754qvb.111.1647859984621;
+        Mon, 21 Mar 2022 03:53:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzLKeCzuV3edUw8vbJv+Bsl1iLJX8hPBFlvWEbB/JJeqtqTC8h0f4t1+2mMzB9eT9s1K3SzYw==
+X-Received: by 2002:a05:6214:29ca:b0:441:1f8c:e58d with SMTP id gh10-20020a05621429ca00b004411f8ce58dmr3759740qvb.111.1647859984284;
+        Mon, 21 Mar 2022 03:53:04 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-232-135.dyn.eolo.it. [146.241.232.135])
-        by smtp.gmail.com with ESMTPSA id j11-20020a05622a038b00b002e1f0bc2e8csm9228440qtx.81.2022.03.21.02.43.21
+        by smtp.gmail.com with ESMTPSA id x6-20020ac86b46000000b002e02be9c0easm10667666qts.69.2022.03.21.03.53.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Mar 2022 02:43:21 -0700 (PDT)
-Message-ID: <67be2502ac695a76da2ea758b7e03636a4ec9540.camel@redhat.com>
-Subject: Re: MPTCP Linux Implementation
+        Mon, 21 Mar 2022 03:53:03 -0700 (PDT)
+Message-ID: <820d78dda48eb1ddc37485826af946505b22c605.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v5 02/14] mptcp: handle local addrs announced
+ by userspace PMs
 From: Paolo Abeni <pabeni@redhat.com>
-To: Sam Kumar <samkumar@berkeley.edu>, mptcp@lists.linux.dev
-Date: Mon, 21 Mar 2022 10:43:19 +0100
-In-Reply-To: <CA+5NP0kpxDU-+57tZe0V7TkcWGH5Jc8cMhck6sKA7ptz2tvbmw@mail.gmail.com>
-References: <CA+5NP0kpxDU-+57tZe0V7TkcWGH5Jc8cMhck6sKA7ptz2tvbmw@mail.gmail.com>
+To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
+Date: Mon, 21 Mar 2022 11:53:01 +0100
+In-Reply-To: <20220316231636.645625-3-kishen.maloor@intel.com>
+References: <20220316231636.645625-1-kishen.maloor@intel.com>
+	 <20220316231636.645625-3-kishen.maloor@intel.com>
 User-Agent: Evolution 3.42.4 (3.42.4-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,66 +64,126 @@ Authentication-Results: relay.mimecast.com;
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On Sat, 2022-03-19 at 11:54 -0700, Sam Kumar wrote:
-> I'm Sam Kumar, a PhD student in Computer Science at UC Berkeley. I
-> read the NSDI 2011 paper about congestion control in MPTCP (this
-> paper: https://www.usenix.org/conference/nsdi11/design-implementation-and-evaluation-congestion-control-multipath-tcp).
-> I think it is really nice work and I would like to try running it.
+On Wed, 2022-03-16 at 19:16 -0400, Kishen Maloor wrote:
+> This change adds an internal function to store/retrieve local
+> addrs announced by userspace PM implementations to/from its kernel
+> context. The function addresses the requirements of three scenarios:
+> 1) ADD_ADDR announcements (which require that a local id be
+> provided), 2) retrieving the local id associated with an address,
+> and also where one may need to be assigned, and 3) reissuance of
+> ADD_ADDRs when there's a successful match of addr/id.
 > 
-> I came across your community's work on upstreaming Multipath TCP
-> (https://github.com/multipath-tcp/mptcp_net-next/wiki), and I wanted
-> to ask about the congestion control algorithm that your implementation
-> supports. Does the version of Multipath TCP in Linux support the
-> congestion control protocols for preferring subflows with less packet
-> loss, such as the COUPLED, SEMICOUPLED, or MPTCP (Sec. 2.5) algorithms
-> described in the paper? 
+> The list of all stored local addr entries is held under the
+> MPTCP sock structure. Memory for these entries is allocated from
+> the sock option buffer, so the list of addrs is bounded by optmem_max.
+> The list if not released via REMOVE_ADDR signals is ultimately
+> freed when the sock is destructed.
+> 
+> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+> ---
+>  net/mptcp/pm_netlink.c | 72 ++++++++++++++++++++++++++++++++++++++++++
+>  net/mptcp/protocol.c   |  2 ++
+>  net/mptcp/protocol.h   |  2 ++
+>  3 files changed, 76 insertions(+)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 98e59576415b..d8825bf580b7 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -390,6 +390,24 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  	return true;
+>  }
+>  
+> +void mptcp_free_local_addr_list(struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_pm_addr_entry *entry, *tmp;
+> +	struct sock *sk = (struct sock *)msk;
+> +	LIST_HEAD(free_list);
+> +
+> +	if (!mptcp_pm_is_userspace(msk))
+> +		return;
+> +
+> +	mptcp_data_lock(sk);
+> +	list_splice_init(&msk->local_addr_list, &free_list);
+> +	mptcp_data_unlock(sk);
 
-Nothing of the above. The in-kernel MPTCP implementation uses a single
-scheduler algorithm, which is a custom heuristic based on the bleast
-scheduler:
+Why are you using the mptcp data lock here ? I think that is subject to
+lockdep issues. Likely the pm spinlock is a more suitable lock.
 
-https://ieeexplore.ieee.org/document/7497206
+> +
+> +	list_for_each_entry_safe(entry, tmp, &free_list, list) {
+> +		sock_kfree_s(sk, entry, sizeof(*entry));
+> +	}
+> +}
+> +
+>  void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+>  {
+>  	struct mptcp_pm_add_entry *entry, *tmp;
+> @@ -878,6 +896,60 @@ static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
+>  	kfree(entry);
+>  }
+>  
+> +static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+> +						    struct mptcp_pm_addr_entry *entry)
+> +{
+> +	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+> +	struct mptcp_pm_addr_entry *match = NULL;
+> +	struct sock *sk = (struct sock *)msk;
+> +	struct mptcp_pm_addr_entry *e;
+> +	bool addr_match = false;
+> +	bool id_match = false;
+> +	int ret = -EINVAL;
+> +
+> +	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+> +
+> +	mptcp_data_lock(sk);
+> +	list_for_each_entry(e, &msk->local_addr_list, list) {
+> +		addr_match = addresses_equal(&e->addr, &entry->addr, true);
+> +		if (addr_match && entry->addr.id == 0)
+> +			entry->addr.id = e->addr.id;
+> +		id_match = (e->addr.id == entry->addr.id);
+> +		if (addr_match && id_match) {
+> +			match = e;
+> +			break;
+> +		} else if (addr_match || id_match) {
+> +			break;
+> +		}
+> +		__set_bit(e->addr.id, id_bitmap);
+> +	}
+> +
+> +	if (!match && !addr_match && !id_match) {
+> +		/* Memory for the entry is allocated from the
+> +		 * sock option buffer.
+> +		 */
+> +		e = sock_kmalloc(sk, sizeof(*e), GFP_ATOMIC);
+> +		if (!e) {
+> +			mptcp_data_unlock(sk);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		*e = *entry;
+> +		if (!e->addr.id)
+> +			e->addr.id = find_next_zero_bit(id_bitmap,
+> +							MPTCP_PM_MAX_ADDR_ID + 1,
+> +							1);
+> +		list_add_tail_rcu(&e->list, &msk->local_addr_list);
+> +		ret = e->addr.id;
+> +	} else if (match) {
+> +		ret = entry->addr.id;
+> +	}
+> +
+> +	mptcp_data_unlock(sk);
 
-For the gory details see:
+After "mptcp: introduce implicit endpoints", the above mimics very
+closely what mptcp_pm_nl_get_local_id() is already doing for the in
+kernel path manager, with the main differences that it avoid the hard
+MPTCP_PM_ADDR_MAX limit.
 
-https://elixir.bootlin.com/linux/latest/source/net/mptcp/protocol.c#L1431
+Perhaps we can re-use the same code? e.g. enforcing the
+MPTCP_PM_ADDR_MAX only for the in-kernel path manager, or possibly
+retaining such constraint even for the user-space one?
 
-and onwards.
-
-> In case it affects the answer, I'm on Linux 5.13. 
-
-Way too old.
-
-> I'm happy to use a
-> more recent kernel version if newer kernels support these congestion
-> control algorithms.
-
-The most up2date scheduler version is present into Linus tree since
-v5.17-rc1, but if you are interested into any real devel work, I
-suggest to check-out our devel branch, and keep your local tree
-up2date:
-
-https://github.com/multipath-tcp/mptcp_net-next.git
-
-> I'm alsv5.17-rc1o aware of the MPTCPv0 work
-> (https://github.com/multipath-tcp/mptcp_net-next/wiki) --- are the
-> congestion control protocols supported by that work any different?
-
-With 'MPTCPv0 work' do you refer to the out-of-tree implementation? 
-
-In that case, yes: the the out-of-tree and upstream[1] implementations
-are quite different independent. As said, the upstream packet scheduler
-is somewhat related to the out-of-tree blest scheduler, which is the
-default scheduler for the out-of-tree kernel.
-
-Note that the vanilla Linux implementation has no support for the
-version 0 of the MPTCP protocol.
-
-Cheers,
-
-Paolo
-
-[1] note: I use 'in-kernel', 'upstream' and 'vanilla' as synonyms.
+/P
 
