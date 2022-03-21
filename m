@@ -1,57 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDCA36A
-	for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 10:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FB136A
+	for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 11:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1647860221;
+	s=mimecast20190719; t=1647860488;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ttWDNeK7LcYsKWmrvVxNBIe5anh/KmiG5xzb+EeQZ4Y=;
-	b=DNI7IoTUBA5IP2wQJ7CzxAG44SeevwMK4YOJutv0Ncw4Vlb9wVserC5ihLHNGR+XIQqinu
-	FmVxQbcB9FS85RRXf/8ralQLjdCpqPGPKvnvNOwJDuFoOz9oWjM4BiOr2N/4F6zgOskYUN
-	lcyMdMXkqGcFFrS3+RywnZq5CFbbQHg=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Y2hVxIVBWJZ6ZRABeVBJL/oL+WxNuctiTm8lMFB4wvo=;
+	b=YHLV+B7erW74r3QOoVUeLz15Fpu89IOhVYj5d5MLsK5zN2Lr7HJ82sLKT+9b11zsNb1P0i
+	VMbe9AL7ja7d6efe4r8UPjlop2ztIN/1u7UZ05kjDJuL2QIc9DgBtvtXmJqPyC3fGGsZO5
+	xgV49teB1SQjfv/LhC4ahEWQozBGToc=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-537-aj-m1x8EPKaWEy-SVXUzIg-1; Mon, 21 Mar 2022 06:57:00 -0400
-X-MC-Unique: aj-m1x8EPKaWEy-SVXUzIg-1
-Received: by mail-qk1-f197.google.com with SMTP id q5-20020a05620a0d8500b004738c1b48beso9523329qkl.7
-        for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 03:56:59 -0700 (PDT)
+ us-mta-588-AxJuzyBGM5mmIHu5kzl2Rw-1; Mon, 21 Mar 2022 07:01:26 -0400
+X-MC-Unique: AxJuzyBGM5mmIHu5kzl2Rw-1
+Received: by mail-qt1-f198.google.com with SMTP id g22-20020ac870d6000000b002e20a1508ecso2370118qtp.19
+        for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 04:01:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ttWDNeK7LcYsKWmrvVxNBIe5anh/KmiG5xzb+EeQZ4Y=;
-        b=Xkc2NbS0EVqzjxpzmjnE4vll+Fka37IWfPRAZ6S+VamZOYA0feom4hmH8OAZ65UX9H
-         kgnoavd4ShkEOHPmRhVD3lmPFzwfkEH/Fyk8ZUumezPFreOFTPylex/DpY4MUXYnp+Py
-         BHYXRLCGixD7dz7PlGCAWTY3cJhPw9COtW9M0Fv5AcH0f+QGkgnvVFTpF4Qute4DVCue
-         hj+mDZwz2vajm38qBSUS3egwDTFMS4vYISzSpyn0lC3VZ6M1Il850rYZEvTwnjvHlshs
-         tvmkGwkAhk+s+41kizMMJBKlUq/dqFb9fKkYwYNU4KxbpliZacqmi3nCLxeoUD4/13Yc
-         jqlg==
-X-Gm-Message-State: AOAM5321918IZD6/MVWfvt3AB06mK2AQGwZMO+1PoUfUxxNraf1cI8n7
-	qN8RF3PjaDGQHRvY7n+MdKRGGSQRj42tKfmvSPQs6BP2Hs6GAkfkqv01Fdr0z32E1ThirXhb4Nb
-	yPWJb4l1f4SoXRcs=
-X-Received: by 2002:ac8:5a43:0:b0:2e1:c68a:6fa0 with SMTP id o3-20020ac85a43000000b002e1c68a6fa0mr15371331qta.481.1647860219296;
-        Mon, 21 Mar 2022 03:56:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzYd/Ef4LvVk4Pctn8jKQbOHKaeux3BTnJbrSs9IWp28TPF2JkzcpwNgs8c4m6m52JbOKmaBA==
-X-Received: by 2002:ac8:5a43:0:b0:2e1:c68a:6fa0 with SMTP id o3-20020ac85a43000000b002e1c68a6fa0mr15371318qta.481.1647860219006;
-        Mon, 21 Mar 2022 03:56:59 -0700 (PDT)
+        bh=Y2hVxIVBWJZ6ZRABeVBJL/oL+WxNuctiTm8lMFB4wvo=;
+        b=tvTN34/PMlDxFkgYmdfbGJStKjJ6gt5lSwTl2tExyi/YVkh3Z5EOfget/+nZhAQOSH
+         KFuju/QPHFnKsJaSFXYq3ZFc9gcqWypnbL/OkyrS7MJ2rNNFLPX+KrAy75Xt1sQLP6Ej
+         vJ9N0mfVhYf27vVTGRXlTx7cBhm92Et5YqvsA7YGTxmdvmjUHf5ciL8svB/2o3wnq4Rt
+         MrVxs6T30LfZyQWwr/ZbsCPUXI+tFNWCJMJWWRRspqahWepmTeuN1aPzME7AihieB2M6
+         jpa38JlAEnGAktWOYHRUClmMu1ECbLJB7xpZGmDALo6LaWDoaqZZXIsR17XviKQowOGk
+         A7Og==
+X-Gm-Message-State: AOAM533ounLcDO5EcTCRZQwV/xIP9SUX3lYWGGh9GPX6E56C7qqWGGfR
+	QSRWzBQy6m2xi7UzlhOJxjrIgd9Fa/9hheJTgNWCWQniIunCTcu8gOuqxVLCHs7jSYYjNUUHkVP
+	SQr6+PcThhxHZ3XQ=
+X-Received: by 2002:a05:6214:d89:b0:440:c955:deb2 with SMTP id e9-20020a0562140d8900b00440c955deb2mr15848274qve.4.1647860485796;
+        Mon, 21 Mar 2022 04:01:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwegmWCjcohOpTp9oW7U2o/9moA15CiMnP6ciYXBakfiN4MLyKfkjP4durwjWNbAAGDnQGPYA==
+X-Received: by 2002:a05:6214:d89:b0:440:c955:deb2 with SMTP id e9-20020a0562140d8900b00440c955deb2mr15848248qve.4.1647860485513;
+        Mon, 21 Mar 2022 04:01:25 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-232-135.dyn.eolo.it. [146.241.232.135])
-        by smtp.gmail.com with ESMTPSA id f21-20020ac859d5000000b002e1e1dfaea5sm12196716qtf.30.2022.03.21.03.56.57
+        by smtp.gmail.com with ESMTPSA id o206-20020a37a5d7000000b0067d42fd49c3sm7637536qke.4.2022.03.21.04.01.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Mar 2022 03:56:58 -0700 (PDT)
-Message-ID: <fe282bdf31c684037c4be06bbc5dbb08ff756bb4.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v5 03/14] mptcp: read attributes of addr
- entries managed by userspace PMs
+        Mon, 21 Mar 2022 04:01:25 -0700 (PDT)
+Message-ID: <09a455b9675f00a9071a583d8595d8fcc3118d2a.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v5 05/14] mptcp: netlink: Add
+ MPTCP_PM_CMD_ANNOUNCE
 From: Paolo Abeni <pabeni@redhat.com>
 To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
-Date: Mon, 21 Mar 2022 11:56:56 +0100
-In-Reply-To: <20220316231636.645625-4-kishen.maloor@intel.com>
+Date: Mon, 21 Mar 2022 12:01:22 +0100
+In-Reply-To: <20220316231636.645625-6-kishen.maloor@intel.com>
 References: <20220316231636.645625-1-kishen.maloor@intel.com>
-	 <20220316231636.645625-4-kishen.maloor@intel.com>
+	 <20220316231636.645625-6-kishen.maloor@intel.com>
 User-Agent: Evolution 3.42.4 (3.42.4-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -67,66 +67,122 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Wed, 2022-03-16 at 19:16 -0400, Kishen Maloor wrote:
-> This change introduces a parallel path in the kernel for retrieving
-> the local id, flags, if_index for an addr entry in the context of
-> an MPTCP connection that's being managed by a userspace PM. The
-> userspace and in-kernel PM modes deviate in their procedures for
-> obtaining this information.
+> This change adds a MPTCP netlink interface for issuing
+> ADD_ADDR advertisements over the chosen MPTCP connection from a
+> userspace path manager.
+> 
+> The command requires the following parameters:
+> { token, { loc_id, family, daddr4 | daddr6 [, dport] } [, if_idx],
+> flags[signal] }.
 > 
 > Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 > ---
->  net/mptcp/pm_netlink.c | 95 ++++++++++++++++++++++++++++--------------
->  net/mptcp/protocol.h   |  3 +-
->  net/mptcp/subflow.c    |  2 +-
->  3 files changed, 67 insertions(+), 33 deletions(-)
+>  include/uapi/linux/mptcp.h |  2 ++
+>  net/mptcp/pm_netlink.c     | 64 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 66 insertions(+)
 > 
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index e41ea01a94bb..ac66c1263f02 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -55,6 +55,7 @@ enum {
+>  	MPTCP_PM_ATTR_ADDR,				/* nested address */
+>  	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
+>  	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
+> +	MPTCP_PM_ATTR_TOKEN,				/* u32 */
+>  
+>  	__MPTCP_PM_ATTR_MAX
+>  };
+> @@ -93,6 +94,7 @@ enum {
+>  	MPTCP_PM_CMD_SET_LIMITS,
+>  	MPTCP_PM_CMD_GET_LIMITS,
+>  	MPTCP_PM_CMD_SET_FLAGS,
+> +	MPTCP_PM_CMD_ANNOUNCE,
+>  
+>  	__MPTCP_PM_CMD_AFTER_LAST
+>  };
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d8825bf580b7..b597e84affd5 100644
+> index aa1a9ae6b530..2b1d8b3b7891 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -1106,31 +1106,47 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+> @@ -1178,6 +1178,7 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_PM_ATTR_MAX + 1] = {
+>  					NLA_POLICY_NESTED(mptcp_pm_addr_policy),
+>  	[MPTCP_PM_ATTR_RCV_ADD_ADDRS]	= { .type	= NLA_U32,	},
+>  	[MPTCP_PM_ATTR_SUBFLOWS]	= { .type	= NLA_U32,	},
+> +	[MPTCP_PM_ATTR_TOKEN]		= { .type	= NLA_U32,	},
+>  };
 >  
->  	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+>  void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+> @@ -1930,6 +1931,64 @@ static int mptcp_nl_set_flags(struct net *net,
+>  	return ret;
+>  }
 >  
-> -	rcu_read_lock();
-> -	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> -		if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
-> -			ret = entry->addr.id;
-> -			break;
-> +	if (mptcp_pm_is_kernel(msk)) {
-> +		rcu_read_lock();
-> +		list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> +			if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
-> +				ret = entry->addr.id;
-> +				break;
-> +			}
->  		}
-> +		rcu_read_unlock();
-> +		if (ret >= 0)
-> +			return ret;
+> +static int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
+> +{
+> +	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+> +	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+> +	struct mptcp_pm_addr_entry addr_val;
+> +	struct mptcp_sock *msk;
+> +	u32 token_val;
+> +	int err;
 > +
-> +		/* address not found, add to local list */
-> +		entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
-> +		if (!entry)
-> +			return -ENOMEM;
+> +	if (!addr || !token) {
+> +		GENL_SET_ERR_MSG(info, "missing required inputs");
+> +		return -EINVAL;
+> +	}
 > +
-> +		entry->addr = skc_local;
-> +		entry->addr.id = 0;
-> +		entry->addr.port = 0;
-> +		entry->ifindex = 0;
-> +		entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> +		entry->lsk = NULL;
-> +		ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
-> +		if (ret < 0)
-> +			kfree(entry);
-> +	} else if (mptcp_pm_is_userspace(msk)) {
+> +	token_val = nla_get_u32(token);
+> +
+> +	msk = mptcp_token_get_sock(sock_net(skb->sk), token_val);
+> +	if (!msk) {
+> +		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!mptcp_pm_is_userspace(msk)) {
+> +		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = mptcp_pm_parse_entry(addr, info, true, &addr_val);
+> +	if (err < 0) {
+> +		GENL_SET_ERR_MSG(info, "error parsing local address");
+> +		return err;
+> +	}
+> +
+> +	if (addr_val.addr.id == 0 || !(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
+> +		GENL_SET_ERR_MSG(info, "invalid addr id or flags");
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = mptcp_userspace_pm_append_new_local_addr(msk, &addr_val);
+> +	if (err < 0) {
+> +		GENL_SET_ERR_MSG(info, "did not match address and id");
+> +		return err;
+> +	}
+> +
+> +	lock_sock((struct sock *)msk);
+> +	spin_lock_bh(&msk->pm.lock);
+> +
+> +	if (mptcp_pm_alloc_anno_list(msk, &addr_val)) {
+> +		mptcp_pm_announce_addr(msk, &addr_val.addr, false);
+> +		mptcp_pm_nl_addr_send_ack(msk);
+> +	}
+> +
+> +	spin_unlock_bh(&msk->pm.lock);
+> +	release_sock((struct sock *)msk);
+> +
+> +	return 0;
+> +}
 
-Since pm_netlink.c is growing big and complex, a few pm-related helpers
-are getting the user-space specific implementation, and we already have
-a "generic" wrapper for some of them in pm.c, I think it would cleaner
-keep all the user-space realted new code in a new/separate .c file, and
-move the if (mptcp_pm_is_userspace(msk)/if
-(mptcp_pm_is_kernelspace(msk)) checks in pm.c
+If you are going to create a new pm_userspace.c compilation unit, I
+think the above function could land there - yep, on the flip side it
+will not be static anymore, still I think it would make easier the long
+-term maintenance.
+
+Similar comments for mptcp_nl_cmd_remove(), mptcp_nl_cmd_sf_create(),
+mptcp_nl_find_ssk(), mptcp_nl_cmd_sf_destroy() in the following
+patches.
 
 /P
 
