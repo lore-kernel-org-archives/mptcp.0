@@ -1,103 +1,154 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E6D2C9C
-	for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 12:32:41 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id r22so9436577ejs.11
-        for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 05:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:cc:in-reply-to:content-transfer-encoding;
-        bh=KGsUy3ocFrRCUNjThkIHPtAl4mlt0p/hKzYEnc707eA=;
-        b=AcZTRYR/4TqjZs8v2OEKoe2+OqGJDL2xeToYLUO12VVekUk73NbzYtT6otIlQT1naK
-         oEGMvxj0XEkfsTlX9SrT7yPGXW6gPmCgUnhXQtcGjTnWArVg90hJC+KH/LPLthA9+CVj
-         VK1JiKS5EbPbneUWgBDXEO3W16/h16iHLjlEZrT+d9W8Ldi6q6HwlEqLpbdTgTtzOPF2
-         k/rXEi3uhMyQIy01KnUYMoKFtAVT/Lc37C/rB9kKqP2l3SYCg1vggd/ghD6INJ0jv05/
-         7BXdm5B3/dYkRXrGvH/jEd737LHMtdUN0DAWluFfsHcaJiSKCX+o6uqhX76U8xAjWhPy
-         9YZg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E2663E
+	for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 17:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1647882325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ovqf81yY/lYhQQMdN/K/PRLPLZw83R6/OOeu+Gqmvkg=;
+	b=PZjblDxR2yPRpWJIZC2a4EG7dL5edupLLD+UyFKUL8FEXrSVao/giiDiOoTtFcQQ8+yw6r
+	FkQEMglQgf7FU3zXs+VjdJOvB7UIAIEM8EJu/zP8FYLBg+1okD4wt/riu8F/RL8Wztjfav
+	PaoKFGPwgCfC9+nxpwchSQBmx/kBaPY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-599-h1LhjyvANO-bNBiOYWxUeQ-1; Mon, 21 Mar 2022 13:05:23 -0400
+X-MC-Unique: h1LhjyvANO-bNBiOYWxUeQ-1
+Received: by mail-wr1-f72.google.com with SMTP id p9-20020adf9589000000b001e333885ac1so3273989wrp.10
+        for <mptcp@lists.linux.dev>; Mon, 21 Mar 2022 10:05:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:cc:in-reply-to
-         :content-transfer-encoding;
-        bh=KGsUy3ocFrRCUNjThkIHPtAl4mlt0p/hKzYEnc707eA=;
-        b=2FqHFvS5aq7j8Y1OFyuqGTxWpi34Rub877N+ZnDu0R+F5UWXldAqu2GxVVH8iTQfsA
-         qybv5toUMpg9uDDQBZWeSOhQhO64JS5X+vXyrg8nVEewfMIjBHczooLNvEmkZDJv4JpG
-         REkEDzKL/zRWrp0xvydBTdyzYkfRSbQGGwCxjeY1ogBFOgbdQZ6ocXIks80qOrp5Vvfx
-         zdoqd6H9nCiQwlKFSUsLkBJH2/YJCptduymgwjbYQqc8maN6bCrUi+4YpnYy0dQGB93U
-         vMnMVjqmusx7mBBWz8qDXwJ27tbMKVqJkj7lXg7ygNgcOB/PiwZJHDq5L60TWomOOTv1
-         QO6w==
-X-Gm-Message-State: AOAM530d9wOAdiP1n3crsDGApviucfUrxycuK6rJ48+hq0pkaYyWK6sV
-	dwQ8dDM3iKqNMXE3Xbv5moWUfw==
-X-Google-Smtp-Source: ABdhPJyy5Q06VzWGz9o43X+rNj54tcs66pwJfh9+nr6IZ3TBVl/jk4744YYZyWYSFdIsJO4TEKOQCw==
-X-Received: by 2002:a17:906:7c93:b0:6cd:341a:a1d5 with SMTP id w19-20020a1709067c9300b006cd341aa1d5mr20018511ejo.698.1647865959799;
-        Mon, 21 Mar 2022 05:32:39 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id f4-20020a170906738400b006df8b6787afsm6023876ejl.13.2022.03.21.05.32.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Mar 2022 05:32:39 -0700 (PDT)
-Message-ID: <d5d271c9-88e1-565e-afbc-41e73bccb415@tessares.net>
-Date: Mon, 21 Mar 2022 13:32:39 +0100
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Ovqf81yY/lYhQQMdN/K/PRLPLZw83R6/OOeu+Gqmvkg=;
+        b=QvGOyRj9p1QO5sbnI79GewJ23EPudZaerdmul19PjrneDmQtr7bBxFo/djbU0oBZVD
+         Tgh6R6YiGcM6O9IS8UruXb6jIOUhvbMnH9Ij7IbdSa8RS2GIxA1ZIQ7hH/4bu118joWg
+         n4pY0jxIN0qJC3yR6da9i4PNkooiUDepjHbZ/oR6IHYjuV2L2egiWsPc/9klnjma6HSi
+         8QSS+m/N0/587qGF/EY8l1nk+ob2O9et1U8PqPlqPSC3RYKMRAsccE6Xstm/w8xVT6w+
+         JEY9Ts74VdLVyeFzUoI3yyVtfxDflEppoVtklRpU+jufiZKwKEFt2NUogX+LjQgpw6NF
+         mKNQ==
+X-Gm-Message-State: AOAM532raPLFChDPDF4xiTycldfyGWpUP9sER/SId6EyiCiYWk2X/aJ8
+	xs9uWxBXxHLfHWSB1rdLSkkk55q/1p9C9HuVjNaYh0boi/N50OUu2BwcsNlRXfdYzPvgaLRppeX
+	38RcpAI6ij0NgglY=
+X-Received: by 2002:a05:600c:3516:b0:389:f9aa:f821 with SMTP id h22-20020a05600c351600b00389f9aaf821mr47534wmq.73.1647882322457;
+        Mon, 21 Mar 2022 10:05:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxTPbsVFvEQLgcqhfyFZNmMBBd9v+Ve05GoQd5xSp2fq8tVrxJNfpL1FeFHLhskZ3ZBqRdCcA==
+X-Received: by 2002:a05:600c:3516:b0:389:f9aa:f821 with SMTP id h22-20020a05600c351600b00389f9aaf821mr47514wmq.73.1647882322107;
+        Mon, 21 Mar 2022 10:05:22 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-232-135.dyn.eolo.it. [146.241.232.135])
+        by smtp.gmail.com with ESMTPSA id 189-20020a1c02c6000000b0038c57df82aasm66731wmc.20.2022.03.21.10.05.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Mar 2022 10:05:21 -0700 (PDT)
+Message-ID: <7a7d243670eed6fdd94e8ebd655f63bed3497c7d.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v8 4/6] mptcp: reflect remote port (not 0) in
+ ANNOUNCED events
+From: Paolo Abeni <pabeni@redhat.com>
+To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
+Date: Mon, 21 Mar 2022 18:05:20 +0100
+In-Reply-To: <20220317230449.763778-5-kishen.maloor@intel.com>
+References: <20220317230449.763778-1-kishen.maloor@intel.com>
+	 <20220317230449.763778-5-kishen.maloor@intel.com>
+User-Agent: Evolution 3.42.4 (3.42.4-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: MPTCP Linux Implementation
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, Sam Kumar <samkumar@berkeley.edu>
-References: <CA+5NP0kpxDU-+57tZe0V7TkcWGH5Jc8cMhck6sKA7ptz2tvbmw@mail.gmail.com>
- <67be2502ac695a76da2ea758b7e03636a4ec9540.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, mptcp-dev <mptcp-dev@listes.uclouvain.be>
-In-Reply-To: <67be2502ac695a76da2ea758b7e03636a4ec9540.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Sam, Paolo,
-
-(+cc mptcp-dev as you also asked the question there)
-
-On 21/03/2022 10:43, Paolo Abeni wrote:
-> On Sat, 2022-03-19 at 11:54 -0700, Sam Kumar wrote:
->> I'm Sam Kumar, a PhD student in Computer Science at UC Berkeley. I
->> read the NSDI 2011 paper about congestion control in MPTCP (this
->> paper: https://www.usenix.org/conference/nsdi11/design-implementation-and-evaluation-congestion-control-multipath-tcp).
->> I think it is really nice work and I would like to try running it.
->>
->> I came across your community's work on upstreaming Multipath TCP
->> (https://github.com/multipath-tcp/mptcp_net-next/wiki), and I wanted
->> to ask about the congestion control algorithm that your implementation
->> supports. Does the version of Multipath TCP in Linux support the
->> congestion control protocols for preferring subflows with less packet
->> loss, such as the COUPLED, SEMICOUPLED, or MPTCP (Sec. 2.5) algorithms
->> described in the paper? 
+On Thu, 2022-03-17 at 19:04 -0400, Kishen Maloor wrote:
+> Per RFC 8684, if no port is specified in an ADD_ADDR message, MPTCP
+> SHOULD attempt to connect to the specified address on the same port
+> as the port that is already in use by the subflow on which the
+> ADD_ADDR signal was sent.
 > 
-> Nothing of the above. The in-kernel MPTCP implementation uses a single
-> scheduler algorithm, which is a custom heuristic based on the bleast
-> scheduler:
+> To facilitate that, this change reflects the specific remote port in
+> use by that subflow in MPTCP_EVENT_ANNOUNCED events.
+> 
+> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+> ---
+>  net/mptcp/options.c    |  2 +-
+>  net/mptcp/pm.c         |  6 ++++--
+>  net/mptcp/pm_netlink.c | 11 ++++++++---
+>  net/mptcp/protocol.h   |  4 ++--
+>  4 files changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 88f4ebbd6515..c9625fea3ef9 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1133,7 +1133,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+>  		if ((mp_opt.suboptions & OPTION_MPTCP_ADD_ADDR) &&
+>  		    add_addr_hmac_valid(msk, &mp_opt)) {
+>  			if (!mp_opt.echo) {
+> -				mptcp_pm_add_addr_received(msk, &mp_opt.addr);
+> +				mptcp_pm_add_addr_received(sk, &mp_opt.addr);
+>  				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
+>  			} else {
+>  				mptcp_pm_add_addr_echoed(msk, &mp_opt.addr);
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index f9a12e6f4b4e..56b3f29efdd9 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -200,15 +200,17 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
+>  	spin_unlock_bh(&pm->lock);
+>  }
+>  
+> -void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+> +void mptcp_pm_add_addr_received(const struct sock *ssk,
+>  				const struct mptcp_addr_info *addr)
+>  {
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+>  	struct mptcp_pm_data *pm = &msk->pm;
+>  
+>  	pr_debug("msk=%p remote_id=%d accept=%d", msk, addr->id,
+>  		 READ_ONCE(pm->accept_addr));
+>  
+> -	mptcp_event_addr_announced(msk, addr);
+> +	mptcp_event_addr_announced(ssk, addr);
+>  
+>  	spin_lock_bh(&pm->lock);
+>  
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 94d2bbb14eba..8676aecc52a6 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -2010,10 +2010,12 @@ void mptcp_event_addr_removed(const struct mptcp_sock *msk, uint8_t id)
+>  	kfree_skb(skb);
+>  }
+>  
+> -void mptcp_event_addr_announced(const struct mptcp_sock *msk,
+> +void mptcp_event_addr_announced(const struct sock *ssk,
+>  				const struct mptcp_addr_info *info)
+>  {
+> -	struct net *net = sock_net((const struct sock *)msk);
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +	struct net *net = sock_net(ssk);
+>  	struct nlmsghdr *nlh;
+>  	struct sk_buff *skb;
+>  
+> @@ -2035,7 +2037,10 @@ void mptcp_event_addr_announced(const struct mptcp_sock *msk,
+>  	if (nla_put_u8(skb, MPTCP_ATTR_REM_ID, info->id))
+>  		goto nla_put_failure;
+>  
+> -	if (nla_put_be16(skb, MPTCP_ATTR_DPORT, info->port))
+> +	if (nla_put_be16(skb, MPTCP_ATTR_DPORT,
+> +			 info->port == 0 ?
+> +			 ((struct inet_sock *)inet_sk(ssk))->inet_dport :
 
-Regarding the TCP CC, there is no coupled congestion control algorithms
-implemented in the upstream kernel. A few are available in the fork:
-lia, olia, balia, morena (not sure about this last one...), etc.
+The explicit cast to 'struct inet_sock' is not needed.
 
-These CC are only needed if fairness is important for you when you have
-multiple paths of the same MPTCP connection with regular TCP flows
-sharing the same congested link. That is not often the case: it is more
-needed for specific use cases. That's probably why nobody started to
-work on that as long as I know. It was a popular topic a few years ago
-because it is an interesting research subject from a mathematical point
-of view. But I don't know if it solves "real-life" problems.
+/P
 
-So in short, these coupled CC have not been implemented in the upstream
-Linux kernel and as far as I know, nobody is working on that.
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
