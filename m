@@ -1,133 +1,209 @@
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5338A53
-	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 16:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF8AA50
+	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 20:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647968074; x=1679504074;
+  t=1647982225; x=1679518225;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=/RoTTh3CHr4UPsYY7wWOTtmOMIq0oniaSbB/yWl4hCg=;
-  b=O+QXDfAHAFHoVtetBh2292dMSCHJxh9/qeuVMABF6XnQwm1saosvVxMZ
-   qi4mUXAzCoaGAbChLPSFDV1sjbPJ1VvNHruaV48SuOyQ6GBl/JDQkeP2a
-   o1ZEwaatGFltLmDrIAQZEnQPWjdu2toJs3VV0B7q2aH1S5+06hQ8PrDJ+
-   QEBITlHXSBiw7pegfB5XhAxxUd2rL0gTkXlfscSiR39ZBekgfTOno4Svj
-   +HLrWnrwRkugOhYx9rKPTeEuSpE4RSVgO8Ei3LjAAfMKcIyJrEK/w/5VM
-   XLlcI7fj9bMzggqdp1ZiYtzWIFw4iIMDv4SUWoo8GuN9GQVZm3q6eckWL
+  bh=F9O4/FqP2t1MAHmkJ27niGQL2IQ5ykWjz9MG0QTZw2k=;
+  b=PkMHWsnRiA14MJ8uT0AlwnIjTGJObMIiw+60k5Tp4pe7CJGPKyQpEVTr
+   iZQCgIiD0sT6I6qPveuYi5sSVxTWTY/Q3AUduEp9M/cpVFRchQ9ruX3Y5
+   +rE56A+383Bw1jCKy35LLbhJ45t4QjKK5jhZLg7oTzc+2U5xFolH5F0fe
+   XCPhYXDyf4oS5s+1nbEO6e5k22Vy5psE4xQyQVNd8/0G7p9xrNz3gLxad
+   DkBPF+NGN4z4Y+rZakBO9AXQsJl34l/9mgUxZI+oSBWzkFAqaZf3pLHOD
+   qeeYeh3YnibY2DKqYVrYs3kAt2GxGrFaO7bHYSZHCpIw7TdMkeYLOd4u7
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10294"; a="257590162"
+X-IronPort-AV: E=McAfee;i="6200,9189,10294"; a="257661037"
 X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="257590162"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 09:54:34 -0700
+   d="scan'208";a="257661037"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 13:50:25 -0700
 X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="692615740"
-Received: from ticela-or-178.amr.corp.intel.com ([10.209.18.94])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 09:54:33 -0700
-Date: Tue, 22 Mar 2022 09:54:32 -0700 (PDT)
+   d="scan'208";a="560586480"
+Received: from priyankk-mobl1.amr.corp.intel.com ([10.212.193.244])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 13:50:25 -0700
+Date: Tue, 22 Mar 2022 13:50:25 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-next 2/3] mptcp: reset the packet scheduler on
- incoming MP_PRIO.
-In-Reply-To: <ed967b995918548f6abf8f2625b29bca770f132a.1647960598.git.pabeni@redhat.com>
-Message-ID: <664e844-1d26-d3e3-fdd-5cb343645@linux.intel.com>
-References: <53b59c780c15855fb57ec41e187a19272747c9d8.1647960598.git.pabeni@redhat.com> <ed967b995918548f6abf8f2625b29bca770f132a.1647960598.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 2/3] selftests: bpf: verify ca_name of
+ struct mptcp_sock
+In-Reply-To: <44d0fb218df30ede0a3797351ee833534c8fad72.1647783989.git.geliang.tang@suse.com>
+Message-ID: <f6ab90d-8a4f-1353-8c80-a64c28a63782@linux.intel.com>
+References: <cover.1647783989.git.geliang.tang@suse.com> <44d0fb218df30ede0a3797351ee833534c8fad72.1647783989.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Tue, 22 Mar 2022, Paolo Abeni wrote:
+On Sun, 20 Mar 2022, Geliang Tang wrote:
 
-> When an incoming MP_PRIO option changes the backup
-> status of any subflow, we need to reset the packet
-> scheduler status, or the next send could keep using
-> the previously selected subflow, without taking in account
-> the new priorities.
+> This patch verified another member of struct mptcp_sock, ca_name. Added a
+> new function get_msk_ca_name() to read the sysctl tcp_congestion_control
+> and verified it in verify_msk().
 >
-> Reported-by: Davide Caratti <dcaratti@redhat.com>
-> Fixes: 40453a5c61f4 ("mptcp: add the incoming MP_PRIO support")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> v1 -> v2:
-> - fix backup comparison - Mat
-
-Thanks for the v2, series is ready for the export branch:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-> ---
-> net/mptcp/pm.c       | 19 +++++++++++++++----
-> net/mptcp/protocol.c |  2 ++
-> net/mptcp/protocol.h |  1 +
-> 3 files changed, 18 insertions(+), 4 deletions(-)
+> tools/testing/selftests/bpf/bpf_tcp_helpers.h |  5 +++
+> .../testing/selftests/bpf/prog_tests/mptcp.c  | 33 +++++++++++++++++++
+> tools/testing/selftests/bpf/progs/mptcp.c     |  4 +++
+> 3 files changed, 42 insertions(+)
 >
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index d0d31d5c198a..c87f8974a1a7 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -262,14 +262,25 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
-> 	spin_unlock_bh(&pm->lock);
+> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> index 9ea6687c8f4d..bebe382bcc7a 100644
+> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> @@ -16,6 +16,10 @@ BPF_PROG(name, args)
+> #define SOL_TCP 6
+> #endif
+>
+> +#ifndef TCP_CA_NAME_MAX
+> +#define TCP_CA_NAME_MAX	16
+> +#endif
+> +
+> #define tcp_jiffies32 ((__u32)bpf_jiffies64())
+>
+> struct sock_common {
+> @@ -87,6 +91,7 @@ struct mptcp_sock {
+> 	struct inet_connection_sock	sk;
+>
+> 	__u32		token;
+> +	char		ca_name[TCP_CA_NAME_MAX];
+> } __attribute__((preserve_access_index));
+>
+> static __always_inline struct inet_connection_sock *inet_csk(const struct sock *sk)
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index 80ae5a9777bf..d2941fbc686c 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -3,12 +3,19 @@
+> #include "cgroup_helpers.h"
+> #include "network_helpers.h"
+>
+> +#define TCP_CA_SYSCTL	"/proc/sys/net/ipv4/tcp_congestion_control"
+> +
+> +#ifndef TCP_CA_NAME_MAX
+> +#define TCP_CA_NAME_MAX	16
+> +#endif
+> +
+> char monitor_log_path[64];
+>
+> struct mptcp_storage {
+> 	__u32 invoked;
+> 	__u32 is_mptcp;
+> 	__u32 token;
+> +	char ca_name[TCP_CA_NAME_MAX];
+> };
+>
+> static int verify_tsk(int map_fd, int client_fd)
+> @@ -77,14 +84,34 @@ static __u32 get_msk_token(void)
+> 	return token;
 > }
 >
-> -void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
-> +void mptcp_pm_mp_prio_received(struct sock *ssk, u8 bkup)
-> {
-> -	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-> +	struct sock *sk = subflow->conn;
-> +	struct mptcp_sock *msk;
->
-> 	pr_debug("subflow->backup=%d, bkup=%d\n", subflow->backup, bkup);
-> -	subflow->backup = bkup;
-> +	msk = mptcp_sk(sk);
-> +	if (subflow->backup != bkup) {
-> +		subflow->backup = bkup;
-> +		mptcp_data_lock(sk);
-> +		if (!sock_owned_by_user(sk))
-> +			msk->last_snd = NULL;
-> +		else
-> +			__set_bit(MPTCP_RESET_SCHEDULER,  &msk->cb_flags);
-> +		mptcp_data_unlock(sk);
+> +void get_msk_ca_name(char ca_name[])
+> +{
+> +	ssize_t len;
+> +	int fd;
+> +
+> +	fd = open(TCP_CA_SYSCTL, O_RDONLY);
+> +	if (CHECK_FAIL(fd < 0)) {
+> +		log_err("Failed to open %s", TCP_CA_SYSCTL);
+> +		return;
 > +	}
+> +
+> +	len = read(fd, ca_name, TCP_CA_NAME_MAX);
+> +	if (CHECK_FAIL(len < 0))
+> +		log_err("Failed to read %s", TCP_CA_SYSCTL);
+> +
+> +	close(fd);
+> +}
+> +
+> static int verify_msk(int map_fd, int client_fd)
+> {
+> 	char *msg = "MPTCP subflow socket";
+> 	int err = 0, cfd = client_fd;
+> 	struct mptcp_storage val;
+> +	char ca_name[TCP_CA_NAME_MAX];
+> 	__u32 token;
 >
-> -	mptcp_event(MPTCP_EVENT_SUB_PRIORITY, mptcp_sk(subflow->conn), sk, GFP_ATOMIC);
-> +	mptcp_event(MPTCP_EVENT_SUB_PRIORITY, msk, ssk, GFP_ATOMIC);
-> }
->
-> void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index bdba1ddee2a7..cec42bc16d12 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3128,6 +3128,8 @@ static void mptcp_release_cb(struct sock *sk)
-> 			__mptcp_set_connected(sk);
-> 		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
-> 			__mptcp_error_report(sk);
-> +		if (__test_and_clear_bit(MPTCP_RESET_SCHEDULER, &msk->cb_flags))
-> +			msk->last_snd = NULL;
+> 	token = get_msk_token();
+> +	get_msk_ca_name(ca_name);
+> 	if (token <= 0) {
+> 		log_err("Unexpected token %x", token);
+> 		return -1;
+> @@ -113,6 +140,12 @@ static int verify_msk(int map_fd, int client_fd)
+> 		err++;
 > 	}
 >
-> 	__mptcp_update_rmem(sk);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index c8bada4537e2..d59c16d248a4 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -124,6 +124,7 @@
-> #define MPTCP_RETRANSMIT	4
-> #define MPTCP_FLUSH_JOIN_LIST	5
-> #define MPTCP_CONNECTED		6
-> +#define MPTCP_RESET_SCHEDULER	7
+> +	if (strncmp(val.ca_name, ca_name, strlen(val.ca_name))) {
+
+Hi Geliang -
+
+Since we don't know if val.ca_name or ca_name are null-terminated, the 
+length should be limited to TCP_CA_NAME_MAX instead of 
+strlen(val.ca_name). strncmp will already limit based on null termination 
+of the two input strings, and using strlen(val.ca_name) could erroneously 
+return 0 if val.ca_name was the shorter string and the initial bytes 
+matched.
+
+When you repost this series, can you also rebase "add add 
+skc_to_mptcp_sock v10" and squash patch 3 of this series?
+
+Thanks!
+
+Mat
+
+
+> +		log_err("Unexpected mptcp_sock.ca_name %s != %s",
+> +			val.ca_name, ca_name);
+> +		err++;
+> +	}
+> +
+> 	return err;
+> }
 >
-> static inline bool before64(__u64 seq1, __u64 seq2)
-> {
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp.c b/tools/testing/selftests/bpf/progs/mptcp.c
+> index b08448a12c02..99718f20c5f8 100644
+> --- a/tools/testing/selftests/bpf/progs/mptcp.c
+> +++ b/tools/testing/selftests/bpf/progs/mptcp.c
+> @@ -1,4 +1,5 @@
+> // SPDX-License-Identifier: GPL-2.0
+> +#include <string.h>
+> #include <linux/bpf.h>
+> #include <bpf/bpf_helpers.h>
+> #include "bpf_tcp_helpers.h"
+> @@ -10,6 +11,7 @@ struct mptcp_storage {
+> 	__u32 invoked;
+> 	__u32 is_mptcp;
+> 	__u32 token;
+> +	char ca_name[TCP_CA_NAME_MAX];
+> };
+>
+> struct {
+> @@ -47,6 +49,7 @@ int _sockops(struct bpf_sock_ops *ctx)
+> 			return 1;
+>
+> 		storage->token = 0;
+> +		bzero(storage->ca_name, TCP_CA_NAME_MAX);
+> 	} else {
+> 		msk = bpf_skc_to_mptcp_sock(sk);
+> 		if (!msk)
+> @@ -58,6 +61,7 @@ int _sockops(struct bpf_sock_ops *ctx)
+> 			return 1;
+>
+> 		storage->token = msk->token;
+> +		memcpy(storage->ca_name, msk->ca_name, TCP_CA_NAME_MAX);
+> 	}
+> 	storage->invoked++;
+> 	storage->is_mptcp = tcp_sk->is_mptcp;
 > -- 
-> 2.35.1
+> 2.34.1
 >
 >
 >
