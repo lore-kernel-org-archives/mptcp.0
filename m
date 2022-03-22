@@ -1,38 +1,38 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE35A50
-	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 21:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE5E6453
+	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 21:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647983561; x=1679519561;
+  t=1647984099; x=1679520099;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=pfeE+V6/+FtNeBqgIzXnStWi81ClyBjOeQ0OsYMlglA=;
-  b=LnrFFBPs+yP2IgKfqMxPSpSQvHUs+jMm93xdklsyxi3i2CvCr71fSQPo
-   a8RoGK+7ntBK2eq4YH4ZTV2ovu9sCzLys9j58EWJs0SXX0Aq3CxC5XHJE
-   HCnXuyTEBo/N9KfIAP5RJ540AGv8p2EOyAElqY0JQ9CYhzYTPc94igMkV
-   gAKC5AF9z0VijlJofWU3woyL5fkNGiG7DXgr5i3Q3g1GNlh52E4DsTr4F
-   oZqG04WJ2ilDWutjGEaKT4pPEklPyQWMwYfRIW2EN5iITYjie0O3tvYyV
-   ifs9GgDbNQ2mjHi7A2EmPpvgMcEz6XFymCYZessFVAVtjjzeNTg8JIDiR
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10294"; a="257665598"
+  bh=nHo4OfeCjF5/FdcnscZ0v7P6aPhxe+XaFQfUpy4IhVc=;
+  b=RmmBrwb4u0W3Ooa0CB8nOLLnGWlkXXlM+d+on7IHH35XHA930OMKUByD
+   ax4KcXZKsWuA9yWwg0XGFJz2VjCWn9HY4BTyfSPak0m9bSHl4NTxvzM96
+   x/NcL8lc9lOenwpRXPemyrhR3aMmonmK2t+SOT5CiVxVnCgX5QAcB6op2
+   aCRVLpLh6rDUnY+hSA1tl0FviaJvThpD+5ds33uJC+cNcb7hYac60gcRG
+   4878Sqf4qEGf5jcIdy6PWYFHNF2PWwq+LHf7dVYrN1G7xL9pbzmRE4ejt
+   MukRKV2W4Mt1PGduZn3/9f4gw02dxWdocPuUk1AhNMJ+O9Q0cnC8tbsX9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10294"; a="318660738"
 X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="257665598"
+   d="scan'208";a="318660738"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:12:41 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:21:38 -0700
 X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="552265016"
+   d="scan'208";a="552267309"
 Received: from priyankk-mobl1.amr.corp.intel.com ([10.212.193.244])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:12:40 -0700
-Date: Tue, 22 Mar 2022 14:12:40 -0700 (PDT)
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:21:38 -0700
+Date: Tue, 22 Mar 2022 14:21:37 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 0/8] BPF packet scheduler
-In-Reply-To: <cover.1647942374.git.geliang.tang@suse.com>
-Message-ID: <96349b9-1e53-7664-556f-142a4140257a@linux.intel.com>
-References: <cover.1647942374.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v4 1/8] mptcp: add struct mptcp_sched_ops
+In-Reply-To: <02c1d2d2eee134713737fe5c5f73127e8c741589.1647942374.git.geliang.tang@suse.com>
+Message-ID: <af371467-cc1a-7c7c-9b13-b1361ccf8992@linux.intel.com>
+References: <cover.1647942374.git.geliang.tang@suse.com> <02c1d2d2eee134713737fe5c5f73127e8c741589.1647942374.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,74 +43,135 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Tue, 22 Mar 2022, Geliang Tang wrote:
 
-> v4:
-> - set msk->sched to &mptcp_sched_default when the sched argument is NULL
-> in mptcp_init_sched().
+> This patch added struct mptcp_sched_ops. And define the scheduler
+> register, unregister and find functions.
 >
-> Depends on the bpf patches queued in the patchwork:
-> - add skc_to_mptcp_sock, v10
-> - check more values from mptcp_sock, v2
-
-Hi Geliang -
-
-I sent a message earlier today about rebasing the above series, can you 
-rebase this one too? It doesn't apply easily on the current export branch 
-or export/20220303T054913, with the above prerequisites.
-
-I'll still post a few comments just based on the email version of the 
-patches.
-
-- Mat
-
-
->
-> v3:
-> - add mptcp_release_sched helper in patch 4.
-> - rename mptcp_set_sched to mptcp_init_sched in patch 4.
-> - add mptcp_sched_first_release in patch 7.
-> - do some cleanups.
->
-> v2:
-> - split into more small patches.
-> - change all parameters of mptcp_sched_ops from sk to msk:
->       void (*init)(struct mptcp_sock *msk);
->       void (*release)(struct mptcp_sock *msk);
->       struct sock *   (*get_subflow)(struct mptcp_sock *msk);
-> - add tests in bpf_tcp_ca.c, instead of adding a new one.
->
-> v1:
->
-> Addressed to the commends in the RFC version:
-> https://patchwork.kernel.org/project/mptcp/cover/cover.1631011068.git.geliangtang@xiaomi.com/
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/75
->
-> Geliang Tang (8):
->  mptcp: add struct mptcp_sched_ops
->  mptcp: register default scheduler
->  mptcp: add a new sysctl scheduler
->  mptcp: add sched in mptcp_sock
->  mptcp: add mptcp_get_subflow wrapper
->  mptcp: add bpf_mptcp_sched_ops
->  selftests: bpf: add bpf_first scheduler
->  selftests: bpf: add bpf_first test
->
-> Documentation/networking/mptcp-sysctl.rst     |   8 ++
-> include/net/mptcp.h                           |  13 +++
-> kernel/bpf/bpf_struct_ops_types.h             |   4 +
-> net/mptcp/Makefile                            |   2 +-
-> net/mptcp/bpf.c                               | 102 ++++++++++++++++++
-> net/mptcp/ctrl.c                              |  14 +++
-> net/mptcp/protocol.c                          |  13 ++-
-> net/mptcp/protocol.h                          |  11 ++
-> net/mptcp/sched.c                             |  94 ++++++++++++++++
-> tools/testing/selftests/bpf/bpf_tcp_helpers.h |  12 +++
-> .../selftests/bpf/prog_tests/bpf_tcp_ca.c     |  42 +++++++-
-> tools/testing/selftests/bpf/progs/bpf_first.c |  30 ++++++
-> 12 files changed, 336 insertions(+), 9 deletions(-)
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> include/net/mptcp.h  | 13 +++++++++++
+> net/mptcp/Makefile   |  2 +-
+> net/mptcp/protocol.h |  3 +++
+> net/mptcp/sched.c    | 55 ++++++++++++++++++++++++++++++++++++++++++++
+> 4 files changed, 72 insertions(+), 1 deletion(-)
 > create mode 100644 net/mptcp/sched.c
-> create mode 100644 tools/testing/selftests/bpf/progs/bpf_first.c
 >
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 8b1afd6f5cc4..e3a0baa8dbd7 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -95,6 +95,19 @@ struct mptcp_out_options {
+> #endif
+> };
+>
+> +#define MPTCP_SCHED_NAME_MAX 16
+> +
+> +struct mptcp_sched_ops {
+> +	struct sock *	(*get_subflow)(struct mptcp_sock *msk);
+> +
+> +	char			name[MPTCP_SCHED_NAME_MAX];
+> +	struct module		*owner;
+> +	struct list_head	list;
+> +
+> +	void (*init)(struct mptcp_sock *msk);
+> +	void (*release)(struct mptcp_sock *msk);
+> +} ____cacheline_aligned_in_smp;
+> +
+> #ifdef CONFIG_MPTCP
+> extern struct request_sock_ops mptcp_subflow_request_sock_ops;
+>
+> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+> index 0a0608b6b4b4..aa5c10d1b80a 100644
+> --- a/net/mptcp/Makefile
+> +++ b/net/mptcp/Makefile
+> @@ -3,7 +3,7 @@ obj-$(CONFIG_MPTCP) += mptcp.o
+> ccflags-y += -DDEBUG
+>
+> mptcp-y := protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o diag.o \
+> -	   mib.o pm_netlink.o sockopt.o
+> +	   mib.o pm_netlink.o sockopt.o sched.o
+>
+> obj-$(CONFIG_SYN_COOKIES) += syncookies.o
+> obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index c8bada4537e2..500dc7b3fde8 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -605,6 +605,9 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
+> void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+> 			 struct sockaddr_storage *addr,
+> 			 unsigned short family);
+> +struct mptcp_sched_ops *mptcp_sched_find(const char *name);
+> +int mptcp_register_scheduler(struct mptcp_sched_ops *sched);
+> +void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
+>
+> static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+> {
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> new file mode 100644
+> index 000000000000..53a1bdaae2f1
+> --- /dev/null
+> +++ b/net/mptcp/sched.c
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Multipath TCP
+> + *
+> + * Copyright (c) 2022, SUSE.
+> + */
+> +
+> +#define pr_fmt(fmt) "MPTCP: " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/list.h>
+> +#include <linux/rculist.h>
+> +#include <linux/spinlock.h>
+> +#include "protocol.h"
+> +
+> +static DEFINE_SPINLOCK(mptcp_sched_list_lock);
+> +static LIST_HEAD(mptcp_sched_list);
+
+Would be better to have this list per-namespace instead of global. Then 
+the pernet lock would also work and mptcp_sched_list_lock would not be 
+needed either.
+
+> +
+> +struct mptcp_sched_ops *mptcp_sched_find(const char *name)
+> +{
+> +	struct mptcp_sched_ops *ops;
+> +
+> +	list_for_each_entry_rcu(ops, &mptcp_sched_list, list) {
+> +		if (!strcmp(ops->name, name))
+> +			return ops;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
+> +{
+> +	if (!sched->get_subflow)
+> +		return -EINVAL;
+> +
+> +	spin_lock(&mptcp_sched_list_lock);
+> +	if (mptcp_sched_find(sched->name)) {
+> +		spin_unlock(&mptcp_sched_list_lock);
+> +		return -EEXIST;
+> +	}
+> +	list_add_tail_rcu(&sched->list, &mptcp_sched_list);
+> +	spin_unlock(&mptcp_sched_list_lock);
+> +
+> +	pr_debug("%s registered", sched->name);
+> +	return 0;
+> +}
+> +
+> +void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched)
+> +{
+> +	spin_lock(&mptcp_sched_list_lock);
+> +	list_del_rcu(&sched->list);
+> +	spin_unlock(&mptcp_sched_list_lock);
+> +
+> +	synchronize_rcu();
+> +}
 > -- 
 > 2.34.1
 >
