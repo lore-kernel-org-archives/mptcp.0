@@ -1,38 +1,38 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1446453
-	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 21:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72A96453
+	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 21:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647984408; x=1679520408;
+  t=1647984794; x=1679520794;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=DJpk5xo0zRWJNHp8rE7exrAthXcgvBBVKT7pCTsXGEA=;
-  b=LJHgrroHQhTXCFAZq6OSJQI7n5kLxfGulr/Ns7A0ZrVeGY5qGfjPKjhm
-   HusRUlbbbnCI4iwFgjkMx6gFqLlFUPqFOBGYb3DQb+stpIjuTakFHVEvs
-   dnAv78KWwvC3C9koZZqbcuuWNaIUboTKotAAq3VTPSYxzG0IRP+d3jfxt
-   u+AHAlMt/vxqFmXlSBe8KQYDR5enx+PHXfZGVJtD3Oi8yfySFIjjBKO6l
-   wpGgxqbPlvXvNJyBPAcMV2ikzUWloxk+RgYtAHAOv9d0xkHuVeXmqPczR
-   eLK5tFC/nyPVKsGBn4EPYQhKfoTaODswtQlqWO9KALvgZEvhEOWXgdsKd
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10294"; a="344382918"
+  bh=cIr/AJf608Pbd7y/qRyy2PKDL9A0fLIoCFO9rJfvqbk=;
+  b=hZDrijlM9ChqWJAN1HZ4iUdU5eTlydSc5Hku+eGGtxI12DGnkiBtJXW6
+   w29PgAynZ5uiedpG2hULFzdpXL5mq1htxjkXlhEx4sL3JJU3BotJ+IPbe
+   qlvrK3ifFF2nzGjWE38Foqa1BTFbsZGpmYLOtJOtkbH1xpdT34vZHl43s
+   jptrFiKng9XSxvijZbTY4CoA2eA4gDjPTiYgUhZAhK56GIj/G5/y78Cl6
+   n9ae7nICoFKQD1i8Vj8of8iYtXcgUGHl9eLgbZPiyVOayEM3W4sq+OsDP
+   Ov2oaAF7kzlptiaJTwjErX3tX3D2kAJFxcvK5T5b84yUq3Wf8+fZxbCEx
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10294"; a="240114267"
 X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="344382918"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:26:48 -0700
+   d="scan'208";a="240114267"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:33:14 -0700
 X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="785551603"
+   d="scan'208";a="500756106"
 Received: from priyankk-mobl1.amr.corp.intel.com ([10.212.193.244])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:26:48 -0700
-Date: Tue, 22 Mar 2022 14:26:47 -0700 (PDT)
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:33:14 -0700
+Date: Tue, 22 Mar 2022 14:33:14 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 2/8] mptcp: register default scheduler
-In-Reply-To: <d6e5cce088abd4c956edc8f47d21a723a5a77b70.1647942374.git.geliang.tang@suse.com>
-Message-ID: <5c8442d8-f74-1f85-43e3-ad9558c39d@linux.intel.com>
-References: <cover.1647942374.git.geliang.tang@suse.com> <d6e5cce088abd4c956edc8f47d21a723a5a77b70.1647942374.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v4 8/8] selftests: bpf: add bpf_first test
+In-Reply-To: <11db7ce5a24b7f38ea835e5d286f7531b3a95929.1647942374.git.geliang.tang@suse.com>
+Message-ID: <22612f2e-64cc-2268-e1dc-6eb766b9d6ec@linux.intel.com>
+References: <cover.1647942374.git.geliang.tang@suse.com> <11db7ce5a24b7f38ea835e5d286f7531b3a95929.1647942374.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,72 +43,117 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Tue, 22 Mar 2022, Geliang Tang wrote:
 
-> This patch defined the default packet scheduler mptcp_sched_default,
-> registered it in mptcp_sched_init().
+> This patch expended the BPF TCP congestion control tests to support
+> MPTCP. Add the bpf_first MPTCP sched test in it. Use sysctl to set
+> net.mptcp.scheduler to use this sched.
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c |  3 ++-
-> net/mptcp/protocol.h |  2 ++
-> net/mptcp/sched.c    | 11 +++++++++++
-> 3 files changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index fbb14dfe62b3..11e19ac9d5af 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1424,7 +1424,7 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
->  * returns the subflow that will transmit the next DSS
->  * additionally updates the rtx timeout
->  */
-> -static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> +struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> {
-> 	struct subflow_send_info send_info[SSK_MODE_MAX];
-> 	struct mptcp_subflow_context *subflow;
-> @@ -3743,6 +3743,7 @@ void __init mptcp_proto_init(void)
->
-> 	mptcp_subflow_init();
-> 	mptcp_pm_init();
-> +	mptcp_sched_init();
-> 	mptcp_token_init();
->
-> 	if (proto_register(&mptcp_prot, MPTCP_USE_SLAB) != 0)
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 500dc7b3fde8..c186d199cf5b 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -608,6 +608,8 @@ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
-> struct mptcp_sched_ops *mptcp_sched_find(const char *name);
-> int mptcp_register_scheduler(struct mptcp_sched_ops *sched);
-> void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
-> +struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
-> +void mptcp_sched_init(void);
->
-> static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-> {
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 53a1bdaae2f1..331e6517622a 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -53,3 +53,14 @@ void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched)
->
-> 	synchronize_rcu();
-> }
-> +
-> +static struct mptcp_sched_ops mptcp_sched_default = {
-> +	.get_subflow    = mptcp_subflow_get_send,
-> +	.name           = "default",
-> +	.owner          = THIS_MODULE,
-> +};
-> +
-> +void mptcp_sched_init(void)
-> +{
-> +	mptcp_register_scheduler(&mptcp_sched_default);
-> +}
 
-We don't want the default scheduler to get unregistered (right?), so this 
-patch should enforce that in mptcp_unregister_scheduler().
+This should definitely be set up as a separate test from bpf_tcp_ca. Ok to 
+copy the CA tests (explain where it was copied from in the commit 
+message), and then modify for MPTCP scheduler use.
+
+-Mat
+
+> ---
+> .../selftests/bpf/prog_tests/bpf_tcp_ca.c     | 42 +++++++++++++++++--
+> 1 file changed, 38 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
+> index 8f7a1cef7d87..979b6e90b372 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
+> @@ -9,6 +9,7 @@
+> #include "bpf_cubic.skel.h"
+> #include "bpf_tcp_nogpl.skel.h"
+> #include "bpf_dctcp_release.skel.h"
+> +#include "bpf_first.skel.h"
+>
+> #define min(a, b) ((a) < (b) ? (a) : (b))
+>
+> @@ -16,6 +17,10 @@
+> #define ENOTSUPP 524
+> #endif
+>
+> +#ifndef IPPROTO_MPTCP
+> +#define IPPROTO_MPTCP 262
+> +#endif
+> +
+> static const unsigned int total_bytes = 10 * 1024 * 1024;
+> static int expected_stg = 0xeB9F;
+> static int stop, duration;
+> @@ -85,21 +90,26 @@ static void do_test(const char *tcp_ca, const struct bpf_map *sk_stg_map)
+> 	socklen_t addrlen = sizeof(sa6);
+> 	void *thread_ret;
+> 	char batch[1500];
+> +	int proto = 0;
+> 	int err;
+>
+> 	WRITE_ONCE(stop, 0);
+>
+> -	lfd = socket(AF_INET6, SOCK_STREAM, 0);
+> +	if (!strcmp(tcp_ca, "bpf_first"))
+> +		proto = IPPROTO_MPTCP;
+> +
+> +	lfd = socket(AF_INET6, SOCK_STREAM, proto);
+> 	if (CHECK(lfd == -1, "socket", "errno:%d\n", errno))
+> 		return;
+> -	fd = socket(AF_INET6, SOCK_STREAM, 0);
+> +	fd = socket(AF_INET6, SOCK_STREAM, proto);
+> 	if (CHECK(fd == -1, "socket", "errno:%d\n", errno)) {
+> 		close(lfd);
+> 		return;
+> 	}
+>
+> -	if (settcpca(lfd, tcp_ca) || settcpca(fd, tcp_ca) ||
+> -	    settimeo(lfd, 0) || settimeo(fd, 0))
+> +	if (!proto &&
+> +	    (settcpca(lfd, tcp_ca) || settcpca(fd, tcp_ca) ||
+> +	     settimeo(lfd, 0) || settimeo(fd, 0)))
+> 		goto done;
+>
+> 	/* bind, listen and start server thread to accept */
+> @@ -324,6 +334,28 @@ static void test_rel_setsockopt(void)
+> 	bpf_dctcp_release__destroy(rel_skel);
+> }
+>
+> +static void test_first(void)
+> +{
+> +	struct bpf_first *first_skel;
+> +	struct bpf_link *link;
+> +
+> +	first_skel = bpf_first__open_and_load();
+> +	if (CHECK(!first_skel, "bpf_first__open_and_load", "failed\n"))
+> +		return;
+> +
+> +	link = bpf_map__attach_struct_ops(first_skel->maps.first);
+> +	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
+> +		bpf_first__destroy(first_skel);
+> +		return;
+> +	}
+> +
+> +	system("sysctl -q net.mptcp.scheduler=bpf_first");
+> +	do_test("bpf_first", NULL);
+> +
+> +	bpf_link__destroy(link);
+> +	bpf_first__destroy(first_skel);
+> +}
+> +
+> void test_bpf_tcp_ca(void)
+> {
+> 	if (test__start_subtest("dctcp"))
+> @@ -336,4 +368,6 @@ void test_bpf_tcp_ca(void)
+> 		test_dctcp_fallback();
+> 	if (test__start_subtest("rel_setsockopt"))
+> 		test_rel_setsockopt();
+> +	if (test__start_subtest("first"))
+> +		test_first();
+> }
+> -- 
+> 2.34.1
+>
+>
+>
 
 --
 Mat Martineau
