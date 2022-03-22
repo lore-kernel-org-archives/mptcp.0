@@ -1,39 +1,39 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4288F621
-	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 00:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C47365
+	for <mptcp@lists.linux.dev>; Tue, 22 Mar 2022 00:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647908543; x=1679444543;
+  t=1647908569; x=1679444569;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=G9mM6iveN3ifAeKGZRYTvkJg0IOAofkwhraxZc88WsM=;
-  b=KCGYrZHf+W2sP1H2sYtLEYJVuupbHearqv2dTQMq9tcJ3Fzpc2mnn4uP
-   EBja4dCF8GgY4wkpkhSNTusEhNCIfO9DeXdULhzSa8erSLFuXECEYaFDJ
-   ZsNnW44ouhvfdApTZDT9bWvHmLqRdfNpPWFJHKKjnb4k8+0gtVxN166YM
-   XduTnSNZF4zQoZ3VhdVeUoHg+ahRRF9VtWVlts0a9bJQHrf22UnkzeSE9
-   20qabUxadKC2GVXfswWO2uICC5yB5+bqPNJ7gB/NK0rEhMhjpdtt15a0l
-   3YISNrbwEiSkAeU2GbKlDSiqQX1t+Tn1hmLVxY12dG0bXKdTiOD6xGreS
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10293"; a="256502425"
+  bh=sFEO33nZk2wG/AwWXmsP59aDK0eUO2AfVL/ChVSq44U=;
+  b=Vw9nKXNadPkHlnLYn58SqMfXKPhrnPMhv5871iQk2JaU4uCl8jr4FKs+
+   p0DWER937w8njNsNfHvTA1FG1oILqB4b8q0d+6gq29Sd56IKfrX7IMqb+
+   pbf1r7KrJqzrOjf2OP+xo7oECvxQJGkGJSdaC993tv96kDM613mnY+WzG
+   zOOW92dIywC9ar6RB+MGrtqOOGDANEcK1BiC3+Abe4RlYDQacMCOyCPmJ
+   b58GZjzagCszMocFyKF7zUys5Di6+WbGjq3bzDqm6hoIgRyQ7hBiY7Lwb
+   NRJ8FqFRTzJKblHcIEToVuMjv9C1B87tWh8N8FSPZV1/buWmUBZBN0snF
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10293"; a="344111468"
 X-IronPort-AV: E=Sophos;i="5.90,200,1643702400"; 
-   d="scan'208";a="256502425"
+   d="scan'208";a="344111468"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 17:22:22 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 17:22:48 -0700
 X-IronPort-AV: E=Sophos;i="5.90,200,1643702400"; 
-   d="scan'208";a="560112338"
+   d="scan'208";a="560112437"
 Received: from danieljm-mobl.amr.corp.intel.com ([10.252.129.122])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 17:22:22 -0700
-Date: Mon, 21 Mar 2022 17:22:21 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 17:22:48 -0700
+Date: Mon, 21 Mar 2022 17:22:47 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 1/3] mptcp: optimize release_cb for the common
- case
-In-Reply-To: <6fc1ea29ae85074d626ad1cef3fea34055de37f1.1647601548.git.pabeni@redhat.com>
-Message-ID: <5090893b-932c-6086-93ee-dfc357dbe859@linux.intel.com>
-References: <6fc1ea29ae85074d626ad1cef3fea34055de37f1.1647601548.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next 3/3] mptcp:  reset the packet scheduler on
+ PRIO change
+In-Reply-To: <067656fe2d3628c219f7fcc4b4d99d6b5d6005c0.1647601548.git.pabeni@redhat.com>
+Message-ID: <7695e1ed-bf32-5612-55d5-62e55e9e798a@linux.intel.com>
+References: <6fc1ea29ae85074d626ad1cef3fea34055de37f1.1647601548.git.pabeni@redhat.com> <067656fe2d3628c219f7fcc4b4d99d6b5d6005c0.1647601548.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,53 +44,34 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Fri, 18 Mar 2022, Paolo Abeni wrote:
 
-> The mptcp release callback checks several flags in atomic
-> context, but only MPTCP_CLEAN_UNA can be up frequently.
+> Similar to the previous patch, for priority changes
+> requested by the local PM.
 >
-> Reorganize the code to avoid multiple conditionals in the
-> most common scenarios.
->
-> Additional clarify a related comment.
->
+> Reported-and-suggested-by: Davide Caratti <dcaratti@redhat.com>
+> Fixes: 067065422fcd ("mptcp: add the outgoing MP_PRIO support")
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> net/mptcp/protocol.c | 16 +++++++++-------
-> 1 file changed, 9 insertions(+), 7 deletions(-)
+> net/mptcp/pm_netlink.c | 2 ++
+> 1 file changed, 2 insertions(+)
 >
 
-This one LGTM:
+Looks good, thanks:
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index fbb14dfe62b3..bdba1ddee2a7 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3118,15 +3118,17 @@ static void mptcp_release_cb(struct sock *sk)
-> 		spin_lock_bh(&sk->sk_lock.slock);
-> 	}
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index c1f4befb1e45..10a73898c8db 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -727,6 +727,8 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+> 		if (!addresses_equal(&local, addr, addr->port))
+> 			continue;
 >
-> -	/* be sure to set the current sk state before tacking actions
-> -	 * depending on sk_state
-> -	 */
-> -	if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
-> -		__mptcp_set_connected(sk);
-> 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
-> 		__mptcp_clean_una_wakeup(sk);
-> -	if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
-> -		__mptcp_error_report(sk);
-> +	if (unlikely(&msk->cb_flags)) {
-> +		/* be sure to set the current sk state before tacking actions
-> +		 * depending on sk_state, that is processing MPTCP_ERROR_REPORT
-> +		 */
-> +		if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
-> +			__mptcp_set_connected(sk);
-> +		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
-> +			__mptcp_error_report(sk);
-> +	}
->
-> 	__mptcp_update_rmem(sk);
-> }
+> +		if (subflow->backup != bkup)
+> +			msk->last_snd = NULL;
+> 		subflow->backup = bkup;
+> 		subflow->send_mp_prio = 1;
+> 		subflow->request_bkup = bkup;
 > -- 
 > 2.35.1
 >
