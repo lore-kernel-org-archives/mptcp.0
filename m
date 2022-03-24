@@ -1,57 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E7E7E
-	for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 16:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F997E
+	for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 16:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1648140360;
+	s=mimecast20190719; t=1648140736;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gmWLKTsN0RxD3ZGQht//c2O21f6lcUB8yu8WwzBWy/Q=;
-	b=Sra9aVYybdqLrrLu0BdMP/q4HrxMIPunRzjIhF//kiz9as+GYWj+IGORPYuZ14CalN5nXa
-	ar5dt+nApChtX+GpFMfgWNVhE1N8RHsGSbRE1J3gD8Kbz1jCUh4hmczQMkddICRx31RKzc
-	DEkRmwBUbJvtp+ju8vF26Fb9IubCOOI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9LEdh/9lzBZ9ksbkPtihIQzrUqNztNRns+4eyyX48EA=;
+	b=aWFWm/WFwWk7GRkjFK6Q2VM4/evWPDk0SWXc4xaAftrZ7ZBMZUlNgFy3zR9sOdG+Hsi5zS
+	pvx3l5LeJ1HfGJ4HjN+LKL3ZWqVJne4Wmvj0asCN+okYNii1OhU1m+aBp5jfZb0HLCWmJb
+	5U8HVEQyWX+5lZWpJgTGqrDat3iaTro=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-620-tvWsOhQcODOTgYD9_rY8Mg-1; Thu, 24 Mar 2022 12:45:59 -0400
-X-MC-Unique: tvWsOhQcODOTgYD9_rY8Mg-1
-Received: by mail-wm1-f69.google.com with SMTP id 12-20020a05600c24cc00b0038c6caa95f7so1783975wmu.4
-        for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 09:45:59 -0700 (PDT)
+ us-mta-255-jCYD63H-Nze2DCI4sMyvAA-1; Thu, 24 Mar 2022 12:52:15 -0400
+X-MC-Unique: jCYD63H-Nze2DCI4sMyvAA-1
+Received: by mail-wm1-f72.google.com with SMTP id c62-20020a1c3541000000b003815245c642so4251438wma.6
+        for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 09:52:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=gmWLKTsN0RxD3ZGQht//c2O21f6lcUB8yu8WwzBWy/Q=;
-        b=Gj03eULrOqqEYyWruA9h4yTNqkZjbTrs3Cn46cFl6aOSC5cKOCFigE1yxWNfpa76gF
-         GuWgpeMZv8VTunnYZ36rHXi5lUhqfuuONgkSpcU9KlYI5KNDBtPAxiJshryqVE73WeAi
-         IPC/sOS91jEyxtr3GgGNzkxwuA6c1UZpkQL46gRFwGpln4usbs/2KuphEmsmG1jHLlra
-         38JLHDkvT0gfhFsdU/bcrkg5GX+c2fCeHAJpWCW3pOJZYSYkeUmS4opYE6MYmbzBqySD
-         XW7lZgiQOu5om/QaiLJE9pU0hGqZDePA/FFBOUPeAK32kIIpcw4NvOIMdq/I3/rmhO5N
-         SkVg==
-X-Gm-Message-State: AOAM530qbtaEJE8ignhU/puP1b9HPqfh1IGGFWIQSWdKw7qh4eEE0dUW
-	PDUQbCT24bGLuPuSeRhyfxjCfVO4ozwmEiB1XOH8lRLT/Ep4wi3yMOfL2zp3atlQlAYW28Lm1Wt
-	D4Jvbm9DbLSWG87U=
-X-Received: by 2002:a5d:4570:0:b0:204:34e:71cb with SMTP id a16-20020a5d4570000000b00204034e71cbmr5350042wrc.129.1648140357902;
-        Thu, 24 Mar 2022 09:45:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwHY4z1w+NIZ8ReUVUutWwi/11Zhokb/qTjrJCP4WR50R1BxddP/VSdOrXYN1FPCTj9oY53dg==
-X-Received: by 2002:a5d:4570:0:b0:204:34e:71cb with SMTP id a16-20020a5d4570000000b00204034e71cbmr5350027wrc.129.1648140357667;
-        Thu, 24 Mar 2022 09:45:57 -0700 (PDT)
+        bh=9LEdh/9lzBZ9ksbkPtihIQzrUqNztNRns+4eyyX48EA=;
+        b=14l6Xjd+x4IZs9kXEMJ7n77oJXWRpzRVIMW+Y+8+BPuwLR25K6ZVyBFd3nNr0QJviA
+         kAUkTOR6d4eSfdtu/ClMufhyi/RI20va4YdBu32eHDZfkYf1zKXkbcUjgO1R4Iz9OCnV
+         sMw3wdgQrzZlk/sncIlX3GAa4OKkL5KYxoOZDXLbNth0SDAIZK30Lz1v3rNB/JA+Svng
+         JedKAKq6ZfLeP+Ury/mNe7I+cIYy5YSdYX7uy1fRpjk2dHbEd4RTXj9INZEyYOCZswef
+         cN2wEVMeQqE+IH8blARaTxqr3gbm6vPDmxWNszGrvpxKV7mwxT7FKwwNuZueN/gZuVEP
+         GxCA==
+X-Gm-Message-State: AOAM531UpZz0CtrpO1shB6bAF3O9X4B13KN5YTGcRDh4kI//tqvxaMI8
+	peP6Q1h5Egg4A7vAFeQWm/3yT3kCOeAOmgrnVfeOGHtqOwu/QNxBoJqqjU8MCGcOQhtVvbigsaW
+	oiN6XlO65iWNAAso=
+X-Received: by 2002:a05:600c:4fd4:b0:38c:cc3f:ac01 with SMTP id o20-20020a05600c4fd400b0038ccc3fac01mr5646374wmq.206.1648140733856;
+        Thu, 24 Mar 2022 09:52:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwhSW4nucwkp0AiaQ896RD6HP0Bz+1Qu0620ywxMdvtuQunVxILg0/ygLp4gWdAIq1jiiotTA==
+X-Received: by 2002:a05:600c:4fd4:b0:38c:cc3f:ac01 with SMTP id o20-20020a05600c4fd400b0038ccc3fac01mr5646358wmq.206.1648140733645;
+        Thu, 24 Mar 2022 09:52:13 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-232-135.dyn.eolo.it. [146.241.232.135])
-        by smtp.gmail.com with ESMTPSA id 7-20020a05600c028700b0038cc9bfe6a4sm2388308wmk.37.2022.03.24.09.45.56
+        by smtp.gmail.com with ESMTPSA id m2-20020a1c2602000000b0038ca9ffac53sm2518350wmm.11.2022.03.24.09.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 09:45:57 -0700 (PDT)
-Message-ID: <69492012a2c7630ff3b5c036992fbc497de2906a.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 4/4] mptcp: let mptcp listen dump show listen
- backlog size
+        Thu, 24 Mar 2022 09:52:13 -0700 (PDT)
+Message-ID: <4e72bdc521dd29c791a51b85700a54a03aba4c00.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 3/4] mptcp: listen diag dump support
 From: Paolo Abeni <pabeni@redhat.com>
 To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Date: Thu, 24 Mar 2022 17:45:55 +0100
-In-Reply-To: <20220324135753.25182-5-fw@strlen.de>
+Date: Thu, 24 Mar 2022 17:52:12 +0100
+In-Reply-To: <20220324135753.25182-4-fw@strlen.de>
 References: <20220324135753.25182-1-fw@strlen.de>
-	 <20220324135753.25182-5-fw@strlen.de>
+	 <20220324135753.25182-4-fw@strlen.de>
 User-Agent: Evolution 3.42.4 (3.42.4-1.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -67,36 +66,43 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Thu, 2022-03-24 at 14:57 +0100, Florian Westphal wrote:
-> Before:
-> State   Recv-Q Send-Q  ..
-> LISTEN       0      0
-> 
-> After:
-> LISTEN       0     20
+> makes 'ss -Ml' show mptcp listen sockets.
 > 
 > Signed-off-by: Florian Westphal <fw@strlen.de>
 > ---
->  net/mptcp/mptcp_diag.c | 10 ++++++++--
->  net/mptcp/protocol.c   |  5 ++++-
->  2 files changed, 12 insertions(+), 3 deletions(-)
+>  net/mptcp/mptcp_diag.c | 67 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 > 
 > diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index 6a6dfc7eac33..e1babab45e86 100644
+> index c4992eeb67d8..6a6dfc7eac33 100644
 > --- a/net/mptcp/mptcp_diag.c
 > +++ b/net/mptcp/mptcp_diag.c
-> @@ -189,8 +189,14 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
->  	struct mptcp_sock *msk = mptcp_sk(sk);
->  	struct mptcp_info *info = _info;
+> @@ -69,6 +69,8 @@ static int mptcp_diag_dump_one(struct netlink_callback *cb,
+>  struct mptcp_diag_ctx {
+>  	long s_slot;
+>  	long s_num;
+> +	unsigned int l_slot;
+> +	unsigned int l_num;
+>  };
 >  
-> -	r->idiag_rqueue = sk_rmem_alloc_get(sk);
-> -	r->idiag_wqueue = sk_wmem_alloc_get(sk);
-> +	if (inet_sk_state_load(sk) == TCP_LISTEN) {
-> +		r->idiag_rqueue = READ_ONCE(sk->sk_ack_backlog);
-> +		r->idiag_wqueue = READ_ONCE(sk->sk_max_ack_backlog);
+>  static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+> @@ -114,6 +116,71 @@ static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+>  		}
+>  		cond_resched();
+>  	}
+> +
+> +	if (r->idiag_states & TCPF_LISTEN) {
+> +		int i;
 
-What about accessing msk->first->sk*ack_backlog instead ? Are there any
-possible subtle races? Otherwise sk_ack_backlog will always be 0,
-right?
+perhaps here we need to add something alike:
+
+		if (r->id.idiag_dport)
+			return;
+
+???
+
+Also, what about moving the following chunk in separate helper -
+mptcp_diag_dump_listener()?
 
 Thanks!
 
