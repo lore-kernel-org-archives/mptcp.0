@@ -1,128 +1,266 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FD57E
-	for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 23:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F50B7E
+	for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 23:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648164223; x=1679700223;
+  t=1648164608; x=1679700608;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=iJ3lmjKy6TcCdzIaS0gfmSsDxSqjTSt8u+R0mtrSXs0=;
-  b=kV55fK9ojCl88Vtmf46rqaGvlW4QMSqDrRA7FK/PL5HL0Lt9XvqPu5GH
-   jQDj8a6PUivOOdvReqOk7S+1Rn8yykjC4I+nGDBCAf5YjHHiFHjGt261A
-   RuKkprjo+WfsHv373cLhZKKV6P/FLbjMQZQM38sAIZ4keXZQdISR+sG+7
-   ET2TnXXpWFFggqj22BKYTnEOklLWXqiCLsZ5w57E6mNZ60xtt8XMtY02Z
-   5EEEv1jT7dtkGxgUlt+Fqure5eRym87Kx2SDJGG5QAP/q900qJHFLdV4/
-   QhVKR4fsZ+caajvMYV5AhKxYypudKKlIgw76hiikSYUnAt+GK6MgYaRRA
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="321709478"
+  bh=r7YWp1WX5KsNI6aqLlZWJDJh3iOfbnEWe6HzKC+wyG8=;
+  b=H8y+ChU5pfKIof+8nDrfxvYk6cesuEq8ivV8nyKVowLwnfjyIAjquGnX
+   hTcJGi92iQgx6YtKAbwOizjaPlMZJb77jzqrvqvoixldgbNKULha0UVLd
+   1jCFIsKw8j64V3oZXclcYk+slisHc+PNmJ1XnE5jclMukeHZlSqovUwLw
+   tprIGgA5oI0W/26/tnt045sBq/TX2HbHXkMRH+DywkKn1SbuFuaC0bfgO
+   p5CoCT8KB/XQ1V1n4rI+vXMWxejoYkWQaOLUR1hZ9E1JYJusWhONB/Bf7
+   +ahB9m92aAdWSUdP65hu64gfNmPhY4ujrXa6CVhG3oA3+P1soFuh7jCKT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="256079601"
 X-IronPort-AV: E=Sophos;i="5.90,208,1643702400"; 
-   d="scan'208";a="321709478"
+   d="scan'208";a="256079601"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 16:23:43 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 16:30:07 -0700
 X-IronPort-AV: E=Sophos;i="5.90,208,1643702400"; 
-   d="scan'208";a="561592804"
+   d="scan'208";a="561594458"
 Received: from lyang24-mobl.amr.corp.intel.com ([10.255.230.22])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 16:23:43 -0700
-Date: Thu, 24 Mar 2022 16:23:42 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 16:30:07 -0700
+Date: Thu, 24 Mar 2022 16:30:07 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH RESEND mptcp-next v5 5/8] mptcp: add get_subflow
- wrapper
-In-Reply-To: <0c0a5ee87793b0292eb80a57248c6ae4fcdeda93.1648130637.git.geliang.tang@suse.com>
-Message-ID: <349b2dcd-e6c1-5cb9-189-6ef577f796a0@linux.intel.com>
-References: <cover.1648130637.git.geliang.tang@suse.com> <0c0a5ee87793b0292eb80a57248c6ae4fcdeda93.1648130637.git.geliang.tang@suse.com>
+Subject: Re: [PATCH RESEND mptcp-next v5 1/8] mptcp: add struct
+ mptcp_sched_ops
+In-Reply-To: <3c9de8-eba6-881d-b869-d2339e76e8@linux.intel.com>
+Message-ID: <28cba8c9-f91b-2d55-2611-cd7fc6a3cf0@linux.intel.com>
+References: <cover.1648130637.git.geliang.tang@suse.com> <4df8257d4783911e933bdf3a3ddcfbac1c9db4f1.1648130637.git.geliang.tang@suse.com> <3c9de8-eba6-881d-b869-d2339e76e8@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 24 Mar 2022, Geliang Tang wrote:
+On Thu, 24 Mar 2022, Mat Martineau wrote:
 
-> This patch defined a new wrapper mptcp_sched_get_subflow(), invoke
-> get_subflow of msk->sched in it. Use the wrapper instead of using
-> mptcp_subflow_get_send() directly.
+> On Thu, 24 Mar 2022, Geliang Tang wrote:
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c | 6 +++---
-> net/mptcp/protocol.h | 1 +
-> net/mptcp/sched.c    | 7 +++++++
-> 3 files changed, 11 insertions(+), 3 deletions(-)
+>> This patch added struct mptcp_sched_ops. And define the scheduler
+>> register, unregister and find functions.
+>> 
+>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>> ---
+>> include/net/mptcp.h  |  13 +++++
+>> net/mptcp/Makefile   |   2 +-
+>> net/mptcp/protocol.c |   1 +
+>> net/mptcp/protocol.h |   7 +++
+>> net/mptcp/sched.c    | 114 +++++++++++++++++++++++++++++++++++++++++++
+>> 5 files changed, 136 insertions(+), 1 deletion(-)
+>> create mode 100644 net/mptcp/sched.c
+>> 
+>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+>> index 8b1afd6f5cc4..e3a0baa8dbd7 100644
+>> --- a/include/net/mptcp.h
+>> +++ b/include/net/mptcp.h
+>> @@ -95,6 +95,19 @@ struct mptcp_out_options {
+>> #endif
+>> };
+>> 
+>> +#define MPTCP_SCHED_NAME_MAX 16
+>> +
+>> +struct mptcp_sched_ops {
+>> +	struct sock *	(*get_subflow)(struct mptcp_sock *msk);
+>> +
+>> +	char			name[MPTCP_SCHED_NAME_MAX];
+>> +	struct module		*owner;
+>> +	struct list_head	list;
+>> +
+>> +	void (*init)(struct mptcp_sock *msk);
+>> +	void (*release)(struct mptcp_sock *msk);
+>> +} ____cacheline_aligned_in_smp;
+>> +
+>> #ifdef CONFIG_MPTCP
+>> extern struct request_sock_ops mptcp_subflow_request_sock_ops;
+>> 
+>> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+>> index 0a0608b6b4b4..aa5c10d1b80a 100644
+>> --- a/net/mptcp/Makefile
+>> +++ b/net/mptcp/Makefile
+>> @@ -3,7 +3,7 @@ obj-$(CONFIG_MPTCP) += mptcp.o
+>> ccflags-y += -DDEBUG
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index c7969b9b567e..241cfda822c0 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1567,7 +1567,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 			int ret = 0;
+> This line of context keeps making 'git am' fail - looks like you have a 
+> debug-enabling commit in your private tree?
 >
-> 			prev_ssk = ssk;
-> -			ssk = mptcp_subflow_get_send(msk);
-> +			ssk = mptcp_sched_get_subflow(msk);
+> This is probably why patchew is having trouble with this series too.
 >
-> 			/* First check. If the ssk has changed since
-> 			 * the last round, release prev_ssk
-> @@ -1636,7 +1636,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
-> 			 * check for a different subflow usage only after
-> 			 * spooling the first chunk of data
-> 			 */
-> -			xmit_ssk = first ? ssk : mptcp_subflow_get_send(mptcp_sk(sk));
-> +			xmit_ssk = first ? ssk : mptcp_sched_get_subflow(mptcp_sk(sk));
-> 			if (!xmit_ssk)
-> 				goto out;
-> 			if (xmit_ssk != ssk) {
-> @@ -3134,7 +3134,7 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
-> 		return;
+> - Mat
 >
-> 	if (!sock_owned_by_user(sk)) {
-> -		struct sock *xmit_ssk = mptcp_subflow_get_send(mptcp_sk(sk));
-> +		struct sock *xmit_ssk = mptcp_sched_get_subflow(mptcp_sk(sk));
->
-> 		if (xmit_ssk == ssk)
-> 			__mptcp_subflow_push_pending(sk, ssk);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index ad45281e8562..7781eb527b9a 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -621,6 +621,7 @@ void mptcp_sched_init(void);
-> void mptcp_init_sched(struct mptcp_sock *msk,
-> 		      struct mptcp_sched_ops *sched);
-> void mptcp_release_sched(struct mptcp_sock *msk);
-> +struct sock *mptcp_sched_get_subflow(struct mptcp_sock *msk);
->
-> static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-> {
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index e431b1eec5e1..2fd2a034ba49 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -11,6 +11,7 @@
-> #include <linux/list.h>
-> #include <linux/rculist.h>
-> #include <linux/spinlock.h>
-> +#include <linux/indirect_call_wrapper.h>
-> #include <net/tcp.h>
-> #include <net/netns/generic.h>
-> #include "protocol.h"
-> @@ -143,3 +144,9 @@ void mptcp_release_sched(struct mptcp_sock *msk)
-> 		msk->sched->release(msk);
-> 	msk->sched = NULL;
-> }
-> +
-> +struct sock *mptcp_sched_get_subflow(struct mptcp_sock *msk)
-> +{
-> +	return INDIRECT_CALL_INET_1(msk->sched->get_subflow,
-> +				    mptcp_subflow_get_send, msk);
-> +}
+>> 
+>> mptcp-y := protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o 
+>> diag.o \
+>> -	   mib.o pm_netlink.o sockopt.o
+>> +	   mib.o pm_netlink.o sockopt.o sched.o
+>> 
+>> obj-$(CONFIG_SYN_COOKIES) += syncookies.o
+>> obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index d3887f628b54..b1d7c8b0c112 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -3807,6 +3807,7 @@ void __init mptcp_proto_init(void)
+>>
+>> 	mptcp_subflow_init();
+>> 	mptcp_pm_init();
+>> +	mptcp_sched_init();
+>> 	mptcp_token_init();
+>>
+>> 	if (proto_register(&mptcp_prot, MPTCP_USE_SLAB) != 0)
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index fd82fd113113..3258b740c8ee 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -608,6 +608,13 @@ int mptcp_subflow_create_socket(struct sock *sk, 
+>> struct socket **new_sock);
+>> void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+>> 			 struct sockaddr_storage *addr,
+>> 			 unsigned short family);
+>> +struct mptcp_sched_ops *mptcp_sched_find(const struct net *net,
+>> +					 const char *name);
+>> +int mptcp_register_scheduler(const struct net *net,
+>> +			     struct mptcp_sched_ops *sched);
+>> +void mptcp_unregister_scheduler(const struct net *net,
+>> +				struct mptcp_sched_ops *sched);
+>> +void mptcp_sched_init(void);
+>> 
+>> static inline bool __mptcp_subflow_active(struct mptcp_subflow_context 
+>> *subflow)
+>> {
+>> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+>> new file mode 100644
+>> index 000000000000..3798a5cefeb6
+>> --- /dev/null
+>> +++ b/net/mptcp/sched.c
+>> @@ -0,0 +1,114 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/* Multipath TCP
+>> + *
+>> + * Copyright (c) 2022, SUSE.
+>> + */
+>> +
+>> +#define pr_fmt(fmt) "MPTCP: " fmt
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/list.h>
+>> +#include <linux/rculist.h>
+>> +#include <linux/spinlock.h>
+>> +#include <net/tcp.h>
+>> +#include <net/netns/generic.h>
+>> +#include "protocol.h"
+>> +
+>> +static int sched_pernet_id;
+>> +
+>> +struct sched_pernet {
+>> +	/* protects pernet updates */
+>> +	spinlock_t		lock;
+>> +	struct list_head	sched_list;
+>> +};
+>> +
+>> +static struct sched_pernet *sched_get_pernet(const struct net *net)
+>> +{
+>> +	return net_generic(net, sched_pernet_id);
+>> +}
+>> +
+>> +struct mptcp_sched_ops *mptcp_sched_find(const struct net *net,
+>> +					 const char *name)
+>> +{
+>> +	struct sched_pernet *pernet = sched_get_pernet(net);
+>> +	struct mptcp_sched_ops *sched, *ret = NULL;
+>> +
+>> +	spin_lock(&pernet->lock);
+>> +	list_for_each_entry_rcu(sched, &pernet->sched_list, list) {
+>> +		if (!strcmp(sched->name, name)) {
+>> +			ret = sched;
+>> +			break;
+>> +		}
+>> +	}
+>> +	spin_unlock(&pernet->lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +int mptcp_register_scheduler(const struct net *net,
+>> +			     struct mptcp_sched_ops *sched)
+>> +{
+>> +	struct sched_pernet *pernet = sched_get_pernet(net);
+>> +
+>> +	if (!sched->get_subflow)
+>> +		return -EINVAL;
 
-Since the purpose of this is to limit function call overhead, this could 
-be implemented as a static inline function in protocol.h
+Should also validate sched->name, don't want to allow a NULL pointer 
+there.
+
+>> +
+>> +	if (mptcp_sched_find(net, sched->name))
+>> +		return -EEXIST;
+>> +
+>> +	spin_lock(&pernet->lock);
+>> +	list_add_tail_rcu(&sched->list, &pernet->sched_list);
+>> +	spin_unlock(&pernet->lock);
+>> +
+>> +	pr_debug("%s registered", sched->name);
+>> +	return 0;
+>> +}
+>> +
+>> +void mptcp_unregister_scheduler(const struct net *net,
+>> +				struct mptcp_sched_ops *sched)
+>> +{
+>> +	struct sched_pernet *pernet = sched_get_pernet(net);
+>> +
+>> +	spin_lock(&pernet->lock);
+>> +	list_del_rcu(&sched->list);
+>> +	spin_unlock(&pernet->lock);
+>> +
+>> +	synchronize_rcu();
+>> +}
+>> +
+>> +static int __net_init sched_init_net(struct net *net)
+>> +{
+>> +	struct sched_pernet *pernet = sched_get_pernet(net);
+>> +
+>> +	INIT_LIST_HEAD_RCU(&pernet->sched_list);
+>> +	spin_lock_init(&pernet->lock);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void __net_exit sched_exit_net(struct net *net)
+>> +{
+>> +	struct sched_pernet *pernet = sched_get_pernet(net);
+>> +	struct mptcp_sched_ops *sched;
+>> +
+>> +	spin_lock(&pernet->lock);
+>> +	list_for_each_entry_rcu(sched, &pernet->sched_list, list)
+>> +		list_del_rcu(&sched->list);
+>> +	spin_unlock(&pernet->lock);
+>> +
+>> +	synchronize_rcu();
+>> +}
+>> +
+>> +static struct pernet_operations mptcp_sched_pernet_ops = {
+>> +	.init = sched_init_net,
+>> +	.exit = sched_exit_net,
+>> +	.id = &sched_pernet_id,
+>> +	.size = sizeof(struct sched_pernet),
+>> +};
+>> +
+>> +void mptcp_sched_init(void)
+>> +{
+>> +	if (register_pernet_subsys(&mptcp_sched_pernet_ops) < 0)
+>> +		panic("Failed to register MPTCP sched pernet subsystem.\n");
+>> +}
 
 --
 Mat Martineau
