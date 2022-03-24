@@ -1,20 +1,24 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81457E
-	for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 17:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04F37E
+	for <mptcp@lists.linux.dev>; Thu, 24 Mar 2022 17:08:03 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@strlen.de>)
-	id 1nXQw4-00089h-Sc; Thu, 24 Mar 2022 18:07:44 +0100
-Date: Thu, 24 Mar 2022 18:07:44 +0100
+	id 1nXQwL-0008AE-Jl; Thu, 24 Mar 2022 18:08:01 +0100
+Date: Thu, 24 Mar 2022 18:08:01 +0100
 From: Florian Westphal <fw@strlen.de>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 3/4] mptcp: listen diag dump support
-Message-ID: <20220324170744.GA30280@breakpoint.cc>
-References: <20220324135753.25182-1-fw@strlen.de>
- <20220324135753.25182-4-fw@strlen.de>
- <4e72bdc521dd29c791a51b85700a54a03aba4c00.camel@redhat.com>
+Subject: Re: [PATCH RESEND mptcp-next v5 1/8] mptcp: add struct
+ mptcp_sched_ops
+Message-ID: <20220324170801.GH24666@breakpoint.cc>
+References: <cover.1648130637.git.geliang.tang@suse.com>
+ <4df8257d4783911e933bdf3a3ddcfbac1c9db4f1.1648130637.git.geliang.tang@suse.com>
+ <20220324142753.GD24666@breakpoint.cc>
+ <20220324144110.GA15636@localhost>
+ <20220324150327.GE24666@breakpoint.cc>
+ <20220324160627.GA17230@localhost>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -23,48 +27,37 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4e72bdc521dd29c791a51b85700a54a03aba4c00.camel@redhat.com>
+In-Reply-To: <20220324160627.GA17230@localhost>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Paolo Abeni <pabeni@redhat.com> wrote:
-> On Thu, 2022-03-24 at 14:57 +0100, Florian Westphal wrote:
-> > makes 'ss -Ml' show mptcp listen sockets.
-> > 
-> > Signed-off-by: Florian Westphal <fw@strlen.de>
-> > ---
-> >  net/mptcp/mptcp_diag.c | 67 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> > 
-> > diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> > index c4992eeb67d8..6a6dfc7eac33 100644
-> > --- a/net/mptcp/mptcp_diag.c
-> > +++ b/net/mptcp/mptcp_diag.c
-> > @@ -69,6 +69,8 @@ static int mptcp_diag_dump_one(struct netlink_callback *cb,
-> >  struct mptcp_diag_ctx {
-> >  	long s_slot;
-> >  	long s_num;
-> > +	unsigned int l_slot;
-> > +	unsigned int l_num;
-> >  };
-> >  
-> >  static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
-> > @@ -114,6 +116,71 @@ static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
-> >  		}
-> >  		cond_resched();
-> >  	}
-> > +
-> > +	if (r->idiag_states & TCPF_LISTEN) {
-> > +		int i;
+Geliang Tang <geliang.tang@suse.com> wrote:
+> On Thu, Mar 24, 2022 at 04:03:27PM +0100, Florian Westphal wrote:
+> > Geliang Tang <geliang.tang@suse.com> wrote:
+> > > On Thu, Mar 24, 2022 at 03:27:53PM +0100, Florian Westphal wrote:
+> > > > Geliang Tang <geliang.tang@suse.com> wrote:
+> > > > > This patch added struct mptcp_sched_ops. And define the scheduler
+> > > > > register, unregister and find functions.
+> > > > 
+> > > > ... but why are they pernet?  Makes no sense to me, so an
+> > > > explanation would help.  Or, remove the pernet ops.
+> > > > 
+> > > > All callers pass &init_net, so I don't think there is any reason
+> > > > for pernet data structures here.
+> > > 
+> > > v4 used global list instead of pernet list:
+> > > 
+> > > https://patchwork.kernel.org/project/mptcp/patch/02c1d2d2eee134713737fe5c5f73127e8c741589.1647942374.git.geliang.tang@suse.com/
 > 
-> perhaps here we need to add something alike:
-> 
-> 		if (r->id.idiag_dport)
-> 			return;
-[..]
+> Florian, should I remove synchronize_rcu() in v4 too?
 
-> Also, what about moving the following chunk in separate helper -
-> mptcp_diag_dump_listener()?
-Changed to:
+I think so.  Else you need to add a comment as to why its needed.
 
-if ((r->idiag_states & TCPF_LISTEN) && r->id.idiag_dport == 0)
-            mptcp_diag_dump_listeners(skb, cb, r, net_admin);
+I suspect full 'rmmod mptcp_sched_example' sequence would be:
+
+1. mptcp_unregister_scheduler(&example_sched);
+2. walk all active mptcp sockets to re-set their scheduler
+in case something still uses 'example_sched'
+3. complete the rmmod
+
+In that case, we might need a synchronize_rcu after 2), but
+not 1.
