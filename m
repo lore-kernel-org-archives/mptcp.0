@@ -1,50 +1,54 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE0F7E
-	for <mptcp@lists.linux.dev>; Fri, 25 Mar 2022 00:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682927E
+	for <mptcp@lists.linux.dev>; Fri, 25 Mar 2022 00:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648167518; x=1679703518;
+  t=1648167521; x=1679703521;
   h=message-id:date:subject:to:references:from:in-reply-to:
    content-transfer-encoding:mime-version;
-  bh=9h5KDEfnNbqf8vyUS+BKINrr29xw9J/VCdSpw4Q9LcY=;
-  b=VMPiJFL2Cqn/5IoJz2w9kNt1l1pCZ3kYwdz7n6x12Sc6mSM3PMA97LY2
-   6iucS+KLW1F1wrgRVxKooe1Rx1n03B//LQhVq+UTeFwbuOtcLlD7y1B3/
-   CS0uFPUCyadfa7gLOQX+svBDpcUV71u9xmKaRhd96MAOF20ch1iWzzOO4
-   +YOpciSoVCoL4ublwE8OhbcdVvEJ7rtfMVO9Vchq2VGyu7v/KfnWcnu55
-   S3fhPsHNopZP76Bf4uZ9j99VLvP6sc9Yc4OmygxBSkUXlUD+XkDEtUh/o
-   FtafaB1cuXo0kSQF5ngBTRfPZGqE0KdqFP1+jQtTYJxO8EnDnZPT/A03j
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="344957727"
+  bh=PNURDisPjJ56H0135pWsTcBIX4QhT3Pn/4dQNOps8Bc=;
+  b=iRYlQRo2hDnOhkti6VBqE1fdTJs4AuVqM8n+ztpzSC89h9H9yO3KRTji
+   dvx6c6D/3EpsNpJeXvbHFf9msrr0Z7ovyZx8jLVLi+6rKGZZRLF2VblsO
+   n8ZPUnS8PpIrfqQdh67+UoVFJEcoT+WeIQi0U/eygyA38CpDIOckfoTHb
+   WxQ94gdxw6pCB5uO38AFGNwlMoHO8iwEEShYWn1AH2K4fP+NcI8a7hi7D
+   21YbnNEnyPOWiK85OpgZ4lRU1qsLh0ZvLP9a18F6L6aqiXCPRQ1LffF6L
+   yTGXf9TCVQhr4BgX3TK/QqYS33S+h2bVkwy8IvSgzGeHHLtAKBIhlJ7X4
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="240677379"
 X-IronPort-AV: E=Sophos;i="5.90,208,1643702400"; 
-   d="scan'208";a="344957727"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 17:18:12 -0700
+   d="scan'208";a="240677379"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 17:18:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,208,1643702400"; 
-   d="scan'208";a="638046314"
-Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Mar 2022 17:18:12 -0700
-Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
- ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+   d="scan'208";a="553050804"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Mar 2022 17:18:40 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 24 Mar 2022 17:18:12 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ 15.1.2308.27; Thu, 24 Mar 2022 17:18:40 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Thu, 24 Mar 2022 17:18:11 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2308.27; Thu, 24 Mar 2022 17:18:39 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Thu, 24 Mar 2022 17:18:39 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.107)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.21; Thu, 24 Mar 2022 17:18:11 -0700
+ 15.1.2308.21; Thu, 24 Mar 2022 17:18:39 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dQGNiFe11tmCGh51SHpIsElrSFtvtU02ZZCy0kBT7KTUBLMyGYS7OOpqclKnIMfA6hOGiIsXnGmZH9OG578OFGcNyqeqUw4O7jcjhbUB/bwci554m5KBZdcrGnrAbQuBuEpiMjp4d/bUGsZCcqYZKS/1RUROP8oYA6EOJ5uXN88rZQwXxGTA5fTO/rw6JEEjlVyoBP1t+sUZn3ExONiOAZ6kIwMG7B4O31MbiZO1WQPOpo1ZcCr7Hv7f3ZuJJ0Hm7YDXhxLzSSVOLuhfpX1i616g0+GyG8OPiQD/pYGWoU2fJNHmwJnpnKYJwha/sp8Ld68r8Yz625q7iPKxmTelFw==
+ b=cliapBgNuqbznW8EIcC6vMfZk/Sv2odZYq2WDjecpXgwsjaIZCJyhwNQrqEesZq34ZNTeOaHa3H4lbCRJ8oOuPFCHMu32XPke6Eco2yLJH6jRUrn/hFkDgayuRMKkXeZaM+m150c7BU7bGSrR/PtjaBemD+A28oa3x8MxWXJSFICx9sB2LtbTqEVhEmFG8RGEg25z9nAGS1vb9X6pyn2ZgBcLbWQ4S9E5AVXx6Q1pmbEvfEHh0QZOh47TvSZtSq6/ILESC2MM4VneXiK7JdwQWU3D7kbMdVAPcaW9QhVcxKUZCJIk33jSsU/7Q3thisw/OuJmwaAxfPc7wpAYyjAUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VQccCpROYxjMMHgpTChJNbVEk0A2mQhd/zugstS6suM=;
- b=JFzZvb35xnwVbojeRCdrzH126fwcWq5go2nxqXvx0mb0RwQ2iAOxTEvXo2MYWV7pgv9RKYzsZUZnqNud41lfDHVKR5uH7F35Tdp87y8a4uX3BcYRkeRTsDkMbAbexLhJ/73vMn1l2pZg7uIbkJ8uy/t23w6lCFzeICNMabJ/nBU9wBd0WqHhpO/LfmMlhI8ttUD02IU0GkUvSyAwPNbJZ7Eyw8HfNO+fJR47sRdj1QV+XTzOv5cDZdeyyuRYBmRsHz+DicQNKQ+RY4zpLt5JkiFim3tKApkpMqA2GX5mu2Y3MoJKk4BZBTLAOM+kM8awPAAeO6GH3tnfbv2Y4OUvnQ==
+ bh=FCRpiw0UWeDQGEFlItB8915hYdbw5GwvV2CNQWVJZfk=;
+ b=Nbxse76nNIejFsi6k19JDHJwD2w/PV5jI1yTHmvgDkRjSUzA2NU2wCx9WizjJOSXpd0nVrkuOKv/yp48gj8g09v9yYwMhiYrmHtgcylwBAnHQw7dhzybKgYO+CXdU+UtRJIL57hIZaYFT1A5pDV7vb0LSAUg51qBhp635Ri0LI/4WmTqPwqgE1mFpAuhq9iKXZqXHcx6hWeTdCp8QH89luJ5ibt4/IbIBRBoLJ3vNMI1zmf9pjqSB1op+Vc7E+crqUC5MwQl7MhHkCAKxelGK7Q7DyMfEKYumhA3xIynMBoKYKgf1cNMEVdVjo2fdf5lrNZkMPfa9+pVa28AMwwkBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -54,28 +58,28 @@ Received: from CO1PR11MB5140.namprd11.prod.outlook.com (2603:10b6:303:9e::21)
  by SA2PR11MB4777.namprd11.prod.outlook.com (2603:10b6:806:115::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.17; Fri, 25 Mar
- 2022 00:18:10 +0000
+ 2022 00:18:38 +0000
 Received: from CO1PR11MB5140.namprd11.prod.outlook.com
  ([fe80::44ba:c91c:ea6c:118d]) by CO1PR11MB5140.namprd11.prod.outlook.com
  ([fe80::44ba:c91c:ea6c:118d%5]) with mapi id 15.20.5102.019; Fri, 25 Mar 2022
- 00:18:10 +0000
-Message-ID: <d96ab7f2-b87b-2519-283c-ca7b3810eb33@intel.com>
-Date: Thu, 24 Mar 2022 17:18:07 -0700
+ 00:18:38 +0000
+Message-ID: <6ec189f4-432a-7f53-c566-ee42d5aee7f3@intel.com>
+Date: Thu, 24 Mar 2022 17:18:35 -0700
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH mptcp-next v5 02/14] mptcp: handle local addrs announced
- by userspace PMs
+Subject: Re: [PATCH mptcp-next v5 03/14] mptcp: read attributes of addr
+ entries managed by userspace PMs
 Content-Language: en-US
 To: Paolo Abeni <pabeni@redhat.com>, <mptcp@lists.linux.dev>
 References: <20220316231636.645625-1-kishen.maloor@intel.com>
- <20220316231636.645625-3-kishen.maloor@intel.com>
- <820d78dda48eb1ddc37485826af946505b22c605.camel@redhat.com>
+ <20220316231636.645625-4-kishen.maloor@intel.com>
+ <fe282bdf31c684037c4be06bbc5dbb08ff756bb4.camel@redhat.com>
 From: Kishen Maloor <kishen.maloor@intel.com>
-In-Reply-To: <820d78dda48eb1ddc37485826af946505b22c605.camel@redhat.com>
+In-Reply-To: <fe282bdf31c684037c4be06bbc5dbb08ff756bb4.camel@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR05CA0054.namprd05.prod.outlook.com
- (2603:10b6:a03:74::31) To CO1PR11MB5140.namprd11.prod.outlook.com
+X-ClientProxiedBy: BYAPR05CA0070.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::47) To CO1PR11MB5140.namprd11.prod.outlook.com
  (2603:10b6:303:9e::21)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -84,192 +88,132 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 983e04ae-1bba-43ec-e592-08da0df4f170
+X-MS-Office365-Filtering-Correlation-Id: 164dca22-e946-4009-b8b0-08da0df5020e
 X-MS-TrafficTypeDiagnostic: SA2PR11MB4777:EE_
-X-Microsoft-Antispam-PRVS: <SA2PR11MB4777F27329B1701C20EAEB65E11A9@SA2PR11MB4777.namprd11.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <SA2PR11MB47770ED96AA008A51BA5DA46E11A9@SA2PR11MB4777.namprd11.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YM+OYGEQdwz5QDwkaNSC6qJQrhRBhk0IKytrKkgrV9aPWLMpCiC4GGeoWar5UrpUqUHXpFFhKFUA3TZoNBQfZs+LMp+tIB3WlhW1z3a/ELLgT3uoyTroSOUazk1IUXawqGFfVU1+cEWl7aYU5SkopzyjbI39Qz0NX90HwS95SII3aXohZlwlllEaj3PocxFjN1Ne0UFtnAYerOmx16MWe20EcVQlFT5d0mig2/l/Ef7c+7RAfn0S972ALWeqDgqZUugQmpMFMFgsfwk6vS4bJ4SbHiJ7XWU30ZlHXnLyio0gMJ+RnoX0WB1f3bZmiOX021Wl4j0WSxnqRJrdPndQWidfqSY1M1Kx0HxSUwaOpLNSPjF6FYwX2prUoUUPxfSDJeZIKFXnPsAr0fRg2BUTK4DNC8TmKUP/orQ0JPhLV0FRDpLU17kqVmF1UqLAkUTENU4QJkqYsky0pyC6JqCdL/s61zdZ8IuLEaMgjkpwT4zlfXw4RtpTJsz82geLY8/2GFdF0VrWNkMMbQ+5WnZWvls7MfYmWZ/VnxjtEspnGYgR3ZBZQsB0RJSwng24eGR7+lWHS47cvSIWPRgjHdqqovzTCk9KHhXDIPww8Fxa7YVpokE8kW0qjVfgJzN15FyCo2qosny+Dg5/CT7/JL0W2u9ZEDBTaL8lWtFMzzKJCYa4DC+JTcXPsqk21R8Xr5CWabPBdfbkuNYH6EqABtDq7SB8NDBpw7EHHj3y3PtyYI8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5140.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(6512007)(2616005)(8936002)(186003)(6486002)(53546011)(83380400001)(508600001)(6506007)(2906002)(31696002)(6666004)(86362001)(44832011)(5660300002)(82960400001)(66946007)(38100700002)(36756003)(66476007)(66556008)(8676002)(31686004)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: Vp173QGklLjfZXTf1XPyppV3IxeX56FON9wbd0Nc6OVnLvrz3C/PkZ/W11URaPaH9LaTtVm3HTdnkiP3H6eA8nd+TdKhpe9HelwLyKxac756Sx8yEpELCeNq9gK0XObaeQE+2zF0GXGgd3s2rS5l480yvCaC4N2p4HinO267yc1jDzMsCY7NAX6+PuGyZEHikKEbVMfZQxb0zg3Qjr610CZ8qb9nkhmvhQhvos7qE1vlu4dX7RCxDXWwyeZ7mcNaiqJS9I+rDXDSDp1esyxYxvQGei3kL8cauKvDFZ7LUTH4ajQldi8Q11M5HdV97rCkQf1iPYNav6ugRHYMMPikyp/XjkQzPSuh2OmZHw0r4uvr3PttProzVIyXqOYeJ1dHI3q3y4toNs+frXqK15i8XXBQfJ5TGm6hMLQcKZ1ny/g9BioxXW+ziSeOH1Z2DXo5VKmf2XQgMGnUJt7HzBJcF7bWgtM1mVGIYKlpnETl0F4+6sPqA/hyikZnv+OCwwPNCYidoTrPTmW0DaN6k4OfEAokK9sXRpmfMCkVGDMHVPWwwBC7NEx6eypp/GkRuNN5EykQ/Wqx043AyawEkV2hTAckbJNa1x4pKRbgE1Np/ux1q1BTQo8MVoVBQB/dnpdc4C7MLYr2YhCiesD9xJ5kOSPfNooFR0vsuaqjifaxSA7u2AARdG3aai2FLpQIoe8fHMi44nYJRl8/Km/DkaHlLxvLTlzaW9USmG68+soaSuEP9KkShUOP9vDpbLGN29yYfWRo2pq9/p5rTR54NiTBNw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5140.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(6512007)(2616005)(8936002)(186003)(6486002)(53546011)(83380400001)(508600001)(6506007)(2906002)(31696002)(6666004)(86362001)(44832011)(5660300002)(82960400001)(66946007)(38100700002)(36756003)(66476007)(66556008)(8676002)(31686004)(316002)(21314003)(43740500002)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TTBBbHhzSnp1QXFDYnJwc3hhS3VmSmsvekRpd3RPWk84UE1mQ0lKM1FHYkI5?=
- =?utf-8?B?UEJGK0prRnV2cW1JbFFhQ0ZmQ0t2Vi9UQk9Mc2U4WTRlOFhLaG9FTzFvcTRV?=
- =?utf-8?B?bXl1eFhFcm44aHllQWo0TUFGbGN0VHVKT29QMHlvd1V0d1NNMXdseGtpbyt6?=
- =?utf-8?B?aUpNSVBwTVFIbEtueWdSbmQwQkExMmR5RzJ6ejgvdStmM0R6bUpmWnpFY2Rj?=
- =?utf-8?B?MDFLb0dzK2h0VTZBNHluSGlVSVRwNVRzSW5XUHYyaVUrd1NBUkN0QSs3L1Na?=
- =?utf-8?B?Q1U0elhuQk1mK2RYVDlodHYwbFJETkNFNXJPZU9DcXo1ME80aTlONjNNY3pM?=
- =?utf-8?B?dGphNTNDUzRxcVNHWDdHU1NwWU8zVlRNcHR0OW9sZmMydEkyYmZSdE9RZlBV?=
- =?utf-8?B?blUrb2F2SGhIQXNGdFFDNmtmNG1Wd2NSTFJiM2pBWmprdnJWcHFzUjRMbkcy?=
- =?utf-8?B?VXEzaDNCM2hoV2RUcGxSYjJkQ2QzbHhiK0t5VEErTjd6ZmxHd0pNRFJjbnpM?=
- =?utf-8?B?VHllQVdqb1NGSjU4NnBNZUFjWk1zcGo2UTBLZENoWi9ra0FKSmRPN041QnJ4?=
- =?utf-8?B?NDNaT2pSS1JlblFGb29NeFFCN3k1Q1hkdVRDR21BUTAzU2hDdFFacVdOSWxp?=
- =?utf-8?B?YmQ5TmxwWWFrQ1M0RzYyeU9tWlowRWdvUTg0MGJxUEN6YjhjbzdrMWtGMUJF?=
- =?utf-8?B?SURES3YvUldtZnJkS0FLUjhRUG1iY0t1RmRuR2g0RmJhMEdkdTB0Q01naytV?=
- =?utf-8?B?VmdDTmNNZ294YVhVYnZkOHBKaXJ6VVh6S2thNDdlWVR4bkdBWEs0aFhHcmZl?=
- =?utf-8?B?N09adi92b0N5bysvcUdNZ1JWYmVqbnRiT09uVWpvU3J5UCsvYVVtNElDSFZV?=
- =?utf-8?B?TGxzeStjS1hoeXpXS3ltSzRVc0xYUEVCUHQ0TnpDQ2VDYVZoNW5EQkhSRmFW?=
- =?utf-8?B?Mkdyd2ozN2JhRGZodlg3bnFZanh5SC95ZGVaT2o3K1dhN3JhTTBCbXAreFlo?=
- =?utf-8?B?WFBEdEQvM01QcUMxeUN1cVdtSVl6SUg5M2ZYMndrS2ptVEVkL0hWMml5S0Rm?=
- =?utf-8?B?d2VlOHE1RVdGalFTTXBDWk9CRnFsdGVkOVNhTXlPSFpLTjlXYjJnVUhtZWxn?=
- =?utf-8?B?UzRUQmo0d2VVVWQrY20yR0tDU0VIcEdTYVI2dXZRRmx3eEIzZ1BPRHBMZUpl?=
- =?utf-8?B?TklYNDl1cnoxWlFMWXlxRzdxcmxFOXIvOGtLcmFPVkVzMGpwbUxlWHZzMmtD?=
- =?utf-8?B?V0ZmZ2laRDBmbG4zVi85MDdpbnIvLzJzTlRUUXFJby9jcGNXKzZzWk5NWEh6?=
- =?utf-8?B?NnVBUlkvc095WlRQdlhaVVJNN1JjS3FSL2daZVVON2pBOE5aSGxwenM5UXo5?=
- =?utf-8?B?bUtHeUoxd1hBd1NKZ0k5TmJqSFArWGwzbWRIYWd5LzhPUGZ0OTUrZGZxUHBN?=
- =?utf-8?B?NHJiRlgrMUkwd0tSQU43MEdnM1VTWjRJNnhCY1luUUtsWGxLcTQvYWs3eTd6?=
- =?utf-8?B?OGsrWDNOZFJUTWw3NS9pWERaYmNEZVFxcVVKdXhvU3pHc0d4RmdaSnkxemFu?=
- =?utf-8?B?ZUVicTN1QUNQVFA4TU8xeFZVNkFtaUJ3K3NwZGtQa25OVjV0L29OenRYbzZh?=
- =?utf-8?B?eVpIL1J4bFA2MWNMS2ErbEtvV1hxVzJOeXc4aTRVTk1yNllZWm5wekppQzdB?=
- =?utf-8?B?dzVlNVFBQXp0b3Z6Tlo2bFZlOGJZV3YvSGw3UlpLU0VoZHZnWVg3NWlUQnU3?=
- =?utf-8?B?NzROT3cvOHRaTFhDaTlTWG9ONTU2NWRYK2Z5WkFHbGViY2tDVlY0bTdnbHpT?=
- =?utf-8?B?TExuSWY5WFB1RHBQS1piUVNwSzBJV0pCL3o0bThCaWV3RmpHMVNldFRvbmtQ?=
- =?utf-8?B?a2pWc255RFdvY0IyYTdIVmtVWHYyTkVQWWswVXdNdkRnL1hkQzh4ZzJtVUtz?=
- =?utf-8?B?cUZoVU5ac2JvYTBGcFlaN1VhMUc3WmVwL29QMVlpaEc4SmxyRnl1bUZKUm80?=
- =?utf-8?B?MVQvaG94YVdBPT0=?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 983e04ae-1bba-43ec-e592-08da0df4f170
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?US90eXdZNkFXdlY5ZVAzMTVJS2ZjSFFPeDRnMDZ0NWlLYk9qWkVnc2xnTkgz?=
+ =?utf-8?B?QndoUHVHeERxZ2dUcHRYelhTOXJzM1pnVWVGYVdSVE9WV0NZcEhhUVVocXlk?=
+ =?utf-8?B?RDQrYVZ1MWJtNGdZdzRLaVZjZDl3OTRQTUhwKzVTNHQxRHZZc1NaLzE4Q2U1?=
+ =?utf-8?B?bE1uQnNYRXUvQWJvSkRKY0tJNkg2cnBGbHJiRUZkNlZGWHlhY1JMVzQrMkg4?=
+ =?utf-8?B?enJPSjdaa3cxem1kcTBmVDZzclJaWjhQdWM4NS9pN2ZBU0NVVTFzREJtMWVI?=
+ =?utf-8?B?QXo0VzhoZG1SS0NBTEhlTEFLY1BCeTdMV0s0OEVhbGE1REpRa0sxcElOYk1h?=
+ =?utf-8?B?WlZDU1RQVll5anhEK1NtQk15dHZVYWJSOFpnSnJvcDJnU3ludmN4N2ZMNFdT?=
+ =?utf-8?B?emVzazMvcVJyQ2dhN2k3MHErRWFrbWo5NThISU4wb2djOHBNWnVLWTV4OFlJ?=
+ =?utf-8?B?S0NFZlIyM1psNG0zTjVUTFhwbGdjSS9KVWVRWGJMWWlmZjhaTEt5K3dkK2Nz?=
+ =?utf-8?B?bmtyaUx6RnVhenZpQ05YQ1NRQklEdVZGeVNITDNnR2l5WkcrQ3NVSklCdUla?=
+ =?utf-8?B?VTg4WDdUL0JFbGtGd0RyZFYzYnZ5NXg0UE1IVVlzS0VtSDZ0dlBGRVN4NTlq?=
+ =?utf-8?B?Y2RMOXY5Q0VlaWJMaUFWc0xRZU8rZEUzQy9tamo0Nnh0YVpyVkkrK1U2LytK?=
+ =?utf-8?B?bDBoYWtUaVRqbktMQ1p6T3JiQUFnNUF5S0ZWejQzRWRZZEVxU0RzcUpIYVkv?=
+ =?utf-8?B?TURRdXZoakhUZ2V1cDdnSzZEbVVEZ2ZSRms3WE1DSDdvVjhEM3NpRXBaOXEr?=
+ =?utf-8?B?Z2Uwa3krc2RXQWFuWXFib3F4UXY5cUI0K05EWG9PRjUwUEFmd3k5d2ptL2hW?=
+ =?utf-8?B?d1lMdm5BYVBnSi9rZXJ6VE5TSzVxd3dqbUNtdzVtY3A2NzBtRHN1RzZlOUNK?=
+ =?utf-8?B?YzFwamVSUzBNYmI1ODQyZDdoQ3JDbU9GMTNEMVlaMzVseDdXTU5ZdUhoRjJZ?=
+ =?utf-8?B?WG9JaHdydVNYNk1HWVpEOFQyejJPS3kyaXB5S2s3bStUSWtyV2c4TzRjeHRr?=
+ =?utf-8?B?MDYvN2pnc3hEWWJhc2ZxeDVySEhrRzlTQkFrMW01MXJiQlB6cVdXa3pQMTQ2?=
+ =?utf-8?B?MGI4cW5GakNoNkFoWW1GbUdNa1pIMnJUckFIcG02UGk3V0Q0a1FEMWZiN0kr?=
+ =?utf-8?B?d0pKSnFrY0NXbW9BS2dxOWU5OTJ2L05jcTc1ZjFGYWxUQWtaek5pZDZsTXls?=
+ =?utf-8?B?UU40ZHhSMWlqVW5XbXN1TjEwRjluOWFlbG9nTG5ualVST3lpZFhoOTVrK3hi?=
+ =?utf-8?B?ZTExSW9zTVYva2dYUktqMVlKR2grR0JYdkZ3NGowR0d5dHAzRDBreURRQ2FM?=
+ =?utf-8?B?eUVhejJYQTA5d1I0U1lnWjVDcjhGSU54RVBWS2MvR0lHVTY3MklTSGNpWTdv?=
+ =?utf-8?B?dXNiV0hoNG8zQWRzUlA0K0FZY05xM09XS05xWEJYNTFBYkZKeFZsQW9iMEQx?=
+ =?utf-8?B?emNFZHhWLzlnQ0hmRlRuRzRDTFJSckpJNjIrQjR5N3d0bDZpOEhCRGZqNUty?=
+ =?utf-8?B?enJFWlBmWDVNc2FwN3ZnYlhlWm1tbDhzVVV6T0o0QytVOGREQXVPUHhSSUQv?=
+ =?utf-8?B?OEtRWWsvaENOamtaTFozZWlXN3o5d0lZQ0N0ejlzMEZjZGZFdjRNZjZ4WkdH?=
+ =?utf-8?B?SUtsSjJ5TVlvL0NERkhjcW1JNG1pbWlrYWpFZ3hFK3RmWi9SOTNDN1RlV3pS?=
+ =?utf-8?B?MEYvbHh1MDUvbWtGNWg3bnVtZHZjbUlDaERYU3ZvcXBXRTRaN3ZqQWY1U1RU?=
+ =?utf-8?B?MEc2SFUzT3IxeUNQWnBNOU10Y05qRGlSRHlyWEM5b0RLWVJnRmdZYzhhbWdw?=
+ =?utf-8?B?S29qRzltK0VUQU1CaDlmOWZXOGNQNlVLeWZ4aktBeWlyZ05yWERoSWhwcDll?=
+ =?utf-8?B?QUJ0R0NtdzFrbG5ZUlFIMWUySlh6emtrVkZ3V3JrOGxrOFdqR1pHbThJQ2R5?=
+ =?utf-8?B?cTI5ZVdLbERnPT0=?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 164dca22-e946-4009-b8b0-08da0df5020e
 X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5140.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2022 00:18:10.1797
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2022 00:18:38.0419
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k4c7yvQeWPsXC71A+v8JvBOhJUK3H5Xv3yMAjEuzVVE2AjV9BgPX5NJDO1KpmG4LzvnhWnVi7qhdZpCCQ3CVeQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: URWy6cahlz0F2JDFZSKvUrAmY8eo19mrI8giv/yWwufxm3trytXa9iQJ5a7u9qfWrgfxSvqkZeSCSCeho0iAsw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4777
 X-OriginatorOrg: intel.com
 
-On 3/21/22 3:53 AM, Paolo Abeni wrote:
+On 3/21/22 3:56 AM, Paolo Abeni wrote:
 > On Wed, 2022-03-16 at 19:16 -0400, Kishen Maloor wrote:
->> This change adds an internal function to store/retrieve local
->> addrs announced by userspace PM implementations to/from its kernel
->> context. The function addresses the requirements of three scenarios:
->> 1) ADD_ADDR announcements (which require that a local id be
->> provided), 2) retrieving the local id associated with an address,
->> and also where one may need to be assigned, and 3) reissuance of
->> ADD_ADDRs when there's a successful match of addr/id.
->>
->> The list of all stored local addr entries is held under the
->> MPTCP sock structure. Memory for these entries is allocated from
->> the sock option buffer, so the list of addrs is bounded by optmem_max.
->> The list if not released via REMOVE_ADDR signals is ultimately
->> freed when the sock is destructed.
+>> This change introduces a parallel path in the kernel for retrieving
+>> the local id, flags, if_index for an addr entry in the context of
+>> an MPTCP connection that's being managed by a userspace PM. The
+>> userspace and in-kernel PM modes deviate in their procedures for
+>> obtaining this information.
 >>
 >> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 >> ---
->>  net/mptcp/pm_netlink.c | 72 ++++++++++++++++++++++++++++++++++++++++++
->>  net/mptcp/protocol.c   |  2 ++
->>  net/mptcp/protocol.h   |  2 ++
->>  3 files changed, 76 insertions(+)
+>>  net/mptcp/pm_netlink.c | 95 ++++++++++++++++++++++++++++--------------
+>>  net/mptcp/protocol.h   |  3 +-
+>>  net/mptcp/subflow.c    |  2 +-
+>>  3 files changed, 67 insertions(+), 33 deletions(-)
 >>
 >> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 98e59576415b..d8825bf580b7 100644
+>> index d8825bf580b7..b597e84affd5 100644
 >> --- a/net/mptcp/pm_netlink.c
 >> +++ b/net/mptcp/pm_netlink.c
->> @@ -390,6 +390,24 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
->>  	return true;
->>  }
+>> @@ -1106,31 +1106,47 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
 >>  
->> +void mptcp_free_local_addr_list(struct mptcp_sock *msk)
->> +{
->> +	struct mptcp_pm_addr_entry *entry, *tmp;
->> +	struct sock *sk = (struct sock *)msk;
->> +	LIST_HEAD(free_list);
->> +
->> +	if (!mptcp_pm_is_userspace(msk))
->> +		return;
->> +
->> +	mptcp_data_lock(sk);
->> +	list_splice_init(&msk->local_addr_list, &free_list);
->> +	mptcp_data_unlock(sk);
-> 
-> Why are you using the mptcp data lock here ? I think that is subject to
-> lockdep issues. Likely the pm spinlock is a more suitable lock.
-
-I needed a spin lock to serialize access to that list so had used mptcp_data_lock
-instead of adding a new lock. But yeah, I could use the pm spinlock instead and may
-be also move this list var into mptcp_pm_data.
-
-> 
->> +
->> +	list_for_each_entry_safe(entry, tmp, &free_list, list) {
->> +		sock_kfree_s(sk, entry, sizeof(*entry));
->> +	}
->> +}
->> +
->>  void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
->>  {
->>  	struct mptcp_pm_add_entry *entry, *tmp;
->> @@ -878,6 +896,60 @@ static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
->>  	kfree(entry);
->>  }
+>>  	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
 >>  
->> +static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
->> +						    struct mptcp_pm_addr_entry *entry)
->> +{
->> +	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
->> +	struct mptcp_pm_addr_entry *match = NULL;
->> +	struct sock *sk = (struct sock *)msk;
->> +	struct mptcp_pm_addr_entry *e;
->> +	bool addr_match = false;
->> +	bool id_match = false;
->> +	int ret = -EINVAL;
+>> -	rcu_read_lock();
+>> -	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+>> -		if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
+>> -			ret = entry->addr.id;
+>> -			break;
+>> +	if (mptcp_pm_is_kernel(msk)) {
+>> +		rcu_read_lock();
+>> +		list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+>> +			if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
+>> +				ret = entry->addr.id;
+>> +				break;
+>> +			}
+>>  		}
+>> +		rcu_read_unlock();
+>> +		if (ret >= 0)
+>> +			return ret;
 >> +
->> +	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
->> +
->> +	mptcp_data_lock(sk);
->> +	list_for_each_entry(e, &msk->local_addr_list, list) {
->> +		addr_match = addresses_equal(&e->addr, &entry->addr, true);
->> +		if (addr_match && entry->addr.id == 0)
->> +			entry->addr.id = e->addr.id;
->> +		id_match = (e->addr.id == entry->addr.id);
->> +		if (addr_match && id_match) {
->> +			match = e;
->> +			break;
->> +		} else if (addr_match || id_match) {
->> +			break;
->> +		}
->> +		__set_bit(e->addr.id, id_bitmap);
->> +	}
->> +
->> +	if (!match && !addr_match && !id_match) {
->> +		/* Memory for the entry is allocated from the
->> +		 * sock option buffer.
->> +		 */
->> +		e = sock_kmalloc(sk, sizeof(*e), GFP_ATOMIC);
->> +		if (!e) {
->> +			mptcp_data_unlock(sk);
+>> +		/* address not found, add to local list */
+>> +		entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
+>> +		if (!entry)
 >> +			return -ENOMEM;
->> +		}
 >> +
->> +		*e = *entry;
->> +		if (!e->addr.id)
->> +			e->addr.id = find_next_zero_bit(id_bitmap,
->> +							MPTCP_PM_MAX_ADDR_ID + 1,
->> +							1);
->> +		list_add_tail_rcu(&e->list, &msk->local_addr_list);
->> +		ret = e->addr.id;
->> +	} else if (match) {
->> +		ret = entry->addr.id;
->> +	}
->> +
->> +	mptcp_data_unlock(sk);
+>> +		entry->addr = skc_local;
+>> +		entry->addr.id = 0;
+>> +		entry->addr.port = 0;
+>> +		entry->ifindex = 0;
+>> +		entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+>> +		entry->lsk = NULL;
+>> +		ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
+>> +		if (ret < 0)
+>> +			kfree(entry);
+>> +	} else if (mptcp_pm_is_userspace(msk)) {
 > 
-> After "mptcp: introduce implicit endpoints", the above mimics very
-> closely what mptcp_pm_nl_get_local_id() is already doing for the in
-> kernel path manager, with the main differences that it avoid the hard
-> MPTCP_PM_ADDR_MAX limit.
-> 
-> Perhaps we can re-use the same code? e.g. enforcing the
-> MPTCP_PM_ADDR_MAX only for the in-kernel path manager, or possibly
-> retaining such constraint even for the user-space one?
+> Since pm_netlink.c is growing big and complex, a few pm-related helpers
+> are getting the user-space specific implementation, and we already have
+> a "generic" wrapper for some of them in pm.c, I think it would cleaner
+> keep all the user-space realted new code in a new/separate .c file, and
+> move the if (mptcp_pm_is_userspace(msk)/if
+> (mptcp_pm_is_kernelspace(msk)) checks in pm.c
 
-I don't think so. The semantics of mptcp_userspace_pm_append_new_local_addr()
-are different and work in concert with the ANNOUNCE impl. It always looks for a matching 
-addr+port and id to return a stored addr; if one matches and the other doesn't it rejects
-that insertion; if neither match it adds a new entry to the list; when adding an entry if
-an id wasn't provided (which can happen only in the "implicit" case), one is assigned. 
-Also, id assignments apply within the scope of each connection (i.e. per msk). 
+
+I think there's only one other case besides the one above with parallel in-kernel and
+userspace branches. Other mptcp_pm_is_xxx() checks are tweaks to existing functions where 
+for e.g., a check is done to process or skip over an entry in a list. So I think the
+existing code is more maintainable with these in-place changes as have been done.
+
+However, I think we could easily move the new (and distinct) userspace code: netlink impls, 
+local_addr_list handling into a pm_userspace.c.
 
 > 
 > /P
