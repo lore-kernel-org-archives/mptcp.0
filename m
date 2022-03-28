@@ -1,38 +1,38 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6CD17E7
-	for <mptcp@lists.linux.dev>; Mon, 28 Mar 2022 22:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C6317E7
+	for <mptcp@lists.linux.dev>; Mon, 28 Mar 2022 22:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648506904; x=1680042904;
+  t=1648507667; x=1680043667;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=s6TQF10cJgFMF5XBsUypily8BIzTZUl9olPLupNraUg=;
-  b=MYemNjsUneFgGe2a0ZE93kzDmc2HWs4KZ7YABOqLgrQK7q+dL9oEY3dd
-   RCzvhFP3ccW0JH8bee1aFa/W3qSnp1Lbp3fzLtaifOo2uwRsmHS0A61Ie
-   2rvidi+dlYIw4h0lwi31lTreajkky3O4vQVzll+Eqa3BT3vPQeRVNwZm3
-   envcG7hzrvzwANMu8+Gg3lGWO4DTdHdBE8a+HZE6IU83WzfxYDFaRxLTO
-   chocwjqVPQ+ztfzCz5iG59Jk8VHJUtRExkBaKGYPeN6QoNCHNtQ1r8a2n
-   3hNwoO3oqbUIJgnzcpzX7zdFt5RpTh862C9aIGBiELctKj6EX6lTseCyV
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="256691289"
+  bh=lrEltdH2qGeEZR5JJRWi50eP6jaySDQInIyoRWm8HX0=;
+  b=TYS+Yy+AqSthfsehWzPDdj6k1tH2NBs+asUkYoU5fDSMsafaPrnFsBoA
+   lb3SOCNcuY7QTOkCKOWD7iRCPHr+ulB7nQHSjgw/q0vmUa8JlIE/DEIRV
+   j+7TePhFppyGQFgSH2v1++w+f9S3PwQ7v8d0j6l1FyvDI72DSiCLp1foJ
+   zExgzBqyUBpXX9YEjvNBzcco9lUAFxJ3Sfu1Nyf9RQ9MSWRk8Gmzli0in
+   m4mTJXltcRnuKtVzE4Jxt3JqesjKmPH1pB9XVDHQ1SI/REWu+w/BxYgLb
+   OPGzw+4Iivb6i60OKDFfCQbTU4qIS7HBywfwWFJi3zjqd3turCGvxIs0c
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="345552860"
 X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="256691289"
+   d="scan'208";a="345552860"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 15:35:03 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 15:47:47 -0700
 X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="694515407"
+   d="scan'208";a="694518115"
 Received: from pchung1-mobl.amr.corp.intel.com ([10.209.44.61])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 15:35:03 -0700
-Date: Mon, 28 Mar 2022 15:35:02 -0700 (PDT)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 15:47:47 -0700
+Date: Mon, 28 Mar 2022 15:47:46 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v14 0/6] add skc_to_mptcp_sock
-In-Reply-To: <cover.1648311457.git.geliang.tang@suse.com>
-Message-ID: <af1bae9-ab98-245-4bce-1747b1fbfeb1@linux.intel.com>
-References: <cover.1648311457.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v7 4/8] mptcp: add sched in mptcp_sock
+In-Reply-To: <2812381119c23048dadbf5372293c724ff4b7970.1648459865.git.geliang.tang@suse.com>
+Message-ID: <bb912e65-412f-1f2a-dab8-2c1f3fa374b@linux.intel.com>
+References: <cover.1648459865.git.geliang.tang@suse.com> <2812381119c23048dadbf5372293c724ff4b7970.1648459865.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,131 +41,121 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Sun, 27 Mar 2022, Geliang Tang wrote:
+On Mon, 28 Mar 2022, Geliang Tang wrote:
 
-> This series addresses to Alexei comments in [1].
+> This patch adds a new struct member sched in struct mptcp_sock.
+> And two helpers mptcp_init_sched() and mptcp_release_sched() to
+> init and release it.
 >
-> [1]
-> https://lore.kernel.org/netdev/20200922040830.3iis6xiavhvpfq3v@ast-mbp.dhcp.thefacebook.com/
+> Init it with the sysctl scheduler in mptcp_init_sock(), copy the
+> scheduler from the parent in mptcp_sk_clone(), and release it in
+> __mptcp_destroy_sock().
 >
-> v14:
-> - merge the squash-to patch for patch 1.
-> - rename progs/mptcp.c to progs/mptcp_sock.c in patch 2.
-> - split the token verifying as a new patch from patch 3.
-> - update the commit logs.
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/protocol.c |  4 ++++
+> net/mptcp/protocol.h |  4 ++++
+> net/mptcp/sched.c    | 27 +++++++++++++++++++++++++++
+> 3 files changed, 35 insertions(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 2c684034fe7a..82b3846147a6 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2662,6 +2662,8 @@ static int mptcp_init_sock(struct sock *sk)
+> 	 * propagate the correct value
+> 	 */
+> 	mptcp_ca_reset(sk);
+> +	mptcp_init_sched(mptcp_sk(sk),
+> +			 mptcp_sched_find(net, mptcp_get_scheduler(net)));
+>
+> 	sk_sockets_allocated_inc(sk);
+> 	sk->sk_rcvbuf = sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
+> @@ -2817,6 +2819,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
+> 	sk_stop_timer(sk, &sk->sk_timer);
+> 	mptcp_data_unlock(sk);
+> 	msk->pm.status = 0;
+> +	mptcp_release_sched(msk);
+>
+> 	/* clears msk->subflow, allowing the following loop to close
+> 	 * even the initial subflow
+> @@ -2994,6 +2997,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+> 	msk->snd_una = msk->write_seq;
+> 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
+> 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+> +	mptcp_init_sched(msk, mptcp_sk(sk)->sched);
+>
+> 	if (mp_opt->suboptions & OPTIONS_MPTCP_MPC) {
+> 		msk->can_ack = true;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index dd4a2afdb38b..81c35af7ade5 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -288,6 +288,7 @@ struct mptcp_sock {
+> 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+> 	struct sock	*first;
+> 	struct mptcp_pm_data	pm;
+> +	struct mptcp_sched_ops	*sched;
+> 	struct {
+> 		u32	space;	/* bytes copied in last measurement window */
+> 		u32	copied; /* bytes copied in this measurement window */
+> @@ -618,6 +619,9 @@ void mptcp_unregister_scheduler(const struct net *net,
+> void mptcp_sched_init(void);
+> struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
+> void mptcp_sched_data_init(struct sock *sk);
+> +int mptcp_init_sched(struct mptcp_sock *msk,
+> +		     struct mptcp_sched_ops *sched);
+> +void mptcp_release_sched(struct mptcp_sock *msk);
+>
+> static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+> {
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 1fb3dd24d6ff..9b3a3157111d 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -125,3 +125,30 @@ void mptcp_sched_data_init(struct sock *sk)
+> {
+> 	mptcp_register_scheduler(sock_net(sk), &mptcp_sched_default);
+> }
+> +
+> +int mptcp_init_sched(struct mptcp_sock *msk,
+> +		     struct mptcp_sched_ops *sched)
+> +{
+> +	if (!sched)
+> +		msk->sched = &mptcp_sched_default;
+> +	else
+> +		msk->sched = sched;
+> +
+> +	if (!bpf_try_module_get(msk->sched, msk->sched->owner))
+> +		return -EBUSY;
 
-Looks ok to me, Matthieu had acked the previous rev so he can take another 
-look too.
+The bpf_try_module_get() should be before msk->sched is assigned.
 
-- Mat
+> +
+> +	if (msk->sched->init)
+> +		msk->sched->init(msk);
+> +
+> +	pr_debug("sched=%s", msk->sched->name);
+> +
+> +	return 0;
+> +}
+> +
+> +void mptcp_release_sched(struct mptcp_sock *msk)
+> +{
+> +	if (msk->sched && msk->sched->release)
+> +		msk->sched->release(msk);
 
->
-> v13:
-> patch 1:
->  As Mat mentioned in the "BPF packet scheduler" series, BPF packet
-> scheduler depends on CONFIG_BPF_SYSCALL. In fact, the series depends on
-> CONFIG_BPF_SYSCALL too.
->  - change "CONFIG_BPF" to "CONFIG_BPF_SYSCALL" in Makefile
->  - change "ifdef CONFIG_MPTCP" in include/linux/bpf.h to:
->    "#if defined(CONFIG_MPTCP) && defined(CONFIG_BPF_SYSCALL)"
->  - drop "#ifdef CONFIG_MPTCP" in net/core/filter.c
-> patch 2:
->  Address to Matt's comments in v12:
->  - use bpf_object__find_program_by_name, bpf_object__find_map_by_name
->  - use -EIO
->  - drop close_client_fd label
->  - add more CHECK_FAIL
->
-> v12:
-> patch 1:
->  - merged the squash-to patch for v11.
->  - rebased to export/20220324T054815.
-> patch 2:
->  - fix the libbpf 0.8 build error.
-> patch 4:
->  - use fgets instead of fread to get null terminated string.
->
-> v11:
-> - merge "check more values from mptcp_sock" series into this series.
-> - patch 2:
->   - rebased.
-> - patch 3:
->   - rebased.
->   - add 'Copyright' entry as Matt suggested in v9.
-> - patch 4:
->   - add test__start_subtest.
->   - add some 'Copyright' entries.
-> - patch 5:
->   - change monitor_log_path to static
->   - drop bpf_trace_printk()
-> - patch 6:
->   - use TCP_CA_NAME_MAX instead of strlen(val.ca_name) in strncmp().
->   - use 'sysctl -b net.ipv4.tcp_congestion_control' to get ca_name.
->
-> v10:
-> - merge the squash-to patch.
-> - update patch 3 as Matt suggested.
-> - add sync() in get_msk_token() before read().
-> - add a comment for get_msk_token().
-> - update subjects and commit logs.
->
-> v9:
-> - update progs/mptcp.c in patch 4 and 5
->
-> v8:
-> - update as Matt suggested.
->
-> v7:
-> - parse msk token from the output of 'ip mptcp monitor'.
-> - add Nicolas and Matt's SoB tags.
->
-> v6:
-> - add skc_to_mptcp_sock helper and test
->
-> RESEND:
-> - fix the CI Build Failure.
-> v5:
-> - fix incorrect token value
-> - verify the token in selftest
->
-> v4:
-> - define bpf_mptcp_sock_proto as a static function, no longer export
->   it in linux/bpf.h
->
-> v3:
-> - use RET_PTR_TO_BTF_ID_OR_NULL instead of RET_PTR_TO_MPTCP_SOCK_OR_NULL
-> - add a new bpf_id BTF_SOCK_TYPE_MPTCP
->
-> v2:
-> - keep RET_PTR_TO_MPTCP_SOCK_OR_NULL. If we use RET_PTR_TO_BTF_ID_OR_NULL
-> instead of RET_PTR_TO_MPTCP_SOCK_OR_NULL as Alexei suggested, the
-> "userspace" tests developed by Nicolas will break.
->
-> Geliang Tang (6):
->  bpf: add bpf_skc_to_mptcp_sock_proto
->  Squash to "selftests: bpf: add MPTCP test base"
->  selftests: bpf: test bpf_skc_to_mptcp_sock
->  selftests: bpf: verify token of struct mptcp_sock
->  selftests: bpf: verify ca_name of struct mptcp_sock
->  selftests: bpf: verify first of struct mptcp_sock
->
-> include/linux/bpf.h                           |   9 +
-> include/linux/btf_ids.h                       |   3 +-
-> include/uapi/linux/bpf.h                      |   7 +
-> net/core/filter.c                             |  16 ++
-> net/mptcp/Makefile                            |   4 +
-> net/mptcp/bpf.c                               |  22 ++
-> scripts/bpf_doc.py                            |   2 +
-> tools/include/uapi/linux/bpf.h                |   7 +
-> tools/testing/selftests/bpf/bpf_tcp_helpers.h |  12 +
-> .../testing/selftests/bpf/prog_tests/mptcp.c  | 209 +++++++++++++++---
-> tools/testing/selftests/bpf/progs/mptcp.c     |  48 ----
-> .../testing/selftests/bpf/progs/mptcp_sock.c  |  76 +++++++
-> 12 files changed, 331 insertions(+), 84 deletions(-)
-> create mode 100644 net/mptcp/bpf.c
-> delete mode 100644 tools/testing/selftests/bpf/progs/mptcp.c
-> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sock.c
->
+Looks like the null check here is already addressed in the squash-to 
+patch.
+
+> +	bpf_module_put(msk->sched, msk->sched->owner);
+
+Would be better to store a local pointer to the sched struct and clear 
+msk->sched before doing the bpf_module_put() call. With the RCU grace 
+period it's not likely to be a problem but might as well do the put last.
+
+> +	msk->sched = NULL;
+> +}
 > -- 
 > 2.34.1
 >
