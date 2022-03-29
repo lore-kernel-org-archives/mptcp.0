@@ -1,225 +1,58 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6D17C
-	for <mptcp@lists.linux.dev>; Tue, 29 Mar 2022 10:51:40 +0000 (UTC)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.226])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KSQmN2F6yz67bH2;
-	Tue, 29 Mar 2022 18:29:40 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Tue, 29 Mar 2022 12:32:12 +0200
-Received: from [10.47.83.59] (10.47.83.59) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 29 Mar
- 2022 11:32:11 +0100
-Message-ID: <e9969b97-3998-d7b2-9fd2-77ddd27969ef@huawei.com>
-Date: Tue, 29 Mar 2022 11:32:10 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB3B7C
+	for <mptcp@lists.linux.dev>; Tue, 29 Mar 2022 11:35:35 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1nZA8G-0004u6-Ep; Tue, 29 Mar 2022 13:35:28 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp-next v3 0/4] mptcp: inet diag listen dump support
+Date: Tue, 29 Mar 2022 13:35:19 +0200
+Message-Id: <20220329113523.19793-1-fw@strlen.de>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH perf] perf tools: .git/ORIG_HEAD might not exist
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
- Melo" <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-CC: <mptcp@lists.linux.dev>, Arnaldo Carvalho de Melo <acme@redhat.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20220329093120.4173283-1-matthieu.baerts@tessares.net>
-From: John Garry <john.garry@huawei.com>
-In-Reply-To: <20220329093120.4173283-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.83.59]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 
-On 29/03/2022 10:31, Matthieu Baerts wrote:
+Changes in v3: fix intendation, fix uninitialised var (Mat)
+	       extend mptcp diag tests
 
-Hi Matthieu,
+Changes in v2: drop patch 4 and prefer msk->first (Paolo Abeni)
 
-Sorry for the breakage.
+Done in a not-very-elegant way:
+Iterate over tcp listen hash, then pick out the tcp sockets
+with mptcp-ctx structure attached, then take the conn->sk for dumping.
 
-About 4e666cdb06ee, I have since discussed this topic with the git 
-community and they think it is unreliable to use any git internal file 
-as a depenency, as mentioned here:
-https://lore.kernel.org/linux-perf-users/85891cbd-e53c-89ac-6da2-40b5d56cd316@huawei.com/T/#t
+First patch is preparation/cleanup.
+Second patch gets rid of locking to avoid a lockdep splat.
+If the socket lock is really needed (I don't see where) I can workaround
+this by dropping locks temporarily when iterating the listen hash table,
+but its a bit more awkward.
 
-So I am not sure if it's better to fix that or just effectively back it 
-out with a (hopefully) proper fix.
+Sample output:
+ss -Mil
+State        Recv-Q Send-Q Local Address:Port  Peer Address:Port
+LISTEN       0      20     127.0.0.1:12000     0.0.0.0:*
+         subflows_max:2
 
-> It seems it cannot be assumed .git/ORIG_HEAD exists if .git/HEAD is
-> there.
-> 
-> Indeed, recently our public CI reported[1] the following error when
-> compiling Perf tool:
-> 
->    $ cd tools/perf
->    $ make -j4 -l4 O=/tmp/(...)/perf DESTDIR=/usr install
->    (...)
->    make[2]: *** No rule to make target '../../.git/ORIG_HEAD', needed by '/tmp/(...)/perf/PERF-VERSION-FILE'.
-> 
-> This is because apparently[2] Cirrus Ci uses a Git client implemented
-> purely in Go[3] to perform a clone. Most likely, this tool doesn't
-> create any .git/ORIG_HEAD file but .git/HEAD is there. The error can
-> indeed be reproduced by renaming this .git/ORIG_HEAD file while keeping
-> .git/HEAD. In other words, it means it is not enough to check the
-> presence of .git/HEAD to assume .git/ORIG_HEAD exists as well.
-> 
-> With the modification here, the version file is always regenerated if
-> .git/ORIG_HEAD file is not present. But that is not an issue as kernel
-> devs probably don't use such tools in their dev env and it can be
-> assumed for them that they have both .git/HEAD and .git/ORIG_HEAD files.
+Florian Westphal (4):
+  mptcp: diag: switch to context structure
+  mptcp: remove locking in mptcp_diag_fill_info
+  mptcp: listen diag dump support
+  selftests/mptcp: add diag listen tests
 
-right
+ net/mptcp/mptcp_diag.c                    | 105 +++++++++++++++++++++-
+ net/mptcp/sockopt.c                       |   6 --
+ tools/testing/selftests/net/mptcp/diag.sh |  38 ++++++++
+ 3 files changed, 140 insertions(+), 9 deletions(-)
 
-Could you please try this:
-
----->8------
-
-
- From 694964709a7fc2b46c995bb7b1967cc6b129def8 Mon Sep 17 00:00:00 2001
-From: John Garry <john.garry@huawei.com>
-Date: Tue, 29 Mar 2022 11:06:46 +0100
-Subject: [PATCH] perf: Stop depending on .git internal files for 
-building PERF-VERSION-FILE
-
-This essentially reverts commit c72e3f04b45fb2e50cdd81a50c3778c6a57251d8
-and commit 4e666cdb06eede2069a7b1a96a1359d1c441a3eb.
-
-In commit c72e3f04b45f ("tools/perf/build: Speed up git-version test on
-re-make"), a makefile dependency on .git/HEAD was added. The background 
-is that running PERF-VERSION-FILE is relatively slow, and commands like
-"git describe" are particularly slow.
-
-In commit 4e666cdb06ee ("perf tools: Fix dependency for version file
-creation"), an additional dependency on .git/ORIG_HEAD was added, as
-.git/HEAD may not change for "git reset --hard HEAD^" command.
-
-However, as discussed with the git community in [0], using git internal
-files for dependencies is not reliable. Commit 4e666cdb06ee also breaks
-some build scenarios [1].
-
-As mentioned, c72e3f04b45f was added to speed up the build. However in
-commit 7572733b8499 ("perf tools: Fix version kernel tag") we removed 
-the call to "git describe", so just revert Makefile.perf back to same as 
-pre c72e3f04b45f and the build should not be so slow, as below:
-
-Pre 7572733b8499:
-$> time util/PERF-VERSION-GEN
-   PERF_VERSION = 5.17.rc8.g4e666cdb06ee
-
-real    0m0.110s
-user    0m0.091s
-sys     0m0.019s
-
-Post 7572733b8499:
-$> time util/PERF-VERSION-GEN
-   PERF_VERSION = 5.17.rc8.g7572733b8499
-
-real    0m0.039s
-user    0m0.036s
-sys     0m0.007s
-
-
-[0] 
-https://lore.kernel.org/git/87wngkpddp.fsf@igel.home/T/#m4a4dd6de52fdbe21179306cd57b3761eb07f45f8
-[1] 
-https://lore.kernel.org/linux-perf-users/20220329093120.4173283-1-matthieu.baerts@tessares.net/T/#u
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 9c935f86d172..ddd03b21bda2 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -691,9 +691,8 @@ $(OUTPUT)common-cmds.h: $(wildcard 
-Documentation/perf-*.txt)
-  $(SCRIPTS) : % : %.sh
-  	$(QUIET_GEN)$(INSTALL) '$@.sh' '$(OUTPUT)$@'
-
--$(OUTPUT)PERF-VERSION-FILE: ../../.git/HEAD ../../.git/ORIG_HEAD
-+$(OUTPUT)PERF-VERSION-FILE: .FORCE-PERF-VERSION-FILE
-  	$(Q)$(SHELL_PATH) util/PERF-VERSION-GEN $(OUTPUT)
--	$(Q)touch $(OUTPUT)PERF-VERSION-FILE
-
-  # These can record PERF_VERSION
-  perf.spec $(SCRIPTS) \
-@@ -1139,21 +1138,12 @@ else
-  	@echo "FEATURE-DUMP file available in $(OUTPUT)FEATURE-DUMP"
-  endif
-
--#
--# Trick: if ../../.git does not exist - we are building out of tree for 
-example,
--# then force version regeneration:
--#
--ifeq ($(wildcard ../../.git/HEAD),)
--    GIT-HEAD-PHONY = ../../.git/HEAD ../../.git/ORIG_HEAD
--else
--    GIT-HEAD-PHONY =
--endif
-
-  FORCE:
-
-  .PHONY: all install clean config-clean strip install-gtk
-  .PHONY: shell_compatibility_test 
-please_set_SHELL_PATH_to_a_more_modern_shell
--.PHONY: $(GIT-HEAD-PHONY) TAGS tags cscope FORCE prepare
-+.PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
-  .PHONY: libtraceevent_plugins archheaders
-
-  endif # force_fixdep
 -- 
-2.26.2
-
-
------8<------
-
-I need to test it more as I just wrote it up now.
-
-Thanks,
-John
-
-> 
-> [1] https://cirrus-ci.com/task/5673396527693824?logs=test#L5026
-> [2] https://cirrus-ci.org/guide/tips-and-tricks/
-> [3] https://github.com/go-git/go-git
-> 
-> Fixes: 4e666cdb06ee ("perf tools: Fix dependency for version file creation")
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->   tools/perf/Makefile.perf | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 9c935f86d172..2f64e4904bbb 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1143,10 +1143,12 @@ endif
->   # Trick: if ../../.git does not exist - we are building out of tree for example,
->   # then force version regeneration:
->   #
-> +GIT-HEAD-PHONY =
->   ifeq ($(wildcard ../../.git/HEAD),)
-> -    GIT-HEAD-PHONY = ../../.git/HEAD ../../.git/ORIG_HEAD
-> -else
-> -    GIT-HEAD-PHONY =
-> +    GIT-HEAD-PHONY += ../../.git/HEAD
-> +endif
-> +ifeq ($(wildcard ../../.git/ORIG_HEAD),)
-> +    GIT-HEAD-PHONY += ../../.git/ORIG_HEAD
->   endif
->   
->   FORCE:
-> 
-> base-commit: ab0809af0bee88b689ba289ec8c40aa2be3a17ec
+2.35.1
 
