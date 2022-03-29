@@ -1,39 +1,24 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64DF20E6
-	for <mptcp@lists.linux.dev>; Tue, 29 Mar 2022 02:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648520086; x=1680056086;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=+rECdyQd8y0br4SUS01z9OTNvgvoP6peEX2mLurHiq0=;
-  b=c5HV9/iqG4WMdw4EgBe8TVihhKMr+UAqDoNo3kKov5MfHGf3To/nq4Z5
-   qAvZDV6TdBm+0sFUBtIWDR+9L/6DOiX4p6rBdFxlYoQ/KFsMOXB/mm2Fq
-   yFxAdxpIMj3I2bCkuBy42BaYt6Bvq4sZMWJYNB8o1kzH8zNXdRF2waH8X
-   DM/fH7hkPE6ZtYiBweUQFafMUsx36jjg6mgVCbzMMPrkfIU6KulXVgpAs
-   9F96tTkKf5d2TXVRqTFvyJntwCKxtx95VVopJXoOKzDR/T8iWjI8M/HM4
-   5agQjPFUAxR7jlo6z234OgsSxKgDn4jNeez/P2qr2JdWTX/bAVjVAwKPu
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="258857997"
-X-IronPort-AV: E=Sophos;i="5.90,219,1643702400"; 
-   d="scan'208";a="258857997"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 19:14:43 -0700
-X-IronPort-AV: E=Sophos;i="5.90,219,1643702400"; 
-   d="scan'208";a="564202904"
-Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 19:14:42 -0700
-From: Kishen Maloor <kishen.maloor@intel.com>
-To: kishen.maloor@intel.com,
-	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v6 10/14] selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_CREATE
-Date: Mon, 28 Mar 2022 22:14:33 -0400
-Message-Id: <20220329021437.1196552-11-kishen.maloor@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220329021437.1196552-1-kishen.maloor@intel.com>
-References: <20220329021437.1196552-1-kishen.maloor@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C92D20E5
+	for <mptcp@lists.linux.dev>; Tue, 29 Mar 2022 02:20:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A4DEEC34117;
+	Tue, 29 Mar 2022 02:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1648520412;
+	bh=8ijaKd1pMoh9IcSpaI9MLgq73wlza4qM6JlDumi8674=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=W646H58rbmUTYs/6upPFQ91NPm3H9p06ygeqTjYE5c7p7kb8nfRn/bbDpXbDhRmrl
+	 rXJPPFjzMEu5r8GD36IUPymSxE4Om6cNbdinjUpi9m7VBi5VE7bY7qFbRDz+GzS0st
+	 V/hzGWX++x5/HvgFPI+acuEcEllKSMG5HGfwPgWEwc7JPQiexU0HVeoLPkPvI+PGHY
+	 m0U9ErAAYLQLKM8oKqsmz53CxJpKvwBMw1SPOZVgv2KJD070e/EsZcVjuNqwuiwLQN
+	 VZgP9TdU2q656940zKMALiaEej6TVZYRMbaSqV+ZpYpnZu3FXKsdprlqx2f7XV5iW4
+	 UQHIDoH3IfYZA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8863BE7BB0B;
+	Tue, 29 Mar 2022 02:20:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,173 +26,39 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next] bpf: Sync comments for bpf_get_stack
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <164852041255.3757.11920454122901613646.git-patchwork-notify@kernel.org>
+Date: Tue, 29 Mar 2022 02:20:12 +0000
+References: <ce54617746b7ed5e9ba3b844e55e74cb8a60e0b5.1648110794.git.geliang.tang@suse.com>
+In-Reply-To: <ce54617746b7ed5e9ba3b844e55e74cb8a60e0b5.1648110794.git.geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, bpf@vger.kernel.org
 
-This change updates the "pm_nl_ctl" testing sample with a "csf"
-(create subflow) option to support the newly added netlink interface
-command MPTCP_PM_CMD_SUBFLOW_CREATE over the chosen MPTCP connection.
+Hello:
 
-E.g. ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2 rport 56789
-token 823274047
+This patch was applied to bpf/bpf.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
----
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 129 ++++++++++++++++++
- 1 file changed, 129 insertions(+)
+On Thu, 24 Mar 2022 16:37:32 +0800 you wrote:
+> Commit ee2a098851bf missed updating the comments for helper bpf_get_stack
+> in tools/include/uapi/linux/bpf.h. Sync it.
+> 
+> Fixes: ee2a098851bf ("bpf: Adjust BPF stack helper functions to accommodate skip > 0")
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  tools/include/uapi/linux/bpf.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 3506b0416c41..e2437bacd133 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -29,6 +29,7 @@ static void syntax(char *argv[])
- 	fprintf(stderr, "\tadd [flags signal|subflow|backup|fullmesh] [id <nr>] [dev <name>] <ip>\n");
- 	fprintf(stderr, "\tann <local-ip> id <local-id> token <token> [port <local-port>] [dev <name>]\n");
- 	fprintf(stderr, "\trem id <local-id> token <token>\n");
-+	fprintf(stderr, "\tcsf lip <local-ip> lid <local-id> rip <remote-ip> rport <remote-port> token <token>\n");
- 	fprintf(stderr, "\tdel <id> [<ip>]\n");
- 	fprintf(stderr, "\tget <id>\n");
- 	fprintf(stderr, "\tset [<ip>] [id <nr>] flags [no]backup|[no]fullmesh [port <nr>]\n");
-@@ -173,6 +174,132 @@ static int resolve_mptcp_pm_netlink(int fd)
- 	return genl_parse_getfamily((void *)data);
- }
- 
-+int csf(int fd, int pm_family, int argc, char *argv[])
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	const char *params[5];
-+	struct nlmsghdr *nh;
-+	struct rtattr *addr;
-+	struct rtattr *rta;
-+	u_int16_t family;
-+	u_int32_t token;
-+	u_int16_t port;
-+	int addr_start;
-+	u_int8_t id;
-+	int off = 0;
-+	int arg;
-+
-+	memset(params, 0, 5 * sizeof(const char *));
-+
-+	memset(data, 0, sizeof(data));
-+	nh = (void *)data;
-+	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_SUBFLOW_CREATE,
-+			    MPTCP_PM_VER);
-+
-+	if (argc < 12)
-+		syntax(argv);
-+
-+	/* Params recorded in this order:
-+	 * <local-ip>, <local-id>, <remote-ip>, <remote-port>, <token>
-+	 */
-+	for (arg = 2; arg < argc; arg++) {
-+		if (!strcmp(argv[arg], "lip")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing local IP");
-+
-+			params[0] = argv[arg];
-+		} else if (!strcmp(argv[arg], "lid")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing local id");
-+
-+			params[1] = argv[arg];
-+		} else if (!strcmp(argv[arg], "rip")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing remote ip");
-+
-+			params[2] = argv[arg];
-+		} else if (!strcmp(argv[arg], "rport")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing remote port");
-+
-+			params[3] = argv[arg];
-+		} else if (!strcmp(argv[arg], "token")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing token");
-+
-+			params[4] = argv[arg];
-+		} else
-+			error(1, 0, "unknown param %s", argv[arg]);
-+	}
-+
-+	for (arg = 0; arg < 4; arg = arg + 2) {
-+		/*  addr header */
-+		addr_start = off;
-+		addr = (void *)(data + off);
-+		addr->rta_type = NLA_F_NESTED |
-+			((arg == 0) ? MPTCP_PM_ATTR_ADDR : MPTCP_PM_ATTR_ADDR_REMOTE);
-+		addr->rta_len = RTA_LENGTH(0);
-+		off += NLMSG_ALIGN(addr->rta_len);
-+
-+		/*  addr data */
-+		rta = (void *)(data + off);
-+		if (inet_pton(AF_INET, params[arg], RTA_DATA(rta))) {
-+			family = AF_INET;
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR4;
-+			rta->rta_len = RTA_LENGTH(4);
-+		} else if (inet_pton(AF_INET6, params[arg], RTA_DATA(rta))) {
-+			family = AF_INET6;
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR6;
-+			rta->rta_len = RTA_LENGTH(16);
-+		} else
-+			error(1, errno, "can't parse ip %s", params[arg]);
-+		off += NLMSG_ALIGN(rta->rta_len);
-+
-+		/* family */
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ADDR_ATTR_FAMILY;
-+		rta->rta_len = RTA_LENGTH(2);
-+		memcpy(RTA_DATA(rta), &family, 2);
-+		off += NLMSG_ALIGN(rta->rta_len);
-+
-+		if (arg == 2) {
-+			/*  port */
-+			port = atoi(params[arg + 1]);
-+			rta = (void *)(data + off);
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_PORT;
-+			rta->rta_len = RTA_LENGTH(2);
-+			memcpy(RTA_DATA(rta), &port, 2);
-+			off += NLMSG_ALIGN(rta->rta_len);
-+		}
-+
-+		if (arg == 0) {
-+			/* id */
-+			id = atoi(params[arg + 1]);
-+			rta = (void *)(data + off);
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_ID;
-+			rta->rta_len = RTA_LENGTH(1);
-+			memcpy(RTA_DATA(rta), &id, 1);
-+			off += NLMSG_ALIGN(rta->rta_len);
-+		}
-+
-+		addr->rta_len = off - addr_start;
-+	}
-+
-+	/* token */
-+	token = atoi(params[4]);
-+	rta = (void *)(data + off);
-+	rta->rta_type = MPTCP_PM_ATTR_TOKEN;
-+	rta->rta_len = RTA_LENGTH(4);
-+	memcpy(RTA_DATA(rta), &token, 4);
-+	off += NLMSG_ALIGN(rta->rta_len);
-+
-+	do_nl_req(fd, nh, off, 0);
-+
-+	return 0;
-+}
-+
- int remove_addr(int fd, int pm_family, int argc, char *argv[])
- {
- 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-@@ -969,6 +1096,8 @@ int main(int argc, char *argv[])
- 		return announce_addr(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "rem"))
- 		return remove_addr(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "csf"))
-+		return csf(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "del"))
- 		return del_addr(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "flush"))
+Here is the summary with links:
+  - [bpf-next] bpf: Sync comments for bpf_get_stack
+    https://git.kernel.org/bpf/bpf/c/98870605b374
+
+You are awesome, thank you!
 -- 
-2.31.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
