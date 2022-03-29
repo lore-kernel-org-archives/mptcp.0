@@ -1,206 +1,88 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC1817C9
-	for <mptcp@lists.linux.dev>; Tue, 29 Mar 2022 01:09:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F4120E5
+	for <mptcp@lists.linux.dev>; Tue, 29 Mar 2022 02:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648516173; x=1680052173;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=P5E8Ku/F7Jk+83lFOo/+E1UDTJxPXdpDzkd+H5NJFy0=;
-  b=a/hb1HLAfUZ2xt7Gv8YxSPAQltQE99yy+PiYe6kWoMqB9ROVjWfSuup6
-   ZKedvFzgMzxgABEuqLxdF/r36I7lX33PLpVGWZUYReRwZepLheBRiMVJe
-   MT9LWMpLnb80cfGM/2yf8hNCPUasN4dfQACiCF9dN4zgq2le3o3OpYDRX
-   Arj9bwLq2hcM4bXk2AmP03d753vc7drp2NtKRJX67iNHd/6+5cDKvIWYu
-   Y6lanZOZbj83ShPuUMzbHr1FBkswnvKwCXfzbaVdUzX2M0a3a+0jBPXG/
-   cVMhlm0eslj1GmL3jRKuO3sSrOyNSlmXLcKA80RPTgvqaGFWopZugC85+
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="256711520"
-X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="256711520"
+  t=1648520048; x=1680056048;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uBPSYn5PjbwgaUDDVCEqOGJJ7a4v8wXr/zjQ3RDEpC0=;
+  b=c3lV5IcPpRo6Uad+k7XWiCwd52+coRl4CPaVhdPxxHg04Ou0sZrW/tO9
+   gfX/lxgloW6Hx3mN6eIn0YfwqHxdvJCv+I69fm/nrIyOZeqwdYakYUzZM
+   NJxswLy54irWXs2uDi00qFpJgdQC3waH4sBqkpkZ3McFkDL0ewg7ptlmi
+   v2z0LxOT5/+YoZFw2iJ30Cw048KI1WiMNOX9Smr+Dv09TRaY1QTxapgIK
+   nn0NZRblY3VUYcc7YnlUjdUbTzyUIOyMNkSsjic5jG0CkZRE8G4+HMDkH
+   9j4ppWyFaZLU59ezbenwDvVExk2vcGBe93D/qtpMmcadKHmbgfFrP/4Rl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="345578741"
+X-IronPort-AV: E=Sophos;i="5.90,219,1643702400"; 
+   d="scan'208";a="345578741"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 18:09:32 -0700
-X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="564162904"
-Received: from pchung1-mobl.amr.corp.intel.com ([10.209.44.61])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 18:09:32 -0700
-Date: Mon, 28 Mar 2022 18:09:32 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 3/3] mptcp: listen diag dump support
-In-Reply-To: <20220328124913.29768-4-fw@strlen.de>
-Message-ID: <972fd6c2-8dfa-971f-c28c-45ab5c48@linux.intel.com>
-References: <20220328124913.29768-1-fw@strlen.de> <20220328124913.29768-4-fw@strlen.de>
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 19:14:08 -0700
+X-IronPort-AV: E=Sophos;i="5.90,219,1643702400"; 
+   d="scan'208";a="564202536"
+Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 19:14:07 -0700
+From: Kishen Maloor <kishen.maloor@intel.com>
+To: kishen.maloor@intel.com,
+	mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v9 0/6] mptcp: fixes and enhancements related to path management
+Date: Mon, 28 Mar 2022 22:13:55 -0400
+Message-Id: <20220329021401.1196466-1-kishen.maloor@intel.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Mon, 28 Mar 2022, Florian Westphal wrote:
+This patch series incorporates fixes and enhancements related to
+path management over MPTCP connections, particularly in support of
+userspace PMs. The changes ensure that the required bits of
+information are conveyed through MPTCP netlink events which
+would be consumed by the path manager in making its decisions.
+Further it adds flexibility in establishing paths and from
+both ends of MPTCP connections.
 
-> makes 'ss -Ml' show mptcp listen sockets.
->
-> Iterate over the tcp listen sockets and pick those that have mptcp ulp
-> info attached.
->
-> mptcp_diag_get_info() is modified to prefer msk->first for mptcp sockets
-> in listen state.  This reports accurate number for recv and send queue
-> (pending / max connection backlog counters).
->
-> Sample output:
-> ss -Mil
-> State        Recv-Q Send-Q Local Address:Port  Peer Address:Port
-> LISTEN       0      20     127.0.0.1:12000     0.0.0.0:*
->         subflows_max:2
->
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
-> Changes:
->  - place functionality in helper function
->  - prefer msk->first for msk listeners
->  - more verbose commit message
->
-> net/mptcp/mptcp_diag.c | 88 ++++++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 88 insertions(+)
->
-> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index c4992eeb67d8..076dd99d35d9 100644
-> --- a/net/mptcp/mptcp_diag.c
-> +++ b/net/mptcp/mptcp_diag.c
-> @@ -69,8 +69,80 @@ static int mptcp_diag_dump_one(struct netlink_callback *cb,
-> struct mptcp_diag_ctx {
-> 	long s_slot;
-> 	long s_num;
-> +	unsigned int l_slot;
-> +	unsigned int l_num;
-> };
->
-> +static void mptcp_diag_dump_listeners(struct sk_buff *skb, struct netlink_callback *cb,
-> +				      const struct inet_diag_req_v2 *r,
-> +				      bool net_admin)
-> +{
-> +	struct mptcp_diag_ctx *diag_ctx = (void *)cb->ctx;
-> +	struct net *net = sock_net(skb->sk);
-> +	struct nlattr *bc;
-> +	int i;
-> +
-> +	for (i = diag_ctx->l_slot; i < INET_LHTABLE_SIZE; i++) {
-> +		struct inet_listen_hashbucket *ilb;
-> +		struct hlist_nulls_node *node;
-> +		struct sock *sk;
-> +		int num = 0;
-> +
-> +		ilb = &tcp_hashinfo.listening_hash[i];
-> +
-> +		rcu_read_lock();
-> +		spin_lock(&ilb->lock);
-> +		sk_nulls_for_each(sk, node, &ilb->nulls_head) {
-> +			const struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(sk);
-> +			struct inet_sock *inet = inet_sk(sk);
-> +			int ret;
-> +
-> +			if (num < diag_ctx->l_num)
-> +				goto next_listen;
-> +
-> +			if (!ctx || strcmp(inet_csk(sk)->icsk_ulp_ops->name, "mptcp"))
-> +				goto next_listen;
-> +
-> +			sk = ctx->conn;
-> +			if (!sk || !net_eq(sock_net(sk), net))
-> +				goto next_listen;
-> +
-> +			if (r->sdiag_family != AF_UNSPEC &&
-> +			    sk->sk_family != r->sdiag_family)
-> +				goto next_listen;
-> +
-> +			if (r->id.idiag_sport != inet->inet_sport &&
-> +			    r->id.idiag_sport)
-> +				goto next_listen;
-> +
-> +			if (!refcount_inc_not_zero(&sk->sk_refcnt))
-> +				goto next_listen;
-> +
-> +			ret = sk_diag_dump(sk, skb, cb, r, bc, net_admin);
+v6:
+-Dropped framework and functionality around the use of kernel
+listening sockets for receiving MPJs.
 
-As the kbuild bot noticed, bc is uninitialized here.
+v7:
+-Fixed bug caught by the CI build.
 
-> +					   sock_put(sk);
+v8:
+-Fixed logic to achieve the desired outcome of not responding to
+address advertisements when a userspace PM is offline.
+-Factored out minor changes to mptcp_pm_is_userspace() to be
+squashed into an earlier commit.
 
-Extra tabs here.
+v9:
+-Removed an explicit 'struct inet_sock *' cast in a patch which was
+not necessary.
 
-It built and ran fine, with some manual tests and diag.sh. Speaking of 
-diag.sh, some coverage there for the new MPTCP listener functionality 
-would be good.
+Kishen Maloor (6):
+  Squash-to: mptcp: Bypass kernel PM when userspace PM is enabled
+  mptcp: bypass in-kernel PM restrictions for non-kernel PMs
+  mptcp: store remote id from MP_JOIN SYN/ACK in local ctx
+  mptcp: reflect remote port (not 0) in ANNOUNCED events
+  mptcp: establish subflows from either end of connection
+  mptcp: expose server_side attribute in MPTCP netlink events
 
-- Mat
+ include/uapi/linux/mptcp.h |  1 +
+ net/mptcp/options.c        |  4 ++--
+ net/mptcp/pm.c             | 21 +++++++++++++++++----
+ net/mptcp/pm_netlink.c     | 24 +++++++++++++++++++++---
+ net/mptcp/protocol.c       |  5 +----
+ net/mptcp/protocol.h       | 22 ++++++++++++++++------
+ net/mptcp/subflow.c        |  5 ++++-
+ 7 files changed, 62 insertions(+), 20 deletions(-)
 
-> +			if (ret < 0) {
-> +				spin_unlock(&ilb->lock);
-> +				rcu_read_unlock();
-> +				diag_ctx->l_slot = i;
-> +				diag_ctx->l_num = num;
-> +				return;
-> +			}
-> +			diag_ctx->l_num = num + 1;
-> +			num = 0;
-> +next_listen:
-> +			++num;
-> +		}
-> +		spin_unlock(&ilb->lock);
-> +		rcu_read_unlock();
-> +
-> +		cond_resched();
-> +		diag_ctx->l_num = 0;
-> +	}
-> +
-> +	diag_ctx->l_num = 0;
-> +	diag_ctx->l_slot = i;
-> +}
-> +
-> static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
-> 			    const struct inet_diag_req_v2 *r)
-> {
-> @@ -114,6 +186,9 @@ static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
-> 		}
-> 		cond_resched();
-> 	}
-> +
-> +	if ((r->idiag_states & TCPF_LISTEN) && r->id.idiag_dport == 0)
-> +		mptcp_diag_dump_listeners(skb, cb, r, net_admin);
-> }
->
-> static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
-> @@ -124,6 +199,19 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
->
-> 	r->idiag_rqueue = sk_rmem_alloc_get(sk);
-> 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
-> +
-> +	if (inet_sk_state_load(sk) == TCP_LISTEN) {
-> +		struct sock *lsk = READ_ONCE(msk->first);
-> +
-> +		if (lsk) {
-> +			/* override with settings from tcp listener,
-> +			 * so Send-Q will show accept queue.
-> +			 */
-> +			r->idiag_rqueue = READ_ONCE(lsk->sk_ack_backlog);
-> +			r->idiag_wqueue = READ_ONCE(lsk->sk_max_ack_backlog);
-> +		}
-> +	}
-> +
-> 	if (!info)
-> 		return;
->
-> -- 
-> 2.35.1
->
->
->
 
+base-commit: 8e1fca01ac83e646133bd647abdae74d6d6449ba
 --
-Mat Martineau
-Intel
+2.31.1
