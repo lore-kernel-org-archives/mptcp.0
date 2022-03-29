@@ -1,39 +1,38 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D4517E7
-	for <mptcp@lists.linux.dev>; Mon, 28 Mar 2022 22:49:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC1817C9
+	for <mptcp@lists.linux.dev>; Tue, 29 Mar 2022 01:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648507743; x=1680043743;
+  t=1648516173; x=1680052173;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=33/pwne8BHBGb1h0DXqJD/TUGTgKOtorOVcA0YDYJeE=;
-  b=Cr2xf3VCk8SuC/S/q+JnKjqUQBGACyBgP0Gx83+QFQi4zVihsdbMhAEz
-   gzOe/H3sajsEgID91nPyt3YXmfWUcdCzZXRFYBRqp6sQnJmFHoQC1nuSy
-   t7e1IGycmCWXr/zqbnlkWV63alfER9+ufrWFkdkWZsQ4U7aD4HyVN0AyL
-   ynR6WMqCRwKQ2FhEjqQBKzFZlYktJtBZTFjNA7CaFXTP4WOtGio4SLr8B
-   vt2m1U4aNgbsibJ2Bk59wZoyRe6cTNljJnx1IUEO1keid27yeG6BwzPA2
-   e5RoiBqvQqDVhHl0ZcisefbenDkeLsmL9sNRjAvbMRgWG8/tm9GoTJm3S
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="258831954"
+  bh=P5E8Ku/F7Jk+83lFOo/+E1UDTJxPXdpDzkd+H5NJFy0=;
+  b=a/hb1HLAfUZ2xt7Gv8YxSPAQltQE99yy+PiYe6kWoMqB9ROVjWfSuup6
+   ZKedvFzgMzxgABEuqLxdF/r36I7lX33PLpVGWZUYReRwZepLheBRiMVJe
+   MT9LWMpLnb80cfGM/2yf8hNCPUasN4dfQACiCF9dN4zgq2le3o3OpYDRX
+   Arj9bwLq2hcM4bXk2AmP03d753vc7drp2NtKRJX67iNHd/6+5cDKvIWYu
+   Y6lanZOZbj83ShPuUMzbHr1FBkswnvKwCXfzbaVdUzX2M0a3a+0jBPXG/
+   cVMhlm0eslj1GmL3jRKuO3sSrOyNSlmXLcKA80RPTgvqaGFWopZugC85+
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="256711520"
 X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="258831954"
+   d="scan'208";a="256711520"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 15:49:03 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 18:09:32 -0700
 X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="564073499"
+   d="scan'208";a="564162904"
 Received: from pchung1-mobl.amr.corp.intel.com ([10.209.44.61])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 15:49:03 -0700
-Date: Mon, 28 Mar 2022 15:49:02 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 18:09:32 -0700
+Date: Mon, 28 Mar 2022 18:09:32 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
+To: Florian Westphal <fw@strlen.de>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v7 8/8] selftests: bpf: add mptcp_bpf_first
- test
-In-Reply-To: <50798e945994585b9c9c5443ce991ceb3dbc662f.1648459866.git.geliang.tang@suse.com>
-Message-ID: <7efd5bfc-26fd-7485-ea99-17211a95d717@linux.intel.com>
-References: <cover.1648459865.git.geliang.tang@suse.com> <50798e945994585b9c9c5443ce991ceb3dbc662f.1648459866.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v2 3/3] mptcp: listen diag dump support
+In-Reply-To: <20220328124913.29768-4-fw@strlen.de>
+Message-ID: <972fd6c2-8dfa-971f-c28c-45ab5c48@linux.intel.com>
+References: <20220328124913.29768-1-fw@strlen.de> <20220328124913.29768-4-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,172 +41,162 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Mon, 28 Mar 2022, Geliang Tang wrote:
+On Mon, 28 Mar 2022, Florian Westphal wrote:
 
-> This patch expends the MPTCP test base to support MPTCP packet
-> scheduler tests. Add the mptcp_bpf_first scheduler test in it.
-> Use sysctl to set net.mptcp.scheduler to use this sched.
+> makes 'ss -Ml' show mptcp listen sockets.
 >
-> Some code in send_data() is from bpf_tcp_ca.c.
+> Iterate over the tcp listen sockets and pick those that have mptcp ulp
+> info attached.
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> mptcp_diag_get_info() is modified to prefer msk->first for mptcp sockets
+> in listen state.  This reports accurate number for recv and send queue
+> (pending / max connection backlog counters).
+>
+> Sample output:
+> ss -Mil
+> State        Recv-Q Send-Q Local Address:Port  Peer Address:Port
+> LISTEN       0      20     127.0.0.1:12000     0.0.0.0:*
+>         subflows_max:2
+>
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 > ---
-> .../testing/selftests/bpf/prog_tests/mptcp.c  | 114 ++++++++++++++++++
-> 1 file changed, 114 insertions(+)
+> Changes:
+>  - place functionality in helper function
+>  - prefer msk->first for msk listeners
+>  - more verbose commit message
 >
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 9b73ef62ee74..e5b6f2f4a52d 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -4,6 +4,9 @@
-> #include <test_progs.h>
-> #include "cgroup_helpers.h"
-> #include "network_helpers.h"
-> +#include "bpf_first.skel.h"
+> net/mptcp/mptcp_diag.c | 88 ++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 88 insertions(+)
+>
+> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+> index c4992eeb67d8..076dd99d35d9 100644
+> --- a/net/mptcp/mptcp_diag.c
+> +++ b/net/mptcp/mptcp_diag.c
+> @@ -69,8 +69,80 @@ static int mptcp_diag_dump_one(struct netlink_callback *cb,
+> struct mptcp_diag_ctx {
+> 	long s_slot;
+> 	long s_num;
+> +	unsigned int l_slot;
+> +	unsigned int l_num;
+> };
+>
+> +static void mptcp_diag_dump_listeners(struct sk_buff *skb, struct netlink_callback *cb,
+> +				      const struct inet_diag_req_v2 *r,
+> +				      bool net_admin)
+> +{
+> +	struct mptcp_diag_ctx *diag_ctx = (void *)cb->ctx;
+> +	struct net *net = sock_net(skb->sk);
+> +	struct nlattr *bc;
+> +	int i;
+> +
+> +	for (i = diag_ctx->l_slot; i < INET_LHTABLE_SIZE; i++) {
+> +		struct inet_listen_hashbucket *ilb;
+> +		struct hlist_nulls_node *node;
+> +		struct sock *sk;
+> +		int num = 0;
+> +
+> +		ilb = &tcp_hashinfo.listening_hash[i];
+> +
+> +		rcu_read_lock();
+> +		spin_lock(&ilb->lock);
+> +		sk_nulls_for_each(sk, node, &ilb->nulls_head) {
+> +			const struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(sk);
+> +			struct inet_sock *inet = inet_sk(sk);
+> +			int ret;
+> +
+> +			if (num < diag_ctx->l_num)
+> +				goto next_listen;
+> +
+> +			if (!ctx || strcmp(inet_csk(sk)->icsk_ulp_ops->name, "mptcp"))
+> +				goto next_listen;
+> +
+> +			sk = ctx->conn;
+> +			if (!sk || !net_eq(sock_net(sk), net))
+> +				goto next_listen;
+> +
+> +			if (r->sdiag_family != AF_UNSPEC &&
+> +			    sk->sk_family != r->sdiag_family)
+> +				goto next_listen;
+> +
+> +			if (r->id.idiag_sport != inet->inet_sport &&
+> +			    r->id.idiag_sport)
+> +				goto next_listen;
+> +
+> +			if (!refcount_inc_not_zero(&sk->sk_refcnt))
+> +				goto next_listen;
+> +
+> +			ret = sk_diag_dump(sk, skb, cb, r, bc, net_admin);
 
-This didn't build for me - above needs to be changed to
+As the kbuild bot noticed, bc is uninitialized here.
 
-#include "mptcp_bpf_first.skel.h"
+> +					   sock_put(sk);
 
-to account for the .c file rename. But after that change, I was able to 
-build and run the mptcp bpf test.
+Extra tabs here.
+
+It built and ran fine, with some manual tests and diag.sh. Speaking of 
+diag.sh, some coverage there for the new MPTCP listener functionality 
+would be good.
 
 - Mat
 
-> +
-> +#define min(a, b) ((a) < (b) ? (a) : (b))
->
-> #ifndef TCP_CA_NAME_MAX
-> #define TCP_CA_NAME_MAX	16
-> @@ -19,6 +22,8 @@ struct mptcp_storage {
-> };
->
-> static char monitor_log_path[64];
-> +static const unsigned int total_bytes = 10 * 1024 * 1024;
-> +static int stop, duration;
->
-> static int verify_tsk(int map_fd, int client_fd)
-> {
-> @@ -251,8 +256,117 @@ void test_base(void)
-> 	close(cgroup_fd);
-> }
->
-> +static void *server(void *arg)
-> +{
-> +	int lfd = (int)(long)arg, err = 0, fd;
-> +	ssize_t nr_sent = 0, bytes = 0;
-> +	char batch[1500];
-> +
-> +	fd = accept(lfd, NULL, NULL);
-> +	while (fd == -1) {
-> +		if (errno == EINTR)
-> +			continue;
-> +		err = -errno;
-> +		goto done;
-> +	}
-> +
-> +	if (settimeo(fd, 0)) {
-> +		err = -errno;
-> +		goto done;
-> +	}
-> +
-> +	while (bytes < total_bytes && !READ_ONCE(stop)) {
-> +		nr_sent = send(fd, &batch,
-> +			       min(total_bytes - bytes, sizeof(batch)), 0);
-> +		if (nr_sent == -1 && errno == EINTR)
-> +			continue;
-> +		if (nr_sent == -1) {
-> +			err = -errno;
-> +			break;
+> +			if (ret < 0) {
+> +				spin_unlock(&ilb->lock);
+> +				rcu_read_unlock();
+> +				diag_ctx->l_slot = i;
+> +				diag_ctx->l_num = num;
+> +				return;
+> +			}
+> +			diag_ctx->l_num = num + 1;
+> +			num = 0;
+> +next_listen:
+> +			++num;
 > +		}
-> +		bytes += nr_sent;
+> +		spin_unlock(&ilb->lock);
+> +		rcu_read_unlock();
+> +
+> +		cond_resched();
+> +		diag_ctx->l_num = 0;
 > +	}
 > +
-> +	CHECK(bytes != total_bytes, "send", "%zd != %u nr_sent:%zd errno:%d\n",
-> +	      bytes, total_bytes, nr_sent, errno);
-> +
-> +done:
-> +	if (fd >= 0)
-> +		close(fd);
-> +	if (err) {
-> +		WRITE_ONCE(stop, 1);
-> +		return ERR_PTR(err);
-> +	}
-> +	return NULL;
+> +	diag_ctx->l_num = 0;
+> +	diag_ctx->l_slot = i;
 > +}
 > +
-> +static void send_data(int lfd, int fd)
-> +{
-> +	ssize_t nr_recv = 0, bytes = 0;
-> +	pthread_t srv_thread;
-> +	void *thread_ret;
-> +	char batch[1500];
-> +	int err;
-> +
-> +	WRITE_ONCE(stop, 0);
-> +
-> +	err = pthread_create(&srv_thread, NULL, server, (void *)(long)lfd);
-> +	if (CHECK(err != 0, "pthread_create", "err:%d errno:%d\n", err, errno))
-> +		return;
-> +
-> +	/* recv total_bytes */
-> +	while (bytes < total_bytes && !READ_ONCE(stop)) {
-> +		nr_recv = recv(fd, &batch,
-> +			       min(total_bytes - bytes, sizeof(batch)), 0);
-> +		if (nr_recv == -1 && errno == EINTR)
-> +			continue;
-> +		if (nr_recv == -1)
-> +			break;
-> +		bytes += nr_recv;
-> +	}
-> +
-> +	CHECK(bytes != total_bytes, "recv", "%zd != %u nr_recv:%zd errno:%d\n",
-> +	      bytes, total_bytes, nr_recv, errno);
-> +
-> +	WRITE_ONCE(stop, 1);
-> +
-> +	pthread_join(srv_thread, &thread_ret);
-> +	CHECK(IS_ERR(thread_ret), "pthread_join", "thread_ret:%ld",
-> +	      PTR_ERR(thread_ret));
-> +}
-> +
-> +static void test_first(void)
-> +{
-> +	struct bpf_first *first_skel;
-> +	int server_fd, client_fd;
-> +	struct bpf_link *link;
-> +
-> +	first_skel = bpf_first__open_and_load();
-> +	if (CHECK(!first_skel, "bpf_first__open_and_load", "failed\n"))
-> +		return;
-> +
-> +	link = bpf_map__attach_struct_ops(first_skel->maps.first);
-> +	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
-> +		bpf_first__destroy(first_skel);
-> +		return;
-> +	}
-> +
-> +	system("sysctl -q net.mptcp.scheduler=mptcp_bpf_first");
-> +	server_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
-> +	client_fd = connect_to_mptcp_fd(server_fd, 0);
-> +
-> +	send_data(server_fd, client_fd);
-> +
-> +	close(client_fd);
-> +	close(server_fd);
-> +	bpf_link__destroy(link);
-> +	bpf_first__destroy(first_skel);
-> +}
-> +
-> void test_mptcp(void)
+> static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+> 			    const struct inet_diag_req_v2 *r)
 > {
-> 	if (test__start_subtest("base"))
-> 		test_base();
-> +	if (test__start_subtest("first"))
-> +		test_first();
+> @@ -114,6 +186,9 @@ static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+> 		}
+> 		cond_resched();
+> 	}
+> +
+> +	if ((r->idiag_states & TCPF_LISTEN) && r->id.idiag_dport == 0)
+> +		mptcp_diag_dump_listeners(skb, cb, r, net_admin);
 > }
+>
+> static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+> @@ -124,6 +199,19 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+>
+> 	r->idiag_rqueue = sk_rmem_alloc_get(sk);
+> 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+> +
+> +	if (inet_sk_state_load(sk) == TCP_LISTEN) {
+> +		struct sock *lsk = READ_ONCE(msk->first);
+> +
+> +		if (lsk) {
+> +			/* override with settings from tcp listener,
+> +			 * so Send-Q will show accept queue.
+> +			 */
+> +			r->idiag_rqueue = READ_ONCE(lsk->sk_ack_backlog);
+> +			r->idiag_wqueue = READ_ONCE(lsk->sk_max_ack_backlog);
+> +		}
+> +	}
+> +
+> 	if (!info)
+> 		return;
+>
 > -- 
-> 2.34.1
+> 2.35.1
 >
 >
 >
