@@ -1,44 +1,44 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720F57B
-	for <mptcp@lists.linux.dev>; Wed, 30 Mar 2022 14:51:29 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id i4so10832498wrb.5
-        for <mptcp@lists.linux.dev>; Wed, 30 Mar 2022 07:51:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E44A7B
+	for <mptcp@lists.linux.dev>; Wed, 30 Mar 2022 14:57:59 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id i132-20020a1c3b8a000000b0038ce25c870dso103962wma.1
+        for <mptcp@lists.linux.dev>; Wed, 30 Mar 2022 07:57:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=ZjNf3ipo07k3pokNq1B/M1pZNVO8n/oj5dqkTm9vhN0=;
-        b=vxuhcvUEE20TyUvcVROK7zIrqXamGlxg77n0wVaL3ZB1qiWJVRloU0JWUa1MKv79DA
-         3II+ZMGi+tgchhIHAHEPa0jShwilxhmWKqG8gFL+BqrGWR5YUh411OlZN9TsfvJJqLJ8
-         +HaHs5esdTjBVt+wWlBh6uIZbaK5F+fOdxYSRdagUAmgrHSoHGpbJ7emWNE7+QSODmbg
-         ViqQvNeeOCbaRdJPZR4+mkbjBM5sXJCVsspP/OXtfX+oW619CdcoSZ/aIDbNADEuygqR
-         1skQHiL5owA34Ett8DhNV1i1B5HUHFyJ/F0XXOdgf5fTeJCUGrf1d3BTKFd5FwIn2Acy
-         t7Xw==
+        bh=yvYrIblpgQxg/mQ6NjWqX7TpJJvtgrmaQJDLJIiuakY=;
+        b=lfazaA+EEJKGThKY8d3mlIo1nScmfIdjyZHc2EkU5UfSzXTgDmwQgqfP38usKCH1fu
+         B5mw6H1I//r8oMXlVoiCld7J1e7c0a4O0gO9nn97PgQIoveTwWWy1fZL0o7PaSoFbdpA
+         0qaU4dyp/XXBgEVA8lp2EC6oZSlW7OPHobQhBj+oKoi03M913r+F3guWJKvowQjUNRB+
+         TOI1l+Zb78yOboqTGLX1WAMggV7wHHWZV7cITtFKIrZkt7i38yqjOJGo7lqSKC806QfI
+         sn5dZ8QVhHzGWHsDYeGcGBiV0MO7rbiOG+gkqQOMpKA+QGxKEzpFmP8bDb+ExxUmkT0E
+         PLIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=ZjNf3ipo07k3pokNq1B/M1pZNVO8n/oj5dqkTm9vhN0=;
-        b=BWt15tmyMWozKO9WQh6bplUTS9K2StcZgHF9x5MEjteVKcjxFp1sS3GKUxCSWO1zq0
-         pJx12K7/pBYLR0y9YyzoVJH9RVDgImiY9QQR8ZGIWckIStnILIquZ1vLKTsihuZxcw5m
-         ACsTwCvaF6jjS8oa1jY0473LYSHD+a6ig2Gxjg8F95rsfmEeO1TLhqkKZPZqhuIe3HMJ
-         NvUmrJ0+qUalhvX3MIzoDOCBXCxAOjp/vy6U2jsCNksKkcMdaVKvMPFwuEojeJBJX6ne
-         YEF/3YKjPdo0QqTACGjxPUpDo4w4mmyF6QiQu4iH6KYDpvV6YGoIOcmjfKQfiNLl7fiE
-         TwFQ==
-X-Gm-Message-State: AOAM5323HdD8nCp0jwjVcXcHX4qReLlVGRy9HsmJ/Tlmp/Ryftl17BtL
-	Oo5rLxexf74TV6VCBH80vS6584msT2Y6eQ==
-X-Google-Smtp-Source: ABdhPJxXulAlJAc7CSMmN+rhuZNi9m+gpBMMpn+Aq+I0Hr9HVdzFEUl1Jhs1D4bvTC0UDahYFefdJg==
-X-Received: by 2002:a5d:50d0:0:b0:203:ee99:a8fe with SMTP id f16-20020a5d50d0000000b00203ee99a8femr34984321wrt.600.1648651887478;
-        Wed, 30 Mar 2022 07:51:27 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id w17-20020a5d4051000000b00205a8bb9c18sm13453916wrp.67.2022.03.30.07.51.26
+        bh=yvYrIblpgQxg/mQ6NjWqX7TpJJvtgrmaQJDLJIiuakY=;
+        b=XYDdn9oBKhT6plw1456moiR9s5rFaSSvHIfYAg474pckNcNbjZnmjVY+TnbeFdxDU3
+         5M9H/nQd4aqOzOWTTgdiyAUPAimSSAucuYuabjTeKwm2TGrfZp96T/kXK0KwcCvttJY7
+         jGwzLSTKsJL+eccIDq5K5Oc04JC32ChA2sjv2hFuRHmIRCCLCaCVlIGauZbjvvwNY1/d
+         607uQIcmKuvzQ9povWHX+28Ry7ui1Gb87sR9+qKxljgL3KCBeBj/vWOjQdgx4iHhMrP2
+         blQop0zgVAveoHhq5gtoxwZHK7AkbsCJCQq45pToS5YYxMXCIgmdMykClsbVHZKPsZFy
+         RPRw==
+X-Gm-Message-State: AOAM53079EmWB71HaF5oGbA5y9i+uPq3HJW88p/91pLH28IoSujoLQgL
+	4fxbRVoPkCldtZEYhkr0pBFX2tw1g5uv3w==
+X-Google-Smtp-Source: ABdhPJxrL0VCHA1gSc/fFSs089zM8NsDVo56qeYCaSpfRGE2TxVKUNuZVOgZtTES7BioZ3i2l0PdtQ==
+X-Received: by 2002:a05:600c:3505:b0:38c:a3a8:8479 with SMTP id h5-20020a05600c350500b0038ca3a88479mr5076260wmq.4.1648652277429;
+        Wed, 30 Mar 2022 07:57:57 -0700 (PDT)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id j17-20020a05600c1c1100b0038e389ab62esm2334386wms.9.2022.03.30.07.57.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Mar 2022 07:51:27 -0700 (PDT)
-Message-ID: <49947509-864b-3d30-5934-a50c3b2d80a4@tessares.net>
-Date: Wed, 30 Mar 2022 16:51:26 +0200
+        Wed, 30 Mar 2022 07:57:56 -0700 (PDT)
+Message-ID: <74bc5fda-ab48-6bfa-dbae-a5783f9a327d@tessares.net>
+Date: Wed, 30 Mar 2022 16:57:56 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,57 +47,81 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: [PATCH mptcp-next] Squash to "bpf: add
- bpf_skc_to_mptcp_sock_proto"
+Subject: Re: [PATCH mptcp-next v8 0/8] BPF packet scheduler
 Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
 Cc: mptcp@lists.linux.dev
-References: <ffd704984e4e76741161d35ef127fde082d0add1.1648624018.git.geliang.tang@suse.com>
- <ecc7a980-d75f-2172-8fc2-eb12de7cf7e3@tessares.net>
- <20220330142214.GA861@localhost>
+References: <cover.1648537203.git.geliang.tang@suse.com>
+ <bf2b415d-a5f8-907c-9a55-d8b6d2c317b6@linux.intel.com>
+ <20220330141211.GA345@localhost>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220330142214.GA861@localhost>
+In-Reply-To: <20220330141211.GA345@localhost>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/03/2022 16:22, Geliang Tang wrote:
-> On Wed, Mar 30, 2022 at 03:29:06PM +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 30/03/2022 09:08, Geliang Tang wrote:
->>> Fix the build breaks reported by kernel test robot:
->>>
->>> [mptcp:export 32/40] ld.lld: error: undefined symbol: bpf_mptcp_sock_from_subflow
->>> [mptcp:export 32/40] filter.c:undefined reference to `bpf_mptcp_sock_from_subflow'
->>>
->>> - add defined(CONFIG_BPF_JIT) too.
->>
->> Thanks for the fix!
->>
->>> - move bpf_mptcp_sock_from_subflow from bpf.h to mptcp.h.
->>
->> Should we add an explicit #include <net/mptcp.h> in filter.c.
->>
->> But maybe it is enough to have net/mptcp.h in net/tcp.h?
+Hi Geliang,
+
+On 30/03/2022 16:12, Geliang Tang wrote:
+> Hi Mat & Matt,
 > 
-> Yes, net/mptcp.h is included in net/tcp.h already. So no need to add it
-> in filter.c explicitly. No build errors for this occurred in my test.
+> On Tue, Mar 29, 2022 at 04:13:02PM -0700, Mat Martineau wrote:
+>>
+>> On Tue, 29 Mar 2022, Geliang Tang wrote:
+>>
+>>> v8:
+>>> - use global sched_list instead of pernet sched_list.
+>>
+>> Yes, I think this is fine. I had initially asked about pernet configuration
+>> with respect to registering BPF schedulers, but the important thing is that
+>> the sysctl can be set per-namespace.
+>>
+>>> - drop synchronize_rcu() in mptcp_unregister_scheduler().
+>>> - update mptcp_init_sched and mptcp_release_sched as Mat and Florian
+>>>   suggested.
+>>> - fix the build break in patch 8.
+>>> - depends on: "add skc_to_mptcp_sock" v14.
+>>> - export/20220325T055307
+>>
+>> Thanks for updating. Builds and runs fine here.
+>>
+>> Before we add this to the export branch, have you thought about how subflow
+>> data (including the backup bit and throughput/latency data used by the
+>> default scheduler) can be accessed in the BPF get_subflow hook? Do you think
+>> that can be cleanly added after this series, or is there anything that may
+>> need to be changed in this series?
+> 
+> I plan to do that in the next series, BPF round-robin scheduler.
+> 
+> I had implemented round-robin in kernel before:
+> 
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1631011068.git.geliangtang@xiaomi.com/
+> 
+> This time I plan to implement it using BPF.
 
-Yes but I don't know if the recommendation is to add mptcp.h directly
-just in case instead of "indirectly" via tcp.h. But that's more a
-question for BPF maintainers, easy to fix later if needed!
+Sounds like a good idea to exercise his new BPF packet scheduler
+infrastructure, thanks!
 
-So good for me to apply this and avoid issues reported by Intel's KBuild!
+> In order to support bpf_rr, I think we need to do two more things
+> based on this series:
+> 
+> 1. Get the subflow data from BPF, maybe iterate over the subflows
+> from mptcp_sock.
 
-Now in our tree:
+Yes, sounds good to me. What is blocking to do that?
+Maybe some new BPF helpers will be needed?
 
-- 3b9cc9f027bf: "squashed" in "bpf: add bpf_skc_to_mptcp_sock_proto"
-- Results: d2b06f03e554..ccc95f7c14d9 (export)
+> 2. Make same members of struct mptcp_sock writable in BPF, say
+> last_snd, then we can set it like this:
+> 
+>         msk->last_snd = ssk.
 
-Builds and tests are now in progress:
+I don't think this is a direction to take with BPF. I mean: not
+directly. You can have helper doing that with extra verifications. How
+is it done with TCP CA?
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220330T145030
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+Or maybe for this specific case here with RR, you can also store the
+last snd subflow in a MAP storage, no?
 
 Cheers,
 Matt
