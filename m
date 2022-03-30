@@ -1,91 +1,88 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD86366
-	for <mptcp@lists.linux.dev>; Wed, 30 Mar 2022 00:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6007E7C
+	for <mptcp@lists.linux.dev>; Wed, 30 Mar 2022 02:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648601846; x=1680137846;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=569NAkugXKinxETe8BmxJq1njtD1TGJhnp1jVwtJ6cc=;
-  b=gqxo4MgklNOfbDJhCpzw0yBvQE+LUPJV6SPDcXnTMhcCkJRYvcLDQNP0
-   +2GgvgZ0ETllHcOA6T7mYb/MlOkt177Lkleo8pydQfriy4kqsO7efAyXK
-   0uZCV+lY3hvGilnrVkgBhlVgtJmd+AnVPPY9sEkz93yUjqIreA9LoV+X4
-   rWxZe73vi/9taVfvhE0utx7PN95v/1t+j68XFxtqlwVzDhOEk4pVbtReu
-   ttvCXPRE15RPLCWi4v1CKVs9xRFOg026rSYUdwrOGrnEst6b3IWRn4kH3
-   /mbx/NA+7KLzduPafQaVd+/wQximQCe2M8j+p46lHw0jygoHl67n7jZOf
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="284318773"
+  t=1648609061; x=1680145061;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=QHibYO+unoB/dnfBLxzYqyjI2OqT+FF/+o8xZG3LMh4=;
+  b=PMx3tyT34Ji3I7psKkPH0aewHbDz/qmEp6GVbKiOFydhqo3XqDKm7m1T
+   toiaYJc3G7jAEk4DTRnNQ8dJ86mBsKQpk+MFX0iDp7skGTJs77go9KdiA
+   Izx8y9H7YCTTYFNZdGB2Ye3eI6v4DXGXXF5rjfvha9lzHhE7/njqmuRhZ
+   vg5TbUZA6EAv6XrobM+EDTbY+jNeiSLpUV8OFzuughwVkMc7eZWNSp0mA
+   JKA8IhpiVYBg+aRrOOZhiZ3bKf+GanwuDXrFO7yPYH3bc4OwgmtJ4vrvt
+   BnFdQceMt6jEJ0aRXmvQ6FOvll45WKl6XfWHJHQ4ikHnynp72sPblt87S
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="259146397"
 X-IronPort-AV: E=Sophos;i="5.90,221,1643702400"; 
-   d="scan'208";a="284318773"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 17:57:25 -0700
+   d="scan'208";a="259146397"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 19:57:40 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,221,1643702400"; 
-   d="scan'208";a="653430848"
-Received: from lnlam-mobl.amr.corp.intel.com ([10.252.130.19])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 17:57:25 -0700
-Date: Tue, 29 Mar 2022 17:57:25 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 0/4] mptcp: inet diag listen dump support
-In-Reply-To: <20220329113523.19793-1-fw@strlen.de>
-Message-ID: <ad2fe1c-5e46-a13-8ecc-79da118cc2dd@linux.intel.com>
-References: <20220329113523.19793-1-fw@strlen.de>
+   d="scan'208";a="546668346"
+Received: from lkp-server01.sh.intel.com (HELO 3965e2759b93) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 29 Mar 2022 19:57:39 -0700
+Received: from kbuild by 3965e2759b93 with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1nZOWg-0000vk-4P; Wed, 30 Mar 2022 02:57:38 +0000
+Date: Wed, 30 Mar 2022 10:57:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: kbuild-all@lists.01.org, mptcp@lists.linux.dev,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Nicolas Rybowski <nicolas.rybowski@tessares.net>
+Subject: [mptcp:export 32/40] net/core/filter.c:11275: undefined reference to
+ `bpf_mptcp_sock_from_subflow'
+Message-ID: <202203301004.nATOEv88-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, 29 Mar 2022, Florian Westphal wrote:
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
+head:   cd59bc96e464d4bee9ab55ad2de0c16a6efc6c5d
+commit: 3f57ab06c5b43fdc2438983f79f2da7556ed3639 [32/40] bpf: add bpf_skc_to_mptcp_sock_proto
+config: x86_64-randconfig-a005-20220328 (https://download.01.org/0day-ci/archive/20220330/202203301004.nATOEv88-lkp@intel.com/config)
+compiler: gcc-9 (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+reproduce (this is a W=1 build):
+        # https://github.com/multipath-tcp/mptcp_net-next/commit/3f57ab06c5b43fdc2438983f79f2da7556ed3639
+        git remote add mptcp https://github.com/multipath-tcp/mptcp_net-next.git
+        git fetch --no-tags mptcp export
+        git checkout 3f57ab06c5b43fdc2438983f79f2da7556ed3639
+        # save the config file to linux build tree
+        mkdir build_dir
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
 
-> Changes in v3: fix intendation, fix uninitialised var (Mat)
-> 	       extend mptcp diag tests
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-Thanks for adding the tests. Series looks good to me:
+All errors (new ones prefixed by >>):
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+   vmlinux.o: warning: objtool: enter_from_user_mode()+0x4e: call to on_thread_stack() leaves .noinstr.text section
+   vmlinux.o: warning: objtool: syscall_enter_from_user_mode()+0x59: call to on_thread_stack() leaves .noinstr.text section
+   vmlinux.o: warning: objtool: syscall_enter_from_user_mode_prepare()+0x4e: call to on_thread_stack() leaves .noinstr.text section
+   vmlinux.o: warning: objtool: irqentry_enter_from_user_mode()+0x4e: call to on_thread_stack() leaves .noinstr.text section
+   ld: net/core/filter.o: in function `____bpf_skc_to_mptcp_sock':
+>> net/core/filter.c:11275: undefined reference to `bpf_mptcp_sock_from_subflow'
 
->
-> Changes in v2: drop patch 4 and prefer msk->first (Paolo Abeni)
->
-> Done in a not-very-elegant way:
-> Iterate over tcp listen hash, then pick out the tcp sockets
-> with mptcp-ctx structure attached, then take the conn->sk for dumping.
->
-> First patch is preparation/cleanup.
-> Second patch gets rid of locking to avoid a lockdep splat.
-> If the socket lock is really needed (I don't see where) I can workaround
-> this by dropping locks temporarily when iterating the listen hash table,
-> but its a bit more awkward.
->
-> Sample output:
-> ss -Mil
-> State        Recv-Q Send-Q Local Address:Port  Peer Address:Port
-> LISTEN       0      20     127.0.0.1:12000     0.0.0.0:*
->         subflows_max:2
->
-> Florian Westphal (4):
->  mptcp: diag: switch to context structure
->  mptcp: remove locking in mptcp_diag_fill_info
->  mptcp: listen diag dump support
->  selftests/mptcp: add diag listen tests
->
-> net/mptcp/mptcp_diag.c                    | 105 +++++++++++++++++++++-
-> net/mptcp/sockopt.c                       |   6 --
-> tools/testing/selftests/net/mptcp/diag.sh |  38 ++++++++
-> 3 files changed, 140 insertions(+), 9 deletions(-)
->
-> -- 
-> 2.35.1
->
->
->
 
---
-Mat Martineau
-Intel
+vim +11275 net/core/filter.c
+
+ 11272	
+ 11273	BPF_CALL_1(bpf_skc_to_mptcp_sock, struct sock *, sk)
+ 11274	{
+ 11275		return (unsigned long)bpf_mptcp_sock_from_subflow(sk);
+ 11276	}
+ 11277	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
