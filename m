@@ -1,44 +1,44 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C530D7E0
-	for <mptcp@lists.linux.dev>; Thu, 31 Mar 2022 13:26:41 +0000 (UTC)
-Received: by mail-ej1-f50.google.com with SMTP id yy13so48127370ejb.2
-        for <mptcp@lists.linux.dev>; Thu, 31 Mar 2022 06:26:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE0E7E0
+	for <mptcp@lists.linux.dev>; Thu, 31 Mar 2022 13:26:52 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id bi12so48188457ejb.3
+        for <mptcp@lists.linux.dev>; Thu, 31 Mar 2022 06:26:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=hqdoDNIisYm23mqiDJXXKrr+XlQDy3opCbCJ8Bk+Cpo=;
-        b=BmGDyCf44JFg3eDSovGZ9YzQYBuMWYdhAypoBB5lzh4cS/JU05VRxHKU4rLRZ9keP3
-         kCXrRDY/+My2+XUJCxevSfMux84Uknfv+QKeod+UU/Pc2sJGAITjJsxd+64GXTTydKsT
-         feDRXdnvio7eAAx+EPzbt8dU54bI2dgpaz8+VwRjlDsC4bFMbh14hRNxUHenE6lXpx8W
-         um5yrv/z3utaFyCKEJBRqO04uOk+b0VWW9NaGyH2a2HjXaqezQLqFHL508PiLMj58Gh2
-         VK1Pkb22gj1ippbCtidouX9kCtKOao2avhRdvgJ0W3710UcPQpacyAunhJfcVE0u5Yfl
-         2IKg==
+        bh=ed578Dst+v1c6V9JqglZt6RfMiyRB6RyoSaIGXBJ7z8=;
+        b=sUkW6L1DsgMW/nbsYFhH+vhToQOCttHVD3bvDeMDFK0m9AzL7tL4o324/bDzKypjd2
+         z05t9R6oEDSbywoC70b1SK4JYkzZR9/NnZBKTug52BdWKnllMoyjrptcls+btGlDi/+D
+         BHKJuyyvVWdEg5UiJySCJ6t/F0EQa/RtFHdJqBS1HCdRm6/sHGzERIw4nyaqhjFt06cO
+         NWAJz84M+sEzZ45OCoBmd0L7CqEZtfyYOlKHVLx2XLDjTxzTUoilNyoNg+0URsJF+Z04
+         dwOXjVgDM9De7xS6YUWgrbc1Jt9N107OFfR74eyAkVUVmhw3xZIsWZZ0G6U2eoU4/Fv6
+         zsCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=hqdoDNIisYm23mqiDJXXKrr+XlQDy3opCbCJ8Bk+Cpo=;
-        b=OhKbilV04xZFOJewxej5Ogfmo6qrn4Y2ruJ5MwGMIHFGIU6ORA6SnA7sUz0nvBCqfD
-         ILm2oXfXzzP4NHkvCNmVEQeVenRulePPf+UCuA1Ix/M13Mi2oB3Xu7Wn5RfVMzaGveBz
-         zJem405bF+UHxN3bppCXtjlDnYqQwDaO45APzjAqVR8dIlnOoD87phmZ1ULeBu9Ooarw
-         oj69BA/fsWmrgpOKySaMouNQkF0h8rYH0+qahQFI0GQ2AnPlwLQYdAfPvvg6edPo+0yz
-         Ah+I4h0nNrWSEc2oLvcAHjTVBorGzq21aZG5y2dogpMVp7QQ7UA9ZAhR2EvOfP0fAOy6
-         rvrQ==
-X-Gm-Message-State: AOAM530R0E9y55yLU0bGPt8tlwrPF5ukDS+OsTTeignXL64/jAL5Kjev
-	C8xoAMfuBsrgQxL45LMUoDHxZQ==
-X-Google-Smtp-Source: ABdhPJzOSHhW/ea4p3BHYYE7IAf6tF86xiuU+bDXz36L0EPrhz0LksJZN0+Q+xA9WApboN+Y2k0MUQ==
-X-Received: by 2002:a17:907:6286:b0:6da:6e24:5e43 with SMTP id nd6-20020a170907628600b006da6e245e43mr4949822ejc.449.1648733199568;
-        Thu, 31 Mar 2022 06:26:39 -0700 (PDT)
+        bh=ed578Dst+v1c6V9JqglZt6RfMiyRB6RyoSaIGXBJ7z8=;
+        b=CUJUA/jHZJsqHBy4DgyAk2fnfg1DjqSyeVz36zaM2bWo2hm95rKDWm7M8A2bAeVmJ+
+         1JjspQI1pspvwmjzqQWTaZ53XC8jGVlEoPDhjpJrbr8FljRwBqr8qStmd3pS7Ej8vK8q
+         tjsNt6R6m0gIKW8K+22LBFS0OjpwTypzlG/QauVoxvzfPZphjB7Qz9G8/O2cZcXgRkDA
+         It+JkW14F6K204cVwPeuD9Hjt4kniJ4eDw7FG7PT6ON3RVW7htdVkKPNtqgxtzLsMPSi
+         DuLTl5KHs0urkwIKnI2KXfSdOFr+CuB5/hsADZisp5KMYo3cW14iX98F+HsqdQToh8Lx
+         ehvA==
+X-Gm-Message-State: AOAM5313NoKtLMkyXOyNgP68bD8LVV/Hetfr5hOwQqsUufq875XwXTt/
+	tdwHqftUBtrOlP8hQkpk3jFXX2VC7ClTBA==
+X-Google-Smtp-Source: ABdhPJxYVWqy07jhWZlLnq0912Sc5JaMmg/hWisH7E2Ltnnua6ySF/Fesf/VHGG8FNENBKHF6zbzlQ==
+X-Received: by 2002:a17:906:2a0c:b0:6df:ec76:af8c with SMTP id j12-20020a1709062a0c00b006dfec76af8cmr4889738eje.269.1648733210396;
+        Thu, 31 Mar 2022 06:26:50 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:67bb:4772:e0be:4bc4? ([2a02:578:8593:1200:67bb:4772:e0be:4bc4])
-        by smtp.gmail.com with ESMTPSA id gb3-20020a170907960300b006dfafbb4ba4sm9724588ejc.83.2022.03.31.06.26.38
+        by smtp.gmail.com with ESMTPSA id d1-20020a50fe81000000b004197f2ecdc2sm11163356edt.89.2022.03.31.06.26.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Mar 2022 06:26:39 -0700 (PDT)
-Message-ID: <15784ee7-82d2-707e-85b6-6dd294fba064@tessares.net>
-Date: Thu, 31 Mar 2022 15:26:38 +0200
+        Thu, 31 Mar 2022 06:26:49 -0700 (PDT)
+Message-ID: <24f4964d-43d2-463a-1219-b5f28c9fd409@tessares.net>
+Date: Thu, 31 Mar 2022 15:26:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,26 +47,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: [PATCH mptcp-next] Squash to "bpf: add
- bpf_skc_to_mptcp_sock_proto" part 2
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: bpf: add MPTCP test
+ base"
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cd7338125a956912da5a431eef68b6849e44c0ae.1648655695.git.geliang.tang@suse.com>
+References: <edcb9bcf557a7205a8301f755688dcbc22b279e6.1648714427.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cd7338125a956912da5a431eef68b6849e44c0ae.1648655695.git.geliang.tang@suse.com>
+In-Reply-To: <edcb9bcf557a7205a8301f755688dcbc22b279e6.1648714427.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 30/03/2022 17:57, Geliang Tang wrote:
-> Include net/mptcp.h explicitly.
+On 31/03/2022 10:14, Geliang Tang wrote:
+> Update newly added files in MAINTAINERS.
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d91f6c6e3d3b..778cbf7c5a3b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13745,6 +13745,8 @@ F:	include/net/mptcp.h
+>  F:	include/trace/events/mptcp.h
+>  F:	include/uapi/linux/mptcp.h
+>  F:	net/mptcp/
+> +F:	tools/testing/selftests/bpf/progs/mptcp_sock.c
+> +F:	tools/testing/selftests/bpf/prog_tests/mptcp.c
 
-Thank you for the patch!
+Thank you for the patch. I applied it a bit differently:
 
-Now in our tree:
+  tools/testing/selftests/bpf/*/*mptcp*.c
 
-- 5b8de9f02483: "squashed" in "bpf: add bpf_skc_to_mptcp_sock_proto"
+See commit 4a7ea84d46b3 ("MAINTAINERS: add MPTCP-specific BPF files"),
+being published soon.
 
 Cheers,
 Matt
