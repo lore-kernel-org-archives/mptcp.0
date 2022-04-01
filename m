@@ -1,126 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103F7ED5
-	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 09:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1648806170;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R4YizlEZjSMTx4oeLGsAWbVZPHwaBUX8p6U09Wm4rR0=;
-	b=FyOwRL04Y/cf20mwjp+GcIs4DNNcdIlMOX6XZhonGurmoAt0ognnYr8m3ijSvbM1Nk3lqy
-	uciwvPQTt9dH7O+qlozpFfO6UhB/x1hDA+ihd5Pp4pFg6CaQtTKDB3/n2WTuYr26pLn/De
-	/XoyKa3ufF0vMxJpujRKKEXMuwPjvyU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-36-_SlEM5pDNjinXDWt0bv01Q-1; Fri, 01 Apr 2022 05:42:49 -0400
-X-MC-Unique: _SlEM5pDNjinXDWt0bv01Q-1
-Received: by mail-wm1-f69.google.com with SMTP id 2-20020a1c0202000000b0038c71e8c49cso2633723wmc.1
-        for <mptcp@lists.linux.dev>; Fri, 01 Apr 2022 02:42:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9431367
+	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 14:01:51 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id bg10so6090736ejb.4
+        for <mptcp@lists.linux.dev>; Fri, 01 Apr 2022 07:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Q1lcpXj0tA+qrmBqBWaO84Qd1GXGQQ30EBs541/V/JM=;
+        b=KcCB9Dwi4L2wH4XuLBCUe5lwvy//bOnw4oRd073YfukwNIEbKfQiEC1EtsIHjfVyc7
+         6tge+1uo0LIk+XDZrgNb/QWtb+nXjjIGWZIqVBAEB3YlJ0eK0w9gl0IPXpianw8+d7j7
+         Wyhtk215cWS94Cc1T12Y2epqPcBLwM9BgI+BBTYsDOOFcbSA7k1dNYBqWCDxKwiDpvyR
+         36bAWtOenoQP4GCHLgy8YgO9FhY0gBVgZO2EJ2dy9UFwsuJjqNqcrZil4Er/SZJQRdcD
+         R0vSLeBpl8feS2agH8c0G+0e7P+PRC4dDzzRR9ixN8PJzSHcHhjkOAk4X8ERfPaBMZ0V
+         8AUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=R4YizlEZjSMTx4oeLGsAWbVZPHwaBUX8p6U09Wm4rR0=;
-        b=whw92OGgcP+DBl2b2pjhJ87BI/Hb5kdy/oHkSMqAZiFLCImCib3Y5UydUBWqC4pAoI
-         6S/ttqIK04jK+ssqWk0LaXHpAk5zBeZHE6n64i6vtwCYS0rr7ePYJ1kxAd/P7p943/Ap
-         4EqRSFHexBhnUCGzFjIMeYl+Oz5Xrqw9gRjSSFRAbfytS/p+meLRl8l+cB9rYI8NJJxe
-         +U7Ccw13Mzx2LbSPCt5JS4Wb5nNVaftTPyICaaQXI5YXZZi1BrEa3fLJa1af/zgTa/h6
-         h2+CqDZHqZkzPHiH92a/L0tPDXJP9Yfa7SZRN1De7xxuGyhASQoZfyaPKbkp54bQIkMj
-         fsDw==
-X-Gm-Message-State: AOAM5315rVSodLn6xugVMsTHIPGWnULCyO8sazK4C5OuzStSRh2EFT8p
-	4DGQ4dQ9zlN1DrHr5u0+euFaWzAYBvK8w2sUXvhHpCMxi+ANGrBYZnqkyF2IRa0U4e0ypC8tuq/
-	o8e02fGVNSPERGqc=
-X-Received: by 2002:a7b:c5d0:0:b0:355:482a:6f44 with SMTP id n16-20020a7bc5d0000000b00355482a6f44mr7987707wmk.58.1648806168042;
-        Fri, 01 Apr 2022 02:42:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwcLvmv0HbEoTrYhOQUsahZvQEfBbvgmLOuaUoEdyzriuDPBB8aP/XhbfPwg+HnAZh15opvzg==
-X-Received: by 2002:a7b:c5d0:0:b0:355:482a:6f44 with SMTP id n16-20020a7bc5d0000000b00355482a6f44mr7987690wmk.58.1648806167819;
-        Fri, 01 Apr 2022 02:42:47 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-243-142.dyn.eolo.it. [146.241.243.142])
-        by smtp.gmail.com with ESMTPSA id b10-20020a05600018aa00b002042a98168csm1942960wri.15.2022.04.01.02.42.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Apr 2022 02:42:47 -0700 (PDT)
-Message-ID: <b2a5907710772d1c807cc82e44397eb14d66900d.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v9 0/6] mptcp: fixes and enhancements related
- to path management
-From: Paolo Abeni <pabeni@redhat.com>
-To: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
-Date: Fri, 01 Apr 2022 11:42:46 +0200
-In-Reply-To: <20220329021401.1196466-1-kishen.maloor@intel.com>
-References: <20220329021401.1196466-1-kishen.maloor@intel.com>
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Q1lcpXj0tA+qrmBqBWaO84Qd1GXGQQ30EBs541/V/JM=;
+        b=DY98myn9u9S7Ynaq3EQw+ekz9/Gu55Ci6o1T2XlwOaDHvw4+qm+RRneJ7ekNESrcFv
+         YTtkfgsYc/tPBRgRPXdVhm48tNNX0o4RQZhJe5bj2ekCaPmmy8nMOMXXGgouYZOhfYui
+         zHynmM8ssne6n5mUcI1NgtaEVa3k+ZehQqrs4sC9IvsTSRJd4Q3CWLnVPReMZAbN71hF
+         rZUQLtjLo8kSGdqAytruubDqw5FEuGs0WogPDVCcAqV//TzSSqs7vfqDUGXVWNXPhNy3
+         OEQvQFaScNZbhs10pbUOyK1SX92LoJrZusJ/QsqlLYv4DOJrBXtjIyRIllrqVX9bUO5H
+         sJYg==
+X-Gm-Message-State: AOAM530O+GremJ+TPX38cpNMANgBqRMbm9S21v7v0d9gu9LWQMUP4Dsn
+	CWqetUpmf7cjiP7DOZA0SRbgDaW1eRwzB2uD
+X-Google-Smtp-Source: ABdhPJyDOLXOdjbkc6S+odutC57jKtTKy1BnWoZDAUlfD9bJAGpXji0rKMNsvQGxfjZE3+8RgYssnw==
+X-Received: by 2002:a17:906:c145:b0:6da:f8c8:34f1 with SMTP id dp5-20020a170906c14500b006daf8c834f1mr8964735ejc.310.1648821709197;
+        Fri, 01 Apr 2022 07:01:49 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:65cd:a27f:e743:cc46? ([2a02:578:8593:1200:65cd:a27f:e743:cc46])
+        by smtp.gmail.com with ESMTPSA id r22-20020a17090638d600b006d584aaa9c9sm1067906ejd.133.2022.04.01.07.01.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Apr 2022 07:01:48 -0700 (PDT)
+Message-ID: <e9271f28-9ad7-8744-65f3-a8fe51c7d984@tessares.net>
+Date: Fri, 1 Apr 2022 16:01:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: Commit logs update request
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Geliang Tang <geliang.tang@suse.com>,
+ "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
+References: <HE1PR0402MB34974081CB4E91797BF80DE1F8E19@HE1PR0402MB3497.eurprd04.prod.outlook.com>
+ <8bf4ccea-7095-0183-66b7-40e19af72dfc@tessares.net>
+ <69e6641-8e9c-43d1-aa29-bde79af009f@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <69e6641-8e9c-43d1-aa29-bde79af009f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2022-03-28 at 22:13 -0400, Kishen Maloor wrote:
-> This patch series incorporates fixes and enhancements related to
-> path management over MPTCP connections, particularly in support of
-> userspace PMs. The changes ensure that the required bits of
-> information are conveyed through MPTCP netlink events which
-> would be consumed by the path manager in making its decisions.
-> Further it adds flexibility in establishing paths and from
-> both ends of MPTCP connections.
-> 
-> v6:
-> -Dropped framework and functionality around the use of kernel
-> listening sockets for receiving MPJs.
-> 
-> v7:
-> -Fixed bug caught by the CI build.
-> 
-> v8:
-> -Fixed logic to achieve the desired outcome of not responding to
-> address advertisements when a userspace PM is offline.
-> -Factored out minor changes to mptcp_pm_is_userspace() to be
-> squashed into an earlier commit.
-> 
-> v9:
-> -Removed an explicit 'struct inet_sock *' cast in a patch which was
-> not necessary.
-> 
-> Kishen Maloor (6):
->   Squash-to: mptcp: Bypass kernel PM when userspace PM is enabled
->   mptcp: bypass in-kernel PM restrictions for non-kernel PMs
->   mptcp: store remote id from MP_JOIN SYN/ACK in local ctx
->   mptcp: reflect remote port (not 0) in ANNOUNCED events
->   mptcp: establish subflows from either end of connection
->   mptcp: expose server_side attribute in MPTCP netlink events
-> 
->  include/uapi/linux/mptcp.h |  1 +
->  net/mptcp/options.c        |  4 ++--
->  net/mptcp/pm.c             | 21 +++++++++++++++++----
->  net/mptcp/pm_netlink.c     | 24 +++++++++++++++++++++---
->  net/mptcp/protocol.c       |  5 +----
->  net/mptcp/protocol.h       | 22 ++++++++++++++++------
->  net/mptcp/subflow.c        |  5 ++++-
->  7 files changed, 62 insertions(+), 20 deletions(-)
-> 
-> 
-> base-commit: 8e1fca01ac83e646133bd647abdae74d6d6449ba
-> --
-> 2.31.1
-> 
-This series LGTM, thanks!
+Hi Geliang, Mat,
 
-There is a consistent self-test failure on test:
+On 31/03/2022 19:09, Mat Martineau wrote:
+> On Thu, 31 Mar 2022, Matthieu Baerts wrote:
+> 
+>> Hi Geliang,
+>>
+>> On 31/03/2022 17:46, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> As I mentioned in the weekly meeting, I noticed some of the commit logs
+>>> of my patches on the export branch became mismatch since changes have
+>>> squashed to them.
+>>>
+>>> Here I send a list of new commit logs. Please help me to update them.
+>>
+>> Thank you for noticing that!
+>>
+>> @Mat: because your RvB tag is on some of them, are you also OK with the
+>> modification?
+>>
+> 
+> The updated commit messages are all ok, thanks!
 
-098 userspace pm type echoes add_addr. 
+Thank you for having checked!
 
-I *think* it can be addressed even after merging this series. @Kishen,
-could you please have a look at that?
+I just modified a bunch of commit messages. I didn't add Mat's RvB tag
+where it was missing but I guess Mat will add a SoB anyway when sending
+them upstream.
 
-Paolo
+New patches for t/upstream:
+- 45bd4e88d059: tg:msg: update from 'Commit logs update request'
+- 608979779671: tg:msg: update from 'Commit logs update request'
+- ff5034728c57: tg:msg: update from 'Commit logs update request'
+- 26d0a0be59de: tg:msg: update from 'Commit logs update request'
+- d681b1dfbe3c: tg:msg: update from 'Commit logs update request'
+- 001e9d359899: tg:msg: update from 'Commit logs update request'
+- 4ea8489f01ce: tg:msg: update from 'Commit logs update request'
+- f86dbe52aa55: tg:msg: update from 'Commit logs update request'
+- 99fe1bfb5fdd: tg:msg: update from 'Commit logs update request'
+- d0167e625579: tg:msg: update from 'Commit logs update request'
+- 3cecfdde5dc3: tg:msg: update from 'Commit logs update request'
+- Results: 7ee50b5fce5a..c56ab3a9d998 (export)
 
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220401T135831
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+(but it is the same content)
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
