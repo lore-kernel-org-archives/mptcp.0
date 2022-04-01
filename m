@@ -1,82 +1,124 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4861D1391
-	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 19:37:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956A61363
+	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 21:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648841839; x=1680377839;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=D5mYbNug0Tp4CDRa4bzF+QM94sQAGsqW/XfmDuaHSAo=;
-  b=TAtZ6dpJNm21dF0X3jppUXmZcTnbXCCTHmtlxI2kWY6xaQ22m+Mkg3z5
-   EEYFYRD3reawDAZO/bU7kwjwTZXX8Vye6VK1Mz4KB6t8t/RF32BRJ90Im
-   4pd9CnXFG+EqE/kZMiczb0727rnwJKJvc0tlQkxJbTkewBnQuBdhHs7/u
-   wnkxUTSJ7WJUqQzVMghSp5R30CPmTKSecIq8K2Dz/e7aI/HWqvR56/9Jq
-   eHNyL8SsyIYpuSoGSjj9mcrTBteuRT3LCag94whVvPsXir5NrCSCtxhqU
-   j53NkTWXyrNrsOf4Uy/8k8tsREHZSZgfsjFSnGwKb5X0rOqwyx5rrO4Dz
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10304"; a="242358952"
+  t=1648849735; x=1680385735;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=nPnu7Oi4UZsn3lS+6m+aATh4fFXTKuxQIzFOTEK952Q=;
+  b=hjhD8/ZI2nuSNBdRltjFYgIY/hpDXz4kGHX3sqXCEcX/9q1MfJr3Hynu
+   pjDdAIon+Ar0waCFlvEUah8SlTKYPkGSjq0mFx+58ng/Kh3EfusPRbta0
+   fU53ndHgcwXCyVJc/AqPi8zLuD9u8OgaP/FfdExESm0EZKJJ44fV27+qP
+   vJkZEC98Vzu7Ee6NPQTzdfBtONgpC42MeW8frEVl/b7B9UH7bKxNzHf+9
+   yOd7K8tE+GcrXCH+iN23lv0Xx+nPXSW80j13Sy+XXMjilD8DDN58aLObR
+   lNhntK0X1kGmt4xUAbegquaCuZM+Us2iOCTfBUa1j3i7/pxDd1yBT8N71
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10304"; a="259938323"
 X-IronPort-AV: E=Sophos;i="5.90,228,1643702400"; 
-   d="scan'208";a="242358952"
+   d="scan'208";a="259938323"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:37:16 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 14:48:55 -0700
 X-IronPort-AV: E=Sophos;i="5.90,228,1643702400"; 
-   d="scan'208";a="640638796"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.187.34])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:37:16 -0700
+   d="scan'208";a="640669199"
+Received: from jbride-mobl.amr.corp.intel.com ([10.209.86.133])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 14:48:54 -0700
+Date: Fri, 1 Apr 2022 14:48:54 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: kishen.maloor@intel.com
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 2/2] selftests: mptcp: ADD_ADDR echo test with missing userspace daemon
-Date: Fri,  1 Apr 2022 12:37:14 -0700
-Message-Id: <20220401193714.10268-3-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220401193714.10268-1-mathew.j.martineau@linux.intel.com>
-References: <20220329021401.1196466-3-kishen.maloor@intel.com>
- <20220401193714.10268-1-mathew.j.martineau@linux.intel.com>
+To: Kishen Maloor <kishen.maloor@intel.com>
+cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next v9 0/6] mptcp: fixes and enhancements related
+ to path management
+In-Reply-To: <20220329021401.1196466-1-kishen.maloor@intel.com>
+Message-ID: <1c5d9b3e-8bda-497d-88a-2591751de8a@linux.intel.com>
+References: <20220329021401.1196466-1-kishen.maloor@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Check userspace PM behavior to ensure ADD_ADDR echoes are only sent when
-there is an active userspace daemon. If the daemon is restarting or
-hasn't loaded yet, the missing echo will cause the peer to retransmit
-the ADD_ADDR - and hopefully the daemon will be ready to receive it at
-that later time.
+On Mon, 28 Mar 2022, Kishen Maloor wrote:
 
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> This patch series incorporates fixes and enhancements related to
+> path management over MPTCP connections, particularly in support of
+> userspace PMs. The changes ensure that the required bits of
+> information are conveyed through MPTCP netlink events which
+> would be consumed by the path manager in making its decisions.
+> Further it adds flexibility in establishing paths and from
+> both ends of MPTCP connections.
+>
+> v6:
+> -Dropped framework and functionality around the use of kernel
+> listening sockets for receiving MPJs.
+>
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 650bb062f612..469cd544a8d2 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2729,6 +2729,17 @@ userspace_tests()
- 		chk_add_nr 0 0
- 	fi
- 
-+	# userspace pm type does not echo add_addr without daemon
-+	if reset "userspace pm no echo w/o daemon"; then
-+		set_userspace_pm $ns2
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 0 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 0 0 0
-+		chk_add_nr 1 0
-+	fi
-+
- 	# userspace pm type rejects join
- 	if reset "userspace pm type rejects join"; then
- 		set_userspace_pm $ns1
--- 
-2.35.1
+Thanks Kishen. This first series looks good to me, and Paolo acked too. 
+The second series needs a rebase and a few more tweaks.
 
+
+For this series:
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+
+Matthieu, I sent two additional selftest-only patches so that the behavior 
+implemented in this series (which is correct: don't send ADD_ADDR echoes 
+if there's no userspace daemon) is correctly tested. They're pretty short 
+and simple, hopefully you can review and apply with Kishen's series. As I 
+mentioned in 
+https://lore.kernel.org/mptcp/20220401193714.10268-1-mathew.j.martineau@linux.intel.com/ 
+:
+
+   If you could add the squash-to patch at the beginning of [the] series to
+   revert the bad test, and add the new self test commit after "mptcp:
+   bypass in-kernel PM restrictions for non-kernel PMs" I think that
+   addresses the test problem.
+
+
+Mat
+
+> v7:
+> -Fixed bug caught by the CI build.
+>
+> v8:
+> -Fixed logic to achieve the desired outcome of not responding to
+> address advertisements when a userspace PM is offline.
+> -Factored out minor changes to mptcp_pm_is_userspace() to be
+> squashed into an earlier commit.
+>
+> v9:
+> -Removed an explicit 'struct inet_sock *' cast in a patch which was
+> not necessary.
+>
+> Kishen Maloor (6):
+>  Squash-to: mptcp: Bypass kernel PM when userspace PM is enabled
+>  mptcp: bypass in-kernel PM restrictions for non-kernel PMs
+>  mptcp: store remote id from MP_JOIN SYN/ACK in local ctx
+>  mptcp: reflect remote port (not 0) in ANNOUNCED events
+>  mptcp: establish subflows from either end of connection
+>  mptcp: expose server_side attribute in MPTCP netlink events
+>
+> include/uapi/linux/mptcp.h |  1 +
+> net/mptcp/options.c        |  4 ++--
+> net/mptcp/pm.c             | 21 +++++++++++++++++----
+> net/mptcp/pm_netlink.c     | 24 +++++++++++++++++++++---
+> net/mptcp/protocol.c       |  5 +----
+> net/mptcp/protocol.h       | 22 ++++++++++++++++------
+> net/mptcp/subflow.c        |  5 ++++-
+> 7 files changed, 62 insertions(+), 20 deletions(-)
+>
+>
+> base-commit: 8e1fca01ac83e646133bd647abdae74d6d6449ba
+> --
+> 2.31.1
+>
+>
+
+--
+Mat Martineau
+Intel
