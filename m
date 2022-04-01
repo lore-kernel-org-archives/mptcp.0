@@ -1,172 +1,61 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B8B7C
-	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 19:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937CB7C
+	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 19:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648840417; x=1680376417;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/sz5Z4MoVRtUfQ1DtpAPqMfj8XvW7Mr7bLwtRei4E6M=;
-  b=iX3NZmTNstrNvLnW6P511Scr9oDcUp6UhzH0t1KIfZ3y7p1BCDGuZB4L
-   adz85X6l+jMl/NqqPb5BUoE8Wh7m08RIN2CPGmGHaLXM94HNW886NDbAi
-   1frV9FnC8Lv5XaiqOOT3+UQz+0+BfSAfh1WhyIJg6PFQedOclInmqmItr
-   jvb0IBNhbQqTpg7ZBue8Yp3PJ0RK+TwQ6CVyqwNDB8xho0b86OU5khZff
-   tLg8lH0KfJfYHKi5XLD/jgmvIaz70ygJe1L3+B68CP7rKIqujDXv/sZxa
-   8E6XD4zlz+GRN/qztVfPdsPhfADgDrkTQSW4H+w2A4KINbQAuQz+hgUUS
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10304"; a="259041838"
+  t=1648841837; x=1680377837;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KcNx+X93vdLXO2gQ1J0ht+MRvYr1tCclB140EZBxEtk=;
+  b=TFpsnE4UslbdhQmqXE7OwF6s64EjzkM3HMSFaqvXSlZZUxqcMrQuOEUv
+   1/44jwggZkCJtTmhQCsieRhHbh7LfwNvVdoMbr5/DncOqKg0NAfgVS8Pn
+   PgEbwr+mAcCs0O4986ne1OJrIaoXneFKLGSFfbvSIxxj+cxI4a4CH1pdI
+   zv1vigaXD3hBVN7J4GoB4m1RORN7Ud4VgHdnMnkLO1ODw44IcfZ8ZytWK
+   tM/w5TwO/Yq0qFCdofhw3TjNL0AecQlw7xvuBAhwhD0kRF8To71uHxhrh
+   0xN26GV2bcuvIRY4nG/yLExTnpBqvxF7aEKJeCLrB+eQnbsGq5fXcsoCS
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10304"; a="242358949"
 X-IronPort-AV: E=Sophos;i="5.90,228,1643702400"; 
-   d="scan'208";a="259041838"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:13:36 -0700
+   d="scan'208";a="242358949"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:37:16 -0700
 X-IronPort-AV: E=Sophos;i="5.90,228,1643702400"; 
-   d="scan'208";a="567731961"
-Received: from nidhikum-mobl.amr.corp.intel.com ([10.209.9.23])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:13:36 -0700
-Date: Fri, 1 Apr 2022 12:13:36 -0700 (PDT)
+   d="scan'208";a="640638789"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.187.34])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:37:16 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v6 03/14] mptcp: read attributes of addr
- entries managed by userspace PMs
-In-Reply-To: <20220329021437.1196552-4-kishen.maloor@intel.com>
-Message-ID: <2ec27254-4b37-e4ed-94c-fbb81af7438f@linux.intel.com>
-References: <20220329021437.1196552-1-kishen.maloor@intel.com> <20220329021437.1196552-4-kishen.maloor@intel.com>
+To: kishen.maloor@intel.com
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v9 2/6] mptcp: bypass in-kernel PM restrictions for non-kernel PMs
+Date: Fri,  1 Apr 2022 12:37:12 -0700
+Message-Id: <20220401193714.10268-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220329021401.1196466-3-kishen.maloor@intel.com>
+References: <20220329021401.1196466-3-kishen.maloor@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 28 Mar 2022, Kishen Maloor wrote:
+This patch exposes some incorrect behavior in my userspace PM selftests
+that are already in the export branch. If you could add the squash-to
+patch at the beginning of your series to revert the bad test, and add
+the new self test commit after "mptcp: bypass in-kernel PM restrictions
+for non-kernel PMs" I think that addresses the test problem.
 
-> This change introduces a parallel path in the kernel for retrieving
-> the local id, flags, if_index for an addr entry in the context of
-> an MPTCP connection that's being managed by a userspace PM. The
-> userspace and in-kernel PM modes deviate in their procedures for
-> obtaining this information.
->
-> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
-> ---
-> net/mptcp/pm_netlink.c | 95 ++++++++++++++++++++++++++++--------------
-> net/mptcp/protocol.h   |  3 +-
-> net/mptcp/subflow.c    |  2 +-
-> 3 files changed, 67 insertions(+), 33 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 836f6df9f744..a258593f2cb1 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1036,31 +1036,47 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
->
-> 	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
->
-> -	rcu_read_lock();
-> -	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> -		if (mptcp_addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
-> -			ret = entry->addr.id;
-> -			break;
-> +	if (mptcp_pm_is_kernel(msk)) {
-> +		rcu_read_lock();
-> +		list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> +			if (mptcp_addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
-> +				ret = entry->addr.id;
-> +				break;
-> +			}
-> 		}
-> +		rcu_read_unlock();
-> +		if (ret >= 0)
-> +			return ret;
-> +
-> +		/* address not found, add to local list */
-> +		entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
-> +		if (!entry)
-> +			return -ENOMEM;
-> +
-> +		entry->addr = skc_local;
-> +		entry->addr.id = 0;
-> +		entry->addr.port = 0;
-> +		entry->ifindex = 0;
-> +		entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> +		entry->lsk = NULL;
-> +		ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
-> +		if (ret < 0)
-> +			kfree(entry);
-> +	} else if (mptcp_pm_is_userspace(msk)) {
-> +		struct mptcp_pm_addr_entry new_entry;
-> +		__be16 msk_sport =  ((struct inet_sock *)
-> +				     inet_sk((struct sock *)msk))->inet_sport;
-> +
-> +		memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
-> +		new_entry.addr = skc_local;
-> +		new_entry.addr.id = 0;
-> +		new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> +
-> +		if (new_entry.addr.port == msk_sport)
-> +			new_entry.addr.port = 0;
-> +
-> +		ret = mptcp_userspace_pm_append_new_local_addr(msk, &new_entry);
-> 	}
-> -	rcu_read_unlock();
-> -	if (ret >= 0)
-> -		return ret;
-> -
-> -	/* address not found, add to local list */
-> -	entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
-> -	if (!entry)
-> -		return -ENOMEM;
-> -
-> -	entry->addr = skc_local;
-> -	entry->addr.id = 0;
-> -	entry->addr.port = 0;
-> -	entry->ifindex = 0;
-> -	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> -	entry->lsk = NULL;
-> -	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
-> -	if (ret < 0)
-> -		kfree(entry);
->
-> 	return ret;
-> }
-> @@ -1298,22 +1314,39 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
-> 	return 0;
-> }
->
-> -int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
-> +int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id,
-> 					 u8 *flags, int *ifindex)
-> {
-> -	struct mptcp_pm_addr_entry *entry;
-> +	struct mptcp_pm_addr_entry *entry, *match = NULL;
-> +	struct sock *sk = (struct sock *)msk;
-> +	struct net *net = sock_net(sk);
->
-> 	*flags = 0;
-> 	*ifindex = 0;
->
-> 	if (id) {
-> -		rcu_read_lock();
-> -		entry = __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), id);
-> -		if (entry) {
-> -			*flags = entry->flags;
-> -			*ifindex = entry->ifindex;
-> +		if (mptcp_pm_is_kernel(msk)) {
-> +			rcu_read_lock();
-> +			entry = __lookup_addr_by_id(net_generic(net, pm_nl_pernet_id), id);
+Mat Martineau (2):
+  Squash-to: selftests: mptcp: Add tests for userspace PM type
+  selftests: mptcp: ADD_ADDR echo test with missing userspace daemon
 
-Another conflict here due to the "mptcp: add pm_nl_pernet helpers" 
-commit, the changes in existing code would be avoided with Paolo's 
-suggestion to add a thin layer to call this function (unmodified) or a 
-separate version for the userspace PM.
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-But also be sure to use the new pm_nl_pernet helpers in the new userspace 
-PM code.
+-- 
+2.35.1
 
-
---
-Mat Martineau
-Intel
