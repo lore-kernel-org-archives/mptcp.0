@@ -1,96 +1,125 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196C5137F
-	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 17:43:05 +0000 (UTC)
-Received: by mail-il1-f180.google.com with SMTP id 14so2450113ily.11
-        for <mptcp@lists.linux.dev>; Fri, 01 Apr 2022 10:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=VDEXrujHw36zF4OlZ+HWh3ywSxk8OFH0OTPNcMkEuYg=;
-        b=OiSmoX7ASrk1O4WEgm1Qx3qDe3dyN7xWVwiSVgTYgYqOyH1/73kzl3/Xhv3KFFQaZ0
-         b5e5b16uhlySuW9N0xVHEQXspwnyjrIPVfGfEMMzpmJstTY26rAZ98ny4FN4t8jIMV1d
-         azH7ecByhcNjyfFpw6AKxNGdk+lZWfpns1LgDF0URR5gUnMdtQM9oipLHJ96Gx8+3fj5
-         Xs2Wb5pIde8TeT/nEnqViMmUrNqcoIfAApGH6Beox/zFa1ZwZbiGXVKbFQhWL6w4+t6/
-         VQ7mE0KFUpLx6tFXeOFTB1vFCFhKKMfyxRk6oCwlosk8b3ubNnBHwR6K1XjigXSdiuV7
-         SnOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=VDEXrujHw36zF4OlZ+HWh3ywSxk8OFH0OTPNcMkEuYg=;
-        b=QNHoht1gr86XrC3zTc7esP5a98VHdPV1BEPXE8ustvlU1WsN2uRfQu0+D9+5IJKovO
-         z+xKc1tN7YJ68SYGNvrPA6DoMkOy5XkAC2+BfpRuRPIXb6xy2wpIJHeUxZbWsIf+asWz
-         xXmws1noZvaS/YcQv69mQmguZEammmfkbvymO3p4i6ylZ/KDLz57IMU83MjjOTjLGtfL
-         ifHme14MjnCqKsxGucSywEfOLMxarJj59swKSX6jEYv199XileM4tzoWowxEpQ1OffLj
-         ZYxMJKCICGhxld7C9BaxqJwsc1l1FX5LuIZkIWcAKb2CSYo5VFkyd+97FHYgj72AoRQG
-         ldRw==
-X-Gm-Message-State: AOAM530HWr92q6ZNE4GGFqEQQS576N9w3laca8H/Zlis9IzDI8g4U+z1
-	ErBdbdzxsgbT9xZw/V+FEK4pjKTXBQ==
-X-Google-Smtp-Source: ABdhPJwK9B8PQs7MOfo9IHJerG/nVxBnWmRq9iMGTuTzt4DB7H5QY8u1nUEOs2lqemdEgZjxAIelaA==
-X-Received: by 2002:a05:6e02:1a23:b0:2c9:c008:8ad6 with SMTP id g3-20020a056e021a2300b002c9c0088ad6mr444392ile.98.1648834984149;
-        Fri, 01 Apr 2022 10:43:04 -0700 (PDT)
-Received: from [127.0.0.1] ([40.69.174.177])
-        by smtp.gmail.com with ESMTPSA id p3-20020a92d483000000b002c7e1877f5dsm1629782ilg.37.2022.04.01.10.43.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Apr 2022 10:43:03 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <83cc1b00132bcd16a5dda7a7636aba252aa47b04.1648826372.git.geliang.tang@suse.com>
-References:
- <83cc1b00132bcd16a5dda7a7636aba252aa47b04.1648826372.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: add MP_FAIL reset testcase: Tests Results
-Message-ID: <61b2c21d-5b21-e882-f821-98d71844b8b1@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 01 Apr 2022 17:43:02 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466E67C
+	for <mptcp@lists.linux.dev>; Fri,  1 Apr 2022 19:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648839746; x=1680375746;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=cVpnz/Jary86Rd3CFqZqmi5kqrMpA9W8BlJ4ImeAO+k=;
+  b=AqEM83Is1S89nQ6beJ6SACYz1LzjOQG6lZB0NMKVJLIo/I8eY8IGapKY
+   QyzE8YX1nFcD332Jc7k/aQFpz/hEGtwRYTecC2jwo+3ebmia9s6ikBezY
+   MXnuXL0lSdPFiUAJxXG4eMcSgpKZLNLxMI3Lxwj4J30OfZS9PkkwAcjtI
+   j1TpQd37vwM66KtUjY2Znvpq9iaaYSPQ8GowJH4K+1DK9mc/7A8yRVvpc
+   HHnnMSvE2pZ2hQb1GYwpMzpYOi1sgs13Wgn/IwL/Hx7vIjNUwLKwlMTZq
+   e/7TIQCp4p96XNmGEAB1LIzfn9Wa5/JEO7Xlu9K5VuqmEUxc4S8FDfG9Z
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10304"; a="240799719"
+X-IronPort-AV: E=Sophos;i="5.90,228,1643702400"; 
+   d="scan'208";a="240799719"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:02:16 -0700
+X-IronPort-AV: E=Sophos;i="5.90,228,1643702400"; 
+   d="scan'208";a="567724101"
+Received: from nidhikum-mobl.amr.corp.intel.com ([10.209.9.23])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 12:02:16 -0700
+Date: Fri, 1 Apr 2022 12:02:15 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Kishen Maloor <kishen.maloor@intel.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v6 02/14] mptcp: handle local addrs announced
+ by userspace PMs
+In-Reply-To: <20220329021437.1196552-3-kishen.maloor@intel.com>
+Message-ID: <2588c590-a25d-28d-23e-fc8b75389bc9@linux.intel.com>
+References: <20220329021437.1196552-1-kishen.maloor@intel.com> <20220329021437.1196552-3-kishen.maloor@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Geliang,
+On Mon, 28 Mar 2022, Kishen Maloor wrote:
 
-Thank you for your modifications, that's great!
+> This change adds an internal function to store/retrieve local
+> addrs announced by userspace PM implementations to/from its kernel
+> context. The function addresses the requirements of three scenarios:
+> 1) ADD_ADDR announcements (which require that a local id be
+> provided), 2) retrieving the local id associated with an address,
+> and also where one may need to be assigned, and 3) reissuance of
+> ADD_ADDRs when there's a successful match of addr/id.
+>
+> The list of all stored local addr entries is held under the
+> MPTCP sock structure. Memory for these entries is allocated from
+> the sock option buffer, so the list of addrs is bounded by optmem_max.
+> The list if not released via REMOVE_ADDR signals is ultimately
+> freed when the sock is destructed.
+>
+> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+> ---
+> v6:
+> -Move local_addr_list into struct mptcp_pm_data.
+> -Replace mptcp_data_lock() with the pm spinlock.
+> -Move mptcp_userspace_pm_append_new_local_addr() and
+> mptcp_free_local_addr_list() into a new pm_userspace.c.
+> -Make addresses_equal() helper non-static and rename to
+> mptcp_addresses_equal().
+> ---
+> net/mptcp/Makefile       |  2 +-
+> net/mptcp/pm.c           |  1 +
+> net/mptcp/pm_netlink.c   | 34 +++++++++---------
+> net/mptcp/pm_userspace.c | 74 ++++++++++++++++++++++++++++++++++++++++
+> net/mptcp/protocol.c     |  1 +
+> net/mptcp/protocol.h     |  7 ++++
+> 6 files changed, 101 insertions(+), 18 deletions(-)
+> create mode 100644 net/mptcp/pm_userspace.c
+>
+> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+> index e54daceac58b..cb7f53f6ab22 100644
+> --- a/net/mptcp/Makefile
+> +++ b/net/mptcp/Makefile
+> @@ -2,7 +2,7 @@
+> obj-$(CONFIG_MPTCP) += mptcp.o
+>
+> mptcp-y := protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o diag.o \
+> -	   mib.o pm_netlink.o sockopt.o
+> +	   mib.o pm_netlink.o sockopt.o pm_userspace.o
+>
+> obj-$(CONFIG_SYN_COOKIES) += syncookies.o
+> obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 5d6832c4d9f2..cdc2d79071f8 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -469,6 +469,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+> {
+> 	spin_lock_init(&msk->pm.lock);
+> 	INIT_LIST_HEAD(&msk->pm.anno_list);
+> +	INIT_LIST_HEAD(&msk->pm.userspace_pm_local_addr_list);
+> 	mptcp_pm_data_reset(msk);
+> }
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 8d04c8d8a8df..836f6df9f744 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -55,8 +55,8 @@ struct pm_nl_pernet {
+> #define MPTCP_PM_ADDR_MAX	8
+> #define ADD_ADDR_RETRANS_MAX	3
+>
+> -static bool addresses_equal(const struct mptcp_addr_info *a,
+> -			    const struct mptcp_addr_info *b, bool use_port)
+> +bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+> +			   const struct mptcp_addr_info *b, bool use_port)
 
-Our CI did some validations and here is its report:
+There's a minor conflict with the export branch here after the get_pernet 
+helpers were added. I know you're planning a rebase but figured I'd 
+capture it here on the ML.
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6121269912403968
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6121269912403968/summary/summary.txt
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): selftest_diag =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5839794935693312
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5839794935693312/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/729b24964314
-
-Please note that despite all the efforts =
-that have been already done to have a
-stable tests suite when executed on a=
- public CI like here, it is possible some
-reported issues are not due to =
-your modifications. Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+--
+Mat Martineau
+Intel
