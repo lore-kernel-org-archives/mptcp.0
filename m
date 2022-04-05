@@ -1,211 +1,52 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mail.ourpartnership.pl (mail.ourpartnership.pl [80.211.82.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10437A
-	for <mptcp@lists.linux.dev>; Tue,  5 Apr 2022 00:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649118593; x=1680654593;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=KtT1mAltReVo0/n5XTEWkNWs0oWMfBeOivvM/PnR6bg=;
-  b=H+xCR/EiFi4Iz7uTeRcqcUzEPWf5X2EHeaeuRYwPnQM7c4TFlmWTfqSZ
-   SYBUH4R+9cYuOiVKdDj1vUMTJoEt0LRYdCrZD1uNBhGb76KI42QjKoj4h
-   wbQuvk4QTaSefvppitHbRgzIiX8hVeHFZS3KLLaXmeE0lArgy4Q5qXiLa
-   Jfu8rthaeh2uyybj0ZxGGu0LcjFNbuEiURSSGjmfU7lUP5i3G+rFd06Jg
-   41Bsn+ibSM6p7grt5H0ZPd/G0yR4Hsshu0vCjIh/t6kIKy9nx4alRuBSH
-   Q5xlFOoV9+BvdenmunD4BclXncObM5ynvTAyTv4Y5J5LaoGi3BhBK+IjE
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10307"; a="259467324"
-X-IronPort-AV: E=Sophos;i="5.90,235,1643702400"; 
-   d="scan'208";a="259467324"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 17:29:45 -0700
-X-IronPort-AV: E=Sophos;i="5.90,235,1643702400"; 
-   d="scan'208";a="548856805"
-Received: from ajnorman-mobl2.amr.corp.intel.com ([10.251.19.143])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 17:29:43 -0700
-Date: Mon, 4 Apr 2022 17:29:43 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v9 6/8] mptcp: add bpf_mptcp_sched_ops
-In-Reply-To: <31b426d5e4d7ccb318ee96f122bc1ac0421d5162.1649037838.git.geliang.tang@suse.com>
-Message-ID: <6d9a111-77a4-e693-df67-a18e873e7c21@linux.intel.com>
-References: <cover.1649037838.git.geliang.tang@suse.com> <31b426d5e4d7ccb318ee96f122bc1ac0421d5162.1649037838.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA3015A5
+	for <mptcp@lists.linux.dev>; Tue,  5 Apr 2022 07:43:36 +0000 (UTC)
+Received: by mail.ourpartnership.pl (Postfix, from userid 1001)
+	id 75B48612F9; Tue,  5 Apr 2022 08:32:21 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ourpartnership.pl;
+	s=mail; t=1649143998;
+	bh=M1ZVeu3q6Upppe+FUx/3rgI7MKJXh389NZDbgCK1SX4=;
+	h=Date:From:To:Subject:From;
+	b=hicwfDHtg59R0i4UN9Y7S+xa34tfD3oNsxQ2qWrACIUKQskgg9edvpYot731GjxDF
+	 COqtGEkr5juV0YFIFhsjo8dKURVPX/vxJQj0+Ad1jfXng3M8EYVVAMzT6vl3HY2xU9
+	 h5zAmvvHfIG+huJ8Pt88EJSuUOVjvbTWyQEs5RywdRVFP4wrMu94EFpgYR8KtnrOkR
+	 kaxmHY5ad63/PJ2Vhn4V8L6v/QMXCanUObMeJWObGV9oFrzLJcNl6sM0hrmiPO6PIn
+	 fYNbZXiPSwlrBbbASeg8NCC5b5MRR6KYXH9YgeyBaBKKdBYwxklZOQe3dxwFLAaySh
+	 atkk0bUYULdhQ==
+Received: by mail.ourpartnership.pl for <mptcp@lists.linux.dev>; Tue,  5 Apr 2022 07:31:25 GMT
+Message-ID: <20220405074502-0.1.f.64xw.0.fouzhl7uk2@ourpartnership.pl>
+Date: Tue,  5 Apr 2022 07:31:25 GMT
+From: =?UTF-8?Q?"Arkadiusz_Soko=C5=82owski"?= <arkadiusz.sokolowski@ourpartnership.pl>
+To: <mptcp@lists.linux.dev>
+Subject: Koszty instalacji fotowoltaicznej
+X-Mailer: mail.ourpartnership.pl
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 4 Apr 2022, Geliang Tang wrote:
+Dzie=C5=84 dobry,
 
-> This patch implements a new struct bpf_struct_ops, bpf_mptcp_sched_ops.
-> Register and unregister the bpf scheduler in .reg and .unreg.
->
-> This implementation is similar to BPF TCP CC. And some code in this patch
-> is from bpf_tcp_ca.c
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> kernel/bpf/bpf_struct_ops_types.h |   4 ++
-> net/mptcp/bpf.c                   | 102 ++++++++++++++++++++++++++++++
-> 2 files changed, 106 insertions(+)
->
-> diff --git a/kernel/bpf/bpf_struct_ops_types.h b/kernel/bpf/bpf_struct_ops_types.h
-> index 5678a9ddf817..5a6b0c0d8d3d 100644
-> --- a/kernel/bpf/bpf_struct_ops_types.h
-> +++ b/kernel/bpf/bpf_struct_ops_types.h
-> @@ -8,5 +8,9 @@ BPF_STRUCT_OPS_TYPE(bpf_dummy_ops)
-> #ifdef CONFIG_INET
-> #include <net/tcp.h>
-> BPF_STRUCT_OPS_TYPE(tcp_congestion_ops)
-> +#ifdef CONFIG_MPTCP
-> +#include <net/mptcp.h>
-> +BPF_STRUCT_OPS_TYPE(mptcp_sched_ops)
-> +#endif
-> #endif
-> #endif
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index 535602ba2582..647cb174d917 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -10,8 +10,110 @@
-> #define pr_fmt(fmt) "MPTCP: " fmt
->
-> #include <linux/bpf.h>
-> +#include <linux/bpf_verifier.h>
-> +#include <linux/btf.h>
-> +#include <linux/btf_ids.h>
-> #include "protocol.h"
->
-> +extern struct bpf_struct_ops bpf_mptcp_sched_ops;
-> +extern struct btf *btf_vmlinux;
-> +
-> +static u32 optional_ops[] = {
-> +	offsetof(struct mptcp_sched_ops, init),
-> +	offsetof(struct mptcp_sched_ops, release),
-> +	offsetof(struct mptcp_sched_ops, get_subflow),
-> +};
-> +
-> +static const struct bpf_func_proto *
-> +bpf_mptcp_sched_get_func_proto(enum bpf_func_id func_id,
-> +			       const struct bpf_prog *prog)
-> +{
-> +	return bpf_base_func_proto(func_id);
-> +}
-> +
-> +static const struct bpf_verifier_ops bpf_mptcp_sched_verifier_ops = {
-> +	.get_func_proto		= bpf_mptcp_sched_get_func_proto,
-> +	.is_valid_access	= btf_ctx_access,
+stworzyli=C5=9Bmy specjaln=C4=85 ofert=C4=99 dla firm, na kompleksow=C4=85=
+ obs=C5=82ug=C4=99 inwestycji w fotowoltaik=C4=99. =20
 
-Hi Geliang -
+Specjalizujemy si=C4=99 w zakresie doboru, monta=C5=BCu i serwisie instal=
+acji fotowoltaicznych, dysponujemy najnowocze=C5=9Bniejszymi rozwi=C4=85z=
+ania, kt=C3=B3re zapewni=C4=85 Pa=C5=84stwu oczekiwane rezultaty.
 
-I'm mostly comparing this code to bpf_tcp_ca.c to try to get a frame of 
-reference for how BPF works.
+Mo=C5=BCemy przygotowa=C4=87 dla Pa=C5=84stwa wst=C4=99pn=C4=85 kalkulacj=
+=C4=99 i przeanalizowa=C4=87 efekty mo=C5=BCliwe do osi=C4=85gni=C4=99cia=
+=2E
 
-Using 'btf_ctx_access' here seems like a less strict check than what the 
-CA code uses. bpf_tracing_btf_ctx_access() has more constraints like only 
-allowing READs. What's the reasoning behind the difference? I want to be 
-sure access is not more open than it needs to be.
+Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
+temacie?
 
-> +	.btf_struct_access	= btf_struct_access,
 
-Similar question here - bpf_tcp_ca.c has more strict checking.
-
-- Mat
-
-> +};
-> +
-> +static int bpf_mptcp_sched_reg(void *kdata)
-> +{
-> +	return mptcp_register_scheduler(kdata);
-> +}
-> +
-> +static void bpf_mptcp_sched_unreg(void *kdata)
-> +{
-> +	mptcp_unregister_scheduler(kdata);
-> +}
-> +
-> +static int bpf_mptcp_sched_check_member(const struct btf_type *t,
-> +					const struct btf_member *member)
-> +{
-> +	return 0;
-> +}
-> +
-> +static bool is_optional(u32 member_offset)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(optional_ops); i++) {
-> +		if (member_offset == optional_ops[i])
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int bpf_mptcp_sched_init_member(const struct btf_type *t,
-> +				       const struct btf_member *member,
-> +				       void *kdata, const void *udata)
-> +{
-> +	const struct mptcp_sched_ops *usched;
-> +	struct mptcp_sched_ops *sched;
-> +	int prog_fd;
-> +	u32 moff;
-> +
-> +	usched = (const struct mptcp_sched_ops *)udata;
-> +	sched = (struct mptcp_sched_ops *)kdata;
-> +
-> +	moff = __btf_member_bit_offset(t, member) / 8;
-> +	switch (moff) {
-> +	case offsetof(struct mptcp_sched_ops, name):
-> +		if (bpf_obj_name_cpy(sched->name, usched->name,
-> +				     sizeof(sched->name)) <= 0)
-> +			return -EINVAL;
-> +		if (mptcp_sched_find(usched->name))
-> +			return -EEXIST;
-> +		return 1;
-> +	}
-> +
-> +	if (!btf_type_resolve_func_ptr(btf_vmlinux, member->type, NULL))
-> +		return 0;
-> +
-> +	/* Ensure bpf_prog is provided for compulsory func ptr */
-> +	prog_fd = (int)(*(unsigned long *)(udata + moff));
-> +	if (!prog_fd && !is_optional(moff))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int bpf_mptcp_sched_init(struct btf *btf)
-> +{
-> +	return 0;
-> +}
-> +
-> +struct bpf_struct_ops bpf_mptcp_sched_ops = {
-> +	.verifier_ops	= &bpf_mptcp_sched_verifier_ops,
-> +	.reg		= bpf_mptcp_sched_reg,
-> +	.unreg		= bpf_mptcp_sched_unreg,
-> +	.check_member	= bpf_mptcp_sched_check_member,
-> +	.init_member	= bpf_mptcp_sched_init_member,
-> +	.init		= bpf_mptcp_sched_init,
-> +	.name		= "mptcp_sched_ops",
-> +};
-> +
-> struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
-> {
-> 	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
-> -- 
-> 2.34.1
->
->
->
-
---
-Mat Martineau
-Intel
+Pozdrawiam
+Arkadiusz Soko=C5=82owski
