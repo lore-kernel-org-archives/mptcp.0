@@ -1,37 +1,39 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A1F180
-	for <mptcp@lists.linux.dev>; Thu,  7 Apr 2022 02:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D1A17F2
+	for <mptcp@lists.linux.dev>; Thu,  7 Apr 2022 02:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649299367; x=1680835367;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KkWgLVVcTO5nctNModK3CWprp4y3xZpe06I0tbzUthQ=;
-  b=H+aEr7fKY82LEgu0bhDKIbtQCtiAClqBpcWnBN6GEerrGJoZSFg+2F32
-   XijiywVkeTwfpzOg0wQhPlLrop2FOuC6EpAzHVMHiohMBnRh2i7+CRzBo
-   ynn6Aza0Z7OCIyZcBbWOCWkMwgUGYfcNJQlW3KpNPJ7Bb08ehiV8KMClB
-   E78+UXMzida6trRG3yHQc0acx1GJsOCgz5VZRPucHtPp9D8xNYf0wd1vN
-   PqhK7scYPUIuPQ1N6QgivFp7JEcHphH1H5ANSSckusWh720sO2GJ9gh7e
-   6de8qiliKPWusoPcPDrJtOawBHnWy2bulNaF0re/z8nlYD1SuixnaPHSn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10309"; a="286189739"
+  t=1649299368; x=1680835368;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=sKHGYS4wSoiHYtJWAVjOUe7mFJkoa0zCDSkyK1QyfBM=;
+  b=LF4L6ZJjnKSNoKkwtKFJ/42w/T4wyzrVVPKdU5MofElJtvowKkvro57u
+   PI9RCNrwVJ2fyecbDSDmv5L820RKWhfLNoEIlWa6+a60x+AyF1LRpwkER
+   lskVeE33IPXs2fXku6gfybETZFY+R5jwx4IJ7pgfdp/5G/u/jHubQ3jWi
+   49/4wfZTLQ05O/UF7LYbqnNlAQTqnr9n7ugxxK+xqV5QgkSRQiCMdXy8E
+   fH6PfdNm05Truk4EKkIbXy5YOktvMACJnMJfdzIeOTYnM7i2AmUwAz3Pa
+   Ih69cSDvRMumzNSBsgd95c4D8B/WXh2FQbHK5CECyTsqS71oNE2Po/rLA
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10309"; a="286189740"
 X-IronPort-AV: E=Sophos;i="5.90,241,1643702400"; 
-   d="scan'208";a="286189739"
+   d="scan'208";a="286189740"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2022 19:42:47 -0700
 X-IronPort-AV: E=Sophos;i="5.90,241,1643702400"; 
-   d="scan'208";a="658882181"
+   d="scan'208";a="658882184"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
   by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2022 19:42:46 -0700
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v7 00/14] mptcp: APIs and self-tests for userspace path management
-Date: Wed,  6 Apr 2022 22:42:27 -0400
-Message-Id: <20220407024241.1757334-1-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v7 01/14] mptcp: allow ADD_ADDR reissuance by userspace PMs
+Date: Wed,  6 Apr 2022 22:42:28 -0400
+Message-Id: <20220407024241.1757334-2-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20220407024241.1757334-1-kishen.maloor@intel.com>
+References: <20220407024241.1757334-1-kishen.maloor@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,68 +42,37 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series brings together the base functionality
-and new netlink APIs for flexible path management from userspace.
-Further it extends the MPTCP self-testing framework to support the new
-netlink APIs along with the ability to capture MPTCP netlink events
-to aid in functional/behavioral validations. Lastly, it adds a
-self-testing script with a suite of test cases covering the entire
-range of the new userspace path management capabilities.
+This change allows userspace PM implementations to reissue ADD_ADDR
+announcements (if necessary) based on their chosen policy.
 
-Note: This series depends on the prior patchset "mptcp: fixes and
-enhancements related to path management".
+Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+---
+ net/mptcp/pm_netlink.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-v5:
--Primary change over v4 is the reliance on userspace
-managed listener sockets for receiving MPJ requests.
--Addressed CI reported issues.
-
-v6:
--Put all distinct userspace PM related code into a separate compilation
-unit: pm_userspace.c.
--Made a few internal helpers non-static (now declared in protocol.h) to
-facilitate the above change.
--Use the pm spinlock instead of mptcp_data_lock() to synchronize
-access to the per-msk local_addr_list.
-
-v7:
--Move userspace PM specific handling from pm_netlink
-into mptcp_userspace_pm_get_local_id()
-and mptcp_userspace_pm_get_flags_and_ifindex_by_id() in pm_userspace.
-
-Florian Westphal (2):
-  mptcp: netlink: split mptcp_pm_parse_addr into two functions
-  mptcp: netlink: allow userspace-driven subflow establishment
-
-Kishen Maloor (12):
-  mptcp: allow ADD_ADDR reissuance by userspace PMs
-  mptcp: handle local addrs announced by userspace PMs
-  mptcp: read attributes of addr entries managed by userspace PMs
-  mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE
-  selftests: mptcp: support MPTCP_PM_CMD_ANNOUNCE
-  mptcp: netlink: Add MPTCP_PM_CMD_REMOVE
-  selftests: mptcp: support MPTCP_PM_CMD_REMOVE
-  selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_CREATE
-  selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_DESTROY
-  selftests: mptcp: capture netlink events
-  selftests: mptcp: create listeners to receive MPJs
-  selftests: mptcp: functional tests for the userspace PM type
-
- include/uapi/linux/mptcp.h                    |   7 +
- net/mptcp/Makefile                            |   2 +-
- net/mptcp/pm.c                                |   1 +
- net/mptcp/pm_netlink.c                        | 169 ++--
- net/mptcp/pm_userspace.c                      | 411 ++++++++++
- net/mptcp/protocol.c                          |   1 +
- net/mptcp/protocol.h                          |  39 +-
- net/mptcp/subflow.c                           |   2 +-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 645 ++++++++++++++-
- .../selftests/net/mptcp/userspace_pm.sh       | 771 ++++++++++++++++++
- 10 files changed, 1985 insertions(+), 63 deletions(-)
- create mode 100644 net/mptcp/pm_userspace.c
- create mode 100755 tools/testing/selftests/net/mptcp/userspace_pm.sh
-
-
-base-commit: 812de90f114c9234a4ebc80058e71250e552ce5f
---
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index a4430c576ce9..98b205c2c101 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -369,8 +369,16 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 
+ 	lockdep_assert_held(&msk->pm.lock);
+ 
+-	if (mptcp_lookup_anno_list_by_saddr(msk, &entry->addr))
+-		return false;
++	add_entry = mptcp_lookup_anno_list_by_saddr(msk, &entry->addr);
++
++	if (add_entry) {
++		if (mptcp_pm_is_kernel(msk))
++			return false;
++
++		sk_reset_timer(sk, &add_entry->add_timer,
++			       jiffies + mptcp_get_add_addr_timeout(net));
++		return true;
++	}
+ 
+ 	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
+ 	if (!add_entry)
+-- 
 2.31.1
+
