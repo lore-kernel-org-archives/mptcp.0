@@ -1,91 +1,128 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0715D368
-	for <mptcp@lists.linux.dev>; Fri,  8 Apr 2022 01:57:10 +0000 (UTC)
-Received: by mail-oi1-f181.google.com with SMTP id k10so7558868oia.0
-        for <mptcp@lists.linux.dev>; Thu, 07 Apr 2022 18:57:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B64623
+	for <mptcp@lists.linux.dev>; Fri,  8 Apr 2022 09:35:28 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id f16-20020a7bcd10000000b0038e9ce3b2a9so742596wmj.2
+        for <mptcp@lists.linux.dev>; Fri, 08 Apr 2022 02:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=pBkLZBhvKr0K3mFITrKD9nt5OZ+bpYbZCLBWUjMlhWM=;
-        b=FuW/qnwxSjDN/2/0fap1CrIqRjgZ9EO5OOmZfaElgQdS44CBsB+AkHKg8efLsZFwKy
-         N4g29jkGkxv+LK6Y0oXK9xEGk5JKbGTqH7iKjUe/1A1Kwh/hyzTt4B5apFbwCIiErAlF
-         3WWd3B/qhdKZlVjlr2qj6SEbdPvKXigE8jUEwi3A7XzANnp5PC7TuAKkaKWkxqOwm9sM
-         hGWk80SywAqbTGBN2Gw8zK/akzy8KxHtpH0IjynFnEFOwjgxH0vDDfGegrALgLRLs6a3
-         FFYty/itS8aB2EzDfOBKmqnItptZ5ujQ7zDEcxfJE0Gdgk7AWmNmUulgwvcPIt0ACDjd
-         ncxg==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=IySqQcPJfa1ZV5tCKeJzqxcXw1IJX39QXoa6tgX6Yk0=;
+        b=MHvcQLL8X1wkdFt2e1ys+B8qi4FUWxFkn9EaM3aNRm5iiArC5StqK40A2aAUPrEHNY
+         kMxcPqjnBcwOAyaT2JG75txsxl5YP5qjI79OQxtywnY9aJt/ERrKxEMKnr4osCImWVm2
+         fomc3B/JEfOVfqKrHTUQ6HEfI+33Uj46sTVFwG4Xkw9W2oSAQOvxwp6pcb8O1LRw5HgN
+         all9fffe8ybF4b2GiZZucpC7QgrXGtweWK3Ho7MVjF1i28kR/HKt/T6FobKyAlCDU46K
+         hqlubPmeeEkx9jx/R4zQQl7kTCiTMQIsFTPcLlMVpklsQmzg9RIZ/C/60U1jR4/Gc/qS
+         o7rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=pBkLZBhvKr0K3mFITrKD9nt5OZ+bpYbZCLBWUjMlhWM=;
-        b=FObO0UlVElMlVy9BYwRRk419d9oRjQPVkokdgCbbP4VS8Ii9dzMuh7RG4gk5ghedgy
-         1qqDdy8ijmvKjXbCw+/yHPzUerh4wnAb8ECnpchiyYdU15MgaT59bSK3h9BUJc5dzH0o
-         aBZwHT7eAzqZPxf7Hb8j29OZjZM7ABOl0vQPPz5pZjMqEeAKnbc+iJw9BhEHnnMHlJuM
-         JrVCHfyNe0E1ekqnkC8UiInhnTxBIlZMekq0fSKSh6nChh7PjjtnSsVRS7a6a2lLr65j
-         BQ8/OBvAPqoXZ/MYD61s/pPKQ58iEaef7JfOKVmcGUhpC3wbcS/FeUAvqN+P+AexAe3B
-         BqYw==
-X-Gm-Message-State: AOAM530vXPj9hPhAd5ua4ghbI7jpqMGYk8Hugiux9Iy7FnsE6xWDcy8J
-	hJ03ivTAcSjE6PTYRAJxKw==
-X-Google-Smtp-Source: ABdhPJzOH7GdDjbdpbeZJWkqV90y7CU/OMiR6pJivoEyt0QfJey8WIYZGYayOYkwB0fBAo6MmX6VRQ==
-X-Received: by 2002:a05:6808:1b25:b0:2da:32ff:ab73 with SMTP id bx37-20020a0568081b2500b002da32ffab73mr6981338oib.285.1649383030031;
-        Thu, 07 Apr 2022 18:57:10 -0700 (PDT)
-Received: from [127.0.0.1] ([20.225.98.39])
-        by smtp.gmail.com with ESMTPSA id h11-20020a9d6f8b000000b005b230ab0461sm8585639otq.64.2022.04.07.18.57.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Apr 2022 18:57:09 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220407234029.1774481-15-kishen.maloor@intel.com>
-References: <20220407234029.1774481-15-kishen.maloor@intel.com>
-Subject: Re: selftests: mptcp: functional tests for the userspace PM type:
- Tests Results
-Message-ID: <0fad9a2c-ced8-f28b-9582-076ec7ff6b5f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 08 Apr 2022 01:57:09 +0000
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=IySqQcPJfa1ZV5tCKeJzqxcXw1IJX39QXoa6tgX6Yk0=;
+        b=GeffqRVJDzmfXWATYcMWmOVAx+3kBGjE+/QVgX1OizVKwjFc2t4VDcelxteFvpuHQt
+         SVlvRsTcORKirUP2HjOnlY6QOUTOwlHd4dWeFYlLrz4re+4Ceap7qyVImrIYuTsJaWqc
+         UpCdRnYXpxKk7X4Pmxrgxfn4kPq4uwX/5sDQdybSZ36VIJtSDhOU6TUGWKW6brOKE6o4
+         koI41JjWRLyYGEXc9sscwUol2Wj74o5FXLax8XZjIp8c5RyhvF7Me6wgUI/55Cb9FBQS
+         E1ix893lqAS5bMwbMT47FwW8uEwj8JhcTXoywtlp2U43GjYjgVYzgrOs6ljDk2v8BXkB
+         PolQ==
+X-Gm-Message-State: AOAM532EXrfkGOTYCNIlCZ+5/thn81UKGrxzKnSi75s8WjF6hBd7WEPE
+	rjzy8XELtplOLU9PaudBvX6Sxw==
+X-Google-Smtp-Source: ABdhPJwVokUn8ONjqiaIV52NM7vGliopV6NEgWHNcjqdl6g1tGxJ5HDOA6tErfSpAmbpxP7zOTwXYQ==
+X-Received: by 2002:a05:600c:3b24:b0:38c:dbdb:a35c with SMTP id m36-20020a05600c3b2400b0038cdbdba35cmr16356788wms.175.1649410526653;
+        Fri, 08 Apr 2022 02:35:26 -0700 (PDT)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id o19-20020a05600c511300b0038d0d8f67e5sm9902106wms.16.2022.04.08.02.35.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Apr 2022 02:35:26 -0700 (PDT)
+Message-ID: <f1401baa-ac43-e1eb-209e-6c4d956cc37f@tessares.net>
+Date: Fri, 8 Apr 2022 11:35:25 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: selftests: mptcp: functional tests for the userspace PM type:
+ Tests Results
+Content-Language: en-GB
+To: Kishen Maloor <kishen.maloor@intel.com>
+References: <20220407234029.1774481-15-kishen.maloor@intel.com>
+ <0fad9a2c-ced8-f28b-9582-076ec7ff6b5f@gmail.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <mathew.j.martineau@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <0fad9a2c-ced8-f28b-9582-076ec7ff6b5f@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Kishen,
+Hi Kishen
 
-Thank you for your modifications, that's great!
+On 08/04/2022 03:57, MPTCP CI wrote:
+> Hi Kishen,
+> 
+> Thank you for your modifications, that's great!
+> 
+> Our CI did some validations and here is its report:
+> 
+> - KVM Validation: normal:
+>   - Success! ✅:
+>   - Task: https://cirrus-ci.com/task/6670539791007744
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6670539791007744/summary/summary.txt
+> 
+> - {"code":404,"message":
+>   - "HTTP 404 Not Found"}:
+>   - Task: https://cirrus-ci.com/task/4629846209855488
 
-Our CI did some validations and here is its report:
+It looks like the issue is the same as with the previous version:
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6670539791007744
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6670539791007744/summary/summary.txt
+[01:14:32.748] + ./userspace_pm.sh
+[01:14:32.757] +
+/tmp/cirrus-ci-build/tools/testing/selftests/kselftest/prefix.pl
+[01:14:32.764] + tee /tmp/cirrus-ci-build/selftest_userspace_pm.tap.tmp
+[01:14:38.155] [ 3434.740942][T11903] IPv6: ADDRCONF(NETDEV_CHANGE):
+ns2eth1: link becomes ready
+[01:14:38.171] [ 3434.756018][T11903] IPv6: ADDRCONF(NETDEV_CHANGE):
+ns1eth2: link becomes ready
+[01:14:38.192] # Created network namespaces ns1, ns2         			[OK]
+[01:14:40.882] # cleanup
+[01:14:40.917] User defined signal 1
+[01:48:15.919] Timeout: sending Ctrl+C
 
-- {"code":404,"message":
-  - "HTTP 404 Not Found"}:
-  - Task: https://cirrus-ci.com/task/4629846209855488
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4629846209855488/su=
-mmary/summary.txt
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2c3fdb5eab10
+More details:
 
-Please note that despite all the efforts that have been already done to =
-have a
-stable tests suite when executed on a public CI like here, it is =
-possible some
-reported issues are not due to your modifications. Still, do =
-not hesitate to
-help us improve that ;-)
+https://cirrus-ci.com/task/4629846209855488?logs=test#L8520
+
+
+Do you mind having a look at this please?
+
+There is an issue only when the kernel debug config is used:
+
+  $ make defconfig debug.config
+
+
+You can easily reproduce that with:
+
+  $ cd <kernel source code>
+  $ echo "run_loop run_selftest_one ./userspace_pm.sh" \
+          > .virtme-exec-run
+  $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+           --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+           auto-debug
+
+(or use "manual-debug" and run the selftests manually of course)
+
+For more details about this docker image:
+
+  https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
+
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
