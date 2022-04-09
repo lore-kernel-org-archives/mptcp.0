@@ -1,36 +1,36 @@
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3159C652
-	for <mptcp@lists.linux.dev>; Sat,  9 Apr 2022 01:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD886622
+	for <mptcp@lists.linux.dev>; Sat,  9 Apr 2022 01:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649468325; x=1681004325;
+  t=1649468324; x=1681004324;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=XfrMc4C9KslLyFbMwlZ3zV5PCfirWg7R8gW3MiTD9Fo=;
-  b=gQhb/Ed4goGYwqNSp7sdASGLTirVADSBZWOv+KBEHx2ITFNpvOg7OAUc
-   WZ++CWuFSrsOjOvJtxEDH6y56yD0DtJ36xocHz3eSF0ge0h5LlEo3ff/9
-   pz4nWnDrLQsX0IbmUVBJ4IUWTM03B59DeujadufFiyTIaHohHOOFGBF+H
-   dLTDUBoLqEVnqCIjSWLT9Zc05rRILEnh8N7q59NR/n4Ss/+BXluLEvHVl
-   tL8cR9OedXO/T4Q0RWxq+5rPyv6TTUY+y1p2OvzoHGAM6UoB8gLCEnIwX
-   pA/KISIQG+0Esvjv5KdFCj5Ub6i9fSP/aSX9iOEaItGCxyQs2NFUUngIm
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10311"; a="261921156"
+  bh=1wo8CiKSlwu96+gKrqdYsQvf47UVr/eya4V33h6n6aQ=;
+  b=leW9V6tAk0ymkOqR6CN77d0PE1qJoi9kCroItQHxcO3Xg4MTvce9OdE2
+   xXLveeKTEKJy8wRv4+g5ELArkpDXiuUKQjShSTVMbO1E3HngjJsqBIiU8
+   u9ILr/uU1ixEwNHjiPYKqDzpz3l0AaKAV62lcySloS8Xt7ADlbBjlP8JS
+   x1WG39DnYapfIoo84lDzNEYNIYitImKSjAT8xPXIg1FNKqn+W/bPkfqIj
+   9fSoYbrXIKBhvc9tNpxcdc9K3GYs8ijYtaMeAeeXYu3Cqtg2782G+RMca
+   SCm7l7t00YZjokSQDvyHlBRLETsuo8CxkIL+gkWQG8MBSXrc2QC2Kdx8j
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10311"; a="261921158"
 X-IronPort-AV: E=Sophos;i="5.90,246,1643702400"; 
-   d="scan'208";a="261921156"
+   d="scan'208";a="261921158"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 18:38:31 -0700
 X-IronPort-AV: E=Sophos;i="5.90,246,1643702400"; 
-   d="scan'208";a="698436105"
+   d="scan'208";a="698436111"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
   by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 18:38:31 -0700
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v9 12/14] selftests: mptcp: capture netlink events
-Date: Fri,  8 Apr 2022 21:38:23 -0400
-Message-Id: <20220409013825.1877395-13-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v9 14/14] selftests: mptcp: functional tests for the userspace PM type
+Date: Fri,  8 Apr 2022 21:38:25 -0400
+Message-Id: <20220409013825.1877395-15-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220409013825.1877395-1-kishen.maloor@intel.com>
 References: <20220409013825.1877395-1-kishen.maloor@intel.com>
@@ -42,261 +42,806 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change adds to self-testing support for the MPTCP netlink interface
-by capturing various MPTCP netlink events (and all their metadata)
-associated with connections, subflows and address announcements.
-It is used in self-testing scripts that exercise MPTCP netlink commands
-to precisely validate those operations by examining the dispatched
-MPTCP netlink events in response to those commands.
+This change adds a selftest script that performs a comprehensive
+behavioral/functional test of all userspace PM capabilities by exercising
+all the newly added APIs and changes to support said capabilities.
 
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 164 +++++++++++++++++-
- 1 file changed, 157 insertions(+), 7 deletions(-)
+v9:
+-Mitigate possible buffering issues.
+---
+ .../selftests/net/mptcp/userspace_pm.sh       | 781 ++++++++++++++++++
+ 1 file changed, 781 insertions(+)
+ create mode 100755 tools/testing/selftests/net/mptcp/userspace_pm.sh
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 8d74fcb04929..f881d8548153 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -22,6 +22,9 @@
- #ifndef MPTCP_PM_NAME
- #define MPTCP_PM_NAME		"mptcp_pm"
- #endif
-+#ifndef MPTCP_PM_EVENTS
-+#define MPTCP_PM_EVENTS		"mptcp_pm_events"
-+#endif
- 
- static void syntax(char *argv[])
- {
-@@ -37,6 +40,7 @@ static void syntax(char *argv[])
- 	fprintf(stderr, "\tflush\n");
- 	fprintf(stderr, "\tdump\n");
- 	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
-+	fprintf(stderr, "\tevents\n");
- 	exit(0);
- }
- 
-@@ -88,6 +92,108 @@ static void nl_error(struct nlmsghdr *nh)
- 	}
- }
- 
-+static int capture_events(int fd, int event_group)
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+new file mode 100755
+index 000000000000..5bec5620796a
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -0,0 +1,781 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++ip -Version > /dev/null 2>&1
++if [ $? -ne 0 ];then
++	echo "SKIP: Cannot not run test without ip tool"
++	exit 1
++fi
++
++ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
++REMOVED=7          # MPTCP_EVENT_REMOVED
++SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
++SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
++
++AF_INET=2
++AF_INET6=10
++
++evts_pid=0
++client4_pid=0
++server4_pid=0
++client6_pid=0
++server6_pid=0
++client4_token=""
++server4_token=""
++client6_token=""
++server6_token=""
++client4_port=0;
++client6_port=0;
++app4_port=50002
++new4_port=50003
++app6_port=50004
++client_addr_id=${RANDOM:0:2}
++server_addr_id=${RANDOM:0:2}
++
++sec=$(date +%s)
++rndh=$(stdbuf -o0 -e0 printf %x "$sec")-$(mktemp -u XXXXXX)
++ns1="ns1-$rndh"
++ns2="ns2-$rndh"
++
++cleanup()
 +{
-+	u_int8_t buffer[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+			NLMSG_ALIGN(sizeof(struct genlmsghdr)) + 1024];
-+	struct genlmsghdr *ghdr;
-+	struct rtattr *attrs;
-+	struct nlmsghdr *nh;
-+	int ret = 0;
-+	int res_len;
-+	int msg_len;
-+	fd_set rfds;
++	echo "cleanup"
 +
-+	if (setsockopt(fd, SOL_NETLINK, NETLINK_ADD_MEMBERSHIP,
-+		       &event_group, sizeof(event_group)) < 0)
-+		error(1, errno, "could not join the " MPTCP_PM_EVENTS " mcast group");
++	rm -rf $file
 +
-+	do {
-+		FD_ZERO(&rfds);
-+		FD_SET(fd, &rfds);
-+		res_len = NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) + 1024;
-+
-+		ret = select(FD_SETSIZE, &rfds, NULL, NULL, NULL);
-+
-+		if (ret < 0)
-+			error(1, ret, "error in select() on NL socket");
-+
-+		res_len = recv(fd, buffer, res_len, 0);
-+		if (res_len < 0)
-+			error(1, res_len, "error on recv() from NL socket");
-+
-+		nh = (struct nlmsghdr *)buffer;
-+
-+		for (; NLMSG_OK(nh, res_len); nh = NLMSG_NEXT(nh, res_len)) {
-+			if (nh->nlmsg_type == NLMSG_ERROR)
-+				error(1, NLMSG_ERROR, "received invalid NL message");
-+
-+			ghdr = (struct genlmsghdr *)NLMSG_DATA(nh);
-+
-+			if (ghdr->cmd == 0)
-+				continue;
-+
-+			fprintf(stderr, "type:%d", ghdr->cmd);
-+
-+			msg_len = nh->nlmsg_len - NLMSG_LENGTH(GENL_HDRLEN);
-+
-+			attrs = (struct rtattr *) ((char *) ghdr + GENL_HDRLEN);
-+			while (RTA_OK(attrs, msg_len)) {
-+				if (attrs->rta_type == MPTCP_ATTR_TOKEN)
-+					fprintf(stderr, ",token:%u", *(__u32 *)RTA_DATA(attrs));
-+				else if (attrs->rta_type == MPTCP_ATTR_FAMILY)
-+					fprintf(stderr, ",family:%u", *(__u16 *)RTA_DATA(attrs));
-+				else if (attrs->rta_type == MPTCP_ATTR_LOC_ID)
-+					fprintf(stderr, ",loc_id:%u", *(__u8 *)RTA_DATA(attrs));
-+				else if (attrs->rta_type == MPTCP_ATTR_REM_ID)
-+					fprintf(stderr, ",rem_id:%u", *(__u8 *)RTA_DATA(attrs));
-+				else if (attrs->rta_type == MPTCP_ATTR_SADDR4) {
-+					u_int32_t saddr4 = ntohl(*(__u32 *)RTA_DATA(attrs));
-+
-+					fprintf(stderr, ",saddr4:%u.%u.%u.%u", saddr4 >> 24,
-+					       (saddr4 >> 16) & 0xFF, (saddr4 >> 8) & 0xFF,
-+					       (saddr4 & 0xFF));
-+				} else if (attrs->rta_type == MPTCP_ATTR_SADDR6) {
-+					char buf[INET6_ADDRSTRLEN];
-+
-+					if (inet_ntop(AF_INET6, RTA_DATA(attrs), buf,
-+						      sizeof(buf)) != NULL)
-+						fprintf(stderr, ",saddr6:%s", buf);
-+				} else if (attrs->rta_type == MPTCP_ATTR_DADDR4) {
-+					u_int32_t daddr4 = ntohl(*(__u32 *)RTA_DATA(attrs));
-+
-+					fprintf(stderr, ",daddr4:%u.%u.%u.%u", daddr4 >> 24,
-+					       (daddr4 >> 16) & 0xFF, (daddr4 >> 8) & 0xFF,
-+					       (daddr4 & 0xFF));
-+				} else if (attrs->rta_type == MPTCP_ATTR_DADDR6) {
-+					char buf[INET6_ADDRSTRLEN];
-+
-+					if (inet_ntop(AF_INET6, RTA_DATA(attrs), buf,
-+						      sizeof(buf)) != NULL)
-+						fprintf(stderr, ",daddr6:%s", buf);
-+				} else if (attrs->rta_type == MPTCP_ATTR_SPORT)
-+					fprintf(stderr, ",sport:%u",
-+						ntohs(*(__u16 *)RTA_DATA(attrs)));
-+				else if (attrs->rta_type == MPTCP_ATTR_DPORT)
-+					fprintf(stderr, ",dport:%u",
-+						ntohs(*(__u16 *)RTA_DATA(attrs)));
-+				else if (attrs->rta_type == MPTCP_ATTR_BACKUP)
-+					fprintf(stderr, ",backup:%u", *(__u8 *)RTA_DATA(attrs));
-+				else if (attrs->rta_type == MPTCP_ATTR_ERROR)
-+					fprintf(stderr, ",error:%u", *(__u8 *)RTA_DATA(attrs));
-+				else if (attrs->rta_type == MPTCP_ATTR_SERVER_SIDE)
-+					fprintf(stderr, ",server_side:%u", *(__u8 *)RTA_DATA(attrs));
-+
-+				attrs = RTA_NEXT(attrs, msg_len);
-+			}
-+		}
-+		fprintf(stderr, "\n");
-+	} while (1);
-+
-+	return 0;
++	# Terminate the MPTCP connection and related processes
++	if [ $client4_pid -ne 0 ]; then
++		kill -SIGUSR1 $client4_pid > /dev/null 2>&1
++	fi
++	if [ $server4_pid -ne 0 ]; then
++		kill $server4_pid > /dev/null 2>&1
++	fi
++	if [ $client6_pid -ne 0 ]; then
++		kill -SIGUSR1 $client6_pid > /dev/null 2>&1
++	fi
++	if [ $server6_pid -ne 0 ]; then
++		kill $server6_pid > /dev/null 2>&1
++	fi
++	if [ $evts_pid -ne 0 ]; then
++		kill $evts_pid > /dev/null 2>&1
++	fi
++	local netns
++	for netns in "$ns1" "$ns2" ;do
++		ip netns del "$netns"
++	done
 +}
 +
- /* do a netlink command and, if max > 0, fetch the reply  */
- static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
- {
-@@ -121,11 +227,18 @@ static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
- 	return ret;
- }
- 
--static int genl_parse_getfamily(struct nlmsghdr *nlh)
-+static int genl_parse_getfamily(struct nlmsghdr *nlh, int *pm_family,
-+				int *events_mcast_grp)
- {
- 	struct genlmsghdr *ghdr = NLMSG_DATA(nlh);
- 	int len = nlh->nlmsg_len;
- 	struct rtattr *attrs;
-+	struct rtattr *grps;
-+	struct rtattr *grp;
-+	int got_events_grp;
-+	int got_family;
-+	int grps_len;
-+	int grp_len;
- 
- 	if (nlh->nlmsg_type != GENL_ID_CTRL)
- 		error(1, errno, "Not a controller message, len=%d type=0x%x\n",
-@@ -140,9 +253,42 @@ static int genl_parse_getfamily(struct nlmsghdr *nlh)
- 		error(1, errno, "Unknown controller command %d\n", ghdr->cmd);
- 
- 	attrs = (struct rtattr *) ((char *) ghdr + GENL_HDRLEN);
-+	got_family = 0;
-+	got_events_grp = 0;
++trap cleanup EXIT
 +
- 	while (RTA_OK(attrs, len)) {
--		if (attrs->rta_type == CTRL_ATTR_FAMILY_ID)
--			return *(__u16 *)RTA_DATA(attrs);
-+		if (attrs->rta_type == CTRL_ATTR_FAMILY_ID) {
-+			*pm_family = *(__u16 *)RTA_DATA(attrs);
-+			got_family = 1;
-+		} else if (attrs->rta_type == CTRL_ATTR_MCAST_GROUPS) {
-+			grps = RTA_DATA(attrs);
-+			grps_len = RTA_PAYLOAD(attrs);
++# Create and configure network namespaces for testing
++for i in "$ns1" "$ns2" ;do
++	ip netns add "$i" || exit 1
++	ip -net "$i" link set lo up
++	ip netns exec "$i" sysctl -q net.mptcp.enabled=1
++	ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
++done
 +
-+			while (RTA_OK(grps, grps_len)) {
-+				grp = RTA_DATA(grps);
-+				grp_len = RTA_PAYLOAD(grps);
-+				got_events_grp = 0;
++#  "$ns1"              ns2
++#     ns1eth2    ns2eth1
 +
-+				while (RTA_OK(grp, grp_len)) {
-+					if (grp->rta_type == CTRL_ATTR_MCAST_GRP_ID)
-+						*events_mcast_grp = *(__u32 *)RTA_DATA(grp);
-+					else if (grp->rta_type == CTRL_ATTR_MCAST_GRP_NAME &&
-+						 !strcmp(RTA_DATA(grp), MPTCP_PM_EVENTS))
-+						got_events_grp = 1;
++ip link add ns1eth2 netns "$ns1" type veth peer name ns2eth1 netns "$ns2"
 +
-+					grp = RTA_NEXT(grp, grp_len);
-+				}
++# Add IPv4/v6 addresses to the namespaces
++ip -net "$ns1" addr add 10.0.1.1/24 dev ns1eth2
++ip -net "$ns1" addr add 10.0.2.1/24 dev ns1eth2
++ip -net "$ns1" addr add dead:beef:1::1/64 dev ns1eth2 nodad
++ip -net "$ns1" addr add dead:beef:2::1/64 dev ns1eth2 nodad
++ip -net "$ns1" link set ns1eth2 up
 +
-+				if (got_events_grp)
-+					break;
++ip -net "$ns2" addr add 10.0.1.2/24 dev ns2eth1
++ip -net "$ns2" addr add 10.0.2.2/24 dev ns2eth1
++ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
++ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
++ip -net "$ns2" link set ns2eth1 up
 +
-+				grps = RTA_NEXT(grps, grps_len);
-+			}
-+		}
++stdbuf -o0 -e0 printf "Created network namespaces ns1, ns2         \t\t\t[OK]\n"
 +
-+		if (got_family && got_events_grp)
-+			return 0;
++make_file()
++{
++	# Store a chunk of data in a file to transmit over an MPTCP connection
++	local name=$1
++	local ksize=1
 +
- 		attrs = RTA_NEXT(attrs, len);
- 	}
- 
-@@ -150,7 +296,7 @@ static int genl_parse_getfamily(struct nlmsghdr *nlh)
- 	return -1;
- }
- 
--static int resolve_mptcp_pm_netlink(int fd)
-+static int resolve_mptcp_pm_netlink(int fd, int *pm_family, int *events_mcast_grp)
- {
- 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
- 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-@@ -172,7 +318,7 @@ static int resolve_mptcp_pm_netlink(int fd)
- 	off += NLMSG_ALIGN(rta->rta_len);
- 
- 	do_nl_req(fd, nh, off, sizeof(data));
--	return genl_parse_getfamily((void *)data);
-+	return genl_parse_getfamily((void *)data, pm_family, events_mcast_grp);
- }
- 
- int dsf(int fd, int pm_family, int argc, char *argv[])
-@@ -1192,7 +1338,9 @@ int set_flags(int fd, int pm_family, int argc, char *argv[])
- 
- int main(int argc, char *argv[])
- {
--	int fd, pm_family;
-+	int events_mcast_grp;
-+	int pm_family;
-+	int fd;
- 
- 	if (argc < 2)
- 		syntax(argv);
-@@ -1201,7 +1349,7 @@ int main(int argc, char *argv[])
- 	if (fd == -1)
- 		error(1, errno, "socket netlink");
- 
--	pm_family = resolve_mptcp_pm_netlink(fd);
-+	resolve_mptcp_pm_netlink(fd, &pm_family, &events_mcast_grp);
- 
- 	if (!strcmp(argv[1], "add"))
- 		return add_addr(fd, pm_family, argc, argv);
-@@ -1225,6 +1373,8 @@ int main(int argc, char *argv[])
- 		return get_set_limits(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "set"))
- 		return set_flags(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "events"))
-+		return capture_events(fd, events_mcast_grp);
- 
- 	fprintf(stderr, "unknown sub-command: %s", argv[1]);
- 	syntax(argv);
++	dd if=/dev/urandom of="$name" bs=2 count=$ksize 2> /dev/null
++	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
++}
++
++make_connection()
++{
++	local file
++	file=$(mktemp)
++	make_file "$file" "client"
++
++	local is_v6=$1
++	local app_port=$app4_port
++	local connect_addr="10.0.1.1"
++	local listen_addr="0.0.0.0"
++	if [ "$is_v6" = "v6" ]
++	then
++		connect_addr="dead:beef:1::1"
++		listen_addr="::"
++		app_port=$app6_port
++	else
++		is_v6="v4"
++	fi
++
++	# Capture netlink events over the two network namespaces running
++	# the MPTCP client and server
++	local client_evts
++	client_evts=$(mktemp)
++	:>"$client_evts"
++	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
++	local client_evts_pid=$!
++	local server_evts
++	server_evts=$(mktemp)
++	:>"$server_evts"
++	ip netns exec "$ns1" ./pm_nl_ctl events >> "$server_evts" 2>&1 &
++	local server_evts_pid=$!
++	sleep 0.1
++
++	# Run the server
++	ip netns exec "$ns1" \
++	   ./mptcp_connect -s MPTCP -w 300 -p $app_port -l $listen_addr > /dev/null 2>&1 &
++	local server_pid=$!
++	sleep 0.1
++
++	# Run the client, transfer $file and stay connected to the server
++	# to conduct tests
++	ip netns exec "$ns2" \
++	   ./mptcp_connect -s MPTCP -w 300 -m sendfile -p $app_port $connect_addr\
++	   2>&1 > /dev/null < "$file" &
++	local client_pid=$!
++	sleep 0.1
++
++	# Capture client/server attributes from MPTCP connection netlink events
++	kill $client_evts_pid
++
++	local client_token
++	local client_port
++	local client_serverside
++	local server_token
++	local server_serverside
++
++	client_token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
++	client_port=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
++	client_serverside=$(sed --unbuffered -n 's/.*\(server_side:\)\([[:digit:]]*\).*$/\2/p;q'\
++				      "$client_evts")
++
++	kill $server_evts_pid
++	server_token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$server_evts")
++	server_serverside=$(sed --unbuffered -n 's/.*\(server_side:\)\([[:digit:]]*\).*$/\2/p;q'\
++				      "$server_evts")
++
++	rm -f "$client_evts" "$server_evts" "$file"
++
++	if [ "$client_token" != "" ] && [ "$server_token" != "" ] && [ "$client_serverside" = 0 ] &&
++		   [ "$server_serverside" = 1 ]
++	then
++		stdbuf -o0 -e0 printf "Established IP%s MPTCP Connection ns2 => ns1    \t\t[OK]\n" $is_v6
++	else
++		exit 1
++	fi
++
++	if [ "$is_v6" = "v6" ]
++	then
++		client6_token=$client_token
++		server6_token=$server_token
++		client6_port=$client_port
++		client6_pid=$client_pid
++		server6_pid=$server_pid
++	else
++		client4_token=$client_token
++		server4_token=$server_token
++		client4_port=$client_port
++		client4_pid=$client_pid
++		server4_pid=$server_pid
++	fi
++}
++
++verify_announce_event()
++{
++	local evt=$1
++	local e_type=$2
++	local e_token=$3
++	local e_addr=$4
++	local e_id=$5
++	local e_dport=$6
++	local e_af=$7
++	local type
++	local token
++	local addr
++	local dport
++	local id
++
++	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	if [ "$e_af" = "v6" ]
++	then
++		addr=$(sed --unbuffered -n 's/.*\(daddr6:\)\([0-9a-f:.]*\).*$/\2/p;q' "$evt")
++	else
++		addr=$(sed --unbuffered -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
++	fi
++	dport=$(sed --unbuffered -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
++		   [ "$addr" = "$e_addr" ] && [ "$dport" = "$e_dport" ] &&
++		   [ "$id" = "$e_id" ]
++	then
++		stdbuf -o0 -e0 printf "[OK]\n"
++		return 0
++	fi
++	stdbuf -o0 -e0 printf "[FAIL]\n"
++	exit 1
++}
++
++test_announce()
++{
++	local evts
++	evts=$(mktemp)
++	# Capture events on the network namespace running the server
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl events >> "$evts" 2>&1 &
++	evts_pid=$!
++	sleep 0.1
++
++	# ADD_ADDR using an invalid token should result in no action
++	local invalid_token=$(( client4_token - 1))
++	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token $invalid_token id\
++	   $client_addr_id dev ns2eth1 > /dev/null 2>&1
++
++	local type
++	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++	stdbuf -o0 -e0 printf "ADD_ADDR 10.0.2.2 (ns2) => ns1, invalid token    \t\t"
++	if [ "$type" = "" ]
++	then
++		stdbuf -o0 -e0 printf "[OK]\n"
++	else
++		stdbuf -o0 -e0 printf "[FAIL]\n"
++		exit 1
++	fi
++
++	# ADD_ADDR from the client to server machine reusing the subflow port
++	:>"$evts"
++	ip netns exec "$ns2"\
++	   ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id $client_addr_id dev\
++	   ns2eth1 > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "ADD_ADDR id:%d 10.0.2.2 (ns2) => ns1, reuse port \t\t" $client_addr_id
++	sleep 0.1
++	verify_announce_event "$evts" "$ANNOUNCED" "$server4_token" "10.0.2.2" "$client_addr_id"\
++			      "$client4_port"
++
++	# ADD_ADDR6 from the client to server machine reusing the subflow port
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl ann\
++	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1 > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "ADD_ADDR6 id:%d dead:beef:2::2 (ns2) => ns1, reuse port\t\t" $client_addr_id
++	sleep 0.1
++	verify_announce_event "$evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
++			      "$client_addr_id" "$client6_port" "v6"
++
++	# ADD_ADDR from the client to server machine using a new port
++	:>"$evts"
++	client_addr_id=$((client_addr_id+1))
++	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
++	   $client_addr_id dev ns2eth1 port $new4_port > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "ADD_ADDR id:%d 10.0.2.2 (ns2) => ns1, new port \t\t\t" $client_addr_id
++	sleep 0.1
++	verify_announce_event "$evts" "$ANNOUNCED" "$server4_token" "10.0.2.2"\
++			      "$client_addr_id" "$new4_port"
++
++	kill $evts_pid
++
++	# Capture events on the network namespace running the client
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl events >> "$evts" 2>&1 &
++	evts_pid=$!
++	sleep 0.1
++
++	# ADD_ADDR from the server to client machine reusing the subflow port
++	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
++	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "ADD_ADDR id:%d 10.0.2.1 (ns1) => ns2, reuse port \t\t" $server_addr_id
++	sleep 0.1
++	verify_announce_event "$evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
++			      "$server_addr_id" "$app4_port"
++
++	# ADD_ADDR6 from the server to client machine reusing the subflow port
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
++	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "ADD_ADDR6 id:%d dead:beef:2::1 (ns1) => ns2, reuse port\t\t" $server_addr_id
++	sleep 0.1
++	verify_announce_event "$evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
++			      "$server_addr_id" "$app6_port" "v6"
++
++	# ADD_ADDR from the server to client machine using a new port
++	:>"$evts"
++	server_addr_id=$((server_addr_id+1))
++	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
++	   $server_addr_id dev ns1eth2 port $new4_port > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "ADD_ADDR id:%d 10.0.2.1 (ns1) => ns2, new port \t\t\t" $server_addr_id
++	sleep 0.1
++	verify_announce_event "$evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
++			      "$server_addr_id" "$new4_port"
++
++	kill $evts_pid
++	rm -f "$evts"
++}
++
++verify_remove_event()
++{
++	local evt=$1
++	local e_type=$2
++	local e_token=$3
++	local e_id=$4
++	local type
++	local token
++	local id
++
++	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
++		   [ "$id" = "$e_id" ]
++	then
++		stdbuf -o0 -e0 printf "[OK]\n"
++		return 0
++	fi
++	stdbuf -o0 -e0 printf "[FAIL]\n"
++	exit 1
++}
++
++test_remove()
++{
++	local evts
++	evts=$(mktemp)
++
++	# Capture events on the network namespace running the server
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl events >> "$evts" 2>&1 &
++	evts_pid=$!
++	sleep 0.1
++
++	# RM_ADDR using an invalid token should result in no action
++	local invalid_token=$(( client4_token - 1 ))
++	ip netns exec "$ns2" ./pm_nl_ctl rem token $invalid_token id\
++	   $client_addr_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR id:%d ns2 => ns1, invalid token                    \t"\
++	       $client_addr_id
++	local type
++	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++	if [ "$type" = "" ]
++	then
++		stdbuf -o0 -e0 printf "[OK]\n"
++	else
++		stdbuf -o0 -e0 printf "[FAIL]\n"
++	fi
++
++	# RM_ADDR using an invalid addr id should result in no action
++	local invalid_id=$(( client_addr_id + 1 ))
++	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
++	   $invalid_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR id:%d ns2 => ns1, invalid id                    \t"\
++	       $invalid_id
++	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++	if [ "$type" = "" ]
++	then
++		stdbuf -o0 -e0 printf "[OK]\n"
++	else
++		stdbuf -o0 -e0 printf "[FAIL]\n"
++	fi
++
++	# RM_ADDR from the client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
++	   $client_addr_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR id:%d ns2 => ns1                                \t"\
++	       $client_addr_id
++	sleep 0.1
++	verify_remove_event "$evts" "$REMOVED" "$server4_token" "$client_addr_id"
++
++	# RM_ADDR from the client to server machine
++	:>"$evts"
++	client_addr_id=$(( client_addr_id - 1 ))
++	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
++	   $client_addr_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR id:%d ns2 => ns1                                \t"\
++	       $client_addr_id
++	sleep 0.1
++	verify_remove_event "$evts" "$REMOVED" "$server4_token" "$client_addr_id"
++
++	# RM_ADDR6 from the client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client6_token" id\
++	   $client_addr_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR6 id:%d ns2 => ns1                               \t"\
++	       $client_addr_id
++	sleep 0.1
++	verify_remove_event "$evts" "$REMOVED" "$server6_token" "$client_addr_id"
++
++	kill $evts_pid
++
++	# Capture events on the network namespace running the client
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl events >> "$evts" 2>&1 &
++	evts_pid=$!
++	sleep 0.1
++
++	# RM_ADDR from the server to client machine
++	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
++	   $server_addr_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR id:%d ns1 => ns2                                \t"\
++	       $server_addr_id
++	sleep 0.1
++	verify_remove_event "$evts" "$REMOVED" "$client4_token" "$server_addr_id"
++
++	# RM_ADDR from the server to client machine
++	:>"$evts"
++	server_addr_id=$(( server_addr_id - 1 ))
++	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
++	   $server_addr_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR id:%d ns1 => ns2                                \t" $server_addr_id
++	sleep 0.1
++	verify_remove_event "$evts" "$REMOVED" "$client4_token" "$server_addr_id"
++
++	# RM_ADDR6 from the server to client machine
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server6_token" id\
++	   $server_addr_id > /dev/null 2>&1
++	stdbuf -o0 -e0 printf "RM_ADDR6 id:%d ns1 => ns2                               \t" $server_addr_id
++	sleep 0.1
++	verify_remove_event "$evts" "$REMOVED" "$client6_token" "$server_addr_id"
++
++	kill $evts_pid
++	rm -f "$evts"
++}
++
++verify_subflow_events()
++{
++	local evt=$1
++	local e_type=$2
++	local e_token=$3
++	local e_family=$4
++	local e_saddr=$5
++	local e_daddr=$6
++	local e_dport=$7
++	local e_locid=$8
++	local e_remid=$9
++	shift 2
++	local e_from=$8
++	local e_to=$9
++	local type
++	local token
++	local family
++	local saddr
++	local daddr
++	local dport
++	local locid
++	local remid
++
++	if [ "$e_type" = "$SUB_ESTABLISHED" ]
++	then
++		if [ "$e_family" = "$AF_INET6" ]
++		then
++			stdbuf -o0 -e0 printf "CREATE_SUBFLOW6 %s (%s) => %s (%s)    "\
++			       "$e_saddr" "$e_from" "$e_daddr" "$e_to"
++		else
++			stdbuf -o0 -e0 printf "CREATE_SUBFLOW %s (%s) => %s (%s)         \t"\
++			       "$e_saddr" "$e_from" "$e_daddr" "$e_to"
++		fi
++	else
++		if [ "$e_family" = "$AF_INET6" ]
++		then
++			stdbuf -o0 -e0 printf "DESTROY_SUBFLOW6 %s (%s) => %s (%s)   "\
++			       "$e_saddr" "$e_from" "$e_daddr" "$e_to"
++		else
++			stdbuf -o0 -e0 printf "DESTROY_SUBFLOW %s (%s) => %s (%s)         \t"\
++			       "$e_saddr" "$e_from" "$e_daddr" "$e_to"
++		fi
++	fi
++
++	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	family=$(sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	dport=$(sed --unbuffered -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	locid=$(sed --unbuffered -n 's/.*\(loc_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	remid=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
++	if [ "$family" = "$AF_INET6" ]
++	then
++		saddr=$(sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q' "$evt")
++		daddr=$(sed --unbuffered -n 's/.*\(daddr6:\)\([0-9a-f:.]*\).*$/\2/p;q' "$evt")
++	else
++		saddr=$(sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
++		daddr=$(sed --unbuffered -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
++	fi
++
++	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
++		   [ "$daddr" = "$e_daddr" ] && [ "$e_dport" = "$dport" ] &&
++		   [ "$family" = "$e_family" ] && [ "$saddr" = "$e_saddr" ] &&
++		   [ "$e_locid" = "$locid" ] && [ "$e_remid" = "$remid" ]
++	then
++		stdbuf -o0 -e0 printf "[OK]\n"
++		return 0
++	fi
++	stdbuf -o0 -e0 printf "[FAIL]\n"
++	exit 1
++}
++
++test_subflows()
++{
++	local evts
++	evts=$(mktemp)
++	# Capture events on the network namespace running the server
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl events >> "$evts" 2>&1 &
++	evts_pid=$!
++	sleep 0.1
++
++	# Attempt to add a listener at 10.0.2.2:<subflow-port>
++	ip netns exec "$ns2" ./pm_nl_ctl listen 10.0.2.2\
++	   "$client4_port" > /dev/null 2>&1 &
++	local listener_pid=$!
++
++	# ADD_ADDR from client to server machine reusing the subflow port
++	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
++	   $client_addr_id > /dev/null 2>&1
++	sleep 0.1
++
++	# CREATE_SUBFLOW from server to client machine
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2\
++	   rport "$client4_port" token "$server4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_ESTABLISHED" "$server4_token" "$AF_INET" "10.0.2.1"\
++			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
++
++	# Delete the listener from the client ns, if one was created
++	kill $listener_pid > /dev/null 2>&1
++
++	local sport
++	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++
++	# DESTROY_SUBFLOW from server to client machine
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
++	   "$client4_port" token "$server4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
++			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
++
++	# RM_ADDR from client to server machine
++	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
++	   "$client4_token" > /dev/null 2>&1
++	sleep 0.1
++
++	# Attempt to add a listener at dead:beef:2::2:<subflow-port>
++	ip netns exec "$ns2" ./pm_nl_ctl listen dead:beef:2::2\
++	   "$client6_port" > /dev/null 2>&1 &
++	listener_pid=$!
++
++	# ADD_ADDR6 from client to server machine reusing the subflow port
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl ann dead:beef:2::2 token "$client6_token" id\
++	   $client_addr_id > /dev/null 2>&1
++	sleep 0.1
++
++	# CREATE_SUBFLOW6 from server to client machine
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl csf lip dead:beef:2::1 lid 23 rip\
++	   dead:beef:2::2 rport "$client6_port" token "$server6_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_ESTABLISHED" "$server6_token" "$AF_INET6"\
++			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
++			      "$client_addr_id" "ns1" "ns2"
++
++	# Delete the listener from the client ns, if one was created
++	kill $listener_pid > /dev/null 2>&1
++
++	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++
++	# DESTROY_SUBFLOW6 from server to client machine
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
++	   dead:beef:2::2 rport "$client6_port" token "$server6_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
++			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
++			      "$client_addr_id" "ns1" "ns2"
++
++	# RM_ADDR from client to server machine
++	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
++	   "$client6_token" > /dev/null 2>&1
++	sleep 0.1
++
++	# Attempt to add a listener at 10.0.2.2:<new-port>
++	ip netns exec "$ns2" ./pm_nl_ctl listen 10.0.2.2\
++	   $new4_port > /dev/null 2>&1 &
++	listener_pid=$!
++
++	# ADD_ADDR from client to server machine using a new port
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
++	   $client_addr_id port $new4_port > /dev/null 2>&1
++	sleep 0.1
++
++	# CREATE_SUBFLOW from server to client machine
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2 rport\
++	   $new4_port token "$server4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_ESTABLISHED" "$server4_token" "$AF_INET"\
++			      "10.0.2.1" "10.0.2.2" "$new4_port" "23"\
++			      "$client_addr_id" "ns1" "ns2"
++
++	# Delete the listener from the client ns, if one was created
++	kill $listener_pid > /dev/null 2>&1
++
++	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++
++	# DESTROY_SUBFLOW from server to client machine
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
++	   $new4_port token "$server4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
++			      "10.0.2.2" "$new4_port" "23" "$client_addr_id" "ns1" "ns2"
++
++	# RM_ADDR from client to server machine
++	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
++	   "$client4_token" > /dev/null 2>&1
++
++	kill $evts_pid
++
++	# Capture events on the network namespace running the client
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl events >> "$evts" 2>&1 &
++	evts_pid=$!
++	sleep 0.1
++
++	# Attempt to add a listener at 10.0.2.1:<subflow-port>
++	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
++	   $app4_port > /dev/null 2>&1 &
++	listener_pid=$!
++
++	# ADD_ADDR from server to client machine reusing the subflow port
++	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
++	   $server_addr_id > /dev/null 2>&1
++	sleep 0.1
++
++	# CREATE_SUBFLOW from client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
++	   $app4_port token "$client4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_ESTABLISHED" "$client4_token" "$AF_INET" "10.0.2.2"\
++			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
++
++	# Delete the listener from the server ns, if one was created
++	kill $listener_pid> /dev/null 2>&1
++
++	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++
++	# DESTROY_SUBFLOW from client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
++	   $app4_port token "$client4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
++			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
++
++	# RM_ADDR from server to client machine
++	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
++	   "$server4_token" > /dev/null 2>&1
++	sleep 0.1
++
++	# Attempt to add a listener at dead:beef:2::1:<subflow-port>
++	ip netns exec "$ns1" ./pm_nl_ctl listen dead:beef:2::1\
++	   $app6_port > /dev/null 2>&1 &
++	listener_pid=$!
++
++	# ADD_ADDR6 from server to client machine reusing the subflow port
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
++	   $server_addr_id > /dev/null 2>&1
++	sleep 0.1
++
++	# CREATE_SUBFLOW6 from client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl csf lip dead:beef:2::2 lid 23 rip\
++	   dead:beef:2::1 rport $app6_port token "$client6_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_ESTABLISHED" "$client6_token"\
++			      "$AF_INET6" "dead:beef:2::2"\
++			      "dead:beef:2::1" "$app6_port" "23"\
++			      "$server_addr_id" "ns2" "ns1"
++
++	# Delete the listener from the server ns, if one was created
++	kill $listener_pid > /dev/null 2>&1
++
++	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++
++	# DESTROY_SUBFLOW6 from client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
++	   dead:beef:2::1 rport $app6_port token "$client6_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_CLOSED" "$client6_token" "$AF_INET6" "dead:beef:2::2"\
++			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
++
++	# RM_ADDR6 from server to client machine
++	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
++	   "$server6_token" > /dev/null 2>&1
++	sleep 0.1
++
++	# Attempt to add a listener at 10.0.2.1:<new-port>
++	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
++	   $new4_port > /dev/null 2>&1 &
++	listener_pid=$!
++
++	# ADD_ADDR from server to client machine using a new port
++	:>"$evts"
++	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
++	   $server_addr_id port $new4_port > /dev/null 2>&1
++	sleep 0.1
++
++	# CREATE_SUBFLOW from client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
++	   $new4_port token "$client4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_ESTABLISHED" "$client4_token" "$AF_INET"\
++			      "10.0.2.2" "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
++
++	# Delete the listener from the server ns, if one was created
++	kill $listener_pid > /dev/null 2>&1
++
++	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts")
++
++	# DESTROY_SUBFLOW from client to server machine
++	:>"$evts"
++	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
++	   $new4_port token "$client4_token" > /dev/null 2>&1
++	sleep 0.1
++	verify_subflow_events "$evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
++			      "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
++
++	# RM_ADDR from server to client machine
++	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
++	   "$server4_token" > /dev/null 2>&1
++
++	kill $evts_pid
++	rm -f "$evts"
++}
++
++make_connection
++make_connection "v6"
++test_announce
++test_remove
++test_subflows
++
++exit 0
 -- 
 2.31.1
 
