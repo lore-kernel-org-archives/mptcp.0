@@ -1,36 +1,36 @@
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC96651
-	for <mptcp@lists.linux.dev>; Sat,  9 Apr 2022 01:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3159C652
+	for <mptcp@lists.linux.dev>; Sat,  9 Apr 2022 01:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649468324; x=1681004324;
+  t=1649468325; x=1681004325;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=+o04xQLPfR6ph1mrN9TOLw9IIeTZ0vtmCqoGxs1NsH0=;
-  b=aaAWtnt+mUs/57f7ur+s3dxfRENAZ07SpWTE7//uBl3MbAaviJ4J5IDe
-   BASiI5hQ23qYGcSKcEGqQpmgwGqkCip3+4BrXEXj4WiGtR8kUlwEEzp98
-   YESf4nhmAdYggPzoMI0KtI6N3s3n7ysKLbEUTAdymj8gxaELtUNv1hhS4
-   wCdmjmKh1cuGwNpL0T7DLDiv2LzOAdiyJ/PiswM71gobRBtk+SWL+AnUc
-   I2uJsYJmIhuWL/PJY1IUgW2hDtvcn7FB3MEC7praJGVID3cf+wCRA9WVH
-   2vIednAllprhEA/yTAp+CNrSZpaWOKtrkVNB5oLRj80vJPTig6Wa4MDAQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10311"; a="261921154"
+  bh=XfrMc4C9KslLyFbMwlZ3zV5PCfirWg7R8gW3MiTD9Fo=;
+  b=gQhb/Ed4goGYwqNSp7sdASGLTirVADSBZWOv+KBEHx2ITFNpvOg7OAUc
+   WZ++CWuFSrsOjOvJtxEDH6y56yD0DtJ36xocHz3eSF0ge0h5LlEo3ff/9
+   pz4nWnDrLQsX0IbmUVBJ4IUWTM03B59DeujadufFiyTIaHohHOOFGBF+H
+   dLTDUBoLqEVnqCIjSWLT9Zc05rRILEnh8N7q59NR/n4Ss/+BXluLEvHVl
+   tL8cR9OedXO/T4Q0RWxq+5rPyv6TTUY+y1p2OvzoHGAM6UoB8gLCEnIwX
+   pA/KISIQG+0Esvjv5KdFCj5Ub6i9fSP/aSX9iOEaItGCxyQs2NFUUngIm
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10311"; a="261921156"
 X-IronPort-AV: E=Sophos;i="5.90,246,1643702400"; 
-   d="scan'208";a="261921154"
+   d="scan'208";a="261921156"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 18:38:31 -0700
 X-IronPort-AV: E=Sophos;i="5.90,246,1643702400"; 
-   d="scan'208";a="698436100"
+   d="scan'208";a="698436105"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
   by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 18:38:31 -0700
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v9 11/14] selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_DESTROY
-Date: Fri,  8 Apr 2022 21:38:22 -0400
-Message-Id: <20220409013825.1877395-12-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v9 12/14] selftests: mptcp: capture netlink events
+Date: Fri,  8 Apr 2022 21:38:23 -0400
+Message-Id: <20220409013825.1877395-13-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220409013825.1877395-1-kishen.maloor@intel.com>
 References: <20220409013825.1877395-1-kishen.maloor@intel.com>
@@ -42,158 +42,261 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change updates the "pm_nl_ctl" testing sample with a "dsf"
-(destroy subflow) option to support the newly added netlink interface
-command MPTCP_PM_CMD_SUBFLOW_DESTROY over the chosen MPTCP connection.
-
-E.g. ./pm_nl_ctl dsf lip 10.0.2.1 lport 44567 rip 10.0.2.2 rport 56789
-token 823274047
+This change adds to self-testing support for the MPTCP netlink interface
+by capturing various MPTCP netlink events (and all their metadata)
+associated with connections, subflows and address announcements.
+It is used in self-testing scripts that exercise MPTCP netlink commands
+to precisely validate those operations by examining the dispatched
+MPTCP netlink events in response to those commands.
 
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 115 ++++++++++++++++++
- 1 file changed, 115 insertions(+)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 164 +++++++++++++++++-
+ 1 file changed, 157 insertions(+), 7 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index e2437bacd133..8d74fcb04929 100644
+index 8d74fcb04929..f881d8548153 100644
 --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
 +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -30,6 +30,7 @@ static void syntax(char *argv[])
- 	fprintf(stderr, "\tann <local-ip> id <local-id> token <token> [port <local-port>] [dev <name>]\n");
- 	fprintf(stderr, "\trem id <local-id> token <token>\n");
- 	fprintf(stderr, "\tcsf lip <local-ip> lid <local-id> rip <remote-ip> rport <remote-port> token <token>\n");
-+	fprintf(stderr, "\tdsf lip <local-ip> lport <local-port> rip <remote-ip> rport <remote-port> token <token>\n");
- 	fprintf(stderr, "\tdel <id> [<ip>]\n");
- 	fprintf(stderr, "\tget <id>\n");
- 	fprintf(stderr, "\tset [<ip>] [id <nr>] flags [no]backup|[no]fullmesh [port <nr>]\n");
-@@ -174,6 +175,118 @@ static int resolve_mptcp_pm_netlink(int fd)
- 	return genl_parse_getfamily((void *)data);
+@@ -22,6 +22,9 @@
+ #ifndef MPTCP_PM_NAME
+ #define MPTCP_PM_NAME		"mptcp_pm"
+ #endif
++#ifndef MPTCP_PM_EVENTS
++#define MPTCP_PM_EVENTS		"mptcp_pm_events"
++#endif
+ 
+ static void syntax(char *argv[])
+ {
+@@ -37,6 +40,7 @@ static void syntax(char *argv[])
+ 	fprintf(stderr, "\tflush\n");
+ 	fprintf(stderr, "\tdump\n");
+ 	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
++	fprintf(stderr, "\tevents\n");
+ 	exit(0);
  }
  
-+int dsf(int fd, int pm_family, int argc, char *argv[])
+@@ -88,6 +92,108 @@ static void nl_error(struct nlmsghdr *nh)
+ 	}
+ }
+ 
++static int capture_events(int fd, int event_group)
 +{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	struct rtattr *rta, *addr;
-+	u_int16_t family, port;
++	u_int8_t buffer[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
++			NLMSG_ALIGN(sizeof(struct genlmsghdr)) + 1024];
++	struct genlmsghdr *ghdr;
++	struct rtattr *attrs;
 +	struct nlmsghdr *nh;
-+	u_int32_t token;
-+	int addr_start;
-+	int off = 0;
-+	int arg;
++	int ret = 0;
++	int res_len;
++	int msg_len;
++	fd_set rfds;
 +
-+	const char *params[5];
++	if (setsockopt(fd, SOL_NETLINK, NETLINK_ADD_MEMBERSHIP,
++		       &event_group, sizeof(event_group)) < 0)
++		error(1, errno, "could not join the " MPTCP_PM_EVENTS " mcast group");
 +
-+	memset(params, 0, 5 * sizeof(const char *));
++	do {
++		FD_ZERO(&rfds);
++		FD_SET(fd, &rfds);
++		res_len = NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
++		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) + 1024;
 +
-+	memset(data, 0, sizeof(data));
-+	nh = (void *)data;
-+	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_SUBFLOW_DESTROY,
-+			    MPTCP_PM_VER);
++		ret = select(FD_SETSIZE, &rfds, NULL, NULL, NULL);
 +
-+	if (argc < 12)
-+		syntax(argv);
++		if (ret < 0)
++			error(1, ret, "error in select() on NL socket");
 +
-+	/* Params recorded in this order:
-+	 * <local-ip>, <local-port>, <remote-ip>, <remote-port>, <token>
-+	 */
-+	for (arg = 2; arg < argc; arg++) {
-+		if (!strcmp(argv[arg], "lip")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing local IP");
++		res_len = recv(fd, buffer, res_len, 0);
++		if (res_len < 0)
++			error(1, res_len, "error on recv() from NL socket");
 +
-+			params[0] = argv[arg];
-+		} else if (!strcmp(argv[arg], "lport")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing local port");
++		nh = (struct nlmsghdr *)buffer;
 +
-+			params[1] = argv[arg];
-+		} else if (!strcmp(argv[arg], "rip")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing remote IP");
++		for (; NLMSG_OK(nh, res_len); nh = NLMSG_NEXT(nh, res_len)) {
++			if (nh->nlmsg_type == NLMSG_ERROR)
++				error(1, NLMSG_ERROR, "received invalid NL message");
 +
-+			params[2] = argv[arg];
-+		} else if (!strcmp(argv[arg], "rport")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing remote port");
++			ghdr = (struct genlmsghdr *)NLMSG_DATA(nh);
 +
-+			params[3] = argv[arg];
-+		} else if (!strcmp(argv[arg], "token")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing token");
++			if (ghdr->cmd == 0)
++				continue;
 +
-+			params[4] = argv[arg];
-+		} else
-+			error(1, 0, "unknown keyword %s", argv[arg]);
-+	}
++			fprintf(stderr, "type:%d", ghdr->cmd);
 +
-+	for (arg = 0; arg < 4; arg = arg + 2) {
-+		/*  addr header */
-+		addr_start = off;
-+		addr = (void *)(data + off);
-+		addr->rta_type = NLA_F_NESTED |
-+			((arg == 0) ? MPTCP_PM_ATTR_ADDR : MPTCP_PM_ATTR_ADDR_REMOTE);
-+		addr->rta_len = RTA_LENGTH(0);
-+		off += NLMSG_ALIGN(addr->rta_len);
++			msg_len = nh->nlmsg_len - NLMSG_LENGTH(GENL_HDRLEN);
 +
-+		/*  addr data */
-+		rta = (void *)(data + off);
-+		if (inet_pton(AF_INET, params[arg], RTA_DATA(rta))) {
-+			family = AF_INET;
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR4;
-+			rta->rta_len = RTA_LENGTH(4);
-+		} else if (inet_pton(AF_INET6, params[arg], RTA_DATA(rta))) {
-+			family = AF_INET6;
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR6;
-+			rta->rta_len = RTA_LENGTH(16);
-+		} else
-+			error(1, errno, "can't parse ip %s", params[arg]);
-+		off += NLMSG_ALIGN(rta->rta_len);
++			attrs = (struct rtattr *) ((char *) ghdr + GENL_HDRLEN);
++			while (RTA_OK(attrs, msg_len)) {
++				if (attrs->rta_type == MPTCP_ATTR_TOKEN)
++					fprintf(stderr, ",token:%u", *(__u32 *)RTA_DATA(attrs));
++				else if (attrs->rta_type == MPTCP_ATTR_FAMILY)
++					fprintf(stderr, ",family:%u", *(__u16 *)RTA_DATA(attrs));
++				else if (attrs->rta_type == MPTCP_ATTR_LOC_ID)
++					fprintf(stderr, ",loc_id:%u", *(__u8 *)RTA_DATA(attrs));
++				else if (attrs->rta_type == MPTCP_ATTR_REM_ID)
++					fprintf(stderr, ",rem_id:%u", *(__u8 *)RTA_DATA(attrs));
++				else if (attrs->rta_type == MPTCP_ATTR_SADDR4) {
++					u_int32_t saddr4 = ntohl(*(__u32 *)RTA_DATA(attrs));
 +
-+		/* family */
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ADDR_ATTR_FAMILY;
-+		rta->rta_len = RTA_LENGTH(2);
-+		memcpy(RTA_DATA(rta), &family, 2);
-+		off += NLMSG_ALIGN(rta->rta_len);
++					fprintf(stderr, ",saddr4:%u.%u.%u.%u", saddr4 >> 24,
++					       (saddr4 >> 16) & 0xFF, (saddr4 >> 8) & 0xFF,
++					       (saddr4 & 0xFF));
++				} else if (attrs->rta_type == MPTCP_ATTR_SADDR6) {
++					char buf[INET6_ADDRSTRLEN];
 +
-+		/*  port */
-+		port = atoi(params[arg + 1]);
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ADDR_ATTR_PORT;
-+		rta->rta_len = RTA_LENGTH(2);
-+		memcpy(RTA_DATA(rta), &port, 2);
-+		off += NLMSG_ALIGN(rta->rta_len);
++					if (inet_ntop(AF_INET6, RTA_DATA(attrs), buf,
++						      sizeof(buf)) != NULL)
++						fprintf(stderr, ",saddr6:%s", buf);
++				} else if (attrs->rta_type == MPTCP_ATTR_DADDR4) {
++					u_int32_t daddr4 = ntohl(*(__u32 *)RTA_DATA(attrs));
 +
-+		addr->rta_len = off - addr_start;
-+	}
++					fprintf(stderr, ",daddr4:%u.%u.%u.%u", daddr4 >> 24,
++					       (daddr4 >> 16) & 0xFF, (daddr4 >> 8) & 0xFF,
++					       (daddr4 & 0xFF));
++				} else if (attrs->rta_type == MPTCP_ATTR_DADDR6) {
++					char buf[INET6_ADDRSTRLEN];
 +
-+	/* token */
-+	token = atoi(params[4]);
-+	rta = (void *)(data + off);
-+	rta->rta_type = MPTCP_PM_ATTR_TOKEN;
-+	rta->rta_len = RTA_LENGTH(4);
-+	memcpy(RTA_DATA(rta), &token, 4);
-+	off += NLMSG_ALIGN(rta->rta_len);
++					if (inet_ntop(AF_INET6, RTA_DATA(attrs), buf,
++						      sizeof(buf)) != NULL)
++						fprintf(stderr, ",daddr6:%s", buf);
++				} else if (attrs->rta_type == MPTCP_ATTR_SPORT)
++					fprintf(stderr, ",sport:%u",
++						ntohs(*(__u16 *)RTA_DATA(attrs)));
++				else if (attrs->rta_type == MPTCP_ATTR_DPORT)
++					fprintf(stderr, ",dport:%u",
++						ntohs(*(__u16 *)RTA_DATA(attrs)));
++				else if (attrs->rta_type == MPTCP_ATTR_BACKUP)
++					fprintf(stderr, ",backup:%u", *(__u8 *)RTA_DATA(attrs));
++				else if (attrs->rta_type == MPTCP_ATTR_ERROR)
++					fprintf(stderr, ",error:%u", *(__u8 *)RTA_DATA(attrs));
++				else if (attrs->rta_type == MPTCP_ATTR_SERVER_SIDE)
++					fprintf(stderr, ",server_side:%u", *(__u8 *)RTA_DATA(attrs));
 +
-+	do_nl_req(fd, nh, off, 0);
++				attrs = RTA_NEXT(attrs, msg_len);
++			}
++		}
++		fprintf(stderr, "\n");
++	} while (1);
 +
 +	return 0;
 +}
 +
- int csf(int fd, int pm_family, int argc, char *argv[])
+ /* do a netlink command and, if max > 0, fetch the reply  */
+ static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
+ {
+@@ -121,11 +227,18 @@ static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
+ 	return ret;
+ }
+ 
+-static int genl_parse_getfamily(struct nlmsghdr *nlh)
++static int genl_parse_getfamily(struct nlmsghdr *nlh, int *pm_family,
++				int *events_mcast_grp)
+ {
+ 	struct genlmsghdr *ghdr = NLMSG_DATA(nlh);
+ 	int len = nlh->nlmsg_len;
+ 	struct rtattr *attrs;
++	struct rtattr *grps;
++	struct rtattr *grp;
++	int got_events_grp;
++	int got_family;
++	int grps_len;
++	int grp_len;
+ 
+ 	if (nlh->nlmsg_type != GENL_ID_CTRL)
+ 		error(1, errno, "Not a controller message, len=%d type=0x%x\n",
+@@ -140,9 +253,42 @@ static int genl_parse_getfamily(struct nlmsghdr *nlh)
+ 		error(1, errno, "Unknown controller command %d\n", ghdr->cmd);
+ 
+ 	attrs = (struct rtattr *) ((char *) ghdr + GENL_HDRLEN);
++	got_family = 0;
++	got_events_grp = 0;
++
+ 	while (RTA_OK(attrs, len)) {
+-		if (attrs->rta_type == CTRL_ATTR_FAMILY_ID)
+-			return *(__u16 *)RTA_DATA(attrs);
++		if (attrs->rta_type == CTRL_ATTR_FAMILY_ID) {
++			*pm_family = *(__u16 *)RTA_DATA(attrs);
++			got_family = 1;
++		} else if (attrs->rta_type == CTRL_ATTR_MCAST_GROUPS) {
++			grps = RTA_DATA(attrs);
++			grps_len = RTA_PAYLOAD(attrs);
++
++			while (RTA_OK(grps, grps_len)) {
++				grp = RTA_DATA(grps);
++				grp_len = RTA_PAYLOAD(grps);
++				got_events_grp = 0;
++
++				while (RTA_OK(grp, grp_len)) {
++					if (grp->rta_type == CTRL_ATTR_MCAST_GRP_ID)
++						*events_mcast_grp = *(__u32 *)RTA_DATA(grp);
++					else if (grp->rta_type == CTRL_ATTR_MCAST_GRP_NAME &&
++						 !strcmp(RTA_DATA(grp), MPTCP_PM_EVENTS))
++						got_events_grp = 1;
++
++					grp = RTA_NEXT(grp, grp_len);
++				}
++
++				if (got_events_grp)
++					break;
++
++				grps = RTA_NEXT(grps, grps_len);
++			}
++		}
++
++		if (got_family && got_events_grp)
++			return 0;
++
+ 		attrs = RTA_NEXT(attrs, len);
+ 	}
+ 
+@@ -150,7 +296,7 @@ static int genl_parse_getfamily(struct nlmsghdr *nlh)
+ 	return -1;
+ }
+ 
+-static int resolve_mptcp_pm_netlink(int fd)
++static int resolve_mptcp_pm_netlink(int fd, int *pm_family, int *events_mcast_grp)
  {
  	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-@@ -1098,6 +1211,8 @@ int main(int argc, char *argv[])
- 		return remove_addr(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "csf"))
- 		return csf(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "dsf"))
-+		return dsf(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "del"))
- 		return del_addr(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "flush"))
+ 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
+@@ -172,7 +318,7 @@ static int resolve_mptcp_pm_netlink(int fd)
+ 	off += NLMSG_ALIGN(rta->rta_len);
+ 
+ 	do_nl_req(fd, nh, off, sizeof(data));
+-	return genl_parse_getfamily((void *)data);
++	return genl_parse_getfamily((void *)data, pm_family, events_mcast_grp);
+ }
+ 
+ int dsf(int fd, int pm_family, int argc, char *argv[])
+@@ -1192,7 +1338,9 @@ int set_flags(int fd, int pm_family, int argc, char *argv[])
+ 
+ int main(int argc, char *argv[])
+ {
+-	int fd, pm_family;
++	int events_mcast_grp;
++	int pm_family;
++	int fd;
+ 
+ 	if (argc < 2)
+ 		syntax(argv);
+@@ -1201,7 +1349,7 @@ int main(int argc, char *argv[])
+ 	if (fd == -1)
+ 		error(1, errno, "socket netlink");
+ 
+-	pm_family = resolve_mptcp_pm_netlink(fd);
++	resolve_mptcp_pm_netlink(fd, &pm_family, &events_mcast_grp);
+ 
+ 	if (!strcmp(argv[1], "add"))
+ 		return add_addr(fd, pm_family, argc, argv);
+@@ -1225,6 +1373,8 @@ int main(int argc, char *argv[])
+ 		return get_set_limits(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "set"))
+ 		return set_flags(fd, pm_family, argc, argv);
++	else if (!strcmp(argv[1], "events"))
++		return capture_events(fd, events_mcast_grp);
+ 
+ 	fprintf(stderr, "unknown sub-command: %s", argv[1]);
+ 	syntax(argv);
 -- 
 2.31.1
 
