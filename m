@@ -1,111 +1,105 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0914B621
-	for <mptcp@lists.linux.dev>; Sat,  9 Apr 2022 03:19:50 +0000 (UTC)
-Received: by mail-pf1-f181.google.com with SMTP id x16so10009945pfa.10
-        for <mptcp@lists.linux.dev>; Fri, 08 Apr 2022 20:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=+FDB8heTspOGw0+fFBpAmPBYAkpuuo+Hr1kpqypt9Hs=;
-        b=bkptKEIJVhiXmPAwdm2MNOIxtakdzldRmCoaBaPXuyZ0fuj7ZnXepNqU80AJdEmGUF
-         GWCXOLsk+pO+LSKrsifkx0qaLj0CDfT8s69leIGqiP9M1vBRO1/Nj/wZz0eIvC1Hk6Tl
-         copbigasw9dHNq7W877/slYN87WoQMOWyYgX2i3VLr5ReX3EUNykO/9cNsL6X5sPQbnA
-         bTaHXKYVGLmh/s0TBEs++m9btaRjp+Vr2cQqPROYT5p55KwoPv7VOKn6y/bhd1TakQBR
-         4CQzBIVkcL3pMJgQP1hFxe8Wy9Vx4FpiO4YA3PnKE366fxkKAD9hrvf1orxQ0F+1mSEq
-         2BFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=+FDB8heTspOGw0+fFBpAmPBYAkpuuo+Hr1kpqypt9Hs=;
-        b=uq+WhpTTQmTBncaswGA7cRQOBoXzRXaSBXqcl0in1U0vyME7+2u8AsYhRf7xZYxqgP
-         NYMFBkcTpNoql9aQJ31YORSAVsORC+6UeU/SG9m0HNBiOqY9MIcuR0dIU/X8npTHAXkD
-         tIu+z4GjZof71r0pUOrKKVWBXiqwNDGprBQ42GGiP+crAs6wDFJCoKeCLdfCbooAXzf/
-         ahcZfFWXnMppYRV5DsLgOPN0e9qUlbnGnhAK5mqdAI3mwG89q2cQ5keM+cA+TT8aAhLl
-         pWmFw6cuh3t/erR7y3i1D8uA24Zr+aZIgxHRUXQN+qcfg96u7FJ3CHQqb0RvFoSUBiwd
-         QK0A==
-X-Gm-Message-State: AOAM5324jvlNdy59+F+UczRcr8+PnLM5Am7e6dA62FAUkBqtCVbme9T5
-	9IXcLRBgjCXOBpLkl6tDtQ==
-X-Google-Smtp-Source: ABdhPJyic1NC5zxlS7opwQvz4FnT8V8IL2GoKxBZNfAZ+rQiki/8sHGaQxfol9gprvD2t0ISCi1RvQ==
-X-Received: by 2002:aa7:88d4:0:b0:4fd:ad26:c52f with SMTP id k20-20020aa788d4000000b004fdad26c52fmr22360237pff.25.1649474390426;
-        Fri, 08 Apr 2022 20:19:50 -0700 (PDT)
-Received: from [127.0.0.1] ([13.83.5.198])
-        by smtp.gmail.com with ESMTPSA id d23-20020a17090a02d700b001bf6ef9daafsm13493814pjd.38.2022.04.08.20.19.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Apr 2022 20:19:50 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220409013825.1877395-15-kishen.maloor@intel.com>
-References: <20220409013825.1877395-15-kishen.maloor@intel.com>
-Subject: Re: selftests: mptcp: functional tests for the userspace PM type:
- Tests Results
-Message-ID: <2ba496bc-8f71-5499-1d9a-f7dfce8771d5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 09 Apr 2022 03:19:49 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F338138A
+	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 10:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1649673623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AAijhWMEFY2O9P3WsUCyqJWj6rGaEmhht/BN7sTyxv4=;
+	b=SZEP/11yHPQFAGG1Sws+EXsqruuAv9DgGqIk3MhrRie/Ce2HBWTI5zIlPMQZyq/36ts9dM
+	2iwcMQnVFi2gdcRcJGLu7Gi1A7Cm0WFYDLoGgFMN1H97KT3+yZsSRJljrE7aKX9eLg/o3A
+	e9slGWqSl3+VwYruhJKO+LxOHMSJF0A=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-160-QA3t55n_PxW_6__DZ6YuYw-1; Mon, 11 Apr 2022 06:40:22 -0400
+X-MC-Unique: QA3t55n_PxW_6__DZ6YuYw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8026F185A7A4
+	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 10:40:22 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.187])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0150640E80E0
+	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 10:40:21 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [RFC PATCH 0/4] mptcp: improve mptcp-level window tracking
+Date: Mon, 11 Apr 2022 12:40:01 +0200
+Message-Id: <cover.1649672265.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Kishen,
+I've been chasing bad/unstable performances with multiple subflows
+on very high speed links.
 
-Thank you for your modifications, that's great!
+It looks like the root cause is due to the current mptcp-level
+congestion window handling. There are apparently a few different
+sub-issues:
 
-Our CI did some validations and here is its report:
+- the rcv_wnd is not effectively shared on the tx side, as each
+  subflow takes in account only the value received by the underlaying
+  TCP connection. This is addressed in patch 1/4
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5254733618216960
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5254733618216960/summary/summary.txt
+- The mptcp-level offered wnd right edge is currently allowed to shrink.
+  Reading section 3.3.4.:
 
-- KVM Validation: debug:
-  - Unstable: 3 failed test(s): selftest_diag =
-selftest_mptcp_join selftest_userspace_pm =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6380633525059584
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6380633525059584/su=
-mmary/summary.txt
+"""
+   The receive window is relative to the DATA_ACK.  As in TCP, a
+   receiver MUST NOT shrink the right edge of the receive window (i.e.,
+   DATA_ACK + receive window).  The receiver will use the data sequence
+   number to tell if a packet should be accepted at the connection
+   level.
+"""
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a726917f504f
+   I read the above as we need to reflect window right-edge tracking
+   on the wire, see patch 3/4.
 
+- The offered window right edge tracking can happen concurrently on
+  multiple subflows, but there is no mutex protection. We need an
+  additional atomic operation - still patch 3/4
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+This series additionally bump a few new MIBs to track all the above
+(ensure/observe that the suspected races actually take place).
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+With this series tput in the critical scenario raises from ~26 Gbps
+(ranging in 4-30 Gbps) to ~43 Gbps (with min > 33 Gbps)
 
-For more details:
+I guess patch 3/4 is the most debatable - expecially for RFC compliance
+Any feedback more then welcome!
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Note: still in patch 3/4, I'm unsure that the th->window update is
+strictly necessary from functional perspective (e.g. possibly the atomic
+operation is enough), I'll try to test that, too.
 
+Paolo Abeni (4):
+  mptcp: really share subflow snd_wnd
+  mptcp: add mib for xmit window sharing
+  mptcp: never shrink offered window
+  mptcp: add more offered MIBs counter.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+ include/net/mptcp.h   |  2 +-
+ net/ipv4/tcp_output.c |  2 +-
+ net/mptcp/mib.c       |  4 +++
+ net/mptcp/mib.h       |  6 +++++
+ net/mptcp/options.c   | 61 +++++++++++++++++++++++++++++++++++++------
+ net/mptcp/protocol.c  | 24 +++++++++++------
+ 6 files changed, 81 insertions(+), 18 deletions(-)
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+-- 
+2.35.1
+
