@@ -1,78 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8390C138A
-	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 11:10:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 34747C385A4;
-	Mon, 11 Apr 2022 11:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1649675414;
-	bh=90YLOsi47e1MDfjEWlCaOjyLzy1CntUJzLUKCG8ODYg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Aae7WZf30Ie9DAbbQ2GZE6BgvgFRft6ia5dBLKiXPI824tJ0cqbzDcnsz1jJcUzRQ
-	 h+prQyyr24C/vLhtTzzc1UXEZTmh143e1+7QvaYJLWX4xJIp5yc24RtbdfIUOdcxJp
-	 GLufVlVOoPLhEMXkaDZUeGPZ/hHAZWkqdeTTQifqosrNHaCmJ9S9fbQWiFPUh+wWHk
-	 Q75X+JuMZQwoawO60ceDilK6ODEd3mJJ++f64E2Ld0RgodjNy8VxA8LjsdwLdscsvl
-	 IMk5MMxbfOJweroXkVvXZNZivv2WXEXmm5Tq/IyKZAUpLJ8tupnN7A3FiiS5h9Ezc6
-	 Z13y0wwvXW/+g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1D518E85B76;
-	Mon, 11 Apr 2022 11:10:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044591840
+	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 11:58:53 +0000 (UTC)
+Received: by mail-io1-f44.google.com with SMTP id r2so18306937iod.9
+        for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 04:58:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=u7pajFUiUcWl6Ws5GmmHna6fjLCvmQgkXbxNKbzTnJU=;
+        b=E2OQjAZ/ILeqqTp0ucU4mhBl3fXJ99QPXh+Bnsfcg+i3V2b4e3MsfUgFsz/fRvDfDA
+         aRf1wZTptNETKpyZq0vOwpjfhMq5sUXVVRguLiffMYpXFAJ4szKhLh56wx0j2B//7ar8
+         mZ2rCQ/z38NodMH/dkwwtzKyj3mM3kL6G+Q3HK9KHWTLQ5icpgUD6/+IY639AVM8ylGs
+         uKa64gjMbEoJFL9QtKifLUkwSrz53FtHipQIysUJLtJT5lPYAE1LK+lLzmtzghq3VKkz
+         rqnQYJQBlZSKeKlA+6bqISwsoIde5Vfh3MZ8Eb5NygMmuPjCDiTg9vcgai9i4aIJ42OE
+         QXoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=u7pajFUiUcWl6Ws5GmmHna6fjLCvmQgkXbxNKbzTnJU=;
+        b=Y4WkVjMgQT126dv8SMtnBsF0ujfSSU+Dx0zOVFvl/s/YRMEqf0Qnv2i3yRPgWVp8KG
+         OKa6fLM65KDBgMV47YqUlOJEHGdbKKpilaLBOYWRjQRzsU1AIp1eu8Gud+8w+zdvMSFB
+         nAq4vedxDdeyfjIJAD/iFYfKy0ZsRcQ4xESP8dqcdtabzG8wS5+vZBTz4hDxX2HfoGJH
+         bGXG85CsFkHaupVpByxauEAyvsZwOca/kKujnVull4IpVRO7t78f5FJAJaVs2ipU+Rb7
+         7RP2ws4jYILc6mM9VMl3V2BHZESIfj2I3+G/WsbyPuKRS2LlS0a/qXz8dZnJ9KDIfCny
+         TjFw==
+X-Gm-Message-State: AOAM532ZKrc0NmEgaWci3bfomYnzxVqO97BMJfNWub6P4uWwMyx/PBMa
+	uq/cwQUEh9dsU9gIn4EDHQ==
+X-Google-Smtp-Source: ABdhPJwiSeCFNqghH5jB8ZMJfQskODbuNnNqbuYKfzDAPRJIKTHLOZqJ3qF/6AsAE3psEr+oKVdreQ==
+X-Received: by 2002:a6b:d10c:0:b0:641:63b2:9ef8 with SMTP id l12-20020a6bd10c000000b0064163b29ef8mr13122694iob.135.1649678332182;
+        Mon, 11 Apr 2022 04:58:52 -0700 (PDT)
+Received: from [127.0.0.1] ([52.165.163.164])
+        by smtp.gmail.com with ESMTPSA id e203-20020a6bb5d4000000b0064dafa0416fsm5684105iof.2.2022.04.11.04.58.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Apr 2022 04:58:51 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <66a6c06373c3905d5b0ecf4fc082cc3750f5479b.1649672265.git.pabeni@redhat.com>
+References:
+ <66a6c06373c3905d5b0ecf4fc082cc3750f5479b.1649672265.git.pabeni@redhat.com>
+Subject: Re: mptcp: add more offered MIBs counter.: Tests Results
+Message-ID: <f6757a49-d76b-dc75-c489-0f0ed00ee462@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 11 Apr 2022 11:58:51 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/8] mptcp: Miscellaneous changes for 5.19
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <164967541411.25321.8414956012124589263.git-patchwork-notify@kernel.org>
-Date: Mon, 11 Apr 2022 11:10:14 +0000
-References: <20220408194601.305969-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220408194601.305969-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hello:
+Hi Paolo,
 
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
+Thank you for your modifications, that's great!
 
-On Fri,  8 Apr 2022 12:45:53 -0700 you wrote:
-> Four separate groups of patches here:
-> 
-> Patch 1 optimizes flag checking when releasing mptcp socket locks.
-> 
-> Patches 2 and 3 update the packet scheduler when subflow priorities
-> change.
-> 
-> [...]
+Our CI did some validations and here is its report:
 
-Here is the summary with links:
-  - [net-next,1/8] mptcp: optimize release_cb for the common case
-    https://git.kernel.org/netdev/net-next/c/65a569b03ca8
-  - [net-next,2/8] mptcp: reset the packet scheduler on incoming MP_PRIO
-    https://git.kernel.org/netdev/net-next/c/43f5b111d1ff
-  - [net-next,3/8] mptcp: reset the packet scheduler on PRIO change
-    https://git.kernel.org/netdev/net-next/c/0e203c324752
-  - [net-next,4/8] mptcp: add pm_nl_pernet helpers
-    https://git.kernel.org/netdev/net-next/c/c682bf536cf4
-  - [net-next,5/8] mptcp: diag: switch to context structure
-    https://git.kernel.org/netdev/net-next/c/6b9ea5c81ea2
-  - [net-next,6/8] mptcp: remove locking in mptcp_diag_fill_info
-    https://git.kernel.org/netdev/net-next/c/e8887b716142
-  - [net-next,7/8] mptcp: listen diag dump support
-    https://git.kernel.org/netdev/net-next/c/4fa39b701ce9
-  - [net-next,8/8] selftests/mptcp: add diag listen tests
-    https://git.kernel.org/netdev/net-next/c/f2ae0fa68e28
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6597949374332928
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6597949374332928/summary/summary.txt
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+- KVM Validation: debug:
+  - Critical: KMemLeak =E2=9D=8C:
+  - Task: https://cirrus-ci.com/task/4768362025713664
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4768362025713664/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/3b2bbb4557d7
 
 
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
