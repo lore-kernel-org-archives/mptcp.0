@@ -1,117 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BE51844
-	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 10:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1649673626;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PpDc4gVMBDRc+/UUbohG0qL7+IGhwbwPzENfYTvKhmo=;
-	b=PTO18LU50Jo6CKKceOLEq1K+TYKZb+qWjo/0xryr6Dwbkn7PiTdZCfqZ8KcUBioPb048aN
-	MeaigL0FoyamAtzcABXKmhm0rzQLHMIfmLXM2fbsBIUcNCCw/nNdRIqRXqYhsEF4F5RLgJ
-	98WGXngZJyUhrSys3aemAK0sAF+vKxo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-424-cqfo8of6Oiipd-U1vfwPbw-1; Mon, 11 Apr 2022 06:40:26 -0400
-X-MC-Unique: cqfo8of6Oiipd-U1vfwPbw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C5454805F7C
-	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 10:40:25 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.187])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5529040E80E0
-	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 10:40:25 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [RFC PATCH 4/4] mptcp: add more offered MIBs counter.
-Date: Mon, 11 Apr 2022 12:40:05 +0200
-Message-Id: <66a6c06373c3905d5b0ecf4fc082cc3750f5479b.1649672265.git.pabeni@redhat.com>
-In-Reply-To: <cover.1649672265.git.pabeni@redhat.com>
-References: <cover.1649672265.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8390C138A
+	for <mptcp@lists.linux.dev>; Mon, 11 Apr 2022 11:10:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 34747C385A4;
+	Mon, 11 Apr 2022 11:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1649675414;
+	bh=90YLOsi47e1MDfjEWlCaOjyLzy1CntUJzLUKCG8ODYg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Aae7WZf30Ie9DAbbQ2GZE6BgvgFRft6ia5dBLKiXPI824tJ0cqbzDcnsz1jJcUzRQ
+	 h+prQyyr24C/vLhtTzzc1UXEZTmh143e1+7QvaYJLWX4xJIp5yc24RtbdfIUOdcxJp
+	 GLufVlVOoPLhEMXkaDZUeGPZ/hHAZWkqdeTTQifqosrNHaCmJ9S9fbQWiFPUh+wWHk
+	 Q75X+JuMZQwoawO60ceDilK6ODEd3mJJ++f64E2Ld0RgodjNy8VxA8LjsdwLdscsvl
+	 IMk5MMxbfOJweroXkVvXZNZivv2WXEXmm5Tq/IyKZAUpLJ8tupnN7A3FiiS5h9Ezc6
+	 Z13y0wwvXW/+g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1D518E85B76;
+	Mon, 11 Apr 2022 11:10:14 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Subject: Re: [PATCH net-next 0/8] mptcp: Miscellaneous changes for 5.19
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <164967541411.25321.8414956012124589263.git-patchwork-notify@kernel.org>
+Date: Mon, 11 Apr 2022 11:10:14 +0000
+References: <20220408194601.305969-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220408194601.305969-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Track the exceptional handling of MPTCP-level offered window
-with a few more counters for observability.
+Hello:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/mib.c     | 3 +++
- net/mptcp/mib.h     | 5 +++++
- net/mptcp/options.c | 6 +++++-
- 3 files changed, 13 insertions(+), 1 deletion(-)
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 6a6f8151375a..0dac2863c6e1 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -57,6 +57,9 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
- 	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
- 	SNMP_MIB_ITEM("SndWndShared", MPTCP_MIB_SNDWNDSHARED),
-+	SNMP_MIB_ITEM("RcvWndShared", MPTCP_MIB_RCVWNDSHARED),
-+	SNMP_MIB_ITEM("RcvWndConflictUpdate", MPTCP_MIB_RCVWNDCONFLICTUPDATE),
-+	SNMP_MIB_ITEM("RcvWndConflict", MPTCP_MIB_RCVWNDCONFLICT),
- 	SNMP_MIB_SENTINEL
- };
- 
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 2411510bef66..e05428838005 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -50,6 +50,11 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_SUBFLOWSTALE,		/* Subflows entered 'stale' status */
- 	MPTCP_MIB_SUBFLOWRECOVER,	/* Subflows returned to active status after being stale */
- 	MPTCP_MIB_SNDWNDSHARED,		/* Subflow snd wnd is overridden by msk's one */
-+	MPTCP_MIB_RCVWNDSHARED,		/* Subflow rcv wnd is overridden by msk's one */
-+	MPTCP_MIB_RCVWNDCONFLICTUPDATE,	/* subflow rcv wnd is overridden by msk's one due to
-+					 * conflict with another subflow while updating msk rcv wnd
-+					 */
-+	MPTCP_MIB_RCVWNDCONFLICT,	/* Conflict with another subflow while updating msk rcv wnd */
- 	__MPTCP_MIB_MAX
- };
- 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ffc0292da041..dc84f39ff9f9 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1249,8 +1249,11 @@ static void mptcp_set_rwin(struct tcp_sock *tp, void *opt)
- 
- 			if (rcv_wnd == rcv_wnd_old)
- 				break;
--			if (before64(rcv_wnd_new, rcv_wnd))
-+			if (before64(rcv_wnd_new, rcv_wnd)) {
-+				MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_RCVWNDCONFLICTUPDATE);
- 				goto raise_win;
-+			}
-+			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_RCVWNDCONFLICT);
- 			rcv_wnd_old = rcv_wnd;
- 		};
- 		return;
-@@ -1278,6 +1281,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp, void *opt)
- 		/* RFC1323 scaling applied */
- 		new_win >>= tp->rx_opt.rcv_wscale;
- 		th->window = htons(new_win);
-+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_RCVWNDSHARED);
- 	}
- }
- 
+On Fri,  8 Apr 2022 12:45:53 -0700 you wrote:
+> Four separate groups of patches here:
+> 
+> Patch 1 optimizes flag checking when releasing mptcp socket locks.
+> 
+> Patches 2 and 3 update the packet scheduler when subflow priorities
+> change.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/8] mptcp: optimize release_cb for the common case
+    https://git.kernel.org/netdev/net-next/c/65a569b03ca8
+  - [net-next,2/8] mptcp: reset the packet scheduler on incoming MP_PRIO
+    https://git.kernel.org/netdev/net-next/c/43f5b111d1ff
+  - [net-next,3/8] mptcp: reset the packet scheduler on PRIO change
+    https://git.kernel.org/netdev/net-next/c/0e203c324752
+  - [net-next,4/8] mptcp: add pm_nl_pernet helpers
+    https://git.kernel.org/netdev/net-next/c/c682bf536cf4
+  - [net-next,5/8] mptcp: diag: switch to context structure
+    https://git.kernel.org/netdev/net-next/c/6b9ea5c81ea2
+  - [net-next,6/8] mptcp: remove locking in mptcp_diag_fill_info
+    https://git.kernel.org/netdev/net-next/c/e8887b716142
+  - [net-next,7/8] mptcp: listen diag dump support
+    https://git.kernel.org/netdev/net-next/c/4fa39b701ce9
+  - [net-next,8/8] selftests/mptcp: add diag listen tests
+    https://git.kernel.org/netdev/net-next/c/f2ae0fa68e28
+
+You are awesome, thank you!
 -- 
-2.35.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
