@@ -1,140 +1,111 @@
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE0C3234
-	for <mptcp@lists.linux.dev>; Thu, 14 Apr 2022 23:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649978921; x=1681514921;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pkd2Qm+FmDr3nTRhn9Zx8ThibdT0s6hnOF8sGapypys=;
-  b=c5ue2+BdDYp/fR/cxMTERpEJTEWOU+0Se0tCmy6tjPyoKZa4CPFfyIxj
-   9VNrxCicDOwuaEWWzcZp9bUFigICxn1craGpIropJKxxOgm0+w2omcvJu
-   54k2Peqo6rJdIT2B2xsX7oHytaZKITfbjaNoju5CXRn3x+ZOc6K37w4cl
-   lBhCgaptCCocJr/mKsamKiOjhUdyh+7gVMi3Z18vkZIrRvNmQzmiS7DAV
-   ffsKjrNs0OQxH5oIsqLNkoS82Q0uP1wXx/XDAiDRAgKjksny+8hLCv3h7
-   VtmTpOogIUzi7MbT+gqswGjWp2PxVrRAfLb/rlopPquVyHmOoRebLD41t
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="323496143"
-X-IronPort-AV: E=Sophos;i="5.90,261,1643702400"; 
-   d="scan'208";a="323496143"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 16:28:41 -0700
-X-IronPort-AV: E=Sophos;i="5.90,261,1643702400"; 
-   d="scan'208";a="574049628"
-Received: from woodmatt-mobl1.amr.corp.intel.com ([10.212.148.55])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 16:28:41 -0700
-Date: Thu, 14 Apr 2022 16:28:40 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C003234
+	for <mptcp@lists.linux.dev>; Thu, 14 Apr 2022 23:37:07 +0000 (UTC)
+Received: by mail-qt1-f171.google.com with SMTP id p1so5076475qtq.10
+        for <mptcp@lists.linux.dev>; Thu, 14 Apr 2022 16:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=s7obv0O3Af8BN14/qmbVuo9Di8aX1Ipo6mFpl3t7Gmg=;
+        b=YDPCB+OIMXbVE5uhzdMKWgUyF6/13nBjqbX2ZjCp6BW19Pg7+/qJnuTahOVVY86a7m
+         S1k7V6c2oOSs29+q11DPKVfTxN1u6P/HlnItgzSjTl6v73RGOAq0bU22/4XmyvDfiMDk
+         AiK/uS11GuqMsfQYOMktvXiuDlREaadmer1XHAxsTXCbsq6xztH8QsZZe/I0BI8VPOnQ
+         UGfBlsyZb1IAWSx/BNP4DSjaLG+tdGQ1bHRYgAMu4ni6P0kDwHNHpnq6lphipQAqEKwG
+         XZsaXZaMa+ZV4UlOa6CKhVWH3nb5GDdQdg65hyCST+71FIoCzjEKXarFiiCfm4eLfsUm
+         XUgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=s7obv0O3Af8BN14/qmbVuo9Di8aX1Ipo6mFpl3t7Gmg=;
+        b=A8V+PDl0xSmT4uoa87rluUUVeid4NJVqSvkKbKBZ0vyVSATX/DeHUF5m0Yi4EYkbzg
+         7wcbSi+OM4eJFABCUKtNA5fMjiH7bMv3h9xfH+JRI8fSYY/Su8BuyQiWUwmCqi+eG/Vx
+         EjbNyQjuTvXCOfLUz+EmkhL5H0MhOSmPlNalN4av1GKg164Vi8uo9+CADhsfbVGPJGZr
+         U/BJCbb2yqeFqxMCC3Xhw2QFD2Wg+/9B8EtRBmgAQ4wecF25uIaJJqHGl4T75XTOYsgH
+         gn0/N3ThNjDSQRqUq9b3jAuFMfWbl5REO1KujZmcZI00eqdBGDf1sFJTsm7dUnzo2qP6
+         hqUw==
+X-Gm-Message-State: AOAM530IoUsGb7dkMJqjqTHYCBn4XeXiOWsTnpOshkNV7rK6NTVGYLCv
+	xKAzplIdFGNrKKZYsPhJkg==
+X-Google-Smtp-Source: ABdhPJzeaelC2RmaA9rkdduAdRVOGBjJSs9qHqayeJMlGu0O9Arx/7XsqlIrbPd0iDcKMVFVYn4CFA==
+X-Received: by 2002:ac8:7e82:0:b0:2eb:8ebd:6f3f with SMTP id w2-20020ac87e82000000b002eb8ebd6f3fmr3710751qtj.79.1649979426098;
+        Thu, 14 Apr 2022 16:37:06 -0700 (PDT)
+Received: from [127.0.0.1] ([20.65.78.253])
+        by smtp.gmail.com with ESMTPSA id m187-20020a37a3c4000000b0069c9136a858sm500900qke.60.2022.04.14.16.37.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Apr 2022 16:37:05 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Kishen Maloor <kishen.maloor@intel.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v10 00/14] mptcp: APIs and self-tests for
- userspace path management
-In-Reply-To: <20220414211920.1987961-1-kishen.maloor@intel.com>
-Message-ID: <471ea964-edcd-8054-8e9c-cef41cde6f1f@linux.intel.com>
-References: <20220414211920.1987961-1-kishen.maloor@intel.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220414211920.1987961-15-kishen.maloor@intel.com>
+References: <20220414211920.1987961-15-kishen.maloor@intel.com>
+Subject: Re: selftests: mptcp: functional tests for the userspace PM type:
+ Tests Results
+Message-ID: <53d3dba6-67e9-42e7-221e-5a7fe33998a3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 Apr 2022 23:37:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 14 Apr 2022, Kishen Maloor wrote:
+Hi Kishen,
 
-> This patch series brings together the base functionality
-> and new netlink APIs for flexible path management from userspace.
-> Further it extends the MPTCP self-testing framework to support the new
-> netlink APIs along with the ability to capture MPTCP netlink events
-> to aid in functional/behavioral validations. Lastly, it adds a
-> self-testing script with a suite of test cases covering the entire
-> range of the new userspace path management capabilities.
->
-> Note: This series depends on the prior patchset "mptcp: fixes and
-> enhancements related to path management".
->
-> v5:
-> -Primary change over v4 is the reliance on userspace
-> managed listener sockets for receiving MPJ requests.
-> -Addressed CI reported issues.
->
-> v6:
-> -Put all distinct userspace PM related code into a separate compilation
-> unit: pm_userspace.c.
-> -Made a few internal helpers non-static (now declared in protocol.h) to
-> facilitate the above change.
-> -Use the pm spinlock instead of mptcp_data_lock() to synchronize
-> access to the per-msk local_addr_list.
->
-> v7:
-> -Move userspace PM specific handling from pm_netlink
-> into mptcp_userspace_pm_get_local_id()
-> and mptcp_userspace_pm_get_flags_and_ifindex_by_id() in pm_userspace.
->
-> v8:
-> -Add copyright notice to pm_userspace.c.
->
-> v9:
-> -userspace_pm.sh: Mitigate possible buffering issues with CI.
->
-> v10:
-> -userspace_pm.sh: Increased sleep time between steps to counter
-> any timing issues with capturing events for verifying the tested
-> behavior. Might resolve test failures in the CI debug build.
->
+Thank you for your modifications, that's great!
 
-Thanks, Kishen. Looks like the timeout changes helped the CI succeed when 
-running userspace_pm.sh, so we're good to merge the series to the export 
-branch as discussed in the meeting today.
+Our CI did some validations and here is its report:
 
-Renewing my tag from v8:
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5991301920325632
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5991301920325632/summary/summary.txt
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): selftest_diag - =
+Critical: KMemLeak =E2=9D=8C:
+  - Task: https://cirrus-ci.=
+com/task/6345785569705984
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6345785569705984/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/273491464f4b
 
 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
 
-> Florian Westphal (2):
->  mptcp: netlink: split mptcp_pm_parse_addr into two functions
->  mptcp: netlink: allow userspace-driven subflow establishment
->
-> Kishen Maloor (12):
->  mptcp: allow ADD_ADDR reissuance by userspace PMs
->  mptcp: handle local addrs announced by userspace PMs
->  mptcp: read attributes of addr entries managed by userspace PMs
->  mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE
->  selftests: mptcp: support MPTCP_PM_CMD_ANNOUNCE
->  mptcp: netlink: Add MPTCP_PM_CMD_REMOVE
->  selftests: mptcp: support MPTCP_PM_CMD_REMOVE
->  selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_CREATE
->  selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_DESTROY
->  selftests: mptcp: capture netlink events
->  selftests: mptcp: create listeners to receive MPJs
->  selftests: mptcp: functional tests for the userspace PM type
->
-> include/uapi/linux/mptcp.h                    |   7 +
-> net/mptcp/Makefile                            |   2 +-
-> net/mptcp/pm.c                                |   1 +
-> net/mptcp/pm_netlink.c                        | 169 ++--
-> net/mptcp/pm_userspace.c                      | 415 ++++++++++
-> net/mptcp/protocol.c                          |   1 +
-> net/mptcp/protocol.h                          |  39 +-
-> net/mptcp/subflow.c                           |   2 +-
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 645 ++++++++++++++-
-> .../selftests/net/mptcp/userspace_pm.sh       | 779 ++++++++++++++++++
-> 10 files changed, 1997 insertions(+), 63 deletions(-)
-> create mode 100644 net/mptcp/pm_userspace.c
-> create mode 100755 tools/testing/selftests/net/mptcp/userspace_pm.sh
->
->
-> base-commit: 812de90f114c9234a4ebc80058e71250e552ce5f
-> --
-> 2.31.1
->
->
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
---
-Mat Martineau
-Intel
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
