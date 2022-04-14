@@ -1,357 +1,82 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6867A3225
-	for <mptcp@lists.linux.dev>; Thu, 14 Apr 2022 21:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649971172; x=1681507172;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WFz9lBARG0qMx8hD/kc3qoR/DlrbBBAwddPK3EEv23U=;
-  b=U+Spp3AyIrC0SybQvQEvyo2nJya3Uby1u+OWKVgz8m/99ZpvAH+khUV0
-   gzrw6CRsT1Mfby8yv4XqT+0FBXDVWq/hG33hm7tq1nTlaHqMV9Envrsuj
-   8rIZMfqngJzvjVKhK4x5lN5Hpu9np2sVTiMOv9FYkn22bWVt5YsdpJj5B
-   EpUjc+CQGc4Gai5LRDrq3kqY4nNLG8lE7bwdAtEvvt31UldBHQ1F1oKE+
-   HXNR2eMLj2AVdwj3wgTwGgMMvAqTYyXCcxE/aop+Qm9od5LhCBHk77pbS
-   JsRKQ4M3pegvDKH5LNheZh1obs1tFoqSQSYwmxrd2sHzbuvE+BWH+59Pd
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="262785931"
-X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="262785931"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 14:19:26 -0700
-X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="573998140"
-Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 14:19:25 -0700
-From: Kishen Maloor <kishen.maloor@intel.com>
-To: kishen.maloor@intel.com,
-	mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next v10 09/14] mptcp: netlink: allow userspace-driven subflow establishment
-Date: Thu, 14 Apr 2022 17:19:15 -0400
-Message-Id: <20220414211920.1987961-10-kishen.maloor@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220414211920.1987961-1-kishen.maloor@intel.com>
-References: <20220414211920.1987961-1-kishen.maloor@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA8A3225
+	for <mptcp@lists.linux.dev>; Thu, 14 Apr 2022 21:31:32 +0000 (UTC)
+Received: by mail-pj1-f46.google.com with SMTP id ll10so6232103pjb.5
+        for <mptcp@lists.linux.dev>; Thu, 14 Apr 2022 14:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=FhNZIfG4l/k8YJyD56FJ5b/4JkhgtcptURGOdPTJjbE=;
+        b=YHTRGHPexivJ4PSdB397n20S1vfEIpTGmviK6jjU8YGcO8Xpe6lNyNlX2JCv63R0rj
+         EGVb0QTqbLDC11xpnEBwgBfRIOrT+qdDdFahAhYL2ORcvBBr3d9UjT+PZi3ZHJ3cj3wL
+         Fib/eWvO/SPyOiPGeqcYVdCcT71xfcYljdrSTbLEjwFMOpbDJQcGSK40QcZCOkBafjjZ
+         zl7obG8AdhklnOnZw06z4uPwWsLzUtCYYeoQvdYEQZ/ADgvNcDY9RiCxhx7r8WDoaYLQ
+         3O+s+dAyL0ZV7Fr9URjkO0ZYXSaPDB3bWMLAlDvnq/ox110ijU8jegVxr5dl01AAQnbl
+         Fi8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=FhNZIfG4l/k8YJyD56FJ5b/4JkhgtcptURGOdPTJjbE=;
+        b=TykstqG55hO8VbazYJP0hnETpNj4YsDCFikG0WhSBh3quEPz4x+Poe7avFqW9yw025
+         2o2ZaCfc2KznhpTMcl5HnAjVtm3AyC5Q81lu9jxaClhNo9xIkFsM6wyOaroWAVD4NjDj
+         RSRCtifp/4BFT9nw7q/r1xJagCQ2GwRGvd00pvvBGFmGoIaavmpi244NM6abc6Ue+d8L
+         i6a5FOOJB7JcGd8M4Ot+9IVRQF0VIuqU6CXM/c9uJVw6TrUmGzkFmFWWgwJKjB7RcrL/
+         DXPuQfDB70MyiVtTnPjXraOhVgW3Q1YzUhBEnObAVWRa8KRt22PfdZspqA+CfBgjGSqx
+         v9ng==
+X-Gm-Message-State: AOAM533qB/a+UnXkeOkJ0C/as2RzyXMRnm+2jsfN3ifjTdtbuTE6sU7f
+	Rc4/LpyrNT16J8j61M7lXg==
+X-Google-Smtp-Source: ABdhPJyIBgjM8yJZ41HnkpeNK8Dx2AfHKZs3h1S9xTVhPEyrq64mSL2IcIzf1EtpG1dpZW+hG6t//A==
+X-Received: by 2002:a17:90a:560a:b0:1bc:72e7:3c13 with SMTP id r10-20020a17090a560a00b001bc72e73c13mr574959pjf.246.1649971891523;
+        Thu, 14 Apr 2022 14:31:31 -0700 (PDT)
+Received: from [127.0.0.1] ([13.86.156.215])
+        by smtp.gmail.com with ESMTPSA id k137-20020a633d8f000000b0039800918b00sm2658044pga.77.2022.04.14.14.31.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Apr 2022 14:31:31 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kishen Maloor <kishen.maloor@intel.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220414211920.1987961-15-kishen.maloor@intel.com>
+References: <20220414211920.1987961-15-kishen.maloor@intel.com>
+Subject: Re: selftests: mptcp: functional tests for the userspace PM type:
+ Build Failure
+Message-ID: <63d24556-9155-ad7a-7054-c2cbe97c500d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 Apr 2022 21:31:30 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Florian Westphal <fw@strlen.de>
+Hi Kishen,
 
-This allows userspace to tell kernel to add a new subflow to an existing
-mptcp connection.
+Thank you for your modifications, that's great!
 
-Userspace provides the token to identify the mptcp-level connection
-that needs a change in active subflows and the local and remote
-addresses of the new or the to-be-removed subflow.
+But sadly, our CI spotted some issues with it when trying to build it.
 
-MPTCP_PM_CMD_SUBFLOW_CREATE requires the following parameters:
-{ token, { loc_id, family, loc_addr4 | loc_addr6 }, { family, rem_addr4 |
-rem_addr6, rem_port }
+You can find more details there:
 
-MPTCP_PM_CMD_SUBFLOW_DESTROY requires the following parameters:
-{ token, { family, loc_addr4 | loc_addr6, loc_port }, { family, rem_addr4 |
-rem_addr6, rem_port }
+  https://patchwork.kernel.=
+org/project/mptcp/patch/20220414211920.1987961-15-kishen.maloor@intel.com/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2169678716
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Co-developed-by: Kishen Maloor <kishen.maloor@intel.com>
-Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
----
-v6:
--Make mptcp_pm_parse_addr() non-static.
--Move mptcp_nl_cmd_sf_create(), mptcp_nl_find_ssk() and
-mptcp_nl_cmd_sf_destroy() into pm_userspace.c.
----
- include/uapi/linux/mptcp.h |   3 +
- net/mptcp/pm_netlink.c     |  22 +++++
- net/mptcp/pm_userspace.c   | 179 +++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h       |   4 +
- 4 files changed, 208 insertions(+)
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/273491464f4b
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 11f9fa001a3c..921963589904 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -57,6 +57,7 @@ enum {
- 	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
- 	MPTCP_PM_ATTR_TOKEN,				/* u32 */
- 	MPTCP_PM_ATTR_LOC_ID,				/* u8 */
-+	MPTCP_PM_ATTR_ADDR_REMOTE,			/* nested address */
- 
- 	__MPTCP_PM_ATTR_MAX
- };
-@@ -97,6 +98,8 @@ enum {
- 	MPTCP_PM_CMD_SET_FLAGS,
- 	MPTCP_PM_CMD_ANNOUNCE,
- 	MPTCP_PM_CMD_REMOVE,
-+	MPTCP_PM_CMD_SUBFLOW_CREATE,
-+	MPTCP_PM_CMD_SUBFLOW_DESTROY,
- 
- 	__MPTCP_PM_CMD_AFTER_LAST
- };
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a26750f19f65..e099f2a12504 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1096,6 +1096,8 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_PM_ATTR_MAX + 1] = {
- 	[MPTCP_PM_ATTR_SUBFLOWS]	= { .type	= NLA_U32,	},
- 	[MPTCP_PM_ATTR_TOKEN]		= { .type	= NLA_U32,	},
- 	[MPTCP_PM_ATTR_LOC_ID]		= { .type	= NLA_U8,	},
-+	[MPTCP_PM_ATTR_ADDR_REMOTE]	=
-+					NLA_POLICY_NESTED(mptcp_pm_addr_policy),
- };
- 
- void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
-@@ -1205,6 +1207,16 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
- 	return err;
- }
- 
-+int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
-+			struct mptcp_addr_info *addr)
-+{
-+	struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
-+
-+	memset(addr, 0, sizeof(*addr));
-+
-+	return mptcp_pm_parse_pm_addr_attr(tb, attr, info, addr, true);
-+}
-+
- int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
- 			 bool require_family,
- 			 struct mptcp_pm_addr_entry *entry)
-@@ -2210,6 +2222,16 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
- 		.doit   = mptcp_nl_cmd_remove,
- 		.flags  = GENL_ADMIN_PERM,
- 	},
-+	{
-+		.cmd    = MPTCP_PM_CMD_SUBFLOW_CREATE,
-+		.doit   = mptcp_nl_cmd_sf_create,
-+		.flags  = GENL_ADMIN_PERM,
-+	},
-+	{
-+		.cmd    = MPTCP_PM_CMD_SUBFLOW_DESTROY,
-+		.doit   = mptcp_nl_cmd_sf_destroy,
-+		.flags  = GENL_ADMIN_PERM,
-+	},
- };
- 
- static struct genl_family mptcp_genl_family __ro_after_init = {
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index b388c095e73d..735ff7ff71af 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -234,3 +234,182 @@ int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
- 	}
- 	return 0;
- }
-+
-+int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
-+	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-+	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	struct mptcp_addr_info addr_r;
-+	struct mptcp_addr_info addr_l;
-+	struct mptcp_sock *msk;
-+	struct sock *sk;
-+	u32 token_val;
-+	int ret;
-+
-+	if (!laddr || !raddr || !token) {
-+		GENL_SET_ERR_MSG(info, "missing required inputs");
-+		return -EINVAL;
-+	}
-+
-+	token_val = nla_get_u32(token);
-+
-+	msk = mptcp_token_get_sock(genl_info_net(info), token_val);
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
-+		return -EINVAL;
-+	}
-+
-+	if (!mptcp_pm_is_userspace(msk)) {
-+		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-+		return -EINVAL;
-+	}
-+
-+	ret = mptcp_pm_parse_addr(laddr, info, &addr_l);
-+	if (ret < 0) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
-+		return -EINVAL;
-+	}
-+
-+	if (addr_l.id == 0) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "missing local addr id");
-+		return -EINVAL;
-+	}
-+
-+	ret = mptcp_pm_parse_addr(raddr, info, &addr_r);
-+	if (ret < 0) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
-+		return -EINVAL;
-+	}
-+
-+	sk = &msk->sk.icsk_inet.sk;
-+	lock_sock(sk);
-+
-+	ret = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
-+
-+	release_sock(sk);
-+
-+	return ret;
-+}
-+
-+static struct sock *mptcp_nl_find_ssk(struct mptcp_sock *msk,
-+				      const struct mptcp_addr_info *local,
-+				      const struct mptcp_addr_info *remote)
-+{
-+	struct sock *sk = &msk->sk.icsk_inet.sk;
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *found = NULL;
-+
-+	if (local->family != remote->family)
-+		return NULL;
-+
-+	lock_sock(sk);
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		const struct ipv6_pinfo *pinfo;
-+		const struct inet_sock *issk;
-+		struct sock *ssk;
-+
-+		ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		if (local->family != ssk->sk_family)
-+			continue;
-+
-+		issk = inet_sk(ssk);
-+
-+		switch (ssk->sk_family) {
-+		case AF_INET:
-+			if (issk->inet_saddr != local->addr.s_addr ||
-+			    issk->inet_daddr != remote->addr.s_addr)
-+				continue;
-+			break;
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+		case AF_INET6:
-+			pinfo = inet6_sk(ssk);
-+			if (!ipv6_addr_equal(&local->addr6, &pinfo->saddr) ||
-+			    !ipv6_addr_equal(&remote->addr6, &ssk->sk_v6_daddr))
-+				continue;
-+			break;
-+#endif
-+		default:
-+			continue;
-+		}
-+
-+		if (issk->inet_sport == local->port &&
-+		    issk->inet_dport == remote->port) {
-+			found = ssk;
-+			goto found;
-+		}
-+	}
-+
-+found:
-+	release_sock(sk);
-+
-+	return found;
-+}
-+
-+int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
-+	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-+	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	struct mptcp_addr_info addr_l;
-+	struct mptcp_addr_info addr_r;
-+	struct mptcp_sock *msk;
-+	struct sock *sk, *ssk;
-+	u32 token_val;
-+	int ret;
-+
-+	if (!laddr || !raddr || !token) {
-+		GENL_SET_ERR_MSG(info, "missing required inputs");
-+		return -EINVAL;
-+	}
-+
-+	token_val = nla_get_u32(token);
-+
-+	msk = mptcp_token_get_sock(genl_info_net(info), token_val);
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
-+		return -EINVAL;
-+	}
-+
-+	if (!mptcp_pm_is_userspace(msk)) {
-+		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-+		return -EINVAL;
-+	}
-+
-+	ret = mptcp_pm_parse_addr(laddr, info, &addr_l);
-+	if (ret < 0) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
-+		return ret;
-+	}
-+
-+	ret = mptcp_pm_parse_addr(raddr, info, &addr_r);
-+	if (ret < 0) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
-+		return ret;
-+	}
-+
-+	if (addr_l.family != addr_r.family) {
-+		GENL_SET_ERR_MSG(info, "address families do not match");
-+		return -EINVAL;
-+	}
-+
-+	if (!addr_l.port || !addr_r.port) {
-+		GENL_SET_ERR_MSG(info, "missing local or remote port");
-+		return -EINVAL;
-+	}
-+
-+	sk = &msk->sk.icsk_inet.sk;
-+	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
-+	if (ssk) {
-+		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+
-+		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
-+		mptcp_close_ssk(sk, ssk, subflow);
-+	} else {
-+		ret = -ESRCH;
-+	}
-+
-+	return ret;
-+}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index bf499ca81445..c799b253998a 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -757,6 +757,8 @@ struct mptcp_pm_addr_entry {
- 	struct socket		*lsk;
- };
- 
-+int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
-+			struct mptcp_addr_info *addr);
- int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
- 			 bool require_family,
- 			 struct mptcp_pm_addr_entry *entry);
-@@ -811,6 +813,8 @@ int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- void mptcp_free_local_addr_list(struct mptcp_sock *msk);
- int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info);
- int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info);
-+int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info);
-+int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info);
- 
- void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
- 		 const struct sock *ssk, gfp_t gfp);
--- 
-2.31.1
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
 
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
