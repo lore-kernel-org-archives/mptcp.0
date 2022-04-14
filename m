@@ -1,36 +1,36 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79493322C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488183225
 	for <mptcp@lists.linux.dev>; Thu, 14 Apr 2022 21:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1649971168; x=1681507168;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=cU4mDnfUAvkiTsCreg+MNcMQDY9hjXXA42yZUnVxXGw=;
-  b=lA+VQeLdSjgSwUmPbtcH/Z5NkfupV2NzwZmSwN55cttXGV4GU6tJ16gH
-   EIYsZjtyzO3K2VoDVb3Pt2CNjM6g0vxtnYKrfqJGRey7fFVml7OA17ON7
-   zleei037DSAnZxX9z/U9dC8VwzrglEswR7ICph5gEvfTl8Rfd9fF40kLv
-   0XGD8LtQGDgsr0dO9zhmUdPXBpVKLvz4vPa0Bq3p7PwWp6n0la/8Iij1p
-   X32Ot750NPMXz4wM68dEsfEv06esDVhRIQ5clEIe2qet3+Ri7z5bGDbms
-   7oCiY5wv3SuroUGoI/o72PAet4+TdAaQffmL8MQlWl4XpiPmsS72EBhIT
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="349467252"
+  bh=+o04xQLPfR6ph1mrN9TOLw9IIeTZ0vtmCqoGxs1NsH0=;
+  b=NkQHPu+JkNRNwfWBvSeLoe2Unj0HK8loakmOoLw6xgHf/Np2Ni2c99Y/
+   3ix0Nd8pnjU0XaZhclSI8uOALW5sDbhNF/W0JLJ5aiZ0S98ORO0IZB8kL
+   63DQsEaN3MCrgrPIS/DDzdXERIhpOI5QUhU757WAUpouHJCwaanQmq8CY
+   QirQxp9viZsO1v2edu1XotHXIpwIZwc4Wa2xPXpokwSYkaIHvXfNSK7vl
+   kENSRqcdZUF0T1cQMXEUQO6Z3VWgiOGwvnGbuRVhGkJbmH6MrNj+NW9nL
+   FiWlIjUkdaHTIqqXWsl/OxYymiTqnb0qxpKrxW2RWdRklW9hUPs9Z/18k
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="262785929"
 X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="349467252"
+   d="scan'208";a="262785929"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 14:19:25 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 14:19:26 -0700
 X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="573998122"
+   d="scan'208";a="573998146"
 Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 14:19:24 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 14:19:25 -0700
 From: Kishen Maloor <kishen.maloor@intel.com>
 To: kishen.maloor@intel.com,
 	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v10 03/14] mptcp: read attributes of addr entries managed by userspace PMs
-Date: Thu, 14 Apr 2022 17:19:09 -0400
-Message-Id: <20220414211920.1987961-4-kishen.maloor@intel.com>
+Subject: [PATCH mptcp-next v10 11/14] selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_DESTROY
+Date: Thu, 14 Apr 2022 17:19:17 -0400
+Message-Id: <20220414211920.1987961-12-kishen.maloor@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220414211920.1987961-1-kishen.maloor@intel.com>
 References: <20220414211920.1987961-1-kishen.maloor@intel.com>
@@ -42,153 +42,158 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change introduces a parallel path in the kernel for retrieving
-the local id, flags, if_index for an addr entry in the context of
-an MPTCP connection that's being managed by a userspace PM. The
-userspace and in-kernel PM modes deviate in their procedures for
-obtaining this information.
+This change updates the "pm_nl_ctl" testing sample with a "dsf"
+(destroy subflow) option to support the newly added netlink interface
+command MPTCP_PM_CMD_SUBFLOW_DESTROY over the chosen MPTCP connection.
+
+E.g. ./pm_nl_ctl dsf lip 10.0.2.1 lport 44567 rip 10.0.2.2 rport 56789
+token 823274047
 
 Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
 ---
-v7:
--Move userspace PM specific handling into mptcp_userspace_pm_get_local_id()
-and mptcp_userspace_pm_get_flags_and_ifindex_by_id().
----
- net/mptcp/pm_netlink.c   | 13 +++++++++++-
- net/mptcp/pm_userspace.c | 43 ++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h     |  7 ++++++-
- net/mptcp/subflow.c      |  2 +-
- 4 files changed, 62 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 115 ++++++++++++++++++
+ 1 file changed, 115 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 92d47e8e8983..ceb1c310d0c6 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1041,6 +1041,9 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
- 	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
- 		return 0;
- 
-+	if (mptcp_pm_is_userspace(msk))
-+		return mptcp_userspace_pm_get_local_id(msk, &skc_local);
-+
- 	pernet = pm_nl_get_pernet_from_msk(msk);
- 
- 	rcu_read_lock();
-@@ -1305,15 +1308,23 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
- 	return 0;
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index e2437bacd133..8d74fcb04929 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -30,6 +30,7 @@ static void syntax(char *argv[])
+ 	fprintf(stderr, "\tann <local-ip> id <local-id> token <token> [port <local-port>] [dev <name>]\n");
+ 	fprintf(stderr, "\trem id <local-id> token <token>\n");
+ 	fprintf(stderr, "\tcsf lip <local-ip> lid <local-id> rip <remote-ip> rport <remote-port> token <token>\n");
++	fprintf(stderr, "\tdsf lip <local-ip> lport <local-port> rip <remote-ip> rport <remote-port> token <token>\n");
+ 	fprintf(stderr, "\tdel <id> [<ip>]\n");
+ 	fprintf(stderr, "\tget <id>\n");
+ 	fprintf(stderr, "\tset [<ip>] [id <nr>] flags [no]backup|[no]fullmesh [port <nr>]\n");
+@@ -174,6 +175,118 @@ static int resolve_mptcp_pm_netlink(int fd)
+ 	return genl_parse_getfamily((void *)data);
  }
  
--int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
-+int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id,
- 					 u8 *flags, int *ifindex)
- {
- 	struct mptcp_pm_addr_entry *entry;
-+	struct sock *sk = (struct sock *)msk;
-+	struct net *net = sock_net(sk);
- 
- 	*flags = 0;
- 	*ifindex = 0;
- 
- 	if (id) {
-+		if (mptcp_pm_is_userspace(msk))
-+			return mptcp_userspace_pm_get_flags_and_ifindex_by_id(msk,
-+									      id,
-+									      flags,
-+									      ifindex);
-+
- 		rcu_read_lock();
- 		entry = __lookup_addr_by_id(pm_nl_get_pernet(net), id);
- 		if (entry) {
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index c50f8900ffba..910116b0f5b9 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -76,3 +76,46 @@ int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 	spin_unlock_bh(&msk->pm.lock);
- 	return ret;
- }
-+
-+int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
-+						   unsigned int id,
-+						   u8 *flags, int *ifindex)
++int dsf(int fd, int pm_family, int argc, char *argv[])
 +{
-+	struct mptcp_pm_addr_entry *entry, *match = NULL;
++	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
++		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
++		  1024];
++	struct rtattr *rta, *addr;
++	u_int16_t family, port;
++	struct nlmsghdr *nh;
++	u_int32_t token;
++	int addr_start;
++	int off = 0;
++	int arg;
 +
-+	*flags = 0;
-+	*ifindex = 0;
++	const char *params[5];
 +
-+	spin_lock_bh(&msk->pm.lock);
-+	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
-+		if (id == entry->addr.id) {
-+			match = entry;
-+			break;
-+		}
++	memset(params, 0, 5 * sizeof(const char *));
++
++	memset(data, 0, sizeof(data));
++	nh = (void *)data;
++	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_SUBFLOW_DESTROY,
++			    MPTCP_PM_VER);
++
++	if (argc < 12)
++		syntax(argv);
++
++	/* Params recorded in this order:
++	 * <local-ip>, <local-port>, <remote-ip>, <remote-port>, <token>
++	 */
++	for (arg = 2; arg < argc; arg++) {
++		if (!strcmp(argv[arg], "lip")) {
++			if (++arg >= argc)
++				error(1, 0, " missing local IP");
++
++			params[0] = argv[arg];
++		} else if (!strcmp(argv[arg], "lport")) {
++			if (++arg >= argc)
++				error(1, 0, " missing local port");
++
++			params[1] = argv[arg];
++		} else if (!strcmp(argv[arg], "rip")) {
++			if (++arg >= argc)
++				error(1, 0, " missing remote IP");
++
++			params[2] = argv[arg];
++		} else if (!strcmp(argv[arg], "rport")) {
++			if (++arg >= argc)
++				error(1, 0, " missing remote port");
++
++			params[3] = argv[arg];
++		} else if (!strcmp(argv[arg], "token")) {
++			if (++arg >= argc)
++				error(1, 0, " missing token");
++
++			params[4] = argv[arg];
++		} else
++			error(1, 0, "unknown keyword %s", argv[arg]);
 +	}
-+	spin_unlock_bh(&msk->pm.lock);
-+	if (match) {
-+		*flags = match->flags;
-+		*ifindex = match->ifindex;
++
++	for (arg = 0; arg < 4; arg = arg + 2) {
++		/*  addr header */
++		addr_start = off;
++		addr = (void *)(data + off);
++		addr->rta_type = NLA_F_NESTED |
++			((arg == 0) ? MPTCP_PM_ATTR_ADDR : MPTCP_PM_ATTR_ADDR_REMOTE);
++		addr->rta_len = RTA_LENGTH(0);
++		off += NLMSG_ALIGN(addr->rta_len);
++
++		/*  addr data */
++		rta = (void *)(data + off);
++		if (inet_pton(AF_INET, params[arg], RTA_DATA(rta))) {
++			family = AF_INET;
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR4;
++			rta->rta_len = RTA_LENGTH(4);
++		} else if (inet_pton(AF_INET6, params[arg], RTA_DATA(rta))) {
++			family = AF_INET6;
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR6;
++			rta->rta_len = RTA_LENGTH(16);
++		} else
++			error(1, errno, "can't parse ip %s", params[arg]);
++		off += NLMSG_ALIGN(rta->rta_len);
++
++		/* family */
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_FAMILY;
++		rta->rta_len = RTA_LENGTH(2);
++		memcpy(RTA_DATA(rta), &family, 2);
++		off += NLMSG_ALIGN(rta->rta_len);
++
++		/*  port */
++		port = atoi(params[arg + 1]);
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_PORT;
++		rta->rta_len = RTA_LENGTH(2);
++		memcpy(RTA_DATA(rta), &port, 2);
++		off += NLMSG_ALIGN(rta->rta_len);
++
++		addr->rta_len = off - addr_start;
 +	}
++
++	/* token */
++	token = atoi(params[4]);
++	rta = (void *)(data + off);
++	rta->rta_type = MPTCP_PM_ATTR_TOKEN;
++	rta->rta_len = RTA_LENGTH(4);
++	memcpy(RTA_DATA(rta), &token, 4);
++	off += NLMSG_ALIGN(rta->rta_len);
++
++	do_nl_req(fd, nh, off, 0);
 +
 +	return 0;
 +}
 +
-+int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
-+				    struct mptcp_addr_info *skc)
-+{
-+	struct mptcp_pm_addr_entry new_entry;
-+	__be16 msk_sport =  ((struct inet_sock *)
-+			     inet_sk((struct sock *)msk))->inet_sport;
-+
-+	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
-+	new_entry.addr = *skc;
-+	new_entry.addr.id = 0;
-+	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-+
-+	if (new_entry.addr.port == msk_sport)
-+		new_entry.addr.port = 0;
-+
-+	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry);
-+}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 40dabf9462a8..a6ee811e5d02 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -775,8 +775,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- struct mptcp_pm_add_entry *
- mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
- 				const struct mptcp_addr_info *addr);
--int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
-+int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
-+					 unsigned int id,
- 					 u8 *flags, int *ifindex);
-+int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
-+						   unsigned int id,
-+						   u8 *flags, int *ifindex);
- 
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
-@@ -854,6 +858,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			     struct mptcp_rm_list *rm_list);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
-+int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- 
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_work(struct mptcp_sock *msk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index a0e7af33fb26..6d59336a8e1e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1468,7 +1468,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	if (local_id)
- 		subflow_set_local_id(subflow, local_id);
- 
--	mptcp_pm_get_flags_and_ifindex_by_id(sock_net(sk), local_id,
-+	mptcp_pm_get_flags_and_ifindex_by_id(msk, local_id,
- 					     &flags, &ifindex);
- 	subflow->remote_key = msk->remote_key;
- 	subflow->local_key = msk->local_key;
+ int csf(int fd, int pm_family, int argc, char *argv[])
+ {
+ 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+@@ -1098,6 +1211,8 @@ int main(int argc, char *argv[])
+ 		return remove_addr(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "csf"))
+ 		return csf(fd, pm_family, argc, argv);
++	else if (!strcmp(argv[1], "dsf"))
++		return dsf(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "del"))
+ 		return del_addr(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "flush"))
 -- 
 2.31.1
 
