@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474333219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC18323C
 	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1650034134;
+	s=mimecast20190719; t=1650034135;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m/C5vRfo1VsStdln5yeW2eFb/ydMicu19AcohD/e8BY=;
-	b=brqHhRd8fIOBA2VrsC98P80oK6uMzcyU+GVrhiRR1IPZ4x/TRm3vbSja44IshaTacAlBlM
-	rVjKb00rpEJWs+mwZg6QHWyP0rRs+jZSSxGkW2aa4HdxYdudgmJsXs7xtOgR7ySB0UEGJl
-	P7I0DJbkZrojYWLu3C1qBEZiy2pPVh4=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=eWu5ly4kU5PF88dNdCsNwtXZJ1Y6GTrAWoGRS7VtE0A=;
+	b=JebrXb7LVwxX74qOCGpJevsawUlnqkRrlclSrKz5Whhf/uhGsgFb+AMR92r2+yNSSSK2LB
+	yVzOUGu4siRlVNW4BEHWH8k1H6NvxKdxOUdjwGLWGIfVCXcAq9rYZQt9tFKLX4YtCLLyjn
+	Z84agNA/B6lwiZG+J2JotGowi8rxg74=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-556-J940wfZsO0aF_pvuoXGu4A-1; Fri, 15 Apr 2022 10:48:53 -0400
-X-MC-Unique: J940wfZsO0aF_pvuoXGu4A-1
+ us-mta-588-ZuwW-WhEPtCFnoo-BnntnA-1; Fri, 15 Apr 2022 10:48:53 -0400
+X-MC-Unique: ZuwW-WhEPtCFnoo-BnntnA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0BDB2A2AD40
-	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:52 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 762EB811E90
+	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:53 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.179])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5372C440AAA
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0DE4C440AAA
 	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:52 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH net-next 1/5] mptcp: really share subflow snd_wnd
-Date: Fri, 15 Apr 2022 16:48:44 +0200
-Message-Id: <9ff5db748641c59f3e6a7640824eddd03c1b3bdd.1650034062.git.pabeni@redhat.com>
+Subject: [PATCH net-next 2/5] mptcp: add mib for xmit window sharing
+Date: Fri, 15 Apr 2022 16:48:45 +0200
+Message-Id: <097fc6a50e7914b3a96d7f14cd680d006f242217.1650034062.git.pabeni@redhat.com>
 In-Reply-To: <cover.1650034062.git.pabeni@redhat.com>
 References: <cover.1650034062.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,86 +47,56 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-As per RFC, mptcp subflows use a "shared" snd_wnd: the effective
-window is the maximum among the current values received on all
-subflows. Without such feature a data transfer using multiple
-subflows could block.
-
-Window sharing is currently implemented in the RX side:
-__tcp_select_window uses the mptcp-level receive buffer to compute
-the announced window.
-
-That is not enough: the TCP stack will stick to the window size
-received on the given subflow; we need to propagate the msk window
-value on each subflow at xmit time.
-
-Change the packet scheduler to ignore the subflow level window
-and use instead the msk level one
+Bump a counter for counter when snd_wnd is shared among subflow,
+for observability's sake.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ net/mptcp/mib.c      | 1 +
+ net/mptcp/mib.h      | 1 +
+ net/mptcp/protocol.c | 4 +++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 093e084f3ac0..923fdb26214e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1141,19 +1141,20 @@ struct mptcp_sendmsg_info {
- 	bool data_lock_held;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index d93a8c9996fd..6a6f8151375a 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -56,6 +56,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
+ 	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
+ 	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
++	SNMP_MIB_ITEM("SndWndShared", MPTCP_MIB_SNDWNDSHARED),
+ 	SNMP_MIB_SENTINEL
  };
  
--static int mptcp_check_allowed_size(struct mptcp_sock *msk, u64 data_seq,
--				    int avail_size)
-+static int mptcp_check_allowed_size(const struct mptcp_sock *msk, struct sock *ssk,
-+				    u64 data_seq, int avail_size)
- {
- 	u64 window_end = mptcp_wnd_end(msk);
-+	u64 mptcp_snd_wnd;
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 529d07af9e14..2411510bef66 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -49,6 +49,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_RCVPRUNED,		/* Incoming packet dropped due to memory limit */
+ 	MPTCP_MIB_SUBFLOWSTALE,		/* Subflows entered 'stale' status */
+ 	MPTCP_MIB_SUBFLOWRECOVER,	/* Subflows returned to active status after being stale */
++	MPTCP_MIB_SNDWNDSHARED,		/* Subflow snd wnd is overridden by msk's one */
+ 	__MPTCP_MIB_MAX
+ };
  
- 	if (__mptcp_check_fallback(msk))
- 		return avail_size;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 923fdb26214e..8f159d535fed 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1153,8 +1153,10 @@ static int mptcp_check_allowed_size(const struct mptcp_sock *msk, struct sock *s
+ 	mptcp_snd_wnd = window_end - data_seq;
+ 	avail_size = min_t(unsigned int, mptcp_snd_wnd, avail_size);
  
--	if (!before64(data_seq + avail_size, window_end)) {
--		u64 allowed_size = window_end - data_seq;
-+	mptcp_snd_wnd = window_end - data_seq;
-+	avail_size = min_t(unsigned int, mptcp_snd_wnd, avail_size);
- 
--		return min_t(unsigned int, allowed_size, avail_size);
--	}
-+	if (unlikely(tcp_sk(ssk)->snd_wnd < mptcp_snd_wnd))
-+		tcp_sk(ssk)->snd_wnd = min_t(u64, U32_MAX, mptcp_snd_wnd);
+-	if (unlikely(tcp_sk(ssk)->snd_wnd < mptcp_snd_wnd))
++	if (unlikely(tcp_sk(ssk)->snd_wnd < mptcp_snd_wnd)) {
+ 		tcp_sk(ssk)->snd_wnd = min_t(u64, U32_MAX, mptcp_snd_wnd);
++		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_SNDWNDSHARED);
++	}
  
  	return avail_size;
  }
-@@ -1305,7 +1306,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	}
- 
- 	/* Zero window and all data acked? Probe. */
--	copy = mptcp_check_allowed_size(msk, data_seq, copy);
-+	copy = mptcp_check_allowed_size(msk, ssk, data_seq, copy);
- 	if (copy == 0) {
- 		u64 snd_una = READ_ONCE(msk->snd_una);
- 
-@@ -1498,11 +1499,16 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	 * to check that subflow has a non empty cwin.
- 	 */
- 	ssk = send_info[SSK_MODE_ACTIVE].ssk;
--	if (!ssk || !sk_stream_memory_free(ssk) || !tcp_sk(ssk)->snd_wnd)
-+	if (!ssk || !sk_stream_memory_free(ssk))
- 		return NULL;
- 
--	burst = min_t(int, MPTCP_SEND_BURST_SIZE, tcp_sk(ssk)->snd_wnd);
-+	burst = min_t(int, MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
- 	wmem = READ_ONCE(ssk->sk_wmem_queued);
-+	if (!burst) {
-+		msk->last_snd = NULL;
-+		return ssk;
-+	}
-+
- 	subflow = mptcp_subflow_ctx(ssk);
- 	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
- 					   READ_ONCE(ssk->sk_pacing_rate) * burst,
 -- 
 2.35.1
 
