@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813513219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E0C33C2
 	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1650034136;
+	s=mimecast20190719; t=1650034137;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4q6a8Ba/GBB79FFNp0RO7VsjOTxSqLP9r8njkXrQUSY=;
-	b=RgUbkklviqzJTUHOc5gkRK/SJXUYhkr6zYPOda8oHvjMYCZE7UJOri0iWTE/DviY/lsatL
-	dKK1KkJNkRWDw91+j/LTfEqvD89zmxCFosfH64tM4ARn6TjjWROZscS+CECirU/gVsbKN8
-	FuI5GFkFAhp3oc35JbvdnzebdNK2ol0=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=oErkHFvEncO7PQBlF7qExGGFgc38OhMtDhkX/b7xgEo=;
+	b=NKjrsqbK03BH/Tmih4axgPEOVgPKSizX650nHtOfwix5QvFn8XcFfeaIoSEUwPdrxzAWfJ
+	eqaEYeW/Zkf1dy6HkMYCW4uZsG9JY/k1+un5c55kLv45SY+EXjkoqzQFhN0GBUCfmFDN4O
+	/CEC3+EBl0KlJoBc+Npae+m17yT4Ke0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-578-VNUdmJgWNXCVCN9lKPcG1g-1; Fri, 15 Apr 2022 10:48:55 -0400
-X-MC-Unique: VNUdmJgWNXCVCN9lKPcG1g-1
+ us-mta-590-oYUkKz0AM6uGdPZyFKP-vA-1; Fri, 15 Apr 2022 10:48:55 -0400
+X-MC-Unique: oYUkKz0AM6uGdPZyFKP-vA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E98951C05158
-	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:54 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9F0D9802803
+	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:55 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.179])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7F3C5440AAA
-	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:54 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 36B7B440AAA
+	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 14:48:55 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH net-next 4/5] mptcp: never shrink offered window
-Date: Fri, 15 Apr 2022 16:48:47 +0200
-Message-Id: <1f9262fde4d50db2d9d5c46254b823fd3e451465.1650034062.git.pabeni@redhat.com>
+Subject: [PATCH net-next 5/5] mptcp: add more offered MIBs counter.
+Date: Fri, 15 Apr 2022 16:48:48 +0200
+Message-Id: <43cbe1db36c118468bc6e88ced16079d05f30643.1650034062.git.pabeni@redhat.com>
 In-Reply-To: <cover.1650034062.git.pabeni@redhat.com>
 References: <cover.1650034062.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,100 +47,71 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-As per RFC, the offered MPTCP-level window should never shrink.
-While we currently track the right edge, we don't enforce the
-above constraint on the wire.
-Additionally, concurrent xmit on different subflows can end-up in
-erroneous right edge update.
-Address the above explicitly updating the announced window and
-protecting the update with an additional atomic operation (sic)
+Track the exceptional handling of MPTCP-level offered window
+with a few more counters for observability.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-RFC -> v1:
- - rebased on previous patch
----
- net/mptcp/options.c | 52 +++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 45 insertions(+), 7 deletions(-)
+ net/mptcp/mib.c     | 3 +++
+ net/mptcp/mib.h     | 5 +++++
+ net/mptcp/options.c | 6 +++++-
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 6a6f8151375a..0dac2863c6e1 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -57,6 +57,9 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
+ 	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
+ 	SNMP_MIB_ITEM("SndWndShared", MPTCP_MIB_SNDWNDSHARED),
++	SNMP_MIB_ITEM("RcvWndShared", MPTCP_MIB_RCVWNDSHARED),
++	SNMP_MIB_ITEM("RcvWndConflictUpdate", MPTCP_MIB_RCVWNDCONFLICTUPDATE),
++	SNMP_MIB_ITEM("RcvWndConflict", MPTCP_MIB_RCVWNDCONFLICT),
+ 	SNMP_MIB_SENTINEL
+ };
+ 
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 2411510bef66..2be3596374f4 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -50,6 +50,11 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_SUBFLOWSTALE,		/* Subflows entered 'stale' status */
+ 	MPTCP_MIB_SUBFLOWRECOVER,	/* Subflows returned to active status after being stale */
+ 	MPTCP_MIB_SNDWNDSHARED,		/* Subflow snd wnd is overridden by msk's one */
++	MPTCP_MIB_RCVWNDSHARED,		/* Subflow rcv wnd is overridden by msk's one */
++	MPTCP_MIB_RCVWNDCONFLICTUPDATE,	/* subflow rcv wnd is overridden by msk's one due to
++					 * conflict with another subflow while updating msk rcv wnd
++					 */
++	MPTCP_MIB_RCVWNDCONFLICT,	/* Conflict with while updating msk rcv wnd */
+ 	__MPTCP_MIB_MAX
+ };
+ 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 2570911735ab..9c76a171af1e 100644
+index 9c76a171af1e..559ff6ca6e66 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -1224,20 +1224,58 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 	return true;
- }
+@@ -1248,8 +1248,11 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
  
--static void mptcp_set_rwin(const struct tcp_sock *tp)
-+static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
- {
- 	const struct sock *ssk = (const struct sock *)tp;
--	const struct mptcp_subflow_context *subflow;
-+	struct mptcp_subflow_context *subflow;
-+	u64 ack_seq, rcv_wnd_old, rcv_wnd_new;
- 	struct mptcp_sock *msk;
--	u64 ack_seq;
-+	u32 new_win;
-+	u64 win;
- 
- 	subflow = mptcp_subflow_ctx(ssk);
- 	msk = mptcp_sk(subflow->conn);
- 
--	ack_seq = READ_ONCE(msk->ack_seq) + tp->rcv_wnd;
-+	ack_seq = READ_ONCE(msk->ack_seq);
-+	rcv_wnd_new = ack_seq + tp->rcv_wnd;
-+
-+	rcv_wnd_old = READ_ONCE(msk->rcv_wnd_sent);
-+	if (after64(rcv_wnd_new, rcv_wnd_old)) {
-+		u64 rcv_wnd;
-+
-+		for (;;) {
-+			rcv_wnd = cmpxchg64(&msk->rcv_wnd_sent, rcv_wnd_old, rcv_wnd_new);
-+
-+			if (rcv_wnd == rcv_wnd_old)
-+				break;
-+			if (before64(rcv_wnd_new, rcv_wnd))
-+				goto raise_win;
-+			rcv_wnd_old = rcv_wnd;
-+		};
-+		return;
-+	}
-+
-+	if (rcv_wnd_new != rcv_wnd_old) {
-+raise_win:
-+		win = rcv_wnd_old - ack_seq;
-+		tp->rcv_wnd = min_t(u64, win, U32_MAX);
-+		new_win = tp->rcv_wnd;
- 
--	if (after64(ack_seq, READ_ONCE(msk->rcv_wnd_sent)))
--		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
-+		/* Make sure we do not exceed the maximum possible
-+		 * scaled window.
-+		 */
-+		if (unlikely(th->syn))
-+			new_win = min(new_win, 65535U) << tp->rx_opt.rcv_wscale;
-+		if (!tp->rx_opt.rcv_wscale &&
-+		    sock_net(ssk)->ipv4.sysctl_tcp_workaround_signed_windows)
-+			new_win = min(new_win, MAX_TCP_WINDOW);
-+		else
-+			new_win = min(new_win, (65535U << tp->rx_opt.rcv_wscale));
-+
-+		/* RFC1323 scaling applied */
-+		new_win >>= tp->rx_opt.rcv_wscale;
-+		th->window = htons(new_win);
-+	}
- }
- 
- u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
-@@ -1554,7 +1592,7 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+ 			if (rcv_wnd == rcv_wnd_old)
+ 				break;
+-			if (before64(rcv_wnd_new, rcv_wnd))
++			if (before64(rcv_wnd_new, rcv_wnd)) {
++				MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_RCVWNDCONFLICTUPDATE);
+ 				goto raise_win;
++			}
++			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_RCVWNDCONFLICT);
+ 			rcv_wnd_old = rcv_wnd;
+ 		};
+ 		return;
+@@ -1275,6 +1278,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
+ 		/* RFC1323 scaling applied */
+ 		new_win >>= tp->rx_opt.rcv_wscale;
+ 		th->window = htons(new_win);
++		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_RCVWNDSHARED);
  	}
- 
- 	if (tp)
--		mptcp_set_rwin(tp);
-+		mptcp_set_rwin(tp, th);
  }
  
- __be32 mptcp_get_reset_option(const struct sk_buff *skb)
 -- 
 2.35.1
 
