@@ -1,115 +1,134 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABC3184
-	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 10:46:23 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id e21so10223576wrc.8
-        for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 03:46:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8729E2F50
+	for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 10:54:37 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id i27so14774487ejd.9
+        for <mptcp@lists.linux.dev>; Fri, 15 Apr 2022 03:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f6EwJIv5WdinK7ANFVBXH7fW4eXLa6wK1WP6i/QNT3g=;
-        b=4VWZEV0gI0sJXU6TpOSemNrCWjGj8HHcf9SrgNmIn+j4orKFBzgcsU2oND+oX+uUA6
-         8JvQEx/qTUHxNSv2jdAeca9Cuvs9wV2Cs17dHLUw5dJ0siv7KU0S9oBvWNqzl+qHpbP3
-         2GxKZu2Z9Ot6ntCUE42EMdCT2XntZPHJkh5ipm/n4l+PBMEoXsC4Xx1anJGDLrrq69IH
-         DfZZ7WdMzgZCT4LmLKmhTh1/OlFQL0NdaWAORt2zY3XExhLTrB7c8gCQQc5a91q7mNFF
-         6D0b6FhmyWD1IBG1fWp2n2qFovdvYY7VxVuoj4DKHOyhCIFW2DLgtrQALP6PmRQQJVvW
-         8QOg==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=y47DHE7FLxIPuTHxGYsf4/Yr/1dc1pvg9lyx7aktF0A=;
+        b=DwvujaUF1VvxvTVGs1rTVkXjksayH5mf+j2CN8l1ccul78pI/QWFAyJuAhzGV+sRiA
+         ED6GUTnYnD2RS5EM4PR7hCQkmDAn0CiQA5Wk0Dr1FBlLKCh9E81HsIV2CXt2KyoAtzQd
+         BHmSsNjfYRntoMNBY7XjrRbPptxx1VrUhg0RVa9p9PdQCPAjMXh/mCjK0A6oynr2zrmW
+         t//VHbpiZFIUVV53XWCsl3lXaqlUYY1mYXaOVEsFoDHFOZ5nxSwSvpczpw8lhRjTl9UB
+         uvQYxA9Ih5qAf3v0NoI/7zelXM0fgIBfPR3jEv4MTujnKyZxjuqh1ij0Euq8/gLNJ3x/
+         wnsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
          :content-transfer-encoding;
-        bh=f6EwJIv5WdinK7ANFVBXH7fW4eXLa6wK1WP6i/QNT3g=;
-        b=gfnytNJsgDAcTeyH5xY/rCjasXK/QXZZt9cbWSqKMIqN48dqZJNWqK0Ve1u0iUHESN
-         TnZGx8I9BTAkxe0uAwmVBU+KXcreDWLVD2TDYvkLZ5/3c7ffASQZbMqQgOc4XrGHQXyT
-         2fVSUYZS7+JJDZU1qeiQzQvS+II+hzi7sj5y8V5KLL9x78Hxm6HZsKm0j5cnVOCyGQAx
-         VJFKgfpC4dpaZ2NWYfVPwBQcfhnLumTQeltl6ZToARXzJpCB7X1tCR7lMo0PI0Q7ZzWL
-         8XCm8mvSMgQu6liRO5rSLkL4+YH8i1hb0MO5wRRMqZz4UZ6Me8MIKuOAoFuQmoiatG3k
-         xILw==
-X-Gm-Message-State: AOAM531NzjSzJiEdtr6JDxGJUfjSlOdpeKscLjqtPe6RPOK2WUCvv4JK
-	/WGRO5VRGe4WmJSEPxNaOjlE4xOmtVceTOHi
-X-Google-Smtp-Source: ABdhPJyx1zXlO7W3XBoPhdLiGZTfbY9UGCMdZQ0oGoBoUw17qxSJn5rCHxxlqHSbUu9Q9wKDm8TUCQ==
-X-Received: by 2002:adf:fb0b:0:b0:205:dfbd:8601 with SMTP id c11-20020adffb0b000000b00205dfbd8601mr4934871wrr.527.1650019581837;
-        Fri, 15 Apr 2022 03:46:21 -0700 (PDT)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id l41-20020a05600c1d2900b0038ec7fcb979sm8704329wms.26.2022.04.15.03.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Apr 2022 03:46:21 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next] Squash to "mptcp: handle local addrs announced by userspace PMs"
-Date: Fri, 15 Apr 2022 12:45:50 +0200
-Message-Id: <20220415104550.1037339-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.34.1
+        bh=y47DHE7FLxIPuTHxGYsf4/Yr/1dc1pvg9lyx7aktF0A=;
+        b=K65EqB6Qx9XJVyWO7bH4eUlVlSWx0u4QZwWXmtYvrd1uJqA7knbj5ratoLvpNKH98I
+         yySZt85nvQupOceBdWEf7lepiBRnkJW9awd5E/mGv8jsmweoo1Guh5L77tG/ChKL4bOg
+         CZ8EPNqHbg0oFM/Db9V7c3QudMIHwBksQZbHZS5WLPrudeZuOUpyQ6YOq8eIzPNVn4nG
+         i8Yn1+zujrkYsGnUiR+QUIW3eWcGPUp0CEE/wZOliy2Eehllpg0H5ahAdmNCRWonwCLr
+         HBsZc2z/RVz45BWCRuvxiingy6rIA5LwT1U+59myIWXcx9dZgTYvGTNB8AER05k+FSPJ
+         iP5g==
+X-Gm-Message-State: AOAM533qLukRIc4o0DPR1SnZOqeFY4tV/3Q3tECUHlPJCJBMp/Y/vfm5
+	1mdGsbutXN82myPrA7Ec/uxzbw==
+X-Google-Smtp-Source: ABdhPJwF7giVGP2Gk3HSbhr7/vnICwdSK6DsaKQhktEJUw/zJ7bXt3Gy/+aE/a+bftqnO5nhubLalg==
+X-Received: by 2002:a17:906:1384:b0:6e8:46b6:d42e with SMTP id f4-20020a170906138400b006e846b6d42emr5834144ejc.366.1650020075677;
+        Fri, 15 Apr 2022 03:54:35 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:8ba4:ab5d:8b2a:caa? ([2a02:578:8593:1200:8ba4:ab5d:8b2a:caa])
+        by smtp.gmail.com with ESMTPSA id e19-20020a056402105300b004162d0b4cbbsm2509371edu.93.2022.04.15.03.54.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Apr 2022 03:54:35 -0700 (PDT)
+Message-ID: <af711184-4972-ac24-8a13-835c1196c32d@tessares.net>
+Date: Fri, 15 Apr 2022 12:54:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH mptcp-next v10 00/14] mptcp: APIs and self-tests for
+ userspace path management
+Content-Language: en-GB
+To: Kishen Maloor <kishen.maloor@intel.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20220414211920.1987961-1-kishen.maloor@intel.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220414211920.1987961-1-kishen.maloor@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Move mptcp_pm_addr_entry structure to protocol.h as this commit exports
-a new function having a parameter using this structure.
+Hi Kishen, Mat, Paolo,
 
-This was causing the CI to complain about this commit (and the 2 next
-ones). Fixing it here instead of modifying the CI not to complain about
-that.
+On 14/04/2022 23:19, Kishen Maloor wrote:
+> This patch series brings together the base functionality
+> and new netlink APIs for flexible path management from userspace.
+> Further it extends the MPTCP self-testing framework to support the new
+> netlink APIs along with the ability to capture MPTCP netlink events
+> to aid in functional/behavioral validations. Lastly, it adds a
+> self-testing script with a suite of test cases covering the entire
+> range of the new userspace path management capabilities.
 
-Note: compared to what Kishen did in commit "mptcp: netlink: Add
-MPTCP_PM_CMD_ANNOUNCE", I moved the new structure with other mptcp_pm
-ones.
+Thank you for these patches and reviews!
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
+I just applied these patches (feat. for net-next next) with Mat's RvB
+tag, Paolo's Ack:
 
-Notes:
-    to be squashed in "mptcp: handle local addrs announced by userspace PMs"
+New patches for t/upstream:
 
- net/mptcp/pm_netlink.c | 8 --------
- net/mptcp/protocol.h   | 8 ++++++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
+- c2dcdbadfac0: mptcp: allow ADD_ADDR reissuance by userspace PMs
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 92d47e8e8983..9d515c3e0b16 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -22,14 +22,6 @@ static struct genl_family mptcp_genl_family;
- 
- static int pm_nl_pernet_id;
- 
--struct mptcp_pm_addr_entry {
--	struct list_head	list;
--	struct mptcp_addr_info	addr;
--	u8			flags;
--	int			ifindex;
--	struct socket		*lsk;
--};
--
- struct mptcp_pm_add_entry {
- 	struct list_head	list;
- 	struct mptcp_addr_info	addr;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 40dabf9462a8..f41089e54555 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -229,6 +229,14 @@ struct mptcp_pm_data {
- 	struct mptcp_rm_list rm_list_rx;
- };
- 
-+struct mptcp_pm_addr_entry {
-+	struct list_head	list;
-+	struct mptcp_addr_info	addr;
-+	u8			flags;
-+	int			ifindex;
-+	struct socket		*lsk;
-+};
-+
- struct mptcp_data_frag {
- 	struct list_head list;
- 	u64 data_seq;
+- 26c71440e307: mptcp: handle local addrs announced by userspace PMs
+
+- 5a865082c99a: mptcp: read attributes of addr entries managed by
+userspace PMs
+
+- 899ec4b7d092: mptcp: netlink: split mptcp_pm_parse_addr into two functions
+
+- 37d4d520025a: mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE
+
+- 90e75a0f1e7a: selftests: mptcp: support MPTCP_PM_CMD_ANNOUNCE
+
+- 151abf946ec6: mptcp: netlink: Add MPTCP_PM_CMD_REMOVE
+
+- 961b8d01cd00: selftests: mptcp: support MPTCP_PM_CMD_REMOVE
+
+- 68f10488da73: mptcp: netlink: allow userspace-driven subflow establishment
+
+- 04de6ee0fd99: selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_CREATE
+
+- 337354cbefde: selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_DESTROY
+
+- feac5b7157cd: selftests: mptcp: capture netlink events
+
+- 802a0fcee8de: selftests: mptcp: create listeners to receive MPJs
+
+- 7a589792c590: selftests: mptcp: functional tests for the userspace PM type
+
+- Results: dd31cb34f82b..f0428dbd45eb (export)
+
+And an extra fix for the CI:
+
+- 6505be1e8a40: Squash to "mptcp: handle local addrs announced by
+userspace PMs"
+- (no co-dev for that)
+- 66af7c7950d4: mptcp: remove dup mptcp_pm_addr_entry
+- c14d95c1413b: conflict in
+t/mptcp-netlink-allow-userspace-driven-subflow-establishment
+- Results: f0428dbd45eb..4fa4540bfc5e (export)
+
+Builds and tests are now in progress:
+
+
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220415T105031
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-2.34.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
