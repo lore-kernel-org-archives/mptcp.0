@@ -1,44 +1,44 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FA2185B
-	for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 16:23:29 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id f17so2990133edt.4
-        for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 09:23:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD101867
+	for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 16:40:04 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id y20so4698881eju.7
+        for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 09:40:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=Ca7eOhdp+MlP2gypZ3BNf4ov3jfybCTNk9Rhqciun8Q=;
-        b=eEIyQfstTFiNpFgBKvBavK+uUJ1Msc8yWgmWZ78xpjQsU4a+rRskRwd4LC9ixGj/3e
-         7tU9XJo5jhR9NWvw4XqA7YHYWGoe9uZWO7rhgMAbrNG9bOf/G0d2UPgZLqHkzZYlFseE
-         izAZKmvNfFQruXecKkfLR1OkQGanSfzavSp+UDNeL4VOeHoB8x5/P285492s7ftPTM1+
-         sY2OnSPbyC5uV+thDAUy3pKkN62r679dGm9r6DkwB3CG+DonWKwcJKuZBzqnfsDloqpV
-         u6JQLCZCadNxw5y6F7FvS0haY6WAiwaSwR9/Gw6Ob3WQLqQ63jhMMj0EKcXsikv/qXwE
-         BoNw==
+        bh=REoJQXaR4ZPCfJjNlzUk3Y2yHafWckIDgtbtMpmxDWI=;
+        b=uY+If7PrDHa4Z1xtaZSAFzBAlOKHi5s/wVQcIlySYdioNhZCh/FyMHdNOCwmTqvQYC
+         jV8uKIZY+cM0MfOfbQB3BIZWWMEHSIYASCkMg9PpY5DuI6hjvAkDSqsT4t9wdXLU6ljZ
+         mEESN2pKwQ0SMYZW3pLOf3TEf0HcsRmGwqbNEGdjCAd+9PGh5js0okxoSLzP6DqOnT7o
+         A1aeSP75DEk96gisNPhF8brhT01ZSlwD5YVUI6xzjrSzful63lAqHrjbIpWYwNd1FMgg
+         /wZJjnbEYjklVCD/QgYEGxUo/9V7/1G5MHk94zr2D28htDKnDCJ+Jok/hfR0YirIq7xg
+         s4yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Ca7eOhdp+MlP2gypZ3BNf4ov3jfybCTNk9Rhqciun8Q=;
-        b=bMf6loKssLGysl9pFLAPdIGo3drEzuAph5jjr3tPF+9SlY9dmHN7sPizSMxO9yDpmX
-         xc2xpcGaigU2Aaqmpp7r67fmykfANKecgkcAkJxgqNtb9/Azd1+RTAQW1fdfhaMSfAsM
-         qz/s+1eGo2GeFMXGyP5+77jXXHCErCW6uhnSc6qfeQXMBvE0gqHohauZDpsPKheUA4Er
-         aPQOxyVTnNrPK3aw3OUPwVbe/fK23Cgaln4bFCR0V7kixeeztD7mVbEcE2COQLwxjY3P
-         JLsPBL/ukmWUz9FrcmaxUoyZ3namVWYDuRG+QbYz9zOvy86zg0B5G2QYLJ4/di60gXDJ
-         lMFQ==
-X-Gm-Message-State: AOAM530a0Ym4y4Y4ZhPjNhKSdLGn2ECtqOIQ2fYD20vn9p/cm83UIr0q
-	eW5hE8FHZJkyh3ZV+AWtvnRl2A==
-X-Google-Smtp-Source: ABdhPJz3laln3N4r4hICZBm9lByKDMKZ5XCGz1+d+dIqEnumigDtM9z1+GKTu0oF+wwDqGyLIgup/Q==
-X-Received: by 2002:a05:6402:34c7:b0:423:d44a:4c6c with SMTP id w7-20020a05640234c700b00423d44a4c6cmr22152578edc.356.1650471807893;
-        Wed, 20 Apr 2022 09:23:27 -0700 (PDT)
+        bh=REoJQXaR4ZPCfJjNlzUk3Y2yHafWckIDgtbtMpmxDWI=;
+        b=MAIDUqAeBHDrMtIMB47A2ql1vif6RIo2k1/hoZh6sbVDD5cw6Fe6qGCvZxN3sGl7Qg
+         Z2JmmILjcVhBLL8Q1nimQ2wotF/Qd0iFTwQ+kAO+RPGuRHFYtTuO5qymTEQBkywUmgrv
+         objFnkGPLBifbepGL6Y8jtTqto6Cnvh3XEuPIDLiZD3Eqp2UhiQUHwPcxAVGEp7Ba449
+         GKv1AhdmwkLzWx+BDZknFzJlguek3LIh11XG5FEheYssRCaolAU1kJWkvn8kQKsAkSh6
+         BZT1fAUgkUvN6IwtrGXhGy8J0Ur66uFy8EUM7dx/fJBRiP7f5RLSBjPYPPv+RKhnqOau
+         k7Wg==
+X-Gm-Message-State: AOAM533LW6mAASB9Jw5nW3AP+aHsavZIM5AO9K0EidEOQkwD9AoPMlAP
+	rwepFe3bWxiw4MROPWMGBhJ06WyPYIRXOw==
+X-Google-Smtp-Source: ABdhPJw8mxvhep/CRnkQk6UYQA/tEOPaBVJvo2DHEQ3SV6K0OHnCNFlhKeSlPHQZ2LTfboUVl0+McA==
+X-Received: by 2002:a17:907:7b84:b0:6e8:b8c2:6fe2 with SMTP id ne4-20020a1709077b8400b006e8b8c26fe2mr20058922ejc.401.1650472802985;
+        Wed, 20 Apr 2022 09:40:02 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:a8ef:af16:f14e:5d01? ([2a02:578:8593:1200:a8ef:af16:f14e:5d01])
-        by smtp.gmail.com with ESMTPSA id e15-20020a170906044f00b006e897e110fcsm6884036eja.48.2022.04.20.09.23.26
+        by smtp.gmail.com with ESMTPSA id kw3-20020a170907770300b006d2a835ac33sm6865482ejc.197.2022.04.20.09.40.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Apr 2022 09:23:27 -0700 (PDT)
-Message-ID: <ecdf9234-ad37-0bb5-6a73-870f31b11a26@tessares.net>
-Date: Wed, 20 Apr 2022 18:23:26 +0200
+        Wed, 20 Apr 2022 09:40:01 -0700 (PDT)
+Message-ID: <dd161bcd-2107-ed55-34cf-ce8d7936467b@tessares.net>
+Date: Wed, 20 Apr 2022 18:40:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,27 +47,45 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH mptcp-next v12 07/10] mptcp: add last_snd write access
+Subject: Re: [PATCH mptcp-next v12 08/10] mptcp: add call_me_again flag
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1650430388.git.geliang.tang@suse.com>
- <396f8edcbf8e4f65a1d76c228dc3d12aa4dd2f11.1650430389.git.geliang.tang@suse.com>
+ <68fa62e5d0ba5fe88f89f6be7923eb952fe3b817.1650430389.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <396f8edcbf8e4f65a1d76c228dc3d12aa4dd2f11.1650430389.git.geliang.tang@suse.com>
+In-Reply-To: <68fa62e5d0ba5fe88f89f6be7923eb952fe3b817.1650430389.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 20/04/2022 06:57, Geliang Tang wrote:
-> This patch exports the member last_snd of struct mptcp_sock in
-> bpf_mptcp_helpers.h, and adds BPF write access to it.
+> For supporting a "redundant" packet scheduler in the future, this patch
+> adds a flag named call_me_again to indicate that get_subflow() function
+> needs to be called again.
 
-Do we really need the have the different schedulers modifying it? Could
-we not let the caller of "sched->get_subflow()" setting it?
+If I'm not mistaken, in mptcp.org, there are two functions that can be
+modified by a packets scheduler:
 
-I mean: 'last_snd' should always be the same as what get_subflow() will
-return, no? If yes, why not setting it in mptcp_sched_get_subflow()?
+  - get_subflow(): return an ssk to where an skb passed in argument will
+be sent. A boolean is also passed to inform if it is a zero window test
+
+  - next_segment(): return the next skb to be sent. A parameter called
+"reinject" can be set to 3 values: from reinject queue (1), from sent
+queue (0), meta-level retransmission for optimisations purposes (-1).
+
+In short, a redundant scheduler will then make sure the same skb is
+returned multiple times in next_segment(). (After the first time,
+'reinject' is set to -1.)
+
+I understand it is quite different from what we currently have here in
+upstream where we don't really have a "next_segment()" that can be
+modified by the different schedulers. Having this 'call_me_again'
+variable should do the job and it is quite "flexible". At least more
+than setting a function parameter. But I don't know if it is a proper
+way and if it will fix all situations. I didn't follow the development
+on all different packet schedulers in mptcp.org. Maybe we can check with
+Christoph if we need to "fix an API".
 
 Cheers,
 Matt
