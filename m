@@ -1,110 +1,143 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D57410F3
-	for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 01:02:52 +0000 (UTC)
-Received: by mail-qt1-f182.google.com with SMTP id f22so3998qtp.13
-        for <mptcp@lists.linux.dev>; Tue, 19 Apr 2022 18:02:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C8510F3
+	for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 01:03:55 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id d15so320207pll.10
+        for <mptcp@lists.linux.dev>; Tue, 19 Apr 2022 18:03:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=UhAJt3Vsn8hnfiIlB76wkeGKgKKSF+xHOpUT2TDVQuY=;
-        b=SSpgKHGjHCcWMrmCyI0dPTjn9EJdY0gpD8riMER0XHnWmAjgfCRcssbLbvELiljO2/
-         cet8YKzp6Q0ZxyKBoBRTU23mfeqJuHjKL23GTgNmdupcXTxSSLqaGd+WaN9u2RLB+jru
-         /lqHYNlu6IH9GVo/cCF+DULl2P6rpRlt0mN0liuApGVzuj3GMlXTc9Y6m/RydDB7P0jY
-         xWXoeSz0+uGBfcrFZ3dvtDI+uyuLdlGA3J+UhSlRpc5Qsyg8f4pROW14ZLt438Bvpvfr
-         QYmnXWykpvoWhmPvwzQRVmD0KlY/SozE34gUInV5aKuoge0KW8/0OGBHt09yU0Mkn7HT
-         Hqrg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RKE6JOX6lmKR4yZOA7ql4+jl1Q0XaF9+SbUYu/NrjCc=;
+        b=klFazsZh26h++FTmlJg7XD2QP/nZUjV1BXyUDYV9Tf92bbDREKCwR9GdiyzblEvDIe
+         PlCpIC1tUE+XmpJBqUOVkhUBEZjsxcIlCJdSUH0uT9R2LKK/oSe1eLSWzr9Z4UsaS6ID
+         LNrTtyZH+sfRWy1cI69WHwgWLL4QVdQ+HrmhvgTs1rsxZ28OWZIArSeH6mhp5F0wV8r9
+         CohVcU3B0jVhpslQsXxn9vFZmYirmkGwO6eqPyc3rXML4s+mQ3s6JdCEj5QpRnOjjjoP
+         /hVStSsFFbb/g/pICMcELxhbZ85tC/t1QFPcu1H6LmYxfEK7yZuY4fqmSRzYns+DmxzS
+         jxsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=UhAJt3Vsn8hnfiIlB76wkeGKgKKSF+xHOpUT2TDVQuY=;
-        b=BnAfP8IxSgi1SfSmffLr3cGTKpY5+PqVPVVJpC3hpaD0WwR0tGAvvOhQ53oGEL8qwT
-         vAC6sRtXLCfxIqujZ71l8l2C3aAO2WPjYOExCS2/qfIIZcaVZRTBG5G2CS2Z8QyMsYY+
-         WUO7kML7zUGQTnxQ59+xNuUgpy9a/1nv1i1T+g3To5QDa0VDesG0+ic/jKg0vDYMLcwu
-         OGt28KX9G/liS2S1kfhSCpnYdKa3Y86slah2+Q5BKFbdiHEN3VSw0k0UitXuM3Jr+ZHp
-         WBFl820iJJitnlXgLbgP9u/n+LwqH17bc8YWWtq66Gsb+xdGlcszi/x86NrsQPfTboFw
-         H6OQ==
-X-Gm-Message-State: AOAM5335vdEikNf2WiGKaCKpFdVnMK2JH078FHgJHtS+GIOHi3yRhWJA
-	oqY6E30+uDi0cMTmKhRhIjqiO1FYxQ==
-X-Google-Smtp-Source: ABdhPJz0lWW9D19geT++lz/3r/HFM8aEFPFMdpr+fN50Q25GD97UxQiLoUnF//8LwulMgqNQ/I64Bw==
-X-Received: by 2002:a05:622a:118b:b0:2f2:163:d2da with SMTP id m11-20020a05622a118b00b002f20163d2damr7520523qtk.677.1650416571167;
-        Tue, 19 Apr 2022 18:02:51 -0700 (PDT)
-Received: from [127.0.0.1] ([20.232.106.244])
-        by smtp.gmail.com with ESMTPSA id i19-20020ac85c13000000b002f33d140da9sm1043622qti.20.2022.04.19.18.02.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Apr 2022 18:02:50 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220419230340.2263545-4-kishen.maloor@intel.com>
-References: <20220419230340.2263545-4-kishen.maloor@intel.com>
-Subject: Re: Squash-to: mptcp: netlink: allow userspace-driven subflow
- establishment: Tests Results
-Message-ID: <4341a22d-cf25-657a-7d27-0b1a4009de1f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 20 Apr 2022 01:02:50 +0000
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RKE6JOX6lmKR4yZOA7ql4+jl1Q0XaF9+SbUYu/NrjCc=;
+        b=JLhIWeqiK5p+qAiVgau3TWWL6Q+Pr3zlkkuFQop/YJc27iwy3BFbtgFsu9rOBGrLVo
+         rm8xPUwE/YgD241KzbxTj3Mp2zcD+Nf+cJRSY3gKuO6BWxSxL2BC246AKc9MdpqvrTmr
+         UBww8UabTrUic3Ih/p9EhmgpukhmRUEIDQiVVPnb31PjBdPhbmJMrxsNyCoGqszOF8D8
+         nR70lTjx9xryJDcEe1YM58WJk5rUcfe5IAXEUxCPrUQA4k81t7d6MqVC0tmwgiR7LFiw
+         lmOtCJWEYRNZLLlUBnqVZS6Bod1oOCV1JttcBa/36fXpQzpUmST5fahhh3NGTuHZlJDF
+         90Cg==
+X-Gm-Message-State: AOAM531iAtzXdpsdQzn1RxbCJwTbNa+Kj3ZZ6L1Iv4MJDd/2m9Xf8PGO
+	bOKVoRSxPdK8uBki5uquu9HEW0wbm0ovDM22Aog=
+X-Google-Smtp-Source: ABdhPJxexQVrAKJsLdE0LN+k9MHogOdu79qLznkudbsIT8ZRbZrvDeXqcDtekP1ayJxgszanbe+OwBVSjQuEcxwJxRk=
+X-Received: by 2002:a17:902:d488:b0:158:e7d1:fc16 with SMTP id
+ c8-20020a170902d48800b00158e7d1fc16mr18196112plg.171.1650416634443; Tue, 19
+ Apr 2022 18:03:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20220419230340.2263545-1-kishen.maloor@intel.com> <20220419230340.2263545-2-kishen.maloor@intel.com>
+In-Reply-To: <20220419230340.2263545-2-kishen.maloor@intel.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Wed, 20 Apr 2022 09:04:10 +0800
+Message-ID: <CA+WQbwsQ-R95+GjEnBG-bJukLbiXuzjozOe5kCJQaON6gQfu8g@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next 1/3] Squash-to: mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE
+To: Kishen Maloor <kishen.maloor@intel.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 Hi Kishen,
 
-Thank you for your modifications, that's great!
+Kishen Maloor <kishen.maloor@intel.com> =E4=BA=8E2022=E5=B9=B44=E6=9C=8820=
+=E6=97=A5=E5=91=A8=E4=B8=89 07:03=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
+> ---
+>  net/mptcp/pm_userspace.c | 19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
+>
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index fce61530fe9e..fca3e4bdf5d4 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -127,11 +127,11 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, stru=
+ct genl_info *info)
+>         struct mptcp_pm_addr_entry addr_val;
+>         struct mptcp_sock *msk;
+>         u32 token_val;
+> -       int err;
+> +       int err =3D -EINVAL;
 
-Our CI did some validations and here is its report:
+This breaks the "reversed XMas tree" order.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5545811772702720
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5545811772702720/summary/summary.txt
+Thanks,
+-Geliang
 
-- {"code":404,"message":
-  - "HTTP 404 Not Found"}:
-  - Task: https://cirrus-ci.com/task/6671711679545344
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6671711679545344/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b0d39b257105
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+>
+>         if (!addr || !token) {
+>                 GENL_SET_ERR_MSG(info, "missing required inputs");
+> -               return -EINVAL;
+> +               return err;
+>         }
+>
+>         token_val =3D nla_get_u32(token);
+> @@ -139,29 +139,29 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, stru=
+ct genl_info *info)
+>         msk =3D mptcp_token_get_sock(sock_net(skb->sk), token_val);
+>         if (!msk) {
+>                 NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token")=
+;
+> -               return -EINVAL;
+> +               return err;
+>         }
+>
+>         if (!mptcp_pm_is_userspace(msk)) {
+>                 GENL_SET_ERR_MSG(info, "invalid request; userspace PM not=
+ selected");
+> -               return -EINVAL;
+> +               goto announce_err;
+>         }
+>
+>         err =3D mptcp_pm_parse_entry(addr, info, true, &addr_val);
+>         if (err < 0) {
+>                 GENL_SET_ERR_MSG(info, "error parsing local address");
+> -               return err;
+> +               goto announce_err;
+>         }
+>
+>         if (addr_val.addr.id =3D=3D 0 || !(addr_val.flags & MPTCP_PM_ADDR=
+_FLAG_SIGNAL)) {
+>                 GENL_SET_ERR_MSG(info, "invalid addr id or flags");
+> -               return -EINVAL;
+> +               goto announce_err;
+>         }
+>
+>         err =3D mptcp_userspace_pm_append_new_local_addr(msk, &addr_val);
+>         if (err < 0) {
+>                 GENL_SET_ERR_MSG(info, "did not match address and id");
+> -               return err;
+> +               goto announce_err;
+>         }
+>
+>         lock_sock((struct sock *)msk);
+> @@ -175,7 +175,10 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, struc=
+t genl_info *info)
+>         spin_unlock_bh(&msk->pm.lock);
+>         release_sock((struct sock *)msk);
+>
+> -       return 0;
+> +       err =3D 0;
+> + announce_err:
+> +       sock_put((struct sock *)msk);
+> +       return err;
+>  }
+>
+>  int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
+> --
+> 2.31.1
+>
+>
