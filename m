@@ -1,30 +1,30 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9B67A
-	for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 22:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DAB3D6C
+	for <mptcp@lists.linux.dev>; Wed, 20 Apr 2022 22:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650493516; x=1682029516;
+  t=1650493517; x=1682029517;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7JGsPMfEIizl3uiYOkvij3X2qHRKl3rpmk92jGiEIgA=;
-  b=lj3LOF+Grbbd4asy2dZxYczEopn1qC+NzFGx59xyFws/tSwqY9tzwCfM
-   9cHSK24zsEYuIKXLfPrd3c+AkidKGI1rhNY9FfFy7ekXDWWVICZIKpoTP
-   yppA7KFZyiJK5d4kcYCuo+jAyT49A6qZE0Ywa/0xGkn38LEf/6+Pr7xJL
-   x3Bd8bc4OrxN/AiOq1QIa4M65lNFuN+jFjsALVWcRmf2Upyv25bT7g5mt
-   U0tpvDR0xoQipTBJ4/+5N1+70Y9Az5OGW9S9ncihVt1qfXx+kLwXd7+Ba
-   g4OIvwWloOYKK+6s8e6CQ3Z/feK0yxKfkRtdVo91lo29L9rbDBr4VaaD5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="289277586"
+  bh=I/fyyemIfL8f6DzsdezVEl00OqqrHn4zb2LgLSArq5c=;
+  b=k2buzFNUt/a3NkFL5o+rWApztitiemezP028XNMcoBzkBuCru3iKAn85
+   mBu/2+yCZHbkQ5aF2WEvNK+qXfC/PSLggcl7KCuXIj/a4CJ57k+DZhhtA
+   v/BPfOHVUSUawwd42mJW0S7AlyKJ4eInOJzwgNtKXZf0/gUKkCtW0pR7W
+   L2K8Y8txK2l9BohmNkXnAA46pU9ZMoe+E52Q41mgQReiOmrqB2VEfAAoc
+   FPfPd2cYFoacaACguCu+/cUoTkHrER1RLkk4jHR7+OHTiS0i32CoLb5XE
+   RzBqyb47NLeYvInuzQ6jKUIKLNsVf6DKLgb2PV6jYkczrvigBQ1TZuDxa
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="289277599"
 X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
-   d="scan'208";a="289277586"
+   d="scan'208";a="289277599"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 15:25:15 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 15:25:17 -0700
 X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
-   d="scan'208";a="555422587"
+   d="scan'208";a="555422598"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.100.38])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 15:25:14 -0700
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 15:25:16 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org,
 	bpf@vger.kernel.org
@@ -33,12 +33,11 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	daniel@iogearbox.net,
 	andrii@kernel.org,
 	mptcp@lists.linux.dev,
-	Nicolas Rybowski <nicolas.rybowski@tessares.net>,
 	Matthieu Baerts <matthieu.baerts@tessares.net>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH bpf-next 2/7] bpf: add bpf_skc_to_mptcp_sock_proto
-Date: Wed, 20 Apr 2022 15:24:54 -0700
-Message-Id: <20220420222459.307649-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH bpf-next 4/7] selftests: bpf: test bpf_skc_to_mptcp_sock
+Date: Wed, 20 Apr 2022 15:24:56 -0700
+Message-Id: <20220420222459.307649-5-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.0
 In-Reply-To: <20220420222459.307649-1-mathew.j.martineau@linux.intel.com>
 References: <20220420222459.307649-1-mathew.j.martineau@linux.intel.com>
@@ -52,211 +51,172 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch implements a new struct bpf_func_proto, named
-bpf_skc_to_mptcp_sock_proto. Define a new bpf_id BTF_SOCK_TYPE_MPTCP,
-and a new helper bpf_skc_to_mptcp_sock(), which invokes another new
-helper bpf_mptcp_sock_from_subflow() in net/mptcp/bpf.c to get struct
-mptcp_sock from a given subflow socket.
+This patch extends the MPTCP test base, to test the new helper
+bpf_skc_to_mptcp_sock().
 
-Co-developed-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
-Signed-off-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Define struct mptcp_sock in bpf_tcp_helpers.h, use bpf_skc_to_mptcp_sock
+to get the msk socket in progs/mptcp_sock.c and store the infos in
+socket_storage_map.
+
+Get the infos from socket_storage_map in prog_tests/mptcp.c. Add a new
+function verify_msk() to verify the infos of MPTCP socket, and rename
+verify_sk() to verify_tsk() to verify TCP socket only.
+
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- include/linux/btf_ids.h        |  3 ++-
- include/net/mptcp.h            |  6 ++++++
- include/uapi/linux/bpf.h       |  7 +++++++
- net/core/filter.c              | 17 +++++++++++++++++
- net/mptcp/Makefile             |  4 ++++
- net/mptcp/bpf.c                | 22 ++++++++++++++++++++++
- scripts/bpf_doc.py             |  2 ++
- tools/include/uapi/linux/bpf.h |  7 +++++++
- 8 files changed, 67 insertions(+), 1 deletion(-)
- create mode 100644 net/mptcp/bpf.c
+ MAINTAINERS                                   |  1 +
+ .../testing/selftests/bpf/bpf_mptcp_helpers.h | 14 ++++++++
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 36 +++++++++++++++----
+ .../testing/selftests/bpf/progs/mptcp_sock.c  | 22 +++++++++---
+ 4 files changed, 62 insertions(+), 11 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/bpf_mptcp_helpers.h
 
-diff --git a/include/linux/btf_ids.h b/include/linux/btf_ids.h
-index bc5d9cc34e4c..335a19092368 100644
---- a/include/linux/btf_ids.h
-+++ b/include/linux/btf_ids.h
-@@ -178,7 +178,8 @@ extern struct btf_id_set name;
- 	BTF_SOCK_TYPE(BTF_SOCK_TYPE_TCP6, tcp6_sock)			\
- 	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UDP, udp_sock)			\
- 	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UDP6, udp6_sock)			\
--	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UNIX, unix_sock)
-+	BTF_SOCK_TYPE(BTF_SOCK_TYPE_UNIX, unix_sock)			\
-+	BTF_SOCK_TYPE(BTF_SOCK_TYPE_MPTCP, mptcp_sock)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 01fbdb0e0180..f31fa73266f9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13764,6 +13764,7 @@ F:	include/net/mptcp.h
+ F:	include/trace/events/mptcp.h
+ F:	include/uapi/linux/mptcp.h
+ F:	net/mptcp/
++F:	tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+ F:	tools/testing/selftests/bpf/*/*mptcp*.c
+ F:	tools/testing/selftests/net/mptcp/
  
- enum {
- #define BTF_SOCK_TYPE(name, str) name,
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 0a3b0fb04a3b..5b3a6f783182 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -283,4 +283,10 @@ static inline int mptcpv6_init(void) { return 0; }
- static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
- #endif
- 
-+#if defined(CONFIG_MPTCP) && defined(CONFIG_BPF_JIT) && defined(CONFIG_BPF_SYSCALL)
-+struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk);
-+#else
-+static inline struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk) { return NULL; }
-+#endif
+diff --git a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+new file mode 100644
+index 000000000000..18da4cc65e89
+--- /dev/null
++++ b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2022, SUSE. */
 +
- #endif /* __NET_MPTCP_H */
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 9ef1f3e1c22f..785f2cb15495 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -5143,6 +5143,12 @@ union bpf_attr {
-  *		The **hash_algo** is returned on success,
-  *		**-EOPNOTSUP** if the hash calculation failed or **-EINVAL** if
-  *		invalid arguments are passed.
-+ *
-+ * struct mptcp_sock *bpf_skc_to_mptcp_sock(void *sk)
-+ *	Description
-+ *		Dynamically cast a *sk* pointer to a *mptcp_sock* pointer.
-+ *	Return
-+ *		*sk* if casting is valid, or **NULL** otherwise.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -5339,6 +5345,7 @@ union bpf_attr {
- 	FN(copy_from_user_task),	\
- 	FN(skb_set_tstamp),		\
- 	FN(ima_file_hash),		\
-+	FN(skc_to_mptcp_sock),		\
- 	/* */
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 7b1867f1f422..4081c55f6f78 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -78,6 +78,7 @@
- #include <linux/btf_ids.h>
- #include <net/tls.h>
- #include <net/xdp.h>
-+#include <net/mptcp.h>
- 
- static const struct bpf_func_proto *
- bpf_sk_base_func_proto(enum bpf_func_id func_id);
-@@ -11279,6 +11280,19 @@ const struct bpf_func_proto bpf_skc_to_unix_sock_proto = {
- 	.ret_btf_id		= &btf_sock_ids[BTF_SOCK_TYPE_UNIX],
++#ifndef __BPF_MPTCP_HELPERS_H
++#define __BPF_MPTCP_HELPERS_H
++
++#include "bpf_tcp_helpers.h"
++
++struct mptcp_sock {
++	struct inet_connection_sock	sk;
++
++} __attribute__((preserve_access_index));
++
++#endif
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index cd548bb2828f..4b40bbdaf91f 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -10,14 +10,12 @@ struct mptcp_storage {
+ 	__u32 is_mptcp;
  };
  
-+BPF_CALL_1(bpf_skc_to_mptcp_sock, struct sock *, sk)
-+{
-+	return (unsigned long)bpf_mptcp_sock_from_subflow(sk);
-+}
-+
-+static const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
-+	.func		= bpf_skc_to_mptcp_sock,
-+	.gpl_only	= false,
-+	.ret_type	= RET_PTR_TO_BTF_ID_OR_NULL,
-+	.arg1_type	= ARG_PTR_TO_SOCK_COMMON,
-+	.ret_btf_id	= &btf_sock_ids[BTF_SOCK_TYPE_MPTCP],
-+};
-+
- BPF_CALL_1(bpf_sock_from_file, struct file *, file)
+-static int verify_sk(int map_fd, int client_fd, const char *msg, __u32 is_mptcp)
++static int verify_tsk(int map_fd, int client_fd)
  {
- 	return (unsigned long)sock_from_file(file);
-@@ -11321,6 +11335,9 @@ bpf_sk_base_func_proto(enum bpf_func_id func_id)
- 	case BPF_FUNC_skc_to_unix_sock:
- 		func = &bpf_skc_to_unix_sock_proto;
- 		break;
-+	case BPF_FUNC_skc_to_mptcp_sock:
-+		func = &bpf_skc_to_mptcp_sock_proto;
-+		break;
- 	case BPF_FUNC_ktime_get_coarse_ns:
- 		return &bpf_ktime_get_coarse_ns_proto;
- 	default:
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index e54daceac58b..168c55d1c917 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -10,3 +10,7 @@ obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o
- mptcp_crypto_test-objs := crypto_test.o
- mptcp_token_test-objs := token_test.o
- obj-$(CONFIG_MPTCP_KUNIT_TEST) += mptcp_crypto_test.o mptcp_token_test.o
-+
-+ifeq ($(CONFIG_BPF_JIT),y)
-+obj-$(CONFIG_BPF_SYSCALL) += bpf.o
-+endif
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-new file mode 100644
-index 000000000000..535602ba2582
---- /dev/null
-+++ b/net/mptcp/bpf.c
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Multipath TCP
-+ *
-+ * Copyright (c) 2020, Tessares SA.
-+ * Copyright (c) 2022, SUSE.
-+ *
-+ * Author: Nicolas Rybowski <nicolas.rybowski@tessares.net>
-+ */
-+
-+#define pr_fmt(fmt) "MPTCP: " fmt
-+
-+#include <linux/bpf.h>
-+#include "protocol.h"
-+
-+struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
-+{
-+	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
-+		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL(bpf_mptcp_sock_from_subflow);
-diff --git a/scripts/bpf_doc.py b/scripts/bpf_doc.py
-index 096625242475..d5452f7eb996 100755
---- a/scripts/bpf_doc.py
-+++ b/scripts/bpf_doc.py
-@@ -633,6 +633,7 @@ class PrinterHelpers(Printer):
-             'struct socket',
-             'struct file',
-             'struct bpf_timer',
-+            'struct mptcp_sock',
-     ]
-     known_types = {
-             '...',
-@@ -682,6 +683,7 @@ class PrinterHelpers(Printer):
-             'struct socket',
-             'struct file',
-             'struct bpf_timer',
-+            'struct mptcp_sock',
-     }
-     mapped_types = {
-             'u8': '__u8',
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 9ef1f3e1c22f..785f2cb15495 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -5143,6 +5143,12 @@ union bpf_attr {
-  *		The **hash_algo** is returned on success,
-  *		**-EOPNOTSUP** if the hash calculation failed or **-EINVAL** if
-  *		invalid arguments are passed.
-+ *
-+ * struct mptcp_sock *bpf_skc_to_mptcp_sock(void *sk)
-+ *	Description
-+ *		Dynamically cast a *sk* pointer to a *mptcp_sock* pointer.
-+ *	Return
-+ *		*sk* if casting is valid, or **NULL** otherwise.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -5339,6 +5345,7 @@ union bpf_attr {
- 	FN(copy_from_user_task),	\
- 	FN(skb_set_tstamp),		\
- 	FN(ima_file_hash),		\
-+	FN(skc_to_mptcp_sock),		\
- 	/* */
++	char *msg = "plain TCP socket";
+ 	int err = 0, cfd = client_fd;
+ 	struct mptcp_storage val;
  
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+-	if (is_mptcp == 1)
+-		return 0;
+-
+ 	if (CHECK_FAIL(bpf_map_lookup_elem(map_fd, &cfd, &val) < 0)) {
+ 		perror("Failed to read socket storage");
+ 		return -1;
+@@ -38,6 +36,32 @@ static int verify_sk(int map_fd, int client_fd, const char *msg, __u32 is_mptcp)
+ 	return err;
+ }
+ 
++static int verify_msk(int map_fd, int client_fd)
++{
++	char *msg = "MPTCP subflow socket";
++	int err = 0, cfd = client_fd;
++	struct mptcp_storage val;
++
++	if (CHECK_FAIL(bpf_map_lookup_elem(map_fd, &cfd, &val) < 0)) {
++		perror("Failed to read socket storage");
++		return -1;
++	}
++
++	if (val.invoked != 1) {
++		log_err("%s: unexpected invoked count %d != 1",
++			msg, val.invoked);
++		err++;
++	}
++
++	if (val.is_mptcp != 1) {
++		log_err("%s: unexpected bpf_tcp_sock.is_mptcp %d != 1",
++			msg, val.is_mptcp);
++		err++;
++	}
++
++	return err;
++}
++
+ static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
+ {
+ 	int client_fd, prog_fd, map_fd, err;
+@@ -88,8 +112,8 @@ static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
+ 		goto out;
+ 	}
+ 
+-	err += is_mptcp ? verify_sk(map_fd, client_fd, "MPTCP subflow socket", 1) :
+-			  verify_sk(map_fd, client_fd, "plain TCP socket", 0);
++	err += is_mptcp ? verify_msk(map_fd, client_fd) :
++			  verify_tsk(map_fd, client_fd);
+ 
+ 	close(client_fd);
+ 
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_sock.c b/tools/testing/selftests/bpf/progs/mptcp_sock.c
+index 0d65fb889d03..5cfaec4e7245 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_sock.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_sock.c
+@@ -3,6 +3,7 @@
+ 
+ #include <linux/bpf.h>
+ #include <bpf/bpf_helpers.h>
++#include "bpf_mptcp_helpers.h"
+ 
+ char _license[] SEC("license") = "GPL";
+ __u32 _version SEC("version") = 1;
+@@ -24,6 +25,7 @@ int _sockops(struct bpf_sock_ops *ctx)
+ {
+ 	struct mptcp_storage *storage;
+ 	struct bpf_tcp_sock *tcp_sk;
++	struct mptcp_sock *msk;
+ 	int op = (int)ctx->op;
+ 	struct bpf_sock *sk;
+ 
+@@ -38,11 +40,21 @@ int _sockops(struct bpf_sock_ops *ctx)
+ 	if (!tcp_sk)
+ 		return 1;
+ 
+-	storage = bpf_sk_storage_get(&socket_storage_map, sk, 0,
+-				     BPF_SK_STORAGE_GET_F_CREATE);
+-	if (!storage)
+-		return 1;
+-
++	if (!tcp_sk->is_mptcp) {
++		storage = bpf_sk_storage_get(&socket_storage_map, sk, 0,
++					     BPF_SK_STORAGE_GET_F_CREATE);
++		if (!storage)
++			return 1;
++	} else {
++		msk = bpf_skc_to_mptcp_sock(sk);
++		if (!msk)
++			return 1;
++
++		storage = bpf_sk_storage_get(&socket_storage_map, msk, 0,
++					     BPF_SK_STORAGE_GET_F_CREATE);
++		if (!storage)
++			return 1;
++	}
+ 	storage->invoked++;
+ 	storage->is_mptcp = tcp_sk->is_mptcp;
+ 
 -- 
 2.36.0
 
