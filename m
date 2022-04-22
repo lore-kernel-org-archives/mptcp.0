@@ -1,116 +1,159 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423B146B6
-	for <mptcp@lists.linux.dev>; Fri, 22 Apr 2022 00:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10F11FCC
+	for <mptcp@lists.linux.dev>; Fri, 22 Apr 2022 00:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650585842; x=1682121842;
+  t=1650588957; x=1682124957;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=jlBr5zYyDEesZhjSWGHpayndIzP0Qlsf28JHXCiaGww=;
-  b=DPdbBRJ49ro3s2ULwuDZL58HM7UqCtVom1ruqUU+B432UNUM2WayJqrS
-   Ru0dSBe4+DGNaOh6W2HdaaiWDl+h1z+fftCbElNLxSwL1TWNLlOoxPb31
-   hySG9/la4lBc8gGwvOQ+USeVXiFsYcGSAx5zEp78NekSRcn41Vkl33apW
-   00l0KuD+GK9uwV0SU/hl29VK5vgieEfE/RkLYsqj8pXKwS1inDBEqS5Se
-   aTmmQkWquw4XJ7kfuZ2VV5YxG03bxqNquq5UfEBHvYvVIsZwmherC1MpE
-   OWiHEk5zB8/KpiI/nhFKH8iLTiLTZr8a1eKirbsp1jBU4SWLmVF/aJStt
+  bh=4SVRJdyFWrK3t0Z0rh1xj0R5SMH1sRvLOc2/cZhoulo=;
+  b=NMMrcOsBZyj3uRMuZrF6OEIxM/lQjrHXjIoeAY2tFhOOnZIuYsrHvxNh
+   hNiq3J/aYD4FY2Si5MMLwgF0WLSjcyPfXvfY6g6KMrghE7PXcgheV+24w
+   9JVe1PGdWde9Zv+zxC3vXA3PxvGhRkLIqeVR2cjKE7NoRKv3t+kuPiQFP
+   ZSoS7YwwZGKOuTg6dgmHxabOdDIvn8vuveWiGnriqqcXOFTy8Fuq0o1+5
+   4hdTbjbOyPmXgm869jC4v13WdrVGH5nB35WFCRDRtBzKbVXVV8NlJN+PG
+   6CnJbcfjOvufkHXBzBdlSq6Vp6ZZmaTIGp2gPmZSLsRVQHHELngII5/L1
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="264293022"
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="289645774"
 X-IronPort-AV: E=Sophos;i="5.90,280,1643702400"; 
-   d="scan'208";a="264293022"
+   d="scan'208";a="289645774"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 17:04:01 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 17:55:57 -0700
 X-IronPort-AV: E=Sophos;i="5.90,280,1643702400"; 
-   d="scan'208";a="658753912"
+   d="scan'208";a="658771939"
 Received: from dolaleye-mobl.amr.corp.intel.com ([10.209.117.155])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 17:04:01 -0700
-Date: Thu, 21 Apr 2022 17:04:00 -0700 (PDT)
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 17:55:57 -0700
+Date: Thu, 21 Apr 2022 17:55:57 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 0/5] mptcp: improve mptcp-level window tracking
-In-Reply-To: <cover.1650550242.git.pabeni@redhat.com>
-Message-ID: <fae0eb5d-34ea-55f6-6bc8-035e4a6c7b3@linux.intel.com>
-References: <cover.1650550242.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next v13 7/9] mptcp: add call_me_again flag
+In-Reply-To: <11f597e62ca79b4c5c1d6256b5eb5233c1bdfba1.1650521788.git.geliang.tang@suse.com>
+Message-ID: <6c212541-6d3a-99b6-a15c-ab8dbd3f74ff@linux.intel.com>
+References: <cover.1650521788.git.geliang.tang@suse.com> <11f597e62ca79b4c5c1d6256b5eb5233c1bdfba1.1650521788.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Thu, 21 Apr 2022, Paolo Abeni wrote:
+On Thu, 21 Apr 2022, Geliang Tang wrote:
 
-> I've been chasing bad/unstable performances with multiple subflows
-> on very high speed links.
+> For supporting a "redundant" packet scheduler in the future, this patch
+> adds a flag of struct mptcp_sock named call_me_again to indicate that
+> get_subflow() function needs to be called again.
 >
-> It looks like the root cause is due to the current mptcp-level
-> congestion window handling. There are apparently a few different
-> sub-issues:
+> Export it in bpf_mptcp_helpers.h, and add BPF write access to it.
 >
-> - the rcv_wnd is not effectively shared on the tx side, as each
->  subflow takes in account only the value received by the underlaying
->  TCP connection. This is addressed in patch 1/4
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/bpf.c                                 | 16 ++++++++++++++++
+> net/mptcp/protocol.h                            |  1 +
+> net/mptcp/sched.c                               |  1 +
+> tools/testing/selftests/bpf/bpf_mptcp_helpers.h |  1 +
+> 4 files changed, 19 insertions(+)
 >
-> - The mptcp-level offered wnd right edge is currently allowed to shrink.
->  Reading section 3.3.4.:
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index e849fc3fb6c5..1611dbe63eb2 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -40,6 +40,7 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
+> {
+> 	const struct btf_type *state;
+> 	u32 type_id;
+> +	size_t end;
 >
-> """
->   The receive window is relative to the DATA_ACK.  As in TCP, a
->   receiver MUST NOT shrink the right edge of the receive window (i.e.,
->   DATA_ACK + receive window).  The receiver will use the data sequence
->   number to tell if a packet should be accepted at the connection
->   level.
-> """
+> 	if (atype == BPF_READ)
+> 		return btf_struct_access(log, btf, t, off, size, atype,
+> @@ -55,6 +56,21 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
+> 		return -EACCES;
+> 	}
 >
-> I read the above as we need to reflect window right-edge tracking
-> on the wire, see patch 3/4.
+> +	switch (off) {
+> +	case offsetofend(struct mptcp_sock, sched):
+> +		end = offsetofend(struct mptcp_sock, sched) + sizeof(u8);
+> +		break;
+> +	default:
+> +		bpf_log(log, "no write support to mptcp_sock at off %d\n", off);
+> +		return -EACCES;
+> +	}
+> +
+> +	if (off + size > end) {
+> +		bpf_log(log, "access beyond mptcp_sock at off %u size %u ended at %zu",
+> +			off, size, end);
+> +		return -EACCES;
+> +	}
+> +
+> 	return NOT_INIT;
+> }
 >
-> - The offered window right edge tracking can happen concurrently on
->  multiple subflows, but there is no mutex protection. We need an
->  additional atomic operation - still patch 3/4
->
-> This series additionally bump a few new MIBs to track all the above
-> (ensure/observe that the suspected races actually take place).
->
-> I could not access again the host where the issue was su much
-> noticeable, still in the current setup the tput changes from
-> [6-18] Gbps to 19Gbps very stable.
->
-> v1 -> v2:
-> - pass only the TCP header to tcp_options_write (Mat)
-> - fix build issues on some 32 bit arches (intel bot)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index f31bc3271bcc..13c6ad5fbade 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -299,6 +299,7 @@ struct mptcp_sock {
+> 	struct sock	*first;
+> 	struct mptcp_pm_data	pm;
+> 	struct mptcp_sched_ops	*sched;
+> +	u8		call_me_again:1;
 
-v2 looks good for the export branch, thanks Paolo.
+This should be part of the get_subflow function call in mptcp_sched_ops, 
+not part of the socket state. We need some BPF-compatible way to return 
+both a subflow pointer and a boolean from the call to the scheduler.
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Seems like it should work to add a new struct like this:
 
+struct mptcp_sched_data {
+ 	struct sock *sock;
+ 	bool call_again;
+};
+
+void (*get_subflow)(struct mptcp_sock *msk, bool reinject, struct mptcp_sched_data *data);
+
+
+and then modify bpf_mptcp_sched_btf_struct_access() to allow writing 
+values? What do you think?
+
+
+The other part we need to figure out is how to update the transmit code to 
+send the same data across multiple subflows with this call_again flag is 
+used. I'm not yet sure what to recommend for that yet.
+
+- Mat
+
+> 	struct {
+> 		u32	space;	/* bytes copied in last measurement window */
+> 		u32	copied; /* bytes copied in this measurement window */
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 8025dc51fbe9..05ab45505f88 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -83,6 +83,7 @@ int mptcp_init_sched(struct mptcp_sock *msk,
+> 	msk->sched = sched_init;
+> 	if (msk->sched->init)
+> 		msk->sched->init(msk);
+> +	msk->call_me_again = 0;
 >
-> RFC -> v1:
-> - added patch 3/5 to address Mat's comment, and rebased the
->   following on top of it - I hope Eric may tolerate that, it's
->   more an hope than guess ;)
+> 	pr_debug("sched=%s", msk->sched->name);
 >
-> Paolo Abeni (5):
->  mptcp: really share subflow snd_wnd
->  mptcp: add mib for xmit window sharing
->  tcp: allow MPTCP to update the announced window.
->  mptcp: never shrink offered window
->  mptcp: add more offered MIBs counter.
->
-> include/net/mptcp.h   |  2 +-
-> net/ipv4/tcp_output.c | 14 ++++++-----
-> net/mptcp/mib.c       |  4 +++
-> net/mptcp/mib.h       |  6 +++++
-> net/mptcp/options.c   | 58 +++++++++++++++++++++++++++++++++++++------
-> net/mptcp/protocol.c  | 32 +++++++++++++++---------
-> net/mptcp/protocol.h  |  2 +-
-> 7 files changed, 90 insertions(+), 28 deletions(-)
+> diff --git a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> index 81a9c5d91aae..dacee63455f5 100644
+> --- a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> @@ -24,6 +24,7 @@ struct mptcp_sock {
+> 	__u32		token;
+> 	struct sock	*first;
+> 	struct mptcp_sched_ops *sched;
+> +	__u8		call_me_again:1;
+> 	char		ca_name[TCP_CA_NAME_MAX];
+> } __attribute__((preserve_access_index));
 >
 > -- 
-> 2.35.1
+> 2.34.1
 >
 >
 >
