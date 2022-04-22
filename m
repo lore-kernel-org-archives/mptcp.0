@@ -1,42 +1,45 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BDF7A
-	for <mptcp@lists.linux.dev>; Fri, 22 Apr 2022 21:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86777A
+	for <mptcp@lists.linux.dev>; Fri, 22 Apr 2022 21:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650664549; x=1682200549;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=21xEP8av6DL8u+JJ2vUv8Ig2n+logWsNBtL3SHSq7eQ=;
-  b=jBEtPxdc/1k4PjpbDopdqnpudoqXrS0w8kyeGuTFQts7kgHubuysBZ+i
-   0MDk4eBDEb42CoetxajMqGoAykHEya4EjTPtieE6qAtnhIuITHi3F1fm8
-   zFAWcmVMg4l6yhSC11/iQ5ckkvMUmWvoPZE9t46qgq9COP891S7cp5jIR
-   bP+wdh7NbiKSP3FFxKFNLwq/fMskaeuCfTdotMQz6sKd0cAjlw3HOMxAO
-   doJK5rQionh/XRLYY2mYnEWusXB1m8b3WnelLPr06j8CwnfmO7XkhDsHr
-   El8DRYP3iTO2MtEOzWzSaKLQQD5YxLJUwLOsnP8zpk9Zfsu5A4JVQeHgF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244720725"
+  t=1650664550; x=1682200550;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1ZI/wWdgV4VW/clVksEhHQFe+EsRIy22X9gG8piZujc=;
+  b=kxVU0nsN6ltSsDXZFS7FipCM8GDvo7qZ77Qjc1rgXOYu+nPojut0+XFL
+   w8mwut9dRxN2uRviD6UUsaujCABBKmNYY9KhOKBS9XI+z7iCDTV/OgXuj
+   M1zpgZSHAskRp3aLJbr2wbqF/SZ+8bt3k6tk2bv3nQ5VTaWPeVDafkiA6
+   QAcZTvHVRPhpQsS7Cr2t6577YbTRTPTNB8zGPuUkWAPrAjFPfKZ00L/wM
+   IYtvv9o+qAhKgENTvx4Vd8LjLgm3DLtN9intCcuLC/bnw4mRDrbmSiott
+   UpqAdKlE/NCn9ZmIeZSpFObakgclmHulnnyp3TeYxBVkHoJtIbfT6ejYP
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244720726"
 X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
-   d="scan'208";a="244720725"
+   d="scan'208";a="244720726"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 14:55:48 -0700
 X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
-   d="scan'208";a="578119254"
+   d="scan'208";a="578119255"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.99.29])
   by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 14:55:48 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+Cc: Geliang Tang <geliang.tang@suse.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	pabeni@redhat.com,
 	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev
-Subject: [PATCH net-next 0/8] mptcp: TCP fallback for established connections
-Date: Fri, 22 Apr 2022 14:55:35 -0700
-Message-Id: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
+	mptcp@lists.linux.dev,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 1/8] mptcp: don't send RST for single subflow
+Date: Fri, 22 Apr 2022 14:55:36 -0700
+Message-Id: <20220422215543.545732-2-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.0
+In-Reply-To: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
+References: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,45 +48,44 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RFC 8684 allows some MPTCP connections to fall back to regular TCP when
-the MPTCP DSS checksum detects middlebox interference, there is only a
-single subflow, and there is no unacknowledged out-of-sequence
-data. When this condition is detected, the stack sends a MPTCP DSS
-option with an "infinite mapping" to signal that a fallback is
-happening, and the peers will stop sending MPTCP options in their TCP
-headers. The Linux MPTCP stack has not yet supported this type of
-fallback, instead closing the connection when the MPTCP checksum fails.
+From: Geliang Tang <geliang.tang@suse.com>
 
-This series adds support for fallback to regular TCP in a more limited
-scenario, for only MPTCP connections that have never connected
-additional subflows or transmitted out-of-sequence data. The selftests
-are also updated to check new MIBs that track infinite mappings.
+When a bad checksum is detected and a single subflow is in use, don't
+send RST + MP_FAIL, send data_ack + MP_FAIL instead.
 
+So invoke tcp_send_active_reset() only when mptcp_has_another_subflow()
+is true.
 
-Geliang Tang (8):
-  mptcp: don't send RST for single subflow
-  mptcp: add the fallback check
-  mptcp: track and update contiguous data status
-  mptcp: infinite mapping sending
-  mptcp: infinite mapping receiving
-  mptcp: add mib for infinite map sending
-  mptcp: dump infinite_map field in mptcp_dump_mpext
-  selftests: mptcp: add infinite map mibs check
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ net/mptcp/subflow.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
- include/net/mptcp.h                           |  3 +-
- include/trace/events/mptcp.h                  |  6 +-
- net/mptcp/mib.c                               |  1 +
- net/mptcp/mib.h                               |  1 +
- net/mptcp/options.c                           |  8 ++-
- net/mptcp/pm.c                                |  6 ++
- net/mptcp/protocol.c                          | 21 +++++++
- net/mptcp/protocol.h                          | 13 +++++
- net/mptcp/subflow.c                           | 57 +++++++++++--------
- .../testing/selftests/net/mptcp/mptcp_join.sh | 36 +++++++++++-
- 10 files changed, 121 insertions(+), 31 deletions(-)
-
-
-base-commit: c78c5a660439d4d341a03b651541fda3ebe76160
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index aba260f547da..f217926f6a9c 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1206,14 +1206,14 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 	/* RFC 8684 section 3.7. */
+ 	if (subflow->send_mp_fail) {
+ 		if (mptcp_has_another_subflow(ssk)) {
++			ssk->sk_err = EBADMSG;
++			tcp_set_state(ssk, TCP_CLOSE);
++			subflow->reset_transient = 0;
++			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
++			tcp_send_active_reset(ssk, GFP_ATOMIC);
+ 			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+ 				sk_eat_skb(ssk, skb);
+ 		}
+-		ssk->sk_err = EBADMSG;
+-		tcp_set_state(ssk, TCP_CLOSE);
+-		subflow->reset_transient = 0;
+-		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+-		tcp_send_active_reset(ssk, GFP_ATOMIC);
+ 		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
+ 		return true;
+ 	}
 -- 
 2.36.0
 
