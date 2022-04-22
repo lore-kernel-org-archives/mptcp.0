@@ -1,30 +1,30 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15952F4E
-	for <mptcp@lists.linux.dev>; Fri, 22 Apr 2022 21:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486847A
+	for <mptcp@lists.linux.dev>; Fri, 22 Apr 2022 21:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650664553; x=1682200553;
+  t=1650664554; x=1682200554;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DGORnmbqkztJwBTlQ2Y3RGQKUzcHV3J/xM4i+2YzTKA=;
-  b=h19L1iZwyV4xGu0gqkv5uFqPKnigGJXe/8u7ycVzfjB+s6DeeWnA5rcx
-   7ecCp27Yk33cRy1231a6WDpStSCDil5HAXBrHjsZ2UBnmU/as33JaL5Fe
-   HGgVaggV4+iuUT41PdqKuSjl/CBCCvZaL6AvqcirNZZr4SpOU6KbWlRvR
-   ByaSpq56tVOH+64xFy8eKde+OSAxF7DsFCv/VYMSnrVhsidfCc9sw1cL+
-   kqPx4b7xPDNyjwUI+31NRIDIpUuelFu/9t/XvQPOPLNq+82M8j/U6173y
-   lzmwJTRVWPCmX2NX2/r0cuSMdqRw4R9h3T0RI3107lPzI9nluFFKWMdhB
+  bh=3K/31va/RyyDkPboWS2IboZC2kBhh+5PAFP+cCkjibQ=;
+  b=kHuaX0WoH3Gm3x+hvs89pvC5I/Ph+PF2pxNjoMzWe5IhNC6cHrrJHbyg
+   N3JDJyBu3x1kYHeezMXBfq2+LFWEPmBSVdQxSDQ4QEzXyWtC+hXolqpSW
+   OOCe0b+XmD+YeSLBH14u3FpJwQzFAXUMM8FD30wWxnKJ+iPtgTqyEJp/L
+   Mr28blZYCh6hUeosbJ7CAcji9RD0eFWBA+TjZVsf/i2iXQoIDX/fymQxP
+   2otW0VtRVmiLDsfcdfYUoHT+H/PSEc9Wmub9aON1ZnJmBfS8WJ3a+H82S
+   rirZ0IDtVhlSSOoc1B5axPuYcSikBRKDo9PXOtd9iFQk4KkFcUtPFJdGm
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244720732"
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244720735"
 X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
-   d="scan'208";a="244720732"
+   d="scan'208";a="244720735"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 14:55:49 -0700
 X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
-   d="scan'208";a="578119264"
+   d="scan'208";a="578119267"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.99.29])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 14:55:48 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 14:55:49 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliang.tang@suse.com>,
@@ -34,9 +34,9 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 6/8] mptcp: add mib for infinite map sending
-Date: Fri, 22 Apr 2022 14:55:41 -0700
-Message-Id: <20220422215543.545732-7-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 8/8] selftests: mptcp: add infinite map mibs check
+Date: Fri, 22 Apr 2022 14:55:43 -0700
+Message-Id: <20220422215543.545732-9-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.0
 In-Reply-To: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
 References: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
@@ -50,53 +50,77 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds a new mib named MPTCP_MIB_INFINITEMAPTX, increase it
-when a infinite mapping has been sent out.
+This patch adds a function chk_infi_nr() to check the mibs for the
+infinite mapping. Invoke it in chk_join_nr() when validate_checksum
+is set.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/mib.c      | 1 +
- net/mptcp/mib.h      | 1 +
- net/mptcp/protocol.c | 1 +
- 3 files changed, 3 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 36 ++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index e55d3dfbee0c..d93a8c9996fd 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -24,6 +24,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
- 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
- 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
-+	SNMP_MIB_ITEM("InfiniteMapTx", MPTCP_MIB_INFINITEMAPTX),
- 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
- 	SNMP_MIB_ITEM("DSSNoMatchTCP", MPTCP_MIB_DSSTCPMISMATCH),
- 	SNMP_MIB_ITEM("DataCsumErr", MPTCP_MIB_DATACSUMERR),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 00576179a619..529d07af9e14 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -17,6 +17,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
- 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
- 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the previous one */
-+	MPTCP_MIB_INFINITEMAPTX,	/* Sent an infinite mapping */
- 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
- 	MPTCP_MIB_DSSTCPMISMATCH,	/* DSS-mapping did not map with TCP's sequence numbers */
- 	MPTCP_MIB_DATACSUMERR,		/* The data checksum fail */
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 161c07f49db6..4581c570ef68 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1239,6 +1239,7 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
- 	mpext->infinite_map = 1;
- 	mpext->data_len = 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 7314257d248a..9eb4d889a24a 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1106,6 +1106,38 @@ chk_rst_nr()
+ 	echo "$extra_msg"
+ }
  
-+	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
- 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
- 	pr_fallback(msk);
- 	__mptcp_do_fallback(msk);
++chk_infi_nr()
++{
++	local infi_tx=$1
++	local infi_rx=$2
++	local count
++	local dump_stats
++
++	printf "%-${nr_blank}s %s" " " "itx"
++	count=$(ip netns exec $ns2 nstat -as | grep InfiniteMapTx | awk '{print $2}')
++	[ -z "$count" ] && count=0
++	if [ "$count" != "$infi_tx" ]; then
++		echo "[fail] got $count infinite map[s] TX expected $infi_tx"
++		fail_test
++		dump_stats=1
++	else
++		echo -n "[ ok ]"
++	fi
++
++	echo -n " - infirx"
++	count=$(ip netns exec $ns1 nstat -as | grep InfiniteMapRx | awk '{print $2}')
++	[ -z "$count" ] && count=0
++	if [ "$count" != "$infi_rx" ]; then
++		echo "[fail] got $count infinite map[s] RX expected $infi_rx"
++		fail_test
++		dump_stats=1
++	else
++		echo "[ ok ]"
++	fi
++
++	[ "${dump_stats}" = 1 ] && dump_stats
++}
++
+ chk_join_nr()
+ {
+ 	local syn_nr=$1
+@@ -1115,7 +1147,8 @@ chk_join_nr()
+ 	local csum_ns2=${5:-0}
+ 	local fail_nr=${6:-0}
+ 	local rst_nr=${7:-0}
+-	local corrupted_pkts=${8:-0}
++	local infi_nr=${8:-0}
++	local corrupted_pkts=${9:-0}
+ 	local count
+ 	local dump_stats
+ 	local with_cookie
+@@ -1170,6 +1203,7 @@ chk_join_nr()
+ 		chk_csum_nr $csum_ns1 $csum_ns2
+ 		chk_fail_nr $fail_nr $fail_nr
+ 		chk_rst_nr $rst_nr $rst_nr
++		chk_infi_nr $infi_nr $infi_nr
+ 	fi
+ }
+ 
 -- 
 2.36.0
 
