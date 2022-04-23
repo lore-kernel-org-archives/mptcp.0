@@ -1,40 +1,92 @@
-Received: from eki-net.com (unknown [107.155.56.53])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 305397C
-	for <mptcp@lists.linux.dev>; Sat, 23 Apr 2022 06:49:18 +0000 (UTC)
-Message-ID: <20220423144919680608@eki-net.com>
-From: =?utf-8?B?44GI44GN44Gt44Gj44Go?= <flv@eki-net.com>
-To: <mptcp@lists.linux.dev>
-Subject: =?utf-8?B?44CQ44GI44GN44Gt44Gj44Go44CR56K66KqN44GV44KM44Gf5oOF5aCx?=
-Date: Sat, 23 Apr 2022 14:49:06 +0800
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577C37C
+	for <mptcp@lists.linux.dev>; Sat, 23 Apr 2022 07:50:52 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id bv19so20351961ejb.6
+        for <mptcp@lists.linux.dev>; Sat, 23 Apr 2022 00:50:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=5IBdNyKa2zjtkrtaYdl5cxUSi3xp74O1DH7Se6JktDk=;
+        b=lr4pyq9UyoYv5HcNzGVMJcW3as6df/vansCg9QGfeJZbTjq/YqjXcghJbjrgQZj9Rg
+         lq5mZ935RiYGPETDXl3dePuRq42sMb6kLfj8nkLWMcS7Cjg+JH8xmWMEl5j+25CZ3Hch
+         O5Dk4U1aGr9HLQegVKjX10RWibqqy/u9scPNRxm7IxYlOIURF3JhBE4Hs63OTDcpzag3
+         N6oY8idTaTqwo+KUUjgJOPh2Uv9siMG05bo/6nBAo/l8GnoW0OPelF44w2mIQdvP79DF
+         zbbIG1IbPTfbKjsubypbYUcFwKbNyuSj6HGGLSMNR8T3qfiUEUYm8Z5CHYlLE7IBDGGH
+         pTlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=5IBdNyKa2zjtkrtaYdl5cxUSi3xp74O1DH7Se6JktDk=;
+        b=S5Mdl8KHGmBJjINnYc0njJR73AtpKKnKAPRARtmdfkYAhF3vD3sVj1W29c+V/aBYSi
+         lo4Dd+I4d3CFD57B1fSriaccG0Bg7v5fNq1s6ayWHk0+wYO+d9R//kLhy1bhrSTemzzB
+         9w0Ze0AHe7NW5hYmkmJRIV1uDm/5lv3J+QvaffWYIWr4s5xjmWQfx8nNrheayJzeEUR2
+         vzhkbUGXb6JKhuQpW00kCtSyT1g6dJN0eFUiv9qHJyalcxsR8AcNYorFzJwSOhdXefnY
+         CeEpiNfUEev+0NxW74lHUAc1F1JW4nrLW909WlF5k/Yqax3h5ZlDwNWW1jq7xmk7rplR
+         rnWw==
+X-Gm-Message-State: AOAM531MG+ywoRO4a/WY950rBSpQO9FXuy47BoTTN29Hs3CaSjdVqruo
+	6/LhZkN1QD7xdUdBp65P8wXRkQ==
+X-Google-Smtp-Source: ABdhPJxTUgjC0D+rgc/4aePok8BuayWhwKoxS5jScf3o0mOYpVOdPQJHCudYhvvg+2sqyYrk0UkBKA==
+X-Received: by 2002:a17:907:86a4:b0:6e8:d653:6376 with SMTP id qa36-20020a17090786a400b006e8d6536376mr7400642ejc.271.1650700251137;
+        Sat, 23 Apr 2022 00:50:51 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:f9e3:1f53:e464:7fe6? ([2a02:578:8593:1200:f9e3:1f53:e464:7fe6])
+        by smtp.gmail.com with ESMTPSA id k26-20020a17090666da00b006ef79b595e9sm1446971ejp.80.2022.04.23.00.50.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Apr 2022 00:50:50 -0700 (PDT)
+Message-ID: <f8d617cb-adad-eac7-5b24-8e985de4102a@tessares.net>
+Date: Sat, 23 Apr 2022 09:50:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-X-mailer: Foeh 3
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] mptcp: fix semicolon.cocci warnings
+Content-Language: en-GB
+To: kernel test robot <lkp@intel.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: kbuild-all@lists.01.org, mptcp@lists.linux.dev,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <202204231205.qD8O1MNA-lkp@intel.com>
+ <YmOGBi4qH7ewXutg@963c369fde65>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <YmOGBi4qH7ewXutg@963c369fde65>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-44CM44GI44GN44Gt44Gj44Go44CN44Gu44Ki44Kr44Km44Oz44OI44Gv5Yi26ZmQ44GV44KM44Gm
-44GE44G+44GZ44CC6YCa5bi444Gu5L2/55So44Gr5b2x6Z+/44KS5LiO44GI44Gq44GE44KI44GG
-44Gr44CB5LiL44Gu44Oq44Oz44Kv44KS44Kv44Oq44OD44Kv44GX44Gm6Zai6YCj5oOF5aCx44KS
-44Gn44GN44KL44Gg44GR5pep44GP56K66KqN44GX44Gm44GP44Gg44GV44GE44CCMTLmmYLplpPk
-u6XlhoXjgavnlLPjgZfovrzjgb/jgYzlsYrjgYvjgarjgYTloLTlkIjjgIHjgqLjgqvjgqbjg7Pj
-g4jjga/luLjjgavjgZTkuI3kvr/jgpLjgYrjgYvjgZHjgZfjgabnlLPjgZfoqLPjgZTjgZbjgYTj
-gb7jgZvjgpPjgIINCi0tLS0tLS0tLS0tLS0tDQoNCuOAkOeiuuiqjeOBleOCjOOBn+aDheWgseOA
-kQ0KaHR0cHM6Ly9zLnlhbS5jb20vUFc3eHINCi0tLS0tLS0tLS0tLS0tLS0tLS0tDQrjgYrllY/j
-gYTlkIjjgo/jgZvlhYgNCiDjgYjjgY3jga3jgaPjgajjgrXjg53jg7zjg4jjgrvjg7Pjgr/jg7wN
-CiBURUwgMDUwLTIwMTYtNTAwMA0KIOWPl+S7mOaZgumWkyA45pmCMDDliIbvvZ4yMuaZgjAw5YiG
-DQog44K144Kk44OI6YGL5Za244O7566h55CGDQogSlLmnbHml6XmnKzjg43jg4Pjg4jjgrnjg4bj
-g7zjgrfjg6fjg7MNCi0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNCuOBk+OBruODoeODvOODq+OBr+OA
-jOOBiOOBjeOBreOBo+OBqOOAjeOCiOOCiuiHquWLlemFjeS/oeOBleOCjOOBpuOBhOOBvuOBmeOA
-gg0K6L+U5L+h44GE44Gf44Gg44GN44G+44GX44Gm44KC5a++5b+c6Ie044GX44GL44Gt44G+44GZ
-44Gu44Gn44CB44GC44KJ44GL44GY44KB44GU5LqG5om/44GP44Gg44GV44GE44CCDQoNCuOBiuW/
-g+W9k+OBn+OCiuOBruOBquOBhOaWueOBr+OAgeiqoOOBq+aBkOOCjOWFpeOCiuOBvuOBmeOBjOOB
-k+OBruODoeODvOODq+OBruWJiumZpOOCkuOBiumhmOOBhOOBhOOBn+OBl+OBvuOBmeOAgg0K44GU
-5LiN5piO44Gq54K544Gu44GC44KL5pa544Gv44CB44GI44GN44Gt44Gj44Go44K144Od44O844OI
-44K744Oz44K/44O844G+44Gn44GU6YCj57Wh44GP44Gg44GV44GE44CCDQogDQo=
+Hi lpk maintainers,
+
+On 23/04/2022 06:52, kernel test robot wrote:
+> From: kernel test robot <lkp@intel.com>
+> 
+> net/mptcp/options.c:1254:3-4: Unneeded semicolon
+> 
+> 
+>  Remove unneeded semicolon.
+> 
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
+
+Thank you for your patch!
+
+Now applied in our tree:
+
+- ce2d30fe1c76: "squashed" in "mptcp: never shrink offered window"
+- Results: ecf0abcd8f60..1442fba32185 (export)
 
 
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220423T074606
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
