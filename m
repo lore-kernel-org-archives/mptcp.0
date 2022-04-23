@@ -1,92 +1,80 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577C37C
-	for <mptcp@lists.linux.dev>; Sat, 23 Apr 2022 07:50:52 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id bv19so20351961ejb.6
-        for <mptcp@lists.linux.dev>; Sat, 23 Apr 2022 00:50:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=5IBdNyKa2zjtkrtaYdl5cxUSi3xp74O1DH7Se6JktDk=;
-        b=lr4pyq9UyoYv5HcNzGVMJcW3as6df/vansCg9QGfeJZbTjq/YqjXcghJbjrgQZj9Rg
-         lq5mZ935RiYGPETDXl3dePuRq42sMb6kLfj8nkLWMcS7Cjg+JH8xmWMEl5j+25CZ3Hch
-         O5Dk4U1aGr9HLQegVKjX10RWibqqy/u9scPNRxm7IxYlOIURF3JhBE4Hs63OTDcpzag3
-         N6oY8idTaTqwo+KUUjgJOPh2Uv9siMG05bo/6nBAo/l8GnoW0OPelF44w2mIQdvP79DF
-         zbbIG1IbPTfbKjsubypbYUcFwKbNyuSj6HGGLSMNR8T3qfiUEUYm8Z5CHYlLE7IBDGGH
-         pTlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=5IBdNyKa2zjtkrtaYdl5cxUSi3xp74O1DH7Se6JktDk=;
-        b=S5Mdl8KHGmBJjINnYc0njJR73AtpKKnKAPRARtmdfkYAhF3vD3sVj1W29c+V/aBYSi
-         lo4Dd+I4d3CFD57B1fSriaccG0Bg7v5fNq1s6ayWHk0+wYO+d9R//kLhy1bhrSTemzzB
-         9w0Ze0AHe7NW5hYmkmJRIV1uDm/5lv3J+QvaffWYIWr4s5xjmWQfx8nNrheayJzeEUR2
-         vzhkbUGXb6JKhuQpW00kCtSyT1g6dJN0eFUiv9qHJyalcxsR8AcNYorFzJwSOhdXefnY
-         CeEpiNfUEev+0NxW74lHUAc1F1JW4nrLW909WlF5k/Yqax3h5ZlDwNWW1jq7xmk7rplR
-         rnWw==
-X-Gm-Message-State: AOAM531MG+ywoRO4a/WY950rBSpQO9FXuy47BoTTN29Hs3CaSjdVqruo
-	6/LhZkN1QD7xdUdBp65P8wXRkQ==
-X-Google-Smtp-Source: ABdhPJxTUgjC0D+rgc/4aePok8BuayWhwKoxS5jScf3o0mOYpVOdPQJHCudYhvvg+2sqyYrk0UkBKA==
-X-Received: by 2002:a17:907:86a4:b0:6e8:d653:6376 with SMTP id qa36-20020a17090786a400b006e8d6536376mr7400642ejc.271.1650700251137;
-        Sat, 23 Apr 2022 00:50:51 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:f9e3:1f53:e464:7fe6? ([2a02:578:8593:1200:f9e3:1f53:e464:7fe6])
-        by smtp.gmail.com with ESMTPSA id k26-20020a17090666da00b006ef79b595e9sm1446971ejp.80.2022.04.23.00.50.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Apr 2022 00:50:50 -0700 (PDT)
-Message-ID: <f8d617cb-adad-eac7-5b24-8e985de4102a@tessares.net>
-Date: Sat, 23 Apr 2022 09:50:48 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C897A
+	for <mptcp@lists.linux.dev>; Sat, 23 Apr 2022 11:00:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D40AC385A0;
+	Sat, 23 Apr 2022 11:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1650711612;
+	bh=wTEpW5crzbWU23lACHJ6N3S1AID+v/qtxAzBSnyteMk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Px2wD0iiADZhdBpqM9wqhqJrNKTPizs0AeHwXHN8kNw0o2d97fpDXTptNJwd/5z+n
+	 xjmosw96qqrIDIFXnJU7J3D+L+FK7tTsdsYJCLV03RaS2emwAQAJMXuuf1IWOVoB6W
+	 obgXSkbWzeXrWQrl6DscWXJxKM2u/ianBSuS5x/hPPUW7bbrB7QVZa/IA/Dn4E4pYk
+	 gYQv/QuR2eHelcYyH/Ai+ra6/x8SZameC735fpxvGDQKCCjy6D4ntPxA4WKQEDScI2
+	 sLVstc7gtaZ71+vWrWLO9ZUqBQa66z+xfyRlChDt8YeatFfrXoJ5Y/cFPmA+MrHhYL
+	 BCvqa6EnOrADg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 30760E7399D;
+	Sat, 23 Apr 2022 11:00:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] mptcp: fix semicolon.cocci warnings
-Content-Language: en-GB
-To: kernel test robot <lkp@intel.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: kbuild-all@lists.01.org, mptcp@lists.linux.dev,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <202204231205.qD8O1MNA-lkp@intel.com>
- <YmOGBi4qH7ewXutg@963c369fde65>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <YmOGBi4qH7ewXutg@963c369fde65>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/8] mptcp: TCP fallback for established connections
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <165071161219.8812.1323328975738766476.git-patchwork-notify@kernel.org>
+Date: Sat, 23 Apr 2022 11:00:12 +0000
+References: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hi lpk maintainers,
+Hello:
 
-On 23/04/2022 06:52, kernel test robot wrote:
-> From: kernel test robot <lkp@intel.com>
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
+
+On Fri, 22 Apr 2022 14:55:35 -0700 you wrote:
+> RFC 8684 allows some MPTCP connections to fall back to regular TCP when
+> the MPTCP DSS checksum detects middlebox interference, there is only a
+> single subflow, and there is no unacknowledged out-of-sequence
+> data. When this condition is detected, the stack sends a MPTCP DSS
+> option with an "infinite mapping" to signal that a fallback is
+> happening, and the peers will stop sending MPTCP options in their TCP
+> headers. The Linux MPTCP stack has not yet supported this type of
+> fallback, instead closing the connection when the MPTCP checksum fails.
 > 
-> net/mptcp/options.c:1254:3-4: Unneeded semicolon
-> 
-> 
->  Remove unneeded semicolon.
-> 
-> Generated by: scripts/coccinelle/misc/semicolon.cocci
+> [...]
 
-Thank you for your patch!
+Here is the summary with links:
+  - [net-next,1/8] mptcp: don't send RST for single subflow
+    https://git.kernel.org/netdev/net-next/c/1761fed25678
+  - [net-next,2/8] mptcp: add the fallback check
+    https://git.kernel.org/netdev/net-next/c/0348c690ed37
+  - [net-next,3/8] mptcp: track and update contiguous data status
+    https://git.kernel.org/netdev/net-next/c/0530020a7c8f
+  - [net-next,4/8] mptcp: infinite mapping sending
+    https://git.kernel.org/netdev/net-next/c/1e39e5a32ad7
+  - [net-next,5/8] mptcp: infinite mapping receiving
+    https://git.kernel.org/netdev/net-next/c/f8d4bcacff3b
+  - [net-next,6/8] mptcp: add mib for infinite map sending
+    https://git.kernel.org/netdev/net-next/c/104125b82e5c
+  - [net-next,7/8] mptcp: dump infinite_map field in mptcp_dump_mpext
+    https://git.kernel.org/netdev/net-next/c/d9fdd02d4265
+  - [net-next,8/8] selftests: mptcp: add infinite map mibs check
+    https://git.kernel.org/netdev/net-next/c/8bd03be3418c
 
-Now applied in our tree:
-
-- ce2d30fe1c76: "squashed" in "mptcp: never shrink offered window"
-- Results: ecf0abcd8f60..1442fba32185 (export)
-
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220423T074606
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
