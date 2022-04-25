@@ -1,80 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C897A
-	for <mptcp@lists.linux.dev>; Sat, 23 Apr 2022 11:00:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D40AC385A0;
-	Sat, 23 Apr 2022 11:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1650711612;
-	bh=wTEpW5crzbWU23lACHJ6N3S1AID+v/qtxAzBSnyteMk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Px2wD0iiADZhdBpqM9wqhqJrNKTPizs0AeHwXHN8kNw0o2d97fpDXTptNJwd/5z+n
-	 xjmosw96qqrIDIFXnJU7J3D+L+FK7tTsdsYJCLV03RaS2emwAQAJMXuuf1IWOVoB6W
-	 obgXSkbWzeXrWQrl6DscWXJxKM2u/ianBSuS5x/hPPUW7bbrB7QVZa/IA/Dn4E4pYk
-	 gYQv/QuR2eHelcYyH/Ai+ra6/x8SZameC735fpxvGDQKCCjy6D4ntPxA4WKQEDScI2
-	 sLVstc7gtaZ71+vWrWLO9ZUqBQa66z+xfyRlChDt8YeatFfrXoJ5Y/cFPmA+MrHhYL
-	 BCvqa6EnOrADg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 30760E7399D;
-	Sat, 23 Apr 2022 11:00:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587162571
+	for <mptcp@lists.linux.dev>; Mon, 25 Apr 2022 14:29:28 +0000 (UTC)
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1niziN-000Aea-7Z; Mon, 25 Apr 2022 16:29:23 +0200
+Received: from [85.1.206.226] (helo=linux.home)
+	by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1niziM-000VwC-UN; Mon, 25 Apr 2022 16:29:22 +0200
+Subject: Re: [PATCH bpf-next 2/7] bpf: add bpf_skc_to_mptcp_sock_proto
+From: Daniel Borkmann <daniel@iogearbox.net>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc: Geliang Tang <geliang.tang@suse.com>, ast@kernel.org, andrii@kernel.org,
+ mptcp@lists.linux.dev, Nicolas Rybowski <nicolas.rybowski@tessares.net>,
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+References: <20220420222459.307649-1-mathew.j.martineau@linux.intel.com>
+ <20220420222459.307649-3-mathew.j.martineau@linux.intel.com>
+ <903108df-161e-515b-da3d-bff4fb49de39@iogearbox.net>
+Message-ID: <779c3a31-381d-75b4-5f7b-be36e9816068@iogearbox.net>
+Date: Mon, 25 Apr 2022 16:29:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/8] mptcp: TCP fallback for established connections
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165071161219.8812.1323328975738766476.git-patchwork-notify@kernel.org>
-Date: Sat, 23 Apr 2022 11:00:12 +0000
-References: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220422215543.545732-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+In-Reply-To: <903108df-161e-515b-da3d-bff4fb49de39@iogearbox.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.5/26523/Mon Apr 25 10:20:35 2022)
 
-Hello:
-
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri, 22 Apr 2022 14:55:35 -0700 you wrote:
-> RFC 8684 allows some MPTCP connections to fall back to regular TCP when
-> the MPTCP DSS checksum detects middlebox interference, there is only a
-> single subflow, and there is no unacknowledged out-of-sequence
-> data. When this condition is detected, the stack sends a MPTCP DSS
-> option with an "infinite mapping" to signal that a fallback is
-> happening, and the peers will stop sending MPTCP options in their TCP
-> headers. The Linux MPTCP stack has not yet supported this type of
-> fallback, instead closing the connection when the MPTCP checksum fails.
+On 4/25/22 4:26 PM, Daniel Borkmann wrote:
+[...]
 > 
-> [...]
+> Looking at bpf_skc_to_tcp6_sock(), do we similarly need a BTF_TYPE_EMIT() here?
 
-Here is the summary with links:
-  - [net-next,1/8] mptcp: don't send RST for single subflow
-    https://git.kernel.org/netdev/net-next/c/1761fed25678
-  - [net-next,2/8] mptcp: add the fallback check
-    https://git.kernel.org/netdev/net-next/c/0348c690ed37
-  - [net-next,3/8] mptcp: track and update contiguous data status
-    https://git.kernel.org/netdev/net-next/c/0530020a7c8f
-  - [net-next,4/8] mptcp: infinite mapping sending
-    https://git.kernel.org/netdev/net-next/c/1e39e5a32ad7
-  - [net-next,5/8] mptcp: infinite mapping receiving
-    https://git.kernel.org/netdev/net-next/c/f8d4bcacff3b
-  - [net-next,6/8] mptcp: add mib for infinite map sending
-    https://git.kernel.org/netdev/net-next/c/104125b82e5c
-  - [net-next,7/8] mptcp: dump infinite_map field in mptcp_dump_mpext
-    https://git.kernel.org/netdev/net-next/c/d9fdd02d4265
-  - [net-next,8/8] selftests: mptcp: add infinite map mibs check
-    https://git.kernel.org/netdev/net-next/c/8bd03be3418c
+(Plus, CONFIG_MPTCP should be enabled in CI config (Andrii).)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Cheers,
+Daniel
