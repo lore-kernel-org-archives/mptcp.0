@@ -1,28 +1,28 @@
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E434133DC
-	for <mptcp@lists.linux.dev>; Tue, 26 Apr 2022 21:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678AB33E7
+	for <mptcp@lists.linux.dev>; Tue, 26 Apr 2022 21:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651010246; x=1682546246;
+  t=1651010247; x=1682546247;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=JYk3TyUbDhDUxu3NzojGlAGOTE6VhZ0AbqCyRH92EY8=;
-  b=V0eSC4yvGl3D6nHqZRWNRlGfdDkqrrRj08APG8MYLtfdJcAkeCeHImNY
-   zR9eckhutv0tj9Fv/+MVlzggJmKOG+4KyeIq5rtoARcYyQw0btVANe9oW
-   qElucYPNOWxQL5OkN+51j+mD299CNhe8Y9hjshJJ8VM0EFFiK1eyKwSQb
-   NZNqcGYwfUf8y/2YrHS2KGRWWvLZ2hh3V9Mqo41fkj4KC7rbqv8bjhaEi
-   oUiSNv+yLY38Qh4Nu9TxSAtO+U43AQo36fbA7wPX0RRo3v+lJc+7FFtE5
-   aok1dekQjiu1/fkryUmQXcQaSigd8SQXKQpUhUsukyJuJ/oGd1aLWDuM5
+  bh=YVHyLHCsb3hF5WWwDRxMNM4YLf+lLPKzKCx6qIJuhX8=;
+  b=HgIFNFQrVpzmSOKg+8mFiGHyCCP7dwlCuEtNZAPYftlc1lpRFyTFwkCC
+   uR/TKXtrFQuoFFNQLaQQ7iTS4GNf1taRhhITWcgKoKRCNxzAAh6X25xLo
+   ClW/JQrhv/rWRbP9qYLua+vo/ytaLpIZrS5wF+nv80/pVqCOkaGuy5ssZ
+   /ifwaWrxETszExBJHN+UiixgU7TG57OpCbUSlCs+X3/BAxIcoUr+SHRgY
+   GXH3lss3Kc8swNX84QzoVAus1hEIctqGdx6w3vYzcqde11f0gXHUybUrM
+   SyE+rdUFM9FIg1q+WfgIj/3SqYHQgduPk8dcLF31UYtjyd6bg9dPxTUw5
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="326222715"
+X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="326222719"
 X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
-   d="scan'208";a="326222715"
+   d="scan'208";a="326222719"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 14:57:23 -0700
 X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
-   d="scan'208";a="532878096"
+   d="scan'208";a="532878098"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.10.176])
   by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 14:57:23 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -34,9 +34,9 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/7] mptcp: add data lock for sk timers
-Date: Tue, 26 Apr 2022 14:57:13 -0700
-Message-Id: <20220426215717.129506-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 5/7] mptcp: reset subflow when MP_FAIL doesn't respond
+Date: Tue, 26 Apr 2022 14:57:15 -0700
+Message-Id: <20220426215717.129506-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.0
 In-Reply-To: <20220426215717.129506-1-mathew.j.martineau@linux.intel.com>
 References: <20220426215717.129506-1-mathew.j.martineau@linux.intel.com>
@@ -50,85 +50,171 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-mptcp_data_lock() needs to be held when manipulating the msk
-retransmit_timer or the sk sk_timer. This patch adds the data
-lock for the both timers.
+This patch adds a new msk->flags bit MPTCP_FAIL_NO_RESPONSE, then reuses
+sk_timer to trigger a check if we have not received a response from the
+peer after sending MP_FAIL. If the peer doesn't respond properly, reset
+the subflow.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/protocol.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/mptcp/pm.c       |  8 ++++++++
+ net/mptcp/protocol.c | 48 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/subflow.c  | 11 ++++++++++
+ 4 files changed, 68 insertions(+)
 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 971e843a304c..14f448d82bb2 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -287,6 +287,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
++	struct sock *s = (struct sock *)msk;
+ 
+ 	pr_debug("fail_seq=%llu", fail_seq);
+ 
+@@ -299,6 +300,13 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+ 		subflow->send_mp_fail = 1;
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
+ 		subflow->send_infinite_map = 1;
++	} else if (s && inet_sk_state_load(s) != TCP_CLOSE) {
++		pr_debug("MP_FAIL response received");
++
++		mptcp_data_lock(s);
++		if (inet_sk_state_load(s) != TCP_CLOSE)
++			sk_stop_timer(s, &s->sk_timer);
++		mptcp_data_unlock(s);
+ 	}
+ }
+ 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e3db319ce92e..ea74122065f1 100644
+index ea74122065f1..a5d466e6b538 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1605,8 +1605,10 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 
- out:
- 	/* ensure the rtx timer is running */
-+	mptcp_data_lock(sk);
- 	if (!mptcp_timer_pending(sk))
- 		mptcp_reset_timer(sk);
-+	mptcp_data_unlock(sk);
- 	if (copied)
- 		__mptcp_check_send_data_fin(sk);
- }
-@@ -2491,8 +2493,10 @@ static void __mptcp_retrans(struct sock *sk)
- reset_timer:
- 	mptcp_check_and_set_pending(sk);
- 
-+	mptcp_data_lock(sk);
- 	if (!mptcp_timer_pending(sk))
- 		mptcp_reset_timer(sk);
-+	mptcp_data_unlock(sk);
+@@ -2169,10 +2169,38 @@ static void mptcp_retransmit_timer(struct timer_list *t)
+ 	sock_put(sk);
  }
  
++static struct mptcp_subflow_context *
++mp_fail_response_expect_subflow(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow, *ret = NULL;
++
++	mptcp_for_each_subflow(msk, subflow) {
++		if (READ_ONCE(subflow->mp_fail_response_expect)) {
++			ret = subflow;
++			break;
++		}
++	}
++
++	return ret;
++}
++
++static void mptcp_check_mp_fail_response(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++
++	bh_lock_sock(sk);
++	subflow = mp_fail_response_expect_subflow(msk);
++	if (subflow)
++		__set_bit(MPTCP_FAIL_NO_RESPONSE, &msk->flags);
++	bh_unlock_sock(sk);
++}
++
+ static void mptcp_timeout_timer(struct timer_list *t)
+ {
+ 	struct sock *sk = from_timer(sk, t, sk_timer);
+ 
++	mptcp_check_mp_fail_response(mptcp_sk(sk));
+ 	mptcp_schedule_work(sk);
+ 	sock_put(sk);
+ }
+@@ -2499,6 +2527,23 @@ static void __mptcp_retrans(struct sock *sk)
+ 	mptcp_data_unlock(sk);
+ }
+ 
++static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *ssk;
++	bool slow;
++
++	subflow = mp_fail_response_expect_subflow(msk);
++	if (subflow) {
++		pr_debug("MP_FAIL doesn't respond, reset the subflow");
++
++		ssk = mptcp_subflow_tcp_sock(subflow);
++		slow = lock_sock_fast(ssk);
++		mptcp_subflow_reset(ssk);
++		unlock_sock_fast(ssk, slow);
++	}
++}
++
  static void mptcp_worker(struct work_struct *work)
-@@ -2651,8 +2655,10 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
- 		} else {
- 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
- 			tcp_send_ack(ssk);
-+			mptcp_data_lock(sk);
- 			if (!mptcp_timer_pending(sk))
- 				mptcp_reset_timer(sk);
-+			mptcp_data_unlock(sk);
- 		}
- 		break;
- 	}
-@@ -2753,8 +2759,10 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	/* join list will be eventually flushed (with rst) at sock lock release time*/
- 	list_splice_init(&msk->conn_list, &conn_list);
+ {
+ 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
+@@ -2539,6 +2584,9 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
+ 		__mptcp_retrans(sk);
  
-+	mptcp_data_lock(sk);
- 	mptcp_stop_timer(sk);
- 	sk_stop_timer(sk, &sk->sk_timer);
-+	mptcp_data_unlock(sk);
- 	msk->pm.status = 0;
- 
- 	/* clears msk->subflow, allowing the following loop to close
-@@ -2816,7 +2824,9 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		__mptcp_destroy_sock(sk);
- 		do_cancel_work = true;
- 	} else {
-+		mptcp_data_lock(sk);
- 		sk_reset_timer(sk, &sk->sk_timer, jiffies + TCP_TIMEWAIT_LEN);
-+		mptcp_data_unlock(sk);
- 	}
++	if (test_and_clear_bit(MPTCP_FAIL_NO_RESPONSE, &msk->flags))
++		mptcp_mp_fail_no_response(msk);
++
+ unlock:
  	release_sock(sk);
- 	if (do_cancel_work)
-@@ -2861,8 +2871,10 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
+ 	sock_put(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index cc66c81a8fab..3a8740fef918 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -116,6 +116,7 @@
+ #define MPTCP_WORK_EOF		3
+ #define MPTCP_FALLBACK_DONE	4
+ #define MPTCP_WORK_CLOSE_SUBFLOW 5
++#define MPTCP_FAIL_NO_RESPONSE	6
+ 
+ /* MPTCP socket release cb flags */
+ #define MPTCP_PUSH_PENDING	1
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index ca2352ad20d4..75c824b67ca9 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -968,6 +968,7 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+ 	bool csum_reqd = READ_ONCE(msk->csum_enabled);
++	struct sock *sk = (struct sock *)msk;
+ 	struct mptcp_ext *mpext;
+ 	struct sk_buff *skb;
+ 	u16 data_len;
+@@ -1009,6 +1010,12 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 		pr_debug("infinite mapping received");
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
+ 		subflow->map_data_len = 0;
++		if (sk && inet_sk_state_load(sk) != TCP_CLOSE) {
++			mptcp_data_lock(sk);
++			if (inet_sk_state_load(sk) != TCP_CLOSE)
++				sk_stop_timer(sk, &sk->sk_timer);
++			mptcp_data_unlock(sk);
++		}
+ 		return MAPPING_INVALID;
  	}
  
-+	mptcp_data_lock(sk);
- 	mptcp_stop_timer(sk);
- 	sk_stop_timer(sk, &sk->sk_timer);
-+	mptcp_data_unlock(sk);
- 
- 	if (mptcp_sk(sk)->token)
- 		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
+@@ -1219,6 +1226,10 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 					sk_eat_skb(ssk, skb);
+ 			} else {
+ 				WRITE_ONCE(subflow->mp_fail_response_expect, true);
++				/* The data lock is acquired in __mptcp_move_skbs() */
++				sk_reset_timer((struct sock *)msk,
++					       &((struct sock *)msk)->sk_timer,
++					       jiffies + TCP_RTO_MAX);
+ 			}
+ 			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
+ 			return true;
 -- 
 2.36.0
 
