@@ -1,76 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A977B
-	for <mptcp@lists.linux.dev>; Wed, 27 Apr 2022 09:50:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A374C385AA;
-	Wed, 27 Apr 2022 09:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1651053012;
-	bh=COwgWPaaoHdfJl+YwIcM2rJ7zTyu4uqOdzRJSXAiqFo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=a4/gn3vYzjVQ9vwEdrQQWPAbzxh+B1Hcfz0MsQkeIIoUuxb8Ovdg0akNA49TwDoim
-	 +SKfjnu2bBoOshmNHnmtPacMv89yTz23kd8Fn4FpgFFCuLFtzjZJjSs8iehbpPL+5T
-	 lRB1Bjr5jjI+CtU99GcOFr/AR3Niwqb6QICt5auo190vJwEH6RfdbaQqU+ik/6N4pD
-	 A07RepdDCGkoAuAJE44SHJZaVPjGheXNr0PSySLvN+Bs17yrTy5cxlghkyvSQ2u5zl
-	 q2UnVRxbNHx8cLRsptbVqmb0Rg/iD9cxI+RldMfcB6Nk+KpPs00AsMvflrHzsd6hFc
-	 Qp2eKW0bs5EZg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6DA3BF0383D;
-	Wed, 27 Apr 2022 09:50:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DB77B
+	for <mptcp@lists.linux.dev>; Wed, 27 Apr 2022 10:09:27 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id gh6so2466107ejb.0
+        for <mptcp@lists.linux.dev>; Wed, 27 Apr 2022 03:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=YvwH1vO4sRmLDCJcY5QHloUEWlMKOR8FmFkmLjgmn20=;
+        b=KRYxY9ijG1TkmkU0m7KhowpVwFB27UMVl7B4ZmWj+SlAO4gKbobWw7t+kgqtN19rA8
+         Vf8CEz5u9vfNrcAbtvl/P5srLn/7kKDhA+09d0ECJ+l4o63YDig+PgApxgu+F1BA+lmc
+         MrZKuRc+EZzrmpy8/+NlfpCuWAFAGYuLqjoEgsL8y5VX4oV0IRJS4Tm7nThDo/GHd7bm
+         SGzaGo6N8rmixCzP9lli0yFWWlzJEzo3h9hfZt1qCvU0sce82hs5x8iUVjKE7CmAgMj9
+         nsx6zVajWSFvauFrfM3v4W6Jd3G6MmKWhSRBGFPgNqzUBJwVpnVtv7bikdBXhEwxaRrt
+         QDJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=YvwH1vO4sRmLDCJcY5QHloUEWlMKOR8FmFkmLjgmn20=;
+        b=Wnchn5RkkVKlqAdvGKvono+RmfkPgVLSY/9T6HAZlQJz1lSLq5o+dC/kWIvfqoUnFV
+         IZS9EZ8geSoTWOqPMWCytv45Bu6ox2vI81NAeLug/pLSrRqlbqoUwLHop8fkOXpRtjcq
+         zYhGNhzUA5Pc7sgURelHbrcwKe/PEJQNk9HWfbDD3cQT94fNQNzg8V31ttVs4PaH7xBr
+         UbhWraYTP0Rt1PTOlGuuUO0ozpIVFjs6NFwwNM4Eo9WAWWcMC9YhhhWOaZTUvZbKoBgg
+         QOAEK8+69J0VtIyqKGz8Ox4yK+orQQF7ir8uMRNy6NX/533Ny0KdtaTYZTBM3pHMiuZH
+         PLyQ==
+X-Gm-Message-State: AOAM531EiVudirAq9yTDBKnDwvVag87mNeJfKH+sO3gbX6U9PniQo/jA
+	ouoUmzT6/MqwrglFbSptOexMi4mKcjq0T5v7
+X-Google-Smtp-Source: ABdhPJzW/tGQkTHAOcMIlJAb1OiVC8jyFevPLfCaok7r7OzHjTaFzLd4QIG5Q3pju7Ub/kLTu8iMwQ==
+X-Received: by 2002:a17:907:d8c:b0:6f0:1091:de34 with SMTP id go12-20020a1709070d8c00b006f01091de34mr25467059ejc.376.1651054165253;
+        Wed, 27 Apr 2022 03:09:25 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:3b64:994c:90d3:9913? ([2a02:578:8593:1200:3b64:994c:90d3:9913])
+        by smtp.gmail.com with ESMTPSA id v20-20020a056402349400b00425a5ea1bb7sm8451235edc.57.2022.04.27.03.09.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Apr 2022 03:09:24 -0700 (PDT)
+Message-ID: <edebd64f-9b82-c4c1-1d03-e39270bf5c58@tessares.net>
+Date: Wed, 27 Apr 2022 12:09:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/7] mptcp: Timeout for MP_FAIL response
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165105301244.17866.15528494250616223898.git-patchwork-notify@kernel.org>
-Date: Wed, 27 Apr 2022 09:50:12 +0000
-References: <20220426215717.129506-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220426215717.129506-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: bpf: add MPTCP test
+ base"
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <38168fb95c78454db24726d2bd45f2d65d977fda.1651022882.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <38168fb95c78454db24726d2bd45f2d65d977fda.1651022882.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Geliang,
 
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
+Thank you for the patch!
 
-On Tue, 26 Apr 2022 14:57:10 -0700 you wrote:
-> When one peer sends an infinite mapping to coordinate fallback from
-> MPTCP to regular TCP, the other peer is expected to send a packet with
-> the MPTCP MP_FAIL option to acknowledge the infinite mapping. Rather
-> than leave the connection in some half-fallback state, this series adds
-> a timeout after which the infinite mapping sender will reset the
-> connection.
-> 
-> [...]
+On 27/04/2022 03:28, Geliang Tang wrote:
+> Add CONFIG_IKCONFIG and CONFIG_IKCONFIG_PROC as Mat suggested.
 
-Here is the summary with links:
-  - [net-next,1/7] selftests: mptcp: add infinite map testcase
-    https://git.kernel.org/netdev/net-next/c/b6e074e171bc
-  - [net-next,2/7] mptcp: use mptcp_stop_timer
-    https://git.kernel.org/netdev/net-next/c/bcf3cf93f645
-  - [net-next,3/7] mptcp: add data lock for sk timers
-    https://git.kernel.org/netdev/net-next/c/4293248c6704
-  - [net-next,4/7] mptcp: add MP_FAIL response support
-    https://git.kernel.org/netdev/net-next/c/9c81be0dbc89
-  - [net-next,5/7] mptcp: reset subflow when MP_FAIL doesn't respond
-    https://git.kernel.org/netdev/net-next/c/49fa1919d6bc
-  - [net-next,6/7] selftests: mptcp: check MP_FAIL response mibs
-    https://git.kernel.org/netdev/net-next/c/1f7d325f7d49
-  - [net-next,7/7] selftests: mptcp: print extra msg in chk_csum_nr
-    https://git.kernel.org/netdev/net-next/c/53f368bfff31
+Mat's second reply on...
 
-You are awesome, thank you!
+  Squash to "selftests: bpf: test bpf_skc_to_mptcp_sock"
+
+...patch confuses me but I think he meant: we need this patch as it is
+and that's why it is marked as Queued on Patchwork. But for this fix
+here, it is probably best to have a dedicated patch and not a Squash-to
+one because these two config should have been added before as they are
+needed by other BPF selftests.
+
+Did I misunderstand?
+
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
