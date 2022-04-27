@@ -1,28 +1,28 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F63804
-	for <mptcp@lists.linux.dev>; Wed, 27 Apr 2022 22:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A5B7B
+	for <mptcp@lists.linux.dev>; Wed, 27 Apr 2022 22:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1651099815; x=1682635815;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1dxqKj8jB6PC1cX01WR8FZdqdf7hC/30ayF8nyz7FU4=;
-  b=k3T/GlT51EAGVabV+7pd5hHlkLw7rFvrNI2XcCAMQJXXIUnNS9q4CAvP
-   HY4PHkr1c3bBw/kIXfpE3dbfJ5yCwjeofp2oqDZGcaCPn8cu1V6Ix2rqL
-   31NplBXmuqIlAU9rpcNjX+26wYgNSpmRA5p2YedojR1QrkTL/A79s3z5r
-   YcUeOOCi2If3DrLuMf1N1yrrTwZpeznt3R4OeMWm+kPwS/EVw0moKrdyw
-   hEBt9M699Aoy7NKnstjeNdFd2+u21N8u09ZPbfyRWJNB5mij4JJC45HNE
-   jSyYTQle3KAcM96pPttfuEnrKt0rKEFSyjzu4vCvaI4VWcsjVpC0cpN+2
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="291252895"
+  bh=wmrL8d5kVZoi9GKjFaD/PhxeoocjNdjMMVWgnhRg444=;
+  b=YP9EIMWZjNF6x4GKFqTt39fR26U+w6IO7fY8feazpgbL1ddORqeWrOhD
+   2ssv8tsV/tNDdWNy6I1VrB6n4/i+mgeSlVVPCbkPVoEQHSWpqWA+x3nR9
+   cxiQrrMqjMp1HRi0RrvOO1d7grMW1hQUptMuWQelhpV6vVTI0TTIJWDPT
+   0N6lQgY/bzIKxfx5UMYq7l22u2m3vrv85G9dee+hjqHyHApALpXShk3Y+
+   xs4Y3FA7MqnqkA4Mwxe2v5GmcQ48QBGijUM1EsoTe5zato+ZwUsx2u2yR
+   Pf4fZyywQZ5wi7fzvMQTfuUxf7LxtQFTwe6rttpYUqQloiSkryPlGLSQz
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="291252896"
 X-IronPort-AV: E=Sophos;i="5.90,294,1643702400"; 
-   d="scan'208";a="291252895"
+   d="scan'208";a="291252896"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 15:50:11 -0700
 X-IronPort-AV: E=Sophos;i="5.90,294,1643702400"; 
-   d="scan'208";a="731049122"
+   d="scan'208";a="731049123"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.233.139])
   by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 15:50:10 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -32,10 +32,11 @@ Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	kuba@kernel.org,
 	pabeni@redhat.com,
 	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev
-Subject: [PATCH net-next 5/6] mptcp: Add a per-namespace sysctl to set the default path manager type
-Date: Wed, 27 Apr 2022 15:50:01 -0700
-Message-Id: <20220427225002.231996-6-mathew.j.martineau@linux.intel.com>
+	mptcp@lists.linux.dev,
+	Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH net-next 6/6] selftests: mptcp: Add tests for userspace PM type
+Date: Wed, 27 Apr 2022 15:50:02 -0700
+Message-Id: <20220427225002.231996-7-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.0
 In-Reply-To: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com>
 References: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com>
@@ -47,182 +48,117 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The new net.mptcp.pm_type sysctl determines which path manager will be
-used by each newly-created MPTCP socket.
+These tests ensure that the in-kernel path manager is bypassed when
+the userspace path manager is configured. Kernel code is still
+responsible for ADD_ADDR echo, so also make sure that's working.
 
-v2: Handle builds without CONFIG_SYSCTL
-v3: Clarify logic for type-specific PM init (Geliang Tang and Paolo Abeni)
-
+Tested-by: Geliang Tang <geliang.tang@suse.com>
 Acked-by: Paolo Abeni <pabeni@redhat.com>
+Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- Documentation/networking/mptcp-sysctl.rst | 18 ++++++++++++
- net/mptcp/ctrl.c                          | 21 ++++++++++++++
- net/mptcp/pm.c                            | 34 +++++++++++++++--------
- net/mptcp/protocol.h                      |  1 +
- 4 files changed, 63 insertions(+), 11 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index b0d4da71e68e..e263dfcc4b40 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -46,6 +46,24 @@ allow_join_initial_addr_port - BOOLEAN
- 
- 	Default: 1
- 
-+pm_type - INTEGER
-+
-+	Set the default path manager type to use for each new MPTCP
-+	socket. In-kernel path management will control subflow
-+	connections and address advertisements according to
-+	per-namespace values configured over the MPTCP netlink
-+	API. Userspace path management puts per-MPTCP-connection subflow
-+	connection decisions and address advertisements under control of
-+	a privileged userspace program, at the cost of more netlink
-+	traffic to propagate all of the related events and commands.
-+
-+	This is a per-namespace sysctl.
-+
-+	* 0 - In-kernel path manager
-+	* 1 - Userspace path manager
-+
-+	Default: 0
-+
- stale_loss_cnt - INTEGER
- 	The number of MPTCP-level retransmission intervals with no traffic and
- 	pending outstanding data on a given subflow required to declare it stale.
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 8b235468c88f..ae20b7d92e28 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -16,6 +16,11 @@
- #define MPTCP_SYSCTL_PATH "net/mptcp"
- 
- static int mptcp_pernet_id;
-+
-+#ifdef CONFIG_SYSCTL
-+static int mptcp_pm_type_max = __MPTCP_PM_TYPE_MAX;
-+#endif
-+
- struct mptcp_pernet {
- #ifdef CONFIG_SYSCTL
- 	struct ctl_table_header *ctl_table_hdr;
-@@ -26,6 +31,7 @@ struct mptcp_pernet {
- 	u8 mptcp_enabled;
- 	u8 checksum_enabled;
- 	u8 allow_join_initial_addr_port;
-+	u8 pm_type;
- };
- 
- static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
-@@ -58,6 +64,11 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net)
- 	return mptcp_get_pernet(net)->stale_loss_cnt;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index e5c8fc2816fb..b27854f976f7 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -70,6 +70,7 @@ init_partial()
+ 		ip netns add $netns || exit $ksft_skip
+ 		ip -net $netns link set lo up
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
++		ip netns exec $netns sysctl -q net.mptcp.pm_type=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
+ 		if [ $checksum -eq 1 ]; then
+@@ -1611,6 +1612,13 @@ wait_attempt_fail()
+ 	return 1
  }
  
-+int mptcp_get_pm_type(const struct net *net)
++set_userspace_pm()
 +{
-+	return mptcp_get_pernet(net)->pm_type;
++	local ns=$1
++
++	ip netns exec $ns sysctl -q net.mptcp.pm_type=1
 +}
 +
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ subflows_tests()
  {
- 	pernet->mptcp_enabled = 1;
-@@ -65,6 +76,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- 	pernet->checksum_enabled = 0;
- 	pernet->allow_join_initial_addr_port = 1;
- 	pernet->stale_loss_cnt = 4;
-+	pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
+ 	if reset "no JOIN"; then
+@@ -2698,6 +2706,63 @@ fail_tests()
+ 	fi
  }
  
- #ifdef CONFIG_SYSCTL
-@@ -108,6 +120,14 @@ static struct ctl_table mptcp_sysctl_table[] = {
- 		.mode = 0644,
- 		.proc_handler = proc_douintvec_minmax,
- 	},
-+	{
-+		.procname = "pm_type",
-+		.maxlen = sizeof(u8),
-+		.mode = 0644,
-+		.proc_handler = proc_dou8vec_minmax,
-+		.extra1       = SYSCTL_ZERO,
-+		.extra2       = &mptcp_pm_type_max
-+	},
- 	{}
- };
- 
-@@ -128,6 +148,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
- 	table[2].data = &pernet->checksum_enabled;
- 	table[3].data = &pernet->allow_join_initial_addr_port;
- 	table[4].data = &pernet->stale_loss_cnt;
-+	table[5].data = &pernet->pm_type;
- 
- 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
- 	if (!hdr)
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 5320270b3926..57f67578a47f 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -415,7 +415,7 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
- 
- void mptcp_pm_data_reset(struct mptcp_sock *msk)
++userspace_tests()
++{
++	# userspace pm type prevents add_addr
++	if reset "userspace pm type prevents add_addr"; then
++		set_userspace_pm $ns1
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 0 2
++		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++		run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 0 0 0
++		chk_add_nr 0 0
++	fi
++
++	# userspace pm type rejects join
++	if reset "userspace pm type rejects join"; then
++		set_userspace_pm $ns1
++		pm_nl_set_limits $ns1 1 1
++		pm_nl_set_limits $ns2 1 1
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++		run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 1 1 0
++	fi
++
++	# userspace pm type does not send join
++	if reset "userspace pm type does not send join"; then
++		set_userspace_pm $ns2
++		pm_nl_set_limits $ns1 1 1
++		pm_nl_set_limits $ns2 1 1
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++		run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 0 0 0
++	fi
++
++	# userspace pm type prevents mp_prio
++	if reset "userspace pm type prevents mp_prio"; then
++		set_userspace_pm $ns1
++		pm_nl_set_limits $ns1 1 1
++		pm_nl_set_limits $ns2 1 1
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
++		chk_join_nr 1 1 0
++		chk_prio_nr 0 0
++	fi
++
++	# userspace pm type prevents rm_addr
++	if reset "userspace pm type prevents rm_addr"; then
++		set_userspace_pm $ns1
++		set_userspace_pm $ns2
++		pm_nl_set_limits $ns1 0 1
++		pm_nl_set_limits $ns2 0 1
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++		run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
++		chk_join_nr 0 0 0
++		chk_rm_nr 0 0
++	fi
++}
++
+ implicit_tests()
  {
--	bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
-+	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
- 	struct mptcp_pm_data *pm = &msk->pm;
+ 	# userspace pm type prevents add_addr
+@@ -2767,6 +2832,7 @@ all_tests_sorted=(
+ 	m@fullmesh_tests
+ 	z@fastclose_tests
+ 	F@fail_tests
++	u@userspace_tests
+ 	I@implicit_tests
+ )
  
- 	pm->add_addr_signaled = 0;
-@@ -424,17 +424,29 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	pm->subflows = 0;
- 	pm->rm_list_tx.nr = 0;
- 	pm->rm_list_rx.nr = 0;
--	WRITE_ONCE(pm->pm_type, MPTCP_PM_TYPE_KERNEL);
--	/* pm->work_pending must be only be set to 'true' when
--	 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
--	 */
--	WRITE_ONCE(pm->work_pending,
--		   (!!mptcp_pm_get_local_addr_max(msk) && subflows_allowed) ||
--		   !!mptcp_pm_get_add_addr_signal_max(msk));
-+	WRITE_ONCE(pm->pm_type, pm_type);
-+
-+	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
-+		bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
-+
-+		/* pm->work_pending must be only be set to 'true' when
-+		 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
-+		 */
-+		WRITE_ONCE(pm->work_pending,
-+			   (!!mptcp_pm_get_local_addr_max(msk) &&
-+			    subflows_allowed) ||
-+			   !!mptcp_pm_get_add_addr_signal_max(msk));
-+		WRITE_ONCE(pm->accept_addr,
-+			   !!mptcp_pm_get_add_addr_accept_max(msk) &&
-+			   subflows_allowed);
-+		WRITE_ONCE(pm->accept_subflow, subflows_allowed);
-+	} else {
-+		WRITE_ONCE(pm->work_pending, 0);
-+		WRITE_ONCE(pm->accept_addr, 0);
-+		WRITE_ONCE(pm->accept_subflow, 0);
-+	}
-+
- 	WRITE_ONCE(pm->addr_signal, 0);
--	WRITE_ONCE(pm->accept_addr,
--		   !!mptcp_pm_get_add_addr_accept_max(msk) && subflows_allowed);
--	WRITE_ONCE(pm->accept_subflow, subflows_allowed);
- 	WRITE_ONCE(pm->remote_deny_join_id0, false);
- 	pm->status = 0;
- 	bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 79606e9d3f2a..54d2b3b2d100 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -585,6 +585,7 @@ unsigned int mptcp_get_add_addr_timeout(const struct net *net);
- int mptcp_is_checksum_enabled(const struct net *net);
- int mptcp_allow_join_id0(const struct net *net);
- unsigned int mptcp_stale_loss_cnt(const struct net *net);
-+int mptcp_get_pm_type(const struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
 -- 
 2.36.0
 
