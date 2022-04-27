@@ -1,39 +1,39 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FE136B
-	for <mptcp@lists.linux.dev>; Wed, 27 Apr 2022 00:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F01C36B
+	for <mptcp@lists.linux.dev>; Wed, 27 Apr 2022 00:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651018655; x=1682554655;
+  t=1651018805; x=1682554805;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=SfD/SIdmUqXFC7/+gQ2h+CDIz9BiubOE4161nXZiJxA=;
-  b=DF6gdsIU4+6Q9mpnXKu4fIPD87LUh5Udx2My54MiFrcco8tlWPWE4ZkO
-   et9H/Owfll4Ut2v2XErEJ0a1E/ANvqHwJtl6hpfukWkOKrrURrMUNdZMq
-   OG2so+bzQpGxnslcNZssZi2RpoKpox/mX99Kw/HfmuFPSKWIve5ijTPec
-   Dhbw79Z7wQAHnEcF8eKEcvgQ0GqbNicTd2RIw/jBtQAUTR1/GVPDD8uLg
-   aL3CXAyFxLP+oUdNeL5Q0bbrDxPaaiU1d4Kx0IMvfiG9DVdWmWBAGBMse
-   OassSCNIi5wlS708oDMwPrZunN8R7NZpUf/u0uvoNs4rILgRTf5qykkC0
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="264610338"
+  bh=looGfH6mbenu2vWqPChaNugkrpcRhAmQbgMSdI/9euw=;
+  b=Ov1UIf236n3fBbwfbwvXjSOvEBQBa2N0At80agePGhq11xLqvv16PA9c
+   9V6Fv/12tAeq1HRaVK98iFWh9LrGC44+pDiC1YsgqzDiDiNSywiT0tjJC
+   NTyRB+r5fkFxxgavTUbvW1jdS8McRAMWpgJCvxoYFmjT4ph9+lhDi4kLJ
+   Z5qiyHZ1V/bF+Akj/o0dHrDt7ljDBHBNzXGvd/anMU6CsRKY2RTp6HYZu
+   NqAZpxDKhhnPvez4+6fBsn6XW20NXXUXoU8cH8mbWXH4Lf5qPYnY4jB7I
+   +2v1MSYEE82kCfCEBKAo66GRAAsDyvx5knx5SH+PCdsf/d8CrI6DKApi4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="328706423"
 X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
-   d="scan'208";a="264610338"
+   d="scan'208";a="328706423"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 17:17:34 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 17:20:04 -0700
 X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
-   d="scan'208";a="532929276"
+   d="scan'208";a="532930521"
 Received: from brpivitt-mobl1.amr.corp.intel.com ([10.252.136.44])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 17:17:34 -0700
-Date: Tue, 26 Apr 2022 17:17:34 -0700 (PDT)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 17:20:04 -0700
+Date: Tue, 26 Apr 2022 17:20:04 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "bpf: add
- bpf_skc_to_mptcp_sock_proto"
-In-Reply-To: <a412b57378176f189e112a36443ac133fa90566c.1650947043.git.geliang.tang@suse.com>
-Message-ID: <39951b3-5ec-09-6547-991ff81e2f1@linux.intel.com>
-References: <a412b57378176f189e112a36443ac133fa90566c.1650947043.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: bpf: test
+ bpf_skc_to_mptcp_sock"
+In-Reply-To: <50d4d7a13beec75c5172d81c2c6d037fb74efd79.1650947056.git.geliang.tang@suse.com>
+Message-ID: <d521e76e-729a-cc7f-9ad5-e4e26f3da8d@linux.intel.com>
+References: <a412b57378176f189e112a36443ac133fa90566c.1650947043.git.geliang.tang@suse.com> <50d4d7a13beec75c5172d81c2c6d037fb74efd79.1650947056.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,103 +44,53 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Tue, 26 Apr 2022, Geliang Tang wrote:
 
-> Update as Daniel suggested.
+> Add CONFIG_MPTCP check.
+>
+> When CONFIG_MPTCP is not enabled, we'll get a clearer error message:
+>
+> libbpf: extern CONFIG_MPTCP (strong) not resolved
+> libbpf: failed to load object './mptcp_sock.o'
+>
+> The message before is like this:
+>
+> libbpf: prog '_sockops': BPF program load failed: Invalid argument
+> libbpf: prog '_sockops': -- BEGIN PROG LOAD LOG --
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> tools/testing/selftests/bpf/progs/mptcp_sock.c | 4 ++++
+> 1 file changed, 4 insertions(+)
+>
 
-Looks good to squash, thanks. The 'base' bpf tests pass, which is what 
-Daniel noted as failing.
+Looks like this also requires CONFIG_IKCONFIG and CONFIG_IKCONFIG_PROC, 
+can you also add those to tools/testing/selftests/bpf/config? Maybe that 
+should be a separate commit, since other bpf test progs appear to rely on 
+this undocumented config requirement.
 
 - Mat
 
-
-> ---
-> include/linux/bpf.h      | 1 +
-> include/net/mptcp.h      | 2 +-
-> kernel/bpf/verifier.c    | 1 +
-> kernel/trace/bpf_trace.c | 2 ++
-> net/core/filter.c        | 3 ++-
-> net/mptcp/Makefile       | 2 --
-> 6 files changed, 7 insertions(+), 4 deletions(-)
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_sock.c b/tools/testing/selftests/bpf/progs/mptcp_sock.c
+> index 5cfaec4e7245..7b6a25e37de8 100644
+> --- a/tools/testing/selftests/bpf/progs/mptcp_sock.c
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_sock.c
+> @@ -7,6 +7,7 @@
 >
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index bdb5298735ce..2493f9601842 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -2249,6 +2249,7 @@ extern const struct bpf_func_proto bpf_skc_to_tcp_timewait_sock_proto;
-> extern const struct bpf_func_proto bpf_skc_to_tcp_request_sock_proto;
-> extern const struct bpf_func_proto bpf_skc_to_udp6_sock_proto;
-> extern const struct bpf_func_proto bpf_skc_to_unix_sock_proto;
-> +extern const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto;
-> extern const struct bpf_func_proto bpf_copy_from_user_proto;
-> extern const struct bpf_func_proto bpf_snprintf_btf_proto;
-> extern const struct bpf_func_proto bpf_snprintf_proto;
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 6b07011c060d..4d761ad530c9 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -284,7 +284,7 @@ static inline int mptcpv6_init(void) { return 0; }
-> static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
-> #endif
+> char _license[] SEC("license") = "GPL";
+> __u32 _version SEC("version") = 1;
+> +extern bool CONFIG_MPTCP __kconfig;
 >
-> -#if defined(CONFIG_MPTCP) && defined(CONFIG_BPF_JIT) && defined(CONFIG_BPF_SYSCALL)
-> +#if defined(CONFIG_MPTCP) && defined(CONFIG_BPF_SYSCALL)
-> struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk);
-> #else
-> static inline struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk) { return NULL; }
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 9c1a02b82ecd..40602ec20c6a 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -517,6 +517,7 @@ static bool is_ptr_cast_function(enum bpf_func_id func_id)
-> 		func_id == BPF_FUNC_skc_to_tcp_sock ||
-> 		func_id == BPF_FUNC_skc_to_tcp6_sock ||
-> 		func_id == BPF_FUNC_skc_to_udp6_sock ||
-> +		func_id == BPF_FUNC_skc_to_mptcp_sock ||
-> 		func_id == BPF_FUNC_skc_to_tcp_timewait_sock ||
-> 		func_id == BPF_FUNC_skc_to_tcp_request_sock;
-> }
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index b26f3da943de..c7bf10cf2fa5 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1685,6 +1685,8 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-> 		return &bpf_skc_to_udp6_sock_proto;
-> 	case BPF_FUNC_skc_to_unix_sock:
-> 		return &bpf_skc_to_unix_sock_proto;
-> +	case BPF_FUNC_skc_to_mptcp_sock:
-> +		return &bpf_skc_to_mptcp_sock_proto;
-> 	case BPF_FUNC_sk_storage_get:
-> 		return &bpf_sk_storage_get_tracing_proto;
-> 	case BPF_FUNC_sk_storage_delete:
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 4bcf13b1d0e2..a0dd6f6b17f8 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -11282,10 +11282,11 @@ const struct bpf_func_proto bpf_skc_to_unix_sock_proto = {
->
-> BPF_CALL_1(bpf_skc_to_mptcp_sock, struct sock *, sk)
-> {
-> +	BTF_TYPE_EMIT(struct mptcp_sock);
-> 	return (unsigned long)bpf_mptcp_sock_from_subflow(sk);
-> }
->
-> -static const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
-> +const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
-> 	.func		= bpf_skc_to_mptcp_sock,
-> 	.gpl_only	= false,
-> 	.ret_type	= RET_PTR_TO_BTF_ID_OR_NULL,
-> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-> index 4004347db47e..6e7df47c9584 100644
-> --- a/net/mptcp/Makefile
-> +++ b/net/mptcp/Makefile
-> @@ -11,6 +11,4 @@ mptcp_crypto_test-objs := crypto_test.o
-> mptcp_token_test-objs := token_test.o
-> obj-$(CONFIG_MPTCP_KUNIT_TEST) += mptcp_crypto_test.o mptcp_token_test.o
->
-> -ifeq ($(CONFIG_BPF_JIT),y)
-> obj-$(CONFIG_BPF_SYSCALL) += bpf.o
-> -endif
+> struct mptcp_storage {
+> 	__u32 invoked;
+> @@ -46,6 +47,9 @@ int _sockops(struct bpf_sock_ops *ctx)
+> 		if (!storage)
+> 			return 1;
+> 	} else {
+> +		if (!CONFIG_MPTCP)
+> +			return 1;
+> +
+> 		msk = bpf_skc_to_mptcp_sock(sk);
+> 		if (!msk)
+> 			return 1;
 > -- 
 > 2.34.1
 >
