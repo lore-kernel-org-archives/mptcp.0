@@ -1,35 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E206136B
-	for <mptcp@lists.linux.dev>; Thu, 28 Apr 2022 16:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A589B136B
+	for <mptcp@lists.linux.dev>; Thu, 28 Apr 2022 16:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1651165111;
+	s=mimecast20190719; t=1651165114;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tFJidSmc5wAv35Hlv9QIpe7SR9V0b/plBI1IP3Qeckc=;
-	b=RP+AuI9UIYcqBAZtif+LmlvdY74VfP5U2RElHBjz0LwyG0PVbAvOd5Z4dy7X9AQ+M1wf+i
-	BBr66SAE1SxlSiVf1XvFG5hAjAB84vE9KPFO97JqIVu7sqsF5kjB/wl10iVCnNDKCYsij4
-	AK6NZyREhDe81zq2eIyvbmrfCF5pF7A=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7/jg3+WJuWIJlkiMbVFNQziYfESj2A3tSjLcWt6LM/M=;
+	b=VLGr/vlkze/wsnKK3t6SGtLbcQNOZZFstNgJ7DYqt67In+xwE9gYs4Qcl52xQBqOQjuMGp
+	Xfe5XJoNKtfvRxWBzVLeFap/N/28U8tB0Ru3WVEUT4iisj+JIPJNCGHTsjFNIieQ1yn49V
+	iL2j2MzESY9mSAP9H4NyyJSuvlOB7bc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-176-998GHxUGMrSHHIcZWACx3g-1; Thu, 28 Apr 2022 12:58:30 -0400
-X-MC-Unique: 998GHxUGMrSHHIcZWACx3g-1
+ us-mta-571-eFriXE0cMpCXhMVANBpaag-1; Thu, 28 Apr 2022 12:58:32 -0400
+X-MC-Unique: eFriXE0cMpCXhMVANBpaag-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3D4E41E10B42
-	for <mptcp@lists.linux.dev>; Thu, 28 Apr 2022 16:58:30 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E826804195
+	for <mptcp@lists.linux.dev>; Thu, 28 Apr 2022 16:58:32 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.120])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C199257354B
-	for <mptcp@lists.linux.dev>; Thu, 28 Apr 2022 16:58:29 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1A94357354B
+	for <mptcp@lists.linux.dev>; Thu, 28 Apr 2022 16:58:31 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net 1/2] mptcp: fix subflow accounting on close
-Date: Thu, 28 Apr 2022 18:58:23 +0200
-Message-Id: <84bfd492fa6e4a5ca5c90201283c48ed07318aa9.1651165091.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net 2/2] selftests: mptcp: add subflow limits test-cases
+Date: Thu, 28 Apr 2022 18:58:24 +0200
+Message-Id: <df068e913873450bfbcabe98f4d4461178278264.1651165091.git.pabeni@redhat.com>
+In-Reply-To: <84bfd492fa6e4a5ca5c90201283c48ed07318aa9.1651165091.git.pabeni@redhat.com>
+References: <84bfd492fa6e4a5ca5c90201283c48ed07318aa9.1651165091.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,109 +47,96 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-If the PM closes a fully established MPJ subflow or the subflow
-creation errors out in it's early stage the subflows counter is
-not bumped accordingly.
+Add and deletes a bunch of endpoints and verify the
+respect of configured limits.
 
-This change adds the missing accouting, additionally taking care
-of updating accordingly the 'accept_subflow' flag.
+This covers the codepath intersted by the previous patch.
 
-Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/pm.c       |  5 ++---
- net/mptcp/protocol.h | 14 ++++++++++++++
- net/mptcp/subflow.c  | 12 +++++++++---
- 3 files changed, 25 insertions(+), 6 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 48 ++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index cdc2d79071f8..59fdab2d0c27 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -181,15 +181,14 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
- 	struct mptcp_pm_data *pm = &msk->pm;
- 	bool update_subflows;
- 
--	update_subflows = (ssk->sk_state == TCP_CLOSE) &&
--			  (subflow->request_join || subflow->mp_join) &&
-+	update_subflows = (subflow->request_join || subflow->mp_join) &&
- 			  mptcp_pm_is_kernel(msk);
- 	if (!READ_ONCE(pm->work_pending) && !update_subflows)
- 		return;
- 
- 	spin_lock_bh(&pm->lock);
- 	if (update_subflows)
--		pm->subflows--;
-+		__mptcp_pm_close_subflow(msk);
- 
- 	/* Even if this subflow is not really established, tell the PM to try
- 	 * to pick the next ones, if possible.
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4672901d0dfe..06b8ebc15204 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -893,6 +893,20 @@ unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
- 
-+/* called under PM lock */
-+static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
-+{
-+	if (--msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
-+		WRITE_ONCE(msk->pm.accept_subflow, true);
-+}
-+
-+static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
-+{
-+	spin_lock_bh(&msk->pm.lock);
-+	__mptcp_pm_close_subflow(msk);
-+	spin_unlock_bh(&msk->pm.lock);
-+}
-+
- void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6d59336a8e1e..75c85ce9a19e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1444,20 +1444,20 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	struct sockaddr_storage addr;
- 	int remote_id = remote->id;
- 	int local_id = loc->id;
-+	int err = -ENOTCONN;
- 	struct socket *sf;
- 	struct sock *ssk;
- 	u32 remote_token;
- 	int addrlen;
- 	int ifindex;
- 	u8 flags;
--	int err;
- 
- 	if (!mptcp_is_fully_established(sk))
--		return -ENOTCONN;
-+		goto err_out;
- 
- 	err = mptcp_subflow_create_socket(sk, &sf);
- 	if (err)
--		return err;
-+		goto err_out;
- 
- 	ssk = sf->sk;
- 	subflow = mptcp_subflow_ctx(ssk);
-@@ -1515,6 +1515,12 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- failed:
- 	subflow->disposable = 1;
- 	sock_release(sf);
-+
-+err_out:
-+	/* we account subflows before the creation, and this failures will not
-+	 * be catched by sk_state_change()
-+	 */
-+	mptcp_pm_close_subflow(msk);
- 	return err;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index b703b61562bf..a98fee834950 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1571,6 +1571,33 @@ chk_prio_nr()
+ 	[ "${dump_stats}" = 1 ] && dump_stats
  }
  
++chk_subflow_nr()
++{
++	local need_title="$1"
++	local msg="$2"
++	local subflow_nr=$3
++	local cnt1
++	local cnt2
++
++	if [ -n "${need_title}" ]; then
++		printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" "${msg}"
++	else
++		printf "%-${nr_blank}s %s" " " "${msg}"
++	fi
++
++	cnt1=$(ss -N $ns1 -tOni | grep -c token)
++	cnt2=$(ss -N $ns2 -tOni | grep -c token)
++	if [ "$cnt1" != "$subflow_nr" -o "$cnt2" != "$subflow_nr" ]; then
++		echo "[fail] got $cnt1:$cnt2 subflows expected $subflow_nr"
++		fail_test
++		dump_stats=1
++	else
++		echo "[ ok ]"
++	fi
++
++	[ "${dump_stats}" = 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -tOni | grep token; ip -n $ns1 mptcp endpoint )
++}
++
+ chk_link_usage()
+ {
+ 	local ns=$1
+@@ -2784,7 +2811,7 @@ userspace_tests()
+ 	fi
+ }
+ 
+-implicit_tests()
++endpoint_tests()
+ {
+ 	# userspace pm type prevents add_addr
+ 	if reset "implicit EP"; then
+@@ -2806,6 +2833,23 @@ implicit_tests()
+ 			$ns2 10.0.2.2 id 1 flags signal
+ 		wait
+ 	fi
++
++	if reset "delete and re-add"; then
++		pm_nl_set_limits $ns1 1 1
++		pm_nl_set_limits $ns2 1 1
++		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
++		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
++
++		wait_mpj $ns2
++		pm_nl_del_endpoint $ns2 2 10.0.2.2
++		sleep 0.5
++		chk_subflow_nr needtitle "after delete" 1
++
++		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
++		wait_mpj $ns2
++		chk_subflow_nr "" "after re-add" 2
++		wait
++	fi
+ }
+ 
+ # [$1: error message]
+@@ -2854,7 +2898,7 @@ all_tests_sorted=(
+ 	z@fastclose_tests
+ 	F@fail_tests
+ 	u@userspace_tests
+-	I@implicit_tests
++	I@endpoint_tests
+ )
+ 
+ all_tests_args=""
 -- 
 2.35.1
 
