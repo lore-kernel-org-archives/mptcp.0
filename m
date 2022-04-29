@@ -1,94 +1,59 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE1C1843
-	for <mptcp@lists.linux.dev>; Thu, 28 Apr 2022 23:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651188556; x=1682724556;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=UFw1pPFsGJlRPbUvv1gKmeS1Of7X8wxSksjaPhLKsmk=;
-  b=oHJ0LuzXXb5ZHDLzmPYDYO0BCjajFVc+D1dN2uCQ4NQKLj/mvcyV1UC0
-   a7v1w2ct6AyRw9VErqzmKPfZNPuMFqnZw0eKKB7NGCcQL6AaT/Kj1WrF3
-   nGIyccoKESvazX5LyXjplq8ee/+GL92nAaxvQn0wiqjX8GyNTJCGxr/CO
-   +uTScwx4ybK1FnUM3lkZHghJcmhcBS7k7PPkXUkYEhR7mEeEE6tXbZDxD
-   3G3d3NW0plZf6z4NdltUkxrmnQm/YCie1at2pLDyuDFYanoJrzlrCmJrP
-   gWMA+xcT4N0Xd5eEYmNY62B/AuT2v/e9RBCvaPVB0n1W3lfYFCJ5PT2eG
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="265309255"
-X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="265309255"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 16:29:01 -0700
-X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="534158671"
-Received: from davideli-mobl.amr.corp.intel.com ([10.209.69.78])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 16:29:01 -0700
-Date: Thu, 28 Apr 2022 16:29:01 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2] selftests/bpf: Enable CONFIG_IKCONFIG_PROC
- in config
-In-Reply-To: <f14787485262a8dd8c439e01cd5651f10d5eb63d.1651114997.git.geliang.tang@suse.com>
-Message-ID: <46af5926-5671-53b7-8358-7697336ed67@linux.intel.com>
-References: <f14787485262a8dd8c439e01cd5651f10d5eb63d.1651114997.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2807B
+	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 01:57:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 257BFC385A9;
+	Fri, 29 Apr 2022 01:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1651197461;
+	bh=WSmbvOxe4jQ8U1WdkVnlhgKmq71A1kfaMtyXnIM0u3s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=C0dc2DLz9+jvx9efmqCfWrfwTIHOURUKeox+Tgyajb8oQ+wy2X2CtJfMTi0YrBB8u
+	 cClgPBC64SmNftM7gsnLqCzx30ym1/ncXGszIfc4sr82tAgZaNDuTNxbw59+b6DlIP
+	 RSpCcgKENthkBl+TdPqFz8NCkJKjJsFWBWd9Ns27b3w9zr1lKP1HtRAVV62YcoWowN
+	 7DPObo5cAo5qMlQ7Os5T2guWDP510N+BIyncd+I5xQ7ZKI+XT+2/T0Lzx1WqsOgZmf
+	 T7eOUGZIevD+hJwYH6oKR+67KQl+koOZzHovw1GfF4fve4bbzeEFHP0usirZtxnSWe
+	 jJ/GhO6CleGEA==
+Date: Thu, 28 Apr 2022 18:57:39 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, pabeni@redhat.com,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next 0/6] mptcp: Path manager mode selection
+Message-ID: <20220428185739.39cdbb33@kernel.org>
+In-Reply-To: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com>
+References: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 28 Apr 2022, Geliang Tang wrote:
+On Wed, 27 Apr 2022 15:49:56 -0700 Mat Martineau wrote:
+> MPTCP already has an in-kernel path manager (PM) to add and remove TCP
+> subflows associated with a given MPTCP connection. This in-kernel PM has
+> been designed to handle typical server-side use cases, but is not very
+> flexible or configurable for client devices that may have more
+> complicated policies to implement.
+> 
+> This patch series from the MPTCP tree is the first step toward adding a
+> generic-netlink-based API for MPTCP path management, which a privileged
+> userspace daemon will be able to use to control subflow
+> establishment. These patches add a per-namespace sysctl to select the
+> default PM type (in-kernel or userspace) for new MPTCP sockets. New
+> self-tests confirm expected behavior when userspace PM is selected but
+> there is no daemon available to handle existing MPTCP PM events.
+> 
+> Subsequent patch series (already staged in the MPTCP tree) will add the
+> generic netlink path management API.
 
-> CONFIG_IKCONFIG_PROC is required by BPF selftests, otherwise we get
-> errors like this:
->
-> libbpf: failed to open system Kconfig
-> libbpf: failed to load object 'kprobe_multi'
-> libbpf: failed to load BPF skeleton 'kprobe_multi': -22
->
-> It's because /proc/config.gz is opened in bpf_object__read_kconfig_file()
-> in tools/lib/bpf/libbpf.c:
->
->        file = gzopen("/proc/config.gz", "r");
->
-> So this patch enables CONFIG_IKCONFIG and CONFIG_IKCONFIG_PROC in
-> tools/testing/selftests/bpf/config.
->
-> Suggested-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> v2:
-> - as a dedicated patch, not a squash-to one.
-> - apply this patch before "bpf: expose is_mptcp flag to bpf_tcp_sock"
+Could you link to those patches, maybe? Feels a little strange to add
+this sysctl to switch to user space mode now, before we had a chance
+to judg^W review the netlink interface.
 
-Thanks - I'll send this as part of the v2 series for bpf-next.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-> ---
-> tools/testing/selftests/bpf/config | 2 ++
-> 1 file changed, 2 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-> index 763db63a3890..8d7faff33c54 100644
-> --- a/tools/testing/selftests/bpf/config
-> +++ b/tools/testing/selftests/bpf/config
-> @@ -53,3 +53,5 @@ CONFIG_NF_DEFRAG_IPV4=y
-> CONFIG_NF_DEFRAG_IPV6=y
-> CONFIG_NF_CONNTRACK=y
-> CONFIG_USERFAULTFD=y
-> +CONFIG_IKCONFIG=y
-> +CONFIG_IKCONFIG_PROC=y
-> -- 
-> 2.34.1
->
->
-
---
-Mat Martineau
-Intel
+Does the pm_type switch not fit more neatly into the netlink interface
+itself?
