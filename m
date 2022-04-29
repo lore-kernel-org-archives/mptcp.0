@@ -1,113 +1,169 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED321869
-	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 20:48:21 +0000 (UTC)
-Received: by mail-qk1-f177.google.com with SMTP id c1so6767196qkf.13
-        for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 13:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=9D3ixt17AUPDfykmu8reX94wvwstrKSdOzLnXzxN8Hk=;
-        b=knE3pL1tm4cn/Lnj4leBBEYG8DBLMnQ61ekGmaj2fR0ivSk6VHDL/nXBKSCs203oyU
-         a9I/1ReQz8OydUdKcybPWpBDUoB6xkZgA2Pguec22VbdOMzuPi1kulvla4qciMwquing
-         rrolJz2RLcM1CFf1JWa4kUAu9e+1EFQF60e+zHYulDOABjP9K8TROhpMFhrPu9rvzoaE
-         0Q1vH/aIhv+fvnpwpU6+VStVjZlMF1nwcAa7Vgx9jYtz419JAmKf6mLkprNsRSdNGiMY
-         kv/ypdjTM19tGtQ/68lScYtKFOys3nkuxB0cVoqILGOU6+XmgJp3qu7TfvXifQSz9Jrm
-         /GsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=9D3ixt17AUPDfykmu8reX94wvwstrKSdOzLnXzxN8Hk=;
-        b=XD1afEwkgYMoahvBu9VjO7rxzO+c0sdDNwlgkG6XgteNNfDeUG/7+FBtqTp9jiiU9P
-         gWH4FyiGKGyWJvsuHYF6Gk74AHfA1jtYZuQ+CGkhEkkHtLizo491ffZqqWAVl2od0UcM
-         tZLkeGe4599l5RDcuirV00Nf9dQopFpCYvZMcMx54fV0ezsCy9F8Q+eD7RkKaIRSGiix
-         zzc2oP0MBrUwE5Fe896b+bs0grWWHow3DdAjt/83wors347txFrc04Wwy4LOP0h+5bXw
-         334xKsv8wGRRMZ3tvgh5lvSOt9CHTuC9osoaulgJ/TPCkgBIJoeRfUifXdRX0D1pF6/A
-         HIQw==
-X-Gm-Message-State: AOAM532Dj7NL/Iq684Duzr4MFMsrY0qBZ+8xJqJnmLXcMOoHu1nXM/XV
-	h/6KtpIoZf7Ge23P7atx5Q==
-X-Google-Smtp-Source: ABdhPJxCNeV9BGCvde4ZEN1H3QL/nwji1wp3IW6iiTidB3wxzASqhAeIlsRk/puwIRs7hbdQF3VYLQ==
-X-Received: by 2002:a05:620a:288c:b0:699:b9a0:b61a with SMTP id j12-20020a05620a288c00b00699b9a0b61amr706069qkp.233.1651265299910;
-        Fri, 29 Apr 2022 13:48:19 -0700 (PDT)
-Received: from [127.0.0.1] ([20.230.66.101])
-        by smtp.gmail.com with ESMTPSA id h17-20020ac85151000000b002f39b99f682sm138377qtn.28.2022.04.29.13.48.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Apr 2022 13:48:19 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0C81869
+	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 20:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651265762; x=1682801762;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=A8bFyREG+zJhvbarid0vK5FxHYzSPGrmBghjq5QrW10=;
+  b=XgPd7Tbs3CR6DGDPWOvliPSojAwudLTMUeAO5cAnBoKAdpBgYrCQvtX5
+   2TKwUnbY8ihRKkLK3148MNqUqecPyYmpXNGn2NBD3SY+T6c5mgG1ZIArZ
+   znSyIxuNX7Rc3TNTB06KeKPqKA5E+BA4UI8Sf6v2H8PPHbv5JliJEeabe
+   QMrrYp17GVr5g278zpBt7EjzAfX6bn5yWQSuz1h2L7oyL7rTetf0aaQNv
+   wFXFrRQp7MWCviRW5p8Tt74lgcgz6PWHh1RjxoCNPHmc4yHDUkEhM5Nro
+   X0scXIPXeeyPTBFQ2ze6cqkmH7gAIC7bUK+D7csiKLGZ4alLIIqPEk/D/
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="291943654"
+X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
+   d="scan'208";a="291943654"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 13:56:01 -0700
+X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
+   d="scan'208";a="732270210"
+Received: from mdbellow-mobl.amr.corp.intel.com ([10.209.122.4])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 13:56:01 -0700
+Date: Fri, 29 Apr 2022 13:56:01 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
-References:
- <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
-Subject: Re: net/sched: act_pedit: really ensure the skb is writable: Tests
- Results
-Message-ID: <ac5ee441-3063-f528-7bdb-f9bb606fa309@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 Apr 2022 20:48:18 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v2] net/sched: act_pedit: really ensure the
+ skb is writable
+In-Reply-To: <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
+Message-ID: <7c93496c-5153-5b83-48a9-6dd75da42542@linux.intel.com>
+References: <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Fri, 29 Apr 2022, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> Currently pedit tries to ensure that the accessed skb offset
+> is writeble via skb_unclone(). The action potentially allows
+> touching any skb bytes, so it may end-up modifying shared data.
+>
+> The above causes some sporadic MPTCP self-test failures.
+>
+> Address the issue keeping track of a rough over-estimate highest skb
+> offset accessed by the action and ensure such offset is really
+> writable.
+>
+> Note that this may cause performance regressions in some scenario,
+> but hopefully pedit is not critical path.
+>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+> - fix build issue
+> - account for the skb hdr offset, too
+>
+> this almost solves issues/265 here. I'm still getting some rare
+> failure with MPTcpExtMPFailTx==0: sometimes the transfer completes
+> before we are able to use the 2nd/failing link. The relevant fix
+> is a purely seft-test one
+>
+> Note that a much simpler alternatives would be simply replacing
+> skb_unshare() with skb_ensure_writable(skb, skb->len), but that
+> really could causes more visible regressions
 
-Our CI did some validations and here is its report:
+To make sure I'm understanding correctly: skb_ensure_writable(skb, 
+skb->len) would copy the entire packet payload on every edited 
+packet, but this patch will only copy the part that might be modified (and 
+maybe a little extra). Seems like the full copy is worth avoiding, and 
+that users shouldn't be depending on pedit modifying shared data.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6080231416004608
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6080231416004608/summary/summary.txt
+I did run the associated test for a while (with the other patches for 
+#265) and the changes look good from a MPTCP perspective:
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): selftest_diag - =
-Critical: 1 Call Trace(s) =E2=9D=8C:
-  - Task: https://cirrus-ci.=
-com/task/4542105128271872
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4542105128271872/summary/summary.txt
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/09c42a988d35
+Do you plan to upstream this one yourself, or should I include it with the 
+other mptcp-net patches?
 
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+Thanks,
+Mat
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+> ---
+> include/net/tc_act/tc_pedit.h |  1 +
+> net/sched/act_pedit.c         | 23 +++++++++++++++++++++--
+> 2 files changed, 22 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/net/tc_act/tc_pedit.h b/include/net/tc_act/tc_pedit.h
+> index 748cf87a4d7e..3e02709a1df6 100644
+> --- a/include/net/tc_act/tc_pedit.h
+> +++ b/include/net/tc_act/tc_pedit.h
+> @@ -14,6 +14,7 @@ struct tcf_pedit {
+> 	struct tc_action	common;
+> 	unsigned char		tcfp_nkeys;
+> 	unsigned char		tcfp_flags;
+> +	u32			tcfp_off_max_hint;
+> 	struct tc_pedit_key	*tcfp_keys;
+> 	struct tcf_pedit_key_ex	*tcfp_keys_ex;
+> };
+> diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+> index e01ef7f109f4..301ad7f19da9 100644
+> --- a/net/sched/act_pedit.c
+> +++ b/net/sched/act_pedit.c
+> @@ -149,7 +149,7 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+> 	struct nlattr *pattr;
+> 	struct tcf_pedit *p;
+> 	int ret = 0, err;
+> -	int ksize;
+> +	int i, ksize;
+> 	u32 index;
+>
+> 	if (!nla) {
+> @@ -228,6 +228,20 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+> 		p->tcfp_nkeys = parm->nkeys;
+> 	}
+> 	memcpy(p->tcfp_keys, parm->keys, ksize);
+> +	p->tcfp_off_max_hint = 0;
+> +	for (i = 0; i < p->tcfp_nkeys; ++i) {
+> +		u32 cur = p->tcfp_keys[i].off;
+> +
+> +		/* The AT option can read a single byte, we can bound the actual
+> +		 * value with uchar max. Each key touches 4 bytes starting from
+> +		 * the computed offset
+> +		 */
+> +		if (p->tcfp_keys[i].offmask) {
+> +			cur += 255 >> p->tcfp_keys[i].shift;
+> +			cur = max(p->tcfp_keys[i].at, cur);
+> +		}
+> +		p->tcfp_off_max_hint = max(p->tcfp_off_max_hint, cur + 4);
+> +	}
+>
+> 	p->tcfp_flags = parm->flags;
+> 	goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
+> @@ -308,9 +322,14 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
+> 			 struct tcf_result *res)
+> {
+> 	struct tcf_pedit *p = to_pedit(a);
+> +	u32 max_offset;
+> 	int i;
+>
+> -	if (skb_unclone(skb, GFP_ATOMIC))
+> +	max_offset = (skb_transport_header_was_set(skb) ?
+> +		      skb_transport_offset(skb) :
+> +		      skb_network_offset(skb)) +
+> +		     p->tcfp_off_max_hint;
+> +	if (skb_ensure_writable(skb, min(skb->len, max_offset)))
+> 		return p->tcf_action;
+>
+> 	spin_lock(&p->tcf_lock);
+> -- 
+> 2.35.1
+>
+>
+>
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+--
+Mat Martineau
+Intel
