@@ -1,112 +1,163 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F7B1851
-	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 17:47:39 +0000 (UTC)
-Received: by mail-qt1-f173.google.com with SMTP id o11so6282548qtp.13
-        for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 10:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=zDW37WIaGrh2cMC9NBgU/YVCIKddemZZvLFYS9XsuFQ=;
-        b=cn4uETHcqptRBBhKw360FwfxLApwdoV9vnb0T6z6ihX8JWToZSsuwwhiIDG4W2idXw
-         06pesJqLT+wWGmVLo7AX5nfa+tn6o0OY70lUAX128xkn02368+X8QRZVuTfMsrrhFUfr
-         ixHJaI9AmzNhWYtTUEJ6vVAuuKrzlcYSm10EOC9n2yFXL8tL5GP6WrHwA1SATEuWYWxx
-         hgQOV4hVAJTZyunbOLqrvihEKP5CzkWWKIvxVNWkM1BakV45O6nONKoHFT6DoK2+qgD/
-         cOJQcGv+kWniBFs4tCfbQSJOGWIoCjESU01FgA+FAcCVhA2QFwUB8hhcpT27jaJQNK+u
-         XIOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=zDW37WIaGrh2cMC9NBgU/YVCIKddemZZvLFYS9XsuFQ=;
-        b=cGbm6SadTkBNbI3gSxG+8Ut5+0vCsQNfnmoLEbk0rsDR0ck2Z2P9Xq2R8ynrzoU2OG
-         0rnGN1MpdpaJKg2wa9J4CZYRR1vjsiAmSd5DAbdv3MHYXt8oDG3rxwd8ZHrLi2EmilNf
-         fi9aVXQpdCBDkWWhUaPfMXobVisNQnpKp53CdRo0pedNlmXtK84JB52CeSLD9/N4rWGP
-         imsbSdLRYy281YJpFZN7S9+Egrr5gMt8/olExGMLYPg5NJGmTVcHK8c+Bot1uVg/NXq7
-         mGgCBGuuCfzKfG9xLdtls94wSAKFrxdMLnP8QZrNwzNfU7X/Y2fwwKSAatH1SzvvEmUD
-         Mb1A==
-X-Gm-Message-State: AOAM532FaKJOX6lTEBf2+SWAMqrGCvrcVif2aBarqrQhuHwkD0wN583g
-	uCMlG0Emk/2nJJmfamvsFg==
-X-Google-Smtp-Source: ABdhPJwkAUTkBwbz9etwvPlbELalZ8+FXnSWLh+FLwHP+Lqs0wKb+3kHjfsBqJEuihMmkjvWL7MqtQ==
-X-Received: by 2002:a05:622a:342:b0:2f3:5c21:1bed with SMTP id r2-20020a05622a034200b002f35c211bedmr491826qtw.123.1651254458854;
-        Fri, 29 Apr 2022 10:47:38 -0700 (PDT)
-Received: from [127.0.0.1] ([20.122.125.201])
-        by smtp.gmail.com with ESMTPSA id u11-20020a05622a14cb00b002e1fd9dce3dsm2075129qtx.60.2022.04.29.10.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Apr 2022 10:47:38 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA957B
+	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 19:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651258995; x=1682794995;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gJUp6wfRtvcM2gOwy3yB3U2AnMvJyNDkHUVLO7WclDY=;
+  b=ZRbuMcgkk9Zav7U8ponXPirF65s1+uQWxyAKMVGmZey5kDp3R2ngYFE2
+   Va7AeNrpPCQVRHqoVATrHtE0TvqrNLfnU9KkbbX3TNrXGUlNz9vKdxY+V
+   6tr3ciPYEQkJxbnaT86DkscgI7HtVOBhVn3hRXFuJfmQJsJWYhMl9so9B
+   /5EFnD5U0sWZVKNRaSQNLMs9hc9TWPPCYkv2++rMlzrC0Ym/PCt46caNA
+   PSGgYn46t7XLT6p8sgVUT5jzT6EUkmN1fIFKG10RNPBbTSSHQICbaTquY
+   GWm8ju5gfUerQHRKPXIXZpvwTu4+22vfiXHAHo5O+KUzc9GLL3BmeAo8f
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="265589775"
+X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
+   d="scan'208";a="265589775"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 12:03:14 -0700
+X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
+   d="scan'208";a="597480388"
+Received: from mdbellow-mobl.amr.corp.intel.com ([10.209.122.4])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 12:03:14 -0700
+Date: Fri, 29 Apr 2022 12:03:14 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <a4e7a052279a027da6721d59dbd293b0bb7e08cf.1651248223.git.pabeni@redhat.com>
-References:
- <a4e7a052279a027da6721d59dbd293b0bb7e08cf.1651248223.git.pabeni@redhat.com>
-Subject: Re: selftests: mptcp: fix MP_FAIL test-case: Tests Results
-Message-ID: <e31ab535-c260-fa26-d6e5-d3219c1259c0@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 Apr 2022 17:47:38 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: fix subflow accounting on close
+In-Reply-To: <84bfd492fa6e4a5ca5c90201283c48ed07318aa9.1651165091.git.pabeni@redhat.com>
+Message-ID: <cfad224c-fe81-beaa-751d-fa54f7b21be9@linux.intel.com>
+References: <84bfd492fa6e4a5ca5c90201283c48ed07318aa9.1651165091.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Thu, 28 Apr 2022, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> If the PM closes a fully established MPJ subflow or the subflow
+> creation errors out in it's early stage the subflows counter is
+> not bumped accordingly.
+>
+> This change adds the missing accouting, additionally taking care
+> of updating accordingly the 'accept_subflow' flag.
+>
+> Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/pm.c       |  5 ++---
+> net/mptcp/protocol.h | 14 ++++++++++++++
+> net/mptcp/subflow.c  | 12 +++++++++---
+> 3 files changed, 25 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index cdc2d79071f8..59fdab2d0c27 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -181,15 +181,14 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
+> 	struct mptcp_pm_data *pm = &msk->pm;
+> 	bool update_subflows;
+>
+> -	update_subflows = (ssk->sk_state == TCP_CLOSE) &&
+> -			  (subflow->request_join || subflow->mp_join) &&
+> +	update_subflows = (subflow->request_join || subflow->mp_join) &&
+> 			  mptcp_pm_is_kernel(msk);
+> 	if (!READ_ONCE(pm->work_pending) && !update_subflows)
+> 		return;
+>
+> 	spin_lock_bh(&pm->lock);
+> 	if (update_subflows)
+> -		pm->subflows--;
+> +		__mptcp_pm_close_subflow(msk);
+>
+> 	/* Even if this subflow is not really established, tell the PM to try
+> 	 * to pick the next ones, if possible.
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 4672901d0dfe..06b8ebc15204 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -893,6 +893,20 @@ unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
+> unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
+> unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
+>
+> +/* called under PM lock */
+> +static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
+> +{
+> +	if (--msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
+> +		WRITE_ONCE(msk->pm.accept_subflow, true);
+> +}
+> +
+> +static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
+> +{
+> +	spin_lock_bh(&msk->pm.lock);
+> +	__mptcp_pm_close_subflow(msk);
+> +	spin_unlock_bh(&msk->pm.lock);
+> +}
+> +
+> void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
+> void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
+>
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 6d59336a8e1e..75c85ce9a19e 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1444,20 +1444,20 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+> 	struct sockaddr_storage addr;
+> 	int remote_id = remote->id;
+> 	int local_id = loc->id;
+> +	int err = -ENOTCONN;
+> 	struct socket *sf;
+> 	struct sock *ssk;
+> 	u32 remote_token;
+> 	int addrlen;
+> 	int ifindex;
+> 	u8 flags;
+> -	int err;
+>
+> 	if (!mptcp_is_fully_established(sk))
+> -		return -ENOTCONN;
+> +		goto err_out;
+>
+> 	err = mptcp_subflow_create_socket(sk, &sf);
+> 	if (err)
+> -		return err;
+> +		goto err_out;
+>
+> 	ssk = sf->sk;
+> 	subflow = mptcp_subflow_ctx(ssk);
+> @@ -1515,6 +1515,12 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+> failed:
+> 	subflow->disposable = 1;
+> 	sock_release(sf);
+> +
+> +err_out:
+> +	/* we account subflows before the creation, and this failures will not
+> +	 * be catched by sk_state_change()
+> +	 */
+> +	mptcp_pm_close_subflow(msk);
 
-Our CI did some validations and here is its report:
+__mptcp_subflow_connect() is also called by the userspace PM, which 
+doesn't use this accounting. How about having the caller be responsible 
+for doing mptcp_pm_close_subflow() if __mptcp_subflow_connect() returns an 
+error other than -EINPROGRESS?
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5704510495522816
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5704510495522816/summary/summary.txt
+> 	return err;
+> }
+>
+> -- 
+> 2.35.1
+>
+>
+>
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): selftest_diag - =
-Critical: 1 Call Trace(s) =E2=9D=8C:
-  - Task: https://cirrus-ci.=
-com/task/5141560542101504
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5141560542101504/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/d97a7b7382ca
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+--
+Mat Martineau
+Intel
