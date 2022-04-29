@@ -1,42 +1,46 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50B91869
-	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 22:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495981FA5
+	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 22:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651269741; x=1682805741;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=e4ZQJt8QmkUQW3Q2NfOKvHTzJhDCEuC7kAGZGauFlKI=;
-  b=V9s9n9CHnAvFjfkUFeFRAvR7LiKL9MLb+ukLI6lewQ0V4A6ynTARkU7M
-   X2Jh0JfwNGLdXBv4CQl3AHraQeOsyTCKsNimF4tKcbDF+LTWTyhCzmkD/
-   xLDt9C5TTX0pomio8Hlqrn0sKRFQP8OA1W9ceryrRoc0jTfxqOVjbbL91
-   /egAaCYin0LWmS+Zoyn+YPSL0OcNJrGnFZUmdH21nHpqKYJU182PBw3QA
-   xMLd9khpRFmgLb1B2OMRH0VG1hLoZ4NVYf8xPY5ryIFcB17nRhvF4uDG2
-   5WXgyXxKOWkpWvB03pUHsisPBldVoeloW5HNcpbt51G0ZDJE+4F/Vmh+J
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="246698320"
+  t=1651269743; x=1682805743;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=DlnszPk3X2RPEnjbzh3vP3TQq5DteMJxTVw6ps/Fp2w=;
+  b=JzmsVuDWZlrZBcTleQv5Q9z3KZEnBDKvfAoZ+dnVFKydXk/KBFy3Y1FE
+   FRHOJPWYKTxcsAlnKnW1Tux/ygzVrfCvp5zK8bstvaK1EyR8SbOFKRmoa
+   gNAsn3b8izNSkM2DE+CwC17K6ZzIruvO+0hNT6CeT5PKlVPAfnPEXT+9G
+   B9O9M51AAvYbmIKrXQ0A5v0oGOhausSeNibI8maIQ+wHkkakUIq5biAIm
+   jaLRWD7B9uj84rxwH+cv5UNi72Y7gilqywpeyokNO6jyQqCbMFD80OGQg
+   owupLTlJz4USbSgSc2pM3xPPEE9+pUtoat58FE9xNG09AmA/TE1rbGp+x
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="246698322"
 X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
-   d="scan'208";a="246698320"
+   d="scan'208";a="246698322"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 15:02:09 -0700
 X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
-   d="scan'208";a="582419795"
+   d="scan'208";a="582419796"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.217.201])
   by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 15:02:09 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org,
 	bpf@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+Cc: Nicolas Rybowski <nicolas.rybowski@tessares.net>,
 	ast@kernel.org,
 	daniel@iogearbox.net,
 	andrii@kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH bpf-next v2 0/8] bpf: mptcp: Support for mptcp_sock and is_mptcp
-Date: Fri, 29 Apr 2022 15:01:56 -0700
-Message-Id: <20220429220204.353225-1-mathew.j.martineau@linux.intel.com>
+	mptcp@lists.linux.dev,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH bpf-next v2 1/8] bpf: expose is_mptcp flag to bpf_tcp_sock
+Date: Fri, 29 Apr 2022 15:01:57 -0700
+Message-Id: <20220429220204.353225-2-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.0
+In-Reply-To: <20220429220204.353225-1-mathew.j.martineau@linux.intel.com>
+References: <20220429220204.353225-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,58 +49,93 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch set adds BPF access to the is_mptcp flag in tcp_sock and
-access to mptcp_sock structures, along with associated self tests. You
-may recognize some of the code from earlier
-(https://lore.kernel.org/bpf/20200918121046.190240-6-nicolas.rybowski@tessares.net/)
-but it has been reworked quite a bit.
+From: Nicolas Rybowski <nicolas.rybowski@tessares.net>
 
+is_mptcp is a field from struct tcp_sock used to indicate that the
+current tcp_sock is part of the MPTCP protocol.
 
-v1 -> v2: Emit BTF type, add func_id checks in verifier.c and bpf_trace.c,
-remove build check for CONFIG_BPF_JIT, add selftest check for CONFIG_MPTCP,
-and add a patch to include CONFIG_IKCONFIG/CONFIG_IKCONFIG_PROC for the
-BPF self tests.
+In this protocol, a first socket (mptcp_sock) is created with
+sk_protocol set to IPPROTO_MPTCP (=262) for control purpose but it
+isn't directly on the wire. This is the role of the subflow (kernel)
+sockets which are classical tcp_sock with sk_protocol set to
+IPPROTO_TCP. The only way to differentiate such sockets from plain TCP
+sockets is the is_mptcp field from tcp_sock.
 
+Such an exposure in BPF is thus required to be able to differentiate
+plain TCP sockets from MPTCP subflow sockets in BPF_PROG_TYPE_SOCK_OPS
+programs.
 
-Geliang Tang (6):
-  bpf: add bpf_skc_to_mptcp_sock_proto
-  selftests: bpf: Enable CONFIG_IKCONFIG_PROC in config
-  selftests: bpf: test bpf_skc_to_mptcp_sock
-  selftests: bpf: verify token of struct mptcp_sock
-  selftests: bpf: verify ca_name of struct mptcp_sock
-  selftests: bpf: verify first of struct mptcp_sock
+The choice has been made to silently pass the case when CONFIG_MPTCP is
+unset by defaulting is_mptcp to 0 in order to make BPF independent of
+the MPTCP configuration. Another solution is to make the verifier fail
+in 'bpf_tcp_sock_is_valid_ctx_access' but this will add an additional
+'#ifdef CONFIG_MPTCP' in the BPF code and a same injected BPF program
+will not run if MPTCP is not set.
 
-Nicolas Rybowski (2):
-  bpf: expose is_mptcp flag to bpf_tcp_sock
-  selftests: bpf: add MPTCP test base
+An example use-case is provided in
+https://github.com/multipath-tcp/mptcp_net-next/tree/scripts/bpf/examples
 
- MAINTAINERS                                   |   2 +
- include/linux/bpf.h                           |   1 +
- include/linux/btf_ids.h                       |   3 +-
- include/net/mptcp.h                           |   6 +
- include/uapi/linux/bpf.h                      |   8 +
- kernel/bpf/verifier.c                         |   1 +
- kernel/trace/bpf_trace.c                      |   2 +
- net/core/filter.c                             |  27 +-
- net/mptcp/Makefile                            |   2 +
- net/mptcp/bpf.c                               |  22 ++
- scripts/bpf_doc.py                            |   2 +
- tools/include/uapi/linux/bpf.h                |   8 +
- .../testing/selftests/bpf/bpf_mptcp_helpers.h |  17 ++
- tools/testing/selftests/bpf/bpf_tcp_helpers.h |   4 +
- tools/testing/selftests/bpf/config            |   3 +
- tools/testing/selftests/bpf/network_helpers.c |  43 ++-
- tools/testing/selftests/bpf/network_helpers.h |   4 +
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 258 ++++++++++++++++++
- .../testing/selftests/bpf/progs/mptcp_sock.c  |  80 ++++++
- 19 files changed, 483 insertions(+), 10 deletions(-)
- create mode 100644 net/mptcp/bpf.c
- create mode 100644 tools/testing/selftests/bpf/bpf_mptcp_helpers.h
- create mode 100644 tools/testing/selftests/bpf/prog_tests/mptcp.c
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sock.c
+Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ include/uapi/linux/bpf.h       | 1 +
+ net/core/filter.c              | 9 ++++++++-
+ tools/include/uapi/linux/bpf.h | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-
-base-commit: 20b87e7c29dffcfa3f96f2e99daec84fd46cabdb
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 444fe6f1cf35..7043f3641534 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -5706,6 +5706,7 @@ struct bpf_tcp_sock {
+ 	__u32 delivered;	/* Total data packets delivered incl. rexmits */
+ 	__u32 delivered_ce;	/* Like the above but only ECE marked packets */
+ 	__u32 icsk_retransmits;	/* Number of unrecovered [RTO] timeouts */
++	__u32 is_mptcp;		/* Is MPTCP subflow? */
+ };
+ 
+ struct bpf_sock_tuple {
+diff --git a/net/core/filter.c b/net/core/filter.c
+index b741b9f7e6a9..b474e5bd1458 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -6754,7 +6754,7 @@ bool bpf_tcp_sock_is_valid_access(int off, int size, enum bpf_access_type type,
+ 				  struct bpf_insn_access_aux *info)
+ {
+ 	if (off < 0 || off >= offsetofend(struct bpf_tcp_sock,
+-					  icsk_retransmits))
++					  is_mptcp))
+ 		return false;
+ 
+ 	if (off % size != 0)
+@@ -6888,6 +6888,13 @@ u32 bpf_tcp_sock_convert_ctx_access(enum bpf_access_type type,
+ 	case offsetof(struct bpf_tcp_sock, icsk_retransmits):
+ 		BPF_INET_SOCK_GET_COMMON(icsk_retransmits);
+ 		break;
++	case offsetof(struct bpf_tcp_sock, is_mptcp):
++#ifdef CONFIG_MPTCP
++		BPF_TCP_SOCK_GET_COMMON(is_mptcp);
++#else
++		*insn++ = BPF_MOV32_IMM(si->dst_reg, 0);
++#endif
++		break;
+ 	}
+ 
+ 	return insn - insn_buf;
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 444fe6f1cf35..7043f3641534 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -5706,6 +5706,7 @@ struct bpf_tcp_sock {
+ 	__u32 delivered;	/* Total data packets delivered incl. rexmits */
+ 	__u32 delivered_ce;	/* Like the above but only ECE marked packets */
+ 	__u32 icsk_retransmits;	/* Number of unrecovered [RTO] timeouts */
++	__u32 is_mptcp;		/* Is MPTCP subflow? */
+ };
+ 
+ struct bpf_sock_tuple {
 -- 
 2.36.0
 
