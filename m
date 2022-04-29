@@ -1,121 +1,92 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2832210EB
-	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 03:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651203542; x=1682739542;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hbI67oUZUKEUm3P+EJ8M8Uh3g2wNFyH+0FXYQT3fUko=;
-  b=LuNoSOwoMabIHvG/jw8HI+mb1AEh8fWT3Uw0mg6DrMMs0S6RO3UYsvYO
-   tpIiKZCkO/kJ2lK6gbBizd8btoCNTIw9A0w5vFBZYKZU+LfZin+Tf30oI
-   8Qh1+mg9DMBJXdt8Qqma9oiG3DMQnIJXh+HrYoQJh0yezassrduBh3c3d
-   rxgEEIKQLuG9iuhy/o//zTzX8/lcqoFyXdiRBKfwnDI4F49jfWfg4g4F0
-   SkHD6SNPiNa3ZsUP+yYSmPXhoHA8k6wA45u/ltl6OwTy6Be8a4dB+N4ms
-   krKpeixsO8gAZF3hqqnaehVjA3YvLczh6xnhTOvUnOIEpptEsoXnHg+E0
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="329459709"
-X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
-   d="scan'208";a="329459709"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 20:39:01 -0700
-X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
-   d="scan'208";a="560073529"
-Received: from davideli-mobl.amr.corp.intel.com ([10.209.69.78])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 20:39:01 -0700
-Date: Thu, 28 Apr 2022 20:39:01 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Jakub Kicinski <kuba@kernel.org>
-cc: netdev@vger.kernel.org, davem@davemloft.net, pabeni@redhat.com, 
-    matthieu.baerts@tessares.net, mptcp@lists.linux.dev
-Subject: Re: [PATCH net-next 0/6] mptcp: Path manager mode selection
-In-Reply-To: <20220428185739.39cdbb33@kernel.org>
-Message-ID: <23ff3b49-2563-1874-fa35-3af55d3088e7@linux.intel.com>
-References: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com> <20220428185739.39cdbb33@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB1E1365
+	for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 10:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1651226932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=btSG8jhwcPPof5JIl34GMZ11EeTqopyAwZraNZ8IyLU=;
+	b=bZ5vcoAuOKvq3brG/zv2pAcbDz721oc6E1Nz3AFo3vYUdWxb5MXrspeMxBfRmVkmIQ/L0B
+	6eiBazTvcW+D8jEe2pOREe5u8386BG1BZU7HJ5sBNq0fL4VkMB1REhg6PLCh3KYllFa4oy
+	ztmXNIzVkRWudxj2BT4w5Bd5pjdIrvk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-519--ZAJ6-UFOwiDcSJivjN5Mw-1; Fri, 29 Apr 2022 06:08:51 -0400
+X-MC-Unique: -ZAJ6-UFOwiDcSJivjN5Mw-1
+Received: by mail-wm1-f72.google.com with SMTP id k5-20020a05600c0b4500b003941ca130f9so625023wmr.0
+        for <mptcp@lists.linux.dev>; Fri, 29 Apr 2022 03:08:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=btSG8jhwcPPof5JIl34GMZ11EeTqopyAwZraNZ8IyLU=;
+        b=Gxw7SnKvDBhfKhWLgW4fJMK/6VhzcsevBaFo6q9ZUgJzJhE9Ka50a3ZUKxk+UweZYR
+         3JADxHfoZpx8RvE9MXiN8+K+NhEfvuSKBv44WFLcag/WkpD+m8eE+uXslwKXvb00DQmh
+         sxO8DsDsSIzwnum83B2IjPPCsCHZVhqOHcTisyaTq6A/EtMTglE6jCqOvlq3LrEwcnvM
+         6rg7xmN51bTzuEIVYhJTCP17m1F9zIzDCR5JgiJh6+m6Z07HC5S/OzrfaDMkOtETo2ex
+         Dj3QwuzBh+MyBDGZUY1len6EAP58y3XEel7kVL6tzm6rIaOPH5gtlxoonGpz3UaGeOd1
+         SUXg==
+X-Gm-Message-State: AOAM531EAV8UTVSyyI0UCKZH9VzOomTrIbwuYXU22rvw4ivWRSFwaNuL
+	v4sA2he6uwGQfUyw8f2yN8DIz1BKHPsicqgar45dA8hKYJNXtJNHWzUvnpE7hf6QSq+9oi31LEM
+	kyWrBIl8gZWAoEgPeUfguP/fcyRRZs/AbAF9t5qK7PpQmCght+QvKw6WT1cVB3ChE
+X-Received: by 2002:a5d:4645:0:b0:20a:db5d:258f with SMTP id j5-20020a5d4645000000b0020adb5d258fmr19290226wrs.135.1651226930086;
+        Fri, 29 Apr 2022 03:08:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyswfkGAxJ1EmwuLiPHo82Aa59/PSyL15jsaYe8iD55SDj6GPxFEHpKNJQpTA3GlwznTqDumQ==
+X-Received: by 2002:a5d:4645:0:b0:20a:db5d:258f with SMTP id j5-20020a5d4645000000b0020adb5d258fmr19290197wrs.135.1651226929730;
+        Fri, 29 Apr 2022 03:08:49 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-96-105.dyn.eolo.it. [146.241.96.105])
+        by smtp.gmail.com with ESMTPSA id k23-20020adfb357000000b0020ad7c36332sm2011714wrd.110.2022.04.29.03.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Apr 2022 03:08:49 -0700 (PDT)
+Message-ID: <3e23ea866374467e2c9aeec60049716b42d6634e.camel@redhat.com>
+Subject: apropos https://github.com/multipath-tcp/mptcp_net-next/issues/265
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>, Mat Martineau
+	 <mathew.j.martineau@linux.intel.com>
+Date: Fri, 29 Apr 2022 12:08:48 +0200
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
+Hello,
 
-On Thu, 28 Apr 2022, Jakub Kicinski wrote:
+I'm investigating the mentioned issue. Not strictily related to the
+observed failure, I think/fear we have a very serious problem WRT csum.
 
-> On Wed, 27 Apr 2022 15:49:56 -0700 Mat Martineau wrote:
->> MPTCP already has an in-kernel path manager (PM) to add and remove TCP
->> subflows associated with a given MPTCP connection. This in-kernel PM has
->> been designed to handle typical server-side use cases, but is not very
->> flexible or configurable for client devices that may have more
->> complicated policies to implement.
->>
->> This patch series from the MPTCP tree is the first step toward adding a
->> generic-netlink-based API for MPTCP path management, which a privileged
->> userspace daemon will be able to use to control subflow
->> establishment. These patches add a per-namespace sysctl to select the
->> default PM type (in-kernel or userspace) for new MPTCP sockets. New
->> self-tests confirm expected behavior when userspace PM is selected but
->> there is no daemon available to handle existing MPTCP PM events.
->>
->> Subsequent patch series (already staged in the MPTCP tree) will add the
->> generic netlink path management API.
->
-> Could you link to those patches, maybe? Feels a little strange to add
-> this sysctl to switch to user space mode now, before we had a chance
-> to judg^W review the netlink interface.
->
+Currently, AFAICS, we encode the csum converting the value returned
+from csum_fold(csum_partial(csum_unfold)) to be:
 
-Hi Jakub -
+https://elixir.bootlin.com/linux/v5.18-rc4/source/net/mptcp/options.c#L1343
 
-Sure, no problem. If you'd prefer a pull request for this feature as a 
-whole I could stage that.
+while the UDP/TCP csum store directly the result for the same
+operation:
 
-Here's a tag (note: do not merge this as-is, the committer ids and full 
-history aren't suitable) -> 
-https://github.com/multipath-tcp/mptcp_net-next/commits/netdev-review-userspace-path-manager
+https://elixir.bootlin.com/linux/v5.18-rc4/source/net/core/dev.c#L3228
 
-The last 26 commits there cover the full userspace path manager kernel 
-code, with the first 6 of those being this series.
+I guess we are doing it wrong but we don't obseve any specific problem
+as tests runs on the same arch and we do swap on rx, too. 
 
-Userspace path managers makes use of generic netlink MPTCP events that 
-have already been upstream for a while, and the full series adds four 
-netlink commands for userspace:
+I think should see sistematic csum failure when the involved peers have
+different endianess (e.g. x86 vs arm). If anyone has easy access to
+both systems, could please verify the above?
 
-* MPTCP_PM_CMD_ANNOUNCE: advertise an address that's available for 
-additional subflow connections.
+If the above is true the nasty part is that I don't see how to fix this
+without breaking the interop with bugged versions :////
 
-* MPTCP_PM_CMD_REMOVE: revoke an advertisement
+/P
 
-* MPTCP_PM_CMD_SUBFLOW_CREATE: initiate a new subflow on an existing MPTCP 
-connection
-
-* MPTCP_PM_CMD_SUBFLOW_DESTROY: close a subflow on an existing MPTCP 
-connection
-
-There's one commit for each command, each with an obvious title ("mptcp: 
-netlink: Add MPTCP_PM_CMD_<name>")
-
-
-> Does the pm_type switch not fit more neatly into the netlink interface
-> itself?
-
-We (on the MPTCP ML) did discuss that as a design option, and landed on 
-the sysctl.
-
-The stack can handle having no userspace PM daemon present since MPTCP 
-connections can still be initiated without the PM and operate in single 
-subflow mode at first. When the daemon starts up later it can manage the 
-existing sockets and start announcing addresses or adding subflows. We 
-wanted to avoid accidentally ending up with a mix of kernel-PM-managed and 
-userspace-PM-managed sockets depending on when the daemon loaded.
-
-Userspace PM daemons could depend on carrier policy or other complex 
-dependencies, so it made sense to allow setting the sysctl early and leave 
-more flexibility for launching the daemon later.
-
---
-Mat Martineau
-Intel
