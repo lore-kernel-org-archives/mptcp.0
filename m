@@ -1,67 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67377B
-	for <mptcp@lists.linux.dev>; Sat, 30 Apr 2022 00:51:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FCF8C385A7;
-	Sat, 30 Apr 2022 00:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C2A7B
+	for <mptcp@lists.linux.dev>; Sat, 30 Apr 2022 01:00:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2951AC385A7;
+	Sat, 30 Apr 2022 01:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1651279876;
-	bh=jX7eUrV7j+cvceaJXIqx4fZhKDwK71UIqUl97mqcCaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uiZLnOT+8Gfpz4nY6Rf7e3JHwqIQAOFaMlj5qzM2gGCZ6UNukZCzxSN/ZnWwn2jlv
-	 79vRMZ8O8+7CyXBiWHxwPQPqEzaQfAh40uIA0Tkoev6fd1pA+IcpQkDl4rJx9sE7u7
-	 bzds8J30t3gpJHHlHDPJejX3Vw20yTgGS5nf6hHlvZctjWgFtm5yoQ4CX7ExqQMRbM
-	 dfgonwmz6NlCzMuHYVkaHzg06Iy16gMxuta/HsdfsdbaAtNYYwOwEaGleD/jxmcgIW
-	 9CeVb8fQqIcYgiv9vtVeOh9Fv9Ec56cEZtxbHZv6eL9rWjj+zOsYv1jRILnLDcEk5a
-	 gCQHy8OggYNUA==
-Date: Fri, 29 Apr 2022 17:51:14 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, pabeni@redhat.com,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
-Subject: Re: [PATCH net-next 0/6] mptcp: Path manager mode selection
-Message-ID: <20220429175114.2500d3a9@kernel.org>
-In-Reply-To: <23ff3b49-2563-1874-fa35-3af55d3088e7@linux.intel.com>
-References: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com>
-	<20220428185739.39cdbb33@kernel.org>
-	<23ff3b49-2563-1874-fa35-3af55d3088e7@linux.intel.com>
+	s=k20201202; t=1651280414;
+	bh=J2nru83vtgNQDoLLwvNxfDEnsmdnLShK5o+F1MnNj28=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=TaDMUn8sqACDvcyHHJOd+12hzPlvsDkDKT9IB9Q9AXy1yQgDDXGXCiSyWjKfpnCT9
+	 7flY+4DQ7z9afcGd+QWp/k7UNCyjLNwFnkR6pNeiF1KXV/5ghhSfvtpT6Ma+HvGEL0
+	 qyerBaVsShbUScZIGxbRTexU9TqTDtCdgjl8CCCiOoPJa5+YDydEBN0VjHbI5ZdXVr
+	 37D+EdIVq/nwF5P+5QlMQqwpzCLkcbghSFW8RdyLI+fConwt4UVxBKztf8UxK68uRp
+	 7WFZ6F8TjrUiGsDqA9pMzQsNiN5A27ctxBmNYkaH62X5EreSXdJbQnGoTs5ygb4+pb
+	 dow1xuBBzxBkA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 14712F0383D;
+	Sat, 30 Apr 2022 01:00:14 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] mptcp: Path manager mode selection
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <165128041408.25380.16524289491061070613.git-patchwork-notify@kernel.org>
+Date: Sat, 30 Apr 2022 01:00:14 +0000
+References: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220427225002.231996-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-On Thu, 28 Apr 2022 20:39:01 -0700 (PDT) Mat Martineau wrote:
-> Sure, no problem. If you'd prefer a pull request for this feature as a 
-> whole I could stage that.
-> 
-> Here's a tag (note: do not merge this as-is, the committer ids and full 
-> history aren't suitable) -> 
-> https://github.com/multipath-tcp/mptcp_net-next/commits/netdev-review-userspace-path-manager
-> 
-> The last 26 commits there cover the full userspace path manager kernel 
-> code, with the first 6 of those being this series.
-> 
-> Userspace path managers makes use of generic netlink MPTCP events that 
-> have already been upstream for a while, and the full series adds four 
-> netlink commands for userspace:
-> 
-> * MPTCP_PM_CMD_ANNOUNCE: advertise an address that's available for 
-> additional subflow connections.
-> 
-> * MPTCP_PM_CMD_REMOVE: revoke an advertisement
-> 
-> * MPTCP_PM_CMD_SUBFLOW_CREATE: initiate a new subflow on an existing MPTCP 
-> connection
-> 
-> * MPTCP_PM_CMD_SUBFLOW_DESTROY: close a subflow on an existing MPTCP 
-> connection
-> 
-> There's one commit for each command, each with an obvious title ("mptcp: 
-> netlink: Add MPTCP_PM_CMD_<name>")
+Hello:
 
-Thanks for the explanation, applied!
+This series was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 27 Apr 2022 15:49:56 -0700 you wrote:
+> MPTCP already has an in-kernel path manager (PM) to add and remove TCP
+> subflows associated with a given MPTCP connection. This in-kernel PM has
+> been designed to handle typical server-side use cases, but is not very
+> flexible or configurable for client devices that may have more
+> complicated policies to implement.
+> 
+> This patch series from the MPTCP tree is the first step toward adding a
+> generic-netlink-based API for MPTCP path management, which a privileged
+> userspace daemon will be able to use to control subflow
+> establishment. These patches add a per-namespace sysctl to select the
+> default PM type (in-kernel or userspace) for new MPTCP sockets. New
+> self-tests confirm expected behavior when userspace PM is selected but
+> there is no daemon available to handle existing MPTCP PM events.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/6] mptcp: Remove redundant assignments in path manager init
+    https://git.kernel.org/netdev/net-next/c/9273b9d57995
+  - [net-next,2/6] mptcp: Add a member to mptcp_pm_data to track kernel vs userspace mode
+    https://git.kernel.org/netdev/net-next/c/d85a8fde71e2
+  - [net-next,3/6] mptcp: Bypass kernel PM when userspace PM is enabled
+    https://git.kernel.org/netdev/net-next/c/14b06811bec6
+  - [net-next,4/6] mptcp: Make kernel path manager check for userspace-managed sockets
+    https://git.kernel.org/netdev/net-next/c/6961326e38fe
+  - [net-next,5/6] mptcp: Add a per-namespace sysctl to set the default path manager type
+    https://git.kernel.org/netdev/net-next/c/6bb63ccc25d4
+  - [net-next,6/6] selftests: mptcp: Add tests for userspace PM type
+    https://git.kernel.org/netdev/net-next/c/5ac1d2d63451
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
