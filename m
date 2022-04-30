@@ -1,38 +1,38 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7976A1363
-	for <mptcp@lists.linux.dev>; Sat, 30 Apr 2022 00:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6C01840
+	for <mptcp@lists.linux.dev>; Sat, 30 Apr 2022 00:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651277018; x=1682813018;
+  t=1651278156; x=1682814156;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=YHvSdBT0JzcjBuXtnFjysOFWwj+hNFm1YwCM+pJFBZw=;
-  b=Bqjyd19/3YpRTTGKj0uLFXmEcBaaDvd4p8xqIqRvd5+Em54Og7KN61ZF
-   /RscKjWKhy1tsQowVNl7xOcy8Id6d9CAAPRBsw41pmq8bIkArdFZ8A/QL
-   UietL4CouJIAHY1+F9LnADRVzcB0jtWdk0eT5NfG2lgHZ/aV16f0tNNcY
-   7UqREOt7qe8jG7zjOP4uYE4Z3AUfDTMoEA+L2msLrLmf1Z17CdgmsZ8Is
-   YNDFFM9cOOb6KSdl1LHmiftzSid8W9sUDWZzl0XuyRfhaFyM8zwZURtmC
-   aDgdN5LHYIyZ5Jb8lqZhUw1eyiiTNcWPMrVUt93yDz9mZVj19JYLlvZrm
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="266350921"
+  bh=n5ss326xpl9KfIpHxkn5aNMNCu4Aq/AoZ3x10bMGz7o=;
+  b=NvOibO2Gt1nAbz/YD6GF6qKSA7Dzsng2vpYBowI92mobFykWmMPenLd6
+   ymHIaDV+RVt3I3wDfJOgPg0R0ZRU98/I6I8zylbsfPjL7fKF5PLJHC81/
+   vMVw2n6zCfqYjIPjaACePQ+ilpgJkQ3YT6L0renw4hi8uR9/oCHHbqC4u
+   ewM3PgdgcXjwrS5WQuoMsDhh48xbkc7CKG/tzo/USZvHNNOkioWw8uB37
+   oIqWt0BwmFd1d1JcoHdtE7eQ6ADJk5FYP2JCTIl59rv5/L44KxyU+kef7
+   oq6Y6kt2r2NRC8dmFZlapN6iL80dxb2Ts+e4s35Nb+DG3gQPwqfwLZjRc
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="264391153"
 X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
-   d="scan'208";a="266350921"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 17:03:38 -0700
+   d="scan'208";a="264391153"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 17:22:34 -0700
 X-IronPort-AV: E=Sophos;i="5.91,186,1647327600"; 
-   d="scan'208";a="630291499"
+   d="scan'208";a="685717457"
 Received: from mdbellow-mobl.amr.corp.intel.com ([10.209.122.4])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 17:03:37 -0700
-Date: Fri, 29 Apr 2022 17:03:37 -0700 (PDT)
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 17:22:33 -0700
+Date: Fri, 29 Apr 2022 17:22:33 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v17 4/8] mptcp: add get_subflow wrappers
-In-Reply-To: <4244e3e9db5b34b5c7ea5809933aed847bc2d523.1651123078.git.geliang.tang@suse.com>
-Message-ID: <d372729c-01b-35d3-e41-2e2db4f66bd@linux.intel.com>
-References: <cover.1651123078.git.geliang.tang@suse.com> <4244e3e9db5b34b5c7ea5809933aed847bc2d523.1651123078.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v17 6/8] mptcp: add last_snd write access
+In-Reply-To: <60a9490aa49e64c1db357ad2096d321d7c54713a.1651123078.git.geliang.tang@suse.com>
+Message-ID: <b954e32b-f0e3-4725-b755-66e5831adcee@linux.intel.com>
+References: <cover.1651123078.git.geliang.tang@suse.com> <60a9490aa49e64c1db357ad2096d321d7c54713a.1651123078.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,160 +43,84 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Thu, 28 Apr 2022, Geliang Tang wrote:
 
-> This patch defines two new wrappers mptcp_sched_get_send() and
-> mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched
-> in them. Use them instead of using mptcp_subflow_get_send() or
-> mptcp_subflow_get_retrans() directly.
+> This patch exports the member last_snd of struct mptcp_sock in
+> bpf_mptcp_helpers.h, and adds BPF write access to it.
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c | 25 ++++++-------------------
-> net/mptcp/protocol.h | 42 ++++++++++++++++++++++++++++++++++++++++++
-> 2 files changed, 48 insertions(+), 19 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f599b702415e..5243c58789a4 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1427,7 +1427,7 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
->  * returns the subflow that will transmit the next DSS
->  * additionally updates the rtx timeout
->  */
-> -static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> +struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> {
-> 	struct subflow_send_info send_info[SSK_MODE_MAX];
-> 	struct mptcp_subflow_context *subflow;
-> @@ -1438,14 +1438,6 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> 	u64 linger_time;
-> 	long tout = 0;
->
-> -	sock_owned_by_me(sk);
-> -
-> -	if (__mptcp_check_fallback(msk)) {
-> -		if (!msk->first)
-> -			return NULL;
-> -		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
-> -	}
-> -
-> 	/* re-use last subflow, if the burst allow that */
-> 	if (msk->last_snd && msk->snd_burst > 0 &&
-> 	    sk_stream_memory_free(msk->last_snd) &&
-> @@ -1575,7 +1567,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 			int ret = 0;
->
-> 			prev_ssk = ssk;
-> -			ssk = mptcp_subflow_get_send(msk);
-> +			ssk = mptcp_sched_get_send(msk);
->
-> 			/* First check. If the ssk has changed since
-> 			 * the last round, release prev_ssk
-> @@ -1644,7 +1636,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
-> 			 * check for a different subflow usage only after
-> 			 * spooling the first chunk of data
-> 			 */
-> -			xmit_ssk = first ? ssk : mptcp_subflow_get_send(mptcp_sk(sk));
-> +			xmit_ssk = first ? ssk : mptcp_sched_get_send(mptcp_sk(sk));
-> 			if (!xmit_ssk)
-> 				goto out;
-> 			if (xmit_ssk != ssk) {
-> @@ -2218,17 +2210,12 @@ static void mptcp_timeout_timer(struct timer_list *t)
->  *
->  * A backup subflow is returned only if that is the only kind available.
->  */
-> -static struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk)
-> +struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk)
-> {
-> 	struct sock *backup = NULL, *pick = NULL;
-> 	struct mptcp_subflow_context *subflow;
-> 	int min_stale_count = INT_MAX;
->
-> -	sock_owned_by_me((const struct sock *)msk);
-> -
-> -	if (__mptcp_check_fallback(msk))
-> -		return NULL;
-> -
-> 	mptcp_for_each_subflow(msk, subflow) {
-> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->
-> @@ -2481,7 +2468,7 @@ static void __mptcp_retrans(struct sock *sk)
-> 	mptcp_clean_una_wakeup(sk);
->
-> 	/* first check ssk: need to kick "stale" logic */
-> -	ssk = mptcp_subflow_get_retrans(msk);
-> +	ssk = mptcp_sched_get_retrans(msk);
-> 	dfrag = mptcp_rtx_head(sk);
-> 	if (!dfrag) {
-> 		if (mptcp_data_fin_enabled(msk)) {
-> @@ -3146,7 +3133,7 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
-> 		return;
->
-> 	if (!sock_owned_by_user(sk)) {
-> -		struct sock *xmit_ssk = mptcp_subflow_get_send(mptcp_sk(sk));
-> +		struct sock *xmit_ssk = mptcp_sched_get_send(mptcp_sk(sk));
->
-> 		if (xmit_ssk == ssk)
-> 			__mptcp_subflow_push_pending(sk, ssk);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 723141a888f4..0da2a91ad197 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -988,4 +988,46 @@ mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subflow_re
-> static inline void mptcp_join_cookie_init(void) {}
-> #endif
->
-> +struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
-> +struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk);
-> +
-> +static inline struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_sched_data data;
-> +
-> +	sock_owned_by_me((struct sock *)msk);
-> +
-> +	/* the following check is moved out of mptcp_subflow_get_send */
-> +	if (__mptcp_check_fallback(msk)) {
-> +		if (!msk->first)
-> +			return NULL;
-> +		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
-> +	}
-> +
-> +	if (!msk->sched)
-> +		return mptcp_subflow_get_send(msk);
-> +
 
-I think it would be good to zero out the mptcp_sched_data here so we 
-aren't passing random data to the BPF code from uninitialized stack 
-memory. Probably good to create a helper function that you can use here 
-and in mptcp_sched_get_retrans(), and then modify the helper when adding 
-struct members in "mptcp: add subflows array in mptcp_sched_data".
+I still think we should stay away from giving the BPF functions write 
+access to the msk unless it's really necessary.
+
+In this case, both of the example schedulers write identical values to 
+msk->last_snd and data->sock. Will they ever be different? Seems better to 
+keep it simple for the BPF code and have the get_subflow wrappers handle 
+assigning to msk->last_snd if a BPF function was called, and let the 
+built-in scheduler assign last_snd itself.
 
 - Mat
 
-> +	msk->sched->get_subflow(msk, false, &data);
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/bpf.c                                 | 15 ++++++++++++---
+> tools/testing/selftests/bpf/bpf_mptcp_helpers.h |  1 +
+> 2 files changed, 13 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index a085c72fe695..300493f9a2b6 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -18,8 +18,8 @@
+> #ifdef CONFIG_BPF_JIT
+> extern struct bpf_struct_ops bpf_mptcp_sched_ops;
+> extern struct btf *btf_vmlinux;
+> -static const struct btf_type *mptcp_sched_type __read_mostly;
+> -static u32 mptcp_sched_id;
+> +static const struct btf_type *mptcp_sock_type, *mptcp_sched_type __read_mostly;
+> +static u32 mptcp_sock_id, mptcp_sched_id;
+>
+> static u32 optional_ops[] = {
+> 	offsetof(struct mptcp_sched_ops, init),
+> @@ -47,12 +47,15 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
+> 		return btf_struct_access(log, btf, t, off, size, atype,
+> 					 next_btf_id, flag);
+>
+> -	if (t != mptcp_sched_type) {
+> +	if (t != mptcp_sock_type && t != mptcp_sched_type) {
+> 		bpf_log(log, "only access to mptcp_sched is supported\n");
+> 		return -EACCES;
+> 	}
+>
+> 	switch (off) {
+> +	case offsetof(struct mptcp_sock, last_snd):
+> +		end = offsetofend(struct mptcp_sock, last_snd);
+> +		break;
+> 	case offsetof(struct mptcp_sched_data, sock):
+> 		end = offsetofend(struct mptcp_sched_data, sock);
+> 		break;
+> @@ -145,6 +148,12 @@ static int bpf_mptcp_sched_init(struct btf *btf)
+> {
+> 	s32 type_id;
+>
+> +	type_id = btf_find_by_name_kind(btf, "mptcp_sock", BTF_KIND_STRUCT);
+> +	if (type_id < 0)
+> +		return -EINVAL;
+> +	mptcp_sock_id = type_id;
+> +	mptcp_sock_type = btf_type_by_id(btf, mptcp_sock_id);
 > +
-> +	return data.sock;
-> +}
-> +
-> +static inline struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_sched_data data;
-> +
-> +	sock_owned_by_me((const struct sock *)msk);
-> +
-> +	/* the following check is moved out of mptcp_subflow_get_retrans */
-> +	if (__mptcp_check_fallback(msk))
-> +		return NULL;
-> +
-> +	if (!msk->sched)
-> +		return mptcp_subflow_get_retrans(msk);
-> +
-> +	msk->sched->get_subflow(msk, true, &data);
-> +
-> +	return data.sock;
-> +}
-> +
-> #endif /* __MPTCP_PROTOCOL_H */
+> 	type_id = btf_find_by_name_kind(btf, "mptcp_sched_data",
+> 					BTF_KIND_STRUCT);
+> 	if (type_id < 0)
+> diff --git a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> index a0b83fbe8133..79a16636400b 100644
+> --- a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> @@ -27,6 +27,7 @@ struct mptcp_sched_ops {
+> struct mptcp_sock {
+> 	struct inet_connection_sock	sk;
+>
+> +	struct sock	*last_snd;
+> 	__u32		token;
+> 	struct sock	*first;
+> 	struct mptcp_sched_ops *sched;
 > -- 
 > 2.34.1
 >
