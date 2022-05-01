@@ -1,31 +1,31 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33D328EB
-	for <mptcp@lists.linux.dev>; Sun,  1 May 2022 13:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671EB28EB
+	for <mptcp@lists.linux.dev>; Sun,  1 May 2022 13:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1651413461;
+	t=1651413470;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zCS7/o0mFEd7aWCvAgyf4JzWsq9+Ec/zl5yXzfeCQRc=;
-	b=Sl7iYK//tMd8eziH99EiZy2ReM6/gO6SAXlE4yOHTyGsYzYh3wEgsMTGD9pajREJ7l3/u0
-	WbtKCRNSS/rx36qUTFyUR/pN9kUzKoGmXTTL7LPTwvf40MG4SYPGrhov4i95NVQ5yOzOIt
-	dERKr0cG55VvYtzTSiAT8/++cX2rzbk=
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
- (mail-he1eur04lp2054.outbound.protection.outlook.com [104.47.13.54]) by
+	bh=QP/HhjyqP5e+YvH8PJ+d5E86H72GakFzEBOOq5Hu6Yg=;
+	b=aJxs7BEKUxjawx2YcENqVbq2ObNIZ43MZocNClsSzKxq5OYoCCZUlGbgHvvgxgrPk7eLfh
+	gGPmOdg4t4Yw8nncSrMJ5re0QpkssflbeTUIGdu0NgV4tI/tzwLrGC7N8eZYU/pOjOVq/d
+	Y8HHgwqXR8dVYFJRPB5NoX/ZV7DPoPE=
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur05lp2176.outbound.protection.outlook.com [104.47.17.176]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-25-psTUDpMMN7y7A4y-ip0PXw-1; Sun, 01 May 2022 15:57:41 +0200
-X-MC-Unique: psTUDpMMN7y7A4y-ip0PXw-1
+ de-mta-30-BV9XgFGhNimN8JwmizjQLw-1; Sun, 01 May 2022 15:57:49 +0200
+X-MC-Unique: BV9XgFGhNimN8JwmizjQLw-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jCdEoeGYTTHlwh/JvRydipLDL+E0tbmwJXpxhW1aYaHf69fkXumI0/+19ZEEEfwuflMvlEiyyB8bRKmiZGvqGX/sCZUXOZojAkCEkDaPAngy207Ewc/420vSXemUt1QbV0c03j66Vf0k10jooGKbjkFkrcGRBCemKx/WHtUeUM+02Stno1/XttaNp4CFe0hN4YU/EIj+E/LEyPavf21apy6RfXpI84BmK1l2xXMdc8ShOE5w1uTo7j4Xm3GzLGCDMgKK/VAeprmJMXKZdPoh72Cc/eSAnaoOocGpl8QIPUf+DWiELFVBpv9CxU6NPWouiS82CIpcvgRfuHZFC2nvvA==
+ b=RogzVlAcmXOOa10K2RhX3WT7D+ertRpoWukxWTWAYPfdVO8+WxVmAgGqycUkONelKOIVlN5kuILVVaBuPo7Q77h7EkTzb4QfymPL6obJfYI1Oua7IhVsKJBI3FEeUHRy8uzJPIQGAcOSIZ8HCaOEec07p+/eIUQwwzNBDP2my49H5edAlPEQmMh71dYBa2ZvxuPSodmHVdtiJL0KV0WVzgCXRkjK3R2c4b3IYB4co1qJixOVG4lS8ef0y+bBKW127lvWuBMUOfT6SY0GFjtx27nDOvMpMjmfGQlPte2htqxFHaQXZ8gFmMgCZ98VRzjUrmGAFMggULmoPkEzCXDqeA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QlIi8ZUX/4tAooxzno3A+twvvyk5QS7FS4c0RSTpZRE=;
- b=E+NuLmVzOqgu1bZdGmYkwendE2qPJLeKWV3PBEcprWgTTKfzHNPLAc2+RGBfHxEjGEuPU/0+Co522WXIpG4Fuon/6gKbwBeIfFmYxreuKyNJ5vPNmKcIEKm+ZEV4nJReUP4kPawGF5e5LClPVDm3xqJZzTOIy+Z71QJzIUDq91hS44hlMNBwlarowKiduWuzjIRox97kjR3rqJnNikWRefQ8MhDMY+MjGIFTw/7GeOCl9YPj+8vn0sdDuANzvsyGhBO/0gu59/+bo4fZhwLX7BIPskOX3fK/ndyHfKisaKsCGAtZ4Rn0WdecSFqVFlstcsktFdNsVQXAmZMT9/z99A==
+ bh=ioI8YHiHz+f7fGNENfwLQdD9qu5mu22h56pvCDu9Sqg=;
+ b=JsflYwAMCuczh1YHlcX8MqkpVFAQBS7nxK6M5iZoRoogbsqr6btHJRPDIrE+d/oo7QTe753PWfYcbHSVLj9dtxgWG3kHyjDxuyCt9HCUrBHmVkmfxiR0PbVYC+yWf1DXJX5qjNJfr5v2CdZc+cNoFxcWIbbCZFnJcBn3z3KJfhH7LIO/Y+OrnxwDp1Ow6kRXiOIIZhrljNiTXS+fbvv3DK4cMsxhRFD2H+zdZqJyzSvYSKzUNVoE44gbLMYj8GQglD8XOQRpDFwH0UgnEhBXOlA+5GN339HBKsFEASKDm0GT1QoJktAwY1D6hDlI0cDh3mQZF6yfsaUrHdNdBw2SjQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
@@ -35,24 +35,24 @@ Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by VE1PR04MB6605.eurprd04.prod.outlook.com (2603:10a6:803:124::33) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.13; Sun, 1 May
- 2022 13:57:40 +0000
+ 2022 13:57:48 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::9974:fd5e:e3c0:14dc]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::9974:fd5e:e3c0:14dc%3]) with mapi id 15.20.5186.028; Sun, 1 May 2022
- 13:57:39 +0000
+ 13:57:48 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v10 2/3] selftests: bpf: add bpf_rr scheduler
-Date: Sun,  1 May 2022 21:57:13 +0800
-Message-ID: <b02fdaa461bc8c887fe39fb9d659cabd1ebca08c.1651413062.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v10 3/3] selftests: bpf: add bpf_rr test
+Date: Sun,  1 May 2022 21:57:14 +0800
+Message-ID: <f21cb6b7d49b4a98dbbfff20321c5a9a2e382456.1651413062.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1651413062.git.geliang.tang@suse.com>
 References: <cover.1651413062.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: HK2PR04CA0059.apcprd04.prod.outlook.com
- (2603:1096:202:14::27) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: HK2PR04CA0054.apcprd04.prod.outlook.com
+ (2603:1096:202:14::22) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -61,146 +61,131 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0a061c2a-5fb6-42d0-232a-08da2b7a8e13
+X-MS-Office365-Filtering-Correlation-Id: 0f450766-c37e-42c3-684c-08da2b7a9345
 X-MS-TrafficTypeDiagnostic: VE1PR04MB6605:EE_
 X-Microsoft-Antispam-PRVS:
-	<VE1PR04MB6605DC0A0386A3E70A38CC1BF8FE9@VE1PR04MB6605.eurprd04.prod.outlook.com>
+	<VE1PR04MB6605FC016856D2FB18E98D10F8FE9@VE1PR04MB6605.eurprd04.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	Jgi97kMlW6OVtsLEyE9OKQxq7tmPGm/n0FPh3v5W3tf4qFKVw63pRyLyYoNQHcSZV33GxFNBBdL30rF6mXsBl/tny3xVQOaBlBjjhPjNkCVheoGfALsyxa3hWm0aGQkzi9zK3/AgIR4Jw1A+TYHzqZZ1/Rwcrpg2A18CEbq9rJkz8PKYTQEUwaCkgZfNuKljcNZpS0AWsJ0Sqk9lLkclqxNHKQVUWDfpeRMQDdeZKpeuQms56nFgYlFXUOZqdDzICqbyCODtxezHJiRgDKY89/EFBlT9tbAWVYWcxdKI3bd5xRejbtT8RMIz/7M14h8xUi2bXGX6B3Yu8GCOF02u3y7qpJfS81jPYijmY/eyDrQiaWbieM+X15Gz5ZEG/mnC2jX86UVMXFihlWbXJ9o8UxWBaqls6W3sBTaZ86tGP6Qkv+YSixQ7hL85UkKH96qZdpzTk5HArY9uG4FUCGvMfyRpR5q/R5Nk0lYMHzAwN/PKFqdNd3zzZyKcVJqR2zeCOyoEFPYyF+Yygku93V2Sjz/kRs1vHEwAPYeSmmiT42q2p2XzDoY0VDOperbmC+qaoCQK6l7XVxEsvAwMNQdQ2JPy9Ky+JRJGP2Rm7gU+ZK9gf3BQadE/f+0VLg7sOe+TtwDW7pIojja0j6f5xP9XbmEWxKjqM0y9bEt4lIZjCcr0FfkLcNY4HSaaI78e70iQfOyAoHR8lDofnpH5afKfFw==
+	ZRbz8vdvD7wU0xjiOcHTFj8PxLjBJU3pZlG42Lm3Y+xCG9IvHlZ3im7l8255oQOYTwzFCJYym7CtNWl88TD0PtAjtUg4ajkh+HJLOA6VSCK+6cw/Np2KeYO5oVPbJsFpVXVrRnCgCPlwelADUKZ+bya7F1S58vkQnrUe9aNnj/Yx5tYyUcYMO5ousUFYCIVYy9FrOj/eTuZls5fGqMxJ0pPJBZNn7zSBmg+42odQGVmy8bP5Qg5TGzvH1xoJg2BaPN+ifwBhH4+6w+uXIMZpBfpXDqb+ayydcujZhYZcz94XzXJqgLAq8TwzabGZuk62fszrvbti1I1SXlNtwJ5w3vp1MvDCi+lpS0kaUg3DaAYzA7mlNv5fEoc4Wkx+0RstkhquLywev7mMcs+M/Z0ujW5h+J6Ist3qBhUnzaE2JS22MlYGJoBbduEGeDlthBRxZNyKVtNsbfTStLXanr4hV5kkuDy279ZpQHHMSJEszWXBCK1Cs1Hd094cEVMFaYzsMiBN+JV8YPICsJ9p5UwuAK2QUrSd8DpmeI1XFAxhqivrdwQN0vMSOycyPK5RT+rP8FjFwLhfPUBKqcdz1TP2OeMZVpAJ4uAnmAg+vS9sYCtmHArjrtTptQQgWowafe41hqW8nsYOQaQza0oVyXjTO5O9UbaDyrfyrnSRQzRCgb5Z0FizugXpMCHFE7ltuVP8
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6486002)(107886003)(508600001)(86362001)(2616005)(6506007)(6512007)(26005)(38100700002)(6666004)(66556008)(66946007)(186003)(66476007)(316002)(44832011)(2906002)(36756003)(5660300002)(8936002)(4326008)(6916009)(8676002)(83380400001)(13296009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2HCHfGt858WrJWlnAGh8ZXRh2uhFuF2D2ZlB3uvVzpZdJdu80EI/6JYna2Ph?=
- =?us-ascii?Q?MI5OpMNP+TlIMWdfAGEVp0KS3LzJ5T1Oy10LXkVBp1EuckQQj3y2dcQauhM6?=
- =?us-ascii?Q?eDigxM0vt4/MuoFEhC4jYx17p7FRW6DDkE+F1RSqiECEaM4OESil4tGCyaMY?=
- =?us-ascii?Q?Nu/4GcwzGANoFUzMfMMu1E9YvBkwHnzDyJOnRNsKThvU+zTrisyKK1sRYheQ?=
- =?us-ascii?Q?58U2x1sg56ptbr8pXJBLkN5w0vh1qEHeq9WWn/W0laNmPKhqGrWr5MTnx5Ns?=
- =?us-ascii?Q?IEW8YCqfM5eulvVzMzd8qsBy4VxBtiE2JfVuWj2OGCB+JTrrcYWdrq2LkrW5?=
- =?us-ascii?Q?SQE1heoq39ps7LUWlVL6rj4STkmHM9sRVbwICDpV/X0dLThYDOx7gJVDrD3l?=
- =?us-ascii?Q?boDPZuhuxxQSHmRuEAq0kOtTTgC86G1EG5JxqSLC0CPSa5jvRZCpHbx52hob?=
- =?us-ascii?Q?vbkIE0cOyDNYcq2UtbvSKiy9vTfkpmipdNEc2uvOXrD5AaDVGgA/1wZQnyG8?=
- =?us-ascii?Q?SmQ3DoDI9swQVnpguw6ud6tbK1x3ZjWVCSl14IrHhBo4vNoR/bEbMW16N34E?=
- =?us-ascii?Q?wg0s9eLPAwFxVB93qAf54/x75M0mzhIA71HBETIc7AaxB7qJ1vyjrF35n8Qa?=
- =?us-ascii?Q?uip+B/sQl0XqaVKJzCLOOZyXbSSEMK0onX/7rFaazNkQhtTbAd3qTesvv0ou?=
- =?us-ascii?Q?H0rPkiEHVpt4u5xkW17x1Zuu/xbDkmUaqp/0m/AVNK0/te3/iruAu5D7CpLq?=
- =?us-ascii?Q?EL92j4YLS/6Z6CJUvetcUehgCUp6VN/jQdObarsU2FLAgZ1vmhuLck8Xkgjx?=
- =?us-ascii?Q?1QVEorHKuDabeqSZd+exONA7qLeRbMaA/oEUZMlQvENoSlh6Tfh2tO+9KMLo?=
- =?us-ascii?Q?licpmSchpzfk6J+y2xpvskmPwSdFr4ufFJLnFh0eGG8wTDruOLc6iRtzhk9v?=
- =?us-ascii?Q?r+PqBr318Lpsh+P0omPddOajcmajbaRLlXTNSEoZAzwtyBc7hujGCyI+aK9h?=
- =?us-ascii?Q?Wcol2Ie4OM44lHQ/6Bryw8Um43wOjiZLRnIA1WiBSyKqeb8LUoMpU4xkZKO7?=
- =?us-ascii?Q?WZykEUjYT8dvuWV49YGrI2c1QY+vybkel9qBZnxMQ3TOX4J9BxE04AqDQOgM?=
- =?us-ascii?Q?mfB4mdqh4Sda6+xT+r6Kav5DtQcnF7dNQCIBP6a3EciXaL1eaaIeHVUJeq66?=
- =?us-ascii?Q?yEOk5r0GXZ0j3RsRE13fSjbAnTxCjfgazIOeBeNq1Ym/IPoodaJOsbV//si4?=
- =?us-ascii?Q?nCtBm9D4C1VqR6kt3/DRBf6SM6Gj3MzJdNMr+sgbm4Ca9OszxBviz74jvAHt?=
- =?us-ascii?Q?Rim4cQLc9wbgdn8BMqt15kXjMyf8qyob2Bvh9y4YPF3xipqBVj3pqsQFCZ+Z?=
- =?us-ascii?Q?Nw+Kyu0MUl9AaCbK22gGc5lrUCnR9UqilUC8LWl7IbqFZPqKqeDwm1xAi1rV?=
- =?us-ascii?Q?XDExYhqUVTuS1dT8pTjOVNfCjBsID4P4peKq6JNEH067sONkAc0xdVnn0ywU?=
- =?us-ascii?Q?+Lkd0fcPn0Q3K3ttULUVX6Af5uGafL0C1Wp7JlGHMutEJu0Vf5lVrx68QlbS?=
- =?us-ascii?Q?u4YgMTzhfL3jCziR9DQf6/wB9YL1LIA1cXww0cq4i9e5sY7zGnVZKjtn2U4W?=
- =?us-ascii?Q?S6cVasT5GOiB58pvLOOo5br9PcqoH2Fo8k9LtkmK7kvkiAJW9jtCKONpN5+w?=
- =?us-ascii?Q?SiBfh0iBox1X/X6+3It2SKHAtMegnwGqmmvyr5JN6/YXeIr6PCZrNevvpucG?=
- =?us-ascii?Q?VmXWJtuzziZNb/bJgQRDFjPLCkFXib8=3D?=
+	=?us-ascii?Q?SaIbtl4VtbKIPADqECxh0x0g00JYdz/ckcFK/LhyirdoCdVDdBphix/h3Bkv?=
+ =?us-ascii?Q?nBF+N2CSEjkaEGSSg0KoaJjfSz/DAOdjev08A1B0jYOVAiIt04cSvLBHu5EG?=
+ =?us-ascii?Q?teFpWgglRpndCcqpgt8ttdOH/IIl1xNbSba95gyoMhNH3wXAePs0l7xztikF?=
+ =?us-ascii?Q?HsEak8d/Il+OL1Vi/YV5175vbCdcO2d9+jh2MibwHTWtFFRS6zWBQpsI6Rz2?=
+ =?us-ascii?Q?de4IKVkhpLabbWDvl9CM8C6PAvPqKgetcipzNiO//It0hYqb3o6RCFvMbDUJ?=
+ =?us-ascii?Q?jpnjN7DZ6i0jdUX8BOuukNT15flsWJsKgTNPnemRK1+7ItsRuS160rr0fOOI?=
+ =?us-ascii?Q?/Jl3ozUa8Ndre7sp5ATE9j3aXMjK2BDr5QB3c8mP3/iZ77AzcU8RZHB8EEjn?=
+ =?us-ascii?Q?F7zYDVxPtVsU6btCCoJoL5449x8v7zIRlkJeQsjb+2Rxkb8Utwq1ypKNoZjF?=
+ =?us-ascii?Q?EK24ZmY7MF03yLiiUEnINT+HIsgmLpnqZKW20VsQqXLLjVwDazyYLH0MAFzE?=
+ =?us-ascii?Q?wDbLnJjlOAh10lWts+bGqB4oeN7nEjpfPBzZy5qGdMTD1HKSEf3m0jVtHoXw?=
+ =?us-ascii?Q?O711SvFCH/YjeAYfcjrV2iMn44HupiraM/vKh+E+/0p30/q9/God5E/WFxq7?=
+ =?us-ascii?Q?EN18BbLDr+NbdwtriSQDDBM24Z7YxWptMVCnEHZsqdfOLIMJyvF6C0F0TIFK?=
+ =?us-ascii?Q?q6YlaZiOd7L78PfTsWFF1gV4dimAYxcc3ioo4nwDcTmI2BsXC8YVSSfNXceU?=
+ =?us-ascii?Q?y/fDyrPegvnULUXaISKKzquGSEuPRFH6ZR9rPFkvNKQOlyYfFqM603V/K/jX?=
+ =?us-ascii?Q?Z7Y/uCBRLztBSCb5o2WWimocltkO8MlYKuEOpxJOlZBYh7p6eQqPuonmyK0A?=
+ =?us-ascii?Q?GSJsLaWE+PoKq3sftsVDd8cVlL7rCTLheL0/86TQUkmd+bMz3uYxFI8VOW9Q?=
+ =?us-ascii?Q?OM1ROYERKn1JI3k9mYUTp1RE3DMNryn/c274Ju4bgVErl+Kx7OlqHWq4cKh1?=
+ =?us-ascii?Q?YmXcLzFY/k7sEj6dShIYZ3YPO9Zqi0AGw/lA+zHKbJnQjtiucRU7dQzrCPxE?=
+ =?us-ascii?Q?5o8fHXLZ/3kfKNc3vjsfYhBXiV0qGByccyVNl3JBMBTirrzqdb1q/xiMuIUu?=
+ =?us-ascii?Q?FuwmlhOQZeStoA1UI2o3yoG+9nAYmUX6Fb5o4zzUsIiW1OXaGoEyFkKwuZOt?=
+ =?us-ascii?Q?GQOEfhMfWxMztwRXHN8gh/iUTgu6BXWBB7BtxLGb6DN1YZFyrI256AeCjI9u?=
+ =?us-ascii?Q?Bop7R5pLEYEjR1HhUiiR/ulnHdXFZ82nOWJ355VRYdbha8sb09qSRDvO+twE?=
+ =?us-ascii?Q?wv75W6WGaaFe/l4gH31FIG1kngL4k7wFfmBkeQoJfCepYDUj+8X0US407CoD?=
+ =?us-ascii?Q?P8qKvZD8PFN9Bzev2sKGtCxBUVvF193N17nzSRKEofwOEHLAkpj9l0y+C9WD?=
+ =?us-ascii?Q?BZIaOgPZplXi/fptmGrH6O1yfwITKzwU2z3E9NG61a29trc1OMu6Th3Vq5b5?=
+ =?us-ascii?Q?6m2TagPzSqCnRZUsVHQJvQUFfxN30iAbo5xGbrt64AViABrD/1zqiXZKz7vz?=
+ =?us-ascii?Q?JT/ZbPrE9fNlSK3qJ4AqI7L8W2wNx+y2QFMQWFMLs/CfkBBv2msb3G62SGgR?=
+ =?us-ascii?Q?im6pIcaB7DlsQ8Oa6hWZYTPUBr1aDWH4Vf+6HNYsnoBvGP3US409gVLHmbaK?=
+ =?us-ascii?Q?WXh5YrkOWdC7BTEWoVmTv7ixuBXIk3VLECXCujm0oM4CP5Ppe7WErLWpAj/G?=
+ =?us-ascii?Q?7mcbVg25S3sbnMV7muR1LiQnA1T5nec=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a061c2a-5fb6-42d0-232a-08da2b7a8e13
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f450766-c37e-42c3-684c-08da2b7a9345
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2022 13:57:39.8938
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2022 13:57:48.6431
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V0/c6n0a/wWJajItmWlqaM+qp4fogGurF3naRW6QOIMdq88ynxci8rKcUTJLgnplGkgt1w9a0QSa0rBFnBSN8g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: BeljjctHm0iCHt1O5ecJmvZJ/AIU/alnx5K07W1h3heRx28ZF+d9jMQziX+2RYJC0Qu5BS0kp4YVgBHfx2LPQg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6605
 
-This patch implements the round-robin BPF MPTCP scheduler, named bpf_rr,
-which always picks the next available subflow to send data. If no such
-next subflow available, picks the first one.
+This patch adds the round-robin BPF MPTCP scheduler test. Use sysctl to
+set net.mptcp.scheduler to use this sched. Add a veth net device to
+simulate the multiple addresses case. Use 'ip mptcp endpoint' command to
+add this new endpoint to PM netlink.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/bpf/bpf_mptcp_helpers.h |  6 +++
- .../selftests/bpf/progs/mptcp_bpf_rr.c        | 45 +++++++++++++++++++
- 2 files changed, 51 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h b/tools/testin=
-g/selftests/bpf/bpf_mptcp_helpers.h
-index 1f991ff2e325..8ce5b1603962 100644
---- a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
-+++ b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
-@@ -30,10 +30,16 @@ struct mptcp_sched_ops {
- struct mptcp_sock {
- 	struct inet_connection_sock	sk;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing=
+/selftests/bpf/prog_tests/mptcp.c
+index 21462c29683c..c400be612f72 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -5,6 +5,7 @@
+ #include "cgroup_helpers.h"
+ #include "network_helpers.h"
+ #include "mptcp_bpf_first.skel.h"
++#include "mptcp_bpf_rr.skel.h"
 =20
-+	struct sock	*last_snd;
- 	__u32		token;
- 	struct sock	*first;
- 	struct mptcp_sched_ops *sched;
- 	char		ca_name[TCP_CA_NAME_MAX];
- } __attribute__((preserve_access_index));
+ #ifndef TCP_CA_NAME_MAX
+ #define TCP_CA_NAME_MAX	16
+@@ -375,10 +376,46 @@ static void test_first(void)
+ 	mptcp_bpf_first__destroy(first_skel);
+ }
 =20
-+struct mptcp_subflow_context {
-+	__u32	token;
-+	struct	sock *tcp_sock;	    /* tcp sk backpointer */
-+} __attribute__((preserve_access_index));
-+
- #endif
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c b/tools/testi=
-ng/selftests/bpf/progs/mptcp_bpf_rr.c
-new file mode 100644
-index 000000000000..3619bd622b94
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2022, SUSE. */
-+
-+#include <linux/bpf.h>
-+#include <linux/stddef.h>
-+#include <linux/tcp.h>
-+#include "bpf_mptcp_helpers.h"
-+
-+char _license[] SEC("license") =3D "GPL";
-+
-+SEC("struct_ops/mptcp_sched_rr_init")
-+void BPF_PROG(mptcp_sched_rr_init, struct mptcp_sock *msk)
++static void test_rr(void)
 +{
-+}
++	struct mptcp_bpf_rr *rr_skel;
++	int server_fd, client_fd;
++	struct bpf_link *link;
 +
-+SEC("struct_ops/mptcp_sched_rr_release")
-+void BPF_PROG(mptcp_sched_rr_release, struct mptcp_sock *msk)
-+{
-+}
++	rr_skel =3D mptcp_bpf_rr__open_and_load();
++	if (CHECK(!rr_skel, "bpf_rr__open_and_load", "failed\n"))
++		return;
 +
-+void BPF_STRUCT_OPS(bpf_rr_get_subflow, struct mptcp_sock *msk,
-+		    bool reinject, struct mptcp_sched_data *data)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *ssk =3D msk->first;
-+
-+	for (int i =3D 0; i < MPTCP_SUBFLOWS_MAX && i < data->subflows; i++) {
-+		subflow =3D data->array[i];
-+		if (subflow->tcp_sock !=3D msk->last_snd) {
-+			ssk =3D subflow->tcp_sock;
-+			break;
-+		}
++	link =3D bpf_map__attach_struct_ops(rr_skel->maps.rr);
++	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
++		mptcp_bpf_rr__destroy(rr_skel);
++		return;
 +	}
 +
-+	data->sock =3D ssk;
-+	data->call_again =3D 0;
++	system("ip link add veth1 type veth; \
++		ip addr add 10.0.1.1/24 dev veth1; \
++		ip link set veth1 up");
++	system("ip mptcp endpoint add 10.0.1.1 subflow");
++	system("sysctl -q net.mptcp.scheduler=3Dbpf_rr");
++	server_fd =3D start_mptcp_server(AF_INET, NULL, 0, 0);
++	client_fd =3D connect_to_mptcp_fd(server_fd, 0);
++
++	send_data(server_fd, client_fd);
++
++	close(client_fd);
++	close(server_fd);
++	system("ip mptcp endpoint flush");
++	system("ip link del veth1");
++	bpf_link__destroy(link);
++	mptcp_bpf_rr__destroy(rr_skel);
 +}
 +
-+SEC(".struct_ops")
-+struct mptcp_sched_ops rr =3D {
-+	.init		=3D (void *)mptcp_sched_rr_init,
-+	.release	=3D (void *)mptcp_sched_rr_release,
-+	.get_subflow	=3D (void *)bpf_rr_get_subflow,
-+	.name		=3D "bpf_rr",
-+};
+ void test_mptcp(void)
+ {
+ 	if (test__start_subtest("base"))
+ 		test_base();
+ 	if (test__start_subtest("first"))
+ 		test_first();
++	if (test__start_subtest("rr"))
++		test_rr();
+ }
 --=20
 2.34.1
 
