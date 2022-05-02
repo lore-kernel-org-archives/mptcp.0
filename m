@@ -1,57 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092C428E0
-	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 13:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB7828E0
+	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 14:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1651499731;
+	s=mimecast20190719; t=1651500582;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XvKghsbsT5mhlqQ+WMKWbeaUStFU3OWuBe89b1Nd55g=;
-	b=OWmtpbZ9aA12asj6MFY8EWkLE3wbBxwgVdBLlolU6eEl6ArfGzBfGg8ZdRRytTDuaPoRmi
-	q6lzS8ArX/Uranoq2+FPfsWiJbbDt9J/fyAEOZa8ev2oUTvZRGvNJfcK+aeFgx5VmR3ppc
-	cXiOWM2p2ZMUVqNOJF975ktFNHg/XOU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=WIlVPTHUunFtkxqrQAc8RhtzPWekoeaeaJ/BzjN3dvM=;
+	b=GkIXtxi6N8TahHVxTR9UBzwWiJ43A8dnSlQVgESm6r3ThWv1TeUdN+3moMBS7+s90iZyg2
+	FXG/M1SK8Fx9Var9TjcZs5Y9DbwvCkAN+71yJ5rd6OBJV+v1Tywpbi2p9dLwNj1RikJA8y
+	qvrhcbkgMBi1CTd5REzKfMYASni9VEU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-119--Nd06YxJMXa_Ag5VrsrvdA-1; Mon, 02 May 2022 09:55:30 -0400
-X-MC-Unique: -Nd06YxJMXa_Ag5VrsrvdA-1
-Received: by mail-wr1-f71.google.com with SMTP id j21-20020adfa555000000b0020adb9ac14fso5326289wrb.13
-        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 06:55:30 -0700 (PDT)
+ us-mta-28-fOs9d3xSMyW20YzPxd8hzg-1; Mon, 02 May 2022 10:09:41 -0400
+X-MC-Unique: fOs9d3xSMyW20YzPxd8hzg-1
+Received: by mail-wr1-f72.google.com with SMTP id e21-20020adfa455000000b0020ae075cf35so5378015wra.11
+        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 07:09:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=XvKghsbsT5mhlqQ+WMKWbeaUStFU3OWuBe89b1Nd55g=;
-        b=713XkvkL+5uPApPTRiiZ1BQdw5tm7yirIXiO6JYMAaFj1LhTdzlpe0pTey6pXvj7+p
-         GqZ0R5hQRDEjP7rt47O9ayW1aVobY2+gEJBJqsnv6o0eON9go4x2EgqbmlHEe7tnYgzl
-         K2uk+bPlQWuhJp9PQwrPGTVfWXDnm5qdckEDXZylQQo1WeCHo8xXhL1lbKBVrF5JJNvJ
-         6oJVQy7j6q9pXM56JxUZC1NgxyK7qtV0qMEbsvW2NNIpqSFJB4I4QOCQdGB6tYQeXkw9
-         irNFK9GcTGRo4orU7Aia3ePHCB26mNuLbui1UmVM7L8L7wfYMLUmpzvci7+TeiKPnRwI
-         WSyw==
-X-Gm-Message-State: AOAM531PqaWisfZdOJ+ECva6ztK5YY5m37Qcg8gBszKqFjN9yDWzjVH6
-	hb/nKJjkZJrvckL/mHrQSG9/XMa4E9pqftDUKe4EdHv4+TBAE2Gb/LTqPirujltVX/9uUTw6Lil
-	hPhZFya9O4aXyndw=
-X-Received: by 2002:a5d:5983:0:b0:20c:4bf8:e0a5 with SMTP id n3-20020a5d5983000000b0020c4bf8e0a5mr9730493wri.349.1651499729294;
-        Mon, 02 May 2022 06:55:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzf23h8dQLyTq/piZMjAuJegfHbOvdcNBzT03S6WpKx0RxYWO0dOQuLbxBzw3L6yJs3sbeKrQ==
-X-Received: by 2002:a5d:5983:0:b0:20c:4bf8:e0a5 with SMTP id n3-20020a5d5983000000b0020c4bf8e0a5mr9730477wri.349.1651499729001;
-        Mon, 02 May 2022 06:55:29 -0700 (PDT)
+        bh=WIlVPTHUunFtkxqrQAc8RhtzPWekoeaeaJ/BzjN3dvM=;
+        b=x0dQW7HtCbkTp39qD4pJjjCmkm/H54uARrXZm97nQKwl09WnY+0CZ0cfGxcbd9vC6A
+         1gTeTjOcxlSje4r7exxo7kiO8csGJQB3mZUD7c7OFTcT9ZeNDzYl6wJea8NedohYeFPe
+         SYM3FpleFUZEMyIlHjnY15e/Ik9QhMm/JfXgwLlsGQBqd5aNjGNA/fQTG1mQWtx4+KL7
+         vR/26hg+kzQx4B945/7jCsZew4kArUfgf0bprOjYNowGtSdVk8Yr+LPqwEi5XF3AH10f
+         0W4v3akmwPs3m+Sd7TOs60MgoZzEqz1k5/dvf3xweymVP9Xf7ZM7/QXIBViCN7oz5TU8
+         6KoQ==
+X-Gm-Message-State: AOAM531T8pMOYfeT+PyJa4ZBKm2Pj27hwdqqgzkftoog0TJ3geAGxUvo
+	A5kAFTTGeE9vKiTx2+iK1zpLJt6e0L1uWfZItkXkez7/M6E6lK/DdcgV0SJk0TemHlxJPQqLuXJ
+	2Fcs5YqDjwL5FSg4=
+X-Received: by 2002:a05:600c:214e:b0:394:31c6:b66b with SMTP id v14-20020a05600c214e00b0039431c6b66bmr8012512wml.31.1651500579972;
+        Mon, 02 May 2022 07:09:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwLLMx7RI32sf61IpZtFoDO/BtkUJfIqQYnWsSnAOo2Kx722GlRLAJ5gyn/EWR8olZFId41+Q==
+X-Received: by 2002:a05:600c:214e:b0:394:31c6:b66b with SMTP id v14-20020a05600c214e00b0039431c6b66bmr8012493wml.31.1651500579680;
+        Mon, 02 May 2022 07:09:39 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-115-66.dyn.eolo.it. [146.241.115.66])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b003942a244f3bsm6222281wmq.20.2022.05.02.06.55.28
+        by smtp.gmail.com with ESMTPSA id q22-20020a1cf316000000b003942a244f4csm6403482wmq.37.2022.05.02.07.09.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 May 2022 06:55:28 -0700 (PDT)
-Message-ID: <9561e194e1ccaf6e91c97b94973ed58984f361ec.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net 1/2] mptcp: fix subflow accounting on close
+        Mon, 02 May 2022 07:09:39 -0700 (PDT)
+Message-ID: <6d7ce54488bd5524f750c52cf2cfd7b0ff68eb40.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v18 5/7] mptcp: add bpf_mptcp_sched_ops
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Date: Mon, 02 May 2022 15:55:27 +0200
-In-Reply-To: <cfad224c-fe81-beaa-751d-fa54f7b21be9@linux.intel.com>
-References: <84bfd492fa6e4a5ca5c90201283c48ed07318aa9.1651165091.git.pabeni@redhat.com>
-	 <cfad224c-fe81-beaa-751d-fa54f7b21be9@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Date: Mon, 02 May 2022 16:09:38 +0200
+In-Reply-To: <2ade81287c82a673c3e6f03d8700e8f77fcfc651.1651412613.git.geliang.tang@suse.com>
+References: <cover.1651412613.git.geliang.tang@suse.com>
+	 <2ade81287c82a673c3e6f03d8700e8f77fcfc651.1651412613.git.geliang.tang@suse.com>
 User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,127 +65,63 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2022-04-29 at 12:03 -0700, Mat Martineau wrote:
-> On Thu, 28 Apr 2022, Paolo Abeni wrote:
+Hello,
+
+On Sun, 2022-05-01 at 21:48 +0800, Geliang Tang wrote:
+> This patch implements a new struct bpf_struct_ops, bpf_mptcp_sched_ops.
+> Register and unregister the bpf scheduler in .reg and .unreg.
 > 
-> > If the PM closes a fully established MPJ subflow or the subflow
-> > creation errors out in it's early stage the subflows counter is
-> > not bumped accordingly.
-> > 
-> > This change adds the missing accouting, additionally taking care
-> > of updating accordingly the 'accept_subflow' flag.
-> > 
-> > Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
-> > net/mptcp/pm.c       |  5 ++---
-> > net/mptcp/protocol.h | 14 ++++++++++++++
-> > net/mptcp/subflow.c  | 12 +++++++++---
-> > 3 files changed, 25 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> > index cdc2d79071f8..59fdab2d0c27 100644
-> > --- a/net/mptcp/pm.c
-> > +++ b/net/mptcp/pm.c
-> > @@ -181,15 +181,14 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
-> > 	struct mptcp_pm_data *pm = &msk->pm;
-> > 	bool update_subflows;
-> > 
-> > -	update_subflows = (ssk->sk_state == TCP_CLOSE) &&
-> > -			  (subflow->request_join || subflow->mp_join) &&
-> > +	update_subflows = (subflow->request_join || subflow->mp_join) &&
-> > 			  mptcp_pm_is_kernel(msk);
-> > 	if (!READ_ONCE(pm->work_pending) && !update_subflows)
-> > 		return;
-> > 
-> > 	spin_lock_bh(&pm->lock);
-> > 	if (update_subflows)
-> > -		pm->subflows--;
-> > +		__mptcp_pm_close_subflow(msk);
-> > 
-> > 	/* Even if this subflow is not really established, tell the PM to try
-> > 	 * to pick the next ones, if possible.
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 4672901d0dfe..06b8ebc15204 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -893,6 +893,20 @@ unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
-> > unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
-> > unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
-> > 
-> > +/* called under PM lock */
-> > +static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
-> > +{
-> > +	if (--msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
-> > +		WRITE_ONCE(msk->pm.accept_subflow, true);
-> > +}
-> > +
-> > +static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
-> > +{
-> > +	spin_lock_bh(&msk->pm.lock);
-> > +	__mptcp_pm_close_subflow(msk);
-> > +	spin_unlock_bh(&msk->pm.lock);
-> > +}
-> > +
-> > void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
-> > void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
-> > 
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index 6d59336a8e1e..75c85ce9a19e 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -1444,20 +1444,20 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
-> > 	struct sockaddr_storage addr;
-> > 	int remote_id = remote->id;
-> > 	int local_id = loc->id;
-> > +	int err = -ENOTCONN;
-> > 	struct socket *sf;
-> > 	struct sock *ssk;
-> > 	u32 remote_token;
-> > 	int addrlen;
-> > 	int ifindex;
-> > 	u8 flags;
-> > -	int err;
-> > 
-> > 	if (!mptcp_is_fully_established(sk))
-> > -		return -ENOTCONN;
-> > +		goto err_out;
-> > 
-> > 	err = mptcp_subflow_create_socket(sk, &sf);
-> > 	if (err)
-> > -		return err;
-> > +		goto err_out;
-> > 
-> > 	ssk = sf->sk;
-> > 	subflow = mptcp_subflow_ctx(ssk);
-> > @@ -1515,6 +1515,12 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
-> > failed:
-> > 	subflow->disposable = 1;
-> > 	sock_release(sf);
-> > +
-> > +err_out:
-> > +	/* we account subflows before the creation, and this failures will not
-> > +	 * be catched by sk_state_change()
-> > +	 */
-> > +	mptcp_pm_close_subflow(msk);
+> This MPTCP BPF scheduler implementation is similar to BPF TCP CC. And
+> net/ipv4/bpf_tcp_ca.c is a frame of reference for this patch.
 > 
-> __mptcp_subflow_connect() is also called by the userspace PM, which 
-> doesn't use this accounting. How about having the caller be responsible 
-> for doing mptcp_pm_close_subflow() if __mptcp_subflow_connect() returns an 
-> error other than -EINPROGRESS?
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  kernel/bpf/bpf_struct_ops_types.h |   4 +
+>  net/mptcp/bpf.c                   | 154 ++++++++++++++++++++++++++++++
+>  2 files changed, 158 insertions(+)
+> 
+> diff --git a/kernel/bpf/bpf_struct_ops_types.h b/kernel/bpf/bpf_struct_ops_types.h
+> index 5678a9ddf817..5a6b0c0d8d3d 100644
+> --- a/kernel/bpf/bpf_struct_ops_types.h
+> +++ b/kernel/bpf/bpf_struct_ops_types.h
+> @@ -8,5 +8,9 @@ BPF_STRUCT_OPS_TYPE(bpf_dummy_ops)
+>  #ifdef CONFIG_INET
+>  #include <net/tcp.h>
+>  BPF_STRUCT_OPS_TYPE(tcp_congestion_ops)
+> +#ifdef CONFIG_MPTCP
+> +#include <net/mptcp.h>
+> +BPF_STRUCT_OPS_TYPE(mptcp_sched_ops)
+> +#endif
+>  #endif
+>  #endif
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 535602ba2582..ad770deb5a72 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -10,8 +10,162 @@
+>  #define pr_fmt(fmt) "MPTCP: " fmt
+>  
+>  #include <linux/bpf.h>
+> +#include <linux/bpf_verifier.h>
+> +#include <linux/btf.h>
+> +#include <linux/btf_ids.h>
+>  #include "protocol.h"
+>  
+> +#ifdef CONFIG_BPF_JIT
+> +extern struct bpf_struct_ops bpf_mptcp_sched_ops;
+> +extern struct btf *btf_vmlinux;
+> +static const struct btf_type *mptcp_sched_type __read_mostly;
+> +static u32 mptcp_sched_id;
+> +
+> +static u32 optional_ops[] = {
+> +	offsetof(struct mptcp_sched_ops, init),
+> +	offsetof(struct mptcp_sched_ops, release),
+> +	offsetof(struct mptcp_sched_ops, get_subflow),
 
-Additionally we probably want to take care of  to take care of
-mptcp_pm_subflow_check_next(), which is called regardless of the active
-PM and can touch subflows, too.
+I think that the 'get_subflow' member should not be options. Otherwise
+the scheduler will useless, right ?!?
 
-On the flip side, touching 'subflows' when the active PM is the user-
-space one should not have any effect - beyond likely be confusing.
-
-I propose to handle all the above with a cleanup net-next patch after
-the relevant -net merge, so we can leverage the mptcp_pm_is_userspace()
-helper and keep the code as simple as possible.
-
-WDYT?
+Otherwise LGTM.
 
 Thanks!
 
