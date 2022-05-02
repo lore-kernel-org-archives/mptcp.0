@@ -1,44 +1,44 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8B015A3
-	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 20:32:01 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id kq17so29858432ejb.4
-        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 13:32:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9209D3212
+	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 20:43:54 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id kq17so29904575ejb.4
+        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 13:43:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=onDg7qBT+kEsafz9H2+unQ9awszPppVtSWMu7faylOg=;
-        b=rI5u6Yja1jaVB8l8eDO2qs2zxmkwNCnpx51F79YK/mnDn0dHcgL4CbKfvb+/satsco
-         83shnnrPPEqSUV2FXqrSjd39WtPeFXYFvY3bjbGjKRo4eA9AN2tr+q7krU1+kr/T0GFd
-         WJu7I8vrFBY8EAnsUh+7nm7TarIvpvw0CiwrHRQ8drhq0SYWigqwyL/WsMMeORUDEZJ+
-         WpZSVuNLwrHIwt5JAyOftVBYfAlEk2GH/YKiLhgy5NiQ9MtGM7zDyoIGW8pgfhsiJLUj
-         AcmbnxJ+SR9lbJOFo+BsjCMbdFIyE7VPWf/VXdbvGM/mrzpsXPiNdqdLBxfgVZZ7nRR7
-         W7IA==
+        bh=cfAL6o4Pshh+Nh7bBN0KVqk6fZxMMHCyBIcobnZP32s=;
+        b=z790qh46uibDA5/N3rj4Uea+5PdJooEHhk3VihIJLoeM9byQcc/oQJW2zXL0TRDnn0
+         2SCah8xBEAvYIBhICH3ndAJg8deuh+ZQ7bFWrErAjCYROBQgIoPaB0iOFMKfEpfF+fm8
+         qzJvrMRzAoDT+fXjtSye0i/hRLidNLBHwfS8zzn7vXWZ532BfiB/CajaZgPiWFH7EBzV
+         Oej1IxFQ7gwB+XtW3UoFIJ1g7l4R45bFhnpj3T8TQvb+EpaOkNc/3lo6WuDZ+TqFUOWV
+         4a1u1hZZWbs9CVAFEsvnY2wofnc6JRezx3JZJ4Vh94Zbjjv8+pXZ6md5AK/Zxl0pHO8I
+         yjgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=onDg7qBT+kEsafz9H2+unQ9awszPppVtSWMu7faylOg=;
-        b=wz0DGDZM7e6ZpcF3/NjB8Ograc6Ic6ssjy6aPLOmCgCOmfXgPSylM1AQUeZEdwKLcF
-         k/dxwJ7+4kE0G8pjfgKDyCH00DnkQaOpuqMyqSP8H1m8U/8LaKFddzuhhLGW6f1cK7BG
-         4i0AYocqctRq4iEpiJyAj6RbbbNi1UHqRMY4mxKiiJqxiWmWbPawJL8gy0cYQnL1Pvfb
-         W9KMA6LgeXFsC+P9Y5rjXhFFt5cEI2NStZx5DI1R1W+sv3hqhVH7oO3Q1hzl94ZtPaBz
-         lTXntse1DO6ajioou5C3SNN8ZK/0R+BRp6WwVBDWS93ToIt6e5loZk95Hc5EO2Fkv1sH
-         M/HA==
-X-Gm-Message-State: AOAM532wwceG17OB8CS2gW8y0BVBObZy66DH6mTazeOAmlDh4ebz7aUq
-	Dy8jHUusAZY8Ty/CadyhLVqZWHswMX9p95vN
-X-Google-Smtp-Source: ABdhPJwShK3+jinlxkDEorXJGrd6fLp/P2dTFTNZjp8PWd0lWuU9VTdcVq1/3ejQAwQhJFrNiI3wEA==
-X-Received: by 2002:a17:907:1c01:b0:6f4:2692:e23 with SMTP id nc1-20020a1709071c0100b006f426920e23mr10331541ejc.243.1651523519545;
-        Mon, 02 May 2022 13:31:59 -0700 (PDT)
+        bh=cfAL6o4Pshh+Nh7bBN0KVqk6fZxMMHCyBIcobnZP32s=;
+        b=vmt2X7J4M/dN2ko2wxpjb+j+KWTlPWBdwtjab8/V/u5H7pNxGoKKZpMcR3iqH2xEh5
+         eEKmXWsKsZE5k3dnKVA75g5LEZmUv1uBD9fr2P0gawxzxmdvRQ8OYEemiu8Hi2+yIIKg
+         xb4jgKKAVAsdZqn6evVIQOZA1R6qIFkFgcRrikyvdm9XRaA9tSavxpt4FDBt24NXPI8p
+         DFYRdcraY019tGat48PbbSe6onRInt6T7Xb3c/ho38byaZQsEEZTq8WpjZq7XMSkZd/J
+         qenx1tbp73jpjpnTwa4SwRDyIl+5CmhLGXmqlsStngE/DDOMavzqehA/nIS5qVaZwPE1
+         kYYw==
+X-Gm-Message-State: AOAM533tP9vYgQwcFJWf9oS51SDHoN6aGC+bhwEXqwYrf4oBli3BG/d8
+	NzACrDVaQW9IfXarewKD6EpYbANqHp18OWVX
+X-Google-Smtp-Source: ABdhPJyHSpX8nlGnir8PMNTU+tqZtxJ+uzSaaHj7AEv5Mun2AgGoPtWReVQzRXoYfDzdvsN/jo8pXA==
+X-Received: by 2002:a17:906:c106:b0:6f4:45d9:2d85 with SMTP id do6-20020a170906c10600b006f445d92d85mr6758484ejc.493.1651524232497;
+        Mon, 02 May 2022 13:43:52 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:8b1c:91db:8679:8c21? ([2a02:578:8593:1200:8b1c:91db:8679:8c21])
-        by smtp.gmail.com with ESMTPSA id er9-20020a170907738900b006f3ef214e6asm3899666ejc.208.2022.05.02.13.31.59
+        by smtp.gmail.com with ESMTPSA id qp24-20020a170907a21800b006f3ef214df9sm3932665ejc.95.2022.05.02.13.43.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 May 2022 13:31:59 -0700 (PDT)
-Message-ID: <3ecc1956-d35f-b53b-43c5-316ddb54bbab@tessares.net>
-Date: Mon, 2 May 2022 22:31:58 +0200
+        Mon, 02 May 2022 13:43:52 -0700 (PDT)
+Message-ID: <647deac5-ea7c-bfcf-e1cd-5ab91a3eee29@tessares.net>
+Date: Mon, 2 May 2022 22:43:51 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,51 +47,35 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH mptcp-net v2] net/sched: act_pedit: really ensure the skb
- is writable
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: bpf: verify ca_name of
+ struct mptcp_sock"
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <47419fbef3ed25bd1bb9d641e4817b85ea55ecda.1651329059.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
+In-Reply-To: <47419fbef3ed25bd1bb9d641e4817b85ea55ecda.1651329059.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat, Geliang,
+Hi Geliang,
 
-On 29/04/2022 19:29, Paolo Abeni wrote:
-> Currently pedit tries to ensure that the accessed skb offset
-> is writeble via skb_unclone(). The action potentially allows
-> touching any skb bytes, so it may end-up modifying shared data.
-> 
-> The above causes some sporadic MPTCP self-test failures.
-> 
-> Address the issue keeping track of a rough over-estimate highest skb
-> offset accessed by the action and ensure such offset is really
-> writable.
-> 
-> Note that this may cause performance regressions in some scenario,
-> but hopefully pedit is not critical path.
+On 30/04/2022 16:31, Geliang Tang wrote:
+> Read /proc/sys/net/ipv4/tcp_congestion_control directly, instead of
+> using sysctl.
 
-Thank you for the patch, review and tests!
+Thank you for the patch!
 
-Now in our tree (fixes for -net) with Mat's ACK and Geliang's Test tags:
+Now in our tree:
 
-New patches for t/upstream:
-- b841c3f765af: net/sched: act_pedit: really ensure the skb is writable
-- Results: 2767792d035c..8ae619c5e009 (export)
+- 7578ba9005cf: "squashed" in "selftests: bpf: verify ca_name of struct
+mptcp_sock"
+- Results: 8ae619c5e009..929d7e14ecf1 (export)
 
-New patches for t/upstream-net:
-- b841c3f765af: net/sched: act_pedit: really ensure the skb is writable
-- Results: eefc441cb5ab..8b01b4ca3343 (export-net)
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220502T202900
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220502T203959
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220502T202900
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export-net
 
 Cheers,
 Matt
