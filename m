@@ -1,129 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB7828E0
-	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 14:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1651500582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WIlVPTHUunFtkxqrQAc8RhtzPWekoeaeaJ/BzjN3dvM=;
-	b=GkIXtxi6N8TahHVxTR9UBzwWiJ43A8dnSlQVgESm6r3ThWv1TeUdN+3moMBS7+s90iZyg2
-	FXG/M1SK8Fx9Var9TjcZs5Y9DbwvCkAN+71yJ5rd6OBJV+v1Tywpbi2p9dLwNj1RikJA8y
-	qvrhcbkgMBi1CTd5REzKfMYASni9VEU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-28-fOs9d3xSMyW20YzPxd8hzg-1; Mon, 02 May 2022 10:09:41 -0400
-X-MC-Unique: fOs9d3xSMyW20YzPxd8hzg-1
-Received: by mail-wr1-f72.google.com with SMTP id e21-20020adfa455000000b0020ae075cf35so5378015wra.11
-        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 07:09:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F62E2C9E
+	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 15:52:17 +0000 (UTC)
+Received: by mail-pj1-f45.google.com with SMTP id fv2so13008330pjb.4
+        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 08:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ys6AzI+mDPMzgbBgSQyZ01em1WyW21362JFtILWGCqU=;
+        b=TDO7ZUtET0X32Sbb1Y1D+bE7qBGyzSMxMxi9hjLaZvExXOB51XZdVKrxJLu1miBLbQ
+         6nvwSZxl5sCp0C5qw/3lBjTODOzDfTr01bJw6nU69Lxfcj2je5z5AMJLFvY2Gy7fNBld
+         dudxAaMu6TvabdAJGQ3KngEFdUC108TOKVxkLA8Vl+BLe5YJ+LIbaQtzF+sy5/iS2Ouu
+         KSv+TV72kobsAnsb9KG6ii/0a7ntIZvvYEL/mORhMZV1oW3cjxAJBZ7eaOhoEstlQ0Iy
+         o897s5K3XAPj+r0glF8fDY7JOr7fYrtFSFrZ0Ld0kuYbjRR47OAFkqXI22n1i34NZsM3
+         l3Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=WIlVPTHUunFtkxqrQAc8RhtzPWekoeaeaJ/BzjN3dvM=;
-        b=x0dQW7HtCbkTp39qD4pJjjCmkm/H54uARrXZm97nQKwl09WnY+0CZ0cfGxcbd9vC6A
-         1gTeTjOcxlSje4r7exxo7kiO8csGJQB3mZUD7c7OFTcT9ZeNDzYl6wJea8NedohYeFPe
-         SYM3FpleFUZEMyIlHjnY15e/Ik9QhMm/JfXgwLlsGQBqd5aNjGNA/fQTG1mQWtx4+KL7
-         vR/26hg+kzQx4B945/7jCsZew4kArUfgf0bprOjYNowGtSdVk8Yr+LPqwEi5XF3AH10f
-         0W4v3akmwPs3m+Sd7TOs60MgoZzEqz1k5/dvf3xweymVP9Xf7ZM7/QXIBViCN7oz5TU8
-         6KoQ==
-X-Gm-Message-State: AOAM531T8pMOYfeT+PyJa4ZBKm2Pj27hwdqqgzkftoog0TJ3geAGxUvo
-	A5kAFTTGeE9vKiTx2+iK1zpLJt6e0L1uWfZItkXkez7/M6E6lK/DdcgV0SJk0TemHlxJPQqLuXJ
-	2Fcs5YqDjwL5FSg4=
-X-Received: by 2002:a05:600c:214e:b0:394:31c6:b66b with SMTP id v14-20020a05600c214e00b0039431c6b66bmr8012512wml.31.1651500579972;
-        Mon, 02 May 2022 07:09:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwLLMx7RI32sf61IpZtFoDO/BtkUJfIqQYnWsSnAOo2Kx722GlRLAJ5gyn/EWR8olZFId41+Q==
-X-Received: by 2002:a05:600c:214e:b0:394:31c6:b66b with SMTP id v14-20020a05600c214e00b0039431c6b66bmr8012493wml.31.1651500579680;
-        Mon, 02 May 2022 07:09:39 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-115-66.dyn.eolo.it. [146.241.115.66])
-        by smtp.gmail.com with ESMTPSA id q22-20020a1cf316000000b003942a244f4csm6403482wmq.37.2022.05.02.07.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 May 2022 07:09:39 -0700 (PDT)
-Message-ID: <6d7ce54488bd5524f750c52cf2cfd7b0ff68eb40.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v18 5/7] mptcp: add bpf_mptcp_sched_ops
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Mon, 02 May 2022 16:09:38 +0200
-In-Reply-To: <2ade81287c82a673c3e6f03d8700e8f77fcfc651.1651412613.git.geliang.tang@suse.com>
-References: <cover.1651412613.git.geliang.tang@suse.com>
-	 <2ade81287c82a673c3e6f03d8700e8f77fcfc651.1651412613.git.geliang.tang@suse.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ys6AzI+mDPMzgbBgSQyZ01em1WyW21362JFtILWGCqU=;
+        b=17h1HctHsSQjfSYd0KRoQZ+0wRC+wNyx8nZQJEwGrCFmwQuc7jCFQqClsKpom1bZPS
+         RbUfWR7HrgGBcaHWqMBULKkBXFc9giMOby+D/Il1XCOkKAaPyH8AJ2JZtcoNopU5EfNd
+         vgjZT/1EcsRBSyhEIZ3HTuC62lwWA1r65j4HDcPbmVb83r5PsY8kCm98HqZ3DptsphxQ
+         nuoGTBd73dLYxhsm6hal433XDBEA3xvpVAV4O3dB7fT4AbYxyCDg75/msggCHPqfChRO
+         3wULHrxWOFlVXLk5eDa2LD0DWjPNmwknUinwajFLOx/kWQSicuHwBhmnbeXmQez8OEnN
+         mi5g==
+X-Gm-Message-State: AOAM533EeYeJmrd/2C/3qq07wI4/3EB8M7m1bhdNR1RspHTL3k7v0ZNc
+	KPimf4K0e8bWqJIsfbSwTX0+mrbv712EoLOTlZk=
+X-Google-Smtp-Source: ABdhPJwwT0qS35BbAfihT3uOM8y/hdTK78T8uSdH1F8Mtj2HLCgUrNKloQkqgTmAVEWxnafWtcZrPED6P/ChbANH2S0=
+X-Received: by 2002:a17:902:8c8f:b0:15e:ab1c:591b with SMTP id
+ t15-20020a1709028c8f00b0015eab1c591bmr3546186plo.171.1651506736894; Mon, 02
+ May 2022 08:52:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
+ <7c93496c-5153-5b83-48a9-6dd75da42542@linux.intel.com> <12a4ac76eddf80868bd61dcadfcb972d597ba629.camel@redhat.com>
+In-Reply-To: <12a4ac76eddf80868bd61dcadfcb972d597ba629.camel@redhat.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Mon, 2 May 2022 23:52:06 +0800
+Message-ID: <CA+WQbwsTJ5n94RMDi8UyMx-Y8JeBmK8jpUsi2H=Y9R5zGghHKg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net v2] net/sched: act_pedit: really ensure the skb
+ is writable
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Paolo,
 
-On Sun, 2022-05-01 at 21:48 +0800, Geliang Tang wrote:
-> This patch implements a new struct bpf_struct_ops, bpf_mptcp_sched_ops.
-> Register and unregister the bpf scheduler in .reg and .unreg.
-> 
-> This MPTCP BPF scheduler implementation is similar to BPF TCP CC. And
-> net/ipv4/bpf_tcp_ca.c is a frame of reference for this patch.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  kernel/bpf/bpf_struct_ops_types.h |   4 +
->  net/mptcp/bpf.c                   | 154 ++++++++++++++++++++++++++++++
->  2 files changed, 158 insertions(+)
-> 
-> diff --git a/kernel/bpf/bpf_struct_ops_types.h b/kernel/bpf/bpf_struct_ops_types.h
-> index 5678a9ddf817..5a6b0c0d8d3d 100644
-> --- a/kernel/bpf/bpf_struct_ops_types.h
-> +++ b/kernel/bpf/bpf_struct_ops_types.h
-> @@ -8,5 +8,9 @@ BPF_STRUCT_OPS_TYPE(bpf_dummy_ops)
->  #ifdef CONFIG_INET
->  #include <net/tcp.h>
->  BPF_STRUCT_OPS_TYPE(tcp_congestion_ops)
-> +#ifdef CONFIG_MPTCP
-> +#include <net/mptcp.h>
-> +BPF_STRUCT_OPS_TYPE(mptcp_sched_ops)
-> +#endif
->  #endif
->  #endif
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index 535602ba2582..ad770deb5a72 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -10,8 +10,162 @@
->  #define pr_fmt(fmt) "MPTCP: " fmt
->  
->  #include <linux/bpf.h>
-> +#include <linux/bpf_verifier.h>
-> +#include <linux/btf.h>
-> +#include <linux/btf_ids.h>
->  #include "protocol.h"
->  
-> +#ifdef CONFIG_BPF_JIT
-> +extern struct bpf_struct_ops bpf_mptcp_sched_ops;
-> +extern struct btf *btf_vmlinux;
-> +static const struct btf_type *mptcp_sched_type __read_mostly;
-> +static u32 mptcp_sched_id;
-> +
-> +static u32 optional_ops[] = {
-> +	offsetof(struct mptcp_sched_ops, init),
-> +	offsetof(struct mptcp_sched_ops, release),
-> +	offsetof(struct mptcp_sched_ops, get_subflow),
+Thank you so much for this patch. It fixed the issue that bothered me
+for a long time. With this change, it seems the bad data in the
+MP_FAIL multiple subflows test case has been dropped correctly now:
 
-I think that the 'get_subflow' member should not be options. Otherwise
-the scheduler will useless, right ?!?
+> sudo ./mptcp_join.sh -F
+Created /tmp/tmp.lqIytszwoM (size 1 KB) containing data sent by client
+Created /tmp/tmp.zChji3JlEJ (size 1 KB) containing data sent by server
+Created /tmp/tmp.iTuFZCucnH (size 128 KB) containing data sent by client
+Created /tmp/tmp.YTN6JELVhq (size 128 KB) containing data sent by server
+file received by server has inverted byte at 169
+001 Infinite map: 5 corrupted pkts       syn[ ok ] - synack[ ok ] - ack[ ok=
+ ]
+                                                            sum[ ok ]
+- csum  [ ok ]
+                                                            ftx[ ok ]
+- failrx[ ok ]
+                                                            rtx[ ok ]
+- rstrx [ ok ]
+                                                            itx[ ok ]
+- infirx[ ok ]
+                                                            ftx[ ok ]
+- failrx[ ok ] invert
+Created /tmp/tmp.iTuFZCucnH (size 1024 KB) containing data sent by client
+Created /tmp/tmp.YTN6JELVhq (size 1024 KB) containing data sent by server
+002 MP_FAIL MP_RST: 1 corrupted pkts     syn[ ok ] - synack[ ok ] - ack[ ok=
+ ]
 
-Otherwise LGTM.
+sum[ ok ] - csum  [ ok ]
 
-Thanks!
+ftx[ ok ] - failrx[ ok ]
 
-Paolo
+rtx[ ok ] - rstrx [ ok ]
 
+itx[ ok ] - infirx[ ok ]
+
+No inverted byte is received in the MP_FAIL MP_RST test.
+
+Do I understand this correctly?
+
+Anyway, please add my tested-by tag for this patch:
+
+Tested-by: Geliang Tang <geliang.tang@suse.com>
+
+Thanks,
+-Geliang
+
+Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2022=E5=B9=B45=E6=9C=882=E6=97=A5=
+=E5=91=A8=E4=B8=80 15:55=E5=86=99=E9=81=93=EF=BC=9A
+
+>
+> On Fri, 2022-04-29 at 13:56 -0700, Mat Martineau wrote:
+> > On Fri, 29 Apr 2022, Paolo Abeni wrote:
+> >
+> > > Currently pedit tries to ensure that the accessed skb offset
+> > > is writeble via skb_unclone(). The action potentially allows
+> > > touching any skb bytes, so it may end-up modifying shared data.
+> > >
+> > > The above causes some sporadic MPTCP self-test failures.
+> > >
+> > > Address the issue keeping track of a rough over-estimate highest skb
+> > > offset accessed by the action and ensure such offset is really
+> > > writable.
+> > >
+> > > Note that this may cause performance regressions in some scenario,
+> > > but hopefully pedit is not critical path.
+> > >
+> > > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > > ---
+> > > v1 -> v2:
+> > > - fix build issue
+> > > - account for the skb hdr offset, too
+> > >
+> > > this almost solves issues/265 here. I'm still getting some rare
+> > > failure with MPTcpExtMPFailTx=3D=3D0: sometimes the transfer complete=
+s
+> > > before we are able to use the 2nd/failing link. The relevant fix
+> > > is a purely seft-test one
+> > >
+> > > Note that a much simpler alternatives would be simply replacing
+> > > skb_unshare() with skb_ensure_writable(skb, skb->len), but that
+> > > really could causes more visible regressions
+> >
+> > To make sure I'm understanding correctly: skb_ensure_writable(skb,
+> > skb->len) would copy the entire packet payload on every edited
+> > packet, but this patch will only copy the part that might be modified (=
+and
+> > maybe a little extra).
+> >
+> Yes, that is. All the above when the relevant packet is cloned.
+>
+> > Seems like the full copy is worth avoiding, and
+> > that users shouldn't be depending on pedit modifying shared data.
+> >
+> > I did run the associated test for a while (with the other patches for
+> > #265) and the changes look good from a MPTCP perspective:
+> >
+> > Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> >
+> > Do you plan to upstream this one yourself, or should I include it with =
+the
+> > other mptcp-net patches?
+>
+> I think it can (and should, to avoid blocking mptcp patches with
+> net/sched discussion and vice-versa) go on it's own. I can send it.
+>
+> Thanks!
+>
+> Paolo
+>
+>
