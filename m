@@ -1,129 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CE42F2A
-	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 16:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1651510733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HEvdQFkdulgmK53cHCl3vBoN+ADNRZ28gKNj5zrN24M=;
-	b=P5n4aHXyQM+RsY8ROhdRD5ujyNtCI4hLnwoHkOROSXfyH5cTe6ErX5xW1jMMn7oB5uToOq
-	HFLucW7E2o9b/xT8x2vmTtEew4eXDhuBbgDb1mFgGg6ue2bt6ZFaIIPVxBNBxvgrOv4cC0
-	oxQN8q+GBN0PLxsUc9HiQ8v325EiWQw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-363-i1jDXilGNG6YDPgzbbkR7w-1; Mon, 02 May 2022 12:58:52 -0400
-X-MC-Unique: i1jDXilGNG6YDPgzbbkR7w-1
-Received: by mail-wm1-f69.google.com with SMTP id q128-20020a1c4386000000b003942fe15835so1959410wma.6
-        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 09:58:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=HEvdQFkdulgmK53cHCl3vBoN+ADNRZ28gKNj5zrN24M=;
-        b=E4LSifvx8sW9c7N21o/fT1C0AcmJ3nGTVvmS0YM6auTucxRmWTFbpng7oJ7zfuITzp
-         Mi6H26va23yIoRr+j4Aj6LYyRSUkkGil5etQcVHZ+BrL5WQokHZzf9x5pywyOlwZKNR8
-         357PQKMBwgpjhKIvnmMGCIR9SPGiilEayTDBAt2b9SGIl4WKgPlmhfAj46CvSqvnPotH
-         wKHEMyoe7NWI/UAcJpQ/+SGn8nyTSBiesLSj7azS8X8L6L9b3FhtesjKKJNRiWLoqYeZ
-         M2cRKsVDrLJgTyU/Fvjr5ceBuwtpWE2XyRq8Cq4BkWF9S+p30A+U/DDZnvc7CWb2zkzm
-         bJ1A==
-X-Gm-Message-State: AOAM531o+dCRHAAQadZnsmV458lYQVPTtk0Z/BwBbvJ+Hd1jjvQ/RFiz
-	vjTXrc/zDxAzq+2AX8qRV8IEshM/Fntl9vWKkhBbi7/rjHE8Ni9kpxoQQLxhBAQJGd0hFHJJw2j
-	f5lTWkDTw650MDvk=
-X-Received: by 2002:a05:6000:1a8d:b0:20c:68ed:7449 with SMTP id f13-20020a0560001a8d00b0020c68ed7449mr2784736wry.124.1651510730573;
-        Mon, 02 May 2022 09:58:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzT2n7565UcwsJN89T1RmEr2LqDiF87ceeSQHupSZQbdkEM+kmAzTzgTk5PbQcUSCHnqcZspw==
-X-Received: by 2002:a05:6000:1a8d:b0:20c:68ed:7449 with SMTP id f13-20020a0560001a8d00b0020c68ed7449mr2784723wry.124.1651510730336;
-        Mon, 02 May 2022 09:58:50 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-115-66.dyn.eolo.it. [146.241.115.66])
-        by smtp.gmail.com with ESMTPSA id d2-20020adf9b82000000b0020c5253d929sm9050291wrc.117.2022.05.02.09.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 May 2022 09:58:49 -0700 (PDT)
-Message-ID: <6c76401699605448e5f74859c71a147d86820e8f.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v2] net/sched: act_pedit: really ensure the
- skb is writable
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, MPTCP Upstream
-	 <mptcp@lists.linux.dev>
-Date: Mon, 02 May 2022 18:58:48 +0200
-In-Reply-To: <CA+WQbwsTJ5n94RMDi8UyMx-Y8JeBmK8jpUsi2H=Y9R5zGghHKg@mail.gmail.com>
-References: <26445210b10b18b39129c4ede9d7fde0e37fe21f.1651253087.git.pabeni@redhat.com>
-	 <7c93496c-5153-5b83-48a9-6dd75da42542@linux.intel.com>
-	 <12a4ac76eddf80868bd61dcadfcb972d597ba629.camel@redhat.com>
-	 <CA+WQbwsTJ5n94RMDi8UyMx-Y8JeBmK8jpUsi2H=Y9R5zGghHKg@mail.gmail.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7142F2A
+	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 17:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651511795; x=1683047795;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0kHVpkZoHrpCI2zETqbZmN477CeFzKnaBwpI3/PESUM=;
+  b=Ra/aGaunC3BH/EsJyU/NQUEhNmfhkjhRkNkrfSiF2hGeGJabavx2x75e
+   xTKF+h3bpFtO4u6Acx27wlZuDXblgWhmdMtieGYl5hOa9IHsC/oLyKLSM
+   x4K/g0zF3tH1DLXfumsJST4ADG/Kyv62g+d4d3VcPzUBzx9qnR8lnwtTg
+   IjcienioCr9LogNgRsWaqwupOtNCZMvLPLru5yE96t5cv2uyLT6i5jPrp
+   7/TAC/tWgUTmBnj67My3JiSV7WfDHzQi+HkG+fLuWAy1Zv47QfVpoaj1c
+   zNJB+ZBIRX5VQhzlBdgXu/uk0fbbichqBPmOtRx8PoeYXlBR+4ykLPMz0
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="327814985"
+X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
+   d="scan'208";a="327814985"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 10:16:35 -0700
+X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
+   d="scan'208";a="561831720"
+Received: from raltenor-mobl.amr.corp.intel.com ([10.212.200.195])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 10:16:35 -0700
+Date: Mon, 2 May 2022 10:16:34 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: fix subflow accounting on close
+In-Reply-To: <9561e194e1ccaf6e91c97b94973ed58984f361ec.camel@redhat.com>
+Message-ID: <3894ce2a-764e-3479-981b-1c7862285a59@linux.intel.com>
+References: <84bfd492fa6e4a5ca5c90201283c48ed07318aa9.1651165091.git.pabeni@redhat.com>  <cfad224c-fe81-beaa-751d-fa54f7b21be9@linux.intel.com> <9561e194e1ccaf6e91c97b94973ed58984f361ec.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 2022-05-02 at 23:52 +0800, Geliang Tang wrote:
-> Hi Paolo,
-> 
-> Thank you so much for this patch. It fixed the issue that bothered me
-> for a long time. With this change, it seems the bad data in the
-> MP_FAIL multiple subflows test case has been dropped correctly now:
-> 
-> > sudo ./mptcp_join.sh -F
-> Created /tmp/tmp.lqIytszwoM (size 1 KB) containing data sent by client
-> Created /tmp/tmp.zChji3JlEJ (size 1 KB) containing data sent by server
-> Created /tmp/tmp.iTuFZCucnH (size 128 KB) containing data sent by client
-> Created /tmp/tmp.YTN6JELVhq (size 128 KB) containing data sent by server
-> file received by server has inverted byte at 169
-> 001 Infinite map: 5 corrupted pkts       syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                                             sum[ ok ]
-> - csum  [ ok ]
->                                                             ftx[ ok ]
-> - failrx[ ok ]
->                                                             rtx[ ok ]
-> - rstrx [ ok ]
->                                                             itx[ ok ]
-> - infirx[ ok ]
->                                                             ftx[ ok ]
-> - failrx[ ok ] invert
-> Created /tmp/tmp.iTuFZCucnH (size 1024 KB) containing data sent by client
-> Created /tmp/tmp.YTN6JELVhq (size 1024 KB) containing data sent by server
-> 002 MP_FAIL MP_RST: 1 corrupted pkts     syn[ ok ] - synack[ ok ] - ack[ ok ]
-> 
-> sum[ ok ] - csum  [ ok ]
-> 
-> ftx[ ok ] - failrx[ ok ]
-> 
-> rtx[ ok ] - rstrx [ ok ]
-> 
-> itx[ ok ] - infirx[ ok ]
-> 
-> No inverted byte is received in the MP_FAIL MP_RST test.
-> 
-> Do I understand this correctly?
+On Mon, 2 May 2022, Paolo Abeni wrote:
 
-The issues was/is really a TC/act_pedit one. That action modifies the
-packet data even when the packet is shared (cloned). Any retransmission
-(or reinjection) of such packet are thus corrupted.
+> On Fri, 2022-04-29 at 12:03 -0700, Mat Martineau wrote:
+>> On Thu, 28 Apr 2022, Paolo Abeni wrote:
+>>
+>>> If the PM closes a fully established MPJ subflow or the subflow
+>>> creation errors out in it's early stage the subflows counter is
+>>> not bumped accordingly.
+>>>
+>>> This change adds the missing accouting, additionally taking care
+>>> of updating accordingly the 'accept_subflow' flag.
+>>>
+>>> Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>> net/mptcp/pm.c       |  5 ++---
+>>> net/mptcp/protocol.h | 14 ++++++++++++++
+>>> net/mptcp/subflow.c  | 12 +++++++++---
+>>> 3 files changed, 25 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>>> index cdc2d79071f8..59fdab2d0c27 100644
+>>> --- a/net/mptcp/pm.c
+>>> +++ b/net/mptcp/pm.c
+>>> @@ -181,15 +181,14 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
+>>> 	struct mptcp_pm_data *pm = &msk->pm;
+>>> 	bool update_subflows;
+>>>
+>>> -	update_subflows = (ssk->sk_state == TCP_CLOSE) &&
+>>> -			  (subflow->request_join || subflow->mp_join) &&
+>>> +	update_subflows = (subflow->request_join || subflow->mp_join) &&
+>>> 			  mptcp_pm_is_kernel(msk);
+>>> 	if (!READ_ONCE(pm->work_pending) && !update_subflows)
+>>> 		return;
+>>>
+>>> 	spin_lock_bh(&pm->lock);
+>>> 	if (update_subflows)
+>>> -		pm->subflows--;
+>>> +		__mptcp_pm_close_subflow(msk);
+>>>
+>>> 	/* Even if this subflow is not really established, tell the PM to try
+>>> 	 * to pick the next ones, if possible.
+>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>>> index 4672901d0dfe..06b8ebc15204 100644
+>>> --- a/net/mptcp/protocol.h
+>>> +++ b/net/mptcp/protocol.h
+>>> @@ -893,6 +893,20 @@ unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
+>>> unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
+>>> unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
+>>>
+>>> +/* called under PM lock */
+>>> +static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
+>>> +{
+>>> +	if (--msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
+>>> +		WRITE_ONCE(msk->pm.accept_subflow, true);
+>>> +}
+>>> +
+>>> +static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
+>>> +{
+>>> +	spin_lock_bh(&msk->pm.lock);
+>>> +	__mptcp_pm_close_subflow(msk);
+>>> +	spin_unlock_bh(&msk->pm.lock);
+>>> +}
+>>> +
+>>> void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
+>>> void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
+>>>
+>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>>> index 6d59336a8e1e..75c85ce9a19e 100644
+>>> --- a/net/mptcp/subflow.c
+>>> +++ b/net/mptcp/subflow.c
+>>> @@ -1444,20 +1444,20 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+>>> 	struct sockaddr_storage addr;
+>>> 	int remote_id = remote->id;
+>>> 	int local_id = loc->id;
+>>> +	int err = -ENOTCONN;
+>>> 	struct socket *sf;
+>>> 	struct sock *ssk;
+>>> 	u32 remote_token;
+>>> 	int addrlen;
+>>> 	int ifindex;
+>>> 	u8 flags;
+>>> -	int err;
+>>>
+>>> 	if (!mptcp_is_fully_established(sk))
+>>> -		return -ENOTCONN;
+>>> +		goto err_out;
+>>>
+>>> 	err = mptcp_subflow_create_socket(sk, &sf);
+>>> 	if (err)
+>>> -		return err;
+>>> +		goto err_out;
+>>>
+>>> 	ssk = sf->sk;
+>>> 	subflow = mptcp_subflow_ctx(ssk);
+>>> @@ -1515,6 +1515,12 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+>>> failed:
+>>> 	subflow->disposable = 1;
+>>> 	sock_release(sf);
+>>> +
+>>> +err_out:
+>>> +	/* we account subflows before the creation, and this failures will not
+>>> +	 * be catched by sk_state_change()
+>>> +	 */
+>>> +	mptcp_pm_close_subflow(msk);
+>>
+>> __mptcp_subflow_connect() is also called by the userspace PM, which
+>> doesn't use this accounting. How about having the caller be responsible
+>> for doing mptcp_pm_close_subflow() if __mptcp_subflow_connect() returns an
+>> error other than -EINPROGRESS?
+>
+> Additionally we probably want to take care of  to take care of
+> mptcp_pm_subflow_check_next(), which is called regardless of the active
+> PM and can touch subflows, too.
+>
+> On the flip side, touching 'subflows' when the active PM is the user-
+> space one should not have any effect - beyond likely be confusing.
+>
+> I propose to handle all the above with a cleanup net-next patch after
+> the relevant -net merge, so we can leverage the mptcp_pm_is_userspace()
+> helper and keep the code as simple as possible.
+>
+> WDYT?
+>
 
-The test failed due to a reinjection on of the corrupted packet on the
-supposedly-non-corrupting link. 
+That plan works for me, thanks.
 
-Not sure if the above clarifies the scenario ;)
-
-> Anyway, please add my tested-by tag for this patch:
-> 
-> Tested-by: Geliang Tang <geliang.tang@suse.com>
-> 
-Thanks!
-
-Paolo
-
+--
+Mat Martineau
+Intel
