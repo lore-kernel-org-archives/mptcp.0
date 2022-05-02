@@ -1,112 +1,99 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C542F32
-	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 19:19:03 +0000 (UTC)
-Received: by mail-qk1-f181.google.com with SMTP id c1so12074071qkf.13
-        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 12:19:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9514B3204
+	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 20:22:11 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id m20so29767397ejj.10
+        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 13:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=q570yDlT9/XhwN9Jb1yAQGyTh22FzsB+PIS5SDA2WBU=;
-        b=b212Ziw+xCvgMlcvq4E/BIhQcglszGntzUGVnDSX7Sb0Me1d3AkdHoPdFpJiQvrswK
-         T4gP79qwtFBv78G71vB+7YD4vwau8kTI4Ud0KtqIpZ7zKmKKo4Dgzi6+PjbKAj7uSz5Q
-         3q3Wtvcn8hCciws3IusNgoSd95wAAc3BJJNuBeUzOr+5xEO8IZUehzzGltAPT9sJGYnB
-         JnsGzeU//ppuGongkuCk8b/YbcphmU3nu5aJasUB856hV5KmYl01NrqdPNSeXsNG5vJM
-         GNEsaoQpzHWBl8mkpWEPYeN/dNKO34NjCC9NyI9nMLRd9B7rtx+53vZYBGN5Qo8JGURr
-         9OBQ==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=ESD9sI/LXaDLgrW47z1kaByylTCDzQrlrS4/AZle/Cw=;
+        b=ooaGa+PVtaElNA1b5i+JFCMfq6t0f2e55rGUP+bKdUBagsZpDy8dHFXGnqcC7gS49q
+         GQzPBSZ+8LxqhzRwxQDhyTfdNkDFAdmiaEMUrgEi0OzGs2ktpXI7pEfrJ0LDPUEAmfiW
+         a3fg/TccOxJguTTousmgklbQRI4cxWF2W20tISVNeOieaBaGfh5DN+CjsJJ+oEJkBgyJ
+         DvWDCjuuW+bol9MWaeJ3lEVX5htcTNIQaOixzJ8GR3sKsZ2dMWCkISrYt0KgBf3GqVQe
+         rMr4vGtbCoIwhlByVWHu6903vlePPz2MsLKn6BEBkPJYR7oWnYWZNwNya5ID8dePstcp
+         U5yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=q570yDlT9/XhwN9Jb1yAQGyTh22FzsB+PIS5SDA2WBU=;
-        b=6/C8sVxMKOv1xc5zmZmtCCrBch1eBmuiEB1l+SF21XuRzre3Q6lZKvaZxgGMmPvXEA
-         /PMYcZoSRoKO8P+Dk0iAVURO/F1YiMvDufA/kHpgUyoVBdvTiE92PTnHeSOqLEm+HYle
-         ef4ASo55EX0/NmKRvDRlLbBG+cPFUKq+hjdZiDWooklyVHXSF4umJT6JVqppRXO8Z3u0
-         SxA9Uf4vGJCA/bn5fUaGeIUvmTX/t3r4BY0JnbIWvJMLUq3xXBPLptr+rVbqmWFHbCEf
-         86c8OqWem3BgEU5x4K9EmdxR4sz49N6zFldH0Xurr/po+ddBmdOhaKA4vAqBsC/qM9Qf
-         DUVQ==
-X-Gm-Message-State: AOAM5301JjgtajIx2WQkujkC90aN5p/BQPRQYyT1c89qDoMvaAB2WiyB
-	ear7tm9Yon2ohuRCZJroF3+N0xfB9A==
-X-Google-Smtp-Source: ABdhPJxpamOwmPmfV7CahsRE/yjPkdueuRHDkfAmJxK2sljDTKbxxwic6SJ3d6sfOhf7+TTTglj3Bw==
-X-Received: by 2002:ae9:ee13:0:b0:69f:3130:643c with SMTP id i19-20020ae9ee13000000b0069f3130643cmr9745246qkg.22.1651519142160;
-        Mon, 02 May 2022 12:19:02 -0700 (PDT)
-Received: from [127.0.0.1] ([20.25.78.186])
-        by smtp.gmail.com with ESMTPSA id d25-20020a05620a167900b0069fc13ce1d6sm4607908qko.7.2022.05.02.12.19.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 May 2022 12:19:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Florian Westphal <fw@strlen.de>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220502163624.6110-1-fw@strlen.de>
-References: <20220502163624.6110-1-fw@strlen.de>
-Subject: Re: mptcp: sockopt: add TCP_DEFER_ACCEPT support: Tests Results
-Message-ID: <558e4939-6555-f8a4-c673-5882aba241c4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 May 2022 19:19:01 +0000
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ESD9sI/LXaDLgrW47z1kaByylTCDzQrlrS4/AZle/Cw=;
+        b=ONXv7oE02j4OITRu1ZZefiYmRQHgVxu8IWUjFACRqfopefn66nBw8k5DTe6cHQDiDG
+         av7qtiiuBLLSfT0Rt6xdD3wFGdC9aYDbu3UhHrOd0kV5zgONGRsL76qI+a/v3AoCNJGn
+         IQYS+dmZy+XPhoxaEZl3Yranj2r8F5NEUU/aPyRxQDxqGtAC1mu+u6eIyf6iTckcQBz9
+         FtR4WymdjvDSr91TgyCqw9mTpWojQxFEXcKbqs/Hx45v4Xtz1NwbQXVKMqmMymLAaZYx
+         Z5pF2vePb/Sir4l2Eq4p100Flrb0iXLDcay60oRBezaHlJtM/bZKxeCj7i+CFXQ4t6Jw
+         bTLA==
+X-Gm-Message-State: AOAM533x6Faoi4+OSxLEsZsDJciQy5SegUrATwBOZwR6KxWFCYb+qeb/
+	3jW/JmdZgE2ROuax7g2X/o+NJ7QyuvuCSCD2
+X-Google-Smtp-Source: ABdhPJyEhU9TKgP/CrcWRRUljYJIp3FqYwV0XSh0hqL8dKfcCvFGmLPZQDczJeQo3anWZoq4s5Q/nw==
+X-Received: by 2002:a17:906:58d2:b0:6da:b635:fbf3 with SMTP id e18-20020a17090658d200b006dab635fbf3mr12062518ejs.40.1651522929419;
+        Mon, 02 May 2022 13:22:09 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:8b1c:91db:8679:8c21? ([2a02:578:8593:1200:8b1c:91db:8679:8c21])
+        by smtp.gmail.com with ESMTPSA id ia17-20020a170907a07100b006f3ef214de6sm3906432ejc.76.2022.05.02.13.22.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 May 2022 13:22:09 -0700 (PDT)
+Message-ID: <c70f3083-6c3f-71bd-34c0-3bdd0b5a450e@tessares.net>
+Date: Mon, 2 May 2022 22:22:08 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH mptcp-next v2] selftests/bpf: Enable CONFIG_IKCONFIG_PROC
+ in config
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <f14787485262a8dd8c439e01cd5651f10d5eb63d.1651114997.git.geliang.tang@suse.com>
+ <46af5926-5671-53b7-8358-7697336ed67@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <46af5926-5671-53b7-8358-7697336ed67@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Florian,
+Hi Geliang, Mat,
 
-Thank you for your modifications, that's great!
+On 29/04/2022 01:29, Mat Martineau wrote:
+> On Thu, 28 Apr 2022, Geliang Tang wrote:
+> 
+>> CONFIG_IKCONFIG_PROC is required by BPF selftests, otherwise we get
+>> errors like this:
+>>
+>> libbpf: failed to open system Kconfig
+>> libbpf: failed to load object 'kprobe_multi'
+>> libbpf: failed to load BPF skeleton 'kprobe_multi': -22
+>>
+>> It's because /proc/config.gz is opened in bpf_object__read_kconfig_file()
+>> in tools/lib/bpf/libbpf.c:
+>>
+>>        file = gzopen("/proc/config.gz", "r");
+>>
+>> So this patch enables CONFIG_IKCONFIG and CONFIG_IKCONFIG_PROC in
+>> tools/testing/selftests/bpf/config.
 
-Our CI did some validations and here is its report:
+Thank you for the patch and the review:
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5574170854555648
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5574170854555648/summary/summary.txt
+New patches for t/upstream:
+- 94d844c712d5: selftests: bpf: Enable CONFIG_IKCONFIG_PROC in config
+- be5f5a7b44f8: conflict in t/selftests-bpf-add-MPTCP-test-base
+- Results: f1fcfe627540..2767792d035c (export)
 
-- KVM Validation: debug:
-  - Unstable: 3 failed test(s): selftest_diag =
-selftest_mptcp_join selftest_simult_flows - Critical: 1 Call Trace(s) =
-=E2=9D=8C:
-  - Task: https://cirrus-ci.com/task/5084536747851776
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5084536747851776/su=
-mmary/summary.txt
+Builds and tests are now in progress:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/5259e61b6ad5
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220502T201958
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
