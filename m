@@ -1,84 +1,92 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9209D3212
-	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 20:43:54 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id kq17so29904575ejb.4
-        for <mptcp@lists.linux.dev>; Mon, 02 May 2022 13:43:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=cfAL6o4Pshh+Nh7bBN0KVqk6fZxMMHCyBIcobnZP32s=;
-        b=z790qh46uibDA5/N3rj4Uea+5PdJooEHhk3VihIJLoeM9byQcc/oQJW2zXL0TRDnn0
-         2SCah8xBEAvYIBhICH3ndAJg8deuh+ZQ7bFWrErAjCYROBQgIoPaB0iOFMKfEpfF+fm8
-         qzJvrMRzAoDT+fXjtSye0i/hRLidNLBHwfS8zzn7vXWZ532BfiB/CajaZgPiWFH7EBzV
-         Oej1IxFQ7gwB+XtW3UoFIJ1g7l4R45bFhnpj3T8TQvb+EpaOkNc/3lo6WuDZ+TqFUOWV
-         4a1u1hZZWbs9CVAFEsvnY2wofnc6JRezx3JZJ4Vh94Zbjjv8+pXZ6md5AK/Zxl0pHO8I
-         yjgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=cfAL6o4Pshh+Nh7bBN0KVqk6fZxMMHCyBIcobnZP32s=;
-        b=vmt2X7J4M/dN2ko2wxpjb+j+KWTlPWBdwtjab8/V/u5H7pNxGoKKZpMcR3iqH2xEh5
-         eEKmXWsKsZE5k3dnKVA75g5LEZmUv1uBD9fr2P0gawxzxmdvRQ8OYEemiu8Hi2+yIIKg
-         xb4jgKKAVAsdZqn6evVIQOZA1R6qIFkFgcRrikyvdm9XRaA9tSavxpt4FDBt24NXPI8p
-         DFYRdcraY019tGat48PbbSe6onRInt6T7Xb3c/ho38byaZQsEEZTq8WpjZq7XMSkZd/J
-         qenx1tbp73jpjpnTwa4SwRDyIl+5CmhLGXmqlsStngE/DDOMavzqehA/nIS5qVaZwPE1
-         kYYw==
-X-Gm-Message-State: AOAM533tP9vYgQwcFJWf9oS51SDHoN6aGC+bhwEXqwYrf4oBli3BG/d8
-	NzACrDVaQW9IfXarewKD6EpYbANqHp18OWVX
-X-Google-Smtp-Source: ABdhPJyHSpX8nlGnir8PMNTU+tqZtxJ+uzSaaHj7AEv5Mun2AgGoPtWReVQzRXoYfDzdvsN/jo8pXA==
-X-Received: by 2002:a17:906:c106:b0:6f4:45d9:2d85 with SMTP id do6-20020a170906c10600b006f445d92d85mr6758484ejc.493.1651524232497;
-        Mon, 02 May 2022 13:43:52 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:8b1c:91db:8679:8c21? ([2a02:578:8593:1200:8b1c:91db:8679:8c21])
-        by smtp.gmail.com with ESMTPSA id qp24-20020a170907a21800b006f3ef214df9sm3932665ejc.95.2022.05.02.13.43.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 May 2022 13:43:52 -0700 (PDT)
-Message-ID: <647deac5-ea7c-bfcf-e1cd-5ab91a3eee29@tessares.net>
-Date: Mon, 2 May 2022 22:43:51 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A1B2F56
+	for <mptcp@lists.linux.dev>; Mon,  2 May 2022 20:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651524764; x=1683060764;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sqqmemZ/5L+jEE02qzBX7TEd2cH2QoD6+mOw1SFfd2E=;
+  b=MBf20KytANhAZ0SaXnfveaXsPL41d51mF1q+Vlbaa2sAw1Wh++R6ESH/
+   Yz5xW3UkeZ6F3f/H5O/gazNiFJcwPIewJUYP5K6IFvvJRgFtq9tRCcqfs
+   nN3haBM60P5RUrlW4A2XcolJo3zKgKEJj9p8zGmFxlZsAtfDAa2n7U505
+   mvIN3vhqpncgbu7Kv2S5yXeBQ/DHjgGmxAQulXwfj5/0+cNK1kX0YE09I
+   pd2ESKLWCooKGIJGW+bru1rBxubLNifTbShQd7sBLNeeH1Imu8NDN696E
+   7WdTMHL19JoJiNjhK46uQL23Q364rE1RGDsXi2l43UTAq9PrwsY43UlrO
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="247875179"
+X-IronPort-AV: E=Sophos;i="5.91,193,1647327600"; 
+   d="scan'208";a="247875179"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 13:52:43 -0700
+X-IronPort-AV: E=Sophos;i="5.91,193,1647327600"; 
+   d="scan'208";a="733619564"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.141.55])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 13:52:43 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/7] mptcp: Userspace path manager prerequisites
+Date: Mon,  2 May 2022 13:52:30 -0700
+Message-Id: <20220502205237.129297-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.36.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: bpf: verify ca_name of
- struct mptcp_sock"
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <47419fbef3ed25bd1bb9d641e4817b85ea55ecda.1651329059.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <47419fbef3ed25bd1bb9d641e4817b85ea55ecda.1651329059.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+This series builds upon the path manager mode selection changes merged
+in 4994d4fa99ba ("Merge branch 'mptcp-path-manager-mode-selection'") to
+further modify the path manager code in preparation for adding the new
+netlink commands to announce/remove advertised addresses and
+create/destroy subflows of an MPTCP connection. The third and final
+patch series for the userspace path manager will implement those
+commands as discussed in
+https://lore.kernel.org/netdev/23ff3b49-2563-1874-fa35-3af55d3088e7@linux.intel.com/#r
 
-On 30/04/2022 16:31, Geliang Tang wrote:
-> Read /proc/sys/net/ipv4/tcp_congestion_control directly, instead of
-> using sysctl.
+Patches 1, 5, and 7 remove some internal constraints on path managers
+(in general) without changing in-kernel PM behavior.
 
-Thank you for the patch!
+Patch 2 adds a self test to validate MPTCP address advertisement ack
+behavior.
 
-Now in our tree:
-
-- 7578ba9005cf: "squashed" in "selftests: bpf: verify ca_name of struct
-mptcp_sock"
-- Results: 8ae619c5e009..929d7e14ecf1 (export)
+Patches 3, 4, and 6 add new attributes to existing MPTCP netlink events
+and track internal state for populating those attributes.
 
 
-Builds and tests are now in progress:
+Kishen Maloor (6):
+  mptcp: bypass in-kernel PM restrictions for non-kernel PMs
+  mptcp: store remote id from MP_JOIN SYN/ACK in local ctx
+  mptcp: reflect remote port (not 0) in ANNOUNCED events
+  mptcp: establish subflows from either end of connection
+  mptcp: expose server_side attribute in MPTCP netlink events
+  mptcp: allow ADD_ADDR reissuance by userspace PMs
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220502T203959
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+Mat Martineau (1):
+  selftests: mptcp: ADD_ADDR echo test with missing userspace daemon
 
-Cheers,
-Matt
+ include/uapi/linux/mptcp.h                    |  1 +
+ net/mptcp/options.c                           |  4 +--
+ net/mptcp/pm.c                                | 21 ++++++++---
+ net/mptcp/pm_netlink.c                        | 36 ++++++++++++++++---
+ net/mptcp/protocol.c                          |  5 +--
+ net/mptcp/protocol.h                          | 18 +++++++---
+ net/mptcp/subflow.c                           |  5 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 11 ++++++
+ 8 files changed, 81 insertions(+), 20 deletions(-)
+
+
+base-commit: 0decb97cb105e85be979432bfc17491df7c6d6d1
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.36.0
+
