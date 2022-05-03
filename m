@@ -1,96 +1,100 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from fallback11.mail.ru (fallback11.mail.ru [94.100.179.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF41933C9
-	for <mptcp@lists.linux.dev>; Tue,  3 May 2022 20:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651610480; x=1683146480;
-  h=date:from:to:subject:in-reply-to:message-id:references:
-   mime-version;
-  bh=+6aU1isN42uNoWFH9U/vgfPVJLDzmaSYdUxJF5qzKSs=;
-  b=eRaXRGRM9q6AsV7i1iNkFnWT/yVKzVAW4YMd7D1t5WMmzPjhfF7B3Ah4
-   ExZwNVx4/u5hpFHi6yHe4cSzCQeZbCBh6THt2ziJzXEzapVBukcYcv8RQ
-   lQoFJRKdzfdXvBhpQk9PfIoS7Xb7lI/9PaVKtk+HCcVT0UzUybMv0eJEJ
-   E2RpkdGT0+diNh4ZXbSAg9dPxMgMQb2q8qHNPabTjxecYOWiUsceM7lzT
-   hG7tWJOdpadVYBuWi3tXNhgSs/fxkeLYg17MUObL8x68tn0PqpIwXy0P6
-   c9W4amyhmH89katJh47nlFE4XyPIUAFU9GMsdHli8r0DgsvaDpAaTE8JS
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="265171617"
-X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="265171617"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:41:19 -0700
-X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="536510568"
-Received: from skarmaka-mobl2.amr.corp.intel.com ([10.209.21.54])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:41:19 -0700
-Date: Tue, 3 May 2022 13:41:19 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [Weekly meetings] MoM - 28th of April 2022 (MP_FAIL followup)
-In-Reply-To: <6052111-39d7-1037-d711-59a3929db477@linux.intel.com>
-Message-ID: <8c369784-1387-887e-6aa-60d631897690@linux.intel.com>
-References: <6052111-39d7-1037-d711-59a3929db477@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF60F33C9
+	for <mptcp@lists.linux.dev>; Tue,  3 May 2022 20:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=YxHeDdh89W/S02jSu/ysMOGqUj6XdYFvnBPUICa0MlU=;
+	t=1651611247;x=1652216647; 
+	b=sJ2DNRpjjG2zLitzLlj/8WqiqrlxStJFhT6HsJvE7MqY6edhIkWmT54zWizzdxH7F3AvVgnZwWIWc2U7vHc4B42ocq2UUD66CTRfTYchGpcveT19ztn+dZswZXdwduDXHWH75Jh+nrX4jbQ2irLGVk166hhl9xY5SXhBjL0C+WoOU7z9mzb7Toy9VJTWhF3K0YGhoavvsHRqE04KIWKzXPviN3+miU5MqFlo3KXPemcjm+70NY4IQa3PJQ/0+kC/h37ZJby37DEywyhRvYMIzVvKrheq/eeiBEZ1GHeYiOAU61hj19iQCsTjbod2swRBKFqizWBROimYqu0UpAjrBQ==;
+Received: from [10.161.64.39] (port=60938 helo=smtp31.i.mail.ru)
+	by fallback11.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
+	id 1nlzLE-0004CX-D8; Tue, 03 May 2022 23:41:52 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=YxHeDdh89W/S02jSu/ysMOGqUj6XdYFvnBPUICa0MlU=;
+	t=1651610512;x=1652215912; 
+	b=N+LO/SMXjdq4NpvRyTsS06R5iw1bWRYH/knJ0EQQhxqbmH29eTwfFHpXNF1dua1AZwnyUdGXDD0IShLdnHAAWUppebXGWxQevnZ+317G6PqBA9DGoYwNcnZBbu7sTu/gGTCcyHnHCedU8S+FASV1iPNn+wAKxqwsV0rGIb+jYsqEvVLcocSi45zGuV0tWcipSmrBwPFvSonUbEtLhqUFpWn2jFgiNZbRFvR9j+cf6vdzYS56jwTMpitMW/fAGK0c7isrrtS9r8Ib4+hBLavsKOi7BIJaleLIReRHxfz3ijIEQ343qiDOCHopJX/nHRUNk1G1a+DeoFL7jBKO7/yn9Q==;
+Received: by smtp31.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
+	id 1nlzKw-00061A-TP; Tue, 03 May 2022 23:41:35 +0300
+Message-ID: <c1513b33-add8-3e16-d14d-0b1886061040@internet.ru>
+Date: Tue, 3 May 2022 23:41:32 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: apropos
+ https://github.com/multipath-tcp/mptcp_net-next/issues/265
+Content-Language: en-US
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <3e23ea866374467e2c9aeec60049716b42d6634e.camel@redhat.com>
+From: Maxim Galaganov <max@internet.ru>
+In-Reply-To: <3e23ea866374467e2c9aeec60049716b42d6634e.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-4EC0790: 10
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD977B76FDA87AFA8B9C46B7B9D8BB44AF2B231429100C6E856182A05F5380850407388FDE713C08EAF9645FEDC913E72985ACC5B2A78C0466379A0B411156537FD
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE72AC9FB60380F23AEEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637BFD6B3F1638522B88638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8AB47FDA31A705B739D30FCAA195C69DA6F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE709B92020B71E24959FA2833FD35BB23D9E625A9149C048EE33AC447995A7AD18C26CFBAC0749D213D2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BF1175FABE1C0F9B6A471835C12D1D977C4224003CC836476EB9C4185024447017B076A6E789B0E975F5C1EE8F4F765FC6397F7B3CF0BEC3D3AA81AA40904B5D9CF19DD082D7633A078D18283394535A93AA81AA40904B5D98AA50765F790063754A7BB9F8FB52A01D81D268191BDAD3D698AB9A7B718F8C4D1B931868CE1C5781A620F70A64A45A98AA50765F79006372E808ACE2090B5E1725E5C173C3A84C3C5EA940A35A165FF2DBA43225CD8A89FD0FAA60E373B885757739F23D657EF2BB5C8C57E37DE458BEDA766A37F9254B7
+X-8FC586DF: 6EFBBC1D9D64D975
+X-C1DE0DAB: 0D63561A33F958A5D3226727E8DC7DF51798A1D1A79AE3235AA50D2A012C618CD59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
+X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D34AEC7C2AC3C44791D74394C48FB024DBE953966EAE76CA2A80EB263C7ED8A16F62301C2BD6FFB998C1D7E09C32AA3244C0FE21B5A05602B2DAE5837D15307884151E887DA02A9F7BF927AC6DF5659F194
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojD/QvxFEDWC9Hnt7v6PPDmg==
+X-Mailru-Sender: 6B47EA55652F5E70849B49CCF28A6C3B34AC50A8855C89779B0E3C2EFDA8054D745EF8D0EC24967EAA92DCB28147B367B60569B44082A3A3CC338593878DF048773EBFF2F43C11D6EAB4BC95F72C04283CDA0F3B3F5B9367
+X-Mras: Ok
+X-4EC0790: 10
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B43AA9A89F3DE39AFE8AC1265785075D8DA91829CF4BFF7EEC049FFFDB7839CE9EE6F2271DCD82A80F647AD8D052131D7D5EE833FAC0A5CEE5458354EBE051E2CE
+X-7FA49CB5: 0D63561A33F958A552CBDEEEC52CEE522AD398C7B67DF4FF66C04D1885B3F43DCACD7DF95DA8FC8BD5E8D9A59859A8B6E37876E7723AB534A471835C12D1D9774AD6D5ED66289B5278DA827A17800CE722C7672CDBCC22789FA2833FD35BB23D2EF20D2F80756B5F868A13BD56FB6657A471835C12D1D977725E5C173C3A84C38D8BB953E4894305117882F4460429728AD0CFFFB425014E868A13BD56FB6657D81D268191BDAD3DC09775C1D3CA48CF569ADAE6D91ADDE5BA3038C0950A5D36C8A9BA7A39EFB766EC990983EF5C032935872C767BF85DA227C277FBC8AE2E8B9323F30CF592B49A75ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-C1DE0DAB: 0D63561A33F958A552CBDEEEC52CEE522AD398C7B67DF4FF10FD67C3AFF6D4F8D59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojD/QvxFEDWC8k1e8aIK3FHg==
+X-Mailru-MI: 8000000000400800
+X-Mras: Ok
 
+On 29.04.2022 13:08, Paolo Abeni wrote:
+> I think should see sistematic csum failure when the involved peers have
+> different endianess (e.g. x86 vs arm). If anyone has easy access to
+> both systems, could please verify the above?
+> 
 
-On Thu, 28 Apr 2022, Mat Martineau wrote:
+I've built OpenWrt from current master (4509b79) for ath79/generic with 
+CONFIG_TESTING_KERNEL=y
+CONFIG_MPTCP=y
+CONFIG_MPTCP_IPV6=y
 
->    - Features for net-next (next):
->
->        - [8053fb8d49ed] selftests: mptcp: add MP_FAIL reset testcase 
-> (Geliang Tang)
->          - Two pending issues: open issue regarding multiple MP_FAIL in self 
-> test, and dropping of bad data.
->          - Prioritize MP_FAIL fixes
->          - Follow up on ML to make sure Geliang is not blocked [Mat]
->
+and flashed it onto TP-Link Archer C7 v5.
+This is what I can observe with a simple echo server and nc.
 
-Geliang -
+Client:
+% uname -r
+5.17.4-200.fc35.x86_64
+% lscpu |fgrep ndian
+Byte Order:                      Little Endian
+% mptcpize run nc 192.168.2.1 12345
+qwerty
+Ncat: Connection reset by peer.
 
-Were the two issues to resolve before upstreaming "selftests: mptcp: add 
-MP_FAIL reset testcase" these:
+Server:
+root@tpa3:~# uname -r
+5.15.35
+root@tpa3:~# lscpu |fgrep ndian
+Byte Order:          Big Endian
+root@tpa3:~# sysctl -w net.mptcp.checksum_enabled=1
+net.mptcp.checksum_enabled = 1
+root@tpa3:~# ./echo 12345
+Server is listening on 12345
+^C
+root@tpa3:~# nstat 'Mptcp*'
+#kernel
+MPTcpExtMPCapableSYNRX          1                  0.0
+MPTcpExtMPCapableACKRX          1                  0.0
+MPTcpExtDataCsumErr             1                  0.0
+MPTcpExtMPFailTx                1                  0.0
 
-1. https://github.com/multipath-tcp/mptcp_net-next/issues/265
-
-2. Waiting for feedback on how to drop data on checksum failure.
-
-
-For #1, Paolo has been making a lot of progress there. Since the bug is 
-tracked, it will be clear when it is closed and no longer blocks 
-upstreaming
-
-
-For #2, do you have questions that I did not address in the "Infinite 
-mapping and dropping data" message on the list (30-Mar-2022):
-
-https://lore.kernel.org/mptcp/5e9cc0c5-1514-a198-5191-a765a67b9de4@linux.intel.com/#r
-
-My conclusion there was that we don't need to drop data on checksum 
-failure:
-
-"""
-I don't think it's necessary to discard any incoming data to
-handle this single-subflow fallback scenario. As Matthieu mentioned in the
-meeting, the checksum failure tells us that there was either MPTCP header
-corruption or a mismatch between the data payload and the MPTCP mapping -
-it is not an indication that the data was "bad". If the incoming data that
-is read from the MPTCP socket matches the subflow's reassembled TCP
-stream, then fallback was successful.
-"""
-
-Was that your concern, or is there a different issue?
-
-
-Thanks!
-
---
-Mat Martineau
-Intel
+The issue goes away when I set net.mptcp.checksum_enabled=0 on both 
+ends. Please tell me if you need more info.
