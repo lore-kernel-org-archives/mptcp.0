@@ -1,44 +1,44 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F585322E
-	for <mptcp@lists.linux.dev>; Tue,  3 May 2022 16:28:58 +0000 (UTC)
-Received: by mail-ed1-f53.google.com with SMTP id ba17so407396edb.5
-        for <mptcp@lists.linux.dev>; Tue, 03 May 2022 09:28:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611707F
+	for <mptcp@lists.linux.dev>; Tue,  3 May 2022 16:35:37 +0000 (UTC)
+Received: by mail-wr1-f54.google.com with SMTP id t6so24153576wra.4
+        for <mptcp@lists.linux.dev>; Tue, 03 May 2022 09:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=/2E9hrXEwlUTMEV9Dj2vTXTcYVRchlfALQ7catN84QM=;
-        b=w1ZZKDFOnyCZ5ISS9FQxtrCxyPejKrKUyUrOgy2EP67lCbwwWYGrRkG5dL7YDSQyUW
-         behjTscOz2VnzztUQ8dwyH71WcOFEljeotpPR2Zvidh/fIB99J0WUyifowYmOUw1umX3
-         v3iKoKRpJuyX8il/SAtvoEdR/8ix53VO5h/bqK6cT4pWzS4QD2Srm2RmviqW5FluCOY0
-         giBGgn85TFuH+nNhd+9cF7woPnAJzlv6UNdzYbW96sDQXOA7HYGXdky21OKONUODTmZx
-         xtRjQ6OAarz8uS0Op/fbprmdWAeDmV1ijGPqqRxtq7Hu91abEW2BhFd7PZrRhffgxf01
-         ORLA==
+        bh=LHl3/B/QeH7yOznm8iqzsNr8LfSdQpYBrrUewHpoVRM=;
+        b=JPS1MfWI5gaHVRETd+kKoLDFY6f6VO0cpfIqdtK/P10VxI3jwflNnvmQbGzKyXihJz
+         sNcgsQUfaIC1UaUdh5Qtwtb7d6O5IFuW2cfE79N2WODBNSp8omNJSfRmWLcbwemNx4d8
+         ulYkO61Tg4a7Z5GB8R2zkBAwFkazVg8w9AYKALHdIt3+9jwVGTOOEJ64OCh0bYL0NyU3
+         l2toaI1t0TJ8oUVdy5Jp7OqGGymT59kMo5oTFgSWSVDjdQnuACx0VTY5qZPGP5kxwxJS
+         AZwZmlUlhBQvlcS+wx0xYPF79xDUDI7iCJxavAJpBZ7b6ImBl7AzfWun5DZhyeZM4CoJ
+         bKkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=/2E9hrXEwlUTMEV9Dj2vTXTcYVRchlfALQ7catN84QM=;
-        b=W5BGvOA7UiMfhCp01hmXH49ApzdPJT8t+0708WTCDmLGFcDdyKukOMZ2ZDcgkvJWXY
-         xLrwAI/zA73oroqyNY/BMxORu5zHYh32ahsCDb/Jxzg+zpnxuddNUg/rce58uD2keBtI
-         L78FkrE2D2tQjzSpOnSu4Fcxz8BN6BIsOhIoy+Kyqa04sFhwkKEn2W6ZbE47fOhb4gc5
-         Zt2nAHRYQGP0orzaWx3Wl24Ae3RFhfJiqk1T4925LOsQw0bkJ0chio45NyC51Xz9L5bL
-         zgHvJBA5Z6ZYC9tR6ytl1emszcotg372mkgK+0FneAYt9JG7tmlD6vb/4CSiecng5qoL
-         NmOg==
-X-Gm-Message-State: AOAM532XxNb6GYTQEldUfg3rXvP1upGiOKPnAyTc5sSdcagRlo/qYMsC
-	/obrpZPH6jpMyspgjEl2xEjfariuqefXYw==
-X-Google-Smtp-Source: ABdhPJyaP45giCMtcc4DMWQ2cacSfPkj9pI7j21YE8i+Mqzy2HO36MrhP9ba/wGj49IXZWghcPjf6g==
-X-Received: by 2002:a05:6402:e99:b0:41d:11f2:85e0 with SMTP id h25-20020a0564020e9900b0041d11f285e0mr18371502eda.339.1651595336356;
-        Tue, 03 May 2022 09:28:56 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id gv49-20020a1709072bf100b006f3ef214e35sm4701455ejc.155.2022.05.03.09.28.55
+        bh=LHl3/B/QeH7yOznm8iqzsNr8LfSdQpYBrrUewHpoVRM=;
+        b=ToHld0OqQrZDOyuxnb+pK8X+HUO5squlgS7Gi8AyREzh1EihaSj9Xo6lIg3y7OWvOQ
+         0B3DU/AE7XaIonJUnRojZ8IROlOnEJw0Ds2ENpTFEpeM4LvpYc1T5U8b0egRvgRZ8aw5
+         jx6P1d2OADTPsqp0NO1HZe66vGdEayqBj81rHs7iB0ZMYogOMEdQXen1bfPsJfk8JoTW
+         nLGdCtXBYNhClBsmupZLb4K0GZK4C3WwnIbvnZNJr0hpU6Y8nTR6RRmqm7iWxOneUnLW
+         4QP+sPZl4mfYnxgpJ4nUdWY4ngv7poeaOLpuEb2YMukQoRvfgtJf6P3bhRgJhAEqBSIM
+         g1aA==
+X-Gm-Message-State: AOAM531w2aYZE9YMsxN6Z7KpQ5KMks1Am5cRf4VuBYO/FF3fnT91ruhe
+	RM/J+Z2OwPcxaOq4Mi+Pl+eaLpxUjN1uHQ==
+X-Google-Smtp-Source: ABdhPJwocNSswBDCA2gx3RMVOgXP+HISOm+BcG3Jg3GbDcUDdsQ9kjZFHV+TphJ9sWGST2Ajpu2igg==
+X-Received: by 2002:a5d:62c4:0:b0:20a:e377:71ea with SMTP id o4-20020a5d62c4000000b0020ae37771eamr12895366wrv.549.1651595736271;
+        Tue, 03 May 2022 09:35:36 -0700 (PDT)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id c3-20020adfc043000000b0020c5253d905sm12178217wrf.81.2022.05.03.09.35.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 May 2022 09:28:55 -0700 (PDT)
-Message-ID: <00bc1734-033a-cb99-08ee-654b35a2400b@tessares.net>
-Date: Tue, 3 May 2022 18:28:55 +0200
+        Tue, 03 May 2022 09:35:35 -0700 (PDT)
+Message-ID: <d4d2dca7-bf7b-c45c-ef1d-d8878465cf24@tessares.net>
+Date: Tue, 3 May 2022 18:35:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,64 +47,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH mptcp-next v18 0/7] BPF packet scheduler
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: fix a mp_fail test warning
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1651412613.git.geliang.tang@suse.com>
+References: <6dd3d1ae0042025c2b4b4fde0e341562c200024a.1651537116.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1651412613.git.geliang.tang@suse.com>
+In-Reply-To: <6dd3d1ae0042025c2b4b4fde0e341562c200024a.1651537116.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat, Paolo,
+Hi Geliang,
 
-On 01/05/2022 15:48, Geliang Tang wrote:
-> v18:
->  - drop "mptcp: add last_snd write access".
->  - add mptcp_sched_data_init helper.
->  - move mptcp_sched_get_send() and mptcp_sched_get_retrans() into sched.c.
+On 03/05/2022 02:19, Geliang Tang wrote:
+> Older version tc command (iprout2 5.3) shows actions in multiple lines,
+> not a single line. Then the following unexpected MP_FAIL selftest output
+> occurs:
+> 
+>  file received by server has inverted byte at 169
+>  ./mptcp_join.sh: line 1277: [: [{"total acts":1},{"actions":[{"order":0 pedit ,"control_action":{"type":"pipe"}keys 1
+>          index 1 ref 1 bind 1,"installed":0,"last_used":0
+>          key #0  at 148: val ff000000 mask ffffffff
+>  5: integer expression expected
+>  001 Infinite map                      syn[ ok ] - synack[ ok ] - ack[ ok ]
+>                                        sum[ ok ] - csum  [ ok ]
+>                                        ftx[ ok ] - failrx[ ok ]
+>                                        rtx[ ok ] - rstrx [ ok ]
+>                                        itx[ ok ] - infirx[ ok ]
+>                                        ftx[ ok ] - failrx[ ok ] invert
+> 
+> This patch adds a 'grep' before 'sed' to fix this.
 
-Thank you for the patches and reviews!
+Thank you for the patch!
 
-Now in our tree (feat. for others) with Paolo's ACK and Mat's RvB tags:
+Now in our tree (fix for net-next) with my RvB tag and without the
+iproute2 typo:
 
 New patches for t/upstream:
-- 2d934cabfc25: mptcp: add struct mptcp_sched_ops
-- 467bf7c54c40: mptcp: add a new sysctl scheduler
-- 9281e21f5f4d: mptcp: add sched in mptcp_sock
-- 656ddb9db4e1: mptcp: add get_subflow wrappers
-- be9de4168364: mptcp: add bpf_mptcp_sched_ops
-- 2885b934b680: selftests: bpf: add bpf_first scheduler
-- 0201204572f8: selftests: bpf: add bpf_first test
-- Results: bea7cea0ffcd..9d8bf95bd8a7 (export)
-
-And the squash-to patches:
-
-- d8a1213416ef: "squashed" in "mptcp: add get_subflow wrappers"
-- Results: 9d8bf95bd8a7..4c418cbad090 (export)
-
-- 014d79843c44: "squashed" in "mptcp: add bpf_mptcp_sched_ops"
-- Results: 4c418cbad090..aa6bec3f788f (export)
-
-- 3b8d5a354bf6: "squashed" in "mptcp: add struct mptcp_sched_ops"
-- Results: aa6bec3f788f..527315ca1901 (export)
-
-- 92b309479c5c: "squashed" in "selftests: bpf: add bpf_first scheduler"
-- Results: 527315ca1901..a800c43a02ab (export)
-
-- 35a824bb888a: "squashed" in "selftests: bpf: add bpf_first test"
-- Results: a800c43a02ab..c3f5d94e8dc4 (export)
-
+- d691758ed81c: selftests: mptcp: fix a mp_fail test warning
+- Results: c3f5d94e8dc4..9cac72edfb62 (export)
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220503T162811
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220503T163309
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/75
-
-I didn't close it because "BPF round-robin scheduler" series also closes it.
 
 Cheers,
 Matt
