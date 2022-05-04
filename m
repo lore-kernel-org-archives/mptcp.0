@@ -1,44 +1,44 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1632596
-	for <mptcp@lists.linux.dev>; Wed,  4 May 2022 16:41:21 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id g6so4006195ejw.1
-        for <mptcp@lists.linux.dev>; Wed, 04 May 2022 09:41:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3852596
+	for <mptcp@lists.linux.dev>; Wed,  4 May 2022 17:07:30 +0000 (UTC)
+Received: by mail-pl1-f175.google.com with SMTP id j8so1956993pll.11
+        for <mptcp@lists.linux.dev>; Wed, 04 May 2022 10:07:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Jg4b3iiCtSRrMUi3cmg2w/dCD6cyO46CCgsKSlgANqA=;
-        b=RCaE8AodQdhVluuUDBu/8Y+PfF3SIOEcpFf80vKKFJoRDkElyVZX+PtdwAh6ShJ7Po
-         JVA38yGCVVUap8Hzv5sSO08caVNyMpT5QRHE+5geQEUAOn+T5uVSOCPR5Y/59Gg0+jcI
-         RLFU8GO+NepcIsasreOZ5JqoQ3Wruc83thKdzBVQR0/IXHw/+OfUAv1E3tAkFvwJaIUK
-         cNJ6in8/gsIuWo+cV/1GsgydXF1eWeQ9aY8yojO1kkP3aAFcJPMWtsHytVhV3s7Yr8dO
-         D3duzLUrt048/XZQT6ASQlizvlneCqmdd35LijLpi4mpsXwnO4jGOIku9LtndbZyASfP
-         bSrA==
+        bh=5heQlZbmjl3R/ScgbWjY3UOlALlpc5dyNuQE2J2tTh8=;
+        b=PYGn8cyOYJe7mUdyDAprPahcuw7uwaYeqc+0nVFaR6gawsQBFxMTWvkwZH/bqb3sAO
+         N0Ncz1b27atKy9ekgZOUYq8XgUvyg2kCVQf/kexa3P9ysLxH7h69nh4sXRBkC5IwBuCU
+         lvDyw1lV89wkkkItT4fsGfUBTGVxqmFrcFUIMCLOdTsvLIJvnKYz9zTpsn69h6CggRVL
+         wnJeHZ86dibGEhFYGLcA9xHFAtNnuag4oce8bW9hRT7w1lnQI3wzymNLYEGTOvTegbC6
+         i+1IulZwNL0CqPF3/nykpMzjJrWoRina/vvqquTC/eXDrcuWKo0GxhEPoa2CCgDTfFMz
+         jluA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Jg4b3iiCtSRrMUi3cmg2w/dCD6cyO46CCgsKSlgANqA=;
-        b=TxZDGMAz57yBiEhwovy016uCvGwCcFIu1AMdnvZznAYmNKjyJvWnP+brbUCAbK5WOx
-         u9fnjBIG5pIATHL9qDRXZ05HLUBmFHJMyTK/hQ2uNFC325X+eMfCQoBeFR/wjbjWVeZ2
-         xOkVeWkA1bXtBOfqQOl+YxLV5oMquiO7rlyplZbmihDascACr6CxzhdAIVdjMpSK3N1i
-         uSy8CC+aUV/Dt1Y4KVCZf9gCllRWWZHoRfzBCFZ7rq8o/ZLFPmSEWzHQuopTXJrJXL1C
-         ws2waKtg32R7NS9UKxNGsq793FxsOmOx/E/Xep204jpsMR7cY/BbdtBijD3oA8msSZbX
-         PEfg==
-X-Gm-Message-State: AOAM530QiVxqhiIifOcbmzKHCeJrnUtswJTYdmAmANd0MzAfkq1GPx90
-	GKkEmijNKrZsWPTbW1AWlyRHhA==
-X-Google-Smtp-Source: ABdhPJwdvnhFAndnqSmQE2BCdyP8Ys2t1yez2hR+14AALhIqPGetIhakY/2fswrSTKTMVy4z7Rwfaw==
-X-Received: by 2002:a17:906:c110:b0:6e8:3a96:996a with SMTP id do16-20020a170906c11000b006e83a96996amr21173952ejc.216.1651682480207;
-        Wed, 04 May 2022 09:41:20 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:e57b:38b2:b6d2:346c? ([2a02:578:8593:1200:e57b:38b2:b6d2:346c])
-        by smtp.gmail.com with ESMTPSA id o4-20020a056402038400b0042617ba63c9sm9374487edv.83.2022.05.04.09.41.18
+        bh=5heQlZbmjl3R/ScgbWjY3UOlALlpc5dyNuQE2J2tTh8=;
+        b=zfnjqCB/AI8aZRkvsnz7M1dGoaJs9+wCHIdNikiBuj4r9TfESkG+VGSxtF7cAPYoLR
+         Nkoj5KCF8WHEy189NBQVjVSTxpGbdt/qz8kwF/WJc3G7i5wUbgwrPb9s8/zMKj8DByyQ
+         MPtB2FJOEurEeuo3XCGFPYuybAmaaDTH2mjsBp28CD9I41gF5/bWQ/cSk50BrZ/S6rSE
+         2Fah5riZzmZBPHLJM6puohon7vEZrL5X5WMPWp92YkX7NXmmRg+jPM/+T+MIezHOABzK
+         /Rzw7diRjN0Dup64+dY55Kk2pT8YVePOY9xUYGVZw9YG4lOY5++0JHYI0z0C7u0d/U2n
+         UdNQ==
+X-Gm-Message-State: AOAM533zROr7xXTC2a1uCXOaAZ2VoiF8tgzNvOoaGztP/O1wj8VkYw1S
+	DQ45+IQVbOqock9gnkGd0pc=
+X-Google-Smtp-Source: ABdhPJzuNG+G7WrVCnZo6oM5E1j+8EOpXMiSJct3FZoI4MOoDiNL6HXgay/Dmjg9M7ZFvLy9XbMCjw==
+X-Received: by 2002:a17:902:70c1:b0:154:667f:e361 with SMTP id l1-20020a17090270c100b00154667fe361mr22914608plt.148.1651684049858;
+        Wed, 04 May 2022 10:07:29 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id i15-20020a170902c94f00b0015e8e7db067sm2502228pla.4.2022.05.04.10.07.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 May 2022 09:41:19 -0700 (PDT)
-Message-ID: <36d7d55f-9672-ffaf-8835-867adc337528@tessares.net>
-Date: Wed, 4 May 2022 18:41:18 +0200
+        Wed, 04 May 2022 10:07:28 -0700 (PDT)
+Message-ID: <5480dd4a-5626-a6e4-c4e4-90c9e10554f9@gmail.com>
+Date: Wed, 4 May 2022 10:07:02 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,42 +46,72 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: apropos
- https://github.com/multipath-tcp/mptcp_net-next/issues/265 (checksums)
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>, Christoph Paasch <cpaasch@apple.com>
-Cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-References: <3e23ea866374467e2c9aeec60049716b42d6634e.camel@redhat.com>
- <e868da1-c75e-2027-83f8-2aae37cfb923@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <e868da1-c75e-2027-83f8-2aae37cfb923@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/91.8.1
+Subject: Re: [PATCH net-next 1/2] net: switch to netif_napi_add_tx()
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net
+Cc: netdev@vger.kernel.org, pabeni@redhat.com, edumazet@google.com,
+ rafal@milecki.pl, opendmb@gmail.com, dmichail@fungible.com,
+ hauke@hauke-m.de, tariqt@nvidia.com, kys@microsoft.com,
+ haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, shshaikh@marvell.com, manishc@marvell.com,
+ jiri@resnulli.us, hayashi.kunihiko@socionext.com, peppe.cavallaro@st.com,
+ alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+ mcoquelin.stm32@gmail.com, grygorii.strashko@ti.com, elder@kernel.org,
+ wintera@linux.ibm.com, wenjia@linux.ibm.com, svens@linux.ibm.com,
+ mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+ s-vadapalli@ti.com, chi.minghao@zte.com.cn, linux-rdma@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, mptcp@lists.linux.dev
+References: <20220504163725.550782-1-kuba@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20220504163725.550782-1-kuba@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+On 5/4/22 09:37, Jakub Kicinski wrote:
+> Switch net callers to the new API not requiring
+> the NAPI_POLL_WEIGHT argument.
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+> CC: rafal@milecki.pl
+> CC: f.fainelli@gmail.com
+> CC: opendmb@gmail.com
+> CC: dmichail@fungible.com
+> CC: hauke@hauke-m.de
+> CC: tariqt@nvidia.com
+> CC: kys@microsoft.com
+> CC: haiyangz@microsoft.com
+> CC: sthemmin@microsoft.com
+> CC: wei.liu@kernel.org
+> CC: decui@microsoft.com
+> CC: shshaikh@marvell.com
+> CC: manishc@marvell.com
+> CC: jiri@resnulli.us
+> CC: hayashi.kunihiko@socionext.com
+> CC: peppe.cavallaro@st.com
+> CC: alexandre.torgue@foss.st.com
+> CC: joabreu@synopsys.com
+> CC: mcoquelin.stm32@gmail.com
+> CC: grygorii.strashko@ti.com
+> CC: elder@kernel.org
+> CC: wintera@linux.ibm.com
+> CC: wenjia@linux.ibm.com
+> CC: svens@linux.ibm.com
+> CC: mathew.j.martineau@linux.intel.com
+> CC: matthieu.baerts@tessares.net
+> CC: s-vadapalli@ti.com
+> CC: chi.minghao@zte.com.cn
+> CC: linux-rdma@vger.kernel.org
+> CC: linux-hyperv@vger.kernel.org
+> CC: mptcp@lists.linux.dev
+> ---
+>   drivers/net/ethernet/broadcom/bcm4908_enet.c       | 2 +-
+>   drivers/net/ethernet/broadcom/bcmsysport.c         | 2 +-
+>   drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 3 +--
 
-On 03/05/2022 20:37, Mat Martineau wrote:
-> I noticed yesterday that the BPF CI is running big-endian tests on the
-> z15 architecture. I think that's through travis-ci. Do CI providers like
-> Travis or Cirrus allow interop testing between multiple VMs?
+For the above:
 
-I guess we can always launch multiple VMs with qemu and allow them to
-discuss with each others.
-
-It is not complex but a bit of work to do.
-
-> Checking on other tools we could use to confirm checksum operation (and
-> run on either big- or little-endian platforms), it looks like wireshark
-> tries to track DSS checksums but does not verify them. Packetdrill seems
-> to have some code (maybe incomplete?) for getting the checksum data from
-> headers - would require some work to complete that code and add test cases.
-
-Maybe Packetdrill can help? Not sure indeed.
-
-Cheers,
-Matt
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Florian
