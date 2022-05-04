@@ -1,86 +1,148 @@
-Received: from fallback24.mail.ru (fallback24.m.smailru.net [94.100.187.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C63C2583
-	for <mptcp@lists.linux.dev>; Wed,  4 May 2022 15:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
-	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=fUz5PDCoxvz3GQPjaYtSo3/WrDGUE9pFAftBJurTKe0=;
-	t=1651676950;x=1652282350; 
-	b=nRcOHzJ4KiTEFUzQ4s5TnblZqWThT27CT4Pr+F4kqsVyHOqZhIIecIq0sifvdYD8Lwo0YFSk3wPE2orHL/66J8joQO3pYxafbR9IvbLyXClmXLlqol5JeYJttrS2FXVIyxPz+2aUJlgL9azEJdgBwwZ9ZlY48ovmPrNSHD404JIhLsgcsduzStAIqDECo1iBNSM9uMTOjQZ/+gpY6nfJxZOIa51HPOtPdSrKXqBlx7E7BNfip4Gky9IncQggY1PpKOhgz+OG76G8tTv+4MXo5ruGR3yuMuu2kLRc2tuWWwaRvsz7qtiWHqisgeKVh3SyzYpkC4xrUe5+NdDWA0RcsA==;
-Received: from [10.161.76.76] (port=55586 helo=smtp17.mail.ru)
-	by fallback24.m.smailru.net with esmtp (envelope-from <max@internet.ru>)
-	id 1nmG1e-0002WH-Of
-	for mptcp@lists.linux.dev; Wed, 04 May 2022 17:30:47 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
-	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=fUz5PDCoxvz3GQPjaYtSo3/WrDGUE9pFAftBJurTKe0=;
-	t=1651674646;x=1652280046; 
-	b=i8y2Jk9opzIkwvk9nCpw647kBUpekQ4ZD4xMji8twYPtDOY0prPLViShh0evIX1MWA/vN9Ve5RiwTNsh4VssnaYROy9TOyMELZJZjJTgKN5N8+H5ul75lUUu0gEtUfmajCoH0aOox3zqmB6uk1acK1RSBjXP7LN0IGn9hbKiCmqwCFYBJ0atA8CQ4UuGoYhwhQsX9+C/xUKO0ZB3Vwlm5xCgF6wrGO0izqzjQPeHlem3wvMfZ41CtSjYcYjpp1HKAJGb+JFF1vO2sNLdknkFRNH7rdH2omZDJHZKOb/oLtfqMdFCuIhlqOWrPYLJvOXLU4DwzC78u+fGROcRDRgvrA==;
-Received: by smtp17.mail.ru with esmtpa (envelope-from <max@internet.ru>)
-	id 1nmG1W-0004C1-M6; Wed, 04 May 2022 17:30:39 +0300
-Message-ID: <3c85fe48-69fe-0655-2146-a4424e02f185@internet.ru>
-Date: Wed, 4 May 2022 17:30:36 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6492583
+	for <mptcp@lists.linux.dev>; Wed,  4 May 2022 15:09:14 +0000 (UTC)
+Received: by mail-pg1-f173.google.com with SMTP id 7so1369905pga.12
+        for <mptcp@lists.linux.dev>; Wed, 04 May 2022 08:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WzR2MTgFgVhFt31HN1hbWId588K8VOlEdnRW+nrg5KI=;
+        b=Bj/YsQdKLRS4vtT3oofCuR4UIEW6Ryodoe6OfNzOgn0OBCUxAXY4by4eGRxgKUa3mw
+         HIChN0ouvqNDB7122D5bBj3a0KfUVAA5ZzZBAEnbkxCe5OZ1TeQPnG8kybC6HSd3Klyt
+         Y/cbl1Uga6qfSYnD+qzUyuy5AkDABu3Irusd7HyFU3Vck1gflQRK9NV/phEOijULJcCA
+         Tw8KhZFpPrfWm2kQ5pRfj9dhqLs11YWZ2OS/0p8RYc1MG5MQ8ikYh2d8yFDfllOJ+8HK
+         Gn7qp6AIHucdcW7I1+UiZB84ow8moDRpLofjC28iy8PY4GcfzqeD43n6DiKRee9iFdFu
+         FzHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WzR2MTgFgVhFt31HN1hbWId588K8VOlEdnRW+nrg5KI=;
+        b=BuTh8F2x3GYKMBUu9A6yedU5RJn07jFBFlJn6tXgq2beT9eJgNni4IiQ2Cxh7Z2RVg
+         devPzqocrjI0xGiWrSEyhN0xugRIWsrJnnGIpdhffUcChqJq1CzoxyKhXlIjhvRcgKTu
+         DkrMx+thVsnIkGR0ao+KNB5xTl74Xmdu/W5Y4Lh7Oph4CIfQQf9x6hPXi9jZFxQ1I1Mx
+         PxOPR8FfmE9b0HL8Lhwbz3S8AFByXD1qwKYzcjagF71jSDe75h9XS5PrhbLJSxKALnJ9
+         Vk4pDgEZYkjod2u3bbBegUL1rSyhYwfNTZkwDJ4kRgUaNYHbjEVB26PMZrsyqDI/s0KF
+         wWBA==
+X-Gm-Message-State: AOAM530YW42tKW8ZQLJE9ZHyHh03oNW9DwBPr7T2hyLaS3aapA8YuwV0
+	S/u7vjf03rcqyraXYby3CuMet8oEj2dTHDVoV2A=
+X-Google-Smtp-Source: ABdhPJy5OUSiaHgfwnXn1lMMS3KRNJSE4cRzh/YtyBl5ciDQ6CR966UGN6BeaDsca5y8iZ0R2T8jaVY9c9fKLrLwVRM=
+X-Received: by 2002:a05:6a00:1a0e:b0:50c:f9b5:6c74 with SMTP id
+ g14-20020a056a001a0e00b0050cf9b56c74mr21452984pfv.69.1651676954136; Wed, 04
+ May 2022 08:09:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: apropos
- https://github.com/multipath-tcp/mptcp_net-next/issues/265
-Content-Language: en-US
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <3e23ea866374467e2c9aeec60049716b42d6634e.camel@redhat.com>
- <c1513b33-add8-3e16-d14d-0b1886061040@internet.ru>
- <e69d4d2bead08317ad3af55ffe415b8f94877948.camel@redhat.com>
-From: Maxim Galaganov <max@internet.ru>
-In-Reply-To: <e69d4d2bead08317ad3af55ffe415b8f94877948.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-4EC0790: 10
-X-7564579A: 78E4E2B564C1792B
-X-77F55803: 4F1203BC0FB41BD963EADE01D1044141A17E2647C4C01652230B94E9C6FB5E4B182A05F538085040A829738D45928EF9D1C0F775941377B5769C952AA8F1F6FB7294D0213CF858E4
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7F65C230EDDCD559EEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006375AC38C7EC4509C8B8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8E67709A81CE9927A0392C2A6624DE81A6F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE749E2213E709ACCBA9FA2833FD35BB23D9E625A9149C048EE9ECD01F8117BC8BEA471835C12D1D9774AD6D5ED66289B52BA9C0B312567BB23117882F44604297287769387670735209ECD01F8117BC8BEA471835C12D1D977C4224003CC836476EB9C4185024447017B076A6E789B0E975F5C1EE8F4F765FC25A138FBFE7C73B83AA81AA40904B5D9CF19DD082D7633A078D18283394535A93AA81AA40904B5D98AA50765F790063734E399CB81F16120D81D268191BDAD3D698AB9A7B718F8C4D1B931868CE1C5781A620F70A64A45A98AA50765F79006372E808ACE2090B5E1725E5C173C3A84C3C5EA940A35A165FF2DBA43225CD8A89FD2A95C73FD1EFF4557739F23D657EF2BB5C8C57E37DE458BEDA766A37F9254B7
-X-8FC586DF: 6EFBBC1D9D64D975
-X-C1DE0DAB: 0D63561A33F958A5FD4D749FBE48766BBB179779ADF7F86675352E5898750370D59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
-X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D344B4608D01B1CB59AD81D11765897BCC73A3C0056DC8F0659DD888163936A4B04CA9EF8F572E94A391D7E09C32AA3244CDFB9FA0333D5ADBC2D41967D71842408CE0B41342B755BCD927AC6DF5659F194
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojD/QvxFEDWC+EcxTZ7tOq2Q==
-X-Mailru-Sender: 6B47EA55652F5E70849B49CCF28A6C3B55F199FE9193BB9DAFE893388B3B80191CB875DE031ABFA1AA92DCB28147B367B60569B44082A3A3CC338593878DF048773EBFF2F43C11D6EAB4BC95F72C04283CDA0F3B3F5B9367
-X-Mras: Ok
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4FA133F958ACA88631377DC799BD9E18194A07D2F15D10F8A68F3CF0E9FE49B69B8EA15FF6BF31FE288585AC411E083015681031751BC332F1FC2B4846C0CF3CB
-X-7FA49CB5: 0D63561A33F958A5CF6ACFE283B3C8DFFE395FB2D06F7A35D73F0FCBE86E51D1CACD7DF95DA8FC8BD5E8D9A59859A8B6DA33821E755670D8CC7F00164DA146DAFE8445B8C89999728AA50765F7900637D5802E9A766D685B389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8BFD98ABA943BD70BF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C9E541A154B51D14BBA3038C0950A5D36C8A9BA7A39EFB766EC990983EF5C032935872C767BF85DA227C277FBC8AE2E8B03CB9B40C9D26FA975ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
-X-C1DE0DAB: 0D63561A33F958A5CF6ACFE283B3C8DFFE395FB2D06F7A35FC4263D81ED7A340D59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojD/QvxFEDWC9SG9Sp2APdJw==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+References: <6052111-39d7-1037-d711-59a3929db477@linux.intel.com>
+ <8c369784-1387-887e-6aa-60d631897690@linux.intel.com> <CA+WQbwuGakz4Ytj2zr6OAQu++p1-QiS5F+BsCFTHfetyT8T6OA@mail.gmail.com>
+ <f27a5f8af0ff5217c1255a1ecadcd28647fd5989.camel@redhat.com>
+In-Reply-To: <f27a5f8af0ff5217c1255a1ecadcd28647fd5989.camel@redhat.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Wed, 4 May 2022 23:09:05 +0800
+Message-ID: <CA+WQbwvNt-0FWAGT44fx6MCCBVi4=zB14rGugiP80a375ZcecQ@mail.gmail.com>
+Subject: Re: [Weekly meetings] MoM - 28th of April 2022 (MP_FAIL followup)
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang.tang@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04.05.2022 12:52, Paolo Abeni wrote:
-> 
-> Could you please additionally test the following patch? Kernel for both
-> arches must be rebuilt.
-> 
-> This should cause old x86 build with csum enabled to fallback to TCP
-> while interoperating with new ones, which is ugly and bad, but - given
-> that csum is disable by default - possibly still acceptable?!?
+Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2022=E5=B9=B45=E6=9C=884=E6=97=A5=
+=E5=91=A8=E4=B8=89 22:05=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, 2022-05-04 at 10:44 +0800, Geliang Tang wrote:
+> > Mat Martineau <mathew.j.martineau@linux.intel.com> =E4=BA=8E2022=E5=B9=
+=B45=E6=9C=884=E6=97=A5=E5=91=A8=E4=B8=89 04:41=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > >
+> > >
+> > > On Thu, 28 Apr 2022, Mat Martineau wrote:
+> > >
+> > > >    - Features for net-next (next):
+> > > >
+> > > >        - [8053fb8d49ed] selftests: mptcp: add MP_FAIL reset testcas=
+e
+> > > > (Geliang Tang)
+> > > >          - Two pending issues: open issue regarding multiple MP_FAI=
+L in self
+> > > > test, and dropping of bad data.
+> > > >          - Prioritize MP_FAIL fixes
+> > > >          - Follow up on ML to make sure Geliang is not blocked [Mat=
+]
+> > > >
+> >
+> > With Paolo's commit "net/sched: act_pedit: really ensure the skb is
+> > writable", all pending issues about MP_FAIL have been solved.
+> >
+> > >
+> > > Geliang -
+> > >
+> > > Were the two issues to resolve before upstreaming "selftests: mptcp: =
+add
+> > > MP_FAIL reset testcase" these:
+> > >
+> > > 1. https://github.com/multipath-tcp/mptcp_net-next/issues/265
+> > >
+> > > 2. Waiting for feedback on how to drop data on checksum failure.
+> > >
+> > >
+> > > For #1, Paolo has been making a lot of progress there. Since the bug =
+is
+> > > tracked, it will be clear when it is closed and no longer blocks
+> > > upstreaming
+> > >
+> >
+> > Now all these '2 MP_FAIL[s]' issues has been fixed:
+> >
+> > 095 MP_FAIL MP_RST                       syn[ ok ] - synack[ ok ] - ack=
+[ ok ]
+> >                                          sum[ ok ] - csum  [ ok ]
+> >                                          ftx[fail] got 2 MP_FAIL[s] TX
+> > expected 1
+> >  - failrx[fail] got 2 MP_FAIL[s] RX expected 1
+> >                                          rtx[fail] got 2 MP_RST[s] TX e=
+xpected 1
+> >  - rstrx [fail] got 2 MP_RST[s] RX expected 1
+> >                                          itx[ ok ] - infirx[ ok ]
+> >
+> > No '2 MP_FAIL[s]' issues in my test anymore.
+> >
+> >
+> > But I still got another type of failures (0 MP_FAIL[s]) in my test:
+> >
+> > 002 MP_FAIL MP_RST: 5 corrupted pkts     syn[ ok ] - synack[ ok ] - ack=
+[ ok ]
+> >                                          sum[ ok ] - csum  [ ok ]
+> >                                          ftx[ ok ] - failrx[fail] got
+> > 0 MP_FAIL[s] RX expected 1
+> >                                          rtx[ ok ] - rstrx [fail] got
+> > 0 MP_RST[s] RX expected 1
+> >                                          itx[ ok ] - infirx[ ok ]
+> >
+> > It seems MP_FAIL is lost in some cases. MP_FAIL is sent, but not receiv=
+ed.
+> >
+> > I don't know whether Paolo is also looking at this 0 MP_FAIL[s] issue,
+> > or whether it is necessary to open a new issue on Githut to track this
+> > issue.
+>
+> [browsers!] I'm not working on it right now. I can have a look at the
+> end of the week or the next one, if the issue is still pending.
 
+Hi Paolo, with your new commit, selftests: mptcp: fix MP_FAIL
+test-case, v2,  I didn't find this issue again in my test.
 
-The results for me are as follows:
-
-old x86_64 (5.17.5) + old mips (5.15.35) => reset
-new x86_64 (5.18-rc5+patch) vs old mips (5.15.35) => works
-new x86_64 (5.18-rc5+patch) vs new mips (5.15.35+patch) => works
-old x86_64 (5.17.2) + new mips (5.15.35+patch) => reset
-old x86_64 (5.17.2) + new x86_64 (5.18-rc5+patch) => reset
-new x86_64 (5.18-rc5+patch) talking to itself => works
-
-I edited the patch so that it applies to my kernels, and this might be 
-the reason I don't see fallback but see reset instead -- I don't have 
-"mptcp: TCP fallback for established connections" patches in my tree as 
-they are only in net-next yet. Or I may be doing something stupid.
-
-Is there a way for an old box without infinite mapping support to 
-fallback an established connection in case of csum failure?
+>
+> Meanwhile, I suggest to track it with an individual/specific gitlab
+> issue - to collect all the relevant info in a single place.
+>
+> Cheers,
+>
+> Paolo
+>
