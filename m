@@ -1,85 +1,142 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-74.mimecast.com (us-smtp-delivery-74.mimecast.com [170.10.133.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC3B2568
-	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 15:17:39 +0000 (UTC)
-Received: by mail-io1-f42.google.com with SMTP id z18so5072208iob.5
-        for <mptcp@lists.linux.dev>; Thu, 05 May 2022 08:17:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=Rc/gvr8TKlNL2EhgwM7KUfgRGbcr8pIGz0LLwUXKWqQ=;
-        b=jj6FWKGmAEHJMha7/BKnm0iFykNRI4gQmnz3giCRJnEHIZCBJRL0XTv7brnSVWsbt9
-         oUC18eUbkX89idqOB/JfbcGAaNmC063eq7WRZuJ1buiBj0YkuI19dRZdJMhLZbZHHZIK
-         2nJ3q511dflZplhA0ps6v/jsXIBZtPbKGLY8YrJFZXBFe/rT2NdBNvLpaHTc1i5+Nc4n
-         SsgOpsCVTXtaYeHNp6ZHhkAG7X+86z3XKz49cmH01D7DU1ZOwZZyJVK8QjC3NT6WA2Ad
-         CTQmMbcRCXO226Vwqf4TCmWKmMygQv6IkWTyiQVymJYiznPvOI4esxyXgs4+Ku88NCNW
-         ZyqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=Rc/gvr8TKlNL2EhgwM7KUfgRGbcr8pIGz0LLwUXKWqQ=;
-        b=fc86oN/BLHUZgG+yIjI1IQ07A5D1TsCw8OGONWCR3VtAQ6P2oTu6J3PZQ57gyiGZUG
-         yF8XuEJL6BB1/RIKNR6mhHj9LaGQ1KlLqFWPWHQRqs78F5GYd5L7nV3KgG9DKhWLNdOr
-         20esAeks/qYpK8Z275GUDEgy9ihzpff9JNS2ohYh0cPuwj962VPj85kGQE5BC5zf4spW
-         s2FMSV1sh/5CrHc5/rTPmQifCDw3VONRFCaR5VrLF/5WkyXqYOM9Vl/CApWxGg5nPsBf
-         94A0FzhsGX/TzrGGvSODPD6o4IsNmnFbrgH9TEuA3+/wefGUIkn1evNIXemIi0feV78a
-         jjpg==
-X-Gm-Message-State: AOAM531v6UpNtXROyey8UDpIkePgjBwdtDbif0z5k1WWyxxMAOXyMU5C
-	GYMOpilHz9hypKOZs27RXw==
-X-Google-Smtp-Source: ABdhPJxRG6Ssjx7AcFeuFB4YJvWrbTDg6SvwVSOApreCOkXedfKWKIFhJ/QerClaD0pYwa3Oit3H3Q==
-X-Received: by 2002:a02:234a:0:b0:32a:f07c:e8 with SMTP id u71-20020a02234a000000b0032af07c00e8mr11579611jau.87.1651763858561;
-        Thu, 05 May 2022 08:17:38 -0700 (PDT)
-Received: from [127.0.0.1] ([40.77.12.125])
-        by smtp.gmail.com with ESMTPSA id a10-20020a92444a000000b002cde6e35304sm473669ilm.78.2022.05.05.08.17.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 08:17:38 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1a8201582e7fd63db7b5c9c4077af1ab1953c57e.1651763323.git.pabeni@redhat.com>
-References:
- <1a8201582e7fd63db7b5c9c4077af1ab1953c57e.1651763323.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix checksum byte order: Build Failure
-Message-ID: <f99a64f5-7aa9-ef3f-02ae-4b69de2c5a3c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 May 2022 15:17:37 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CDB2568
+	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 15:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1651763966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NjzztI/g3DGpwECMhfn49droPq5TshiT2QY7OqVjf5E=;
+	b=UrRCi535VqdRuQ3DLV5Z7+6wlc1ldNxDMyYMbDsP6lSWR8plb1sCioVuS4v4wd2kMu1GS/
+	favUunOftsG1Dgvyl3iPBI8lYHumiyAQORpjFHgCsZGAlbyeUpavo2RAVXyhpJMcUUJHf3
+	rM7LlAuxjurUw9lsfwW+Jc9KKronthY=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-404-W3OO5NmUN0OoWdehGEHO7Q-1; Thu, 05 May 2022 11:19:25 -0400
+X-MC-Unique: W3OO5NmUN0OoWdehGEHO7Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D7789299E755
+	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 15:19:24 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.241])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6B829C15D7D
+	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 15:19:24 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH net] From 4223a13095ac07a36ecaf0758734e031508529f9 Mon Sep 17 00:00:00 2001 Message-Id: <4223a13095ac07a36ecaf0758734e031508529f9.1651760706.git.pabeni@redhat.com> From: Paolo Abeni <pabeni@redhat.com> Date: Tue, 3 May 2022 05:52:04 +0000 Subject: [PATCH net] net/sched: act_pedit: really ensure the skb is writable
+Date: Thu,  5 May 2022 17:18:47 +0200
+Message-Id: <f5b98636245e625134dcf8daed5b67389bd8439a.1651763903.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+Currently pedit tries to ensure that the accessed skb offset
+is writeble via skb_unclone(). The action potentially allows
+touching any skb bytes, so it may end-up modifying shared data.
 
-Thank you for your modifications, that's great!
+The above causes some sporadic MPTCP self-test failures.
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Address the issue keeping track of a rough over-estimate highest skb
+offset accessed by the action and ensure such offset is really
+writable.
 
-You can find more details there:
+Note that this may cause performance regressions in some scenario,
+but hopefully pedit is not critical path.
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/1a8201582e7fd63db7b5c9c4077af1ab1953c57e.1651763323=
-.git.pabeni@redhat.com/
-  https://github.com/multipath-tcp/mptcp_net-next/a=
-ctions/runs/2276563461
+v1 -> v2:
+ - cleanup hint update (Jakub)
+ - avoid raices while accessing the hint (Jakub)
+ - re-organize the comments for clarity
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e13b663008=
-d0
+Fixes: db2c24175d14 ("act_pedit: access skb->data safely")
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Tested-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ include/net/tc_act/tc_pedit.h |  1 +
+ net/sched/act_pedit.c         | 25 +++++++++++++++++++++----
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+diff --git a/include/net/tc_act/tc_pedit.h b/include/net/tc_act/tc_pedit.h
+index 748cf87a4d7e..3e02709a1df6 100644
+--- a/include/net/tc_act/tc_pedit.h
++++ b/include/net/tc_act/tc_pedit.h
+@@ -14,6 +14,7 @@ struct tcf_pedit {
+ 	struct tc_action	common;
+ 	unsigned char		tcfp_nkeys;
+ 	unsigned char		tcfp_flags;
++	u32			tcfp_off_max_hint;
+ 	struct tc_pedit_key	*tcfp_keys;
+ 	struct tcf_pedit_key_ex	*tcfp_keys_ex;
+ };
+diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+index e01ef7f109f4..0fc07532e6f6 100644
+--- a/net/sched/act_pedit.c
++++ b/net/sched/act_pedit.c
+@@ -149,7 +149,7 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+ 	struct nlattr *pattr;
+ 	struct tcf_pedit *p;
+ 	int ret = 0, err;
+-	int ksize;
++	int i, ksize;
+ 	u32 index;
+ 
+ 	if (!nla) {
+@@ -228,6 +228,18 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+ 		p->tcfp_nkeys = parm->nkeys;
+ 	}
+ 	memcpy(p->tcfp_keys, parm->keys, ksize);
++	p->tcfp_off_max_hint = 0;
++	for (i = 0; i < p->tcfp_nkeys; ++i) {
++		u32 cur = p->tcfp_keys[i].off;
++
++		/* The AT option can read a single byte, we can bound the actual
++		 * value with uchar max.
++		 */
++		cur += (0xff & p->tcfp_keys[i].offmask) >> p->tcfp_keys[i].shift;
++
++		/* Each key touches 4 bytes starting from the computed offset */
++		p->tcfp_off_max_hint = max(p->tcfp_off_max_hint, cur + 4);
++	}
+ 
+ 	p->tcfp_flags = parm->flags;
+ 	goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
+@@ -308,13 +320,18 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
+ 			 struct tcf_result *res)
+ {
+ 	struct tcf_pedit *p = to_pedit(a);
++	u32 max_offset;
+ 	int i;
+ 
+-	if (skb_unclone(skb, GFP_ATOMIC))
+-		return p->tcf_action;
+-
+ 	spin_lock(&p->tcf_lock);
+ 
++	max_offset = (skb_transport_header_was_set(skb) ?
++		      skb_transport_offset(skb) :
++		      skb_network_offset(skb)) +
++		     p->tcfp_off_max_hint;
++	if (skb_ensure_writable(skb, min(skb->len, max_offset)))
++		return p->tcf_action;
++
+ 	tcf_lastuse_update(&p->tcf_tm);
+ 
+ 	if (p->tcfp_nkeys > 0) {
+-- 
+2.35.1
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
