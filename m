@@ -1,114 +1,152 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208FD29A9
-	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 18:38:15 +0000 (UTC)
-Received: by mail-pj1-f49.google.com with SMTP id t11-20020a17090ad50b00b001d95bf21996so8776745pju.2
-        for <mptcp@lists.linux.dev>; Thu, 05 May 2022 11:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=qmf85bBrLnZofsHPy/Ei9Sz5htK+HgxrbGeSUPPQywM=;
-        b=qAconjCT9bYXRo781Z2TZ2dEfXbNFOFnWnaLPLW6MIw/u3onnOUfvsztS17qn4Wmdd
-         9EsyqVQtwAFofd1bbWJBpPizeBaUhNdEYYHZGjSfsDFu1+nlv8zN7/Rnx5Wb4xBiNQHa
-         VS12/i4+fXRuMSlc142PZa1iatut6c6K7C6DppRyjfHGmMOMlmRiJeehAwZi77XNiHKm
-         pv5gbazDQ3YpJ2bomLiQ4IXu7fgH229zGnCpgo2PEsbQp9nbdodT3UBOtaj4Wc/97t5y
-         5BQnFxC0Hacvnf0Yzc6zAkULa/hbkbSwP9ppwsTALaSWJAVSEygbS6ImI22O5FP84RpG
-         5bnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=qmf85bBrLnZofsHPy/Ei9Sz5htK+HgxrbGeSUPPQywM=;
-        b=KzJA9wfTGewDgKM75t6WBt1vnTG55IXYe7s9paVKDx54cYqOKWdi/UKgNg7BzQdOUX
-         4E8AteeM5KSww86Yx+WrzUBBPAtygeaq0rUUeQQInOlsIhg6Asa8Hs6VWiT3J7qfn9ol
-         x9aLAkiBDTdRLFhSBxaWd5iLMgg+aFTylO7i/ipiHQ0nb2M72DbUgHbLtLurC5H8k0vO
-         hDhb2daJLmptmCIMKVf0Aq+mK25Ly9m5aDv2kIPwcO/XpUTJZjl6stOc+BI/xd2DYn6E
-         FfjZU12nhRZNt24jFRvOso6OaUTRVaEBQwFLAlSEchktO24i0wPEPPtEx1FpvDQEEFLj
-         ErWg==
-X-Gm-Message-State: AOAM533uH8Oy7URs+AJsLa4mn+o90k1x59vDUCZa5l/vQaWbvNfoSxzL
-	cmTpDJmriahq8WebJ7abvg==
-X-Google-Smtp-Source: ABdhPJyBfUkWl5OZwNCJRsH6jlLtum3wH4kEA760KoldZjSRiMKvtS/JJCIr3aS4ibK0r9DY04DVwA==
-X-Received: by 2002:a17:90a:4a8a:b0:1d5:a3df:ab5 with SMTP id f10-20020a17090a4a8a00b001d5a3df0ab5mr7787519pjh.64.1651775895508;
-        Thu, 05 May 2022 11:38:15 -0700 (PDT)
-Received: from [127.0.0.1] ([20.66.123.192])
-        by smtp.gmail.com with ESMTPSA id z7-20020a170903018700b0015e8d4eb2e9sm1837614plg.307.2022.05.05.11.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 11:38:15 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C825631
+	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 20:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651782635; x=1683318635;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3s0uEbRnI0IaVl5zqG62Yxb0TbcESa0WiRDjjxTMMi8=;
+  b=ECeZ8wAfkXX0cY3x2TXiz0dG52KHvVm3dAcxGwi1KyNi7cQ7GgeP6YxZ
+   /xhdiUgkIinSSufqVMhEBn0Kwu1kbUpHcql2CLu3cu2SHbiAcLAuhOAGV
+   abXh1VLsqDbwV2OU57G7DEFNes25/U1t53IwzpDvtO4FJ3Wal7YKN7beq
+   TZu3nN6WsSgVy8L9S3lRaAjw8MP/AB1Mfl+WNzzuuH+UPzba3q1pBVwW7
+   cQPO9q0vEbZUOFeDuMTsgzBBUOWqD+6+aNdKXmi1YiOPa5u9nGWCy04Ui
+   iCixS22z0NGLAhDuxeIDZdBn/m3E0wZaP1uKrlM/TWkMjtKVqam2cIqxX
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="268389445"
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="268389445"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 13:30:34 -0700
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="537521945"
+Received: from barreola-mobl1.amr.corp.intel.com ([10.212.167.175])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 13:30:34 -0700
+Date: Thu, 5 May 2022 13:30:13 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <0343ae0f3f81535f20d387147ce6b8e4158cc1fc.1651770128.git.pabeni@redhat.com>
-References:
- <0343ae0f3f81535f20d387147ce6b8e4158cc1fc.1651770128.git.pabeni@redhat.com>
-Subject: =?UTF-8?Q?Re=3A_Revert_=22mptcp=3A_add_data_lock_f?=
- =?UTF-8?Q?or_sk_timers=22=3A_Tests_Results?=
-Message-ID: <c0da703b-624f-9d24-c043-46da54965954@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 May 2022 18:38:14 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH net] net/sched: act_pedit: really ensure the skb is
+ writable
+In-Reply-To: <dfcfe03e01c364599e92715828b24713d955e7c8.1651764848.git.pabeni@redhat.com>
+Message-ID: <f81c6f47-3fe-1e9f-c260-31c68d32547c@linux.intel.com>
+References: <dfcfe03e01c364599e92715828b24713d955e7c8.1651764848.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Thu, 5 May 2022, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> Currently pedit tries to ensure that the accessed skb offset
+> is writeble via skb_unclone(). The action potentially allows
+> touching any skb bytes, so it may end-up modifying shared data.
+>
+> The above causes some sporadic MPTCP self-test failures.
+>
+> Address the issue keeping track of a rough over-estimate highest skb
+> offset accessed by the action and ensure such offset is really
+> writable.
+>
+> Note that this may cause performance regressions in some scenario,
+> but hopefully pedit is not critical path.
+>
+> v1 -> v2:
+> - cleanup hint update (Jakub)
+> - avoid raices while accessing the hint (Jakub)
+> - re-organize the comments for clarity
+>
+> Fixes: db2c24175d14 ("act_pedit: access skb->data safely")
+> Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Tested-by: Geliang Tang <geliang.tang@suse.com>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> include/net/tc_act/tc_pedit.h |  1 +
+> net/sched/act_pedit.c         | 25 +++++++++++++++++++++----
+> 2 files changed, 22 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/net/tc_act/tc_pedit.h b/include/net/tc_act/tc_pedit.h
+> index 748cf87a4d7e..3e02709a1df6 100644
+> --- a/include/net/tc_act/tc_pedit.h
+> +++ b/include/net/tc_act/tc_pedit.h
+> @@ -14,6 +14,7 @@ struct tcf_pedit {
+> 	struct tc_action	common;
+> 	unsigned char		tcfp_nkeys;
+> 	unsigned char		tcfp_flags;
+> +	u32			tcfp_off_max_hint;
+> 	struct tc_pedit_key	*tcfp_keys;
+> 	struct tcf_pedit_key_ex	*tcfp_keys_ex;
+> };
+> diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+> index e01ef7f109f4..0fc07532e6f6 100644
+> --- a/net/sched/act_pedit.c
+> +++ b/net/sched/act_pedit.c
+> @@ -149,7 +149,7 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+> 	struct nlattr *pattr;
+> 	struct tcf_pedit *p;
+> 	int ret = 0, err;
+> -	int ksize;
+> +	int i, ksize;
+> 	u32 index;
+>
+> 	if (!nla) {
+> @@ -228,6 +228,18 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+> 		p->tcfp_nkeys = parm->nkeys;
+> 	}
+> 	memcpy(p->tcfp_keys, parm->keys, ksize);
+> +	p->tcfp_off_max_hint = 0;
+> +	for (i = 0; i < p->tcfp_nkeys; ++i) {
+> +		u32 cur = p->tcfp_keys[i].off;
+> +
+> +		/* The AT option can read a single byte, we can bound the actual
+> +		 * value with uchar max.
+> +		 */
+> +		cur += (0xff & p->tcfp_keys[i].offmask) >> p->tcfp_keys[i].shift;
+> +
+> +		/* Each key touches 4 bytes starting from the computed offset */
+> +		p->tcfp_off_max_hint = max(p->tcfp_off_max_hint, cur + 4);
+> +	}
+>
+> 	p->tcfp_flags = parm->flags;
+> 	goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
+> @@ -308,13 +320,18 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
+> 			 struct tcf_result *res)
+> {
+> 	struct tcf_pedit *p = to_pedit(a);
+> +	u32 max_offset;
+> 	int i;
+>
+> -	if (skb_unclone(skb, GFP_ATOMIC))
+> -		return p->tcf_action;
+> -
+> 	spin_lock(&p->tcf_lock);
+>
+> +	max_offset = (skb_transport_header_was_set(skb) ?
+> +		      skb_transport_offset(skb) :
+> +		      skb_network_offset(skb)) +
+> +		     p->tcfp_off_max_hint;
+> +	if (skb_ensure_writable(skb, min(skb->len, max_offset)))
+> +		return p->tcf_action;
 
-Our CI did some validations and here is its report:
+Now that this hunk of code happens after the spinlock is acquired, that 
+lock needs to be released before returning.
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5032872854683648
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5032872854683648/summary/summary.txt
+> +
+> 	tcf_lastuse_update(&p->tcf_tm);
+>
+> 	if (p->tcfp_nkeys > 0) {
+> -- 
+> 2.35.1
+>
+>
+>
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): selftest_diag =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6158772761526272
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6158772761526272/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/641d7584c1de
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+--
+Mat Martineau
+Intel
