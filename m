@@ -1,112 +1,129 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-74.mimecast.com (us-smtp-delivery-74.mimecast.com [170.10.129.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE82397
-	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 16:33:52 +0000 (UTC)
-Received: by mail-qk1-f170.google.com with SMTP id y6so3540119qke.10
-        for <mptcp@lists.linux.dev>; Thu, 05 May 2022 09:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=7ukhYz0pHc1Dk4Y2cplfGySSywiPK21WLLea0DcqGVw=;
-        b=ZFuyG8vCBVcdVCrLtj30VPcmnjzZ+F8GwY5pCLgvqwjqklPgguz3G40BHIezITCHeL
-         5x4wryUGmFE1MTvYoDf+AmBY5YmmKMrzI9zFwVlW61ABTuijihpcJqdz3xgVowIVVnX0
-         ORXigZ1EiaAtW/rCKdgLpp7DfQ5IAGrGHHjkwXZhtce7v/b2/wrVYi79P9JM1f6MJbaa
-         4szIqaFxMF8x7JhriCxGryfkCad6HwaBRxzoX59KSXCKl9WxAUusoNg0rkcoVF/Q9HHu
-         s5hKlJj+GXuPBbhA7RPOdpskgqgIqf+NpLmQftMNgVFxqXuU++siqaSx6V3LxJpy27cc
-         xd2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=7ukhYz0pHc1Dk4Y2cplfGySSywiPK21WLLea0DcqGVw=;
-        b=YNIA3tVdE6V9urgtVrMLozjdigTJgut4mr/pdukBpMvqQOCb5ok30FG60IkotZ29+n
-         yXwhdYwGVr5U47niIcLPlBrEklxTu7Ge/wP5q1VqY4pgkORQtKjuk5mK5ozBk3/Buo+h
-         xOx5lQiAjytH97CWrFLH9n6F5kk9yjl8uptou4nCPVwUZtc87jOz0XzGbGDxH/mRUmwE
-         PZMr1/7ZvCHqTUQGa+De/P6gQ3D5R7bzcdl+h/Yx0xEXW4EIgL5vCYj7kQhXKG0ZpQd8
-         IWqDgN35FthO0u/hxWV+trBgqUmtD8awn6DNVNQ9SEmAvfMaKgNBprk+zMS/sj9y3oGH
-         lOsg==
-X-Gm-Message-State: AOAM533E9AowqWU3zGGhdgDFhb64gkN9EypVaKiF7u1ucmI3O+WRrEUY
-	zKU6TAU8q9QF1iZKs89yjg==
-X-Google-Smtp-Source: ABdhPJxh280RzgmpYc2hdlfTcZST5S/pq/+BjpyuIxnr4kt7PtjJV1OVHI6bRd5MXPJrxWuU/HZVxg==
-X-Received: by 2002:a37:4454:0:b0:69f:c339:e2dc with SMTP id r81-20020a374454000000b0069fc339e2dcmr18023936qka.771.1651768431515;
-        Thu, 05 May 2022 09:33:51 -0700 (PDT)
-Received: from [127.0.0.1] ([20.110.181.137])
-        by smtp.gmail.com with ESMTPSA id i16-20020a05620a075000b0069fc13ce1e7sm998336qki.24.2022.05.05.09.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 09:33:51 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DF8259A
+	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 17:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1651770761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=d+uxHQeZI4zp5AocO2ATY6179eGzpGUR4gGziSNhM1c=;
+	b=AnfiCuDLTACCUuH/Jf4LJT5NL4v9uTZuwXkRIyziCrc0FNtzrCKCWhrPPkYMiOlGi7ZcvQ
+	9iXQDNGyHMxAkyRYXrc43sS1f6fE69lc+kG1Xr80Q1u65/caOeQsATEv5uBtV1SKAnwytO
+	uFgsnZJExjG26IXZRTfhcJtIkbASNV4=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-221-fYUCkER5MBOuOTKZAPVB9Q-1; Thu, 05 May 2022 13:12:37 -0400
+X-MC-Unique: fYUCkER5MBOuOTKZAPVB9Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D5C98299E758;
+	Thu,  5 May 2022 17:12:36 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.241])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3E9B4400E89B;
+	Thu,  5 May 2022 17:12:36 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1a8201582e7fd63db7b5c9c4077af1ab1953c57e.1651763323.git.pabeni@redhat.com>
-References:
- <1a8201582e7fd63db7b5c9c4077af1ab1953c57e.1651763323.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix checksum byte order: Tests Results
-Message-ID: <f58aae63-a7af-9aa3-a3c4-f441baa9646c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 May 2022 16:33:50 +0000
+Subject: [PATCH mptcp-next] Revert "mptcp: add data lock for sk timers"
+Date: Thu,  5 May 2022 19:12:26 +0200
+Message-Id: <0343ae0f3f81535f20d387147ce6b8e4158cc1fc.1651770128.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+This reverts commit 4293248c6704b854bf816aa1967e433402bee11c.
 
-Thank you for your modifications, that's great!
+Additional locks are not needed, all the touched sections
+are already under mptcp socket lock protection.
 
-Our CI did some validations and here is its report:
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5796430060191744
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5796430060191744/su=
-mmary/summary.txt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 5243c58789a4..ff567e9d0b1f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1605,10 +1605,8 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 
+ out:
+ 	/* ensure the rtx timer is running */
+-	mptcp_data_lock(sk);
+ 	if (!mptcp_timer_pending(sk))
+ 		mptcp_reset_timer(sk);
+-	mptcp_data_unlock(sk);
+ 	if (copied)
+ 		__mptcp_check_send_data_fin(sk);
+ }
+@@ -2516,10 +2514,8 @@ static void __mptcp_retrans(struct sock *sk)
+ reset_timer:
+ 	mptcp_check_and_set_pending(sk);
+ 
+-	mptcp_data_lock(sk);
+ 	if (!mptcp_timer_pending(sk))
+ 		mptcp_reset_timer(sk);
+-	mptcp_data_unlock(sk);
+ }
+ 
+ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
+@@ -2707,10 +2703,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
+ 		} else {
+ 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
+ 			tcp_send_ack(ssk);
+-			mptcp_data_lock(sk);
+ 			if (!mptcp_timer_pending(sk))
+ 				mptcp_reset_timer(sk);
+-			mptcp_data_unlock(sk);
+ 		}
+ 		break;
+ 	}
+@@ -2811,10 +2805,8 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 	/* join list will be eventually flushed (with rst) at sock lock release time*/
+ 	list_splice_init(&msk->conn_list, &conn_list);
+ 
+-	mptcp_data_lock(sk);
+ 	mptcp_stop_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+-	mptcp_data_unlock(sk);
+ 	msk->pm.status = 0;
+ 	mptcp_release_sched(msk);
+ 
+@@ -2877,9 +2869,7 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 		__mptcp_destroy_sock(sk);
+ 		do_cancel_work = true;
+ 	} else {
+-		mptcp_data_lock(sk);
+ 		sk_reset_timer(sk, &sk->sk_timer, jiffies + TCP_TIMEWAIT_LEN);
+-		mptcp_data_unlock(sk);
+ 	}
+ 	release_sock(sk);
+ 	if (do_cancel_work)
+@@ -2924,10 +2914,8 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
+ 	}
+ 
+-	mptcp_data_lock(sk);
+ 	mptcp_stop_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+-	mptcp_data_unlock(sk);
+ 
+ 	if (mptcp_sk(sk)->token)
+ 		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
+-- 
+2.35.1
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s):=
- selftest_diag selftest_mptcp_join =F0=9F=94=B4:
-  - Task: =
-https://cirrus-ci.com/task/5233480106770432
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5233480106770432/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/e13b663008d0
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
