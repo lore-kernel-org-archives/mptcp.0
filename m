@@ -1,112 +1,138 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE4F7F
-	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 06:26:32 +0000 (UTC)
-Received: by mail-qv1-f43.google.com with SMTP id p3so895435qvi.7
-        for <mptcp@lists.linux.dev>; Wed, 04 May 2022 23:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=yN9tpUiEGm9kvTtVQOSi3Yjn8g84vLW7FmtiVjngfGU=;
-        b=Lb+FOBdVOgmy22Aewo2hpi6QKChSrNUWUp7jG8b4GgeE4lCPLAT5F+uSBR0W8xQLRM
-         m0nZuDz8fa5ihJAn48MSRhhqJ/7VQpOd/NLWEAIYfEIiYuFYS4+xjsrJ1g97iX92TfRj
-         Gn2zpqdIb9DMcdxhtbXqwGpfYNk7FqyNOryeDjzvT7ffBQjEmdnVO22kCYtRPB57uzhJ
-         aBnebHenVW1wj6/N71VUj9/q3D2ljkux1WmEf/ZXcXm6rRmsqugWWhioPeco95yhrHv6
-         7b6KeYOsiWudEhHFuScGnbcZ2P+sUE9+U/i7KA1sCdZhnHZ7dEmj/9OYx5d1heeIpj5n
-         A4Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=yN9tpUiEGm9kvTtVQOSi3Yjn8g84vLW7FmtiVjngfGU=;
-        b=1QiBjtfgYkrOQgAXO2Fj35KXh+iys/cx+NV1CyEV5IZATLOZKjzp3UexdLZYQdu7fL
-         bwQb3XpZ9+ieloH2CLD5LmpC5oARV+wwYcc1I/SZ2Xnw+gfitSATzGPuAQ+rQICBKxrx
-         WLRfErdPRcK6z/KkP/6hx2eSZwDCj+4yNY6J3iP5wNgDoZ8YBArwt+IaBxHIbC0Q0f6z
-         iclvshVtOoE6XZKPozjy/UkNI+gXEC6qugqhbMiRsL52NdDaXzBwEwXhrtm6vlPtA9OK
-         JyUjyVKAZpLjbd1ehq/eHhxQIO54wstbNuwsn8IB2LIVDXZ2+tJI4fVtvHVehj+JAt3H
-         7KyQ==
-X-Gm-Message-State: AOAM531FZ7AQMqhai2j+rz9QxKinp3sZ+eFMy8D9PnWm4mOiiwdaswUU
-	imN9RxmRJjglJosMpDjNGA==
-X-Google-Smtp-Source: ABdhPJwcvFVZLAde9wrRUWiBs2GrLM9/wsdwFjVgRZQCKEIns1iTzzTPgthd2mvZUqFMRFPNJV5KYg==
-X-Received: by 2002:ad4:5ca4:0:b0:45a:76f5:dd69 with SMTP id q4-20020ad45ca4000000b0045a76f5dd69mr20386643qvh.131.1651731991688;
-        Wed, 04 May 2022 23:26:31 -0700 (PDT)
-Received: from [127.0.0.1] ([20.242.82.243])
-        by smtp.gmail.com with ESMTPSA id l12-20020ac8148c000000b002f39b99f67dsm381314qtj.23.2022.05.04.23.26.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 May 2022 23:26:31 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <89c1a1cb213959a3a59fb7ddffab8b043ab5f3ca.1651724418.git.geliang.tang@suse.com>
-References:
- <89c1a1cb213959a3a59fb7ddffab8b043ab5f3ca.1651724418.git.geliang.tang@suse.com>
-Subject: Re: selftests: bpf: add bpf_rr test: Tests Results
-Message-ID: <f694e8b5-c80e-d3b3-f2da-c6131c326f46@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 May 2022 06:26:30 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15008625
+	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 09:59:06 +0000 (UTC)
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2459aFeB024134;
+	Thu, 5 May 2022 09:58:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=eY2YObbcFr4e3utydicajCplfb/dauutThJaiKhuaBI=;
+ b=YJAfb2Tx1B2BE1qq0eQzJh6g0XaIvjk/wKcIaqZMntb2j8S8dEKjP0pDTmYk7uc5shAe
+ x/3csDSUbmdfudFVxvoD+SVBgZ5xFQX52TcpSUm/0FWQck6KJG7QCg+imXgK8wGieVP+
+ KP7e0qE7B/U6Th+4tuq9o+5xUZshq0dX/oxphycjDk8quIp7ZwSNP27hPP2NXINS/bBs
+ /me6mxYaJdf2eUVxNkhcgVuWuxU4Fip1s1cb/W3gXKt4B7JgZlNt7nKj1FULAWwmrMTz
+ IvOLNZJ3OoQK70Pn9z7NoqIDNBhvCE6NBmKivdCJutRRFLqr5pGjpByfOCOtL5JyYmLb oQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fvc3j0bb7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 May 2022 09:58:44 +0000
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2459hPTQ021697;
+	Thu, 5 May 2022 09:58:44 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fvc3j0ban-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 May 2022 09:58:43 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+	by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2459wNvA028720;
+	Thu, 5 May 2022 09:58:41 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+	by ppma03fra.de.ibm.com with ESMTP id 3fscdk50qj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 May 2022 09:58:41 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2459wcHr47579582
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 5 May 2022 09:58:38 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2FBBB4C046;
+	Thu,  5 May 2022 09:58:38 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BA37C4C044;
+	Thu,  5 May 2022 09:58:36 +0000 (GMT)
+Received: from [9.145.10.86] (unknown [9.145.10.86])
+	by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+	Thu,  5 May 2022 09:58:36 +0000 (GMT)
+Message-ID: <99841fd9-da83-a482-b86d-c82d53d3ebbb@linux.ibm.com>
+Date: Thu, 5 May 2022 11:58:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-
-Hi Geliang,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6384460542246912
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6384460542246912/summary/summary.txt
-
-- KVM Validation: debug:
-  - Unstable: 3 failed test(s): =
-packetdrill_add_addr selftest_diag selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4977085658693632
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4977085658693632/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/5dd02ab25990
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.0
+Subject: Re: [PATCH net-next 1/2] net: switch to netif_napi_add_tx()
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net
+Cc: netdev@vger.kernel.org, pabeni@redhat.com, edumazet@google.com,
+        rafal@milecki.pl, f.fainelli@gmail.com, opendmb@gmail.com,
+        dmichail@fungible.com, hauke@hauke-m.de, tariqt@nvidia.com,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, shshaikh@marvell.com,
+        manishc@marvell.com, jiri@resnulli.us, hayashi.kunihiko@socionext.com,
+        peppe.cavallaro@st.com, alexandre.torgue@foss.st.com,
+        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
+        grygorii.strashko@ti.com, elder@kernel.org, wenjia@linux.ibm.com,
+        svens@linux.ibm.com, mathew.j.martineau@linux.intel.com,
+        matthieu.baerts@tessares.net, s-vadapalli@ti.com,
+        chi.minghao@zte.com.cn, linux-rdma@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mptcp@lists.linux.dev
+References: <20220504163725.550782-1-kuba@kernel.org>
+From: Alexandra Winter <wintera@linux.ibm.com>
+In-Reply-To: <20220504163725.550782-1-kuba@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FQKgPrf0AWcYtwf2epIDAiiAJ0Y93y-W
+X-Proofpoint-ORIG-GUID: iAZJdqaevE2kmwUaneOsutwQhM8oos7d
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-05_04,2022-05-05_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=855
+ clxscore=1011 lowpriorityscore=0 impostorscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205050063
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+On 04.05.22 18:37, Jakub Kicinski wrote:
+> Switch net callers to the new API not requiring
+> the NAPI_POLL_WEIGHT argument.
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+> CC: rafal@milecki.pl
+> CC: f.fainelli@gmail.com
+> CC: opendmb@gmail.com
+> CC: dmichail@fungible.com
+> CC: hauke@hauke-m.de
+> CC: tariqt@nvidia.com
+> CC: kys@microsoft.com
+> CC: haiyangz@microsoft.com
+> CC: sthemmin@microsoft.com
+> CC: wei.liu@kernel.org
+> CC: decui@microsoft.com
+> CC: shshaikh@marvell.com
+> CC: manishc@marvell.com
+> CC: jiri@resnulli.us
+> CC: hayashi.kunihiko@socionext.com
+> CC: peppe.cavallaro@st.com
+> CC: alexandre.torgue@foss.st.com
+> CC: joabreu@synopsys.com
+> CC: mcoquelin.stm32@gmail.com
+> CC: grygorii.strashko@ti.com
+> CC: elder@kernel.org
+> CC: wintera@linux.ibm.com
+> CC: wenjia@linux.ibm.com
+> CC: svens@linux.ibm.com
+> CC: mathew.j.martineau@linux.intel.com
+> CC: matthieu.baerts@tessares.net
+> CC: s-vadapalli@ti.com
+> CC: chi.minghao@zte.com.cn
+> CC: linux-rdma@vger.kernel.org
+> CC: linux-hyperv@vger.kernel.org
+> CC: mptcp@lists.linux.dev
+> ---
+...
+>  drivers/s390/net/qeth_core_main.c                  | 3 +--
+
+
+For drivers/s390/net/qeth_core_main.c :
+
+Acked-by: Alexandra Winter <wintera@linux.ibm.com>
