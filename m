@@ -1,106 +1,156 @@
 Received: from us-smtp-delivery-74.mimecast.com (us-smtp-delivery-74.mimecast.com [170.10.129.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49EE7F4
-	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 09:19:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CD97F4
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 09:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1651828746;
+	s=mimecast20190719; t=1651828886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fnPQyEeKbsHW1LZRu1jU8z7ntrJgUW9w1tgC5w+Ee54=;
-	b=N5wQxQVBAi+44PBzRstKHPBJ3tQivzxMd1816eIfVsXseaYeqd4sCbCGrvt6/Jqt5UjyKs
-	SCoACoqiuzYnuITxM+S+eoTJ1oNWtCm6/1tKyPqqMVzw7YiFffBhxG27KfKB3aLgKhEnnv
-	AXZvtXfJZeESXWXBUEBGFBCE5dkLvvc=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WWJwwH7Z7c6I4hQNbK34IQbG6et0V0n7VjO7O5IA+kg=;
+	b=CwxWWlj/xIsq2XKa2wuzNPCXPS7i6CJNrsnLEJOXAHcy8QkcN0MqukEd7RYT5ADNmVTQir
+	0dmwLI41+4VcbXPY+rrM9a+bEVueGVEFUTHIZKwTXsKSOyfkGGBDiQFpbXKRJrX1ueMwWF
+	tc0DY2mJGbbBhLhmLonLj5+bZM0bCRI=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-609-VwI2xfSdMGeyL7_ZW2Y9CA-1; Fri, 06 May 2022 05:19:05 -0400
-X-MC-Unique: VwI2xfSdMGeyL7_ZW2Y9CA-1
-Received: by mail-qv1-f69.google.com with SMTP id eo13-20020ad4594d000000b004466661ece9so5505635qvb.1
-        for <mptcp@lists.linux.dev>; Fri, 06 May 2022 02:19:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=fnPQyEeKbsHW1LZRu1jU8z7ntrJgUW9w1tgC5w+Ee54=;
-        b=5dyxTBKBhkiy1rcNPcNpsdNp18cCI1rQZKzyQaCAXts4oQjXqQz9QP8NI3Nlv+SQqt
-         cBrg6rrEQP6dMdk7wr2b+HV2Tn2FOZo2+AC9tXmgAvgEf7QPnebmlQtajghzmoxVr7T2
-         /kwoeeXaBH3K5q4pIbh8+UTELutWD9+ri5hfSDOrBYycqsSDRd+oFK5G1DcKu/po6ZyX
-         43kfEkpzJF6D3XSEN1q3or069s0/ko62sdTCXH4bI/huVY0f3r0uK/VWMm/8zOPYd0Bc
-         6Qt7YnfYHGKKu+xljVtWsbvOwf7NyIpXZ3H6pWeg2nS9gIUsAX4pDuUifM4FPbAeyr5Y
-         URFg==
-X-Gm-Message-State: AOAM533hAyxvs8jCZr6v33ABgFNBj8GNoIFP5vZVLK74vT+if72IZheV
-	p+vlqodMrNb9oNCI31zD/mLf1NzyejNuhN9CPJqc5hBweGdRPgSThLL0n451jacf49zbPmNfO/k
-	BHzKvwPJXNYm9DGU=
-X-Received: by 2002:a37:42d3:0:b0:69c:830d:6e51 with SMTP id p202-20020a3742d3000000b0069c830d6e51mr1639355qka.302.1651828744954;
-        Fri, 06 May 2022 02:19:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwT9sl+A+/gPrLqJIQm/b4hftX4hOWp/c+uKwOuKB60cNN+PG8ETHWSOnQlzT7oc0fN80zUpA==
-X-Received: by 2002:a37:42d3:0:b0:69c:830d:6e51 with SMTP id p202-20020a3742d3000000b0069c830d6e51mr1639343qka.302.1651828744679;
-        Fri, 06 May 2022 02:19:04 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-115-66.dyn.eolo.it. [146.241.115.66])
-        by smtp.gmail.com with ESMTPSA id e26-20020ac8671a000000b002f39b99f6c2sm2116040qtp.92.2022.05.06.02.19.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 May 2022 02:19:03 -0700 (PDT)
-Message-ID: <ec6a41422f706bc73075e97df27d437a7bde9c13.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] Revert "mptcp: add data lock for sk timers"
+ us-mta-609-WlylO9f0Nem_49ejmk0yNA-1; Fri, 06 May 2022 05:21:25 -0400
+X-MC-Unique: WlylO9f0Nem_49ejmk0yNA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E424338C5C46
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 09:21:24 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.195.157])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 72292428F11
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 09:21:24 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Fri, 06 May 2022 11:19:00 +0200
-In-Reply-To: <bdde3a40-1471-c8b9-65bd-f53ddebacdb4@linux.intel.com>
-References: <0343ae0f3f81535f20d387147ce6b8e4158cc1fc.1651770128.git.pabeni@redhat.com>
-	 <bdde3a40-1471-c8b9-65bd-f53ddebacdb4@linux.intel.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+To: mptcp@lists.linux.dev
+Subject: [PATCH net v3] net/sched: act_pedit: really ensure the skb is writable
+Date: Fri,  6 May 2022 11:21:17 +0200
+Message-Id: <7ec2ff1bd88c6d87e452afa58f1f6b6c756a2fb0.1651828857.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Thu, 2022-05-05 at 16:40 -0700, Mat Martineau wrote:
-> On Thu, 5 May 2022, Paolo Abeni wrote:
-> 
-> > This reverts commit 4293248c6704b854bf816aa1967e433402bee11c.
-> > 
-> > Additional locks are not needed, all the touched sections
-> > are already under mptcp socket lock protection.
-> > 
-> 
-> I agree that this needs to be reverted:
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> 
-> 
-> But msk->sk_timer is *also* accessed in two places without the mptcp 
-> socket lock (but with the data lock):
->   * mptcp_pm_mp_fail_received() (stop timer when mp_fail received)
-> 
->   * subflow_check_data_avail() (start timer on infinite mapping rx)
+Currently pedit tries to ensure that the accessed skb offset
+is writeble via skb_unclone(). The action potentially allows
+touching any skb bytes, so it may end-up modifying shared data.
 
-I'm reasonably no additional lock is required to call sk_stop_timer()
-and/or sk_reset_timer(): they boil down to the timer_{del,mod}
-primitives which in turns are irq safe.
+The above causes some sporadic MPTCP self-test failures.
 
-The mptcp wrappers *could* require additional locking because they
-additionally touch mptcp_sk(sk)->timer_ival. I *think* we could avoid
-the lock even there with some additional barrier, but it looks every
-caller is already under the lock.
+Address the issue keeping track of a rough over-estimate highest skb
+offset accessed by the action and ensure such offset is really
+writable.
 
-I think we don't need to defer touching the timer. Eventully we could
-remove the check on the msk socket status, which again looks not
-needed.
+Note that this may cause performance regressions in some scenario,
+but hopefully pedit is not critical path.
 
+v1 -> v2:
+ - cleanup hint update (Jakub)
+ - avoid raices while accessing the hint (Jakub)
+ - re-organize the comments for clarity
 
-Cheers,
+Fixes: db2c24175d14 ("act_pedit: access skb->data safely")
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Tested-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v2 -> v3:
+ - release lock on error (Mat)
 
-Paolo
+note: part of the changelog is here, because -net will see only v2
+(hopefully)
+---
+ include/net/tc_act/tc_pedit.h |  1 +
+ net/sched/act_pedit.c         | 26 ++++++++++++++++++++++----
+ 2 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/include/net/tc_act/tc_pedit.h b/include/net/tc_act/tc_pedit.h
+index 748cf87a4d7e..3e02709a1df6 100644
+--- a/include/net/tc_act/tc_pedit.h
++++ b/include/net/tc_act/tc_pedit.h
+@@ -14,6 +14,7 @@ struct tcf_pedit {
+ 	struct tc_action	common;
+ 	unsigned char		tcfp_nkeys;
+ 	unsigned char		tcfp_flags;
++	u32			tcfp_off_max_hint;
+ 	struct tc_pedit_key	*tcfp_keys;
+ 	struct tcf_pedit_key_ex	*tcfp_keys_ex;
+ };
+diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+index e01ef7f109f4..d1221daa0952 100644
+--- a/net/sched/act_pedit.c
++++ b/net/sched/act_pedit.c
+@@ -149,7 +149,7 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+ 	struct nlattr *pattr;
+ 	struct tcf_pedit *p;
+ 	int ret = 0, err;
+-	int ksize;
++	int i, ksize;
+ 	u32 index;
+ 
+ 	if (!nla) {
+@@ -228,6 +228,18 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
+ 		p->tcfp_nkeys = parm->nkeys;
+ 	}
+ 	memcpy(p->tcfp_keys, parm->keys, ksize);
++	p->tcfp_off_max_hint = 0;
++	for (i = 0; i < p->tcfp_nkeys; ++i) {
++		u32 cur = p->tcfp_keys[i].off;
++
++		/* The AT option can read a single byte, we can bound the actual
++		 * value with uchar max.
++		 */
++		cur += (0xff & p->tcfp_keys[i].offmask) >> p->tcfp_keys[i].shift;
++
++		/* Each key touches 4 bytes starting from the computed offset */
++		p->tcfp_off_max_hint = max(p->tcfp_off_max_hint, cur + 4);
++	}
+ 
+ 	p->tcfp_flags = parm->flags;
+ 	goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
+@@ -308,13 +320,18 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
+ 			 struct tcf_result *res)
+ {
+ 	struct tcf_pedit *p = to_pedit(a);
++	u32 max_offset;
+ 	int i;
+ 
+-	if (skb_unclone(skb, GFP_ATOMIC))
+-		return p->tcf_action;
+-
+ 	spin_lock(&p->tcf_lock);
+ 
++	max_offset = (skb_transport_header_was_set(skb) ?
++		      skb_transport_offset(skb) :
++		      skb_network_offset(skb)) +
++		     p->tcfp_off_max_hint;
++	if (skb_ensure_writable(skb, min(skb->len, max_offset)))
++		goto unlock;
++
+ 	tcf_lastuse_update(&p->tcf_tm);
+ 
+ 	if (p->tcfp_nkeys > 0) {
+@@ -403,6 +420,7 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
+ 	p->tcf_qstats.overlimits++;
+ done:
+ 	bstats_update(&p->tcf_bstats, skb);
++unlock:
+ 	spin_unlock(&p->tcf_lock);
+ 	return p->tcf_action;
+ }
+-- 
+2.35.1
 
