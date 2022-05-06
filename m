@@ -1,44 +1,44 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134912FAE
-	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 19:18:11 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id z2so14624042ejj.3
-        for <mptcp@lists.linux.dev>; Fri, 06 May 2022 12:18:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFA22FAE
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 19:31:12 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id g20so9792699edw.6
+        for <mptcp@lists.linux.dev>; Fri, 06 May 2022 12:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=2KeSWKuPXMC0ijDpm6mA8+RY9mzzYLxHHvPNMnX1/hM=;
-        b=01a8PNfom6o6MQPdKt4Q0f1qhTraBC1+X8VMZFDyHf/nQy0JgPx2blv8XIS6GA8vhK
-         9weQEMTD8F75DzBT3fuZ4V8+Bu3YL+0dCqUWsDvWkJSe2TXE37r1i3R4L12+XI7Nnjw4
-         k4jG16rNwnwpdGYKttrvrjauB6asR7uQL2wWojMqP3ofuz6YHpQ2W1WP+kcAB6Kjy/0a
-         XD9sggI9d16tP8dgYDntCipb9NFy0uY+PxzbEJ+aHbDgIE4jF6p1w8I94INstkROgPPN
-         9YaMtdfg+7Pp5a5KHY1hRaV+ersjHgtRsw34VM2KG/ZAfiJs1GbIXegEwoQvSqgxRm3C
-         zxLA==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=jW1sNae3+4XiMrZh/uZDGJUW+JbJouJOjBWwrNW8SfQ=;
+        b=oZKlNrywekoh3I17wcRQxsnMJcEQd4cVsJnusMCKnou9WXlx3WTW6q/ejNhfrqGaNE
+         4Pve485QMEP3JFbViVtLWuMXX23Uh06L7yGVj5/ZphbJ1KHzC1iXsvq5KdrzpunWopX7
+         WN/b35eAete5XVI7YBVVdqMZySCtb7I7wfCwOBykTTmGVNon86YoL/DDGmiOAO+GLUie
+         8+BZy1RWfFdUl1+4S+4MTXav4OSMZ+JvJK0wZZYZsK9aCQpqQD2La+X8h6ZqdUKW0I8f
+         x3ssWhC0Z7JfKCjajpmmOu3sXU5IJIimtP5twvHc1PWKLeKu/RqCd/CKTY5vzzDzNiUE
+         1P8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=2KeSWKuPXMC0ijDpm6mA8+RY9mzzYLxHHvPNMnX1/hM=;
-        b=mYMoaAW3smXApvSS5GDwqLBUqvkgS6Na0jNbCOB1piPrcPuXc+Fi1oyOuOkKyZATcG
-         YzA8QliU18ppULG69q1NG7kusSIZWdc5FhGc+wYeIBWrbX4FF8rX5fmjk9L2B8VbXTQm
-         X0GCfYn9DvzM2A1iaFI+FESgcCXfnEP+FMOVv/r8R2kWJHNb+Ml3dprlxoDHF1J30Uhp
-         ugs3Wby4lutzt8HqsKODwKCNsHcfRwZ0dfEBLGgHvJkN3AknjWA9FPwGEZhJIk9VtnWY
-         B3IAXm/0Qx2X843fc2LDG3hV+3jPLedaclTzc+GfPM4GTafZE6537zXOzvdzvHaQLkk7
-         vGhg==
-X-Gm-Message-State: AOAM5328U9WahgwwL2BUzkWZKb1lEFy/xFTtBxo7QpJJtXaaeqCVzCfe
-	bZj/DL/DMRh9U2fSNVJ0lwxhqVFW6KtZj3tG
-X-Google-Smtp-Source: ABdhPJyPrMSTG/IQQvIg7fmU3btuhTVXAtP4eW9rpnL0ZvDweZkNiyZZxtKfbYV2pzRwGyYO7u4+hg==
-X-Received: by 2002:a17:907:d01:b0:6f4:d873:d7a0 with SMTP id gn1-20020a1709070d0100b006f4d873d7a0mr4387332ejc.717.1651864689815;
-        Fri, 06 May 2022 12:18:09 -0700 (PDT)
+        bh=jW1sNae3+4XiMrZh/uZDGJUW+JbJouJOjBWwrNW8SfQ=;
+        b=l0OToTg2GJr22rf123UORAgR1erjfTpOJGzFhbnjq2b3ds6IpPcQ/3TD8bYXw8+wHv
+         VN89TCRY7FL0ghp1eHVPlLfkdSRzihbFV5bzBqL0ImeTcaMheHQT3Aqp48R0axXekP6J
+         WzbeSXt48ZwH1ILTRYWYxILcIoa/QN/Bb8vtOUb9t2EisT7KRECow5FBaRCcPbjaFnpV
+         pwjtkxn1D6rtSJDWIt0pAtADke4ZFOUGF3di9cdlk63XCOR0zQ46sNWIvXEKjq34j+we
+         ayLnYk2cCYdxi8W8CW/DswpzKUSJe0pYFEd4fIjsUtNdaINKzBg60OD2bGB7w13MvRcV
+         Vquw==
+X-Gm-Message-State: AOAM530a9QmVuX4vcIAQOqW8QcmwcWgvA9pGQ6OioeJQBBGpTNLSquHk
+	DMoLsF3zVfXd3mC9lOw3UhMRU/zhFXZ/wvGN
+X-Google-Smtp-Source: ABdhPJxoRumJLXDOxxl7lR5t6O1H63vpBBXWSASuho+NWmTxkp5389SOWItA4Q4tm1hsVUfRUy4EOA==
+X-Received: by 2002:aa7:da08:0:b0:425:af3c:196a with SMTP id r8-20020aa7da08000000b00425af3c196amr5106993eds.69.1651865471020;
+        Fri, 06 May 2022 12:31:11 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:b63e:f9ca:c9c4:cf8a? ([2a02:578:8593:1200:b63e:f9ca:c9c4:cf8a])
-        by smtp.gmail.com with ESMTPSA id wi22-20020a170906fd5600b006f3ef214de0sm2211804ejb.70.2022.05.06.12.18.09
+        by smtp.gmail.com with ESMTPSA id bx8-20020a0564020b4800b0042617ba639bsm2604582edb.37.2022.05.06.12.31.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 May 2022 12:18:09 -0700 (PDT)
-Message-ID: <403dfad5-185b-eaef-0abc-2ad7167de025@tessares.net>
-Date: Fri, 6 May 2022 21:18:08 +0200
+        Fri, 06 May 2022 12:31:10 -0700 (PDT)
+Message-ID: <863dd5a5-ca95-17fe-a12d-364f805ffcdb@tessares.net>
+Date: Fri, 6 May 2022 21:31:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,32 +47,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH mptcp-next] mptcp: sockopt: add TCP_DEFER_ACCEPT support
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: fix MP_FAIL test-case
 Content-Language: en-GB
-To: Florian Westphal <fw@strlen.de>
-References: <20220502163624.6110-1-fw@strlen.de>
-Cc: mptcp@lists.linux.dev
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <613074c6f6136ebb652df581fbb3d7de02fb8e33.1651655175.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220502163624.6110-1-fw@strlen.de>
+In-Reply-To: <613074c6f6136ebb652df581fbb3d7de02fb8e33.1651655175.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Florian, Mat,
+Hi Paolo, Mat,
 
-On 02/05/2022 18:36, Florian Westphal wrote:
-> Support this via passthrough to the underlaying tcp listener socket.
+On 04/05/2022 11:06, Paolo Abeni wrote:
+> The mentioned tests sometimes fails because the data
+> transfer completes before any packet is sent on the 2nd
+> link (the failing one).
+> 
+> Address the issue reducing the "virtual" b/w available
+> on the primary link.
 
 Thank you for the patch and the review!
 
-Now in our tree (feat. for net-next) with Mat's RvB tag.
-
-New patches for t/upstream:
-- 3476c1a3846c: mptcp: sockopt: add TCP_DEFER_ACCEPT support
-- Results: 22856348dac5..9a52d7243fda (export)
+- 4fe3d4071237: "squashed" in "selftests: mptcp: add MP_FAIL reset testcase"
+- ac30a511e2eb: "Signed-off-by" + "Co-developed-by"
+- Results: 9a52d7243fda..9a06ad1b6cf2 (export)
 
 Builds and tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220506T191513
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220506T192929
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
