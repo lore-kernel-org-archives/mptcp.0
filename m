@@ -1,75 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.greatagencyonline.pl (mail.greatagencyonline.pl [89.40.125.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01D362A
-	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 02:20:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 58E0DC385AC;
-	Fri,  6 May 2022 02:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1651803613;
-	bh=j+6BGiPTO3E/mW2NwULlDaHPBcBa1H2rq7yRLvwIOOo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=F9h3g2ExgHPXVRxqAf8WXZwoykSLQis2d1nFtEbprHHi31dlrY2JPqqejoEHY8WZz
-	 8Q4Atyz2EmuexBa7yQFzLEtPhlAZBWSk5RPNTv9byd9F4AS4FLgGZ86+tEXO4MHQum
-	 ozSeMH9yeTadxpwyv0sveiQcL9oGypESiYwZDH7pGTdzHv8az9rhYGuu6LOab6/laB
-	 ngJGnJeuv465N2FsE6BrDxsggwarE8IzTSGBGEs+zwg0lSVrAeYWpap17HHKyNg5c7
-	 +L28RmvzdlZE5uRuwUOrjpR+6mqLdTwbwbId/xqgUlLN5aWT+iVTSPcL1lb8rAcqYP
-	 4WpoRvDDZdbbg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 38675F03874;
-	Fri,  6 May 2022 02:20:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B527E8
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 08:04:52 +0000 (UTC)
+Received: by mail.greatagencyonline.pl (Postfix, from userid 1001)
+	id 3BBDEAB87B; Fri,  6 May 2022 08:50:28 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=greatagencyonline.pl;
+	s=mail; t=1651823460;
+	bh=ksvwLPFdjL017OLwir5xHXy3Vmrj/5fhZ5DwBI62qzc=;
+	h=Date:From:To:Subject:From;
+	b=OXPh5B0xaRpa6v9XI/Op8QjNpz6zGscSJfUH3LZWLhMS3BCOEY15wrn2PjxTNf+UJ
+	 zqRLhJcX0Aknp7TpjD+t8Mi9Gr0Un1Lnw8bee/09GMKrVe+eDu8BONUA/2BQOQEl3q
+	 w2UXu9rcW6cdGXQ2GtMVnp64D0AII7oFdV8Bs32XThp0G6d/TB3KSJpLKK7mTkiTsJ
+	 ZNbMjG+L0QGZ1eat2MVQjhiTVm1yaYqEBq81VZkUH/oPN9aF4BKjl2lQGKOh5+lCU4
+	 y7o6UOo5bIxEAFuCfVxtGGcSZ75vLf6jRYTt2tcxLhjPBTQ3WLoh0A/JUg6xBQF0R/
+	 drQgwKfGEdsvw==
+Received: by mail.greatagencyonline.pl for <mptcp@lists.linux.dev>; Fri,  6 May 2022 07:48:42 GMT
+Message-ID: <20220506073002-0.1.3r.k75f.0.cn5qvh28bw@greatagencyonline.pl>
+Date: Fri,  6 May 2022 07:48:42 GMT
+From: =?UTF-8?Q?"Miko=C5=82aj_Rudzik"?= <mikolaj.rudzik@greatagencyonline.pl>
+To: <mptcp@lists.linux.dev>
+Subject: =?UTF-8?Q?Nap=C5=82yw_Klient=C3=B3w_ze_strony?=
+X-Mailer: mail.greatagencyonline.pl
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] mptcp: Improve MPTCP-level window tracking
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165180361322.11309.2801636924198252902.git-patchwork-notify@kernel.org>
-Date: Fri, 06 May 2022 02:20:13 +0000
-References: <20220504215408.349318-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220504215408.349318-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, matthieu.baerts@tessares.net,
- mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Dzie=C5=84 dobry,
 
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+chcia=C5=82bym poinformowa=C4=87 Pa=C5=84stwa o mo=C5=BCliwo=C5=9Bci pozy=
+skania nowych zlece=C5=84 ze strony www.
 
-On Wed,  4 May 2022 14:54:03 -0700 you wrote:
-> This series improves MPTCP receive window compliance with RFC 8684 and
-> helps increase throughput on high-speed links. Note that patch 3 makes a
-> change in tcp_output.c
-> 
-> For the details, Paolo says:
-> 
-> I've been chasing bad/unstable performance with multiple subflows
-> on very high speed links.
-> 
-> [...]
+Widzimy zainteresowanie potencjalnych Klient=C3=B3w Pa=C5=84stwa firm=C4=85=
+, dlatego ch=C4=99tnie pomo=C5=BCemy Pa=C5=84stwu dotrze=C4=87 z ofert=C4=
+=85 do wi=C4=99kszego grona odbiorc=C3=B3w poprzez efektywne metody pozyc=
+jonowania strony w Google.
 
-Here is the summary with links:
-  - [net-next,1/5] mptcp: really share subflow snd_wnd
-    https://git.kernel.org/netdev/net-next/c/b713d0067574
-  - [net-next,2/5] mptcp: add mib for xmit window sharing
-    https://git.kernel.org/netdev/net-next/c/92be2f522777
-  - [net-next,3/5] tcp: allow MPTCP to update the announced window
-    https://git.kernel.org/netdev/net-next/c/ea66758c1795
-  - [net-next,4/5] mptcp: never shrink offered window
-    https://git.kernel.org/netdev/net-next/c/f3589be0c420
-  - [net-next,5/5] mptcp: add more offered MIBs counter
-    https://git.kernel.org/netdev/net-next/c/38acb6260f60
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Czy m=C3=B3g=C5=82bym liczy=C4=87 na kontakt zwrotny?
 
 
+Pozdrawiam,
+Miko=C5=82aj Rudzik
