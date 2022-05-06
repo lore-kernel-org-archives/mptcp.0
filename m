@@ -1,108 +1,107 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D6B62A
-	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 01:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651799484; x=1683335484;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=v9mpXvU3XHd7dTBQzwS7hLxGRKoG1NYs+W8iaCU5jME=;
-  b=L3b3UFcvCLRwwU4mVab0Bj2nkQnWtkD+ufDjMQC6OHqugBveWgBbNqSZ
-   9L4JCVTZFX6XN2Pa1GjF+u4oNZdWgOfeY7dzPUyoXwR79N9jnYOVmuD8K
-   gi/TFLKIlxgvTfKYaT5pEFn/gJFV4PaGm0f8fjp/BmVPcQ+l2JjlLWutt
-   m4gAdwcPjCG+0X6hCuxT2NVnHUqiNwWrkp71gX64dQzsOG+EkaeGNVbm7
-   z21gA9Dw4zPKhbQccaMZg3Ui+jkDj8tfzdTIhBFDnuEYB8h1a0pU3la7s
-   y6ONeFbw0MpqCnDvqVfTDNu7nNClDEChmwyC4riAoAlTa9AbD/sd/0WpG
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="267910995"
-X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="267910995"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:11:22 -0700
-X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="665234055"
-Received: from barreola-mobl1.amr.corp.intel.com ([10.212.167.175])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:11:19 -0700
-Date: Thu, 5 May 2022 18:11:19 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Maxim Galaganov <max@internet.ru>, Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: apropos
- https://github.com/multipath-tcp/mptcp_net-next/issues/265
-In-Reply-To: <3c85fe48-69fe-0655-2146-a4424e02f185@internet.ru>
-Message-ID: <d7497da1-86e4-30ae-aca-633b71facdcd@linux.intel.com>
-References: <3e23ea866374467e2c9aeec60049716b42d6634e.camel@redhat.com> <c1513b33-add8-3e16-d14d-0b1886061040@internet.ru> <e69d4d2bead08317ad3af55ffe415b8f94877948.camel@redhat.com> <3c85fe48-69fe-0655-2146-a4424e02f185@internet.ru>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7037562A
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 01:20:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1082EC385B4;
+	Fri,  6 May 2022 01:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1651800015;
+	bh=4sE3ggOy+dlpQdbHbeyDY3gRDDi9ok/3eqQEzCi+FZM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=kzwLOw6JqC+w2wVVoacvJm9uu12CQct/IMjI/mjVIzNPw3m+np6ldV0/iix2ZGMYF
+	 j4oMPMaBxzg7De8UdDyKDV9oHm7vtT8IoZ0AMEN/elTXUPWNTqbQWf/e4ZnR+TH+tG
+	 eQVyDBzMV5g+j0hMY3bc/F813aKlvK/SwCGcBiyhV8EFr8dl74lKmtH5pQWPVcJJDo
+	 oHxfdakfVzWq7X70b0RTBgU5XJntEsD8JmLkozKPCqzQMoASmssnwDeatKtq2arfUb
+	 A2h0Krhjf+M7OmY8bhMeyQ7TPSsjC1e972PJSxM0SGfyJ8RGTb+1f3TH3yFKJMwAjK
+	 376bYn/4cVA2Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E6C47F03876;
+	Fri,  6 May 2022 01:20:14 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 1/2] net: switch to netif_napi_add_tx()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <165180001494.16316.16139936183700758910.git-patchwork-notify@kernel.org>
+Date: Fri, 06 May 2022 01:20:14 +0000
+References: <20220504163725.550782-1-kuba@kernel.org>
+In-Reply-To: <20220504163725.550782-1-kuba@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, pabeni@redhat.com,
+ edumazet@google.com, rafal@milecki.pl, f.fainelli@gmail.com,
+ opendmb@gmail.com, dmichail@fungible.com, hauke@hauke-m.de,
+ tariqt@nvidia.com, kys@microsoft.com, haiyangz@microsoft.com,
+ sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ shshaikh@marvell.com, manishc@marvell.com, jiri@resnulli.us,
+ hayashi.kunihiko@socionext.com, peppe.cavallaro@st.com,
+ alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+ mcoquelin.stm32@gmail.com, grygorii.strashko@ti.com, elder@kernel.org,
+ wintera@linux.ibm.com, wenjia@linux.ibm.com, svens@linux.ibm.com,
+ mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+ s-vadapalli@ti.com, chi.minghao@zte.com.cn, linux-rdma@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, mptcp@lists.linux.dev
 
-On Wed, 4 May 2022, Maxim Galaganov wrote:
+Hello:
 
-> On 04.05.2022 12:52, Paolo Abeni wrote:
->> 
->> Could you please additionally test the following patch? Kernel for both
->> arches must be rebuilt.
->> 
->> This should cause old x86 build with csum enabled to fallback to TCP
->> while interoperating with new ones, which is ugly and bad, but - given
->> that csum is disable by default - possibly still acceptable?!?
->
->
-> The results for me are as follows:
->
-> old x86_64 (5.17.5) + old mips (5.15.35) => reset
-> new x86_64 (5.18-rc5+patch) vs old mips (5.15.35) => works
-> new x86_64 (5.18-rc5+patch) vs new mips (5.15.35+patch) => works
-> old x86_64 (5.17.2) + new mips (5.15.35+patch) => reset
-> old x86_64 (5.17.2) + new x86_64 (5.18-rc5+patch) => reset
-> new x86_64 (5.18-rc5+patch) talking to itself => works
->
-> I edited the patch so that it applies to my kernels, and this might be the 
-> reason I don't see fallback but see reset instead -- I don't have "mptcp: TCP 
-> fallback for established connections" patches in my tree as they are only in 
-> net-next yet. Or I may be doing something stupid.
->
-> Is there a way for an old box without infinite mapping support to fallback an 
-> established connection in case of csum failure?
->
+This series was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-In some cases, I think we can do that!
+On Wed,  4 May 2022 09:37:24 -0700 you wrote:
+> Switch net callers to the new API not requiring
+> the NAPI_POLL_WEIGHT argument.
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+> CC: rafal@milecki.pl
+> CC: f.fainelli@gmail.com
+> CC: opendmb@gmail.com
+> CC: dmichail@fungible.com
+> CC: hauke@hauke-m.de
+> CC: tariqt@nvidia.com
+> CC: kys@microsoft.com
+> CC: haiyangz@microsoft.com
+> CC: sthemmin@microsoft.com
+> CC: wei.liu@kernel.org
+> CC: decui@microsoft.com
+> CC: shshaikh@marvell.com
+> CC: manishc@marvell.com
+> CC: jiri@resnulli.us
+> CC: hayashi.kunihiko@socionext.com
+> CC: peppe.cavallaro@st.com
+> CC: alexandre.torgue@foss.st.com
+> CC: joabreu@synopsys.com
+> CC: mcoquelin.stm32@gmail.com
+> CC: grygorii.strashko@ti.com
+> CC: elder@kernel.org
+> CC: wintera@linux.ibm.com
+> CC: wenjia@linux.ibm.com
+> CC: svens@linux.ibm.com
+> CC: mathew.j.martineau@linux.intel.com
+> CC: matthieu.baerts@tessares.net
+> CC: s-vadapalli@ti.com
+> CC: chi.minghao@zte.com.cn
+> CC: linux-rdma@vger.kernel.org
+> CC: linux-hyperv@vger.kernel.org
+> CC: mptcp@lists.linux.dev
+> 
+> [...]
 
-Both peers do not consider MPTCP "fully established" until they receive a 
-valid DATA_ACK, and the old box will fall back if the new box sends an 
-infinite mapping in response to the first data. So, if as part of the fix 
-we make sure the new box responds to a bad checksum in the initial DSS (or 
-MPC+DATA) with an infinite mapping instead of a reset, fallback should 
-work. And I think what's needed to do that is to only set subflow->mp_fail 
-at the end of validate_data_csum() if subflow->fully_established is 
-'true'.
+Here is the summary with links:
+  - [net-next,1/2] net: switch to netif_napi_add_tx()
+    https://git.kernel.org/netdev/net-next/c/16d083e28f1a
+  - [net-next,2/2] net: move snowflake callers to netif_napi_add_tx_weight()
+    https://git.kernel.org/netdev/net-next/c/8d602e1a132e
 
-However, if the new box is the first to send data with a checksum, the old 
-box decides whether to reset or fallback. It looks like unpatched 5.17, 
-5.16, and 5.15 would send a reset in this "patched host sends data first" 
-scenario. 5.14 looks like it would fall back? Older MPTCP kernels don't 
-support DSS checksums.
-
-This means that if the use case is a client/server setup where the client 
-sends data first, and the server is running a new/patched kernel, we get 
-the fallback behavior. That's good!
-
-
-This still leaves that "patched host sends data first" scenario that 
-should be addressed. The RFC requires checksums to be enabled if one peer 
-requests it in the SYN/SYNACK handshake. Is it too much of a kludge to use 
-a sysctl that would force TCP fallback if a peer requests checksums? This 
-would be just like the behavior we had in v5.13 and earlier. We could add 
-another state to the existing MPTCP checksum sysctl ("force fallback if 
-checksums requested").
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---
-Mat Martineau
-Intel
