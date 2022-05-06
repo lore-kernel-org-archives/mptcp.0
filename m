@@ -1,107 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7037562A
-	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 01:20:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1082EC385B4;
-	Fri,  6 May 2022 01:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1651800015;
-	bh=4sE3ggOy+dlpQdbHbeyDY3gRDDi9ok/3eqQEzCi+FZM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kzwLOw6JqC+w2wVVoacvJm9uu12CQct/IMjI/mjVIzNPw3m+np6ldV0/iix2ZGMYF
-	 j4oMPMaBxzg7De8UdDyKDV9oHm7vtT8IoZ0AMEN/elTXUPWNTqbQWf/e4ZnR+TH+tG
-	 eQVyDBzMV5g+j0hMY3bc/F813aKlvK/SwCGcBiyhV8EFr8dl74lKmtH5pQWPVcJJDo
-	 oHxfdakfVzWq7X70b0RTBgU5XJntEsD8JmLkozKPCqzQMoASmssnwDeatKtq2arfUb
-	 A2h0Krhjf+M7OmY8bhMeyQ7TPSsjC1e972PJSxM0SGfyJ8RGTb+1f3TH3yFKJMwAjK
-	 376bYn/4cVA2Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E6C47F03876;
-	Fri,  6 May 2022 01:20:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C998C62A
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 01:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651801051; x=1683337051;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PmsU1PmO5AoiMycVHPq3+XL8mRV1yK3OfGxUgSfdwaQ=;
+  b=Zg233TCWtiOBhHKJ1dQnysLQqgXsCjGzAbM+MedyGcbhALHK89zM2IVj
+   /+/+0/ZtfqX7rNtocqEoIglWuTUBQnVDf5gUEDmn8/bKDuBuJnR/i5OAn
+   8XtPffVw2K72ymRczqwEZnpmEHC3FfVNQ857hmLWqpWNshv8qLRgRzmdt
+   TjIPuuWXrNV8Byxzzg88+gPMtwlA572c/sSPOfw2wgZuXtWk20RRXt+LM
+   Lun2rPKtgcY9wpXmzRx9w8TNl4xmdRZci0m4noWVN3zIoTdP3Bc6g9eQi
+   qoRsD8fcO9x5turVFlqEZnOp/ynzyR8fvXBEYB/QytdMvuKnqR7PPOFCA
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="293519010"
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="293519010"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:37:31 -0700
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="568869931"
+Received: from barreola-mobl1.amr.corp.intel.com ([10.212.167.175])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:37:30 -0700
+Date: Thu, 5 May 2022 18:37:30 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH MPTCP-next] mptcp: fix checksum byte order
+In-Reply-To: <1a8201582e7fd63db7b5c9c4077af1ab1953c57e.1651763323.git.pabeni@redhat.com>
+Message-ID: <33a3c3fe-36d9-985e-9b9e-2dab5f60b38a@linux.intel.com>
+References: <1a8201582e7fd63db7b5c9c4077af1ab1953c57e.1651763323.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 1/2] net: switch to netif_napi_add_tx()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165180001494.16316.16139936183700758910.git-patchwork-notify@kernel.org>
-Date: Fri, 06 May 2022 01:20:14 +0000
-References: <20220504163725.550782-1-kuba@kernel.org>
-In-Reply-To: <20220504163725.550782-1-kuba@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, pabeni@redhat.com,
- edumazet@google.com, rafal@milecki.pl, f.fainelli@gmail.com,
- opendmb@gmail.com, dmichail@fungible.com, hauke@hauke-m.de,
- tariqt@nvidia.com, kys@microsoft.com, haiyangz@microsoft.com,
- sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- shshaikh@marvell.com, manishc@marvell.com, jiri@resnulli.us,
- hayashi.kunihiko@socionext.com, peppe.cavallaro@st.com,
- alexandre.torgue@foss.st.com, joabreu@synopsys.com,
- mcoquelin.stm32@gmail.com, grygorii.strashko@ti.com, elder@kernel.org,
- wintera@linux.ibm.com, wenjia@linux.ibm.com, svens@linux.ibm.com,
- mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
- s-vadapalli@ti.com, chi.minghao@zte.com.cn, linux-rdma@vger.kernel.org,
- linux-hyperv@vger.kernel.org, mptcp@lists.linux.dev
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hello:
+On Thu, 5 May 2022, Paolo Abeni wrote:
 
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+> The MPTCP code typecasts the checksum value to u16 and
+> then convert it to big endian while storing the value into
+> the MPTCP option.
+>
+> As a result, the wire encoding for little endian host is
+> wrong, and that causes interoperabilty interoperability
+> issues with other implementation or host with different endianess.
+>
+> Address the issue writing in the packet the unmodified __sum16 value.
+>
+> The change is not backward compatible, but I can't see any
+> other option. MPTCP checksum is disabled by default, and there are
+> no backward issues with csum disabled.
+>
 
-On Wed,  4 May 2022 09:37:24 -0700 you wrote:
-> Switch net callers to the new API not requiring
-> the NAPI_POLL_WEIGHT argument.
-> 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+See my reply a few minutes ago on the "Re: apropos 
+https://github.com/multipath-tcp/mptcp_net-next/issues/265" thread, maybe 
+we do have some backward-compatibility-via-fallback options?
+
+
+> Fixes: c5b39e26d003 ("mptcp: send out checksum for DSS")
+> Fixes: 390b95a5fb84 ("mptcp: receive checksum for DSS")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> CC: rafal@milecki.pl
-> CC: f.fainelli@gmail.com
-> CC: opendmb@gmail.com
-> CC: dmichail@fungible.com
-> CC: hauke@hauke-m.de
-> CC: tariqt@nvidia.com
-> CC: kys@microsoft.com
-> CC: haiyangz@microsoft.com
-> CC: sthemmin@microsoft.com
-> CC: wei.liu@kernel.org
-> CC: decui@microsoft.com
-> CC: shshaikh@marvell.com
-> CC: manishc@marvell.com
-> CC: jiri@resnulli.us
-> CC: hayashi.kunihiko@socionext.com
-> CC: peppe.cavallaro@st.com
-> CC: alexandre.torgue@foss.st.com
-> CC: joabreu@synopsys.com
-> CC: mcoquelin.stm32@gmail.com
-> CC: grygorii.strashko@ti.com
-> CC: elder@kernel.org
-> CC: wintera@linux.ibm.com
-> CC: wenjia@linux.ibm.com
-> CC: svens@linux.ibm.com
-> CC: mathew.j.martineau@linux.intel.com
-> CC: matthieu.baerts@tessares.net
-> CC: s-vadapalli@ti.com
-> CC: chi.minghao@zte.com.cn
-> CC: linux-rdma@vger.kernel.org
-> CC: linux-hyperv@vger.kernel.org
-> CC: mptcp@lists.linux.dev
-> 
-> [...]
+> net/mptcp/options.c | 35 ++++++++++++++++++++++-------------
+> 1 file changed, 22 insertions(+), 13 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index ac3b7b8a02f6..5b5849d9fe60 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -107,7 +107,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+> 			ptr += 2;
+> 		}
+> 		if (opsize == TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM) {
+> -			mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
+> +			mp_opt->csum = get_unaligned((__force __sum16 *)ptr);
+> 			mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
+> 			ptr += 2;
+> 		}
+> @@ -221,7 +221,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+>
+> 			if (opsize == expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
+> 				mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
+> -				mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
+> +				mp_opt->csum = get_unaligned((__force __sum16 *)ptr);
+> 				ptr += 2;
+> 			}
+>
+> @@ -1282,7 +1282,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
+> 	}
+> }
+>
+> -u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
+> +__sum16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
+> {
+> 	struct csum_pseudo_header header;
+> 	__wsum csum;
+> @@ -1298,15 +1298,23 @@ u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
+> 	header.csum = 0;
+>
+> 	csum = csum_partial(&header, sizeof(header), sum);
+> -	return (__force u16)csum_fold(csum);
+> +	return csum_fold(csum);
+> }
+>
+> -static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+> +static __sum16 mptcp_make_csum(const struct mptcp_ext *mpext)
+> {
+> 	return __mptcp_make_csum(mpext->data_seq, mpext->subflow_seq, mpext->data_len,
+> 				 ~csum_unfold(mpext->csum));
+> }
+>
+> +static void put_len_csum(u16 len, __sum16 csum, __be16 *ptr)
 
-Here is the summary with links:
-  - [net-next,1/2] net: switch to netif_napi_add_tx()
-    https://git.kernel.org/netdev/net-next/c/16d083e28f1a
-  - [net-next,2/2] net: move snowflake callers to netif_napi_add_tx_weight()
-    https://git.kernel.org/netdev/net-next/c/8d602e1a132e
+If ptr was a __be32, this code could do the casting inside this function 
+and the callers would look a little cleaner. Not a big deal though - 
+existing code ok if there's a good rationale for the __be16 that I'm 
+missing.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Other than that, there is the warning from CI to fix and basing this on 
+mptcp-net.
 
+I haven't had a chance to try this in a mixed-endian setup yet but Maxim's 
+tests looked promising.
 
+- Mat
+
+> +{
+> +	put_unaligned_be16(len, ptr);
+> +
+> +	ptr += 1;
+> +	put_unaligned(csum, ptr);
+> +}
+> +
+> void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+> 			 struct mptcp_out_options *opts)
+> {
+> @@ -1385,9 +1393,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+> 				/* data_len == 0 is reserved for the infinite mapping,
+> 				 * the checksum will also be set to 0.
+> 				 */
+> -				put_unaligned_be32(mpext->data_len << 16 |
+> -						   (mpext->data_len ? mptcp_make_csum(mpext) : 0),
+> -						   ptr);
+> +				put_len_csum(mpext->data_len,
+> +					     mpext->data_len ? mptcp_make_csum(mpext) : 0,
+> +					     (__force __be16 *)ptr);
+> 			} else {
+> 				put_unaligned_be32(mpext->data_len << 16 |
+> 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+> @@ -1438,11 +1446,12 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+> 			goto mp_capable_done;
+>
+> 		if (opts->csum_reqd) {
+> -			put_unaligned_be32(opts->data_len << 16 |
+> -					   __mptcp_make_csum(opts->data_seq,
+> -							     opts->subflow_seq,
+> -							     opts->data_len,
+> -							     ~csum_unfold(opts->csum)), ptr);
+> +			put_len_csum(opts->data_len,
+> +				     __mptcp_make_csum(opts->data_seq,
+> +						       opts->subflow_seq,
+> +						       opts->data_len,
+> +						       ~csum_unfold(opts->csum)),
+> +				     (__force __be16 *)ptr);
+> 		} else {
+> 			put_unaligned_be32(opts->data_len << 16 |
+> 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+> -- 
+> 2.35.1
+>
+>
+>
+
+--
+Mat Martineau
+Intel
