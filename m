@@ -1,167 +1,95 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A906B7F
-	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 15:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651849527; x=1683385527;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=zfAyfwHZeptJFKZr8lnpb8bBK3Fe9hLGhoWwjd2hBKQ=;
-  b=VezEfHwZMrVA6tu8wbp1IZYCloQSN+nv6DxJBsmDNR3QKlv4qN/HYSBw
-   wdh5oO03Fa8mqYtF/sP+0dg6gUxUcfab7gRgWKLJLkY0ob///cv/uFNOw
-   r+TuPqOB0ofOo501TlARgRd4yFZrrm9ZpAch3P3tp5aI76Xhp1CmwZsXN
-   upqXjMOY3mCXj6DBFQaM5CBsFfUZKdY7Zb/S9PUFbU/LTs8zBs0pNLiyG
-   aGeDFOmLpBWR3hQ4fiyWwZMul/GtNVwGn+zxXP5aXn7ezGvC3unGJhcKS
-   O1q/COJckXd2zjiBHgGc8yoTZaTMjjoyGJrThcU7R5GsIfCCQAqr07au0
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10339"; a="354923221"
-X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="354923221"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 08:05:01 -0700
-X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="537924326"
-Received: from jrbond-mobl1.amr.corp.intel.com ([10.212.218.216])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 08:05:00 -0700
-Date: Fri, 6 May 2022 08:04:52 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH net v3] net/sched: act_pedit: really ensure the skb is
- writable
-In-Reply-To: <7ec2ff1bd88c6d87e452afa58f1f6b6c756a2fb0.1651828857.git.pabeni@redhat.com>
-Message-ID: <9220dc2b-1082-db78-4c3e-9d4f801279c9@linux.intel.com>
-References: <7ec2ff1bd88c6d87e452afa58f1f6b6c756a2fb0.1651828857.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88790A5B
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 17:18:41 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id i67-20020a1c3b46000000b003946c466c17so777338wma.4
+        for <mptcp@lists.linux.dev>; Fri, 06 May 2022 10:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7bcAkx0YF5XrVhaL1qynVdnseeYSj6j9kBWrxnH/0Zk=;
+        b=aq9FplxUKkEmN+3Zgct+J8ugsbQdxTkImzFwKyYIqNJxKHOdCwYZkscnWTqTQZoIl6
+         bj4XeIAat6TkmvZOEKyAwuWUV20GFXqwIqTjd0OSYZAy1RbyonryRVzZPQ8mkFgR5dYj
+         nE+nl7wQWmv8oMI9h8QsgvpMt9uMFxrKxwKVXk9VigrilP3Z40OikpkHaBwdKjXQ0Vd5
+         xuQ8SmdAer0KmVe0OE7/Scp7UywHzQXaWmG0l/FNEfda+YUPiFOEufhALZdHZCtVuhtz
+         EPSQH+ytCI3z6LKBUxt4bZ5CzP8udmrEGDqWhJ+0OfjMCj7Ng6egnwR+RDIHBx7u+lBd
+         +tfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7bcAkx0YF5XrVhaL1qynVdnseeYSj6j9kBWrxnH/0Zk=;
+        b=PYlBKSQtleCFO0Dusrv0NcwWiKjs8lm51/E/J83JD3xu5CZkK+RtuofUej54H8hbtL
+         2ARRDKAWMsuo7WBxJiSycj38xu6orgQXSZPTc+yaEigfc7Y+xzMXS+eom1cY9BbaLxFq
+         vmSfsW9dCg4WpIwxqhByhlEr9veuDOefVdRH9fWW6GxD2fpfOZ4JMfr/EDdNMM5Um+kw
+         SU13RVu8sKx1ujMgSLH8jKebaMKu0O6SF4XLfbSCQnwZoLaNzY40wVAKjKA2q13INLZR
+         3fq6gya1WSE5IUriDVmLnSf9iXCUr8dGK7JGBtl+Hynz/12w0DtZ9/H/4+8hO29pOMJ0
+         vDxQ==
+X-Gm-Message-State: AOAM532gt/X1Z4bq644QEZXgpO4cWog/+3F0g5dy6Dm9oDr1VIW4LpQ1
+	pGgR3Uutwahcr/eEZ2XZ/+ilBC2IE4TASHOy
+X-Google-Smtp-Source: ABdhPJy8nzCENW5HNylXTDE4CU4hMWes5PoAFjf56fQM9t/eJEVOF6trXWsIa31rA3ZaqwlqBiRB3w==
+X-Received: by 2002:a05:600c:1e13:b0:394:5cdd:e8e6 with SMTP id ay19-20020a05600c1e1300b003945cdde8e6mr10792230wmb.108.1651857519325;
+        Fri, 06 May 2022 10:18:39 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id k3-20020adfb343000000b0020c5253d8c2sm4239213wrd.14.2022.05.06.10.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 May 2022 10:18:38 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next] Squash to "selftests: mptcp: add subflow limits test-cases"
+Date: Fri,  6 May 2022 19:18:19 +0200
+Message-Id: <20220506171819.1104074-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 6 May 2022, Paolo Abeni wrote:
+From: Paolo Abeni <pabeni@redhat.com>
 
-> Currently pedit tries to ensure that the accessed skb offset
-> is writeble via skb_unclone(). The action potentially allows
-> touching any skb bytes, so it may end-up modifying shared data.
->
-> The above causes some sporadic MPTCP self-test failures.
->
-> Address the issue keeping track of a rough over-estimate highest skb
-> offset accessed by the action and ensure such offset is really
-> writable.
->
-> Note that this may cause performance regressions in some scenario,
-> but hopefully pedit is not critical path.
->
-> v1 -> v2:
-> - cleanup hint update (Jakub)
-> - avoid raices while accessing the hint (Jakub)
-> - re-organize the comments for clarity
->
-> Fixes: db2c24175d14 ("act_pedit: access skb->data safely")
-> Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> Tested-by: Geliang Tang <geliang.tang@suse.com>
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v2 -> v3:
-> - release lock on error (Mat)
+The test -- "delete and re-add" introduced by the above commit -- is
+failing on the different CIs with a debug kernel config. It is also
+failing without the debug config but it is less frequent, only on the
+public CI.
 
-LGTM. My Acked-by tag is re-affirmed :)
+Increasing the packet size from 1KB to 4KB makes the kernel sending
+multiple packets and it seems to fix the issues reported by the
+different CIs.
 
-- Mat
+Note: Paolo shared the diff on IRC without a commit message. I prefer to
+apply it like that (without his SoB) so we can stop ignoring CI's
+output.
 
->
-> note: part of the changelog is here, because -net will see only v2
-> (hopefully)
-> ---
-> include/net/tc_act/tc_pedit.h |  1 +
-> net/sched/act_pedit.c         | 26 ++++++++++++++++++++++----
-> 2 files changed, 23 insertions(+), 4 deletions(-)
->
-> diff --git a/include/net/tc_act/tc_pedit.h b/include/net/tc_act/tc_pedit.h
-> index 748cf87a4d7e..3e02709a1df6 100644
-> --- a/include/net/tc_act/tc_pedit.h
-> +++ b/include/net/tc_act/tc_pedit.h
-> @@ -14,6 +14,7 @@ struct tcf_pedit {
-> 	struct tc_action	common;
-> 	unsigned char		tcfp_nkeys;
-> 	unsigned char		tcfp_flags;
-> +	u32			tcfp_off_max_hint;
-> 	struct tc_pedit_key	*tcfp_keys;
-> 	struct tcf_pedit_key_ex	*tcfp_keys_ex;
-> };
-> diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
-> index e01ef7f109f4..d1221daa0952 100644
-> --- a/net/sched/act_pedit.c
-> +++ b/net/sched/act_pedit.c
-> @@ -149,7 +149,7 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
-> 	struct nlattr *pattr;
-> 	struct tcf_pedit *p;
-> 	int ret = 0, err;
-> -	int ksize;
-> +	int i, ksize;
-> 	u32 index;
->
-> 	if (!nla) {
-> @@ -228,6 +228,18 @@ static int tcf_pedit_init(struct net *net, struct nlattr *nla,
-> 		p->tcfp_nkeys = parm->nkeys;
-> 	}
-> 	memcpy(p->tcfp_keys, parm->keys, ksize);
-> +	p->tcfp_off_max_hint = 0;
-> +	for (i = 0; i < p->tcfp_nkeys; ++i) {
-> +		u32 cur = p->tcfp_keys[i].off;
-> +
-> +		/* The AT option can read a single byte, we can bound the actual
-> +		 * value with uchar max.
-> +		 */
-> +		cur += (0xff & p->tcfp_keys[i].offmask) >> p->tcfp_keys[i].shift;
-> +
-> +		/* Each key touches 4 bytes starting from the computed offset */
-> +		p->tcfp_off_max_hint = max(p->tcfp_off_max_hint, cur + 4);
-> +	}
->
-> 	p->tcfp_flags = parm->flags;
-> 	goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
-> @@ -308,13 +320,18 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
-> 			 struct tcf_result *res)
-> {
-> 	struct tcf_pedit *p = to_pedit(a);
-> +	u32 max_offset;
-> 	int i;
->
-> -	if (skb_unclone(skb, GFP_ATOMIC))
-> -		return p->tcf_action;
-> -
-> 	spin_lock(&p->tcf_lock);
->
-> +	max_offset = (skb_transport_header_was_set(skb) ?
-> +		      skb_transport_offset(skb) :
-> +		      skb_network_offset(skb)) +
-> +		     p->tcfp_off_max_hint;
-> +	if (skb_ensure_writable(skb, min(skb->len, max_offset)))
-> +		goto unlock;
-> +
-> 	tcf_lastuse_update(&p->tcf_tm);
->
-> 	if (p->tcfp_nkeys > 0) {
-> @@ -403,6 +420,7 @@ static int tcf_pedit_act(struct sk_buff *skb, const struct tc_action *a,
-> 	p->tcf_qstats.overlimits++;
-> done:
-> 	bstats_update(&p->tcf_bstats, skb);
-> +unlock:
-> 	spin_unlock(&p->tcf_lock);
-> 	return p->tcf_action;
-> }
-> -- 
-> 2.35.1
->
->
->
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/274
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
 
---
-Mat Martineau
-Intel
+Notes:
+    to be squashed in "selftests: mptcp: add subflow limits test-cases"
+
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 5763595c885b..48ef112f42c2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -2610,7 +2610,7 @@ endpoint_tests()
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+-		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
++		run_tests $ns1 $ns2 10.0.1.1 4 0 0 slow &
+ 
+ 		wait_mpj $ns2
+ 		pm_nl_del_endpoint $ns2 2 10.0.2.2
+-- 
+2.34.1
+
