@@ -1,38 +1,39 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B5D7F
-	for <mptcp@lists.linux.dev>; Thu,  5 May 2022 23:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D6B62A
+	for <mptcp@lists.linux.dev>; Fri,  6 May 2022 01:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651794035; x=1683330035;
+  t=1651799484; x=1683335484;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=x+T5AGc3fyhIDyjhT6Xd5HhRdbquPAj6YkryC4sY0gk=;
-  b=MtPpvza4cSRtk6aYm/FsgIVHXlMPmIXomanQiPkemQe72UhIgyRu/Ri0
-   DDgUC4MHBJkYQLLzsU9hHdmCqeOY+xwQjtaHkp7GKz4ecO3eNRVyXa+N2
-   6FmZZV9lB5KERdvPbZram8D2rmvjVlX/hJYFMcPJvwPFUaY0Q6l3U9zr5
-   lSo6ZZr0QKa3LL6+OYB0Y+8doIAizA8XRoTvf852vZmJy8XzTO6Xmtqgt
-   nVAWLZA+noOD0HPQzH8Eknj8FhzJPifVF8uR1smXdbc0lOYj4QmDeiWPy
-   YROtnAmiAmgOnTeVe4paTm/j928E1oJ9S8GHPGSRrNFSypbdA74W8oJIl
+  bh=v9mpXvU3XHd7dTBQzwS7hLxGRKoG1NYs+W8iaCU5jME=;
+  b=L3b3UFcvCLRwwU4mVab0Bj2nkQnWtkD+ufDjMQC6OHqugBveWgBbNqSZ
+   9L4JCVTZFX6XN2Pa1GjF+u4oNZdWgOfeY7dzPUyoXwR79N9jnYOVmuD8K
+   gi/TFLKIlxgvTfKYaT5pEFn/gJFV4PaGm0f8fjp/BmVPcQ+l2JjlLWutt
+   m4gAdwcPjCG+0X6hCuxT2NVnHUqiNwWrkp71gX64dQzsOG+EkaeGNVbm7
+   z21gA9Dw4zPKhbQccaMZg3Ui+jkDj8tfzdTIhBFDnuEYB8h1a0pU3la7s
+   y6ONeFbw0MpqCnDvqVfTDNu7nNClDEChmwyC4riAoAlTa9AbD/sd/0WpG
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="267127899"
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="267910995"
 X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="267127899"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 16:40:34 -0700
+   d="scan'208";a="267910995"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:11:22 -0700
 X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="621533206"
+   d="scan'208";a="665234055"
 Received: from barreola-mobl1.amr.corp.intel.com ([10.212.167.175])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 16:40:34 -0700
-Date: Thu, 5 May 2022 16:40:34 -0700 (PDT)
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:11:19 -0700
+Date: Thu, 5 May 2022 18:11:19 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Revert "mptcp: add data lock for sk timers"
-In-Reply-To: <0343ae0f3f81535f20d387147ce6b8e4158cc1fc.1651770128.git.pabeni@redhat.com>
-Message-ID: <bdde3a40-1471-c8b9-65bd-f53ddebacdb4@linux.intel.com>
-References: <0343ae0f3f81535f20d387147ce6b8e4158cc1fc.1651770128.git.pabeni@redhat.com>
+To: Maxim Galaganov <max@internet.ru>, Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
+Subject: Re: apropos
+ https://github.com/multipath-tcp/mptcp_net-next/issues/265
+In-Reply-To: <3c85fe48-69fe-0655-2146-a4424e02f185@internet.ru>
+Message-ID: <d7497da1-86e4-30ae-aca-633b71facdcd@linux.intel.com>
+References: <3e23ea866374467e2c9aeec60049716b42d6634e.camel@redhat.com> <c1513b33-add8-3e16-d14d-0b1886061040@internet.ru> <e69d4d2bead08317ad3af55ffe415b8f94877948.camel@redhat.com> <3c85fe48-69fe-0655-2146-a4424e02f185@internet.ru>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,120 +42,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Thu, 5 May 2022, Paolo Abeni wrote:
+On Wed, 4 May 2022, Maxim Galaganov wrote:
 
-> This reverts commit 4293248c6704b854bf816aa1967e433402bee11c.
->
-> Additional locks are not needed, all the touched sections
-> are already under mptcp socket lock protection.
->
-
-I agree that this needs to be reverted:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-
-But msk->sk_timer is *also* accessed in two places without the mptcp 
-socket lock (but with the data lock):
-
-  * mptcp_pm_mp_fail_received() (stop timer when mp_fail received)
-
-  * subflow_check_data_avail() (start timer on infinite mapping rx)
-
-
-I think these were the reason the locking was added, because we don't want 
-the use of msk->sk_timer for MP_FAIL timeout to interfere with other use 
-of msk->sk_timer when a msk is closing.
-
-Now I see that the data lock doesn't work for that purpose. In addition to 
-removing the data locks as this patch does, it looks like the two 
-functions I listed above need to use msk->cb_flags and deferred events to 
-safely check msk->sk_state and modify msk->sk_timer. What do you think? I 
-can send a patch on Friday.
-
-
-- Mat
-
-
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c | 12 ------------
-> 1 file changed, 12 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 5243c58789a4..ff567e9d0b1f 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1605,10 +1605,8 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
->
-> out:
-> 	/* ensure the rtx timer is running */
-> -	mptcp_data_lock(sk);
-> 	if (!mptcp_timer_pending(sk))
-> 		mptcp_reset_timer(sk);
-> -	mptcp_data_unlock(sk);
-> 	if (copied)
-> 		__mptcp_check_send_data_fin(sk);
-> }
-> @@ -2516,10 +2514,8 @@ static void __mptcp_retrans(struct sock *sk)
-> reset_timer:
-> 	mptcp_check_and_set_pending(sk);
->
-> -	mptcp_data_lock(sk);
-> 	if (!mptcp_timer_pending(sk))
-> 		mptcp_reset_timer(sk);
-> -	mptcp_data_unlock(sk);
-> }
->
-> static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
-> @@ -2707,10 +2703,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
-> 		} else {
-> 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
-> 			tcp_send_ack(ssk);
-> -			mptcp_data_lock(sk);
-> 			if (!mptcp_timer_pending(sk))
-> 				mptcp_reset_timer(sk);
-> -			mptcp_data_unlock(sk);
-> 		}
-> 		break;
-> 	}
-> @@ -2811,10 +2805,8 @@ static void __mptcp_destroy_sock(struct sock *sk)
-> 	/* join list will be eventually flushed (with rst) at sock lock release time*/
-> 	list_splice_init(&msk->conn_list, &conn_list);
->
-> -	mptcp_data_lock(sk);
-> 	mptcp_stop_timer(sk);
-> 	sk_stop_timer(sk, &sk->sk_timer);
-> -	mptcp_data_unlock(sk);
-> 	msk->pm.status = 0;
-> 	mptcp_release_sched(msk);
->
-> @@ -2877,9 +2869,7 @@ static void mptcp_close(struct sock *sk, long timeout)
-> 		__mptcp_destroy_sock(sk);
-> 		do_cancel_work = true;
-> 	} else {
-> -		mptcp_data_lock(sk);
-> 		sk_reset_timer(sk, &sk->sk_timer, jiffies + TCP_TIMEWAIT_LEN);
-> -		mptcp_data_unlock(sk);
-> 	}
-> 	release_sock(sk);
-> 	if (do_cancel_work)
-> @@ -2924,10 +2914,8 @@ static int mptcp_disconnect(struct sock *sk, int flags)
-> 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
-> 	}
->
-> -	mptcp_data_lock(sk);
-> 	mptcp_stop_timer(sk);
-> 	sk_stop_timer(sk, &sk->sk_timer);
-> -	mptcp_data_unlock(sk);
->
-> 	if (mptcp_sk(sk)->token)
-> 		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
-> -- 
-> 2.35.1
+> On 04.05.2022 12:52, Paolo Abeni wrote:
+>> 
+>> Could you please additionally test the following patch? Kernel for both
+>> arches must be rebuilt.
+>> 
+>> This should cause old x86 build with csum enabled to fallback to TCP
+>> while interoperating with new ones, which is ugly and bad, but - given
+>> that csum is disable by default - possibly still acceptable?!?
 >
 >
+> The results for me are as follows:
 >
+> old x86_64 (5.17.5) + old mips (5.15.35) => reset
+> new x86_64 (5.18-rc5+patch) vs old mips (5.15.35) => works
+> new x86_64 (5.18-rc5+patch) vs new mips (5.15.35+patch) => works
+> old x86_64 (5.17.2) + new mips (5.15.35+patch) => reset
+> old x86_64 (5.17.2) + new x86_64 (5.18-rc5+patch) => reset
+> new x86_64 (5.18-rc5+patch) talking to itself => works
+>
+> I edited the patch so that it applies to my kernels, and this might be the 
+> reason I don't see fallback but see reset instead -- I don't have "mptcp: TCP 
+> fallback for established connections" patches in my tree as they are only in 
+> net-next yet. Or I may be doing something stupid.
+>
+> Is there a way for an old box without infinite mapping support to fallback an 
+> established connection in case of csum failure?
+>
+
+In some cases, I think we can do that!
+
+Both peers do not consider MPTCP "fully established" until they receive a 
+valid DATA_ACK, and the old box will fall back if the new box sends an 
+infinite mapping in response to the first data. So, if as part of the fix 
+we make sure the new box responds to a bad checksum in the initial DSS (or 
+MPC+DATA) with an infinite mapping instead of a reset, fallback should 
+work. And I think what's needed to do that is to only set subflow->mp_fail 
+at the end of validate_data_csum() if subflow->fully_established is 
+'true'.
+
+However, if the new box is the first to send data with a checksum, the old 
+box decides whether to reset or fallback. It looks like unpatched 5.17, 
+5.16, and 5.15 would send a reset in this "patched host sends data first" 
+scenario. 5.14 looks like it would fall back? Older MPTCP kernels don't 
+support DSS checksums.
+
+This means that if the use case is a client/server setup where the client 
+sends data first, and the server is running a new/patched kernel, we get 
+the fallback behavior. That's good!
+
+
+This still leaves that "patched host sends data first" scenario that 
+should be addressed. The RFC requires checksums to be enabled if one peer 
+requests it in the SYN/SYNACK handshake. Is it too much of a kludge to use 
+a sysctl that would force TCP fallback if a peer requests checksums? This 
+would be just like the behavior we had in v5.13 and earlier. We could add 
+another state to the existing MPTCP checksum sysctl ("force fallback if 
+checksums requested").
+
 
 --
 Mat Martineau
