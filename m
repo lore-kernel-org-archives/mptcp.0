@@ -1,158 +1,198 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790651865
-	for <mptcp@lists.linux.dev>; Mon,  9 May 2022 11:53:56 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id v12so19051422wrv.10
-        for <mptcp@lists.linux.dev>; Mon, 09 May 2022 04:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=TvsdTmKIer9xfAKMURdrScAEsigvcyJw/rMbr9eMKP0=;
-        b=U2bnpuhcNMVxyw2LyEOavi5LDrRGnepz0GPaocEslA9uagNJUS0eqVl9kRnUN8qMFZ
-         ihg57G4jc/mRxcYSvzYpYEm9RMAtl3K5qpV1YbTIa6aAvfSZxjksq3Jm9ZNCwkskIFkn
-         /tKBM6ZCjhDnzrA6lI2XRsDOQKoGJjqztPGk8NayLvGihS+iaqvG5qOQJQByMfguCPV4
-         hIYZzc+YNE61jrQkGGDwk2P4s/sALgCCaJCr4Qh/3XgjSkNui8MmoZ8Zh6amFMo38M9Z
-         mzJ9UE1fGPSYNnUIPu08Pqt3Yvq50oKJMKktAxpc1++EP76TNcfYq7ftYt1CPJJI4pvA
-         zyzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=TvsdTmKIer9xfAKMURdrScAEsigvcyJw/rMbr9eMKP0=;
-        b=e1tPqE28ZsMAz7+l68pedXbTSioyNO20Nr+40dBQnRuWlwTma+RzFnnXqbYM2Y22Y6
-         zV0OBJZ1HkPxwYVEWjwri9t/ewHYKfK4TaLLUovc745ImnG2hx4gRVeYMcQy5PD3hw2T
-         fTw05hBcK75op4n9D3GI+jV7HEpaH2VvMHi4dhO3QDaVuTKwhJu5P1tUauSz+T77W6PU
-         E2kjc5jam2xfbaRTKox8GX8XBU59b5lL2kqD91sd0efmePDANL1jcv6Gk4xmEBQuyBaN
-         10BA2Lz2bAcf+dShIPal3lbkbLMdpT3FQeXD5lIYa/c5zag9TxLXUNCE1XvAfp8AgrL9
-         5zBw==
-X-Gm-Message-State: AOAM531pvXfkt6KE+FUu0wMxJiRhTLtG2ReTXWRuWg7FWyFucni6geQr
-	s9xjEHddQmGnE1chWx0QbfLogQ==
-X-Google-Smtp-Source: ABdhPJzB14PvSVkhVDrWLZuMx9hwh+4TP+GNxB4g6TIXZj19F7fPLSVVHy/R9YcAKZWGgX81Ltgh3g==
-X-Received: by 2002:adf:f7cb:0:b0:20c:9dbd:49be with SMTP id a11-20020adff7cb000000b0020c9dbd49bemr13378311wrq.250.1652097234305;
-        Mon, 09 May 2022 04:53:54 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id g6-20020a1c4e06000000b00394708a3d7dsm11264451wmh.15.2022.05.09.04.53.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 May 2022 04:53:53 -0700 (PDT)
-Message-ID: <247ec851-ec60-5b32-43f9-a3562dc0aca4@tessares.net>
-Date: Mon, 9 May 2022 13:53:53 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0B51FA0
+	for <mptcp@lists.linux.dev>; Mon,  9 May 2022 14:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+	t=1652108219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JqJ+yJ21UAgg5CPdteNZ35KXhzVuokO2ATtIVVszC9I=;
+	b=ELkzb/fhIweBVPAkyUvKutPCcM0d23QBF1SwWaqnNlFPpOTqHU/HVHHgLr6dKgIBaGlWAI
+	3ZoBIT21pTHqGHdK1BqVrxH1QS7QNYSw80oNHgai1GAAvfJHWvvzufIlIHHyL82aodgshy
+	tvzCSUxlyIt7IB9RdiSsGxwC51z68Z8=
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur01lp2057.outbound.protection.outlook.com [104.47.2.57]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-24-3vdzZbNDOU-bIfP0KTHrjQ-1; Mon, 09 May 2022 16:56:58 +0200
+X-MC-Unique: 3vdzZbNDOU-bIfP0KTHrjQ-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RHib0eqr5qpZpwMRHDTtOVONqAdyYh2D8R8lkOVEq77aiTBJkOI4godDy39d5Agm/spBDgLPnn/ugoyYHu5d/2cp2+Cj5S0YIB/Qk5s7NZarc7wHdP5vywilXnzWIM/A9CtKEyuewh9LILXHschbT9IG7D2FxqRb1qIpucHoZsu/HFiB6T0PLyh4INErd2OpIxwDmzHcWRpkfTFKvoqCNk++kWm264N66ryt8ODFEShuk9mqsjsq3KppVX0fzW+7FvBupUxiazxqfcNOMtVQykfo+V1RHqD8tPVKpFNwffwFeFjhBO1MHsguDnUfA4tRsVpF5IoVXxcd4tWTVyjf3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=z9Q+Dygnfh2Zz8ctcZMFJjhhQ6gh0xqb4/jIKcVu2Ig=;
+ b=KNuIZE3muU0VbF+1N/kvs51kc0u7/MfjHgkQ/bZvavJ4rgfFiDaZX0ARk5uaRzQXxAM+pof5NywJJqQbIa6AWsNcrruYmTc/auofVAtsN/Iq39jQHACEZyy6EbQBakvje3LSVKEtYvkewZBGS7wm/sDvh2MM0LOkylPRyhWLak0i3TleyN7RgQI/abkVSzLIF7wyijB1CX+Zi0rBSJ7qKmrJPo9qpwg0cQIJUoJEZJ8/hNyBua329sp+9e7iHrHw+350NzrI+GzPNXxFENKwy0bVRkjDovPro32++g/Cyzv37MwIPvDTujUBgpVg0Sl74YpoR5BTG7gjA3hyoBxYvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AS8PR04MB7975.eurprd04.prod.outlook.com (2603:10a6:20b:2a4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.23; Mon, 9 May
+ 2022 14:56:57 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::9974:fd5e:e3c0:14dc]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::9974:fd5e:e3c0:14dc%3]) with mapi id 15.20.5227.022; Mon, 9 May 2022
+ 14:56:57 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+CC: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v13 0/3] BPF round-robin scheduler
+Date: Mon,  9 May 2022 22:56:46 +0800
+Message-ID: <cover.1652107942.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: HKAPR04CA0012.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::22) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: bpf: add MPTCP test
- base"
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <83acce83a5bafc3b45c45b56105678210d07ac92.1651904124.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <83acce83a5bafc3b45c45b56105678210d07ac92.1651904124.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 78d91aef-fe55-4e38-f813-08da31cc29c3
+X-MS-TrafficTypeDiagnostic: AS8PR04MB7975:EE_
+X-Microsoft-Antispam-PRVS:
+	<AS8PR04MB7975FD8C31487BB0C0BE592CF8C69@AS8PR04MB7975.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	AvnFLuMdQF49boNx4h0NmIzAkBhe0ncqkSbMIfn4hxWwYZpGTpEeXSScw9V6ATHLs3NatXZPEix/jCom8BtJTtw3kOdb9D0fy0bzFvkxyqgN29GPW2Dq0IozBLkivU+KXLL3g5tfZZzmWuKutxwiCyW+ve1oc6xxrnP8PcK32gQ3FmMuNWhoO/P47zxc5YUUbpY1986QKDwYBN7CsPP3jwuq/Q2PSnL11mfQKQU2jdG+Ehgl+VqrG1N+j4+hylz4oDj3ORE3uSGfajzJdbVdsYqNb1E+AaHMtq00IzUrnb5kGzelNAyJ/BOaJzU0eabD9TGIf8scE5qU1guofPoJVn869b0tIgoIPVixewCz99WeyfWB0rZM1YJ/aq4M3+a+1hc/g4SgLx/0nlEPQa2KaFh9bHMVHAtVlApoDS9xvlBNXEyaoDcux3YdrXvuqy03HewMGaKuu75YS9Se+T/fnhn5A6dk1RvElNoEV3urMR8v+Xlbi2hBrbbvNe8SZtIVPnzkVs9twrRZEtK6JCvWA55XNqTJ6/Zn+huU/mi+kOGiCMBXVZGEfaoYpeHNSDXyANxnKwXoQt1hgWcIi7we5aHtLr3/vbPTNEZe5qfdb2tZ3/2t3aQTv/AFgUF6uLkjvsZto4ejPDyXvL5ho2NKactphxmPkPKgrC4AspXIWL54SCcm6FIP6dt7lfhZPdptBQVWgJfU+8nqoEWq1ykZoo/imSBHP55c8vtvnEzR8f2IkLkUBRoztoOp+rmJCKGxwd7h/nm7GTp4FcLnkB8LixaN6q1eIme8yPWN4dPBs/Brg1nLRcceQTmFPKTjY3tr
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(508600001)(966005)(6486002)(66476007)(66556008)(8676002)(66946007)(86362001)(4326008)(316002)(2616005)(26005)(6916009)(6666004)(38100700002)(6512007)(5660300002)(6506007)(107886003)(2906002)(186003)(83380400001)(44832011)(36756003)(8936002)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?L8p+zkvZelHwutkZ3WXu8XoXw4yLmuKYJFRxJDluXhA+6tfzIE8X6Ri6wcKu?=
+ =?us-ascii?Q?ogks1R6u9+alKjaTcUlBPJ/AbK7couFyMVrBIVd7bLDK0URcl9+ZYY3JEdV9?=
+ =?us-ascii?Q?oLI/QD0Hpj2NSEUUlSJFdfbk25WggiFHD0oNM8//Boh/wStiWoE+iqsiVB4g?=
+ =?us-ascii?Q?SGRK4TsNCGHmfvN5wguIDZEyFnesyZd1GI7Rtpsfv/D2tWPdPaxVefFmsPGp?=
+ =?us-ascii?Q?L+w4oqdgn3PQw6vDjnxV+B9/KgZtjDy2S8WtSAhLE+vjTyRCih3608rPNjFm?=
+ =?us-ascii?Q?7prjqvvcysYDUElBN3b7Q4sTmlKOAhYykaaSltqvkaez1ds1h0B1mY70iWEW?=
+ =?us-ascii?Q?Z/Ls3YkaEVKWTRd/h/WdFarAWnHyzAom4vfOpNHFN1k/cHf3HeBa7h5wSJla?=
+ =?us-ascii?Q?TTs9R9ux8840MnQ5lRsJ3cwQ+btPH/b2uOJRnUMuSlucd0i9BEEElkPioD+H?=
+ =?us-ascii?Q?ZGcYNFRQoI729v4V5acqxf/LG4Oa0FJg8zHLz1sHA4CO20HhePDpbk6WtzPw?=
+ =?us-ascii?Q?1RrasgbbQN1in2t5o6M7RP8dOgwP3uGADfTdJMJKhaQl5EZd4NsPMEcX2MQm?=
+ =?us-ascii?Q?TxgXl7x557czQxelsrL/MVyiC97paQ2VDGPw1V+dawwqbxVZ9Qvqk1rqPEQF?=
+ =?us-ascii?Q?1v4tXgqzaYHIMFGwFXKaGJ4LXpWLNE6Xyx0/mXfiNV26NhSzfQ2DvkXy6Vog?=
+ =?us-ascii?Q?XqWK2X6WAb+4zqRyl8jnkEL+VsWKS1IrTluxDDz/2JMbGWv7TFDuxLFA5ubb?=
+ =?us-ascii?Q?YenPbcqdN3PpFFFTJanDN32JgjtkIYq3kIbpK44rkZFfC4bkgEqbcK7WkkMH?=
+ =?us-ascii?Q?YBWgFau4zfJBNW97XyJcB16AedE2PS5SbBois4xKtiB7kEv34KbFRwYK6/3t?=
+ =?us-ascii?Q?89K+PIR9tKAi+VeP/9Tv7D8jfsrZSb7RWUagcaLXb3BYgJm+ZToYE35RBae6?=
+ =?us-ascii?Q?7wCBY1tVNYWG14xfNL0BsTSuMyBxS+erxlNXoILciyJyV1KuTjFkr3QnMoJd?=
+ =?us-ascii?Q?AmKrD/UCQViBxtdi5RiV8RQqt5DiFUC1NhMp+m4v8Ckvnes89MsFJV0RpAJU?=
+ =?us-ascii?Q?4Kzfj4P6DGdYserKpc/Pm+8ch6Kjlbt+Hy/iVsL4m4NJsFBY6xtqsgWY149R?=
+ =?us-ascii?Q?UsdP/FHT6pzigGcLLMl2hyCVggkvI7jabKVVXCAbQdUsGmgUb/1aroEVuPaB?=
+ =?us-ascii?Q?dBzOQNttr9M+iKlKCn+Vi9x+rivfGRip6oFahoa6kPan9XaZ/eFuzpYmQiQI?=
+ =?us-ascii?Q?j/4fGfnxVPQLsnEuqUDBoW9fS9TG7BKe9MC52e43UUkb14qHozgMCZxs14Tw?=
+ =?us-ascii?Q?U553BLqnctgkFlZ2hM86o76Zs3XCqqTQ29aHNC/nyUcaOmTSEjDUsDWpccEi?=
+ =?us-ascii?Q?go3ykrwRPtrgrOMYM8xO61EEZo7vCGaR4zILQu2/tcvaXEq5/Uspq8+6yfJy?=
+ =?us-ascii?Q?3yUW7m5iSxksru77vhHv2Udz7UumohQjSfXAnS0pJUKPkCvUcM3sgFPWaMU3?=
+ =?us-ascii?Q?YNqBgzGRtZo2MlEthoPzTXDFCpxslLDEdnfCf8S5UC8lRHfRjRYxq+PMh9lx?=
+ =?us-ascii?Q?EVPN9PnfDFdx3cKRiDxsgX30DQfJNflsk5hbTLdSSzXF9sRhppPOtofnM143?=
+ =?us-ascii?Q?zlUkI8sRkL0cnt8mVdoPy4mfqgWLS4qgmE1qZutQf71EFE8wAT3AGN5Z/5Hp?=
+ =?us-ascii?Q?8mbB+E/zS93Esi7zp+lBn3FfAagAm247Qx8Z8K2e4NnnTqBhhe5GLZf8A6iA?=
+ =?us-ascii?Q?56t4phm8186Sa8InRdJtLQYT98Zv8nc=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78d91aef-fe55-4e38-f813-08da31cc29c3
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2022 14:56:57.3894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZTbcy05Gmdws4BcQTC29E3lhPRrzdkw8EDbqU6/eqYOfrdDxD2UYntUEAjojFLejRazMeMChsu8TiCslL8uxxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7975
 
-Hi Geliang,
+v13:
+ - add !msk->last_snd check in patch 2
+ - use ASSERT_OK_PTR instead of CHECK in patch 3
+ - base-commit: export/20220509T115202
 
-On 07/05/2022 08:17, Geliang Tang wrote:
-> Address to Andrii's comments:
->  - add copyright 2022
->  - use ASSERT_* instead of CHECK_FAIL
->  - drop SEC("version")
+v12:
+ - init ssk from data->contexts[0], instead of msk->first.
+ - cycle through all the subflows, instead of the first two.
 
-Thank you for the patches!
+v11:
+ - rename array to contexts.
+ - drop number of subflows in mptcp_sched_data.
+ - set unused array elements to NULL.
+ - add MPTCP_SUBFLOWS_MAX check in mptcp_sched_data_init.
 
-I also replaced a few ASSERT_GT() by ASSERT_GE() and update the commit
-messages: prefix + changelog. Please check if I didn't miss anything :)
+v10:
+ - init subflows array in mptcp_sched_data_init.
+ - for (int i =3D 0; i < data->subflows; i++) is not allowed in BPF, using
+   this instead:
+	for (int i =3D 0; i < MPTCP_SUBFLOWS_MAX && i < data->subflows; i++)
+ - deponds on: "BPF packet scheduler" series v18.
 
-- f0bf012a62d0: "squashed" in "selftests: bpf: add MPTCP test base"
-- bcb1ed91a0e2: use ASSERT_GE instead of _GT: fd == 0 is valid
-- d13c2826b435: conflict in t/selftests-bpf-test-bpf_skc_to_mptcp_sock
-- Results: 2b6d9d722f05..2b4b3ea4ee81 (export)
+v9:
+ - add subflows array in mptcp_sched_data
+ - deponds on: "BPF packet scheduler" series v17 +
+               Squash to "mptcp: add struct mptcp_sched_ops v17".
 
-- b8c48e454a31: "squashed" in "selftests: bpf: test bpf_skc_to_mptcp_sock"
-- c2d9dbcf32da: use ASSERT_GE instead of _GT: fd == 0 is valid
-- 909c2e46449c: conflict in
-t/selftests-bpf-verify-ca_name-of-struct-mptcp_sock
-- Results: 2b4b3ea4ee81..edd1596ddede (export)
-- 105fd75cff3a: "squashed" in "selftests: bpf: test bpf_skc_to_mptcp_sock"
-- Results: bb750830dfba..21c7846253fc (export)
+v8:
+ - use struct mptcp_sched_data.
+ - deponds on: "BPF packet scheduler" series v14.
 
-- d2a584bb2988: "squashed" in "selftests: bpf: verify token of struct
-mptcp_sock"
-- 023c51695e66: use ASSERT_GE instead of _GT: fd == 0 is valid
-- Results: edd1596ddede..44a1ca452f9d (export)
+v7:
+ - rename retrans to reinject.
+ - drop last_snd setting.
+ - deponds on: "BPF packet scheduler" series v13.
 
-- 18126dc0fe4f: "squashed" in "selftests: bpf: verify ca_name of struct
-mptcp_sock"
-- 8d3b8669d7a4: use ASSERT_GE instead of _GT: fd == 0 is valid
-- Results: 44a1ca452f9d..bb750830dfba (export)
+v6:
+ - set call_me_again flag.
+ - deponds on: "BPF packet scheduler" series v12.
 
-- 67678621ed32: "squashed" in "selftests: bpf: add bpf_first test"
-- Results: 21c7846253fc..ae3944c04e7a (export)
+v5:
+ - update patch 2, use temporary storage instead.
+ - update patch 3, use new helpers.
+ - deponds on: "BPF packet scheduler" series v11.
 
+v4:
+ - add retrans argment for get_subflow()
 
-- 17c227d200aa: tg:msg: add changelog for "bpf: add
-bpf_skc_to_mptcp_sock_proto"
+v3:
+ - add last_snd write access.
+ - keep msk->last_snd setting in get_subflow().
+ - deponds on: "BPF packet scheduler" series v10.
 
-- 94caf3b41f66: tg:msg: add changelog for "selftests: bpf: Enable
-CONFIG_IKCONFIG_PROC in config"
-- 8da49841ed59: tg:msg: fix prefix for "selftests: bpf: Enable
-CONFIG_IKCONFIG_PROC in config"
+v2:
+ - merge the squash-to patch.
+ - implement bpf_mptcp_get_subflows helper, instead of
+   bpf_mptcp_get_next_subflow.
+ - deponds on: "BPF packet scheduler v9".
 
-- 3f14113ff1f6: tg:msg: add changelog for "selftests: bpf: add MPTCP
-test base"
-- 542fa9c889e0: tg:msg: fix prefix for "selftests: bpf: add MPTCP test base"
+This patchset implements round-robin scheduler using BPF. Address to
+some commends for the RFC version:
 
-- 9f1d3a3094b4: tg:msg: add changelog for "selftests: bpf: test
-bpf_skc_to_mptcp_sock"
-- e8c7107863e8: tg:msg: fix prefix for "selftests: bpf: test
-bpf_skc_to_mptcp_sock"
+https://patchwork.kernel.org/project/mptcp/cover/cover.1631011068.git.gelia=
+ngtang@xiaomi.com/
 
-- b6003fc6580c: tg:msg: add changelog for "selftests: bpf: verify token
-of struct mptcp_sock"
-- 7195dbb7ee5d: tg:msg: fix prefix for "selftests: bpf: verify token of
-struct mptcp_sock"
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/75
 
-- 58ce37bdb3ce: tg:msg: add changelog for "selftests: bpf: verify
-ca_name of struct mptcp_sock"
-- 5431605d68cc: tg:msg: fix prefix for "selftests: bpf: verify ca_name
-of struct mptcp_sock"
+Geliang Tang (3):
+  mptcp: add subflows array in sched data
+  selftests/bpf: add bpf_rr scheduler
+  selftests/bpf: add bpf_rr test
 
-- 9fc1e8122379: tg:msg: fix prefix for "selftests: bpf: verify first of
-struct mptcp_sock"
+ include/net/mptcp.h                           |  2 +
+ net/mptcp/sched.c                             | 14 ++++++
+ .../testing/selftests/bpf/bpf_mptcp_helpers.h |  8 ++++
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 38 +++++++++++++++
+ .../selftests/bpf/progs/mptcp_bpf_rr.c        | 47 +++++++++++++++++++
+ 5 files changed, 109 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
 
-- c007e06819ef: tg:msg: 'selftests: bpf:' -> 'selftests/bpf:'
-- 227c9d78e571: tg:msg: 'selftests: bpf:' -> 'selftests/bpf:'
+--=20
+2.34.1
 
-
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index cd548bb2828f..760374f1fce4 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-
-(...)
-
->  	prog_fd = bpf_program__fd(prog);
-> -	if (CHECK_FAIL(prog_fd < 0)) {
-> +	if (!ASSERT_GT(prog_fd, 0, "bpf_program__fd")) {
-
-See my commit bcb1ed91a0e2 and a few others after: the fd can be zero,
-we need to use ASSERT_GE().
-
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220509T115202
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
