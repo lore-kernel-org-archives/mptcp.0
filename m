@@ -1,112 +1,120 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530731FC0
-	for <mptcp@lists.linux.dev>; Mon,  9 May 2022 16:48:32 +0000 (UTC)
-Received: by mail-io1-f44.google.com with SMTP id z26so15963639iot.8
-        for <mptcp@lists.linux.dev>; Mon, 09 May 2022 09:48:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8635423A8
+	for <mptcp@lists.linux.dev>; Mon,  9 May 2022 21:00:30 +0000 (UTC)
+Received: by mail-io1-f51.google.com with SMTP id f4so16661050iov.2
+        for <mptcp@lists.linux.dev>; Mon, 09 May 2022 14:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=vE9gWrIOGyVkXXXfqaV2b2a7Q8TKiLVMfJbn9w6GtSk=;
-        b=OGpWvOD0jXgX10RAffU/fANQPfRDtkesSoBz08xCHJlD/34mqrr8FnD+YHu/jdniX3
-         dhFiSVdOIyWetFcpavAkgaakg9jrmueoqkYkI9K+MuFlDWvKHLb/cZx2+vC/PADni5Kl
-         zkAaMg9OqJY32E1TY5Yw0lTsYhJYJHOA2Lci7FEH9VB/wExHf84c6ixtX9nrf5WvQ6uH
-         qsPinkdNTyzFRgFqYVCUZp/A0uE9cAh0cT9kF3DSkdNCyfNYgnE3B3u6GFV9CKU6M/gw
-         TwbYcVWOelWHUMqr8h78H54ijrkcr3yqcmOtbz2IJrMtVxOoGyASlmveklv0eYn2KoHU
-         HIHQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sfa+L1MKfwEVwek6Xm7/cKDId/OMBsX1x8UVDLlmeV4=;
+        b=GCcrFI3Odr9GEQgYk8BV9rgcTKJnDUVqyrcwwE8GZdomb9ZZZ40xoKK1GBfnEosnPj
+         u9IrBFEnhZVUHU8eaZjvaGo70R4xC5KXjvW29q5KhLYK/fo6usoEYN6MIeeV0lc2ZdR6
+         x8dHu9Igf9AZjD0htWBDkZJgLP1JAG1nHNiKXfE+1TG9kOET4UfllxU5HDxhmv/jhDzO
+         VuF8hIfIi1d9kPdYYJqH02+/Z6zpxd5R65F++gsJoKvarCKcd6lrZ29HtkORxGzOOxGT
+         lP50Np5GQIk5WOeqdt8FqjvmP4yvwoaAG3FYMg8B6a91RV7dqj/fnUaYpvtKmNhjnjv7
+         Hzvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=vE9gWrIOGyVkXXXfqaV2b2a7Q8TKiLVMfJbn9w6GtSk=;
-        b=TBRXtlykqoCDWresQeA+tg1j4Nx1cY0imzfdiS6NV/mEXeLBISPJW8wP1ky6rT63VH
-         xOupBypwPOE2VHpUOISLpjn/MaFdgejHWsKPvtnHSyz0GP3S8Onzag695vb+kaIbWf0f
-         U3U/3nVu5Ri6CTrmIerZFd5zI1GXWjhSH8xkDrRLZfd1kM9P2li/k2hku9rd7kktOdlr
-         v3c2kOm8byLZgWqXL23xge3+pw5GroXiOCT5TGHWp20ehqgUUbq0PzqPaDXmr1JdAdXN
-         PQ4FRjx+N0BHFE5xfakJ7khkFd+Xq/uU/3fKVEfCnpXQrAErNi4xfAjJPA7OgnDj+RMC
-         Cxrg==
-X-Gm-Message-State: AOAM530IGeK4X4v/8GtjpSubMXzXqqET+diQuUu8g0n2BIwMzrdyLZPr
-	MUPIni0fmL6XpY6uB4qI+huv0GEP4A==
-X-Google-Smtp-Source: ABdhPJxTYGOlJL/Ys1w/hToxds1Y6blK6K9tQvxXckUAfd8yaX1gcdLXZhDX7wMWd5fzJzDfK17sCQ==
-X-Received: by 2002:a02:a507:0:b0:32b:543:d66 with SMTP id e7-20020a02a507000000b0032b05430d66mr7218025jam.146.1652114911342;
-        Mon, 09 May 2022 09:48:31 -0700 (PDT)
-Received: from [127.0.0.1] ([52.173.183.144])
-        by smtp.gmail.com with ESMTPSA id d4-20020a023f04000000b0032b3a7817a3sm3682331jaa.103.2022.05.09.09.48.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 May 2022 09:48:31 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <96f9ac276c4f24d2ef189987522dc0c987266c94.1652107942.git.geliang.tang@suse.com>
-References:
- <96f9ac276c4f24d2ef189987522dc0c987266c94.1652107942.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: add bpf_rr test: Tests Results
-Message-ID: <50b3a977-8bea-071d-0c95-e9f3c6f479a3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 May 2022 16:48:30 +0000
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sfa+L1MKfwEVwek6Xm7/cKDId/OMBsX1x8UVDLlmeV4=;
+        b=xHPQlYCiojjlme5uAhjOQuxOxu3Y2uzPLXx4xiybKNFOlAha3uMlxLoRQcHpbUn1N0
+         164d0pV9GAfBmJZQUzHF7X3T0fmNMvOmzYwZ36KOzvexCCRpWDDKsNWbtCxNnpkMw7jp
+         OpJ0B4ydKpUTUW4625hHl7wHXnVtjr+Y3FWC8hFX4gFkuIhnk0+/owrannopD4Q7eCUr
+         A9Hxv63L4h4w3WAU0ruz+WES9FUKLrLTsBUcf+jEBzba5Kct9TL1Abgy0kDWxRb+A2UE
+         RNJWU0nB1ydFqvJt2xWCE2CWn1Z92VMhs3w+UVJurFMga07IhYKEOumwQ0tdmm9GPNz9
+         /+xQ==
+X-Gm-Message-State: AOAM530KG+wbbPNtEJsUSSKsynLDFkcv7D6OnswsU4YHyWtZr5W4p3Cm
+	VHsYFKaN4MXv+MTPDDAl/7q0rb0g2ZS/Q3uCxkc=
+X-Google-Smtp-Source: ABdhPJwSq+cVlV6IA0h/x6EIQOBZsDxmow6vmYrzlXG44EPzm6h31VbH2TlRahj+ZSCn2GWJWzi9tjE0CBuyemGsSfY=
+X-Received: by 2002:a05:6638:16d6:b0:32b:a283:a822 with SMTP id
+ g22-20020a05663816d600b0032ba283a822mr8275162jat.145.1652130029615; Mon, 09
+ May 2022 14:00:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20220502211235.142250-1-mathew.j.martineau@linux.intel.com>
+ <20220502211235.142250-6-mathew.j.martineau@linux.intel.com>
+ <CAEf4BzY-t=ZtmU+6yeSo5DD6+C==NUN=twAKq=OQyVb2rS2ENw@mail.gmail.com> <8afe6b33-49c1-5060-87ed-80ef21096bbb@tessares.net>
+In-Reply-To: <8afe6b33-49c1-5060-87ed-80ef21096bbb@tessares.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 9 May 2022 14:00:18 -0700
+Message-ID: <CAEf4BzbwGHtoEooE3wFotgoYi8uDRYJcK=Y0Vdt-JUtWi4rqhg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 5/8] selftests: bpf: test bpf_skc_to_mptcp_sock
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, Networking <netdev@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, Geliang Tang <geliang.tang@suse.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+On Mon, May 9, 2022 at 2:00 AM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+>
+> Hi Andrii,
+>
+> Thank you for the review!
+>
+> On 07/05/2022 00:26, Andrii Nakryiko wrote:
+> > On Mon, May 2, 2022 at 2:12 PM Mat Martineau
+> > <mathew.j.martineau@linux.intel.com> wrote:
+>
+> (...)
+>
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index 359afc617b92..d48d3cb6abbc 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -13780,6 +13780,7 @@ F:      include/net/mptcp.h
+> >>  F:     include/trace/events/mptcp.h
+> >>  F:     include/uapi/linux/mptcp.h
+> >>  F:     net/mptcp/
+> >> +F:     tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> >>  F:     tools/testing/selftests/bpf/*/*mptcp*.c
+> >>  F:     tools/testing/selftests/net/mptcp/
+> >>
+> >> diff --git a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> >> new file mode 100644
+> >> index 000000000000..18da4cc65e89
+> >> --- /dev/null
+> >> +++ b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> >> @@ -0,0 +1,14 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +/* Copyright (c) 2022, SUSE. */
+> >> +
+> >> +#ifndef __BPF_MPTCP_HELPERS_H
+> >> +#define __BPF_MPTCP_HELPERS_H
+> >> +
+> >> +#include "bpf_tcp_helpers.h"
+> >> +
+> >> +struct mptcp_sock {
+> >> +       struct inet_connection_sock     sk;
+> >> +
+> >> +} __attribute__((preserve_access_index));
+> >
+> > why can't all this live in bpf_tcp_helpers.h? why do we need extra header?
+>
+> The main reason is related to the maintenance: to have MPTCP ML being
+> cc'd for all patches modifying this file.
+>
+> Do you prefer if all these specific MPTCP structures and macros and
+> mixed with TCP ones?
+>
 
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6702307382394880
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6702307382394880/summary/summary.txt
-
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): selftest_diag =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4556060684976128
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4556060684976128/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/4c681daf367a
+These definitions don't even have to be 1:1 w/ whatever is kernel
+defining in terms of having all the fields, or their order, etc. So I
+think it won't require active maintenance and thus can be merged into
+bpf_tcp_helpers.h to keep it in one place.
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
