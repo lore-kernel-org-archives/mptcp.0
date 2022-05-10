@@ -1,283 +1,211 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3F72F4E
-	for <mptcp@lists.linux.dev>; Tue, 10 May 2022 23:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1192F3D9F
+	for <mptcp@lists.linux.dev>; Tue, 10 May 2022 23:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652223803; x=1683759803;
+  t=1652224242; x=1683760242;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=RU/TisfyQQBQDH0bG32VNC44WCwB939yR1eaNCaVJS8=;
-  b=ErepkDszYaLTXQg00zLfDe4VHSJEbh6lzq+bLl/AaCKoCMSSAf40NwVn
-   Z2Djghd08/bo9wwp40znwF2O5i6PdULSmQQ0gmBIdjf3mIAjxFlItZe2o
-   qRAOYUkazxjoH18o351Hp7J8tzP7UvTcqQ3UHGL8Ddu0JTBNFCPosSf21
-   aUPeFAvT8/1sI8tNubNamCHmi133YPeLmIQPUCvyUjgR2A/D1J+oE+W+h
-   iuwVPwJj46y45GIXWf/b6Yi3gu9U8kIVaB5tIiQ24mK41TW5Js9mLR6Ka
-   sOQD26DRo9ScS1dOsjB+p54m2WblwWXnjWVF4MiSQYK+U/o9WdvhBkuca
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="250060494"
+  bh=Wuhv/x2FcH5+6pQxN+/kTDoYuuzyeVEMd93FID/zYK0=;
+  b=d2VUObd+othZxDV6jFPlXfFf9iWCUKtqwU6C5tuIskW7fHWshmvo9WBh
+   +db1M0SY6SVya+PrSiUKvJnqo1blJ/8R0+z5cNnvOzReBcaIoNdCQ6nv/
+   xdU3MTf+we0cHOuIkuRHXjj1EMSEkftpwtNtlQg1MpID3aibzdJUICyXB
+   24YENE2F0OKycvyY+W3FVKc2XxY0b6zzs6lfiKTzwwnjG5z5J/cTdR+wZ
+   ESqqBiWlJSpcE510Jf4AYmny+54mmNXlkq806zrqyDnWV3jDNIUg6girC
+   eGfVNBjlhmBAoy7oWSLsnEqxEp36EF28k03vFxjH5XSRDa2S+k/u1nejs
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="249427982"
 X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
-   d="scan'208";a="250060494"
+   d="scan'208";a="249427982"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 16:03:18 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 16:10:41 -0700
 X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
-   d="scan'208";a="553049822"
+   d="scan'208";a="553051930"
 Received: from yperng-mobl1.amr.corp.intel.com ([10.209.50.90])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 16:03:17 -0700
-Date: Tue, 10 May 2022 16:03:17 -0700 (PDT)
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 16:10:41 -0700
+Date: Tue, 10 May 2022 16:10:40 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: test
- bpf_skc_to_mptcp_sock"
-In-Reply-To: <6de915f94665491d2944dd7aab1e6f7a0f3abcaf.1652156539.git.geliang.tang@suse.com>
-Message-ID: <45f492b2-1b41-9681-2fac-9cd59dd0f6b@linux.intel.com>
-References: <6de915f94665491d2944dd7aab1e6f7a0f3abcaf.1652156539.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v2] mptcp: fix checksum byte order
+In-Reply-To: <595f104803a212df58db6d20f84947325b33a9d6.1652196378.git.pabeni@redhat.com>
+Message-ID: <331ef61b-19b7-ea0-6832-ebf3c97aa9c@linux.intel.com>
+References: <595f104803a212df58db6d20f84947325b33a9d6.1652196378.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 10 May 2022, Geliang Tang wrote:
+On Tue, 10 May 2022, Paolo Abeni wrote:
 
-> Drop bpf_mptcp_helpers.h, squash into bpf_tcp_helpers.h (Andrii)
+> The MPTCP code typecasts the checksum value to u16 and
+> then convert it to big endian while storing the value into
+> the MPTCP option.
+>
+> As a result, the wire encoding for little endian host is
+> wrong, and that causes interoperabilty interoperability
+> issues with other implementation or host with different endianess.
+>
+> Address the issue writing in the packet the unmodified __sum16 value.
+>
+> MPTCP checksum is disabled by default, interoperating with systems
+> with bad mptcp-level csum encodying should cause fallback to TCP.
+>
+> Fixes: c5b39e26d003 ("mptcp: send out checksum for DSS")
+> Fixes: 390b95a5fb84 ("mptcp: receive checksum for DSS")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+> - move the typecast inside put_len_csum (Mat)
+> - updated the commit message (Mat)
+> - fix a few sparse issues
 
-Hi Geliang -
+Hi Paolo, thanks for the v2:
 
-Since there are 6 different commits touching bpf_mptcp_helpers.h, maybe it 
-would be easier for Matthieu if you posted the full patches for 
-"selftests/bpf: test bpf_skc_to_mptcp_sock" and all the bpf patches after 
-that, instead of squash changes / instructions?
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-I'm not sure the instructions below translate well to topgit.
+(for export-net)
+
+Still ok with you to apply this to export-net? There are a couple of minor 
+conflicts when rebasing to export-net, and it also creates a merge 
+conflict with net-next. But I think it's worth it to be able to say "every 
+5.18 and later kernel has the checksum fix".
+
+Have you tried backporting this commit to 5.17-stable or 5.15-stable?
+
 
 - Mat
 
->
-> 1
->
-> CONFLICT (modify/delete): tools/testing/selftests/bpf/bpf_mptcp_helpers.h deleted in HEAD and modified in 8996b41ffcd2 (selftests/bpf: verify token of struct mptcp_sock).  Version 8996b41ffcd2 (selftests/bpf: verify token of struct mptcp_sock) of tools/testing/selftests/bpf/bpf_mptcp_helpers.h left in tree.
-> Auto-merging tools/testing/selftests/bpf/progs/mptcp_sock.c
-> error: could not apply 8996b41ffcd2... selftests/bpf: verify token of struct mptcp_sock
->
-> cat tools/testing/selftests/bpf/bpf_tcp_helpers.h:
->
-> '''
-> extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
->
-> struct mptcp_sock {
-> 	struct inet_connection_sock	sk;
->
-> 	__u32		token;
-> } __attribute__((preserve_access_index));
->
-> '''
->
-> git add tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> git rm tools/testing/selftests/bpf/bpf_mptcp_helpers.h
->
-> 2
->
-> CONFLICT (modify/delete): tools/testing/selftests/bpf/bpf_mptcp_helpers.h deleted in HEAD and modified in 57dcfb6f61ec (selftests/bpf: verify ca_name of struct mptcp_sock).  Version 57dcfb6f61ec (selftests/bpf: verify ca_name of struct mptcp_sock) of tools/testing/selftests/bpf/bpf_mptcp_helpers.h left in tree.
-> Auto-merging tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> Auto-merging tools/testing/selftests/bpf/progs/mptcp_sock.c
-> error: could not apply 57dcfb6f61ec... selftests/bpf: verify ca_name of struct mptcp_sock
->
-> cat tools/testing/selftests/bpf/bpf_tcp_helpers.h:
->
-> '''
-> extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
->
-> struct mptcp_sock {
-> 	struct inet_connection_sock	sk;
->
-> 	__u32		token;
-> 	char		ca_name[TCP_CA_NAME_MAX];
-> } __attribute__((preserve_access_index));
->
-> '''
->
-> git add tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> git rm tools/testing/selftests/bpf/bpf_mptcp_helpers.h
->
-> 3
->
-> CONFLICT (modify/delete): tools/testing/selftests/bpf/bpf_mptcp_helpers.h deleted in HEAD and modified in 416cb433f1df (selftests/bpf: verify first of struct mptcp_sock).  Version 416cb433f1df (selftests/bpf: verify first of struct mptcp_sock) of tools/testing/selftests/bpf/bpf_mptcp_helpers.h left in tree.
-> Auto-merging tools/testing/selftests/bpf/progs/mptcp_sock.c
-> error: could not apply 416cb433f1df... selftests/bpf: verify first of struct mptcp_sock
->
-> cat tools/testing/selftests/bpf/bpf_tcp_helpers.h:
->
-> '''
-> extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
->
-> struct mptcp_sock {
-> 	struct inet_connection_sock	sk;
->
-> 	__u32		token;
-> 	struct sock	*first;
-> 	char		ca_name[TCP_CA_NAME_MAX];
-> } __attribute__((preserve_access_index));
->
-> '''
->
-> git add tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> git rm tools/testing/selftests/bpf/bpf_mptcp_helpers.h
->
-> 4
->
-> CONFLICT (modify/delete): tools/testing/selftests/bpf/bpf_mptcp_helpers.h deleted in HEAD and modified in 74d3c74494e6 (mptcp: add struct mptcp_sched_ops).  Version 74d3c74494e6 (mptcp: add struct mptcp_sched_ops) of tools/testing/selftests/bpf/bpf_mptcp_helpers.h left in tree.
-> error: could not apply 74d3c74494e6... mptcp: add struct mptcp_sched_ops
->
-> cat tools/testing/selftests/bpf/bpf_tcp_helpers.h:
->
-> '''
-> extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
->
-> struct mptcp_sched_data {
-> 	struct sock	*sock;
-> 	bool		call_again;
-> };
->
-> struct mptcp_sched_ops {
-> 	char name[MPTCP_SCHED_NAME_MAX];
->
-> 	void (*init)(const struct mptcp_sock *msk);
-> 	void (*release)(const struct mptcp_sock *msk);
->
-> 	void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
-> 			    struct mptcp_sched_data *data);
-> 	void *owner;
-> };
->
-> struct mptcp_sock {
-> 	struct inet_connection_sock	sk;
->
-> 	__u32		token;
-> 	struct sock	*first;
-> 	char		ca_name[TCP_CA_NAME_MAX];
-> } __attribute__((preserve_access_index));
->
-> '''
->
-> git add tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> git rm tools/testing/selftests/bpf/bpf_mptcp_helpers.h
->
-> 5
->
-> CONFLICT (modify/delete): tools/testing/selftests/bpf/bpf_mptcp_helpers.h deleted in HEAD and modified in 1b3d7a5f1f10 (mptcp: add sched in mptcp_sock).  Version 1b3d7a5f1f10 (mptcp: add sched in mptcp_sock) of tools/testing/selftests/bpf/bpf_mptcp_helpers.h left in tree.
-> error: could not apply 1b3d7a5f1f10... mptcp: add sched in mptcp_sock
->
-> cat tools/testing/selftests/bpf/bpf_tcp_helpers.h:
->
-> '''
-> extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
->
-> struct mptcp_sched_data {
-> 	struct sock	*sock;
-> 	bool		call_again;
-> };
->
-> struct mptcp_sched_ops {
-> 	char name[MPTCP_SCHED_NAME_MAX];
->
-> 	void (*init)(const struct mptcp_sock *msk);
-> 	void (*release)(const struct mptcp_sock *msk);
->
-> 	void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
-> 			    struct mptcp_sched_data *data);
-> 	void *owner;
-> };
->
-> struct mptcp_sock {
-> 	struct inet_connection_sock	sk;
->
-> 	__u32		token;
-> 	struct sock	*first;
-> 	struct mptcp_sched_ops *sched;
-> 	char		ca_name[TCP_CA_NAME_MAX];
-> } __attribute__((preserve_access_index));
->
-> '''
->
-> git add tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> git rm tools/testing/selftests/bpf/bpf_mptcp_helpers.h
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+
 > ---
-> MAINTAINERS                                     |  1 -
-> tools/testing/selftests/bpf/bpf_mptcp_helpers.h | 14 --------------
-> tools/testing/selftests/bpf/bpf_tcp_helpers.h   |  5 +++++
-> tools/testing/selftests/bpf/progs/mptcp_sock.c  |  2 +-
-> 4 files changed, 6 insertions(+), 16 deletions(-)
-> delete mode 100644 tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> net/mptcp/options.c  | 37 ++++++++++++++++++++++++-------------
+> net/mptcp/protocol.h |  2 +-
+> net/mptcp/subflow.c  |  2 +-
+> 3 files changed, 26 insertions(+), 15 deletions(-)
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index af0d6a8543f6..56f5dd17859b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13787,7 +13787,6 @@ F:	include/net/mptcp.h
-> F:	include/trace/events/mptcp.h
-> F:	include/uapi/linux/mptcp.h
-> F:	net/mptcp/
-> -F:	tools/testing/selftests/bpf/bpf_mptcp_helpers.h
-> F:	tools/testing/selftests/bpf/*/*mptcp*.c
-> F:	tools/testing/selftests/net/mptcp/
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index ac3b7b8a02f6..6c90c78b52d1 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -107,7 +107,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+> 			ptr += 2;
+> 		}
+> 		if (opsize == TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM) {
+> -			mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
+> +			mp_opt->csum = get_unaligned((__force __sum16 *)ptr);
+> 			mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
+> 			ptr += 2;
+> 		}
+> @@ -221,7 +221,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
 >
-> diff --git a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
-> deleted file mode 100644
-> index 18da4cc65e89..000000000000
-> --- a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
-> +++ /dev/null
-> @@ -1,14 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -/* Copyright (c) 2022, SUSE. */
-> -
-> -#ifndef __BPF_MPTCP_HELPERS_H
-> -#define __BPF_MPTCP_HELPERS_H
-> -
-> -#include "bpf_tcp_helpers.h"
-> -
-> -struct mptcp_sock {
-> -	struct inet_connection_sock	sk;
-> -
-> -} __attribute__((preserve_access_index));
-> -
-> -#endif
-> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> index b1ede6f0b821..a43b1afe22bd 100644
-> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> @@ -225,4 +225,9 @@ static __always_inline bool tcp_cc_eq(const char *a, const char *b)
-> extern __u32 tcp_slow_start(struct tcp_sock *tp, __u32 acked) __ksym;
-> extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
+> 			if (opsize == expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
+> 				mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
+> -				mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
+> +				mp_opt->csum = get_unaligned((__force __sum16 *)ptr);
+> 				ptr += 2;
+> 			}
 >
-> +struct mptcp_sock {
-> +	struct inet_connection_sock	sk;
+> @@ -1282,7 +1282,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
+> 	}
+> }
+>
+> -u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
+> +__sum16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
+> {
+> 	struct csum_pseudo_header header;
+> 	__wsum csum;
+> @@ -1298,15 +1298,25 @@ u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
+> 	header.csum = 0;
+>
+> 	csum = csum_partial(&header, sizeof(header), sum);
+> -	return (__force u16)csum_fold(csum);
+> +	return csum_fold(csum);
+> }
+>
+> -static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
+> +static __sum16 mptcp_make_csum(const struct mptcp_ext *mpext)
+> {
+> 	return __mptcp_make_csum(mpext->data_seq, mpext->subflow_seq, mpext->data_len,
+> 				 ~csum_unfold(mpext->csum));
+> }
+>
+> +static void put_len_csum(u16 len, __sum16 csum, void *data)
+> +{
+> +	__sum16 *sumptr = data + 2;
+> +	__be16 *ptr = data;
 > +
-> +} __attribute__((preserve_access_index));
+> +	put_unaligned_be16(len, ptr);
 > +
-> #endif
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_sock.c b/tools/testing/selftests/bpf/progs/mptcp_sock.c
-> index 9552584b1b6c..dd2448d1e7fc 100644
-> --- a/tools/testing/selftests/bpf/progs/mptcp_sock.c
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_sock.c
-> @@ -4,7 +4,7 @@
+> +	put_unaligned(csum, sumptr);
+> +}
+> +
+> void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+> 			 struct mptcp_out_options *opts)
+> {
+> @@ -1385,9 +1395,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+> 				/* data_len == 0 is reserved for the infinite mapping,
+> 				 * the checksum will also be set to 0.
+> 				 */
+> -				put_unaligned_be32(mpext->data_len << 16 |
+> -						   (mpext->data_len ? mptcp_make_csum(mpext) : 0),
+> -						   ptr);
+> +				put_len_csum(mpext->data_len,
+> +					     mpext->data_len ? mptcp_make_csum(mpext) : 0,
+> +					     ptr);
+> 			} else {
+> 				put_unaligned_be32(mpext->data_len << 16 |
+> 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+> @@ -1438,11 +1448,12 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+> 			goto mp_capable_done;
 >
-> #include <linux/bpf.h>
-> #include <bpf/bpf_helpers.h>
-> -#include "bpf_mptcp_helpers.h"
-> +#include "bpf_tcp_helpers.h"
+> 		if (opts->csum_reqd) {
+> -			put_unaligned_be32(opts->data_len << 16 |
+> -					   __mptcp_make_csum(opts->data_seq,
+> -							     opts->subflow_seq,
+> -							     opts->data_len,
+> -							     ~csum_unfold(opts->csum)), ptr);
+> +			put_len_csum(opts->data_len,
+> +				     __mptcp_make_csum(opts->data_seq,
+> +						       opts->subflow_seq,
+> +						       opts->data_len,
+> +						       ~csum_unfold(opts->csum)),
+> +				     ptr);
+> 		} else {
+> 			put_unaligned_be32(opts->data_len << 16 |
+> 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 59a23838782f..f98c27300e60 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -763,7 +763,7 @@ void mptcp_token_destroy(struct mptcp_sock *msk);
+> void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn);
 >
-> char _license[] SEC("license") = "GPL";
-> extern bool CONFIG_MPTCP __kconfig;
+> void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hmac);
+> -u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum);
+> +__sum16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum);
+>
+> void __init mptcp_pm_init(void);
+> void mptcp_pm_data_init(struct mptcp_sock *msk);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 9842dab09c8b..b38a02db924b 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -891,7 +891,7 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
+> {
+> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> 	u32 offset, seq, delta;
+> -	u16 csum;
+> +	__sum16 csum;
+> 	int len;
+>
+> 	if (!csum_reqd)
 > -- 
-> 2.34.1
+> 2.35.3
 >
 >
 >
