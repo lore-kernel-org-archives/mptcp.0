@@ -1,215 +1,262 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1192F3D9F
-	for <mptcp@lists.linux.dev>; Tue, 10 May 2022 23:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652224242; x=1683760242;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Wuhv/x2FcH5+6pQxN+/kTDoYuuzyeVEMd93FID/zYK0=;
-  b=d2VUObd+othZxDV6jFPlXfFf9iWCUKtqwU6C5tuIskW7fHWshmvo9WBh
-   +db1M0SY6SVya+PrSiUKvJnqo1blJ/8R0+z5cNnvOzReBcaIoNdCQ6nv/
-   xdU3MTf+we0cHOuIkuRHXjj1EMSEkftpwtNtlQg1MpID3aibzdJUICyXB
-   24YENE2F0OKycvyY+W3FVKc2XxY0b6zzs6lfiKTzwwnjG5z5J/cTdR+wZ
-   ESqqBiWlJSpcE510Jf4AYmny+54mmNXlkq806zrqyDnWV3jDNIUg6girC
-   eGfVNBjlhmBAoy7oWSLsnEqxEp36EF28k03vFxjH5XSRDa2S+k/u1nejs
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="249427982"
-X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
-   d="scan'208";a="249427982"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 16:10:41 -0700
-X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
-   d="scan'208";a="553051930"
-Received: from yperng-mobl1.amr.corp.intel.com ([10.209.50.90])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 16:10:41 -0700
-Date: Tue, 10 May 2022 16:10:40 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2] mptcp: fix checksum byte order
-In-Reply-To: <595f104803a212df58db6d20f84947325b33a9d6.1652196378.git.pabeni@redhat.com>
-Message-ID: <331ef61b-19b7-ea0-6832-ebf3c97aa9c@linux.intel.com>
-References: <595f104803a212df58db6d20f84947325b33a9d6.1652196378.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40343D9F
+	for <mptcp@lists.linux.dev>; Tue, 10 May 2022 23:58:46 +0000 (UTC)
+Received: by mail-io1-f49.google.com with SMTP id f2so452213ioh.7
+        for <mptcp@lists.linux.dev>; Tue, 10 May 2022 16:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LIfUjAZIEHf1KpjRZvZJrcDVb3Re8H1xsX5MJbeUAFQ=;
+        b=DbZhSiXenRB3CYAjj8DHcI3kJDszgmwNu6Cki9CzC+BANO5R/hOz87iyPlo9lVPLoh
+         Z8jW++G8gnHoGrpFJc1LK9rlqOyyDe2c5qZqFY5fFv7xKaFxGlKJnCUEVYaWHKPEMLRH
+         s0Ge5gA3x8jnJucDEiHFjR2waJgqGglF4cdVi9yLiHsk++SWwhrxWKQ+SU0b1q4RmiSI
+         RdXZZf0kjdDZRyf40rXAwtSCXi1Xm2zPpZXcLMDZ8syWtFD/m/KBlKzZ/Oso0fwTrpnu
+         UKdhjn8FHSnC7Uk1uD7Dl2mYKDcSzfSQsHGcohgfhuegHjexYizOWI0atSZUtz94lO6B
+         qGlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LIfUjAZIEHf1KpjRZvZJrcDVb3Re8H1xsX5MJbeUAFQ=;
+        b=Bm/vThjmZVywBVhqVIrwTmDTbvpUw4aGZUIZVNoQYleOfVAQubv9Dhp7XtCOl9Rx97
+         UNbpLDwmI8hFyGeA7Cx03MPnEaBkuhLA5vPFlD8eYA7STJEKbvr7xaZi0P+4Rt82ajAH
+         ht/hzSzTcnROpAFttlWiM4jS74fzcTZGB+u9Vw2N34Fwpali4XGmJJZ4WefkDUC7hoxa
+         ywUTfW2D+7He2vQRAITSGH7DnoZ0bv6z4szb64sPnwC2ZfGIZ2yxHCbp9Y5E7ag5Hj9X
+         hwKCOgmzqhZHKgV1JroA109Nkma+XSZa3AL0T2KU4zcU2ziw9oDJDz4jJ7Bjigt/Gj0/
+         xbjQ==
+X-Gm-Message-State: AOAM532E9k6fjq4xN2C01luF25pXFNd9E9SAuxFYixjxwT8/aAEkp122
+	TAXZkXjVozaplL70yZ6IfNsB3KzlLXGQ9GafYdo=
+X-Google-Smtp-Source: ABdhPJxhi0mRHy7O3mol15xME9VrLH+gtnYjGV2KknrggjSISwlb6ABLMy7j08qK7u26OQoAOY6XQEKJ4Rz7RizW/7U=
+X-Received: by 2002:a05:6602:2acd:b0:65a:9f9d:23dc with SMTP id
+ m13-20020a0566022acd00b0065a9f9d23dcmr9636596iov.154.1652227125788; Tue, 10
+ May 2022 16:58:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20220502211235.142250-1-mathew.j.martineau@linux.intel.com>
+ <20220502211235.142250-7-mathew.j.martineau@linux.intel.com> <e024cde0-70ad-5332-1818-e6af77509a8c@linux.intel.com>
+In-Reply-To: <e024cde0-70ad-5332-1818-e6af77509a8c@linux.intel.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 10 May 2022 16:58:34 -0700
+Message-ID: <CAEf4BzY5GPzdZbFXKKhsCNubsJKp-ROB-iLVHz=9v6FOkt_r0Q@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 6/8] selftests: bpf: verify token of struct mptcp_sock
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Geliang Tang <geliang.tang@suse.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, mptcp@lists.linux.dev, 
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 10 May 2022, Paolo Abeni wrote:
-
-> The MPTCP code typecasts the checksum value to u16 and
-> then convert it to big endian while storing the value into
-> the MPTCP option.
+On Tue, May 10, 2022 at 2:59 PM Mat Martineau
+<mathew.j.martineau@linux.intel.com> wrote:
 >
-> As a result, the wire encoding for little endian host is
-> wrong, and that causes interoperabilty interoperability
-> issues with other implementation or host with different endianess.
+> On Mon, 2 May 2022, Mat Martineau wrote:
 >
-> Address the issue writing in the packet the unmodified __sum16 value.
+> > From: Geliang Tang <geliang.tang@suse.com>
+> >
+> > This patch verifies the struct member token of struct mptcp_sock. Add a
+> > new function get_msk_token() to parse the msk token from the output of
+> > the command 'ip mptcp monitor', and verify it in verify_msk().
+> >
+> > Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> > Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> > ---
+> > .../testing/selftests/bpf/bpf_mptcp_helpers.h |  1 +
+> > .../testing/selftests/bpf/prog_tests/mptcp.c  | 66 +++++++++++++++++++
+> > .../testing/selftests/bpf/progs/mptcp_sock.c  |  5 ++
+> > 3 files changed, 72 insertions(+)
+> >
+> > diff --git a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> > index 18da4cc65e89..87e15810997d 100644
+> > --- a/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> > +++ b/tools/testing/selftests/bpf/bpf_mptcp_helpers.h
+> > @@ -9,6 +9,7 @@
+> > struct mptcp_sock {
+> >       struct inet_connection_sock     sk;
+> >
+> > +     __u32           token;
+> > } __attribute__((preserve_access_index));
+> >
+> > #endif
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > index 4b40bbdaf91f..c5d96ba81e04 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > @@ -8,8 +8,11 @@
+> > struct mptcp_storage {
+> >       __u32 invoked;
+> >       __u32 is_mptcp;
+> > +     __u32 token;
+> > };
+> >
+> > +static char monitor_log_path[64];
+> > +
+> > static int verify_tsk(int map_fd, int client_fd)
+> > {
+> >       char *msg = "plain TCP socket";
+> > @@ -36,11 +39,58 @@ static int verify_tsk(int map_fd, int client_fd)
+> >       return err;
+> > }
+> >
+> > +/*
+> > + * Parse the token from the output of 'ip mptcp monitor':
+> > + *
+> > + * [       CREATED] token=3ca933d3 remid=0 locid=0 saddr4=127.0.0.1 ...
+> > + * [       CREATED] token=2ab57040 remid=0 locid=0 saddr4=127.0.0.1 ...
+> > + */
+> > +static __u32 get_msk_token(void)
+> > +{
+> > +     char *prefix = "[       CREATED] token=";
+> > +     char buf[BUFSIZ] = {};
+> > +     __u32 token = 0;
+> > +     ssize_t len;
+> > +     int fd;
+> > +
+> > +     sync();
+> > +
+> > +     fd = open(monitor_log_path, O_RDONLY);
+> > +     if (CHECK_FAIL(fd < 0)) {
+> > +             log_err("Failed to open %s", monitor_log_path);
+> > +             return token;
+> > +     }
+> > +
+> > +     len = read(fd, buf, sizeof(buf));
+> > +     if (CHECK_FAIL(len < 0)) {
+> > +             log_err("Failed to read %s", monitor_log_path);
+> > +             goto err;
+> > +     }
+> > +
+> > +     if (strncmp(buf, prefix, strlen(prefix))) {
+> > +             log_err("Invalid prefix %s", buf);
+> > +             goto err;
+> > +     }
+> > +
+> > +     token = strtol(buf + strlen(prefix), NULL, 16);
+> > +
+> > +err:
+> > +     close(fd);
+> > +     return token;
+> > +}
+> > +
+> > static int verify_msk(int map_fd, int client_fd)
+> > {
+> >       char *msg = "MPTCP subflow socket";
+> >       int err = 0, cfd = client_fd;
+> >       struct mptcp_storage val;
+> > +     __u32 token;
+> > +
+> > +     token = get_msk_token();
+> > +     if (token <= 0) {
+> > +             log_err("Unexpected token %x", token);
+> > +             return -1;
+> > +     }
+> >
+> >       if (CHECK_FAIL(bpf_map_lookup_elem(map_fd, &cfd, &val) < 0)) {
+> >               perror("Failed to read socket storage");
+> > @@ -59,6 +109,12 @@ static int verify_msk(int map_fd, int client_fd)
+> >               err++;
+> >       }
+> >
+> > +     if (val.token != token) {
+> > +             log_err("Unexpected mptcp_sock.token %x != %x",
+> > +                     val.token, token);
+> > +             err++;
+> > +     }
+> > +
+> >       return err;
+> > }
+> >
+> > @@ -124,6 +180,7 @@ static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
+> >
+> > void test_base(void)
+> > {
+> > +     char cmd[256], tmp_dir[] = "/tmp/XXXXXX";
+> >       int server_fd, cgroup_fd;
+> >
+> >       cgroup_fd = test__join_cgroup("/mptcp");
+> > @@ -141,6 +198,13 @@ void test_base(void)
+> >
+> > with_mptcp:
+> >       /* with MPTCP */
 >
-> MPTCP checksum is disabled by default, interoperating with systems
-> with bad mptcp-level csum encodying should cause fallback to TCP.
+> Geliang, could you add a check here that skips this test (instead of
+> failing) if the 'ip mptcp monitor' command is not supported?
 >
-> Fixes: c5b39e26d003 ("mptcp: send out checksum for DSS")
-> Fixes: 390b95a5fb84 ("mptcp: receive checksum for DSS")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v1 -> v2:
-> - move the typecast inside put_len_csum (Mat)
-> - updated the commit message (Mat)
-> - fix a few sparse issues
-
-Hi Paolo, thanks for the v2:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-(for export-net)
-
-Still ok with you to apply this to export-net? There are a couple of minor 
-conflicts when rebasing to export-net, and it also creates a merge 
-conflict with net-next. But I think it's worth it to be able to say "every 
-5.18 and later kernel has the checksum fix".
-
-Have you tried backporting this commit to 5.17-stable or 5.15-stable?
-
-
-- Mat
-
-
-> ---
-> net/mptcp/options.c  | 37 ++++++++++++++++++++++++-------------
-> net/mptcp/protocol.h |  2 +-
-> net/mptcp/subflow.c  |  2 +-
-> 3 files changed, 26 insertions(+), 15 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index ac3b7b8a02f6..6c90c78b52d1 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -107,7 +107,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
-> 			ptr += 2;
-> 		}
-> 		if (opsize == TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM) {
-> -			mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
-> +			mp_opt->csum = get_unaligned((__force __sum16 *)ptr);
-> 			mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
-> 			ptr += 2;
-> 		}
-> @@ -221,7 +221,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
->
-> 			if (opsize == expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
-> 				mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
-> -				mp_opt->csum = (__force __sum16)get_unaligned_be16(ptr);
-> +				mp_opt->csum = get_unaligned((__force __sum16 *)ptr);
-> 				ptr += 2;
-> 			}
->
-> @@ -1282,7 +1282,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
-> 	}
-> }
->
-> -u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
-> +__sum16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
-> {
-> 	struct csum_pseudo_header header;
-> 	__wsum csum;
-> @@ -1298,15 +1298,25 @@ u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
-> 	header.csum = 0;
->
-> 	csum = csum_partial(&header, sizeof(header), sum);
-> -	return (__force u16)csum_fold(csum);
-> +	return csum_fold(csum);
-> }
->
-> -static u16 mptcp_make_csum(const struct mptcp_ext *mpext)
-> +static __sum16 mptcp_make_csum(const struct mptcp_ext *mpext)
-> {
-> 	return __mptcp_make_csum(mpext->data_seq, mpext->subflow_seq, mpext->data_len,
-> 				 ~csum_unfold(mpext->csum));
-> }
->
-> +static void put_len_csum(u16 len, __sum16 csum, void *data)
-> +{
-> +	__sum16 *sumptr = data + 2;
-> +	__be16 *ptr = data;
-> +
-> +	put_unaligned_be16(len, ptr);
-> +
-> +	put_unaligned(csum, sumptr);
-> +}
-> +
-> void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
-> 			 struct mptcp_out_options *opts)
-> {
-> @@ -1385,9 +1395,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
-> 				/* data_len == 0 is reserved for the infinite mapping,
-> 				 * the checksum will also be set to 0.
-> 				 */
-> -				put_unaligned_be32(mpext->data_len << 16 |
-> -						   (mpext->data_len ? mptcp_make_csum(mpext) : 0),
-> -						   ptr);
-> +				put_len_csum(mpext->data_len,
-> +					     mpext->data_len ? mptcp_make_csum(mpext) : 0,
-> +					     ptr);
-> 			} else {
-> 				put_unaligned_be32(mpext->data_len << 16 |
-> 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-> @@ -1438,11 +1448,12 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
-> 			goto mp_capable_done;
->
-> 		if (opts->csum_reqd) {
-> -			put_unaligned_be32(opts->data_len << 16 |
-> -					   __mptcp_make_csum(opts->data_seq,
-> -							     opts->subflow_seq,
-> -							     opts->data_len,
-> -							     ~csum_unfold(opts->csum)), ptr);
-> +			put_len_csum(opts->data_len,
-> +				     __mptcp_make_csum(opts->data_seq,
-> +						       opts->subflow_seq,
-> +						       opts->data_len,
-> +						       ~csum_unfold(opts->csum)),
-> +				     ptr);
-> 		} else {
-> 			put_unaligned_be32(opts->data_len << 16 |
-> 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 59a23838782f..f98c27300e60 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -763,7 +763,7 @@ void mptcp_token_destroy(struct mptcp_sock *msk);
-> void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn);
->
-> void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hmac);
-> -u16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum);
-> +__sum16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum);
->
-> void __init mptcp_pm_init(void);
-> void mptcp_pm_data_init(struct mptcp_sock *msk);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 9842dab09c8b..b38a02db924b 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -891,7 +891,7 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
-> {
-> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-> 	u32 offset, seq, delta;
-> -	u16 csum;
-> +	__sum16 csum;
-> 	int len;
->
-> 	if (!csum_reqd)
-> -- 
-> 2.35.3
->
->
+> Checking the exit status of "ip mptcp help 2>&1 | grep monitor" should
+> work.
 >
 
---
-Mat Martineau
-Intel
+Ilya actually already generated updated image, and after [0] it should
+be used in CI runs. But we'll know for sure with your next MPTCP
+submission.
+
+  [0] https://github.com/libbpf/ci/pull/16
+
+> Thanks,
+>
+> Mat
+>
+> > +     if (CHECK_FAIL(!mkdtemp(tmp_dir)))
+> > +             goto close_cgroup_fd;
+> > +     snprintf(monitor_log_path, sizeof(monitor_log_path),
+> > +              "%s/ip_mptcp_monitor", tmp_dir);
+> > +     snprintf(cmd, sizeof(cmd), "ip mptcp monitor > %s &", monitor_log_path);
+> > +     if (CHECK_FAIL(system(cmd)))
+> > +             goto close_cgroup_fd;
+> >       server_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
+> >       if (CHECK_FAIL(server_fd < 0))
+> >               goto close_cgroup_fd;
+> > @@ -148,6 +212,8 @@ void test_base(void)
+> >       CHECK_FAIL(run_test(cgroup_fd, server_fd, true));
+> >
+> >       close(server_fd);
+> > +     snprintf(cmd, sizeof(cmd), "rm -rf %s", tmp_dir);
+> > +     system(cmd);
+> >
+> > close_cgroup_fd:
+> >       close(cgroup_fd);
+> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_sock.c b/tools/testing/selftests/bpf/progs/mptcp_sock.c
+> > index 7b6a25e37de8..c58c191d8416 100644
+> > --- a/tools/testing/selftests/bpf/progs/mptcp_sock.c
+> > +++ b/tools/testing/selftests/bpf/progs/mptcp_sock.c
+> > @@ -12,6 +12,7 @@ extern bool CONFIG_MPTCP __kconfig;
+> > struct mptcp_storage {
+> >       __u32 invoked;
+> >       __u32 is_mptcp;
+> > +     __u32 token;
+> > };
+> >
+> > struct {
+> > @@ -46,6 +47,8 @@ int _sockops(struct bpf_sock_ops *ctx)
+> >                                            BPF_SK_STORAGE_GET_F_CREATE);
+> >               if (!storage)
+> >                       return 1;
+> > +
+> > +             storage->token = 0;
+> >       } else {
+> >               if (!CONFIG_MPTCP)
+> >                       return 1;
+> > @@ -58,6 +61,8 @@ int _sockops(struct bpf_sock_ops *ctx)
+> >                                            BPF_SK_STORAGE_GET_F_CREATE);
+> >               if (!storage)
+> >                       return 1;
+> > +
+> > +             storage->token = msk->token;
+> >       }
+> >       storage->invoked++;
+> >       storage->is_mptcp = tcp_sk->is_mptcp;
+> > --
+> > 2.36.0
+> >
+> >
+>
+> --
+> Mat Martineau
+> Intel
