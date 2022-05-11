@@ -1,38 +1,38 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D3615A7
-	for <mptcp@lists.linux.dev>; Wed, 11 May 2022 00:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F2415A7
+	for <mptcp@lists.linux.dev>; Wed, 11 May 2022 00:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652230590; x=1683766590;
+  t=1652230637; x=1683766637;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Q0YgZrkLMDbRsVnonCnjgQKMXerNTF8gif5ZwrrsxIc=;
-  b=njxrKFwfAGrUJLFEJEU4HWK3B0E2dp3CUlCLPgv3jT6mQh1NqNNZmlxI
-   SnvHPus+HUwV5onNzswjva/knBBV55CJ7Y8vlX5xoq4v4nfj5MPxjaoJL
-   TGR3NiYtJ9N2AkbN5c/Ze6jwj+BcaJpTQgv9wsmwnODQMhKSdq9284Z20
-   rcS9kHpTVFx2Zr9/54ma3QaJEZ4qMF3/u+AelYu7ABezyihbC6Vj+7Qgz
-   x9PX9Un4PhxggG13uJXWzx58y0ohmeT0xJMTXIx+Pp4dzQ3h98Wfhbxsh
-   TVYpbJ3YUUpeFzf+wJmihGxOha1u86rNKbq/idIHETXlt0UpOcY7pc3Wm
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="269211714"
+  bh=wC0YrCVdqH77lAqOmCn+r/bVslztb/+p6n672sMjSmU=;
+  b=W4TxeVrqA/SIbZ0LJ/3g67dA90cKLVAj6e9VCa7Bl4fcX9+NnFesM2Fb
+   Zx8vQAIAEpJlSU27klGeTp1CU59GTy7U2J9H3hJjn/R/ExYIlEs+DH1Ot
+   wFZHSXsNWS4JUBPKCE8Wm/CkeNBOIRSKrTdU+Ui9k085l0G8yZtIxvUnh
+   Zna2sKnO5wPqndMqRMsa15qfOmptJifgeT45MvvZFWi3gPE9YziXVZ5PL
+   us9LZCUPVV3dKaSdbT614XwS0jojEM43aKFXYT4hQbqjyJp9j5FPfTZ4b
+   bIvjy+NrjlHSKBK8kMSJjHj/Op87k5akvr3AAp/QRawT95hHouuM1yAe2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="269680196"
 X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
-   d="scan'208";a="269211714"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 17:56:29 -0700
+   d="scan'208";a="269680196"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 17:57:16 -0700
 X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
-   d="scan'208";a="636195795"
+   d="scan'208";a="711266052"
 Received: from yperng-mobl1.amr.corp.intel.com ([10.209.50.90])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 17:56:29 -0700
-Date: Tue, 10 May 2022 17:56:29 -0700 (PDT)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 17:57:16 -0700
+Date: Tue, 10 May 2022 17:57:15 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 2/4] mptcp: add redundant subflows support
-In-Reply-To: <7455f0b7b02d6f2edac5fca53c8667e1e0e84533.1652108279.git.geliang.tang@suse.com>
-Message-ID: <e13f717d-47dd-b443-5142-40b7c104a9e@linux.intel.com>
-References: <cover.1652108279.git.geliang.tang@suse.com> <7455f0b7b02d6f2edac5fca53c8667e1e0e84533.1652108279.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v13 0/3] BPF round-robin scheduler
+In-Reply-To: <cover.1652107942.git.geliang.tang@suse.com>
+Message-ID: <9915db1-d479-1123-a4bb-109897f634da@linux.intel.com>
+References: <cover.1652107942.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,98 +43,96 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Mon, 9 May 2022, Geliang Tang wrote:
 
-> This patch adds the redundant subflows support, sending all packets
-> redundantly on all available subflows.
+> v13:
+> - add !msk->last_snd check in patch 2
+> - use ASSERT_OK_PTR instead of CHECK in patch 3
+> - base-commit: export/20220509T115202
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> include/net/mptcp.h  |  1 +
-> net/mptcp/protocol.c | 13 ++++++++-----
-> net/mptcp/sched.c    |  1 +
-> 3 files changed, 10 insertions(+), 5 deletions(-)
+
+Thanks for the updates. Like the v12 review, I think we should wait until 
+this is rebased on the bpf header changes before applying the patches.
+
+- Mat
+
+> v12:
+> - init ssk from data->contexts[0], instead of msk->first.
+> - cycle through all the subflows, instead of the first two.
 >
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 345f27a68eaa..d48c66de8466 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -101,6 +101,7 @@ struct mptcp_out_options {
-> struct mptcp_sched_data {
-> 	struct sock	*sock;
-> 	bool		call_again;
-> +	u8		subflows;
-> 	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
-> };
+> v11:
+> - rename array to contexts.
+> - drop number of subflows in mptcp_sched_data.
+> - set unused array elements to NULL.
+> - add MPTCP_SUBFLOWS_MAX check in mptcp_sched_data_init.
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4a55a6e89ed5..e3e1026aad97 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1591,13 +1591,16 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 				goto out;
-
-If the updates below were skipped on a previous iteration of the loop, 
-they would need to be handled before the 'goto' here.
-
-> 			}
+> v10:
+> - init subflows array in mptcp_sched_data_init.
+> - for (int i = 0; i < data->subflows; i++) is not allowed in BPF, using
+>   this instead:
+> 	for (int i = 0; i < MPTCP_SUBFLOWS_MAX && i < data->subflows; i++)
+> - deponds on: "BPF packet scheduler" series v18.
 >
-> -			info.sent += ret;
-> -			copied += ret;
-> -			len -= ret;
-> +			if (!call_again) {
-> +				info.sent += ret;
-> +				copied += ret;
-> +				len -= ret;
+> v9:
+> - add subflows array in mptcp_sched_data
+> - deponds on: "BPF packet scheduler" series v17 +
+>               Squash to "mptcp: add struct mptcp_sched_ops v17".
 >
-> -			mptcp_update_post_push(msk, dfrag, ret);
-> +				mptcp_update_post_push(msk, dfrag, ret);
-
-I'm not sure this works, 'ret' is the number of bytes sent on the final 
-scheduled subflow. A different amount of data could have been sent on 
-other subflows.
-
-The simple fix is to keep track of the largest value of 'ret' when 
-repeating this loop and use that to track the amount of data sent. But I'm 
-not sure how that will behave when the multiple subflows have different 
-latencies, speeds, and window sizes.
-
-Do we want to send the latest unsent data on every scheduled subflow? Or 
-is it better to keep the data on the slower subflows contiguous until the 
-received DATA_ACKs move msk->snd_una forward? The former case means that 
-the slow subflows skip unacked data and increase the possible need for 
-reinjecting data. The latter would only skip acked data, leading to fewer 
-MPTCP reinjections.
-
-The best thing for now may be to try the simple approach (track the 
-largest copied amount) and see how it behaves, then we can discuss based 
-on that data.
-
-> +			}
-> 		}
-> -		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> +		if (!call_again)
-> +			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> 	}
+> v8:
+> - use struct mptcp_sched_data.
+> - deponds on: "BPF packet scheduler" series v14.
 >
-> 	/* at this point we held the socket lock for the last subflow we used */
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 83377cd1a4de..0d5fc96a2ce0 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -104,6 +104,7 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
-> 		}
-> 		data->contexts[i++] = subflow;
-> 	}
-> +	data->subflows = i;
+> v7:
+> - rename retrans to reinject.
+> - drop last_snd setting.
+> - deponds on: "BPF packet scheduler" series v13.
 >
-> 	for (; i < MPTCP_SUBFLOWS_MAX; i++)
-> 		data->contexts[i++] = NULL;
-
-
-There's also the more complex __mptcp_subflow_push_pending() path and the 
-chaining of further sends through mptcp_subflow_delegate(), and the 
-retransmit loop.
-
-
+> v6:
+> - set call_me_again flag.
+> - deponds on: "BPF packet scheduler" series v12.
+>
+> v5:
+> - update patch 2, use temporary storage instead.
+> - update patch 3, use new helpers.
+> - deponds on: "BPF packet scheduler" series v11.
+>
+> v4:
+> - add retrans argment for get_subflow()
+>
+> v3:
+> - add last_snd write access.
+> - keep msk->last_snd setting in get_subflow().
+> - deponds on: "BPF packet scheduler" series v10.
+>
+> v2:
+> - merge the squash-to patch.
+> - implement bpf_mptcp_get_subflows helper, instead of
+>   bpf_mptcp_get_next_subflow.
+> - deponds on: "BPF packet scheduler v9".
+>
+> This patchset implements round-robin scheduler using BPF. Address to
+> some commends for the RFC version:
+>
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1631011068.git.geliangtang@xiaomi.com/
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/75
+>
+> Geliang Tang (3):
+>  mptcp: add subflows array in sched data
+>  selftests/bpf: add bpf_rr scheduler
+>  selftests/bpf: add bpf_rr test
+>
+> include/net/mptcp.h                           |  2 +
+> net/mptcp/sched.c                             | 14 ++++++
+> .../testing/selftests/bpf/bpf_mptcp_helpers.h |  8 ++++
+> .../testing/selftests/bpf/prog_tests/mptcp.c  | 38 +++++++++++++++
+> .../selftests/bpf/progs/mptcp_bpf_rr.c        | 47 +++++++++++++++++++
+> 5 files changed, 109 insertions(+)
+> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+>
+> -- 
+> 2.34.1
+>
+>
+>
 
 --
 Mat Martineau
