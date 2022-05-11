@@ -1,165 +1,141 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD75615A7
-	for <mptcp@lists.linux.dev>; Wed, 11 May 2022 00:48:36 +0000 (UTC)
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24B0abFA006936;
-	Tue, 10 May 2022 17:48:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=TSh3RvWrCvFRcDS5IB7psHai4C2p/Jp0jsXVxTSzuQw=;
- b=CZzGAVWwkhX8DSnhXtNsyctX3IR8zhtCXGSaM44xy9HTbXBbV0BmGMKVE75/iaSiN0Rg
- SItqZwmO35Hz6+Xw15yKefZQw9uIphxSR75+prPFlr9vhGjqYaTzFhib/yll3dPDdoDK
- Zw84RovbAf1YEGD9NXitdBv33Fa3V/aw8W8= 
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3fym646e0r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 May 2022 17:48:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ejk0oTlcG6an5GN505JINiPGrpikAleZ8y6VpQc3tSOdAuY8QakRg1KFUdwLevWk/LZxDeleDMu36NOUpN+hppyYGrtvTkOgy3kHOXGtj0lfNpaTWID6g37WQKYdUYy6q21xBba0WUQfD8EUkfVRv+lkHr0DmaeoUVV8bDEB9sAwW/rlDaAoZ/CffRbCKPb8ChTcMaA5MvseI0NgDdahjyO0EhZwuzsadDXSsiAM34HVxnONnYuxAx9YxeAOJ/YvG5xcZvi9bm40TdKsD47MBXHuJeqnQsbKbToKQtzn4++JQEYcJqNqA30H2NCz2ggEInhP5pqHCnUhlC9DAXCPmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TSh3RvWrCvFRcDS5IB7psHai4C2p/Jp0jsXVxTSzuQw=;
- b=RqDV37HiaqF1Q9FdHkFWRxxMrFkUFXzFRAHW1CzzUneczjG4U3qtK1xP9uim9nt+2/6I94y0+O0/ic/eeg+Tf9MPH2lmCS59q8A/qbF0ZLRP3cSwMGK+0qDr6SxqSILXUujZQ44j/G2tnC0uWn2fXOUzMZVUKH/5UCL2NBJ9AzHQbHQkdycAK7QauR5lxLEHplJXfER1COuYUKPKPxLfSGkgMOwaLFbZskS6oe59BiT/LkHC9FsS8OBkYZMOwDbU13/Pa3v0q99ysXcp9wxF9FLwlR/tC1v+T0ZjQTeko8bHLa72l7ntrRnD9uahirDAvEkJycJhPUauY/UG5bvP/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-Received: from SA1PR15MB5016.namprd15.prod.outlook.com (2603:10b6:806:1db::19)
- by CY4PR15MB1495.namprd15.prod.outlook.com (2603:10b6:903:f4::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.23; Wed, 11 May
- 2022 00:48:20 +0000
-Received: from SA1PR15MB5016.namprd15.prod.outlook.com
- ([fe80::fd7d:7e89:37f4:1714]) by SA1PR15MB5016.namprd15.prod.outlook.com
- ([fe80::fd7d:7e89:37f4:1714%5]) with mapi id 15.20.5227.023; Wed, 11 May 2022
- 00:48:20 +0000
-Date: Tue, 10 May 2022 17:48:18 -0700
-From: Martin KaFai Lau <kafai@fb.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, andrii@kernel.org
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Nicolas Rybowski <nicolas.rybowski@tessares.net>, ast@kernel.org,
-        daniel@iogearbox.net, mptcp@lists.linux.dev,
-        Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH bpf-next v3 1/8] bpf: expose is_mptcp flag to bpf_tcp_sock
-Message-ID: <20220511004818.qnfpzgepmg7xufwd@kafai-mbp.dhcp.thefacebook.com>
-References: <20220502211235.142250-1-mathew.j.martineau@linux.intel.com>
- <20220502211235.142250-2-mathew.j.martineau@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220502211235.142250-2-mathew.j.martineau@linux.intel.com>
-X-ClientProxiedBy: BYAPR07CA0052.namprd07.prod.outlook.com
- (2603:10b6:a03:60::29) To SA1PR15MB5016.namprd15.prod.outlook.com
- (2603:10b6:806:1db::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D3615A7
+	for <mptcp@lists.linux.dev>; Wed, 11 May 2022 00:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652230590; x=1683766590;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Q0YgZrkLMDbRsVnonCnjgQKMXerNTF8gif5ZwrrsxIc=;
+  b=njxrKFwfAGrUJLFEJEU4HWK3B0E2dp3CUlCLPgv3jT6mQh1NqNNZmlxI
+   SnvHPus+HUwV5onNzswjva/knBBV55CJ7Y8vlX5xoq4v4nfj5MPxjaoJL
+   TGR3NiYtJ9N2AkbN5c/Ze6jwj+BcaJpTQgv9wsmwnODQMhKSdq9284Z20
+   rcS9kHpTVFx2Zr9/54ma3QaJEZ4qMF3/u+AelYu7ABezyihbC6Vj+7Qgz
+   x9PX9Un4PhxggG13uJXWzx58y0ohmeT0xJMTXIx+Pp4dzQ3h98Wfhbxsh
+   TVYpbJ3YUUpeFzf+wJmihGxOha1u86rNKbq/idIHETXlt0UpOcY7pc3Wm
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="269211714"
+X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
+   d="scan'208";a="269211714"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 17:56:29 -0700
+X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
+   d="scan'208";a="636195795"
+Received: from yperng-mobl1.amr.corp.intel.com ([10.209.50.90])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 17:56:29 -0700
+Date: Tue, 10 May 2022 17:56:29 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 2/4] mptcp: add redundant subflows support
+In-Reply-To: <7455f0b7b02d6f2edac5fca53c8667e1e0e84533.1652108279.git.geliang.tang@suse.com>
+Message-ID: <e13f717d-47dd-b443-5142-40b7c104a9e@linux.intel.com>
+References: <cover.1652108279.git.geliang.tang@suse.com> <7455f0b7b02d6f2edac5fca53c8667e1e0e84533.1652108279.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 394697a1-e641-407e-2ef6-08da32e7f1f9
-X-MS-TrafficTypeDiagnostic: CY4PR15MB1495:EE_
-X-Microsoft-Antispam-PRVS: 
-	<CY4PR15MB14956731B12657EEEDEE1D05D5C89@CY4PR15MB1495.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	TFOcXvTKNpyMrGQhNIXF5dqX29lrgQ9Y/xBMg+WH2xblX0j4X2H1wMwNouot4cNybuL78KkU9g9icLajyex+nog/KVOvaoViW4zCBnxaS2lY3TArSf7Uny2yveujOvDwlTiy3yuosIpOH/9ed84WY+z1ZnWOGjT9tckx/r5SCg2u8powcu7lNYCvKhEFquffzqwIlAfRA5a35/lDPY3D+7TfMAd7PyobMhm9HSIpkIrkkftjsYUqkzRqCTT3NUc2zAts8C39Ucn1zwtKMR1NEc157g8spRTAdT3QNiArUznQbkgr3cVnAz2/CKBpxicsumcgl1nFhfN2el6ItmNqRPNIgnO+eVByE9d2n0gDBQrwwJqSAGCAC+hUMIuAVPGknzz1bCT6WQanjzfKG3g7Jj/mWIFU48ZV9EenbRCoYHekUawAa0tk+fGmZMisvI0Y0GeEetKc/bsNpclAhb55FNz5qIVe5zAUNsE6GUGsu/3djmtmDp3j+hTR1c9etO6LvwVZ8+wgWnIu+KOCDm+NDEX3O/odNp9hycIjkwwFPGlsrZp7HXeP4+ScHmk3aTd+BnyaeqoTJ9R/HBW62bP3HXScJ+kJmMymhER4bS+/YIkOy4S5EsnC+jYvfho/QRVbvIxOGIzOu5f9kMMGHMt6Dg==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB5016.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6512007)(508600001)(9686003)(6486002)(6506007)(186003)(86362001)(1076003)(52116002)(2906002)(5660300002)(316002)(83380400001)(8676002)(66476007)(4326008)(54906003)(66946007)(66556008)(38100700002)(8936002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?lkksCNlpnUKxMMJJtJ6LwQDKS4Cw/Yg+FoBTp90safWwUoiWtr2fKb6SWyoj?=
- =?us-ascii?Q?riJ74U5EsfEnbGKqZpetlNXgpL5VPrF3LiaPt95Ol8lh6vXoLHZJNv1Au9cJ?=
- =?us-ascii?Q?2sOorL4sXFytoJ8INfrRFFKEVv2BbaUcWG8t6NsC6VUlAISJmEpnpKXNNZBn?=
- =?us-ascii?Q?88PeE/BbvKdVK0gEvWaA37GFC4SaBLqvz9kzcgB+KXxHviB04KWyrm3WLeMi?=
- =?us-ascii?Q?vKTMo837o5dQd0xFhSBaZLpyLDsHuJfuYebUXM/Zz2GmRagX7LkjsBRvt+Jc?=
- =?us-ascii?Q?WwN/WzSFRroZIW1iU5r5LQn5YDioI/j8ZikDf6arscx1UplZBed+8E83Xkhc?=
- =?us-ascii?Q?D1Q2kvJmc7TmbW8WwNbL6qtuawKM9V3fN71TMgG+2fE8N2sAkM0tVwX9eEBH?=
- =?us-ascii?Q?dXSEnZ2xGxKEwfeBwddu0F1n/Dr1NgcIHAgULz1SlGarJFM8v0cVWTvDQ1pR?=
- =?us-ascii?Q?DJ+PYLOagXjVolsRcylBzpYi/fKBZeHNTBAIUVkxHlOakmtOEJ/y/DAK20kx?=
- =?us-ascii?Q?ZoPrPmJ2BY2eTWDjYpX0E32fr3iqtRB/leqph2nSdqx/n2krMq/FHqOhB7rL?=
- =?us-ascii?Q?eJ3KFObZSd7XdHoQAULUPPYb9K/FMmvicyknNSIacPFnT3GuB2bBsh3V6HmZ?=
- =?us-ascii?Q?zbz/BzntxeTpARSDKeexW6j5AxTGeEEL9bEuhgx3j6dnUXY3v/LRjWEuQmrY?=
- =?us-ascii?Q?KHgartx3zGi5ewH6YQ5T+vYzaciqQDGn2xStt5bX9CCTGLeLjKbrvAqviskr?=
- =?us-ascii?Q?RhRiR7OtXC7ilrZDLNVrK/YFKLyxPtYaJTifAEhTp0MQkKkE7xpMBDF0Cexo?=
- =?us-ascii?Q?kW8dcr+Gu6t5dcaknrR2IGvpWV29c895pR9TULb/15Eu69LcA6SJDvfK1cBi?=
- =?us-ascii?Q?VSNTqpxoMQWwll2EYQjf4YJYrxd7ogddDFEH/UknB2i0Opo/98J7J4/ltIAL?=
- =?us-ascii?Q?dusqBlOJwm1RmpsEsCK657X/sFdkoC2xjuRgfmJvSqNSZ/ILsam3NzOJlhCB?=
- =?us-ascii?Q?mE+LNP841J2Tb3cBI8rBMrO7xXfi7r8YjS6mPlHLgstecrEg+S6d3UtZZL66?=
- =?us-ascii?Q?6eS3j8/Ds9/UxchG8oz/ChSIpfcJuNHRS8oFxwMMFub8+G6zP9zyTM3nINkX?=
- =?us-ascii?Q?HUBX7EU+jtYOc4xMuGxhVajNII12wYVgMoQRhpdsICdbnMlEgGWTpIrUn7iO?=
- =?us-ascii?Q?6kXwwF4z+tkpEenDh82gI+UAQ+z7oGn7PlsYxOmOKg9slDupk92m+RcYigbf?=
- =?us-ascii?Q?ifMNV9AAbnYGvY/7i45D/pxy8XEh7NNuSTtfJ8CvXEYjVUk0gUB138CNKb5R?=
- =?us-ascii?Q?8xzfLLJwoc/nu34snjCxg8rxAp5zHLy5la8Kst3ZH4xcIDFEiMYV9+yGnRNd?=
- =?us-ascii?Q?bJU3lh9SXYgk2a+jcqv9H/55Dni80lDTHwmH5wP30WNMpUtVkefSdC03N6TQ?=
- =?us-ascii?Q?gWCVAMbIlAVQd3t1V3Jbs91tf6L6Bxqw/9yScyXu+zlNJc3lN+QlI4eqmdhT?=
- =?us-ascii?Q?H0zMPJZQqsKusN24SKv57Kc8UdaGmTifPd09PEGyBqlHTLe4QFwfSlOXn0mR?=
- =?us-ascii?Q?1i1FfAb9cIwLbSnULnOY1Z+YEFwraxajMbiu40Ib/wCwMQuFB1ggYBdLdUQG?=
- =?us-ascii?Q?5LxwrNN5MYENe4Y0umdj14Jzg/WBWwl0KYqIOWE4O6jjrB1dtQ8NNByI5WYT?=
- =?us-ascii?Q?BZrU/FRkliooKwQOtcvKOz+7fs9vImrOOg6mM8PumqVFgYI75z9HjGJjcdz3?=
- =?us-ascii?Q?enSojZ2niN4I7FTwqNFID0Mz9JLNFOo=3D?=
-X-OriginatorOrg: fb.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 394697a1-e641-407e-2ef6-08da32e7f1f9
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB5016.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2022 00:48:20.6539
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wnFm9PMWxN+S8pYQz6u6Mk4lVoF5gK1sTkapGW9SWyS3vF/7mmcXB3BEgPllj95g
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1495
-X-Proofpoint-GUID: eDuyUAZa6d4zCIhS5qJjRrrzJ6KtmdwK
-X-Proofpoint-ORIG-GUID: eDuyUAZa6d4zCIhS5qJjRrrzJ6KtmdwK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-10_07,2022-05-10_01,2022-02-23_01
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Mon, May 02, 2022 at 02:12:27PM -0700, Mat Martineau wrote:
-> From: Nicolas Rybowski <nicolas.rybowski@tessares.net>
-> 
-> is_mptcp is a field from struct tcp_sock used to indicate that the
-> current tcp_sock is part of the MPTCP protocol.
-> 
-> In this protocol, a first socket (mptcp_sock) is created with
-> sk_protocol set to IPPROTO_MPTCP (=262) for control purpose but it
-> isn't directly on the wire. This is the role of the subflow (kernel)
-> sockets which are classical tcp_sock with sk_protocol set to
-> IPPROTO_TCP. The only way to differentiate such sockets from plain TCP
-> sockets is the is_mptcp field from tcp_sock.
-> 
-> Such an exposure in BPF is thus required to be able to differentiate
-> plain TCP sockets from MPTCP subflow sockets in BPF_PROG_TYPE_SOCK_OPS
-> programs.
-> 
-> The choice has been made to silently pass the case when CONFIG_MPTCP is
-> unset by defaulting is_mptcp to 0 in order to make BPF independent of
-> the MPTCP configuration. Another solution is to make the verifier fail
-> in 'bpf_tcp_sock_is_valid_ctx_access' but this will add an additional
-> '#ifdef CONFIG_MPTCP' in the BPF code and a same injected BPF program
-> will not run if MPTCP is not set.
-There is already bpf_skc_to_tcp_sock() and its returned tcp_sock pointer
-can access all fields of the "struct tcp_sock" without extending
-the bpf_tcp_sock.
+On Mon, 9 May 2022, Geliang Tang wrote:
 
-iiuc, I believe the needs to extend bpf_tcp_sock here is to make the
-same bpf sockops prog works for kernel with and without CONFIG_MPTCP
-because tp->is_mptcp is not always available:
+> This patch adds the redundant subflows support, sending all packets
+> redundantly on all available subflows.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> include/net/mptcp.h  |  1 +
+> net/mptcp/protocol.c | 13 ++++++++-----
+> net/mptcp/sched.c    |  1 +
+> 3 files changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 345f27a68eaa..d48c66de8466 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -101,6 +101,7 @@ struct mptcp_out_options {
+> struct mptcp_sched_data {
+> 	struct sock	*sock;
+> 	bool		call_again;
+> +	u8		subflows;
+> 	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
+> };
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 4a55a6e89ed5..e3e1026aad97 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1591,13 +1591,16 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> 				goto out;
 
-struct tcp_sock {
-	/* ... */
+If the updates below were skipped on a previous iteration of the loop, 
+they would need to be handled before the 'goto' here.
 
-#if IS_ENABLED(CONFIG_MPTCP)
-	bool    is_mptcp;
-#endif
-};
+> 			}
+>
+> -			info.sent += ret;
+> -			copied += ret;
+> -			len -= ret;
+> +			if (!call_again) {
+> +				info.sent += ret;
+> +				copied += ret;
+> +				len -= ret;
+>
+> -			mptcp_update_post_push(msk, dfrag, ret);
+> +				mptcp_update_post_push(msk, dfrag, ret);
 
-Andrii, do you think bpf_core_field_exists() can be used in
-the bpf prog to test if is_mptcp is available in the running kernel
-such that the same bpf prog can be used in kernel with and without
-CONFIG_MPTCP?
+I'm not sure this works, 'ret' is the number of bytes sent on the final 
+scheduled subflow. A different amount of data could have been sent on 
+other subflows.
+
+The simple fix is to keep track of the largest value of 'ret' when 
+repeating this loop and use that to track the amount of data sent. But I'm 
+not sure how that will behave when the multiple subflows have different 
+latencies, speeds, and window sizes.
+
+Do we want to send the latest unsent data on every scheduled subflow? Or 
+is it better to keep the data on the slower subflows contiguous until the 
+received DATA_ACKs move msk->snd_una forward? The former case means that 
+the slow subflows skip unacked data and increase the possible need for 
+reinjecting data. The latter would only skip acked data, leading to fewer 
+MPTCP reinjections.
+
+The best thing for now may be to try the simple approach (track the 
+largest copied amount) and see how it behaves, then we can discuss based 
+on that data.
+
+> +			}
+> 		}
+> -		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+> +		if (!call_again)
+> +			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+> 	}
+>
+> 	/* at this point we held the socket lock for the last subflow we used */
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 83377cd1a4de..0d5fc96a2ce0 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -104,6 +104,7 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
+> 		}
+> 		data->contexts[i++] = subflow;
+> 	}
+> +	data->subflows = i;
+>
+> 	for (; i < MPTCP_SUBFLOWS_MAX; i++)
+> 		data->contexts[i++] = NULL;
+
+
+There's also the more complex __mptcp_subflow_push_pending() path and the 
+chaining of further sends through mptcp_subflow_delegate(), and the 
+retransmit loop.
+
+
+
+--
+Mat Martineau
+Intel
