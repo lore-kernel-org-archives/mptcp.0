@@ -1,38 +1,38 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1F215A5
-	for <mptcp@lists.linux.dev>; Wed, 11 May 2022 05:02:38 +0000 (UTC)
-Received: by mail-io1-f43.google.com with SMTP id e3so944927ios.6
-        for <mptcp@lists.linux.dev>; Tue, 10 May 2022 22:02:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B646315A5
+	for <mptcp@lists.linux.dev>; Wed, 11 May 2022 06:10:45 +0000 (UTC)
+Received: by mail-pl1-f176.google.com with SMTP id m12so913545plb.4
+        for <mptcp@lists.linux.dev>; Tue, 10 May 2022 23:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qL43RrUbVH+f1B+3t8LwJt0lv0NOYwjIQ3uG3JnS6BE=;
-        b=F0KIyHKikIarjOy3zOURb8B2PJ0+zoYPqvfYVrQ4r0JhT2JRAwjSoa4lVTbNF8hu8r
-         xel8Dd7cIc3WrhcaEtbH+b2OPjm8uzSGML9VlDbgPXssf/iia5ISKuEsNXjUXXy55nT9
-         VtT5z1iqb4ucj5wfHSXBnDT2bxcDBdzdHTDccwyBxD5kM8k1GWcJ9pQvl+tfzoryNXL8
-         0fDdh5oW52CfD83SfOTt4BfePwrNc5p0HSyTQnr5QesVA2a5IDvz8/TvX2DkrsOPXhxI
-         wIVU2XkCwB1S7pupZqKZXhj7zIKTOuigjbdjC+mV4KjVy2ZfE7Kj21XDqYTK9hNHusqE
-         6VSA==
+         :cc:content-transfer-encoding;
+        bh=Rxwmw7F4yraTtQttPtF/0wZ/ikGq2Rscn+f5iMrT7V8=;
+        b=hk5nmcxWqr1+4XZIG4Y2EoHdn4MFyQuBSg3wMbJB03xCN3J0/fGQJI9kJKzQLLlWfP
+         ZDVe37fm/UkBmm/PkjCtG1P4jelVut0rqGMNUuM6eaNwDqMDWJXOAVNl43inn/9fzuiX
+         08PIOuW+zLnKULD33PrfJiIhTaBGApajk5KJgbDuUBGdDqvD325R1qkKy6xn2plIZWb6
+         q0aQvfYNQ6zMw9ug/iMN/mRFoKLZLTd/4HF2ZzjOoZxf4gLk0u7t38GhennBESJ0W/R3
+         gpWBhIKHac6jv9zJ8sSWOg69s2c3x674NJk5GSfVmEAeoaiakgRb0u/l55Wh9RH3czUw
+         sUqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qL43RrUbVH+f1B+3t8LwJt0lv0NOYwjIQ3uG3JnS6BE=;
-        b=st/RxZvO9sBjbfQycwFjOiFL8lvgojocg+V9IJbVEwFMpO1CDySFRebJOpNYQmtWxx
-         MJ6sg3SyCqiFJqVIeDKlplC9M8JlTArP0wkORg0EDGBIzACKXxTRpcitnSi3QyV01nTt
-         GNjeClf2Z9O3cHPV1vVrO13biZFA09N9OoMVeXudkjsgy1KtEkExpU7q7thjm+YfWmfM
-         ppaCer5jrAn5qSyzDyFXDJhFuTOM0k9G8tudidY6+VraSeqP9Fa17Q13xU1TtEa/HQNB
-         G/dUlQuddb6tidxtuidr8hsubqVXFShBJxsJn3Sj5XvUtbwhstXHTDeCu5hAzcxEiVJz
-         Rl+g==
-X-Gm-Message-State: AOAM532m+jCo5uYMcHqaf10HQhUGyA/u6HLV4gZeBUXk6OFvFvUVhnfQ
-	t5FXOOcpwqUmNF4oRZoa29yExU1KXSSsR1DYBj4=
-X-Google-Smtp-Source: ABdhPJx7zeGmihXLb1/F9NNyxkVglvSCzpITEorG6p1s3jMVe0vKT8kwVD0lhwyrK7MDGBl7TamOKrNLh8STlx7BpP8=
-X-Received: by 2002:a05:6638:533:b0:32a:d418:b77b with SMTP id
- j19-20020a056638053300b0032ad418b77bmr11456677jar.237.1652245357291; Tue, 10
- May 2022 22:02:37 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Rxwmw7F4yraTtQttPtF/0wZ/ikGq2Rscn+f5iMrT7V8=;
+        b=p77daCVbpcDmZ2hWDT6v2HfV5MmE7yaXBsQpQxIpBA3lGmpj7VTxp/WyVbAwF/P441
+         +PinExegaP9IhQCC+yPaq/1nJaIoVBKNyhnOGziGtcT0RKxHIv8YOZKK5y0fFHcCLuUv
+         S46vQRLNUiedbJ1LbEL96WkVZOWk1yMOoUcDFjvvXVyZlLFmxgYE5wDBqhOrRJ+xFXbm
+         NCgNWeL0yStsdHmpHr6LxJwTzo2VuIGrH10gL2cCS8KlAAs8lOGif3sGxLsjV04rQvje
+         hxs8DGcj2NFjHIiR6UHgylhrvjtD7Z75IZtG3mCVmbEIGvA1sccbNIwNB48GOCaw7KFA
+         0BXQ==
+X-Gm-Message-State: AOAM5315ib8DUOlqYAnM20FISd8AXPEm+PYtRwB3hmPOo8HG0FnPm2Sr
+	tGibA2qr2se2Bnp8mqbARMP8bY7yx/nnxAM4p70=
+X-Google-Smtp-Source: ABdhPJyvXv/OGzpotKsy1AIe0kD136J2PA88iaQfJStWhn17wXqCV6y8+g7+UBAut26mWSxafLKVkQRZipa4VxIIYG4=
+X-Received: by 2002:a17:902:8f8d:b0:15b:7b98:22e6 with SMTP id
+ z13-20020a1709028f8d00b0015b7b9822e6mr23907991plo.102.1652249445174; Tue, 10
+ May 2022 23:10:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,72 +40,89 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20220502211235.142250-1-mathew.j.martineau@linux.intel.com>
- <20220502211235.142250-2-mathew.j.martineau@linux.intel.com> <20220511004818.qnfpzgepmg7xufwd@kafai-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20220511004818.qnfpzgepmg7xufwd@kafai-mbp.dhcp.thefacebook.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 10 May 2022 22:02:26 -0700
-Message-ID: <CAEf4BzbnsdSAKoZhQbX8WPuNtnJBx9hNLS2ct8gBkSRg-=Meog@mail.gmail.com>
+ <20220502211235.142250-2-mathew.j.martineau@linux.intel.com>
+ <20220511004818.qnfpzgepmg7xufwd@kafai-mbp.dhcp.thefacebook.com> <CAEf4BzbnsdSAKoZhQbX8WPuNtnJBx9hNLS2ct8gBkSRg-=Meog@mail.gmail.com>
+In-Reply-To: <CAEf4BzbnsdSAKoZhQbX8WPuNtnJBx9hNLS2ct8gBkSRg-=Meog@mail.gmail.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Wed, 11 May 2022 14:10:42 +0800
+Message-ID: <CA+WQbwvdOPk7c1s648kgkgVf+DOrEhRvOv2kz+WuP8eWV+qvBA@mail.gmail.com>
 Subject: Re: [PATCH bpf-next v3 1/8] bpf: expose is_mptcp flag to bpf_tcp_sock
-To: Martin KaFai Lau <kafai@fb.com>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Martin KaFai Lau <kafai@fb.com>, Mat Martineau <mathew.j.martineau@linux.intel.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
 	Nicolas Rybowski <nicolas.rybowski@tessares.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, mptcp@lists.linux.dev, 
+	Daniel Borkmann <daniel@iogearbox.net>, MPTCP Upstream <mptcp@lists.linux.dev>, 
 	Matthieu Baerts <matthieu.baerts@tessares.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 10, 2022 at 5:48 PM Martin KaFai Lau <kafai@fb.com> wrote:
+Andrii Nakryiko <andrii.nakryiko@gmail.com> =E4=BA=8E2022=E5=B9=B45=E6=9C=
+=8811=E6=97=A5=E5=91=A8=E4=B8=89 13:02=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On Mon, May 02, 2022 at 02:12:27PM -0700, Mat Martineau wrote:
-> > From: Nicolas Rybowski <nicolas.rybowski@tessares.net>
+> On Tue, May 10, 2022 at 5:48 PM Martin KaFai Lau <kafai@fb.com> wrote:
 > >
-> > is_mptcp is a field from struct tcp_sock used to indicate that the
-> > current tcp_sock is part of the MPTCP protocol.
+> > On Mon, May 02, 2022 at 02:12:27PM -0700, Mat Martineau wrote:
+> > > From: Nicolas Rybowski <nicolas.rybowski@tessares.net>
+> > >
+> > > is_mptcp is a field from struct tcp_sock used to indicate that the
+> > > current tcp_sock is part of the MPTCP protocol.
+> > >
+> > > In this protocol, a first socket (mptcp_sock) is created with
+> > > sk_protocol set to IPPROTO_MPTCP (=3D262) for control purpose but it
+> > > isn't directly on the wire. This is the role of the subflow (kernel)
+> > > sockets which are classical tcp_sock with sk_protocol set to
+> > > IPPROTO_TCP. The only way to differentiate such sockets from plain TC=
+P
+> > > sockets is the is_mptcp field from tcp_sock.
+> > >
+> > > Such an exposure in BPF is thus required to be able to differentiate
+> > > plain TCP sockets from MPTCP subflow sockets in BPF_PROG_TYPE_SOCK_OP=
+S
+> > > programs.
+> > >
+> > > The choice has been made to silently pass the case when CONFIG_MPTCP =
+is
+> > > unset by defaulting is_mptcp to 0 in order to make BPF independent of
+> > > the MPTCP configuration. Another solution is to make the verifier fai=
+l
+> > > in 'bpf_tcp_sock_is_valid_ctx_access' but this will add an additional
+> > > '#ifdef CONFIG_MPTCP' in the BPF code and a same injected BPF program
+> > > will not run if MPTCP is not set.
+> > There is already bpf_skc_to_tcp_sock() and its returned tcp_sock pointe=
+r
+> > can access all fields of the "struct tcp_sock" without extending
+> > the bpf_tcp_sock.
 > >
-> > In this protocol, a first socket (mptcp_sock) is created with
-> > sk_protocol set to IPPROTO_MPTCP (=262) for control purpose but it
-> > isn't directly on the wire. This is the role of the subflow (kernel)
-> > sockets which are classical tcp_sock with sk_protocol set to
-> > IPPROTO_TCP. The only way to differentiate such sockets from plain TCP
-> > sockets is the is_mptcp field from tcp_sock.
+> > iiuc, I believe the needs to extend bpf_tcp_sock here is to make the
+> > same bpf sockops prog works for kernel with and without CONFIG_MPTCP
+> > because tp->is_mptcp is not always available:
 > >
-> > Such an exposure in BPF is thus required to be able to differentiate
-> > plain TCP sockets from MPTCP subflow sockets in BPF_PROG_TYPE_SOCK_OPS
-> > programs.
+> > struct tcp_sock {
+> >         /* ... */
 > >
-> > The choice has been made to silently pass the case when CONFIG_MPTCP is
-> > unset by defaulting is_mptcp to 0 in order to make BPF independent of
-> > the MPTCP configuration. Another solution is to make the verifier fail
-> > in 'bpf_tcp_sock_is_valid_ctx_access' but this will add an additional
-> > '#ifdef CONFIG_MPTCP' in the BPF code and a same injected BPF program
-> > will not run if MPTCP is not set.
-> There is already bpf_skc_to_tcp_sock() and its returned tcp_sock pointer
-> can access all fields of the "struct tcp_sock" without extending
-> the bpf_tcp_sock.
+> > #if IS_ENABLED(CONFIG_MPTCP)
+> >         bool    is_mptcp;
+> > #endif
+> > };
+> >
+> > Andrii, do you think bpf_core_field_exists() can be used in
+> > the bpf prog to test if is_mptcp is available in the running kernel
+> > such that the same bpf prog can be used in kernel with and without
+> > CONFIG_MPTCP?
 >
-> iiuc, I believe the needs to extend bpf_tcp_sock here is to make the
-> same bpf sockops prog works for kernel with and without CONFIG_MPTCP
-> because tp->is_mptcp is not always available:
+> yep, absolutely:
 >
-> struct tcp_sock {
->         /* ... */
+> bool is_mptcp =3D bpf_core_field_exists(struct tcp_sock, is_mptcp) ?
+> sock->is_mptcp : false;
 >
-> #if IS_ENABLED(CONFIG_MPTCP)
->         bool    is_mptcp;
-> #endif
-> };
+> One can also directly check if CONFIG_MPTCP is set with the following
+> in BPF-side code:
 >
-> Andrii, do you think bpf_core_field_exists() can be used in
-> the bpf prog to test if is_mptcp is available in the running kernel
-> such that the same bpf prog can be used in kernel with and without
-> CONFIG_MPTCP?
+> extern bool CONFIG_MPTCP __kconfig;
 
-yep, absolutely:
+Thanks Martin & Andrii, will update this in v4.
 
-bool is_mptcp = bpf_core_field_exists(struct tcp_sock, is_mptcp) ?
-sock->is_mptcp : false;
+-Geliang
+SUSE
 
-One can also directly check if CONFIG_MPTCP is set with the following
-in BPF-side code:
-
-extern bool CONFIG_MPTCP __kconfig;
+>
