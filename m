@@ -1,115 +1,166 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B36160
-	for <mptcp@lists.linux.dev>; Thu, 12 May 2022 00:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652314995; x=1683850995;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=QOz7ZHX7Fzu8nzJgdncqpRvaW1FkQxs1zJEvh0OQvuM=;
-  b=Uhc3mC4c/tZgdDJK5jsUt1APwRPPNI6ZK5gZUcGsqM0b2vwq/zEc1/42
-   9cArWDJGQwG30pwwqjk40PxY6E+UmDGcAcR5kd3UUH87s65kln4LJ3llg
-   yEuXd9nYKp9Y8sON69YdmmPTXsMS69+lCkjh47qOhZnRl2ZaXSJLtyIQJ
-   P6bDFklWSdzW2aLNe+Wbso72+hPgecpZfOeSgvVvjSl2Om5IbzBRzLM7f
-   +CaWMPk+0LrbDABmnilCYvhsraV2gV1oSfmqMWeF458AxZtzsHvPV+HNN
-   ZuIgXZCSYp+2FpRVDFPVQ7Fn2B6iMw430fggcShTB6tWDq0qXHXHBkzQK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="295093407"
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="295093407"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:23:13 -0700
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="658378726"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.225.213])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:23:13 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next 2/2] mptcp: Do not traverse the subflow connection list without lock
-Date: Wed, 11 May 2022 17:23:08 -0700
-Message-Id: <20220512002308.445416-2-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220512002308.445416-1-mathew.j.martineau@linux.intel.com>
-References: <20220512002308.445416-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB7318F
+	for <mptcp@lists.linux.dev>; Thu, 12 May 2022 02:35:57 +0000 (UTC)
+Received: by mail-pj1-f46.google.com with SMTP id iq2-20020a17090afb4200b001d93cf33ae9so6544562pjb.5
+        for <mptcp@lists.linux.dev>; Wed, 11 May 2022 19:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1NHbeJwSxy/KE7ziMbFRBwVPTapn0SsRrilUgGMvWCc=;
+        b=dlZLQWNA9SaSxVWqUvTWiQHZ6alzG31JeKEl1OGhMKaQvo7Z23YnmSvwc7oqzIx8bl
+         cK/UKKKz+y0rGsNp73pv8/pKs/GhsUGzcGQcQn8GXKaPyC4FqietO0WB+XypsXO0R934
+         zDKj352neNHP+LH0ps3Dpk/rF8HycxmfQhnsgiBcOuiNYulNI8dx3iHwfEzN6dsEkucS
+         k5a6e2IP15H6f0yTxEEVkVuvMZa31z7ufjbNX5vQ+huuyPNPGBpys+zjyOm8ZLnEJP4g
+         rJ3ioyuqAk27SA7hpkyei1iIgW+GBIctlrc7MHfSbIWv/aDb2CMXGSuYfWqjQIpResvM
+         mEyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1NHbeJwSxy/KE7ziMbFRBwVPTapn0SsRrilUgGMvWCc=;
+        b=Gs4H1xw5XFkvbxu8F03r+eVtVZyGG2oJiUJYtOlHfeDz8P3k+VQVLM3hIFiYawtnJs
+         rxeyODSP8jZbSXoIXKm4Aufmd85SdKICkVtbiX8celVYPFToLHvCYoJmewju38MQyuWB
+         X+3yP9aAo3gn4TREQg6VGcjvnNbPIzfUCS3nPhB4Eg3TIKWu+KvA0sY1MC6HsKZgVPf9
+         2w0a2QjMPnRSb7RKpqCSKJX1cNRmYE9MTpq14P5I2pNmubUS9gQaRv7kR5Vj9uR0nIap
+         KzviYnyz9Mj356ot6v95yYJEF2yefn4/IY/Tbu7+poqGHqR3jgPYms50c1kzyl8vQ9Yp
+         JeiA==
+X-Gm-Message-State: AOAM531+hkbgaX0HePyqNoJx7AW2SaSawSFlWKNT2GmJ1ftiqhXKSzRF
+	BImUr+FqiMFQststeHU0WuhK2bl+XRtLA5fr1ug=
+X-Google-Smtp-Source: ABdhPJwDHVbp6Kp87ppbub8wv9MLQ+JLBfAnNPgVPrg4KOsqQKAgYMNrspkEo2xsobCs0s/ro+cf2i4svjOY8CO96eA=
+X-Received: by 2002:a17:902:8203:b0:15f:4423:6e9c with SMTP id
+ x3-20020a170902820300b0015f44236e9cmr807044pln.25.1652322956854; Wed, 11 May
+ 2022 19:35:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <5e05ab9275671ea3018eaa02028197817715de65.1652275377.git.pabeni@redhat.com>
+ <19d1ced2-b6f7-9e69-b152-6d52c21e0ac@linux.intel.com>
+In-Reply-To: <19d1ced2-b6f7-9e69-b152-6d52c21e0ac@linux.intel.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Thu, 12 May 2022 10:35:54 +0800
+Message-ID: <CA+WQbwsMB5Eoy6BPoPM6bBq2+ukARRq+1Sxc8L+bq394EQYjFA@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next] mptcp: stop using the mptcp_has_another_subflow()
+ helper
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The MPTCP socket's conn_list (list of subflows) requires the socket lock
-to access. The MP_FAIL timeout code added such an access, where it would
-check the list of subflows both in timer context and (later) in workqueue
-context where the socket lock is held.
+Mat Martineau <mathew.j.martineau@linux.intel.com> =E4=BA=8E2022=E5=B9=B45=
+=E6=9C=8812=E6=97=A5=E5=91=A8=E5=9B=9B 08:15=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, 11 May 2022, Paolo Abeni wrote:
+>
+> > The mentioned helper requires the msk socket lock, and the
+> > current callers don't own it nor can't acquire it, so the
+> > access is racy.
+> >
+> > All the current callers are really checking for infinite mapping
+> > fallback, and the latter condition is explicitly tracked by
+> > the relevant msk variable: we can safely remove the caller usage
+> > - and the caller itself.
+> >
+> > The issue is present since MP_FAIL implementation, but the
+> > fix only applies since the infinite fallback support, ence the
+> > somewhat unexpected fixes tag.
+> >
+> > Fixes: 0530020a7c8f ("mptcp: track and update contiguous data status")
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>
+> Looks good to me. I wasn't able to reproduce the CI failure.
+>
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Rather than check the list twice, remove the check in the timeout
-handler and only depend on the check in the workqueue.
+Acked-and-tested-by: Geliang Tang <geliang.tang@suse.com>
 
-Reported-by: Paolo Abeni <pabeni@redhat.com>
-Fixes: 49fa1919d6bc ("mptcp: reset subflow when MP_FAIL doesn't respond")
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 16 ++--------------
- net/mptcp/protocol.h |  2 +-
- 2 files changed, 3 insertions(+), 15 deletions(-)
+CI reported this failure:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3c55e7f45aef..11e1c58dcbcf 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2182,23 +2182,11 @@ mp_fail_response_expect_subflow(struct mptcp_sock *msk)
- 	return ret;
- }
- 
--static void mptcp_check_mp_fail_response(struct mptcp_sock *msk)
--{
--	struct mptcp_subflow_context *subflow;
--	struct sock *sk = (struct sock *)msk;
--
--	bh_lock_sock(sk);
--	subflow = mp_fail_response_expect_subflow(msk);
--	if (subflow)
--		__set_bit(MPTCP_FAIL_NO_RESPONSE, &msk->flags);
--	bh_unlock_sock(sk);
--}
--
- static void mptcp_timeout_timer(struct timer_list *t)
- {
- 	struct sock *sk = from_timer(sk, t, sk_timer);
- 
--	mptcp_check_mp_fail_response(mptcp_sk(sk));
-+	set_bit(MPTCP_WORK_TIMEOUT, &mptcp_sk(sk)->flags);
- 	mptcp_schedule_work(sk);
- 	sock_put(sk);
- }
-@@ -2575,7 +2563,7 @@ static void mptcp_worker(struct work_struct *work)
- 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- 		__mptcp_retrans(sk);
- 
--	if (test_and_clear_bit(MPTCP_FAIL_NO_RESPONSE, &msk->flags))
-+	if (test_and_clear_bit(MPTCP_WORK_TIMEOUT, &msk->flags))
- 		mptcp_mp_fail_no_response(msk);
- 
- unlock:
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 9933c711b787..2c5e16d360fb 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -117,7 +117,7 @@
- #define MPTCP_WORK_EOF		3
- #define MPTCP_FALLBACK_DONE	4
- #define MPTCP_WORK_CLOSE_SUBFLOW 5
--#define MPTCP_FAIL_NO_RESPONSE	6
-+#define MPTCP_WORK_TIMEOUT	6
- 
- /* MPTCP socket release cb flags */
- #define MPTCP_PUSH_PENDING	1
--- 
-2.36.1
+[13:54:03.080] # itx[ ok ] - infirx[fail] got 0 infinite map[s] RX expected=
+ 1
 
+But it doesn't occur in my test.
+
+Thanks,
+-Geliang
+
+>
+>
+>
+> > ---
+> > net/mptcp/pm.c       |  2 +-
+> > net/mptcp/protocol.h | 13 -------------
+> > net/mptcp/subflow.c  |  3 +--
+> > 3 files changed, 2 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> > index 59fdab2d0c27..8ba51120f35b 100644
+> > --- a/net/mptcp/pm.c
+> > +++ b/net/mptcp/pm.c
+> > @@ -303,7 +303,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64=
+ fail_seq)
+> >
+> >       pr_debug("fail_seq=3D%llu", fail_seq);
+> >
+> > -     if (mptcp_has_another_subflow(sk) || !READ_ONCE(msk->allow_infini=
+te_fallback))
+> > +     if (!READ_ONCE(msk->allow_infinite_fallback))
+> >               return;
+> >
+> >       if (!READ_ONCE(subflow->mp_fail_response_expect)) {
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index f98c27300e60..dbb914def5cc 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -661,19 +661,6 @@ static inline void mptcp_subflow_tcp_fallback(stru=
+ct sock *sk,
+> >       inet_csk(sk)->icsk_af_ops =3D ctx->icsk_af_ops;
+> > }
+> >
+> > -static inline bool mptcp_has_another_subflow(struct sock *ssk)
+> > -{
+> > -     struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk),=
+ *tmp;
+> > -     struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> > -
+> > -     mptcp_for_each_subflow(msk, tmp) {
+> > -             if (tmp !=3D subflow)
+> > -                     return true;
+> > -     }
+> > -
+> > -     return false;
+> > -}
+> > -
+> > void __init mptcp_proto_init(void);
+> > #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> > int __init mptcp_proto_v6_init(void);
+> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > index b38a02db924b..550c8fbec54d 100644
+> > --- a/net/mptcp/subflow.c
+> > +++ b/net/mptcp/subflow.c
+> > @@ -1218,8 +1218,7 @@ static bool subflow_check_data_avail(struct sock =
+*ssk)
+> >       if (!__mptcp_check_fallback(msk)) {
+> >               /* RFC 8684 section 3.7. */
+> >               if (subflow->send_mp_fail) {
+> > -                     if (mptcp_has_another_subflow(ssk) ||
+> > -                         !READ_ONCE(msk->allow_infinite_fallback)) {
+> > +                     if (!READ_ONCE(msk->allow_infinite_fallback)) {
+> >                               ssk->sk_err =3D EBADMSG;
+> >                               tcp_set_state(ssk, TCP_CLOSE);
+> >                               subflow->reset_transient =3D 0;
+> > --
+> > 2.35.3
+> >
+> >
+> >
+>
+> --
+> Mat Martineau
+> Intel
+>
