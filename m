@@ -1,140 +1,134 @@
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087AB3FE0
-	for <mptcp@lists.linux.dev>; Wed, 11 May 2022 23:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236B8160
+	for <mptcp@lists.linux.dev>; Thu, 12 May 2022 00:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652313103; x=1683849103;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=T6ohq70PvrfHIJo9AdvzzGDp3GeVOaFclkR+cZp5Puk=;
-  b=AZxVyn9K1zp97PbuogPzcgvqutlUNn+DBVg2d4SeWMqkz0bt305u25Ou
-   wakgtiLLvYm7zFp7KCYutynKv8uthAT82VlfZSYLo0OsAHKgwaCao+KTz
-   +rEirPCqRo813Xf0+pKxITN+1IXs14JOq5v6BGCZxgTWXmT9hXV1h3EqV
-   Fd/dGuGCpg8IX40Wp+/3u/O0CRZpHpy5LEBs1OJS0MfOkHQviZyjG0poj
-   DFjPxL+U/1azDPwaOGY8lCGL8EMNtVjd4XEbmYS5H6jt7zW3nJ5s6B9Vd
-   /xOpLLiIrclyWGnTA4GlfgYpxib/e7Ppzl3OlvL43AI1KB3NBrYjj7sJ1
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="267427995"
+  t=1652314531; x=1683850531;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rAhJjPzj/+aC6Ye2ItBAqd5169E4q0TFGujqTIEVNKc=;
+  b=DZCeQIvTjuA+DmHKe6+xVJxxZu/RT3F7uoIlaKjTADjW5/ClWEYyNIEC
+   90S+YtGjYnGgLogVtUXdlYiTyB0nbO0Lby8TTUAem6gzQZ5RoDiUZ7WJN
+   gQtjmeZ+HRY0aC9wpJ4b6PI/yabondTbuWm85VRDeskOFWUefrzluHdD6
+   oGkRowUOM0VHGs5Pc2F7J60pL1IXJgSek8ys5se6sgdfap1XlJ29/GjDx
+   V4fImtqIQK8pz9kjOF8Z2G1ZWqy09raZ2CHyPB6463j8rBO98uxwvM58U
+   kx3dAqQWRp+k/h1SEUkme+i2IP4g8Hf5JCAid3GPqQuYbwR/fg2Hj+FhO
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="267432422"
 X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="267427995"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 16:51:42 -0700
+   d="scan'208";a="267432422"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:15:30 -0700
 X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="895560682"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.225.213])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 16:51:42 -0700
+   d="scan'208";a="572302582"
+Received: from rdstein-mobl.amr.corp.intel.com ([10.212.177.197])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:15:30 -0700
+Date: Wed, 11 May 2022 17:15:29 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-net v2] mptcp: Do TCP fallback on early DSS checksum failure
-Date: Wed, 11 May 2022 16:51:37 -0700
-Message-Id: <20220511235137.431538-1-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.36.1
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] mptcp: stop using the mptcp_has_another_subflow()
+ helper
+In-Reply-To: <5e05ab9275671ea3018eaa02028197817715de65.1652275377.git.pabeni@redhat.com>
+Message-ID: <19d1ced2-b6f7-9e69-b152-6d52c21e0ac@linux.intel.com>
+References: <5e05ab9275671ea3018eaa02028197817715de65.1652275377.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-RFC 8684 section 3.7 describes several opportunities for a MPTCP
-connection to "fall back" to regular TCP early in the connection
-process, before it has been confirmed that MPTCP options can be
-successfully propagated on all SYN, SYN/ACK, and data packets. If a peer
-acknowledges the first received data packet with a regular TCP header
-(no MPTCP options), fallback is allowed.
+On Wed, 11 May 2022, Paolo Abeni wrote:
 
-If the recipient of that first data packet finds a MPTCP DSS checksum
-error, this provides an opportunity to fail gracefully with a TCP
-fallback rather than resetting the connection (as might happen if a
-checksum failure were detected later).
+> The mentioned helper requires the msk socket lock, and the
+> current callers don't own it nor can't acquire it, so the
+> access is racy.
+>
+> All the current callers are really checking for infinite mapping
+> fallback, and the latter condition is explicitly tracked by
+> the relevant msk variable: we can safely remove the caller usage
+> - and the caller itself.
+>
+> The issue is present since MP_FAIL implementation, but the
+> fix only applies since the infinite fallback support, ence the
+> somewhat unexpected fixes tag.
+>
+> Fixes: 0530020a7c8f ("mptcp: track and update contiguous data status")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-This commit modifies the checksum failure code to attempt fallback on
-the initial subflow of a MPTCP connection, only if it's a failure in the
-first data mapping. In cases where the peer initiates the connection,
-requests checksums, is the first to send data, and the peer is sending
-incorrect checksums (see
-https://github.com/multipath-tcp/mptcp_net-next/issues/275), this allows
-the connection to proceed as TCP rather than reset.
+Looks good to me. I wasn't able to reproduce the CI failure.
 
-v2: add a helper function for checking whether a subflow is
-fallback-capable.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Fixes: dd8bcd1768ff ("mptcp: validate the data checksum")
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.h |  3 ++-
- net/mptcp/subflow.c  | 21 ++++++++++++++++++---
- 2 files changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f4ce28bb0fdc..6c7e78ec88e8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -443,7 +443,8 @@ struct mptcp_subflow_context {
- 		can_ack : 1,        /* only after processing the remote a key */
- 		disposable : 1,	    /* ctx can be free at ulp release time */
- 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
--		local_id_valid : 1; /* local_id is correctly initialized */
-+		local_id_valid : 1, /* local_id is correctly initialized */
-+		valid_csum_seen : 1;        /* at least one csum validated */
- 	enum mptcp_data_avail data_avail;
- 	u32	remote_nonce;
- 	u64	thmac;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8c37087f0d84..dac38b6a8c53 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -955,11 +955,14 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
- 				 subflow->map_data_csum);
- 	if (unlikely(csum)) {
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
--		subflow->send_mp_fail = 1;
--		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
-+		if (subflow->mp_join || subflow->valid_csum_seen) {
-+			subflow->send_mp_fail = 1;
-+			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
-+		}
- 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
- 	}
- 
-+	subflow->valid_csum_seen = 1;
- 	return MAPPING_OK;
- }
- 
-@@ -1141,6 +1144,18 @@ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ss
- 	}
- }
- 
-+static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-+
-+	if (subflow->mp_join)
-+		return false;
-+	else if (READ_ONCE(msk->csum_enabled))
-+		return !subflow->valid_csum_seen;
-+	else
-+		return !subflow->fully_established;
-+}
-+
- static bool subflow_check_data_avail(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-@@ -1218,7 +1233,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		return true;
- 	}
- 
--	if (subflow->mp_join || subflow->fully_established) {
-+	if (!subflow_can_fallback(subflow)) {
- 		/* fatal protocol error, close the socket.
- 		 * subflow_error_report() will introduce the appropriate barriers
- 		 */
--- 
-2.36.1
 
+> ---
+> net/mptcp/pm.c       |  2 +-
+> net/mptcp/protocol.h | 13 -------------
+> net/mptcp/subflow.c  |  3 +--
+> 3 files changed, 2 insertions(+), 16 deletions(-)
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 59fdab2d0c27..8ba51120f35b 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -303,7 +303,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+>
+> 	pr_debug("fail_seq=%llu", fail_seq);
+>
+> -	if (mptcp_has_another_subflow(sk) || !READ_ONCE(msk->allow_infinite_fallback))
+> +	if (!READ_ONCE(msk->allow_infinite_fallback))
+> 		return;
+>
+> 	if (!READ_ONCE(subflow->mp_fail_response_expect)) {
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index f98c27300e60..dbb914def5cc 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -661,19 +661,6 @@ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+> 	inet_csk(sk)->icsk_af_ops = ctx->icsk_af_ops;
+> }
+>
+> -static inline bool mptcp_has_another_subflow(struct sock *ssk)
+> -{
+> -	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk), *tmp;
+> -	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> -
+> -	mptcp_for_each_subflow(msk, tmp) {
+> -		if (tmp != subflow)
+> -			return true;
+> -	}
+> -
+> -	return false;
+> -}
+> -
+> void __init mptcp_proto_init(void);
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> int __init mptcp_proto_v6_init(void);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index b38a02db924b..550c8fbec54d 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1218,8 +1218,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+> 	if (!__mptcp_check_fallback(msk)) {
+> 		/* RFC 8684 section 3.7. */
+> 		if (subflow->send_mp_fail) {
+> -			if (mptcp_has_another_subflow(ssk) ||
+> -			    !READ_ONCE(msk->allow_infinite_fallback)) {
+> +			if (!READ_ONCE(msk->allow_infinite_fallback)) {
+> 				ssk->sk_err = EBADMSG;
+> 				tcp_set_state(ssk, TCP_CLOSE);
+> 				subflow->reset_transient = 0;
+> -- 
+> 2.35.3
+>
+>
+>
+
+--
+Mat Martineau
+Intel
