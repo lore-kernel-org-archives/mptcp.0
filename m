@@ -1,28 +1,28 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D39F2F28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B373FF1
 	for <mptcp@lists.linux.dev>; Thu, 12 May 2022 23:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652398026; x=1683934026;
+  t=1652398027; x=1683934027;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4RHugB5Hjz9zdcLDqVwhGkff4wmFwxuJQu7+m1e3h1k=;
-  b=BE0GWtVbb+W8a1RRGfb+8DoW7dhrWnH59QuJ4l0QB+Mq/LFPzEFcBpIZ
-   Tip4yGprNc76gyHL+P9BVYliY8FiZm5hpw0louovkf+QKiVu3fiRZ/vi3
-   WGn1pq77F6qRUBTNb5jfZmxNE3H+B+eiq7Ry2qMRO4ARh8F4wGIumOleR
-   Or8t8m+k4TvZlkelIN8jmYQvFKw/WEvueDXU1Pov7k/2mS+HySEFzqLC5
-   GAIS2Yy9BOVlor0bmTSJz+kmwGQI/3i1o/6ovdW2IrbvqWNrDNpz8IvUO
-   sujtBZP+bMODrAHibF9gpP9FRHRjillNRAlCy82l814O63NH/L1ssh/eV
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="356590479"
+  bh=y8Kff7elEMZUNQ5A0JvdNuSLQhIb8zXMDvwIJO0oxHs=;
+  b=dNHZcs3aRPFq9jyeeRAXebnJDu9hi1Gf5QEXEQ4Oru9EyF13X/bG7/5i
+   thnckysUrlN3Uefw4Zw0RIeKcVqAY6d2FDToyJVzbrc5H6bAIb4FcYwe4
+   8MMIlzcnH6Uh62CU+zvBY41Z4KHMUjfCs5oQPzg9mwr3KLR1/6fFiJxps
+   VTYbx6DRFp7+dGNDpJ5v9Zyfoj2bpBLFdFlQMbGZ/DfpEzXTDCC/vKSwh
+   K9causLZwOdI/VgDlqKYoGF+zXfzSWSNtAUXrQTuYQGu6fJqGafCOud9r
+   4dBrbQL2mOGBbh39TLkYihz9hEk9xnmwyfWrjz/0v7bU6XKAQGSqSW8Ai
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="356590480"
 X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="356590479"
+   d="scan'208";a="356590480"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 16:26:47 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 16:26:48 -0700
 X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="739919554"
+   d="scan'208";a="739919555"
 Received: from cmokhtar-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.36.250])
   by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 16:26:47 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -34,9 +34,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 1/2] mptcp: fix subflow accounting on close
-Date: Thu, 12 May 2022 16:26:41 -0700
-Message-Id: <20220512232642.541301-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 2/2] selftests: mptcp: add subflow limits test-cases
+Date: Thu, 12 May 2022 16:26:42 -0700
+Message-Id: <20220512232642.541301-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220512232642.541301-1-mathew.j.martineau@linux.intel.com>
 References: <20220512232642.541301-1-mathew.j.martineau@linux.intel.com>
@@ -50,109 +50,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-If the PM closes a fully established MPJ subflow or the subflow
-creation errors out in it's early stage the subflows counter is
-not bumped accordingly.
+Add and delete a bunch of endpoints and verify the
+respect of configured limits.
 
-This change adds the missing accounting, additionally taking care
-of updating accordingly the 'accept_subflow' flag.
+This covers the codepath introduced by the previous patch.
 
-Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
+Fixes: 69c6ce7b6eca ("selftests: mptcp: add implicit endpoint test case")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm.c       |  5 ++---
- net/mptcp/protocol.h | 14 ++++++++++++++
- net/mptcp/subflow.c  | 12 +++++++++---
- 3 files changed, 25 insertions(+), 6 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 48 ++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 01809eef29b4..aa51b100e033 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -178,14 +178,13 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
- 	struct mptcp_pm_data *pm = &msk->pm;
- 	bool update_subflows;
- 
--	update_subflows = (ssk->sk_state == TCP_CLOSE) &&
--			  (subflow->request_join || subflow->mp_join);
-+	update_subflows = subflow->request_join || subflow->mp_join;
- 	if (!READ_ONCE(pm->work_pending) && !update_subflows)
- 		return;
- 
- 	spin_lock_bh(&pm->lock);
- 	if (update_subflows)
--		pm->subflows--;
-+		__mptcp_pm_close_subflow(msk);
- 
- 	/* Even if this subflow is not really established, tell the PM to try
- 	 * to pick the next ones, if possible.
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 3c1a3036550f..f4ce28bb0fdc 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -833,6 +833,20 @@ unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
- 
-+/* called under PM lock */
-+static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
-+{
-+	if (--msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
-+		WRITE_ONCE(msk->pm.accept_subflow, true);
-+}
-+
-+static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
-+{
-+	spin_lock_bh(&msk->pm.lock);
-+	__mptcp_pm_close_subflow(msk);
-+	spin_unlock_bh(&msk->pm.lock);
-+}
-+
- void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index aba260f547da..8c37087f0d84 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1422,20 +1422,20 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	struct sockaddr_storage addr;
- 	int remote_id = remote->id;
- 	int local_id = loc->id;
-+	int err = -ENOTCONN;
- 	struct socket *sf;
- 	struct sock *ssk;
- 	u32 remote_token;
- 	int addrlen;
- 	int ifindex;
- 	u8 flags;
--	int err;
- 
- 	if (!mptcp_is_fully_established(sk))
--		return -ENOTCONN;
-+		goto err_out;
- 
- 	err = mptcp_subflow_create_socket(sk, &sf);
- 	if (err)
--		return err;
-+		goto err_out;
- 
- 	ssk = sf->sk;
- 	subflow = mptcp_subflow_ctx(ssk);
-@@ -1492,6 +1492,12 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- failed:
- 	subflow->disposable = 1;
- 	sock_release(sf);
-+
-+err_out:
-+	/* we account subflows before the creation, and this failures will not
-+	 * be caught by sk_state_change()
-+	 */
-+	mptcp_pm_close_subflow(msk);
- 	return err;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 7314257d248a..48ef112f42c2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1444,6 +1444,33 @@ chk_prio_nr()
+ 	[ "${dump_stats}" = 1 ] && dump_stats
  }
  
++chk_subflow_nr()
++{
++	local need_title="$1"
++	local msg="$2"
++	local subflow_nr=$3
++	local cnt1
++	local cnt2
++
++	if [ -n "${need_title}" ]; then
++		printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" "${msg}"
++	else
++		printf "%-${nr_blank}s %s" " " "${msg}"
++	fi
++
++	cnt1=$(ss -N $ns1 -tOni | grep -c token)
++	cnt2=$(ss -N $ns2 -tOni | grep -c token)
++	if [ "$cnt1" != "$subflow_nr" -o "$cnt2" != "$subflow_nr" ]; then
++		echo "[fail] got $cnt1:$cnt2 subflows expected $subflow_nr"
++		fail_test
++		dump_stats=1
++	else
++		echo "[ ok ]"
++	fi
++
++	[ "${dump_stats}" = 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -tOni | grep token; ip -n $ns1 mptcp endpoint )
++}
++
+ chk_link_usage()
+ {
+ 	local ns=$1
+@@ -2556,7 +2583,7 @@ fastclose_tests()
+ 	fi
+ }
+ 
+-implicit_tests()
++endpoint_tests()
+ {
+ 	# userspace pm type prevents add_addr
+ 	if reset "implicit EP"; then
+@@ -2578,6 +2605,23 @@ implicit_tests()
+ 			$ns2 10.0.2.2 id 1 flags signal
+ 		wait
+ 	fi
++
++	if reset "delete and re-add"; then
++		pm_nl_set_limits $ns1 1 1
++		pm_nl_set_limits $ns2 1 1
++		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
++		run_tests $ns1 $ns2 10.0.1.1 4 0 0 slow &
++
++		wait_mpj $ns2
++		pm_nl_del_endpoint $ns2 2 10.0.2.2
++		sleep 0.5
++		chk_subflow_nr needtitle "after delete" 1
++
++		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
++		wait_mpj $ns2
++		chk_subflow_nr "" "after re-add" 2
++		wait
++	fi
+ }
+ 
+ # [$1: error message]
+@@ -2624,7 +2668,7 @@ all_tests_sorted=(
+ 	d@deny_join_id0_tests
+ 	m@fullmesh_tests
+ 	z@fastclose_tests
+-	I@implicit_tests
++	I@endpoint_tests
+ )
+ 
+ all_tests_args=""
 -- 
 2.36.1
 
