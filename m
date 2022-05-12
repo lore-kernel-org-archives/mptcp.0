@@ -1,147 +1,108 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B373FF1
-	for <mptcp@lists.linux.dev>; Thu, 12 May 2022 23:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9EF3D93
+	for <mptcp@lists.linux.dev>; Thu, 12 May 2022 23:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652398027; x=1683934027;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=y8Kff7elEMZUNQ5A0JvdNuSLQhIb8zXMDvwIJO0oxHs=;
-  b=dNHZcs3aRPFq9jyeeRAXebnJDu9hi1Gf5QEXEQ4Oru9EyF13X/bG7/5i
-   thnckysUrlN3Uefw4Zw0RIeKcVqAY6d2FDToyJVzbrc5H6bAIb4FcYwe4
-   8MMIlzcnH6Uh62CU+zvBY41Z4KHMUjfCs5oQPzg9mwr3KLR1/6fFiJxps
-   VTYbx6DRFp7+dGNDpJ5v9Zyfoj2bpBLFdFlQMbGZ/DfpEzXTDCC/vKSwh
-   K9causLZwOdI/VgDlqKYoGF+zXfzSWSNtAUXrQTuYQGu6fJqGafCOud9r
-   4dBrbQL2mOGBbh39TLkYihz9hEk9xnmwyfWrjz/0v7bU6XKAQGSqSW8Ai
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="356590480"
+  t=1652398836; x=1683934836;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=FKhOU+w6tiUTx3EIFbJ8M5yINHzUo5WIQ5TzYpX4ttM=;
+  b=AfmRe0wxFcjhAiD4UT3LUuM9qgANl8m724XSqKhG1DgTdtQLGj1/bl4i
+   mXBMV5R7tjlWDs+ZuDlNCFGFznRdnyLGjBhvsj5sEOTTNMnr24Nr92llj
+   lpusb5iD0iGMfNqYqNi58POrQMGenqrkyIc4EfTjbCp7GoFBTU9dFH03w
+   rgZSUQ7GCwyf0re4vGeovcOhfXijJ44BIe+2qPYFJCbDsZotdsst42L80
+   g10Xwd/buTx81ao/65rt9hAOvF0bcIu+OgT4XawcqrPNeoGA+KFFvZR4D
+   qUfPPvPPcxvFfL/4ERnFT35WQbBlIgSog+n9PuDbupFGhPqsDjWHoab4S
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="269834562"
 X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="356590480"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 16:26:48 -0700
+   d="scan'208";a="269834562"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 16:40:30 -0700
 X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="739919555"
-Received: from cmokhtar-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.36.250])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 16:26:47 -0700
+   d="scan'208";a="624619593"
+Received: from gjimenez-mobl2.amr.corp.intel.com ([10.212.193.238])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 16:40:30 -0700
+Date: Thu, 12 May 2022 16:40:20 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	edumazet@google.com,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 2/2] selftests: mptcp: add subflow limits test-cases
-Date: Thu, 12 May 2022 16:26:42 -0700
-Message-Id: <20220512232642.541301-3-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220512232642.541301-1-mathew.j.martineau@linux.intel.com>
-References: <20220512232642.541301-1-mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: Do not traverse the subflow
+ connection list without lock
+In-Reply-To: <9f3f7f33e4fb662d85046205018f9cffd93aac44.camel@redhat.com>
+Message-ID: <8f82e782-8e64-d198-24fc-f4d7f4689f@linux.intel.com>
+References: <20220512002308.445416-1-mathew.j.martineau@linux.intel.com>  <20220512002308.445416-2-mathew.j.martineau@linux.intel.com> <9f3f7f33e4fb662d85046205018f9cffd93aac44.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Thu, 12 May 2022, Paolo Abeni wrote:
 
-Add and delete a bunch of endpoints and verify the
-respect of configured limits.
+> On Wed, 2022-05-11 at 17:23 -0700, Mat Martineau wrote:
+>> The MPTCP socket's conn_list (list of subflows) requires the socket lock
+>> to access. The MP_FAIL timeout code added such an access, where it would
+>> check the list of subflows both in timer context and (later) in workqueue
+>> context where the socket lock is held.
+>>
+>> Rather than check the list twice, remove the check in the timeout
+>> handler and only depend on the check in the workqueue.
+>>
+>> Reported-by: Paolo Abeni <pabeni@redhat.com>
+>> Fixes: 49fa1919d6bc ("mptcp: reset subflow when MP_FAIL doesn't respond")
+>> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>> ---
+>>  net/mptcp/protocol.c | 16 ++--------------
+>>  net/mptcp/protocol.h |  2 +-
+>>  2 files changed, 3 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 3c55e7f45aef..11e1c58dcbcf 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -2182,23 +2182,11 @@ mp_fail_response_expect_subflow(struct mptcp_sock *msk)
+>>  	return ret;
+>>  }
+>>
+>> -static void mptcp_check_mp_fail_response(struct mptcp_sock *msk)
+>> -{
+>> -	struct mptcp_subflow_context *subflow;
+>> -	struct sock *sk = (struct sock *)msk;
+>> -
+>> -	bh_lock_sock(sk);
+>> -	subflow = mp_fail_response_expect_subflow(msk);
+>> -	if (subflow)
+>> -		__set_bit(MPTCP_FAIL_NO_RESPONSE, &msk->flags);
+>> -	bh_unlock_sock(sk);
+>> -}
+>> -
+>>  static void mptcp_timeout_timer(struct timer_list *t)
+>>  {
+>>  	struct sock *sk = from_timer(sk, t, sk_timer);
+>>
+>> -	mptcp_check_mp_fail_response(mptcp_sk(sk));
+>> +	set_bit(MPTCP_WORK_TIMEOUT, &mptcp_sk(sk)->flags);
+>>  	mptcp_schedule_work(sk);
+>>  	sock_put(sk);
+>>  }
+>
+> I'm wondering if at this point we could get rid also of the
+> MPTCP_WORK_TIMEOUT flags. In case of mptcp-level timeout we just
+> schedule the worker and let it do it's check.
 
-This covers the codepath introduced by the previous patch.
+Yeah, the iteration and READ_ONCE() calls over the subflows are not that 
+expensive. I'll send a v2 for this patch...
 
-Fixes: 69c6ce7b6eca ("selftests: mptcp: add implicit endpoint test case")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 48 ++++++++++++++++++-
- 1 file changed, 46 insertions(+), 2 deletions(-)
+>
+> Other than that the series LGTM, thanks!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 7314257d248a..48ef112f42c2 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1444,6 +1444,33 @@ chk_prio_nr()
- 	[ "${dump_stats}" = 1 ] && dump_stats
- }
- 
-+chk_subflow_nr()
-+{
-+	local need_title="$1"
-+	local msg="$2"
-+	local subflow_nr=$3
-+	local cnt1
-+	local cnt2
-+
-+	if [ -n "${need_title}" ]; then
-+		printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" "${msg}"
-+	else
-+		printf "%-${nr_blank}s %s" " " "${msg}"
-+	fi
-+
-+	cnt1=$(ss -N $ns1 -tOni | grep -c token)
-+	cnt2=$(ss -N $ns2 -tOni | grep -c token)
-+	if [ "$cnt1" != "$subflow_nr" -o "$cnt2" != "$subflow_nr" ]; then
-+		echo "[fail] got $cnt1:$cnt2 subflows expected $subflow_nr"
-+		fail_test
-+		dump_stats=1
-+	else
-+		echo "[ ok ]"
-+	fi
-+
-+	[ "${dump_stats}" = 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -tOni | grep token; ip -n $ns1 mptcp endpoint )
-+}
-+
- chk_link_usage()
- {
- 	local ns=$1
-@@ -2556,7 +2583,7 @@ fastclose_tests()
- 	fi
- }
- 
--implicit_tests()
-+endpoint_tests()
- {
- 	# userspace pm type prevents add_addr
- 	if reset "implicit EP"; then
-@@ -2578,6 +2605,23 @@ implicit_tests()
- 			$ns2 10.0.2.2 id 1 flags signal
- 		wait
- 	fi
-+
-+	if reset "delete and re-add"; then
-+		pm_nl_set_limits $ns1 1 1
-+		pm_nl_set_limits $ns2 1 1
-+		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
-+		run_tests $ns1 $ns2 10.0.1.1 4 0 0 slow &
-+
-+		wait_mpj $ns2
-+		pm_nl_del_endpoint $ns2 2 10.0.2.2
-+		sleep 0.5
-+		chk_subflow_nr needtitle "after delete" 1
-+
-+		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
-+		wait_mpj $ns2
-+		chk_subflow_nr "" "after re-add" 2
-+		wait
-+	fi
- }
- 
- # [$1: error message]
-@@ -2624,7 +2668,7 @@ all_tests_sorted=(
- 	d@deny_join_id0_tests
- 	m@fullmesh_tests
- 	z@fastclose_tests
--	I@implicit_tests
-+	I@endpoint_tests
- )
- 
- all_tests_args=""
--- 
-2.36.1
+...and mark the first patch as "queued".
 
+--
+Mat Martineau
+Intel
