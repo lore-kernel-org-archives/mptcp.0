@@ -1,96 +1,112 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18AD17E7
-	for <mptcp@lists.linux.dev>; Fri, 13 May 2022 01:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652404533; x=1683940533;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=g9HiSvRZpufrC3K95IOhacFNuvsO9+KifoI+tkCxB1c=;
-  b=NMqbs1JudQEqHmbAWptNd0gwDrcb0lvtAIEBIVjsZZm+rSrXHj0oXD6j
-   77yNyRjG1s3R8t1hj+pMfbom/qmP1o/PRYn/UFdhcQdgUJS01PNYvf1eI
-   r7+o8nw+Vrlc8iirUMx0koG639oXolqTmJ+l7M3NabIWa/wKPLJzN4GC3
-   +Z0U+tWUFbwr86FILytBSC+equZoSXuil9foPAFyeViOaIHxA+RubwJmC
-   18fRq2P2lI7VCVCFWQQ3oWEDfh4UsGhs7qEtZFDTQo8kHWCNRdOekFl11
-   ikk6t+RJeUhNMX0e9uHJ0OjwEbQLsoFY8MKQw9KEiQwpbkCCnq2aO85kV
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="250081827"
-X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="250081827"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 18:15:33 -0700
-X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="658874929"
-Received: from gjimenez-mobl2.amr.corp.intel.com ([10.212.193.238])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 18:15:33 -0700
-Date: Thu, 12 May 2022 18:15:32 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 0/5] BPF redundant scheduler
-In-Reply-To: <cover.1652271034.git.geliang.tang@suse.com>
-Message-ID: <ae464c1c-fc6a-72f3-9ebe-a0c647b9f0e@linux.intel.com>
-References: <cover.1652271034.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C597520E0
+	for <mptcp@lists.linux.dev>; Fri, 13 May 2022 02:10:44 +0000 (UTC)
+Received: by mail-qv1-f54.google.com with SMTP id n10so5746464qvi.5
+        for <mptcp@lists.linux.dev>; Thu, 12 May 2022 19:10:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=ogLxish0KvlX5UR4L8hylZUhlKp/8GzlrbWJ1s6Tq2Y=;
+        b=HTF+PhyfQ/a80y7GEY3mSC4uEnQQUtbGdk7V0o4A1G9+V6EIziIyvnHdEGWt85eb+I
+         1KhBLqfTVloc47CmzKNrApbtLkwhp+Snhz4FLB0dlbXB2pgOfbF1vLiS/VNOMJOJGE/e
+         rMLDAjNkg1fBuYt0xUPtXvYMef8mCBoGEYLFnKTrAn0NDDicxgTQB0jOCk7i/fmHGgKO
+         XkqarvoQ7ybglGU6PbE16J4jSvRweoFjQxwF2pg0mdNaPf+N+wnrxOtBaUDi6AbMiu24
+         0n0l0ZQhGMXGP/6kttGgns+VSXQACpJALCwBwfscX8Mhg09ClUr26jN4KjDielv2Tatn
+         PCrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=ogLxish0KvlX5UR4L8hylZUhlKp/8GzlrbWJ1s6Tq2Y=;
+        b=T1jYBqxSKV1rJU65024mMUJTgSC81zNk/yUZdU7fPZ5IF2msM5norDC9r8i5xkGWGV
+         8eqO47X1hXiux5rhSdQpHxjv1tTfGlNKtbNAxoNR87Q1/VEh4pMxIhr25JE5HRvZsnfK
+         22ehUMylirm2qmzMKrs7h3mTln3v5EDGKjCsAU0ApsUrFy7s4xJw2E8UT0lyzdjbHkGl
+         SKWXYsNdA+/0MS81A89g0PEc9jOSJAJkIPcv9bgPCatppASfkzogHt1TCzobF40wKtrV
+         3hXYG0iVYTLDkHP4ETB1/wZw4DOzPKleVS4dralyBFv2dxAXOcJZBX6+DJgkqWZ1EwoP
+         8Pmg==
+X-Gm-Message-State: AOAM532etw6BZGqDOXzZ9do1ahtm/n7hMVUcCoYQlt4kEgzg2qXXJ8cs
+	eOPLQTh9/UdFb8MGbognvCBTpbQ1UQ==
+X-Google-Smtp-Source: ABdhPJxXfOWCdQNFuck156kITzaF9WW2aTKTJuGAQjzidvWVL8ZjR8B8e/8tNQzfVUjavvvCM1A6MQ==
+X-Received: by 2002:a0c:fb4d:0:b0:456:3a15:30d7 with SMTP id b13-20020a0cfb4d000000b004563a1530d7mr2479730qvq.93.1652407843623;
+        Thu, 12 May 2022 19:10:43 -0700 (PDT)
+Received: from [127.0.0.1] ([20.122.109.131])
+        by smtp.gmail.com with ESMTPSA id a79-20020ae9e852000000b0069fc13ce257sm662412qkg.136.2022.05.12.19.10.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 19:10:42 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220513003521.548193-1-mathew.j.martineau@linux.intel.com>
+References: <20220513003521.548193-1-mathew.j.martineau@linux.intel.com>
+Subject: Re: mptcp: Do not traverse the subflow connection list without
+ lock: Tests Results
+Message-ID: <c86c69ca-fa4b-eb4a-3722-dacd7f461083@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 May 2022 02:10:42 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 11 May 2022, Geliang Tang wrote:
+Hi Mat,
 
-> v2:
-> - add MPTCP_SUBFLOWS_MAX limit to avoid infinite loops when the
->   scheduler always sets call_again to true.
-> - track the largest copied amount.
-> - deal with __mptcp_subflow_push_pending() and the retransmit loop.
-> - depends on "BPF round-robin scheduler" v14.
+Thank you for your modifications, that's great!
 
-Thanks for those updates.
+Our CI did some validations and here is its report:
 
-As we talked about in the meeting this week, I think it's still good to 
-revise this to be able to return multiple subflows (whether in a bitmap or 
-array) from the BPF scheduler function. That is more likely to be workable 
-with __mptcp_subflow_push_pending() and the way it chains to send on 
-different subflows with mptcp_subflow_delegate().
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/4747222951657472
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4747222951657472/summary/summary.txt
 
-- Mat
+- KVM Validation: debug:
+  - Unstable: 2 failed test(s): selftest_diag =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5873122858500096
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5873122858500096/summary/summary.txt
 
->
-> v1:
->
-> Implements the redundant BPF MPTCP scheduler, which sends all packets
-> redundantly on all available subflows.
->
-> depends on:
-> - BPF round-robin scheduler, v13
->
-> Geliang Tang (5):
->  Squash to "mptcp: add get_subflow wrappers"
->  mptcp: add redundant subflows support
->  mptcp: add call_again flag in mptcp_sched_ops
->  selftests/bpf: add bpf_red scheduler
->  selftests/bpf: add bpf_red test
->
-> include/net/mptcp.h                           |  1 +
-> net/mptcp/protocol.c                          | 64 ++++++++++++++-----
-> net/mptcp/protocol.h                          |  4 +-
-> net/mptcp/sched.c                             | 11 +++-
-> .../testing/selftests/bpf/prog_tests/mptcp.c  | 38 +++++++++++
-> .../selftests/bpf/progs/mptcp_bpf_red.c       | 54 ++++++++++++++++
-> 6 files changed, 151 insertions(+), 21 deletions(-)
-> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_red.c
->
-> -- 
-> 2.34.1
->
->
->
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/5e566d71122d
 
---
-Mat Martineau
-Intel
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
