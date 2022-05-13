@@ -1,43 +1,45 @@
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A150256E
-	for <mptcp@lists.linux.dev>; Fri, 13 May 2022 22:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03892586
+	for <mptcp@lists.linux.dev>; Fri, 13 May 2022 22:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652482115; x=1684018115;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jknNG3mEEPgr4q3ixj78wwwHeBd+dIoANpLZX+rO+Ek=;
-  b=Jm9v6jzSjXPvaqITmUQXfd/68dNQ7+LN/1opakeR++ywXJ8ZKuekpNEF
-   6UUS4EOYoFlEgBPYlJDzEfOfIIQlsY6bqsTWN4HtbruHyxcyVz56qOxbS
-   jpvHCz4pi2KLwDAX9i9IF7hFBKMiDTdHW7fhpxRvS3RoVV0tTeFoMMc+s
-   MJ95gmQPbMPGKkogmxn0VFPOjFVRhaFo1iP8hNeFUhKGf7U/ETonxatHH
-   m6qjOZhJjGbG02CzVlY9WwaTOZPHlxWK/i8GaI10PCqJOxEF/kybPxsPx
-   Tc68bVCVTBMGNDI0iTR4eKr04Z3MqNGiYBkky/IvLgxA5wwleSo8E4gdo
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="333462005"
+  t=1652482116; x=1684018116;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Fpbu7J+T3sEY5KzKGDHOZcdSlNTcq4FmV5F0zYAzn2c=;
+  b=iWGTzy4wIOkzXUIAPHxhoEzF4Tfd5Q9irKEpB+sPYtNVXE6bNwEXkBRI
+   mLwHRWwUTy2MFDuLm4wP18k0/kWVhUMw9KCeehI2VF23PjtzSra2fSohJ
+   uOYy1vvcfd3E0gJ+h0s3BIEj29ZQ5hy/TT0t/rGRgFkexsTBbwFtxOoX7
+   tobVHnAu40NhQsrYUimWVxH/d6qX/tqel07m5XdtSBLt/tgaU48f4TeQ5
+   XPLuzXo7BXeXHRf7OaDcREEWzWVVbJvldNXK/t6JHMYAIO34mMebXC22r
+   8NIlm83whKkkiIVzqEJwvTjEXXW+bKOhIv6m2EBt5Im9LNXG9veJJVhhW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="333462011"
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="333462005"
+   d="scan'208";a="333462011"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 15:48:33 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 15:48:34 -0700
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="815588245"
+   d="scan'208";a="815588248"
 Received: from clakshma-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.160.121])
   by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 15:48:33 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org,
 	bpf@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+Cc: Geliang Tang <geliang.tang@suse.com>,
 	ast@kernel.org,
 	daniel@iogearbox.net,
 	andrii@kernel.org,
 	mptcp@lists.linux.dev,
-	geliang.tang@suse.com
-Subject: [PATCH bpf-next v4 0/7] bpf: mptcp: Support for mptcp_sock
-Date: Fri, 13 May 2022 15:48:20 -0700
-Message-Id: <20220513224827.662254-1-mathew.j.martineau@linux.intel.com>
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH bpf-next v4 2/7] selftests/bpf: Enable CONFIG_IKCONFIG_PROC in config
+Date: Fri, 13 May 2022 15:48:22 -0700
+Message-Id: <20220513224827.662254-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.1
+In-Reply-To: <20220513224827.662254-1-mathew.j.martineau@linux.intel.com>
+References: <20220513224827.662254-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,59 +48,41 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch set adds BPF access to mptcp_sock structures, along with
-associated self tests. You may recognize some of the code from earlier
-(https://lore.kernel.org/bpf/20200918121046.190240-6-nicolas.rybowski@tessares.net/)
-but it has been reworked quite a bit.
+From: Geliang Tang <geliang.tang@suse.com>
 
+CONFIG_IKCONFIG_PROC is required by BPF selftests, otherwise we get
+errors like this:
 
-v1 -> v2: Emit BTF type, add func_id checks in verifier.c and bpf_trace.c,
-remove build check for CONFIG_BPF_JIT, add selftest check for CONFIG_MPTCP,
-and add a patch to include CONFIG_IKCONFIG/CONFIG_IKCONFIG_PROC for the
-BPF self tests.
+ libbpf: failed to open system Kconfig
+ libbpf: failed to load object 'kprobe_multi'
+ libbpf: failed to load BPF skeleton 'kprobe_multi': -22
 
-v2 -> v3: Access sysctl through the filesystem to work around CI use of
-the more limited busybox sysctl command.
+It's because /proc/config.gz is opened in bpf_object__read_kconfig_file()
+in tools/lib/bpf/libbpf.c:
 
-v3 -> v4: Dropped special case kernel code for tcp_sock is_mptcp, use
-existing bpf_tcp_helpers.h, and add check for 'ip mptcp monitor' support.
+        file = gzopen("/proc/config.gz", "r");
 
-Geliang Tang (6):
-  bpf: add bpf_skc_to_mptcp_sock_proto
-  selftests/bpf: Enable CONFIG_IKCONFIG_PROC in config
-  selftests/bpf: test bpf_skc_to_mptcp_sock
-  selftests/bpf: verify token of struct mptcp_sock
-  selftests/bpf: verify ca_name of struct mptcp_sock
-  selftests/bpf: verify first of struct mptcp_sock
+So this patch enables CONFIG_IKCONFIG and CONFIG_IKCONFIG_PROC in
+tools/testing/selftests/bpf/config.
 
-Nicolas Rybowski (1):
-  selftests/bpf: add MPTCP test base
+Suggested-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ tools/testing/selftests/bpf/config | 2 ++
+ 1 file changed, 2 insertions(+)
 
- MAINTAINERS                                   |   1 +
- include/linux/bpf.h                           |   1 +
- include/linux/btf_ids.h                       |   3 +-
- include/net/mptcp.h                           |   6 +
- include/uapi/linux/bpf.h                      |   7 +
- kernel/bpf/verifier.c                         |   1 +
- kernel/trace/bpf_trace.c                      |   2 +
- net/core/filter.c                             |  18 ++
- net/mptcp/Makefile                            |   2 +
- net/mptcp/bpf.c                               |  22 ++
- scripts/bpf_doc.py                            |   2 +
- tools/include/uapi/linux/bpf.h                |   7 +
- tools/testing/selftests/bpf/bpf_tcp_helpers.h |  13 +
- tools/testing/selftests/bpf/config            |   3 +
- tools/testing/selftests/bpf/network_helpers.c |  43 ++-
- tools/testing/selftests/bpf/network_helpers.h |   4 +
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 265 ++++++++++++++++++
- .../testing/selftests/bpf/progs/mptcp_sock.c  |  82 ++++++
- 18 files changed, 473 insertions(+), 9 deletions(-)
- create mode 100644 net/mptcp/bpf.c
- create mode 100644 tools/testing/selftests/bpf/prog_tests/mptcp.c
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sock.c
-
-
-base-commit: 0d2d2648931bdb1a629bf0df4e339e6a326a6136
+diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
+index 08c6e5a66d87..6840d4625e01 100644
+--- a/tools/testing/selftests/bpf/config
++++ b/tools/testing/selftests/bpf/config
+@@ -54,3 +54,5 @@ CONFIG_NF_DEFRAG_IPV6=y
+ CONFIG_NF_CONNTRACK=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_FPROBE=y
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
 -- 
 2.36.1
 
