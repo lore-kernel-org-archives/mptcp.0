@@ -1,118 +1,128 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8049A17E7
-	for <mptcp@lists.linux.dev>; Fri, 13 May 2022 00:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C44917E7
+	for <mptcp@lists.linux.dev>; Fri, 13 May 2022 01:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652402142; x=1683938142;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=z1WZLVRkQfKK8s9jSV8yCvjpYgok2e55HaS29UyWUZQ=;
-  b=Lyb7HwLUtuq/79Tz1O3IeRI7pD4ORA+bGlFTotBW6Bvm5JHlBpUXYii5
-   NtlxF9iPp8Wg5HKWhsdn+WA4Ob5+IqrDQuV/BGWljPDWRj10Utz8xKqOk
-   m7RqvR1U5eHRO4Ze2V7fKEzGPp9WcYZ9/AJipoesGLMUoC+Of+e6QhouS
-   OqKhW+QSACK/xybbo27UCpyZ1CA4dO9SNKpH/KTonnkVJ1jdwX2h3D0q/
-   GLuMKV3N8GckYqwy0d4lCn1zsRyv1kVU4tHDLxDQshamoR5dqA4hrDFL9
-   Ehl1ymavFIKF3yfMAm7aVrXcw7m8/GNsKNBwnTa1sFqVqZIJQOiBEOyOa
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="269845025"
+  t=1652404155; x=1683940155;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vo8LTBd8BW84euojZjsQDT7SSAP7wkowsKUleY7rgzU=;
+  b=Yo65wPmrvK1KMf9Hk/aCswamMSVqrnftN/CzsP4/PiG2PDvrSesaTB8b
+   xIMpeIYrNtADY2z1e0yjfjrwSqMsvrFo19DhBHT//GTbNKV64YWE8QiZC
+   QdaXzvCLEM/+uY3Wl99DwBxmc/vcNxS6GiaypW5UIVaFdo0swr+5EmNRQ
+   cUoFb8lsYFS0SUYKqn0GZ7SBtpICsLa7p15TrkmrKov5ad5456tka+crl
+   +oetX/OoMvZcvxqi1Hl/LRjTCa8ZsUcuABr9lFeo9YPxuYsk6m8SEKtxm
+   idl5uUYCgEBMn6XRQ0XucNwhCV6Nt0Jk65xh+dHx3SWFCFCh9Im7/qCKo
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="356608229"
 X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="269845025"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 17:35:30 -0700
+   d="scan'208";a="356608229"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 18:09:14 -0700
 X-IronPort-AV: E=Sophos;i="5.91,221,1647327600"; 
-   d="scan'208";a="554007923"
-Received: from cmokhtar-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.36.250])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 17:35:26 -0700
+   d="scan'208";a="658873242"
+Received: from gjimenez-mobl2.amr.corp.intel.com ([10.212.193.238])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 18:09:14 -0700
+Date: Thu, 12 May 2022 18:08:57 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v2] mptcp: Do not traverse the subflow connection list without lock
-Date: Thu, 12 May 2022 17:35:21 -0700
-Message-Id: <20220513003521.548193-1-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.36.1
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v14 3/3] selftests/bpf: add bpf_rr test
+In-Reply-To: <e3d31fc19246a91423fca7c497bdd0f661470e36.1652270663.git.geliang.tang@suse.com>
+Message-ID: <344bad28-8918-29c7-387c-a41c356c447b@linux.intel.com>
+References: <cover.1652270663.git.geliang.tang@suse.com> <e3d31fc19246a91423fca7c497bdd0f661470e36.1652270663.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-The MPTCP socket's conn_list (list of subflows) requires the socket lock
-to access. The MP_FAIL timeout code added such an access, where it would
-check the list of subflows both in timer context and (later) in workqueue
-context where the socket lock is held.
+On Wed, 11 May 2022, Geliang Tang wrote:
 
-Rather than check the list twice, remove the check in the timeout
-handler and only depend on the check in the workqueue. Also remove the
-MPTCP_FAIL_NO_RESPONSE flag, since mptcp_mp_fail_no_response() has
-insignificant overhead and can be checked on each worker run.
+> This patch adds the round-robin BPF MPTCP scheduler test. Use sysctl to
+> set net.mptcp.scheduler to use this sched. Add a veth net device to
+> simulate the multiple addresses case. Use 'ip mptcp endpoint' command to
+> add this new endpoint to PM netlink.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> .../testing/selftests/bpf/prog_tests/mptcp.c  | 38 +++++++++++++++++++
+> 1 file changed, 38 insertions(+)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index 93a5739712ce..6303eba67fab 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -6,6 +6,7 @@
+> #include "cgroup_helpers.h"
+> #include "network_helpers.h"
+> #include "mptcp_bpf_first.skel.h"
+> +#include "mptcp_bpf_rr.skel.h"
+>
+> #ifndef TCP_CA_NAME_MAX
+> #define TCP_CA_NAME_MAX	16
+> @@ -369,10 +370,47 @@ static void test_first(void)
+> 	mptcp_bpf_first__destroy(first_skel);
+> }
+>
+> +static void test_rr(void)
+> +{
+> +	struct mptcp_bpf_rr *rr_skel;
+> +	int server_fd, client_fd;
+> +	struct bpf_link *link;
+> +
+> +	rr_skel = mptcp_bpf_rr__open_and_load();
+> +	if (!ASSERT_OK_PTR(rr_skel, "bpf_rr__open_and_load"))
+> +		return;
+> +
+> +	link = bpf_map__attach_struct_ops(rr_skel->maps.rr);
+> +	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
+> +		mptcp_bpf_rr__destroy(rr_skel);
+> +		return;
+> +	}
+> +
+> +	system("ip link add veth1 type veth");
+> +	system("ip addr add 10.0.1.1/24 dev veth1");
+> +	system("ip link set veth1 up");
+> +	system("ip mptcp endpoint add 10.0.1.1 subflow");
+> +	system("sysctl -qw net.mptcp.scheduler=bpf_rr");
+> +	server_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
+> +	client_fd = connect_to_mptcp_fd(server_fd, 0);
+> +
+> +	send_data(server_fd, client_fd);
+> +
 
-Reported-by: Paolo Abeni <pabeni@redhat.com>
-Fixes: 49fa1919d6bc ("mptcp: reset subflow when MP_FAIL doesn't respond")
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
+Is there a way to verify data was sent on both subflows? Maybe look at 
+bytes_sent or segs_out in 'ss' output?
 
-v2: Remove flag.
+> +	close(client_fd);
+> +	close(server_fd);
+> +	system("sysctl -qw net.mptcp.scheduler=default");
+> +	system("ip mptcp endpoint flush");
+> +	system("ip link del veth1");
+> +	bpf_link__destroy(link);
+> +	mptcp_bpf_rr__destroy(rr_skel);
+> +}
+> +
+> void test_mptcp(void)
+> {
+> 	if (test__start_subtest("base"))
+> 		test_base();
+> 	if (test__start_subtest("first"))
+> 		test_first();
+> +	if (test__start_subtest("rr"))
+> +		test_rr();
+> }
+> -- 
+> 2.34.1
+>
+>
+>
 
----
- net/mptcp/protocol.c | 16 +---------------
- net/mptcp/protocol.h |  1 -
- 2 files changed, 1 insertion(+), 16 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3c55e7f45aef..d6aef4b13b8a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2182,23 +2182,10 @@ mp_fail_response_expect_subflow(struct mptcp_sock *msk)
- 	return ret;
- }
- 
--static void mptcp_check_mp_fail_response(struct mptcp_sock *msk)
--{
--	struct mptcp_subflow_context *subflow;
--	struct sock *sk = (struct sock *)msk;
--
--	bh_lock_sock(sk);
--	subflow = mp_fail_response_expect_subflow(msk);
--	if (subflow)
--		__set_bit(MPTCP_FAIL_NO_RESPONSE, &msk->flags);
--	bh_unlock_sock(sk);
--}
--
- static void mptcp_timeout_timer(struct timer_list *t)
- {
- 	struct sock *sk = from_timer(sk, t, sk_timer);
- 
--	mptcp_check_mp_fail_response(mptcp_sk(sk));
- 	mptcp_schedule_work(sk);
- 	sock_put(sk);
- }
-@@ -2575,8 +2562,7 @@ static void mptcp_worker(struct work_struct *work)
- 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- 		__mptcp_retrans(sk);
- 
--	if (test_and_clear_bit(MPTCP_FAIL_NO_RESPONSE, &msk->flags))
--		mptcp_mp_fail_no_response(msk);
-+	mptcp_mp_fail_no_response(msk);
- 
- unlock:
- 	release_sock(sk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 9933c711b787..9ccbe25dcc3e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -117,7 +117,6 @@
- #define MPTCP_WORK_EOF		3
- #define MPTCP_FALLBACK_DONE	4
- #define MPTCP_WORK_CLOSE_SUBFLOW 5
--#define MPTCP_FAIL_NO_RESPONSE	6
- 
- /* MPTCP socket release cb flags */
- #define MPTCP_PUSH_PENDING	1
--- 
-2.36.1
-
+--
+Mat Martineau
+Intel
