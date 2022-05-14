@@ -1,152 +1,112 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8569624
-	for <mptcp@lists.linux.dev>; Sat, 14 May 2022 16:46:58 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id l11-20020a17090a49cb00b001d923a9ca99so10493205pjm.1
-        for <mptcp@lists.linux.dev>; Sat, 14 May 2022 09:46:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCEF2577
+	for <mptcp@lists.linux.dev>; Sat, 14 May 2022 17:09:35 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id bv19so21570520ejb.6
+        for <mptcp@lists.linux.dev>; Sat, 14 May 2022 10:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WUZRVKOOfeqCRceVd3UKCZK5M/bcGzdRqpgQT4pV7rE=;
-        b=NfFVNgGdmHvhAaj5PwoI21Aq6mIek0wUmyWzMnYYio1TGevQOkkgUUbHjTuMH6oZjl
-         40mzK2AXJCE6FG0AMv+ZKTFjjOKPlcpCVFS3eeRUlyMsW4yJkgpqaFPBf3/mLNvHDmge
-         dFcflcs/+pr3fHRnZof1gYIVEWnsD1BIvGOy3Cf6eQmkB9vngm4TagW4LadQcL9Xilam
-         /PjbS08sUVgBBR72/bMgevLN0yDFuN0nYlk4qHBI7f24lRYfgmCXVCDAOdA6Oavm/7mN
-         mWHz46aUaBoCU0m6/VOiP3fMjtuBiRY07sUqNI3LCsIMilb7qXvAlf0c6Oga5tdVHUTY
-         hM0A==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=AWLLUeqQEncY4PcoCGjwU3lvMLkIgsCWBsop4Scf1Rc=;
+        b=ClG/IWpbfKwTiA1hdJOv/O0p83bwD6aCzdZTQqT4+wtL3zRDtwDFhxWPU3wryMYfr2
+         atG35mLL4HsVvcFaWmJLneHnDpZvuMBDGIdPSOLfch4G1gxa/KFURL4FM7ejRTKdBbPT
+         SubRGiefbIFmISfiBPjd//rJLVIcOqTfQdAGFNvUI0EqwgHtt4TrjxZmr3Vo5amzo+u3
+         R69gvq+7ILrh55lHqq01+xDZBwIX5IrM1m3fgqGR3fAz5BMe6+YvVRUhtA5+N6Rl4g9N
+         SbGtaW+YrJrVw/6T+hxk5aToBzDID9mhfL5T4oFvN9vS/UwqfsFS2x9jxt7h7VafaLNa
+         +48g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WUZRVKOOfeqCRceVd3UKCZK5M/bcGzdRqpgQT4pV7rE=;
-        b=tJMiRqwQokaMDq1XysH98ziEH4ntdsxMAVLCxVA1JY2H6cNEZF1h/MxzRuOdtoIZks
-         IZ3+1Ymm2Z9sGtY3rUJcpCj7GLzBO0bfCb5Rd8UpVg5zLLCTx0y9PR9mRiz54fpbuYVy
-         cVg5IZPoV+B4NS1VJemF8erv++Uqf2/3NQq9emV25wg4WLJc6Q56OkrVQx9NZHkaLjU+
-         thR415YxWdaE3cc9Ls0rGnGAbU6LIhHzp/AKg1StPkDfXND5NRrvbNgUsthWUQLsIqz9
-         NtHFmIIMVcM5qPpiQKaIpHu3oR+X1kq88W6fRU7eWG3YspAiSmsJxb6BxCb1mL4g4bwP
-         jl0w==
-X-Gm-Message-State: AOAM531otmj0sA6m/ye5r/gItaKxyuT8XZms5LfCPoSwJ7E45g7A+ufK
-	sTFIA/k+1RWT1MIfPIz+X+X6YNBDOrS9GWpxsbnohTSS51U=
-X-Google-Smtp-Source: ABdhPJwuo/wuodVenxqC4tVXrc2Jhu8iPYHti9lNzImBGXhA3/TKON39Qgwa4WqI348meQ8o92rSwj47QLjerf2aYwM=
-X-Received: by 2002:a17:902:8203:b0:15f:4423:6e9c with SMTP id
- x3-20020a170902820300b0015f44236e9cmr9914488pln.25.1652546817983; Sat, 14 May
- 2022 09:46:57 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=AWLLUeqQEncY4PcoCGjwU3lvMLkIgsCWBsop4Scf1Rc=;
+        b=QGh+5Tp4ko2ASRPClWWXxT2erwq3SUEFb1VrB9AR44B2u0jdOugy0Z14r6BXeZDw7g
+         NwsApzKUq7l7bS1+QUaoMfBHtxAa/SDwTeUNEVavgdPPpbEUMj46GMBWKW9LXH94Yi1q
+         ZTlsf3boPDk4QOp9bFGnwqLwIP80qyozbbZiAzjFChwpxUuaPdr7259x22jlOsQ/T+Vg
+         4jlglPghP2JzB7A3KJqeW6ciYlyDbUyDQfpQoZlZsyHaB8OYM/dfx7LM8VikXVWn6nuE
+         VLiqMDT3b9q/oUdXe4LEDPdZQtusifrfBIXgrD1Z346w6QZbDVReeLygF3/eSn8ifEEU
+         EARw==
+X-Gm-Message-State: AOAM532Pp7GiUczQItGFncSIPhOL3W1vkoAL+40SSbh2EPgrHRlT673f
+	7qLVECh/d+wdPV0FvlM4BqwqLA==
+X-Google-Smtp-Source: ABdhPJw7mY77lbQGopD/ElyfBAF75Mne5fvKvv1+mY6cuPfoYIdu0Kq03k9oJBVkJRohUiYCWJHpqw==
+X-Received: by 2002:a17:906:3087:b0:6f4:2901:608a with SMTP id 7-20020a170906308700b006f42901608amr9047896ejv.646.1652548173933;
+        Sat, 14 May 2022 10:09:33 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:7ae9:144e:df38:3671? ([2a02:578:8593:1200:7ae9:144e:df38:3671])
+        by smtp.gmail.com with ESMTPSA id c18-20020a1709063f1200b006f3ef214e35sm1899445ejj.155.2022.05.14.10.09.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 May 2022 10:09:33 -0700 (PDT)
+Message-ID: <cb764533-65ca-d2c9-2d65-4d4877e2d64a@tessares.net>
+Date: Sat, 14 May 2022 19:09:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1652255615.git.geliang.tang@suse.com> <8f2755bc-4c52-9837-c0db-2b620d7a3b22@tessares.net>
- <20220514154845.GA4189@bogon.HOST> <f697c655-618e-841c-4f60-3c57078e4a76@tessares.net>
-In-Reply-To: <f697c655-618e-841c-4f60-3c57078e4a76@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Sun, 15 May 2022 00:46:56 +0800
-Message-ID: <CA+WQbwvKWodtjjjFyidvzXVCAj=0-qYinvvbUUd=QjUQ+oejyQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v2 00/14] update bpf patches on export branch
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Geliang Tang <geliang.tang@suse.com>, 
-	Mat Martineau <mathew.j.martineau@linux.intel.com>, MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH mptcp-net v2] mptcp: Do TCP fallback on early DSS checksum
+ failure
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>
+References: <20220511235137.431538-1-mathew.j.martineau@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220511235137.431538-1-mathew.j.martineau@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Mat, Paolo,
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2022=E5=B9=B45=E6=
-=9C=8815=E6=97=A5=E5=91=A8=E6=97=A5 00:31=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Geliang,
->
-> On 14/05/2022 17:48, Geliang Tang wrote:
-> > On Sat, May 14, 2022 at 01:25:35PM +0200, Matthieu Baerts wrote:
-> >> Hi Geliang, Mat
-> >>
-> >> On 11/05/2022 09:56, Geliang Tang wrote:
-> >>> v2:
-> >>>  - drop "bpf: expose is_mptcp flag to bpf_tcp_sock" (Martin & Andrii)
-> >>>  - patch 3, use is_mptcp in tcp_sock, instead of bpf_tcp_sock (Martin=
- & Andrii)
-> >>>
-> >>> base-commit: bcf89bc9c28e ("DO-NOT-MERGE: git markup: features
-> >>> net-next-next") on export/20220510T054929
-> >>>
-> >>> v1:
-> >>>  - drop bpf_mptcp_helpers.h (Andrii)
-> >>>  - patch 6, skip the test if 'ip mptcp monitor' is not supported (Mat=
-)
-> >>
-> >> Thank you for the patches.
-> >>
-> >> I *think* everything is now sync in our tree but feel free to check
-> >> because I had to "manually" compare patches with what was in our tree.
-> >>
-> >> But in theory, our tree is now ready for a v5.
-> >
-> > Thanks Matt, but three patches still need to be updated:
-> >
-> > Patch #4, selftests/bpf: test bpf_skc_to_mptcp_sock
-> >
-> > if (!tcp_sk->is_mptcp) {
-> >
-> > ->
-> >
-> > if (!is_mptcp) {
->
-> Thank you, I missed that!
->
-> - a973ee164a70 tg: fix wrong merge conflict resolution
->
-> > Patch #10, mptcp: add sched in mptcp_sock
-> >
-> >  struct mptcp_sock {
-> >       struct inet_connection_sock     sk;
-> >
-> > -     __u32           token;
-> > -     struct sock     *first;
-> > -     char            ca_name[TCP_CA_NAME_MAX];
-> > +     __u32                   token;
-> > +     struct sock             *first;
-> > +     struct mptcp_sched_ops  *sched;
-> > +     char                    ca_name[TCP_CA_NAME_MAX];
-> >  } __attribute__((preserve_access_index));
-> >
-> > ->
-> >
-> >       __u32           token;
-> >       struct sock     *first;
-> > +     struct mptcp_sched_ops *sched;
-> >       char            ca_name[TCP_CA_NAME_MAX];
-> >  } __attribute__((preserve_access_index));
->
-> I did that on purpose, I thought it was clearer to read after.
->
-> Do you prefer not to change the alignment?
+On 12/05/2022 01:51, Mat Martineau wrote:
+> RFC 8684 section 3.7 describes several opportunities for a MPTCP
+> connection to "fall back" to regular TCP early in the connection
+> process, before it has been confirmed that MPTCP options can be
+> successfully propagated on all SYN, SYN/ACK, and data packets. If a peer
+> acknowledges the first received data packet with a regular TCP header
+> (no MPTCP options), fallback is allowed.
+> 
+> If the recipient of that first data packet finds a MPTCP DSS checksum
+> error, this provides an opportunity to fail gracefully with a TCP
+> fallback rather than resetting the connection (as might happen if a
+> checksum failure were detected later).
+> 
+> This commit modifies the checksum failure code to attempt fallback on
+> the initial subflow of a MPTCP connection, only if it's a failure in the
+> first data mapping. In cases where the peer initiates the connection,
+> requests checksums, is the first to send data, and the peer is sending
+> incorrect checksums (see
+> https://github.com/multipath-tcp/mptcp_net-next/issues/275), this allows
+> the connection to proceed as TCP rather than reset.
+> 
+> v2: add a helper function for checking whether a subflow is
+> fallback-capable.
 
-Yes, I prefer not to change the alignments, it's much easier. If we
-want to change them, it's better to squash the changes into the
-original patches.
+Thank you for the patch and review!
 
-Thanks,
--Geliang
+I just applied it in our tree (fixes for -net).
 
->
-> > Patch #13, selftests/bpf: add bpf_first scheduler
-> >
-> > bpf_mptcp_helpers.h
-> >
-> > ->
-> >
-> > bpf_tcp_helpers.h
->
-> Thanks!
->
-> - fc2aafca4737: bpf: use bpf_tcp_helpers.h instead of the mptcp one
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
+
+I had a conflict with commit f8d4bcacff3b ("mptcp: infinite mapping
+receiving"), may you check if the resolution is correct please?
+
+
+- 88cf15503ba1: mptcp: Do TCP fallback on early DSS checksum failure
+- Results: b453c372356a..128393ceec9b (export-net)
+- 74a4236c9eae: conflict in
+top-bases/t/DO-NOT-MERGE-git-markup-fixes-net-next
+- Results: db7207dab3db..9634a3a2eced (export)
+
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220514T164907
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export-net
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
