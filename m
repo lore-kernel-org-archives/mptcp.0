@@ -1,44 +1,44 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7714B62B
-	for <mptcp@lists.linux.dev>; Sat, 14 May 2022 10:05:41 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id ch13so20297448ejb.12
-        for <mptcp@lists.linux.dev>; Sat, 14 May 2022 03:05:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A033624
+	for <mptcp@lists.linux.dev>; Sat, 14 May 2022 11:12:07 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id z19so12716160edx.9
+        for <mptcp@lists.linux.dev>; Sat, 14 May 2022 04:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=CQbgtAr/ZhV+wZhAyhJAujaSIPZALxZPOiUNU4jSo8A=;
-        b=7Ajipl5b/6ZOIHPhBCUIft4iqB4I4fY9oQRd9tnKj4mY0Zs12iVVaUnJyO718xx6zm
-         Sgm5+ROOAKxcghMktO/Px0m6nnhui3wNOZR3t74qdZYhb8X1ULiMI+g8TxIP7FhQd4ZS
-         V+WCnAsKoAqORx/md7hKELQjeIzm+ms4E7Wb9pDIj5X90fxfPOEyn5Xz+fAMix+k6Tmr
-         keKhYH5KwBRpqoyftD/QFjOt4dpe/xLtk9qNJTyfUTZ1j2i8/2yxbJp0NlV84lqJxaS+
-         ERghMmQXa9svxTGD0wiPvG2rnpK27nyMPyJH7MXLtioUnt52/MS5P85D5b150mgWNsgG
-         YKzg==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=Ag+8VtqnWeYU/Ux7K5glTIzpqi2C6P3sp2mRS5Xq4NY=;
+        b=WRuoafZJ+/lzrj05bLjdYLuX8PtkOk0pxpCBAHELVURvlq940+Ici2YxpO2Z5irxOP
+         Vs7esDhKCzlWm6VMWdnif8sqPpOqMM7HyOMv2ZfPrL/hqZX6okVDayh38xVVgUJB+SRD
+         DdbXDu0mbqyjZcbIjQFICimBvOtGH39nXlJW3m8NSyigxfIfqAGns7pWQsp3P2HZxmWJ
+         W1f5bh07y23xRAjdVvFaagT5MtcuGR9NEsIvFrenMj8y4X+4KAtJsfOk1OO5qLPa5M9o
+         jH3JeDZIxAvKkRXBL7ty+VidGqH1mTCDPJFnf+CkSHndZ6gJKWwJHAHxKjzYaQChTJE9
+         qEDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=CQbgtAr/ZhV+wZhAyhJAujaSIPZALxZPOiUNU4jSo8A=;
-        b=SFZLFbf6FlF8Z+KJyQFUlGBgRvpX7EryeJjdgFby0cUdj89u2jKvT2T1+p+nddaB5Z
-         jif3mPRJ9b3l80gFm1qWFgBQlJFOmLiO20qzd9E42jKhXJtaFPNa2NoC5rJ5FqIESF+x
-         +xMEZ1HXSgkVTpPDhVQOivq75UYo5ggdpcA/cAVvZsMcuSBUS2nsoujZ8OgNYi6oI26+
-         CJuQfKiDzPMehw7Woyv1LikoeW8G2tdA1gb8qrQrgFHvNwJK25aVx4xuGpRjXz3sXpdD
-         o3ztAFOvjUXsr4shsmfg7r83K/je3UQ8HxNRTg7/PhF4wMatzX33ka5dkYSQ1v346M7M
-         jkHQ==
-X-Gm-Message-State: AOAM5323LrHavpFpVUFkQ90XddjBS3/HxFFsk2wPT1bbJFaD4p5fzJHW
-	iNOoIFuVveRiuX05sc10xf4UmrgU+I/hKg9Xns0=
-X-Google-Smtp-Source: ABdhPJxkdhfc3gt09Kvzl0+kpF1J5fqKeQtvyiV5r2sfDpnj31ka7cYl68YFl/3D6dSIbelo4oNoUg==
-X-Received: by 2002:a17:906:d54b:b0:6f4:cea3:843b with SMTP id cr11-20020a170906d54b00b006f4cea3843bmr7458022ejc.40.1652522739168;
-        Sat, 14 May 2022 03:05:39 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:764e:bcb8:669d:8965? ([2a02:578:8593:1200:764e:bcb8:669d:8965])
-        by smtp.gmail.com with ESMTPSA id f15-20020a056402160f00b0042617ba63a6sm2091911edv.48.2022.05.14.03.05.38
+        bh=Ag+8VtqnWeYU/Ux7K5glTIzpqi2C6P3sp2mRS5Xq4NY=;
+        b=nPannhOhbvV5hJcoH/47r2Jjc8MpHyczecetyp98gQtXc+k/YoWMXgVo8v2nZOpvMJ
+         vftFNa+ijgGBfldgy6q842N0276oSSoG071+AMGuPWBl+f3WaRyuoc+uFx19WjKmXtmc
+         ZjsMWqN74C2876kUGdbmt9qLjTN1W7KsWbGNTkFRNpWr2Zdz8kifI9Mm55QlAM977ZVy
+         xOAxDtttxffDadSfZJ+qCs1do1ww6k+1H802r1zkGKtZ579KNrW/eTSWTOBrfxSTzxhJ
+         GqeZgimFY5cg0qWmOtPcLsAGVu06XHrgXNrogF27iuQyrpTSPwivaJi9qcAUZ70CAkL9
+         JT4Q==
+X-Gm-Message-State: AOAM531iA1Ipcc3MRtlFUVuuaVTs+Tfa8a0ZlrJbv+GDYCR3A3nwKfVO
+	E8vSWZJyBmB2Z3hN41bmhrg6vA==
+X-Google-Smtp-Source: ABdhPJyB0SujaZy43ook7CFCaNHa1FpWZn6MUA6xGSjiBw6qLy1HEkOTVXXBMvI66bYgCgRs9R6cAQ==
+X-Received: by 2002:a05:6402:1394:b0:427:e7a5:b8d0 with SMTP id b20-20020a056402139400b00427e7a5b8d0mr3196465edv.9.1652526725970;
+        Sat, 14 May 2022 04:12:05 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:e0ff:1350:df1:12f? ([2a02:578:8593:1200:e0ff:1350:df1:12f])
+        by smtp.gmail.com with ESMTPSA id s3-20020a50d483000000b0042617ba63d6sm2092650edi.96.2022.05.14.04.12.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 May 2022 03:05:38 -0700 (PDT)
-Message-ID: <896634ab-bb72-bbc0-19c8-4e14b6ead723@tessares.net>
-Date: Sat, 14 May 2022 12:05:37 +0200
+        Sat, 14 May 2022 04:12:05 -0700 (PDT)
+Message-ID: <8a68cc98-2b14-a972-77e4-7e7f040d54d4@tessares.net>
+Date: Sat, 14 May 2022 13:12:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,45 +50,34 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
 Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: test
  bpf_skc_to_mptcp_sock"
 Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <6de915f94665491d2944dd7aab1e6f7a0f3abcaf.1652156539.git.geliang.tang@suse.com>
- <45f492b2-1b41-9681-2fac-9cd59dd0f6b@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <45f492b2-1b41-9681-2fac-9cd59dd0f6b@linux.intel.com>
+In-Reply-To: <6de915f94665491d2944dd7aab1e6f7a0f3abcaf.1652156539.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat, Geliang,
+Hi Geliang, Mat,
 
-On 11/05/2022 01:03, Mat Martineau wrote:
-> On Tue, 10 May 2022, Geliang Tang wrote:
-> 
->> Drop bpf_mptcp_helpers.h, squash into bpf_tcp_helpers.h (Andrii)
+On 10/05/2022 06:23, Geliang Tang wrote:
+> Drop bpf_mptcp_helpers.h, squash into bpf_tcp_helpers.h (Andrii)
 
-Thank you for the patch!
+Just applied (with some delay, sorry) in our tree:
 
-> Hi Geliang -
-> 
-> Since there are 6 different commits touching bpf_mptcp_helpers.h, maybe
-> it would be easier for Matthieu if you posted the full patches for
-> "selftests/bpf: test bpf_skc_to_mptcp_sock" and all the bpf patches
-> after that, instead of squash changes / instructions?
-> 
-> I'm not sure the instructions below translate well to topgit.
+- fea9321e0256: "squashed" in "selftests/bpf: test bpf_skc_to_mptcp_sock"
+- fce3bccb2cda: conflict in
+t/selftests-bpf-verify-token-of-struct-mptcp_sock
+- 9dcaed2c0d9e: conflict in
+t/selftests-bpf-verify-ca_name-of-struct-mptcp_sock
+- bc1ecc2ce851: conflict in
+t/selftests-bpf-verify-first-of-struct-mptcp_sock
+- e25640bd2a45: conflict in t/mptcp-add-struct-mptcp_sched_ops
+- 5f43144bcb9b: conflict in t/mptcp-add-sched-in-mptcp_sock
 
-Sorry for the late reply. In fact, I prefer to get squash-to patches
-instead of reworded patches where I need to find differences :-)
+ChangeLog have been updated soon.
 
-If there are conflicts, I'm usually fine with some explanations in the
-commit message. Here, the conflicts are easy to resolve: just move the
-content of one file to another one. For these conflicts, I don't even
-need the detailed instructions but that's always useful, just in case.
-
-If the conflicts are harder to resolve, sharing a Git branch on a public
-repo is an easy way for me to compare the resolution I did with the
-expected one.
+I'm syncing with the v4 Mat sent yesterday, I will update the "export"
+branch just after.
 
 Cheers,
 Matt
