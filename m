@@ -1,121 +1,89 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046542577
-	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 22:47:45 +0000 (UTC)
-Received: by mail-io1-f46.google.com with SMTP id z26so17579006iot.8
-        for <mptcp@lists.linux.dev>; Mon, 16 May 2022 15:47:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iXCsccIRv/oRQ4k5XyZPds/zrCr9HYqlNJkf3+MT3ZU=;
-        b=knKjM4jo64KbuqHxsCnj3gpGu9VJneQCaN/SMPJVzUdVIFcgWg83759h0w0wdNO+3B
-         U0ZgDckE0iPZK33pREqfzhWhxcrn4DtQM0y5f+Xsn6aDDXBP8alnnVeNB3rXlMeOT8vu
-         l0fFvEcDHo82KCMnXpGfh5ebaoGHRrn6cCsYDuJyutcq0QCIgaGbFXaCjxdqz/ynpZqf
-         ECZ7fRLV9JcdM50DsAmFeXE3LxGLXyxEDKW8ZyVcAA+B3RgSfSLf9qBMdvky4PaFwILW
-         E9sXd5flvwfaGCyVQpdOtxIKwPPR3EIlqHj6NV4widqVc0GMC9dRF3tfjbc0/1gzklgx
-         nv7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iXCsccIRv/oRQ4k5XyZPds/zrCr9HYqlNJkf3+MT3ZU=;
-        b=ym1ykrBhJ35KJV+P/WTyzbAdQkXXVcr1oQ6JZ+uivyA1SOPbGTkuGavUkedb/gwgfU
-         599qt6X6Kmxwr7EfqfHqHubok1gXP6BNWRhu0SRV27BrECo/A5rR/GHKv4z500tT3AdZ
-         o11V0TZYBCX0fQyOOYZjxKzSYaMYFY9SzBwTcAyfj/U633cwVtYvcLj6BKPeVQMG7PMZ
-         40WzWD2ZQY2oiLvXMxMn4/aZJIl+Fh7M9nzltj2wID5AnItcTZNVRlOOE1S+g2g4M0Nz
-         BUQnf4yHYC5tuBBOeZHTE4SuW1j0bXpx8yPoWqwxZ03bZlx5tpzHUA3hJ5y/2XnWIVGN
-         ebKw==
-X-Gm-Message-State: AOAM5304DLgOrAi+OClpoEMG68yMXozf3ZychCD5LugkqnvYnPM4iDvf
-	AtF2qr7TOGXl7KTDVnJlBwwZ6+X10Aq1As4T33s=
-X-Google-Smtp-Source: ABdhPJzXurvnQTVLbZLmRa1uP13vbh/prUlGz7ViD6y8C0tp2etwbsn1aznZEMOq6h06dLG0px8JjzIx9JhL0kBP7qA=
-X-Received: by 2002:a05:6638:468e:b0:32b:fe5f:d73f with SMTP id
- bq14-20020a056638468e00b0032bfe5fd73fmr10707056jab.234.1652741265081; Mon, 16
- May 2022 15:47:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F732577
+	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 22:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652741788; x=1684277788;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=qeBWt9sFz0qhBj6THXmPyx42/x9n80C4nO36vfGOiRk=;
+  b=BP45YHnyk4Ov1Wlb2EoJr2CX+j3QgjymZIrgb1NJ9N3DmGB7Jk/OVHWj
+   tJSASaqXU9MtqIwk0dVDMQDxt7K9qFZwQDOyvVTogcnb8sZHorg5RhoU3
+   bZV5mSSQjL2JJ2LBaTLIuAMQXZGiJd6ZfYm12MCQQcjA3K8fdWCTGzk4S
+   Rx/BRKQZ/58D6bRB6mwCFkTS7pKU93rrvhzlHKC46I5Bw4JEWkCf1UwQA
+   IrvV44lDYvOLm0w6uGYFBLk0e+qO1Ti9EDvGP3OEXHXzhBdz7mCqxxQ8w
+   ajNQMbbZULYN3O1G6xwYKphiXu0oylmE/aB8WP+xByzrj4StYkurljBbB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10349"; a="250885552"
+X-IronPort-AV: E=Sophos;i="5.91,231,1647327600"; 
+   d="scan'208";a="250885552"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 15:56:28 -0700
+X-IronPort-AV: E=Sophos;i="5.91,231,1647327600"; 
+   d="scan'208";a="626172172"
+Received: from scrowley-mobl1.amr.corp.intel.com ([10.212.97.175])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 15:56:27 -0700
+Date: Mon, 16 May 2022 15:56:21 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: test
+ bpf_skc_to_mptcp_sock"
+In-Reply-To: <896634ab-bb72-bbc0-19c8-4e14b6ead723@tessares.net>
+Message-ID: <763216a-c627-c4ae-ccae-4042575246c3@linux.intel.com>
+References: <6de915f94665491d2944dd7aab1e6f7a0f3abcaf.1652156539.git.geliang.tang@suse.com> <45f492b2-1b41-9681-2fac-9cd59dd0f6b@linux.intel.com> <896634ab-bb72-bbc0-19c8-4e14b6ead723@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220513224827.662254-1-mathew.j.martineau@linux.intel.com> <20220513224827.662254-5-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220513224827.662254-5-mathew.j.martineau@linux.intel.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 16 May 2022 15:47:34 -0700
-Message-ID: <CAEf4BzaMz=CR5H=_BXgQ8UfDC6mDawgNbGb5XyYBOBqkkS83Hg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 4/7] selftests/bpf: test bpf_skc_to_mptcp_sock
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Geliang Tang <geliang.tang@suse.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, mptcp@lists.linux.dev, 
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Fri, May 13, 2022 at 3:48 PM Mat Martineau
-<mathew.j.martineau@linux.intel.com> wrote:
+On Sat, 14 May 2022, Matthieu Baerts wrote:
+
+> Hi Mat, Geliang,
 >
-> From: Geliang Tang <geliang.tang@suse.com>
+> On 11/05/2022 01:03, Mat Martineau wrote:
+>> On Tue, 10 May 2022, Geliang Tang wrote:
+>>
+>>> Drop bpf_mptcp_helpers.h, squash into bpf_tcp_helpers.h (Andrii)
 >
-> This patch extends the MPTCP test base, to test the new helper
-> bpf_skc_to_mptcp_sock().
+> Thank you for the patch!
 >
-> Define struct mptcp_sock in bpf_tcp_helpers.h, use bpf_skc_to_mptcp_sock
-> to get the msk socket in progs/mptcp_sock.c and store the infos in
-> socket_storage_map.
+>> Hi Geliang -
+>>
+>> Since there are 6 different commits touching bpf_mptcp_helpers.h, maybe
+>> it would be easier for Matthieu if you posted the full patches for
+>> "selftests/bpf: test bpf_skc_to_mptcp_sock" and all the bpf patches
+>> after that, instead of squash changes / instructions?
+>>
+>> I'm not sure the instructions below translate well to topgit.
 >
-> Get the infos from socket_storage_map in prog_tests/mptcp.c. Add a new
-> function verify_msk() to verify the infos of MPTCP socket, and rename
-> verify_sk() to verify_tsk() to verify TCP socket only.
->
-> v2: Add CONFIG_MPTCP check for clearer error messages
-> v4:
->  - use ASSERT_* instead of CHECK_FAIL (Andrii)
->  - drop bpf_mptcp_helpers.h (Andrii)
->
-> Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> ---
->  tools/testing/selftests/bpf/bpf_tcp_helpers.h |  5 +++
->  .../testing/selftests/bpf/prog_tests/mptcp.c  | 45 ++++++++++++++-----
->  .../testing/selftests/bpf/progs/mptcp_sock.c  | 23 ++++++++--
->  3 files changed, 58 insertions(+), 15 deletions(-)
+> Sorry for the late reply. In fact, I prefer to get squash-to patches
+> instead of reworded patches where I need to find differences :-)
 >
 
-[...]
+Noted, I should have spoken for myself :)
 
-> +static int verify_msk(int map_fd, int client_fd)
-> +{
-> +       char *msg = "MPTCP subflow socket";
-> +       int err, cfd = client_fd;
-> +       struct mptcp_storage val;
-> +
-> +       err = bpf_map_lookup_elem(map_fd, &cfd, &val);
-> +       if (!ASSERT_OK(err, "bpf_map_lookup_elem"))
-> +               return err;
-> +
-> +       if (val.invoked != 1) {
-> +               log_err("%s: unexpected invoked count %d != 1",
-> +                       msg, val.invoked);
-> +               err++;
-> +       }
-> +
-> +       if (val.is_mptcp != 1) {
-> +               log_err("%s: unexpected bpf_tcp_sock.is_mptcp %d != 1",
-> +                       msg, val.is_mptcp);
-> +               err++;
-> +       }
+I was hoping you would not need to find any differences if the old patches 
+were dropped in favor of a fresh import of the new ones, but I was 
+making a lot of assumptions there.
 
-any reason to not use ASSERT_NEQ ?
+> If there are conflicts, I'm usually fine with some explanations in the
+> commit message. Here, the conflicts are easy to resolve: just move the
+> content of one file to another one. For these conflicts, I don't even
+> need the detailed instructions but that's always useful, just in case.
+>
+> If the conflicts are harder to resolve, sharing a Git branch on a public
+> repo is an easy way for me to compare the resolution I did with the
+> expected one.
+
+I do agree this is the best thing to do in general.
 
 
-> +
-> +       return err;
-> +}
-> +
->  static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
->  {
->         int client_fd, prog_fd, map_fd, err;
-
-[...]
+--
+Mat Martineau
+Intel
