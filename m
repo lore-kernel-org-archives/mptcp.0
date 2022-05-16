@@ -1,145 +1,134 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E1729A1
-	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 22:43:48 +0000 (UTC)
-Received: by mail-il1-f178.google.com with SMTP id j7so2171383ila.1
-        for <mptcp@lists.linux.dev>; Mon, 16 May 2022 15:43:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048CA29A1
+	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 22:45:26 +0000 (UTC)
+Received: by mail-io1-f48.google.com with SMTP id y12so9250613ior.7
+        for <mptcp@lists.linux.dev>; Mon, 16 May 2022 15:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DtkAHaBfvpLeewqHIadY9qnpq18gjeld0itQ23Cwil8=;
-        b=HjuZhCIXYlaDIIfu06PAuU4MH3TEmrVTYICjkCezfb91ufGMax2DcAz+18fUWZfUsT
-         xLOzI+G2tJVTjX7AU3dZ2Rdvs2MXu/3mCvMayFXuLN81SoM32g8FVO+jI0895I3nTbd8
-         fQsEuu0vpPLY+cIvz6e5W/Ll47y6xAMMX6i330mY/FwtcyR96NMU9p4TzN7BXlyVbNDe
-         dcRe5y7UfvyE3xuGCIzL68YY/u753vmkUzQzKOd+S1Y4nt4UYgwa2XN0ALyc7PPqlI/3
-         WO9g5ciz+TOUeWk0ORkFXzcrVGPmBi3/d9hOMv0ztj8EQJWKM7l1YCLbO9Wpd7VUvkY5
-         hr6A==
+        bh=9E7RpF3kV6uZXouTfZrM1fmjZpic/OFFP4Rr3o2bqnA=;
+        b=LPzyDwK1mHDDhjjzL6eMFYzavfB/+fZqNoysv+PK+BKBqU1s9j6pVjsIslmdAO88fW
+         rxzsz4AjZmwzgp9HAIfj5hopHnLycaTWqL2S8kG0quEcq35z5b8Gb2uQwyUxHnQPEDiY
+         wyU+A3WmFFkJbSxSM1g+jzBCc/A0ms8mGu2wQAIZYImZZh/AKDQYGHKzwWj2GW/BUQl9
+         95s2G5fN8DBb1VcIDYaW9xeXvDlkaHmVSGV8uuxxgDR6AZX0m0XBzjSXf98r2UyKOxKZ
+         OcJltAsd9tAn6kwbQYic2BZUOGWHJJPMPx5xUxHkzzTxqWO5foj1MBWpiHYvqrg+T2fq
+         7bGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DtkAHaBfvpLeewqHIadY9qnpq18gjeld0itQ23Cwil8=;
-        b=L9ixUioWEJe0MeyjU+L1k2i83z3XW6HUczHZuypNT3Stq03GfxO6lyQnYqTxsGKZna
-         TF3pc1WRB8Lfqii2G3QRrR7jnBdDiccwRwP8gfscnzpYZCYd9yGi1ro/8ZbsSHEh6MM1
-         szq4hsdihDp7sqSWZY/qTUeeOpX/J9rfqOPEiv2sC3n/1fhD6D4vUXBzIujv/MwT1ex2
-         lP4mRnoVK9cASpzsP9nxFO7TMVLJQR01V63j1GfZiGYgOBw0FqSMkbUG01oXcB7m3mDG
-         8HFUImEy9Tk8vwQrhoKIwAnQ0P25/CaVGYFp0m9GXyF9Zjnx73T14Bb3qbYSLbwaNTrx
-         NwSw==
-X-Gm-Message-State: AOAM531sgoSFG/lR5fDTt5TwpvS+bQ99KxwhTLjqs9YejkB+K5cwjVFO
-	ErL/6mxF5HVZmW7Ocw8utLxooR23587Z3ryC/3U=
-X-Google-Smtp-Source: ABdhPJw89tcTh5etslrD0BFLbgYaeiiJXOpVG0xwZPBUaWa9G0ykOj0vx964VmDsIuegAktEXXYCxCWcyVj2I2eLVjU=
-X-Received: by 2002:a05:6e02:1b82:b0:2cf:199f:3b4b with SMTP id
- h2-20020a056e021b8200b002cf199f3b4bmr10385669ili.71.1652741027438; Mon, 16
- May 2022 15:43:47 -0700 (PDT)
+        bh=9E7RpF3kV6uZXouTfZrM1fmjZpic/OFFP4Rr3o2bqnA=;
+        b=4o00qHrkmVP3Z+uvVL1IVyH+xB7WjkI5dk2eJ0NL3/offFMXLQdCDhv2h1/U4qHgWN
+         m8B0AHMFo5h6Bd9r88iIxkf6psuMIpju7a2/KkUSgLvy2IcU9Hw1h6ou58IgIYcXKU2A
+         xeOWO9JY5WraSb8wxsmFpKJLXZ7COo9K/Ca4zregelt+xoO3DHwI6AYBzDcS9WJ2Eo2A
+         DgQLOXA35p2U7YdWHzUK/C2h/dcbYI2iSDzM4a0Bxxxe8aBZZREEe/com2LgH9SU+iJ4
+         9Qcynf/3KEIvTlawap1u3gsm037kNAlbUc2pQGv3ks3992xBrgUc0NmFt0MjOiX/x7HU
+         sZ6A==
+X-Gm-Message-State: AOAM533X/cmb2rz/RydusAIVQXqlgEnF2FjNKwzTpSkBXklcIcAx5ltw
+	wcFc2GNG2AwLivqChetZljt8zdZilCmcWtWeRMU=
+X-Google-Smtp-Source: ABdhPJw7Fg0ClVP+XC5GPYevvUVOxVKp0UvEXx/7+mToohzRfuFsiF+HjkMYUgcNp8fngXAb8ZOVnj44mK2FXEsEQiE=
+X-Received: by 2002:a5e:8e42:0:b0:657:bc82:64e5 with SMTP id
+ r2-20020a5e8e42000000b00657bc8264e5mr8838937ioo.112.1652741126084; Mon, 16
+ May 2022 15:45:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220513224827.662254-1-mathew.j.martineau@linux.intel.com> <20220513224827.662254-4-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220513224827.662254-4-mathew.j.martineau@linux.intel.com>
+References: <20220513224827.662254-1-mathew.j.martineau@linux.intel.com> <20220513224827.662254-6-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220513224827.662254-6-mathew.j.martineau@linux.intel.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 16 May 2022 15:43:36 -0700
-Message-ID: <CAEf4Bzbn8DSwxt7WdWhNmfAP_NU8gmnJmFzSzO2kt=ZNSt1gUQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 3/7] selftests/bpf: add MPTCP test base
+Date: Mon, 16 May 2022 15:45:15 -0700
+Message-ID: <CAEf4BzbsK9C1=h=7s25Ezh8HFo7=+vA1XSuLjbQA2Bi16W4kvg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 5/7] selftests/bpf: verify token of struct mptcp_sock
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Cc: Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Nicolas Rybowski <nicolas.rybowski@tessares.net>, Alexei Starovoitov <ast@kernel.org>, 
+	Geliang Tang <geliang.tang@suse.com>, Alexei Starovoitov <ast@kernel.org>, 
 	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, mptcp@lists.linux.dev, 
-	Matthieu Baerts <matthieu.baerts@tessares.net>, Geliang Tang <geliang.tang@suse.com>
+	Matthieu Baerts <matthieu.baerts@tessares.net>
 Content-Type: text/plain; charset="UTF-8"
 
 On Fri, May 13, 2022 at 3:48 PM Mat Martineau
 <mathew.j.martineau@linux.intel.com> wrote:
 >
-> From: Nicolas Rybowski <nicolas.rybowski@tessares.net>
+> From: Geliang Tang <geliang.tang@suse.com>
 >
-> This patch adds a base for MPTCP specific tests.
->
-> It is currently limited to the is_mptcp field in case of plain TCP
-> connection because there is no easy way to get the subflow sk from a msk
-> in userspace. This implies that we cannot lookup the sk_storage attached
-> to the subflow sk in the sockops program.
+> This patch verifies the struct member token of struct mptcp_sock. Add a
+> new function get_msk_token() to parse the msk token from the output of
+> the command 'ip mptcp monitor', and verify it in verify_msk().
 >
 > v4:
->  - add copyright 2022 (Andrii)
 >  - use ASSERT_* instead of CHECK_FAIL (Andrii)
->  - drop SEC("version") (Andrii)
->  - use is_mptcp in tcp_sock, instead of bpf_tcp_sock (Martin & Andrii)
+>  - skip the test if 'ip mptcp monitor' is not supported (Mat)
 >
 > Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Co-developed-by: Geliang Tang <geliang.tang@suse.com>
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> Signed-off-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
 > Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 > ---
->  MAINTAINERS                                   |   1 +
->  tools/testing/selftests/bpf/bpf_tcp_helpers.h |   1 +
->  tools/testing/selftests/bpf/config            |   1 +
->  tools/testing/selftests/bpf/network_helpers.c |  43 ++++--
->  tools/testing/selftests/bpf/network_helpers.h |   4 +
->  .../testing/selftests/bpf/prog_tests/mptcp.c  | 136 ++++++++++++++++++
->  .../testing/selftests/bpf/progs/mptcp_sock.c  |  53 +++++++
->  7 files changed, 231 insertions(+), 8 deletions(-)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/mptcp.c
->  create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sock.c
+>  tools/testing/selftests/bpf/bpf_tcp_helpers.h |  1 +
+>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 64 +++++++++++++++++++
+>  .../testing/selftests/bpf/progs/mptcp_sock.c  |  5 ++
+>  3 files changed, 70 insertions(+)
 >
 
-Seems like bpf_core_field_exists() works fine for your use case and CI
-is green. See some selftest-specific issues below, though.
-
 [...]
 
-> +static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
-> +{
-> +       int client_fd, prog_fd, map_fd, err;
-> +       struct bpf_program *prog;
-> +       struct bpf_object *obj;
-> +       struct bpf_map *map;
+> +       fd = open(monitor_log_path, O_RDONLY);
+> +       if (!ASSERT_GE(fd, 0, "Failed to open monitor_log_path"))
+> +               return token;
 > +
-> +       obj = bpf_object__open("./mptcp_sock.o");
-> +       if (libbpf_get_error(obj))
-> +               return -EIO;
+> +       len = read(fd, buf, sizeof(buf));
+> +       if (!ASSERT_GT(len, 0, "Failed to read monitor_log_path"))
+> +               goto err;
 > +
-> +       err = bpf_object__load(obj);
-> +       if (!ASSERT_OK(err, "bpf_object__load"))
-> +               goto out;
-> +
-> +       prog = bpf_object__find_program_by_name(obj, "_sockops");
+> +       if (strncmp(buf, prefix, strlen(prefix))) {
 
-can you please use BPF skeleton instead of doing these lookups by
-name? See other tests that are including .skel.h headers for example
+ASSERT_STRNEQ ?
 
-> +       if (!ASSERT_OK_PTR(prog, "bpf_object__find_program_by_name")) {
-> +               err = -EIO;
-> +               goto out;
+> +               log_err("Invalid prefix %s", buf);
+> +               goto err;
 > +       }
 > +
+> +       token = strtol(buf + strlen(prefix), NULL, 16);
+> +
+> +err:
+> +       close(fd);
+> +       return token;
+> +}
+> +
+>  static int verify_msk(int map_fd, int client_fd)
+>  {
+>         char *msg = "MPTCP subflow socket";
+>         int err, cfd = client_fd;
+>         struct mptcp_storage val;
+> +       __u32 token;
+> +
+> +       token = get_msk_token();
+> +       if (!ASSERT_GT(token, 0, "Unexpected token"))
+> +               return -1;
+>
+>         err = bpf_map_lookup_elem(map_fd, &cfd, &val);
+>         if (!ASSERT_OK(err, "bpf_map_lookup_elem"))
+> @@ -58,6 +102,12 @@ static int verify_msk(int map_fd, int client_fd)
+>                 err++;
+>         }
+>
+> +       if (val.token != token) {
 
-[...]
 
-> +void test_base(void)
-> +{
-> +       int server_fd, cgroup_fd;
-> +
-> +       cgroup_fd = test__join_cgroup("/mptcp");
-> +       if (CHECK_FAIL(cgroup_fd < 0))
-> +               return;
-> +
-> +       /* without MPTCP */
-> +       server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
-> +       if (CHECK_FAIL(server_fd < 0))
-> +               goto with_mptcp;
-> +
-> +       CHECK_FAIL(run_test(cgroup_fd, server_fd, false));
+ASSERT_NEQ
 
-please don't add new uses of CHECK_FAIL()
-
+> +               log_err("Unexpected mptcp_sock.token %x != %x",
+> +                       val.token, token);
+> +               err++;
+> +       }
 > +
-> +       close(server_fd);
-> +
+>         return err;
+>  }
+>
 
 [...]
