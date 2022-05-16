@@ -1,44 +1,44 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BA310E0
-	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 16:13:03 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id 1-20020a05600c248100b00393fbf11a05so11222672wms.3
-        for <mptcp@lists.linux.dev>; Mon, 16 May 2022 09:13:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD3110E0
+	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 16:18:50 +0000 (UTC)
+Received: by mail-wm1-f53.google.com with SMTP id a14-20020a7bc1ce000000b00393fb52a386so11250319wmj.1
+        for <mptcp@lists.linux.dev>; Mon, 16 May 2022 09:18:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Lqx1Swk6Ge+X8lMCTVUAQ1vD8QNWO9yTtk2o0vzrKOY=;
-        b=Sf2edvGMeQCJ19///7WgoLXktoLnytjvo9n/m9fFA9K/HJdEDsNmI9QE6VrW/Zl3Ih
-         vWEVxnQ5VebTxsORl6hIbbDHGehpdxFO8BnrkpkHlwgjDF3wnMe8yFnfyndC0ui1/xve
-         7lMhHZ7jyKTK9+2BdsPv/4WK9xzDsUEec9f+r4UeTe4tUc/56yBdvzFo7mDeXVkT7mnI
-         uF+wvC+Li5Y9eeTGWcLkXpW5ZP6mgqRURwm+6IJ3LlZtfOcEpwYqmtZBooUQeo0h33Wz
-         mLs5/iZkuZIvjUL7IZFwuvpXXEthUBSVfVsO1/U50FxswqJqFcQHGdYOrLgpxQeDFuOu
-         1NOg==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=TJsDl8znQgrUMsk/j2LiMfl+ZDq7MKItHhiqd6dmquo=;
+        b=ig5BstA7I7zXBMDZf7Av42FKakYxdP+GQ9Gdn8XocSQ4/i2VlW3e/HlhjGNOqG5Zzz
+         YMVxJUNyv9yFRSkrnB0kXFv7XYc/vPZRbYhd8Il2pFBkGoLbXO35b+UZp0RuKI6kaICZ
+         w33FAyg8HeG37bpry/wAj/0gIh2KMR3qWg2R5UjTFfq5/I+VHbmS5MpuEpudt/KVNs1Z
+         nASC25APr/VnWLVbcr5L4k8q27uJXPNxmyhsgPI8e++do6bCsNInZH2kFLAW9o2t2ecj
+         oUWVladXCAoE8mNqI57pxUbQI4+bBqZRNPQWKfYGacRX8B/OjiKvt2niA2s6t2D2F78f
+         d9Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Lqx1Swk6Ge+X8lMCTVUAQ1vD8QNWO9yTtk2o0vzrKOY=;
-        b=NzVMmYFlbJHB7uJSjV8Z7ofNmu3pVPIsaEyXeP97FrTkzyLere7L4yCnYvMZmdsK43
-         FfRvVLfDv8zII5D5SHwinOzMaIL9ZAH2ykQxzqaYWSC9+cG+Y/o+qDimVpmoR/gdArFl
-         e1yEFdKA8NmtPOOo/ZONieMyMDrdy9L9vrZoTqwSdbCs3411rMdVGv7eUtYht+tm1SiD
-         9Ch7SUnz620dONO2meaoZnANqCwLFcmyWIbFMZncKmNY/5eQqi5l0fVkipglC+UVv+I+
-         SWvg1RpBnHAxmXyvKzJXyUPerSjA5LLOT6poMUc2tPG6VhfQjKa/F6ZSh9MttOsSqrg7
-         Ph2g==
-X-Gm-Message-State: AOAM533BDeP0DBPc0g7Wblp8qbdY2QBdLu/dhfILaezUTc1HusfP+KYB
-	PkCZHyHHxCt53NhAO+H+k2DZIRc3l8CVKgVd
-X-Google-Smtp-Source: ABdhPJyUfVvXjB9CIyk9TCaMrlHmSUET7SUOJLyR2scbuag6Oy4ZvwT8mOnQw0I8H+epIz+C2Xznsw==
-X-Received: by 2002:a05:600c:4994:b0:394:dcb:d66d with SMTP id h20-20020a05600c499400b003940dcbd66dmr27982575wmp.178.1652717581291;
-        Mon, 16 May 2022 09:13:01 -0700 (PDT)
-Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id o17-20020adfca11000000b0020c5253d8ddsm10736913wrh.41.2022.05.16.09.13.00
+        bh=TJsDl8znQgrUMsk/j2LiMfl+ZDq7MKItHhiqd6dmquo=;
+        b=I8pVv0IshmOPqOD0V5HEGtjPJJFiRbFeLOujQiDLPDLUKgeOUoh77LRh9+GZ+hBEXA
+         P48grAtEwNCkGZrPFA0b+yF5t5YHMq46xU9mGyYZCbyZN5HpTtKFvBQcVb6J4DdENOrt
+         xxO7ZsrC9wkqrTmdJWQIisFxUvi0jVmpn/Xqh08GTaXMm0w67ZDmjunO/J83kkDT/SNd
+         YIW9pV8fatSltgC+X1CR8iYN2lhBwL49BWZXmrmAYcqDmmAnQyQqKqwxnxdsbREH143B
+         z9D8x6R77AGlVciLJ6Am3wPs5A3kDzfswMBtwaUsC0FT2aONywi341iBSAnemBm4vzDq
+         Is0w==
+X-Gm-Message-State: AOAM5301F6KQU3fTJo8LP07oYtWXCgwcpAHbgH9Gcq3gHaRnjclJ5eUC
+	ZHFHogR3zwZqwH5ZbO+d/+EDIg==
+X-Google-Smtp-Source: ABdhPJzvmNmXfyUxpSCD6MvHsS9Rolp/j/rE0LRKilVhxI9SptAGxy5IPCoWPxFcTy94jjXnfQ5y9w==
+X-Received: by 2002:a05:600c:3b93:b0:394:57c8:5901 with SMTP id n19-20020a05600c3b9300b0039457c85901mr17748661wms.77.1652717928295;
+        Mon, 16 May 2022 09:18:48 -0700 (PDT)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id 8-20020a05600c024800b00394975e14f4sm10510595wmj.8.2022.05.16.09.18.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 May 2022 09:13:00 -0700 (PDT)
-Message-ID: <d6834a87-0555-c953-4d60-d3a493340cb3@tessares.net>
-Date: Mon, 16 May 2022 18:13:00 +0200
+        Mon, 16 May 2022 09:18:48 -0700 (PDT)
+Message-ID: <9c84d083-f556-f439-9b47-fd0ad768b0bc@tessares.net>
+Date: Mon, 16 May 2022 18:18:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,124 +47,50 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH mptcp-next] Revert "mptcp: add data lock for sk timers"
+Subject: Re: [PATCH mptcp-next] mptcp: stop using the
+ mptcp_has_another_subflow() helper
 Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <0343ae0f3f81535f20d387147ce6b8e4158cc1fc.1651770128.git.pabeni@redhat.com>
- <2ff24f02-800b-d980-9019-74f214e53c56@tessares.net>
- <38dab5e7-1193-db64-a6ca-22aba0622b49@linux.intel.com>
- <bdd48852-cd00-c041-1b68-a436a56f8fb8@tessares.net>
- <7a1c3d44-2cb0-29c7-ae80-b2f9275d3130@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <5e05ab9275671ea3018eaa02028197817715de65.1652275377.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <7a1c3d44-2cb0-29c7-ae80-b2f9275d3130@linux.intel.com>
+In-Reply-To: <5e05ab9275671ea3018eaa02028197817715de65.1652275377.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Paolo, Mat, Geliang,
 
-On 11/05/2022 22:40, Mat Martineau wrote:
-> On Tue, 10 May 2022, Matthieu Baerts wrote:
+On 11/05/2022 15:23, Paolo Abeni wrote:
+> The mentioned helper requires the msk socket lock, and the
+> current callers don't own it nor can't acquire it, so the
+> access is racy.
 > 
->> Hi Mat,
->>
->> On 10/05/2022 02:11, Mat Martineau wrote:
->>> On Fri, 6 May 2022, Matthieu Baerts wrote:
->>>
->>>> Hi Paolo, Mat,
->>>>
->>>> On 05/05/2022 19:12, Paolo Abeni wrote:
->>>>> This reverts commit 4293248c6704b854bf816aa1967e433402bee11c.
->>>>>
->>>>> Additional locks are not needed, all the touched sections
->>>>> are already under mptcp socket lock protection.
->>>>
->>>> Thank you for the patch and the review!
->>>>
->>>> Now in our tree (fixes for net-next) with Mat's RvB and a Fixes tag.
->>>>
->>>> New patches for t/upstream:
->>>> - 2ff5e4eba944: Revert "mptcp: add data lock for sk timers"
->>>> - Results: bc6528b2b1d7..22856348dac5 (export)
->>>
->>> This shows up in a different place in the export branch commit history
->>> than I expected:
->>>
->>> * 1238ef9dd5ce (HEAD, tag: export/20220509T115202, mptcp-nn/export)
->>> DO-NOT-MERGE: mptcp: enabled by default
->>> * a89b2ebc4a26 DO-NOT-MERGE: mptcp: use kmalloc on kasan build
->>> * 8adddf50a9e9 DO-NOT-MERGE: git markup: features other trees
->>> * c0e05f5207ec selftests/bpf: add bpf_first test
->>> * 90b2072ffc21 selftests/bpf: add bpf_first scheduler
->>> * 2f547420d0f4 mptcp: add bpf_mptcp_sched_ops
->>> * cf597ecbdb4b mptcp: add get_subflow wrappers
->>> * 1b3d7a5f1f10 mptcp: add sched in mptcp_sock
->>> * e31f54bd6183 mptcp: add a new sysctl scheduler
->>> * 74d3c74494e6 mptcp: add struct mptcp_sched_ops
->>> * 416cb433f1df selftests/bpf: verify first of struct mptcp_sock
->>> * 57dcfb6f61ec selftests/bpf: verify ca_name of struct mptcp_sock
->>> * 8996b41ffcd2 selftests/bpf: verify token of struct mptcp_sock
->>> * f8f99d2ff6a7 selftests/bpf: test bpf_skc_to_mptcp_sock
->>> * 3fb057749027 selftests/bpf: add MPTCP test base
->>> * 1585ded1ef3d selftests/bpf: Enable CONFIG_IKCONFIG_PROC in config
->>> * d4fc73d43d5b bpf: add bpf_skc_to_mptcp_sock_proto
->>> * 581159326c14 bpf: expose is_mptcp flag to bpf_tcp_sock
->>> * b20a348378e2 DO-NOT-MERGE: git markup: features net-next-next
->>> * fa71bf0a2db6 selftests: mptcp: add MP_FAIL reset testcase
->>> * fddb2da3de32 DO-NOT-MERGE: git markup: features net-next
->>>
->>> Expected to see the patch here.
->>>
->>> * 218186cd781d mptcp: sockopt: add TCP_DEFER_ACCEPT support
->>> * 6d8839d159a7 DO-NOT-MERGE: git markup: fixes net-next
->>> *   f858740fef1e TopGit-driven merge of branches:
->>> |\
->>> | * baa752231c4d DO-NOT-MERGE: git markup: end common net net-next
->>> | * cad34cf702bc DO-NOT-MERGE: mptcp: add CI support
->>> | * d7945d0bf36f DO-NOT-MERGE: git markup: fixes net
->>> | * d8e908a27426 selftests: mptcp: add subflow limits test-cases
->>> | * 001ce634cb09 mptcp: fix subflow accounting on close
->>> | * ca2debea5aa8 net/sched: act_pedit: really ensure the skb is writable
->>> | * 945110b5a812 DO-NOT-MERGE: git markup: fixes other trees
->>> | * 55775678c466 x86/pm: Fix false positive kmemleak report in
->>> msr_build_context()
->>> | * 7a38d7853776 DO-NOT-MERGE: git markup: net
->>> * | 4f43f697b6be Revert "mptcp: add data lock for sk timers"
->>>
->>>                  ^^^ but it's here instead
->>>
->>> * | f57e72f418df selftests: mptcp: fix a mp_fail test warning
->>> * | 49161dcf2772 DO-NOT-MERGE: git markup: net-next
->>> * |   c908565eecf2 (mptcp-nn/net-next) Merge tag
->>> 'batadv-next-pullrequest-202205
->>>
->>>
->>> Matthieu, is that what you intended?
->>
->> Yes, that was my initial intension: if there is an issue with a patch in
->> net-next, we probably don't want to wait for a sync with -net to send
->> the patch. So it is on top of net-next only. It is just in case we force
->> a sync with -net evenn if net and net-next have not been recently sync
->> yet.
->>
->> Do you prefer to have these patches on top of -net and net-next instead?
->>
+> All the current callers are really checking for infinite mapping
+> fallback, and the latter condition is explicitly tracked by
+> the relevant msk variable: we can safely remove the caller usage
+> - and the caller itself.
 > 
-> That is my preference for future mptcp-next patches, yes. But you don't
-> need to re-arrange these two patches in the tree.
-> 
-> None of the patches staged for net-next (before or after the
-> topgit-driven merge) are waiting for a sync unless there's a known
-> conflict with a pending patch in export-net.
-> 
-> When I prepare a series to send to the netdev list I often "git rebase
-> --onto net-next/master <from-sha> <to-sha>" the relevant patches, and I
-> don't want a merge commit in the middle of the range. It's also helpful
-> to find out if there are any surprise conflicts at that stage so I can
-> consider that before sending.
+> The issue is present since MP_FAIL implementation, but the
+> fix only applies since the infinite fallback support, ence the
+> somewhat unexpected fixes tag.
 
-Fine for me, I just did the modification to put all fixes for net-next
-on top of -net as well!
+Thank you for the patch, review and validation!
+
+Just applied in our tree (fixes for net-next) with Mat's RvB and
+Geliang's ACK+Test tag.
+
+New patches for t/upstream:
+
+- 9dc556bbb2c6: mptcp: stop using the mptcp_has_another_subflow() helper
+
+- Results: 2cb58f40e877..7e5581f27ee6 (export)
+
+Builds and tests are now in progress:
+
+
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220516T161647
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
 Cheers,
 Matt
