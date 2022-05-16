@@ -1,172 +1,113 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3A8A2A
-	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 02:20:40 +0000 (UTC)
-Received: by mail-pj1-f42.google.com with SMTP id gj17-20020a17090b109100b001d8b390f77bso16054990pjb.1
-        for <mptcp@lists.linux.dev>; Sun, 15 May 2022 19:20:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069C8A35
+	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 04:05:37 +0000 (UTC)
+Received: by mail-qv1-f49.google.com with SMTP id kj8so11315248qvb.6
+        for <mptcp@lists.linux.dev>; Sun, 15 May 2022 21:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HYc1KBnMRHIGYYTXYXfwZVkVgzlXkDCdUTN6VcRSFuM=;
-        b=mSH6ZoY3WRYUaFE8iVU2NHWb3Kh+SlE0wMWQTsvxR9XO558N9uOe2X5C3XoAUnHlU2
-         EOhSNhOGpSrFGW9Rfc3uNwtWIZcjtQZpU/kTJsmQQ1E5LdY+KCQGbFOWtTGBjIiFiN55
-         Jfpp7WOLA8PYZgz6Bq8Yb7WST6bgh8SNvIuDmFlwj/Z8ppjn2QJjR6F7Bk203AywYDGA
-         IJfQzPA7S5qBqCl7pJJ/1jJUiBZZ/ggRUuTA2mtJgOd9CyZS5upoazcbfzzeF0bGQdtC
-         yCICNzpNW1LwbC4QtqCulpTXoGh3/mXydQrSVgqOJcRWnHCusPgttDY5uOGMjrizlLiR
-         n9dA==
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=AUcbmr3vNjQgx++R/qHv6hDQn0YSt9Kh69HKzHtARFY=;
+        b=Y4Jon24+D4V35btE3HQj2OngDHNYr6Pm6GvFsb9Lk9yvpsha3VnbXEJf/bf9begTb5
+         mP//HHWXbXQuyTq1uAYJczI8lAJoRWrcmBxmYCxp62Ck3TeNtlwJnIzJqHJ501GhpeOp
+         EOxwAhI8Y9owczjawkWGoZsQ8oXbksIiUT61HW9WVygKUIexUBltqlB8cvgiPKC5/SjV
+         8h5x1BEQLcz74TNnFAL2LdDyTyE9/+HsXjzbvPZypugWYSycF8IiP/PX3y2WVUgAjYRq
+         NhXCgJIGEW2zHaJmG7jNtPoTPBiCYdP9wpdfAVKKESnjS+OT2It+7IWLvQZBUHM33gvp
+         d1dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HYc1KBnMRHIGYYTXYXfwZVkVgzlXkDCdUTN6VcRSFuM=;
-        b=IUPlpOZaKN42DykxNWxQyv44xvJNLMGvBtAx2HXpTULAwCjdjYkg1y6H3eYr6++M7u
-         MQjVeGuZHnnqCNDy36WMGNEdMnoVeFmjSfHP879ItSOSy/MbW3G97H0KtD+x54eVcQPL
-         OKVf3GwRybwLV+0+ouuR+uhCE8ZtnL6fBw5bSsQi9mvKhB9jPFIP+c6XUn/TtZgT5CRG
-         rYCRMe55VEH04dmwTDeLWWZxUscUrRFUSDCH59Lc7vzDFfTok4cA5FYSgX/kTt+DHdix
-         +OOnTHDS1gmSfQy9vymMRBDHEL08O5zem2iVssHziaHz+TouARuYOW5lCfovp//0kg39
-         ZAew==
-X-Gm-Message-State: AOAM5313C5Jo4JX3p3kHLVBzJ44X7J2tgSJao4LTRfJYXuyUvU0SaLgz
-	sBKb3jOyAHw+nBGOp15v/UIXOBxhcUAhveDYSx8=
-X-Google-Smtp-Source: ABdhPJzzQMIif/C6kKiocjlD/CKX5YVbxQfXAyeH8fWUJB5WShQ/T0BD/03m2Raf7hTXIbHVrK0RoI6hpnzW9T1WZog=
-X-Received: by 2002:a17:902:8c8f:b0:15e:ab1c:591b with SMTP id
- t15-20020a1709028c8f00b0015eab1c591bmr15772383plo.171.1652667640079; Sun, 15
- May 2022 19:20:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=AUcbmr3vNjQgx++R/qHv6hDQn0YSt9Kh69HKzHtARFY=;
+        b=y++WWaiw4ZGatXuFOmSkz7LVba1YxhK2WgXGMb4dJrfQybxHFAx2R2VwuRvSzI060r
+         lc4jtSZladMZFi1SJ14VlfFKmXZQISZsgpXRJfl/xKG4z14d+/4s61O+BqipWJApe4be
+         9moLjnd6LTubGxXIKZ5BXcEAEyK9yLhn15nXGcy0+gozZ5dbmrXR597u4U2KYJVerfsp
+         LaP6phSGCqSqysKNErhNbtbgaK2Vst6MBVpU8slbK5kFrHsPVFkOu1+JKg2j2y0ukcKJ
+         YaJddDeD2PODwYkYjTle/NKj51DsPMDsmpfxxk/pxKZ0YB8VbEcZgjtm7sIYNtKpPg4+
+         Oyug==
+X-Gm-Message-State: AOAM530xTZgExN8lSafcqz1SdaaDzHCHu97IGgo0uKDn0YoOnCnCMIDV
+	fE1j1FUQBmky8V87E5TnWe3nVAypFg==
+X-Google-Smtp-Source: ABdhPJyi6p3gnV6YEzYO+yzn5TX6pNtE1MiT2Koe6Ns4gElApIS8BhnL6xI1ZX9Q+PUcD4X/U0jR2g==
+X-Received: by 2002:a05:6214:509c:b0:45a:7c96:d603 with SMTP id kk28-20020a056214509c00b0045a7c96d603mr13905289qvb.86.1652673936892;
+        Sun, 15 May 2022 21:05:36 -0700 (PDT)
+Received: from [127.0.0.1] ([20.127.58.220])
+        by smtp.gmail.com with ESMTPSA id 12-20020a37060c000000b0069fc13ce216sm5059638qkg.71.2022.05.15.21.05.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 May 2022 21:05:36 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <550c72ef0be9d4c25874c997370dbe541d2b28fd.1652667282.git.geliang.tang@suse.com>
+References:
+ <550c72ef0be9d4c25874c997370dbe541d2b28fd.1652667282.git.geliang.tang@suse.com>
+Subject: =?UTF-8?Q?Re=3A_Squash_to_=22mptcp=3A_add_sched_in?=
+ =?UTF-8?Q?_mptcp=5Fsock=22=3A_Tests_Results?=
+Message-ID: <3d138936-5b99-5794-782e-bf1bc42b3861@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 16 May 2022 04:05:35 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1652255615.git.geliang.tang@suse.com> <8f2755bc-4c52-9837-c0db-2b620d7a3b22@tessares.net>
- <20220514154845.GA4189@bogon.HOST> <f697c655-618e-841c-4f60-3c57078e4a76@tessares.net>
- <CA+WQbwvKWodtjjjFyidvzXVCAj=0-qYinvvbUUd=QjUQ+oejyQ@mail.gmail.com>
-In-Reply-To: <CA+WQbwvKWodtjjjFyidvzXVCAj=0-qYinvvbUUd=QjUQ+oejyQ@mail.gmail.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Mon, 16 May 2022 10:20:41 +0800
-Message-ID: <CA+WQbwsJpiLPNhtEMyV60if7qoSSjtq0xmgRW=DAS71OJVnGDQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v2 00/14] update bpf patches on export branch
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Geliang Tang <geliang.tang@suse.com>, 
-	Mat Martineau <mathew.j.martineau@linux.intel.com>, MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Geliang Tang <geliangtang@gmail.com> =E4=BA=8E2022=E5=B9=B45=E6=9C=8815=E6=
-=97=A5=E5=91=A8=E6=97=A5 00:46=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Matt,
->
-> Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2022=E5=B9=B45=E6=
-=9C=8815=E6=97=A5=E5=91=A8=E6=97=A5 00:31=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > Hi Geliang,
-> >
-> > On 14/05/2022 17:48, Geliang Tang wrote:
-> > > On Sat, May 14, 2022 at 01:25:35PM +0200, Matthieu Baerts wrote:
-> > >> Hi Geliang, Mat
-> > >>
-> > >> On 11/05/2022 09:56, Geliang Tang wrote:
-> > >>> v2:
-> > >>>  - drop "bpf: expose is_mptcp flag to bpf_tcp_sock" (Martin & Andri=
-i)
-> > >>>  - patch 3, use is_mptcp in tcp_sock, instead of bpf_tcp_sock (Mart=
-in & Andrii)
-> > >>>
-> > >>> base-commit: bcf89bc9c28e ("DO-NOT-MERGE: git markup: features
-> > >>> net-next-next") on export/20220510T054929
-> > >>>
-> > >>> v1:
-> > >>>  - drop bpf_mptcp_helpers.h (Andrii)
-> > >>>  - patch 6, skip the test if 'ip mptcp monitor' is not supported (M=
-at)
-> > >>
-> > >> Thank you for the patches.
-> > >>
-> > >> I *think* everything is now sync in our tree but feel free to check
-> > >> because I had to "manually" compare patches with what was in our tre=
-e.
-> > >>
-> > >> But in theory, our tree is now ready for a v5.
-> > >
-> > > Thanks Matt, but three patches still need to be updated:
-> > >
-> > > Patch #4, selftests/bpf: test bpf_skc_to_mptcp_sock
-> > >
-> > > if (!tcp_sk->is_mptcp) {
-> > >
-> > > ->
-> > >
-> > > if (!is_mptcp) {
-> >
-> > Thank you, I missed that!
-> >
-> > - a973ee164a70 tg: fix wrong merge conflict resolution
-> >
-> > > Patch #10, mptcp: add sched in mptcp_sock
-> > >
-> > >  struct mptcp_sock {
-> > >       struct inet_connection_sock     sk;
-> > >
-> > > -     __u32           token;
-> > > -     struct sock     *first;
-> > > -     char            ca_name[TCP_CA_NAME_MAX];
-> > > +     __u32                   token;
-> > > +     struct sock             *first;
-> > > +     struct mptcp_sched_ops  *sched;
-> > > +     char                    ca_name[TCP_CA_NAME_MAX];
-> > >  } __attribute__((preserve_access_index));
-> > >
-> > > ->
-> > >
-> > >       __u32           token;
-> > >       struct sock     *first;
-> > > +     struct mptcp_sched_ops *sched;
-> > >       char            ca_name[TCP_CA_NAME_MAX];
-> > >  } __attribute__((preserve_access_index));
-> >
-> > I did that on purpose, I thought it was clearer to read after.
-> >
-> > Do you prefer not to change the alignment?
->
-> Yes, I prefer not to change the alignments, it's much easier. If we
-> want to change them, it's better to squash the changes into the
-> original patches.
+Hi Geliang,
 
-Hi Matt & Mat,
+Thank you for your modifications, that's great!
 
-I think it's better to keep the alignment of members of mptcp_sock in
-bpf_tcp_helpers.h as the same as the alignment of mptcp_sock in
-net/mptcp/protocol.h. So I just sent a squash-to patch in our ML to
-fix this.
+Our CI did some validations and here is its report:
 
-Anyway, bpf patches in our tree are now ready for a bpf-next v5.
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5942261262319616
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5942261262319616/summary/summary.txt
 
-Thanks,
--Geliang
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): selftest_diag =
+=F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5379311308898304
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5379311308898304/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/089c6d64a118
 
 
->
-> Thanks,
-> -Geliang
->
-> >
-> > > Patch #13, selftests/bpf: add bpf_first scheduler
-> > >
-> > > bpf_mptcp_helpers.h
-> > >
-> > > ->
-> > >
-> > > bpf_tcp_helpers.h
-> >
-> > Thanks!
-> >
-> > - fc2aafca4737: bpf: use bpf_tcp_helpers.h instead of the mptcp one
-> >
-> > Cheers,
-> > Matt
-> > --
-> > Tessares | Belgium | Hybrid Access Solutions
-> > www.tessares.net
-> >
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
