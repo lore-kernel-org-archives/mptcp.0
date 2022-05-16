@@ -1,44 +1,44 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD3110E0
-	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 16:18:50 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id a14-20020a7bc1ce000000b00393fb52a386so11250319wmj.1
-        for <mptcp@lists.linux.dev>; Mon, 16 May 2022 09:18:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DFE10E0
+	for <mptcp@lists.linux.dev>; Mon, 16 May 2022 16:22:27 +0000 (UTC)
+Received: by mail-wr1-f54.google.com with SMTP id f2so14234118wrc.0
+        for <mptcp@lists.linux.dev>; Mon, 16 May 2022 09:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=TJsDl8znQgrUMsk/j2LiMfl+ZDq7MKItHhiqd6dmquo=;
-        b=ig5BstA7I7zXBMDZf7Av42FKakYxdP+GQ9Gdn8XocSQ4/i2VlW3e/HlhjGNOqG5Zzz
-         YMVxJUNyv9yFRSkrnB0kXFv7XYc/vPZRbYhd8Il2pFBkGoLbXO35b+UZp0RuKI6kaICZ
-         w33FAyg8HeG37bpry/wAj/0gIh2KMR3qWg2R5UjTFfq5/I+VHbmS5MpuEpudt/KVNs1Z
-         nASC25APr/VnWLVbcr5L4k8q27uJXPNxmyhsgPI8e++do6bCsNInZH2kFLAW9o2t2ecj
-         oUWVladXCAoE8mNqI57pxUbQI4+bBqZRNPQWKfYGacRX8B/OjiKvt2niA2s6t2D2F78f
-         d9Uw==
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=zTTFTQKwdvTMIYTmtHWNFRAJr3WfWhNujNC5AV+Xb0Y=;
+        b=Ilczs8t5m29I4my+SHt0lFeo4IEQfJGymY0BnKLbN4N2jAHH2J9EX8vax2KXXlN2h0
+         Sz9QxWucEgvkI7l0eYvnYxDsLW1Ej1kykHwPzfxltkPmsa56v1tq3goTb4RcQh1zBKDM
+         dYTdCKW/P5yDLqAfUsyBVOvGFCUxdo8Ms0x7aFLaayHhKRYthbsw08E2R83IEqPBzVlM
+         tXRDWSOr52FM8CsVK7zmJZ12o9b/wz1D49bZnvxHIKUvCAQ7EbmGgvAsm8RmhTVT0q1b
+         G9uJ4mrL0VPiJISGXY5S8yH8XpYtBRcTvh7L3R61/4VeupcssYiJiVpNZaFfyF0tLX1E
+         TmCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=TJsDl8znQgrUMsk/j2LiMfl+ZDq7MKItHhiqd6dmquo=;
-        b=I8pVv0IshmOPqOD0V5HEGtjPJJFiRbFeLOujQiDLPDLUKgeOUoh77LRh9+GZ+hBEXA
-         P48grAtEwNCkGZrPFA0b+yF5t5YHMq46xU9mGyYZCbyZN5HpTtKFvBQcVb6J4DdENOrt
-         xxO7ZsrC9wkqrTmdJWQIisFxUvi0jVmpn/Xqh08GTaXMm0w67ZDmjunO/J83kkDT/SNd
-         YIW9pV8fatSltgC+X1CR8iYN2lhBwL49BWZXmrmAYcqDmmAnQyQqKqwxnxdsbREH143B
-         z9D8x6R77AGlVciLJ6Am3wPs5A3kDzfswMBtwaUsC0FT2aONywi341iBSAnemBm4vzDq
-         Is0w==
-X-Gm-Message-State: AOAM5301F6KQU3fTJo8LP07oYtWXCgwcpAHbgH9Gcq3gHaRnjclJ5eUC
-	ZHFHogR3zwZqwH5ZbO+d/+EDIg==
-X-Google-Smtp-Source: ABdhPJzvmNmXfyUxpSCD6MvHsS9Rolp/j/rE0LRKilVhxI9SptAGxy5IPCoWPxFcTy94jjXnfQ5y9w==
-X-Received: by 2002:a05:600c:3b93:b0:394:57c8:5901 with SMTP id n19-20020a05600c3b9300b0039457c85901mr17748661wms.77.1652717928295;
-        Mon, 16 May 2022 09:18:48 -0700 (PDT)
+        bh=zTTFTQKwdvTMIYTmtHWNFRAJr3WfWhNujNC5AV+Xb0Y=;
+        b=5chUwJkq7BPnnPH1WqZ3y/4eMm39D/LgW4+depsZn2yx1bsWSoEz3tsgntIY4ETnZK
+         0/JE+SWGs12230wlL9gfNXSIKKuSNWYJsyNFGbRk+cO4SbVnNclVYHhcLJ87hX5eq16o
+         3dzvZ5/45Q11sJ9gCKJgsXvtKnm+lPZRvTY1fAoiyTMrTaxRYlFPP4KVJuPAkLVgYGuC
+         6HCL19GXR+Yp2F0eaf19HjuXJExrO1esgJnDpf6kG8tp8A8MvTf1Ke0er9dcZTwyDJFr
+         2wdeGAoZhoRFedf2kUiPlM4CQQhRE2Djpy8HPHWHrXv/KSdQ98NAz5+b2SgGbUOvu4dn
+         Pr+g==
+X-Gm-Message-State: AOAM531Pn9+vUfw/3EL2bG90bgUD8lCd8OF7IJOUx47KXWnaIoMW+f9h
+	AjDfySJ0ZBeEZJjc9u7BVWNgKw==
+X-Google-Smtp-Source: ABdhPJzUPT9Yga0ELY7Cw/JbER2stsPEd1Fw+Xx2uSwAna/tQ7rCgpNSbSxcAjkLeBSJwT49I6dYlg==
+X-Received: by 2002:a05:6000:1569:b0:20c:4ed4:4ba8 with SMTP id 9-20020a056000156900b0020c4ed44ba8mr14483429wrz.270.1652718145480;
+        Mon, 16 May 2022 09:22:25 -0700 (PDT)
 Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id 8-20020a05600c024800b00394975e14f4sm10510595wmj.8.2022.05.16.09.18.47
+        by smtp.gmail.com with ESMTPSA id d10-20020adfa40a000000b0020c5253d8fesm10292848wra.74.2022.05.16.09.22.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 May 2022 09:18:48 -0700 (PDT)
-Message-ID: <9c84d083-f556-f439-9b47-fd0ad768b0bc@tessares.net>
-Date: Mon, 16 May 2022 18:18:47 +0200
+        Mon, 16 May 2022 09:22:24 -0700 (PDT)
+Message-ID: <31ceb1cd-75ca-afdf-1fd8-668928421cad@tessares.net>
+Date: Mon, 16 May 2022 18:22:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,48 +47,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH mptcp-next] mptcp: stop using the
- mptcp_has_another_subflow() helper
+Subject: Re: [PATCH mptcp-next v2] mptcp: Do not traverse the subflow
+ connection list without lock
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <5e05ab9275671ea3018eaa02028197817715de65.1652275377.git.pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>
+References: <20220513003521.548193-1-mathew.j.martineau@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <5e05ab9275671ea3018eaa02028197817715de65.1652275377.git.pabeni@redhat.com>
+In-Reply-To: <20220513003521.548193-1-mathew.j.martineau@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat, Geliang,
+Hi Mat, Paolo,
 
-On 11/05/2022 15:23, Paolo Abeni wrote:
-> The mentioned helper requires the msk socket lock, and the
-> current callers don't own it nor can't acquire it, so the
-> access is racy.
+On 13/05/2022 02:35, Mat Martineau wrote:
+> The MPTCP socket's conn_list (list of subflows) requires the socket lock
+> to access. The MP_FAIL timeout code added such an access, where it would
+> check the list of subflows both in timer context and (later) in workqueue
+> context where the socket lock is held.
 > 
-> All the current callers are really checking for infinite mapping
-> fallback, and the latter condition is explicitly tracked by
-> the relevant msk variable: we can safely remove the caller usage
-> - and the caller itself.
-> 
-> The issue is present since MP_FAIL implementation, but the
-> fix only applies since the infinite fallback support, ence the
-> somewhat unexpected fixes tag.
+> Rather than check the list twice, remove the check in the timeout
+> handler and only depend on the check in the workqueue. Also remove the
+> MPTCP_FAIL_NO_RESPONSE flag, since mptcp_mp_fail_no_response() has
+> insignificant overhead and can be checked on each worker run.
 
-Thank you for the patch, review and validation!
+Thank you for the patchs and the reviews!
 
-Just applied in our tree (fixes for net-next) with Mat's RvB and
-Geliang's ACK+Test tag.
+Now in our tree (fixes for net-next) with Paolo's RvB tag:
 
 New patches for t/upstream:
 
-- 9dc556bbb2c6: mptcp: stop using the mptcp_has_another_subflow() helper
+- 032e9e845d39: mptcp: Check for orphaned subflow before handling
+MP_FAIL timer
 
-- Results: 2cb58f40e877..7e5581f27ee6 (export)
+- 8df40881ecfe: mptcp: Do not traverse the subflow connection list
+without lock
+
+- Results: 7e5581f27ee6..cd3c57373965 (export)
 
 Builds and tests are now in progress:
 
 
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220516T161647
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220516T162107
 
 https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
 
