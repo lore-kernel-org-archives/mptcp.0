@@ -1,28 +1,28 @@
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393081854
-	for <mptcp@lists.linux.dev>; Tue, 17 May 2022 18:02:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDF81860
+	for <mptcp@lists.linux.dev>; Tue, 17 May 2022 18:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652810540; x=1684346540;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9i15zZu1wsyIycRzynIEjtH80AivT4HanS2rE/bQPcI=;
-  b=V93octjC6sbwzmva5bwJgg7j2F5qPbMcrw72/LuD7GwSBfeNN+CpM4Yg
-   AJ1vI2xcFtm+/NI3gnLKBEbyOlv4n5tW7qW/Xy/ed61a6nuuyPuGvk9jh
-   K6j0lnDM36xulMVzxeFQCY6dPTZ1mbQxy41c2i24zzU/Dw/Abx/rIo65p
-   19Hn1vSMFkwXfarvwQGX2idvNer4ju+YXVnvW7ZXMmUPe5zZUvfOSRYul
-   UwAv+CObVZZxP4vOAccoht7omqi8Z3QJjO7bKElb96ijXLO5Ib3u/uArH
-   OuYgHE6LqfZZ2WuvHJDUOHl0Pl356UFJI0xePHFg4b9rsZloEi3D593AJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="331887956"
+  t=1652810541; x=1684346541;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hUIHED+FQ98pTjGesxJQFWoxjja0CiSPbNhECuXi4/Y=;
+  b=lJYdc61dphhMtnzEek0xT7F949n8TA31m3gC1ye2p0paoam12zMp1d9K
+   tCMsMYeadIIfNK1biCQmq5K/OwvtZ/EVGcjB72QvGCgcV3gVsA+DXOd8/
+   NDlJptEdfCwbCOZeRLhDZFQtANnqvkYxN/zj50LYr9xtHJflYkB6I80Rv
+   t4XSz1mlniFCP0cQIgGMVlmS+QcaY6BzM3YuqTA6jAAXoZM2wnyduw1MY
+   h1lAROxkWgfKUhCUJ4Dqu5XqJBaz4Ba2RwnWK+uuOpiS63vg/ytUw3HKv
+   8yOGbM2cfxvsCUoXoQF5rXif2PW/fYFhvf+VjG3OV+NHSZX/87Iz0RXq5
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="331887957"
 X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
-   d="scan'208";a="331887956"
+   d="scan'208";a="331887957"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 11:02:19 -0700
 X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
-   d="scan'208";a="523080354"
+   d="scan'208";a="523080350"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.6.57])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 11:02:17 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -34,12 +34,10 @@ Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	edumazet@google.com,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev
-Subject: [PATCH net 2/2] mptcp: Do TCP fallback on early DSS checksum failure
-Date: Tue, 17 May 2022 11:02:12 -0700
-Message-Id: <20220517180212.92597-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 0/2] mptcp: Fix checksum byte order on little-endian
+Date: Tue, 17 May 2022 11:02:10 -0700
+Message-Id: <20220517180212.92597-1-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220517180212.92597-1-mathew.j.martineau@linux.intel.com>
-References: <20220517180212.92597-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,97 +46,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RFC 8684 section 3.7 describes several opportunities for a MPTCP
-connection to "fall back" to regular TCP early in the connection
-process, before it has been confirmed that MPTCP options can be
-successfully propagated on all SYN, SYN/ACK, and data packets. If a peer
-acknowledges the first received data packet with a regular TCP header
-(no MPTCP options), fallback is allowed.
+These patches address a bug in the byte ordering of MPTCP checksums on
+little-endian architectures. The __sum16 type is always big endian, but
+was being cast to u16 and then byte-swapped (on little-endian archs)
+when reading/writing the checksum field in MPTCP option headers.
 
-If the recipient of that first data packet finds a MPTCP DSS checksum
-error, this provides an opportunity to fail gracefully with a TCP
-fallback rather than resetting the connection (as might happen if a
-checksum failure were detected later).
+MPTCP checksums are off by default, but are enabled if one or both peers
+request it in the SYN/SYNACK handshake.
 
-This commit modifies the checksum failure code to attempt fallback on
-the initial subflow of a MPTCP connection, only if it's a failure in the
-first data mapping. In cases where the peer initiates the connection,
-requests checksums, is the first to send data, and the peer is sending
-incorrect checksums (see
-https://github.com/multipath-tcp/mptcp_net-next/issues/275), this allows
-the connection to proceed as TCP rather than reset.
+The corrected code is verified to interoperate between big-endian and
+little-endian machines.
 
-Fixes: dd8bcd1768ff ("mptcp: validate the data checksum")
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.h |  3 ++-
- net/mptcp/subflow.c  | 21 ++++++++++++++++++---
- 2 files changed, 20 insertions(+), 4 deletions(-)
+Patch 1 fixes the checksum byte order, patch 2 partially mitigates
+interoperation with peers sending bad checksums by falling back to TCP
+instead of resetting the connection.
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index fb40dd676a26..5655a63aa6a8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -443,7 +443,8 @@ struct mptcp_subflow_context {
- 		can_ack : 1,        /* only after processing the remote a key */
- 		disposable : 1,	    /* ctx can be free at ulp release time */
- 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
--		local_id_valid : 1; /* local_id is correctly initialized */
-+		local_id_valid : 1, /* local_id is correctly initialized */
-+		valid_csum_seen : 1;        /* at least one csum validated */
- 	enum mptcp_data_avail data_avail;
- 	u32	remote_nonce;
- 	u64	thmac;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e90fe7eec43a..be76ada89d96 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -955,11 +955,14 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
- 				 subflow->map_data_csum);
- 	if (unlikely(csum)) {
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
--		subflow->send_mp_fail = 1;
--		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
-+		if (subflow->mp_join || subflow->valid_csum_seen) {
-+			subflow->send_mp_fail = 1;
-+			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
-+		}
- 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
- 	}
- 
-+	subflow->valid_csum_seen = 1;
- 	return MAPPING_OK;
- }
- 
-@@ -1141,6 +1144,18 @@ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ss
- 	}
- }
- 
-+static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-+
-+	if (subflow->mp_join)
-+		return false;
-+	else if (READ_ONCE(msk->csum_enabled))
-+		return !subflow->valid_csum_seen;
-+	else
-+		return !subflow->fully_established;
-+}
-+
- static bool subflow_check_data_avail(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-@@ -1218,7 +1233,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		return true;
- 	}
- 
--	if (subflow->mp_join || subflow->fully_established) {
-+	if (!subflow_can_fallback(subflow)) {
- 		/* fatal protocol error, close the socket.
- 		 * subflow_error_report() will introduce the appropriate barriers
- 		 */
+Mat Martineau (1):
+  mptcp: Do TCP fallback on early DSS checksum failure
+
+Paolo Abeni (1):
+  mptcp: fix checksum byte order
+
+ net/mptcp/options.c  | 36 ++++++++++++++++++++++++------------
+ net/mptcp/protocol.h |  5 +++--
+ net/mptcp/subflow.c  | 23 +++++++++++++++++++----
+ 3 files changed, 46 insertions(+), 18 deletions(-)
+
+
+base-commit: edf410cb74dc612fd47ef5be319c5a0bcd6e6ccd
 -- 
 2.36.1
 
