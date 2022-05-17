@@ -1,89 +1,144 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78471854
-	for <mptcp@lists.linux.dev>; Tue, 17 May 2022 17:00:58 +0000 (UTC)
-Received: by mail-qk1-f178.google.com with SMTP id a76so14994952qkg.12
-        for <mptcp@lists.linux.dev>; Tue, 17 May 2022 10:00:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JQfz7/9xIwZXm9owxDLXdrtXLr0FcC/lv49DpFzTm/w=;
-        b=KllF1yFDNMuYt8/7qrB0ktpdb+81T1SrApDtTOsVrHcMhq673CWem5wB4dLaly0uZB
-         +0b4yDMOD+PUQ5PUeT61AfniwPm6jJfRNoaOTY5PEjT0a9Zg/UNuJSXbnp1OYnAyMJoP
-         TPBwE6Vby5NWvsqTEhzb5xMRstgMpq4DPchwpx8a3w+nx1JkXIlYJovY04+TZyWe3C3+
-         q+13GBcAXHa3Vh5Ef4VX6ka0TN4khAHdDou8zfQJTxA4MtI+OlWkN1I3I/8uDUOgh9sw
-         G/AKWxJRpSKTEW1s42ASC1Vx0/5WdwiCAQkg9PFZaR/DArVMzvsPsXAflz+ftBLUMdKY
-         EqvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JQfz7/9xIwZXm9owxDLXdrtXLr0FcC/lv49DpFzTm/w=;
-        b=CYm0t4l+hFtIhlr2mv2H5bnz4l75y8qJbJZteLrwGB4yfsUwT2rlPhcNLu+5SoKbJJ
-         n7SYf0iNs/LFow5jBlK4Vz5pqJLqHFhBcx3SlcW1DbBZWMOiGy/GxDZf6KdGHunDaiAb
-         6MhEPFEmZutBw1AkPN7rDQrL9hnZ8pRoPNDKMyQmSylOJ+W7IXf70QpRZhjR9syrSPpW
-         t7noeNMi9CE2ZJCyN3RTW1v7TY6EIybzjnsAgvaMUbjsH9mewDByV/ku479m22UFPzvF
-         9fCFoXUwpgScCT4Pzu4/TGz6uQEetCf0vKnnjRolIwFQvUAcgxMEqkcBaeuQo1dpIywH
-         1cJg==
-X-Gm-Message-State: AOAM530jCVjOpUDtjCtko6NrcPWqFaXfptbIN5ktpbyHaJn6wlf7Jywr
-	/6qgIs6CjR4/Ia8r/aHnTXD6C44itsSF63v7rcs=
-X-Google-Smtp-Source: ABdhPJyc0I91BWWjtZVgl+EUrAbG6Tfb9o74K2EpzYJFWxb9b781DfjS9ZrI6ajXliDgmZM28LTPoF7yVklrLtOEFRQ=
-X-Received: by 2002:a05:620a:28c7:b0:6a0:5de3:e6 with SMTP id
- l7-20020a05620a28c700b006a05de300e6mr17521955qkp.464.1652806857719; Tue, 17
- May 2022 10:00:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393081854
+	for <mptcp@lists.linux.dev>; Tue, 17 May 2022 18:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652810540; x=1684346540;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9i15zZu1wsyIycRzynIEjtH80AivT4HanS2rE/bQPcI=;
+  b=V93octjC6sbwzmva5bwJgg7j2F5qPbMcrw72/LuD7GwSBfeNN+CpM4Yg
+   AJ1vI2xcFtm+/NI3gnLKBEbyOlv4n5tW7qW/Xy/ed61a6nuuyPuGvk9jh
+   K6j0lnDM36xulMVzxeFQCY6dPTZ1mbQxy41c2i24zzU/Dw/Abx/rIo65p
+   19Hn1vSMFkwXfarvwQGX2idvNer4ju+YXVnvW7ZXMmUPe5zZUvfOSRYul
+   UwAv+CObVZZxP4vOAccoht7omqi8Z3QJjO7bKElb96ijXLO5Ib3u/uArH
+   OuYgHE6LqfZZ2WuvHJDUOHl0Pl356UFJI0xePHFg4b9rsZloEi3D593AJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="331887956"
+X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
+   d="scan'208";a="331887956"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 11:02:19 -0700
+X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
+   d="scan'208";a="523080354"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.6.57])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 11:02:17 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net 2/2] mptcp: Do TCP fallback on early DSS checksum failure
+Date: Tue, 17 May 2022 11:02:12 -0700
+Message-Id: <20220517180212.92597-3-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <20220517180212.92597-1-mathew.j.martineau@linux.intel.com>
+References: <20220517180212.92597-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220513224827.662254-1-mathew.j.martineau@linux.intel.com>
- <20220513224827.662254-2-mathew.j.martineau@linux.intel.com>
- <20220517010730.mmv6u2h25xyz4uwl@kafai-mbp.dhcp.thefacebook.com> <CA+WQbwvHidwt0ua=g67CJfmjtCow8SCvZp4Sz=2AZa+ocDxnpg@mail.gmail.com>
-In-Reply-To: <CA+WQbwvHidwt0ua=g67CJfmjtCow8SCvZp4Sz=2AZa+ocDxnpg@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 17 May 2022 10:00:46 -0700
-Message-ID: <CAADnVQJ8V-B0GvOsQg1m37ij2nGJbzemB9p46o1PG4VSnf0kSg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 1/7] bpf: add bpf_skc_to_mptcp_sock_proto
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: Martin KaFai Lau <kafai@fb.com>, Geliang Tang <geliang.tang@suse.com>, 
-	Mat Martineau <mathew.j.martineau@linux.intel.com>, Networking <netdev@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	MPTCP Upstream <mptcp@lists.linux.dev>, Nicolas Rybowski <nicolas.rybowski@tessares.net>, 
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 16, 2022 at 10:26 PM Geliang Tang <geliangtang@gmail.com> wrote=
-:
->
-> Martin KaFai Lau <kafai@fb.com> =E4=BA=8E2022=E5=B9=B45=E6=9C=8817=E6=97=
-=A5=E5=91=A8=E4=BA=8C 09:07=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Fri, May 13, 2022 at 03:48:21PM -0700, Mat Martineau wrote:
-> > [ ... ]
-> >
-> > > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> > > index 8b1afd6f5cc4..2ba09de955c7 100644
-> > > --- a/include/net/mptcp.h
-> > > +++ b/include/net/mptcp.h
-> > > @@ -284,4 +284,10 @@ static inline int mptcpv6_init(void) { return 0;=
+RFC 8684 section 3.7 describes several opportunities for a MPTCP
+connection to "fall back" to regular TCP early in the connection
+process, before it has been confirmed that MPTCP options can be
+successfully propagated on all SYN, SYN/ACK, and data packets. If a peer
+acknowledges the first received data packet with a regular TCP header
+(no MPTCP options), fallback is allowed.
+
+If the recipient of that first data packet finds a MPTCP DSS checksum
+error, this provides an opportunity to fail gracefully with a TCP
+fallback rather than resetting the connection (as might happen if a
+checksum failure were detected later).
+
+This commit modifies the checksum failure code to attempt fallback on
+the initial subflow of a MPTCP connection, only if it's a failure in the
+first data mapping. In cases where the peer initiates the connection,
+requests checksums, is the first to send data, and the peer is sending
+incorrect checksums (see
+https://github.com/multipath-tcp/mptcp_net-next/issues/275), this allows
+the connection to proceed as TCP rather than reset.
+
+Fixes: dd8bcd1768ff ("mptcp: validate the data checksum")
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ net/mptcp/protocol.h |  3 ++-
+ net/mptcp/subflow.c  | 21 ++++++++++++++++++---
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index fb40dd676a26..5655a63aa6a8 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -443,7 +443,8 @@ struct mptcp_subflow_context {
+ 		can_ack : 1,        /* only after processing the remote a key */
+ 		disposable : 1,	    /* ctx can be free at ulp release time */
+ 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
+-		local_id_valid : 1; /* local_id is correctly initialized */
++		local_id_valid : 1, /* local_id is correctly initialized */
++		valid_csum_seen : 1;        /* at least one csum validated */
+ 	enum mptcp_data_avail data_avail;
+ 	u32	remote_nonce;
+ 	u64	thmac;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e90fe7eec43a..be76ada89d96 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -955,11 +955,14 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
+ 				 subflow->map_data_csum);
+ 	if (unlikely(csum)) {
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
+-		subflow->send_mp_fail = 1;
+-		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
++		if (subflow->mp_join || subflow->valid_csum_seen) {
++			subflow->send_mp_fail = 1;
++			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
++		}
+ 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
+ 	}
+ 
++	subflow->valid_csum_seen = 1;
+ 	return MAPPING_OK;
  }
-> > >  static inline void mptcpv6_handle_mapped(struct sock *sk, bool mappe=
-d) { }
-> > >  #endif
-> > >
-> > > +#if defined(CONFIG_MPTCP) && defined(CONFIG_BPF_SYSCALL)
-> > > +struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk);
-> > Can this be inline ?
->
-> This function can't be inline since it uses struct mptcp_subflow_context.
->
-> mptcp_subflow_context is defined in net/mptcp/protocol.h, and we don't
-> want to export it to user space in net/mptcp/protocol.h.
+ 
+@@ -1141,6 +1144,18 @@ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ss
+ 	}
+ }
+ 
++static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
++{
++	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
++
++	if (subflow->mp_join)
++		return false;
++	else if (READ_ONCE(msk->csum_enabled))
++		return !subflow->valid_csum_seen;
++	else
++		return !subflow->fully_established;
++}
++
+ static bool subflow_check_data_avail(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+@@ -1218,7 +1233,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		return true;
+ 	}
+ 
+-	if (subflow->mp_join || subflow->fully_established) {
++	if (!subflow_can_fallback(subflow)) {
+ 		/* fatal protocol error, close the socket.
+ 		 * subflow_error_report() will introduce the appropriate barriers
+ 		 */
+-- 
+2.36.1
 
-The above function can be made static inline in a header file.
-That doesn't automatically expose it to user space.
