@@ -1,99 +1,81 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA517A
-	for <mptcp@lists.linux.dev>; Wed, 18 May 2022 12:45:54 +0000 (UTC)
-Received: by mail-pj1-f52.google.com with SMTP id z7-20020a17090abd8700b001df78c7c209so5509617pjr.1
-        for <mptcp@lists.linux.dev>; Wed, 18 May 2022 05:45:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wMBWkCffbBwysChLpTvWBp9qoFOKgowkBCTbVVltEvc=;
-        b=Tgo/QWUS67DuIrrV7tAltNApvOhIatkqkxvsSUL5cgee/8bSFEVskiqtezbpCcOIvQ
-         3BVcC6NG1dGHaShAupmErhkcq5mE1cmJbnoTDHHx5LkRYIzVRhGRMvgZmsA8Y8bs6RfO
-         zgWUHlaYMR21iG2oAZVM8tXAZGCSilGtKRDSBToa3N1LO+9Aw7AX6RZrRbIDBjVpPCC6
-         29wGcZlvtJn4nYn6uV2zUgh9I+GSBetyZCcb75v1RdQAW0l29IRg8R1oxNsj50qczIOx
-         a38cym4NODlIiEbiM2Z6kolcegymkZLsCxD7fE5tjXax6TvCJOxOJBPEeS5u1QutZsPf
-         DwCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wMBWkCffbBwysChLpTvWBp9qoFOKgowkBCTbVVltEvc=;
-        b=YVYGXZJJlOyILT1rFmASNTHArJBeupDh1uQW1KLF2MUX81NVcAIORIGcZ+G9GLZf5G
-         fQYNLORoN8BzAcRFpl3Bvxa34BXTzbPHAS5Wz9cOiULqtKUclrv2dbHPS0Qyj4HbFG0H
-         wjnmXvgMlUT44lgx2WNdgI3G3Hvd/fAwvdd3QatprovmUlwrMh57nNJvURrj3Z66LqtZ
-         0LV0PQQz/d49gtnkM5d03WKO5HEMPPAZPMiLhdCcBL69cZ177rkFAHUj9q7b2P9XcmcD
-         I0tkMYEFnqOZUfuZVaBakKcM9mS3UwaQDmmkEIA4BoJ4B+Jh+JCDmiSLaBZyMhhGuPQT
-         qUvQ==
-X-Gm-Message-State: AOAM532giw/7i3i46PJZ2yE2wnLd1Mrk4CjY4qqF9CpRGI/G2Ra9EPhz
-	IU72TahyUEHQjPpgn+DhduGBxTCcD4SI6ja89mOwDLDAgwc=
-X-Google-Smtp-Source: ABdhPJxoioopodj5CYQ+VjOH/KtaPnv/DPN35CrRlNdT5BSBeegG6t4ZB+jBoPV8QYU1LtattcGa8Is+6sp9dGPxj1k=
-X-Received: by 2002:a17:902:8c8f:b0:15e:ab1c:591b with SMTP id
- t15-20020a1709028c8f00b0015eab1c591bmr27554255plo.171.1652877953485; Wed, 18
- May 2022 05:45:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3FD23A3
+	for <mptcp@lists.linux.dev>; Wed, 18 May 2022 22:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652911491; x=1684447491;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AaYAfdtSFmamX2nqp1xAEEDOlvserQ8afZnPYHX55DI=;
+  b=jm+DirzQcB4q0xm9Aa9BsRzj7A7CWSb9LtFJMt45kSkzVP60HFHpd1uY
+   FzSPiCNfScij5FmPO0xcdFbaP8hfkF8FjhOMe1OdutI/JjDRDQeh+wxp/
+   Y56/SSZKoQPa/tEwOJGdi0U5+OImSeosto2RdTR8trWAncFAe7MRqTHfk
+   /yjnsy9bYFNIFzRAgNVBIq4rL0YtPaBLSabKhva2POfh1k9SmxWzDipzW
+   2xBkwoplBPR2D7iMwaq8WEEidPfyyPuAWhOrBXjTRr6nYoHWtdV0PyLeh
+   KzsuLw4X8PMUvPMIP5eAU8IyTYTJGp86tVo54uzfVdmIa94rqMQOQ1paB
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="271865359"
+X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
+   d="scan'208";a="271865359"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 15:04:51 -0700
+X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
+   d="scan'208";a="598075431"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.36.18])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 15:04:51 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/4] mptcp: Miscellaneous fixes and a new test case
+Date: Wed, 18 May 2022 15:04:42 -0700
+Message-Id: <20220518220446.209750-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1652853898.git.geliang.tang@suse.com> <b5db3ac6-acc9-a551-de50-816a79754e2a@tessares.net>
-In-Reply-To: <b5db3ac6-acc9-a551-de50-816a79754e2a@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Wed, 18 May 2022 20:45:56 +0800
-Message-ID: <CA+WQbwvtDfeFrMQRoubHohFJrxZ6ikFz6gVtHnHGfBav2ma+GQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next 00/17] for bpf-next
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Geliang Tang <geliang.tang@suse.com>, MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Patches 1 and 3 remove helpers that were iterating over the subflow
+connection list without proper locking. Iteration was not needed in
+either case.
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2022=E5=B9=B45=E6=
-=9C=8818=E6=97=A5=E5=91=A8=E4=B8=89 18:59=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Geliang,
->
-> Thank you for this series.
->
-> On 18/05/2022 08:10, Geliang Tang wrote:
-> > - The first 10 patches is for bpf-next v5.
-> > - Rebased the "BPF packet scheduler" series on export branch.
-> > - base-commit: df896c77f02a ("DO-NOT-MERGE: git markup: features
-> > net-next-next"), export/20220517T155019
->
-> Does this correspond to what I should get if I apply all the Squash-to
-> patch you sent yesterday?
-> Or are there differences on top of that?
+Patch 2 fixes handling of MP_FAIL timeout, checking for orphaned
+subflows instead of using the MPTCP socket data lock and connection
+state.
 
-This series addresses all BPF maintainers=E2=80=98 comments for v4. It make=
-s
-the squash-to patches I sent yesterday superseded. I found it's hard
-to send them as squash-to patches because there are too many
-differences. So I sent this new series. I think it's much easier for
-Mat to review and upstream.
+Patch 4 adds a test for MP_FAIL timeout using tc pedit to induce checksum
+failures.
 
->
-> On my side, it is easier to apply squash-to patch and re-apply an
-> updated series which is already in our tree.
-> Of course if the conflicts are complex, you can send your version on a
-> public Git repo for me to compare.
+Geliang Tang (1):
+  selftests: mptcp: add MP_FAIL reset testcase
 
-I suggest we skip merging this version into our export branch. I guess
-BPF maintainers will give some comments for this v5 too. When this
-series is accepted at last, then I'll split them as squash-to patches,
-and send to you for merging into our export branch.
+Mat Martineau (2):
+  mptcp: Check for orphaned subflow before handling MP_FAIL timer
+  mptcp: Do not traverse the subflow connection list without lock
 
-Thanks,
--Geliang
+Paolo Abeni (1):
+  mptcp: stop using the mptcp_has_another_subflow() helper
 
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
+ net/mptcp/pm.c                                  |  9 +++------
+ net/mptcp/protocol.c                            | 16 +---------------
+ net/mptcp/protocol.h                            | 14 --------------
+ net/mptcp/subflow.c                             | 15 +++++----------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++++
+ 5 files changed, 19 insertions(+), 45 deletions(-)
+
+
+base-commit: a3641ca416a3da7cbeae5bcf1fc26ba9797a1438
+-- 
+2.36.1
+
