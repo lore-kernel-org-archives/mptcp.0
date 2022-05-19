@@ -1,98 +1,293 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6F933C7
-	for <mptcp@lists.linux.dev>; Wed, 18 May 2022 22:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FF47B
+	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 00:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652911494; x=1684447494;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7jv4TLkPgS77sTOajhv/AhHBPudRU+BK3j6zHr5UKYM=;
-  b=ZYM6iBSFBCNyJ0IkB/0PJGvv45zYTq3yHYHZ0kZASVuAZCHxFEzaptTp
-   EgYsXK4BLmePCAlUKV0hJAj3UUj+2r4RBnT/F6sM8EGjHS79iJfFHPsQ5
-   no+K94t8x+BdlUXrhv3xoyGTo8S020EyCnTIUCzfb7GdAOFTZroP1M6US
-   oc3s2ChZaBiQOsIiFE40assefS1qS6FDHrIEOdDYagza81zrwqwpxL7Cv
-   ASmbLcjfTwuTYdTAaoQbueJadKGkOAbT2B5u9CNsWdCxBzXLeVz4eZwRy
-   Ou/8+uqCersrBiAb+R2mj3/SzgzVH7uEwZy9vEtezJ9wfbJyAY2Fv6/HK
+  t=1652920142; x=1684456142;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ysiogHjmumr8Kbc9Yp9xxVo6MaZQQbIGF1ZuAe68HRE=;
+  b=QQtYPZx22EDMEpsjrSKdhX69KxG5KJw/j9ZNluBuyuefcNZY9QuqbTdy
+   42zY61OT/rPx6zCudSaVun0whxrb3AoVgxSgvc8RH1IIZysVB0n6RgLCa
+   QU4mVEOGWDONQg/udnbvtqFljyYwTq+xYN2xG44cqOiGNrOY3oQFGSPen
+   Cj0uiMKXRewTe0okXebtXIba0HI7vlmCLMlfyIGpNIBqjy6Txm8VFpymR
+   EPUjy53g8nu9v5bTWG2GF7A6zqipicYvB6+rftcSw4H5vAUUjEFqxjaFb
+   dQfKGBZcq8TYF3Wu4a+7FfJTJacaflIMTIPUQlc0btrzJo1F+smzQipAj
    A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="271865365"
-X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="271865365"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 15:04:51 -0700
-X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="598075443"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.36.18])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 15:04:51 -0700
+X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="358360287"
+X-IronPort-AV: E=Sophos;i="5.91,236,1647327600"; 
+   d="scan'208";a="358360287"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 17:29:01 -0700
+X-IronPort-AV: E=Sophos;i="5.91,236,1647327600"; 
+   d="scan'208";a="569836000"
+Received: from asova-mobl.amr.corp.intel.com ([10.209.69.6])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 17:29:01 -0700
+Date: Wed, 18 May 2022 17:28:54 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 4/4] selftests: mptcp: add MP_FAIL reset testcase
-Date: Wed, 18 May 2022 15:04:46 -0700
-Message-Id: <20220518220446.209750-5-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220518220446.209750-1-mathew.j.martineau@linux.intel.com>
-References: <20220518220446.209750-1-mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 02/17] mptcp: move mptcp_subflow_context in
+ net/mptcp.h
+In-Reply-To: <b06c5cd73cb6f6bd8c57cd1b23c95ca365b30708.1652853898.git.geliang.tang@suse.com>
+Message-ID: <8573a785-26d2-c69b-e18b-fc3a5220e4f3@linux.intel.com>
+References: <cover.1652853898.git.geliang.tang@suse.com> <b06c5cd73cb6f6bd8c57cd1b23c95ca365b30708.1652853898.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-From: Geliang Tang <geliang.tang@suse.com>
+On Wed, 18 May 2022, Geliang Tang wrote:
 
-Add the multiple subflows test case for MP_FAIL, to test the MP_FAIL
-reset case. Use the test_linkfail value to make 1024KB test files.
+> Move struct mptcp_subflow_context definition from net/mptcp/protocol.h
+> to include/net/mptcp.h. And move the related struct mptcp_data_avail and
+> function mptcp_subflow_ctx() too.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 
-Invoke reset_with_fail() to use 'iptables' and 'tc action pedit' rules
-to produce the bit flips to trigger the checksum failures on ns2eth2.
-Add delays on ns2eth1 to make sure more data can translate on ns2eth2.
+I'm not sure I agree with moving all of this just because Martin asked 
+about an inline function. I'll follow up on the netdev email thread.
 
-The check_invert flag is enabled in reset_with_fail(), so this test
-prints out the inverted bytes, instead of the file mismatch errors.
+- Mat
 
-Invoke pedit_action_pkts() to get the numbers of the packets edited
-by the tc pedit actions, and print this numbers to the output.
+> ---
+> include/net/mptcp.h  | 91 ++++++++++++++++++++++++++++++++++++++++++++
+> net/mptcp/protocol.h | 88 ------------------------------------------
+> 2 files changed, 91 insertions(+), 88 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 4713757e36c1..9422b6d2a268 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -40,6 +40,86 @@ struct mptcp_ext {
+> };
+>
+> #define MPTCPOPT_HMAC_LEN	20
+> +
+> +enum mptcp_data_avail {
+> +	MPTCP_SUBFLOW_NODATA,
+> +	MPTCP_SUBFLOW_DATA_AVAIL,
+> +};
+> +
+> +/* MPTCP subflow context */
+> +struct mptcp_subflow_context {
+> +	struct	list_head node;/* conn_list of subflows */
+> +
+> +	struct_group(reset,
+> +
+> +	unsigned long avg_pacing_rate; /* protected by msk socket lock */
+> +	u64	local_key;
+> +	u64	remote_key;
+> +	u64	idsn;
+> +	u64	map_seq;
+> +	u32	snd_isn;
+> +	u32	token;
+> +	u32	rel_write_seq;
+> +	u32	map_subflow_seq;
+> +	u32	ssn_offset;
+> +	u32	map_data_len;
+> +	__wsum	map_data_csum;
+> +	u32	map_csum_len;
+> +	u32	request_mptcp : 1,  /* send MP_CAPABLE */
+> +		request_join : 1,   /* send MP_JOIN */
+> +		request_bkup : 1,
+> +		mp_capable : 1,	    /* remote is MPTCP capable */
+> +		mp_join : 1,	    /* remote is JOINing */
+> +		fully_established : 1,	    /* path validated */
+> +		pm_notified : 1,    /* PM hook called for established status */
+> +		conn_finished : 1,
+> +		map_valid : 1,
+> +		map_csum_reqd : 1,
+> +		map_data_fin : 1,
+> +		mpc_map : 1,
+> +		backup : 1,
+> +		send_mp_prio : 1,
+> +		send_mp_fail : 1,
+> +		send_fastclose : 1,
+> +		send_infinite_map : 1,
+> +		rx_eof : 1,
+> +		can_ack : 1,        /* only after processing the remote a key */
+> +		disposable : 1,	    /* ctx can be free at ulp release time */
+> +		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
+> +		local_id_valid : 1, /* local_id is correctly initialized */
+> +		valid_csum_seen : 1;        /* at least one csum validated */
+> +	enum mptcp_data_avail data_avail;
+> +	bool	mp_fail_response_expect;
+> +	u32	remote_nonce;
+> +	u64	thmac;
+> +	u32	local_nonce;
+> +	u32	remote_token;
+> +	u8	hmac[MPTCPOPT_HMAC_LEN];
+> +	u8	local_id;
+> +	u8	remote_id;
+> +	u8	reset_seen:1;
+> +	u8	reset_transient:1;
+> +	u8	reset_reason:4;
+> +	u8	stale_count;
+> +
+> +	long	delegated_status;
+> +
+> +	);
+> +
+> +	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
+> +
+> +	u32	setsockopt_seq;
+> +	u32	stale_rcv_tstamp;
+> +
+> +	struct	sock *tcp_sock;	    /* tcp sk backpointer */
+> +	struct	sock *conn;	    /* parent mptcp_sock */
+> +	const	struct inet_connection_sock_af_ops *icsk_af_ops;
+> +	void	(*tcp_state_change)(struct sock *sk);
+> +	void	(*tcp_error_report)(struct sock *sk);
+> +
+> +	struct	rcu_head rcu;
+> +};
+> +
+> #define MPTCP_RM_IDS_MAX	8
+>
+> struct mptcp_rm_list {
+> @@ -198,6 +278,15 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
+>
+> 	return htonl(0u);
+> }
+> +
+> +static inline struct mptcp_subflow_context *
+> +mptcp_subflow_ctx(const struct sock *sk)
+> +{
+> +	struct inet_connection_sock *icsk = inet_csk(sk);
+> +
+> +	/* Use RCU on icsk_ulp_data only for sock diag code */
+> +	return (__force struct mptcp_subflow_context *)icsk->icsk_ulp_data;
+> +}
+> #else
+>
+> static inline void mptcp_init(void)
+> @@ -275,6 +364,8 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
+> }
+>
+> static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
+> +static inline struct mptcp_subflow_context *
+> +mptcp_subflow_ctx(const struct sock *sk) { return NULL; }
+> #endif /* CONFIG_MPTCP */
+>
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 8f03775a2f22..cc24756cedfe 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -409,11 +409,6 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
+> 	return (struct mptcp_subflow_request_sock *)rsk;
+> }
+>
+> -enum mptcp_data_avail {
+> -	MPTCP_SUBFLOW_NODATA,
+> -	MPTCP_SUBFLOW_DATA_AVAIL,
+> -};
+> -
+> struct mptcp_delegated_action {
+> 	struct napi_struct napi;
+> 	struct list_head head;
+> @@ -424,89 +419,6 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+> #define MPTCP_DELEGATE_SEND		0
+> #define MPTCP_DELEGATE_ACK		1
+>
+> -/* MPTCP subflow context */
+> -struct mptcp_subflow_context {
+> -	struct	list_head node;/* conn_list of subflows */
+> -
+> -	struct_group(reset,
+> -
+> -	unsigned long avg_pacing_rate; /* protected by msk socket lock */
+> -	u64	local_key;
+> -	u64	remote_key;
+> -	u64	idsn;
+> -	u64	map_seq;
+> -	u32	snd_isn;
+> -	u32	token;
+> -	u32	rel_write_seq;
+> -	u32	map_subflow_seq;
+> -	u32	ssn_offset;
+> -	u32	map_data_len;
+> -	__wsum	map_data_csum;
+> -	u32	map_csum_len;
+> -	u32	request_mptcp : 1,  /* send MP_CAPABLE */
+> -		request_join : 1,   /* send MP_JOIN */
+> -		request_bkup : 1,
+> -		mp_capable : 1,	    /* remote is MPTCP capable */
+> -		mp_join : 1,	    /* remote is JOINing */
+> -		fully_established : 1,	    /* path validated */
+> -		pm_notified : 1,    /* PM hook called for established status */
+> -		conn_finished : 1,
+> -		map_valid : 1,
+> -		map_csum_reqd : 1,
+> -		map_data_fin : 1,
+> -		mpc_map : 1,
+> -		backup : 1,
+> -		send_mp_prio : 1,
+> -		send_mp_fail : 1,
+> -		send_fastclose : 1,
+> -		send_infinite_map : 1,
+> -		rx_eof : 1,
+> -		can_ack : 1,        /* only after processing the remote a key */
+> -		disposable : 1,	    /* ctx can be free at ulp release time */
+> -		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
+> -		local_id_valid : 1, /* local_id is correctly initialized */
+> -		valid_csum_seen : 1;        /* at least one csum validated */
+> -	enum mptcp_data_avail data_avail;
+> -	bool	mp_fail_response_expect;
+> -	u32	remote_nonce;
+> -	u64	thmac;
+> -	u32	local_nonce;
+> -	u32	remote_token;
+> -	u8	hmac[MPTCPOPT_HMAC_LEN];
+> -	u8	local_id;
+> -	u8	remote_id;
+> -	u8	reset_seen:1;
+> -	u8	reset_transient:1;
+> -	u8	reset_reason:4;
+> -	u8	stale_count;
+> -
+> -	long	delegated_status;
+> -
+> -	);
+> -
+> -	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
+> -
+> -	u32	setsockopt_seq;
+> -	u32	stale_rcv_tstamp;
+> -
+> -	struct	sock *tcp_sock;	    /* tcp sk backpointer */
+> -	struct	sock *conn;	    /* parent mptcp_sock */
+> -	const	struct inet_connection_sock_af_ops *icsk_af_ops;
+> -	void	(*tcp_state_change)(struct sock *sk);
+> -	void	(*tcp_error_report)(struct sock *sk);
+> -
+> -	struct	rcu_head rcu;
+> -};
+> -
+> -static inline struct mptcp_subflow_context *
+> -mptcp_subflow_ctx(const struct sock *sk)
+> -{
+> -	struct inet_connection_sock *icsk = inet_csk(sk);
+> -
+> -	/* Use RCU on icsk_ulp_data only for sock diag code */
+> -	return (__force struct mptcp_subflow_context *)icsk->icsk_ulp_data;
+> -}
+> -
+> static inline struct sock *
+> mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
+> {
+> -- 
+> 2.34.1
+>
+>
+>
 
-Co-developed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 7381d1f85209..91039605d82f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2705,6 +2705,16 @@ fail_tests()
- 		chk_join_nr 0 0 0 +1 +0 1 0 1 "$(pedit_action_pkts)"
- 		chk_fail_nr 1 -1 invert
- 	fi
-+
-+	# multiple subflows
-+	if reset_with_fail "MP_FAIL MP_RST" 2; then
-+		tc -n $ns2 qdisc add dev ns2eth1 root netem rate 1mbit delay 5
-+		pm_nl_set_limits $ns1 0 1
-+		pm_nl_set_limits $ns2 0 1
-+		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
-+		run_tests $ns1 $ns2 10.0.1.1 1024
-+		chk_join_nr 1 1 1 1 0 1 1 0 "$(pedit_action_pkts)"
-+	fi
- }
- 
- userspace_tests()
--- 
-2.36.1
-
+--
+Mat Martineau
+Intel
