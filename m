@@ -1,102 +1,98 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A1428EE
-	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 15:07:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652972840; x=1684508840;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=25kt8fL0h31Q1rzTeqcKrWJ50kSWKMqCTfmkixVa/qQ=;
-  b=dO1yOpR6lNMrcgbtKOBQwkUNGtCdT0NszFR3TjExIkh1nrljFZBdKS0f
-   PlxYnbJ71yofWoG8mlk22Iuyx7XSphj+avTa0CfW6ioyCA7+Gstrk2dtE
-   ut9yaZyvkFNoaTDiN2nDdjkqqLuUzNpTan3oUgmra8qeauqeVYBI6n0CQ
-   t7gjIPcVdFvNjDNHtz+9uplpz55yXxVcyOK6iLGKdbR3zJ9BEXy9CnYDN
-   5BmNohZsh7AqlecKTaOyTrGLG23Lg9J0sDUdFT340MQIILm2XXoZC7FD3
-   TjezYFlwVg9sxxQ/RxPe5jUmUlvNdv6XYN42H8ipA3+VKxP6M0VdO8NU2
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10352"; a="259814825"
-X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
-   d="scan'208";a="259814825"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 08:06:36 -0700
-X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
-   d="scan'208";a="674053917"
-Received: from camcconn-mobl1.amr.corp.intel.com ([10.255.229.130])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 08:06:36 -0700
-Date: Thu, 19 May 2022 08:06:35 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 01/17] mptcp: move MPTCPOPT_HMAC_LEN to
- net/mptcp.h
-In-Reply-To: <9128762ee54d7f8f5755067bbdd7511e1ead1f1a.1652853898.git.geliang.tang@suse.com>
-Message-ID: <6c1c291b-43d8-6e86-fcae-582a9ca5632@linux.intel.com>
-References: <cover.1652853898.git.geliang.tang@suse.com> <9128762ee54d7f8f5755067bbdd7511e1ead1f1a.1652853898.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B3F28EE
+	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 15:40:30 +0000 (UTC)
+Received: by mail-pg1-f172.google.com with SMTP id v10so5393540pgl.11
+        for <mptcp@lists.linux.dev>; Thu, 19 May 2022 08:40:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pKLKo70g6togMlHkHAmjaaA5K8/SPp6HD60y+EHKvNo=;
+        b=EKiH9Z2mcioa6mklctNjLc089L3WMMovMh+ARzDQQxF5Q5oJTAUhvI/qvq6EW6DHAi
+         ggdq8OSkyXEz41KTHGRit/1Bjsfqria3WAwDoSWcsZ5hUVORMO8l9MP2eZdAk+MBGrmz
+         Y7Dhx7gAPqiQpgEHXn1J6NLCs8ww0WsdEUTFLPyV3g2fB/lDzTBpnaOASezCr2yFr98t
+         /XNm+b592F09u+Xdj0GKTXT4FF3UAd1S+egvCe06/ieUbl+sVv4/zMiVjY7alvU2belg
+         JelsbXXCcdlrYajoiwF+wf4q9MxVAMAEm0xyxEt4YL2OF3W0oC5S8ra9KChqCANeHjA5
+         pHIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pKLKo70g6togMlHkHAmjaaA5K8/SPp6HD60y+EHKvNo=;
+        b=sdmuQ2n9IEdK/rTLPWolbis8NLl/C0q6/Jq8D1ExHRJs4FCc4yH0olpAmSDbQWJveb
+         0DlfFRlssvHl7Lt12fMmnyYOpi+3AhvYL5ZORRwEfYCfUdPAlFp7foI0vdoHxCf61W53
+         m40mD4p6Jyz4ZIYL3zQKerjdHLW0jA4TjesTEraVMVMCoP3C2p6QjBOgOk4dkr1HZ+dr
+         M6KZ2ici+k/zDlwd1jgiJ0xQ+sZvh9mVR1GZqk6Ex5+0CvhVPc++49h5vUZOULSbxEuE
+         XEGlvqESz5D+GzB5L72/xoqIEAyxGhgSka+TUD8JOghMo85114ki+WkwoErVqpRsbHTT
+         dJ9w==
+X-Gm-Message-State: AOAM532MtZqWamECPcZTd+6ZxIjSxEbCfyuIRnWCdX2pwp1dBaYCRmEA
+	4/s+etsiRKI8pXNsvbyZRTO4LVRU6Bpr/Q==
+X-Google-Smtp-Source: ABdhPJwKt4hwvulSIV3BYhU4Yf3HdaOTlzwJMM9C+3zR22uMyH4zB2cUEg/BONryPyJnomfWktYQRw==
+X-Received: by 2002:a05:6a00:170a:b0:50d:3e40:9e0 with SMTP id h10-20020a056a00170a00b0050d3e4009e0mr5263151pfc.48.1652974829908;
+        Thu, 19 May 2022 08:40:29 -0700 (PDT)
+Received: from hydra.localdomain ([50.45.159.39])
+        by smtp.gmail.com with ESMTPSA id c22-20020a170902c2d600b0015e8d4eb2cdsm3976008pla.279.2022.05.19.08.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 May 2022 08:40:29 -0700 (PDT)
+From: Ossama Othman <ossama.othman@gmail.com>
+X-Google-Original-From: Ossama Othman <ossama.othman@intel.com>
+To: mptcp@lists.linux.dev
+Cc: Ossama Othman <ossama.othman@intel.com>
+Subject: [PATCH mptcp-next] mptcp: fix conflict with <netinet/in.h>
+Date: Thu, 19 May 2022 08:39:29 -0700
+Message-Id: <20220519153929.214331-1-ossama.othman@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Wed, 18 May 2022, Geliang Tang wrote:
+Including <linux/mptcp.h> before the C library <netinet/in.h> header
+causes symbol redefinition errors at compile-time due to duplicate
+declarations and definitions in the <linux/in.h> header included by
+<linux/mptcp.h>.
 
-> Move macro MPTCPOPT_HMAC_LEN definition from net/mptcp/protocol.h to
-> include/net/mptcp.h.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Explicitly include <netinet/in.h> before <linux/in.h> in
+<linux/mptcp.h> when __KERNEL__ is not defined so that the C library
+compatibility logic in <linux/libc-compat.h> is enabled when including
+<linux/mptcp.h> in user space code.
 
-This one's fine for the mptcp tree (will upstream to net-next):
+Signed-off-by: Ossama Othman <ossama.othman@intel.com>
+---
+ include/uapi/linux/mptcp.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 921963589904..dfe19bf13f4c 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -2,16 +2,17 @@
+ #ifndef _UAPI_MPTCP_H
+ #define _UAPI_MPTCP_H
+ 
++#ifndef __KERNEL__
++#include <netinet/in.h>		/* for sockaddr_in and sockaddr_in6	*/
++#include <sys/socket.h>		/* for struct sockaddr			*/
++#endif
++
+ #include <linux/const.h>
+ #include <linux/types.h>
+ #include <linux/in.h>		/* for sockaddr_in			*/
+ #include <linux/in6.h>		/* for sockaddr_in6			*/
+ #include <linux/socket.h>	/* for sockaddr_storage and sa_family	*/
+ 
+-#ifndef __KERNEL__
+-#include <sys/socket.h>		/* for struct sockaddr			*/
+-#endif
+-
+ #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
+ #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
+ #define MPTCP_SUBFLOW_FLAG_JOIN_REM		_BITUL(2)
+-- 
+2.34.1
 
-> ---
-> include/net/mptcp.h  | 3 ++-
-> net/mptcp/protocol.h | 1 -
-> 2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index d4ec894ce67b..4713757e36c1 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -39,6 +39,7 @@ struct mptcp_ext {
-> 			infinite_map:1;
-> };
->
-> +#define MPTCPOPT_HMAC_LEN	20
-> #define MPTCP_RM_IDS_MAX	8
->
-> struct mptcp_rm_list {
-> @@ -89,7 +90,7 @@ struct mptcp_out_options {
-> 			u32 nonce;
-> 			u32 token;
-> 			u64 thmac;
-> -			u8 hmac[20];
-> +			u8 hmac[MPTCPOPT_HMAC_LEN];
-> 		};
-> 	};
-> #endif
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 200f89f6d62f..8f03775a2f22 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -83,7 +83,6 @@
->
-> /* MPTCP MP_JOIN flags */
-> #define MPTCPOPT_BACKUP		BIT(0)
-> -#define MPTCPOPT_HMAC_LEN	20
-> #define MPTCPOPT_THMAC_LEN	8
->
-> /* MPTCP MP_CAPABLE flags */
-> -- 
-> 2.34.1
->
->
->
-
---
-Mat Martineau
-Intel
