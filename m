@@ -1,44 +1,44 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140437E
-	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 14:12:17 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id i27so10204095ejd.9
-        for <mptcp@lists.linux.dev>; Thu, 19 May 2022 07:12:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EEA7E
+	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 14:13:45 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id i27so10212830ejd.9
+        for <mptcp@lists.linux.dev>; Thu, 19 May 2022 07:13:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=p6fNzP4yQRrlHL62qFX5OCcKyB/XuN8DHnsMnnt0I9Q=;
-        b=rhOi/rqTFLOh16fMt01QnhpIAJ7batuAAMLFgewecAwvRrK+nBIB8M7HBoSUHypqQY
-         wjSN9RDArMxKm1hEtjI6coFYwf1ldCkhbpLtj3kx/IGkajEplUgyp/o1D9AeC3SVWq5L
-         K5NvQOHE5eteQec1mjK9wIqdOADSPJrlBA9zAXqU9AoYALZV4b7IkW8yUsbSwtvo/9rM
-         UFc5osqIMQjqAv7Xn7Fky8rOxItEFnkbwVVujJd+wcWRWB1o1hkMcgGGk1jbDnP8wjtg
-         Fk0qx6h9QwYERVtXPNDWX+pPCCTfCTEscuQ5WuPnKrbuzMX7QZRG7VE1cb0OatU33ppR
-         velg==
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Zp/Y8Vzf9itahOYjcOyC3LTGrec+oGBlVCeAhAtDwM4=;
+        b=FwHLYG+1fSBo7jClLYjrrEJNRIz2AOq1KL/xfjkgC90Lr5lQohC4u/oXyRYbmLWnEP
+         Q6jV/1v/zFPQvV9QaYZFRsEdh6/5vgdPeKMSzgCZP3SlJikJqNnHX89sbimWz0zp9LrM
+         lxuTzk6dPaIzalqV5iSTKuE/hoJ0Et8itpyxTLMvsvPpmYv3hiJP903YWskk/HuaWWck
+         B2MYAmlVetLPUbAxLDrVnOpCV8Uen7wurh4mAcke6z4tD66oHH6VzWiWBcIVzOQ95O06
+         BUqs/Ga5A9XESVCVLLFcyo/HNvkEoZHSZN/SOjvHh4U+hMlOc0k16XrEr3/X61bejgrJ
+         9hIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=p6fNzP4yQRrlHL62qFX5OCcKyB/XuN8DHnsMnnt0I9Q=;
-        b=4LhZ6iJfNlmy2uISz1AZRWA6glWbzrBCosRtPvNBvsOzYeUGCu6zm5G3bBaOJtIPmH
-         2DzYIypqqQzdlJsb36PpX2Ev26JsLLaWeh4dB7jZ/3QD9m8RaF2RyPOW6uBFRFWvMCR3
-         4jmWImCQoLMNKvKHGwg3mPL0suTtsw9gaKiFC1beQWwd5ADcVTsBqj1nx4ekGe1n/5jl
-         AuIVU7jhyrqkYwqGRbhGrTxxBBaNF8CMEHD/cG2zn1kiRh+bop7WR4jHkx4YW9vRJjIs
-         MifOxDEvZQszDe78/j+ZEvmFRwBAf+ZOQwVykQy7R2qIhoNtaiFJii4xRl1CjBjvMc/C
-         IIlg==
-X-Gm-Message-State: AOAM533HE+sVHibjG3bUiW55CXatFbVIXbCh+7ZON5rwpccb3urSu65c
-	C/AovYgC1v1aR9SWTMRs/ojxwA==
-X-Google-Smtp-Source: ABdhPJw0zYVwkSgrM6aBK6/NNXWP486XmUjH5vz96odftpZlAXPu1ZX/6gfxAhEL3K11M0hK5IY7hg==
-X-Received: by 2002:a17:907:972a:b0:6f4:f456:50a7 with SMTP id jg42-20020a170907972a00b006f4f45650a7mr4381010ejc.431.1652969536012;
-        Thu, 19 May 2022 07:12:16 -0700 (PDT)
+        bh=Zp/Y8Vzf9itahOYjcOyC3LTGrec+oGBlVCeAhAtDwM4=;
+        b=EtaVWLYGER5k3B3IzQ+THbmpXuze/bwOmztSBx5wV8ytQZYNX93xKEEZDirItdAM9Q
+         Xi33u1/KG6nBtRxvaNKL4CzK6Awn4kKEIYXs30WGWqcZ+6ihUpjXBqYPJeHnXZWEShGV
+         fJP7BI3f0tJtbawWt4Slp1wzvMsvB2ACReBUkyubU3KO2m7ltVE5HVNKJxLJwsGctnaa
+         JK4mNco+XZUToUERpnAJjRjPMa9A5rhYZaAORF9ejOf0TTaeNQIKP/Ic9qcFTwM3K0pn
+         WOpZFw2RFzm5ELUGUzW0tkcSW382DoCYZxQi01h7eAREcnr2F8AyulMRUgwHuuXoB3zF
+         1eNA==
+X-Gm-Message-State: AOAM532jPys7OPIopgiMmy9wKsLqbgXc+P+EYMBf37ME7SbDpurWd9g3
+	A0oPsundP1na0NEWYFuWjzYgkaqr5kC8/g==
+X-Google-Smtp-Source: ABdhPJxNiR4Q2yWnra0ry70XRrBUAmpxUPZs45bovVCAKdkor0ATwKYCrVb7tix3eMnO6SxPUox79A==
+X-Received: by 2002:a17:907:6d26:b0:6f4:bba2:ebbb with SMTP id sa38-20020a1709076d2600b006f4bba2ebbbmr4462672ejc.699.1652969623636;
+        Thu, 19 May 2022 07:13:43 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:dd49:d598:4fbc:6d53? ([2a02:578:8593:1200:dd49:d598:4fbc:6d53])
-        by smtp.gmail.com with ESMTPSA id ca7-20020aa7cd67000000b0042617ba63absm2819421edb.53.2022.05.19.07.12.15
+        by smtp.gmail.com with ESMTPSA id dq8-20020a170907734800b006f3ef214e31sm2139694ejc.151.2022.05.19.07.13.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 May 2022 07:12:15 -0700 (PDT)
-Message-ID: <025be707-a620-8e83-3aca-d962c5ff7ff4@tessares.net>
-Date: Thu, 19 May 2022 16:12:14 +0200
+        Thu, 19 May 2022 07:13:43 -0700 (PDT)
+Message-ID: <75e74b8a-b28e-008e-02e9-a75dc4b6e467@tessares.net>
+Date: Thu, 19 May 2022 16:13:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,54 +47,55 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH mptcp-next v2 0/7] for bpf-next
+Subject: Re: [PATCH mptcp-next v2] mptcp: fix checksum byte order
 Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1652948238.git.geliang.tang@suse.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <595f104803a212df58db6d20f84947325b33a9d6.1652196378.git.pabeni@redhat.com>
+ <349fa6a5-6e64-8bce-5592-6164941659b9@tessares.net>
+ <314ab5c-3e28-4f49-3afc-82f01c6d2da4@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1652948238.git.geliang.tang@suse.com>
+In-Reply-To: <314ab5c-3e28-4f49-3afc-82f01c6d2da4@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-On 19/05/2022 10:25, Geliang Tang wrote:
-> v2:
->  - The series is for bpf-next v5.
->  - patch 1, keep bpf_mptcp_sock_from_subflow() in bpf.c
->  - patch 3, Drop the 'msg' parameter of verify_sk
->  - base-commit: df896c77f02a ("DO-NOT-MERGE: git markup: features
-> net-next-next"), export/20220517T155019
->  - The last squash-to patch is for "BPF packet scheduler" series.
+On 17/05/2022 01:07, Mat Martineau wrote:
+> 
+> On Sat, 14 May 2022, Matthieu Baerts wrote:
+> 
+>> Hi Paolo, Mat,
+>>
+>> On 10/05/2022 18:25, Paolo Abeni wrote:
+>>> The MPTCP code typecasts the checksum value to u16 and
+>>> then convert it to big endian while storing the value into
+>>> the MPTCP option.
+>>>
+>>> As a result, the wire encoding for little endian host is
+>>> wrong, and that causes interoperabilty interoperability
+>>> issues with other implementation or host with different endianess.
+>>>
+>>> Address the issue writing in the packet the unmodified __sum16 value.
+>>>
+>>> MPTCP checksum is disabled by default, interoperating with systems
+>>> with bad mptcp-level csum encodying should cause fallback to TCP.
+>>
+>> Thank you for the patch and the review!
+>>
+>> Now in our tree (fixes for -net) with Mat's RvB tag:
+>>
+>> - 5291df4774c1: mptcp: fix checksum byte order (with conflicts)
+>> - Results: 128393ceec9b..35e8b300fc90 (export-net)
+>>
+> 
+> Matthieu, Paolo -
+> 
+> I'm planning to send this patch and "mptcp: Do TCP fallback on early DSS
+> checksum failure" to the -net branch on Tuesday - any concerns with that?
 
-I just imported this new series in our tree.
-
-- 7046a98c4501: "squashed" patch 1/7 in "bpf: add
-bpf_skc_to_mptcp_sock_proto"
-- dc043d25d647: "squashed" patch 2/7 in "selftests/bpf: Enable
-CONFIG_IKCONFIG_PROC in config"
-- bd3e6e2ffc15: "squashed" patch 3/7 in "selftests/bpf: add MPTCP test base"
-- efa55efc427c: "squashed" patch 4/7 in "selftests/bpf: test
-bpf_skc_to_mptcp_sock"
-- f087e13912ad: "squashed" patch 5/7 in "selftests/bpf: verify token of
-struct mptcp_sock"
-- 21c0f634b797: "squashed" patch 6/7 in "selftests/bpf: verify ca_name
-of struct mptcp_sock"
-- d38ab51eb84e: "squashed" patch 7/7 in "selftests/bpf: verify first of
-struct mptcp_sock"
-- c79872213ec4: conflict in t/selftests-bpf-add-bpf_first-test
-- Results: 9ceda99ef71f..5fbf0e7a331f (export)
-
-- 4353cb87928e: "squashed" in "selftests/bpf: add bpf_first test"
-- Results: 5fbf0e7a331f..086d4a4a0f34 (export)
-
-Builds and tests are now in progress:
-
-
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220519T141104
-
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+Thank you for having done that!
 
 Cheers,
 Matt
