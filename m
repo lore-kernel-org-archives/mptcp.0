@@ -1,98 +1,100 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B3F28EE
-	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 15:40:30 +0000 (UTC)
-Received: by mail-pg1-f172.google.com with SMTP id v10so5393540pgl.11
-        for <mptcp@lists.linux.dev>; Thu, 19 May 2022 08:40:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AC828EE
+	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 16:07:54 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id fd25so7583023edb.3
+        for <mptcp@lists.linux.dev>; Thu, 19 May 2022 09:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pKLKo70g6togMlHkHAmjaaA5K8/SPp6HD60y+EHKvNo=;
-        b=EKiH9Z2mcioa6mklctNjLc089L3WMMovMh+ARzDQQxF5Q5oJTAUhvI/qvq6EW6DHAi
-         ggdq8OSkyXEz41KTHGRit/1Bjsfqria3WAwDoSWcsZ5hUVORMO8l9MP2eZdAk+MBGrmz
-         Y7Dhx7gAPqiQpgEHXn1J6NLCs8ww0WsdEUTFLPyV3g2fB/lDzTBpnaOASezCr2yFr98t
-         /XNm+b592F09u+Xdj0GKTXT4FF3UAd1S+egvCe06/ieUbl+sVv4/zMiVjY7alvU2belg
-         JelsbXXCcdlrYajoiwF+wf4q9MxVAMAEm0xyxEt4YL2OF3W0oC5S8ra9KChqCANeHjA5
-         pHIg==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=OzXyydPOTVDjWYogoevXwjZExc8KeM0IOZQMQ6+wwkY=;
+        b=29UxiTElw20v8lJV4a+RbzrnExXyFvFbFNkY1NZFO1KH8c7HYQvYBBcDClAGJOv5C1
+         UEuO5akgk6O4uNsJ3tQ2Ym28OWKzCM1gb8viDHiB+r4th1IGsk/hUpm4m7xqSr1iVhOQ
+         354Bs56kAWocEWYcRsVq41oD3ZV06nSn9tbYOi86XfJxYXfxtDIC86S5xk5/y7S+We0q
+         HaaZtym/c/5s+Z2zgHNh9vYOMVzysPU926i92Lz3wd4BvypwOZK54lNA55c0DajGSRIV
+         FaJIWaRVkzNgSjXlrEmf1dj9TMbDApL0KYTI0EJ8j3g/dpU9fhJxFPj0QLRKpjK/Njy3
+         1sZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=pKLKo70g6togMlHkHAmjaaA5K8/SPp6HD60y+EHKvNo=;
-        b=sdmuQ2n9IEdK/rTLPWolbis8NLl/C0q6/Jq8D1ExHRJs4FCc4yH0olpAmSDbQWJveb
-         0DlfFRlssvHl7Lt12fMmnyYOpi+3AhvYL5ZORRwEfYCfUdPAlFp7foI0vdoHxCf61W53
-         m40mD4p6Jyz4ZIYL3zQKerjdHLW0jA4TjesTEraVMVMCoP3C2p6QjBOgOk4dkr1HZ+dr
-         M6KZ2ici+k/zDlwd1jgiJ0xQ+sZvh9mVR1GZqk6Ex5+0CvhVPc++49h5vUZOULSbxEuE
-         XEGlvqESz5D+GzB5L72/xoqIEAyxGhgSka+TUD8JOghMo85114ki+WkwoErVqpRsbHTT
-         dJ9w==
-X-Gm-Message-State: AOAM532MtZqWamECPcZTd+6ZxIjSxEbCfyuIRnWCdX2pwp1dBaYCRmEA
-	4/s+etsiRKI8pXNsvbyZRTO4LVRU6Bpr/Q==
-X-Google-Smtp-Source: ABdhPJwKt4hwvulSIV3BYhU4Yf3HdaOTlzwJMM9C+3zR22uMyH4zB2cUEg/BONryPyJnomfWktYQRw==
-X-Received: by 2002:a05:6a00:170a:b0:50d:3e40:9e0 with SMTP id h10-20020a056a00170a00b0050d3e4009e0mr5263151pfc.48.1652974829908;
-        Thu, 19 May 2022 08:40:29 -0700 (PDT)
-Received: from hydra.localdomain ([50.45.159.39])
-        by smtp.gmail.com with ESMTPSA id c22-20020a170902c2d600b0015e8d4eb2cdsm3976008pla.279.2022.05.19.08.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 May 2022 08:40:29 -0700 (PDT)
-From: Ossama Othman <ossama.othman@gmail.com>
-X-Google-Original-From: Ossama Othman <ossama.othman@intel.com>
-To: mptcp@lists.linux.dev
-Cc: Ossama Othman <ossama.othman@intel.com>
-Subject: [PATCH mptcp-next] mptcp: fix conflict with <netinet/in.h>
-Date: Thu, 19 May 2022 08:39:29 -0700
-Message-Id: <20220519153929.214331-1-ossama.othman@intel.com>
-X-Mailer: git-send-email 2.34.1
+        bh=OzXyydPOTVDjWYogoevXwjZExc8KeM0IOZQMQ6+wwkY=;
+        b=ywDm6x80nNkAAfI+bZjW3v8tMIyakmt5gsEyjTAQ7fucV8UWnmz+1M+NLRhML6Q8va
+         p5m2yOx4ZeNM4DPq334clL7+npn1fC8wodT52AHmDZDF7rl6DDjYd8/8u/Q6sbw/ouS0
+         7ecZgGR7qDrBt2iz+IPoTHLWLV9MHydat/nE+KCW8z+9NVkIy/vSWM44KvGmK3Hq8qKF
+         Dx0izR87dQHo6mKuOPfkc4pFhUhCUNmpIeSSpdqhAZYvv/aBCLAQ7tVT9xzOMB5yqrij
+         duON+csShf29tbnw8XNv2UHHvjfn9rIjQdesdGnj3WxlMO5op2EH4iWZ3ti3JfIr6lUO
+         8q5Q==
+X-Gm-Message-State: AOAM5304+hLKr5TI4J6RK4dnSO3vCpkolKACfhSXMcpaBxFWlSZzjMpB
+	wTmXECUD4v5fnQQVfHgSjdYtuA==
+X-Google-Smtp-Source: ABdhPJzZd3Y3Cwgkv22yTJDqscBxaEsjufmnQKDzsgxDksihRBI448TCRYuM9fXYAceK9NUxcLL4dQ==
+X-Received: by 2002:a05:6402:2547:b0:428:1dd3:2751 with SMTP id l7-20020a056402254700b004281dd32751mr6042393edb.87.1652976472469;
+        Thu, 19 May 2022 09:07:52 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:dd49:d598:4fbc:6d53? ([2a02:578:8593:1200:dd49:d598:4fbc:6d53])
+        by smtp.gmail.com with ESMTPSA id v1-20020aa7dbc1000000b0042aa34f9e72sm2976359edt.34.2022.05.19.09.07.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 May 2022 09:07:52 -0700 (PDT)
+Message-ID: <62bbf9e4-5d5f-ffc7-b28a-5e9556010cd3@tessares.net>
+Date: Thu, 19 May 2022 18:07:51 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH mptcp-next 01/17] mptcp: move MPTCPOPT_HMAC_LEN to
+ net/mptcp.h
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1652853898.git.geliang.tang@suse.com>
+ <9128762ee54d7f8f5755067bbdd7511e1ead1f1a.1652853898.git.geliang.tang@suse.com>
+ <6c1c291b-43d8-6e86-fcae-582a9ca5632@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <6c1c291b-43d8-6e86-fcae-582a9ca5632@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Including <linux/mptcp.h> before the C library <netinet/in.h> header
-causes symbol redefinition errors at compile-time due to duplicate
-declarations and definitions in the <linux/in.h> header included by
-<linux/mptcp.h>.
+Hi Geliang, Mat,
 
-Explicitly include <netinet/in.h> before <linux/in.h> in
-<linux/mptcp.h> when __KERNEL__ is not defined so that the C library
-compatibility logic in <linux/libc-compat.h> is enabled when including
-<linux/mptcp.h> in user space code.
+On 19/05/2022 17:06, Mat Martineau wrote:
+> On Wed, 18 May 2022, Geliang Tang wrote:
+> 
+>> Move macro MPTCPOPT_HMAC_LEN definition from net/mptcp/protocol.h to
+>> include/net/mptcp.h.
+>>
+>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> 
+> This one's fine for the mptcp tree (will upstream to net-next):
+> 
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Signed-off-by: Ossama Othman <ossama.othman@intel.com>
----
- include/uapi/linux/mptcp.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Thank you for the patch and the review!
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 921963589904..dfe19bf13f4c 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -2,16 +2,17 @@
- #ifndef _UAPI_MPTCP_H
- #define _UAPI_MPTCP_H
- 
-+#ifndef __KERNEL__
-+#include <netinet/in.h>		/* for sockaddr_in and sockaddr_in6	*/
-+#include <sys/socket.h>		/* for struct sockaddr			*/
-+#endif
-+
- #include <linux/const.h>
- #include <linux/types.h>
- #include <linux/in.h>		/* for sockaddr_in			*/
- #include <linux/in6.h>		/* for sockaddr_in6			*/
- #include <linux/socket.h>	/* for sockaddr_storage and sa_family	*/
- 
--#ifndef __KERNEL__
--#include <sys/socket.h>		/* for struct sockaddr			*/
--#endif
--
- #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
- #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
- #define MPTCP_SUBFLOW_FLAG_JOIN_REM		_BITUL(2)
+Now in our tree (feat. for net-next) with Mat's RvB tag:
+
+New patches for t/upstream:
+
+- e4afdbb036ca: mptcp: move MPTCPOPT_HMAC_LEN to net/mptcp.h
+
+- Results: 086d4a4a0f34..52d9427a77d9 (export)
+
+Builds and tests are now in progress:
+
+
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220519T160645
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-2.34.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
