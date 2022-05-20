@@ -1,95 +1,121 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1CB7E
-	for <mptcp@lists.linux.dev>; Fri, 20 May 2022 15:20:13 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id f2so11973550wrc.0
-        for <mptcp@lists.linux.dev>; Fri, 20 May 2022 08:20:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DCA7E
+	for <mptcp@lists.linux.dev>; Fri, 20 May 2022 22:46:33 +0000 (UTC)
+Received: by mail-vs1-f43.google.com with SMTP id i186so9671182vsc.9
+        for <mptcp@lists.linux.dev>; Fri, 20 May 2022 15:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=RyFUxt9z62+UdCVduPZXeTSjVRgbARkRsKGv3BU8HMM=;
-        b=0/NC5UvgVXhs4NkPJWzfDhkPN0S+nKgRxQF3uT1hgXtnx0/eIG7U4WhhIedJMuXtH5
-         lvqOLb4Mj2IiJA5LdY18P3dyAZZIfvbhmdEvO7CH1G9V5pvUy/w6YhKv5GYOMkqYkmlv
-         5g9VKkuuKHujLL1pIK+6KMJbLFL2af9SsJs6ce9+t8pQxruDLlVoh2nDh6fqhQr/L9Dl
-         IjcL/uRItKmpNJK3vmucMDDaPPVM+RDYq3FBoYqfp9PXr3OBN83eCgcmpZBcfUqcm+7S
-         WVEnvOzJ6aF/1Z34Evida+0fw7mNFRHhpWB24DKlix4Ou/nM5qOKEDkVdXt2NzJqOsRE
-         VvGw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5pQeUb7i2aQrMCTFP4sfEtDtoSYxOjDxSh8e8T9nS1E=;
+        b=L3x6/NW1KmjyeV38jecoTyoSPtHQaXXxld5nI5ziNWGeMDmOuzG8gyeiR5OidJyR3r
+         8HpYxb/QGZAC6BHmf8HtkBI3YA6VWOoxBvg0LzNDtqgxaSCQ63mlnoJSMXlhVCP/O30k
+         1xyQ4xMW74V2jTNALUiqUtfcsAeE6tjaFnDgsiw1JkLLA7t6+00Hg4RDEkfmHsKGC2/V
+         q7MZTNjmnGdc7t+qtUdI04hJ5JIOCqBhrORl5bOMJ5OzUwlaL0K0Wcp9vtYav4hhLnms
+         xHnHZ/v6pFwI+bI0gRcpPniT2l9Ixnfiji1lstMTybByURvjkhasLrUpuoLM0DW02sBg
+         +1Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=RyFUxt9z62+UdCVduPZXeTSjVRgbARkRsKGv3BU8HMM=;
-        b=cUPnzOLrkfK4VdsSFn5e5YA9dKh9fEWIfV4bWqWjXF1LjncXNQViRIjI4caqwsKKi1
-         l+MPShF4nV6eAz/mxPfWkkPgK4j4cKeKy83imQhO7as6g22JAIci6teOw7h2RLgyk8Bj
-         cmiETprqAi6mLkvf+hrT0iAyGwZ+qTUuhXPDN/ni6xy0XajvPhmdy8Jutfg5drp513MD
-         202wAd7FpluETczTjg1zbgNH1mTm1VAlN7lzc/WERN2jX2RY+xTkLl9sswq8l1mB+XKV
-         DJrficOf7ks5egIPa33t6JwMeaAU1quCfHhkg7I/aP/X/7WA49qrGyAsoWCy/nvcZ5vD
-         +Fuw==
-X-Gm-Message-State: AOAM531wjzMxmsqkg375HYP7pvU0ZK/l2Ioo62Rjmu+pknuYB7iY4H4O
-	e81a6toq1l0dEA89O8NfovYcwzleZ3yAuw==
-X-Google-Smtp-Source: ABdhPJxEuDp9JQiz9w3iDsT9+MSD21+FNj4joqufT4Ep17PdW46IlBBGrjWXs+pvst1Gghh1ImnbZg==
-X-Received: by 2002:a5d:650f:0:b0:20d:77b:702b with SMTP id x15-20020a5d650f000000b0020d077b702bmr8824241wru.78.1653060011391;
-        Fri, 20 May 2022 08:20:11 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id d24-20020adf9b98000000b0020e617ccd10sm2765047wrc.59.2022.05.20.08.20.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 May 2022 08:20:11 -0700 (PDT)
-Message-ID: <e5d644c4-b190-412f-967a-8a79bfaf0f9b@tessares.net>
-Date: Fri, 20 May 2022 17:20:10 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5pQeUb7i2aQrMCTFP4sfEtDtoSYxOjDxSh8e8T9nS1E=;
+        b=0Gk2gz7q+A8bubQriA+iejnOmtV/9lAS7HZUmxl/ADyqGE27j13QpD+/Y/zXL3buEj
+         37hBoLYzJEb0XLtB6lAVwv78lSanW0Jm6bZfBxXRI4uCD2CTqrh6tE0QlVXRXvQ6pCvn
+         INFqzbi8hl7nHPS3s7U29jsk1UnUvI4wu2apOPcF/M+WJuwQ3+r/ixOOp3jB798M454L
+         nsq6XKgaFOpGgXpm5N0Def/V9MgLyHF5o1LrcowFYqcsc5NGjbY5BxVQbnyzXcH9EbEh
+         VI9YzILsyMWiYfsWDhAoF/iWg0WuQcQ6ppbln+ztUbqSMSDMn+GxmeML5Y46MrErZO6W
+         78OA==
+X-Gm-Message-State: AOAM533/Pz6636J1Euq1eToC7Y/imgBMT896feMq1SlXIXgb+DhG84wX
+	K8N7Nq/8F9hzw0/+xXNtqz7wH2aDU5DwPc1QZ1M=
+X-Google-Smtp-Source: ABdhPJyiaAtAdaUBzDp9yFdA6kuTy81xzJn/Z4v7Wfuy50rIkY0QXBW8+d0+xYs7kmFR1Mu1NCsSmgdujwsvLus5sTo=
+X-Received: by 2002:a05:6102:370a:b0:333:c0e7:77e8 with SMTP id
+ s10-20020a056102370a00b00333c0e777e8mr5497192vst.54.1653086792033; Fri, 20
+ May 2022 15:46:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH mptcp-next] mptcp: fix conflict with <netinet/in.h>
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Ossama Othman <ossama.othman@gmail.com>
-Cc: mptcp@lists.linux.dev, Ossama Othman <ossama.othman@intel.com>
-References: <20220519153929.214331-1-ossama.othman@intel.com>
- <f4baa4-81e6-21df-80a5-13eb15317559@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <f4baa4-81e6-21df-80a5-13eb15317559@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220519233016.105670-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220519233016.105670-1-mathew.j.martineau@linux.intel.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 20 May 2022 15:46:21 -0700
+Message-ID: <CAEf4BzaZ07_VRN_z6xPogcx-YQuPQR8FCkC=K621r5oo1vBViQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 0/7] bpf: mptcp: Support for mptcp_sock
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ossama, Mat,
+On Thu, May 19, 2022 at 4:30 PM Mat Martineau
+<mathew.j.martineau@linux.intel.com> wrote:
+>
+> This patch set adds BPF access to mptcp_sock structures, along with
+> associated self tests. You may recognize some of the code from earlier
+> (https://lore.kernel.org/bpf/20200918121046.190240-6-nicolas.rybowski@tessares.net/)
+> but it has been reworked quite a bit.
+>
+>
+> v1 -> v2: Emit BTF type, add func_id checks in verifier.c and bpf_trace.c,
+> remove build check for CONFIG_BPF_JIT, add selftest check for CONFIG_MPTCP,
+> and add a patch to include CONFIG_IKCONFIG/CONFIG_IKCONFIG_PROC for the
+> BPF self tests.
+>
+> v2 -> v3: Access sysctl through the filesystem to work around CI use of
+> the more limited busybox sysctl command.
+>
+> v3 -> v4: Dropped special case kernel code for tcp_sock is_mptcp, use
+> existing bpf_tcp_helpers.h, and add check for 'ip mptcp monitor' support.
+>
+> v4 -> v5: Use BPF test skeleton, more consistent use of ASSERT macros,
+> drop some unnecessary parameters / checks, and use tracing to acquire
+> MPTCP token.
+>
+> Geliang Tang (6):
+>   bpf: add bpf_skc_to_mptcp_sock_proto
+>   selftests/bpf: Enable CONFIG_IKCONFIG_PROC in config
+>   selftests/bpf: test bpf_skc_to_mptcp_sock
+>   selftests/bpf: verify token of struct mptcp_sock
+>   selftests/bpf: verify ca_name of struct mptcp_sock
+>   selftests/bpf: verify first of struct mptcp_sock
+>
+> Nicolas Rybowski (1):
+>   selftests/bpf: add MPTCP test base
+>
+>  MAINTAINERS                                   |   1 +
+>  include/linux/bpf.h                           |   1 +
+>  include/linux/btf_ids.h                       |   3 +-
+>  include/net/mptcp.h                           |   6 +
+>  include/uapi/linux/bpf.h                      |   7 +
+>  kernel/bpf/verifier.c                         |   1 +
+>  kernel/trace/bpf_trace.c                      |   2 +
+>  net/core/filter.c                             |  18 ++
+>  net/mptcp/Makefile                            |   2 +
+>  net/mptcp/bpf.c                               |  21 +++
+>  scripts/bpf_doc.py                            |   2 +
+>  tools/include/uapi/linux/bpf.h                |   7 +
+>  tools/testing/selftests/bpf/bpf_tcp_helpers.h |  13 ++
+>  tools/testing/selftests/bpf/config            |   3 +
+>  tools/testing/selftests/bpf/network_helpers.c |  40 +++-
+>  tools/testing/selftests/bpf/network_helpers.h |   2 +
+>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 174 ++++++++++++++++++
+>  .../testing/selftests/bpf/progs/mptcp_sock.c  |  89 +++++++++
+>  18 files changed, 382 insertions(+), 10 deletions(-)
+>  create mode 100644 net/mptcp/bpf.c
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/mptcp.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sock.c
+>
+>
+> base-commit: 834650b50ed283d9d34a32b425d668256bf2e487
+> --
+> 2.36.1
+>
 
-On 20/05/2022 02:05, Mat Martineau wrote:
-> On Thu, 19 May 2022, Ossama Othman wrote:
-> 
->> Including <linux/mptcp.h> before the C library <netinet/in.h> header
->> causes symbol redefinition errors at compile-time due to duplicate
->> declarations and definitions in the <linux/in.h> header included by
->> <linux/mptcp.h>.
->>
->> Explicitly include <netinet/in.h> before <linux/in.h> in
->> <linux/mptcp.h> when __KERNEL__ is not defined so that the C library
->> compatibility logic in <linux/libc-compat.h> is enabled when including
->> <linux/mptcp.h> in user space code.
->>
->> Signed-off-by: Ossama Othman <ossama.othman@intel.com>
-> 
-> Looks good to me, I think this makes things easier for userspace.
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-Thank you for the patch and the review!
-
-Do you mind if I add this Fixes tag?
-
-Fixes: c11c5906bc0a ("mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support")
-
-Or do you prefer without it not to have it backported?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+I've added missing static for test_base and some other helper and
+replaced bzero and memcpy in BPF-side code with __builtin_memset and
+__builtin_memcpy (and dropped string.h include, it's not supposed to
+be used from BPF-side code). Applied to bpf-next, thanks.
