@@ -1,142 +1,100 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1621C33FC
-	for <mptcp@lists.linux.dev>; Thu, 19 May 2022 23:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A302F33
+	for <mptcp@lists.linux.dev>; Fri, 20 May 2022 00:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653003047; x=1684539047;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=la3wcnMhgWCUcLyaEaClOPhyG2MoAKhnFpoSTvrOpAQ=;
-  b=FZjp65JJeqFLWj5QUIr8hr8u21wgsUj6xBdlwdlQMoXHAb6NRyuvSqdw
-   y3W9srv9easxLR6MGdcJW5jKIsvMJlAPLBIDxzN7Wv4llvXRMMWwQiYzo
-   vZSE5pfKYyx5tZbAUJ81PwEzc+sWEZtEowgtnJlqHnDnOOLffa891Adwr
-   3D5af9kq+pbaK5zYzYhSeLfqcl7KbIhQhHEyscciuYn49Dkr/+MknETJv
-   VUNiZradHGWnfuaTS6+GqdNklLF1dIEuJqS0KHe4X7oHR5xotsLPOs9a4
-   WX8xWDlQ6hhNRVbRJNFasg9Gy2bI4Zk4kKlRiPca/L1ELJ3Ng3nnwLmH1
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10352"; a="272381771"
+  t=1653005115; x=1684541115;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IiJY2js+rPkuFaQOWH7HKCr7xno9b7c+PtvFgscgEmU=;
+  b=OCl1ck+zMcJ6LGAfPT4M1iC/x4nBoMf0Lr5M9YEYQDjO7sAMZ4LpTNht
+   He6AtujYL8DIlnYaA+HJz1/E9FBg6y0hEVvslsmI9wlzUCjowGqD/PI3N
+   hwGKc7AHcERQBcCiKc6r/bbYryoMC+06Yiz+W4y1J+v/BaCtibU7/6sdW
+   H7GpLksohaANte5f2iuCiH0Aud41mUgDuUrw6i96kcjMTza715on+QtST
+   Q5s5wvOEQkzmzshnhkCrMfMxgDX8C+TOsHGw3oeyLpQ57rHbDT8ApH/c4
+   VRV3m8jZDqrmfIGeGRbYultpr9Fu52J6sQQIi+GJKHqw441DGfcBsTqFv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10352"; a="333049064"
 X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
-   d="scan'208";a="272381771"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 16:30:22 -0700
+   d="scan'208";a="333049064"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 17:05:15 -0700
 X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
-   d="scan'208";a="570491205"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.252.132.179])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 16:30:22 -0700
+   d="scan'208";a="575903567"
+Received: from camcconn-mobl1.amr.corp.intel.com ([10.255.229.130])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 17:05:14 -0700
+Date: Thu, 19 May 2022 17:05:08 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org,
-	bpf@vger.kernel.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	mptcp@lists.linux.dev,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH bpf-next v5 7/7] selftests/bpf: verify first of struct mptcp_sock
-Date: Thu, 19 May 2022 16:30:16 -0700
-Message-Id: <20220519233016.105670-8-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220519233016.105670-1-mathew.j.martineau@linux.intel.com>
-References: <20220519233016.105670-1-mathew.j.martineau@linux.intel.com>
+To: Ossama Othman <ossama.othman@gmail.com>
+cc: mptcp@lists.linux.dev, Ossama Othman <ossama.othman@intel.com>
+Subject: Re: [PATCH mptcp-next] mptcp: fix conflict with <netinet/in.h>
+In-Reply-To: <20220519153929.214331-1-ossama.othman@intel.com>
+Message-ID: <f4baa4-81e6-21df-80a5-13eb15317559@linux.intel.com>
+References: <20220519153929.214331-1-ossama.othman@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Geliang Tang <geliang.tang@suse.com>
+On Thu, 19 May 2022, Ossama Othman wrote:
 
-This patch verifies the 'first' struct member of struct mptcp_sock, which
-points to the first subflow of msk. Save 'sk' in mptcp_storage, and verify
-it with 'first' in verify_msk().
+> Including <linux/mptcp.h> before the C library <netinet/in.h> header
+> causes symbol redefinition errors at compile-time due to duplicate
+> declarations and definitions in the <linux/in.h> header included by
+> <linux/mptcp.h>.
+>
+> Explicitly include <netinet/in.h> before <linux/in.h> in
+> <linux/mptcp.h> when __KERNEL__ is not defined so that the C library
+> compatibility logic in <linux/libc-compat.h> is enabled when including
+> <linux/mptcp.h> in user space code.
+>
+> Signed-off-by: Ossama Othman <ossama.othman@intel.com>
 
-v5:
- - Use ASSERT_EQ() instead of a manual comparison + log (Andrii).
+Looks good to me, I think this makes things easier for userspace.
 
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- tools/testing/selftests/bpf/bpf_tcp_helpers.h  | 1 +
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 5 +++++
- tools/testing/selftests/bpf/progs/mptcp_sock.c | 5 +++++
- 3 files changed, 11 insertions(+)
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-index c38c66d5c1e6..82a7c9de95f9 100644
---- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-+++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-@@ -234,6 +234,7 @@ struct mptcp_sock {
- 	struct inet_connection_sock	sk;
- 
- 	__u32		token;
-+	struct sock	*first;
- 	char		ca_name[TCP_CA_NAME_MAX];
- } __attribute__((preserve_access_index));
- 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 17ad1cb07339..257a8668ad40 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -14,7 +14,9 @@
- struct mptcp_storage {
- 	__u32 invoked;
- 	__u32 is_mptcp;
-+	struct sock *sk;
- 	__u32 token;
-+	struct sock *first;
- 	char ca_name[TCP_CA_NAME_MAX];
- };
- 
-@@ -80,6 +82,9 @@ static int verify_msk(int map_fd, int client_fd, __u32 token)
- 	if (!ASSERT_EQ(val.token, token, "unexpected token"))
- 		err++;
- 
-+	if (!ASSERT_EQ(val.first, val.sk, "unexpected first"))
-+		err++;
-+
- 	if (!ASSERT_STRNEQ(val.ca_name, ca_name, TCP_CA_NAME_MAX, "unexpected ca_name"))
- 		err++;
- 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_sock.c b/tools/testing/selftests/bpf/progs/mptcp_sock.c
-index 6a78e7b754a8..f638cb876424 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_sock.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_sock.c
-@@ -13,7 +13,9 @@ __u32 token = 0;
- struct mptcp_storage {
- 	__u32 invoked;
- 	__u32 is_mptcp;
-+	struct sock *sk;
- 	__u32 token;
-+	struct sock *first;
- 	char ca_name[TCP_CA_NAME_MAX];
- };
- 
-@@ -54,6 +56,7 @@ int _sockops(struct bpf_sock_ops *ctx)
- 
- 		storage->token = 0;
- 		bzero(storage->ca_name, TCP_CA_NAME_MAX);
-+		storage->first = NULL;
- 	} else {
- 		msk = bpf_skc_to_mptcp_sock(sk);
- 		if (!msk)
-@@ -66,9 +69,11 @@ int _sockops(struct bpf_sock_ops *ctx)
- 
- 		storage->token = msk->token;
- 		memcpy(storage->ca_name, msk->ca_name, TCP_CA_NAME_MAX);
-+		storage->first = msk->first;
- 	}
- 	storage->invoked++;
- 	storage->is_mptcp = is_mptcp;
-+	storage->sk = (struct sock *)sk;
- 
- 	return 1;
- }
--- 
-2.36.1
+> ---
+> include/uapi/linux/mptcp.h | 9 +++++----
+> 1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index 921963589904..dfe19bf13f4c 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -2,16 +2,17 @@
+> #ifndef _UAPI_MPTCP_H
+> #define _UAPI_MPTCP_H
+>
+> +#ifndef __KERNEL__
+> +#include <netinet/in.h>		/* for sockaddr_in and sockaddr_in6	*/
+> +#include <sys/socket.h>		/* for struct sockaddr			*/
+> +#endif
+> +
+> #include <linux/const.h>
+> #include <linux/types.h>
+> #include <linux/in.h>		/* for sockaddr_in			*/
+> #include <linux/in6.h>		/* for sockaddr_in6			*/
+> #include <linux/socket.h>	/* for sockaddr_storage and sa_family	*/
+>
+> -#ifndef __KERNEL__
+> -#include <sys/socket.h>		/* for struct sockaddr			*/
+> -#endif
+> -
+> #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
+> #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
+> #define MPTCP_SUBFLOW_FLAG_JOIN_REM		_BITUL(2)
+> -- 
+> 2.34.1
+>
+>
+>
 
+--
+Mat Martineau
+Intel
