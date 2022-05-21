@@ -1,42 +1,39 @@
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE157E
-	for <mptcp@lists.linux.dev>; Sat, 21 May 2022 00:02:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085CE7E
+	for <mptcp@lists.linux.dev>; Sat, 21 May 2022 00:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653091321; x=1684627321;
+  t=1653092320; x=1684628320;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=AWk5EzpwQakMCN7K4ikJj1LOGHAGUToZe4PbLyD2PRk=;
-  b=RFIAipUcEKSVSJ6nx3FKiDFyLUuPa37p61lwdaGHELRCakOd+mzQdlKZ
-   0kbAGNaVF8kBPrsWy9drhnTQ1FseMGkCCVjC44AqPCktAvZcK+92sMHxE
-   FhFx57GQYf5ou1R7zFmE9TFVnssBU1Z2MSfOxyWEgfitMgTqZCelQ//5f
-   qxRgBmHKTZ22HcW0qJfp3+41u9ezBM7BQIMx0zXFBiogB5rlVyTY4U1SJ
-   ClokVJ2g3QcnBhQEjKw9YheNJgi9cW1y43rtptFWj9EUG8hFbCUFpNAfX
-   0aCAUsA3SNoXu61sM2PXeuzUTttKArYweQb8Bc4Ej+y+7O7U1mhrcoE+b
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10353"; a="260359166"
+  bh=176zx5fBs0ogsyZSc6kCZQHDskY6rmR/x9XN3xJtc44=;
+  b=OtxRMgg5LQty9vkdYYLP3b2BhyYePx4bbc0WYczzQUmhOZkfFIhXlA4l
+   2U/t0xluXop8NhQeX3WsFMr/CCNKH0BgepCx6vF1TN4N9DzL92283njfE
+   yF/j33pUSK7iu7L6gkcLMOCCJdirk0vT8/ja2+kzo+SKPrwH6Be3toDiK
+   D8e/kWnLpe3t6NHbuHAkGC9WfSE+o7Eo5/D9aK0xujFbyeDsCxSK1cDN+
+   ofug3Babnn4YQ+gYHXQ8KoYzG5jiKcRVH8JyZb2j9/73r19blxeyirrvH
+   WBWSgGvXqbI+nv3veV8KjIaU15d3motAYvKhhmUTROs3FIU6MF84mU6jl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10353"; a="260362133"
 X-IronPort-AV: E=Sophos;i="5.91,240,1647327600"; 
-   d="scan'208";a="260359166"
+   d="scan'208";a="260362133"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2022 17:02:00 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2022 17:18:39 -0700
 X-IronPort-AV: E=Sophos;i="5.91,240,1647327600"; 
-   d="scan'208";a="524882953"
+   d="scan'208";a="524887982"
 Received: from ofirfata-mobl1.amr.corp.intel.com ([10.209.118.159])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2022 17:02:00 -0700
-Date: Fri, 20 May 2022 17:01:53 -0700 (PDT)
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2022 17:18:39 -0700
+Date: Fri, 20 May 2022 17:18:38 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-cc: Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-    Alexei Starovoitov <ast@kernel.org>, 
-    Daniel Borkmann <daniel@iogearbox.net>, 
-    Andrii Nakryiko <andrii@kernel.org>, Geliang Tang <geliang.tang@suse.com>, 
-    mptcp@lists.linux.dev
-Subject: Re: [PATCH bpf-next v5 0/7] bpf: mptcp: Support for mptcp_sock
-In-Reply-To: <CAEf4BzaZ07_VRN_z6xPogcx-YQuPQR8FCkC=K621r5oo1vBViQ@mail.gmail.com>
-Message-ID: <1043967d-395f-aa6-680-9ab7eec780d3@linux.intel.com>
-References: <20220519233016.105670-1-mathew.j.martineau@linux.intel.com> <CAEf4BzaZ07_VRN_z6xPogcx-YQuPQR8FCkC=K621r5oo1vBViQ@mail.gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Ossama Othman <ossama.othman@gmail.com>, mptcp@lists.linux.dev, 
+    Ossama Othman <ossama.othman@intel.com>
+Subject: Re: [PATCH mptcp-next] mptcp: fix conflict with <netinet/in.h>
+In-Reply-To: <e5d644c4-b190-412f-967a-8a79bfaf0f9b@tessares.net>
+Message-ID: <bd93114f-b693-cf60-9f42-f83543354499@linux.intel.com>
+References: <20220519153929.214331-1-ossama.othman@intel.com> <f4baa4-81e6-21df-80a5-13eb15317559@linux.intel.com> <e5d644c4-b190-412f-967a-8a79bfaf0f9b@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,79 +42,39 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, 20 May 2022, Andrii Nakryiko wrote:
+On Fri, 20 May 2022, Matthieu Baerts wrote:
 
-> On Thu, May 19, 2022 at 4:30 PM Mat Martineau
-> <mathew.j.martineau@linux.intel.com> wrote:
->>
->> This patch set adds BPF access to mptcp_sock structures, along with
->> associated self tests. You may recognize some of the code from earlier
->> (https://lore.kernel.org/bpf/20200918121046.190240-6-nicolas.rybowski@tessares.net/)
->> but it has been reworked quite a bit.
->>
->>
->> v1 -> v2: Emit BTF type, add func_id checks in verifier.c and bpf_trace.c,
->> remove build check for CONFIG_BPF_JIT, add selftest check for CONFIG_MPTCP,
->> and add a patch to include CONFIG_IKCONFIG/CONFIG_IKCONFIG_PROC for the
->> BPF self tests.
->>
->> v2 -> v3: Access sysctl through the filesystem to work around CI use of
->> the more limited busybox sysctl command.
->>
->> v3 -> v4: Dropped special case kernel code for tcp_sock is_mptcp, use
->> existing bpf_tcp_helpers.h, and add check for 'ip mptcp monitor' support.
->>
->> v4 -> v5: Use BPF test skeleton, more consistent use of ASSERT macros,
->> drop some unnecessary parameters / checks, and use tracing to acquire
->> MPTCP token.
->>
->> Geliang Tang (6):
->>   bpf: add bpf_skc_to_mptcp_sock_proto
->>   selftests/bpf: Enable CONFIG_IKCONFIG_PROC in config
->>   selftests/bpf: test bpf_skc_to_mptcp_sock
->>   selftests/bpf: verify token of struct mptcp_sock
->>   selftests/bpf: verify ca_name of struct mptcp_sock
->>   selftests/bpf: verify first of struct mptcp_sock
->>
->> Nicolas Rybowski (1):
->>   selftests/bpf: add MPTCP test base
->>
->>  MAINTAINERS                                   |   1 +
->>  include/linux/bpf.h                           |   1 +
->>  include/linux/btf_ids.h                       |   3 +-
->>  include/net/mptcp.h                           |   6 +
->>  include/uapi/linux/bpf.h                      |   7 +
->>  kernel/bpf/verifier.c                         |   1 +
->>  kernel/trace/bpf_trace.c                      |   2 +
->>  net/core/filter.c                             |  18 ++
->>  net/mptcp/Makefile                            |   2 +
->>  net/mptcp/bpf.c                               |  21 +++
->>  scripts/bpf_doc.py                            |   2 +
->>  tools/include/uapi/linux/bpf.h                |   7 +
->>  tools/testing/selftests/bpf/bpf_tcp_helpers.h |  13 ++
->>  tools/testing/selftests/bpf/config            |   3 +
->>  tools/testing/selftests/bpf/network_helpers.c |  40 +++-
->>  tools/testing/selftests/bpf/network_helpers.h |   2 +
->>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 174 ++++++++++++++++++
->>  .../testing/selftests/bpf/progs/mptcp_sock.c  |  89 +++++++++
->>  18 files changed, 382 insertions(+), 10 deletions(-)
->>  create mode 100644 net/mptcp/bpf.c
->>  create mode 100644 tools/testing/selftests/bpf/prog_tests/mptcp.c
->>  create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sock.c
->>
->>
->> base-commit: 834650b50ed283d9d34a32b425d668256bf2e487
->> --
->> 2.36.1
->>
+> Hi Ossama, Mat,
 >
-> I've added missing static for test_base and some other helper and
-> replaced bzero and memcpy in BPF-side code with __builtin_memset and
-> __builtin_memcpy (and dropped string.h include, it's not supposed to
-> be used from BPF-side code). Applied to bpf-next, thanks.
+> On 20/05/2022 02:05, Mat Martineau wrote:
+>> On Thu, 19 May 2022, Ossama Othman wrote:
+>>
+>>> Including <linux/mptcp.h> before the C library <netinet/in.h> header
+>>> causes symbol redefinition errors at compile-time due to duplicate
+>>> declarations and definitions in the <linux/in.h> header included by
+>>> <linux/mptcp.h>.
+>>>
+>>> Explicitly include <netinet/in.h> before <linux/in.h> in
+>>> <linux/mptcp.h> when __KERNEL__ is not defined so that the C library
+>>> compatibility logic in <linux/libc-compat.h> is enabled when including
+>>> <linux/mptcp.h> in user space code.
+>>>
+>>> Signed-off-by: Ossama Othman <ossama.othman@intel.com>
+>>
+>> Looks good to me, I think this makes things easier for userspace.
+>>
+>> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>
+> Thank you for the patch and the review!
+>
+> Do you mind if I add this Fixes tag?
+>
+> Fixes: c11c5906bc0a ("mptcp: add MPTCP_SUBFLOW_ADDRS getsockopt support")
+>
+> Or do you prefer without it not to have it backported?
 >
 
-Thanks for the fixups.
+Fixes tag is good, thanks! I will probably cc: stable on this one.
 
 --
 Mat Martineau
