@@ -1,41 +1,41 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7C53203
-	for <mptcp@lists.linux.dev>; Sun, 22 May 2022 18:47:13 +0000 (UTC)
-Received: by mail-pg1-f181.google.com with SMTP id t28so4319280pga.6
-        for <mptcp@lists.linux.dev>; Sun, 22 May 2022 11:47:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B3C3203
+	for <mptcp@lists.linux.dev>; Sun, 22 May 2022 18:59:12 +0000 (UTC)
+Received: by mail-pl1-f179.google.com with SMTP id c2so11330298plh.2
+        for <mptcp@lists.linux.dev>; Sun, 22 May 2022 11:59:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
          :content-transfer-encoding:date:mime-version;
-        bh=XheQJGPY7jgvIH3zCAWsrBknLAUXtO5033niy6GdjrE=;
-        b=CAhwr+6c16jn3Wm27W1PqKH6enCSmQQgUjSSOSM6SLKuE+kXL6N3fq2qGEZlyQzN56
-         1WTC7Vkkg2zZE3fushnRmZ5MGIelwLXNtKwiRzZ69zQA1KUc4cvVuyCZaCwO13zERSFu
-         Gcxo/aaEFUDmHgzFGoGSk+IV+xv05GCkncb5c3j106yxA+QPo4jEzbFh63+Q4YBzu051
-         Bn6EfudPHbtXdkLxijJiSDhFhrJpkeOYICWdTJTSbfn/T4ww3Cetru0LbtdzYZB4uVUe
-         Q5zE+Sutzt5LhaoQ8eJPpXdjmlaIxj7SppitXSfhmbdbJOcjPxDt4soUIbWH0L2/+yOT
-         M0Bw==
+        bh=BLiM61C41hniiDDprJJfhZm0Lf8dE1THggE/JF2LaGA=;
+        b=hmXSlCvJUlCI6eYUirb3Z3swrFJcdTKLHjL/bSgkMzvFui5e1ChySFWszZPU/NCo8X
+         cIznEbq6fYdbgyfluI24006Khhidfi5+3Gw/oscrxyKOmbf96ZqO238Cw3wY86uRNSWn
+         rm01LagfJPAFud+OcvR5xVsfsOqvT3cNa5F647H+oug0arvK/uXozlj4GvFPcrAB04tk
+         uLeHTJI3NlNguXDDV9TJ0qH9CLbvdAlEEaLxfJlyCEQBfrNI1t74T8QmWq3DX6kvYkMi
+         mpRAjieetZcCsef3V3S4UFCB1dyZ+ey5dPyWXlmkCzCvSo32a+iENwPgiaNctvNUN9BK
+         6/ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
          :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=XheQJGPY7jgvIH3zCAWsrBknLAUXtO5033niy6GdjrE=;
-        b=WiYqeJk4wiOQT6GsTCx5lRQyIesN6ZBNI2VB+R5+hU3pv7gJXj6bSdkZ3vM36kebrD
-         5oXwKAf+1Px2C+gv0ybTNkK8m2P1nVzhwf6flm/2hTiE70sVJKUQGZYJpimorzMHkykN
-         KEl/KymMN5Vfxa0fR85QoKemYtKS8N6oz9BqlDNpF7fE8TJdZg/Y014ya/czLE/7mShx
-         WHTqwbQz9F+wobs+VWRW5KjEWttXPWZFjDY9+o2NnJ4IrXoku69Ef2V5VFm62s8OMJLY
-         g7MvJlrXPkbtxCNYMr8fkb41zoNdiXF4X/Q2QHA9OFMBGovp9+jilyeiCKKbDVcBrdCP
-         G5tw==
-X-Gm-Message-State: AOAM532h5kTaaQEPpIztkL6cEioy3Lr4c6iAD71Mh4uPyqHrvaLn6gAv
-	K+ok+v8jsqVahToFxX+cWg==
-X-Google-Smtp-Source: ABdhPJy6W0vJVzvDh64Pq3Q3XAQSoP7Z2kWXeJCWHxKNruHzpSTbkOyqVnDdt6KPxLC+fAW26NJOCw==
-X-Received: by 2002:a05:6a00:198f:b0:50d:bf61:3de9 with SMTP id d15-20020a056a00198f00b0050dbf613de9mr20257194pfl.16.1653245232670;
-        Sun, 22 May 2022 11:47:12 -0700 (PDT)
-Received: from [127.0.0.1] ([20.237.176.196])
-        by smtp.gmail.com with ESMTPSA id n5-20020a170903110500b0015e8d4eb2b8sm3418263plh.258.2022.05.22.11.47.12
+        bh=BLiM61C41hniiDDprJJfhZm0Lf8dE1THggE/JF2LaGA=;
+        b=Er1gqfIxfHSp+9liamiU9hCTNU+RgXubN2QoYF5Nxkrtu9rsCirQsEO4h3/EHga6/d
+         H/oTb6OjFyklLu+QlB10Qu7cuYIS6Wn/FatMAIPiJq6+v4aPvWpfkXPp4+B80SCStV+Q
+         NjjKXTJe4HumIcgIkTDgn21ew6BJC3EiwDcnu15U4AkSZsYurl+jwfXUHV04T/lAEnIj
+         Il/JF341ZT6J83vJdC1uDb9Lm7NxBTNO3qYIQPBx7s6PSRHuzawiSbsqU8Lcltye4P6/
+         zE6ZlAVLXYYusbMT3ekV3ejC5b0fIGF+spbXmE6nx5DPRreFgmWWutJhT/eBntZGEwtQ
+         EoZw==
+X-Gm-Message-State: AOAM533rXcuptsk3gC+ce5ONC7VFrRqMPgh+HjkLW+6Z175H/w1wNrE+
+	1OVWmiFH46rAXTGpkI/3tGX2Xx0HWU2y/aw=
+X-Google-Smtp-Source: ABdhPJzbMkzi900Cj9w1eCnsWpDG3Km6kG8fCFgTf+WaV9kegpd4c5fT9VzKMMnqCIgJ+QjUCbmFBQ==
+X-Received: by 2002:a17:902:74c5:b0:161:5061:9d93 with SMTP id f5-20020a17090274c500b0016150619d93mr19323653plt.171.1653245951950;
+        Sun, 22 May 2022 11:59:11 -0700 (PDT)
+Received: from [127.0.0.1] ([20.106.125.164])
+        by smtp.gmail.com with ESMTPSA id p188-20020a62d0c5000000b0050dc762813csm3196150pfg.22.2022.05.22.11.59.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 May 2022 11:47:12 -0700 (PDT)
+        Sun, 22 May 2022 11:59:11 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Dmytro SHYTYI <dmytro@shytyi.net>
@@ -43,10 +43,10 @@ Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20220522183921.103526-1-dmytro@shytyi.net>
 References: <20220522183921.103526-1-dmytro@shytyi.net>
-Subject: Re: mptcp: Fast Open Mechanism: Build Failure
-Message-ID: <5819e9d9-372e-4511-3ce0-d317789fee28@gmail.com>
+Subject: Re: mptcp: Fast Open Mechanism: Tests Results
+Message-ID: <6e2935fb-fb7d-8746-9aef-5343658b0720@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 22 May 2022 18:47:11 +0000
+Date: Sun, 22 May 2022 18:59:11 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,24 +58,52 @@ Hi Dmytro,
 
 Thank you for your modifications, that's great!
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Our CI did some validations and here is its report:
 
-You can find more details there:
+- KVM Validation: Script error! =E2=9D=93:
+  - :
+  - Task: =
+https://cirrus-ci.com/task/6196328442101760
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6196328442101760/summary/summary.txt
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20220522183921.103526-1-dmytro@shytyi.net/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2367376398
+- KVM Validation: Script error! =E2=9D=93:
+  - :
+  - Task: =
+https://cirrus-ci.com/task/4788953558548480
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/4788953558548480/summary/summary.txt
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d3cb28a0acf1
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/d3cb28a0acf1
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
 MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Bot operated by Matthieu Baerts (Tessares)
