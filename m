@@ -1,194 +1,308 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8067E2592
-	for <mptcp@lists.linux.dev>; Mon, 23 May 2022 15:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1653319574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o2T7mVubO4wK3t8OKAo+M4lfxkoVeL3vDkH7Up6zTd0=;
-	b=gZ7sNYg4Xuh4S0ETf0FaqwloonkGFxrBIz6oQ4s001iqz6p3klJf4EcnsSJ8cXGuHa6jG9
-	fxSJ5GitRxkxJZYoaiJDyqrjvIiShv55SO/9evrMvw0FeYFHCq8wBq+48MvwXEdMlfhxcm
-	CIvSUjbAYYsuOaKEHhflNBFocfMavZY=
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
- (mail-he1eur04lp2057.outbound.protection.outlook.com [104.47.13.57]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-27-I3rZYC3vMlOI3PRPUTpHEw-2; Mon, 23 May 2022 17:26:13 +0200
-X-MC-Unique: I3rZYC3vMlOI3PRPUTpHEw-2
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oy9mKu2fIDQfLg+FRTGBfGjdupMrEVffOgbe3JCWNm57KCT+OIgi+sfX7HsSqZf3t9/985wHPNFtj5o5ozYmmX0XInWet7nR/dS54bLE7tBdS8m5pzu7bZ2MvcFMY707iahvaHYcchdfm18NIa5O/CTvntDN1Hs2A/1OBtz2TOVgwK1yNdIPzCKCxeKNHY9h3c3TaITYuaC429zxq64pjL0s0VRZFFqe3V+VagTtS+nojBtPREFt6WT/0FFv6PorEPDCQxHExQafOSf2DGlWmCyT/9YmuENVzwQKc9lCQuUdOrZ/kRABvFu4LNh+4w4aT2THM7LvmveytvFZGCKxNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DyIY/QEIFZgnefDkNKNmY8JMeoMtlAOCnZdxvWYV0vc=;
- b=JQUTgbdRV0gRSalTYPyxNIlb+F4TLAg4q5y0Xy8dWv9e7ovdAR3sLnZCrRjmUXMsre+P/C7ABIcZjjv29oqXT31dJI+KCG0juMFz9mhxIxkRQpJuSgrSWMQXSOvlUQ+pL6ZW1P6DiFs7E0dORn1pdYUVTkOJWa4V7aQTjclorP0WiBf3HvsJCYQ0V4uMNFo/o63fBxRXEXJYC9AtszA7T/oa3Ew2JA3Wjm/g+ZSVb1XVX+Pm1KsuIu0PMw4qBLert4CS9yxdcSjMj0KkLVRePnNQ0ouhsE0x0HD5+iZuqPO4yR/xDXy8mRX4mior8ePH63o0Z+dmL9DmYz6DsHy6zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM0PR04MB5681.eurprd04.prod.outlook.com (2603:10a6:208:12a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.22; Mon, 23 May
- 2022 15:26:07 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::5557:2d1:efed:96a6]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::5557:2d1:efed:96a6%7]) with mapi id 15.20.5273.022; Mon, 23 May 2022
- 15:26:07 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v15 2/2] selftests/bpf: add bpf_rr test
-Date: Mon, 23 May 2022 23:25:54 +0800
-Message-ID: <b2074f7736fbab5843560833ec010d844134d6ef.1653319279.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1653319279.git.geliang.tang@suse.com>
-References: <cover.1653319279.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: HKAPR04CA0017.apcprd04.prod.outlook.com
- (2603:1096:203:d0::27) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606E8258E
+	for <mptcp@lists.linux.dev>; Mon, 23 May 2022 15:33:15 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id o9so1347365wmd.0
+        for <mptcp@lists.linux.dev>; Mon, 23 May 2022 08:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=7adeKNg57M1LPVgwgZUncwHBz/pZxWbYTxneOXUMFvM=;
+        b=Ih5c8OTKtsQ+s1LqoWywEAPyZIC5TYxRMES2HSkuM2fqprQvkgoax509+TjXMKOQX8
+         WoTyAT7iSxHNQ+nh5Iv3fTHELm919ca9V6cPDh+RLGqLMklklGavZceBeQecnYQmMZZb
+         8lqSU169w3Rhzwis9Nt+4eNzQG1un3G+RuoWyQaBLHu4WqgA8TcQMiRPCp+x8KzKqYSr
+         b1wuuGXg8tGepvMA+NYP+DlwKmTLoucK822b5+Qz7g9ham7sGBffyQPEtFsEwCKFyNRI
+         VbToFgidIGgiaMUSulMVLQAnb41Jp5u23P3sAK2t5SN5OlksKq/lNe8ZC2575vBhd0n+
+         s8Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=7adeKNg57M1LPVgwgZUncwHBz/pZxWbYTxneOXUMFvM=;
+        b=Ct4J4zgoOoYQZ6FBTu0ul5z2704Ta2vjsOD4FSvksdRUsnqvLSzufjOV/cYrKbd4ji
+         TzxmnJW1LKhyudMw2RAlf57P7SLVDjxSDuCKZ81G2Z27/0GzbxwDK5B+2Gq6vY4CYhPz
+         jEYVZjec8IKiGhCUgMNY+g8A6W6HPHXSSPcnvhOZODRAw/lf7PIrSfSLK4B8tOmcrAyk
+         aMArHKqmKa7w8/ZIrBpg9om6YiGIaWL1tsV/PpAPGS+70QAn++KF9kYXY1rRdHHtgLvY
+         P0mly689goJdiQw9XZ9dQTfuEuupSU9mN+upalz4gO9b1RHjoAPIaaYlKJ0ivc7wi32l
+         Hckw==
+X-Gm-Message-State: AOAM530yJNp130dJD2AuMLNZo3MVaGftkDj219v/XszR+9LI+p6ca3ox
+	rlWtYrdHEnIF/S2V8EHD15WXWwwHtYxkj++r
+X-Google-Smtp-Source: ABdhPJx45ORa5y0AVZLrEP+kEX/jMWnE+oA+2BVreToWy/wGAmIgWGjpfNBG/w57mL1ayh8zjriBgA==
+X-Received: by 2002:a05:600c:5120:b0:394:6480:d595 with SMTP id o32-20020a05600c512000b003946480d595mr21398790wms.204.1653319994109;
+        Mon, 23 May 2022 08:33:14 -0700 (PDT)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id p6-20020a05600c358600b0039726cd3ae5sm11727218wmq.3.2022.05.23.08.33.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 May 2022 08:33:13 -0700 (PDT)
+Message-ID: <4668b747-35fa-d6b0-8390-24c0f8f62a71@tessares.net>
+Date: Mon, 23 May 2022 17:33:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a371dd25-d741-48d4-3e0d-08da3cd08ee4
-X-MS-TrafficTypeDiagnostic: AM0PR04MB5681:EE_
-X-Microsoft-Antispam-PRVS:
-	<AM0PR04MB56813CBE77D3E2AD08EE43E4F8D49@AM0PR04MB5681.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	iTXDkM6eSff3nqUrLJGXVk0vhRcmuU2TMufb4Nd6AMv2j8ztzOfuatLWjQUAe8RUmcdywAF4B6NnRO5ESCRasww5bKJOFTQ9WSn5JtQQ2EISA56UTtGnXhJww3pGiA4zHDITFv2fv5DuD9IttKm+rWW1owdtn0a8CfbMwYi3P1YwS5RnzpFW7uQb4xJWqlB0Uj7yFvD6oivz2Dh9lx8NkKzlrDmg4XoGF6SfF3ER5LpUthUPXLPb1AVypDfF6/fiI1DE7XdjebRXJQfjPB4SZAWal5dU3VN3a8Src79tiHP9Lg6ievi6leCiST+G1rjq4S5gBAO1YAicrVSM4Hx71vmf22NHpJaHKHjcpEBL7tobn8QATuCd7o6FmIHT3BL/Qio7Y/d/cqJdtGwKpgMMr8BbbYlwpY8hxXU1P+nu0KrGN6pxrVMijCf7grvl90h8KTE9+UIXhfu6kM1FSjrn2Ro4hpsuridwXk9twsYp1eJxPLDGxlD2o2tNT4eer0DGrB55fETrZV/taNh0vegi75FoOzawksWWP35AV20+JIAGpS6xrbGcKvQqd975/cKGTWe+yDp7uVJSpKxId5Po8fS6GveU7nAu3zg2dyT3207jfbLWEcebiMMWv1RwGh+myoNXwtdRNjmjFRbOQOjgf2eoFJoXnq4ZTxYLJf7qGgMj3O//11FI4cfn7jGsxrwe
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6506007)(4326008)(66476007)(8676002)(66946007)(66556008)(83380400001)(8936002)(508600001)(2906002)(6486002)(316002)(107886003)(86362001)(6512007)(38100700002)(44832011)(2616005)(186003)(6666004)(6916009)(26005)(36756003)(5660300002)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Sfyez7q7PPcFg1vdBD8unjh4LiFkB7wUfnZnJLOUjIS92kki0H6bHPfzI7jg?=
- =?us-ascii?Q?ujOD2k8SmqpVQzszSZdMG5fSveSuf4xUv7dLuD8TUj8f1jS7EiFHSunSoyBn?=
- =?us-ascii?Q?cqbmOOT7YfVHf/LKBIBBr3t48GUUsib5RdC9/DBYuzgCnVwrdLHcyKaMs7wz?=
- =?us-ascii?Q?rE0Ppy/2jmaMlhOPBTF4pX/Z6WAOPcZvIPgNE/n0rYfRjXjyO+VFz9ata8KR?=
- =?us-ascii?Q?Znnv1ysPGWp3l5kbeusV9QJS/iUExR2dZJB6I3zpzUC60KducLh/GpKPNZWh?=
- =?us-ascii?Q?FkjeEa47w2CyQVLZETEiZylxxSmKYTCnwqVfoP3OSKeOCaMHDo1hQL8NRB+Z?=
- =?us-ascii?Q?U+YmFPi2811J9OVwHDU0r4Xky3nm5L+m+RFMDEYz/wFyVjFDBj1BFymYub11?=
- =?us-ascii?Q?Va3+yMj3T7bxSjHzWg6O87eTu+j30w7+UnLnXFekBLzpi1uNk5N0D9OFmc4d?=
- =?us-ascii?Q?EEG6bLCFOksrugzZFaJiA+/Yx/XY0Xb92YW9YKYU0bt7jhLxsic8dT46xr3w?=
- =?us-ascii?Q?f0xFjfIknX+gKhCQklv2ULDBQ/FpISWN0JOO+WPBm+6OYrTNIhLzCRY0APMr?=
- =?us-ascii?Q?hQ7mbcSk0ekG25mK9T/uwDLMDg7IIuSSotfxYao9ODN3cpzW0CO3zFZW/jbM?=
- =?us-ascii?Q?+PqdDeCJcQ+KawF2MOGyn+BzN9gy35qoqx8Y6rs+Hb02zR5ITOXCZpg7ZbFf?=
- =?us-ascii?Q?8S63fzP+Yo5gL/YVF/+XEIcDHwGmgOl0X0FrtzWy8edJFRw2ZYe+bqV8byY1?=
- =?us-ascii?Q?90DdbY8Pl3ctOsdox3e0cgaJc5ehyiPjPtBXST64442Uy2Plgs+WB9tyJsVH?=
- =?us-ascii?Q?IAjl/uX4SIbRsGet+9dchiggQI7PD2qOvwGuEjA7XP89HKiLbfiv8bOi+N7j?=
- =?us-ascii?Q?wKGM2tH6zf2+ax/4X8rPuedBBxfkm1O7b6Z0a1dhcqWR/KHgeNB1A+wbQbYa?=
- =?us-ascii?Q?cGL3hANUw3b+qb+69PoPUV9hXjXflYUkcpFuIU7L4SrRNCNs+nYPybRfc358?=
- =?us-ascii?Q?KvOQ/g25qyrtqIat+EfCIIPWd5fssNCJCnWS/6a19iyCFniQyrkr0YBgMAG1?=
- =?us-ascii?Q?aEPbe3SixVKFVJeZ/WvkCj7xn1sfb9ZlZ5vaXof4o/+GGdEs4EwNGCb7qB2z?=
- =?us-ascii?Q?U4PQsQIa3WgUM+7s9kQDnjUrDtmqy1JadBC6Skg9eSPZF0Ohg3TZ3R2USpJ6?=
- =?us-ascii?Q?VkXdSFoibzDsOuFrW58MUq0u9GiQT9+Yb+MWmyMPOscS452Ft6EQo+2EGCfP?=
- =?us-ascii?Q?uIzMRiqlN8yF1LacAEd83qmxoOT4o04dminD2sQg4lIpXrF9vZ4N3a4x+aXe?=
- =?us-ascii?Q?xKKZUinjB4efALXCIobrjv5uEVbcr3riwg2oFBfMx5uLZiPkewKua7uSjOCb?=
- =?us-ascii?Q?9ojEElmOj0uGbYtmLgEEhjpjFtVKGjlzaBAynt6i85KSUcCl8krFuNpUWqWn?=
- =?us-ascii?Q?/p85IVCzCLNa08CrZYqZ4zdcnybnNmEzDGHRjxnsJVpJwrDM/rMgT/SB651W?=
- =?us-ascii?Q?K+FvIOiSsdVadxJ5yD6AcBrOUViS9sXaaxQMNAe3sowQxiH3WJ4GFP2Hieco?=
- =?us-ascii?Q?fE7TT0tAiz9eEnkZ1Oeocn0sosiNEA7zSt30lQ8hAkh2sg2JJzIcOrB+UyT8?=
- =?us-ascii?Q?j9TryPKD+JycGXlzQT7qtH/lmkVpemjunhGgcUPtqrvgKZbeFPJ2efcTAw3Y?=
- =?us-ascii?Q?HP0YnTiUT3zO3iUtCqtteX3CnZYaUubdaQ0BScLGJr5phgns4+/7LaA7/RNQ?=
- =?us-ascii?Q?PlNxdJh88Hn15Gwd+UA0OSrpy7rVBVY=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a371dd25-d741-48d4-3e0d-08da3cd08ee4
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2022 15:26:07.7658
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bt6g1fCqZhWqcf3t/VStJbZCRHsl9zYUeTcR6H1heJ28eIvqASzg2TNpQkPaP4lDDqmI/gJGZf1aGGgu5+EdLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5681
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: Patch "mptcp: strict local address ID selection" has been added
+ to the 5.17-stable tree
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20220523030625.741995-1-sashal@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220523030625.741995-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch adds the round-robin BPF MPTCP scheduler test. Use sysctl to
-set net.mptcp.scheduler to use this sched. Add a veth net device to
-simulate the multiple addresses case. Use 'ip mptcp endpoint' command to
-add this new endpoint to PM netlink.
+Hi Mat, Paolo,
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
+(- stable list and netdev maintainers, + mptcp list)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing=
-/selftests/bpf/prog_tests/mptcp.c
-index 9d37c509d3ce..1746b6488bc0 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -7,6 +7,7 @@
- #include "network_helpers.h"
- #include "mptcp_sock.skel.h"
- #include "mptcp_bpf_first.skel.h"
-+#include "mptcp_bpf_rr.skel.h"
-=20
- #ifndef TCP_CA_NAME_MAX
- #define TCP_CA_NAME_MAX	16
-@@ -279,10 +280,48 @@ static void test_first(void)
- 	mptcp_bpf_first__destroy(first_skel);
- }
-=20
-+static void test_rr(void)
-+{
-+	struct mptcp_bpf_rr *rr_skel;
-+	int server_fd, client_fd;
-+	struct bpf_link *link;
-+
-+	rr_skel =3D mptcp_bpf_rr__open_and_load();
-+	if (!ASSERT_OK_PTR(rr_skel, "bpf_rr__open_and_load"))
-+		return;
-+
-+	link =3D bpf_map__attach_struct_ops(rr_skel->maps.rr);
-+	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
-+		mptcp_bpf_rr__destroy(rr_skel);
-+		return;
-+	}
-+
-+	system("ip link add veth1 type veth");
-+	system("ip addr add 10.0.1.1/24 dev veth1");
-+	system("ip link set veth1 up");
-+	system("ip mptcp endpoint add 10.0.1.1 subflow");
-+	system("sysctl -qw net.mptcp.scheduler=3Dbpf_rr");
-+	server_fd =3D start_mptcp_server(AF_INET, NULL, 0, 0);
-+	client_fd =3D connect_to_fd(server_fd, 0);
-+
-+	send_data(server_fd, client_fd);
-+	ASSERT_OK(system("ss -MOenita | grep '10.0.1.1' | grep -q 'bytes_sent:'")=
-, "ss");
-+
-+	close(client_fd);
-+	close(server_fd);
-+	system("sysctl -qw net.mptcp.scheduler=3Ddefault");
-+	system("ip mptcp endpoint flush");
-+	system("ip link del veth1");
-+	bpf_link__destroy(link);
-+	mptcp_bpf_rr__destroy(rr_skel);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
- 		test_base();
- 	if (test__start_subtest("first"))
- 		test_first();
-+	if (test__start_subtest("rr"))
-+		test_rr();
- }
---=20
-2.34.1
+On 23/05/2022 05:06, Sasha Levin wrote:
+> This is a note to let you know that I've just added the patch titled
+> 
+>     mptcp: strict local address ID selection
+> 
+> to the 5.17-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>      mptcp-strict-local-address-id-selection.patch
+> and it can be found in the queue-5.17 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
 
+
+Do we want the patch below to be backported to stable?
+
+It think it is slightly changing the behaviour and we might not want it
+there, no?
+
+Cheers,
+Matt
+
+
+> commit dd874ab95a2df6fce00831bf16a06ed827639f6c
+> Author: Paolo Abeni <pabeni@redhat.com>
+> Date:   Mon Mar 7 12:44:37 2022 -0800
+> 
+>     mptcp: strict local address ID selection
+>     
+>     [ Upstream commit 4cf86ae84c718333928fd2d43168a1e359a28329 ]
+>     
+>     The address ID selection for MPJ subflows created in response
+>     to incoming ADD_ADDR option is currently unreliable: it happens
+>     at MPJ socket creation time, when the local address could be
+>     unknown.
+>     
+>     Additionally, if the no local endpoint is available for the local
+>     address, a new dummy endpoint is created, confusing the user-land.
+>     
+>     This change refactor the code to move the address ID selection inside
+>     the rebuild_header() helper, when the local address eventually
+>     selected by the route lookup is finally known. If the address used
+>     is not mapped by any endpoint - and thus can't be advertised/removed
+>     pick the id 0 instead of allocate a new endpoint.
+>     
+>     Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>     Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>     Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 4b5d795383cd..ec73bd4be0a8 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -83,16 +83,6 @@ static bool addresses_equal(const struct mptcp_addr_info *a,
+>  	return a->port == b->port;
+>  }
+>  
+> -static bool address_zero(const struct mptcp_addr_info *addr)
+> -{
+> -	struct mptcp_addr_info zero;
+> -
+> -	memset(&zero, 0, sizeof(zero));
+> -	zero.family = addr->family;
+> -
+> -	return addresses_equal(addr, &zero, true);
+> -}
+> -
+>  static void local_address(const struct sock_common *skc,
+>  			  struct mptcp_addr_info *addr)
+>  {
+> @@ -1011,9 +1001,6 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+>  	if (addresses_equal(&msk_local, &skc_local, false))
+>  		return 0;
+>  
+> -	if (address_zero(&skc_local))
+> -		return 0;
+> -
+>  	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+>  
+>  	rcu_read_lock();
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 014c9d88f947..cb90941840b1 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -117,6 +117,9 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
+>  	list_add(&subflow->node, &msk->conn_list);
+>  	sock_hold(ssock->sk);
+>  	subflow->request_mptcp = 1;
+> +
+> +	/* This is the first subflow, always with id 0 */
+> +	subflow->local_id_valid = 1;
+>  	mptcp_sock_graft(msk->first, sk->sk_socket);
+>  
+>  	return 0;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index aec767ee047a..e4413b3e50c2 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -442,7 +442,8 @@ struct mptcp_subflow_context {
+>  		rx_eof : 1,
+>  		can_ack : 1,        /* only after processing the remote a key */
+>  		disposable : 1,	    /* ctx can be free at ulp release time */
+> -		stale : 1;	    /* unable to snd/rcv data, do not use for xmit */
+> +		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
+> +		local_id_valid : 1; /* local_id is correctly initialized */
+>  	enum mptcp_data_avail data_avail;
+>  	u32	remote_nonce;
+>  	u64	thmac;
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 651f01d13191..e27574e9f969 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -483,6 +483,51 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+>  	mptcp_subflow_reset(sk);
+>  }
+>  
+> +static void subflow_set_local_id(struct mptcp_subflow_context *subflow, int local_id)
+> +{
+> +	subflow->local_id = local_id;
+> +	subflow->local_id_valid = 1;
+> +}
+> +
+> +static int subflow_chk_local_id(struct sock *sk)
+> +{
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +	int err;
+> +
+> +	if (likely(subflow->local_id_valid))
+> +		return 0;
+> +
+> +	err = mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	subflow_set_local_id(subflow, err);
+> +	return 0;
+> +}
+> +
+> +static int subflow_rebuild_header(struct sock *sk)
+> +{
+> +	int err = subflow_chk_local_id(sk);
+> +
+> +	if (unlikely(err < 0))
+> +		return err;
+> +
+> +	return inet_sk_rebuild_header(sk);
+> +}
+> +
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +static int subflow_v6_rebuild_header(struct sock *sk)
+> +{
+> +	int err = subflow_chk_local_id(sk);
+> +
+> +	if (unlikely(err < 0))
+> +		return err;
+> +
+> +	return inet6_sk_rebuild_header(sk);
+> +}
+> +#endif
+> +
+>  struct request_sock_ops mptcp_subflow_request_sock_ops;
+>  EXPORT_SYMBOL_GPL(mptcp_subflow_request_sock_ops);
+>  static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops;
+> @@ -1401,13 +1446,8 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+>  		get_random_bytes(&subflow->local_nonce, sizeof(u32));
+>  	} while (!subflow->local_nonce);
+>  
+> -	if (!local_id) {
+> -		err = mptcp_pm_get_local_id(msk, (struct sock_common *)ssk);
+> -		if (err < 0)
+> -			goto failed;
+> -
+> -		local_id = err;
+> -	}
+> +	if (local_id)
+> +		subflow_set_local_id(subflow, local_id);
+>  
+>  	mptcp_pm_get_flags_and_ifindex_by_id(sock_net(sk), local_id,
+>  					     &flags, &ifindex);
+> @@ -1432,7 +1472,6 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+>  	pr_debug("msk=%p remote_token=%u local_id=%d remote_id=%d", msk,
+>  		 remote_token, local_id, remote_id);
+>  	subflow->remote_token = remote_token;
+> -	subflow->local_id = local_id;
+>  	subflow->remote_id = remote_id;
+>  	subflow->request_join = 1;
+>  	subflow->request_bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+> @@ -1737,15 +1776,22 @@ static void subflow_ulp_clone(const struct request_sock *req,
+>  		new_ctx->token = subflow_req->token;
+>  		new_ctx->ssn_offset = subflow_req->ssn_offset;
+>  		new_ctx->idsn = subflow_req->idsn;
+> +
+> +		/* this is the first subflow, id is always 0 */
+> +		new_ctx->local_id_valid = 1;
+>  	} else if (subflow_req->mp_join) {
+>  		new_ctx->ssn_offset = subflow_req->ssn_offset;
+>  		new_ctx->mp_join = 1;
+>  		new_ctx->fully_established = 1;
+>  		new_ctx->backup = subflow_req->backup;
+> -		new_ctx->local_id = subflow_req->local_id;
+>  		new_ctx->remote_id = subflow_req->remote_id;
+>  		new_ctx->token = subflow_req->token;
+>  		new_ctx->thmac = subflow_req->thmac;
+> +
+> +		/* the subflow req id is valid, fetched via subflow_check_req()
+> +		 * and subflow_token_join_request()
+> +		 */
+> +		subflow_set_local_id(new_ctx, subflow_req->local_id);
+>  	}
+>  }
+>  
+> @@ -1798,6 +1844,7 @@ void __init mptcp_subflow_init(void)
+>  	subflow_specific.conn_request = subflow_v4_conn_request;
+>  	subflow_specific.syn_recv_sock = subflow_syn_recv_sock;
+>  	subflow_specific.sk_rx_dst_set = subflow_finish_connect;
+> +	subflow_specific.rebuild_header = subflow_rebuild_header;
+>  
+>  	tcp_prot_override = tcp_prot;
+>  	tcp_prot_override.release_cb = tcp_release_cb_override;
+> @@ -1810,6 +1857,7 @@ void __init mptcp_subflow_init(void)
+>  	subflow_v6_specific.conn_request = subflow_v6_conn_request;
+>  	subflow_v6_specific.syn_recv_sock = subflow_syn_recv_sock;
+>  	subflow_v6_specific.sk_rx_dst_set = subflow_finish_connect;
+> +	subflow_v6_specific.rebuild_header = subflow_v6_rebuild_header;
+>  
+>  	subflow_v6m_specific = subflow_v6_specific;
+>  	subflow_v6m_specific.queue_xmit = ipv4_specific.queue_xmit;
+> @@ -1817,6 +1865,7 @@ void __init mptcp_subflow_init(void)
+>  	subflow_v6m_specific.net_header_len = ipv4_specific.net_header_len;
+>  	subflow_v6m_specific.mtu_reduced = ipv4_specific.mtu_reduced;
+>  	subflow_v6m_specific.net_frag_header_len = 0;
+> +	subflow_v6m_specific.rebuild_header = subflow_rebuild_header;
+>  
+>  	tcpv6_prot_override = tcpv6_prot;
+>  	tcpv6_prot_override.release_cb = tcp_release_cb_override;
+
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
