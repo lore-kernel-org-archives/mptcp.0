@@ -1,39 +1,39 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9722F27
-	for <mptcp@lists.linux.dev>; Mon, 23 May 2022 18:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFB3629
+	for <mptcp@lists.linux.dev>; Tue, 24 May 2022 01:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653330054; x=1684866054;
+  t=1653354089; x=1684890089;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=FvMPSbf1RkFEXuW8wPohUwXosu3qibhi5AnHRlu7V/4=;
-  b=mmYYauXZsdeN0/WzErt5lrSKhQd5TAmmJTsjbamGwRt/9C65THPSTzlD
-   YQLRI04uXtESHQd66a9WKhii1EDGFNCUhMFNHXUbSJJ78gX2WoXTnC//U
-   RIkZUpIg7KIpw+wL7Xv+Iy5SBgzBoKwDo9v9eJOOj1+KtoZBeJVmA7lNZ
-   ZYv02Co+7HoMr6S1tA9JMLL09/wA9mv7CS418vpnpie4UhPyxJv2eCQdw
-   prQ2ZhHcY7XGHgH+3YLbaUnl9dabujcREWOySA6M/etuY/T4WVayXIrtU
-   V7MWHv7bIstGBU+xpGEbI9JjVujBbws04s5CxZCRqIlVco5pmo762MM3F
+  bh=HP3zqqWhvbtXutw7gQrOnJuYqxt1+F41P22toHsoxEk=;
+  b=hIRYAfm+xyi9IKWS3QFQ1LDVahA/+qhX3U6BXNcdysX0AOXc/jBhTHux
+   lF/nstfDBPYTpbQ0uM+Wu/XsDvNtvfFWBIbmH59W5mYNzhug+/3RfQ0OY
+   4lQ82Q4pECGvr3BMR3NBD8E3d+m4XziVmU5xqgzBC6WSn0FDpPLdcRZ3T
+   kawPPyQItIZVT+YWt1HTFrIIM3dz6yyd3m3jCFAVkorU6Q9Vof7e7C/zt
+   zunLwbWpaNjPy4CjB0pOGDYVcgaCIAyfZU82aYTGuPXP0pTP1+w+frdn9
+   FbXViVXm1H7WbAH4LECiXAZ+maNc3EsECHonX4vbU7LGbyd4BAMbCs5NS
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="336370509"
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="336370509"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 11:20:53 -0700
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="526070248"
+X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="253273606"
+X-IronPort-AV: E=Sophos;i="5.91,247,1647327600"; 
+   d="scan'208";a="253273606"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 18:01:10 -0700
+X-IronPort-AV: E=Sophos;i="5.91,247,1647327600"; 
+   d="scan'208";a="572383795"
 Received: from samuelal-mobl.amr.corp.intel.com ([10.212.199.128])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 11:20:53 -0700
-Date: Mon, 23 May 2022 11:20:46 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 18:01:10 -0700
+Date: Mon, 23 May 2022 18:01:03 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Paolo Abeni <pabeni@redhat.com>, MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: Patch "mptcp: strict local address ID selection" has been added
- to the 5.17-stable tree
-In-Reply-To: <a2af92c5-5258-cd5c-33e4-c745281422a5@tessares.net>
-Message-ID: <92bc25d-f6eb-e969-d45e-d7c1944b5dd@linux.intel.com>
-References: <20220523030625.741995-1-sashal@kernel.org> <4668b747-35fa-d6b0-8390-24c0f8f62a71@tessares.net> <a2af92c5-5258-cd5c-33e4-c745281422a5@tessares.net>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v2 3/5] Squash to "mptcp: add get_subflow
+ wrappers"
+In-Reply-To: <e0034f846f86901bd0c996bca6693c4036602750.1653305364.git.geliang.tang@suse.com>
+Message-ID: <294011b7-28d5-5549-c138-e6e674b18b9e@linux.intel.com>
+References: <cover.1653305364.git.geliang.tang@suse.com> <e0034f846f86901bd0c996bca6693c4036602750.1653305364.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,70 +42,142 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Mon, 23 May 2022, Matthieu Baerts wrote:
+On Mon, 23 May 2022, Geliang Tang wrote:
 
-> On 23/05/2022 17:33, Matthieu Baerts wrote:
->> Hi Mat, Paolo,
->>
->> (- stable list and netdev maintainers, + mptcp list)
->>
->> On 23/05/2022 05:06, Sasha Levin wrote:
->>> This is a note to let you know that I've just added the patch titled
->>>
->>>     mptcp: strict local address ID selection
->>>
->>> to the 5.17-stable tree which can be found at:
->>>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
->>>
->>> The filename of the patch is:
->>>      mptcp-strict-local-address-id-selection.patch
->>> and it can be found in the queue-5.17 subdirectory.
->>>
->>> If you, or anyone else, feels it should not be added to the stable tree,
->>> please let <stable@vger.kernel.org> know about it.
->>
->>
->> Do we want the patch below to be backported to stable?
->>
->> It think it is slightly changing the behaviour and we might not want it
->> there, no?
+> Please update the commit log:
 >
-> (...)
+> '''
+> This patch defines two new wrappers mptcp_sched_get_send() and
+> mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in them.
+> Use them instead of using mptcp_subflow_get_send() or
+> mptcp_subflow_get_retrans() directly.
 >
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index aec767ee047a..e4413b3e50c2 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>> @@ -442,7 +442,8 @@ struct mptcp_subflow_context {
->>>  		rx_eof : 1,
->>>  		can_ack : 1,        /* only after processing the remote a key */
->>>  		disposable : 1,	    /* ctx can be free at ulp release time */
->>> -		stale : 1;	    /* unable to snd/rcv data, do not use for xmit */
->>> +		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
->>> +		local_id_valid : 1; /* local_id is correctly initialized */
+> Set the subflow pointers array in struct mptcp_sched_data before invoking
+> get_subflow(), then it can be used in get_subflow() in the BPF contexts.
 >
-> I guess the reason this patch has been added to the stable queue is
-> because this patch adds 'local_id_valid' element here in
-> 'mptcp_subflow_context' structure.
+> Get the return bitmap of get_subflow() and test which subflow or subflows
+> are picked by the scheduler.
+> '''
 >
-> If you look at "mptcp: Do TCP fallback on early DSS checksum failure"
-> patch, Mat added 'valid_csum_seen' just after 'local_id_valid'.
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/sched.c | 47 +++++++++++++++++++++++++++++++++++++++--------
+> 1 file changed, 39 insertions(+), 8 deletions(-)
 >
-> If we don't want  "mptcp: strict local address ID selection" to be
-> backported, we can probably easily resolve the conflict and send a new
-> version adding 'valid_csum_seen' just after 'stale'.
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 3ceb721e6489..0ef805c489ab 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -91,8 +91,19 @@ void mptcp_release_sched(struct mptcp_sock *msk)
+> static int mptcp_sched_data_init(struct mptcp_sock *msk,
+> 				 struct mptcp_sched_data *data)
+> {
+> -	data->sock = NULL;
+> -	data->call_again = 0;
+> +	struct mptcp_subflow_context *subflow;
+> +	int i = 0;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		if (i == MPTCP_SUBFLOWS_MAX) {
+> +			pr_warn_once("too many subflows");
+> +			break;
+> +		}
+> +		data->contexts[i++] = subflow;
+> +	}
+> +
+> +	for (; i < MPTCP_SUBFLOWS_MAX; i++)
+> +		data->contexts[i++] = NULL;
 >
+> 	return 0;
+> }
+> @@ -100,6 +111,9 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
+> struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
+> {
+> 	struct mptcp_sched_data data;
+> +	struct sock *ssk = NULL;
+> +	unsigned long bitmap;
+> +	int i;
+>
+> 	sock_owned_by_me((struct sock *)msk);
+>
+> @@ -114,15 +128,25 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
+> 		return mptcp_subflow_get_send(msk);
+>
+> 	mptcp_sched_data_init(msk, &data);
+> -	msk->sched->get_subflow(msk, false, &data);
+> +	bitmap = msk->sched->get_subflow(msk, false, &data);
+>
+> -	msk->last_snd = data.sock;
+> -	return data.sock;
+> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
+> +		if (test_bit(i, &bitmap) && data.contexts[i]) {
+> +			ssk = data.contexts[i]->tcp_sock;
+> +			msk->last_snd = ssk;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ssk;
 
-Like Paolo, I don't have a strong preference - but since the dependency is 
-only because of diff context (not because of any actual functionality) the 
-choice seems less clear!
+The commit that this gets squashed too also ignores call_again, so is this 
+code that just returns the ssk for the first bit in the bitmap also 
+placeholder code?
 
-I'm not aware of any negative impacts from "mptcp: strict local address ID 
-selection", so I lean in Paolo's direction to let -stable cherry-pick the 
-"extra" commit to make the stable process easier.
 
-I'll try running the self tests on 5.15 and 5.17 -stable with these 
-commits and see if there is any problem there.
+It also seems like correlate the bitmap bits with the data.contexts array 
+makes the bitmap require extra work. What do you think about using an 
+array instead, like:
+
+struct mptcp_sched_data {
+        struct mptcp_subflow_context *context;
+        bool is_scheduled;
+};
+
+And passing an array of that struct to the BPF code? Then the is_scheduled 
+flag could be set for the corresponding subflow.
+
+Do you think that array-based API would be clearer than the bitmap to 
+someone writing a BPF scheduler?
+
+
+- Mat
+
+
+> }
+>
+> struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
+> {
+> 	struct mptcp_sched_data data;
+> +	struct sock *ssk = NULL;
+> +	unsigned long bitmap;
+> +	int i;
+>
+> 	sock_owned_by_me((const struct sock *)msk);
+>
+> @@ -134,8 +158,15 @@ struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
+> 		return mptcp_subflow_get_retrans(msk);
+>
+> 	mptcp_sched_data_init(msk, &data);
+> -	msk->sched->get_subflow(msk, true, &data);
+> +	bitmap = msk->sched->get_subflow(msk, true, &data);
+> +
+> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
+> +		if (test_bit(i, &bitmap) && data.contexts[i]) {
+> +			ssk = data.contexts[i]->tcp_sock;
+> +			msk->last_snd = ssk;
+> +			break;
+> +		}
+> +	}
+>
+> -	msk->last_snd = data.sock;
+> -	return data.sock;
+> +	return ssk;
+> }
+> -- 
+> 2.34.1
+>
+>
+>
 
 --
 Mat Martineau
