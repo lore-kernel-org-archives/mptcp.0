@@ -1,39 +1,39 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFB3629
-	for <mptcp@lists.linux.dev>; Tue, 24 May 2022 01:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD7B629
+	for <mptcp@lists.linux.dev>; Tue, 24 May 2022 01:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653354089; x=1684890089;
+  t=1653354157; x=1684890157;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=HP3zqqWhvbtXutw7gQrOnJuYqxt1+F41P22toHsoxEk=;
-  b=hIRYAfm+xyi9IKWS3QFQ1LDVahA/+qhX3U6BXNcdysX0AOXc/jBhTHux
-   lF/nstfDBPYTpbQ0uM+Wu/XsDvNtvfFWBIbmH59W5mYNzhug+/3RfQ0OY
-   4lQ82Q4pECGvr3BMR3NBD8E3d+m4XziVmU5xqgzBC6WSn0FDpPLdcRZ3T
-   kawPPyQItIZVT+YWt1HTFrIIM3dz6yyd3m3jCFAVkorU6Q9Vof7e7C/zt
-   zunLwbWpaNjPy4CjB0pOGDYVcgaCIAyfZU82aYTGuPXP0pTP1+w+frdn9
-   FbXViVXm1H7WbAH4LECiXAZ+maNc3EsECHonX4vbU7LGbyd4BAMbCs5NS
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="253273606"
+  bh=dAUbU1ue3iAiNVy+OhOU+uTYL2lbvglYL6ySgRHCvDk=;
+  b=cVKBAjv1MqlSp48TCmdugkfA6DEhapxaTKP0I+ZUkLPv8/QGieHhxTWe
+   m0d2UH9lgoS8ZLe4HhP0wq62SzFAqQVXzgbqUhG6KJia1NTfxHeUM0gGW
+   yKlWdBzHRLOTUJ6p04JmYmI6PGho/foCuROnGXYWZQcrkUgO7KEVCvasG
+   KJ7Xb1wkrHHEflmrJ4KWwFp+Y+ZTwCGDiK0IhaJ/tEuUxLdPqE45KtLAe
+   7XI4jrzlElEFQHhsWtRnKR/HSIhpFgl+IKqtmv1bdz9hG3YKTE0WIu/Ta
+   KZ12bEjfvpvftM6zo38LQeagS0A8ppkq1EASMF6t2WPRT9yrRFoJ6sRfn
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="273393461"
 X-IronPort-AV: E=Sophos;i="5.91,247,1647327600"; 
-   d="scan'208";a="253273606"
+   d="scan'208";a="273393461"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 18:01:10 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 18:02:36 -0700
 X-IronPort-AV: E=Sophos;i="5.91,247,1647327600"; 
-   d="scan'208";a="572383795"
+   d="scan'208";a="572384171"
 Received: from samuelal-mobl.amr.corp.intel.com ([10.212.199.128])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 18:01:10 -0700
-Date: Mon, 23 May 2022 18:01:03 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 18:02:36 -0700
+Date: Mon, 23 May 2022 18:02:36 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 3/5] Squash to "mptcp: add get_subflow
- wrappers"
-In-Reply-To: <e0034f846f86901bd0c996bca6693c4036602750.1653305364.git.geliang.tang@suse.com>
-Message-ID: <294011b7-28d5-5549-c138-e6e674b18b9e@linux.intel.com>
-References: <cover.1653305364.git.geliang.tang@suse.com> <e0034f846f86901bd0c996bca6693c4036602750.1653305364.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v2 5/5] Squash to "selftests/bpf: add bpf_first
+ scheduler"
+In-Reply-To: <94abb5c4207ee3fc0827c77816648ad37dccf5d0.1653305364.git.geliang.tang@suse.com>
+Message-ID: <b475a6e4-c734-e78c-bf90-19601686aac6@linux.intel.com>
+References: <cover.1653305364.git.geliang.tang@suse.com> <94abb5c4207ee3fc0827c77816648ad37dccf5d0.1653305364.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,135 +44,63 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Mon, 23 May 2022, Geliang Tang wrote:
 
-> Please update the commit log:
->
-> '''
-> This patch defines two new wrappers mptcp_sched_get_send() and
-> mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in them.
-> Use them instead of using mptcp_subflow_get_send() or
-> mptcp_subflow_get_retrans() directly.
->
-> Set the subflow pointers array in struct mptcp_sched_data before invoking
-> get_subflow(), then it can be used in get_subflow() in the BPF contexts.
->
-> Get the return bitmap of get_subflow() and test which subflow or subflows
-> are picked by the scheduler.
-> '''
+> Add set_bit() helper and use new get_subflow API.
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> net/mptcp/sched.c | 47 +++++++++++++++++++++++++++++++++++++++--------
-> 1 file changed, 39 insertions(+), 8 deletions(-)
+> tools/testing/selftests/bpf/bpf_tcp_helpers.h       | 11 +++++++++++
+> tools/testing/selftests/bpf/progs/mptcp_bpf_first.c | 10 ++++++----
+> 2 files changed, 17 insertions(+), 4 deletions(-)
 >
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 3ceb721e6489..0ef805c489ab 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -91,8 +91,19 @@ void mptcp_release_sched(struct mptcp_sock *msk)
-> static int mptcp_sched_data_init(struct mptcp_sock *msk,
-> 				 struct mptcp_sched_data *data)
+> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> index cb3db7ea36b9..9c7d33e106a4 100644
+> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> @@ -260,4 +260,15 @@ struct mptcp_sock {
+> 	char		ca_name[TCP_CA_NAME_MAX];
+> } __attribute__((preserve_access_index));
+>
+> +#define _AC(X,Y)	(X##Y)
+> +#define UL(x)		(_AC(x, UL))
+> +
+> +static inline void set_bit(unsigned int nr, volatile unsigned long *addr)
+> +{
+> +        unsigned long *p = ((unsigned long *)addr) + (nr / sizeof(unsigned long));
+> +        unsigned long mask = UL(1) << (nr % sizeof(unsigned long));
+> +
+> +        *p  |= mask;
+> +}
+> +
+> #endif
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> index fd67b5f42964..e5dc53965642 100644
+> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> @@ -16,11 +16,13 @@ void BPF_PROG(mptcp_sched_first_release, const struct mptcp_sock *msk)
 > {
-> -	data->sock = NULL;
-> -	data->call_again = 0;
-> +	struct mptcp_subflow_context *subflow;
-> +	int i = 0;
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		if (i == MPTCP_SUBFLOWS_MAX) {
-> +			pr_warn_once("too many subflows");
-> +			break;
-> +		}
-> +		data->contexts[i++] = subflow;
-> +	}
-> +
-> +	for (; i < MPTCP_SUBFLOWS_MAX; i++)
-> +		data->contexts[i++] = NULL;
->
-> 	return 0;
 > }
-> @@ -100,6 +111,9 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
-> struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
+>
+> -void BPF_STRUCT_OPS(bpf_first_get_subflow, const struct mptcp_sock *msk,
+> -		    bool reinject, struct mptcp_sched_data *data)
+> +unsigned long BPF_STRUCT_OPS(bpf_first_get_subflow, const struct mptcp_sock *msk,
+> +			     bool reinject, struct mptcp_sched_data *data)
 > {
-> 	struct mptcp_sched_data data;
-> +	struct sock *ssk = NULL;
-> +	unsigned long bitmap;
-> +	int i;
->
-> 	sock_owned_by_me((struct sock *)msk);
->
-> @@ -114,15 +128,25 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
-> 		return mptcp_subflow_get_send(msk);
->
-> 	mptcp_sched_data_init(msk, &data);
-> -	msk->sched->get_subflow(msk, false, &data);
-> +	bitmap = msk->sched->get_subflow(msk, false, &data);
->
-> -	msk->last_snd = data.sock;
-> -	return data.sock;
-> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> +		if (test_bit(i, &bitmap) && data.contexts[i]) {
-> +			ssk = data.contexts[i]->tcp_sock;
-> +			msk->last_snd = ssk;
-> +			break;
-> +		}
-> +	}
+> -	data->sock = msk->first;
+> -	data->call_again = 0;
+> +	unsigned long bitmap = 0;
 > +
-> +	return ssk;
+> +	set_bit(0, &bitmap);
+> +	return bitmap;
 
-The commit that this gets squashed too also ignores call_again, so is this 
-code that just returns the ssk for the first bit in the bitmap also 
-placeholder code?
-
-
-It also seems like correlate the bitmap bits with the data.contexts array 
-makes the bitmap require extra work. What do you think about using an 
-array instead, like:
-
-struct mptcp_sched_data {
-        struct mptcp_subflow_context *context;
-        bool is_scheduled;
-};
-
-And passing an array of that struct to the BPF code? Then the is_scheduled 
-flag could be set for the corresponding subflow.
-
-Do you think that array-based API would be clearer than the bitmap to 
-someone writing a BPF scheduler?
-
+It might be more realistic to return the first non-backup subflow (or 
+first backup if there are only backup subflows). Do you think that would 
+be better as a replacement for this test or as an additional test?
 
 - Mat
 
-
 > }
 >
-> struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
-> {
-> 	struct mptcp_sched_data data;
-> +	struct sock *ssk = NULL;
-> +	unsigned long bitmap;
-> +	int i;
->
-> 	sock_owned_by_me((const struct sock *)msk);
->
-> @@ -134,8 +158,15 @@ struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
-> 		return mptcp_subflow_get_retrans(msk);
->
-> 	mptcp_sched_data_init(msk, &data);
-> -	msk->sched->get_subflow(msk, true, &data);
-> +	bitmap = msk->sched->get_subflow(msk, true, &data);
-> +
-> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> +		if (test_bit(i, &bitmap) && data.contexts[i]) {
-> +			ssk = data.contexts[i]->tcp_sock;
-> +			msk->last_snd = ssk;
-> +			break;
-> +		}
-> +	}
->
-> -	msk->last_snd = data.sock;
-> -	return data.sock;
-> +	return ssk;
-> }
+> SEC(".struct_ops")
 > -- 
 > 2.34.1
 >
