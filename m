@@ -1,747 +1,514 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200AF7C
-	for <mptcp@lists.linux.dev>; Thu, 26 May 2022 12:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1653567476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z7FyI/CKx86nNnowk99lSwpBLM5ZFFULNNiqqPY8gNc=;
-	b=BgfnDBsgfKZexC1iJJMaElG9UULqf3j1132kYrEucZ64O7aGGzz6NsoTcO8+U16QFKwxaZ
-	pE094afh99oxmdtk1/+cyd7+4gwNN3OkT6AaQQVgbU5hChKsSzHLdV32ZuRnVz4DGqEntC
-	X3vWF0bBu5L52W+31bmmKCzsxf/3s+k=
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur04lp2059.outbound.protection.outlook.com [104.47.14.59]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-6-awXnxH1IO--_weeM2zxUEw-1; Thu, 26 May 2022 14:17:54 +0200
-X-MC-Unique: awXnxH1IO--_weeM2zxUEw-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n5e8BaH7DaXZJxtnAKpKHQN4/5pVQv2SyIhZRqbN5JGYn1WIL0AaQMM8+jAQNZlPjZXEzyDpeFS3urTsc3owmisyEMxv7kngbeuEpebCgwN0tBqqLWhNJAS/lIZT2Z6Oy5deN/PuTBGSReCSPmzcTCbAGSPd5ZvGEekgxv94yt2KDr+uUzqZ/aoffD/OFVqRSDsHGtA+X6kpjIgELS27/gcKTM9Tw/VOWxXPUaDZFv3xSP3HL37oTjIL08x9KUK8PGyKVbX9L2G7HlKX/+Z4u8usyTemuIP6bcI2p8XqTfaqAAGxxF2jpJppf5i3Ruk60pa4eC4bn9uqaQEVMtGGkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z7FyI/CKx86nNnowk99lSwpBLM5ZFFULNNiqqPY8gNc=;
- b=SAz5qNs8vYSI0nm/JN55HMiVzV8y5Q2Pd8+PHoEmcrNgLl6JGZa7iuNT+L0gGQScQUd4bx+rYonmOy/AC3QAgbcr/Ko4mqPsxIvO1ij7I6eseKhYgWAGHbnx4efFlLiLQKj8HTny29P02R8hbufWPNKyu+nTXNKsUWCYVm1SSJoWX/bMoafBdx0UShkbbqmp6mkK835lMFrDm8JWCYIdqjjJNLpj38QBg7JXi/samk3LsPJbYtfh0XMCiUaXFs4CvVekoekzYm/YCuL7TVIx6IUhy3UDo+NP+Fv27Qzr2CNzO9+oLaFxoZTUXD/OgfhtbD3w25UYZZ1AmKjnSKqvWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM8PR04MB7299.eurprd04.prod.outlook.com (2603:10a6:20b:1d4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13; Thu, 26 May
- 2022 12:17:53 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::5557:2d1:efed:96a6]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::5557:2d1:efed:96a6%7]) with mapi id 15.20.5273.022; Thu, 26 May 2022
- 12:17:53 +0000
-Date: Thu, 26 May 2022 20:18:02 +0800
-From: Geliang Tang <geliang.tang@suse.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 3/5] Squash to "mptcp: add get_subflow
- wrappers"
-Message-ID: <20220526121659.GA2665@bogon.HOST>
-References: <cover.1653305364.git.geliang.tang@suse.com>
- <e0034f846f86901bd0c996bca6693c4036602750.1653305364.git.geliang.tang@suse.com>
- <294011b7-28d5-5549-c138-e6e674b18b9e@linux.intel.com>
-Content-Type: multipart/mixed; boundary="VrqPEDrXMn8OVzN4"
-Content-Disposition: inline
-In-Reply-To: <294011b7-28d5-5549-c138-e6e674b18b9e@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SGBP274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::22)
- To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542891875
+	for <mptcp@lists.linux.dev>; Thu, 26 May 2022 21:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653600768; x=1685136768;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jJzI3SKBGBeR+rstjIkht6Bil5rVirTOOoCfbK8vnfk=;
+  b=YY3Mb2hv0qxyn5kWZx6/E/EeX+6LW0eDdqsHF7IN6vtNnDSfa7kF7E5x
+   ql4UpiMNOiKaW11enL2v2GmdWb0qiFm+IvGyidgCOe5EAQV2Lf8sN3Phq
+   X2IhCiSx7Fsrgo9L+M7ER9B1CNzAYL1DR3dIob426YS5uzOWRU6OuCkii
+   PO3IdKJJyLMdEeJvkBfVuNnk0qutok4NRtRW1ZdX6Yl1G7V3MHNcOxDgN
+   I8MssrhrETxzFyLciNHdXmV7aZT90VY14wB9bmdGLo/AQ63yuDG2cr9VB
+   1eUCVKyJSsAC4C5/eqiHM4BfFcmbY3EPwQ4LXrMtbhFadhL4KJFq1t8pj
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10359"; a="334941687"
+X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
+   d="scan'208";a="334941687"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 14:32:47 -0700
+X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
+   d="scan'208";a="579064122"
+Received: from boyao-mobl2.amr.corp.intel.com ([10.251.4.60])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 14:32:46 -0700
+Date: Thu, 26 May 2022 14:32:39 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Dmytro SHYTYI <dmytro@shytyi.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [RFC PATCH mptcp-next v3] mptcp: Fast Open Mechanism
+In-Reply-To: <30709939-9ba2-c9f1-1a0-d63236f53d86@linux.intel.com>
+Message-ID: <c49dea5b-4ae0-f64d-759e-9c4fa9f75f8@linux.intel.com>
+References: <20220522183921.103526-1-dmytro@shytyi.net> <30709939-9ba2-c9f1-1a0-d63236f53d86@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2001c697-998b-42e6-098c-08da3f11c209
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7299:EE_
-X-Microsoft-Antispam-PRVS:
-	<AM8PR04MB7299A1C8BBDAB0B246F6BC32F8D99@AM8PR04MB7299.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ooY4TmAe/q2A75S/tzYEIrk8Q0uzTJf0tC4kZ32VUxqryTinVf4sjrhtE2xxZNPFfY1eL0YR/JjWRIJc9SuvxYgYbak+puQlRWK3l4asveMFFks1eImKMR1vzyVUAu+XWm+ZyyIa//1zya25pbPmAdI+tjH3A+9lw3c73za428kEKsMCGGE7EOI9j2E1RFLBvue8yTPL9ErMNljqc8yo95JQyvmWmvY1B76RxCk7cGV69J9dMYE5FjM2c3IWqgRiFhRgqVc5QU0m8jmkONUBXXRbbpt5sCgMlICBOPF1mEJaUqiCOnIN3Avwer5G07sWWg4EoPQV2SWXOLMkw9xLZZIBUJf3UIgaY7uGt617wi+d6kpK791HbNpfpC+PXwGFOh0jRgdb9XI7gJVrU1F9zvvXnDOyC+C5FQf7ivpzKe0Kt6Dma5q7fkm6HFif/XYmakj6gLFi25KyqscCqNTORD6xw2hxrJ98DhDkUDG8/WmkMVamvrwF9NC2SfR3P2vz2gL5PtU9VBjfyxLKn9vKRROvB95/PApwEkUWQFWvp0LqZpYanI32tFZLhZawe8/GspLiUJgl+dFl6gVP2exv7N0K5pVYm/hFLJ0xjKh1yu4rdlKeENSyJyjoz5WTie7DI4CvreBjRfWSvrgP+hRz6keRrM1poDVpwFXHL97DGQWCJ0UkJY0dW31Sm0WBtNYWxWG7vmTkd0/s6Q6VbCt/TMSa+YyReZPi7dRBqsnUk3c=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(9686003)(38100700002)(6506007)(44144004)(6512007)(44832011)(235185007)(36756003)(5660300002)(33656002)(2906002)(8936002)(66476007)(66946007)(66556008)(6916009)(86362001)(6486002)(316002)(4326008)(508600001)(6666004)(1076003)(186003)(83380400001)(21480400003)(8676002)(13296009)(2700100001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gG+18Y4ZSnEf/Y4lk0OhpqquTWjg4O/JrOGB5Ywt9DVnbQLJZgSDghTjwMjN?=
- =?us-ascii?Q?mK+1ztIISwHO4PDTS0iAKNrXDDio5WHizPyKfETEocA3kSbKD/0CAvJMDsB/?=
- =?us-ascii?Q?fHSRxUElPr98LNP7i5x+LmWUMo9FDQLGqsMFI/Ppz9z8v7EZzpSsHSU/2bQx?=
- =?us-ascii?Q?27W7fMqeKo+krt6bOrx5PcawnWbhYhkfJGphUOafFytr6+PjEPZ7vYNyXlJO?=
- =?us-ascii?Q?+i60lBLXCjN3c8quO6ZiUHiqFCvRVqdEy222dnE+F7haCnvskagUUJf0gBzX?=
- =?us-ascii?Q?lPOMFYS0pHNWQILhfsp5SPN5KnqsbQ18RQ+jCzXuIhNcJaYnjltYRszuLjAu?=
- =?us-ascii?Q?uAOcK1bGi2lOtij+LqsVpUqzB2VN0PNJRjoTj/lWk8enG9pi39/hCPwd9SH2?=
- =?us-ascii?Q?8ML5TXf7INxb5nAt9Goc4/5zRyE7QU6d1QIGQ2vlazEPbI7daNDpzyD1NGoP?=
- =?us-ascii?Q?6yG20T9I7w/W5S0lG3pZ3fu2QM7NOd9skNmeDBbdiMmSZ9DOqMSzlkVX6PqO?=
- =?us-ascii?Q?Em3ZS8Ci0hjURI3DB79wXVbjDfmDBHKuWhi3bymteD8eo5sh6bQEt4g9Kso+?=
- =?us-ascii?Q?YscFTwcjsonTdHm+ulEZCd4KHIQhPvOztmv5yFgaZNX1g1ZTk/qlJxKnwHvt?=
- =?us-ascii?Q?smoMcmETh93A8drH3GnzBdI7kKf7yo7MzZbdy5wqd6sZTRtLyN7hLCeGg4zf?=
- =?us-ascii?Q?NJpKz9iUgGHTvX8jyRBqKiXu7mkIkt2mwxRFPV16BT+bWLLjeylq9rg4e7ia?=
- =?us-ascii?Q?qu7/p9S96pf0tJlAmAMXMkULOe0/Vz0aoOuIN3cqeO6DkPyOMzmVl/pY/9cI?=
- =?us-ascii?Q?E69Pa3c4l85p1lJR+u/0Kfjdqj1PprgNo9eTmE50gee0KwnjQhXEg67lei2d?=
- =?us-ascii?Q?GxDWaS3LW3XOBMuUZh5ci1vfpfgyWVRB13DkgnyU0Xn2lT1jKbch8gp1bMJf?=
- =?us-ascii?Q?1h0S01tdL8QoSLny9K2lxhML3bFGLdbXP7VGNhB6DvoMLhAdW+eTUBEYtOFK?=
- =?us-ascii?Q?oZYrOnGm0cq0ZkrKJQUo6m76bcM9EddbtN7poUujr6nFGpOnF/facNwICp4b?=
- =?us-ascii?Q?Xmi+Z81xr3AG4oEkqmu3bnV4zU+fsca/EBaPVIhQjdRqQlwhCic8tX6YDUOW?=
- =?us-ascii?Q?RSknnMOE47G7a1PXOjeqk+Zev00j0BtsTTKMG9iqILwNrcWVTQ5tDsSK9QT5?=
- =?us-ascii?Q?z54I4mhKWk4xDVF0e3XWHQ9wxMoPJYWWAw6uZHMEj6KXmO0kvh3Ct3pXyqmH?=
- =?us-ascii?Q?NcRfs24Ae5s5jQVjO++5Yci32KPtECUq3hs9NEFru4pJP4oIzAGEBB+Q4Zfc?=
- =?us-ascii?Q?GZ+YkX6DbEUeJ3tz7qa4Y0Umltb42Vuy+3baHxqkCTlFADXbq+6+V5J5qfZu?=
- =?us-ascii?Q?bFU6hSmgwhqt9oNr/4QqTgMnEnLncghhllYN7+x9nyf8aExiNHGQWh/tfQgd?=
- =?us-ascii?Q?PNHmGhaJY8Jr24ezngBWcjluTz5eBl+0t4MVxvC5y6MJCvNa2oFrqJoNXYw2?=
- =?us-ascii?Q?Xrcnw66rg2GAFW175AgTF4Zsy55eoPhfox7IqMciZ6kgX/xubMgjxZSucIWf?=
- =?us-ascii?Q?eKXTOhKo18qOmkYyLao1ytLxE+P16JHsN7QNI4Yjwp6H6qlgP3l25GDkCr3/?=
- =?us-ascii?Q?IeytK/tGboFKgVW+XFmi6yYa32zw2Cgb+I08gkHGGA2KFkEAN0lM7VMa/PNq?=
- =?us-ascii?Q?aOmB+jEQIAH00rBdY0yY4MPreGnOM7twgnTxBWH5nOBYR3PeVUTscMlq49sQ?=
- =?us-ascii?Q?0Qfhu/dKL4kYVf/OLDiw2wI6n1txpBU=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2001c697-998b-42e6-098c-08da3f11c209
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2022 12:17:53.1837
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LTKQaVJUmJTWbGAn6dZ0600JtInvmqy8WeRDq1k+DPhY94VHD/RNfK6DNoz1IEvIxlAgmx6WJv+ov2gIfiygwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7299
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
---VrqPEDrXMn8OVzN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, 24 May 2022, Mat Martineau wrote:
 
-Hi Mat,
+>
+> On Sun, 22 May 2022, Dmytro SHYTYI wrote:
+>
+>> This set of patches will bring "Fast Open" Option support to MPTCP.
+>> The aim of Fast Open Mechanism is to eliminate one round trip
+>> time from a TCP conversation by allowing data to be included as
+>> part of the SYN segment that initiates the connection.
+>> 
+>> IETF RFC 8684: Appendix B.  TCP Fast Open and MPTCP.
+>> 
+>> [PATCH v3] includes "client-server" partial support for :
+>> 1. MPTCP cookie request from client.
+>> 2. MPTCP cookie offering from server.
+>> 3. MPTCP SYN+DATA+COOKIE from client.
+>> 4. subsequent write + read on the opened socket.
+>> 
+>> This patch is Work In Progress transitional draft. There was a pause
+>> in code development that was unpaused recently.
+>
+> Welcome back Dmytro.
+>
+>> Now this code is based
+>> on the top of mptcp-next branch. The option below will be modified in
+>> future inelligently, depending on socket type (TCP||MPTCP):
+>> *tcp_options ^= OPTION_TS
+>> You also might notice some of commented pieces of the upstream code -
+>> that (is probably not good) and was done to observe an
+>> expected behavior of MPTCP Fast Open mechanism. Any comments how
+>> to achive the same behavior of MPTCP_FO without commenting the related
+>> parts of the code are welcome.
+>
+> One step would be to split those commented out regions in to a separate 
+> commit, so they're at least separate from the other changes.
+>
+> Also, if you could trim out any extra whitespace changes (blank lines that 
+> were added or deleted), that makes it easier to review.
+>
+> I have some first-pass comments below. I'll have to learn more about fastopen 
+> before I can comment on the protocol specifics.
+>
+>> 
+>> Signed-off-by: Dmytro SHYTYI <dmytro@shytyi.net>
+>> ---
+>> include/net/mptcp.h     |  2 +-
+>> net/ipv4/tcp_fastopen.c |  4 +++
+>> net/ipv4/tcp_input.c    |  7 ++---
+>> net/ipv4/tcp_output.c   |  3 +--
+>> net/mptcp/options.c     |  8 ++++--
+>> net/mptcp/protocol.c    | 59 ++++++++++++++++++++++++++++++++++++++---
+>> net/mptcp/sockopt.c     | 41 ++++++++++++++++++++++++++++
+>> net/mptcp/subflow.c     |  9 ++++---
+>> 8 files changed, 118 insertions(+), 15 deletions(-)
+>> 
+>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+>> index 6456ea26e4c7..692197187af8 100644
+>> --- a/include/net/mptcp.h
+>> +++ b/include/net/mptcp.h
+>> @@ -139,7 +139,7 @@ void mptcp_space(const struct sock *ssk, int *space, 
+>> int *full_space);
+>> bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+>> 		       unsigned int *size, struct mptcp_out_options *opts);
+>> bool mptcp_synack_options(const struct request_sock *req, unsigned int 
+>> *size,
+>> -			  struct mptcp_out_options *opts);
+>> +			  struct mptcp_out_options *opts, u16 *tcp_options);
+>> bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>> 			       unsigned int *size, unsigned int remaining,
+>> 			       struct mptcp_out_options *opts);
+>> diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
+>> index fdbcf2a6d08e..f5f189e4d15a 100644
+>> --- a/net/ipv4/tcp_fastopen.c
+>> +++ b/net/ipv4/tcp_fastopen.c
+>> @@ -346,8 +346,10 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct 
+>> sk_buff *skb,
+>> 			      struct tcp_fastopen_cookie *foc,
+>> 			      const struct dst_entry *dst)
+>> {
+>> +	/*
+>> 	bool syn_data = TCP_SKB_CB(skb)->end_seq != TCP_SKB_CB(skb)->seq + 1;
+>> 	int tcp_fastopen = sock_net(sk)->ipv4.sysctl_tcp_fastopen;
+>> +	*/
+>> 	struct tcp_fastopen_cookie valid_foc = { .len = -1 };
+>> 	struct sock *child;
+>> 	int ret = 0;
+>> @@ -355,12 +357,14 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct 
+>> sk_buff *skb,
+>> 	if (foc->len == 0) /* Client requests a cookie */
+>> 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPFASTOPENCOOKIEREQD);
+>> 
+>> +	/*
+>> 	if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
+>> 	      (syn_data || foc->len >= 0) &&
+>> 	      tcp_fastopen_queue_check(sk))) {
+>> 		foc->len = -1;
+>> 		return NULL;
+>> 	}
+>> +	*/
+>>
+>> 	if (tcp_fastopen_no_cookie(sk, dst, TFO_SERVER_COOKIE_NOT_REQD))
+>> 		goto fastopen;
+>> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+>> index 3231af73e430..38119b96171d 100644
+>> --- a/net/ipv4/tcp_input.c
+>> +++ b/net/ipv4/tcp_input.c
+>> @@ -6273,9 +6273,10 @@ static int tcp_rcv_synsent_state_process(struct sock 
+>> *sk, struct sk_buff *skb,
+>> 		}
+>> 		if (fastopen_fail)
+>> 			return -1;
+>> -		if (sk->sk_write_pending ||
+>> -		    icsk->icsk_accept_queue.rskq_defer_accept ||
+>> -		    inet_csk_in_pingpong_mode(sk)) {
+>> +
+>> +		if (!sk_is_mptcp(sk) && (sk->sk_write_pending ||
+>> +		     icsk->icsk_accept_queue.rskq_defer_accept ||
+>> +		     inet_csk_in_pingpong_mode(sk))) {
+>> 			/* Save one ACK. Data will be ready after
+>> 			 * several ticks, if write_pending is set.
+>> 			 *
+>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+>> index b4b2284ed4a2..864517e63bdf 100644
+>> --- a/net/ipv4/tcp_output.c
+>> +++ b/net/ipv4/tcp_output.c
+>> @@ -747,7 +747,7 @@ static void mptcp_set_option_cond(const struct 
+>> request_sock *req,
+>> 	if (rsk_is_mptcp(req)) {
+>> 		unsigned int size;
+>> 
+>> -		if (mptcp_synack_options(req, &size, &opts->mptcp)) {
+>> +		if (mptcp_synack_options(req, &size, &opts->mptcp, 
+>> &opts->options)) {
+>> 			if (*remaining >= size) {
+>> 				opts->options |= OPTION_MPTCP;
+>> 				*remaining -= size;
+>> @@ -822,7 +822,6 @@ static unsigned int tcp_syn_options(struct sock *sk, 
+>> struct sk_buff *skb,
+>> 			tp->syn_fastopen_exp = fastopen->cookie.exp ? 1 : 0;
+>> 		}
+>> 	}
+>> -
+>> 	smc_set_option(tp, opts, &remaining);
+>>
+>> 	if (sk_is_mptcp(sk)) {
+>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>> index be3b918a6d15..ebcb9c04ead9 100644
+>> --- a/net/mptcp/options.c
+>> +++ b/net/mptcp/options.c
+>> @@ -887,16 +887,20 @@ bool mptcp_established_options(struct sock *sk, 
+>> struct sk_buff *skb,
+>> }
+>> 
+>> bool mptcp_synack_options(const struct request_sock *req, unsigned int 
+>> *size,
+>> -			  struct mptcp_out_options *opts)
+>> +			  struct mptcp_out_options *opts, u16 *tcp_options)
+>> {
+>> 	struct mptcp_subflow_request_sock *subflow_req = 
+>> mptcp_subflow_rsk(req);
+>> +#define OPTION_TS               BIT(1)
+>> +
+>> +
+>> +        *tcp_options ^= OPTION_TS;
+>
+> Did you try setting tstamp_ok = 0 in the inet_request_sock, so 
+> tcp_synack_options() doesn't consume the space for the timestamp option to 
+> begin with?
+>
+>>
+>> 	if (subflow_req->mp_capable) {
+>> 		opts->suboptions = OPTION_MPTCP_MPC_SYNACK;
+>> 		opts->sndr_key = subflow_req->local_key;
+>> 		opts->csum_reqd = subflow_req->csum_reqd;
+>> 		opts->allow_join_id0 = subflow_req->allow_join_id0;
+>> -		*size = TCPOLEN_MPTCP_MPC_SYNACK;
+>> +		*size = TCPOLEN_MPTCP_MPC_SYNACK  - TCPOLEN_TSTAMP_ALIGNED + 
+>> TCPOLEN_SACKPERM_ALIGNED;
+>
+> It's important to keep the timestamp and SACK logic in tcp_synack_options() 
+> so this function won't have to readjust the options size based on whatever 
+> combination of fastopen/timestamps/sack are enabled.
+>
+>> 		pr_debug("subflow_req=%p, local_key=%llu",
+>> 			 subflow_req, subflow_req->local_key);
+>> 		return true;
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index d6aef4b13b8a..6649088baae5 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -54,6 +54,8 @@ static struct percpu_counter mptcp_sockets_allocated 
+>> ____cacheline_aligned_in_sm
+>> 
+>> static void __mptcp_destroy_sock(struct sock *sk);
+>> static void __mptcp_check_send_data_fin(struct sock *sk);
+>> +static int mptcp_stream_connect(struct socket *sock, struct sockaddr 
+>> *uaddr,
+>> +				int addr_len, int flags);
+>> 
+>> DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+>> static struct net_device mptcp_napi_dev;
+>> @@ -1673,6 +1675,53 @@ static void __mptcp_subflow_push_pending(struct sock 
+>> *sk, struct sock *ssk)
+>> 	}
+>> }
+>> 
+>> +static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>> +				  size_t len, struct mptcp_sock *msk, size_t 
+>> copied)
+>> +{
+>> +	const struct iphdr *iph;
+>> +	struct ubuf_info *uarg;
+>> +	struct sockaddr *uaddr;
+>> +	struct sk_buff *skb;
+>> +	struct tcp_sock *tp;
+>> +	struct socket *ssk;
+>> +	int ret;
+>> +
+>> +	ssk = __mptcp_nmpc_socket(msk);
+>> +	if (unlikely(!ssk))
+>> +		goto out_EFAULT;
+>
+> Need to lock_sock() / release_sock() for both sk and ssk here. Be sure to 
+> observe the correct locking order (sk acquired first, released last).
+>
+>> +	skb = tcp_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
+>> +	if (unlikely(!skb))
+>> +		goto out_EFAULT;
+>> +	iph = ip_hdr(skb);
+>> +	if (unlikely(!iph))
+>> +		goto out_EFAULT;
+>> +	uarg = msg_zerocopy_realloc(sk, len, skb_zcopy(skb));
+>> +	if (unlikely(!uarg))
+>> +		goto out_EFAULT;
+>> +	uaddr = msg->msg_name;
+>> +
+>> +	tp = tcp_sk(ssk->sk);
+>> +	if (unlikely(!tp))
+>> +		goto out_EFAULT;
+>> +	if (!tp->fastopen_req)
+>> +		tp->fastopen_req = kzalloc(sizeof(*tp->fastopen_req), 
+>> ssk->sk->sk_allocation);
+>> +
+>> +	if (unlikely(!tp->fastopen_req))
+>> +		goto out_EFAULT;
+>> +	tp->fastopen_req->data = msg;
+>> +	tp->fastopen_req->size = len;
+>> +	tp->fastopen_req->uarg = uarg;
+>
+> Similar to how mptcp_sendmsg() has to reimplement tcp_sendmsg() because of 
+> all the custom handling of the MPTCP retransmit queue and coordinating the 
+> mappings and data, I don't think the normal TCP fastopen code invoked by 
+> ssock->ops->connect() in mptcp_stream_connect() is going to work 
+> out-of-the-box.
+>
+> I haven't had a chance to look at how the multipath-tcp.org kernel handles 
+> that yet, it might be good to check that out.
 
-On Mon, May 23, 2022 at 06:01:03PM -0700, Mat Martineau wrote:
-> On Mon, 23 May 2022, Geliang Tang wrote:
-> 
-> > Please update the commit log:
-> > 
-> > '''
-> > This patch defines two new wrappers mptcp_sched_get_send() and
-> > mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in them.
-> > Use them instead of using mptcp_subflow_get_send() or
-> > mptcp_subflow_get_retrans() directly.
-> > 
-> > Set the subflow pointers array in struct mptcp_sched_data before invoking
-> > get_subflow(), then it can be used in get_subflow() in the BPF contexts.
-> > 
-> > Get the return bitmap of get_subflow() and test which subflow or subflows
-> > are picked by the scheduler.
-> > '''
-> > 
-> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> > ---
-> > net/mptcp/sched.c | 47 +++++++++++++++++++++++++++++++++++++++--------
-> > 1 file changed, 39 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> > index 3ceb721e6489..0ef805c489ab 100644
-> > --- a/net/mptcp/sched.c
-> > +++ b/net/mptcp/sched.c
-> > @@ -91,8 +91,19 @@ void mptcp_release_sched(struct mptcp_sock *msk)
-> > static int mptcp_sched_data_init(struct mptcp_sock *msk,
-> > 				 struct mptcp_sched_data *data)
-> > {
-> > -	data->sock = NULL;
-> > -	data->call_again = 0;
-> > +	struct mptcp_subflow_context *subflow;
-> > +	int i = 0;
-> > +
-> > +	mptcp_for_each_subflow(msk, subflow) {
-> > +		if (i == MPTCP_SUBFLOWS_MAX) {
-> > +			pr_warn_once("too many subflows");
-> > +			break;
-> > +		}
-> > +		data->contexts[i++] = subflow;
-> > +	}
-> > +
-> > +	for (; i < MPTCP_SUBFLOWS_MAX; i++)
-> > +		data->contexts[i++] = NULL;
-> > 
-> > 	return 0;
-> > }
-> > @@ -100,6 +111,9 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
-> > struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
-> > {
-> > 	struct mptcp_sched_data data;
-> > +	struct sock *ssk = NULL;
-> > +	unsigned long bitmap;
-> > +	int i;
-> > 
-> > 	sock_owned_by_me((struct sock *)msk);
-> > 
-> > @@ -114,15 +128,25 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
-> > 		return mptcp_subflow_get_send(msk);
-> > 
-> > 	mptcp_sched_data_init(msk, &data);
-> > -	msk->sched->get_subflow(msk, false, &data);
-> > +	bitmap = msk->sched->get_subflow(msk, false, &data);
-> > 
-> > -	msk->last_snd = data.sock;
-> > -	return data.sock;
-> > +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> > +		if (test_bit(i, &bitmap) && data.contexts[i]) {
-> > +			ssk = data.contexts[i]->tcp_sock;
-> > +			msk->last_snd = ssk;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	return ssk;
-> 
-> The commit that this gets squashed too also ignores call_again, so is this
-> code that just returns the ssk for the first bit in the bitmap also
-> placeholder code?
+I realized what I said here might not be correct. Since the initial data 
+is not part of the DSS-mapped sequence space, it doesn't need to be stored 
+for possible retransmission. The regular TCP fastopen code for adding the 
+data skb to the SYN packet might be ok on the transmit side.
 
-Yes. Since the redundant scheduler is still under development and there's
-still a lot of work to be done, I plan to support single subflow schedulers
-in this series first. The multiple subflows schedulers will be added later.
+- Mat
 
-> 
-> 
-> It also seems like correlate the bitmap bits with the data.contexts array
-> makes the bitmap require extra work. What do you think about using an array
-> instead, like:
-> 
-> struct mptcp_sched_data {
->        struct mptcp_subflow_context *context;
->        bool is_scheduled;
-> };
-> 
-> And passing an array of that struct to the BPF code? Then the is_scheduled
-> flag could be set for the corresponding subflow.
-> 
-> Do you think that array-based API would be clearer than the bitmap to
-> someone writing a BPF scheduler?
-
-I tried to implement this array-based API, but it's not going well. Array
-parameters are not easily supported in BPF functions. And the write access
-permissions of array members is not easy to allow in BPF. I haven't found
-a solution to these two issues yet. Here are codes and error logs in the
-attachment.
-
-Thanks,
--Geliang
-
-> 
-> 
-> - Mat
-> 
-> 
-> > }
-> > 
-> > struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
-> > {
-> > 	struct mptcp_sched_data data;
-> > +	struct sock *ssk = NULL;
-> > +	unsigned long bitmap;
-> > +	int i;
-> > 
-> > 	sock_owned_by_me((const struct sock *)msk);
-> > 
-> > @@ -134,8 +158,15 @@ struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
-> > 		return mptcp_subflow_get_retrans(msk);
-> > 
-> > 	mptcp_sched_data_init(msk, &data);
-> > -	msk->sched->get_subflow(msk, true, &data);
-> > +	bitmap = msk->sched->get_subflow(msk, true, &data);
-> > +
-> > +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> > +		if (test_bit(i, &bitmap) && data.contexts[i]) {
-> > +			ssk = data.contexts[i]->tcp_sock;
-> > +			msk->last_snd = ssk;
-> > +			break;
-> > +		}
-> > +	}
-> > 
-> > -	msk->last_snd = data.sock;
-> > -	return data.sock;
-> > +	return ssk;
-> > }
-> > -- 
-> > 2.34.1
-> > 
-> > 
-> > 
-> 
+>
+>> +
+>> +	/* requests a cookie */
+>> +	ret = mptcp_stream_connect(sk->sk_socket, uaddr,
+>> +				   msg->msg_namelen, msg->msg_flags);
+>> +
+>> +	return ret;
+>> +out_EFAULT:
+>> +	ret = -EFAULT;
+>> +	return ret;
+>> +}
+>> +
+>> static void mptcp_set_nospace(struct sock *sk)
+>> {
+>> 	/* enable autotune */
+>> @@ -1690,9 +1739,9 @@ static int mptcp_sendmsg(struct sock *sk, struct 
+>> msghdr *msg, size_t len)
+>> 	int ret = 0;
+>> 	long timeo;
+>> 
+>> -	/* we don't support FASTOPEN yet */
+>> +	/* we don't fully support FASTOPEN yet */
+>> 	if (msg->msg_flags & MSG_FASTOPEN)
+>> -		return -EOPNOTSUPP;
+>> +		ret = mptcp_sendmsg_fastopen(sk, msg, len, msk, copied);
+>>
+>> 	/* silently ignore everything else */
+>> 	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
+>> @@ -2558,10 +2607,10 @@ static void mptcp_worker(struct work_struct *work)
+>>
+>> 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+>> 		__mptcp_close_subflow(msk);
+>> -
+>> +/*
+>> 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
+>> 		__mptcp_retrans(sk);
+>> -
+>> +*/
+>> 	mptcp_mp_fail_no_response(msk);
+>> 
+>> unlock:
+>> @@ -2681,6 +2730,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct 
+>> sock *ssk, int how)
+>> 	case TCP_SYN_SENT:
+>> 		tcp_disconnect(ssk, O_NONBLOCK);
+>> 		break;
+>> +	case TCP_ESTABLISHED:
+>> +		break;
+>
+> This would prevent subflows from being closed by any calls to 
+> mptcp_subflow_shutdown() - I'm curious what caused you to add this?
+>
+>> 	default:
+>> 		if (__mptcp_check_fallback(mptcp_sk(sk))) {
+>> 			pr_debug("Fallback");
+>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>> index 423d3826ca1e..e1ae1ef224cf 100644
+>> --- a/net/mptcp/sockopt.c
+>> +++ b/net/mptcp/sockopt.c
+>> @@ -560,6 +560,8 @@ static bool mptcp_supported_sockopt(int level, int 
+>> optname)
+>> 		case TCP_TX_DELAY:
+>> 		case TCP_INQ:
+>> 			return true;
+>> +		case TCP_FASTOPEN:
+>> +			return true;
+>> 		}
+>>
+>> 		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not 
+>> compatible with MPTCP */
+>> @@ -768,6 +770,43 @@ static int mptcp_setsockopt_sol_tcp_defer(struct 
+>> mptcp_sock *msk, sockptr_t optv
+>> 	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, 
+>> optval, optlen);
+>> }
+>> 
+>> +static int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock *msk, 
+>> sockptr_t optval,
+>> +					     unsigned int optlen)
+>> +{
+>> +	struct mptcp_subflow_context *subflow;
+>> +	struct sock *sk = (struct sock *)msk;
+>> +	struct net *net = sock_net(sk);
+>> +	int val;
+>> +	int ret;
+>> +
+>> +	ret = 0;
+>> +
+>> +	if (copy_from_sockptr(&val, optval, sizeof(val)))
+>> +		return -EFAULT;
+>> +
+>> +	lock_sock(sk);
+>> +
+>> +	mptcp_for_each_subflow(msk, subflow) {
+>> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>> +
+>> +		lock_sock(ssk);
+>> +
+>> +		if (val >= 0 && ((1 << sk->sk_state) & (TCPF_CLOSE |
+>> +		    TCPF_LISTEN))) {
+>> +			tcp_fastopen_init_key_once(net);
+>> +			fastopen_queue_tune(sk, val);
+>
+> Need to use ssk instead of sk in these several lines, right?
+>
+>> +		} else {
+>> +			ret = -EINVAL;
+>> +		}
+>> +
+>> +		release_sock(ssk);
+>> +	}
+>> +
+>> +	release_sock(sk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>> 				    sockptr_t optval, unsigned int optlen)
+>> {
+>> @@ -796,6 +835,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock 
+>> *msk, int optname,
+>> 		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
+>> 	case TCP_DEFER_ACCEPT:
+>> 		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
+>> +	case TCP_FASTOPEN:
+>> +		return mptcp_setsockopt_sol_tcp_fastopen(msk, optval, 
+>> optlen);
+>> 	}
+>>
+>> 	return -EOPNOTSUPP;
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index 8841e8cd9ad8..f732e41e12df 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -1002,16 +1002,17 @@ static enum mapping_status 
+>> get_mapping_status(struct sock *ssk,
+>> 			sk_eat_skb(ssk, skb);
+>> 			return MAPPING_EMPTY;
+>> 		}
+>> -
+>> +/*
+>> 		if (!subflow->map_valid)
+>> 			return MAPPING_INVALID;
+>> -
+>> +*/
+>
+> Yeah, there's some work to do to handle TFO data since the RFC says it is not 
+> part of the data sequence number space. Fastopen will need to move the SYN 
+> data directly to the msk->receive_queue, bypassing the normal mapping code.
+>
+>
+>> 		goto validate_seq;
+>> 	}
+>>
+>> 	trace_get_mapping_status(mpext);
+>>
+>> 	data_len = mpext->data_len;
+>> +
+>> 	if (data_len == 0) {
+>> 		pr_debug("infinite mapping received");
+>> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
+>> @@ -1075,6 +1076,7 @@ static enum mapping_status get_mapping_status(struct 
+>> sock *ssk,
+>> 		/* If this skb data are fully covered by the current mapping,
+>> 		 * the new map would need caching, which is not supported
+>> 		 */
+>> +
+>> 		if (skb_is_fully_mapped(ssk, skb)) {
+>> 			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSNOMATCH);
+>> 			return MAPPING_INVALID;
+>> @@ -1107,11 +1109,12 @@ static enum mapping_status 
+>> get_mapping_status(struct sock *ssk,
+>> 	/* we revalidate valid mapping on new skb, because we must ensure
+>> 	 * the current skb is completely covered by the available mapping
+>> 	 */
+>> +	/*
+>> 	if (!validate_mapping(ssk, skb)) {
+>> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSTCPMISMATCH);
+>> 		return MAPPING_INVALID;
+>> 	}
+>> -
+>> +	*/
+>
+> If the fastopen data bypasses the normal mptcp receive path, mappings can 
+> still be validated (as they must be :) ) for regular data.
+>
+>> 	skb_ext_del(skb, SKB_EXT_MPTCP);
+>> 
+>> validate_csum:
+>> -- 
+>> 2.25.1
+>> 
+>> 
+>> 
+>> 
+>
 > --
 > Mat Martineau
 > Intel
-> 
+>
+>
 
---VrqPEDrXMn8OVzN4
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0001-new-api.patch"
-
-From 6b45c73f0621a3ba001712615b53bc89c47e9c80 Mon Sep 17 00:00:00 2001
-Message-Id: <6b45c73f0621a3ba001712615b53bc89c47e9c80.1653401254.git.geliang.tang@suse.com>
-From: Geliang Tang <geliang.tang@suse.com>
-Date: Tue, 24 May 2022 16:57:53 +0800
-Subject: [PATCH] new api
-
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- include/net/mptcp.h                           |  7 ++--
- net/mptcp/bpf.c                               | 33 +++++++++++++++++++
- net/mptcp/sched.c                             | 33 ++++++++++---------
- tools/testing/selftests/bpf/bpf_tcp_helpers.h | 18 +++-------
- .../selftests/bpf/progs/mptcp_bpf_first.c     |  9 ++---
- .../selftests/bpf/progs/mptcp_bpf_rr.c        | 13 ++++----
- 6 files changed, 67 insertions(+), 46 deletions(-)
-
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 24a9eb32c1dd..279b46536b64 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -100,12 +100,13 @@ struct mptcp_out_options {
- #define MPTCP_SUBFLOWS_MAX	8
- 
- struct mptcp_sched_data {
--	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
-+	struct mptcp_subflow_context *context;
-+	bool is_scheduled;
- };
- 
- struct mptcp_sched_ops {
--	unsigned long (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
--				     struct mptcp_sched_data *data);
-+	void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
-+			    struct mptcp_sched_data contexts[]);
- 
- 	char			name[MPTCP_SCHED_NAME_MAX];
- 	struct module		*owner;
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 218f78514bdf..89b7fa68e363 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -18,6 +18,8 @@
- #ifdef CONFIG_BPF_JIT
- extern struct bpf_struct_ops bpf_mptcp_sched_ops;
- extern struct btf *btf_vmlinux;
-+static const struct btf_type *mptcp_sched_type __read_mostly;
-+static u32 mptcp_sched_id;
- 
- static u32 optional_ops[] = {
- 	offsetof(struct mptcp_sched_ops, init),
-@@ -38,11 +40,33 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 					     u32 *next_btf_id,
- 					     enum bpf_type_flag *flag)
- {
-+	size_t end;
-+
- 	if (atype == BPF_READ) {
- 		return btf_struct_access(log, btf, t, off, size, atype,
- 					 next_btf_id, flag);
- 	}
- 
-+	if (t != mptcp_sched_type) {
-+		bpf_log(log, "only access to mptcp_sched_data is supported\n");
-+		return -EACCES;
-+	}
-+
-+	switch (off) {
-+	case offsetof(struct mptcp_sched_data, is_scheduled):
-+		end = offsetofend(struct mptcp_sched_data, is_scheduled);
-+		break;
-+	default:
-+		bpf_log(log, "no write support to mptcp_sched_data at off %d\n", off);
-+		return -EACCES;
-+	}
-+
-+	if (off + size > end) {
-+		bpf_log(log, "access beyond mptcp_sched_data at off %u size %u ended at %zu",
-+			off, size, end);
-+		return -EACCES;
-+	}
-+
- 	return NOT_INIT;
- }
- 
-@@ -116,6 +140,15 @@ static int bpf_mptcp_sched_init_member(const struct btf_type *t,
- 
- static int bpf_mptcp_sched_init(struct btf *btf)
- {
-+	s32 type_id;
-+
-+	type_id = btf_find_by_name_kind(btf, "mptcp_sched_data",
-+					BTF_KIND_STRUCT);
-+	if (type_id < 0)
-+		return -EINVAL;
-+	mptcp_sched_id = type_id;
-+	mptcp_sched_type = btf_type_by_id(btf, mptcp_sched_id);
-+
- 	return 0;
- }
- 
-diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index 0ef805c489ab..83ea956cdb9d 100644
---- a/net/mptcp/sched.c
-+++ b/net/mptcp/sched.c
-@@ -89,7 +89,7 @@ void mptcp_release_sched(struct mptcp_sock *msk)
- }
- 
- static int mptcp_sched_data_init(struct mptcp_sock *msk,
--				 struct mptcp_sched_data *data)
-+				 struct mptcp_sched_data contexts[])
- {
- 	struct mptcp_subflow_context *subflow;
- 	int i = 0;
-@@ -99,20 +99,22 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
- 			pr_warn_once("too many subflows");
- 			break;
- 		}
--		data->contexts[i++] = subflow;
-+		contexts[i++].context = subflow;
-+		contexts[i++].is_scheduled = 0;
- 	}
- 
--	for (; i < MPTCP_SUBFLOWS_MAX; i++)
--		data->contexts[i++] = NULL;
-+	for (; i < MPTCP_SUBFLOWS_MAX; i++) {
-+		contexts[i++].context = NULL;
-+		contexts[i++].is_scheduled = 0;
-+	}
- 
- 	return 0;
- }
- 
- struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
- {
--	struct mptcp_sched_data data;
-+	struct mptcp_sched_data contexts[MPTCP_SUBFLOWS_MAX];
- 	struct sock *ssk = NULL;
--	unsigned long bitmap;
- 	int i;
- 
- 	sock_owned_by_me((struct sock *)msk);
-@@ -127,12 +129,12 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
- 	if (!msk->sched)
- 		return mptcp_subflow_get_send(msk);
- 
--	mptcp_sched_data_init(msk, &data);
--	bitmap = msk->sched->get_subflow(msk, false, &data);
-+	mptcp_sched_data_init(msk, contexts);
-+	msk->sched->get_subflow(msk, false, contexts);
- 
- 	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
--		if (test_bit(i, &bitmap) && data.contexts[i]) {
--			ssk = data.contexts[i]->tcp_sock;
-+		if (contexts[i].is_scheduled) {
-+			ssk = contexts[i].context->tcp_sock;
- 			msk->last_snd = ssk;
- 			break;
- 		}
-@@ -143,9 +145,8 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
- 
- struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
- {
--	struct mptcp_sched_data data;
-+	struct mptcp_sched_data contexts[MPTCP_SUBFLOWS_MAX];
- 	struct sock *ssk = NULL;
--	unsigned long bitmap;
- 	int i;
- 
- 	sock_owned_by_me((const struct sock *)msk);
-@@ -157,12 +158,12 @@ struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
- 	if (!msk->sched)
- 		return mptcp_subflow_get_retrans(msk);
- 
--	mptcp_sched_data_init(msk, &data);
--	bitmap = msk->sched->get_subflow(msk, true, &data);
-+	mptcp_sched_data_init(msk, contexts);
-+	msk->sched->get_subflow(msk, true, contexts);
- 
- 	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
--		if (test_bit(i, &bitmap) && data.contexts[i]) {
--			ssk = data.contexts[i]->tcp_sock;
-+		if (contexts[i].is_scheduled) {
-+			ssk = contexts[i].context->tcp_sock;
- 			msk->last_snd = ssk;
- 			break;
- 		}
-diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-index 0f29b47260ff..cfa1fada3793 100644
---- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-+++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-@@ -238,7 +238,8 @@ struct mptcp_subflow_context {
- } __attribute__((preserve_access_index));
- 
- struct mptcp_sched_data {
--	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
-+	struct mptcp_subflow_context *context;
-+	bool is_scheduled;
- };
- 
- struct mptcp_sched_ops {
-@@ -247,8 +248,8 @@ struct mptcp_sched_ops {
- 	void (*init)(const struct mptcp_sock *msk);
- 	void (*release)(const struct mptcp_sock *msk);
- 
--	unsigned long (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
--				     struct mptcp_sched_data *data);
-+	void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
-+			    struct mptcp_sched_data contexts[]);
- 	void *owner;
- };
- 
-@@ -261,15 +262,4 @@ struct mptcp_sock {
- 	char		ca_name[TCP_CA_NAME_MAX];
- } __attribute__((preserve_access_index));
- 
--#define _AC(X,Y)	(X##Y)
--#define UL(x)		(_AC(x, UL))
--
--static inline void set_bit(unsigned int nr, volatile unsigned long *addr)
--{
--        unsigned long *p = ((unsigned long *)addr) + (nr / sizeof(unsigned long));
--        unsigned long mask = UL(1) << (nr % sizeof(unsigned long));
--
--        *p  |= mask;
--}
--
- #endif
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
-index e5dc53965642..739f34768664 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
-@@ -16,13 +16,10 @@ void BPF_PROG(mptcp_sched_first_release, const struct mptcp_sock *msk)
- {
- }
- 
--unsigned long BPF_STRUCT_OPS(bpf_first_get_subflow, const struct mptcp_sock *msk,
--			     bool reinject, struct mptcp_sched_data *data)
-+void BPF_STRUCT_OPS(bpf_first_get_subflow, const struct mptcp_sock *msk,
-+		    bool reinject, struct mptcp_sched_data contexts[])
- {
--	unsigned long bitmap = 0;
--
--	set_bit(0, &bitmap);
--	return bitmap;
-+	contexts[0].is_scheduled = 1;
- }
- 
- SEC(".struct_ops")
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
-index ef475bd33dd7..c2635fd14b0e 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
-@@ -16,18 +16,18 @@ void BPF_PROG(mptcp_sched_rr_release, const struct mptcp_sock *msk)
- {
- }
- 
--unsigned long BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
--			     bool reinject, struct mptcp_sched_data *data)
-+void BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
-+		    bool reinject, struct mptcp_sched_data contexts[])
- {
- 	unsigned long bitmap = 0;
- 	int nr = 0;
- 
- 	for (int i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
--		if (!msk->last_snd || !data->contexts[i])
-+		if (!msk->last_snd || !contexts[i].context)
- 			break;
- 
--		if (data->contexts[i]->tcp_sock == msk->last_snd) {
--			if (i + 1 == MPTCP_SUBFLOWS_MAX || !data->contexts[i + 1])
-+		if (contexts[i].context->tcp_sock == msk->last_snd) {
-+			if (i + 1 == MPTCP_SUBFLOWS_MAX || !contexts[i + 1].context)
- 				break;
- 
- 			nr = i + 1;
-@@ -35,8 +35,7 @@ unsigned long BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
- 		}
- 	}
- 
--	set_bit(nr, &bitmap);
--	return bitmap;
-+	contexts[nr].is_scheduled = 1;
- }
- 
- SEC(".struct_ops")
--- 
-2.34.1
-
-
---VrqPEDrXMn8OVzN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="0002-new-api.log"
-
-#106 mptcp:FAIL
-test_base:PASS:test__join_cgroup 0 nsec
-test_base:PASS:start_server 0 nsec
-run_test:PASS:skel_open_load 0 nsec
-run_test:PASS:skel_attach 0 nsec
-run_test:PASS:bpf_program__fd 0 nsec
-run_test:PASS:bpf_map__fd 0 nsec
-run_test:PASS:bpf_prog_attach 0 nsec
-run_test:PASS:connect to fd 0 nsec
-verify_tsk:PASS:bpf_map_lookup_elem 0 nsec
-verify_tsk:PASS:unexpected invoked count 0 nsec
-verify_tsk:PASS:unexpected is_mptcp 0 nsec
-test_base:PASS:run_test tcp 0 nsec
-test_base:PASS:start_mptcp_server 0 nsec
-run_test:PASS:skel_open_load 0 nsec
-run_test:PASS:skel_attach 0 nsec
-run_test:PASS:bpf_program__fd 0 nsec
-run_test:PASS:bpf_map__fd 0 nsec
-run_test:PASS:bpf_prog_attach 0 nsec
-run_test:PASS:connect to fd 0 nsec
-verify_msk:PASS:invalid token 0 nsec
-get_msk_ca_name:PASS:failed to open tcp_congestion_control 0 nsec
-get_msk_ca_name:PASS:failed to read ca_name 0 nsec
-verify_msk:PASS:bpf_map_lookup_elem 0 nsec
-verify_msk:PASS:unexpected invoked count 0 nsec
-verify_msk:PASS:unexpected is_mptcp 0 nsec
-verify_msk:PASS:unexpected token 0 nsec
-verify_msk:PASS:unexpected first 0 nsec
-verify_msk:PASS:unexpected ca_name 0 nsec
-test_base:PASS:run_test mptcp 0 nsec
-#106/1 mptcp/base:OK
-test_first:PASS:bpf_first__open_and_load 0 nsec
-test_first:PASS:bpf_map__attach_struct_ops 0 nsec
-send_data:PASS:pthread_create 0 nsec
-server:PASS:send 0 nsec
-send_data:PASS:recv 0 nsec
-send_data:PASS:pthread_join 0 nsec
-#106/2 mptcp/first:OK
-libbpf: prog 'bpf_rr_get_subflow': BPF program load failed: Permission denied
-libbpf: prog 'bpf_rr_get_subflow': -- BEGIN PROG LOAD LOG --
-R1 type=ctx expected=fp
-0: R1=ctx(off=0,imm=0) R10=fp0
-; void BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
-0: (b7) r3 = 0                        ; R3_w=0
-; void BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
-1: (79) r2 = *(u64 *)(r1 +16)
-func 'get_subflow' arg2 has btf_id 27881 type STRUCT 'mptcp_sched_data'
-2: R1=ctx(off=0,imm=0) R2_w=ptr_mptcp_sched_data(off=0,imm=0)
-2: (79) r1 = *(u64 *)(r1 +0)
-func 'get_subflow' arg0 has btf_id 137236 type STRUCT 'mptcp_sock'
-3: R1_w=ptr_mptcp_sock(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-3: (79) r4 = *(u64 *)(r1 +1448)       ; R1_w=ptr_mptcp_sock(off=0,imm=0) R4_w=ptr_sock(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-4: (15) if r4 == 0x0 goto pc+44       ; R4_w=ptr_sock(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-5: (79) r5 = *(u64 *)(r2 +0)          ; R2_w=ptr_mptcp_sched_data(off=0,imm=0) R5_w=ptr_mptcp_subflow_context(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-6: (15) if r5 == 0x0 goto pc+42       ; R5_w=ptr_mptcp_subflow_context(off=0,imm=0)
-7: (b7) r4 = 1                        ; R4_w=1
-; if (contexts[i].context->tcp_sock == msk->last_snd) {
-8: (79) r1 = *(u64 *)(r1 +1448)       ; R1_w=ptr_sock(off=0,imm=0)
-; if (contexts[i].context->tcp_sock == msk->last_snd) {
-9: (79) r5 = *(u64 *)(r5 +176)        ; R5=ptr_sock(off=0,imm=0)
-; if (contexts[i].context->tcp_sock == msk->last_snd) {
-10: (5d) if r5 != r1 goto pc+8        ; R1=ptr_sock(off=0,imm=0) R5=ptr_sock(off=0,imm=0)
-; if (i + 1 == MPTCP_SUBFLOWS_MAX || !contexts[i + 1].context)
-11: (bf) r1 = r4                      ; R1_w=1 R4=1
-12: (67) r1 <<= 4                     ; R1_w=16
-13: (bf) r5 = r2                      ; R2=ptr_mptcp_sched_data(off=0,imm=0) R5_w=ptr_mptcp_sched_data(off=0,imm=0)
-14: (0f) r5 += r1                     ; R1_w=P16 R5_w=ptr_mptcp_sched_data(off=16,imm=0)
-15: (79) r1 = *(u64 *)(r5 +0)
-access beyond struct mptcp_sched_data at off 16 size 8
-processed 16 insns (limit 1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 1
--- END PROG LOAD LOG --
-libbpf: failed to load program 'bpf_rr_get_subflow'
-libbpf: failed to load object 'mptcp_bpf_rr'
-libbpf: failed to load BPF skeleton 'mptcp_bpf_rr': -13
-test_rr:FAIL:bpf_rr__open_and_load unexpected error: -13
-#106/3 mptcp/rr:FAIL
-
-All error logs:
-#106 mptcp:FAIL
-test_base:PASS:test__join_cgroup 0 nsec
-test_base:PASS:start_server 0 nsec
-run_test:PASS:skel_open_load 0 nsec
-run_test:PASS:skel_attach 0 nsec
-run_test:PASS:bpf_program__fd 0 nsec
-run_test:PASS:bpf_map__fd 0 nsec
-run_test:PASS:bpf_prog_attach 0 nsec
-run_test:PASS:connect to fd 0 nsec
-verify_tsk:PASS:bpf_map_lookup_elem 0 nsec
-verify_tsk:PASS:unexpected invoked count 0 nsec
-verify_tsk:PASS:unexpected is_mptcp 0 nsec
-test_base:PASS:run_test tcp 0 nsec
-test_base:PASS:start_mptcp_server 0 nsec
-run_test:PASS:skel_open_load 0 nsec
-run_test:PASS:skel_attach 0 nsec
-run_test:PASS:bpf_program__fd 0 nsec
-run_test:PASS:bpf_map__fd 0 nsec
-run_test:PASS:bpf_prog_attach 0 nsec
-run_test:PASS:connect to fd 0 nsec
-verify_msk:PASS:invalid token 0 nsec
-get_msk_ca_name:PASS:failed to open tcp_congestion_control 0 nsec
-get_msk_ca_name:PASS:failed to read ca_name 0 nsec
-verify_msk:PASS:bpf_map_lookup_elem 0 nsec
-verify_msk:PASS:unexpected invoked count 0 nsec
-verify_msk:PASS:unexpected is_mptcp 0 nsec
-verify_msk:PASS:unexpected token 0 nsec
-verify_msk:PASS:unexpected first 0 nsec
-verify_msk:PASS:unexpected ca_name 0 nsec
-test_base:PASS:run_test mptcp 0 nsec
-#106/1 mptcp/base:OK
-test_first:PASS:bpf_first__open_and_load 0 nsec
-test_first:PASS:bpf_map__attach_struct_ops 0 nsec
-send_data:PASS:pthread_create 0 nsec
-server:PASS:send 0 nsec
-send_data:PASS:recv 0 nsec
-send_data:PASS:pthread_join 0 nsec
-#106/2 mptcp/first:OK
-libbpf: prog 'bpf_rr_get_subflow': BPF program load failed: Permission denied
-libbpf: prog 'bpf_rr_get_subflow': -- BEGIN PROG LOAD LOG --
-R1 type=ctx expected=fp
-0: R1=ctx(off=0,imm=0) R10=fp0
-; void BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
-0: (b7) r3 = 0                        ; R3_w=0
-; void BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
-1: (79) r2 = *(u64 *)(r1 +16)
-func 'get_subflow' arg2 has btf_id 27881 type STRUCT 'mptcp_sched_data'
-2: R1=ctx(off=0,imm=0) R2_w=ptr_mptcp_sched_data(off=0,imm=0)
-2: (79) r1 = *(u64 *)(r1 +0)
-func 'get_subflow' arg0 has btf_id 137236 type STRUCT 'mptcp_sock'
-3: R1_w=ptr_mptcp_sock(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-3: (79) r4 = *(u64 *)(r1 +1448)       ; R1_w=ptr_mptcp_sock(off=0,imm=0) R4_w=ptr_sock(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-4: (15) if r4 == 0x0 goto pc+44       ; R4_w=ptr_sock(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-5: (79) r5 = *(u64 *)(r2 +0)          ; R2_w=ptr_mptcp_sched_data(off=0,imm=0) R5_w=ptr_mptcp_subflow_context(off=0,imm=0)
-; if (!msk->last_snd || !contexts[i].context)
-6: (15) if r5 == 0x0 goto pc+42       ; R5_w=ptr_mptcp_subflow_context(off=0,imm=0)
-7: (b7) r4 = 1                        ; R4_w=1
-; if (contexts[i].context->tcp_sock == msk->last_snd) {
-8: (79) r1 = *(u64 *)(r1 +1448)       ; R1_w=ptr_sock(off=0,imm=0)
-; if (contexts[i].context->tcp_sock == msk->last_snd) {
-9: (79) r5 = *(u64 *)(r5 +176)        ; R5=ptr_sock(off=0,imm=0)
-; if (contexts[i].context->tcp_sock == msk->last_snd) {
-10: (5d) if r5 != r1 goto pc+8        ; R1=ptr_sock(off=0,imm=0) R5=ptr_sock(off=0,imm=0)
-; if (i + 1 == MPTCP_SUBFLOWS_MAX || !contexts[i + 1].context)
-11: (bf) r1 = r4                      ; R1_w=1 R4=1
-12: (67) r1 <<= 4                     ; R1_w=16
-13: (bf) r5 = r2                      ; R2=ptr_mptcp_sched_data(off=0,imm=0) R5_w=ptr_mptcp_sched_data(off=0,imm=0)
-14: (0f) r5 += r1                     ; R1_w=P16 R5_w=ptr_mptcp_sched_data(off=16,imm=0)
-15: (79) r1 = *(u64 *)(r5 +0)
-access beyond struct mptcp_sched_data at off 16 size 8
-processed 16 insns (limit 1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 1
--- END PROG LOAD LOG --
-libbpf: failed to load program 'bpf_rr_get_subflow'
-libbpf: failed to load object 'mptcp_bpf_rr'
-libbpf: failed to load BPF skeleton 'mptcp_bpf_rr': -13
-test_rr:FAIL:bpf_rr__open_and_load unexpected error: -13
-#106/3 mptcp/rr:FAIL
-Summary: 0/2 PASSED, 0 SKIPPED, 1 FAILED
-
---VrqPEDrXMn8OVzN4--
-
+--
+Mat Martineau
+Intel
