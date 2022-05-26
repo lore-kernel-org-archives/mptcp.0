@@ -1,38 +1,39 @@
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542891875
-	for <mptcp@lists.linux.dev>; Thu, 26 May 2022 21:32:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9438F2CA4
+	for <mptcp@lists.linux.dev>; Thu, 26 May 2022 23:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653600768; x=1685136768;
+  t=1653608922; x=1685144922;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=jJzI3SKBGBeR+rstjIkht6Bil5rVirTOOoCfbK8vnfk=;
-  b=YY3Mb2hv0qxyn5kWZx6/E/EeX+6LW0eDdqsHF7IN6vtNnDSfa7kF7E5x
-   ql4UpiMNOiKaW11enL2v2GmdWb0qiFm+IvGyidgCOe5EAQV2Lf8sN3Phq
-   X2IhCiSx7Fsrgo9L+M7ER9B1CNzAYL1DR3dIob426YS5uzOWRU6OuCkii
-   PO3IdKJJyLMdEeJvkBfVuNnk0qutok4NRtRW1ZdX6Yl1G7V3MHNcOxDgN
-   I8MssrhrETxzFyLciNHdXmV7aZT90VY14wB9bmdGLo/AQ63yuDG2cr9VB
-   1eUCVKyJSsAC4C5/eqiHM4BfFcmbY3EPwQ4LXrMtbhFadhL4KJFq1t8pj
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10359"; a="334941687"
+  bh=guIkA9KYh4xhpGpIigDQfUC3jenNeH1mrzDOSvc9sIs=;
+  b=FBP/GCP0TAlyULxUhhtvzmH8u6LJpQFKT3KPlKhc6+8ErjexJp3ZUeCp
+   n7gC7+/JyLxA+sdifR8nbCYeEMXd6rNp4TDhqnrfZlxSTbHXod40ubYfI
+   QHbnwUKcduoFmSmQnJlQHuTgoaB6KSM2Vzh6E0JeYd8sTNaITeCw2jhk/
+   MC2xyni+VWvyyEilwLhayiGvnUFGJCXgh7HejtOKzE4qCxIQg3FldiAEp
+   2gkPlT3m9d4liQeCPWeVVKTnihZBWxcBwqTaFslbcSJw+WPXUXMpIbuoP
+   yCMt87s1ze6qHqMGE5LdLbO9Qn2d/aLLNfiywLdAadi/q1gp/gKyc9kZg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10359"; a="299668168"
 X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
-   d="scan'208";a="334941687"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 14:32:47 -0700
+   d="scan'208";a="299668168"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 16:48:41 -0700
 X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
-   d="scan'208";a="579064122"
+   d="scan'208";a="609958018"
 Received: from boyao-mobl2.amr.corp.intel.com ([10.251.4.60])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 14:32:46 -0700
-Date: Thu, 26 May 2022 14:32:39 -0700 (PDT)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 16:48:41 -0700
+Date: Thu, 26 May 2022 16:48:41 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Dmytro SHYTYI <dmytro@shytyi.net>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [RFC PATCH mptcp-next v3] mptcp: Fast Open Mechanism
-In-Reply-To: <30709939-9ba2-c9f1-1a0-d63236f53d86@linux.intel.com>
-Message-ID: <c49dea5b-4ae0-f64d-759e-9c4fa9f75f8@linux.intel.com>
-References: <20220522183921.103526-1-dmytro@shytyi.net> <30709939-9ba2-c9f1-1a0-d63236f53d86@linux.intel.com>
+Subject: Re: [PATCH mptcp-next v2 3/5] Squash to "mptcp: add get_subflow
+ wrappers"
+In-Reply-To: <20220526121659.GA2665@bogon.HOST>
+Message-ID: <92789df9-f9e7-9d31-e859-eef24b938919@linux.intel.com>
+References: <cover.1653305364.git.geliang.tang@suse.com> <e0034f846f86901bd0c996bca6693c4036602750.1653305364.git.geliang.tang@suse.com> <294011b7-28d5-5549-c138-e6e674b18b9e@linux.intel.com> <20220526121659.GA2665@bogon.HOST>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,473 +42,188 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 24 May 2022, Mat Martineau wrote:
+On Thu, 26 May 2022, Geliang Tang wrote:
 
+> Hi Mat,
 >
-> On Sun, 22 May 2022, Dmytro SHYTYI wrote:
->
->> This set of patches will bring "Fast Open" Option support to MPTCP.
->> The aim of Fast Open Mechanism is to eliminate one round trip
->> time from a TCP conversation by allowing data to be included as
->> part of the SYN segment that initiates the connection.
->> 
->> IETF RFC 8684: Appendix B.  TCP Fast Open and MPTCP.
->> 
->> [PATCH v3] includes "client-server" partial support for :
->> 1. MPTCP cookie request from client.
->> 2. MPTCP cookie offering from server.
->> 3. MPTCP SYN+DATA+COOKIE from client.
->> 4. subsequent write + read on the opened socket.
->> 
->> This patch is Work In Progress transitional draft. There was a pause
->> in code development that was unpaused recently.
->
-> Welcome back Dmytro.
->
->> Now this code is based
->> on the top of mptcp-next branch. The option below will be modified in
->> future inelligently, depending on socket type (TCP||MPTCP):
->> *tcp_options ^= OPTION_TS
->> You also might notice some of commented pieces of the upstream code -
->> that (is probably not good) and was done to observe an
->> expected behavior of MPTCP Fast Open mechanism. Any comments how
->> to achive the same behavior of MPTCP_FO without commenting the related
->> parts of the code are welcome.
->
-> One step would be to split those commented out regions in to a separate 
-> commit, so they're at least separate from the other changes.
->
-> Also, if you could trim out any extra whitespace changes (blank lines that 
-> were added or deleted), that makes it easier to review.
->
-> I have some first-pass comments below. I'll have to learn more about fastopen 
-> before I can comment on the protocol specifics.
->
->> 
->> Signed-off-by: Dmytro SHYTYI <dmytro@shytyi.net>
->> ---
->> include/net/mptcp.h     |  2 +-
->> net/ipv4/tcp_fastopen.c |  4 +++
->> net/ipv4/tcp_input.c    |  7 ++---
->> net/ipv4/tcp_output.c   |  3 +--
->> net/mptcp/options.c     |  8 ++++--
->> net/mptcp/protocol.c    | 59 ++++++++++++++++++++++++++++++++++++++---
->> net/mptcp/sockopt.c     | 41 ++++++++++++++++++++++++++++
->> net/mptcp/subflow.c     |  9 ++++---
->> 8 files changed, 118 insertions(+), 15 deletions(-)
->> 
->> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->> index 6456ea26e4c7..692197187af8 100644
->> --- a/include/net/mptcp.h
->> +++ b/include/net/mptcp.h
->> @@ -139,7 +139,7 @@ void mptcp_space(const struct sock *ssk, int *space, 
->> int *full_space);
->> bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
->> 		       unsigned int *size, struct mptcp_out_options *opts);
->> bool mptcp_synack_options(const struct request_sock *req, unsigned int 
->> *size,
->> -			  struct mptcp_out_options *opts);
->> +			  struct mptcp_out_options *opts, u16 *tcp_options);
->> bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->> 			       unsigned int *size, unsigned int remaining,
->> 			       struct mptcp_out_options *opts);
->> diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
->> index fdbcf2a6d08e..f5f189e4d15a 100644
->> --- a/net/ipv4/tcp_fastopen.c
->> +++ b/net/ipv4/tcp_fastopen.c
->> @@ -346,8 +346,10 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct 
->> sk_buff *skb,
->> 			      struct tcp_fastopen_cookie *foc,
->> 			      const struct dst_entry *dst)
->> {
->> +	/*
->> 	bool syn_data = TCP_SKB_CB(skb)->end_seq != TCP_SKB_CB(skb)->seq + 1;
->> 	int tcp_fastopen = sock_net(sk)->ipv4.sysctl_tcp_fastopen;
->> +	*/
->> 	struct tcp_fastopen_cookie valid_foc = { .len = -1 };
->> 	struct sock *child;
->> 	int ret = 0;
->> @@ -355,12 +357,14 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct 
->> sk_buff *skb,
->> 	if (foc->len == 0) /* Client requests a cookie */
->> 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPFASTOPENCOOKIEREQD);
->> 
->> +	/*
->> 	if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
->> 	      (syn_data || foc->len >= 0) &&
->> 	      tcp_fastopen_queue_check(sk))) {
->> 		foc->len = -1;
->> 		return NULL;
->> 	}
->> +	*/
+> On Mon, May 23, 2022 at 06:01:03PM -0700, Mat Martineau wrote:
+>> On Mon, 23 May 2022, Geliang Tang wrote:
 >>
->> 	if (tcp_fastopen_no_cookie(sk, dst, TFO_SERVER_COOKIE_NOT_REQD))
->> 		goto fastopen;
->> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
->> index 3231af73e430..38119b96171d 100644
->> --- a/net/ipv4/tcp_input.c
->> +++ b/net/ipv4/tcp_input.c
->> @@ -6273,9 +6273,10 @@ static int tcp_rcv_synsent_state_process(struct sock 
->> *sk, struct sk_buff *skb,
->> 		}
->> 		if (fastopen_fail)
->> 			return -1;
->> -		if (sk->sk_write_pending ||
->> -		    icsk->icsk_accept_queue.rskq_defer_accept ||
->> -		    inet_csk_in_pingpong_mode(sk)) {
->> +
->> +		if (!sk_is_mptcp(sk) && (sk->sk_write_pending ||
->> +		     icsk->icsk_accept_queue.rskq_defer_accept ||
->> +		     inet_csk_in_pingpong_mode(sk))) {
->> 			/* Save one ACK. Data will be ready after
->> 			 * several ticks, if write_pending is set.
->> 			 *
->> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->> index b4b2284ed4a2..864517e63bdf 100644
->> --- a/net/ipv4/tcp_output.c
->> +++ b/net/ipv4/tcp_output.c
->> @@ -747,7 +747,7 @@ static void mptcp_set_option_cond(const struct 
->> request_sock *req,
->> 	if (rsk_is_mptcp(req)) {
->> 		unsigned int size;
->> 
->> -		if (mptcp_synack_options(req, &size, &opts->mptcp)) {
->> +		if (mptcp_synack_options(req, &size, &opts->mptcp, 
->> &opts->options)) {
->> 			if (*remaining >= size) {
->> 				opts->options |= OPTION_MPTCP;
->> 				*remaining -= size;
->> @@ -822,7 +822,6 @@ static unsigned int tcp_syn_options(struct sock *sk, 
->> struct sk_buff *skb,
->> 			tp->syn_fastopen_exp = fastopen->cookie.exp ? 1 : 0;
->> 		}
->> 	}
->> -
->> 	smc_set_option(tp, opts, &remaining);
+>>> Please update the commit log:
+>>>
+>>> '''
+>>> This patch defines two new wrappers mptcp_sched_get_send() and
+>>> mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in them.
+>>> Use them instead of using mptcp_subflow_get_send() or
+>>> mptcp_subflow_get_retrans() directly.
+>>>
+>>> Set the subflow pointers array in struct mptcp_sched_data before invoking
+>>> get_subflow(), then it can be used in get_subflow() in the BPF contexts.
+>>>
+>>> Get the return bitmap of get_subflow() and test which subflow or subflows
+>>> are picked by the scheduler.
+>>> '''
+>>>
+>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>> ---
+>>> net/mptcp/sched.c | 47 +++++++++++++++++++++++++++++++++++++++--------
+>>> 1 file changed, 39 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+>>> index 3ceb721e6489..0ef805c489ab 100644
+>>> --- a/net/mptcp/sched.c
+>>> +++ b/net/mptcp/sched.c
+>>> @@ -91,8 +91,19 @@ void mptcp_release_sched(struct mptcp_sock *msk)
+>>> static int mptcp_sched_data_init(struct mptcp_sock *msk,
+>>> 				 struct mptcp_sched_data *data)
+>>> {
+>>> -	data->sock = NULL;
+>>> -	data->call_again = 0;
+>>> +	struct mptcp_subflow_context *subflow;
+>>> +	int i = 0;
+>>> +
+>>> +	mptcp_for_each_subflow(msk, subflow) {
+>>> +		if (i == MPTCP_SUBFLOWS_MAX) {
+>>> +			pr_warn_once("too many subflows");
+>>> +			break;
+>>> +		}
+>>> +		data->contexts[i++] = subflow;
+>>> +	}
+>>> +
+>>> +	for (; i < MPTCP_SUBFLOWS_MAX; i++)
+>>> +		data->contexts[i++] = NULL;
+>>>
+>>> 	return 0;
+>>> }
+>>> @@ -100,6 +111,9 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
+>>> struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
+>>> {
+>>> 	struct mptcp_sched_data data;
+>>> +	struct sock *ssk = NULL;
+>>> +	unsigned long bitmap;
+>>> +	int i;
+>>>
+>>> 	sock_owned_by_me((struct sock *)msk);
+>>>
+>>> @@ -114,15 +128,25 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
+>>> 		return mptcp_subflow_get_send(msk);
+>>>
+>>> 	mptcp_sched_data_init(msk, &data);
+>>> -	msk->sched->get_subflow(msk, false, &data);
+>>> +	bitmap = msk->sched->get_subflow(msk, false, &data);
+>>>
+>>> -	msk->last_snd = data.sock;
+>>> -	return data.sock;
+>>> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
+>>> +		if (test_bit(i, &bitmap) && data.contexts[i]) {
+>>> +			ssk = data.contexts[i]->tcp_sock;
+>>> +			msk->last_snd = ssk;
+>>> +			break;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return ssk;
 >>
->> 	if (sk_is_mptcp(sk)) {
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index be3b918a6d15..ebcb9c04ead9 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -887,16 +887,20 @@ bool mptcp_established_options(struct sock *sk, 
->> struct sk_buff *skb,
->> }
->> 
->> bool mptcp_synack_options(const struct request_sock *req, unsigned int 
->> *size,
->> -			  struct mptcp_out_options *opts)
->> +			  struct mptcp_out_options *opts, u16 *tcp_options)
->> {
->> 	struct mptcp_subflow_request_sock *subflow_req = 
->> mptcp_subflow_rsk(req);
->> +#define OPTION_TS               BIT(1)
->> +
->> +
->> +        *tcp_options ^= OPTION_TS;
+>> The commit that this gets squashed too also ignores call_again, so is this
+>> code that just returns the ssk for the first bit in the bitmap also
+>> placeholder code?
 >
-> Did you try setting tstamp_ok = 0 in the inet_request_sock, so 
-> tcp_synack_options() doesn't consume the space for the timestamp option to 
-> begin with?
+> Yes. Since the redundant scheduler is still under development and there's
+> still a lot of work to be done, I plan to support single subflow schedulers
+> in this series first. The multiple subflows schedulers will be added later.
 >
 >>
->> 	if (subflow_req->mp_capable) {
->> 		opts->suboptions = OPTION_MPTCP_MPC_SYNACK;
->> 		opts->sndr_key = subflow_req->local_key;
->> 		opts->csum_reqd = subflow_req->csum_reqd;
->> 		opts->allow_join_id0 = subflow_req->allow_join_id0;
->> -		*size = TCPOLEN_MPTCP_MPC_SYNACK;
->> +		*size = TCPOLEN_MPTCP_MPC_SYNACK  - TCPOLEN_TSTAMP_ALIGNED + 
->> TCPOLEN_SACKPERM_ALIGNED;
+>>
+>> It also seems like correlate the bitmap bits with the data.contexts array
+>> makes the bitmap require extra work. What do you think about using an array
+>> instead, like:
+>>
+>> struct mptcp_sched_data {
+>>        struct mptcp_subflow_context *context;
+>>        bool is_scheduled;
+>> };
+>>
+>> And passing an array of that struct to the BPF code? Then the is_scheduled
+>> flag could be set for the corresponding subflow.
+>>
+>> Do you think that array-based API would be clearer than the bitmap to
+>> someone writing a BPF scheduler?
 >
-> It's important to keep the timestamp and SACK logic in tcp_synack_options() 
-> so this function won't have to readjust the options size based on whatever 
-> combination of fastopen/timestamps/sack are enabled.
+> I tried to implement this array-based API, but it's not going well. Array
+> parameters are not easily supported in BPF functions. And the write access
+> permissions of array members is not easy to allow in BPF. I haven't found
+> a solution to these two issues yet. Here are codes and error logs in the
+> attachment.
 >
->> 		pr_debug("subflow_req=%p, local_key=%llu",
->> 			 subflow_req, subflow_req->local_key);
->> 		return true;
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index d6aef4b13b8a..6649088baae5 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -54,6 +54,8 @@ static struct percpu_counter mptcp_sockets_allocated 
->> ____cacheline_aligned_in_sm
->> 
->> static void __mptcp_destroy_sock(struct sock *sk);
->> static void __mptcp_check_send_data_fin(struct sock *sk);
->> +static int mptcp_stream_connect(struct socket *sock, struct sockaddr 
->> *uaddr,
->> +				int addr_len, int flags);
->> 
->> DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
->> static struct net_device mptcp_napi_dev;
->> @@ -1673,6 +1675,53 @@ static void __mptcp_subflow_push_pending(struct sock 
->> *sk, struct sock *ssk)
->> 	}
->> }
->> 
->> +static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->> +				  size_t len, struct mptcp_sock *msk, size_t 
->> copied)
->> +{
->> +	const struct iphdr *iph;
->> +	struct ubuf_info *uarg;
->> +	struct sockaddr *uaddr;
->> +	struct sk_buff *skb;
->> +	struct tcp_sock *tp;
->> +	struct socket *ssk;
->> +	int ret;
->> +
->> +	ssk = __mptcp_nmpc_socket(msk);
->> +	if (unlikely(!ssk))
->> +		goto out_EFAULT;
->
-> Need to lock_sock() / release_sock() for both sk and ssk here. Be sure to 
-> observe the correct locking order (sk acquired first, released last).
->
->> +	skb = tcp_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
->> +	if (unlikely(!skb))
->> +		goto out_EFAULT;
->> +	iph = ip_hdr(skb);
->> +	if (unlikely(!iph))
->> +		goto out_EFAULT;
->> +	uarg = msg_zerocopy_realloc(sk, len, skb_zcopy(skb));
->> +	if (unlikely(!uarg))
->> +		goto out_EFAULT;
->> +	uaddr = msg->msg_name;
->> +
->> +	tp = tcp_sk(ssk->sk);
->> +	if (unlikely(!tp))
->> +		goto out_EFAULT;
->> +	if (!tp->fastopen_req)
->> +		tp->fastopen_req = kzalloc(sizeof(*tp->fastopen_req), 
->> ssk->sk->sk_allocation);
->> +
->> +	if (unlikely(!tp->fastopen_req))
->> +		goto out_EFAULT;
->> +	tp->fastopen_req->data = msg;
->> +	tp->fastopen_req->size = len;
->> +	tp->fastopen_req->uarg = uarg;
->
-> Similar to how mptcp_sendmsg() has to reimplement tcp_sendmsg() because of 
-> all the custom handling of the MPTCP retransmit queue and coordinating the 
-> mappings and data, I don't think the normal TCP fastopen code invoked by 
-> ssock->ops->connect() in mptcp_stream_connect() is going to work 
-> out-of-the-box.
->
-> I haven't had a chance to look at how the multipath-tcp.org kernel handles 
-> that yet, it might be good to check that out.
 
-I realized what I said here might not be correct. Since the initial data 
-is not part of the DSS-mapped sequence space, it doesn't need to be stored 
-for possible retransmission. The regular TCP fastopen code for adding the 
-data skb to the SYN packet might be ok on the transmit side.
+Yeah, after looking at your logs and trying a few experiments, I 
+definitely agree that array parameters are not well supported by the BPF 
+verifies.
 
-- Mat
+It looks like the bpf verifier was inspecting the args for get_subflow in 
+mptcp_sched_ops:
 
->
->> +
->> +	/* requests a cookie */
->> +	ret = mptcp_stream_connect(sk->sk_socket, uaddr,
->> +				   msg->msg_namelen, msg->msg_flags);
->> +
->> +	return ret;
->> +out_EFAULT:
->> +	ret = -EFAULT;
->> +	return ret;
->> +}
->> +
->> static void mptcp_set_nospace(struct sock *sk)
->> {
->> 	/* enable autotune */
->> @@ -1690,9 +1739,9 @@ static int mptcp_sendmsg(struct sock *sk, struct 
->> msghdr *msg, size_t len)
->> 	int ret = 0;
->> 	long timeo;
->> 
->> -	/* we don't support FASTOPEN yet */
->> +	/* we don't fully support FASTOPEN yet */
->> 	if (msg->msg_flags & MSG_FASTOPEN)
->> -		return -EOPNOTSUPP;
->> +		ret = mptcp_sendmsg_fastopen(sk, msg, len, msk, copied);
->>
->> 	/* silently ignore everything else */
->> 	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
->> @@ -2558,10 +2607,10 @@ static void mptcp_worker(struct work_struct *work)
->>
->> 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
->> 		__mptcp_close_subflow(msk);
->> -
->> +/*
->> 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
->> 		__mptcp_retrans(sk);
->> -
->> +*/
->> 	mptcp_mp_fail_no_response(msk);
->> 
->> unlock:
->> @@ -2681,6 +2730,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct 
->> sock *ssk, int how)
->> 	case TCP_SYN_SENT:
->> 		tcp_disconnect(ssk, O_NONBLOCK);
->> 		break;
->> +	case TCP_ESTABLISHED:
->> +		break;
->
-> This would prevent subflows from being closed by any calls to 
-> mptcp_subflow_shutdown() - I'm curious what caused you to add this?
->
->> 	default:
->> 		if (__mptcp_check_fallback(mptcp_sk(sk))) {
->> 			pr_debug("Fallback");
->> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
->> index 423d3826ca1e..e1ae1ef224cf 100644
->> --- a/net/mptcp/sockopt.c
->> +++ b/net/mptcp/sockopt.c
->> @@ -560,6 +560,8 @@ static bool mptcp_supported_sockopt(int level, int 
->> optname)
->> 		case TCP_TX_DELAY:
->> 		case TCP_INQ:
->> 			return true;
->> +		case TCP_FASTOPEN:
->> +			return true;
->> 		}
->>
->> 		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not 
->> compatible with MPTCP */
->> @@ -768,6 +770,43 @@ static int mptcp_setsockopt_sol_tcp_defer(struct 
->> mptcp_sock *msk, sockptr_t optv
->> 	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, 
->> optval, optlen);
->> }
->> 
->> +static int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock *msk, 
->> sockptr_t optval,
->> +					     unsigned int optlen)
->> +{
->> +	struct mptcp_subflow_context *subflow;
->> +	struct sock *sk = (struct sock *)msk;
->> +	struct net *net = sock_net(sk);
->> +	int val;
->> +	int ret;
->> +
->> +	ret = 0;
->> +
->> +	if (copy_from_sockptr(&val, optval, sizeof(val)))
->> +		return -EFAULT;
->> +
->> +	lock_sock(sk);
->> +
->> +	mptcp_for_each_subflow(msk, subflow) {
->> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->> +
->> +		lock_sock(ssk);
->> +
->> +		if (val >= 0 && ((1 << sk->sk_state) & (TCPF_CLOSE |
->> +		    TCPF_LISTEN))) {
->> +			tcp_fastopen_init_key_once(net);
->> +			fastopen_queue_tune(sk, val);
->
-> Need to use ssk instead of sk in these several lines, right?
->
->> +		} else {
->> +			ret = -EINVAL;
->> +		}
->> +
->> +		release_sock(ssk);
->> +	}
->> +
->> +	release_sock(sk);
->> +
->> +	return ret;
->> +}
->> +
->> static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->> 				    sockptr_t optval, unsigned int optlen)
->> {
->> @@ -796,6 +835,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock 
->> *msk, int optname,
->> 		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
->> 	case TCP_DEFER_ACCEPT:
->> 		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
->> +	case TCP_FASTOPEN:
->> +		return mptcp_setsockopt_sol_tcp_fastopen(msk, optval, 
->> optlen);
->> 	}
->>
->> 	return -EOPNOTSUPP;
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 8841e8cd9ad8..f732e41e12df 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1002,16 +1002,17 @@ static enum mapping_status 
->> get_mapping_status(struct sock *ssk,
->> 			sk_eat_skb(ssk, skb);
->> 			return MAPPING_EMPTY;
->> 		}
->> -
->> +/*
->> 		if (!subflow->map_valid)
->> 			return MAPPING_INVALID;
->> -
->> +*/
->
-> Yeah, there's some work to do to handle TFO data since the RFC says it is not 
-> part of the data sequence number space. Fastopen will need to move the SYN 
-> data directly to the msk->receive_queue, bypassing the normal mapping code.
->
->
->> 		goto validate_seq;
->> 	}
->>
->> 	trace_get_mapping_status(mpext);
->>
->> 	data_len = mpext->data_len;
->> +
->> 	if (data_len == 0) {
->> 		pr_debug("infinite mapping received");
->> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
->> @@ -1075,6 +1076,7 @@ static enum mapping_status get_mapping_status(struct 
->> sock *ssk,
->> 		/* If this skb data are fully covered by the current mapping,
->> 		 * the new map would need caching, which is not supported
->> 		 */
->> +
->> 		if (skb_is_fully_mapped(ssk, skb)) {
->> 			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSNOMATCH);
->> 			return MAPPING_INVALID;
->> @@ -1107,11 +1109,12 @@ static enum mapping_status 
->> get_mapping_status(struct sock *ssk,
->> 	/* we revalidate valid mapping on new skb, because we must ensure
->> 	 * the current skb is completely covered by the available mapping
->> 	 */
->> +	/*
->> 	if (!validate_mapping(ssk, skb)) {
->> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSTCPMISMATCH);
->> 		return MAPPING_INVALID;
->> 	}
->> -
->> +	*/
->
-> If the fastopen data bypasses the normal mptcp receive path, mappings can 
-> still be validated (as they must be :) ) for regular data.
->
->> 	skb_ext_del(skb, SKB_EXT_MPTCP);
->> 
->> validate_csum:
->> -- 
->> 2.25.1
->> 
->> 
->> 
->> 
->
-> --
-> Mat Martineau
-> Intel
->
->
+void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
+ 		    struct mptcp_sched_data contexts[]);
+
+and thinking 'contexts' was a pointer to a single struct mptcp_sched_data 
+instance, instead of an array. The verifier can't guarantee safe access 
+for a variable-length array so that does make some sense.
+
+I tried changing the code to:
+
+void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
+                     struct mptcp_sched_data (*contexts)[MPTCP_SUBFLOWS_MAX]);
+
+so the third arg was a "pointer to array of structs, with 
+MPTCP_SUBFLOWS_MAX elements in the array". The verifier didn't like that 
+either:
+
+"""
+func 'get_subflow' arg2 type ARRAY is not a struct
+"""
+
+That error message is printed by btf_ctx_access(). It might be possible to 
+customize bpf_mptcp_sched_verifier_ops to handle that, but it seems 
+complicated.
+
+
+We could instead use mptcp_sched_data to contain all the parameters 
+(including an array of structs):
+
+struct mptcp_sched_subflow {
+ 	struct mptcp_subflow_context *context;
+ 	bool is_scheduled;
+};
+
+struct mptcp_sched_data {
+ 	/* Moving the msk and reinject args here is optional, but
+ 	 * it seemed like a good way to group all of the data
+ 	 * for a bpf scheduler to use */
+ 	const struct mptcp_sock *msk;
+ 	bool reinject;
+ 	struct mptcp_sched_subflow subflows[MPTCP_SUBFLOWS_MAX];
+};
+
+struct mptcp_sched_ops {
+ 	void (*get_subflow)(struct mptcp_sched_data *data);
+
+ 	char			name[MPTCP_SCHED_NAME_MAX];
+ 	struct module		*owner;
+ 	struct list_head	list;
+
+ 	void (*init)(const struct mptcp_sock *msk);
+ 	void (*release)(const struct mptcp_sock *msk);
+} ____cacheline_aligned_in_smp;
+
+It looks like btf_struct_access() and btf_struct_walk() know how to handle 
+an array *inside* a struct, so MPTCP would not need as much custom 
+verifier code. This seems like a better fit than my array idea - hopefully 
+it's more workable.
+
+Do you think this seems like a reasonable interface for BPF 
+scheduler code?
+
 
 --
 Mat Martineau
