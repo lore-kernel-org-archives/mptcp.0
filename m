@@ -1,315 +1,275 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from server.green17creative.com (vs1.green17creative.com [80.76.205.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9471FC8
-	for <mptcp@lists.linux.dev>; Fri, 27 May 2022 20:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653681790; x=1685217790;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=R+m1A8O9uXZ1WPXOWzbZUWDGZyq/X/EnHvyZNx8rU7A=;
-  b=Z73I1whQJafi80c5TN/vusRRb1l03gv7Aer3cUiuYJhRSdW5CaYHP+H8
-   vizcKPAgru6uFArwxGxUv9AjDEZ2PJWfei3vZ3RtzghM8PRZpdD1xhiup
-   D+0RnGV+8t806t0XsldgrrKoZmD8gHg655peDgZvqZuQyDMMGaEzRzs4z
-   xssgBThHi0eyVm3AblMIXR1jpKPY1iQISq1xwOOi1uNPUIU2W0f202g53
-   On8+HNSgWOjavvRd5LY7SX9C3SzsV/IaUImi1IzKpR7Iz30DRV06AAY2R
-   FS+IPYmJO+wfpfz3GOpErLctoumI5Hk6N80qLiqUj3uk/dtiW9MAwzY5x
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10360"; a="255059750"
-X-IronPort-AV: E=Sophos;i="5.91,256,1647327600"; 
-   d="scan'208";a="255059750"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2022 13:03:09 -0700
-X-IronPort-AV: E=Sophos;i="5.91,256,1647327600"; 
-   d="scan'208";a="560914094"
-Received: from mapenner-mobl1.amr.corp.intel.com ([10.209.63.165])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2022 13:03:09 -0700
-Date: Fri, 27 May 2022 13:03:02 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 3/5] Squash to "mptcp: add get_subflow
- wrappers"
-In-Reply-To: <20220527152717.GA19642@bogon.HOST>
-Message-ID: <f580e7c6-bfcf-c990-5232-bb3e5184475@linux.intel.com>
-References: <cover.1653305364.git.geliang.tang@suse.com> <e0034f846f86901bd0c996bca6693c4036602750.1653305364.git.geliang.tang@suse.com> <294011b7-28d5-5549-c138-e6e674b18b9e@linux.intel.com> <20220526121659.GA2665@bogon.HOST> <92789df9-f9e7-9d31-e859-eef24b938919@linux.intel.com>
- <20220527152717.GA19642@bogon.HOST>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A2C1FCD
+	for <mptcp@lists.linux.dev>; Sat, 28 May 2022 03:55:43 +0000 (UTC)
+Received: by server.green17creative.com (Postfix)
+	id 5E16E7501B04; Sat, 28 May 2022 04:49:38 +0100 (BST)
+Date: Sat, 28 May 2022 04:49:38 +0100 (BST)
+From: MAILER-DAEMON@server.green17creative.com (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: mptcp@lists.linux.dev
+Auto-Submitted: auto-replied
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="943427501B03.1653709778/server.green17creative.com"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20220528034938.5E16E7501B04@server.green17creative.com>
 
-On Fri, 27 May 2022, Geliang Tang wrote:
+This is a MIME-encapsulated message.
 
-> Hi Mat,
->
-> On Thu, May 26, 2022 at 04:48:41PM -0700, Mat Martineau wrote:
->> On Thu, 26 May 2022, Geliang Tang wrote:
->>
->>> Hi Mat,
->>>
->>> On Mon, May 23, 2022 at 06:01:03PM -0700, Mat Martineau wrote:
->>>> On Mon, 23 May 2022, Geliang Tang wrote:
->>>>
->>>>> Please update the commit log:
->>>>>
->>>>> '''
->>>>> This patch defines two new wrappers mptcp_sched_get_send() and
->>>>> mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in them.
->>>>> Use them instead of using mptcp_subflow_get_send() or
->>>>> mptcp_subflow_get_retrans() directly.
->>>>>
->>>>> Set the subflow pointers array in struct mptcp_sched_data before invoking
->>>>> get_subflow(), then it can be used in get_subflow() in the BPF contexts.
->>>>>
->>>>> Get the return bitmap of get_subflow() and test which subflow or subflows
->>>>> are picked by the scheduler.
->>>>> '''
->>>>>
->>>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->>>>> ---
->>>>> net/mptcp/sched.c | 47 +++++++++++++++++++++++++++++++++++++++--------
->>>>> 1 file changed, 39 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
->>>>> index 3ceb721e6489..0ef805c489ab 100644
->>>>> --- a/net/mptcp/sched.c
->>>>> +++ b/net/mptcp/sched.c
->>>>> @@ -91,8 +91,19 @@ void mptcp_release_sched(struct mptcp_sock *msk)
->>>>> static int mptcp_sched_data_init(struct mptcp_sock *msk,
->>>>> 				 struct mptcp_sched_data *data)
->>>>> {
->>>>> -	data->sock = NULL;
->>>>> -	data->call_again = 0;
->>>>> +	struct mptcp_subflow_context *subflow;
->>>>> +	int i = 0;
->>>>> +
->>>>> +	mptcp_for_each_subflow(msk, subflow) {
->>>>> +		if (i == MPTCP_SUBFLOWS_MAX) {
->>>>> +			pr_warn_once("too many subflows");
->>>>> +			break;
->>>>> +		}
->>>>> +		data->contexts[i++] = subflow;
->>>>> +	}
->>>>> +
->>>>> +	for (; i < MPTCP_SUBFLOWS_MAX; i++)
->>>>> +		data->contexts[i++] = NULL;
->>>>>
->>>>> 	return 0;
->>>>> }
->>>>> @@ -100,6 +111,9 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
->>>>> struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
->>>>> {
->>>>> 	struct mptcp_sched_data data;
->>>>> +	struct sock *ssk = NULL;
->>>>> +	unsigned long bitmap;
->>>>> +	int i;
->>>>>
->>>>> 	sock_owned_by_me((struct sock *)msk);
->>>>>
->>>>> @@ -114,15 +128,25 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
->>>>> 		return mptcp_subflow_get_send(msk);
->>>>>
->>>>> 	mptcp_sched_data_init(msk, &data);
->>>>> -	msk->sched->get_subflow(msk, false, &data);
->>>>> +	bitmap = msk->sched->get_subflow(msk, false, &data);
->>>>>
->>>>> -	msk->last_snd = data.sock;
->>>>> -	return data.sock;
->>>>> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
->>>>> +		if (test_bit(i, &bitmap) && data.contexts[i]) {
->>>>> +			ssk = data.contexts[i]->tcp_sock;
->>>>> +			msk->last_snd = ssk;
->>>>> +			break;
->>>>> +		}
->>>>> +	}
->>>>> +
->>>>> +	return ssk;
->>>>
->>>> The commit that this gets squashed too also ignores call_again, so is this
->>>> code that just returns the ssk for the first bit in the bitmap also
->>>> placeholder code?
->>>
->>> Yes. Since the redundant scheduler is still under development and there's
->>> still a lot of work to be done, I plan to support single subflow schedulers
->>> in this series first. The multiple subflows schedulers will be added later.
->>>
->>>>
->>>>
->>>> It also seems like correlate the bitmap bits with the data.contexts array
->>>> makes the bitmap require extra work. What do you think about using an array
->>>> instead, like:
->>>>
->>>> struct mptcp_sched_data {
->>>>        struct mptcp_subflow_context *context;
->>>>        bool is_scheduled;
->>>> };
->>>>
->>>> And passing an array of that struct to the BPF code? Then the is_scheduled
->>>> flag could be set for the corresponding subflow.
->>>>
->>>> Do you think that array-based API would be clearer than the bitmap to
->>>> someone writing a BPF scheduler?
->>>
->>> I tried to implement this array-based API, but it's not going well. Array
->>> parameters are not easily supported in BPF functions. And the write access
->>> permissions of array members is not easy to allow in BPF. I haven't found
->>> a solution to these two issues yet. Here are codes and error logs in the
->>> attachment.
->>>
->>
->> Yeah, after looking at your logs and trying a few experiments, I definitely
->> agree that array parameters are not well supported by the BPF verifies.
->>
->> It looks like the bpf verifier was inspecting the args for get_subflow in
->> mptcp_sched_ops:
->>
->> void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
->> 		    struct mptcp_sched_data contexts[]);
->>
->> and thinking 'contexts' was a pointer to a single struct mptcp_sched_data
->> instance, instead of an array. The verifier can't guarantee safe access for
->> a variable-length array so that does make some sense.
->>
->> I tried changing the code to:
->>
->> void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
->>                     struct mptcp_sched_data (*contexts)[MPTCP_SUBFLOWS_MAX]);
->>
->> so the third arg was a "pointer to array of structs, with MPTCP_SUBFLOWS_MAX
->> elements in the array". The verifier didn't like that either:
->>
->> """
->> func 'get_subflow' arg2 type ARRAY is not a struct
->> """
->>
->> That error message is printed by btf_ctx_access(). It might be possible to
->> customize bpf_mptcp_sched_verifier_ops to handle that, but it seems
->> complicated.
->>
->>
->> We could instead use mptcp_sched_data to contain all the parameters
->> (including an array of structs):
->>
->> struct mptcp_sched_subflow {
->> 	struct mptcp_subflow_context *context;
->> 	bool is_scheduled;
->> };
->>
->> struct mptcp_sched_data {
->> 	/* Moving the msk and reinject args here is optional, but
->> 	 * it seemed like a good way to group all of the data
->> 	 * for a bpf scheduler to use */
->> 	const struct mptcp_sock *msk;
->> 	bool reinject;
->> 	struct mptcp_sched_subflow subflows[MPTCP_SUBFLOWS_MAX];
->> };
->>
->> struct mptcp_sched_ops {
->> 	void (*get_subflow)(struct mptcp_sched_data *data);
->>
->> 	char			name[MPTCP_SCHED_NAME_MAX];
->> 	struct module		*owner;
->> 	struct list_head	list;
->>
->> 	void (*init)(const struct mptcp_sock *msk);
->> 	void (*release)(const struct mptcp_sock *msk);
->> } ____cacheline_aligned_in_smp;
->>
->> It looks like btf_struct_access() and btf_struct_walk() know how to handle
->> an array *inside* a struct, so MPTCP would not need as much custom verifier
->> code. This seems like a better fit than my array idea - hopefully it's more
->> workable.
->
-> It's hard to get the write access to is_scheduled in this case.
->
-> If we add another member bitmap in mptcp_sched_data like this:
->
-> struct mptcp_sched_subflow {
-> 	struct mptcp_subflow_context *context;
-> 	bool is_scheduled;
-> };
->
-> struct mptcp_sched_data {
-> 	struct mptcp_sched_subflow subflows[MPTCP_SUBFLOWS_MAX];
-> 	const struct mptcp_sock *msk;
-> 	bool reinject;
-> 	unsigned bitmap;
-> };
->
-> It's easy to calculate the offset in bpf_mptcp_sched_btf_struct_access():
->
-> 	switch (off) {
-> 	case offsetof(struct mptcp_sched_data, bitmap):
-> 		end = offsetofend(struct mptcp_sched_data, bitmap);
-> 		break;
->
-> But it's hard to calculate the offsets of is_scheduled, we need to have
-> write access for 8 different offsets.
->
-> We may calculate them like this:
->
-> data->contexts[0].is_scheduled	offset = 0 + sizeof(struct mptcp_subflow_context)
-> data->contexts[1].is_scheduled  offset = 1 * sizeof(mptcp_sched_subflow) + sizeof(struct mptcp_subflow_context *)
-> data->contexts[2].is_scheduled  ...
-> data->contexts[3].is_scheduled  ...
-> data->contexts[4].is_scheduled  ...
-> data->contexts[5].is_scheduled  ...
-> data->contexts[6].is_scheduled  ...
-> data->contexts[7].is_scheduled  offset = 7 * sizeof(mptcp_sched_subflow) + sizeof(struct mptcp_subflow_context *)
->
-> But it doesn't work. I haven't found a solution yet.
->
-> Maybe we also need to consider the actual number of subflows, which makes
-> it more complicated.
->
->
-> If we make the array read only, just write the bitmap member or return a
-> bitmap, we can avoid dealing with these complex offsets.
->
->
-> Anyway, I will continue to solve this write access issue, but I also want
-> to hear your opinion.
+--943427501B03.1653709778/server.green17creative.com
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host server.green17creative.com.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<info@passdoorsystems.com>: host eu-smtp-inbound-2.mimecast.com[91.220.42.241]
+    said: 554 Email rejected due to security policies -
+    https://community.mimecast.com/docs/DOC-1369#554
+    [j-IKiw5QOeqlgtzv74a_Zg.uk241] (in reply to end of DATA command)
+
+--943427501B03.1653709778/server.green17creative.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; server.green17creative.com
+X-Postfix-Queue-ID: 943427501B03
+X-Postfix-Sender: rfc822; mptcp@lists.linux.dev
+Arrival-Date: Sat, 28 May 2022 04:49:37 +0100 (BST)
+
+Final-Recipient: rfc822; info@passdoorsystems.com
+Action: failed
+Status: 5.0.0
+Remote-MTA: dns; eu-smtp-inbound-2.mimecast.com
+Diagnostic-Code: smtp; 554 Email rejected due to security policies -
+    https://community.mimecast.com/docs/DOC-1369#554
+    [j-IKiw5QOeqlgtzv74a_Zg.uk241]
+
+--943427501B03.1653709778/server.green17creative.com
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 8bit
+
+Return-Path: <mptcp@lists.linux.dev>
+Received: by server.green17creative.com (Postfix, from userid 33)
+	id 943427501B03; Sat, 28 May 2022 04:49:37 +0100 (BST)
+To: info@passdoorsystems.com
+Subject: Website enquiry
+X-PHP-Originating-Script: 5178:class.phpmailer.php
+Date: Sat, 28 May 2022 03:49:37 +0000
+From: Pass Door Systems <mptcp@lists.linux.dev>
+Message-ID: <27f76aa6f60e61507933c258b62ef870@passdoorsystems.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="b1_27f76aa6f60e61507933c258b62ef870"
+Content-Transfer-Encoding: 8bit
+
+This is a multi-part message in MIME format.
+
+--b1_27f76aa6f60e61507933c258b62ef870
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor='#FFFFFF' >
+<STYLE>
+  body {background:#f9f9f9;}
+ .headerTop { background-color:white; border-top:0px solid #000000; border-bottom:1px solid #FFFFFF; text-align:center; }
+ .adminText { font-size:10px; color:#996600; line-height:200%; font-family:verdana; text-decoration:none; }
+ .headerBar { background-color:#FFFFFF; border-top:0px solid #333333; border-bottom:10px solid #FFFFFF; }
+ .title { font-size:20px; font-weight:bold; color:#CC6600; font-family:arial; line-height:110%; }
+ .subTitle { font-size:11px; font-weight:normal; color:#666666; font-style:italic; font-family:arial; }
+  td { font-size:12px; color:#000000; line-height:150%; font-family:trebuchet ms; }
+ .sideColumn { background-color:#FFFFFF; border-left:1px dashed #CCCCCC; text-align:left; }
+ .sideColumnText { font-size:11px; font-weight:normal; color:#999999; font-family:arial; line-height:150%; }
+ .sideColumnTitle { font-size:15px; font-weight:bold; color:#333333; font-family:arial; line-height:150%; }
+ .footerRow { background-color:#FFFFCC; border-top:10px solid #FFFFFF; }
+ .footerText { font-size:10px; color:#996600; line-height:100%; font-family:verdana; }
+  a { color:#901832;}
+  a.twitter-ie { -webkit-transition:0.3s; padding:0!important; margin-top: 15px; margin-left: 0; }
+  a.linkedin-ie { -webkit-transition:0.3s; padding:0!important; margin-top: 15px; margin-left:15px; }
+  a.facebook-ie { -webkit-transition:0.3s; padding:0!important; margin-top: 15px; margin-left:15px; }
+  a.twitter:hover {opacity:0.6; -webkit-transition:0.3s;}
+  a.facebook:hover {opacity:0.6; -webkit-transition:0.3s;}
+  a.linkedin:hover {opacity:0.6;  -webkit-transition:0.3s;}
+</STYLE>
+
+<table width="100%" cellpadding="10" cellspacing="0" bgcolor='#FFFFFF'>
+  <td valign="top" align="center">
+    <table width="600" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="left" valign="middle" style="background-color:#FFFFFF;border-top:0px solid #333333;border-bottom:10px solid #FFFFFF;">
+          <center>
+            <a href="">
+              <img src="https://passdoorsystems.com/assets/img/pass-door-systems-logo@2x.png" height="120" alt="Pass Door Systems" name="editableImg1" border="0" align="center" id='editableImg1' title="Pass Door Systems">
+            </a>
+          </center>
+        </td>
+      </tr>
+    </table>
+
+    <!--sub table-->
+    <table width="600" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+      <tr>
+        <td bgcolor="#FFFFFF" valign="top" width="400" style="font-size:12px;color:#000000;line-height:150%;font-family:trebuchet ms;">
+          <p>
+            <span style="font-size:20px; font-weight:bold; color:#666666; font-family:arial; line-height:110%;">💛 Helen just viewed your profile! Click here: https://sweetgirl22.page.link/c2Sd?wcza8 💛 contacted you from the website</span>
+            <br/>
+          </p>
+          <p>Details submitted:</p>
+          <p>
+            <b>Name:</b> 💛 Helen just viewed your profile! Click here: https://sweetgirl22.page.link/c2Sd?wcza8 💛<br />
+            <b>Email:</b> mptcp@lists.linux.dev<br />
+            <b>Phone:</b> 245751741878<br />
+            <b>Address:</b> dl715w<br />
+            <b>Sector:</b> 9jm0rc<br />
+            <br />
+            <b>Message:</b> gss9jj
+          </p>
+        </td>
+        <td width="200" valign="top" style="background-color:#FFFFFF;border-left:1px solid #CCCCCC;text-align:left; font-size:12px;color:#000000;line-height:150%;font-family:trebuchet ms;">
+          <p>
+            <span style="font-weight:bold; color:#666666; font-family:arial; line-height:22px;">Pass Door Systems Limited</span><br>
+            Unit 5 &amp; 6,<br/>
+            Woodside Road Industrial Estate,<br/>
+            Broughshane,<br/>
+            BT42 4QJ 
+          </p>
+          <p>
+            <b>t.</b> +44 (0) 28 25 44 69 30<br/>
+            <b>e.</b> <a href="mailto:info@passdoorsystems.com">info@passdoorsystems.com</a><br />
+          </p>
+        </td>
+      </tr>
+    </table>
+    <!--sub table end-->
+
+    <!--sub2 table-->
+    <table width="600" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+      <td width="600">
+      </td>
+    </table>
+    <!--sub2 table end-->
+    
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
 
 
-I think using a loop to evaluate possible offsets within the array is not 
-too complex.
+--b1_27f76aa6f60e61507933c258b62ef870
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor='#FFFFFF' >
+<STYLE>
+  body {background:#f9f9f9;}
+ .headerTop { background-color:white; border-top:0px solid #000000; border-bottom:1px solid #FFFFFF; text-align:center; }
+ .adminText { font-size:10px; color:#996600; line-height:200%; font-family:verdana; text-decoration:none; }
+ .headerBar { background-color:#FFFFFF; border-top:0px solid #333333; border-bottom:10px solid #FFFFFF; }
+ .title { font-size:20px; font-weight:bold; color:#CC6600; font-family:arial; line-height:110%; }
+ .subTitle { font-size:11px; font-weight:normal; color:#666666; font-style:italic; font-family:arial; }
+  td { font-size:12px; color:#000000; line-height:150%; font-family:trebuchet ms; }
+ .sideColumn { background-color:#FFFFFF; border-left:1px dashed #CCCCCC; text-align:left; }
+ .sideColumnText { font-size:11px; font-weight:normal; color:#999999; font-family:arial; line-height:150%; }
+ .sideColumnTitle { font-size:15px; font-weight:bold; color:#333333; font-family:arial; line-height:150%; }
+ .footerRow { background-color:#FFFFCC; border-top:10px solid #FFFFFF; }
+ .footerText { font-size:10px; color:#996600; line-height:100%; font-family:verdana; }
+  a { color:#901832;}
+  a.twitter-ie { -webkit-transition:0.3s; padding:0!important; margin-top: 15px; margin-left: 0; }
+  a.linkedin-ie { -webkit-transition:0.3s; padding:0!important; margin-top: 15px; margin-left:15px; }
+  a.facebook-ie { -webkit-transition:0.3s; padding:0!important; margin-top: 15px; margin-left:15px; }
+  a.twitter:hover {opacity:0.6; -webkit-transition:0.3s;}
+  a.facebook:hover {opacity:0.6; -webkit-transition:0.3s;}
+  a.linkedin:hover {opacity:0.6;  -webkit-transition:0.3s;}
+</STYLE>
+
+<table width="100%" cellpadding="10" cellspacing="0" bgcolor='#FFFFFF'>
+  <td valign="top" align="center">
+    <table width="600" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="left" valign="middle" style="background-color:#FFFFFF;border-top:0px solid #333333;border-bottom:10px solid #FFFFFF;">
+          <center>
+            <a href="">
+              <img src="https://passdoorsystems.com/assets/img/pass-door-systems-logo@2x.png" height="120" alt="Pass Door Systems" name="editableImg1" border="0" align="center" id='editableImg1' title="Pass Door Systems">
+            </a>
+          </center>
+        </td>
+      </tr>
+    </table>
+
+    <!--sub table-->
+    <table width="600" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+      <tr>
+        <td bgcolor="#FFFFFF" valign="top" width="400" style="font-size:12px;color:#000000;line-height:150%;font-family:trebuchet ms;">
+          <p>
+            <span style="font-size:20px; font-weight:bold; color:#666666; font-family:arial; line-height:110%;">💛 Helen just viewed your profile! Click here: https://sweetgirl22.page.link/c2Sd?wcza8 💛 contacted you from the website</span>
+            <br/>
+          </p>
+          <p>Details submitted:</p>
+          <p>
+            <b>Name:</b> 💛 Helen just viewed your profile! Click here: https://sweetgirl22.page.link/c2Sd?wcza8 💛<br />
+            <b>Email:</b> mptcp@lists.linux.dev<br />
+            <b>Phone:</b> 245751741878<br />
+            <b>Address:</b> dl715w<br />
+            <b>Sector:</b> 9jm0rc<br />
+            <br />
+            <b>Message:</b> gss9jj
+          </p>
+        </td>
+        <td width="200" valign="top" style="background-color:#FFFFFF;border-left:1px solid #CCCCCC;text-align:left; font-size:12px;color:#000000;line-height:150%;font-family:trebuchet ms;">
+          <p>
+            <span style="font-weight:bold; color:#666666; font-family:arial; line-height:22px;">Pass Door Systems Limited</span><br>
+            Unit 5 &amp; 6,<br/>
+            Woodside Road Industrial Estate,<br/>
+            Broughshane,<br/>
+            BT42 4QJ 
+          </p>
+          <p>
+            <b>t.</b> +44 (0) 28 25 44 69 30<br/>
+            <b>e.</b> <a href="mailto:info@passdoorsystems.com">info@passdoorsystems.com</a><br />
+          </p>
+        </td>
+      </tr>
+    </table>
+    <!--sub table end-->
+
+    <!--sub2 table-->
+    <table width="600" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+      <td width="600">
+      </td>
+    </table>
+    <!--sub2 table end-->
+    
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
 
 
-Going back to this layout:
 
-struct mptcp_sched_data {
- 	const struct mptcp_sock *msk;
- 	bool reinject;
- 	struct mptcp_sched_subflow subflows[MPTCP_SUBFLOWS_MAX];
-};
-
-The offset limits of is_scheduled within each mptcp_sched_subflow are:
-
-nested_offset = offsetof(struct mptcp_sched_subflow, is_scheduled);
-nested_offset_end = offsetofend(struct mptcp_sched_subflow, is_scheduled);
-
-and the starting offset of each element in the subflows[] array is:
-
-static size_t subflow_offset(int i)
-{
- 	return offsetof(struct mptcp_sched_data, subflows) + i * sizeof(struct mptcp_sched_subflow);
-}
+--b1_27f76aa6f60e61507933c258b62ef870--
 
 
-Then I think the offset 'off' can be checked for write access in a loop:
-
-for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
- 	size_t soff = subflow_offset(i);
- 	if (off == soff + nested_offset && off + size <= soff + nested_offset_end)
- 		return NOT_INIT; /* offsets match up with is_scheduled */
-}
-
-
---
-Mat Martineau
-Intel
+--943427501B03.1653709778/server.green17creative.com--
