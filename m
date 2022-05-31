@@ -1,85 +1,51 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5730C210B
-	for <mptcp@lists.linux.dev>; Tue, 31 May 2022 09:21:06 +0000 (UTC)
-Received: by mail-il1-f176.google.com with SMTP id f7so2680515ilr.5
-        for <mptcp@lists.linux.dev>; Tue, 31 May 2022 02:21:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E882B210B
+	for <mptcp@lists.linux.dev>; Tue, 31 May 2022 09:24:42 +0000 (UTC)
+Received: by mail-pg1-f172.google.com with SMTP id j21so12270635pga.13
+        for <mptcp@lists.linux.dev>; Tue, 31 May 2022 02:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=kRKfRzKw6tU/RBOHC/WvKryiB8yLx9j1uVCJtFrAZ1o=;
-        b=ECMDNLS2sIqZG/+dx23ZbJ2/zs3C+47hzab4UCQG95jHx/ROQMO0FnpFtUl/RwRqP2
-         3uxa17ucFLOX4siSFiduANCsdxDaWzXXCnFn7Hoaov7/eDtNZYgM5dxV4uLYlJQbIY5j
-         M9eAN00fJrhUz7qweRIKG1r92pnIhNuuM23g2Oer6IdnSXOrUg7hHRjikdVbsXsmgZXz
-         OHvA0y0xdByHTkMk3tUHJqnheE6AtXErvfhHvDBSMRZal6uUyQ3JXhOJCsweMDXaC2Bx
-         fhD/xAtQMdLXFstgdx+Xd7BV3++ng3oqKK8SXR8ZBdqIsB/Vvl0lRdrSLFgsZMGb+tbf
-         9d+g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xeucAChSDh+7yh3jLWhSG0ySXy+Y7ULvnWp+zI9w/5c=;
+        b=jI8n5ZN8azH372qn8gFCTTXewE5S/ExZ65dqwu2BvHemHen8VPu6cwTnglOMvTDxYd
+         44D7PuefzCNe8InLoZ6X/AChYDc/357eP7rKGUR4ZZtEorluUlbxFLv6DJ2E0fglAefc
+         tdxF3WOHjpH1HNIVRGWQiaozi2vCiNkK2Rc9gPAKY+/HHl8+uLYRXvlo3J5r4W134f0U
+         4atu0cbyWLUyGT46hqTdZd83gtzy2pVCaqn+4oJ/iXL0Fwe1Bi6JOvyiSBQlU9VBQiMZ
+         D1dzMcWCQ0XaVw/6the0CQJqqzIa7e4i4EVG6A9ofF7eKNQiuOyw7dj7lNGJg4fXPWYx
+         cudA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=kRKfRzKw6tU/RBOHC/WvKryiB8yLx9j1uVCJtFrAZ1o=;
-        b=aj/QiDNtNcs6MIC3/v7Yh1HlyCdQHyMYxlQA0XefkRBXmlFsmCXKseGYIvR2gxND1A
-         duPdM396dsIqnS8sadbbe7mPo27QzvPt3Gq6l7K1Fm5Hc9s3X+8NZfB2YEA7BZh5zgSo
-         v4A2pjSpa1t2dvLzZGsxH/Xj/bd5nwwFFF65RIwWnN1GXM97KX32U9Bc4qQj0OaUkFoB
-         UFszd9xtVc3DhhT1XsDFu9ZFpox4AahYsnStUVhZIyZkOZ3Y6cH5qvarXT2LcV8jZttr
-         /drWgp+Wm9jajQy7+fI9dyV46Swd2gGDXtTL3fBS5TYt9o+aalaCTd6jH7OnjhAwuXtN
-         W1qA==
-X-Gm-Message-State: AOAM531qFxChNVFjNTpit0geVaQwsXl4wrAONwuC/5t/zBqa0ky44CMY
-	cZxrOErpfdE2VGOf+yipXg==
-X-Google-Smtp-Source: ABdhPJyerUFpcxBhBKeyPDuoXz2qB5QXa4th+XkD2rXBOQwk6X8V20sWU4mKEBLjVa3fb+F5FLS8lw==
-X-Received: by 2002:a05:6e02:1525:b0:2d1:e38d:a941 with SMTP id i5-20020a056e02152500b002d1e38da941mr15174878ilu.198.1653988865350;
-        Tue, 31 May 2022 02:21:05 -0700 (PDT)
-Received: from [127.0.0.1] ([40.77.95.166])
-        by smtp.gmail.com with ESMTPSA id j19-20020a056638053300b0032dd4094580sm3335700jar.49.2022.05.31.02.21.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 May 2022 02:21:04 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <31935db8f3291afbea6e5dc057f63032ed6f259a.1653987929.git.geliang.tang@suse.com>
-References:
- <31935db8f3291afbea6e5dc057f63032ed6f259a.1653987929.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: add bpf_rr test: Build Failure
-Message-ID: <b3d0d091-f18b-9cae-9e89-09c69d203347@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 31 May 2022 09:21:04 +0000
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xeucAChSDh+7yh3jLWhSG0ySXy+Y7ULvnWp+zI9w/5c=;
+        b=s5aWp4bw8si9dErmIrpDzTVzuiE5fv/MQwhpSgYeZNEaHx7z2tQWbvlz0WuUnb58XP
+         +Xf0A4p3l2pTMm2/K53spf9EScvUAP5XZW4zzojMttqZYAk1izBY/f1lVLv7MStef5qB
+         9yLUQsgGa408Ozozio1FK5yNuJu5q7h0dLEJ0490sv0ngKQzkteUqMgLhpGxeHXJs4AL
+         dDsYrIhyQg8mL6Qkw9zSTeKBnT2mutB2HFhZYzTxV2Z63cY5gJwhweF+xYsyldjeabl+
+         dKiV1LagYx3VVzlmm3MMLw3IjT3wOAGUmih93CK6cAbuFaIoCe/hHZCZfK4kfH5PmMe7
+         BsvQ==
+X-Gm-Message-State: AOAM5331x+h5V+zcrl89Id0UcpHYOQNfsXzrCfGU8uq7C/CR5+M33YqF
+	UxLtjeOdDuYIYle+TTSifTP+8vmwyPRQ0+a1VTdJeT1NOyo=
+X-Google-Smtp-Source: ABdhPJyfXW8PlYY+Oi++VWFHo3ki8T+h09n1zAMn7IVUiNvPKCNIczHa5a10WNI2VFoSTsMNliYnllonbnFoZ/8Bpvc=
+X-Received: by 2002:a63:2:0:b0:3f6:5b37:e94c with SMTP id 2-20020a630002000000b003f65b37e94cmr47958835pga.356.1653989082416;
+ Tue, 31 May 2022 02:24:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <cover.1653987929.git.geliang.tang@suse.com> <9037c9679144745dde14866e1f975d221df90f94.1653987929.git.geliang.tang@suse.com>
+In-Reply-To: <9037c9679144745dde14866e1f975d221df90f94.1653987929.git.geliang.tang@suse.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Tue, 31 May 2022 17:24:50 +0800
+Message-ID: <CA+WQbwu1cuc4fOnqwFM39uE4W6RxaLZNkmYV_ye5g_OaHjvR9A@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v4 08/10] selftests/bpf: add bpf_backup test
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
-
-Thank you for your modifications, that's great!
-
-But sadly, our CI spotted some issues with it when trying to build it.
-
-You can find more details there:
-
-  https://patchwork.kernel.=
-org/project/mptcp/patch/31935db8f3291afbea6e5dc057f63032ed6f259a.1653987929=
-.git.geliang.tang@suse.com/
-  https://github.com/multipath-tcp/mptcp_net-ne=
-xt/actions/runs/2413917761
-
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/c91606f830=
-c4
-
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+The subject should be update to "selftests/bpf: add bpf_bkup test".
