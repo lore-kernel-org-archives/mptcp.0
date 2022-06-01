@@ -1,113 +1,152 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF68180
-	for <mptcp@lists.linux.dev>; Tue, 31 May 2022 10:39:55 +0000 (UTC)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-f2e0a41009so16348604fac.6
-        for <mptcp@lists.linux.dev>; Tue, 31 May 2022 03:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=r/W+4wu0FPGI6yoI68QFRnEm53LzZydcb5eGb+oeO+M=;
-        b=TiTLkVFtU+8wyFis6P3sVwEtLLxb0X62Lixi3C/D/wa/Y4kVOZlvMu7chOMwIszV48
-         lWS16rzpoPBtaZnHQ/Z7VLZCwwebXgZW/ZRvZaG+p+MpAAKWb1GWDcdxFHh+dICIFO0L
-         LQoPrnCQLgMjaDB8k6w0J+9etz/ac83RjvpM3Udeebji/u/HlbjRUbS44QFLqM+lYmtb
-         DKBTZwXN2hZicnSqT70JpsqVAdpVg8v8l1CGTK4okdyyHT0y0cBIAth6v3O74jhr0hqZ
-         7TEuvqVNyTpKItHNNgNfXV6ye6uf7s+KlJg80cEazzrq69N4uroJCZZMbaCDbPPaT4fP
-         /xEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=r/W+4wu0FPGI6yoI68QFRnEm53LzZydcb5eGb+oeO+M=;
-        b=reSGpXW4vu87APKEEEfawbIXr3hMe2Ym1tb1akdAD6a9kqhjXf4tXFwR6yrKASBbDN
-         ppK5EXVgQjQVavZP/Xrk/tH4WWXBbXqA0ZolJ9iKUtblM2neTHarrOCZ+rePpy9/PQZT
-         KdTGzsiLFCviv6M95TDtJKK7HX26DczTH4Gjcjkb6cqp4Egge/IjHdfLCvZzGpoy1+nA
-         EPkn45k2bzb50kCoqjZH7FnLJxJNkp/kONMFpQC7YC9D1s3332/vTusdecIPEVH+cQXV
-         7YGm5HnIWEUByl/7JcObgKLyruZUinXXaLfRPeAvqAew/OHwC7PACy9ipt/bTMIrtFWE
-         wIgw==
-X-Gm-Message-State: AOAM531ap7fwdkrMy0XL8PwXe9oFg839KctTb0Dy5mOeT0BR5TQ5vOgq
-	wNTAKe2Gz165DNvWX1pmdvoy8PHgSmzI
-X-Google-Smtp-Source: ABdhPJwIabjbCFc8jAte1zjQGnBkyYCOJzecmG/9AfGZsfnsSj67aF+1JNqzYknMUF2E0qnGZ9YoEg==
-X-Received: by 2002:a05:6870:e749:b0:f3:6646:be47 with SMTP id t9-20020a056870e74900b000f36646be47mr2441385oak.219.1653993594385;
-        Tue, 31 May 2022 03:39:54 -0700 (PDT)
-Received: from [127.0.0.1] ([20.236.143.232])
-        by smtp.gmail.com with ESMTPSA id eh6-20020a056870f58600b000f30837129esm4533903oab.55.2022.05.31.03.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 May 2022 03:39:53 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7415E7E
+	for <mptcp@lists.linux.dev>; Wed,  1 Jun 2022 00:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654043944; x=1685579944;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I/FjY0rAnqKIJCKAVSwyvpwuDGOtThVdLsvm352JFZw=;
+  b=if0Mm2ZG5wjwUPQ37nn6ee5sMIOoZ7PSJjmzJOx0bNgcDI5UQnGZ3dJ0
+   53gAL0ixo9FJ+dzOHqwebU8tkt/fmB0FQTUvlplus1XmbUl4OPDzHWCke
+   Sv33JBfO/ubG4tsB5mYabL7TGQm75BpERWQnPcyb2sWlDXOox7Ssqe4e0
+   xsyuRCaXbjToM/LmgqcFM1n4LmonufW8ZOuGrji97Zxe3UIvv2XCyYnGD
+   gDFNp2EQ4RNpjEXnLu2TL48yX+vcRkACjkOhxYF81QZg7M2KL6/hbHWbk
+   J4BpG3LbA0Ub6+Oq6A9OpOZrC5OS5/iptEl+tEj18Kuk2OGn/NW28gzhc
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="275508812"
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="275508812"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 17:39:03 -0700
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="904216366"
+Received: from sbeaupre-mobl1.amr.corp.intel.com ([10.209.105.200])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 17:39:03 -0700
+Date: Tue, 31 May 2022 17:38:56 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <31935db8f3291afbea6e5dc057f63032ed6f259a.1653987929.git.geliang.tang@suse.com>
-References:
- <31935db8f3291afbea6e5dc057f63032ed6f259a.1653987929.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: add bpf_rr test: Tests Results
-Message-ID: <715fc76f-0d43-4b30-a19e-720f92d9d70b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 31 May 2022 10:39:53 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v4 01/10] Squash to "mptcp: add struct
+ mptcp_sched_ops"
+In-Reply-To: <fc0419737e68303ab2f9da821b740f5069d1da7e.1653987929.git.geliang.tang@suse.com>
+Message-ID: <8e7fff78-1f64-2757-c6c-a7ce826cef5a@linux.intel.com>
+References: <cover.1653987929.git.geliang.tang@suse.com> <fc0419737e68303ab2f9da821b740f5069d1da7e.1653987929.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Geliang,
+On Tue, 31 May 2022, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> Use bitmap instead of sock in struct mptcp_sched_data.
+>
+> Please update the commit log:
+>
+> '''
+> This patch defines struct mptcp_sched_ops, which has three struct members,
+> name, owner and list, and three function pointers, init, release and
+> get_subflow.
+>
+> Add the scheduler registering, unregistering and finding functions to add,
+> delete and find a packet scheduler on the global list mptcp_sched_list.
+>
+> The BPF scheduler function get_subflow() has a struct mptcp_sched_data
+> parameter, which contains a mptcp_subflow_context array. Add a new member
+> scheduled for mptcp_subflow_context, which will be set in the MPTCP
+> scheduler context when the scheduler picks this subflow to send data.
+> '''
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> include/net/mptcp.h                           |  7 ++++---
+> net/mptcp/protocol.h                          |  1 +
+> tools/testing/selftests/bpf/bpf_tcp_helpers.h | 11 ++++++++---
+> 3 files changed, 13 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 6456ea26e4c7..7af7fd48acc7 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -97,14 +97,15 @@ struct mptcp_out_options {
+> };
+>
+> #define MPTCP_SCHED_NAME_MAX	16
+> +#define MPTCP_SUBFLOWS_MAX	8
+>
+> struct mptcp_sched_data {
+> -	struct sock	*sock;
+> -	bool		call_again;
+> +	bool	reinject;
+> +	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
 
-Our CI did some validations and here is its report:
+Ok - the BPF verifier is able to handle this array? That's good news.
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/4799661683769344
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4799661683769344/summary/summary.txt
+> };
+>
+> struct mptcp_sched_ops {
+> -	void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
+> +	void (*get_subflow)(const struct mptcp_sock *msk,
+> 			    struct mptcp_sched_data *data);
+>
+> 	char			name[MPTCP_SCHED_NAME_MAX];
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 8739794166d8..48c5261b7b15 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -469,6 +469,7 @@ struct mptcp_subflow_context {
+> 		valid_csum_seen : 1;        /* at least one csum validated */
+> 	enum mptcp_data_avail data_avail;
+> 	bool	mp_fail_response_expect;
+> +	bool	scheduled;
+> 	u32	remote_nonce;
+> 	u64	thmac;
+> 	u32	local_nonce;
+> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> index aca4e3c6ac48..a705054f38c5 100644
+> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> @@ -231,10 +231,15 @@ extern __u32 tcp_slow_start(struct tcp_sock *tp, __u32 acked) __ksym;
+> extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
+>
+> #define MPTCP_SCHED_NAME_MAX	16
+> +#define MPTCP_SUBFLOWS_MAX	8
+> +
+> +struct mptcp_subflow_context {
+> +	bool	scheduled;
+> +} __attribute__((preserve_access_index));
 
-- KVM Validation: debug:
-  - Unstable: 3 failed test(s): selftest_diag =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5925561590611968
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5925561590611968/su=
-mmary/summary.txt
+Ah, is this the array "magic"?
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/c91606f830c4
+>
+> struct mptcp_sched_data {
+> -	struct sock	*sock;
+> -	bool		call_again;
+> +	bool	reinject;
+> +	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
+> };
+>
+> struct mptcp_sched_ops {
+> @@ -243,7 +248,7 @@ struct mptcp_sched_ops {
+> 	void (*init)(const struct mptcp_sock *msk);
+> 	void (*release)(const struct mptcp_sock *msk);
+>
+> -	void (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
+> +	void (*get_subflow)(const struct mptcp_sock *msk,
+> 			    struct mptcp_sched_data *data);
+> 	void *owner;
+> };
+> -- 
+> 2.34.1
+>
+>
+>
 
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+--
+Mat Martineau
+Intel
