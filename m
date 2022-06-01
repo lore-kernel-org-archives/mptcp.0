@@ -1,85 +1,113 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C984C256F
-	for <mptcp@lists.linux.dev>; Wed,  1 Jun 2022 14:21:04 +0000 (UTC)
-Received: by mail-qv1-f47.google.com with SMTP id q15so740889qvy.8
-        for <mptcp@lists.linux.dev>; Wed, 01 Jun 2022 07:21:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BF42562
+	for <mptcp@lists.linux.dev>; Wed,  1 Jun 2022 15:04:27 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id x62so2580153ede.10
+        for <mptcp@lists.linux.dev>; Wed, 01 Jun 2022 08:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=1S1cARBPoph2NNvxMYzQvF8eT54zlnGbcJna3RumVes=;
-        b=iapqgVhrpudsxP4Pa8seqErz7k2fGs9Tmqxn6T5BIoYYG16NnXtItMTGA4CkZdl5p8
-         d1PhH6kQ4CK5jwP/WP8W7CvyMTfJLTdgse0FJpoaoMNZjbn3IZei3oJLnywGoaWbmJeP
-         BNitAOZ4odDYZfC0ynSR/5OW0Kz0PMLgJmANofa20P3rpkuLvsK/ZawnJVEP7q3LpBr7
-         lBF8On4iY6Z23yTxXtblOH8BpR9uj8pwHVghzgSeYQBT5tMTh0rIPsRCMoyK1kSUInJG
-         nP5H+VQJ9r85JD1FSf3AAJ+fjn9+Kl2lJfxBKPMhdOqRcmMt4AfHN7Uw3ymmvJAxEuOK
-         cq1Q==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:cc:from:in-reply-to:content-transfer-encoding;
+        bh=mDt8VyRhOTkbEbvkqKJu0pPTg6jhmIp+WhDQUVhbOLk=;
+        b=th3g+EslkRaQJArIvyOCseC6Etw1eWSRfRfagSyn2y80/DKKfYCnPkW2MmVzNpREHE
+         ck+6Hk1MhI5peQJE+KRNkG7uMWdgmWuYWWa1kMztW5dmvefz7aEwQxmt6f/zXSa2tbBM
+         lTI6n6EAauoyxL10OFa86aHjHiYdQ1nV6EPIEWV7eweodZpY/mvCK9EnFgTKReE9HCfs
+         ziSb/wXx617isoUZzYmjKgzLN4LauQf5ZaVpVpnb5xwRx0PsCBR/JOs0GB7NOLOQIuNr
+         Wsxsxqwi3Pf7PBHtH9t2Pto+UrSmccpaVGq+2P37eL+Km5yEZ0cMKdhG9/ta5PYRkbfn
+         ZlEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=1S1cARBPoph2NNvxMYzQvF8eT54zlnGbcJna3RumVes=;
-        b=uzfaktVMZu+RHO9P/PvzJ1Xl1/U/OXVrYtqawB/JreTYzA5j7Fkq8ILxWy2CkVlrhm
-         v3kL5LflwQbcpHPFBiP3DnbBJUZ/VEM4EJmQIp3yue+WP4H5cPCClz5LuSETNKSSh6AT
-         7cGLr9L7DIj9vBR2wk5H3xTbEVMJmI487jd/mDfIGuJMeFYWFSU5pyM2n6ox+WHPdAU0
-         j+sgoLr5Hnl3C7EKaQALP/sah0hzVMBEmNAr1itwgFHxJQVM/jGAshi4VaDrzPNff17m
-         TbIhznAbqAYyVRhBFtk4YTn/rKVVjWziG09T+68YT9E74+Lf3J8Q4haMKzN0c/WJ5Lws
-         rPiw==
-X-Gm-Message-State: AOAM530rFp3PwBHNxY2PrAR50PLYKV5uDg4sSWPZBfJjwNc1ChIAmupP
-	jWIqe2LTfHhMKC5lxiAauA==
-X-Google-Smtp-Source: ABdhPJyil/BPNybiCBRbRbpQwkcFHHkTEYLL5FYCrllZSuil79fYCGDImgI6xUD6FKmfQbNndw5MGQ==
-X-Received: by 2002:ad4:5cab:0:b0:464:643b:1099 with SMTP id q11-20020ad45cab000000b00464643b1099mr6147746qvh.95.1654093263372;
-        Wed, 01 Jun 2022 07:21:03 -0700 (PDT)
-Received: from [127.0.0.1] ([20.231.51.156])
-        by smtp.gmail.com with ESMTPSA id i12-20020a37c20c000000b0069fc13ce20asm1298108qkm.59.2022.06.01.07.21.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jun 2022 07:21:03 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <94de6d463bde36d3ad8e50324b9c40ce9ae36467.1654092153.git.geliang.tang@suse.com>
-References:
- <94de6d463bde36d3ad8e50324b9c40ce9ae36467.1654092153.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: add bpf_rr test: Build Failure
-Message-ID: <dbd58b00-6a0d-91fc-c739-8f8c453b0c42@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jun 2022 14:21:02 +0000
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:cc:from:in-reply-to
+         :content-transfer-encoding;
+        bh=mDt8VyRhOTkbEbvkqKJu0pPTg6jhmIp+WhDQUVhbOLk=;
+        b=YbT5fe3hKRiulPwgPS9sVCKzkX8PVNnoRYxrSFFRX4RzU9NPM1X7b5PaA7goslRM+R
+         gvg0+vBQTwugPJlIrkV4McInEpQI5x5H1sIyPjMlANFNoYt4bp3fLKE0B/eAazn9dGvs
+         n89AxuJe4QMdre3T1ACC8+d4noCpy8QfltqJix8bO+Aap+1XKN/07cWpVGpKqfxXmPgK
+         Ux/a/ySmbEpzj4AxCtsKgZPHoRYBO1jdjUCPcveLSv29S09aLjBGinzgM2zxj4ZcEB/3
+         T8A9o1mUrvjniZlOsXrHDg7FyDQ6wxK7gN2s4LbKkxc1Ss4KiHgLWRu6nrgaT9j14wOq
+         zp/A==
+X-Gm-Message-State: AOAM533VBvvo5xrUfAnvgTUFdpaEGE/bh4Zq+j6BonF80OVD1c9p/2BS
+	5XKNNA+YwUul2D9VkSoRdhlzQL/Id/mZzg==
+X-Google-Smtp-Source: ABdhPJyUrw0d4o5WdTJA/5yK3n4pIWK5CiB0M0de8h23iB7zFGggC4YgEwP8lLTRm6rnqECWjR2SQQ==
+X-Received: by 2002:a50:ed12:0:b0:42d:d1d3:493c with SMTP id j18-20020a50ed12000000b0042dd1d3493cmr147512eds.174.1654095865400;
+        Wed, 01 Jun 2022 08:04:25 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:5a6a:8d5b:5988:be90? ([2a02:578:8593:1200:5a6a:8d5b:5988:be90])
+        by smtp.gmail.com with ESMTPSA id q24-20020aa7d458000000b0042aad9edc9bsm1091237edr.71.2022.06.01.08.04.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jun 2022 08:04:24 -0700 (PDT)
+Message-ID: <0e945e4c-212f-bf6f-04ce-50d32bb6e330@tessares.net>
+Date: Wed, 1 Jun 2022 17:04:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: selftests/bpf: add bpf_rr test: Build Failure
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+References: <94de6d463bde36d3ad8e50324b9c40ce9ae36467.1654092153.git.geliang.tang@suse.com>
+ <dbd58b00-6a0d-91fc-c739-8f8c453b0c42@gmail.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <dbd58b00-6a0d-91fc-c739-8f8c453b0c42@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+Thank you for the new version!
 
-But sadly, our CI spotted some issues with it when trying to build it.
+On 01/06/2022 16:21, MPTCP CI wrote:
+> Hi Geliang,
+> 
+> Thank you for your modifications, that's great!
+> 
+> But sadly, our CI spotted some issues with it when trying to build it.
+> 
+> You can find more details there:
+> 
+>   https://patchwork.kernel.org/project/mptcp/patch/94de6d463bde36d3ad8e50324b9c40ce9ae36467.1654092153.git.geliang.tang@suse.com/
+>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2422165357
 
-You can find more details there:
+Regarding these errors, are they normal? I mean: will they be removed
+after having applied the different Squash-to patch?
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/94de6d463bde36d3ad8e50324b9c40ce9ae36467.1654092153=
-.git.geliang.tang@suse.com/
-  https://github.com/multipath-tcp/mptcp_net-ne=
-xt/actions/runs/2422165357
+I guess for these ones yes:
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/4d61a8b660=
-c4
+  net/mptcp/sched.c: In function 'mptcp_sched_data_init':
+  net/mptcp/sched.c:94:6: error: 'struct mptcp_sched_data' has no member
+named 'sock'
+     94 |  data->sock = NULL;
+        |      ^~
+  (...)
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+
+But also for these ones?
+
+  In file included from ./include/uapi/linux/posix_types.h:5,
+                   from ./include/uapi/linux/types.h:14,
+                   from ./include/linux/types.h:6,
+                   from ./include/uapi/linux/bpf.h:11,
+                   from ./include/linux/bpf.h:7,
+                   from net/mptcp/bpf.c:12:
+  net/mptcp/bpf.c: In function 'bpf_mptcp_sched_btf_struct_access':
+  ./include/linux/stddef.h:16:32: error: 'struct mptcp_sched_data' has
+no member named 'sock'
+     16 | #define offsetof(TYPE, MEMBER) __builtin_offsetof(TYPE, MEMBER)
+        |                                ^~~~~~~~~~~~~~~~~~
+  net/mptcp/bpf.c:55:7: note: in expansion of macro 'offsetof'
+     55 |  case offsetof(struct mptcp_sched_data, sock):
+        |       ^~~~~~~~
+  (...)
+
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
