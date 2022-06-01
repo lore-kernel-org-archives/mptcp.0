@@ -1,39 +1,39 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C4F7E
-	for <mptcp@lists.linux.dev>; Wed,  1 Jun 2022 00:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0263A7E
+	for <mptcp@lists.linux.dev>; Wed,  1 Jun 2022 01:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654045182; x=1685581182;
+  t=1654045894; x=1685581894;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=qeB1I69UckP6fZp6Ym2htlUn/Y8tCFo/KInZOBx84dU=;
-  b=BIlBDXdAml8mEtTB/ieqHwOczaffTRaufLrQElwGnBy6qPtfJuSerXPl
-   khqrN4sjn7jICVBUFyEc2ogj3kCfBbhZkTTgQlmv5PCXBmCzbBU+o9ZEm
-   C6MpwTwvSSbNq+92Fae0RreImDAk2lrymqzHA0YkZWwLki5uYcZTLJ2NG
-   P+n6Qd6jU7XYaEgWEyv64hHmja+QoJsSbnXU19ntiOII+w3f6B/ysfT45
-   u7NX7DAjDBdNTMHrgT9XS2ErK3Y2Sx90CC1+8yxIK1wHgOZfB2DdpJzz7
-   P3EeU8PI05rI8vXHSmhxie5lgT9G1ZdTbHm1NKmsyIktuOHmiSbpqOgTQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="275157470"
+  bh=+5tfJLT9cDw/p/OvzwqY6EdgjQHvghucjE8x3QHL+ro=;
+  b=f5R5WpePj+aD4AqOrM5JXg8vOlSCRvjeLsNOolKeVJuN+iMY8dun9xB+
+   h38ORXo7TRe1lpJdh6ls7+dtnm4nT3cgF55zMfd9pvnS9OyJWBCx1m8/q
+   RU+khriIZ8yTzlIpnUuB5RCg0LdM3Rqf+pB2auIUxuOwSsxR0itRtHYS4
+   OfZTDNLHimpuvZDEUAc9v6xV4IVGyNSv6JahBCIXRYVjoy3Hf24BPMW64
+   Ig+QW6QBeYhmsSyrP5TXZHt64bBRW3T+Kc4q7zrK59Whixuqpp+/lPplB
+   PSiWGmkLJpecOMy7vP8KRP50YIKHhC5LZR7/nX2jpi2BcLDof+X1AUHc2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="263070507"
 X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
-   d="scan'208";a="275157470"
+   d="scan'208";a="263070507"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 17:59:41 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 18:11:33 -0700
 X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
-   d="scan'208";a="720552870"
+   d="scan'208";a="720556364"
 Received: from sbeaupre-mobl1.amr.corp.intel.com ([10.209.105.200])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 17:59:41 -0700
-Date: Tue, 31 May 2022 17:59:40 -0700 (PDT)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 18:11:32 -0700
+Date: Tue, 31 May 2022 18:11:32 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 03/10] Squash to "mptcp: add get_subflow
- wrappers"
-In-Reply-To: <38eee17dadb62fe1e21a19c875cf63e1cadb0f1f.1653987929.git.geliang.tang@suse.com>
-Message-ID: <4afab57d-4c35-fa46-c379-453c98a963ef@linux.intel.com>
-References: <cover.1653987929.git.geliang.tang@suse.com> <38eee17dadb62fe1e21a19c875cf63e1cadb0f1f.1653987929.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v4 07/10] selftests/bpf: add bpf_bkup
+ scheduler
+In-Reply-To: <fb54b554c1897f5205d1e146d0a7d1d25f7a8a4a.1653987929.git.geliang.tang@suse.com>
+Message-ID: <a6b9795-7b6-2cb9-f82e-e643bbb79e51@linux.intel.com>
+References: <cover.1653987929.git.geliang.tang@suse.com> <fb54b554c1897f5205d1e146d0a7d1d25f7a8a4a.1653987929.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,138 +44,84 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Tue, 31 May 2022, Geliang Tang wrote:
 
-> Please update the commit log:
->
-> '''
-> This patch defines two new wrappers mptcp_sched_get_send() and
-> mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in them.
-> Use them instead of using mptcp_subflow_get_send() or
-> mptcp_subflow_get_retrans() directly.
->
-> Set the subflow pointers array in struct mptcp_sched_data before invoking
-> get_subflow(), then it can be used in get_subflow() in the BPF contexts.
->
-> Check the subflow scheduled flags to test which subflow or subflows are
-> picked by the scheduler.
-> '''
+> This patch implements the backup flag test scheduler, named bpf_bkup,
+> which picks the first non-backup subflow to send data.
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> net/mptcp/sched.c | 54 +++++++++++++++++++++++++++++++++++++----------
-> 1 file changed, 43 insertions(+), 11 deletions(-)
+> tools/testing/selftests/bpf/bpf_tcp_helpers.h |  2 +
+> .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 43 +++++++++++++++++++
+> 2 files changed, 45 insertions(+)
+> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c
 >
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 3ceb721e6489..613b7005938c 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -88,11 +88,25 @@ void mptcp_release_sched(struct mptcp_sock *msk)
-> 	bpf_module_put(sched, sched->owner);
-> }
+> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> index 870deb5cf5ed..6fa496a65bef 100644
+> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> @@ -234,6 +234,8 @@ extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
+> #define MPTCP_SUBFLOWS_MAX	8
 >
-> -static int mptcp_sched_data_init(struct mptcp_sock *msk,
-> +static int mptcp_sched_data_init(struct mptcp_sock *msk, bool reinject,
-> 				 struct mptcp_sched_data *data)
-> {
-> -	data->sock = NULL;
-> -	data->call_again = 0;
-> +	struct mptcp_subflow_context *subflow;
-> +	int i = 0;
+> struct mptcp_subflow_context {
+> +	__u32	padding : 12,
+> +		backup : 1;
+
+Is the padding required? It looks like the BTF code might know how to 
+handle bitfield members.
+
+- Mat
+
+> 	bool	scheduled;
+> } __attribute__((preserve_access_index));
+>
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c
+> new file mode 100644
+> index 000000000000..ad2b2b4de8a5
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2022, SUSE. */
 > +
-> +	data->reinject = reinject;
+> +#include <linux/bpf.h>
+> +#include "bpf_tcp_helpers.h"
 > +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		if (i == MPTCP_SUBFLOWS_MAX) {
-> +			pr_warn_once("too many subflows");
+> +char _license[] SEC("license") = "GPL";
+> +
+> +SEC("struct_ops/mptcp_sched_bkup_init")
+> +void BPF_PROG(mptcp_sched_bkup_init, const struct mptcp_sock *msk)
+> +{
+> +}
+> +
+> +SEC("struct_ops/mptcp_sched_bkup_release")
+> +void BPF_PROG(mptcp_sched_bkup_release, const struct mptcp_sock *msk)
+> +{
+> +}
+> +
+> +void BPF_STRUCT_OPS(bpf_bkup_get_subflow, const struct mptcp_sock *msk,
+> +		    struct mptcp_sched_data *data)
+> +{
+> +	int nr = 0;
+> +
+> +	for (int i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
+> +		if (!data->contexts[i])
 > +			break;
-> +		}
-> +		WRITE_ONCE(subflow->scheduled, false);
-
-If subflow->scheduled is using READ_ONCE/WRITE_ONCE semantics, then 
-writing it directly from BPF code is going to be a problem. The code in 
-this patch set would work ok since all read and write access is under the 
-msk lock, but I think integrating with all of the transmit and retransmit 
-code (especially transmission in mptcp_subflow_process_delegated()) would 
-make it important to use WRITE_ONCE() to set subflow->scheduled.
-
-I think that requires using a C helper function called from BPF to do 
-WRITE_ONCE(subflow->scheduled), or using a lock to order accesses. The 
-mptcp_data_lock is already used in mptcp_subflow_process_delegated() but 
-we probably don't want to add more locking to mptcp_sendmsg(). That makes 
-me think the helper function might be better - unless there's a generic 
-BPF technique for using WRITE_ONCE.
-
-> +		data->contexts[i++] = subflow;
-> +	}
 > +
-> +	for (; i < MPTCP_SUBFLOWS_MAX; i++)
-> +		data->contexts[i] = NULL;
->
-> 	return 0;
-> }
-> @@ -100,6 +114,8 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk,
-> struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
-> {
-> 	struct mptcp_sched_data data;
-> +	struct sock *ssk = NULL;
-> +	int i;
->
-> 	sock_owned_by_me((struct sock *)msk);
->
-> @@ -113,16 +129,25 @@ struct sock *mptcp_sched_get_send(struct mptcp_sock *msk)
-> 	if (!msk->sched)
-> 		return mptcp_subflow_get_send(msk);
->
-> -	mptcp_sched_data_init(msk, &data);
-> -	msk->sched->get_subflow(msk, false, &data);
-> +	mptcp_sched_data_init(msk, false, &data);
-> +	msk->sched->get_subflow(msk, &data);
-> +
-> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> +		if (data.contexts[i] && READ_ONCE(data.contexts[i]->scheduled)) {
-> +			ssk = data.contexts[i]->tcp_sock;
-> +			msk->last_snd = ssk;
+> +		if (!data->contexts[i]->backup) {
+> +			nr = i;
 > +			break;
 > +		}
 > +	}
-
-I think this is ok for a placeholder until more of the transmit 
-integration is done.
-
->
-> -	msk->last_snd = data.sock;
-> -	return data.sock;
-> +	return ssk;
-> }
->
-> struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
-> {
-> 	struct mptcp_sched_data data;
-> +	struct sock *ssk = NULL;
-> +	int i;
->
-> 	sock_owned_by_me((const struct sock *)msk);
->
-> @@ -133,9 +158,16 @@ struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
-> 	if (!msk->sched)
-> 		return mptcp_subflow_get_retrans(msk);
->
-> -	mptcp_sched_data_init(msk, &data);
-> -	msk->sched->get_subflow(msk, true, &data);
-> +	mptcp_sched_data_init(msk, true, &data);
-> +	msk->sched->get_subflow(msk, &data);
 > +
-> +	for (i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> +		if (data.contexts[i] && READ_ONCE(data.contexts[i]->scheduled)) {
-> +			ssk = data.contexts[i]->tcp_sock;
-> +			msk->last_snd = ssk;
-> +			break;
-> +		}
-> +	}
->
-> -	msk->last_snd = data.sock;
-> -	return data.sock;
-> +	return ssk;
-> }
+> +	data->contexts[nr]->scheduled = 1;
+> +}
+> +
+> +SEC(".struct_ops")
+> +struct mptcp_sched_ops bkup = {
+> +	.init		= (void *)mptcp_sched_bkup_init,
+> +	.release	= (void *)mptcp_sched_bkup_release,
+> +	.get_subflow	= (void *)bpf_bkup_get_subflow,
+> +	.name		= "bpf_bkup",
+> +};
 > -- 
 > 2.34.1
 >
