@@ -1,112 +1,95 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6B4362
-	for <mptcp@lists.linux.dev>; Wed,  1 Jun 2022 08:16:09 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id l20-20020a17090a409400b001dd2a9d555bso1391366pjg.0
-        for <mptcp@lists.linux.dev>; Wed, 01 Jun 2022 01:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=WVbYLELo8WO6C8P38V8fzYu4qfUri3A90Y8kEyBUex4=;
-        b=h9k5vvd5RyCcTu/JiGwAGITG2Knsj1gCLlItrxUc3YSZZz6/AELKV3HAzJFx1HFhZ7
-         IlnvIX4o8J9GkxkmtkhI6xL8icLDJZw70w5845ZFOiNs/qkzOyYB4cmekJjSqP9xjJNg
-         Tn2xbrJQ/HE9tLf5mIJWK+JYvAWmS7H54ikJ9/vZSOUJD9zMJN35V0xfIXfebySSwDPy
-         zKItPGA3wb5ux/uDXgs3ohx+6WQq4PHr2sCeKEi8TjUqJK5MS8/Pjqrlid0Pjo9TA8Tk
-         iibJ3dk2yRUZQife/iDiQ4UHJ3383Qz1Qu36wi6RfEH7c5MLtw6TLIElI+zSqN1Glyuy
-         v2dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=WVbYLELo8WO6C8P38V8fzYu4qfUri3A90Y8kEyBUex4=;
-        b=XJICJYAd8st9vS44dTrqD2eJNd2VyDcdmTwdpJxpgMxFSyTJF+2Ink96gc6MlVKNCa
-         Sg7pqBBBchhlht21lLowT0ZR5ib7aZIMPPC/LUNSP3pjQ/lAb7+Qaj4Ovwakcq5grQZg
-         3vrqWTIJ8897Jt/vAjZJsrZfBqNN/f7MRDsuPAq5NSDm7Dq1iqAX6P8ohnUUTzM3hun5
-         S/x85QqHf3cj3fhuPcWZG9ZCW/fjCfr6ExL3kyvY//gcud36fMevs0DAmFh4061T2K6u
-         XYqCPm2C7nCZaQTFycAezOeCSmTBFFUZXUvka/KH/XKWgmzBr7eErbq3tV8Vj8Z8IQVd
-         YCSw==
-X-Gm-Message-State: AOAM531KfHDUiaHwy9vjfd/l3nTq9h5poQQftxws1ePKkkw9F9az6mZi
-	0SyHyjm6lOTKSk7zJkWVsS9ce9NIWCR2+GA=
-X-Google-Smtp-Source: ABdhPJwoG4eT6B/xb1c3LOl9pIUkVzrn20wbVONm8KrZ+NR2EqL/jjDfOcEzRmS3ZG4MACZ3FE4LaA==
-X-Received: by 2002:a17:90b:4b82:b0:1df:e6b4:1fa4 with SMTP id lr2-20020a17090b4b8200b001dfe6b41fa4mr33554354pjb.46.1654071368526;
-        Wed, 01 Jun 2022 01:16:08 -0700 (PDT)
-Received: from [127.0.0.1] ([20.118.135.233])
-        by smtp.gmail.com with ESMTPSA id m12-20020aa78a0c000000b005190ce2839csm799864pfa.122.2022.06.01.01.16.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jun 2022 01:16:08 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <076285ed7f05ec809cfb5866c6ff2d6b8cd04e95.1654065674.git.geliang.tang@suse.com>
-References:
- <076285ed7f05ec809cfb5866c6ff2d6b8cd04e95.1654065674.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: add bpf_rr test: Tests Results
-Message-ID: <c90ab2c8-32ec-a26f-ee72-21ebc275bf1c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jun 2022 08:16:07 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DD67E
+	for <mptcp@lists.linux.dev>; Wed,  1 Jun 2022 09:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654075565; x=1685611565;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ngog9IFUxbDTWYuPs7xqjojhsq7LzCUJRz/q+Fohudo=;
+  b=ij/IL41lD5CEcZkAG82w8jL9ntsXh9LJtZnWMPCCgFqMbNd9P40UTCot
+   9L/cuas0+0BRIeKtFJIZd5nITsjc2DR9nNbRTmPXEm+Sc6XqqDzhY0gJc
+   FRiQXIOoD8FdmNFnJn/0iy/VGVjOsZk1ExO8o2NYkFBBGc+GoT43bttNl
+   U+BRmfOvtJ6uiTGmEwb/T8MfwMLeinfM+Xm1d8knkvd2onPQaEL+kaqzH
+   nN26bzYz+E6ZekTMbOwPSf3T1NFeu5eOyApF0oGgky0VLMTbs93ZU84B+
+   Et+85o3A5ZU39WfgGUhzcZjE+gErNXzVNOg3ZrA7ulyTVh6bjQ1THaMm+
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="361901549"
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="361901549"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 02:25:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="823669671"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 01 Jun 2022 02:25:54 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+	(envelope-from <lkp@intel.com>)
+	id 1nwKbx-0003nb-Nj;
+	Wed, 01 Jun 2022 09:25:53 +0000
+Date: Wed, 1 Jun 2022 17:25:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Cc: kbuild-all@lists.01.org, Geliang Tang <geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v5 05/11] mptcp: add bpf set scheduled helper
+Message-ID: <202206011710.y7OIrPON-lkp@intel.com>
+References: <af10cde0bfec857862b84ac9e2624a544ccd4795.1654065674.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af10cde0bfec857862b84ac9e2624a544ccd4795.1654065674.git.geliang.tang@suse.com>
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+Thank you for the patch! Perhaps something to improve:
 
-Our CI did some validations and here is its report:
+[auto build test WARNING on mptcp/export]
+[cannot apply to bpf-next/master bpf/master linus/master v5.18 next-20220601]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6448318602543104
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6448318602543104/summary/summary.txt
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/BPF-packet-scheduler/20220601-144812
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+config: x86_64-randconfig-a006 (https://download.01.org/0day-ci/archive/20220601/202206011710.y7OIrPON-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-1) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/4bfb6a3d6d5ea1744a301d97642ff0077eb280f6
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Geliang-Tang/BPF-packet-scheduler/20220601-144812
+        git checkout 4bfb6a3d6d5ea1744a301d97642ff0077eb280f6
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash net/mptcp/
 
-- KVM Validation: debug:
-  - Unstable: 3 failed test(s): =
-packetdrill_add_addr selftest_diag selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5040943718989824
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5040943718989824/su=
-mmary/summary.txt
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/f2e8aeb9dc5b
+All warnings (new ones prefixed by >>):
 
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+>> net/mptcp/bpf.c:165:6: warning: no previous prototype for 'bpf_mptcp_subflow_set_scheduled' [-Wmissing-prototypes]
+     165 | void bpf_mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+vim +/bpf_mptcp_subflow_set_scheduled +165 net/mptcp/bpf.c
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+   164	
+ > 165	void bpf_mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow)
+   166	{
+   167		WRITE_ONCE(subflow->scheduled, true);
+   168	}
+   169	EXPORT_SYMBOL(bpf_mptcp_subflow_set_scheduled);
+   170	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
