@@ -1,38 +1,39 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5534A363
-	for <mptcp@lists.linux.dev>; Thu,  2 Jun 2022 00:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB75363
+	for <mptcp@lists.linux.dev>; Thu,  2 Jun 2022 00:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654128137; x=1685664137;
+  t=1654129393; x=1685665393;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=UEpeExEmUt3yUBD9YrdsV+iyPSv2AkkHAct0yWgjKak=;
-  b=MUd6KRu0T309sJWLvumPVZCaml8RpBIq4aF4LfIFhvUB1yvJH7VMFMbP
-   d3X6gL3Z88Y6fWy6NqAKyTJ3rXB73ZIPV9JdoI/QCRlhhPy4+nxIUX16i
-   WUWPchXAcxyZglfax/DsBmvuC2VB0wYzr7vZUz+2warAP0hEij8Qny5dq
-   WbJXnY3YAB6CceoZXxybc5ciTMopYYQz6ylRyqCq7LkB0C1IX7PHEuvBi
-   GvZ0VRosPE0nbtJUaRTzQxm2Q4XF8sGoJ8Tkt8n8WQQrOjVuw8cIvSJPr
-   +vk4FKNzvHO8ZnE+L+Anp8Tn2nPZaYxrdS+1EAVs7Ty/5z7EfMDq3ZI4E
+  bh=e9Vgsqp6Sqh5Ov2Hv1DdwrLLoMvUafyqNttXPbJ7Klc=;
+  b=IQsW8WpizlJXGFMF9hOZUboo2s/fjIoPq4deyezUXhjSCmnXlFgvsefn
+   hMkOmHRDAllFsQe7IYEs5bvJ/4Eoud9BX47umfJNsmxfVw80UnVE+9VzD
+   obgvofpM2U0sPjqUXf1Zy6im+R+S2nnZ73b8l4SpjIaJ4SBge3gfZk8cX
+   pWD5w5nw3WgWSFIIyOtEwyjB+0ekolIn6NWo3gitEbxkRWq5Kw6FF2AaW
+   gS2tN2I3FN4NRufCLVDNHfw+IM7BHZ+1e/yziWZ6ML9ZmngD3HbsVSJcQ
+   APD87RcRhoS5U99zcOsp3QFVbP2de422hdk70FedTZGduVm1TgSCfG+BO
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="273338762"
-X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
-   d="scan'208";a="273338762"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 17:02:16 -0700
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="338819891"
 X-IronPort-AV: E=Sophos;i="5.91,270,1647327600"; 
-   d="scan'208";a="904701251"
+   d="scan'208";a="338819891"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 17:23:13 -0700
+X-IronPort-AV: E=Sophos;i="5.91,270,1647327600"; 
+   d="scan'208";a="606550864"
 Received: from hli80-mobl.amr.corp.intel.com ([10.212.232.82])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 17:02:16 -0700
-Date: Wed, 1 Jun 2022 17:02:10 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 17:23:10 -0700
+Date: Wed, 1 Jun 2022 17:23:10 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v6 00/11] BPF packet scheduler
-In-Reply-To: <cover.1654092153.git.geliang.tang@suse.com>
-Message-ID: <a8e78a15-c2bf-fb1a-9496-2555b92193f@linux.intel.com>
-References: <cover.1654092153.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v6 05/11] mptcp: add subflow_set_scheduled
+ helper
+In-Reply-To: <b459c84aa68ea021299b89e2c4bcad208736ce48.1654092153.git.geliang.tang@suse.com>
+Message-ID: <3468a375-3122-ad91-9955-78236a3be365@linux.intel.com>
+References: <cover.1654092153.git.geliang.tang@suse.com> <b459c84aa68ea021299b89e2c4bcad208736ce48.1654092153.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,73 +44,123 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Wed, 1 Jun 2022, Geliang Tang wrote:
 
-> v6:
-> - fix the warning reported by kernel test robot:
+> This patch adds a new helper mptcp_subflow_set_scheduled() to set the
+> scheduled flag of struct mptcp_subflow_context using WRITE_ONCE().
+> Register this helper in bpf_mptcp_sched_kfunc_init() to make sure it can
+> be accessed from the BPF context.
 >
->>> net/mptcp/bpf.c:165:6: warning: no previous prototype for 'bpf_mptcp_subflow_set_scheduled' [-Wmissing-prototypes]
->     165 | void bpf_mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow)
->         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> - rename bpf_mptcp_subflow_set_scheduled to mptcp_subflow_set_scheduled
->
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/bpf.c                               | 16 ++++++++++++++++
+> net/mptcp/protocol.h                          |  2 ++
+> net/mptcp/sched.c                             |  7 +++++++
+> tools/testing/selftests/bpf/bpf_tcp_helpers.h |  3 +++
 
-I think these should be squashed/applied to the export branch. Any other 
-fixes can be squashed later.
+Geliang -
 
-I have a minor change to suggest in patch 5, I'll reply to that 
-separately.
+This commit changes both bpf_tcp_helpers.h and MPTCP core code. There are 
+different upstreaming requirements for bpf_tcp_helpers.h since the BPF 
+maintainers own that file.
 
-- Mat
+Could you split the changes to bpf_tcp_helpers.h in this commit, and in 
+the others already in the export branch, in to a separate "MPTCP BPF 
+helper" commit before "selftests/bpf: add bpf_first scheduler"? I think 
+that will make it easier to upstream commits that don't need to go through 
+the BPF maintainers.
 
-> v5:
-> - add bpf_mptcp_subflow_set_scheduled helper.
-> - drop padding bits before backup, use BPF_CORE_READ_BITFIELD_PROBED()
->   instead.
-> - The new patch "mptcp: add bpf set scheduled helper" should be inserted
->   between the commits "mptcp: add bpf_mptcp_sched_ops" and
->   "selftests/bpf: add bpf_first scheduler"
+
+> 4 files changed, 28 insertions(+)
 >
-> v4:
-> - merge "mptcp: move is_scheduled into mptcp_subflow_context"
-> - rename bpf_backup tp bpf_bkup
-> - full patches of this series: https://github.com/geliangtang/mptcp_net-next
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 0529e70d53b1..e86dff4272d5 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -161,6 +161,22 @@ struct bpf_struct_ops bpf_mptcp_sched_ops = {
+> 	.init		= bpf_mptcp_sched_init,
+> 	.name		= "mptcp_sched_ops",
+> };
+> +
+> +BTF_SET_START(bpf_mptcp_sched_kfunc_ids)
+> +BTF_ID(func, mptcp_subflow_set_scheduled)
+> +BTF_SET_END(bpf_mptcp_sched_kfunc_ids)
+> +
+> +static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
+> +	.owner		= THIS_MODULE,
+> +	.check_set	= &bpf_mptcp_sched_kfunc_ids,
+> +};
+> +
+> +static int __init bpf_mptcp_sched_kfunc_init(void)
+> +{
+> +	return register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+> +					 &bpf_mptcp_sched_kfunc_set);
+> +}
+> +late_initcall(bpf_mptcp_sched_kfunc_init);
+> #endif /* CONFIG_BPF_JIT */
 >
-> v3:
-> - use new BPF scheduler API:
-> - add backup scheduler
-> - add round-robin scheduler
-> - check bytes_sent of 'ss' output.
+> struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 48c5261b7b15..d406b5afbee4 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -629,6 +629,8 @@ void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
+> int mptcp_init_sched(struct mptcp_sock *msk,
+> 		     struct mptcp_sched_ops *sched);
+> void mptcp_release_sched(struct mptcp_sock *msk);
+> +void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+> +				 bool scheduled);
+> struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
+> struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk);
+> struct sock *mptcp_sched_get_send(struct mptcp_sock *msk);
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 6815654fc6f4..8858e1fc8b74 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -88,6 +88,12 @@ void mptcp_release_sched(struct mptcp_sock *msk)
+> 	bpf_module_put(sched, sched->owner);
+> }
 >
-> v2:
-> - Use new BPF scheduler API:
-> unsigned long (*get_subflow)(const struct mptcp_sock *msk, bool reinject,
->                              struct mptcp_sched_data *data);
+> +void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+> +				 bool scheduled)
+> +{
+> +	WRITE_ONCE(subflow->scheduled, scheduled);
+> +}
+
+As far as I can tell, it is safe to call a function like this from BPF 
+code. I modified the bpf_first test to try to pass a bad subflow pointer 
+in a few different ways, and the BPF verifier caught it.
+
+I'm curious, have you found any documentation for how the verifier checks 
+args for kfunc calls? I'd like to understand that better and will keep 
+searching.
+
+Thanks,
+
+Mat
+
+> +
+> static int mptcp_sched_data_init(struct mptcp_sock *msk, bool reinject,
+> 				 struct mptcp_sched_data *data)
+> {
+> @@ -101,6 +107,7 @@ static int mptcp_sched_data_init(struct mptcp_sock *msk, bool reinject,
+> 			pr_warn_once("too many subflows");
+> 			break;
+> 		}
+> +		mptcp_subflow_set_scheduled(subflow, false);
+> 		data->contexts[i++] = subflow;
+> 	}
 >
-> Geliang Tang (11):
->  Squash to "mptcp: add struct mptcp_sched_ops"
->  Squash to "mptcp: add sched in mptcp_sock"
->  Squash to "mptcp: add get_subflow wrappers"
->  Squash to "mptcp: add bpf_mptcp_sched_ops"
->  mptcp: add subflow_set_scheduled helper
->  Squash to "selftests/bpf: add bpf_first scheduler"
->  Squash to "selftests/bpf: add bpf_first test"
->  selftests/bpf: add bpf_bkup scheduler
->  selftests/bpf: add bpf_bkup test
->  selftests/bpf: add bpf_rr scheduler
->  selftests/bpf: add bpf_rr test
+> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> index 5f6a7fa2269b..5e301e830a0a 100644
+> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> @@ -261,4 +261,7 @@ struct mptcp_sock {
+> 	char		ca_name[TCP_CA_NAME_MAX];
+> } __attribute__((preserve_access_index));
 >
-> include/net/mptcp.h                           |  7 +-
-> net/mptcp/bpf.c                               | 34 ++++---
-> net/mptcp/protocol.h                          |  3 +
-> net/mptcp/sched.c                             | 60 ++++++++++---
-> tools/testing/selftests/bpf/bpf_tcp_helpers.h | 17 +++-
-> .../testing/selftests/bpf/prog_tests/mptcp.c  | 89 ++++++++++++++++++-
-> .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 43 +++++++++
-> .../selftests/bpf/progs/mptcp_bpf_first.c     |  5 +-
-> .../selftests/bpf/progs/mptcp_bpf_rr.c        | 46 ++++++++++
-> 9 files changed, 272 insertions(+), 32 deletions(-)
-> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c
-> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
->
+> +extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+> +					bool scheduled) __ksym;
+> +
+> #endif
 > -- 
 > 2.34.1
 >
