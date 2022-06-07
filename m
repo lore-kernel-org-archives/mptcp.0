@@ -1,220 +1,209 @@
-Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.109.102])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF927F
-	for <mptcp@lists.linux.dev>; Tue,  7 Jun 2022 00:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-	t=1654561772;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=i9HKxmsFEe8bKulwu9oSFTGpck5IZxmqkiP4j2vsAsg=;
-	b=gm7G7h+uJsIjyO3CG+MqiU6Xc6cvRhOkygyHRZtLXC6OsZ/s/jRHK261M4pyvcpeDWQbrb
-	uoluzV0BBXVCOw0ceWWw7FZBYZA9x+ciVsFw12nCyPziCqNjX0JQkn5Qw5hKp7ORARTzfI
-	UwYEUijSrslQie6M3x6FwXwAM+CL5H8=
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com
- (mail-ve1eur02lp2051.outbound.protection.outlook.com [104.47.6.51]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-33-kthp7nUDOQ6VyFMypx2xqQ-1; Tue, 07 Jun 2022 02:29:31 +0200
-X-MC-Unique: kthp7nUDOQ6VyFMypx2xqQ-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HF5XHF9s079iZwVTa4sqm4bxFQQ2boffw549CG/8RKhv2znYnMu5BFbNEduyhG0Qx6vqZqAXev7ytxaMFsyy2ri6ePZpC2Hdg2SfhCNE9Cr2Hx/36H26mXcFJp57Kwy5S/K4dsX28J1glWIYfsZnJmpiS5YojYaWev8yZLfjQuRigVghsCmx5VxIGmkyDad6WwszErX3RvJ/b1ccvBQf8wjwSx/VJg12fklrSWQ175Pm2/Wqzajda5tsK8TnX3kGnq7lr88msiarvVaokqHNm0LwInmXjw53EjnZ7lCep7dIr+zDH10eV8cgD2XNY8gQsc1/RWTmsLVZufdwlc5JuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o+Izz49kKBhDEKC5sjgY/A3GE3HqkjUfAIMf7EcYj30=;
- b=Va02NCLwQ+RRgNZciZaFZCgv5V9jNGQ0qDPuU/66fBWNLgOTWthjHDJfgndyk10NCgV0DbgmNrk7nJNH5DC+bh/AqG17mjteVxJBD11snupTiF9jF1l9M8XustfqgwzscJoUV6IIhlGrCrDIUgBTCGCvQwmLUJRGOL79Va0BskIv3p6nTxh9VVKGQ50H98wjH1t6v4Owyy2daB/G+LXsgFdNQgmxBkvW/vlP3+AW2Y0B3qG0A/hbu1TZc+k/8Vd60uL/wfKTQ8BrtPxuAxdHvGa6anpVafxEK3BZpUTry1lxyFLQvIcfs1VRSFccUbVXJF9eurMXCvl28/uRhMYHqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mysuse.onmicrosoft.com; s=selector1-mysuse-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o+Izz49kKBhDEKC5sjgY/A3GE3HqkjUfAIMf7EcYj30=;
- b=DyvJJx86cNkLOpsOz4fqCGw7BkST90iQtp5C06EPc6dIffRsghBMwNRHcvNSPcUgwOvGYdmX0Ru+hUvIT9VTvjrjgg1yPy+ybX2KWyz286xkia74XdrdR3KDw6YR/IeRuBc+sd53V6fsAm4K8HfdAjkltfIaN4DwVgMi0VujBUpPaFZdwInoTco693t0CXaDJiupmyqz1dAGrdTOHTTrBUYtRPYUIHgiKHoyt2oDgNDS6aX79LJZazAaYstaVljH3ZT4Cd1rBG/Fpr/1Q/YDDNN+FSHdpARIhI/CooyWbqr04Gb6hu5rrLlA6ajcT4RX47mFC57zOUsmZuygP6cjvw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DB7PR04MB4571.eurprd04.prod.outlook.com (2603:10a6:5:36::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.19; Tue, 7 Jun
- 2022 00:29:29 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::8002:50a5:a57a:d8fe]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::8002:50a5:a57a:d8fe%5]) with mapi id 15.20.5314.019; Tue, 7 Jun 2022
- 00:29:29 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-CC: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] Squash to "mptcp: redundant subflows retrans support" v5
-Date: Tue,  7 Jun 2022 08:29:17 +0800
-Message-ID: <bf701cb47c25ea01cabffb67f83ff82a3ddb933a.1654561738.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0192.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::21) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6DB7C
+	for <mptcp@lists.linux.dev>; Tue,  7 Jun 2022 00:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654562802; x=1686098802;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=o2vSbz65uRQS7IADVZwztn47aD1Zb9djCelpjrQH4ms=;
+  b=bp67INHBkfk3lcUNsnuoSPwuYiPIVYkQQ4FaY20TOyTswsbHplyYrQyV
+   ijgA6Laf8D2AzJ5nnt09mbUhKkxmdxBf7CIs9l2nvLILhiZ0HtyoUqANO
+   UILpFzOW9AFIUhODqt2ji4d33hFkWC5+17yX1UqyAhB4C5XDGxT2XMOjr
+   MwW2uw9B4/C4GDfPvKsPhs4WTXAxD+YSe4d663K4aCzdDYkuzZRzWLyy4
+   /Sqm0N+rTOQWfFhm1DevcOxpxRBzu5FL171FsfpTMNiT86lQ1ZK8/7cKC
+   il3S7aI8RhAtIHnT5dyuhbhutb+tYLWtonQ+ESMO3GelZyvjQA/m4ghfA
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10370"; a="276945901"
+X-IronPort-AV: E=Sophos;i="5.91,282,1647327600"; 
+   d="scan'208";a="276945901"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2022 17:46:42 -0700
+X-IronPort-AV: E=Sophos;i="5.91,282,1647327600"; 
+   d="scan'208";a="758795158"
+Received: from mgudaram-mobl1.amr.corp.intel.com ([10.209.43.78])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2022 17:46:42 -0700
+Date: Mon, 6 Jun 2022 17:46:42 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v5 2/7] mptcp: redundant subflows push
+ pending
+In-Reply-To: <c456d88a1c0e71ecf5849f1dbd93524422c818a0.1654526068.git.geliang.tang@suse.com>
+Message-ID: <b3a9c42-2573-a083-b28b-34738eac7fd9@linux.intel.com>
+References: <cover.1654526068.git.geliang.tang@suse.com> <c456d88a1c0e71ecf5849f1dbd93524422c818a0.1654526068.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: eb0e6727-59e8-49df-4847-08da481cc8a8
-X-MS-TrafficTypeDiagnostic: DB7PR04MB4571:EE_
-X-Microsoft-Antispam-PRVS:
-	<DB7PR04MB45713DDC5CB222383398D7F7F8A59@DB7PR04MB4571.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rID6YdsH399FBjT9PI5Fo4nWLWyU53vOPme9/MATmwro9OOTQAtD66IHJCq48hhCK82d18uSwcFzgCeLAzNKMFm6o049w/Zhc+jFHg9bISQ5Su8h3Vjz78+V31te9pV+DTjc9kwh2RYNRGkcIyWrfu+KGjASt5M2XY9swPTiCzxR2xZfikJjJr1K72SlnxQpZ/WBLEspPzWictBtAj82XsvP3PzefGT3CITqPP0D50ftVTHI8etCMI8mOE+JesBcSj02kUs6EDvMGp/m8f6efLHLofsZbNRYQ2rQ5oeE+lkYCImw8jl4jNIZKWC+6vCjbZMuPM4hTKwID+eazsXgK4liGhmGLsVGCkSvEgztdvm7Tvf1DNdIzkwtxMEloFYa+aP5BjpXgDmtuytIW/GqoWTij2NdxTukLL0ippA59W3d6UGjGI/PLuPsoFijNPXvjkzNw0LMO8m9gBqCO+lKmqToKGWZWb1/XcnC2XGQZK4HDo8JCm60ygotm5XtyM9w0wRC8wYGPCoNt8J9HvezKPggjmbskyZqJ42ffoAbNj1AVsVxAm0ujyO0ppoU+TExWnaTkRL0YT1ONCu1X2lbtk589ulcy92IJTfbBlxdFxy3xL24BzDXsfAnb74iQaJDsCRIA+OUG0OcsVp7badGzM27ruuCI49sCCsp0W1MDbIxA7uoTApq9BhlURDgljlH
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(66476007)(36756003)(2616005)(6916009)(38100700002)(66556008)(6666004)(66946007)(26005)(6506007)(5660300002)(86362001)(8676002)(4326008)(316002)(8936002)(44832011)(107886003)(186003)(6512007)(508600001)(45080400002)(83380400001)(6486002)(2906002)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?H06wyRtnk2qmMwKqiPffGlFCcMXRhySpYGC2vKf1Jrsw6dMgKqKeNs8W9XxI?=
- =?us-ascii?Q?txK7dICcTyZua+Pn/BX+xKpTJYPAVj3vNO5TSCNOmW+2tlQ/FgfXAOHo9pSD?=
- =?us-ascii?Q?5Juq0gNZ+WZCYZb9bCPrBfWWvPAnWmDnMQnWyV9iqKytdWiBwB95gNhEk20q?=
- =?us-ascii?Q?Jh4ZeqF2LauJII8Ixkq4o3WziV5jrwPf7uprQfPp6m5FgiCyspeSlFlSza3c?=
- =?us-ascii?Q?HB2GSDeQY/LDMWtQPSVXMURr2mlynS7BWZxfU6gUfwLNajq/ptllerLKXujg?=
- =?us-ascii?Q?MGtGu9FVyavzFssHOCPSRVl0wLUtHIzaluAdWRNr7Ax2TfjRkuQtzK7ckW15?=
- =?us-ascii?Q?L0fG2OuKN3CZdeWpY+O76T6oOpItR48TIN75ObpekHH/nGUM0Ggd1GHqz5L2?=
- =?us-ascii?Q?FovEytdrtBhKMIWj21yD8cCKv9SFDTcocxbZUaSNq22IhvaDxZaWIn5ilBLs?=
- =?us-ascii?Q?5G98dtcOuE0yiHMxHwXjJnlWrdc5tqvYET0zEpHbt/ciUjZBuQTHRJqXxdKz?=
- =?us-ascii?Q?ESuCfZWcsAAisRI432XHYUgZmEWvatOk7zi3rOWvy0uusyr2FALmtMFf/ORw?=
- =?us-ascii?Q?0zbkZaxXWGxlOVNU1NfGxQ0zYyc6V/IAZL7vq+vI3WpyR6TJjS1GlTK0b30C?=
- =?us-ascii?Q?EYhoC7IQaX8wsWX5aEd/IzeZWBJNcFd43TfQmEZ8QdhThCkOyEWmcOVHreKM?=
- =?us-ascii?Q?JfSrIXAn4kbOExNdxsPn07rHi++z/IQVqzhStYUTHZbseE68w08Lu8y46xsz?=
- =?us-ascii?Q?aJWVUyvl7sbPSwXvS4J/pyMGghOmYNBSaaHRsZ4cw9eqllC2B8Tm3YoaHXeZ?=
- =?us-ascii?Q?2vFiXv5asp0+Ltn9qBiYFT7rrCYBgtmqFhau101B0ofhVov6j9ZfkMGeqXe0?=
- =?us-ascii?Q?T4j0fUzU4SnMOlPMFtkQg7Ss5QbbyfyrBqblfS1CR8CXMHWi07Yz/sivb+1a?=
- =?us-ascii?Q?V0TFxJuWvy7YEwFzXrVwFY4bAZ1c8x0n4wdIaUFSGHKIaBmTEo5OJ0Bix7HO?=
- =?us-ascii?Q?frL+EGy1wHAIEBTGvtT3egpaF/NGKestawYS1JCBgxoyA8Y0ZJN7jzn8TIJX?=
- =?us-ascii?Q?d2uF2Qbl+8GVee1LK73+pd0jLtWhxeH0w1Xp/9pLcF1dtk/q4M0kP4NCpEz9?=
- =?us-ascii?Q?x7hbMes7r3+Kzl3jMgXCUfS5YOLpYBUUuWNchVRsBZA4R3Vnjdu7A/aZGhLD?=
- =?us-ascii?Q?zhq8qGdF6RNXbzc9x9d7sr+pExRtovKQQLsLThrObe/ur4zfzGIslVM6/NiL?=
- =?us-ascii?Q?z9BECRbmt6XumfGN96EqmMYcLJYP+TeOWn1Lyc73NMK5dmsDE+KAhU0JcPeO?=
- =?us-ascii?Q?RmI7S3Q8+MzyPMrBnFErzlecbL7JuA5tJL2t7ltVMUg6h0l16jURwHFZ6YCF?=
- =?us-ascii?Q?TuF6kv6X8r+x6+rLXxG/gaOe1Z6/ATcEPJ71jYzdtPLKgv68NjxtDqBpUfPf?=
- =?us-ascii?Q?Y0Jv5WzGLhbh3+53fmvejEyI2gTmC1tef4qCtGCIQFQT9UyYDwZnpg5Z2ND3?=
- =?us-ascii?Q?ecT7P0oKIpTVRV+ljzQFSlEXElGfiHZGHeE3qBYoJodbSVJkgYwS32Cz5+ea?=
- =?us-ascii?Q?3svxzdwqi82YOQUP836yoP2kqh/zogS1Vx/pJOAUuahX6/hR3UEKE/86bks9?=
- =?us-ascii?Q?BI1UGf0n9wh6SSrP7KXE2H0Q72KNjymXySOt90JKQff6UIPV+UAex1j7Nw1o?=
- =?us-ascii?Q?SF1fAxNrliLHucsVTmutKjmzK7ZNuas+9KJJatqJFORRaxivqCnJwf/GZ5Hw?=
- =?us-ascii?Q?kW7GfkmeGYaw495QosL+hbKRwdssoZI=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb0e6727-59e8-49df-4847-08da481cc8a8
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2022 00:29:29.1133
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: evo+9mSM1a1bxg2tS446rvhUkUAC4jmD8AFqR+GLH24pPkDUZInM1Qt/O1eyNAsxLGLvDM3VYGDXWKahrKdxVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4571
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Fix a soft lockup in __mptcp_retrans in my test:
+On Mon, 6 Jun 2022, Geliang Tang wrote:
 
-[  458.339707] watchdog: BUG: soft lockup - CPU#5 stuck for 26s! [kworker/5=
-:2:23428]
-[  458.339717] Modules linked in: bpf_testmod(OE) mptcp_diag tcp_diag inet_=
-diag sch_netem act_csum act_pedit cls_fw sch_ingress xt_mark xt_statistic x=
-t_length btusb btrtl btbcm nf_tables btintel bluetooth ecdh_generic ecc ipt=
-able_nat      bpfilter iwlmvm i2c_designware_platform i2c_designware_core i=
-wlwifi x86_pkg_temp_thermal intel_lpss_pci thinkpad_acpi intel_lpss mfd_cor=
-e ledtrig_audio battery platform_profile intel_pmc_core intel_hid usbkbd us=
-bmouse nvme hid_multi     touch nvme_core i2c_hid_acpi i2c_hid pinctrl_cann=
-onlake hid_generic usbhid sg dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_=
-alua efivarfs [last unloaded: bpf_testmod]
-[  458.339748] CPU: 5 PID: 23428 Comm: kworker/5:2 Tainted: G        W  OE =
-    5.18.0-mptcp+ #76
-[  458.339750] Hardware name: LENOVO 20UASA0901/20UASA0901, BIOS N2WET27W (=
-1.17 ) 03/29/2021
-[  458.339751] Workqueue: events mptcp_worker
-[  458.339757] RIP: 0010:__mptcp_retrans+0x126/0x3a0
-[  458.339759] Code: 44 24 30 4c 8d ab 50 06 00 00 48 c7 44 24 08 00 00 00 =
-00 48 89 04 24 4c 8b bb 50 06 00 00 4d 39 ef 0f 84 5d 02 00 00 45 31 e4 <41=
-> 0f b6 47 61 84 c0 0f 84 b4 00 00 00 49 8b af b0 00 00 00 48 85
-[  458.339761] RSP: 0000:ffffae5c41e33de8 EFLAGS: 00000283
-[  458.339762] RAX: 0000000000000000 RBX: ffffa006e4294b00 RCX: 00000000000=
-00001
-[  458.339764] RDX: 00002e53124044c8 RSI: 0000000000000000 RDI: ffffa006262=
-a2400
-[  458.339765] RBP: ffffa005c38f71c0 R08: ffffa005c38f7320 R09: 00000000000=
-00001
-[  458.339766] R10: ffffae5c41e33be0 R11: ffffa006e4294b00 R12: 00000000000=
-00000
-[  458.339767] R13: ffffa006e4295150 R14: ffffa006560a0000 R15: ffffa006e41=
-a5100
-[  458.339768] FS:  0000000000000000(0000) GS:ffffa0092d740000(0000) knlGS:=
-0000000000000000
-[  458.339769] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  458.339770] CR2: 00007f9a909ea000 CR3: 000000014d210003 CR4: 00000000003=
-706e0
-[  458.339771] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
-00000
-[  458.339772] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
-00400
-[  458.339773] Call Trace:
-[  458.339776]  <TASK>
-[  458.339779]  mptcp_worker+0x233/0x390
-[  458.339782]  process_one_work+0x21f/0x430
-[  458.339785]  ? process_one_work+0x430/0x430
-[  458.339786]  worker_thread+0x2a/0x3b0
-[  458.339788]  ? process_one_work+0x430/0x430
-[  458.339789]  kthread+0xe6/0x110
-[  458.339792]  ? kthread_complete_and_exit+0x20/0x20
-[  458.339794]  ret_from_fork+0x1f/0x30
-[  458.339798]  </TASK>
+> This patch adds the redundant subflows support for __mptcp_push_pending().
+> Use mptcp_sched_get_send() wrapper instead of mptcp_subflow_get_send()
+> in it.
+>
+> Check the subflow scheduled flags to test which subflow or subflows are
+> picked by the scheduler, use them to send data.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/protocol.c | 63 ++++++++++++++++++++++----------------------
+> net/mptcp/subflow.c  |  1 -
+> 2 files changed, 32 insertions(+), 32 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 8d93df73a9e3..8bf48387f9d8 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1551,58 +1551,59 @@ void mptcp_check_and_set_pending(struct sock *sk)
+>
+> void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> {
+> -	struct sock *prev_ssk = NULL, *ssk = NULL;
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_sendmsg_info info = {
+> -				.flags = flags,
+> +		.flags = flags,
+> 	};
+> 	struct mptcp_data_frag *dfrag;
+> -	int len, copied = 0;
+> +	int len, copied = 0, err = 0;
+> +	struct sock *ssk = NULL;
+>
+> 	while ((dfrag = mptcp_send_head(sk))) {
+> 		info.sent = dfrag->already_sent;
+> 		info.limit = dfrag->data_len;
+> 		len = dfrag->data_len - dfrag->already_sent;
+> 		while (len > 0) {
+> -			int ret = 0;
+> +			int ret = 0, max = 0;
+>
+> -			prev_ssk = ssk;
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/protocol.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Removing prev_ssk and the optimizations related to it will affect the 
+performance of non-redundant schedulers (which is most of them). It forces 
+a separate lock and tcp_push call for every dfrag. The optimization is 
+important to keep, but using it with a redundant scheduler means changing 
+this transmit loop.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f39318f5a21e..d0621730692f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2450,12 +2450,9 @@ static void __mptcp_retrans(struct sock *sk)
- 	struct mptcp_data_frag *dfrag;
- 	size_t copied =3D 0;
- 	struct sock *ssk;
--	int err;
-=20
- 	mptcp_clean_una_wakeup(sk);
-=20
--	/* first check ssk: need to kick "stale" logic */
--	err =3D mptcp_sched_get_retrans(msk);
- 	dfrag =3D mptcp_rtx_head(sk);
- 	if (!dfrag) {
- 		if (mptcp_data_fin_enabled(msk)) {
-@@ -2474,14 +2471,15 @@ static void __mptcp_retrans(struct sock *sk)
- 		goto reset_timer;
- 	}
-=20
--	if (err)
--		goto reset_timer;
--
- 	/* limit retransmission to the bytes already sent on some subflows */
- 	info.sent =3D 0;
- 	info.limit =3D READ_ONCE(msk->csum_enabled) ? dfrag->data_len : dfrag->al=
-ready_sent;
- 	while (info.sent < info.limit) {
--		int ret =3D 0, max =3D 0;
-+		int ret =3D 0, max =3D 0, err;
-+
-+		err =3D mptcp_sched_get_retrans(msk);
-+		if (err)
-+			goto reset_timer;
-=20
- 		mptcp_for_each_subflow(msk, subflow) {
- 			if (READ_ONCE(subflow->scheduled)) {
---=20
-2.34.1
+There are some options for how to handle redundant schedulers and 
+optimization:
 
+1. Only optimize non-redundant schedulers. Redundant schedulers will 
+require lock/tcp_push/unlock for each scheduled subflow.
+
+2. Change the transmit loop to instead call the scheduler first, and then 
+send multiple fragments on each scheduled subflow.
+
+
+Option 2 would need more information from the scheduler I think: for 
+example, the number of bytes to schedule. Instead of just the 'scheduled' 
+flag, the subflow context could store more information about the range of 
+sequence numbers to send.
+
+Another approach could be to use something like the current code to send 
+as much data as possible on the first selected subflow, then for redundant 
+subflows use the retransmit code to send data again.
+
+
+There's a lot of complexity here: changing the (re)transmit and scheduler 
+loops, modifying the BPF API, keeping or improving existing performance. I 
+think it's worth talking about at the meeting again.
+
+
+- Mat
+
+> -			ssk = mptcp_subflow_get_send(msk);
+> -
+> -			/* First check. If the ssk has changed since
+> -			 * the last round, release prev_ssk
+> -			 */
+> -			if (ssk != prev_ssk && prev_ssk)
+> -				mptcp_push_release(prev_ssk, &info);
+> -			if (!ssk)
+> +			mptcp_sched_get_send(msk, &err);
+> +			if (err)
+> 				goto out;
+>
+> -			/* Need to lock the new subflow only if different
+> -			 * from the previous one, otherwise we are still
+> -			 * helding the relevant lock
+> -			 */
+> -			if (ssk != prev_ssk)
+> -				lock_sock(ssk);
+> +			mptcp_for_each_subflow(msk, subflow) {
+> +				if (READ_ONCE(subflow->scheduled)) {
+> +					ssk = mptcp_subflow_tcp_sock(subflow);
+> +					if (!ssk)
+> +						goto out;
+>
+> -			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+> -			if (ret <= 0) {
+> -				mptcp_push_release(ssk, &info);
+> -				goto out;
+> +					lock_sock(ssk);
+> +
+> +					ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+> +					if (ret <= 0) {
+> +						mptcp_push_release(ssk, &info);
+> +						goto out;
+> +					}
+> +
+> +					if (ret > max)
+> +						max = ret;
+> +
+> +					mptcp_push_release(ssk, &info);
+> +
+> +					msk->last_snd = ssk;
+> +					mptcp_subflow_set_scheduled(subflow, false);
+> +				}
+> 			}
+>
+> -			info.sent += ret;
+> -			copied += ret;
+> -			len -= ret;
+> +			info.sent += max;
+> +			copied += max;
+> +			len -= max;
+>
+> -			mptcp_update_post_push(msk, dfrag, ret);
+> +			mptcp_update_post_push(msk, dfrag, max);
+> 		}
+> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+> 	}
+>
+> -	/* at this point we held the socket lock for the last subflow we used */
+> -	if (ssk)
+> -		mptcp_push_release(ssk, &info);
+> -
+> out:
+> 	/* ensure the rtx timer is running */
+> 	if (!mptcp_timer_pending(sk))
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 8841e8cd9ad8..e7864a413192 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -881,7 +881,6 @@ static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
+> 				  subflow->map_data_len))) {
+> 		/* Mapping does covers past subflow data, invalid */
+> 		dbg_bad_map(subflow, ssn);
+> -		return false;
+> 	}
+> 	return true;
+> }
+> -- 
+> 2.34.1
+>
+>
+>
+
+--
+Mat Martineau
+Intel
