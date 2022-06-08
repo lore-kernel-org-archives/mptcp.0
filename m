@@ -1,58 +1,113 @@
-Received: from mail.coredeal.pl (mail.coredeal.pl [51.75.73.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1DB7C
-	for <mptcp@lists.linux.dev>; Wed,  8 Jun 2022 08:04:14 +0000 (UTC)
-Received: by mail.coredeal.pl (Postfix, from userid 1002)
-	id 21545A36F2; Wed,  8 Jun 2022 07:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=coredeal.pl; s=mail;
-	t=1654675012; bh=9KGuIG62LgzC9aYmjKxzocuYLRCVghXg6v9Q1q2LHec=;
-	h=Date:From:To:Subject:From;
-	b=KH4RobfjmQ5PAgdyrW6sgdoSmCKd7IMUljYlUGnrtFgmfJAw05BHMeDIsuPT4SSVS
-	 GR4cH9WFUadIvDVKtl55oZYhLEX9RMt/enFG9qjG1wJcSrfW1cd7CP+E3BnapzI7m2
-	 15OC9GLVnk4NdOmRNrc69EBvJAd7h4XqgLInSnfuf9P+Q+ISen0cU5qHTz7FaBwaGT
-	 usL8+O+k6Cr7HCllE29JwyDZ3Z56+BZZiJ/x31WPh1N/loFfpxyttSNSBSazgCi15W
-	 rKnDD7utAFSDOW2Am3y1yONkFUqvhZLlTG50opoukRRZQFgIfpMljsR8aznDSYK2cI
-	 qbXWjhwMQ1/sg==
-Received: by mail.coredeal.pl for <mptcp@lists.linux.dev>; Wed,  8 Jun 2022 07:55:57 GMT
-Message-ID: <20220608064500-0.1.3l.uol2.0.a9k22kn3a9@coredeal.pl>
-Date: Wed,  8 Jun 2022 07:55:57 GMT
-From: "Krzysztof Maj" <krzysztof.maj@coredeal.pl>
-To: <mptcp@lists.linux.dev>
-Subject: Biznesowy angielski
-X-Mailer: mail.coredeal.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1BC7C
+	for <mptcp@lists.linux.dev>; Wed,  8 Jun 2022 08:15:23 +0000 (UTC)
+Received: by mail-qt1-f171.google.com with SMTP id hf10so14384330qtb.7
+        for <mptcp@lists.linux.dev>; Wed, 08 Jun 2022 01:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=hWZ28emr4iVoQhFOiTvvrw/r6mmzv2XHKkcGHsVAJS4=;
+        b=Ge+4fjL6hpYkzxaaPnCHttlN+CdxG5imOFqo46A3lLzgRK+1r9IpCEfyqWcbnxWyXK
+         DXYBOVnDd3gbdhD/FeYweZziqWZq0sl+vxdQSav+zIwcXVcX1XfGW3PqK6OEg+Q2cOnI
+         oUNYdYAGDy2RzcNFggudEEzQUke6zze0gcjhwgfLw3PWsrwGxhzwF59WjI1B6JItRiQX
+         VjXA+oTEDZk86GjUoA6ZyzSoRjkA0kSu+sN7g+pqm963WLmaY0WOKi69Pq6mfnj3P31F
+         +nfGXom3RGImv6DXPkJdZVlDAFY+/MGvv7fWBh5P6/1qOtrwa5d6Pe4Jbaj1pwK+DYEZ
+         nRYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=hWZ28emr4iVoQhFOiTvvrw/r6mmzv2XHKkcGHsVAJS4=;
+        b=3SgfTWKcgrrUO+v93IM1u4V5bhaNBgGRIdpO1al6EKezqO60VO59XWN4aX2F5M7Xkn
+         bTIKN3vdJRU3rzg4U8VlEnsqJYE/jX7H0oSQA8v2EBVIvPh6pbyGF7mXKjqeV8h2Nmke
+         en/G/izpDdkAMlpJmoAW1VSfWc3VdFHbgOfIOmf3lmH9Q2gGE/HuH6d3dE83MDYSUgLo
+         FrzOLFQ7LsVbq8F5sd9Np9Z40tui/AmhStOja7n3dV2hRjrWa39MH/fVU+NXAxOWcQkc
+         qr6EI9oGISItd7OeQgLWnVhKaayvj2ww+98X2HlFogEeyZo0AKqA/IFaQZBSdAwH7HXn
+         V36g==
+X-Gm-Message-State: AOAM532xtr7LACa96Mve0LD9+gbYZTfx9WoBIkoko4Ny17gPnCHq2yhX
+	Uc8ib7thnWVpaYE1VUgs3zM4KR4wijA0hp4=
+X-Google-Smtp-Source: ABdhPJzSJoyKzmojl0246RfqNjBbfESalC30uPG6vBZ2xhwTQbAqEUfjW/bbVWSthyFgwZbpGmahNQ==
+X-Received: by 2002:ac8:7d0c:0:b0:2f9:2d58:d973 with SMTP id g12-20020ac87d0c000000b002f92d58d973mr26349066qtb.234.1654676121685;
+        Wed, 08 Jun 2022 01:15:21 -0700 (PDT)
+Received: from [127.0.0.1] ([20.242.48.190])
+        by smtp.gmail.com with ESMTPSA id v1-20020a05620a0f0100b006a6a6f148e6sm11762738qkl.17.2022.06.08.01.15.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jun 2022 01:15:21 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <2e7b890b45f548567894a01465ba6ea86dae55e5.1654670172.git.geliang.tang@suse.com>
+References:
+ <2e7b890b45f548567894a01465ba6ea86dae55e5.1654670172.git.geliang.tang@suse.com>
+Subject: Re: mptcp: call mp_fail_no_response only when needed: Tests
+ Results
+Message-ID: <c80d8dfa-ea79-d67c-87e7-3f0f1e229d9c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Jun 2022 08:15:21 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Dzie=C5=84 dobry,=20
+Hi Geliang,
 
-czy rozwa=C5=BCali Pa=C5=84stwo rozw=C3=B3j kwalifikacji j=C4=99zykowych =
-swoich pracownik=C3=B3w?
+Thank you for your modifications, that's great!
 
-Opracowali=C5=9Bmy kursy j=C4=99zykowe dla r=C3=B3=C5=BCnych bran=C5=BC, =
-w kt=C3=B3rych koncentrujemy si=C4=99 na podniesieniu poziomu s=C5=82owni=
-ctwa i jako=C5=9Bci komunikacji wykorzystuj=C4=85c autorsk=C4=85 metod=C4=
-=99, stworzon=C4=85 specjalnie dla wymagaj=C4=85cego biznesu.=20
+Our CI did some validations and here is its report:
 
-Niestandardowy kurs on-line, dopasowany do profilu firmy i obszar=C3=B3w =
-=C5=9Bwiadczonych us=C5=82ug, w szybkim czasie przyniesie efekty, kt=C3=B3=
-re zwi=C4=99ksz=C4=85 komfort i jako=C5=9B=C4=87 pracy, rozwijaj=C4=85c m=
-o=C5=BCliwo=C5=9Bci biznesowe.=20
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5856398490730496
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5856398490730496/summary/summary.txt
 
-Zdalne szkolenie j=C4=99zykowe to m.in. zaj=C4=99cia z native speakerami,=
- kt=C3=B3re w szybkim czasie naucz=C4=85 pracownik=C3=B3w rozmawia=C4=87 =
-za pomoc=C4=85 jasnego i zwi=C4=99z=C5=82ego j=C4=99zyka Business English=
-=2E
+- KVM Validation: debug:
+  - Unstable: 3 failed test(s): =
+packetdrill_sockopts selftest_diag selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5293448537309184
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5293448537309184/su=
+mmary/summary.txt
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 wi=C4=99cej szczeg=C3=B3=C5=82=C3=B3=
-w i opowiedzie=C4=87 jak dzia=C5=82amy?=20
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/527585a8ae40
 
 
-Pozdrawiam
-Krzysztof Maj
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
