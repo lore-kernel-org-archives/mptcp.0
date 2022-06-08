@@ -1,111 +1,176 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9437B
-	for <mptcp@lists.linux.dev>; Wed,  8 Jun 2022 14:36:50 +0000 (UTC)
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-fe15832ce5so1725586fac.8
-        for <mptcp@lists.linux.dev>; Wed, 08 Jun 2022 07:36:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=uswx9lUaPDAPOTOQc9xW3nJVoMXE5rQAh8V+eIjpBB8=;
-        b=jSgQER9JbXKj3hAt/kt2yRekQUll46yM2rjIlKMBffMgOi67Nxu7xdIkJm18d0S+Z5
-         obBYr5hTvC0o1pF8Za0YiRKdqW7XBDM0e4OyV8Np4wmepI0XHE4T6/76OOmuwBb8fwhw
-         aTCTprB0uNwkMyH8f2gDerXO05u+7faE73A6KCPgRpqSQLyXArL6Gt6Z3Hn/ydtBFrmb
-         Osssgnp7ZQ4x/TsQITPN/G/BJkgMdE7OXLWs95pKL2eNEQrvMD/OImy7U+sAtzarccmH
-         khh2oypiTDBQlCAjiUMukBs/9oQ9jIV4ze4jRTXyUklxOANzeN+DcYhmNngAi/oRa1SG
-         UA8A==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D0C320A
+	for <mptcp@lists.linux.dev>; Wed,  8 Jun 2022 16:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1654707079;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NCqb9YNQjGN60a86+s4t1G7mBqjgh9f+HNWPdfPmI7c=;
+	b=Qt3d5ak9YVH049brkP1HZh4z8oZs/TQcohOS9a6Xk3OWwaka//xxnb0UmhMraiSAixRQW5
+	H8Dvk2Ejg4nDyWDm3EYJp4jXhIBe9OUdv14EF2prwxFjlxbeDyKonuuqHUKnom7hb9zShX
+	yeQHlxaQ/nqlvNFsZqL5ai+9q+Klvs4=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-612-FeAHyqkMOxGpAgFbA6vNoA-1; Wed, 08 Jun 2022 12:51:18 -0400
+X-MC-Unique: FeAHyqkMOxGpAgFbA6vNoA-1
+Received: by mail-qv1-f71.google.com with SMTP id kj4-20020a056214528400b0044399a9bb4cso13281871qvb.15
+        for <mptcp@lists.linux.dev>; Wed, 08 Jun 2022 09:51:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=uswx9lUaPDAPOTOQc9xW3nJVoMXE5rQAh8V+eIjpBB8=;
-        b=RLv3e9R+m8U+fKdeICVpLN95rPyMl7kOFKjQsZBMW4XgBqQw+wAnXQ/GK6Z4UDQig5
-         ngL2aYJknfGdP3E2nmmRNzNq2UKnN2vS3SAwCjHm99aRqMksC/xOptNqoY47Sj7cgqYX
-         QtK0ehRknDpOb6jxlURQzp6BHa2DKJjKJGT34AhCB5HOpA3XvEpU8US1S/aH5CGrWRaK
-         OD3uuvRnZUevnTMoscv/apJm6UOGxPkq/lYyjNODIK3GIxKJYeSos+I/qzUIgBJHwbGr
-         Kvm0yb+mUX4fddb4uXEriuPkS/W8LuT4oWFulg7IMgqtL0BV31StGsecfzUZptI0tr3S
-         MasA==
-X-Gm-Message-State: AOAM533yjBT7MkmIfvP/w+05PHx5LWTfpF2NTyV4Rw/nscx5k2mFpwHe
-	yOZl2lu1gxfeZ74Z7D4B1g==
-X-Google-Smtp-Source: ABdhPJwP5dCddR28L6YPRireHEaXgBnxNcCWKDHAhDG4F2pH/ptEmvhH2jdaW38nJ/3NIM2IF2yKDg==
-X-Received: by 2002:a05:6870:c8a5:b0:f1:65c3:b1e9 with SMTP id er37-20020a056870c8a500b000f165c3b1e9mr2659771oab.36.1654699009652;
-        Wed, 08 Jun 2022 07:36:49 -0700 (PDT)
-Received: from [127.0.0.1] ([40.84.186.93])
-        by smtp.gmail.com with ESMTPSA id g3-20020a056870ea0300b000f33ced2c50sm9439040oap.56.2022.06.08.07.36.48
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=NCqb9YNQjGN60a86+s4t1G7mBqjgh9f+HNWPdfPmI7c=;
+        b=aAS+qgtC8+PKmOhqzEaHg1gqmhG+vpYxGTPCyNecQEBlhbsHV20rO+Gpw1sZIttKjI
+         bGHTnDs3Z8W2CJ8WAN8N7zXf2VjDpROFrWKZQsmhL+HCRJXEXE32Ajw93qNyIlgc/lW5
+         gReHaq5QPndhGqIUn8b3OQJEsUVAnZbwhRox7dunIltnbRsyNtWvvEMV6bS+KXIBDChO
+         vL4o2al2SGAxsPxkHwo01jm3+adMCZvnk/8p4T+HFepbFeOMeqxymnDZdfVefHKHG2bq
+         X5l4TE3ZPyw8bGOEop9aFrIFRQay4J3ruv9zq7PfekrruOfyUoPcOZwk0uneLgsEEj0t
+         WBhQ==
+X-Gm-Message-State: AOAM5331ecPWQAbjLhcyYAS+4FJf4oWnocnkmEAKQ/3LPqXBJsOn2G4R
+	mpTkIIQfuu/W/qB0bqBC/ae4B4WvFQw47O6ggsS92N67vygmMBymFF6efYJFjivNK/HVML5n37l
+	YtZLOt6jPdKkRWEQ=
+X-Received: by 2002:a05:620a:12b9:b0:6a7:1832:bdd4 with SMTP id x25-20020a05620a12b900b006a71832bdd4mr1392425qki.193.1654707078091;
+        Wed, 08 Jun 2022 09:51:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxD6NE6rkBF516XMCLFrtxdEzs0qNV47u53jAD12LlORsXiH6JGxnbOWNmZuiVts08ZsLg1Ag==
+X-Received: by 2002:a05:620a:12b9:b0:6a7:1832:bdd4 with SMTP id x25-20020a05620a12b900b006a71832bdd4mr1392416qki.193.1654707077803;
+        Wed, 08 Jun 2022 09:51:17 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-112-184.dyn.eolo.it. [146.241.112.184])
+        by smtp.gmail.com with ESMTPSA id x19-20020ac85f13000000b002f9ba2b666csm15159099qta.58.2022.06.08.09.51.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jun 2022 07:36:49 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <527414fccf0c041908900aadb2f043134a0ec09c.1654694739.git.geliang.tang@suse.com>
-References:
- <527414fccf0c041908900aadb2f043134a0ec09c.1654694739.git.geliang.tang@suse.com>
-Subject: Re: mptcp: refactor MP_FAIL response: Tests Results
-Message-ID: <8569d7c4-6ec4-254e-6a28-5bc2ea7be136@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jun 2022 14:36:48 +0000
+        Wed, 08 Jun 2022 09:51:17 -0700 (PDT)
+Message-ID: <ed3e810dacb60c72ad1cf9ab73284a7623d12ba6.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v3] mptcp: refactor MP_FAIL response
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Date: Wed, 08 Jun 2022 18:51:14 +0200
+In-Reply-To: <527414fccf0c041908900aadb2f043134a0ec09c.1654694739.git.geliang.tang@suse.com>
+References: <527414fccf0c041908900aadb2f043134a0ec09c.1654694739.git.geliang.tang@suse.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On Wed, 2022-06-08 at 21:26 +0800, Geliang Tang wrote:
+> This patch refactors the MP_FAIL response logic.
+> 
+> Add fail_sock in struct mptcp_sock to record the MP_FAIL subflow. Add
+> fail_timeout in mptcp_sock to record the MP_FAIL timestamp. Check them
+> in mptcp_mp_fail_no_response() to reset the subflow when MP_FAIL response
+> timeout occurs.
+> 
+> Drop mp_fail_response_expect flag in struct mptcp_subflow_context and
+> the code to reuse sk_timer.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/281
+> Fixes: d9fb797046c5 ("mptcp: Do not traverse the subflow connection list without lock")
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  v3:
+>  - update as Paolo suggested.
+> ---
+>  net/mptcp/pm.c       |  7 ++-----
+>  net/mptcp/protocol.c | 26 ++++++--------------------
+>  net/mptcp/protocol.h |  3 ++-
+>  net/mptcp/subflow.c  | 12 +++---------
+>  4 files changed, 13 insertions(+), 35 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 59a85220edc9..c780e5d11b89 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -299,23 +299,20 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+>  {
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+>  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> -	struct sock *s = (struct sock *)msk;
+>  
+>  	pr_debug("fail_seq=%llu", fail_seq);
+>  
+>  	if (!READ_ONCE(msk->allow_infinite_fallback))
+>  		return;
+>  
+> -	if (!READ_ONCE(subflow->mp_fail_response_expect)) {
+> +	if (!msk->fail_sock) {
+>  		pr_debug("send MP_FAIL response and infinite map");
+>  
+>  		subflow->send_mp_fail = 1;
+>  		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
+>  		subflow->send_infinite_map = 1;
+> -	} else if (!sock_flag(sk, SOCK_DEAD)) {
+> +	} else {
+>  		pr_debug("MP_FAIL response received");
+> -
+> -		sk_stop_timer(s, &s->sk_timer);
+>  	}
+>  }
+>  
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d6aef4b13b8a..9ffc96ddce01 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2167,21 +2167,6 @@ static void mptcp_retransmit_timer(struct timer_list *t)
+>  	sock_put(sk);
+>  }
+>  
+> -static struct mptcp_subflow_context *
+> -mp_fail_response_expect_subflow(struct mptcp_sock *msk)
+> -{
+> -	struct mptcp_subflow_context *subflow, *ret = NULL;
+> -
+> -	mptcp_for_each_subflow(msk, subflow) {
+> -		if (READ_ONCE(subflow->mp_fail_response_expect)) {
+> -			ret = subflow;
+> -			break;
+> -		}
+> -	}
+> -
+> -	return ret;
+> -}
+> -
+>  static void mptcp_timeout_timer(struct timer_list *t)
+>  {
+>  	struct sock *sk = from_timer(sk, t, sk_timer);
+> @@ -2507,18 +2492,17 @@ static void __mptcp_retrans(struct sock *sk)
+>  
+>  static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
+>  {
+> -	struct mptcp_subflow_context *subflow;
+> -	struct sock *ssk;
+> +	struct sock *ssk = msk->fail_sock;
+>  	bool slow;
+>  
+> -	subflow = mp_fail_response_expect_subflow(msk);
+> -	if (subflow) {
+> +	if (ssk && time_after(jiffies, msk->fail_timeout)) {
 
-Thank you for your modifications, that's great!
+The patch LGTM, thanks! 
 
-Our CI did some validations and here is its report:
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5446757227167744
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5446757227167744/summary/summary.txt
+As minor nits I *think* that 'fail_sock' could be renamed to
+'fail_ssk', for consistency (a 'sock' is usally a 'struct socket') and
+I *think* that the above msk->fail_sock/msk->fail_ssk check could be
+moved into mptcp_worker() function to make it clear that the
+fail_no_response thing is not unconditional.
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6572657134010368
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6572657134010368/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/a555dd44b7a8
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+As said, minor things, could be handled with a squash-to patch, if
+there is agreement on them.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+
+Paolo
+
