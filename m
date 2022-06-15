@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B8023BD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA3B23BE
 	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 09:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655284627;
+	s=mimecast20190719; t=1655284625;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=69vsEmHqxmCClUDYO0nhCF/yZYhk33vQMIF1L1ed2Uc=;
-	b=RMEzQlrLloZouJc9GjcgrZ1Ys6fzovlQwIB1sUE6jjY6PgP7ZR+c0c8gOj0xUzV0geXxsd
-	BxDtOiieNBvS+3GU6j+IoXpCoRcMRLp7tfWHpvRskKQJJJcPBLRr5O+l46Xm6AVWK0wYOO
-	mWCRfqGSLMYcz2Phi+zHYnpGyhwtYnA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=zduH8uaZcAHo2NbiT8xUZB5EHlogKwIN6MiufFddsms=;
+	b=D2hJhO7cROUKvU75rKanJ/aBY9wdyEGiLMWNkbKgnQkyV61idVT9zqu35EFtXyOvQuIWdZ
+	A7Hywalg1gSCcrRJb7eMbu8y2OXsWGn7timpeyaRXNS3QC8G6gC++JWsliFouOGJB2Nz3p
+	JI0tXIR9d+1v6nshetTFaklmrRmZmns=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-90-XmP7Kle8PlSrODLYodnprw-1; Wed, 15 Jun 2022 05:17:05 -0400
-X-MC-Unique: XmP7Kle8PlSrODLYodnprw-1
+ us-mta-635-cvBWc2DlP2SvQjbWpAJ18w-1; Wed, 15 Jun 2022 05:17:04 -0400
+X-MC-Unique: cvBWc2DlP2SvQjbWpAJ18w-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A59123831C4A
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 09:17:05 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D6B5811E75
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 09:17:03 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.220])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 350F2C2811A
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 09:17:05 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F0F4AC28112
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 09:17:02 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net 4/5] mptcp: fix shutdown vs fallback race
-Date: Wed, 15 Jun 2022 11:16:15 +0200
-Message-Id: <4fe795f3e0e7c87c2df1a8839f2a3c1d07a11e34.1655283387.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net 1/5] mptcp: fix error mibs accounting
+Date: Wed, 15 Jun 2022 11:16:12 +0200
+Message-Id: <47342100035cbb73ae5a545d8e01c59d14095f70.1655283387.git.pabeni@redhat.com>
 In-Reply-To: <cover.1655283387.git.pabeni@redhat.com>
 References: <cover.1655283387.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,93 +47,90 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-If the MPTCP socket shutdown happens before a fallback
-to TCP, and all the pending data have been already spooled,
-we never close the TCP connection.
+The current accounting for MP_FAIL and FASTCLOSE is not very
+accurate: both can be increased even when the related option is
+not really sent. Move the accounting into the correct place.
 
-Address the issue explicitly checking for critical condition
-at fallback time.
-
+Fixes: eb7f33654dc1 ("mptcp: add the mibs for MP_FAIL")
+Fixes: 1e75629cb964 ("mptcp: add the mibs for MP_FASTCLOSE")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/options.c  |  2 +-
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h | 19 ++++++++++++++++---
- net/mptcp/subflow.c  |  2 +-
- 4 files changed, 19 insertions(+), 6 deletions(-)
+ net/mptcp/options.c | 6 +++---
+ net/mptcp/pm.c      | 1 -
+ net/mptcp/subflow.c | 4 +---
+ 3 files changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0bfa6662447c..57eab237c837 100644
+index be3b918a6d15..0bfa6662447c 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -966,7 +966,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 			goto reset;
- 		subflow->mp_capable = 0;
- 		pr_fallback(msk);
--		__mptcp_do_fallback(msk);
-+		mptcp_do_fallback(ssk);
- 		return false;
+@@ -765,6 +765,7 @@ static noinline bool mptcp_established_options_rst(struct sock *sk, struct sk_bu
+ 	opts->suboptions |= OPTION_MPTCP_RST;
+ 	opts->reset_transient = subflow->reset_transient;
+ 	opts->reset_reason = subflow->reset_reason;
++	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTTX);
+ 
+ 	return true;
+ }
+@@ -788,6 +789,7 @@ static bool mptcp_established_options_fastclose(struct sock *sk,
+ 	opts->rcvr_key = msk->remote_key;
+ 
+ 	pr_debug("FASTCLOSE key=%llu", opts->rcvr_key);
++	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFASTCLOSETX);
+ 	return true;
+ }
+ 
+@@ -807,7 +809,7 @@ static bool mptcp_established_options_mp_fail(struct sock *sk,
+ 	*size = TCPOLEN_MPTCP_FAIL;
+ 	opts->suboptions |= OPTION_MPTCP_FAIL;
+ 	opts->fail_seq = subflow->map_seq;
+-
++	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
+ 	pr_debug("MP_FAIL fail_seq=%llu", opts->fail_seq);
+ 
+ 	return true;
+@@ -833,13 +835,11 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
+ 			*size += opt_size;
+ 			remaining -= opt_size;
+-			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFASTCLOSETX);
+ 		}
+ 		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
+ 		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
+ 			*size += opt_size;
+ 			remaining -= opt_size;
+-			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTTX);
+ 		}
+ 		return true;
  	}
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 2a57d95d5492..3c7f07bb124e 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -309,7 +309,6 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+ 		pr_debug("send MP_FAIL response and infinite map");
  
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2910105a99b0..3a781f6f5709 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1245,7 +1245,7 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
- 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
- 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
- 	pr_fallback(msk);
--	__mptcp_do_fallback(msk);
-+	mptcp_do_fallback(ssk);
- }
- 
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1d2d71711872..9860179bfd5e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -927,12 +927,25 @@ static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
- 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
- }
- 
--static inline void mptcp_do_fallback(struct sock *sk)
-+static inline void mptcp_do_fallback(struct sock *ssk)
- {
--	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
--	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+	struct sock *sk = subflow->conn;
-+	struct mptcp_sock *msk;
- 
-+	msk = mptcp_sk(sk);
- 	__mptcp_do_fallback(msk);
-+	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
-+		gfp_t saved_allocation = ssk->sk_allocation;
-+
-+		/* we are in a atomic (BH) scope, override ssk default for data
-+		 * fin allocation
-+		 */
-+		ssk->sk_allocation = GFP_ATOMIC;
-+		ssk->sk_shutdown |= SEND_SHUTDOWN;
-+		tcp_shutdown(ssk, SEND_SHUTDOWN);
-+		ssk->sk_allocation = saved_allocation;
-+	}
- }
- 
- #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)", __func__, a)
+ 		subflow->send_mp_fail = 1;
+-		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
+ 		subflow->send_infinite_map = 1;
+ 	} else {
+ 		pr_debug("MP_FAIL response received");
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 040901c1f40c..75fdc6474d0e 100644
+index 5351d54e514a..57d2d8d933d0 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -1273,7 +1273,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			return false;
- 		}
- 
--		__mptcp_do_fallback(msk);
-+		mptcp_do_fallback(ssk);
+@@ -958,10 +958,8 @@ static enum mapping_status validate_data_csum(struct sock *ssk, struct sk_buff *
+ 				 subflow->map_data_csum);
+ 	if (unlikely(csum)) {
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
+-		if (subflow->mp_join || subflow->valid_csum_seen) {
++		if (subflow->mp_join || subflow->valid_csum_seen)
+ 			subflow->send_mp_fail = 1;
+-			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
+-		}
+ 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
  	}
  
- 	skb = skb_peek(&ssk->sk_receive_queue);
 -- 
 2.35.3
 
