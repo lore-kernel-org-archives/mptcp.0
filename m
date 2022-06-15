@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7F03D9D
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6763D96
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655324906;
+	s=mimecast20190719; t=1655324907;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tJS/33G/jdeIT0WGkXjxwdl7IgG+gCx7SWlT7UoUkzE=;
-	b=Rqq3NXCgzBezbgndYu4VJCw17xctZeEF9W16elCfth/2I8wgs/FEtegbB1NpP4UdRCbjUt
-	s+FeM+uToPRoWV+Xfx0rjqspHT6+Bxt6tZvjp9m+naeNDks1uPmgymDqzhuNktu3uQL1NF
-	Vh2VUD3vRJodqU1ipsNYDbHmXzJMENI=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=PKbQkM9NksZKJWJ79oRNw0LFN3Wzl0ZPlA4jqwkj9vg=;
+	b=JJC3LArtC4MOG9n8Qxlgbio3JnccrZGM31MUEHJkarcx7GeQr7wtbEiFWQSObHOqP+CQyU
+	oNc1q85Z1TUydQ9VEh/EYM3oHkMFUSxL5x0uCzHHzfVHH9O3wBn6PdR6d75JgDNIn77N+M
+	zjPtjYHFYHRYtLTnZquhawbLZYprDiE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-488-py7qMqxaOzKMwtLc8cfr6g-1; Wed, 15 Jun 2022 16:28:25 -0400
-X-MC-Unique: py7qMqxaOzKMwtLc8cfr6g-1
+ us-mta-673-5980L5PfOIWo_K4k24FRNw-1; Wed, 15 Jun 2022 16:28:26 -0400
+X-MC-Unique: 5980L5PfOIWo_K4k24FRNw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0B10F299E77E
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0B06811E80
 	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:25 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.220])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8DFA040C1288
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:24 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 502BD400F3FF
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:25 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2 5/6] mptcp: consistent map handling on failure
-Date: Wed, 15 Jun 2022 22:28:12 +0200
-Message-Id: <7aa8059e8fbbeab845269969ad02784a8c53fb1b.1655324843.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net v2 6/6] mptcp: fix race on unaccepted mptcp sockets
+Date: Wed, 15 Jun 2022 22:28:13 +0200
+Message-Id: <a87184583103c8dd66dc9e314ccb99d3daadc00e.1655324843.git.pabeni@redhat.com>
 In-Reply-To: <cover.1655324843.git.pabeni@redhat.com>
 References: <cover.1655324843.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,65 +47,127 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-When the MPTCP receive path reach a non fatal fall-back condition, e.g.
-when the MPC sockets must fall-back to TCP, the existing code is a little
-self-inconsistent: it reports that new data is available - return true -
-but sets the MPC flag to the opposite value.
+When the listener socket owning the relevant request is closed,
+it frees the unaccepted subflows and that causes later deletion
+of the paired MPTCP sockets.
 
-As the consequence read operations in some exceptional scenario may block
-unexpectedly.
+The mptcp socket's worker can run in the time interval between such delete
+operations. When that happens, any access to msk->first will cause an UaF
+access, as the subflow cleanup did not cleared such field in the mptcp
+socket.
 
-Address the issue setting the correct MPC read status. Additionally avoid
-some code duplication in the fatal fall-back scenario.
+Address the issue explictly traversing the listener socket accept
+queue at close time and performing the needed cleanup on the pending
+msk.
 
-Fixes: 9c81be0dbc89 ("mptcp: add MP_FAIL response support")
+Note that the locking is a bit tricky, as we need to acquire the msk
+socket lock, while still owning the subflow socket one.
+
+Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/subflow.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ net/mptcp/protocol.c |  5 +++++
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 50 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 57 insertions(+)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4f4d6c66e190..35e3060233c9 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2318,6 +2318,11 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		kfree_rcu(subflow, rcu);
+ 	} else {
+ 		/* otherwise tcp will dispose of the ssk and subflow ctx */
++		if (ssk->sk_state == TCP_LISTEN) {
++			tcp_set_state(ssk, TCP_CLOSE);
++			mptcp_subflow_queue_clean(ssk);
++			inet_csk_listen_stop(ssk);
++		}
+ 		__tcp_close(ssk, 0);
+ 
+ 		/* close acquired an extra ref */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ad9b02b1b3e6..95c9ace1437b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -306,6 +306,7 @@ struct mptcp_sock {
+ 
+ 	u32 setsockopt_seq;
+ 	char		ca_name[TCP_CA_NAME_MAX];
++	struct mptcp_sock	*dl_next;
+ };
+ 
+ #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
+@@ -610,6 +611,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow);
+ void mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_reset(struct sock *ssk);
++void mptcp_subflow_queue_clean(struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+ struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
+ 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 75fdc6474d0e..bec36e2bcc32 100644
+index bec36e2bcc32..02a12f271a60 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -1246,17 +1246,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			subflow->send_mp_fail = 1;
+@@ -1717,6 +1717,56 @@ static void subflow_state_change(struct sock *sk)
+ 	}
+ }
  
- 			if (!READ_ONCE(msk->allow_infinite_fallback)) {
--				ssk->sk_err = EBADMSG;
--				tcp_set_state(ssk, TCP_CLOSE);
- 				subflow->reset_transient = 0;
- 				subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
--				tcp_send_active_reset(ssk, GFP_ATOMIC);
--				while ((skb = skb_peek(&ssk->sk_receive_queue)))
--					sk_eat_skb(ssk, skb);
--			} else {
--				mptcp_subflow_fail(msk, ssk);
-+				goto reset;
- 			}
--			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
-+			mptcp_subflow_fail(msk, ssk);
-+			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
- 			return true;
- 		}
- 
-@@ -1264,10 +1259,14 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			/* fatal protocol error, close the socket.
- 			 * subflow_error_report() will introduce the appropriate barriers
- 			 */
--			ssk->sk_err = EBADMSG;
--			tcp_set_state(ssk, TCP_CLOSE);
- 			subflow->reset_transient = 0;
- 			subflow->reset_reason = MPTCP_RST_EMPTCP;
++void mptcp_subflow_queue_clean(struct sock *listener_ssk)
++{
++	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
++	struct mptcp_sock *msk, *next, *head = NULL;
++	struct request_sock *req;
 +
-+reset:
-+			ssk->sk_err = EBADMSG;
-+			tcp_set_state(ssk, TCP_CLOSE);
-+			while ((skb = skb_peek(&ssk->sk_receive_queue)))
-+				sk_eat_skb(ssk, skb);
- 			tcp_send_active_reset(ssk, GFP_ATOMIC);
- 			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
- 			return false;
++	/* build a list of all unaccepted mptcp sockets */
++	spin_lock_bh(&queue->rskq_lock);
++	for (req = queue->rskq_accept_head; req; req = req->dl_next) {
++		struct mptcp_subflow_context *subflow;
++		struct sock *ssk = req->sk;
++		struct mptcp_sock *msk;
++
++		if (!sk_is_mptcp(ssk))
++			continue;
++
++		subflow = mptcp_subflow_ctx(ssk);
++		if (!subflow || !subflow->conn)
++			continue;
++
++		/* skip if already in list */
++		msk = mptcp_sk(subflow->conn);
++		if (msk->dl_next || msk == head)
++			continue;
++
++		msk->dl_next = head;
++		head = msk;
++	}
++	spin_unlock_bh(&queue->rskq_lock);
++	if (!head)
++		return;
++
++	/* can't acquire the msk socket lock under the subflow one,
++	 * or will cause ABBA deadlock
++	 */
++	release_sock(listener_ssk);
++
++	for (msk = head; msk; msk = next) {
++		struct sock *sk = (struct sock *)msk;
++		bool slow;
++
++		slow = lock_sock_fast_nested(sk);
++		next = msk->dl_next;
++		msk->first = NULL;
++		msk->dl_next = NULL;
++		unlock_sock_fast(sk, slow);
++	}
++	lock_sock(listener_ssk);
++}
++
+ static int subflow_ulp_init(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
 -- 
 2.35.3
 
