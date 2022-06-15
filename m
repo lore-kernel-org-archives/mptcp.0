@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890703D96
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7F03D9D
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655324905;
+	s=mimecast20190719; t=1655324906;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/gUpc9d77Yr9CavgneuMYlMESCy3ScnOki+efXZPISw=;
-	b=GH/o8a6b8qL8CLHssVCeiN1hW802ChPmeRWgforIYqf29ahKju5yUpMzvAYVL8IQ2A6arz
-	pHGdTE86Wl11fyW2JoPlkNNx/lMybkQFgYbBEejNM0JQ9TL4rtNceOE0FVAGfOC+Vc6WOo
-	RiAiV/ceBQmmUsvk5UHs+BYSv7mhGmc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=tJS/33G/jdeIT0WGkXjxwdl7IgG+gCx7SWlT7UoUkzE=;
+	b=Rqq3NXCgzBezbgndYu4VJCw17xctZeEF9W16elCfth/2I8wgs/FEtegbB1NpP4UdRCbjUt
+	s+FeM+uToPRoWV+Xfx0rjqspHT6+Bxt6tZvjp9m+naeNDks1uPmgymDqzhuNktu3uQL1NF
+	Vh2VUD3vRJodqU1ipsNYDbHmXzJMENI=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-154-MSLl_aytM0ihrdNfms8u3A-1; Wed, 15 Jun 2022 16:28:24 -0400
-X-MC-Unique: MSLl_aytM0ihrdNfms8u3A-1
+ us-mta-488-py7qMqxaOzKMwtLc8cfr6g-1; Wed, 15 Jun 2022 16:28:25 -0400
+X-MC-Unique: py7qMqxaOzKMwtLc8cfr6g-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 482AE83397F
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:24 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0B10F299E77E
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:25 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.220])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CBB8040C1288
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:23 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8DFA040C1288
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:24 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2 4/6] mptcp: fix shutdown vs fallback race
-Date: Wed, 15 Jun 2022 22:28:11 +0200
-Message-Id: <295d4399ffbe647652245925f73aafdb7b072c38.1655324843.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net v2 5/6] mptcp: consistent map handling on failure
+Date: Wed, 15 Jun 2022 22:28:12 +0200
+Message-Id: <7aa8059e8fbbeab845269969ad02784a8c53fb1b.1655324843.git.pabeni@redhat.com>
 In-Reply-To: <cover.1655324843.git.pabeni@redhat.com>
 References: <cover.1655324843.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,93 +47,65 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-If the MPTCP socket shutdown happens before a fallback
-to TCP, and all the pending data have been already spooled,
-we never close the TCP connection.
+When the MPTCP receive path reach a non fatal fall-back condition, e.g.
+when the MPC sockets must fall-back to TCP, the existing code is a little
+self-inconsistent: it reports that new data is available - return true -
+but sets the MPC flag to the opposite value.
 
-Address the issue explicitly checking for critical condition
-at fallback time.
+As the consequence read operations in some exceptional scenario may block
+unexpectedly.
 
+Address the issue setting the correct MPC read status. Additionally avoid
+some code duplication in the fatal fall-back scenario.
+
+Fixes: 9c81be0dbc89 ("mptcp: add MP_FAIL response support")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/options.c  |  2 +-
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h | 19 ++++++++++++++++---
- net/mptcp/subflow.c  |  2 +-
- 4 files changed, 19 insertions(+), 6 deletions(-)
+ net/mptcp/subflow.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0bfa6662447c..57eab237c837 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -966,7 +966,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 			goto reset;
- 		subflow->mp_capable = 0;
- 		pr_fallback(msk);
--		__mptcp_do_fallback(msk);
-+		mptcp_do_fallback(ssk);
- 		return false;
- 	}
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 50026b8da625..4f4d6c66e190 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1245,7 +1245,7 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
- 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
- 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
- 	pr_fallback(msk);
--	__mptcp_do_fallback(msk);
-+	mptcp_do_fallback(ssk);
- }
- 
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 077a717799a0..ad9b02b1b3e6 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -941,12 +941,25 @@ static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
- 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
- }
- 
--static inline void mptcp_do_fallback(struct sock *sk)
-+static inline void mptcp_do_fallback(struct sock *ssk)
- {
--	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
--	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+	struct sock *sk = subflow->conn;
-+	struct mptcp_sock *msk;
- 
-+	msk = mptcp_sk(sk);
- 	__mptcp_do_fallback(msk);
-+	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
-+		gfp_t saved_allocation = ssk->sk_allocation;
-+
-+		/* we are in a atomic (BH) scope, override ssk default for data
-+		 * fin allocation
-+		 */
-+		ssk->sk_allocation = GFP_ATOMIC;
-+		ssk->sk_shutdown |= SEND_SHUTDOWN;
-+		tcp_shutdown(ssk, SEND_SHUTDOWN);
-+		ssk->sk_allocation = saved_allocation;
-+	}
- }
- 
- #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)", __func__, a)
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 040901c1f40c..75fdc6474d0e 100644
+index 75fdc6474d0e..bec36e2bcc32 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -1273,7 +1273,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			return false;
+@@ -1246,17 +1246,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 			subflow->send_mp_fail = 1;
+ 
+ 			if (!READ_ONCE(msk->allow_infinite_fallback)) {
+-				ssk->sk_err = EBADMSG;
+-				tcp_set_state(ssk, TCP_CLOSE);
+ 				subflow->reset_transient = 0;
+ 				subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+-				tcp_send_active_reset(ssk, GFP_ATOMIC);
+-				while ((skb = skb_peek(&ssk->sk_receive_queue)))
+-					sk_eat_skb(ssk, skb);
+-			} else {
+-				mptcp_subflow_fail(msk, ssk);
++				goto reset;
+ 			}
+-			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
++			mptcp_subflow_fail(msk, ssk);
++			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
+ 			return true;
  		}
  
--		__mptcp_do_fallback(msk);
-+		mptcp_do_fallback(ssk);
- 	}
- 
- 	skb = skb_peek(&ssk->sk_receive_queue);
+@@ -1264,10 +1259,14 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 			/* fatal protocol error, close the socket.
+ 			 * subflow_error_report() will introduce the appropriate barriers
+ 			 */
+-			ssk->sk_err = EBADMSG;
+-			tcp_set_state(ssk, TCP_CLOSE);
+ 			subflow->reset_transient = 0;
+ 			subflow->reset_reason = MPTCP_RST_EMPTCP;
++
++reset:
++			ssk->sk_err = EBADMSG;
++			tcp_set_state(ssk, TCP_CLOSE);
++			while ((skb = skb_peek(&ssk->sk_receive_queue)))
++				sk_eat_skb(ssk, skb);
+ 			tcp_send_active_reset(ssk, GFP_ATOMIC);
+ 			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
+ 			return false;
 -- 
 2.35.3
 
