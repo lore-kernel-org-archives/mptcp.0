@@ -1,173 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6763D96
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655324907;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PKbQkM9NksZKJWJ79oRNw0LFN3Wzl0ZPlA4jqwkj9vg=;
-	b=JJC3LArtC4MOG9n8Qxlgbio3JnccrZGM31MUEHJkarcx7GeQr7wtbEiFWQSObHOqP+CQyU
-	oNc1q85Z1TUydQ9VEh/EYM3oHkMFUSxL5x0uCzHHzfVHH9O3wBn6PdR6d75JgDNIn77N+M
-	zjPtjYHFYHRYtLTnZquhawbLZYprDiE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-673-5980L5PfOIWo_K4k24FRNw-1; Wed, 15 Jun 2022 16:28:26 -0400
-X-MC-Unique: 5980L5PfOIWo_K4k24FRNw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0B06811E80
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:25 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.220])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 502BD400F3FF
-	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 20:28:25 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2 6/6] mptcp: fix race on unaccepted mptcp sockets
-Date: Wed, 15 Jun 2022 22:28:13 +0200
-Message-Id: <a87184583103c8dd66dc9e314ccb99d3daadc00e.1655324843.git.pabeni@redhat.com>
-In-Reply-To: <cover.1655324843.git.pabeni@redhat.com>
-References: <cover.1655324843.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255DA3FDF
+	for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 22:10:24 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id bf7so16014812oib.11
+        for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 15:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=3Enqe9iXrltOH/HXrAo79ZtZ/g0LHSI0ZmRQF1hvXj4=;
+        b=i8msop+n50b5zi9oV0nlQxWakvg1xNVP7GwDb1Q5OGNlhHxRb/DH/ezBiIl/wqjJlg
+         ZuuhcwGjfl9Vo0wd8HaRmIY3U37wI/jdGYpSjZMk0bp4QKFDpOC/6smouF8Mk9nImHmm
+         uVdby9BE1GL/2ioYxdTtctFnhZIr+zSOPDo96+LZhpQtBmpcr4vdHAvC+6+wDQj+808u
+         7tNdZ3k1szMQdxabxZXh3kbaWGzG4p/uOfpnR+PSMZZjmeYrHgbWHNgiTEWfleTHC0ZH
+         SHQ1ixxHiJ3nFdmEUTstZQKdN/3kqc6/p8wUY+/Ap1+n9TXjBJ0P2ytlUgfVapm0EiBW
+         5/xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=3Enqe9iXrltOH/HXrAo79ZtZ/g0LHSI0ZmRQF1hvXj4=;
+        b=MjyRZDqeJgCBxy2ycT9GOxDefw7SiMagMtU9aJ/zKViApNTnp6rDgRU+INCsTzAOC9
+         ARtzRT39/b6s36304yWQa/8CcmI0uAZT6Vfs8Yi7w/rn7v34jBqWgG6gZY9uf0x0n3at
+         kMrXX2f/p00YyKTva0Oo4tn67YjiuJ4eyXEVqloAEIczQEl/lrjarrUT1worrkvgpTzE
+         5QUQAIVKxzGs7Halqea1HnGsBffmORMbWTuegHQE9LvMCCexxqTikHe/LEllK1L4wnFl
+         lHKtdL5gMXi83guuxCOsBHYDohx54PbblmZJMmDO7kiNIPi88m3FG14eLBA5oHnEFUQm
+         xomQ==
+X-Gm-Message-State: AOAM533srvokHV3GHBX9d0TbtoQflWPC17VTQqTzzNUtMSUc5PIn7/YH
+	PhoIazenkVnbLgRpjbo2og==
+X-Google-Smtp-Source: ABdhPJzdahGOR+sm18DqgWtLSL0hkwqQ2TNpwZYRMMakXAmokH+FLIpiA/XygoPOfyeulI3fjB+JSA==
+X-Received: by 2002:a05:6808:23d2:b0:32f:1a3a:2212 with SMTP id bq18-20020a05680823d200b0032f1a3a2212mr6412496oib.178.1655331023196;
+        Wed, 15 Jun 2022 15:10:23 -0700 (PDT)
+Received: from [127.0.0.1] ([13.85.15.215])
+        by smtp.gmail.com with ESMTPSA id w128-20020a4a5d86000000b0041e992e002bsm158026ooa.38.2022.06.15.15.10.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 15:10:22 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <a87184583103c8dd66dc9e314ccb99d3daadc00e.1655324843.git.pabeni@redhat.com>
+References:
+ <a87184583103c8dd66dc9e314ccb99d3daadc00e.1655324843.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix race on unaccepted mptcp sockets: Tests Results
+Message-ID: <4ead90bb-c474-faee-2ce9-470679c09426@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 15 Jun 2022 22:10:22 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-When the listener socket owning the relevant request is closed,
-it frees the unaccepted subflows and that causes later deletion
-of the paired MPTCP sockets.
+Hi Paolo,
 
-The mptcp socket's worker can run in the time interval between such delete
-operations. When that happens, any access to msk->first will cause an UaF
-access, as the subflow cleanup did not cleared such field in the mptcp
-socket.
+Thank you for your modifications, that's great!
 
-Address the issue explictly traversing the listener socket accept
-queue at close time and performing the needed cleanup on the pending
-msk.
+Our CI did some validations and here is its report:
 
-Note that the locking is a bit tricky, as we need to acquire the msk
-socket lock, while still owning the subflow socket one.
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5240636109488128
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5240636109488128/summary/summary.txt
 
-Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c |  5 +++++
- net/mptcp/protocol.h |  2 ++
- net/mptcp/subflow.c  | 50 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 57 insertions(+)
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): selftest_diag =
+=F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6366536016330752
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6366536016330752/su=
+mmary/summary.txt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4f4d6c66e190..35e3060233c9 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2318,6 +2318,11 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		kfree_rcu(subflow, rcu);
- 	} else {
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
-+		if (ssk->sk_state == TCP_LISTEN) {
-+			tcp_set_state(ssk, TCP_CLOSE);
-+			mptcp_subflow_queue_clean(ssk);
-+			inet_csk_listen_stop(ssk);
-+		}
- 		__tcp_close(ssk, 0);
- 
- 		/* close acquired an extra ref */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ad9b02b1b3e6..95c9ace1437b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -306,6 +306,7 @@ struct mptcp_sock {
- 
- 	u32 setsockopt_seq;
- 	char		ca_name[TCP_CA_NAME_MAX];
-+	struct mptcp_sock	*dl_next;
- };
- 
- #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
-@@ -610,6 +611,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow);
- void mptcp_subflow_send_ack(struct sock *ssk);
- void mptcp_subflow_reset(struct sock *ssk);
-+void mptcp_subflow_queue_clean(struct sock *ssk);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index bec36e2bcc32..02a12f271a60 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1717,6 +1717,56 @@ static void subflow_state_change(struct sock *sk)
- 	}
- }
- 
-+void mptcp_subflow_queue_clean(struct sock *listener_ssk)
-+{
-+	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
-+	struct mptcp_sock *msk, *next, *head = NULL;
-+	struct request_sock *req;
-+
-+	/* build a list of all unaccepted mptcp sockets */
-+	spin_lock_bh(&queue->rskq_lock);
-+	for (req = queue->rskq_accept_head; req; req = req->dl_next) {
-+		struct mptcp_subflow_context *subflow;
-+		struct sock *ssk = req->sk;
-+		struct mptcp_sock *msk;
-+
-+		if (!sk_is_mptcp(ssk))
-+			continue;
-+
-+		subflow = mptcp_subflow_ctx(ssk);
-+		if (!subflow || !subflow->conn)
-+			continue;
-+
-+		/* skip if already in list */
-+		msk = mptcp_sk(subflow->conn);
-+		if (msk->dl_next || msk == head)
-+			continue;
-+
-+		msk->dl_next = head;
-+		head = msk;
-+	}
-+	spin_unlock_bh(&queue->rskq_lock);
-+	if (!head)
-+		return;
-+
-+	/* can't acquire the msk socket lock under the subflow one,
-+	 * or will cause ABBA deadlock
-+	 */
-+	release_sock(listener_ssk);
-+
-+	for (msk = head; msk; msk = next) {
-+		struct sock *sk = (struct sock *)msk;
-+		bool slow;
-+
-+		slow = lock_sock_fast_nested(sk);
-+		next = msk->dl_next;
-+		msk->first = NULL;
-+		msk->dl_next = NULL;
-+		unlock_sock_fast(sk, slow);
-+	}
-+	lock_sock(listener_ssk);
-+}
-+
- static int subflow_ulp_init(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
--- 
-2.35.3
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/bac04f5bed54
 
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
