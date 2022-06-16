@@ -1,111 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F5928E4
-	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 13:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655387755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gWeBCyh4HWwcugZn1ikAE1myQGLo/gYWZyJva0YmXVs=;
-	b=hxY3XFosFmFvgmwXQT+ZweuPd1To1aSTJJ3v/3a61kYOx+cKPWFgHWTEekWZDOqlR3PIRB
-	kbeNOwmM2Xf+ekzRkuuJzFDvnsHEVE2D3rDbReBHZneuCsSkgztSWHNuODiZFb9J77RuXy
-	VCqeoE67rY33ZmTcDfgkDwMJNVeLCb4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-508-GWjbrsggMCqp1pNHy2JuIg-1; Thu, 16 Jun 2022 09:55:54 -0400
-X-MC-Unique: GWjbrsggMCqp1pNHy2JuIg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5991585A580
-	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 13:55:54 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.220])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DEA621415108
-	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 13:55:53 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next] selftests: mptcp: tweak simult_flows for debug kernels.
-Date: Thu, 16 Jun 2022 15:55:48 +0200
-Message-Id: <d1745c1e08937164e34f0010369e8be5f4c2afb0.1655387728.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B70929A0
+	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 15:27:26 +0000 (UTC)
+Received: by mail-qv1-f44.google.com with SMTP id r14so2561950qvh.1
+        for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 08:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=4BVgkWQ+7lGYhkR5mnNgC5QDycdI7zcJieDui0jb7eI=;
+        b=JB08BDoUPLd7/3lcalaRyYxpWYNlV7XYmdv8FSPIdfYY0DjPLjiu9gi2g3rr1NdxxJ
+         Ov4gh1iCqDBSiUQJq4YovY0S02w9+rL7Mfo3vePNkcLT1bBTaqa9zMym7lHvyStAR5Z5
+         g13t7jCLYSXSse5y86DWQphZQG0Rnv1i4kv9LPBqfEHt4pzyD2YZ8ZHaAVGBoS9rd01y
+         kTsOxl+BKmqx+yJfp+6SsZf32mMd5YCo6CrojHehpba+vtGz11OlE/U0nHyFHXCpZIm+
+         QNxgLbMJJ+pODAI8NaAPNj2+0SuUCtYSwLm2uO4mJOhDyfZlZPHZy5FqaxphmhRjRgTW
+         rDLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=4BVgkWQ+7lGYhkR5mnNgC5QDycdI7zcJieDui0jb7eI=;
+        b=34GuApPwJoStvZ8KbDJ51pfgo0IL32A7KIwigYDWFEwWVz3ZCq41efxCWTyV2XnbUv
+         uq9lFGuQsCzMjHPcWzAtPi0LKons2ZnsX/bnyJ0sKu8wsxvhcxpBZaFYOreovvvIYAn1
+         hgK35rQQoKf+5CoO4wcrxby4lZw37SaVNOyBS4IPVmxT4Dq7bX5hp3I0/zizDcnqGUzc
+         oJnNtiX3rJ+GejGy2UVGaRSYnGmHGAA6wLdykleRQTy2/IzF3nkdwFitii+qHlRXcGCV
+         kuFTHR4P4eUIJZP6jbZIrOHNnW6erpMQqabbC7hgtGLAfgk7Ep79k8A0KF96A/OmAhyj
+         gyFg==
+X-Gm-Message-State: AJIora90nLSZlltHZ++1vXTqgYKgpDCTSacvR7SCjM5DirGoofAlGRnL
+	Np2SYOkxWLEzZL7RdAOPCg==
+X-Google-Smtp-Source: AGRyM1t5WF4F1G23mFCrmQc3bg5IbodaZQ7YSwhX4NiLkyUacJxQNmekm3iP9bEPMuEXEWatqCwYUg==
+X-Received: by 2002:ac8:5949:0:b0:305:1445:f413 with SMTP id 9-20020ac85949000000b003051445f413mr4420857qtz.27.1655393245245;
+        Thu, 16 Jun 2022 08:27:25 -0700 (PDT)
+Received: from [127.0.0.1] ([20.242.0.10])
+        by smtp.gmail.com with ESMTPSA id t20-20020ac86a14000000b00304b5eef8aasm1895017qtr.32.2022.06.16.08.27.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jun 2022 08:27:24 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <d1745c1e08937164e34f0010369e8be5f4c2afb0.1655387728.git.pabeni@redhat.com>
+References:
+ <d1745c1e08937164e34f0010369e8be5f4c2afb0.1655387728.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: tweak simult_flows for debug kernels.: Tests
+ Results
+Message-ID: <1d640fd1-9779-91a4-e86f-9fc7acee1709@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 16 Jun 2022 15:27:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The mentioned test measures the transfer run-time to verify
-that the user-space program is able to use the full aggregate B/W.
+Hi Paolo,
 
-Even on (virtual) link-speed-bound tests, debug kernel can slow
-down the transfer enough to cause sporadic test failures.
+Thank you for your modifications, that's great!
 
-Instead of unconditionally raising the maximum allowed run-time,
-tweak when the running kernel is a debug one, and use some simple/
-rough heuristic to guess such scenarios.
+Our CI did some validations and here is its report:
 
-Note: this intentionally avoids looking for /boot/config-<version> as
-the latter file is not always available in our reference CI
-environments.
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5708948505362432
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5708948505362432/summary/summary.txt
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- tools/testing/selftests/net/mptcp/simult_flows.sh | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+- KVM Validation: debug:
+  - Unstable: 3 failed test(s): =
+packetdrill_add_addr selftest_diag selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5145998551941120
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5145998551941120/su=
+mmary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index f441ff7904fc..141fcf0d40d1 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -12,6 +12,7 @@ timeout_test=$((timeout_poll * 2 + 1))
- test_cnt=1
- ret=0
- bail=0
-+slack=50
- 
- usage() {
- 	echo "Usage: $0 [ -b ] [ -c ] [ -d ]"
-@@ -52,6 +53,7 @@ setup()
- 	cout=$(mktemp)
- 	capout=$(mktemp)
- 	size=$((2 * 2048 * 4096))
-+
- 	dd if=/dev/zero of=$small bs=4096 count=20 >/dev/null 2>&1
- 	dd if=/dev/zero of=$large bs=4096 count=$((size / 4096)) >/dev/null 2>&1
- 
-@@ -104,6 +106,13 @@ setup()
- 	ip -net "$ns3" route add default via dead:beef:3::2
- 
- 	ip netns exec "$ns3" ./pm_nl_ctl limits 1 1
-+
-+	# debug build can slow down measurably the test program
-+	# we use quite tight time limit on the run-time, to ensure
-+	# maximum B/W usage.
-+	# Use the kmemleak file presence as a rough estimate for this being
-+	# a debug kernel and increase the maximum run-time accordingly
-+	[ -f /sys/kernel/debug/kmemleak ] && slack=$((slack+200))
- }
- 
- # $1: ns, $2: port
-@@ -241,7 +250,7 @@ run_test()
- 
- 	# mptcp_connect will do some sleeps to allow the mp_join handshake
- 	# completion (see mptcp_connect): 200ms on each side, add some slack
--	time=$((time + 450))
-+	time=$((time + 400 + $slack))
- 
- 	printf "%-60s" "$msg"
- 	do_transfer $small $large $time
--- 
-2.35.3
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/727243b29682
 
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
