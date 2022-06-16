@@ -1,112 +1,134 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCD47A
-	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 06:32:43 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id v7so308885ilo.3
-        for <mptcp@lists.linux.dev>; Wed, 15 Jun 2022 23:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=5PnS9cW4d5ZUYbMagKMr9yPgd3GFs55jXrolNPdBIqg=;
-        b=Ig2RaaEPfwLy/B+oVlcg44l9sVgT1/VYhEvxSqbnadep80nse/OVRO1yvMcr3niEQc
-         FLCUNoKyikGD8rl/NCO/cg+7g2/p8xoZVXMTMX96r2CC5wg6jE813HfSA8vgzenPfAB3
-         7YBs2Ea6xMC/4Wnk/G2PEmofcVe/HjRLyFYdQJEmsoC64JNaWnT7+crbwNAbvtUxYlrC
-         kccAAEF+regafWnN8dtPdBuncuycr695RlvXLUCyCYVU3DlOAYUS5DLNU/Tpq9nJ8tXp
-         hZB7svX8XrfaMA89bMGI9MPvEbEN0r9CqIZjxOv8BRLqfWtMg5CtfV6JLhgS+Km9AxOx
-         yTyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=5PnS9cW4d5ZUYbMagKMr9yPgd3GFs55jXrolNPdBIqg=;
-        b=55WhVMseV6GwTWa6CHHdMaipyLSGYGh2gjZOive7JPEzCuDZPfmbP8JlBgTRRyFVfS
-         GJyHZ/tWDdGcwsQeNR1vvN1P8l+Dh2uT1WHmApOAEXS4WnLvVF9ONXnLmg2qrMVgb6aE
-         hTcWw/1OKfbseagmjYoJQepRxEdd5k2F8RSD42IIuh3pTPlcNYWBlALph7FWUcaf2aE5
-         qzZH6EoBZt+jkUrLaInq1+xbXNIPtz67acVek10l9b0iRCUHqfDtY5M327atSWFYgnO4
-         bv43LR4FRWzulVgV+fjJNvmPAMC10b98iIAtOXlFc04ijaLhQ2eppw4ogUrrCOYMC4nO
-         yufw==
-X-Gm-Message-State: AJIora/9Cm+EuSOZ1epFn24wtlHZ8KB62m4evf4BKoJ+ZKfTrOC6AMxH
-	IdhuhfQAjHbT5YbrgqmgQQ==
-X-Google-Smtp-Source: AGRyM1v3aEGvq/TJsHumPOponfM5z0AvDmT3ST3qQZfUxL/xcDZuBUbWijM1UlT9ss1GjzWAX8euJw==
-X-Received: by 2002:a05:6e02:1485:b0:2d1:c323:18fe with SMTP id n5-20020a056e02148500b002d1c32318femr1988137ilk.228.1655361162741;
-        Wed, 15 Jun 2022 23:32:42 -0700 (PDT)
-Received: from [127.0.0.1] ([104.208.26.241])
-        by smtp.gmail.com with ESMTPSA id f20-20020a02a814000000b0032e7bd2287asm520494jaj.94.2022.06.15.23.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 23:32:42 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <11468cbfc4fc4ca766094b81c544f9108e04daf2.1655355422.git.geliang.tang@suse.com>
-References:
- <11468cbfc4fc4ca766094b81c544f9108e04daf2.1655355422.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: update pm_nl_ctl usage header: Tests Results
-Message-ID: <453d4949-497c-21a6-dd52-012ad98b712d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jun 2022 06:32:41 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6227A
+	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 06:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655362323;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=THx0NjOxNkUhsKM+gRYeN5FJwnj/dCCToPdXiCcNG2g=;
+	b=i4Bp2FJGamnfl/fyryNo1i8SGyh8pTdw+CI1O3dBk8+lnzGppG9wJtv8r6Du7qsOdSF3ZA
+	dZq8AIpKiO+HfJgi1LcK/p25vDHhjzIT+PxDhgvGVMCNGnDfijSf71x4rYtVTYdIn/ZqAJ
+	3GQafjGxTqEO0AixJcYXIodcdKXoHX4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-370-w1epVuvPPgWmWtwfw9HyNg-1; Thu, 16 Jun 2022 02:52:02 -0400
+X-MC-Unique: w1epVuvPPgWmWtwfw9HyNg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D3F8785A581
+	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 06:52:01 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.220])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6722E2026D2D
+	for <mptcp@lists.linux.dev>; Thu, 16 Jun 2022 06:52:01 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] selftests: mptcp: more stable diag tests
+Date: Thu, 16 Jun 2022 08:51:56 +0200
+Message-Id: <f318c8ca562695b07272ea3753a52f950555c18a.1655362313.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang,
+The mentioned test-case still use an hard-coded-len sleep to
+wait for a relative large number of connection to be established.
 
-Thank you for your modifications, that's great!
+On very slow VM and with debug build such timeout could be exceeded,
+causing failures in our CI.
 
-Our CI did some validations and here is its report:
+Address the issue polling for the expected condition several times,
+up to an unreasonable high amount of time. On reasonably fast system
+the self-tests will be faster then before, on very slow one we will
+still catch the correct condition.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6339386420756480
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6339386420756480/summary/summary.txt
+Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ tools/testing/selftests/net/mptcp/diag.sh | 40 ++++++++++++++++++++---
+ 1 file changed, 36 insertions(+), 4 deletions(-)
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): =
-packetdrill_sockopts selftest_diag =F0=9F=94=B4:
-  - Task: =
-https://cirrus-ci.com/task/4932011537203200
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/4932011537203200/summary/summary.txt
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 9dd43d7d957b..ee2f238255ec 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -61,6 +61,39 @@ chk_msk_nr()
+ 	__chk_nr "grep -c token:" $*
+ }
+ 
++wait_msk_nr()
++{
++	local condition="grep -c token:"
++	local expected=$1
++	local timeout=20
++	local msg nr
++	local max=0
++	local i=0
++
++	shift 1
++	msg=$*
++
++	while [ $i -lt $timeout ]; do
++		nr=$(ss -inmHMN $ns | $condition)
++		[ $nr == $expected ] && break;
++		[ $nr -gt $max ] && max=$nr
++		i=$((i + 1))
++		sleep 1
++	done
++
++	printf "%-50s" "$msg"
++	if [ $i -ge $timeout ]; then
++		echo "[ fail ] timeout while expecting $expected max $max last $nr"
++		ret=$test_cnt
++	elif [ $nr != $expected ]; then
++		echo "[ fail ] expected $expected found $nr"
++		ret=$test_cnt
++	else
++		echo "[  ok  ]"
++	fi
++	test_cnt=$((test_cnt+1))
++}
++
+ chk_msk_fallback_nr()
+ {
+ 		__chk_nr "grep -c fallback" $*
+@@ -184,7 +217,7 @@ for I in `seq 1 $NR_CLIENTS`; do
+ 	echo "a" | \
+ 		timeout ${timeout_test} \
+ 			ip netns exec $ns \
+-				./mptcp_connect -p $((I+10001)) -l -w 10 \
++				./mptcp_connect -p $((I+10001)) -l -w 20 \
+ 					-t ${timeout_poll} 0.0.0.0 >/dev/null &
+ done
+ wait_local_port_listen $ns $((NR_CLIENTS + 10001))
+@@ -193,12 +226,11 @@ for I in `seq 1 $NR_CLIENTS`; do
+ 	echo "b" | \
+ 		timeout ${timeout_test} \
+ 			ip netns exec $ns \
+-				./mptcp_connect -p $((I+10001)) -w 10 \
++				./mptcp_connect -p $((I+10001)) -w 20 \
+ 					-t ${timeout_poll} 127.0.0.1 >/dev/null &
+ done
+-sleep 1.5
+ 
+-chk_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
++wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
+ flush_pids
+ 
+ exit $ret
+-- 
+2.35.3
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/d4a1e2c951f3
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
