@@ -1,85 +1,174 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2BA4C84
-	for <mptcp@lists.linux.dev>; Fri, 17 Jun 2022 22:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083874C84
+	for <mptcp@lists.linux.dev>; Fri, 17 Jun 2022 22:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655503889; x=1687039889;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=v4DDu+bitg/F1FCCSr7g5ld+JIVSkrdezAyVwtKz/IM=;
-  b=lP2cWioYBeKo9kgleQhr8dlvc0kUqULo3v675vjfyockKajlcxH2am9o
-   RToqbzYYx0nQyc9uqKtVbYXxIhUB1BSSrYvwt5DwrUrCALOyr0YLZbOmo
-   UcCRnVZbYSQCy3Up4/zJWHAiUVWTsCulMKzDAI9JEt74CHmHHlRgmOLvS
-   Ko2FR6LT11BzshX//7U0pkMClR4ybb1UReEHUt0frfHDdWMgKxeaM+uJb
-   zc67kGtOS2nek6Z26JNY+PMq1UUNeMrU6qwZ/pSA9fM0FSaFOK+aZ6Ghy
-   ZvO5KBG9j5ISHA8xXXlh8FjllTa4fZG2o7rvLDUKYXac4Fh9q8SQsCSLZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="262636742"
+  t=1655503982; x=1687039982;
+  h=date:from:to:subject:in-reply-to:message-id:references:
+   mime-version;
+  bh=9scInmh934c4JXyF5XBwecwI0o9Pmp2aQIQhLGC7+WE=;
+  b=WGrRSxvOdWVewKuXhp/2iX/+TVQQfl0Wg8YB5ybH0+OXM2h7zFhYMequ
+   dBOdTGOnOzp1hb5GgfMhNzEwNex0/jAB+8IDpH5t+47F9v4yfLzdfoDYm
+   DzUP8O9i2ABuZaoTb7VWjGcWQQMMx3jM7k2DjAzs0qvTE7vES2idAL5Rs
+   0Ychkb3julpnN8biilw1eIuH2bgxmKXZlmbsTni1pvdEIoYHnYeJ69wTe
+   VB6CBDb3SGPHOS1sBCmr9A/1HtBtSwVNMDfZhMcvoKkQMfCM6LiXIT/sm
+   vdLTZ9t2LjK0Qe/MsiW44MQQf5q2AMKd2e73kiOMWK1NBkxUWgN9FYbwu
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="341279872"
 X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="262636742"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 15:11:29 -0700
+   d="scan'208";a="341279872"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 15:13:01 -0700
 X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="536970694"
+   d="scan'208";a="675652730"
 Received: from theiders-mobl.amr.corp.intel.com ([10.209.81.3])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 15:11:29 -0700
-Date: Fri, 17 Jun 2022 15:11:29 -0700 (PDT)
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 15:13:01 -0700
+Date: Fri, 17 Jun 2022 15:13:00 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 0/5] mptcp_join userspace pm tests
-In-Reply-To: <cover.1655355422.git.geliang.tang@suse.com>
-Message-ID: <f5913d71-d469-c4c7-7520-c69a3e641b5b@linux.intel.com>
-References: <cover.1655355422.git.geliang.tang@suse.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: several messages
+In-Reply-To: <1d640fd1-9779-91a4-e86f-9fc7acee1709@gmail.com>
+Message-ID: <45371c28-11c0-297d-b6ba-ba278f24ec56@linux.intel.com>
+References: <d1745c1e08937164e34f0010369e8be5f4c2afb0.1655387728.git.pabeni@redhat.com> <1d640fd1-9779-91a4-e86f-9fc7acee1709@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/mixed; boundary="0-372314676-1655503981=:44421"
 
-On Thu, 16 Jun 2022, Geliang Tang wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> This patch set adds add address, remove address, create subflow, and
-> destroy subflow test cases for userspace pm in mptcp_join script.
+--0-372314676-1655503981=:44421
+Content-Type: text/plain; format=flowed; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Thu, 16 Jun 2022, Paolo Abeni wrote:
+
+> The mentioned test measures the transfer run-time to verify
+> that the user-space program is able to use the full aggregate B/W.
 >
-> v3:
-> - use MPTCP_INC_STATS instead of __MPTCP_INC_STATS.
-> - drop unneeded pm_nl_set_limits.
+> Even on (virtual) link-speed-bound tests, debug kernel can slow
+> down the transfer enough to cause sporadic test failures.
+>
+> Instead of unconditionally raising the maximum allowed run-time,
+> tweak when the running kernel is a debug one, and use some simple/
+> rough heuristic to guess such scenarios.
+>
+> Note: this intentionally avoids looking for /boot/config-<version> as
+> the latter file is not always available in our reference CI
+> environments.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-Thanks Geliang.
-
-Series looks good, with a squash-to request (see patch 3 comment):
+Looks good, runs fine in my vm with debug kernel config:
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
+> ---
+> tools/testing/selftests/net/mptcp/simult_flows.sh | 11 ++++++++++-
+> 1 file changed, 10 insertions(+), 1 deletion(-)
 >
-> v2:
-> - add more tests in mptcp_join.sh
-> - patch 4, add kill_wait helper as Matt suggested.
+> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> index f441ff7904fc..141fcf0d40d1 100755
+> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> @@ -12,6 +12,7 @@ timeout_test=$((timeout_poll * 2 + 1))
+> test_cnt=1
+> ret=0
+> bail=0
+> +slack=50
 >
-> Geliang Tang (5):
->  mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy
->  selftests: mptcp: userspace pm address tests
->  selftests: mptcp: userspace pm subflow tests
->  selftests: mptcp: avoid Terminated messages in userspace_pm
->  selftests: mptcp: update pm_nl_ctl usage header
+> usage() {
+> 	echo "Usage: $0 [ -b ] [ -c ] [ -d ]"
+> @@ -52,6 +53,7 @@ setup()
+> 	cout=$(mktemp)
+> 	capout=$(mktemp)
+> 	size=$((2 * 2048 * 4096))
+> +
+> 	dd if=/dev/zero of=$small bs=4096 count=20 >/dev/null 2>&1
+> 	dd if=/dev/zero of=$large bs=4096 count=$((size / 4096)) >/dev/null 2>&1
 >
-> net/mptcp/pm_userspace.c                      |  2 +
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 82 ++++++++++++++++++-
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  2 +-
-> .../selftests/net/mptcp/userspace_pm.sh       | 40 +++++----
-> 4 files changed, 106 insertions(+), 20 deletions(-)
+> @@ -104,6 +106,13 @@ setup()
+> 	ip -net "$ns3" route add default via dead:beef:3::2
 >
+> 	ip netns exec "$ns3" ./pm_nl_ctl limits 1 1
+> +
+> +	# debug build can slow down measurably the test program
+> +	# we use quite tight time limit on the run-time, to ensure
+> +	# maximum B/W usage.
+> +	# Use the kmemleak file presence as a rough estimate for this being
+> +	# a debug kernel and increase the maximum run-time accordingly
+> +	[ -f /sys/kernel/debug/kmemleak ] && slack=$((slack+200))
+> }
+>
+> # $1: ns, $2: port
+> @@ -241,7 +250,7 @@ run_test()
+>
+> 	# mptcp_connect will do some sleeps to allow the mp_join handshake
+> 	# completion (see mptcp_connect): 200ms on each side, add some slack
+> -	time=$((time + 450))
+> +	time=$((time + 400 + $slack))
+>
+> 	printf "%-60s" "$msg"
+> 	do_transfer $small $large $time
 > -- 
 > 2.35.3
 >
 >
 >
 
+On Thu, 16 Jun 2022, MPTCP CI wrote:
+
+> Hi Paolo,
+>
+> Thank you for your modifications, that's great!
+>
+> Our CI did some validations and here is its report:
+>
+> - KVM Validation: normal:
+>  - Success! ✅:
+>  - Task: https://cirrus-ci.com/task/5708948505362432
+>  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5708948505362432/summary/summary.txt
+>
+> - KVM Validation: debug:
+>  - Unstable: 3 failed test(s): packetdrill_add_addr selftest_diag selftest_mptcp_join 🔴:
+>  - Task: https://cirrus-ci.com/task/5145998551941120
+>  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5145998551941120/summary/summary.txt
+>
+> Initiator: Patchew Applier
+> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/727243b29682
+>
+>
+> If there are some issues, you can reproduce them using the same environment as
+> the one used by the CI thanks to a docker image, e.g.:
+>
+>    $ cd [kernel source code]
+>    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+>        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+>        auto-debug
+>
+> For more details:
+>
+>    https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
+>
+>
+> Please note that despite all the efforts that have been already done to have a
+> stable tests suite when executed on a public CI like here, it is possible some
+> reported issues are not due to your modifications. Still, do not hesitate to
+> help us improve that ;-)
+>
+> Cheers,
+> MPTCP GH Action bot
+> Bot operated by Matthieu Baerts (Tessares)
+>
+>
+
 --
 Mat Martineau
 Intel
+--0-372314676-1655503981=:44421--
