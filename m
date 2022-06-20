@@ -1,117 +1,84 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2552580
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:38:53 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id me5so22247936ejb.2
-        for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 09:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=pTBjQOu78C6rd0Ifhxhb6Jn9sL2SGJ8ZWNOB83K45NQ=;
-        b=zz4Q+CsekLGgZ5XIRS/VMTcQQRglmUivG2jxU0vB0d1iet6O3QVV0+CG1HLnG//Jz/
-         b7QbiJ0GROAQer8GhU2mupylikfJ1DZe9Ce9iDsZ+PCb+Sc64rOBczAfOyzid8NQMDzy
-         caUhzNKK4KLAHWOYPjK8tGajxjtn/R0QH6p1g2JagWOc9RXTGSeo7pg+exy4MC0ONM7u
-         XS7IMc16nfFoL8z2WbUKgQtiEcHhPIQuJI3Kdn8/asjFxv77q+CTU1EC/GTSCVOzb0IB
-         OP06H9YxJhrR2J9jUsly2l0lvAzE0NowkHHAxt6gdyERLIpQo1NyBC+gIJ9zz1A0Xl7T
-         Yc9w==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802A17E7
+	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655743601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Dhmp0en1Fo20Ala+h4qiGgPkOF2kd+/ACWIvpdaMDeY=;
+	b=TUR8xoNgoCBIYA4H1B5wEau2Yw1jmE7WEf5P2F5h8+n+BsKGIQ8rs+/R83yuTRnJZ39PQt
+	9EX1iOTXGwn4hKbmQJxa/P1cCTYS/omsLLtFfxtD2QBGv7oQ18LL9roCwLWE3kuc/a/2j+
+	4jskohd0fIaaXt1oDy625zJH7/Wntz8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-461-yJSUXMd2OOKSwIP9o1cpzQ-1; Mon, 20 Jun 2022 12:46:39 -0400
+X-MC-Unique: yJSUXMd2OOKSwIP9o1cpzQ-1
+Received: by mail-wm1-f70.google.com with SMTP id r4-20020a1c4404000000b0039c8f5804c4so87362wma.3
+        for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 09:46:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=pTBjQOu78C6rd0Ifhxhb6Jn9sL2SGJ8ZWNOB83K45NQ=;
-        b=hmh5WLWwPxhmInJBHe6xWDgGgQFEeKKi/miAY1K6Tm4riex/li592dYkP3yyqVvZpF
-         bEnPdV6jP1F3eUT4fGW1/Bl0ZLYt1wZrx8Y8tjFZLjfLwjXZ+qYNgHo4qVGYaX52r3oL
-         Br/TZakvSAmuSY+a2pYw+ps+KdvJKrykvWUvA9zYvOlVr1+K9Netew5g0D7nRaohkNEr
-         5gvkgb7BUnPW4RcXiK1mQahGudBogOkf1Iw5wDCDi+YwJ3QeGs5y+OC7ZbqAUKl5op//
-         k6gSnWF8wuM7IwskQ0U3LEMRfvyFydczz8WrR+RUkBIZcr7FTrValHkC3ISVc8eWuoR3
-         f6Iw==
-X-Gm-Message-State: AJIora8O5y8A67bUWzaEf7VvYAlJwez0xWvzcwLjoFJavGraR4gOpQaT
-	5XrwebUy8XYZhmh88P3EoRAtiQ==
-X-Google-Smtp-Source: AGRyM1sIZRUtzqN6oRT/EMB9X6RELi/2nOmuoVXBpDb9tVOVfWi/Or21XH6xZzy50OVCN+DV6wYvQw==
-X-Received: by 2002:a17:906:7786:b0:712:3c92:4335 with SMTP id s6-20020a170906778600b007123c924335mr21375511ejm.610.1655743132157;
-        Mon, 20 Jun 2022 09:38:52 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:dab4:d6b9:b46d:dda6? ([2a02:578:8593:1200:dab4:d6b9:b46d:dda6])
-        by smtp.gmail.com with ESMTPSA id w13-20020a170906480d00b00704b196e59bsm6231162ejq.185.2022.06.20.09.38.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jun 2022 09:38:51 -0700 (PDT)
-Message-ID: <1c15521b-e748-eec5-205f-9ac75ce0cd98@tessares.net>
-Date: Mon, 20 Jun 2022 18:38:51 +0200
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Dhmp0en1Fo20Ala+h4qiGgPkOF2kd+/ACWIvpdaMDeY=;
+        b=Ob0vkzJudhLLzVqxbjJ4RSv+a0C05aKuF57Qg4RY/ExVf+FMXy9ZLVbg6e76ERApS3
+         qNRacvt9BGSJmDzL97bPhcQnNcr6iC2Fz/zaFyTqLvSKsfw0dV0naPqraU4kxcEZeOxR
+         oX5ol16A+kleQy9/JLfEaTqVFxmpYupaLfhNP2bauCfyHu/jyum6OplK2Kxp+kphB8xF
+         YBqZAG6ziZXMWd0BXgZbwNHA9NuH8aFCXkqlbIsZ1TFzO2hpNWjtkf69E+ZgDk37QMXO
+         ZkhEdjrDCdPsxudQEGa7UCU/i0jgkP5GHT7H9WeicmYxf9DUlNe9S0/U24l9EGYiX2qk
+         1sBA==
+X-Gm-Message-State: AOAM533hqU4MaUBjHtO7ZQtp5iFK9pysh7h4JF1Ej+Bn2qYJZ2tNeXxw
+	63ockpEZAuShMDiVTftYWR1clL+ooxSCbSbdfl8Rj2iYcYhRy6KfJmxreYP21/cyPt6B5wqG/bW
+	2JHca0mrVuKvtvGjq9ipAtF6Qd8jRXzZTdEA3jqY/l0d5Qo+GLTiFmHxk1Gziff1p
+X-Received: by 2002:a05:600c:1906:b0:39c:7f6c:ab3e with SMTP id j6-20020a05600c190600b0039c7f6cab3emr35554506wmq.205.1655743598650;
+        Mon, 20 Jun 2022 09:46:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwPNTT6Rr0B0B1q/nPU6CO/CnL1S70GS56zqNJmGkqofXsA/QKLf/I0pK2/fWG8B8lch0aBLQ==
+X-Received: by 2002:a05:600c:1906:b0:39c:7f6c:ab3e with SMTP id j6-20020a05600c190600b0039c7f6cab3emr35554486wmq.205.1655743598383;
+        Mon, 20 Jun 2022 09:46:38 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-113-202.dyn.eolo.it. [146.241.113.202])
+        by smtp.gmail.com with ESMTPSA id c5-20020adffb45000000b0021b91d1ddbfsm2512818wrs.21.2022.06.20.09.46.37
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jun 2022 09:46:38 -0700 (PDT)
+Message-ID: <11ee2e3c17ef70255be80c87406178a9fa4e4eec.camel@redhat.com>
+Subject: Re: [PATCH net-next v3 1/3] mptcp: never fetch fwd memory from the
+ subflow
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Date: Mon, 20 Jun 2022 18:46:37 +0200
+In-Reply-To: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
+References: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: tweak simult_flows for debug
- kernels.
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <d1745c1e08937164e34f0010369e8be5f4c2afb0.1655387728.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <d1745c1e08937164e34f0010369e8be5f4c2afb0.1655387728.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
-
-On 16/06/2022 15:55, Paolo Abeni wrote:
-> The mentioned test measures the transfer run-time to verify
-> that the user-space program is able to use the full aggregate B/W.
+On Mon, 2022-06-20 at 18:19 +0200, Paolo Abeni wrote:
+> The memory accounting is broken in such exceptional code
+> path, and after commit 4890b686f408 ("net: keep sk->sk_forward_alloc
+> as small as possible") we can't find much help there.
 > 
-> Even on (virtual) link-speed-bound tests, debug kernel can slow
-> down the transfer enough to cause sporadic test failures.
+> Drop the broken code.
 > 
-> Instead of unconditionally raising the maximum allowed run-time,
-> tweak when the running kernel is a debug one, and use some simple/
-> rough heuristic to guess such scenarios.
-> 
-> Note: this intentionally avoids looking for /boot/config-<version> as
-> the latter file is not always available in our reference CI
-> environments.
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-Thank you for the patch and review!
+This is actually a "v2" ;)
 
-Now in our tree (feat. for net-next but it could also go in 'fixes for
--net', no?) with Mat's RvB tag and a small diff, see below:
+The only change is the new patch 3/3 - I even kept the obsolete comment
+after the commit message in patch 1/3 :)
 
-New patches for t/upstream:
-- 87eefff9e9e8: selftests: mptcp: tweak simult_flows for debug kernels
-- Results: 1445c5fa4907..065936dc9f58 (export)
+/P
 
-
-Builds and tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220620T163537
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> index f441ff7904fc..141fcf0d40d1 100755
-> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-
-(...)
-
-> @@ -241,7 +250,7 @@ run_test()
->  
->  	# mptcp_connect will do some sleeps to allow the mp_join handshake
->  	# completion (see mptcp_connect): 200ms on each side, add some slack
-> -	time=$((time + 450))
-> +	time=$((time + 400 + $slack))
-
-(detail: I removed the extra '$' before 'slack' just for the uniformity :) )
-
-Cheers,
-Matt
-
->  
->  	printf "%-60s" "$msg"
->  	do_transfer $small $large $time
-
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
