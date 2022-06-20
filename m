@@ -1,84 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802A17E7
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655743601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dhmp0en1Fo20Ala+h4qiGgPkOF2kd+/ACWIvpdaMDeY=;
-	b=TUR8xoNgoCBIYA4H1B5wEau2Yw1jmE7WEf5P2F5h8+n+BsKGIQ8rs+/R83yuTRnJZ39PQt
-	9EX1iOTXGwn4hKbmQJxa/P1cCTYS/omsLLtFfxtD2QBGv7oQ18LL9roCwLWE3kuc/a/2j+
-	4jskohd0fIaaXt1oDy625zJH7/Wntz8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-461-yJSUXMd2OOKSwIP9o1cpzQ-1; Mon, 20 Jun 2022 12:46:39 -0400
-X-MC-Unique: yJSUXMd2OOKSwIP9o1cpzQ-1
-Received: by mail-wm1-f70.google.com with SMTP id r4-20020a1c4404000000b0039c8f5804c4so87362wma.3
-        for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 09:46:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5A72580
+	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:52:25 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id n20so15521444ejz.10
+        for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 09:52:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=q7rIbk16p8jaUo848u/VyuiFwd/CPg37jS/tHPKkbd8=;
+        b=C52izw4/8lEmQS0fug5DG2vUWwuGdPsjV3MciLJMF9Vlje5/nmTKO23IRmDQnZkhUI
+         DMRRtwnjAa3RWhDy3GbUsZiKKvv7CGU8wnzNBQOQ5WtZZb2DFH2lWYUtwblBWd/h8/sA
+         uuHsYdH+XL2X4zgjPnGTHX+tjvmObq4VH7vVjKhJzlDGJvA/QQBpuIyfE5wCS3FKAOLp
+         3u6852VNkKysYqtIPbsPKjj3AaVd8N4e3/WXo/ovlU4EVr0R84fkfC/fYq8FvLamUjoQ
+         B43yeIZnUs6p3OGghCodon2GpHsLKqpk1/MB0AZEVlneBUcbeHR+NqeDACBnq+uBGbyc
+         KMAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Dhmp0en1Fo20Ala+h4qiGgPkOF2kd+/ACWIvpdaMDeY=;
-        b=Ob0vkzJudhLLzVqxbjJ4RSv+a0C05aKuF57Qg4RY/ExVf+FMXy9ZLVbg6e76ERApS3
-         qNRacvt9BGSJmDzL97bPhcQnNcr6iC2Fz/zaFyTqLvSKsfw0dV0naPqraU4kxcEZeOxR
-         oX5ol16A+kleQy9/JLfEaTqVFxmpYupaLfhNP2bauCfyHu/jyum6OplK2Kxp+kphB8xF
-         YBqZAG6ziZXMWd0BXgZbwNHA9NuH8aFCXkqlbIsZ1TFzO2hpNWjtkf69E+ZgDk37QMXO
-         ZkhEdjrDCdPsxudQEGa7UCU/i0jgkP5GHT7H9WeicmYxf9DUlNe9S0/U24l9EGYiX2qk
-         1sBA==
-X-Gm-Message-State: AOAM533hqU4MaUBjHtO7ZQtp5iFK9pysh7h4JF1Ej+Bn2qYJZ2tNeXxw
-	63ockpEZAuShMDiVTftYWR1clL+ooxSCbSbdfl8Rj2iYcYhRy6KfJmxreYP21/cyPt6B5wqG/bW
-	2JHca0mrVuKvtvGjq9ipAtF6Qd8jRXzZTdEA3jqY/l0d5Qo+GLTiFmHxk1Gziff1p
-X-Received: by 2002:a05:600c:1906:b0:39c:7f6c:ab3e with SMTP id j6-20020a05600c190600b0039c7f6cab3emr35554506wmq.205.1655743598650;
-        Mon, 20 Jun 2022 09:46:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwPNTT6Rr0B0B1q/nPU6CO/CnL1S70GS56zqNJmGkqofXsA/QKLf/I0pK2/fWG8B8lch0aBLQ==
-X-Received: by 2002:a05:600c:1906:b0:39c:7f6c:ab3e with SMTP id j6-20020a05600c190600b0039c7f6cab3emr35554486wmq.205.1655743598383;
-        Mon, 20 Jun 2022 09:46:38 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-113-202.dyn.eolo.it. [146.241.113.202])
-        by smtp.gmail.com with ESMTPSA id c5-20020adffb45000000b0021b91d1ddbfsm2512818wrs.21.2022.06.20.09.46.37
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jun 2022 09:46:38 -0700 (PDT)
-Message-ID: <11ee2e3c17ef70255be80c87406178a9fa4e4eec.camel@redhat.com>
-Subject: Re: [PATCH net-next v3 1/3] mptcp: never fetch fwd memory from the
- subflow
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Date: Mon, 20 Jun 2022 18:46:37 +0200
-In-Reply-To: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
-References: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=q7rIbk16p8jaUo848u/VyuiFwd/CPg37jS/tHPKkbd8=;
+        b=ux6+7uJmV3jIseuPRFG23Nl8sqCvaGxZOP1P92+w+gsAi2iecI/NeDmdlFYzlAwXGI
+         OeNhau6n7PnT/dH/LS4lY8j8fFLXwRfjTcuo5T7881jvgoXaQYRkRmuxnLDcv7JSU2k9
+         PF5ckvZsGYIIsMEE2mTas1rfUTLzPbdelHJ9kOV91cFwDGto3qqr9N6BGHmhroTaexwv
+         gFe5yAGH+jJnkrsK7H6trKwNSPUsK4Y7jKj48Cv6unfcs+bzpyLw7IdbBlJ/I/roPLNk
+         DQZvjE2iMiTStEE9ON/DhCMB1Egv54/s9mosDaYBrUIzx+nCUK2+JNiHu/EBcLDnMN9O
+         5w8g==
+X-Gm-Message-State: AJIora/9IfJb48UAfp1VIz/t5RBp2lA5mAKK2HWkMknrPqhSt2GVmZJa
+	WhV0SOf4bzzS7V0xVk0LySepc9bgNXO7edTp
+X-Google-Smtp-Source: AGRyM1tLpMqlEDhICY4Cl7WrYt1uoVhi4uDLvMGXOsZzocZ0/83rQoQAizH9S6S8zW10LjDbV5eNHg==
+X-Received: by 2002:a17:907:629a:b0:6d7:b33e:43f4 with SMTP id nd26-20020a170907629a00b006d7b33e43f4mr22132355ejc.149.1655743943543;
+        Mon, 20 Jun 2022 09:52:23 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:dab4:d6b9:b46d:dda6? ([2a02:578:8593:1200:dab4:d6b9:b46d:dda6])
+        by smtp.gmail.com with ESMTPSA id 4-20020a170906300400b00722dcb4629bsm410964ejz.14.2022.06.20.09.52.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jun 2022 09:52:23 -0700 (PDT)
+Message-ID: <a2116590-580e-9b95-3224-48cbad6786cf@tessares.net>
+Date: Mon, 20 Jun 2022 18:52:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH mptcp-next v3 3/5] selftests: mptcp: userspace pm subflow
+ tests
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1655355422.git.geliang.tang@suse.com>
+ <3fe28e031020b282b23e906b1095f1cce16af111.1655355422.git.geliang.tang@suse.com>
+ <655c24a-a36-d7af-5b1d-925191d17c43@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <655c24a-a36-d7af-5b1d-925191d17c43@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2022-06-20 at 18:19 +0200, Paolo Abeni wrote:
-> The memory accounting is broken in such exceptional code
-> path, and after commit 4890b686f408 ("net: keep sk->sk_forward_alloc
-> as small as possible") we can't find much help there.
+Hi Mat,
+
+On 18/06/2022 00:10, Mat Martineau wrote:
+> On Thu, 16 Jun 2022, Geliang Tang wrote:
 > 
-> Drop the broken code.
+>> This patch adds userspace pm subflow tests support for mptcp_join.sh
+>> script. Add userpace pm create subflow and destroy test cases in
+>> userspace_tests().
+>>
+>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>> ---
+>> .../testing/selftests/net/mptcp/mptcp_join.sh | 40 ++++++++++++++++++-
+>> 1 file changed, 38 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 977c59c540b2..bec22fa38415 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -657,6 +657,8 @@ do_transfer()
+>>     local userspace_pm=0
+>>     local evts_ns1
+>>     local evts_ns1_pid
+>> +    local evts_ns2
+>> +    local evts_ns2_pid
+>>
+>>     :> "$cout"
+>>     :> "$sout"
+>> @@ -702,13 +704,20 @@ do_transfer()
+>>         # disconnect
+>>         extra_args="$extra_args -I ${addr_nr_ns2:10}"
+>>         addr_nr_ns2=0
+>> +    elif [[ "${addr_nr_ns2}" = "userspace_"* ]]; then
+>> +        userspace_pm=1
+>> +        addr_nr_ns2=${addr_nr_ns2:10}
+>>     fi
+>>
+>>     if [ $userspace_pm -eq 1 ]; then
+>>         evts_ns1=$(mktemp)
+>> +        evts_ns2=$(mktemp)
+>>         :> "$evts_ns1"
+>> +        :> "$evts_ns2"
+>>         ip netns exec ${listener_ns} ./pm_nl_ctl events >> "$evts_ns1"
+>> 2>&1 &
+>>         evts_ns1_pid=$!
+>> +        ip netns exec ${connector_ns} ./pm_nl_ctl events >>
+>> "$evts_ns2" 2>&1 &
+>> +        evts_ns2_pid=$!
+>>     fi
+>>
+>>     local local_addr
+>> @@ -830,6 +839,8 @@ do_transfer()
+>>     if [ $addr_nr_ns2 -gt 0 ]; then
+>>         local add_nr_ns2=${addr_nr_ns2}
+>>         local counter=3
+>> +        local id=20
+>> +        local tk da dp sp
+>>         while [ $add_nr_ns2 -gt 0 ]; do
+>>             local addr
+>>             if is_v6 "${connect_addr}"; then
+>> @@ -837,9 +848,23 @@ do_transfer()
+>>             else
+>>                 addr="10.0.$counter.2"
+>>             fi
+>> -            pm_nl_add_endpoint $ns2 $addr flags $flags
+>> +            if [ $userspace_pm -eq 0 ]; then
+>> +                pm_nl_add_endpoint $ns2 $addr flags $flags
+>> +            else
+>> +                tk=$(sed -n
+>> 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+>> +                da=$(sed -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q'
+>> "$evts_ns2")
+>> +                dp=$(sed -n
+>> 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+>> +                ip netns exec ${connector_ns} ./pm_nl_ctl csf lip
+>> $addr lid $id \
+>> +                                    rip $da rport $dp token $tk
+>> +                sleep 1
+>> +                sp=$(grep "type:10" "$evts_ns2" |
+>> +                     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
+>> +                ip netns exec ${connector_ns} ./pm_nl_ctl dsf lip
+>> $addr lport $sp \
+>> +                                    rip $da rport $dp token $tk
+>> +            fi
+>>             counter=$((counter + 1))
+>>             add_nr_ns2=$((add_nr_ns2 - 1))
+>> +            id=$((id + 1))
+>>         done
+>>     elif [ $addr_nr_ns2 -lt 0 ]; then
+>>         local rm_nr_ns2=$((-addr_nr_ns2))
+>> @@ -919,7 +944,9 @@ do_transfer()
+>>     if [ $userspace_pm -eq 1 ]; then
+>>         kill $evts_ns1_pid
+>>         wait $evts_ns1_pid 2>/dev/null
+>> -        rm -rf $evts_ns1
+>> +        kill $evts_ns2_pid
+>> +        wait $evts_ns2_pid 2>/dev/null
 > 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Would be nice to use the kill_wait function from "selftests: mptcp: avoid
+> Terminated messages in userspace_pm" here. Can you send a squash-to for
+> that "avoid Terminated messages..." commit that uses kill_wait?
 
-This is actually a "v2" ;)
+It might be fine not to have this function as the only "kill + wait" we
+have are here: just these two. It might then not be needed to create
+this "kill_wait" helper in mptcp_join.sh.
 
-The only change is the new patch 3/3 - I even kept the obsolete comment
-after the commit message in patch 1/3 :)
+But up to you :)
 
-/P
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
