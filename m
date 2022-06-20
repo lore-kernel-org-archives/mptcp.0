@@ -1,35 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF7F2562
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D562579
+	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655741967;
+	s=mimecast20190719; t=1655741968;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mAwT/4d89Rwzkct7lup/OjrROHG/B/gzwXf/mB5pA2M=;
-	b=RXB55SEbMEmaoJ/9/SowBlsejF1BPBxF1m2b/MRYkGrL+4OQ5HoKDktKolYkm/TWxK6LSy
-	8rGpdL+2HMaZTiq/jmyqnRtMAGv8n5NtF5mosV8S2MD51ymLOllnwivmmg01gd+t5VKPQN
-	i1JY4Rdp/aEsbGOj9vMk/l2i1VPGi5I=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3xRyAB+ZjoLEmxImKE98nUmlixT8Hs7DyFjCINlndw4=;
+	b=fVjAXdx5dduXMWs2su4W9Mx3m3zAuFuCIl9j4VRgfbhyvf2gHgN7afJ0fERvKg3XCq8te+
+	7SjWdj87lDKT8TyoV+odDchfzrhGNBVqzUTNf21v3P4TnS/MGYbci8yXmMfMPpUfML6TkT
+	WecuFgJlRNsldf2dA89KEbVXG3uLzjg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-669-7sd0LuexNzeXp4qrKJ4KbA-1; Mon, 20 Jun 2022 12:19:26 -0400
-X-MC-Unique: 7sd0LuexNzeXp4qrKJ4KbA-1
+ us-mta-78-oNLEDNIqMx-MuQL18x41DA-1; Mon, 20 Jun 2022 12:19:27 -0400
+X-MC-Unique: oNLEDNIqMx-MuQL18x41DA-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 17C6F1C04B70
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0656101AA4D
 	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:26 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.195.59])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9C6954011A3E
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:25 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5E4ED40CF8F0
+	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:26 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH net-next v3 1/3] mptcp: never fetch fwd memory from the subflow
-Date: Mon, 20 Jun 2022 18:19:03 +0200
-Message-Id: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
+Subject: [PATCH net-next v3 2/3] mptcp: drop SK_RECLAIM_* macros
+Date: Mon, 20 Jun 2022 18:19:04 +0200
+Message-Id: <b7884c6176c0dc56361a5cc365215333b5b81ec2.1655741931.git.pabeni@redhat.com>
+In-Reply-To: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
+References: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,41 +47,104 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The memory accounting is broken in such exceptional code
-path, and after commit 4890b686f408 ("net: keep sk->sk_forward_alloc
-as small as possible") we can't find much help there.
+After commit 4890b686f408 ("net: keep sk->sk_forward_alloc as small as
+possible"), the MPTCP protocol is the last SK_RECLAIM_CHUNK and
+SK_RECLAIM_THRESHOLD users.
 
-Drop the broken code.
+Update the MPTCP reclaim schema to match the core/TCP one and drop the
+mentioned macros. This additionally clean the MPTCP code a bit.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-This is possibly for net, but makes sense only on top of recent
-net-next patches, so whatever ;)
----
- net/mptcp/protocol.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ net/mptcp/protocol.c | 35 ++---------------------------------
+ 1 file changed, 2 insertions(+), 33 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6d2aa41390e7..0d4b2c010da0 100644
+index 0d4b2c010da0..b31bac33f87a 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -328,15 +328,10 @@ static bool mptcp_rmem_schedule(struct sock *sk, struct sock *ssk, int size)
+@@ -181,8 +181,8 @@ static void mptcp_rmem_uncharge(struct sock *sk, int size)
+ 	reclaimable = msk->rmem_fwd_alloc - sk_unused_reserved_mem(sk);
  
- 	amt = sk_mem_pages(size);
- 	amount = amt << PAGE_SHIFT;
--	msk->rmem_fwd_alloc += amount;
--	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV)) {
--		if (ssk->sk_forward_alloc < amount) {
--			msk->rmem_fwd_alloc -= amount;
--			return false;
--		}
-+	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV))
-+		return false;
+ 	/* see sk_mem_uncharge() for the rationale behind the following schema */
+-	if (unlikely(reclaimable >= SK_RECLAIM_THRESHOLD))
+-		__mptcp_rmem_reclaim(sk, SK_RECLAIM_CHUNK);
++	if (unlikely(reclaimable >= PAGE_SIZE))
++		__mptcp_rmem_reclaim(sk, reclaimable);
+ }
  
--		ssk->sk_forward_alloc -= amount;
+ static void mptcp_rfree(struct sk_buff *skb)
+@@ -961,25 +961,6 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+ 		df->data_seq + df->data_len == msk->write_seq;
+ }
+ 
+-static void __mptcp_mem_reclaim_partial(struct sock *sk)
+-{
+-	int reclaimable = mptcp_sk(sk)->rmem_fwd_alloc - sk_unused_reserved_mem(sk);
+-
+-	lockdep_assert_held_once(&sk->sk_lock.slock);
+-
+-	if (reclaimable > (int)PAGE_SIZE)
+-		__mptcp_rmem_reclaim(sk, reclaimable - 1);
+-
+-	sk_mem_reclaim(sk);
+-}
+-
+-static void mptcp_mem_reclaim_partial(struct sock *sk)
+-{
+-	mptcp_data_lock(sk);
+-	__mptcp_mem_reclaim_partial(sk);
+-	mptcp_data_unlock(sk);
+-}
+-
+ static void dfrag_uncharge(struct sock *sk, int len)
+ {
+ 	sk_mem_uncharge(sk, len);
+@@ -999,7 +980,6 @@ static void __mptcp_clean_una(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_data_frag *dtmp, *dfrag;
+-	bool cleaned = false;
+ 	u64 snd_una;
+ 
+ 	/* on fallback we just need to ignore snd_una, as this is really
+@@ -1022,7 +1002,6 @@ static void __mptcp_clean_una(struct sock *sk)
+ 		}
+ 
+ 		dfrag_clear(sk, dfrag);
+-		cleaned = true;
+ 	}
+ 
+ 	dfrag = mptcp_rtx_head(sk);
+@@ -1044,7 +1023,6 @@ static void __mptcp_clean_una(struct sock *sk)
+ 		dfrag->already_sent -= delta;
+ 
+ 		dfrag_uncharge(sk, delta);
+-		cleaned = true;
+ 	}
+ 
+ 	/* all retransmitted data acked, recovery completed */
+@@ -1052,9 +1030,6 @@ static void __mptcp_clean_una(struct sock *sk)
+ 		msk->recovery = false;
+ 
+ out:
+-	if (cleaned && tcp_under_memory_pressure(sk))
+-		__mptcp_mem_reclaim_partial(sk);
+-
+ 	if (snd_una == READ_ONCE(msk->snd_nxt) &&
+ 	    snd_una == READ_ONCE(msk->write_seq)) {
+ 		if (mptcp_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
+@@ -1206,12 +1181,6 @@ static struct sk_buff *mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, boo
+ {
+ 	gfp_t gfp = data_lock_held ? GFP_ATOMIC : sk->sk_allocation;
+ 
+-	if (unlikely(tcp_under_memory_pressure(sk))) {
+-		if (data_lock_held)
+-			__mptcp_mem_reclaim_partial(sk);
+-		else
+-			mptcp_mem_reclaim_partial(sk);
 -	}
-+	msk->rmem_fwd_alloc += amount;
- 	return true;
+ 	return __mptcp_alloc_tx_skb(sk, ssk, gfp);
  }
  
 -- 
