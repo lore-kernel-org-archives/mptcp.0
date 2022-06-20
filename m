@@ -1,85 +1,172 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE7B2580
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:53:35 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id fu3so22301390ejc.7
-        for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 09:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=/tlenR0kwm9yvxskCGzwLgCAaeCdAiQHmUbw02vyCBA=;
-        b=OZNp9c83eCH+bCGgh+QQ+1DBXazhmkNfqk//gFQK2USUDZWwfpYfts/AfexTos1t6B
-         sLTOC7gaYybVOkZQ1FwsVOgcds1Hhj8xdc1KGKvlpRdjDL8Iwq4Zh+y/zV/sWaGQn3ZP
-         qI5YTQgWgpjMPy7kBW3bL1Z/HyfzJCf7+5EpiqIlXk+ynuTpkq2/JWJc/hf9DtJYhglc
-         atexgcerRkCpgsbs2ro+Aca6q3Z+nI3JALfNFQg8Rj8SLFF8Vf/ZCZsDxjHr71pByRz6
-         A2Ab491iWmfQmGQoEiE1Ed/e07TtqkHuH3qTVZHE+AkGzcNQSeJ0GNA/pp7oBUgMqAl5
-         5JgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=/tlenR0kwm9yvxskCGzwLgCAaeCdAiQHmUbw02vyCBA=;
-        b=efrgJmteZVpm8M0ECVWrnN+5EEWebzsXSUWKitilkWp9EKFDjYY+hMLLNe/lrbh9UP
-         tdkGxUEwltGQBVtnqq0DecHKZ4zLQpf0jJT8cq/Y860cRGuDTU+oDv2l12bjakb0Fst8
-         0nv9rJ+RKIUAF6UDVw9kjPgQadHS0lGzeGdh3a46iHcryyJKiFPMuy0b7S7Mgpnieoyg
-         RTOyW99AfvOzIVeGnuko0RB248UeGozrx/N0mJtH0znYzt3AZ8+uAojLEpB6ZbLI4SBn
-         4riSG1DiaIHHJpAmXjTBzFrsA0ugzdBDXPWrDrVrMSG7yqH58lky7tg+cgl2rG6uC9AT
-         ajtg==
-X-Gm-Message-State: AJIora/AlS6rYnJUUjK742pCxQe6IdwbevdYYYMsLV+7cmcsv7isZrVv
-	6v031taTrhC2DxwPCjdK+wU+HNLKXrydWijb
-X-Google-Smtp-Source: AGRyM1sF5hxdznjU2XnPLN7dcAlHO721xCkyWrWdyVIlJThkknaDosddxPpcij23RYfWLMn5zKInVg==
-X-Received: by 2002:a17:906:7393:b0:712:57a8:5cc9 with SMTP id f19-20020a170906739300b0071257a85cc9mr21549359ejl.469.1655744013848;
-        Mon, 20 Jun 2022 09:53:33 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:dab4:d6b9:b46d:dda6? ([2a02:578:8593:1200:dab4:d6b9:b46d:dda6])
-        by smtp.gmail.com with ESMTPSA id s18-20020a1709064d9200b006f3ef214da6sm3661804eju.12.2022.06.20.09.53.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jun 2022 09:53:33 -0700 (PDT)
-Message-ID: <50a7387d-1f2b-2a25-31ef-552af589d9b9@tessares.net>
-Date: Mon, 20 Jun 2022 18:53:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41CC3205
+	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 18:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655749627; x=1687285627;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Y09SXzmbjWVKvYHrG2CRZ2QvcvUKgaeksaWaV+7kXD4=;
+  b=HWZ28AVZfDhB54VxeM3QPiqEnFmqWkCvn7UQ31xJ0vlmMSELIbH3XST4
+   9oGx/b0z6R63h7Dp0Y9w/ACZwdkDNTvcPt8qmOXcF+NptJYQ9lojxApE1
+   ffPpWRcJL7aFGJNQtVhrek4TrL1+YboSBbpA2z7fl6lilksSWX1vLGnHi
+   E2B0Mf4CQtX6TkJRgfjDZSFG2bSpuKVuH64Ay0nvbw5jjqlB/4WAT9NBv
+   UdWM0zLYSBCvmRSJ4xMXdSO+hSnFf7/n8WJVzS86QhgAhk211iUDmoh2Y
+   gx4zUirQYkqib6OWjSm+vKgPbb8G4KiFz/q4gIGm4CThn0OT0CYu5MmJg
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10384"; a="268674484"
+X-IronPort-AV: E=Sophos;i="5.92,207,1650956400"; 
+   d="scan'208";a="268674484"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 11:27:07 -0700
+X-IronPort-AV: E=Sophos;i="5.92,207,1650956400"; 
+   d="scan'208";a="614474278"
+Received: from mmachax-mobl.amr.corp.intel.com ([10.212.156.191])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 11:27:07 -0700
+Date: Mon, 20 Jun 2022 11:27:07 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v3 3/5] selftests: mptcp: userspace pm subflow
+ tests
+In-Reply-To: <a2116590-580e-9b95-3224-48cbad6786cf@tessares.net>
+Message-ID: <8da3168-a814-c8e6-6f9e-dbaa8975ac9@linux.intel.com>
+References: <cover.1655355422.git.geliang.tang@suse.com> <3fe28e031020b282b23e906b1095f1cce16af111.1655355422.git.geliang.tang@suse.com> <655c24a-a36-d7af-5b1d-925191d17c43@linux.intel.com> <a2116590-580e-9b95-3224-48cbad6786cf@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH mptcp-next v3 0/5] mptcp_join userspace pm tests
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1655355422.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1655355422.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="0-910435017-1655749627=:5355"
 
-Hi Geliang, Mat,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 16/06/2022 07:02, Geliang Tang wrote:
-> This patch set adds add address, remove address, create subflow, and
-> destroy subflow test cases for userspace pm in mptcp_join script.
+--0-910435017-1655749627=:5355
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-Thank you for the patches and the reviews!
+On Mon, 20 Jun 2022, Matthieu Baerts wrote:
 
-New patches for t/upstream:
-- 577d9f614162: mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy
-- e246aad773d9: selftests: mptcp: userspace pm address tests
-- 01eef364817f: selftests: mptcp: userspace pm subflow tests
-- b1781e4c95ae: selftests: mptcp: avoid Terminated messages in userspace_pm
-- cef6c7fc0216: selftests: mptcp: update pm_nl_ctl usage header
-- Results: 065936dc9f58..9e30e28df3d9 (export)
+> Hi Mat,
+>
+> On 18/06/2022 00:10, Mat Martineau wrote:
+>> On Thu, 16 Jun 2022, Geliang Tang wrote:
+>>
+>>> This patch adds userspace pm subflow tests support for mptcp_join.sh
+>>> script. Add userpace pm create subflow and destroy test cases in
+>>> userspace_tests().
+>>>
+>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>> ---
+>>> .../testing/selftests/net/mptcp/mptcp_join.sh | 40 ++++++++++++++++++-
+>>> 1 file changed, 38 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> index 977c59c540b2..bec22fa38415 100755
+>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> @@ -657,6 +657,8 @@ do_transfer()
+>>>     local userspace_pm=0
+>>>     local evts_ns1
+>>>     local evts_ns1_pid
+>>> +    local evts_ns2
+>>> +    local evts_ns2_pid
+>>>
+>>>     :> "$cout"
+>>>     :> "$sout"
+>>> @@ -702,13 +704,20 @@ do_transfer()
+>>>         # disconnect
+>>>         extra_args="$extra_args -I ${addr_nr_ns2:10}"
+>>>         addr_nr_ns2=0
+>>> +    elif [[ "${addr_nr_ns2}" = "userspace_"* ]]; then
+>>> +        userspace_pm=1
+>>> +        addr_nr_ns2=${addr_nr_ns2:10}
+>>>     fi
+>>>
+>>>     if [ $userspace_pm -eq 1 ]; then
+>>>         evts_ns1=$(mktemp)
+>>> +        evts_ns2=$(mktemp)
+>>>         :> "$evts_ns1"
+>>> +        :> "$evts_ns2"
+>>>         ip netns exec ${listener_ns} ./pm_nl_ctl events >> "$evts_ns1"
+>>> 2>&1 &
+>>>         evts_ns1_pid=$!
+>>> +        ip netns exec ${connector_ns} ./pm_nl_ctl events >>
+>>> "$evts_ns2" 2>&1 &
+>>> +        evts_ns2_pid=$!
+>>>     fi
+>>>
+>>>     local local_addr
+>>> @@ -830,6 +839,8 @@ do_transfer()
+>>>     if [ $addr_nr_ns2 -gt 0 ]; then
+>>>         local add_nr_ns2=${addr_nr_ns2}
+>>>         local counter=3
+>>> +        local id=20
+>>> +        local tk da dp sp
+>>>         while [ $add_nr_ns2 -gt 0 ]; do
+>>>             local addr
+>>>             if is_v6 "${connect_addr}"; then
+>>> @@ -837,9 +848,23 @@ do_transfer()
+>>>             else
+>>>                 addr="10.0.$counter.2"
+>>>             fi
+>>> -            pm_nl_add_endpoint $ns2 $addr flags $flags
+>>> +            if [ $userspace_pm -eq 0 ]; then
+>>> +                pm_nl_add_endpoint $ns2 $addr flags $flags
+>>> +            else
+>>> +                tk=$(sed -n
+>>> 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+>>> +                da=$(sed -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q'
+>>> "$evts_ns2")
+>>> +                dp=$(sed -n
+>>> 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+>>> +                ip netns exec ${connector_ns} ./pm_nl_ctl csf lip
+>>> $addr lid $id \
+>>> +                                    rip $da rport $dp token $tk
+>>> +                sleep 1
+>>> +                sp=$(grep "type:10" "$evts_ns2" |
+>>> +                     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
+>>> +                ip netns exec ${connector_ns} ./pm_nl_ctl dsf lip
+>>> $addr lport $sp \
+>>> +                                    rip $da rport $dp token $tk
+>>> +            fi
+>>>             counter=$((counter + 1))
+>>>             add_nr_ns2=$((add_nr_ns2 - 1))
+>>> +            id=$((id + 1))
+>>>         done
+>>>     elif [ $addr_nr_ns2 -lt 0 ]; then
+>>>         local rm_nr_ns2=$((-addr_nr_ns2))
+>>> @@ -919,7 +944,9 @@ do_transfer()
+>>>     if [ $userspace_pm -eq 1 ]; then
+>>>         kill $evts_ns1_pid
+>>>         wait $evts_ns1_pid 2>/dev/null
+>>> -        rm -rf $evts_ns1
+>>> +        kill $evts_ns2_pid
+>>> +        wait $evts_ns2_pid 2>/dev/null
+>>
+>> Would be nice to use the kill_wait function from "selftests: mptcp: avoid
+>> Terminated messages in userspace_pm" here. Can you send a squash-to for
+>> that "avoid Terminated messages..." commit that uses kill_wait?
+>
+> It might be fine not to have this function as the only "kill + wait" we
+> have are here: just these two. It might then not be needed to create
+> this "kill_wait" helper in mptcp_join.sh.
+>
+> But up to you :)
+>
 
+Yeah, good point. Probably not worth creating the additional function in 
+mptcp_join.sh
 
-Builds and tests are now in progress:
+So: Geliang, you don't need to modify the "avoid Terminated messages..." 
+commit.
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220620T164712
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
+--0-910435017-1655749627=:5355--
