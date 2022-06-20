@@ -1,73 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776F92562
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655741976;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6hgnm+tHg/Nq6/RCmdaH5beEZtteyR8AKDGBcJxwjp4=;
-	b=g3uS0XCINS005rQW6Z9xAIGeRq6Z4rQ/G2wUVTO0Xo9YAmzp80XzYxiaJFoUX/v1O4GkeY
-	mnaxIsDQ6Y78MYy4pEb0X8fyfaMJuf/228kah2itT6vLesSRQASaC294j87auHHh0cQ0p+
-	Y5Pz1YztoBu6KYsDEZA+R8i5xvi3ek8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-220-g7ivmPF4N6aGdn-oszyGvw-1; Mon, 20 Jun 2022 12:19:27 -0400
-X-MC-Unique: g7ivmPF4N6aGdn-oszyGvw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9054980B90C
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:27 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.195.59])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 209EE40CF8F0
-	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:19:26 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH net-next v3 3/3] mptcp: refine memory scheduling
-Date: Mon, 20 Jun 2022 18:19:05 +0200
-Message-Id: <9ab1ce9ee1019cb90181d4e6268c37448c8af46b.1655741931.git.pabeni@redhat.com>
-In-Reply-To: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
-References: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655741931.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A98E7E7
+	for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 16:33:25 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id mf9so1882870ejb.0
+        for <mptcp@lists.linux.dev>; Mon, 20 Jun 2022 09:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=GSYI3CMXkKGQO4ZDm4ldukFCGLY8krq4r+8++Sno5Go=;
+        b=PMmhiFqFD/aZudp8m9LJ43INKo8A3idTR4K7YATSqAPE27tn9qMbzHfbyzvzJFbxKI
+         n5L0vmJemixKATTEXlHafAn6hmN7I93YhIjsu2r87FFPx01JhvtGj2vatG2rrhw744fV
+         OobizfOGSHB3Cjb79fP9X9P5yooBGF1p1taBUDpPrN5qohyZ4o6ZLI7AeajY8fbCfqxe
+         0rp7Ac6dbEjEDXI8SIfffiOSSgOhG+xbojRX6uyyRPhPWYTzqRj3bM//XJTziSuHu+cf
+         HmsMvvdLXLA0JLxbmxDC0ssVqkeITmWXNIO1Lm+EkNeva9IxoSLAmLafZzzbuFYNxQqI
+         pE5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=GSYI3CMXkKGQO4ZDm4ldukFCGLY8krq4r+8++Sno5Go=;
+        b=wUTP4Yiv8jHWNOmPqNTtIwuf1Q7eQ87Vs8IO0bIF4eX/sZ/lHsS43XV8fPRIAFZmhF
+         VZ11RJ0wkIQI8YzL9XW7+ziVh+O5ioh4wPB7k5gZ+Lbz3YGJz1Xil+dO1SKVFQChXMCB
+         4YZpqIKnxw+bEfLU8MP/WUoixxjxF25jnHVs0F45oIpuc8SZqM/1qmASimIKKQ2lQhB2
+         gqc9kWI1nkvc6Wf1JToRRUlKnGfDcf6U9yxdf13SK/va0I8qG/R3AAJJJCrXnvgBTypo
+         LPVAhMpic8S5vpanoL8Gw6y8MFENIgMBy9x967UtSJpk9kRqabCSPM4hKCpsOIE+OtYl
+         EYMw==
+X-Gm-Message-State: AJIora8YGNhzvp0+v/KjPdi1bf8UCZO2frx8XO4XcuvDs4J76CxiYlgM
+	IVYKKmCoMOkCSEMr2OBfil43Cthqt1Djm1cs
+X-Google-Smtp-Source: AGRyM1tLGj2WCRxBOnzSbi6QpgZzqbppq6j5EZPf2o+Z2qQyfxoAFhDCNTbqdRj9o7mGx35njLCToQ==
+X-Received: by 2002:a17:907:7dac:b0:722:3352:ac05 with SMTP id oz44-20020a1709077dac00b007223352ac05mr9722165ejc.421.1655742804084;
+        Mon, 20 Jun 2022 09:33:24 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:dab4:d6b9:b46d:dda6? ([2a02:578:8593:1200:dab4:d6b9:b46d:dda6])
+        by smtp.gmail.com with ESMTPSA id nb36-20020a1709071ca400b0070beb9401d9sm6280138ejc.171.2022.06.20.09.33.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jun 2022 09:33:23 -0700 (PDT)
+Message-ID: <c3923775-a448-76b5-e7c9-c2ea69aa43c2@tessares.net>
+Date: Mon, 20 Jun 2022 18:33:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: more stable diag tests
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <f318c8ca562695b07272ea3753a52f950555c18a.1655362313.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <f318c8ca562695b07272ea3753a52f950555c18a.1655362313.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Similar to commit 7c80b038d23e ("net: fix sk_wmem_schedule() and
-sk_rmem_schedule() errors"), let the MPTCP receive path schedule
-exactly the required amount of memory.
+Hi Paolo, Mat,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+On 16/06/2022 08:51, Paolo Abeni wrote:
+> The mentioned test-case still use an hard-coded-len sleep to
+> wait for a relative large number of connection to be established.
+> 
+> On very slow VM and with debug build such timeout could be exceeded,
+> causing failures in our CI.
+> 
+> Address the issue polling for the expected condition several times,
+> up to an unreasonable high amount of time. On reasonably fast system
+> the self-tests will be faster then before, on very slow one we will
+> still catch the correct condition.
+> 
+> Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b31bac33f87a..0e295b3bce54 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -326,6 +326,7 @@ static bool mptcp_rmem_schedule(struct sock *sk, struct sock *ssk, int size)
- 	if (size < msk->rmem_fwd_alloc)
- 		return true;
- 
-+	size -= msk->rmem_fwd_alloc;
- 	amt = sk_mem_pages(size);
- 	amount = amt << PAGE_SHIFT;
- 	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV))
+Thank you for the fix and the review!
+
+Great to see the CI reporting less issues :-)
+
+I guess I can close issue 264:
+
+  https://github.com/multipath-tcp/mptcp_net-next/issues/264
+
+New patches for t/upstream-net:
+- 718b9e36a088: selftests: mptcp: more stable diag tests
+- Results: bd3a280300a4..2500388fcff9 (export-net)
+
+New patches for t/upstream:
+- 718b9e36a088: selftests: mptcp: more stable diag tests
+- Results: f267d3bf87de..1445c5fa4907 (export)
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220620T160817
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export-net
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220620T160817
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-2.35.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
