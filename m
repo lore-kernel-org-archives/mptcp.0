@@ -1,39 +1,39 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE551C0C
-	for <mptcp@lists.linux.dev>; Tue, 21 Jun 2022 22:35:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B4D1C0C
+	for <mptcp@lists.linux.dev>; Tue, 21 Jun 2022 22:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655850914; x=1687386914;
+  t=1655851137; x=1687387137;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=q2BBOEZ2h4S+wzJaHuxGtAxIO3Z4n/WXU0kaP4FaBMk=;
-  b=M+3ONrAGIKLc0cAHwVNa9me7RuaCn/9pG8/asbqgtlxKlQp1n4b9Tq9F
-   D1w8YcunyIoFu7JI5BECTBX/ct/X5ierJo+TbEq0QIyrt0DTe1dSEU2/S
-   V+mrnArbS1oAE0X53FxqxQ1JMA3RjQ3lAi73NiN33+TZHn4B4iYO/3KsQ
-   STRfzl2ha1k3GCnnifDzX/C800yBWxURVNaC3cNe4EgBt8FIWM0ODwMVo
-   ZGPBSu99cbhiDKuuxrsOIm93izy2EXuO7/BP9VjI2ndxqZqGmK9kgwVPC
-   nAWcUHrUyjw1ZRQHIZmZ1m+t74GORHAx7+REw9kXews2PNT3Jq0lXTGtL
+  bh=CgLdUOkGbMdyYjIUfBWFflCqQfYYZka8LLF2te5T630=;
+  b=Z395bslPot5ASiENHGl+3+pPW/JOZ6TfDrMetn781aHk8fFuOirxrVlG
+   5qAbwADpU7zMYKTUjHJW/4dIaUkUGccBP/mTqBFQAAmDYmUvgYvOOT0HX
+   tvth61U1aSt95G8G7UyfDPTCZXnmyMKiHixm28cbqx5bXquIQE2PcMCcH
+   EPkjSNXE7iz2PkHKIBJzXah74+XiBf8b5Kv8kkaxFIPiQ3BjKy0s0sV1H
+   +weawTSlsxyhTppLhMzvfnVZ6FII09aYhEFxOeHvYzPK+VmbRiW9RUayL
+   qijpO7yUxAewn8oiDhPCl/aNFoCNka9QcNbgyjXPswL0mQqbem6se0SMA
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="260075876"
+X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="277804785"
 X-IronPort-AV: E=Sophos;i="5.92,210,1650956400"; 
-   d="scan'208";a="260075876"
+   d="scan'208";a="277804785"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 15:35:14 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 15:38:56 -0700
 X-IronPort-AV: E=Sophos;i="5.92,210,1650956400"; 
-   d="scan'208";a="833793984"
+   d="scan'208";a="833794608"
 Received: from vanehosx-mobl.gar.corp.intel.com ([10.251.13.241])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 15:35:13 -0700
-Date: Tue, 21 Jun 2022 15:35:13 -0700 (PDT)
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 15:38:56 -0700
+Date: Tue, 21 Jun 2022 15:38:56 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v4 mptcp-next 1/4] mptcp: never fetch fwd memory from
- the subflow
-In-Reply-To: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655828070.git.pabeni@redhat.com>
-Message-ID: <f6421a9f-b294-862-2077-67a2e57eeb43@linux.intel.com>
-References: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655828070.git.pabeni@redhat.com>
+Subject: Re: [PATCH v4 mptcp-next 4/4] net: remove SK_RECLAIM_THRESHOLD and
+ SK_RECLAIM_CHUNK
+In-Reply-To: <746be47fdbbf4c5fadb9d5dcb2ee2e9cff0dacf5.1655828070.git.pabeni@redhat.com>
+Message-ID: <b324f6a1-6f17-c52b-4725-22893fc13cd4@linux.intel.com>
+References: <630f7e13d7226f8c37a9cc0c66008a298c1e6b9e.1655828070.git.pabeni@redhat.com> <746be47fdbbf4c5fadb9d5dcb2ee2e9cff0dacf5.1655828070.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,58 +44,42 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Tue, 21 Jun 2022, Paolo Abeni wrote:
 
-> The memory accounting is broken in such exceptional code
-> path, and after commit 4890b686f408 ("net: keep sk->sk_forward_alloc
-> as small as possible") we can't find much help there.
->
-> Drop the broken code.
+> There are no more users for the mentioned macros, just
+> drop them.
 >
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
 
-Thanks Paolo, v4 looks good.
+Looks good:
 
-For patches 1-3:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-See patch 4 for different tag.
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
-> This is possibly for net, but makes sense only on top of recent
-> net-next patches, so whatever ;)
+(even though I'll end up replacing that with a Signed-off-by when 
+upstreaming anyway...)
 
-I agree it makes sense for net-next.
 
 - Mat
 
 > ---
-> net/mptcp/protocol.c | 11 +++--------
-> 1 file changed, 3 insertions(+), 8 deletions(-)
+> include/net/sock.h | 5 -----
+> 1 file changed, 5 deletions(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6d2aa41390e7..0d4b2c010da0 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -328,15 +328,10 @@ static bool mptcp_rmem_schedule(struct sock *sk, struct sock *ssk, int size)
->
-> 	amt = sk_mem_pages(size);
-> 	amount = amt << PAGE_SHIFT;
-> -	msk->rmem_fwd_alloc += amount;
-> -	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV)) {
-> -		if (ssk->sk_forward_alloc < amount) {
-> -			msk->rmem_fwd_alloc -= amount;
-> -			return false;
-> -		}
-> +	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV))
-> +		return false;
->
-> -		ssk->sk_forward_alloc -= amount;
-> -	}
-> +	msk->rmem_fwd_alloc += amount;
-> 	return true;
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 5bed1ea7a722..c3ac36b7b7b8 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -1619,11 +1619,6 @@ static inline void sk_mem_charge(struct sock *sk, int size)
+> 	sk->sk_forward_alloc -= size;
 > }
 >
+> -/* the following macros control memory reclaiming in mptcp_rmem_uncharge()
+> - */
+> -#define SK_RECLAIM_THRESHOLD	(1 << 21)
+> -#define SK_RECLAIM_CHUNK	(1 << 20)
+> -
+> static inline void sk_mem_uncharge(struct sock *sk, int size)
+> {
+> 	if (!sk_has_account(sk))
 > -- 
 > 2.35.3
 >
