@@ -1,128 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E203410E8
-	for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 09:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655891638;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/w3h3rGbkHNy2EhKXLEOk8KM5Faay2hdZ+/PMheFMR4=;
-	b=F/bvtv3WyJBthomM7h8ViyMn1x+t7nI/YLRU1N0y7Qr4nSYTiqkX/2Jcxmju4t9emM1wTZ
-	fLSDRmGJQCtrgvMJGA/wuLP+tHK63rwV7WWMt6hePREl1Kwis4JV2BiZUrLjc9mwtAyYfX
-	p2+QEJdBwzmyYGNyLT8bDhGD4KnmtPA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-340-n-lhkrB8MDeAnRjm_duNjg-1; Wed, 22 Jun 2022 05:53:57 -0400
-X-MC-Unique: n-lhkrB8MDeAnRjm_duNjg-1
-Received: by mail-wr1-f69.google.com with SMTP id s14-20020adfa28e000000b0020ac7532f08so3879065wra.15
-        for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 02:53:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553E5137A
+	for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 11:52:14 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id h9-20020a17090a648900b001ecb8596e43so7357975pjj.5
+        for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 04:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=uGNLalw38N3xkUgLe6BB5i7v4qyTPGHryj1OkU1WIoM=;
+        b=Qi3ZEIaIL9rT1gxIXhqIfdA3wGKCGgnvDYSu6L8TMYfRxuGcMdKuBujDfNHQxBe7WK
+         kbhXvs5nzMIZylb3t0laDuJfjc5Gha3F8uwQ2I5jWU5ZtNv/CHlAd2P5aG93LuujTsdr
+         HS4S/CyAfiqcDksx32B9jVT2vE4roKCa/myFwOu48Mbg7Fmj15BkQmRIMvXYpvmiDmyx
+         4Hh+skkHB1hlxbLx6S8qmCrtbR2wMCGDgEd8mvLWoSEDdzNKLZWPBkYLY814BNvfzX9A
+         FjrIPOVk72ARfClFa39jrW7UAw4X0elObVGZ+Ceri7WVZAMiRK/vxSEe9o3C/IhPAJV7
+         CarQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=/w3h3rGbkHNy2EhKXLEOk8KM5Faay2hdZ+/PMheFMR4=;
-        b=iCqFS46cSKqUtO08Go1tutRvWVsrW77BrG+bY2pI/EC/zLEkA7hAkTrktUkub8qc0M
-         RZGFyCRWrPFr0F9oWU0P0OdRzy5g9tB79W//I0wW7jhVzQoMTAxF+2SrAe4Le+3VdopE
-         QBQfo1QfmqZY861x2A3u5d6Xe5wIa1VKh2q6mGd6XAdeI96N/BU7oaTQOfYeFUh5uox1
-         N7PETJyBV9tMBC53zZzgCkFyMT+9wmoWaeLe4gHp0JqSkxrJmNrwC4a+F65WNiqfhTff
-         zets/a30zGTQlCXiNOtXOjgctXwOYlhOl/Kcx8BlxIeh9mGILds91LTYFGYV+tTOsN9z
-         OURw==
-X-Gm-Message-State: AJIora+CEiEWZ/SDdRXpGBZXsVQZjr9qCsiaffWtgQUY4O9FgslMBmDJ
-	cXADt7DwLh4Xx0uelELLcXJ6NwoQ0dNCKRutT6zcVw8N1laf0V/0LGbgNSBLk5K0xGrv62qGIZ/
-	CQPR29ClAXvYz6I0=
-X-Received: by 2002:a05:6000:18ab:b0:219:ed2e:be94 with SMTP id b11-20020a05600018ab00b00219ed2ebe94mr2442696wri.270.1655891636150;
-        Wed, 22 Jun 2022 02:53:56 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tjidOTlmJdzU/IX+SG5B9OHfjl0fWOHueSQkdWQo1Q79DaKVe4UKSxJ6SVD829nNpAinhzYg==
-X-Received: by 2002:a05:6000:18ab:b0:219:ed2e:be94 with SMTP id b11-20020a05600018ab00b00219ed2ebe94mr2442676wri.270.1655891635838;
-        Wed, 22 Jun 2022 02:53:55 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-113-202.dyn.eolo.it. [146.241.113.202])
-        by smtp.gmail.com with ESMTPSA id cl10-20020a5d5f0a000000b0021b92171d28sm8756811wrb.54.2022.06.22.02.53.55
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=uGNLalw38N3xkUgLe6BB5i7v4qyTPGHryj1OkU1WIoM=;
+        b=bRBNX5VilVM3ENoe1FZ5CLgAqZqUB4lTZnUj6HatheGzb7jVNKv/wT3k2uphBymjlh
+         Q9ZEMvUxQWPMJYiZ3KHBV+a081PAUkG9qpEUjVq8vdttGPkxTQUAKMoiHBzV3GF8Ws/1
+         xryLXsvyEXJbocZAyzCNr/JaGNCYtJz/feOSlHoCkxtXek0Bj5Wcq8A8I4u8gU+NSYmc
+         +ZZqPqbZ4hKvDHO+6RZaq5THBepcNFp1ZC8NhW8Iw4BtvCM0MGt3kgrDwmrB4dw7ZOE9
+         TIOsKxMtQmC+uzGSpzBGO8G5Kl1kDbJkST2YFO11b8yU4IJSBVYx/ElaPfg5cJrZ+Th4
+         V98w==
+X-Gm-Message-State: AJIora/HRtYsxvlk9G9dTZ//G0AtvUmioO1rBNoZXTxBYn6MXu6shMYq
+	0BbRcMnYd4ajUgCXPr5luA==
+X-Google-Smtp-Source: AGRyM1tAXlzfza+v6DIVtYMmn2WiR2w6vkYStYEDgt8TkVbqEV/C9/qNrbxERHjBIZVW5KpUCxnPxA==
+X-Received: by 2002:a17:902:e84a:b0:16a:1759:da1e with SMTP id t10-20020a170902e84a00b0016a1759da1emr19740082plg.49.1655898733714;
+        Wed, 22 Jun 2022 04:52:13 -0700 (PDT)
+Received: from [127.0.0.1] ([20.245.86.245])
+        by smtp.gmail.com with ESMTPSA id jg13-20020a17090326cd00b0016909be39e5sm9076178plb.177.2022.06.22.04.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jun 2022 02:53:55 -0700 (PDT)
-Message-ID: <de318850f95461401b64b60a9f4f6bbcac305756.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: Initialize variables to
- quiet gcc 12 warnings
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
-Date: Wed, 22 Jun 2022 11:53:54 +0200
-In-Reply-To: <20220622001846.172735-1-mathew.j.martineau@linux.intel.com>
-References: <20220622001846.172735-1-mathew.j.martineau@linux.intel.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        Wed, 22 Jun 2022 04:52:12 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <f1109179c77a14bed80be75bb297aac1ef867a49.1655891188.git.pabeni@redhat.com>
+References:
+ <f1109179c77a14bed80be75bb297aac1ef867a49.1655891188.git.pabeni@redhat.com>
+Subject: =?UTF-8?Q?Re=3A_Squash-to=3A_=22selftests=3A_mptcp?=
+ =?UTF-8?Q?=3A_more_stable_diag_tests=22=3A_Tests_R?= =?UTF-8?Q?esults?=
+Message-ID: <4f2ad0c5-2667-c62c-b485-34923aa8bb28@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Jun 2022 11:52:11 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Tue, 2022-06-21 at 17:18 -0700, Mat Martineau wrote:
-> In a few MPTCP selftest tools, gcc 12 complains that the 'sock' variable
-> might be used uninitialized. This is a false positive because the only
-> code path that could lead to uninitialized access is where getaddrinfo()
-> fails, but the local xgetaddrinfo() wrapper exits if such a failure
-> occurs.
-> 
-> Initialize the 'sock' variable anyway to allow the tools to build with
-> gcc 12.
-> 
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
->  tools/testing/selftests/net/mptcp/mptcp_inq.c     | 2 +-
->  tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 8628aa61b763..e2ea6c126c99 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -265,7 +265,7 @@ static void sock_test_tcpulp(int sock, int proto, unsigned int line)
->  static int sock_listen_mptcp(const char * const listenaddr,
->  			     const char * const port)
->  {
-> -	int sock;
-> +	int sock = -1;
->  	struct addrinfo hints = {
->  		.ai_protocol = IPPROTO_TCP,
->  		.ai_socktype = SOCK_STREAM,
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-> index 29f75e2a1116..8672d898f8cd 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-> @@ -88,7 +88,7 @@ static void xgetaddrinfo(const char *node, const char *service,
->  static int sock_listen_mptcp(const char * const listenaddr,
->  			     const char * const port)
->  {
-> -	int sock;
-> +	int sock = -1;
->  	struct addrinfo hints = {
->  		.ai_protocol = IPPROTO_TCP,
->  		.ai_socktype = SOCK_STREAM,
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> index ac9a4d9c1764..ae61f39556ca 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> @@ -136,7 +136,7 @@ static void xgetaddrinfo(const char *node, const char *service,
->  static int sock_listen_mptcp(const char * const listenaddr,
->  			     const char * const port)
->  {
-> -	int sock;
-> +	int sock = -1;
->  	struct addrinfo hints = {
->  		.ai_protocol = IPPROTO_TCP,
->  		.ai_socktype = SOCK_STREAM,
+Hi Paolo,
 
-LGTM, thanks!
+Thank you for your modifications, that's great!
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6497233930551296
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6497233930551296/summary/summary.txt
+
+- KVM Validation: debug:
+  - Unstable: 2 failed test(s): =
+selftest_mptcp_connect selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5273199779774464
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5273199779774464/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/9c6d0fe8af73
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
