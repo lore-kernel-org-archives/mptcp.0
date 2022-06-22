@@ -1,160 +1,111 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760A91872
-	for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 18:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655921866; x=1687457866;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=Mx3o+3gHiM8oLX9HyzZap33/8cIxily7yQNzQvIQ6io=;
-  b=BkTVVYuVvItSNwX2nlmEtaQt+rqLYb/x49I46kFgQ+KcbCbExHFrLKJV
-   Dj62g4bNXRxW92DtZ4vkuo7yzburBL1KDlMjqroRC3SLA2jRyEMeE/92w
-   vBkKE+2VKgZhuRAiRAus4NoETCMmFHiuqEMTpW7+HWSHu9+FcUAqvg25Q
-   cMVokvmD0LYMK6sotiROj4AhhMfLDCi0dKNHsZlxsDClmSKmdPPNCKPjK
-   RcpxUtTJ/uRUZ1Rb+P8a5UFB6xt4FAtvcGAjvPO71pGYNYd+5RzZ1WsXr
-   FPFyqhbZyLKVGo+GSECJ/tIAd73akZmmlcz56fTJ7xIYqJ4AAqOt418Y3
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="344490534"
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="344490534"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 10:55:56 -0700
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="592302708"
-Received: from otc-tsn-4.jf.intel.com ([10.23.153.135])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 10:55:53 -0700
-From: Kishen Maloor <kishen.maloor@intel.com>
-To: kishen.maloor@intel.com,
-	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net 2/2] selftests: mptcp: userspace PM support for MP_PRIO signals
-Date: Wed, 22 Jun 2022 13:55:47 -0400
-Message-Id: <20220622175547.289717-3-kishen.maloor@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220622175547.289717-1-kishen.maloor@intel.com>
-References: <20220622175547.289717-1-kishen.maloor@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9984B3C02
+	for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 20:03:54 +0000 (UTC)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-101ec2d6087so13386582fac.3
+        for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 13:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=aJiJOS3nvXNS9gN6bUddgkRsUkBeV3gbN9+Cqbd49VU=;
+        b=K0m0A55tw6hzNroRjph3oFbeOuae2u16fVGWhI5qfKTtqv6K6/KrRj3t9uRLMqBSFU
+         1Kavoe3K4W4LnzVslwWmXEpzbxK+57M8Ld7YCQ0ijBwxk4kgGsfxMxQ9fZCOdNMNyaqd
+         gz2o6LRWSiIDxgT72F5gIgsuL1Bzjvh7uLeDkg5k5pezdGpe6myt7raN9dwBlA5skTC7
+         1PataZHsmbRt7yYUknZVuzVzFKniL+18i5uJMJ/vq5i3tq8s6ohy3LwwDNgwNxm8Ajhh
+         zIZFFkuFWvg6iSoyBXeslH0lYjdbYGCUsNgDwJm10op6AfW0Kc0UufV/5vbN4oE+3VvP
+         wjfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=aJiJOS3nvXNS9gN6bUddgkRsUkBeV3gbN9+Cqbd49VU=;
+        b=hhO9YJV9i5NO/9xvz8e7XGe4EkWuhbgPisg88RnZ3xgb8Q2K7gNvH5jJaN3rLfqX/e
+         gb+XTwt7NQ2Y7SQNTZrVrhV2q3KvgyJ8W3ROpXf61/Y4S57ohTA8PQNS2aWvQKjsKZdm
+         MZgTGSESN3s0yrkRrC35hQVKj8oXFd6DGrF+Duu1NETisiwzLDEWzASf1S4JtBFOwXiB
+         Mf86k13DiqeZXM4b6DVnuc/h+22rZAp8fiQf0LaECb3fhiCCMVG0E+I4ZsohCH5gkuIL
+         vfDbzxsE4TPYQ+2nPcdt5wZCmk+tfjZ72lOg0+YIeeozi3OBFFaZpbYFOnyiwwtWi1ay
+         c3xA==
+X-Gm-Message-State: AJIora9kHiYP/MNj1DrzYXJJqEx0R999dNkG1TGZfY2CU2Rgm2fWtXwr
+	WZiuBj0BkqSEnpDEmmStuQ==
+X-Google-Smtp-Source: AGRyM1vcUVA/3Eo7y6BCCEN17OzK4Y4/mtNzb3WyLhz+GlNLgGya5L2BNJIpLOaHemWn23rh/h7EfA==
+X-Received: by 2002:a05:6870:a782:b0:fe:23b6:6efc with SMTP id x2-20020a056870a78200b000fe23b66efcmr70157oao.66.1655928233576;
+        Wed, 22 Jun 2022 13:03:53 -0700 (PDT)
+Received: from [127.0.0.1] ([20.225.234.13])
+        by smtp.gmail.com with ESMTPSA id t17-20020a9d7291000000b0060c29c6d7f6sm32665otj.32.2022.06.22.13.03.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jun 2022 13:03:52 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kishen Maloor <kishen.maloor@intel.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220622175547.289717-3-kishen.maloor@intel.com>
+References: <20220622175547.289717-3-kishen.maloor@intel.com>
+Subject: Re: selftests: mptcp: userspace PM support for MP_PRIO signals:
+ Tests Results
+Message-ID: <6ad8981a-7713-036b-d9aa-e1843aaa11e2@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Jun 2022 20:03:52 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This change updates the testing sample (pm_nl_ctl) to take a
-connection token as an optional param for the MPTCP_PM_CMD_SET_FLAGS
-command. This is used to test the userspace PM code path for issuing
-MP_PRIO signals over a connection for the specified address ID.
+Hi Kishen,
 
-E.g. ./pm_nl_ctl set id 0 flags backup token 823274047
+Thank you for your modifications, that's great!
 
-userspace_pm.sh has new selftests which exercise this command.
+Our CI did some validations and here is its report:
 
-Fixes: 259a834fadda ("selftests: mptcp: functional tests for the userspace PM type")
-Signed-off-by: Kishen Maloor <kishen.maloor@intel.com>
----
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 19 ++++++++++--
- .../selftests/net/mptcp/userspace_pm.sh       | 31 +++++++++++++++++++
- 2 files changed, 48 insertions(+), 2 deletions(-)
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5802668730875904
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5802668730875904/summary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 4dd87bb9ee91..0512d64b1d11 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -39,7 +39,7 @@ static void syntax(char *argv[])
- 	fprintf(stderr, "\tdsf lip <local-ip> lport <local-port> rip <remote-ip> rport <remote-port> token <token>\n");
- 	fprintf(stderr, "\tdel <id> [<ip>]\n");
- 	fprintf(stderr, "\tget <id>\n");
--	fprintf(stderr, "\tset [<ip>] [id <nr>] flags [no]backup|[no]fullmesh [port <nr>]\n");
-+	fprintf(stderr, "\tset [<ip>] [id <nr>] flags [no]backup|[no]fullmesh [port <nr>] [token <token>]\n");
- 	fprintf(stderr, "\tflush\n");
- 	fprintf(stderr, "\tdump\n");
- 	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
-@@ -1279,6 +1279,7 @@ int set_flags(int fd, int pm_family, int argc, char *argv[])
- 	struct rtattr *rta, *nest;
- 	struct nlmsghdr *nh;
- 	u_int32_t flags = 0;
-+	u_int32_t token = 0;
- 	u_int16_t family;
- 	int nest_start;
- 	int use_id = 0;
-@@ -1339,7 +1340,13 @@ int set_flags(int fd, int pm_family, int argc, char *argv[])
- 		error(1, 0, " missing flags keyword");
- 
- 	for (; arg < argc; arg++) {
--		if (!strcmp(argv[arg], "flags")) {
-+		if (!strcmp(argv[arg], "token")) {
-+			if (++arg >= argc)
-+				error(1, 0, " missing token value");
-+
-+			/* token */
-+			token = atoi(argv[arg]);
-+		} else if (!strcmp(argv[arg], "flags")) {
- 			char *tok, *str;
- 
- 			/* flags */
-@@ -1384,6 +1391,14 @@ int set_flags(int fd, int pm_family, int argc, char *argv[])
- 	}
- 	nest->rta_len = off - nest_start;
- 
-+	if (token) {
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ATTR_TOKEN;
-+		rta->rta_len = RTA_LENGTH(4);
-+		memcpy(RTA_DATA(rta), &token, 4);
-+		off += NLMSG_ALIGN(rta->rta_len);
-+	}
-+
- 	do_nl_req(fd, nh, off, 0);
- 	return 0;
- }
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index d586bc5ffe01..387f5774d541 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -776,10 +776,41 @@ test_subflows()
- 	rm -f "$evts"
- }
- 
-+test_prio()
-+{
-+	local count
-+
-+	# Send MP_PRIO signal from client to server machine
-+	ip netns exec "$ns2" ./pm_nl_ctl set id 0 flags backup token "$client4_token"
-+
-+	# Check TX
-+	stdbuf -o0 -e0 printf "MP_PRIO TX                                                 \t"
-+	count=$(ip netns exec "$ns2" nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}')
-+	[ -z "$count" ] && count=0
-+	if [ $count != 1 ]; then
-+		stdbuf -o0 -e0 printf "[FAIL]\n"
-+		exit 1
-+	else
-+		stdbuf -o0 -e0 printf "[OK]\n"
-+	fi
-+
-+	# Check RX
-+	stdbuf -o0 -e0 printf "MP_PRIO RX                                                 \t"
-+	count=$(ip netns exec "$ns1" nstat -as | grep MPTcpExtMPPrioRx | awk '{print $2}')
-+	[ -z "$count" ] && count=0
-+	if [ $count != 1 ]; then
-+		stdbuf -o0 -e0 printf "[FAIL]\n"
-+		exit 1
-+	else
-+		stdbuf -o0 -e0 printf "[OK]\n"
-+	fi
-+}
-+
- make_connection
- make_connection "v6"
- test_announce
- test_remove
- test_subflows
-+test_prio
- 
- exit 0
--- 
-2.31.1
+- KVM Validation: debug:
+  - Unstable: 3 failed test(s): =
+packetdrill_add_addr selftest_diag selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5239718777454592
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5239718777454592/su=
+mmary/summary.txt
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/290f28914c4e
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
