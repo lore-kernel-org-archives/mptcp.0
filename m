@@ -1,93 +1,100 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368F71C0C
-	for <mptcp@lists.linux.dev>; Tue, 21 Jun 2022 23:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DADA52
+	for <mptcp@lists.linux.dev>; Wed, 22 Jun 2022 00:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655854578; x=1687390578;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Sl9t++i2u4pOPVk0GdsP9bR2WZZjOvEWgqcuVlb0ZGI=;
-  b=kAUz2Er3gwDgEw4QhvWyGD+Wki3PqQQrYRDZkCObQk92e1JGMJRMohdM
-   rCKr35IF3vINqN3csZree3SLprnvgp3wdGiw5CR1LvrmwVqA6jMagVNoe
-   EZYU2qIVUecuXpsWbpkVw5t10eGDnKeYg3GHGoJItoTuPUtQXOaYNvbcF
-   O6aRyvvWFSRzIEKSTSawPsy6Zs+KbwpJY9bL+KedEc/1vS87l0Cwj4DHl
-   MfwyvGBgH+Jn/MEA3WnW3ySAbcUOIaQkPun6BURoxjOztVZ8VEn+B3FC3
-   PwupJE0h6iYUDmezFn4gSHSVJo68gmmiKyj7VQwin9CRlZ/Arw8jiDDq5
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="268984567"
+  t=1655857131; x=1687393131;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mLHOTebsTSrgxUmTOUjrMKtwnFO40+Lg320nyhPkMcs=;
+  b=SbAVgRmJpyOR1vEzCq3Gyes+YbgcasAfRBxTQLKwaIQwWxHC2StcaefR
+   J4HftYeVQ+vHz+uvG7TMlj1GqhWQz5j57FMLIIJAW5mNfgtvyFFFrLMdG
+   4MwKoQX/wq8fqO/pNRJN8F7IcvGz2qax158cjOwU/PwEsK23h4K5oWudO
+   nCQ1cXv865+dfRuui/gcIu+Pr4sxOGDeQ3YnCGrpsfBlB1CsYQlOgpr9U
+   RCNm8caeYq/voWutOvwIEm9anp+Nu4FiMNka2AyHFQVwwrhb9SJVqinND
+   XUWjVLfAGemm1/+sWj0jIzYqhLJs/QdXFfPae9EWAyopTkRO72OkkmsXa
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="305721448"
 X-IronPort-AV: E=Sophos;i="5.92,210,1650956400"; 
-   d="scan'208";a="268984567"
+   d="scan'208";a="305721448"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 16:36:17 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 17:18:51 -0700
 X-IronPort-AV: E=Sophos;i="5.92,210,1650956400"; 
-   d="scan'208";a="833814183"
-Received: from vanehosx-mobl.gar.corp.intel.com ([10.251.13.241])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 16:36:17 -0700
-Date: Tue, 21 Jun 2022 16:36:17 -0700 (PDT)
+   d="scan'208";a="833825995"
+Received: from kingsum-mobl.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.204.100])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 17:18:50 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v5 mptcp-net 0/6] mptcp: mp_fail related fixes
-In-Reply-To: <cover.1655829222.git.pabeni@redhat.com>
-Message-ID: <54aafe5-1caf-cd52-13fb-bea3b56a24@linux.intel.com>
-References: <cover.1655829222.git.pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH mptcp-next] selftests: mptcp: Initialize variables to quiet gcc 12 warnings
+Date: Tue, 21 Jun 2022 17:18:46 -0700
+Message-Id: <20220622001846.172735-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Tue, 21 Jun 2022, Paolo Abeni wrote:
+In a few MPTCP selftest tools, gcc 12 complains that the 'sock' variable
+might be used uninitialized. This is a false positive because the only
+code path that could lead to uninitialized access is where getaddrinfo()
+fails, but the local xgetaddrinfo() wrapper exits if such a failure
+occurs.
 
-> While cooking a follow-up for "mptcp: invoke MP_FAIL response when
-> needed" I stumbled upon a few other MP_FAIL related issues hit my
-> the self-tests while mangling the above.
->
-> All the patches for for the -net tree, and should be applied in-order
-> around to the squashed-to patch.
->
-> v4 -> v5:
-> - hopefully fix for real lockdep annotaiton in patch 6/6 (still mat)
+Initialize the 'sock' variable anyway to allow the tools to build with
+gcc 12.
 
-Thanks Paolo, nested lock fix confirmed. For v5 of the series:
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
+ tools/testing/selftests/net/mptcp/mptcp_inq.c     | 2 +-
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 8628aa61b763..e2ea6c126c99 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -265,7 +265,7 @@ static void sock_test_tcpulp(int sock, int proto, unsigned int line)
+ static int sock_listen_mptcp(const char * const listenaddr,
+ 			     const char * const port)
+ {
+-	int sock;
++	int sock = -1;
+ 	struct addrinfo hints = {
+ 		.ai_protocol = IPPROTO_TCP,
+ 		.ai_socktype = SOCK_STREAM,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
+index 29f75e2a1116..8672d898f8cd 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_inq.c
+@@ -88,7 +88,7 @@ static void xgetaddrinfo(const char *node, const char *service,
+ static int sock_listen_mptcp(const char * const listenaddr,
+ 			     const char * const port)
+ {
+-	int sock;
++	int sock = -1;
+ 	struct addrinfo hints = {
+ 		.ai_protocol = IPPROTO_TCP,
+ 		.ai_socktype = SOCK_STREAM,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index ac9a4d9c1764..ae61f39556ca 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -136,7 +136,7 @@ static void xgetaddrinfo(const char *node, const char *service,
+ static int sock_listen_mptcp(const char * const listenaddr,
+ 			     const char * const port)
+ {
+-	int sock;
++	int sock = -1;
+ 	struct addrinfo hints = {
+ 		.ai_protocol = IPPROTO_TCP,
+ 		.ai_socktype = SOCK_STREAM,
+-- 
+2.36.1
 
->
-> v3 -> v4:
-> - fix a couple of typos in 3/6, fix lockdep annotation in 6/6 (mat)
->
-> v2 -> v3:
-> - do not schedule mp_fail timeout on closed socket in patch 3/6 (mat)
->
-> v1 -> v2:
-> - take care of UaF in mptcp_worker with new patch 6/6
->
-> Paolo Abeni (6):
->  mptcp: fix error mibs accounting
->  mptcp: introduce MAPPING_BAD_CSUM
->  Squash-to: "mptcp: invoke MP_FAIL response when needed"
->  mptcp: fix shutdown vs fallback race
->  mptcp: consistent map handling on failure
->  mptcp: fix race on unaccepted mptcp sockets
->
-> net/mptcp/options.c  |   8 +--
-> net/mptcp/pm.c       |   5 +-
-> net/mptcp/protocol.c |  57 ++++++++++++++++----
-> net/mptcp/protocol.h |  25 +++++++--
-> net/mptcp/subflow.c  | 121 +++++++++++++++++++++++++++++++++++--------
-> 5 files changed, 172 insertions(+), 44 deletions(-)
->
-> -- 
-> 2.35.3
->
->
->
-
---
-Mat Martineau
-Intel
