@@ -1,96 +1,157 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330F723A8
-	for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 21:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656019956; x=1687555956;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+B3fEMgi/9XyCQpjlwim/Ply7sByS1rxENmE4xesunE=;
-  b=Iayt+/ugKdWnNVFi3fZ6mjZkd8X7H64jMA1aDO+5VLTn2Kmrr1Z/+3gf
-   Mm6DdCcno3bsOEH2I9oDGUuGwjQE1qq/2r+Fe8x9IY/PnIvKVFYO9hpcM
-   Y6qBsfqsrFtt+oV8s6nLx2O/ufdEwFKwmXgg3hSjHTx25+SKhymMCbQ3G
-   45BvI996GJymcMFIPY9ead6Jrnf+3ub3l4WS9W0L/tT573gG5r61ZfAb1
-   T5UZZR7kUNJJCToryXshSfYIslNWXZqPp1rjvROvxuVuosuE1mhfTams/
-   YHrkjkEs/fJAi5TdizV1GvLHNyrhrl8xqtWFp+Yh6NlnYZGgEVYyJFm3F
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="263882931"
-X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="263882931"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 14:32:20 -0700
-X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="615737442"
-Received: from jngertso-mobl1.amr.corp.intel.com ([10.212.159.56])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 14:32:20 -0700
-Date: Thu, 23 Jun 2022 14:32:20 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: support MP_PRIO signals with
- userspace PMs
-In-Reply-To: <8cab7043-8cc3-eecc-08f-c5e563b8f2e@linux.intel.com>
-Message-ID: <efd28e16-67e5-4ef2-ed45-e75e431581aa@linux.intel.com>
-References: <20220623005948.291792-1-kishen.maloor@intel.com> <8cab7043-8cc3-eecc-08f-c5e563b8f2e@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9EA1FAC
+	for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 22:50:36 +0000 (UTC)
+Received: by mail-oi1-f178.google.com with SMTP id bd16so1386406oib.6
+        for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 15:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Y+Dg0mM96GxdgWzW8Q0806WYRu+tu0Ie+VcO+cMcI4U=;
+        b=FYk61bvDh5JwGf5WdZIwNZW8B6+57IJxN4Nk3SgOVQUCUsYiOm3ErEX+kq3vz0b1jl
+         ehO4ycV50KjmXNOG82d4ajlgj9CqbebkKJ4SWJJqHREo4pk+ilQPgbCv6IB6zHid79iP
+         rqmZHNnlfQ/rPeGGBvDbNZN9ZMa975cK8vv+RyGLosEe6hd4C5Y35Ob1uvZYTwiiw7Y6
+         b7DLV4jzyNghScUUIIDElRVSlbKCQALz3tZIOKZJAGj2eZTZ+H5JRAhWbVmRsDvMSzlp
+         R9wiUFpG2WjWK042boAletT6C5cPLJc0Zo+RjXzFx7sR8PaYb7ukt2dzVz3wkwtF6YIr
+         Md9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Y+Dg0mM96GxdgWzW8Q0806WYRu+tu0Ie+VcO+cMcI4U=;
+        b=3kbxlaGN1unBLgaV0aIfZqdNqhR55ud5794UcmVhJslNptA7/fbL51w0KctRvqPet+
+         oPP3bas19QANnaU/Qxb3Qbz73EEYg+rsPlBF8oATkIn8Pb0GmFNiU52An7BvYTsN0Sci
+         jIiJ/BUT2V6deESujtPz9gaPuSgYEnyGG/irkW8zSkPcz78vX6G/1ylK3Aq7iF8PYEbT
+         T/vpZX5wOzXcl9zwKfiye4h7GmcxjVpKtGPUS6M86ZQ36n/DsmktNjX4MGbcMEMI4U0j
+         WWs5iWAR5ItPQ4RGQ2+x90gUOYSZ6Bjq6GGKk+7MBqIESQz4kRiCL5OuL2bk4Cr+9Xat
+         mjVw==
+X-Gm-Message-State: AJIora+Snda6w8BfaROu7DczteqgT33YK0WGKmpNzAN67Bh+O3EGkuMb
+	6lMECtFYwEIaOyZ37c00jwbkx64TTslLRYS2eX0=
+X-Google-Smtp-Source: AGRyM1uj/Q9s5zKn4L4uThaMvEnMiPzOqEF1sLtJVqTO12h9dB2vaIo0yv0Uh2i5b+OALrND/sp8sTGWW12NFpQK0Us=
+X-Received: by 2002:a05:6808:179a:b0:32f:fd4:3ad6 with SMTP id
+ bg26-20020a056808179a00b0032f0fd43ad6mr199172oib.190.1656024634956; Thu, 23
+ Jun 2022 15:50:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20220619150456.GB34471@xsang-OptiPlex-9020> <20220622172857.37db0d29@kernel.org>
+ <CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
+In-Reply-To: <CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
+Date: Thu, 23 Jun 2022 18:50:07 -0400
+Message-ID: <CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
+Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, kernel test robot <oliver.sang@intel.com>, 
+	Eric Dumazet <edumazet@google.com>, Shakeel Butt <shakeelb@google.com>, 
+	Soheil Hassas Yeganeh <soheil@google.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Memory Management List <linux-mm@kvack.org>, network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org, 
+	mptcp@lists.linux.dev, 
+	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>, lkp@lists.01.org, 
+	kbuild test robot <lkp@intel.com>, Huang Ying <ying.huang@intel.com>, feng.tang@intel.com, 
+	zhengjun.xing@linux.intel.com, fengwei.yin@intel.com, 
+	Ying Xu <yinxu@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 23 Jun 2022, Mat Martineau wrote:
-
-> On Wed, 22 Jun 2022, Kishen Maloor wrote:
+On Wed, Jun 22, 2022 at 11:08 PM Xin Long <lucien.xin@gmail.com> wrote:
 >
->> This patch series updates MPTCP_PM_CMD_SET_FLAGS to allow userspace PMs
->> to issue MP_PRIO signals for a specified address ID over a chosen
->> MPTCP connection. It also adds self testing support for this change.
->> 
->> v2:
->> -userspace_pm.sh: added a sleep after issuing the MP_PRIO signal.
+> Yes, I'm working on it. I couldn't see the regression in my env with
+> the 'reproduce' script attached.
+> I will try with lkp tomorrow.
 >
-> Thanks Kishen. v2 looks good to me:
+> Thanks.
 >
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
->
+> On Wed, Jun 22, 2022 at 8:29 PM Jakub Kicinski <kuba@kernel.org> wrote:
+> >
+> > Could someone working on SCTP double check this is a real regression?
+> > Feels like the regression reports are flowing at such rate its hard
+> > to keep up.
+> >
+> > >
+> > > commit:
+> > >   7c80b038d2 ("net: fix sk_wmem_schedule() and sk_rmem_schedule() err=
+ors")
+> > >   4890b686f4 ("net: keep sk->sk_forward_alloc as small as possible")
+> > >
+> > > 7c80b038d23e1f4c 4890b686f4088c90432149bd6de
+> > > ---------------- ---------------------------
+> > >          %stddev     %change         %stddev
+> > >              \          |                \
+> > >      15855           -69.4%       4854        netperf.Throughput_Mbps
+> > >     570788           -69.4%     174773        netperf.Throughput_tota=
+l_Mbps
+...
+> > >       0.00            +5.1        5.10 =C2=B1  5%  perf-profile.callt=
+race.cycles-pp.__sk_mem_reduce_allocated.sctp_wfree.skb_release_head_state.=
+consume_skb.sctp_chunk_put
+> > >       0.17 =C2=B1141%      +5.3        5.42 =C2=B1  6%  perf-profile.=
+calltrace.cycles-pp.skb_release_head_state.consume_skb.sctp_chunk_put.sctp_=
+outq_sack.sctp_cmd_interpreter
+> > >       0.00            +5.3        5.35 =C2=B1  6%  perf-profile.callt=
+race.cycles-pp.sctp_wfree.skb_release_head_state.consume_skb.sctp_chunk_put=
+.sctp_outq_sack
+> > >       0.00            +5.5        5.51 =C2=B1  6%  perf-profile.callt=
+race.cycles-pp.__sk_mem_reduce_allocated.skb_release_head_state.kfree_skb_r=
+eason.sctp_recvmsg.inet_recvmsg
+> > >       0.00            +5.7        5.65 =C2=B1  6%  perf-profile.callt=
+race.cycles-pp.skb_release_head_state.kfree_skb_reason.sctp_recvmsg.inet_re=
+cvmsg.____sys_recvmsg
+...
+> > >       0.00            +4.0        4.04 =C2=B1  6%  perf-profile.child=
+ren.cycles-pp.mem_cgroup_charge_skmem
+> > >       2.92 =C2=B1  6%      +4.2        7.16 =C2=B1  6%  perf-profile.=
+children.cycles-pp.sctp_outq_sack
+> > >       0.00            +4.3        4.29 =C2=B1  6%  perf-profile.child=
+ren.cycles-pp.__sk_mem_raise_allocated
+> > >       0.00            +4.3        4.32 =C2=B1  6%  perf-profile.child=
+ren.cycles-pp.__sk_mem_schedule
+> > >       1.99 =C2=B1  6%      +4.4        6.40 =C2=B1  6%  perf-profile.=
+children.cycles-pp.consume_skb
+> > >       1.78 =C2=B1  6%      +4.6        6.42 =C2=B1  6%  perf-profile.=
+children.cycles-pp.kfree_skb_reason
+> > >       0.37 =C2=B1  8%      +5.0        5.40 =C2=B1  6%  perf-profile.=
+children.cycles-pp.sctp_wfree
+> > >       0.87 =C2=B1  9%     +10.3       11.20 =C2=B1  6%  perf-profile.=
+children.cycles-pp.skb_release_head_state
+> > >       0.00           +10.7       10.66 =C2=B1  6%  perf-profile.child=
+ren.cycles-pp.__sk_mem_reduce_allocated
+...
+> > >       0.00            +1.2        1.19 =C2=B1  7%  perf-profile.self.=
+cycles-pp.try_charge_memcg
+> > >       0.00            +2.0        1.96 =C2=B1  6%  perf-profile.self.=
+cycles-pp.page_counter_uncharge
+> > >       0.00            +2.1        2.07 =C2=B1  5%  perf-profile.self.=
+cycles-pp.page_counter_try_charge
+> > >       1.09 =C2=B1  8%      +2.8        3.92 =C2=B1  6%  perf-profile.=
+self.cycles-pp.native_queued_spin_lock_slowpath
+> > >       0.29 =C2=B1  6%      +3.5        3.81 =C2=B1  6%  perf-profile.=
+self.cycles-pp.sctp_eat_data
+> > >       0.00            +7.8        7.76 =C2=B1  6%  perf-profile.self.=
+cycles-pp.__sk_mem_reduce_allocated
 
-I spoke too soon.
+From the perf data, we can see __sk_mem_reduce_allocated() is the one
+using CPU the most more than before, and mem_cgroup APIs are also
+called in this function. It means the mem cgroup must be enabled in
+the test env, which may explain why I couldn't reproduce it.
 
-I was looking at the multipath-tcp.org API for changing the backup flag 
-with Ossama, and that netlink command (MPTCP_CMD_SUB_PRIORITY) uses the 
-local and remote addresses and port numbers rather than the endpoint IDs.
+The Commit 4890b686f4 ("net: keep sk->sk_forward_alloc as small as
+possible") uses sk_mem_reclaim(checking reclaimable >=3D PAGE_SIZE) to
+reclaim the memory, which is *more frequent* to call
+__sk_mem_reduce_allocated() than before (checking reclaimable >=3D
+SK_RECLAIM_THRESHOLD). It might be cheap when
+mem_cgroup_sockets_enabled is false, but I'm not sure if it's still
+cheap when mem_cgroup_sockets_enabled is true.
 
-This is so the priority can be changed for an individual subflow. The 
-API parameters I asked for in issue 286 would only allow priority to be 
-changed for all subflows using a specific local endpoint, which is not 
-specific enough.
+I think SCTP netperf could trigger this, as the CPU is the bottleneck
+for SCTP netperf testing, which is more sensitive to the extra
+function calls than TCP.
 
-I'll update https://github.com/multipath-tcp/mptcp_net-next/issues/286 
-to request a change to the MPTCP_PM_CMD_SET_FLAGS parameters.
+Can we re-run this testing without mem cgroup enabled?
 
->> 
->> Kishen Maloor (2):
->>  mptcp: netlink: issue MP_PRIO signals from userspace PMs
->>  selftests: mptcp: userspace PM support for MP_PRIO signals
->> 
->> net/mptcp/pm_netlink.c                        | 23 +++++++++----
->> net/mptcp/pm_userspace.c                      | 30 +++++++++++++++++
->> net/mptcp/protocol.h                          |  6 +++-
->> tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 19 +++++++++--
->> .../selftests/net/mptcp/userspace_pm.sh       | 32 +++++++++++++++++++
->> 5 files changed, 101 insertions(+), 9 deletions(-)
->> 
->> 
->> base-commit: 68fec8b7f640037e4bf224ca4e924574098f5911
->> --
->> 2.31.1
->> 
->>
-
---
-Mat Martineau
-Intel
+Thanks.
