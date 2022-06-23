@@ -1,79 +1,115 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461F1FB3
-	for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 15:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655996560; x=1687532560;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SIhCnJuDAho1l1V4TYeOCv1fk2yaqX2V4qvtNWeWhYA=;
-  b=GNftdIIqaGLWbR3nFA+XWzKxnmTEYQ60hAUaWM1aikfjnXhv7ZyfW8bI
-   waTh4s/1FrCHBb6NNvRen7uVKlKcDGMSU4Ns+0gcoqAq1tST9IGku5mu1
-   k9HS+xGrU/sTpvfj7mxDFuB2cqnwN+M/ci6cjbb8+dzNPPgznQmvYbNZi
-   XUwjEIUCU2eqiF4grCL1dj8T1xRELN4kC8CvCPFx/Ur6X/oVYUd0i+24l
-   6YqqRo0hBU995f+69tAxlfz9jepQbMpP89XiYR2b2bp/S1G9Mc1VdI1y2
-   UgqQp2+khxdLaMRwhOH875H0RxJc29OOoGU5gI4Fkm74HXyCmrl9Ko6O7
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="261174374"
-X-IronPort-AV: E=Sophos;i="5.92,216,1650956400"; 
-   d="scan'208";a="261174374"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 08:02:39 -0700
-X-IronPort-AV: E=Sophos;i="5.92,216,1650956400"; 
-   d="scan'208";a="563482324"
-Received: from jngertso-mobl1.amr.corp.intel.com ([10.212.159.56])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 08:02:39 -0700
-Date: Thu, 23 Jun 2022 08:02:38 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Kishen Maloor <kishen.maloor@intel.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: support MP_PRIO signals with
- userspace PMs
-In-Reply-To: <20220623005948.291792-1-kishen.maloor@intel.com>
-Message-ID: <8cab7043-8cc3-eecc-08f-c5e563b8f2e@linux.intel.com>
-References: <20220623005948.291792-1-kishen.maloor@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79CB1FB3
+	for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 16:20:59 +0000 (UTC)
+Received: by mail-pf1-f182.google.com with SMTP id p14so44457pfh.6
+        for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 09:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=/b9Sa8pKC1uY7kWLBMA78exACU2ZfadJ6zZ+W1rAkHg=;
+        b=cXKXvtCG8/siJTySAQT0XgtYX/p1qF9EO4HROmYWjaG2ynM/7ZNTnsNrmKOBAWKvfA
+         Nec+P5lnxIesLrhWj8sVpeTp9riQWMBOZDCX/dQkh25KJm8efZJEmjmsnVpHVKe6r3ux
+         MWlIUEuwiNpX42u+oBY2GRNeSPb0UOKiIFjVLM/h5bi6bpisj9xhy8el5d0eCW98wHy4
+         jcXykE/pbLgsYqxb5dRosd6VK+4UYe/zXxLVG8Y5z33jIW43vIhkmx0fv94yO8bZg63K
+         v1+dN6Kn/B2xZfld64pbNuaaL++6F7nVBOJQ0jLsH+IpVb3JQtuPNrbWRpcxwHI4hswZ
+         J8Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=/b9Sa8pKC1uY7kWLBMA78exACU2ZfadJ6zZ+W1rAkHg=;
+        b=mAjW12O/CTPIE+nlnDdwdlg8kaFFCbagtD2Y1p8Iqp5/cZrRY6elkdx1pX7zYmyn8A
+         VQon3R48j1Ie+1TFgruEBecjqHqPcLvORoqpxjbEoeAJShu3geteL0oP3vYxd3dAh7cn
+         8M5uSFNh7qv6g16jAIlneXoSXAhqgGkyUQXSl0kTVwE9aiLU4N2U3KhI1UahOf+gXTc/
+         57HKO05n/2CjvvGqhsZDOLdJNOHWJOUzd8oy6VhHS1DPjuU7MKa33EfbFeXdKC7X9BQJ
+         SM1G3g0D2W8OdUO6v+cVxQgzbgpXpWpcspljWvzM6wM1BsEm/CJsPpvGlLokBuZfxwOv
+         G7yA==
+X-Gm-Message-State: AJIora8B++xgK2yoe7LhcZT3nr+Uq/6VtKU2fbTcOT9sb5QQhF0YQKoH
+	p0BTEWaG+NwZM2mpMVCOEA==
+X-Google-Smtp-Source: AGRyM1vzcvNp5avAjzG3U35q7xG558fk0d46TSUdLSvSVili8l2MjQE1GYcxU65eeI4LJKO+y2bx2g==
+X-Received: by 2002:a05:6a00:14c8:b0:51c:29fb:7b2 with SMTP id w8-20020a056a0014c800b0051c29fb07b2mr41388431pfu.24.1656001259177;
+        Thu, 23 Jun 2022 09:20:59 -0700 (PDT)
+Received: from [127.0.0.1] ([20.237.171.202])
+        by smtp.gmail.com with ESMTPSA id jj1-20020a170903048100b001616e19537esm8878674plb.213.2022.06.23.09.20.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jun 2022 09:20:58 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <9eeeda9e63480ed2ac0b01399a70a5c3e92d9816.1655995770.git.geliang.tang@suse.com>
+References:
+ <9eeeda9e63480ed2ac0b01399a70a5c3e92d9816.1655995770.git.geliang.tang@suse.com>
+Subject: Re: selftests/bpf: Add bpf_red test: Tests Results
+Message-ID: <82444594-c937-478f-2a06-dd3282e217c8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 23 Jun 2022 16:20:57 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 22 Jun 2022, Kishen Maloor wrote:
+Hi Geliang,
 
-> This patch series updates MPTCP_PM_CMD_SET_FLAGS to allow userspace PMs
-> to issue MP_PRIO signals for a specified address ID over a chosen
-> MPTCP connection. It also adds self testing support for this change.
->
-> v2:
-> -userspace_pm.sh: added a sleep after issuing the MP_PRIO signal.
+Thank you for your modifications, that's great!
 
-Thanks Kishen. v2 looks good to me:
+Our CI did some validations and here is its report:
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+- KVM Validation: normal:
+  - Unstable: 3 failed test(s): =
+mptcp_connect_mmap selftest_mptcp_connect selftest_simult_flows - Critical:=
+ 2 Call Trace(s) =E2=9D=8C:
+  - Task: https://cirrus-ci.=
+com/task/6417549658161152
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6417549658161152/summary/summary.txt
 
->
-> Kishen Maloor (2):
->  mptcp: netlink: issue MP_PRIO signals from userspace PMs
->  selftests: mptcp: userspace PM support for MP_PRIO signals
->
-> net/mptcp/pm_netlink.c                        | 23 +++++++++----
-> net/mptcp/pm_userspace.c                      | 30 +++++++++++++++++
-> net/mptcp/protocol.h                          |  6 +++-
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 19 +++++++++--
-> .../selftests/net/mptcp/userspace_pm.sh       | 32 +++++++++++++++++++
-> 5 files changed, 101 insertions(+), 9 deletions(-)
->
->
-> base-commit: 68fec8b7f640037e4bf224ca4e924574098f5911
-> --
-> 2.31.1
->
->
+- KVM Validation: debug:
+  - Unstable: 4 failed test(s): mptcp_connect_mmap=
+ selftest_mptcp_connect selftest_mptcp_join selftest_simult_flows - =
+Critical: 2 Call Trace(s) =E2=9D=8C:
+  - Task: https://cirrus-ci.=
+com/task/5010174774607872
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5010174774607872/summary/summary.txt
 
---
-Mat Martineau
-Intel
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/4187f41ea008
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
