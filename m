@@ -1,91 +1,79 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CB643E8
-	for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 14:57:44 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id z7so28907010edm.13
-        for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 07:57:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=LSAQhv/lAR2E+Fq/uh0vDxnXH2BNz3wSXwawKHm2YiA=;
-        b=49s6KeaDQy4JcLfbpfusNSHTvS3xJ6/Iuz5VLhbJTWm44TQSWJIgOA9Mck2yJCPXqE
-         wtxq/xC/HtZOgIHSIlya+j8oaaooQleD9yUEHJTQbWxTkqKZt/KgL4k1NJXt3lR6Uw+M
-         ekREer6evmQsFn/XwHFi1aFh0a4NeiLjTQTPBm1N2P6DhhLhDz1ReY9MY52cXfy4M0K1
-         LAaQLCq9+ExcTkeS6O39Z5/7oknmq8gtVhD1h7EQxUMxuNEWyUNlD7ciTE6f0aCBPBS1
-         7JyJ5kE5jubVx7zk4XatApl6e/HnaWy9/1gQBJLIZPseKXX4lBSAKlEEPjn7x3PjNgHI
-         dejQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=LSAQhv/lAR2E+Fq/uh0vDxnXH2BNz3wSXwawKHm2YiA=;
-        b=GdpsSGJB0rh5TxS8Nlri0GzF3ma+trQcO19ZEEp1136NVnMiTI8014r4KoIngjPMj3
-         4CuIU0TNuDrCg13vqb+IGQnYGUN6vmKw4HOrOdKJCetnexZfhHAu0kY+vpyA4qaQmcT0
-         DdWD6bMmXURZd6M0s0XssFLIpvnGL/pzvXSepjhu59h4FT9Wxu64og94+ewU391CAEnT
-         J+S/9YAtuu/FH2QRhuaZa9oZMXS6StSZg1lP1l5RW3Hy3Nfg6gwGGnyMtEYPXmPf8AtE
-         GW32rIPP31MLHmBXb5poMvWIM8zqNzLx0x+gY+ZVwmBYpCOLN4yOmZ8PcdjXuNjpvmp6
-         jWTA==
-X-Gm-Message-State: AJIora/RRFmgjgPtvJ1MmYhhlE4hQ408q9OdbOQmx+WtCn4jmXTVffv/
-	XOL2RItpb9IqJJsQtmH6b5kSCzf70cc/sw==
-X-Google-Smtp-Source: AGRyM1smbBQ+NI18GZMrm0QS214WKM7gi5czQIhlzf7BMixYeZZrGtEsNisbzq7c+6jx7lqHjXRlFg==
-X-Received: by 2002:a05:6402:3685:b0:435:8069:e44 with SMTP id ej5-20020a056402368500b0043580690e44mr11205464edb.202.1655996262743;
-        Thu, 23 Jun 2022 07:57:42 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:5115:5050:7b92:9ea5? ([2a02:578:8593:1200:5115:5050:7b92:9ea5])
-        by smtp.gmail.com with ESMTPSA id q12-20020a056402040c00b00435cfa7c6f5sm1735625edv.46.2022.06.23.07.57.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jun 2022 07:57:42 -0700 (PDT)
-Message-ID: <d4ca2d5c-f040-5155-f4f4-d3aac1648019@tessares.net>
-Date: Thu, 23 Jun 2022 16:57:41 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461F1FB3
+	for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 15:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655996560; x=1687532560;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=SIhCnJuDAho1l1V4TYeOCv1fk2yaqX2V4qvtNWeWhYA=;
+  b=GNftdIIqaGLWbR3nFA+XWzKxnmTEYQ60hAUaWM1aikfjnXhv7ZyfW8bI
+   waTh4s/1FrCHBb6NNvRen7uVKlKcDGMSU4Ns+0gcoqAq1tST9IGku5mu1
+   k9HS+xGrU/sTpvfj7mxDFuB2cqnwN+M/ci6cjbb8+dzNPPgznQmvYbNZi
+   XUwjEIUCU2eqiF4grCL1dj8T1xRELN4kC8CvCPFx/Ur6X/oVYUd0i+24l
+   6YqqRo0hBU995f+69tAxlfz9jepQbMpP89XiYR2b2bp/S1G9Mc1VdI1y2
+   UgqQp2+khxdLaMRwhOH875H0RxJc29OOoGU5gI4Fkm74HXyCmrl9Ko6O7
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="261174374"
+X-IronPort-AV: E=Sophos;i="5.92,216,1650956400"; 
+   d="scan'208";a="261174374"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 08:02:39 -0700
+X-IronPort-AV: E=Sophos;i="5.92,216,1650956400"; 
+   d="scan'208";a="563482324"
+Received: from jngertso-mobl1.amr.corp.intel.com ([10.212.159.56])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 08:02:39 -0700
+Date: Thu, 23 Jun 2022 08:02:38 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Kishen Maloor <kishen.maloor@intel.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: support MP_PRIO signals with
+ userspace PMs
+In-Reply-To: <20220623005948.291792-1-kishen.maloor@intel.com>
+Message-ID: <8cab7043-8cc3-eecc-08f-c5e563b8f2e@linux.intel.com>
+References: <20220623005948.291792-1-kishen.maloor@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH mptcp-next v9 0/6] BPF redundant scheduler
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
-References: <cover.1655995770.git.geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1655995770.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Geliang,
+On Wed, 22 Jun 2022, Kishen Maloor wrote:
 
-On 23/06/2022 16:54, Geliang Tang wrote:
-> v9:
->  - drop the extra *err paramenter of mptcp_sched_get_send() as Florian
->    suggested.
+> This patch series updates MPTCP_PM_CMD_SET_FLAGS to allow userspace PMs
+> to issue MP_PRIO signals for a specified address ID over a chosen
+> MPTCP connection. It also adds self testing support for this change.
+>
+> v2:
+> -userspace_pm.sh: added a sleep after issuing the MP_PRIO signal.
 
-Just to be sure, did you see the last report from the CI:
+Thanks Kishen. v2 looks good to me:
 
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-- KVM Validation: normal:
-  - Unstable: 3 failed test(s): mptcp_connect_mmap
-selftest_mptcp_connect selftest_simult_flows - Critical: 2 Call Trace(s) ❌:
-  - Task: https://cirrus-ci.com/task/6077066394206208
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/6077066394206208/summary/summary.txt
+>
+> Kishen Maloor (2):
+>  mptcp: netlink: issue MP_PRIO signals from userspace PMs
+>  selftests: mptcp: userspace PM support for MP_PRIO signals
+>
+> net/mptcp/pm_netlink.c                        | 23 +++++++++----
+> net/mptcp/pm_userspace.c                      | 30 +++++++++++++++++
+> net/mptcp/protocol.h                          |  6 +++-
+> tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 19 +++++++++--
+> .../selftests/net/mptcp/userspace_pm.sh       | 32 +++++++++++++++++++
+> 5 files changed, 101 insertions(+), 9 deletions(-)
+>
+>
+> base-commit: 68fec8b7f640037e4bf224ca4e924574098f5911
+> --
+> 2.31.1
+>
+>
 
-
-- KVM Validation: debug:
-  - Unstable: 3 failed test(s): selftest_mptcp_connect
-selftest_mptcp_join selftest_simult_flows - Critical: 2 Call Trace(s) ❌:
-  - Task: https://cirrus-ci.com/task/5514116440784896
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/5514116440784896/summary/summary.txt
-
-I guess it is linked to your modifications, no?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
