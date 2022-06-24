@@ -1,7 +1,7 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E077C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F1E3D9D
 	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1656088699;
@@ -9,28 +9,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pXMCy+nIpSmrgqNJN+8DnoYqilodAvmKSi1TZI1d8Ng=;
-	b=fB0a+8Tz5dhDE+78JS9qOPGt92w80b3OiaIXQRNeyVHN4j6MzsEXmkIz+1ukRzNtpcueg7
-	3ExJoWFFwVQ3tDprjPok5sHDK/JgNW7413NghDZbeyDnFVBoF3bkBCscWkSDnWoKVmB1jI
-	mHZtpbi0+49+dMPou3/Wl5BiwQv9/Uk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=o/KXnaRDceVKGvSF2PXEkNM1NbH19YquXzFEqGc6IuY=;
+	b=L0GeI/v+lulJADOddsQTt72MFLH9Kn4NcnUguhVyzY6d9CNU8yc4PXkDQhZKvG06kLxi1V
+	F3U6yN4J+CwMWzh1NzAuEG4y20CfOco/rJ4SmADLO9FrVABoNEUeKxHbutX359u4f569B5
+	icrXYWW8c37UX28mHJjcj5oa7UsA4L4=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-479-bWKM-CyiPW-J6vkE6YPjLg-1; Fri, 24 Jun 2022 12:38:18 -0400
-X-MC-Unique: bWKM-CyiPW-J6vkE6YPjLg-1
+ us-mta-43-3EHx58E8NYWegcI_UzkD4w-1; Fri, 24 Jun 2022 12:38:17 -0400
+X-MC-Unique: 3EHx58E8NYWegcI_UzkD4w-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 05ECC811E75
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:18 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.243])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8EA112026D64
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4AE1B2919EB2
 	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:17 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.243])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CD60D2026D64
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:16 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH RFC 3/4] mptcp: allow the in kernel PM to set MPC subflow priority
-Date: Fri, 24 Jun 2022 18:38:09 +0200
-Message-Id: <8a80c3bf12e43985e00b4fb04beccd38d69e505b.1656088406.git.pabeni@redhat.com>
+Subject: [PATCH RFC 2/4]  mptcp: introduce and use mptcp_pm_send_ack()
+Date: Fri, 24 Jun 2022 18:38:08 +0200
+Message-Id: <a59c3eb1e47c5c32f97c87d66c52f6c0021846bc.1656088406.git.pabeni@redhat.com>
 In-Reply-To: <cover.1656088406.git.pabeni@redhat.com>
 References: <cover.1656088406.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,90 +47,130 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Any local endpoints configured on the address matching the
-MPC subflow are currently ignored.
+The in-kernel PM has a bit of duplicate code related to ack
+generation. Create a new helper factoring out the PM-specific
+needs and use it in a couple of places.
 
-Specifically, setting a backup flag on them has no effect
-on the first subflow, as the MPC handshake can't carry such
-info.
-
-This change refactors the MPC endpoint id accounting to
-additionally fetch the priority info from the relevant endpoint
-and eventually trigger the MP_PRIO handshake as needed.
-
-As a result, the MPC subflow now switches to backup priority
-after that the MPTCP socket is fully established, according
-to the local endpoint configuration.
+Note that this additionally moves a few unsafe subflow socket
+access under the relevant socket lock.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/pm_netlink.c | 37 +++++++++++++++----------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
+ net/mptcp/pm_netlink.c | 45 ++++++++++++++++++++++++------------------
+ net/mptcp/protocol.c   | 11 ++++++++---
+ net/mptcp/protocol.h   |  2 +-
+ 3 files changed, 35 insertions(+), 23 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 91f6ed2a076a..a6eb501e5031 100644
+index 2b2bb3599781..91f6ed2a076a 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -505,30 +505,14 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
- 	struct mptcp_pm_addr_entry *entry;
- 
- 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if ((!lookup_by_id && mptcp_addresses_equal(&entry->addr, info, true)) ||
-+		if ((!lookup_by_id &&
-+		     mptcp_addresses_equal(&entry->addr, info, entry->addr.port)) ||
- 		    (lookup_by_id && entry->addr.id == info->id))
- 			return entry;
- 	}
- 	return NULL;
+@@ -463,6 +463,29 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+ 	return i;
  }
  
--static int
--lookup_id_by_addr(const struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
--{
--	const struct mptcp_pm_addr_entry *entry;
--	int ret = -1;
--
--	rcu_read_lock();
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, addr, entry->addr.port)) {
--			ret = entry->addr.id;
--			break;
--		}
--	}
--	rcu_read_unlock();
--	return ret;
--}
--
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
-@@ -546,13 +530,22 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 
- 	/* do lazy endpoint usage accounting for the MPC subflows */
- 	if (unlikely(!(msk->pm.status & BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED))) && msk->first) {
-+		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(msk->first);
-+		struct mptcp_pm_addr_entry *entry;
- 		struct mptcp_addr_info mpc_addr;
--		int mpc_id;
-+		bool backup = false;
- 
- 		local_address((struct sock_common *)msk->first, &mpc_addr);
--		mpc_id = lookup_id_by_addr(pernet, &mpc_addr);
--		if (mpc_id >= 0)
--			__clear_bit(mpc_id, msk->pm.id_avail_bitmap);
-+		rcu_read_lock();
-+		entry = __lookup_addr(pernet, &mpc_addr, false);
-+		if (entry) {
-+			__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
-+			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-+		}
-+		rcu_read_unlock();
++static void mptcp_pm_send_ack(struct mptcp_sock *msk, struct mptcp_subflow_context *subflow,
++			      bool prio, bool backup)
++{
++	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++	bool slow;
 +
-+		if (backup)
-+			mptcp_pm_send_ack(msk, subflow, true, backup);
++	spin_unlock_bh(&msk->pm.lock);
++	pr_debug("send ack for %s",
++		 prio ? "mp_prio" : (mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr"));
++
++	slow = lock_sock_fast(ssk);
++	if (prio) {
++		subflow->send_mp_prio = 1;
++		subflow->backup = backup;
++		subflow->request_bkup = backup;
++	}
++
++	__mptcp_subflow_send_ack(ssk);
++	unlock_sock_fast(ssk, slow);
++
++	spin_lock_bh(&msk->pm.lock);
++}
++
+ static struct mptcp_pm_addr_entry *
+ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
+ {
+@@ -705,16 +728,8 @@ void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
+ 		return;
  
- 		msk->pm.status |= BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED);
+ 	subflow = list_first_entry_or_null(&msk->conn_list, typeof(*subflow), node);
+-	if (subflow) {
+-		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+-
+-		spin_unlock_bh(&msk->pm.lock);
+-		pr_debug("send ack for %s",
+-			 mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr");
+-
+-		mptcp_subflow_send_ack(ssk);
+-		spin_lock_bh(&msk->pm.lock);
+-	}
++	if (subflow)
++		mptcp_pm_send_ack(msk, subflow, false, false);
+ }
+ 
+ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+@@ -736,16 +751,8 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+ 
+ 		if (subflow->backup != bkup)
+ 			msk->last_snd = NULL;
+-		subflow->backup = bkup;
+-		subflow->send_mp_prio = 1;
+-		subflow->request_bkup = bkup;
+ 		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIOTX);
+-
+-		spin_unlock_bh(&msk->pm.lock);
+-		pr_debug("send ack for mp_prio");
+-		mptcp_subflow_send_ack(ssk);
+-		spin_lock_bh(&msk->pm.lock);
+-
++		mptcp_pm_send_ack(msk, subflow, true, bkup);
+ 		return 0;
  	}
+ 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b1fae2f747c9..874344f7e0fa 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -502,13 +502,18 @@ static inline bool tcp_can_send_ack(const struct sock *ssk)
+ 	       (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLOSE | TCPF_LISTEN));
+ }
+ 
+-void mptcp_subflow_send_ack(struct sock *ssk)
++void __mptcp_subflow_send_ack(struct sock *ssk)
++{
++	if (tcp_can_send_ack(ssk))
++		tcp_send_ack(ssk);
++}
++
++static void mptcp_subflow_send_ack(struct sock *ssk)
+ {
+ 	bool slow;
+ 
+ 	slow = lock_sock_fast(ssk);
+-	if (tcp_can_send_ack(ssk))
+-		tcp_send_ack(ssk);
++	__mptcp_subflow_send_ack(ssk);
+ 	unlock_sock_fast(ssk, slow);
+ }
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 95c9ace1437b..a92b6276a03c 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -609,7 +609,7 @@ void __init mptcp_subflow_init(void);
+ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
+ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow);
+-void mptcp_subflow_send_ack(struct sock *ssk);
++void __mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_reset(struct sock *ssk);
+ void mptcp_subflow_queue_clean(struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
 -- 
 2.35.3
 
