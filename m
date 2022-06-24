@@ -1,78 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD987C
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656088706;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g7OkVUbfttfEym+rk9UuMQIvrm4/ED6RhiPAR/EIjS0=;
-	b=Z14Qzomgq6+NuIWKbbBUXpTMtDP6w/m3iSuDlay4gtEgpU4YlYH6WPyieu1xQoPwL2omOg
-	oyHXnUOuJKebqQoyFYM6vWfJ/4GBNnZLi/3lPWZK/d9lQez7QjDrFbUkM6WhBG4amtdXqe
-	jzfxcoNxAU2xuibmzUw34EQt+WAIIz8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-15-n3FLh6Y4Mmil_NALgEvKKw-1; Fri, 24 Jun 2022 12:38:16 -0400
-X-MC-Unique: n3FLh6Y4Mmil_NALgEvKKw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8850C101AA46
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:16 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.243])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1BC132026D64
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:15 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH RFC 1/4] mptcp: fix local endpoint acconting.
-Date: Fri, 24 Jun 2022 18:38:07 +0200
-Message-Id: <211c8536d4776abdb86e60a154d5fc6c140a6535.1656088406.git.pabeni@redhat.com>
-In-Reply-To: <cover.1656088406.git.pabeni@redhat.com>
-References: <cover.1656088406.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093D27C
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:49:39 +0000 (UTC)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1013ecaf7e0so4479984fac.13
+        for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 09:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=WwEQ68KiJ5hjziORIVhqwJv+nET5h14vCzqyNodQ5CA=;
+        b=n+VlLwij5RPZeU19c60HFoQrHqmeHpD3kvhdKZHpykoiEAnDAQa0XYWPzd7h12EGee
+         eLtAcSLfuePxckkYcszQXY3BZOV7eSTw24bhoYJlxLRKeXyLsHbDPKj9cttFlhY552TW
+         0RvjhbRsLb+gYy0C7X258Sx94xAEplEG3Uxrrb+zLKIofW2SQRi0QITaeDInuHhwFcxE
+         EYuQ4Br7ECOLHvhOeob47LGU87R8B2g5BjU2rC/RvacuK6s2XBG597UImuqkzllizF3X
+         LpVNeeJSWjLi1Dh24KVQBVkNC1Aot3THXnPpJXg5O/SabGvR5NFJ/eMa0d7DPF4XWQzJ
+         1rxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=WwEQ68KiJ5hjziORIVhqwJv+nET5h14vCzqyNodQ5CA=;
+        b=ZuLWk4SDKXTzNo851O9WY0KoTzhqHIm7bPCqTZtphmckN1LgYxtestFsGcvHAC9PPQ
+         L13ELT4ztI5gqoOshFyZAfWC1MpIozGOluiQQgC1ItmAN/xbP9dixEtNae3Nl/odAflf
+         yOXJ9mtok/TbHS0sUzhDxJwElI0XwxJjBrA1vDqKKys07reZVMunXDC35mCtgBffr3ZS
+         KKqPZMBiHWlhqIsOZRPkD2xTJQJXfN4H/emN7rNGuZB9F869kpomjLCuQWeyEZ8tpsFE
+         9fJ2McWL8w7eT/9H+Pvrj8vp9lAZN2XycZIgk5l5/RQAFAkdEE+lAVLzTCy3cdS+vWAZ
+         KOyw==
+X-Gm-Message-State: AJIora/4oOax6CBJIxYn/jW1CAZFao6nTFVMZ9BxC1c1sBWLQV9vNTuR
+	9DDcIgArYjvKnJWfnL5KFw==
+X-Google-Smtp-Source: AGRyM1urdu4kOpTF+0A1wLuyMIJ38XpjEZwIyRD4XuaQXiaGEqAGtdXv44FE1pteTGQX7pYsIEkKqA==
+X-Received: by 2002:a05:6871:80e:b0:101:fa85:8519 with SMTP id q14-20020a056871080e00b00101fa858519mr2618341oap.254.1656089378989;
+        Fri, 24 Jun 2022 09:49:38 -0700 (PDT)
+Received: from [127.0.0.1] ([104.214.107.219])
+        by smtp.gmail.com with ESMTPSA id h20-20020a4adcd4000000b004258ce7a111sm269067oou.24.2022.06.24.09.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jun 2022 09:49:38 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <25ad186319f6b464aee3286c0386f2851f9a1f8f.1656088406.git.pabeni@redhat.com>
+References:
+ <25ad186319f6b464aee3286c0386f2851f9a1f8f.1656088406.git.pabeni@redhat.com>
+Subject: Re: mptcp: more accurate MPC endpoint tracking: Build Failure
+Message-ID: <ee2ec742-07e3-1b26-90f1-129c1360fd5a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 24 Jun 2022 16:49:38 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-In mptcp_pm_nl_rm_addr_or_subflow() we always mark as availble
-the id corresponding to the just removed address.
+Hi Paolo,
 
-The used bitmap actually tracks only the local IDs: we must
-restrict the operation when a (local) subflow is removed.
+Thank you for your modifications, that's great!
 
-Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm_netlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+But sadly, our CI spotted some issues with it when trying to build it.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index e099f2a12504..2b2bb3599781 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -801,7 +801,8 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 			removed = true;
- 			__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		}
--		__set_bit(rm_list->ids[i], msk->pm.id_avail_bitmap);
-+		if (rm_type == MPTCP_MIB_RMSUBFLOW)
-+			__set_bit(rm_list->ids[i], msk->pm.id_avail_bitmap);
- 		if (!removed)
- 			continue;
- 
--- 
-2.35.3
+You can find more details there:
 
+  https://patchwork.kernel.=
+org/project/mptcp/patch/25ad186319f6b464aee3286c0386f2851f9a1f8f.1656088406=
+.git.pabeni@redhat.com/
+  https://github.com/multipath-tcp/mptcp_net-next/a=
+ctions/runs/2556986908
+
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e01f9f5a36=
+95
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
