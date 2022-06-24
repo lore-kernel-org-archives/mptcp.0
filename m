@@ -1,217 +1,68 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0170A7C
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 01:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656033605; x=1687569605;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=i9IowktddDPlm6uLMWEKaHKP4crHoIVYMXyU1BAEQa8=;
-  b=OymvgypcU/yXiNYyscNkb7B61plUtl6RpZD+IR1M2JJSCfXJvzwWB97n
-   kwPE8jasHh1t6Cjzq0x+9/OC4fDxr9fpTYOXoWNBxTjXxojkivcpVKRhV
-   BBzedT3ySZlziS1h6tTghdgaUjKNGdsGtjrc97c/YffyH/0qhzgWwpp2v
-   Tvq0eBAFOaIvMHrc6XRocJuBxHizYBZ2XiFCKJ4ip7BkDKOrBq1adFQbD
-   syhHs6ES3+mvaNVs4lphoCZ+u45aXLdAYbr1Y5rSxvDSzAQDrbFXhOfAe
-   UsETZu/+KdT4Toe7tY40i0nrw8+B0SAuXNnakO97AGat8R0acDqgnsD5R
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="280934773"
-X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="280934773"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 18:20:04 -0700
-X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="691302054"
-Received: from jngertso-mobl1.amr.corp.intel.com ([10.212.159.56])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 18:20:04 -0700
-Date: Thu, 23 Jun 2022 18:20:03 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v9 3/6] mptcp: redundant subflows push
- pending
-In-Reply-To: <7845ef0db19df1d87225b22911dea3947792c711.1655995770.git.geliang.tang@suse.com>
-Message-ID: <45ab37e4-f01b-92db-2365-469acbf3949@linux.intel.com>
-References: <cover.1655995770.git.geliang.tang@suse.com> <7845ef0db19df1d87225b22911dea3947792c711.1655995770.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFFE7C
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 01:57:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B392C3411D;
+	Fri, 24 Jun 2022 01:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1656035860;
+	bh=A5G1y5zfAakBvev3o+XJTirP3qP3skGJx2wBFS2dMIw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NjKjfEStvKxSWdi9XBcvE5z2PoJQ+rRQOSMkMkbJY0GP0VoRTsPwg9uwXpmXN1cvd
+	 xU6FarBJ5y1fQR2qVqKLuGdOHOdhGQRQuJX9ctEO+u1izzWm6xBvbhiefSVZrCnoPX
+	 PilF/HnqBRc6tuVGYzt2xvXD2+Lxr6ZtOiEtedEtv9GmJEhWFkaX5rqDDGyxwjV4N8
+	 wId5i2oWRkpJ5yRyitMGL4QJ6wWk3Am92+3kp8HX+9MjWEFXcvfYQACVljd0P8mwmj
+	 uwbSRHSLYlTYBy57r5Yaam5U1qLUZvo5XbLYt7E+Q9m2mcLXLDsC4m8Jf5AqATNa1O
+	 SNi52mAnS305Q==
+Date: Thu, 23 Jun 2022 18:57:30 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Xin Long <lucien.xin@gmail.com>
+Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, kernel test robot
+ <oliver.sang@intel.com>, Eric Dumazet <edumazet@google.com>, Shakeel Butt
+ <shakeelb@google.com>, Soheil Hassas Yeganeh <soheil@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Memory Management List
+ <linux-mm@kvack.org>, network dev <netdev@vger.kernel.org>,
+ linux-s390@vger.kernel.org, mptcp@lists.linux.dev, "linux-sctp @ vger .
+ kernel . org" <linux-sctp@vger.kernel.org>, lkp@lists.01.org, kbuild test
+ robot <lkp@intel.com>, Huang Ying <ying.huang@intel.com>,
+ feng.tang@intel.com, zhengjun.xing@linux.intel.com, fengwei.yin@intel.com,
+ Ying Xu <yinxu@redhat.com>
+Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
+Message-ID: <20220623185730.25b88096@kernel.org>
+In-Reply-To: <CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
+References: <20220619150456.GB34471@xsang-OptiPlex-9020>
+	<20220622172857.37db0d29@kernel.org>
+	<CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
+	<CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 23 Jun 2022, Geliang Tang wrote:
+On Thu, 23 Jun 2022 18:50:07 -0400 Xin Long wrote:
+> From the perf data, we can see __sk_mem_reduce_allocated() is the one
+> using CPU the most more than before, and mem_cgroup APIs are also
+> called in this function. It means the mem cgroup must be enabled in
+> the test env, which may explain why I couldn't reproduce it.
+> 
+> The Commit 4890b686f4 ("net: keep sk->sk_forward_alloc as small as
+> possible") uses sk_mem_reclaim(checking reclaimable >= PAGE_SIZE) to
+> reclaim the memory, which is *more frequent* to call
+> __sk_mem_reduce_allocated() than before (checking reclaimable >=
+> SK_RECLAIM_THRESHOLD). It might be cheap when
+> mem_cgroup_sockets_enabled is false, but I'm not sure if it's still
+> cheap when mem_cgroup_sockets_enabled is true.
+> 
+> I think SCTP netperf could trigger this, as the CPU is the bottleneck
+> for SCTP netperf testing, which is more sensitive to the extra
+> function calls than TCP.
+> 
+> Can we re-run this testing without mem cgroup enabled?
 
-> This patch adds the redundant subflows support for __mptcp_push_pending().
-> Use mptcp_sched_get_send() wrapper instead of mptcp_subflow_get_send()
-> in it.
->
-> Check the subflow scheduled flags to test which subflow or subflows are
-> picked by the scheduler, use them to send data.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c | 98 ++++++++++++++++++++++++++------------------
-> 1 file changed, 57 insertions(+), 41 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6e44786e01fd..d09b01f1dc29 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1516,63 +1516,79 @@ void mptcp_check_and_set_pending(struct sock *sk)
->
-> void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> {
-> -	struct sock *prev_ssk = NULL, *ssk = NULL;
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> -	struct mptcp_sendmsg_info info = {
-> -				.flags = flags,
-> -	};
-> +	struct mptcp_subflow_context *subflow;
-> 	struct mptcp_data_frag *dfrag;
-> -	int len, copied = 0;
-> +	int len, max = 0;
->
-> -	while ((dfrag = mptcp_send_head(sk))) {
-> -		info.sent = dfrag->already_sent;
-> -		info.limit = dfrag->data_len;
-> -		len = dfrag->data_len - dfrag->already_sent;
-> -		while (len > 0) {
-> -			int ret = 0;
-> +	if (!mptcp_sched_get_send(msk))
-> +		goto out;
->
-> -			prev_ssk = ssk;
-> -			ssk = mptcp_subflow_get_send(msk);
-> +	dfrag = mptcp_send_head(sk);
-
-I think the looping structure in v7 was closer to what is needed.
-
-Each subflow needs to be able to send from multiple dfrags if they are 
-able to.
-
-> +	if (!dfrag)
-> +		goto out;
->
-> -			/* First check. If the ssk has changed since
-> -			 * the last round, release prev_ssk
-> -			 */
-> -			if (ssk != prev_ssk && prev_ssk)
-> -				mptcp_push_release(prev_ssk, &info);
-> -			if (!ssk)
-> -				goto out;
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		if (READ_ONCE(subflow->scheduled)) {
-> +			struct sock *prev_ssk = NULL, *ssk = NULL;
-> +			struct mptcp_sendmsg_info info = {
-> +				.flags = flags,
-> +			};
-> +			int copied = 0;
->
-> -			/* Need to lock the new subflow only if different
-> -			 * from the previous one, otherwise we are still
-> -			 * helding the relevant lock
-> -			 */
-> -			if (ssk != prev_ssk)
-> -				lock_sock(ssk);
-
-
-There still needs to be a loop here (like in v7) that allows multiple 
-calls to mptcp_sendmsg_frag(). Each subflow *starts* sending at the 
-initial dfrag, but can send any amount of data from the available list of 
-dfrags. If msk->first_pending has not been updated until after all 
-subflows are done, that can be used as the starting point for each 
-subflow.
-
-
-> +			info.sent = dfrag->already_sent;
-> +			info.limit = dfrag->data_len;
-> +			len = dfrag->data_len - dfrag->already_sent;
-> +			while (len > 0) {
-> +				int ret = 0;
->
-> -			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
-> -			if (ret <= 0) {
-> -				mptcp_push_release(ssk, &info);
-> -				goto out;
-> -			}
-> +				prev_ssk = ssk;
-> +				ssk = mptcp_subflow_tcp_sock(subflow);
->
-> -			info.sent += ret;
-> -			copied += ret;
-> -			len -= ret;
-> +				/* First check. If the ssk has changed since
-> +				 * the last round, release prev_ssk
-> +				 */
-> +				if (ssk != prev_ssk && prev_ssk)
-> +					mptcp_push_release(prev_ssk, &info);
-> +				if (!ssk)
-> +					goto out;
-> +
-> +				/* Need to lock the new subflow only if different
-> +				 * from the previous one, otherwise we are still
-> +				 * helding the relevant lock
-> +				 */
-> +				if (ssk != prev_ssk)
-> +					lock_sock(ssk);
-> +
-> +				ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
-> +				if (ret <= 0) {
-> +					mptcp_push_release(ssk, &info);
-> +					goto out;
-> +				}
-> +
-> +				info.sent += ret;
-> +				copied += ret;
-> +				len -= ret;
-> +			}
-> +			max = max(copied, max);
-
-Would be good to use a variable name other than "max" so it doesn't match 
-the macro name here.
-
->
-> -			mptcp_update_post_push(msk, dfrag, ret);
-> +			/* at this point we held the socket lock for the last subflow we used */
-> +			if (ssk) {
-> +				mptcp_push_release(ssk, &info);
-> +				msk->last_snd = ssk;
-> +				mptcp_subflow_set_scheduled(subflow, false);
-> +			}
-> 		}
-> -		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> 	}
-> -
-> -	/* at this point we held the socket lock for the last subflow we used */
-> -	if (ssk)
-> -		mptcp_push_release(ssk, &info);
-> +	if (max)
-> +		mptcp_update_post_push(msk, dfrag, max);
-> +	WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-
-With the notes above on supporting multiple dfrags, 
-mptcp_update_post_push() also will need to be more complicated. It will 
-have to update all dfrags that were sent.
-
->
-> out:
-> 	/* ensure the rtx timer is running */
-> 	if (!mptcp_timer_pending(sk))
-> 		mptcp_reset_timer(sk);
-> -	if (copied)
-> +	if (max)
-> 		__mptcp_check_send_data_fin(sk);
-> }
->
-> -- 
-> 2.35.3
->
->
->
-
---
-Mat Martineau
-Intel
+FWIW I defer to Eric, thanks a lot for double checking the report 
+and digging in!
