@@ -1,113 +1,79 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D2423A1
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 18:36:36 +0000 (UTC)
-Received: by mail-qk1-f174.google.com with SMTP id f14so2612251qkm.0
-        for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 11:36:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA0B46AA
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 20:58:56 +0000 (UTC)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-101ec2d6087so5385230fac.3
+        for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 13:58:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=DQj+AReDtimho+ZdcvYfzaP95TEfKvM6VXXAIA3MluM=;
-        b=h9D41mI7S3QuStqIr+miKYVmEtOBsv44khV6UrDNW/fjMLkIRLgKmFEZurAX0LEwnt
-         F60mkEzTFSqovfWPo/VESKhsZRRXukhFYtv3YGd5/54/6ZdibmJBChnTQXY/3yaeMWqI
-         PdferBgmvHYh89STbEu1I/riH4FZQe/x05cyXy0dzPIyJnu/1WNeoSeVot4Vh3uW8XMR
-         GBSyATL6tnBk/9QmizcbfwSxbdvCYTpo/ZAIjQtScIGEAoXxJmMTx5hBpB4LEF2l/suj
-         fNsoRfnofQoVH4Iy0KIt/z+F0M8LEzQ18reeypZ3s7T/MxWqCBSXK06PjhaUEQirCsvi
-         fE0Q==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=YiukLnuCcsFeDvKRKfWEB6o/9sIaVYaIpOvE+VSbHxc=;
+        b=TVqe3b17RnEe+nXzzqKAPFhHKXxjI/SUfU/yvup4EsBX2tWLl/6AXAtTrQUfk4qXW9
+         wRPu6VargYpthmu5tDezcBQSoimPHfdUaI06dwGrs9UG7kQCldaafeJLneFWivfUoRTi
+         jdsm7stmKN7OAHdU0JhoErVX2W5e5+SNq3E+tkI947iWVqbuofbnhwts7fh0zyz3bxia
+         XFLnaSmi52rtrO+BJWHDPeAo9SAkVcAUjNEdoYzHMGDca3sRb+8wiK6pJqKdK2CQUJjA
+         inEkNxkQz3UeI+Gex8VOVo8wLUrbI6nsaQvkGqlFFWb4q9WPbzMH0fE/eQyykYLR8yB9
+         C1gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=DQj+AReDtimho+ZdcvYfzaP95TEfKvM6VXXAIA3MluM=;
-        b=8HoP3MO6tHHUZ8MDX5R13SlpbY6gCnV1Sm/AnyoJHNgU+djpEQC4iLoCfMFrerY9tO
-         XQVaqTWJLj6Dqsdsx1MM4lzjdK4p3yreIiXORwz/ULXV4Y4BwZP59GrOGUkS6oJcRvzR
-         MqI6oRaoM4fxcryPiuSSjR06FfWfW8clcG8eT0u7SuNvRpxoEG6YsWvhlUdz72hi9T7F
-         ERbW9hUCOQ67G88WzBmYPMifKzKeFddcMrFekAeINOnWgDEf77pBZAbOdUV1YCabU8Mm
-         xhrRzs+IsjO8q3xrcgqak+aATJHljeSw9jwC/DW/isjHHwO6RaAORpj7C4MEBNnX/+eO
-         BSrQ==
-X-Gm-Message-State: AJIora/rmTVS8gJtr+6GcZGC9dxBl5dCYQpmJit61J6V9dNSdZ+JT8rJ
-	e5Grnmq6mVEUAP27xzOgNQ==
-X-Google-Smtp-Source: AGRyM1skybFHK0ckVpJKqWkcOgkL7ZX2LD2kmHpSEizeImQH5Y/EYsTClDtWqc9B+Sx981LwUaLhaw==
-X-Received: by 2002:a05:620a:cf4:b0:6af:4b9:58d4 with SMTP id c20-20020a05620a0cf400b006af04b958d4mr508917qkj.38.1656095795467;
-        Fri, 24 Jun 2022 11:36:35 -0700 (PDT)
-Received: from [127.0.0.1] ([20.25.33.244])
-        by smtp.gmail.com with ESMTPSA id u8-20020a05622a17c800b0031776d4ae3asm1777111qtk.60.2022.06.24.11.36.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jun 2022 11:36:34 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <25ad186319f6b464aee3286c0386f2851f9a1f8f.1656088406.git.pabeni@redhat.com>
-References:
- <25ad186319f6b464aee3286c0386f2851f9a1f8f.1656088406.git.pabeni@redhat.com>
-Subject: Re: mptcp: more accurate MPC endpoint tracking: Tests Results
-Message-ID: <9c120205-665a-d8e1-e9eb-9616b70a4a8c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Jun 2022 18:36:34 +0000
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=YiukLnuCcsFeDvKRKfWEB6o/9sIaVYaIpOvE+VSbHxc=;
+        b=Qq1gAez49Q/S48qtDclcfhnWbyHCEfJzTqmPfx+OHlAZb0stUkv/MpY1rW9ZEfzV9o
+         b0zrBr2KMubAB/rR0lecSUWEOctw7loC/yiB+NMqRVrgPSTmZ83QXYOG/EoUkfKWwrjb
+         flqerQgmRDgKjdD6UzgwFRollbHQtrDd2Y/JpYDNnJ0EcMBRSGvhc2wEK1oxS53+L8iS
+         kN4A9JelLSplo4ECEmLaLyMg9O9pxuWshcivc2PWBV9+uxjc5GkNtg21Ca8wNeK3sHKF
+         ZMV4WyWoZ/tQy57wG8RGWL7T6UJLkv7tjbgVmF5cRKxbwuhM/zyGNtxZtOJqycY2kBKQ
+         Kldg==
+X-Gm-Message-State: AJIora8/hNx07FhPe/VypqAy1xgQOhtG5qqWAw0GBaFbs5IDVM4NmkZg
+	X5xwiERQt77VrsietneVU16wZn9B0F5bF7zRuQNNEF6IC+0=
+X-Google-Smtp-Source: AGRyM1sz6/CU0mhSJ061nuk10CKT9VtLVHwyzU/xm4MOAS383MW2K160CrvBou+xTqoBPz9kXhVGwJ6UqNw5892+HUU=
+X-Received: by 2002:a05:6870:c092:b0:f1:efd3:ef9e with SMTP id
+ c18-20020a056870c09200b000f1efd3ef9emr3284979oad.92.1656104335024; Fri, 24
+ Jun 2022 13:58:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+From: Ossama Othman <ossama.othman@gmail.com>
+Date: Fri, 24 Jun 2022 13:58:44 -0700
+Message-ID: <CAE+88WNQ4J5iBNZMOnLkh+iUgXSQOaHL5ZcU30T4fC0ovh9zrA@mail.gmail.com>
+Subject: mptcpd 0.10 released
+To: mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Paolo,
+Mptcpd 0.10 is now available at:
 
-Thank you for your modifications, that's great!
+    https://github.com/intel/mptcpd/releases/tag/v0.10
 
-Our CI did some validations and here is its report:
+Notable changes include the following:
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6620488473509888
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6620488473509888/summary/summary.txt
+- Inconsistent byte order handling in mptcpd was corrected.  IP ports
+  sent in path management commands and events now have the correct
+  byte order.  Furthermore, the mptcpd unit test suite no longer
+  assumes that the tests will be run on a little endian host.  IPv4
+  addresses and IP ports used in the mptcpd unit test suite are now
+  byte swapped as needed according to the endianness of the platform.
+  As always, IPv4 addresses and IP ports passed through pointers to
+  struct sockaddr should be in network byte order by convention.
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/4579794892357632
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4579794892357632/summary/summary.txt
+- A potential memory violation caused when attempting to register NULL
+  networking monitoring operations with mptcpd was fixed.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/e01f9f5a3695
+- Mptcpd now supports gcc 12.  Link-time errors found in gcc 12 mptcpd
+  builds were fixed.
 
+- ELL 0.45 or greater is supported.
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+- Code coverage was further expanded.
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+- The mptcpd network monitor supports loopback interface monitoring if
+  so desired.
 
-For more details:
+- Improved support for reproducible builds by disabling HTML
+  timestamps in Doxygen generated mptcpd documentation.
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+- Some mptcpd unit tests will be skipped rather than allowed to fail
+  on hosts running a kernel without MPTCP support.
