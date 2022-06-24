@@ -1,67 +1,85 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EC01FAC
-	for <mptcp@lists.linux.dev>; Thu, 23 Jun 2022 23:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C11A7C
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 00:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656026384; x=1687562384;
-  h=date:from:to:subject:message-id:mime-version;
-  bh=wFALJ5J/RTwzCV1qDIWBompLmZZD1dDHcgmVLkLmFxw=;
-  b=dwHoiy/4nqHrtVLkoeitsObhFvEIT73AHwrdUnjjZ8cRcJTIbmubTBdN
-   gmuvmoTaBwzZp+oKOY6ywzzLWkIc9cPdIpIsW8w2nWWBb3/Cj719MSWhy
-   vH1bqRjpmOa5CxDfBnMvq7tSiU42dtrwRu18Hm8oGIlnPcPyQ5AUlqaA1
-   Q5ZUG0wfRIV2sBROSNVoDgedxJY35RHsJMtmZyFtX8+TCH6LcfMXFElYG
-   TUatvV8Tl1h8b8oHbK9UemiPP1u16VtlZDfMGKsUn1U3e6oIvTrfReOVU
-   vAvMzfrIAuq6B7mOlCwCHMDlUt816Ab7GEGXKQ4QAk7UM2g73FHkJcz3s
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="281948394"
+  t=1656032349; x=1687568349;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IK/FY2rlPHcfuIJFaMxQbuqfmDfj2O4HMWHugegPK6s=;
+  b=N9s90TAld/jcd8bpG541+mZQr9S+qlqim52KlHT0L2cEo1PDbLsPCSbr
+   Y//3JRjJY9BtbDVZKUhRvvLAGyzHH57X9hmWxp127aEB/qyYyby/ZI8BU
+   heP2OkB9PsA/feE80Stw00NVmjY3x3LKcSBG1mAWoResuIJlXUeACaud3
+   nD0f3S0Ny1zVSkG2jlkdiJAaN5jNlpMStJf/IQuAsE/UYDj906JYZmee9
+   0ST12bOK6GjDMakNbve7lLQdKzLnFvaq8a2S/1aqCes098hHb0/9HkUNy
+   XYFnqYcYkFKvygniCe8QJx931L8HXtetOAeSV/QYHa3Eeu+DTizFLFddd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="261314160"
 X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="281948394"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 16:19:43 -0700
+   d="scan'208";a="261314160"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 17:59:08 -0700
 X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="691259749"
+   d="scan'208";a="915456241"
 Received: from jngertso-mobl1.amr.corp.intel.com ([10.212.159.56])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 16:19:43 -0700
-Date: Thu, 23 Jun 2022 16:19:42 -0700 (PDT)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 17:59:08 -0700
+Date: Thu, 23 Jun 2022 17:59:07 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
-    Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Subject: Should the MIB_RMSUBFLOW commit go to -net?
-Message-ID: <ad151d35-f094-675d-5ced-71df98ea5857@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v9 2/6] mptcp: accept right edge of mapping
+ validating
+In-Reply-To: <6f5dffe33bd23ea18ec8cff99c8944e9d0f9c6fe.1655995770.git.geliang.tang@suse.com>
+Message-ID: <8e4e2b9f-44e4-adeb-8d3-6a76a7799f3d@linux.intel.com>
+References: <cover.1655995770.git.geliang.tang@suse.com> <6f5dffe33bd23ea18ec8cff99c8944e9d0f9c6fe.1655995770.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
+On Thu, 23 Jun 2022, Geliang Tang wrote:
 
-I was preparing the patches we had agreed to be ready for net-next in the 
-meeting today:
+> If ssn is at the right edge of DSS mapping (ssn == subflow->map_subflow_seq
+> + subflow->map_data_len), it shouldn't be handled as a bad map. This
+> happens in the redundant subflows test cases.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/subflow.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 63e8892ec807..69a2c3e6fd76 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -878,8 +878,8 @@ static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
+> 		dbg_bad_map(subflow, ssn);
+> 		return false;
+> 	}
+> -	if (unlikely(!before(ssn, subflow->map_subflow_seq +
+> -				  subflow->map_data_len))) {
+> +	if (unlikely(after(ssn, subflow->map_subflow_seq +
+> +				subflow->map_data_len))) {
 
-         - [f1eb3f2cb4d2] mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy (Geliang Tang)
-         - [f3c5dde10031] selftests: mptcp: userspace pm address tests (Geliang Tang)
-         - [92378ff55152] selftests: mptcp: userspace pm subflow tests (Geliang Tang)
-         - [1908a4ccaa2c] selftests: mptcp: avoid Terminated messages in userspace_pm (Geliang Tang)
-         - [bac5548c7c47] selftests: mptcp: update pm_nl_ctl usage header (Geliang Tang)
+I'm not sure this correct.
 
-I think the selftest commits are definitely best for net-next. But for the 
-first one ("mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy"), should we add
+For example, if subflow->map_data_len == 1, then ssn can only be equal to 
+subflow->map_subflow_seq. Changing this to after() allows the skb to 
+include an extra byte that isn't covered by the mapping.
 
-Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
-
-and include that in a patch set for -net? Seems like it would be good to 
-improve the MIB accuracy with the userspace PM in 5.19.
-
-Link to commit in patchwork: 
-https://patchwork.kernel.org/project/mptcp/patch/723d61d82730b996132925686b43f9c3c79bc747.1655355422.git.geliang.tang@suse.com/
-
-
-If that patch goes to -net, it would also require waiting until the next 
-net/net-next sync before sending the selftest patches listed above.
+> 		/* Mapping does covers past subflow data, invalid */
+> 		dbg_bad_map(subflow, ssn);
+> 		return false;
+> -- 
+> 2.35.3
+>
+>
+>
 
 --
 Mat Martineau
