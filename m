@@ -1,165 +1,104 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A0723B5
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 07:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656054422; x=1687590422;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I94Jl9kETqNl2DSK3suPqG7/Oh9kRDrmgsP9ccLnRJ8=;
-  b=BUdQ+P9XZz381DZYdIwrN6+4QeKqyH2AnPAvlFwomTcuD/NC9iQk6PLH
-   6VrrjhDgRwUc/AqQ7OULUq5QOXWBF2jlBHFdp9BAj2nBOzXmk/MS3PM6/
-   Y7t/YWskd6kjA/1J8Nir8BFlc1yo12Idu5uAeFRFJ4uBFZRy7ABhpM2Fc
-   HzCUVEib1FccwPvqSZm4l+5Ez7AiotGBorNwgnVDmuSnN/n9iwJsH7GZS
-   dMo2h9Ckpcu5XQaEJouCY5Xi2B+q8OVxDbDkCPs1I4OBjeGqMbJykVRC1
-   Q7dpCsFCAVboTzZ5XijnhHcfAKhdcB4ARptct3dOqR5rwHq4iAW2cEZY5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="344934875"
-X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="344934875"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2022 00:07:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="691408221"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2022 00:06:56 -0700
-Date: Fri, 24 Jun 2022 15:06:56 +0800
-From: Feng Tang <feng.tang@intel.com>
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Eric Dumazet <edumazet@google.com>, Linux MM <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Michal Hocko <mhocko@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	Soheil Hassas Yeganeh <soheil@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
-	MPTCP Upstream <mptcp@lists.linux.dev>,
-	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
-	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
-	Huang Ying <ying.huang@intel.com>,
-	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
-Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-Message-ID: <20220624070656.GE79500@shbuild999.sh.intel.com>
-References: <20220619150456.GB34471@xsang-OptiPlex-9020>
- <20220622172857.37db0d29@kernel.org>
- <CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
- <CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
- <20220623185730.25b88096@kernel.org>
- <CANn89iLidqjiiV8vxr7KnUg0JvfoS9+TRGg=8ANZ8NBRjeQxsQ@mail.gmail.com>
- <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEBF7C
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 08:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656060047;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uqfCE86Bdfy5PqzY1173pw/zJRavGFJgIxJVzbZQrDQ=;
+	b=QDLcw7G+rKKrKSXkO2ZA5vIXNzFyPjMm1PswzhOxlyc2D9DrQtJ7qSNNeSZb/IS/F3uhwe
+	2nj3W0jaqwy6MmKS5TffGqMzIcLHt9CSGgv+tYIqRLhgmdFh7lh+G2YfY0PoTQf2K3TJNM
+	wogxdtVFv5uRpNWeQfuXAkgyZiLZ+6o=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-438-RKg9U3oGN3SsgGX0qhbjFw-1; Fri, 24 Jun 2022 04:40:46 -0400
+X-MC-Unique: RKg9U3oGN3SsgGX0qhbjFw-1
+Received: by mail-wm1-f70.google.com with SMTP id 2-20020a1c0202000000b0039c94528746so2742423wmc.6
+        for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 01:40:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=uqfCE86Bdfy5PqzY1173pw/zJRavGFJgIxJVzbZQrDQ=;
+        b=YDu1dOVJux7SJiOJHBfXFM6mfYQNQtroeAHjcdplUyCk0OKOUTbxxzyn1KPUP8Obx0
+         tL4eypKnQrhRCTaYPl01dhJS5V6z+fTlFZiu3dm/y8WaboKyvcJ6VjpuUnkkk5d/xhe7
+         thiROIoAuRmXR6PstpOApmPCPHyyAcuYsaOWgLZi+/9nfI60O+oaLywH1HyflXUdXQ8Y
+         FYuwbydr2LVfq5RA5CKyI1/0kR+hJN65d+g+kzjdcpmnaBlDqYWthh1Ogg7IyyV8Ylwl
+         gFn/DBQiuvWUsaFefr7GTks21ME2H+G8O9/I6FR41VWe6wTaZhJ6/5xEX6sSj4WxdEic
+         WqyA==
+X-Gm-Message-State: AJIora/zedAm4JJuar6M/FYNz8Ok1vSd8wsIweq9ewrnC95NfARaZUCX
+	t42Em0tQdwOUZgyJqDooZh9ZWj662KHTfoPWPzQhGxM3imbE7p9pNGcBHMIYt2n9wZQsG3puQe1
+	86hEL+nbTD0BY2pE=
+X-Received: by 2002:a5d:456e:0:b0:21b:9219:b28a with SMTP id a14-20020a5d456e000000b0021b9219b28amr11995841wrc.497.1656060045002;
+        Fri, 24 Jun 2022 01:40:45 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1u29bNuuiHq+s/LUI6+Uz1j1JxJIqDLtbXWxMAjAo6hH84y9k1COg+Im1lMqvYHOEzIAgwMlA==
+X-Received: by 2002:a5d:456e:0:b0:21b:9219:b28a with SMTP id a14-20020a5d456e000000b0021b9219b28amr11995817wrc.497.1656060044686;
+        Fri, 24 Jun 2022 01:40:44 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-113-202.dyn.eolo.it. [146.241.113.202])
+        by smtp.gmail.com with ESMTPSA id u16-20020a05600c441000b0039c4d022a44sm2146807wmn.1.2022.06.24.01.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jun 2022 01:40:44 -0700 (PDT)
+Message-ID: <437af8add242099c84cf106108ab4988a65010ff.camel@redhat.com>
+Subject: Re: Should the MIB_RMSUBFLOW commit go to -net?
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
+	 <matthieu.baerts@tessares.net>, Geliang Tang <geliang.tang@suse.com>, 
+	mptcp@lists.linux.dev
+Date: Fri, 24 Jun 2022 10:40:43 +0200
+In-Reply-To: <ad151d35-f094-675d-5ced-71df98ea5857@linux.intel.com>
+References: <ad151d35-f094-675d-5ced-71df98ea5857@linux.intel.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 23, 2022 at 11:34:15PM -0700, Shakeel Butt wrote:
-> CCing memcg folks.
+On Thu, 2022-06-23 at 16:19 -0700, Mat Martineau wrote:
+> I was preparing the patches we had agreed to be ready for net-next in the 
+> meeting today:
 > 
-> The thread starts at
-> https://lore.kernel.org/all/20220619150456.GB34471@xsang-OptiPlex-9020/
+>          - [f1eb3f2cb4d2] mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy (Geliang Tang)
+>          - [f3c5dde10031] selftests: mptcp: userspace pm address tests (Geliang Tang)
+>          - [92378ff55152] selftests: mptcp: userspace pm subflow tests (Geliang Tang)
+>          - [1908a4ccaa2c] selftests: mptcp: avoid Terminated messages in userspace_pm (Geliang Tang)
+>          - [bac5548c7c47] selftests: mptcp: update pm_nl_ctl usage header (Geliang Tang)
 > 
-> On Thu, Jun 23, 2022 at 9:14 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Fri, Jun 24, 2022 at 3:57 AM Jakub Kicinski <kuba@kernel.org> wrote:
-> > >
-> > > On Thu, 23 Jun 2022 18:50:07 -0400 Xin Long wrote:
-> > > > From the perf data, we can see __sk_mem_reduce_allocated() is the one
-> > > > using CPU the most more than before, and mem_cgroup APIs are also
-> > > > called in this function. It means the mem cgroup must be enabled in
-> > > > the test env, which may explain why I couldn't reproduce it.
-> > > >
-> > > > The Commit 4890b686f4 ("net: keep sk->sk_forward_alloc as small as
-> > > > possible") uses sk_mem_reclaim(checking reclaimable >= PAGE_SIZE) to
-> > > > reclaim the memory, which is *more frequent* to call
-> > > > __sk_mem_reduce_allocated() than before (checking reclaimable >=
-> > > > SK_RECLAIM_THRESHOLD). It might be cheap when
-> > > > mem_cgroup_sockets_enabled is false, but I'm not sure if it's still
-> > > > cheap when mem_cgroup_sockets_enabled is true.
-> > > >
-> > > > I think SCTP netperf could trigger this, as the CPU is the bottleneck
-> > > > for SCTP netperf testing, which is more sensitive to the extra
-> > > > function calls than TCP.
-> > > >
-> > > > Can we re-run this testing without mem cgroup enabled?
-> > >
-> > > FWIW I defer to Eric, thanks a lot for double checking the report
-> > > and digging in!
-> >
-> > I did tests with TCP + memcg and noticed a very small additional cost
-> > in memcg functions,
-> > because of suboptimal layout:
-> >
-> > Extract of an internal Google bug, update from June 9th:
-> >
-> > --------------------------------
-> > I have noticed a minor false sharing to fetch (struct
-> > mem_cgroup)->css.parent, at offset 0xc0,
-> > because it shares the cache line containing struct mem_cgroup.memory,
-> > at offset 0xd0
-> >
-> > Ideally, memcg->socket_pressure and memcg->parent should sit in a read
-> > mostly cache line.
-> > -----------------------
-> >
-> > But nothing that could explain a "-69.4% regression"
-> >
-> > memcg has a very similar strategy of per-cpu reserves, with
-> > MEMCG_CHARGE_BATCH being 32 pages per cpu.
-> >
-> > It is not clear why SCTP with 10K writes would overflow this reserve constantly.
-> >
-> > Presumably memcg experts will have to rework structure alignments to
-> > make sure they can cope better
-> > with more charge/uncharge operations, because we are not going back to
-> > gigantic per-socket reserves,
-> > this simply does not scale.
+> I think the selftest commits are definitely best for net-next. But for the 
+> first one ("mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy"), should we add
 > 
-> Yes I agree. As you pointed out there are fields which are mostly
-> read-only but sharing cache lines with fields which get updated and
-> definitely need work.
+> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
 > 
-> However can we first confirm if memcg charging is really the issue
-> here as I remember these intel lkp tests are configured to run in root
-> memcg and the kernel does not associate root memcg to any socket (see
-> mem_cgroup_sk_alloc()).
+> and include that in a patch set for -net? Seems like it would be good to 
+> improve the MIB accuracy with the userspace PM in 5.19.
 > 
-> If these tests are running in non-root memcg, is this cgroup v1 or v2?
-> The memory counter and the 32 pages per cpu stock are only used on v2.
-> For v1, there is no per-cpu stock and there is a separate tcpmem page
-> counter and on v1 the network memory accounting has to be enabled
-> explicitly i.e. not enabled by default.
+> Link to commit in patchwork: 
+> https://patchwork.kernel.org/project/mptcp/patch/723d61d82730b996132925686b43f9c3c79bc747.1655355422.git.geliang.tang@suse.com/
 > 
-> There is definite possibility of slowdown on v1 but let's first
-> confirm the memcg setup used for this testing environment.
 > 
-> Feng, can you please explain the memcg setup on these test machines
-> and if the tests are run in root or non-root memcg?
+> If that patch goes to -net, it would also require waiting until the next 
+> net/net-next sync before sending the selftest patches listed above.
 
-I don't know the exact setup, Philip/Oliver from 0Day can correct me.
+I would vote for keeping the process simple and keeping all the above
+patches on net-next.
 
-I logged into a test box which runs netperf test, and it seems to be
-cgoup v1 and non-root memcg. The netperf tasks all sit in dir:
-'/sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service'
+If we choose otherwise, I think we should also update a bit the
+("mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy") commit message to
+something more tuned for -net. Alike: "The user-space patch manager
+currently miss the required update of the subflow destruction MIB,
+address the issue "...
 
-And the rootfs is a debian based rootfs
+/P
 
-Thanks,
-Feng
-
-
-> thanks,
-> Shakeel
