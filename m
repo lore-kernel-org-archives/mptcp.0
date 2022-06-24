@@ -1,120 +1,74 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE4129AA
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 15:04:21 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id r81-20020a1c4454000000b003a0297a61ddso2016989wma.2
-        for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 08:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=2/7nvv148zKSk394HCCgycs1RtYWchcVhr9gcH88FVE=;
-        b=i1gbBjvclNPqWZ9LqmB05MD7GYQJUflrB+sweUfk7hkBNeJqt109fQ/rimnej5gqSO
-         6sJcPzFaIXBZigaKOa13PGmtgsGBv0gpY2m1AyZJJ7vKx2tiQ67NZUoaUzKYpEbjETYh
-         acFvTPsBMazSFfI4K43X/D/mNdpbl4jBaYxOIOkcfYaLnhOA7WL55BJQEzM/oJr8eIeY
-         99AovHMttuLC2YwYRXjIyGdx5aefJ3o1E/C8JBQmqXQiQERz90S2jQs/Ahp3Qps/Rg0b
-         ipOA0j3N9GRvDei4LiJESRXlPJtgNJtjq9SfQsknYfDG3iNGsr5WsaoAP7W6vRvubcFD
-         CSUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=2/7nvv148zKSk394HCCgycs1RtYWchcVhr9gcH88FVE=;
-        b=POSjwZSIl375hcAUa09gfPcC+79yeaZQfq9nhd3cIlt7JqHeJ34q2Uq8WM8w7AAx2h
-         Fpt+O4BIN20i7GC2rbDns4VZAnvuAJFnl9ktuHk93qOMhprb+RmBf4Zh3W/OZUiFdRS3
-         OJmFFaI6CXDWJpX1DypDfOIpoeIwrSgmH16xOVNAv+JFw4d0AHzGMr9rwDmezZ9K2C0u
-         TtfeoSj4nOoOYe441KGHlvoCDSL5CfZ1Amk1aBjFGVtfnSq8la5aMT8qwFXCa8dUSdI0
-         C0Gt93DsCJf+zs7zVjoTrGn4XS8rAAh5OGhIEpq66l3K//v3oFqmTtUEEwjaj2Gqclkq
-         5mQA==
-X-Gm-Message-State: AJIora9I1KK4Lta+5SWRsia7IV7pNBKdxPNvLdAIo5B1xylqBFFMbz1O
-	q0v/ZHpVp/65JFkdiPtrp7PYuIv7qr4c/w==
-X-Google-Smtp-Source: AGRyM1u1Is9zm8XSXCUtPScCdo3+aBAk0HubWPClOsfkum3E2BpvXpyghvOc39pfJPHhYtz+kofS3w==
-X-Received: by 2002:a05:600c:1990:b0:39c:81f0:a882 with SMTP id t16-20020a05600c199000b0039c81f0a882mr4454297wmq.72.1656083060114;
-        Fri, 24 Jun 2022 08:04:20 -0700 (PDT)
-Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id q4-20020adff944000000b0021b956da1dcsm2497163wrr.113.2022.06.24.08.04.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jun 2022 08:04:19 -0700 (PDT)
-Message-ID: <c2dbb9d3-47a2-aebf-e133-15d6d3c12d0d@tessares.net>
-Date: Fri, 24 Jun 2022 17:04:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2B7C
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656088697;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=atSN2hIl0bUyQ1HuCimzZtiBGkyoPeBgko1bbeblR1Q=;
+	b=KBCv7Y12F8+35z2GsweOq4fL/KgCRJXT7nMeBDU3gfh0rWPJs2MK4T0IkbkeQnwwItIWiF
+	IGrLrJkA0c3b6CmRGL+V6udXLqrv9rMa6tBGrFkuzYZcTry7iBBYM6+hiQX8FeXI/m46SY
+	2b/OnSW1BqBxU+UVaPlZKEp25tT5jmM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-438-REJq7XGtPKWc84UPmWXSNg-1; Fri, 24 Jun 2022 12:38:16 -0400
+X-MC-Unique: REJq7XGtPKWc84UPmWXSNg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC22A811E7A
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:15 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.243])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5C4982026D64
+	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 16:38:15 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH RFC 0/4] mptcp: let the in kernel PM control the MPC
+Date: Fri, 24 Jun 2022 18:38:06 +0200
+Message-Id: <cover.1656088406.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: Should the MIB_RMSUBFLOW commit go to -net?
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <ad151d35-f094-675d-5ced-71df98ea5857@linux.intel.com>
- <437af8add242099c84cf106108ab4988a65010ff.camel@redhat.com>
-Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <437af8add242099c84cf106108ab4988a65010ff.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Mat, Paolo,
+this is follow-up to the last public mtg and:
 
-On 24/06/2022 10:40, Paolo Abeni wrote:
-> On Thu, 2022-06-23 at 16:19 -0700, Mat Martineau wrote:
->> I was preparing the patches we had agreed to be ready for net-next in the 
->> meeting today:
->>
->>          - [f1eb3f2cb4d2] mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy (Geliang Tang)
->>          - [f3c5dde10031] selftests: mptcp: userspace pm address tests (Geliang Tang)
->>          - [92378ff55152] selftests: mptcp: userspace pm subflow tests (Geliang Tang)
->>          - [1908a4ccaa2c] selftests: mptcp: avoid Terminated messages in userspace_pm (Geliang Tang)
->>          - [bac5548c7c47] selftests: mptcp: update pm_nl_ctl usage header (Geliang Tang)
->>
->> I think the selftest commits are definitely best for net-next. But for the 
->> first one ("mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy"), should we add
->>
->> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
->>
->> and include that in a patch set for -net? Seems like it would be good to 
->> improve the MIB accuracy with the userspace PM in 5.19.
->>
->> Link to commit in patchwork: 
->> https://patchwork.kernel.org/project/mptcp/patch/723d61d82730b996132925686b43f9c3c79bc747.1655355422.git.geliang.tang@suse.com/
->>
->>
->> If that patch goes to -net, it would also require waiting until the next 
->> net/net-next sync before sending the selftest patches listed above.
-> 
-> I would vote for keeping the process simple and keeping all the above
-> patches on net-next.
-> 
-> If we choose otherwise, I think we should also update a bit the
-> ("mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy") commit message to
-> something more tuned for -net. Alike: "The user-space patch manager
-> currently miss the required update of the subflow destruction MIB,
-> address the issue "...
+https://github.com/multipath-tcp/mptcp_net-next/issues/285
 
-I think all commits fixing something should have the "Fixes" tag and
-target "-net". That's not a must of course depending on the complexity
-and what the fix implies. This should simplify stable versions
-maintenance somehow if we know all fixes are explicitly linked to a
-feature: the stable team can do the backport if they think it makes
-sense to do that. We can also avoid messages like: ah yes, in v5.19,
-don't look at this MIB counter, it is not correct but that's fixed later
-in vX.Y.
+implementing the idea described in the last comment from the above isse
+It's just a proof of concept, only compile tested, to better describe
+the idea.
 
-But I understand the issue with the sync of -net and net-next.
-Could it help to send the conflicting patch in both -net and net-next?
-'git merge' might understand the same modification has been done on both
-side.
+While implementing the above I found a fews bugs fixed in patch
+1/4, 2/4 and 4/4.
 
-Or explain in the commit message/cover letter there is a conflict with
--net and the fix is not urgent?
+If there is agreement on this kind of changes, next week I plan to cook
+a formal submission, including a few additional self-tests.
 
-Cheers,
-Matt
+Paolo Abeni (4):
+  mptcp: fix local endpoint acconting.
+  mptcp: introduce and use mptcp_pm_send_ack()
+  mptcp: allow the in kernel PM to set MPC subflow priority
+  mptcp: more accurate MPC endpoint tracking
+
+ net/mptcp/pm_netlink.c | 103 ++++++++++++++++++++++-------------------
+ net/mptcp/protocol.c   |  11 +++--
+ net/mptcp/protocol.h   |   3 +-
+ 3 files changed, 65 insertions(+), 52 deletions(-)
+
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.35.3
+
