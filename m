@@ -1,79 +1,201 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA0B46AA
-	for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 20:58:56 +0000 (UTC)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-101ec2d6087so5385230fac.3
-        for <mptcp@lists.linux.dev>; Fri, 24 Jun 2022 13:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=YiukLnuCcsFeDvKRKfWEB6o/9sIaVYaIpOvE+VSbHxc=;
-        b=TVqe3b17RnEe+nXzzqKAPFhHKXxjI/SUfU/yvup4EsBX2tWLl/6AXAtTrQUfk4qXW9
-         wRPu6VargYpthmu5tDezcBQSoimPHfdUaI06dwGrs9UG7kQCldaafeJLneFWivfUoRTi
-         jdsm7stmKN7OAHdU0JhoErVX2W5e5+SNq3E+tkI947iWVqbuofbnhwts7fh0zyz3bxia
-         XFLnaSmi52rtrO+BJWHDPeAo9SAkVcAUjNEdoYzHMGDca3sRb+8wiK6pJqKdK2CQUJjA
-         inEkNxkQz3UeI+Gex8VOVo8wLUrbI6nsaQvkGqlFFWb4q9WPbzMH0fE/eQyykYLR8yB9
-         C1gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=YiukLnuCcsFeDvKRKfWEB6o/9sIaVYaIpOvE+VSbHxc=;
-        b=Qq1gAez49Q/S48qtDclcfhnWbyHCEfJzTqmPfx+OHlAZb0stUkv/MpY1rW9ZEfzV9o
-         b0zrBr2KMubAB/rR0lecSUWEOctw7loC/yiB+NMqRVrgPSTmZ83QXYOG/EoUkfKWwrjb
-         flqerQgmRDgKjdD6UzgwFRollbHQtrDd2Y/JpYDNnJ0EcMBRSGvhc2wEK1oxS53+L8iS
-         kN4A9JelLSplo4ECEmLaLyMg9O9pxuWshcivc2PWBV9+uxjc5GkNtg21Ca8wNeK3sHKF
-         ZMV4WyWoZ/tQy57wG8RGWL7T6UJLkv7tjbgVmF5cRKxbwuhM/zyGNtxZtOJqycY2kBKQ
-         Kldg==
-X-Gm-Message-State: AJIora8/hNx07FhPe/VypqAy1xgQOhtG5qqWAw0GBaFbs5IDVM4NmkZg
-	X5xwiERQt77VrsietneVU16wZn9B0F5bF7zRuQNNEF6IC+0=
-X-Google-Smtp-Source: AGRyM1sz6/CU0mhSJ061nuk10CKT9VtLVHwyzU/xm4MOAS383MW2K160CrvBou+xTqoBPz9kXhVGwJ6UqNw5892+HUU=
-X-Received: by 2002:a05:6870:c092:b0:f1:efd3:ef9e with SMTP id
- c18-20020a056870c09200b000f1efd3ef9emr3284979oad.92.1656104335024; Fri, 24
- Jun 2022 13:58:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD2615A7
+	for <mptcp@lists.linux.dev>; Sat, 25 Jun 2022 02:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656124608; x=1687660608;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7UU7ei0p3fZSOJ/8dN+UbHzSxDz0FQ0Q5dZSwXjI5YY=;
+  b=h4QX/lFCjbmfVvHv9c60keUaIn9os16egLGzDslkBHVSGO0tpSn0swg2
+   aVffJIaqIU6uXXX1AF78ZW3pRUOjmQN6g5bfOt6gRDB3a0uWX8JMt/Mb5
+   Mma9bGDeXv4tOlZ+iaLvH3fUmsNrHmSK9GMtNma8te4865A/T4WIx9jtB
+   JC1UOnlOqsfXdJ6XH2WCSks71wjcuJq++vha26U+vWozWlCXBsv3/EU5P
+   O5UyYmqNznummdLxgPFNVmjcYbBqbKEHFtYrRRzsnD6uWBLsACWgHxXMr
+   FNF6jGWslUOnl9Pzahcz+2j08ObFcbN32GnepA1YIb/9JmdDxcQadZAXj
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10388"; a="282226291"
+X-IronPort-AV: E=Sophos;i="5.92,221,1650956400"; 
+   d="scan'208";a="282226291"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2022 19:36:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,221,1650956400"; 
+   d="scan'208";a="678785905"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Jun 2022 19:36:42 -0700
+Date: Sat, 25 Jun 2022 10:36:42 +0800
+From: Feng Tang <feng.tang@intel.com>
+To: Shakeel Butt <shakeelb@google.com>, Eric Dumazet <edumazet@google.com>
+Cc: Eric Dumazet <edumazet@google.com>, Linux MM <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Michal Hocko <mhocko@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Muchun Song <songmuchun@bytedance.com>,
+	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Soheil Hassas Yeganeh <soheil@google.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
+	MPTCP Upstream <mptcp@lists.linux.dev>,
+	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
+	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
+Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
+Message-ID: <20220625023642.GA40868@shbuild999.sh.intel.com>
+References: <20220619150456.GB34471@xsang-OptiPlex-9020>
+ <20220622172857.37db0d29@kernel.org>
+ <CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
+ <CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
+ <20220623185730.25b88096@kernel.org>
+ <CANn89iLidqjiiV8vxr7KnUg0JvfoS9+TRGg=8ANZ8NBRjeQxsQ@mail.gmail.com>
+ <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
+ <20220624070656.GE79500@shbuild999.sh.intel.com>
+ <20220624144358.lqt2ffjdry6p5u4d@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Ossama Othman <ossama.othman@gmail.com>
-Date: Fri, 24 Jun 2022 13:58:44 -0700
-Message-ID: <CAE+88WNQ4J5iBNZMOnLkh+iUgXSQOaHL5ZcU30T4fC0ovh9zrA@mail.gmail.com>
-Subject: mptcpd 0.10 released
-To: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220624144358.lqt2ffjdry6p5u4d@google.com>
 
-Mptcpd 0.10 is now available at:
+On Fri, Jun 24, 2022 at 02:43:58PM +0000, Shakeel Butt wrote:
+> On Fri, Jun 24, 2022 at 03:06:56PM +0800, Feng Tang wrote:
+> > On Thu, Jun 23, 2022 at 11:34:15PM -0700, Shakeel Butt wrote:
+> [...]
+> > > 
+> > > Feng, can you please explain the memcg setup on these test machines
+> > > and if the tests are run in root or non-root memcg?
+> > 
+> > I don't know the exact setup, Philip/Oliver from 0Day can correct me.
+> > 
+> > I logged into a test box which runs netperf test, and it seems to be
+> > cgoup v1 and non-root memcg. The netperf tasks all sit in dir:
+> > '/sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service'
+> > 
+> 
+> Thanks Feng. Can you check the value of memory.kmem.tcp.max_usage_in_bytes
+> in /sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service after making
+> sure that the netperf test has already run?
 
-    https://github.com/intel/mptcpd/releases/tag/v0.10
+memory.kmem.tcp.max_usage_in_bytes:0
 
-Notable changes include the following:
+And here is more memcg stats (let me know if you want to check more)
 
-- Inconsistent byte order handling in mptcpd was corrected.  IP ports
-  sent in path management commands and events now have the correct
-  byte order.  Furthermore, the mptcpd unit test suite no longer
-  assumes that the tests will be run on a little endian host.  IPv4
-  addresses and IP ports used in the mptcpd unit test suite are now
-  byte swapped as needed according to the endianness of the platform.
-  As always, IPv4 addresses and IP ports passed through pointers to
-  struct sockaddr should be in network byte order by convention.
+/sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service# grep . memory.*
+memory.failcnt:0
+memory.kmem.failcnt:0
+memory.kmem.limit_in_bytes:9223372036854771712
+memory.kmem.max_usage_in_bytes:47861760
+memory.kmem.tcp.failcnt:0
+memory.kmem.tcp.limit_in_bytes:9223372036854771712
+memory.kmem.tcp.max_usage_in_bytes:0
+memory.kmem.tcp.usage_in_bytes:0
+memory.kmem.usage_in_bytes:40730624
+memory.limit_in_bytes:9223372036854771712
+memory.max_usage_in_bytes:642424832
+memory.memsw.failcnt:0
+memory.memsw.limit_in_bytes:9223372036854771712
+memory.memsw.max_usage_in_bytes:642424832
+memory.memsw.usage_in_bytes:639549440
+memory.move_charge_at_immigrate:0
+memory.numa_stat:total=144073 N0=124819 N1=19254
+memory.numa_stat:file=0 N0=0 N1=0
+memory.numa_stat:anon=77721 N0=58502 N1=19219
+memory.numa_stat:unevictable=66352 N0=66317 N1=35
+memory.numa_stat:hierarchical_total=144073 N0=124819 N1=19254
+memory.numa_stat:hierarchical_file=0 N0=0 N1=0
+memory.numa_stat:hierarchical_anon=77721 N0=58502 N1=19219
+memory.numa_stat:hierarchical_unevictable=66352 N0=66317 N1=35
+memory.oom_control:oom_kill_disable 0
+memory.oom_control:under_oom 0
+memory.oom_control:oom_kill 0
+grep: memory.pressure_level: Invalid argument
+memory.soft_limit_in_bytes:9223372036854771712
+memory.stat:cache 282562560
+memory.stat:rss 307884032
+memory.stat:rss_huge 239075328
+memory.stat:shmem 10784768
+memory.stat:mapped_file 3444736
+memory.stat:dirty 0
+memory.stat:writeback 0
+memory.stat:swap 0
+memory.stat:pgpgin 1018918
+memory.stat:pgpgout 932902
+memory.stat:pgfault 2130513
+memory.stat:pgmajfault 0
+memory.stat:inactive_anon 310272000
+memory.stat:active_anon 8073216
+memory.stat:inactive_file 0
+memory.stat:active_file 0
+memory.stat:unevictable 271777792
+memory.stat:hierarchical_memory_limit 9223372036854771712
+memory.stat:hierarchical_memsw_limit 9223372036854771712
+memory.stat:total_cache 282562560
+memory.stat:total_rss 307884032
+memory.stat:total_rss_huge 239075328
+memory.stat:total_shmem 10784768
+memory.stat:total_mapped_file 3444736
+memory.stat:total_dirty 0
+memory.stat:total_writeback 0
+memory.stat:total_swap 0
+memory.stat:total_pgpgin 1018918
+memory.stat:total_pgpgout 932902
+memory.stat:total_pgfault 2130513
+memory.stat:total_pgmajfault 0
+memory.stat:total_inactive_anon 310272000
+memory.stat:total_active_anon 8073216
+memory.stat:total_inactive_file 0
+memory.stat:total_active_file 0
+memory.stat:total_unevictable 271777792
+memory.swappiness:60
+memory.usage_in_bytes:639549440
+memory.use_hierarchy:1
 
-- A potential memory violation caused when attempting to register NULL
-  networking monitoring operations with mptcpd was fixed.
+> If this is non-zero then network memory accounting is enabled and the
+> slowdown is expected.
 
-- Mptcpd now supports gcc 12.  Link-time errors found in gcc 12 mptcpd
-  builds were fixed.
+From the perf-profile data in original report, both
+__sk_mem_raise_allocated() and __sk_mem_reduce_allocated() are called
+much more often, which call memcg charge/uncharge functions.
 
-- ELL 0.45 or greater is supported.
+IIUC, the call chain is:
 
-- Code coverage was further expanded.
+__sk_mem_raise_allocated
+    sk_memory_allocated_add
+    mem_cgroup_charge_skmem
+        charge memcg->tcpmem (for cgroup v2)
+	try_charge memcg (for v1)
 
-- The mptcpd network monitor supports loopback interface monitoring if
-  so desired.
+Also from Eric's one earlier commit log:
 
-- Improved support for reproducible builds by disabling HTML
-  timestamps in Doxygen generated mptcpd documentation.
+"
+net: implement per-cpu reserves for memory_allocated
+...
+This means we are going to call sk_memory_allocated_add()
+and sk_memory_allocated_sub() more often.
+...
+"
 
-- Some mptcpd unit tests will be skipped rather than allowed to fail
-  on hosts running a kernel without MPTCP support.
+So this slowdown is related to the more calling of charge/uncharge? 
+
+Thanks,
+Feng
+
+> > And the rootfs is a debian based rootfs
+> > 
+> > Thanks,
+> > Feng
+> > 
+> > 
+> > > thanks,
+> > > Shakeel
