@@ -1,83 +1,144 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CF22C9E
-	for <mptcp@lists.linux.dev>; Mon, 27 Jun 2022 12:27:10 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id o4so8873886wrh.3
-        for <mptcp@lists.linux.dev>; Mon, 27 Jun 2022 05:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=wbsk5o6KgdL4SnufubuiVYM7EL+gtXq5PDT+l+PqB58=;
-        b=G39QUtITWY0/DbOcOb//w+M4CHOPXvYEoF0ubU5juOPNHcEYSrbvs643OgfKroXIDK
-         HCnkbocFpkO8zOxae0uYMUwDCj8D8+g1OP5T04xB2IOh8VzD4Kq43QVYZduOEWxxN3n2
-         TXvgzj0sEK993zoM4sITfkxNnS4p0fDaE/Or310c/w8ffN8kd0jI/k6mByuoK5jorTYh
-         MXJxNy/srJ7sIfNNF2DN+XQmh/VGhAyTT+gdbvkIJbgGVGPnLN3p4hqfc0GcZuziZcYO
-         zjntYDlGC9aTnlmUUrOEw7yZz7SHrfAsJcfhxAtYalKS4GetimgBD5h6UWA24P8f5RpN
-         OI5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=wbsk5o6KgdL4SnufubuiVYM7EL+gtXq5PDT+l+PqB58=;
-        b=KogZR8SyvNwryEqFvPvPkHhjFNmU89jpO8UQrngECS2sc7jvA35oGx6wjyx/NX0kop
-         cpB5IGw2PJmB/+SJ94Ou5mgzncVwFIJQqPLeVlmE2/mrIp4ioOXSHvn4AcL0pTS2uw6A
-         +O0TS2aHNMvsaPIT9lESpvpZBwdXvqiiAvcIbvhtwdkEznj9k2ZCRml9liyVh1gMLXul
-         rvZ0HFpsWUaUBF43Czr2+7UScSG/DpJPaEC7W7YCW0SLQ1ZRY63RHQq0ljlGtUzK5QyD
-         oqMNcdPIFGYoydfOs5awazP7ht8YOz9JRX57Ft0QEwD0NfgnwsiTas6Gx33rREVy65WK
-         KSkg==
-X-Gm-Message-State: AJIora8w08hHDu63acLxYZw6TP1J0Jt5IBimPkQZBjuW+CO3zWMZDyBl
-	oS4z66b9kE1ISCkvtyk+PuO3Yg==
-X-Google-Smtp-Source: AGRyM1s10QCPtzo9j4RkTgku5PKsw19klOZT3gv3QSpsPaPKYe0nS6sDZVGtf8it5iJlLaSmpS/klg==
-X-Received: by 2002:a5d:6da8:0:b0:218:510a:be9f with SMTP id u8-20020a5d6da8000000b00218510abe9fmr12054141wrs.352.1656332828373;
-        Mon, 27 Jun 2022 05:27:08 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id d10-20020adff2ca000000b0021a38089e99sm10360546wrp.57.2022.06.27.05.27.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jun 2022 05:27:07 -0700 (PDT)
-Message-ID: <c1fb40e6-7bab-20a3-febe-3af3b84fc2cd@tessares.net>
-Date: Mon, 27 Jun 2022 14:27:06 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C350A320B
+	for <mptcp@lists.linux.dev>; Mon, 27 Jun 2022 12:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656333261; x=1687869261;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3cZhrIXL/31n4yULxyK6MSoWTderF7rYg/64LrImcrE=;
+  b=l8Ek+mVAIYB77pTxT3xHwJOrlKPN4ZrqO6g4PMZfW3yWZ5dhKW5aRNrY
+   AuhGC9X5i6JisqKxIoQ0kQc1CvRomRcPKcXgpNFdODLhM4x/t5KFa4+Lj
+   FY2ne7/Fbikw+Jwxuxy1H2NrO96+0BxVvPKwEo9oaDo0b0jzoiGMey4s6
+   zkouTkaHzUMtQB+/b0Kn72CxPzHEmTbkmFqIqq6sNtPdceuoin1DUqPWv
+   TQpOx9K40n0LvlTp5/Nx31mfU0i7SD37c4I34adDkn1I/qhJPa+oTjfhX
+   afsyuaEFkl0fEW/+og9+h9I7aHp5h9FiWeOevMVIVQ6H2nZFN0Cjsdn1u
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10390"; a="345437578"
+X-IronPort-AV: E=Sophos;i="5.92,226,1650956400"; 
+   d="scan'208";a="345437578"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 05:34:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,226,1650956400"; 
+   d="scan'208";a="679565746"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Jun 2022 05:34:16 -0700
+Date: Mon, 27 Jun 2022 20:34:15 +0800
+From: Feng Tang <feng.tang@intel.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Shakeel Butt <shakeelb@google.com>, Linux MM <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Michal Hocko <mhocko@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Muchun Song <songmuchun@bytedance.com>,
+	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Soheil Hassas Yeganeh <soheil@google.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
+	MPTCP Upstream <mptcp@lists.linux.dev>,
+	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
+	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
+Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
+Message-ID: <20220627123415.GA32052@shbuild999.sh.intel.com>
+References: <CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
+ <CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
+ <20220623185730.25b88096@kernel.org>
+ <CANn89iLidqjiiV8vxr7KnUg0JvfoS9+TRGg=8ANZ8NBRjeQxsQ@mail.gmail.com>
+ <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
+ <20220624070656.GE79500@shbuild999.sh.intel.com>
+ <20220624144358.lqt2ffjdry6p5u4d@google.com>
+ <20220625023642.GA40868@shbuild999.sh.intel.com>
+ <20220627023812.GA29314@shbuild999.sh.intel.com>
+ <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH net-next] net: mptcp: fix some spelling mistake in mptcp
-Content-Language: en-GB
-To: menglong8.dong@gmail.com, kuba@kernel.org
-Cc: mathew.j.martineau@linux.intel.com, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- Menglong Dong <imagedong@tencent.com>
-References: <20220627121626.1595732-1-imagedong@tencent.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220627121626.1595732-1-imagedong@tencent.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
 
-Hi Menglong Dong,
-
-On 27/06/2022 14:16, menglong8.dong@gmail.com wrote:
-> From: Menglong Dong <imagedong@tencent.com>
+On Mon, Jun 27, 2022 at 10:46:21AM +0200, Eric Dumazet wrote:
+> On Mon, Jun 27, 2022 at 4:38 AM Feng Tang <feng.tang@intel.com> wrote:
+[snip]
+> > > >
+> > > > Thanks Feng. Can you check the value of memory.kmem.tcp.max_usage_in_bytes
+> > > > in /sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service after making
+> > > > sure that the netperf test has already run?
+> > >
+> > > memory.kmem.tcp.max_usage_in_bytes:0
+> >
+> > Sorry, I made a mistake that in the original report from Oliver, it
+> > was 'cgroup v2' with a 'debian-11.1' rootfs.
+> >
+> > When you asked about cgroup info, I tried the job on another tbox, and
+> > the original 'job.yaml' didn't work, so I kept the 'netperf' test
+> > parameters and started a new job which somehow run with a 'debian-10.4'
+> > rootfs and acutally run with cgroup v1.
+> >
+> > And as you mentioned cgroup version does make a big difference, that
+> > with v1, the regression is reduced to 1% ~ 5% on different generations
+> > of test platforms. Eric mentioned they also got regression report,
+> > but much smaller one, maybe it's due to the cgroup version?
 > 
-> codespell finds some spelling mistake in mptcp:
+> This was using the current net-next tree.
+> Used recipe was something like:
 > 
-> net/mptcp/subflow.c:1624: interaces ==> interfaces
-> net/mptcp/pm_netlink.c:1130: regarless ==> regardless
+> Make sure cgroup2 is mounted or mount it by mount -t cgroup2 none $MOUNT_POINT.
+> Enable memory controller by echo +memory > $MOUNT_POINT/cgroup.subtree_control.
+> Create a cgroup by mkdir $MOUNT_POINT/job.
+> Jump into that cgroup by echo $$ > $MOUNT_POINT/job/cgroup.procs.
 > 
-> Just fix them.
+> <Launch tests>
+> 
+> The regression was smaller than 1%, so considered noise compared to
+> the benefits of the bug fix.
+ 
+Yes, 1% is just around noise level for a microbenchmark.
 
-Thank you for this fix.
+I went check the original test data of Oliver's report, the tests was
+run 6 rounds and the performance data is pretty stable (0Day's report
+will show any std deviation bigger than 2%)
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+The test platform is a 4 sockets 72C/144T machine, and I run the
+same job (nr_tasks = 25% * nr_cpus) on one CascadeLake AP (4 nodes)
+and one Icelake 2 sockets platform, and saw 75% and 53% regresson on
+them.
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+In the first email, there is a file named 'reproduce', it shows the
+basic test process:
+
+"
+  use 'performane' cpufre  governor for all CPUs
+
+  netserver -4 -D
+  modprobe sctp
+  netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
+  netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
+  netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
+  (repeat 36 times in total) 
+  ...
+
+"
+
+Which starts 36 (25% of nr_cpus) netperf clients. And the clients number
+also matters, I tried to increase the client number from 36 to 72(50%),
+and the regression is changed from 69.4% to 73.7%
+
+Thanks,
+Feng
+
+> >
+> > Thanks,
+> > Feng
