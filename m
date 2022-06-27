@@ -1,144 +1,111 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C350A320B
-	for <mptcp@lists.linux.dev>; Mon, 27 Jun 2022 12:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656333261; x=1687869261;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3cZhrIXL/31n4yULxyK6MSoWTderF7rYg/64LrImcrE=;
-  b=l8Ek+mVAIYB77pTxT3xHwJOrlKPN4ZrqO6g4PMZfW3yWZ5dhKW5aRNrY
-   AuhGC9X5i6JisqKxIoQ0kQc1CvRomRcPKcXgpNFdODLhM4x/t5KFa4+Lj
-   FY2ne7/Fbikw+Jwxuxy1H2NrO96+0BxVvPKwEo9oaDo0b0jzoiGMey4s6
-   zkouTkaHzUMtQB+/b0Kn72CxPzHEmTbkmFqIqq6sNtPdceuoin1DUqPWv
-   TQpOx9K40n0LvlTp5/Nx31mfU0i7SD37c4I34adDkn1I/qhJPa+oTjfhX
-   afsyuaEFkl0fEW/+og9+h9I7aHp5h9FiWeOevMVIVQ6H2nZFN0Cjsdn1u
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10390"; a="345437578"
-X-IronPort-AV: E=Sophos;i="5.92,226,1650956400"; 
-   d="scan'208";a="345437578"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 05:34:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,226,1650956400"; 
-   d="scan'208";a="679565746"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Jun 2022 05:34:16 -0700
-Date: Mon, 27 Jun 2022 20:34:15 +0800
-From: Feng Tang <feng.tang@intel.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Shakeel Butt <shakeelb@google.com>, Linux MM <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Michal Hocko <mhocko@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	Soheil Hassas Yeganeh <soheil@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
-	MPTCP Upstream <mptcp@lists.linux.dev>,
-	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
-	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
-	Huang Ying <ying.huang@intel.com>,
-	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
-Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-Message-ID: <20220627123415.GA32052@shbuild999.sh.intel.com>
-References: <CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
- <CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
- <20220623185730.25b88096@kernel.org>
- <CANn89iLidqjiiV8vxr7KnUg0JvfoS9+TRGg=8ANZ8NBRjeQxsQ@mail.gmail.com>
- <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
- <20220624070656.GE79500@shbuild999.sh.intel.com>
- <20220624144358.lqt2ffjdry6p5u4d@google.com>
- <20220625023642.GA40868@shbuild999.sh.intel.com>
- <20220627023812.GA29314@shbuild999.sh.intel.com>
- <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E092CA2
+	for <mptcp@lists.linux.dev>; Mon, 27 Jun 2022 13:49:05 +0000 (UTC)
+Received: by mail-oi1-f178.google.com with SMTP id y77so12921135oia.3
+        for <mptcp@lists.linux.dev>; Mon, 27 Jun 2022 06:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=gKXJnBusY4TjTPlltRR8l+S2yk4Hu7c+4LhWP7gXlWQ=;
+        b=VtHgFOsasbCNxWO3urdL42dAM+VWp1c6haQJU44rPY7xjq3PfvsJxfyJ3SAiTFQcEY
+         MgIaxN6w4oRpPfaH7TvJA5LPuo9w11jFNp5kzFuGP1kDdDU0gZ3T9Ob1FskBtP7JcOxg
+         J1gLqHU+lDwmjo8ZVmlc4vkGHWSKcvd4OQ3Tj89cGjOBEBsktBE24aAZdzg9WXYltFUg
+         +xnz6VqvadjmK6oJ/d1h+4eaacp+lIyAMhVqKNk5iKpQmAXZDuj5tKNfOIElQt2RfOhY
+         EFG+hNAZZ8XaTeEsib5bGtNAdati1W++NZl8p0Pl+2N3e14BQczv8s7QDvqnDbPTUDb/
+         TXNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=gKXJnBusY4TjTPlltRR8l+S2yk4Hu7c+4LhWP7gXlWQ=;
+        b=XhJgE1xU8Z/ZXzRij9GmvGMZHtWfXzVFQTldcLEzsM6Vw9Kkpl5M1/fIH5txQ6wxb5
+         2W5JrT9z1yD4NDEvxO1fq5DDtsWWuS3aCvZYDvC/+24bOYwFriTZh2mABUY+gwpmxsGs
+         Q0WhY94zVykaC2H1C+68kOL3dbekeVJPmEt53iame1gDQinvPxNlRfI23aCpOEvAf84P
+         HZ93CZkTSXPDZfoWpDYNXPbaf9vGFzPRcD5HRtF4LxaJbsdEGBaUbn5JsGth2VTfeEFB
+         T38BQ9BaZIqy9gg4Ll9a8P3ZsxZlmwBcMR9NnzPCx/ZVrN3aPjt/qTPXARmwWs1lk/vT
+         uCgw==
+X-Gm-Message-State: AJIora8piZdhPmAVjssc6wV59CQ/kx2gL1ad438yZa8M+7VraLry/OAs
+	wGnN+EkpawsVPjwOIf5aqw==
+X-Google-Smtp-Source: AGRyM1vohD3icWn/6WTYbgyMU6CumO5mDqL3aVWDxFstYayHZgZoFLdCTduzUFHJV5kktmecVCxNMg==
+X-Received: by 2002:a05:6808:1153:b0:32e:b45d:bd74 with SMTP id u19-20020a056808115300b0032eb45dbd74mr8072875oiu.259.1656337744624;
+        Mon, 27 Jun 2022 06:49:04 -0700 (PDT)
+Received: from [127.0.0.1] ([20.97.5.28])
+        by smtp.gmail.com with ESMTPSA id x27-20020a9d459b000000b0060c0c6e9186sm1471442ote.15.2022.06.27.06.49.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 06:49:04 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Menglong Dong <imagedong@tencent.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220627121626.1595732-1-imagedong@tencent.com>
+References: <20220627121626.1595732-1-imagedong@tencent.com>
+Subject: Re: net: mptcp: fix some spelling mistake in mptcp: Tests Results
+Message-ID: <bf9ef7dd-84bd-733b-11a6-abc923712dcc@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 27 Jun 2022 13:49:03 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
 
-On Mon, Jun 27, 2022 at 10:46:21AM +0200, Eric Dumazet wrote:
-> On Mon, Jun 27, 2022 at 4:38 AM Feng Tang <feng.tang@intel.com> wrote:
-[snip]
-> > > >
-> > > > Thanks Feng. Can you check the value of memory.kmem.tcp.max_usage_in_bytes
-> > > > in /sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service after making
-> > > > sure that the netperf test has already run?
-> > >
-> > > memory.kmem.tcp.max_usage_in_bytes:0
-> >
-> > Sorry, I made a mistake that in the original report from Oliver, it
-> > was 'cgroup v2' with a 'debian-11.1' rootfs.
-> >
-> > When you asked about cgroup info, I tried the job on another tbox, and
-> > the original 'job.yaml' didn't work, so I kept the 'netperf' test
-> > parameters and started a new job which somehow run with a 'debian-10.4'
-> > rootfs and acutally run with cgroup v1.
-> >
-> > And as you mentioned cgroup version does make a big difference, that
-> > with v1, the regression is reduced to 1% ~ 5% on different generations
-> > of test platforms. Eric mentioned they also got regression report,
-> > but much smaller one, maybe it's due to the cgroup version?
-> 
-> This was using the current net-next tree.
-> Used recipe was something like:
-> 
-> Make sure cgroup2 is mounted or mount it by mount -t cgroup2 none $MOUNT_POINT.
-> Enable memory controller by echo +memory > $MOUNT_POINT/cgroup.subtree_control.
-> Create a cgroup by mkdir $MOUNT_POINT/job.
-> Jump into that cgroup by echo $$ > $MOUNT_POINT/job/cgroup.procs.
-> 
-> <Launch tests>
-> 
-> The regression was smaller than 1%, so considered noise compared to
-> the benefits of the bug fix.
- 
-Yes, 1% is just around noise level for a microbenchmark.
+Hi Menglong,
 
-I went check the original test data of Oliver's report, the tests was
-run 6 rounds and the performance data is pretty stable (0Day's report
-will show any std deviation bigger than 2%)
+Thank you for your modifications, that's great!
 
-The test platform is a 4 sockets 72C/144T machine, and I run the
-same job (nr_tasks = 25% * nr_cpus) on one CascadeLake AP (4 nodes)
-and one Icelake 2 sockets platform, and saw 75% and 53% regresson on
-them.
+Our CI did some validations and here is its report:
 
-In the first email, there is a file named 'reproduce', it shows the
-basic test process:
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/4864806451675136
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4864806451675136/summary/summary.txt
 
-"
-  use 'performane' cpufre  governor for all CPUs
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5990706358517760
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5990706358517760/summary/summary.txt
 
-  netserver -4 -D
-  modprobe sctp
-  netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
-  netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
-  netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
-  (repeat 36 times in total) 
-  ...
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/b8c9415261d9
 
-"
 
-Which starts 36 (25% of nr_cpus) netperf clients. And the clients number
-also matters, I tried to increase the client number from 36 to 72(50%),
-and the regression is changed from 69.4% to 73.7%
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-Thanks,
-Feng
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-> >
-> > Thanks,
-> > Feng
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
