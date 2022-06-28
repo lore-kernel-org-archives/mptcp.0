@@ -1,39 +1,37 @@
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91F57A
-	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 19:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7298F7A
+	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 19:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656443053; x=1687979053;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9oafj8IEchmde+4lypiQotwbsnPAYCakx9LD9twZoQs=;
-  b=BfBUq1nzsPMO8/d92Leqdd+Zs23k+WNZyDPnjz1GPembMeaX6ce/ucWc
-   oA1CdDpxMN5wYKuFbJ9ULa9pnZqzE7HcPeRN1aaInkX/X3Pv3hzsO5nng
-   lLp/TDe4oMLMRAhKn6GEUAYKAVqU7++XsOoSP1mdjGX5rSEZUsdOdF4Z7
-   2l9sG3b8P/7eLJLwpzT3mQQmEu8jnruHjLQ8RrDLZakgq6ewYVq+PF7AI
-   TuO8xBUoZJ+rwoT+Pm4+jqFBB0f3BIn+XrSO8rr0iFK+XO6wNLH+eSBGr
-   rDsYFOY2LrVg3yCSL+ODG0AyWGLd8lSre254ZAGisKJuRAIh7xJtu1edv
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="343514649"
+  t=1656443057; x=1687979057;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gCf3bmm3Pk0fTzuvQ8ZdYjaSwW60ysiLB9qzJPMH10Q=;
+  b=hoYHZ4ijyNRlb1n4+HhiZ2q3n/Hvfs0Freec60X8cyyE7E0j7X5cz6lB
+   607v/A8sq5VZNfVa0+JGfYTkiKogK7qmg3q8k+jesoJnpOQ4PgJrAil6/
+   9mUOsALyXr4iExYrKKqfZdFW31/85mLDco/CAgvUZOS/ZbG0wDpBhAklI
+   Ov++9UZu8phui8BOOx2tKNJKeOCg9kUkY/g6jGJ6H661+8xgnN84rf78v
+   758AxTeWpvgkPUxUoHtKD5QcMTQV+r2PHqA2JawAxnL8/PgeE4vh9hYdV
+   lc9R5+g4WFW+f1rHxblRpkDVpUO8Bhcpp6Ij+GWOBr1p1QSQ7k0SvlVW6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="343514644"
 X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
-   d="scan'208";a="343514649"
+   d="scan'208";a="343514644"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 12:04:01 -0700
 X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
-   d="scan'208";a="917294954"
+   d="scan'208";a="917294946"
 Received: from gwbruss-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.112.228])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 12:04:01 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 12:04:00 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-net 3/3] mptcp: Acquire the subflow socket lock before modifying MP_PRIO flags
-Date: Tue, 28 Jun 2022 12:03:56 -0700
-Message-Id: <20220628190356.326233-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH mptcp-net 0/3] Locking fixes for subflow flag changes
+Date: Tue, 28 Jun 2022 12:03:53 -0700
+Message-Id: <20220628190356.326233-1-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220628190356.326233-1-mathew.j.martineau@linux.intel.com>
-References: <20220628190356.326233-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,47 +40,30 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When setting up a subflow's flags for sending MP_PRIO MPTCP options, the
-subflow socket lock was not held while reading and modifying several
-struct members that are also read and modified in mptcp_write_options().
+When working with Kishen on the userspace PM, the locking code in
+mptcp_pm_nl_mp_prio_send_ack() caught my attention. The
+release-and-reacquire of the PM lock in that function was requiring the
+userspace PM code to grab that lock, even though nothing protected by
+that lock was being accessed. Patch 1 addresses this.
 
-Acquire the subflow socket lock earlier and send the MP_PRIO ACK with
-that lock already acquired.
+While investigating that issue, I realized that
+mptcp_pm_nl_mp_prio_send_ack() was not holding the subflow socket lock
+while modifying several parts of the subflow context. Patch 3 addresses
+this, and is not a drastic change since the subflow lock was being
+acquired anyway in mptcp_subflow_send_ack(). Patch 2 is a prerequisite
+patch adding a __mptcp_subflow_send_ack() helper to use in patch 3 when
+the subflow is already locked.
 
-Fixes: 067065422fcd ("mptcp: add the outgoing MP_PRIO support")
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/pm_netlink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Mat Martineau (3):
+  mptcp: Avoid acquiring PM lock for subflow priority changes
+  mptcp: Add a variant of mptcp_subflow_send_ack() for locked subflows
+  mptcp: Acquire the subflow socket lock before modifying MP_PRIO flags
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d04b34fc9a8e..05c6a95e9c28 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -729,11 +729,13 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		struct sock *sk = (struct sock *)msk;
- 		struct mptcp_addr_info local;
-+		bool slow;
- 
- 		local_address((struct sock_common *)ssk, &local);
- 		if (!mptcp_addresses_equal(&local, addr, addr->port))
- 			continue;
- 
-+		slow = lock_sock_fast(ssk);
- 		if (subflow->backup != bkup)
- 			msk->last_snd = NULL;
- 		subflow->backup = bkup;
-@@ -742,7 +744,8 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIOTX);
- 
- 		pr_debug("send ack for mp_prio");
--		mptcp_subflow_send_ack(ssk);
-+		__mptcp_subflow_send_ack(ssk);
-+		unlock_sock_fast(ssk, slow);
- 
- 		return 0;
- 	}
+ net/mptcp/pm_netlink.c | 11 ++++++-----
+ net/mptcp/protocol.c   |  9 +++++++--
+ net/mptcp/protocol.h   |  1 +
+ 3 files changed, 14 insertions(+), 7 deletions(-)
+
 -- 
 2.37.0
 
