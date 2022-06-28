@@ -1,148 +1,94 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E856368
-	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 03:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656388173; x=1687924173;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=JCJ3t15hN0kX/PrCxPVD3oswwqwAU6aCjICQKC2sqZE=;
-  b=l5N3Q/+iOgc6ZujH8OeWhX+z7eZZX9M6KmVGgHRpS4oyB/c1VZfUYoL6
-   hCzyTKYKqFEoRpWOQHTpqJe2ZvtOYDEPd2HDng8aHF01KRZe9w1kimA3Y
-   felQVH7z9egx7WHAbSDQi1wZiID6ef9vWyp8GYoRqgS5RnkqtGciyBoo4
-   Ct89J93MfFMfQWxbWW0qffJRzWgNDQvk0ffhkus0tzWpMB2HwLTajiXLw
-   Kd41XDT5uoUvCnDpa42Z/KuGZZ+tKhSOEChTjDC7Q7LtTFbYO3GS6/4qH
-   zUXFezg/F9+pr9DUa8oH+fen71mJ7bs4g8tjoRPwIFVsC9Ttk6RRGeRnQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="261428463"
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="261428463"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 20:49:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="564924431"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
-  by orsmga006.jf.intel.com with ESMTP; 27 Jun 2022 20:49:27 -0700
-Date: Tue, 28 Jun 2022 11:49:26 +0800
-From: Feng Tang <feng.tang@intel.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Shakeel Butt <shakeelb@google.com>, Linux MM <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Michal Hocko <mhocko@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	Soheil Hassas Yeganeh <soheil@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
-	MPTCP Upstream <mptcp@lists.linux.dev>,
-	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
-	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
-	Huang Ying <ying.huang@intel.com>,
-	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
-Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-Message-ID: <20220628034926.GA69004@shbuild999.sh.intel.com>
-References: <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
- <20220624070656.GE79500@shbuild999.sh.intel.com>
- <20220624144358.lqt2ffjdry6p5u4d@google.com>
- <20220625023642.GA40868@shbuild999.sh.intel.com>
- <20220627023812.GA29314@shbuild999.sh.intel.com>
- <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
- <20220627123415.GA32052@shbuild999.sh.intel.com>
- <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
- <20220627144822.GA20878@shbuild999.sh.intel.com>
- <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496EE7A
+	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 09:42:34 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id e28so11648519wra.0
+        for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 02:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=pU8aRTsvKtbD2Q+oPIOFeZ00oSdCebpL4fFU2CnZhFU=;
+        b=erUPjVVWFAf8JUZNwDf9NBx2Jx5SUxrL+Foz6yv498fPJFmXguqse6ZZAOnf86qr4t
+         xtaw+baKj+6rbWlc9OIrynZMnAiVWbWNT1OScNunXb+87CIf6i0+JX7tSOcsKhK9imkD
+         qXFaAZXdVu0MvSGc3joXxgPlPWvDCMVIwY4Gp/8gMKgIigcTADyZkxp40OyHdSpkBeMY
+         vQ9qk1z4gMfqr8VHzN9H7gvJdi8m1ibBTAxPNIRb/YpHaS4ZWLqOAlKY0xnhe1mzIhBe
+         DKP96ey2l6AVwG3WlwCMZMfnax1Szlg4pHcK5wpA22XCWEMF/QL2smjKmTNgYmcZUCLc
+         OfYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=pU8aRTsvKtbD2Q+oPIOFeZ00oSdCebpL4fFU2CnZhFU=;
+        b=sh4KfR7thG3Y5FekxeQkxldnFbPSGe/S+G67L9u0kE3PPQxCnNyOmbW13NLjC9nuPe
+         Svsm74/EHD4JVcfoSkzPpED577wi727rALlxnIjJn4sjW97Fi9OE/4NhLoQkNloMkQXZ
+         d1MRVnF5Ar2viM0Hr+tVY8oolB3ng3bAsKHJNJwAaj+9Gw1hW5hwrapR6hSNxR/mW7Xy
+         ZSY8sP1EWXLMW9yLLCXOaLXedBw67xvKt/WzCMTBTEfdxrU/GQSoJgTV4xhkIbKTEnjv
+         fb2a6w3wgIDcYCkqWvmhBIdm5f5L/3CljrYlPC9oYsjY/Hnht4iRadYKLWCpXXl2go8c
+         S/gw==
+X-Gm-Message-State: AJIora+3kbc8KAUCwl09rXMvH71Mj3WiQr0zkRuPwwYLCV0ypthXec9n
+	a4Q91LBHMVU374KUv2Ju5kvja//flqPXIr4k
+X-Google-Smtp-Source: AGRyM1sO8oFdKJDkLUdHKFUqLu3VCj23mH7GZZuIiqC8HImSHhRUmA+U+qBIn38O/1iUAW3R73/P/w==
+X-Received: by 2002:a5d:4a48:0:b0:21b:9ee2:a6e0 with SMTP id v8-20020a5d4a48000000b0021b9ee2a6e0mr16508358wrs.468.1656409353145;
+        Tue, 28 Jun 2022 02:42:33 -0700 (PDT)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id n7-20020a5d67c7000000b0021b9e8d4c22sm13219434wrw.61.2022.06.28.02.42.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jun 2022 02:42:32 -0700 (PDT)
+Message-ID: <acfcb031-4be5-c5a2-6858-02fed78a89f3@tessares.net>
+Date: Tue, 28 Jun 2022 11:42:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH mptcp-next] Squash-to: "selftests: mptcp: tweak
+ simult_flows for debug kernels"
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
+Cc: pabeni@redhat.com
+References: <20220627214438.17887-1-mathew.j.martineau@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220627214438.17887-1-mathew.j.martineau@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 27, 2022 at 06:25:59PM +0200, Eric Dumazet wrote:
-> On Mon, Jun 27, 2022 at 4:48 PM Feng Tang <feng.tang@intel.com> wrote:
-> >
-> > Yes, I also analyzed the perf-profile data, and made some layout changes
-> > which could recover the changes from 69% to 40%.
-> >
-> > 7c80b038d23e1f4c 4890b686f4088c90432149bd6de 332b589c49656a45881bca4ecc0
-> > ---------------- --------------------------- ---------------------------
-> >      15722           -69.5%       4792           -40.8%       9300        netperf.Throughput_Mbps
-> >
-> 
-> I simply did the following and got much better results.
-> 
-> But I am not sure if updates to ->usage are really needed that often...
-> 
-> 
-> diff --git a/include/linux/page_counter.h b/include/linux/page_counter.h
-> index 679591301994d316062f92b275efa2459a8349c9..e267be4ba849760117d9fd041e22c2a44658ab36
-> 100644
-> --- a/include/linux/page_counter.h
-> +++ b/include/linux/page_counter.h
-> @@ -3,12 +3,15 @@
->  #define _LINUX_PAGE_COUNTER_H
-> 
->  #include <linux/atomic.h>
-> +#include <linux/cache.h>
->  #include <linux/kernel.h>
->  #include <asm/page.h>
-> 
->  struct page_counter {
-> -       atomic_long_t usage;
-> -       unsigned long min;
-> +       /* contended cache line. */
-> +       atomic_long_t usage ____cacheline_aligned_in_smp;
-> +
-> +       unsigned long min ____cacheline_aligned_in_smp;
->         unsigned long low;
->         unsigned long high;
->         unsigned long max;
-> @@ -27,12 +30,6 @@ struct page_counter {
->         unsigned long watermark;
->         unsigned long failcnt;
-> 
-> -       /*
-> -        * 'parent' is placed here to be far from 'usage' to reduce
-> -        * cache false sharing, as 'usage' is written mostly while
-> -        * parent is frequently read for cgroup's hierarchical
-> -        * counting nature.
-> -        */
->         struct page_counter *parent;
->  };
+Hi Mat,
 
-I just tested it, it does perform better (the 4th is with your patch),
-some perf-profile data is also listed.
+On 27/06/2022 23:44, Mat Martineau wrote:
+> kbuild is still seeing intermittent failures in the simult_flows.sh
+> test. It uses a kernel config without kmemleak, but with other
+> performance-affecting debug options like lockdep and kasan.
+> 
+> Example failures:
+> kernel-selftests.net/mptcp.simult_flows.sh.unbalanced_bwidth_with_unbalanced_delay_transfer_slower_than_expected!_runtime_4339_ms_expected_4005_ms_max_4005.fail
+> kernel-selftests.net/mptcp.simult_flows.sh.unbalanced_bwidth_transfer_slower_than_expected!_runtime_4285_ms_expected_4005_ms_max_4005.fail
+> kernel-selftests.net/mptcp.simult_flows.sh.unbalanced_bwidth_transfer_slower_than_expected!_runtime_4346_ms_expected_4005_ms_max_4005.fail
 
- 7c80b038d23e1f4c 4890b686f4088c90432149bd6de 332b589c49656a45881bca4ecc0 e719635902654380b23ffce908d 
----------------- --------------------------- --------------------------- --------------------------- 
-     15722           -69.5%       4792           -40.8%       9300           -27.9%      11341        netperf.Throughput_Mbps
+If I'm not mistaken, adding 200ms would not prevent these failures if
+you got 4346ms instead of 4005ms, right? It looks like we need to extend
+the time to something around 350ms.
 
-      0.00            +0.3        0.26 ±  5%      +0.5        0.51            +1.3        1.27 ±  2%pp.self.__sk_mem_raise_allocated
-      0.00            +0.3        0.32 ± 15%      +1.7        1.74 ±  2%      +0.4        0.40 ±  2%  pp.self.propagate_protected_usage
-      0.00            +0.8        0.82 ±  7%      +0.9        0.90            +0.8        0.84        pp.self.__mod_memcg_state
-      0.00            +1.2        1.24 ±  4%      +1.0        1.01            +1.4        1.44        pp.self.try_charge_memcg
-      0.00            +2.1        2.06            +2.1        2.13            +2.1        2.11        pp.self.page_counter_uncharge
-      0.00            +2.1        2.14 ±  4%      +2.7        2.71            +2.6        2.60 ±  2%  pp.self.page_counter_try_charge
-      1.12 ±  4%      +3.1        4.24            +1.1        2.22            +1.4        2.51        pp.self.native_queued_spin_lock_slowpath
-      0.28 ±  9%      +3.8        4.06 ±  4%      +0.2        0.48            +0.4        0.68        pp.self.sctp_eat_data
-      0.00            +8.2        8.23            +0.8        0.83            +1.3        1.26        pp.self.__sk_mem_reduce_allocated
+> Adjust the debug detection to loosen the simult_flows timing constraints
+> if either kmemleak or lockdep are configured.
 
-And the size of 'mem_cgroup' is increased from 4224 Bytes to 4608.
+Good idea!
+I didn't find any "safe" ways to easily check that KASAN is used.
 
-Another info is the perf hotspos are slightly different between
-tcp and sctp test cases.
+Checking dmesg doesn't seem to be a safe way for all environments.
 
-Thanks,
-Feng
+But maybe we could do this? (with '-q')
+
+  $ grep mm/kasan /sys/devices/system/cpu/hotplug/states/sys/devices
+  /system/cpu/hotplug/states:70:214: mm/kasan:online
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
