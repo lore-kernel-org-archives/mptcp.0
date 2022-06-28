@@ -1,44 +1,44 @@
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0087A
-	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 01:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF07A370
+	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 01:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656378172; x=1687914172;
+  t=1656378173; x=1687914173;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SZMGGdom3UTaqSHVSKVxP0Y/R0YYJNQ8r6w/sDGPGSE=;
-  b=RFSJGMQiMBm0BDMXVmFSoPWKmPQdL1UQIHj1hJk/4I1ERcDN1GF7Z+X7
-   PRRXFYuMYm/fGHwntwyEdx+TH1qKKvVj/njn8vj77MYF1M9UJkARuVUl0
-   U2hMsJ2w4UcaIF9BPytUmGGCEwIbsORmHpSwqJRQgpQKMlJBgcIskQxLQ
-   xWrDt1Iic7UbOL4ncSKRdfHb6e20tsOA8S0jkd3W5D7ma+mJHDdM1Xzgh
-   Dz81wgLW/vUtLj6rLo35UmR/CgfKYJ8bkbFlgWmFHhlKOwq41gVa2bu47
-   eSXVvk0uKBlJHtcALb+48scU+nEy/im1vYzUjQLF6XLX5Q1yoHoYaUmjH
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="270347715"
+  bh=cwCjWO7p4fYLgITbqWT1J/qDbZF+jfQ+eMSp5vmDTCk=;
+  b=O4OvMPf9IjKb/cUDWSWAnVNr3ro/sC2L6L38vG8CEJ3scgH7vLIS/Guk
+   OjF4rl76YGYgGPcD6FyGKDS1ffh55JEB7RFSW40Oor50y6pXjv4PH2+/g
+   S/+CwLC5fWvVxEc0ZhcJfTZJ9tI+hi7Lk8ddXulaoKkoL9jxfROG/qNUz
+   yD9+u8fWRsPnxZa1uIlWPsmIZUN1Pw77ZtrpqevO/4W59X17qZ0Yt2tzO
+   shWt9jh2ZOJLzIHLtfutL64UWdvHlJwd/EkxMMO4otvvhMTqkbQjRyvzF
+   sGjFdvjqyGaWayv+pI6ipqZGVoZPiPafw3pjnetaIoxy3xJdr4o3ZEii9
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="270347719"
 X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="270347715"
+   d="scan'208";a="270347719"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:02:50 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:02:51 -0700
 X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="692867373"
+   d="scan'208";a="692867396"
 Received: from cgarner-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.0.217])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:02:49 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:02:51 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
+Cc: Paolo Abeni <pabeni@redhat.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
-	pabeni@redhat.com,
 	edumazet@google.com,
 	fw@strlen.de,
+	geliang.tang@suse.com,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 3/9] mptcp: invoke MP_FAIL response when needed
-Date: Mon, 27 Jun 2022 18:02:37 -0700
-Message-Id: <20220628010243.166605-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 6/9] mptcp: fix race on unaccepted mptcp sockets
+Date: Mon, 27 Jun 2022 18:02:40 -0700
+Message-Id: <20220628010243.166605-7-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.37.0
 In-Reply-To: <20220628010243.166605-1-mathew.j.martineau@linux.intel.com>
 References: <20220628010243.166605-1-mathew.j.martineau@linux.intel.com>
@@ -50,317 +50,132 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliang.tang@suse.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-mptcp_mp_fail_no_response shouldn't be invoked on each worker run, it
-should be invoked only when MP_FAIL response timeout occurs.
+When the listener socket owning the relevant request is closed,
+it frees the unaccepted subflows and that causes later deletion
+of the paired MPTCP sockets.
 
-This patch refactors the MP_FAIL response logic.
+The mptcp socket's worker can run in the time interval between such delete
+operations. When that happens, any access to msk->first will cause an UaF
+access, as the subflow cleanup did not cleared such field in the mptcp
+socket.
 
-It leverages the fact that only the MPC/first subflow can gracefully
-fail to avoid unneeded subflows traversal: the failing subflow can
-be only msk->first.
+Address the issue explicitly traversing the listener socket accept
+queue at close time and performing the needed cleanup on the pending
+msk.
 
-A new 'fail_tout' field is added to the subflow context to record the
-MP_FAIL response timeout and use such field to reliably share the
-timeout timer between the MP_FAIL event and the MPTCP socket close
-timeout.
+Note that the locking is a bit tricky, as we need to acquire the msk
+socket lock, while still owning the subflow socket one.
 
-Finally, a new ack is generated to send out MP_FAIL notification as soon
-as we hit the relevant condition, instead of waiting a possibly unbound
-time for the next data packet.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/281
-Fixes: d9fb797046c5 ("mptcp: Do not traverse the subflow connection list without lock")
-Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm.c       |  9 +++---
- net/mptcp/protocol.c | 77 +++++++++++++++++++++++++++-----------------
- net/mptcp/protocol.h |  3 +-
- net/mptcp/subflow.c  | 38 ++++++++++++++++------
- 4 files changed, 82 insertions(+), 45 deletions(-)
+ net/mptcp/protocol.c |  5 +++++
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 52 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 59 insertions(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 91a62b598de4..45e2a48397b9 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -299,22 +299,21 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
--	struct sock *s = (struct sock *)msk;
- 
- 	pr_debug("fail_seq=%llu", fail_seq);
- 
- 	if (!READ_ONCE(msk->allow_infinite_fallback))
- 		return;
- 
--	if (!READ_ONCE(subflow->mp_fail_response_expect)) {
-+	if (!subflow->fail_tout) {
- 		pr_debug("send MP_FAIL response and infinite map");
- 
- 		subflow->send_mp_fail = 1;
- 		subflow->send_infinite_map = 1;
--	} else if (!sock_flag(sk, SOCK_DEAD)) {
-+		tcp_send_ack(sk);
-+	} else {
- 		pr_debug("MP_FAIL response received");
--
--		sk_stop_timer(s, &s->sk_timer);
-+		WRITE_ONCE(subflow->fail_tout, 0);
- 	}
- }
- 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 17e13396024a..e6fcb61443dd 100644
+index e63bc2bb7fff..e475212f2618 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -500,7 +500,7 @@ static void mptcp_set_timeout(struct sock *sk)
- 	__mptcp_set_timeout(sk, tout);
- }
- 
--static bool tcp_can_send_ack(const struct sock *ssk)
-+static inline bool tcp_can_send_ack(const struct sock *ssk)
- {
- 	return !((1 << inet_sk_state_load(ssk)) &
- 	       (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLOSE | TCPF_LISTEN));
-@@ -2175,21 +2175,6 @@ static void mptcp_retransmit_timer(struct timer_list *t)
- 	sock_put(sk);
- }
- 
--static struct mptcp_subflow_context *
--mp_fail_response_expect_subflow(struct mptcp_sock *msk)
--{
--	struct mptcp_subflow_context *subflow, *ret = NULL;
--
--	mptcp_for_each_subflow(msk, subflow) {
--		if (READ_ONCE(subflow->mp_fail_response_expect)) {
--			ret = subflow;
--			break;
--		}
--	}
--
--	return ret;
--}
--
- static void mptcp_timeout_timer(struct timer_list *t)
- {
- 	struct sock *sk = from_timer(sk, t, sk_timer);
-@@ -2518,27 +2503,50 @@ static void __mptcp_retrans(struct sock *sk)
- 		mptcp_reset_timer(sk);
- }
- 
-+/* schedule the timeout timer for the relevant event: either close timeout
-+ * or mp_fail timeout. The close timeout takes precedence on the mp_fail one
-+ */
-+void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout)
-+{
-+	struct sock *sk = (struct sock *)msk;
-+	unsigned long timeout, close_timeout;
-+
-+	if (!fail_tout && !sock_flag(sk, SOCK_DEAD))
-+		return;
-+
-+	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies + TCP_TIMEWAIT_LEN;
-+
-+	/* the close timeout takes precedence on the fail one, and here at least one of
-+	 * them is active
-+	 */
-+	timeout = sock_flag(sk, SOCK_DEAD) ? close_timeout : fail_tout;
-+
-+	sk_reset_timer(sk, &sk->sk_timer, timeout);
-+}
-+
- static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
- {
--	struct mptcp_subflow_context *subflow;
--	struct sock *ssk;
-+	struct sock *ssk = msk->first;
- 	bool slow;
- 
--	subflow = mp_fail_response_expect_subflow(msk);
--	if (subflow) {
--		pr_debug("MP_FAIL doesn't respond, reset the subflow");
-+	if (!ssk)
-+		return;
- 
--		ssk = mptcp_subflow_tcp_sock(subflow);
--		slow = lock_sock_fast(ssk);
--		mptcp_subflow_reset(ssk);
--		unlock_sock_fast(ssk, slow);
--	}
-+	pr_debug("MP_FAIL doesn't respond, reset the subflow");
-+
-+	slow = lock_sock_fast(ssk);
-+	mptcp_subflow_reset(ssk);
-+	WRITE_ONCE(mptcp_subflow_ctx(ssk)->fail_tout, 0);
-+	unlock_sock_fast(ssk, slow);
-+
-+	mptcp_reset_timeout(msk, 0);
- }
- 
- static void mptcp_worker(struct work_struct *work)
- {
- 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
- 	struct sock *sk = &msk->sk.icsk_inet.sk;
-+	unsigned long fail_tout;
- 	int state;
- 
- 	lock_sock(sk);
-@@ -2575,7 +2583,9 @@ static void mptcp_worker(struct work_struct *work)
- 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- 		__mptcp_retrans(sk);
- 
--	mptcp_mp_fail_no_response(msk);
-+	fail_tout = msk->first ? READ_ONCE(mptcp_subflow_ctx(msk->first)->fail_tout) : 0;
-+	if (fail_tout && time_after(jiffies, fail_tout))
-+		mptcp_mp_fail_no_response(msk);
- 
- unlock:
- 	release_sock(sk);
-@@ -2822,6 +2832,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
- static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
- 	bool do_cancel_work = false;
- 
- 	lock_sock(sk);
-@@ -2840,10 +2851,16 @@ static void mptcp_close(struct sock *sk, long timeout)
- cleanup:
- 	/* orphan all the subflows */
- 	inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32;
--	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
-+	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		bool slow = lock_sock_fast_nested(ssk);
- 
-+		/* since the close timeout takes precedence on the fail one,
-+		 * cancel the latter
-+		 */
-+		if (ssk == msk->first)
-+			subflow->fail_tout = 0;
-+
- 		sock_orphan(ssk);
- 		unlock_sock_fast(ssk, slow);
- 	}
-@@ -2852,13 +2869,13 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	sock_hold(sk);
- 	pr_debug("msk=%p state=%d", sk, sk->sk_state);
- 	if (mptcp_sk(sk)->token)
--		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
-+		mptcp_event(MPTCP_EVENT_CLOSED, msk, NULL, GFP_KERNEL);
- 
- 	if (sk->sk_state == TCP_CLOSE) {
- 		__mptcp_destroy_sock(sk);
- 		do_cancel_work = true;
+@@ -2331,6 +2331,11 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		kfree_rcu(subflow, rcu);
  	} else {
--		sk_reset_timer(sk, &sk->sk_timer, jiffies + TCP_TIMEWAIT_LEN);
-+		mptcp_reset_timeout(msk, 0);
- 	}
- 	release_sock(sk);
- 	if (do_cancel_work)
+ 		/* otherwise tcp will dispose of the ssk and subflow ctx */
++		if (ssk->sk_state == TCP_LISTEN) {
++			tcp_set_state(ssk, TCP_CLOSE);
++			mptcp_subflow_queue_clean(ssk);
++			inet_csk_listen_stop(ssk);
++		}
+ 		__tcp_close(ssk, 0);
+ 
+ 		/* close acquired an extra ref */
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 200f89f6d62f..1d2d71711872 100644
+index 9860179bfd5e..c14d70c036d0 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -468,7 +468,6 @@ struct mptcp_subflow_context {
- 		local_id_valid : 1, /* local_id is correctly initialized */
- 		valid_csum_seen : 1;        /* at least one csum validated */
- 	enum mptcp_data_avail data_avail;
--	bool	mp_fail_response_expect;
- 	u32	remote_nonce;
- 	u64	thmac;
- 	u32	local_nonce;
-@@ -482,6 +481,7 @@ struct mptcp_subflow_context {
- 	u8	stale_count;
+@@ -306,6 +306,7 @@ struct mptcp_sock {
  
- 	long	delegated_status;
-+	unsigned long	fail_tout;
+ 	u32 setsockopt_seq;
+ 	char		ca_name[TCP_CA_NAME_MAX];
++	struct mptcp_sock	*dl_next;
+ };
  
- 	);
+ #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
+@@ -608,6 +609,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow);
+ void mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_reset(struct sock *ssk);
++void mptcp_subflow_queue_clean(struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+ struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
  
-@@ -662,6 +662,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 
- void mptcp_finish_connect(struct sock *sk);
- void __mptcp_set_connected(struct sock *sk);
-+void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout);
- static inline bool mptcp_is_fully_established(struct sock *sk)
- {
- 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 42a7c18a1c24..8dfea6a8a82f 100644
+index 03862103665d..63e8892ec807 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -971,7 +971,6 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 	bool csum_reqd = READ_ONCE(msk->csum_enabled);
--	struct sock *sk = (struct sock *)msk;
- 	struct mptcp_ext *mpext;
- 	struct sk_buff *skb;
- 	u16 data_len;
-@@ -1013,9 +1012,6 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- 		pr_debug("infinite mapping received");
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
- 		subflow->map_data_len = 0;
--		if (!sock_flag(ssk, SOCK_DEAD))
--			sk_stop_timer(sk, &sk->sk_timer);
--
- 		return MAPPING_INVALID;
+@@ -1723,6 +1723,58 @@ static void subflow_state_change(struct sock *sk)
  	}
- 
-@@ -1162,6 +1158,33 @@ static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
- 		return !subflow->fully_established;
  }
  
-+static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
++void mptcp_subflow_queue_clean(struct sock *listener_ssk)
 +{
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+	unsigned long fail_tout;
++	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
++	struct mptcp_sock *msk, *next, *head = NULL;
++	struct request_sock *req;
 +
-+	/* greceful failure can happen only on the MPC subflow */
-+	if (WARN_ON_ONCE(ssk != READ_ONCE(msk->first)))
++	/* build a list of all unaccepted mptcp sockets */
++	spin_lock_bh(&queue->rskq_lock);
++	for (req = queue->rskq_accept_head; req; req = req->dl_next) {
++		struct mptcp_subflow_context *subflow;
++		struct sock *ssk = req->sk;
++		struct mptcp_sock *msk;
++
++		if (!sk_is_mptcp(ssk))
++			continue;
++
++		subflow = mptcp_subflow_ctx(ssk);
++		if (!subflow || !subflow->conn)
++			continue;
++
++		/* skip if already in list */
++		msk = mptcp_sk(subflow->conn);
++		if (msk->dl_next || msk == head)
++			continue;
++
++		msk->dl_next = head;
++		head = msk;
++	}
++	spin_unlock_bh(&queue->rskq_lock);
++	if (!head)
 +		return;
 +
-+	/* since the close timeout take precedence on the fail one,
-+	 * no need to start the latter when the first is already set
++	/* can't acquire the msk socket lock under the subflow one,
++	 * or will cause ABBA deadlock
 +	 */
-+	if (sock_flag((struct sock *)msk, SOCK_DEAD))
-+		return;
++	release_sock(listener_ssk);
 +
-+	/* we don't need extreme accuracy here, use a zero fail_tout as special
-+	 * value meaning no fail timeout at all;
-+	 */
-+	fail_tout = jiffies + TCP_RTO_MAX;
-+	if (!fail_tout)
-+		fail_tout = 1;
-+	WRITE_ONCE(subflow->fail_tout, fail_tout);
-+	tcp_send_ack(ssk);
++	for (msk = head; msk; msk = next) {
++		struct sock *sk = (struct sock *)msk;
++		bool slow;
 +
-+	mptcp_reset_timeout(msk, subflow->fail_tout);
++		slow = lock_sock_fast_nested(sk);
++		next = msk->dl_next;
++		msk->first = NULL;
++		msk->dl_next = NULL;
++		unlock_sock_fast(sk, slow);
++	}
++
++	/* we are still under the listener msk socket lock */
++	lock_sock_nested(listener_ssk, SINGLE_DEPTH_NESTING);
 +}
 +
- static bool subflow_check_data_avail(struct sock *ssk)
+ static int subflow_ulp_init(struct sock *sk)
  {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-@@ -1236,11 +1259,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 				tcp_send_active_reset(ssk, GFP_ATOMIC);
- 				while ((skb = skb_peek(&ssk->sk_receive_queue)))
- 					sk_eat_skb(ssk, skb);
--			} else if (!sock_flag(ssk, SOCK_DEAD)) {
--				WRITE_ONCE(subflow->mp_fail_response_expect, true);
--				sk_reset_timer((struct sock *)msk,
--					       &((struct sock *)msk)->sk_timer,
--					       jiffies + TCP_RTO_MAX);
-+			} else {
-+				mptcp_subflow_fail(msk, ssk);
- 			}
- 			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
- 			return true;
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
 -- 
 2.37.0
 
