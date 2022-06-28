@@ -1,112 +1,80 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from out1.migadu.com (out1.migadu.com [91.121.223.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F84370
-	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 01:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656378175; x=1687914175;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Wi7F1z6CctRCQxoeHDKSVN4TBguQrYOW58cE0JPGs0U=;
-  b=YY9f4xCZHC6YQD4i2QK5nhOTGSNQy8jWfqbl4tbZmlojhcaSGlaAsqF2
-   8w5UdgzPIgGjJoErcAlJglbu6DqTk6nehVrg1XaKrvFwkKPDAmf8OdwsQ
-   8VXFpMnqBxvjj2S42UYqSz2lm0v0AwKif2hnruOiPkWN7hPn3q6ZYDPmI
-   IOpn2NUUNivPwejyW/ap5oDojPqljgNgi8/bYnlrVIdxpiT73BR0zyy+y
-   ypgzx/1Mx6YrL2UnoaJdd3JZhJRi4mEmGakFtgB6VbhhB8d4Nn/c6CDKw
-   m7LtgB6hUPcUfW+vewQpkIK+8Prrb/Y2Fv4AXSFdfJziVWOluE0Lu7ZoF
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="270347729"
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="270347729"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:02:52 -0700
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="692867421"
-Received: from cgarner-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.0.217])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:02:52 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	fw@strlen.de,
-	geliang.tang@suse.com,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev
-Subject: [PATCH net 9/9] selftests: mptcp: Initialize variables to quiet gcc 12 warnings
-Date: Mon, 27 Jun 2022 18:02:43 -0700
-Message-Id: <20220628010243.166605-10-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.37.0
-In-Reply-To: <20220628010243.166605-1-mathew.j.martineau@linux.intel.com>
-References: <20220628010243.166605-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E053D7A
+	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 01:53:49 +0000 (UTC)
+Date: Mon, 27 Jun 2022 18:46:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1656380820;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ORdLe5wVx7GzxxMtzEujYJBVbDhPT8vtTYMDRzc+hUM=;
+	b=ctCXHWlV79XK06hz0/egR14h1WrQtW6OqdpoYuhXrwnV4k6ahAaXCUNyw4vskHn4vKSf+m
+	3WlYbBfaHxPvdtR+zayNdLZiOJnjqFjG1N23ON6FHn1abZfSgM5OwfnZqbiWeASScl0i7c
+	LMyQj8wvsIK0gksoQYXXMp5JpN1W4y0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Shakeel Butt <shakeelb@google.com>
+Cc: Eric Dumazet <edumazet@google.com>, Feng Tang <feng.tang@intel.com>,
+	Linux MM <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Muchun Song <songmuchun@bytedance.com>,
+	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Soheil Hassas Yeganeh <soheil@google.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
+	MPTCP Upstream <mptcp@lists.linux.dev>,
+	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
+	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
+Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
+Message-ID: <YrpdhDx3DDXtxx7b@castle>
+References: <20220624070656.GE79500@shbuild999.sh.intel.com>
+ <20220624144358.lqt2ffjdry6p5u4d@google.com>
+ <20220625023642.GA40868@shbuild999.sh.intel.com>
+ <20220627023812.GA29314@shbuild999.sh.intel.com>
+ <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
+ <20220627123415.GA32052@shbuild999.sh.intel.com>
+ <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
+ <20220627144822.GA20878@shbuild999.sh.intel.com>
+ <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
+ <CALvZod60OHC4iQnyBd16evCHXa_8ucpHiRnm9iNErQeUOycGZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod60OHC4iQnyBd16evCHXa_8ucpHiRnm9iNErQeUOycGZw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
 
-In a few MPTCP selftest tools, gcc 12 complains that the 'sock' variable
-might be used uninitialized. This is a false positive because the only
-code path that could lead to uninitialized access is where getaddrinfo()
-fails, but the local xgetaddrinfo() wrapper exits if such a failure
-occurs.
+On Mon, Jun 27, 2022 at 09:48:01AM -0700, Shakeel Butt wrote:
+> On Mon, Jun 27, 2022 at 9:26 AM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> [...]
+> > >
+> >
+> > I simply did the following and got much better results.
+> >
+> > But I am not sure if updates to ->usage are really needed that often...
+> 
+> I suspect we need to improve the per-cpu memcg stock usage here. Were
+> the updates mostly from uncharge path or charge path or that's
+> irrelevant?
+> 
+> I think doing full drain (i.e. drain_stock()) within __refill_stock()
+> when the local cache is larger than MEMCG_CHARGE_BATCH is not best.
+> Rather we should always keep at least MEMCG_CHARGE_BATCH for such
+> scenarios.
 
-Initialize the 'sock' variable anyway to allow the tools to build with
-gcc 12.
-
-Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
- tools/testing/selftests/net/mptcp/mptcp_inq.c     | 2 +-
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 8628aa61b763..e2ea6c126c99 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -265,7 +265,7 @@ static void sock_test_tcpulp(int sock, int proto, unsigned int line)
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
- {
--	int sock;
-+	int sock = -1;
- 	struct addrinfo hints = {
- 		.ai_protocol = IPPROTO_TCP,
- 		.ai_socktype = SOCK_STREAM,
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-index 29f75e2a1116..8672d898f8cd 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-@@ -88,7 +88,7 @@ static void xgetaddrinfo(const char *node, const char *service,
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
- {
--	int sock;
-+	int sock = -1;
- 	struct addrinfo hints = {
- 		.ai_protocol = IPPROTO_TCP,
- 		.ai_socktype = SOCK_STREAM,
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index ac9a4d9c1764..ae61f39556ca 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -136,7 +136,7 @@ static void xgetaddrinfo(const char *node, const char *service,
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
- {
--	int sock;
-+	int sock = -1;
- 	struct addrinfo hints = {
- 		.ai_protocol = IPPROTO_TCP,
- 		.ai_socktype = SOCK_STREAM,
--- 
-2.37.0
-
++1, really good point.
