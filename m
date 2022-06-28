@@ -1,36 +1,36 @@
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19734C72
-	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 19:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B384C75
+	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 19:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656443057; x=1687979057;
+  t=1656443058; x=1687979058;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HkfPWCq7EsGiUJu3Y+0zZO77SJ0g4FFIxWbiZJWNGf0=;
-  b=lfQ9JW0JepB+oib0msJM8RdiG485GCYokaDHhELC7ferqaYJp71P8FJK
-   5RQPcYHY1uG8HJDCrObZRZGuF/c2+SBlkwGnFP7HNQKhnU75KANHtSZe3
-   smeQYCHUJ5E4hMUUXQjy6FeLPBTVIufRLCmGQ0thSyBV633hbZsfTe7kP
-   TL7OoudjhvVF9CG05lH4M7p88Dawsie5tI8TXToGFG2Xdkcs4PLndMS3T
-   mI5HxvMVHcVRUhHMvNU9DBCkL8XgmQltH/EGfzdC0WxgQoZ4glE7TBWTl
-   b2tmAXB4yBf9OY0b2ZwuO+JfgWpt6FiTlwACDTj1WpEPYWR1gtIMOo/T2
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="343514646"
+  bh=KLD6tyHtFOIl8tUbSzN0mzIm//0DER4c0z5tbUBNWHM=;
+  b=KLuT14xgpwo/4wHS5bWW33wGdy+J7nXDpLz76JNWb6FvozsrOx4PkLox
+   OUGmk1uCFhyVLPcVHT4Of5zYLhxeYMPcPvzZRKwzMWI8e2fwZ3IBX4hqr
+   UoLAPq0Zt1HuMH94qGX3FXKCwg9QxS56WAeLuPNw0KXFwz/BgwsaZtUwD
+   7CUherfTbRDROrqiFtkmJS+hLL5F/jwFep4UI8vKWwbCmU4FDXYx+DWmE
+   cqckNJOf5Ye09IQzWK2kBuQY1u1rAS8sighfFEiRpT5ohVuBrWiuLNrHx
+   pazTkB55ELXV+ftEqeo/qYVoypyezoSxr4REaSQQV+b2C4bkkv9ttF+0x
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="343514647"
 X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
-   d="scan'208";a="343514646"
+   d="scan'208";a="343514647"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 12:04:01 -0700
 X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
-   d="scan'208";a="917294948"
+   d="scan'208";a="917294952"
 Received: from gwbruss-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.112.228])
   by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 12:04:01 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-net 1/3] mptcp: Avoid acquiring PM lock for subflow priority changes
-Date: Tue, 28 Jun 2022 12:03:54 -0700
-Message-Id: <20220628190356.326233-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH mptcp-net 2/3] mptcp: Add a variant of mptcp_subflow_send_ack() for locked subflows
+Date: Tue, 28 Jun 2022 12:03:55 -0700
+Message-Id: <20220628190356.326233-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220628190356.326233-1-mathew.j.martineau@linux.intel.com>
 References: <20220628190356.326233-1-mathew.j.martineau@linux.intel.com>
@@ -42,65 +42,55 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The in-kernel path manager code for changing subflow flags acquired both
-the msk socket lock and the PM lock when possibly changing the "backup"
-and "fullmesh" flags. mptcp_pm_nl_mp_prio_send_ack() does not access
-anything protected by the PM lock, and it must release and reacquire
-the PM lock.
+The existing mptcp_subflow_send_ack() function handles subflow locking,
+but it's also sometimes necessary to force an ack from a caller that
+already holds the subflow socket lock. This is required for the
+following commit.
 
-By pushing the PM lock to where it is needed in mptcp_pm_nl_fullmesh(),
-the lock is only acquired when the fullmesh flag is changed and the
-backup flag code no longer has to release and reacquire the PM lock.
-
-This change also makes it possible to call
-mptcp_pm_nl_mp_prio_send_ack() for the userspace PM commands without
-manipulating the in-kernel PM lock.
-
-Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
+Fixes: 340fa6667a69 ("mptcp: Only send extra TCP acks in eligible socket states")
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 9 +++++++--
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index e099f2a12504..d04b34fc9a8e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -741,10 +741,8 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 		subflow->request_bkup = bkup;
- 		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIOTX);
- 
--		spin_unlock_bh(&msk->pm.lock);
- 		pr_debug("send ack for mp_prio");
- 		mptcp_subflow_send_ack(ssk);
--		spin_lock_bh(&msk->pm.lock);
- 
- 		return 0;
- 	}
-@@ -1816,8 +1814,10 @@ static void mptcp_pm_nl_fullmesh(struct mptcp_sock *msk,
- 
- 	list.ids[list.nr++] = addr->id;
- 
-+	spin_lock_bh(&msk->pm.lock);
- 	mptcp_pm_nl_rm_subflow_received(msk, &list);
- 	mptcp_pm_create_subflow_or_signal_addr(msk);
-+	spin_unlock_bh(&msk->pm.lock);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3efbae948707..b96a80c8e22a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -506,13 +506,18 @@ static inline bool tcp_can_send_ack(const struct sock *ssk)
+ 	       (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLOSE | TCPF_LISTEN));
  }
  
- static int mptcp_nl_set_flags(struct net *net,
-@@ -1835,12 +1835,10 @@ static int mptcp_nl_set_flags(struct net *net,
- 			goto next;
++void __mptcp_subflow_send_ack(struct sock *ssk)
++{
++	if (tcp_can_send_ack(ssk))
++		tcp_send_ack(ssk);
++}
++
+ void mptcp_subflow_send_ack(struct sock *ssk)
+ {
+ 	bool slow;
  
- 		lock_sock(sk);
--		spin_lock_bh(&msk->pm.lock);
- 		if (changed & MPTCP_PM_ADDR_FLAG_BACKUP)
- 			ret = mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
- 		if (changed & MPTCP_PM_ADDR_FLAG_FULLMESH)
- 			mptcp_pm_nl_fullmesh(msk, addr);
--		spin_unlock_bh(&msk->pm.lock);
- 		release_sock(sk);
+ 	slow = lock_sock_fast(ssk);
+-	if (tcp_can_send_ack(ssk))
+-		tcp_send_ack(ssk);
++	__mptcp_subflow_send_ack(ssk);
+ 	unlock_sock_fast(ssk, slow);
+ }
  
- next:
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index c14d70c036d0..033c995772dc 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -607,6 +607,7 @@ void __init mptcp_subflow_init(void);
+ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
+ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow);
++void __mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_reset(struct sock *ssk);
+ void mptcp_subflow_queue_clean(struct sock *ssk);
 -- 
 2.37.0
 
