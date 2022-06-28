@@ -1,24 +1,37 @@
-Received: from out1.migadu.com (out1.migadu.com [91.121.223.63])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E053D7A
-	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 01:53:49 +0000 (UTC)
-Date: Mon, 27 Jun 2022 18:46:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1656380820;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ORdLe5wVx7GzxxMtzEujYJBVbDhPT8vtTYMDRzc+hUM=;
-	b=ctCXHWlV79XK06hz0/egR14h1WrQtW6OqdpoYuhXrwnV4k6ahAaXCUNyw4vskHn4vKSf+m
-	3WlYbBfaHxPvdtR+zayNdLZiOJnjqFjG1N23ON6FHn1abZfSgM5OwfnZqbiWeASScl0i7c
-	LMyQj8wvsIK0gksoQYXXMp5JpN1W4y0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Eric Dumazet <edumazet@google.com>, Feng Tang <feng.tang@intel.com>,
-	Linux MM <linux-mm@kvack.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E856368
+	for <mptcp@lists.linux.dev>; Tue, 28 Jun 2022 03:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656388173; x=1687924173;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JCJ3t15hN0kX/PrCxPVD3oswwqwAU6aCjICQKC2sqZE=;
+  b=l5N3Q/+iOgc6ZujH8OeWhX+z7eZZX9M6KmVGgHRpS4oyB/c1VZfUYoL6
+   hCzyTKYKqFEoRpWOQHTpqJe2ZvtOYDEPd2HDng8aHF01KRZe9w1kimA3Y
+   felQVH7z9egx7WHAbSDQi1wZiID6ef9vWyp8GYoRqgS5RnkqtGciyBoo4
+   Ct89J93MfFMfQWxbWW0qffJRzWgNDQvk0ffhkus0tzWpMB2HwLTajiXLw
+   Kd41XDT5uoUvCnDpa42Z/KuGZZ+tKhSOEChTjDC7Q7LtTFbYO3GS6/4qH
+   zUXFezg/F9+pr9DUa8oH+fen71mJ7bs4g8tjoRPwIFVsC9Ttk6RRGeRnQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="261428463"
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="261428463"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 20:49:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="564924431"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
+  by orsmga006.jf.intel.com with ESMTP; 27 Jun 2022 20:49:27 -0700
+Date: Tue, 28 Jun 2022 11:49:26 +0800
+From: Feng Tang <feng.tang@intel.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Shakeel Butt <shakeelb@google.com>, Linux MM <linux-mm@kvack.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
 	Michal Hocko <mhocko@kernel.org>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	Muchun Song <songmuchun@bytedance.com>,
@@ -35,8 +48,9 @@ Cc: Eric Dumazet <edumazet@google.com>, Feng Tang <feng.tang@intel.com>,
 	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
 	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
 Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-Message-ID: <YrpdhDx3DDXtxx7b@castle>
-References: <20220624070656.GE79500@shbuild999.sh.intel.com>
+Message-ID: <20220628034926.GA69004@shbuild999.sh.intel.com>
+References: <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
+ <20220624070656.GE79500@shbuild999.sh.intel.com>
  <20220624144358.lqt2ffjdry6p5u4d@google.com>
  <20220625023642.GA40868@shbuild999.sh.intel.com>
  <20220627023812.GA29314@shbuild999.sh.intel.com>
@@ -45,36 +59,90 @@ References: <20220624070656.GE79500@shbuild999.sh.intel.com>
  <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
  <20220627144822.GA20878@shbuild999.sh.intel.com>
  <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
- <CALvZod60OHC4iQnyBd16evCHXa_8ucpHiRnm9iNErQeUOycGZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALvZod60OHC4iQnyBd16evCHXa_8ucpHiRnm9iNErQeUOycGZw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: linux.dev
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
 
-On Mon, Jun 27, 2022 at 09:48:01AM -0700, Shakeel Butt wrote:
-> On Mon, Jun 27, 2022 at 9:26 AM Eric Dumazet <edumazet@google.com> wrote:
+On Mon, Jun 27, 2022 at 06:25:59PM +0200, Eric Dumazet wrote:
+> On Mon, Jun 27, 2022 at 4:48 PM Feng Tang <feng.tang@intel.com> wrote:
 > >
-> [...]
-> > >
+> > Yes, I also analyzed the perf-profile data, and made some layout changes
+> > which could recover the changes from 69% to 40%.
 > >
-> > I simply did the following and got much better results.
+> > 7c80b038d23e1f4c 4890b686f4088c90432149bd6de 332b589c49656a45881bca4ecc0
+> > ---------------- --------------------------- ---------------------------
+> >      15722           -69.5%       4792           -40.8%       9300        netperf.Throughput_Mbps
 > >
-> > But I am not sure if updates to ->usage are really needed that often...
 > 
-> I suspect we need to improve the per-cpu memcg stock usage here. Were
-> the updates mostly from uncharge path or charge path or that's
-> irrelevant?
+> I simply did the following and got much better results.
 > 
-> I think doing full drain (i.e. drain_stock()) within __refill_stock()
-> when the local cache is larger than MEMCG_CHARGE_BATCH is not best.
-> Rather we should always keep at least MEMCG_CHARGE_BATCH for such
-> scenarios.
+> But I am not sure if updates to ->usage are really needed that often...
+> 
+> 
+> diff --git a/include/linux/page_counter.h b/include/linux/page_counter.h
+> index 679591301994d316062f92b275efa2459a8349c9..e267be4ba849760117d9fd041e22c2a44658ab36
+> 100644
+> --- a/include/linux/page_counter.h
+> +++ b/include/linux/page_counter.h
+> @@ -3,12 +3,15 @@
+>  #define _LINUX_PAGE_COUNTER_H
+> 
+>  #include <linux/atomic.h>
+> +#include <linux/cache.h>
+>  #include <linux/kernel.h>
+>  #include <asm/page.h>
+> 
+>  struct page_counter {
+> -       atomic_long_t usage;
+> -       unsigned long min;
+> +       /* contended cache line. */
+> +       atomic_long_t usage ____cacheline_aligned_in_smp;
+> +
+> +       unsigned long min ____cacheline_aligned_in_smp;
+>         unsigned long low;
+>         unsigned long high;
+>         unsigned long max;
+> @@ -27,12 +30,6 @@ struct page_counter {
+>         unsigned long watermark;
+>         unsigned long failcnt;
+> 
+> -       /*
+> -        * 'parent' is placed here to be far from 'usage' to reduce
+> -        * cache false sharing, as 'usage' is written mostly while
+> -        * parent is frequently read for cgroup's hierarchical
+> -        * counting nature.
+> -        */
+>         struct page_counter *parent;
+>  };
 
-+1, really good point.
+I just tested it, it does perform better (the 4th is with your patch),
+some perf-profile data is also listed.
+
+ 7c80b038d23e1f4c 4890b686f4088c90432149bd6de 332b589c49656a45881bca4ecc0 e719635902654380b23ffce908d 
+---------------- --------------------------- --------------------------- --------------------------- 
+     15722           -69.5%       4792           -40.8%       9300           -27.9%      11341        netperf.Throughput_Mbps
+
+      0.00            +0.3        0.26 ±  5%      +0.5        0.51            +1.3        1.27 ±  2%pp.self.__sk_mem_raise_allocated
+      0.00            +0.3        0.32 ± 15%      +1.7        1.74 ±  2%      +0.4        0.40 ±  2%  pp.self.propagate_protected_usage
+      0.00            +0.8        0.82 ±  7%      +0.9        0.90            +0.8        0.84        pp.self.__mod_memcg_state
+      0.00            +1.2        1.24 ±  4%      +1.0        1.01            +1.4        1.44        pp.self.try_charge_memcg
+      0.00            +2.1        2.06            +2.1        2.13            +2.1        2.11        pp.self.page_counter_uncharge
+      0.00            +2.1        2.14 ±  4%      +2.7        2.71            +2.6        2.60 ±  2%  pp.self.page_counter_try_charge
+      1.12 ±  4%      +3.1        4.24            +1.1        2.22            +1.4        2.51        pp.self.native_queued_spin_lock_slowpath
+      0.28 ±  9%      +3.8        4.06 ±  4%      +0.2        0.48            +0.4        0.68        pp.self.sctp_eat_data
+      0.00            +8.2        8.23            +0.8        0.83            +1.3        1.26        pp.self.__sk_mem_reduce_allocated
+
+And the size of 'mem_cgroup' is increased from 4224 Bytes to 4608.
+
+Another info is the perf hotspos are slightly different between
+tcp and sctp test cases.
+
+Thanks,
+Feng
