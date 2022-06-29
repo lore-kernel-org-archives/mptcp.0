@@ -1,131 +1,111 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECC06ADB
-	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 22:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656543214; x=1688079214;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YidN+KwUmTWdbyFrHnnyxsnJooCAyuG4bQjhbQ7HDV4=;
-  b=St00RI6BBeZoTRYiYebpZMLhogmcW847tF5qcQVAJ+SltOmlj6w08AaW
-   MxSLPeXYgI1pTAv1flZDqz5iTPbevedyHhWeBHAX+Dhcx/8d+HwhdVBmo
-   ysAJw651+ow5YWGFUJ2rED+/9lQuG2RK3o4pgsYJcVlAfcu7votuKZWfB
-   MTbE3O84JYTKPHDGjGnhpB+xUOey69Wqhx3LTkRAE34ytmPj+5YbCn2/J
-   QmyVSfhdIQ5+MjQiK91ND2AulK3RshXN4SPHiR627h1EwaL71Fztk99E/
-   u5IfKlYHZu6uprHCowjc5wTjdpjOienUgZgbQdVmZ0BiofLgn3RMyj21/
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="368498786"
-X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
-   d="scan'208";a="368498786"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 15:53:32 -0700
-X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
-   d="scan'208";a="917796275"
-Received: from divyamar-mobl2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.13.211])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 15:53:31 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev,
-	pabeni@redhat.com
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-net v3 2/2] mptcp: Acquire the subflow socket lock before modifying MP_PRIO flags
-Date: Wed, 29 Jun 2022 15:53:27 -0700
-Message-Id: <20220629225327.657202-3-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.37.0
-In-Reply-To: <20220629225327.657202-1-mathew.j.martineau@linux.intel.com>
-References: <20220629225327.657202-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F8C7B
+	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 22:55:10 +0000 (UTC)
+Received: by mail-qv1-f52.google.com with SMTP id cu16so27162923qvb.7
+        for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 15:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=ilkNvGZ7S40nWPnb2+HTyWJFik4u9EX5C3e78EmcHj8=;
+        b=RP3XASQzhNpOUUVetfReRloBZrcXfCzb/tlvdlxZw2b3miS3MpZIMwewbdz67TJGJn
+         NEYofB5sqrR413+N0QoAcFmu0GVHeGR2/x6TE0ClVE1Tl1ySThslkl0HdDylfl8yQ53a
+         GMkU1M4gekVqZ9ui4nOpW0Iv/h5Bn+FCPbosYtDO2ddxGrq7Fv1KRkred0riD7z9pY07
+         y5htFthNCcz+o3BR/pYzahvB58LILbGN4CqZ6jPtRk8582wdLfm6xqAL5zttux0+KZuj
+         NF5eC+NKph+OgGYP4KsUNJjgc9uNittk5hpKE9GWrRD/FymMKoF147zFmztwK/vpDsEN
+         uSgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=ilkNvGZ7S40nWPnb2+HTyWJFik4u9EX5C3e78EmcHj8=;
+        b=Zo+2+VvJ76wUDkNN0AhU9szB8IOspNmqB6Aw/qaNPvfVuC0YkSBELvHMG0So56fHhx
+         M8oO5gxc1NLd2ZjGqwCmuLd72Iso5yo0yISG0tYnbQeJgZJfJy/wpHqB8cOK+pWmq1r4
+         ii448eL7p9B80Il+UvCE3zDTq6wLQcmEcelloeP2uCy5HPJ7z9gfhWR1A9whWwiYBg1+
+         /LjllvGXR5V/GcMU0k66voc4zkZCfYo/F81Z1gTqPlrVS910zHt7Cb4Hz9J3chgYEQOR
+         WzVO5fe1Qny3Q5A+C2VNoKchXJYCD9ABPlTKsZ4Y/QtuzKFB7RNJWujtm+HwJkBGdCoJ
+         bOuQ==
+X-Gm-Message-State: AJIora+yXHhBKQFnoObUosGQOvoyzrtJS4rrt1sFIvUmY4mobw2m4NSF
+	6OZea16BbLcxoxeWLKAUeF54yJEwrxpe6as=
+X-Google-Smtp-Source: AGRyM1twnL8emRxAt6QKsmESnadX+ufihfrvoFiL5C24+keZII4daf7EmaSnrvUw7AHXJyp9JJ4M7g==
+X-Received: by 2002:a05:622a:2ca:b0:31d:2ac3:fb19 with SMTP id a10-20020a05622a02ca00b0031d2ac3fb19mr660654qtx.449.1656543309522;
+        Wed, 29 Jun 2022 15:55:09 -0700 (PDT)
+Received: from [127.0.0.1] ([20.185.88.46])
+        by smtp.gmail.com with ESMTPSA id bs24-20020ac86f18000000b00304fa21762csm4028836qtb.53.2022.06.29.15.55.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jun 2022 15:55:09 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220629223550.655928-3-mathew.j.martineau@linux.intel.com>
+References: <20220629223550.655928-3-mathew.j.martineau@linux.intel.com>
+Subject: Re: mptcp: Acquire the subflow socket lock before modifying
+ MP_PRIO flags: Tests Results
+Message-ID: <15ca1394-b763-d8e0-9625-83825a6532c1@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 29 Jun 2022 22:55:09 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When setting up a subflow's flags for sending MP_PRIO MPTCP options, the
-subflow socket lock was not held while reading and modifying several
-struct members that are also read and modified in mptcp_write_options().
+Hi Mat,
 
-Acquire the subflow socket lock earlier and send the MP_PRIO ACK with
-that lock already acquired. Add a new variant of the
-mptcp_subflow_send_ack() helper to use with the subflow lock held.
+Thank you for your modifications, that's great!
 
-v2: Squashed helper function commit
+Our CI did some validations and here is its report:
 
-Fixes: 067065422fcd ("mptcp: add the outgoing MP_PRIO support")
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/pm_netlink.c | 5 ++++-
- net/mptcp/protocol.c   | 9 +++++++--
- net/mptcp/protocol.h   | 1 +
- 3 files changed, 12 insertions(+), 3 deletions(-)
+- {"code":404,"message":
+  - "Can't find artifacts containing file =
+conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/4719806531239936
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4719806531239936/su=
+mmary/summary.txt
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 5ff93b73f33d..ca86c88f89e0 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -728,11 +728,13 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		struct mptcp_addr_info local;
-+		bool slow;
- 
- 		local_address((struct sock_common *)ssk, &local);
- 		if (!mptcp_addresses_equal(&local, addr, addr->port))
- 			continue;
- 
-+		slow = lock_sock_fast(ssk);
- 		if (subflow->backup != bkup)
- 			msk->last_snd = NULL;
- 		subflow->backup = bkup;
-@@ -740,7 +742,8 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 		subflow->request_bkup = bkup;
- 
- 		pr_debug("send ack for mp_prio");
--		mptcp_subflow_send_ack(ssk);
-+		__mptcp_subflow_send_ack(ssk);
-+		unlock_sock_fast(ssk, slow);
- 
- 		return 0;
- 	}
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3efbae948707..b96a80c8e22a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -506,13 +506,18 @@ static inline bool tcp_can_send_ack(const struct sock *ssk)
- 	       (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLOSE | TCPF_LISTEN));
- }
- 
-+void __mptcp_subflow_send_ack(struct sock *ssk)
-+{
-+	if (tcp_can_send_ack(ssk))
-+		tcp_send_ack(ssk);
-+}
-+
- void mptcp_subflow_send_ack(struct sock *ssk)
- {
- 	bool slow;
- 
- 	slow = lock_sock_fast(ssk);
--	if (tcp_can_send_ack(ssk))
--		tcp_send_ack(ssk);
-+	__mptcp_subflow_send_ack(ssk);
- 	unlock_sock_fast(ssk, slow);
- }
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index c14d70c036d0..033c995772dc 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -607,6 +607,7 @@ void __init mptcp_subflow_init(void);
- void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
- void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow);
-+void __mptcp_subflow_send_ack(struct sock *ssk);
- void mptcp_subflow_send_ack(struct sock *ssk);
- void mptcp_subflow_reset(struct sock *ssk);
- void mptcp_subflow_queue_clean(struct sock *ssk);
--- 
-2.37.0
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/5845706438082560
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5845706438082560/summary/summary.txt
 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/2c27d7a3c28d
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
