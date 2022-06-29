@@ -1,66 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD9E62A
-	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 05:20:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9E33EC341CA;
-	Wed, 29 Jun 2022 05:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656480013;
-	bh=wVaA/zaGrgkeDZVTa1fVbkBtdiqSj69Zp6MvjMQn6+g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=c6mTJFvA9MsqU9eOMb/sRIeBu/O0UGiwWKV+YjsOiAo+123DvyBiPYtCRAAd6PVo1
-	 zvOerCGLy+q6mlW2PqNvw3Ocd+1ymArOaYOJZbWnh+3E26D1AL32DgIOqR9XlK2V5O
-	 WqTw2ebp/NuZghwiBxlsZqla1VyNB910H29Mkod06fqWjPMPy8P0jgW+AqBXWOGw3Q
-	 f1vS1C5J2s4//Dad30ec0iGADomGCMq0d6vs/SSVUylUKHPzLwFB8/1L4IjPfUgv0a
-	 4/SSPbVQ7YggTRdiahntf1D9KjsRIJK1WfOrnivmi6rGxMaZMhi7bBPXZDVh1fDU2U
-	 5ieRjgzbt8XvQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7CB1FE49BBA;
-	Wed, 29 Jun 2022 05:20:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B89E7B
+	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 08:32:41 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id d2so19312802ejy.1
+        for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 01:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=bbhhIC/azOQXIMOedO8/sG5fYJVYILH4PjSBwpr8POg=;
+        b=I/YGSkfEEOgOJLpfKYEYtNiGItVEHNeDDrUDNLNzC9FZEBAS4MRu/4antS4RpUkqyC
+         ARyTI52cH4Um4HgWmftE9rskVauv7hIBiRJpDyaT/vTPdznduk2rnGijyEgG+xl3jU2A
+         9me51MwwWDozycY3lKTiLMQs6s7b7CAyAVPOWstwSBrunt+BUPTVxhDkXvtCTsfjbtcF
+         R47y33UDhhjfvHvdMD3hGUU83p+1mse/HRmmV4ds1DYeNQdpNIv8wwawvoWQ2iC3HHhZ
+         rHnJhTGCcH7yPrnJ5kxiKnIU4FiJEoY3NYk/qpbdAUzLzhrZAOANYzfejxiEuciD0lDG
+         8I6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=bbhhIC/azOQXIMOedO8/sG5fYJVYILH4PjSBwpr8POg=;
+        b=Fk+ovc3NwCf/bv2jFvU1lHEi1fwrB709eEPGiNkkNrnCqwItc8rouPvb2sS3GlmXM/
+         6sAWU37EQdKEoy2Z+38rAxPHBi+t5JQBlXbVXdo/Fn471x6dkG0tknVarmh4xZPOQTbZ
+         +9QIe7gc75Mwg0R11gyZyCxFROsiRIFLm+AdLeiJTgx5cy8VsLGPkFDRYWuWwae7vdm0
+         4tWHbY/9FxwZRbeUc6J9rssgobKMTnvz/qcL80byoMoSXWcuNk8zH+UecFlj8t6ERfUC
+         rlNsd/4/USzPxc9YYoYnw86w9E+NQaEZ1eQeA4SQJKXUxMWoS7zVEAj38PlotHBREPWQ
+         U4vg==
+X-Gm-Message-State: AJIora9SvIYk/pBWlemXMNCRn9g80JMBVLg4X7yfEIGOqgSaLJjtZYAS
+	Yj4HX1FYZhw5xEFEVvOus+bd7Q==
+X-Google-Smtp-Source: AGRyM1vHvaGOdfGoK8Aj8iCKU3gjc6se6fcrtn38V106CvDwU1CKEESlhe/LeRxKf7QJd46boVn2lA==
+X-Received: by 2002:a17:907:2ce3:b0:722:e1b0:68b7 with SMTP id hz3-20020a1709072ce300b00722e1b068b7mr2158093ejc.14.1656491559754;
+        Wed, 29 Jun 2022 01:32:39 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:a891:49f2:211e:5634? ([2a02:578:8593:1200:a891:49f2:211e:5634])
+        by smtp.gmail.com with ESMTPSA id r14-20020a170906c28e00b00722edb5fb53sm7474307ejz.116.2022.06.29.01.32.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jun 2022 01:32:38 -0700 (PDT)
+Message-ID: <b3baf637-f34d-2015-ef5e-1602877af5d6@tessares.net>
+Date: Wed, 29 Jun 2022 10:32:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH mptcp-next] Squash-to: "selftests: mptcp: tweak
+ simult_flows for debug kernels"
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com
+References: <20220627214438.17887-1-mathew.j.martineau@linux.intel.com>
+ <acfcb031-4be5-c5a2-6858-02fed78a89f3@tessares.net>
+ <edce75f6-48fc-7b40-af0-8a5410b19223@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <edce75f6-48fc-7b40-af0-8a5410b19223@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: mptcp: fix some spelling mistake in mptcp
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165648001350.19091.5869614487710926226.git-patchwork-notify@kernel.org>
-Date: Wed, 29 Jun 2022 05:20:13 +0000
-References: <20220627121626.1595732-1-imagedong@tencent.com>
-In-Reply-To: <20220627121626.1595732-1-imagedong@tencent.com>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: kuba@kernel.org, mathew.j.martineau@linux.intel.com,
- matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, imagedong@tencent.com
 
-Hello:
+Hi Mat,
 
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon, 27 Jun 2022 20:16:25 +0800 you wrote:
-> From: Menglong Dong <imagedong@tencent.com>
+On 28/06/2022 19:55, Mat Martineau wrote:
+> On Tue, 28 Jun 2022, Matthieu Baerts wrote:
 > 
-> codespell finds some spelling mistake in mptcp:
+>> Hi Mat,
+>>
+>> On 27/06/2022 23:44, Mat Martineau wrote:
+>>> kbuild is still seeing intermittent failures in the simult_flows.sh
+>>> test. It uses a kernel config without kmemleak, but with other
+>>> performance-affecting debug options like lockdep and kasan.
+>>>
+>>> Example failures:
+>>> kernel-selftests.net/mptcp.simult_flows.sh.unbalanced_bwidth_with_unbalanced_delay_transfer_slower_than_expected!_runtime_4339_ms_expected_4005_ms_max_4005.fail
+>>>
+>>> kernel-selftests.net/mptcp.simult_flows.sh.unbalanced_bwidth_transfer_slower_than_expected!_runtime_4285_ms_expected_4005_ms_max_4005.fail
+>>>
+>>> kernel-selftests.net/mptcp.simult_flows.sh.unbalanced_bwidth_transfer_slower_than_expected!_runtime_4346_ms_expected_4005_ms_max_4005.fail
+>>>
+>>
+>> If I'm not mistaken, adding 200ms would not prevent these failures if
+>> you got 4346ms instead of 4005ms, right? It looks like we need to extend
+>> the time to something around 350ms.
+>>
 > 
-> net/mptcp/subflow.c:1624: interaces ==> interfaces
-> net/mptcp/pm_netlink.c:1130: regarless ==> regardless
+> I had thought the "slack" was calculated differently, but I think you're
+> correct here. I am a little reluctant to increase the limit too far,
+> since the whole point is to detect when the transfers become slower -
+> and we seem to instead keep finding slower CI systems!
+
+Indeed.
+In a recent build with a non debug kernel, I also got one issue:
+
+>  # unbalanced bwidth with opposed, unbalanced delay - reverse directiontransfer slower than expected! runtime 4097 ms, expected 4005 ms max 4005 [ fail ]
+
+It seems it is quite rare and probably due other jobs running in
+parallel. I will monitor that.
+
+> What do you think about this approach: make simult_flows.sh 'SKIP' when
+> debug kernel features are detected, unless a "-f" flag forces it to run?
+> That way we could run it with debug features where we know the system
+> performance, like our CI, but not show bogus failures on random
+> debug-enabled systems.
+
+Yes, that was my suggestion in the GitHub issue I opened. In "debug"
+mode, we are going to be slowed down by the extra processing the kernel
+has to do while in this test we mainly focus on the network delay. A bit
+more is added the processing but not much because I guess the "slack" is
+also there for the "slow start" at the beginning of the connection.
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/282
+
+If we add a "-f" flag, maybe good to add the possibility to change the
+default "slack" value, e.g.
+
+  ./simult_flows.sh -f 400
+
+
+Or maybe clearer with:
+
+  ./simult_flows.sh -f -s 400
+
+
+(slack would be 400 instead of 50 then)
+
+
+@Paolo: would it be OK for you if we skip this test in debug mode?
+
+
+>>> Adjust the debug detection to loosen the simult_flows timing constraints
+>>> if either kmemleak or lockdep are configured.
+>>
+>> Good idea!
+>> I didn't find any "safe" ways to easily check that KASAN is used.
+>>
+>> Checking dmesg doesn't seem to be a safe way for all environments.
+>>
+>> But maybe we could do this? (with '-q')
+>>
+>>  $ grep mm/kasan /sys/devices/system/cpu/hotplug/states/sys/devices
+>>  /system/cpu/hotplug/states:70:214: mm/kasan:online
+>>
 > 
-> [...]
+> How about:
+> 
+> grep -q ' kmemleak_init$\| lockdep_init$\| kasan_init$\| prove_locking$'
+> /proc/kallsyms
+> 
+> ?
+> 
+> That detects the compiled-in features, rather than what's enabled at
+> runtime, but it's simple and may be good enough.
 
-Here is the summary with links:
-  - [net-next] net: mptcp: fix some spelling mistake in mptcp
-    https://git.kernel.org/netdev/net-next/c/d640516a65d8
+Good idea, seems OK on my side:
 
-You are awesome, thank you!
+  # grep ' kmemleak_init$\| lockdep_init$\| kasan_init$\|
+prove_locking$' /proc/kallsyms
+  ffffffff9ae5b420 d prove_locking
+  ffffffff9c51b592 T kasan_init
+  ffffffff9c525857 T lockdep_init
+  ffffffff9c542072 T kmemleak_init
+
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
