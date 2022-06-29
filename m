@@ -1,84 +1,138 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268087B
-	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 22:42:11 +0000 (UTC)
-Received: by mail-io1-f51.google.com with SMTP id y18so17479241iof.2
-        for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 15:42:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=wdI16GoybfH5nE6sSSLOoss2GfeRjCWyl5YA/NT27Jo=;
-        b=jSkOVn9Q1zu8it1vGfzh9Yv+Q24LbnYvT1TIlEidkC9UiG8NQ9Y7W/lz5m2Maoe9kB
-         Su1YkIjNHuXFOY65ETvpwqboIxC04dtluiSHHi0vzfrOAoC6vmc/5omPzi9RRmS5PAQ4
-         IgfiXKHJAY7dTyZZm+mgsPb303sFNCRvVVda4Hveyg39L9Bhhok+rqxRt49mlVLf4ZXJ
-         bAQd/vP9BL52T92h2EKnCmxspHsxlOH3tpnrJAFtsFcjxlxv+Mpbd6wyFa78h1/jfgJY
-         t9dKvqediVnqU5Hwvtbaqv+AtlF24IC09V26A1FmrKmQHN4WD75ZoMBqv8OfzzNwWNWf
-         T9mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=wdI16GoybfH5nE6sSSLOoss2GfeRjCWyl5YA/NT27Jo=;
-        b=h8jU7yesuHYun9ANAkxrlfoXzJzeuIT3sfBiUAKtpzjmR9Bf2jPZ9Sz864z0Z6Bplp
-         ghSzCTk2oH1lBc8IRa9eoXUqQ/wlCZjJ2wjqmSDJsbzgaRTNamDJ0G3PBDDvLwYTfu3C
-         0KQka3p2Rgy+bsGtiU4tVd6Qv0vEVF3ZFYdxljkgy+vtr4NEDAMrTei6suzK5+U1ICVu
-         FwNKJkBXzHdc5LORoO6EZE02BqGz7UBkWtAlHb1qlcZyqLypzf7Z4t9kq/NuYmcZ+vcq
-         3v2+SCyBLnyuwWVmvi7msBrxIN7Hu2b4QWznnOmmmXyLELMSpXaR/CIUdeMLRTi1C2Wa
-         TAXA==
-X-Gm-Message-State: AJIora8ujf3HHnnzlC0JNUO5qEMuvXfzAd8vSrvCDrZywbYIdfRESFMP
-	x2WIvwiltuOxstjZr3YiDJCy7npr5TcC
-X-Google-Smtp-Source: AGRyM1smrdGU+PNFf7dXtRY8xAw09Vk7nM1PgM2J1aYCUs2zJ1AElhTvStYZ37Zl1mvcyHZPQlcM3g==
-X-Received: by 2002:a05:6638:10c:b0:339:e949:b332 with SMTP id x12-20020a056638010c00b00339e949b332mr3358804jao.22.1656542528761;
-        Wed, 29 Jun 2022 15:42:08 -0700 (PDT)
-Received: from [127.0.0.1] ([52.165.187.63])
-        by smtp.gmail.com with ESMTPSA id q9-20020a92d409000000b002d90ae7b6a3sm7471036ilm.12.2022.06.29.15.42.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 15:42:08 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220629223550.655928-3-mathew.j.martineau@linux.intel.com>
-References: <20220629223550.655928-3-mathew.j.martineau@linux.intel.com>
-Subject: Re: mptcp: Acquire the subflow socket lock before modifying
- MP_PRIO flags: Build Failure
-Message-ID: <fe2f0ff3-db35-fc11-71c5-bfafca5d4e0c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Jun 2022 22:42:07 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CED7B
+	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 22:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656542860; x=1688078860;
+  h=date:from:to:subject:in-reply-to:message-id:references:
+   mime-version;
+  bh=3YsZq4UJD+aMK74RrVGfCEpmNGd+6HheF1T2CuxmM60=;
+  b=YGjdpcT5lSEQU/i85OVCcK3B20Wl4rdd03sYqfFZLxddlBK6/2Mvj09c
+   LbMLA+7ntqWHvoIugc69LhF8BVKpSfTEvmFXyW4h/agNQu2Z/FtxhrX7c
+   NsVs3kS2GCipdHg7XEBkCLciv3aVw54WM6zQO+UBuDLCPuqLtMsVwJYoT
+   oEnBq53sBY3R2akBxZO6eAv+4MF+lcnNVJqczY5+NHi3xJu6nLrzOZJ7T
+   C5HC/KOnVc5+FufzlTiuqkL9tBeyoQE5qpXRNgFZAh3svvEDEu7Tyt0cj
+   XJczzUaRGX9CBneHXmhUgTBsTfGplAooUKXPb34tH3wIENg28kpbys3dH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="368497769"
+X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
+   d="scan'208";a="368497769"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 15:47:39 -0700
+X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
+   d="scan'208";a="541038700"
+Received: from bschenc3-mobl.amr.corp.intel.com ([10.209.57.164])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 15:47:39 -0700
+Date: Wed, 29 Jun 2022 15:47:38 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: mptcp@lists.linux.dev, pabeni@redhat.com
+Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: Avoid acquiring PM lock for
+ subflow priority changes
+In-Reply-To: <20220629223550.655928-2-mathew.j.martineau@linux.intel.com>
+Message-ID: <4b8981b-f6e7-b41d-3832-1c60c0582b23@linux.intel.com>
+References: <20220629223550.655928-1-mathew.j.martineau@linux.intel.com> <20220629223550.655928-2-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Mat,
+On Wed, 29 Jun 2022, Mat Martineau wrote:
 
-Thank you for your modifications, that's great!
+> The in-kernel path manager code for changing subflow flags acquired both
+> the msk socket lock and the PM lock when possibly changing the "backup"
+> and "fullmesh" flags. mptcp_pm_nl_mp_prio_send_ack() does not access
+> anything protected by the PM lock, and it must release and reacquire
+> the PM lock.
+>
+> By pushing the PM lock to where it is needed in mptcp_pm_nl_fullmesh(),
+> the lock is only acquired when the fullmesh flag is changed and the
+> backup flag code no longer has to release and reacquire the PM lock. The
+> change in locking context requires the MIB update to be modified - move
+> that to a better location instead.
+>
+> This change also makes it possible to call
+> mptcp_pm_nl_mp_prio_send_ack() for the userspace PM commands without
+> manipulating the in-kernel PM lock.
+>
+> v2: Move MIB call to handle change in atomic context.
+>
+> Fixes: 0f9f696a502e ("mptcp: add set_flags command in PM netlink")
+> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> ---
+> net/mptcp/options.c    | 2 ++
+> net/mptcp/pm_netlink.c | 7 ++-----
+> 2 files changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index aead331866a0..d5e58d2ce153 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1584,6 +1584,8 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+> 		*ptr++ = mptcp_option(MPTCPOPT_MP_PRIO,
+> 				      TCPOLEN_MPTCP_PRIO,
+> 				      opts->backup, TCPOPT_NOP);
+> +
+> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIOTX);
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Forgot to check in the build fix for this line before generating the 
+.patch files... v3 coming right up.
 
-You can find more details there:
+- Mat
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20220629223550.655928-3-mathew.j.martineau@linux.=
-intel.com/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2=
-586322258
+> 	}
+>
+> mp_capable_done:
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index e099f2a12504..936d72359c46 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -739,12 +739,9 @@ static int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+> 		subflow->backup = bkup;
+> 		subflow->send_mp_prio = 1;
+> 		subflow->request_bkup = bkup;
+> -		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIOTX);
+>
+> -		spin_unlock_bh(&msk->pm.lock);
+> 		pr_debug("send ack for mp_prio");
+> 		mptcp_subflow_send_ack(ssk);
+> -		spin_lock_bh(&msk->pm.lock);
+>
+> 		return 0;
+> 	}
+> @@ -1816,8 +1813,10 @@ static void mptcp_pm_nl_fullmesh(struct mptcp_sock *msk,
+>
+> 	list.ids[list.nr++] = addr->id;
+>
+> +	spin_lock_bh(&msk->pm.lock);
+> 	mptcp_pm_nl_rm_subflow_received(msk, &list);
+> 	mptcp_pm_create_subflow_or_signal_addr(msk);
+> +	spin_unlock_bh(&msk->pm.lock);
+> }
+>
+> static int mptcp_nl_set_flags(struct net *net,
+> @@ -1835,12 +1834,10 @@ static int mptcp_nl_set_flags(struct net *net,
+> 			goto next;
+>
+> 		lock_sock(sk);
+> -		spin_lock_bh(&msk->pm.lock);
+> 		if (changed & MPTCP_PM_ADDR_FLAG_BACKUP)
+> 			ret = mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
+> 		if (changed & MPTCP_PM_ADDR_FLAG_FULLMESH)
+> 			mptcp_pm_nl_fullmesh(msk, addr);
+> -		spin_unlock_bh(&msk->pm.lock);
+> 		release_sock(sk);
+>
+> next:
+> -- 
+> 2.36.1
+>
+>
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/2c27d7a3c2=
-8d
-
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+--
+Mat Martineau
+Intel
