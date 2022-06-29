@@ -1,39 +1,39 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58513D6C
-	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 16:07:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273A46AB4
+	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 19:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656518830; x=1688054830;
+  t=1656531418; x=1688067418;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=JcJuKyQXdMqU/X4dFKdSKZmflzQzaO0nyMJJjT8+pU4=;
-  b=GIEf0uUaWFMy70UOyFUYN8AJQf/c3ao8FgEQzBP4aGw5TkXYYqMU45G/
-   ZM6FkfgaSaskBpByZDl7QYIujUl39Ok1idO7gVOFmkbRYL6GHfzOOntOh
-   XDztQqu1Dzu46+M+P7YxNcbHswauC94EIq8asFxCzU51cSb75zXaGJVFa
-   cV6rcnw2ENW0LyJCwz8lTgtDaeKmwrvYpdq7S51Vfj5L0UG/ZiyI2sqCZ
-   td6z0wykhjt5WlvoI8lTMOoZ58cNS26qBQZ7oSQI5lZL1XO6662h4b+49
-   HMjoMPIgNaDVdYBR7l0pduVYIpgzBI85HcuevmFHvCQN7WsSTXxDPTob9
+  bh=PpgZH9HeAZEe+nl6PphJAiGEmojgSG2TlUd/sLV2ogw=;
+  b=e7IHlsnS5iGg/xwWRfENDdTp3D8AlkgF7cLjWoHrhM6Tj1VvKjcKfM7e
+   TKMoCrGTo7ZNQyRpcc1BMCLuRi8X0wAG0dlzKc3ds/DNP4zN6sHGH0/p1
+   vQ6SM07NVB4t/a9P8x4m8jL75wYUeAuYhMtD+AK2TVJe8KVdVb7dS7VwZ
+   fj9eN2l9T0bRRQzRaZCd+Mm+1ZnSHiBVyKhRpTq8hqoH1kEmSX2IkOgE2
+   dVvN5C1r9VQKQxVa718/bSBZYxoZo2n855Gbl0jslkJvxwMKELnnD09GH
+   h4A9B3RY5mTqcNDRZzjGDMJ/EhB1wSfQQ6nqqTx9SLCaJUUY694Ej/16X
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="265107787"
+X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="261933085"
 X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="265107787"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 09:07:10 -0700
+   d="scan'208";a="261933085"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 12:13:52 -0700
 X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="837178645"
+   d="scan'208";a="540965459"
 Received: from bschenc3-mobl.amr.corp.intel.com ([10.209.57.164])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 09:07:09 -0700
-Date: Wed, 29 Jun 2022 09:07:09 -0700 (PDT)
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 12:13:52 -0700
+Date: Wed, 29 Jun 2022 12:13:52 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH RFC 3/4] mptcp: allow the in kernel PM to set MPC subflow
- priority
-In-Reply-To: <08338fd031ddcb369d37f765cfbddf933cc3fdad.camel@redhat.com>
-Message-ID: <6129115f-b3c0-24e0-d7d4-f9ec9bf4383@linux.intel.com>
-References: <cover.1656088406.git.pabeni@redhat.com>  <8a80c3bf12e43985e00b4fb04beccd38d69e505b.1656088406.git.pabeni@redhat.com>  <31cf8780-ea9f-fdf7-dffa-b77c831747@linux.intel.com> <08338fd031ddcb369d37f765cfbddf933cc3fdad.camel@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang.tang@suse.com>, 
+    mptcp@lists.linux.dev
+Subject: Re: Should the MIB_RMSUBFLOW commit go to -net?
+In-Reply-To: <c2dbb9d3-47a2-aebf-e133-15d6d3c12d0d@tessares.net>
+Message-ID: <ad2f349e-68fe-6993-155b-c64e96e09fa9@linux.intel.com>
+References: <ad151d35-f094-675d-5ced-71df98ea5857@linux.intel.com> <437af8add242099c84cf106108ab4988a65010ff.camel@redhat.com> <c2dbb9d3-47a2-aebf-e133-15d6d3c12d0d@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,70 +42,70 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 29 Jun 2022, Paolo Abeni wrote:
+On Fri, 24 Jun 2022, Matthieu Baerts wrote:
 
-> On Tue, 2022-06-28 at 17:11 -0700, Mat Martineau wrote:
->> On Fri, 24 Jun 2022, Paolo Abeni wrote:
+> Hi Mat, Paolo,
+>
+> On 24/06/2022 10:40, Paolo Abeni wrote:
+>> On Thu, 2022-06-23 at 16:19 -0700, Mat Martineau wrote:
+>>> I was preparing the patches we had agreed to be ready for net-next in the
+>>> meeting today:
+>>>
+>>>          - [f1eb3f2cb4d2] mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy (Geliang Tang)
+>>>          - [f3c5dde10031] selftests: mptcp: userspace pm address tests (Geliang Tang)
+>>>          - [92378ff55152] selftests: mptcp: userspace pm subflow tests (Geliang Tang)
+>>>          - [1908a4ccaa2c] selftests: mptcp: avoid Terminated messages in userspace_pm (Geliang Tang)
+>>>          - [bac5548c7c47] selftests: mptcp: update pm_nl_ctl usage header (Geliang Tang)
+>>>
+>>> I think the selftest commits are definitely best for net-next. But for the
+>>> first one ("mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy"), should we add
+>>>
+>>> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
+>>>
+>>> and include that in a patch set for -net? Seems like it would be good to
+>>> improve the MIB accuracy with the userspace PM in 5.19.
+>>>
+>>> Link to commit in patchwork:
+>>> https://patchwork.kernel.org/project/mptcp/patch/723d61d82730b996132925686b43f9c3c79bc747.1655355422.git.geliang.tang@suse.com/
+>>>
+>>>
+>>> If that patch goes to -net, it would also require waiting until the next
+>>> net/net-next sync before sending the selftest patches listed above.
 >>
->>> Any local endpoints configured on the address matching the
->>> MPC subflow are currently ignored.
->>>
->>> Specifically, setting a backup flag on them has no effect
->>> on the first subflow, as the MPC handshake can't carry such
->>> info.
->>>
->>> This change refactors the MPC endpoint id accounting to
->>> additionally fetch the priority info from the relevant endpoint
->>> and eventually trigger the MP_PRIO handshake as needed.
->>>
->>> As a result, the MPC subflow now switches to backup priority
->>> after that the MPTCP socket is fully established, according
->>> to the local endpoint configuration.
->>>
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>> net/mptcp/pm_netlink.c | 37 +++++++++++++++----------------------
->>> 1 file changed, 15 insertions(+), 22 deletions(-)
->>>
->>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->>> index 91f6ed2a076a..a6eb501e5031 100644
->>> --- a/net/mptcp/pm_netlink.c
->>> +++ b/net/mptcp/pm_netlink.c
->>> @@ -505,30 +505,14 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
->>> 	struct mptcp_pm_addr_entry *entry;
->>>
->>> 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
->>> -		if ((!lookup_by_id && mptcp_addresses_equal(&entry->addr, info, true)) ||
->>> +		if ((!lookup_by_id &&
->>> +		     mptcp_addresses_equal(&entry->addr, info, entry->addr.port)) ||
+>> I would vote for keeping the process simple and keeping all the above
+>> patches on net-next.
 >>
->> It seems like we could have multiple entries in the local_addr_list with
->> the same address, but with different entries having port==0 or nonzero
->> ports. If mptcp_nl_cmd_set_flags() is called with a nonzero port, but this
->> lookup function encounters the port==0 entry first, this will match an
->> unexpected entry in local_addr_list.
->>
->> Is there some other constraint preventing this?
+>> If we choose otherwise, I think we should also update a bit the
+>> ("mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy") commit message to
+>> something more tuned for -net. Alike: "The user-space patch manager
+>> currently miss the required update of the subflow destruction MIB,
+>> address the issue "...
 >
-> Uhmmm.. I updated the mptcp_addresses_equal() statement to match the
-> existing one in lookup_id_by_addr() below.
+> I think all commits fixing something should have the "Fixes" tag and
+> target "-net". That's not a must of course depending on the complexity
+> and what the fix implies. This should simplify stable versions
+> maintenance somehow if we know all fixes are explicitly linked to a
+> feature: the stable team can do the backport if they think it makes
+> sense to do that. We can also avoid messages like: ah yes, in v5.19,
+> don't look at this MIB counter, it is not correct but that's fixed later
+> in vX.Y.
 >
-> You are right, this check is uncorrect, and generally speaking the
-> mptcp_addresses_equal() invocations are a bit fuzzy. I'll try to
-> clarify that with an additional patches:
+> But I understand the issue with the sync of -net and net-next.
+> Could it help to send the conflicting patch in both -net and net-next?
+> 'git merge' might understand the same modification has been done on both
+> side.
 >
-> - mptcp_addresses_equal() on subflow list use port matching if the
-> looked-up address has  non 0 port (the current code looks correct)
+> Or explain in the commit message/cover letter there is a conflict with
+> -net and the fix is not urgent?
 >
-> - mptcp_addresses_equal on local_addr_list should use port matching if
-> address_use_port(entry), and entry with port matching should be
-> preferred over entries without port-matching. The latter can be
-> enforces adding entries with address_use_port(entry) at the list head
-> and entries with !address_use_port(entry) at tail
->
-> WDYT?
 
-That looks like a good plan - thanks
+I think it will be best to send it to -net with a modified commit message 
+like Paolo suggests. The net/net-next sync shouldn't be a problem since 
+we're at 5.19-rc4 and the dependent selftest fixes are not super urgent 
+for net-next.
+
+This patch to pm_userspace.c also fits in with the one pending commit in 
+export-net and the 5 -net patches in patchwork.
 
 --
 Mat Martineau
