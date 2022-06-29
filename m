@@ -1,117 +1,96 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA343D6C
-	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 15:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EA33D6C
+	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 16:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656518344; x=1688054344;
+  t=1656518635; x=1688054635;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=wBrIgT+nM73FmtCHxq1lygsBhDFEfHnVVqZQYrF3ef4=;
-  b=nTd9U3lIEKx1I+WdhUhXaisGC9GgNj36IdWidOj3yRRyIFsoQ7t/fHJr
-   je4H6jAocCV0wyMoAZeubyO5y9f1+z6rx3oIzcSHyffDJD+fmSf2PGgjI
-   jTN14TmSM23bkw3T0TlBm8DPayRFWvyIGplUd/rZBs2FqapdFjzKzZuqI
-   bdxCQzPgSNiMfdHSGjTbicpuWBxEUh766prMNWnZ+xHLks3NH4NaCDesQ
-   ucXG2yDdmdiWu9I2QtV3Cz+Y1jBgmJ0n85e70e1mIxu+51X7I0/OtroJV
-   TQkuU0SYc/HbvE+xl0XNvQDCFoqeQ06zvk8YlEdYw68gBowKjK1jJRj3E
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="368380680"
+  bh=v9MAFGw+D+q8fA+Ns6zzRoGuUsqeS7sHEgJGDYMRdgs=;
+  b=asWW8uwVuKLh3oAhtp6L+DpAK3sDaqKUhYWNCninaHcJbiMyxZFYVYSo
+   zrPhZKMgO30Tfpf9qWjHFid4SuvX+S0t8s1OBDtXdpPb15QphdFYsm+as
+   DMScWZBUZ+WsphZXg8SN/X8MpzXf4wHVPFhRhJNahUFkJtM287GaWXpdI
+   rhu9cO5Lg9UZyV9cmPFCDD6f/+QE1pjNdCB+cVDXsIeu2qy9yn6Rl/15F
+   L5q7lsMJgSd8vQOXwhMNkmf3ez889wy/oxXL2nPXI61sdd+72IkLBhxRr
+   XfLlabUktkvCO4Qy5T71E4OFzvpgmBEeD1EpWpTue735vC2NKzR+UbBii
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="346060678"
 X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="368380680"
+   d="scan'208";a="346060678"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 08:59:01 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 09:03:54 -0700
 X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="595285955"
+   d="scan'208";a="595289152"
 Received: from bschenc3-mobl.amr.corp.intel.com ([10.209.57.164])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 08:59:01 -0700
-Date: Wed, 29 Jun 2022 08:59:00 -0700 (PDT)
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 09:03:54 -0700
+Date: Wed, 29 Jun 2022 09:03:53 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH RFC 2/4]  mptcp: introduce and use mptcp_pm_send_ack()
-In-Reply-To: <6693bf191808b3089a01b60bfaa350e551c62bc5.camel@redhat.com>
-Message-ID: <ed8a271-fcef-2449-972a-f62c6cecc@linux.intel.com>
-References: <cover.1656088406.git.pabeni@redhat.com>  <a59c3eb1e47c5c32f97c87d66c52f6c0021846bc.1656088406.git.pabeni@redhat.com>  <12f7b059-d6c8-cd75-1e1-33abe8b2b8fd@linux.intel.com> <6693bf191808b3089a01b60bfaa350e551c62bc5.camel@redhat.com>
+cc: Kishen Maloor <kishen.maloor@intel.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v4 0/2] mptcp: support MP_PRIO signals with
+ userspace PMs
+In-Reply-To: <9bfd377923a2c200ff8be000dcbe6b378504f8bd.camel@redhat.com>
+Message-ID: <7f39b3d3-3681-48cf-d656-a778c7a367eb@linux.intel.com>
+References: <20220629012702.425574-1-kishen.maloor@intel.com>  <144ee4af-c481-ffd3-1eae-151557d28e9c@linux.intel.com> <9bfd377923a2c200ff8be000dcbe6b378504f8bd.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Wed, 29 Jun 2022, Paolo Abeni wrote:
 
-> On Tue, 2022-06-28 at 16:28 -0700, Mat Martineau wrote:
->> On Fri, 24 Jun 2022, Paolo Abeni wrote:
+> On Tue, 2022-06-28 at 20:37 -0700, Mat Martineau wrote:
+>> On Tue, 28 Jun 2022, Kishen Maloor wrote:
 >>
->>> The in-kernel PM has a bit of duplicate code related to ack
->>> generation. Create a new helper factoring out the PM-specific
->>> needs and use it in a couple of places.
+>>> This patch series updates MPTCP_PM_CMD_SET_FLAGS to allow userspace PMs
+>>> to issue MP_PRIO signals over a selected (by local and remote address+port)
+>>> subflow in a MPTCP connection. It also adds self tests for this
+>>> change.
 >>>
->>> Note that this additionally moves a few unsafe subflow socket
->>> access under the relevant socket lock.
+>>> This patch series has been rebased to the series (in review) titled
+>>> "Locking fixes for subflow flag changes".
 >>>
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>> net/mptcp/pm_netlink.c | 45 ++++++++++++++++++++++++------------------
->>> net/mptcp/protocol.c   | 11 ++++++++---
->>> net/mptcp/protocol.h   |  2 +-
->>> 3 files changed, 35 insertions(+), 23 deletions(-)
+>>> v2:
+>>> -userspace_pm.sh: added a sleep after issuing the MP_PRIO signal.
 >>>
->>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->>> index 2b2bb3599781..91f6ed2a076a 100644
->>> --- a/net/mptcp/pm_netlink.c
->>> +++ b/net/mptcp/pm_netlink.c
->>> @@ -463,6 +463,29 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
->>> 	return i;
->>> }
+>>> v3:
+>>> -use local and remote address+port (instead of address ID) alongwith the
+>>> connection token to select a subflow.
 >>>
->>> +static void mptcp_pm_send_ack(struct mptcp_sock *msk, struct mptcp_subflow_context *subflow,
->>> +			      bool prio, bool backup)
->>> +{
->>> +	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->>> +	bool slow;
->>> +
->>> +	spin_unlock_bh(&msk->pm.lock);
->>> +	pr_debug("send ack for %s",
->>> +		 prio ? "mp_prio" : (mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr"));
->>> +
->>> +	slow = lock_sock_fast(ssk);
->>> +	if (prio) {
->>> +		subflow->send_mp_prio = 1;
->>> +		subflow->backup = backup;
->>> +		subflow->request_bkup = backup;
->>> +	}
->>> +
->>> +	__mptcp_subflow_send_ack(ssk);
->>> +	unlock_sock_fast(ssk, slow);
->>> +
->>> +	spin_lock_bh(&msk->pm.lock);
->>> +}
+>>> v4:
+>>> -fixed bug during rebase in v3.
 >>
->> I was short on time yesterday so I delayed reviewing this RFC series...
->> Instead I spent time working on the "Locking fixes for subflow flag
->> changes" series which has very, very similar locking changes. MPTCP minds
->> think alike?
->
-> :)
->
->
->> I guess the lesson is that I should always look at Paolo's pending patches
->> before trying to solve a "new" problem :)
+>> Thanks Kishen. v4 looks good to me, and the builds look good (I pushed
+>> equivalent commits to github to trigger a build):
 >>
->> In that other series, I remove the pm locking when sending this ack for
->> MP_PRIO - but I think this refactoring could still be helpful. The pm lock
->> could be released and reacquired by the caller instead of inside
->> mptcp_pm_send_ack().
+>> https://cirrus-ci.com/build/6289402744799232
+>> https://github.com/multipath-tcp/mptcp_net-next/runs/7103422638
+>>
+>> Looks like the github action got a little confused by the exact version of
+>> the patches not being in patchwork.
+>>
+>>
+>> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>>
+>> At the meeting last week Paolo said he was planning to take a look as
+>> well.
 >
-> LGTM! If you agree, I could rebase this series on top of "mptcp: Avoid
-> acquiring PM lock for subflow priority changes".
+> LGTM, too.
+>
+> Acked-by: Paolo Abeni <pabeni@redhat.com>
 >
 
-Yes, would be good to rebase on that series. Thanks!
+Thanks for the ack.
+
+As Kishen noted above, this series depends on "Locking fixes for subflow 
+flag changes" - have you had a chance to look at that one? Like I 
+mentioned in the other thread, it's almost a match for your locking 
+changes in the RFC MPC MP_PRIO series.
 
 --
 Mat Martineau
