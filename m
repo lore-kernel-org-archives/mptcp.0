@@ -1,99 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01396D19
-	for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 16:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656605895;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TNPVhG6FFRFuQ8eChNznVvTx8ZpBlO1Hc/5puE7Ig94=;
-	b=WoqKMp4V5NzvQlJKaj5VSNmJWs3lxMrHGXdZs+9jtwPNjXjfmJI9XfyYGouUeHkoPpxELi
-	wcHPFbbw+++W+nVWexqNA6NUfjX31ZHWL6wpddmC+S77j8pI6/ijKKHRTWQ/h9wqC0dU+V
-	2jZeNqo09XGfh7LUxhUDSJhxbnP2gFc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-237-sNaZZldtOJ61usrJ8fyZhA-1; Thu, 30 Jun 2022 12:18:13 -0400
-X-MC-Unique: sNaZZldtOJ61usrJ8fyZhA-1
-Received: by mail-wr1-f69.google.com with SMTP id l9-20020adfa389000000b0021b8b489336so3258615wrb.13
-        for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 09:18:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9917B
+	for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 17:35:47 +0000 (UTC)
+Received: by mail-ed1-f50.google.com with SMTP id r18so19664145edb.9
+        for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 10:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=Un+NiPMCHGHJ/Wr+YcFM3yNOTuExnWsPBH5Vu6z+ZRY=;
+        b=T/Ysq/NJlT2LaB2mr6WEQfD3fdHKNi4xrhGnsBceL8uzaSDu1qKUn8CHiCKs1Nl0gf
+         K11CGwtcCrxKfzYuTD5LvcB8g0KUMK2FVd04t6QDVH1JAqGWUEVYJPnIZxFO5tHNSjR4
+         fcs0yvUmWJAQYCDI4A/6CsVEuNgWZUoXAMvOErqMqVLUVBL+89iEI67IXiT1gHKCzAnI
+         vERM2VI2WsF/OywN8fjpeAJZBJGeXfABXEpXvgQIHeio7gr4gipFPZnZ3jtIJ8MIXMHd
+         YwK5pYjp/EGC5hAbSoxAsXvSIRh7IjuFoE2ti/2YVcTZ/UXWMpo1Jup7urLe4MmeZ2Nz
+         Bbww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=TNPVhG6FFRFuQ8eChNznVvTx8ZpBlO1Hc/5puE7Ig94=;
-        b=zQLqMnCNtSRDaPwtIdqexY7A5O3+tUp+06RqfpoeiJEBaJOptjmdBBDWf+1giyWK4D
-         n/Y+/uFb2aYXgBl4+SQivfWwFL43+aAaB67sSVYOP2mHmrfK81Sm5E+DvpulwXxfnNRu
-         1k82pPPz9uZOCs+48DHLtNEuvgahAihpKi2yTiJR9jFtp1fAI/ub+Ff0tWABFyqWaPuD
-         XpXt7LDbg4llOs8jdU0e/n731Kq8y+A1bOLaw9mOmo9cVHMdQPLu9m4hm3qG3bvs2YSZ
-         88C/y5/mXYgftGG/3PBhfyl8Z21X21vh8rmJZZ9fFotXvmjuqtEb828e0Xm6u02NMU/r
-         mlmQ==
-X-Gm-Message-State: AJIora8rt40Xcl4VMEsYoTtzL+ZRktuReqh3GXTowqYJrxK0BOkr9GqI
-	+nxl9y9ReRaOOIKGicL/z08g7Csjx6xjpa5lru1TVbrdRXWmH0m/0LvD9UXvH3HwkgY6juM08i5
-	h2MVvOaqk7+1O7bs=
-X-Received: by 2002:a05:6000:1844:b0:21b:b06f:a3a1 with SMTP id c4-20020a056000184400b0021bb06fa3a1mr9724367wri.357.1656605891833;
-        Thu, 30 Jun 2022 09:18:11 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tK52NYS+6yOJcW/39vVPJNTUd0kFqCdV2md3T3rl2VApvTs5f+PMel3AFxu2wwY8zD6V2NTQ==
-X-Received: by 2002:a05:6000:1844:b0:21b:b06f:a3a1 with SMTP id c4-20020a056000184400b0021bb06fa3a1mr9724347wri.357.1656605891601;
-        Thu, 30 Jun 2022 09:18:11 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-106-148.dyn.eolo.it. [146.241.106.148])
-        by smtp.gmail.com with ESMTPSA id m21-20020a05600c4f5500b003a0502c620dsm3056102wmq.44.2022.06.30.09.18.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jun 2022 09:18:10 -0700 (PDT)
-Message-ID: <6bfbf8f4852f3491330c2ab8cbc2ed28920cd734.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v3 0/2] Locking fixes for subflow flag changes
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
-Date: Thu, 30 Jun 2022 18:18:09 +0200
-In-Reply-To: <20220629225327.657202-1-mathew.j.martineau@linux.intel.com>
-References: <20220629225327.657202-1-mathew.j.martineau@linux.intel.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Un+NiPMCHGHJ/Wr+YcFM3yNOTuExnWsPBH5Vu6z+ZRY=;
+        b=djefzpJtGq5GmgeVp9Gn0MhEUL2AhaWfsXKkrdlNF0TSVPb3cJSEcZRnKa7y6E0YTm
+         KifDhfZB14btjzSpFvhS+VQURoLa3FMupBrYdG8Abg3WnUbopL5vpY4fzO94u+XwVJFS
+         qIDJj/6DU5694myJ+eUloabT84NhJRJ8itLWJMjs5yod7CAW/MBvL4OLikfxRdb1ewcU
+         OwD3JjjNCCHqWU0bix94BdM+Rr+NH8nSxFsvxYVQJh8yde+FI0KQ+5auQnD0v79pw+ik
+         MmxkZCyVPA5hngaWDhFTL3XYmcY2LgtKxJKYw/YL13KNqOms13EReXGtdjQpDXWQAwdz
+         vJWQ==
+X-Gm-Message-State: AJIora9NrdF4yo2vhHGbgIuu9hWAY39rniJIh7ZgDx938S50LyHGJaeY
+	2+0TLDtEcQfDKfATyE0zXlYzylh1ujY04A==
+X-Google-Smtp-Source: AGRyM1va8PrkCKj1xrYFu88//to+47EngstZldClr1Y/2KeYpq1mYduFUGKx/U5XTVSc22ctr1aeVg==
+X-Received: by 2002:a05:6402:4316:b0:437:8d2e:cf2d with SMTP id m22-20020a056402431600b004378d2ecf2dmr13032720edc.229.1656610545558;
+        Thu, 30 Jun 2022 10:35:45 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:6947:dee2:2822:3dc2? ([2a02:578:8593:1200:6947:dee2:2822:3dc2])
+        by smtp.gmail.com with ESMTPSA id d2-20020aa7d682000000b0042dddaa8af3sm13462819edr.37.2022.06.30.10.35.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jun 2022 10:35:44 -0700 (PDT)
+Message-ID: <d0547d88-332f-3c5b-403a-f1547b1114ef@tessares.net>
+Date: Thu, 30 Jun 2022 19:35:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add bpf_mptcp_sched_ops"
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <9ab93a02e7bf2ea1b2cfd40ce9e2001970d2e890.1656586148.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <9ab93a02e7bf2ea1b2cfd40ce9e2001970d2e890.1656586148.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2022-06-29 at 15:53 -0700, Mat Martineau wrote:
-> When working with Kishen on the userspace PM, the locking code in
-> mptcp_pm_nl_mp_prio_send_ack() caught my attention. The
-> release-and-reacquire of the PM lock in that function was requiring the
-> userspace PM code to grab that lock, even though nothing protected by
-> that lock was being accessed. Patch 1 addresses this.
-> 
-> While investigating that issue, I realized that
-> mptcp_pm_nl_mp_prio_send_ack() was not holding the subflow socket lock
-> while modifying several parts of the subflow context. Patch 2 addresses
-> this, and is not a drastic change since the subflow lock was being
-> acquired anyway in mptcp_subflow_send_ack().
-> 
-> v2->v3: Fix build error
-> 
-> v1->v2: Based on Paolo's feedback, fix MIB issue with atomic context in
-> patch 1 (tested with CONFIG_PREEMPT), and squash patches 2 & 3.
-> 
-> 
-> Mat Martineau (2):
->   mptcp: Avoid acquiring PM lock for subflow priority changes
->   mptcp: Acquire the subflow socket lock before modifying MP_PRIO flags
-> 
->  net/mptcp/options.c    |  3 +++
->  net/mptcp/pm_netlink.c | 13 ++++++-------
->  net/mptcp/protocol.c   |  9 +++++++--
->  net/mptcp/protocol.h   |  1 +
->  4 files changed, 17 insertions(+), 9 deletions(-)
+Hi Geliang, Mat,
 
-LGTM! for the series:
+On 30/06/2022 12:49, Geliang Tang wrote:
+> Rename optional_ops to optional_sched_ops, rename is_optional() to
+> is_optional_sched(). We may add optional_pm_ops and is_optional_pm()
+> in bpf.c in the future for BPF path managers.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Thank you for the patch and the review!
 
+Now in our tree:
+
+- 546b86f8921c: "squashed" in "bpf: Add bpf_mptcp_sched_ops"
+- Results: 083eb67a4d91..223590507ff9 (export)
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220630T173458
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
