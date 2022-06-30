@@ -1,174 +1,471 @@
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30076.outbound.protection.outlook.com [40.107.3.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F32EA6
-	for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 08:51:20 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZGy5ST4VfybR7EvW5bm6VZ3e7I6koMzDMTHX1XB7jAizQJPtVyjoqiB0+sIHfgUyfDa+L5jW7q2zOO03TiAFBP6C2QVo3kOaWDFsciJ5CmVs1p2YKteWtdurTLjNTZi7M9hAWCDc+1fQ575zlGmxOHI3ZXUnkhqASGSxAQhnJHNCTwrUg7GCnDq2TXA9XMvCSVB6eyrZQFBCaq9KNQXxTBmf7B8UnN7H4Glfn4+26N6rEidZ3Y2HTaAr70/+afgUQWS0oEYDj42Y2CvgnL1d2pMm2PSH+tNU/ZOZvIsGdX8zDQbZ6yxKcc9J3T35qV3bbbdWVW/hb3iwRe3XdKyn5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G5VgHOKGiA2QU4SHX+fkno94QBSUGbqMBV+Qv9K8cJ4=;
- b=I27+gcqswknus2/qmIGSRW/bnRhu4HfqtL4CuI7C7F5OTGShb1+j9cFElod5L6J8mItwVe33vVV4IIvsM7qU/0IgEU4R8yHctPKgHoKSDJ55d7LPv7WaC7UAq4YuZkbGEIpliREWGyt13kLdOG1NdVgSwa43y8eaC48dWzZEEYexGH3FRaXtwF0HI7C6CxBpkO+DMZaMZaVVVrnbjm9V93Mo/EXR1qKN4aXlogcqqFsomAMI4lAerwDOdf495NEc8OE7/NJE4GkbOATzmTpsWi4pCaAYFBYshr7+6wJbTn11YqRYbGri9GB5T/WHNbrw/2B4M8MQWkGEW6t/qL1uwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G5VgHOKGiA2QU4SHX+fkno94QBSUGbqMBV+Qv9K8cJ4=;
- b=FC/D/cQYhiI6ekKHQ8tIsB/6OfV5kKEkT8tz6eIXwaZp7adBn8W3poWCo8DFmdxI6sMwE0qBFQ66ZdaoigRwATm4ZX33LhDZhJbyhV0hK4Caz5q0SntUY0qdxMkw9oveFNWhegfcQMPTM+0MghZ5S+pt3QCj0Pn+NlFLQiNS1OMQZaU/YdOWqDUxue7Xpplho41XlFtJvNloqXW7HaNV4qjSJ6iGUdiaDOBjRL6EeJaUyLKsyy+/VxyeW0/8CaRBZrTbF6gtJBp1Y1Opuf2SS1jtuh8aB/DHTrsj5DIu5CXYMfSm9vEoQkLjxU4JpsXZ1AMGVq9TbFGWYx3jB1ZnDg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM8PR04MB7778.eurprd04.prod.outlook.com (2603:10a6:20b:24a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Thu, 30 Jun
- 2022 08:51:17 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::e50b:e0b:7b9c:a79e]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::e50b:e0b:7b9c:a79e%7]) with mapi id 15.20.5395.014; Thu, 30 Jun 2022
- 08:51:17 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v10 5/5] selftests/bpf: Add bpf_red test
-Date: Thu, 30 Jun 2022 16:50:54 +0800
-Message-Id: <22c84dbb74978d8062d453f6bc1857502078fc28.1656578856.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1656578856.git.geliang.tang@suse.com>
-References: <cover.1656578856.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0103.apcprd02.prod.outlook.com
- (2603:1096:4:92::19) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE13EBB
+	for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 09:51:51 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id fd6so25775767edb.5
+        for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 02:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:from
+         :subject:to:content-transfer-encoding;
+        bh=i4+MQcfemYL8kwMy13wyaoBrkF/Tlw43VeoQCs6zINw=;
+        b=imVhgO49+msEp4ZUkJdzTSZqmUuY9Y2IhYNIhrLyuojON4rCjp14VF1+HVDjYd22RS
+         kZaTYAxpO/7v0PtQZoOQUypTUSmETfWjgHHOqPafjxjEBlpnz7qeIWjisIArU1q4vuQd
+         AHqwE+LKYJYkSUV+EFu7vq1dffTHfqCWs1Uh7GM9NXpzHJUAHMa/k6uGIJUokTJKZHwg
+         5U8IpHiMfzD1AxlqD6TpJj7GcW73+a4BUo2V56KOyHx1tN54gfKu6L+vneNnHbNADsFq
+         QBUljvj/zdO5hZ5oFNBsxIW5tzK+4bFwld/Kd0YOAze2X7zu0bf2Ejkko3hxD2RQDQi9
+         ZKrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:from:subject:to:content-transfer-encoding;
+        bh=i4+MQcfemYL8kwMy13wyaoBrkF/Tlw43VeoQCs6zINw=;
+        b=A/OTFrWw74OILLvJX9nLiVAqzcraNvEKSSN/WlfqPpJRXCiP6wE0+Q9xOXp+KNfNY2
+         H5V4d+28o8vpTqzv/GUNAv5VgVCY69vuao2Ard8D4fyY9haI+mWCk4qF0L0sc2QegNrO
+         L9HWi02p1R+LZf38KkJWb86Ic/2KaQW7yauDpCrFYgo/rN2YTlZhpJz/ymnB9iTubwlD
+         wRcqV+idQr/Pk/YUOOAZehHswwWFvJcH39Kfw13jaFIBrCVNp3bSW33fNjnn8VuxmNMl
+         4WOcACuVtFiv2V1LFxqyOeX0hn+GthpKd9sXr7bMcqq9WFGKw4AY+xsTt2VMtgGkwio8
+         xxxA==
+X-Gm-Message-State: AJIora81o1ohQMsTXyB/te+guAhySnu08gbzD7Y0D1+EISyZwTs68cY6
+	oWvBlNMIgxs3SA+SHndtfewhkubRvzVchA==
+X-Google-Smtp-Source: AGRyM1uU9eukSaqz9JEJrDK3iwgORd1D7NvZa0I2s3eMp4i/201KnUxp07CnEgEdh6h6VTl5q0bY7w==
+X-Received: by 2002:a05:6402:3808:b0:435:5a6c:9dd9 with SMTP id es8-20020a056402380800b004355a6c9dd9mr10454087edb.368.1656582708924;
+        Thu, 30 Jun 2022 02:51:48 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:6947:dee2:2822:3dc2? ([2a02:578:8593:1200:6947:dee2:2822:3dc2])
+        by smtp.gmail.com with ESMTPSA id w16-20020a1709061f1000b0071d3b6ed4eesm8877134ejj.160.2022.06.30.02.51.48
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jun 2022 02:51:48 -0700 (PDT)
+Message-ID: <987093b3-d243-92cd-623f-774e32e9453d@tessares.net>
+Date: Thu, 30 Jun 2022 11:51:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e99e09fd-a7ca-40db-82ce-08da5a75b21b
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7778:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	wVG+DEYNmcvMzz0YdxX/KTJYkvbX00+BS4EtiscnbHW7Zv3zuzgGcCs/d8u9FrKNtyBpUN5xchDtFopIGqTHOpCV6VnDtegL+l8D5a2CtcgLuFbRJoGBiQifUWOpTsNz9kB+NVGVPuBhOGYAap1W7oc6Re9Yb8TeNdGXXKJIXiFAzk9CTWAV+7H+TEFsXkdvXDES8DbEB+JSIfG0FLFLvuypc3A+y0u/LXHiym3x/7I8cq58FCkW32Guc6IUu284033SmqW9pAoct/b57/UbDZ0S0j6Vmy2IbG6ZuEJtEITVm5PoH9UcJnHJnY1q8LBEQ3wB0kTMMND9DawRyi3xC4gg8LugXCVlaYCHY9hhhg1WpcJMBHrE6rJPJoS488mnol6m94lEaQExguVlzPb19IPCpq3NX6vyGxzZy4uC86cOuCzFGvr04G0vM1n7vNwANu/lNCjseMJN/ml+AhQ+QF/l3zbqr90fM9vdk5gu5E4thQLdAYYIgHk9pZxkthsaQmVeo1gXoe0DhJSXXL1mTI8IboLap19t4mrDXV1XwJUyFY2NtxCZWiAbOJjAR8PXZXt5VcfYmndQ91yFvrKQGFOsADNX2Qtey41czY4lo1xJpA0mdKWG/ZRPpfemxAlqmks2xrwGEJrWsFoIDvHBSR8WOiaoSL3FmWLt9EafEVGekzP4hRd8JgEINIRL2Qpt/qWnyxCPvfKbKBZbAdsOqUKyAyQOPucb2xCBGdkElUeVxQL+rD6OOZXJ+LSCtS34Xgu4OjfHT3M/F0iiVeOC/rpb11CvPvILjkcl+SM252E=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(376002)(366004)(396003)(136003)(39860400002)(41300700001)(186003)(107886003)(6512007)(2616005)(6506007)(478600001)(26005)(66476007)(86362001)(6666004)(83380400001)(38100700002)(5660300002)(36756003)(6916009)(66556008)(6486002)(44832011)(8936002)(66946007)(316002)(2906002)(4326008)(8676002)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CPvKiRE8q2YD4aMoGk/A+xO2rQMDsvP7ezwfhOPwFsPGVKyv8bvxCztN0wgY?=
- =?us-ascii?Q?/jLj9skqyhIryCuWIh6PumtthyJ7E6zlK9n0T5uX3bnlMzx1r9wRn3CUVW9w?=
- =?us-ascii?Q?bEpsFNtmIzFGo+toQHBbUmsPr4bdyqFosqg5o3ts03tq8XD0q4VgommcAXUg?=
- =?us-ascii?Q?IQGQchTFfrRBF4ygJ9W9Wg7FbqoL4btYyNgqfac40gdxJFjOpxFBxaNzZg9e?=
- =?us-ascii?Q?5k2zsBki/jts/u7yt5I7b1x7V8/IIiqYfNk7Bol4vR5aFxqIoTkgTt/Amkxn?=
- =?us-ascii?Q?tO+WljlJF+MHZz1QCiRs4Gsjius40moBdM1t4/Vica8y58xv63OyatLN8vKK?=
- =?us-ascii?Q?ddZGeDh40GqneHzkwfg7n47u3ZqUU/gw1LTbuxLo6wGaz5pAwjpyC5d3zIzZ?=
- =?us-ascii?Q?wsUYSRSAu/s6KAWFvc0l5/cnU6wnBrJeWR+nkwkCbJfDjv7Mco6FFRDfzZ5A?=
- =?us-ascii?Q?i9NT5/5pe8CIIqkFCpzE4pcg1JZMZG2vLghxPAWQnA8lyMTeoZd5n74ebUfU?=
- =?us-ascii?Q?ev28H6YL9AvrAe/NjtgyaJTh5s/VYw08uhlqWarJ2sF2Rjmu8ZBn3GhCAj3h?=
- =?us-ascii?Q?vOQuHak411R/EHouloRdOY94xsfwbrfPH8VNvy8lQCSvx0t6FRsJqZyv3g9d?=
- =?us-ascii?Q?UBjK8zy6LZczOk82prnW8Ov8O/pXpezdD6HtOWMXMe0ZQdsGi9LNpyw4BksE?=
- =?us-ascii?Q?dw5sCS10TC7MSoHQg7vy+FQGr/nwnK0WCqBWb/AnakUFLohZpkevYACzFjEV?=
- =?us-ascii?Q?ktGOpvb/9ZgCbSgpPrmhaIm3WBerY+U9+0Uu18qQ6KDQrdGIQyGV2seHZGTd?=
- =?us-ascii?Q?3meCOj56ZR2eYRMn3TMWlHBcN3TvRWvmT2BvFlynop0frEBASmm+WdwceLMc?=
- =?us-ascii?Q?iwpVFsUYJ3Hj0ZQqmQjHZ0Ilinfh999hILxlj/1XkB3in+RyxWl+sii27FQH?=
- =?us-ascii?Q?ntoKpJ+Twzh8jEcmjJI+TQ+fztCgY/XvMU8LnIa6g/UdA1UFJ6fU31AduMie?=
- =?us-ascii?Q?s3C99DSu51+DIHFExFo7KurycGa7XNgn6TTtOcXKQKrlF6sY6WaZ7IWg5s/C?=
- =?us-ascii?Q?EmXS18fukOocB7Pv7Cbj5fGvdHm9z/FEMQgCJ0lTPZBhr455cDFaMQuQCa1z?=
- =?us-ascii?Q?Gk0Ksx7QHKoHDRD1INm+BOIA7LVHGLHyLc2BvdypUD4mjZvLWXxDlcw8LjDA?=
- =?us-ascii?Q?sSxnf8Rst4hRty0GWG7FRVvZ75tySED7GiRs8OPBsF21tiLCYiH8S0ifmJC6?=
- =?us-ascii?Q?CHlZHo7n1TDlbC+OvZXWoPquYRp4LunvtaLlkED9YvhQq77cE0XziTzHEAGp?=
- =?us-ascii?Q?rszY9H6psGCvTv5RRwHbwudocm/6XVbvIWcgZ7geKamLYPex11nj99KtNulS?=
- =?us-ascii?Q?0LJ9+baqjbpjlM+d2hlZ0Cq+/+NHKbOdEsIVasSYpjp/sWlg7+FARNFAoIJM?=
- =?us-ascii?Q?eWUxt7NFtB6Uft+lMnD+EOhZ5RKFEsmv7ioRuMuamQGkGRkPBdcdmSOnnKo/?=
- =?us-ascii?Q?x30eyJAdPIZijTpk0O4w58TSHwmq19nUw5otjkGYi5KdOs3aTnMxUjKxxnkB?=
- =?us-ascii?Q?LWu/sNrZNy1v6wgbj1IYEQKilwZ96HSiesGWA0xVcG7Q1oXykAP+5zSDmI6h?=
- =?us-ascii?Q?HA=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e99e09fd-a7ca-40db-82ce-08da5a75b21b
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 08:51:17.4823
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mlj7b1K6M1Fes2tvYR4Maj+H1vl9fryj4GddXmnXv81wHJO6KOz5dTJQ2EJHmNsZ+/2tSMwUnnHSvFhZfReSoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7778
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [Weekly meetings] MoM - 23rd of June 2022
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This patch adds the redundant BPF MPTCP scheduler test: test_red(). Use
-sysctl to set net.mptcp.scheduler to use this sched. Add two veth net
-devices to simulate the multiple addresses case. Use 'ip mptcp endpoint'
-command to add the new endpoint ADDR_2 to PM netlink. Send data and check
-bytes_sent of 'ss' output after it to make sure the data has been
-redundantly sent on both net devices.
+Hello everyone,
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Last Thursday, we had our 199th meeting with Mat, Ossama (Intel), Paolo
+(Redhat), Geliang (SUSE), Geray (Parkyeri) and myself (Tessares).
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 647d313475bc..8426a5aba721 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -9,6 +9,7 @@
- #include "mptcp_bpf_first.skel.h"
- #include "mptcp_bpf_bkup.skel.h"
- #include "mptcp_bpf_rr.skel.h"
-+#include "mptcp_bpf_red.skel.h"
- 
- #ifndef TCP_CA_NAME_MAX
- #define TCP_CA_NAME_MAX	16
-@@ -381,6 +382,37 @@ static void test_rr(void)
- 	mptcp_bpf_rr__destroy(rr_skel);
- }
- 
-+static void test_red(void)
-+{
-+	struct mptcp_bpf_red *red_skel;
-+	int server_fd, client_fd;
-+	struct bpf_link *link;
-+
-+	red_skel = mptcp_bpf_red__open_and_load();
-+	if (!ASSERT_OK_PTR(red_skel, "bpf_red__open_and_load"))
-+		return;
-+
-+	link = bpf_map__attach_struct_ops(red_skel->maps.red);
-+	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
-+		mptcp_bpf_red__destroy(red_skel);
-+		return;
-+	}
-+
-+	sched_init("subflow", "bpf_red");
-+	server_fd = start_mptcp_server(AF_INET, ADDR_1, 0, 0);
-+	client_fd = connect_to_fd(server_fd, 0);
-+
-+	send_data(server_fd, client_fd);
-+	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr 1");
-+	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr 2");
-+
-+	close(client_fd);
-+	close(server_fd);
-+	sched_cleanup();
-+	bpf_link__destroy(link);
-+	mptcp_bpf_red__destroy(red_skel);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
-@@ -391,4 +423,6 @@ void test_mptcp(void)
- 		test_bkup();
- 	if (test__start_subtest("rr"))
- 		test_rr();
-+	if (test__start_subtest("red"))
-+		test_red();
- }
+
+Thanks again for this new good meeting!
+
+Here are the minutes of the meeting:
+
+
+
+Accepted patches:
+    - The list of accepted patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=3
+
+
+    netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+    our repo (by: Geliang Tang, Mat Martineau, Paolo Abeni):
+
+12890418  [mptcp-net] Squash-to: "selftests: mptcp: more stable diag tests"
+
+12889968  [mptcp-next] selftests: mptcp: Initialize variables to quiet
+gcc 12 w...:
+    - should probably go to -net
+
+12889576  [v5,mptcp-net,6/6] mptcp: fix race on unaccepted mptcp sockets
+12889575  [v5,mptcp-net,5/6] mptcp: consistent map handling on failure
+12889574  [v5,mptcp-net,4/6] mptcp: fix shutdown vs fallback race
+12889573  [v5,mptcp-net,3/6] Squash-to: "mptcp: invoke MP_FAIL response
+when ne...
+12889572  [v5,mptcp-net,2/6] mptcp: introduce MAPPING_BAD_CSUM
+12889571  [v5,mptcp-net,1/6] mptcp: fix error mibs accounting
+
+12889519  [v4,mptcp-next,4/4] net: remove SK_RECLAIM_THRESHOLD and
+SK_RECLAIM_C...
+12889518  [v4,mptcp-next,3/4] mptcp: refine memory scheduling
+12889517  [v4,mptcp-next,2/4] mptcp: drop SK_RECLAIM_* macros
+12889516  [v4,mptcp-next,1/4] mptcp: never fetch fwd memory from the subflow
+
+12888641  [mptcp-next] Squash to "selftests: mptcp: userspace pm subflow
+tests"
+12888640  [mptcp-next] Squash to "selftests: mptcp: userspace pm address
+tests"
+12883908  [mptcp-next] selftests: mptcp: tweak simult_flows for debug
+kernels.
+12883411  [mptcp-net] selftests: mptcp: more stable diag tests
+
+12883327  [mptcp-next,v3,5/5] selftests: mptcp: update pm_nl_ctl usage
+header
+12883326  [mptcp-next,v3,4/5] selftests: mptcp: avoid Terminated
+messages in us...
+12883325  [mptcp-next,v3,3/5] selftests: mptcp: userspace pm subflow tests
+12883324  [mptcp-next,v3,2/5] selftests: mptcp: userspace pm address tests
+12883319  [mptcp-next,v3,1/5] mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy
+
+12874836  [mptcp-next] Squash to "selftests/bpf: Add bpf_first test"
+
+
+
+Pending patches:
+    - The list of pending patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=*
+
+
+    netdev (if mptcp ML is in cc) (by: Mat Martineau):
+
+12874585  [net-next,2/2] mptcp: move MPTCPOPT_HMAC_LEN to net/mptcp.h
+12874584  [net-next,1/2] mptcp: fix conflict with <netinet/in.h>:
+    - need to be re-sent
+
+    our repo (by: Dan Carpenter, Dmytro SHYTYI, Florian Westphal,
+Geliang Tang, Jiang Biao, Jiapeng Chong, Kishen Maloor, Mat Martineau,
+Matthieu Baerts, Paolo Abeni, Yonglong Li):
+
+12279739: RFC: [RFC,3/4] mptcp: move the whole rx path under msk socket
+lock protection
+12279741: RFC: [RFC,4/4] mptcp: cleanup mem accounting.
+12282219: RFC: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to
+tcp.h/mptcp.h
+12282221: RFC: [RESEND,RFC,4/4] tcp: parse tcp options contained in
+reset packets
+12282223: RFC: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support
+12282225: RFC: [RESEND,1/5] tcp: make two mptcp helpers available to tcp
+stack
+12282227: RFC: [RESEND,5/5] mptcp: send fastclose if userspace closes
+socket with unread data
+12858306: Changes Requested: [RFC,mptcp-next,v3] mptcp: Fast Open Mechanism:
+    - WIP
+
+12891609: Queued: [mptcp-net,v2,1/2] mptcp: netlink: issue MP_PRIO
+signals from userspace PMs
+12891610: Queued: [mptcp-net,v2,2/2] selftests: mptcp: userspace PM
+support for MP_PRIO signals:
+    - v2 is adding one sleep
+    - Can be applied (post-meeting update: change required to netlink
+attributes so individual subflows can have priority modified)
+    - For -net because it is an important feature missing from Netlink
+series
+    - Not a new command but modifying the behaviour of the CMD one to
+allow MP_PRIO signals for established subflow:
+        - @Paolo: is it OK for -net -> let me see the patches first!
+    - Not a new command for 'ip mptcp' but more for a userspace PM like
+mptcpd
+    - not related to that:
+        - Geliang reported that the "dump addresses" command is broken →
+best to report a new issue.
+        - *@Geliang* can you do that please?
+
+12892830: New: [mptcp-next,v9,1/6] Squash to "mptcp: add get_subflow
+wrappers"
+12892831: New: [mptcp-next,v9,2/6] mptcp: accept right edge of mapping
+validating
+12892832: New: [mptcp-next,v9,3/6] mptcp: redundant subflows push pending
+12892833: New: [mptcp-next,v9,4/6] mptcp: redundant subflows retrans support
+12892834: New: [mptcp-next,v9,5/6] selftests/bpf: Add bpf_red scheduler
+12892835: New: [mptcp-next,v9,6/6] selftests/bpf: Add bpf_red test:
+    - series: BPF redundant scheduler
+    - v7 was in good progress, Mat will check v9
+    - The CI reported some issues with it
+
+
+
+Issues on Github:
+    https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+    Recently opened (latest from last week: 282)
+
+  287  selftests: `mptcp_join.sh`: `userspace pm add & remove address`:
+WARNING `sock_owned_by_me()` in `mptcp_sched_get_send()` [bug] [selftests]:
+      - WARNING triggered by a new test
+      - Stacktrace has been added
+
+  286  Make MPTCP_PM_CMD_SET_FLAGS usable with the userspace PM [bug]
+@kmaloor:
+      - See patches above
+
+  285  Excluding the initial connecting interface? [question]:
+      - is in fact a bug → we cannot change the priority (backup) for ID
+0 (initial subflow)
+      - it only looks at the list of extra subflows but not the initial one
+      - for the first subflow, we cannot set the backup flag directly:
+          - not handled by the protocol in MPCapable
+          - but the PM should probably send it after the establishment
+of the connection:
+              - when fully established
+          - the first subflow is a bit particular (ID 0): it is not
+linked to an endpoint from the in-kernel PM
+          - there is currently no way in the API to set the backup flag
+for ID 0:
+              - the in-kernel PM could have a default behaviour for the ID0
+      - would be good to modify the ticket to make it clearer on what
+needs to be done:
+          - *@Paolo* will try to do that
+
+  284  combine to WAN's via two Wiregate Connections [question]:
+      - is MPTCP used?
+      - if not: -> issues/178
+
+  283  Cleanup following TCP changes to forward allocation @pabeni:
+      - Already closed, see patches above
+
+
+    Bugs (opened, flagged as "bug" and assigned)
+
+  286  Make MPTCP_PM_CMD_SET_FLAGS usable with the userspace PM [bug]
+@kmaloor:
+      - See patches above
+
+  279  [syzkaller] Warning in icsk_get_port [bug] [syzkaller] @mjmartineau:
+      - the patches introducing the issue have been reverted
+      - Mat just closed this ticket
+
+  181  implement data_fin ack retransmission for subflow in  TIME_WAIT
+state [bug] @mjmartineau
+
+
+    Bugs (opened and flagged as "bug" and not assigned)
+
+  287  selftests: `mptcp_join.sh`: `userspace pm add & remove address`:
+WARNING `sock_owned_by_me()` in `mptcp_sched_get_send()` [bug] [selftests]:
+      - just been opened
+
+  248  packetdrill: more tests failing due to packets arriving later
+than expected [bug] [packetdrill]
+
+
+    In Progress (opened, new feature and assigned)
+
+  234  Packetdrill: Support MPC+DATA+checksum error [enhancement]
+[packetdrill] @spoorva
+  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
+@dcaratti
+
+   75  BPF: packet scheduler [enhancement] @geliangtang:
+       - See patches above
+
+   74  BPF: path manager [enhancement] @geliangtang
+
+
+    For later (opened and not assigned assigned)
+
+  285  Excluding the initial connecting interface? [question]
+  284  combine to WAN's via two Wiregate Connections [question]
+  273  Packetdrill: test outgoing MP_FASTCLOSE [enhancement] [packetdrill]
+  269  Allow having a mix of v4/v6 subflows for the same socket
+[enhancement]
+  266  Packetdrill: add MP_FAIL coverage [packetdrill]
+  236  Review supported sockopts list [enhancement]
+  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
+  215  TCP Urgent pointer and MPTCP [enhancement]
+  213  add MPTCP man page [enhancement]
+  208  better handing of ssk memory pressure in the TX path [enhancement]
+  202  Add sendmsg support for ancillary data [enhancement]
+  197  more mibs needed [enhancement]
+  180  Get an update when MPTCP fall back to TCP [enhancement]
+  177  improve retransmit subflow selection [enhancement]
+  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
+port [enhancement] [packetdrill]
+  150  remove completely workqueue usage [enhancement]
+  141  avoid acquiring mptcp_data_lock() twice in the receive path
+[enhancement]
+  133  PM: Closing the MPTCP connection when last subflow is not the
+initial one and its IP address is removed [enhancement]
+  128  When the last subflow is closed without DATA_FIN and msk
+Established, close msk (after a timeout) [enhancement]
+   79  allow 'force to MPTCP' mode: BPF [enhancement]
+   78  notify the application (userspace) when a subflow is
+added/removed [enhancement]
+   77  [gs]etsockopt: forward to new/existing SF [enhancement]
+   76  [gs]etsockopt per subflow: BPF [enhancement]
+   61  move msk clone after ctx creation [enhancement]
+   59  (MP)TFO support [enhancement]
+   57  After a few attempts of failed MPTCP, directly fallback to TCP
+for new connections [enhancement]
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
+interface [enhancement] [syzkaller]
+   41  reduce indirect call usage [enhancement]
+   24  Revisit layout of struct mptcp_subflow_context [enhancement]
+
+
+    Recently closed (since last week)
+
+  283  Cleanup following TCP changes to forward allocation @pabeni
+  282  selftests: `simult_flows`: failing with debug kernel: transfer
+slower than expected [bug] [selftests] @pabeni
+  280  support of ndiffport [question]
+  264  selftests: diag: failing on the public CI with the new
+debug.config [bug] [selftests] @pabeni
+
+
+
+FYI: Current Roadmap:
+    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+    - Current/Coming merge window (5.20/6.0):
+https://github.com/multipath-tcp/mptcp_net-next/projects/15
+    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Patches to send to netdev:
+
+    - Fixes for other trees: /
+
+
+    - Fixes for -net:
+        - [9187f59fcf76] mptcp: fix error mibs accounting (Paolo Abeni)
+        - [9b5c48a2c155] mptcp: introduce MAPPING_BAD_CSUM (Paolo Abeni)
+        - [c81afcd7c9b3] mptcp: invoke MP_FAIL response when needed
+(Geliang Tang)
+        - [b8a9af086a90] mptcp: fix shutdown vs fallback race (Paolo Abeni)
+        - [5fbf8dcb1487] mptcp: consistent map handling on failure
+(Paolo Abeni)
+        - [55f4ef78229d] mptcp: fix race on unaccepted mptcp sockets
+(Paolo Abeni)
+        - [018d2f16d544] selftests: mptcp: more stable diag tests (Paolo
+Abeni):
+            - Applied recently, probably best to wait a bit (next week)
+
+
+    - Fixes for net-next:
+        - [c20568e1d4f8] mptcp: fix conflict with <netinet/in.h> (Ossama
+Othman):
+            - this is in fact for -net
+
+
+    - Features for net-next:
+        - [3bdd1b9e0319] mptcp: move MPTCPOPT_HMAC_LEN to net/mptcp.h
+(Geliang Tang):
+            - has to be re-sent
+
+
+        - [68003ca13a6f] selftests: mptcp: tweak simult_flows for debug
+kernels (Paolo Abeni):
+            - it looks like we also had the same issue with the public
+CI without a debug kernel
+            - probably best to wait and see how often we have this issue
+on the public ci
+            - workaround is to modify the script when the CI is doing
+the tests
+
+        - [f1eb3f2cb4d2] mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy
+(Geliang Tang)
+        - [f3c5dde10031] selftests: mptcp: userspace pm address tests
+(Geliang Tang)
+        - [92378ff55152] selftests: mptcp: userspace pm subflow tests
+(Geliang Tang)
+        - [1908a4ccaa2c] selftests: mptcp: avoid Terminated messages in
+userspace_pm (Geliang Tang)
+        - [bac5548c7c47] selftests: mptcp: update pm_nl_ctl usage header
+(Geliang Tang):
+            - are OK to be sent, applied a few days ago
+
+        - [efdd161d452f] mptcp: never fetch fwd memory from the subflow
+(Paolo Abeni)
+        - [31b85342665d] mptcp: drop SK_RECLAIM_* macros (Paolo Abeni)
+        - [b846ca72c717] mptcp: refine memory scheduling (Paolo Abeni)
+        - [78f0912127b3] net: remove SK_RECLAIM_THRESHOLD and
+SK_RECLAIM_CHUNK (Paolo Abeni):
+            - probably best to wait a bit
+            - also upstream, a regression has been reported in sctp in
+the patches from Eric linked to SK_RECLAIM_*
+            - best to wait to get a clearer view about this regression
+
+
+        - [b2ccb6a27761] selftests: mptcp: Initialize variables to quiet
+gcc 12 warnings (Mat Martineau):
+            - can be sent to '-net' with a 'Fixes' tag (even if it is
+introduced by a new compiler)
+
+
+    - Features for net-next (next): /
+
+
+    - Features for other trees:
+        - [4e3ab75acdac] mptcp: add struct mptcp_sched_ops (Geliang Tang)
+        - [6654b1085907] mptcp: add a new sysctl scheduler (Geliang Tang)
+        - [db3be898e969] mptcp: add sched in mptcp_sock (Geliang Tang)
+        - [ee54afef4ecf] mptcp: add scheduled in mptcp_subflow_context
+(Geliang Tang)
+        - [f31fa75643a6] mptcp: add get_subflow wrappers (Geliang Tang)
+        - [b90fc0c86616] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
+        - [dcc7d193254b] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang)
+        - [87fade60a74c] selftests/bpf: Add mptcp sched structs (Geliang
+Tang)
+        - [e5b8af95d247] selftests/bpf: Add bpf_first scheduler (Geliang
+Tang)
+        - [bcb7f244fb28] selftests/bpf: Add bpf_first test (Geliang Tang)
+        - [367da0a71d20] selftests/bpf: Add bpf_bkup scheduler (Geliang
+Tang)
+        - [10619a9693fb] selftests/bpf: Add bpf_bkup test (Geliang Tang)
+        - [fe81a842b0ea] selftests/bpf: Add bpf_rr scheduler (Geliang Tang)
+        - [1e7bb19e7659] selftests/bpf: Add bpf_rr test (Geliang Tang):
+            - some patches are in review and related to that, best to wait
+
+
+
+Extra tests:
+    - news about Syzkaller? (Christoph / Mat):
+        - nothing related to MPTCP
+
+    - news about interop with mptcp.org/other stacks? (Christoph):
+        - /
+
+    - news about Intel's kbuild? (Mat):
+        - running and mostly succeeding.
+        - failure are linked to the ones seen by the public CI
+
+    - packetdrill (Davide):
+        - /
+
+    - Patchew (Davide):
+        - /
+
+    - CI (Matth):
+        - /
+
+
+
+Applying patches:
+    - now with b4 with signature checks
+
+
+
+Linux Plumber:
+    - we might have Mat and Paolo but to be confirmed
+    -
+https://lpc.events/blog/2022/index.php/2022/06/22/registration-still-sold-out-but-there-is-now-a-waitlist/
+    - Matth might go if possible
+    - Mat would like to talk about MPTCP extensions. Matth might help if
+he can go
+
+
+
+
+Next meeting:
+    - Next one on Thursday, the 30th of June.
+    - 15:00 UTC (8am PST, 4pm CET, 11am CST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20220630
+
+
+
+Feel free to comment on these topics and suggest new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
 -- 
-2.35.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
