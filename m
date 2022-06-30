@@ -1,111 +1,96 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F8C7B
-	for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 22:55:10 +0000 (UTC)
-Received: by mail-qv1-f52.google.com with SMTP id cu16so27162923qvb.7
-        for <mptcp@lists.linux.dev>; Wed, 29 Jun 2022 15:55:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=ilkNvGZ7S40nWPnb2+HTyWJFik4u9EX5C3e78EmcHj8=;
-        b=RP3XASQzhNpOUUVetfReRloBZrcXfCzb/tlvdlxZw2b3miS3MpZIMwewbdz67TJGJn
-         NEYofB5sqrR413+N0QoAcFmu0GVHeGR2/x6TE0ClVE1Tl1ySThslkl0HdDylfl8yQ53a
-         GMkU1M4gekVqZ9ui4nOpW0Iv/h5Bn+FCPbosYtDO2ddxGrq7Fv1KRkred0riD7z9pY07
-         y5htFthNCcz+o3BR/pYzahvB58LILbGN4CqZ6jPtRk8582wdLfm6xqAL5zttux0+KZuj
-         NF5eC+NKph+OgGYP4KsUNJjgc9uNittk5hpKE9GWrRD/FymMKoF147zFmztwK/vpDsEN
-         uSgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=ilkNvGZ7S40nWPnb2+HTyWJFik4u9EX5C3e78EmcHj8=;
-        b=Zo+2+VvJ76wUDkNN0AhU9szB8IOspNmqB6Aw/qaNPvfVuC0YkSBELvHMG0So56fHhx
-         M8oO5gxc1NLd2ZjGqwCmuLd72Iso5yo0yISG0tYnbQeJgZJfJy/wpHqB8cOK+pWmq1r4
-         ii448eL7p9B80Il+UvCE3zDTq6wLQcmEcelloeP2uCy5HPJ7z9gfhWR1A9whWwiYBg1+
-         /LjllvGXR5V/GcMU0k66voc4zkZCfYo/F81Z1gTqPlrVS910zHt7Cb4Hz9J3chgYEQOR
-         WzVO5fe1Qny3Q5A+C2VNoKchXJYCD9ABPlTKsZ4Y/QtuzKFB7RNJWujtm+HwJkBGdCoJ
-         bOuQ==
-X-Gm-Message-State: AJIora+yXHhBKQFnoObUosGQOvoyzrtJS4rrt1sFIvUmY4mobw2m4NSF
-	6OZea16BbLcxoxeWLKAUeF54yJEwrxpe6as=
-X-Google-Smtp-Source: AGRyM1twnL8emRxAt6QKsmESnadX+ufihfrvoFiL5C24+keZII4daf7EmaSnrvUw7AHXJyp9JJ4M7g==
-X-Received: by 2002:a05:622a:2ca:b0:31d:2ac3:fb19 with SMTP id a10-20020a05622a02ca00b0031d2ac3fb19mr660654qtx.449.1656543309522;
-        Wed, 29 Jun 2022 15:55:09 -0700 (PDT)
-Received: from [127.0.0.1] ([20.185.88.46])
-        by smtp.gmail.com with ESMTPSA id bs24-20020ac86f18000000b00304fa21762csm4028836qtb.53.2022.06.29.15.55.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 15:55:09 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220629223550.655928-3-mathew.j.martineau@linux.intel.com>
-References: <20220629223550.655928-3-mathew.j.martineau@linux.intel.com>
-Subject: Re: mptcp: Acquire the subflow socket lock before modifying
- MP_PRIO flags: Tests Results
-Message-ID: <15ca1394-b763-d8e0-9625-83825a6532c1@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Jun 2022 22:55:09 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52407B
+	for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 00:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656548219; x=1688084219;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=DquRVD8ZDpwFCE9tJKiDOO5eqxwejBvk5lXfn1ybgIc=;
+  b=QvmVcK8C6gTVzMqv4q+6rmjELQBkc4SWqmYLK0i2uxv5sVbOkXBGNDjH
+   WQ8FXpLrN04Ua/p5md9vaXbR34L/tcvZ1M+u90/ZW8DcgOfD8GZnlQqyy
+   5WztrjU4qFAF+yBl/7/xjfG8X5P2j35ojTx/6v0Wk+l2TFA3trqYeO8pi
+   u3U/fJFHW5UZmmbfANyVptQIY72kwPw+pmOX9IiJweHhRrtbztxMdLNwP
+   LJqaiXmLmCwypJIE954SnSeA6F8UHdmHFfqbo29DeC9v1fTVSN+DtU6ON
+   PuSvw/kqoKSQwF8hY6Wj+7iUbABhE7/senktLwva4TIXUQfia/Iv9AUjD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="283294378"
+X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
+   d="scan'208";a="283294378"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 17:16:58 -0700
+X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
+   d="scan'208";a="693814616"
+Received: from bschenc3-mobl.amr.corp.intel.com ([10.209.57.164])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 17:16:53 -0700
+Date: Wed, 29 Jun 2022 17:16:53 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Draft talk proposal for MPTCP @ Linux Plumbers '22
+Message-ID: <78ff1ebd-f440-9dd0-256-abf3345e6d3@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-
-Hi Mat,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- {"code":404,"message":
-  - "Can't find artifacts containing file =
-conclusion.txt"}:
-  - Task: https://cirrus-ci.com/task/4719806531239936
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4719806531239936/su=
-mmary/summary.txt
-
-- {"code":404,"message":
-  - "Can't find artifacts =
-containing file conclusion.txt"}:
-  - Task: https://cirrus-ci.=
-com/task/5845706438082560
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5845706438082560/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/2c27d7a3c28d
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+At our recent weekly MPTCP meetings, I've talked about proposing a Linux 
+Plumbers talk this year. Matthieu and I have discussed collaborating on 
+it.
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+My high-level idea was to focus on our new customization features: 
+userspace path management and BPF packet schedulers.
 
-For more details:
+Since MPTCP is a community effort, I'd like to share this draft so I 
+can be sure to focus in the right areas and represent the community well. 
+Please review and comment!
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+Side note: I've included the https://mptcp.dev URL even though it's not 
+working yet. Matthieu, do you think we could get something set up there 
+before September? The old https://is.gd/mptcp_upstream URL we used for the 
+2019 talk doesn't work any more.
 
+----
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+Multipath TCP (MPTCP) was initially supported in v5.6 of the Linux kernel. 
+In later releases, the MPTCP development community has steadily expanded 
+from the initial baseline feature set to now support a broad range of 
+MPTCP features on the wire and through the socket and generic netlink 
+APIs. The first phase of development focused on solid support of server 
+use cases. Two current projects are intended to make MPTCP more 
+customizable for client devices and unique use cases without requiring 
+custom kernel modules.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+The first of these customization features is the userspace path manager 
+added in v5.19. On the kernel side, MPTCP's generic netlink API was 
+updated with new commands that allow a userspace process to control 
+multipath address advertisements and the additional subflows that can add 
+paths to a MPTCP connection. The Multipath TCP Daemon (mptcpd) is the 
+first userspace daemon to support these commands. With these components, 
+systems can now customize MPTCP behavior on a per-connection basis. The 
+in-kernel path manager, which remains available, has configuration options 
+that affect all connections in a network namespace. We will show what the 
+userspace and in-kernel path managers are best suited for and explain the 
+tradeoffs between them.
+
+A BPF packet scheduler framework is also in active development. When there 
+are multiple active TCP subflows in a MPTCP connection, the MPTCP stack 
+must decide which of those subflows to use to transmit each data packet. 
+The default in-kernel scheduler tries to utilize all the available 
+subflows to favor throughput, but is not tunable. Customizable schedulers 
+could optimize for latency, redundancy, cost, carrier policy, or other 
+factors. We will review the progress that MPTCP Linux developers have made 
+on this feature to date, along with some of the challenges of integrating 
+BPF into the MPTCP transmit path.
+
+MPTCP development for the Linux kernel and mptcpd are public and open. You 
+can find us at mptcp@lists.linux.dev, https://mptcp.dev, and 
+https://github.com/intel/mptcpd
+
+--
+Mat Martineau
+Intel
