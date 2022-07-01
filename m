@@ -1,81 +1,80 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A387488
-	for <mptcp@lists.linux.dev>; Thu, 30 Jun 2022 22:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656627484; x=1688163484;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tF/Wq5emO17ur6n4i4kolET5/WZvdXynovD9SwfsTxM=;
-  b=JvgDMj9E/icT2AUxD2HSeEqKrwWSG8pjX2123WZ8L7QVQRwrLQwcvRzg
-   8ZDLKZ0TUuqxLVCypyJB3LzJCIypZuXXZ35oSxqQxOidooqmd8OFBb3Wn
-   Lqwol0nlBBfXuC1E/gO96T4MvP2pdnlzmjEuTj8PRMn4XGCb/OHzB1VtQ
-   wjUSL6i6PHkbDptMv05LVqDkfHL9sfihxetGzcJ/HWejc5HGeiDeb945y
-   pqjdkm8tCpS5hRYz0lQSg7HEopBxX8qqW+5yASjoJZ01Rnf2TrLf0r1lE
-   /ghQaZk77vYarFI+pp4nfmrqAJK4HJ9rjb0y5QI9cfeRHmtYJTz3xGlAf
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10394"; a="368797906"
-X-IronPort-AV: E=Sophos;i="5.92,235,1650956400"; 
-   d="scan'208";a="368797906"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 15:18:02 -0700
-X-IronPort-AV: E=Sophos;i="5.92,235,1650956400"; 
-   d="scan'208";a="733804541"
-Received: from mhtran-desk5.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.176.78])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 15:18:02 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	edumazet@google.com,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/4] mptcp: refine memory scheduling
-Date: Thu, 30 Jun 2022 15:17:56 -0700
-Message-Id: <20220630221757.763751-4-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.37.0
-In-Reply-To: <20220630221757.763751-1-mathew.j.martineau@linux.intel.com>
-References: <20220630221757.763751-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BCD1855
+	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656669940;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=omJcDEkURcSK4UY9y/M1fWybvbWyeOf+wnsFav0uXLA=;
+	b=i1c1zeVOUoNSQTR5PkWl0LLBhLBftxUkES/uNnZKDlY6bsktESI15cAuBSqvCaTFiDOGEP
+	QF216B/9PaqEG5zYV+7bTIz+AptRV6N5tbdvefMqhX8q52vR85AivbYKlf6naZz1vKaFTy
+	pYwa5ZLOYB7uH5Onjvn4Le41k5XcyO0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-659-1-Xs3zE7PUyOcr_DCcLnMg-1; Fri, 01 Jul 2022 06:05:39 -0400
+X-MC-Unique: 1-Xs3zE7PUyOcr_DCcLnMg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 107FD1C06EC5
+	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:39 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.185])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 94B42400DEFC
+	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:38 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 0/6] mptcp: support for MPC prio exchange
+Date: Fri,  1 Jul 2022 12:05:20 +0200
+Message-Id: <cover.1656669391.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Paolo Abeni <pabeni@redhat.com>
+This series introduces the ability to control the MPC subflow for
+the in kernel PM.
 
-Similar to commit 7c80b038d23e ("net: fix sk_wmem_schedule() and
-sk_rmem_schedule() errors"), let the MPTCP receive path schedule
-exactly the required amount of memory.
+Patch 1 and 5 are actually a related bugfixes.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+patch 2 && 3 refactor a bit the endpoint lookup and MP_PRIO generation
+code, to simplify the next patch.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e89a0124023f..91628dbe5a2d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -323,9 +323,10 @@ static bool mptcp_rmem_schedule(struct sock *sk, struct sock *ssk, int size)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	int amt, amount;
- 
--	if (size < msk->rmem_fwd_alloc)
-+	if (size <= msk->rmem_fwd_alloc)
- 		return true;
- 
-+	size -= msk->rmem_fwd_alloc;
- 	amt = sk_mem_pages(size);
- 	amount = amt << PAGE_SHIFT;
- 	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV))
+patch 4 introduces the new feature quering the backup status of the
+endpoint used by the MPC subflow and eventually generating the needed
+MP_PRIO option.
+
+changes vs RFC:
+ - rebased on top of Mats' patches
+ - added patch 3/6 clarifying the endpoint id lookup semanthic
+ - added self-tests (patch 6/6)
+
+Paolo Abeni (6):
+  mptcp: fix local endpoint acconting.
+  mptcp: introduce and use mptcp_pm_send_ack()
+  mptcp: address lookup improvements
+  mptcp: allow the in kernel PM to set MPC subflow priority
+  mptcp: more accurate MPC endpoint tracking
+  selftests: mptcp: add MPC backup tests
+
+ net/mptcp/pm_netlink.c                        | 129 ++++++++++--------
+ net/mptcp/protocol.c                          |   2 +-
+ net/mptcp/protocol.h                          |   2 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  30 ++++
+ 4 files changed, 105 insertions(+), 58 deletions(-)
+
 -- 
-2.37.0
+2.35.3
 
