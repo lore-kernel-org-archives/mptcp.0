@@ -1,136 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACFF1869
-	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656669946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vc4FXkpz2q5liVNY8feAVGT09eyRqTZZ5C9SLhxKAow=;
-	b=ZPJkAbCbvOFqWaZtq4Pu0WYyFzXiw7tMlksAilV4temnc5Pe+mK+pI4Sxn+jk9lElI6ktD
-	bfOq599jsRMLYKoXnEoaEIm9R2OueM9qNiixy+uYO9WnmLabZXq02gtCB7tPu9RqbD9vA0
-	pOpx20roOz4+cXR37bhs3ZED5aePcj4=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-619-3fOJcKRuMkqNsHgGTaVuqw-1; Fri, 01 Jul 2022 06:05:45 -0400
-X-MC-Unique: 3fOJcKRuMkqNsHgGTaVuqw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 11E431C06EC7
-	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:42 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.185])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 965B1400DEFC
-	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:41 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 4/6] mptcp: allow the in kernel PM to set MPC subflow priority
-Date: Fri,  1 Jul 2022 12:05:24 +0200
-Message-Id: <00ff72e657916fc8c5e5a1cfca68d7e08b33097c.1656669391.git.pabeni@redhat.com>
-In-Reply-To: <cover.1656669391.git.pabeni@redhat.com>
-References: <cover.1656669391.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892421871
+	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 12:40:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E7ABC341C7;
+	Fri,  1 Jul 2022 12:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1656679215;
+	bh=XkZF9QDE5BboUanwfpPLD7ZnP0eXUrPzW2SgFIEozcs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hIJWP+SiBaVgYqpOvc8JBSKptXO1z9pCcMev2eArv5eVflAhGA7MqdNmnb4G49Yi8
+	 N/H/XGwwVI2sRvZ+ygSJGm0PcB6sIhS//dF2cTzzOety/+7f0oo5Y9GHIzmhc5h8ns
+	 iL2n41U/MtK+zKxRGw/EnCIwRVbuQGqxZqAI3iE/noL4iyZYxYWhlxRqWumfDU8L7a
+	 dqPu7P5N7RLNTtk77FwOkFdWB/RQIyVJU1ucZcL/Ae+gc0HKpXOkwkXyXuV35hi2TH
+	 NStXVbMtZvAH4di3VyY7qYtO77wuH0P9c5xUWEh61TpVrgYE1oWt1qH/T9Q5mQE4ZS
+	 ZAsIMfBvbVL7w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0DB1EE49BB8;
+	Fri,  1 Jul 2022 12:40:15 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Subject: Re: [PATCH net-next 0/4] mptcp: Updates for mem scheduling and SK_RECLAIM
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <165667921504.18764.8434604982955394989.git-patchwork-notify@kernel.org>
+Date: Fri, 01 Jul 2022 12:40:15 +0000
+References: <20220630221757.763751-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220630221757.763751-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, matthieu.baerts@tessares.net,
+ mptcp@lists.linux.dev
 
-Any local endpoints configured on the address matching the
-MPC subflow are currently ignored.
+Hello:
 
-Specifically, setting a backup flag on them has no effect
-on the first subflow, as the MPC handshake can't carry such
-info.
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-This change refactors the MPC endpoint id accounting to
-additionally fetch the priority info from the relevant endpoint
-and eventually trigger the MP_PRIO handshake as needed.
+On Thu, 30 Jun 2022 15:17:53 -0700 you wrote:
+> In the "net: reduce tcp_memory_allocated inflation" series (merge commit
+> e10b02ee5b6c), Eric Dumazet noted that "Removal of SK_RECLAIM_CHUNK and
+> SK_RECLAIM_THRESHOLD is left to MPTCP maintainers as a follow up."
+> 
+> Patches 1-3 align MPTCP with the above TCP changes to forward memory
+> allocation, reclaim, and memory scheduling.
+> 
+> [...]
 
-As a result, the MPC subflow now switches to backup priority
-after that the MPTCP socket is fully established, according
-to the local endpoint configuration.
+Here is the summary with links:
+  - [net-next,1/4] mptcp: never fetch fwd memory from the subflow
+    https://git.kernel.org/netdev/net-next/c/4aaa1685f750
+  - [net-next,2/4] mptcp: drop SK_RECLAIM_* macros
+    https://git.kernel.org/netdev/net-next/c/d24141fe7b48
+  - [net-next,3/4] mptcp: refine memory scheduling
+    https://git.kernel.org/netdev/net-next/c/69d93daec026
+  - [net-next,4/4] net: remove SK_RECLAIM_THRESHOLD and SK_RECLAIM_CHUNK
+    https://git.kernel.org/netdev/net-next/c/e918c137db40
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm_netlink.c | 37 +++++++++++++++----------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d6180b34a2c9..46950ccac07d 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -514,30 +514,14 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
- 	struct mptcp_pm_addr_entry *entry;
- 
- 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if ((!lookup_by_id && mptcp_addresses_equal(&entry->addr, info, true)) ||
-+		if ((!lookup_by_id &&
-+		     mptcp_addresses_equal(&entry->addr, info, entry->addr.port)) ||
- 		    (lookup_by_id && entry->addr.id == info->id))
- 			return entry;
- 	}
- 	return NULL;
- }
- 
--static int
--lookup_id_by_addr(const struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
--{
--	const struct mptcp_pm_addr_entry *entry;
--	int ret = -1;
--
--	rcu_read_lock();
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, addr, entry->addr.port)) {
--			ret = entry->addr.id;
--			break;
--		}
--	}
--	rcu_read_unlock();
--	return ret;
--}
--
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
-@@ -555,13 +539,22 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 
- 	/* do lazy endpoint usage accounting for the MPC subflows */
- 	if (unlikely(!(msk->pm.status & BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED))) && msk->first) {
-+		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(msk->first);
-+		struct mptcp_pm_addr_entry *entry;
- 		struct mptcp_addr_info mpc_addr;
--		int mpc_id;
-+		bool backup = false;
- 
- 		local_address((struct sock_common *)msk->first, &mpc_addr);
--		mpc_id = lookup_id_by_addr(pernet, &mpc_addr);
--		if (mpc_id >= 0)
--			__clear_bit(mpc_id, msk->pm.id_avail_bitmap);
-+		rcu_read_lock();
-+		entry = __lookup_addr(pernet, &mpc_addr, false);
-+		if (entry) {
-+			__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
-+			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-+		}
-+		rcu_read_unlock();
-+
-+		if (backup)
-+			mptcp_pm_send_ack(msk, subflow, true, backup);
- 
- 		msk->pm.status |= BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED);
- 	}
+You are awesome, thank you!
 -- 
-2.35.3
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
