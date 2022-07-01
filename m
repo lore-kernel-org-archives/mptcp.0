@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E270186D
-	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACFF1869
+	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656669947;
+	s=mimecast20190719; t=1656669946;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+DFKaN8QVS/mKAoW3OQy6u47fqbLFxD26tTV/pZD5xY=;
-	b=V/AaSLA1rQ9Jg8urdXEAiHQ7BMHRspGQVYp4meFsH+yTOXvvQYi3ShDkp9pVhUHakxV6kz
-	E5pvK5hQ6UGOoQ/X7CSYCCqPsa+2K1ULGe7rmMLlSM9CdEQ1+kMlwPDlM0ewhwnKF1YVaT
-	G4d/sZB4RL050FEyk6mIooDfJsW7wtg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Vc4FXkpz2q5liVNY8feAVGT09eyRqTZZ5C9SLhxKAow=;
+	b=ZPJkAbCbvOFqWaZtq4Pu0WYyFzXiw7tMlksAilV4temnc5Pe+mK+pI4Sxn+jk9lElI6ktD
+	bfOq599jsRMLYKoXnEoaEIm9R2OueM9qNiixy+uYO9WnmLabZXq02gtCB7tPu9RqbD9vA0
+	pOpx20roOz4+cXR37bhs3ZED5aePcj4=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-637-WNawn-H0NzWzTbTg3fq65g-1; Fri, 01 Jul 2022 06:05:43 -0400
-X-MC-Unique: WNawn-H0NzWzTbTg3fq65g-1
+ us-mta-619-3fOJcKRuMkqNsHgGTaVuqw-1; Fri, 01 Jul 2022 06:05:45 -0400
+X-MC-Unique: 3fOJcKRuMkqNsHgGTaVuqw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 82A68101A586
-	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:43 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.185])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 12E4240E7F28
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 11E431C06EC7
 	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:42 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.185])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 965B1400DEFC
+	for <mptcp@lists.linux.dev>; Fri,  1 Jul 2022 10:05:41 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 6/6] selftests: mptcp: add MPC backup tests
-Date: Fri,  1 Jul 2022 12:05:26 +0200
-Message-Id: <212a50ec33651131416e0bc7c0533343d8135dfb.1656669391.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 4/6] mptcp: allow the in kernel PM to set MPC subflow priority
+Date: Fri,  1 Jul 2022 12:05:24 +0200
+Message-Id: <00ff72e657916fc8c5e5a1cfca68d7e08b33097c.1656669391.git.pabeni@redhat.com>
 In-Reply-To: <cover.1656669391.git.pabeni@redhat.com>
 References: <cover.1656669391.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,55 +47,90 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Add a couple of test-cases covering the newly introduced
-features - priority update for the MPC subflow.
+Any local endpoints configured on the address matching the
+MPC subflow are currently ignored.
+
+Specifically, setting a backup flag on them has no effect
+on the first subflow, as the MPC handshake can't carry such
+info.
+
+This change refactors the MPC endpoint id accounting to
+additionally fetch the priority info from the relevant endpoint
+and eventually trigger the MP_PRIO handshake as needed.
+
+As a result, the MPC subflow now switches to backup priority
+after that the MPTCP socket is fully established, according
+to the local endpoint configuration.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ net/mptcp/pm_netlink.c | 37 +++++++++++++++----------------------
+ 1 file changed, 15 insertions(+), 22 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 55efe2aafb84..ff83ef426df5 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2428,6 +2428,36 @@ backup_tests()
- 		chk_add_nr 1 1
- 		chk_prio_nr 1 1
- 	fi
-+
-+	if reset "mpc backup"; then
-+		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
-+		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+		chk_join_nr 0 0 0
-+		chk_prio_nr 0 1
-+	fi
-+
-+	if reset "mpc backup both sides"; then
-+		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow,backup
-+		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
-+		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+		chk_join_nr 0 0 0
-+		chk_prio_nr 1 1
-+	fi
-+
-+	if reset "mpc switch to backup"; then
-+		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
-+		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
-+		chk_join_nr 0 0 0
-+		chk_prio_nr 0 1
-+	fi
-+
-+	if reset "mpc switch to backup both sides"; then
-+		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow
-+		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
-+		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
-+		chk_join_nr 0 0 0
-+		chk_prio_nr 1 1
-+	fi
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d6180b34a2c9..46950ccac07d 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -514,30 +514,14 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
+ 	struct mptcp_pm_addr_entry *entry;
+ 
+ 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
+-		if ((!lookup_by_id && mptcp_addresses_equal(&entry->addr, info, true)) ||
++		if ((!lookup_by_id &&
++		     mptcp_addresses_equal(&entry->addr, info, entry->addr.port)) ||
+ 		    (lookup_by_id && entry->addr.id == info->id))
+ 			return entry;
+ 	}
+ 	return NULL;
  }
  
- add_addr_ports_tests()
+-static int
+-lookup_id_by_addr(const struct pm_nl_pernet *pernet, const struct mptcp_addr_info *addr)
+-{
+-	const struct mptcp_pm_addr_entry *entry;
+-	int ret = -1;
+-
+-	rcu_read_lock();
+-	list_for_each_entry(entry, &pernet->local_addr_list, list) {
+-		if (mptcp_addresses_equal(&entry->addr, addr, entry->addr.port)) {
+-			ret = entry->addr.id;
+-			break;
+-		}
+-	}
+-	rcu_read_unlock();
+-	return ret;
+-}
+-
+ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+@@ -555,13 +539,22 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 
+ 	/* do lazy endpoint usage accounting for the MPC subflows */
+ 	if (unlikely(!(msk->pm.status & BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED))) && msk->first) {
++		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(msk->first);
++		struct mptcp_pm_addr_entry *entry;
+ 		struct mptcp_addr_info mpc_addr;
+-		int mpc_id;
++		bool backup = false;
+ 
+ 		local_address((struct sock_common *)msk->first, &mpc_addr);
+-		mpc_id = lookup_id_by_addr(pernet, &mpc_addr);
+-		if (mpc_id >= 0)
+-			__clear_bit(mpc_id, msk->pm.id_avail_bitmap);
++		rcu_read_lock();
++		entry = __lookup_addr(pernet, &mpc_addr, false);
++		if (entry) {
++			__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
++			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
++		}
++		rcu_read_unlock();
++
++		if (backup)
++			mptcp_pm_send_ack(msk, subflow, true, backup);
+ 
+ 		msk->pm.status |= BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED);
+ 	}
 -- 
 2.35.3
 
