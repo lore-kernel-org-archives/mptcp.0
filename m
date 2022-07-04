@@ -1,113 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE25623C2
-	for <mptcp@lists.linux.dev>; Mon,  4 Jul 2022 09:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656926098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=00hrlLwCfHmsGG0fifYpdJ6TA4nLO6kOJy830ifafLw=;
-	b=Pm+lOHorQJxSL+Oa5i1IOaJAWdPTkjy5sV9hQTSBUUDE2L1fBerffGi5QvC1b2C3v+J8Xi
-	i/ioO326KsweV4rpTyz/QwCJqymMWKPd0DfTVMs2vdGrvR7MenSLToYctaGE4L7YvWYGsS
-	b3wP6MLMXzGIV1yaKa6gzgu/xplPWsM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-467-7xfhgXZTPiWbdraQANedwg-1; Mon, 04 Jul 2022 05:14:51 -0400
-X-MC-Unique: 7xfhgXZTPiWbdraQANedwg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8592A802D1C
-	for <mptcp@lists.linux.dev>; Mon,  4 Jul 2022 09:14:51 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.94])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 171332166B26
-	for <mptcp@lists.linux.dev>; Mon,  4 Jul 2022 09:14:50 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 2/5] mptcp: address lookup improvements
-Date: Mon,  4 Jul 2022 11:14:33 +0200
-Message-Id: <9aca8356861affca14c6e4732943f9b76c3923a1.1656925387.git.pabeni@redhat.com>
-In-Reply-To: <cover.1656925387.git.pabeni@redhat.com>
-References: <cover.1656925387.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87FA46B3
+	for <mptcp@lists.linux.dev>; Mon,  4 Jul 2022 16:09:35 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id o25so17531612ejm.3
+        for <mptcp@lists.linux.dev>; Mon, 04 Jul 2022 09:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=sia9cwArgWQffQyy6bmKysbMLAj0TjML+wac95tt+XQ=;
+        b=fMqfZpQmJJxAaAGy4CqL0XaIKdf21Xby125XTy7Sh3VnQeuA47n10bIcZ76wwo2WAH
+         /fMwWhs6lh+HIwQvBd9egi7wJmeVWPV+le49YP4TiB1BRbbEgPuTSjPqfGZBLlGxABSb
+         aAuqh1EeANhkeCmgxpatckV26jj6Swn26CCPf5qkFCHwGk1PqsgR8PX3LJKgiRd9Bgdd
+         FUmkOnH5W26TM4Qs3KeilQ78qTmwNtexGdxZCnFW15K5vOfYTfddeMLb1vsdZjJTPT4f
+         xP3YrL2JlESUI16vA9C+WZY4Xze7pSob7LokV7chiTvcweUpMgzjJKAtvtK0bO++jwcz
+         R7LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=sia9cwArgWQffQyy6bmKysbMLAj0TjML+wac95tt+XQ=;
+        b=7mcSIcTNJuBYotYSU0tWp6W0OHBaVk5bWscnF4RnhWtsyMd88pPPOQPwBKn3naoOC8
+         cPAHgpv3yxV/+zhAjznINi7PbUplff623TBSPWT7+cURdaIQrGdM3FvS9eKNhPQme8Ee
+         /5laksNAgjhmEeYAfiWY6PSeZgS82VmUyHaW3D1g3qZxu1c2jSCTuA8Lz38fD2gnbE5T
+         0yeoURsH//6wdNOyvvMJirQGSEU0VHrld7OuJLEPqm3zV2GQ7sMAEoiQbbKObvuwWQ5L
+         cS8bK5HEAGWILGhI7cGQTo1nR2um/CfGo47sKkhO12InhUhBMFvLdP7kXUL3BohqsujO
+         6r6w==
+X-Gm-Message-State: AJIora/DtRcTO9LVZ5ND5BM2g5iSe8pnf5RK810iZfsorvyuwi/Z6r48
+	nixBqP7IXXXwJHImo4dxK6LqQ6iPzC9agg==
+X-Google-Smtp-Source: AGRyM1vODEzLd0v9DRHvwZtT89jM6gAzEcCxygGjttNdgLpY4U0vuvfo/SEuDgGOmJi9bJGL+nkHYQ==
+X-Received: by 2002:a17:907:2bf6:b0:72a:881b:8d79 with SMTP id gv54-20020a1709072bf600b0072a881b8d79mr18644318ejc.623.1656950973606;
+        Mon, 04 Jul 2022 09:09:33 -0700 (PDT)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id k20-20020a1709063fd400b00722f66fb36csm14206448ejj.112.2022.07.04.09.09.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Jul 2022 09:09:33 -0700 (PDT)
+Message-ID: <0648ad62-f409-0657-6e42-105c5f755814@tessares.net>
+Date: Mon, 4 Jul 2022 18:09:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH mptcp-next 1/6] mptcp: fix local endpoint acconting.
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1656669391.git.pabeni@redhat.com>
+ <f0f5893c05f19d5076a9d03c84b65495f488fbf2.1656669391.git.pabeni@redhat.com>
+ <1dc71764-4046-79c3-c6f-5c736d2d64c0@linux.intel.com>
+ <15406f2f64a2650e1ffa919bee02fee763400eaf.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <15406f2f64a2650e1ffa919bee02fee763400eaf.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When looking-up a socket address in the endpoint list, we
-must prefer port-based matches over address only match.
+Hi Paolo, Mat,
 
-Ensure that port-based endpoints are listed first, using
-head insertion for them. Additionally be sure that only
-port-based endpoints carry a non zero port number.
+On 04/07/2022 10:02, Paolo Abeni wrote:
+> On Fri, 2022-07-01 at 17:04 -0700, Mat Martineau wrote:
+>> On Fri, 1 Jul 2022, Paolo Abeni wrote:
+>>
+>>> In mptcp_pm_nl_rm_addr_or_subflow() we always mark as availble
+>>> the id corresponding to the just removed address.
+>>>
+>>> The used bitmap actually tracks only the local IDs: we must
+>>> restrict the operation when a (local) subflow is removed.
+>>>
+>>> Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>
+>> Looks good to me. Ok to apply this one to the net branch, separate from 
+>> the rest of the series?
+> 
+> Works for me, thanks!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm_netlink.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+Thank you for the patch and the review!
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index e85fbced2c07..c0a4c947347b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -413,7 +413,7 @@ static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned
- 	int i;
- 
- 	for (i = 0; i < nr; i++) {
--		if (mptcp_addresses_equal(&addrs[i], addr, addr->port))
-+		if (addrs[i].id == addr->id)
- 			return true;
- 	}
- 
-@@ -449,7 +449,8 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
- 		mptcp_for_each_subflow(msk, subflow) {
- 			ssk = mptcp_subflow_tcp_sock(subflow);
- 			remote_address((struct sock_common *)ssk, &addrs[i]);
--			if (deny_id0 && mptcp_addresses_equal(&addrs[i], &remote, false))
-+			addrs[i].id = subflow->remote_id;
-+			if (deny_id0 && !addrs[i].id)
- 				continue;
- 
- 			if (!lookup_address_in_vec(addrs, i, &addrs[i]) &&
-@@ -919,10 +920,11 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	/* do not insert duplicate address, differentiate on port only
- 	 * singled addresses
- 	 */
-+	if (!address_use_port(entry))
-+		entry->addr.port = 0;
- 	list_for_each_entry(cur, &pernet->local_addr_list, list) {
- 		if (mptcp_addresses_equal(&cur->addr, &entry->addr,
--					  address_use_port(entry) &&
--					  address_use_port(cur))) {
-+					  cur->addr.port || entry->addr.port)) {
- 			/* allow replacing the exiting endpoint only if such
- 			 * endpoint is an implicit one and the user-space
- 			 * did not provide an endpoint id
-@@ -968,7 +970,10 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	}
- 
- 	pernet->addrs++;
--	list_add_tail_rcu(&entry->list, &pernet->local_addr_list);
-+	if (!entry->addr.port)
-+		list_add_tail_rcu(&entry->list, &pernet->local_addr_list);
-+	else
-+		list_add_rcu(&entry->list, &pernet->local_addr_list);
- 	ret = entry->addr.id;
- 
- out:
+This patch (and only this 1/6 patch) is now in our tree (fixes for -net)
+with Mat's RvB tag and without some typos found by codespell
+(./scripts/checkpatch.pl --codespell):
+
+New patches for t/upstream-net:
+- 700323697153: mptcp: fix local endpoint accounting
+- Results: 8b0928bdfa52..9e57efad1e78 (export-net)
+
+New patches for t/upstream:
+- 700323697153: mptcp: fix local endpoint accounting
+- Results: d9c4fd4f6874..d7694db70480 (export)
+
+
+Builds and tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220704T160802
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export-net
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220704T160802
+https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
+
+Cheers,
+Matt
 -- 
-2.35.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
