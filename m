@@ -1,97 +1,88 @@
-Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5D023C1
-	for <mptcp@lists.linux.dev>; Sun,  3 Jul 2022 23:04:49 +0000 (UTC)
-Date: Sun, 3 Jul 2022 15:55:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1656888940;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8881015A3
+	for <mptcp@lists.linux.dev>; Mon,  4 Jul 2022 08:02:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656921765;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UsoL24ELETfF3MSNiDW9I/K0Flpmei9riTSH6+si7ig=;
-	b=iUInCXasIip4wHrtoL/0lzsYtRCZFSsRqfLRPjoYwSOtiqscSWuPjZHfbG97LiaP3BzDIe
-	0ZXrzFwfVL/E2wq4AmYs4coUwxW0GVnJ6RLTvBjOWag7XFKXgSSe9R92erWjn2FlZkzP5K
-	kLcNL3GRn8tg7m+p4Hc6FjL36mprR04=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Feng Tang <feng.tang@intel.com>
-Cc: Shakeel Butt <shakeelb@google.com>, Eric Dumazet <edumazet@google.com>,
-	Linux MM <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	Soheil Hassas Yeganeh <soheil@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
-	MPTCP Upstream <mptcp@lists.linux.dev>,
-	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
-	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
-	Huang Ying <ying.huang@intel.com>,
-	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
-Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-Message-ID: <YsIeYzEuj95PWMWO@castle>
-References: <20220625023642.GA40868@shbuild999.sh.intel.com>
- <20220627023812.GA29314@shbuild999.sh.intel.com>
- <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
- <20220627123415.GA32052@shbuild999.sh.intel.com>
- <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
- <20220627144822.GA20878@shbuild999.sh.intel.com>
- <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
- <20220628034926.GA69004@shbuild999.sh.intel.com>
- <CALvZod71Fti8yLC08mdpDk-TLYJVyfVVauWSj1zk=BhN1-GPdA@mail.gmail.com>
- <20220703104353.GB62281@shbuild999.sh.intel.com>
+	bh=1TzgzOHVH2Xk2RXLzSWOLJEnA1DJer0yI53caeV/E3s=;
+	b=BmaObMXjTMcDYEnibVLBdbghRt+5jcHzf6D/9A/drPUbCuMKjw8xi5gP9RL/Vp+yfBuzRN
+	KHk3zKWIoSyNx40cxM/QYcqqw7V59AwzsXHwY3v0M0CF798QEwbuqKv4mwfgF8XRq4a7FB
+	ej+rS2xSM3DEZK+RQW+HFziaH7lames=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-590-LBA7rOhAOZGv2vmPkLyjOQ-1; Mon, 04 Jul 2022 04:02:44 -0400
+X-MC-Unique: LBA7rOhAOZGv2vmPkLyjOQ-1
+Received: by mail-wr1-f71.google.com with SMTP id f20-20020adfc994000000b0021d4aca9d0eso1159973wrh.0
+        for <mptcp@lists.linux.dev>; Mon, 04 Jul 2022 01:02:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=1TzgzOHVH2Xk2RXLzSWOLJEnA1DJer0yI53caeV/E3s=;
+        b=Xz1tCElnMchToHTfg/J/RoTukmb45qYZ0PKecn8121DKGx1D+U0Uz/Axf/auhKcEDP
+         vBzXSNXVBthUCWE20bktj1CMyEe+cgyarPEQCJdemP/ULd5Mo9VAJdj0NgKL377GthgY
+         u+G+ggfcwcsv1f2UNJGxhd9+qjokEe6X/j71OLqYYjZ7yXsk08FvyGD56Ld5fc9WIH4f
+         1ondMKflDTHG2CJzpBPiw6jeJIn0ajpA3m2khpboWeoGRa533ICtlcNisb8SCkV92YWG
+         H/XK7vpweujsuvXMqLV00tIW9kiYg8bUjkUcAIAEk347cMyZdZdoU6e28wKKUJdlBtVk
+         dT7g==
+X-Gm-Message-State: AJIora93kJDZhKytuCZBpP6AABKOrkvdtxFCMgIpfdIizt6mPtDdyYBQ
+	flWGYdM6C2RqQfXGii75kH1hPtmO4cyjTGrUqiv+4jY9yw0OHwKOJoRV72Rn5cNu8tfaU3HDygH
+	HbJQ1SBwlpXXVWuQ=
+X-Received: by 2002:a05:600c:3481:b0:3a1:918d:6719 with SMTP id a1-20020a05600c348100b003a1918d6719mr14468373wmq.35.1656921762701;
+        Mon, 04 Jul 2022 01:02:42 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uOspG0M9VoTuG0fHMuf3fQ0JXBZAELdEIft9L2rAyhBvuP/Jj3m8F7Qo+BJTRivlIzXt0Gig==
+X-Received: by 2002:a05:600c:3481:b0:3a1:918d:6719 with SMTP id a1-20020a05600c348100b003a1918d6719mr14468351wmq.35.1656921762400;
+        Mon, 04 Jul 2022 01:02:42 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-106-148.dyn.eolo.it. [146.241.106.148])
+        by smtp.gmail.com with ESMTPSA id r16-20020a05600c35d000b003a0375c4f73sm19029693wmq.44.2022.07.04.01.02.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Jul 2022 01:02:41 -0700 (PDT)
+Message-ID: <15406f2f64a2650e1ffa919bee02fee763400eaf.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 1/6] mptcp: fix local endpoint acconting.
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Date: Mon, 04 Jul 2022 10:02:41 +0200
+In-Reply-To: <1dc71764-4046-79c3-c6f-5c736d2d64c0@linux.intel.com>
+References: <cover.1656669391.git.pabeni@redhat.com>
+	 <f0f5893c05f19d5076a9d03c84b65495f488fbf2.1656669391.git.pabeni@redhat.com>
+	 <1dc71764-4046-79c3-c6f-5c736d2d64c0@linux.intel.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220703104353.GB62281@shbuild999.sh.intel.com>
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: linux.dev
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jul 03, 2022 at 06:43:53PM +0800, Feng Tang wrote:
-> Hi Shakeel,
+On Fri, 2022-07-01 at 17:04 -0700, Mat Martineau wrote:
+> On Fri, 1 Jul 2022, Paolo Abeni wrote:
 > 
-> On Fri, Jul 01, 2022 at 08:47:29AM -0700, Shakeel Butt wrote:
-> > On Mon, Jun 27, 2022 at 8:49 PM Feng Tang <feng.tang@intel.com> wrote:
-> > > I just tested it, it does perform better (the 4th is with your patch),
-> > > some perf-profile data is also listed.
-> > >
-> > >  7c80b038d23e1f4c 4890b686f4088c90432149bd6de 332b589c49656a45881bca4ecc0 e719635902654380b23ffce908d
-> > > ---------------- --------------------------- --------------------------- ---------------------------
-> > >      15722           -69.5%       4792           -40.8%       9300           -27.9%      11341        netperf.Throughput_Mbps
-> > >
-> > >       0.00            +0.3        0.26 ±  5%      +0.5        0.51            +1.3        1.27 ±  2%pp.self.__sk_mem_raise_allocated
-> > >       0.00            +0.3        0.32 ± 15%      +1.7        1.74 ±  2%      +0.4        0.40 ±  2%  pp.self.propagate_protected_usage
-> > >       0.00            +0.8        0.82 ±  7%      +0.9        0.90            +0.8        0.84        pp.self.__mod_memcg_state
-> > >       0.00            +1.2        1.24 ±  4%      +1.0        1.01            +1.4        1.44        pp.self.try_charge_memcg
-> > >       0.00            +2.1        2.06            +2.1        2.13            +2.1        2.11        pp.self.page_counter_uncharge
-> > >       0.00            +2.1        2.14 ±  4%      +2.7        2.71            +2.6        2.60 ±  2%  pp.self.page_counter_try_charge
-> > >       1.12 ±  4%      +3.1        4.24            +1.1        2.22            +1.4        2.51        pp.self.native_queued_spin_lock_slowpath
-> > >       0.28 ±  9%      +3.8        4.06 ±  4%      +0.2        0.48            +0.4        0.68        pp.self.sctp_eat_data
-> > >       0.00            +8.2        8.23            +0.8        0.83            +1.3        1.26        pp.self.__sk_mem_reduce_allocated
-> > >
-> > > And the size of 'mem_cgroup' is increased from 4224 Bytes to 4608.
+> > In mptcp_pm_nl_rm_addr_or_subflow() we always mark as availble
+> > the id corresponding to the just removed address.
 > > 
-> > Hi Feng, can you please try two more configurations? Take Eric's patch
-> > of adding ____cacheline_aligned_in_smp in page_counter and for first
-> > increase MEMCG_CHARGE_BATCH to 64 and for second increase it to 128.
-> > Basically batch increases combined with Eric's patch.
+> > The used bitmap actually tracks only the local IDs: we must
+> > restrict the operation when a (local) subflow is removed.
+> > 
+> > Fixes: a88c9e496937 ("mptcp: do not block subflows creation on errors")
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > 
-> With increasing batch to 128, the regression could be reduced to -12.4%.
+> Looks good to me. Ok to apply this one to the net branch, separate from 
+> the rest of the series?
 
-If we're going to bump it, I wonder if we should scale it dynamically depending
-on the size of the memory cgroup?
+Works for me, thanks!
 
-Thanks!
+Paolo
+
