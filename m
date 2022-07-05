@@ -1,120 +1,144 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102BF7C
-	for <mptcp@lists.linux.dev>; Tue,  5 Jul 2022 05:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656997422; x=1688533422;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=0sKczz/MzrkciaGHBhWNdrcBmOzdmGmWF8CNerI1VBk=;
-  b=V5M0msSwvzO2oaJSQWQoiuifKfVxTDtMT/rCezKywLK78JjAYGMf5Dy7
-   SStBwduozk9/zfWELNPcwHR8TiAzPlBKsiLZn5RFzy3CFI82vmwipQ2Mu
-   DpNqZJXS4kMEvfNTdarwQFXyy6sNq3u+eWPIK1BE3PyWGpA/Yk79GMPrR
-   QrcrM0oGtfX/7CahYX3dhlz13TQlZ/LAK76aJfJprnmV65CUhsAlKp9+f
-   Gy0TgmuIY/9nMnylUSIDj78hxnTyr+ZFyDo3Ed8ho6XvMueeyF4xxDxLU
-   rswXAdadzIrADh/ljXHAdSL0uZKqQqeqVzE0Rmf6WrsyR+6bLpGXH1Vlj
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10398"; a="283280446"
-X-IronPort-AV: E=Sophos;i="5.92,245,1650956400"; 
-   d="scan'208";a="283280446"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2022 22:03:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,245,1650956400"; 
-   d="scan'208";a="625312910"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
-  by orsmga001.jf.intel.com with ESMTP; 04 Jul 2022 22:03:26 -0700
-Date: Tue, 5 Jul 2022 13:03:26 +0800
-From: Feng Tang <feng.tang@intel.com>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Shakeel Butt <shakeelb@google.com>, Eric Dumazet <edumazet@google.com>,
-	Linux MM <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	Soheil Hassas Yeganeh <soheil@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	network dev <netdev@vger.kernel.org>, linux-s390@vger.kernel.org,
-	MPTCP Upstream <mptcp@lists.linux.dev>,
-	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
-	lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
-	Huang Ying <ying.huang@intel.com>,
-	Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-	Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
-Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-Message-ID: <20220705050326.GF62281@shbuild999.sh.intel.com>
-References: <20220627023812.GA29314@shbuild999.sh.intel.com>
- <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
- <20220627123415.GA32052@shbuild999.sh.intel.com>
- <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
- <20220627144822.GA20878@shbuild999.sh.intel.com>
- <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
- <20220628034926.GA69004@shbuild999.sh.intel.com>
- <CALvZod71Fti8yLC08mdpDk-TLYJVyfVVauWSj1zk=BhN1-GPdA@mail.gmail.com>
- <20220703104353.GB62281@shbuild999.sh.intel.com>
- <YsIeYzEuj95PWMWO@castle>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354C87C
+	for <mptcp@lists.linux.dev>; Tue,  5 Jul 2022 15:59:25 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id eq6so15847064edb.6
+        for <mptcp@lists.linux.dev>; Tue, 05 Jul 2022 08:59:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Bkb2t3lDURV+9gpABG4pK24ow+hL1RSxnJvzn5vajrk=;
+        b=1Z/M5igvv0Rmr0OrX4V65gyT3peDifd6VzU6pHtDqhA5yFORCVa85nrL7jqZxGK3iZ
+         oThhYGFLTJieRMIIKx7DHNajY99W8nUnQoJHobOBY4MEvHkAHRPzTxCOAgaqFmoYj4FG
+         twEa15zo+Rvd+QVuiQNgKIoUu9e51RgFD1c71W004mitFUa695AqWaz0zE8AR5CqNgvr
+         CqJ9i9lUnQcYfskMy1qhUfr+fYAHwSjCf7mX96xdmirL11sNaNx3HXqdYe3GsJ/DeXAO
+         8TjE91WpncxpuQBMTAdimKE1JxHjfmRwJT6Ujvt9cX3DMeKLOI57WvMzs950Tdd3ufa9
+         5DxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Bkb2t3lDURV+9gpABG4pK24ow+hL1RSxnJvzn5vajrk=;
+        b=fJwH1pkVY0QwMStHZ0Njy7C0BJt2L2Wd7BHClJA17Ywf3GVVkpwxs5uJ3hxYTLctGq
+         xGArRiA5gkCSQfyudxyYBgZRPoBZpIa32hUGyF9pLX93uqdJbqPnczI7IMKbPtV6Zg1x
+         uciz1+CU76FC4K9PWtWuoY8Kcp2c+4x7iIXLCZ2t7Nn3BCP2nAQPQv5TAl6xysDhIzfa
+         lSfwpFn6kxl/fQdKFYfHW5+tbgJY6uoeOcPl+2z5S6/WXRNT+X2w9zfAe9VTmkcP2yx6
+         ewWrlbNLjPqzkSp71f+xATcS8+S4MoMUJF3Q4A0kGxa7nH01itcZAVlC7hE0UcrTS8aC
+         OH/w==
+X-Gm-Message-State: AJIora9AsbLACsWh1QUxq9SVa3+hHVFCqrgZu3Keq/72lq+Dy7yGRgwc
+	EErPqV8C9QHvm+qhK9tGQz0T5g==
+X-Google-Smtp-Source: AGRyM1uX/8bSp9ptLr5H45URMO7tC+aqTDEkQtq86thF0ZSPXurVHz6F/5XpZPMU+xsesfHwDv98HQ==
+X-Received: by 2002:a05:6402:2988:b0:43a:60b5:1e63 with SMTP id eq8-20020a056402298800b0043a60b51e63mr13906468edb.171.1657036764104;
+        Tue, 05 Jul 2022 08:59:24 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:a555:352e:f7d5:1df2? ([2a02:578:8593:1200:a555:352e:f7d5:1df2])
+        by smtp.gmail.com with ESMTPSA id cf16-20020a0564020b9000b0043a422801f8sm5610074edb.87.2022.07.05.08.59.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Jul 2022 08:59:23 -0700 (PDT)
+Message-ID: <a2260559-86af-74ff-ca95-d494688d5ea7@tessares.net>
+Date: Tue, 5 Jul 2022 17:59:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YsIeYzEuj95PWMWO@castle>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 5.10 51/84] selftests: mptcp: add ADD_ADDR timeout test
+ case
+Content-Language: en-GB
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+ Geliang Tang <geliangtang@gmail.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20220705115615.323395630@linuxfoundation.org>
+ <20220705115616.814163273@linuxfoundation.org>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220705115616.814163273@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jul 03, 2022 at 03:55:31PM -0700, Roman Gushchin wrote:
-> On Sun, Jul 03, 2022 at 06:43:53PM +0800, Feng Tang wrote:
-> > Hi Shakeel,
-> > 
-> > On Fri, Jul 01, 2022 at 08:47:29AM -0700, Shakeel Butt wrote:
-> > > On Mon, Jun 27, 2022 at 8:49 PM Feng Tang <feng.tang@intel.com> wrote:
-> > > > I just tested it, it does perform better (the 4th is with your patch),
-> > > > some perf-profile data is also listed.
-> > > >
-> > > >  7c80b038d23e1f4c 4890b686f4088c90432149bd6de 332b589c49656a45881bca4ecc0 e719635902654380b23ffce908d
-> > > > ---------------- --------------------------- --------------------------- ---------------------------
-> > > >      15722           -69.5%       4792           -40.8%       9300           -27.9%      11341        netperf.Throughput_Mbps
-> > > >
-> > > >       0.00            +0.3        0.26 ±  5%      +0.5        0.51            +1.3        1.27 ±  2%pp.self.__sk_mem_raise_allocated
-> > > >       0.00            +0.3        0.32 ± 15%      +1.7        1.74 ±  2%      +0.4        0.40 ±  2%  pp.self.propagate_protected_usage
-> > > >       0.00            +0.8        0.82 ±  7%      +0.9        0.90            +0.8        0.84        pp.self.__mod_memcg_state
-> > > >       0.00            +1.2        1.24 ±  4%      +1.0        1.01            +1.4        1.44        pp.self.try_charge_memcg
-> > > >       0.00            +2.1        2.06            +2.1        2.13            +2.1        2.11        pp.self.page_counter_uncharge
-> > > >       0.00            +2.1        2.14 ±  4%      +2.7        2.71            +2.6        2.60 ±  2%  pp.self.page_counter_try_charge
-> > > >       1.12 ±  4%      +3.1        4.24            +1.1        2.22            +1.4        2.51        pp.self.native_queued_spin_lock_slowpath
-> > > >       0.28 ±  9%      +3.8        4.06 ±  4%      +0.2        0.48            +0.4        0.68        pp.self.sctp_eat_data
-> > > >       0.00            +8.2        8.23            +0.8        0.83            +1.3        1.26        pp.self.__sk_mem_reduce_allocated
-> > > >
-> > > > And the size of 'mem_cgroup' is increased from 4224 Bytes to 4608.
-> > > 
-> > > Hi Feng, can you please try two more configurations? Take Eric's patch
-> > > of adding ____cacheline_aligned_in_smp in page_counter and for first
-> > > increase MEMCG_CHARGE_BATCH to 64 and for second increase it to 128.
-> > > Basically batch increases combined with Eric's patch.
-> > 
-> > With increasing batch to 128, the regression could be reduced to -12.4%.
+Hi Greg, Sasha,
+
+(+ MPTCP upstream ML)
+
+First, thank you again for maintaining the stable branches!
+
+On 05/07/2022 13:58, Greg Kroah-Hartman wrote:
+> From: Geliang Tang <geliangtang@gmail.com>
 > 
-> If we're going to bump it, I wonder if we should scale it dynamically depending
-> on the size of the memory cgroup?
- 
-I think it makes sense, or also make it a configurable parameter? From 
-the test reports of 0Day, these charging/counting play critical role
-in performance (easy to see up to 60% performance effect). If user only
-wants memcg for isolating things or doesn't care charging/stats, these
-seem to be extra taxes.
+> [ Upstream commit 8d014eaa9254a9b8e0841df40dd36782b451579a ]
+> 
+> This patch added the test case for retransmitting ADD_ADDR when timeout
+> occurs. It set NS1's add_addr_timeout to 1 second, and drop NS2's ADD_ADDR
+> echo packets.
+TL;DR: Could it be possible to drop all selftests MPTCP patches from
+v5.10 queue please?
 
-For bumping to 64 or 128, universal improvement is expected with the
-only concern of accuracy.
 
-Thanks,
-Feng
+I was initially reacting on this patch because it looks like it depends on:
 
-> Thanks!
+  93f323b9cccc ("mptcp: add a new sysctl add_addr_timeout")
+
+and indirectly to:
+
+  9ce7deff92e8 ("docs: networking: mptcp: Add MPTCP sysctl entries")
+
+to have "net.mptcp.add_addr_timeout" sysctl knob needed for this new
+selftest.
+
+But then I tried to understand why this current patch ("selftests:
+mptcp: add ADD_ADDR timeout test case") has been selected for 5.10. I
+guess it was to ease the backport of another one, right?
+Looking at the 'series' file in 5.10 queue, it seems the new
+"selftests-mptcp-more-stable-diag-tests" patch requires 5 other patches:
+
+-> selftests-mptcp-more-stable-diag-tests.patch
+ -> selftests-mptcp-fix-diag-instability.patch
+  -> selftests-mptcp-launch-mptcp_connect-with-timeout.patch
+   -> selftests-mptcp-add-add_addr-ipv6-test-cases.patch
+    -> selftests-mptcp-add-link-failure-test-case.patch
+     -> selftests-mptcp-add-add_addr-timeout-test-case.patch
+
+
+When looking at these patches in more detail, it looks like "selftests:
+mptcp: add ADD_ADDR IPv6 test cases" depends on a new feature only
+available from v5.11: ADD_ADDR for IPv6.
+
+
+Could it be possible to drop all these patches from v5.10 then please?
+
+
+The two recent fixes for the "diag" selftest mainly helps on slow / busy
+CI. I think it is not worth backporting them to v5.10.
+
+
+(Note that if we want "selftests: mptcp: fix diag instability" patch, we
+also need 2e580a63b5c2 ("selftests: mptcp: add cfg_do_w for cfg_remove")
+and the top part of 8da6229b9524 ("selftests: mptcp: timeout testcases
+for multi addresses"): the list starts to be long.)
+
+
+One last thing: it looks like when Sasha adds patches to a stable queue,
+a notification is sent to less people than when Greg adds patches. For
+example here, I have not been notified for this patch when added to the
+queue while I was one of the reviewers. I already got notifications from
+Greg when I was a reviewer on other patches.
+Is it normal? Do you only cc people who signed off on the patch?
+
+It looks like you don't cc maintainers from the MAINTAINERS file but
+that's probably on purpose. I didn't get cc for all MPTCP patches of the
+series here but I guess I can always subscribe to 'stable' ML for that.
+
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
