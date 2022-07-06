@@ -1,54 +1,53 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490A14A3E
-	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 14:02:06 +0000 (UTC)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-f2a4c51c45so21492641fac.9
-        for <mptcp@lists.linux.dev>; Wed, 06 Jul 2022 07:02:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E094C82
+	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 14:06:37 +0000 (UTC)
+Received: by mail-ot1-f52.google.com with SMTP id n12-20020a9d64cc000000b00616ebd87fc4so11899260otl.7
+        for <mptcp@lists.linux.dev>; Wed, 06 Jul 2022 07:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
          :content-transfer-encoding:date:mime-version;
-        bh=/YYONLSCNKinuFNWfyFuvxO39oOcmG8pN5sdwl3g+vI=;
-        b=lD+sPmZeVQ+UELPfJj+01IXrTBqQ1/pn9Gv87Lnaf+3RUdTEqgyepBeZjjizyhmjMo
-         fEidUgp1RBROYDpNzy8Y7DZnPGv/cI4zbCsRoxe4af/lskipMix9Jw+0sxqxYtUgSZEL
-         clTy+E//e9NDpWCtdzjTd6fVwQJK7phyamY3iFqDu/hUsxUa0+JwO4j9SjiFI+l6nWsV
-         8tSQJrQ2osLwhcibMGn864gVvQ2eOLi6K7RYulZ8eswGOcT7gPEiIWa8+LajG+KmLuut
-         nr2jIuay5fo7pvmbb5xtKAIBnI3WoxjC0gXJodJp0UZHtt0rqHMKdAI48E2UciVYYknV
-         TokQ==
+        bh=6BjgA45zi8yXc4jjn1R4jMlzLFzv2WMhIOTurY21NpQ=;
+        b=i0uE9IfYE4BJLLpnAZT9LMrPobF1/mpz6YJ7sLLgTkmygqsSn6O40FX9d4wl/oZyBh
+         xAx9NT2uDenOdRwCSYWZxjBhwKx/n48NvPIIPLkduloPI5DBJZHs7tEQqeojMlUA26Y8
+         RuWL0G+K9Jp7UIZA64IvER1jpncACQNuHBDPeiNXaIG0FXRd+M4hqySMqXA6QQ8HWEz2
+         eBgOT34NbuG+MJjHsYCM2icCA7tx3u84S0ks0JtleLcvYvGLTCzW609NiU1oWuxFuolV
+         yKFh/KpeAS41WxxCBN7VItcFh6x/tpvZweSDRqeb7g3Qx/IgWJx7Z1q4XqEdsXrh9pHN
+         3GuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
          :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=/YYONLSCNKinuFNWfyFuvxO39oOcmG8pN5sdwl3g+vI=;
-        b=hkp9C+uk3+UH61/CE8q0YRpLy2BRWfIxEnjkc5lo+pVgGL2mWHgmor1/SVPXnGth45
-         71MqGBy4r2renLA5zXxoN4CrBJ5wO0QbUfNvumVPSw92VEC3GYsCLxp4U+GfDNqUNsC2
-         cD9mpKuFSoj4B6Tjs5WgVsKj04hXaK1xkWLeol19X8nC/x+LHsTzOEvip2X7OPbovKgz
-         zvro0w8H7pE809uw8e+uUiFwbSeZ2FWjhqUeFJIE5p0AXqVO0LONAe+E7q3gCliXH1t6
-         XEEhHWy/WgzOV4xneovbKQ4Jtz2PAHLfv84X9FS92xUC+Sgc6hViQK35GREPvqAxXY9e
-         X1Cw==
-X-Gm-Message-State: AJIora94vwKkosjsnGz80ZQRexf1CyKujJKsJYv2XqSv+h8I6XLblPRw
-	Z3CJeRGbTtp+mm2Fzz0zCw==
-X-Google-Smtp-Source: AGRyM1vnvcBubRF3aGxDRQW8k3Mj4fCx8Jt93Z0zd1BakO2NlUqE3PHbANzNCEpgQ/b7n0Yt86+vgw==
-X-Received: by 2002:a05:6871:68d:b0:10b:f47a:a7cf with SMTP id l13-20020a056871068d00b0010bf47aa7cfmr11222041oao.83.1657116125384;
-        Wed, 06 Jul 2022 07:02:05 -0700 (PDT)
-Received: from [127.0.0.1] ([40.84.150.149])
-        by smtp.gmail.com with ESMTPSA id t39-20020a05687060a700b000f5d8d031b6sm21127766oae.49.2022.07.06.07.02.04
+        bh=6BjgA45zi8yXc4jjn1R4jMlzLFzv2WMhIOTurY21NpQ=;
+        b=7YKPYJDJFSVLzP1p4OSZskak/pncfjEfZ5xv2a1VTvledS5CjLhFSE0CTYRWeGYjJr
+         d2fjvr/29FPSZRXkB/QKfS6Z0GH9f6658ALilQZfdeTS8tKAy019oqwaWDGk35ULlIq0
+         gO3zLlo4pwf+MCXuEC162PXUC8Cv2XNWwO3eqN1O0OhnFvm6vwpEQaA79cIlsoMCnuyf
+         PYDrGRErmu/SX53GyXeifMX50hSNxSzcFeTJCXn8hgHqWbnFiMlvWcPzC7jNQszZUrQO
+         OfpQTbKzqAPIivL+3hW4cpEVoBfTEmMORiKf0Bsm+yAarIYukclUgvVbF4+Aj2HAYoge
+         WdfA==
+X-Gm-Message-State: AJIora9I08QkfObQPWun2DgRCTAqvu9db2oQH9jVApfH0iJ2+pY1+Ye4
+	ziVYC0jwY5G9vfnoTIsPPvp00jIFu+vc
+X-Google-Smtp-Source: AGRyM1uXUoMB8MhFoLfVTTZdGwxlsyAImng9IQfa0c/SBrz7kaHC99q91nCUNCoyEY2+J4B/kGCl6g==
+X-Received: by 2002:a9d:e86:0:b0:616:be57:df48 with SMTP id 6-20020a9d0e86000000b00616be57df48mr17161759otj.345.1657116396326;
+        Wed, 06 Jul 2022 07:06:36 -0700 (PDT)
+Received: from [127.0.0.1] ([20.225.202.98])
+        by smtp.gmail.com with ESMTPSA id u21-20020a056870421500b001019fb71e4bsm21673764oac.17.2022.07.06.07.06.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 07:02:05 -0700 (PDT)
+        Wed, 06 Jul 2022 07:06:36 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <2c5147569717a1c879b291230d460e8e85992878.1657106043.git.pabeni@redhat.com>
-References:
- <2c5147569717a1c879b291230d460e8e85992878.1657106043.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix subflow traveral at disconnect time: Tests Results
-Message-ID: <a623b059-a449-fcc0-e22f-a17ee4dd3362@gmail.com>
+In-Reply-To: <20220706091706.2679400-1-matthieu.baerts@tessares.net>
+References: <20220706091706.2679400-1-matthieu.baerts@tessares.net>
+Subject: Re: selftests: mptcp: validate userspace PM tests by default:
+ Tests Results
+Message-ID: <5da0c5a4-4c7c-7352-c514-8073be66339e@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 Jul 2022 14:02:04 +0000
+Date: Wed, 06 Jul 2022 14:06:35 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -56,31 +55,29 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Hi Paolo,
+Hi Matthieu,
 
 Thank you for your modifications, that's great!
 
 Our CI did some validations and here is its report:
 
 - KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6553371904573440
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6553371904573440/summary/summary.txt
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6585815751983104
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6585815751983104/summary/summary.txt
 
 - KVM Validation: debug:
-  - Unstable: 1 failed test(s): =
-packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6525527967137792
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6525527967137792/summary/summary.txt
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5796690794905600
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5796690794905600/summary/summary.txt
 
 Initiator: Patchew Applier
 Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/d9e83c59b762
+net-next/commits/795982e1ec62
 
 
 If there are some issues, you can reproduce=
