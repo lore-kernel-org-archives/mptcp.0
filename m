@@ -1,96 +1,90 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C75A258B
-	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 17:14:33 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id m16so4622917edb.11
-        for <mptcp@lists.linux.dev>; Wed, 06 Jul 2022 10:14:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=qBTloUL2f4MVh7+Yy4+N8GBOBeIaNURH52HXFvRbU/U=;
-        b=C01VeB8Q3g9CjKGikIN8GWqxI9pc8Xqksl+Ntyqu9l49LS5KvMvXCCVsvQHy1n3YbD
-         zhtXSuJSzQKHvvLHNRpSG0QqadYx0VoBYT6rG68MFO1vrilkWah3+uKumek5DuWg8i/W
-         V/MVR8mR94RaNWKJBMrZpTwiMMI3dPVdFfVVXecJ9bTmrCjVefs7+JtthWNM0blv2WJ8
-         YCY2EvTEzdCOxlvYS1IHncEk2t28/AVwDFPQw1mbP/8X9HHiLI0eJ1O1GKejwzaJjz8q
-         pA0ue2zfeHChNnv1xthVo/R4Kzygm3gNLrPEY63BOtNtj3wbfkd+UoTU+ykA3yrbQKcp
-         Qd0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=qBTloUL2f4MVh7+Yy4+N8GBOBeIaNURH52HXFvRbU/U=;
-        b=1GS9zIY85yEQscrUPOIaGqtyso6wpndKruT8XPVAAa+1a410FMA0hhTs7f7DthdDdv
-         M77KCn4m+/VkMrT79OTpxmlo4igzHpmvjZgF4Orko84Mr1uXqyVj32PzH9ZL2PylAOX7
-         STmSk2XXabnCHBhkL8iNDzftoMzI4QTX7z//1Pn7xEaCjPlNH6YNUL0ZptdOO4lY0Rp4
-         /iipbQHHXIXnZRpat7NUMBc/OXq57sTusHQeH/+Xtj3IqXx9FWMDJG9As7j2f1lvE75x
-         MNUSYN/Yi5wSxzV4viKZof3+rC8Yb3TIIuBRePc7sX1/XDRYrVDmkrKowF8641ZO7raO
-         J7Lg==
-X-Gm-Message-State: AJIora9Xb52jmH1Q/y3RQyp+CwAZnUd2Rq7ek4c93FkKlIBAuPKRjDTv
-	q0TWTSoilWd+H8GCQCy9lJjBEtjHRG030am1
-X-Google-Smtp-Source: AGRyM1tTWPo9v29PQr+KS3lfMHmu3SMGhfmfLrdqFPc1pynC8DWSS4pB5KuPuDtDudeBiyhdVWW5wA==
-X-Received: by 2002:a05:6402:b9b:b0:43a:5aac:ed6 with SMTP id cf27-20020a0564020b9b00b0043a5aac0ed6mr22636704edb.131.1657127671662;
-        Wed, 06 Jul 2022 10:14:31 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:c688:fc49:57d7:6b4c? ([2a02:578:8593:1200:c688:fc49:57d7:6b4c])
-        by smtp.gmail.com with ESMTPSA id kz11-20020a17090777cb00b0072af18329c4sm1802263ejc.225.2022.07.06.10.14.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Jul 2022 10:14:31 -0700 (PDT)
-Message-ID: <54664e84-80a5-cdc9-df37-db1e93fb72ee@tessares.net>
-Date: Wed, 6 Jul 2022 19:14:30 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C558258B
+	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 17:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657127741; x=1688663741;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Hirys4WHNeIVc8TqWyLD2CazkEei34db9l8Ads0k7jY=;
+  b=LcV3LwMkE0sGf9KfVwJvKoNtS0ItrL38OchlyrTCyszI+7vuyRX98Qya
+   EzrOycboXTZ30vDXUa/TitoEjYQ21vXQptqnSF9nOwbATAcstIxaJAui3
+   8GPuYEwF8PSlaPTvsmrl6nMba6Us1NWrCyebA2LJbCS1xRrkcb8qIlKu2
+   i/whZU254mL3R+wkUn9tHcX3nYfW19hJtdCWrSeDbjHSZJECiTvgt+UaI
+   peXE8pTW1vLcvwg7vnx8nU9Og3MX89DQCXAutYPOvrrCLZCNtdAVPvfO7
+   /WlzKNMLWmPdwYYtI5kd9nkgC37Qj9L20CQ/7wpDfp5Jt6JwqtaIok6Iv
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10400"; a="283841922"
+X-IronPort-AV: E=Sophos;i="5.92,250,1650956400"; 
+   d="scan'208";a="283841922"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2022 10:15:40 -0700
+X-IronPort-AV: E=Sophos;i="5.92,250,1650956400"; 
+   d="scan'208";a="543484822"
+Received: from lerosale-mobl.amr.corp.intel.com ([10.209.34.41])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2022 10:15:40 -0700
+Date: Wed, 6 Jul 2022 10:15:40 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: fix subflow traveral at disconnect
+ time
+In-Reply-To: <05928f87-fe08-2be9-0677-a9611138a088@tessares.net>
+Message-ID: <60c93f68-7a-4d21-167d-8812fc651094@linux.intel.com>
+References: <2c5147569717a1c879b291230d460e8e85992878.1657106043.git.pabeni@redhat.com> <05928f87-fe08-2be9-0677-a9611138a088@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 mptcp-next 0/5] mptcp: support for MPC prio exchange
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1656925387.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1656925387.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo, Mat,
+On Wed, 6 Jul 2022, Matthieu Baerts wrote:
 
-On 04/07/2022 11:14, Paolo Abeni wrote:
-> This series introduces the ability to control the MPC subflow for
-> the in kernel PM.
-> 
-> patch 1 && 2 refactor a bit the endpoint lookup and MP_PRIO generation
-> code, to simplify the next patch.
-> 
-> patch 3 introduces the new feature quering the backup status of the
-> endpoint used by the MPC subflow and eventually generating the needed
-> MP_PRIO option.
-> 
-> Patch 4 is a related cleanup.
+> Hi Paolo,
+>
+> On 06/07/2022 13:18, Paolo Abeni wrote:
+>> At disconnect time the MPTCP protocol traverse the subflows
+>> list closing each of them. In some circumstances - MPJ subflow,
+>> passive MPTCP socket, the latter operation can remove the
+>> subflow from the list, invalidating the current iterator.
+>>
+>> Address the issue using the safe list traversing helper
+>> variant.
+>>
+>> Reported-by: van fantasy <g1042620637@gmail.com>
+>> Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>> I think this should go soon upstream, sending here to trigger the CI
+>>
+>> A pktdrill test will follow.
+>
+> Because the CI report was not fully green, I ran the full tests suite on
+> my side (with and without a debug kernel) and I didn't spot any issues.
+>
+> Tested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>
+> The patch looks good to me. If we can wait a bit, I guess it is better
+> to wait for Mat to review it. But I don't mind applying now if needed.
+>
 
-Thank you for the patches and the reviews!
+Fine with me to apply it:
 
-Now in our tree (feat. for net-next) with Mat's RvB tag and without 2
-small issues reported by checkpatch.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-New patches for t/upstream:
-- 063213e73149: mptcp: introduce and use mptcp_pm_send_ack()
-- 69bc499efccb: mptcp: address lookup improvements
-- 0417a959d55e: mptcp: allow the in kernel PM to set MPC subflow priority
-- 084ba8b4dc1a: mptcp: more accurate MPC endpoint tracking
-- 267566754670: selftests: mptcp: add MPC backup tests
-- Results: c47b82c7b9aa..7d868133e0d9 (export)
+>
+> Also, I think we should probably add a new macro on net-next:
+>
+>  mptcp_for_each_subflow_safe(msk, subflow, tmp)
+>
+> WDYT?
 
-Builds and tests are now in progress:
++1
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220706T170628
-https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/build-validation.yml?query=branch:export
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
