@@ -1,111 +1,87 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6EF7C
-	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 10:17:10 +0000 (UTC)
-Received: by mail-qk1-f182.google.com with SMTP id o26so3556471qkl.6
-        for <mptcp@lists.linux.dev>; Wed, 06 Jul 2022 03:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=jQQQ3SICsdHIE6BfLBapUvQoHXUKGmQfnSP7KtLNqI4=;
-        b=qKiFna17bJRJzvcpBne69nYJ+fE+ig6W0YsXEWfrCLEMmEiLZxM+UCglKa9MabbJ/z
-         0diQvawyxesPMdQ7Tp/I6Qebz2WgkiiczFPQrdmjJcnEZpZDnp3kq36FEFRqlxS5n/dT
-         2QPwtUCIOQfAXrkF/uyde9y++y9Fk4d8mxZSTCMlt5JjnYX7NFppdKt74DhuJBOsrLkW
-         NWxxo+fHlLfcyjZ9i767JwZVmgHzfso2NHGZpezcKXNGvTr0tPoRjp0xh5FxvcoBjZsw
-         nloebiaHagUudQG4D+pIEuiFwcaVkcNuhCHYsrlpjby8aYdZLnLqqGLV/2/ZX1LHzl6B
-         llQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=jQQQ3SICsdHIE6BfLBapUvQoHXUKGmQfnSP7KtLNqI4=;
-        b=AfeQ50UkIdSuz5lnaada4KcAT3+irbR70bqqmCYI6jHW8XPlTji+fOuq0OxkrG7/eC
-         TIRRyXiTUydcM4hYJsQ1Y5/gwmqZ7gNO8Ojsn/1BbF2jfvjMcAsmKpCtQFKTX8ostPtj
-         K1AYmB75XSSDQ6biJMVYS22VDLezQ67f7VugD/D1/QTJpckPkLMEAoPGANMUkpDKRotr
-         v7fb8Gws8lLXZOlBA4aGtMadNhPWZiNP7E/tndxJE98ge/AYmD+BrdP1sj4H2VSDYhrI
-         5oJRvoR8E/w8culj245cH+f2YYMmwcLx29uva8UKQk6HQciK2t1LM7z7BbFzhkvYjK6k
-         UxKw==
-X-Gm-Message-State: AJIora+HpPugYvxNcgttJBQ6iFBxZlHzwKCkmbs8l8P0RFy+IjDhH85A
-	IkAvfcWns9ZfuZXjFAgth0B3ZOXUZAXl
-X-Google-Smtp-Source: AGRyM1u570tQedatWxzJK3uKHASTl/feyy0TRKidf1+pA3XgGSaKSe4JohzLA5EaNmwJMWc1y1Y0BQ==
-X-Received: by 2002:a05:620a:4384:b0:6af:59ce:a5c0 with SMTP id a4-20020a05620a438400b006af59cea5c0mr26756290qkp.492.1657102629115;
-        Wed, 06 Jul 2022 03:17:09 -0700 (PDT)
-Received: from [127.0.0.1] ([20.114.221.186])
-        by smtp.gmail.com with ESMTPSA id v12-20020a05620a0f0c00b006a73654c19bsm31998358qkl.23.2022.07.06.03.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 03:17:08 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220706091706.2679400-1-matthieu.baerts@tessares.net>
-References: <20220706091706.2679400-1-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: validate userspace PM tests by default:
- Tests Results
-Message-ID: <709d6d2a-0e12-76ce-c029-c429c9f22763@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 Jul 2022 10:17:08 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63DA2F3A
+	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 11:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1657106328;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=n/+33ewEEP3NNc8FkZf4PAVIf5CFGh0Xsp8W3PvO8KM=;
+	b=YSlA0npo9y++eZsCzc5RruCbNaZsnaTPm6MzeC+hdtDP+ETMltMHZRgfaoBF/pM4IySwrz
+	kOU6VIHnRSLWEDM+pMRZ1J70p4SOkszjnrUVg7LH1IddD2/TYp+mthcSY0OS6M+pr9NlHc
+	ebUkEMquM//sP/bEzWftH1wLy6edadc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-453-LT9AhhAdN8-1cBnvjcP2OA-1; Wed, 06 Jul 2022 07:18:47 -0400
+X-MC-Unique: LT9AhhAdN8-1cBnvjcP2OA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63593101A586
+	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 11:18:47 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.92])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D85DB1121315
+	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 11:18:46 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: fix subflow traveral at disconnect time
+Date: Wed,  6 Jul 2022 13:18:29 +0200
+Message-Id: <2c5147569717a1c879b291230d460e8e85992878.1657106043.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Matthieu,
+At disconnect time the MPTCP protocol traverse the subflows
+list closing each of them. In some circumstances - MPJ subflow,
+passive MPTCP socket, the latter operation can remove the
+subflow from the list, invalidating the current iterator.
 
-Thank you for your modifications, that's great!
+Address the issue using the safe list traversing helper
+variant.
 
-Our CI did some validations and here is its report:
+Reported-by: van fantasy <g1042620637@gmail.com>
+Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+I think this should go soon upstream, sending here to trigger the CI
 
-- {"code":404,"message":
-  - "Can't find artifacts containing file =
-conclusion.txt"}:
-  - Task: https://cirrus-ci.com/task/5669279193366528
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5669279193366528/su=
-mmary/summary.txt
+A pktdrill test will follow.
+---
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-- {"code":404,"message":
-  - "Can't find artifacts =
-containing file conclusion.txt"}:
-  - Task: https://cirrus-ci.=
-com/task/6597218206482432
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6597218206482432/summary/summary.txt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 10bfa2b78206..0264642f133f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2881,12 +2881,12 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+ 
+ static int mptcp_disconnect(struct sock *sk, int flags)
+ {
+-	struct mptcp_subflow_context *subflow;
++	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ 
+-	mptcp_for_each_subflow(msk, subflow) {
++	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+ 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
+-- 
+2.35.3
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/795982e1ec62
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
