@@ -1,87 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63DA2F3A
-	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 11:18:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1657106328;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=n/+33ewEEP3NNc8FkZf4PAVIf5CFGh0Xsp8W3PvO8KM=;
-	b=YSlA0npo9y++eZsCzc5RruCbNaZsnaTPm6MzeC+hdtDP+ETMltMHZRgfaoBF/pM4IySwrz
-	kOU6VIHnRSLWEDM+pMRZ1J70p4SOkszjnrUVg7LH1IddD2/TYp+mthcSY0OS6M+pr9NlHc
-	ebUkEMquM//sP/bEzWftH1wLy6edadc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-453-LT9AhhAdN8-1cBnvjcP2OA-1; Wed, 06 Jul 2022 07:18:47 -0400
-X-MC-Unique: LT9AhhAdN8-1cBnvjcP2OA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63593101A586
-	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 11:18:47 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.92])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D85DB1121315
-	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 11:18:46 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: fix subflow traveral at disconnect time
-Date: Wed,  6 Jul 2022 13:18:29 +0200
-Message-Id: <2c5147569717a1c879b291230d460e8e85992878.1657106043.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D4D33C6
+	for <mptcp@lists.linux.dev>; Wed,  6 Jul 2022 12:00:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 99126C341CA;
+	Wed,  6 Jul 2022 12:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657108820;
+	bh=DPJoaqosU+UXtuc1NFSZO1IP+Lo7h5IyPFbdkKfhEV4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=PnuFP6fE700NyWvJxQVhWs7Nt7b3LyXvj1pNVyYgTPa21geMyf7sEQOMpy6/38+Jc
+	 U+cIXjMsKU4NGJ27j0w4zdp4jmK2GZDWoc75y85mIUJXanYt78Xn5+4RZGW/qdN9MQ
+	 S8KfOg4kFkcI87Q061v3CGnl+5ijR7sc4PqQFdGLayf2b8cdq7+lPOuv46M5uSZYGM
+	 uI0CbJKYTPQLJv6W6jGL+smGwUMfonKk1q4mi35RyvoP0FndZFDuAaNQKgUu6YlWW4
+	 57sRQ56yISRR9l5L8gG9Xj7dLcclwpax+EusCogkSXYfay1LssVwIzeJP/v7PYoftB
+	 cDgnpmuURc4Kg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 85412E45BDC;
+	Wed,  6 Jul 2022 12:00:20 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Subject: Re: [PATCH net 0/7] mptcp: Path manager fixes for 5.19
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <165710882054.23384.2979823140272634407.git-patchwork-notify@kernel.org>
+Date: Wed, 06 Jul 2022 12:00:20 +0000
+References: <20220705213217.146898-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220705213217.146898-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, fw@strlen.de, geliang.tang@suse.com,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-At disconnect time the MPTCP protocol traverse the subflows
-list closing each of them. In some circumstances - MPJ subflow,
-passive MPTCP socket, the latter operation can remove the
-subflow from the list, invalidating the current iterator.
+Hello:
 
-Address the issue using the safe list traversing helper
-variant.
+This series was applied to netdev/net.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Reported-by: van fantasy <g1042620637@gmail.com>
-Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-I think this should go soon upstream, sending here to trigger the CI
+On Tue,  5 Jul 2022 14:32:10 -0700 you wrote:
+> The MPTCP userspace path manager is new in 5.19, and these patches fix
+> some issues in that new code.
+> 
+> Patches 1-3 fix path manager locking issues.
+> 
+> Patches 4 and 5 allow userspace path managers to change priority of
+> established subflows using the existing MPTCP_PM_CMD_SET_FLAGS generic
+> netlink command. Includes corresponding self test update.
+> 
+> [...]
 
-A pktdrill test will follow.
----
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Here is the summary with links:
+  - [net,1/7] mptcp: fix locking in mptcp_nl_cmd_sf_destroy()
+    https://git.kernel.org/netdev/net/c/5ccecaec5c1e
+  - [net,2/7] mptcp: Avoid acquiring PM lock for subflow priority changes
+    https://git.kernel.org/netdev/net/c/c21b50d5912b
+  - [net,3/7] mptcp: Acquire the subflow socket lock before modifying MP_PRIO flags
+    https://git.kernel.org/netdev/net/c/a657430260e5
+  - [net,4/7] mptcp: netlink: issue MP_PRIO signals from userspace PMs
+    https://git.kernel.org/netdev/net/c/892f396c8e68
+  - [net,5/7] selftests: mptcp: userspace PM support for MP_PRIO signals
+    https://git.kernel.org/netdev/net/c/ca188a25d43f
+  - [net,6/7] mptcp: fix local endpoint accounting
+    https://git.kernel.org/netdev/net/c/843b5e75efff
+  - [net,7/7] mptcp: update MIB_RMSUBFLOW in cmd_sf_destroy
+    https://git.kernel.org/netdev/net/c/d2d21f175f1f
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 10bfa2b78206..0264642f133f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2881,12 +2881,12 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
- 
- static int mptcp_disconnect(struct sock *sk, int flags)
- {
--	struct mptcp_subflow_context *subflow;
-+	struct mptcp_subflow_context *subflow, *tmp;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
- 	inet_sk_state_store(sk, TCP_CLOSE);
- 
--	mptcp_for_each_subflow(msk, subflow) {
-+	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
- 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
+You are awesome, thank you!
 -- 
-2.35.3
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
