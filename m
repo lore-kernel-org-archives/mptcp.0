@@ -1,43 +1,44 @@
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C754C75
-	for <mptcp@lists.linux.dev>; Fri,  8 Jul 2022 23:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5304C75
+	for <mptcp@lists.linux.dev>; Fri,  8 Jul 2022 23:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657323383; x=1688859383;
+  t=1657323385; x=1688859385;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=mLtbgDckIbKax2TRKG/sQfPD3NEQ0gRiAtYmyp8RjqY=;
-  b=c4TpUCI1S3W9O/oT/hb/D1gLQufqJe1b9YYUgINHRQw/tjcJp53UtRoS
-   z0Zep95FQ2jUDpGiuG0Z1reCerG8jKKTKlkSGBvC+zLxVbt+koBd0zTjm
-   e2PUIXxXNLiuHz6a14d6XeBTX5HafFpC3XaFX9v/wgSUwM+ICYW3+X1xv
-   HH9raJBzuCryKyWGM4cOZDkMCtdtIWWlh4Xr1UxCG6nl6qoqLSf7RuMU3
-   MqZ9v96G7iiPMwmHfoeCRR+TvznKROIVAD6Z06Eb8UGNw1gyW9pILI+dz
-   irSvIad/UdsXddn9tCh3Hj0LB30ofypHpTpqod256UN4SBzMlVX7EzjYV
+  bh=cNc661S3iimevezDyva1ssvcfT/UsrE7h/xgcUHLZHg=;
+  b=YF6Jpv2H2EJUym54CaRfsX3uoWL5VZw1KN3fSHi5KjJmjCJNkALohr5K
+   uGBpAoYYbdJCGZYU/MrdsDRcJAH8U5fMBWvNhSioEv2QESX4VilHrcDzY
+   9jxekxTbyvJtCYDiQMYeJC/llcoEs0i1fd5CLLD9xImS0sSR5axddR46P
+   uDp/Qxa6GRFWAXCyyPyA/79EDUqRmwTRtTx+jMcDVAXU8rvLwelt6leCf
+   z5Vi7QEIlbZD+Px1tx5h1LEvg9vmWpNqLlFVKUGGw+sKVgcpyEDBTSJet
+   mMH9ftZOYkbvPCd0LERik4ebwwO5FqcL6UskdXo6cFAKTJqAFvKh4Jyhr
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="348372260"
+X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="348372259"
 X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="348372260"
+   d="scan'208";a="348372259"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 16:36:14 -0700
 X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="770933082"
+   d="scan'208";a="770933079"
 Received: from aroras-mobl.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.1.203])
   by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 16:36:14 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+Cc: Paolo Abeni <pabeni@redhat.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
-	pabeni@redhat.com,
 	edumazet@google.com,
 	kishen.maloor@intel.com,
+	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
+	van fantasy <g1042620637@gmail.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 2/2] selftests: mptcp: validate userspace PM tests by default
-Date: Fri,  8 Jul 2022 16:36:10 -0700
-Message-Id: <20220708233610.410786-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 1/2] mptcp: fix subflow traversal at disconnect time
+Date: Fri,  8 Jul 2022 16:36:09 -0700
+Message-Id: <20220708233610.410786-2-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.37.0
 In-Reply-To: <20220708233610.410786-1-mathew.j.martineau@linux.intel.com>
 References: <20220708233610.410786-1-mathew.j.martineau@linux.intel.com>
@@ -49,36 +50,45 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+From: Paolo Abeni <pabeni@redhat.com>
 
-The new script was not listed in the programs to test.
+At disconnect time the MPTCP protocol traverse the subflows
+list closing each of them. In some circumstances - MPJ subflow,
+passive MPTCP socket, the latter operation can remove the
+subflow from the list, invalidating the current iterator.
 
-By consequence, some CIs running MPTCP selftests were not validating
-these new tests. Note that MPTCP CI was validating it as it executes all
-.sh scripts from 'tools/testing/selftests/net/mptcp' directory.
+Address the issue using the safe list traversing helper
+variant.
 
-Fixes: 259a834fadda ("selftests: mptcp: functional tests for the userspace PM type")
-Reported-by: Jakub Kicinski <kuba@kernel.org>
+Reported-by: van fantasy <g1042620637@gmail.com>
+Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+Tested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- tools/testing/selftests/net/mptcp/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index f905d5358e68..48a99e1453e1 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -6,7 +6,7 @@ KSFT_KHDR_INSTALL := 1
- CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g -I$(top_srcdir)/usr/include $(KHDR_INCLUDES)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cc21fafd9726..21a3ed64226e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2919,12 +2919,12 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
  
- TEST_PROGS := mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh \
--	      simult_flows.sh mptcp_sockopt.sh
-+	      simult_flows.sh mptcp_sockopt.sh userspace_pm.sh
+ static int mptcp_disconnect(struct sock *sk, int flags)
+ {
+-	struct mptcp_subflow_context *subflow;
++	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
  
- TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq
+ 	inet_sk_state_store(sk, TCP_CLOSE);
  
+-	mptcp_for_each_subflow(msk, subflow) {
++	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+ 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
 -- 
 2.37.0
 
