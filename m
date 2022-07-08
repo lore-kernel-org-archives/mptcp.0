@@ -1,43 +1,42 @@
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E45E3229
-	for <mptcp@lists.linux.dev>; Fri,  8 Jul 2022 17:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2270A3238
+	for <mptcp@lists.linux.dev>; Fri,  8 Jul 2022 17:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1657300460; x=1688836460;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wvwoov0ZtEtx5i1pjqAsOc7JoLHCC2rk2TZrjCa1l7A=;
-  b=gp2Nvm3C3nfRRGmvFlmsTVqMT6RUf3fyQ4nHTjqEXq3M8vAE7CgwZKLn
-   GxRJ95rx5ksBNddYlWOtPQfUzuB6V5nm40TpyqEJH2L4zZsMbC4g90rDL
-   VGnaKKy9fOhtLes/Vj8gA8hN28N3m6D/T3pGd9O+HCFPZUttFC15jVPby
-   PJY0Bc8Rrdj4lLKTzZ1/tXuwHXlPcQ6eMVhNJVnOi5FrSTwllCEYM1iZv
-   Jl38rVXCQFFedidLhE4eSwA04zp+YMsWoJjtne3+Umff8PkfzecaoOuhW
-   1S4WbfHsFmlCn0e2WzhCnxfNqabFuzUI7PGK2lIAcr3VyDFZSizOfXz1p
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="285069092"
+  bh=dDFcKsL9kB1Uqm+n86u6isMH3J6Z2PbdfW1/uIBATOc=;
+  b=n+P8dGIefs65IFTfPn9M4TeBwe+DcU5gbdwD/JU4wY8o/SM8lp7tUGQo
+   C4bLodU7WPdK9Au7G8hfZMPgJ8z2B1xSNdX1p/5enC2TKrCNtF64uoi6a
+   ky0jWZc3wRp8SdI0Aq0sqQKWMey49mX5dNI4X1cCZN7wWk2zkJnfeY6nL
+   xz9glcT2OXmyP8t40YXxeBZ6rIGnQwzUdeRQtNu9BT+BOoyPy175PYoO3
+   gxQyWY0QikvdEk/ygzzJYeydI2oPfsYvtx2F/LVsKhg1icGpxcPRIACbG
+   DmCiFQgwy/5IvHg52GkXqBLB5t5T2pVvQvON7nrMxsUwZCxEAdkOd5QZr
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="285069095"
 X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="285069092"
+   d="scan'208";a="285069095"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 10:14:18 -0700
 X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="651641497"
+   d="scan'208";a="651641498"
 Received: from aroras-mobl.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.1.203])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 10:14:17 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 10:14:18 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
+Cc: Paolo Abeni <pabeni@redhat.com>,
 	davem@davemloft.net,
 	kuba@kernel.org,
-	pabeni@redhat.com,
 	edumazet@google.com,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 1/6] mptcp: move MPTCPOPT_HMAC_LEN to net/mptcp.h
-Date: Fri,  8 Jul 2022 10:14:08 -0700
-Message-Id: <20220708171413.327112-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 2/6] selftests: mptcp: tweak simult_flows for debug kernels
+Date: Fri,  8 Jul 2022 10:14:09 -0700
+Message-Id: <20220708171413.327112-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.37.0
 In-Reply-To: <20220708171413.327112-1-mathew.j.martineau@linux.intel.com>
 References: <20220708171413.327112-1-mathew.j.martineau@linux.intel.com>
@@ -49,52 +48,75 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliang.tang@suse.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-Move macro MPTCPOPT_HMAC_LEN definition from net/mptcp/protocol.h to
-include/net/mptcp.h.
+The mentioned test measures the transfer run-time to verify
+that the user-space program is able to use the full aggregate B/W.
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Even on (virtual) link-speed-bound tests, debug kernel can slow
+down the transfer enough to cause sporadic test failures.
+
+Instead of unconditionally raising the maximum allowed run-time,
+tweak when the running kernel is a debug one, and use some simple/
+rough heuristic to guess such scenarios.
+
+Note: this intentionally avoids looking for /boot/config-<version> as
+the latter file is not always available in our reference CI
+environments.
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Co-developed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- include/net/mptcp.h  | 3 ++-
- net/mptcp/protocol.h | 1 -
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 4d761ad530c9..ac9cf7271d46 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -39,6 +39,7 @@ struct mptcp_ext {
- 			infinite_map:1;
- };
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index f441ff7904fc..ffa13a957a36 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -12,6 +12,7 @@ timeout_test=$((timeout_poll * 2 + 1))
+ test_cnt=1
+ ret=0
+ bail=0
++slack=50
  
-+#define MPTCPOPT_HMAC_LEN	20
- #define MPTCP_RM_IDS_MAX	8
+ usage() {
+ 	echo "Usage: $0 [ -b ] [ -c ] [ -d ]"
+@@ -52,6 +53,7 @@ setup()
+ 	cout=$(mktemp)
+ 	capout=$(mktemp)
+ 	size=$((2 * 2048 * 4096))
++
+ 	dd if=/dev/zero of=$small bs=4096 count=20 >/dev/null 2>&1
+ 	dd if=/dev/zero of=$large bs=4096 count=$((size / 4096)) >/dev/null 2>&1
  
- struct mptcp_rm_list {
-@@ -89,7 +90,7 @@ struct mptcp_out_options {
- 			u32 nonce;
- 			u32 token;
- 			u64 thmac;
--			u8 hmac[20];
-+			u8 hmac[MPTCPOPT_HMAC_LEN];
- 		};
- 	};
- #endif
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 480c5320b86e..07871e10e510 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -83,7 +83,6 @@
+@@ -104,6 +106,16 @@ setup()
+ 	ip -net "$ns3" route add default via dead:beef:3::2
  
- /* MPTCP MP_JOIN flags */
- #define MPTCPOPT_BACKUP		BIT(0)
--#define MPTCPOPT_HMAC_LEN	20
- #define MPTCPOPT_THMAC_LEN	8
+ 	ip netns exec "$ns3" ./pm_nl_ctl limits 1 1
++
++	# debug build can slow down measurably the test program
++	# we use quite tight time limit on the run-time, to ensure
++	# maximum B/W usage.
++	# Use kmemleak/lockdep/kasan/prove_locking presence as a rough
++	# estimate for this being a debug kernel and increase the
++	# maximum run-time accordingly. Observed run times for CI builds
++	# running selftests, including kbuild, were used to determine the
++	# amount of time to add.
++	grep -q ' kmemleak_init$\| lockdep_init$\| kasan_init$\| prove_locking$' /proc/kallsyms && slack=$((slack+550))
+ }
  
- /* MPTCP MP_CAPABLE flags */
+ # $1: ns, $2: port
+@@ -241,7 +253,7 @@ run_test()
+ 
+ 	# mptcp_connect will do some sleeps to allow the mp_join handshake
+ 	# completion (see mptcp_connect): 200ms on each side, add some slack
+-	time=$((time + 450))
++	time=$((time + 400 + slack))
+ 
+ 	printf "%-60s" "$msg"
+ 	do_transfer $small $large $time
 -- 
 2.37.0
 
