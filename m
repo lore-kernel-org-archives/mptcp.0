@@ -1,119 +1,75 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2338F7B
-	for <mptcp@lists.linux.dev>; Sat,  9 Jul 2022 09:11:51 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id b11so1297694eju.10
-        for <mptcp@lists.linux.dev>; Sat, 09 Jul 2022 02:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to;
-        bh=GwRPDPz0wAqQuQjReGGFUUa9OBEO/j7dclJ1wvnbWbw=;
-        b=3Bk7y61bJci89ZJ+gdYXv/2I2Jd2H107ZgBpjScH3iI0MvbkdyNoFcIWlrEWTU+jHi
-         sOyDWGsQZSVr58Nwhv30399lkGvsSY2T5wh3bw0vteP3vfYQMjy6qnrEzVxwz1BRbCGL
-         FcMEaJFEI+vHHH4aOsmLrNqg8sDJY78xw6zBEucJoR7pVc+F9BqhoWS1G1DO4jI/ZEQi
-         pbBy3ATNb5ZEbfNIp59CTRxcOYn2aUoprsExPnCOWiC4Y893cGlZrEf51ifyWB5U38rR
-         lB3fhZ6uepYs9Wadql+/NECLavybhDnZAXCP1Ut9suIE9nn8LemPquOuiVYksMRcToGz
-         1AEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to;
-        bh=GwRPDPz0wAqQuQjReGGFUUa9OBEO/j7dclJ1wvnbWbw=;
-        b=3HdS2awKlFjsHCxdttxuzrLsRQSg++PHYOZgysR2iC/x6e5p/zadWXbkACNIpXpMOY
-         hTMX7xaai4dLtSOvw5vYMR4I1s9G736fpkgCDsje/GFf6B9mMpNX65dm4Ch8UN3EzhgM
-         aTtze//hizlgs3GQdftSSRILo4gqasMmcbC5G9BU4kXmar1Sxa9sWSnrpoG45m+q051V
-         TK2wLErJikuY8z9JEt60v/uA9GO0CxTAwcy4Gt4/z6RcfOmviLo3PlkWCpLt64PR6KJv
-         MedQms243k9E4/0znJ3EZGoL4wDEHq9+VrQONTDuqlAdQZkaY25Ik/kqleD6ToIY6jNx
-         +ISA==
-X-Gm-Message-State: AJIora/1y5nMjZxtrDdqeHmnJ7ito/rFIMGnagbs3tmLHZ1RKv+k4/1T
-	Secmg6IcbeOsmxpxn2kQMA0Hcg==
-X-Google-Smtp-Source: AGRyM1vI7m5nS7zEdVam2tmvN320LNjtUyI/YEZCStnztWbPDuR7Wt5qMJTystEcWIBSj3QF/E84fg==
-X-Received: by 2002:a17:906:cc52:b0:72b:114e:c56c with SMTP id mm18-20020a170906cc5200b0072b114ec56cmr8008533ejb.144.1657357909909;
-        Sat, 09 Jul 2022 02:11:49 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:e51f:3772:e05:89c3? ([2a02:578:8593:1200:e51f:3772:e05:89c3])
-        by smtp.gmail.com with ESMTPSA id y26-20020a056402135a00b00435a742e350sm636472edw.75.2022.07.09.02.11.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 Jul 2022 02:11:49 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------3cL3LDjvU14fMcomcm3uA5J9"
-Message-ID: <6dddf3f2-40c1-a08b-ec0e-c4feafcad118@tessares.net>
-Date: Sat, 9 Jul 2022 11:11:47 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BAFEA4
+	for <mptcp@lists.linux.dev>; Sat,  9 Jul 2022 11:40:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B8126C3411E;
+	Sat,  9 Jul 2022 11:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657366813;
+	bh=H7C7bHDxgx7Hf4TRIhu1MC4de+z6YL1GgTy9ZRp1CUE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=S60M474H6ncKScSP2go6Z58mtLeb6XqSbCsYLlCv44YiocVWR+vJJETLZQCrnxPOS
+	 0Q3LcpqlM9WSfpixbdCdJCJzlBlJTdKbXUdEDZp8UxU+n7Kcf+6fWFxboAIlXqgpZk
+	 e0sW9vGCOaGUc4jMVb8cN/7wqVgc4vZcLd9qgkPyg1iPSe2IuPJ/GwxkHoXMWPhaVh
+	 d2YzA2tLElIQfKJF/bgZxp84rkw4q6euLE3UDrBbXpr/cz8DBZrsBFlD5C9RSGJtvE
+	 tZxGIjsrYI9Hhtb/ASyuSsc5S8qQPgqLEcQFRI7SsryYp6DMMbGDHQI1x8C30TyS76
+	 nVnHy/SmzTKcA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9E3E2E45BD8;
+	Sat,  9 Jul 2022 11:40:13 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 net 09/12] net: Fix data-races around sysctl_mem.
-Content-Language: en-GB
-To: Kuniyuki Iwashima <kuniyu@amazon.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
- Iurii Zaikin <yzaikin@google.com>
-Cc: Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20220706234003.66760-1-kuniyu@amazon.com>
- <20220706234003.66760-10-kuniyu@amazon.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220706234003.66760-10-kuniyu@amazon.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] mptcp: Self test improvements and a header tweak
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <165736681364.32617.7153064094364641646.git-patchwork-notify@kernel.org>
+Date: Sat, 09 Jul 2022 11:40:13 +0000
+References: <20220708171413.327112-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20220708171413.327112-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, matthieu.baerts@tessares.net,
+ geliang.tang@suse.com, mptcp@lists.linux.dev
 
-This is a multi-part message in MIME format.
---------------3cL3LDjvU14fMcomcm3uA5J9
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Hello:
 
-Hello,
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-On 07/07/2022 01:40, Kuniyuki Iwashima wrote:
-> While reading .sysctl_mem, it can be changed concurrently.
-> So, we need to add READ_ONCE() to avoid data-races.
+On Fri,  8 Jul 2022 10:14:07 -0700 you wrote:
+> Patch 1 moves a definition to a header so it can be used in a struct
+> declaration.
+> 
+> Patch 2 adjusts a time threshold for a selftest that runs much slower on
+> debug kernels (and even more on slow CI infrastructure), to reduce
+> spurious failures.
+> 
+> [...]
 
-FYI, we got a small conflict when merging -net in net-next in the MPTCP
-tree due to this patch applied in -net:
+Here is the summary with links:
+  - [net-next,1/6] mptcp: move MPTCPOPT_HMAC_LEN to net/mptcp.h
+    https://git.kernel.org/netdev/net-next/c/f7657ff4a709
+  - [net-next,2/6] selftests: mptcp: tweak simult_flows for debug kernels
+    https://git.kernel.org/netdev/net-next/c/d0d9c8f2df60
+  - [net-next,3/6] selftests: mptcp: userspace pm address tests
+    https://git.kernel.org/netdev/net-next/c/97040cf9806e
+  - [net-next,4/6] selftests: mptcp: userspace pm subflow tests
+    https://git.kernel.org/netdev/net-next/c/5e986ec46874
+  - [net-next,5/6] selftests: mptcp: avoid Terminated messages in userspace_pm
+    https://git.kernel.org/netdev/net-next/c/507719cd7c0f
+  - [net-next,6/6] selftests: mptcp: update pm_nl_ctl usage header
+    https://git.kernel.org/netdev/net-next/c/65ebc6676d17
 
-  310731e2f161 ("net: Fix data-races around sysctl_mem.")
-
-and this one from net-next:
-
-  e70f3c701276 ("Revert "net: set SK_MEM_QUANTUM to 4096"")
-
-The conflict has been resolved on our side[1] and the resolution we
-suggest is attached to this email.
-
-I'm sharing this thinking it can help others but if it only creates
-noise, please tell me! :)
-
-Cheers,
-Matt
-
-[1] https://github.com/multipath-tcp/mptcp_net-next/commit/b01bda9d0fe6
+You are awesome, thank you!
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---------------3cL3LDjvU14fMcomcm3uA5J9
-Content-Type: text/x-patch; charset=UTF-8; name="b01bda9d0fe6.patch"
-Content-Disposition: attachment; filename="b01bda9d0fe6.patch"
-Content-Transfer-Encoding: base64
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-ZGlmZiAtLWNjIGluY2x1ZGUvbmV0L3NvY2suaAppbmRleCAwZGQ0M2MzZGY0OWIsOWZhNTQ3
-NjJlMDc3Li5mN2FkMWE3NzA1ZTkKLS0tIGEvaW5jbHVkZS9uZXQvc29jay5oCisrKyBiL2lu
-Y2x1ZGUvbmV0L3NvY2suaApAQEAgLTE1NDEsMTAgLTE1MjEsMjIgKzE1NDEsMTAgQEBAIHZv
-aWQgX19za19tZW1fcmVjbGFpbShzdHJ1Y3Qgc29jayAqc2ssIAogICNkZWZpbmUgU0tfTUVN
-X1NFTkQJMAogICNkZWZpbmUgU0tfTUVNX1JFQ1YJMQogIAogLS8qIHN5c2N0bF9tZW0gdmFs
-dWVzIGFyZSBpbiBwYWdlcywgd2UgY29udmVydCB0aGVtIGluIFNLX01FTV9RVUFOVFVNIHVu
-aXRzICovCiArLyogc3lzY3RsX21lbSB2YWx1ZXMgYXJlIGluIHBhZ2VzICovCiAgc3RhdGlj
-IGlubGluZSBsb25nIHNrX3Byb3RfbWVtX2xpbWl0cyhjb25zdCBzdHJ1Y3Qgc29jayAqc2ss
-IGludCBpbmRleCkKICB7Ci0gCXJldHVybiBzay0+c2tfcHJvdC0+c3lzY3RsX21lbVtpbmRl
-eF07CiAtCWxvbmcgdmFsID0gUkVBRF9PTkNFKHNrLT5za19wcm90LT5zeXNjdGxfbWVtW2lu
-ZGV4XSk7CiAtCiAtI2lmIFBBR0VfU0laRSA+IFNLX01FTV9RVUFOVFVNCiAtCXZhbCA8PD0g
-UEFHRV9TSElGVCAtIFNLX01FTV9RVUFOVFVNX1NISUZUOwogLSNlbGlmIFBBR0VfU0laRSA8
-IFNLX01FTV9RVUFOVFVNCiAtCXZhbCA+Pj0gU0tfTUVNX1FVQU5UVU1fU0hJRlQgLSBQQUdF
-X1NISUZUOwogLSNlbmRpZgogLQlyZXR1cm4gdmFsOworKwlyZXR1cm4gUkVBRF9PTkNFKHNr
-LT5za19wcm90LT5zeXNjdGxfbWVtW2luZGV4XSk7CiAgfQogIAogIHN0YXRpYyBpbmxpbmUg
-aW50IHNrX21lbV9wYWdlcyhpbnQgYW10KQo=
 
---------------3cL3LDjvU14fMcomcm3uA5J9--
