@@ -1,24 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BAFEA4
-	for <mptcp@lists.linux.dev>; Sat,  9 Jul 2022 11:40:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B8126C3411E;
-	Sat,  9 Jul 2022 11:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657366813;
-	bh=H7C7bHDxgx7Hf4TRIhu1MC4de+z6YL1GgTy9ZRp1CUE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S60M474H6ncKScSP2go6Z58mtLeb6XqSbCsYLlCv44YiocVWR+vJJETLZQCrnxPOS
-	 0Q3LcpqlM9WSfpixbdCdJCJzlBlJTdKbXUdEDZp8UxU+n7Kcf+6fWFxboAIlXqgpZk
-	 e0sW9vGCOaGUc4jMVb8cN/7wqVgc4vZcLd9qgkPyg1iPSe2IuPJ/GwxkHoXMWPhaVh
-	 d2YzA2tLElIQfKJF/bgZxp84rkw4q6euLE3UDrBbXpr/cz8DBZrsBFlD5C9RSGJtvE
-	 tZxGIjsrYI9Hhtb/ASyuSsc5S8qQPgqLEcQFRI7SsryYp6DMMbGDHQI1x8C30TyS76
-	 nVnHy/SmzTKcA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9E3E2E45BD8;
-	Sat,  9 Jul 2022 11:40:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD1BEBC
+	for <mptcp@lists.linux.dev>; Sun, 10 Jul 2022 08:35:30 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id be14-20020a05600c1e8e00b003a04a458c54so1430880wmb.3
+        for <mptcp@lists.linux.dev>; Sun, 10 Jul 2022 01:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=orIIFdtRbt6cm/l/3AlelKzIyuzEuMYVC6VdEiG/HhE=;
+        b=xw92GhKX4WJO8whQD7utDC8+8bFUEokf6yXN1jTy1b8fK7xUW6SB6d3+HjS0DvXLln
+         bu2CcR2YFRaQZFjV19f90BQSnxs/vaoHsaybo7j3aeVfpytGIIkW/Xvu6uexB8PrE/Ge
+         XpYOfxY7hQT9u0RvKILf+GBEYrXwvGdduWd9tyDOcEztbS14h6uOF50qQmRSixwuhmaQ
+         jGpgJfWQZidxD74rkU11R6urlWEKy51jhcyDMa0ZO0DyHjFSy7mzxI64jEn52drPB0kz
+         7Ydd2tQlZibBTDjy+AbGQ3K1FhRIf5cOSzCjwF5S/q3gOwoMi+NmYGtAUf7DVfmfKZL3
+         PDWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=orIIFdtRbt6cm/l/3AlelKzIyuzEuMYVC6VdEiG/HhE=;
+        b=l2dDJqrXAzLkEaFWhWuq9NbtREOyPcuuZ/+ZRsw4YgOmAQ1+KmTlvY3Vy3q65ZIJu3
+         IOAKNf1VkxyUUNHiqQWwfMSYss10YgsDMi/BzuSsPhfr7nvc6BhNgTjWMaC5SObIWJDq
+         VLbI8+qWNYUNE8PGV6ZdIIU0Pw2cJsdwpUfV/jbMwaUnowYvZejMCGxkENBqRYECsVp/
+         GjNDJ103XTIjLH8qcidWXyabE5VWoJTXuQUAxfwW49TIIBmxGXawuU5suGUZtIbqMik9
+         QRi8vXgYKF5mWSAFdGOFq3/ArzMN+Epw5+SP9jxLjoNEukl+Z7q6mD6yRzytA5+UrVyq
+         JHrA==
+X-Gm-Message-State: AJIora+kmIH0wzLSlXKMdBmg7lyKxZJdBPprkd7pEtPp3S6YYJlcwri3
+	VYNv7l8VUyJx8930kORlSnpo8w==
+X-Google-Smtp-Source: AGRyM1tfaaudoS0WgFrUsnxUfK8M9lLdROl46O50ihd3Xfy0Amv5OvYdh8xbcdjuftlmcbSlpL7aYw==
+X-Received: by 2002:a05:600c:4e54:b0:3a0:4e07:ce with SMTP id e20-20020a05600c4e5400b003a04e0700cemr9652537wmq.37.1657442128721;
+        Sun, 10 Jul 2022 01:35:28 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id b17-20020adff911000000b0021d819c8f6dsm3120944wrr.39.2022.07.10.01.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Jul 2022 01:35:28 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Cc: mptcp@lists.linux.dev,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] bpf: fix 'dubious one-bit signed bitfield' warnings
+Date: Sun, 10 Jul 2022 10:35:23 +0200
+Message-Id: <20220710083523.1620722-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,50 +64,63 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] mptcp: Self test improvements and a header tweak
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165736681364.32617.7153064094364641646.git-patchwork-notify@kernel.org>
-Date: Sat, 09 Jul 2022 11:40:13 +0000
-References: <20220708171413.327112-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220708171413.327112-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, matthieu.baerts@tessares.net,
- geliang.tang@suse.com, mptcp@lists.linux.dev
 
-Hello:
+Our CI[1] reported these warnings when using Sparse:
 
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
+  $ touch net/mptcp/bpf.c
+  $ make C=1 net/mptcp/bpf.o
+  net/mptcp/bpf.c: note: in included file:
+  include/linux/bpf_verifier.h:348:26: error: dubious one-bit signed bitfield
+  include/linux/bpf_verifier.h:349:29: error: dubious one-bit signed bitfield
 
-On Fri,  8 Jul 2022 10:14:07 -0700 you wrote:
-> Patch 1 moves a definition to a header so it can be used in a struct
-> declaration.
-> 
-> Patch 2 adjusts a time threshold for a selftest that runs much slower on
-> debug kernels (and even more on slow CI infrastructure), to reduce
-> spurious failures.
-> 
-> [...]
+These two fields from the new 'bpf_loop_inline_state' structure are used
+as booleans. Instead of declaring two 'unsigned int', we can declare
+them as 'bool'.
 
-Here is the summary with links:
-  - [net-next,1/6] mptcp: move MPTCPOPT_HMAC_LEN to net/mptcp.h
-    https://git.kernel.org/netdev/net-next/c/f7657ff4a709
-  - [net-next,2/6] selftests: mptcp: tweak simult_flows for debug kernels
-    https://git.kernel.org/netdev/net-next/c/d0d9c8f2df60
-  - [net-next,3/6] selftests: mptcp: userspace pm address tests
-    https://git.kernel.org/netdev/net-next/c/97040cf9806e
-  - [net-next,4/6] selftests: mptcp: userspace pm subflow tests
-    https://git.kernel.org/netdev/net-next/c/5e986ec46874
-  - [net-next,5/6] selftests: mptcp: avoid Terminated messages in userspace_pm
-    https://git.kernel.org/netdev/net-next/c/507719cd7c0f
-  - [net-next,6/6] selftests: mptcp: update pm_nl_ctl usage header
-    https://git.kernel.org/netdev/net-next/c/65ebc6676d17
+While at it, also set 'state->initialized' to 'true' instead of '1' to
+make it clearer it is linked to a 'bool' type.
 
-You are awesome, thank you!
+[1] https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2643588487
+
+Fixes: 1ade23711971 ("bpf: Inline calls to bpf_loop when callback is known")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ include/linux/bpf_verifier.h | 8 ++++----
+ kernel/bpf/verifier.c        | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
+index 81b19669efba..2ac424641cc3 100644
+--- a/include/linux/bpf_verifier.h
++++ b/include/linux/bpf_verifier.h
+@@ -345,10 +345,10 @@ struct bpf_verifier_state_list {
+ };
+ 
+ struct bpf_loop_inline_state {
+-	int initialized:1; /* set to true upon first entry */
+-	int fit_for_inline:1; /* true if callback function is the same
+-			       * at each call and flags are always zero
+-			       */
++	bool initialized; /* set to true upon first entry */
++	bool fit_for_inline; /* true if callback function is the same
++			      * at each call and flags are always zero
++			      */
+ 	u32 callback_subprogno; /* valid when fit_for_inline is true */
+ };
+ 
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 328cfab3af60..4fa49d852a59 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7144,7 +7144,7 @@ static void update_loop_inline_state(struct bpf_verifier_env *env, u32 subprogno
+ 	struct bpf_loop_inline_state *state = &cur_aux(env)->loop_inline_state;
+ 
+ 	if (!state->initialized) {
+-		state->initialized = 1;
++		state->initialized = true;
+ 		state->fit_for_inline = loop_flag_is_zero(env);
+ 		state->callback_subprogno = subprogno;
+ 		return;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.36.1
 
