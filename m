@@ -1,79 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0848F7A
-	for <mptcp@lists.linux.dev>; Mon, 11 Jul 2022 13:07:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF1BFC34115;
-	Mon, 11 Jul 2022 13:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657544861;
-	bh=KSVdsk0NC94AFJ7bwZTkH/uOWzU/O4IXdwEJf7+JQRM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LwtVCWnFJ5qNCmvJ3MuDYWA0XulRjmnaTSBRNLMBGbyRHArvy0eTmKpPJsTky61CB
-	 WPKNH2IzcClJ8JfJ/yYwEnUFIErWoDpWNSXUPTGUdES3+ZZvgAlN+O2RtCBBRJ3F0o
-	 FYUh2d1+MoMqpdNKw0F+b+vFD+CgVJntB62C2KftadQU5dH0J3sOkru8F4WngeDhrk
-	 uIpRmvHjLnQNhkuYE8zDQsjhx7UgJDloIRXJMhB3F/JGOHSEW6nIDeI/0dQnW8eWiC
-	 yKT8wTEr9bOHgMdFaaMqGmr+csxxLhNfBorSFZQ4tJn9hiFE6GjLY8QuM6u190R5IC
-	 swvAO72IDnwMQ==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Geliang Tang <geliang.tang@suse.com>,
-	mptcp@lists.linux.dev
-Subject: [PATCH bpf-next] mptcp: Add struct mptcp_sock definition when CONFIG_MPTCP is disabled
-Date: Mon, 11 Jul 2022 15:07:31 +0200
-Message-Id: <20220711130731.3231188-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.35.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704502F2E
+	for <mptcp@lists.linux.dev>; Mon, 11 Jul 2022 14:41:10 +0000 (UTC)
+Received: by mail-qv1-f43.google.com with SMTP id cw12so496215qvb.12
+        for <mptcp@lists.linux.dev>; Mon, 11 Jul 2022 07:41:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=eJvJ5XOmkQMGPnybtAk57i9ZbdFoylRwhLwM2/AlVOU=;
+        b=j9H7tb9fQXU1fIWHL/bUu9stVcqBiXP8dhAawFnaMsxbC2kapL+n/TBi9DiRgRU8b4
+         vfsW4bTC4MP7mcHbmWVHlIMfphbbLM0KTPwNsQcm2Q86kCsSSU8+uphn/Q4onjaacTQr
+         RNFmJBphhgevV+Btt7Q+UNwgjxW6BPcMobgOq3U8JYsMjSoTeTFkS73WcIK8netnNAk1
+         E2cg+LqHMVEzp+xhYzZxF9cJBpj0PUzHw2y3r31fyJHZUGfd/uDvcKHriT7xy7QZ69Gh
+         KXanDQRg8iqatPyKx5gBYO5fFx35IsDR5E0SomeLlnKB6dvlg8FRF2kgej+U0ZMWWHDE
+         NTzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=eJvJ5XOmkQMGPnybtAk57i9ZbdFoylRwhLwM2/AlVOU=;
+        b=p4bxqUo68JqPRaIQnpWd+4E66mGEYETiGnFQ29umoRCni9P98zf0jRshwAMaQLb71a
+         CeF3rj9XU65JfBg6tjm3avsHOTrQEtMYaArEwL0e+DcDObmvMoE1J+Y33b9vlvfNVWVg
+         G5hSLyrb31oeZ6j/0WJuxcD95Q0n51Z1vk+XLPkvdA2GwSsMvvAZnb3+qdB1/TUrwkwE
+         yt0YuqPN5z3rzwIRRHBPSPPIjC3p5wENU4j2ERaw6Lwoen6WAdJiOaKRGIGz9eaEklvi
+         6iA6dkLc9HhOCEXsashEan7d1mT+VjSWwdDT6RfEGJ3ukNiwVMoKw/LVbciMOAK1Uv17
+         W/8w==
+X-Gm-Message-State: AJIora8RhvOpxucJ4xAbj0+WQm288jWdkfdl9wuQAViRzyj5HYKwmhxn
+	6vYUL0ZtG4icFJlUo2QNEQ==
+X-Google-Smtp-Source: AGRyM1sxKvMSdqT4hKYx4swzYv1rp14rt2vB275mbrs7JjsvYnlgsoj0/ieU5E46d0uJ29TT3cRZLg==
+X-Received: by 2002:a05:6214:2465:b0:472:fcc9:1dcd with SMTP id im5-20020a056214246500b00472fcc91dcdmr13949116qvb.78.1657550469278;
+        Mon, 11 Jul 2022 07:41:09 -0700 (PDT)
+Received: from [127.0.0.1] ([52.168.8.93])
+        by smtp.gmail.com with ESMTPSA id bl29-20020a05620a1a9d00b006af45243e15sm6632757qkb.114.2022.07.11.07.41.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 07:41:08 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220711130731.3231188-1-jolsa@kernel.org>
+References: <20220711130731.3231188-1-jolsa@kernel.org>
+Subject: Re: mptcp: Add struct mptcp_sock definition when CONFIG_MPTCP is
+ disabled: Tests Results
+Message-ID: <c65825b7-2d9c-4f49-ee75-426d7d59c50e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 11 Jul 2022 14:41:08 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The btf_sock_ids array needs struct mptcp_sock BTF ID for
-the bpf_skc_to_mptcp_sock helper.
+Hi Jiri,
 
-When CONFIG_MPTCP is disabled, the 'struct mptcp_sock' is not
-defined and resolve_btfids will complain with:
+Thank you for your modifications, that's great!
 
-  BTFIDS  vmlinux
-WARN: resolve_btfids: unresolved symbol mptcp_sock
+Our CI did some validations and here is its report:
 
-Adding empty difinition for struct mptcp_sock when CONFIG_MPTCP
-is disabled.
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5307521400307712
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5307521400307712/su=
+mmary/summary.txt
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- include/net/mptcp.h | 4 ++++
- 1 file changed, 4 insertions(+)
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s):=
+ selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/6433421307150336
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6433421307150336/summary/summary.txt
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index ac9cf7271d46..25741a52c666 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -59,6 +59,10 @@ struct mptcp_addr_info {
- 	};
- };
- 
-+#if !IS_ENABLED(CONFIG_MPTCP)
-+struct mptcp_sock { };
-+#endif
-+
- struct mptcp_out_options {
- #if IS_ENABLED(CONFIG_MPTCP)
- 	u16 suboptions;
--- 
-2.35.3
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/1d9ed6cb0b33
 
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
