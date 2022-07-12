@@ -1,142 +1,127 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90C54681
-	for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 17:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB69A4681
+	for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 17:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657645556; x=1689181556;
+  t=1657646710; x=1689182710;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=rPxMZ+Vw5uzO4+6HpSJz1lqVx99t6Z9trYQCIx/TXKA=;
-  b=TZnmk1I59TZM75KY8+xc+pj71l2mo3JoTdhE40emH1UNix+8QDS+yXgh
-   siOebGOhtOLzPELlsoCKuDPUz1MaPsaCwzeeF05yFBl3BwZMBU6UzPBuF
-   /QTekKwZ84ODbHcumrVkW7olP5xuzTc8kcIi8dU48QsXSuP+jgVAHvzFS
-   CgQI79yDJ4aNOgcn/I0GzPepLLVDihgS5QYjSRHAdq+Dcgc65zSjlj//t
-   5GoFpmn9xc6KRlSxLH/u62xu0ZcZuUugZ/Zjvtv4Bn3PNZJYuigdVrFvi
-   B6DSVogpCcFcrXgAEVc0wFzEbctKwd6+6JjRL6YKKcfRrqmfJjMUuq8En
+  bh=GwAzDXOH6cVXN0b7QKrnYJSm0gHYatWv/kV5HTV09uI=;
+  b=dT6RtjK4j0vN9Q5iCzAh7lBgGGIcipgEmzHjxVdytTZjqdoNZk25XbPp
+   jPjf6tqcXv+WqDP4qgzaUodkBbOInbNX3y7dM/xXFRAc2Q81Pwr1GRzfK
+   NEQans9w2LxtdCucSgcqeoV24TyFwtDtZCnmVWAWmub1cDdjIhObxTvkt
+   5sNFrOE3WUtpx7AsxHSf0ZPXnNUQOiqsrWKdgdnQfUYcZRVMGK14RKuD2
+   mUVo7PhmOqf8O8G6Zllf+avb1oZdNODRkOY5Y0mTGb6vEUOCZSS17TNUd
+   9AN4cogOY81cIJe4BtwGzEDi4yEbmFtIgJ5qChg30djsey8O8Unbi5Ol2
    A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="310615955"
+X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="348971263"
 X-IronPort-AV: E=Sophos;i="5.92,266,1650956400"; 
-   d="scan'208";a="310615955"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 10:05:48 -0700
+   d="scan'208";a="348971263"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 10:25:10 -0700
 X-IronPort-AV: E=Sophos;i="5.92,266,1650956400"; 
-   d="scan'208";a="663024910"
+   d="scan'208";a="592706906"
 Received: from eklong-mobl.amr.corp.intel.com ([10.209.68.103])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 10:05:47 -0700
-Date: Tue, 12 Jul 2022 10:05:47 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 10:25:10 -0700
+Date: Tue, 12 Jul 2022 10:25:09 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Jiri Olsa <olsajiri@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-    Daniel Borkmann <daniel@iogearbox.net>, 
-    Andrii Nakryiko <andrii@kernel.org>, netdev@vger.kernel.org, 
-    bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
-    Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-    John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-    Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Subject: Re: [PATCH bpf-next] mptcp: Add struct mptcp_sock definition when
- CONFIG_MPTCP is disabled
-In-Reply-To: <23fa8509-5b2d-6263-1543-443c9c896348@tessares.net>
-Message-ID: <d8cecd5-64b-5e5f-3fa-93dbbef3c2@linux.intel.com>
-References: <20220711130731.3231188-1-jolsa@kernel.org> <6d3b3bf-2e29-d695-87d7-c23497acc81@linux.intel.com> <5710e8f7-6c09-538f-a636-2ea1863ab208@tessares.net> <Ys1lKqF1GL/T6mBz@krava> <23fa8509-5b2d-6263-1543-443c9c896348@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] mptcp: add mptcp_for_each_subflow_safe
+ helper
+In-Reply-To: <20220712160236.3668376-1-matthieu.baerts@tessares.net>
+Message-ID: <2898be1f-e7c0-3c-c732-8f2ea01c28ea@linux.intel.com>
+References: <20220712160236.3668376-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-1561649209-1657645548=:60884"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---0-1561649209-1657645548=:60884
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Tue, 12 Jul 2022, Matthieu Baerts wrote:
 
-> Hi Jiri,
+> Similar to mptcp_for_each_subflow(): this is clearer now that the _safe
+> version is used in multiple places.
 >
-> On 12/07/2022 14:12, Jiri Olsa wrote:
->> On Tue, Jul 12, 2022 at 11:06:38AM +0200, Matthieu Baerts wrote:
->>> Hi Jiri, Mat,
->>>
->>> On 11/07/2022 23:21, Mat Martineau wrote:
->>>> On Mon, 11 Jul 2022, Jiri Olsa wrote:
->>>>
->>>>> The btf_sock_ids array needs struct mptcp_sock BTF ID for
->>>>> the bpf_skc_to_mptcp_sock helper.
->>>>>
->>>>> When CONFIG_MPTCP is disabled, the 'struct mptcp_sock' is not
->>>>> defined and resolve_btfids will complain with:
->>>>>
->>>>>  BTFIDS  vmlinux
->>>>> WARN: resolve_btfids: unresolved symbol mptcp_sock
->>>>>
->>>>> Adding empty difinition for struct mptcp_sock when CONFIG_MPTCP
->>>>> is disabled.
->>>>>
->>>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
->>>>> ---
->>>>> include/net/mptcp.h | 4 ++++
->>>>> 1 file changed, 4 insertions(+)
->>>>>
->>>>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->>>>> index ac9cf7271d46..25741a52c666 100644
->>>>> --- a/include/net/mptcp.h
->>>>> +++ b/include/net/mptcp.h
->>>>> @@ -59,6 +59,10 @@ struct mptcp_addr_info {
->>>>>     };
->>>>> };
->>>>>
->>>>> +#if !IS_ENABLED(CONFIG_MPTCP)
->>>>> +struct mptcp_sock { };
->>>>> +#endif
->>>>
->>>> The only use of struct mptcp_sock I see with !CONFIG_MPTCP is from this
->>>> stub at the end of mptcp.h:
->>>>
->>>> static inline struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock
->>>> *sk) { return NULL; }
->>>>
->>>> It's normally defined in net/mptcp/protocol.h for the MPTCP subsystem code.
->>>>
->>>> The conditional could be added on the line before the stub to make it
->>>> clear that the empty struct is associated with that inline stub.
->>>
->>> If this is required only for this specific BPF function, why not
->>> modifying this stub (or add a define) to return "void *" instead of
->>> "struct mptcp_sock *"?
->>
->> so btf_sock_ids array needs BTF ID for 'struct mptcp_sock' and if CONFIG_MPTCP
->> is not enabled, then resolve_btfids (which resolves and populate all BTF IDs)
->> won't find it and will complain
->>
->> btf_sock_ids keeps all socket IDs regardles the state of their CONFIG options,
->> and relies that sock structs are defined even if related CONFIG option is disabled
->
-> Thank you for the explanation. I didn't know about that.
->
-> Then it is fine for me to leave it in mptcp.h. If it is not directly
-> linked to bpf_mptcp_sock_from_subflow(), I guess it can stay there but
-> maybe better to wait for Mat's answer about that.
->
->> if that is false assumption then maybe we need to make btf_sock_ids values optional
->> somehow
->
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-I'd rather keep the full mptcp_sock definition in net/mptcp/protocol.h 
-since moving it would require also moving a few other structs it depends 
-on.
+Looks good to me, thanks Matthieu
 
-Defining the empty struct in mptcp.h is fine with me and it sounds like 
-that meets the needs of btf_sock_ids - but I'd like a v2 of this patch 
-that moves the new empty struct declaration next to the inline 
-btf_mptcp_sock_from_subflow function in mptcp.h
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+> ---
+> net/mptcp/pm_netlink.c | 2 +-
+> net/mptcp/protocol.c   | 6 +++---
+> net/mptcp/protocol.h   | 2 ++
+> 3 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 291b5da42fdb..62471aaedb6d 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -796,7 +796,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+> 		u8 rm_id = rm_list->ids[i];
+> 		bool removed = false;
+>
+> -		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+> +		mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+> 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
+> 			u8 id = subflow->local_id;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index c92f91cb2c8d..48fdef304309 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2338,7 +2338,7 @@ static void __mptcp_close_subflow(struct mptcp_sock *msk)
+>
+> 	might_sleep();
+>
+> -	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+> +	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>
+> 		if (inet_sk_state_load(ssk) != TCP_CLOSE)
+> @@ -2381,7 +2381,7 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+>
+> 	mptcp_token_destroy(msk);
+>
+> -	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+> +	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+> 		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
+> 		bool slow;
+>
+> @@ -2886,7 +2886,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+>
+> 	inet_sk_state_store(sk, TCP_CLOSE);
+>
+> -	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+> +	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>
+> 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index b9333e7f380a..13b76f86f749 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -315,6 +315,8 @@ struct mptcp_sock {
+>
+> #define mptcp_for_each_subflow(__msk, __subflow)			\
+> 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
+> +#define mptcp_for_each_subflow_safe(__msk, __subflow, __tmp)			\
+> +	list_for_each_entry_safe(__subflow, __tmp, &((__msk)->conn_list), node)
+>
+> static inline void msk_owned_by_me(const struct mptcp_sock *msk)
+> {
+> -- 
+> 2.36.1
+>
+>
+>
 
 --
 Mat Martineau
 Intel
---0-1561649209-1657645548=:60884--
