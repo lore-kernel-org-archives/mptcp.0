@@ -1,127 +1,109 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB69A4681
-	for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 17:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657646710; x=1689182710;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GwAzDXOH6cVXN0b7QKrnYJSm0gHYatWv/kV5HTV09uI=;
-  b=dT6RtjK4j0vN9Q5iCzAh7lBgGGIcipgEmzHjxVdytTZjqdoNZk25XbPp
-   jPjf6tqcXv+WqDP4qgzaUodkBbOInbNX3y7dM/xXFRAc2Q81Pwr1GRzfK
-   NEQans9w2LxtdCucSgcqeoV24TyFwtDtZCnmVWAWmub1cDdjIhObxTvkt
-   5sNFrOE3WUtpx7AsxHSf0ZPXnNUQOiqsrWKdgdnQfUYcZRVMGK14RKuD2
-   mUVo7PhmOqf8O8G6Zllf+avb1oZdNODRkOY5Y0mTGb6vEUOCZSS17TNUd
-   9AN4cogOY81cIJe4BtwGzEDi4yEbmFtIgJ5qChg30djsey8O8Unbi5Ol2
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="348971263"
-X-IronPort-AV: E=Sophos;i="5.92,266,1650956400"; 
-   d="scan'208";a="348971263"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 10:25:10 -0700
-X-IronPort-AV: E=Sophos;i="5.92,266,1650956400"; 
-   d="scan'208";a="592706906"
-Received: from eklong-mobl.amr.corp.intel.com ([10.209.68.103])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 10:25:10 -0700
-Date: Tue, 12 Jul 2022 10:25:09 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D434681
+	for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 17:44:15 +0000 (UTC)
+Received: by mail-qk1-f176.google.com with SMTP id b25so6344021qkl.1
+        for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 10:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=Ssqml+DoH6nXkko27H7lrE3ggGsKgwDwXVNRtOL3AzQ=;
+        b=hCTDprqvFvwZvu3NlndSH0zkgKbnYRvKMlRvMfDE3Ve4D3TYVt57RkY+9p/JEAmMdi
+         DuyeDWajCsxPkS+h5jm5HpHyQJdl7f7Fj+sisag8Z37Gx78rBNbwunIfcGfoASVOR86t
+         +8F/VQryASxlobcGLheNw6BHhPkhtN17/Y5kRpULnZmRFJXA8SSFcvynQlxKqBqDRjNK
+         lgVrYtBoLCNIOoryJeL5h4msRdk/haQgFG4+eW5qzHrPEr8CqZXdHxJgXjk2he42ii+D
+         TnvgvKXO7yvxGM4QqI0GUe2U+KQaGZcrHPs8X/p3UIlV6NxoBh3dIaZso18DO/zWrWhB
+         TWfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=Ssqml+DoH6nXkko27H7lrE3ggGsKgwDwXVNRtOL3AzQ=;
+        b=6f0RoUl8z1G0P41vF4LMZNdlz/66rXIGBeCnFKd7dB/AxjEiaJB7kWV4xHJ/IDJzT8
+         S067zMgwaegM8Unku1Pc6cMZNqoEHTuyL63MfvufsUoP4ni43MB+0/NmVMpFXuxqpWq8
+         +SDmHSyczH6T22SwYDjSz5IobcfXrpKzFu448BtsrT7nKJs2KBG4qvikEISZHjjAx741
+         +wRmRW/4S4Ir1AGHId7WHYk45wTdismRiz6aN71lAXBm4ltc792UuLk986h115FgIvC8
+         8f5Um0LUBQ/mxflui3qtezw6LD9InwmUpBPKUp2cHz9ZI2e/ba4k+t8xBoe1Z4GyQvH8
+         TGYw==
+X-Gm-Message-State: AJIora+mgfhkM6FX7V4B66l5PxXWNBXDdz+ogYIHlCefebt/N6Sg84x6
+	se0s8xxCZR9b/PbAPBw7G+qUkqJc2YMXZuo=
+X-Google-Smtp-Source: AGRyM1uKzrj51dGijIGXYK426K/hMyInbQ8NKXJumuvImKZs5qG/aq0PRDjscbyMfyUgO/Q8Ifi8GQ==
+X-Received: by 2002:a37:aacf:0:b0:6b5:6f5b:eb9e with SMTP id t198-20020a37aacf000000b006b56f5beb9emr12603696qke.444.1657647854180;
+        Tue, 12 Jul 2022 10:44:14 -0700 (PDT)
+Received: from [127.0.0.1] ([20.122.192.21])
+        by smtp.gmail.com with ESMTPSA id i14-20020a05620a248e00b006b555509398sm10019713qkn.136.2022.07.12.10.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 10:44:13 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] mptcp: add mptcp_for_each_subflow_safe
- helper
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20220712160236.3668376-1-matthieu.baerts@tessares.net>
-Message-ID: <2898be1f-e7c0-3c-c732-8f2ea01c28ea@linux.intel.com>
 References: <20220712160236.3668376-1-matthieu.baerts@tessares.net>
+Subject: Re: mptcp: add mptcp_for_each_subflow_safe helper: Tests Results
+Message-ID: <fbc59882-d350-0395-3ad8-976fa757743a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 12 Jul 2022 17:44:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 12 Jul 2022, Matthieu Baerts wrote:
+Hi Matthieu,
 
-> Similar to mptcp_for_each_subflow(): this is clearer now that the _safe
-> version is used in multiple places.
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Thank you for your modifications, that's great!
 
-Looks good to me, thanks Matthieu
+Our CI did some validations and here is its report:
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4969640886534144
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4969640886534144/su=
+mmary/summary.txt
 
-> ---
-> net/mptcp/pm_netlink.c | 2 +-
-> net/mptcp/protocol.c   | 6 +++---
-> net/mptcp/protocol.h   | 2 ++
-> 3 files changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 291b5da42fdb..62471aaedb6d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -796,7 +796,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
-> 		u8 rm_id = rm_list->ids[i];
-> 		bool removed = false;
->
-> -		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> +		mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-> 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
-> 			u8 id = subflow->local_id;
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index c92f91cb2c8d..48fdef304309 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2338,7 +2338,7 @@ static void __mptcp_close_subflow(struct mptcp_sock *msk)
->
-> 	might_sleep();
->
-> -	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> +	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->
-> 		if (inet_sk_state_load(ssk) != TCP_CLOSE)
-> @@ -2381,7 +2381,7 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
->
-> 	mptcp_token_destroy(msk);
->
-> -	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> +	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-> 		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
-> 		bool slow;
->
-> @@ -2886,7 +2886,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
->
-> 	inet_sk_state_store(sk, TCP_CLOSE);
->
-> -	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> +	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->
-> 		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index b9333e7f380a..13b76f86f749 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -315,6 +315,8 @@ struct mptcp_sock {
->
-> #define mptcp_for_each_subflow(__msk, __subflow)			\
-> 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
-> +#define mptcp_for_each_subflow_safe(__msk, __subflow, __tmp)			\
-> +	list_for_each_entry_safe(__subflow, __tmp, &((__msk)->conn_list), node)
->
-> static inline void msk_owned_by_me(const struct mptcp_sock *msk)
-> {
-> -- 
-> 2.36.1
->
->
->
+- KVM Validation: debug:
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6095540793376768
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6095540793376768/su=
+mmary/summary.txt
 
---
-Mat Martineau
-Intel
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a95c064741f6
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
