@@ -1,69 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3742623A9
-	for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 04:30:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D0173C341C0;
-	Tue, 12 Jul 2022 04:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657600213;
-	bh=2O9oCOtLhZK7N0Ps3fdnTGG2yPfJtsX/AEI7XcdxC9g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Bt7E8IgW1ycvTXur177rFtbrkEzjJap9n2YfadD6YnyKLYLjc7LyfzThYwbmaQbqW
-	 oj2vRAsogQ6uSNijiW1uB2v8BM2of4BwLEq8qp8PFUB2t9Gs8bgGaSB+alLvdXGhlN
-	 pQHLBtGmji8vXvKJmZ28Q9rz5T1xxIUPK/7YQ2IUl1STC588A1ZBPHY8CDd2DHamGg
-	 xaTxj+Zsgr0m7gGtq+NaN9xjSw+QIWvWVHYkKbND529ivGfsQWrlSrHvyxtGSIbzJ8
-	 jyXrwPT8FZ777ef5IML8kpMvppPZYP1AxND410xhyA0gGxIdrmvtaUKFfz93ZQxX4S
-	 sBveeyrE2vMWQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B403EE45221;
-	Tue, 12 Jul 2022 04:30:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDB87A
+	for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 09:06:41 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id eq6so9271705edb.6
+        for <mptcp@lists.linux.dev>; Tue, 12 Jul 2022 02:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=qYA+CXnEl7sfS6k4g6zHHThVZs8dy55zsI6lMrLacaY=;
+        b=aYBI2z7PA36pGhgjlUbNBRX+vHc3wQvJievLrFZtAfUCjO1g/8yqhR8RaFRKn8X8JR
+         vB26NAW2t5IxIMu3mCn+G+6tYXSrp0Dk6xSos5W5kFJWjaHG/BDmxOAjsB8Rm0l6bx2A
+         3QmwccZ2fQR6FlBK7mpYNwp1mEQZ6miNuodkTcpCN6Yawuq8b3PHw3FGbbhY1IrogwKd
+         BMXNMAMuDXuQV8+8aRV61tnvw4owfyLc1SAEqS2hsAyxgM05XFvYBPI9FMo5B68Mcjra
+         6tOW0XHjlxVHBrlW1RCiOd3VrF23+0JxGJ0j8EQwYNBHaGBNZwoVE9Up8J+PDy3Ma2xT
+         ifhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=qYA+CXnEl7sfS6k4g6zHHThVZs8dy55zsI6lMrLacaY=;
+        b=5udQp7v/7Zcvx8Q49KF1U6rhV898p2RNy+9jm11MUbctQ1BlKg2UUuO68CKNMSVoAn
+         qQhFgSviZKfxEqwKBuH9k7i/z/ExwbZ8C9Q7uEwbJQBw3kGZ6OHaILi48tWrqrdGYh6F
+         ttU1jT5fY6AQI8nDsjo9p5WJYiDb/ziKpDpdF3I1ov++DcikSKTXqHzZ4UZUuDxkcDPY
+         oUJDV0+B4SfiulQCdCxn+aOc3YFVgRDTKmg6RZKucucloPxh1k2qXQj/NXB6pg7+c9jz
+         wHtFT67qD87s3kds110lt6jOVfVn6WkhdHg8cs5gAJ5oUnRFJ77i5RpWnEOBw7Trz9Om
+         jknA==
+X-Gm-Message-State: AJIora8a+IdSY0ShzOA+hEWffJwkEYQ8nOVMLTfewQWihpG+OWjs0589
+	SCQ6ErKYg6DmXBhx5TEwj+3UCA==
+X-Google-Smtp-Source: AGRyM1uhar7ip0dqkB0ceBmPEnItulW4wUgu8zUqEkAtY3ZqOdlRnk83HfpQf+FiI7s9q4Cm6flCuQ==
+X-Received: by 2002:aa7:ce8a:0:b0:43a:7b0e:9950 with SMTP id y10-20020aa7ce8a000000b0043a7b0e9950mr30451101edv.58.1657616799959;
+        Tue, 12 Jul 2022 02:06:39 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:dee3:acc:246:d17a? ([2a02:578:8593:1200:dee3:acc:246:d17a])
+        by smtp.gmail.com with ESMTPSA id i8-20020a170906a28800b0072b13fa5e4csm3617403ejz.58.2022.07.12.02.06.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 02:06:39 -0700 (PDT)
+Message-ID: <5710e8f7-6c09-538f-a636-2ea1863ab208@tessares.net>
+Date: Tue, 12 Jul 2022 11:06:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH bpf-next] mptcp: Add struct mptcp_sock definition when
+ CONFIG_MPTCP is disabled
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, Martin KaFai Lau
+ <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@chromium.org>, Geliang Tang <geliang.tang@suse.com>,
+ mptcp@lists.linux.dev
+References: <20220711130731.3231188-1-jolsa@kernel.org>
+ <6d3b3bf-2e29-d695-87d7-c23497acc81@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <6d3b3bf-2e29-d695-87d7-c23497acc81@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v2] bpf: Fix 'dubious one-bit signed bitfield'
- warnings
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165760021373.564.7413956884709981206.git-patchwork-notify@kernel.org>
-Date: Tue, 12 Jul 2022 04:30:13 +0000
-References: <20220711081200.2081262-1-matthieu.baerts@tessares.net>
-In-Reply-To: <20220711081200.2081262-1-matthieu.baerts@tessares.net>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
- eddyz87@gmail.com, mptcp@lists.linux.dev, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
 
-Hello:
+Hi Jiri, Mat,
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Mon, 11 Jul 2022 10:12:00 +0200 you wrote:
-> Our CI[1] reported these warnings when using Sparse:
+On 11/07/2022 23:21, Mat Martineau wrote:
+> On Mon, 11 Jul 2022, Jiri Olsa wrote:
 > 
->   $ touch net/mptcp/bpf.c
->   $ make C=1 net/mptcp/bpf.o
->   net/mptcp/bpf.c: note: in included file:
->   include/linux/bpf_verifier.h:348:26: error: dubious one-bit signed bitfield
->   include/linux/bpf_verifier.h:349:29: error: dubious one-bit signed bitfield
+>> The btf_sock_ids array needs struct mptcp_sock BTF ID for
+>> the bpf_skc_to_mptcp_sock helper.
+>>
+>> When CONFIG_MPTCP is disabled, the 'struct mptcp_sock' is not
+>> defined and resolve_btfids will complain with:
+>>
+>>  BTFIDS  vmlinux
+>> WARN: resolve_btfids: unresolved symbol mptcp_sock
+>>
+>> Adding empty difinition for struct mptcp_sock when CONFIG_MPTCP
+>> is disabled.
+>>
+>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>> ---
+>> include/net/mptcp.h | 4 ++++
+>> 1 file changed, 4 insertions(+)
+>>
+>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+>> index ac9cf7271d46..25741a52c666 100644
+>> --- a/include/net/mptcp.h
+>> +++ b/include/net/mptcp.h
+>> @@ -59,6 +59,10 @@ struct mptcp_addr_info {
+>>     };
+>> };
+>>
+>> +#if !IS_ENABLED(CONFIG_MPTCP)
+>> +struct mptcp_sock { };
+>> +#endif
 > 
-> [...]
+> The only use of struct mptcp_sock I see with !CONFIG_MPTCP is from this
+> stub at the end of mptcp.h:
+> 
+> static inline struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock
+> *sk) { return NULL; }
+> 
+> It's normally defined in net/mptcp/protocol.h for the MPTCP subsystem code.
+> 
+> The conditional could be added on the line before the stub to make it
+> clear that the empty struct is associated with that inline stub.
 
-Here is the summary with links:
-  - [bpf-next,v2] bpf: Fix 'dubious one-bit signed bitfield' warnings
-    https://git.kernel.org/bpf/bpf-next/c/f16214c102f0
+If this is required only for this specific BPF function, why not
+modifying this stub (or add a define) to return "void *" instead of
+"struct mptcp_sock *"?
 
-You are awesome, thank you!
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
