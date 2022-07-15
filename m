@@ -1,209 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065122F34
-	for <mptcp@lists.linux.dev>; Fri, 15 Jul 2022 11:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1657883468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HGems0LCutp5I0DpH5X2WCkyCBJQupMG00wPWcmhl58=;
-	b=HPCQ6TE7D992oZ+98auVw5TD9dt1BymlC2rY2j6gofgYDxAzAmp7RGJeUpudoFUVaXeRTd
-	OTDDAiXC+IfOnbtPqnh8eYe9vN9JBTcpdVsL+K6kJaPgtF2V3Q+n0/915AZuw0OldAPDxb
-	5DzxtPxBgRrHD2F95xYR48bf2EasrLY=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-611-Gla4HKhUMgaOuHH_pApMWg-1; Fri, 15 Jul 2022 07:11:07 -0400
-X-MC-Unique: Gla4HKhUMgaOuHH_pApMWg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 76C153C0E21E;
-	Fri, 15 Jul 2022 11:11:07 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.99])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D10802166B26;
-	Fri, 15 Jul 2022 11:11:06 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: phind.uet@gmail.com
-Subject: [PATCH mptcp-net] mptcp: move subflow cleanup in mptcp_destroy_common()
-Date: Fri, 15 Jul 2022 13:10:44 +0200
-Message-Id: <bcfa7cfc41ada0c8811794cb3c45cdeb1b34f303.1657883173.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DCA19B
+	for <mptcp@lists.linux.dev>; Fri, 15 Jul 2022 14:47:05 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id x91so6608173ede.1
+        for <mptcp@lists.linux.dev>; Fri, 15 Jul 2022 07:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=XuTRz6GblJ7BC3eFBOn8UDBcnpNDCQy9M68yaCIMx0o=;
+        b=qBO2qDBqncKnHfEbRJ1g0QpQD5o7H/Mp751F9CWTpwaAAyxVpBu2E2jDLpJhbbqjKS
+         nVmZebHaNvwWRuQM4rlDisqE8wmNHIQ/ggE4umtAfxwoA5ACdcF/4mhLExmwVpFtAwD4
+         AyBwfoiTfmvzCV06iA1Aa+P0D2Sao4J3NNzuUgKY/WXO34XFOGErRFK8XSq8GolcdROe
+         mbYWwiVA018mwaD/jcESZJNoenuE+9DrN9n1WrGxdpNRzcZDCZZAVAw6KtFRmHi4/MKl
+         IRBsBDm/gx0cvr3xf+G6GfRvRotD1M7YhseHuTKMVLjddUJSpqTss/ErzYrRtNVkr6St
+         3g/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=XuTRz6GblJ7BC3eFBOn8UDBcnpNDCQy9M68yaCIMx0o=;
+        b=c/jdNhbg/BEYOqMz1XTDQPvv9JKmZ+mu0ui7O+5JvXVHjOTcRfc0gOFo2s6A0BqAoZ
+         zSx7rxcFCpRTGRV+ZJkOwi6Afq1YL0IvHUaGHcJoJIL3nmSIpApMBlnOflc0CAFgSfwO
+         +dJwhwsOCP2nrZEt3RFoEvbT+B9QPHLcYhBXY59Ex4GYzWiaVd/3eOEcKwQc1DGXfT9N
+         xi4ooIfffipHyFUtRSkXTOJXwMnqtECgnCDhPpPdjDK6r6ECyqH5Nnf3kl8JggOVoycd
+         bxHl1Y4SRcEIqYnTrnymIFIiYW3BGMNMP9Yva2OW2ycKW10//9+4cs00MSEffoVlQRo9
+         v72Q==
+X-Gm-Message-State: AJIora+/7sAyMyIvw5rbczvQucNfOjS6PfKV1OvYVuxBw/kSuIOnsKV4
+	+X7As4a54Xt1tF4vRMLWwJt3Fg==
+X-Google-Smtp-Source: AGRyM1uYBNcq31OL2u8jfqf29+6A/AYN89jWzk/pYlRLG5UKc9zxdiFrAjMTBS2p4FESdT6X/AUlBw==
+X-Received: by 2002:a05:6402:510a:b0:43a:91ff:3f4b with SMTP id m10-20020a056402510a00b0043a91ff3f4bmr19398076edd.187.1657896423585;
+        Fri, 15 Jul 2022 07:47:03 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:70ff:32c4:2014:7c11? ([2a02:578:8593:1200:70ff:32c4:2014:7c11])
+        by smtp.gmail.com with ESMTPSA id ja8-20020a170907988800b0072af843c794sm2116915ejc.43.2022.07.15.07.47.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Jul 2022 07:47:03 -0700 (PDT)
+Message-ID: <7cd436ad-6c05-d788-7af3-2ff08d647dfd@tessares.net>
+Date: Fri, 15 Jul 2022 16:47:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0.1
+Subject: Re: Draft talk proposal for MPTCP @ Linux Plumbers '22 (2nd draft)
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
+References: <78ff1ebd-f440-9dd0-256-abf3345e6d3@linux.intel.com>
+ <3f3a487-64b-e687-f566-ae9b3b930bb@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <3f3a487-64b-e687-f566-ae9b3b930bb@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-If the mptcp socket creation fails due to a CGROUP_INET_SOCK_CREATE
-eBPF program, the MPTCP protocol ends-up leaking all the subflows:
-the related cleanup happens in __mptcp_destroy_sock() that is not
-invoked in such code path.
+Hi Mat,
 
-Address the issue moving the subflow sockets cleanup in the
-mptcp_destroy_common() helper, which is invoked in every msk cleanup
-path.
+On 15/07/2022 00:50, Mat Martineau wrote:
+> 
+> After some discussion at out last couple of weekly meetings, here's an
+> updated draft.
+> 
+> Changes:
+> 
+>  * Moved BPF section up (before userspace PM)
+>  * Emphasized interactive discussion for BPF issues we've been trying to
+> resolve, like the BPF/kernel API.
+>  * General edits
 
-Additionally get rid of the intermediate list_splice_init step, which
-is an unneeded relic from the past.
+Thank you for this v2!
 
-The issue is present since before the reported root cause commit, but
-any attempt to backport the fix before that hash will require a complete
-rewrite.
+This looks really good. I have one general comment below:
 
-Fixes: e16163b6e2 ("mptcp: refactor shutdown and close")
-Reported-by: Nguyen Dinh Phi <phind.uet@gmail.com>
-Co-developed-by: Nguyen Dinh Phi <phind.uet@gmail.com>
-Signed-off-by: Nguyen Dinh Phi <phind.uet@gmail.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-The tags are provisional, waiting for Nguyen feedback/preferences.
+> Suggestions, edits, feedback, etc, all welcome!
+> 
+> 
+> ---
+> 
+> Multipath TCP (MPTCP) was initially supported in v5.6 of the Linux
+> kernel. In later releases, the MPTCP development community has steadily
+> expanded from the initial baseline feature set to now support a broad
+> range of MPTCP features on the wire and through the socket and generic
+> netlink APIs. Two current projects are intended to make MPTCP more
+> customizable for client devices and unique use cases without requiring
+> custom kernel modules.
+> 
+> One of these projects is the BPF MPTCP packet scheduler framework. When
+> there are multiple active TCP subflows in a MPTCP connection, the MPTCP
+> stack must decide which of those subflows to use to transmit each data
+> packet. The default in-kernel scheduler tries to utilize all the
+> available subflows to favor throughput, but it is not tunable.
+> Customizable schedulers can optimize for latency, redundancy, cost,
+> carrier policy, or other factors. We have patches implementing a
+> proof-of-concept BPF packet scheduler, and hope to discuss with the
+> netdev/BPF maintainers and audience how we might best structure the
+> BPF/kernel API to balance long-term API stability, future evolution of
+> MPTCP scheduler features, and usability for scheduler authors.
 
-Sending out early to trigger the CI.
+Should we insist on the fact that these discussions are not specific to
+MPTCP but this is more general and MPTCP is used as one typical use-case?
 
-This will need likely some staging period.
+I would suggest to explain that before this 2nd paragraph. Maybe saying
+that we are trying to get answers to questions like: what's the
+recommended way to extend a subsystem(?)? The recommended ways seems to
+be with BPF and Netlink and they both have limitations. allowing
+customisations with BPF bring more questions for us, e.g.: what about
+long-term API stability and other questions you raised here at the end.
 
-"mptcp: add mptcp_for_each_subflow_safe helper" needs to be rebased
-on top of this (we can replace another list_for_each_safe instance)
----
- net/mptcp/protocol.c | 39 +++++++++++++++------------------------
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  |  3 ++-
- 3 files changed, 18 insertions(+), 26 deletions(-)
+Then we can introduce the two use cases. The first one with the Packet
+Scheduler where we need something on the kernel side as it is a decision
+to take per packet. There are some uncertainties when using BPF but a
+proof-of-concept implementation exists.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 21a3ed64226e..6f3324955355 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2804,30 +2804,16 @@ static void __mptcp_wr_shutdown(struct sock *sk)
- 
- static void __mptcp_destroy_sock(struct sock *sk)
- {
--	struct mptcp_subflow_context *subflow, *tmp;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
--	LIST_HEAD(conn_list);
- 
- 	pr_debug("msk=%p", msk);
- 
- 	might_sleep();
- 
--	/* join list will be eventually flushed (with rst) at sock lock release time*/
--	list_splice_init(&msk->conn_list, &conn_list);
--
- 	mptcp_stop_timer(sk);
- 	sk_stop_timer(sk, &sk->sk_timer);
- 	msk->pm.status = 0;
- 
--	/* clears msk->subflow, allowing the following loop to close
--	 * even the initial subflow
--	 */
--	mptcp_dispose_initial_subflow(msk);
--	list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
--		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--		__mptcp_close_ssk(sk, ssk, subflow, 0);
--	}
--
- 	sk->sk_prot->destroy(sk);
- 
- 	WARN_ON_ONCE(msk->rmem_fwd_alloc);
-@@ -2919,24 +2905,20 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
- 
- static int mptcp_disconnect(struct sock *sk, int flags)
- {
--	struct mptcp_subflow_context *subflow, *tmp;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
- 	inet_sk_state_store(sk, TCP_CLOSE);
- 
--	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
--		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--
--		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
--	}
--
- 	mptcp_stop_timer(sk);
- 	sk_stop_timer(sk, &sk->sk_timer);
- 
- 	if (mptcp_sk(sk)->token)
- 		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
- 
--	mptcp_destroy_common(msk);
-+	/* msk->subflow is still intact, the following will not free the first
-+	 * subflow
-+	 */
-+	mptcp_destroy_common(msk, MPTCP_CF_FASTCLOSE);
- 	msk->last_snd = NULL;
- 	WRITE_ONCE(msk->flags, 0);
- 	msk->cb_flags = 0;
-@@ -3086,12 +3068,17 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
- 	return newsk;
- }
- 
--void mptcp_destroy_common(struct mptcp_sock *msk)
-+void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
- {
-+	struct mptcp_subflow_context *subflow, *tmp;
- 	struct sock *sk = (struct sock *)msk;
- 
- 	__mptcp_clear_xmit(sk);
- 
-+	/* join list will be eventually flushed (with rst) at sock lock release time */
-+	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node)
-+		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
-+
- 	/* move to sk_receive_queue, sk_stream_kill_queues will purge it */
- 	mptcp_data_lock(sk);
- 	skb_queue_splice_tail_init(&msk->receive_queue, &sk->sk_receive_queue);
-@@ -3113,7 +3100,11 @@ static void mptcp_destroy(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
--	mptcp_destroy_common(msk);
-+	/* clears msk->subflow, allowing the following to close
-+	 * even the initial subflow
-+	 */
-+	mptcp_dispose_initial_subflow(msk);
-+	mptcp_destroy_common(msk, 0);
- 	sk_sockets_allocated_dec(sk);
- }
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 480c5320b86e..78c8c471b22e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -718,7 +718,7 @@ static inline void mptcp_write_space(struct sock *sk)
- 	}
- }
- 
--void mptcp_destroy_common(struct mptcp_sock *msk);
-+void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags);
- 
- #define MPTCP_TOKEN_MAX_RETRIES	4
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 63e8892ec807..fc4ceb02328d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -621,7 +621,8 @@ static void mptcp_sock_destruct(struct sock *sk)
- 		sock_orphan(sk);
- 	}
- 
--	mptcp_destroy_common(mptcp_sk(sk));
-+	/* We don't need to clear msk->subflow, as it's still NULL at this point */
-+	mptcp_destroy_common(mptcp_sk(sk), 0);
- 	inet_sock_destruct(sk);
- }
- 
+Then for the Path Manager, the decision can be done from the userspace
+because the communications are per connections and not per packet. So
+this is a another use-case where exposing a Netlink API seems to be a
+good fit (even if there are some limitations if there is a very high
+number of connections to deal with).
+
+We can then compare BPF and Netlink and trying to get answers to our
+questions.
+
+What do you think?
+
+Cheers,
+Matt
+
+> 
+> The next customization feature is the userspace path manager added in
+> v5.19. On the kernel side, MPTCP's generic netlink API has new commands
+> that allow a userspace process to control multipath address
+> advertisements and the additional subflows that add paths to a MPTCP
+> connection. The Multipath TCP Daemon (mptcpd) is the first userspace
+> daemon to support these commands. With these components, systems can now
+> customize MPTCP behavior on a per-connection basis. The in-kernel path
+> manager, which is enabled by default, only has per-namespace
+> configuration. We will show what the userspace and in-kernel path
+> managers are best suited for and explain the tradeoffs between them.
+> 
+> MPTCP development for the Linux kernel and mptcpd are public and open.
+> You can find us at mptcp@lists.linux.dev, https://mptcp.dev, and
+> https://github.com/intel/mptcpd
+> 
+> 
+> -- 
+> Mat Martineau
+> Intel
+
 -- 
-2.35.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
