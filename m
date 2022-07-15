@@ -1,97 +1,58 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mail.coredeal.pl (mail.coredeal.pl [51.75.73.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397656030
-	for <mptcp@lists.linux.dev>; Thu, 14 Jul 2022 22:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657839041; x=1689375041;
-  h=date:from:to:subject:in-reply-to:message-id:references:
-   mime-version;
-  bh=I7xazlrhsbTG5o6551bCZ/VX4wrSAenM4gvW0mlQ3vQ=;
-  b=NznDoj2lqkys7cD7pHybY78RnHqHRWzS4yNhc6fgGJgSO0K5FN4os0qG
-   k1eFGsa0qWr7jfIPsjdJsCv2ybs1eeQ1zJy6nF5QWel/g6CM473ICo1As
-   HqMZJsDjfGM/6XyfbJZZNpkC8FdDG2aGcs9ff6PdSqtrnTKUbQlm3dyK7
-   WfzyFCiAla+C6rXG1n5y50QyG7EhqlfDthEHZWhfIOlFJaTA0Nh72IbC8
-   PMHdHUJBROjb16A2ktC8JJoPgxGiqaZXPe3V3F2tFX++PB1dd0tbBOpEY
-   A+uWg+UfIrzXWsZEJYlmZN12w7weYcyPQuHHG9AhGCiZFkfvpmBhvbWNJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="284402578"
-X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="284402578"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 15:50:40 -0700
-X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="628875812"
-Received: from dwalters-mobl1.amr.corp.intel.com ([10.209.100.35])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 15:50:40 -0700
-Date: Thu, 14 Jul 2022 15:50:40 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: Draft talk proposal for MPTCP @ Linux Plumbers '22 (2nd draft)
-In-Reply-To: <78ff1ebd-f440-9dd0-256-abf3345e6d3@linux.intel.com>
-Message-ID: <3f3a487-64b-e687-f566-ae9b3b930bb@linux.intel.com>
-References: <78ff1ebd-f440-9dd0-256-abf3345e6d3@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E868D20E0
+	for <mptcp@lists.linux.dev>; Fri, 15 Jul 2022 07:39:12 +0000 (UTC)
+Received: by mail.coredeal.pl (Postfix, from userid 1002)
+	id 0305FA313B; Fri, 15 Jul 2022 07:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=coredeal.pl; s=mail;
+	t=1657870289; bh=9KGuIG62LgzC9aYmjKxzocuYLRCVghXg6v9Q1q2LHec=;
+	h=Date:From:To:Subject:From;
+	b=PE59+Z7Y6GJemXyq8HfeeTxys9VGW7L8fZ+tehh7z2vSto2QeRzmstVrCli9zbNI7
+	 syucpQdzhRapOYCIYYyqSHT/LqBb49Om2Sa3kPb5uQoalBSTKcnOZXxO0v+HWHcAfS
+	 6/FEBYpR7h9MWwCGNyTaHwAnCyxkdZ9uGFLPTEHVwQitO2tXzilZNYHpHE25AG8DIo
+	 vNLH+rtTOYyVqqzQG65CyMyYbn9mfHW8F73670hXhKYR+KpCEb22yO0CcBG2Pv65Me
+	 U7J7fQ7LNzczdpSJOo01Ux0khr0Ioz+5Px9kNwvgQB8mUNWJ3g5i0HLE6xJWBl8F0t
+	 nuulrebgCQInA==
+Received: by mail.coredeal.pl for <mptcp@lists.linux.dev>; Fri, 15 Jul 2022 07:30:47 GMT
+Message-ID: <20220715064500-0.1.4b.13niq.0.oz2ij6sua0@coredeal.pl>
+Date: Fri, 15 Jul 2022 07:30:47 GMT
+From: "Krzysztof Maj" <krzysztof.maj@coredeal.pl>
+To: <mptcp@lists.linux.dev>
+Subject: Biznesowy angielski
+X-Mailer: mail.coredeal.pl
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dzie=C5=84 dobry,=20
+
+czy rozwa=C5=BCali Pa=C5=84stwo rozw=C3=B3j kwalifikacji j=C4=99zykowych =
+swoich pracownik=C3=B3w?
+
+Opracowali=C5=9Bmy kursy j=C4=99zykowe dla r=C3=B3=C5=BCnych bran=C5=BC, =
+w kt=C3=B3rych koncentrujemy si=C4=99 na podniesieniu poziomu s=C5=82owni=
+ctwa i jako=C5=9Bci komunikacji wykorzystuj=C4=85c autorsk=C4=85 metod=C4=
+=99, stworzon=C4=85 specjalnie dla wymagaj=C4=85cego biznesu.=20
+
+Niestandardowy kurs on-line, dopasowany do profilu firmy i obszar=C3=B3w =
+=C5=9Bwiadczonych us=C5=82ug, w szybkim czasie przyniesie efekty, kt=C3=B3=
+re zwi=C4=99ksz=C4=85 komfort i jako=C5=9B=C4=87 pracy, rozwijaj=C4=85c m=
+o=C5=BCliwo=C5=9Bci biznesowe.=20
+
+Zdalne szkolenie j=C4=99zykowe to m.in. zaj=C4=99cia z native speakerami,=
+ kt=C3=B3re w szybkim czasie naucz=C4=85 pracownik=C3=B3w rozmawia=C4=87 =
+za pomoc=C4=85 jasnego i zwi=C4=99z=C5=82ego j=C4=99zyka Business English=
+=2E
+
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 wi=C4=99cej szczeg=C3=B3=C5=82=C3=B3=
+w i opowiedzie=C4=87 jak dzia=C5=82amy?=20
 
 
-After some discussion at out last couple of weekly meetings, here's an 
-updated draft.
-
-Changes:
-
-  * Moved BPF section up (before userspace PM)
-  * Emphasized interactive discussion for BPF issues we've been trying to 
-resolve, like the BPF/kernel API.
-  * General edits
-
-Suggestions, edits, feedback, etc, all welcome!
-
-
----
-
-Multipath TCP (MPTCP) was initially supported in v5.6 of the Linux kernel. 
-In later releases, the MPTCP development community has steadily expanded 
-from the initial baseline feature set to now support a broad range of 
-MPTCP features on the wire and through the socket and generic netlink 
-APIs. Two current projects are intended to make MPTCP more customizable 
-for client devices and unique use cases without requiring custom kernel 
-modules.
-
-One of these projects is the BPF MPTCP packet scheduler framework. When 
-there are multiple active TCP subflows in a MPTCP connection, the MPTCP 
-stack must decide which of those subflows to use to transmit each data 
-packet. The default in-kernel scheduler tries to utilize all the available 
-subflows to favor throughput, but it is not tunable. Customizable 
-schedulers can optimize for latency, redundancy, cost, carrier policy, or 
-other factors. We have patches implementing a proof-of-concept BPF packet 
-scheduler, and hope to discuss with the netdev/BPF maintainers and 
-audience how we might best structure the BPF/kernel API to balance 
-long-term API stability, future evolution of MPTCP scheduler features, and 
-usability for scheduler authors.
-
-The next customization feature is the userspace path manager added in 
-v5.19. On the kernel side, MPTCP's generic netlink API has new commands 
-that allow a userspace process to control multipath address advertisements 
-and the additional subflows that add paths to a MPTCP connection. The 
-Multipath TCP Daemon (mptcpd) is the first userspace daemon to support 
-these commands. With these components, systems can now customize MPTCP 
-behavior on a per-connection basis. The in-kernel path manager, which is 
-enabled by default, only has per-namespace configuration. We will show 
-what the userspace and in-kernel path managers are best suited for and 
-explain the tradeoffs between them.
-
-MPTCP development for the Linux kernel and mptcpd are public and open. You 
-can find us at mptcp@lists.linux.dev, https://mptcp.dev, and 
-https://github.com/intel/mptcpd
-
-
---
-Mat Martineau
-Intel
+Pozdrawiam
+Krzysztof Maj
