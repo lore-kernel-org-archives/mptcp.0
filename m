@@ -1,111 +1,84 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AB133F6
-	for <mptcp@lists.linux.dev>; Tue, 19 Jul 2022 14:44:46 +0000 (UTC)
-Received: by mail-qv1-f52.google.com with SMTP id mi10so11233458qvb.1
-        for <mptcp@lists.linux.dev>; Tue, 19 Jul 2022 07:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=k1wxkAAWqJhnV/rPQfsJzMF6SBRyTmtG7B5tAyYVfYk=;
-        b=BUi0jQSflaUiXOxjHvANcklox+R81SieWSIxr3yzyds9Dc8rhRFZ0rBTg9kA5hkN5r
-         joCf/GvtCMO3xkRrwIl6dWMfMJeTCjjUnV6ltN5Mx22HxR7ODf3SNDf/UW3bhiR7Uvvw
-         wJG0TpUugRu+N3mDX+12EUJKDdf/V5SW3K/1fKgR2aIfC5TznZ0HCZBGQ2L7KfCXeu22
-         JDyb/ZmaWQ8rc8MPCwFaRmR33Nvq4jOBjZ/zuB/Ln8OGDJoEJjSQKK17d9fahk2FxVaL
-         J7wcub3IEXKNdT3L3SG7JRWvB6tv9Iso1zKOo3CwTI656JQSQKlLNIc7vzqm06gl9TWX
-         UStw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=k1wxkAAWqJhnV/rPQfsJzMF6SBRyTmtG7B5tAyYVfYk=;
-        b=jKZtCcg0NsZbTkmjvFgb4YGnxYX/EDgTxeMzzLEkM/oWMU0ziNCiK0rkMJhMlA0G/2
-         BU4UwLQznIdHufUI/HFao9U5Z4/xH/DUa2ZqmSHprnM1Qb2BX30U8gv4KFfbf1I/OOVm
-         kcFV2x9xSK1vLqdldphh042NjdGlwlYW7lt1ao76EaZhKDWiudBEuKypMOy6APT6dYFB
-         BS7xNUingrgHZiUYYUA5r6sg8z/uEFjzWWb6VZTyE25VuBsnmBwOPHpbXzwHJM2rGa1l
-         PT+43d2UccWyBTfzBzpA9PlqSCikT3+6s3v3fTFiOBfQv1BWhqseeCV+1hStMo4Ufh6r
-         /SyQ==
-X-Gm-Message-State: AJIora/NoTqy9Xq/84xfIlwAz/+rESFeZjaFGJy9cLLCubTE4DdjyNfh
-	9TqAFaJfyLZ7QEFe3u7Sl9QVeiShecPc208=
-X-Google-Smtp-Source: AGRyM1urnf0fP4Tme09Y+Wuzn+JczUf50/cqYt0hHTeGpB/lcdw2Lavh7+KYyvIZXI+0+J4GSz4Lzw==
-X-Received: by 2002:a05:6214:519d:b0:473:2532:1f5a with SMTP id kl29-20020a056214519d00b0047325321f5amr25366909qvb.59.1658241885298;
-        Tue, 19 Jul 2022 07:44:45 -0700 (PDT)
-Received: from [127.0.0.1] ([20.7.193.102])
-        by smtp.gmail.com with ESMTPSA id bj12-20020a05620a190c00b006b5f68bc106sm3736432qkb.110.2022.07.19.07.44.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jul 2022 07:44:44 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96E31105
+	for <mptcp@lists.linux.dev>; Tue, 19 Jul 2022 16:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658249772; x=1689785772;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=fme5LROzlV8l/fNFEXKRx2eWQvLe0mfWfzSOKn+4C0I=;
+  b=ceclwl5k5Q26Pp0OcjJwNNL3H8RTl9OY+3ZGzmbKYOOpCBaHIqxp+J9e
+   F/njgdmKM3rBensFzjhLW7ypgiqQrvhgW+WS4N4YJ1R/o4wHiXDFVnp3u
+   JINtr3sYwYT9lyzLEUvwGVLMzxfddGAmMJS/8Sg4q5a5wrLvrXw2gxEOt
+   /Wxcg4AagE9hlRW3f6tB+Z06sqF5kCmJ4tpzk0SsQw0xf4Dx3fErKMrMq
+   WkHPQlQHFDvnMvV7H9JaN8NhTTBPI7FC+LXsBz5Xa4D151sJ9OCHjHKH7
+   ihv09XOUOfGlwwtZorTj0N2PXG2Z146XHh/E+AKjPfl6IdlvJFW4qNidc
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="273375807"
+X-IronPort-AV: E=Sophos;i="5.92,284,1650956400"; 
+   d="scan'208";a="273375807"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 09:56:12 -0700
+X-IronPort-AV: E=Sophos;i="5.92,284,1650956400"; 
+   d="scan'208";a="625270322"
+Received: from nhanhan-mobl.amr.corp.intel.com ([10.209.102.198])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 09:56:12 -0700
+Date: Tue, 19 Jul 2022 09:56:12 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Jason Wang <wangborong@cdjrlc.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
+cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com, 
+    kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
+    mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mptcp: Fix comment typo
 In-Reply-To: <20220716044226.43587-1-wangborong@cdjrlc.com>
+Message-ID: <1414d684-8881-5b2a-4824-e3c4488e862@linux.intel.com>
 References: <20220716044226.43587-1-wangborong@cdjrlc.com>
-Subject: Re: mptcp: Fix comment typo: Tests Results
-Message-ID: <0fc467cf-d88e-db03-67f5-08e84e057592@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 19 Jul 2022 14:44:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-
-Hi Jason,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5398489659080704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5398489659080704/summary/summary.txt
-
-- {"code":404,"message":
-  - "Can't find artifacts containing file =
-conclusion.txt"}:
-  - Task: https://cirrus-ci.com/task/6524389565923328
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6524389565923328/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a3d94f3f9ae5
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+On Sat, 16 Jul 2022, Jason Wang wrote:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+> The double `the' is duplicated in the comment, remove one.
+>
+> Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+> ---
+> net/mptcp/token.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index f52ee7b26aed..68b822691e36 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -288,7 +288,7 @@ EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
+>  * token container starting from the specified position, or NULL.
+>  *
+>  * On successful iteration, the iterator is move to the next position and the
 
-For more details:
+Two more changes are needed in the line above:
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+move -> moved
+the -> then
 
+Thanks for the contribution.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> - * the acquires a reference to the returned socket.
+> + * acquires a reference to the returned socket.
+>  */
+> struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
+> 					 long *s_num)
+> -- 
+> 2.35.1
+>
+>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+--
+Mat Martineau
+Intel
