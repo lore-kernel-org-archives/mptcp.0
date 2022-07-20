@@ -1,206 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3474405
-	for <mptcp@lists.linux.dev>; Wed, 20 Jul 2022 11:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1658317405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R2e4wOlYVKr9RKO8zlBxN7BjDmxSv6ErygfnVu6Dogg=;
-	b=auVUCLIcrRIGO5eUR3TgJ5g4UvC4oZK8L/DuEWDk+XZ8xiKDvowfDMKIKPubWAvMUiOsvV
-	Z21cLUfCugJbzJwl1EcVvZesVA6hB0unYihYxqaFClbGFgVb+Ua64haO1F/CQmwzDcI846
-	UZ5sJr/CuzbkyxYUVoYPNktNPBXIztk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-636-woWTmS8SMFS9ihFxCd067A-1; Wed, 20 Jul 2022 07:43:24 -0400
-X-MC-Unique: woWTmS8SMFS9ihFxCd067A-1
-Received: by mail-wm1-f70.google.com with SMTP id a18-20020a05600c225200b003a30355c0feso670018wmm.6
-        for <mptcp@lists.linux.dev>; Wed, 20 Jul 2022 04:43:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F9E7475
+	for <mptcp@lists.linux.dev>; Wed, 20 Jul 2022 21:07:22 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id w12so25263828edd.13
+        for <mptcp@lists.linux.dev>; Wed, 20 Jul 2022 14:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=byTbtkG1y6OqroUAnBTrNkp18/ma/1+IPsFHlJmcMok=;
+        b=UJr7UCCrYaAcw4tj7FOBkIJTy7ytyPYcGBELrQ7DAX+eLVD9o8RqlguWlzbD+2uhb4
+         aSsRtUPoKe2I+Sm5nLQCC75KZJ0mQJeI+TzA5DS54z+vkaoD4Cu7EmvXV/0pzcMwLIfZ
+         OmC4P99nSzFcDutguHXBOcctUKWW8pyCwpDrE9PF6zy7bNfVwI/31lfxseignMeHeD53
+         mgHpPo4TOXX4eZBW/b/nRG9Ml0rBV/LtNqIMq366F1YNxva5aBBo3JHlvm/iJOMtvHDl
+         mWZBQrpmqDyg9qBst/jsikcE9zhUe6OgzkHsT/D7/xl0DWhBsijOJrQLO3q8UcP76M8n
+         tqaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=R2e4wOlYVKr9RKO8zlBxN7BjDmxSv6ErygfnVu6Dogg=;
-        b=YD53IwCnNPGY+TNMZdB6pq+nN2FJ9OUg0Ui61KyNy/8xwCne38bvx6QnhIHBipXBaz
-         01DYy6UxxNM436IW9AhdL253+qjOxWoksLHSSuGBDGCxRS1VLBNzUUaeicp8Vn92+YhH
-         3KensWSXZTak5k61J3qnA7xLCFg0c2EOGMO+wFTbv0lOzHKGvUqPrmko68VZvtSzTXkp
-         dTN8AAMGZdoPcDSZPy9WrNfJaLkqvklt9Am3UTUL4FI9luvSjQKn3Q+rfdKU5tS+6xct
-         zrOf/UTuga2UdIw5g1wudlVGZ64arhQyLSf4itPI2QK8LBhjdk91H3S+jwo1IPtsDM4F
-         4xAw==
-X-Gm-Message-State: AJIora/mO6V2kAxZl2KnSCkEZPsXAtQFzeKBbhEtcqptE6gp5+74bUWR
-	cRMHqKnDtS2AWMY+NTLDp0fu+lIGheuurZAQS4AYioWFVzL9HQWwv0DNr28oYuH0GYpPfO/lHFc
-	BBflQHNbTXt7lLA1rxTx9xlhznH4EW22p7KvaCsquQNy6WXHDmorAcqsdkS9vrztZ
-X-Received: by 2002:a5d:69ca:0:b0:21d:640c:79f6 with SMTP id s10-20020a5d69ca000000b0021d640c79f6mr30365213wrw.309.1658317402332;
-        Wed, 20 Jul 2022 04:43:22 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sa1kdgc8T86BOUHECptaMyL7xhD/FllZKwmzJOeLr95MXA6mgjWuI5e211Pb1l7CCjs1K/fQ==
-X-Received: by 2002:a5d:69ca:0:b0:21d:640c:79f6 with SMTP id s10-20020a5d69ca000000b0021d640c79f6mr30365183wrw.309.1658317401875;
-        Wed, 20 Jul 2022 04:43:21 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-104-164.dyn.eolo.it. [146.241.104.164])
-        by smtp.gmail.com with ESMTPSA id bo28-20020a056000069c00b0021dd3e2fb60sm15513797wrb.0.2022.07.20.04.43.20
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jul 2022 04:43:21 -0700 (PDT)
-Message-ID: <8a7582e383b4a4f6fcea2b7d1442a03664716331.camel@redhat.com>
-Subject: Re: [mptcp]  d24141fe7b:
- WARNING:at_mm/page_counter.c:#page_counter_cancel
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Date: Wed, 20 Jul 2022 13:43:19 +0200
-In-Reply-To: <26265e62a3ed1d5fd8f588a043c2da5a09378021.camel@redhat.com>
-References: <YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020>
-	 <26265e62a3ed1d5fd8f588a043c2da5a09378021.camel@redhat.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=byTbtkG1y6OqroUAnBTrNkp18/ma/1+IPsFHlJmcMok=;
+        b=rK0ZQS0b8phKt/m1oHLUssXE1RtniazIgV2DfFINgO5hTswYAP4JPfD4rTKYWyCT/5
+         fV3/iZYpuzzdYfg4VxXTorqn/GIHiilMePmUSleIuLzZCdF/ky46hbiBpAMkz+juPIaA
+         X1uD+reVYRIwcuI1sKevYIL7uFmEJaqme0qT671NVBe1JncVsqsfny4WjhCH8C4s4xQ/
+         zf0V0hm2QgfrVmqzIr3V8wkOr0RevcbBhVO48lMxexIvzPTp1hM4X7Lw8YbsWxVXcODh
+         me804xHzKua47y/qA6QG6Jaqiy0W8ReQNuCUDVIp/J+KVATDDJyZ7VwYMBkCES8+3OgF
+         Stww==
+X-Gm-Message-State: AJIora9aM0DKQjqR0FDCyT0ppLV/Z9OHSasBtI5pXEklSRmJeGVSQCJv
+	P/G/cUrC9XkzYWbAhO7mly8Rfw==
+X-Google-Smtp-Source: AGRyM1s4PmaXPckFNTuL69Vx1dCUqW2uODb6FrgYlStKw52yJz+cnuZNgfIWIcYplqYsY6NunxSYUQ==
+X-Received: by 2002:a05:6402:22b5:b0:43a:8e9f:f495 with SMTP id cx21-20020a05640222b500b0043a8e9ff495mr52353981edb.324.1658351241038;
+        Wed, 20 Jul 2022 14:07:21 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:5c89:ec72:45e4:3bcb? ([2a02:578:8593:1200:5c89:ec72:45e4:3bcb])
+        by smtp.gmail.com with ESMTPSA id b27-20020a17090630db00b0072af843c794sm79461ejb.43.2022.07.20.14.07.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Jul 2022 14:07:20 -0700 (PDT)
+Message-ID: <d1f761a8-2f89-c0d9-0d61-103d7c78c0ac@tessares.net>
+Date: Wed, 20 Jul 2022 23:07:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0.1
+Subject: Re: [PATCH mptcp-net] mptcp: move subflow cleanup in
+ mptcp_destroy_common()
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: phind.uet@gmail.com, mptcp@lists.linux.dev
+References: <bcfa7cfc41ada0c8811794cb3c45cdeb1b34f303.1657883173.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <bcfa7cfc41ada0c8811794cb3c45cdeb1b34f303.1657883173.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2022-07-18 at 17:01 +0200, Paolo Abeni wrote:
-> On Mon, 2022-07-18 at 21:36 +0800, kernel test robot wrote:
-> > [  240.473094][T14986] ------------[ cut here ]------------
-> > [  240.478507][T14986] page_counter underflow: -4294828518 nr_pages=4294967290
-> > [  240.485500][T14986] WARNING: CPU: 2 PID: 14986 at mm/page_counter.c:56 page_counter_cancel+0x96/0xc0
-> > [  240.494671][T14986] Modules linked in: mptcp_diag inet_diag nft_tproxy nf_tproxy_ipv6 nf_tproxy_ipv4 nft_socket nf_socket_ipv4 nf_socket_ipv6 nf_tabl
-> > es nfnetlink openvswitch nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 btrfs blake2b_generic xor raid6_pq zstd_compress libcrc32c sd_mo
-> > d t10_pi crc64_rocksoft_generic crc64_rocksoft crc64 i915 sg hp_wmi ipmi_devintf intel_rapl_msr intel_rapl_common ipmi_msghandler x86_pkg_temp_thermal i
-> > ntel_powerclamp coretemp crct10dif_pclmul crc32_pclmul intel_gtt sparse_keymap crc32c_intel platform_profile drm_buddy ghash_clmulni_intel mei_wdt rfkil
-> > l wmi_bmof drm_display_helper rapl ttm ahci drm_kms_helper libahci intel_cstate syscopyarea intel_uncore mei_me sysfillrect serio_raw libata i2c_i801 me
-> > i sysimgblt i2c_smbus fb_sys_fops intel_pch_thermal wmi video intel_pmc_core tpm_infineon acpi_pad fuse ip_tables
-> > [  240.570849][T14986] CPU: 2 PID: 14986 Comm: mptcp_connect Tainted: G S                5.19.0-rc4-00739-gd24141fe7b48 #1
-> > [  240.581637][T14986] Hardware name: HP HP Z240 SFF Workstation/802E, BIOS N51 Ver. 01.63 10/05/2017
-> > [  240.590600][T14986] RIP: 0010:page_counter_cancel+0x96/0xc0
-> > [  240.596179][T14986] Code: 00 00 00 45 31 c0 48 89 ef 5d 4c 89 c6 41 5c e9 40 fd ff ff 4c 89 e2 48 c7 c7 20 73 39 84 c6 05 d5 b1 52 04 01 e8 e7 95 f3
-> > 01 <0f> 0b eb a9 48 89 ef e8 1e 25 fc ff eb c3 66 66 2e 0f 1f 84 00 00
-> > [  240.615639][T14986] RSP: 0018:ffffc9000496f7c8 EFLAGS: 00010082
-> > [  240.621569][T14986] RAX: 0000000000000000 RBX: ffff88819c9c0120 RCX: 0000000000000000
-> > [  240.629404][T14986] RDX: 0000000000000027 RSI: 0000000000000004 RDI: fffff5200092deeb
-> > [  240.637239][T14986] RBP: ffff88819c9c0120 R08: 0000000000000001 R09: ffff888366527a2b
-> > [  240.645069][T14986] R10: ffffed106cca4f45 R11: 0000000000000001 R12: 00000000fffffffa
-> > [  240.652903][T14986] R13: ffff888366536118 R14: 00000000fffffffa R15: ffff88819c9c0000
-> > [  240.660738][T14986] FS:  00007f3786e72540(0000) GS:ffff888366500000(0000) knlGS:0000000000000000
-> > [  240.669529][T14986] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  240.675974][T14986] CR2: 00007f966b346000 CR3: 0000000168cea002 CR4: 00000000003706e0
-> > [  240.683807][T14986] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > [  240.691641][T14986] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > [  240.699468][T14986] Call Trace:
-> > [  240.702613][T14986]  <TASK>
-> > [  240.705413][T14986]  page_counter_uncharge+0x29/0x80
-> > [  240.710389][T14986]  drain_stock+0xd0/0x180
-> > [  240.714585][T14986]  refill_stock+0x278/0x580
-> > [  240.718951][T14986]  __sk_mem_reduce_allocated+0x222/0x5c0
-> > [  240.724443][T14986]  ? rwlock_bug+0xc0/0xc0
-> > [  240.729248][T14986]  __mptcp_update_rmem+0x235/0x2c0
-> > [  240.734228][T14986]  __mptcp_move_skbs+0x194/0x6c0
-> > [  240.739030][T14986]  ? mptcp_check_data_fin+0x380/0x380
-> > [  240.744869][T14986]  ? skb_release_data+0x482/0x640
-> > [  240.749764][T14986]  mptcp_recvmsg+0xdfa/0x1340
-> > [  240.754315][T14986]  ? __mptcp_move_skbs+0x6c0/0x6c0
-> > [  240.759296][T14986]  ? memset+0x20/0x40
-> > [  240.763153][T14986]  inet_recvmsg+0x37f/0x500
-> > [  240.767521][T14986]  ? generic_perform_write+0x310/0x4c0
-> > [  240.772846][T14986]  ? inet_sendpage+0x140/0x140
-> > [  240.777473][T14986]  ? find_held_lock+0x2c/0x140
-> > [  240.782109][T14986]  sock_read_iter+0x24a/0x380
-> > [  240.786655][T14986]  ? sock_recvmsg+0x140/0x140
-> > [  240.791198][T14986]  ? 0xffffffff81000000
-> > [  240.795228][T14986]  ? poll_select_set_timeout+0x82/0x100
-> > [  240.800633][T14986]  ? __lock_release+0x102/0x540
-> > [  240.805353][T14986]  new_sync_read+0x420/0x540
-> > [  240.809806][T14986]  ? lock_is_held_type+0x98/0x140
-> > [  240.814691][T14986]  ? __ia32_sys_llseek+0x340/0x340
-> > [  240.819668][T14986]  ? 0xffffffff81000000
-> > [  240.823693][T14986]  ? recalibrate_cpu_khz+0x40/0x40
-> > [  240.828667][T14986]  ? ktime_get_ts64+0xbc/0x240
-> > [  240.833306][T14986]  ? fsnotify_perm+0x13b/0x4c0
-> > [  240.838552][T14986]  vfs_read+0x37f/0x4c0
-> > [  240.842582][T14986]  ksys_read+0x170/0x200
-> > [  240.846688][T14986]  ? __ia32_sys_pwrite64+0x200/0x200
-> > [  240.851836][T14986]  ? lockdep_hardirqs_on_prepare+0x19a/0x380
-> > [  240.858284][T14986]  ? syscall_enter_from_user_mode+0x21/0x80
-> > [  240.864039][T14986]  do_syscall_64+0x5c/0x80
-> > [  240.868314][T14986]  ? do_syscall_64+0x69/0x80
-> > [  240.872770][T14986]  entry_SYSCALL_64_after_hwframe+0x46/0xb0
-> > [  240.878526][T14986] RIP: 0033:0x7f3786d9ae8e
-> > [  240.882805][T14986] Code: c0 e9 b6 fe ff ff 50 48 8d 3d 6e 18 0a 00 e8 89 e8 01 00 66 0f 1f 84 00 00 00 00 00 64 8b 04 25 18 00 00 00 85 c0 75 14 0f 05 <48> 3d 00 f0 ff ff 77 5a c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 28
-> > [  240.902259][T14986] RSP: 002b:00007fff7be81e08 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> > [  240.910533][T14986] RAX: ffffffffffffffda RBX: 0000000000002000 RCX: 00007f3786d9ae8e
-> > [  240.918368][T14986] RDX: 0000000000002000 RSI: 00007fff7be87ec0 RDI: 0000000000000005
-> > [  240.926206][T14986] RBP: 0000000000000005 R08: 00007f3786e6a230 R09: 00007f3786e6a240
-> > [  240.934046][T14986] R10: fffffffffffff288 R11: 0000000000000246 R12: 0000000000002000
-> > [  240.941884][T14986] R13: 00007fff7be87ec0 R14: 00007fff7be87ec0 R15: 0000000000002000
-> > [  240.949741][T14986]  </TASK>
-> > [  240.952632][T14986] irq event stamp: 27367
-> > [  240.956735][T14986] hardirqs last  enabled at (27366): [<ffffffff81ba50ea>] mem_cgroup_uncharge_skmem+0x6a/0x80
-> > [  240.966848][T14986] hardirqs last disabled at (27367): [<ffffffff81b8fd42>] refill_stock+0x282/0x580
-> > [  240.976017][T14986] softirqs last  enabled at (27360): [<ffffffff83a4d8ef>] mptcp_recvmsg+0xaf/0x1340
-> > [  240.985273][T14986] softirqs last disabled at (27364): [<ffffffff83a4d30c>] __mptcp_move_skbs+0x18c/0x6c0
-> > [  240.994872][T14986] ---[ end trace 0000000000000000 ]---
+Hi Paolo, Mat,
+
+On 15/07/2022 13:10, Paolo Abeni wrote:
+> If the mptcp socket creation fails due to a CGROUP_INET_SOCK_CREATE
+> eBPF program, the MPTCP protocol ends-up leaking all the subflows:
+> the related cleanup happens in __mptcp_destroy_sock() that is not
+> invoked in such code path.
 > 
-> I think that the root cause is that subflows and main socket end-up in
-> different cgroups (likely, the subflows in no cgroup at all). It should
-> be quite unrelated from the mentioned commit (older issue).
+> Address the issue moving the subflow sockets cleanup in the
+> mptcp_destroy_common() helper, which is invoked in every msk cleanup
+> path.
 > 
-> I'll try to have a better look.
+> Additionally get rid of the intermediate list_splice_init step, which
+> is an unneeded relic from the past.
+> 
+> The issue is present since before the reported root cause commit, but
+> any attempt to backport the fix before that hash will require a complete
+> rewrite.
+Thank you for the patch and the review!
 
-Ouch, this is quite untrivial :/
+Now in our tree (fixes for -net):
 
-I *think* the issue is caused by a few different things:
+New patches for t/upstream-net:
+- 4b5a18b64fca: mptcp: move subflow cleanup in mptcp_destroy_common()
+- Results: b0fec3f01957..7023536b34d1 (export-net)
 
-1) on passive msk sockets, the MPC subflow gets full cgroup setup via:
-
-https://elixir.bootlin.com/linux/latest/source/net/mptcp/protocol.c#L2976
-https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L536
-
-2) the passive msk itself get no sk_memcg:
-https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L536
-https://elixir.bootlin.com/linux/latest/source/net/core/sock.c#L2176
-
-and mptcp*_accept() does not set sk_memcg for the msk socket
-
-2.b) (possibly irrelevant here) the MPJ subflows for passive sockets
-get no sk_memcg, for similar reasons to the above.
-
-3) the msk "borrow" fwd allocated memory from the subflow (quite
-unlikely event).
-
-https://elixir.bootlin.com/linux/latest/source/net/mptcp/protocol.c#L333
-
-when that happens for a passive socket, the mem_cgroup_uncharge_skmem()
-and mem_cgroup_charge_skmem() will be unbalanced, as not all the
-allocated memory will be freed. 
-
-Uhm... after all, the above could cause an overflow, not an underflow
-(as reported by syzbot) so possibly I'm missing something. BTW I can't
-reproduce the splat, so far.
-
-Still the problems in 2) and 2b) look real and relevant. And hard to
-address. Specifically its hard/ugly to implement:
-
-https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L533
-
-for the msk socket, as the relevant mem accounting fields
-(sk_rmem_fwd_alloc and sk_rmem_alloc) are under the mptcp_data_lock()
-protection (that is the msk socket spin lock), while we very likely
-want to be in process context for the later allocation:
-
-https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L537
-
-/me needs more coffee...
-
-/P
+New patches for t/upstream:
+- 4b5a18b64fca: mptcp: move subflow cleanup in mptcp_destroy_common()
+- Results: fc8aa8591c3b..04e53d6af29a (export)
 
 
+Tests are now in progress:
 
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220720T210003
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220720T210003
 
+> ---
+> The tags are provisional, waiting for Nguyen feedback/preferences.
+> 
+> Sending out early to trigger the CI.
+> 
+> This will need likely some staging period.
+> 
+> "mptcp: add mptcp_for_each_subflow_safe helper" needs to be rebased
+> on top of this (we can replace another list_for_each_safe instance)
+
+Done! Thanks for the note!
+
+- de34e44fab5e: conflict in
+t/mptcp-add-mptcp_for_each_subflow_safe-helper (+ use the new helper in
+mptcp_destroy_common())
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
