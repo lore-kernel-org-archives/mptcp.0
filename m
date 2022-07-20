@@ -1,259 +1,206 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF814C67
-	for <mptcp@lists.linux.dev>; Tue, 19 Jul 2022 17:22:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658251338; x=1689787338;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=K0g9PNkzE043iSoaaz0BWS+rCRCR98wKnhUIB67Owyg=;
-  b=B3w7rpREBEI/uzjhOdECtDvSyRFuJNGBN4IY8mtekpq2fr4ZxTMMca1e
-   Zdwuq/A9rXXTU8NwOkQQF5+VmJ92brDrCL2+hpBvMEYy7HigahppH1bab
-   EkHo7R6pc4TA51wEOPy774ttAfY40BjvSvPkQoN8WCItk7loJd6Ud0YLz
-   xua2qDroTezH6+lK/pzkjtyEv+dYn+99gT4X4VEmTbxD8/Gx91H4U7rWw
-   Lfe4bVCzDyAHowB+h9ELYo30vTgA85GxZcMPihbBAODM+KZIQHBtQAY2T
-   qyu/mUVN+tgwxfNK/WiTtZrBegf/g/p8M3K0uj2gyap9epLyNa+Cn0Wu9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="284111667"
-X-IronPort-AV: E=Sophos;i="5.92,284,1650956400"; 
-   d="scan'208";a="284111667"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 10:22:16 -0700
-X-IronPort-AV: E=Sophos;i="5.92,284,1650956400"; 
-   d="scan'208";a="547994029"
-Received: from nhanhan-mobl.amr.corp.intel.com ([10.209.102.198])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 10:22:15 -0700
-Date: Tue, 19 Jul 2022 10:22:15 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev, phind.uet@gmail.com
-Subject: Re: [PATCH mptcp-net] mptcp: move subflow cleanup in
- mptcp_destroy_common()
-In-Reply-To: <4ad824cad8f81dcb18ee899d9106db434d214993.camel@redhat.com>
-Message-ID: <1c63e3a3-c54c-d939-28d1-d34c111d3af4@linux.intel.com>
-References: <bcfa7cfc41ada0c8811794cb3c45cdeb1b34f303.1657883173.git.pabeni@redhat.com>   <3e824615-67a2-77c5-6752-572fb17a71d5@linux.intel.com>  <64bcf034cea0d8f4e19c8d2c8cd289ed0ccd6cb0.camel@redhat.com>  <7b1bb2af-381-bfcf-305d-a2676f58e3ef@linux.intel.com>
- <4ad824cad8f81dcb18ee899d9106db434d214993.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3474405
+	for <mptcp@lists.linux.dev>; Wed, 20 Jul 2022 11:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1658317405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R2e4wOlYVKr9RKO8zlBxN7BjDmxSv6ErygfnVu6Dogg=;
+	b=auVUCLIcrRIGO5eUR3TgJ5g4UvC4oZK8L/DuEWDk+XZ8xiKDvowfDMKIKPubWAvMUiOsvV
+	Z21cLUfCugJbzJwl1EcVvZesVA6hB0unYihYxqaFClbGFgVb+Ua64haO1F/CQmwzDcI846
+	UZ5sJr/CuzbkyxYUVoYPNktNPBXIztk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-636-woWTmS8SMFS9ihFxCd067A-1; Wed, 20 Jul 2022 07:43:24 -0400
+X-MC-Unique: woWTmS8SMFS9ihFxCd067A-1
+Received: by mail-wm1-f70.google.com with SMTP id a18-20020a05600c225200b003a30355c0feso670018wmm.6
+        for <mptcp@lists.linux.dev>; Wed, 20 Jul 2022 04:43:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=R2e4wOlYVKr9RKO8zlBxN7BjDmxSv6ErygfnVu6Dogg=;
+        b=YD53IwCnNPGY+TNMZdB6pq+nN2FJ9OUg0Ui61KyNy/8xwCne38bvx6QnhIHBipXBaz
+         01DYy6UxxNM436IW9AhdL253+qjOxWoksLHSSuGBDGCxRS1VLBNzUUaeicp8Vn92+YhH
+         3KensWSXZTak5k61J3qnA7xLCFg0c2EOGMO+wFTbv0lOzHKGvUqPrmko68VZvtSzTXkp
+         dTN8AAMGZdoPcDSZPy9WrNfJaLkqvklt9Am3UTUL4FI9luvSjQKn3Q+rfdKU5tS+6xct
+         zrOf/UTuga2UdIw5g1wudlVGZ64arhQyLSf4itPI2QK8LBhjdk91H3S+jwo1IPtsDM4F
+         4xAw==
+X-Gm-Message-State: AJIora/mO6V2kAxZl2KnSCkEZPsXAtQFzeKBbhEtcqptE6gp5+74bUWR
+	cRMHqKnDtS2AWMY+NTLDp0fu+lIGheuurZAQS4AYioWFVzL9HQWwv0DNr28oYuH0GYpPfO/lHFc
+	BBflQHNbTXt7lLA1rxTx9xlhznH4EW22p7KvaCsquQNy6WXHDmorAcqsdkS9vrztZ
+X-Received: by 2002:a5d:69ca:0:b0:21d:640c:79f6 with SMTP id s10-20020a5d69ca000000b0021d640c79f6mr30365213wrw.309.1658317402332;
+        Wed, 20 Jul 2022 04:43:22 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sa1kdgc8T86BOUHECptaMyL7xhD/FllZKwmzJOeLr95MXA6mgjWuI5e211Pb1l7CCjs1K/fQ==
+X-Received: by 2002:a5d:69ca:0:b0:21d:640c:79f6 with SMTP id s10-20020a5d69ca000000b0021d640c79f6mr30365183wrw.309.1658317401875;
+        Wed, 20 Jul 2022 04:43:21 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-104-164.dyn.eolo.it. [146.241.104.164])
+        by smtp.gmail.com with ESMTPSA id bo28-20020a056000069c00b0021dd3e2fb60sm15513797wrb.0.2022.07.20.04.43.20
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jul 2022 04:43:21 -0700 (PDT)
+Message-ID: <8a7582e383b4a4f6fcea2b7d1442a03664716331.camel@redhat.com>
+Subject: Re: [mptcp]  d24141fe7b:
+ WARNING:at_mm/page_counter.c:#page_counter_cancel
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Date: Wed, 20 Jul 2022 13:43:19 +0200
+In-Reply-To: <26265e62a3ed1d5fd8f588a043c2da5a09378021.camel@redhat.com>
+References: <YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020>
+	 <26265e62a3ed1d5fd8f588a043c2da5a09378021.camel@redhat.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, 19 Jul 2022, Paolo Abeni wrote:
+On Mon, 2022-07-18 at 17:01 +0200, Paolo Abeni wrote:
+> On Mon, 2022-07-18 at 21:36 +0800, kernel test robot wrote:
+> > [  240.473094][T14986] ------------[ cut here ]------------
+> > [  240.478507][T14986] page_counter underflow: -4294828518 nr_pages=4294967290
+> > [  240.485500][T14986] WARNING: CPU: 2 PID: 14986 at mm/page_counter.c:56 page_counter_cancel+0x96/0xc0
+> > [  240.494671][T14986] Modules linked in: mptcp_diag inet_diag nft_tproxy nf_tproxy_ipv6 nf_tproxy_ipv4 nft_socket nf_socket_ipv4 nf_socket_ipv6 nf_tabl
+> > es nfnetlink openvswitch nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 btrfs blake2b_generic xor raid6_pq zstd_compress libcrc32c sd_mo
+> > d t10_pi crc64_rocksoft_generic crc64_rocksoft crc64 i915 sg hp_wmi ipmi_devintf intel_rapl_msr intel_rapl_common ipmi_msghandler x86_pkg_temp_thermal i
+> > ntel_powerclamp coretemp crct10dif_pclmul crc32_pclmul intel_gtt sparse_keymap crc32c_intel platform_profile drm_buddy ghash_clmulni_intel mei_wdt rfkil
+> > l wmi_bmof drm_display_helper rapl ttm ahci drm_kms_helper libahci intel_cstate syscopyarea intel_uncore mei_me sysfillrect serio_raw libata i2c_i801 me
+> > i sysimgblt i2c_smbus fb_sys_fops intel_pch_thermal wmi video intel_pmc_core tpm_infineon acpi_pad fuse ip_tables
+> > [  240.570849][T14986] CPU: 2 PID: 14986 Comm: mptcp_connect Tainted: G S                5.19.0-rc4-00739-gd24141fe7b48 #1
+> > [  240.581637][T14986] Hardware name: HP HP Z240 SFF Workstation/802E, BIOS N51 Ver. 01.63 10/05/2017
+> > [  240.590600][T14986] RIP: 0010:page_counter_cancel+0x96/0xc0
+> > [  240.596179][T14986] Code: 00 00 00 45 31 c0 48 89 ef 5d 4c 89 c6 41 5c e9 40 fd ff ff 4c 89 e2 48 c7 c7 20 73 39 84 c6 05 d5 b1 52 04 01 e8 e7 95 f3
+> > 01 <0f> 0b eb a9 48 89 ef e8 1e 25 fc ff eb c3 66 66 2e 0f 1f 84 00 00
+> > [  240.615639][T14986] RSP: 0018:ffffc9000496f7c8 EFLAGS: 00010082
+> > [  240.621569][T14986] RAX: 0000000000000000 RBX: ffff88819c9c0120 RCX: 0000000000000000
+> > [  240.629404][T14986] RDX: 0000000000000027 RSI: 0000000000000004 RDI: fffff5200092deeb
+> > [  240.637239][T14986] RBP: ffff88819c9c0120 R08: 0000000000000001 R09: ffff888366527a2b
+> > [  240.645069][T14986] R10: ffffed106cca4f45 R11: 0000000000000001 R12: 00000000fffffffa
+> > [  240.652903][T14986] R13: ffff888366536118 R14: 00000000fffffffa R15: ffff88819c9c0000
+> > [  240.660738][T14986] FS:  00007f3786e72540(0000) GS:ffff888366500000(0000) knlGS:0000000000000000
+> > [  240.669529][T14986] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  240.675974][T14986] CR2: 00007f966b346000 CR3: 0000000168cea002 CR4: 00000000003706e0
+> > [  240.683807][T14986] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [  240.691641][T14986] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [  240.699468][T14986] Call Trace:
+> > [  240.702613][T14986]  <TASK>
+> > [  240.705413][T14986]  page_counter_uncharge+0x29/0x80
+> > [  240.710389][T14986]  drain_stock+0xd0/0x180
+> > [  240.714585][T14986]  refill_stock+0x278/0x580
+> > [  240.718951][T14986]  __sk_mem_reduce_allocated+0x222/0x5c0
+> > [  240.724443][T14986]  ? rwlock_bug+0xc0/0xc0
+> > [  240.729248][T14986]  __mptcp_update_rmem+0x235/0x2c0
+> > [  240.734228][T14986]  __mptcp_move_skbs+0x194/0x6c0
+> > [  240.739030][T14986]  ? mptcp_check_data_fin+0x380/0x380
+> > [  240.744869][T14986]  ? skb_release_data+0x482/0x640
+> > [  240.749764][T14986]  mptcp_recvmsg+0xdfa/0x1340
+> > [  240.754315][T14986]  ? __mptcp_move_skbs+0x6c0/0x6c0
+> > [  240.759296][T14986]  ? memset+0x20/0x40
+> > [  240.763153][T14986]  inet_recvmsg+0x37f/0x500
+> > [  240.767521][T14986]  ? generic_perform_write+0x310/0x4c0
+> > [  240.772846][T14986]  ? inet_sendpage+0x140/0x140
+> > [  240.777473][T14986]  ? find_held_lock+0x2c/0x140
+> > [  240.782109][T14986]  sock_read_iter+0x24a/0x380
+> > [  240.786655][T14986]  ? sock_recvmsg+0x140/0x140
+> > [  240.791198][T14986]  ? 0xffffffff81000000
+> > [  240.795228][T14986]  ? poll_select_set_timeout+0x82/0x100
+> > [  240.800633][T14986]  ? __lock_release+0x102/0x540
+> > [  240.805353][T14986]  new_sync_read+0x420/0x540
+> > [  240.809806][T14986]  ? lock_is_held_type+0x98/0x140
+> > [  240.814691][T14986]  ? __ia32_sys_llseek+0x340/0x340
+> > [  240.819668][T14986]  ? 0xffffffff81000000
+> > [  240.823693][T14986]  ? recalibrate_cpu_khz+0x40/0x40
+> > [  240.828667][T14986]  ? ktime_get_ts64+0xbc/0x240
+> > [  240.833306][T14986]  ? fsnotify_perm+0x13b/0x4c0
+> > [  240.838552][T14986]  vfs_read+0x37f/0x4c0
+> > [  240.842582][T14986]  ksys_read+0x170/0x200
+> > [  240.846688][T14986]  ? __ia32_sys_pwrite64+0x200/0x200
+> > [  240.851836][T14986]  ? lockdep_hardirqs_on_prepare+0x19a/0x380
+> > [  240.858284][T14986]  ? syscall_enter_from_user_mode+0x21/0x80
+> > [  240.864039][T14986]  do_syscall_64+0x5c/0x80
+> > [  240.868314][T14986]  ? do_syscall_64+0x69/0x80
+> > [  240.872770][T14986]  entry_SYSCALL_64_after_hwframe+0x46/0xb0
+> > [  240.878526][T14986] RIP: 0033:0x7f3786d9ae8e
+> > [  240.882805][T14986] Code: c0 e9 b6 fe ff ff 50 48 8d 3d 6e 18 0a 00 e8 89 e8 01 00 66 0f 1f 84 00 00 00 00 00 64 8b 04 25 18 00 00 00 85 c0 75 14 0f 05 <48> 3d 00 f0 ff ff 77 5a c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 28
+> > [  240.902259][T14986] RSP: 002b:00007fff7be81e08 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> > [  240.910533][T14986] RAX: ffffffffffffffda RBX: 0000000000002000 RCX: 00007f3786d9ae8e
+> > [  240.918368][T14986] RDX: 0000000000002000 RSI: 00007fff7be87ec0 RDI: 0000000000000005
+> > [  240.926206][T14986] RBP: 0000000000000005 R08: 00007f3786e6a230 R09: 00007f3786e6a240
+> > [  240.934046][T14986] R10: fffffffffffff288 R11: 0000000000000246 R12: 0000000000002000
+> > [  240.941884][T14986] R13: 00007fff7be87ec0 R14: 00007fff7be87ec0 R15: 0000000000002000
+> > [  240.949741][T14986]  </TASK>
+> > [  240.952632][T14986] irq event stamp: 27367
+> > [  240.956735][T14986] hardirqs last  enabled at (27366): [<ffffffff81ba50ea>] mem_cgroup_uncharge_skmem+0x6a/0x80
+> > [  240.966848][T14986] hardirqs last disabled at (27367): [<ffffffff81b8fd42>] refill_stock+0x282/0x580
+> > [  240.976017][T14986] softirqs last  enabled at (27360): [<ffffffff83a4d8ef>] mptcp_recvmsg+0xaf/0x1340
+> > [  240.985273][T14986] softirqs last disabled at (27364): [<ffffffff83a4d30c>] __mptcp_move_skbs+0x18c/0x6c0
+> > [  240.994872][T14986] ---[ end trace 0000000000000000 ]---
+> 
+> I think that the root cause is that subflows and main socket end-up in
+> different cgroups (likely, the subflows in no cgroup at all). It should
+> be quite unrelated from the mentioned commit (older issue).
+> 
+> I'll try to have a better look.
 
-> On Mon, 2022-07-18 at 11:31 -0700, Mat Martineau wrote:
->> On Mon, 18 Jul 2022, Paolo Abeni wrote:
->>
->>> On Fri, 2022-07-15 at 12:13 -0700, Mat Martineau wrote:
->>>> On Fri, 15 Jul 2022, Paolo Abeni wrote:
->>>>
->>>>> If the mptcp socket creation fails due to a CGROUP_INET_SOCK_CREATE
->>>>> eBPF program, the MPTCP protocol ends-up leaking all the subflows:
->>>>> the related cleanup happens in __mptcp_destroy_sock() that is not
->>>>> invoked in such code path.
->>>>>
->>>>> Address the issue moving the subflow sockets cleanup in the
->>>>> mptcp_destroy_common() helper, which is invoked in every msk cleanup
->>>>> path.
->>>>>
->>>>> Additionally get rid of the intermediate list_splice_init step, which
->>>>> is an unneeded relic from the past.
->>>>>
->>>>> The issue is present since before the reported root cause commit, but
->>>>> any attempt to backport the fix before that hash will require a complete
->>>>> rewrite.
->>>>>
->>>>> Fixes: e16163b6e2 ("mptcp: refactor shutdown and close")
->>>>> Reported-by: Nguyen Dinh Phi <phind.uet@gmail.com>
->>>>> Co-developed-by: Nguyen Dinh Phi <phind.uet@gmail.com>
->>>>> Signed-off-by: Nguyen Dinh Phi <phind.uet@gmail.com>
->>>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>>>> ---
->>>>> The tags are provisional, waiting for Nguyen feedback/preferences.
->>>>>
->>>>> Sending out early to trigger the CI.
->>>>
->>>> For some reason patchew didn't tag this commit, so the CI didn't trigger.
->>>> Patchew did tag my patch about a half hour ago, so the importer doesn't
->>>> seem to be completely offline.
->>>>
->>>> I manually pushed a tag: patchew/20220715-pabeni-subflow-cleanup
->>>>
->>>> That has started the github and cirrus-ci builds:
->>>>
->>>> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2678690859
->>>> https://cirrus-ci.com/build/4905612499746816
->>>>
->>>>
->>>> I also noticed that this patch conflicts with Matthieu's "mptcp: add
->>>> mptcp_for_each_subflow_safe helper" patch, but that's only in the export
->>>> branch currently so we can easily wait on that until your -net fix
->>>> propagates to net-next.
->>>>
->>>>
->>>> One more question below (about mptcp_dispose_initial_subflow), but
->>>> assuming the CI results are ok I think this would be good to apply to
->>>> export-net and squash further fixes if needed:
->>>>
->>>> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
->>>>
->>>>>
->>>>> This will need likely some staging period.
->>>>>
->>>>> "mptcp: add mptcp_for_each_subflow_safe helper" needs to be rebased
->>>>> on top of this (we can replace another list_for_each_safe instance)
->>>>> ---
->>>>> net/mptcp/protocol.c | 39 +++++++++++++++------------------------
->>>>> net/mptcp/protocol.h |  2 +-
->>>>> net/mptcp/subflow.c  |  3 ++-
->>>>> 3 files changed, 18 insertions(+), 26 deletions(-)
->>>>>
->>>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>>>> index 21a3ed64226e..6f3324955355 100644
->>>>> --- a/net/mptcp/protocol.c
->>>>> +++ b/net/mptcp/protocol.c
->>>>> @@ -2804,30 +2804,16 @@ static void __mptcp_wr_shutdown(struct sock *sk)
->>>>>
->>>>> static void __mptcp_destroy_sock(struct sock *sk)
->>>>> {
->>>>> -	struct mptcp_subflow_context *subflow, *tmp;
->>>>> 	struct mptcp_sock *msk = mptcp_sk(sk);
->>>>> -	LIST_HEAD(conn_list);
->>>>>
->>>>> 	pr_debug("msk=%p", msk);
->>>>>
->>>>> 	might_sleep();
->>>>>
->>>>> -	/* join list will be eventually flushed (with rst) at sock lock release time*/
->>>>> -	list_splice_init(&msk->conn_list, &conn_list);
->>>>> -
->>>>> 	mptcp_stop_timer(sk);
->>>>> 	sk_stop_timer(sk, &sk->sk_timer);
->>>>> 	msk->pm.status = 0;
->>>>>
->>>>> -	/* clears msk->subflow, allowing the following loop to close
->>>>> -	 * even the initial subflow
->>>>> -	 */
->>>>> -	mptcp_dispose_initial_subflow(msk);
->>>>> -	list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
->>>>> -		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->>>>> -		__mptcp_close_ssk(sk, ssk, subflow, 0);
->>>>> -	}
->>>>> -
->>>>> 	sk->sk_prot->destroy(sk);
->>>>>
->>>>> 	WARN_ON_ONCE(msk->rmem_fwd_alloc);
->>>>> @@ -2919,24 +2905,20 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
->>>>>
->>>>> static int mptcp_disconnect(struct sock *sk, int flags)
->>>>> {
->>>>> -	struct mptcp_subflow_context *subflow, *tmp;
->>>>> 	struct mptcp_sock *msk = mptcp_sk(sk);
->>>>>
->>>>> 	inet_sk_state_store(sk, TCP_CLOSE);
->>>>>
->>>>> -	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
->>>>> -		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->>>>> -
->>>>> -		__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_FASTCLOSE);
->>>>> -	}
->>>>> -
->>>>> 	mptcp_stop_timer(sk);
->>>>> 	sk_stop_timer(sk, &sk->sk_timer);
->>>>>
->>>>> 	if (mptcp_sk(sk)->token)
->>>>> 		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
->>>>>
->>>>> -	mptcp_destroy_common(msk);
->>>>> +	/* msk->subflow is still intact, the following will not free the first
->>>>> +	 * subflow
->>>>> +	 */
->>>>> +	mptcp_destroy_common(msk, MPTCP_CF_FASTCLOSE);
->>>>> 	msk->last_snd = NULL;
->>>>> 	WRITE_ONCE(msk->flags, 0);
->>>>> 	msk->cb_flags = 0;
->>>>> @@ -3086,12 +3068,17 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
->>>>> 	return newsk;
->>>>> }
->>>>>
->>>>> -void mptcp_destroy_common(struct mptcp_sock *msk)
->>>>> +void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
->>>>> {
->>>>> +	struct mptcp_subflow_context *subflow, *tmp;
->>>>> 	struct sock *sk = (struct sock *)msk;
->>>>>
->>>>> 	__mptcp_clear_xmit(sk);
->>>>>
->>>>> +	/* join list will be eventually flushed (with rst) at sock lock release time */
->>>>> +	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node)
->>>>> +		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
->>>>> +
->>>>> 	/* move to sk_receive_queue, sk_stream_kill_queues will purge it */
->>>>> 	mptcp_data_lock(sk);
->>>>> 	skb_queue_splice_tail_init(&msk->receive_queue, &sk->sk_receive_queue);
->>>>> @@ -3113,7 +3100,11 @@ static void mptcp_destroy(struct sock *sk)
->>>>> {
->>>>> 	struct mptcp_sock *msk = mptcp_sk(sk);
->>>>>
->>>>> -	mptcp_destroy_common(msk);
->>>>> +	/* clears msk->subflow, allowing the following to close
->>>>> +	 * even the initial subflow
->>>>> +	 */
->>>>> +	mptcp_dispose_initial_subflow(msk);
->>>>
->>>> Was the missing call to mptcp_displose_initial_subflow() also causing a
->>>> problem? Or did this cleanup end up happening through a different path?
->>>>
->>>> This seems different from the "leaking all subflows" case mentioned in the
->>>> commit message.
->>>
->>> I'm unsure I read the question correctly.
->>>
->>> This patch does not add a new mptcp_dispose_initial_subflow() call in
->>> the cleanup/free code path. Such call was already there in
->>> __mptcp_destroy_sock(), and is needed to ensure even the initial
->>> subflow is deleted.
->>>
->>> mptcp_dispose_initial_subflow() is placed outside
->>> mptcp_destroy_common() to allow mptcp_disconnect() to re-use the latter
->>> helper while preserving the initial subflow
->>>
->>
->> Right, it was clear that the old call in __mptcp_destroy_sock() was moved
->> to mptcp_destroy().
->>
->> But the commit message states that not every cleanup/free code path was
->> calling __mptcp_destroy_sock(). That means not every code path was calling
->> mptcp_dispose_initial_subflow(), and now it is consistently called by
->> mptcp_destroy().
->>
->> Does this mean the msk->subflow inode was leaked as part of "leaking all
->> the subflows"?
->
-> AFAICS, yes.
->
->
-> Note that this patch should also additionally address a different leak
-> scenario:
->
-> After MPC handshake an mptcp listener creates the MPC subflow and the
-> paired msk sockets. Later the client creates additional subflows, which
-> are added to the msk conn_list, as the msk is already fully
-> established.
->
-> the mptcp listener is closed before the child msk is accepted. The mpc
-> subflow is deleted, but prior to this patch mptcp_sock_destruct() did
-> not free the MPJ subflows, leaking them.
->
-> In such scenario the child msk->subflow struct is not leaked - because
-> it's not even allocated ;)
+Ouch, this is quite untrivial :/
 
-Ok, thanks for the details. I've updated the patch status in patchwork.
+I *think* the issue is caused by a few different things:
 
---
-Mat Martineau
-Intel
+1) on passive msk sockets, the MPC subflow gets full cgroup setup via:
+
+https://elixir.bootlin.com/linux/latest/source/net/mptcp/protocol.c#L2976
+https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L536
+
+2) the passive msk itself get no sk_memcg:
+https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L536
+https://elixir.bootlin.com/linux/latest/source/net/core/sock.c#L2176
+
+and mptcp*_accept() does not set sk_memcg for the msk socket
+
+2.b) (possibly irrelevant here) the MPJ subflows for passive sockets
+get no sk_memcg, for similar reasons to the above.
+
+3) the msk "borrow" fwd allocated memory from the subflow (quite
+unlikely event).
+
+https://elixir.bootlin.com/linux/latest/source/net/mptcp/protocol.c#L333
+
+when that happens for a passive socket, the mem_cgroup_uncharge_skmem()
+and mem_cgroup_charge_skmem() will be unbalanced, as not all the
+allocated memory will be freed. 
+
+Uhm... after all, the above could cause an overflow, not an underflow
+(as reported by syzbot) so possibly I'm missing something. BTW I can't
+reproduce the splat, so far.
+
+Still the problems in 2) and 2b) look real and relevant. And hard to
+address. Specifically its hard/ugly to implement:
+
+https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L533
+
+for the msk socket, as the relevant mem accounting fields
+(sk_rmem_fwd_alloc and sk_rmem_alloc) are under the mptcp_data_lock()
+protection (that is the msk socket spin lock), while we very likely
+want to be in process context for the later allocation:
+
+https://elixir.bootlin.com/linux/latest/source/net/ipv4/inet_connection_sock.c#L537
+
+/me needs more coffee...
+
+/P
+
+
+
+
