@@ -1,24 +1,21 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F828A20
-	for <mptcp@lists.linux.dev>; Wed, 27 Jul 2022 03:10:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EF342C43470;
-	Wed, 27 Jul 2022 03:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1658891414;
-	bh=pQSyi3UH3WZQn2CrCYki7a8JjgL0ezEu7fIgfkMONR0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=DQpIhrd3Rktn9eh83J7GQr6kN4F5z1IkJQ5yMQxCwOM4Aa0ueT7Ed4H7JSvxnBh5G
-	 HJ72bUQPSMW3cj7JsoSiiqxKfHHc5g3xw3lSAU9e8wXe9ZQaq/88jdPgJ6xWly7j4w
-	 bgaSHXi91svU5cwPdwxmfW+QRD1y/3QpUvaLeRU4H6NOwCpWgatz7JrRL1d8UbwhaY
-	 7nBDEP14PH03EYLBGrP2YGTpYSOplYLDCANepZ6WcE2ZhfxX8krRVW8QJ5b3KklTVU
-	 J2W4rR8xNAE7256h8O+k/XrVkhn6T1FfGXRIlQnd0zwJVVijCVl5q2gVY1w1dNNW/V
-	 te4lspArTPeBQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D5D06C43140;
-	Wed, 27 Jul 2022 03:10:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC507A
+	for <mptcp@lists.linux.dev>; Thu, 28 Jul 2022 18:53:31 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1oH8Ck-0005MX-Kg; Thu, 28 Jul 2022 20:25:50 +0200
+From: Florian Westphal <fw@strlen.de>
+To: mptcp@lists.linux.dev
+Cc: mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net,
+	Paolo Abeni <pabeni@redhat.com>,
+	Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp] selftests: mptcp: make sendfile selftest work
+Date: Thu, 28 Jul 2022 20:25:44 +0200
+Message-Id: <20220728182544.4128-1-fw@strlen.de>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,45 +23,35 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: Do not return EINPROGRESS when subflow creation
- succeeds
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165889141387.5272.6096636304213896963.git-patchwork-notify@kernel.org>
-Date: Wed, 27 Jul 2022 03:10:13 +0000
-References: <20220725205231.87529-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20220725205231.87529-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, matthieu.baerts@tessares.net,
- fw@strlen.de, mptcp@lists.linux.dev
 
-Hello:
+When the selftest got added, sendfile() on mptcp sockets returned
+-EOPNOTSUPP, so running 'mptcp_connect.sh -m sendfile' failed
+immediately.
 
-This patch was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+This is no longer the case, but the script fails anyway due to timeout.
+Let the receiver know once the sender has sent all data, just like
+with '-m mmap' mode.
 
-On Mon, 25 Jul 2022 13:52:31 -0700 you wrote:
-> New subflows are created within the kernel using O_NONBLOCK, so
-> EINPROGRESS is the expected return value from kernel_connect().
-> __mptcp_subflow_connect() has the correct logic to consider EINPROGRESS
-> to be a successful case, but it has also used that error code as its
-> return value.
-> 
-> Before v5.19 this was benign: all the callers ignored the return
-> value. Starting in v5.19 there is a MPTCP_PM_CMD_SUBFLOW_CREATE generic
-> netlink command that does use the return value, so the EINPROGRESS gets
-> propagated to userspace.
-> 
-> [...]
+Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Here is the summary with links:
-  - [net] mptcp: Do not return EINPROGRESS when subflow creation succeeds
-    https://git.kernel.org/netdev/net/c/b5177ed92bf6
-
-You are awesome, thank you!
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index e2ea6c126c99..6e429b88f911 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -791,6 +791,9 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
+ 		err = do_sendfile(infd, peerfd, size);
+ 		if (err)
+ 			return err;
++
++		shutdown(peerfd, SHUT_WR);
++
+ 		err = do_recvfile(peerfd, outfd);
+ 		*in_closed_after_out = true;
+ 	}
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.35.1
 
