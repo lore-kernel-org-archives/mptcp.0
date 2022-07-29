@@ -1,98 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED704A24
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 16:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659111005;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TA9cb7ugqlhNOUMjqH4abfcGp/S6VYvvZQRWc7mn020=;
-	b=So1zAfSHBYgCAZH+E23SOe77krInk06or+bPbfDtt/+LSD0v/7Aa7Az+TxKxnt4CKKCekO
-	H5gebrr6BTy1VzLUjxyZPaPfkEMMLQbpuWZZRk9r9UNO2mucDqiRrS+8UmqD9tfhh50KYN
-	GN/dB0SqoSKTQbMKc6L+ZjH8kjjzUq8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-453-ktdkZfK0NduAxETGTFpubA-1; Fri, 29 Jul 2022 12:10:03 -0400
-X-MC-Unique: ktdkZfK0NduAxETGTFpubA-1
-Received: by mail-qk1-f200.google.com with SMTP id ay35-20020a05620a17a300b006b5d9646d31so3876871qkb.6
-        for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 09:10:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C48A4C77
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 17:32:30 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id j22so9741413ejs.2
+        for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 10:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to;
+        bh=CFLaoRvSZHru3HQdsOGbY3058tzPt4G6aYxol0kgPGs=;
+        b=uWliBo0qgFw+I0nh4swa/nkyX94E5W8BMd4QSYJTsoSiMXnCnNBBBGN9CDjbQ/MpnR
+         2znotFdPC+Lll4RKxslsze+C+7tM1OWb/icwz2iTPbE+p9FsRDT4RHY0U6Y3fayyNjJ3
+         C4crpev1cIyEhtSTj/Q0Ik9dwYORsqDfvMlkQO0GpNDhlBbHpiV6HKv0TlSHhqZ5eSl5
+         oANOj5ASl8HXUqonPdTtgKEyoZ56A3Ox6/iGot7B8e1szn0WHxOGCebtLyPaLHkNQT+O
+         IdfXhcdXr820dmCM3MnQ+F/lYlvEnsP7MKic7kX9alY7kSiLrPDG02xPvv2a1wl3EDjS
+         KMww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=TA9cb7ugqlhNOUMjqH4abfcGp/S6VYvvZQRWc7mn020=;
-        b=Upj0ixHKsjpf5VudLsGDGUT6IHff8g7SoXo7ui7kE/zM9/yG2Yfm3IaTGawVR9vysS
-         WhX7Ffd2ZG7pQZd44wn7I6K7URcXjm9T612qg7QYowMeUljwJf+fNZNpFno0QL9xAY5w
-         6xQuUTKBA0P6PoYzsLJeVIdnB7nVD0Q4obVXB7gTGQa3aTeFhJd/0HYouGbG5egy2IDF
-         ULse50UB+0155+37YBqcE3KruAYmwO11IXVUFW4vCGfJepjnZ/KJNQROqDf6WPsZzWzM
-         UAQ5JiS3Rb94iK/sdFfd/eCXLioq/O1una4SM8S1eZlHOO6ciBJ9h2TaT4ZJmHfsv/2X
-         jeHA==
-X-Gm-Message-State: AJIora/Lfl3SH0n6YGGZOhLPukhQs5xDqDFMGt1fS8GVVRR0MrB/a+PL
-	MwnJGT5dHeLobeVZuC8sv/p87QushnpXv3tQOmsoIU1yBw5lkBHAuiStu/B4a/ohVz7MirJXH49
-	FpOmstSp+UcjhR2Mm0/nL22CTYTwiQsTTTWDz5Z2BtQWjKSyCxAF2McWRDoX3+mFp
-X-Received: by 2002:a05:620a:2710:b0:6b5:bf24:10e9 with SMTP id b16-20020a05620a271000b006b5bf2410e9mr3282370qkp.28.1659111002606;
-        Fri, 29 Jul 2022 09:10:02 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1syM9+Z0D59Pr8cXs9qOUzhmDlXYiTmDStMvI4zBGet/fKEfQOTvysGzHCVwkrXNA1tIZs/Ag==
-X-Received: by 2002:a05:620a:2710:b0:6b5:bf24:10e9 with SMTP id b16-20020a05620a271000b006b5bf2410e9mr3282340qkp.28.1659111002223;
-        Fri, 29 Jul 2022 09:10:02 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-104-164.dyn.eolo.it. [146.241.104.164])
-        by smtp.gmail.com with ESMTPSA id t4-20020ac85304000000b0031ee2080c73sm2375180qtn.54.2022.07.29.09.10.00
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Jul 2022 09:10:01 -0700 (PDT)
-Message-ID: <8b1f82abc720de4d75bae6ea0324f255d834d4e4.camel@redhat.com>
-Subject: Re: mptcp: use common helper for rmem memory accounting: Build
- Failure
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Date: Fri, 29 Jul 2022 18:09:58 +0200
-In-Reply-To: <c42ea753-9808-f3c8-fa7f-ee4fb5055f10@gmail.com>
-References: <f253e24227ce660aae19714c2cca1726ee087184.1659107989.git.pabeni@redhat.com>
-	 <c42ea753-9808-f3c8-fa7f-ee4fb5055f10@gmail.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to;
+        bh=CFLaoRvSZHru3HQdsOGbY3058tzPt4G6aYxol0kgPGs=;
+        b=GKjzYXgzXy+0xNWdBDZ75KdKWuHuQ4e/RS+UZWvwJyGdMH0ZFoDi7gsjIvxu5v0BXU
+         tFIiveu1ZnmyLyNe2jAVLPYRMYItoPeRkIM0zcMaMWdfQaJ+QxHigWcSRk/NdWPUQHvG
+         PWo2OYvi8EIs9uCJ9ccqzxE7No+ewdagWocSAeFD61/i80AsNOBen86KQZDLTrJlaSug
+         N+c99UOIB+kToCoBYSHfQFuaRfI8LQuj8z17JuAqP8Xk4baFqX0BMHT/wxmYOjnyK78g
+         j4VBZzN4af0XWKVK/8pHq4JPVGSVS4YKsXmwUCDGXlcAlltcsqBsWtDiJVyvIqesvmb5
+         xSeg==
+X-Gm-Message-State: AJIora8CyvcTQR4LEemFZRZLBfvIR2IL201y9vZKvDsPD2B4bt1mrKGA
+	KCyrXD4Dum5CF2S6k7+K3Jqwmg==
+X-Google-Smtp-Source: AGRyM1uad1NlO4uqQqdZktk6GRJSEnWODQtcUbvo9bDm7FYnb5/lH7iAMLPHw+6is4M5GQ99Brx0cA==
+X-Received: by 2002:a17:907:69b0:b0:72b:8e7b:6c2c with SMTP id ra48-20020a17090769b000b0072b8e7b6c2cmr3727742ejc.61.1659115948178;
+        Fri, 29 Jul 2022 10:32:28 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:e755:980d:42b4:512c? ([2a02:578:8593:1200:e755:980d:42b4:512c])
+        by smtp.gmail.com with ESMTPSA id ia9-20020a170907a06900b00722e7e48dfdsm1947227ejc.218.2022.07.29.10.32.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Jul 2022 10:32:27 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------cpt0pvXLjin79DJZvHPiCtD7"
+Message-ID: <ffa2ea4f-dba9-5e44-95cb-4f4d3470884c@tessares.net>
+Date: Fri, 29 Jul 2022 19:32:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0.3
+Subject: Re: [PATCH net] ax25: fix incorrect dev_tracker usage
+Content-Language: en-GB
+To: Eric Dumazet <eric.dumazet@gmail.com>,
+ "David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev <netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>,
+ Bernard F6BVP <f6bvp@free.fr>, Duoming Zhou <duoming@zju.edu.cn>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20220728051821.3160118-1-eric.dumazet@gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220728051821.3160118-1-eric.dumazet@gmail.com>
+
+This is a multi-part message in MIME format.
+--------------cpt0pvXLjin79DJZvHPiCtD7
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2022-07-29 at 15:47 +0000, MPTCP CI wrote:
-> Hi Paolo,
-> 
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
-> 
-> You can find more details there:
-> 
->   https://patchwork.kernel.org/project/mptcp/patch/f253e24227ce660aae19714c2cca1726ee087184.1659107989.git.pabeni@redhat.com/
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2761676692
-> 
-> Status: failure
-> Initiator: MPTCPimporter
-> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/1f45050af065
-> 
-> Feel free to reply to this email if you cannot access logs, if you need
-> some support to fix the error, if this doesn't seem to be caused by your
-> modifications or if the error is a false positive one.
-> 
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (Tessares)
+Hello,
 
-Darn me! some latest local change did not land into this series, I'll
-submit a v2 soon. Sorry for the noise...
+On 28/07/2022 07:18, Eric Dumazet wrote:
+> From: Eric Dumazet <edumazet@google.com>
+> 
+> While investigating a separate rose issue [1], and enabling
+> CONFIG_NET_DEV_REFCNT_TRACKER=y, Bernard reported an orthogonal ax25 issue [2]
+> 
+> An ax25_dev can be used by one (or many) struct ax25_cb.
+> We thus need different dev_tracker, one per struct ax25_cb.
+> 
+> After this patch is applied, we are able to focus on rose.
 
-/P
+FYI, we got a small conflict when merging -net in net-next in the MPTCP
+tree due to this patch applied in -net:
 
+  d7c4c9e075f8 ("ax25: fix incorrect dev_tracker usage")
+
+and this one from net-next:
+
+  d62607c3fe45 ("net: rename reference+tracking helpers")
+
+The conflict has been resolved on our side[1] and the resolution we
+suggest is attached to this email.
+
+I'm sharing this thinking it can help others but if it only creates
+noise, please tell me! :-)
+
+Cheers,
+Matt
+
+[1] https://github.com/multipath-tcp/mptcp_net-next/commit/b01791aa6b6c
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--------------cpt0pvXLjin79DJZvHPiCtD7
+Content-Type: text/x-patch; charset=UTF-8;
+ name="b01791aa6b6c783778b534f91997581a0e3caeb6.patch"
+Content-Disposition: attachment;
+ filename="b01791aa6b6c783778b534f91997581a0e3caeb6.patch"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWNjIG5ldC9heDI1L2FmX2F4MjUuYwppbmRleCBiYmFjM2NiNGRjOTksNWI1MzYz
+Yzk5ZWQ1Li5kODJhNTFlNjkzODYKLS0tIGEvbmV0L2F4MjUvYWZfYXgyNS5jCisrKyBiL25l
+dC9heDI1L2FmX2F4MjUuYwpAQEAgLTEwNjYsNyAtMTA2NSw3ICsxMDY2LDcgQEBAIHN0YXRp
+YyBpbnQgYXgyNV9yZWxlYXNlKHN0cnVjdCBzb2NrZXQgKgogIAkJCWRlbF90aW1lcl9zeW5j
+KCZheDI1LT50M3RpbWVyKTsKICAJCQlkZWxfdGltZXJfc3luYygmYXgyNS0+aWRsZXRpbWVy
+KTsKICAJCX0KLSAJCW5ldGRldl9wdXQoYXgyNV9kZXYtPmRldiwgJmF4MjVfZGV2LT5kZXZf
+dHJhY2tlcik7CiAtCQlkZXZfcHV0X3RyYWNrKGF4MjVfZGV2LT5kZXYsICZheDI1LT5kZXZf
+dHJhY2tlcik7CisrCQluZXRkZXZfcHV0KGF4MjVfZGV2LT5kZXYsICZheDI1LT5kZXZfdHJh
+Y2tlcik7CiAgCQlheDI1X2Rldl9wdXQoYXgyNV9kZXYpOwogIAl9CiAgCkBAQCAtMTE0Nyw3
+IC0xMTQ2LDcgKzExNDcsNyBAQEAgc3RhdGljIGludCBheDI1X2JpbmQoc3RydWN0IHNvY2tl
+dCAqc29jCiAgCiAgCWlmIChheDI1X2RldikgewogIAkJYXgyNV9maWxsaW5fY2IoYXgyNSwg
+YXgyNV9kZXYpOwotIAkJbmV0ZGV2X2hvbGQoYXgyNV9kZXYtPmRldiwgJmF4MjVfZGV2LT5k
+ZXZfdHJhY2tlciwgR0ZQX0FUT01JQyk7CiAtCQlkZXZfaG9sZF90cmFjayhheDI1X2Rldi0+
+ZGV2LCAmYXgyNS0+ZGV2X3RyYWNrZXIsIEdGUF9BVE9NSUMpOworKwkJbmV0ZGV2X2hvbGQo
+YXgyNV9kZXYtPmRldiwgJmF4MjUtPmRldl90cmFja2VyLCBHRlBfQVRPTUlDKTsKICAJfQog
+IAogIGRvbmU6Cg==
+
+--------------cpt0pvXLjin79DJZvHPiCtD7--
