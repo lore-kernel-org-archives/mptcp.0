@@ -1,157 +1,86 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3C4C77
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659119116; x=1690655116;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ltvm2d7MetkZ1LmGuDxRWFZT12u4l81YtRDgSrXpnvg=;
-  b=A75W5JV5scAAXBGWt/GDwWi0ZiyOZehx/q1qjSQr8q3cj3oqqtlwlIES
-   xA22xa0sQkdRCXre1p/7WLRITje7aIJi6OVl566OzhWCr2/kWrVNdPGLp
-   X/h+GT2c0doqAjuOdUBUjUaRaQakuQjSjkU7gaSTv7L2i578r60pxlYLj
-   Zp/y2eNB7DlpEGLdoRGprPHWyJWaxQ4ykBFcteQpLxP2Gr/9XAH2yzh9k
-   UJm8R1JF/RwGbeQEjzMWxXBMwRVFF9DiGuJvrP9Jes99YvdBInttF+FBw
-   p2fm8MI14JE2+9CxlogvPf75pj0JhvgCVvFJnk5uGUA1RBTDs3F2II6Ez
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10423"; a="290025906"
-X-IronPort-AV: E=Sophos;i="5.93,201,1654585200"; 
-   d="scan'208";a="290025906"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2022 11:25:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,201,1654585200"; 
-   d="scan'208";a="629468947"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 29 Jul 2022 11:25:14 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oHUfi-000Bxp-0x;
-	Fri, 29 Jul 2022 18:25:14 +0000
-Date: Sat, 30 Jul 2022 02:24:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: kbuild-all@lists.01.org
-Subject: Re: [PATCH mptcp-next 2/4] mptcp: more accurate receive buffer
- updates
-Message-ID: <202207300227.kYan1H1K-lkp@intel.com>
-References: <63def511912bf79d6af065dccb155e9304932640.1659107989.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7226110C
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:32:01 +0000 (UTC)
+Received: by mail-io1-f47.google.com with SMTP id y197so4215770iof.12
+        for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 11:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=TvQB11QiX4pqX4W06/WgIBSST2vvr1XvJoFilbSeEdc=;
+        b=lWlVWBP6gcGKKfeyXcb7lft7R1UAVr3n6P5gXI5TBfhunHWCOCwyl4GP2ZCxDfbDZ8
+         M6IZCak6UYbie8T9ecnlQal2yygO7PicxgOkXr28BZU3AOVyOGA490iKyvx1FuXicNTL
+         wT/0UpdmMKSL5aSX9fSjXIDe+RHXw58lJc0dIxI8bnMOY7yjyPmrwp7gMwbRHRTNlc4u
+         +C1laCUfC2Irwo9ljXFGnoKnbZjEt2p3l6w4L6l2zXndAk+9TUGuhYgM0O/U/l7yQJ5M
+         Td8/ICELGPakFvG4EuH9wzBP0/Gg805RLSPfF2Q80XSOwVjzq2luIkFm6F6s6wTggZ3+
+         ffuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=TvQB11QiX4pqX4W06/WgIBSST2vvr1XvJoFilbSeEdc=;
+        b=Q3v+F4kVvEBriEgb/RcGDH+iiXYKsvKF2Th31l3KT/dPHP43op46XtfUIW+jBJdNRv
+         i7bw0UpdcL6Nfor8G8SjqNxybHI/hqdaVL9ZV0CAWKmj4npM8mqFPlFMPp3VV3Utx/lZ
+         C4FlKvLP+qnYHorOldUompCLdW7Z++4Go5byvjcGh7bKu4yKtq7kpumC6cdcy2GLCsur
+         GIHLvTWzg/ulwK1CSum42o/giSk9U1/pl79mE4Gbv3DBgV+u6E6T5fcpRzydciQvvfX+
+         j4WdSwjvc5uPJZE+J30hw9fTBuUx1rw9dsllu5/Mq763+ig/nc150IXmrT1lQoowPzut
+         a0HA==
+X-Gm-Message-State: AJIora9bMO5guVl1c0zn4ZQAjtn3pgSkvfwXzrY36rwL9l8LFPs2WQv8
+	CYXCoa4FEciw8NSbVDaYNw==
+X-Google-Smtp-Source: AGRyM1uUreoQkWaHerMVW8nBA4EWoULwzezeYltkQyQ73onkv626hxKSTctfbzdZ6uSq2m6b0w2Vgw==
+X-Received: by 2002:a05:6602:29d0:b0:669:1723:c249 with SMTP id z16-20020a05660229d000b006691723c249mr1591438ioq.208.1659119521054;
+        Fri, 29 Jul 2022 11:32:01 -0700 (PDT)
+Received: from [127.0.0.1] ([20.29.108.137])
+        by smtp.gmail.com with ESMTPSA id s20-20020a056638219400b00341648c405esm1957192jaj.144.2022.07.29.11.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Jul 2022 11:32:00 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <a5a451ed4421993380b46e8b546b228a66001212.1659117128.git.pabeni@redhat.com>
+References:
+ <a5a451ed4421993380b46e8b546b228a66001212.1659117128.git.pabeni@redhat.com>
+Subject: Re: mptcp: use common helper for rmem memory accounting: Build
+ Failure
+Message-ID: <f1217e12-1c62-496d-b831-2ca0d4488eb4@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 29 Jul 2022 18:32:00 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63def511912bf79d6af065dccb155e9304932640.1659107989.git.pabeni@redhat.com>
 
 Hi Paolo,
 
-I love your patch! Yet something to improve:
+Thank you for your modifications, that's great!
 
-[auto build test ERROR on mptcp/export]
-[also build test ERROR on linus/master v5.19-rc8 next-20220728]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+But sadly, our CI spotted some issues with it when trying to build it.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Paolo-Abeni/mptcp-just-another-receive-path-refactor/20220729-233501
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20220730/202207300227.kYan1H1K-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/c330a583c6d306ab637d187f0f981bfe4408caba
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Paolo-Abeni/mptcp-just-another-receive-path-refactor/20220729-233501
-        git checkout c330a583c6d306ab637d187f0f981bfe4408caba
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
+You can find more details there:
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+  https://patchwork.kernel.=
+org/project/mptcp/patch/a5a451ed4421993380b46e8b546b228a66001212.1659117128=
+.git.pabeni@redhat.com/
+  https://github.com/multipath-tcp/mptcp_net-next/a=
+ctions/runs/2762483896
 
-All errors (new ones prefixed by >>):
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/2febaa3d4a=
+51
 
-   net/ipv4/tcp.c: In function 'tcp_cleanup_rbuf':
->> net/ipv4/tcp.c:1609:21: error: implicit declaration of function 'is_tcpsk' [-Werror=implicit-function-declaration]
-    1609 |                 if (is_tcpsk(sk))
-         |                     ^~~~~~~~
-   cc1: some warnings being treated as errors
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
 
-
-vim +/is_tcpsk +1609 net/ipv4/tcp.c
-
-  1563	
-  1564	/* Clean up the receive buffer for full frames taken by the user,
-  1565	 * then send an ACK if necessary.  COPIED is the number of bytes
-  1566	 * tcp_recvmsg has given to the user so far, it speeds up the
-  1567	 * calculation of whether or not we must ACK for the sake of
-  1568	 * a window update.
-  1569	 */
-  1570	void tcp_cleanup_rbuf(struct sock *sk, int copied)
-  1571	{
-  1572		struct tcp_sock *tp = tcp_sk(sk);
-  1573		bool time_to_ack = false;
-  1574	
-  1575		struct sk_buff *skb = skb_peek(&sk->sk_receive_queue);
-  1576	
-  1577		WARN(skb && !before(tp->copied_seq, TCP_SKB_CB(skb)->end_seq),
-  1578		     "cleanup rbuf bug: copied %X seq %X rcvnxt %X\n",
-  1579		     tp->copied_seq, TCP_SKB_CB(skb)->end_seq, tp->rcv_nxt);
-  1580	
-  1581		if (inet_csk_ack_scheduled(sk)) {
-  1582			const struct inet_connection_sock *icsk = inet_csk(sk);
-  1583	
-  1584			if (/* Once-per-two-segments ACK was not sent by tcp_input.c */
-  1585			    tp->rcv_nxt - tp->rcv_wup > icsk->icsk_ack.rcv_mss ||
-  1586			    /*
-  1587			     * If this read emptied read buffer, we send ACK, if
-  1588			     * connection is not bidirectional, user drained
-  1589			     * receive buffer and there was a small segment
-  1590			     * in queue.
-  1591			     */
-  1592			    (copied > 0 &&
-  1593			     ((icsk->icsk_ack.pending & ICSK_ACK_PUSHED2) ||
-  1594			      ((icsk->icsk_ack.pending & ICSK_ACK_PUSHED) &&
-  1595			       !inet_csk_in_pingpong_mode(sk))) &&
-  1596			      !atomic_read(&sk->sk_rmem_alloc)))
-  1597				time_to_ack = true;
-  1598		}
-  1599	
-  1600		/* We send an ACK if we can now advertise a non-zero window
-  1601		 * which has been raised "significantly".
-  1602		 *
-  1603		 * Even if window raised up to infinity, do not send window open ACK
-  1604		 * in states, where we will not receive more. It is useless.
-  1605		 */
-  1606		if (copied > 0 && !time_to_ack && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
-  1607			__u32 rcv_window_now = tcp_receive_window(tp);
-  1608	
-> 1609			if (is_tcpsk(sk))
-  1610				mptcp_receive_window(sk, &rcv_window_now);
-  1611	
-  1612			/* Optimize, __tcp_select_window() is not cheap. */
-  1613			if (2*rcv_window_now <= tp->window_clamp) {
-  1614				__u32 new_window = __tcp_select_window(sk);
-  1615	
-  1616				/* Send ACK now, if this read freed lots of space
-  1617				 * in our buffer. Certainly, new_window is new window.
-  1618				 * We can advertise it now, if it is not less than current one.
-  1619				 * "Lots" means "at least twice" here.
-  1620				 */
-  1621				if (new_window && new_window >= 2 * rcv_window_now)
-  1622					time_to_ack = true;
-  1623			}
-  1624		}
-  1625		if (time_to_ack)
-  1626			tcp_send_ack(sk);
-  1627	}
-  1628	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
