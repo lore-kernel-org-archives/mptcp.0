@@ -1,109 +1,87 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA891360
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 11:20:25 +0000 (UTC)
-Received: by mail-qk1-f176.google.com with SMTP id m16so3325189qka.12
-        for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 04:20:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=JNN2QE7AM/1q+TDRCVUNnolZpAEWxsVHryX8G2zWhbo=;
-        b=bpnKCuPpCYElRsYvAdE7CuDGN5UJWjRkGiD2bLeK1HNV92RrsqbggnQ76uPaYZzSBe
-         96CQ2WZtgqHuyRv1YmI+YTWN73uQdznFPFV/I8XeV+ZUqvTpj0cqf+bqgTxI+rKHko+M
-         sOfgaKijlXE6t4jgUvvKtG1VmX3d94JkIT7S33SBS+dEWdNaV6JFhNEVvQbU+He96xPz
-         kLoFc1dIo79O4fqLavw4mk78z3qURyBNU1RggDpK+/zxae2JE+iafViOVrv2fs4WR/mf
-         egieTqupA/BSuysrMMKPO6+safU3ErwQi7LVjYKz4OijlUSGtViJeWkunf+liBYc5p7q
-         76Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=JNN2QE7AM/1q+TDRCVUNnolZpAEWxsVHryX8G2zWhbo=;
-        b=PD6179DXGgh1eEw70HZ9BoKb7knM/YOJRKr1pH23GoSNcRR6m0PqWJGS0JDK2hGWZN
-         NHqKlDhIzPVP2qT2CCNl7O+t2HWKBd7CF1E5pvxsz2NN90/3h6SVXPptMtRuNyOeDPT8
-         7YxLVict3/5XO2slYTSMi9Z7tfhYCPwXPubphIJDA7C7vv1qQSzcq04F5B09hS2MONuU
-         i9Qm3MpoagIhPVbFMvTi3ZD4hzTbT4YQnj2MqnYxUWNKzaArQ1QqD8LihrPzi8im3hIz
-         0cXO+nSM7kDxlMRCppDEWNvZkeJoZSJ0pXFIBx2DF6hzNecvPkjTYZgX/lWnSSzZBKIO
-         Gxwg==
-X-Gm-Message-State: AJIora8zaWHq4v/feyGYxHIbh8FGQEEosPOe+Y3JKc0eYSJerB8bCWFL
-	PQMtVbrocBsbvKJEp6XN92a3dWskdPIjlLw=
-X-Google-Smtp-Source: AGRyM1vsMyCYLodqrEvuk/volwSZhPwuSSjza05yhRYlmrWJbsU5tUmTtjiLDzuqsAmNsrwWL5l8SQ==
-X-Received: by 2002:a37:714:0:b0:6b5:c578:28ef with SMTP id 20-20020a370714000000b006b5c57828efmr2105260qkh.242.1659093624402;
-        Fri, 29 Jul 2022 04:20:24 -0700 (PDT)
-Received: from [127.0.0.1] ([20.120.111.96])
-        by smtp.gmail.com with ESMTPSA id bt8-20020ac86908000000b0031f16e7f899sm2064724qtb.45.2022.07.29.04.20.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Jul 2022 04:20:24 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Florian Westphal <fw@strlen.de>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220729095550.3040-1-fw@strlen.de>
-References: <20220729095550.3040-1-fw@strlen.de>
-Subject: Re: selftests: mptcp: make sendfile selftest work: Tests Results
-Message-ID: <8e5a552a-669f-4a87-37c5-6d5c6a6412f5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 Jul 2022 11:20:23 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44EE4A23
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 15:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1659108834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VPFpAlxZ1Fqq+8efVjPI2mRPaSb57UfRdPk9P1KQSjc=;
+	b=XowTIOiIK1D4hAEjXGEbTtWS70e8j4W2scZJC3dh/yPqF5UTG1Kx3NE9IdgIOQGw9tRCae
+	+Xc3TWtEelOF3YutaRs5aMdUnCCL6i9LtS+JqsH5lUBXLboiaiXYGoT+gj6/DUUVC3eVfX
+	vMUCLefkzS4WZYu95GD6Sh7YsVuZD/4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-21-dTip1z4qOsWCnxhIKf68Rg-1; Fri, 29 Jul 2022 11:33:52 -0400
+X-MC-Unique: dTip1z4qOsWCnxhIKf68Rg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 76BFC101A54E
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 15:33:52 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.205])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0752C90A04
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 15:33:51 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 0/4] mptcp: just another receive path refactor
+Date: Fri, 29 Jul 2022 17:33:00 +0200
+Message-Id: <cover.1659107989.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Florian,
+This is a refresh and rebase of an already shared work:
 
-Thank you for your modifications, that's great!
+https://lore.kernel.org/mptcp/cover.1621963632.git.pabeni@redhat.com/
+[1]
 
-Our CI did some validations and here is its report:
+The motiviation for refreshing this is:
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5322407467548672
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5322407467548672/su=
-mmary/summary.txt
+https://lore.kernel.org/mptcp/YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020/
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6448307374391296
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6448307374391296/su=
-mmary/summary.txt
+specifically it looks like that properly attaching mem_cg to the
+msk socket would be (much?) easier if the RX path and the fwd memory
+allocation would be under msk socket lock protection.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1b04f2259a4c
+The first 2 patches are proably worthy even without the refactor,
+but specifically the 2nd one is required to get a good mptcp-level
+acking behavior when we move the rx under the socket lock.
 
+The 3rd patch does the real work, and the 4th is a follow-up cleanup.
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+Back at [1], I measured relevant performance regressions in some
+specific cases. I've done the same test here and I now see little to
+noise changes. I guess that is mostly due to the better acking
+strategy already introduce with commit 949dfdcf343c ("Merge branch 
+'mptcp-improve-mptcp-level-window-tracking'") and refined here.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Paolo Abeni (4):
+  mptcp: move RCVPRUNE event later
+  mptcp: more accurate receive buffer updates
+  mptcp: move msk input path under full msk socket lock
+  mptcp: use common helper for rmem memory accounting
 
-For more details:
+ include/net/mptcp.h  |   2 +
+ net/ipv4/tcp.c       |   3 +
+ net/mptcp/options.c  |   1 -
+ net/mptcp/protocol.c | 220 +++++++++++--------------------------------
+ net/mptcp/protocol.h |  12 ++-
+ 5 files changed, 69 insertions(+), 169 deletions(-)
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+-- 
+2.35.3
 
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
