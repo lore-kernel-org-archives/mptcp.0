@@ -1,327 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53D94C89
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659118492;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bFNE4JGHhubGyGVygNNiX2rA+9CcUBUuFfxxhypH3v8=;
-	b=hQxHsnq2CBNOv+7KAuNgmJTmrsVtcSMTTtnETd06QLED/CsIi4CqaLnYdO860XbBI+ktMN
-	gBSvdsMb+Rwz5Eu1dVttvQFDyU4JKYrN5vGzYEkzcL72XZ+iNIZkNsw84nccCVpzgi6GEY
-	0UQaGrLCXlugmj0ZKfkUTAMcWG08ftQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-326-VkAux13tMiGDR7IrZY61gQ-1; Fri, 29 Jul 2022 14:14:51 -0400
-X-MC-Unique: VkAux13tMiGDR7IrZY61gQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4AAC3802D2C
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:51 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.205])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CC5B71121314
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:50 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 4/4] mptcp: use common helper for rmem memory accounting
-Date: Fri, 29 Jul 2022 20:14:41 +0200
-Message-Id: <a5a451ed4421993380b46e8b546b228a66001212.1659117128.git.pabeni@redhat.com>
-In-Reply-To: <cover.1659117128.git.pabeni@redhat.com>
-References: <cover.1659117128.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3C4C77
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659119116; x=1690655116;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ltvm2d7MetkZ1LmGuDxRWFZT12u4l81YtRDgSrXpnvg=;
+  b=A75W5JV5scAAXBGWt/GDwWi0ZiyOZehx/q1qjSQr8q3cj3oqqtlwlIES
+   xA22xa0sQkdRCXre1p/7WLRITje7aIJi6OVl566OzhWCr2/kWrVNdPGLp
+   X/h+GT2c0doqAjuOdUBUjUaRaQakuQjSjkU7gaSTv7L2i578r60pxlYLj
+   Zp/y2eNB7DlpEGLdoRGprPHWyJWaxQ4ykBFcteQpLxP2Gr/9XAH2yzh9k
+   UJm8R1JF/RwGbeQEjzMWxXBMwRVFF9DiGuJvrP9Jes99YvdBInttF+FBw
+   p2fm8MI14JE2+9CxlogvPf75pj0JhvgCVvFJnk5uGUA1RBTDs3F2II6Ez
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10423"; a="290025906"
+X-IronPort-AV: E=Sophos;i="5.93,201,1654585200"; 
+   d="scan'208";a="290025906"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2022 11:25:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,201,1654585200"; 
+   d="scan'208";a="629468947"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jul 2022 11:25:14 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1oHUfi-000Bxp-0x;
+	Fri, 29 Jul 2022 18:25:14 +0000
+Date: Sat, 30 Jul 2022 02:24:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: kbuild-all@lists.01.org
+Subject: Re: [PATCH mptcp-next 2/4] mptcp: more accurate receive buffer
+ updates
+Message-ID: <202207300227.kYan1H1K-lkp@intel.com>
+References: <63def511912bf79d6af065dccb155e9304932640.1659107989.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63def511912bf79d6af065dccb155e9304932640.1659107989.git.pabeni@redhat.com>
 
-After the previous patch, updating sk_forward_memory is cheap and
-we can drop a lot of complexity from the MPTCP memory acconting,
-using the common helper for that.
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 112 ++++---------------------------------------
- net/mptcp/protocol.h |   4 +-
- 2 files changed, 9 insertions(+), 107 deletions(-)
+I love your patch! Yet something to improve:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b7982b578c86..f6ff130f39c1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -131,11 +131,6 @@ static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
- 	__kfree_skb(skb);
- }
- 
--static void mptcp_rmem_charge(struct sock *sk, int size)
--{
--	mptcp_sk(sk)->rmem_fwd_alloc -= size;
--}
--
- static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
- 			       struct sk_buff *from)
- {
-@@ -152,7 +147,7 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
- 	MPTCP_SKB_CB(to)->end_seq = MPTCP_SKB_CB(from)->end_seq;
- 	kfree_skb_partial(from, fragstolen);
- 	atomic_add(delta, &sk->sk_rmem_alloc);
--	mptcp_rmem_charge(sk, delta);
-+	sk->sk_forward_alloc -= delta;
- 	return true;
- }
- 
-@@ -165,44 +160,6 @@ static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff *to,
- 	return mptcp_try_coalesce((struct sock *)msk, to, from);
- }
- 
--static void __mptcp_rmem_reclaim(struct sock *sk, int amount)
--{
--	amount >>= PAGE_SHIFT;
--	mptcp_sk(sk)->rmem_fwd_alloc -= amount << PAGE_SHIFT;
--	__sk_mem_reduce_allocated(sk, amount);
--}
--
--static void mptcp_rmem_uncharge(struct sock *sk, int size)
--{
--	struct mptcp_sock *msk = mptcp_sk(sk);
--	int reclaimable;
--
--	msk->rmem_fwd_alloc += size;
--	reclaimable = msk->rmem_fwd_alloc - sk_unused_reserved_mem(sk);
--
--	/* see sk_mem_uncharge() for the rationale behind the following schema */
--	if (unlikely(reclaimable >= PAGE_SIZE))
--		__mptcp_rmem_reclaim(sk, reclaimable);
--}
--
--static void mptcp_rfree(struct sk_buff *skb)
--{
--	unsigned int len = skb->truesize;
--	struct sock *sk = skb->sk;
--
--	atomic_sub(len, &sk->sk_rmem_alloc);
--	mptcp_rmem_uncharge(sk, len);
--}
--
--static void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk)
--{
--	skb_orphan(skb);
--	skb->sk = sk;
--	skb->destructor = mptcp_rfree;
--	atomic_add(skb->truesize, &sk->sk_rmem_alloc);
--	mptcp_rmem_charge(sk, skb->truesize);
--}
--
- /* "inspired" by tcp_data_queue_ofo(), main differences:
-  * - use mptcp seqs
-  * - don't cope with sacks
-@@ -315,25 +272,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- 
- end:
- 	skb_condense(skb);
--	mptcp_set_owner_r(skb, sk);
--}
--
--static bool mptcp_rmem_schedule(struct sock *sk, struct sock *ssk, int size)
--{
--	struct mptcp_sock *msk = mptcp_sk(sk);
--	int amt, amount;
--
--	if (size <= msk->rmem_fwd_alloc)
--		return true;
--
--	size -= msk->rmem_fwd_alloc;
--	amt = sk_mem_pages(size);
--	amount = amt << PAGE_SHIFT;
--	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV))
--		return false;
--
--	msk->rmem_fwd_alloc += amount;
--	return true;
-+	skb_set_owner_r(skb, sk);
- }
- 
- static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
-@@ -350,8 +289,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
- 	skb_ext_reset(skb);
- 	skb_orphan(skb);
- 
--	/* try to fetch required memory from subflow */
--	if (!mptcp_rmem_schedule(sk, ssk, skb->truesize))
-+	if (!sk_rmem_schedule(sk, skb, skb->truesize))
- 		goto drop;
- 
- 	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
-@@ -372,7 +310,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
- 		if (tail && mptcp_try_coalesce(sk, tail, skb))
- 			return true;
- 
--		mptcp_set_owner_r(skb, sk);
-+		skb_set_owner_r(skb, sk);
- 		__skb_queue_tail(&sk->sk_receive_queue, skb);
- 		return true;
- 	} else if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq)) {
-@@ -1783,7 +1721,6 @@ static int __mptcp_recvmsg_mskq(struct sock *sk,
- 				struct scm_timestamping_internal *tss,
- 				int *cmsg_flags)
- {
--	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct sk_buff *skb, *tmp;
- 	int copied = 0;
- 
-@@ -1821,9 +1758,10 @@ static int __mptcp_recvmsg_mskq(struct sock *sk,
- 		}
- 
- 		if (!(flags & MSG_PEEK)) {
--			/* we will bulk release the skb memory later */
-+			/* avoid the indirect call, we know the destructor is sock_wfree */
- 			skb->destructor = NULL;
--			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
-+			atomic_sub(skb->truesize, &sk->sk_rmem_alloc);
-+			sk_mem_uncharge(sk, skb->truesize);
- 			__skb_unlink(skb, &sk->sk_receive_queue);
- 			__kfree_skb(skb);
- 		}
-@@ -1933,18 +1871,6 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
- 	msk->rcvq_space.time = mstamp;
- }
- 
--static void __mptcp_update_rmem(struct sock *sk)
--{
--	struct mptcp_sock *msk = mptcp_sk(sk);
--
--	if (!msk->rmem_released)
--		return;
--
--	atomic_sub(msk->rmem_released, &sk->sk_rmem_alloc);
--	mptcp_rmem_uncharge(sk, msk->rmem_released);
--	WRITE_ONCE(msk->rmem_released, 0);
--}
--
- static bool __mptcp_move_skbs(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -1959,7 +1885,6 @@ static bool __mptcp_move_skbs(struct sock *sk)
- 			break;
- 
- 		slowpath = lock_sock_fast(ssk);
--		__mptcp_update_rmem(sk);
- 		done = __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
- 
- 		if (unlikely(ssk->sk_err))
-@@ -1968,11 +1893,7 @@ static bool __mptcp_move_skbs(struct sock *sk)
- 	} while (!done);
- 
- 	ret = moved > 0;
--	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
--	    !skb_queue_empty(&sk->sk_receive_queue)) {
--		__mptcp_update_rmem(sk);
--		ret |= __mptcp_ofo_queue(msk);
--	}
-+	ret |= __mptcp_ofo_queue(msk);
- 	if (ret) {
- 		mptcp_cleanup_rbuf(msk);
- 		mptcp_check_data_fin((struct sock *)msk);
-@@ -2562,8 +2483,6 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_WORK(&msk->work, mptcp_worker);
- 	msk->out_of_order_queue = RB_ROOT;
- 	msk->first_pending = NULL;
--	msk->rmem_fwd_alloc = 0;
--	WRITE_ONCE(msk->rmem_released, 0);
- 	msk->timer_ival = TCP_RTO_MIN;
- 
- 	msk->first = NULL;
-@@ -2775,8 +2694,6 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 
- 	sk->sk_prot->destroy(sk);
- 
--	WARN_ON_ONCE(msk->rmem_fwd_alloc);
--	WARN_ON_ONCE(msk->rmem_released);
- 	sk_stream_kill_queues(sk);
- 	xfrm_sk_free_policy(sk);
- 
-@@ -3044,11 +2961,6 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
- 	__skb_queue_purge(&sk->sk_receive_queue);
- 	skb_rbtree_purge(&msk->out_of_order_queue);
- 
--	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
--	 * inet_sock_destruct() will dispose it
--	 */
--	sk->sk_forward_alloc += msk->rmem_fwd_alloc;
--	msk->rmem_fwd_alloc = 0;
- 	mptcp_token_destroy(msk);
- 	mptcp_pm_free_anno_list(msk);
- 	mptcp_free_local_addr_list(msk);
-@@ -3146,8 +3058,6 @@ static void mptcp_release_cb(struct sock *sk)
- 		if (__test_and_clear_bit(MPTCP_RESET_SCHEDULER, &msk->cb_flags))
- 			msk->last_snd = NULL;
- 	}
--
--	__mptcp_update_rmem(sk);
- }
- 
- /* MP_JOIN client subflow must wait for 4th ack before sending any data:
-@@ -3328,11 +3238,6 @@ static void mptcp_shutdown(struct sock *sk, int how)
- 		__mptcp_wr_shutdown(sk);
- }
- 
--static int mptcp_forward_alloc_get(const struct sock *sk)
--{
--	return sk->sk_forward_alloc + mptcp_sk(sk)->rmem_fwd_alloc;
--}
--
- static int mptcp_ioctl_outq(const struct mptcp_sock *msk, u64 v)
- {
- 	const struct sock *sk = (void *)msk;
-@@ -3413,7 +3318,6 @@ static struct proto mptcp_prot = {
- 	.hash		= mptcp_hash,
- 	.unhash		= mptcp_unhash,
- 	.get_port	= mptcp_get_port,
--	.forward_alloc_get	= mptcp_forward_alloc_get,
- 	.sockets_allocated	= &mptcp_sockets_allocated,
- 
- 	.memory_allocated	= &tcp_memory_allocated,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f12a6e80171d..d4a267cb7663 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -258,7 +258,6 @@ struct mptcp_sock {
- 	u64		ack_seq;
- 	atomic64_t	rcv_wnd_sent;
- 	u64		rcv_data_fin_seq;
--	int		rmem_fwd_alloc;
- 	struct sock	*last_snd;
- 	int		snd_burst;
- 	u64		recovery_snd_nxt;	/* in recovery mode accept up to this seq;
-@@ -269,7 +268,6 @@ struct mptcp_sock {
- 	u64		wnd_end;
- 	unsigned long	timer_ival;
- 	u32		token;
--	int		rmem_released;
- 	unsigned long	flags;
- 	unsigned long	cb_flags;
- 	unsigned long	push_pending;
-@@ -332,7 +330,7 @@ static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
-  */
- static inline int __mptcp_rmem(const struct sock *sk)
- {
--	return atomic_read(&sk->sk_rmem_alloc) - READ_ONCE(mptcp_sk(sk)->rmem_released);
-+	return atomic_read(&sk->sk_rmem_alloc);
- }
- 
- static inline int __mptcp_receive_window(const struct mptcp_sock *msk)
+[auto build test ERROR on mptcp/export]
+[also build test ERROR on linus/master v5.19-rc8 next-20220728]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Paolo-Abeni/mptcp-just-another-receive-path-refactor/20220729-233501
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20220730/202207300227.kYan1H1K-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/c330a583c6d306ab637d187f0f981bfe4408caba
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Paolo-Abeni/mptcp-just-another-receive-path-refactor/20220729-233501
+        git checkout c330a583c6d306ab637d187f0f981bfe4408caba
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   net/ipv4/tcp.c: In function 'tcp_cleanup_rbuf':
+>> net/ipv4/tcp.c:1609:21: error: implicit declaration of function 'is_tcpsk' [-Werror=implicit-function-declaration]
+    1609 |                 if (is_tcpsk(sk))
+         |                     ^~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/is_tcpsk +1609 net/ipv4/tcp.c
+
+  1563	
+  1564	/* Clean up the receive buffer for full frames taken by the user,
+  1565	 * then send an ACK if necessary.  COPIED is the number of bytes
+  1566	 * tcp_recvmsg has given to the user so far, it speeds up the
+  1567	 * calculation of whether or not we must ACK for the sake of
+  1568	 * a window update.
+  1569	 */
+  1570	void tcp_cleanup_rbuf(struct sock *sk, int copied)
+  1571	{
+  1572		struct tcp_sock *tp = tcp_sk(sk);
+  1573		bool time_to_ack = false;
+  1574	
+  1575		struct sk_buff *skb = skb_peek(&sk->sk_receive_queue);
+  1576	
+  1577		WARN(skb && !before(tp->copied_seq, TCP_SKB_CB(skb)->end_seq),
+  1578		     "cleanup rbuf bug: copied %X seq %X rcvnxt %X\n",
+  1579		     tp->copied_seq, TCP_SKB_CB(skb)->end_seq, tp->rcv_nxt);
+  1580	
+  1581		if (inet_csk_ack_scheduled(sk)) {
+  1582			const struct inet_connection_sock *icsk = inet_csk(sk);
+  1583	
+  1584			if (/* Once-per-two-segments ACK was not sent by tcp_input.c */
+  1585			    tp->rcv_nxt - tp->rcv_wup > icsk->icsk_ack.rcv_mss ||
+  1586			    /*
+  1587			     * If this read emptied read buffer, we send ACK, if
+  1588			     * connection is not bidirectional, user drained
+  1589			     * receive buffer and there was a small segment
+  1590			     * in queue.
+  1591			     */
+  1592			    (copied > 0 &&
+  1593			     ((icsk->icsk_ack.pending & ICSK_ACK_PUSHED2) ||
+  1594			      ((icsk->icsk_ack.pending & ICSK_ACK_PUSHED) &&
+  1595			       !inet_csk_in_pingpong_mode(sk))) &&
+  1596			      !atomic_read(&sk->sk_rmem_alloc)))
+  1597				time_to_ack = true;
+  1598		}
+  1599	
+  1600		/* We send an ACK if we can now advertise a non-zero window
+  1601		 * which has been raised "significantly".
+  1602		 *
+  1603		 * Even if window raised up to infinity, do not send window open ACK
+  1604		 * in states, where we will not receive more. It is useless.
+  1605		 */
+  1606		if (copied > 0 && !time_to_ack && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
+  1607			__u32 rcv_window_now = tcp_receive_window(tp);
+  1608	
+> 1609			if (is_tcpsk(sk))
+  1610				mptcp_receive_window(sk, &rcv_window_now);
+  1611	
+  1612			/* Optimize, __tcp_select_window() is not cheap. */
+  1613			if (2*rcv_window_now <= tp->window_clamp) {
+  1614				__u32 new_window = __tcp_select_window(sk);
+  1615	
+  1616				/* Send ACK now, if this read freed lots of space
+  1617				 * in our buffer. Certainly, new_window is new window.
+  1618				 * We can advertise it now, if it is not less than current one.
+  1619				 * "Lots" means "at least twice" here.
+  1620				 */
+  1621				if (new_window && new_window >= 2 * rcv_window_now)
+  1622					time_to_ack = true;
+  1623			}
+  1624		}
+  1625		if (time_to_ack)
+  1626			tcp_send_ack(sk);
+  1627	}
+  1628	
+
 -- 
-2.35.3
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
