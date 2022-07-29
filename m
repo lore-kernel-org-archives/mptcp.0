@@ -1,140 +1,91 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E034C77
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659118065; x=1690654065;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZG+6BHHLKqMsa1VYL5OYM9osm4fwtekpRnPo7Q/C7Ko=;
-  b=N1OpRxq19MNpeEH8sm43K2PPAWE0qqijThphgQywuY/T1D34OWYTh8hO
-   5fNl/XkboYOg8xn2zQWAX3VblTgZq4G00axmO/tLFxjz/3WDDOWbokSG0
-   G2DDyDOnc18rOVaMPcKrr/C6x7H1ZkourZoTBaXL/UC9t16Yn4gwUoAf/
-   0726IkjPG5mpLR4QFU3tWtR1H6QJd+Icamimt1V85CxD6JQbjX0yWIHJC
-   MGj0BTFrr8Ge3eSkPKNInv4PqfIN9tLDGgwKRz0bx+NO2mP71Cvy7TD3q
-   jHr4ZxC3pjW/uPOvn45anDGrypsRjMo5kc+mZTBjtavNkf/xqBtY6sicc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10423"; a="275706221"
-X-IronPort-AV: E=Sophos;i="5.93,201,1654585200"; 
-   d="scan'208";a="275706221"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2022 11:07:44 -0700
-X-IronPort-AV: E=Sophos;i="5.93,201,1654585200"; 
-   d="scan'208";a="690806887"
-Received: from jmborger-mobl.amr.corp.intel.com ([10.209.59.73])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2022 11:07:44 -0700
-Date: Fri, 29 Jul 2022 11:07:44 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Florian Westphal <fw@strlen.de>
-cc: mptcp@lists.linux.dev, matthieu.baerts@tessares.net, 
-    Paolo Abeni <pabeni@redhat.com>, Xiumei Mu <xmu@redhat.com>
-Subject: Re: [PATCH v2 mptcp] selftests: mptcp: make sendfile selftest work
-In-Reply-To: <20220729095550.3040-1-fw@strlen.de>
-Message-ID: <7ff00ad-80b5-8ab-6544-fdfaefd43f0@linux.intel.com>
-References: <20220729095550.3040-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36544C85
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1659118490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NmqNfBxtLkzWe+pLdip167JE+jFsOpmnXlvaOhUlx3Y=;
+	b=TbunOlnLa3bJniV3tJJgDG1hUIUMkEt6WbYsQFCmQcTUnaw6zYaAixR+uHjOBxUHNIy5OZ
+	tSeYwQbBDAr1DzWCMFq8qxhKV6kGgQhR3BmP2TZHVLZqlb0wBXu8b+5VVhRNyIiln//3Za
+	z7tlM70Ps9BzVer0FKKI/LSUCGvZvLM=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-169-KlbAuvV3MLu5NNnOGl3pFA-1; Fri, 29 Jul 2022 14:14:48 -0400
+X-MC-Unique: KlbAuvV3MLu5NNnOGl3pFA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 47904299E759
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:48 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.205])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CB2831121314
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:47 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH v2 mptcp-next 0/4] mptcp: just another receive path refactor
+Date: Fri, 29 Jul 2022 20:14:37 +0200
+Message-Id: <cover.1659117128.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Fri, 29 Jul 2022, Florian Westphal wrote:
+This is a refresh and rebase of an already shared work:
 
-> When the selftest got added, sendfile() on mptcp sockets returned
-> -EOPNOTSUPP, so running 'mptcp_connect.sh -m sendfile' failed
-> immediately.
->
-> This is no longer the case, but the script fails anyway due to timeout.
-> Let the receiver know once the sender has sent all data, just like
-> with '-m mmap' mode.
->
-> v2: need to respect cfg_wait too, as pm_userspace.sh relied
-> on -m sendfile to keep the connection open (Mat Martineau)
->
-> Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
-> Reported-by: Xiumei Mu <xmu@redhat.com>
-> Signed-off-by: Florian Westphal <fw@strlen.de>
+https://lore.kernel.org/mptcp/cover.1621963632.git.pabeni@redhat.com/
+[1]
 
-Looks good to me, tests run fine on my system. I tried to reproduce the 
-failures that CI reported on the non-debug build but so far it doesn't 
-look like this change caused those failures.
+The motiviation for refreshing this is:
 
-With the Fixes: tag I assume this is intended for -net?
+https://lore.kernel.org/mptcp/YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020/
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+specifically it looks like that properly attaching mem_cg to the
+msk socket would be (much?) easier if the RX path and the fwd memory
+allocation would be under msk socket lock protection.
 
+The first 2 patches are proably worthy even without the refactor,
+but specifically the 2nd one is required to get a good mptcp-level
+acking behavior when we move the rx under the socket lock.
 
-> ---
-> .../selftests/net/mptcp/mptcp_connect.c       | 26 ++++++++++++-------
-> 1 file changed, 17 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index e2ea6c126c99..24d4e9cb617e 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -553,6 +553,18 @@ static void set_nonblock(int fd, bool nonblock)
-> 		fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
-> }
->
-> +static void shut_wr(int fd)
-> +{
-> +	/* Close our write side, ev. give some time
-> +	 * for address notification and/or checking
-> +	 * the current status
-> +	 */
-> +	if (cfg_wait)
-> +		usleep(cfg_wait);
-> +
-> +	shutdown(fd, SHUT_WR);
-> +}
-> +
-> static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after_out)
-> {
-> 	struct pollfd fds = {
-> @@ -630,14 +642,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
-> 					/* ... and peer also closed already */
-> 					break;
->
-> -				/* ... but we still receive.
-> -				 * Close our write side, ev. give some time
-> -				 * for address notification and/or checking
-> -				 * the current status
-> -				 */
-> -				if (cfg_wait)
-> -					usleep(cfg_wait);
-> -				shutdown(peerfd, SHUT_WR);
-> +				shut_wr(peerfd);
-> 			} else {
-> 				if (errno == EINTR)
-> 					continue;
-> @@ -767,7 +772,7 @@ static int copyfd_io_mmap(int infd, int peerfd, int outfd,
-> 		if (err)
-> 			return err;
->
-> -		shutdown(peerfd, SHUT_WR);
-> +		shut_wr(peerfd);
->
-> 		err = do_recvfile(peerfd, outfd);
-> 		*in_closed_after_out = true;
-> @@ -791,6 +796,9 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
-> 		err = do_sendfile(infd, peerfd, size);
-> 		if (err)
-> 			return err;
-> +
-> +		shut_wr(peerfd);
-> +
-> 		err = do_recvfile(peerfd, outfd);
-> 		*in_closed_after_out = true;
-> 	}
-> -- 
-> 2.35.1
->
->
+The 3rd patch does the real work, and the 4th is a follow-up cleanup.
 
---
-Mat Martineau
-Intel
+Back at [1], I measured relevant performance regressions in some
+specific cases. I've done the same test here and I now see little to
+noise changes. I guess that is mostly due to the better acking
+strategy already introduce with commit 949dfdcf343c ("Merge branch 
+'mptcp-improve-mptcp-level-window-tracking'") and refined here.
+
+v1 -> v2:
+ - fix build issue in patch 3/4 due to PEBKAC
+ - added missing commit messages(!!!) in patch 3/4 & 4/4
+
+Paolo Abeni (4):
+  mptcp: move RCVPRUNE event later
+  mptcp: more accurate receive buffer updates
+  mptcp: move msk input path under full msk socket lock
+  mptcp: use common helper for rmem memory accounting
+
+ include/net/mptcp.h  |   2 +
+ net/ipv4/tcp.c       |   3 +
+ net/mptcp/options.c  |   1 -
+ net/mptcp/protocol.c | 219 +++++++++++--------------------------------
+ net/mptcp/protocol.h |  12 ++-
+ 5 files changed, 68 insertions(+), 169 deletions(-)
+
+-- 
+2.35.3
+
