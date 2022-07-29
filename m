@@ -1,7 +1,7 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD514C85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53D94C89
 	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1659118492;
@@ -9,28 +9,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GaButeQXGlT9DY7XbRreNiBMhcnzrjF6WGFOjidMj4A=;
-	b=bzml1RzyXdRRGCg6DzbIjZsc01j3yq8RrgYhZnvFJjOkUFyyfESO5bmcAoHneWTfQyx2GF
-	5i/S8gxM5X5NWm1eWE6K1TUJ2O3XwHjzB76oKOJg1E7HCPeXx2teCWrQGNpKxf+hiuzKiq
-	IB+xbadFcrSnaheWM5284pktX3z0w/4=
+	bh=bFNE4JGHhubGyGVygNNiX2rA+9CcUBUuFfxxhypH3v8=;
+	b=hQxHsnq2CBNOv+7KAuNgmJTmrsVtcSMTTtnETd06QLED/CsIi4CqaLnYdO860XbBI+ktMN
+	gBSvdsMb+Rwz5Eu1dVttvQFDyU4JKYrN5vGzYEkzcL72XZ+iNIZkNsw84nccCVpzgi6GEY
+	0UQaGrLCXlugmj0ZKfkUTAMcWG08ftQ=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-26-PBrTYMjvOy28lp8Lc0dPoQ-1; Fri, 29 Jul 2022 14:14:50 -0400
-X-MC-Unique: PBrTYMjvOy28lp8Lc0dPoQ-1
+ us-mta-326-VkAux13tMiGDR7IrZY61gQ-1; Fri, 29 Jul 2022 14:14:51 -0400
+X-MC-Unique: VkAux13tMiGDR7IrZY61gQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8763285A585
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:50 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4AAC3802D2C
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:51 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.205])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 14DB91121314
-	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:49 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CC5B71121314
+	for <mptcp@lists.linux.dev>; Fri, 29 Jul 2022 18:14:50 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 3/4] mptcp: move msk input path under full msk socket lock
-Date: Fri, 29 Jul 2022 20:14:40 +0200
-Message-Id: <24af8221d74f9923858c926d4acb7d81e37dd4d2.1659117128.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-next 4/4] mptcp: use common helper for rmem memory accounting
+Date: Fri, 29 Jul 2022 20:14:41 +0200
+Message-Id: <a5a451ed4421993380b46e8b546b228a66001212.1659117128.git.pabeni@redhat.com>
 In-Reply-To: <cover.1659117128.git.pabeni@redhat.com>
 References: <cover.1659117128.git.pabeni@redhat.com>
 Precedence: bulk
@@ -47,268 +47,281 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-After commit c2e6048fa1cf ("mptcp: fix race in release_cb") it's
-pretty straight forward move the whole MPTCP rx path under the socket
-lock leveraging the release_cb.
-
-We can drop a bunch of spin_lock pairs in the receive functions, use
-a single receive queue and invoke __mptcp_move_skbs only when subflows
-ask for it.
-
-This will allow more cleanup in the next patch.
+After the previous patch, updating sk_forward_memory is cheap and
+we can drop a lot of complexity from the MPTCP memory acconting,
+using the common helper for that.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 78 +++++++++++++++++++-------------------------
- net/mptcp/protocol.h |  2 +-
- 2 files changed, 35 insertions(+), 45 deletions(-)
+ net/mptcp/protocol.c | 112 ++++---------------------------------------
+ net/mptcp/protocol.h |   4 +-
+ 2 files changed, 9 insertions(+), 107 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 17e2dbe43639..b7982b578c86 100644
+index b7982b578c86..f6ff130f39c1 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -795,7 +795,7 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
- 	return moved > 0;
+@@ -131,11 +131,6 @@ static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
+ 	__kfree_skb(skb);
  }
  
--void mptcp_data_ready(struct sock *sk, struct sock *ssk)
-+void __mptcp_data_ready(struct sock *sk, struct sock *ssk)
+-static void mptcp_rmem_charge(struct sock *sk, int size)
+-{
+-	mptcp_sk(sk)->rmem_fwd_alloc -= size;
+-}
+-
+ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ 			       struct sk_buff *from)
  {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 
-@@ -807,10 +807,17 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- 		return;
- 
- 	/* Wake-up the reader only for in-sequence data */
--	mptcp_data_lock(sk);
- 	if (move_skbs_to_msk(mptcp_sk(sk), ssk))
- 		sk->sk_data_ready(sk);
-+}
- 
-+void mptcp_data_ready(struct sock *sk, struct sock *ssk)
-+{
-+	mptcp_data_lock(sk);
-+	if (!sock_owned_by_user(sk))
-+		__mptcp_data_ready(sk, ssk);
-+	else
-+		__set_bit(MPTCP_DEQUEUE, &mptcp_sk(sk)->cb_flags);
- 	mptcp_data_unlock(sk);
+@@ -152,7 +147,7 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ 	MPTCP_SKB_CB(to)->end_seq = MPTCP_SKB_CB(from)->end_seq;
+ 	kfree_skb_partial(from, fragstolen);
+ 	atomic_add(delta, &sk->sk_rmem_alloc);
+-	mptcp_rmem_charge(sk, delta);
++	sk->sk_forward_alloc -= delta;
+ 	return true;
  }
  
-@@ -1768,16 +1775,22 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	return copied ? : ret;
+@@ -165,44 +160,6 @@ static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff *to,
+ 	return mptcp_try_coalesce((struct sock *)msk, to, from);
  }
  
--static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
-+static bool __mptcp_move_skbs(struct sock *sk);
-+
-+static int __mptcp_recvmsg_mskq(struct sock *sk,
- 				struct msghdr *msg,
- 				size_t len, int flags,
+-static void __mptcp_rmem_reclaim(struct sock *sk, int amount)
+-{
+-	amount >>= PAGE_SHIFT;
+-	mptcp_sk(sk)->rmem_fwd_alloc -= amount << PAGE_SHIFT;
+-	__sk_mem_reduce_allocated(sk, amount);
+-}
+-
+-static void mptcp_rmem_uncharge(struct sock *sk, int size)
+-{
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-	int reclaimable;
+-
+-	msk->rmem_fwd_alloc += size;
+-	reclaimable = msk->rmem_fwd_alloc - sk_unused_reserved_mem(sk);
+-
+-	/* see sk_mem_uncharge() for the rationale behind the following schema */
+-	if (unlikely(reclaimable >= PAGE_SIZE))
+-		__mptcp_rmem_reclaim(sk, reclaimable);
+-}
+-
+-static void mptcp_rfree(struct sk_buff *skb)
+-{
+-	unsigned int len = skb->truesize;
+-	struct sock *sk = skb->sk;
+-
+-	atomic_sub(len, &sk->sk_rmem_alloc);
+-	mptcp_rmem_uncharge(sk, len);
+-}
+-
+-static void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk)
+-{
+-	skb_orphan(skb);
+-	skb->sk = sk;
+-	skb->destructor = mptcp_rfree;
+-	atomic_add(skb->truesize, &sk->sk_rmem_alloc);
+-	mptcp_rmem_charge(sk, skb->truesize);
+-}
+-
+ /* "inspired" by tcp_data_queue_ofo(), main differences:
+  * - use mptcp seqs
+  * - don't cope with sacks
+@@ -315,25 +272,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 
+ end:
+ 	skb_condense(skb);
+-	mptcp_set_owner_r(skb, sk);
+-}
+-
+-static bool mptcp_rmem_schedule(struct sock *sk, struct sock *ssk, int size)
+-{
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-	int amt, amount;
+-
+-	if (size <= msk->rmem_fwd_alloc)
+-		return true;
+-
+-	size -= msk->rmem_fwd_alloc;
+-	amt = sk_mem_pages(size);
+-	amount = amt << PAGE_SHIFT;
+-	if (!__sk_mem_raise_allocated(sk, size, amt, SK_MEM_RECV))
+-		return false;
+-
+-	msk->rmem_fwd_alloc += amount;
+-	return true;
++	skb_set_owner_r(skb, sk);
+ }
+ 
+ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+@@ -350,8 +289,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 	skb_ext_reset(skb);
+ 	skb_orphan(skb);
+ 
+-	/* try to fetch required memory from subflow */
+-	if (!mptcp_rmem_schedule(sk, ssk, skb->truesize))
++	if (!sk_rmem_schedule(sk, skb, skb->truesize))
+ 		goto drop;
+ 
+ 	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+@@ -372,7 +310,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 		if (tail && mptcp_try_coalesce(sk, tail, skb))
+ 			return true;
+ 
+-		mptcp_set_owner_r(skb, sk);
++		skb_set_owner_r(skb, sk);
+ 		__skb_queue_tail(&sk->sk_receive_queue, skb);
+ 		return true;
+ 	} else if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq)) {
+@@ -1783,7 +1721,6 @@ static int __mptcp_recvmsg_mskq(struct sock *sk,
  				struct scm_timestamping_internal *tss,
  				int *cmsg_flags)
  {
-+	struct mptcp_sock *msk = mptcp_sk(sk);
+-	struct mptcp_sock *msk = mptcp_sk(sk);
  	struct sk_buff *skb, *tmp;
  	int copied = 0;
  
--	skb_queue_walk_safe(&msk->receive_queue, skb, tmp) {
-+	if (skb_queue_empty(&sk->sk_receive_queue) && !__mptcp_move_skbs(sk))
-+		return 0;
-+
-+	skb_queue_walk_safe(&sk->sk_receive_queue, skb, tmp) {
- 		u32 offset = MPTCP_SKB_CB(skb)->offset;
- 		u32 data_len = skb->len - offset;
- 		u32 count = min_t(size_t, len - copied, data_len);
-@@ -1811,7 +1824,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
- 			/* we will bulk release the skb memory later */
- 			skb->destructor = NULL;
- 			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
--			__skb_unlink(skb, &msk->receive_queue);
-+			__skb_unlink(skb, &sk->sk_receive_queue);
- 			__kfree_skb(skb);
+@@ -1821,9 +1758,10 @@ static int __mptcp_recvmsg_mskq(struct sock *sk,
  		}
  
-@@ -1932,16 +1945,9 @@ static void __mptcp_update_rmem(struct sock *sk)
- 	WRITE_ONCE(msk->rmem_released, 0);
+ 		if (!(flags & MSG_PEEK)) {
+-			/* we will bulk release the skb memory later */
++			/* avoid the indirect call, we know the destructor is sock_wfree */
+ 			skb->destructor = NULL;
+-			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
++			atomic_sub(skb->truesize, &sk->sk_rmem_alloc);
++			sk_mem_uncharge(sk, skb->truesize);
+ 			__skb_unlink(skb, &sk->sk_receive_queue);
+ 			__kfree_skb(skb);
+ 		}
+@@ -1933,18 +1871,6 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 	msk->rcvq_space.time = mstamp;
  }
  
--static void __mptcp_splice_receive_queue(struct sock *sk)
-+static bool __mptcp_move_skbs(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
+-static void __mptcp_update_rmem(struct sock *sk)
+-{
+-	struct mptcp_sock *msk = mptcp_sk(sk);
 -
--	skb_queue_splice_tail_init(&sk->sk_receive_queue, &msk->receive_queue);
+-	if (!msk->rmem_released)
+-		return;
+-
+-	atomic_sub(msk->rmem_released, &sk->sk_rmem_alloc);
+-	mptcp_rmem_uncharge(sk, msk->rmem_released);
+-	WRITE_ONCE(msk->rmem_released, 0);
 -}
 -
--static bool __mptcp_move_skbs(struct mptcp_sock *msk)
--{
--	struct sock *sk = (struct sock *)msk;
- 	unsigned int moved = 0;
- 	bool ret, done;
- 
-@@ -1949,37 +1955,29 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 		struct sock *ssk = mptcp_subflow_recv_lookup(msk);
- 		bool slowpath;
- 
--		/* we can have data pending in the subflows only if the msk
--		 * receive buffer was full at subflow_data_ready() time,
--		 * that is an unlikely slow path.
--		 */
--		if (likely(!ssk))
-+		if (unlikely(!ssk))
+ static bool __mptcp_move_skbs(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -1959,7 +1885,6 @@ static bool __mptcp_move_skbs(struct sock *sk)
  			break;
  
  		slowpath = lock_sock_fast(ssk);
--		mptcp_data_lock(sk);
- 		__mptcp_update_rmem(sk);
+-		__mptcp_update_rmem(sk);
  		done = __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
--		mptcp_data_unlock(sk);
  
  		if (unlikely(ssk->sk_err))
- 			__mptcp_error_report(sk);
- 		unlock_sock_fast(ssk, slowpath);
+@@ -1968,11 +1893,7 @@ static bool __mptcp_move_skbs(struct sock *sk)
  	} while (!done);
  
--	/* acquire the data lock only if some input data is pending */
  	ret = moved > 0;
- 	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
--	    !skb_queue_empty_lockless(&sk->sk_receive_queue)) {
--		mptcp_data_lock(sk);
-+	    !skb_queue_empty(&sk->sk_receive_queue)) {
- 		__mptcp_update_rmem(sk);
- 		ret |= __mptcp_ofo_queue(msk);
--		__mptcp_splice_receive_queue(sk);
--		mptcp_data_unlock(sk);
- 	}
--	if (ret)
-+	if (ret) {
-+		mptcp_cleanup_rbuf(msk);
- 		mptcp_check_data_fin((struct sock *)msk);
--	return !skb_queue_empty(&msk->receive_queue);
-+	}
-+	return ret;
- }
- 
- static unsigned int mptcp_inq_hint(const struct sock *sk)
-@@ -1987,7 +1985,7 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
- 	const struct mptcp_sock *msk = mptcp_sk(sk);
- 	const struct sk_buff *skb;
- 
--	skb = skb_peek(&msk->receive_queue);
-+	skb = skb_peek(&sk->sk_receive_queue);
- 	if (skb) {
- 		u64 hint_val = msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
- 
-@@ -2033,7 +2031,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	while (copied < len) {
- 		int bytes_read;
- 
--		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags, &tss, &cmsg_flags);
-+		bytes_read = __mptcp_recvmsg_mskq(sk, msg, len - copied, flags, &tss, &cmsg_flags);
- 		if (unlikely(bytes_read < 0)) {
- 			if (!copied)
- 				copied = bytes_read;
-@@ -2045,9 +2043,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 		/* be sure to advertise window change */
+-	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
+-	    !skb_queue_empty(&sk->sk_receive_queue)) {
+-		__mptcp_update_rmem(sk);
+-		ret |= __mptcp_ofo_queue(msk);
+-	}
++	ret |= __mptcp_ofo_queue(msk);
+ 	if (ret) {
  		mptcp_cleanup_rbuf(msk);
- 
--		if (skb_queue_empty(&msk->receive_queue) && __mptcp_move_skbs(msk))
--			continue;
--
- 		/* only the master socket status is relevant here. The exit
- 		 * conditions mirror closely tcp_recvmsg()
- 		 */
-@@ -2074,7 +2069,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 				/* race breaker: the shutdown could be after the
- 				 * previous receive queue check
- 				 */
--				if (__mptcp_move_skbs(msk))
-+				if (__mptcp_move_skbs(sk))
- 					continue;
- 				break;
- 			}
-@@ -2111,9 +2106,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 		}
- 	}
- 
--	pr_debug("msk=%p rx queue empty=%d:%d copied=%d",
--		 msk, skb_queue_empty_lockless(&sk->sk_receive_queue),
--		 skb_queue_empty(&msk->receive_queue), copied);
-+	pr_debug("msk=%p rx queue empty=%d copied=%d",
-+		 msk, skb_queue_empty(&sk->sk_receive_queue), copied);
- 	if (!(flags & MSG_PEEK))
- 		mptcp_rcv_space_adjust(msk, copied);
- 
-@@ -2566,7 +2560,6 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->join_list);
- 	INIT_LIST_HEAD(&msk->rtx_queue);
+ 		mptcp_check_data_fin((struct sock *)msk);
+@@ -2562,8 +2483,6 @@ static int __mptcp_init_sock(struct sock *sk)
  	INIT_WORK(&msk->work, mptcp_worker);
--	__skb_queue_head_init(&msk->receive_queue);
  	msk->out_of_order_queue = RB_ROOT;
  	msk->first_pending = NULL;
- 	msk->rmem_fwd_alloc = 0;
-@@ -3048,12 +3041,8 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
- 	mptcp_for_each_subflow_safe(msk, subflow, tmp)
- 		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
+-	msk->rmem_fwd_alloc = 0;
+-	WRITE_ONCE(msk->rmem_released, 0);
+ 	msk->timer_ival = TCP_RTO_MIN;
  
--	/* move to sk_receive_queue, sk_stream_kill_queues will purge it */
--	mptcp_data_lock(sk);
--	skb_queue_splice_tail_init(&msk->receive_queue, &sk->sk_receive_queue);
+ 	msk->first = NULL;
+@@ -2775,8 +2694,6 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 
+ 	sk->sk_prot->destroy(sk);
+ 
+-	WARN_ON_ONCE(msk->rmem_fwd_alloc);
+-	WARN_ON_ONCE(msk->rmem_released);
+ 	sk_stream_kill_queues(sk);
+ 	xfrm_sk_free_policy(sk);
+ 
+@@ -3044,11 +2961,6 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
  	__skb_queue_purge(&sk->sk_receive_queue);
  	skb_rbtree_purge(&msk->out_of_order_queue);
--	mptcp_data_unlock(sk);
  
- 	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
- 	 * inet_sock_destruct() will dispose it
-@@ -3135,6 +3124,8 @@ static void mptcp_release_cb(struct sock *sk)
- 			__mptcp_flush_join_list(sk);
- 		if (flags & BIT(MPTCP_PUSH_PENDING))
- 			__mptcp_push_pending(sk, 0);
-+		if ((flags & BIT(MPTCP_DEQUEUE)) && __mptcp_move_skbs(sk))
-+			sk->sk_data_ready(sk);
- 		if (flags & BIT(MPTCP_RETRANSMIT))
- 			__mptcp_retrans(sk);
+-	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
+-	 * inet_sock_destruct() will dispose it
+-	 */
+-	sk->sk_forward_alloc += msk->rmem_fwd_alloc;
+-	msk->rmem_fwd_alloc = 0;
+ 	mptcp_token_destroy(msk);
+ 	mptcp_pm_free_anno_list(msk);
+ 	mptcp_free_local_addr_list(msk);
+@@ -3146,8 +3058,6 @@ static void mptcp_release_cb(struct sock *sk)
+ 		if (__test_and_clear_bit(MPTCP_RESET_SCHEDULER, &msk->cb_flags))
+ 			msk->last_snd = NULL;
+ 	}
+-
+-	__mptcp_update_rmem(sk);
+ }
  
-@@ -3383,7 +3374,7 @@ static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
- 			return -EINVAL;
+ /* MP_JOIN client subflow must wait for 4th ack before sending any data:
+@@ -3328,11 +3238,6 @@ static void mptcp_shutdown(struct sock *sk, int how)
+ 		__mptcp_wr_shutdown(sk);
+ }
  
- 		lock_sock(sk);
--		__mptcp_move_skbs(msk);
-+		__mptcp_move_skbs(sk);
- 		answ = mptcp_inq_hint(sk);
- 		release_sock(sk);
- 		break;
-@@ -3619,8 +3610,7 @@ static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
- 	/* Concurrent splices from sk_receive_queue into receive_queue will
- 	 * always show at least one non-empty queue when checked in this order.
- 	 */
--	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue) &&
--	    skb_queue_empty_lockless(&msk->receive_queue))
-+	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue))
- 		return 0;
+-static int mptcp_forward_alloc_get(const struct sock *sk)
+-{
+-	return sk->sk_forward_alloc + mptcp_sk(sk)->rmem_fwd_alloc;
+-}
+-
+ static int mptcp_ioctl_outq(const struct mptcp_sock *msk, u64 v)
+ {
+ 	const struct sock *sk = (void *)msk;
+@@ -3413,7 +3318,6 @@ static struct proto mptcp_prot = {
+ 	.hash		= mptcp_hash,
+ 	.unhash		= mptcp_unhash,
+ 	.get_port	= mptcp_get_port,
+-	.forward_alloc_get	= mptcp_forward_alloc_get,
+ 	.sockets_allocated	= &mptcp_sockets_allocated,
  
- 	return EPOLLIN | EPOLLRDNORM;
+ 	.memory_allocated	= &tcp_memory_allocated,
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1e603f28f1db..f12a6e80171d 100644
+index f12a6e80171d..d4a267cb7663 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -125,6 +125,7 @@
- #define MPTCP_FLUSH_JOIN_LIST	5
- #define MPTCP_CONNECTED		6
- #define MPTCP_RESET_SCHEDULER	7
-+#define MPTCP_DEQUEUE		8
- 
- static inline bool before64(__u64 seq1, __u64 seq2)
+@@ -258,7 +258,6 @@ struct mptcp_sock {
+ 	u64		ack_seq;
+ 	atomic64_t	rcv_wnd_sent;
+ 	u64		rcv_data_fin_seq;
+-	int		rmem_fwd_alloc;
+ 	struct sock	*last_snd;
+ 	int		snd_burst;
+ 	u64		recovery_snd_nxt;	/* in recovery mode accept up to this seq;
+@@ -269,7 +268,6 @@ struct mptcp_sock {
+ 	u64		wnd_end;
+ 	unsigned long	timer_ival;
+ 	u32		token;
+-	int		rmem_released;
+ 	unsigned long	flags;
+ 	unsigned long	cb_flags;
+ 	unsigned long	push_pending;
+@@ -332,7 +330,7 @@ static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
+  */
+ static inline int __mptcp_rmem(const struct sock *sk)
  {
-@@ -288,7 +289,6 @@ struct mptcp_sock {
- 	struct work_struct work;
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
--	struct sk_buff_head receive_queue;
- 	struct list_head conn_list;
- 	struct list_head rtx_queue;
- 	struct mptcp_data_frag *first_pending;
+-	return atomic_read(&sk->sk_rmem_alloc) - READ_ONCE(mptcp_sk(sk)->rmem_released);
++	return atomic_read(&sk->sk_rmem_alloc);
+ }
+ 
+ static inline int __mptcp_receive_window(const struct mptcp_sock *msk)
 -- 
 2.35.3
 
