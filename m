@@ -1,113 +1,95 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F11623BB;
-	Sat, 30 Jul 2022 06:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659163436; x=1690699436;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bXR5RftXddzD3LTV09Yi5K5W6TGoloxS1Fx+Z3kLsIo=;
-  b=IoOOPoHjO13hrjUnIp8XfmN1EQh8+2ld7LL0ElJbaTrD4V6XGAtkfADO
-   +Fnzi+j9CT3f0zsVFr2/QL7eZOhsx5WN8GwqieZD6J1SbV6hMH5GoRYhb
-   0ZinytHGZBpAna1YOsv6/ZGsU+3NCd1VwAYo0LnMLxlrfsEhJtzJZBqrZ
-   fWOw3RkpmY0ZfIgkGpsZpCqkEx7aKlUwcvW7PCCijI0LDOgO8vw/ueIj8
-   VALOG60V5hvR1W5VoKexSVf6DNKYZXMsObQSGgtfEZmBzsmjayF+XYlbo
-   BoHAxMfHZHjW55QVoAmTHMUqHmh7oIxmewDAosf8+cdqNGUF8aDkAI8Pz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10423"; a="290100666"
-X-IronPort-AV: E=Sophos;i="5.93,203,1654585200"; 
-   d="scan'208";a="290100666"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2022 23:43:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,203,1654585200"; 
-   d="scan'208";a="847329849"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 29 Jul 2022 23:43:53 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oHgCX-000CXr-11;
-	Sat, 30 Jul 2022 06:43:53 +0000
-Date: Sat, 30 Jul 2022 14:43:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org
-Subject: Re: [PATCH v2 mptcp-next 3/4] mptcp: move msk input path under full
- msk socket lock
-Message-ID: <202207301455.Biyfbfoh-lkp@intel.com>
-References: <24af8221d74f9923858c926d4acb7d81e37dd4d2.1659117128.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC0023CB
+	for <mptcp@lists.linux.dev>; Sat, 30 Jul 2022 08:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1659168299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=T7yqnIjjWojhpp2CQ0rk0v2WtqlReKVFubAteBoz6Cs=;
+	b=U3OESVytpi7mqcem+Fd/aJmLlQBv30P5vilTS0WqcS3zsbPrOeRWoZ9cR8H2wx/UBVk3TZ
+	VxEuKR4IHpFIoFKCMxVwdeAfgagsqtMV5TIb6spTmUJjgLb1ObRawk/lwwit1fUvhWSLWB
+	m1BRdCJwfyW4zpcufNNKWPJguql+2c0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-630-NXMqEBqtOO2duaqGICgSdQ-1; Sat, 30 Jul 2022 04:04:57 -0400
+X-MC-Unique: NXMqEBqtOO2duaqGICgSdQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 01C513C01DA2
+	for <mptcp@lists.linux.dev>; Sat, 30 Jul 2022 08:04:57 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.37])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 85C852026D64
+	for <mptcp@lists.linux.dev>; Sat, 30 Jul 2022 08:04:56 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH v3 mptcp-next 0/4] mptcp: just another receive path refactor
+Date: Sat, 30 Jul 2022 10:04:38 +0200
+Message-Id: <cover.1659165378.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24af8221d74f9923858c926d4acb7d81e37dd4d2.1659117128.git.pabeni@redhat.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+This is a refresh and rebase of an already shared work:
 
-I love your patch! Perhaps something to improve:
+https://lore.kernel.org/mptcp/cover.1621963632.git.pabeni@redhat.com/
+[1]
 
-[auto build test WARNING on mptcp/export]
-[cannot apply to linus/master v5.19-rc8 next-20220728]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The motiviation for refreshing this is:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Paolo-Abeni/mptcp-just-another-receive-path-refactor/20220730-021638
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-config: x86_64-randconfig-a001 (https://download.01.org/0day-ci/archive/20220730/202207301455.Biyfbfoh-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 52cd00cabf479aa7eb6dbb063b7ba41ea57bce9e)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/f2cae8b9b78304e87a6c4ee4dbaa50cc02b078d5
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Paolo-Abeni/mptcp-just-another-receive-path-refactor/20220730-021638
-        git checkout f2cae8b9b78304e87a6c4ee4dbaa50cc02b078d5
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash net/mptcp/
+https://lore.kernel.org/mptcp/YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020/
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+specifically it looks like that properly attaching mem_cg to the
+msk socket would be (much?) easier if the RX path and the fwd memory
+allocation would be under msk socket lock protection.
 
-All warnings (new ones prefixed by >>):
+The first 2 patches are proably worthy even without the refactor,
+but specifically the 2nd one is required to get a good mptcp-level
+acking behavior when we move the rx under the socket lock.
 
->> net/mptcp/protocol.c:798:6: warning: no previous prototype for function '__mptcp_data_ready' [-Wmissing-prototypes]
-   void __mptcp_data_ready(struct sock *sk, struct sock *ssk)
-        ^
-   net/mptcp/protocol.c:798:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   void __mptcp_data_ready(struct sock *sk, struct sock *ssk)
-   ^
-   static 
-   1 warning generated.
+The 3rd patch does the real work, and the 4th is a follow-up cleanup.
 
+Back at [1], I measured relevant performance regressions in some
+specific cases. I've done the same test here and I now see little to
+noise changes. I guess that is mostly due to the better acking
+strategy already introduce with commit 949dfdcf343c ("Merge branch 
+'mptcp-improve-mptcp-level-window-tracking'") and refined here.
 
-vim +/__mptcp_data_ready +798 net/mptcp/protocol.c
+v2 -> v3:
+ - dropped obsoleted comment in patch 2/4
+ - fixed compile warning in patch 3/4
 
-   797	
- > 798	void __mptcp_data_ready(struct sock *sk, struct sock *ssk)
-   799	{
-   800		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-   801	
-   802		/* The peer can send data while we are shutting down this
-   803		 * subflow at msk destruction time, but we must avoid enqueuing
-   804		 * more data to the msk receive queue
-   805		 */
-   806		if (unlikely(subflow->disposable))
-   807			return;
-   808	
-   809		/* Wake-up the reader only for in-sequence data */
-   810		if (move_skbs_to_msk(mptcp_sk(sk), ssk))
-   811			sk->sk_data_ready(sk);
-   812	}
-   813	
+v1 -> v2:
+ - fix build issue in patch 3/4 due to PEBKAC
+ - added missing commit messages(!!!) in patch 3/4 & 4/4
+
+Paolo Abeni (4):
+  mptcp: move RCVPRUNE event later
+  mptcp: more accurate receive buffer updates
+  mptcp: move msk input path under full msk socket lock
+  mptcp: use common helper for rmem memory accounting
+
+ include/net/mptcp.h  |   2 +
+ net/ipv4/tcp.c       |   3 +
+ net/mptcp/options.c  |   1 -
+ net/mptcp/protocol.c | 219 +++++++++++--------------------------------
+ net/mptcp/protocol.h |  12 ++-
+ 5 files changed, 68 insertions(+), 169 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.35.3
+
