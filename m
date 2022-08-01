@@ -1,134 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38E37F
-	for <mptcp@lists.linux.dev>; Mon,  1 Aug 2022 10:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659351048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cp8QHX5t2WXcm+OqscwZWKOkJOm3yY6JrE4oWGQsSfM=;
-	b=iuAb0yrfbEpIAfWpzQ3YRKtvN5JmrgPuKTCOLovX7gol6u9qcOiRphR/ZtWma4hqceJhIN
-	vfVy0exvu5V1xtFABKFzyRKxA75tHeQvKFNnr7lmNWgYUtX2O1TMf5PgdB71aK5NAgpsXk
-	ryYBGBfrKIRwtfUjIUeLwaHgVyq3Z8g=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-36-APNZ-wXkMNyl_hfslPsrfg-1; Mon, 01 Aug 2022 06:50:47 -0400
-X-MC-Unique: APNZ-wXkMNyl_hfslPsrfg-1
-Received: by mail-wm1-f69.google.com with SMTP id n19-20020a05600c3b9300b003a314062cf4so5235864wms.0
-        for <mptcp@lists.linux.dev>; Mon, 01 Aug 2022 03:50:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154187F
+	for <mptcp@lists.linux.dev>; Mon,  1 Aug 2022 12:41:35 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id z16so13908224wrh.12
+        for <mptcp@lists.linux.dev>; Mon, 01 Aug 2022 05:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=fLvjBLbhS84e5/hRa29XSLwyltd2loiNFYMXPD08/js=;
+        b=AOKg1WSOEvKVgyzkduFblbaj4deHQdcgPCDMeYKyFajeCz2rjtMMMMYw9VLNAEhN94
+         MIm4ur/nqEgl1XXwd/eKH7eRqXqxp0DQx4mn7r5qZIyJ3dO5O3FDE7NpceTQhhUp/nJ7
+         a7GYPgu/cGrtan9fagkj9ftQkSbUnsT7jdVZlvxPy2+bWaHV3AFmhGY7OOnCwWILS2xD
+         3WFPKLNXODGrSQxyMxwwRPrc4CQkf2GOr9OuQqrPhWPeevTWBvZNt+ReSQvb3wHd/2cL
+         88X0SJimdEkq8FpcsHyX8MClE4wXj6X85uhWeQ+p6C4ickPJVjAzTfEvsqCPzS+LgBo6
+         9s4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=cp8QHX5t2WXcm+OqscwZWKOkJOm3yY6JrE4oWGQsSfM=;
-        b=wUgJKmc2YdzBaFcSV1iprCLPTFzIBUSEONDfVlwgy7v6S7qHUc1j6S9B6RScpZGmsD
-         rwB7jYCo1KLBk4O0lRV+plmXtaF6caz9j7j5ANZsnLIvAgXgYjTdZXtAEGqkvbvK/h5I
-         UhhmL7NBqPlefp40lg3sptpjUlhtO0c/J80j8gNHz+B4ffpEOVQTFFGkJ6H/wuDoVVyb
-         9sELKVh/UatzbidVvvBqvxIJEYbcnRV+foeHway1SPslJIlu+qK+b2zam3rZQxCuU5Zs
-         Sr1lQVvAfalA+KbAZfXgyrAJgg1LwHqEJuOS2r7YeknuCresuNfEqSsck7LPZDClMFTy
-         zMsQ==
-X-Gm-Message-State: AJIora/9qKJsvMgoVpOcyTwhIDaBqJeMmtnaSLmiNdfJ4t3jm9oH0TJe
-	Ud2gaHMzdtC8F/6XdzAiXUtM0dtn7QYe4UAAihsOS9zpfky+0Xmoc2WQMlafAFTjlhCwOyNt7km
-	qMvW8SldE9BwbWP7mQch+PeQFMUISLeqy+AuojT1RFxs/zNU+3tLxN90KnUo4SqZA
-X-Received: by 2002:a7b:ca4a:0:b0:3a3:651f:51d8 with SMTP id m10-20020a7bca4a000000b003a3651f51d8mr10706055wml.102.1659351045765;
-        Mon, 01 Aug 2022 03:50:45 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sjtJVO69TqeC70SItXFJb3/BgyUl+/pcwYfZgjwLrKMTO2c11/Qk0N2Rwo5MdbVvcUgflixA==
-X-Received: by 2002:a7b:ca4a:0:b0:3a3:651f:51d8 with SMTP id m10-20020a7bca4a000000b003a3651f51d8mr10706035wml.102.1659351045370;
-        Mon, 01 Aug 2022 03:50:45 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-118-222.dyn.eolo.it. [146.241.118.222])
-        by smtp.gmail.com with ESMTPSA id t18-20020a05600c199200b003a3278d5cafsm20590568wmq.28.2022.08.01.03.50.44
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 03:50:44 -0700 (PDT)
-Message-ID: <9f161078dfd130882b9d9bfea2a76b3d89fdc42e.camel@redhat.com>
-Subject: Re: [PATCH v3 mptcp-next 0/4] mptcp: just another receive path
- refactor
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Date: Mon, 01 Aug 2022 12:50:44 +0200
-In-Reply-To: <cover.1659165378.git.pabeni@redhat.com>
-References: <cover.1659165378.git.pabeni@redhat.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=fLvjBLbhS84e5/hRa29XSLwyltd2loiNFYMXPD08/js=;
+        b=hx+mCPmpHCy9GjP0RxL6TKb5tAzx9aSc2TtnO4JzC48CTyxiWbUCnkUhebb0ANjdNE
+         cYx9xG4miFmI8rfORwkpM9ARM+s6MJWHPWXRcx+bGdF3Ilb4+kt2jGtRCC7S+1THAcUW
+         x/iWrkf2tXkHFWLKm6i5CditbrsgCnLVKJB1zMM/eVPZcGBZqt5FG2ecqN0RHAx66K9t
+         aBZq1upoFQriDjlMlCg7IePvnXu0/nevX0f04JgpneO9QFhgyRcUex47xTPqgRL4IuQH
+         LxUk6hjYfYZeRDPKhLCVgtK1fE29iZL2OZFiZdV4Meaauhhu42+xcRg94/phWhLQIltR
+         xPeQ==
+X-Gm-Message-State: ACgBeo1w6qwFYyyVRnMhqW7qDEPf+zZdpvhmz2W6wBVSu4j8qio+CeZc
+	M9FLb6tSeXBMS4YOdng7cOpa+/P4OFLtLA==
+X-Google-Smtp-Source: AA6agR50WYTdDMqgEGihkEAOqmFTiFpq1G7ap0r0VtfEqnZoahtvnuR+4/B2zmXzqTVvXwAwlTwYqA==
+X-Received: by 2002:a5d:48c8:0:b0:21e:5134:c78c with SMTP id p8-20020a5d48c8000000b0021e5134c78cmr9961801wrs.233.1659357693930;
+        Mon, 01 Aug 2022 05:41:33 -0700 (PDT)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id s10-20020a5d424a000000b0021e6effef8bsm11344165wrr.50.2022.08.01.05.41.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Aug 2022 05:41:33 -0700 (PDT)
+Message-ID: <9beff9f6-b06d-a879-c2df-542375a2def7@tessares.net>
+Date: Mon, 1 Aug 2022 14:41:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0.3
+Subject: Re: Patch "mptcp: don't send RST for single subflow" has been added
+ to the 5.18-stable tree
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20220731024320.3360515-1-sashal@kernel.org>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220731024320.3360515-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Sat, 2022-07-30 at 10:04 +0200, Paolo Abeni wrote:
-> This is a refresh and rebase of an already shared work:
-> 
-> https://lore.kernel.org/mptcp/cover.1621963632.git.pabeni@redhat.com/
-> [1]
-> 
-> The motiviation for refreshing this is:
-> 
-> https://lore.kernel.org/mptcp/YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020/
-> 
-> specifically it looks like that properly attaching mem_cg to the
-> msk socket would be (much?) easier if the RX path and the fwd memory
-> allocation would be under msk socket lock protection.
-> 
-> The first 2 patches are proably worthy even without the refactor,
-> but specifically the 2nd one is required to get a good mptcp-level
-> acking behavior when we move the rx under the socket lock.
-> 
-> The 3rd patch does the real work, and the 4th is a follow-up cleanup.
-> 
-> Back at [1], I measured relevant performance regressions in some
-> specific cases. I've done the same test here and I now see little to
-> noise changes. I guess that is mostly due to the better acking
-> strategy already introduce with commit 949dfdcf343c ("Merge branch 
-> 'mptcp-improve-mptcp-level-window-tracking'") and refined here.
-> 
-> v2 -> v3:
->  - dropped obsoleted comment in patch 2/4
->  - fixed compile warning in patch 3/4
-> 
-> v1 -> v2:
->  - fix build issue in patch 3/4 due to PEBKAC
->  - added missing commit messages(!!!) in patch 3/4 & 4/4
-> 
-> Paolo Abeni (4):
->   mptcp: move RCVPRUNE event later
->   mptcp: more accurate receive buffer updates
->   mptcp: move msk input path under full msk socket lock
->   mptcp: use common helper for rmem memory accounting
-> 
->  include/net/mptcp.h  |   2 +
->  net/ipv4/tcp.c       |   3 +
->  net/mptcp/options.c  |   1 -
->  net/mptcp/protocol.c | 219 +++++++++++--------------------------------
->  net/mptcp/protocol.h |  12 ++-
->  5 files changed, 68 insertions(+), 169 deletions(-)
+Hi Mat,
 
-I *think* there is a litte more self-tests instability with series
-applied, specifically on simult_flows, and mptcp_join 32 && 99.
+(cc: MPTCP ML)
 
-Behind the CI report I also observed a few sporadid failures there.
+On 31/07/2022 04:43, Sasha Levin wrote:
+> This is a note to let you know that I've just added the patch titled
+> 
+>     mptcp: don't send RST for single subflow
+> 
+> to the 5.18-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>      mptcp-don-t-send-rst-for-single-subflow.patch
+> and it can be found in the queue-5.18 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
 
-I'm wild guessing that the mpj failures are caused by the subflow
-socket lock being acquired/relased more often under the msk socket lock
-, possibly changing the timing for some events.
+I just noticed the patch below is being backported to v5.18 while it
+doesn't have any "Fixes" tag.
 
-I still have to investigate the above.
+It slightly changes the behaviour on v5.18 but I don't think that's an
+issue, it could even be seen as a bug-fix for me.
 
-I think we could still consider merging this on the export branch, and
-later try to hammer the issue on the branch (to get more coverage from
-the bots).
+I just double-checked and the selftests are still OK with this patch.
 
-WDYT?
+Also OK for you to have it in v5.18?
 
-Thanks!
+Cheers,
+Matt
 
-Paolo
+> commit 0a782d12ad419f820fbaf1d637a788097014b5b1
+> Author: Geliang Tang <geliang.tang@suse.com>
+> Date:   Fri Apr 22 14:55:36 2022 -0700
+> 
+>     mptcp: don't send RST for single subflow
+>     
+>     [ Upstream commit 1761fed2567807f26fbd53032ff622f55978c7a9 ]
+>     
+>     When a bad checksum is detected and a single subflow is in use, don't
+>     send RST + MP_FAIL, send data_ack + MP_FAIL instead.
+>     
+>     So invoke tcp_send_active_reset() only when mptcp_has_another_subflow()
+>     is true.
+>     
+>     Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>     Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 7919e259175d..ccae50eba664 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1221,14 +1221,14 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  	/* RFC 8684 section 3.7. */
+>  	if (subflow->send_mp_fail) {
+>  		if (mptcp_has_another_subflow(ssk)) {
+> +			ssk->sk_err = EBADMSG;
+> +			tcp_set_state(ssk, TCP_CLOSE);
+> +			subflow->reset_transient = 0;
+> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
+>  			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+>  				sk_eat_skb(ssk, skb);
+>  		}
+> -		ssk->sk_err = EBADMSG;
+> -		tcp_set_state(ssk, TCP_CLOSE);
+> -		subflow->reset_transient = 0;
+> -		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+> -		tcp_send_active_reset(ssk, GFP_ATOMIC);
+>  		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
+>  		return true;
+>  	}
 
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
