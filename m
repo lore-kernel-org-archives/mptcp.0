@@ -1,44 +1,44 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E557F
-	for <mptcp@lists.linux.dev>; Mon,  1 Aug 2022 16:10:56 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id c187-20020a1c35c4000000b003a30d88fe8eso7677694wma.2
-        for <mptcp@lists.linux.dev>; Mon, 01 Aug 2022 09:10:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182E67F
+	for <mptcp@lists.linux.dev>; Mon,  1 Aug 2022 16:24:31 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id ay11-20020a05600c1e0b00b003a3013da120so7685978wmb.5
+        for <mptcp@lists.linux.dev>; Mon, 01 Aug 2022 09:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=message-id:date:mime-version:user-agent:content-language:from
          :subject:to:content-transfer-encoding;
-        bh=ZwvtxMX/BQVAAYANOcmjwVuVG09P/Yoy7wXq7jIHwM8=;
-        b=bPUTlJo/PiSeaRiIp+2q7GTFe13wx55tB2TqROO69VnMFyTCylMZcqBEruaCeyBK+2
-         hVzO2iLsqZ4RpobBTt5X+KNe3N8u8mF/hJgiVaAHlYkWTLnvZ3yL+AiWp2feuEbpVKpE
-         OYcXL3Nb9uS0MHxCUrMkWjCr3D2q2y1wowjrnqxXv7dABdf/+KBNb9u8v5cr/S9nlZa5
-         HXoa9mM9fO2qZGXRizgInPvKXVopwQozev9rX00JZJV90DFXcaIAeOM/ihF77HX+EkKw
-         UHieJ4L3l4/0xeS1vLW8t8uVmMYUaQFrZy4bClrHSeP2eMZ9ylXhPPim0y7MfwrCgvnM
-         s5Ew==
+        bh=JegU4P81/gMlYj9ZvDT5FL0wjUTciPQ0ywbhMhxGqsQ=;
+        b=o2n/VGRI7KWwSQWhAKqQV3yW4ciFS1Wdc8/7FhwaWlXprrTrCPyHVkNf+KzbZIUPJU
+         ACXHtkamo5Z7OcMQuz0BPxQH18b/wKRN9YgxX397uyyuzTGyT3WyU2hDJfw+kTKY7soD
+         HL+G/mZEiW5vc60fe/62YP9S/T5fzc1uAhr/6xky//pcWqjyvyh34jsymetuQB0fQRte
+         NVp5Y+1hLuG1R5H4jGQ8oBrbwYP4fA2fBFCCtE2LsfTT3LMntj0gwLKnnWetCrDHrkf4
+         vAcTecVPHNgNxoyI860cGXwR3xy16LZyHD2RtdhPDiIG47hVyp/vDNTQnw5wOIZxAkOb
+         frjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent
          :content-language:from:subject:to:content-transfer-encoding;
-        bh=ZwvtxMX/BQVAAYANOcmjwVuVG09P/Yoy7wXq7jIHwM8=;
-        b=uB1DA9oNSK8Kcg5EkLjCupP2KxDy8AtJNHfUvYM5sqy2keo/8X8btj0d4GzwB/iITN
-         NHZVPXCcUtQjhbTAG4CzZLI5Jepa/qDYRyyTlyNxIdxYGC5ySrVsUGIO6Ej2VGwjkXGg
-         neopyCGjHitKpme/iXGCOJrqHV9y0IbkvrfhGSGuAM378zQtpgj4kdvmFNv3P1esOoyG
-         B0jLFR0aYKMm+Pi0VkbNv5UMRJgpaKwmed6Eqb5zFIgpvJ9+qYHgE8RS5OpinKPBjGGE
-         88TPTpWtdWsyJ2aszneT+UzCeZzk64p0cKfbjCgnPxKac4sGLvxfjfYJrlyAAH1W3ZpE
-         736g==
-X-Gm-Message-State: AJIora+gpW0afCNPegjnTRLR6zOy7kTKjMXUBNYr+trVqprIXr1f8ev6
-	J7IH578l4vvputd50hBY6qjuDo82PvVGiTRT
-X-Google-Smtp-Source: AGRyM1sW2GdOqDPiFrQxJNGUJlRQ9TemciOchDlK+KtFedlTT84nMf+TTS16veZ2QHLgTOsPcffLRw==
-X-Received: by 2002:a05:600c:1987:b0:3a3:2db1:d35b with SMTP id t7-20020a05600c198700b003a32db1d35bmr10904997wmq.14.1659370254678;
-        Mon, 01 Aug 2022 09:10:54 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id n185-20020a1ca4c2000000b003a37b7e0780sm15158377wme.8.2022.08.01.09.10.54
+        bh=JegU4P81/gMlYj9ZvDT5FL0wjUTciPQ0ywbhMhxGqsQ=;
+        b=zvHJ4qhQ8tJyrWNsLkB2CflMzV6tyz4VadDkYiHMCRB21lbSvg3rP7pOW5fa7cm8Cx
+         VynumGLqgyc961ylw+yYlDm4OEGzeAgC5Sdo9B5pctZKgOn/HSB1fAMndgTRmrpt1EpB
+         H+tdB6yCL3W/pjuLiBypsVkkReh4ydV0DxkKVOIJjrBvi/PcvU4E5jwfjxmBG1TViQSY
+         xWlMIl8V0x6qCqgYfdOpdni9ejPAl+llGZALv1H8fNqSN8RuHprwGnEzSxlTEDazQqMM
+         F1cVSlVqB8bp6Mj1M9XWlkNsnnEe639z3vElGgPiyyZAeFE2dkNbAwDH6Q95dcaGhvFu
+         ZCjg==
+X-Gm-Message-State: AJIora8f6X4sQYTFhKueCZ9sZplrKVyYwNBEOUdV0/Sue5lPeunrJ22d
+	IV7fTmDhwJbMkQYjJ9Xj7XmhXaWx38UkD5Le
+X-Google-Smtp-Source: AGRyM1vA5qtRr1bytbzFgobrIz2caoWWi+qUurMhNu6pYOKh28DrG4f0OXj6l5Hvu68Rnx8GmDU+oQ==
+X-Received: by 2002:a05:600c:2652:b0:3a3:2a3e:a2de with SMTP id 18-20020a05600c265200b003a32a3ea2demr11833138wmy.174.1659371069855;
+        Mon, 01 Aug 2022 09:24:29 -0700 (PDT)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id g18-20020adffc92000000b0021e43b4edf0sm12384452wrr.20.2022.08.01.09.24.29
         for <mptcp@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Aug 2022 09:10:54 -0700 (PDT)
-Message-ID: <e3d022bd-4168-55c8-4e25-01236b955555@tessares.net>
-Date: Mon, 1 Aug 2022 18:10:53 +0200
+        Mon, 01 Aug 2022 09:24:29 -0700 (PDT)
+Message-ID: <c1785ecc-d955-e6cf-0390-81b5fa761118@tessares.net>
+Date: Mon, 1 Aug 2022 18:24:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,15 +49,15 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.0.3
 Content-Language: en-GB
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [Weekly meetings] MoM - 14th of July 2022
+Subject: [Weekly meetings] MoM - 28th of July 2022
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hello everyone,
 
-On the 14th of July, we had our 202nd meeting with Mat, Ossama (Intel),
-Paolo, Davide (Redhat) and myself (Tessares).
+Last Thursday, we had our 203rd meeting with Mat, Ossama (Intel),
+Dmytro (SFR), Benjamin and myself (Tessares).
 
 
 Thanks again for this new good meeting!
@@ -71,52 +71,32 @@ Accepted patches:
       https://patchwork.kernel.org/project/mptcp/list/?state=3
 
 
-    netdev (if mptcp ML is in cc) (by: Mat Martineau, Matthieu Baerts):
+    netdev (if mptcp ML is in cc) (by: Mat Martineau):
 
-12911557: [net-next,1/6] mptcp: move MPTCPOPT_HMAC_LEN to net/mptcp.h
-12911558: [net-next,2/6] selftests: mptcp: tweak simult_flows for debug
-kernels
-12911559: [net-next,3/6] selftests: mptcp: userspace pm address tests
-12911560: [net-next,4/6] selftests: mptcp: userspace pm subflow tests
-12911561: [net-next,5/6] selftests: mptcp: avoid Terminated messages in
-userspace_pm
-12911562: [net-next,6/6] selftests: mptcp: update pm_nl_ctl usage header:
-      - Series: mptcp: Self test improvements and a header tweak
+12928418: [net] mptcp: Do not return EINPROGRESS when subflow creation
+succeeds:
       - Submitter: Mat Martineau
       - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=657961&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/patch/20220725205231.87529-1-mathew.j.martineau@linux.intel.com/
 
-12911979: [net,1/2] mptcp: fix subflow traversal at disconnect time
-12911978: [net,2/2] selftests: mptcp: validate userspace PM tests by
-default:
-      - Series: mptcp: Disconnect and selftest fixes
+
+    our repo (by: Mat Martineau, Paolo Abeni):
+
+12919013: [mptcp-net] mptcp: move subflow cleanup in mptcp_destroy_common():
+      - Submitter: Paolo Abeni
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/bcfa7cfc41ada0c8811794cb3c45cdeb1b34f303.1657883173.git.pabeni@redhat.com/
+
+12919561: [mptcp-net] mptcp: Do not return EINPROGRESS when subflow
+creation succeeds:
       - Submitter: Mat Martineau
       - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=658074&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/patch/20220715181207.522021-1-mathew.j.martineau@linux.intel.com/
 
-12913082: [bpf-next,v2] bpf: Fix 'dubious one-bit signed bitfield' warnings:
-      - Submitter: Matthieu Baerts
+12928285: [mptcp-net] mptcp: do not queue data on closed subflows:
+      - Submitter: Paolo Abeni
       - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20220711081200.2081262-1-matthieu.baerts@tessares.net/
-
-12914161: [net-next,1/5] mptcp: introduce and use mptcp_pm_send_ack()
-12914162: [net-next,2/5] mptcp: address lookup improvements
-12914163: [net-next,3/5] mptcp: allow the in kernel PM to set MPC
-subflow priority
-12914164: [net-next,4/5] mptcp: more accurate MPC endpoint tracking
-12914165: [net-next,5/5] selftests: mptcp: add MPC backup tests:
-      - Series: mptcp: Support changes to initial subflow priority
-      - Submitter: Mat Martineau
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=658666&state=*&archive=both
-
-
-    our repo (by: Matthieu Baerts):
-
-12915271: [mptcp-next] mptcp: add mptcp_for_each_subflow_safe helper:
-      - Submitter: Matthieu Baerts
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20220712160236.3668376-1-matthieu.baerts@tessares.net/
+https://patchwork.kernel.org/project/mptcp/patch/937464128633daa18ebc093215ac04487f001b3f.1658769042.git.pabeni@redhat.com/
 
 
 
@@ -129,8 +109,9 @@ Pending patches:
 
 /
 
-    our repo (by: Dmytro SHYTYI, Geliang Tang, Jiapeng Chong, Jiri Olsa,
-Matthieu Baerts):
+
+    our repo (by: Dmytro SHYTYI, Geliang Tang, Jason Wang, Jiapeng
+Chong, Jiri Olsa, Matthieu Baerts):
 
 12282219: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
 12282221: [RESEND,RFC,4/4] tcp: parse tcp options contained in reset
@@ -139,8 +120,27 @@ packets:
 12282225: [RESEND,1/5] tcp: make two mptcp helpers available to tcp stack
 12282227: [RESEND,5/5] mptcp: send fastclose if userspace closes socket
 with unread data:
-12321111: mptcp: Remove redundant assignment to remaining:
+12321111: mptcp: Remove redundant assignment to remaining
 12858306: [RFC,mptcp-next,v3] mptcp: Fast Open Mechanism:
+      - State: Changes requested
+      - Submitter: Dmytro SHYTYI
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20220522183921.103526-1-dmytro@shytyi.net/
+      - Dmytro presented the progress he did:
+          - the cookie request seems working as expected during the
+first connection when looking at the traces
+          - except the DATA_FIN which is duplicated: something not
+investigated yet
+          - following connections have now data in the SYN but MPTCP seq
+num are wrong:
+              - the validation has to be dropped for the client to
+receive the data, not just the data from the SYN
+              - (and probably it only works with one subflow)
+          - Dmytro will send a new version with the modifications he
+presented.
+      - Follow-up can also be done on the Github ticket
+      - Dmytro will share the slides there
+      - https://github.com/multipath-tcp/mptcp_net-next/issues/59
 
 12901431: [mptcp-next,v10,1/5] Squash to "mptcp: add get_subflow wrappers"
 12901432: [mptcp-next,v10,2/5] mptcp: redundant subflows push pending
@@ -159,58 +159,43 @@ CONFIG_MPTCP is disabled:
       - Submitter: Jiri Olsa
       - URL:
 https://patchwork.kernel.org/project/mptcp/patch/20220711130731.3231188-1-jolsa@kernel.org/
+      - Note sure if Jiri is going to change it.
+      - *TODO* Matth: send email to Jiri → Done
+
+12922458: mptcp: Fix comment typo:
+      - State: Changes requested
+      - Submitter: Jason Wang
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20220716044226.43587-1-wangborong@cdjrlc.com/
+      - Note sure we will have a v2
 
 
 
 Issues on Github:
     https://github.com/multipath-tcp/mptcp_net-next/issues/
 
-    Recently opened (latest from last week: 288)
+    Recently opened (latest from last meeting: 291)
 
-  291  [syzkaller] memory leak in inet6_create  [bug] [syzkaller]:
-      - from 2020 but reproduced recently:
-
-https://syzkaller.appspot.com/bug?id=9623d77a6280008dc6f9d85261fbdf16090a35e2
-      - We should try to reproduce it on our side first
-      - there is a syz-repro and a c-repro
-      - logs:
-https://syzkaller.appspot.com/text?tag=CrashReport&x=16ac8c60080000
-      - it looks like the patch shared by the issue reporter might not help:
-          - it tries to fix a race but it doesn't look to be tested by
-the syzbot
-          - probably best to repro the issue with packetdrill
-          - it uses CONFIG_PREEMPT=y, maybe not commonly used?
-          - Maybe linked to the kernel config
-      - Could be nice to reproduce it on a different HW:
-          - Mat & Paolo will try with c-repro (or fallback to syz repro)
-          - Paolo sees a potential path and will try to repro with
-packetdrill
-
-  290  Not possible to `connect()` after a disconnect for a passive
-socket [bug]:
-      - see the discussions from last week
-
-  289  mptcp: audit comments for non inclusive language [enhancement]:
-      - see the discussions from last week
+None.
 
 
     Bugs (opened, flagged as "bug" and assigned)
 
   288  [syzkaller] memory leak in __netlink_create [bug] @mjmartineau:
-      - it was not reproduced this week
+      - still happening but not related to MPTCP
+      - *Mat* will check if it has been reported by syzbot or someone
+else on netdev → it has not been reported by syzbot
 
   181  implement data_fin ack retransmission for subflow in  TIME_WAIT
 state [bug] @mjmartineau:
-      - Should we assign it to Florian?
+      - *Florian*: are you looking at it?
+      - *Mat* will send a dedicated email to Florian
 
 
     Bugs (opened and flagged as "bug" and not assigned)
 
-  291  [syzkaller] memory leak in inet6_create  [bug] [syzkaller]
   290  Not possible to `connect()` after a disconnect for a passive
-socket [bug]:
-      - see above
-
+socket [bug]
   248  packetdrill: more tests failing due to packets arriving later
 than expected [bug] [packetdrill]
 
@@ -223,7 +208,7 @@ than expected [bug] [packetdrill]
 @dcaratti
 
    75  BPF: packet scheduler [enhancement] @geliangtang:
-       - see patches above
+       - See patches above
 
    74  BPF: path manager [enhancement] @geliangtang
 
@@ -231,6 +216,7 @@ than expected [bug] [packetdrill]
     Assigned Questions (opened, questions and assigned)
 
 None.
+
 
     Open questions (opened, questions and not assigned)
 
@@ -279,8 +265,12 @@ interface [enhancement] [syzkaller]
 
     Recently closed (since last week)
 
-  285  PM: in-kernel: support for MPC prio exchange  [enhancement] @pabeni
-  284  combine to WAN's via two Wiregate Connections [question] @matttbe
+  280  support of ndiffport [question]:
+      - Mat is looking at implementing that in mptcpd
+      - For the kernel side, everything seems to be there to have this
+working
+      - For the mptcpd side, it depends on a PR adding MPTCP Upstream
+Netlink commands support
 
 
 
@@ -294,103 +284,118 @@ https://github.com/multipath-tcp/mptcp_net-next/projects/15
 
 Patches to send to netdev:
 
-    - Fixes for other trees:
-
-/
+    - Fixes for other trees: /
 
     - Fixes for -net:
 
-/
+        - [8274dcacc6a9] mptcp: move subflow cleanup in
+mptcp_destroy_common() (Paolo Abeni)
+        - [f9442c050d26] mptcp: do not queue data on closed subflows
+(Paolo Abeni):
+            - Probably too late for the next batch that is going to be
+sent to Linus for the final 5.19 release
+            - Mat will check with Paolo to know where/when to send them
+→ done
 
-    - Fixes for net-next:
-
-        - [c7572cca163f] bpf: Fix 'dubious one-bit signed bitfield'
-warnings (Matthieu Baerts):
-            - applied in BPF-next
+    - Fixes for net-next: /
 
     - Features for net-next:
 
-        - [b2eab62902e7] mptcp: add mptcp_for_each_subflow_safe helper
+        - [2e1afc4408a3] mptcp: add mptcp_for_each_subflow_safe helper
 (Matthieu Baerts):
-            - Matth will send it → no, depending on a patch for -net
+            - depends on "mptcp: move subflow cleanup in
+mptcp_destroy_common", can wait
 
-    - Features for net-next (next):
-
-/
+    - Features for net-next (next): /
 
     - Features for other trees:
 
-        - [3991e4842fdc] mptcp: add struct mptcp_sched_ops (Geliang Tang)
-        - [d0bf85f3278e] mptcp: add a new sysctl scheduler (Geliang Tang)
-        - [c68e303973d6] mptcp: add sched in mptcp_sock (Geliang Tang)
-        - [b1394688c8a4] mptcp: add scheduled in mptcp_subflow_context
+        - [4ba1a3ae3b82] mptcp: add struct mptcp_sched_ops (Geliang Tang)
+        - [278e27c00c52] mptcp: add a new sysctl scheduler (Geliang Tang)
+        - [b10ad34c536f] mptcp: add sched in mptcp_sock (Geliang Tang)
+        - [ccea340949e6] mptcp: add scheduled in mptcp_subflow_context
 (Geliang Tang)
-        - [c98a1ade558b] mptcp: add get_subflow wrappers (Geliang Tang)
-        - [9c7112198413] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
-        - [c61f3f8c2610] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang)
-        - [076f161b2f62] selftests/bpf: Add mptcp sched structs (Geliang
+        - [bfb156bf3360] mptcp: add get_subflow wrappers (Geliang Tang)
+        - [342d78e6876d] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
+        - [4ddec94ad688] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang):
+            - small adaptation has been done to sync with recent BPF
+changes, see ML
+
+        - [b406633da610] selftests/bpf: Add mptcp sched structs (Geliang
 Tang)
-        - [50878b77aa4b] selftests/bpf: Add bpf_first scheduler (Geliang
+        - [ecf0fd0de5c0] selftests/bpf: Add bpf_first scheduler (Geliang
 Tang)
-        - [2afcd887e6d9] selftests/bpf: Add bpf_first test (Geliang Tang)
-        - [214842082e33] selftests/bpf: Add bpf_bkup scheduler (Geliang
+        - [03a38a3ef1e9] selftests/bpf: Add bpf_first test (Geliang Tang)
+        - [af1174d91fa2] selftests/bpf: Add bpf_bkup scheduler (Geliang
 Tang)
-        - [0fffa87c4d5e] selftests/bpf: Add bpf_bkup test (Geliang Tang)
-        - [9db83859adf0] selftests/bpf: Add bpf_rr scheduler (Geliang Tang)
-        - [41155b09314e] selftests/bpf: Add bpf_rr test (Geliang Tang):
-            - we prefer to wait
+        - [d1ee999c1748] selftests/bpf: Add bpf_bkup test (Geliang Tang)
+        - [bd653323c5bf] selftests/bpf: Add bpf_rr scheduler (Geliang Tang)
+        - [8f8e81bd0eb9] selftests/bpf: Add bpf_rr test (Geliang Tang)
 
 
 
 Extra tests:
-    - news about Syzkaller? (Christoph / Mat):
-        - no new syz reports linked to MPTCP
+    - news about Syzkaller? (Mat):
+        - nothing related to MPTCP
 
     - news about interop with mptcp.org/other stacks? (Christoph):
         - /
 
     - news about Intel's kbuild? (Mat):
-        - happier with simult flows timeout
+        - issues but not related to MPTCP (tools installed before but it
+is back now)
 
     - packetdrill (Davide):
-        - TFO should still be alive: to be tested. Matth and Benjamin
-will have a look.
+        - /
 
     - Patchew (Davide):
-        - the UI is sill not responding (or very slow)
-        - but the importer is still alive, the most important
+        - Davide wanted to upgrade it but there are some issues with the
+modifications we did
+        - Maybe we need something else if we only need the importer bit?
 
     - CI (Matth):
-        - simult flows:
-            - the fix was only for net-next
-            - still happening 2 to 3 times a week without the debug
-kernel config
+        - some small modif in the image used by the CI and some devs,
+nothing really important, see Git log
 
 
 
-MPTCP Maintainer scripts:
-    -
-https://github.com/multipath-tcp/mptcp_net-next/tree/scripts/utils#readme
-    - Mat will check if he had to add anything
-    - No need to use topgit directly
+mptcpd:
+    - Probably a new release in September supporting the new netlink
+commands
+    - Matth is looking at sending the v0.10 to Debian (and Ubuntu)
+
+
+
+TCP authopt series: Looks like no MPTCP special case is needed, options
+are not in allow list in mptcp_supported_sockopt():
+    - Related: Are checks for TCP_MD5 in protocol.c/subflow.c now redundant?
+    - It is similar to TCP_MD5 but different protocol
+    - In the series sent on netdev, there is no special check not to
+conflict with MPTCP
+    - Now that we have a deny list for the setsockopt, we probably don't
+need the check in protocol.c/subflow.c?
+    - And it protects us from using TCP authopt in //.
+
+
+
+bpf: net: Remove duplicated codes from bpf_setsockopt():
+    - Martin from Facebook also suggested to do some changes related to
+setsockopt functions, also used in MPTCP
+    - https://lore.kernel.org/netdev/20220727060902.2370689-1-kafai@fb.com/
 
 
 
 LPC:
-    - Mat will send a ~v2~ v3 of the proposal
-    - notification will be done mid of August but we would like to be
-ready before
-    - if the talk is rejected, it could still be presented another time
-(Netdev?), not lost
+    - remote participation possible?
+    - to be discussed by email/IRC
 
 
 
 Next meeting:
-    - Next one on Thursday, not on the 21st of July (Belgium National
-day \o/) but on the 28th of July.
+    - Next one on Thursday, the 4th of August.
     - 15:00 UTC (8am PST, 4pm CET, 11am CST)
     - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20220728
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20220804
 
 
 
