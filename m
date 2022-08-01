@@ -1,109 +1,134 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B4E7F
-	for <mptcp@lists.linux.dev>; Mon,  1 Aug 2022 02:59:55 +0000 (UTC)
-Received: by mail-qt1-f169.google.com with SMTP id r21so7148104qtn.11
-        for <mptcp@lists.linux.dev>; Sun, 31 Jul 2022 19:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
-         :content-transfer-encoding:date:mime-version;
-        bh=hyiCwVj6+VHzkUkoIr1R11v8ZPQj08VUuT5tx4xhKPs=;
-        b=lxNQthlJcR3SB3bsOoUxSXTLqz+k1ZmTwNv5v8TQjDvrTvY5X7qFedGsoGp7jnQQSE
-         3kIelwEeKsFMUxi+/N0HbEuFo56bBebjvslhHYV2lK1NnTum4ZpymDR+YtfsWw7/3HfT
-         iBsZbi5OtfbijvGCPS8R+A6spBjpIfu0AAxN+8ANzTN/Tq0JNbZvBVPs87eZc/Gp7gRR
-         dD3Tcn5apSiJYD7bqKgJiXtLBFfCkzF5BJBWl+n2jC553A+YhZhzjSsUzt3Cw3+7+Ud6
-         u4M+KH34Ff7skc1SeZX4CovCayJZPEX1xgHAZMc9Q/CS4DXGZ6TdyuQgPpG7lshbtp0e
-         VeUA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38E37F
+	for <mptcp@lists.linux.dev>; Mon,  1 Aug 2022 10:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1659351048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cp8QHX5t2WXcm+OqscwZWKOkJOm3yY6JrE4oWGQsSfM=;
+	b=iuAb0yrfbEpIAfWpzQ3YRKtvN5JmrgPuKTCOLovX7gol6u9qcOiRphR/ZtWma4hqceJhIN
+	vfVy0exvu5V1xtFABKFzyRKxA75tHeQvKFNnr7lmNWgYUtX2O1TMf5PgdB71aK5NAgpsXk
+	ryYBGBfrKIRwtfUjIUeLwaHgVyq3Z8g=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-36-APNZ-wXkMNyl_hfslPsrfg-1; Mon, 01 Aug 2022 06:50:47 -0400
+X-MC-Unique: APNZ-wXkMNyl_hfslPsrfg-1
+Received: by mail-wm1-f69.google.com with SMTP id n19-20020a05600c3b9300b003a314062cf4so5235864wms.0
+        for <mptcp@lists.linux.dev>; Mon, 01 Aug 2022 03:50:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
-         :subject:message-id:content-transfer-encoding:date:mime-version;
-        bh=hyiCwVj6+VHzkUkoIr1R11v8ZPQj08VUuT5tx4xhKPs=;
-        b=PthuhX3rfvrbJEqZZ4lMIYyTqkqn6bHVOc1B/GNYIVuseVKJ2yQuPNDXiabkZGyLwH
-         eQ93qYaAdjK0W1T8pyvxLhHDyuJ4NZHQtvfeCv8XMSaeeKCwvTlV1Io2ohIKH/7UWG8u
-         huKmzkl5nM0a6NpOvg8RDajVy07FC1T8UpCPR62o/hPjS/+DrS6lUepulOkxvVvinTRS
-         LkWc5wDp4zHGy02tA133YvnOYwnVCyHO+FIGbvnhhD2eTclsyfNmuCXYdhmG2ZV3qBGM
-         hjvEc1vq/KP3IdHI4o/Gy1/9LZOAhmWrLMiF3/q6jTBZp2nSempvUoRx9tbWvxpsccZ6
-         oKpg==
-X-Gm-Message-State: AJIora+modilQmtyV0rcDMPceS6iecumTEN05ozCB8ZYMJS0Jdbwpl4C
-	AqnC5TTjZ35Wrw4jZCczn5YpJ91yly0W
-X-Google-Smtp-Source: AGRyM1sRTZl7QDkOOZLODeJmi4Mdy7o8jjcOyh+2O/DgBuIptcmMMV1k3VQld6rNE5RPtZcsm26XUw==
-X-Received: by 2002:ac8:5bc8:0:b0:31e:e5bd:ef3b with SMTP id b8-20020ac85bc8000000b0031ee5bdef3bmr12768039qtb.94.1659322794990;
-        Sun, 31 Jul 2022 19:59:54 -0700 (PDT)
-Received: from [127.0.0.1] ([20.106.141.75])
-        by smtp.gmail.com with ESMTPSA id y194-20020a3764cb000000b006b61b34d2c2sm7460053qkb.42.2022.07.31.19.59.54
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=cp8QHX5t2WXcm+OqscwZWKOkJOm3yY6JrE4oWGQsSfM=;
+        b=wUgJKmc2YdzBaFcSV1iprCLPTFzIBUSEONDfVlwgy7v6S7qHUc1j6S9B6RScpZGmsD
+         rwB7jYCo1KLBk4O0lRV+plmXtaF6caz9j7j5ANZsnLIvAgXgYjTdZXtAEGqkvbvK/h5I
+         UhhmL7NBqPlefp40lg3sptpjUlhtO0c/J80j8gNHz+B4ffpEOVQTFFGkJ6H/wuDoVVyb
+         9sELKVh/UatzbidVvvBqvxIJEYbcnRV+foeHway1SPslJIlu+qK+b2zam3rZQxCuU5Zs
+         Sr1lQVvAfalA+KbAZfXgyrAJgg1LwHqEJuOS2r7YeknuCresuNfEqSsck7LPZDClMFTy
+         zMsQ==
+X-Gm-Message-State: AJIora/9qKJsvMgoVpOcyTwhIDaBqJeMmtnaSLmiNdfJ4t3jm9oH0TJe
+	Ud2gaHMzdtC8F/6XdzAiXUtM0dtn7QYe4UAAihsOS9zpfky+0Xmoc2WQMlafAFTjlhCwOyNt7km
+	qMvW8SldE9BwbWP7mQch+PeQFMUISLeqy+AuojT1RFxs/zNU+3tLxN90KnUo4SqZA
+X-Received: by 2002:a7b:ca4a:0:b0:3a3:651f:51d8 with SMTP id m10-20020a7bca4a000000b003a3651f51d8mr10706055wml.102.1659351045765;
+        Mon, 01 Aug 2022 03:50:45 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sjtJVO69TqeC70SItXFJb3/BgyUl+/pcwYfZgjwLrKMTO2c11/Qk0N2Rwo5MdbVvcUgflixA==
+X-Received: by 2002:a7b:ca4a:0:b0:3a3:651f:51d8 with SMTP id m10-20020a7bca4a000000b003a3651f51d8mr10706035wml.102.1659351045370;
+        Mon, 01 Aug 2022 03:50:45 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-118-222.dyn.eolo.it. [146.241.118.222])
+        by smtp.gmail.com with ESMTPSA id t18-20020a05600c199200b003a3278d5cafsm20590568wmq.28.2022.08.01.03.50.44
+        for <mptcp@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Jul 2022 19:59:54 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Dmytro SHYTYI <dmytro@shytyi.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220801024656.397714-1-dmytro@shytyi.net>
-References: <20220801024656.397714-1-dmytro@shytyi.net>
-Subject: Re: mptcp: Fast Open Mechanism: Tests Results
-Message-ID: <6ba054ad-6f2f-a921-c4e8-a979bea2fb15@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 01 Aug 2022 02:59:54 +0000
+        Mon, 01 Aug 2022 03:50:44 -0700 (PDT)
+Message-ID: <9f161078dfd130882b9d9bfea2a76b3d89fdc42e.camel@redhat.com>
+Subject: Re: [PATCH v3 mptcp-next 0/4] mptcp: just another receive path
+ refactor
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Date: Mon, 01 Aug 2022 12:50:44 +0200
+In-Reply-To: <cover.1659165378.git.pabeni@redhat.com>
+References: <cover.1659165378.git.pabeni@redhat.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Dmytro,
+On Sat, 2022-07-30 at 10:04 +0200, Paolo Abeni wrote:
+> This is a refresh and rebase of an already shared work:
+> 
+> https://lore.kernel.org/mptcp/cover.1621963632.git.pabeni@redhat.com/
+> [1]
+> 
+> The motiviation for refreshing this is:
+> 
+> https://lore.kernel.org/mptcp/YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020/
+> 
+> specifically it looks like that properly attaching mem_cg to the
+> msk socket would be (much?) easier if the RX path and the fwd memory
+> allocation would be under msk socket lock protection.
+> 
+> The first 2 patches are proably worthy even without the refactor,
+> but specifically the 2nd one is required to get a good mptcp-level
+> acking behavior when we move the rx under the socket lock.
+> 
+> The 3rd patch does the real work, and the 4th is a follow-up cleanup.
+> 
+> Back at [1], I measured relevant performance regressions in some
+> specific cases. I've done the same test here and I now see little to
+> noise changes. I guess that is mostly due to the better acking
+> strategy already introduce with commit 949dfdcf343c ("Merge branch 
+> 'mptcp-improve-mptcp-level-window-tracking'") and refined here.
+> 
+> v2 -> v3:
+>  - dropped obsoleted comment in patch 2/4
+>  - fixed compile warning in patch 3/4
+> 
+> v1 -> v2:
+>  - fix build issue in patch 3/4 due to PEBKAC
+>  - added missing commit messages(!!!) in patch 3/4 & 4/4
+> 
+> Paolo Abeni (4):
+>   mptcp: move RCVPRUNE event later
+>   mptcp: more accurate receive buffer updates
+>   mptcp: move msk input path under full msk socket lock
+>   mptcp: use common helper for rmem memory accounting
+> 
+>  include/net/mptcp.h  |   2 +
+>  net/ipv4/tcp.c       |   3 +
+>  net/mptcp/options.c  |   1 -
+>  net/mptcp/protocol.c | 219 +++++++++++--------------------------------
+>  net/mptcp/protocol.h |  12 ++-
+>  5 files changed, 68 insertions(+), 169 deletions(-)
 
-Thank you for your modifications, that's great!
+I *think* there is a litte more self-tests instability with series
+applied, specifically on simult_flows, and mptcp_join 32 && 99.
 
-Our CI did some validations and here is its report:
+Behind the CI report I also observed a few sporadid failures there.
 
-- KVM Validation: Script error! =E2=9D=93:
-  - :
-  - Task: =
-https://cirrus-ci.com/task/5864799425789952
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5864799425789952/summary/summary.txt
+I'm wild guessing that the mpj failures are caused by the subflow
+socket lock being acquired/relased more often under the msk socket lock
+, possibly changing the timing for some events.
 
-- KVM Validation: Script error! =E2=9D=93:
-  - :
-  - Task: =
-https://cirrus-ci.com/task/5301849472368640
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5301849472368640/summary/summary.txt
+I still have to investigate the above.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/552c6ba5a6a7
+I think we could still consider merging this on the export branch, and
+later try to hammer the issue on the branch (to get more coverage from
+the bots).
 
+WDYT?
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+Thanks!
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Paolo
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
