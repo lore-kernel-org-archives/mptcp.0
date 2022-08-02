@@ -1,39 +1,39 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E8B7F
-	for <mptcp@lists.linux.dev>; Tue,  2 Aug 2022 20:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4285C7F
+	for <mptcp@lists.linux.dev>; Tue,  2 Aug 2022 22:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659473251; x=1691009251;
+  t=1659478263; x=1691014263;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Mu0Hh6ClNDyQsJ5JiYre0VlvPUdzVDpoNkM4g5UfoHA=;
-  b=bSybWWIvG/oKrM5hOFs2IkDqBikmshwiG1loY/aI2a837Kz0D5/CfCY6
-   /E1vqA0qhYftzIz6cln3oBh0Cyfae7ByMENV1GgAX2kb2B7vPJisp/FSc
-   y8L6jid51h4WULzVvFKYgIcpklhpdltR2ut34qThwiB2vNYTPjHUX2QrP
-   dtorJxs5t3AIVfDOLnurEXSJIWQ6pmcdGlXZJPHb7VV98nfct7CoMORUB
-   Z2qwgicbEk5OLf73iKGWRvZt8FVbTRveMUPLoGA/UhGIOGYtN+075ji4h
-   B3kwQVqVcuqIj+V9R4tkzNweZSOkCp6zygkBUkrLxkr0ugml3aT5zJeEe
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10427"; a="290731968"
+  bh=7xXkpzVNuPeQWv3xP0Vya/cMot0kX82VQ1/PS252PjU=;
+  b=iulIdZYASCBtedSZPV7uante+89aHjQoOcLYq3B1bsai/5qWjXbv25hB
+   3iNnkRENYuXYT2FjoNLdNcqrc+1wYPeMBcqjmXY8SSg7Oht7dXksBnXpL
+   3nRRRgtwGGanZM74ad/qYc7ql1Y4/k+jM+GI/bKgOIamQC3fGGNHwBOmK
+   CPUHen3oFtCBd/gLQMVzY+lL3Gxv0FVTN3GERrR9Mm4PDGW3+spwiMets
+   i/fJLP+6w7t2F/n/X6cEgsNUFjPlxgjcvc9A5a78m6wul3pLxmCdVfC+A
+   gAfjTn6RZoLkNMwMitzUDU/SpZZpfXVRwwApCsgrnrENZLSTmZZIDTkDd
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10427"; a="269300412"
 X-IronPort-AV: E=Sophos;i="5.93,212,1654585200"; 
-   d="scan'208";a="290731968"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 13:47:30 -0700
+   d="scan'208";a="269300412"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 15:11:02 -0700
 X-IronPort-AV: E=Sophos;i="5.93,212,1654585200"; 
-   d="scan'208";a="778755424"
+   d="scan'208";a="930147224"
 Received: from dnrajurk-mobl.amr.corp.intel.com ([10.209.121.166])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 13:47:30 -0700
-Date: Tue, 2 Aug 2022 13:47:30 -0700 (PDT)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 15:11:02 -0700
+Date: Tue, 2 Aug 2022 15:11:01 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: Patch "mptcp: don't send RST for single subflow" has been added
- to the 5.18-stable tree
-In-Reply-To: <9beff9f6-b06d-a879-c2df-542375a2def7@tessares.net>
-Message-ID: <c6f067e4-37a4-a8a7-5bdf-45c461c2462@linux.intel.com>
-References: <20220731024320.3360515-1-sashal@kernel.org> <9beff9f6-b06d-a879-c2df-542375a2def7@tessares.net>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v3 mptcp-next 0/4] mptcp: just another receive path
+ refactor
+In-Reply-To: <9f161078dfd130882b9d9bfea2a76b3d89fdc42e.camel@redhat.com>
+Message-ID: <ba2ec96f-aee3-8c96-e18b-75a666d14488@linux.intel.com>
+References: <cover.1659165378.git.pabeni@redhat.com> <9f161078dfd130882b9d9bfea2a76b3d89fdc42e.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,93 +42,82 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 1 Aug 2022, Matthieu Baerts wrote:
+On Mon, 1 Aug 2022, Paolo Abeni wrote:
 
-> Hi Mat,
->
-> (cc: MPTCP ML)
->
-> On 31/07/2022 04:43, Sasha Levin wrote:
->> This is a note to let you know that I've just added the patch titled
+> On Sat, 2022-07-30 at 10:04 +0200, Paolo Abeni wrote:
+>> This is a refresh and rebase of an already shared work:
 >>
->>     mptcp: don't send RST for single subflow
+>> https://lore.kernel.org/mptcp/cover.1621963632.git.pabeni@redhat.com/
+>> [1]
 >>
->> to the 5.18-stable tree which can be found at:
->>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+>> The motiviation for refreshing this is:
 >>
->> The filename of the patch is:
->>      mptcp-don-t-send-rst-for-single-subflow.patch
->> and it can be found in the queue-5.18 subdirectory.
+>> https://lore.kernel.org/mptcp/YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020/
 >>
->> If you, or anyone else, feels it should not be added to the stable tree,
->> please let <stable@vger.kernel.org> know about it.
+>> specifically it looks like that properly attaching mem_cg to the
+>> msk socket would be (much?) easier if the RX path and the fwd memory
+>> allocation would be under msk socket lock protection.
+>>
+>> The first 2 patches are proably worthy even without the refactor,
+>> but specifically the 2nd one is required to get a good mptcp-level
+>> acking behavior when we move the rx under the socket lock.
+>>
+>> The 3rd patch does the real work, and the 4th is a follow-up cleanup.
+>>
+>> Back at [1], I measured relevant performance regressions in some
+>> specific cases. I've done the same test here and I now see little to
+>> noise changes. I guess that is mostly due to the better acking
+>> strategy already introduce with commit 949dfdcf343c ("Merge branch
+>> 'mptcp-improve-mptcp-level-window-tracking'") and refined here.
+>>
+>> v2 -> v3:
+>>  - dropped obsoleted comment in patch 2/4
+>>  - fixed compile warning in patch 3/4
+>>
+>> v1 -> v2:
+>>  - fix build issue in patch 3/4 due to PEBKAC
+>>  - added missing commit messages(!!!) in patch 3/4 & 4/4
+>>
+>> Paolo Abeni (4):
+>>   mptcp: move RCVPRUNE event later
+>>   mptcp: more accurate receive buffer updates
+>>   mptcp: move msk input path under full msk socket lock
+>>   mptcp: use common helper for rmem memory accounting
+>>
+>>  include/net/mptcp.h  |   2 +
+>>  net/ipv4/tcp.c       |   3 +
+>>  net/mptcp/options.c  |   1 -
+>>  net/mptcp/protocol.c | 219 +++++++++++--------------------------------
+>>  net/mptcp/protocol.h |  12 ++-
+>>  5 files changed, 68 insertions(+), 169 deletions(-)
 >
-> I just noticed the patch below is being backported to v5.18 while it
-> doesn't have any "Fixes" tag.
+> I *think* there is a litte more self-tests instability with series
+> applied, specifically on simult_flows, and mptcp_join 32 && 99.
 >
-> It slightly changes the behaviour on v5.18 but I don't think that's an
-> issue, it could even be seen as a bug-fix for me.
+> Behind the CI report I also observed a few sporadid failures there.
 >
-> I just double-checked and the selftests are still OK with this patch.
+> I'm wild guessing that the mpj failures are caused by the subflow
+> socket lock being acquired/relased more often under the msk socket lock
+> , possibly changing the timing for some events.
 >
-> Also OK for you to have it in v5.18?
+> I still have to investigate the above.
+>
+> I think we could still consider merging this on the export branch, and
+> later try to hammer the issue on the branch (to get more coverage from
+> the bots).
+>
+> WDYT?
 >
 
-I noticed this too - I'm going to ask Greg to drop it. Without the 
-infinite mapping support that follows in the series I think it's better to 
-keep the RST behavior.
+I think that's a good plan. Tests are running ok on my test VM and the 
+code looks ok, and I agree your wild guess is plausible.
 
-- Mat
+It's also a good time to let it bake a bit in the export branch, with 
+net-next being newly closed.
 
->
->> commit 0a782d12ad419f820fbaf1d637a788097014b5b1
->> Author: Geliang Tang <geliang.tang@suse.com>
->> Date:   Fri Apr 22 14:55:36 2022 -0700
->>
->>     mptcp: don't send RST for single subflow
->>
->>     [ Upstream commit 1761fed2567807f26fbd53032ff622f55978c7a9 ]
->>
->>     When a bad checksum is detected and a single subflow is in use, don't
->>     send RST + MP_FAIL, send data_ack + MP_FAIL instead.
->>
->>     So invoke tcp_send_active_reset() only when mptcp_has_another_subflow()
->>     is true.
->>
->>     Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->>     Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
->>     Signed-off-by: David S. Miller <davem@davemloft.net>
->>     Signed-off-by: Sasha Levin <sashal@kernel.org>
->>
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 7919e259175d..ccae50eba664 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1221,14 +1221,14 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>  	/* RFC 8684 section 3.7. */
->>  	if (subflow->send_mp_fail) {
->>  		if (mptcp_has_another_subflow(ssk)) {
->> +			ssk->sk_err = EBADMSG;
->> +			tcp_set_state(ssk, TCP_CLOSE);
->> +			subflow->reset_transient = 0;
->> +			subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
->> +			tcp_send_active_reset(ssk, GFP_ATOMIC);
->>  			while ((skb = skb_peek(&ssk->sk_receive_queue)))
->>  				sk_eat_skb(ssk, skb);
->>  		}
->> -		ssk->sk_err = EBADMSG;
->> -		tcp_set_state(ssk, TCP_CLOSE);
->> -		subflow->reset_transient = 0;
->> -		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
->> -		tcp_send_active_reset(ssk, GFP_ATOMIC);
->>  		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
->>  		return true;
->>  	}
->
-> -- 
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
+For the series:
+
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 --
 Mat Martineau
