@@ -1,41 +1,47 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103177F
-	for <mptcp@lists.linux.dev>; Tue,  2 Aug 2022 22:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3538A7F
+	for <mptcp@lists.linux.dev>; Tue,  2 Aug 2022 22:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659478895; x=1691014895;
+  t=1659479817; x=1691015817;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=RRl8Wr0Hdlu6OVTnv0N+8fa2YKugeYr1fvxmaKZlk3U=;
-  b=XVtFRbeKMXOMzPeOoHb0WRaKOQxK8eXotVgH79Z7ziaMfqCli6OH8QXR
-   6oFpYDEUWpyMF2OPJE0olGLtSqgVna6WIBfdPbRQ/Uz0BkjI04SQAwZgB
-   u6tKc/VhJo3ZKzSwoqoDWonHL50idFBdGa7fEyh/J0H+r+sHUIP8ZKZhG
-   PrkqXhCB0J6r7ZMs0r1zh2t0NsL4rW961zPk9yV0TTZZYH4gLmq+N31r8
-   JxbhWk77vBpSYEECgt3aLSBOigSormBPaEVGuqJ5RCKs9ql7i7mt0g7wG
-   QIp5XOe0lrN6JPqcWxkl4ScS+crFXBj9hJvkF861XLYJFALoGxfyrx+WA
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10427"; a="269301805"
+  bh=XCsTPnpTKoW+duZszx3zQSg+OHhT0zbLo009U3mVwMs=;
+  b=niq+aLAX/oS5tSZRzLrhy6pimrYr1jZB7kjirABqVxe7wDAe3fkHIJY9
+   5qz+rbNFYjQdSr9pd0Huf/QGE99T76V1VBNEvPgM8eYxZkoaAm1VFcbLU
+   OBvFyBvxXSJRHvVE9u49BBp66PpUKBqhuu8MVdFXyDacROQsp/PvRhkGJ
+   t/ttc6du5q5qyukCcr4NYB4R7VpaYa3DF1/NAf/vRMJKpXADD7RRMn/28
+   ELPx7bhG82san5XvcXCANJtgI9BkMuEUUW3FVzJLw/RXUImqOhrbenI2/
+   rFhjYb3aU9utTUKxNEKcoEqBEuYEdtENclwuK/LR6DtsEJVJb99e9uXQb
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10427"; a="269303865"
 X-IronPort-AV: E=Sophos;i="5.93,212,1654585200"; 
-   d="scan'208";a="269301805"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 15:21:34 -0700
+   d="scan'208";a="269303865"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 15:36:56 -0700
 X-IronPort-AV: E=Sophos;i="5.93,212,1654585200"; 
-   d="scan'208";a="553086889"
+   d="scan'208";a="599448815"
 Received: from dnrajurk-mobl.amr.corp.intel.com ([10.209.121.166])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 15:21:34 -0700
-Date: Tue, 2 Aug 2022 15:21:34 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2022 15:36:56 -0700
+Date: Tue, 2 Aug 2022 15:36:55 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Xie Shaowen <studentxswpy@163.com>
-cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com, 
-    kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
-    mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-    Hacash Robot <hacashRobot@santino.com>
-Subject: Re: [PATCH net-next] mptcp: Fix spelling mistakes and cleanup code
-In-Reply-To: <20220730090617.3101386-1-studentxswpy@163.com>
-Message-ID: <8dbc125-5396-fe56-99a1-c94b27c8938e@linux.intel.com>
-References: <20220730090617.3101386-1-studentxswpy@163.com>
+To: Jiri Olsa <jolsa@kernel.org>
+cc: Alexei Starovoitov <ast@kernel.org>, 
+    Daniel Borkmann <daniel@iogearbox.net>, 
+    Andrii Nakryiko <andrii@kernel.org>, 
+    Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    Martin KaFai Lau <kafai@fb.com>, bpf@vger.kernel.org, 
+    Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+    John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
+    Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+    mptcp@lists.linux.dev
+Subject: Re: [PATCHv2 bpf-next] mptcp: Add struct mptcp_sock definition when
+ CONFIG_MPTCP is disabled
+In-Reply-To: <20220802163324.1873044-1-jolsa@kernel.org>
+Message-ID: <341f1b39-24e1-3c80-41e0-a4ebac91297@linux.intel.com>
+References: <20220802163324.1873044-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,62 +50,51 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Sat, 30 Jul 2022, studentxswpy@163.com wrote:
+On Tue, 2 Aug 2022, Jiri Olsa wrote:
 
-> From: Xie Shaowen <studentxswpy@163.com>
+> The btf_sock_ids array needs struct mptcp_sock BTF ID for
+> the bpf_skc_to_mptcp_sock helper.
 >
-> fix follow spelling misktakes:
-> 	regarless ==> regardless
-> 	interaces ==> interfaces
+> When CONFIG_MPTCP is disabled, the 'struct mptcp_sock' is not
+> defined and resolve_btfids will complain with:
 >
-> Reported-by: Hacash Robot <hacashRobot@santino.com>
-> Signed-off-by: Xie Shaowen <studentxswpy@163.com>
+>  BTFIDS  vmlinux
+> WARN: resolve_btfids: unresolved symbol mptcp_sock
+>
+> Adding empty difinition for struct mptcp_sock when CONFIG_MPTCP
+> is disabled.
+>
+> Acked-by: Martin KaFai Lau <kafai@fb.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-Hello Xie Shaowen -
+Thanks Jiri, v2 looks good to merge in bpf-next:
 
-These spelling errors were already fixed in commit d640516a65d8, merged 
-2022-06-28. Please make sure to work from an up-to-date branch!
-
-
-Thanks for your patch,
-
-Mat
-
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
 > ---
-> net/mptcp/pm_netlink.c | 2 +-
-> net/mptcp/subflow.c    | 2 +-
-> 2 files changed, 2 insertions(+), 2 deletions(-)
+> include/net/mptcp.h | 4 ++++
+> 1 file changed, 4 insertions(+)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 7c7395b58944..5bdb559d5242 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1134,7 +1134,7 @@ void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ss
-> 			}
-> 			unlock_sock_fast(ssk, slow);
+> v2 changes:
+>  - moved the new empty struct declaration next to the inline
+>    bpf_mptcp_sock_from_subflow function [Mat]
 >
-> -			/* always try to push the pending data regarless of re-injections:
-> +			/* always try to push the pending data regardless of re-injections:
-> 			 * we can possibly use backup subflows now, and subflow selection
-> 			 * is cheap under the msk socket lock
-> 			 */
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index af28f3b60389..901c763dcdbb 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1634,7 +1634,7 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
-> 	/* the newly created socket really belongs to the owning MPTCP master
-> 	 * socket, even if for additional subflows the allocation is performed
-> 	 * by a kernel workqueue. Adjust inode references, so that the
-> -	 * procfs/diag interaces really show this one belonging to the correct
-> +	 * procfs/diag interfaces really show this one belonging to the correct
-> 	 * user.
-> 	 */
-> 	SOCK_INODE(sf)->i_ino = SOCK_INODE(sk->sk_socket)->i_ino;
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index ac9cf7271d46..412479ebf5ad 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -291,4 +291,8 @@ struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk);
+> static inline struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk) { return NULL; }
+> #endif
+>
+> +#if !IS_ENABLED(CONFIG_MPTCP)
+> +struct mptcp_sock { };
+> +#endif
+> +
+> #endif /* __NET_MPTCP_H */
 > -- 
-> 2.25.1
+> 2.37.1
 >
 >
 
