@@ -1,44 +1,44 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BBD18D
-	for <mptcp@lists.linux.dev>; Wed,  3 Aug 2022 16:31:34 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id c24so1650076ejd.11
-        for <mptcp@lists.linux.dev>; Wed, 03 Aug 2022 09:31:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5011FBB
+	for <mptcp@lists.linux.dev>; Wed,  3 Aug 2022 16:34:41 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id tl27so14586266ejc.1
+        for <mptcp@lists.linux.dev>; Wed, 03 Aug 2022 09:34:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=JvTUEgxu3LtwkI0TnpQkqvLy+9CzfL/Hd5+ZyExTZxI=;
-        b=UUUyc3lGNU/EGVcI46JZQ67Y6N3JSvFGVHZ/HeCyanIZa5VMi5WzA8yoACVDrDkMZd
-         8PZROqNx1AFspi2uvYmHHRdxOpbhffyYP7RoAqv6r1habea70Mo9iDSt1REMiEtyKVr2
-         ilXDiwXFBX3HuUpJou/7LvzfLM/aCs4/qjJzE6whgFcgEQubXPMZNj28LGSehsusNmCV
-         k0VVLwwjBKdtoMGNH9W8+E2qBR6Ys4KfESHRlpxjV1bUGibqQI+/kAERzDW1lCMHvSWE
-         FueGRk+j7ia21rAcA2NFzRfLk7v61la6zUtEXwUf1YCDuQcKYBKF3+8J6WBTYuYzrFfN
-         nHZw==
+        bh=EbR1YFKhUTOJbOrUp9kWPuF/jbusUzUUH3aU6R65iI8=;
+        b=M/1lomOZaa3wS0Rc2/7deBHxu3WhPB59xKXrW/zkoQhYkyWENCllUDt0lc9hsQeVhR
+         fVejQ4ihyUZp61SoNEgWIr2fOT7yFdwobMJ8hpDHRZobA92NcNQUKVnufxby2AgPVUe9
+         rdt3IsenEE6Wcay+S3xfzSG0rtKwGVnKUYHvWrpwvWAQiI1DYJMi3M340xLOWKidg2wj
+         ndi0CLY/Zb9JC6piBVWd6+3YVF/QKLggy9jntS3pRf2gP+cKtF00v4YYg/1Z1MLtE2r+
+         n7NCgcMiC/NuXMtf+8j5PDWxjHUniZ0dDnCMIaM1s5TMhIO+qrdioqymut4eajskDlwG
+         M8ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=JvTUEgxu3LtwkI0TnpQkqvLy+9CzfL/Hd5+ZyExTZxI=;
-        b=SV+RbhZxwC1lPmNYq75j4gH8dY+uxCLcWK/qt987M8BRpiLX1NdKntsETjpfk9VulZ
-         zAHfiQzllnYeJ6eZdX6yxSmGymjCeTvLreHRWdvLzzU32A1vFjliOebpJZE0bRRBMTp+
-         Je8+9qcV6h0Cg+8PfE8Wd4Z5XBR5gb1xFzq2Ms3SlGQLGtLj4mdXIeG8N5cVtTNo8FZH
-         /zhtmTLuCs0QONUQKwHHo5NK5FDn/Td80siweAG35Fj39pxm5JKmrzfT5Ds2WpSwWG6m
-         bAUTxnLQulZYg1fWtddeXlkxXLMrBjWbBb7toEkkRiWwkcOAfVlwkiqmi7B+/np3eUaa
-         7Q7A==
-X-Gm-Message-State: AJIora9nRZdb8DCB06kLetCjWfrxD+ANajY0ggxR0wjTrX3f0hBVsv37
-	wJ36Z7VkMdw3N6JF/l9Yb5tCYw==
-X-Google-Smtp-Source: AGRyM1sIUDH8DKLvEI9OCQmUtZbgwJz0G7gyTjNa4BF/nbW51mtGstJt+n0OtidDMOfuuxIoAefAvQ==
-X-Received: by 2002:a17:906:8cb0:b0:72f:6ce7:3a1 with SMTP id qr48-20020a1709068cb000b0072f6ce703a1mr20292075ejc.322.1659544292857;
-        Wed, 03 Aug 2022 09:31:32 -0700 (PDT)
+        bh=EbR1YFKhUTOJbOrUp9kWPuF/jbusUzUUH3aU6R65iI8=;
+        b=tB7xdIChiZHJr0rSZXkwQKpGsEgvY8x+3swUM/sR3ovtge+vm5gLkn69PR87ux8VYi
+         v5xp39eXxNdepIXMtZ/EPLyzA6lVRj6RIMdEAHhPkY/h4GUHzPUdupm3IrLt3HLvFqt2
+         +H3a4mzCkTPfmXVL0n/ezUJSMjSOpQkGT78BVi3UJPtJNnA3d4ByykVBOfe3a9+hJmly
+         gEzXuw8c0DKYN4EZt16nXjBRzUCTmHK6EM+j04wKfJlKEuXjIU8UgpKXIJDiAgD9jhYj
+         EaxFQP2ymO98rDcdj39H8F5Pt/LwJ/cyohcfNR/peia4aJXIyCXQ60WTl7ktEnPUv+q3
+         SW8w==
+X-Gm-Message-State: ACgBeo3czGjywELc8bzLfvs6atCpwV2UC1MZ6j9ZhNn047stJvcw2PQx
+	eXarohZMeFKgMsrFdOqPn3Lmkg==
+X-Google-Smtp-Source: AA6agR6yzFpCiSxF96igMuHSW5+g9xZoky3XHS3vP36CnvvtMwKaQmMOWz5MT2WJyOtD44N13CVlqQ==
+X-Received: by 2002:a17:907:2707:b0:730:af0b:3572 with SMTP id w7-20020a170907270700b00730af0b3572mr3073464ejk.411.1659544479840;
+        Wed, 03 Aug 2022 09:34:39 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:aec0:3f15:459e:231a? ([2a02:578:8593:1200:aec0:3f15:459e:231a])
-        by smtp.gmail.com with ESMTPSA id kz25-20020a17090777d900b0073085243f3fsm3474095ejc.64.2022.08.03.09.31.32
+        by smtp.gmail.com with ESMTPSA id c13-20020a509f8d000000b0043ba1ecb0dfsm551528edf.75.2022.08.03.09.34.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Aug 2022 09:31:32 -0700 (PDT)
-Message-ID: <902b74e0-6053-9570-61df-f27ff1895961@tessares.net>
-Date: Wed, 3 Aug 2022 18:31:31 +0200
+        Wed, 03 Aug 2022 09:34:39 -0700 (PDT)
+Message-ID: <8ab4af57-e618-19ec-0cc5-1590612bacfc@tessares.net>
+Date: Wed, 3 Aug 2022 18:34:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,50 +47,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.0.3
-Subject: Re: [PATCHv2 bpf-next] mptcp: Add struct mptcp_sock definition when
- CONFIG_MPTCP is disabled
+Subject: Re: [PATCH v2 mptcp] selftests: mptcp: make sendfile selftest work
 Content-Language: en-GB
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20220802163324.1873044-1-jolsa@kernel.org>
+To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Cc: mathew.j.martineau@linux.intel.com, Paolo Abeni <pabeni@redhat.com>,
+ Xiumei Mu <xmu@redhat.com>
+References: <20220729095550.3040-1-fw@strlen.de>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220802163324.1873044-1-jolsa@kernel.org>
+In-Reply-To: <20220729095550.3040-1-fw@strlen.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jiri, Mat,
+Hi Florian, Mat,
 
-(MPTCP ML only)
-
-On 02/08/2022 18:33, Jiri Olsa wrote:
-> The btf_sock_ids array needs struct mptcp_sock BTF ID for
-> the bpf_skc_to_mptcp_sock helper.
+On 29/07/2022 11:55, Florian Westphal wrote:
+> When the selftest got added, sendfile() on mptcp sockets returned
+> -EOPNOTSUPP, so running 'mptcp_connect.sh -m sendfile' failed
+> immediately.
 > 
-> When CONFIG_MPTCP is disabled, the 'struct mptcp_sock' is not
-> defined and resolve_btfids will complain with:
+> This is no longer the case, but the script fails anyway due to timeout.
+> Let the receiver know once the sender has sent all data, just like
+> with '-m mmap' mode.
 > 
->   BTFIDS  vmlinux
-> WARN: resolve_btfids: unresolved symbol mptcp_sock
-> 
-> Adding empty difinition for struct mptcp_sock when CONFIG_MPTCP
-> is disabled.
+> v2: need to respect cfg_wait too, as pm_userspace.sh relied
+> on -m sendfile to keep the connection open (Mat Martineau)
 
 Thank you for the patch and the review!
 
-FYI, I just applied this patch in MPTCP tree (feat. for other trees)
-just to track it and prevent conflicts on our side with the future
-bpf-next/net-next.
+Now in our tree (fix for -net) with Mat's RvB tag:
 
+
+New patches for t/upstream-net:
+- febacb9a6dd6: selftests: mptcp: make sendfile selftest work
+- Results: 17273797344c..06a049f34010 (export-net)
 
 New patches for t/upstream:
-- fa5c3bcfae6e: mptcp: Add struct mptcp_sock definition when
-CONFIG_MPTCP is disabled
-- Results: 982ba3087aac..ba0f79895fde (export)
+- febacb9a6dd6: selftests: mptcp: make sendfile selftest work
+- Results: ba0f79895fde..7f8f198f2f9b (export)
 
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220803T162341
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220803T163309
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220803T163309
 
 
 Cheers,
