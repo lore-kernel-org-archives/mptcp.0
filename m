@@ -1,131 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7457C
-	for <mptcp@lists.linux.dev>; Fri,  5 Aug 2022 11:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659700232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PA1iZbZfGn1+lXzDyZdvVs/eG9qxHtUO+Mk7lsjsY6k=;
-	b=JyukVIvW1rpFJqM3HtKqxt4gaTC7AC6FonVLvHFuroOEnYYlAE5vqkqpTyrskhvQ8ntI7e
-	xA04Ra84YtKMkYP34OJZKvATIFw5k0v5wKSnU0xnmpDQFH7lP751LHUxhQvhjD4bxWcB+i
-	0o0NAwEGI9ZXGZkood/TjZvnfxnDRbM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-609-axumRqx-PIKHg_TR9BVsaQ-1; Fri, 05 Aug 2022 07:50:31 -0400
-X-MC-Unique: axumRqx-PIKHg_TR9BVsaQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2A27085A585
-	for <mptcp@lists.linux.dev>; Fri,  5 Aug 2022 11:50:31 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.40.193.11])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 98E1B909FE;
-	Fri,  5 Aug 2022 11:50:29 +0000 (UTC)
-From: Thomas Haller <thaller@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com,
-	Thomas Haller <thaller@redhat.com>
-Subject: [PATCH] mptcp: allow priviledged operations from user namespaces
-Date: Fri,  5 Aug 2022 13:50:20 +0200
-Message-Id: <20220805115020.525181-1-thaller@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD11ED9
+	for <mptcp@lists.linux.dev>; Fri,  5 Aug 2022 13:37:35 +0000 (UTC)
+Received: by mail-pj1-f47.google.com with SMTP id a8so2788614pjg.5
+        for <mptcp@lists.linux.dev>; Fri, 05 Aug 2022 06:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:reply-to:in-reply-to:references:subject:message-id
+         :content-transfer-encoding:date:mime-version;
+        bh=Z+fvXFWDDbJLBEQuokIQvW22VejjWwYTqY14HkFFnUM=;
+        b=k0FQ7Aa4MMgHmy9asBPKNLM0H3TBTAiL8U6u5gs7r1ZHXH+BiHATvk1CwKqbjfvInB
+         ywnMxuR2DlTLQZKKNk+O4q9CzQYEAyGAOAdq1D9kEmGCB+uHgDitXMmsm8bMz0FHeS2v
+         IvYpMgILn9suFTNlpwlZZu1Hw7eKvjJXYY1kdCxHo/iB1uidSg2RQUHgSkkpyzhhMigW
+         ZAObVKQad1obmN5Ah6aTrMcfrYgVJC9DbzG6TJNdXBlg0ZnGrTxaYUyRve3jVqQprVqR
+         z+ZHgteH53UGMS8C2ucdFToX4o9YthlTX4ZPbTaPstDwAw196REgy8WnHS1dgd8BD5v2
+         skGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:reply-to:in-reply-to:references
+         :subject:message-id:content-transfer-encoding:date:mime-version;
+        bh=Z+fvXFWDDbJLBEQuokIQvW22VejjWwYTqY14HkFFnUM=;
+        b=kgzKpBD2i5hSDpGNuuGTYQRaxjrQH4UmMkQXjLkJg3g1nx2Tvn26uxlcC+ldESfek4
+         t4RaTywVKmK6/UiC7WIoh4HhLn2/V/pEOYANLDFaMxni4MPOB9C1xpbZO8l/5SNOI7Q8
+         aqyCPzxPuXiG3I3h0sUsmBZ/WaI0YEtcrjbMyXO9+EDjWm0pSvdnhwcOApk8+0X7lRHa
+         9dib5BWrYvIhT1sNsZvdPI+/M9V78j6CbKASZLWIcXZVe1XS0q/DjQ3sQL7d7Tt7G0ja
+         NKAAHAZZe6i5ddlNZoIRq+TteFAvPZ9xCSzKmU/36foIKAsqITmk08EAyfk3EnvUJrzJ
+         1NjQ==
+X-Gm-Message-State: ACgBeo12hBy57AqQrRtAyimcxcEF307U3jaMplVFMRF+B5HUkl9kOnVB
+	85hLFzLcaulTQHvyDhwHXw==
+X-Google-Smtp-Source: AA6agR6X8AP1hORWXkZ0TPt5atDfG+YtixVSYqfeqJew13uzPBKCt08wGIIxGLbvW5Z5kRgnPmNMcw==
+X-Received: by 2002:a17:902:8693:b0:16c:db86:1c86 with SMTP id g19-20020a170902869300b0016cdb861c86mr6759816plo.9.1659706654711;
+        Fri, 05 Aug 2022 06:37:34 -0700 (PDT)
+Received: from [127.0.0.1] ([20.245.173.85])
+        by smtp.gmail.com with ESMTPSA id p9-20020a63fe09000000b00401a9bc0f33sm1467675pgh.85.2022.08.05.06.37.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Aug 2022 06:37:34 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Thomas Haller <thaller@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220805115020.525181-1-thaller@redhat.com>
+References: <20220805115020.525181-1-thaller@redhat.com>
+Subject: Re: mptcp: allow priviledged operations from user namespaces:
+ Tests Results
+Message-ID: <2c2acc73-a8e2-662e-8558-432efd4a49ad@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 05 Aug 2022 13:37:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-GENL_ADMIN_PERM checks that the user has CAP_NET_ADMIN in the initial
-namespace by calling netlink_capable(). Instead, use GENL_UNS_ADMIN_PERM
-which uses netlink_ns_capable(). This checks that the caller has
-CAP_NET_ADMIN in the current user namespace.
+Hi Thomas,
 
-See also commit 4a92602aa1cd ('openvswitch: allow management from inside
-user namespaces') which introduced this mechanism. See also commit
-5617c6cd6f84 ('nl80211: Allow privileged operations from user
-namespaces'), which introduced this for nl80211.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Thomas Haller <thaller@redhat.com>
----
- net/mptcp/pm_netlink.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 291b5da42fdb..2c145cdc7bdc 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -2218,17 +2218,17 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
- 	{
- 		.cmd    = MPTCP_PM_CMD_ADD_ADDR,
- 		.doit   = mptcp_nl_cmd_add_addr,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_DEL_ADDR,
- 		.doit   = mptcp_nl_cmd_del_addr,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_FLUSH_ADDRS,
- 		.doit   = mptcp_nl_cmd_flush_addrs,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_GET_ADDR,
-@@ -2238,7 +2238,7 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
- 	{
- 		.cmd    = MPTCP_PM_CMD_SET_LIMITS,
- 		.doit   = mptcp_nl_cmd_set_limits,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_GET_LIMITS,
-@@ -2247,27 +2247,27 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
- 	{
- 		.cmd    = MPTCP_PM_CMD_SET_FLAGS,
- 		.doit   = mptcp_nl_cmd_set_flags,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_ANNOUNCE,
- 		.doit   = mptcp_nl_cmd_announce,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_REMOVE,
- 		.doit   = mptcp_nl_cmd_remove,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_SUBFLOW_CREATE,
- 		.doit   = mptcp_nl_cmd_sf_create,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd    = MPTCP_PM_CMD_SUBFLOW_DESTROY,
- 		.doit   = mptcp_nl_cmd_sf_destroy,
--		.flags  = GENL_ADMIN_PERM,
-+		.flags  = GENL_UNS_ADMIN_PERM,
- 	},
- };
- 
--- 
-2.37.1
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): kunit =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/4847158800154624
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4847158800154624/summary/summary.txt
 
+- KVM Validation: debug:
+  - Unstable: 2 failed test(s): kunit =
+packetdrill_add_addr =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5973058706997248
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5973058706997248/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/c384b8e857ac
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
