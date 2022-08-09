@@ -1,103 +1,170 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3269715A0
-	for <mptcp@lists.linux.dev>; Tue,  9 Aug 2022 00:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660004119; x=1691540119;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fdtAtv2JPMsbcix1AFVf1WX9kLPKYrE0I+SQabnNTsI=;
-  b=UYk5Ih5HLbCiZOly1TyYpo3FYotjJhf//B4WSQNGtGmAKO55+mLh5O2r
-   oobWBcQdVicrcByzYLulUt2ONchv1EOz/HXmDcXC/XBUMpE7d2RKPESw5
-   vig46oLHt0WIJ39HBk5r3Wi/A9l4PKXoPUKzfp6cxzQyKQ2f/EAk2cAVW
-   SwsFUV/CfOr6+S80P9v5kjz04coNnwdhtZxgNkKjsVqQGW9ovZv7MmrXp
-   HEIeTIVSqaSP5zlfsQnpfHLpcwabn1A/696cGnZq5AKX4DS+uaL+NUkdo
-   mZ2LkkCmxIYxR+zZwCQPcE+oEPeL/0s7j4RP4B9tyQsa7VI4WxJZgtMwO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10433"; a="277653609"
-X-IronPort-AV: E=Sophos;i="5.93,223,1654585200"; 
-   d="scan'208";a="277653609"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 17:15:18 -0700
-X-IronPort-AV: E=Sophos;i="5.93,223,1654585200"; 
-   d="scan'208";a="780678409"
-Received: from srinathm-mobl.amr.corp.intel.com ([10.212.202.204])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 17:15:18 -0700
-Date: Mon, 8 Aug 2022 17:15:18 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: move prefix tests of
- addr_nr_ns2 together
-In-Reply-To: <a13144785eab9f2568fdf9eb7da6714d4a911756.1659923077.git.geliang.tang@suse.com>
-Message-ID: <b69ddfa-7e77-2c1d-1e76-84527d297228@linux.intel.com>
-References: <a13144785eab9f2568fdf9eb7da6714d4a911756.1659923077.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D733C1C
+	for <mptcp@lists.linux.dev>; Tue,  9 Aug 2022 10:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1660040629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ho+ePTWPl/EL1EPq17UmLOir9InpXxMWG0Gdv1KLdRg=;
+	b=BzCkQ5AYjFV/Ew75p1gw0tyDfL9d/H1mHQvNoKt4Ujg6SHtqNkMwCHy5qwJCtnaJlt6kwZ
+	/+dBj+NTHXA5V/h0lNBjRgzDs8/e+9Dx+sWHCm6sO8wm1Ag8qzVguoS2tzVQDvJF8OzVNZ
+	ct0+IGTmw6g4chomK+N+WkkrtyRwjSI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-58-SfMlTi19Pr2Sjw24FQO4vw-1; Tue, 09 Aug 2022 06:23:48 -0400
+X-MC-Unique: SfMlTi19Pr2Sjw24FQO4vw-1
+Received: by mail-wm1-f72.google.com with SMTP id az42-20020a05600c602a00b003a552086ba9so1191466wmb.6
+        for <mptcp@lists.linux.dev>; Tue, 09 Aug 2022 03:23:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc;
+        bh=ho+ePTWPl/EL1EPq17UmLOir9InpXxMWG0Gdv1KLdRg=;
+        b=ptKiccgD5stAmIyjFePPMXLDepvpGEhtHmZVVnk3QUNFQ/+tK1zdm9yMW1WQAR2z7T
+         xvN3Nalfk/9oQClP7lhXYDK+nUxx/75yxiWq29fdajMKhKxiUfOWWGpFzqWrk8jz9RpB
+         XSqyfuuOnLkccAiglPwSaHoUGv3fOeopUNHJEhxq9E/uyfXf5lzwtaPs06GG6iTaHVWR
+         4bWanYkbgM/+EpYYMHwY7mysKP/0PR1yyuXAesa47JvFD3R0fGdLEPjPVzEzX480pGRS
+         RwONmJ2pfg+vzNqq+dzBHaHQiIZU0SiGIDoLGfQUF2Hf5svUjypMWw33mnv0Cgtb5EiR
+         lYlw==
+X-Gm-Message-State: ACgBeo3rbQ8NUuAvgvxuRdCGJapyYcUvLIxNh+uyJ+/zHGQiPIyozLWb
+	u5pZvCxDYK5sZNSvRpqi3E0TSPkrC/t480QuU3ZmIKwma4BHe16J6J9RdnPGOuiEjLYAYFUrNud
+	Mh2UMgF8HKDkfXCI=
+X-Received: by 2002:a1c:2504:0:b0:3a5:3f92:25ca with SMTP id l4-20020a1c2504000000b003a53f9225camr6033993wml.139.1660040627149;
+        Tue, 09 Aug 2022 03:23:47 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7+mbTBA47nCH2jnBg8RFd3mIJPRRv0MjBK9pEzgI/jv1HDzfF4SvML59zGBc713wGE8vjCfA==
+X-Received: by 2002:a1c:2504:0:b0:3a5:3f92:25ca with SMTP id l4-20020a1c2504000000b003a53f9225camr6033981wml.139.1660040626938;
+        Tue, 09 Aug 2022 03:23:46 -0700 (PDT)
+Received: from [192.168.27.164] ([151.68.6.210])
+        by smtp.gmail.com with ESMTPSA id bn30-20020a056000061e00b002206236ab3dsm13181940wrb.3.2022.08.09.03.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Aug 2022 03:23:46 -0700 (PDT)
+Message-ID: <61c4ce025d140659e34c14b2180378f48f45839e.camel@redhat.com>
+Subject: Re: [PATCH] mptcp: allow priviledged operations from user namespaces
+From: Thomas Haller <thaller@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>, Florian Westphal
+	 <fw@strlen.de>, Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Tue, 09 Aug 2022 12:23:44 +0200
+In-Reply-To: <e95949bf-53cf-bdf-27c8-8cbc3eeda450@linux.intel.com>
+References: <20220805115020.525181-1-thaller@redhat.com>
+	 <e95949bf-53cf-bdf-27c8-8cbc3eeda450@linux.intel.com>
+User-Agent: Evolution 3.44.3 (3.44.3-1.fc36)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On Mon, 8 Aug 2022, Geliang Tang wrote:
+SGkgTWF0LAoKT24gTW9uLCAyMDIyLTA4LTA4IGF0IDE3OjA0IC0wNzAwLCBNYXQgTWFydGluZWF1
+IHdyb3RlOgo+IE9uIEZyaSwgNSBBdWcgMjAyMiwgVGhvbWFzIEhhbGxlciB3cm90ZToKPiAKPiA+
+IEdFTkxfQURNSU5fUEVSTSBjaGVja3MgdGhhdCB0aGUgdXNlciBoYXMgQ0FQX05FVF9BRE1JTiBp
+biB0aGUKPiA+IGluaXRpYWwKPiA+IG5hbWVzcGFjZSBieSBjYWxsaW5nIG5ldGxpbmtfY2FwYWJs
+ZSgpLiBJbnN0ZWFkLCB1c2UKPiA+IEdFTkxfVU5TX0FETUlOX1BFUk0KPiA+IHdoaWNoIHVzZXMg
+bmV0bGlua19uc19jYXBhYmxlKCkuIFRoaXMgY2hlY2tzIHRoYXQgdGhlIGNhbGxlciBoYXMKPiA+
+IENBUF9ORVRfQURNSU4gaW4gdGhlIGN1cnJlbnQgdXNlciBuYW1lc3BhY2UuCj4gPiAKPiA+IFNl
+ZSBhbHNvIGNvbW1pdCA0YTkyNjAyYWExY2QgKCdvcGVudnN3aXRjaDogYWxsb3cgbWFuYWdlbWVu
+dCBmcm9tCj4gPiBpbnNpZGUKPiA+IHVzZXIgbmFtZXNwYWNlcycpIHdoaWNoIGludHJvZHVjZWQg
+dGhpcyBtZWNoYW5pc20uIFNlZSBhbHNvIGNvbW1pdAo+ID4gNTYxN2M2Y2Q2Zjg0ICgnbmw4MDIx
+MTogQWxsb3cgcHJpdmlsZWdlZCBvcGVyYXRpb25zIGZyb20gdXNlcgo+ID4gbmFtZXNwYWNlcycp
+LCB3aGljaCBpbnRyb2R1Y2VkIHRoaXMgZm9yIG5sODAyMTEuCj4gPiAKPiA+IFNpZ25lZC1vZmYt
+Ynk6IFRob21hcyBIYWxsZXIgPHRoYWxsZXJAcmVkaGF0LmNvbT4KPiAKPiBIaSBUaG9tYXMgLQo+
+IAo+IFRoYW5rcyBmb3IgdGhlIHBhdGNoISBUaGlzIGRvZXMgc2VlbSBsaWtlIGEgZ29vZCBpZGVh
+IHRvIG1lIChhbmQgaXQKPiBzZWVtcyAKPiB0byB3b3JrIG9rIHdpdGggb3VyIE1QVENQIHRlc3Rz
+KSwgYnV0IEknZCBsaWtlIHRvIGdldCBzb21lIG1vcmUKPiBjb21tdW5pdHkgCj4gaW5wdXQgYmVm
+b3JlIG1lcmdpbmcgKFBhb2xvL0Zsb3JpYW4/KS4KCnRoYW5rcyBmb3IgeW91ciBmZWVkYmFjay4K
+ClRoZSBiYWNrZ3JvdW5kIGZvciB0aGlzIGlzIHRoYXQgd2UgcnVuIHVuaXQgdGVzdHMgZm9yIE5l
+dHdvcmtNYW5hZ2VyIGluCmEgc2VwYXJhdGUgbmV0d29yayBuYW1lc3BhY2UsIHN0YXJ0ZWQgYXMg
+bm9uLXJvb3QgdXNlci4gQ29uZmlndXJpbmcKTVBUQ1AgZW5kcG9pbnRzIGRvZXMgY3VycmVudGx5
+IG5vdCB3b3JrIGluIHRoYXQgZW52aXJvbm1lbnQuCgoKPiBXZSBhbHNvIG5lZWQgdG8gZmlndXJl
+IG91dCB3aGljaCBicmFuY2ggdGhpcyBiZWxvbmdzIGluICh3ZSB1c3VhbGx5Cj4gdGFnIAo+IHRo
+ZSBwYXRjaCBzdWJqZWN0IHdpdGggW1BBVENIIG1wdGNwLW5ldF0gb3IgW1BBVENIIG1wdGNwLW5l
+eHRdIHRvCj4gaW5kaWNhdGUgCj4gdGhpcykuIElmIHdlIHVwc3RyZWFtIGl0IHRvIHRoZSBuZXQg
+YnJhbmNoIGl0IHdpbGwgZ2V0IGluIHRvIDYuMC1yY1gKPiBhbmQgCj4gYmUgZWxpZ2libGUgZm9y
+IGJhY2twb3J0aW5nIHRvIHRoZSBzdGFibGUgYnJhbmNoZXMuIExvb2tzIGxpa2UgaXQKPiB3b3Vs
+ZCAKPiBuZWVkIG1hbnVhbCBiYWNrcG9ydGluZyB0byBwcmUtNS4xOSBrZXJuZWxzIGR1ZSB0byB0
+aGUgaW5jcmVtZW50YWwKPiBjaGFuZ2VzIAo+IHRvIG1wdGNwX3BtX29wcyBvdmVyIHRpbWUuCgo+
+IFRvIHVwc3RyZWFtIHRoaXMgdG8gbmV0IGl0IGFsc28gbmVlZHMgYSBGaXhlcyB0YWc6Cj4gCj4g
+Rml4ZXM6IDcwMmMyZjY0NmQ0MiAoIm1wdGNwOiBuZXRsaW5rOiBhbGxvdyB1c2Vyc3BhY2UtZHJp
+dmVuIHN1YmZsb3cKPiBlc3RhYmxpc2htZW50IikKCgo+IFRob21hcywgZG8geW91IGhhdmUgYW55
+IHRob3VnaHRzL3ByZWZlcmVuY2VzIG9uIHVwc3RyZWFtaW5nIHRvIG5ldCBvcgo+IG5ldC1uZXh0
+PwoKSSBkb24ndCBoYXZlIGEgc3Ryb25nIG9waW5pb24gb3IgbmVlZC4gVGhhbmtzIGZvciBleHBs
+YWluaW5nIHRoZQpwcm9jZXNzLgoKRmZyb20gd2hhdCB5b3Ugc2FpZCwgaXQgc291bmRzIGFzIHRo
+aXMgd291bGQgbWFrZSBzZW5zZSBhcyBbUEFUQ0gKbXB0Y3AtbmV0XS4gSSB3aWxsIHNlbmQgYSB2
+MiB3aXRoIHRoZSAiRml4ZXM6IiBsaW5lLgoKCgpUaG9tYXMKCj4gPiAtLS0KPiA+IG5ldC9tcHRj
+cC9wbV9uZXRsaW5rLmMgfCAxOCArKysrKysrKystLS0tLS0tLS0KPiA+IDEgZmlsZSBjaGFuZ2Vk
+LCA5IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9u
+ZXQvbXB0Y3AvcG1fbmV0bGluay5jIGIvbmV0L21wdGNwL3BtX25ldGxpbmsuYwo+ID4gaW5kZXgg
+MjkxYjVkYTQyZmRiLi4yYzE0NWNkYzdiZGMgMTAwNjQ0Cj4gPiAtLS0gYS9uZXQvbXB0Y3AvcG1f
+bmV0bGluay5jCj4gPiArKysgYi9uZXQvbXB0Y3AvcG1fbmV0bGluay5jCj4gPiBAQCAtMjIxOCwx
+NyArMjIxOCwxNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGdlbmxfc21hbGxfb3BzCj4gPiBtcHRj
+cF9wbV9vcHNbXSA9IHsKPiA+IMKgwqDCoMKgwqDCoMKgwqB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoC5jbWTCoMKgwqAgPSBNUFRDUF9QTV9DTURfQUREX0FERFIsCj4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5kb2l0wqDCoCA9IG1wdGNwX25sX2NtZF9h
+ZGRfYWRkciwKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdF
+TkxfQURNSU5fUEVSTSwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PC
+oCA9IEdFTkxfVU5TX0FETUlOX1BFUk0sCj4gPiDCoMKgwqDCoMKgwqDCoMKgfSwKPiA+IMKgwqDC
+oMKgwqDCoMKgwqB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5jbWTCoMKg
+wqAgPSBNUFRDUF9QTV9DTURfREVMX0FERFIsCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoC5kb2l0wqDCoCA9IG1wdGNwX25sX2NtZF9kZWxfYWRkciwKPiA+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfQURNSU5fUEVSTSwKPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfVU5TX0FETUlOX1BFUk0s
+Cj4gPiDCoMKgwqDCoMKgwqDCoMKgfSwKPiA+IMKgwqDCoMKgwqDCoMKgwqB7Cj4gPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5jbWTCoMKgwqAgPSBNUFRDUF9QTV9DTURfRkxVU0hf
+QUREUlMsCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5kb2l0wqDCoCA9IG1w
+dGNwX25sX2NtZF9mbHVzaF9hZGRycywKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAuZmxhZ3PCoCA9IEdFTkxfQURNSU5fUEVSTSwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfVU5TX0FETUlOX1BFUk0sCj4gPiDCoMKgwqDCoMKgwqDC
+oMKgfSwKPiA+IMKgwqDCoMKgwqDCoMKgwqB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoC5jbWTCoMKgwqAgPSBNUFRDUF9QTV9DTURfR0VUX0FERFIsCj4gPiBAQCAtMjIzOCw3
+ICsyMjM4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBnZW5sX3NtYWxsX29wcwo+ID4gbXB0Y3Bf
+cG1fb3BzW10gPSB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgewo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAuY21kwqDCoMKgID0gTVBUQ1BfUE1fQ01EX1NFVF9MSU1JVFMsCj4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5kb2l0wqDCoCA9IG1wdGNwX25sX2NtZF9z
+ZXRfbGltaXRzLAo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5mbGFnc8KgID0g
+R0VOTF9BRE1JTl9QRVJNLAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5mbGFn
+c8KgID0gR0VOTF9VTlNfQURNSU5fUEVSTSwKPiA+IMKgwqDCoMKgwqDCoMKgwqB9LAo+ID4gwqDC
+oMKgwqDCoMKgwqDCoHsKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLmNtZMKg
+wqDCoCA9IE1QVENQX1BNX0NNRF9HRVRfTElNSVRTLAo+ID4gQEAgLTIyNDcsMjcgKzIyNDcsMjcg
+QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBnZW5sX3NtYWxsX29wcwo+ID4gbXB0Y3BfcG1fb3BzW10g
+PSB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgewo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAuY21kwqDCoMKgID0gTVBUQ1BfUE1fQ01EX1NFVF9GTEFHUywKPiA+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgLmRvaXTCoMKgID0gbXB0Y3BfbmxfY21kX3NldF9mbGFncywK
+PiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfQURNSU5f
+UEVSTSwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxf
+VU5TX0FETUlOX1BFUk0sCj4gPiDCoMKgwqDCoMKgwqDCoMKgfSwKPiA+IMKgwqDCoMKgwqDCoMKg
+wqB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5jbWTCoMKgwqAgPSBNUFRD
+UF9QTV9DTURfQU5OT1VOQ0UsCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5k
+b2l0wqDCoCA9IG1wdGNwX25sX2NtZF9hbm5vdW5jZSwKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfQURNSU5fUEVSTSwKPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfVU5TX0FETUlOX1BFUk0sCj4gPiDCoMKg
+wqDCoMKgwqDCoMKgfSwKPiA+IMKgwqDCoMKgwqDCoMKgwqB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoC5jbWTCoMKgwqAgPSBNUFRDUF9QTV9DTURfUkVNT1ZFLAo+ID4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZG9pdMKgwqAgPSBtcHRjcF9ubF9jbWRfcmVt
+b3ZlLAo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5mbGFnc8KgID0gR0VOTF9B
+RE1JTl9QRVJNLAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5mbGFnc8KgID0g
+R0VOTF9VTlNfQURNSU5fUEVSTSwKPiA+IMKgwqDCoMKgwqDCoMKgwqB9LAo+ID4gwqDCoMKgwqDC
+oMKgwqDCoHsKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLmNtZMKgwqDCoCA9
+IE1QVENQX1BNX0NNRF9TVUJGTE9XX0NSRUFURSwKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgLmRvaXTCoMKgID0gbXB0Y3BfbmxfY21kX3NmX2NyZWF0ZSwKPiA+IC3CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfQURNSU5fUEVSTSwKPiA+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfVU5TX0FETUlOX1BF
+Uk0sCj4gPiDCoMKgwqDCoMKgwqDCoMKgfSwKPiA+IMKgwqDCoMKgwqDCoMKgwqB7Cj4gPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5jbWTCoMKgwqAgPSBNUFRDUF9QTV9DTURfU1VC
+RkxPV19ERVNUUk9ZLAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuZG9pdMKg
+wqAgPSBtcHRjcF9ubF9jbWRfc2ZfZGVzdHJveSwKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfQURNSU5fUEVSTSwKPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAuZmxhZ3PCoCA9IEdFTkxfVU5TX0FETUlOX1BFUk0sCj4gPiDCoMKgwqDC
+oMKgwqDCoMKgfSwKPiA+IH07Cj4gPiAKPiA+IC0tIAo+ID4gMi4zNy4xCj4gPiAKPiA+IAo+ID4g
+Cj4gCj4gLS0KPiBNYXQgTWFydGluZWF1Cj4gSW50ZWwKPiAKCg==
 
-> Move the fullmesh prefix test of addr_nr_ns2 together with its other
-> prefix tests.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-
-Looks good to me, thanks Geliang:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++------
-> 1 file changed, 4 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index ff83ef426df5..2957fe414639 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -706,6 +706,7 @@ do_transfer()
-> 		addr_nr_ns1=${addr_nr_ns1:10}
-> 	fi
->
-> +	local flags="subflow"
-> 	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
-> 		# disconnect
-> 		extra_args="$extra_args -I ${addr_nr_ns2:10}"
-> @@ -713,6 +714,9 @@ do_transfer()
-> 	elif [[ "${addr_nr_ns2}" = "userspace_"* ]]; then
-> 		userspace_pm=1
-> 		addr_nr_ns2=${addr_nr_ns2:10}
-> +	elif [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
-> +		flags="${flags},fullmesh"
-> +		addr_nr_ns2=${addr_nr_ns2:9}
-> 	fi
->
-> 	if [ $userspace_pm -eq 1 ]; then
-> @@ -832,12 +836,6 @@ do_transfer()
-> 		fi
-> 	fi
->
-> -	local flags="subflow"
-> -	if [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
-> -		flags="${flags},fullmesh"
-> -		addr_nr_ns2=${addr_nr_ns2:9}
-> -	fi
-> -
-> 	# if newly added endpoints must be deleted, give the background msk
-> 	# some time to created them
-> 	[ $addr_nr_ns1 -gt 0 ] && [ $addr_nr_ns2 -lt 0 ] && sleep 1
-> -- 
-> 2.35.3
->
->
->
-
---
-Mat Martineau
-Intel
