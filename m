@@ -1,83 +1,137 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47ED23CD
-	for <mptcp@lists.linux.dev>; Tue,  9 Aug 2022 16:40:23 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id gk3so23173792ejb.8
-        for <mptcp@lists.linux.dev>; Tue, 09 Aug 2022 09:40:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=OxD2kiwoodTUkPm0qPx+ojJoC5zBLayKjarCs5yGv8g=;
-        b=dRR5OpgXReZueMvUs/NE3ky95Y2h5c2hE+RZOEV5eooPgh9UXu8a27alvOgjm20qTy
-         L02e67tQh/Growkgjofr9IGsfq7J9f6D4CT5E/8b7D/QEJcMEz7edId7zkkiojT0EGaZ
-         ZZ38x4tF9CH7W08+5KMtozNqm813igdR0Sz9tu++Pb1LZ1h09LgRxq594lhuPhmQ29mO
-         8RJ7HBN9snsndkj15E6JE/xH+5n6yzihMRvYiuzPbY1cXO5SvJTPOogSldpxhPkkyhCO
-         y500NlJYeFRG2ukungBkv3pqbJViu9zy2BXd71OGrTlMvADdS4idQVVdkNJsa8F/Ysk6
-         e0Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=OxD2kiwoodTUkPm0qPx+ojJoC5zBLayKjarCs5yGv8g=;
-        b=XH93hfe+6YqEESuuwbdl4GrCblom6sb7eNOoVl+RuW+nKLNyTwUiXovtzfZ0NEIYDp
-         BJJXzqEd7jasBPnHDq0HKLErGHQ2AkNq7swj7KzvYrCO64/jAOd2Q6im99t884kTM9o0
-         m6CMd+WqPG+v/waKq9+8b+ewJAm0Lfu7eChLC5Xbj1N3fqfD2or5ecSo8K8hIlsP35dB
-         TUSJUgysgIF4yxjhHtAlDVkZxT1XBt4t/g42OyABPkmc13HM/3bzSND+6nzBbF8hr5R7
-         wAYgBu9f1T+u6Bzm5qSIuxDWL5ZchpHBt2avZv+YMuE3oT/VHffCuuE4vo0ScOP44P5i
-         dfHQ==
-X-Gm-Message-State: ACgBeo0ABsC90OH+1MNvNwyrXBvjEyyg3H5ftvSH4QZj6GzEWtnUuepE
-	UWEaZ9gwKeFIRYlwzfR1QZcxxic+++UOMA==
-X-Google-Smtp-Source: AA6agR7F21DfKitU2gYh3TMUNidjZPFA7QyhO0A3XyFphpmsVyXQumEpXT9DvYuuj/tRj16tvy7wKw==
-X-Received: by 2002:a17:907:929:b0:731:3bb6:d454 with SMTP id au9-20020a170907092900b007313bb6d454mr9777025ejc.96.1660063221635;
-        Tue, 09 Aug 2022 09:40:21 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:ae2f:6836:2e67:a090? ([2a02:578:8593:1200:ae2f:6836:2e67:a090])
-        by smtp.gmail.com with ESMTPSA id cz18-20020a0564021cb200b0043d1eff72b3sm6382990edb.74.2022.08.09.09.40.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Aug 2022 09:40:21 -0700 (PDT)
-Message-ID: <8eb663d9-744b-8c0b-1863-62a69bfecfba@tessares.net>
-Date: Tue, 9 Aug 2022 18:40:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2286817CE
+	for <mptcp@lists.linux.dev>; Wed, 10 Aug 2022 07:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1660117393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PA1iZbZfGn1+lXzDyZdvVs/eG9qxHtUO+Mk7lsjsY6k=;
+	b=h4JSSY+28D3RviycYMylg7dbhivquGpwEgI5p34Ilf8N608ZJYjYSFnhk0GwDjxTZaiL3x
+	5co6saOswLGF0tyY2Myfc1hECOg9/KB7xTuA0ZOTQ/Zobb/NhnfB2aPCQuMhw+rVUqmmDz
+	ztIIYpOCY9wFNurYTHiSIFjhk822668=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-147-4icAtt9eNDu7MRshew8lnQ-1; Wed, 10 Aug 2022 03:43:10 -0400
+X-MC-Unique: 4icAtt9eNDu7MRshew8lnQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 92E9480231E;
+	Wed, 10 Aug 2022 07:43:09 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.40.194.40])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BADDB1121314;
+	Wed, 10 Aug 2022 07:43:07 +0000 (UTC)
+From: Thomas Haller <thaller@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Florian Westphal <fw@strlen.de>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Thomas Haller <thaller@redhat.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v2 1/2] mptcp: allow priviledged operations from user namespaces
+Date: Wed, 10 Aug 2022 09:42:50 +0200
+Message-Id: <20220810074251.31887-1-thaller@redhat.com>
+In-Reply-To: <e95949bf-53cf-bdf-27c8-8cbc3eeda450@linux.intel.com>
+References: <e95949bf-53cf-bdf-27c8-8cbc3eeda450@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: move prefix tests of
- addr_nr_ns2 together
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <a13144785eab9f2568fdf9eb7da6714d4a911756.1659923077.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <a13144785eab9f2568fdf9eb7da6714d4a911756.1659923077.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang, Mat,
+GENL_ADMIN_PERM checks that the user has CAP_NET_ADMIN in the initial
+namespace by calling netlink_capable(). Instead, use GENL_UNS_ADMIN_PERM
+which uses netlink_ns_capable(). This checks that the caller has
+CAP_NET_ADMIN in the current user namespace.
 
-On 08/08/2022 03:44, Geliang Tang wrote:
-> Move the fullmesh prefix test of addr_nr_ns2 together with its other
-> prefix tests.
+See also commit 4a92602aa1cd ('openvswitch: allow management from inside
+user namespaces') which introduced this mechanism. See also commit
+5617c6cd6f84 ('nl80211: Allow privileged operations from user
+namespaces'), which introduced this for nl80211.
 
-I'm glad to see you back!
+Signed-off-by: Thomas Haller <thaller@redhat.com>
+---
+ net/mptcp/pm_netlink.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Now in our tree (feat. for net-next) with Mat's RvB tag:
-
-New patches for t/upstream:
-- 1f2452544e4e: selftests: mptcp: move prefix tests of addr_nr_ns2 together
-- Results: 8b0cb8f8874a..cb5660da7192 (export)
-
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220809T163858
-
-Cheers,
-Matt
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 291b5da42fdb..2c145cdc7bdc 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -2218,17 +2218,17 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_ADD_ADDR,
+ 		.doit   = mptcp_nl_cmd_add_addr,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_DEL_ADDR,
+ 		.doit   = mptcp_nl_cmd_del_addr,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_FLUSH_ADDRS,
+ 		.doit   = mptcp_nl_cmd_flush_addrs,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_GET_ADDR,
+@@ -2238,7 +2238,7 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_SET_LIMITS,
+ 		.doit   = mptcp_nl_cmd_set_limits,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_GET_LIMITS,
+@@ -2247,27 +2247,27 @@ static const struct genl_small_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_SET_FLAGS,
+ 		.doit   = mptcp_nl_cmd_set_flags,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_ANNOUNCE,
+ 		.doit   = mptcp_nl_cmd_announce,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_REMOVE,
+ 		.doit   = mptcp_nl_cmd_remove,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_SUBFLOW_CREATE,
+ 		.doit   = mptcp_nl_cmd_sf_create,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    = MPTCP_PM_CMD_SUBFLOW_DESTROY,
+ 		.doit   = mptcp_nl_cmd_sf_destroy,
+-		.flags  = GENL_ADMIN_PERM,
++		.flags  = GENL_UNS_ADMIN_PERM,
+ 	},
+ };
+ 
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.37.1
+
