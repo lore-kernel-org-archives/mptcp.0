@@ -1,83 +1,155 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EEE5391
-	for <mptcp@lists.linux.dev>; Tue, 16 Aug 2022 15:55:54 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id a8so10099096pjg.5
-        for <mptcp@lists.linux.dev>; Tue, 16 Aug 2022 08:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=S0TjqgZ/cpwhvqIRclTaRgLLFqhzUsXjGRreU5l1Dao=;
-        b=qTx7jEv4/nwmvCExtD6R89Dm1SBJ4SkhasuOIfOrwWZ6K1t2Zr0EaCkQWcJCS/uim+
-         8X9WP8VRmTcp17JN0SF1dTFzd9Oh4JZoisOJYrLLcIy4MM3xb74oG5Mscfg6rwcrXhJI
-         hQdCdNpKMiGt/+1SGkofKjc4IhOG8u/ztqpv2yctdU8Nuk2IMbHx6qI6TzuQQ0klWjGq
-         aFceiAkHInK+h5iWx+IC90K1AiFSPR3Plz+cYfA1om82VYY1xFn9WCIj5pzWRvWr0cZB
-         /NocanLC50/KXHrrK96ND8mMKm9IrEstRN/hRIk2ALjS9Xwx1q7bVX56kmoPPF2s2jMo
-         tW3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=S0TjqgZ/cpwhvqIRclTaRgLLFqhzUsXjGRreU5l1Dao=;
-        b=b4RoldxDzkScowh8txmhlohplGi8VzXcbimZN3tPAMTyDmT88BIvW1OItQID+xGjLs
-         9U4nM2KD1hL782I1dBBq8TItk9NHSlosU3cIL/54MSZkZEfYuHbVOFPH9whwwYr4HHF3
-         ssUqFOBALomhWUISSwJ77WdPbnf4pSnYz9XPLT/PeCoRVbX8VHLv3MVkMz33i4LNkjSe
-         q3dcy4hKyQRRccFR+NKCW3x1vMwoC+bnUnx7MULe62hYOdIcOy5pUEU+MIDhtVkWn8Q3
-         9rRvZ7QavaRoq3HGOTq/q1g8coeVA1W7HtOkOOWgJ9s8ucub3wA0ebZZhFu2jNXnEllu
-         gagQ==
-X-Gm-Message-State: ACgBeo2Bukbk/e+11EJws+tklgUclYInmkskwvCOmegUIxiOw1tpn1By
-	AMmfvIap7Kye6FTtaVzFUsJVA1tReF3UMZJhqNtfjg==
-X-Google-Smtp-Source: AA6agR7rNOEKD6nRN5Avv+ABuxkIhBYlnMLShbilL+t09HuhZ24Kqp5AE/3faQMwTl37shqIo4Nw0wBbJ21Udr/teco=
-X-Received: by 2002:a17:902:8683:b0:171:3114:7678 with SMTP id
- g3-20020a170902868300b0017131147678mr22420060plo.172.1660665354218; Tue, 16
- Aug 2022 08:55:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F160C443F
+	for <mptcp@lists.linux.dev>; Thu, 18 Aug 2022 16:55:32 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1oOiGy-00018b-1V; Thu, 18 Aug 2022 18:21:32 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH RFC mptcp] net: tcp: prevent transition to FIN_WAIT2 when mptcp has unacked data_fin
+Date: Thu, 18 Aug 2022 18:21:23 +0200
+Message-Id: <20220818162123.30198-1-fw@strlen.de>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
- <20220627123415.GA32052@shbuild999.sh.intel.com> <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
- <20220627144822.GA20878@shbuild999.sh.intel.com> <CANn89iLSWm-c4XE79rUsxzOp3VwXVDhOEPTQnWgeQ48UwM=u7Q@mail.gmail.com>
- <20220628034926.GA69004@shbuild999.sh.intel.com> <CALvZod71Fti8yLC08mdpDk-TLYJVyfVVauWSj1zk=BhN1-GPdA@mail.gmail.com>
- <20220703104353.GB62281@shbuild999.sh.intel.com> <YsIeYzEuj95PWMWO@castle>
- <20220705050326.GF62281@shbuild999.sh.intel.com> <YvswusNaC5yr+HwT@xsang-OptiPlex-9020>
-In-Reply-To: <YvswusNaC5yr+HwT@xsang-OptiPlex-9020>
-From: Shakeel Butt <shakeelb@google.com>
-Date: Tue, 16 Aug 2022 08:55:43 -0700
-Message-ID: <CALvZod66HFiBX2N07gmCYDk_iH0bf4U+O=0DqUDmcebpOSyvwA@mail.gmail.com>
-Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Eric Dumazet <edumazet@google.com>, Linux MM <linux-mm@kvack.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Muchun Song <songmuchun@bytedance.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Xin Long <lucien.xin@gmail.com>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Soheil Hassas Yeganeh <soheil@google.com>, 
-	LKML <linux-kernel@vger.kernel.org>, network dev <netdev@vger.kernel.org>, 
-	linux-s390@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>, 
-	"linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>, lkp@lists.01.org, 
-	kbuild test robot <lkp@intel.com>, Huang Ying <ying.huang@intel.com>, 
-	Xing Zhengjun <zhengjun.xing@linux.intel.com>, Yin Fengwei <fengwei.yin@intel.com>, 
-	Ying Xu <yinxu@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 15, 2022 at 10:53 PM Oliver Sang <oliver.sang@intel.com> wrote:
->
-> Hi all,
->
-> now we noticed this commit has already merged into mainline, and in our tests
-> there is still similar regression. [1]
->
-> not sure if there is a plan to merge some of the solutions that have been
-> discussed in this thread? we'll very glad to test patches if there is a request
->
-> Thanks a lot!
+When an mptcp connection closes down, a MPTCP-level DATA_FIN (flag in mp tcp
+options) is sent.
 
-Hi Oliver, sorry for the delay. I will send out the patches in a day or two.
+We should wait until we can be sure the peer has received the mptcp-level ack of
+that DATA_FIN.  Else, we can end up with the last mptcp subflow in FIN_WAIT2 state.
 
-thanks,
-Shakeel
+In that state, TCP won't respond to incoming ACK anymore, because no
+progress happens from TCP point of view.
+
+mptcp-packetdrill example:
+
+// MPTCP sk moves to FIN_WAIT1, subflow remains in ESTABLISHED state:
++0.5   close(4) = 0
++0.0   >   .  2:2(0)  ack 1  win 256    <dss dack4=1 dsn8=2 ssn=0 dll=1 nocs fin, nop, nop>
+
+// receive DATA_FIN ack. MPTCP sk moves to FIN_WAIT2, subflow remains in ESTABLISHED state.
++0.0  <  .  1:1(0)  ack 2  win 450    <dss dack4=3 dsn8=1 ssn=0 dll=0 nocs, nop, nop>
+
+// Receive DATA_FIN.  MPTCP socket is removed, subflow sk moves to FIN_WAIT1.
++0.0  <  .  1:1(0)  ack 2  win 450    <dss dack4=3 dsn8=1 ssn=0 dll=1 nocs fin, nop, nop>
+
+// acks the clients DATA_FIN, but packet might get lost
++0  >  .  2:2(0)  ack 1  win 256	<dss dack4=2 nocs>
+
+// Receive DATA_FIN retransmission, subflow still in TCP_FIN1 state.
++0.01  <  .  1:1(0)  ack 1 win 450    <dss dack4=2 dsn8=1 ssn=0 dll=1 nocs fin, nop, nop>
+
++0  >  F.  2:2(0)  ack 1  win 256     <dss dack4=2 nocs>
+
+// Ack the tcp-level fin but also retransmit the data fin.
+// Note that we still claim mptcp-level dack4=2, i.e. the
+// servers DATA_FIN remains unacked.
+
+// Without this change, this 'ack 3' moves the subflow to FIN_WAIT2 state.
++0.0  < .  2:2(0)  ack 3 win 450    <dss dack4=2 dsn8=1 ssn=0 dll=1 nocs fin, nop, nop>
++0 > . 3:3(0) ack 1 win 256 <dss dack4=2 nocs>
+
+// receive another retransmit of data fin...
++0.0  < .  2:2(0)  ack 3 win 450    <dss dack4=2 dsn8=1 ssn=0 dll=1 nocs fin, nop, nop>
+
+// ... but without this patch, nothing happens, TW sk won't send anything.
+// With this patch, the subflow remains in FIN_WAIT1 and replies with a DSS ack.
++0 > . 3:3(0) ack 1 win 256 <dss dack4=2 nocs>
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/181
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ include/net/mptcp.h  | 4 ++++
+ net/ipv4/tcp_input.c | 5 +++++
+ net/mptcp/subflow.c  | 8 ++++++++
+ 3 files changed, 17 insertions(+)
+
+Full test case stashed here for the time being:
+https://github.com/fw-strlen/packetdrill/commit/60a3f57ea309f910643e06dbf123236741c7f8d9
+
+Its possible to either change tw_sk to have enough mptcp context to be
+able to send a packet back, or we can supress/delay the tw_sock
+transition.  This is what classic TCP is doing when it receives another
+FIN while in FIN1 state.
+
+This change makes the test case work (another dss ack is sent), but
+there may be other corner cases where we need to delay the sk ->
+tw_sk transition.
+
+If the general idea looks ok, perhaps its better to replace
+
+tcp_time_wait(sk, skb, ..
+
+with a mptcp aware helper, e.g.  tcp_time_wait_check(sk, skb, ..
+and place the option parsing for mptcp-subflows there?
+
+
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 02ca83493470..de2249996671 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -152,6 +152,8 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+ 
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info);
+ 
++bool mptcp_subflow_pending_data_fin_ack(const struct sock *ssk);
++
+ /* move the skb extension owership, with the assumption that 'to' is
+  * newly allocated
+  */
+@@ -297,6 +299,8 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ }
+ 
+ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
++
++static inline bool mptcp_subflow_pending_data_fin_ack(const struct sock *ssk) { return false; }
+ #endif /* CONFIG_MPTCP */
+ 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index ab5f0ea166f1..c3281e0cf9db 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6608,6 +6608,11 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
+ 			 * marginal case.
+ 			 */
+ 			inet_csk_reset_keepalive_timer(sk, tmo);
++		} else if (sk_is_mptcp(sk) &&
++			   mptcp_incoming_options(sk, skb) &&
++			   mptcp_subflow_pending_data_fin_ack(sk)) {
++				inet_csk_schedule_ack(sk);
++				inet_csk_reset_keepalive_timer(sk, tmo);
+ 		} else {
+ 			tcp_time_wait(sk, TCP_FIN_WAIT2, tmo);
+ 			goto consume;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index c7d49fb6e7bd..d3e285bc45b8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -351,6 +351,14 @@ static bool subflow_thmac_valid(struct mptcp_subflow_context *subflow)
+ 	return thmac == subflow->thmac;
+ }
+ 
++bool mptcp_subflow_pending_data_fin_ack(const struct sock *ssk)
++{
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
++	struct sock *sk = subflow->conn;
++
++	return READ_ONCE(mptcp_sk(sk)->rcv_data_fin);
++}
++
+ void mptcp_subflow_reset(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+-- 
+2.35.1
+
