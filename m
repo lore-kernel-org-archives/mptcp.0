@@ -1,113 +1,121 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832F57B
-	for <mptcp@lists.linux.dev>; Thu, 18 Aug 2022 18:40:27 +0000 (UTC)
-Received: by mail-qt1-f169.google.com with SMTP id a4so1786018qto.10
-        for <mptcp@lists.linux.dev>; Thu, 18 Aug 2022 11:40:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968DC440F
+	for <mptcp@lists.linux.dev>; Fri, 19 Aug 2022 15:20:54 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id gk3so9400243ejb.8
+        for <mptcp@lists.linux.dev>; Fri, 19 Aug 2022 08:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc;
-        bh=jvtxPZrvx5tbNp7jVsB5gfqBHZ+KPOXWh6KW62TY2/0=;
-        b=jWjNrqbAEEXs8qjGpTF3l62Sin7vaQttJ28cqL6EO0489LJlEh09PqZOdninps9nOq
-         sHdHDhi59q0fdngXlG3QKpLo2TjY1JIavqFmu+dFrwwGc05kcY/wpF38GxBZYhjY4z+n
-         mjtoHthgvwKNKagBvyysSEEhDo0tsFlwNRSMizs6FJnOY79xpUOeK7e6toWamkyN5kbG
-         EGoNk5l/xkoaWm5jwdeia4YlzbzzJsOZvZfkzgHZ4CykOfdYtSAIQeggeydybBPjFSuo
-         qvKNTp0OBWZ7tPxHnD1Rh9iAvy0jSP7vzUjaPbRFilWRjImupOhikiyuwgabeKyngf98
-         4VrQ==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=i8q1GegoN+sP33ccaU6zv78I0cAcWc0q0JE7i0pJirQ=;
+        b=lKqJZxvBoPBhdI3jjDh1Mr3I5ysANspyrVXVlFexKwDUlghU7ZB5Kwn7wWYjDnTZZ2
+         kfj8b7yLnLUxdXwPGol8UJ0OJB4dszvgH9HG9J2sF3ENIyQ5aDGJtUQk7TXmyOMEcdhW
+         uj+hm8ruaoSZZ/EQ8QDZ8KWNtW+CkF94rtyArsKT7XD19yizp3B3LfslSnIby7BE3VFN
+         BUT+UelGQ04t/868g2w7GuIpnfdU9H7jQeT8hfJ4iqQWcSKY1wh+5Cy27a/2bcOP8bng
+         1NDsDf1NS/TsCchJcA8D0o5HXzg1riIfVHG3dhlT95zHU+CCjd/aeRlAd8txh6YOAELu
+         p3iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc;
-        bh=jvtxPZrvx5tbNp7jVsB5gfqBHZ+KPOXWh6KW62TY2/0=;
-        b=LPMqdvCIoChUwZUEZwwCAHwj/sLDeN2X4vjMQuPHS+5ijQ8SWXD4ghJTjdvrB5uGLM
-         TrIq/sAI9qgygsNB/QnGe3xyoP0mDqEqJbgdQSD/rz1LvioynCAar8FXFkCB9YF1gu9r
-         re3R6jlmta3RfAGtGSo65V9MLaQROberPqfHjKfDEPm1sy6NrxeCY0+GWhuQtyjovCil
-         PxSvp9tQIJqIc290ewy5juk6p66p+onTPeuwWa79nYHe4P52ulGYkgfcjzBqkldaaJNz
-         TSIQBUSpWmuxk5YYnPPkqissG9n60ALCHFCL2fPWrZzKbvApCTpGmcC5ey7sg9aB/v3o
-         s0zA==
-X-Gm-Message-State: ACgBeo3lK1dhLULrWencR5m0QAhjIarLSokRkJrQ+jbK/gO4rhwSVZ/F
-	rLGhsl5p/H/+eGFkSuPn4q4V+b3oC7u/ckk=
-X-Google-Smtp-Source: AA6agR7x4dodfA1WpzVdDxzYsuZs5/TR3R9aqvKt+m1qLtbMWTBObMwwtIe9uwiP95yTbFeeTnyXeA==
-X-Received: by 2002:ac8:5c52:0:b0:343:3dc7:db0d with SMTP id j18-20020ac85c52000000b003433dc7db0dmr3962716qtj.179.1660848026339;
-        Thu, 18 Aug 2022 11:40:26 -0700 (PDT)
-Received: from [127.0.0.1] ([20.1.196.254])
-        by smtp.gmail.com with ESMTPSA id r11-20020ae9d60b000000b006af1f0af045sm1929017qkk.107.2022.08.18.11.40.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 11:40:26 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Florian Westphal <fw@strlen.de>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220818162123.30198-1-fw@strlen.de>
-References: <20220818162123.30198-1-fw@strlen.de>
-Subject: Re: net: tcp: prevent transition to FIN_WAIT2 when mptcp has
- unacked data_fin: Tests Results
-Message-ID: <6350ccdd-0e0d-4f9d-6f2c-4c165e2d07c6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 18 Aug 2022 18:40:25 +0000
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=i8q1GegoN+sP33ccaU6zv78I0cAcWc0q0JE7i0pJirQ=;
+        b=0RdqAP/jSXvW9CVv0/01iPZbAry+gjtuh3Pcvp73QGr6nfWK142qWzizFb3C8jWJE6
+         I230UbYbB5wONYytulMbYhzkgaoL6muTjmSu9FAfkTXgUpgREPVvsMGz2Dw+cnRORRw9
+         NdB6nMg8Y7hDINhyRRRfXwfUtrrmhL0ditkPFJwLp3WIYYZai2l+/6naWGEjw8heNw8v
+         Yjw8FSpJvAijb/UmfbbP6cSyFLZkKxWEBcIAZyQmA8oXQttpPHBR8Cl0HRBmUFF/+cVm
+         erO7Njwe2gbUTX+cbA0TP4wPzTfE8AYFX01sCVcxpocq6IzFu9in98HWLrHerRNLYk4r
+         B7Hg==
+X-Gm-Message-State: ACgBeo3jD7RtpvgcLcA0w4eGdfL8YiAnXF2gWr1v3JTXgvNs09VX/Wiz
+	38LHmwZW/hmVMn4FumjC6+gx+A==
+X-Google-Smtp-Source: AA6agR6YJo01NQyAY3zBrhNOBNbbOV2cVKRhgoN5eBBkfbJvMWSp9BtVbXZyzPJb/0bpiUuFI9DMmA==
+X-Received: by 2002:a17:907:6e14:b0:730:a229:f747 with SMTP id sd20-20020a1709076e1400b00730a229f747mr5507174ejc.202.1660922452232;
+        Fri, 19 Aug 2022 08:20:52 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:1cec:2730:4dc0:d9b0? ([2a02:578:8593:1200:1cec:2730:4dc0:d9b0])
+        by smtp.gmail.com with ESMTPSA id i23-20020a170906a29700b0073073ce488asm2465382ejz.45.2022.08.19.08.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Aug 2022 08:20:49 -0700 (PDT)
+Message-ID: <361c7c0e-29bf-af9a-8ce0-e9668f9e2267@tessares.net>
+Date: Fri, 19 Aug 2022 17:20:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH RFC mptcp] net: tcp: prevent transition to FIN_WAIT2 when
+ mptcp has unacked data_fin
+Content-Language: en-GB
+To: Florian Westphal <fw@strlen.de>
+References: <20220818162123.30198-1-fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220818162123.30198-1-fw@strlen.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Florian,
 
-Thank you for your modifications, that's great!
+On 18/08/2022 18:21, Florian Westphal wrote:
+> When an mptcp connection closes down, a MPTCP-level DATA_FIN (flag in mp tcp
+> options) is sent.
+> 
+> We should wait until we can be sure the peer has received the mptcp-level ack of
+> that DATA_FIN.  Else, we can end up with the last mptcp subflow in FIN_WAIT2 state.
+> 
+> In that state, TCP won't respond to incoming ACK anymore, because no
+> progress happens from TCP point of view.
 
-Our CI did some validations and here is its report:
+Thank you for looking at that!
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5095347042123776
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5095347042123776/summary/summary.txt
+(...)
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): =
-packetdrill_add_addr selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6221246948966400
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6221246948966400/su=
-mmary/summary.txt
+> Its possible to either change tw_sk to have enough mptcp context to be
+> able to send a packet back
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6c09a70059d2
+Do you think changing tw_sk would be accepted upstream?
 
+That would be good for MPTCP from a perf point of view I suppose. Or
+maybe not worth it?
+If it is worth it, could we have a 'struct mptcp_timewait_sock' for
+MPTCP case, extending 'struct tcp_timewait_sock'? But then I guess the
+"annoying" thing for upstream is that we might have to modify or split
+functions from tcp_minisocks.c if we cannot add more indirections.
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+> or we can supress/delay the tw_sock
+> transition.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+All the time for MPTCP sockets?
+Do you think it the impact will just be minor?
 
-For more details:
+> This is what classic TCP is doing when it receives another
+> FIN while in FIN1 state.
+> 
+> This change makes the test case work (another dss ack is sent), but
+> there may be other corner cases where we need to delay the sk ->
+> tw_sk transition.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+We didn't hear anything about other cases so far, we can also see case
+by case for this situation (corner cases at the end of a connection) :)
 
+> If the general idea looks ok, perhaps its better to replace
+> 
+> tcp_time_wait(sk, skb, ..
+> 
+> with a mptcp aware helper, e.g.  tcp_time_wait_check(sk, skb, ..
+> and place the option parsing for mptcp-subflows there?
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Would it be better because we would put this in tcp_minisocks.c? Or just
+to isolate MPTCP specific function in a small and dedicated function?
+I don't have any strong opinion about one or the other.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
