@@ -1,59 +1,64 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969FF6711
-	for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 16:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E567B
+	for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 20:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661360281;
+	s=mimecast20190719; t=1661373438;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BbwYxccnRs7pAdVJLaPq1j+wVVAA09aqY7eo2GhrB0E=;
-	b=eDG1jdWTyX2y/ZgPOScKJ/+NXOjB4yhjg2TtPSuo2cu398FG+SmwbUhI734EYd1nKk+a1Q
-	L5gMzrDSm0M3KWefDFDPl8nU9qOvYoFJxh8h1+AjcZNvezA3tknc3jQo10By9kN00ASGp0
-	vQEvDEGv4xVxNNGOXSr1h97uBca+zgw=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Y5GTZD4Ze2jISn/5ZqZmcMlNM7aY/GBZIjNaPxrSz8s=;
+	b=Dk88JjyxD3EwCfGtlIjb/3EHXgUk5O9l4oMeEKu+4UBdJr0/67VUUDvJGE6PK1a1wI79hT
+	u1LhhNCFcfFy54nVTPEqlCfQgD/sdCNHAXKaG154haKMPzrUu2ISr0lv6lQ6m8egucH/Or
+	O5GB4c7G4JRH5siNLhY6L1MzrrxDEc4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-575-5pukFtK9PGSiYx9gMUFGlg-1; Wed, 24 Aug 2022 12:58:00 -0400
-X-MC-Unique: 5pukFtK9PGSiYx9gMUFGlg-1
-Received: by mail-qt1-f198.google.com with SMTP id d20-20020a05622a05d400b00344997f0537so12227161qtb.0
-        for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 09:58:00 -0700 (PDT)
+ us-mta-597-7MiAu3fPOXS0CWReh2QbgA-1; Wed, 24 Aug 2022 16:37:17 -0400
+X-MC-Unique: 7MiAu3fPOXS0CWReh2QbgA-1
+Received: by mail-wm1-f70.google.com with SMTP id f18-20020a05600c4e9200b003a5f81299caso9860614wmq.7
+        for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 13:37:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
+        h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc;
-        bh=BbwYxccnRs7pAdVJLaPq1j+wVVAA09aqY7eo2GhrB0E=;
-        b=rhVZ/hmCShCQwAquNUS+DRu35urrlnFuKEQzkGo32Ufwlyr/UaamC2+BtUg1quakeE
-         Qw4blJdcTnyCjKDI9TmkiR092/xJcz/ioe4TRJzbdIey8c0NVjIeoP1Qopb01JwNjn3V
-         BhQaoKuY8GndnpAJykz11gAZ2NYUicT1nNQAMmhENmj/TV41FnxpWWKov6pXg3MzzyLu
-         Ha3Iycrm+wZzZe8NATatpK2QOVQCyowwvpfvd7YRjrRE8RZW8ymGGmpVcWvbipw7Hl1L
-         H2oMjU0OskA0dB/rkaqCYubTJw1JvhTEOMCBFgclxsUqNSyJVrx3TXupuOUPecdOY7yF
-         OfyQ==
-X-Gm-Message-State: ACgBeo36zg/t11SKGBGqdwz5/dIefFnIvuQ4ckSpTF2oqFrnoPyaHXaD
-	as3sOTHrSP16ZhELQZuoKT8mtz4eBzJgcsKOB4Gb2jUX+tlyJxoP5G+CA+uGYmHhk3pBmBZsgkj
-	R8ItuuB0K0o/KtkbRawVVBzOo2Ikin4zJVa8tENiGjUrdGHNavFWJ4y2R8+EKmc3c
-X-Received: by 2002:a05:620a:198e:b0:6bb:7651:fc7 with SMTP id bm14-20020a05620a198e00b006bb76510fc7mr137089qkb.376.1661360279891;
-        Wed, 24 Aug 2022 09:57:59 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4QUbGJNWf0JQ5JGyJO3mD8kJ8KGN0oF2nUwd4qCeVjZjisp7fMEAbDREzYrKiiJkYNdhS9kA==
-X-Received: by 2002:a05:620a:198e:b0:6bb:7651:fc7 with SMTP id bm14-20020a05620a198e00b006bb76510fc7mr137067qkb.376.1661360279485;
-        Wed, 24 Aug 2022 09:57:59 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-97-176.dyn.eolo.it. [146.241.97.176])
-        by smtp.gmail.com with ESMTPSA id w20-20020a05620a0e9400b006bbda80595asm12708924qkm.5.2022.08.24.09.57.58
+        bh=Y5GTZD4Ze2jISn/5ZqZmcMlNM7aY/GBZIjNaPxrSz8s=;
+        b=jgNrv+CJTdrzdOOMQ562FTFHZ7IhkiJqjtHEynuFIoMdk+28s0B0BrU9i7t4K9J/Hj
+         y0AwIdFa5UVIBMKWc/se6XcCrwCOhsrArody6hwuoRwHzIVzAjw0BVUCkyNxo7sdpWMn
+         11vwFJEl0UD6lKJiA54St9qxQhgHaxH7v/akAcK1ciB2WeY4AIKrgi7JUZ/vpQaZrWJK
+         uYMuWt1DYGQbUeKq9Wzh/RT2kQMvI0gNVfcEhB1M2UgztDQhdQmn58WvBBfIKq7D5kGk
+         UUc9peNsbi33cMiiVWE0aQ7ht/UEdEsMtf8yB1Oh8n9CdFhTEj8uI8YFf7AJlUw3ZsD6
+         SL2w==
+X-Gm-Message-State: ACgBeo2QgsuiYYt0pvDFP6NDP1MjMpxCwP0gV3cc5V6m5zw6bC+LiZ0v
+	AY6A3SZ0CvYpNe+7aqy8nk10TiI1LOiLk+9k+5TsNP5uZUrpxGtiQe0hxOY4uMz7c1bO4m3ogOZ
+	qansTr2YWj+DR870=
+X-Received: by 2002:a05:600c:5103:b0:3a6:14a7:1a1c with SMTP id o3-20020a05600c510300b003a614a71a1cmr6405175wms.193.1661373436093;
+        Wed, 24 Aug 2022 13:37:16 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR78Tkyo17IJvtYe7ud5WSM9tuAIllBsMGQC8Y+a/WgP5V9WHyC2TlM3ZE7yt+3N77tQV58wPw==
+X-Received: by 2002:a05:600c:5103:b0:3a6:14a7:1a1c with SMTP id o3-20020a05600c510300b003a614a71a1cmr6405170wms.193.1661373435889;
+        Wed, 24 Aug 2022 13:37:15 -0700 (PDT)
+Received: from [192.168.129.164] ([151.82.183.45])
+        by smtp.gmail.com with ESMTPSA id j10-20020a5d564a000000b00225307f43fbsm17620640wrw.44.2022.08.24.13.37.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 09:57:58 -0700 (PDT)
-Message-ID: <838c0079ceb8efc44377b8eb6baf2e62f76bc407.camel@redhat.com>
-Subject: Re: [mptcp]  d24141fe7b:
- WARNING:at_mm/page_counter.c:#page_counter_cancel
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-Date: Wed, 24 Aug 2022 18:57:56 +0200
-In-Reply-To: <YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020>
-References: <YtVhyGSsv1CWvPz4@xsang-OptiPlex-9020>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        Wed, 24 Aug 2022 13:37:15 -0700 (PDT)
+Message-ID: <c359cd4e1ea2970d0bd3d3127773d08041ae2acd.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 1/2] mptcp: allow priviledged operations
+ from user namespaces
+From: Thomas Haller <thaller@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau
+	 <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Florian Westphal <fw@strlen.de>, Paolo Abeni
+	 <pabeni@redhat.com>
+Date: Wed, 24 Aug 2022 22:37:14 +0200
+In-Reply-To: <49976d61-c3e1-3991-37b3-4751f8a96a5c@tessares.net>
+References: <e95949bf-53cf-bdf-27c8-8cbc3eeda450@linux.intel.com>
+	 <20220810074251.31887-1-thaller@redhat.com>
+	 <3af41bc6-436a-5849-b2d-9564dd8f46c7@linux.intel.com>
+	 <49976d61-c3e1-3991-37b3-4751f8a96a5c@tessares.net>
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -63,90 +68,84 @@ MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Matthieu,
 
-Since the rx path refactor is showing to be quite problematic, I'm
-looking back the original issue, to see if that is really needed.
 
-On Mon, 2022-07-18 at 21:36 +0800, kernel test robot wrote:
-> [  240.473094][T14986] ------------[ cut here ]------------
-> [  240.478507][T14986] page_counter underflow: -4294828518 nr_pages=4294967290
-> [  240.485500][T14986] WARNING: CPU: 2 PID: 14986 at mm/page_counter.c:56 page_counter_cancel+0x96/0xc0
-> [  240.494671][T14986] Modules linked in: mptcp_diag inet_diag nft_tproxy nf_tproxy_ipv6 nf_tproxy_ipv4 nft_socket nf_socket_ipv4 nf_socket_ipv6 nf_tabl
-> es nfnetlink openvswitch nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 btrfs blake2b_generic xor raid6_pq zstd_compress libcrc32c sd_mo
-> d t10_pi crc64_rocksoft_generic crc64_rocksoft crc64 i915 sg hp_wmi ipmi_devintf intel_rapl_msr intel_rapl_common ipmi_msghandler x86_pkg_temp_thermal i
-> ntel_powerclamp coretemp crct10dif_pclmul crc32_pclmul intel_gtt sparse_keymap crc32c_intel platform_profile drm_buddy ghash_clmulni_intel mei_wdt rfkil
-> l wmi_bmof drm_display_helper rapl ttm ahci drm_kms_helper libahci intel_cstate syscopyarea intel_uncore mei_me sysfillrect serio_raw libata i2c_i801 me
-> i sysimgblt i2c_smbus fb_sys_fops intel_pch_thermal wmi video intel_pmc_core tpm_infineon acpi_pad fuse ip_tables
-> [  240.570849][T14986] CPU: 2 PID: 14986 Comm: mptcp_connect Tainted: G S                5.19.0-rc4-00739-gd24141fe7b48 #1
-> [  240.581637][T14986] Hardware name: HP HP Z240 SFF Workstation/802E, BIOS N51 Ver. 01.63 10/05/2017
-> [  240.590600][T14986] RIP: 0010:page_counter_cancel+0x96/0xc0
-> [  240.596179][T14986] Code: 00 00 00 45 31 c0 48 89 ef 5d 4c 89 c6 41 5c e9 40 fd ff ff 4c 89 e2 48 c7 c7 20 73 39 84 c6 05 d5 b1 52 04 01 e8 e7 95 f3
-> 01 <0f> 0b eb a9 48 89 ef e8 1e 25 fc ff eb c3 66 66 2e 0f 1f 84 00 00
-> [  240.615639][T14986] RSP: 0018:ffffc9000496f7c8 EFLAGS: 00010082
-> [  240.621569][T14986] RAX: 0000000000000000 RBX: ffff88819c9c0120 RCX: 0000000000000000
-> [  240.629404][T14986] RDX: 0000000000000027 RSI: 0000000000000004 RDI: fffff5200092deeb
-> [  240.637239][T14986] RBP: ffff88819c9c0120 R08: 0000000000000001 R09: ffff888366527a2b
-> [  240.645069][T14986] R10: ffffed106cca4f45 R11: 0000000000000001 R12: 00000000fffffffa
-> [  240.652903][T14986] R13: ffff888366536118 R14: 00000000fffffffa R15: ffff88819c9c0000
-> [  240.660738][T14986] FS:  00007f3786e72540(0000) GS:ffff888366500000(0000) knlGS:0000000000000000
-> [  240.669529][T14986] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  240.675974][T14986] CR2: 00007f966b346000 CR3: 0000000168cea002 CR4: 00000000003706e0
-> [  240.683807][T14986] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  240.691641][T14986] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  240.699468][T14986] Call Trace:
-> [  240.702613][T14986]  <TASK>
-> [  240.705413][T14986]  page_counter_uncharge+0x29/0x80
-> [  240.710389][T14986]  drain_stock+0xd0/0x180
-> [  240.714585][T14986]  refill_stock+0x278/0x580
-> [  240.718951][T14986]  __sk_mem_reduce_allocated+0x222/0x5c0
 
-The above basically means __sk_mem_reduce_allocated() is trying to
-release/uncharge a negative amount of pages (-6)
+On Thu, 2022-08-11 at 12:34 +0200, Matthieu Baerts wrote:
+> Hi Thomas, Mat, Florian,
+>=20
+> On 11/08/2022 01:08, Mat Martineau wrote:
+> ...
+>=20
+> >=20
+> > Thanks Thomas, looks good:
+> >=20
+> > Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>=20
+> Thank you for the patches and the reviews!
+>=20
+> > [...]
+>=20
+>=20
+> I initially thought it was more a bug-fix but I also agree with
+> Florian.
+> Also I see that the two mentioned commits above don't have a Fixes
+> tag.
+>=20
+> The only exception I found and related to this flag was for l2tp: the
+> commit 2abe05234f2e ("l2tp: Allow management of tunnels and session
+> in
+> user namespace") has been selected by davem and backported to v5.4.
+>=20
+> https://lore.kernel.org/stable/20200417.105100.821338189941807731.davem@d=
+avemloft.net/
+> (see patch 03/19)
+>=20
+>=20
+> Anyway, your 2 patches are now in our tree (feat. for net-next) with
+> Mat's RvB tag and without a typo (s/priviledged/privileged/) + a
+> small
+> fix for checkpatch related to how the commit are mentioned, nothing
+> important:
 
-> [  240.724443][T14986]  ? rwlock_bug+0xc0/0xc0
-> [  240.729248][T14986]  __mptcp_update_rmem+0x235/0x2c0
+Thank you for the adjustments, the feedback and applying!!
 
-After the mentioned/bisected commit:
-d24141fe7b48d3572afb673ae350cf0e88caba6c ("mptcp: drop SK_RECLAIM_*
-macros")
-in __mptcp_update_rmem() -> mptcp_rmem_uncharge():
 
-	/* see sk_mem_uncharge() for the rationale behind the following schema */
-        if (unlikely(reclaimable >= PAGE_SIZE))
-                __mptcp_rmem_reclaim(sk, reclaimable);
+> New patches for t/upstream:
+> - 3d542a6c45ea: mptcp: allow privileged operations from user
+> namespaces
+> - 11bdb1959854: mptcp: account memory allocation in
+> mptcp_nl_cmd_add_addr() to user
+> - Results: c4a0ae952875..004104cc8a77 (export)
+>=20
+>=20
+> Tests are now in progress:
+>=20
+> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220811=
+T101116
+>=20
+>=20
+> @Thomas: BTW, thank you for maintaining libnl!
+> Funny that you sent these patches to MPTCP while earlier this week I
+> sent the latest libnl version to Debian :)
+>=20
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1016867
+> https://tracker.debian.org/pkg/libnl3
 
-if can end-up calling __mptcp_rmem_reclaim() ->
-__sk_mem_reduce_allocated() with a negative value if 'reclaimable' is
-negative: 'PAGE_SIZE' is UL, 'reclaimable' is a signed integer, will be
-implicitly casted to UL, and any negative value will match the
-condition.
+Oh, that's nice. After I rather neglected libnl for quite some time, I
+want do to a better job in the future. :)
 
-So 'reclaimable' is negative, which in turn means either 'msk-
->rmem_fwd_alloc' or 'msk->rmem_released' are negative before this call.
 
-I can't see how any of them may become negative. Any help/second
-opinion more then welcome.
 
-> [  240.734228][T14986]  __mptcp_move_skbs+0x194/0x6c0
+On an unrelated note: upcoming NetworkManager 1.40.0 release will have
+basic MPTCP support and configure endpoints. Similar to what mptcpd
+does. This was the backstory for the patches.
 
-side note: this is quite unusual. __mptcp_move_skbs() could do any real
-work only on very exceptional conditions.
 
-> To reproduce:
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         sudo bin/lkp install job.yaml           # job file is attached in this email
->         bin/lkp split-job --compatible job.yaml # generate the yaml file for lkp run
->         sudo bin/lkp run generated-yaml-file
-> 
->         # if come across any failure that blocks the test,
->         # please remove ~/.lkp and /lkp dir to run from a clean state.
 
-Still no luck to reproduce it here...
-
-/P
+best,
+Thomas
 
