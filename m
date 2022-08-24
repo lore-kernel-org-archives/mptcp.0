@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322AC139C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4692139F
 	for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 11:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661339904;
+	s=mimecast20190719; t=1661339905;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4K/ilaNjHULF35m8WGbIYb9Dt50PAoquRCu6phEih4E=;
-	b=ZjkVPw0R4CyhKGdV/4/20iMmdSNrLC5p9TMjorunQGdcBXONG4VaPvLrB8NRlcfVUlX/Xi
-	p9Tq0sa0/qwn+PKrGoU+Tnw9pFgIf9qu3kcnsqO7/CFt2U5CBhaLQuqIEqZ40cT8inX/0n
-	ZW3AZp0tAr1lqBq04rBlvrl8BIxxD54=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=sA4NgqFVtLhtuschY9R88Cjx4hfhiSukNOUqbDcNRhI=;
+	b=TWYwGYbQnPjdrg6oV48kYKw/tfgJFnpJfT6Rk9lWOFhCmgENeHhVtsarJm3wJ1FDRrzij9
+	bhrAgeWBanzQeW6/0Uoi2+lQA+YkUwQSw9lenm4zyZm8b22/ata44Q0YVuk8KO+KpPTYK7
+	O/UyxNQVdi2RfEtQYqB79v+mH/yXua4=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-404-Vv3TppSSMMq-u9lKHTSAyw-1; Wed, 24 Aug 2022 07:18:23 -0400
-X-MC-Unique: Vv3TppSSMMq-u9lKHTSAyw-1
+ us-mta-533-AtzR4Xi1MXa3630lbZIJCQ-1; Wed, 24 Aug 2022 07:18:24 -0400
+X-MC-Unique: AtzR4Xi1MXa3630lbZIJCQ-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 847BC101A54E
-	for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 11:18:23 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 476233C0ED55
+	for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 11:18:24 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.133])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 14F73492C3B
-	for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 11:18:22 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CB784492C3B
+	for <mptcp@lists.linux.dev>; Wed, 24 Aug 2022 11:18:23 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 1/2] Squash-to: "mptcp: move msk input path under full msk socket lock"
-Date: Wed, 24 Aug 2022 13:18:13 +0200
-Message-Id: <30ec171851daca06e3c3a60a1d3e41ff5887eae2.1661339834.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 2/2] mptcp: never re-inject data on a single subflow
+Date: Wed, 24 Aug 2022 13:18:14 +0200
+Message-Id: <cfe4fd464d2e7701008b5e1b39030b74f3e9a606.1661339834.git.pabeni@redhat.com>
 In-Reply-To: <cover.1661339834.git.pabeni@redhat.com>
 References: <cover.1661339834.git.pabeni@redhat.com>
 Precedence: bulk
@@ -45,37 +45,64 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-whoops, I forgot to really test for pending data at release_cb time.
+If the MPTCP-level data ack is delayed WRT to the TCP-level ack,
+there is a single subflow and the user-space stops pushing data,
+the MPTCP-level retransmit may trigger in, fooling (disallowing)
+infinite mapping fallback.
 
-The above causes several recurring failures in the self-tests.
+All the above is triggered quite reliably by the self-tests, once
+we move the MPTCP receive path under the msk socket lock - delaying
+the MPTCP-level acks.
 
-Note that this could affect badly the mptcp performance (as we now
-really move relevant CPU time from the subflow rx path/ksoftirqd to
-the user-space process), even if I haven't performed perf-tests yet
-on top of this change.
+Plain TCP is good enough to handle retransmissions as needed.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-This should be placed just before: "mptcp: move RCVPRUNE event later"/
-the last rx path refactor
----
- net/mptcp/protocol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Note that there are a couple of sad untold stories here. The first one
+is as follow: with the delayed mptcp-level ack, at MPC handshake time we have:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 74699bd47edf..d47c19494023 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3008,7 +3008,8 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+MPC + SYN ->
+	<- MPC + SYN_ACK(1)
+MPC + ACK(1) ->
+	<- DSS(n bytes) + ACK(1)
+DSS_ACK(1) + ACK(n+1)
+
+and no more acks from the client side, even after reading the
+incoming n bytes data. So a possible alternative solution would be
+to tweek mptcp_cleanup_rbuf() to properly handle this scenario.
+
+Additionally, possibly, still due to the mptcp-level delyated ack,
+we could need to tweek mptcp_cleanup_rbuf() more - e.g. do we need
+to force mptcp-level ack when there is a large enough amount of newly
+"ackable" data due to __mptcp_move_skbs() action? I don't know.
+
+I guess/hope that the condition on mptcp-level window update already
+implemented in mptcp_cleanup_rbuf() should also cover for the above,
+but I'm not sure.
+
+The other point is that I can't recall the previous discussion about
+avoiding re-injection with a single subflow. I now think that is bad,
+at least with delayed mptcp-level ack, and I don't see a need for that,
+but possibly/likely I'm forgetting something?!?
+---
+ net/mptcp/sched.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+index 044c5ec8bbfb..409e832085c2 100644
+--- a/net/mptcp/sched.c
++++ b/net/mptcp/sched.c
+@@ -162,6 +162,10 @@ struct sock *mptcp_sched_get_retrans(struct mptcp_sock *msk)
+ 	if (__mptcp_check_fallback(msk))
+ 		return NULL;
  
- #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
- 				      BIT(MPTCP_RETRANSMIT) | \
--				      BIT(MPTCP_FLUSH_JOIN_LIST))
-+				      BIT(MPTCP_FLUSH_JOIN_LIST) | \
-+				      BIT(MPTCP_DEQUEUE))
++	/* never retransmit when there is a single subflow */
++	if (list_is_singular(&msk->conn_list) && list_empty(&msk->join_list))
++		return NULL;
++
+ 	if (!msk->sched)
+ 		return mptcp_subflow_get_retrans(msk);
  
- /* processes deferred events and flush wmem */
- static void mptcp_release_cb(struct sock *sk)
 -- 
 2.37.1
 
