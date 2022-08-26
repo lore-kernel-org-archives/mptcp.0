@@ -1,148 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C2C4401
-	for <mptcp@lists.linux.dev>; Fri, 26 Aug 2022 17:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661533429;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HIuxaaAX5MY7xt7Xqr5a1gV9v0vpq5vV1eMu2h79iGc=;
-	b=BhfpuDbkrG2Sd2IpSkBY94Pm85R1QuBk4SEFdPj4bVrWSqxwcBHPaRcUa6xsGl5j+EXETt
-	Ab181bjyLx4XsHzSWsqO+1Xevhum5w5/A0P065H9lGPRRCXh6uE0n0hR5uLCcRrWXQ4QFy
-	43d2MH6BwpxebQjnyDCmURRWOxwtHO4=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-436-_P5KgbtsO5K2fvOTgpRBYw-1; Fri, 26 Aug 2022 13:03:48 -0400
-X-MC-Unique: _P5KgbtsO5K2fvOTgpRBYw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6820E1C06ED6
-	for <mptcp@lists.linux.dev>; Fri, 26 Aug 2022 17:03:48 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EEAC8C15BB3
-	for <mptcp@lists.linux.dev>; Fri, 26 Aug 2022 17:03:47 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next] mptcp: use fastclose on more edge scenarios.
-Date: Fri, 26 Aug 2022 19:03:34 +0200
-Message-Id: <fda2e5ce19891d50fc3b7cff19c81330b5b475b1.1661533333.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68771441B
+	for <mptcp@lists.linux.dev>; Fri, 26 Aug 2022 19:03:45 +0000 (UTC)
+Received: by mail-pl1-f179.google.com with SMTP id x19so2345011plc.5
+        for <mptcp@lists.linux.dev>; Fri, 26 Aug 2022 12:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc;
+        bh=sIX3o4MUXpX1ypjLKUqjBBdMDbza8Q8xDPf+E2q8lco=;
+        b=I3GfJoMtMpBTfDqYMMI+OHlHlBCHRoKehT5HFwcaL3bGzxY9N5ZxXcILHe2KH79hJC
+         iwy+98ilnvSsGYr9Eep4Kn62sQ5YqVsiR6BQ76QXmbnos7LetIK2euf1gAKFDwJc0t1Q
+         zhDDTVJd0nVl2NMho70T4B7L67ngzdSkK1kESCxr9a3J/+V1GfyNqAWNSaK81m91xGLn
+         7O7I51IExX84vwnbdxyM41Tas33JrwglICCUuMMjnJHCusC6LN6aAmo7Yt2y0KxdFa/Z
+         k9xU0iIObYlqypYPKXEYSEIirKNnyhD2UgEv4XuUvjJJu99tNvyPIivnfLOrEkPXrXN8
+         gtDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc;
+        bh=sIX3o4MUXpX1ypjLKUqjBBdMDbza8Q8xDPf+E2q8lco=;
+        b=YZUCSQ5ohcpNQ5je2HY1kECGH5xAxnKy2Vb4j9HEUs/0NJorOKwdi5F6zQl5wh0er+
+         ZRvrrabf6Kt4f9PzPdKi2YnK92sTlUTwhTAih2V35Uw65OXIp7DYEnPGdBF/Q1fuvFGF
+         KCS9YmN2o23kzhRwRCtVK8HjGQtCTax7LbweNU/3ae+GLJIj50T+uVZTzjAUThi+0UWr
+         DHDhu+0vgxzNT0qOgsG4qCtoK8Z1teBoXJkJwEfxIwijQQfAPiI5DYruRmeAkmQoFoH8
+         wZ2gy4uw1+InRoqEs0qxhkxfC1fawf3/6E/ha43Qx7kL1RgLoqI9guzxKVsqxeDI/tsX
+         ZIsQ==
+X-Gm-Message-State: ACgBeo0cMBvNaDVgs0chCzoJFMX32ylkdrzG9VSzTjxglTH3FNnM1e6J
+	pSKSfJAnGdEXLNUO1dK2F2QUetQWDo7B
+X-Google-Smtp-Source: AA6agR5MYoUux7AzxnIyIXKxg3yNpBqjHUl70krqFG3pBCP3AXAT8p9qu10ZPWneZmS3YPdPEinyKQ==
+X-Received: by 2002:a17:90b:514:b0:1f5:59b2:fceb with SMTP id r20-20020a17090b051400b001f559b2fcebmr5829433pjz.82.1661540624596;
+        Fri, 26 Aug 2022 12:03:44 -0700 (PDT)
+Received: from [127.0.0.1] ([20.253.186.91])
+        by smtp.gmail.com with ESMTPSA id t4-20020a170902e84400b0017336c3a585sm1954554plg.233.2022.08.26.12.03.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Aug 2022 12:03:44 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <fda2e5ce19891d50fc3b7cff19c81330b5b475b1.1661533333.git.pabeni@redhat.com>
+References:
+ <fda2e5ce19891d50fc3b7cff19c81330b5b475b1.1661533333.git.pabeni@redhat.com>
+Subject: Re: mptcp: use fastclose on more edge scenarios.: Tests Results
+Message-ID: <c8148166-47c7-ef2e-4d3c-b205ed3b4f04@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 26 Aug 2022 19:03:43 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Daire reported a user-space application hang-up when the
-peer is forcibly closed before the data transfer completion.
+Hi Paolo,
 
-The relevant application expects the peer to either
-do an application-level clean shutdown or a transport-level
-connection reset.
+Thank you for your modifications, that's great!
 
-We can accommodate a such user by extending the fastclose
-usage: at fd close time, if the msk socket has some unread
-data, and at FIN_WAIT timeout.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-no fixes nor reported tag, as this is IMHO not for -net and
-is more a new feature than a bug-fix, but we can adjust
----
- net/mptcp/protocol.c | 42 +++++++++++++++++++++++++++++-------------
- 1 file changed, 29 insertions(+), 13 deletions(-)
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+packetdrill_syscalls selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6532607029542912
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6532607029542912/su=
+mmary/summary.txt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f4891db86217..417ee8860366 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2515,6 +2515,16 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
- 	mptcp_reset_timeout(msk, 0);
- }
- 
-+static void mptcp_do_fastclose(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
-+	mptcp_for_each_subflow_safe(msk, subflow, tmp)
-+		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow),
-+				  subflow, MPTCP_CF_FASTCLOSE);
-+}
-+
- static void mptcp_worker(struct work_struct *work)
- {
- 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
-@@ -2546,6 +2556,7 @@ static void mptcp_worker(struct work_struct *work)
- 	if (sock_flag(sk, SOCK_DEAD) &&
- 	    (mptcp_check_close_timeout(sk) || sk->sk_state == TCP_CLOSE)) {
- 		inet_sk_state_store(sk, TCP_CLOSE);
-+		mptcp_do_fastclose(sk);
- 		__mptcp_destroy_sock(sk);
- 		goto unlock;
- 	}
-@@ -2798,6 +2809,18 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	sock_put(sk);
- }
- 
-+static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
-+{
-+	/* Concurrent splices from sk_receive_queue into receive_queue will
-+	 * always show at least one non-empty queue when checked in this order.
-+	 */
-+	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue) &&
-+	    skb_queue_empty_lockless(&msk->receive_queue))
-+		return 0;
-+
-+	return EPOLLIN | EPOLLRDNORM;
-+}
-+
- static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -2812,8 +2835,13 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		goto cleanup;
- 	}
- 
--	if (mptcp_close_state(sk))
-+	if (mptcp_check_readable(msk)) {
-+		/* the msk has read data, do the MPTCP equivalent of TCP reset */
-+		inet_sk_state_store(sk, TCP_CLOSE);
-+		mptcp_do_fastclose(sk);
-+	} else if (mptcp_close_state(sk)) {
- 		__mptcp_wr_shutdown(sk);
-+	}
- 
- 	sk_stream_wait_close(sk, timeout);
- 
-@@ -3621,18 +3649,6 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 	return err;
- }
- 
--static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
--{
--	/* Concurrent splices from sk_receive_queue into receive_queue will
--	 * always show at least one non-empty queue when checked in this order.
--	 */
--	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue) &&
--	    skb_queue_empty_lockless(&msk->receive_queue))
--		return 0;
--
--	return EPOLLIN | EPOLLRDNORM;
--}
--
- static __poll_t mptcp_check_writeable(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
--- 
-2.37.1
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/4703019680923648
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4703019680923648/summary/summary.txt
 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/19f1e4100f11
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
