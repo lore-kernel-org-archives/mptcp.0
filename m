@@ -1,88 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AC03D65
-	for <mptcp@lists.linux.dev>; Mon, 29 Aug 2022 13:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661779407;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y6bQH0QudxVBqE03fZaKsQZ1B8AIT6nabVsLgna7BHA=;
-	b=Pv6dqp5pspuZ9Zvy2X7sEGDKwsiigsXu9c6uHHyB3CCOXUUDeckdJXImJooB7hW7ASTI2K
-	c6fgfi0xgSpzqibI+BQTj+nd0P8OLy6jzgUxIQsqEVrftZjqelpDnorBopYi8Uw16KJipC
-	rdnruQEXNi2XI1QGytGcqNZHBH6Ufoc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-659-WuxeZbEnNmeKLIqZR5zGyg-1; Mon, 29 Aug 2022 09:23:26 -0400
-X-MC-Unique: WuxeZbEnNmeKLIqZR5zGyg-1
-Received: by mail-wm1-f72.google.com with SMTP id i132-20020a1c3b8a000000b003a537064611so5058343wma.4
-        for <mptcp@lists.linux.dev>; Mon, 29 Aug 2022 06:23:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A7753A4
+	for <mptcp@lists.linux.dev>; Mon, 29 Aug 2022 15:13:54 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id bs25so10613455wrb.2
+        for <mptcp@lists.linux.dev>; Mon, 29 Aug 2022 08:13:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=g7+53mUGzurcVBobsSlcLd0AXzkF73wUSRWux0A/pG4=;
+        b=q5J50dfepDnmuinJo8StvRsuG6wLSv4j5rUXG1g1KaqH9EpF03Kt22z03Ho9kNkk7P
+         JRHUwLXzBHE8d1xYd+LHJjNSm4tLmcwIZN0HzX5uisrr0sHnRnbULR/I8oEvIdQ0mOWB
+         3HHLf4/6pNjNjlc13IY5Anou3iMjZR9WgBxQIYG3zvBR0pvAAsl6FR+CEU8o7snX8dA7
+         2ylpqM/1qnpehQ46yeDlT8d2sLaduSmUiC5y7k4H7rdjvZDHA9bLLxc6b+cjNkFhL5KN
+         Z0me5mQEsYiWE0DbbieW4sW5LbTqJSHfKOr3/7WU6wWgSqs2h2w5yQ+r3Mnn5nHqEWXJ
+         t3yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc;
-        bh=Y6bQH0QudxVBqE03fZaKsQZ1B8AIT6nabVsLgna7BHA=;
-        b=RrtXTTToJR1ZYX3rYc1k38VqUFOJupL1YL71meFJsx7cKEzgF6+/9teuNMGzm0QO3B
-         jtu6PsOUC5ZB7jBShMlFr66XLLeepxQY35TzO9BqPkruxAbJcO3ThPOMmQiS/ACEDQ+r
-         N9l8pQY1NGWcbgopnXytPkQkQXuV2LNa7r+xCtnyREgTOus8TW92sc0Sdg/vdYz/QEyR
-         YY951gGLvbx1ubmKo+p6W0Q+tCmH2luNLHabUOaorZeqk5rZ8JxulaDGGEz74tNs86zP
-         /xDL6BMl1nN6A//rW7gSSB0TzfTCNXk2IjpmU3OvwBwCI5XnCpWHiUsknKQIEm2qF03x
-         +dIQ==
-X-Gm-Message-State: ACgBeo0rmU2FMc00UtV+lonbwFhKxRulHa/uOihUlerfJ23ugcJEtK9R
-	P5tuqKw0f4gusoAPs/L9D2T3+SwZeWNmgnmPCD0vRxGb6QlBu7QogWOJ5hHkXGltn6MBmMrWENV
-	nyTPkhRZz08n4Cb+RiMfc4bxXBpGTP/ry1S0unuUCpPVUTdoE73osUDHbduQZpWaT
-X-Received: by 2002:a05:6000:178f:b0:221:7dcb:7cbf with SMTP id e15-20020a056000178f00b002217dcb7cbfmr6435706wrg.58.1661779405342;
-        Mon, 29 Aug 2022 06:23:25 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7CbMy44j7fbTz2Nzkth5kON4VOgbUpIEsRztyuWypv8YnQ368L23a8KeuoZIAY9zLoS17PRw==
-X-Received: by 2002:a05:6000:178f:b0:221:7dcb:7cbf with SMTP id e15-20020a056000178f00b002217dcb7cbfmr6435696wrg.58.1661779405070;
-        Mon, 29 Aug 2022 06:23:25 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-97-176.dyn.eolo.it. [146.241.97.176])
-        by smtp.gmail.com with ESMTPSA id i20-20020a05600c2d9400b003a342933727sm8680031wmg.3.2022.08.29.06.23.24
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Aug 2022 06:23:24 -0700 (PDT)
-Message-ID: <1455852631243eb21d13c86ba3ca2332a9bf48a3.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: use fastclose on more edge scenarios.
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Date: Mon, 29 Aug 2022 15:23:23 +0200
-In-Reply-To: <fda2e5ce19891d50fc3b7cff19c81330b5b475b1.1661533333.git.pabeni@redhat.com>
-References: <fda2e5ce19891d50fc3b7cff19c81330b5b475b1.1661533333.git.pabeni@redhat.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=g7+53mUGzurcVBobsSlcLd0AXzkF73wUSRWux0A/pG4=;
+        b=yR2m857sFwAyHAm6ZLyj1KA1vWDWZCkEtGXsiHEaSBFXKnFfGjgRRKcUHoq29nMFf/
+         cnyPenrIGJ5j23f70noOx8DhEJJiXPAj5bmbaSV2NQ7eaAPIwUXSGG/0HMjHo0Y9X0BD
+         VplJO39c4pkXIOBmQSfZGzdt4XIayR3KPgw/cDQh/lKupgRPlJePuvICGtsS+IBHCwZZ
+         v7oFFK9ckCfRUpAHb8+9Ll92gGy/Sqswslj4mqaEMSAc2pyuNV50mVO6YIcjB69g93k8
+         Qi6Hoc1VK6rrnTOE8rjfYXFA8Cx98e1ZTYJATTbBRSee4SavFuSCWIhW4SC/WUTqERVj
+         BlKw==
+X-Gm-Message-State: ACgBeo0/K7x6oU3u6TlLsPnIUcwleJoCIXE0W7yHfKXsQN4bA04QaXQX
+	nhswilBvxwRUB5ke5dL+eNDAXw==
+X-Google-Smtp-Source: AA6agR4hk/+Tchjy7K9whMSS4G3Vful/HZgtXAr6avIZnW1rv24T1e8Cd3+aAwGs2q5ZGM6PyFq6SA==
+X-Received: by 2002:a5d:6c6f:0:b0:225:3cbf:eab7 with SMTP id r15-20020a5d6c6f000000b002253cbfeab7mr6744144wrz.264.1661786032656;
+        Mon, 29 Aug 2022 08:13:52 -0700 (PDT)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id s9-20020a1cf209000000b003a60f0f34b7sm9051134wmc.40.2022.08.29.08.13.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Aug 2022 08:13:52 -0700 (PDT)
+Message-ID: <6fcba5a4-c4a1-eee9-25da-5429835603cf@tessares.net>
+Date: Mon, 29 Aug 2022 17:13:51 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH mptcp-next v2 1/2] mptcp: allow priviledged operations
+ from user namespaces
+Content-Language: en-GB
+To: Thomas Haller <thaller@redhat.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Florian Westphal <fw@strlen.de>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <e95949bf-53cf-bdf-27c8-8cbc3eeda450@linux.intel.com>
+ <20220810074251.31887-1-thaller@redhat.com>
+ <3af41bc6-436a-5849-b2d-9564dd8f46c7@linux.intel.com>
+ <49976d61-c3e1-3991-37b3-4751f8a96a5c@tessares.net>
+ <c359cd4e1ea2970d0bd3d3127773d08041ae2acd.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <c359cd4e1ea2970d0bd3d3127773d08041ae2acd.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2022-08-26 at 19:03 +0200, Paolo Abeni wrote:
-> Daire reported a user-space application hang-up when the
-> peer is forcibly closed before the data transfer completion.
+Hi Thomas,
+
+On 24/08/2022 22:37, Thomas Haller wrote:
+> On Thu, 2022-08-11 at 12:34 +0200, Matthieu Baerts wrote:
+
+(...)
+
+>> @Thomas: BTW, thank you for maintaining libnl!
+>> Funny that you sent these patches to MPTCP while earlier this week I
+>> sent the latest libnl version to Debian :)
+>>
+>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1016867
+>> https://tracker.debian.org/pkg/libnl3
 > 
-> The relevant application expects the peer to either
-> do an application-level clean shutdown or a transport-level
-> connection reset.
-> 
-> We can accommodate a such user by extending the fastclose
-> usage: at fd close time, if the msk socket has some unread
-> data, and at FIN_WAIT timeout.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Oh, that's nice. After I rather neglected libnl for quite some time, I
+> want do to a better job in the future. :)
 
-self-nack. This causes self-tests hang-up, even if the root cause of
-the latter is likely pre-existent and this just uncover the latter
-issue.
+:-)
 
-Will send a v2.
+> On an unrelated note: upcoming NetworkManager 1.40.0 release will have
+> basic MPTCP support and configure endpoints. Similar to what mptcpd
+> does. This was the backstory for the patches.
 
-/P
+That's a really good news! Thank you for having worked on that,
+preparing a setup to be used with MPTCP is going to be easier now!
 
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
