@@ -1,530 +1,446 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C192804
-	for <mptcp@lists.linux.dev>; Wed, 31 Aug 2022 10:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661942886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ePrArrj9fby6vKG6V04lqMq5VLK8gjAFdlYwfXibIZA=;
-	b=JnvMa68oPT/0XXx6wDJQBIMwt+Ykjzw69xE1jgeV5yF3yeJ/P9bL9V8AyzMaRiIGnpT+IB
-	oXn8vAetaXTTgAKA3LOW1LBQBX7e336xKjbUwZBGgxlB2OKCpeWah2+USHPfnt6mEI9S4m
-	HpiD/OoSghVS8iSbbvRZ1gMjmKgHl0c=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-245-7Mq3i2-bNticxTLwNhyZYQ-1; Wed, 31 Aug 2022 06:48:04 -0400
-X-MC-Unique: 7Mq3i2-bNticxTLwNhyZYQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8681F80418F
-	for <mptcp@lists.linux.dev>; Wed, 31 Aug 2022 10:48:04 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.59])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EAE3640B40C7
-	for <mptcp@lists.linux.dev>; Wed, 31 Aug 2022 10:48:03 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 2/2] mptcp: use fastclose on more edge scenarios.
-Date: Wed, 31 Aug 2022 12:47:43 +0200
-Message-Id: <3fbf8f18c53284c5aaead02201563ee16096b290.1661942855.git.pabeni@redhat.com>
-In-Reply-To: <5e26963328ae04aa375089a713ec40f5eb6adacd.1661942855.git.pabeni@redhat.com>
-References: <5e26963328ae04aa375089a713ec40f5eb6adacd.1661942855.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E909A38
+	for <mptcp@lists.linux.dev>; Thu,  1 Sep 2022 14:40:47 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id u9so35181140ejy.5
+        for <mptcp@lists.linux.dev>; Thu, 01 Sep 2022 07:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc;
+        bh=OPetxa9TOIY0Sn8AIzZ0VqpkBysxtusjpqMFB0luLeY=;
+        b=JTdZ9WsoDEdVc45dJVelNhO+z3ScHz529OCbqe0Bajg2wwCw7ulOYGii+bLkx7TDDQ
+         frbVJDnmz/zqd7oRrxSc0SLe/mQ4P2+anUV15uE4L0Rw98rWTQtyK34O1zjEPIwK3wnL
+         +lsvR5ziaDhyfjKQROze6cDIUZR6Bu+GA+KvfMp0CDIGzZCA0RGtfWyahUcAEBlfky1R
+         8ag2rLb4J+m13IOoWqyEWqOOd+gJhECEAMdiQnw+klxm6W7P1/MP0IFImizaz2GvdB53
+         +lYEBTJxrmVda5ihqiIt9QuYrs+KOlkOrjAFrbfFS7km8/pU91/cj2qk5wPcX1DvoN6D
+         AQfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc;
+        bh=OPetxa9TOIY0Sn8AIzZ0VqpkBysxtusjpqMFB0luLeY=;
+        b=mzQ8z5xV8zLQTj+ubC41z0n7xweoInXSs2XWGyGZZFhkc4rHkxFj57qkjNAQiANAN/
+         bTxHItHLda7jiP7hQmhGERJRuuXliTCGGgntgLhjWIjWYz8wcHBdg/Em8rh0H+T2Lr2Z
+         FJEfeoPY3bPelD+IzxAyud0UmKo1YQxeRjZR6hIeQRldEusMGGjDBVi5IAHhfRmPBmkV
+         pZd8CTSWRBlL0F9hheCv8f27p/BnSr99uAzSP3t75aZJ5sCDemMmBcRMcrEQ1rE2DDeO
+         bbErfI2D8FG+j7FAMZYj4xdVlocZ7o/GjVbGs2/GCdI/osyUsAyAnwzcAPJQ2fHe7OUW
+         Ir6w==
+X-Gm-Message-State: ACgBeo0uQ4mWU3OebiVzvDxPJ9nbjd6PKI7xCJ+eFIBwzm25SChgcxA7
+	+TkuLA64sjLQGHizeNQLN8+kLCjqLum1PA==
+X-Google-Smtp-Source: AA6agR5l+NRNzcekD1AoyiL98b04li1u0Xnw3yLnr0MpX14rtUhdWHfLZXNrjvjxCZtZ05+rjgezBA==
+X-Received: by 2002:a17:906:d54e:b0:73d:dcb2:39ac with SMTP id cr14-20020a170906d54e00b0073ddcb239acmr21571598ejc.520.1662043244965;
+        Thu, 01 Sep 2022 07:40:44 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:6af0:84ce:9f4e:2025? ([2a02:578:8593:1200:6af0:84ce:9f4e:2025])
+        by smtp.gmail.com with ESMTPSA id ez20-20020a056402451400b00446ad774ea0sm1453782edb.7.2022.09.01.07.40.44
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Sep 2022 07:40:44 -0700 (PDT)
+Message-ID: <5c4d1628-f6f8-7984-f978-deb07cb4eb88@tessares.net>
+Date: Thu, 1 Sep 2022 16:40:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [Weekly meetings] MoM - 25th of August 2022
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Daire reported a user-space application hang-up when the
-peer is forcibly closed before the data transfer completion.
+Hello everyone,
 
-The relevant application expects the peer to either
-do an application-level clean shutdown or a transport-level
-connection reset.
+Last Thursday, we had our 206th meeting with Paolo, Davide (Redhat), and
+myself (Tessares).
 
-We can accommodate a such user by extending the fastclose
-usage: at fd close time, if the msk socket has some unread
-data, and at FIN_WAIT timeout.
 
-Note that at MPTCP close time we must ensure that the TCP
-subflows will reset: set the linger socket option to a suitable
-value.
+Thanks again for this new good meeting!
 
-The fastclose self-tests are updated accordingly to the above
-changes, and a new test-case for client-side fast-close is
-introduced.
+Here are the minutes of the meeting:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
---
-v1 -> v2:
- - ensure mptcp_do_fastclose will reset all the subflows,
- - update fastclose self-tests
----
- net/mptcp/protocol.c                          | 50 ++++++++---
- .../selftests/net/mptcp/mptcp_connect.c       | 58 +++++++++++--
- .../testing/selftests/net/mptcp/mptcp_join.sh | 86 +++++++++++++++----
- 3 files changed, 154 insertions(+), 40 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b04f184695e4..fec542fea02a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2276,8 +2276,14 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- 
--	if (flags & MPTCP_CF_FASTCLOSE)
-+	if (flags & MPTCP_CF_FASTCLOSE) {
-+		/* be sure to force the tcp_disconnect() path,
-+		 * to generate the egress reset
-+		 */
-+		ssk->sk_lingertime = 0;
-+		sock_set_flag(ssk, SOCK_LINGER);
- 		subflow->send_fastclose = 1;
-+	}
- 
- 	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
- 	if (!dispose_it) {
-@@ -2540,6 +2546,16 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
- 	mptcp_reset_timeout(msk, 0);
- }
- 
-+static void mptcp_do_fastclose(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
-+	mptcp_for_each_subflow_safe(msk, subflow, tmp)
-+		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow),
-+				  subflow, MPTCP_CF_FASTCLOSE);
-+}
-+
- static void mptcp_worker(struct work_struct *work)
- {
- 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
-@@ -2571,6 +2587,7 @@ static void mptcp_worker(struct work_struct *work)
- 	if (sock_flag(sk, SOCK_DEAD) &&
- 	    (mptcp_check_close_timeout(sk) || sk->sk_state == TCP_CLOSE)) {
- 		inet_sk_state_store(sk, TCP_CLOSE);
-+		mptcp_do_fastclose(sk);
- 		__mptcp_destroy_sock(sk);
- 		goto unlock;
- 	}
-@@ -2823,6 +2840,18 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	sock_put(sk);
- }
- 
-+static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
-+{
-+	/* Concurrent splices from sk_receive_queue into receive_queue will
-+	 * always show at least one non-empty queue when checked in this order.
-+	 */
-+	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue) &&
-+	    skb_queue_empty_lockless(&msk->receive_queue))
-+		return 0;
-+
-+	return EPOLLIN | EPOLLRDNORM;
-+}
-+
- static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -2837,8 +2866,13 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		goto cleanup;
- 	}
- 
--	if (mptcp_close_state(sk))
-+	if (mptcp_check_readable(msk)) {
-+		/* the msk has read data, do the MPTCP equivalent of TCP reset */
-+		inet_sk_state_store(sk, TCP_CLOSE);
-+		mptcp_do_fastclose(sk);
-+	} else if (mptcp_close_state(sk)) {
- 		__mptcp_wr_shutdown(sk);
-+	}
- 
- 	sk_stream_wait_close(sk, timeout);
- 
-@@ -3646,18 +3680,6 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 	return err;
- }
- 
--static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
--{
--	/* Concurrent splices from sk_receive_queue into receive_queue will
--	 * always show at least one non-empty queue when checked in this order.
--	 */
--	if (skb_queue_empty_lockless(&((struct sock *)msk)->sk_receive_queue) &&
--	    skb_queue_empty_lockless(&msk->receive_queue))
--		return 0;
--
--	return EPOLLIN | EPOLLRDNORM;
--}
--
- static __poll_t mptcp_check_writeable(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 24d4e9cb617e..3592a1f51019 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -72,6 +72,7 @@ static int cfg_wait;
- static uint32_t cfg_mark;
- static char *cfg_input;
- static int cfg_repeat = 1;
-+static int cfg_truncate = 0;
- 
- struct cfg_cmsg_types {
- 	unsigned int cmsg_enabled:1;
-@@ -381,8 +382,6 @@ static size_t do_rnd_write(const int fd, char *buf, const size_t len)
- 		do_w = cfg_do_w;
- 
- 	bw = write(fd, buf, do_w);
--	if (bw < 0)
--		perror("write");
- 
- 	/* let the join handshake complete, before going on */
- 	if (cfg_join && first) {
-@@ -571,7 +570,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		.fd = peerfd,
- 		.events = POLLIN | POLLOUT,
- 	};
--	unsigned int woff = 0, wlen = 0;
-+	unsigned int woff = 0, wlen = 0, total_wlen = 0, total_rlen = 0;
- 	char wbuf[8192];
- 
- 	set_nonblock(peerfd, true);
-@@ -597,7 +596,16 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		}
- 
- 		if (fds.revents & POLLIN) {
--			len = do_rnd_read(peerfd, rbuf, sizeof(rbuf));
-+			ssize_t rb = sizeof(rbuf);
-+
-+			/* limit the total amount of read data to the trunc value*/
-+			if (cfg_truncate > 0) {
-+				if (rb + total_rlen > cfg_truncate)
-+					rb = cfg_truncate - total_rlen;
-+				len = read(peerfd, rbuf, rb);
-+			} else {
-+				len = do_rnd_read(peerfd, rbuf, sizeof(rbuf));
-+			}
- 			if (len == 0) {
- 				/* no more data to receive:
- 				 * peer has closed its write side
-@@ -612,10 +620,14 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 
- 			/* Else, still have data to transmit */
- 			} else if (len < 0) {
-+				/* ignore errors on I/O operation when the peer is fastclosing */
-+				if (cfg_truncate < 0)
-+					return 0;
- 				perror("read");
- 				return 3;
- 			}
- 
-+			total_rlen += len;
- 			do_write(outfd, rbuf, len);
- 		}
- 
-@@ -628,12 +640,21 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 			if (wlen > 0) {
- 				ssize_t bw;
- 
-+				/* limit the total amount of written data to the trunc value */
-+				if (cfg_truncate > 0 && wlen + total_wlen > cfg_truncate)
-+					wlen = cfg_truncate - total_wlen;
-+
- 				bw = do_rnd_write(peerfd, wbuf + woff, wlen);
--				if (bw < 0)
-+				if (bw < 0) {
-+					if (cfg_truncate < 0)
-+						return 0;
-+					perror("write");
- 					return 111;
-+				}
- 
- 				woff += bw;
- 				wlen -= bw;
-+				total_wlen += bw;
- 			} else if (wlen == 0) {
- 				/* We have no more data to send. */
- 				fds.events &= ~POLLOUT;
-@@ -652,10 +673,19 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		}
- 
- 		if (fds.revents & (POLLERR | POLLNVAL)) {
-+			/* when the peer is truncating the file and fastclosing, ignore
-+			 * HUP/connection reset errors
-+			 */
-+			if (cfg_truncate < 0)
-+				return 0;
- 			fprintf(stderr, "Unexpected revents: "
- 				"POLLERR/POLLNVAL(%x)\n", fds.revents);
- 			return 5;
- 		}
-+
-+		if (cfg_truncate > 0 && total_wlen >= cfg_truncate &&
-+		    total_rlen >= cfg_truncate)
-+			break;
- 	}
- 
- 	/* leave some time for late join/announce */
-@@ -1160,11 +1190,13 @@ int main_loop(void)
- 	}
- 
- 	/* close the client socket open only if we are not going to reconnect */
--	ret = copyfd_io(fd_in, fd, 1, cfg_repeat == 1);
-+	ret = copyfd_io(fd_in, fd, 1, 0);
- 	if (ret)
- 		return ret;
- 
--	if (--cfg_repeat > 0) {
-+	if (cfg_truncate > 0) {
-+		xdisconnect(fd, peer->ai_addrlen);
-+	} else if (--cfg_repeat > 0) {
- 		xdisconnect(fd, peer->ai_addrlen);
- 
- 		/* the socket could be unblocking at this point, we need the
-@@ -1176,7 +1208,8 @@ int main_loop(void)
- 		if (cfg_input)
- 			close(fd_in);
- 		goto again;
--	}
-+	} else
-+		close(fd);
- 	return 0;
- }
- 
-@@ -1262,8 +1295,15 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6c:hi:I:jlm:M:o:p:P:r:R:s:S:t:T:w:")) != -1) {
-+	while ((c = getopt(argc, argv, "6c:f:hi:I:jlm:M:o:p:P:r:R:s:S:t:T:w:")) != -1) {
- 		switch (c) {
-+		case 'f':
-+			cfg_truncate = atoi(optarg);
-+
-+			/* when receiving a fastclose, ignore PIPE signals */
-+			if (cfg_truncate < 0)
-+				signal(SIGPIPE, handle_signal);
-+			break;
- 		case 'j':
- 			cfg_join = true;
- 			cfg_mode = CFG_MODE_POLL;
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2957fe414639..71eadfa882a9 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -346,10 +346,21 @@ check_transfer()
- 	local in=$1
- 	local out=$2
- 	local what=$3
-+	local bytes=$4
- 	local i a b
- 
- 	local line
--	cmp -l "$in" "$out" | while read -r i a b; do
-+	if [ -n "$bytes" ]; then
-+		# when truncating we must check the size explicitly
-+		local out_size=$(wc -c $out | awk '{print $1}')
-+		if [ $out_size -ne $bytes ]; then
-+			echo "[ FAIL ] $what output file has wrong size ($out_size, $bytes)"
-+			fail_test
-+			return 1
-+		fi
-+		bytes="--bytes=${bytes}"
-+	fi
-+	cmp -l "$in" "$out" ${bytes} | while read -r i a b; do
- 		local sum=$((0${a} + 0${b}))
- 		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
- 			echo "[ FAIL ] $what does not match (in, out):"
-@@ -707,9 +718,29 @@ do_transfer()
- 	fi
- 
- 	local flags="subflow"
-+	local extra_cl_args=""
-+	local extra_srv_args=""
-+	local trunc_size=""
- 	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
-+		if [ ${test_link_fail} -le 1 ]; then
-+			echo "fastclose tests need test_link_fail argument"
-+			return 0
-+		fi
-+
- 		# disconnect
--		extra_args="$extra_args -I ${addr_nr_ns2:10}"
-+		trunc_size=${test_link_fail}
-+		local side=${addr_nr_ns2:10}
-+
-+		if [ ${side} = "client" ]; then
-+			extra_cl_args="-f ${test_link_fail}"
-+			extra_srv_args="-f -1"
-+		elif [ ${side} = "server" ]; then
-+			extra_srv_args="-f ${test_link_fail}"
-+			extra_cl_args="-f -1"
-+		else
-+			echo "wrong/unknown fastclose spec ${side}"
-+			return 0
-+		fi
- 		addr_nr_ns2=0
- 	elif [[ "${addr_nr_ns2}" = "userspace_"* ]]; then
- 		userspace_pm=1
-@@ -741,12 +772,12 @@ do_transfer()
- 		timeout ${timeout_test} \
- 			ip netns exec ${listener_ns} \
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_args ${local_addr} < "$sinfail" > "$sout" &
-+					$extra_args $extra_srv_args ${local_addr} < "$sinfail" > "$sout" &
- 	else
- 		timeout ${timeout_test} \
- 			ip netns exec ${listener_ns} \
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_args ${local_addr} < "$sin" > "$sout" &
-+					$extra_args $extra_srv_args ${local_addr} < "$sin" > "$sout" &
- 	fi
- 	local spid=$!
- 
-@@ -756,20 +787,20 @@ do_transfer()
- 		timeout ${timeout_test} \
- 			ip netns exec ${connector_ns} \
- 				./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--					$extra_args $connect_addr < "$cin" > "$cout" &
-+					$extra_args $extra_cl_args $connect_addr < "$cin" > "$cout" &
- 	elif [ "$test_link_fail" -eq 1 ] || [ "$test_link_fail" -eq 2 ];then
- 		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
- 			tee "$cinsent" | \
- 			timeout ${timeout_test} \
- 				ip netns exec ${connector_ns} \
- 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--						$extra_args $connect_addr > "$cout" &
-+						$extra_args $extra_cl_args $connect_addr > "$cout" &
- 	else
- 		tee "$cinsent" < "$cinfail" | \
- 			timeout ${timeout_test} \
- 				ip netns exec ${connector_ns} \
- 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--						$extra_args $connect_addr > "$cout" &
-+						$extra_args $extra_cl_args $connect_addr > "$cout" &
- 	fi
- 	local cpid=$!
- 
-@@ -971,15 +1002,15 @@ do_transfer()
- 	fi
- 
- 	if [ "$test_link_fail" -gt 1 ];then
--		check_transfer $sinfail $cout "file received by client"
-+		check_transfer $sinfail $cout "file received by client" $trunc_size
- 	else
--		check_transfer $sin $cout "file received by client"
-+		check_transfer $sin $cout "file received by client" $trunc_size
- 	fi
- 	retc=$?
- 	if [ "$test_link_fail" -eq 0 ];then
--		check_transfer $cin $sout "file received by server"
-+		check_transfer $cin $sout "file received by server" $trunc_size
- 	else
--		check_transfer $cinsent $sout "file received by server"
-+		check_transfer $cinsent $sout "file received by server" $trunc_size
- 	fi
- 	rets=$?
- 
-@@ -1188,12 +1219,23 @@ chk_fclose_nr()
- {
- 	local fclose_tx=$1
- 	local fclose_rx=$2
-+	local ns_invert=${3:-""}
- 	local count
- 	local dump_stats
-+	local ns_tx=$ns2
-+	local ns_rx=$ns1
-+	local extra_msg=""
-+
-+	if [[ $ns_invert = "invert" ]]; then
-+		ns_tx=$ns1
-+		ns_rx=$ns2
-+		extra_msg="   invert"
-+	fi
- 
- 	printf "%-${nr_blank}s %s" " " "ctx"
--	count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
-+	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
-+	[ "$count" != "$fclose_tx" ] && extra_msg="$extra_msg,tx=$count"
- 	if [ "$count" != "$fclose_tx" ]; then
- 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
- 		fail_test
-@@ -1203,17 +1245,20 @@ chk_fclose_nr()
- 	fi
- 
- 	echo -n " - fclzrx"
--	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
-+	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
-+	[ "$count" != "$fclose_rx" ] && extra_msg="$extra_msg,rx=$count"
- 	if [ "$count" != "$fclose_rx" ]; then
- 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
- 		fail_test
- 		dump_stats=1
- 	else
--		echo "[ ok ]"
-+		echo -n "[ ok ]"
- 	fi
- 
- 	[ "${dump_stats}" = 1 ] && dump_stats
-+
-+	echo "$extra_msg"
- }
- 
- chk_rst_nr()
-@@ -1236,7 +1281,7 @@ chk_rst_nr()
- 	printf "%-${nr_blank}s %s" " " "rtx"
- 	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPRstTx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
--	if [ "$count" != "$rst_tx" ]; then
-+	if [ $count -lt $rst_tx ]; then
- 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
- 		fail_test
- 		dump_stats=1
-@@ -1247,7 +1292,7 @@ chk_rst_nr()
- 	echo -n " - rstrx "
- 	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPRstRx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
--	if [ "$count" != "$rst_rx" ]; then
-+	if [ "$count" -lt "$rst_rx" ]; then
- 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
- 		fail_test
- 		dump_stats=1
-@@ -2801,11 +2846,18 @@ fullmesh_tests()
- fastclose_tests()
- {
- 	if reset "fastclose test"; then
--		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_2
-+		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_client
- 		chk_join_nr 0 0 0
- 		chk_fclose_nr 1 1
- 		chk_rst_nr 1 1 invert
- 	fi
-+
-+	if reset "fastclose server test"; then
-+		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_server
-+		chk_join_nr 0 0 0
-+		chk_fclose_nr 1 1 invert
-+		chk_rst_nr 1 1
-+	fi
- }
- 
- pedit_action_pkts()
+
+Accepted patches:
+    - The list of accepted patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=3
+
+
+    netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+    our repo (by: /):
+
+/
+
+
+
+Pending patches:
+    - The list of pending patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=*
+
+
+    netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+    our repo (by: Dmytro SHYTYI, Florian Westphal, Geliang Tang, Jakub
+Kicinski, Jason Wang, Jiapeng Chong, Matthieu Baerts, Paolo Abeni):
+
+12282219: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
+12282221: [RESEND,RFC,4/4] tcp: parse tcp options contained in reset
+packets:
+12282223: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
+12282225: [RESEND,1/5] tcp: make two mptcp helpers available to tcp stack
+12282227: [RESEND,5/5] mptcp: send fastclose if userspace closes socket
+with unread data:
+12321111: mptcp: Remove redundant assignment to remaining:
+      - State: RFC
+
+12901431: [mptcp-next,v10,1/5] Squash to "mptcp: add get_subflow wrappers"
+12901432: [mptcp-next,v10,2/5] mptcp: redundant subflows push pending
+12901433: [mptcp-next,v10,3/5] mptcp: redundant subflows retrans support
+12901434: [mptcp-next,v10,4/5] selftests/bpf: Add bpf_red scheduler
+12901435: [mptcp-next,v10,5/5] selftests/bpf: Add bpf_red test:
+      - State: Changes requested
+      - Series: BPF redundant scheduler
+      - Submitter: Geliang Tang
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=655328&state=*&archive=both
+      - Same as last week
+
+12922458: mptcp: Fix comment typo:
+      - State: Changes requested
+      - Series: mptcp: Fix comment typo
+      - Submitter: Jason Wang
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=661054&state=*&archive=both
+      - Same as last week
+
+12933347: [RFC,mptcp-next,v4] mptcp: Fast Open Mechanism:
+      - State: RFC
+      - Submitter: Dmytro SHYTYI
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20220801024656.397714-1-dmytro@shytyi.net/
+      - Same as last week
+
+12947468: [RFC] net: tcp: prevent transition to FIN_WAIT2 when mptcp has
+unacked data_fin:
+      - State: Change Requested
+      - Submitter: Florian Westphal
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20220818162123.30198-1-fw@strlen.de/
+      - Discussions are ongoing:
+          - are we going to delay the transition to FIN_WAIT2 (→
+timewait) for too many sockets
+          - it looks like only a small part would be delayed, so should
+be OK
+          - Paolo will check that
+
+12952040: [mptcp-next] mptcp: add do_check_data_fin to replace copied:
+      - State: Queued
+      - Submitter: Geliang Tang
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/95f0f96d90264cc6411b024753fe8430f6998e4f.1661258990.git.geliang.tang@suse.com/
+      - Looks good, can be applied → Done
+
+12953299: [mptcp-next,1/2] Squash-to: "mptcp: move msk input path under
+full msk socket lock"
+12953300: [mptcp-next,2/2] mptcp: never re-inject data on a single subflow:
+      - State: Rejected? yes
+      - Series: mptcp: rx path refactor follow-ups
+      - Submitter: Paolo Abeni
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=670614&state=*&archive=both
+      - These two patches show some issues:
+          - more refactoring seems to be needed and it seems complex
+          - probably best to address the original bug with the smaller
+patch (see below)
+      - Solution:
+          - we don't apply these two patches
+          - we revert the 4 patches from our tree
+
+12954112: [net-next] genetlink: start to validate reserved header bytes:
+      - State: Handled elsewhere
+      - Submitter: Jakub Kicinski
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20220825001830.1911524-1-kuba@kernel.org/
+      - Looks OK
+
+12954562: [mptcp-net] mptcp: fix fwd memory accounting on coalesce:
+      - State: New
+      - Submitter: Paolo Abeni
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/e07e982885b904607d42e1e45840c4eb3c124d4b.1661426770.git.pabeni@redhat.com/
+      - We avoid the issue by calling kfree_skb_partial() later which
+modifies counters (in an atomic way)
+      - TODO Matth: apply → done
+
+
+
+
+Issues on Github:
+    https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+
+    Recently opened (latest from last week: 294)
+
+  295  mptcpize, rsyncd & connection tear down (hangs)? [bug]:
+      - TODO: Matth: check to reproduce the issue → Paolo was faster
+
+
+New:
+    - To open: use IP_TTL socktopt (+v6 version):
+        - best to do it on all subflows by default
+        - if needed, a BPF program could change the TTL value per subflow
+    - TODO Matth: open → done
+
+
+
+    Bugs (opened, flagged as "bug" and assigned)
+
+  181  implement data_fin ack retransmission for subflow in  TIME_WAIT
+state [bug] @fw-strlen:
+      - See patch above
+
+
+    Bugs (opened and flagged as "bug" and not assigned)
+
+  295  mptcpize, rsyncd & connection tear down (hangs)? [bug]
+  290  Not possible to `connect()` after a disconnect for a passive
+socket [bug]
+  248  packetdrill: more tests failing due to packets arriving later
+than expected [bug] [packetdrill]
+
+
+    In Progress (opened, new feature and assigned)
+
+  294  Clear way for userspace to know if the connection fell back to
+TCP [enhancement] @matttbe
+  234  Packetdrill: Support MPC+DATA+checksum error [enhancement]
+[packetdrill] @spoorva
+  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
+@dcaratti
+
+   75  BPF: packet scheduler [enhancement] @geliangtang:
+       - See patches above
+
+   74  BPF: path manager [enhancement] @geliangtang
+
+   59  (MP)TFO support [enhancement] @dmytroshytyi:
+       - See patches above
+
+
+    Assigned Questions (opened, questions and assigned)
+
+None.
+
+
+    Open questions (opened, questions and not assigned)
+
+  293  fail to create a subflow when a listen socket is closed [question]:
+      - another solution is not to close the listening socket
+      - why closing the socket?:
+          - save resources?
+          - Best to ask
+      - maybe we can have an MPTCP specific sockopt to 0 the backlog (or
+another possibility to do it?)
+      - one problem we can have if we want to close the listening socket:
+          - we could not accept new subflows sent to the initial IP if
+we have to close then re-open
+      - → TODO: Matth: update ticket → done
+
+
+    For later (opened and not assigned assigned)
+
+  289  mptcp: audit comments for non inclusive language [enhancement]
+  273  Packetdrill: test outgoing MP_FASTCLOSE [enhancement] [packetdrill]
+  269  Allow having a mix of v4/v6 subflows for the same socket
+[enhancement]
+  266  Packetdrill: add MP_FAIL coverage [packetdrill]
+  236  Review supported sockopts list [enhancement]
+  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
+  215  TCP Urgent pointer and MPTCP [enhancement]
+  213  add MPTCP man page [enhancement]
+  208  better handing of ssk memory pressure in the TX path [enhancement]
+  202  Add sendmsg support for ancillary data [enhancement]
+  197  more mibs needed [enhancement]
+  180  Get an update when MPTCP fall back to TCP [enhancement]
+  177  improve retransmit subflow selection [enhancement]
+  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
+port [enhancement] [packetdrill]
+  150  remove completely workqueue usage [enhancement]
+  141  avoid acquiring mptcp_data_lock() twice in the receive path
+[enhancement]
+  133  PM: Closing the MPTCP connection when last subflow is not the
+initial one and its IP address is removed [enhancement]
+  128  When the last subflow is closed without DATA_FIN and msk
+Established, close msk (after a timeout) [enhancement]
+   79  allow 'force to MPTCP' mode: BPF [enhancement]
+   78  notify the application (userspace) when a subflow is
+added/removed [enhancement]
+   77  [gs]etsockopt: forward to new/existing SF [enhancement]
+   76  [gs]etsockopt per subflow: BPF [enhancement]
+   61  move msk clone after ctx creation [enhancement]
+   57  After a few attempts of failed MPTCP, directly fallback to TCP
+for new connections [enhancement]
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
+interface [enhancement] [syzkaller]
+   41  reduce indirect call usage [enhancement]
+   24  Revisit layout of struct mptcp_subflow_context [enhancement]
+
+
+    Recently closed (since last week)
+
+  285  PM: in-kernel: support for MPC prio exchange  [enhancement] @pabeni
+
+
+
+FYI: Current Roadmap:
+    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+    - Current/Coming merge window (6.1):
+https://github.com/multipath-tcp/mptcp_net-next/projects/16
+    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Patches to send to netdev:
+    - Fixes for other trees:
+
+        - [42f81832db6b] module: kunit: Load .kunit_test_suites section
+when CONFIG_KUNIT=m (David Gow):
+            - in another tree
+            - TODO: Matth: check if it is applied in Linus' tree → yes it is
+
+    - Fixes for -net: /
+
+    - Fixes for net-next: /
+
+    - Features for net-next:
+
+        - [94b4b697c713] mptcp: add mptcp_for_each_subflow_safe helper
+(Matthieu Baerts):
+            - can be sent → TODO
+
+        - [2690e8cca6bb] mptcp: move RCVPRUNE event later (Paolo Abeni)
+        - [dd77c4b18f06] mptcp: more accurate receive buffer updates
+(Paolo Abeni)
+        - [0f0ab98e16a4] mptcp: move msk input path under full msk
+socket lock (Paolo Abeni)
+        - [f481943b88c8] mptcp: use common helper for rmem memory
+accounting (Paolo Abeni):
+            - TODO: Matth: Remove → Done
+
+        - [1b447c139aa8] selftests: mptcp: move prefix tests of
+addr_nr_ns2 together (Geliang Tang)
+        - [2bfaf90f9579] mptcp: allow privileged operations from user
+namespaces (Thomas Haller)
+        - [42bea5699c66] mptcp: account memory allocation in
+mptcp_nl_cmd_add_addr() to user (Thomas Haller):
+            - these 3 can be sent as well → TODO
+
+
+    - Features for net-next (next): /
+
+
+    - Features for other trees:
+
+        - [ab8b0fa282e9] mptcp: add struct mptcp_sched_ops (Geliang Tang)
+        - [117b8c62a6fe] mptcp: add a new sysctl scheduler (Geliang Tang)
+        - [0e478a4eea7e] mptcp: add sched in mptcp_sock (Geliang Tang)
+        - [45003f8025a5] mptcp: add scheduled in mptcp_subflow_context
+(Geliang Tang)
+        - [460624a0ad0c] mptcp: add get_subflow wrappers (Geliang Tang)
+        - [9e85cdd959a3] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
+        - [c275dd7cd866] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang)
+        - [0cce4245b5d0] selftests/bpf: Add mptcp sched structs (Geliang
+Tang)
+        - [ff705ffb482b] selftests/bpf: Add bpf_first scheduler (Geliang
+Tang)
+        - [1a5782501bf9] selftests/bpf: Add bpf_first test (Geliang Tang)
+        - [98e864cbbfe4] selftests/bpf: Add bpf_bkup scheduler (Geliang
+Tang)
+        - [9b05565b7417] selftests/bpf: Add bpf_bkup test (Geliang Tang)
+        - [924b7ce05c79] selftests/bpf: Add bpf_rr scheduler (Geliang Tang)
+        - [13bf0dc9c9bd] selftests/bpf: Add bpf_rr test (Geliang Tang):
+            - some patches are pending in review, we can wait
+
+
+Extra tests:
+    - news about Syzkaller? (Christoph / Mat):
+        - /
+
+    - news about interop with mptcp.org/other stacks? (Christoph):
+        - Christoph is doing some modifications to ease the transition
+from mptcp.org to upstream (MPTCP_INFO support)
+
+    - news about Intel's kbuild? (Mat):
+        - /
+
+    - packetdrill (Davide):
+        - /
+
+    - Patchew (Davide):
+        - new code has changed quite a lot, we need to re-do the
+modifications we did
+        - TODO: Matth: find the name of the other project to apply
+patches from a mailing list in Git → I didn't find it but probably best
+to use Patchwork for that (we want to send results there anyway):
+           https://github.com/kuba-moo/nipa/blob/master/pw_poller.py
+
+    - CI (Matth):
+        - /
+
+
+
+mptcpd 0.11:
+    - New release:
+        - https://github.com/intel/mptcpd/releases/tag/v0.11
+        - Support for the user space MPTCP path management generic
+netlink API in the upstream Linux 5.19 kernel was implemented
+        - Propagate the "server side" flag to new_connection and
+connection_established plugin operations
+        - Support a new fullmesh address flag in the mptcpd
+configuration file and command line addr-flags configuration option for
+the in-kernel path manager
+        - Allow the mptcpd network monitor unit test to pass if it
+detects an active interface without any IPv4 or v6 addresses
+        - Fix memory leaks that occurred when parsing the addr-flags and
+notify-flags entries in the mptcpd configuration file
+        - Fix a use-after-free memory error in the mptcpd load-plugins
+configuration code
+        - Improved the underlying mptcpd ID manager hash algorithm by
+replacing the existing trivial hash with the MurmurHash3 algorithm.
+
+    - Matth will check to update it in Debian / Ubuntu
+
+    - (and ask to have the 0.10 available in Ubuntu 22.04 and maybe the
+0.11 in the backports)
+
+
+
+Next meeting:
+    - Next one on Thursday, the 1st of September.
+    - 15:00 UTC (8am PST, 4pm CET, 11am CST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20220901
+
+
+
+Feel free to comment on these topics and suggest new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
 -- 
-2.37.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
