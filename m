@@ -1,89 +1,186 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BBA671A
-	for <mptcp@lists.linux.dev>; Tue,  6 Sep 2022 16:26:57 +0000 (UTC)
-Received: by mail-ej1-f54.google.com with SMTP id cu2so24646427ejb.0
-        for <mptcp@lists.linux.dev>; Tue, 06 Sep 2022 09:26:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352237E
+	for <mptcp@lists.linux.dev>; Tue,  6 Sep 2022 18:04:38 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id bj12so25033329ejb.13
+        for <mptcp@lists.linux.dev>; Tue, 06 Sep 2022 11:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date;
-        bh=0HttWAFBTjr6pSn89zHPcMqWfYLtcVX1sFnLl6PEMLk=;
-        b=kz57SyVpaPJxGHKKaiFeyShzfr6kQUaWEklEoNiv7MjmnhdNZRhgJHF9vgYr9E1DF3
-         wOQy1SOX0zyqpcjdNpKfK1pSStUuDXWQhAWipNABMCQyBrZNnwCNk+f65Tf9CnaOhXvK
-         zm8k/Kylv0EFiXBdYxWbQ6cLr6sq7Lv+XeeFYyJgrnAbmMGH2q18dQ/tTU9mCKvGoA6d
-         WmQo47bg4IcukUstlFcUCFrxBFaquTFzc+2JYJXHkleFx+/lis1wZs0Euh1SDQeNrB9J
-         gfLLAGBkCDEnQdME/MBdVBoBSNqJQPlO/yPK7lY1wl+fh/kSQBuEfH+AcPmxmrXg+cTo
-         ovCA==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=Ow/wLd30qnpVXkYHu9y10pAdjF3WB8VsFrXpWU88Txg=;
+        b=28aoz7P7Ti8HMbmay9OAw9t6XaM0aGpiu1qjbU04Xqk2kmJdB4n9pNYyu0BPHUUARY
+         ZkbOuz7tkerHLa8mU/2DfbvUnLjzVt0QzW2FvP5WkryNWCzQLwkUD0VUDRMIUv3Jnc8/
+         HK4nSUiWPhF10YEtpPnvdueoz28qFOugksikcsiT0kFlnCBU1MLUYwYxM+pm7AgDWF3i
+         NcwfutTvXQfxGw1kqCfn5zZxJbot2DWR80QA+Kp76BU6Y2dn9cy6uRzViwHr4s5Y6Jj2
+         tBmutwyjtSbapmcxuaPfdkN2NNyoYWCuYFD4oemB0Wf2udzDwE5lfca2uUFxgfhRyFzm
+         gUBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=0HttWAFBTjr6pSn89zHPcMqWfYLtcVX1sFnLl6PEMLk=;
-        b=GFcwHWyoFkV0IlE055sG1v2Hwq9a1e0Rir7piOSmQ40D2Zp8j31w79dtQ9SyS6q2NR
-         WoTZgU6DXh+uiiDvS8+ltDgLh0vblNPBgkuo6s4vc7U6J08U7jqM/YnQ9Cv3aMqqACd4
-         4z+YwcTpHLkaeVCzD3rR2oQ0BXgHVBlcwNabRrGCd8dusN/Hlb1X3fZdLKgFZ5E2ya6U
-         HrEZpLEvfdekmFDMrafOE/BGLAZgPoKF1ZhKCC+yUWR1QWzTQvboZwZlP5Xt+mc8CW21
-         739cwi2zhRBl5HTsh3kI8lObWDsxbk1m3mdB3UTfCBD+w5tCGDKhD5rxVk3/r83cpgrv
-         ggdA==
-X-Gm-Message-State: ACgBeo3jy6+ZQxuALD956TfetsHPC9eT5Zd45nqDar6ZTBE0vqdDzI6V
-	WecHy20PjlqABrTQtRaNp+TDu/nsoUbGIuEZ
-X-Google-Smtp-Source: AA6agR430jD6H2kJBEdYA5DpzpRTxsab4q8KDTqUy18QgvTZKVBLbaLyHpbadVBECP8aFkMmXGKIuw==
-X-Received: by 2002:a17:907:94c7:b0:730:d5bc:14c with SMTP id dn7-20020a17090794c700b00730d5bc014cmr41194235ejc.68.1662481615852;
-        Tue, 06 Sep 2022 09:26:55 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:6615:6f8d:478f:a6fc? ([2a02:578:8593:1200:6615:6f8d:478f:a6fc])
-        by smtp.gmail.com with ESMTPSA id s6-20020aa7c546000000b00448cb764290sm4225771edr.92.2022.09.06.09.26.54
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Sep 2022 09:26:54 -0700 (PDT)
-Message-ID: <6f2b6d1d-7c7c-0c80-85ee-fc35ace59f50@tessares.net>
-Date: Tue, 6 Sep 2022 18:26:52 +0200
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=Ow/wLd30qnpVXkYHu9y10pAdjF3WB8VsFrXpWU88Txg=;
+        b=DwX6TjuQOhSwSeg/f+7uOUNNio6zEJzbeRwmjlUx4VGmoJHL4lf/oy5f97yrbVl4Qz
+         ppfidAHM79CXNnxrrmhpUIldG8alnpf2R5zZoQ8w52iJdDrk2CsI6CcpwXWLBtLCK181
+         qO1TQ2kiMnbe620OJs7gh9mB81/OK/bksmdy50eV6LLqixzjuxVKNotio/0kBS2w0oq/
+         uUM1qyt9LxNZeXezwDnZWS8vtDmbq0V4IjvPxyXwrTvVBy8V0AON9KRpgtU70kc9NNNj
+         WEe5LhvmBhD1xwNYH6QkjBPxkclB9n0zNUnzKtpmOghJeiYBS+NP1+HnAuWkGSgd69eU
+         HyRA==
+X-Gm-Message-State: ACgBeo0l1SNcRzp9nP7lqVBCE5OPKeVrE/CkFNp1n+CaPG4dJWoPl6XO
+	GNhSzGJaIANt5XpvrNQ5aLGOEA==
+X-Google-Smtp-Source: AA6agR6lafvIMENxBfPkng6SP6E+fxgPIE0i4Xce9xglTCv8jjI/RR4iSZAXuzihbSYkU0fRkNQ0Hg==
+X-Received: by 2002:a17:907:7ea8:b0:731:4fa1:d034 with SMTP id qb40-20020a1709077ea800b007314fa1d034mr40894770ejc.758.1662487477080;
+        Tue, 06 Sep 2022 11:04:37 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id t6-20020a170906948600b00731745a7e62sm7007845ejx.28.2022.09.06.11.04.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Sep 2022 11:04:35 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: kernel test robot <oliver.sang@intel.com>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 1/2] mptcp: fix fwd memory accounting on coalesce
+Date: Tue,  6 Sep 2022 20:04:01 +0200
+Message-Id: <20220906180404.1255873-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH mptcp-net] Documentation: mptcp: fix pm_type formatting
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20220906122025.743592-1-matthieu.baerts@tessares.net>
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220906122025.743592-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5665; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=t8cmDnU3uUS9PdW1N2RcyIJOSiEW+cMzPyWsGrCTiQQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjF4uEGvXD6136jzJ9RSpbwD8Xf7mZeTRCTlvAoKQd
+ KrYW74mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCYxeLhAAKCRD2t4JPQmmgc5GsD/
+ 42uTEzezIR1isCLJfxvuKH+edEeHDc9WVDBxEr5SDyxKjNZVBgmWShPjaOFV+HodpN9REuezgZwD0R
+ A37hGko4Y6ERWeXVuzglXERHMVz2ImDvXEHQrlJUpQc4ilv8miqLDA4Po5C3T+2y6SMtRMvzuE5g/b
+ 8YeGKfPWWnaI/1gjXjIyKenkVBgGxuqs138qDExX5N8hGCjUAyNdNCpFX7QjvgWb7luKbsRKhD59H5
+ tO6kfywJ2bim9uN2pyBMZM0sWjHHYNp3tkPAWPNpo+8MJcCW822DH4MYutUA9kKA3i6q5zoQj95IrC
+ wzh43vOcIu1yncmBN3ckaRRWqoCygKnYQjDsxE9hkXXVcdoTcdxOFQ602YOifciIFuhlwA/AWTwLwR
+ 4XRLLaO8On3Zw+A7LWWhK2DtsUglp5/htgHnEAvpw2SeQJCGBt+PmIDkonTYJVuxX0sN69gOsZG7nL
+ MHNCISs+EzMl/bFSU8ppq5Ml3+JRvjXkDPdxHKTGcJjQR6+e5J3vlGzZ0+Lp0RRax/OC9i72D+gwg4
+ KvZhr5TqxOFq4i01t2W8iZ4sDqnlx7jfYFsPq0DaZhpRpOteQun1pOTzw00sXqE89NpuzS84WBQukK
+ v9CWFpvH2ZQTmGAbaRbKunMVmKFAGXYbzEXXs6I8JxZLSpumiHZVlUSTnyZA==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Paolo Abeni <pabeni@redhat.com>
 
-On 06/09/2022 14:20, Matthieu Baerts wrote:
-> When looking at the rendered HTML version, we can see 'pm_type' is not
-> displayed with a bold font:
-> 
->   https://docs.kernel.org/5.19/networking/mptcp-sysctl.html
-> 
-> The empty line under 'pm_type' is then removed to have the same style as
-> the others.
-> 
-> Fixes: 6bb63ccc25d4 ("mptcp: Add a per-namespace sysctl to set the default path manager type")
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+The intel bot reported a memory accounting related splat:
 
-I just applied this patch in our tree (fix for -net):
+[  240.473094] ------------[ cut here ]------------
+[  240.478507] page_counter underflow: -4294828518 nr_pages=4294967290
+[  240.485500] WARNING: CPU: 2 PID: 14986 at mm/page_counter.c:56 page_counter_cancel+0x96/0xc0
+[  240.570849] CPU: 2 PID: 14986 Comm: mptcp_connect Tainted: G S                5.19.0-rc4-00739-gd24141fe7b48 #1
+[  240.581637] Hardware name: HP HP Z240 SFF Workstation/802E, BIOS N51 Ver. 01.63 10/05/2017
+[  240.590600] RIP: 0010:page_counter_cancel+0x96/0xc0
+[  240.596179] Code: 00 00 00 45 31 c0 48 89 ef 5d 4c 89 c6 41 5c e9 40 fd ff ff 4c 89 e2 48 c7 c7 20 73 39 84 c6 05 d5 b1 52 04 01 e8 e7 95 f3
+01 <0f> 0b eb a9 48 89 ef e8 1e 25 fc ff eb c3 66 66 2e 0f 1f 84 00 00
+[  240.615639] RSP: 0018:ffffc9000496f7c8 EFLAGS: 00010082
+[  240.621569] RAX: 0000000000000000 RBX: ffff88819c9c0120 RCX: 0000000000000000
+[  240.629404] RDX: 0000000000000027 RSI: 0000000000000004 RDI: fffff5200092deeb
+[  240.637239] RBP: ffff88819c9c0120 R08: 0000000000000001 R09: ffff888366527a2b
+[  240.645069] R10: ffffed106cca4f45 R11: 0000000000000001 R12: 00000000fffffffa
+[  240.652903] R13: ffff888366536118 R14: 00000000fffffffa R15: ffff88819c9c0000
+[  240.660738] FS:  00007f3786e72540(0000) GS:ffff888366500000(0000) knlGS:0000000000000000
+[  240.669529] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  240.675974] CR2: 00007f966b346000 CR3: 0000000168cea002 CR4: 00000000003706e0
+[  240.683807] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  240.691641] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  240.699468] Call Trace:
+[  240.702613]  <TASK>
+[  240.705413]  page_counter_uncharge+0x29/0x80
+[  240.710389]  drain_stock+0xd0/0x180
+[  240.714585]  refill_stock+0x278/0x580
+[  240.718951]  __sk_mem_reduce_allocated+0x222/0x5c0
+[  240.729248]  __mptcp_update_rmem+0x235/0x2c0
+[  240.734228]  __mptcp_move_skbs+0x194/0x6c0
+[  240.749764]  mptcp_recvmsg+0xdfa/0x1340
+[  240.763153]  inet_recvmsg+0x37f/0x500
+[  240.782109]  sock_read_iter+0x24a/0x380
+[  240.805353]  new_sync_read+0x420/0x540
+[  240.838552]  vfs_read+0x37f/0x4c0
+[  240.842582]  ksys_read+0x170/0x200
+[  240.864039]  do_syscall_64+0x5c/0x80
+[  240.872770]  entry_SYSCALL_64_after_hwframe+0x46/0xb0
+[  240.878526] RIP: 0033:0x7f3786d9ae8e
+[  240.882805] Code: c0 e9 b6 fe ff ff 50 48 8d 3d 6e 18 0a 00 e8 89 e8 01 00 66 0f 1f 84 00 00 00 00 00 64 8b 04 25 18 00 00 00 85 c0 75 14 0f 05 <48> 3d 00 f0 ff ff 77 5a c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 28
+[  240.902259] RSP: 002b:00007fff7be81e08 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[  240.910533] RAX: ffffffffffffffda RBX: 0000000000002000 RCX: 00007f3786d9ae8e
+[  240.918368] RDX: 0000000000002000 RSI: 00007fff7be87ec0 RDI: 0000000000000005
+[  240.926206] RBP: 0000000000000005 R08: 00007f3786e6a230 R09: 00007f3786e6a240
+[  240.934046] R10: fffffffffffff288 R11: 0000000000000246 R12: 0000000000002000
+[  240.941884] R13: 00007fff7be87ec0 R14: 00007fff7be87ec0 R15: 0000000000002000
+[  240.949741]  </TASK>
+[  240.952632] irq event stamp: 27367
+[  240.956735] hardirqs last  enabled at (27366): [<ffffffff81ba50ea>] mem_cgroup_uncharge_skmem+0x6a/0x80
+[  240.966848] hardirqs last disabled at (27367): [<ffffffff81b8fd42>] refill_stock+0x282/0x580
+[  240.976017] softirqs last  enabled at (27360): [<ffffffff83a4d8ef>] mptcp_recvmsg+0xaf/0x1340
+[  240.985273] softirqs last disabled at (27364): [<ffffffff83a4d30c>] __mptcp_move_skbs+0x18c/0x6c0
+[  240.994872] ---[ end trace 0000000000000000 ]---
 
-New patches for t/upstream-net:
-- 8fe9543c0acd: Documentation: mptcp: fix pm_type formatting
-- Results: 9a90302f0e94..6cfce7e8a42a (export-net)
+After commit d24141fe7b48 ("mptcp: drop SK_RECLAIM_* macros"),
+if rmem_fwd_alloc become negative, mptcp_rmem_uncharge() can
+try to reclaim a negative amount of pages, since the expression:
 
-New patches for t/upstream:
-- 8fe9543c0acd: Documentation: mptcp: fix pm_type formatting
-- Results: cc17a6220548..7191ca91a85d (export)
+	reclaimable >= PAGE_SIZE
 
-Cheers,
-Matt
+will evaluate to true for any negative value of the int
+'reclaimable': 'PAGE_SIZE' is an unsigned long and
+the negative integer will be promoted to a (very large)
+unsigned long value.
+
+Still after the mentioned commit, kfree_skb_partial()
+in mptcp_try_coalesce() will reclaim most of just released fwd
+memory, so that following charging of the skb delta size will
+lead to negative fwd memory values.
+
+At that point a racing recvmsg() can trigger the splat.
+
+Address the issue switching the order of the memory accounting
+operations. The fwd memory can still transiently reach negative
+values, but that will happen in an atomic scope and no code
+path could touch/use such value.
+
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Fixes: d24141fe7b48 ("mptcp: drop SK_RECLAIM_* macros")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ net/mptcp/protocol.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d398f3810662..969b33a9dd64 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -150,9 +150,15 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ 		 MPTCP_SKB_CB(from)->map_seq, MPTCP_SKB_CB(to)->map_seq,
+ 		 to->len, MPTCP_SKB_CB(from)->end_seq);
+ 	MPTCP_SKB_CB(to)->end_seq = MPTCP_SKB_CB(from)->end_seq;
+-	kfree_skb_partial(from, fragstolen);
++
++	/* note the fwd memory can reach a negative value after accounting
++	 * for the delta, but the later skb free will restore a non
++	 * negative one
++	 */
+ 	atomic_add(delta, &sk->sk_rmem_alloc);
+ 	mptcp_rmem_charge(sk, delta);
++	kfree_skb_partial(from, fragstolen);
++
+ 	return true;
+ }
+ 
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.37.2
+
