@@ -1,100 +1,110 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457F786CE
-	for <mptcp@lists.linux.dev>; Tue,  6 Sep 2022 18:04:44 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id u6so16140234eda.12
-        for <mptcp@lists.linux.dev>; Tue, 06 Sep 2022 11:04:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D30529A5
+	for <mptcp@lists.linux.dev>; Tue,  6 Sep 2022 20:56:33 +0000 (UTC)
+Received: by mail-wr1-f54.google.com with SMTP id b16so17254987wru.7
+        for <mptcp@lists.linux.dev>; Tue, 06 Sep 2022 13:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=LVyWz9QjSr71K78QY/khwjiVlTkSeqPk1bL9XsiAab8=;
-        b=Re5zgjEeBJwrtp6COp+yqdoKd0kJxgGB9EP8EM4lHbOkdRlFx+tG2KqkBItnfXBGLD
-         0tJMg3b8rYTWqe5f+cbyWHxbMaF+qobw27G/noRRFH1el11lb0fzZER/R8A3G8NTFxEd
-         j3LmcYlQRRgWYrLvdFaXMxGByfC3JcMtsiavJn7M389LN+Z5VjN8SjSvYZ4g4/iWxkhM
-         ohI3Jf0X6QW6PyVWIKSnJQtEJOzMIPOhC1gYRpxgCXt8mtZxmxNF/UQf6iuv3w2xfsPh
-         54aQrCsU7j7XYCmXDQj7hGzXURi43HqGgm7Kpr09I0t/QXcMQ4IHbYHBgfZFp8LDLCkx
-         AQ1Q==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=RZRC0OhzUwbsz5o6LL8NbWidAu3WkyLmyQWIoEdm+Jg=;
+        b=4Ji5BUeDdT3w2OVS/yQVfWuHzPrLkTm8zpYRx2UWHWio/6W9jrrt8L3IWVHPr+ooY7
+         i3Jej7gc5Exww9C/RufEN860zdBH0dpndyfofXbcYgHBOaT1AxHxGmKFFgGvKJ4N8mcW
+         fyNE1WmC4f0iU/4k/9LT4GJO7zd8RBe3Svnuc+uij8L6SQraU2MCw6e+dwyWFjw63cch
+         I7hUZuoXTmqgoxVl0YF2M1GVjaTeOrCLBPfJc0gaZB6+W9skIDOyyRFhzPrftQQnZ5a3
+         oXhYxnlZ3kxfES7Fsm85706o/VroybaNW2sY8wK5ymL5cbxiEahstleQ9VXzQxj7j75b
+         /grw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=LVyWz9QjSr71K78QY/khwjiVlTkSeqPk1bL9XsiAab8=;
-        b=6tQLuFgrqhqwg7tJv+P+ZH4JQoPaeFrAyFpvAl8p97zVOyCblq9+Etd0Ot7sWi/+XN
-         JR1jzHur7KxTozdYRzMB3JzXD4SwCjdHEc34JMMeKbwNFeD0DKxGRn3FW+VP1tW094LL
-         kCar2tSB77sL5hUodCmEBQKts/xqrunIvoLwMcZZfktz770UMx1z34Fzfq2m6n0nJ5D9
-         r2MoNfsUZ/hISnnWwSOmIbTjapJckgzqpt1wncCXhnn8oKALQ09cI91bF/tc8PmILMIW
-         pHm5gmRiaLY7ZvJs5HMDJEz22BDyPLZ9sd7Mq5vHQlsQ5Yau2xqJ3Qn0kSaM4heOTT5q
-         RM9w==
-X-Gm-Message-State: ACgBeo0V9xPrDZXzZ3hLJREXzYMyKmPmqIgsSeNYPYI7HlxS/bh3Vrk/
-	/r3EQFp4sBbFSVh0cCYule4o+g==
-X-Google-Smtp-Source: AA6agR74kDMSCpJxhGlyOhnVWcbezEO1RBH7czD3h8FziyPXSo5pBqCBmmaucK+Bmgt7//B4Wn9b4Q==
-X-Received: by 2002:a05:6402:415:b0:446:230d:2b82 with SMTP id q21-20020a056402041500b00446230d2b82mr48496731edv.200.1662487482513;
-        Tue, 06 Sep 2022 11:04:42 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=RZRC0OhzUwbsz5o6LL8NbWidAu3WkyLmyQWIoEdm+Jg=;
+        b=UCgkm2+872BcSMrTReUCB2ARUdZAx4JWi+fUCTGsKrMt2hUDWawzCXUtP7MjJU0lSd
+         csUGRJeNIbqqhvWsfahT9rtl1U2XdHtwjaB8GoYk2zAmiMR5ft3B/kqirBXb5MHjVgPK
+         J+eJCZRO09UjSppDlgeZVhddIbMlETcOLUiOW5EBSNIJRLKjGFpfFF+k/J2LK5Dt+vVc
+         gts7efOfQWFQT59L73dagj3pWlQ0gY/t/T3oM7jrdzDfETl6v7iiZaauq2dpbw1lEo4w
+         xgT58akdiSyGjq8M9WGzIDy6aFuOJByx6VdLl0Db3kvahkdRW8LXdwJlwETtkgdeX1gg
+         jObw==
+X-Gm-Message-State: ACgBeo0/N2d35GwBq6LeWI36pvj7COjoM5gFy/JZ4+8y1YR1ws6BXOnt
+	IGBbzH5oWfwDHu7acz92i9L8gQ==
+X-Google-Smtp-Source: AA6agR7XxadU1nBJKVC9I9af5814KUHtWktC30z4WVGLJu0wF/DHqaVW1+kfOIN4gVZqmnVjY8oMIQ==
+X-Received: by 2002:a5d:66ce:0:b0:228:a430:673f with SMTP id k14-20020a5d66ce000000b00228a430673fmr154542wrw.355.1662497791425;
+        Tue, 06 Sep 2022 13:56:31 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id t6-20020a170906948600b00731745a7e62sm7007845ejx.28.2022.09.06.11.04.40
+        by smtp.gmail.com with ESMTPSA id n24-20020a1c7218000000b003a317ee3036sm15735887wmc.2.2022.09.06.13.56.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 11:04:41 -0700 (PDT)
+        Tue, 06 Sep 2022 13:56:28 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	mptcp@lists.linux.dev,
 	netdev@vger.kernel.org
-Subject: [PATCH net 0/2] mptcp: fix fwd memory accounting and doc format
-Date: Tue,  6 Sep 2022 20:04:03 +0200
-Message-Id: <20220906180404.1255873-3-matthieu.baerts@tessares.net>
+Subject: [PATCH net-next 0/5] mptcp: allow privileged operations from user ns & cleanup
+Date: Tue,  6 Sep 2022 22:55:38 +0200
+Message-Id: <20220906205545.1623193-1-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220906180404.1255873-1-matthieu.baerts@tessares.net>
-References: <20220906180404.1255873-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=628; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=cJSBkCmTFkNb+vTncfw1kpPps+aLxPT32YDqXYY6lw4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjF4uE2d4DWi8yvA2+8upFVesEuDDIHcfCBUtQV2ge
- XrB2+pqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCYxeLhAAKCRD2t4JPQmmgczOeD/
- wIMnPNtrhZbg4tgRD18zm7fDyFZYITI3h1PCNF+6KwWJ6lmiQYWV0XKSMIk2NAmK44K66TL9XtcY81
- 1QEtaKMawaIhqrhIFpAwqrcYye8HigHyMswwTtBX/u7LONhb4ZFvC0Fe7gKLhDHMcPeCF5H/DZMcld
- wS1Kqk6zYx/6JHLJDFp9TFdeABiOkR0fKXbuZr41hNmC+qPOKeBy5o0/SL2B0BrQwmE4vqGhD79V3L
- 6dPXK/qsjfgD80EYOkg1kHvehBoAk2rJuHlDuOlTfABRNwB4rC4CiPo8N6w2o877M5Yzv5jD5Nv5wQ
- k/rCi3FDp9A9w6p2tbYL1168/DxoczkmDHOyuO6tohuzwn+ddCFBhJ3VeQqIsPgBSLYz0gBzB1v19V
- iBE5pq2cf1oQ+2hYK55m19T12y0ULKZwZfGd6+xgx5Kb++qYF7NTpSeqZo0X99hctnldRK8U8ARQTJ
- RNWaQhzPz3TvpOWjFtdMryRHm/LKSrB5uaDmHR9WlVfsXCUioQd5+FktBHaaZIDjnnNMH/ALEX6ECX
- QVVthel6qGBySl+oifBPvxxvwEW8l0OGNzj+ZMSyPUtyOxW4On0vXJqX26iNuG4+/v8Sxv2ZBEP7M6
- 4gFyBE7YGdiQFZRsRMHFLGKfw4vKz6duQsDdeZ4vu3Wi8Y6J5L6GVYDKHbjw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1171; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=S4CDyrNeDuwlK018W6S651nbf7bbfRCydZCxhDW7uh0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjF7O5qBlYlK33qKWIebumCBpUmWZJxbNvIYsaNWiw
+ uwEx7WiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCYxezuQAKCRD2t4JPQmmgc1oyEA
+ Dc9Qn2D1dJo1OMABQwg6c2OfVJyiZprfb9sKPSfeSQxD6rj7treW/AUKsgVZ3CA2RVUruf090DtCKD
+ Cb7qbGDOViZN+d1VsHTMDULxI3mETmFLVGQYYg+ytqIOdNE/iKJhbOWRbVhul6XC3bCBYoN4nKKI5E
+ iw6X1N5MagJh6O2cjt9f//FfO4g9NoAbGtA9SU5KOuQ7mbF++NEDmIWs5Zkxs5Qw3hwCK7QtvpHFEw
+ sn/+5gNL63vkzzemfZBwaK8VGyhrOs5w/ZBz0b2bKlMpkf+l6Yg/qBkFfQlqdFj8VpVPYgmb5vOihK
+ IoRkWkzXGoy0erIOm93Z63E/ulhrkWYFYIEtiYFhQFbjSkusCQ/BOa9wGVuC9vF1Eh9aUbsPmx0lvm
+ tnh82vA68Tmp9QZNPGu0zlFhg0LIlbiYYsJ+O3sBH02cMlyH8gcHAGMROBQsC9vBzeY1+4lhBJEReJ
+ ENlKkhknoNGgErC9nxLnesxDqzC8rtLq87JlqO/r3NVdRbOqnKCFGE7eZJH2iNXpT4PW4dMFkU94v3
+ K52Jj5jMyKxZQ5PknJu97DbWOqSkn6ZbXMErQUG2ed7fiJI4/8Jjk8RXc0y2On0agcNN+H1HiBdOXq
+ ztEWwjdVkvpjce9c1OGiRZv/dQNQhMwq2ecC3rs2sJfDSW5f4cs0+SEanUkg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-Patch 1 fixes a memory accounting related splat reported by Intel's bot. It
-fixes a regression introduced in this cycle (v6.0-rc1).
+This series allows privileged Netlink operations from user namespaces. When a
+non-root user configures MPTCP endpoints, the memory allocation is now accounted
+to this user. See patches 4 and 5.
 
-Patch 2 fixes a formatting issue in the documentation. The issue had been
-introduced in the previous version (v5.19).
+Apart from that, there are some cleanup:
+
+ - Patch 1 adds a macro to improve code readability
+
+ - Patch 2 regroups similar checks all together
+
+ - Patch 3 uses an explicit boolean instead of a counter to do one more check
+
+Geliang Tang (2):
+  selftests: mptcp: move prefix tests of addr_nr_ns2 together
+  mptcp: add do_check_data_fin to replace copied
 
 Matthieu Baerts (1):
-  Documentation: mptcp: fix pm_type formatting
+  mptcp: add mptcp_for_each_subflow_safe helper
 
-Paolo Abeni (1):
-  mptcp: fix fwd memory accounting on coalesce
+Thomas Haller (2):
+  mptcp: allow privileged operations from user namespaces
+  mptcp: account memory allocation in mptcp_nl_cmd_add_addr() to user
 
- Documentation/networking/mptcp-sysctl.rst | 1 -
- net/mptcp/protocol.c                      | 8 +++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ net/mptcp/pm_netlink.c                        | 22 +++++++++----------
+ net/mptcp/protocol.c                          | 13 ++++++-----
+ net/mptcp/protocol.h                          |  2 ++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++-----
+ 4 files changed, 24 insertions(+), 23 deletions(-)
 
 
-base-commit: e1091e226a2bab4ded1fe26efba2aee1aab06450
+base-commit: 03fdb11da92fde0bdc0b6e9c1c642b7414d49e8d
 -- 
 2.37.2
 
