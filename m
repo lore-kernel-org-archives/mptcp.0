@@ -1,111 +1,89 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD6B5381
-	for <mptcp@lists.linux.dev>; Tue,  6 Sep 2022 14:29:06 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id d12so11483449plr.6
-        for <mptcp@lists.linux.dev>; Tue, 06 Sep 2022 07:29:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BBA671A
+	for <mptcp@lists.linux.dev>; Tue,  6 Sep 2022 16:26:57 +0000 (UTC)
+Received: by mail-ej1-f54.google.com with SMTP id cu2so24646427ejb.0
+        for <mptcp@lists.linux.dev>; Tue, 06 Sep 2022 09:26:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=joDw92iiOZdOK1SKFSEUxVP0GpO+b6E0WFIbKbU+jhs=;
-        b=NsHBDsU+NGUqiGgKim3dE7LNYmm1tzrkfiBQKUwLcOpVM45D51VXGzoxeAu4iMvmid
-         XrBEykcZYxgJkWVua1oO+9dwz1PaTU7a/734AekFyyPRTew5u4dL6Lrznn07pIl3ge0K
-         E92cxG12IFhQrH3xBccV9ZsiiSdoCfS8nQLcT9QcpJ/vljUOetyRZ/axXIlX3cHFfQaq
-         SKU4J8BJOLgwR5CCJ0rjXr5JXO1F3Jj0AWZ0KSPlKNAUOFoIDEABids4pXiGk8bKM4PD
-         S+7fgqa4A+gd2GYlKTTfJR5xWr6GV/KeKvw32d8W5hnt3ol8zJBWrvFQHzZ+CbCFSpcJ
-         kjFQ==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date;
+        bh=0HttWAFBTjr6pSn89zHPcMqWfYLtcVX1sFnLl6PEMLk=;
+        b=kz57SyVpaPJxGHKKaiFeyShzfr6kQUaWEklEoNiv7MjmnhdNZRhgJHF9vgYr9E1DF3
+         wOQy1SOX0zyqpcjdNpKfK1pSStUuDXWQhAWipNABMCQyBrZNnwCNk+f65Tf9CnaOhXvK
+         zm8k/Kylv0EFiXBdYxWbQ6cLr6sq7Lv+XeeFYyJgrnAbmMGH2q18dQ/tTU9mCKvGoA6d
+         WmQo47bg4IcukUstlFcUCFrxBFaquTFzc+2JYJXHkleFx+/lis1wZs0Euh1SDQeNrB9J
+         gfLLAGBkCDEnQdME/MBdVBoBSNqJQPlO/yPK7lY1wl+fh/kSQBuEfH+AcPmxmrXg+cTo
+         ovCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=joDw92iiOZdOK1SKFSEUxVP0GpO+b6E0WFIbKbU+jhs=;
-        b=4mvGcVs7oW/SkT5sHefsS4ibaY8n9xIapfwbs6h2/TYfb0G8rmXaN+/3BhmCML2c2q
-         AIeuif2oWLAIVe7zUgthf8hGp2aeixnPiEDg2hAkSBaKLwc3qa8Mf/Pdqsvj99iPPt1G
-         nFsh+v7hkRwUp7iyyCMBNcBomoyaUXPi+ZiuAPp8jpuj160lFqiYc+CwOnUTRnTclmat
-         cVPzb2Aq2xgy43EiLoU48XIu3PLAf/a7sO3h73EcGdLarGfUnWNsgX0Flyqe+v0IxfPp
-         IU9K0UG90qiB6PJMM3BQU2kJqFjN+AuwLzZX/MId7T43o+/IWmuGbq9F9P71By1yZJaX
-         MLGg==
-X-Gm-Message-State: ACgBeo34SC8w+1pNmtgQ/v55ioRX35E/Uo62rQMMG2fEDIleEyyTkozv
-	kx8fTUKtOyer6xJ7INmC6g==
-X-Google-Smtp-Source: AA6agR4g3sNrTvc99PCz6JOZKGC4lxArEybKWOyAjxzNLfybm7uQVMi2ys00pyK+kx06Pwn1uGlCug==
-X-Received: by 2002:a17:902:a40f:b0:172:d0c7:ede1 with SMTP id p15-20020a170902a40f00b00172d0c7ede1mr55204361plq.88.1662474545754;
-        Tue, 06 Sep 2022 07:29:05 -0700 (PDT)
-Received: from [127.0.0.1] ([20.3.216.217])
-        by smtp.gmail.com with ESMTPSA id a2-20020aa795a2000000b005360dc9c45csm10280579pfk.43.2022.09.06.07.29.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 07:29:05 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220906122025.743592-1-matthieu.baerts@tessares.net>
-References: <20220906122025.743592-1-matthieu.baerts@tessares.net>
-Subject: Re: Documentation: mptcp: fix pm_type formatting: Tests Results
-Message-ID: <79296f71-941c-78a4-819e-9b30dc5263ad@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Sep 2022 14:29:04 +0000
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=0HttWAFBTjr6pSn89zHPcMqWfYLtcVX1sFnLl6PEMLk=;
+        b=GFcwHWyoFkV0IlE055sG1v2Hwq9a1e0Rir7piOSmQ40D2Zp8j31w79dtQ9SyS6q2NR
+         WoTZgU6DXh+uiiDvS8+ltDgLh0vblNPBgkuo6s4vc7U6J08U7jqM/YnQ9Cv3aMqqACd4
+         4z+YwcTpHLkaeVCzD3rR2oQ0BXgHVBlcwNabRrGCd8dusN/Hlb1X3fZdLKgFZ5E2ya6U
+         HrEZpLEvfdekmFDMrafOE/BGLAZgPoKF1ZhKCC+yUWR1QWzTQvboZwZlP5Xt+mc8CW21
+         739cwi2zhRBl5HTsh3kI8lObWDsxbk1m3mdB3UTfCBD+w5tCGDKhD5rxVk3/r83cpgrv
+         ggdA==
+X-Gm-Message-State: ACgBeo3jy6+ZQxuALD956TfetsHPC9eT5Zd45nqDar6ZTBE0vqdDzI6V
+	WecHy20PjlqABrTQtRaNp+TDu/nsoUbGIuEZ
+X-Google-Smtp-Source: AA6agR430jD6H2kJBEdYA5DpzpRTxsab4q8KDTqUy18QgvTZKVBLbaLyHpbadVBECP8aFkMmXGKIuw==
+X-Received: by 2002:a17:907:94c7:b0:730:d5bc:14c with SMTP id dn7-20020a17090794c700b00730d5bc014cmr41194235ejc.68.1662481615852;
+        Tue, 06 Sep 2022 09:26:55 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:6615:6f8d:478f:a6fc? ([2a02:578:8593:1200:6615:6f8d:478f:a6fc])
+        by smtp.gmail.com with ESMTPSA id s6-20020aa7c546000000b00448cb764290sm4225771edr.92.2022.09.06.09.26.54
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Sep 2022 09:26:54 -0700 (PDT)
+Message-ID: <6f2b6d1d-7c7c-0c80-85ee-fc35ace59f50@tessares.net>
+Date: Tue, 6 Sep 2022 18:26:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH mptcp-net] Documentation: mptcp: fix pm_type formatting
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20220906122025.743592-1-matthieu.baerts@tessares.net>
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220906122025.743592-1-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hello,
 
-Thank you for your modifications, that's great!
+On 06/09/2022 14:20, Matthieu Baerts wrote:
+> When looking at the rendered HTML version, we can see 'pm_type' is not
+> displayed with a bold font:
+> 
+>   https://docs.kernel.org/5.19/networking/mptcp-sysctl.html
+> 
+> The empty line under 'pm_type' is then removed to have the same style as
+> the others.
+> 
+> Fixes: 6bb63ccc25d4 ("mptcp: Add a per-namespace sysctl to set the default path manager type")
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Our CI did some validations and here is its report:
+I just applied this patch in our tree (fix for -net):
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-packetdrill_add_addr selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6440432971284480
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6440432971284480/su=
-mmary/summary.txt
+New patches for t/upstream-net:
+- 8fe9543c0acd: Documentation: mptcp: fix pm_type formatting
+- Results: 9a90302f0e94..6cfce7e8a42a (export-net)
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s):=
- selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5033058087731200
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5033058087731200/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/578f14d513e3
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+New patches for t/upstream:
+- 8fe9543c0acd: Documentation: mptcp: fix pm_type formatting
+- Results: cc17a6220548..7191ca91a85d (export)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
