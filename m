@@ -1,242 +1,161 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEA0539F
-	for <mptcp@lists.linux.dev>; Wed,  7 Sep 2022 11:12:03 +0000 (UTC)
-Received: by mail-pj1-f68.google.com with SMTP id m3so3583888pjo.1
-        for <mptcp@lists.linux.dev>; Wed, 07 Sep 2022 04:12:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069AD89A5
+	for <mptcp@lists.linux.dev>; Wed,  7 Sep 2022 17:22:29 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id z8so20734119edb.6
+        for <mptcp@lists.linux.dev>; Wed, 07 Sep 2022 10:22:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=9JyQhGC5twBqhnVSFX5NB4Ii/dlVPnV+Lg33o+If3Tw=;
-        b=UBhSDsLvEo7utzJeHRlIrXtRWLWXUnfWNvyjSe3ZttdKDIc8MBErGKy2Q92ZzvRtWT
-         bb1h5pdjAiqkzlYbKCab80ujf7Ltyk3oycevvb6Mp0x9zndVf5wMQwTXuoxuFpQie6Lv
-         0Lb+bSxqL+QKvf++pKwSbMeM/rbpi5Yr21OpnugqoZTg2MXrWedhcpq6XGZJkL2TrFFD
-         Hhy0+LnJsKjHkXQk+Zs3d3y6/eRtc9j4vDE45HK+MTZsdwHolIzMEC9IH2B+F66AW5jN
-         x8rS6PgE3rN+IvFAToBDHvODpglap3OlTpZFBnqsZByO+zPhkP+tsiWV5h/AEdfBbfR1
-         3Uyw==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=WK12/Via43Q0TYZkazkjE42+9Za6r2UY63gstg2V1kY=;
+        b=K2S72GIiNz+gEiaSbvUBGAeISU1GnmheX1yIiDnrsOMAI/GBE0FDDCUeuSW4o1iJVs
+         rEmlgHY0AcMP2UTca6sznO1Yp1l8XVamtb31d6AtZ6C5cMZvyj0eSHiEr2SNAL9cldMv
+         ivRjUK/mXaE7SdhSOhxvo1cF/UhJlD6/IeUxtmDDvdVcRtmRZCPKvQzCGjgAMVDJq+P5
+         2vVzt5ByQTHcQS70CshtyZqse/PPa6A/zUeIwz7AusLnPk/ARz0XTs2X1OCqKKFMgk6a
+         j5YAxzaC++X2OazdAg5uJPseiAwUFMVckXnfpjf+IFq5rV9q7xfs0B2hFrLNnbUhkbbG
+         7IvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=9JyQhGC5twBqhnVSFX5NB4Ii/dlVPnV+Lg33o+If3Tw=;
-        b=bCGUAZr77hDE/WjwvlrgEjNqO00eq+ReBhCdgy+L3R2WXBiSFqC0L5F6e6FM/sSvhA
-         dzJhQdo+SJmwYR8mUckqNMoK5y0kXYbtBs82+4Brlb+pHtvromYhZE9mgOAqqVX73sVu
-         Tf/ATLlTJcdybPnGjLA9IeqeXfC0P5/v2hs0bUG4OwTL0u+RHLFUl6xB0xYL/5RLbHU/
-         QzAr2iDhwOiZZXqKXMOuCvVjPV/bZYMSNiv1mPzo7tlsny3e/fmXuRCBjn5GQHtYc03O
-         2xg156fsr5x9tLTFEfmvlfDwEi0zTf4YiOIbT3ru84eqctSZ080QDzHuBXlIh1mQGcD5
-         jddA==
-X-Gm-Message-State: ACgBeo0E93lZEiB2GFU1JWJAyR4Ii3NpN4iCWD6fJud9XcvSor3yMEMH
-	IX2dO3Bc7bGOxWpe5Waf1Lc=
-X-Google-Smtp-Source: AA6agR5rxp/8oBEHwaj8lcja+zOf+HJVJGRuIE/uxzGzja1ttN3dJ8S3cmoVGATrGirA1B4TM2Ll4g==
-X-Received: by 2002:a17:90b:2708:b0:200:40aa:5cf5 with SMTP id px8-20020a17090b270800b0020040aa5cf5mr19613370pjb.134.1662549122678;
-        Wed, 07 Sep 2022 04:12:02 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.84])
-        by smtp.gmail.com with ESMTPSA id p186-20020a625bc3000000b00535d3caa66fsm12225683pfb.197.2022.09.07.04.11.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 04:12:02 -0700 (PDT)
-From: menglong8.dong@gmail.com
-X-Google-Original-From: imagedong@tencent.com
-To: pabeni@redhat.com
-Cc: mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	fw@strlen.de,
-	peter.krystad@linux.intel.com,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Menglong Dong <imagedong@tencent.com>,
-	Jiang Biao <benbjiang@tencent.com>,
-	Mengen Sun <mengensun@tencent.com>
-Subject: [PATCH net v3] net: mptcp: fix unreleased socket in accept queue
-Date: Wed,  7 Sep 2022 19:11:32 +0800
-Message-Id: <20220907111132.31722-1-imagedong@tencent.com>
-X-Mailer: git-send-email 2.37.2
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=WK12/Via43Q0TYZkazkjE42+9Za6r2UY63gstg2V1kY=;
+        b=IuDF1Hd1/DucxCqZGR2PgYQuJRxM/iOE8wENsgGAzIL6PCdDeJ0oLnuaXLdTsZP0q8
+         h7ej0bI7uqSUrUcuylDMtN2STLgJZEQzjyhTehq8awmt44DwD5aMavx3QSPPNlfMUP2f
+         pZxbF4JEKJszuRNit3qS3CxSCX+xpc9y1bN9xba8Y/sDYOG++nz+sT17Glt5fWCC54L+
+         VFTHbv7aX0rRwnnqUsLroQ34eERVxY0VaYLObpZZPCKTDdZyfNNrpmU+bCEAO13ZFgNT
+         hMsr6Z3rAATkCZA/BepwIUHB8LVF+N3Oj8YSreNvIvCrKC1VrhSbWfjGHmgYiWG6LKeU
+         peSw==
+X-Gm-Message-State: ACgBeo2nCdtccxh8fMlxVz5QnTEp/vvN64ojmtdJVpQoCZsmghlslR1W
+	T8khUGDmapyjf2LFYc6W7AVNqfU2OHzWJIED
+X-Google-Smtp-Source: AA6agR4zwOMPardMOCAYm4Ny/NR+xFBCWoflFeyXjo7WfvD9n072wY1W69pCG+jB6u8Ki0OgJKZA8Q==
+X-Received: by 2002:aa7:c610:0:b0:44e:9a0f:753a with SMTP id h16-20020aa7c610000000b0044e9a0f753amr3884958edq.140.1662571347977;
+        Wed, 07 Sep 2022 10:22:27 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:6db7:c94e:7f7:7f98? ([2a02:578:8593:1200:6db7:c94e:7f7:7f98])
+        by smtp.gmail.com with ESMTPSA id i23-20020aa7c9d7000000b0044e7d69091asm6861530edt.85.2022.09.07.10.22.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Sep 2022 10:22:27 -0700 (PDT)
+Message-ID: <86057d75-499c-8e30-ef15-7cd67cbc2344@tessares.net>
+Date: Wed, 7 Sep 2022 19:22:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH v3 mptcp-next 1/3] mptcp: propagate fastclose error.
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <5e26963328ae04aa375089a713ec40f5eb6adacd.1662051551.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <5e26963328ae04aa375089a713ec40f5eb6adacd.1662051551.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Menglong Dong <imagedong@tencent.com>
+Hi Paolo,
 
-The mptcp socket and its subflow sockets in accept queue can't be
-released after the process exit.
+On 01/09/2022 19:31, Paolo Abeni wrote:
+> When an mptcp socket is closed due to an incoming FASTCLOSE
+> option, so specific sk_err is set and later syscall will
+> fail usually with EPIPE.
+> 
+> Align the current fastclose error handling with TCP reset,
+> properly setting the socket error according to the current
+> msk state and propagating such error.
 
-While the release of a mptcp socket in listening state, the
-corresponding tcp socket will be released too. Meanwhile, the tcp
-socket in the unaccept queue will be released too. However, only init
-subflow is in the unaccept queue, and the joined subflow is not in the
-unaccept queue, which makes the joined subflow won't be released, and
-therefore the corresponding unaccepted mptcp socket will not be released
-to.
+Thank you for the patch and sorry for the delay!
 
-This can be reproduced easily with following steps:
+I have some questions here below:
 
-1. create 2 namespace and veth:
-   $ ip netns add mptcp-client
-   $ ip netns add mptcp-server
-   $ sysctl -w net.ipv4.conf.all.rp_filter=0
-   $ ip netns exec mptcp-client sysctl -w net.mptcp.enabled=1
-   $ ip netns exec mptcp-server sysctl -w net.mptcp.enabled=1
-   $ ip link add red-client netns mptcp-client type veth peer red-server \
-     netns mptcp-server
-   $ ip -n mptcp-server address add 10.0.0.1/24 dev red-server
-   $ ip -n mptcp-server address add 192.168.0.1/24 dev red-server
-   $ ip -n mptcp-client address add 10.0.0.2/24 dev red-client
-   $ ip -n mptcp-client address add 192.168.0.2/24 dev red-client
-   $ ip -n mptcp-server link set red-server up
-   $ ip -n mptcp-client link set red-client up
+> Additionally sendmsg() is currently not handling properly
+> the sk_err, always returning EPIPE.
+Could it be seen as a bug-fix and deserving a dedicated commit?
 
-2. configure the endpoint and limit for client and server:
-   $ ip -n mptcp-server mptcp endpoint flush
-   $ ip -n mptcp-server mptcp limits set subflow 2 add_addr_accepted 2
-   $ ip -n mptcp-client mptcp endpoint flush
-   $ ip -n mptcp-client mptcp limits set subflow 2 add_addr_accepted 2
-   $ ip -n mptcp-client mptcp endpoint add 192.168.0.2 dev red-client id \
-     1 subflow
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 45 ++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 35 insertions(+), 10 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index f4891db86217..b04f184695e4 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1685,9 +1685,13 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  	if ((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
+>  		ret = sk_stream_wait_connect(sk, &timeo);
+>  		if (ret)
+> -			goto out;
+> +			goto do_error;
+>  	}
+>  
+> +	ret = -EPIPE;
 
-3. listen and accept on a port, such as 9999. The nc command we used
-   here is modified, which makes it use mptcp protocol by default.
-   $ ip netns exec mptcp-server nc -l -k -p 9999
+Regarding this line above... (see below)
 
-4. open another *two* terminal and use each of them to connect to the
-   server with the following command:
-   $ ip netns exec mptcp-client nc 10.0.0.1 9999
-   Input something after connect to triger the connection of the second
-   subflow. So that there are two established mptcp connections, with the
-   second one still unaccepted.
+> +	if (unlikely(sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN)))
+> +		goto do_error;
+> +
+>  	pfrag = sk_page_frag(sk);
+>  
+>  	while (msg_data_left(msg)) {
 
-5. exit all the nc command, and check the tcp socket in server namespace.
-   And you will find that there is one tcp socket in CLOSE_WAIT state
-   and can't release forever.
+...Could we eventually have no data left and no going through the while
+loop?
 
-Fix this by closing all of the unaccepted mptcp socket in
-mptcp_subflow_queue_clean() with mptcp_close(). As the mptcp_cancel_work()
-is called inside mptcp_close(), we can't introduce a mptcp_close_nolock()
-and call it here, which will cause deadlock.
+In this case "copied" will be 0 and we will return the new -EPIPE, maybe
+not what we want, no?
+Or should we change 'ret' value just before calling 'goto do_error' to
+avoid that?
 
-Now, we can ensure that all unaccepted mptcp sockets will be cleaned by
-mptcp_close() before they are released, so mptcp_sock_destruct(), which is
-used to clean the unaccepted mptcp socket, is not needed anymore.
+(...)
 
-The selftests for mptcp is ran for this commit, and no new failures.
-However, there are some failures before this commit for mptcp_join.sh:
+> @@ -2404,12 +2410,31 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+>  		unlock_sock_fast(tcp_sk, slow);
+>  	}
+>  
+> +	/* Mirror the tcp_reset() error propagation */
+> +	switch (sk->sk_state) {
+> +	case TCP_SYN_SENT:
+> +		sk->sk_err = ECONNREFUSED;
+> +		break;
+> +	case TCP_CLOSE_WAIT:
+> +		sk->sk_err = EPIPE;
+> +		break;
+> +	case TCP_CLOSE:
+> +		return;
+> +	default:
+> +		sk->sk_err = ECONNRESET;
+> +	}
 
- 5 failure(s) has(ve) been detected:
-        - 27: invalid address, ADD_ADDR timeout
-        - 34: remove invalid addresses
-        - 102: userspace pm no echo w/o daemon
-        - 103: userspace pm type rejects join
-        - 105: userspace pm type prevents mp_prio
+Should we eventually move this out of tcp_reset(), export it (inline
+function?) and re-using it here to avoid the duplication (and eventually
+being out-of-sync in case of changes on TCP side? even if I guess this
+would not change but well)
 
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
-Reviewed-by: Jiang Biao <benbjiang@tencent.com>
-Reviewed-by: Mengen Sun <mengensun@tencent.com>
-Signed-off-by: Menglong Dong <imagedong@tencent.com>
----
-v3:
-- remove mptcp_close_nolock() and call mptcp_close() directly in
-  mptcp_subflow_queue_clean(), as mptcp_close_nolock() will cause
-  dead lock.
+> +
+>  	inet_sk_state_store(sk, TCP_CLOSE);
+>  	sk->sk_shutdown = SHUTDOWN_MASK;
+>  	smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+>  	set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags);
+>  
+> -	mptcp_close_wake_up(sk);
+> +	/* the calling mptcp_worker will properly destroy the socket */
+> +	if (sock_flag(sk, SOCK_DEAD))
+> +		return;
+> +
+> +	sk->sk_state_change(sk);
+> +	sk_error_report(sk);
+>  }
+>  
+>  static void __mptcp_retrans(struct sock *sk)
 
-v2:
-- remove mptcp_sock_destruct()
-- introduce mptcp_close_nolock() and replace mptcp_close() with it in
-  mptcp_subflow_queue_clean()
----
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 31 ++++++-------------------------
- 3 files changed, 8 insertions(+), 26 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d398f3810662..2de33626b73f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2796,7 +2796,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	sock_put(sk);
- }
- 
--static void mptcp_close(struct sock *sk, long timeout)
-+void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 132d50833df1..102692b581dd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -612,6 +612,7 @@ void mptcp_subflow_reset(struct sock *ssk);
- void mptcp_subflow_queue_clean(struct sock *ssk);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
-+void mptcp_close(struct sock *sk, long timeout);
- 
- bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
- 			   const struct mptcp_addr_info *b, bool use_port);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c7d49fb6e7bd..45315a57185a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -602,30 +602,6 @@ static bool subflow_hmac_valid(const struct request_sock *req,
- 	return !crypto_memneq(hmac, mp_opt->hmac, MPTCPOPT_HMAC_LEN);
- }
- 
--static void mptcp_sock_destruct(struct sock *sk)
--{
--	/* if new mptcp socket isn't accepted, it is free'd
--	 * from the tcp listener sockets request queue, linked
--	 * from req->sk.  The tcp socket is released.
--	 * This calls the ULP release function which will
--	 * also remove the mptcp socket, via
--	 * sock_put(ctx->conn).
--	 *
--	 * Problem is that the mptcp socket will be in
--	 * ESTABLISHED state and will not have the SOCK_DEAD flag.
--	 * Both result in warnings from inet_sock_destruct.
--	 */
--	if ((1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
--		sk->sk_state = TCP_CLOSE;
--		WARN_ON_ONCE(sk->sk_socket);
--		sock_orphan(sk);
--	}
--
--	/* We don't need to clear msk->subflow, as it's still NULL at this point */
--	mptcp_destroy_common(mptcp_sk(sk), 0);
--	inet_sock_destruct(sk);
--}
--
- static void mptcp_force_close(struct sock *sk)
- {
- 	/* the msk is not yet exposed to user-space */
-@@ -768,7 +744,6 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			/* new mpc subflow takes ownership of the newly
- 			 * created mptcp socket
- 			 */
--			new_msk->sk_destruct = mptcp_sock_destruct;
- 			mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
- 			mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
- 			mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
-@@ -1770,6 +1745,12 @@ void mptcp_subflow_queue_clean(struct sock *listener_ssk)
- 		msk->first = NULL;
- 		msk->dl_next = NULL;
- 		unlock_sock_fast(sk, slow);
-+
-+		/* mptcp_close() will put a extra reference on sk,
-+		 * so we hold one here.
-+		 */
-+		sock_hold(sk);
-+		mptcp_close(sk, 0);
- 	}
- 
- 	/* we are still under the listener msk socket lock */
+Cheers,
+Matt
 -- 
-2.37.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
