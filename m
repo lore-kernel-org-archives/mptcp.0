@@ -1,146 +1,145 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104BC2CA6
-	for <mptcp@lists.linux.dev>; Wed,  7 Sep 2022 08:59:40 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id j12so1511078pfi.11
-        for <mptcp@lists.linux.dev>; Wed, 07 Sep 2022 01:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=mKARXm2kMQBJjCoMq1zHo4f6Vijr8sVnvDkYWq/yY00=;
-        b=JyzYTnj4Jo1BhJLatgnyH3qO4uNfq7eYWswaPviDRn6zx52TDlV0p+EXjU0/Fj0fBp
-         M26YLiYs0SQDzb221bpFX45l30bIjt4i97wrGCR2gHdPUrD8HjxO/WD5gOTMiXWBPr7T
-         NBnSINLZz7XpDL0XyMVuWoD7KEY7VEXdKvCxDr1ujie3p4uvgNV9GqLv1WrJ8RhQLxI7
-         m8u8O860aneQz74CickxPrLWsfzQfLMHKWnxK9criXkbM7wRbOcYrTMHw+3sBXCaMpj0
-         Emt57oBDZZAVyG0XMaXOk6CQHkTX5B8Y2LBvIV4TPOzahoTWXK168Pam0ZfLgG7E82be
-         OztA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=mKARXm2kMQBJjCoMq1zHo4f6Vijr8sVnvDkYWq/yY00=;
-        b=tVWi36WjpZvIKo1tUWu81e7+ooygp4QufX8ijxsK836GfyufChtSu+rQ1W/9H0Lm34
-         upOoMuNfffgEtKLns1aaVQcdEMmLkyJWE15fLn79BnRXZZ9BpgXcGRnq90pdrLnNVY5u
-         qNcTWeZNh7Hk8fI70Sy62shu7Tzjn4nMuRMYxU8wzJw2Wwmo73ug2LUNZKaZOaPNVtvM
-         gR9LpA1ZMwiDCXGmL90Wfg5xcMgOs+Xm3iIAqxeiMRuYw9/ak5t9Lzu9A2vGV36n3IRm
-         QtNGwz3z7QS8O/3F38Q4F7d3deyF3dOtCZv4bKOm4xr3JiKC/S/W0DuDmm1scWYSN4PP
-         bqYQ==
-X-Gm-Message-State: ACgBeo2NevyyLGp3C6lFR5pdeDm/CQoVPNJjVqR9FWJ8ZGBOZ4Fdrusv
-	EknX7/wW9hLY3hE7mSKuSX3W+TOdePhN9FL0LxI=
-X-Google-Smtp-Source: AA6agR7ugy96b6qwQ050Ysi1QiI6Gbohgqoj15UIwkoRiZqKNeVKVVYF3ex9FrK9aiSxRamzOtC48nmR7WaTNe2dVjM=
-X-Received: by 2002:a05:6a00:1307:b0:53a:9663:1bd6 with SMTP id
- j7-20020a056a00130700b0053a96631bd6mr2779063pfu.55.1662541180552; Wed, 07 Sep
- 2022 01:59:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042652F4E
+	for <mptcp@lists.linux.dev>; Wed,  7 Sep 2022 09:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662543449; x=1694079449;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Fm94KITMVPvJBzxCnyPknZfdfxk9KSXkT2Wso/5vHA4=;
+  b=IYluOBY79Dr3EZu9vwALsYWCN/PBv+s9V0TjcbbcDgiIBDWSk2sTNzHB
+   AFsrGCXycfPE9AT0xbO9wQjPag30TzhtClamRQZx2sYE23xsQ+PFsrAGU
+   pdTjfAJwco8MoJ2JlzKVi4Iv/pfQfyJN966Rnwm1oMTDnmIRDF7PPoDkU
+   V/N3iq6ANrymhFAlSCUdRzKYx9qXcN22wBNWWmRJMp1QwILQZfUqxsDCl
+   T1+9jW79g1u8UuPRt2hS8wS/b30Q/p2r+um+XtEBsHYGv+dVHxTZQ2IYT
+   Hoqh8ACdtPc6mo+aJFpeQIA01bmAs78WSjZOG75eL5poJaErnOwj1lX74
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="360773135"
+X-IronPort-AV: E=Sophos;i="5.93,296,1654585200"; 
+   d="scan'208";a="360773135"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 02:37:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,296,1654585200"; 
+   d="scan'208";a="859577988"
+Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Sep 2022 02:37:10 -0700
+Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1oVrUb-0006P6-20;
+	Wed, 07 Sep 2022 09:37:09 +0000
+Date: Wed, 7 Sep 2022 17:36:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: menglong8.dong@gmail.com, pabeni@redhat.com
+Cc: kbuild-all@lists.01.org, mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, fw@strlen.de,
+	peter.krystad@linux.intel.com, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Menglong Dong <imagedong@tencent.com>,
+	Jiang Biao <benbjiang@tencent.com>,
+	Mengen Sun <mengensun@tencent.com>
+Subject: Re: [PATCH net v2] net: mptcp: fix unreleased socket in accept queue
+Message-ID: <202209071742.Cv2hLTkj-lkp@intel.com>
+References: <20220907083304.605526-1-imagedong@tencent.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220907083304.605526-1-imagedong@tencent.com> <873298fe-7fc2-4417-2852-5180f81f94aa@tessares.net>
-In-Reply-To: <873298fe-7fc2-4417-2852-5180f81f94aa@tessares.net>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 7 Sep 2022 16:59:29 +0800
-Message-ID: <CADxym3YQCjpVXs8EZr_B7iJDdbjOv53kqiqZqZmJ4fh3KUbzrg@mail.gmail.com>
-Subject: Re: [PATCH net v2] net: mptcp: fix unreleased socket in accept queue
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: pabeni@redhat.com, mathew.j.martineau@linux.intel.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, fw@strlen.de, 
-	peter.krystad@linux.intel.com, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Menglong Dong <imagedong@tencent.com>, 
-	Jiang Biao <benbjiang@tencent.com>, Mengen Sun <mengensun@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220907083304.605526-1-imagedong@tencent.com>
 
-On Wed, Sep 7, 2022 at 4:51 PM Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> Hi Menglong,
->
-> On 07/09/2022 10:33, menglong8.dong@gmail.com wrote:
-> > From: Menglong Dong <imagedong@tencent.com>
-> >
-> > The mptcp socket and its subflow sockets in accept queue can't be
-> > released after the process exit.
-> >
-> > While the release of a mptcp socket in listening state, the
-> > corresponding tcp socket will be released too. Meanwhile, the tcp
-> > socket in the unaccept queue will be released too. However, only init
-> > subflow is in the unaccept queue, and the joined subflow is not in the
-> > unaccept queue, which makes the joined subflow won't be released, and
-> > therefore the corresponding unaccepted mptcp socket will not be released
-> > to.
->
-> Thank you for the patch!
->
-> (...)
->
-> > ---
-> >  net/mptcp/protocol.c | 13 +++++++++----
-> >  net/mptcp/subflow.c  | 33 ++++++++-------------------------
-> >  2 files changed, 17 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index d398f3810662..fe6b7fbb145c 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -2796,13 +2796,12 @@ static void __mptcp_destroy_sock(struct sock *sk)
-> >       sock_put(sk);
-> >  }
-> >
-> > -static void mptcp_close(struct sock *sk, long timeout)
-> > +void mptcp_close_nolock(struct sock *sk, long timeout)
->
-> I didn't look at it into details but like the previous previous, I don't
-> think this one compiles without errors: you define this (non static)
-> function here in protocol.c but you don't "expose" it in protocol.h ...
-> (see below)
->
+Hi,
 
-Oops...I forgot to commit the protocol.h :)
+Thank you for the patch! Perhaps something to improve:
 
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index c7d49fb6e7bd..cebabf2bb222 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
->
-> (...)
->
-> > @@ -1765,11 +1740,19 @@ void mptcp_subflow_queue_clean(struct sock *listener_ssk)
-> >               struct sock *sk = (struct sock *)msk;
-> >               bool slow;
-> >
-> > +             sock_hold(sk);
-> >               slow = lock_sock_fast_nested(sk);
-> >               next = msk->dl_next;
-> >               msk->first = NULL;
-> >               msk->dl_next = NULL;
-> > +
-> > +             /* mptcp_close_nolock() will put a extra reference on sk,
-> > +              * so we hold one here.
-> > +              */
-> > +             sock_hold(sk);
-> > +             mptcp_close_nolock(sk, 0);
->
-> ... I guess the compiler will complain if you try to use it here from
-> subflow.c, no?
->
+[auto build test WARNING on net/master]
 
-Hmm...The compiler didn't, as I modified protocol.h locally. That
-'s why I didn't find this mistake :)
+url:    https://github.com/intel-lab-lkp/linux/commits/menglong8-dong-gmail-com/net-mptcp-fix-unreleased-socket-in-accept-queue/20220907-163559
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git e1091e226a2bab4ded1fe26efba2aee1aab06450
+config: parisc-allyesconfig (https://download.01.org/0day-ci/archive/20220907/202209071742.Cv2hLTkj-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/d238db12dcac26bfb2197e0aae24fadf6bbfdcb6
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review menglong8-dong-gmail-com/net-mptcp-fix-unreleased-socket-in-accept-queue/20220907-163559
+        git checkout d238db12dcac26bfb2197e0aae24fadf6bbfdcb6
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=parisc SHELL=/bin/bash net/
 
-> Also, did you have the opportunity to run the different MPTCP selftests
-> with this patch?
->
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Not yet. I'll do it before the next version.
+All warnings (new ones prefixed by >>):
 
-Thanks!
-Menglong Dong
+>> net/mptcp/protocol.c:2799:6: warning: no previous prototype for 'mptcp_close_nolock' [-Wmissing-prototypes]
+    2799 | void mptcp_close_nolock(struct sock *sk, long timeout)
+         |      ^~~~~~~~~~~~~~~~~~
 
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+
+vim +/mptcp_close_nolock +2799 net/mptcp/protocol.c
+
+  2798	
+> 2799	void mptcp_close_nolock(struct sock *sk, long timeout)
+  2800	{
+  2801		struct mptcp_subflow_context *subflow;
+  2802		struct mptcp_sock *msk = mptcp_sk(sk);
+  2803		bool do_cancel_work = false;
+  2804	
+  2805		sk->sk_shutdown = SHUTDOWN_MASK;
+  2806	
+  2807		if ((1 << sk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE)) {
+  2808			inet_sk_state_store(sk, TCP_CLOSE);
+  2809			goto cleanup;
+  2810		}
+  2811	
+  2812		if (mptcp_close_state(sk))
+  2813			__mptcp_wr_shutdown(sk);
+  2814	
+  2815		sk_stream_wait_close(sk, timeout);
+  2816	
+  2817	cleanup:
+  2818		/* orphan all the subflows */
+  2819		inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32;
+  2820		mptcp_for_each_subflow(msk, subflow) {
+  2821			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+  2822			bool slow = lock_sock_fast_nested(ssk);
+  2823	
+  2824			/* since the close timeout takes precedence on the fail one,
+  2825			 * cancel the latter
+  2826			 */
+  2827			if (ssk == msk->first)
+  2828				subflow->fail_tout = 0;
+  2829	
+  2830			sock_orphan(ssk);
+  2831			unlock_sock_fast(ssk, slow);
+  2832		}
+  2833		sock_orphan(sk);
+  2834	
+  2835		pr_debug("msk=%p state=%d", sk, sk->sk_state);
+  2836		if (mptcp_sk(sk)->token)
+  2837			mptcp_event(MPTCP_EVENT_CLOSED, msk, NULL, GFP_KERNEL);
+  2838	
+  2839		if (sk->sk_state == TCP_CLOSE) {
+  2840			__mptcp_destroy_sock(sk);
+  2841			do_cancel_work = true;
+  2842		} else {
+  2843			mptcp_reset_timeout(msk, 0);
+  2844		}
+  2845	
+  2846		if (do_cancel_work)
+  2847			mptcp_cancel_work(sk);
+  2848	}
+  2849	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
