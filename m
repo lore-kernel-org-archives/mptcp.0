@@ -1,113 +1,106 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E779A3222
-	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:41:39 +0000 (UTC)
-Received: by mail-qt1-f176.google.com with SMTP id l5so12853469qtv.4
-        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:41:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE423222
+	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:56:36 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id gb36so38189678ejc.10
+        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=13TDzxq/4e7KV1tyuFjBVTPuJsqOz69YvrhHx2UEPP0=;
-        b=mX1m7/tpE1qfo9xvjtrCk3hAyH8n+Z2JfZN0SWe2/Ym1GM0PiBu1TJL7GOcQY+QA1h
-         u6+C1htNS+yivLzyYKp0FVeHoQ9mvYHSfiHrDCUQSTyPI4+qMBclBN4wloh+vsoj5UIC
-         H0UnF+hYsc9FpNVM7A+6QdkE+tfrWhMZhEPs0Fpk/v4ZIPTw0rx8ydt8aiSlZST94ggW
-         8NWjAH1A57GSBBYXEfIXgDgY6bmgpBtVuv9cz9US8aKNhMT9D/GW97eb85Fa3YU0PPZv
-         NlPbtvTJNpHEI24pLeaoxUznia0Ugm99gJ+/bd2gznxHJUhtJeyKuJl3zxvBq20hNQ5p
-         +l7w==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=oU7r9URdkHR4hFtjwb+DGbO5ThpZ489lVmOF+LZfRK0=;
+        b=UQlzr6tCetqVbCOOX2ttQ/neOUnakbzGJShT7CCa07IJuqxjOzl+EOWl/kv99025Iy
+         rCDQcVk1pCFItNZQ/tvHphz+S7cmtNw9x42goeylzffmomGRsueAsM7xcL8I3cfWC/qF
+         KFfnufPnVdlKSc22AbRxrP5tMpvvRvvTo+BR7MBP2Sqkf/1IFL8fMcKO/hSe+W6+tlNR
+         SgbSCHx09n1Y8nXPKoM4arIoWokszvDSY94Pjn4G38V08HlvuJzx6+lHIeUVbqekZd1m
+         FF5F/dlhvn8S82lH7Y00yvifqIo+ANWsQ466ROvddquwTgi1TrDwIgKG2jZtyzlNqMtf
+         mY1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=13TDzxq/4e7KV1tyuFjBVTPuJsqOz69YvrhHx2UEPP0=;
-        b=WwrF31kOVl5EkooDiWUL/unFSY/qdAxjXiJTPepq9dWKIShN1P2clNpJ3UOwaSa8Sy
-         N9Ixbbun7GRqi7aR4LWJuHJiD/SgsZfNqIL2wdn+viVYqjYu0hPX6NAa7VnQCErylG0W
-         CD3UBOSbwSpBUA0TgObX9Q8V5qq3WZIv2ubi2F34coS4vwCLGrQAS0aCIC29iuhVzpzv
-         FWXYQDJZ/hFMnYNKOsiylUSZd9XMu0MZ+GojS4fmBqxmHGi6SD7NO+wGRhvY6qi9q+Cd
-         oLbje6K+JdVs/vtLmHmgb3hj+qFfEwNPzk6CfFPXOo+WObUDX3fQr4Uc3KOw1xYigwh6
-         hUVw==
-X-Gm-Message-State: ACgBeo10qeML3+MhI0pt/Nftye7P0u0g2BebkiOABhSuEWkxzqinKM4+
-	508Xzb4vGctYdAeLVAYDeA==
-X-Google-Smtp-Source: AA6agR4aGGdJz84lEhT13lU7EAP9YzMhLuogFeMg0F0IzKEzOYxDPxghoLvf9D1KITpNzhoceyHWdw==
-X-Received: by 2002:ac8:7d92:0:b0:344:aa94:4798 with SMTP id c18-20020ac87d92000000b00344aa944798mr7770019qtd.511.1662644498682;
-        Thu, 08 Sep 2022 06:41:38 -0700 (PDT)
-Received: from [127.0.0.1] ([20.7.132.7])
-        by smtp.gmail.com with ESMTPSA id bl28-20020a05620a1a9c00b006bc5cdc890bsm15893768qkb.77.2022.09.08.06.41.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 06:41:38 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Menglong Dong <imagedong@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220907111132.31722-1-imagedong@tencent.com>
-References: <20220907111132.31722-1-imagedong@tencent.com>
-Subject: Re: net: mptcp: fix unreleased socket in accept queue: Tests
- Results
-Message-ID: <4e6d3d9e-1f1a-23ae-cb56-2d4f043f17ae@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 Sep 2022 13:41:37 +0000
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=oU7r9URdkHR4hFtjwb+DGbO5ThpZ489lVmOF+LZfRK0=;
+        b=n4BRySnM5dJdywLAEnGEw409wNdOZ+VPWKCWtPeZyyoalQcsNJQzAN/gVBSfT8noCt
+         1sXyTaync1h7jeY/+usyzKpd8d9Jpuh0Ox0UMNB1gAtpO+05m+Bgx6wABdvURLHAXD3H
+         vDUk0ioefIfeFjczuLPcLjiTFX71Cbm7VTgGXaMLsyWgY3YmAoZGU9QFpfEUgXdjfGMV
+         2+J56Pdw+rRqmmI2SvSEBj3ErCig/LvMWHvHPCue21LeBlkhGU0wP91ylRSqNkwyaBRZ
+         wU8C0iLIBm5CeEB6jV+EpIf0nk6yvvwkLGdWIa1hHB/ts3bJJUneFJUndXvhXdcdseVb
+         84xA==
+X-Gm-Message-State: ACgBeo3ofEv8zl6JMupw8icqRahSpAjS3TeGZnYp7DaXyIUu7N3Zrnqd
+	KLyyOvG0ksG0/47vit3NZ2iFgQ==
+X-Google-Smtp-Source: AA6agR71PQQCRleuxeuH7B8IXp8332nCARvv5AMHLZ9ubQsUxlJHU9AyInKTff/3PUJPpU6bxUx9mA==
+X-Received: by 2002:a17:906:974f:b0:778:ce93:38e3 with SMTP id o15-20020a170906974f00b00778ce9338e3mr588170ejy.644.1662645395092;
+        Thu, 08 Sep 2022 06:56:35 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:8618:9875:a93a:7063? ([2a02:578:8593:1200:8618:9875:a93a:7063])
+        by smtp.gmail.com with ESMTPSA id u24-20020a056402111800b0044ebe6f364csm6002652edv.45.2022.09.08.06.56.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Sep 2022 06:56:16 -0700 (PDT)
+Message-ID: <e4b7eddc-3a73-0994-467e-6d65d6ad80c0@tessares.net>
+Date: Thu, 8 Sep 2022 15:56:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH net v3] net: mptcp: fix unreleased socket in accept queue
+Content-Language: en-GB
+To: menglong8.dong@gmail.com, pabeni@redhat.com
+Cc: mathew.j.martineau@linux.intel.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, fw@strlen.de,
+ peter.krystad@linux.intel.com, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Menglong Dong <imagedong@tencent.com>, Jiang Biao <benbjiang@tencent.com>,
+ Mengen Sun <mengensun@tencent.com>
+References: <20220907111132.31722-1-imagedong@tencent.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220907111132.31722-1-imagedong@tencent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hi Menglong,
 
-Thank you for your modifications, that's great!
+On 07/09/2022 13:11, menglong8.dong@gmail.com wrote:
+> From: Menglong Dong <imagedong@tencent.com>
+> 
+> The mptcp socket and its subflow sockets in accept queue can't be
+> released after the process exit.
+> 
+> While the release of a mptcp socket in listening state, the
+> corresponding tcp socket will be released too. Meanwhile, the tcp
+> socket in the unaccept queue will be released too. However, only init
+> subflow is in the unaccept queue, and the joined subflow is not in the
+> unaccept queue, which makes the joined subflow won't be released, and
+> therefore the corresponding unaccepted mptcp socket will not be released
+> to.
 
-Our CI did some validations and here is its report:
+Thank you for the v3.
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/5981233187389440
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5981233187389440/summary/summary.txt
+Unfortunately, our CI found a possible recursive locking:
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join - Critical: 1 Call Trace(s) =E2=9D=8C:
-  - Task: https://cirrus-ci.com/task/5418283233968128
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5418283233968128/su=
-mmary/summary.txt
+> - KVM Validation: debug:
+>   - Unstable: 1 failed test(s): selftest_mptcp_join - Critical: 1 Call Trace(s) ❌:
+>   - Task: https://cirrus-ci.com/task/5418283233968128
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5418283233968128/summary/summary.txt
 
-Initiator: Matthieu Baerts
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/aefc08a013fb
+https://lore.kernel.org/mptcp/4e6d3d9e-1f1a-23ae-cb56-2d4f043f17ae@gmail.com/T/#u
 
+Do you mind looking at it please?
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+Also, because it is not just a simple fix, may you send any new versions
+only to MPTCP mailing list please? So without the other mailing lists
+and netdev maintainers to reduce the audience during the development.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Once the patch is ready, we will apply it in MPTCP tree and send it to
+netdev. That's what we usually for MPTCP related patches.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
