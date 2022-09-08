@@ -1,177 +1,131 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCBE7C
-	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 12:13:18 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id b16so24057290edd.4
-        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 05:13:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD503224
+	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:38:47 +0000 (UTC)
+Received: by mail-wm1-f46.google.com with SMTP id n17-20020a05600c501100b003a84bf9b68bso1784796wmr.3
+        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=KZPoYELu+OmWPyWckkyXqumb2NlvL3QHh34vPnJ9dWs=;
-        b=xvaCTWewx5mhKCJ1K77u3ElgZmp66DGBTt8Eg9nXCqF33QjGWGqWkdEAn3grUPE5k8
-         c1rg06NXQlORQ12jnnb4JxskOe7BzJFHT4grIeeOj44ZXUQzmPPQ5LP9bjsZpLbGp3r1
-         WWU60sMNhk0Ctoe7yEpdduMkhFhG5BtUP0E+BJR/OGIZ1pAizbP6ee9Bl3CZ/4MJNwxo
-         lsn+clTxIYwjvAXQ/HVkBqYd8ET6KlAcWBSqAdti1gUGlsSfEUYgT3pYg0R0Hoq26qtn
-         GpQY9t7+8QDWZjU0i8sNQ62fwi+54DlRmBbavReJdB6VbtTAe38fwPn8Z4SIdOH7kdmx
-         8AIA==
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:from:to:cc:subject:date;
+        bh=MucUSLBYQgaqEZzouRlEu+Sv92psSBaTorLTjbyK/Es=;
+        b=xia2diYJogSLaVTYPb1jhYGSjxhCukqA+D2iVEdKqm7nCM1nw2mQ41NtZix2OdRnbj
+         XNnU0JAR777bg3j2o60umI3KguMidw4sRCTgQMx2UFTq2JE1ZgO9uA1XDzwb8rD+QU/r
+         muooXU4BEbkZQhF28nJEGWJM+fJQ0yyigB66FVWZq96TL7Blq6u5n7RHlQi8guLx8LPt
+         ZWSZ8gpdi7cMJOc46Gmrf2su+tez92jKcnTh6eoDKjTHWJHDjy6uF2y32hSxBgu7Bm30
+         pj/r0LjGUk7IsfPK67JHULSNZ4rgDrWJbH8fyZXwTCRl2/5pLfriowCbPV5tHNOSQ+CL
+         r9dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=KZPoYELu+OmWPyWckkyXqumb2NlvL3QHh34vPnJ9dWs=;
-        b=kmD2bIa9FZHRRAoXbsKoJytWq9LFds3pLL3dJGyi4y2d3MlIiQw5MMbP3IJwXBCDdF
-         8bkN3vPZ2G+gXCyfD61Yaj5ly+aO2iR5TP1QSWzLlPEW9tPjxatbM+MRr61J1DNZQPqY
-         PfJhBIWDukXZtMVFklsIVvC4q43iMGaoVGixrsN1OECq3nVg2PfVUd0LGpEN23iGJWIX
-         bWJbwq6YrIvIVN0cz3FQZEmwCPiQstblFH6Hc82H22ZehKWHjxiYZlcAfbB4JFlTlWD1
-         PmENY+z1t5w62reuN9ifUiLuH3DAlN1MTzBCZwxk8dlvIMOmArMwK5cWRJ+V+N8PvP95
-         D1rA==
-X-Gm-Message-State: ACgBeo1zsxsyycDO2+FpKjSq5Fs6oHW9reEJ1ZAGhP5Y1WyEpQQoKv20
-	7kW5DGCIjsh0Ugt6rHfJOxQs8g==
-X-Google-Smtp-Source: AA6agR556DDIPSoVfy3e1aneqC8KEmjuTo5dovhgxjW86uLak4OK0h+a4PxiRTbzGDYrpAF9LWx9Pw==
-X-Received: by 2002:aa7:d5c8:0:b0:44e:3eb1:a13f with SMTP id d8-20020aa7d5c8000000b0044e3eb1a13fmr7028078eds.220.1662639196675;
-        Thu, 08 Sep 2022 05:13:16 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:8618:9875:a93a:7063? ([2a02:578:8593:1200:8618:9875:a93a:7063])
-        by smtp.gmail.com with ESMTPSA id cm20-20020a0564020c9400b0044e74c9dfedsm8480861edb.86.2022.09.08.05.13.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Sep 2022 05:13:16 -0700 (PDT)
-Message-ID: <471abad1-74ec-c8ee-163b-0a1a215a89d9@tessares.net>
-Date: Thu, 8 Sep 2022 14:13:14 +0200
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date;
+        bh=MucUSLBYQgaqEZzouRlEu+Sv92psSBaTorLTjbyK/Es=;
+        b=FL9STHrWW7TWvxirEgqFopuoJbUpwB7Fv47A7Yr5r2OPsXPF8CbVyQ3pIi4tCiamKj
+         BmqgD4LAJ7rb1ZjuNIyvW21zZ65z3Ir9qKx5zwRtnXhFhBTyD39BRmkjg8M5Ru9f/HKJ
+         a8+Ab7GdGAkCuMm5h0riu4RSd4h2DlsAVg9EdwcIxm+2ELRpgmRF+LtkSaCQy8b2dSoO
+         ppwulyXsC/1JwF5jNa2F0ArKo6pV8o4aGfnXWt33BeBmMEbbMP7NEDmzPi4Td18teBtB
+         lmwdZcnpq+mXdkXUsbW8/ha7H1FaDBxSMBjw6zyR8ZBkJ8xxJqxJrhIbY3a9ALTRC+4c
+         rU0Q==
+X-Gm-Message-State: ACgBeo0yQ5CwNYIBr9Rkoh4InYfvkE7xIm+XWf6gae0WH5xLTdEfePVo
+	0fgc0A6lhtqjT6b30qZI8G52vf4GXVPULuZWkOvGP/4/ZXkJ/CMqpkTaPnNyCyK05hIIALTW4yi
+	K45AID7bsqRVfRJPcZ+Chtg==
+X-Google-Smtp-Source: AA6agR4A+nxTqK3AdEs4PMHB3Lh5wvFh5UB+qf0ZOsMogu7WDtL3O6t4MWSaU3z1IyBkUwtuY8M54Q==
+X-Received: by 2002:a7b:c451:0:b0:3a6:829a:6102 with SMTP id l17-20020a7bc451000000b003a6829a6102mr2358465wmi.12.1662644325996;
+        Thu, 08 Sep 2022 06:38:45 -0700 (PDT)
+Received: from vdi02.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id fc15-20020a05600c524f00b003a5260b8392sm3100822wmb.23.2022.09.08.06.38.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Sep 2022 06:38:45 -0700 (PDT)
+From: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+Subject: [PATCH RFC mptcp-next 01/10] mptcp: add TCP_FASTOPEN_CONNECT socket option
+Date: Thu,  8 Sep 2022 15:38:20 +0200
+Message-Id: <20220908133829.3410092-2-benjamin.hesmans@tessares.net>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
+References: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH v3 mptcp-next 1/3] mptcp: propagate fastclose error.
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <5e26963328ae04aa375089a713ec40f5eb6adacd.1662051551.git.pabeni@redhat.com>
- <86057d75-499c-8e30-ef15-7cd67cbc2344@tessares.net>
- <697a9878ebff12d2a08a40bab699ed7cb41326d9.camel@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <697a9878ebff12d2a08a40bab699ed7cb41326d9.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi Paolo,
+Set the option for the first subflow only. For the other subflows TFO
+can't be used because a mapping would be needed to cover the data in the
+SYN.
 
-Thank you for your replies!
+Signed-off-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+---
 
-On 08/09/2022 13:48, Paolo Abeni wrote:
-> On Wed, 2022-09-07 at 19:22 +0200, Matthieu Baerts wrote:
->> On 01/09/2022 19:31, Paolo Abeni wrote:
+Notes:
+    This patch only consider TCP_FASTOPEN_CONNECT, for TCP_FASTOPEN, Dmytro SHYTYI
+    has proposed a different set of patches.
 
-(...)
+ net/mptcp/sockopt.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
->>> Additionally sendmsg() is currently not handling properly
->>> the sk_err, always returning EPIPE.
->> Could it be seen as a bug-fix and deserving a dedicated commit?
-> 
-> I personally see this as an improvement, as AFAIK there is no mandated
-> by RFC return error code for MPTCP.
-
-Mmh yes I see, we can say that.
-
->>
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>>  net/mptcp/protocol.c | 45 ++++++++++++++++++++++++++++++++++----------
->>>  1 file changed, 35 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index f4891db86217..b04f184695e4 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -1685,9 +1685,13 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>>  	if ((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
->>>  		ret = sk_stream_wait_connect(sk, &timeo);
->>>  		if (ret)
->>> -			goto out;
->>> +			goto do_error;
->>>  	}
->>>  
->>> +	ret = -EPIPE;
->>
->> Regarding this line above... (see below)
->>
->>> +	if (unlikely(sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN)))
->>> +		goto do_error;
->>> +
->>>  	pfrag = sk_page_frag(sk);
->>>  
->>>  	while (msg_data_left(msg)) {
->>
->> ...Could we eventually have no data left and no going through the while
->> loop?
-> 
-> yes...
-> 
->> In this case "copied" will be 0 and we will return the new -EPIPE, maybe
->> not what we want, no?
-> 
-> no;) we now always return 'copied'. We set 'copied' to the correct
-> error code only in the error path, saving a conditional in the fast
-> path.
-
-My bad, for the end of the function, I was looking at code prior this
-patch... Indeed, all good with the rest of the modifications :)
-
-> All gracefully stolen from plain TCP ;)
-
-:)
-
-> 
->> Or should we change 'ret' value just before calling 'goto do_error' to
->> avoid that?
->>
->> (...)
->>
->>> @@ -2404,12 +2410,31 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
->>>  		unlock_sock_fast(tcp_sk, slow);
->>>  	}
->>>  
->>> +	/* Mirror the tcp_reset() error propagation */
->>> +	switch (sk->sk_state) {
->>> +	case TCP_SYN_SENT:
->>> +		sk->sk_err = ECONNREFUSED;
->>> +		break;
->>> +	case TCP_CLOSE_WAIT:
->>> +		sk->sk_err = EPIPE;
->>> +		break;
->>> +	case TCP_CLOSE:
->>> +		return;
->>> +	default:
->>> +		sk->sk_err = ECONNRESET;
->>> +	}
->>
->> Should we eventually move this out of tcp_reset(), export it (inline
->> function?) and re-using it here to avoid the duplication (and eventually
->> being out-of-sync in case of changes on TCP side? even if I guess this
->> would not change but well)
-> 
-> That could be a possible follow-up I guess, but I would refrain from
-> touching TCP to address issues/295.
-
-Sure, we can do that later as a clean-up.
-
-
-Patch 1/3 and 2/3 from this v3 are then good to me:
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-
-(I'm not going to apply them now as we need patch 3/3 and I had some
-questions there + packetdrill adaptations)
-
-
-Cheers,
-Matt
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 423d3826ca1e..03bd57aef987 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -559,6 +559,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
+ 		case TCP_NOTSENT_LOWAT:
+ 		case TCP_TX_DELAY:
+ 		case TCP_INQ:
++		case TCP_FASTOPEN_CONNECT:
+ 			return true;
+ 		}
+ 
+@@ -567,7 +568,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
+ 		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
+ 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
+ 		 */
+-		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN TCP_FASTOPEN_CONNECT, TCP_FASTOPEN_NO_COOKIE,
++		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN, TCP_FASTOPEN_NO_COOKIE,
+ 		 * are not supported fastopen is currently unsupported
+ 		 */
+ 	}
+@@ -768,6 +769,19 @@ static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optv
+ 	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
+ }
+ 
++static int mptcp_setsockopt_sol_tcp_fastopen_connect(struct mptcp_sock *msk, sockptr_t optval,
++						     unsigned int optlen)
++{
++	struct socket *sock;
++
++	/* Limit to first subflow, maybe msk->first could be used here? */
++	sock = __mptcp_nmpc_socket(msk);
++	if (!sock)
++		return -EINVAL;
++
++	return tcp_setsockopt(sock->sk, SOL_TCP, TCP_FASTOPEN_CONNECT, optval, optlen);
++}
++
+ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    sockptr_t optval, unsigned int optlen)
+ {
+@@ -796,6 +810,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
+ 	case TCP_DEFER_ACCEPT:
+ 		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
++	case TCP_FASTOPEN_CONNECT:
++		return mptcp_setsockopt_sol_tcp_fastopen_connect(msk, optval, optlen);
+ 	}
+ 
+ 	return -EOPNOTSUPP;
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.25.1
+
+
+-- 
+
+
+Disclaimer: https://www.tessares.net/mail-disclaimer/ 
+<https://www.tessares.net/mail-disclaimer/>
+
+
