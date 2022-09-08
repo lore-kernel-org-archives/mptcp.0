@@ -1,84 +1,136 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D09633C6
-	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 14:10:10 +0000 (UTC)
-Received: by mail-qt1-f175.google.com with SMTP id h22so12939520qtu.2
-        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 07:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=xRPrTnZI6QLZwDzrLXtaTjlntHsImKWMFSKq/UQh1XQ=;
-        b=Oc2cLFiZw4lmqWnefUUFr24kx5DEM+8HxRu3v739V/K6KBZku3gVSTGaQVHup+EQto
-         ncLWgQZxOnSQ7VVIh/RLbVIL28ubDyIzA3iToeIcLVm4N4j5H4vhds18E+xOjyisRMM3
-         E//J0WB9D+H/7RpbSgITi/keTNHl1Oe24ILmDSAWp5wzeaUw41gKZXLT/O14sI0oecF9
-         GGKjkGEnMeDCKxebRe4OBlUUNW+ATLexFguTMWFjMb4WH+hs8xYSQo9zFbEMPq4HL+fX
-         Ge5PKIvzxg28N27Q6UF8evHFuagjPQdqFVAXw0Xqv32hxNRFiiZulOQ+iKSSsFmLHHSH
-         B8Bg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF8D28FA
+	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 14:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1662648302;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D1NWLsPufrv1Z1Z1oT9L72C7JiwJYlyGG1fa5hFdEoc=;
+	b=PVx855HONZv7tAvBuviq6riQYwqnHmRjGiJDETDYIX0xP0eBpDXXmZYF2Kf3Ckc/o67HKq
+	OM70uMNHcXlTl1DNWJPYCWTj27Osbb3wcdc22qWsxJ+inHnYXD9EuOX43ZelrNslP+PviH
+	oY+phoEfKD0wzMI3LJeFm8niZj5G0gc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-588-JP5JOpfNN3mjone-MBw6IQ-1; Thu, 08 Sep 2022 10:45:01 -0400
+X-MC-Unique: JP5JOpfNN3mjone-MBw6IQ-1
+Received: by mail-wr1-f69.google.com with SMTP id a13-20020adfbc4d000000b00228631ddfafso4146172wrh.9
+        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 07:45:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=xRPrTnZI6QLZwDzrLXtaTjlntHsImKWMFSKq/UQh1XQ=;
-        b=HD5D+v0ZYwxy8ysFZYub8IEHENgovFBmlx+BVO3oSwEk8pUgiYuJ8jPNB3NGi1ZdZf
-         JfzODTfgLGHhTVQD5+vUsSoCrhb2Dl4SBIcD925UueHAk1i4gqmWrUi/ceGDUb4Q3lVR
-         vDGAtGw0avt+fxXCPEYiQS5A8CQaGW9zgOSvsXYEm7S6m9GoBvgTdyNBcSo4yn4+O6Ug
-         D9uBv1pA6WNmiVWCULRq1Vepmjq8Q2COXPLlXb8HxHlZC77qxgmMCtNPFvAcbw/2lJl8
-         DwHW4QrKE/7v6v91Tsfzy+WGww9pugvOIijAlQmRt8MUI4CGtNqUdEyEYbq38YMIoUFd
-         SrhA==
-X-Gm-Message-State: ACgBeo2ubE7k+3yWXSQJ3HODRMwjlhRGtiDmkKX7O/srozlhitcQ6tHs
-	fSySuOGiuHoYy5AJ24aHJw==
-X-Google-Smtp-Source: AA6agR7t1IfQccxqU/c+PPkC2xD+CyTIyfCksASk1JFP8vTSVYy3prHoIFbT1bMYFVWGJ70J5/D1/A==
-X-Received: by 2002:ac8:4611:0:b0:342:faf6:351b with SMTP id p17-20020ac84611000000b00342faf6351bmr7930230qtn.343.1662646209056;
-        Thu, 08 Sep 2022 07:10:09 -0700 (PDT)
-Received: from [127.0.0.1] ([52.152.236.244])
-        by smtp.gmail.com with ESMTPSA id d22-20020ac851d6000000b0031bf484079esm13999280qtn.18.2022.09.08.07.10.06
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=D1NWLsPufrv1Z1Z1oT9L72C7JiwJYlyGG1fa5hFdEoc=;
+        b=PloaFYBu4uKcY+/WX+fxBE4vOLN13cPg6uQsHHs/Hs524gSirInkS+RMV8RY9Bh1gV
+         K0ecfHz+nY+cvV6fpqoSCQCzZH4EtRcixxlVkZOUmPCbVr6wjGNdSM9aCptIUj5KQYAQ
+         1cv2jwazJ8uN8/CJsq395P8cGo7HkHQLAT6lIMfVZhCn6jBvpEL3XJ4wIp+7Y9F6HDPC
+         0VzySBWu5wuSu7Tv4BwyIE4cmqI1sZQk2Xb+xl0F82nqYxGBzfsDMDjNB6Kc8HS0MkjZ
+         l0vHuynJGoOg0ySKXXsA/HoPNKPrYn1AsLX+KGxC66fgp/GLblXHfdQMlzZEjbrHJNhN
+         Edhg==
+X-Gm-Message-State: ACgBeo3rPUg99Kf0sYhMkIo/XO3zjkIlUQtMNegCezUbjVpv66S1aykA
+	ER4NU0WWcL0Jj4oHHZrRwVVG/TNLfQtqMbmOPWI/Mic3qfIdjXVh8HsZKVz7xXsuaECnxrNer6x
+	A4NW8YUcMFcHkgNw=
+X-Received: by 2002:a05:600c:1c23:b0:3a5:d936:e5bb with SMTP id j35-20020a05600c1c2300b003a5d936e5bbmr2387513wms.59.1662648300350;
+        Thu, 08 Sep 2022 07:45:00 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7fJgOmrcKJ8ShbrwnUHuBpfa0K9y45SnAFXKT+MRGLC/LnSpWU83I3ibPwXZDWaCCVfMnJPw==
+X-Received: by 2002:a05:600c:1c23:b0:3a5:d936:e5bb with SMTP id j35-20020a05600c1c2300b003a5d936e5bbmr2387497wms.59.1662648300076;
+        Thu, 08 Sep 2022 07:45:00 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-119-112.dyn.eolo.it. [146.241.119.112])
+        by smtp.gmail.com with ESMTPSA id z11-20020a056000110b00b00228dcf471e8sm9480472wrw.56.2022.09.08.07.44.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 07:10:07 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220908133829.3410092-11-benjamin.hesmans@tessares.net>
-References: <20220908133829.3410092-11-benjamin.hesmans@tessares.net>
-Subject: Re: mptcp: test TFO: Build Failure
-Message-ID: <c0d54b09-ae1a-03dd-908e-b7afb82eda33@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 Sep 2022 14:10:03 +0000
+        Thu, 08 Sep 2022 07:44:59 -0700 (PDT)
+Message-ID: <52fcd27efafb415baa0bc52440296306110c56d7.camel@redhat.com>
+Subject: Re: [PATCH net v3] net: mptcp: fix unreleased socket in accept queue
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, menglong8.dong@gmail.com
+Cc: mathew.j.martineau@linux.intel.com, davem@davemloft.net, 
+ edumazet@google.com, kuba@kernel.org, fw@strlen.de,
+ peter.krystad@linux.intel.com,  netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,  Menglong Dong
+ <imagedong@tencent.com>, Jiang Biao <benbjiang@tencent.com>, Mengen Sun
+ <mengensun@tencent.com>
+Date: Thu, 08 Sep 2022 16:44:58 +0200
+In-Reply-To: <e4b7eddc-3a73-0994-467e-6d65d6ad80c0@tessares.net>
+References: <20220907111132.31722-1-imagedong@tencent.com>
+	 <e4b7eddc-3a73-0994-467e-6d65d6ad80c0@tessares.net>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Benjamin,
+On Thu, 2022-09-08 at 15:56 +0200, Matthieu Baerts wrote:
+> Hi Menglong,
+> 
+> On 07/09/2022 13:11, menglong8.dong@gmail.com wrote:
+> > From: Menglong Dong <imagedong@tencent.com>
+> > 
+> > The mptcp socket and its subflow sockets in accept queue can't be
+> > released after the process exit.
+> > 
+> > While the release of a mptcp socket in listening state, the
+> > corresponding tcp socket will be released too. Meanwhile, the tcp
+> > socket in the unaccept queue will be released too. However, only init
+> > subflow is in the unaccept queue, and the joined subflow is not in the
+> > unaccept queue, which makes the joined subflow won't be released, and
+> > therefore the corresponding unaccepted mptcp socket will not be released
+> > to.
+> 
+> Thank you for the v3.
+> 
+> Unfortunately, our CI found a possible recursive locking:
+> 
+> > - KVM Validation: debug:
+> >   - Unstable: 1 failed test(s): selftest_mptcp_join - Critical: 1 Call Trace(s) ❌:
+> >   - Task: https://cirrus-ci.com/task/5418283233968128
+> >   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5418283233968128/summary/summary.txt
+> 
+> https://lore.kernel.org/mptcp/4e6d3d9e-1f1a-23ae-cb56-2d4f043f17ae@gmail.com/T/#u
+> 
+> Do you mind looking at it please?
 
-Thank you for your modifications, that's great!
+Ah, that is actually a false positive, but we must silence it. The main
+point is that the lock_sock() in mptcp_close() rightfully lacks the
+_nested annotation.
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Instead of adding such annotation only for this call site, which would
+be both ugly and dangerous, I suggest to factor_out from mptcp_close()
+all the code the run under the socket lock, say in:
+ 
+bool __mptcp_close(struct sock *sk, long timeout)
+	// return true if the caller need to cancel the mptcp worker
+	// (outside the socket lock)
 
-You can find more details there:
+and then in mptcp_subflow_queue_clean():
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20220908133829.3410092-11-benjamin.hesmans@tessares=
-.net/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/301561=
-0232
+	sock_hold(sk);
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/64da39cf5e0a
+	slow = lock_sock_fast_nested(sk);
+        next = msk->dl_next;
+        msk->first = NULL;
+        msk->dl_next = NULL;
+	do_cancel_work = __mptcp_close(sk, 0);
+	unlock_sock_fast(sk, slow);
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+	if (do_cancel_work)
+		mptcp_cancel_work(sk);
+	sock_put(sk);
+
+All the above could require 2 different patches, 1 to factor-out the
+helper, and 1 to actually implement the fix.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+
+Paolo
+
