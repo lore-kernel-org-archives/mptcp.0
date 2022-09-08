@@ -1,48 +1,48 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF8C322A
-	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:38:48 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id m17-20020a7bce11000000b003a5bedec07bso1744679wmc.0
-        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:38:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18A1322B
+	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:38:49 +0000 (UTC)
+Received: by mail-wr1-f42.google.com with SMTP id k9so26157067wri.0
+        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
          :from:from:to:cc:subject:date;
-        bh=AlZcDGKD3h8w7SVOoMAnBwdJWd5RHVKmHHHEnH8yp/k=;
-        b=Bvl6RAXsAu8Mq1ZJua5X9G++evk/VWchcl3Wu+5tMKhl7azXl2XM1hMEph1tHWDT5o
-         XCGRmSSSUE1Zl2BkI9KYwNLDvweSccuH/fkm70iREAqQVViaueKfVUvs1LAdKhArHnAr
-         2zXpfsKfhU3ioR6LySyppv91MBWeib9sT0waDDAuwJRT2RXdTnrnI4cIl8fKXF1qg02I
-         DffsT/WCjZge8haBXL3dRLG//2i2qCmuawxCjtD/Sz8ymvncz3jgY8rqpjkT4WRrAG5o
-         NXaMwLY7yci2AyCevp1HlC8ycrNGxEXh9ua1sPel72dwW+BjIABrTnX3DsYZBuSo614c
-         xx1A==
+        bh=IyhqBXZcntykYwHoMAqYkJIjhx7GOIDvM+xBrS8J4cM=;
+        b=ntZZjI3bQQdA9jsHOYDCRDLeeAuAD52tKQ7hOu0mlH8lAuamjVqZoq4LONH5vHbsu9
+         ytvhQmDrEtoqplT1ywzrerLkNXpG0OgkAcN1InoJUcO4Myg33NJUiJ16QZn3nBhD/Ey+
+         Mq5eT4gzicWkmoAk332xElLWTRGtafm/Ke2Fphau3LP+6LU5G3T6CNIGP2BgqmV446v9
+         qbhFR9d3866b36C8Y/ltS4FMNn8vEC+97Z2cZh5atmBSn1uZSmOGlWhy/0tiLLq/S3ik
+         vhf3SPrWj3DahlsszqzUUFdMBoU3BcU0BI1gBVFXMEiei+jFT6d70EQi5IUHXxH62I+O
+         E1YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=AlZcDGKD3h8w7SVOoMAnBwdJWd5RHVKmHHHEnH8yp/k=;
-        b=a46pAQZYvUHjjztnSaZSh6iFbmj/ThUhqTLGzJvS2LqIVLZ8Jbpmqq8fr1J03ZM2Kw
-         fERIZ7TZSu50YSPhQqxb6I1C7TfcL3pYtRRsarHG/AxB2PiyfphniEHlBlVoluBFZt9/
-         eYNjh7PpY7vkDQnkb2dGPTjkRoxWmY6VhA6oKH89x09pl2u3deLz0dppUhgFMpYOPEep
-         FvvBGB40vl2yNPS9fmeR348DVZjFYYRPtzkE4H9jZBOpKoXXWxKTlqL9Epb4U3PYOn5o
-         FOuWBW+2Q7UuApsfeWnjlhdo3pByK2cNXrJ6exjDB/9IXuEjouKLqygf1rJcQhFDvn3j
-         R7GQ==
-X-Gm-Message-State: ACgBeo2KBTNU67f9LXYtP7rp9vRk35cbcf7ZiszX+VfR+7AoG8AgxiaS
-	h6PAmYeNFPG70uuzCTxJM0ilfDSD4fzhoNTfKIDyt6vEQxNKXvCGIpN7V0LS3a3F5il9km2J0qh
-	76jj9Ge4BvsmLeEpeJ0ZI1Q==
-X-Google-Smtp-Source: AA6agR4X59zYYroil7p01mBms+QYwyKdaDWgn2g19pLwIq8yTazTJmF0xkB5QA3I5ZiiJRoVVSujjA==
-X-Received: by 2002:a05:600c:3d93:b0:3a5:eb9b:b495 with SMTP id bi19-20020a05600c3d9300b003a5eb9bb495mr2279123wmb.91.1662644326688;
-        Thu, 08 Sep 2022 06:38:46 -0700 (PDT)
+        bh=IyhqBXZcntykYwHoMAqYkJIjhx7GOIDvM+xBrS8J4cM=;
+        b=i4AaQtjAS/VuqRcvMPpvJUN6PSU4LDu9oz7rTUMNQrYhAvPceuqOtfH7VwQrvffHfZ
+         0h8pW6DfLmTQEKO/JJ4D1n99ykywEVu8dPtkuo09Nj/v/T8kY/BIv9eDpLjQV7nYcxKn
+         nbt3MqazK41H9KFOGJ2p3vlrVHXgT5RHgW+r1RWahUvvgjfUtr2oXmKXV4FVo6xKT1fS
+         ELQ/dlYvXLYOmgAvioLNrXzTQwDSjH5E9NevvgLV88LIBy05lcVO4wpVNEP3i3Krk5eU
+         obZMOrBC/ICUsy/kjK43PVoXUw60L/1mS5ef8Lsf3cyOuWjWF2wGguxLLzHlaklr44zA
+         n88A==
+X-Gm-Message-State: ACgBeo0+PqFl1gVfCH1eHH0ICrSZRaXRMiCj9Sr6EOxda3kejLPh4OAX
+	0OdM5R48EG/IqqxYQX617WY/b8RS8HGvl9Ho72G264KW5t9nfuERh3DJ6C9ULezvvwvCv5uWd5D
+	o0SzHxdy0/UmM0badrnYmEQ==
+X-Google-Smtp-Source: AA6agR7M/G3mJQNFadBVoDlEAOqiAKV+y7HIxQUt8M7+ksLSmRjurMarHtI2cjCkUSevSmrO3dsDeg==
+X-Received: by 2002:adf:8b07:0:b0:228:da7c:80ee with SMTP id n7-20020adf8b07000000b00228da7c80eemr5121248wra.25.1662644327388;
+        Thu, 08 Sep 2022 06:38:47 -0700 (PDT)
 Received: from vdi02.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
         by smtp.gmail.com with ESMTPSA id fc15-20020a05600c524f00b003a5260b8392sm3100822wmb.23.2022.09.08.06.38.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 06:38:46 -0700 (PDT)
+        Thu, 08 Sep 2022 06:38:47 -0700 (PDT)
 From: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Subject: [PATCH RFC mptcp-next 02/10] tcp: export tcp_sendmsg_fastopen
-Date: Thu,  8 Sep 2022 15:38:21 +0200
-Message-Id: <20220908133829.3410092-3-benjamin.hesmans@tessares.net>
+Subject: [PATCH RFC mptcp-next 03/10] mptcp: handle defer connect in mptcp_sendmsg
+Date: Thu,  8 Sep 2022 15:38:22 +0200
+Message-Id: <20220908133829.3410092-4-benjamin.hesmans@tessares.net>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
 References: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
@@ -54,43 +54,57 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 
-It will be used to support TCP FastOpen with MPTCP in a following commit.
+When TCP_FASTOPEN_CONNECT has been set on the socket before a connect,
+the defer flag is set and must be handled when sendmsg is called.
+
+This is similar to what is done in tcp_sendmsg_locked()
 
 Signed-off-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 ---
- include/net/tcp.h | 2 ++
- net/ipv4/tcp.c    | 5 ++---
- 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d10962b9f0d0..9a073b58dc4b 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -327,6 +327,8 @@ void tcp_remove_empty_skb(struct sock *sk);
- int tcp_v4_tw_remember_stamp(struct inet_timewait_sock *tw);
- int tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size);
- int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size);
-+int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg, int *copied,
-+			 size_t size, struct ubuf_info *uarg);
- int tcp_sendpage(struct sock *sk, struct page *page, int offset, size_t size,
- 		 int flags);
- int tcp_sendpage_locked(struct sock *sk, struct page *page, int offset,
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 44bc885bb2db..999db6b28008 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1162,9 +1162,8 @@ void tcp_free_fastopen_req(struct tcp_sock *tp)
- 	}
- }
- 
--static int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
--				int *copied, size_t size,
--				struct ubuf_info *uarg)
-+int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg, int *copied,
-+			 size_t size, struct ubuf_info *uarg)
+Notes:
+    The error case is probably not correctly handled. To be checked.
+
+ net/mptcp/protocol.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 55442df8fb97..ad81824bdbfe 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1668,6 +1668,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  {
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	struct inet_sock *inet = inet_sk(sk);
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct page_frag *pfrag;
++	struct socket *ssock;
+ 	size_t copied = 0;
+ 	int ret = 0;
+ 	long timeo;
+@@ -1681,6 +1682,24 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 
+ 	lock_sock(sk);
+ 
++	ssock = __mptcp_nmpc_socket(msk);
++	if (ssock && inet_sk(ssock->sk)->defer_connect) {
++		int copied_syn = 0;
++
++		lock_sock(ssock->sk);
++
++		ret = tcp_sendmsg_fastopen(ssock->sk, msg, &copied_syn, len, NULL);
++		copied += copied_syn;
++		if (ret == -EINPROGRESS && copied_syn > 0) {
++			release_sock(ssock->sk);
++			goto out;
++		} else if (ret) {
++			/* The error case is probably not correctly handled. To be checked. */
++			release_sock(ssock->sk);
++			goto out;
++		}
++	}
++
+ 	timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+ 
+ 	if ((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
 -- 
 2.25.1
 
