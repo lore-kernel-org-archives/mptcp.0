@@ -1,51 +1,49 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD503224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611233222
 	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:38:47 +0000 (UTC)
-Received: by mail-wm1-f46.google.com with SMTP id n17-20020a05600c501100b003a84bf9b68bso1784796wmr.3
-        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:38:47 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id k17so10862388wmr.2
+        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:38:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date;
-        bh=MucUSLBYQgaqEZzouRlEu+Sv92psSBaTorLTjbyK/Es=;
-        b=xia2diYJogSLaVTYPb1jhYGSjxhCukqA+D2iVEdKqm7nCM1nw2mQ41NtZix2OdRnbj
-         XNnU0JAR777bg3j2o60umI3KguMidw4sRCTgQMx2UFTq2JE1ZgO9uA1XDzwb8rD+QU/r
-         muooXU4BEbkZQhF28nJEGWJM+fJQ0yyigB66FVWZq96TL7Blq6u5n7RHlQi8guLx8LPt
-         ZWSZ8gpdi7cMJOc46Gmrf2su+tez92jKcnTh6eoDKjTHWJHDjy6uF2y32hSxBgu7Bm30
-         pj/r0LjGUk7IsfPK67JHULSNZ4rgDrWJbH8fyZXwTCRl2/5pLfriowCbPV5tHNOSQ+CL
-         r9dw==
+        h=mime-version:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date;
+        bh=RAvzXdOurNPCwitNPy342JeVz+SYxlH+OA+WAoTv03c=;
+        b=7NY2haqFCqjQoyLTzvvxdiTwvdK2sYyblPYd5AYlMsMJgpqBJAPvFRtwaqVPmZh6Rq
+         +vv0enSjI7WNxB4n8pZDvWL223yaE38Z4dhTqEwOpsrnc27AoRYAvXo8UxnRzuYjarjZ
+         WKvvpjrrSpIvo48hUXYX4hrhID6Pef04cS6k74bslBFEgT0bhBVXT+pAztNa06EWT0BV
+         CgDFRjEkFruz6nuNYVcAXZKycbaxZuOGRhRtXt+8v9/0P3gCedP2wzeaVmDbF2Ql/HHZ
+         R4ypkE/DdP0WOd8BMKq/T746/4wobmVyLwORLgeFRu4NEDSvKkDUGz8IF3NXswj/nHV4
+         IB1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=MucUSLBYQgaqEZzouRlEu+Sv92psSBaTorLTjbyK/Es=;
-        b=FL9STHrWW7TWvxirEgqFopuoJbUpwB7Fv47A7Yr5r2OPsXPF8CbVyQ3pIi4tCiamKj
-         BmqgD4LAJ7rb1ZjuNIyvW21zZ65z3Ir9qKx5zwRtnXhFhBTyD39BRmkjg8M5Ru9f/HKJ
-         a8+Ab7GdGAkCuMm5h0riu4RSd4h2DlsAVg9EdwcIxm+2ELRpgmRF+LtkSaCQy8b2dSoO
-         ppwulyXsC/1JwF5jNa2F0ArKo6pV8o4aGfnXWt33BeBmMEbbMP7NEDmzPi4Td18teBtB
-         lmwdZcnpq+mXdkXUsbW8/ha7H1FaDBxSMBjw6zyR8ZBkJ8xxJqxJrhIbY3a9ALTRC+4c
-         rU0Q==
-X-Gm-Message-State: ACgBeo0yQ5CwNYIBr9Rkoh4InYfvkE7xIm+XWf6gae0WH5xLTdEfePVo
-	0fgc0A6lhtqjT6b30qZI8G52vf4GXVPULuZWkOvGP/4/ZXkJ/CMqpkTaPnNyCyK05hIIALTW4yi
-	K45AID7bsqRVfRJPcZ+Chtg==
-X-Google-Smtp-Source: AA6agR4A+nxTqK3AdEs4PMHB3Lh5wvFh5UB+qf0ZOsMogu7WDtL3O6t4MWSaU3z1IyBkUwtuY8M54Q==
-X-Received: by 2002:a7b:c451:0:b0:3a6:829a:6102 with SMTP id l17-20020a7bc451000000b003a6829a6102mr2358465wmi.12.1662644325996;
+        h=mime-version:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=RAvzXdOurNPCwitNPy342JeVz+SYxlH+OA+WAoTv03c=;
+        b=tFVXsnM2hIhoAmsrS0AVQP3PtILsmPHhRoAKEwSa+qOynWSy8QV3gysf/jtCNgDsQ6
+         pfRWtUWe8yprJGn3PRJJy9j4ohPzTvAvLg0bUKAK0hc2pC5xPUFqlgNJTxqeRQYtuVPc
+         6BLEzBHiPM7C9ttzh1swe2fSsBFuU7Q7eKOmxBCmu20haRs8MnKXnP90IIwhkHLI+2G7
+         iavkdwRj2R5JBaMeT6VmOSKLbPWLe09eV0h3xGN+j7naVGXZnwN+PfbZX471oPsAGeFa
+         XgOoZfMaxujlr5Gv3hQrpdsmlpSfAgzLL8zXXHNvai+hCMGXtTDHPNVYsQpJNUg9r7SX
+         DYkQ==
+X-Gm-Message-State: ACgBeo0YhY4hVHDfA9QkfAmB8A4tjpCg+7csBZ9k6A/Q02LQV2HXihmZ
+	wfhE5dzZbgERnMMS8pGEObE/oVUaJj4wIEWPiNJixVR67lNJLZ/tpAr9K5x7uYl8/4BpUDvlOQx
+	RY0SBS7wQknD/FrVzP5vcTA==
+X-Google-Smtp-Source: AA6agR6q4pHyPjN2MbE0rfDj9b9e913s+VQOHy+vQDgbos1Z7luNq9VgpfsR/DlE+yN+8yOnpOf4Lw==
+X-Received: by 2002:a05:600c:3217:b0:3a6:8235:4f6f with SMTP id r23-20020a05600c321700b003a682354f6fmr2277424wmp.96.1662644325315;
         Thu, 08 Sep 2022 06:38:45 -0700 (PDT)
 Received: from vdi02.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id fc15-20020a05600c524f00b003a5260b8392sm3100822wmb.23.2022.09.08.06.38.45
+        by smtp.gmail.com with ESMTPSA id fc15-20020a05600c524f00b003a5260b8392sm3100822wmb.23.2022.09.08.06.38.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 08 Sep 2022 06:38:45 -0700 (PDT)
 From: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Subject: [PATCH RFC mptcp-next 01/10] mptcp: add TCP_FASTOPEN_CONNECT socket option
-Date: Thu,  8 Sep 2022 15:38:20 +0200
-Message-Id: <20220908133829.3410092-2-benjamin.hesmans@tessares.net>
+Subject: [PATCH RFC mptcp-next 00/10] Implement TCP_FASTOPEN_CONNECT for mptcp
+Date: Thu,  8 Sep 2022 15:38:19 +0200
+Message-Id: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
-References: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -54,71 +52,38 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 
-Set the option for the first subflow only. For the other subflows TFO
-can't be used because a mapping would be needed to cover the data in the
-SYN.
+Add support for TCP_FASTOPEN_CONNECT for MPTCP
 
-Signed-off-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
----
+This series only consider data in the SYN and not the TFO cookies.
+Dmytro SHYTYI has pending patch for the TFO cookies and the TCP_FASTOPEN
+socket option.
 
-Notes:
-    This patch only consider TCP_FASTOPEN_CONNECT, for TCP_FASTOPEN, Dmytro SHYTYI
-    has proposed a different set of patches.
+Benjamin Hesmans (10):
+  mptcp: add TCP_FASTOPEN_CONNECT socket option
+  tcp: export tcp_sendmsg_fastopen
+  mptcp: handle defer connect in mptcp_sendmsg
+  mptcp: poll allow write call before actual connect
+  mptcp: delay mptcp data_ack calculation
+  mptcp: allow delayed data_ack calculation
+  mptcp: TFO receive: bypass mapping check
+  mptcp: allow data that can not be DATA_ACKed
+  mptcp: force data_ready
+  mptcp: test TFO
 
- net/mptcp/sockopt.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ include/net/tcp.h                        |  5 ++-
+ net/ipv4/tcp.c                           |  5 +--
+ net/ipv4/tcp_fastopen.c                  |  4 ++
+ net/ipv4/tcp_minisocks.c                 | 29 ++++++++++++-
+ net/mptcp/options.c                      |  1 +
+ net/mptcp/protocol.c                     | 32 +++++++++++++-
+ net/mptcp/protocol.h                     |  3 +-
+ net/mptcp/sockopt.c                      | 18 +++++++-
+ net/mptcp/subflow.c                      | 15 ++++++-
+ tools/testing/selftests/net/mptcp/tfo.sh | 55 ++++++++++++++++++++++++
+ 10 files changed, 158 insertions(+), 9 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/tfo.sh
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 423d3826ca1e..03bd57aef987 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -559,6 +559,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case TCP_NOTSENT_LOWAT:
- 		case TCP_TX_DELAY:
- 		case TCP_INQ:
-+		case TCP_FASTOPEN_CONNECT:
- 			return true;
- 		}
- 
-@@ -567,7 +568,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
- 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
- 		 */
--		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN TCP_FASTOPEN_CONNECT, TCP_FASTOPEN_NO_COOKIE,
-+		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN, TCP_FASTOPEN_NO_COOKIE,
- 		 * are not supported fastopen is currently unsupported
- 		 */
- 	}
-@@ -768,6 +769,19 @@ static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optv
- 	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
- }
- 
-+static int mptcp_setsockopt_sol_tcp_fastopen_connect(struct mptcp_sock *msk, sockptr_t optval,
-+						     unsigned int optlen)
-+{
-+	struct socket *sock;
-+
-+	/* Limit to first subflow, maybe msk->first could be used here? */
-+	sock = __mptcp_nmpc_socket(msk);
-+	if (!sock)
-+		return -EINVAL;
-+
-+	return tcp_setsockopt(sock->sk, SOL_TCP, TCP_FASTOPEN_CONNECT, optval, optlen);
-+}
-+
- static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    sockptr_t optval, unsigned int optlen)
- {
-@@ -796,6 +810,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
- 		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
-+	case TCP_FASTOPEN_CONNECT:
-+		return mptcp_setsockopt_sol_tcp_fastopen_connect(msk, optval, optlen);
- 	}
- 
- 	return -EOPNOTSUPP;
--- 
+--
 2.25.1
 
 
