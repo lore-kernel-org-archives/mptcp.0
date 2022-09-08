@@ -1,48 +1,48 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BDF3233
-	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:38:52 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id e20so26094274wri.13
-        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:38:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5F4322B
+	for <mptcp@lists.linux.dev>; Thu,  8 Sep 2022 13:38:53 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id n17-20020a05600c3b9100b003b3235574dbso1344321wms.2
+        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 06:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
          :from:from:to:cc:subject:date;
-        bh=se5gaMpcKM25jMOs3a3vW1g+Gsv2qMzh5/kD+TSXIFc=;
-        b=zbqqnYmrzx4ppQd0ONY77vST8YtVSEBOsDJDRbpZmTlZLj6Uf1PPF4flb7kjocY0eh
-         32oeeYOp/fhsJSSIsMw/hhXA7cOCuBHeyp2UA5HXxnPRrgWsJ7knJfpzTzLUWrny/XFW
-         q/gKWRBXvJbdPChQOv/dS/wjMST5Ts3xI/vxq8sjeFfE6IKj4vJ5Onm+g3UOQPQ+djR8
-         Ww/txrBOL75nZsE8cZ+XRREb2XlOQv5EfB/C7ZajKMzi6IWoaeRxdoPN3ch5kouIdACe
-         WXiXvHdMlqPsDKQQ7dHU0yncvZSik0Aw1uZ0x+PVRMmPvcNhVsAehsXWi/iC6ujNz3dr
-         6Fxw==
+        bh=fQErWLix5lykv/59ThKYcc1uUrv70Mw0NixnLuT+mRE=;
+        b=eK3GJsTfiwpr9RquTeRCoJ9y8eOyqhMdI9Ljgn/u1S0PGI1FFDr/mGvmy6i7Q2/6u7
+         c8dOCJfQXiMCUb0I6bNh2i1MqsMdD/NMECdiesTXF1mILQ7S2qgU9DycS2fH0KtcLOpU
+         G4rxUk9zs2iDScP2dhmTQtkeEgXerryIjDYlJQeDMH5em+9nNsA/Hv7gxZHuxEDHSoaT
+         rVyos51aT11uN9IFS3eibEeD3eSPDYRnWPdVb+/NRpNrW0MvxVdi3h6d2Rh5/Fw3HC9P
+         i+a4JLUQaxV8xt2gFKTQN21S0vEFaGuBPX2z4wlIqk8sPrDP+eUa2D1pjMIX9PbS+vbT
+         ZoYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=se5gaMpcKM25jMOs3a3vW1g+Gsv2qMzh5/kD+TSXIFc=;
-        b=gGYEix5u3zW9sbrZPwoWllZlu1yZo97zbgglIQ+AHFrygOZudcqhXHyhh33BdM4AN1
-         IMKaKdgucPqH+KjGflExFORItXmeqGrWr0wKBPWV5e4s8qNvJ0M5pSdOvV+6xRjf1d5B
-         t64M8sfs/KFdzM7F4Gpc5ssjz59/IG1YTVD+6eixssCKTGBi98JDRi3vMWw4V4bWPmut
-         v7zxF4IWbgc8yIeI7x+I33ZkzVt9YfCtBD9fjoUvZGyyg4I6rb3XeRlyp1ExF6LMQtyM
-         Xs7W/71e1YTqaMWJ4NCbZJiC/2sorxyWSdw6jJ7wc9SlqI4uaYvj/3b52MIw0CK6VKdu
-         crFA==
-X-Gm-Message-State: ACgBeo2uCOO68dJLlDUd9Q2v60uLAkkgwDmEuVYQRgzU//+pg9N8Hrus
-	9q8VJ2KZoZHV4JkTLqns70Sde4eRUFpA3xED04ZlXzISm7i/Ysf7k8WaTZzvnGzkt0mRZBhp3GY
-	fvIhuDbhPeRMWEtFhUW9cSg==
-X-Google-Smtp-Source: AA6agR5vHsVCfQcTmh+nuhj0Lt+NZ3R0yLnuVv3X19OzVByMBLGERI6Xp3366W24UAQLifPQKdzKLw==
-X-Received: by 2002:adf:e510:0:b0:228:d6be:23b0 with SMTP id j16-20020adfe510000000b00228d6be23b0mr5179866wrm.588.1662644330585;
-        Thu, 08 Sep 2022 06:38:50 -0700 (PDT)
+        bh=fQErWLix5lykv/59ThKYcc1uUrv70Mw0NixnLuT+mRE=;
+        b=isPW3QLmwBbS86HIi7KZKAIoEqgkt3t1R2I1fu1+ey4wso56coRn/TijT8jyRM2yDE
+         P51QkGnOIcqIWYOSAwL9tRUb1r+9chxqB8HPxIv9EU2wN4vm+u2Krw6UoPIDYeecpv8K
+         0d5vH3NfpToOUGccq65wxDvn4NG9VROd0X1jOD3YAuBb5ubAERbAz1DYUI0vkergrn83
+         SXVU/usP2f8xdj5G629qaIHi8S2HcsZ4uaPyyUW4ruyM37DOi6cdnRS89EWwLU/06kIt
+         QvbCeLcxispqeQZYcU7FApXatP8x4Bdg8NISE28eJK2oBzwaXMFdVbyStLiQV/dQxOeC
+         gFvA==
+X-Gm-Message-State: ACgBeo08dkwWJlVXXcULHRZ3ctRhwWFSNEKUhmg6K63PQdQ1RGBS44ko
+	MU3hEHD3edsk4UR5EvpZYGXyI1tKejfJMbRzbwAYJnTU3HXuTAKSTlUZ/jtlqptQtyA8h7ILuMu
+	LstZe69/CiqngyTESHLyL3Q==
+X-Google-Smtp-Source: AA6agR6qJ7hIBcmJjaGFbVb1g1h6mKpgxAPBpfoJfZ0HKQCVkzxufYjec3wFZSAMKL79QSopwP4VMg==
+X-Received: by 2002:a05:600c:601f:b0:3a6:28e:be81 with SMTP id az31-20020a05600c601f00b003a6028ebe81mr2312754wmb.35.1662644331959;
+        Thu, 08 Sep 2022 06:38:51 -0700 (PDT)
 Received: from vdi02.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id fc15-20020a05600c524f00b003a5260b8392sm3100822wmb.23.2022.09.08.06.38.49
+        by smtp.gmail.com with ESMTPSA id fc15-20020a05600c524f00b003a5260b8392sm3100822wmb.23.2022.09.08.06.38.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 06:38:50 -0700 (PDT)
+        Thu, 08 Sep 2022 06:38:51 -0700 (PDT)
 From: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Subject: [PATCH RFC mptcp-next 07/10] mptcp: TFO receive: bypass mapping check
-Date: Thu,  8 Sep 2022 15:38:26 +0200
-Message-Id: <20220908133829.3410092-8-benjamin.hesmans@tessares.net>
+Subject: [PATCH RFC mptcp-next 08/10] mptcp: allow data that can not be DATA_ACKed
+Date: Thu,  8 Sep 2022 15:38:27 +0200
+Message-Id: <20220908133829.3410092-9-benjamin.hesmans@tessares.net>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
 References: <20220908133829.3410092-1-benjamin.hesmans@tessares.net>
@@ -54,81 +54,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 
-With TFO, there is no mapping, the stack can bypass any check related to
-the mapping.
-
-=> I'm not fully convinced this is the correct way to do this. I made
-this into a small isolated patch to ease the reviews.
-Maybe we could MPTCP SKB extension for this? (I didn't check yet)
+With TFO, this first bytes are out of the regular MTPCP seq numbers,
+hence they can't be DATA_ACKed. The data ack validation can then be
+skipped in this case.
 
 Signed-off-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 ---
- include/net/tcp.h       | 3 ++-
- net/ipv4/tcp_fastopen.c | 2 ++
- net/mptcp/protocol.c    | 6 ++++++
- net/mptcp/subflow.c     | 5 +++++
- 4 files changed, 15 insertions(+), 1 deletion(-)
+ net/mptcp/subflow.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 9a073b58dc4b..0c7996e7ad3f 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -881,7 +881,8 @@ struct tcp_skb_cb {
- 	__u8		txstamp_ack:1,	/* Record TX timestamp for ack? */
- 			eor:1,		/* Is skb MSG_EOR marked? */
- 			has_rxtstamp:1,	/* SKB has a RX timestamp	*/
--			unused:5;
-+			is_tfo:1,
-+			unused:4;
- 	__u32		ack_seq;	/* Sequence number ACK'd	*/
- 	union {
- 		struct {
-diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
-index 45cc7f1ca296..1b2d045604e3 100644
---- a/net/ipv4/tcp_fastopen.c
-+++ b/net/ipv4/tcp_fastopen.c
-@@ -193,6 +193,8 @@ void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb)
- 	TCP_SKB_CB(skb)->seq++;
- 	TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_SYN;
- 
-+	TCP_SKB_CB(skb)->is_tfo = 1;
-+
- 	tp->rcv_nxt = TCP_SKB_CB(skb)->end_seq;
- 	__skb_queue_tail(&sk->sk_receive_queue, skb);
- 	tp->syn_data_acked = 1;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f5a0dd589ad5..765c50bd6bb3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -362,6 +362,12 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
- 
- 	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
- 
-+	if (TCP_SKB_CB(skb)->is_tfo) {
-+		mptcp_set_owner_r(skb, sk);
-+		__skb_queue_tail(&sk->sk_receive_queue, skb);
-+		return true;
-+	}
-+
- 	/* the skb map_seq accounts for the skb offset:
- 	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
- 	 * value
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c7d49fb6e7bd..c2d1ba21c8c2 100644
+index c2d1ba21c8c2..ca5b9853eca3 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -984,6 +984,11 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- 	if (mptcp_check_fallback(ssk))
- 		return MAPPING_DUMMY;
+@@ -1221,6 +1221,14 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		if (WARN_ON_ONCE(!skb))
+ 			goto no_data;
  
-+	if (TCP_SKB_CB(skb)->is_tfo) {
-+		/* subflow->map_valid = 1; */
-+		return MAPPING_OK; /* or DUMMY ? */
-+	}
++		/* with TFO, we can have data, but we don't not yet the data ack
++		 * because its not part of the MTPCP seq number.
++		 */
++		if (unlikely(!READ_ONCE(msk->can_ack)) && TCP_SKB_CB(skb)->is_tfo) {
++			pr_err("%s (%i): can't ack yet, but already got data\n", __func__, __LINE__);
++			goto valid_data;
++		}
 +
- 	mpext = mptcp_get_ext(skb);
- 	if (!mpext || !mpext->use_map) {
- 		if (!subflow->map_valid && !skb->len) {
+ 		/* if msk lacks the remote key, this subflow must provide an
+ 		 * MP_CAPABLE-based mapping
+ 		 */
+@@ -1240,7 +1248,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 			mptcp_subflow_discard_data(ssk, skb, old_ack - ack_seq);
+ 			continue;
+ 		}
+-
++valid_data:
+ 		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
+ 		break;
+ 	}
 -- 
 2.25.1
 
