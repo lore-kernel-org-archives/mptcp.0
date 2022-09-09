@@ -1,50 +1,55 @@
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B9C622
-	for <mptcp@lists.linux.dev>; Fri,  9 Sep 2022 05:49:46 +0000 (UTC)
-Received: by mail-pf1-f194.google.com with SMTP id b144so679643pfb.7
-        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 22:49:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E644622
+	for <mptcp@lists.linux.dev>; Fri,  9 Sep 2022 05:49:56 +0000 (UTC)
+Received: by mail-pj1-f65.google.com with SMTP id j6-20020a17090a694600b00200bba67dadso542107pjm.5
+        for <mptcp@lists.linux.dev>; Thu, 08 Sep 2022 22:49:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=zfjTtsrORODWPAnoElqcq+UGRe4yX6WpO1UZKoa9Zh4=;
-        b=aYpXC3cEGNIzQP7//sJBpe2NGNLPGBiFx4diwUqF3fhOgZt2dOuSV2arlYu85CeKQb
-         jhZNuVPuNGKOA9NGo3uuHj01CaVNmndfCVmCnHFn4GDHyq8tmNuz1H77nWMgGk+DDmiR
-         LfdxF1ZrdtEYBST7YRaXCoL5zXG3O+zodz/C9UB47pR/JZmjz/ekjBitCo//Ogw3vmhh
-         id+cIllFYOdOHakkICwGjXRJxupfLkngYF3Jymw72l/uYFtUt4jEKFubCUWf123L++6q
-         ZBI6P8TCQ3S611TyEiMuKkiKiW3BrMpdyKm21l3nFOy73ZXdxXvVmu/6MXHozmU2OX7u
-         LEsw==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=zObJjur29NGVC1x/vbzekAZIqJVc4Pubf1mrnRS0spo=;
+        b=a88YNdPUwydWs+QVIEXU4XO9InrBtdO+7sDNYUboAtMWm8HbnnlKrsdQsbe/RtIC9x
+         D6CVjeg+PBEZ8G3iU2iQ3ekeeVlQruHbUe1JrsMLcGXk1w1yeT829coOGFyFcQs+hQ5K
+         QMMPaxxYzblNl5GTjbj22cNzswSUEO1f5IfOjZsilFEX4yjciWGWC2DLWNRnX/Q5ZyDD
+         wpnDdEGC+aiGhKawhKzPc/Jl0veb39CQaQUIaZrSmVcFA4WIXMu6/ptuP54PsnOoAzRr
+         3V9Qbv7Z2Ml/cBNJ9m1SAvms0NYSiHqAR+8l31qnbMPejdq73V3LFwXH5zWxh6mC29/b
+         4zaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=zfjTtsrORODWPAnoElqcq+UGRe4yX6WpO1UZKoa9Zh4=;
-        b=Y/Nszj2/1J7xYaShXXjii1nMp2zjhiTbMvTANoEvksm8ZRy71JfNELAdmbDTpcBtZ0
-         ih0LhEJrUjCrXCImqt9Od2M6tMkwIYbUmPozveSvtnKvCFBMlfcjgVQJ0S2hhrjAa8wF
-         vq1ePzbg9Jq4op7ghE3XuVrnMkxTUn0iCPcxIVyNJa2A4zaOWsl9q/VZP19IviiwhPRz
-         TNu3pAe22R5gV7nxJ/7GUQtcfSzZI4yCFQu3Qb+e97ZwE30qMo9FvwOu2xpdj5fdF01d
-         csrtau5hyhBatTdjrKz34DMluUOsvGTQt29a0rHmCqHWJpsc/Htu9yKZ2brYIZwrjBLW
-         RQ2A==
-X-Gm-Message-State: ACgBeo1dQvhzLxfjhmfHO2ye0N99dvz7u+pmk3ekWZt7F5Zz2cNs6weD
-	8iZjPUTz/cIu2Nb47geLS9M=
-X-Google-Smtp-Source: AA6agR7vQhzjCLQ8ssV38+JRLA/gvaE90/y/airIpb154UQ0quw+jq9sBFUZne6G08YNqhIi5Fi8Sw==
-X-Received: by 2002:a65:4941:0:b0:42a:8c1b:6b6c with SMTP id q1-20020a654941000000b0042a8c1b6b6cmr10862951pgs.375.1662702586475;
-        Thu, 08 Sep 2022 22:49:46 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=zObJjur29NGVC1x/vbzekAZIqJVc4Pubf1mrnRS0spo=;
+        b=6q0kuyoN0M+1YsZtiDdgisEzmSHYMjIq2i8igNumFN95XfMxXsZ48ILC9kCgpI+ioj
+         7si+jNcSrQ385Zj9R0naxqTepcDjqgPMUkS93qf85WVudA03SMi5loYvR0AgiX/3CFE4
+         NYN6HZDGU9wnjFZc1XYcO8xaRFf3iEKew6ndE/ZaAE3k0PihfURjExILT5m9BeEVQrlF
+         5Rt/TTzvvlCf6UJTGzMQqEoAmEwwn0MNPQcsPVxNbo5oBpzMb0/2TugGaHckgtuJ3+4T
+         /r2I8Y+O+9U6sh80UYMTNs1oco9gj7W5nsavNUw120bpXKANLsz12/uN9OcM2pP+dm1s
+         XXrA==
+X-Gm-Message-State: ACgBeo36+rekq5xW6Ra4U6ObDPe19AVwWhcKrvB4ycYibYOSuU1uLJwB
+	rVMCMYaEIuVeOeEHn1ZgYjtQT8evees=
+X-Google-Smtp-Source: AA6agR5QPmz1R0LIrwshm+NjsKE1paI7KrRh3WeuPpl5BJpM+y+grY4BsYnGIAL6OGUg17wa2IxUdQ==
+X-Received: by 2002:a17:90a:d50b:b0:200:76c6:9cef with SMTP id t11-20020a17090ad50b00b0020076c69cefmr8103145pju.232.1662702596478;
+        Thu, 08 Sep 2022 22:49:56 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.12])
-        by smtp.gmail.com with ESMTPSA id d3-20020a170903230300b0016cf3f124e1sm492646plh.234.2022.09.08.22.49.45
+        by smtp.gmail.com with ESMTPSA id d3-20020a170903230300b0016cf3f124e1sm492646plh.234.2022.09.08.22.49.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 22:49:46 -0700 (PDT)
+        Thu, 08 Sep 2022 22:49:56 -0700 (PDT)
 From: menglong8.dong@gmail.com
 X-Google-Original-From: imagedong@tencent.com
 To: pabeni@redhat.com
 Cc: mptcp@lists.linux.dev,
-	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH net v4 0/3] net: mptcp: fix unreleased socket in accept queue
-Date: Fri,  9 Sep 2022 13:49:29 +0800
-Message-Id: <20220909054932.246221-1-imagedong@tencent.com>
+	Menglong Dong <imagedong@tencent.com>,
+	Jiang Biao <benbjiang@tencent.com>,
+	Mengen Sun <mengensun@tencent.com>
+Subject: [PATCH net v4 1/3] net: mptcp: factor out __mptcp_close() without socket lock
+Date: Fri,  9 Sep 2022 13:49:30 +0800
+Message-Id: <20220909054932.246221-2-imagedong@tencent.com>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20220909054932.246221-1-imagedong@tencent.com>
+References: <20220909054932.246221-1-imagedong@tencent.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,41 +60,83 @@ Content-Transfer-Encoding: 8bit
 
 From: Menglong Dong <imagedong@tencent.com>
 
-The mptcp socket and its subflow sockets in accept queue can't be
-released after the process exit.
+Factor out __mptcp_close() from mptcp_close(). The caller of
+__mptcp_close() should hold the socket lock, and cancel mptcp work when
+__mptcp_close() return true.
 
-While the release of a mptcp socket in listening state, the
-corresponding tcp socket will be released too. Meanwhile, the tcp
-socket in the unaccept queue will be released too. However, only init
-subflow is in the unaccept queue, and the joined subflow is not in the
-unaccept queue, which makes the joined subflow won't be released, and
-therefore the corresponding unaccepted mptcp socket will not be released
-to.
+This function will be used in the next commit.
 
-In the 1th patch, we factor-out __mptcp_close() which should run under
-socket lock.
+Reviewed-by: Jiang Biao <benbjiang@tencent.com>
+Reviewed-by: Mengen Sun <mengensun@tencent.com>
+Signed-off-by: Menglong Dong <imagedong@tencent.com>
+---
+ net/mptcp/protocol.c | 19 ++++++++++++++-----
+ net/mptcp/protocol.h |  1 +
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-In the 2th patch, we move mptcp_cancel_work() to protocol.h and make it
-as an inline, as we need to use it in subflow.c.
-
-And in the 3th patch, we fix the problem we mentioned above by closing
-all of the unaccepted mptcp socket in mptcp_subflow_queue_clean()
-with __mptcp_close().
-
-Changes since v3:
-- factor out __mptcp_close() and replace mptcp_close() with it in
-  mptcp_subflow_queue_clean()
-
-Menglong Dong (3):
-  net: mptcp: factor out __mptcp_close() without socket lock
-  net: mptcp: move mptcp_cancel_work() to protocol.h
-  net: mptcp: fix unreleased socket in accept queue
-
- net/mptcp/protocol.c | 27 ++++++++++++++-------------
- net/mptcp/protocol.h |  9 +++++++++
- net/mptcp/subflow.c  | 37 +++++++++++--------------------------
- 3 files changed, 34 insertions(+), 39 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d398f3810662..1cfb4f1ff4e4 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2796,13 +2796,12 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 	sock_put(sk);
+ }
+ 
+-static void mptcp_close(struct sock *sk, long timeout)
++bool __mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	bool do_cancel_work = false;
+ 
+-	lock_sock(sk);
+ 	sk->sk_shutdown = SHUTDOWN_MASK;
+ 
+ 	if ((1 << sk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE)) {
+@@ -2833,7 +2832,6 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	}
+ 	sock_orphan(sk);
+ 
+-	sock_hold(sk);
+ 	pr_debug("msk=%p state=%d", sk, sk->sk_state);
+ 	if (mptcp_sk(sk)->token)
+ 		mptcp_event(MPTCP_EVENT_CLOSED, msk, NULL, GFP_KERNEL);
+@@ -2844,10 +2842,21 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	} else {
+ 		mptcp_reset_timeout(msk, 0);
+ 	}
++
++	return do_cancel_work;
++}
++
++static void mptcp_close(struct sock *sk, long timeout)
++{
++	bool cancel_work;
++
++	sock_hold(sk);
++	lock_sock(sk);
++
++	cancel_work = __mptcp_close(sk, timeout);
+ 	release_sock(sk);
+-	if (do_cancel_work)
++	if (cancel_work)
+ 		mptcp_cancel_work(sk);
+-
+ 	sock_put(sk);
+ }
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 132d50833df1..8f123d450c76 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -612,6 +612,7 @@ void mptcp_subflow_reset(struct sock *ssk);
+ void mptcp_subflow_queue_clean(struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+ struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
++bool __mptcp_close(struct sock *sk, long timeout);
+ 
+ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+ 			   const struct mptcp_addr_info *b, bool use_port);
 -- 
 2.37.2
 
