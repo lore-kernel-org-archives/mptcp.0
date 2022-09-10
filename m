@@ -1,38 +1,38 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64DAA2C
-	for <mptcp@lists.linux.dev>; Sat, 10 Sep 2022 04:22:14 +0000 (UTC)
-Received: by mail-pf1-f193.google.com with SMTP id l65so3448140pfl.8
-        for <mptcp@lists.linux.dev>; Fri, 09 Sep 2022 21:22:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17635A2C
+	for <mptcp@lists.linux.dev>; Sat, 10 Sep 2022 04:22:39 +0000 (UTC)
+Received: by mail-pg1-f196.google.com with SMTP id i19so48892pgi.1
+        for <mptcp@lists.linux.dev>; Fri, 09 Sep 2022 21:22:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=8Nmhv0k23ytQxg6l4ld7N7wkJt08RaB9CsGELSG+3jA=;
-        b=c4VsnmtAnBhaaUChRmwuXTlaOI3XSojTaPj05TIbHELFcfMMQgEZa8WB7SNIiAKpQ0
-         OrEruuv9lTAeW4Hgyt8ctbHZjDF5fC30U++HjpIjgheqQjTlBAOyQwt3SFtp2RKVuBr/
-         BWaU9naBmryzoCxLLrLw/P1JvT3938Gd8EmbEK9rUd8f9Y/G/1rve04ePjUe/fJvzlDb
-         II5cFmKtWfD+MoHDW8znErjy6tLA2qAZ+4c9tXkE4O8gtyrJvazdlf7hWEzso/3RyigV
-         NCWuXWMmiBGcs3MH5QSt7AyQArcJECXVWoa7M0LetUgc3KY0iMhFFljmxQEHJINxrMmR
-         LjdQ==
+        bh=UUwFUZL+VXUyKvjIIJY7AFHuyE9V4NyQjldWLp5LWlA=;
+        b=OgQdiftI7LWz/ZPlDZCPNwWcf794Lvr244S+AQki5En6BWWqN+WkOhuM6ZhsZnWlvh
+         lTXEFBVKM2pQGjtY0JLSvZylfybExbHMM5Zgpi25h0sEi6c+0/PN6NBzbr6exIr+UXJM
+         Ju2ZhhF3ZZXL76Y+oWPOlsUUPKvkrn5pPs1MN1QIC3NofIJmQZSE860VzGY40HeO01vN
+         OfWV9TShOrz3T55XWYKdVGzcph1iMpmVYmKQm+GuoKQAJaMzwTpfk852OA+6tO1pixlK
+         bC4vUZ33EQJjp2XFL+QFPANoqKSBFNA2rbVPVtSyaJW/pRk8dkQepVCPjMgKE6sCaj5B
+         9IRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=8Nmhv0k23ytQxg6l4ld7N7wkJt08RaB9CsGELSG+3jA=;
-        b=jg8LuE4JLMcthsGEPktwDbV9SIZ3laFx3GyOyap4D/rlZGRfLOg1ahQ7Ll6FpEFlAs
-         aA9GcEx7umEM1MCsvPltC5ZV9u35626hXrTUrzHrRsBfZjWOvJ4NLQR65RbajSjkutNz
-         GkFH0FWSkepQv7SC4cp0Tt2AsxULtb6h5coIOoVri1S40VEE2nAgg5x1j6I06AFCW0P/
-         GeTudpg1ba6haeX1istdluGUIRcUoP5Q2i2tJo/yO6YSShMNYx9vO6feV9DNYieBbcHO
-         dcPhwm+2a7TG5GkFzUfHvpfmHQ8Wg23sIZAuGbU11kzVbGS1v7Ool5jHamZia9ASEIgD
-         w+/w==
-X-Gm-Message-State: ACgBeo12GdxQeesl5klZlw8ukqjwPAx8MAsitPU5zIpat11n/5NhVb7h
-	voU14b5IF7EjYQe/PD0doMK6kJ1PMywQHLar3Kw=
-X-Google-Smtp-Source: AA6agR7RuQ7crHdKDlCUHnQhHPJH4MeGjKPZBDOckbHhyPSVWOYOrBZd8h6TDnNzNU2j9YIcjyimtYq4SDTOdMGo6xY=
-X-Received: by 2002:a05:6a00:1688:b0:53b:4239:7c5c with SMTP id
- k8-20020a056a00168800b0053b42397c5cmr17508585pfc.81.1662783734319; Fri, 09
- Sep 2022 21:22:14 -0700 (PDT)
+        bh=UUwFUZL+VXUyKvjIIJY7AFHuyE9V4NyQjldWLp5LWlA=;
+        b=huM3jp+lp/uK53IXXGVVWEwunB5gS3Ne6qHCfcDs6H0jDVyzaUmdRy2z598PCMWjk3
+         DCTb+r1+zBHI5MhopMFF3Wt3isEdxBT9yKQPSZ2Ra0fVaibqoZF0eufAewVkenv/04Ss
+         D4gETvZMmO5nBhuGEnj0XJLapPdQBB/ioC4AxjFtGvfloedGcayGGSRnw7zWOUM4VQW4
+         t/qBe01c+TzM1z1YzPgLw7M8/MufEZ2OWpdleByaQ/ATW77Las4LLMgiquw3YPnFEj2y
+         3CExbzj+DMz4T5jHKNF/3BiLbjJRr1g800AvDMLwjTugkLM/6fXBHi8Kg6U3so0rt7cg
+         toCQ==
+X-Gm-Message-State: ACgBeo3UBRlT0xyJDru2SR1THqALVhWYpPlxNRRSHLB+W7skz8fRp4mg
+	VB4HSiif8rIQwBD5o1mwTM6uvDYXgoLbaGpMr4E=
+X-Google-Smtp-Source: AA6agR4wa/bISViz/W8sZnfxZkh6OUlqCHwxiTVilG5WMZP6WOEFCuo3rLMTpMdyXexUTikvwlHSCLaBNNbvZyfd6vo=
+X-Received: by 2002:a65:4202:0:b0:42b:d734:51e2 with SMTP id
+ c2-20020a654202000000b0042bd73451e2mr14748834pgq.621.1662783759527; Fri, 09
+ Sep 2022 21:22:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,103 +40,53 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20220909054932.246221-1-imagedong@tencent.com>
- <20220909054932.246221-2-imagedong@tencent.com> <e5ccdd9584523641866dbbe906cd7ad4e2f1c43f.camel@redhat.com>
-In-Reply-To: <e5ccdd9584523641866dbbe906cd7ad4e2f1c43f.camel@redhat.com>
+ <20220909054932.246221-3-imagedong@tencent.com> <f200db2b725c1d453d3cc68e4dbeb0883a5d9f4f.camel@redhat.com>
+In-Reply-To: <f200db2b725c1d453d3cc68e4dbeb0883a5d9f4f.camel@redhat.com>
 From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Sat, 10 Sep 2022 12:22:03 +0800
-Message-ID: <CADxym3YXL0+xePN_X7v1ZNNbLtmoNgViJRxZVzbeKnN=_aBxEQ@mail.gmail.com>
-Subject: Re: [PATCH net v4 1/3] net: mptcp: factor out __mptcp_close() without
- socket lock
+Date: Sat, 10 Sep 2022 12:22:28 +0800
+Message-ID: <CADxym3bZDwDC32f6qf4o1WDpDJ+Wvi=pZEob5dWzor54oYSokA@mail.gmail.com>
+Subject: Re: [PATCH net v4 2/3] net: mptcp: move mptcp_cancel_work() to protocol.h
 To: Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>, 
 	Jiang Biao <benbjiang@tencent.com>, Mengen Sun <mengensun@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 9, 2022 at 3:32 PM Paolo Abeni <pabeni@redhat.com> wrote:
->
-> Hello,
->
-> overall the series LGTM, but there are a few small cosmetic changes I
-> I'd  like to suggest, see below and the other patches for the details.
+On Fri, Sep 9, 2022 at 3:33 PM Paolo Abeni <pabeni@redhat.com> wrote:
 >
 > On Fri, 2022-09-09 at 13:49 +0800, menglong8.dong@gmail.com wrote:
 > > From: Menglong Dong <imagedong@tencent.com>
 > >
-> > Factor out __mptcp_close() from mptcp_close(). The caller of
-> > __mptcp_close() should hold the socket lock, and cancel mptcp work when
-> > __mptcp_close() return true.
-> >
-> > This function will be used in the next commit.
+> > mptcp_cancel_work() is simple enough and we can make it as inline and
+> > move it to protocol.h. mptcp_cancel_work() will be used in subflow.c
+> > in the next commit.
 > >
 > > Reviewed-by: Jiang Biao <benbjiang@tencent.com>
 > > Reviewed-by: Mengen Sun <mengensun@tencent.com>
 > > Signed-off-by: Menglong Dong <imagedong@tencent.com>
 > > ---
-> >  net/mptcp/protocol.c | 19 ++++++++++++++-----
-> >  net/mptcp/protocol.h |  1 +
-> >  2 files changed, 15 insertions(+), 5 deletions(-)
+> >  net/mptcp/protocol.c | 8 --------
+> >  net/mptcp/protocol.h | 8 ++++++++
+> >  2 files changed, 8 insertions(+), 8 deletions(-)
 > >
 > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index d398f3810662..1cfb4f1ff4e4 100644
+> > index 1cfb4f1ff4e4..d6eb033e93b9 100644
 > > --- a/net/mptcp/protocol.c
 > > +++ b/net/mptcp/protocol.c
-> > @@ -2796,13 +2796,12 @@ static void __mptcp_destroy_sock(struct sock *sk)
-> >       sock_put(sk);
+> > @@ -2656,14 +2656,6 @@ static void __mptcp_clear_xmit(struct sock *sk)
+> >               dfrag_clear(sk, dfrag);
 > >  }
 > >
-> > -static void mptcp_close(struct sock *sk, long timeout)
-> > +bool __mptcp_close(struct sock *sk, long timeout)
-> >  {
-> >       struct mptcp_subflow_context *subflow;
-> >       struct mptcp_sock *msk = mptcp_sk(sk);
-> >       bool do_cancel_work = false;
-> >
-> > -     lock_sock(sk);
-> >       sk->sk_shutdown = SHUTDOWN_MASK;
-> >
-> >       if ((1 << sk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE)) {
-> > @@ -2833,7 +2832,6 @@ static void mptcp_close(struct sock *sk, long timeout)
-> >       }
-> >       sock_orphan(sk);
-> >
-> > -     sock_hold(sk);
+> > -static void mptcp_cancel_work(struct sock *sk)
 >
-> If you don't remove this line you can avoid adding a sock_hold(sk) in
-> mptcp_close() and an additional one in patch 3. The diff will be
-> smaller and the patch clearer.
-
-I thought about it before, and I was a little afraid that
-it would make the function hard to understand.
-
+> I think it's better to just drop the 'static' scope and the function
+> declaration to the header.
 >
-> >       pr_debug("msk=%p state=%d", sk, sk->sk_state);
-> >       if (mptcp_sk(sk)->token)
-> >               mptcp_event(MPTCP_EVENT_CLOSED, msk, NULL, GFP_KERNEL);
-> > @@ -2844,10 +2842,21 @@ static void mptcp_close(struct sock *sk, long timeout)
-> >       } else {
-> >               mptcp_reset_timeout(msk, 0);
-> >       }
-> > +
-> > +     return do_cancel_work;
-> > +}
-> > +
-> > +static void mptcp_close(struct sock *sk, long timeout)
-> > +{
-> > +     bool cancel_work;
->
-> I think this variable name is a bit confusing, as we already have a
-> global function with the same name. I think 'do_cancel_work' will be
-> better (and again will produce a smaller diff and a clearer patch).
+> This is not critical/fast path, so it's better to keep the generated
+> code smaller vs. possibly avoiding a function call due to inlining.
 >
 
-Sounds nice!
+Okay!
 
-(BTW, Happy Mid-Autumn Festival~ )
-
-Thanks!
-Menglong Dong
-
->
 > Thanks,
 >
 > Paolo
