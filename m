@@ -1,34 +1,34 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E5B6712
-	for <mptcp@lists.linux.dev>; Thu, 15 Sep 2022 23:56:36 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1663286186; cv=none; 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346C86718
+	for <mptcp@lists.linux.dev>; Thu, 15 Sep 2022 23:56:37 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1663286188; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=XftBtHEApY6XMQLIdwqVbinzxh34JeWNwUn08qSmHwWUDOFdUUaEEZGo19V2Q3gKNJityUD/pHLSzhPT6sbupCnrvVk4lyU0bv5+UHSq0UkqaQ7kBoXyXDCjOOJ0X6JeK3AzvNjpNFUSAb3Iajq+IXOP/eRydo9agiMNWlmAIF0=
+	b=NoWX8/03wXgQKm9h8Oc1hNclai9zNlZFk5cRtV51TDMYldEskezRHtJsSuTTajudKfIvoWv3ANi7TmS7WUsokNO1gStK80btFgipz26aDmMD17W1r3yqIR3BEfFFwBZbQr9EQ/e0lCim4v9Y4EPrFfMhe+GziSNXeoPxGecBDVo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1663286186; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=nJx9T7UcYHoYNb+qgpWl9AFqIl7y/SRTGdgCMh6o250=; 
-	b=b1sCPqwmrTH1YbDcmUjN0+eZ9NQ+Ild3nNc9Fjp028oYtkKMrsIDkSZ6Qq6CMt4ldm3tAYJmm1VUXLzzZflDeMi9b+SNl7OPOj8k0DBOMnVqB7a+mpwBLJR+DQjZ/zDoK7EUaa4CQBBrtlv+588fUdgcCM3mPZwPzhKWPIoql00=
+	t=1663286188; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=BffKtKL+iY7yu11hLHREQ3MEbrwGh7lMWG68utuU7Gw=; 
+	b=KGLEfn/EZEPhGRmwKSLyyfURIcJ+MwHVp8ZIdVpkfeUNmehv7plPp9j0zMR0fP+BXWlXIXYYvjWXaGZv0ct8Dyerf12rdf0CMWoBdxT/vbXhRmEdCWNMZ7xc+f1C5mz/whF5Ekb6hKv6FbLDJaMl+NGhJay6B+B+z9Vf/tlvrtw=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
 	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663286186;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663286188;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
 	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=nJx9T7UcYHoYNb+qgpWl9AFqIl7y/SRTGdgCMh6o250=;
-	b=hHGfEY8DJT1TvwBILYLD/kpf2hHapYSrUbz8Fso2KldiMazKPv92dHzYDhYPI1aE
-	AICvsc4cR9t8y9vaDgXlzXcACv3X8TCywulXB2Nz1UNcRUlUnxiHmDyFp/KLyNRoVCW
-	Qvk2GRpe+CL57EDLay0tTHArLgisIjNiTfwBfp9Q=
+	bh=BffKtKL+iY7yu11hLHREQ3MEbrwGh7lMWG68utuU7Gw=;
+	b=RraBTiCs+dea2ZL3I69nVkVfFrL0DJ4LlLtUTF7NYd0aVTv9TjgG/H5r6pTU8pxs
+	T46oy4aRtOoHewB15/1EoEzxOjOlYNiLbxOGhKBXVuDi5YnZ4BtlXFqye6CpG33fUzq
+	/fO10HS3bIR3oL2XA9x6JUa4VhMuC4D+RqlrBcSs=
 Received: from doris.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 1663286184373652.6967180822953; Fri, 16 Sep 2022 01:56:24 +0200 (CEST)
+	with SMTPS id 1663286185231612.162719830736; Fri, 16 Sep 2022 01:56:25 +0200 (CEST)
 From: Dmytro Shytyi <dmytro@shytyi.net>
 To: mptcp@lists.linux.dev
 Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <20220915235604.26018-3-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v6 2/9] Initiator: MSG_FASTOPEN sendto(). request cookie
-Date: Fri, 16 Sep 2022 01:55:57 +0200
+Message-ID: <20220915235604.26018-7-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v6 6/9] mptfo variables for msk, options. Fix loop retrans
+Date: Fri, 16 Sep 2022 01:56:01 +0200
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220915235604.26018-1-dmytro@shytyi.net>
 References: <20220915235604.26018-1-dmytro@shytyi.net>
@@ -42,110 +42,101 @@ Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 Content-Type: text/plain; charset=utf8
 
-Initiator: MSG_FASTOPEN in sendto triggers the mptcp_sendsmg_fastopen.
-It requests a MPTFO cookie.=20
-Suggestion @palbeni(JAN 17): 'split the patch in several small one'.
+Introduce mptfo variables for msk and options.=20
+Also fixe the infinite retransmissions in the end of second session.=20
+Suggestion @palbeni (SEP 1) during the meting to 'look at data_ack'
 
 Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
 ---
- net/mptcp/fastopen.c | 50 ++++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c |  4 ++--
- net/mptcp/protocol.h |  6 ++++++
- 3 files changed, 58 insertions(+), 2 deletions(-)
+ net/mptcp/fastopen.c | 16 ++++++++++++++++
+ net/mptcp/options.c  |  3 +++
+ net/mptcp/protocol.h |  6 +++++-
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-index 0c9ef6f5d528..9974508e0f4c 100644
+index 436e773d798a..149a4b1d3dac 100644
 --- a/net/mptcp/fastopen.c
 +++ b/net/mptcp/fastopen.c
-@@ -3,3 +3,53 @@
-  */
+@@ -91,3 +91,19 @@ int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock =
+*msk, sockptr_t optval,
 =20
- #include "protocol.h"
+ =09return ret;
+ }
 +
-+int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
-+=09=09=09   size_t len, struct mptcp_sock *msk,
-+=09=09=09   size_t *copied)
++void mptcp_treat_hshake_ack_fastopen(struct mptcp_sock *msk, struct mptcp_=
+subflow_context *subflow,
++=09=09=09=09 struct mptcp_options_received mp_opt)
 +{
-+=09const struct iphdr *iph;
-+=09struct ubuf_info *uarg;
-+=09struct sockaddr *uaddr;
-+=09struct sk_buff *skb;
-+=09struct tcp_sock *tp;
-+=09struct socket *ssk;
-+=09int ret;
++=09u64 ack_seq;
 +
-+=09ssk =3D __mptcp_nmpc_socket(msk);
-+=09if (unlikely(!ssk))
-+=09=09goto out_EFAULT;
-+=09skb =3D tcp_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
-+=09if (unlikely(!skb))
-+=09=09goto out_EFAULT;
-+=09iph =3D ip_hdr(skb);
-+=09if (unlikely(!iph))
-+=09=09goto out_EFAULT;
-+=09uarg =3D msg_zerocopy_realloc(sk, len, skb_zcopy(skb));
-+=09if (unlikely(!uarg))
-+=09=09goto out_EFAULT;
-+=09uaddr =3D msg->msg_name;
-+
-+=09tp =3D tcp_sk(ssk->sk);
-+=09if (unlikely(!tp))
-+=09=09goto out_EFAULT;
-+=09if (!tp->fastopen_req)
-+=09=09tp->fastopen_req =3D kzalloc(sizeof(*tp->fastopen_req),
-+=09=09=09=09=09   ssk->sk->sk_allocation);
-+
-+=09if (unlikely(!tp->fastopen_req))
-+=09=09goto out_EFAULT;
-+=09tp->fastopen_req->data =3D msg;
-+=09tp->fastopen_req->size =3D len;
-+=09tp->fastopen_req->uarg =3D uarg;
-+
-+=09/* requests a cookie */
-+=09ret =3D mptcp_stream_connect(sk->sk_socket, uaddr,
-+=09=09=09=09   msg->msg_namelen, msg->msg_flags);
-+=09if (!ret)
-+=09=09*copied =3D len;
-+=09return ret;
-+out_EFAULT:
-+=09ret =3D -EFAULT;
-+=09return ret;
++=09if (mp_opt.suboptions & OPTIONS_MPTCP_MPC && mp_opt.is_mptfo && msk->is=
+_mptfo) {
++=09=09msk->can_ack =3D true;
++=09=09msk->remote_key =3D mp_opt.sndr_key;
++=09=09mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
++=09=09ack_seq++;
++=09=09WRITE_ONCE(msk->ack_seq, ack_seq);
++=09=09pr_debug("ack_seq=3D%llu sndr_key=3D%llu", msk->ack_seq, mp_opt.sndr=
+_key);
++=09=09atomic64_set(&msk->rcv_wnd_sent, ack_seq);
++=09}
 +}
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 55442df8fb97..6bbf1b86465d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1672,9 +1672,9 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- =09int ret =3D 0;
- =09long timeo;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 30d289044e71..185b069e57f4 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -91,6 +91,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ =09=09=09ptr +=3D 8;
+ =09=09}
+ =09=09if (opsize >=3D TCPOLEN_MPTCP_MPC_ACK) {
++=09=09=09mp_opt->is_mptfo =3D 1;
+ =09=09=09mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
+ =09=09=09ptr +=3D 8;
+ =09=09}
+@@ -1124,6 +1125,8 @@ bool mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb)
+ =09=09return sk->sk_state !=3D TCP_CLOSE;
 =20
--=09/* we don't support FASTOPEN yet */
-+=09/* we don't fully support FASTOPEN yet */
- =09if (msg->msg_flags & MSG_FASTOPEN)
--=09=09return -EOPNOTSUPP;
-+=09=09ret =3D mptcp_sendmsg_fastopen(sk, msg, len, msk, &copied);
-=20
- =09/* silently ignore everything else */
- =09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
+ =09if (unlikely(mp_opt.suboptions !=3D OPTION_MPTCP_DSS)) {
++=09=09mptcp_treat_hshake_ack_fastopen(msk, subflow, mp_opt);
++
+ =09=09if ((mp_opt.suboptions & OPTION_MPTCP_FASTCLOSE) &&
+ =09=09    msk->local_key =3D=3D mp_opt.rcvr_key) {
+ =09=09=09WRITE_ONCE(msk->rcv_fastclose, true);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1bc9f6e77ddd..ad51910f1cc9 100644
+index 2a4b6dfb6f8f..c364616c2d56 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -836,6 +836,12 @@ void mptcp_event_addr_announced(const struct sock *ssk=
-, const struct mptcp_addr_
- void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
- bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
+@@ -155,7 +155,8 @@ struct mptcp_options_received {
+ =09=09echo:1,
+ =09=09backup:1,
+ =09=09deny_join_id0:1,
+-=09=09__unused:2;
++=09=09is_mptfo:1,
++=09=09__unused:1;
+ =09u8=09join_id;
+ =09u64=09thmac;
+ =09u8=09hmac[MPTCPOPT_HMAC_LEN];
+@@ -282,6 +283,7 @@ struct mptcp_sock {
+ =09bool=09=09use_64bit_ack; /* Set when we received a 64-bit DSN */
+ =09bool=09=09csum_enabled;
+ =09bool=09=09allow_infinite_fallback;
++=09bool=09=09is_mptfo;
+ =09u8=09=09mpc_endpoint_id;
+ =09u8=09=09recvmsg_inq:1,
+ =09=09=09cork:1,
+@@ -848,6 +850,8 @@ int mptcp_sendmsg_fastopen(struct sock *sk, struct msgh=
+dr *msg,
+ =09=09=09   size_t *copied);
+ int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock *msk, sockptr_t op=
+tval,
+ =09=09=09=09      unsigned int optlen);
++void mptcp_treat_hshake_ack_fastopen(struct mptcp_sock *msk, struct mptcp_=
+subflow_context *subflow,
++=09=09=09=09     struct mptcp_options_received mp_opt);
+ // Fast Open Mechanism functions end
 =20
-+// Fast Open Mechanism functions begin
-+int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
-+=09=09=09   size_t len, struct mptcp_sock *msk,
-+=09=09=09   size_t *copied);
-+// Fast Open Mechanism functions end
-+
  static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
- {
- =09return READ_ONCE(msk->pm.addr_signal) &
 --=20
 2.25.1
 
