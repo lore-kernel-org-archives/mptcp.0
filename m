@@ -1,15 +1,15 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BA35CA5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AAE5C9B
 	for <mptcp@lists.linux.dev>; Sat, 17 Sep 2022 22:29:29 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; t=1663453760; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=itcpAeE80FIJYwj5SB/rpDIbzmDCUArKcdB8G8ueS07C7lBCwa1LAI2mCwlPxwUh2yhVCKHN/HH1QSByRvm19bvNxqGxmJ9G/CEHrrEZhEmbgJ3MTgZ4T2k5ao1URxNjF+VQYGQWp46hnuolaRUN0T3Q/LIdP0UWtAHahLkQZkc=
+	b=CePXCIQVytVmQ9eqP9twB2xSWprKwawPnRsMUIstQZcqfGnU9fsxxPR5mBff4FAtzWUFnkosklr6Q9CeU+AEFQwcnKD3+/NTR7npD+uCcwYoF07YFZ+hmIaoiAwErj/g+yij2KM5rIdRwr5+ECdsxOM+XDsGTnhqRXDjkEKdUZc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
 	t=1663453760; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=7IYuOTC/csJn4GK6bWNW85nwG5yGcE+PlbLHcHsmsH0=; 
-	b=a1wm9IlSysrnJOmgHrq1XthFkv4NhaiTa9NujOQtiGJp+oYL9ELF5/rzMduv2uepddhZibC5nF4waEToyfuMCx9Gj7PmBBkqE2WFPep0jFXnDXtOMf/tdmtM5v7sQCm4Q7igyz5gh7XMq81qCNMBmyMpz+xuhkOY4j9vVD9jyl8=
+	bh=A374qcFGZnxbZk1AlL4TUHso2FHnehXtgKDlDMolsaI=; 
+	b=afuJAOk17ts56C30UhdyKplV1JrPWiyun2BRK13cYrXqFypiY8GDpRubFN3SFGjw9wUDILuf2T6ydP96OmNjMj+jiJH2KE2tHMa8IlCAOji9kK2RNmRviVKC4gscbiYDmcj7oK4XcYYuWD882MH+QTjHhEPBmW5M8+n92XPho+A=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
@@ -17,18 +17,18 @@ ARC-Authentication-Results: i=1; mx.zohomail.eu;
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663453760;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
 	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=7IYuOTC/csJn4GK6bWNW85nwG5yGcE+PlbLHcHsmsH0=;
-	b=TbSkzJ5+5JKo8vm3sBgpg72u4GGHnMXzfBXt3gVh0yARm3O4FGz6+i1ZWaCotWVb
-	c9kGBucCBx66oVa5Uv2IjJQFtMLdP5zaTpnHEHPbzg6bATd1u9AxNdVN6A8VuvNzurB
-	C6STK2c+pSanlf4wUD4hn8t2CNDC4PHXURkhxHuI=
+	bh=A374qcFGZnxbZk1AlL4TUHso2FHnehXtgKDlDMolsaI=;
+	b=HuwFjOkL44m4Rm/pQsyzeM6/J8RV4tVPJrvZssuKmlxATV3JXqeEXa+WNz1WqcE0
+	rPY4qECgFfKkAtguKaFYmOLYStUsnWHiy5+b5sO7RlCWyS8F8HOQaCUoxQ/p7qtL+I/
+	joccEinO0ovFmmWfcXDkdon6H40fNYvYb3mgrNlI=
 Received: from doris.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 1663453758103740.42406034695; Sun, 18 Sep 2022 00:29:18 +0200 (CEST)
+	with SMTPS id 1663453759878256.3947009535458; Sun, 18 Sep 2022 00:29:19 +0200 (CEST)
 From: Dmytro Shytyi <dmytro@shytyi.net>
 To: mptcp@lists.linux.dev
 Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <20220917222853.2406-4-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v7 03/11] Initiator: MSG_FASTOPEN sendto(). request cookie
-Date: Sun, 18 Sep 2022 00:28:45 +0200
+Message-ID: <20220917222853.2406-12-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v7 11/11] selftests: mptfo initiator/listener
+Date: Sun, 18 Sep 2022 00:28:53 +0200
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220917222853.2406-1-dmytro@shytyi.net>
 References: <20220917222853.2406-1-dmytro@shytyi.net>
@@ -42,111 +42,199 @@ Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 Content-Type: text/plain; charset=utf8
 
-Initiator: MSG_FASTOPEN in sendto triggers the mptcp_sendsmg_fastopen.
-It requests a MPTFO cookie.
-Suggestion @palbeni(JAN 17): 'split the patch in several small one'.
+MPTFO tests: these are examples of initiator (sendto) and listener,
+probably are going to be integrated to the mptcp_connect.* selftests
 
 Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
 ---
- net/mptcp/fastopen.c | 50 ++++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c |  4 ++--
- net/mptcp/protocol.h |  6 ++++++
- 3 files changed, 58 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptfo.sh    | 13 +++
+ .../selftests/net/mptcp/mptfo_initiator.c     | 41 ++++++++
+ .../selftests/net/mptcp/mptfo_listener.c      | 98 +++++++++++++++++++
+ 3 files changed, 152 insertions(+)
+ create mode 100644 tools/testing/selftests/net/mptcp/mptfo.sh
+ create mode 100644 tools/testing/selftests/net/mptcp/mptfo_initiator.c
+ create mode 100644 tools/testing/selftests/net/mptcp/mptfo_listener.c
 
-diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-index 0c9ef6f5d528..9974508e0f4c 100644
---- a/net/mptcp/fastopen.c
-+++ b/net/mptcp/fastopen.c
-@@ -3,3 +3,53 @@
-  */
-=20
- #include "protocol.h"
+diff --git a/tools/testing/selftests/net/mptcp/mptfo.sh b/tools/testing/sel=
+ftests/net/mptcp/mptfo.sh
+new file mode 100644
+index 000000000000..9ed0cb281094
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptfo.sh
+@@ -0,0 +1,13 @@
++#!/bin/bash
++#This is an example of environmen that was used to generate wireshark
++sudo ip netns add server
++sudo ip netns add client
++sudo ip link add veth0 type veth peer name veth1
++sudo ip link set veth1 netns server
++sudo ip link set veth0 netns client
++sudo ip netns exec client ip a a 10.10.0.1/24 dev veth0
++sudo ip netns exec server ip a a 10.10.0.2/24 dev veth1
++sudo ip netns exec client ip link set dev  veth0 up
++sudo ip netns exec server ip link set dev  veth1 up
++sudo ip netns exec server bash -c "echo 2 > /proc/sys/net/ipv4/tcp_fastope=
+n"
++sudo ip netns exec client bash -c "echo 1 > /proc/sys/net/ipv4/tcp_fastope=
+n"
+diff --git a/tools/testing/selftests/net/mptcp/mptfo_initiator.c b/tools/te=
+sting/selftests/net/mptcp/mptfo_initiator.c
+new file mode 100644
+index 000000000000..e23b88693fb0
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptfo_initiator.c
+@@ -0,0 +1,41 @@
++#include <arpa/inet.h>
++#include <netinet/in.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/socket.h>
++#include <unistd.h>
++#include <netinet/tcp.h>
++#include <string.h>
++#include <signal.h>
 +
-+int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
-+=09=09=09   size_t len, struct mptcp_sock *msk,
-+=09=09=09   size_t *copied)
++#define SERVER_PORT 7003
++
++int main(int argc, char *argv[])
 +{
-+=09const struct iphdr *iph;
-+=09struct ubuf_info *uarg;
-+=09struct sockaddr *uaddr;
-+=09struct sk_buff *skb;
-+=09struct tcp_sock *tp;
-+=09struct socket *ssk;
++=09unsigned char valsyn[3] =3D "abc";
++=09struct sockaddr_in daddr;
++=09char *valend =3D "fff";
++=09char *val1 =3D "zz1";
++=09char *val2 =3D "zz2";
++=09char *val3 =3D "zz3";
++=09int sock_fd =3D -1;
 +=09int ret;
 +
-+=09ssk =3D __mptcp_nmpc_socket(msk);
-+=09if (unlikely(!ssk))
-+=09=09goto out_EFAULT;
-+=09skb =3D tcp_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, true);
-+=09if (unlikely(!skb))
-+=09=09goto out_EFAULT;
-+=09iph =3D ip_hdr(skb);
-+=09if (unlikely(!iph))
-+=09=09goto out_EFAULT;
-+=09uarg =3D msg_zerocopy_realloc(sk, len, skb_zcopy(skb));
-+=09if (unlikely(!uarg))
-+=09=09goto out_EFAULT;
-+=09uaddr =3D msg->msg_name;
++=09memset(&daddr, 0, sizeof(daddr));
++=09inet_pton(AF_INET, "10.10.0.2", &daddr.sin_addr);
++=09daddr.sin_family =3D AF_INET;
++=09daddr.sin_port =3D htons(SERVER_PORT);
 +
-+=09tp =3D tcp_sk(ssk->sk);
-+=09if (unlikely(!tp))
-+=09=09goto out_EFAULT;
-+=09if (!tp->fastopen_req)
-+=09=09tp->fastopen_req =3D kzalloc(sizeof(*tp->fastopen_req),
-+=09=09=09=09=09   ssk->sk->sk_allocation);
++=09sock_fd =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
 +
-+=09if (unlikely(!tp->fastopen_req))
-+=09=09goto out_EFAULT;
-+=09tp->fastopen_req->data =3D msg;
-+=09tp->fastopen_req->size =3D len;
-+=09tp->fastopen_req->uarg =3D uarg;
++=09ret =3D sendto(sock_fd, valsyn, 3, MSG_FASTOPEN, (struct sockaddr *) &d=
+addr, sizeof(daddr));
++=09ret =3D write(sock_fd, val1, 3);
++=09ret =3D write(sock_fd, val2, 3);
++=09ret =3D write(sock_fd, val2, 3);
++=09ret =3D write(sock_fd, val2, 3);
++=09ret =3D write(sock_fd, val3, 3);
++=09ret =3D write(sock_fd, valend, 3);
 +
-+=09/* requests a cookie */
-+=09ret =3D mptcp_stream_connect(sk->sk_socket, uaddr,
-+=09=09=09=09   msg->msg_namelen, msg->msg_flags);
-+=09if (!ret)
-+=09=09*copied =3D len;
-+=09return ret;
-+out_EFAULT:
-+=09ret =3D -EFAULT;
-+=09return ret;
++=09close(sock_fd);
++=09return EXIT_SUCCESS;
 +}
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0e5db0a634d3..af99a03021c9 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1672,9 +1672,9 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- =09int ret =3D 0;
- =09long timeo;
-=20
--=09/* we don't support FASTOPEN yet */
-+=09/* we don't fully support FASTOPEN yet */
- =09if (msg->msg_flags & MSG_FASTOPEN)
--=09=09return -EOPNOTSUPP;
-+=09=09ret =3D mptcp_sendmsg_fastopen(sk, msg, len, msk, &copied);
-=20
- =09/* silently ignore everything else */
- =09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1e21293bceaa..21f9bf6d2f7e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -837,6 +837,12 @@ void mptcp_event_addr_removed(const struct mptcp_sock =
-*msk, u8 id);
- bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
- int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr, int =
-addr_len, int flags);
-=20
-+// Fast Open Mechanism functions begin
-+int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
-+=09=09=09   size_t len, struct mptcp_sock *msk,
-+=09=09=09   size_t *copied);
-+// Fast Open Mechanism functions end
+diff --git a/tools/testing/selftests/net/mptcp/mptfo_listener.c b/tools/tes=
+ting/selftests/net/mptcp/mptfo_listener.c
+new file mode 100644
+index 000000000000..7e3de8d1d08c
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptfo_listener.c
+@@ -0,0 +1,98 @@
++#include <arpa/inet.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/socket.h>
++#include <sys/types.h>
++#include <unistd.h>
++#include <netinet/in.h>
++#include <linux/in.h>
++#include <netinet/tcp.h>
 +
- static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
- {
- =09return READ_ONCE(msk->pm.addr_signal) &
++#define CLIENT_QUEUE_LEN 10
++#define SERVER_PORT 7003
++
++int main(void)
++{
++=09int listen_sock_fd =3D -1, client_sock_fd =3D -1;
++=09char str_addr[INET6_ADDRSTRLEN];
++=09struct sockaddr_in server_addr;
++=09int ret, flag;
++=09int qlen =3D 5;
++=09char ch;
++
++=09server_addr.sin_family =3D AF_INET;
++=09inet_pton(AF_INET, "10.10.0.2", &server_addr.sin_addr);
++=09server_addr.sin_port =3D htons(SERVER_PORT);
++
++=09/* Create socket for listening (client requests) */
++=09listen_sock_fd =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
++=09if (listen_sock_fd =3D=3D -1) {
++=09=09perror("socket()server");
++=09=09return EXIT_FAILURE;
++=09}
++
++=09/* Set socket to reuse address */
++=09flag =3D 1;
++=09ret =3D setsockopt(listen_sock_fd, SOL_SOCKET, SO_REUSEADDR, &flag, siz=
+eof(flag));
++=09if (ret =3D=3D -1) {
++=09=09perror("setsockopt()");
++=09=09return EXIT_FAILURE;
++=09}
++
++=09ret =3D setsockopt(listen_sock_fd, SOL_TCP, TCP_FASTOPEN, &qlen, sizeof=
+(qlen));
++=09if (ret =3D=3D -1) {
++=09=09perror("setsockopt()TCP_FASTOPEN");
++=09=09return EXIT_FAILURE;
++=09}
++
++=09/* Bind address and socket together */
++=09ret =3D bind(listen_sock_fd, (struct sockaddr *)&server_addr, sizeof(se=
+rver_addr));
++=09if (ret =3D=3D -1) {
++=09=09perror("bind()");
++=09=09close(listen_sock_fd);
++=09=09return EXIT_FAILURE;
++=09}
++
++=09/* Create listening queue (client requests) */
++=09ret =3D listen(listen_sock_fd, CLIENT_QUEUE_LEN);
++=09if (ret =3D=3D -1) {
++=09=09perror("listen()");
++=09=09close(listen_sock_fd);
++=09=09return EXIT_FAILURE;
++=09}
++=09perror("Server listening");
++=09while (1) {
++=09=09/* Do TCP handshake with client */
++=09=09client_sock_fd =3D accept(listen_sock_fd,
++=09=09=09=09NULL,
++=09=09=09=090);
++=09=09if (client_sock_fd =3D=3D -1) {
++=09=09=09perror("accept()");
++=09=09=09close(listen_sock_fd);
++=09=09=09return EXIT_FAILURE;
++=09=09} else {
++=09=09=09perror("ACCEPT_SUCCESS");
++=09=09}
++
++=09=09char rb[1024];
++
++=09=09while (1) {
++=09=09=09ret =3D read(client_sock_fd, rb, 3);
++
++=09=09=09if (ret =3D=3D -1) {
++=09=09=09=09perror("SERVVERread()");
++=09=09=09=09close(client_sock_fd);
++=09=09=09=09break;
++=09=09=09} else {
++=09=09=09=09fprintf(stderr, "received %c%c%c from client", rb[0], rb[1], r=
+b[2]);
++=09=09=09}
++=09=09=09if (rb[0] =3D=3D 'f' && rb[1] =3D=3D 'f' && rb[2] =3D=3D 'f') {
++=09=09=09=09close(client_sock_fd);
++=09=09=09=09break;
++=09=09=09}
++
++=09=09}
++=09}
++
++=09return EXIT_SUCCESS;
++}
 --=20
 2.25.1
 
