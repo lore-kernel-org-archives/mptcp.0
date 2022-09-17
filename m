@@ -1,34 +1,34 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F2746BA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6A05C80
 	for <mptcp@lists.linux.dev>; Sat, 17 Sep 2022 22:29:27 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1663453759; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1663453758; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=jZvMGDzgqE7fLpBcWQhOsrPvxbPUGlnBgHzVF8kWkPpFvqgtJ7iasaxrGH5uQMPAMlSafu6yacE7dDp5c3f/6yIhfa0yw3BlEk783x/cVK9unuzmJ1Bwn92rcUWFEIMjTBwk+tKE0A4kZAr004WQAMcjmrADgajJgF20sluu5hI=
+	b=hmr70rOdxz8elnGTizpPK8nfnxAjrmuR3AOw9hxdH+4Xw0qAVvVKdqtq0Dri0twVXKZDbYtkucIX/eMEZkV7bq9J5bs00kYDsWnUlc3iZj6J71Gr0tiVwRfZAPjlwotyWcrsPvmyoUA1ArvnHWoj1dBoi0VvEjydbwxNXuFHvV4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1663453759; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=lQrsdQ7WntcxlzBejgs67ot2JiQC73UDXM2RJFaYzv0=; 
-	b=fCjX9NZ20Uf3RtVEv6kR3kgSHPlKA3p+891QKMb1EAdu4gEPFH1eSU7y+nhXHsMYi5pLHwiGN5yg44EVfwtNR5mrOVKmwBFlQJSC4SiKRIgi9+LgEx2+MKoN1UNc+nAxo6tQwa3dy3mq2OHNSZgJeiLcIFXLGi+GZhsJTCGgN+k=
+	t=1663453758; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=GsQyvmSGizvFF+1HgibWVVbslT+CcV6JOXOiNAGM9iQ=; 
+	b=JfG+mD8uPSBQrIZ7/3eZMDm9YLHU/0TDziEjonCo7EPxhtdey36jIs6hcv5ursvEBdZ4zihY+hiANRJ9RvYRkW1b29ATqvQIztDkE4/Dh0Z+2Vd4VGJS2HJRdDd0yxKu6JKJf88JCzMSRy+vfbl2k2b65IQgU9WWvZNfRYvuO2c=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
 	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663453759;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663453758;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
 	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=lQrsdQ7WntcxlzBejgs67ot2JiQC73UDXM2RJFaYzv0=;
-	b=YnM+9PGdd8cZFwn/Kr56fiFSCp3Kgw7YHMjWAEfoS3uO2noXNGw/oHo55xhpRV73
-	dG0RBie+/QRk1voZNJrrNH6NfkXXWidB+//57F7/A0Q7ZHF/lv51RqbOO19eAWp1g0N
-	xnSqt7NbfbILmRybrnb8RbBp9nO0ccPqcno+a6ew=
+	bh=GsQyvmSGizvFF+1HgibWVVbslT+CcV6JOXOiNAGM9iQ=;
+	b=JACzBwXcXL00YNPfowS6yNdHs24Mkw9OXb+7E5EwO9Hne6jnq7DVeCjwLjCGfYks
+	kzyZMz5oMRfZgFSjMizFcrjmwmL73RXfKsr8repLStiUrj2/GCGuhbj2OCw/3l1c2gy
+	xohFqAsEJOyGO9JxkBBKu6MZAs6ODfUwgUHwPWoA=
 Received: from doris.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 166345375788882.48674977069504; Sun, 18 Sep 2022 00:29:17 +0200 (CEST)
+	with SMTPS id 166345375767072.63750628351613; Sun, 18 Sep 2022 00:29:17 +0200 (CEST)
 From: Dmytro Shytyi <dmytro@shytyi.net>
 To: mptcp@lists.linux.dev
 Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <20220917222853.2406-3-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v7 02/11] add mptcp_stream_connect to protocol.h
-Date: Sun, 18 Sep 2022 00:28:44 +0200
+Message-ID: <20220917222853.2406-2-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v7 01/11] Add separate fastopen.c file.
+Date: Sun, 18 Sep 2022 00:28:43 +0200
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220917222853.2406-1-dmytro@shytyi.net>
 References: <20220917222853.2406-1-dmytro@shytyi.net>
@@ -42,47 +42,41 @@ Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 Content-Type: text/plain; charset=utf8
 
-We call mptcp_stream_connect() from mptcp_sendmsg_fastopen() in
-fastopen.c
+Add separate *.c file. Function prototypes are coming to protocol.h
+(Suggestion of @palbeni (JUN 17))
 
 Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
 ---
- net/mptcp/protocol.c | 4 ++--
- net/mptcp/protocol.h | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ net/mptcp/Makefile   | 2 +-
+ net/mptcp/fastopen.c | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+ create mode 100644 net/mptcp/fastopen.c
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 55442df8fb97..0e5db0a634d3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3474,8 +3474,8 @@ static void mptcp_subflow_early_fallback(struct mptcp=
-_sock *msk,
- =09__mptcp_do_fallback(msk);
- }
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index 8a7f68efa35f..c42ad8609876 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -2,7 +2,7 @@
+ obj-$(CONFIG_MPTCP) +=3D mptcp.o
 =20
--static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uadd=
-r,
--=09=09=09=09int addr_len, int flags)
-+int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
-+=09=09=09 int addr_len, int flags)
- {
- =09struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
- =09struct mptcp_subflow_context *subflow;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1bc9f6e77ddd..1e21293bceaa 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -835,6 +835,7 @@ void mptcp_event(enum mptcp_event_type type, const stru=
-ct mptcp_sock *msk,
- void mptcp_event_addr_announced(const struct sock *ssk, const struct mptcp=
-_addr_info *info);
- void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
- bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
-+int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr, int =
-addr_len, int flags);
+ mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o d=
+iag.o \
+-=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o
++=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o fastopen.o
 =20
- static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
- {
+ obj-$(CONFIG_SYN_COOKIES) +=3D syncookies.o
+ obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+new file mode 100644
+index 000000000000..0c9ef6f5d528
+--- /dev/null
++++ b/net/mptcp/fastopen.c
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0
++ * MPTCP Fast Open Mechanism. Copyright (c) 2021-2022, Dmytro SHYTYI
++ */
++
++#include "protocol.h"
 --=20
 2.25.1
 
