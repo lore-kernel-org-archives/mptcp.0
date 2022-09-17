@@ -1,82 +1,89 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B0917EA
-	for <mptcp@lists.linux.dev>; Fri, 16 Sep 2022 01:35:05 +0000 (UTC)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-1278624b7c4so50099370fac.5
-        for <mptcp@lists.linux.dev>; Thu, 15 Sep 2022 18:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=7jQezPPmCy5IehwJ5jv535SVoUkslxcFt+Ua9NIbmQU=;
-        b=byNGkLln395ulbgVSPkzLkYaTxPrabezCzU4uOD2OMw8viR24Z6VzwsOQBQm145RMl
-         OAn/f2DN2fGc5WIAzXn1MsgfexXtqdXuipEWXduwYe1pW09Mxocz0X9ZQXHfDhnjizG6
-         o7rJlmFVPOgB/cljUeDgoN/yCtobDWA1eyCPnnbEeYCVyB2HxYISeuLgzPQkbENmsHaC
-         ZdOg8h/+2pNmsg19CNFpuhf9hYmxfdaxGxdaacv8wvuOhBMZLn0/OK2G12G+WrnJMiac
-         BRzu5PsuweEvjwNmpJ9i8gJ5lKqI0mcMQcjovIRqrMXOHLvheQDjQVdUqBfymEuHDb2I
-         Yjig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=7jQezPPmCy5IehwJ5jv535SVoUkslxcFt+Ua9NIbmQU=;
-        b=kvuxsYqWuczVmGWXA7hO6pHQw398JHFTukySyQeIBJLVVTz2xw69ZdRf1tMzhiNqFU
-         MEdBe8KgqiYBr9STG4CEASDxHq10um2PpSsbMVfggUYOUY26bit4qkUN+WbZdpMLIFmc
-         rf4TlD6fvF+8/8AwqXXw3VNFF3tM2oYWl1eC8IKsziFJCC7SchCiupiwrs0zSUD6M3/d
-         Cx8LudaFjv37NLUj3jvrwYcBzN/+SNJTauGpA5z7vH3JsmpPYJgbiiCbL/e+BT8Xzqvc
-         6CRdusXNul3M1ZhEigIX2TKrG6zICsq4fBZlWRV09gYnZ7OKCUUWYewVgCI8NzoZ67gG
-         IMDw==
-X-Gm-Message-State: ACrzQf2OSMfe2Bme42BdECcc9Yopal6+g5OpD0Gfd91LEAPZPJ+LiKUc
-	kNH+QQxK+IaQItlCbnGjRUuVhhhP6A/m
-X-Google-Smtp-Source: AMsMyM6qMyrbMTidHDxCOceGjv4WQbsJKV9It75FBXDu2ahaSV/zErN81JkloEyQ4NeggUZgR0jTrA==
-X-Received: by 2002:a05:6870:b28c:b0:127:ad43:573e with SMTP id c12-20020a056870b28c00b00127ad43573emr1501325oao.174.1663292104578;
-        Thu, 15 Sep 2022 18:35:04 -0700 (PDT)
-Received: from [127.0.0.1] ([13.85.74.194])
-        by smtp.gmail.com with ESMTPSA id v36-20020a056870312400b001227148da8csm2187891oaa.36.2022.09.15.18.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Sep 2022 18:35:04 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Dmytro Shytyi <dmytro@shytyi.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220915235604.26018-10-dmytro@shytyi.net>
-References: <20220915235604.26018-10-dmytro@shytyi.net>
-Subject: Re: selftests: mptfo initiator/listener: Build Failure
-Message-ID: <f6b17b4d-5bbd-bfff-347d-b68ea3bb7967@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Sep 2022 01:35:03 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F2746BA
+	for <mptcp@lists.linux.dev>; Sat, 17 Sep 2022 22:29:27 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1663453759; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=jZvMGDzgqE7fLpBcWQhOsrPvxbPUGlnBgHzVF8kWkPpFvqgtJ7iasaxrGH5uQMPAMlSafu6yacE7dDp5c3f/6yIhfa0yw3BlEk783x/cVK9unuzmJ1Bwn92rcUWFEIMjTBwk+tKE0A4kZAr004WQAMcjmrADgajJgF20sluu5hI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1663453759; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=lQrsdQ7WntcxlzBejgs67ot2JiQC73UDXM2RJFaYzv0=; 
+	b=fCjX9NZ20Uf3RtVEv6kR3kgSHPlKA3p+891QKMb1EAdu4gEPFH1eSU7y+nhXHsMYi5pLHwiGN5yg44EVfwtNR5mrOVKmwBFlQJSC4SiKRIgi9+LgEx2+MKoN1UNc+nAxo6tQwa3dy3mq2OHNSZgJeiLcIFXLGi+GZhsJTCGgN+k=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=shytyi.net;
+	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
+	dmarc=pass header.from=<dmytro@shytyi.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663453759;
+	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
+	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=lQrsdQ7WntcxlzBejgs67ot2JiQC73UDXM2RJFaYzv0=;
+	b=YnM+9PGdd8cZFwn/Kr56fiFSCp3Kgw7YHMjWAEfoS3uO2noXNGw/oHo55xhpRV73
+	dG0RBie+/QRk1voZNJrrNH6NfkXXWidB+//57F7/A0Q7ZHF/lv51RqbOO19eAWp1g0N
+	xnSqt7NbfbILmRybrnb8RbBp9nO0ccPqcno+a6ew=
+Received: from doris.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
+	with SMTPS id 166345375788882.48674977069504; Sun, 18 Sep 2022 00:29:17 +0200 (CEST)
+From: Dmytro Shytyi <dmytro@shytyi.net>
+To: mptcp@lists.linux.dev
+Cc: Dmytro Shytyi <dmytro@shytyi.net>
+Message-ID: <20220917222853.2406-3-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v7 02/11] add mptcp_stream_connect to protocol.h
+Date: Sun, 18 Sep 2022 00:28:44 +0200
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220917222853.2406-1-dmytro@shytyi.net>
+References: <20220917222853.2406-1-dmytro@shytyi.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 
-Hi Dmytro,
+We call mptcp_stream_connect() from mptcp_sendmsg_fastopen() in
+fastopen.c
 
-Thank you for your modifications, that's great!
+Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+---
+ net/mptcp/protocol.c | 4 ++--
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-But sadly, our CI spotted some issues with it when trying to build it.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 55442df8fb97..0e5db0a634d3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3474,8 +3474,8 @@ static void mptcp_subflow_early_fallback(struct mptcp=
+_sock *msk,
+ =09__mptcp_do_fallback(msk);
+ }
+=20
+-static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uadd=
+r,
+-=09=09=09=09int addr_len, int flags)
++int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
++=09=09=09 int addr_len, int flags)
+ {
+ =09struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+ =09struct mptcp_subflow_context *subflow;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 1bc9f6e77ddd..1e21293bceaa 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -835,6 +835,7 @@ void mptcp_event(enum mptcp_event_type type, const stru=
+ct mptcp_sock *msk,
+ void mptcp_event_addr_announced(const struct sock *ssk, const struct mptcp=
+_addr_info *info);
+ void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
+ bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
++int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr, int =
+addr_len, int flags);
+=20
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
+--=20
+2.25.1
 
-You can find more details there:
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20220915235604.26018-10-dmytro@shytyi.net/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/3064785105
-
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a04a47ac6e30
-
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
