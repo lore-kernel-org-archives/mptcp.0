@@ -1,157 +1,129 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A883256F
-	for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 13:23:18 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id c198so28064840pfc.13
-        for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 06:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=XQUVrFwBLSG6cw41QKQ+VH9yclGvZ7B9EM1AUf7nyrc=;
-        b=d4DlwIinK2zoo1Gy0MMGxWnMaQsFDYNAmnsX4zdIydkGgpsWhgasN4N19xdCfpjyvx
-         obwV0+v3Gf14aSHfBSNVuKLEt/x9iF31kbPmQ2cP2uQRJi0BtRT5+Wr5OLxo22SMFW6B
-         ng6PkyL3xmvlhGLoW0wvzZs8Bmf7YUfBtK6s7l1zcGCbNBR/P6MV6M9KdB7RYQQhL1sf
-         GkAhJ3xSXlDqbXknxlTaG2aDrdBh3kTFn6E7Cvj6rtGg7j1neWVBV8xIv4T/le0a2rjI
-         324w6GAzcaTdrCb6jJV6RtNsgenTrOyUFzy4nlnOcpRt7lvC3JuOLY9iFcc2Y77OgnX9
-         xCdg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8515C92
+	for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 14:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1663596161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kLSW7js+GHhq3pvtlQbHITZcLyoHvsydFeVQYomLEnc=;
+	b=AhAhAk+ie3WTyrE30jG1vtbHrm27OfmzZd+lJ6ZY7jtFsurXa1rm2fbwMalkE0fFUpCczd
+	UtDPhBLDkCY39cqvdHqQRaaul67rCs3XXNFrD/3EEdIfdwkhZT9BzqoRyk6Hy3yM0JkKIy
+	fXZBhbotftHQPEj9F5euaIKXa4HK2as=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-611-hO8j9pkGMz2UtJHSeE1QMw-1; Mon, 19 Sep 2022 10:02:39 -0400
+X-MC-Unique: hO8j9pkGMz2UtJHSeE1QMw-1
+Received: by mail-wm1-f71.google.com with SMTP id o25-20020a05600c339900b003b2973dab88so15215373wmp.6
+        for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 07:02:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=XQUVrFwBLSG6cw41QKQ+VH9yclGvZ7B9EM1AUf7nyrc=;
-        b=uwCuioLQdR54nZAfrV7BLzJBqeBqO/EKq7bA8m+35KlWS5Ur9d77DGnqGAr6tP+1TQ
-         mk3Tbrj7/FLS3Dd6MZYg2tP5PxysSy3ZdzuzXKgsYLyTiaoyxRyxSAy/LEhOeId/u9Oq
-         ts2T9KdYsbsNvbZk8qM66tBw64BD692uNq1kRl9DRVu8calD03LMHRyrDzKjbtdL/GnA
-         WMZjkNkt8vze52MMfkoHuAijjMg9lmZGDEKXJ3KkgSDA6zCreqNBvxfZgd8plHbjj5QG
-         9yAPHd7USNYjp8hxPFKjA8iHi8hfn+K3p3LIKu2AzNdsDE+qL00MwYgYRTWJPAjul3w9
-         55lw==
-X-Gm-Message-State: ACrzQf1ZJB47TLvcoRKDyV02bbDN2MAh43S7njWUz0KHrpLZQ7hUYNdx
-	KCRnEBEF62EbHUL7dqZktsw=
-X-Google-Smtp-Source: AMsMyM47yb+ga51uupetgTgKY6RYczccMeoiDhkxraiHmw/0kT7HXmZOufi+FhiTFHSgCM8JqH+PoA==
-X-Received: by 2002:a05:6a00:a29:b0:54e:6aed:c655 with SMTP id p41-20020a056a000a2900b0054e6aedc655mr6131307pfh.25.1663593797683;
-        Mon, 19 Sep 2022 06:23:17 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.83])
-        by smtp.gmail.com with ESMTPSA id c16-20020a624e10000000b0053b2681b0e4sm20390593pfb.67.2022.09.19.06.23.16
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=kLSW7js+GHhq3pvtlQbHITZcLyoHvsydFeVQYomLEnc=;
+        b=Y5bRh/SgY61X38HS4+rkXwphscq9Zh/b2dfCeI3sMc/fv0ieGVYVn66wtChWE53kcV
+         YSN22MY1eujZML9u7C4MwSsU38OHGdzv3080/nSeHr4AfWoYNsounleXnEkNb8d8frng
+         g+K5yQV3o+a+4L16gyTljbqgJgHgOnVD+dh2rfcR8bTwWzmT9V+y38GYQ5fTXjCejamR
+         Te3Rz3kElEnP+2pI31G8j6MlIBXr5VBuHemZU33VQYGKce4j3smeUd1+k4W9dlY5C+A9
+         YNz76pxquKVEjeykWRO+oXULvWfPiyk3rrdSPB+8a38eb3ASaMTiSrc7peozax13H5tV
+         IWyQ==
+X-Gm-Message-State: ACrzQf0d7fBLThOQc8XsFYY+f6Ex4fTLcawXjNc0LakztDb3uxpXuVXk
+	rh5LUo/ZGpiULkG0i6QIwcu8e8IVyegTQi4ECUkYYE1zpghCy7ZkbOR6G169GXahVORTH2r57hV
+	SdrexONuDb7LSKkI=
+X-Received: by 2002:adf:fb10:0:b0:22a:f1d8:18d2 with SMTP id c16-20020adffb10000000b0022af1d818d2mr6579207wrr.483.1663596158570;
+        Mon, 19 Sep 2022 07:02:38 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7/1f5vJPaV3S6uWnZVmvqjrbAGlVbVXKtdNaZAolq0ZYLoEkl5fMPLpUIXjde8GRRRmrMiJg==
+X-Received: by 2002:adf:fb10:0:b0:22a:f1d8:18d2 with SMTP id c16-20020adffb10000000b0022af1d818d2mr6579172wrr.483.1663596158256;
+        Mon, 19 Sep 2022 07:02:38 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-114-90.dyn.eolo.it. [146.241.114.90])
+        by smtp.gmail.com with ESMTPSA id y1-20020adfdf01000000b0022a297950cesm14013635wrl.23.2022.09.19.07.02.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 06:23:17 -0700 (PDT)
-From: menglong8.dong@gmail.com
-X-Google-Original-From: imagedong@tencent.com
-To: pabeni@redhat.com
-Cc: mptcp@lists.linux.dev,
-	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH mptcp] net: mptcp: add statistics for mptcp socket in use
-Date: Mon, 19 Sep 2022 21:21:56 +0800
-Message-Id: <20220919132156.3649522-1-imagedong@tencent.com>
-X-Mailer: git-send-email 2.37.2
+        Mon, 19 Sep 2022 07:02:37 -0700 (PDT)
+Message-ID: <e9876aae93db906138bd090b821c7a5e5554eeae.camel@redhat.com>
+Subject: Re: [RFC PATCH mptcp-next v7 08/11] Fix unxpctd val of
+ subflow->map_seq(dscrd packet)
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, Dmytro Shytyi
+	 <dmytro@shytyi.net>
+Cc: mptcp@lists.linux.dev, Benjamin Hesmans <benjamin.hesmans@tessares.net>
+Date: Mon, 19 Sep 2022 16:02:36 +0200
+In-Reply-To: <48aa48fa-85a7-b391-7095-204efbb63f97@tessares.net>
+References: <20220917222853.2406-1-dmytro@shytyi.net>
+	 <20220917222853.2406-9-dmytro@shytyi.net>
+	 <b83883829f7a8730207223178841f330617a72e4.camel@redhat.com>
+	 <48aa48fa-85a7-b391-7095-204efbb63f97@tessares.net>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Menglong Dong <imagedong@tencent.com>
+On Mon, 2022-09-19 at 13:31 +0200, Matthieu Baerts wrote:
+> Hi Paolo, Dmytro,
+> 
+> On 19/09/2022 13:27, Paolo Abeni wrote:
+> > On Sun, 2022-09-18 at 00:28 +0200, Dmytro Shytyi wrote:
+> > > Fix unexpected value of subflow->map_seq (discarded and after
+> > > retransmitted 2nd packet)
+> > > 
+> > > Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+> > > ---
+> > >  net/mptcp/subflow.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > > index c7d49fb6e7bd..075c61d1d37f 100644
+> > > --- a/net/mptcp/subflow.c
+> > > +++ b/net/mptcp/subflow.c
+> > > @@ -1077,8 +1077,10 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+> > >  		/* will validate the next map after consuming the current one */
+> > >  		goto validate_csum;
+> > >  	}
+> > > -
+> > > -	subflow->map_seq = map_seq;
+> > > +	if (msk->is_mptfo)
+> > > +		subflow->map_seq = READ_ONCE(msk->ack_seq);
+> > > +	else
+> > > +		subflow->map_seq = map_seq;
+> > >  	subflow->map_subflow_seq = mpext->subflow_seq;
+> > >  	subflow->map_data_len = data_len;
+> > >  	subflow->map_valid = 1;
+> > 
+> > 
+> > This is likely not needed, if you build a special dss mapping at
+> > incoming option processing time.
+> 
+> Also for this, Benjamin had another approach by delaying MPTCP data_ack
+> calculation, see from patch 5/10 from [1]. It might be good to discuss
+> about that at the next weekly meeting.
 
-Do the statistics of mptcp socket in use with sock_prot_inuse_add().
-Therefore, we can get the count of used mptcp socket from
-/proc/net/protocols:
+I think that later approach is better. Apropos, regarding the question
+raised in patch 6/10 in such series - where to hook for late ack_seq
+initialization - I think we could:
 
-& cat /proc/net/protocols
-protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
-MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
-MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+- add a 'remote_key_avail' bit in mptcp_subflow_context
+- in mptcp_incoming_options(), for MPC_ACK pkts, copy mp_opt->sndr_key
+in subflow->remote_key and set  'remote_key_avail'
+- in subflow_state_change() when changing to TCP_ESTABLISHED && this is
+a TFO passive socket (-> prev state == TCP_SYN_RECV), remote_key_avail
+is true, and can_ack == false, do the late ack_seq initialization.
 
-Signed-off-by: Menglong Dong <imagedong@tencent.com>
----
- net/mptcp/protocol.c | 19 +++++++++++++------
- net/mptcp/subflow.c  |  3 +++
- 2 files changed, 16 insertions(+), 6 deletions(-)
+Note that the last quite convoluted condition should catch the
+sk->sk_state_change(sk) invocation in tcp_rcv_state_process() for TFO
+sockets.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 45ed50e9aec9..4da77aa8b070 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2311,6 +2311,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 			tcp_set_state(ssk, TCP_CLOSE);
- 			mptcp_subflow_queue_clean(ssk);
- 			inet_csk_listen_stop(ssk);
-+			sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
- 		}
- 		__tcp_close(ssk, 0);
- 
-@@ -3067,6 +3068,9 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
- 	skb_rbtree_purge(&msk->out_of_order_queue);
- 	mptcp_data_unlock(sk);
- 
-+	if (!sk_unhashed(sk) || __mptcp_check_fallback(msk))
-+		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
-+
- 	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
- 	 * inet_sock_destruct() will dispose it
- 	 */
-@@ -3513,6 +3517,7 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- 	mptcp_token_destroy(msk);
- 	inet_sk_state_store(sock->sk, TCP_SYN_SENT);
- 	subflow = mptcp_subflow_ctx(ssock->sk);
-+	sock_prot_inuse_add(sock_net(sock->sk), sock->sk->sk_prot, 1);
- #ifdef CONFIG_TCP_MD5SIG
- 	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
- 	 * TCP option space.
-@@ -3547,12 +3552,13 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- static int mptcp_listen(struct socket *sock, int backlog)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
-+	struct sock *sk = sock->sk;
- 	struct socket *ssock;
- 	int err;
- 
- 	pr_debug("msk=%p", msk);
- 
--	lock_sock(sock->sk);
-+	lock_sock(sk);
- 	ssock = __mptcp_nmpc_socket(msk);
- 	if (!ssock) {
- 		err = -EINVAL;
-@@ -3560,16 +3566,17 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	}
- 
- 	mptcp_token_destroy(msk);
--	inet_sk_state_store(sock->sk, TCP_LISTEN);
--	sock_set_flag(sock->sk, SOCK_RCU_FREE);
-+	inet_sk_state_store(sk, TCP_LISTEN);
-+	sock_set_flag(sk, SOCK_RCU_FREE);
-+	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
- 
- 	err = ssock->ops->listen(ssock, backlog);
--	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
-+	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
- 	if (!err)
--		mptcp_copy_inaddrs(sock->sk, ssock->sk);
-+		mptcp_copy_inaddrs(sk, ssock->sk);
- 
- unlock:
--	release_sock(sock->sk);
-+	release_sock(sk);
- 	return err;
- }
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 07dd23d0fe04..da6cfa73a3bd 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -747,6 +747,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
- 			mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
- 			mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
-+			sock_prot_inuse_add(sock_net(new_msk),
-+					    new_msk->sk_prot,
-+					    1);
- 			ctx->conn = new_msk;
- 			new_msk = NULL;
- 
--- 
-2.37.2
+Cheers,
+
+Paolo
 
