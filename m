@@ -1,111 +1,112 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0EA7C
-	for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 15:14:45 +0000 (UTC)
-Received: by mail-qt1-f177.google.com with SMTP id g23so16260827qtu.2
-        for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 08:14:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1430C7C
+	for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 15:14:54 +0000 (UTC)
+Received: by mail-wr1-f43.google.com with SMTP id b5so47995284wrr.5
+        for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 08:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=ZHSU6iwu4HRUqDxUMSAaE1Kza+Jdm3trneH3dQ+QlvE=;
-        b=YtoP3irZifzV2jjkzlAsvPeEsfOyWzEDxtFPQr50zRdvldtFnZwGt2m5ayvSpPu8XO
-         XxNC1s1LMKNvfXPefX939eZz6yntHqK7Om1rquJZjWGR8fMaDqPGnY779EZ7lzQQrGbQ
-         uUj254xYd2dfZVftMa0vt+whnkCRBW/Y3HVUd41pMKEE47uOvGQxycMfyevdulFROh2Z
-         Slqo1tVruUjvuJwm346py4Jrz++g1/NJGdBsdo9BCLo4hDgVqONRijUo2loEzrzaCl4x
-         ckL81wNAdcHNgC1MJjmdSEfZG8lMlczvBh9DuYQ0LYZK0HfG+HiOV1/4G0sYRVMelZR4
-         ifxg==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=15L5ppRGWxdu1AzxtTDfMXfD1wRkvt2gL7rNRsMafk8=;
+        b=co3OKAIeVTZx8EfDcIQtJr00gvUpPwbCThJKX6yFG3XFnC34k5jdKfevcqbsr1Px6n
+         8zkrKJqYK/i1PpqSzNQaEYVw8xShhfIrQ2IZkbpwIHCySniR8awTnR8/Eo3NYuwVC+XD
+         ZNHIJV00n+kfu83O/oICfpUozeEJyspp9tFboW7KsuDoWR2poEtwK4P0NSemW5gBQQ0I
+         fKcM1PWI7F/6XFv5jmMK15iC2POMqwTBTZqOgTwOj7VmZ7LjVON4hgzYdwzFvf2bT+G2
+         NRQWORJzz8wLOVrmb34Dt29TuK1+A7BuIOqOV9EJsywczKhD5GPmJhoJiMYKg+JvG5Mj
+         tK2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=ZHSU6iwu4HRUqDxUMSAaE1Kza+Jdm3trneH3dQ+QlvE=;
-        b=cu5u9lV2PDITpJzkJmfFGKac6xYyd/VXH0llEL64kNs/LXxvsNl7RqkkUeL6zR4fj3
-         Mk/RUafSY5KfIE2dsUdKw9XawsT8iRySb8xAAM7DBfQZpvFyn4N3ZptgJxPahjouHA9n
-         y3KR9tbyY9RW89oSDHJnpfY6Dwzkr+4579BaCtqqlxJR0TJS9w8+pcnAWZ6/LC8K/2vH
-         y1skZ5gYrb2n0TkTZ9ETIOvLE4kBzinWZzT5EPiJYyRhgkG38vWH+FFN0PnLUJ2bD7xj
-         jLfXnZEGFiA+UbCDyqF+3qS01KgJn1vl2Tk8EcLMYLO4H5gCLJzInAO3ESlTAK5CBo/E
-         oENg==
-X-Gm-Message-State: ACrzQf2t3Q13JkdWdY0Q6XZNCt3PEjvICdqOYgaMzdDxn1qlU3ZK6WdT
-	KeTjQWhn4o2ZBXMGKuN4jzyPq814v85PLyA=
-X-Google-Smtp-Source: AMsMyM7Jbmh/apj6VX8v+C0r8ZAbJNEFOtseQZT70w/bL69CqnvHN0kLGwPu2r59TYbWizjG8oZgVw==
-X-Received: by 2002:ac8:59c8:0:b0:35c:e115:b18d with SMTP id f8-20020ac859c8000000b0035ce115b18dmr7741808qtf.123.1663600484404;
-        Mon, 19 Sep 2022 08:14:44 -0700 (PDT)
-Received: from [127.0.0.1] ([40.71.89.84])
-        by smtp.gmail.com with ESMTPSA id 66-20020a370345000000b006cbc00db595sm12495255qkd.23.2022.09.19.08.14.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 08:14:44 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Menglong Dong <imagedong@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220919132156.3649522-1-imagedong@tencent.com>
-References: <20220919132156.3649522-1-imagedong@tencent.com>
-Subject: Re: net: mptcp: add statistics for mptcp socket in use: Tests
- Results
-Message-ID: <a62f843e-c8a2-4408-dbc4-3921a51009ab@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Sep 2022 15:14:43 +0000
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=15L5ppRGWxdu1AzxtTDfMXfD1wRkvt2gL7rNRsMafk8=;
+        b=yL6aHx2pPEBrixPkvcyaH8grd+WnBcF40kvBcXctHSWhI15g3K0pcVqrEqA4hfutWJ
+         cgh7Ot0buuaNT2W6ZF1X15Ax8BZtbzKJ/Gj+/BRYLSKhwg6sVvCr5bnqvaIotIGYUdjY
+         YbxzBuVgbMtSy+8IIoArvtdFb/2ul0KLnVovj+ZxQpHkECJsgDfinfNb5vJDJgiZL2U4
+         12MxvdJEqCDJeUiIDs0rN1CDI4pndvJ9oFAvjcjZ0joTXUW2DtM55Tinw56IZM1mPxoH
+         G9Srilyrd+tq2G/ep7LR6hxbNIjsCPP0efCKup2XI2Zo3OYMleEUEEbnv6WSy+g3HYN4
+         zQ/w==
+X-Gm-Message-State: ACrzQf2BZANfx2pemoPUZIX2haPDoTBBgZS4YRT9E3Hu3NufveX5bZPs
+	6Fxm9bEKlDZnGHrJigz6BBlA7Jyxy0LLig==
+X-Google-Smtp-Source: AMsMyM64V7s5kD+INIBwOfFDkbs2IVM3G1trCbq38JlCOpNA5DzdUGTPEYtTxGeNA3gYHB26gzttlA==
+X-Received: by 2002:a5d:6052:0:b0:22a:2ee9:4377 with SMTP id j18-20020a5d6052000000b0022a2ee94377mr10846158wrt.449.1663600492937;
+        Mon, 19 Sep 2022 08:14:52 -0700 (PDT)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id s15-20020a5d510f000000b00228655a5c8fsm13981510wrt.28.2022.09.19.08.14.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Sep 2022 08:14:52 -0700 (PDT)
+Message-ID: <f7f23136-3227-5c80-45c0-29a52c5ec11a@tessares.net>
+Date: Mon, 19 Sep 2022 17:14:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH net v5 0/2] net: mptcp: fix unreleased socket in accept
+ queue
+Content-Language: en-GB
+To: menglong8.dong@gmail.com, pabeni@redhat.com
+Cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+References: <20220911041418.818201-1-imagedong@tencent.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220911041418.818201-1-imagedong@tencent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Menglong,
+Hi Menglong, Paolo,
 
-Thank you for your modifications, that's great!
+On 11/09/2022 06:14, menglong8.dong@gmail.com wrote:
+> From: Menglong Dong <imagedong@tencent.com>
+> 
+> The mptcp socket and its subflow sockets in accept queue can't be
+> released after the process exit.
+> 
+> While the release of a mptcp socket in listening state, the
+> corresponding tcp socket will be released too. Meanwhile, the tcp
+> socket in the unaccept queue will be released too. However, only init
+> subflow is in the unaccept queue, and the joined subflow is not in the
+> unaccept queue, which makes the joined subflow won't be released, and
+> therefore the corresponding unaccepted mptcp socket will not be released
+> to.
+> 
+> In the 1th patch, we factor-out __mptcp_close() which should run under
+> socket lock.
+> 
+> And in the 2th patch, we fix the problem we mentioned above by closing
+> all of the unaccepted mptcp socket in mptcp_subflow_queue_clean()
+> with __mptcp_close().
 
-Our CI did some validations and here is its report:
+Thank you for the patches and the reviews!
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5623681228472320
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5623681228472320/su=
-mmary/summary.txt
+This series is now in our tree (fix for -net) with Paolo's ACK and
+without one typo found by "checkpatch.pl --codespell" and 'net:' prefix
+has been strip from the commit titles ('mptcp:' is enough)
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6749581135314944
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6749581135314944/su=
-mmary/summary.txt
+New patches for t/upstream-net:
+- 8c21b4904d34: mptcp: factor out __mptcp_close() without socket lock
+- f00ac22032b8: mptcp: fix unreleased socket in accept queue
+- Results: 69b3bebab7a6..2882a52515ba (export-net)
 
-Initiator: Matthieu Baerts
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/02a3d2d88e79
+New patches for t/upstream:
+- 8c21b4904d34: mptcp: factor out __mptcp_close() without socket lock
+- f00ac22032b8: mptcp: fix unreleased socket in accept queue
+- Results: 6cd726fd86f8..6c59a4b0aee6 (export)
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+Tests are now in progress:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20220919T151225
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220919T151225
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
