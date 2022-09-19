@@ -1,58 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371A76105
-	for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 14:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299006105
+	for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 14:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1663596696;
+	s=mimecast20190719; t=1663597043;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m+pbJgWeaqDYxJPNCyzOzQ6jJxZNrpBjI70m795d0q4=;
-	b=RSqNruVZThR95SCCqJpb7kVigHST3j7epoti2sS5rIcm49ifOJTZgf/6vsHLPkjAY0WSmq
-	ri5yGMk3Z+IwYzecOZEBYZGUfM6E6w2oHiP293QP8CToA295xROGr2odM9XR6XRSlKgXPP
-	jfrtmxKUww/T5QmTNwaDSYcIAG2g4k0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=cDutmRu8p2bm/wbJxjOF5iBCjfDnNF6gJaQuSios6Zw=;
+	b=PC/aLNSQJbX+4t9szxqG+tcy2TOtGYQFbsiVr+hbX3LZA8KUbCngLOKT/SJJ40za03u7QA
+	XBK2Hm9aS+YNbBW5jPkcj0lPq7+f7tXicGxztfbf7LDYHXkHZbc7t2J7ukk5d8aBjAhp/Z
+	ERUIVIxF8QbDz6JhR2E87XQkg0LBZa0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-149-5dLyHfIuNBCyK5LTKw3Row-1; Mon, 19 Sep 2022 10:11:35 -0400
-X-MC-Unique: 5dLyHfIuNBCyK5LTKw3Row-1
-Received: by mail-wm1-f72.google.com with SMTP id i129-20020a1c3b87000000b003b33e6160bdso4706798wma.7
-        for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 07:11:34 -0700 (PDT)
+ us-mta-644-Jx5ICbENOPikQyJvf1903w-1; Mon, 19 Sep 2022 10:17:22 -0400
+X-MC-Unique: Jx5ICbENOPikQyJvf1903w-1
+Received: by mail-wr1-f69.google.com with SMTP id q25-20020adfb199000000b0022ae4ea0afcso1199157wra.8
+        for <mptcp@lists.linux.dev>; Mon, 19 Sep 2022 07:17:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=m+pbJgWeaqDYxJPNCyzOzQ6jJxZNrpBjI70m795d0q4=;
-        b=rsQ5i9+zIY0FIjI5Sy/Foj7woafQNugLsaOcXa4KO74rV/Sn/6+6Rr5BpzMArkMApF
-         EJK5HuCCmNkSTNGtGD8QNhw1EcycnOVZJsXUTIsWqcdewK48K+2ytlNHvc1tlsP3uPcR
-         l31ocdpzDPICAKLvP/M66qkjjHgVJh/bEA8zkoEzQOS6pZYroOYyyMx3i3QmJZxifGwv
-         j1c/AxhV8OCJYuDd/4zLgUAjRlkT1lAIlkz8/orOTKXq9FQHApjrh3HhnyKq9c1OUtha
-         H2Dw8C0gNz/FYJSpvBOJcMOJpibEepAZUFHb9EBpsMS5M//cu5S6PSLEgzFH6B0nZv5K
-         u9UA==
-X-Gm-Message-State: ACrzQf2JySFZk+qLn4s8yR9Yt+MuWT6pfRHu1kkBso1vnMVjCAIZniZh
-	vlXh0THdvQPDUgEYaTHNW/lhucgL3Z7pAYAHlAMI67LJrJX8vRTbQc7M2TXirVZJNpWq4mpoG8A
-	PxgR4fNW0o5i04FQ=
-X-Received: by 2002:adf:fe89:0:b0:228:62f7:3e75 with SMTP id l9-20020adffe89000000b0022862f73e75mr10476624wrr.400.1663596693801;
-        Mon, 19 Sep 2022 07:11:33 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5wUeZC60EkL3hwEZ4b7Zckt2PssuCG0tPlVAJhGyON1HHhvuDsjIcYVFARbYFd31OYbSMj4g==
-X-Received: by 2002:adf:fe89:0:b0:228:62f7:3e75 with SMTP id l9-20020adffe89000000b0022862f73e75mr10476613wrr.400.1663596693608;
-        Mon, 19 Sep 2022 07:11:33 -0700 (PDT)
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=cDutmRu8p2bm/wbJxjOF5iBCjfDnNF6gJaQuSios6Zw=;
+        b=7U4omtfYHI0BMjW7nSs2DEcorunRrgGbA1W7pTLdR6RVMndcIFlmlBgawQFlq0pdvM
+         +4YEEm6QEGLDdbuud2WancCTTJNaQarFmwZm6Xsag5GfQBXrKQROz7Ev4cZp6UFerHuG
+         PZd1I9/YOgRiwGmXLluzlAzIyPro9gPqXU+44LBVfdBIZWKvwOrbpo0P5HaVzrCBUQFG
+         SXzMYF8ntEu8kc2RdFAss1A/3c9zsXrZIprRZB8S60c5x5ZJ5RSwVEiEWWY7qIRuO32G
+         12gmTT9ejvcv2UZGDytq+1tc2wLxrbGGf2dm+XPBBFBNFszbkuQjRLBQMl0wnnyWEIV+
+         M15Q==
+X-Gm-Message-State: ACrzQf2Xxjc2NxgcyT77c7pAjfxb+CrCruUD99jz0ujEpnFNoXFQm5lr
+	mwFOhsUMGvuEkME8x+t5Rqyxmb155NhcGmEN95Cwt1+DFM/b0nppOoTQn6TgDDKHfwhl6zUIzQV
+	Wwini5GJapiwAU2A=
+X-Received: by 2002:a05:600c:b47:b0:3b4:8604:410c with SMTP id k7-20020a05600c0b4700b003b48604410cmr12586719wmr.51.1663597039530;
+        Mon, 19 Sep 2022 07:17:19 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4NkZfGPR/WiIDEqMyjMlsDiMiF9Wde93uSDcYpi02pnXOhUoUHEteuEzRSkt3FECVA9V0AQQ==
+X-Received: by 2002:a05:600c:b47:b0:3b4:8604:410c with SMTP id k7-20020a05600c0b4700b003b48604410cmr12586699wmr.51.1663597039294;
+        Mon, 19 Sep 2022 07:17:19 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-114-90.dyn.eolo.it. [146.241.114.90])
-        by smtp.gmail.com with ESMTPSA id z3-20020adff1c3000000b0022af9555669sm6261215wro.99.2022.09.19.07.11.32
+        by smtp.gmail.com with ESMTPSA id k24-20020adfd238000000b0022ad393ba3csm13634663wrh.107.2022.09.19.07.17.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 07:11:33 -0700 (PDT)
-Message-ID: <6d480f33f953566aeeb7387e1b023c6783e294ce.camel@redhat.com>
-Subject: Re: [RFC PATCH mptcp-next v7 11/11] selftests: mptfo
- initiator/listener
+        Mon, 19 Sep 2022 07:17:18 -0700 (PDT)
+Message-ID: <5d0371c3eb22b65bafd6d46ff59a77ad20bdcfc9.camel@redhat.com>
+Subject: Re: [PATCH net v5 0/2] net: mptcp: fix unreleased socket in accept
+ queue
 From: Paolo Abeni <pabeni@redhat.com>
-To: Dmytro Shytyi <dmytro@shytyi.net>, mptcp@lists.linux.dev
-Date: Mon, 19 Sep 2022 16:11:32 +0200
-In-Reply-To: <20220917222853.2406-12-dmytro@shytyi.net>
-References: <20220917222853.2406-1-dmytro@shytyi.net>
-	 <20220917222853.2406-12-dmytro@shytyi.net>
+To: menglong8.dong@gmail.com
+Cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+Date: Mon, 19 Sep 2022 16:17:17 +0200
+In-Reply-To: <20220911041418.818201-1-imagedong@tencent.com>
+References: <20220911041418.818201-1-imagedong@tencent.com>
 User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -65,18 +65,50 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Sun, 2022-09-18 at 00:28 +0200, Dmytro Shytyi wrote:
-> MPTFO tests: these are examples of initiator (sendto) and listener,
-> probably are going to be integrated to the mptcp_connect.* selftests
+On Sun, 2022-09-11 at 12:14 +0800, menglong8.dong@gmail.com wrote:
+> From: Menglong Dong <imagedong@tencent.com>
+> 
+> The mptcp socket and its subflow sockets in accept queue can't be
+> released after the process exit.
+> 
+> While the release of a mptcp socket in listening state, the
+> corresponding tcp socket will be released too. Meanwhile, the tcp
+> socket in the unaccept queue will be released too. However, only init
+> subflow is in the unaccept queue, and the joined subflow is not in the
+> unaccept queue, which makes the joined subflow won't be released, and
+> therefore the corresponding unaccepted mptcp socket will not be released
+> to.
+> 
+> In the 1th patch, we factor-out __mptcp_close() which should run under
+> socket lock.
+> 
+> And in the 2th patch, we fix the problem we mentioned above by closing
+> all of the unaccepted mptcp socket in mptcp_subflow_queue_clean()
+> with __mptcp_close().
+> 
+> Changes since v4:
+> - keep sock_hold() in __mptcp_close() in the 1th patch
+> - rename cancel_work to do_cancel_work in the 1th patch
+> - don't make mptcp_cancel_work() inline in the 2th patch
+> 
+> Changes since v3:
+> - factor out __mptcp_close() and replace mptcp_close() with it in
+>   mptcp_subflow_queue_clean()
+> 
+> Menglong Dong (2):
+>   net: mptcp: factor out __mptcp_close() without socket lock
+>   net: mptcp: fix unreleased socket in accept queue
+> 
+>  net/mptcp/protocol.c | 16 +++++++++++++---
+>  net/mptcp/protocol.h |  2 ++
+>  net/mptcp/subflow.c  | 33 +++++++--------------------------
+>  3 files changed, 22 insertions(+), 29 deletions(-)
 
-I know I'm contradiction myself once again, but I think it would be
-better adding support for the TCP_FASTOPEN flag in tcp_connect.c
+I think this is now even a nice cleanup, beyond a relevant bug-fix,
+thanks!
 
-Probably we want to add additional MIBs for the egress and incoming TFO
-counters (likely a separate patch) and check them in the relevant test-
-case.
+For the series:
 
-Cheers,
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-Paolo
 
