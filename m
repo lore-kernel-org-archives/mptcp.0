@@ -1,109 +1,183 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1196E1C34
-	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 13:47:27 +0000 (UTC)
-Received: by mail-pl1-f193.google.com with SMTP id t3so2443254ply.2
-        for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 06:47:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=+NEIRDpX2PxPAcYNBNMoUY1RzU+Xf9gVqYnUWSSaR14=;
-        b=XuVr4oGUAxYUYQV/6CrEvyjT8DCzthcrgbOfsKBVb/pXh/z9Kq8h2HU0yfci+SLWHn
-         NMDMu2q7DrLtWg+AIWPpLmFKf3FOu/wxECKGX1sT3kzB4Q0J9XPTs1hGb48aquq1VqC+
-         jEEMHkkZbTlhMhHb2cy13dPQmQbjHkPhAID/bycLXmqEyqlK1A3ltT/1Zyh4UfXeIfY/
-         FUBfOLycsdzPLX1gNrZUiRzLb01Zeve+GuVOhbCqS2sbXHHow4tjoIsheI3LtR24nqxz
-         xkZ8VmaLpi3+olTuZ8WWv58+VXzlqgymX4ljH6zbhL1n4rVE66Gv+lHJpCNRHiVB4p2H
-         CdoA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E007462
+	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 14:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1663684631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BSnTMY5hs7siGJexDhfutae2txs2uAybXsmWH5JELKI=;
+	b=U2qALmvEA4YzSZuxLqjtl+DJTdazi93KTmUZzMzLF/NVl9FdGecypgEJlVsbQYxfLtR+71
+	W+04dGNjGID22XE9Tm6gsY1dv5b/iRnSiRTl0FXKbt60/0eYTgddtCJbInlx0s4Mo6Txr8
+	sk/VFQv719tzPNTWQq9m0RfWIQUi1Gw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-16-YiHTTc8tOAOpjXZ0nKY8xQ-1; Tue, 20 Sep 2022 10:37:01 -0400
+X-MC-Unique: YiHTTc8tOAOpjXZ0nKY8xQ-1
+Received: by mail-wr1-f69.google.com with SMTP id q17-20020adfab11000000b0022a44f0c5d9so1239215wrc.2
+        for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 07:37:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=+NEIRDpX2PxPAcYNBNMoUY1RzU+Xf9gVqYnUWSSaR14=;
-        b=77BuBgd4euMwDJ2H5qx1qDy23WzK8BfRmKxZKWYuEk+Q74rc+aB9tkvMSUyEb/K0VW
-         aVx5EBDnnjj0w5q8eeooN+ieyGwCfGPJwfpRIxPkpQZvlKSoOm4ll9wJ+PGUh8xGsuaG
-         T61Zwa2LW4f9bJeURS/pIKRTGPyjWe+JvNETtxml1Fhp4NhPUdOVyJYv60E3utqOT8Oo
-         u5Is5l8Gcu/aAbkLzDw5mgT8IFZfLQk36eOpxBXg9KVAXX5tLD4tQe+kgASNPRF+S+eS
-         UakM7inXYghCaG8sJR/auDB7OSu2SPpgMfr3AE2duXlzrlbhANGD9rC1OqW00i/F4yUH
-         q9iw==
-X-Gm-Message-State: ACrzQf3jeJRmdM16HwKiPzpjyHHe58WP55cIdU7yRLqOZsJTLeq/DGWL
-	osAuxhxDzCOT0xEu2g3D+x9BHZW4fV6nQ8EqjGs=
-X-Google-Smtp-Source: AMsMyM7/lzj/M8yrdjovLe09ylgriH0mLp2n/Z8PIY2tUJoP5+MnVTwv/D5uCJ+xkxShjB8m3dlCfWoGBLK/8OJBJ3I=
-X-Received: by 2002:a17:90b:2504:b0:203:5b24:e84b with SMTP id
- ns4-20020a17090b250400b002035b24e84bmr3918035pjb.188.1663681647484; Tue, 20
- Sep 2022 06:47:27 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=BSnTMY5hs7siGJexDhfutae2txs2uAybXsmWH5JELKI=;
+        b=UX4EqM3xr4hPiIMwgzl52bosUztMrEe0J6c8dz4xZCM8eiy2WNaziwvAQ2q4FDfQEu
+         n84lI5XIFtrY4MVvWDdRH2MjZxqz2+qY/vtUfycWh4/FXMlCswQL6jnvpoy991oz941V
+         RhPoF7TVzBNJOKkCSLA7EHKo834Rr/sRCQe/tlw9oIh1LLTpHPfTOfh6PJ0bsf9FVLoi
+         /E/9JZ4EIdQjaWOMK0PcLiEfk/f7YZrkFGAObnMziY6+JVhYTZoxS1u9ZMwxqwOVS5pP
+         RBLlABVwISxObIJur4hrWl45jVqktiOXJWgPwH6DzGfPgV0dSF/7qGDbr16E8MaOfTZ3
+         fANA==
+X-Gm-Message-State: ACrzQf1O1sKKiYuEyL66nvQBxwk/XS4l0cQlWDSeBPr+C/cJpO3F7Mr/
+	P4oUleNlvHckhyoUUqiWOc/B0LUyhHYisW4ZKiHlW1m2GotqhG9YEFwCjt0ggOUmYJj+Kc+a5QZ
+	e1EN5TC3Jj13J2hE=
+X-Received: by 2002:a05:600c:1f16:b0:3b4:f20e:6463 with SMTP id bd22-20020a05600c1f1600b003b4f20e6463mr2182448wmb.56.1663684619613;
+        Tue, 20 Sep 2022 07:36:59 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5pqmimFg4Xn0szdepF/sKeXh8yLqlWRocslSfTXw1Mg/V3RlmxMk2CB69EcUCrH0BhgEJT2Q==
+X-Received: by 2002:a05:600c:1f16:b0:3b4:f20e:6463 with SMTP id bd22-20020a05600c1f1600b003b4f20e6463mr2182436wmb.56.1663684619357;
+        Tue, 20 Sep 2022 07:36:59 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-114-90.dyn.eolo.it. [146.241.114.90])
+        by smtp.gmail.com with ESMTPSA id i20-20020a05600c355400b003b47b80cec3sm203750wmq.42.2022.09.20.07.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Sep 2022 07:36:58 -0700 (PDT)
+Message-ID: <5bebaee5b0a6b183603d8c8428a01750b41df515.camel@redhat.com>
+Subject: Re: [RFC PATCH mptcp-next v8 3/7] reuse tcp_sendmsg_fastopen()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Dmytro Shytyi <dmytro@shytyi.net>, mptcp@lists.linux.dev
+Date: Tue, 20 Sep 2022 16:36:57 +0200
+In-Reply-To: <20220920125243.2880-4-dmytro@shytyi.net>
+References: <20220920125243.2880-1-dmytro@shytyi.net>
+	 <20220920125243.2880-4-dmytro@shytyi.net>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220919132156.3649522-1-imagedong@tencent.com>
- <61ca3016-5f92-7779-9213-f8b75ff9ff55@linux.intel.com> <CADxym3a3q_Tz=SWPqfwL+apnVtEpCd1Ng47xmCbN9ywNXnnMaw@mail.gmail.com>
- <6b78ea19-4756-64be-3599-79f8d8b434b9@tessares.net>
-In-Reply-To: <6b78ea19-4756-64be-3599-79f8d8b434b9@tessares.net>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Tue, 20 Sep 2022 21:47:16 +0800
-Message-ID: <CADxym3ZEjwieR-spFw+FeN1xthAsapWTxPbYheh9tV9gUUZ4-Q@mail.gmail.com>
-Subject: Re: [PATCH mptcp] net: mptcp: add statistics for mptcp socket in use
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, pabeni@redhat.com, 
-	mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 20, 2022 at 7:44 PM Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> Hi Menglong,
->
-> On 20/09/2022 04:10, Menglong Dong wrote:
-> > On Tue, Sep 20, 2022 at 6:37 AM Mat Martineau
-> > <mathew.j.martineau@linux.intel.com> wrote:
-> >>
-> >> On Mon, 19 Sep 2022, menglong8.dong@gmail.com wrote:
-> >>
-> >>> From: Menglong Dong <imagedong@tencent.com>
-> >>>
-> >>> Do the statistics of mptcp socket in use with sock_prot_inuse_add().
-> >>> Therefore, we can get the count of used mptcp socket from
-> >>> /proc/net/protocols:
-> >>>
-> >>> & cat /proc/net/protocols
-> >>> protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
-> >>> MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
-> >>> MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
-> >>>
-> >>> Signed-off-by: Menglong Dong <imagedong@tencent.com>
-> >>
-> >> Hello Menglong -
-> >>
-> >> Thanks for your patch.
-> >>
-> >> One minor thing: please use the subject line tags listed in
-> >> https://github.com/multipath-tcp/mptcp_net-next/wiki/Patch-prefixes :
-> >> either "[PATCH mptcp-net]" or "[PATCH mptcp-next]", so it's clear which
-> >> tree the patch is intended for.
-> >>
-> >
-> > Thanks for your remind, I'll send the next version with
-> > mptcp-next tag.
->
-> Thank you for the your patch.
->
-> If you don't mind, can you also strip "net:" prefix from the commit
-> title? Having 'mptcp:' is enough and that's what was done in most
-> commits changing files from net/mptcp directory so far.
->
+On Tue, 2022-09-20 at 14:52 +0200, Dmytro Shytyi wrote:
+> In the following patches we will reuse modified tcp_sendmsg_fastopen().
+> We call it from mptcp_sendmsg().
+> 
+> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+> ---
+>  include/net/tcp.h    |  3 +++
+>  net/ipv4/tcp.c       | 18 +++++++++++++-----
+>  net/mptcp/protocol.c | 11 +++++++++--
+>  3 files changed, 25 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index 735e957f7f4b..a7d49e42470a 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -1754,6 +1754,9 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
+>  			      struct request_sock *req,
+>  			      struct tcp_fastopen_cookie *foc,
+>  			      const struct dst_entry *dst);
+> +int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+> +			 int *copied, size_t size,
+> +			 struct ubuf_info *uarg);
+>  void tcp_fastopen_init_key_once(struct net *net);
+>  bool tcp_fastopen_cookie_check(struct sock *sk, u16 *mss,
+>  			     struct tcp_fastopen_cookie *cookie);
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index 9251c99d3cfd..d10a3cdae220 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -280,6 +280,9 @@
+>  #include <asm/ioctls.h>
+>  #include <net/busy_poll.h>
+>  
+> +#include <net/mptcp.h>
+> +#include "../mptcp/protocol.h"
+> +
+>  /* Track pending CMSGs. */
+>  enum {
+>  	TCP_CMSG_INQ = 1,
+> @@ -1162,9 +1165,9 @@ void tcp_free_fastopen_req(struct tcp_sock *tp)
+>  	}
+>  }
+>  
+> -static int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+> -				int *copied, size_t size,
+> -				struct ubuf_info *uarg)
+> +int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+> +			 int *copied, size_t size,
+> +			 struct ubuf_info *uarg)
+>  {
+>  	struct tcp_sock *tp = tcp_sk(sk);
+>  	struct inet_sock *inet = inet_sk(sk);
+> @@ -1197,8 +1200,13 @@ static int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>  		}
+>  	}
+>  	flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
+> -	err = __inet_stream_connect(sk->sk_socket, uaddr,
+> -				    msg->msg_namelen, flags, 1);
+> +	if (!sk_is_mptcp(sk))
+> +		err = __inet_stream_connect(sk->sk_socket, uaddr,
+> +					    msg->msg_namelen, flags, 1);
+> +	else
+> +		err = mptcp_stream_connect(sk->sk_socket, uaddr,
+> +					   msg->msg_namelen, msg->msg_flags);
 
-Oops, I forgot it again. Sure, I'll send the next version
-with 'mptcp:' prefix.
 
-Thanks!
-Menglong Dong
+I guess the goal of the above change is let mptcp_stream_connect()
+update the msk socket status, is that correct?
 
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+However there are a few problems with lock: you must acquite the
+subflow socket lock before calling tcp_sendmsg_fastopen() - or will see
+subflow state corruption - but that in turn will cause a deadlock as 
+ mptcp_stream_connect() acquires the msk socket lock and then the
+subflow socket lock.
+
+I think it's better leave the tcp_sendmsg_fastopen() body unchanged...
+
+> +
+>  	/* fastopen_req could already be freed in __inet_stream_connect
+>  	 * if the connection times out or gets rst
+>  	 */
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 470045793181..8cf307e4e59c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1673,9 +1673,16 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  	long timeo;
+>  
+>  	/* we don't support FASTOPEN yet */
+> -	if (msg->msg_flags & MSG_FASTOPEN)
+> -		return -EOPNOTSUPP;
+> +	if (msg->msg_flags & MSG_FASTOPEN) {
+> +		struct socket *ssock = __mptcp_nmpc_socket(msk);
+
+... acquire the subflow socket lock here...
+
+>  
+> +		if (ssock) {
+> +			int copied_syn_fastopen = 0;
+> +
+> +			ret = tcp_sendmsg_fastopen(ssock->sk, msg, &copied_syn_fastopen, len, NULL);
+> +			copied += copied_syn_fastopen;
+> +		}
+
+... and additionally handle the sock state update here. Possibly you
+can encapsulate all the fastopen code in a new function - say
+__mptcp_sendmsg_fastopen(), as it will be called under the msk socket
+lock.
+
+
+Side note: you should enter the fastopen branch even when 
+inet_sk(ssock->sk)->defer_connect is set
+
+Cheers,
+
+Paolo
+
