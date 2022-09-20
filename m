@@ -1,30 +1,29 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D161C14
-	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 13:30:34 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1663680629; cv=none; 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9710E1C34
+	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 13:32:39 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1663680754; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=JKzi32q67qQwuZKOctq/HbVvW7nRzGumEye0a06s8GVvydL1qBJkunUKhDe7B7uHBo1f+UMJUHnfeNhE9NwLVs0/lUsOtx04LyVS3hrhGoHQkm5V/BFpVY+P6yLX5K0Z84O06CU6e2Hqm91yRPQqPigj2bxw3KzWIUSxBQSQ/KU=
+	b=OKuZagCtyThP7A1Uq79Ewppq7y5P4XBprMmI4PtJ5Cob7pnEeVvi2uecjH4XpBrK8LWHFvbfea72uQMTOWUeJR3FzQT4SlcD0HtBQd/tS4kFF2oW9hDMcH6Z+uLjx//hUH7OBQ6LxL2cjId2/YVOxs6I53Swe3rwrZ9twBaAyqQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1663680629; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=c77AjBVSSfxEDMehOqzji44Tw4Tw5svS5BaY1kUgFok=; 
-	b=DAbP7+TWKZ9aEVUpTOUTcwx+/tbW7wLHNukX2PvXJyn0By3uEvhXzO72GpTRf3GN3ku7BxBbTY4TcpGiUhLoGukQyUVwR10cVv6U3+vhZ+gkzuH7Ym0GinkQ9sSYXh8JekFOY2D4RlPomNDWsPq2Jdpjk1+fbjXz9ml4GCB1qlM=
+	t=1663680754; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=rC1grzGIKJ7gGMJ+NlZaRfOlV1hnFcEd9Em1iZse/5Y=; 
+	b=QCEYJAM4Cov+t6RXR8fD24N8JvRkYBqTDqULjLUfa6i96tBCfjGikyLF7qr10UghQS5Cv2zQ8HW5l6ymZo+W8CWoBNO0Y+wthiB5mrrGs07XWbHw83siJmHihQ6nig8ZtfAbIun6TEw6qekrWDVMoSrTB442mpwwwUG+kwfja24=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
 	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663680629;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663680754;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=c77AjBVSSfxEDMehOqzji44Tw4Tw5svS5BaY1kUgFok=;
-	b=DEorZEOo3ESiRocoM7H7mTspsaqdwZYgkfai14ElKHHMAQGAkpDl0tBNILmYB5if
-	9mQANcnKECS4TV1+DSMEEmSeSHR1+MdHrJyg/5pKAXPzv2y8ORXu4gEkXbRXfBIJ9fB
-	ZZS8ZCPOj674sUBTZeU1kyWh/Odfbvggxw1cUVcQ=
+	h=Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:Message-ID:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=rC1grzGIKJ7gGMJ+NlZaRfOlV1hnFcEd9Em1iZse/5Y=;
+	b=FlqrAdydaisNqNzqkckjQRJ9XlEEGB/q8+InxkpurEh56UP/T99Dkm8Ymb/N8MIz
+	LlY9X2ZfO3v+cPuAkAhY6v1zOTwvViOxPxfP8f/TptkjhoEfvd/zxI94QyosmHJZVEL
+	+xVBaHOfaw9sUBatxz6ClxYpGstamyMXNUWzZGgs=
 Received: from [192.168.1.25] (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 16636806277351018.8545252619208; Tue, 20 Sep 2022 15:30:27 +0200 (CEST)
-Message-ID: <50e1cd98-99d4-c33b-5784-f56377ef48af@shytyi.net>
-Date: Tue, 20 Sep 2022 15:30:27 +0200
+	with SMTPS id 1663680751671107.8225451013983; Tue, 20 Sep 2022 15:32:31 +0200 (CEST)
+Date: Tue, 20 Sep 2022 15:32:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -33,73 +32,85 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.2
-Subject: Re: [RFC PATCH mptcp-next v7 02/11] add mptcp_stream_connect to
- protocol.h
+Subject: Re: [RFC PATCH mptcp-next v7 03/11] Initiator: MSG_FASTOPEN sendto().
+ request cookie
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+To: Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
 References: <20220917222853.2406-1-dmytro@shytyi.net>
- <20220917222853.2406-3-dmytro@shytyi.net>
- <5819cf0613ccb13db1c45d8f71bf5fc85d3b0ccf.camel@redhat.com>
+ <20220917222853.2406-4-dmytro@shytyi.net>
+ <e1e8bfbc5f3ba023e01354e62c4f3a28f69c0bca.camel@redhat.com>
+ <7f09e484ec0d6068d62bca82d4ca907a09db64d5.camel@redhat.com>
+ <369dc9a1-eb92-00d3-0447-81e5e017d728@tessares.net>
 From: Dmytro Shytyi <dmytro@shytyi.net>
-In-Reply-To: <5819cf0613ccb13db1c45d8f71bf5fc85d3b0ccf.camel@redhat.com>
+Message-ID: <732cccc8-55de-e08a-9cc7-5cf0132856ae@shytyi.net>
+In-Reply-To: <369dc9a1-eb92-00d3-0447-81e5e017d728@tessares.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 
-Commit message was changed in v8.
+Hello Paolo. Matthieu,
 
-Best,
+Please, check my last commit please v8 . It *fully reuses the existing=20
+code.*
 
-Dmytro
+As from the beginning my misunderstanging from the received feedback was=20
+that it is better
 
-On 9/19/2022 12:19 PM, Paolo Abeni wrote:
-> On Sun, 2022-09-18 at 00:28 +0200, Dmytro Shytyi wrote:
->> We call mptcp_stream_connect() from mptcp_sendmsg_fastopen() in
-> Minor nit: the commit message should be changed to something alike:
+to not impact the existing TCP code and I was forced to create hooks and=20
+reimplement some parts.
+
+
+As from now I see clear acceptance from majority=C2=A0 of modification of t=
+he=20
+existing code (execpt of fastpath),
+
+I prepared a patch v8 that is fully reuse the exsiting code at maximum :)
+
+
+On 9/19/2022 1:22 PM, Matthieu Baerts wrote:
+> Hi Paolo, Dmytro,
 >
-> """
-> In the following patches we will call mptcp_stream_connect() [...],
-> make such symbol visible.
-> """
+> On 19/09/2022 12:44, Paolo Abeni wrote:
+>> On Mon, 2022-09-19 at 12:35 +0200, Paolo Abeni wrote:
+>>> On Sun, 2022-09-18 at 00:28 +0200, Dmytro Shytyi wrote:
+> (...)
 >
-> Otherwise other reviewer may be confused.
->
-> Thanks!
->
-> Paolo
->
->> fastopen.c
+>>>> +=09skb =3D tcp_stream_alloc_skb(ssk->sk, 0, ssk->sk->sk_allocation, t=
+rue);
+>>>> +=09if (unlikely(!skb))
+>>>> +=09=09goto out_EFAULT;
+>>>> +=09iph =3D ip_hdr(skb);
+>>>> +=09if (unlikely(!iph))
+>>>> +=09=09goto out_EFAULT;
+>>> Use only lower case for macro names. Also EFAULT is probably not a good
+>>> return value. EINVAL should fit better. More importantly, it looks like
+>>> this check is not needed ?!?
+>> Addendum: you probably need to add/duplicate the full checks
+>> implemented in tcp_sendmsg_fastopen():
 >>
->> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
->> ---
->>   net/mptcp/protocol.c | 4 ++--
->>   net/mptcp/protocol.h | 1 +
->>   2 files changed, 3 insertions(+), 2 deletions(-)
+>> https://elixir.bootlin.com/linux/v6.0-rc5/source/net/ipv4/tcp.c#L1174
 >>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 55442df8fb97..0e5db0a634d3 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -3474,8 +3474,8 @@ static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
->>   	__mptcp_do_fallback(msk);
->>   }
->>   
->> -static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
->> -				int addr_len, int flags)
->> +int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
->> +			 int addr_len, int flags)
->>   {
->>   	struct mptcp_sock *msk = mptcp_sk(sock->sk);
->>   	struct mptcp_subflow_context *subflow;
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 1bc9f6e77ddd..1e21293bceaa 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -835,6 +835,7 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
->>   void mptcp_event_addr_announced(const struct sock *ssk, const struct mptcp_addr_info *info);
->>   void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
->>   bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
->> +int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, int flags);
->>   
->>   static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
->>   {
+>> lines 1174-1180
+> We discussed a bit about that at the last meeting and I think it might
+> make more sense to re-use tcp_sendmsg_fastopen() like Benjamin did in
+> his seris, see patch 2/10 and 3/10 from [1].
+>
+> I think there were just some confusions here: it is not forbidden to
+> modify TCP code. Of course we don't want modifications for MPTCP
+> affecting TCP perf, especially the fast path but here, it makes sense to
+> export some functions to be re-used in MPTCP instead of duplicating a
+> big bunch of code.
+>
+> It is not needed in our case here, it is more a generic comment about
+> MPTCP dev but I think we can also say that if needed, it might make
+> sense to refactor some code from TCP to export a part of it, no?
+>
+> Cheers,
+> Matt
+>
+> [1]
+> https://lore.kernel.org/mptcp/20220908133829.3410092-1-benjamin.hesmans@t=
+essares.net/T/
+
