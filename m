@@ -1,82 +1,68 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4067E1C14
-	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 13:17:16 +0000 (UTC)
-Received: by mail-oi1-f178.google.com with SMTP id t62so3594989oie.10
-        for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 06:17:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=3TdtYFb5CmGoGQwSW+yPvsETIc66ixw3YLveEuJZyss=;
-        b=jIo5fvHvaS2Sc56XwI/rUigE4u4zVG9BRrabqvaOLANeRhxyJ5Q1dRifWvK8C00Cu9
-         E8dzlLZCqU/T1m+DFENnw6iTIS6B+R2dY0HPZ+DYp/MLFwF1r+wAb4I1bpSBkHis83E2
-         bL0zZtFmSKZcvE9F2Op3E6tP1Jwj0QaVeBmc5iCazuqjNFMYv0pM2yMfY1XtUsS0vGwX
-         kiWfsZ3tKrb4t3hXQ7uXfVGaaVu4rwnIbtf7eJGZKU9d9QD07EhcicxOmhZIc1pLUCro
-         jZNFbV+oJIUolF/uO5Onfmym0FHEnOWQiAgPi9IfOIi13Jre6JKe3PtYbp4HVC/RFbnL
-         Y2zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=3TdtYFb5CmGoGQwSW+yPvsETIc66ixw3YLveEuJZyss=;
-        b=cxugEtvWYTufCsnc+VsgXGE21gJjzOYPr232/y5+rqtLkfHDEzifMedBKeV+D1LX8t
-         BJ89nEra32uBuoZ9mJ/cC/XqFtTU6WcrsaonmDGDGnMw/+Jv4NpVTaNypSaNYOwMxfNw
-         Ji7QGyQa/0NDoNnWLJ01B+r3L4ZUlfz6J1QhL/weV9FQ05DoF1XAh60EKCMZgdOld6jC
-         CDiRgYGxdfk5640mzqBaUiNBCcHJ28OwvJsl/YR3J8AB4xHJjuislDjzwhh/UPC+1xF4
-         jx8OTSEvROLBN93HsR4YU+49h9Da3Acj4BgqVKSef7NEYzcbtGulKE8ebXwWMacKmD89
-         b1ZQ==
-X-Gm-Message-State: ACrzQf2LrcXGvdft2CSB6da8F07CAasxtIFL5b5eeENBn0y2a9748IV9
-	8Z1+YAdfCCPZhAFdQyk1Ww==
-X-Google-Smtp-Source: AMsMyM7Eq9Mbq0QT4QYO7t9OmcPoI5khBXJcTlHhmbuDSPiIWggJWtaW/hXYOszjsy0AvmWg0l2DGQ==
-X-Received: by 2002:a54:410a:0:b0:34f:84d1:b2b3 with SMTP id l10-20020a54410a000000b0034f84d1b2b3mr1561413oic.102.1663679835211;
-        Tue, 20 Sep 2022 06:17:15 -0700 (PDT)
-Received: from [127.0.0.1] ([20.225.99.11])
-        by smtp.gmail.com with ESMTPSA id 125-20020aca0583000000b00350aae903e0sm45837oif.56.2022.09.20.06.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Sep 2022 06:17:14 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Dmytro Shytyi <dmytro@shytyi.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220920125243.2880-8-dmytro@shytyi.net>
-References: <20220920125243.2880-8-dmytro@shytyi.net>
-Subject: Re: selftests: mptfo initiator/listener: Build Failure
-Message-ID: <c6a30614-473d-3718-0229-74fd1278f01f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Sep 2022 13:17:14 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F04F1C14
+	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 13:29:54 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1663680587; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=ipLo9Az3iVuZHi88qyCX/AdcSEHq7vb8u6bbLRY/E8WCLmxIajeYTyyNJ/hKO/5ysStjSOS4lcnKurLzSTRHHJYaKN32oURFgk3Y9JANGkuYmJI1F7iZaXWfTVn9RdohNlYisxwuv10eceZpc1Zk2096U28X1W6K94gRTAb7LNA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1663680587; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=h3c3gMy3iY7IMFzwnZOouJhHBSTi4Us2R7p0bp8Qn5E=; 
+	b=ag3lsDb7Mf4c4cxOXIUmbkqhjhg0FrqnxA7ujhMRxl7+wQAIBuaAnYxXoCvIPuwRl5xuqWXEzYiEZDx4KDoaXS/RQQd9p7iU7tgGnRgJrhnvqbw/c6Hpl8cy7emqFMeJtJ72AJgURrgLia+Feik2v4q+s4+kc/poLutog+hmblA=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=shytyi.net;
+	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
+	dmarc=pass header.from=<dmytro@shytyi.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663680587;
+	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=h3c3gMy3iY7IMFzwnZOouJhHBSTi4Us2R7p0bp8Qn5E=;
+	b=PJ1v6bjrdnXnYC+D/+BKYuuhkFkqvdGZyDPo5QKeihiIRv/Gvu9eyySH8ZPWLIna
+	8PYEp5hCnO7h2A/CeciB2dS73XvjxMpX8W0u1+7ESslpPh17pOs8xbArfuQvd2528fu
+	TTBnvTw69xEwXDjEoc1p71fOghyMli4+ApodmvlU=
+Received: from [192.168.1.25] (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
+	with SMTPS id 1663680585754896.6741233675374; Tue, 20 Sep 2022 15:29:45 +0200 (CEST)
+Message-ID: <feff145e-6234-dba6-3e0c-6b8a2f292e21@shytyi.net>
+Date: Tue, 20 Sep 2022 15:29:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [RFC PATCH mptcp-next v7 01/11] Add separate fastopen.c file.
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <20220917222853.2406-1-dmytro@shytyi.net>
+ <20220917222853.2406-2-dmytro@shytyi.net>
+ <5a7fe64e44c689a4cdc8c9f12895b06d5736d7f4.camel@redhat.com>
+From: Dmytro Shytyi <dmytro@shytyi.net>
+In-Reply-To: <5a7fe64e44c689a4cdc8c9f12895b06d5736d7f4.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Hi Dmytro,
+Hello,
 
-Thank you for your modifications, that's great!
+It is done in v8.
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Thanks,
 
-You can find more details there:
+Dmytro
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20220920125243.2880-8-dmytro@shytyi.net/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/3090294936
-
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/413c19c617ef
-
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+On 9/19/2022 12:21 PM, Paolo Abeni wrote:
+> On Sun, 2022-09-18 at 00:28 +0200, Dmytro Shytyi wrote:
+>> Add separate *.c file. Function prototypes are coming to protocol.h
+>> (Suggestion of @palbeni (JUN 17))
+>>
+>> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+> It's probaly better to squash this patch in 3/11, so fastopen.c will
+> not be a completelly empty skelethon.
+>
+> Thanks,
+>
+> Paolo
+>
