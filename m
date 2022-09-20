@@ -1,15 +1,15 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535521C2C
-	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 12:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9841C26
+	for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 12:52:56 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; t=1663678372; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=K14jNiPf9oz69zqrsupFNNQdd0Ui4FOKVkyZV/XD4CJlzgN5BRzu5uckUuoeG5LU/GvPEa5P5ZM3NJ8zRt4L00a42++Kwk7g3AfxcP1mBrWqlAvbgOqRh0XZiKHyPfebxEBJggMCrrw59rQZ4PUaDiRr1IQ8EqHL+7blsgg0m18=
+	b=GpjvZp8eG1XMhnszfU9t3B7yfm1tgPHQdks2c+qkZH2EjOiBESiVy6f+mHxACwAJzKyJ+QPDvAicdbBy9r2EUonh6R6kYih8N1ZUnex+coSPBH99hXf7pJJYQW6fKBw2FjGjFP2+Yp3PqkBnZC+ENMVDAJWs8YL6hOJYn8CxyQ4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
 	t=1663678372; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=2XZ7xI9ZUYlysUXOthx8OFRz0Ou/hN+oPvfOGP7eC78=; 
-	b=NF5Bt37I675PhS8VRuEG7aROnlbdiheetxxGlMxghfO8p4mrgD5EQejvMEtcYzpFreSL/MGGELTTtv7CH8BMKr8gKDHAElie/Fy/zenYS18AP4KYVjc58PgXEnQ9i/r9sVZ+b4b1GE/Uim2buhSXUFIFmzVO7OBo+zCLKfop3U8=
+	bh=BomVV4olj5Ja7EIR4z671e78rwD9YQdbHSUxTR3sNYc=; 
+	b=LpSiXIvbApgb3DniXIe1Eq0c1r4Pr3pYbqdIX+1EZbMNajOyyhAJFO/uQzKT8u7KwHY3cJEIEY0+RX7uTuvopxspzJGY/YbjUyfmg3VT9v1a/UdN6N/koeMiI1XWYYLX3t6aXRfiqUZC+gYhG+2rdbTs1Hx0EKD1aWKONzk/NZE=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
@@ -17,18 +17,18 @@ ARC-Authentication-Results: i=1; mx.zohomail.eu;
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663678372;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
 	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=2XZ7xI9ZUYlysUXOthx8OFRz0Ou/hN+oPvfOGP7eC78=;
-	b=RyjoWOQAoMYDEwh67qzz+nAKaXF4jBP5SIJGa63TrBeH4hyEFCJn7UbwPhhaz147
-	x6eIrou0hLLnQezjI8KFX2vVfVEP0AkFBA5zaqiiHV4kVqTb8Ms82aec4+vmO6wKaBo
-	2VL7EeKloEguy69Czgvt+9ADbPzJJTDTQm23c9b4=
+	bh=BomVV4olj5Ja7EIR4z671e78rwD9YQdbHSUxTR3sNYc=;
+	b=SDTk3pZMASub7xQ+9nZKJ9oU32C8N9uZ5tC0nGGc9JgU4QVFmKkpk+eAYdMVFT+w
+	fuDQBXEgskH/396zi7ygwR8ziGHzSgSWDpTWgYT8s4qrYuaWw04NaU/QceKOpYbnZXL
+	DOKlIoXEVVaaBCPdIpokst3iFhaUvsvzsxm7TvNg=
 Received: from doris.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 1663678369719293.1301311611096; Tue, 20 Sep 2022 14:52:49 +0200 (CEST)
+	with SMTPS id 1663678369292962.0724831824473; Tue, 20 Sep 2022 14:52:49 +0200 (CEST)
 From: Dmytro Shytyi <dmytro@shytyi.net>
 To: mptcp@lists.linux.dev
 Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <20220920125243.2880-7-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v8 6/7] add skb to mskq in tcp_fastopen_add_skb()
-Date: Tue, 20 Sep 2022 14:52:42 +0200
+Message-ID: <20220920125243.2880-5-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v8 4/7] mptfo variables for msk, options. Fix loop retrans
+Date: Tue, 20 Sep 2022 14:52:40 +0200
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220920125243.2880-1-dmytro@shytyi.net>
 References: <20220920125243.2880-1-dmytro@shytyi.net>
@@ -42,213 +42,106 @@ Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 Content-Type: text/plain; charset=utf8
 
-In the following patches we add skb to msk->receive_queue in the MPTCP
-fastopen context.
+Introduce mptfo variables for msk and options.
+Also fix the infinite retransmissions in the end of second session.
+
+The variable 2nd ack received in struct mptcp_options_received identifies t=
+he
+received ack on the listener side during 3way handshake in mptfo context
+and miningless alone if used alone. It is further used(checked)
+in conjunction in the same "if" statement with variable is_mptfo
+from struct mptcp_sock.
 
 Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
 ---
- include/net/tcp.h       |  2 +-
- net/ipv4/tcp_fastopen.c | 55 +++++++++++++++++++++++++++++++++++------
- net/ipv4/tcp_input.c    | 11 +++++++--
- net/mptcp/protocol.c    |  4 +--
- net/mptcp/protocol.h    |  2 ++
- 5 files changed, 62 insertions(+), 12 deletions(-)
+ net/mptcp/fastopen.c | 14 ++++++++++++++
+ net/mptcp/options.c  |  4 ++++
+ net/mptcp/protocol.h |  6 +++++-
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index a7d49e42470a..6456f90ed9ed 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1749,7 +1749,7 @@ int tcp_fastopen_reset_cipher(struct net *net, struct=
- sock *sk,
- =09=09=09      void *primary_key, void *backup_key);
- int tcp_fastopen_get_cipher(struct net *net, struct inet_connection_sock *=
-icsk,
- =09=09=09    u64 *key);
--void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb);
-+void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb, struct req=
-uest_sock *req);
- struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
- =09=09=09      struct request_sock *req,
- =09=09=09      struct tcp_fastopen_cookie *foc,
-diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
-index 45cc7f1ca296..566706172828 100644
---- a/net/ipv4/tcp_fastopen.c
-+++ b/net/ipv4/tcp_fastopen.c
-@@ -3,6 +3,7 @@
- #include <linux/tcp.h>
- #include <linux/rcupdate.h>
- #include <net/tcp.h>
-+#include "../mptcp/protocol.h"
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+index 9ef49a2d2ea2..92885e459f93 100644
+--- a/net/mptcp/fastopen.c
++++ b/net/mptcp/fastopen.c
+@@ -30,3 +30,17 @@ int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock =
+*msk, sockptr_t optval,
 =20
- void tcp_fastopen_init_key_once(struct net *net)
- {
-@@ -166,8 +167,12 @@ static void tcp_fastopen_cookie_gen(struct sock *sk,
- /* If an incoming SYN or SYNACK frame contains a payload and/or FIN,
-  * queue this additional data / FIN.
-  */
--void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb)
-+void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb, struct req=
-uest_sock *req)
- {
-+=09struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+=09struct tcp_request_sock *tcp_r_sock =3D tcp_rsk(req);
-+=09struct sock *socket =3D mptcp_subflow_ctx(sk)->conn;
-+=09struct mptcp_sock *msk =3D mptcp_sk(socket);
- =09struct tcp_sock *tp =3D tcp_sk(sk);
-=20
- =09if (TCP_SKB_CB(skb)->end_seq =3D=3D tp->rcv_nxt)
-@@ -194,7 +199,34 @@ void tcp_fastopen_add_skb(struct sock *sk, struct sk_b=
-uff *skb)
- =09TCP_SKB_CB(skb)->tcp_flags &=3D ~TCPHDR_SYN;
-=20
- =09tp->rcv_nxt =3D TCP_SKB_CB(skb)->end_seq;
-+
-+=09if (req && tp->syn_fastopen && sk_is_mptcp(sk))
-+=09=09tcp_r_sock =3D tcp_rsk(req);
-+=09else
-+=09=09goto add_skb_to_sk;
-+
-+=09msk->is_mptfo =3D 1;
-+
-+=09//Solves: WARNING: at 704 _mptcp_move_skbs_from_subflow+0x5d0/0x651
-+=09tp->copied_seq +=3D tp->rcv_nxt - tcp_r_sock->rcv_isn - 1;
-+
-+=09subflow->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
-+
-+=09//Solves: BAD mapping: ssn=3D0 map_seq=3D1 map_data_len=3D3
-+=09subflow->ssn_offset =3D tp->copied_seq - 1;
-+
-+=09skb_orphan(skb);
-+=09skb->sk =3D socket;
-+=09skb->destructor =3D mptcp_rfree;
-+=09atomic_add(skb->truesize, &socket->sk_rmem_alloc);
-+=09msk->rmem_fwd_alloc -=3D skb->truesize;
-+
-+=09__skb_queue_tail(&msk->receive_queue, skb);
-+=09atomic64_set(&msk->rcv_wnd_sent, mptcp_subflow_get_mapped_dsn(subflow))=
-;
-+=09goto avoid_add_skb_to_sk;
-+add_skb_to_sk:
- =09__skb_queue_tail(&sk->sk_receive_queue, skb);
-+avoid_add_skb_to_sk:
- =09tp->syn_data_acked =3D 1;
-=20
- =09/* u64_stats_update_begin(&tp->syncp) not needed here,
-@@ -283,7 +315,7 @@ static struct sock *tcp_fastopen_create_child(struct so=
-ck *sk,
-=20
- =09tp->rcv_nxt =3D TCP_SKB_CB(skb)->seq + 1;
-=20
--=09tcp_fastopen_add_skb(child, skb);
-+=09tcp_fastopen_add_skb(child, skb, req);
-=20
- =09tcp_rsk(req)->rcv_nxt =3D tp->rcv_nxt;
- =09tp->rcv_wup =3D tp->rcv_nxt;
-@@ -350,17 +382,26 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct=
- sk_buff *skb,
- =09bool syn_data =3D TCP_SKB_CB(skb)->end_seq !=3D TCP_SKB_CB(skb)->seq + =
-1;
- =09int tcp_fastopen =3D READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_fastopen);
- =09struct tcp_fastopen_cookie valid_foc =3D { .len =3D -1 };
-+=09struct tcp_sock *tp =3D tcp_sk(sk);
- =09struct sock *child;
- =09int ret =3D 0;
-=20
- =09if (foc->len =3D=3D 0) /* Client requests a cookie */
- =09=09NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPFASTOPENCOOKIEREQD);
-=20
--=09if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
--=09      (syn_data || foc->len >=3D 0) &&
--=09      tcp_fastopen_queue_check(sk))) {
--=09=09foc->len =3D -1;
--=09=09return NULL;
-+=09if (tp->syn_fastopen && sk_is_mptcp(sk)) {
-+=09=09if (((syn_data || foc->len >=3D 0) &&
-+=09=09     tcp_fastopen_queue_check(sk))) {
-+=09=09=09foc->len =3D -1;
-+=09=09=09return NULL;
-+=09=09}
-+=09} else {
-+=09=09if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
-+=09=09      (syn_data || foc->len >=3D 0) &&
-+=09=09      tcp_fastopen_queue_check(sk))) {
-+=09=09=09foc->len =3D -1;
-+=09=09=09return NULL;
-+=09=09}
- =09}
-=20
- =09if (tcp_fastopen_no_cookie(sk, dst, TFO_SERVER_COOKIE_NOT_REQD))
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index bc2ea12221f9..3facccee9dcb 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6134,7 +6134,7 @@ static bool tcp_rcv_fastopen_synack(struct sock *sk, =
-struct sk_buff *synack,
- =09=09=09--tp->delivered;
- =09}
-=20
--=09tcp_fastopen_add_skb(sk, synack);
-+=09tcp_fastopen_add_skb(sk, synack, NULL);
-=20
- =09return false;
+ =09return ret;
  }
-@@ -6954,7 +6954,14 @@ int tcp_conn_request(struct request_sock_ops *rsk_op=
-s,
- =09if (IS_ENABLED(CONFIG_SMC) && want_cookie)
- =09=09tmp_opt.smc_ok =3D 0;
-=20
--=09tmp_opt.tstamp_ok =3D tmp_opt.saw_tstamp;
-+=09if (foc.len =3D=3D -1 && sk_is_mptcp(sk)) {
-+=09=09tmp_opt.tstamp_ok =3D tmp_opt.saw_tstamp;
-+=09} else {
-+=09=09tmp_opt.tstamp_ok =3D 0;
-+=09=09tcp_rsk(req)->ts_off =3D 1;
-+=09=09tp->syn_fastopen =3D 1;
-+=09}
 +
- =09tcp_openreq_init(req, &tmp_opt, skb, sk);
- =09inet_rsk(req)->no_srccheck =3D inet_sk(sk)->transparent;
++void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_su=
+bflow_context *subflow,
++=09=09=09=09   struct mptcp_options_received mp_opt)
++{
++=09u64 ack_seq;
++
++=09msk->can_ack =3D true;
++=09msk->remote_key =3D mp_opt.sndr_key;
++=09mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
++=09ack_seq++;
++=09WRITE_ONCE(msk->ack_seq, ack_seq);
++=09pr_debug("ack_seq=3D%llu sndr_key=3D%llu", msk->ack_seq, mp_opt.sndr_ke=
+y);
++=09atomic64_set(&msk->rcv_wnd_sent, ack_seq);
++}
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 30d289044e71..8852a13cfe62 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -91,6 +91,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ =09=09=09ptr +=3D 8;
+ =09=09}
+ =09=09if (opsize >=3D TCPOLEN_MPTCP_MPC_ACK) {
++=09=09=09mp_opt->hns_2nd_ack_rcvd =3D 1;
+ =09=09=09mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
+ =09=09=09ptr +=3D 8;
+ =09=09}
+@@ -1124,6 +1125,9 @@ bool mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb)
+ =09=09return sk->sk_state !=3D TCP_CLOSE;
 =20
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8cf307e4e59c..b2329ef298fd 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -178,7 +178,7 @@ static void __mptcp_rmem_reclaim(struct sock *sk, int a=
-mount)
- =09__sk_mem_reduce_allocated(sk, amount);
- }
-=20
--static void mptcp_rmem_uncharge(struct sock *sk, int size)
-+void mptcp_rmem_uncharge(struct sock *sk, int size)
- {
- =09struct mptcp_sock *msk =3D mptcp_sk(sk);
- =09int reclaimable;
-@@ -191,7 +191,7 @@ static void mptcp_rmem_uncharge(struct sock *sk, int si=
-ze)
- =09=09__mptcp_rmem_reclaim(sk, reclaimable);
- }
-=20
--static void mptcp_rfree(struct sk_buff *skb)
-+void mptcp_rfree(struct sk_buff *skb)
- {
- =09unsigned int len =3D skb->truesize;
- =09struct sock *sk =3D skb->sk;
+ =09if (unlikely(mp_opt.suboptions !=3D OPTION_MPTCP_DSS)) {
++=09=09if (mp_opt.suboptions & OPTIONS_MPTCP_MPC && mp_opt.hns_2nd_ack_rcvd=
+ && msk->is_mptfo)
++=09=09=09mptcp_gen_msk_ackseq_fastopen(msk, subflow, mp_opt);
++
+ =09=09if ((mp_opt.suboptions & OPTION_MPTCP_FASTCLOSE) &&
+ =09=09    msk->local_key =3D=3D mp_opt.rcvr_key) {
+ =09=09=09WRITE_ONCE(msk->rcv_fastclose, true);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 3b9a349a7080..5d86cd7d8dab 100644
+index 57596cdfb1f9..3b9a349a7080 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -840,6 +840,8 @@ void mptcp_event_addr_announced(const struct sock *ssk,=
- const struct mptcp_addr_
- void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
- bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
- int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr, int =
-addr_len, int flags);
-+void mptcp_rmem_uncharge(struct sock *sk, int size);
-+void mptcp_rfree(struct sk_buff *skb);
-=20
+@@ -155,7 +155,8 @@ struct mptcp_options_received {
+ =09=09echo:1,
+ =09=09backup:1,
+ =09=09deny_join_id0:1,
+-=09=09__unused:2;
++=09=09__unused:1;
++=09u8=09hns_2nd_ack_rcvd:1;
+ =09u8=09join_id;
+ =09u64=09thmac;
+ =09u8=09hmac[MPTCPOPT_HMAC_LEN];
+@@ -282,6 +283,7 @@ struct mptcp_sock {
+ =09bool=09=09use_64bit_ack; /* Set when we received a 64-bit DSN */
+ =09bool=09=09csum_enabled;
+ =09bool=09=09allow_infinite_fallback;
++=09bool=09=09is_mptfo;
+ =09u8=09=09mpc_endpoint_id;
+ =09u8=09=09recvmsg_inq:1,
+ =09=09=09cork:1,
+@@ -842,6 +844,8 @@ int mptcp_stream_connect(struct socket *sock, struct so=
+ckaddr *uaddr, int addr_l
  // Fast Open Mechanism functions begin
  int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock *msk, sockptr_t op=
 tval,
+ =09=09=09=09      unsigned int optlen);
++void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_su=
+bflow_context *subflow,
++=09=09=09=09   struct mptcp_options_received mp_opt);
+ // Fast Open Mechanism functions end
+=20
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
 --=20
 2.25.1
 
