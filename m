@@ -1,104 +1,113 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64CF4C6C
-	for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 15:26:23 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id x18so4454102wrm.7
-        for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 08:26:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4705E3237
+	for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 16:52:23 +0000 (UTC)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-12c8312131fso9951152fac.4
+        for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 09:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date;
-        bh=td7eeUdAoD+sboAvcQa/UeCUj1r6FvEiNL/P94CpwKo=;
-        b=dnjXBBoxQEcsJ35HWg58CVDXUysNQIoIeqoEQRZSU6ymQaUfAG/dud/14b2VvYinYp
-         RV2toIzYYdiOayx/qevsT5nMFwaceZvqeX4LUoFTyMyyDKxyJehBlKJTTKhQ7X604zmT
-         CctSY99KwGDghaecVqKKoxdBg+0PUlultYFJUsJu6oF9PrwojZJKlSH6R8jFP9X94UoG
-         RJpZbgYwAeP1H/mYgQreK/dse0uF3i8FQONvKN47FC5+togsebnF+r/Vx5HqGTPqiQRO
-         1jLOTpoLRUQZo3hbzYstdTwUpH/L/qHEb8fk/jlry03GKUK3wvnEEADgAV53uQ7tHlho
-         ZgpA==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
+        bh=pRutzTyb6yVMg3N1dWjNXd0Qn2QlqYr0ZR9nhytWzVU=;
+        b=pPVOGGfZQLT6KkHJvtOn8a7tnFbPMgyIj7zwN6Trn8fjBqzGHCjWMEx8hkwn2qqs3B
+         u7Oz61GvSZpwxAeIj+3olHaA9T8RHl4U1SVYrGvi0/jV/oAvXquqqDKh/Zn/ebyJSkGL
+         gpzpVBx8nS9DU8+9hgypYcZpYdpQf399evI8n68N8pYgpqVtpBvwhxv3wg01M7U7z+dd
+         8OuxAmh72tTL9Rdu4nScywSXqPIdC+LVuwJi94SrfuCJUqHx4Y324o+Fos5XaD/DOQQ8
+         n5CnYFiVLXHxEGoHjJ13vm77lkYq3HV7i9+S+NAyhqd5o4D+bsKpyCFnzZhpAhAQGZTB
+         nzfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=td7eeUdAoD+sboAvcQa/UeCUj1r6FvEiNL/P94CpwKo=;
-        b=AdK8Gpr0Cm9DoVHPEF6LuJ9UJQ1bvOHDNAxWqTVG7brgpOC3XUYuB8VTwCO8fOXKls
-         N//9PQPx/eCO6FwtlbJy7ngRVZIpARpp18qlD1/H/FHuHYsd/BuOZ7WM0lnr9RP4WVQw
-         cqiSxTfuiMC8E0HOj5A4eJ+jUz/JjqAIoyT/cxf4yjBTw3sfiaWQIzBnNKlSTWWozwW/
-         4cE4JfKg50zcEUROAsyT6oBLFmLJ9DJ/BmVUS82njPSp5fumbuqYyE/zS+BJuxc6gttx
-         aR8NWjQNScJ4GzfaG5CtXyJR2MhaP0ghHWX/fs5pOobKGnpOcIvD+IIOdYGzqJu3ZbCi
-         xUbw==
-X-Gm-Message-State: ACrzQf0GWgWUlPGL5nJ16xn9orWPDk/ii+Ok0jKXMRRXdrfvHVN5ITuZ
-	0GB47HN1hC0Nc0w6vYjsvBZjoWavuJ1rfLGlJwSJXYHEA9AQ6TO58bGYAc+JLb+lX/gSQ/Eoiom
-	DR61PZnaU3kIju/V1/BU=
-X-Google-Smtp-Source: AMsMyM4/yVckasR7Uh9OnPBnX/rQQ7cCbJ1vvUYuobUmVRYoqFsB/QeZODUA9Hxyuy5jyloWpMNKzg==
-X-Received: by 2002:a05:6000:cf:b0:228:e37b:361b with SMTP id q15-20020a05600000cf00b00228e37b361bmr17677997wrx.374.1663773981984;
-        Wed, 21 Sep 2022 08:26:21 -0700 (PDT)
-Received: from vdi02.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id p4-20020a05600c358400b003b4935f04a4sm3994435wmq.5.2022.09.21.08.26.21
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=pRutzTyb6yVMg3N1dWjNXd0Qn2QlqYr0ZR9nhytWzVU=;
+        b=Pd9XHYsDfqlKIk/L2LEZ/8fND286sG8O4YH0p1TUgKBk+qikhaCUhyu4Pd8G20pqRi
+         Gh6ihwnmqvT8LdO6A/korN387I9+t0Ve69xPDuAe0w2xhvy2Ml/Q+cXXLGY5eTpErIB2
+         4B5oNsKeNQpvx3ZuOjAVz1u4GVy0F4tbW+CYRFOrqN8OT9/iKH83ApslXM7YeIcUXWiy
+         C7HhOYkmA4L713HN5qxbKOMlxOZX6sRA2Gd6ppuY8LspMc978HcVisbumN+f604RK0sY
+         NQ6kGloDrzNXNTT3xCc/6GjvfhESRP54AlLEssMYr70D4akfal0WTQpsy9PGzwK+63/Y
+         dJ2g==
+X-Gm-Message-State: ACrzQf10eOMBvIt//7M4Qo8roMqCpLn+T+pIIvyyS0l1EdWp1xp1Cj6w
+	ZiuMRzRsZE0saf70Vx1BzyREl+o9+MQl
+X-Google-Smtp-Source: AMsMyM7yBrgbspnJy+5M4bqVEC0YPzVJkcT5L8jrPiy6zIPoAwWj3FTP6ezrvikTdXpLiHvHE1Zphw==
+X-Received: by 2002:a05:6870:c14e:b0:127:c700:b210 with SMTP id g14-20020a056870c14e00b00127c700b210mr5648324oad.192.1663779142359;
+        Wed, 21 Sep 2022 09:52:22 -0700 (PDT)
+Received: from [127.0.0.1] ([40.84.224.243])
+        by smtp.gmail.com with ESMTPSA id p1-20020a9d4541000000b00618fa37308csm1527382oti.35.2022.09.21.09.52.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 08:26:21 -0700 (PDT)
-From: Benjamin Hesmans <benjamin.hesmans@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Subject: [PATCH mptcp-next v1 5/5] mptcp: poll allow write call before actual connect
-Date: Wed, 21 Sep 2022 17:25:39 +0200
-Message-Id: <20220921152539.1851441-6-benjamin.hesmans@tessares.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220921152539.1851441-1-benjamin.hesmans@tessares.net>
-References: <20220921152539.1851441-1-benjamin.hesmans@tessares.net>
+        Wed, 21 Sep 2022 09:52:21 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220921152539.1851441-6-benjamin.hesmans@tessares.net>
+References: <20220921152539.1851441-6-benjamin.hesmans@tessares.net>
+Subject: Re: mptcp: poll allow write call before actual connect: Tests
+ Results
+Message-ID: <c9ff22ec-ad2b-c166-8351-d7e7abb31f84@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Sep 2022 16:52:20 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
 
-If fastopen is used, poll must allow a first write that will trigger
-the SYN+data
+Hi Benjamin,
 
-Similar to what is done in tcp_poll().
+Thank you for your modifications, that's great!
 
-Signed-off-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
----
- net/mptcp/protocol.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Our CI did some validations and here is its report:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index aa6e13949b23..308a09b3c0b6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3733,10 +3733,12 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- {
- 	struct sock *sk = sock->sk;
- 	struct mptcp_sock *msk;
-+	struct socket *ssock;
- 	__poll_t mask = 0;
- 	int state;
- 
- 	msk = mptcp_sk(sk);
-+	ssock = __mptcp_nmpc_socket(msk);
- 	sock_poll_wait(file, sock, wait);
- 
- 	state = inet_sk_state_load(sk);
-@@ -3751,6 +3753,9 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
- 		mask |= mptcp_check_readable(msk);
- 		mask |= mptcp_check_writeable(msk);
-+	} else if (ssock && state == TCP_SYN_SENT && inet_sk(ssock->sk)->defer_connect) {
-+		/* cf tcp_poll() note about TFO */
-+		mask |= EPOLLOUT | EPOLLWRNORM;
- 	}
- 	if (sk->sk_shutdown == SHUTDOWN_MASK || state == TCP_CLOSE)
- 		mask |= EPOLLHUP;
--- 
-2.25.1
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/6174768750657536
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6174768750657536/summary/summary.txt
+
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): =
+packetdrill_add_addr =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5611818797236224
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5611818797236224/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/559d6c15f187
 
 
--- 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
 
-Disclaimer: https://www.tessares.net/mail-disclaimer/ 
-<https://www.tessares.net/mail-disclaimer/>
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
