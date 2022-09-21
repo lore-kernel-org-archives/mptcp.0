@@ -1,265 +1,192 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0849B7C
-	for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 03:25:56 +0000 (UTC)
-Received: by mail-pf1-f193.google.com with SMTP id b75so4612814pfb.7
-        for <mptcp@lists.linux.dev>; Tue, 20 Sep 2022 20:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=0oC/VUTkeyEGlzSwJ4jhfY2RtBQvIjcCAA0t7QkLv0w=;
-        b=kPq3ugkxqw2rIXw+hp5qT7ne1uLVjerych7Gn3XMWihKW2ZHupWi5baHrBd4V/VfG3
-         /rCR2uxIfvfzkMF+VN98oWekR2m4EUFs2kd186pH+IaUO3RH74HOMecfrIwNUgCyxUto
-         2hZZNEblwoIbz4sSj+ACy/Rp0ladohHUT7O659/2/0mo3woKgUBvVM9BLnL3D282FR5h
-         JojO3ZXrYOpURFw0cCpUWBPEP3Fo0na+OAnkEbgpivQAF3jPWoOPvCJHXrgF1NFHAOY7
-         c2ormu808IudJQ9ufKC6aVV7Brfhw9kSQLZ4bWfDmbw6NN4jRQEkTjwIR+48bDs3/uKR
-         QctA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=0oC/VUTkeyEGlzSwJ4jhfY2RtBQvIjcCAA0t7QkLv0w=;
-        b=v+lsKAyv0hQg8ufto0/4M0QZQ9yICyhwsCkFQjipOE3NmlpmGUzFmzTVoUWcKoBOqk
-         xZEzcWoAG9a+NqGUn97M9XGsuT2X+gI4u30SH7v30zb0VQLtVJXe1GWT9MIuXAIrMbmK
-         Wf2qBV4RVvMikrlhcNTOnW5HDbFemb0Fj+S9IZr2NITc1tTFB0jIPZOsWJ1/SSfIW5f9
-         PnAhGGx6HHi13smMK4cNukv4WsrMjFsWiugtYmg+qVQai/VWlGcHIi7ISGwfThB1PLD6
-         pEymrMzwzYffArVobiXO/1W8omZ+URXtm0kwbxDTVbbXFxry4SNaTtZDgN4YdBFebzD8
-         QuKA==
-X-Gm-Message-State: ACrzQf1sigyxlOjYSetv9rFLt7MzfmUU+iol1yVJelubToBfSd40X5p4
-	a7BF6j93I7/1JSMoXzz4eadQlVNNjXXee+ZK4Vk=
-X-Google-Smtp-Source: AMsMyM4dT9jEkkx1IsssFuDe/N9OdjNNMNfnmuyp3hqmtw3JlN3iyYQLVNo02Hq27YX/NUNlCX5EtVSFz0Hg4NjGoVs=
-X-Received: by 2002:a05:6a00:1307:b0:53a:9663:1bd6 with SMTP id
- j7-20020a056a00130700b0053a96631bd6mr26932347pfu.55.1663730756239; Tue, 20
- Sep 2022 20:25:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9667C
+	for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 04:10:02 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1663733391; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=MGWg/L4Lr3OGHRY5vfZKeTxBbXQOSmIPiPFXLPl0tItv2E8IE55dExV4Yx1hBMnmQ0fDpqyRVK2cPFRorBVw2/l+ogqqBLtEDhL/H93K/3cRWBYTGfCM8acKGqze3JHaDZx01974WQFTcLGIbzW6kfqR+Ounargqto/Kgj5pBKo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1663733391; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=V/I/yLII7Ytx97f4rr9bcuAJmysaBde/crLgGDIEByk=; 
+	b=MzQciwCI9P/QLBBxhAPVIFd2X3M10WFh1MsybM0YNJvx4l+LZyvutI28yewm6x9Yq5Rt/D6JY+BxLp6YWEfnxKVpIO2dxIwVkTKDuGBiLcVa0CIVzS5qJKSQgND7nt/Q8eXr8iPF0DAFN4OtVMtUv9oix8NfKhV6h4TW0xckeqo=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=shytyi.net;
+	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
+	dmarc=pass header.from=<dmytro@shytyi.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663733391;
+	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=V/I/yLII7Ytx97f4rr9bcuAJmysaBde/crLgGDIEByk=;
+	b=a7+OZKhokObm5HFhr4RH28/jkaEEMOG9h5un7p9tXSftu0Jo6WJ3feM4SX6nrukW
+	M1Pzo+2hjuaZ691zx1SPUMXR/QDtxWqam5e+MRiq3G4S/xmv/KtcN3p0+nMihQJYZ4Q
+	iQWe1wkHmc6uCKWNpgGSvxb01FraFwcjVlP8EnS8=
+Received: from [192.168.1.25] (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
+	with SMTPS id 1663733389826574.6976538687214; Wed, 21 Sep 2022 06:09:49 +0200 (CEST)
+Message-ID: <2658a04c-a7e9-ef5c-d741-b13ee71a9d8f@shytyi.net>
+Date: Wed, 21 Sep 2022 06:09:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220919132156.3649522-1-imagedong@tencent.com>
- <61ca3016-5f92-7779-9213-f8b75ff9ff55@linux.intel.com> <CADxym3a3q_Tz=SWPqfwL+apnVtEpCd1Ng47xmCbN9ywNXnnMaw@mail.gmail.com>
- <44a260ec-6a0c-15f8-516b-6304ae9610d6@linux.intel.com>
-In-Reply-To: <44a260ec-6a0c-15f8-516b-6304ae9610d6@linux.intel.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 21 Sep 2022 11:25:44 +0800
-Message-ID: <CADxym3Ydc36U-Z2he0t-v8USoPEALWcO5d=TCL-hYsNvvrC1oQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp] net: mptcp: add statistics for mptcp socket in use
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: pabeni@redhat.com, mptcp@lists.linux.dev, 
-	Menglong Dong <imagedong@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [RFC PATCH mptcp-next v8 6/7] add skb to mskq in
+ tcp_fastopen_add_skb()
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <20220920125243.2880-1-dmytro@shytyi.net>
+ <20220920125243.2880-7-dmytro@shytyi.net>
+ <f486773706f78c6ea780dfed5e97bbedf4fcee70.camel@redhat.com>
+From: Dmytro Shytyi <dmytro@shytyi.net>
+In-Reply-To: <f486773706f78c6ea780dfed5e97bbedf4fcee70.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Wed, Sep 21, 2022 at 6:36 AM Mat Martineau
-<mathew.j.martineau@linux.intel.com> wrote:
->
-> On Tue, 20 Sep 2022, Menglong Dong wrote:
->
-> > On Tue, Sep 20, 2022 at 6:37 AM Mat Martineau
-> > <mathew.j.martineau@linux.intel.com> wrote:
-> >>
-> >> On Mon, 19 Sep 2022, menglong8.dong@gmail.com wrote:
-> >>
-> >>> From: Menglong Dong <imagedong@tencent.com>
-> >>>
-> >>> Do the statistics of mptcp socket in use with sock_prot_inuse_add().
-> >>> Therefore, we can get the count of used mptcp socket from
-> >>> /proc/net/protocols:
-> >>>
-> >>> & cat /proc/net/protocols
-> >>> protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
-> >>> MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
-> >>> MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
-> >>>
-> >>> Signed-off-by: Menglong Dong <imagedong@tencent.com>
-> >>
-> >> Hello Menglong -
-> >>
-> >> Thanks for your patch.
-> >>
-> >> One minor thing: please use the subject line tags listed in
-> >> https://github.com/multipath-tcp/mptcp_net-next/wiki/Patch-prefixes :
-> >> either "[PATCH mptcp-net]" or "[PATCH mptcp-next]", so it's clear which
-> >> tree the patch is intended for.
-> >>
-> >
-> > Thanks for your remind, I'll send the next version with
-> > mptcp-next tag.
-> >
-> >>> ---
-> >>> net/mptcp/protocol.c | 19 +++++++++++++------
-> >>> net/mptcp/subflow.c  |  3 +++
-> >>> 2 files changed, 16 insertions(+), 6 deletions(-)
-> >>>
-> >>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> >>> index 45ed50e9aec9..4da77aa8b070 100644
-> >>> --- a/net/mptcp/protocol.c
-> >>> +++ b/net/mptcp/protocol.c
-> >>> @@ -2311,6 +2311,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-> >>>                       tcp_set_state(ssk, TCP_CLOSE);
-> >>>                       mptcp_subflow_queue_clean(ssk);
-> >>>                       inet_csk_listen_stop(ssk);
-> >>> +                     sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
-> >>
-> >> The code in this function is for a closing subflow, not a closing MPTCP
-> >> socket. I don't think this call belongs here.
-> >>
-> >
-> > I think this is the path of the listening mptcp close.
-> > The mptcp socket in listening status is not hashed
-> > to the token hash table, or has 'MPTCP_FALLBACK_DONE'
-> > flags. Therefore, the use statistics of it is not freed in
-> > mptcp_destroy_common().
-> >
-> > Hmm...maybe there is a better code path for
-> > this part?
->
-> Ah, right: the above block of code only runs once for the single listener
-> subflow.
->
-> mptcp_destroy_common() still seems like the better place to adjust the
-> counter for the TCP_LISTEN case. Does it work to check the sk_state of
-> __mptcp_nmpc_socket(msk) for TCP_LISTEN before the loop in
-> mptcp_destroy_common() that calls __mptcp_close_ssk(), like this?
->
+Thank you Paolo for this interesting comment with great approach.
 
-I'm afraid that this can't work, as msk->subflow will be disposed
-in mptcp_destroy() before mptcp_destroy_common().
+Version 9 of mptfo is coming with implemented and working 
+"subflow_v4_send_synack()"
 
-Does it work if we move mptcp_dispose_initial_subflow()
-behind mptcp_destroy_common()?
 
-Otherwise, how about we pass a MPTCP_CF_LISTEN flag
-to mptcp_destroy_common(), like this:
-
-    ssock = __mptcp_nmpc_socket(msk);
-    if (ssock && inet_sk_state_load(ssock->sk) == TCP_LISTEN)
-        listener = true;
-
-    mptcp_dispose_initial_subflow(msk);
-    mptcp_destroy_common(msk, listener ? MPTCP_CF_LISTEN : 0);
-
-Thanks!
-Menglong Dong
-
-> ssock = __mptcp_nmpc_socket(msk);
-> if (ssock && inet_sk_state_load(ssock->sk) == TCP_LISTEN)
->         listener = true;
+On 9/20/2022 6:02 PM, Paolo Abeni wrote:
+> On Tue, 2022-09-20 at 14:52 +0200, Dmytro Shytyi wrote:
+>> In the following patches we add skb to msk->receive_queue in the MPTCP
+>> fastopen context.
+>>
+>> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+>> ---
+>>   include/net/tcp.h       |  2 +-
+>>   net/ipv4/tcp_fastopen.c | 55 +++++++++++++++++++++++++++++++++++------
+>>   net/ipv4/tcp_input.c    | 11 +++++++--
+>>   net/mptcp/protocol.c    |  4 +--
+>>   net/mptcp/protocol.h    |  2 ++
+>>   5 files changed, 62 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/include/net/tcp.h b/include/net/tcp.h
+>> index a7d49e42470a..6456f90ed9ed 100644
+>> --- a/include/net/tcp.h
+>> +++ b/include/net/tcp.h
+>> @@ -1749,7 +1749,7 @@ int tcp_fastopen_reset_cipher(struct net *net, struct sock *sk,
+>>   			      void *primary_key, void *backup_key);
+>>   int tcp_fastopen_get_cipher(struct net *net, struct inet_connection_sock *icsk,
+>>   			    u64 *key);
+>> -void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb);
+>> +void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb, struct request_sock *req);
+>>   struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
+>>   			      struct request_sock *req,
+>>   			      struct tcp_fastopen_cookie *foc,
+>> diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
+>> index 45cc7f1ca296..566706172828 100644
+>> --- a/net/ipv4/tcp_fastopen.c
+>> +++ b/net/ipv4/tcp_fastopen.c
+>> @@ -3,6 +3,7 @@
+>>   #include <linux/tcp.h>
+>>   #include <linux/rcupdate.h>
+>>   #include <net/tcp.h>
+>> +#include "../mptcp/protocol.h"
+>>   
+>>   void tcp_fastopen_init_key_once(struct net *net)
+>>   {
+>> @@ -166,8 +167,12 @@ static void tcp_fastopen_cookie_gen(struct sock *sk,
+>>   /* If an incoming SYN or SYNACK frame contains a payload and/or FIN,
+>>    * queue this additional data / FIN.
+>>    */
+>> -void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb)
+>> +void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb, struct request_sock *req)
+>>   {
+>> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+>> +	struct tcp_request_sock *tcp_r_sock = tcp_rsk(req);
+>> +	struct sock *socket = mptcp_subflow_ctx(sk)->conn;
+>> +	struct mptcp_sock *msk = mptcp_sk(socket);
+>>   	struct tcp_sock *tp = tcp_sk(sk);
+>>   
+>>   	if (TCP_SKB_CB(skb)->end_seq == tp->rcv_nxt)
+>> @@ -194,7 +199,34 @@ void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb)
+>>   	TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_SYN;
+>>   
+>>   	tp->rcv_nxt = TCP_SKB_CB(skb)->end_seq;
+>> +
+>> +	if (req && tp->syn_fastopen && sk_is_mptcp(sk))
+>> +		tcp_r_sock = tcp_rsk(req);
+>> +	else
+>> +		goto add_skb_to_sk;
+>> +
+>> +	msk->is_mptfo = 1;
+>> +
+>> +	//Solves: WARNING: at 704 _mptcp_move_skbs_from_subflow+0x5d0/0x651
+>> +	tp->copied_seq += tp->rcv_nxt - tcp_r_sock->rcv_isn - 1;
+>> +
+>> +	subflow->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
+>> +
+>> +	//Solves: BAD mapping: ssn=0 map_seq=1 map_data_len=3
+>> +	subflow->ssn_offset = tp->copied_seq - 1;
+>> +
+>> +	skb_orphan(skb);
+>> +	skb->sk = socket;
+>> +	skb->destructor = mptcp_rfree;
+>> +	atomic_add(skb->truesize, &socket->sk_rmem_alloc);
+>> +	msk->rmem_fwd_alloc -= skb->truesize;
+>> +
+>> +	__skb_queue_tail(&msk->receive_queue, skb);
+>> +	atomic64_set(&msk->rcv_wnd_sent, mptcp_subflow_get_mapped_dsn(subflow));
+>> +	goto avoid_add_skb_to_sk;
+> AFAICS the above:
 >
-> >
-> >>>               }
-> >>>               __tcp_close(ssk, 0);
-> >>>
-> >>> @@ -3067,6 +3068,9 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
-> >>>       skb_rbtree_purge(&msk->out_of_order_queue);
-> >>>       mptcp_data_unlock(sk);
-> >>>
-> >>> +     if (!sk_unhashed(sk) || __mptcp_check_fallback(msk))
+> - mark the passive socket as an TFO one.
+> - set the mapping the DSS mapping for the TFO syn data
+> - bypass the usual MPTCP receive path
 >
-> then you could change this to
+> I think we can do all the above elsewhere, with no need to touch the
+> tcp code in an IMHO cleaner way, something alike the following (mostly
+> pseudo code, only ipv4 example, the ipv6 part should be added, too):
 >
-> if (!sk_unhashed(sk) || __mptcp_check_fallback(msk) || listener)
+> ---
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index c7d49fb6e7bd..4e23fa9f0083 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -307,6 +307,28 @@ static struct dst_entry *subflow_v4_route_req(const struct sock *sk,
+>   	return NULL;
+>   }
+>   
+> +static int subflow_v4_send_synack(const struct sock *sk, struct dst_entry *dst,
+> +				  struct flowi *fl,
+> +				  struct request_sock *req,
+> +				  struct tcp_fastopen_cookie *foc,
+> +				  enum tcp_synack_type synack_type,
+> +				  struct sk_buff *syn_skb)
+> +{
+> +	if (synack_type == TCP_SYNACK_FASTOPEN) {
+> +		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+> +
+> +		<mark subflow/msk as "mptfo">
+> +		<evenutally clear tstamp_ok, as needed depending on cookie size>
+> +		<dequeue the skb from sk receive queue>
+> +		<set the skb mapping>
+> +		<acquire the msk data lock>
+> +		<move skb into msk receive queue>
+> +		<call msk data_ready>
+> +		<release the msk data lock>
+> +	}
+> +	return tcp_request_sock_ipv4_ops.send_synack(sk, dst, fl, req, foc, synack_type, syn_skb);
+> +}
+> +
+>   #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>   static struct dst_entry *subflow_v6_route_req(const struct sock *sk,
+>   					      struct sk_buff *skb,
+> @@ -1939,6 +1960,7 @@ void __init mptcp_subflow_init(void)
+>   
+>   	subflow_request_sock_ipv4_ops = tcp_request_sock_ipv4_ops;
+>   	subflow_request_sock_ipv4_ops.route_req = subflow_v4_route_req;
+> +	subflow_request_sock_ipv4_ops.send_synack = subflow_v4_send_synack;
+>   
+>   	subflow_specific = ipv4_specific;
+>   	subflow_specific.conn_request = subflow_v4_conn_request;
 >
-> ?
 >
 >
-> Thanks,
 >
-> Mat
->
->
-> >>> +             sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
-> >>> +
-> >>>       /* move all the rx fwd alloc into the sk_mem_reclaim_final in
-> >>>        * inet_sock_destruct() will dispose it
-> >>>        */
-> >>> @@ -3513,6 +3517,7 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
-> >>>       mptcp_token_destroy(msk);
-> >>>       inet_sk_state_store(sock->sk, TCP_SYN_SENT);
-> >>>       subflow = mptcp_subflow_ctx(ssock->sk);
-> >>> +     sock_prot_inuse_add(sock_net(sock->sk), sock->sk->sk_prot, 1);
-> >>> #ifdef CONFIG_TCP_MD5SIG
-> >>>       /* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-> >>>        * TCP option space.
-> >>> @@ -3547,12 +3552,13 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
-> >>> static int mptcp_listen(struct socket *sock, int backlog)
-> >>> {
-> >>>       struct mptcp_sock *msk = mptcp_sk(sock->sk);
-> >>> +     struct sock *sk = sock->sk;
-> >>
-> >> Changing all of the "sock->sk" text in this function to "sk" creates a lot
-> >> of diffs that aren't related to maintaining the inuse statistics. If you'd
-> >> like to do that refactoring change, please split that into a separate
-> >> patch for mptcp-next.
-> >>
-> >
-> > Ok, I'll split it into a separate patch.
-> >
-> > Thanks!
-> > Menglong Dong
-> >
-> >> -Mat
-> >>
-> >>>       struct socket *ssock;
-> >>>       int err;
-> >>>
-> >>>       pr_debug("msk=%p", msk);
-> >>>
-> >>> -     lock_sock(sock->sk);
-> >>> +     lock_sock(sk);
-> >>>       ssock = __mptcp_nmpc_socket(msk);
-> >>>       if (!ssock) {
-> >>>               err = -EINVAL;
-> >>> @@ -3560,16 +3566,17 @@ static int mptcp_listen(struct socket *sock, int backlog)
-> >>>       }
-> >>>
-> >>>       mptcp_token_destroy(msk);
-> >>> -     inet_sk_state_store(sock->sk, TCP_LISTEN);
-> >>> -     sock_set_flag(sock->sk, SOCK_RCU_FREE);
-> >>> +     inet_sk_state_store(sk, TCP_LISTEN);
-> >>> +     sock_set_flag(sk, SOCK_RCU_FREE);
-> >>> +     sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
-> >>>
-> >>>       err = ssock->ops->listen(ssock, backlog);
-> >>> -     inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
-> >>> +     inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
-> >>>       if (!err)
-> >>> -             mptcp_copy_inaddrs(sock->sk, ssock->sk);
-> >>> +             mptcp_copy_inaddrs(sk, ssock->sk);
-> >>>
-> >>> unlock:
-> >>> -     release_sock(sock->sk);
-> >>> +     release_sock(sk);
-> >>>       return err;
-> >>> }
-> >>>
-> >>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> >>> index 07dd23d0fe04..da6cfa73a3bd 100644
-> >>> --- a/net/mptcp/subflow.c
-> >>> +++ b/net/mptcp/subflow.c
-> >>> @@ -747,6 +747,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
-> >>>                       mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
-> >>>                       mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
-> >>>                       mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
-> >>> +                     sock_prot_inuse_add(sock_net(new_msk),
-> >>> +                                         new_msk->sk_prot,
-> >>> +                                         1);
-> >>>                       ctx->conn = new_msk;
-> >>>                       new_msk = NULL;
-> >>>
-> >>> --
-> >>> 2.37.2
-> >>>
-> >>>
-> >>>
-> >>
-> >> --
-> >> Mat Martineau
-> >> Intel
-> >
->
-> --
-> Mat Martineau
-> Intel
