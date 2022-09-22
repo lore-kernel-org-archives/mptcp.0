@@ -1,129 +1,106 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E7823AD
-	for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 08:04:59 +0000 (UTC)
-Received: by mail-ej1-f50.google.com with SMTP id lh5so19163836ejb.10
-        for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 01:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date;
-        bh=peqvwuzTwxVm+IS/9Q1M9Q7XZLLqPzAJFTVSOHEuD54=;
-        b=eOPOkkn+2Diw5ZrGhr6L0K6UZMtfgwkF0lN2dbl+FcOlxNp9H7+n+B8quRoE50aAYQ
-         YsViXqx0YFjcdFldfNngS/AcYUc7bpSH2QoA88g4+KdfZ/aXhOLuET4HolTD5kNpOLdP
-         szFRSVuWOx6X3u2ss20Pt1bqNGuT5XPHBA89Da+1RQC6GEtqxM6tgGQ9+52oQUs9o3TJ
-         pN8ktyNcprI9T56x7mc4G+DwxY2SDiKDv8zdwkdGBTRxi/OcRsVkK29D0xp90EDBxHqM
-         Dqivi/QkedETG2ZkhWR195ClquntswkjkAkCEV8Vz+4VepBgXaFvfSPyHl7tMyOYawbW
-         /IbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date;
-        bh=peqvwuzTwxVm+IS/9Q1M9Q7XZLLqPzAJFTVSOHEuD54=;
-        b=vZy+z+k/W/usOiK/9BMmryF7DG2LOkIwp0G2HjgrYGtY1187c4W3zCKfD8llO2qHRJ
-         Jhc4ovqEJEhBykzB0TrOQLNTSrLXaq9I1Asd5c9cCnD/G/6IUwvhNn0CGg0v6WtMKSuH
-         O1/rubnYQRoFDbh0WEftrWu4E13GOVf+fow8kq4mm1h5avOsCHi2vRxAue4XaD+NAuCh
-         2MFFWrGryoVq3gW3q+iJP54M8gKQHYqbXMv9vOh/I4OMJnrwYWZKgImmVb0K+RHtIJGt
-         rUfZc6bnI03YXka2oq+YE6XSRONDYO2hO3mhKPyYbygi4N1S0YuqadZ7ByYPolJmSnma
-         bLBA==
-X-Gm-Message-State: ACrzQf1JO/Izq9VEJkSsC2TfFAfC+Q+DKrwX4BXM+von2Uk0+mRzhGNY
-	AL2n8EmaEDsjWh2yMB4YCu8fhg==
-X-Google-Smtp-Source: AMsMyM605C+I/fNudehHOC0GL1+YrftCxs4qArOLY6AOkmbAS/IA2l9lKGliWnFM+F0mulRpAESTTQ==
-X-Received: by 2002:a17:906:8a6c:b0:781:6a4a:11d4 with SMTP id hy12-20020a1709068a6c00b007816a4a11d4mr1768038ejc.14.1663833897438;
-        Thu, 22 Sep 2022 01:04:57 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:ffea:d2d9:c85a:125a? ([2a02:578:8593:1200:ffea:d2d9:c85a:125a])
-        by smtp.gmail.com with ESMTPSA id b21-20020aa7c6d5000000b0044e1b4bca41sm3191282eds.79.2022.09.22.01.04.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Sep 2022 01:04:56 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------wz1F5KJ9wzLGWF5YjXa0fIAp"
-Message-ID: <84f45a7d-92b6-4dc5-d7a1-072152fab6ff@tessares.net>
-Date: Thu, 22 Sep 2022 10:04:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8BF28F2
+	for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 09:02:12 +0000 (UTC)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1obHn8-00069v-Lf; Thu, 22 Sep 2022 10:42:42 +0200
+Received: from pengutronix.de (unknown [IPv6:2a01:4f8:1c1c:29e9:22:41ff:fe00:1400])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id DE95DE9FCD;
+	Thu, 22 Sep 2022 08:23:38 +0000 (UTC)
+Date: Thu, 22 Sep 2022 10:23:38 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+	linux-can@vger.kernel.org, kernel@pengutronix.de,
+	MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH net 2/3] can: gs_usb: gs_can_open(): fix race
+ dev->can.state condition
+Message-ID: <20220922082338.a6mbf2bbtznr3lvz@pengutronix.de>
+References: <20220921083609.419768-1-mkl@pengutronix.de>
+ <20220921083609.419768-3-mkl@pengutronix.de>
+ <84f45a7d-92b6-4dc5-d7a1-072152fab6ff@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH net 2/3] can: gs_usb: gs_can_open(): fix race
- dev->can.state condition
-Content-Language: en-GB
-To: Marc Kleine-Budde <mkl@pengutronix.de>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, linux-can@vger.kernel.org,
- kernel@pengutronix.de, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20220921083609.419768-1-mkl@pengutronix.de>
- <20220921083609.419768-3-mkl@pengutronix.de>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220921083609.419768-3-mkl@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vaq73b4wttzzl5et"
+Content-Disposition: inline
+In-Reply-To: <84f45a7d-92b6-4dc5-d7a1-072152fab6ff@tessares.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: mptcp@lists.linux.dev
 
-This is a multi-part message in MIME format.
---------------wz1F5KJ9wzLGWF5YjXa0fIAp
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hello,
+--vaq73b4wttzzl5et
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 21/09/2022 10:36, Marc Kleine-Budde wrote:
-> The dev->can.state is set to CAN_STATE_ERROR_ACTIVE, after the device
-> has been started. On busy networks the CAN controller might receive
-> CAN frame between and go into an error state before the dev->can.state
-> is assigned.
-> 
-> Assign dev->can.state before starting the controller to close the race
-> window.
-> 
-> Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
-> Link: https://lore.kernel.org/all/20220920195216.232481-1-mkl@pengutronix.de
-> Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+On 22.09.2022 10:04:55, Matthieu Baerts wrote:
+> On 21/09/2022 10:36, Marc Kleine-Budde wrote:
+> > The dev->can.state is set to CAN_STATE_ERROR_ACTIVE, after the device
+> > has been started. On busy networks the CAN controller might receive
+> > CAN frame between and go into an error state before the dev->can.state
+> > is assigned.
+> >=20
+> > Assign dev->can.state before starting the controller to close the race
+> > window.
+> >=20
+> > Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN dev=
+ices")
+> > Link: https://lore.kernel.org/all/20220920195216.232481-1-mkl@pengutron=
+ix.de
+> > Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+>=20
+> FYI, we got a small conflict when merging -net in net-next in the MPTCP
+> tree due to this patch applied in -net:
+>=20
+>   5440428b3da6 ("can: gs_usb: gs_can_open(): fix race dev->can.state
+> condition")
+>=20
+> and this one from net-next:
+>=20
+>   45dfa45f52e6 ("can: gs_usb: add RX and TX hardware timestamp support")
+>=20
+> The conflict has been resolved on our side[1] and the resolution we
+> suggest is attached to this email.
 
-FYI, we got a small conflict when merging -net in net-next in the MPTCP
-tree due to this patch applied in -net:
+That patch looks good to me.
 
-  5440428b3da6 ("can: gs_usb: gs_can_open(): fix race dev->can.state
-condition")
+Thanks,
+Marc
 
-and this one from net-next:
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
 
-  45dfa45f52e6 ("can: gs_usb: add RX and TX hardware timestamp support")
+--vaq73b4wttzzl5et
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The conflict has been resolved on our side[1] and the resolution we
-suggest is attached to this email.
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
-Matt
+iQEzBAABCgAdFiEEBsvAIBsPu6mG7thcrX5LkNig010FAmMsG4YACgkQrX5LkNig
+013BAAf/e8dSMLbcldH9hd0PZggpl/ZVOZp4/l82rYQCWa4VWXHfLg+XUMmvvyxp
+rwvvw4ku3d2RBX5V6OKP+Xtqhe7gaXdRm2miKGS8404n3Cr3AmxYSXs41e/pDkj5
+xM0oUB+oAR2lP9ZDkICvA3ZbM4roVhEFimrPDoVrTP41t1L7YCyBqNrNZsqv4p9e
+leKI3+TZQuJdVTnlZGhkLto7sXY2v1GgrlK97EqiekICB0MBwWIHBr/LIAnVLkfD
+Yy4rDCD2Byhbmao9mhnCa/vg+yG5MFTDo58dvM5C6x5ABwvhpWTKtyyRQ0N+CI5F
+sHpP4/DHzamLg0sUdNDklbMwDXoEDA==
+=vFx/
+-----END PGP SIGNATURE-----
 
-[1] https://github.com/multipath-tcp/mptcp_net-next/commit/671f1521b564
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---------------wz1F5KJ9wzLGWF5YjXa0fIAp
-Content-Type: text/x-patch; charset=UTF-8;
- name="671f1521b5648e99fb55bbd0f114e4433551d411.patch"
-Content-Disposition: attachment;
- filename="671f1521b5648e99fb55bbd0f114e4433551d411.patch"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWNjIGRyaXZlcnMvbmV0L2Nhbi91c2IvZ3NfdXNiLmMKaW5kZXggY2MzNjNmMTkz
-NWNlLGMxZmYzYzA0NmQ2Mi4uNWUwZDI4MGIwY2QzCi0tLSBhL2RyaXZlcnMvbmV0L2Nhbi91
-c2IvZ3NfdXNiLmMKKysrIGIvZHJpdmVycy9uZXQvY2FuL3VzYi9nc191c2IuYwpAQEAgLTk1
-NiwxMSAtODIzLDggKzk1NiwxMiBAQEAgc3RhdGljIGludCBnc19jYW5fb3BlbihzdHJ1Y3Qg
-bmV0X2RldmljCiAgCWlmIChjdHJsbW9kZSAmIENBTl9DVFJMTU9ERV8zX1NBTVBMRVMpCiAg
-CQlmbGFncyB8PSBHU19DQU5fTU9ERV9UUklQTEVfU0FNUExFOwogIAogKwkvKiBpZiBoYXJk
-d2FyZSBzdXBwb3J0cyB0aW1lc3RhbXBzLCBlbmFibGUgaXQgKi8KICsJaWYgKGRldi0+ZmVh
-dHVyZSAmIEdTX0NBTl9GRUFUVVJFX0hXX1RJTUVTVEFNUCkKICsJCWZsYWdzIHw9IEdTX0NB
-Tl9NT0RFX0hXX1RJTUVTVEFNUDsKICsKICAJLyogZmluYWxseSBzdGFydCBkZXZpY2UgKi8K
-KyAJZGV2LT5jYW4uc3RhdGUgPSBDQU5fU1RBVEVfRVJST1JfQUNUSVZFOwogIAlkbS0+bW9k
-ZSA9IGNwdV90b19sZTMyKEdTX0NBTl9NT0RFX1NUQVJUKTsKICAJZG0tPmZsYWdzID0gY3B1
-X3RvX2xlMzIoZmxhZ3MpOwogIAlyYyA9IHVzYl9jb250cm9sX21zZyhpbnRlcmZhY2VfdG9f
-dXNiZGV2KGRldi0+aWZhY2UpLApAQEAgLTk3NywxMiAtODQyLDYgKzk3OSwxMCBAQEAKICAK
-ICAJa2ZyZWUoZG0pOwogIAogKwkvKiBzdGFydCBwb2xsaW5nIHRpbWVzdGFtcCAqLwogKwlp
-ZiAoZGV2LT5mZWF0dXJlICYgR1NfQ0FOX0ZFQVRVUkVfSFdfVElNRVNUQU1QKQogKwkJZ3Nf
-dXNiX3RpbWVzdGFtcF9pbml0KGRldik7CiArCi0gCWRldi0+Y2FuLnN0YXRlID0gQ0FOX1NU
-QVRFX0VSUk9SX0FDVElWRTsKLSAKICAJcGFyZW50LT5hY3RpdmVfY2hhbm5lbHMrKzsKICAJ
-aWYgKCEoZGV2LT5jYW4uY3RybG1vZGUgJiBDQU5fQ1RSTE1PREVfTElTVEVOT05MWSkpCiAg
-CQluZXRpZl9zdGFydF9xdWV1ZShuZXRkZXYpOwo=
-
---------------wz1F5KJ9wzLGWF5YjXa0fIAp--
+--vaq73b4wttzzl5et--
