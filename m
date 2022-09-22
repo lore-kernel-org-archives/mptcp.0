@@ -1,81 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DA08440
-	for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 18:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1663783332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F5Xif7Qt3hEAXgYAx5zeoVTvOQfZkJFDLCimvuJIzDM=;
-	b=et4YVTKrtKx6oc5u4OSO2euo3akMwmcSInaRx/i1k/0P3uJYOo0uAKHlT1ZAnJoa3pwXab
-	3b2fLNFWgQ2YftJKVAtp+GF2LCzy0CcxWBNZofoHku1uDxrfp3gLUjCWP8vkdqW9dPMR4O
-	7eXdXoTOg++a+B9f06nInwtejg61kKo=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-594-w8ECHbiiMpS5cstgF8jUsw-1; Wed, 21 Sep 2022 14:02:11 -0400
-X-MC-Unique: w8ECHbiiMpS5cstgF8jUsw-1
-Received: by mail-qv1-f70.google.com with SMTP id ec8-20020ad44e68000000b004aab01f3eaaso4816614qvb.4
-        for <mptcp@lists.linux.dev>; Wed, 21 Sep 2022 11:02:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=F5Xif7Qt3hEAXgYAx5zeoVTvOQfZkJFDLCimvuJIzDM=;
-        b=ME+88t+U2UceCFb9hNDmsvGhBYS+QD+VJnN85+igOWwJ9kEXlpa/MIquYvwVJ5JxPo
-         HTespfPTMPYQ7MDzsbXjxt8yZKW3XRQ2GoWXRDP6l7B4NqywD3ThZS6vb6jK391ccfej
-         P06+UZ7cwphcREVlWlCJoIHQygKVXnqpWLx6O/wbcds60vH7ZBuLSsjLTT92IzGXSSZT
-         Apkw3kyA1OAEj5H26iGuygK2Hg7nfmyQjYBBS0+2wWwKLPn7dtzD1W3ALEUfi4E8pRG9
-         CLE1Db7yJziS2EsOvW0b6wGcsf3Jk/MqJ7N8hp0tAyg+0wRxAPpRUselmKRocUrGII6n
-         SraQ==
-X-Gm-Message-State: ACrzQf0iBZyLT/ajt8zYHAHjdTnt6c40j2EU4mnBRtMf3O68SRvAGQKR
-	WfKtHeJIUDHuLFL1jBBrd9FFPWM8hjgvUty+sGHQmbLSjgG5hFuNSdfikM8ierbiRAOO9hYzTDH
-	Nomt7/apYJpRts6k=
-X-Received: by 2002:ac8:7e92:0:b0:35c:bee6:bbfe with SMTP id w18-20020ac87e92000000b0035cbee6bbfemr24871318qtj.468.1663783330604;
-        Wed, 21 Sep 2022 11:02:10 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM51F9jyev7Mq++SiEj5PVY7St1WYQDJ74KJztUVeLLe374KH/+CHz9AAzZ7Hesy1gj3wltlVA==
-X-Received: by 2002:ac8:7e92:0:b0:35c:bee6:bbfe with SMTP id w18-20020ac87e92000000b0035cbee6bbfemr24871250qtj.468.1663783329987;
-        Wed, 21 Sep 2022 11:02:09 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-104-76.dyn.eolo.it. [146.241.104.76])
-        by smtp.gmail.com with ESMTPSA id w12-20020a05620a444c00b006af1f0af045sm2297033qkp.107.2022.09.21.11.02.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 11:02:09 -0700 (PDT)
-Message-ID: <3f896828c24c388e84c0f7577af3d24b55599e1d.camel@redhat.com>
-Subject: Re: [RFC PATCH mptcp-next v9 4/6] mptcp: fix retrans., add mptfo
- vars to msk
-From: Paolo Abeni <pabeni@redhat.com>
-To: Dmytro Shytyi <dmytro@shytyi.net>, mptcp@lists.linux.dev
-Date: Wed, 21 Sep 2022 20:02:07 +0200
-In-Reply-To: <20220921125558.19483-5-dmytro@shytyi.net>
-References: <20220921125558.19483-1-dmytro@shytyi.net>
-	 <20220921125558.19483-5-dmytro@shytyi.net>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32D17B
+	for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 00:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663805059; x=1695341059;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gm8zX0mUqiicRDAQmE17Li+quyaH6nwdXncw1yXgbCw=;
+  b=RnNS79YLo7IiudhktyYD0Vi/kv9D6aLYFSDpvW/+hLJokVucqr+J9/Mk
+   9D4cXaZq3qJTb08lF8aynOGU3B9BFBnmYHfqfFJD5j+3ABTWxc8Sedi0c
+   X0h44VGrJHhLo5phDOOgi4ui+h5w4vZZZQ/CVHw0Ju8OhMvuRO1j5IObA
+   pbAltEANn6IK6RdP74yWpobzm4dfkszSfuh66VStIELPpVA2P1P/e6hFv
+   95cjimSJHqX6VlM1ZQ7lIm0VUnATojuC+EDokgJA0ENlU2EmXZzMW0Ori
+   vJneUqnYhaJTxHMZlDapdJBmacmcq0bg7MTHIXoQ+6KdD+8wPisFhbyHt
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="280527896"
+X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
+   d="scan'208";a="280527896"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 17:04:19 -0700
+X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
+   d="scan'208";a="745173302"
+Received: from mesixta-mobl.amr.corp.intel.com ([10.255.229.180])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 17:04:19 -0700
+Date: Wed, 21 Sep 2022 17:03:58 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: menglong8.dong@gmail.com
+cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+Subject: Re: [PATCH mptcp-next v2 0/2] mptcp: add statistics for mptcp socket
+ in use
+In-Reply-To: <20220921120442.320727-1-imagedong@tencent.com>
+Message-ID: <ca982b91-22b7-48c0-bf01-6ce05394632b@linux.intel.com>
+References: <20220921120442.320727-1-imagedong@tencent.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 2022-09-21 at 14:55 +0200, Dmytro Shytyi wrote:
-> We use mptcp_gen_msk_ackseq_fasopen()
-> when we know this is the first chunk of data after MPTFO.
-> Without it I observe infinite retransmissions.
+On Wed, 21 Sep 2022, menglong8.dong@gmail.com wrote:
 
-The commit message should probably re-phrase to something more
-descriptive. With fastopen in place the first subflow socket is created
-before the MPC handshake completes, and we need to properly initialize
-the sequence numbers at MPC ACK reception.
+> From: Menglong Dong <imagedong@tencent.com>
+>
+> In the 1th patch, we do some code cleanup with replease 'sock->sk'
+> with 'sk'. In the 2th patch, we add statistics for mptcp socket in
+> use.
+>
+> Changes since v1:
+> - split the code cleanup into the 1th patch.
+> - decrease the statistics for listening mptcp socket inuse with
+>  mptcp_listen_inuse_dec()
+> - add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+>  called on the msk. For fallback case, we need to decrease the
+>  statistics only once, and mptcp_destroy_common() can be called
+>  more than once.
+>
 
-Thanks,
+Hi Menglong -
 
-Paolo
+Thanks for the v2. Other than Matthieu's request about MPTCP_DESTROYED, 
+could you also add a selftest patch to confirm the counter is updated 
+correctly?
 
+This test script:
+
+tools/testing/selftests/net/mptcp/diag.sh
+
+already creates a large number of simultaneous sockets, so it might work 
+well to modify the wait_msk_nr() function to also confirm the protocol 
+inuse counter, and then check that the counter returns to zero after the 
+sockets are closed.
+
+> Menglong Dong (2):
+>  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+>  mptcp: add statistics for mptcp socket in use
+>
+> net/mptcp/protocol.c | 34 +++++++++++++++++++++++++++-------
+> net/mptcp/protocol.h |  1 +
+> net/mptcp/subflow.c  |  3 +++
+> 3 files changed, 31 insertions(+), 7 deletions(-)
+>
+> -- 
+> 2.37.2
+>
+>
+
+--
+Mat Martineau
+Intel
