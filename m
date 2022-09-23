@@ -1,154 +1,82 @@
-Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505F27B
-	for <mptcp@lists.linux.dev>; Fri, 23 Sep 2022 00:16:16 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1663892173; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=STt6InJTs/c9VPY4+Tss+rV3DCk4AEiH9hTidHtJVHgQWUe+CFWcE09gR0aP6ttNore+EQq/tNn758n9ll14fwE0PIcMYJd9W0af8a0xCdQLTP5tiDlSGv0zyEJrz0R53Tm93XgnUEz/3oa78XolSvsxUM+n28tNfXuU0KmKNDQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1663892173; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=GwxF1WLyg0q2mQXpu8TM0HK3cD2x7dTs3DdVAMnDKnc=; 
-	b=EJzO21nPdjkQzNuFky7kwMYgb6ssRQOxt1wLPxHzAhGjb1tPiPpCMGAprsnd3geZ6z+EnLVif9R0q2e+n8nwtp7lF4lGgnjP/CWNjE6REanV1K+7pOl2O8x+sZg9J0daNNEC0k/wfn8fk96WTBeHE3mYDgfPnO5nAxzmSR9hHKM=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=shytyi.net;
-	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
-	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663892173;
-	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=GwxF1WLyg0q2mQXpu8TM0HK3cD2x7dTs3DdVAMnDKnc=;
-	b=S5lNhv+DScClz7CIWQt3R8Y6wXVXw53Q3CRkAVbKIgrWJX4fTU7tzbEH0S6/9OmP
-	0Pwzk/5CHlLt1chMededT1q6UPkDyk4FdptDEy7CZzIowN0+jtPMUQDXe9TRbgUC1Ea
-	oD9RC51rwqkO0DZUvPNZWQK4mG1+qjNoICb+mT7E=
-Received: from doris.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 1663892137266236.01115238738953; Fri, 23 Sep 2022 02:15:37 +0200 (CEST)
-From: Dmytro Shytyi <dmytro@shytyi.net>
-To: mptcp@lists.linux.dev
-Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <20220923001530.9722-2-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v10 1/3] mptcp: add mptcp_setsockopt_fastopen
-Date: Fri, 23 Sep 2022 02:15:28 +0200
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220923001530.9722-1-dmytro@shytyi.net>
-References: <20220923001530.9722-1-dmytro@shytyi.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF9415B0
+	for <mptcp@lists.linux.dev>; Fri, 23 Sep 2022 00:44:21 +0000 (UTC)
+Received: by mail-io1-f42.google.com with SMTP id p202so2879670iod.6
+        for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 17:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
+        bh=eJNPpftCHQ3GDZuwOy1JlRr8c8TQAVXQMrjXOH7R0s4=;
+        b=DDrekmVD2LDiTmXeqb4aZg5EpidcmijZnrNxrIkjGTGhktS18hIgtfBVqB7sMCrJ19
+         YGap3CgiIlY3gh/2DIB8wuAPZNJQoSxmaXmcOmLYxCB54YTHzBSTj7Etvayt7NXxp7UK
+         x3NPXln7eoe7n+V6eZCawdSJgQj4dR3nVRLXT8czWJwgHiTqN16hXWgIW4UE/SFoB/Nb
+         EsCjRdF27bWXCWRBeUfYfWcsMB5FAhrkwyRS2Esr2dBrWY15+8IyE5UPLKojaW4Q0+Bg
+         u/7VLKZmM1j6ka6RGaVEXCcUvgUW+rgrfpYVrJ4C9qhQVXwccxY90ZmMJ0UBMnyKQF6I
+         kq+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=eJNPpftCHQ3GDZuwOy1JlRr8c8TQAVXQMrjXOH7R0s4=;
+        b=DN/LkLwqDOZvEk5yJtjfIY/N6LktC52Us2WbqintV78m4psD2OZ/hhEWu3PK7WpwEm
+         S/+fZ2gFuvn7FWmoWfTn5CMtWdltyQXHsDZ3H00pm1bbRIoSH7A/RztJMceLfMwXA7JG
+         c+vw65Ge21qnddSutTex74JDI7eR0hneEoWpe/e4gMqkd+tVcY9dtcXOsT0Ot4R3mR3I
+         QCEPIDEiWV0p+DLPjjbgUXeGM1sv0jpIJkqWLLxpwDlfLJn3Wsacj3hs/ex9/YHlR/IV
+         t9AcZn5OLMbl1PlW4Oi30Cyp7Z/4t7hoTBuj6ddqyFh3T+VjEFtuN22w054xIFx9MICO
+         5lag==
+X-Gm-Message-State: ACrzQf1yxCnzb+LH+SXIYBAc7BZLaiXerCZraYarJSAv/RtoDUrPPsKh
+	zgWTNpjd7kPdjply3/Rx9D5zkxMFQJgm
+X-Google-Smtp-Source: AMsMyM6WUSzv2O0qab5y75v8o5rEqfIzyIl2LZMobALhOR7yFx5ma779uHDKM5SRaLR1YfVtO98BUg==
+X-Received: by 2002:a6b:ba0a:0:b0:6a0:cf7e:b647 with SMTP id k10-20020a6bba0a000000b006a0cf7eb647mr2969160iof.137.1663893860930;
+        Thu, 22 Sep 2022 17:44:20 -0700 (PDT)
+Received: from [127.0.0.1] ([40.86.10.5])
+        by smtp.gmail.com with ESMTPSA id y13-20020a056638228d00b0035a6ee24e09sm2835200jas.15.2022.09.22.17.44.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 17:44:20 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Dmytro Shytyi <dmytro@shytyi.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220923001530.9722-4-dmytro@shytyi.net>
+References: <20220923001530.9722-4-dmytro@shytyi.net>
+Subject: Re: mptcp: reuse tcp_sendmsg_fastopen(): Build Failure
+Message-ID: <f86caae1-31b4-281c-5abd-06f01d3cec56@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 23 Sep 2022 00:44:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
 
-Add set MPTFO socket option for MPTCP. This option is needed for
-the listen socket to accept MPTFO.
+Hi Dmytro,
 
-Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
----
- net/mptcp/Makefile   |  2 +-
- net/mptcp/fastopen.c | 32 ++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h |  5 +++++
- net/mptcp/sockopt.c  |  3 +++
- 4 files changed, 41 insertions(+), 1 deletion(-)
- create mode 100644 net/mptcp/fastopen.c
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index 8a7f68efa35f..c42ad8609876 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -2,7 +2,7 @@
- obj-$(CONFIG_MPTCP) +=3D mptcp.o
-=20
- mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o d=
-iag.o \
--=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o
-+=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o fastopen.o
-=20
- obj-$(CONFIG_SYN_COOKIES) +=3D syncookies.o
- obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
-diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-new file mode 100644
-index 000000000000..9ef49a2d2ea2
---- /dev/null
-+++ b/net/mptcp/fastopen.c
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ * MPTCP Fast Open Mechanism. Copyright (c) 2021-2022, Dmytro SHYTYI
-+ */
-+
-+#include "protocol.h"
-+
-+int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock *msk, sockptr_t op=
-tval,
-+=09=09=09=09      unsigned int optlen)
-+{
-+=09struct sock *sk =3D (struct sock *)msk;
-+=09struct net *net =3D sock_net(sk);
-+=09int val;
-+=09int ret;
-+
-+=09ret =3D 0;
-+
-+=09if (copy_from_sockptr(&val, optval, sizeof(val)))
-+=09=09return -EFAULT;
-+
-+=09lock_sock(sk);
-+
-+=09if (val >=3D 0 && ((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN))) {
-+=09=09tcp_fastopen_init_key_once(net);
-+=09=09fastopen_queue_tune(sk, val);
-+=09} else {
-+=09=09ret =3D -EINVAL;
-+=09}
-+
-+=09release_sock(sk);
-+
-+=09return ret;
-+}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 93c535440a5c..522647804aed 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -838,6 +838,11 @@ void mptcp_event_addr_announced(const struct sock *ssk=
-, const struct mptcp_addr_
- void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
- bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
-=20
-+// Fast Open Mechanism functions begin
-+int mptcp_setsockopt_sol_tcp_fastopen(struct mptcp_sock *msk, sockptr_t op=
-tval,
-+=09=09=09=09      unsigned int optlen);
-+// Fast Open Mechanism functions end
-+
- static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
- {
- =09return READ_ONCE(msk->pm.addr_signal) &
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 423d3826ca1e..f62f0d63b8e6 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -559,6 +559,7 @@ static bool mptcp_supported_sockopt(int level, int optn=
-ame)
- =09=09case TCP_NOTSENT_LOWAT:
- =09=09case TCP_TX_DELAY:
- =09=09case TCP_INQ:
-+=09=09case TCP_FASTOPEN:
- =09=09=09return true;
- =09=09}
-=20
-@@ -796,6 +797,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *=
-msk, int optname,
- =09=09return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
- =09case TCP_DEFER_ACCEPT:
- =09=09return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
-+=09case TCP_FASTOPEN:
-+=09=09return mptcp_setsockopt_sol_tcp_fastopen(msk, optval, optlen);
- =09}
-=20
- =09return -EOPNOTSUPP;
---=20
-2.25.1
+But sadly, our CI spotted some issues with it when trying to build it.
 
+You can find more details there:
 
+  https://patchwork.kernel.=
+org/project/mptcp/patch/20220923001530.9722-4-dmytro@shytyi.net/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/3109657443
+
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d6a6496543d4
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
