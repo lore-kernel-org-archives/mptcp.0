@@ -1,89 +1,77 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198C115B0
-	for <mptcp@lists.linux.dev>; Fri, 23 Sep 2022 02:23:50 +0000 (UTC)
-Received: by mail-vs1-f44.google.com with SMTP id k2so12277203vsk.8
-        for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 19:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=j+mjDeU8MfTaoo2Hr5w1v30IzbKSmgNAkOvuWkOsXjM=;
-        b=UMtVs9r6osj9VmxhbEMYKQzKkleV/r446iRFxqMvE/gbFQVZaizc6S8gprSj6kO3Ds
-         N+tt8rVMwKl908yhk9ENaHYDZZSYDiFaqmj/oMNdQYMXghvmG6DGfX4e+R5gUxKTwvMw
-         Y0JY9godWbtlKhD/4bTK+2r62kwutzBOxT5BNEqeZvaa8hcJe3skwHqWrmVkKUMTX6Bf
-         hHCJaYzcw/ca9h4kv/jUsV3gN9RjZn9CTwv/aOz+6L3ON3GlD14zztk9oXwVS1AyZPXm
-         QrIHjrASqemJU9GOjRaJIhDwfzbgTtC5yufuzo1lEOfkvLexyEhhf8ECO1SOlJBAdGGS
-         CT6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=j+mjDeU8MfTaoo2Hr5w1v30IzbKSmgNAkOvuWkOsXjM=;
-        b=4cehkA2tSNVr3W2KygfYhfAF7o5GXT6T2wxHlxrKbwJmh9UXkjrWd5wQQBMrrq4uBS
-         fSPjK8ldiJTnNHV1QXF9v7d/TccY0haksZ0Fy8/n9NMoAmkBwyvwYNSyZMDMDlbbNZVt
-         kpzPl3MONiUzAG7vi0brakbbsj46VnoMTHAva4BXSSiZytWHJvW7do7P7dlPo8ie/gHH
-         P4lf/K7swybIzgb+cIt8MW3pn05zYaM+fTtKTK0qsfm9o8aWBSGohNa82vSUMVCcrt+7
-         K1nY6aG/E/knBAu6Nxf4AyIo1jhBDJrCw2ZtSV5PDaG4iM6qrHmbd6wi0SsTuyyPy/BY
-         v7bg==
-X-Gm-Message-State: ACrzQf0B+YmLXSA24GFzQcMa+hqZ7vz3CU+haZqbAREAJGa2NM1Q0MTS
-	uTmlQq5V8zej+H2ozgWtw5JiRiIgfzNy3J9VKjU=
-X-Google-Smtp-Source: AMsMyM4RqEWUTYLvpo5uDoNc12YKavzt8E+kH8ArJyRF2vgLlGG6O1oGmDR2maiMAwQbZCIvRZ2jJTrYcNSe1MdMMU8=
-X-Received: by 2002:a67:e401:0:b0:398:89f1:492f with SMTP id
- d1-20020a67e401000000b0039889f1492fmr2891816vsf.21.1663899829770; Thu, 22 Sep
- 2022 19:23:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9AC15B0
+	for <mptcp@lists.linux.dev>; Fri, 23 Sep 2022 02:26:17 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1663899974; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=C7EHhizBl8x8MYKm1cQiwuEOzt6REg1V1jOpZmRAOgm0DQa0kiXzKpymdLoL8+IdL7qeIprEwf8uajBFdjhiru3Msm4JrA0EDeSqDFNse2PXLGkMh55d9dKFNIco0VIIltY3eqD3Su83HH5vFECV0qW0rAejkdGAJRbkvREpdyg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1663899974; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=1Lw9nwNUi3sib4YnsJiUjVIkfuiGJr671bTLlwPr1zY=; 
+	b=PiY/4mgsf34QykHWMzCxHIujDpqom0RL2wexiJGO8vvlYz0f/OMURabAKG879jQNzBu81hmz7B0MIjqI/FwC+sSM7LhAEAE/73G09USzGr5RLoU/MYO+Vm97nB8dmUn2lt6xHzoEbd4ohIANVWdpWWIjq334l730q5WUg4YSGxY=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=shytyi.net;
+	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
+	dmarc=pass header.from=<dmytro@shytyi.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663899974;
+	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=1Lw9nwNUi3sib4YnsJiUjVIkfuiGJr671bTLlwPr1zY=;
+	b=NV1/598enuWWfaofaIsHTSPzF06zP2V6AzeGhOw+XVBtQc8BjDAuQR9DJi+f+gQL
+	paSWsjK9DX0VxyPBRFyKBNg+PBRoLCCJdYhJZlJeixC0DD76BtSYiYN1wVCPb0gTeoC
+	sqUGa3P34WwCdjAgV1kbEMX9dxX71PAMM1/ZfxrI=
+Received: from [192.168.1.25] (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
+	with SMTPS id 1663899971135939.4157839469492; Fri, 23 Sep 2022 04:26:11 +0200 (CEST)
+Message-ID: <85949067-c35d-26bd-b5ea-5342d3a6f841@shytyi.net>
+Date: Fri, 23 Sep 2022 04:26:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <48ba286b429284accc457e34c6580efcdec593c4.1662725968.git.geliang.tang@suse.com>
- <99b1363eeecf160159bbe9f37e38221e93baef55.camel@redhat.com>
-In-Reply-To: <99b1363eeecf160159bbe9f37e38221e93baef55.camel@redhat.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Fri, 23 Sep 2022 10:24:26 +0800
-Message-ID: <CA+WQbwsLPo_XbS-cLe1QhdEj8Ak7Y+as8v6y3FT1Mp3fKd2N5g@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next] tcp: Add mss zero checks to avoid divide errors
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [RFC PATCH mptcp-next v10 0/3] mptcp: Fast Open Mechanism:
+Content-Language: fr
+To: mptcp@lists.linux.dev
+References: <20220923001530.9722-1-dmytro@shytyi.net>
+From: Dmytro Shytyi <dmytro@shytyi.net>
+In-Reply-To: <20220923001530.9722-1-dmytro@shytyi.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Hi Paolo,
+Hello all,
 
-Sorry for the late reply.
 
-Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2022=E5=B9=B49=E6=9C=889=E6=97=A5=
-=E5=91=A8=E4=BA=94 22:44=E5=86=99=E9=81=93=EF=BC=9A
+Do you grant a permission to submit v11 in less then 24h period?
+
+I have 2 things to do:
+1. I have one line to modify in tcp.c and build will be successful (I 
+think).
+2. Change the name of the patch (add "sender" in the topic) as somehow 
+it wasn't applied.
+
+Best regards,
+Dmytro SHYTYI
+
+On 9/23/2022 2:15 AM, Dmytro Shytyi wrote:
+> Compared to the previous patches, these focus on the sender side.
 >
-> On Fri, 2022-09-09 at 20:19 +0800, Geliang Tang wrote:
-> > If mss_now is set to zero when invoking tcp_push(), this divide error w=
-ill occur:
+> Dmytro Shytyi (3):
+>    mptcp: add mptcp_setsockopt_fastopen
+>    mptcp: add mptcp_stream_connect to *.h
+>    mptcp: reuse tcp_sendmsg_fastopen()
 >
-> We should not call at all tcp_push() in such situation. How did you
-> reproduce the issue?
-
-This does not happen on the export branch, but only when I add the BPF
-redundant scheduler.
-
->
-> Adding more check in TCP for the above situation is very likely not the
-> correct thing to do. Instead we should prevent MPTCP from reaching for
-> tcp_push() in the critical situation.
-
-I agree. Let's just drop this patch. I'll add the new one to avoid
-calling tcp_push() in such situation into the " BPF redundant scheduler"
-series If we really need it.
-
-Thanks!
--Geliang
-
->
-> Thanks!
->
-> Paolo
->
+>   include/net/tcp.h    |  3 +++
+>   net/ipv4/tcp.c       | 23 ++++++++++++++++++-----
+>   net/mptcp/Makefile   |  2 +-
+>   net/mptcp/fastopen.c | 32 ++++++++++++++++++++++++++++++++
+>   net/mptcp/protocol.c | 22 ++++++++++++++++++----
+>   net/mptcp/protocol.h |  6 ++++++
+>   net/mptcp/sockopt.c  |  3 +++
+>   7 files changed, 81 insertions(+), 10 deletions(-)
+>   create mode 100644 net/mptcp/fastopen.c
 >
