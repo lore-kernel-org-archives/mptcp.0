@@ -1,112 +1,89 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C1F15B0
-	for <mptcp@lists.linux.dev>; Fri, 23 Sep 2022 01:49:50 +0000 (UTC)
-Received: by mail-qt1-f172.google.com with SMTP id y2so7588256qtv.5
-        for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 18:49:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198C115B0
+	for <mptcp@lists.linux.dev>; Fri, 23 Sep 2022 02:23:50 +0000 (UTC)
+Received: by mail-vs1-f44.google.com with SMTP id k2so12277203vsk.8
+        for <mptcp@lists.linux.dev>; Thu, 22 Sep 2022 19:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=vQ96nswQMOV8loZdUxQcjLLCHZLBdoNxfbRQBCzKKTA=;
-        b=X8oG5vCbJwgeeyNhou+MapDx828NgWbJWzgSO8bYLnSCgXm4f1QzVJ8o0j+IMJ/Ky7
-         3c6QxWHDghra4mLmr8chPcsGrC7i6gH5j6SFhYFyh454fuWWVKRlB+oq07S0sSV5KfnO
-         TdGuTed5ynp1aJLHJHcEt1IDtyAHu9zOE1t897VkDyNlM1lDjjYyZ0y0pbYK779hVMJk
-         V3rZg1j369RSI0oXL4M3cOCM+SEeQaPyRHpWj2yT5JcRz0EoqSR56DGXKFXdVihdvoKQ
-         Hoj5dgctvFgKteGOXEc9xqDBf1MifUroRlJvQSg8D+6HwFYimyJT6KH+2hV6L1OTkeP+
-         lBMQ==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=j+mjDeU8MfTaoo2Hr5w1v30IzbKSmgNAkOvuWkOsXjM=;
+        b=UMtVs9r6osj9VmxhbEMYKQzKkleV/r446iRFxqMvE/gbFQVZaizc6S8gprSj6kO3Ds
+         N+tt8rVMwKl908yhk9ENaHYDZZSYDiFaqmj/oMNdQYMXghvmG6DGfX4e+R5gUxKTwvMw
+         Y0JY9godWbtlKhD/4bTK+2r62kwutzBOxT5BNEqeZvaa8hcJe3skwHqWrmVkKUMTX6Bf
+         hHCJaYzcw/ca9h4kv/jUsV3gN9RjZn9CTwv/aOz+6L3ON3GlD14zztk9oXwVS1AyZPXm
+         QrIHjrASqemJU9GOjRaJIhDwfzbgTtC5yufuzo1lEOfkvLexyEhhf8ECO1SOlJBAdGGS
+         CT6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=vQ96nswQMOV8loZdUxQcjLLCHZLBdoNxfbRQBCzKKTA=;
-        b=1gYcqtzAOmjpQaHzIxvFbKK3AWz9eG3FUZLhKDkEqfEumlHOmWYOUaO5u00Wufzv8M
-         kH2hLQ5dqGUhmymCAbOGFWWdDEZaCtAeItfcUCR9d7u1uJKOj9ssoURoLPHlIrkpCutO
-         RmAdNFAvwfog0bbTPoMRjgwvvDcLUKn2VmSEr+VMu0wZmYI8WYZZLqJXEEowqvbX7nOl
-         MCn1ZAhiQzubXMQiKNJB75zGATbb9UwHSsGTfaUggh/yJI1PtLKhV4KZaGwez1eBxgZi
-         JwfSbhq55Mm8qENvkrzhzH5hlrMX0cgRP1POJA4OmNbiVfmj2MXxRs27qzfrKNuO3a1d
-         1UnQ==
-X-Gm-Message-State: ACrzQf3M89CbJIQfkTX7f7eQ29q4W04Prbdec6+o1xkx48eJg/Suj+5o
-	Wqr0NAtmaOHGqNTsyTLzcA==
-X-Google-Smtp-Source: AMsMyM7Vecs3uYx91KoD8FqGBDIz/fUXTDr+Jm4iyG6VmpETfi5Sb4oQUnImwXhPHw58kvhyKxS1eA==
-X-Received: by 2002:ac8:4e8e:0:b0:35c:f6a6:7c8e with SMTP id 14-20020ac84e8e000000b0035cf6a67c8emr5431354qtp.373.1663897789826;
-        Thu, 22 Sep 2022 18:49:49 -0700 (PDT)
-Received: from [127.0.0.1] ([20.1.196.107])
-        by smtp.gmail.com with ESMTPSA id v19-20020a05620a441300b006b945519488sm4780602qkp.88.2022.09.22.18.49.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 18:49:49 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Dmytro Shytyi <dmytro@shytyi.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20220923001530.9722-4-dmytro@shytyi.net>
-References: <20220923001530.9722-4-dmytro@shytyi.net>
-Subject: Re: mptcp: reuse tcp_sendmsg_fastopen(): Tests Results
-Message-ID: <7ec77f05-2684-741f-001a-cc8164a8dba8@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Sep 2022 01:49:48 +0000
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=j+mjDeU8MfTaoo2Hr5w1v30IzbKSmgNAkOvuWkOsXjM=;
+        b=4cehkA2tSNVr3W2KygfYhfAF7o5GXT6T2wxHlxrKbwJmh9UXkjrWd5wQQBMrrq4uBS
+         fSPjK8ldiJTnNHV1QXF9v7d/TccY0haksZ0Fy8/n9NMoAmkBwyvwYNSyZMDMDlbbNZVt
+         kpzPl3MONiUzAG7vi0brakbbsj46VnoMTHAva4BXSSiZytWHJvW7do7P7dlPo8ie/gHH
+         P4lf/K7swybIzgb+cIt8MW3pn05zYaM+fTtKTK0qsfm9o8aWBSGohNa82vSUMVCcrt+7
+         K1nY6aG/E/knBAu6Nxf4AyIo1jhBDJrCw2ZtSV5PDaG4iM6qrHmbd6wi0SsTuyyPy/BY
+         v7bg==
+X-Gm-Message-State: ACrzQf0B+YmLXSA24GFzQcMa+hqZ7vz3CU+haZqbAREAJGa2NM1Q0MTS
+	uTmlQq5V8zej+H2ozgWtw5JiRiIgfzNy3J9VKjU=
+X-Google-Smtp-Source: AMsMyM4RqEWUTYLvpo5uDoNc12YKavzt8E+kH8ArJyRF2vgLlGG6O1oGmDR2maiMAwQbZCIvRZ2jJTrYcNSe1MdMMU8=
+X-Received: by 2002:a67:e401:0:b0:398:89f1:492f with SMTP id
+ d1-20020a67e401000000b0039889f1492fmr2891816vsf.21.1663899829770; Thu, 22 Sep
+ 2022 19:23:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <48ba286b429284accc457e34c6580efcdec593c4.1662725968.git.geliang.tang@suse.com>
+ <99b1363eeecf160159bbe9f37e38221e93baef55.camel@redhat.com>
+In-Reply-To: <99b1363eeecf160159bbe9f37e38221e93baef55.camel@redhat.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Fri, 23 Sep 2022 10:24:26 +0800
+Message-ID: <CA+WQbwsLPo_XbS-cLe1QhdEj8Ak7Y+as8v6y3FT1Mp3fKd2N5g@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next] tcp: Add mss zero checks to avoid divide errors
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dmytro,
+Hi Paolo,
 
-Thank you for your modifications, that's great!
+Sorry for the late reply.
 
-Our CI did some validations and here is its report:
+Paolo Abeni <pabeni@redhat.com> =E4=BA=8E2022=E5=B9=B49=E6=9C=889=E6=97=A5=
+=E5=91=A8=E4=BA=94 22:44=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Fri, 2022-09-09 at 20:19 +0800, Geliang Tang wrote:
+> > If mss_now is set to zero when invoking tcp_push(), this divide error w=
+ill occur:
+>
+> We should not call at all tcp_push() in such situation. How did you
+> reproduce the issue?
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/4837384788377600
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4837384788377600/summary/summary.txt
+This does not happen on the export branch, but only when I add the BPF
+redundant scheduler.
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): =
-packetdrill_add_addr selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5963284695220224
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5963284695220224/su=
-mmary/summary.txt
+>
+> Adding more check in TCP for the above situation is very likely not the
+> correct thing to do. Instead we should prevent MPTCP from reaching for
+> tcp_push() in the critical situation.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d6a6496543d4
+I agree. Let's just drop this patch. I'll add the new one to avoid
+calling tcp_push() in such situation into the " BPF redundant scheduler"
+series If we really need it.
 
+Thanks!
+-Geliang
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+>
+> Thanks!
+>
+> Paolo
+>
+>
