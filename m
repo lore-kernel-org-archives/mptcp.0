@@ -1,34 +1,35 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851114685
-	for <mptcp@lists.linux.dev>; Sun, 25 Sep 2022 23:26:20 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1664148371; cv=none; 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7E24682
+	for <mptcp@lists.linux.dev>; Sun, 25 Sep 2022 23:27:14 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1664148431; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=bg9eJRqim7mb5OutGludFX98Tc+12wJuprE+a1BAZTS9o7TpIvD0WM/WlB9QaPaaaHZmCdH+MA4hchkexdt4P5LxSAxpUnQDhAC5hghTTgJKCnZaiMHoatashCZ85wUYly3ZHoyFODlwLDQtf8gr06Qgnk/tpthibjhCnj/PCFE=
+	b=UDjw2VvgNsR03Ry+D137KF0Cdz20jlMllvXTG1UQIbdXZr55/uzsqbk/dumMQwsg+z5tDdDaLgraylABFanlILVvCeHWXy9a/dv6W391d7AdvWhMwbIqfXmhoWoN4HVmh06ZyIpo+1q/0C3v5P7QvDT48cZmq0dAHBfrDUPP8nA=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1664148371; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=29/2Wv8ppT+6/XSVyrfjLFk6pFV1hhH3C4UmdC18qPc=; 
-	b=VDoR4TKy4EDd8ULNV5nTb1buZdPM8E7Eq+v9ELPGOzAUTVNci2u9vi1Uduq0w9UEISuJ3nntG6wW368k4jSZkf/4H33XVFT15NJkvOxuFSdrQT7mZbAB861q5+JF4NOjM33QA2rnRBR8xR7+wm4/ZAVpgMNs8qndBIO2htQNK/k=
+	t=1664148431; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=80Ksk8Qlj9QydeBYveFPQAA9IxDN0PgU6HvxcL4LlC0=; 
+	b=i8/pU1sae6tvAeAK/2Mpj0C9kxFbqwp1S/Sr4F1K9x6zawb/JDfstL0vghreMjbvFJru+0oRnwBQ3ECAQasf3C997GjZlIiVPgEffkfgZxiigqoq/aqlWM54pK/lcRHhlMjsAKDJcZO3yUH/DHFE0T87mFh8sY4ZtvpAGtnCGE8=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
 	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1664148371;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1664148431;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
 	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=29/2Wv8ppT+6/XSVyrfjLFk6pFV1hhH3C4UmdC18qPc=;
-	b=HmOZpHI2LDRMTZSTKqYGaFG2hm1vhAnDaX8tQKKyAPLAR/OJMn/9bdyIAIDzeaDG
-	b/Zp1IfTUnjkQn9uOA0YP81S5AMSRxj6gYttmZZ0gE0uzD2Mq65+17BPqzrg3+OEZxt
-	5ri2TaPNdAY/nsaZ3bWrJ21wfPRjtRe9giqJxA2s=
+	bh=80Ksk8Qlj9QydeBYveFPQAA9IxDN0PgU6HvxcL4LlC0=;
+	b=Y+nis/+5AXEIp++OPuaeoCgAKAmXp/4ZdA9thfWLqi6waS0U5lgOwdbX00iioUW+
+	vyQAPOQ8t2+VtUETLIogXTvloeBX/ozIS1pBvEjTrrwHxXWF1vmZaHJFlN6yGJk8RFm
+	SUrtDsRqdIEb/AFXToeF9wxnVNGufq54IvU5yxT0=
 Received: from doris.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 16641483695721005.7720995242595; Mon, 26 Sep 2022 01:26:09 +0200 (CEST)
+	with SMTPS id 1664148369818729.127890630177; Mon, 26 Sep 2022 01:26:09 +0200 (CEST)
 From: Dmytro Shytyi <dmytro@shytyi.net>
 To: mptcp@lists.linux.dev
-Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <20220925232601.25252-4-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v11 3/4] mptcp: add mptcp_subflow_conn_sock()
-Date: Mon, 26 Sep 2022 01:26:00 +0200
+Cc: Dmytro Shytyi <dmytro@shytyi.net>,
+	Benjamin Hesmans <benjamin.hesmans@tessares.net>
+Message-ID: <20220925232601.25252-5-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v11 4/4] mptcp: reuse tcp_sendmsg_fastopen()
+Date: Mon, 26 Sep 2022 01:26:01 +0200
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220925232601.25252-1-dmytro@shytyi.net>
 References: <20220925232601.25252-1-dmytro@shytyi.net>
@@ -42,78 +43,88 @@ Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 Content-Type: text/plain; charset=utf8
 
-In the following patches we will call mptcp_subflow_conn_sock() from=20
-tcp_sendmsg_fastopen() in file "net/ipv4/tcp.c", thus make such symbol
-visible.
+In the following patches we will reuse modified tcp_sendmsg_fastopen().
+We call it from mptcp_sendmsg().
 
+Signed-of-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
 ---
- include/net/mptcp.h  |  1 +
- net/ipv4/tcp.c       | 15 +++++++++++++--
- net/mptcp/protocol.c |  6 ++++++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+ include/net/tcp.h    |  3 +++
+ net/ipv4/tcp.c       |  6 +++---
+ net/mptcp/protocol.c | 25 +++++++++++++++++++++++--
+ 3 files changed, 29 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index d9908b839059..ccf2b42837a1 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -151,6 +151,7 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr=
-, struct tcp_sock *tp,
-=20
- void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)=
-;
- int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr, int =
-addr_len, int flags);
-+struct sock *mptcp_subflow_conn_sock(struct sock *sk);
-=20
- /* move the skb extension owership, with the assumption that 'to' is
-  * newly allocated
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 27e8d378c70a..97cb014ddcab 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1755,6 +1755,9 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct=
+ sk_buff *skb,
+ =09=09=09      struct request_sock *req,
+ =09=09=09      struct tcp_fastopen_cookie *foc,
+ =09=09=09      const struct dst_entry *dst);
++int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
++=09=09=09 int *copied, size_t size,
++=09=09=09 struct ubuf_info *uarg);
+ void tcp_fastopen_init_key_once(struct net *net);
+ bool tcp_fastopen_cookie_check(struct sock *sk, u16 *mss,
+ =09=09=09     struct tcp_fastopen_cookie *cookie);
 diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 5702ca9b952d..a22c8044de17 100644
+index a22c8044de17..daa611671d9a 100644
 --- a/net/ipv4/tcp.c
 +++ b/net/ipv4/tcp.c
-@@ -1197,8 +1197,19 @@ static int tcp_sendmsg_fastopen(struct sock *sk, str=
-uct msghdr *msg,
- =09=09}
+@@ -1162,9 +1162,9 @@ void tcp_free_fastopen_req(struct tcp_sock *tp)
  =09}
- =09flags =3D (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
--=09err =3D __inet_stream_connect(sk->sk_socket, uaddr,
--=09=09=09=09    msg->msg_namelen, flags, 1);
-+=09if (!sk_is_mptcp(sk)) {
-+=09=09err =3D __inet_stream_connect(sk->sk_socket, uaddr,
-+=09=09=09=09=09    msg->msg_namelen, flags, 1);
-+=09} else {
-+=09=09struct sock *parent =3D mptcp_subflow_conn_sock(sk);
-+
-+=09=09release_sock(sk);
-+=09=09release_sock(parent);
-+=09=09err =3D mptcp_stream_connect(sk->sk_socket, uaddr,
-+=09=09=09=09=09   msg->msg_namelen, msg->msg_flags);
-+=09=09lock_sock(parent);
-+=09=09lock_sock(sk);
-+=09}
- =09/* fastopen_req could already be freed in __inet_stream_connect
- =09 * if the connection times out or gets rst
- =09 */
+ }
+=20
+-static int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+-=09=09=09=09int *copied, size_t size,
+-=09=09=09=09struct ubuf_info *uarg)
++int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
++=09=09=09 int *copied, size_t size,
++=09=09=09 struct ubuf_info *uarg)
+ {
+ =09struct tcp_sock *tp =3D tcp_sk(sk);
+ =09struct inet_sock *inet =3D inet_sk(sk);
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c39ed726c1c0..fb08e1f458c0 100644
+index fb08e1f458c0..dd2414fdcf04 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -58,6 +58,12 @@ static void __mptcp_check_send_data_fin(struct sock *sk)=
-;
- DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- static struct net_device mptcp_napi_dev;
+@@ -1679,9 +1679,30 @@ static int mptcp_sendmsg(struct sock *sk, struct msg=
+hdr *msg, size_t len)
+ =09long timeo;
 =20
-+struct sock *
-+mptcp_subflow_conn_sock(struct sock *sk)
-+{
-+=09return ((mptcp_subflow_ctx(sk))->conn);
-+}
+ =09/* we don't support FASTOPEN yet */
+-=09if (msg->msg_flags & MSG_FASTOPEN)
+-=09=09return -EOPNOTSUPP;
++=09if (msg->msg_flags & MSG_FASTOPEN) {
++=09=09struct socket *ssock;
++=09=09struct sock *ssk;
+=20
++=09=09lock_sock(sk);
 +
- /* If msk has an initial subflow socket, and the MP_CAPABLE handshake has =
-not
-  * completed yet or has failed, return the subflow socket.
-  * Otherwise return NULL.
++=09=09ssock =3D __mptcp_nmpc_socket(msk);
++=09=09ssk =3D ssock->sk;
++
++=09=09lock_sock(ssk);
++
++=09=09if (ssock) {
++=09=09=09int copied_syn_fastopen =3D 0;
++
++=09=09=09ret =3D tcp_sendmsg_fastopen(ssk, msg, &copied_syn_fastopen, len,=
+ NULL);
++=09=09=09copied +=3D copied_syn_fastopen;
++=09=09=09if (ret) {
++=09=09=09=09release_sock(ssk);
++=09=09=09=09goto do_error;
++=09=09=09}
++=09=09}
++=09=09release_sock(ssock->sk);
++=09=09release_sock(sk);
++=09}
+ =09/* silently ignore everything else */
+ =09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
+=20
 --=20
 2.25.1
 
