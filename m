@@ -1,46 +1,48 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B7B4A14
-	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 23:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684994A14
+	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 23:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664234864; x=1695770864;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=B5Yg2idHOkhfeyKnOqdWAauDKv7lxxhtXBCixX+H1Hc=;
-  b=d2IVe2q7SNG9056NpFG4ibLhYZi3mzPYfU9pvhZ8SIXk62SibFwVz2Qk
-   nWEqS8jDhW3lOqS8v6pJOB2o67jiOAR0fxXcsbxgAi/q/iefjZqV1G94M
-   cCOZY9AT3S7FybKa8uwh4gb6C1WT4+WvOZRFWWyvhonKq4RGjUeIr3jnP
-   jAiPsO1B6+BwO81E2nde2xMAIOIlfi0v5pfkEoQwPzo6vixdQoE4UryAF
-   NDqw3tp5yggUlDFN1BOVA426GtkbzxG+Hnl0QEm7mJ2BQ+jWG2vj0dwPj
-   ktWj3ukezrXjoxpLKwwzNAheOtkRm8katP62bAGq+6ZxX3Uin3Lx/Zfzf
+  t=1664234866; x=1695770866;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dTdNtwOMsNbFRYHs8fkMG5KM7mukDSfJKHtWQRWdNQ8=;
+  b=D3vLVigstQRnm/4JMZ5RJOnjd7hI/rFBHGRcpp2UmUt3FmAY7ogU2XlD
+   tov4ZbggR2/VYKT9qBezlWDJZ0j8BLBVWaTw/A8FxSq3VB22A+AZqo2mG
+   aSmYT+7ysuqsjktgDSGRZrOOMT3IGEJtcUl/McnPRdwfK8A+i07qnxZxC
+   0Uuwj2TUBjs9CJpgqZlo/uY8pduxFgeduJBPn6lwdAueMBpduYimcNHah
+   3S6OvWAecwmHL9ouM+I8L7cHaPyee9rEfCES8FqFr1Yd2ODpV6i5WRsG8
+   liWs25gg2k7rif5pSav3qjP9xoFYW2QTpwHd6H/2DngG1EFHpcld12n2h
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="280890865"
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="280890868"
 X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="280890865"
+   d="scan'208";a="280890868"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 16:27:43 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="572424284"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 16:27:44 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="572424285"
 X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="572424284"
+   d="scan'208";a="572424285"
 Received: from sankarka-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.3.132])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 16:27:43 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	pabeni@redhat.com,
 	edumazet@google.com,
 	dmytro@shytyi.net,
-	benjamin.hesmans@tessares.net,
 	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev
-Subject: [PATCH net-next 0/4] mptcp: MPTCP support for TCP_FASTOPEN_CONNECT
-Date: Mon, 26 Sep 2022 16:27:35 -0700
-Message-Id: <20220926232739.76317-1-mathew.j.martineau@linux.intel.com>
+	mptcp@lists.linux.dev,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 1/4] mptcp: add TCP_FASTOPEN_CONNECT socket option
+Date: Mon, 26 Sep 2022 16:27:36 -0700
+Message-Id: <20220926232739.76317-2-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20220926232739.76317-1-mathew.j.martineau@linux.intel.com>
+References: <20220926232739.76317-1-mathew.j.martineau@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,41 +51,78 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RFC 8684 appendix B describes how to use TCP Fast Open with MPTCP. This
-series allows TFO use with MPTCP using the TCP_FASTOPEN_CONNECT socket
-option. The scope here is limited to the initiator of the connection -
-support for MSG_FASTOPEN and the listener side of the connection will be
-in a separate series. The preexisting TCP fastopen code does most of the
-work, so these changes mostly involve plumbing MPTCP through to those
-TCP functions.
+From: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 
-Patch 1 changes the MPTCP socket option code to pass the
-TCP_FASTOPEN_CONNECT option through to the initial unconnected subflow.
+Set the option for the first subflow only. For the other subflows TFO
+can't be used because a mapping would be needed to cover the data in the
+SYN.
 
-Patch 2 exports the existing tcp_sendmsg_fastopen() function from tcp.c
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ net/mptcp/sockopt.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-Patch 3 adds the call to tcp_sendmsg_fastopen() from the MPTCP send
-function.
-
-Patch 4 modifies mptcp_poll() to handle the deferred TFO connection.
-
-
-Benjamin Hesmans (3):
-  mptcp: add TCP_FASTOPEN_CONNECT socket option
-  tcp: export tcp_sendmsg_fastopen
-  mptcp: poll allow write call before actual connect
-
-Dmytro Shytyi (1):
-  mptcp: handle defer connect in mptcp_sendmsg
-
- include/net/tcp.h    |  2 ++
- net/ipv4/tcp.c       |  5 ++---
- net/mptcp/protocol.c | 26 ++++++++++++++++++++++++++
- net/mptcp/sockopt.c  | 19 ++++++++++++++++++-
- 4 files changed, 48 insertions(+), 4 deletions(-)
-
-
-base-commit: 4991931223e3b909aa4931face285e4658927824
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 423d3826ca1e..c7cb68c725b2 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -559,6 +559,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
+ 		case TCP_NOTSENT_LOWAT:
+ 		case TCP_TX_DELAY:
+ 		case TCP_INQ:
++		case TCP_FASTOPEN_CONNECT:
+ 			return true;
+ 		}
+ 
+@@ -567,7 +568,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
+ 		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
+ 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
+ 		 */
+-		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN TCP_FASTOPEN_CONNECT, TCP_FASTOPEN_NO_COOKIE,
++		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN, TCP_FASTOPEN_NO_COOKIE,
+ 		 * are not supported fastopen is currently unsupported
+ 		 */
+ 	}
+@@ -768,6 +769,19 @@ static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optv
+ 	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
+ }
+ 
++static int mptcp_setsockopt_sol_tcp_fastopen_connect(struct mptcp_sock *msk, sockptr_t optval,
++						     unsigned int optlen)
++{
++	struct socket *sock;
++
++	/* Limit to first subflow */
++	sock = __mptcp_nmpc_socket(msk);
++	if (!sock)
++		return -EINVAL;
++
++	return tcp_setsockopt(sock->sk, SOL_TCP, TCP_FASTOPEN_CONNECT, optval, optlen);
++}
++
+ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    sockptr_t optval, unsigned int optlen)
+ {
+@@ -796,6 +810,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
+ 	case TCP_DEFER_ACCEPT:
+ 		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
++	case TCP_FASTOPEN_CONNECT:
++		return mptcp_setsockopt_sol_tcp_fastopen_connect(msk, optval, optlen);
+ 	}
+ 
+ 	return -EOPNOTSUPP;
+@@ -1157,6 +1173,7 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	case TCP_INFO:
+ 	case TCP_CC_INFO:
+ 	case TCP_DEFER_ACCEPT:
++	case TCP_FASTOPEN_CONNECT:
+ 		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
+ 						      optval, optlen);
+ 	case TCP_INQ:
 -- 
 2.37.3
 
