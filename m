@@ -1,112 +1,104 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C552FAF
-	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 16:52:17 +0000 (UTC)
-Received: by mail-pg1-f176.google.com with SMTP id u69so7091339pgd.2
-        for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 09:52:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18992FAF
+	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 17:11:45 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id 30so9940859edw.5
+        for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 10:11:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=91jRNzn30ZB5uwfFnc3Tyj2hJ/53ZAa7YDSOIenuUc8=;
-        b=HeF/2hcH2PTspMN3h7Ud7SD3fRo04MblMtwz/dbpzfdt7yEkVbghaHU57C88rRG+bs
-         TcFASIOzWPEK9sMMb5nicdBW/7x4ub1rGpdC2JAcRwv07uSFoprABQ4lrcYkIGilt+P4
-         ZZ3RgZTMKLOQbIE0HvNjTRSPPr/52nZ2+6Vo7BWHrzNAtbrdNCNixsYnG1EcLL/kIw2K
-         INELCMV8HRQ/hw6XOYODe4a9WEX+7iSOEWUHbrIzzci2NKiaIWZ64hF3ihx38T97rv1X
-         Mxy9Q1pdU3Y43GXl3w+lEUbwKSodShMHbFAWkx9kwFJBgCJCx+XNI98XNjilf96lv/82
-         GDWQ==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=LJFiVgm+cvgYgRsHTWVT23V3eG4Cs5qZfVA/Ahe4xuo=;
+        b=KPkfoWh0XQgoxjA7FbBt+8ywQQe7ptO99oicvleJQJiNFfetsVhaUNhO+kDp3r6TSk
+         JbL0HfcGN2PnbZuan8so4j4oCBVtcWyq/RrJ4t1Y7mFIQoMYLyx3dH+X940NjtGta8mH
+         QlareVSgSmrtnqQ+vIL3bpablZDRIO9JsECv4x0XDMBgMK2rCFl5FdkFOznwEuty/xmU
+         bhDzKgArV8Ix+RjS2LuFUlosUkl1gmz4yZnAPYD9KJsVzQI7CRvSXajJOTFkFPWwo/C2
+         6PhM7mW1DC29U3MvyWLFZZ59hD/fMRAAt/ZACNd7I4J0mu78QoEOqXVqU8Wq2kx6o9LI
+         56Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=91jRNzn30ZB5uwfFnc3Tyj2hJ/53ZAa7YDSOIenuUc8=;
-        b=RfT6QaySBKXbs8w+VONfZGRi6Q0I9Sqg4hYRLw2ZvOzmIvIbAp6SL8n/zN/S0IehBz
-         ogpEuALUulsiv/g+5H9kS0NEObc4swbavUqWCOVclvi7Cz4KZqxCd+0AQdt6t/FYe7my
-         ThaPFZYqu20uZKvpDgP+ptXAhS1YgX+Htq23gWyix7H+xulhH2mE+gByA/EDBUyxeZ1y
-         5suWhWxgJ0cucilbL+K3junWEWBdez+er65Fci+UX7UBQwXWrinvth/YT3KKQFh4SB0Z
-         BRRx/gRw1K2A0PFUKuc45L/vWbrG7cF43sE8bPHXSFZy9EMzQoad3gKwNLwBXBhZF3ro
-         0npA==
-X-Gm-Message-State: ACrzQf1L2tecIugxcZCcAwRLuPGweV9bNXTGqC+IlNcnwXgRXDEqrTSg
-	TZBw2Sy2EPy0ciGdaNslZA==
-X-Google-Smtp-Source: AMsMyM6kmEeJxvhVNfN5hictDxY0yaJmedZ+oGJyKfhyjAmfeE2euxPUCd2ZWmYVaPxd3Cul8UPqOQ==
-X-Received: by 2002:a63:1a4c:0:b0:43b:e648:a7a4 with SMTP id a12-20020a631a4c000000b0043be648a7a4mr20875404pgm.7.1664211137282;
-        Mon, 26 Sep 2022 09:52:17 -0700 (PDT)
-Received: from [127.0.0.1] ([20.237.208.29])
-        by smtp.gmail.com with ESMTPSA id ix12-20020a170902f80c00b0016b81679c1fsm11437971plb.216.2022.09.26.09.51.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 09:52:05 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <870262a8c7ca7eb682da90684f2ff193a818924b.1664205929.git.pabeni@redhat.com>
-References:
- <870262a8c7ca7eb682da90684f2ff193a818924b.1664205929.git.pabeni@redhat.com>
-Subject: Re: mptcp: update misleading comments.: Tests Results
-Message-ID: <124c4d58-ad4d-9587-627b-4c56ce14df44@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Sep 2022 16:51:58 +0000
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=LJFiVgm+cvgYgRsHTWVT23V3eG4Cs5qZfVA/Ahe4xuo=;
+        b=GWypmBlj2YmMyZK3REtpEIjEpMsqgXufrZWGUWxux6kHk8MAX4Rrog3Zoe7AtTe4PZ
+         zDltWT6veqCyUGXRBV4TKR0xdTOPOThrMFguMAMGjr1vhgTdEg7Cv/rmgpPEfBeGsB4S
+         SSOG6JJBo1gpTrep86XeaJ5TzE26PvnIc1t50DuUghfe2lJjUXUljb/T0rHyddWyFX86
+         UrFJiVkG7j+xsNW06Z0uZNS517NoEs29HNqcw6154s4HOUeBw6NDtKgCgZ9L6hvr+Rix
+         9E++DZVSCpyXnZwLGDNE8v/Z49CbCQc2BiImVH+rluwzOJ2Y5ZlHNEToM/TMenBDdloG
+         rfkA==
+X-Gm-Message-State: ACrzQf2hhef3PFDaYKXcowV9EAlvyPkRhwmh8KEgSQFVWu2pHhBNpuyf
+	B7tbzrcvBPkrCUb2jRQiOlgaNg==
+X-Google-Smtp-Source: AMsMyM6kJwSMq2MhyMdVa01pQDYKDvKfNSlxySL7uFyBkHxANTBzbTLB+8GEWKMTwAVLnenpF9hXgA==
+X-Received: by 2002:a50:fc9a:0:b0:454:6a56:7d27 with SMTP id f26-20020a50fc9a000000b004546a567d27mr23213412edq.73.1664212303882;
+        Mon, 26 Sep 2022 10:11:43 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:d58b:a76f:9c42:d02a? ([2a02:578:8593:1200:d58b:a76f:9c42:d02a])
+        by smtp.gmail.com with ESMTPSA id i9-20020a0564020f0900b0044e937ddcabsm11793806eda.77.2022.09.26.10.11.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Sep 2022 10:11:43 -0700 (PDT)
+Message-ID: <f132db08-8601-40d3-9477-ae914e96165a@tessares.net>
+Date: Mon, 26 Sep 2022 19:11:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [RFC PATCH mptcp-next v11 3/4] mptcp: add
+ mptcp_subflow_conn_sock()
+Content-Language: en-GB
+To: Dmytro Shytyi <dmytro@shytyi.net>, mptcp@lists.linux.dev
+References: <20220925232601.25252-1-dmytro@shytyi.net>
+ <20220925232601.25252-4-dmytro@shytyi.net>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20220925232601.25252-4-dmytro@shytyi.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Dmytro,
 
-Thank you for your modifications, that's great!
+On 26/09/2022 01:26, Dmytro Shytyi wrote:
+> In the following patches we will call mptcp_subflow_conn_sock() from 
+> tcp_sendmsg_fastopen() in file "net/ipv4/tcp.c", thus make such symbol
+> visible.
 
-Our CI did some validations and here is its report:
+The patch description and title don't seem to be correct. You are doing
+more than that here.
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-packetdrill_add_addr selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6420352380174336
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6420352380174336/su=
-mmary/summary.txt
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index 5702ca9b952d..a22c8044de17 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -1197,8 +1197,19 @@ static int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>  		}
+>  	}
+>  	flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
+> -	err = __inet_stream_connect(sk->sk_socket, uaddr,
+> -				    msg->msg_namelen, flags, 1);
+> +	if (!sk_is_mptcp(sk)) {
+> +		err = __inet_stream_connect(sk->sk_socket, uaddr,
+> +					    msg->msg_namelen, flags, 1);
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5012977496621056
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5012977496621056/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d9dfe29d53ec
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Do you think it could be possible not to modify tcp_sendmsg_fastopen()
+but instead implement '.connect' callback in 'mptcp_prot'?
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> +	} else {
+> +		struct sock *parent = mptcp_subflow_conn_sock(sk);
+> +
+> +		release_sock(sk);
+> +		release_sock(parent);
+
+It looks strange to release sockets because, I guess, they are going to
+be re-lock just after. It certainly means you want to call a (new)
+function which is not doing this locking bit, no?
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
