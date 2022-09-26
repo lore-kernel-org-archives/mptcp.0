@@ -1,113 +1,89 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A0146B6
-	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 23:07:03 +0000 (UTC)
-Received: by mail-oo1-f49.google.com with SMTP id t4-20020a4aa3c4000000b00475624f2369so1348076ool.3
-        for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 16:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=fU5qdCf4e7FkC+oZ1SqqSyPlY5Vnq9h5Aqg/ogcdjqc=;
-        b=REei57jpfsB05kriftLSrdGvLrdlMsey/RgBo2ErVFrkZzpujvxr0GsQL0r2lPJCSo
-         FpC4hQrldWngoTqlg6eHsHaaax2EBjiTi/LkocHtnw5B9xK0TqnyWGTLSdhUzCEUE24K
-         iX5tBzknsaQMVtBTNGvE8ZBrqk+RhfDjbkv2yTWajaRWOH9xHc2eKx1Hk0XFyBpHy2gz
-         TpzzrMNf+wEi/4rptXgK7GA3u3AFwP7xdVKHC4PLMQwsgBzgZBU1t6MIwnTA1cN11Y+8
-         4Ok1woujLkkR5SwN36Kn2u6DGWXlhLeC6K7iReOUjm4gusGj9Ylvdu/WJMYglGzfPlTh
-         TOxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=fU5qdCf4e7FkC+oZ1SqqSyPlY5Vnq9h5Aqg/ogcdjqc=;
-        b=24wX/2WeG3CEkXHJG7EG7Vijn/ocHELFVukX1IyGAMueHN6DR07WTO4chGfQ6xE/kL
-         W+raJL+tiGlziVKCAZ3XOblygJY1unZQOOgFyNUONn1bY2n97SXHMOvMisIBh8amIhQs
-         ZP4xJYFNvUmrZ+K3YbOsK8eXKhMSQ+y/enh1DiEUz9DfTtRCdYhYJRtMslvgx9XvbMWb
-         J5vi+HIpr+8wmx3q/pSgYfXSSJtWHoMAa/PB0sRT2TrXqF/4lThz+sdDegkwyOvZ7pQg
-         wmk5KCQK2kIIWhFo6+I9SmUzEQ/MP1jixfgg1DdZKuRnNM+uowaQzXKvFqC524pgL8Wz
-         VkoA==
-X-Gm-Message-State: ACrzQf2A9ZVyO5C22EEUvRtY5V0ayE03t5iACg7FPktxJetLAB7FrYta
-	4mjH4TG/LzgISlimM+U23Q==
-X-Google-Smtp-Source: AMsMyM4XUDpjTzjHBUGl0mTeqAGjMBtmheBquQq4uLYOV+lZmfcUCr/AksalY2XXd+toC7LjI1egvA==
-X-Received: by 2002:a05:6820:1354:b0:476:7bd3:ed30 with SMTP id b20-20020a056820135400b004767bd3ed30mr1493293oow.66.1664233622154;
-        Mon, 26 Sep 2022 16:07:02 -0700 (PDT)
-Received: from [127.0.0.1] ([20.165.24.90])
-        by smtp.gmail.com with ESMTPSA id q2-20020aca4302000000b003514e125e12sm932625oia.35.2022.09.26.16.07.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 16:07:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <870262a8c7ca7eb682da90684f2ff193a818924b.1664205929.git.pabeni@redhat.com>
-References:
- <870262a8c7ca7eb682da90684f2ff193a818924b.1664205929.git.pabeni@redhat.com>
-Subject: Re: mptcp: update misleading comments.: Tests Results
-Message-ID: <8a1575fa-b620-2471-890d-0c90e4253806@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Sep 2022 23:07:00 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B7B4A14
+	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 23:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664234864; x=1695770864;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=B5Yg2idHOkhfeyKnOqdWAauDKv7lxxhtXBCixX+H1Hc=;
+  b=d2IVe2q7SNG9056NpFG4ibLhYZi3mzPYfU9pvhZ8SIXk62SibFwVz2Qk
+   nWEqS8jDhW3lOqS8v6pJOB2o67jiOAR0fxXcsbxgAi/q/iefjZqV1G94M
+   cCOZY9AT3S7FybKa8uwh4gb6C1WT4+WvOZRFWWyvhonKq4RGjUeIr3jnP
+   jAiPsO1B6+BwO81E2nde2xMAIOIlfi0v5pfkEoQwPzo6vixdQoE4UryAF
+   NDqw3tp5yggUlDFN1BOVA426GtkbzxG+Hnl0QEm7mJ2BQ+jWG2vj0dwPj
+   ktWj3ukezrXjoxpLKwwzNAheOtkRm8katP62bAGq+6ZxX3Uin3Lx/Zfzf
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="280890865"
+X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
+   d="scan'208";a="280890865"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 16:27:43 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="572424284"
+X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
+   d="scan'208";a="572424284"
+Received: from sankarka-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.3.132])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 16:27:43 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	dmytro@shytyi.net,
+	benjamin.hesmans@tessares.net,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/4] mptcp: MPTCP support for TCP_FASTOPEN_CONNECT
+Date: Mon, 26 Sep 2022 16:27:35 -0700
+Message-Id: <20220926232739.76317-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+RFC 8684 appendix B describes how to use TCP Fast Open with MPTCP. This
+series allows TFO use with MPTCP using the TCP_FASTOPEN_CONNECT socket
+option. The scope here is limited to the initiator of the connection -
+support for MSG_FASTOPEN and the listener side of the connection will be
+in a separate series. The preexisting TCP fastopen code does most of the
+work, so these changes mostly involve plumbing MPTCP through to those
+TCP functions.
 
-Thank you for your modifications, that's great!
+Patch 1 changes the MPTCP socket option code to pass the
+TCP_FASTOPEN_CONNECT option through to the initial unconnected subflow.
 
-Our CI did some validations and here is its report:
+Patch 2 exports the existing tcp_sendmsg_fastopen() function from tcp.c
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4956489147219968
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4956489147219968/su=
-mmary/summary.txt
+Patch 3 adds the call to tcp_sendmsg_fastopen() from the MPTCP send
+function.
 
-- KVM Validation: debug:
-  - Unstable: 1 failed test(s):=
- packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6082389054062592
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6082389054062592/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/2474bd2962c4
+Patch 4 modifies mptcp_poll() to handle the deferred TFO connection.
 
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+Benjamin Hesmans (3):
+  mptcp: add TCP_FASTOPEN_CONNECT socket option
+  tcp: export tcp_sendmsg_fastopen
+  mptcp: poll allow write call before actual connect
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Dmytro Shytyi (1):
+  mptcp: handle defer connect in mptcp_sendmsg
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+ include/net/tcp.h    |  2 ++
+ net/ipv4/tcp.c       |  5 ++---
+ net/mptcp/protocol.c | 26 ++++++++++++++++++++++++++
+ net/mptcp/sockopt.c  | 19 ++++++++++++++++++-
+ 4 files changed, 48 insertions(+), 4 deletions(-)
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+base-commit: 4991931223e3b909aa4931face285e4658927824
+-- 
+2.37.3
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
