@@ -1,88 +1,112 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A0F2FAF
-	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 17:16:26 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id hy2so15511601ejc.8
-        for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 10:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=u1hIdHaiU3P21Lze8J777j3+Acv2oKkhWoSA0/RDm/k=;
-        b=eQcz6u4tZQoz3pKtZbtdFiOAxutjh3WBg4VX8awcW6Zb2MHRUEV8/nrXZ7+WEC4jls
-         RRx3SATGaWOwA9zScFNDo5HKdXKVQSuFI57tl146p8n0dVNRO/v1GehIablIqIHR7u6A
-         LyOaRzQNe0p1nK47QeKxa5XvJIz3wThck1l3gnfeFTWSQwymMGH9KpfFFk4CM5SlcmU/
-         tLCwrssrHlK5vuDhOBGq9/Bqgpwq2IXtjX2wiKr7o+WJat5VzaQvBG85HvvnBajbRlza
-         pIKdKwVodZvBTi7RGeMHAWeDWJ2NGYMf3ffMPHpF4jY8qhMdeoYb7r4Eg0eD03t+0ojt
-         /ljA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=u1hIdHaiU3P21Lze8J777j3+Acv2oKkhWoSA0/RDm/k=;
-        b=Z4RTSfVXWRhhtAj+PzdyS2bzdaz8uEADaGDKKKklWpArKh7YWpOvzDYAXai7J8r9KI
-         6QyjItkBX8XRdtVhxJBt/Dh+jwofKfL9QsQzl8vRADAbj7lcWkCu3JclmK/8vIOhAZVG
-         FbP+DgrzL18xWvjcxJT8j7A7V3DKH0WDmC/NEVJR1/IL6vAWC8XKg9mLy4slUSPU8y3w
-         Z3AlawYMh9s2eibQ+rUUEjMV4RJijHUjPI62OZ1B4woAFAIHoYj/BsIfROPbHoME7S4D
-         XXbu1FrXussxVcpDCvsMgVOuQYxwERAEd1kLB3lQBWkotcf9VkoJlYsEMxpy70yfJ1yl
-         78Jg==
-X-Gm-Message-State: ACrzQf183LB+SlWNsXFCM0JCdhHVB2FSFTupRREPxDAj+g3XHUeQHnpP
-	vvfC+YJLg5APlrvgxxG1u2panDrfsISsO72S
-X-Google-Smtp-Source: AMsMyM5ieME9q+E7KPxU8t1Gb5NT7K0Ung+mYuXyUQO52231LZI1vHbhtNgTpjyQZgRHVSvgcKbyKw==
-X-Received: by 2002:a17:906:2245:b0:715:7c81:e39d with SMTP id 5-20020a170906224500b007157c81e39dmr20291690ejr.262.1664212584449;
-        Mon, 26 Sep 2022 10:16:24 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:d58b:a76f:9c42:d02a? ([2a02:578:8593:1200:d58b:a76f:9c42:d02a])
-        by smtp.gmail.com with ESMTPSA id d12-20020aa7ce0c000000b004570ed2da1bsm4895980edv.38.2022.09.26.10.16.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Sep 2022 10:16:24 -0700 (PDT)
-Message-ID: <079eb3f1-37c4-37c2-2afc-7a9d8e750af8@tessares.net>
-Date: Mon, 26 Sep 2022 19:16:22 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDDD46B6
+	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 21:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664226897; x=1695762897;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=fuEEMQWbGzpjAYd/p0S0Kc0ta8ge1e4r8zD7xy0WDiY=;
+  b=A8g+L338Lho3EvdMSgrYN7k1QaL32JY3X03Y5aFZ3D0zwiok2n56WD3r
+   DZEvOMjFsSZk83W50NQx10rYoQ4tNq5h+d5SNubbM75HkSVuzXFRVt9k1
+   bzTE4i0mVO+rVRHVY0VhLi209jfcWJBQji+iygrPw9uNNo8+ZNXF4A6NW
+   hKfAojzMLUhhqOSShNX1poRgrzsBCL108ZLk3LOTbfxG2NEIcT97rCUqS
+   qW87d6CPD9FLXf+nblW09K+ZptEy5tDkFu5yp7oDaZeoc2c0w1ofnuO5e
+   z/TcwQXVUtsZ8McEHXxu6Hc5ZnCKfisf1NDcAYlCJk9Z17tkmhuZv+q3B
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="299864141"
+X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
+   d="scan'208";a="299864141"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 14:14:56 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="746772807"
+X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
+   d="scan'208";a="746772807"
+Received: from msakmal-mobl.amr.corp.intel.com ([10.209.99.219])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 14:14:56 -0700
+Date: Mon, 26 Sep 2022 14:14:56 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] mptcp: update misleading comments.
+In-Reply-To: <870262a8c7ca7eb682da90684f2ff193a818924b.1664205929.git.pabeni@redhat.com>
+Message-ID: <4d18a02d-5f12-cfdc-034f-10cb5e2696d8@linux.intel.com>
+References: <870262a8c7ca7eb682da90684f2ff193a818924b.1664205929.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: use fastclose on more edge
- scenarios"
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <0a7720e1aebc9ae8babf8b4881b7ad2acf672352.1664198754.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <0a7720e1aebc9ae8babf8b4881b7ad2acf672352.1664198754.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Mon, 26 Sep 2022, Paolo Abeni wrote:
 
-On 26/09/2022 15:26, Paolo Abeni wrote:
-> The orginal commit applied fastclose too aggressivly.
-> Specifically, we don't need a fastclose after the completion of
-> the data_fin handshakr for an orphaned socket.
+> The MPTCP data path is quite complex and hard to understend even
+> without some foggy comments referring to modified code and/or
+> completely misleading from the beginning.
+>
+> Update a few of them to more accurately describing the current
+> status.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-Thank you for the fix!
+Thanks for updating the comments, Paolo. New comments look good to me:
 
-Now in our tree:
-
-New patches for t/upstream:
-- 3fa214dd96ae: "squashed" in "mptcp: use fastclose on more edge scenarios"
-- Results: a24eaf661ebf..e839b37d59fd (export)
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
-Tests are now in progress:
+> ---
+> net/mptcp/protocol.c | 14 +++++++-------
+> 1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index c99eb4ce948e..8feb684408f7 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -662,9 +662,9 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>
+> 		skb = skb_peek(&ssk->sk_receive_queue);
+> 		if (!skb) {
+> -			/* if no data is found, a racing workqueue/recvmsg
+> -			 * already processed the new data, stop here or we
+> -			 * can enter an infinite loop
+> +			/* With racing move_skbs_to_msk() and __mptcp_move_skbs(),
+> +			 * a different CPU can have already processed the pending
+> +			 * data, stop here or we can enter an infinite loop
+> 			 */
+> 			if (!moved)
+> 				done = true;
+> @@ -672,9 +672,9 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+> 		}
+>
+> 		if (__mptcp_check_fallback(msk)) {
+> -			/* if we are running under the workqueue, TCP could have
+> -			 * collapsed skbs between dummy map creation and now
+> -			 * be sure to adjust the size
+> +			/* Under fallback skbs have no MPTCP extension and TCP could
+> +			 * collapse them between the dummy map creation and the
+> +			 * current dequeue. Be sure to adjust the map size.
+> 			 */
+> 			map_remaining = skb->len;
+> 			subflow->map_data_len = skb->len;
+> @@ -3767,7 +3767,7 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+> 	if (sk->sk_shutdown & RCV_SHUTDOWN)
+> 		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
+>
+> -	/* This barrier is coupled with smp_wmb() in tcp_reset() */
+> +	/* This barrier is coupled with smp_wmb() in __mptcp_error_report() */
+> 	smp_rmb();
+> 	if (sk->sk_err)
+> 		mask |= EPOLLERR;
+> -- 
+> 2.37.3
+>
+>
+>
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220926T171410
-
-
-Cheers,
-Matt
-
-PS: I also merged the Packetdrill PR and closed the ticket #303 ;)
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
