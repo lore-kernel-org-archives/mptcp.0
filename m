@@ -1,35 +1,37 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716B9362
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AF54C93
 	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 22:54:22 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; t=1664319258; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=Q92zspZQ1Bp6lphPLHNlxD7/mnfwPBtfNQueTREZBSbFYlBROUl+UAj8boELB7Ul2RSnNCKpewZVxGMDVubAPYg4WDegXSvyWzavPmNEfoTDbgCW6hPRwToQR8iYQBZmSD7ctfVGZTGhKKBOyyLueD0bHYyube7GHqhv2HJ41QY=
+	b=XUTXtOMVeNVN1G/oCjS0HLEOivX6+b9gXwzxXSSE6Bc5+onMUlygHuH2hjuzNcvbQO2EyScvtmxlUgpdCbNRDmEY9u6/zobfD2Hb8lzrxYnnaSWwQGqU9CcEMQAbNhnx2TCQnBVlR1ksvKJj+epq0TX75UBvysEdP3SncM1gOnY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1664319258; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-	bh=HXMMnmNeswQ7/QJOpmsNwOSx8TJ02Ysw1r+nHV6Ug9A=; 
-	b=ITIyr7KM4R5Ml0Etxtxo/DePMaLxch+hH6H3moQCxvPhwOBEKH801/sZM96K7yLfd9S03orBBPgQssdQObpSGecENTV5RT4oLRUSZkHsNnLDon6XVDB5djyYaGVln5FoiWs1X2x9saKBEARsKEmgEytLfb+1ldwE22HrETUNwUQ=
+	t=1664319258; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=vnjxOjcMDYrcLbQy+5FDy2xufVDeEbFU6NcKTVZkgAQ=; 
+	b=hOG9N1gFSPf4l2QGTb5jVYR5WflAt/R9wV3x5nIkU1bNwqi2f1rKnvUZ4ouvkdUoWK30tFphhOBQkvCkVrH0QsmvLdWcoRkq4FTKYhQcaatts0XZ407PVunxqs4QylJZXaQUT+25bGFaW3ebzXjoEabGPyJExcYNsdb1GRKc35k=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
 	dmarc=pass header.from=<dmytro@shytyi.net>
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1664319258;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=HXMMnmNeswQ7/QJOpmsNwOSx8TJ02Ysw1r+nHV6Ug9A=;
-	b=fznx6LPE2os96cFonvpUYDF138ZTxQzxZkfRDGZjlaGxl+4uq+bN8TC0CLfUhIBW
-	iuMQRqZSi8AAb4NuqvpMYZ6Qei0zeqUbSDBr8fajNeHQg2mPrlgp25TedLNW9O17Oqb
-	iSoj+vvX9K5tUhG+KqtYZIzpiqr7BADcbvNjwwsU=
+	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=vnjxOjcMDYrcLbQy+5FDy2xufVDeEbFU6NcKTVZkgAQ=;
+	b=T0N3IXIr8J+Xi+Q2O0tsZOkp025BZgAU1+S5Yeef85Y36U2Koei3bVwS5IV/U7K5
+	YEqEEvbkVe5f4GkB88JSnmw0N69PC1dPbMAO75qGrCm2sdO6UU6PZe1JDo9gQ7yrJzt
+	46tkV6HhbXlalZGIddBwzxMcHyu3P3DrpK+TKar4=
 Received: from localhost.localdomain (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 1664319256137893.4506186453959; Wed, 28 Sep 2022 00:54:16 +0200 (CEST)
+	with SMTPS id 1664319257334408.09512802636925; Wed, 28 Sep 2022 00:54:17 +0200 (CEST)
 From: Dmytro Shytyi <dmytro@shytyi.net>
 To: mptcp@lists.linux.dev
 Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <20220927225341.14165-1-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v12 0/7] mptcp: Fast Open Mechanism
-Date: Tue, 27 Sep 2022 22:53:34 +0000
+Message-ID: <20220927225341.14165-3-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v12 2/7] mptcp: fix retrans., add mptfo vars to msk
+Date: Tue, 27 Sep 2022 22:53:36 +0000
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220927225341.14165-1-dmytro@shytyi.net>
+References: <20220927225341.14165-1-dmytro@shytyi.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,48 +42,103 @@ Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 Content-Type: text/plain; charset=utf8
 
+With fastopen in place the first subflow socket is created
+before the MPC handshake completes, and we need to properly initialize
+the sequence numbers at MPC ACK reception.
 
-These patches focus on the Initiator and partially on Listener side.
-The next options in userspace are available:=20
-a) sendto(..., ..., ..., MSG_FASTOPEN, ..., ...);
-b) setsockopt(..., SOL_TCP, TCP_FASTOPEN, ..., ...);
-
-These patches implement Appendix-B of RFC8684 (MPTFO).
-
-We would like to credit Paulo Abeni, Mat Martineau, Matthieu Baerts and
-Benjamin Hesmans for advices and ideas that improved these patches.
-
-Dmytro Shytyi (5):
-  mptcp: introduce MSG_FASTOPEN flag.
-  mptcp: fix retrans., add mptfo vars to msk
-  mptcp: add subflow_v(4,6)_send_synack()
-  mptcp: add TCP_FASTOPEN option
-  selftests: mptfo initiator/listener
-
-Matthieu Baerts (2):
-  mptcp: sockopt: make 'tcp_fastopen_connect' generic
-  mptcp: add TCP_FASTOPEN_NO_COOKIE support
-
- include/net/mptcp.h                           |   9 ++
- include/net/tcp.h                             |   3 +
- net/ipv4/tcp.c                                |  20 +++-
- net/ipv4/tcp_fastopen.c                       |  19 ++--
- net/mptcp/Makefile                            |   2 +-
- net/mptcp/fastopen.c                          |  62 +++++++++++
- net/mptcp/options.c                           |   5 +
- net/mptcp/protocol.c                          |  21 ++--
- net/mptcp/protocol.h                          |   9 ++
- net/mptcp/sockopt.c                           |  21 ++--
- net/mptcp/subflow.c                           |  42 ++++++++
- tools/testing/selftests/net/mptcp/mptfo.sh    |  13 +++
- .../selftests/net/mptcp/mptfo_initiator.c     |  43 ++++++++
- .../selftests/net/mptcp/mptfo_listener.c      | 100 ++++++++++++++++++
- 14 files changed, 342 insertions(+), 27 deletions(-)
+Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+---
+ net/mptcp/Makefile   |  2 +-
+ net/mptcp/fastopen.c | 19 +++++++++++++++++++
+ net/mptcp/options.c  |  5 +++++
+ net/mptcp/protocol.h |  6 ++++++
+ 4 files changed, 31 insertions(+), 1 deletion(-)
  create mode 100644 net/mptcp/fastopen.c
- create mode 100644 tools/testing/selftests/net/mptcp/mptfo.sh
- create mode 100644 tools/testing/selftests/net/mptcp/mptfo_initiator.c
- create mode 100644 tools/testing/selftests/net/mptcp/mptfo_listener.c
 
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index 8a7f68efa35f..c42ad8609876 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -2,7 +2,7 @@
+ obj-$(CONFIG_MPTCP) +=3D mptcp.o
+=20
+ mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o d=
+iag.o \
+-=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o
++=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o fastopen.o
+=20
+ obj-$(CONFIG_SYN_COOKIES) +=3D syncookies.o
+ obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+new file mode 100644
+index 000000000000..d6fb45e6be4f
+--- /dev/null
++++ b/net/mptcp/fastopen.c
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0
++ * MPTCP Fast Open Mechanism. Copyright (c) 2021-2022, Dmytro SHYTYI
++ */
++
++#include "protocol.h"
++
++void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_su=
+bflow_context *subflow,
++=09=09=09=09   struct mptcp_options_received mp_opt)
++{
++=09u64 ack_seq;
++
++=09WRITE_ONCE(msk->can_ack, true);
++=09WRITE_ONCE(msk->remote_key, mp_opt.sndr_key);
++=09mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
++=09ack_seq++;
++=09WRITE_ONCE(msk->ack_seq, ack_seq);
++=09pr_debug("ack_seq=3D%llu sndr_key=3D%llu", msk->ack_seq, mp_opt.sndr_ke=
+y);
++=09atomic64_set(&msk->rcv_wnd_sent, ack_seq);
++}
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 30d289044e71..0b6c4535750c 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1208,6 +1208,11 @@ bool mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb)
+ =09=09=09mpext->dsn64 =3D 1;
+ =09=09=09mpext->mpc_map =3D 1;
+ =09=09=09mpext->data_fin =3D 0;
++
++=09=09=09if (msk->is_mptfo) {
++=09=09=09=09mptcp_gen_msk_ackseq_fastopen(msk, subflow, mp_opt);
++=09=09=09=09mpext->data_seq =3D READ_ONCE(msk->ack_seq);
++=09=09=09}
+ =09=09} else {
+ =09=09=09mpext->data_seq =3D mp_opt.data_seq;
+ =09=09=09mpext->subflow_seq =3D mp_opt.subflow_seq;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 93c535440a5c..a9708a2eb2bc 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -282,6 +282,7 @@ struct mptcp_sock {
+ =09bool=09=09use_64bit_ack; /* Set when we received a 64-bit DSN */
+ =09bool=09=09csum_enabled;
+ =09bool=09=09allow_infinite_fallback;
++=09bool=09=09is_mptfo;
+ =09u8=09=09mpc_endpoint_id;
+ =09u8=09=09recvmsg_inq:1,
+ =09=09=09cork:1,
+@@ -838,6 +839,11 @@ void mptcp_event_addr_announced(const struct sock *ssk=
+, const struct mptcp_addr_
+ void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
+ bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
+=20
++// Fast Open Mechanism functions begin
++void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_su=
+bflow_context *subflow,
++=09=09=09=09   struct mptcp_options_received mp_opt);
++// Fast Open Mechanism functions end
++
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
+ =09return READ_ONCE(msk->pm.addr_signal) &
 --=20
 2.34.1
 
