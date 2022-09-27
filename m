@@ -1,93 +1,98 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896D24A1E
-	for <mptcp@lists.linux.dev>; Mon, 26 Sep 2022 23:27:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32780362
+	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 00:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664234868; x=1695770868;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3eEN83FGptLBGWVNuc+N6UdQMdtD/faMYXdyfUdW2Ss=;
-  b=eD0zSv4QiT2vaAHIS5CN4wWO2DO/AulY2rflgtuDbPPsHh+BHc9mXKVi
-   9PFDgM7RGUJt4QMJ/Viw80f5xjR74788JPvJIZdQXMS+2C+Hkmx0+zcJI
-   l0RVpcMhNPh2sV5OAU7vzoA0knTD2w3k3/ki/+bqSL6+jYs3WrevAV57l
-   /3JmpW7gCUkNtTboXS9kPbfVvShHXebPbTk2wZMFp1WkU6xet6Q8IJzBA
-   SQSuWgB21RlhbiRiZZBjStFkZciobvzS4Nb2EkbXFr8NgEw57f+GLsjTC
-   Og4Nef3f3Vx+jaSCMrX5pJ71urY6VmSmmlrUYSRbMJflXQ6MS1tm/CMLv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="280890879"
+  t=1664237455; x=1695773455;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=GyWq7LPGxcyXUdJ5XtACdjNTZyNruNTJyWHKUyj2cLM=;
+  b=EyoASy2BiFyZ0ToPVgmuzgzdKmPtmiYtDvIuCcVDx3Ii10X843vqCi09
+   S+z7dPjhaQgeFM/dL0WuQOa7Sn5vv/1pHa7+pV+ll+o4l/+OYvBVdcFsG
+   U6gGgpPN+vQwrDMK/ix7b0XCSrf+MxwvMrxPIE792jVUTDbqMyJC3oCtr
+   kTflEbKcMxxBpJmy1eEkxk4MH8HVKVDEL8GKCxbtPuDv3doJSeWFny458
+   S/0OUO+3+lrmpHow5OAHN1kC3IAqSBJqqrfQEkRn1FMXkQTjm1r6XVHzV
+   dT8n8v3Z6gO5xEAonRlHQKxzht3aKJkl0OEZ4Rlqq7T5tL5kVlpT58cJ9
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="288317912"
 X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="280890879"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 16:27:44 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="572424288"
+   d="scan'208";a="288317912"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 17:10:54 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="725281367"
 X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="572424288"
-Received: from sankarka-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.3.132])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 16:27:44 -0700
+   d="scan'208";a="725281367"
+Received: from msakmal-mobl.amr.corp.intel.com ([10.209.99.219])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 17:10:54 -0700
+Date: Mon, 26 Sep 2022 17:10:33 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	dmytro@shytyi.net,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 4/4] mptcp: poll allow write call before actual connect
-Date: Mon, 26 Sep 2022 16:27:39 -0700
-Message-Id: <20220926232739.76317-5-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220926232739.76317-1-mathew.j.martineau@linux.intel.com>
-References: <20220926232739.76317-1-mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: MPTCP upstreaming, week of 26-Sept-2022
+Message-ID: <57e168ae-9de0-c986-cab1-a130e72e4e95@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="0-1085618361-1664237454=:4723"
 
-From: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-If fastopen is used, poll must allow a first write that will trigger
-the SYN+data
+--0-1085618361-1664237454=:4723
+Content-Type: text/plain; format=flowed; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-Similar to what is done in tcp_poll().
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Matthieu and Paolo -
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index fc753896caa0..16c3a6fc347f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3548,6 +3548,7 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- 
- do_connect:
- 	err = ssock->ops->connect(ssock, uaddr, addr_len, flags);
-+	inet_sk(sock->sk)->defer_connect = inet_sk(ssock->sk)->defer_connect;
- 	sock->state = ssock->state;
- 
- 	/* on successful connect, the msk state will be moved to established by
-@@ -3698,6 +3699,9 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
- 		mask |= mptcp_check_readable(msk);
- 		mask |= mptcp_check_writeable(msk);
-+	} else if (state == TCP_SYN_SENT && inet_sk(sk)->defer_connect) {
-+		/* cf tcp_poll() note about TFO */
-+		mask |= EPOLLOUT | EPOLLWRNORM;
- 	}
- 	if (sk->sk_shutdown == SHUTDOWN_MASK || state == TCP_CLOSE)
- 		mask |= EPOLLHUP;
--- 
-2.37.3
+I upstreamed the fastopen changes for net-next today, so those are in the 
+patchwork queue for the netdev maintainers:
 
+https://patchwork.kernel.org/project/netdevbpf/list/?series=680767
+
+
+The other patch sets we discussed upstreaming in the meeting last week 
+were:
+
+     - Fixes for -net:
+
+         - [6e827151a607] mptcp: factor out __mptcp_close() without socket lock (Menglong Dong)
+         - [62b5536f77f6] mptcp: fix unreleased socket in accept queue (Menglong Dong):
+             - can wait a bit more and can be sent next week
+
+
+     - Features for net-next:
+
+         - [ef4a93571133] mptcp: propagate fastclose error (Paolo Abeni)
+         - [885cab8b5203] mptcp: use fastclose on more edge scenarios (Paolo Abeni)
+         - [13c82c8b0d9f] selftests: mptcp: update and extend fastclose test-cases (Paolo Abeni):
+             - can wait a bit, Paolo would like to have a look at the modification on packetdrill side
+
+
+I'm planning to upstream the two -net patches on Tuesday unless someone 
+objects.
+
+
+The net-next patches are slightly more complicated:
+
+  * They were updated with a squash-to patch today
+  * Need to wait until fastopen patches are merged
+  * There is a minor conflict with the -net patches (just diff context)
+    in "mptcp: use fastclose on more edge scenarios".
+
+
+Regarding the conflict, I could wait until Friday for a likely 
+net/net-next sync.
+
+Another option is to modify the patch slightly by moving 
+mptcp_check_readable() before __mptcp_check_send_data_fin(), it doesn't 
+make the diff any larger and avoids the -net conflict. What do you think?
+
+--
+Mat Martineau
+Intel
+--0-1085618361-1664237454=:4723--
