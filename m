@@ -1,29 +1,30 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890DA259A
-	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 15:10:05 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1664291399; cv=none; 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5472FAE
+	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 15:11:58 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1664291515; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=RCQCAlxBX4awDK9aYVlL1HlZbg1L0EbFd8Ck4V2ChbRLXFFh/sev8puRYd+kpDmRhEarEPF3R9nLH5Gepl9ioZPVC/knduBmBOkKW6KzA8KYLU2jgI1qt1jCWlWVeIitVF0hZHDhmATWlOSNS0zpcIiiyVi9G52o0eenAiemHZs=
+	b=GJhHfEDRyWiMTxNKQsK4UbK1KQyXgftZRGc3XsuQu6rYbrSobmcrYMVayRTFtNpZrsupAmccQNvHJTfs9z4koLVw0a7QC27Inv6Blvur9c1FDo7sVgkkkurhj54wuomLV8Ldef4xi/AYPZ+IBksksTrST2o+3r7SPxjVNKPB4KE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1664291399; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=mC6aMjG62HyegJr2E5PqEjKPeYlAVtKdxZA3PjhkeC0=; 
-	b=R9XRW2qY40P/Jk8+1YkF0qhYJ03t4qMBtoMhNFsN+/glFT6yCAdOCN2TiW7w4HWtXHDEBAOXxwzbEvaCqWaMcHj6c5vgqhR0egMcvfeAYEpQZq6AV3XgpdIkckpGBSvMAva/NK55p3hui9tJOpIb1bT+m3ADQnuI4qW7RplYwjw=
+	t=1664291515; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=6B0rFLn7Uf0ZTEGiUCVjBSRJPGLplHFeehyDxrDcx+0=; 
+	b=GglplAgt1YzDbjkUzqIWeFlpmEzlrbsZxJwTGLXMn3hiQFZwDSrRaqrPW36Lbce2qLaspBAmLvLL9woXogKLR5yb+nc/iC3c5ONmAEVTKWu5mrglaaDSDbNPLW/dBDfxi/pv7mU827dd9G/d9hapU8/9qWjCrPVnyFiIcJj6LCs=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
 	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1664291399;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1664291515;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:Message-ID:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=mC6aMjG62HyegJr2E5PqEjKPeYlAVtKdxZA3PjhkeC0=;
-	b=eRpKh0inAlIjkHo6QVlRatDRL+ltog1UtSjdYYahN+ZiP4RmODwB/CBuzNlxMWVe
-	5iYWSfc51E1QesoIWu8RdZdx9cL4sn6Jr4l2O+s7yzEVvV7FVPSjDzOMjrlp5OqVo96
-	Uqskd9cuKFk/evyuaO09lHoQ08rzJyQfe5PJuho8=
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=6B0rFLn7Uf0ZTEGiUCVjBSRJPGLplHFeehyDxrDcx+0=;
+	b=YAAyqyK7txsXqqrueRc5AsoyZ3H4mM9qgzSgEhHWK+WZB038qnnCK6V3skw1Ej8l
+	wsYSKvpw45v/T4tz2QZKXsd5RtfUT74+5oFozPAI35oxE5G5kdzXQkhU/Pq4Os9AzNL
+	spfzNkL+01LSGZNefGcawrQcMm/ajrtNdQeXBhlw=
 Received: from [192.168.1.25] (243.34.22.93.rev.sfr.net [93.22.34.243]) by mx.zoho.eu
-	with SMTPS id 1664291397069378.5966740624657; Tue, 27 Sep 2022 17:09:57 +0200 (CEST)
-Date: Tue, 27 Sep 2022 17:09:56 +0200
+	with SMTPS id 166429151340536.99493976961469; Tue, 27 Sep 2022 17:11:53 +0200 (CEST)
+Message-ID: <0d446a93-7cd1-1c34-099b-716e31c0054b@shytyi.net>
+Date: Tue, 27 Sep 2022 17:11:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -32,142 +33,65 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
-Subject: Re: [RFC PATCH mptcp-next v11 4/4] mptcp: reuse
- tcp_sendmsg_fastopen()
+Subject: Re: [RFC PATCH mptcp-next v11 3/4] mptcp: add
+ mptcp_subflow_conn_sock()
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
 References: <20220925232601.25252-1-dmytro@shytyi.net>
- <20220925232601.25252-5-dmytro@shytyi.net>
- <3b85c5f3ceac73bfc397c783910ef0bc5532fb69.camel@redhat.com>
+ <20220925232601.25252-4-dmytro@shytyi.net>
+ <f132db08-8601-40d3-9477-ae914e96165a@tessares.net>
 From: Dmytro Shytyi <dmytro@shytyi.net>
-Message-ID: <1e813adc-0171-3274-48fd-a9f20316b477@shytyi.net>
-In-Reply-To: <3b85c5f3ceac73bfc397c783910ef0bc5532fb69.camel@redhat.com>
+In-Reply-To: <f132db08-8601-40d3-9477-ae914e96165a@tessares.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 X-ZohoMailClient: External
 
-Hello,
+Hello Matthieu,
 
-On 9/26/2022 4:46 PM, Paolo Abeni wrote:
-> Hello,
+
+On 9/26/2022 7:11 PM, Matthieu Baerts wrote:
+> Hi Dmytro,
 >
-> On Mon, 2022-09-26 at 01:26 +0200, Dmytro Shytyi wrote:
->> In the following patches we will reuse modified tcp_sendmsg_fastopen().
->> We call it from mptcp_sendmsg().
->>
->> Signed-of-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
->> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
->> ---
->>   include/net/tcp.h    |  3 +++
->>   net/ipv4/tcp.c       |  6 +++---
->>   net/mptcp/protocol.c | 25 +++++++++++++++++++++++--
->>   3 files changed, 29 insertions(+), 5 deletions(-)
->>
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index 27e8d378c70a..97cb014ddcab 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -1755,6 +1755,9 @@ struct sock *tcp_try_fastopen(struct sock *sk, str=
-uct sk_buff *skb,
->>   =09=09=09      struct request_sock *req,
->>   =09=09=09      struct tcp_fastopen_cookie *foc,
->>   =09=09=09      const struct dst_entry *dst);
->> +int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->> +=09=09=09 int *copied, size_t size,
->> +=09=09=09 struct ubuf_info *uarg);
->>   void tcp_fastopen_init_key_once(struct net *net);
->>   bool tcp_fastopen_cookie_check(struct sock *sk, u16 *mss,
->>   =09=09=09     struct tcp_fastopen_cookie *cookie);
+> On 26/09/2022 01:26, Dmytro Shytyi wrote:
+>> In the following patches we will call mptcp_subflow_conn_sock() from
+>> tcp_sendmsg_fastopen() in file "net/ipv4/tcp.c", thus make such symbol
+>> visible.
+> The patch description and title don't seem to be correct. You are doing
+> more than that here.
+
+Thanks, I deleted this patch in next version.
+
+
 >> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
->> index a22c8044de17..daa611671d9a 100644
+>> index 5702ca9b952d..a22c8044de17 100644
 >> --- a/net/ipv4/tcp.c
 >> +++ b/net/ipv4/tcp.c
->> @@ -1162,9 +1162,9 @@ void tcp_free_fastopen_req(struct tcp_sock *tp)
->>   =09}
->>   }
->>  =20
->> -static int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->> -=09=09=09=09int *copied, size_t size,
->> -=09=09=09=09struct ubuf_info *uarg)
->> +int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->> +=09=09=09 int *copied, size_t size,
->> +=09=09=09 struct ubuf_info *uarg)
->>   {
->>   =09struct tcp_sock *tp =3D tcp_sk(sk);
->>   =09struct inet_sock *inet =3D inet_sk(sk);
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index fb08e1f458c0..dd2414fdcf04 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -1679,9 +1679,30 @@ static int mptcp_sendmsg(struct sock *sk, struct =
-msghdr *msg, size_t len)
->>   =09long timeo;
->>  =20
->>   =09/* we don't support FASTOPEN yet */
->> -=09if (msg->msg_flags & MSG_FASTOPEN)
->> -=09=09return -EOPNOTSUPP;
->> +=09if (msg->msg_flags & MSG_FASTOPEN) {
->> +=09=09struct socket *ssock;
->> +=09=09struct sock *ssk;
->>  =20
->> +=09=09lock_sock(sk);
->> +
->> +=09=09ssock =3D __mptcp_nmpc_socket(msk);
->> +=09=09ssk =3D ssock->sk;
->> +
->> +=09=09lock_sock(ssk);
->> +
->> +=09=09if (ssock) {
->> +=09=09=09int copied_syn_fastopen =3D 0;
->> +
->> +=09=09=09ret =3D tcp_sendmsg_fastopen(ssk, msg, &copied_syn_fastopen, l=
-en, NULL);
->> +=09=09=09copied +=3D copied_syn_fastopen;
->> +=09=09=09if (ret) {
->> +=09=09=09=09release_sock(ssk);
->> +=09=09=09=09goto do_error;
->> +=09=09=09}
->> +=09=09}
->> +=09=09release_sock(ssock->sk);
->> +=09=09release_sock(sk);
->> +=09}
->>   =09/* silently ignore everything else */
->>   =09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
-> the above/previous patches duplicate quit a bit of code. Instead the
-> following should be enough (replacing patches 2, 3, 4 here):
-
-
-Indeed. You are right. We could use this=C2=A0 and seems like it works :)
-
-> ---
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index c99eb4ce948e..c50e8f85bb11 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1673,17 +1673,14 @@ static int mptcp_sendmsg(struct sock *sk, struct =
-msghdr *msg, size_t len)
->   =09int ret =3D 0;
->   =09long timeo;
->  =20
-> -=09/* we don't support FASTOPEN yet */
-> -=09if (msg->msg_flags & MSG_FASTOPEN)
-> -=09=09return -EOPNOTSUPP;
-> -
->   =09/* silently ignore everything else */
-> -=09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
-> +=09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_FAST=
-OPEN;
->  =20
->   =09lock_sock(sk);
->  =20
->   =09ssock =3D __mptcp_nmpc_socket(msk);
-> -=09if (unlikely(ssock && inet_sk(ssock->sk)->defer_connect)) {
-> +=09if (unlikely(ssock && inet_sk(ssock->sk)->defer_connect ||
-> +=09=09     msg->msg_flags & MSG_FASTOPEN)) {
->   =09=09struct sock *ssk =3D ssock->sk;
->   =09=09int copied_syn =3D 0;
->  =20
+>> @@ -1197,8 +1197,19 @@ static int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>>   		}
+>>   	}
+>>   	flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
+>> -	err = __inet_stream_connect(sk->sk_socket, uaddr,
+>> -				    msg->msg_namelen, flags, 1);
+>> +	if (!sk_is_mptcp(sk)) {
+>> +		err = __inet_stream_connect(sk->sk_socket, uaddr,
+>> +					    msg->msg_namelen, flags, 1);
+> Do you think it could be possible not to modify tcp_sendmsg_fastopen()
+> but instead implement '.connect' callback in 'mptcp_prot'?
 >
 >
+>> +	} else {
+>> +		struct sock *parent = mptcp_subflow_conn_sock(sk);
+>> +
+>> +		release_sock(sk);
+>> +		release_sock(parent);
+> It looks strange to release sockets because, I guess, they are going to
+> be re-lock just after. It certainly means you want to call a (new)
+> function which is not doing this locking bit, no?
+No need to address this question, as I deleted this patch in new version.
+> Cheers,
+> Matt\
+
+Thanks.
+
+Dmytro.
 
