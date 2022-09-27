@@ -1,102 +1,112 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0D54C64
-	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 19:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664308748; x=1695844748;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=75x4CZZbJ76Gnj7NODJiPax5+PQzcpNMnIH+QXcZGfU=;
-  b=cakr04lptQOkYIX0owlbhkoIsmnJ1Im//0bOMKsPM3JMTG/+y9sHv6o7
-   7vFNIMcdyexJcTV9uy8+WYv0qprkMzeXkqGostfXuHcpSPsC2rTnUBc3s
-   NLib407FoQRvNmA4h0o+GH/rzMzSJv1aBGchpyQBqe0t6NFnYyPNHSxhn
-   uXgh3Bp7RR7+1uAzTX0bNJyNO17kTxzZbVOeeSqJYjvACZSRsLa8UI0dl
-   fcMFYn0xiMQLfIP66MsQzSCG/VqLTE+1xyKABccBE1U9csHT+BMmeuhKK
-   lpVVQV/LMUXLNjLHKxtrPwyNvw967kpQakLSFMkQ/QFnx/X8LxSJ5Fwz6
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="284546290"
-X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
-   d="scan'208";a="284546290"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:59:07 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="616950870"
-X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
-   d="scan'208";a="616950870"
-Received: from smahinde-mobl1.gar.corp.intel.com ([10.255.229.132])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:59:07 -0700
-Date: Tue, 27 Sep 2022 12:59:07 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: sockopt: make 'tcp_fastopen_connect'
- generic
-In-Reply-To: <f348f260d1c2c988fd96e5079b18e9468ff8cb3b.camel@redhat.com>
-Message-ID: <1eb00480-b89d-914e-bbd9-11c185448ef0@linux.intel.com>
-References: <20220927150306.1552795-1-matthieu.baerts@tessares.net>  <20220927150306.1552795-2-matthieu.baerts@tessares.net> <f348f260d1c2c988fd96e5079b18e9468ff8cb3b.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26474C86
+	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 21:24:36 +0000 (UTC)
+Received: by mail-qv1-f47.google.com with SMTP id m18so1300360qvo.12
+        for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 14:24:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date;
+        bh=Z/Sgw477Stzz0XVCGZyXnwKKXQDy4ene2zjJ/mit9YU=;
+        b=LUF01RJ/0Iw1a1rennVo8tfsuJ1VCNb1XlieJZR6dIzF9Dpp+96m/+EN6ojam+9lpo
+         OPK4FzDHiGbzK3xQmqRYddgVUFUXZi9gtnTKDiBgy5K2W7bOf+Cx/LhySigDEMYpMAoj
+         9TrU3fNBDgYRAdzTuC6lq6M0PVKJICe0qto0elG1BT3nER2DEpv03OOTOGJqF3N7GJ8e
+         idvz4QJHqVUNe2ElIhJXhJ3aIECe9GiOcirXSx7jZhrCP8q8Dru63yRA0w5tsbVGdddc
+         tQaSl/Qd2E6IAufgefJwzv4QdADbhK0HtKXbUZc2Op2BkvDwIIvygTPe+d0/bGTD1PWZ
+         4fLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=Z/Sgw477Stzz0XVCGZyXnwKKXQDy4ene2zjJ/mit9YU=;
+        b=ZFMfVAKsEoFRiq2b6t68190kNBrF7cj3wET6P6twk1t2/WldnIA0iIee4biw4aqXyN
+         632EtHXYhJAOdiDjnbC1bhLZb7eiazA9N60/4z2DAKkAxyjhXORiP4Y2wcisyZeSup4U
+         93Iz8aXfyYjc4sBMrhBBA0sigkPcZE7FIp6CjwPYNjAIHNnJY2nkpjxlyYoCbBDK+E0C
+         sZJZhq2sWIERb54ZkN1+QU4mwbovbRVrSIINjH5TsTIlCuSwMWznXZoZVlt1KYG6yEGK
+         Ll5DPKuN9voCKzNFqdzLflW8IkQcRXBh7z2zhCJGe7F88OdRxKSqUzm7MrzKI1e+saZ/
+         Md+w==
+X-Gm-Message-State: ACrzQf3Wp+rPllYCQjwBVjFjremYYnCcf5d/tlotTYzuN8vTWeU1Ikys
+	C3AoqRebCX0XjBS4maLbgiD56/eVrJG8
+X-Google-Smtp-Source: AMsMyM61F5SrdJJ4P6sGDRRYl0hzmRUsNNehndrWHLq5BR0zZdXuqAb5OmghGITequzUz7M4+G8eGw==
+X-Received: by 2002:a05:6214:f6a:b0:4a7:fe99:a39f with SMTP id iy10-20020a0562140f6a00b004a7fe99a39fmr23206808qvb.26.1664313875751;
+        Tue, 27 Sep 2022 14:24:35 -0700 (PDT)
+Received: from [127.0.0.1] ([20.110.54.228])
+        by smtp.gmail.com with ESMTPSA id h12-20020a05620a284c00b006b5e296452csm1469617qkp.54.2022.09.27.14.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Sep 2022 14:24:35 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20220927150306.1552795-3-matthieu.baerts@tessares.net>
+References: <20220927150306.1552795-3-matthieu.baerts@tessares.net>
+Subject: Re: mptcp: add TCP_FASTOPEN_NO_COOKIE support: Tests Results
+Message-ID: <81b21319-a6e6-de34-06bd-8b44f0ebe0d4@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 27 Sep 2022 21:24:34 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 27 Sep 2022, Paolo Abeni wrote:
+Hi Matthieu,
 
-> On Tue, 2022-09-27 at 17:03 +0200, Matthieu Baerts wrote:
->> There are other socket options that need to act only on the first
->> subflow, e.g. all TCP_FASTOPEN* socket options.
->>
->> This is similar to the getsockopt version.
->>
->> In the next commit, this new mptcp_setsockopt_first_sf_only() helper is
->> used by other another option.
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->>  net/mptcp/sockopt.c | 11 ++++++-----
->>  1 file changed, 6 insertions(+), 5 deletions(-)
->>
->> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
->> index c7cb68c725b2..8d3b09d75c3a 100644
->> --- a/net/mptcp/sockopt.c
->> +++ b/net/mptcp/sockopt.c
->> @@ -769,17 +769,17 @@ static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optv
->>  	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
->>  }
->>
->> -static int mptcp_setsockopt_sol_tcp_fastopen_connect(struct mptcp_sock *msk, sockptr_t optval,
->> -						     unsigned int optlen)
->> +static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
->> +					  sockptr_t optval, unsigned int optlen)
->>  {
->>  	struct socket *sock;
->>
->> -	/* Limit to first subflow */
->> +	/* Limit to first subflow, before the connection establishment */
->>  	sock = __mptcp_nmpc_socket(msk);
->>  	if (!sock)
->>  		return -EINVAL;
->
-> Crazy idea: if we add another int argument e.g. 'default_reval', we can
-> use this helper even for mptcp_setsockopt_sol_tcp_defer()
-> (default_retval == 0, while here default_reval == -EINVAL) ;)
->
-> Not a big deal, I'm fine even this way.
+Thank you for your modifications, that's great!
 
-Or do something similar without adding the extra int argument: just have 
-the call site for TCP_DEFER_ACCEPT in mptcp_setsockopt_sol_tcp() ignore 
-the return value of mptcp_setsockopt_first_sf_only(), and remove 
-mptcp_setsockopt_sol_tcp_defer()?
+Our CI did some validations and here is its report:
 
-That would be a third patch to use the new helper, so if you (Matthieu) 
-want to make that change I think these two patches are good as-is:
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/4851555361882112
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4851555361882112/summary/summary.txt
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5977455268724736
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5977455268724736/summary/summary.txt
 
---
-Mat Martineau
-Intel
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/91a8d06ab5a1
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
