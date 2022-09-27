@@ -1,142 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F0523BE
-	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 14:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1664287924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MBQlkzNVqnxVMG6dUP/GQGnPLyiblZeKd25PeiTSQ0w=;
-	b=GDsXa7Kf9SQjXeaamRANEc8V7Lm0p1lfk5fpuwZrPRSW7XEKdkonYKLNq25La3C/UtRIN+
-	iO/2kSkf/hHvqYXWLCfY75afYVEoWwDUQYUngouS0oM0qkMr1phoHBOb35c9/D4pLl7DEm
-	GihRDMVIifgQMZphGz+NYfltNGjNag8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-550-SdMHTaULNby8mmpuSyKNDw-1; Tue, 27 Sep 2022 10:12:03 -0400
-X-MC-Unique: SdMHTaULNby8mmpuSyKNDw-1
-Received: by mail-qk1-f200.google.com with SMTP id r14-20020a05620a298e00b006be796b6164so7404967qkp.19
-        for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 07:12:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B6E2596
+	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 15:06:06 +0000 (UTC)
+Received: by mail-wr1-f41.google.com with SMTP id m4so1137393wrr.5
+        for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 08:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=imoJ4JIQ9lGXdVJevFDQTKnqkGWYyTt9e70tLlpe5CA=;
+        b=v4AM2KOy2yuSVgOxB5VRmV2UfZ6kPkr67C+r7F4O/xn604GJKNvKWa5t7+4i49OJO2
+         +16OACoLypdivGx3b2NgwvD/h0YCV6RY330ghLl0vUD64CqyLr91M6RSab7yOvrA2dlZ
+         Ms1bc7QEUm5glXC7gYNLC7m4z0/WO05YdW4a+Kb9odYGFqMa6ZdhoINnqqRcglHjdB12
+         uQnH09SvAtDy6ZvRgI8uGd2Z0nZMNMTlqhfWecFG3FbzGPwG56edoQCIAcN3v4ojXvbm
+         YnDJ5XBenNhf0t6jFHxyse5L5lr9kKWM5DG/7Bvq8aiOHPdq1uvdmGisE+hWgcfzzXqi
+         i+Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=MBQlkzNVqnxVMG6dUP/GQGnPLyiblZeKd25PeiTSQ0w=;
-        b=e0OhiZ8QwSo11wUZWFW4x/Ov/eqQdT4Cpfp4qMwGBLwAukhIkqwg+BJnVov33BvfPO
-         2cXQ4ve7P0EtOesnm9uoEYdsffIO/ob5nzEtWiNrJwn3O2MQOpBdE1qwon7zFRKjvELF
-         PkVE1yVjdEelP8Fc+aRqJzbozHn/QYrblr3a4SSZGNJkK7/zTebVy97ZJgrjbYItl+xg
-         EDDdcIRxa4MHBFhJEksZ6qkMke1atLSbhInFnqqHWpnmrAQvIz/QN/9yvWDI3Q56yNIi
-         waEDi3kjzDtvQ3rCeHPsk66F+bf5DkVlzp0WNzHiLqqxw46km/mbAErIHOTTHYpwXLX3
-         qvBg==
-X-Gm-Message-State: ACrzQf2uu6Kix1Ujj4MT5KwTZjvVjc7rrR0I7gkc/oBdQpG7xStFy1jn
-	0Z+nXOgL0mbZPFnwvKVOsyyTO/AChz8E546bgQjb3y56vErf0jfKqTDkzHH+J51SH/r5JFA9BSh
-	Fq8qHoA5OjWeEKog=
-X-Received: by 2002:a05:6214:2a47:b0:4af:61e4:3934 with SMTP id jf7-20020a0562142a4700b004af61e43934mr11381511qvb.97.1664287922267;
-        Tue, 27 Sep 2022 07:12:02 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM67lNhmq/oq+XZbsW3pfJYt+M7UjkNOMv6ROyGsNC04ReX0KEDPT2yOI2Z79evLND2ekgZy5Q==
-X-Received: by 2002:a05:6214:2a47:b0:4af:61e4:3934 with SMTP id jf7-20020a0562142a4700b004af61e43934mr11381487qvb.97.1664287921913;
-        Tue, 27 Sep 2022 07:12:01 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-104-40.dyn.eolo.it. [146.241.104.40])
-        by smtp.gmail.com with ESMTPSA id dm12-20020a05620a1d4c00b006ceda7a9283sm1106038qkb.48.2022.09.27.07.12.00
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=imoJ4JIQ9lGXdVJevFDQTKnqkGWYyTt9e70tLlpe5CA=;
+        b=LVMSFBf+lb1vhYoYLSEXIgQpcunWAZR/olO7fcYNOqQdNCzV9M/PTKB6y7PDYKvCnO
+         meXGdpj21Y6bfNZMQbiYhaxY4f9+w50/XGJFa2MxGtWqlu6PRiD5b7fmUGaZzPEZA5Fs
+         GNUd9sJVOI+vQTz54K6O344nh5jh97pC1YOjT/XlLy+QiODC/NyBP14P5qHQp1OSUGWo
+         ditTfrSAu9c9IgJk9WOC2izJOI/Hb5R6t51OBdz1JgVZPS9aQ/QjmuKSQ16aIsNZWbv2
+         yG5aRtYLjoDNk7D7GyDzl60dQ4vD1bMKv3rNKZeXKjC38exp9NPelA56vaJ79Q9kQYl/
+         19Rg==
+X-Gm-Message-State: ACrzQf1x39lpdolo/lm9amDmJxwfY7l819UjglUGJWFkoy779wVBLnFX
+	Vw8t6NSRCLdIMXUpPqMv1ZsO0RC/XKgfyG/quBk=
+X-Google-Smtp-Source: AMsMyM7qkW1qjXsgI68zqXTkuMH4swisvGjiLsC5hwgb8Xrb9d1L2oA0UnuJCVFFKTr6iMmhYpGIoQ==
+X-Received: by 2002:a5d:6c6b:0:b0:225:dde:ab40 with SMTP id r11-20020a5d6c6b000000b002250ddeab40mr17383863wrz.690.1664291164777;
+        Tue, 27 Sep 2022 08:06:04 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id bx31-20020a5d5b1f000000b0022a2bacabbasm2101430wrb.31.2022.09.27.08.06.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 07:12:01 -0700 (PDT)
-Message-ID: <0a6a01130bc558691a0fcd8dab0f2ac77fda199f.camel@redhat.com>
-Subject: Re: MPTCP upstreaming, week of 26-Sept-2022
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau
-	 <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Date: Tue, 27 Sep 2022 16:11:58 +0200
-In-Reply-To: <2d24f789-9fc1-0229-4b37-ff570c4be080@tessares.net>
-References: <57e168ae-9de0-c986-cab1-a130e72e4e95@linux.intel.com>
-	 <2d24f789-9fc1-0229-4b37-ff570c4be080@tessares.net>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        Tue, 27 Sep 2022 08:06:04 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next 0/2] mptcp: add TCP_FASTOPEN_NO_COOKIE support
+Date: Tue, 27 Sep 2022 17:03:04 +0200
+Message-Id: <20220927150306.1552795-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=315; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=rzqgm1upIPn/Gzf165EN+Y/kiIoh8ztbaGJVMJKsEj8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjMw+1AnrV7GaXWhm0EXbqVgwPJV35OTrE2Y/bDL0x
+ wFfm13qJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCYzMPtQAKCRD2t4JPQmmgc823D/
+ 9mlaPeceETkUEGRmf8i4tCC4ENIWcVqiy6hcJEnE9h2fqSLuaLnv98Tkl1wdFiY/1AEt6pq7QHn0Xv
+ gYEJNWu89zm+vnAou9qzTusj6b+6LUozEoyNQUxSAenM4w1hpb+0pZBFl7Ax+JEjMXssUf5PyNpgcq
+ R4nkRk+xmK+p8o3UBrM1PH3RupTe2TcUOG42z3fSbIf0x7kQjsiFoQZbGajjAbtaOB2o+I5YKNmiB8
+ 73ubX2vWnBTspjx7qWUhZ6FngNsJ2XNERCF9O0uhxqOuQPm6NASYrPRZcLAO5/fKYVEAyGRwhoTo2N
+ D1PIUrinpUnNrnMpSa9KKJ8xanUQQaqLNJ3QanzRAcoz73LSIxQIFBCmO/1V1d2+EhY8fTIC0txPPS
+ 5k/KTSpnP04dGUq4cdGQscOTFT0bBNA4TQq1W9yy+ZAL35ay2NVHzAdgn6R/nSn5Refy1c4//8drCo
+ 5z1dDLQS9QIdYbzRfkZy+szLxvCieFV9tahykKTjaPCto6q4P2BvP0TfUy76+smzePRa9hZu8o8hwv
+ TVLURgmHImruL99AktzEqFhSy9jti+3xgV4QAoRNKk5yQ2LKuNfLmfkMGgZIY3BLTIyU4Mn4HpiLo+
+ 5Cgd6KyXkYqE+4UWwxD8K17GxGgCvgo8hubiQAq4xIXehQ/yeqnHfeATn3hw==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-On Tue, 2022-09-27 at 10:07 +0200, Matthieu Baerts wrote:
-> Hi Mat, Paolo,
-> 
-> On 27/09/2022 02:10, Mat Martineau wrote:
-> > 
-> > Matthieu and Paolo -
-> > 
-> > I upstreamed the fastopen changes for net-next today, so those are in
-> > the patchwork queue for the netdev maintainers:
-> > 
-> > https://patchwork.kernel.org/project/netdevbpf/list/?series=680767
-> 
-> Thank you!
-> 
-> > The other patch sets we discussed upstreaming in the meeting last week
-> > were:
-> > 
-> >     - Fixes for -net:
-> > 
-> >         - [6e827151a607] mptcp: factor out __mptcp_close() without
-> > socket lock (Menglong Dong)
-> >         - [62b5536f77f6] mptcp: fix unreleased socket in accept queue
-> > (Menglong Dong):
-> >             - can wait a bit more and can be sent next week
-> > 
-> > 
-> >     - Features for net-next:
-> > 
-> >         - [ef4a93571133] mptcp: propagate fastclose error (Paolo Abeni)
-> >         - [885cab8b5203] mptcp: use fastclose on more edge scenarios
-> > (Paolo Abeni)
-> >         - [13c82c8b0d9f] selftests: mptcp: update and extend fastclose
-> > test-cases (Paolo Abeni):
-> >             - can wait a bit, Paolo would like to have a look at the
-> > modification on packetdrill side
-> > 
-> > 
-> > I'm planning to upstream the two -net patches on Tuesday unless someone
-> > objects.
-> 
-> Sounds good to me.
-> 
-> > The net-next patches are slightly more complicated:
-> > 
-> >  * They were updated with a squash-to patch today
-> >  * Need to wait until fastopen patches are merged
-> 
-> We should at least wait for the fastopen patches to be applied I suppose.
-> 
-> >  * There is a minor conflict with the -net patches (just diff context)
-> >    in "mptcp: use fastclose on more edge scenarios".
-> > 
-> > 
-> > Regarding the conflict, I could wait until Friday for a likely
-> > net/net-next sync.
-> > 
-> > Another option is to modify the patch slightly by moving
-> > mptcp_check_readable() before __mptcp_check_send_data_fin(), it doesn't
-> > make the diff any larger and avoids the -net conflict. What do you think?
-> 
-> We can also add a note in the commit and explain how to fix this
-> conflict. I think the function is at the right place but it can also be
-> moved if it eases stuff.
+This series adds TCP_FASTOPEN_NO_COOKIE socket option support.
+
+The first patch refactors a bit a function introduced by Benjamin to support
+TCP_FASTOPEN_CONNECT: the function is now generic.
+
+Adding the support of the new socket option is easy after because the only
+action needed is to forward the request to the first subflow.
+
+This has been validated using Packetdrill:
+
+  https://github.com/multipath-tcp/packetdrill/pull/91
+
+Matthieu Baerts (2):
+  mptcp: sockopt: make 'tcp_fastopen_connect' generic
+  mptcp: add TCP_FASTOPEN_NO_COOKIE support
+
+ net/mptcp/sockopt.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
 
-I think there is no rush for that patches. If the net patches will land
-upstream soon, they will be likely merged by EoW. If there will be
-another RC, we can rebase the net-next and send out still for 6.1,
-othewise the fastclose patches can wait IMHO a few more weeks.
-
-Cheers,
-
-Paolo
+base-commit: 095ffd740bdb5564bfe678e5cddf5d1d7c6b7462
+-- 
+2.37.2
 
