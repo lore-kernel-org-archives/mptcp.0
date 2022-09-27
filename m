@@ -1,224 +1,102 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1394A27
-	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 19:35:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0D54C64
+	for <mptcp@lists.linux.dev>; Tue, 27 Sep 2022 19:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664307329; x=1695843329;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+T+ojb/064eW50kyu/docWvls9bdSsjpGYD0DnSFSEU=;
-  b=IC5JwMVIvXF39vJCP+iiAA+KoQllodjhxgxICCpqtXhJcTfdYkXmqAAj
-   OEkTb/F4DlmGiiO7ja9nQpAYjsZnopzRfyw/82lgkNOcAxiHpcbIfOSMu
-   OXB/mOkPYE/EVrnGLlSRNo08JjqKagalGcE/QwOlbMmbL/zSmCG7Ua3y1
-   LOZ4fVfl05Wj0r7PYzhlAQFDgoQcb6Vp1aZGOKziHxaLPpzaUUoojXJA+
-   fOLk/bUmZ6cHDhtFAFBsj9/luwXS30yXf+FiVBfkwiL2QBqTsU+U0mdlf
-   G/4rP33KSO+3oUMyLN5MjwzMykxEXNS08IDLRK5FTgcTVoTRlyj20uKVu
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="281782536"
+  t=1664308748; x=1695844748;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=75x4CZZbJ76Gnj7NODJiPax5+PQzcpNMnIH+QXcZGfU=;
+  b=cakr04lptQOkYIX0owlbhkoIsmnJ1Im//0bOMKsPM3JMTG/+y9sHv6o7
+   7vFNIMcdyexJcTV9uy8+WYv0qprkMzeXkqGostfXuHcpSPsC2rTnUBc3s
+   NLib407FoQRvNmA4h0o+GH/rzMzSJv1aBGchpyQBqe0t6NFnYyPNHSxhn
+   uXgh3Bp7RR7+1uAzTX0bNJyNO17kTxzZbVOeeSqJYjvACZSRsLa8UI0dl
+   fcMFYn0xiMQLfIP66MsQzSCG/VqLTE+1xyKABccBE1U9csHT+BMmeuhKK
+   lpVVQV/LMUXLNjLHKxtrPwyNvw967kpQakLSFMkQ/QFnx/X8LxSJ5Fwz6
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="284546290"
 X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
-   d="scan'208";a="281782536"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:32:05 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="652399450"
+   d="scan'208";a="284546290"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:59:07 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="616950870"
 X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
-   d="scan'208";a="652399450"
-Received: from soumiban-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.81.98])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:32:03 -0700
+   d="scan'208";a="616950870"
+Received: from smahinde-mobl1.gar.corp.intel.com ([10.255.229.132])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:59:07 -0700
+Date: Tue, 27 Sep 2022 12:59:07 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Menglong Dong <imagedong@tencent.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	fw@strlen.de,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	Jiang Biao <benbjiang@tencent.com>,
-	Mengen Sun <mengensun@tencent.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 2/2] mptcp: fix unreleased socket in accept queue
-Date: Tue, 27 Sep 2022 12:31:58 -0700
-Message-Id: <20220927193158.195729-3-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220927193158.195729-1-mathew.j.martineau@linux.intel.com>
-References: <20220927193158.195729-1-mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, 
+    Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: sockopt: make 'tcp_fastopen_connect'
+ generic
+In-Reply-To: <f348f260d1c2c988fd96e5079b18e9468ff8cb3b.camel@redhat.com>
+Message-ID: <1eb00480-b89d-914e-bbd9-11c185448ef0@linux.intel.com>
+References: <20220927150306.1552795-1-matthieu.baerts@tessares.net>  <20220927150306.1552795-2-matthieu.baerts@tessares.net> <f348f260d1c2c988fd96e5079b18e9468ff8cb3b.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Menglong Dong <imagedong@tencent.com>
+On Tue, 27 Sep 2022, Paolo Abeni wrote:
 
-The mptcp socket and its subflow sockets in accept queue can't be
-released after the process exit.
+> On Tue, 2022-09-27 at 17:03 +0200, Matthieu Baerts wrote:
+>> There are other socket options that need to act only on the first
+>> subflow, e.g. all TCP_FASTOPEN* socket options.
+>>
+>> This is similar to the getsockopt version.
+>>
+>> In the next commit, this new mptcp_setsockopt_first_sf_only() helper is
+>> used by other another option.
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>>  net/mptcp/sockopt.c | 11 ++++++-----
+>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>> index c7cb68c725b2..8d3b09d75c3a 100644
+>> --- a/net/mptcp/sockopt.c
+>> +++ b/net/mptcp/sockopt.c
+>> @@ -769,17 +769,17 @@ static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optv
+>>  	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
+>>  }
+>>
+>> -static int mptcp_setsockopt_sol_tcp_fastopen_connect(struct mptcp_sock *msk, sockptr_t optval,
+>> -						     unsigned int optlen)
+>> +static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
+>> +					  sockptr_t optval, unsigned int optlen)
+>>  {
+>>  	struct socket *sock;
+>>
+>> -	/* Limit to first subflow */
+>> +	/* Limit to first subflow, before the connection establishment */
+>>  	sock = __mptcp_nmpc_socket(msk);
+>>  	if (!sock)
+>>  		return -EINVAL;
+>
+> Crazy idea: if we add another int argument e.g. 'default_reval', we can
+> use this helper even for mptcp_setsockopt_sol_tcp_defer()
+> (default_retval == 0, while here default_reval == -EINVAL) ;)
+>
+> Not a big deal, I'm fine even this way.
 
-While the release of a mptcp socket in listening state, the
-corresponding tcp socket will be released too. Meanwhile, the tcp
-socket in the unaccept queue will be released too. However, only init
-subflow is in the unaccept queue, and the joined subflow is not in the
-unaccept queue, which makes the joined subflow won't be released, and
-therefore the corresponding unaccepted mptcp socket will not be released
-to.
+Or do something similar without adding the extra int argument: just have 
+the call site for TCP_DEFER_ACCEPT in mptcp_setsockopt_sol_tcp() ignore 
+the return value of mptcp_setsockopt_first_sf_only(), and remove 
+mptcp_setsockopt_sol_tcp_defer()?
 
-This can be reproduced easily with following steps:
+That would be a third patch to use the new helper, so if you (Matthieu) 
+want to make that change I think these two patches are good as-is:
 
-1. create 2 namespace and veth:
-   $ ip netns add mptcp-client
-   $ ip netns add mptcp-server
-   $ sysctl -w net.ipv4.conf.all.rp_filter=0
-   $ ip netns exec mptcp-client sysctl -w net.mptcp.enabled=1
-   $ ip netns exec mptcp-server sysctl -w net.mptcp.enabled=1
-   $ ip link add red-client netns mptcp-client type veth peer red-server \
-     netns mptcp-server
-   $ ip -n mptcp-server address add 10.0.0.1/24 dev red-server
-   $ ip -n mptcp-server address add 192.168.0.1/24 dev red-server
-   $ ip -n mptcp-client address add 10.0.0.2/24 dev red-client
-   $ ip -n mptcp-client address add 192.168.0.2/24 dev red-client
-   $ ip -n mptcp-server link set red-server up
-   $ ip -n mptcp-client link set red-client up
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-2. configure the endpoint and limit for client and server:
-   $ ip -n mptcp-server mptcp endpoint flush
-   $ ip -n mptcp-server mptcp limits set subflow 2 add_addr_accepted 2
-   $ ip -n mptcp-client mptcp endpoint flush
-   $ ip -n mptcp-client mptcp limits set subflow 2 add_addr_accepted 2
-   $ ip -n mptcp-client mptcp endpoint add 192.168.0.2 dev red-client id \
-     1 subflow
-
-3. listen and accept on a port, such as 9999. The nc command we used
-   here is modified, which makes it use mptcp protocol by default.
-   $ ip netns exec mptcp-server nc -l -k -p 9999
-
-4. open another *two* terminal and use each of them to connect to the
-   server with the following command:
-   $ ip netns exec mptcp-client nc 10.0.0.1 9999
-   Input something after connect to trigger the connection of the second
-   subflow. So that there are two established mptcp connections, with the
-   second one still unaccepted.
-
-5. exit all the nc command, and check the tcp socket in server namespace.
-   And you will find that there is one tcp socket in CLOSE_WAIT state
-   and can't release forever.
-
-Fix this by closing all of the unaccepted mptcp socket in
-mptcp_subflow_queue_clean() with __mptcp_close().
-
-Now, we can ensure that all unaccepted mptcp sockets will be cleaned by
-__mptcp_close() before they are released, so mptcp_sock_destruct(), which
-is used to clean the unaccepted mptcp socket, is not needed anymore.
-
-The selftests for mptcp is ran for this commit, and no new failures.
-
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
-Fixes: 6aeed9045071 ("mptcp: fix race on unaccepted mptcp sockets")
-Cc: stable@vger.kernel.org
-Reviewed-by: Jiang Biao <benbjiang@tencent.com>
-Reviewed-by: Mengen Sun <mengensun@tencent.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Menglong Dong <imagedong@tencent.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 33 +++++++--------------------------
- 3 files changed, 9 insertions(+), 27 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f7690414320a..f8897a70c11d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2662,7 +2662,7 @@ static void __mptcp_clear_xmit(struct sock *sk)
- 		dfrag_clear(sk, dfrag);
- }
- 
--static void mptcp_cancel_work(struct sock *sk)
-+void mptcp_cancel_work(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 8f123d450c76..8f372b8f059c 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -613,6 +613,7 @@ void mptcp_subflow_queue_clean(struct sock *ssk);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
- bool __mptcp_close(struct sock *sk, long timeout);
-+void mptcp_cancel_work(struct sock *sk);
- 
- bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
- 			   const struct mptcp_addr_info *b, bool use_port);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c7d49fb6e7bd..07dd23d0fe04 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -602,30 +602,6 @@ static bool subflow_hmac_valid(const struct request_sock *req,
- 	return !crypto_memneq(hmac, mp_opt->hmac, MPTCPOPT_HMAC_LEN);
- }
- 
--static void mptcp_sock_destruct(struct sock *sk)
--{
--	/* if new mptcp socket isn't accepted, it is free'd
--	 * from the tcp listener sockets request queue, linked
--	 * from req->sk.  The tcp socket is released.
--	 * This calls the ULP release function which will
--	 * also remove the mptcp socket, via
--	 * sock_put(ctx->conn).
--	 *
--	 * Problem is that the mptcp socket will be in
--	 * ESTABLISHED state and will not have the SOCK_DEAD flag.
--	 * Both result in warnings from inet_sock_destruct.
--	 */
--	if ((1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
--		sk->sk_state = TCP_CLOSE;
--		WARN_ON_ONCE(sk->sk_socket);
--		sock_orphan(sk);
--	}
--
--	/* We don't need to clear msk->subflow, as it's still NULL at this point */
--	mptcp_destroy_common(mptcp_sk(sk), 0);
--	inet_sock_destruct(sk);
--}
--
- static void mptcp_force_close(struct sock *sk)
- {
- 	/* the msk is not yet exposed to user-space */
-@@ -768,7 +744,6 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			/* new mpc subflow takes ownership of the newly
- 			 * created mptcp socket
- 			 */
--			new_msk->sk_destruct = mptcp_sock_destruct;
- 			mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
- 			mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
- 			mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
-@@ -1763,13 +1738,19 @@ void mptcp_subflow_queue_clean(struct sock *listener_ssk)
- 
- 	for (msk = head; msk; msk = next) {
- 		struct sock *sk = (struct sock *)msk;
--		bool slow;
-+		bool slow, do_cancel_work;
- 
-+		sock_hold(sk);
- 		slow = lock_sock_fast_nested(sk);
- 		next = msk->dl_next;
- 		msk->first = NULL;
- 		msk->dl_next = NULL;
-+
-+		do_cancel_work = __mptcp_close(sk, 0);
- 		unlock_sock_fast(sk, slow);
-+		if (do_cancel_work)
-+			mptcp_cancel_work(sk);
-+		sock_put(sk);
- 	}
- 
- 	/* we are still under the listener msk socket lock */
--- 
-2.37.3
-
+--
+Mat Martineau
+Intel
