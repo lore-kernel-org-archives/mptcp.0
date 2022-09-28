@@ -1,126 +1,244 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF56EA51
-	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 09:19:16 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id 130-20020a1c0288000000b003b494ffc00bso249078wmc.0
-        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 02:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=5knTb6IDn+ThzKUjPbnne3nwnpWv2uOtNFRFpDFKse0=;
-        b=yCleEs3YxRxFTD6qdrC14ALInCKuxgxL8P8nB5z5i2ncoXV3Fos0DxMqj4w/hwhI/D
-         S8BKbjVuIrZdqmrHGrxxnIbaKE9yTnWNdbUAzIgrK+NMuL9ISIO1VqXNemgLOu9ks6OE
-         foJ5jow//+1IGHa25aus7acDqYMiR51S29ZUI/0/BpCBBLPZAPV57q2OHAt0wcVRoXnE
-         yQ4RmXWFvJB/ydpBk5G5z+oLpAtooybQi8qzMFQ5InTVPb9K4dkg3kt3b3P9hLoFtUZb
-         8V4M32w5+vo3+2bdJeYxuzXNP6s9LajZb3yZ3nAN7YLM/LX+xO80V3kTjrT5qghUb2SL
-         QTpw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BA4EA2
+	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 09:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1664357034;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Jbwxj2z2TMKOFoeVwDnhQQ7n5UnXta97/3fA3yuD+s=;
+	b=ZfyyhC6Q1jdO0LlMri4C1TcFatD2zqsKzo/Q18R1B/EsvLc1c/R9UNfNpGrJXEdOaZhHLZ
+	dmXEB8j/ikH2XZI1av8iUmvX2r4OdSIwDu34Q3DRR1OOGfRYOGj7oVQOC0YpD63TsVSq7L
+	ZaOYeK4bf+ZZgkNX9+07SU+n82A7YV0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-518-Qiq8K5NOOZKU6jQL1wa6oQ-1; Wed, 28 Sep 2022 05:23:53 -0400
+X-MC-Unique: Qiq8K5NOOZKU6jQL1wa6oQ-1
+Received: by mail-wm1-f72.google.com with SMTP id k38-20020a05600c1ca600b003b49a809168so876126wms.5
+        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 02:23:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=5knTb6IDn+ThzKUjPbnne3nwnpWv2uOtNFRFpDFKse0=;
-        b=2jGOGYQPqyCoTgc+h46TnG00IaOwz0idS2u7r4R8rlXBjdyokAn4eW4mnIWqPlFLmM
-         3ZqFtT56SnjHpYEoSv8cIpum9PLzS5+x4K04KNFvDcMh1eOuJg4n1Ti4Jg5+jjGeLsBE
-         uPca7XQQ/4eNA/e2HAhaz5Ft9+QQ3ZG0ldQVJW69VHULmcJ/0aX5SQDgYBQC5RCNijem
-         HUOR/A9oD3zdUbrnXWdlVn8pAi5ssUfTqI14HHnqbRHnjBhqxFgvnp84nPusE9XuVcEz
-         g2mWWWRATnHjrlobKTSlfwiajSxeffh3FMpX6G3tNY/9ivrQOsLYQLilekZXkVPnqn5U
-         4V4A==
-X-Gm-Message-State: ACrzQf2prHF/A6bUyDmvVjBjBRydaA8Fjk9D1Y4Vrd6TYSckPC+qz51e
-	Ws1whZyQQyUNM5wyyI45iA1WQB7Aqf0Sh6rc
-X-Google-Smtp-Source: AMsMyM4TmiLkr/34aMiEc3mTiayaGMyN1I49F97yA+wcWU/n7iASWfkom0G+E5pSVKLO3nIib52+6g==
-X-Received: by 2002:a05:600c:4f46:b0:3b4:fed8:331e with SMTP id m6-20020a05600c4f4600b003b4fed8331emr6043727wmq.198.1664356754971;
-        Wed, 28 Sep 2022 02:19:14 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id bq21-20020a5d5a15000000b0022afe4fb459sm3799851wrb.51.2022.09.28.02.19.14
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=3Jbwxj2z2TMKOFoeVwDnhQQ7n5UnXta97/3fA3yuD+s=;
+        b=j3vnt5lvmJWgQY7EqS9OJCe/wA363SEvZG5KRxGevLXKsNWqFMo57maEVj98ZlYSnb
+         JYHHsaUNmYK57FxXb734uZJY7ezkEdrNdaFGQ7kw98UCoTSFTPh5XfXPQMfh2Cc2LLEj
+         O3PpNJ9H4Whcxeek98bI8apmYZ97Ogo5792kHI9lksThpakLWxqT9Eg7snHM0GvXRt3f
+         7uIrAU5cZe/8VpiVRfg6vCKhAzO/Xke9bD9dFpZoVLW6FxjqW6CxERXk6p0/aAEvfKRQ
+         fMdGBsZr1cPssUS6NQUGlOwda25rt/3OUODIWn+NH9LjUIt3h3zbRBQubtX4snAVcb6w
+         T4rw==
+X-Gm-Message-State: ACrzQf2RhaRctPMfPITKQKTmupddrwfotTdDhEC/0XnW5ar1NW9yHNW8
+	bHNPq/2ZZTCHo6t+OwkVC2ZSOoOz3JxSnidmseF/H27f8qwYAe04Y3xnxIjtAxr3lYGjKuxUbmb
+	UWAPIi8J8Regm6MI=
+X-Received: by 2002:a5d:6052:0:b0:22a:2ee9:4377 with SMTP id j18-20020a5d6052000000b0022a2ee94377mr19567773wrt.449.1664357032308;
+        Wed, 28 Sep 2022 02:23:52 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM65buSQn+JpjpajC5bfp3VeUvy1ApNJZVV4ZdVod7Y0Thvg7G5cqzRS2Vghlkx8M2HpPAfl2g==
+X-Received: by 2002:a5d:6052:0:b0:22a:2ee9:4377 with SMTP id j18-20020a5d6052000000b0022a2ee94377mr19567758wrt.449.1664357031972;
+        Wed, 28 Sep 2022 02:23:51 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-104-40.dyn.eolo.it. [146.241.104.40])
+        by smtp.gmail.com with ESMTPSA id w6-20020adfd4c6000000b00223b8168b15sm3705935wrk.66.2022.09.28.02.23.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 02:19:14 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-next] mptcp: sockopt: use new helper for TCP_DEFER_ACCEPT
-Date: Wed, 28 Sep 2022 11:18:52 +0200
-Message-Id: <20220928091852.1933333-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
+        Wed, 28 Sep 2022 02:23:51 -0700 (PDT)
+Message-ID: <3bd2e2ed85386ea1716ff12d54704dc160733be2.camel@redhat.com>
+Subject: Re: [RFC PATCH mptcp-next v12 3/7] mptcp: add
+ subflow_v(4,6)_send_synack()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Dmytro Shytyi <dmytro@shytyi.net>, mptcp@lists.linux.dev
+Date: Wed, 28 Sep 2022 11:23:50 +0200
+In-Reply-To: <20220927225341.14165-4-dmytro@shytyi.net>
+References: <20220927225341.14165-1-dmytro@shytyi.net>
+	 <20220927225341.14165-4-dmytro@shytyi.net>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2052; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=80h/HWcgBlVdso8XPNXEkpdA2HGGN2JknGp1a0yxT7Q=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjNBE2m3jysoiCYumIXTXua7tT9Y7Vj+Dqt+UiNHbK
- xGwQmjGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCYzQRNgAKCRD2t4JPQmmgc/WTEA
- DrFRgrd7cGO0oFzuHc+zYyAWgX/s7N/e82CgyZhONcjL736CI81mnjfeFU4/YnNXFJubsbHDHOtXRf
- s/s4ji6WXJz0xFPBQr/wwTfkL2thoAdzEmd99TLEhSPQdOdCa+iGUlFyP28v8OWBVZAAArDrc0r6sU
- 6yu3diAajtrItUkiXXJoMhoP7IiC07TtedXkpNuta/qnKja71OPv1NsWzwP6s2cQVN+19lQ2ZOpLsZ
- 03o5rZ+tzCNQkisVS1N+os1lvOVgY4E69ZeFNJvKxZAyfxaV6TQLTkzC2hnrUe3fX/PS+UxXQ4+vna
- ybWYCaDe1Bt4I/0XVs/NYbqsXgNyQTneQPPjAImswVusHPq1VVn3KIrZgDANwhlfge+2SLvX1EtY2Q
- QlhyrD2D/pS88ySplW142EmVoF1DMrntXYwlp7O7m6H+2jID/8pAc4q59/zCApKn1tEYDWL8o9IhIA
- qIDdpp6HmuInvDNdzLRyH59RaMxmHxMxgj9nqu6MrMFvmbizHg8wknwF1f6WWU5ydPgK4ITRr6KDUn
- wG5adsRZWQRYDAQDId6vyWjoMhsmTaP7oYC8wQNqmIJ6DmI302ATlh5uojFWx4ExI30PZuWp17Lc28
- GEXzeVyBl7kHzr/lcD/3BUHcMskufIo5OY8VmMNck3pm36ap3Gvz1B/FnAgA==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-mptcp_setsockopt_sol_tcp_defer() was doing the same thing as
-mptcp_setsockopt_first_sf_only() except for the returned code in case of
-error.
+On Tue, 2022-09-27 at 22:53 +0000, Dmytro Shytyi wrote:
+> In this patch we add skb to the msk, dequeue it from sk, remove TSs and
+> do skb mapping.
+> 
+> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+> ---
+>  net/ipv4/tcp_fastopen.c | 19 ++++++++++++------
+>  net/mptcp/fastopen.c    | 43 +++++++++++++++++++++++++++++++++++++++++
+>  net/mptcp/protocol.c    |  2 +-
+>  net/mptcp/protocol.h    |  3 +++
+>  net/mptcp/subflow.c     | 42 ++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 102 insertions(+), 7 deletions(-)
+> 
+> diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
+> index 45cc7f1ca296..d6b1380525ea 100644
+> --- a/net/ipv4/tcp_fastopen.c
+> +++ b/net/ipv4/tcp_fastopen.c
+> @@ -356,13 +356,20 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
+>  	if (foc->len == 0) /* Client requests a cookie */
+>  		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPFASTOPENCOOKIEREQD);
+>  
+> -	if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
+> -	      (syn_data || foc->len >= 0) &&
+> -	      tcp_fastopen_queue_check(sk))) {
+> -		foc->len = -1;
+> -		return NULL;
+> +	if (sk_is_mptcp(sk)) {
+> +		if (((syn_data || foc->len >= 0) &&
+> +		     tcp_fastopen_queue_check(sk))) {
+> +			foc->len = -1;
+> +			return NULL;
+> +		}
+> +	} else {
+> +		if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
+> +		      (syn_data || foc->len >= 0) &&
+> +		      tcp_fastopen_queue_check(sk))) {
+> +			foc->len = -1;
+> +			return NULL;
+> +		}
+>  	}
 
-Ignoring the error is needed to mimic how TCP_DEFER_ACCEPT is handled
-when used with "plain" TCP sockets.
+This should really not be needed; with a proper setup, sock_net(sk)-
+>ipv4.sysctl_tcp_fastopen/tcp_fastopen should already be
+TFO_SERVER_ENABLE at this point. You can double check that with the
+'perf' tool adding a probe on the relevant LoC dumping the sysctl value
+(or with a possibly easier way but required a rebuild, with a temporary
+printk)
 
-The specific function for TCP_DEFER_ACCEPT can be replaced by the new
-mptcp_setsockopt_first_sf_only() helper and errors can be ignored to
-stay compatible with TCP. A bit of cleanup.
+> -
+>  	if (tcp_fastopen_no_cookie(sk, dst, TFO_SERVER_COOKIE_NOT_REQD))
+>  		goto fastopen;
+>  
+> diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+> index d6fb45e6be4f..1d824a4d9606 100644
+> --- a/net/mptcp/fastopen.c
+> +++ b/net/mptcp/fastopen.c
+> @@ -17,3 +17,46 @@ void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_subflow_
+>  	pr_debug("ack_seq=%llu sndr_key=%llu", msk->ack_seq, mp_opt.sndr_key);
+>  	atomic64_set(&msk->rcv_wnd_sent, ack_seq);
+>  }
+> +
+> +void subflow_fastopen_send_synack_set_params(struct mptcp_subflow_context *subflow,
+> +					     struct request_sock *req)
+> +{
+> +	struct tcp_request_sock *tcp_r_sock = tcp_rsk(req);
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Suggested-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/sockopt.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+The conventional name for a tcp_request_sock variable is 'treq'
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 1857281a0dd5..f85e9bbfe86f 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -758,18 +758,6 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
- 	return -EOPNOTSUPP;
- }
- 
--static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optval,
--					  unsigned int optlen)
--{
--	struct socket *listener;
--
--	listener = __mptcp_nmpc_socket(msk);
--	if (!listener)
--		return 0; /* TCP_DEFER_ACCEPT does not fail */
--
--	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
--}
--
- static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
- 					  sockptr_t optval, unsigned int optlen)
- {
-@@ -810,7 +798,9 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	case TCP_NODELAY:
- 		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
--		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
-+		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
-+		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
-+		return 0;
- 	case TCP_FASTOPEN_CONNECT:
- 	case TCP_FASTOPEN_NO_COOKIE:
- 		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
+> +	struct sock *ssk = subflow->tcp_sock;
+> +	struct sock *sk = subflow->conn;
+> +	struct mptcp_sock *msk;
+> +	struct sk_buff *skb;
+> +	struct tcp_sock *tp;
+> +
+> +	msk = mptcp_sk(sk);
+> +	tp = tcp_sk(ssk);
+> +
+> +	/* <mark subflow/msk as "mptfo"> */
 
-base-commit: 6711fbb5e6c8541f84685542127455c18145d559
--- 
-2.37.2
+Please remove the '<' '>' from the comments, here and below.
+
+> +	msk->is_mptfo = 1;
+> +
+> +	skb = skb_peek(&ssk->sk_receive_queue);
+> +
+> +	/* <dequeue the skb from sk receive queue> */
+> +	__skb_unlink(skb, &ssk->sk_receive_queue);
+> +	skb_ext_reset(skb);
+> +	skb_orphan(skb);
+> +
+> +	/* <set the skb mapping> */
+> +	tp->copied_seq += tp->rcv_nxt - tcp_r_sock->rcv_isn - 1;
+> +	subflow->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
+> +	subflow->ssn_offset = tp->copied_seq - 1;
+> +
+> +	/* <acquire the msk data lock> */
+
+the above comment and the next 3 are really not needed.
+
+> +	mptcp_data_lock(sk);
+> +
+> +	/* <move skb into msk receive queue> */
+> +	mptcp_set_owner_r(skb, sk);
+> +	__skb_queue_tail(&msk->receive_queue, skb);
+> +	atomic64_set(&msk->rcv_wnd_sent, mptcp_subflow_get_mapped_dsn(subflow));
+
+I think the above statement is not needed here? we already have it in
+mptcp_gen_msk_ackseq_fastopen() in the previous patch?
+
+Instead I think we need to initialize the MPTCP_CB for skb, to avoid
+random coalescing from later skbs.
+
+> +
+> +	/* <call msk data_ready> */
+> +	(sk)->sk_data_ready(sk);
+> +
+> +	/* <release the msk data lock> */
+> +	mptcp_data_unlock(sk);
+> +}
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 0db50712bad7..7e63b414011c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -206,7 +206,7 @@ static void mptcp_rfree(struct sk_buff *skb)
+>  	mptcp_rmem_uncharge(sk, len);
+>  }
+>  
+> -static void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk)
+> +void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk)
+>  {
+>  	skb_orphan(skb);
+>  	skb->sk = sk;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index a9708a2eb2bc..9c46e802a73a 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -842,6 +842,9 @@ bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
+>  // Fast Open Mechanism functions begin
+>  void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_subflow_context *subflow,
+>  				   struct mptcp_options_received mp_opt);
+> +void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
+> +void subflow_fastopen_send_synack_set_params(struct mptcp_subflow_context *subflow,
+> +					     struct request_sock *req);
+>  // Fast Open Mechanism functions end
+>  
+>  static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 07dd23d0fe04..c48143bff114 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -307,6 +307,46 @@ static struct dst_entry *subflow_v4_route_req(const struct sock *sk,
+>  	return NULL;
+>  }
+>  
+> +static int subflow_v4_send_synack(const struct sock *sk, struct dst_entry *dst,
+> +				  struct flowi *fl,
+> +				  struct request_sock *req,
+> +				  struct tcp_fastopen_cookie *foc,
+> +				  enum tcp_synack_type synack_type,
+> +				  struct sk_buff *syn_skb)
+> +{
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+> +	struct inet_request_sock *ireq = inet_rsk(req);
+> +
+> +	/* <evenutally clear tstamp_ok, as needed depending on cookie size> */
+> +	if (foc)
+> +		ireq->tstamp_ok = 0;
+
+I guess you really need to check the cookie size, too? If the cookie
+size is small enough, stripping the timestamp should not be needed.
+Also you can move the above 2 lines in
+subflow_fastopen_send_synack_set_params()
+
+Cheers,
+
+Paolo
 
