@@ -1,45 +1,45 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D82BA40
-	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 07:57:38 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id rk17so12210630ejb.1
-        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 00:57:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CFE7F4
+	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 08:31:48 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id v2so15417145edc.7
+        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 01:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=w3RNAKrlkG669nLcStjtN6rZF5yQ29mjiPM/i6Syc7I=;
-        b=RLFKmPt1zqX+SXWJzwgWUwaymvBXkfeO1F59ikQbjfhB6EJzfSx9zigBwTVCW0Unf9
-         8O1ppUCAJPDmQTMMTNsvcDinNJL48wPD0boDWY8cVX+JExeM4gtVfbJv6bcJmJ/ToVzS
-         giY0522Gm6U3RVx67mMrQQSibj8CI4GvWl+qPnwffyY+aj1kKSRuIF3/HIMGTpo2hWVg
-         78wbaHfc2VTyMKAwGnola6RjclAtDTDWiz4pLn8jtitjUBCPh+fHQS4bIQOjzOG/hdz2
-         CIzKtQPvcIE9+P/AcB1O6daNkoDKemZ+NZjRMi4cz1maIrXJBIvLossVuanV5TdhgEUN
-         6KOA==
+        bh=rCEvcpN7Y07e/EvxQzt+h2y6ju7QUeP6vg8wDHg7EQc=;
+        b=j7Z/b0mJvdXY5W8IMxcHsbD4tKyVb5PlYJ4w1IYd8NbNmz1C+Sbi0mpvHZ2og5jjuh
+         HZHiPfhAR8GpEJkqlTlWGu9whBdWgCFxGapkikf0n/c2XBUxgs0MyArZc9CoAfHHGi1k
+         TW7eXZF8RDputk5JcNyeKbIzUCMd5JJZaHG/wW28MVhv5UXz/DtxG7j4Yu3NT1nvbm5u
+         0qja/8nukOysljocppEZN/a8eBuOYUvi6CRc5N2qCUliaDKN/4RujJppq1gLYGCodl7b
+         typ5wi+NcZd6ogAZDKci1YPjzODXPoWx5m/rE+jbYz+c5xaNV0jrr2/a035IuW000URM
+         DJIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=w3RNAKrlkG669nLcStjtN6rZF5yQ29mjiPM/i6Syc7I=;
-        b=LJTe8hDEDZACt3R9LoD91vN0mW5267f5TR8kpEbx2a4xzlly2A4RgyVlWDCiyHfolq
-         VF5sVuaZwWgWvKQIRcnvWxc7rEP9imqyeOBTf77Y0UrvO76JSdixYvs3CvNB6NmcX9CN
-         HdpOTCPIupTIeAEq5x74Za2CxIBooRtgX9wUSN/hxhNxattDlzNDfe0cU8cgSstpxXl4
-         qO6OrdFF3w9ivke0JvP2mS7FstzgUjNgdQ3wIqXiFVo+FDhR0UeSRrVhRl0/sjnv0+Tr
-         G3eWBFLkyguaYoankdhA6HGdkn2lXuLc/YD/j6gmqF3eTwxReCQp+tgTiKtUgTYXgl/t
-         u82w==
-X-Gm-Message-State: ACrzQf0UL+RQV7IWVzzCSzcH45ahxPpqYZZD3AbwKMeniLkW1S9dcbrj
-	iZXvMNNJdpIygGIV52uBrbmIFw==
-X-Google-Smtp-Source: AMsMyM7R0vOsQ6x5OrZWglSNFnnzWzU348lu3XxSqLI7OYbm4j6uhbB5RUr7wyJ+QXbTsJ2kGIjSLw==
-X-Received: by 2002:a17:907:749:b0:782:3e85:97c4 with SMTP id xc9-20020a170907074900b007823e8597c4mr26485473ejb.446.1664351857040;
-        Wed, 28 Sep 2022 00:57:37 -0700 (PDT)
+        bh=rCEvcpN7Y07e/EvxQzt+h2y6ju7QUeP6vg8wDHg7EQc=;
+        b=FtgyneooILIwAmU//gHNaYtmAqeL+Hva9JjIsTN6qHcVhILFIySiNhyc0GgVHCQAGK
+         4G0+HIpLG/4Vazf70Bn9rji8pFNSbTyc0iMJZaVsq+bJuGYl0kuvuLsDhQ/XTf0c9r8b
+         R2gf4noh85+bZul4qn4KATm0U17h5foZtXh57PaOqnvtJfoXm8z2+S4y7zE7yD7ujykL
+         ORc/7+oPGZzahFfhPi/jRjU4hhlcytNSPxJXpUGJLWRDy/Qth8zbFzMy5W+A6nyCX2AR
+         OMdoa6/6alvZBORNwh1Rc5NuMYNN/uUW77WBNoqk6DoUYobfzgGMhChNYBwzFP6cPGnM
+         yL/g==
+X-Gm-Message-State: ACrzQf0VotQ5i/z7AM3PRNAHFYHUxCDAo6ik1Bk07CAYpnlFJ1xiQrls
+	kGtuD2/2KYdk5ZKK1/cD2HLaKQ==
+X-Google-Smtp-Source: AMsMyM71BOw3AsyOacfVbxmUjYDAnUEqgxyXrCFgKxsjU1XNXm6BcHwlAfA1v+NGurDI5WnoTzFmyA==
+X-Received: by 2002:aa7:cf89:0:b0:457:3dff:8a4 with SMTP id z9-20020aa7cf89000000b004573dff08a4mr16132708edx.175.1664353906494;
+        Wed, 28 Sep 2022 01:31:46 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:6518:6c3b:2826:5305? ([2a02:578:8593:1200:6518:6c3b:2826:5305])
-        by smtp.gmail.com with ESMTPSA id d17-20020a50f691000000b0044e6802623dsm2868654edn.18.2022.09.28.00.57.36
+        by smtp.gmail.com with ESMTPSA id v8-20020a056402174800b0044bfdbd8a33sm2846272edx.88.2022.09.28.01.31.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 00:57:36 -0700 (PDT)
-Message-ID: <ec408186-402e-4278-4e2b-ac3780851dbe@tessares.net>
-Date: Wed, 28 Sep 2022 09:57:35 +0200
+        Wed, 28 Sep 2022 01:31:46 -0700 (PDT)
+Message-ID: <4b492955-36b3-e38b-cb75-7f32114923cb@tessares.net>
+Date: Wed, 28 Sep 2022 10:31:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,88 +48,62 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: sockopt: make
- 'tcp_fastopen_connect' generic
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: add TCP_FASTOPEN_NO_COOKIE support
 Content-Language: en-GB
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
  Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
 References: <20220927150306.1552795-1-matthieu.baerts@tessares.net>
- <20220927150306.1552795-2-matthieu.baerts@tessares.net>
- <f348f260d1c2c988fd96e5079b18e9468ff8cb3b.camel@redhat.com>
- <1eb00480-b89d-914e-bbd9-11c185448ef0@linux.intel.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <1eb00480-b89d-914e-bbd9-11c185448ef0@linux.intel.com>
+In-Reply-To: <20220927150306.1552795-1-matthieu.baerts@tessares.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Mat, Paolo,
 
-Thank you both for the reviews!
-
-On 27/09/2022 21:59, Mat Martineau wrote:
-> On Tue, 27 Sep 2022, Paolo Abeni wrote:
+On 27/09/2022 17:03, Matthieu Baerts wrote:
+> This series adds TCP_FASTOPEN_NO_COOKIE socket option support.
 > 
->> On Tue, 2022-09-27 at 17:03 +0200, Matthieu Baerts wrote:
->>> There are other socket options that need to act only on the first
->>> subflow, e.g. all TCP_FASTOPEN* socket options.
->>>
->>> This is similar to the getsockopt version.
->>>
->>> In the next commit, this new mptcp_setsockopt_first_sf_only() helper is
->>> used by other another option.
->>>
->>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->>> ---
->>>  net/mptcp/sockopt.c | 11 ++++++-----
->>>  1 file changed, 6 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
->>> index c7cb68c725b2..8d3b09d75c3a 100644
->>> --- a/net/mptcp/sockopt.c
->>> +++ b/net/mptcp/sockopt.c
->>> @@ -769,17 +769,17 @@ static int
->>> mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optv
->>>      return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT,
->>> optval, optlen);
->>>  }
->>>
->>> -static int mptcp_setsockopt_sol_tcp_fastopen_connect(struct
->>> mptcp_sock *msk, sockptr_t optval,
->>> -                             unsigned int optlen)
->>> +static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk,
->>> int level, int optname,
->>> +                      sockptr_t optval, unsigned int optlen)
->>>  {
->>>      struct socket *sock;
->>>
->>> -    /* Limit to first subflow */
->>> +    /* Limit to first subflow, before the connection establishment */
->>>      sock = __mptcp_nmpc_socket(msk);
->>>      if (!sock)
->>>          return -EINVAL;
->>
->> Crazy idea: if we add another int argument e.g. 'default_reval', we can
->> use this helper even for mptcp_setsockopt_sol_tcp_defer()
->> (default_retval == 0, while here default_reval == -EINVAL) ;)
->>
->> Not a big deal, I'm fine even this way.
+> The first patch refactors a bit a function introduced by Benjamin to support
+> TCP_FASTOPEN_CONNECT: the function is now generic.
 > 
-> Or do something similar without adding the extra int argument: just have
-> the call site for TCP_DEFER_ACCEPT in mptcp_setsockopt_sol_tcp() ignore
-> the return value of mptcp_setsockopt_first_sf_only(), and remove
-> mptcp_setsockopt_sol_tcp_defer()?
+> Adding the support of the new socket option is easy after because the only
+> action needed is to forward the request to the first subflow.
 > 
-> That would be a third patch to use the new helper, so if you (Matthieu)
-> want to make that change I think these two patches are good as-is:
+> This has been validated using Packetdrill:
+> 
+>   https://github.com/multipath-tcp/packetdrill/pull/91
 
-I thought about supporting the tcp_defer case but I didn't think about
-just ignoring the error, good idea!
+Thank you for your reviews!
 
-I can apply the two patches and send an extra one
+Now in our tree (feat. for net-next) with Mat's RvB (I didn't add
+Paolo's ACK yet but please tell me if I can/should):
+
+New patches for t/upstream:
+- ce72cdadf047: mptcp: sockopt: make 'tcp_fastopen_connect' generic
+- 5d745bd13d21: mptcp: add TCP_FASTOPEN_NO_COOKIE support
+- Results: 5391f0d311f6..6711fbb5e6c8 (export)
+
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220928T081959
+
 
 Cheers,
 Matt
+
+> 
+> Matthieu Baerts (2):
+>   mptcp: sockopt: make 'tcp_fastopen_connect' generic
+>   mptcp: add TCP_FASTOPEN_NO_COOKIE support
+> 
+>  net/mptcp/sockopt.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> 
+> base-commit: 095ffd740bdb5564bfe678e5cddf5d1d7c6b7462
+
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
