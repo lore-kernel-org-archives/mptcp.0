@@ -1,130 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60048.outbound.protection.outlook.com [40.107.6.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8A8EA2
-	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 09:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1664358397;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UIVj/asuPk0WEQF9Dn7EjKcTTVyAMWfsFW2Rvl5Ongw=;
-	b=RLpD7Y+AOaxAQZodZ42W9jRJyZUDSnsK4uGjJvGBMhoHqdgIXXv/9tL3SesaBK1HryHlT4
-	xldLTj88DCnpiZI56VWIGqqoV9uN6rQBGu7U34ydlxcrDFqGoxboXTmHrKIeoVw92ILe4E
-	HX6jGzDCIlsIAfclTn+HBoehHNJ3MYA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-625-yZRu5P08MsO-f4q4dvQ2AA-1; Wed, 28 Sep 2022 05:46:36 -0400
-X-MC-Unique: yZRu5P08MsO-f4q4dvQ2AA-1
-Received: by mail-wm1-f71.google.com with SMTP id c130-20020a1c3588000000b003b56be513e1so427806wma.0
-        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 02:46:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=UIVj/asuPk0WEQF9Dn7EjKcTTVyAMWfsFW2Rvl5Ongw=;
-        b=N4/EoKkZY4grzZaAI/2lSbiEyYdvz+BFvz48UckPXPoKcDc2firFXk7oYL8YFKnWHw
-         e2hVRUmt8W97KSwHDLMpDHGZkZH7suGoCD2mq1IJXQ2KaZydVqwzmJLTKrV2ux/nqIci
-         P41RoBlQISMNDIst5LvctbQbHWsyU0Z9trUd9HPuLZg5Ihy4LqYQ9SXS4cfpXDEsDrwG
-         GGF++KvpyeTVCc/z1A3AlxbC6+AcfYJo08sxO9Y34KuyEAqBgbQVyweGfAqlCWsRS+WG
-         j4+EQ0Ei5VvNja1NX9PyHON+j98bYYYj+DcOVYJzzugMv69IOyar/dzGpRYKIVbMOIzj
-         A5RA==
-X-Gm-Message-State: ACrzQf2ib3s5HU5iDCRA1G18huF60m1kbEnjwZUuw46iOgSoqz3Abz2c
-	gB+Qin+qXQ0uWGrQEQvsSab0sLAxxrt8skMWNH33Kg5HaB1yLtLHlx3rDjFg1xvhw20255C348g
-	YrDdbe7gEqikNeec=
-X-Received: by 2002:a5d:49c8:0:b0:22a:35a1:1755 with SMTP id t8-20020a5d49c8000000b0022a35a11755mr18944001wrs.180.1664358395597;
-        Wed, 28 Sep 2022 02:46:35 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM69z69pweJHp3hLvCge/nl8Mi2Fey0Kbr4Pqph5MVZmURRXdah34ma0E9bMnhhGiwPmP6BTXg==
-X-Received: by 2002:a5d:49c8:0:b0:22a:35a1:1755 with SMTP id t8-20020a5d49c8000000b0022a35a11755mr18943991wrs.180.1664358395358;
-        Wed, 28 Sep 2022 02:46:35 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-104-40.dyn.eolo.it. [146.241.104.40])
-        by smtp.gmail.com with ESMTPSA id m17-20020a05600c3b1100b003b476cabf1csm1616717wms.26.2022.09.28.02.46.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 02:46:34 -0700 (PDT)
-Message-ID: <96ec8c7534425d2693aaa6b03cd7272adc4e6438.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: sockopt: use new helper for
- TCP_DEFER_ACCEPT
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Date: Wed, 28 Sep 2022 11:46:34 +0200
-In-Reply-To: <20220928091852.1933333-1-matthieu.baerts@tessares.net>
-References: <20220928091852.1933333-1-matthieu.baerts@tessares.net>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F6FEA2
+	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 09:47:33 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eFBaq8N4JU2D5FoUGbJQ7eC8KOfqg7ZfoAOSCy1LDBLJwMROFyw+GOn6FAav/Td4U2V0RtsmRdITHS0k0EfFCWJiCnODckTN2HjxAtyDQvjnT+lyZUTEA/2H3sHL/YkFFZ2AC0oc3b6YQcO85hn9VOUKqxbqb+nls2Ji87+CSzHXjODL2KayuPthHhJQ87NAiGLzO9hG8QhZHiQI4WxDl3UYpvV55ct/s7L8H6TsuWd963eAUQgIfd3b8gMdwLeB29BJ+fjzaSUBaKwyp9LKS0IW5tKjVoB+yFkH4k0dJwEzXyi15+HbEM4JmFlgBHxOnJRJeQNS9hyVLJ3lH87T2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1QNVrTQQHqCurZBU6hljQLSvzgzsLyj8gAo0y5ArL98=;
+ b=jla0O7LTDO6aHrvif4iiVnej2kI62D2MihBd5Y5ePFAc+tc/i8cs1ZUatZ0eYu/0teDddDq5gDjwbZh1doLzNW0NSSjBQNIBXNFOZdlkxEo1sryN20ki4lA02xwfrhXRgMrniMAjjdLaClLlZMY20RcKYX6FhvV9vrM6B4LV904RJXT5SMicUeKH/FQnzdWySzxdQ1PMe9RfQXwocwLq7K+Fw4yFGJTfMwbdk3D3Nqy/7z0B/QWwdVUfKwNXTfhmVGu+oHgr4zbc6RGjZxYcprZbFHMzwXpy8Y+Pg8Jajdz48MArEnYDXIyMMmz9r0wX1lDenziaF15kpYsU9ezuNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1QNVrTQQHqCurZBU6hljQLSvzgzsLyj8gAo0y5ArL98=;
+ b=kaNxxPp5FzKLnpi8hFa3Dj1rZdahXFvZ7BWjEK6vb1MXh2JcOM1+goRqYJv0vrAvAkz1k5onLjonbhawtHXtZY2CMcOhymAzw/EK8bOWhUbobXq1d3b8P9keMFsEWiFvlPJFRLVQujDzpDjQz8A5O0NNSkGt0IP9kScnrfrNvVSvwM04KnFl7R4UvtPjS9EDbl1N3V818AOPNL0ZmXfFbMWyjyeuHauAuG9eyjYcBImSWGuy/yfNrRS7KlUajf/grJUETgSwnOjioWCag9hYPn2MzQ8vy1EaqOirAD19tYii0zyzC3hkawotbJPduiXfK6R/g63SMiDA9sbmUl+0/A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com (2603:10a6:803:d::26)
+ by PA4PR04MB7502.eurprd04.prod.outlook.com (2603:10a6:102:ef::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.17; Wed, 28 Sep
+ 2022 09:47:29 +0000
+Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com
+ ([fe80::247c:645d:3f4e:d907]) by VI1PR0402MB3503.eurprd04.prod.outlook.com
+ ([fe80::247c:645d:3f4e:d907%6]) with mapi id 15.20.5654.025; Wed, 28 Sep 2022
+ 09:47:29 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next 0/4] refactor push pending
+Date: Wed, 28 Sep 2022 17:48:02 +0800
+Message-Id: <cover.1664358100.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGBP274CA0012.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::24)
+ To VI1PR0402MB3503.eurprd04.prod.outlook.com (2603:10a6:803:d::26)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3503:EE_|PA4PR04MB7502:EE_
+X-MS-Office365-Filtering-Correlation-Id: 684003f9-f6e6-47b1-3a39-08daa13674f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	V6W5LyNo3U6YE5z3fikWhLfrUSuowq6GPC1IpF1eTez+TAC4pfs4azzdh0leitbI1g2XpA0DVpmX3xlGTy/2OzqhgOGiRgb9wZvv0ZHDgUN1Nsw/E4FhcCt15rqsc8JTb2mHcLhwrgtXxLdKmnG08uaxlUu+1GyWeqi25SQja87qngj/FWS8243bz9jAea5BQDLsKtrlvsfmE904s9yTEae73Pf7mXplKzzke3pukt6zFVONHnCn11Nk+9OJMXkXCAfBhPu/Ti64roDFBi4CS0k0qNRr2X0eWq1azql+wRFuJ/xFMcDdNmPrcmdCsd3YD1VKz+1hgiSmxV9wJAlCHfl52Ci81vsSTNQss8JszbRdF3DFnMDWAVd7PpBgy2PTwcFRqvpUZFuzCo8NTk3ajn+1jgSF5vEphYoM0xjkW0YhywzrPtR+qZAA90jZIE2bAAF2y20quPFKpDTYDrx/DSDPDkLfQ+CMWT1zs4BQA8SDWtFQMnaYWUFyFmDaCPs/Ig8ssGLrvXRaBruTnKdRSx6I+va9AlbZmT9VRaz3c5JexbzLJPFXqpw/xfo5Ychhg+tl3eLgNTtd412P6WKHAXO04Yp+F8/X8BlZd22P8zEqGormvhIDalXkRPo1fF6TyVz9phwVNlB0vp5XNiwqD+2DK/Ipko3BVnNsKpIE/St9xIzOnDTcul8+4J1man5G
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3503.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(366004)(396003)(39860400002)(376002)(136003)(451199015)(26005)(6512007)(6506007)(38100700002)(8676002)(6916009)(66556008)(66946007)(66476007)(86362001)(316002)(36756003)(4326008)(478600001)(6666004)(107886003)(2616005)(186003)(8936002)(6486002)(4744005)(44832011)(83380400001)(41300700001)(2906002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7EFHh6FbPmn6DUaPIxvlP9ra9LL/ydCc7eEHCGeujAXI/EF/deM3V3Uxu0nH?=
+ =?us-ascii?Q?yrLz4YlHtUF4OG0koN74DWVpdmOF2u2fYmgAbjffymX5ZoqRWcmj+emdGf3B?=
+ =?us-ascii?Q?478X8qX+iCpIOtjz8DPdS8jEKX3NA5Vzr1ju5uQUMRVaYGDBd7Xu9gtx6wPl?=
+ =?us-ascii?Q?ij8R3VzzSQbIiVcAC+Oc1IuQIIPkEaHlRYdEXURGP+20K+ZCdhvL1B/j6rEL?=
+ =?us-ascii?Q?+Fmg6tFgDAeHSnxIkKA8iGZnYV3fgnGo6imtoF4UA0R3PuM4INm9nV4GUO3j?=
+ =?us-ascii?Q?Zjvuab3LuTQYxQ2YI3jA4F4yS/GmalFmIegXqRPQhr0NDOvuy+Gd5mfjYChw?=
+ =?us-ascii?Q?szAyAvx4/mR4ionD9wH1I+rEyT27I11oOu6Yu9eByGjUiptItmkuDIwyndG6?=
+ =?us-ascii?Q?2KOvNaPzT1ItvIelZCgiJwbLg84imL+6uHDUf7ehTsb859odCK9ymRsAeDZY?=
+ =?us-ascii?Q?dnXO7PoFjxTI2Y8AbMXV+Ok9anYaSXDbwfbxOUsnUEXs9bGbFJI8Jco5Daib?=
+ =?us-ascii?Q?eyrcpH1HW7mXeoi4gkRbjY/msp5n0m+Fp0d+0r66UDOf2px76L/1rcpWl30W?=
+ =?us-ascii?Q?IkBXRrft7H3sVxLCNdU/Za4aR3PJWiZkGiJ2WpnW83iV1QhlYnuOlGsrMml9?=
+ =?us-ascii?Q?OswM/YZQeMUQ6ONoCNHLOQDSZaJqhPL2vzLcNZiU2r1EeLRvdQcWQQ5hb0qW?=
+ =?us-ascii?Q?XMza99nth1uZdMuUiG64f/3dekJQYXy7XNdYxJpqg79D/6Rf5tnBSeERV0o+?=
+ =?us-ascii?Q?TFspbVq3K0SF/eUTNOONa52kL1iVQ43H8rwxi1Js32aYWzF8WVNE7WHdT4PY?=
+ =?us-ascii?Q?5lBQggROS1bzkG6zGo7Q0zKGA4RE1BvZ81DQILcwzhgjcj5tryBCLPv2o00b?=
+ =?us-ascii?Q?+6UPtn8R6zmVlRdRaHMFihoXoVdcPYS0Be0Irgf1+Mn0/rL7941OBZnPXMIp?=
+ =?us-ascii?Q?0b8tccpm8wQilKSFEIQuOflFPO6y/izXNWyskF7iyCXz29MI9nBL4qH8KHY/?=
+ =?us-ascii?Q?VYn2wEorxQecHbGuqhBjgkWk5+3ru5M/fSH7qiPTOMMK+1pmhBAzlzv9vn8i?=
+ =?us-ascii?Q?aND1TcxMsqMKU6OrnC58RUa85ARhEfCb1zbTsNt0f0mfAvBDcmK6ktiW7ODA?=
+ =?us-ascii?Q?M50GoYnl18K39VOg9l774TXed28L0S/ntr7ORCH+vazrwfWof1JjXr+L8puT?=
+ =?us-ascii?Q?mWuOgLtZdArHs9omtGiUw3U0lsiC3fL+FsiG6Ei5SPIEKlD6n/LIVd2UG7Tw?=
+ =?us-ascii?Q?0FI7/7PltlKl24HhdM/ow1bIjOdicaaf10ZeY88QixrnH087ju5tMH4e5AHc?=
+ =?us-ascii?Q?LGcT9vyc/OJ95t8FnlH8nPIjAxiQ1+wSXNq0NKhwQGrpdytSyIHgEcSwA9Zc?=
+ =?us-ascii?Q?eTC23VJcxC7XSVAPU1NhXjcxKa9Z+OLlfuV7e8BAz9sIf0Nia2NZnn1pJF0O?=
+ =?us-ascii?Q?1mf5kvUBPZ8N4mDLgAQp0d3ICHeVAVxSbAbSuMxi/iXt0zeegjaWjhtVLIpU?=
+ =?us-ascii?Q?oZpqAEOy75KFfIeOA5LJVQ7u92gIqKPGEQi6vHTevIc4Hb1JCQi5d1wXTz4a?=
+ =?us-ascii?Q?4h/vvrt2+56L2LJE/gxniYG2zt8gIFFfw/pwhuvU?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 684003f9-f6e6-47b1-3a39-08daa13674f8
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3503.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2022 09:47:29.2202
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 03jgkHxFF2Ec2JuoUg76YRBoX5MDpv2IPE2S3dFxRLxLvj4CONsTlFD7Vbt+iuSrWKCUjAkohjZCvQZz/OS0HQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7502
 
-On Wed, 2022-09-28 at 11:18 +0200, Matthieu Baerts wrote:
-> mptcp_setsockopt_sol_tcp_defer() was doing the same thing as
-> mptcp_setsockopt_first_sf_only() except for the returned code in case of
-> error.
-> 
-> Ignoring the error is needed to mimic how TCP_DEFER_ACCEPT is handled
-> when used with "plain" TCP sockets.
-> 
-> The specific function for TCP_DEFER_ACCEPT can be replaced by the new
-> mptcp_setsockopt_first_sf_only() helper and errors can be ignored to
-> stay compatible with TCP. A bit of cleanup.
-> 
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Refactor __mptcp_push_pending() and __mptcp_subflow_push_pending() to
+remove duplicate code and support redundant scheduler more easily in
+__mptcp_subflow_push_pending().
 
-You can/should drop the above tag ;)
+Geliang Tang (4):
+  mptcp: update __mptcp_push_pending
+  mptcp: add do_push_pending helper
+  mptcp: update __mptcp_subflow_push_pending
+  mptcp: simplify __mptcp_subflow_push_pending
 
-> Suggested-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->  net/mptcp/sockopt.c | 16 +++-------------
->  1 file changed, 3 insertions(+), 13 deletions(-)
-> 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 1857281a0dd5..f85e9bbfe86f 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -758,18 +758,6 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
->  	return -EOPNOTSUPP;
->  }
->  
-> -static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optval,
-> -					  unsigned int optlen)
-> -{
-> -	struct socket *listener;
-> -
-> -	listener = __mptcp_nmpc_socket(msk);
-> -	if (!listener)
-> -		return 0; /* TCP_DEFER_ACCEPT does not fail */
-> -
-> -	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
-> -}
-> -
->  static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
->  					  sockptr_t optval, unsigned int optlen)
->  {
-> @@ -810,7 +798,9 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  	case TCP_NODELAY:
->  		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
->  	case TCP_DEFER_ACCEPT:
-> -		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
-> +		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
-> +		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
-> +		return 0;
->  	case TCP_FASTOPEN_CONNECT:
->  	case TCP_FASTOPEN_NO_COOKIE:
->  		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
-> 
-> base-commit: 6711fbb5e6c8541f84685542127455c18145d559
+ net/mptcp/protocol.c | 137 ++++++++++++++++---------------------------
+ 1 file changed, 50 insertions(+), 87 deletions(-)
 
-Nice! LGTM!
-
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+-- 
+2.35.3
 
