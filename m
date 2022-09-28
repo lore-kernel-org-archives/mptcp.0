@@ -1,109 +1,211 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CFE7F4
-	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 08:31:48 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id v2so15417145edc.7
-        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 01:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=rCEvcpN7Y07e/EvxQzt+h2y6ju7QUeP6vg8wDHg7EQc=;
-        b=j7Z/b0mJvdXY5W8IMxcHsbD4tKyVb5PlYJ4w1IYd8NbNmz1C+Sbi0mpvHZ2og5jjuh
-         HZHiPfhAR8GpEJkqlTlWGu9whBdWgCFxGapkikf0n/c2XBUxgs0MyArZc9CoAfHHGi1k
-         TW7eXZF8RDputk5JcNyeKbIzUCMd5JJZaHG/wW28MVhv5UXz/DtxG7j4Yu3NT1nvbm5u
-         0qja/8nukOysljocppEZN/a8eBuOYUvi6CRc5N2qCUliaDKN/4RujJppq1gLYGCodl7b
-         typ5wi+NcZd6ogAZDKci1YPjzODXPoWx5m/rE+jbYz+c5xaNV0jrr2/a035IuW000URM
-         DJIQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9918AA51
+	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 09:01:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1664355681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4zRujAuWlWXvb/8N22q0vfCqARHPux76y6G+bRHtG4I=;
+	b=DY2OG9rbNelrkHFB3BumtLY0Ze5Ep/fyDMB7tk+DuuQGpt3fwfsCyrZ5oXeM57swQZT1ze
+	ln3RXG4bwhtNkMxPBoaYXVVWzvLSvTkr4B4ybpYDz2/snww/7jt7taEu8l9HemICXS5ifZ
+	MTI5eYqJuv26NfOvdtyG6qZWEQtlR/M=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-672-xcwIl0ZmOoS6fvPGJBdqEA-1; Wed, 28 Sep 2022 05:01:20 -0400
+X-MC-Unique: xcwIl0ZmOoS6fvPGJBdqEA-1
+Received: by mail-wr1-f69.google.com with SMTP id s5-20020adfa285000000b0022ad5c2771cso2793603wra.18
+        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 02:01:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=rCEvcpN7Y07e/EvxQzt+h2y6ju7QUeP6vg8wDHg7EQc=;
-        b=FtgyneooILIwAmU//gHNaYtmAqeL+Hva9JjIsTN6qHcVhILFIySiNhyc0GgVHCQAGK
-         4G0+HIpLG/4Vazf70Bn9rji8pFNSbTyc0iMJZaVsq+bJuGYl0kuvuLsDhQ/XTf0c9r8b
-         R2gf4noh85+bZul4qn4KATm0U17h5foZtXh57PaOqnvtJfoXm8z2+S4y7zE7yD7ujykL
-         ORc/7+oPGZzahFfhPi/jRjU4hhlcytNSPxJXpUGJLWRDy/Qth8zbFzMy5W+A6nyCX2AR
-         OMdoa6/6alvZBORNwh1Rc5NuMYNN/uUW77WBNoqk6DoUYobfzgGMhChNYBwzFP6cPGnM
-         yL/g==
-X-Gm-Message-State: ACrzQf0VotQ5i/z7AM3PRNAHFYHUxCDAo6ik1Bk07CAYpnlFJ1xiQrls
-	kGtuD2/2KYdk5ZKK1/cD2HLaKQ==
-X-Google-Smtp-Source: AMsMyM71BOw3AsyOacfVbxmUjYDAnUEqgxyXrCFgKxsjU1XNXm6BcHwlAfA1v+NGurDI5WnoTzFmyA==
-X-Received: by 2002:aa7:cf89:0:b0:457:3dff:8a4 with SMTP id z9-20020aa7cf89000000b004573dff08a4mr16132708edx.175.1664353906494;
-        Wed, 28 Sep 2022 01:31:46 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:6518:6c3b:2826:5305? ([2a02:578:8593:1200:6518:6c3b:2826:5305])
-        by smtp.gmail.com with ESMTPSA id v8-20020a056402174800b0044bfdbd8a33sm2846272edx.88.2022.09.28.01.31.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 01:31:46 -0700 (PDT)
-Message-ID: <4b492955-36b3-e38b-cb75-7f32114923cb@tessares.net>
-Date: Wed, 28 Sep 2022 10:31:45 +0200
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=4zRujAuWlWXvb/8N22q0vfCqARHPux76y6G+bRHtG4I=;
+        b=7AwiNznxlRcgh+ZbnW1iNNSonH+MlJAu9ilFhajekA9H8DNj6eL6qcP/3M5IFWPWxz
+         PLm6sxGELhe7Z9MwLVRfnqxfVhIISq6zvQ9+ZVUEXCcihF4QCZzfTdxmYiIz5bxBuaEL
+         cK4NM82+CVJLjwUNa5yx1/3jKB7+LC/YjSR43gelwJp3p2b9K8+0VLMpj2RlCg4aKFal
+         Vp99rYKyZslqOvX00gpEWHa2vdk0yFEFKrCLuH81SYhFPdE3rLtAgTtY6aCtFkPupHml
+         irLJMgi0CuEBy8wfcob8R4KsFoRpW6+kwalEeRG0dGxncIiu/z+ENSFbt6Hd/0lFnmzc
+         poGQ==
+X-Gm-Message-State: ACrzQf0xpTKuFs3gCb9luYn4u51XWVq7QxlJKXEOtg4UL3ZGD98WC+DP
+	/aIkdA8wy32IrSgT4SkhN1dG51DFeLVgtxtXfIOCHTTpIRBMwfcbrs2GFXPFCtXegDwZXxGd9Ba
+	kcsMO0nnj3tdG8Rk=
+X-Received: by 2002:a7b:ce97:0:b0:3b3:4136:59fe with SMTP id q23-20020a7bce97000000b003b3413659femr5949862wmj.24.1664355678746;
+        Wed, 28 Sep 2022 02:01:18 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6ZZH/0yNxgxW56KBuYXJMZocMLsyKESUz0zvK4HHhzFGKL9+ekWpiz3hjGbZ40JDf1F9ZF/A==
+X-Received: by 2002:a7b:ce97:0:b0:3b3:4136:59fe with SMTP id q23-20020a7bce97000000b003b3413659femr5949825wmj.24.1664355678255;
+        Wed, 28 Sep 2022 02:01:18 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-104-40.dyn.eolo.it. [146.241.104.40])
+        by smtp.gmail.com with ESMTPSA id e11-20020a05600c218b00b003b47ff307e1sm1131686wme.31.2022.09.28.02.01.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Sep 2022 02:01:17 -0700 (PDT)
+Message-ID: <c074b37149bbad50ece1b0f0b6e380106b5a0e38.camel@redhat.com>
+Subject: Re: [RFC PATCH mptcp-next v12 1/7] mptcp: introduce MSG_FASTOPEN
+ flag.
+From: Paolo Abeni <pabeni@redhat.com>
+To: Dmytro Shytyi <dmytro@shytyi.net>, mptcp@lists.linux.dev
+Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+Date: Wed, 28 Sep 2022 11:01:16 +0200
+In-Reply-To: <20220927225341.14165-2-dmytro@shytyi.net>
+References: <20220927225341.14165-1-dmytro@shytyi.net>
+	 <20220927225341.14165-2-dmytro@shytyi.net>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: add TCP_FASTOPEN_NO_COOKIE support
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>
-References: <20220927150306.1552795-1-matthieu.baerts@tessares.net>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220927150306.1552795-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Mat, Paolo,
-
-On 27/09/2022 17:03, Matthieu Baerts wrote:
-> This series adds TCP_FASTOPEN_NO_COOKIE socket option support.
+On Tue, 2022-09-27 at 22:53 +0000, Dmytro Shytyi wrote:
+> In the following patches we will analyse the MSG_FASTOPEN flag
+> in the mptcp_sendmsg() and invoke the MPTFO.
 > 
-> The first patch refactors a bit a function introduced by Benjamin to support
-> TCP_FASTOPEN_CONNECT: the function is now generic.
+> Signed-of-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+> Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+> ---
+>  include/net/mptcp.h  |  9 +++++++++
+>  include/net/tcp.h    |  3 +++
+>  net/ipv4/tcp.c       | 20 ++++++++++++++++----
+>  net/mptcp/protocol.c | 19 +++++++++++--------
+>  4 files changed, 39 insertions(+), 12 deletions(-)
 > 
-> Adding the support of the new socket option is easy after because the only
-> action needed is to forward the request to the first subflow.
-> 
-> This has been validated using Packetdrill:
-> 
->   https://github.com/multipath-tcp/packetdrill/pull/91
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index c25939b2af68..ccf2b42837a1 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -150,6 +150,8 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+>  			 struct mptcp_out_options *opts);
+>  
+>  void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info);
+> +int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr, int addr_len, int flags);
+> +struct sock *mptcp_subflow_conn_sock(struct sock *sk);
+>  
+>  /* move the skb extension owership, with the assumption that 'to' is
+>   * newly allocated
+> @@ -286,6 +288,13 @@ static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
+>  
+>  static inline void mptcp_space(const struct sock *ssk, int *s, int *fs) { }
+>  static inline void mptcp_seq_show(struct seq_file *seq) { }
+> +static inline int mptcp_stream_connect(struct socket *sock,
+> +				       struct sockaddr *uaddr,
+> +				       int addr_len,
+> +				       int flags)
+> +{
+> +
+> +}
+>  
+>  static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
+>  						const struct sock *sk_listener,
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index 4f71cc15ff8e..e53d26d74dec 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -1757,6 +1757,9 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
+>  			      struct request_sock *req,
+>  			      struct tcp_fastopen_cookie *foc,
+>  			      const struct dst_entry *dst);
+> +int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+> +			 int *copied, size_t size,
+> +			 struct ubuf_info *uarg);
+>  void tcp_fastopen_init_key_once(struct net *net);
+>  bool tcp_fastopen_cookie_check(struct sock *sk, u16 *mss,
+>  			     struct tcp_fastopen_cookie *cookie);
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index 5237a3f08c94..daa611671d9a 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -1162,8 +1162,9 @@ void tcp_free_fastopen_req(struct tcp_sock *tp)
+>  	}
+>  }
+>  
+> -int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg, int *copied,
+> -			 size_t size, struct ubuf_info *uarg)
+> +int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+> +			 int *copied, size_t size,
+> +			 struct ubuf_info *uarg)
+>  {
+>  	struct tcp_sock *tp = tcp_sk(sk);
+>  	struct inet_sock *inet = inet_sk(sk);
+> @@ -1196,8 +1197,19 @@ int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg, int *copied,
+>  		}
+>  	}
+>  	flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
+> -	err = __inet_stream_connect(sk->sk_socket, uaddr,
+> -				    msg->msg_namelen, flags, 1);
+> +	if (!sk_is_mptcp(sk)) {
+> +		err = __inet_stream_connect(sk->sk_socket, uaddr,
+> +					    msg->msg_namelen, flags, 1);
+> +	} else {
+> +		struct sock *parent = mptcp_subflow_conn_sock(sk);
+> +
+> +		release_sock(sk);
+> +		release_sock(parent);
+> +		err = mptcp_stream_connect(sk->sk_socket, uaddr,
+> +					   msg->msg_namelen, msg->msg_flags);
+> +		lock_sock(parent);
+> +		lock_sock(sk);
+> +	}
+>  	/* fastopen_req could already be freed in __inet_stream_connect
+>  	 * if the connection times out or gets rst
+>  	 */
 
-Thank you for your reviews!
+I'm sorry it looks like I was not clear enough in my previous replies. 
 
-Now in our tree (feat. for net-next) with Mat's RvB (I didn't add
-Paolo's ACK yet but please tell me if I can/should):
+I really think we should avoid this chunk. I thought it only served for
+updating the msk socket status, but now I see it is also needed to
+properly allocate the token and update the MIBs, right? Does it serve
+any other roles?
 
-New patches for t/upstream:
-- ce72cdadf047: mptcp: sockopt: make 'tcp_fastopen_connect' generic
-- 5d745bd13d21: mptcp: add TCP_FASTOPEN_NO_COOKIE support
-- Results: 5391f0d311f6..6711fbb5e6c8 (export)
+Anyway I still think you can avoid the above chunck, factoring out the
+relevant slice of mptcp_stream_connect() in an helper:
 
+static void __mptcp_pre_connect(struct mptcp_sock *msk, struct sock *ssk)
+{
+	struct mptcp_subflow_context *subflow;
 
-Tests are now in progress:
+	mptcp_token_destroy(msk);
+        subflow = mptcp_subflow_ctx(ssk);
+#ifdef CONFIG_TCP_MD5SIG
+        /* no MPTCP if MD5SIG is enabled on this socket or we may run out of
+         * TCP option space.
+         */
+        if (rcu_access_pointer(tcp_sk(ssk)->md5sig_info))
+                mptcp_subflow_early_fallback(msk, subflow);
+#endif
+        if (subflow->request_mptcp && mptcp_token_new_connect(ssk)) {
+                MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_TOKENFALLBACKINIT);
+                mptcp_subflow_early_fallback(msk, subflow);
+        }
+        if (likely(!__mptcp_check_fallback(msk)))
+                MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPCAPABLEACTIVE);
+}
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220928T081959
+and call the above in mptcp_sendmsg():
+
+	if (unlikely(ssock && (inet_sk(ssock->sk)->defer_connect ||
+			       msg->msg_flags & MSG_FASTOPEN))) {
+		struct sock *ssk = ssock->sk;
+                int copied_syn = 0;
+
+                lock_sock(ssk);
+		if (msg->msg_flags & MSG_FASTOPEN && sk->sk_state == TCP_CLOSE)
+			__mptcp_pre_connect(msk, ssk);
+		
+Likely this patch should be split in 2 separate ones: the new patch
+will just create the helper and use it in mptcp_stream_connect.	
 
 
 Cheers,
-Matt
 
-> 
-> Matthieu Baerts (2):
->   mptcp: sockopt: make 'tcp_fastopen_connect' generic
->   mptcp: add TCP_FASTOPEN_NO_COOKIE support
-> 
->  net/mptcp/sockopt.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> 
-> base-commit: 095ffd740bdb5564bfe678e5cddf5d1d7c6b7462
+Paolo
 
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
