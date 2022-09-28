@@ -1,93 +1,80 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B1EEA2
-	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 10:00:34 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id l14so26012193eja.7
-        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 03:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=+s1X28ywrVcsaU82H1Ve14loBaCngrJ5sCMnjCvxUhs=;
-        b=rI5VhHiWOPAlYZtMbQoVsBTFFXqLMFrXmDof3DfijUAEISym/nUIVozMvD+8jbfGfF
-         mb4ya7LrOWbLcYiNwEC5wi8k6iTR47WM+Y7j6kaYwNpRDG8++8gnJzI8E+Ua3dMStPLL
-         FhykBCaj4F9xulYQ8NgzCrkuEOxIZXaq/xVHyPcL6jdCD6/4W/bk7jCmDaCYblFGUA04
-         IGP12PsjGv0uoQQnMtf3hcBeKD7eweWBTla+NxJgMCo9kXuj9psxBOZQXXKQ9WdkW+L6
-         quUIXeNsLjJcSvHWFimm89yCopItPkpsCmiw8KKKKuTDhMNn+IEDpr5I4rv7LPl63AaC
-         bQrA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C77B
+	for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 11:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1664362942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GGMvSEiBMHKgniJ7sqJQQ6Qlpd1iQZmv4yTi+akjblk=;
+	b=CDxQPYVzwn8NCMeffeIN2ymnRx6oRrib6pwynUbhEduvSimP5XRC764ye/vtriVt0GVMZN
+	KZnXgAK38GLj0puloDvbjpMwyNtSeIxwzQGIfO6UFSZG5+lSdUcywi2V0i4W5OlYNMYLRF
+	m1HyxFEqegiQyKOIRta2xuZjvfcdD8s=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-451-4VNjUQu_OjCB4e6U-uNX_w-1; Wed, 28 Sep 2022 07:02:11 -0400
+X-MC-Unique: 4VNjUQu_OjCB4e6U-uNX_w-1
+Received: by mail-qt1-f197.google.com with SMTP id ay22-20020a05622a229600b0035bbb349e79so8697107qtb.13
+        for <mptcp@lists.linux.dev>; Wed, 28 Sep 2022 04:02:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=+s1X28ywrVcsaU82H1Ve14loBaCngrJ5sCMnjCvxUhs=;
-        b=DZXGnbL90qrBhxhapkVIws+0cnaKNunyXI+ET2Bhd44UTVv1tlmCYTtoUPNjuBWY6j
-         V/RuYu+5zscitrhnArM19j2EHMrc24XIF1uCNU8sPpNc3VyycRDsZXmwO9h4WN8Zn7nW
-         5EWne+0olkv+fb4ZfM8rUzt8xI1cYfNMugA3KguGqEFkyO0GXqT/koVvXTEJ2TKUCrI0
-         Z8x6QwTestjUQe4PodukTURwH6sqS6m+V3w0gdLdWkDLrHxpQCDWqNqyg1RbbzprDqXQ
-         YyyVoaGk9XbAu86ySxeQLczxetjayGvMz23mCH88pJi1W7+c4IgYQPN4jjlVuQ1QJ0dX
-         iHtw==
-X-Gm-Message-State: ACrzQf0jeVhYhpr/bQnGZ68ozNJHkU1c/fir6nPzqTc6es974nnP0tNc
-	8ZArk6t7ZiM6gqsX0cdo6q93Lw==
-X-Google-Smtp-Source: AMsMyM5rRaMpZDWjaIwl4+K1kO1WAvbOIH93Q94Oajc87QdqO2gmajvNUEEjtkCvnM0U4Q3Hl/GD/w==
-X-Received: by 2002:a17:906:6a2a:b0:782:356e:4207 with SMTP id qw42-20020a1709066a2a00b00782356e4207mr26897521ejc.167.1664359232366;
-        Wed, 28 Sep 2022 03:00:32 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:6518:6c3b:2826:5305? ([2a02:578:8593:1200:6518:6c3b:2826:5305])
-        by smtp.gmail.com with ESMTPSA id r8-20020aa7da08000000b00456f2dbb379sm3004320eds.62.2022.09.28.03.00.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 03:00:31 -0700 (PDT)
-Message-ID: <acc4d56a-c615-153b-1154-35071d223496@tessares.net>
-Date: Wed, 28 Sep 2022 12:00:30 +0200
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=GGMvSEiBMHKgniJ7sqJQQ6Qlpd1iQZmv4yTi+akjblk=;
+        b=nsepJGSTT+LBcIKqRXBH5KD3XrixJZHUrUXt+GP7eDYAU8P2OSJXutBpT+GwBYnfP4
+         Qk1NuwwSVSQk8LYv1+T1l4Sv/kIBecvChRoB1I7+3moCc8HDGbOxenECnU7rZ6hBjrIQ
+         kpQ7NRVO2K56yVRVEJ/2E26ZJW+rv3WBsrb8OqVE982+G042LR86J8ajCU0sfUOIUf2q
+         WcBwUbyUKOwA0vCzRrtE05H0dyRNhEfn/w4zYUj+WgstT2tRMKre7UB5XVJwl529FSFJ
+         XctHA5vOs+Fx6Pi4icSxvLxyfkcuXcHBn9o3nkizJSZrg5Cytknrb2vPkBcTMzOY7uvo
+         Xl8A==
+X-Gm-Message-State: ACrzQf1NT1wbPtovNUdYyv3EZ+WafWL8vGUhcd5FQ2WmRwkG37FFJhl0
+	YrydiSfBxL3PVKLMQFLwqvhgGeD9+FjBRSvDcRy78MtWve87kx4jxZ/ferB4vhuagV5MtQtX6gD
+	myDvs8GtQYCeoHDA=
+X-Received: by 2002:a05:620a:1793:b0:6ce:a093:f190 with SMTP id ay19-20020a05620a179300b006cea093f190mr20784347qkb.282.1664362930840;
+        Wed, 28 Sep 2022 04:02:10 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM54CQE9xTXy0xoCabfNu40phN4mWZUatm17QC/xwAGMjTxsNODunhLuj3G+Umm/UKgnAYMpeQ==
+X-Received: by 2002:a05:620a:1793:b0:6ce:a093:f190 with SMTP id ay19-20020a05620a179300b006cea093f190mr20784317qkb.282.1664362930458;
+        Wed, 28 Sep 2022 04:02:10 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-104-40.dyn.eolo.it. [146.241.104.40])
+        by smtp.gmail.com with ESMTPSA id s6-20020ae9de06000000b006cf36d46902sm2758600qkf.66.2022.09.28.04.02.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Sep 2022 04:02:09 -0700 (PDT)
+Message-ID: <5b186defb2217a8de5ef73c4a8f0809dac920d07.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 1/4] mptcp: update __mptcp_push_pending
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Date: Wed, 28 Sep 2022 13:02:07 +0200
+In-Reply-To: <0b90e9ec304d919c833863e056f8e6c7b62d0dc2.1664358100.git.geliang.tang@suse.com>
+References: <cover.1664358100.git.geliang.tang@suse.com>
+	 <0b90e9ec304d919c833863e056f8e6c7b62d0dc2.1664358100.git.geliang.tang@suse.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH mptcp-next] mptcp: sockopt: use new helper for
- TCP_DEFER_ACCEPT
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <20220928091852.1933333-1-matthieu.baerts@tessares.net>
- <96ec8c7534425d2693aaa6b03cd7272adc4e6438.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <96ec8c7534425d2693aaa6b03cd7272adc4e6438.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+On Wed, 2022-09-28 at 17:48 +0800, Geliang Tang wrote:
+> To support redundant package schedulers more easily, this patch moves the
+> packet scheduler out of the dfrags loop in __mptcp_push_pending(), invoke
+> mptcp_sched_get_send() only once. 
 
-On 28/09/2022 11:46, Paolo Abeni wrote:
-> On Wed, 2022-09-28 at 11:18 +0200, Matthieu Baerts wrote:
->> mptcp_setsockopt_sol_tcp_defer() was doing the same thing as
->> mptcp_setsockopt_first_sf_only() except for the returned code in case of
->> error.
->>
->> Ignoring the error is needed to mimic how TCP_DEFER_ACCEPT is handled
->> when used with "plain" TCP sockets.
->>
->> The specific function for TCP_DEFER_ACCEPT can be replaced by the new
->> mptcp_setsockopt_first_sf_only() helper and errors can be ignored to
->> stay compatible with TCP. A bit of cleanup.
->>
->> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> 
-> You can/should drop the above tag ;)
+I fear the above will make cause hitting HoL blocking [more]
+frequently/easily. I'm not sure if the simult_flows.sh self test will
+catch that, but you should see a measurably worse running time for such
+test - in non debug build, as the average of multiple runs.
 
-You suggested to remove mptcp_setsockopt_sol_tcp_defer() but I
-understand your request :)
+I'm sorry, I can't see a feasible way out here :(
 
-Thank you for the review!
+/P
 
-I can wait for Mat to review it as he suggested the whole code :-)
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
