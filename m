@@ -1,170 +1,126 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2079.outbound.protection.outlook.com [40.107.22.79])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904E82579
-	for <mptcp@lists.linux.dev>; Thu, 29 Sep 2022 15:03:16 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q9l8wELVnFEQ6T6Kr0KpoLgxmL+RqFZp+f1xEYhTRurBw+jLXJHJL2Fz/Z+RP0BH6miFbR/ZigK+kZyvALexSM2dhMqppcGpK0Vgst6o441bxAzon/UCB1m51ZDlnMDtoNaWD0ln5bUhaDS8ioeqNYiPQfGNagzHNBSEhM7ZV+tyxZ5/Xjr9keaSrC16BbOkN7k/FIuVk+DfybutRJIWOuK3ZEVGiattPSdaEXL//o21ofJlUQy3o45VwbeC66/njF7aTI5Qtm/mAcRHxFfo14qBvuNZSKesB9TFBq4hN2DeqB0KdZ3OHDpiSje/eDqX20Cwi3ie1g1GYxfHbHHk5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vZyBh6hMF/tFTACf4HvquVxyA2bfbaIjuO2c4Kdn0dM=;
- b=RhpHd5hg3We+/LEJR3nD3K0mg+hyHK3kDZRKQ3gt+zlDldazXZzqERa2bgm0MlHHkFgJC8ETVkjpEmbqL9RZ7qmN/Uak1Zyg6oaiLEvHc6iARw0GtLgjfHfXGBVeqlA9PchFMqlVYkpeO4xYfsSz5Vy95ih/tL+ues9Xwe+cX0ojvheaWI2lzMTXhIWFFeNcsAvDbKKmeFTpLf3KiuHlkJCt8P2b/QwWrM/UsPnCrVEauqWdHz0QaRlcISdGmVYPzQdWKUX9Nc4UIEAsdaXbGBXaPvGBODzA7TuHRpfV3Uw3PQR+MUW+slhE7cFcqYwlx/VeNVo1sHVpoaGVEea7cA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vZyBh6hMF/tFTACf4HvquVxyA2bfbaIjuO2c4Kdn0dM=;
- b=hfYfiNmond1t1HwOy4QYUX8uFGFKVRTHkc4ddpbUNU1V7Kjc1sYkwR+h90KqO+TwWr+VEP8/0/VixNXEDTuwwaT2L4qFTBrcAlO9OS4jiaiwfm4JPk4l/dCNyhukbEv+r0R0fiidXi9ubLOQdNzL4IoWSpSh2dlKb/mXGpID3+zM9IeVeBRHi8Xqt+MsPsUSBSXJd3dBv9tyq1YCRf6Uk5eOSfh07h9HwsCrx9TJ4ppToRSMzxwEXZINo6YERmlVMOp0/KlSGQboTydurMKC+1DvQNYjfDRW8wr/+0XFOY2n/TBeC5O6qjvfDsTr29dFaOpYTwYkgOJ4yNK3fBmcqg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by PA4PR04MB7822.eurprd04.prod.outlook.com (2603:10a6:102:b8::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.20; Thu, 29 Sep
- 2022 15:03:14 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::e936:9fd1:22e7:97d1]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::e936:9fd1:22e7:97d1%5]) with mapi id 15.20.5676.020; Thu, 29 Sep 2022
- 15:03:14 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2 4/4] mptcp: simplify __mptcp_subflow_push_pending
-Date: Thu, 29 Sep 2022 23:03:18 +0800
-Message-Id: <51380f56ea152f419218b8f58951b5f848d982e7.1664463491.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1664463491.git.geliang.tang@suse.com>
-References: <cover.1664463491.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0014.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::9) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40B77B
+	for <mptcp@lists.linux.dev>; Thu, 29 Sep 2022 22:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664492059; x=1696028059;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=dM8Q78+cCEtLn0Rn1sAwFh+4ECWR4DePP3E4i5wmT8I=;
+  b=cwjnWGom2OP3zMqTlGoiIWy4gNFc3T6tXOHA7e2YquwdKQWvxj6nCO+q
+   /JldyVtLPZJVa+CPTxvmxMzqMgMy5U9BZHMNpp4xMXVdCYb06g2/T7bNl
+   7pZUE64Sibkw6cHMzLeBZIkwqirUAvtZnAhUUDgdRwB7ePxkRbftEMKMa
+   XutdsOjgxlSiiW9UIztmu8yO7e1wRShJ7/2s7/qllrnzeMxO2chbHP246
+   Rbh9FycdF7XbEW2So0dfWZAaF9DERGZWeYTST3r9CA2qAIJ6SJbn2mY3I
+   Q9usA13g1jU5Uiv0phCBD/1Dv9uhZ9dUc6e99VmbG9RGlNrI6/VB3g09C
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="303535037"
+X-IronPort-AV: E=Sophos;i="5.93,356,1654585200"; 
+   d="scan'208";a="303535037"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 15:54:19 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="653312651"
+X-IronPort-AV: E=Sophos;i="5.93,356,1654585200"; 
+   d="scan'208";a="653312651"
+Received: from kisungle-mobl.amr.corp.intel.com ([10.209.49.82])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 15:54:19 -0700
+Date: Thu, 29 Sep 2022 15:54:18 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Subject: Re: MPTCP upstreaming, week of 26-Sept-2022
+In-Reply-To: <0a6a01130bc558691a0fcd8dab0f2ac77fda199f.camel@redhat.com>
+Message-ID: <397e0988-7a03-3073-ea12-4845a44b85b7@linux.intel.com>
+References: <57e168ae-9de0-c986-cab1-a130e72e4e95@linux.intel.com>  <2d24f789-9fc1-0229-4b37-ff570c4be080@tessares.net> <0a6a01130bc558691a0fcd8dab0f2ac77fda199f.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|PA4PR04MB7822:EE_
-X-MS-Office365-Filtering-Correlation-Id: d63ed81b-f9a5-456d-afe1-08daa22bbb73
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	M/BkGrcPDyrkaCjP/ML73lt04H0smTrQFTVh1StN5k5ztVwfMCxNyEpYmt4chM4re2kJZko3yPGg+rXZIIJW8dRHPIGhuHvzPb5wOzOb+xLNtJAC1jYCgwKU+uMcB/ePYQSZx2LMfiUT0wCGSLkh5JQZTP0BtqxCQWyypOJyzZXRbZFy3RD4d5vtmGN1Uf/2zwRbiOd9HcHbl6cj+2m4tJFytl44e6ET8cvI3Ysa+1RrPKS+0tBbt8k9MKvZFrGOHgdmsTTSpBpM/d/Ti0yJRj6GJcP8BcTIS5Lx+5ErD3Kxt3Omz7HStmlQLVaOWidWYmFijpZ2bg7OKMwLDctck+no3pU0vZgw+8OsGrXx3N2bNzPFFYku+VZMZ+4dXEl3gRPJoR5YfNfmyuVaUGU2D5X3TZvxoYdO66E1W6Nos6zFvqYybGRburwMwD5b1A5kJ5ElX/lfnnkLCw/OoqVDBlmKYg30epOLVEXWKBpaW6LHp8RX5biChmvz2jqFTZ/cZeto7HLEoAqau9XGS7L03gFtoi8GEjbKH4gC7w8z75WLhK4w8fu8V3W7+A3nbA1fST/moh8WFd8gepP8LN3BTSGtgpi0IvNVNYUu1uzpMIGiDldBi3SBsK1GfzMi1+fKJyysjdEEV0M/llTgiuAQk5x2htw6YxT5mHZfKNeiT9iIQoXWOnTJS3KBA35/VpHtOsbN6wRdHj2MUkbUt1/TjKg7ETbJBWmBJmfdvDKQaXb7Dl2m8bDNohsQhdJyzJW7
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(376002)(136003)(396003)(39860400002)(346002)(451199015)(83380400001)(186003)(2616005)(86362001)(38100700002)(8936002)(66476007)(66556008)(66946007)(5660300002)(4326008)(41300700001)(6486002)(2906002)(44832011)(107886003)(478600001)(6506007)(26005)(6512007)(316002)(6916009)(8676002)(36756003)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dRgL3Y7J7utUBXu0DnTJfV84dZSnTpuHuU1/kcUiCjUBPLC7gCWckUnDd4o3?=
- =?us-ascii?Q?dVNPnmkx0qek464y3yBvEruZ7zWrKa3RdyI/XU2nYXvTXF3WyNsPddhjLK+r?=
- =?us-ascii?Q?7nK9PlMR6MG3Kq97lbaWNGGJZuOYorAQwHMsX+NJvtga57cRn/HpWZmQoej0?=
- =?us-ascii?Q?E4eFMYoLnhfw8gzwy5QRTodhrN7WRUPs89WzdXHpLT17jJM10WNGdZ9DG0LL?=
- =?us-ascii?Q?uVAxaU4C3756LbTrcfn2EZaxrG1rayjJMCgLmuWF7E6XX9cmBh8lOO9sbjyN?=
- =?us-ascii?Q?LZYqaDAp8UO5Hdui3jo0eGZtgYDybGmQdJ1wBML9Say7tB17gOayUnRc/cb5?=
- =?us-ascii?Q?ClLqyXF+Ue+nAb5zdxFZomxXb270GH13AlP47kfobEbnTrtEcTJ68qSkDxYy?=
- =?us-ascii?Q?G6JCWwNN1ZX37lk7w3gWllez56gYaJsadFtfsiqbeWs3UaSgz22zySEMeBVk?=
- =?us-ascii?Q?xmqWlPzpxuRZuVsOHrCL+3nx4WIdEeht7M4N0DZq3OGixl5f0/mNyZUfMV8L?=
- =?us-ascii?Q?EDhEXdTjC1ZUrNf8PSDKq46jkBx9lq4a3cjNZSOt+1dgEkXG/Jxn/qG4Ab/O?=
- =?us-ascii?Q?DmcnhMYvPL12Lifi7WKFWbpAeN4y4FPy65oSg5QYzRRNAOGdLm4L2va+dZTU?=
- =?us-ascii?Q?jg4X+LxvWKOHiVswzSxZsbY5PxgSLIPLtxlD8biN0kkXc1nCkQf2jSFvIWVU?=
- =?us-ascii?Q?OLqpYvl4uZpq3uZqPUj+SqcXVRUkHuWNQpmvBskUeQQEa/B1YndgUqxl31JG?=
- =?us-ascii?Q?Keha5StcLdrKZdhuUWCIUsSpyCw04ayr2dwKwtPQ5y5vuuxU1ZV82GnKpO1d?=
- =?us-ascii?Q?qzVcgDY5CawsOH3x6GIts/VpAyGaY/Pi9jccTAEAD8DUVPGtzYhQbdUJ0JVx?=
- =?us-ascii?Q?tJ0J9GhBBkIBqUwL74UOIQEDDOMIIGd7vUw6KHmTpaCW529l1wodkITw2Cga?=
- =?us-ascii?Q?UjWWMVOinwFzkM4DMxz9zRAMPUmxVoAvOCDt2D9mUgxjJ5tELRArBJvbM5IN?=
- =?us-ascii?Q?W76BhyWvnMJi0K2QYPYlGgOs6fd3i4DbscBXWtPSl3ZZZuIB3TaRzPDuGxeh?=
- =?us-ascii?Q?/ZA3IVPlu45QZlp5TvlPpTRV6Qz6Yx483fjgW5+7w46DqSThrN2ZrgoS1QZb?=
- =?us-ascii?Q?lS98EP52mQ/ZyoCYE/M9JuoB5ExJbsH/Z8l/SBQ8kExvhcRxyINJ1aXUI9O6?=
- =?us-ascii?Q?GpGu0E1TQzUQmo7cOrhOaF4ZidJ09iwU94jW2dfRQIgr2biDw9i6QR+4z8K1?=
- =?us-ascii?Q?arEDMo3RvTV4lkH0WGlJpmBVd+Ojrz1YoHlUarQZlfKfoCJ7mmxL0nFPINUw?=
- =?us-ascii?Q?YSJyp8w1yLvgIMWFlDK/TVVLgwSHLID1g1OtAx2tGQHvv+mlffEfwr0IdRy6?=
- =?us-ascii?Q?njoPkPESOetGSKXxPBnkRf24KSmEHLgeFy8cCOtPDZQHlnGH/xwHzpgbdb8Q?=
- =?us-ascii?Q?4kxbG8Hjv3AlOsi+fqX77siaxmGAB3PZDEe8e+kEel1C8QejyHNswinQ1WnO?=
- =?us-ascii?Q?wsiYuW4HBoV8knipUJL5P0n0+T1vHyVoEruZGZnVkRTICsbDA36Q8yjZFgNg?=
- =?us-ascii?Q?xLftfaVBRklA3UEIK0eltzyEs4rwtbKbdKLqJoXo?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d63ed81b-f9a5-456d-afe1-08daa22bbb73
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2022 15:03:14.1217
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2uVMNOZ2kiRh1nFEzNXWKlnMvFl5GIWuMf+7qTQktfzO1FdQAPSPLfsIz5CMapppb1N/P/3OhJuXbPVwYfG2WA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7822
+Content-Type: multipart/mixed; boundary="0-2083699861-1664492059=:10178"
 
-This patch simplifies __mptcp_subflow_push_pending() by invoking
-__do_push_pending() helper.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/protocol.c | 33 ++-------------------------------
- 1 file changed, 2 insertions(+), 31 deletions(-)
+--0-2083699861-1664492059=:10178
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index af37b18aa5a5..8ab98cd89e87 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1595,9 +1595,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 	struct mptcp_sendmsg_info info = {
- 		.data_lock_held = true,
- 	};
--	struct mptcp_data_frag *dfrag;
- 	struct sock *xmit_ssk;
--	int len, copied = 0;
-+	int copied = 0;
- 
- 	xmit_ssk = mptcp_sched_get_send(mptcp_sk(sk));
- 	if (!xmit_ssk)
-@@ -1609,41 +1608,13 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 	}
- 
- 	info.flags = 0;
--	while ((dfrag = mptcp_send_head(sk))) {
--		info.sent = dfrag->already_sent;
--		info.limit = dfrag->data_len;
--		len = dfrag->data_len - dfrag->already_sent;
--		while (len > 0) {
--			int ret = 0;
--
--			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
--			if (ret <= 0)
--				goto out;
--
--			info.sent += ret;
--			copied += ret;
--			len -= ret;
--
--			mptcp_update_post_push(msk, dfrag, ret);
--		}
--		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
--
--		if (msk->snd_burst > 0 &&
--		    sk_stream_memory_free(ssk) &&
--		    mptcp_subflow_active(mptcp_subflow_ctx(ssk))) {
--			mptcp_set_timeout(sk);
--		} else {
--			break;
--		}
--	}
-+	copied = __do_push_pending(sk, ssk, &info);
- 
- out:
- 	/* __mptcp_alloc_tx_skb could have released some wmem and we are
- 	 * not going to flush it via release_sock()
- 	 */
- 	if (copied) {
--		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
--			 info.size_goal);
- 		if (!mptcp_timer_pending(sk))
- 			mptcp_reset_timer(sk);
- 
--- 
-2.35.3
+On Tue, 27 Sep 2022, Paolo Abeni wrote:
 
+> On Tue, 2022-09-27 at 10:07 +0200, Matthieu Baerts wrote:
+>> Hi Mat, Paolo,
+>>
+>> On 27/09/2022 02:10, Mat Martineau wrote:
+>>>
+>>>     - Features for net-next:
+>>>
+>>>         - [ef4a93571133] mptcp: propagate fastclose error (Paolo Abeni)
+>>>         - [885cab8b5203] mptcp: use fastclose on more edge scenarios
+>>> (Paolo Abeni)
+>>>         - [13c82c8b0d9f] selftests: mptcp: update and extend fastclose
+>>> test-cases (Paolo Abeni):
+>>>             - can wait a bit, Paolo would like to have a look at the
+>>> modification on packetdrill side
+>>>
+>>>
+>>> The net-next patches are slightly more complicated:
+>>>
+>>>  * They were updated with a squash-to patch today
+>>>  * Need to wait until fastopen patches are merged
+>>
+>> We should at least wait for the fastopen patches to be applied I suppose.
+>>
+>>>  * There is a minor conflict with the -net patches (just diff context)
+>>>    in "mptcp: use fastclose on more edge scenarios".
+>>>
+>>>
+>>> Regarding the conflict, I could wait until Friday for a likely
+>>> net/net-next sync.
+>>>
+>>> Another option is to modify the patch slightly by moving
+>>> mptcp_check_readable() before __mptcp_check_send_data_fin(), it doesn't
+>>> make the diff any larger and avoids the -net conflict. What do you think?
+>>
+>> We can also add a note in the commit and explain how to fix this
+>> conflict. I think the function is at the right place but it can also be
+>> moved if it eases stuff.
+>
+>
+> I think there is no rush for that patches. If the net patches will land
+> upstream soon, they will be likely merged by EoW. If there will be
+> another RC, we can rebase the net-next and send out still for 6.1,
+> othewise the fastclose patches can wait IMHO a few more weeks.
+>
+
+Thanks Paolo.
+
+With the net and net-next patches for MPTCP just merged today, and the 
+backlog in netdev patchwork, I'll wait on the fastclose changes:
+
+ee1e43f10dc5 mptcp: update misleading comments.
+d1c02fee7732 selftests: mptcp: update and extend fastclose test-cases
+61fc1bc2edeb mptcp: use fastclose on more edge scenarios
+20af637811c9 mptcp: propagate fastclose error
+
+And the recent TCP_FASTOPEN_NO_COOKIE changes:
+
+de98c67ae3a9 mptcp: add TCP_FASTOPEN_NO_COOKIE support
+a05c21ad4572 mptcp: sockopt: make 'tcp_fastopen_connect' generic
+(plus "mptcp: sockopt: use new helper for TCP_DEFER_ACCEPT" that's still 
+in patchwork).
+
+
+It sounds like rc8 is unlikely 
+(https://lore.kernel.org/lkml/CAHk-=wjc_CDPy5WbN=e_FtPrd0Yn2Wp4JcdRByeyDoM9azK1mA@mail.gmail.com/) 
+but I can revisit next week if there isn't a final 6.0 on Sunday.
+
+Thanks,
+
+--
+Mat Martineau
+Intel
+--0-2083699861-1664492059=:10178--
