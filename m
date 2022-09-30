@@ -1,455 +1,189 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108355A7B
-	for <mptcp@lists.linux.dev>; Fri, 30 Sep 2022 16:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B8C5C85
+	for <mptcp@lists.linux.dev>; Fri, 30 Sep 2022 23:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664553632; x=1696089632;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WqJbDskOUo7L0c8HqZ5zeSVTdQNENPHNixig9QogiRs=;
-  b=QfjPJ4+yJpNjFWvC+FrHuuAFmzn0ZU1uzkFzP3gipvxoJsKQ2RFWEi1Z
-   4Kf+xIJsqTx+k3BK6uszQ34gMphAdNievYnnnjvpJmruIPgBLdZAuiFKn
-   t9QCB2HSdnwv6wQIu4AOuLdFSJsydsp6couviiE48A4C1hNTcxyy0O2yM
-   uEyzxtjQX4rtF1XXtOuZSAbAXhcdBa4hPEzQFzyya7ghXK8Yd5kVlb/g4
-   FchaFSMusNx3IvuSn6WFbGStmSwSfhAbCn+/xniJGAXMHA5P5zk+N5T5M
-   u8jIjrcGDzYDKjnfuz+rP58saxyT7+V4m09lCLlbFq5EVg9DbFVKigK7o
+  t=1664580329; x=1696116329;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=8931elewq6MoO08H2xmOOWZaCa+MfYbaSlgvA8HFkuM=;
+  b=YMMJ3RyPZxSuTUYY8xPEU9fQkA0dB7EHT1h8f4/tEpsbXRbo1sKk7rUo
+   1bbgCRqtbblV84ZThgE3pPuoBcqxAwwtmtGz3NpFJwEDBySUK7JG4HzR3
+   Bx6++YVxACADk5cSuuUYAMbbzznyEGxIV+a2Hwl9QP6g+RVAXI1e8Do91
+   4D82WFIDs0wPvqWsplWF/euePHfuuwRjvtZ+j12gk+CPJLjhzLuhlxrIp
+   rV3z4xumyZ0csjzDX8mhZ0FcwWfjsLF3X364KoHtWFELV69tlFSu2OsG0
+   Atjx9lVDmrlaucWPkgll+4JWdCGLoX33Yl6lBH7WLgYrmyUfitxTXgJGJ
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="289383897"
-X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
-   d="scan'208";a="289383897"
+X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="303797653"
+X-IronPort-AV: E=Sophos;i="5.93,359,1654585200"; 
+   d="scan'208";a="303797653"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 09:00:28 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="655996110"
-X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
-   d="scan'208";a="655996110"
-Received: from cmforest-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.22.5])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 09:00:28 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 16:25:28 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="656119462"
+X-IronPort-AV: E=Sophos;i="5.93,359,1654585200"; 
+   d="scan'208";a="656119462"
+Received: from gkaragat-mobl.amr.corp.intel.com ([10.252.141.75])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 16:25:28 -0700
+Date: Fri, 30 Sep 2022 16:25:28 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	edumazet@google.com,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/4] selftests: mptcp: update and extend fastclose test-cases
-Date: Fri, 30 Sep 2022 08:59:33 -0700
-Message-Id: <20220930155934.404466-4-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220930155934.404466-1-mathew.j.martineau@linux.intel.com>
-References: <20220930155934.404466-1-mathew.j.martineau@linux.intel.com>
+To: menglong8.dong@gmail.com
+cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+Subject: Re: [PATCH mptcp-next v3 2/3] mptcp: add statistics for mptcp socket
+ in use
+In-Reply-To: <20220930024607.128202-3-imagedong@tencent.com>
+Message-ID: <6ebd4a84-3be5-17fa-6e03-3ca69740512b@linux.intel.com>
+References: <20220930024607.128202-1-imagedong@tencent.com> <20220930024607.128202-3-imagedong@tencent.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Fri, 30 Sep 2022, menglong8.dong@gmail.com wrote:
 
-After the previous patches, the MPTCP protocol can generate
-fast-closes on both ends of the connection. Rework the relevant
-test-case to carefully trigger the fast-close code-path on a
-single end at the time, while ensuring than a predictable amount
-of data is spooled on both ends.
+> From: Menglong Dong <imagedong@tencent.com>
+>
+> Do the statistics of mptcp socket in use with sock_prot_inuse_add().
+> Therefore, we can get the count of used mptcp socket from
+> /proc/net/protocols:
+>
+> & cat /proc/net/protocols
+> protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
+> MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+> MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+>
+> Signed-off-by: Menglong Dong <imagedong@tencent.com>
+> ---
+> v2:
+> - decrease the statistics for listening mptcp socket inuse with
+>  mptcp_listen_inuse_dec()
+> - add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+>  called on the msk. For fallback case, we need to decrease the
+>  statistics only once, and mptcp_destroy_common() can be called
+>  more than once.
+> ---
+> net/mptcp/protocol.c | 22 +++++++++++++++++++++-
+> net/mptcp/protocol.h |  1 +
+> net/mptcp/subflow.c  |  3 +++
+> 3 files changed, 25 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d817fdb2f6ef..e6d358027b7b 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2913,6 +2913,16 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+> 	inet_sk(msk)->inet_rcv_saddr = inet_sk(ssk)->inet_rcv_saddr;
+> }
+>
+> +static void mptcp_listen_inuse_dec(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct socket *ssock;
+> +
+> +	ssock = __mptcp_nmpc_socket(msk);
+> +	if (ssock && inet_sk_state_load(ssock->sk) == TCP_LISTEN)
+> +		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
+> +}
+> +
+> static int mptcp_disconnect(struct sock *sk, int flags)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> @@ -2925,6 +2935,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+> 	if (mptcp_sk(sk)->token)
+> 		mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
+>
+> +	mptcp_listen_inuse_dec(sk);
+> 	/* msk->subflow is still intact, the following will not free the first
+> 	 * subflow
+> 	 */
+> @@ -3096,6 +3107,11 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
+> 	skb_rbtree_purge(&msk->out_of_order_queue);
+> 	mptcp_data_unlock(sk);
+>
+> +	if ((__mptcp_check_fallback(msk) &&
+> +	     !test_and_set_bit(MPTCP_DESTROIED, &msk->flags)) ||
+> +	    !sk_unhashed(sk))
+> +		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
+> +
+> 	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
+> 	 * inet_sock_destruct() will dispose it
+> 	 */
+> @@ -3110,6 +3126,7 @@ static void mptcp_destroy(struct sock *sk)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+>
+> +	mptcp_listen_inuse_dec(sk);
+> 	/* clears msk->subflow, allowing the following to close
+> 	 * even the initial subflow
+> 	 */
+> @@ -3542,6 +3559,7 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+> 	mptcp_token_destroy(msk);
+> 	inet_sk_state_store(sock->sk, TCP_SYN_SENT);
+> 	subflow = mptcp_subflow_ctx(ssock->sk);
+> +	sock_prot_inuse_add(sock_net(sock->sk), sock->sk->sk_prot, 1);
+> #ifdef CONFIG_TCP_MD5SIG
+> 	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
+> 	 * TCP option space.
+> @@ -3596,8 +3614,10 @@ static int mptcp_listen(struct socket *sock, int backlog)
+>
+> 	err = ssock->ops->listen(ssock, backlog);
+> 	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
+> -	if (!err)
+> +	if (!err) {
+> +		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+> 		mptcp_copy_inaddrs(sk, ssock->sk);
+> +	}
+>
+> unlock:
+> 	release_sock(sk);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index c0b5b4628f65..675de024de10 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -116,6 +116,7 @@
+> #define MPTCP_WORK_EOF		3
+> #define MPTCP_FALLBACK_DONE	4
+> #define MPTCP_WORK_CLOSE_SUBFLOW 5
 
-Additionally add another test-cases for the passive socket
-fast-close.
+Hi Menglong -
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 65 ++++++++++++--
- .../testing/selftests/net/mptcp/mptcp_join.sh | 90 +++++++++++++++----
- 2 files changed, 130 insertions(+), 25 deletions(-)
+Overall, v3 is looking good. Thanks for adding the tests!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 24d4e9cb617e..e54653ea2ed4 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -72,6 +72,8 @@ static int cfg_wait;
- static uint32_t cfg_mark;
- static char *cfg_input;
- static int cfg_repeat = 1;
-+static int cfg_truncate;
-+static int cfg_rcv_trunc;
- 
- struct cfg_cmsg_types {
- 	unsigned int cmsg_enabled:1;
-@@ -95,11 +97,15 @@ static struct cfg_sockopt_types cfg_sockopt_types;
- 
- static void die_usage(void)
- {
--	fprintf(stderr, "Usage: mptcp_connect [-6] [-c cmsg] [-i file] [-I num] [-j] [-l] "
-+	fprintf(stderr, "Usage: mptcp_connect [-6] [-c cmsg] [-f offset] [-i file] [-I num] [-j] [-l] "
- 		"[-m mode] [-M mark] [-o option] [-p port] [-P mode] [-j] [-l] [-r num] "
- 		"[-s MPTCP|TCP] [-S num] [-r num] [-t num] [-T num] [-u] [-w sec] connect_address\n");
- 	fprintf(stderr, "\t-6 use ipv6\n");
- 	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
-+	fprintf(stderr, "\t-f offset -- stop the I/O after receiving and sending the specified amount "
-+		"of bytes. If there are unread bytes in the receive queue, that will cause a MPTCP "
-+		"fastclose at close/shutdown. If offset is negative, expect the peer to close before "
-+		"all the local data as been sent, thus toleration errors on write and EPIPE signals\n");
- 	fprintf(stderr, "\t-i file -- read the data to send from the given file instead of stdin");
- 	fprintf(stderr, "\t-I num -- repeat the transfer 'num' times. In listen mode accepts num "
- 		"incoming connections, in client mode, disconnect and reconnect to the server\n");
-@@ -382,7 +388,7 @@ static size_t do_rnd_write(const int fd, char *buf, const size_t len)
- 
- 	bw = write(fd, buf, do_w);
- 	if (bw < 0)
--		perror("write");
-+		return bw;
- 
- 	/* let the join handshake complete, before going on */
- 	if (cfg_join && first) {
-@@ -571,7 +577,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		.fd = peerfd,
- 		.events = POLLIN | POLLOUT,
- 	};
--	unsigned int woff = 0, wlen = 0;
-+	unsigned int woff = 0, wlen = 0, total_wlen = 0, total_rlen = 0;
- 	char wbuf[8192];
- 
- 	set_nonblock(peerfd, true);
-@@ -597,7 +603,16 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		}
- 
- 		if (fds.revents & POLLIN) {
--			len = do_rnd_read(peerfd, rbuf, sizeof(rbuf));
-+			ssize_t rb = sizeof(rbuf);
-+
-+			/* limit the total amount of read data to the trunc value*/
-+			if (cfg_truncate > 0) {
-+				if (rb + total_rlen > cfg_truncate)
-+					rb = cfg_truncate - total_rlen;
-+				len = read(peerfd, rbuf, rb);
-+			} else {
-+				len = do_rnd_read(peerfd, rbuf, sizeof(rbuf));
-+			}
- 			if (len == 0) {
- 				/* no more data to receive:
- 				 * peer has closed its write side
-@@ -612,10 +627,13 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 
- 			/* Else, still have data to transmit */
- 			} else if (len < 0) {
-+				if (cfg_rcv_trunc)
-+					return 0;
- 				perror("read");
- 				return 3;
- 			}
- 
-+			total_rlen += len;
- 			do_write(outfd, rbuf, len);
- 		}
- 
-@@ -628,12 +646,21 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 			if (wlen > 0) {
- 				ssize_t bw;
- 
-+				/* limit the total amount of written data to the trunc value */
-+				if (cfg_truncate > 0 && wlen + total_wlen > cfg_truncate)
-+					wlen = cfg_truncate - total_wlen;
-+
- 				bw = do_rnd_write(peerfd, wbuf + woff, wlen);
--				if (bw < 0)
-+				if (bw < 0) {
-+					if (cfg_rcv_trunc)
-+						return 0;
-+					perror("write");
- 					return 111;
-+				}
- 
- 				woff += bw;
- 				wlen -= bw;
-+				total_wlen += bw;
- 			} else if (wlen == 0) {
- 				/* We have no more data to send. */
- 				fds.events &= ~POLLOUT;
-@@ -652,10 +679,16 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		}
- 
- 		if (fds.revents & (POLLERR | POLLNVAL)) {
-+			if (cfg_rcv_trunc)
-+				return 0;
- 			fprintf(stderr, "Unexpected revents: "
- 				"POLLERR/POLLNVAL(%x)\n", fds.revents);
- 			return 5;
- 		}
-+
-+		if (cfg_truncate > 0 && total_wlen >= cfg_truncate &&
-+		    total_rlen >= cfg_truncate)
-+			break;
- 	}
- 
- 	/* leave some time for late join/announce */
-@@ -1160,11 +1193,13 @@ int main_loop(void)
- 	}
- 
- 	/* close the client socket open only if we are not going to reconnect */
--	ret = copyfd_io(fd_in, fd, 1, cfg_repeat == 1);
-+	ret = copyfd_io(fd_in, fd, 1, 0);
- 	if (ret)
- 		return ret;
- 
--	if (--cfg_repeat > 0) {
-+	if (cfg_truncate > 0) {
-+		xdisconnect(fd, peer->ai_addrlen);
-+	} else if (--cfg_repeat > 0) {
- 		xdisconnect(fd, peer->ai_addrlen);
- 
- 		/* the socket could be unblocking at this point, we need the
-@@ -1176,7 +1211,10 @@ int main_loop(void)
- 		if (cfg_input)
- 			close(fd_in);
- 		goto again;
-+	} else {
-+		close(fd);
- 	}
-+
- 	return 0;
- }
- 
-@@ -1262,8 +1300,19 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6c:hi:I:jlm:M:o:p:P:r:R:s:S:t:T:w:")) != -1) {
-+	while ((c = getopt(argc, argv, "6c:f:hi:I:jlm:M:o:p:P:r:R:s:S:t:T:w:")) != -1) {
- 		switch (c) {
-+		case 'f':
-+			cfg_truncate = atoi(optarg);
-+
-+			/* when receiving a fastclose, ignore PIPE signals and
-+			 * all the I/O errors later in the code
-+			 */
-+			if (cfg_truncate < 0) {
-+				cfg_rcv_trunc = true;
-+				signal(SIGPIPE, handle_signal);
-+			}
-+			break;
- 		case 'j':
- 			cfg_join = true;
- 			cfg_mode = CFG_MODE_POLL;
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2957fe414639..f3dd5f2a0272 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -346,10 +346,21 @@ check_transfer()
- 	local in=$1
- 	local out=$2
- 	local what=$3
-+	local bytes=$4
- 	local i a b
- 
- 	local line
--	cmp -l "$in" "$out" | while read -r i a b; do
-+	if [ -n "$bytes" ]; then
-+		# when truncating we must check the size explicitly
-+		local out_size=$(wc -c $out | awk '{print $1}')
-+		if [ $out_size -ne $bytes ]; then
-+			echo "[ FAIL ] $what output file has wrong size ($out_size, $bytes)"
-+			fail_test
-+			return 1
-+		fi
-+		bytes="--bytes=${bytes}"
-+	fi
-+	cmp -l "$in" "$out" ${bytes} | while read -r i a b; do
- 		local sum=$((0${a} + 0${b}))
- 		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
- 			echo "[ FAIL ] $what does not match (in, out):"
-@@ -707,9 +718,31 @@ do_transfer()
- 	fi
- 
- 	local flags="subflow"
-+	local extra_cl_args=""
-+	local extra_srv_args=""
-+	local trunc_size=""
- 	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
-+		if [ ${test_link_fail} -le 1 ]; then
-+			echo "fastclose tests need test_link_fail argument"
-+			fail_test
-+			return 1
-+		fi
-+
- 		# disconnect
--		extra_args="$extra_args -I ${addr_nr_ns2:10}"
-+		trunc_size=${test_link_fail}
-+		local side=${addr_nr_ns2:10}
-+
-+		if [ ${side} = "client" ]; then
-+			extra_cl_args="-f ${test_link_fail}"
-+			extra_srv_args="-f -1"
-+		elif [ ${side} = "server" ]; then
-+			extra_srv_args="-f ${test_link_fail}"
-+			extra_cl_args="-f -1"
-+		else
-+			echo "wrong/unknown fastclose spec ${side}"
-+			fail_test
-+			return 1
-+		fi
- 		addr_nr_ns2=0
- 	elif [[ "${addr_nr_ns2}" = "userspace_"* ]]; then
- 		userspace_pm=1
-@@ -737,39 +770,41 @@ do_transfer()
- 		local_addr="0.0.0.0"
- 	fi
- 
-+	extra_srv_args="$extra_args $extra_srv_args"
- 	if [ "$test_link_fail" -gt 1 ];then
- 		timeout ${timeout_test} \
- 			ip netns exec ${listener_ns} \
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_args ${local_addr} < "$sinfail" > "$sout" &
-+					$extra_srv_args ${local_addr} < "$sinfail" > "$sout" &
- 	else
- 		timeout ${timeout_test} \
- 			ip netns exec ${listener_ns} \
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_args ${local_addr} < "$sin" > "$sout" &
-+					$extra_srv_args ${local_addr} < "$sin" > "$sout" &
- 	fi
- 	local spid=$!
- 
- 	wait_local_port_listen "${listener_ns}" "${port}"
- 
-+	extra_cl_args="$extra_args $extra_cl_args"
- 	if [ "$test_link_fail" -eq 0 ];then
- 		timeout ${timeout_test} \
- 			ip netns exec ${connector_ns} \
- 				./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--					$extra_args $connect_addr < "$cin" > "$cout" &
-+					$extra_cl_args $connect_addr < "$cin" > "$cout" &
- 	elif [ "$test_link_fail" -eq 1 ] || [ "$test_link_fail" -eq 2 ];then
- 		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
- 			tee "$cinsent" | \
- 			timeout ${timeout_test} \
- 				ip netns exec ${connector_ns} \
- 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--						$extra_args $connect_addr > "$cout" &
-+						$extra_cl_args $connect_addr > "$cout" &
- 	else
- 		tee "$cinsent" < "$cinfail" | \
- 			timeout ${timeout_test} \
- 				ip netns exec ${connector_ns} \
- 					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--						$extra_args $connect_addr > "$cout" &
-+						$extra_cl_args $connect_addr > "$cout" &
- 	fi
- 	local cpid=$!
- 
-@@ -971,15 +1006,15 @@ do_transfer()
- 	fi
- 
- 	if [ "$test_link_fail" -gt 1 ];then
--		check_transfer $sinfail $cout "file received by client"
-+		check_transfer $sinfail $cout "file received by client" $trunc_size
- 	else
--		check_transfer $sin $cout "file received by client"
-+		check_transfer $sin $cout "file received by client" $trunc_size
- 	fi
- 	retc=$?
- 	if [ "$test_link_fail" -eq 0 ];then
--		check_transfer $cin $sout "file received by server"
-+		check_transfer $cin $sout "file received by server" $trunc_size
- 	else
--		check_transfer $cinsent $sout "file received by server"
-+		check_transfer $cinsent $sout "file received by server" $trunc_size
- 	fi
- 	rets=$?
- 
-@@ -1188,12 +1223,23 @@ chk_fclose_nr()
- {
- 	local fclose_tx=$1
- 	local fclose_rx=$2
-+	local ns_invert=$3
- 	local count
- 	local dump_stats
-+	local ns_tx=$ns2
-+	local ns_rx=$ns1
-+	local extra_msg="   "
-+
-+	if [[ $ns_invert = "invert" ]]; then
-+		ns_tx=$ns1
-+		ns_rx=$ns2
-+		extra_msg=${extra_msg}"invert"
-+	fi
- 
- 	printf "%-${nr_blank}s %s" " " "ctx"
--	count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
-+	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
-+	[ "$count" != "$fclose_tx" ] && extra_msg="$extra_msg,tx=$count"
- 	if [ "$count" != "$fclose_tx" ]; then
- 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
- 		fail_test
-@@ -1203,17 +1249,20 @@ chk_fclose_nr()
- 	fi
- 
- 	echo -n " - fclzrx"
--	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
-+	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
-+	[ "$count" != "$fclose_rx" ] && extra_msg="$extra_msg,rx=$count"
- 	if [ "$count" != "$fclose_rx" ]; then
- 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
- 		fail_test
- 		dump_stats=1
- 	else
--		echo "[ ok ]"
-+		echo -n "[ ok ]"
- 	fi
- 
- 	[ "${dump_stats}" = 1 ] && dump_stats
-+
-+	echo "$extra_msg"
- }
- 
- chk_rst_nr()
-@@ -1236,7 +1285,7 @@ chk_rst_nr()
- 	printf "%-${nr_blank}s %s" " " "rtx"
- 	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPRstTx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
--	if [ "$count" != "$rst_tx" ]; then
-+	if [ $count -lt $rst_tx ]; then
- 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
- 		fail_test
- 		dump_stats=1
-@@ -1247,7 +1296,7 @@ chk_rst_nr()
- 	echo -n " - rstrx "
- 	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPRstRx | awk '{print $2}')
- 	[ -z "$count" ] && count=0
--	if [ "$count" != "$rst_rx" ]; then
-+	if [ "$count" -lt "$rst_rx" ]; then
- 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
- 		fail_test
- 		dump_stats=1
-@@ -2801,11 +2850,18 @@ fullmesh_tests()
- fastclose_tests()
- {
- 	if reset "fastclose test"; then
--		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_2
-+		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_client
- 		chk_join_nr 0 0 0
- 		chk_fclose_nr 1 1
- 		chk_rst_nr 1 1 invert
- 	fi
-+
-+	if reset "fastclose server test"; then
-+		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_server
-+		chk_join_nr 0 0 0
-+		chk_fclose_nr 1 1 invert
-+		chk_rst_nr 1 1
-+	fi
- }
- 
- pedit_action_pkts()
--- 
-2.37.3
+One thing that was requested in v2 review was to fix this spelling:
 
+> +#define MPTCP_DESTROIED		6
+
+to be MPTCP_DESTROYED. Can you fix that and post v4?
+
+
+- Mat
+
+>
+> /* MPTCP socket release cb flags */
+> #define MPTCP_PUSH_PENDING	1
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 07dd23d0fe04..da6cfa73a3bd 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -747,6 +747,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+> 			mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
+> 			mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
+> 			mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
+> +			sock_prot_inuse_add(sock_net(new_msk),
+> +					    new_msk->sk_prot,
+> +					    1);
+> 			ctx->conn = new_msk;
+> 			new_msk = NULL;
+>
+> -- 
+> 2.37.2
+>
+>
+
+--
+Mat Martineau
+Intel
