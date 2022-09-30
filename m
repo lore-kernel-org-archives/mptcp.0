@@ -1,45 +1,45 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4009A7B
-	for <mptcp@lists.linux.dev>; Fri, 30 Sep 2022 08:18:57 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id x15so5164546wrv.1
-        for <mptcp@lists.linux.dev>; Fri, 30 Sep 2022 01:18:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C523633D6
+	for <mptcp@lists.linux.dev>; Fri, 30 Sep 2022 14:13:26 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id r3-20020a05600c35c300b003b4b5f6c6bdso2306583wmq.2
+        for <mptcp@lists.linux.dev>; Fri, 30 Sep 2022 07:13:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=EqhBJSBxG/wZSTB8yt4Ov3D/nhvjhTT1IZe9vtGeDKY=;
-        b=hqRkWBdam6S2X6GR7TyyvlzCTXjxRe32LVR7xgiHuSGmIE9leLnEqZd5m0mOvz/57/
-         Ddvy9Y+aAPAy6CRcoyBBkoWUohYG8VU2vscZoAODohOHHbHeN2lD5srjdXXqQpL3zEDD
-         ADkQCzrxrzwHctkBN/RPHLDFoEf/UQ1P1EP/RAqIA5sgwr7wOTffAUuy9XZ6A5XwruY+
-         BXWXW90BBt3HVjbPYW54K5GhYNJDqM8d78pR4TlMgWCugXPfRjEUnOVHsRYfdQjEpYER
-         6knoim/ClxBaxYztX2a3FWL+LNuNAmTdmtqhLiZN/EOSOSmXZXCVtUdAxQenYanvdFr3
-         JvOg==
+        bh=JiWkBz/UN+3n8DVvC9kg2k8Mg3yN9elUc+CSUEVa7X4=;
+        b=FlpSyHUruMsFswpXlNR2/96enjF2vpZn0yiqygYIwuJcDL/h1DfU90HgdnI6bkpkW4
+         BIB4wJ1mY9dKpIhnyCBNE5zElQuWLISNyBZGm2VC7U/EVZ6nLimHsW3PwuNbLG4+9sZf
+         39G0mC75LvdrpL1hvd0go5kw0fPUYHtK54Vh6IGwA6EpKqoBovTB5UWgBIiR9W2QUoh5
+         KdHaoOrWkTBReW+SRknZSyfd2uKPDNYjsHMKyuchxlSPRxFxR3HsNJq8i27S5NPIo1jg
+         vkeWpRsXPaGOfS08n8fvzRoeLAGwXAqV1Vt/ZVITvzHkffvzfzrJeZW4qXXNdPRQOMXI
+         nyJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=EqhBJSBxG/wZSTB8yt4Ov3D/nhvjhTT1IZe9vtGeDKY=;
-        b=bU+SU3B8j6hbRnF5Qiq1mDkTypkjcfleScx1q8QyxTlnkYrHWaU9sSIvmPZGXfdDNK
-         qrY8eKbNTEVSuqOqhyEdsPGx5VoJXEifO6VXaVfAxbd1F3s6KzIOOKQ59DqkY+U657Og
-         zFR/jDbOP6hlV75GSAqVHRRIsC79qtyoMJ5dOSyJSY61rNwC1Jb/USSyvNZ2XXkvOIC9
-         ZacuR0Q7H74o/Ynwl27yjE84dy9yWaElSUrdaVw3oT3Yp4ejbSaDkPcwGcnBCDsxKZcQ
-         2fFfCSPao54DHydWjXyI52C73fWEAxAP5DSq1hSkZneR1zr/ZtGEX9qk2R1+c3Iv58ae
-         gY2A==
-X-Gm-Message-State: ACrzQf3Obn40QegjImMukh1cdrVj3TsYMnZeuD+Us6lRaXCj5kRmVF21
-	5eroyxien8JFpD5VuGP8wwWx9gtnBM9paQ==
-X-Google-Smtp-Source: AMsMyM6UFINUEYm6UytcAevwHL1gxbOSLMT455eMw2Z5K4sI33UfO567rGaSvuxQkrehUVHsZX9pcQ==
-X-Received: by 2002:a5d:5222:0:b0:22c:df1c:92a3 with SMTP id i2-20020a5d5222000000b0022cdf1c92a3mr2322684wra.537.1664525935990;
-        Fri, 30 Sep 2022 01:18:55 -0700 (PDT)
+        bh=JiWkBz/UN+3n8DVvC9kg2k8Mg3yN9elUc+CSUEVa7X4=;
+        b=Ry4+grdiw0A9lHpqtAwgaiafYY7QKBkWO8wlq64B9WpY/Bud5Z4PTZM5Ivem5twFlI
+         RvUlmlQ/f9Dhczo2ggZjXumUuh673ByeZ7n5C0Kko3QzbzOMS6vUEHM9jRISPipx/5XA
+         NjBYHzm+DlhLlmVF8u54ld9pzBDio2XF3+cEhzMiJ8bzTavjZXe+NIikfsEOpQcCeJFq
+         hus8CTopzhJPV4Bmeu+dAJbIyOaFxPPLTPE5H2PPmZ7tKqycusFZYDxaUtSgLO5opaJK
+         376t9rqC7zJd4BlEgmuOcITAmrUH72WWvDIqJkT9TJBMSBFXLgNMnrG2Lz14Bmj/y9Di
+         90Pw==
+X-Gm-Message-State: ACrzQf2dxVuoJdQeyL5YvIZO4dbqidS0hAncpDAj6EL/BWOyfH2EGPl9
+	dT3Luk7eH/km7QhQ9WxFvTnoAlMnZCyM1A==
+X-Google-Smtp-Source: AMsMyM6KIEqkGSyhU8cLyFbRPPvWkzgVuTSsEagTDe75ouAppkOlu8eCCeD4CESTr5bFPTokQGfg4Q==
+X-Received: by 2002:a05:600c:4f45:b0:3b4:9c9a:7077 with SMTP id m5-20020a05600c4f4500b003b49c9a7077mr6203071wmq.109.1664547204592;
+        Fri, 30 Sep 2022 07:13:24 -0700 (PDT)
 Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id b5-20020adfe645000000b0022e03fd193csm222009wrn.33.2022.09.30.01.18.55
+        by smtp.gmail.com with ESMTPSA id j11-20020a056000124b00b0022a3517d3besm2151169wrx.5.2022.09.30.07.13.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Sep 2022 01:18:55 -0700 (PDT)
-Message-ID: <3c9e8479-8352-8e61-6d52-713036c21318@tessares.net>
-Date: Fri, 30 Sep 2022 10:18:54 +0200
+        Fri, 30 Sep 2022 07:13:24 -0700 (PDT)
+Message-ID: <3aa928ca-92af-c903-b40d-f087815c5d28@tessares.net>
+Date: Fri, 30 Sep 2022 16:13:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,44 +48,89 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
-Subject: Re: [PATCH mptcp-next] mptcp: sockopt: use new helper for
- TCP_DEFER_ACCEPT
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: Re: MPTCP upstreaming, week of 26-Sept-2022
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
-References: <20220928091852.1933333-1-matthieu.baerts@tessares.net>
+References: <57e168ae-9de0-c986-cab1-a130e72e4e95@linux.intel.com>
+ <2d24f789-9fc1-0229-4b37-ff570c4be080@tessares.net>
+ <0a6a01130bc558691a0fcd8dab0f2ac77fda199f.camel@redhat.com>
+ <397e0988-7a03-3073-ea12-4845a44b85b7@linux.intel.com>
+Content-Language: en-GB
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20220928091852.1933333-1-matthieu.baerts@tessares.net>
+In-Reply-To: <397e0988-7a03-3073-ea12-4845a44b85b7@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+Hi Mat, Paolo,
 
-On 28/09/2022 11:18, Matthieu Baerts wrote:
-> mptcp_setsockopt_sol_tcp_defer() was doing the same thing as
-> mptcp_setsockopt_first_sf_only() except for the returned code in case of
-> error.
+On 30/09/2022 00:54, Mat Martineau wrote:
+> On Tue, 27 Sep 2022, Paolo Abeni wrote:
 > 
-> Ignoring the error is needed to mimic how TCP_DEFER_ACCEPT is handled
-> when used with "plain" TCP sockets.
+>> On Tue, 2022-09-27 at 10:07 +0200, Matthieu Baerts wrote:
+>>> Hi Mat, Paolo,
+>>>
+>>> On 27/09/2022 02:10, Mat Martineau wrote:
+>>>>
+>>>>     - Features for net-next:
+>>>>
+>>>>         - [ef4a93571133] mptcp: propagate fastclose error (Paolo Abeni)
+>>>>         - [885cab8b5203] mptcp: use fastclose on more edge scenarios
+>>>> (Paolo Abeni)
+>>>>         - [13c82c8b0d9f] selftests: mptcp: update and extend fastclose
+>>>> test-cases (Paolo Abeni):
+>>>>             - can wait a bit, Paolo would like to have a look at the
+>>>> modification on packetdrill side
+>>>>
+>>>>
+>>>> The net-next patches are slightly more complicated:
+>>>>
+>>>>  * They were updated with a squash-to patch today
+>>>>  * Need to wait until fastopen patches are merged
+>>>
+>>> We should at least wait for the fastopen patches to be applied I
+>>> suppose.
+>>>
+>>>>  * There is a minor conflict with the -net patches (just diff context)
+>>>>    in "mptcp: use fastclose on more edge scenarios".
+>>>>
+>>>>
+>>>> Regarding the conflict, I could wait until Friday for a likely
+>>>> net/net-next sync.
+>>>>
+>>>> Another option is to modify the patch slightly by moving
+>>>> mptcp_check_readable() before __mptcp_check_send_data_fin(), it doesn't
+>>>> make the diff any larger and avoids the -net conflict. What do you
+>>>> think?
+>>>
+>>> We can also add a note in the commit and explain how to fix this
+>>> conflict. I think the function is at the right place but it can also be
+>>> moved if it eases stuff.
+>>
+>>
+>> I think there is no rush for that patches. If the net patches will land
+>> upstream soon, they will be likely merged by EoW. If there will be
+>> another RC, we can rebase the net-next and send out still for 6.1,
+>> othewise the fastclose patches can wait IMHO a few more weeks.
+>>
 > 
-> The specific function for TCP_DEFER_ACCEPT can be replaced by the new
-> mptcp_setsockopt_first_sf_only() helper and errors can be ignored to
-> stay compatible with TCP. A bit of cleanup.
+> Thanks Paolo.
+> 
+> With the net and net-next patches for MPTCP just merged today, and the
+> backlog in netdev patchwork, I'll wait on the fastclose changes:
+> 
+> ee1e43f10dc5 mptcp: update misleading comments.
+> d1c02fee7732 selftests: mptcp: update and extend fastclose test-cases
+> 61fc1bc2edeb mptcp: use fastclose on more edge scenarios
+> 20af637811c9 mptcp: propagate fastclose error
 
-Thank you both for your review!
+Just in case you still see an opportunity to have this in the next 6.1,
+that would be great to have it.
+I say that because it is looking like a fix -- we were hesitating
+between net and net-next -- and it seems needed for some use-cases to
+mimic TCP + also it is only affecting MPTCP :)
 
-I just applied this patch in our tree (feat. for net-next) without
-Paolo's Suggested-by tag.
-
-New patches for t/upstream:
-- db52578cbc69: mptcp: sockopt: use new helper for TCP_DEFER_ACCEPT
-- Results: 6ae98b87e288..a34025ee429c (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20220930T081708
+But if it is too late, I understand :)
 
 Cheers,
 Matt
