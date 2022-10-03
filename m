@@ -1,248 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D422D7C
-	for <mptcp@lists.linux.dev>; Mon,  3 Oct 2022 16:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1664812808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=klvF6tdSrNLo0N3+kmd6HZq42Pej2R/B3dl29D737g8=;
-	b=PMx26aeM7rzVg4EjEfF4XBz86vhL4YbbbLTm6ygFK/ukHug38i77m+xkmbhE2uJJV7U/b8
-	UHidQTtNjf3vt3Z7yMtagOQbpMioUTfadiU/+taUVJ6Sd/dXpBEaJD2ceaH8a0QynH6nXM
-	xTXTEr9cFE9km6FSSNVttVOutVLKo38=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-616-8bslZWyrNb6wXWAeRChyww-1; Mon, 03 Oct 2022 12:00:04 -0400
-X-MC-Unique: 8bslZWyrNb6wXWAeRChyww-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7D9123826A47;
-	Mon,  3 Oct 2022 16:00:04 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.54])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CE0E7492CA4;
-	Mon,  3 Oct 2022 16:00:03 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Subject: [PATCH mptcp-next] mptcp: factor out mptcp_connect()
-Date: Mon,  3 Oct 2022 17:59:21 +0200
-Message-Id: <ddbb4cae497ea3df00bb82b238fdef63b8924fad.1664812609.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E8D17E9
+	for <mptcp@lists.linux.dev>; Mon,  3 Oct 2022 16:51:55 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1664815908; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=Opax6JQ2JW1fibIloZzbRv8RHFQRPq1u+w86Ro+nVVEsLDYGr1E3CnX7i+h0NpDU+Qb5LvUP/goaTWgyfkRY9ygyO6LPhUf7rcn7royeY/vyqRNTlR8KEFInNsqn2tYn9p2hOsRYIYrbtd65Gt+KvwHl6LcP9DfJIODEc7uQv6c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1664815908; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=VWxPfUtAm6Ms+4Lm94SOSuXtixFTx+XDQ85vpwXUDEQ=; 
+	b=e9TezrDddkkVZiYdSJaRHDOPe8UmsX8qM4gH/fo+FO+3aenbHfOedY5hqb6EJ4eEDYYm7dseOjYeY0yN3yVamr+VAIAGKzfX7KdSLxFJJg2pCw9jhMwv0oFfsheNMsxPwrkFhQMoZaNxQz2v2VAd09WUVVM+UlITW1t3lyigsno=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=shytyi.net;
+	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
+	dmarc=pass header.from=<dmytro@shytyi.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1664815908;
+	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=VWxPfUtAm6Ms+4Lm94SOSuXtixFTx+XDQ85vpwXUDEQ=;
+	b=ejnrL9PH+9VAJn36m7N+3tn6ypveHeE5mdidtgLr/VhQSuKce+IUIwdePC3J6+jn
+	6/ApTAB6F4G9MxYxLlOW5RPP7U+XxGAkq8Rc6+Br/phjH6HRmcmkpSlbRLXJbRLcCu/
+	QkQ7sfSEoLOBjInIfxEc6euaF5Tns5cizJgYzFEo=
+Received: from [10.8.0.6] (vps-940813d4.vps.ovh.net [198.244.188.50]) by mx.zoho.eu
+	with SMTPS id 1664815904401689.2060673037407; Mon, 3 Oct 2022 18:51:44 +0200 (CEST)
+Message-ID: <880ac00c-e38a-0676-6139-3c60a84b19ca@shytyi.net>
+Date: Mon, 3 Oct 2022 18:51:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH mptcp-next] mptcp: factor out mptcp_connect()
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <ddbb4cae497ea3df00bb82b238fdef63b8924fad.1664812609.git.pabeni@redhat.com>
+From: Dmytro Shytyi <dmytro@shytyi.net>
+In-Reply-To: <ddbb4cae497ea3df00bb82b238fdef63b8924fad.1664812609.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-The current MPTCP connect implementation duplicates a bit of inet
-code and does not use nor provide a struct proto->connect callback,
-which in turn will not fit the upcoming fastopen implementation.
+Thank you, Paolo!
 
-Refactor such implementation to use the common helper, moving the
-MPTCP-specific bits into mptcp_connect(). Additionally, avoid an
-indirect call to the subflow connect callback.
 
-Note that the fastopen call-path invokes mptcp_connect() while already
-holding the subflow socket lock. Explicitly keep track of such path
-via a new MPTCP-level flag and handle the locking accordingly.
+I will rebase Fast Open Mechanism patches, after these patches will be 
+merged to the tree.
 
-Additionally, track the connect flags in a new msk field to allow
-propagating them to the subflow inet_stream_connect call.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 128 +++++++++++++++++++++----------------------
- net/mptcp/protocol.h |   4 +-
- 2 files changed, 65 insertions(+), 67 deletions(-)
+Best,
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8feb684408f7..6245248d0182 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1689,7 +1689,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 
- 		lock_sock(ssk);
- 
-+		msk->connect_flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
-+		msk->is_sendmsg = 1;
- 		ret = tcp_sendmsg_fastopen(ssk, msg, &copied_syn, len, NULL);
-+		msk->is_sendmsg = 0;
- 		copied += copied_syn;
- 		if (ret == -EINPROGRESS && copied_syn > 0) {
- 			/* reflect the new state on the MPTCP socket */
-@@ -3506,10 +3509,65 @@ static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
- 	return put_user(answ, (int __user *)arg);
- }
- 
-+static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
-+					 struct mptcp_subflow_context *subflow)
-+{
-+	subflow->request_mptcp = 0;
-+	__mptcp_do_fallback(msk);
-+}
-+
-+static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct socket *ssock;
-+	int err = -EINVAL;
-+
-+	ssock = __mptcp_nmpc_socket(msk);
-+	if (!ssock)
-+		return -EINVAL;
-+
-+	mptcp_token_destroy(msk);
-+	inet_sk_state_store(sk, TCP_SYN_SENT);
-+	subflow = mptcp_subflow_ctx(ssock->sk);
-+#ifdef CONFIG_TCP_MD5SIG
-+	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-+	 * TCP option space.
-+	 */
-+	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
-+		mptcp_subflow_early_fallback(msk, subflow);
-+#endif
-+	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk)) {
-+		MPTCP_INC_STATS(sock_net(ssock->sk), MPTCP_MIB_TOKENFALLBACKINIT);
-+		mptcp_subflow_early_fallback(msk, subflow);
-+	}
-+	if (likely(!__mptcp_check_fallback(msk)))
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVE);
-+
-+	/* if reaching here via the fastopen/sendmsg path, the caller already
-+	 * acquired the subflow socket lock, too.
-+	 */
-+	if (msk->is_sendmsg)
-+		err = __inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags, 1);
-+	else
-+		err = inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags);
-+	inet_sk(sk)->defer_connect = inet_sk(ssock->sk)->defer_connect;
-+
-+	/* on successful connect, the msk state will be moved to established by
-+	 * subflow_finish_connect()
-+	 */
-+	if (!err || err == -EINPROGRESS)
-+		mptcp_copy_inaddrs(sk, ssock->sk);
-+	else
-+		inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
-+	return err;
-+}
-+
- static struct proto mptcp_prot = {
- 	.name		= "MPTCP",
- 	.owner		= THIS_MODULE,
- 	.init		= mptcp_init_sock,
-+	.connect	= mptcp_connect,
- 	.disconnect	= mptcp_disconnect,
- 	.close		= mptcp_close,
- 	.accept		= mptcp_accept,
-@@ -3561,78 +3619,16 @@ static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
- 	return err;
- }
- 
--static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
--					 struct mptcp_subflow_context *subflow)
--{
--	subflow->request_mptcp = 0;
--	__mptcp_do_fallback(msk);
--}
--
- static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- 				int addr_len, int flags)
- {
--	struct mptcp_sock *msk = mptcp_sk(sock->sk);
--	struct mptcp_subflow_context *subflow;
--	struct socket *ssock;
--	int err = -EINVAL;
-+	int ret;
- 
- 	lock_sock(sock->sk);
--	if (uaddr) {
--		if (addr_len < sizeof(uaddr->sa_family))
--			goto unlock;
--
--		if (uaddr->sa_family == AF_UNSPEC) {
--			err = mptcp_disconnect(sock->sk, flags);
--			sock->state = err ? SS_DISCONNECTING : SS_UNCONNECTED;
--			goto unlock;
--		}
--	}
--
--	if (sock->state != SS_UNCONNECTED && msk->subflow) {
--		/* pending connection or invalid state, let existing subflow
--		 * cope with that
--		 */
--		ssock = msk->subflow;
--		goto do_connect;
--	}
--
--	ssock = __mptcp_nmpc_socket(msk);
--	if (!ssock)
--		goto unlock;
--
--	mptcp_token_destroy(msk);
--	inet_sk_state_store(sock->sk, TCP_SYN_SENT);
--	subflow = mptcp_subflow_ctx(ssock->sk);
--#ifdef CONFIG_TCP_MD5SIG
--	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
--	 * TCP option space.
--	 */
--	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
--		mptcp_subflow_early_fallback(msk, subflow);
--#endif
--	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk)) {
--		MPTCP_INC_STATS(sock_net(ssock->sk), MPTCP_MIB_TOKENFALLBACKINIT);
--		mptcp_subflow_early_fallback(msk, subflow);
--	}
--	if (likely(!__mptcp_check_fallback(msk)))
--		MPTCP_INC_STATS(sock_net(sock->sk), MPTCP_MIB_MPCAPABLEACTIVE);
--
--do_connect:
--	err = ssock->ops->connect(ssock, uaddr, addr_len, flags);
--	inet_sk(sock->sk)->defer_connect = inet_sk(ssock->sk)->defer_connect;
--	sock->state = ssock->state;
--
--	/* on successful connect, the msk state will be moved to established by
--	 * subflow_finish_connect()
--	 */
--	if (!err || err == -EINPROGRESS)
--		mptcp_copy_inaddrs(sock->sk, ssock->sk);
--	else
--		inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
--
--unlock:
-+	mptcp_sk(sock->sk)->connect_flags = flags;
-+	ret = __inet_stream_connect(sock, uaddr, addr_len, flags, 0);
- 	release_sock(sock->sk);
--	return err;
-+	return ret;
- }
- 
- static int mptcp_listen(struct socket *sock, int backlog)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 93c535440a5c..18f866b1afda 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -285,7 +285,9 @@ struct mptcp_sock {
- 	u8		mpc_endpoint_id;
- 	u8		recvmsg_inq:1,
- 			cork:1,
--			nodelay:1;
-+			nodelay:1,
-+			is_sendmsg:1;
-+	int		connect_flags;
- 	struct work_struct work;
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
--- 
-2.37.3
+Dmytro.
 
+On 10/3/2022 5:59 PM, Paolo Abeni wrote:
+> not fit the upcoming fastopen implementation.
+>
+> Refactor such implementation to use the common helper, moving the
+> MPTCP-specific bits into mptcp_connect(). Additionally, avoid an
+> indirect call to the subflow connect callback.
+>
+> Note that the fastopen call-path invokes mptcp_connect() while already
+> holding the subflow socket lock. Explicitly keep track of such path
+> via a new MPTCP-level flag and handle the locking accordingly.
