@@ -1,207 +1,206 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C8C375
-	for <mptcp@lists.linux.dev>; Wed,  5 Oct 2022 00:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664930030; x=1696466030;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=EP40TIxfCdK6EWasNHWVWsZEE8ZiilPQNLBOdYuyTFE=;
-  b=iSsAXtdv8QZFrPuzniIU/1iTvkCSo0YRtzCnFpIBiTSTtre4+mdoB+5o
-   WEHh45016E75XO0uSDYWhYttoM1t0UcyA7t7be6EsAXWZ31y9URY5jVJv
-   N5Xh7wAve1weDbDAjmSTtQQrXY+y7eZJ/Z6I7x5eg9+rc9J0OVT5/MwGa
-   TdEOKefoCZjoxuxMjbbCJI15zTyCrqijfc5G1OR2RlmdR0sNOeBfpFUrD
-   lO4PZ8idDtB0lN1ZpCnFFDCSm/OgMoe7nbPrBoNmnndmg8vPQj/cxjna+
-   l9fCfe4JhlTeCDh18XAgSRXvW0Wa5RiYBs1zApN9ofEylxKJlke+XdAlO
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="389350954"
-X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
-   d="scan'208";a="389350954"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 17:33:49 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="799334200"
-X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
-   d="scan'208";a="799334200"
-Received: from jessicat-mobl.amr.corp.intel.com ([10.209.12.163])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 17:33:49 -0700
-Date: Tue, 4 Oct 2022 17:33:49 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v4 05/11] mptcp: simplify push_pending
-In-Reply-To: <b0c832c5f1b3dfaf20a7ade32968c78eaf228482.1664720538.git.geliang.tang@suse.com>
-Message-ID: <171d9a6f-9628-4989-677c-9a6ac38a5880@linux.intel.com>
-References: <cover.1664720538.git.geliang.tang@suse.com> <b0c832c5f1b3dfaf20a7ade32968c78eaf228482.1664720538.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A938C64C
+	for <mptcp@lists.linux.dev>; Thu,  6 Oct 2022 05:20:44 +0000 (UTC)
+Received: by mail-lf1-f46.google.com with SMTP id f37so1065310lfv.8
+        for <mptcp@lists.linux.dev>; Wed, 05 Oct 2022 22:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=8KVS99KgIXMHophLAOqt+btFaRDFkE5w9tJA60L1/Aw=;
+        b=D3gMQ7NYmrFArebHM2XMCrd68eUpzIdnqnd8/Dj0c8FMR7XC/5x+qtZJ//g3KH5Vsn
+         q3dmT5oQzKv4PS1ncPWqCICcc6vZi3rZryjFZtlhHyt/dkkkjd3rS6H5xj4bMQvGkzDH
+         j4OFf2yOrZlHi5/i6XYjqKZBH+EHvExzmDogux8q8uhk7M40aBNyhNk+EKHdlFAQRsU1
+         ayHJaQ+sC2TkowYQ9Odx70wMG4rRFtP6+fPenDKrEaW0Ua2GSiONSOvpjGkgTBU5wRJJ
+         daUTA7oryjpZXq5bHrJu1NH5g9wvTCpQM1m0KPmr0kSU0Aji/79Q3ESNUrNmN+bk4ffV
+         pvuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=8KVS99KgIXMHophLAOqt+btFaRDFkE5w9tJA60L1/Aw=;
+        b=oT22tb0yN3Tgn7YG1Wp/XbfnDaH1aUZ3Jb/Glq0uxIdcoLoLhI82hnhkhbw9VRk65i
+         IP+Xz3J7Wdv9C6ZezP8HJbKwyi/DN3ZbEAiqcrhMJHzrF+YlUth3zAcdeynKYMLbrtx1
+         E6Fqn7zU89l1rpYi5UqFpu3YfBh/a3uUJfT+hZB8Ag9XyaOG2+zDaP5PI1N0l9ByZT1L
+         w4uiH0F2G7q2cQKYWRdLlc47xpD2mIY4E0nANfErJNBTa64yCJ5jNx9/QLeRHdwYvKFo
+         bk80Vkih0lMXrnl8xw6cQ8j8OrzkxJIwfPR8LAzP4ri05xC1BHJyKGP7UFO0H9q83pkr
+         +dkA==
+X-Gm-Message-State: ACrzQf0RBFHM9OAhzTDVYDHmZzFrh8fKisidoUg3BLADRX6DlcHKC3lc
+	kptk4creDck2QoD5nNWgBbqqPo2qXP5WSQBpVPQ=
+X-Google-Smtp-Source: AMsMyM43gMVMs1K1ceozu36GUxnwgvqaQ2tXZJlH4R1YAJ/k9a40tXblPQSZkOvT3RcpZS19TBgOXEvyozaSHJcpLRA=
+X-Received: by 2002:a05:6512:2295:b0:49e:f3d0:4cf8 with SMTP id
+ f21-20020a056512229500b0049ef3d04cf8mr1264498lfu.616.1665033642590; Wed, 05
+ Oct 2022 22:20:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20220930024607.128202-1-imagedong@tencent.com>
+ <20220930024607.128202-3-imagedong@tencent.com> <6ebd4a84-3be5-17fa-6e03-3ca69740512b@linux.intel.com>
+In-Reply-To: <6ebd4a84-3be5-17fa-6e03-3ca69740512b@linux.intel.com>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Thu, 6 Oct 2022 13:20:31 +0800
+Message-ID: <CADxym3bn4O-Mj345_S4s+b+AzmVeeVvX9j2h3x3eajSxOtbpMQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v3 2/3] mptcp: add statistics for mptcp socket
+ in use
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 2 Oct 2022, Geliang Tang wrote:
-
-> This patch moves the duplicate code from __mptcp_push_pending() and
-> __mptcp_subflow_push_pending() into a new helper function, named
-> __subflow_push_pending(). And simplify __mptcp_push_pending() by
-> invoking this helper.
+On Sat, Oct 1, 2022 at 7:25 AM Mat Martineau
+<mathew.j.martineau@linux.intel.com> wrote:
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c | 90 +++++++++++++++++++++++---------------------
-> 1 file changed, 48 insertions(+), 42 deletions(-)
+> On Fri, 30 Sep 2022, menglong8.dong@gmail.com wrote:
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 296b7135e9cf..66c97ac06a4e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1480,12 +1480,6 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> 	return ssk;
-> }
+> > From: Menglong Dong <imagedong@tencent.com>
+> >
+> > Do the statistics of mptcp socket in use with sock_prot_inuse_add().
+> > Therefore, we can get the count of used mptcp socket from
+> > /proc/net/protocols:
+> >
+> > & cat /proc/net/protocols
+> > protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
+> > MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+> > MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+> >
+> > Signed-off-by: Menglong Dong <imagedong@tencent.com>
+> > ---
+> > v2:
+> > - decrease the statistics for listening mptcp socket inuse with
+> >  mptcp_listen_inuse_dec()
+> > - add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+> >  called on the msk. For fallback case, we need to decrease the
+> >  statistics only once, and mptcp_destroy_common() can be called
+> >  more than once.
+> > ---
+> > net/mptcp/protocol.c | 22 +++++++++++++++++++++-
+> > net/mptcp/protocol.h |  1 +
+> > net/mptcp/subflow.c  |  3 +++
+> > 3 files changed, 25 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index d817fdb2f6ef..e6d358027b7b 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -2913,6 +2913,16 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+> >       inet_sk(msk)->inet_rcv_saddr = inet_sk(ssk)->inet_rcv_saddr;
+> > }
+> >
+> > +static void mptcp_listen_inuse_dec(struct sock *sk)
+> > +{
+> > +     struct mptcp_sock *msk = mptcp_sk(sk);
+> > +     struct socket *ssock;
+> > +
+> > +     ssock = __mptcp_nmpc_socket(msk);
+> > +     if (ssock && inet_sk_state_load(ssock->sk) == TCP_LISTEN)
+> > +             sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
+> > +}
+> > +
+> > static int mptcp_disconnect(struct sock *sk, int flags)
+> > {
+> >       struct mptcp_sock *msk = mptcp_sk(sk);
+> > @@ -2925,6 +2935,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+> >       if (mptcp_sk(sk)->token)
+> >               mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
+> >
+> > +     mptcp_listen_inuse_dec(sk);
+> >       /* msk->subflow is still intact, the following will not free the first
+> >        * subflow
+> >        */
+> > @@ -3096,6 +3107,11 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
+> >       skb_rbtree_purge(&msk->out_of_order_queue);
+> >       mptcp_data_unlock(sk);
+> >
+> > +     if ((__mptcp_check_fallback(msk) &&
+> > +          !test_and_set_bit(MPTCP_DESTROIED, &msk->flags)) ||
+> > +         !sk_unhashed(sk))
+> > +             sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
+> > +
+> >       /* move all the rx fwd alloc into the sk_mem_reclaim_final in
+> >        * inet_sock_destruct() will dispose it
+> >        */
+> > @@ -3110,6 +3126,7 @@ static void mptcp_destroy(struct sock *sk)
+> > {
+> >       struct mptcp_sock *msk = mptcp_sk(sk);
+> >
+> > +     mptcp_listen_inuse_dec(sk);
+> >       /* clears msk->subflow, allowing the following to close
+> >        * even the initial subflow
+> >        */
+> > @@ -3542,6 +3559,7 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+> >       mptcp_token_destroy(msk);
+> >       inet_sk_state_store(sock->sk, TCP_SYN_SENT);
+> >       subflow = mptcp_subflow_ctx(ssock->sk);
+> > +     sock_prot_inuse_add(sock_net(sock->sk), sock->sk->sk_prot, 1);
+> > #ifdef CONFIG_TCP_MD5SIG
+> >       /* no MPTCP if MD5SIG is enabled on this socket or we may run out of
+> >        * TCP option space.
+> > @@ -3596,8 +3614,10 @@ static int mptcp_listen(struct socket *sock, int backlog)
+> >
+> >       err = ssock->ops->listen(ssock, backlog);
+> >       inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
+> > -     if (!err)
+> > +     if (!err) {
+> > +             sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+> >               mptcp_copy_inaddrs(sk, ssock->sk);
+> > +     }
+> >
+> > unlock:
+> >       release_sock(sk);
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index c0b5b4628f65..675de024de10 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -116,6 +116,7 @@
+> > #define MPTCP_WORK_EOF                3
+> > #define MPTCP_FALLBACK_DONE   4
+> > #define MPTCP_WORK_CLOSE_SUBFLOW 5
 >
-> -static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
-> -{
-> -	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
-> -	release_sock(ssk);
-> -}
-> -
-> static void mptcp_update_post_push(struct mptcp_sock *msk,
-> 				   struct mptcp_data_frag *dfrag,
-> 				   u32 sent)
-> @@ -1517,6 +1511,52 @@ void mptcp_check_and_set_pending(struct sock *sk)
-> 		mptcp_sk(sk)->push_pending |= BIT(MPTCP_PUSH_PENDING);
-> }
+> Hi Menglong -
 >
-> +static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
-> +				  struct mptcp_sendmsg_info *info)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_data_frag *dfrag;
-> +	int len, copied = 0;
-> +
-> +	while ((dfrag = mptcp_send_head(sk))) {
-> +		info->sent = dfrag->already_sent;
-> +		info->limit = dfrag->data_len;
-> +		len = dfrag->data_len - dfrag->already_sent;
-> +		while (len > 0) {
-> +			int ret = 0;
-> +
-> +			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, info);
-> +			if (ret <= 0) {
-> +				if (ret == -EAGAIN)
-> +					continue;
-
-In the older code, the scheduler got called again in the -EAGAIN case. 
-With this refactored code, this could get in a very tight loop if 
-mptcp_sendmsg_frag() returns. I think it's necessary to cleanly finish 
-this loop iteration and let the scheduler run again in this -EAGAIN case.
-
-> +				goto out;
-> +			}
-> +
-> +			info->sent += ret;
-> +			copied += ret;
-> +			len -= ret;
-> +
-> +			mptcp_update_post_push(msk, dfrag, ret);
-> +		}
-> +		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> +
-> +		if (msk->snd_burst <= 0 ||
-> +		    !sk_stream_memory_free(ssk) ||
-> +		    !mptcp_subflow_active(mptcp_subflow_ctx(ssk))) {
-> +			goto out;
-> +		}
-> +		mptcp_set_timeout(sk);
-> +	}
-> +
-> +out:
-> +	if (copied) {
-> +		tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle,
-> +			 info->size_goal);
-> +	}
-> +
-> +	return copied;
-> +}
-> +
-> void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> @@ -1524,48 +1564,14 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 				.flags = flags,
-> 	};
-> 	bool do_check_data_fin = false;
-> -	struct mptcp_data_frag *dfrag;
-> 	struct sock *ssk;
-> -	int len;
+> Overall, v3 is looking good. Thanks for adding the tests!
 >
-> 	while (mptcp_send_head(sk) && (ssk = mptcp_subflow_get_send(msk))) {
-> 		lock_sock(ssk);
-> -
-> -		while ((dfrag = mptcp_send_head(sk))) {
-> -			info.sent = dfrag->already_sent;
-> -			info.limit = dfrag->data_len;
-> -			len = dfrag->data_len - dfrag->already_sent;
-> -			while (len > 0) {
-> -				int ret = 0;
-> -
-> -				ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
-> -				if (ret <= 0) {
-> -					if (ret == -EAGAIN)
-> -						continue;
-> -					mptcp_push_release(ssk, &info);
-> -					goto out;
-> -				}
-> -
-> -				do_check_data_fin = true;
-> -				info.sent += ret;
-> -				len -= ret;
-> -
-> -				mptcp_update_post_push(msk, dfrag, ret);
-> -			}
-> -			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> -
-> -			if (msk->snd_burst <= 0 ||
-> -			    !sk_stream_memory_free(ssk) ||
-> -			    !mptcp_subflow_active(mptcp_subflow_ctx(ssk))) {
-> -				goto out;
-> -			}
-> -			mptcp_set_timeout(sk);
-> -		}
-> -
-> -		mptcp_push_release(ssk, &info);
-> +		do_check_data_fin = __subflow_push_pending(sk, ssk, &info);
-
-do_check_data_fin is a bool, but __subflow_push_pending() returns an 
-int (the number of bytes copied). Looking at the other patches, the int 
-value is needed. I suggest assigning the int return value to an int 
-variable:
-
- 		copied = __subflow_push_pending(sk, ssk, &info);
-
-and updating the 'if' statement below...
-
-> +		release_sock(ssk);
-> 	}
+> One thing that was requested in v2 review was to fix this spelling:
 >
-> -out:
-> 	/* ensure the rtx timer is running */
-> 	if (!mptcp_timer_pending(sk))
-> 		mptcp_reset_timer(sk);
->	if (do_check_data_fin)
-> 		__mptcp_check_send_data_fin(sk);
+> > +#define MPTCP_DESTROIED              6
+>
+> to be MPTCP_DESTROYED. Can you fix that and post v4?
+>
 
-...like this:
+OMG! I forgot this part :) Yeah, I'll fix it in v4.
 
- 	if (copied > 0)
-  		__mptcp_check_send_data_fin(sk);
+Thanks!
+Menglong Dong
 
-
-Thanks,
-
---
-Mat Martineau
-Intel
+>
+> - Mat
+>
+> >
+> > /* MPTCP socket release cb flags */
+> > #define MPTCP_PUSH_PENDING    1
+> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > index 07dd23d0fe04..da6cfa73a3bd 100644
+> > --- a/net/mptcp/subflow.c
+> > +++ b/net/mptcp/subflow.c
+> > @@ -747,6 +747,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+> >                       mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
+> >                       mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
+> >                       mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
+> > +                     sock_prot_inuse_add(sock_net(new_msk),
+> > +                                         new_msk->sk_prot,
+> > +                                         1);
+> >                       ctx->conn = new_msk;
+> >                       new_msk = NULL;
+> >
+> > --
+> > 2.37.2
+> >
+> >
+>
+> --
+> Mat Martineau
+> Intel
