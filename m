@@ -1,162 +1,112 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60084.outbound.protection.outlook.com [40.107.6.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D74E2F56
-	for <mptcp@lists.linux.dev>; Sun,  9 Oct 2022 15:44:54 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SU6q5cykqVnPFQGnKNA/SZY2yOhmHSqqM8LD0B7VACc1GQ+/Gd368gMtV6kfQZf7MlzTBKiupQwQBx39gOK/VoU4iZ8xtQkiQMTCS7VxpQSM1Ytu6LH3emWbR8kfIZrtnc4QOqo5hfZ4qHf6lFeYz1Y0nao1MEZmY+8Vp7IqdiaV6HDL+T5e0E7TW6/nqE8jsuUv+ZhlLSXaB9lOPmfMQ1QWmi4u9dPmCI4sxURhVzJCBarCFfQfFjluqZz9PEw/i7x5sun9BNHaZHXCD7jpFA3JrI9cod8LoQSMxIhhfq7EtjtgLbFdiL7cNpHabYU8hmQKkaS7gAGwMiWkbWWKLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LEgzPTNJ458NGlYnEHbf56MC4RpnXSIAD1JzeiYi+h0=;
- b=FNF1WevT9QuolAYQm9ShZ6lAhhImMTyUVOO81GmvtbLnHaGeDuTM/ob2yNexI9JGaiZeoxpMeAVbjRua2hmcyUko6ZTZ6iwDC5L7diK0uP+7OtteaK0wzB/5R9ol4yUBV/6shV9W4Vj3ljdmOP5rMu2XAH8hHJtq5WJPw6gSd6vPlyTybPp5vL2cNqclLhPqrUCWVvoA82JaH9SCJYLQtJ6HGxDerRRp3O7wSuE1EWQgUlI8HKv/jTkbNboVlZJM4zE8lAiEzOwsIgpqY5nP8SPXdl4kOp+C2hpGzR/Slq6BIdfV3uBbpXvGWt8vV7dy40uxgZu4KN5VXfYlzoVjdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LEgzPTNJ458NGlYnEHbf56MC4RpnXSIAD1JzeiYi+h0=;
- b=RF7C2ByucaykZmYJ8ZmpTgqVGC5DpUKS/OX5/+nE9Z4ch8ebmQzcT9pfmNG56DIaTNY2MmAe9i8m0aeWu/S4qIk8dgnsh99IJn0ZktBDRmwUQxFhEj1UK0fUxa1Kex2kACOO+6oF5FXaPT+8uv7Xk4Y1H2UWGp7BzZUBtPjYQiJ91spZGKNe47tc7hPSNkcl1QH2S4+REaBE43xOeFSftsen2jUfvCLH3pxInMw7SV1Teqy0WTbBCPzqq6bk1ityweZkX/fs3UK76T3WMm3XEgtDngujGNTaIZ6pJtCl6mHcbaLa3pkeadgOm9TfSSjAfGM5p+P5+YMasQkxfiHA2A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DU2PR04MB8853.eurprd04.prod.outlook.com (2603:10a6:10:2e0::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15; Sun, 9 Oct
- 2022 15:44:50 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::c5ff:965f:506f:6770]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::c5ff:965f:506f:6770%4]) with mapi id 15.20.5709.015; Sun, 9 Oct 2022
- 15:44:50 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf_rr scheduler"
-Date: Sun,  9 Oct 2022 23:45:31 +0800
-Message-Id: <20221009154531.11543-1-geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0046.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::18) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8D91876
+	for <mptcp@lists.linux.dev>; Sun,  9 Oct 2022 17:24:33 +0000 (UTC)
+Received: by mail-pg1-f181.google.com with SMTP id r18so8574316pgr.12
+        for <mptcp@lists.linux.dev>; Sun, 09 Oct 2022 10:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QE3H59KzGOOkkxT2hH48nHZfTo6ZKYb/gHrkhkw2a90=;
+        b=PvoBi7fm6gX0pwcQzin/EN7vpO1L5OEEGzxbE1lI9C6LwfvHTGeH+D3TuJnuW1/3x8
+         VsGW/3L8TQrB+8z68tjjz98fulfd4w69emrN+AcU8brhAjIumEVICiak9Wo+MmoXS0jD
+         DTgOMHrPLY2xboSWMANlvq1YZv2jQnKFZBGC/pVjD60RbYxEH3YECIA+kM0EhcPZ1GR0
+         kqY0t5VKdzfoX0Kc94eLIemnsMCtXaKDUylbLzYM46WGwAlPmeZAC1/3sQfEoXOvExjU
+         fTcuiAfu84pwoxSPFtpr7yRGD1ofTCxzDJAcIJ7MHPx8GLxwFq6WJYh4ToCjUGzWDvSK
+         pe+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QE3H59KzGOOkkxT2hH48nHZfTo6ZKYb/gHrkhkw2a90=;
+        b=Uwro2gAczruzzX7HyzsqsImT4UWwlCnaSTdh2U7IJHDggmYdkBHjtTRArjvIrP1OdP
+         gXKH5NhYF4A8wbXhuWW+5Outvf/Cd0Ez02Wo/Nkdjre5hnSWv9R43dGe/c2YeWJu063o
+         qtg9wBOZfNvboNrIuM4nub2+esrweuYk/U/jfCrjZGTiTjQRaOboW/d4K4pNIqH6lsCV
+         l2DQtf2K48/I/G/1odmsMnFIg9I1QuxJx326Y/joUvXp/sAwnUtTOaTjnDfGqrtXvE/O
+         hNUJ0/IhA4LpGtyeeb3ds67pNSEIimxnSOfC51GUtgPfJtJcsRkeDh8Lbae9YCVQXHBW
+         sUhg==
+X-Gm-Message-State: ACrzQf1sGT/9boRUePT0zcfa14SqHMeeiW7bDuS+hewg6tUGmeo/7V+M
+	2LjXCYVWNqunhDgFJ5H3JtrRlu/2yA==
+X-Google-Smtp-Source: AMsMyM5bUji/YBOaSkNCOVEpNuAlUeZrZZocVQ/1c/bjey/WiNb36CWCNOwvmqTyJLwcdZyrZ1o/0A==
+X-Received: by 2002:a63:8bc8:0:b0:461:ff70:7546 with SMTP id j191-20020a638bc8000000b00461ff707546mr2293266pge.70.1665336272949;
+        Sun, 09 Oct 2022 10:24:32 -0700 (PDT)
+Received: from [127.0.0.1] ([40.83.196.69])
+        by smtp.gmail.com with ESMTPSA id q13-20020a63504d000000b0042fe1914e26sm4909377pgl.37.2022.10.09.10.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Oct 2022 10:24:32 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221009154531.11543-1-geliang.tang@suse.com>
+References: <20221009154531.11543-1-geliang.tang@suse.com>
+Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests/bpf=3A_Add_?=
+ =?UTF-8?Q?bpf=5Frr_scheduler=22=3A_Tests_Results?=
+Message-ID: <e5c4cb5d-6d6c-d297-cf87-1317dd621d47@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 09 Oct 2022 17:24:31 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DU2PR04MB8853:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7826d3d-0986-4042-afcd-08daaa0d332f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qX+122YrLqSB1ejHkjqfWFqxeU1KEHo//QGEnAellbnRD86muxw46RAp50rLXfcB0ZfHL77WPTyFJvepkf6DCCJQzcaEIigyMVeM/aqmN6Zg2r+CASaaGp4p6p0LMyzfv8tpmVIaVFFBl+Kg5yFt06HP2Yl+RCz0SwIqhPhi1+LS2T+x1BCV50izZFl5zJndOV/xTXQolm89ySDBNNe8EO51JlbLCnO54XeyzGeeDHUJBhoEXAGWrUZ4IRID6oTU3mLsbrNm2ASeUKNfmklosaQxmtFbo+Y1XciULIHrE5zzbVaNddbE1Wi3higO0SzBmZq9GO0VR47dxV8/l32jOM+pjS4SQtLLlsDv8wCqtrIwyqP+Y+NX+KzaSKnx7qrxaA9UfzliZBNaaqVz/AbkRIAqCw5RifJb3MoDzVgbTyXnF1J+vkKPlEv37ZS2UkyodIgC709JKlCtBaPVDXDbsuPCwhMHxahCwzcMxjCfdjjvWMxTe65yO8mutAfAnxDd1esoqPKLbqOlP8QFXQJczC+IZKU0Ba9gQFCNKCcyponl4l5sRDNGrefXmB62r1dozNmAqTqVB+37c5anvp2xifES9VGcBWQPdFp2WWeFEWp3b++zFq+80IqyIyOdr2Z3Avvsv30Awkk4dXR9TRriMR7meRRNLLyw+tYEM0T/rIObNhFR6UwzQMdgySzuN7F1MJy1AjTdCiirjxUKnvD5PCwKDXtPW6MKqwkpF0SQstYG3P8Ky/qVXjEYgnmhAq8a
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(39850400004)(376002)(396003)(136003)(346002)(451199015)(36756003)(6506007)(2616005)(41300700001)(26005)(4326008)(66946007)(6486002)(6512007)(66476007)(478600001)(8676002)(66556008)(38100700002)(86362001)(1076003)(186003)(8936002)(44832011)(83380400001)(107886003)(6916009)(6666004)(316002)(5660300002)(2906002)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?chxfMWTKZULaSl3BaUq4iyvGwWdy1h1T3EEly0jbU4G/wZ4RTT3cPG/FfKw9?=
- =?us-ascii?Q?Hfr/WFKNYZeRzE/dInVE8rlKJ50qyzSjQQ7KxUtM8sl5pWgy0MXE5wm6Sygh?=
- =?us-ascii?Q?9C6yXxPZrenBg4Qc/FLxmyPzo0YJpzo6v0mwEeIdHrkOabqtTYgHdxBSY1WN?=
- =?us-ascii?Q?OqTMOmxBsqN6HDx8+c9yXm5xnjKfzyhkMglENCFUC8tYB48CrwdmE+S/4FUM?=
- =?us-ascii?Q?JH3c/tmUsBbWsWfT3EdtbuiLe0u8fGIHHgnL4d5xENJLiwGsEkSkJ+j2u0PS?=
- =?us-ascii?Q?Hy6MDE3mubMWsTfYppJZCa9ErirfvcUd14iFo8pHElOhY6/vA91+yZ7JX7Y8?=
- =?us-ascii?Q?LStMt8YHNcjEzzCWJcImhob2Y0uiam5hq+FvRCYsraydUk8SHnay+ChLZNl9?=
- =?us-ascii?Q?x7EjBsxbWTz0ZCgCc4CaZY968h5OS3YtuLglzPengbrP1JWcMbM7fF6JOr4+?=
- =?us-ascii?Q?qJDofwSAmDoHvj5a165P5Gfb2rWrL4QsOP/OJjTYNvhCFVMu4aHhjuA69EO6?=
- =?us-ascii?Q?ga0i3QWwxV6YK7hInQ2/BgGpDZlV/5MhcYqQoQS+DWSPX7UnatNRc2LizGYw?=
- =?us-ascii?Q?uon+U61GeUy2NZFidU4sjbT8SpNgMpP5RzQbJlds55ZzMB6/bW4F/Muym5VX?=
- =?us-ascii?Q?kYjDPI68P+ojNKekmrWN3XYIr8o936pTY0Zt+9OxCkFPzMKtuz4tBrpE9DhD?=
- =?us-ascii?Q?6pImM9Z9Z5cO7BRKIh1o/nngZoSIZ2/C4a4P5CPDEYhsN3hN/5mRmGR1jTb4?=
- =?us-ascii?Q?8Tu3u9P00kmDgiZMwlnDUK9214t+zQhM/+fcU5fTq7hhAQ6LuD/pIGYncM9b?=
- =?us-ascii?Q?jpWkYkaIwijL3b+lP8hKmV2TF0OCISyRa9wcynHBqR+ZTj0Qn0RDxS3gFPG/?=
- =?us-ascii?Q?t/ZVq1HcK8w3KgNQHKdAax3mgbKH2nKpAdWK9Pp3yOPWGQ5Av1awm4FzJ8xr?=
- =?us-ascii?Q?WCkr19dVS73OeE8ejbMT/P4ilLGG27a1ZdQIOGU/j7dVJs1TdfNDhSI1Ue96?=
- =?us-ascii?Q?ljE7yvimKi9ELETtvlicczcOkVEh9jZC0vO9G238sMy0OZfsc6ZGZy6ChE+w?=
- =?us-ascii?Q?dPHxy4ed9DJW6nb9PmqzxGFMoXiYeIWV6uwbT2xS/HBtOmQI1m40psM4lpSM?=
- =?us-ascii?Q?5AGgS5lCvmAhSf4tfMlENCSO+xkglbhLGU6qgMN0MN6eGwKzgIX1RMvWsXrM?=
- =?us-ascii?Q?UPhF17Qpx5DvG9rF03c+4MmZ+nH8lqipk8fB4tc0lPubHfds0o3eemlE8nEE?=
- =?us-ascii?Q?0DWLcwoVog3uxrYEdjk56RIVgfM4kZZdG1SdnkUiLc7tXyQivPKWgtW9x7xC?=
- =?us-ascii?Q?HKi39F1f9xWifnx0CgXudVoQ/bJfVJaXo5h+WTDi+sxqaMzawFUyZY58oGTb?=
- =?us-ascii?Q?qZO4i1RA2Ryab9QDOL79HLVuzaIC4Rd/sZd8IhUWYsb80ty7C5k/xc+ZzLz5?=
- =?us-ascii?Q?YlGsQlGwv/icywT0Uw1D8EmtnP3BKQzA2zlO6Dn9gnmFNZZTIgsOtKvuNAMQ?=
- =?us-ascii?Q?FbCaZ5qC55S3hb3jHpdmn2mcLcwO6/MSSSDacWeXnMuVt2eXUrshka1eZTV8?=
- =?us-ascii?Q?XcXbKmu0H+OcyxHdNu0fVqfm6w3creQpMk6YItNxFhKg/JDK1cny2WN1XSQy?=
- =?us-ascii?Q?jg=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7826d3d-0986-4042-afcd-08daaa0d332f
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2022 15:44:50.0156
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ge3F6vlZ6pJgU7+jWEX9WCr6oaLAyU3ZiPJVrPbZ3elqCq0Nknzn9+y4PEXnr2ufI7LWX9BuoTOJOnAon+cTMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8853
 
-Use last_snd instead of msk->last_snd, then last_snd of mptcp_sock could
-be removed.
+Hi Geliang,
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- tools/testing/selftests/bpf/bpf_tcp_helpers.h    | 1 -
- tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c | 7 +++++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-index c7d4a9a69cfc..c8792e6f125a 100644
---- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-+++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-@@ -257,7 +257,6 @@ struct mptcp_sched_ops {
- struct mptcp_sock {
- 	struct inet_connection_sock	sk;
- 
--	struct sock	*last_snd;
- 	__u32		token;
- 	struct sock	*first;
- 	char		ca_name[TCP_CA_NAME_MAX];
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
-index ce4e98f83e43..65d4f7f41bc2 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
-@@ -5,10 +5,12 @@
- #include "bpf_tcp_helpers.h"
- 
- char _license[] SEC("license") = "GPL";
-+struct sock *last_snd = NULL;
- 
- SEC("struct_ops/mptcp_sched_rr_init")
- void BPF_PROG(mptcp_sched_rr_init, const struct mptcp_sock *msk)
- {
-+	last_snd = msk->first;
- }
- 
- SEC("struct_ops/mptcp_sched_rr_release")
-@@ -22,10 +24,10 @@ void BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
- 	int nr = 0;
- 
- 	for (int i = 0; i < MPTCP_SUBFLOWS_MAX; i++) {
--		if (!msk->last_snd || !data->contexts[i])
-+		if (!last_snd || !data->contexts[i])
- 			break;
- 
--		if (data->contexts[i]->tcp_sock == msk->last_snd) {
-+		if (data->contexts[i]->tcp_sock == last_snd) {
- 			if (i + 1 == MPTCP_SUBFLOWS_MAX || !data->contexts[i + 1])
- 				break;
- 
-@@ -35,6 +37,7 @@ void BPF_STRUCT_OPS(bpf_rr_get_subflow, const struct mptcp_sock *msk,
- 	}
- 
- 	mptcp_subflow_set_scheduled(data->contexts[nr], true);
-+	last_snd = data->contexts[nr]->tcp_sock;
- }
- 
- SEC(".struct_ops")
--- 
-2.35.3
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6426348104187904
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6426348104187904/summary/summary.txt
+
+- KVM Validation: debug:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5018973220634624
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5018973220634624/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/76b10c873f3d
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
