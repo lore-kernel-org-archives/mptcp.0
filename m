@@ -1,83 +1,162 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950615CBD
-	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 22:52:44 +0000 (UTC)
-Received: by mail-pg1-f175.google.com with SMTP id e129so11349554pgc.9
-        for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 15:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GmR1cIJOZOHZar4pGoGIR7U7OTNdtmQ6COLYtmbG93s=;
-        b=ZB1yD6LpsPz4uP1k4TqT25WagoOdjLyA6UtdKeS4OzqeQZ66aaqWAalUxh0ieJGCVs
-         g5BoHnDDv60Ur7CxKbasPOO76syfTDbRpBiBCA84L3yJt/ODFycHP1S51pLXqFF42E/A
-         90a34z4kEACgszkznZ5T1iuNSB5sRScWnz+ubumFNLpoi7xCii45BXa6YXRvV3rUM1QG
-         MzM5B7HNfs9si3Erlkr8Cc0B3CLzW3etbCn5n0aOPVWbzBzZaAYHliTjcSt1Hze31hma
-         zahJbhzxZ0HfyTXIchyiVCv7ObaX6NMU1clTKlf/8MP2nv7TPV/0zr5EJAZxOETG9iYb
-         633g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GmR1cIJOZOHZar4pGoGIR7U7OTNdtmQ6COLYtmbG93s=;
-        b=4k0RjBosMdmeG9AtOsq+Bswlue3T7+fkSYGSIW99SwhnukgJENPC6qMkQwwWo31UCL
-         8cC+EzbFMgi7G+y/uvMB8t0z78b1BB6tMnwpRzorx/9xD+ARu5bfAVFy9IO39c1b4BtH
-         Eq+6SkfYV7NDtPmMT5O1eqOjMiA3aeWpIfnF0Fw9hgb0w9puudIx2rDR7hWveZV7LZFH
-         Vhzt0Nhb7cpIeRykNICu0/oumyzaRSP+1q5unOFESAI52BVgfzcww/Jqa972pLYKE5NR
-         JCSwwasFZ1/Ub3SYat/zRs0W4+EhUzTNiN3jA9CRPgEpnqDvRVO1mQaD68w/G9u9Ktpj
-         xpJQ==
-X-Gm-Message-State: ACrzQf1tXGpglJrcWkaYpHZnBAvAgoQc8PpeDXqmsqsmVr0H5qkNyPtc
-	RsC1JfAHAQeEtuBqzhNrsg==
-X-Google-Smtp-Source: AMsMyM7s6VqnhvxPg2tR2fXrMDqA41TWAwv7HFvUdPHmZvN//MAZGBeZNieHfu2A+zb6ZoJRmGA8Fw==
-X-Received: by 2002:a05:6a00:181c:b0:563:2c6c:2a7a with SMTP id y28-20020a056a00181c00b005632c6c2a7amr10935716pfa.28.1665442363792;
-        Mon, 10 Oct 2022 15:52:43 -0700 (PDT)
-Received: from [127.0.0.1] ([20.66.95.188])
-        by smtp.gmail.com with ESMTPSA id w19-20020a631613000000b004597e92f99dsm6595131pgl.66.2022.10.10.15.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 15:52:43 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Dmytro Shytyi <dmytro@shytyi.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221010221809.1792-6-dmytro@shytyi.net>
-References: <20221010221809.1792-6-dmytro@shytyi.net>
-Subject: Re: selftests: mptcp: mptfo Initiator/Listener: Build Failure
-Message-ID: <a8979393-f702-f8d2-0744-43c56f5faff3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Oct 2022 22:52:42 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1C06101
+	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 23:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665445092; x=1696981092;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=t7SXemiaiJvQ1leG9i7qBdNXDj7+3isFTm8IxCurlMg=;
+  b=cP+Uct2HmNBHHNw2IKlcw2bKZNwq4LLGxKsAHUJvSoz/Dpw8dL8jLJnK
+   0a1XgxZ51hVwDimATPdBQY7hcWrjCwXmjNcuVc1DFCGow+Ayq82qUsp4c
+   WVAxR7mxwv17/RH8F/nItXa+yzGCvakOjkFEJ6D9w34iaD+SHQqkDs7NJ
+   3RnTk4T/UQRMj/kll4hpCsozlHeAr+6ialK1B0W+Cx33jCwicCJLR9BE6
+   Ys1CMBf45csCBZJey+nuLaFkhQImlPbXl4pIYSNJ8p51g1bBOJluIbsM/
+   p/8jzQ+/1SI5pHL4kUZGcpoFPxVfR+50Eza9Wa2TSW5y8vPq+ZqDMAZZk
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="303100189"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="303100189"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 16:38:12 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="955118712"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="955118712"
+Received: from pnle-mobl.amr.corp.intel.com ([10.212.235.19])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 16:38:11 -0700
+Date: Mon, 10 Oct 2022 16:38:11 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: set msk local address earlier
+In-Reply-To: <f5e8bfe9878d3948df9328870fc35daec6388e2b.1665431162.git.pabeni@redhat.com>
+Message-ID: <3978422b-52e0-8a1d-e424-541d6ab5c229@linux.intel.com>
+References: <f5e8bfe9878d3948df9328870fc35daec6388e2b.1665431162.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Dmytro,
+On Mon, 10 Oct 2022, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> The mptcp_pm_nl_get_local_id() code assumes that the msk local address
+> is available at that point. For passive sockets, we initialize such
+> address at accept() time.
+>
+> Depending on the running configuration and the user-space timing, a
+> passive MPJ subflow can join the msk socket before accept() completes.
+>
+> In such case, the PM assigns a wrong local id to the MPJ subflow
+> and later PM netlink operations will end-up touching the wrong/unexpected
+> subflow.
+>
+> All the above causes sporadic self-tests failures, especially when
+> the host is heavy loaded.
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/308
+> Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
+> Fixes: d045b9eb95a9 ("mptcp: introduce implicit endpoints")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-But sadly, our CI spotted some issues with it when trying to build it.
+This has a minor conflict in protocol.h when trying to apply to 
+export-net, but it's easy to resolve (mptcp_get_scheduler is in export 
+but not export-net).
 
-You can find more details there:
+I ran in to one failure in a test that wasn't mentioned in #308 the first 
+time I tried running "mptcp_join.sh -rp" but couldn't reproduce it:
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20221010221809.1792-6-dmytro@shytyi.net/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/3222787780
+010 flush addresses                      syn[fail] got 2 JOIN[s] syn expected 3
+  - synack[fail] got 2 JOIN[s] synack expected 3
+  - ack[fail] got 2 JOIN[s] ack expected 3
+                                          add[ ok ] - echo  [fail] got 2 ADD_ADDR echo[s] expected 3
+                                          rm [fail] got 2 RM_ADDR[s] expected 3
+  - rmsf  [fail] got 2 RM_SUBFLOW[s] expected in range [3:6]
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/444fcb2258d7
+but I don't think that's related? (Let me know if the MIB list is useful, 
+I saved that too)
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+Code changes look good to me, seems like it's worth trying in the 
+export-net branch so we can test it with the CI builds:
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+
+
+> ---
+> net/mptcp/protocol.c | 3 +--
+> net/mptcp/protocol.h | 1 +
+> net/mptcp/subflow.c  | 7 +++++++
+> 3 files changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1aa940928b4f..d34765db0700 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2951,7 +2951,7 @@ static void mptcp_close(struct sock *sk, long timeout)
+> 	sock_put(sk);
+> }
+>
+> -static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+> +void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+> {
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> 	const struct ipv6_pinfo *ssk6 = inet6_sk(ssk);
+> @@ -3702,7 +3702,6 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+> 		if (mptcp_is_fully_established(newsk))
+> 			mptcp_pm_fully_established(msk, msk->first, GFP_KERNEL);
+>
+> -		mptcp_copy_inaddrs(newsk, msk->first);
+> 		mptcp_rcv_space_init(msk, msk->first);
+> 		mptcp_propagate_sndbuf(newsk, msk->first);
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 18f866b1afda..2358a4083eb3 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -604,6 +604,7 @@ int mptcp_allow_join_id0(const struct net *net);
+> unsigned int mptcp_stale_loss_cnt(const struct net *net);
+> int mptcp_get_pm_type(const struct net *net);
+> const char *mptcp_get_scheduler(const struct net *net);
+> +void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk);
+> void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+> 				     struct mptcp_options_received *mp_opt);
+> bool __mptcp_retransmit_pending_data(struct sock *sk);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 07dd23d0fe04..05a2b054287a 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -723,6 +723,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+> 				goto dispose_child;
+> 			}
+>
+> +			if (new_msk)
+> +				mptcp_copy_inaddrs(new_msk, child);
+> 			subflow_drop_ctx(child);
+> 			goto out;
+> 		}
+> @@ -750,6 +752,11 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+> 			ctx->conn = new_msk;
+> 			new_msk = NULL;
+>
+> +			/* set msk addresse early to ensure mptcp_pm_get_local_id()
+> +			 * uses the correct data
+> +			 */
+> +			mptcp_copy_inaddrs(ctx->conn, child);
+> +
+> 			/* with OoO packets we can reach here without ingress
+> 			 * mpc option
+> 			 */
+> -- 
+> 2.37.3
+>
+>
+>
+
+--
+Mat Martineau
+Intel
