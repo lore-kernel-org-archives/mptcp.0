@@ -1,129 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C5E5C84
-	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 19:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1665431769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Qjg7faDUMCPmzL02FZ9pnPTjRD25oc41ift8y2p3gDA=;
-	b=VXjWtWa/GJAs5Nnpc7ZJl7LV/9vpv5U+hMVgo+ShDPOxnVaIoE5K4wGPmY3IkmKziRh1cZ
-	dWkGLqXr0V2kpvND8pU+b06g2L62k6hwFgoWR9nslAlfL5nDjYSHyVJ3fmIryZMSsV6oib
-	mzS16I1hWr4h3bBqRqZS17QqkK4qojc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-64-h0XAACyTORKAMC1zxtzgXg-1; Mon, 10 Oct 2022 15:56:08 -0400
-X-MC-Unique: h0XAACyTORKAMC1zxtzgXg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 895F21012460
-	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 19:56:08 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.63])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1A9A8112D164
-	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 19:56:07 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: set msk local address earlier
-Date: Mon, 10 Oct 2022 21:56:02 +0200
-Message-Id: <f5e8bfe9878d3948df9328870fc35daec6388e2b.1665431162.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DAF5CB0
+	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 21:36:47 +0000 (UTC)
+Received: by mail-qt1-f171.google.com with SMTP id z8so2724551qtv.5
+        for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 14:36:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yB7DvxJJKl3TybwR0usCqFvOrJO/LH8m4XxNNIUq/tY=;
+        b=oOG5Ny/cG2Mas5UPCqzyHoQx2/0aXZCBvYOTS2j8NaT3stu/HmhSxX2Ezd3KtbCsct
+         Ta9PJkmO1dOCsZ+fusoLlBS7w8KMzfIFNCRLPd1XDaQS+go30QpW856o60WnauNdTTiO
+         dSaoYESH7xHpChziiGokct5jX309LOwklsCOqRze7I3qotTEpcF78WonOZO439KtUTcL
+         kRcAeraNu2pRCzmjeOKK24APWnGcn7bf1nfa0R8hRQzYIGuHyqJIBEJ+IpTJWzg4n5Ck
+         EdzQoMyhgThAkb0Req3yvYrHL30Ms2QPNb7qlM12R0qegZr5/aU3/mmLn3SCA0ZiB9ly
+         FA+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yB7DvxJJKl3TybwR0usCqFvOrJO/LH8m4XxNNIUq/tY=;
+        b=XDunQzv0hqAsFe1SN0mUQ7JC5JEIMv7m2w15bZixzI8zYCG4J7Fx5eGDeYqrqhe4dZ
+         BTciOq8SysUuPeeEcjlFgNdVDkod2bDcwVdujWOKWHJxVrlAzlQrTUOJXsig9bIZk16c
+         EilQ0i7dukcud8sxl6YQ2tL/C8j4gtb502AfC/cJWfiUJr+Y3bB2uFJvRdAakW3jw9Fy
+         r0BQ9ItHsnSy2HifKLI1w/iI5bO2bFX7OCFV49LtLYXRK8RD9Mn+1D9eaNByoreyO33l
+         fwQkQnVdS1agmwpyepeGbz5D6vM0XGFGmYZ2Qc7xDo3sUb4NxmGi9xYTUriiCJTlu9KX
+         WQ+w==
+X-Gm-Message-State: ACrzQf3OlG/0cK45G5JkSWVRF0sFNLvjEI9ElD3o39V3y4lFwx7iun2v
+	ogIkrdDrrD+9oplS/40ChA==
+X-Google-Smtp-Source: AMsMyM5nnewiU8p9b8yFGaqVWxIsKh8MCvzYIKFhtt5VBHUSEQtWEkp8IQLH3SudUFTrrd+CNp6+gQ==
+X-Received: by 2002:ac8:7e84:0:b0:35b:a902:57c3 with SMTP id w4-20020ac87e84000000b0035ba90257c3mr16435360qtj.37.1665437806917;
+        Mon, 10 Oct 2022 14:36:46 -0700 (PDT)
+Received: from [127.0.0.1] ([20.172.193.171])
+        by smtp.gmail.com with ESMTPSA id g11-20020a05620a40cb00b006ce813bb306sm601554qko.125.2022.10.10.14.36.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Oct 2022 14:36:46 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <f5e8bfe9878d3948df9328870fc35daec6388e2b.1665431162.git.pabeni@redhat.com>
+References:
+ <f5e8bfe9878d3948df9328870fc35daec6388e2b.1665431162.git.pabeni@redhat.com>
+Subject: Re: mptcp: set msk local address earlier: Tests Results
+Message-ID: <ec1c0025-8b98-367e-9e64-a61e65274743@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 10 Oct 2022 21:36:45 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The mptcp_pm_nl_get_local_id() code assumes that the msk local address
-is available at that point. For passive sockets, we initialize such
-address at accept() time.
+Hi Paolo,
 
-Depending on the running configuration and the user-space timing, a
-passive MPJ subflow can join the msk socket before accept() completes.
+Thank you for your modifications, that's great!
 
-In such case, the PM assigns a wrong local id to the MPJ subflow
-and later PM netlink operations will end-up touching the wrong/unexpected
-subflow.
+Our CI did some validations and here is its report:
 
-All the above causes sporadic self-tests failures, especially when
-the host is heavy loaded.
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+packetdrill_add_addr selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6015508108541952
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6015508108541952/su=
+mmary/summary.txt
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/308
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-Fixes: d045b9eb95a9 ("mptcp: introduce implicit endpoints")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 3 +--
- net/mptcp/protocol.h | 1 +
- net/mptcp/subflow.c  | 7 +++++++
- 3 files changed, 9 insertions(+), 2 deletions(-)
+- KVM Validation: debug:
+  - Unstable: 2 failed test(s):=
+ packetdrill_add_addr selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5452558155120640
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5452558155120640/su=
+mmary/summary.txt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1aa940928b4f..d34765db0700 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2951,7 +2951,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	sock_put(sk);
- }
- 
--static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
-+void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
- {
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	const struct ipv6_pinfo *ssk6 = inet6_sk(ssk);
-@@ -3702,7 +3702,6 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 		if (mptcp_is_fully_established(newsk))
- 			mptcp_pm_fully_established(msk, msk->first, GFP_KERNEL);
- 
--		mptcp_copy_inaddrs(newsk, msk->first);
- 		mptcp_rcv_space_init(msk, msk->first);
- 		mptcp_propagate_sndbuf(newsk, msk->first);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 18f866b1afda..2358a4083eb3 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -604,6 +604,7 @@ int mptcp_allow_join_id0(const struct net *net);
- unsigned int mptcp_stale_loss_cnt(const struct net *net);
- int mptcp_get_pm_type(const struct net *net);
- const char *mptcp_get_scheduler(const struct net *net);
-+void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 07dd23d0fe04..05a2b054287a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -723,6 +723,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 				goto dispose_child;
- 			}
- 
-+			if (new_msk)
-+				mptcp_copy_inaddrs(new_msk, child);
- 			subflow_drop_ctx(child);
- 			goto out;
- 		}
-@@ -750,6 +752,11 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			ctx->conn = new_msk;
- 			new_msk = NULL;
- 
-+			/* set msk addresse early to ensure mptcp_pm_get_local_id()
-+			 * uses the correct data
-+			 */
-+			mptcp_copy_inaddrs(ctx->conn, child);
-+
- 			/* with OoO packets we can reach here without ingress
- 			 * mpc option
- 			 */
--- 
-2.37.3
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/33d6013f6eae
 
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
