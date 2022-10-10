@@ -1,15 +1,15 @@
 Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE91D5CBB
-	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 22:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6105CBC
+	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 22:18:38 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; t=1665440308; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=b9ZIwlCyRlWueCJd3GdKnixePW3j0M5fjkkplD1CtU/70SFAcpBng9Su6nDyVWVrC+gdObF7r74cI7BOQTkdupttuq/eRZhY8TgQqxUGfAN5bRpLepauozcSdL8eMyjFRjSwpLAEQxQEHJ04ZS7S8vicYIaXhBEQzbSCrv0W9SM=
+	b=Vc6erHVIv5oQZJrth1fWiV74kkyPC5jc40i32EfclHI0L7w7EUTr5j8WVjL2Lb3g9tMw8BghtZ4+GrzwWVorP9RiUVd8o+eb9F6rQ5R+uTu8rcOW9rbbW3sJOyxwpusXXEZO/Vt0vCQP/Rb//UO5b7207g15tD7pZ1OSdzTgUVw=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
 	t=1665440308; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=cvQq9gdDu5XKGiQ44zR2uokoRkYA4OAqfh2u37svOLU=; 
-	b=J1+SROhkIdJff5TJP7Kx1kcH2mXhDXXsI35BKxdUij61WupwnmfdFzQSf2Zd5j+SfjyDbLPp/foe84HnsOpGkTSBKz7u23WCOhpaqga1EafHEtKrWJXwY5LTrpQAHsdmhXVaWSnwNqv2f8NrpVdZXfJ1yk/bE+UGfSjN2WCZTZY=
+	bh=pNu48RZme7ExKQiNWIIrnxNBbaEyThENQeRocKx8Nq8=; 
+	b=j0lCBro+XoCoDGQ8+/MBm2CirovFgQlh3IHA22sAW/xEvZ4trHGiEl+TJWhQDHddgFe1SjtZNrNMeFDTMpcsnpqIXpnbk33o4B4ClMgyQ7b0SKQrgVBsFMbau4wqvyyRaCKCafTGBMFt3FUPlZri0gg0fly4/ktGRCwD8yd5NZI=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=shytyi.net;
 	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
@@ -17,19 +17,18 @@ ARC-Authentication-Results: i=1; mx.zohomail.eu;
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1665440308;
 	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
 	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=cvQq9gdDu5XKGiQ44zR2uokoRkYA4OAqfh2u37svOLU=;
-	b=DXJsfMJ3V6SaYGXvA03iLRW97VwXekOgR+MbT78vDD4mphg3jE3keTCySB+e72V0
-	+C/AZ0/0HfQ3uTNPNQfMDN436fNU++ZEA0xoK3/5ojHEiXnJM7rQlE4ze87RrsfX6AW
-	PwgEAFpB4h0kv6SjQxxdphRad/JuEWF+o4To/6gY=
+	bh=pNu48RZme7ExKQiNWIIrnxNBbaEyThENQeRocKx8Nq8=;
+	b=WuhQC5iEpMrBbuarmfdOebAntouuqVIPJy7v/wDEa9+eKGZ0rQpfmAnrhhFzAOWi
+	ks9uN79MHYifrp5k09gGPqgKXCX+WbXE4HSGM88LIx3bhBdOqGD/q8L3Uz8xt0TUEif
+	+NZj3AIZqVo50cStHhNw06s8toh7OGFsBSiyAEfQ=
 Received: from localhost.localdomain (vps-940813d4.vps.ovh.net [198.244.188.50]) by mx.zoho.eu
-	with SMTPS id 1665440306478135.64254988044843; Tue, 11 Oct 2022 00:18:26 +0200 (CEST)
+	with SMTPS id 166544030751339.32648651547288; Tue, 11 Oct 2022 00:18:27 +0200 (CEST)
 From: Dmytro Shytyi <dmytro@shytyi.net>
 To: mptcp@lists.linux.dev
-Cc: Dmytro Shytyi <dmytro@shytyi.net>,
-	Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Message-ID: <20221010221809.1792-2-dmytro@shytyi.net>
-Subject: [RFC PATCH mptcp-next v14 1/5] mptcp: introduce MSG_FASTOPEN flag.
-Date: Mon, 10 Oct 2022 22:18:05 +0000
+Cc: Dmytro Shytyi <dmytro@shytyi.net>
+Message-ID: <20221010221809.1792-5-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v14 4/5] mptcp: add TCP_FASTOPEN sock option
+Date: Mon, 10 Oct 2022 22:18:08 +0000
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221010221809.1792-1-dmytro@shytyi.net>
 References: <20221010221809.1792-1-dmytro@shytyi.net>
@@ -43,42 +42,56 @@ Content-Transfer-Encoding: quoted-printable
 X-ZohoMailClient: External
 Content-Type: text/plain; charset=utf8
 
-In the following patches we will analyse the MSG_FASTOPEN flag
-in the mptcp_sendmsg() and invoke the MPTFO.
+We add the TCP_FASTOPEN socket option in this patch that is going to
+ be set by the listener side.
 
-Signed-of-by: Benjamin Hesmans <benjamin.hesmans@tessares.net>
 Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
 ---
- net/mptcp/protocol.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ net/mptcp/sockopt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1aa940928b4f..b06f9bbe0e0a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1673,17 +1673,14 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len)
- =09int ret =3D 0;
- =09long timeo;
-=20
--=09/* we don't support FASTOPEN yet */
--=09if (msg->msg_flags & MSG_FASTOPEN)
--=09=09return -EOPNOTSUPP;
--
- =09/* silently ignore everything else */
--=09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
-+=09msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_FASTOP=
-EN;
-=20
- =09lock_sock(sk);
-=20
- =09ssock =3D __mptcp_nmpc_socket(msk);
--=09if (unlikely(ssock && inet_sk(ssock->sk)->defer_connect)) {
-+=09if (unlikely(ssock && (inet_sk(ssock->sk)->defer_connect ||
-+=09=09=09       msg->msg_flags & MSG_FASTOPEN))) {
- =09=09struct sock *ssk =3D ssock->sk;
- =09=09int copied_syn =3D 0;
-=20
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index f85e9bbfe86f..7f6977295256 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -559,6 +559,7 @@ static bool mptcp_supported_sockopt(int level, int optn=
+ame)
+ =09=09case TCP_NOTSENT_LOWAT:
+ =09=09case TCP_TX_DELAY:
+ =09=09case TCP_INQ:
++=09=09case TCP_FASTOPEN:
+ =09=09case TCP_FASTOPEN_CONNECT:
+ =09=09case TCP_FASTOPEN_NO_COOKIE:
+ =09=09=09return true;
+@@ -569,7 +570,7 @@ static bool mptcp_supported_sockopt(int level, int optn=
+ame)
+ =09=09/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
+ =09=09 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
+ =09=09 */
+-=09=09/* TCP_FASTOPEN_KEY, TCP_FASTOPEN are not supported because
++=09=09/* TCP_FASTOPEN_KEY is not supported because
+ =09=09 * fastopen for the listener side is currently unsupported
+ =09=09 */
+ =09}
+@@ -801,6 +802,7 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *=
+msk, int optname,
+ =09=09/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
+ =09=09mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen=
+);
+ =09=09return 0;
++=09case TCP_FASTOPEN:
+ =09case TCP_FASTOPEN_CONNECT:
+ =09case TCP_FASTOPEN_NO_COOKIE:
+ =09=09return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
+@@ -1166,6 +1168,7 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock=
+ *msk, int optname,
+ =09case TCP_INFO:
+ =09case TCP_CC_INFO:
+ =09case TCP_DEFER_ACCEPT:
++=09case TCP_FASTOPEN:
+ =09case TCP_FASTOPEN_CONNECT:
+ =09case TCP_FASTOPEN_NO_COOKIE:
+ =09=09return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
 --=20
 2.34.1
 
