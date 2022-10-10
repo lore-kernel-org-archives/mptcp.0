@@ -1,114 +1,145 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DAF5CB0
-	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 21:36:47 +0000 (UTC)
-Received: by mail-qt1-f171.google.com with SMTP id z8so2724551qtv.5
-        for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 14:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yB7DvxJJKl3TybwR0usCqFvOrJO/LH8m4XxNNIUq/tY=;
-        b=oOG5Ny/cG2Mas5UPCqzyHoQx2/0aXZCBvYOTS2j8NaT3stu/HmhSxX2Ezd3KtbCsct
-         Ta9PJkmO1dOCsZ+fusoLlBS7w8KMzfIFNCRLPd1XDaQS+go30QpW856o60WnauNdTTiO
-         dSaoYESH7xHpChziiGokct5jX309LOwklsCOqRze7I3qotTEpcF78WonOZO439KtUTcL
-         kRcAeraNu2pRCzmjeOKK24APWnGcn7bf1nfa0R8hRQzYIGuHyqJIBEJ+IpTJWzg4n5Ck
-         EdzQoMyhgThAkb0Req3yvYrHL30Ms2QPNb7qlM12R0qegZr5/aU3/mmLn3SCA0ZiB9ly
-         FA+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yB7DvxJJKl3TybwR0usCqFvOrJO/LH8m4XxNNIUq/tY=;
-        b=XDunQzv0hqAsFe1SN0mUQ7JC5JEIMv7m2w15bZixzI8zYCG4J7Fx5eGDeYqrqhe4dZ
-         BTciOq8SysUuPeeEcjlFgNdVDkod2bDcwVdujWOKWHJxVrlAzlQrTUOJXsig9bIZk16c
-         EilQ0i7dukcud8sxl6YQ2tL/C8j4gtb502AfC/cJWfiUJr+Y3bB2uFJvRdAakW3jw9Fy
-         r0BQ9ItHsnSy2HifKLI1w/iI5bO2bFX7OCFV49LtLYXRK8RD9Mn+1D9eaNByoreyO33l
-         fwQkQnVdS1agmwpyepeGbz5D6vM0XGFGmYZ2Qc7xDo3sUb4NxmGi9xYTUriiCJTlu9KX
-         WQ+w==
-X-Gm-Message-State: ACrzQf3OlG/0cK45G5JkSWVRF0sFNLvjEI9ElD3o39V3y4lFwx7iun2v
-	ogIkrdDrrD+9oplS/40ChA==
-X-Google-Smtp-Source: AMsMyM5nnewiU8p9b8yFGaqVWxIsKh8MCvzYIKFhtt5VBHUSEQtWEkp8IQLH3SudUFTrrd+CNp6+gQ==
-X-Received: by 2002:ac8:7e84:0:b0:35b:a902:57c3 with SMTP id w4-20020ac87e84000000b0035ba90257c3mr16435360qtj.37.1665437806917;
-        Mon, 10 Oct 2022 14:36:46 -0700 (PDT)
-Received: from [127.0.0.1] ([20.172.193.171])
-        by smtp.gmail.com with ESMTPSA id g11-20020a05620a40cb00b006ce813bb306sm601554qko.125.2022.10.10.14.36.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 14:36:46 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <f5e8bfe9878d3948df9328870fc35daec6388e2b.1665431162.git.pabeni@redhat.com>
-References:
- <f5e8bfe9878d3948df9328870fc35daec6388e2b.1665431162.git.pabeni@redhat.com>
-Subject: Re: mptcp: set msk local address earlier: Tests Results
-Message-ID: <ec1c0025-8b98-367e-9e64-a61e65274743@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Oct 2022 21:36:45 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8A25CB0
+	for <mptcp@lists.linux.dev>; Mon, 10 Oct 2022 22:18:36 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1665440308; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=kn0f4d8etNJDGbFQ464clUsqmCTnlKm/R1PKQUSvs2HezwrXswbrS8rYVwksk+JLnZbs6Pu+Jdf2sqxFQ4oks5gOpI52cjfrGiJrjrXEpYVPgcSiFtTeyt0FoiYhgCDdK5BD0pFf1bARo+UGooNIV3X3JDW0cyz/xowoTbVkvxk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1665440308; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=Xv76KnkqTZVuO5RScDnsFJ5wzxmYYgBVV1S/QyukRwM=; 
+	b=XUKGkKTmEg8NnpAKVGrV59uIRTUAnG/h6xhv/39xiQve+wJpkAHL2ZEjdhk8B+rELxrOT58+CJFovqPJi9D3a6KTullae4mBoYei71KbeMGtTO9ax1n3ogJ1SWy8TmpVtiZnrUxjnG6f/ybp64joKN0L+/tMF3sWvPtFjFtaDLo=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=shytyi.net;
+	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
+	dmarc=pass header.from=<dmytro@shytyi.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1665440308;
+	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
+	h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=Xv76KnkqTZVuO5RScDnsFJ5wzxmYYgBVV1S/QyukRwM=;
+	b=DvXfbwSe2BB+v92uG+4QaCMm+6qD2ZGeLmmM5uve1FjUlIpFVfgOwCuzntuvd+FC
+	6uMX2Amq2+h/fiPpABuH6+QEB0fGjL9iuLC5IpDVIAAsz6slgrALc1+Vp4V/oLvwtx1
+	ksjzc+pq+qS6Y/wv9rzM+fOTKVFE9uGJkzjv3qT8=
+Received: from localhost.localdomain (vps-940813d4.vps.ovh.net [198.244.188.50]) by mx.zoho.eu
+	with SMTPS id 1665440306886890.3400640647226; Tue, 11 Oct 2022 00:18:26 +0200 (CEST)
+From: Dmytro Shytyi <dmytro@shytyi.net>
+To: mptcp@lists.linux.dev
+Cc: Dmytro Shytyi <dmytro@shytyi.net>
+Message-ID: <20221010221809.1792-3-dmytro@shytyi.net>
+Subject: [RFC PATCH mptcp-next v14 2/5] mptcp: implement delayed seq generation for passive fastopen
+Date: Mon, 10 Oct 2022 22:18:06 +0000
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221010221809.1792-1-dmytro@shytyi.net>
+References: <20221010221809.1792-1-dmytro@shytyi.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 
-Hi Paolo,
+With fastopen in place the first subflow socket is created
+before the MPC handshake completes, and we need to properly initialize
+the sequence numbers at MPC ACK reception.
 
-Thank you for your modifications, that's great!
+Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
+---
+ net/mptcp/Makefile   |  2 +-
+ net/mptcp/fastopen.c | 19 +++++++++++++++++++
+ net/mptcp/options.c  |  5 +++++
+ net/mptcp/protocol.h |  6 ++++++
+ 4 files changed, 31 insertions(+), 1 deletion(-)
+ create mode 100644 net/mptcp/fastopen.c
 
-Our CI did some validations and here is its report:
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index 8a7f68efa35f..c42ad8609876 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -2,7 +2,7 @@
+ obj-$(CONFIG_MPTCP) +=3D mptcp.o
+=20
+ mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o d=
+iag.o \
+-=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o
++=09   mib.o pm_netlink.o sockopt.o pm_userspace.o sched.o fastopen.o
+=20
+ obj-$(CONFIG_SYN_COOKIES) +=3D syncookies.o
+ obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+new file mode 100644
+index 000000000000..d6fb45e6be4f
+--- /dev/null
++++ b/net/mptcp/fastopen.c
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0
++ * MPTCP Fast Open Mechanism. Copyright (c) 2021-2022, Dmytro SHYTYI
++ */
++
++#include "protocol.h"
++
++void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_su=
+bflow_context *subflow,
++=09=09=09=09   struct mptcp_options_received mp_opt)
++{
++=09u64 ack_seq;
++
++=09WRITE_ONCE(msk->can_ack, true);
++=09WRITE_ONCE(msk->remote_key, mp_opt.sndr_key);
++=09mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
++=09ack_seq++;
++=09WRITE_ONCE(msk->ack_seq, ack_seq);
++=09pr_debug("ack_seq=3D%llu sndr_key=3D%llu", msk->ack_seq, mp_opt.sndr_ke=
+y);
++=09atomic64_set(&msk->rcv_wnd_sent, ack_seq);
++}
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 30d289044e71..0b6c4535750c 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1208,6 +1208,11 @@ bool mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb)
+ =09=09=09mpext->dsn64 =3D 1;
+ =09=09=09mpext->mpc_map =3D 1;
+ =09=09=09mpext->data_fin =3D 0;
++
++=09=09=09if (msk->is_mptfo) {
++=09=09=09=09mptcp_gen_msk_ackseq_fastopen(msk, subflow, mp_opt);
++=09=09=09=09mpext->data_seq =3D READ_ONCE(msk->ack_seq);
++=09=09=09}
+ =09=09} else {
+ =09=09=09mpext->data_seq =3D mp_opt.data_seq;
+ =09=09=09mpext->subflow_seq =3D mp_opt.subflow_seq;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 18f866b1afda..41276788626b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -282,6 +282,7 @@ struct mptcp_sock {
+ =09bool=09=09use_64bit_ack; /* Set when we received a 64-bit DSN */
+ =09bool=09=09csum_enabled;
+ =09bool=09=09allow_infinite_fallback;
++=09bool=09=09is_mptfo;
+ =09u8=09=09mpc_endpoint_id;
+ =09u8=09=09recvmsg_inq:1,
+ =09=09=09cork:1,
+@@ -840,6 +841,11 @@ void mptcp_event_addr_announced(const struct sock *ssk=
+, const struct mptcp_addr_
+ void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
+ bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
+=20
++// Fast Open Mechanism functions begin
++void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_su=
+bflow_context *subflow,
++=09=09=09=09   struct mptcp_options_received mp_opt);
++// Fast Open Mechanism functions end
++
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
+ =09return READ_ONCE(msk->pm.addr_signal) &
+--=20
+2.34.1
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-packetdrill_add_addr selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6015508108541952
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6015508108541952/su=
-mmary/summary.txt
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s):=
- packetdrill_add_addr selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5452558155120640
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5452558155120640/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/33d6013f6eae
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
