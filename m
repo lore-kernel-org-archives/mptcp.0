@@ -1,110 +1,97 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F17815AC
-	for <mptcp@lists.linux.dev>; Tue, 11 Oct 2022 00:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C02D15AC
+	for <mptcp@lists.linux.dev>; Tue, 11 Oct 2022 01:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665449707; x=1696985707;
+  t=1665450070; x=1696986070;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=O/vUjaZa6P/YkPiq8E5i+2L09Uh8q7YClsTXR7Xov6U=;
-  b=DbuVrFDfx4y8xjpXAjA/ZMb6gaYxpKJmyB6q1MplBTDphUizTg9w9l6n
-   +E/lCDN1ZoZslfxljEp+J/sKcqPpfWWgofUr8rgRHb1MvdMbs8b25SiYV
-   XmUomeMgNfdaMUkIx8jgidzB63XwzyN9yQqpgaB8rDGSZhR5bsTu5cdJe
-   80jVFmY++hEjtOyiEvDzSSUdpV8UlXCUm8Co9vi6ZJDNtVJHfUKLiMBPC
-   FXkyls2WE3cLqKht7bCYxpOH8v7OiwzgexYfz3gHWFK+6vj23JtOXAexx
-   YL2zhEtI8Nj6yiW65ESTh2JcfDdB2nnmUv2FQVgM8Y8N5vMeb5UgxgNxO
+  bh=eRIugIPe/Pom2/1oB/3LQVg/wdhIgDnH22uh4U4+mPE=;
+  b=SaX6R2lqpl8B1ECp9JlFDem1D1ic3iOTm+2G5a72ssTmXtPgIM0+8KJ7
+   ICFI6y8ZrC1KPvnMdZRm+fq3PMDDqeATJC31wJzbTTxJ68AOXXnpa/wRN
+   GVn2rhz0pyEAqnBKTOL4g7y9HklH7UK+WuqfT01Nw8uC5O68wpAeme2IO
+   x7QvEV5P/vgXDisIuTVU7RjxD2m32z4ltJOoGj6dBvG0UkhpNELCJbpTu
+   CEgOTTeNfDpWgfS4ElWRJlEyygYVmZ13+h8/gGDur+WcnxNRKDHnBz4Vy
+   7eE4pIhVPlCIo4PSDpdbbiKZU9ewUdT0bRjVc5O9C1clCp8JYHvy111U9
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="330845745"
+X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="303112213"
 X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
-   d="scan'208";a="330845745"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 17:55:06 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="626167512"
+   d="scan'208";a="303112213"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 18:01:09 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="955137738"
 X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
-   d="scan'208";a="626167512"
+   d="scan'208";a="955137738"
 Received: from pnle-mobl.amr.corp.intel.com ([10.212.235.19])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 17:55:05 -0700
-Date: Mon, 10 Oct 2022 17:55:05 -0700 (PDT)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 18:01:09 -0700
+Date: Mon, 10 Oct 2022 18:01:08 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 2/2] Squash to "mptcp: multi subflows
- subflow_push_pending" v5
-In-Reply-To: <20221009083604.14151-2-geliang.tang@suse.com>
-Message-ID: <3d897fe0-15e5-2d94-15c0-d9cc3b0f22c8@linux.intel.com>
-References: <20221009083604.14151-1-geliang.tang@suse.com> <20221009083604.14151-2-geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v5 00/11] refactor push pending
+In-Reply-To: <cover.1665058388.git.geliang.tang@suse.com>
+Message-ID: <798c2189-afea-dd5a-c15c-20880aee8d3a@linux.intel.com>
+References: <cover.1665058388.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Sun, 9 Oct 2022, Geliang Tang wrote:
+On Thu, 6 Oct 2022, Geliang Tang wrote:
 
-> Update the first chunk of data pushing.
+> v5:
+> - address Mat's comments in v4.
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c | 18 +++++++-----------
-> 1 file changed, 7 insertions(+), 11 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ff2c1bbf4484..acc220bfb34e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1614,17 +1614,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk,
-> 		/* check for a different subflow usage only after
-> 		 * spooling the first chunk of data
-> 		 */
-> -		if (first) {
-> -			ret = __subflow_push_pending(sk, ssk, &info);
-> -			if (ret <= 0) {
-> -				if (ret == -EAGAIN)
-> -					goto again;
-> -				break;
-> -			}
-> -			first = false;
-> -			msk->last_snd = ssk;
-> -			continue;
-> -		}
-> +		if (first)
-> +			goto push;
 
-Is the only goal here to reduce duplicate code? It looks like the 
-functionality is equivalent, but I'd rather not use 'goto' to jump into 
-the middle of a loop.
+Hi Geliang -
 
-The 'Squash to "mptcp: simplify push_pending"' looks fine to include in 
-v6.
+I do think these changes are getting closer to being good to merge, 
+there's a remaining bisectability issue that I mention in patch 3 and the 
+feedback on the squash-to patches to address.
 
 - Mat
 
+> v4:
+> - update __mptcp_subflow_push_pending as Mat suggested.
+> - add more patches from "BPF redundant scheduler" series.
 >
-> 		if (mptcp_sched_get_send(msk))
-> 			goto out;
-> @@ -1643,6 +1634,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk,
-> 					continue;
-> 				}
+> v3:
+> - add a cleanup patch.
+> - remove msk->last_snd in mptcp_subflow_get_send().
+> - add the loop that calls the scheduler again in __mptcp_push_pending().
 >
-> +push:
-> 				ret = __subflow_push_pending(sk, ssk, &info);
-> 				if (ret <= 0) {
-> 					if (ret == -EAGAIN)
-> @@ -1650,6 +1642,10 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk,
-> 					goto out;
-> 				}
-> 				msk->last_snd = ssk;
-> +				if (first) {
-> +					first = false;
-> +					goto again;
-> +				}
-> 				mptcp_subflow_set_scheduled(subflow, false);
-> 			}
-> 		}
+> v2:
+> - add snd_burst check in dfrags loop as Mat suggested.
+>
+> Refactor __mptcp_push_pending() and __mptcp_subflow_push_pending() to
+> remove duplicate code and support redundant scheduler more easily in
+> __mptcp_subflow_push_pending().
+>
+> Geliang Tang (11):
+>  Squash to "mptcp: add get_subflow wrappers"
+>  mptcp: 'first' argument for subflow_push_pending
+>  mptcp: refactor push_pending logic
+>  mptcp: drop last_snd for burst scheduler
+>  mptcp: simplify push_pending
+>  mptcp: multi subflows push_pending
+>  mptcp: use msk instead of mptcp_sk
+>  mptcp: refactor subflow_push_pending logic
+>  mptcp: simplify subflow_push_pending
+>  mptcp: multi subflows subflow_push_pending
+>  mptcp: multi subflows retrans support
+>
+> net/mptcp/pm.c         |   9 +-
+> net/mptcp/pm_netlink.c |   3 -
+> net/mptcp/protocol.c   | 285 ++++++++++++++++++++++-------------------
+> net/mptcp/protocol.h   |   5 +-
+> net/mptcp/sched.c      |  61 +++++----
+> 5 files changed, 184 insertions(+), 179 deletions(-)
+>
 > -- 
 > 2.35.3
 >
