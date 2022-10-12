@@ -1,40 +1,40 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B62191
-	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 00:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328A5191
+	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 00:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665535913; x=1697071913;
+  t=1665535999; x=1697071999;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=q6NOFUY0aiHVdm79sWQvstRgOi8EIpvTMkPoQXNAttE=;
-  b=XGC+akvodO91AHt6t85jwdFwbp1JrlWnD/+QOPdQpjYBw/xoH5hRR2AX
-   tqzzHdgMYSUDLl3xEHLiTLHPY27pohcVHRrMcftJ9zbh+KmNjicceBYhb
-   z5jQ9hVXXLVngTKGijVl0RWcIs5dVXoeKUPGiG9k9amCzIVQD9sLo0rTl
-   zrq0/Q8NneM14YCvMSW2oxwqQmn/GO73y2qItgxUWFFebNSlXp+3lkmqe
-   ZnDD/nv20F2WUloT4bXRXyiCrs2zrAlbpocAm1DBfPI1fLOrTEdgTxsVF
-   SKIzQ36bTGsydxnW07M+2g8Irz8KJJWrN32nMtbtZQCA34QeMgUhP9Llb
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="368831029"
+  bh=ylRzlWEicl4kPIAwCETYHDgPjnGrxE6g/4y0N/EKUtc=;
+  b=eH4SmY25aqSSsVSoKIymfbU3fcgwP2d+Ur2tkyuoPbvsR4ZetPqXhWop
+   ni9ATuHuKCJoYIApLh5/JzK7k9TfNCe2efet5abAregiOEq9SwLr21/vh
+   d1498ZW7887+723GmNqEnq+Qzf2pLptc6Dh7NLFOGOpnfrtUGy+WS6XqW
+   ghvlHJCRcqZ94gjGxiVu045jQ4KWYLC24wEBZEd37VGlATUGMUfvhBQX5
+   lbgPj+4Lv94UiJWbjxqPBvI9KWu/g9MMVE2uBhtqjn9pXNQqEW8kcE2uX
+   w44gj9yv3sbzz4mFkdgh6qm39eJluIKqjhKgUTyeAUVK4AawbtRoIXOtB
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="390969525"
 X-IronPort-AV: E=Sophos;i="5.95,177,1661842800"; 
-   d="scan'208";a="368831029"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 17:51:52 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="769012338"
+   d="scan'208";a="390969525"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 17:53:18 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="955552809"
 X-IronPort-AV: E=Sophos;i="5.95,177,1661842800"; 
-   d="scan'208";a="769012338"
+   d="scan'208";a="955552809"
 Received: from sgzinzer-mobl.amr.corp.intel.com (HELO klee13-mobl1.amr.corp.intel.com) ([10.212.187.101])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 17:51:52 -0700
-Date: Tue, 11 Oct 2022 17:51:51 -0700 (PDT)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 17:53:18 -0700
+Date: Tue, 11 Oct 2022 17:53:18 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>
+To: menglong8.dong@gmail.com
 cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
-Subject: Re: [PATCH mptcp-next v5 2/3] mptcp: add statistics for mptcp socket
+Subject: Re: [PATCH mptcp-next v5 0/3] mptcp: add statistics for mptcp socket
  in use
-In-Reply-To: <CADxym3bWocKAT7A+76vr84GTiZgMdDR4suYYM9=cABwQZir36g@mail.gmail.com>
-Message-ID: <c50e018e-0ab1-5003-5a0f-1abc971d99e5@linux.intel.com>
-References: <20221007092922.13169-1-imagedong@tencent.com> <20221007092922.13169-3-imagedong@tencent.com> <3b348f3f-5eb6-83a6-c1c8-6ad095b3d278@linux.intel.com> <CADxym3bWocKAT7A+76vr84GTiZgMdDR4suYYM9=cABwQZir36g@mail.gmail.com>
+In-Reply-To: <20221007092922.13169-1-imagedong@tencent.com>
+Message-ID: <95cb50a4-e50c-3b02-a521-24c2d11341de@linux.intel.com>
+References: <20221007092922.13169-1-imagedong@tencent.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,176 +43,52 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 11 Oct 2022, Menglong Dong wrote:
+On Fri, 7 Oct 2022, menglong8.dong@gmail.com wrote:
 
-> On Tue, Oct 11, 2022 at 9:11 AM Mat Martineau
-> <mathew.j.martineau@linux.intel.com> wrote:
->>
->> On Fri, 7 Oct 2022, menglong8.dong@gmail.com wrote:
->>
->>> From: Menglong Dong <imagedong@tencent.com>
->>>
->>> Do the statistics of mptcp socket in use with sock_prot_inuse_add().
->>> Therefore, we can get the count of used mptcp socket from
->>> /proc/net/protocols:
->>>
->>> & cat /proc/net/protocols
->>> protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
->>> MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
->>> MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
->>>
->>> Signed-off-by: Menglong Dong <imagedong@tencent.com>
->>> ---
->>> v5:
->>> - rebase to solve merge conflict
->>>
->>> v4:
->>> - rename MPTCP_DESTROIED to MPTCP_DESTROYED
->>>
->>> v2:
->>> - decrease the statistics for listening mptcp socket inuse with
->>>  mptcp_listen_inuse_dec()
->>> - add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
->>>  called on the msk. For fallback case, we need to decrease the
->>>  statistics only once, and mptcp_destroy_common() can be called
->>>  more than once.
->>> ---
->>> net/mptcp/protocol.c | 22 +++++++++++++++++++++-
->>> net/mptcp/protocol.h |  1 +
->>> net/mptcp/subflow.c  |  3 +++
->>> 3 files changed, 25 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 04d92dc0941f..3d1570a9d3e9 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -2974,6 +2974,16 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
->>>       inet_sk(msk)->inet_rcv_saddr = inet_sk(ssk)->inet_rcv_saddr;
->>> }
->>>
->>> +static void mptcp_listen_inuse_dec(struct sock *sk)
->>> +{
->>> +     struct mptcp_sock *msk = mptcp_sk(sk);
->>> +     struct socket *ssock;
->>> +
->>> +     ssock = __mptcp_nmpc_socket(msk);
->>> +     if (ssock && inet_sk_state_load(ssock->sk) == TCP_LISTEN)
->>> +             sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
->>> +}
->>> +
->>> static int mptcp_disconnect(struct sock *sk, int flags)
->>> {
->>>       struct mptcp_sock *msk = mptcp_sk(sk);
->>> @@ -2986,6 +2996,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
->>>       if (mptcp_sk(sk)->token)
->>>               mptcp_event(MPTCP_EVENT_CLOSED, mptcp_sk(sk), NULL, GFP_KERNEL);
->>>
->>> +     mptcp_listen_inuse_dec(sk);
->>>       /* msk->subflow is still intact, the following will not free the first
->>>        * subflow
->>>        */
->>> @@ -3160,6 +3171,11 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
->>>       skb_rbtree_purge(&msk->out_of_order_queue);
->>>       mptcp_data_unlock(sk);
->>>
->>> +     if ((__mptcp_check_fallback(msk) &&
->>> +          !test_and_set_bit(MPTCP_DESTROYED, &msk->flags)) ||
->>
->> Hi Menglong -
->>
->> Sorry I didn't look at this more closely earlier, but did you find that
->> mptcp_destroy_common() is only called multiple times with fallback
->> sockets?
->>
->> (This makes me wonder if we have a separate bug to look at, not
->> necessarily related to your patch series)
+> From: Menglong Dong <imagedong@tencent.com>
 >
-> Hello,
->
-> mptcp_destroy_common() can be called multiple times with all
-> sockets, if shutdown is called before close(). Isn't it designed that
-> mptcp_destroy_common() can be called multiple times?
+> In the 1th patch, we do some code cleanup with replease 'sock->sk'
+> with 'sk'. In the 2th patch, we add statistics for mptcp socket in
+> use. And in the 3th patch, we add the testing for this commit.
 >
 
-It did look like mptcp_destroy_common() would work fine with multiple 
-calls, but I had forgotten about the expected shutdown/close case.
+I think v5 looks ok for the export branch - we can get more test coverage 
+there and update if needed.
 
-> For no-fallback sockets, it will be unhashed when mptcp_destroy_common()
-> is called for the first time. So we can check if it is in use by this.
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+> Changes since v4:
+> - rebase to solve merge conflict
 >
-
-That makes sense, thanks for the details!
-
-- Mat
-
->>> +         !sk_unhashed(sk))
->>> +             sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
->>> +
->>>       /* move all the rx fwd alloc into the sk_mem_reclaim_final in
->>>        * inet_sock_destruct() will dispose it
->>>        */
->>> @@ -3174,6 +3190,7 @@ static void mptcp_destroy(struct sock *sk)
->>> {
->>>       struct mptcp_sock *msk = mptcp_sk(sk);
->>>
->>> +     mptcp_listen_inuse_dec(sk);
->>>       /* clears msk->subflow, allowing the following to close
->>>        * even the initial subflow
->>>        */
->>> @@ -3529,6 +3546,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
->>>
->>>       mptcp_token_destroy(msk);
->>>       inet_sk_state_store(sk, TCP_SYN_SENT);
->>> +     sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
->>>       subflow = mptcp_subflow_ctx(ssock->sk);
->>> #ifdef CONFIG_TCP_MD5SIG
->>>       /* no MPTCP if MD5SIG is enabled on this socket or we may run out of
->>> @@ -3661,8 +3679,10 @@ static int mptcp_listen(struct socket *sock, int backlog)
->>>
->>>       err = ssock->ops->listen(ssock, backlog);
->>>       inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
->>> -     if (!err)
->>> +     if (!err) {
->>> +             sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
->>>               mptcp_copy_inaddrs(sk, ssock->sk);
->>> +     }
->>>
->>> unlock:
->>>       release_sock(sk);
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index 18f866b1afda..374ef75e4bb9 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>> @@ -116,6 +116,7 @@
->>> #define MPTCP_WORK_EOF                3
->>> #define MPTCP_FALLBACK_DONE   4
->>> #define MPTCP_WORK_CLOSE_SUBFLOW 5
->>> +#define MPTCP_DESTROYED              6
->>>
->>> /* MPTCP socket release cb flags */
->>> #define MPTCP_PUSH_PENDING    1
->>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->>> index 07dd23d0fe04..da6cfa73a3bd 100644
->>> --- a/net/mptcp/subflow.c
->>> +++ b/net/mptcp/subflow.c
->>> @@ -747,6 +747,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
->>>                       mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
->>>                       mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
->>>                       mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
->>> +                     sock_prot_inuse_add(sock_net(new_msk),
->>> +                                         new_msk->sk_prot,
->>> +                                         1);
->>>                       ctx->conn = new_msk;
->>>                       new_msk = NULL;
->>>
->>> --
->>> 2.37.2
->>>
->>>
->>
->> --
->> Mat Martineau
->> Intel
+> Changes since v3:
+> - rename MPTCP_DESTROIED to MPTCP_DESTROYED in the 2th patch
+>
+> Changes since v2:
+> - add testing
+>
+> Changes since v1:
+> - split the code cleanup into the 1th patch.
+> - decrease the statistics for listening mptcp socket inuse with
+>  mptcp_listen_inuse_dec()
+> - add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+>  called on the msk. For fallback case, we need to decrease the
+>  statistics only once, and mptcp_destroy_common() can be called
+>  more than once.
+>
+> Menglong Dong (3):
+>  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+>  mptcp: add statistics for mptcp socket in use
+>  selftest: mptcp: add test for mptcp socket in use
+>
+> net/mptcp/protocol.c                      | 35 ++++++++++++++++++-----
+> net/mptcp/protocol.h                      |  1 +
+> net/mptcp/subflow.c                       |  3 ++
+> tools/testing/selftests/net/mptcp/diag.sh | 28 ++++++++++++++++++
+> 4 files changed, 60 insertions(+), 7 deletions(-)
+>
+> -- 
+> 2.37.2
+>
 >
 
 --
