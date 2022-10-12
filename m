@@ -1,197 +1,172 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80071.outbound.protection.outlook.com [40.107.8.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E495E15A8
-	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 10:37:05 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IYXCaZiobJZOJbpgWiptMoPc8DrDYUeVpRxdxP5A+TrFfQdDQJSFAVw6ObiMwbzCT6h6qf/Q15i90Y8aXiqI/Kbb54c2EiesPZtXGTiE2c+PrimAa76WyDQnlS5/WXg0i51oJMjDy2LaNDL85Py64vUC8ZgS9t8d2/lBdUN482kR/34gmIoZuKQzygjTJej8lp8uJh1BLh9OZ3xqVM+d+71XfpOg7cT5XySlJj0MGTxzuKrF/Z04C8HLaK2fLMT57rlTxSUIyoC0omYQzHt7ufSwuGdYAtvEsaSf1N2E0q3HtY3Clg+AN5P3hVDJVGXkBqEqGuP86xZBLqng0YQiRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2+jhyo5EZo0VWBYZAnixwlZK3istrO65GahkGCoP5oE=;
- b=jqLrSPR7R5GQu+ioRH6hp/d5Q+URopN6c/3Dn06dYxRdYWMVmWVI0sQXfBwyBsTv0I/9nNoj58obhlRIso4grLM0iEe7WvYgdHGi6i0DnA5kT408Nrptthf1djg0Rx77fYdBmYBFvkMACbTnakpOz1Ed9R3uf0YM8fg+ELmcb/bE4grbR614VbJxXs4WfkFTl1hGcXbCv1g696SRFM/Y0EAFucuHpT6S3LvSo9N/PfIu2IJR+xWBDRW7/YnKHdvP9QRoqreaI/eLK25ETz9fE/zn0gtTPCyUfudTnk9bMmXUNeEa1LLnAQm7ZrhhEnvSV69IC9TdgUBskBP2TVp12g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2+jhyo5EZo0VWBYZAnixwlZK3istrO65GahkGCoP5oE=;
- b=K1kJIK49ss77lOfqo0mzp9wwsOlgQ5VJJPICNvU0t88PjL/de3tZe9pIqvv/fd1dgCyC0JtwfJzWaafkHyZ9dlH7zj0TPAH6O4fD6WcFpPw8tjrN8xYZ7rTTlP+3jk/109c981qGMgDZN6GpcwznRb6jhLytp8yqZ/E19OyheWWISspiCUIS5T8XEFuGHNMqGmFkhiNYmxJH1aCL2/1Muq4X8b+N+8kP0A6X2uHDRx14F4DII5MfGi80KtO/6Dqniiw9lDjIK9RnPA9Fg7o6poBjwI0ti9wE4ki7s/w7RWqcQtmVn2u9XlhOeh/xVHO+TUc0HtRsXQHp8YoGY+MPtA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM8PR04MB7905.eurprd04.prod.outlook.com (2603:10a6:20b:235::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15; Wed, 12 Oct
- 2022 10:37:03 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::f426:b04f:d9f1:cd5f]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::f426:b04f:d9f1:cd5f%4]) with mapi id 15.20.5709.021; Wed, 12 Oct 2022
- 10:37:02 +0000
-Date: Wed, 12 Oct 2022 18:36:51 +0800
-From: Geliang Tang <geliang.tang@suse.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v6 06/13] mptcp: multi subflows push_pending
-Message-ID: <20221012103651.GA15335@bogon>
-References: <20221011120137.5475-1-geliang.tang@suse.com>
- <20221011120137.5475-7-geliang.tang@suse.com>
- <d2926dc5-f72d-f104-d982-78215924d96e@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2926dc5-f72d-f104-d982-78215924d96e@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SG2PR02CA0133.apcprd02.prod.outlook.com
- (2603:1096:4:188::18) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617148F75
+	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 11:32:01 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id e18so24056513edj.3
+        for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 04:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oBsLNE9Pbq1fhnGAfz8/cgJdH/Th+g4OCC15xAfxUU4=;
+        b=D9oXuzDQIPZfkwgqbq+FIRxpYYzvAXzSiQKnNf+iVrglFGHyWvbaNYoUK/pGfZv4ve
+         /OYeP4tnAVfFfWliNdbUOo/4bHPRjRwy5/7Z6gTYubHu3K8R41IuGZDrUoNAx8xW1vs5
+         rXF7KqvfYjFDQFxskdq0nAb2mwqo4SQhPx/zls+tRpvL9iczjI3W+BELXZMYjlF2tYPO
+         WlSe3VbYT5f3lOXPq25837+h9aqWMOVwjxjYU/ujooLksZ37cbJ27a9Fw5Namcxyejy5
+         pbMp1asBXJ7V4iyHFDW3TS2SzJKXcGVH4FFoTfL310rLzKReMlAku1D8Jj1KpUCE1V97
+         g7Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oBsLNE9Pbq1fhnGAfz8/cgJdH/Th+g4OCC15xAfxUU4=;
+        b=7y3n0VRSzEEiPOgxD2ymOCeqDLFEPfDrb87gvHzZ3IbXOiWBGRVi6Gxq1z2psudbBS
+         exgHgBKDkbgaPIxx73UT8cRAaQ/+jfK5yBb5vsZEs4m8sxP4YFBiTc3bRwzwCDoDUvNn
+         0PA+yKC+Fz2StkCo525HzSu4Fr54Ka/i7qOE1yO2Fc4czscPjmax1S1PZjc4fTgNaSrE
+         PxZ4uvGZWRR+uMSOqk6tB4IICDHNk2Ml2JyrkX9dCtxw3pMs+ZDBw/A84+mb+wN2Sbdz
+         9gYZxTdJeO+fHkkqZMWRtg031IAQIVZX47i8qEbeiwKyiVAkh55rVU2kQE4//rig/KTb
+         v9kg==
+X-Gm-Message-State: ACrzQf20v7rL8VVzsEw42dukAy1K48B2ML/2+RBwR+zA9G/tRexeRhTL
+	Sw9Y1doVi+DIbOfcKw7PweqHcw==
+X-Google-Smtp-Source: AMsMyM6dTCtDXa+kB/7hzhStTuJlGiQTrA7kBpYFKKQuVMj+hfBnhE2TZ3Bc8dYhNr77RyzQXcmCcg==
+X-Received: by 2002:a05:6402:b5a:b0:458:f4c6:8039 with SMTP id bx26-20020a0564020b5a00b00458f4c68039mr26988459edb.349.1665574320167;
+        Wed, 12 Oct 2022 04:32:00 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:765f:321d:fe2e:6d29? ([2a02:578:8593:1200:765f:321d:fe2e:6d29])
+        by smtp.gmail.com with ESMTPSA id 9-20020a170906058900b0078d4c72e2cesm1119190ejn.44.2022.10.12.04.31.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Oct 2022 04:31:59 -0700 (PDT)
+Message-ID: <e89fc24c-36d9-3352-63e4-354dca83b171@tessares.net>
+Date: Wed, 12 Oct 2022 13:31:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM8PR04MB7905:EE_
-X-MS-Office365-Filtering-Correlation-Id: d61fbe26-3630-45f6-f4ad-08daac3db2af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	XeUOHKt2FAqxQxkLeLUD9Qi8IoS+diXjCDhCcwuk7jZgRE3ERtXNiqC+T4LtJnK/CboxN/ZN+AD66kSJJ4uztguFhpQkqg/ZZxQajyxB61gEacIXneBs3cf9h0xAZg2S6i8Y/JwNoQreCxDHi/spd8jORXXvA36dAkxzYIvGvR3FnQpI4Ou4zlt5qaTk6zpobb0n7rELtj8MYDUAFsl8s04PyWw++XDwk5/eyJP9QD/msVnjDD+ujbPABvqXpH/hu0Otq6pX2Lmo1Azku08xUgNcvfI5qPF4+uoFbXou7H9jE/bnQyCikPw0eLQPkLOTQvXShCxwg5q/YwVXBBDUhF8IAGSTb3FzYYUbWvsi96Ko56PR8q6/yPXpcSuT3dtokG/KQWFoc+hf8/XCxsKtQfKJ5G3ohUoa90NW5qWs7pWakSJI9JP+nZShBaMOlF/XBN2jdvCDIN/1jFDcgQ66DnGgRy/vqRt7jKEPh7FZ5ZI23aPpUxZ9rOeBZ3Wlek6SwY+yi9HVZAj/+Zd0jCFJJ2fSkVQlWvPtMUshiFzNQaN6Xnb5pjVoCqz6cxu2EdB0JHNECPq3hBOwYlHiQ0LSpx8cXgLJnewN0bjCm40u23g0mdqaIYVb0ZbhVKZGOyYNRjWwTLzt/9DfrVnA/bhVmP0NUw1UXue1DRFpsoNgWIsQ/MHslgw+I6wgrvW3B6zaYsPEUtgcx2cPhepo29LP4WGJTJyfZrGom3RcsdFmjrE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(396003)(376002)(136003)(366004)(39860400002)(346002)(451199015)(1076003)(186003)(83380400001)(8676002)(26005)(5660300002)(38100700002)(6512007)(4326008)(41300700001)(33716001)(44832011)(6486002)(316002)(6506007)(6666004)(9686003)(66476007)(66556008)(66946007)(8936002)(6916009)(2906002)(478600001)(86362001)(33656002)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zEH1I2J5um8CxQvr6QQGirLbQ6wC975ccUkaPty2ew61fhkXDqmUP0TfpOkA?=
- =?us-ascii?Q?dHkDHLxug23oGZg5Rv3Kz7zNeeLKrOBrwMYu4MFRqxocY0LSjmpo3QBdccfh?=
- =?us-ascii?Q?71Jx79l6hKNquWwxK1tQ5XWHU71LbwuWqzptivuOnqYBTe3jG1dK1brPENzQ?=
- =?us-ascii?Q?+8TUYmPlJvuscN0BsWkRzlPLV28TZK5lNDUmWeorrggYSOxD1r33hRpkzho7?=
- =?us-ascii?Q?+H2bQ7GFIs3r3OF2TWAzK9Ief9lW7qFLgeEuJOfdjzmAuNs2fQ/fVlGf/+kH?=
- =?us-ascii?Q?NKvK4a/Y9WB+/RVOIPcZpFqoJMvG5h3QPlHyOAZxKUtBo201IKahV2uCYLIg?=
- =?us-ascii?Q?Gpnb8pLFgrhC3pQqa7WzzMBHBHqDW8Y7rX2cRskb0k1aizPNuWMMxaYtVuO0?=
- =?us-ascii?Q?cp37xN1sbhpRU7X5kqGk3jgzjxK1BhjBdlEVEN1xziQLFD3T+AhMS1WJiGqB?=
- =?us-ascii?Q?GP0m9sOL+eq1NePJBnSoWa3k8SqMoTJ7XW1BDT9JcGHl70Gk4UzvtxRqS0LH?=
- =?us-ascii?Q?PflAUJLHU2fsphxrQjzfPavSxADbHL9iGGxP1kk5fGjA3b71VHdSbJA1aL5f?=
- =?us-ascii?Q?adIQqY0I2okxtMOuZb32PRib5A5+y+tX9kTy9/nNgbzXSIPMT0qlWv+GgTN8?=
- =?us-ascii?Q?ckadjMQvCH91qO2InRVBg7aJpV7L81864uNZ5Kgc/cw5yCYDYGyF/V6IttGC?=
- =?us-ascii?Q?CMF7kAHaH2Uyw5/yX5zUCsS7R3+dkQP3e9BB+4JC4oRMRtE4dXq8vB13gRti?=
- =?us-ascii?Q?tAOSjUxX/oVmtqBOHZhrH8cxMOEWNNocuCsUQV6wyRNeW/rFuzOEsLZ3M1TY?=
- =?us-ascii?Q?VGkVJhWFfIAYBseuSCEnVCcWNsl6MaUTytNYNzaZEH2UuXeiGdbeqdJ/Putz?=
- =?us-ascii?Q?xTSk3mnY7Jl0gd2hdxwaP+FT2Kn3nZxXQLZvoCNB4oa0OtdApuL2itmZtPSi?=
- =?us-ascii?Q?jnheaje/4LpStBWmqzgsLwAWFqvc6iTVLXabqDEWIgSA0uhHrBxVXNIrcp33?=
- =?us-ascii?Q?4pLs4pIpIkkH6mYtxH4Ne1y4SuknAdGVZm3SlnCqkOvGMFirpIz/veCi2DZK?=
- =?us-ascii?Q?+aPfxjtNa1dSEroLMJLXpVRz1cze6jp7odmCxnTQCMcNACgGQoXgDKdmWkeX?=
- =?us-ascii?Q?3zrmNDpYjBfShvBfbFavex/TxBgZ1cEN3r0IQkYxXC4WK9fgh66qfgBZGO4M?=
- =?us-ascii?Q?WRx7fbqUVOu/CtaNZzP1KLPOecyMm8zldt6bANLmuz1AJjVysokbx/S6NCDj?=
- =?us-ascii?Q?zhv4xON3BCXggwQL5rxgPZTzUvCUOdPcMd4tH8Ll7TXe6SMBG7wViOpQfwEc?=
- =?us-ascii?Q?Uuq4KfS8vuA0OObs2pVWv6sMBAxs0PLiK2CelnZ6MinIVjiZKTm1jkIcQkmK?=
- =?us-ascii?Q?SblbXo2rXuAtcO9zEfoCdjwy7vIwoVBP8w1uOW3ATquK575GLfJOgEaCwnpa?=
- =?us-ascii?Q?NVxZINEDcgh+uVu7PvSAL3gpiTOcViRkoBxx/H8QGzBsHBuRzbHESfyCyOVY?=
- =?us-ascii?Q?qoTFv1krPjr4bwoXkghIaGEOr039twn6FrdRTAoOnTUQeYTUw0KS/ACcG7ur?=
- =?us-ascii?Q?Tpgb+5P9/e+043eEZVK2m184RO+mjHsPQyKD8pkji6kdTN48O/Hi9Lgkseum?=
- =?us-ascii?Q?Qw=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d61fbe26-3630-45f6-f4ad-08daac3db2af
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2022 10:37:02.1110
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YBWvpjmDptLo8kPrAIH1hFsAJj2iKM/I9yXxfo75cpZEn9Inja96zeNNbaWw/Hdoyua70hqBbvaPzjguRjcGLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7905
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH mptcp-next v5 3/3] selftest: mptcp: add test for mptcp
+ socket in use
+Content-Language: en-GB
+To: menglong8.dong@gmail.com, mathew.j.martineau@linux.intel.com
+Cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+References: <20221007092922.13169-1-imagedong@tencent.com>
+ <20221007092922.13169-4-imagedong@tencent.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20221007092922.13169-4-imagedong@tencent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 11, 2022 at 03:30:43PM -0700, Mat Martineau wrote:
-> On Tue, 11 Oct 2022, Geliang Tang wrote:
-> 
-> > This patch adds the multiple subflows support for __mptcp_push_pending().
-> > Use mptcp_sched_get_send() wrapper instead of mptcp_subflow_get_send() in
-> > it.
-> > 
-> > Check the subflow scheduled flags to test which subflow or subflows are
-> > picked by the scheduler, use them to send data.
-> > 
-> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> > ---
-> > net/mptcp/protocol.c | 32 ++++++++++++++++++++------------
-> > 1 file changed, 20 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 817e539d1d12..86ac38d10bc4 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -1561,22 +1561,30 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
-> > void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> > {
-> > 	struct mptcp_sock *msk = mptcp_sk(sk);
-> > -	struct mptcp_sendmsg_info info = {
-> > -				.flags = flags,
-> > -	};
-> > -	struct sock *ssk;
-> > 	int ret = 0;
-> > 
-> > again:
-> > -	while (mptcp_send_head(sk) && (ssk = mptcp_subflow_get_send(msk))) {
-> > -		lock_sock(ssk);
-> > -		ret = __subflow_push_pending(sk, ssk, &info);
-> > -		release_sock(ssk);
-> > +	while (mptcp_send_head(sk) && !mptcp_sched_get_send(msk)) {
-> > +		struct mptcp_subflow_context *subflow;
-> > +		struct mptcp_sendmsg_info info = {
-> > +			.flags = flags,
-> > +		};
-> > 
-> > -		if (ret <= 0) {
-> > -			if (ret == -EAGAIN)
-> > -				goto again;
-> > -			goto out;
-> > +		mptcp_for_each_subflow(msk, subflow) {
-> > +			if (READ_ONCE(subflow->scheduled)) {
-> > +				struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> > +
-> > +				lock_sock(ssk);
-> > +				ret = __subflow_push_pending(sk, ssk, &info);
-> > +				release_sock(ssk);
-> 
-> Geliang -
-> 
-> It seems like this doesn't allow for redundant transmits, since
-> __subflow_push_pending() updates msk->first_pending. Did you find that
-> redundant sends were working correctly (maybe I've misunderstood)?
+Hi Menglong,
 
-Hi Mat,
+If you have to edit this commit (see my message on the patch 0/3), I
+have some small improvements to suggest.
 
-Redundant sends are not support in this series yet. It will be added in
-this __subflow_push_pending() function in the next series with the
-selftests patches.
-
-There are still some issues that haven't been solved in the redundant
-support patches. I'm still working on them.
-
-Thanks,
--Geliang
-
+On 07/10/2022 11:29, menglong8.dong@gmail.com wrote:
+> From: Menglong Dong <imagedong@tencent.com>
 > 
-> - Mat
+> Add the function chk_msk_inuse() to diag.sh, which is used to check the
+> statistics of mptcp socket in use. As mptcp socket in listen state will
+> be closed randomly after 'accept', we need to get the count of listening
+> mptcp socket through 'ss' command.
 > 
-> > +
-> > +				if (ret <= 0) {
-> > +					if (ret == -EAGAIN)
-> > +						goto again;
-> > +					goto out;
-> > +				}
-> > +				mptcp_subflow_set_scheduled(subflow, false);
-> > +			}
-> > 		}
-> > 	}
-> > 
-> > -- 
-> > 2.35.3
-> > 
-> > 
-> > 
+> mptcp_connect command with '-r' flag seems won't exit after flush_pids,
+> therefore we need consider this additional statistics. But after the
+> second flush_pids, it will exit.
 > 
-> --
-> Mat Martineau
-> Intel
+> All tests pass.
+> 
+> Signed-off-by: Menglong Dong <imagedong@tencent.com>
+> ---
+>  tools/testing/selftests/net/mptcp/diag.sh | 28 +++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+> index 515859a5168b..d969cb45b8a9 100755
+> --- a/tools/testing/selftests/net/mptcp/diag.sh
+> +++ b/tools/testing/selftests/net/mptcp/diag.sh
+> @@ -141,6 +141,28 @@ chk_msk_listen()
+>  	nr=$(ss -Ml $filter | wc -l)
+>  }
+>  
+> +chk_msk_inuse()
+> +{
+> +	local nr listen_nr
+> +	local expected=$1
+> +
+> +	shift 1
+> +	msg=$*
+
+Can you mark 'msg' as 'local' please?
+(we regularly forget to add this keyword, it is possible it is missing
+in other places)
+
+> +
+> +	nr=$(ip netns exec $ns awk '$1~/^MPTCP$/{print $3}' /proc/net/protocols)
+> +	listen_nr=$(ss -N $ns -Ml | grep -c LISTEN)
+> +	expected=$(($expected+$listen_nr))
+> +
+> +	printf "%-50s" "$msg"
+> +
+> +	if [ $nr != $expected ]; then
+> +		echo "[ fail ] expected $expected found $nr"
+> +		ret=$test_cnt
+> +	else
+> +		echo "[  ok  ]"
+> +	fi
+
+Could it not be possible to re-use __chk_nr()? (maybe you need to
+slightly adapt it?)
+
+> +}
+> +
+>  # $1: ns, $2: port
+>  wait_local_port_listen()
+>  {
+> @@ -194,8 +216,11 @@ wait_connected $ns 10000
+>  chk_msk_nr 2 "after MPC handshake "
+>  chk_msk_remote_key_nr 2 "....chk remote_key"
+>  chk_msk_fallback_nr 0 "....chk no fallback"
+> +chk_msk_inuse 2 "msk in use statistics"
+>  flush_pids
+>  
+> +# with '-r' flag, client won't exit after flush_pids
+> +chk_msk_inuse 1 "msk in use statistics"
+>  
+>  echo "a" | \
+>  	timeout ${timeout_test} \
+> @@ -231,6 +256,9 @@ for I in `seq 1 $NR_CLIENTS`; do
+>  done
+>  
+>  wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
+> +chk_msk_inuse $((NR_CLIENTS*2+1)) "msk in use statistics"
+
+Why do you expect to see msk + 1?
+
+>  flush_pids
+>  
+> +chk_msk_inuse 0 "msk in use statistics"
+
+The message "msk in use statistics" is always the same. Maybe clearer if
+it is slightly different? e.g. to print something like:
+
+after MPC handshake
+....chk remote_key
+....chk no fallback
+....chk 2 msk in use
+....chk 0 msk in use after flush
+check fallback
+many msk socket present
+....chk many msk in use
+....chk 0 msk in use after flush
+
+WDYT?
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
