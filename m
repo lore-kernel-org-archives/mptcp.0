@@ -1,179 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6CD17CB
-	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 09:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1665565827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KgIkXma0E5msWYy155T5GltFicUJWPgn01iAvI795ZE=;
-	b=NL8PWypsf1+gy8Rego49hxTabTlNTrRE9Uelyv1gw7D2fZeoSCmQ3xIYrXkfnWmyuhx5Du
-	9IDQFbt0caqj4R/GpeYx0zCrfrFtrSG0zURx3zKx1/uCSL1rUfCx2F8tUXPf4eT0PH1G+T
-	HmWW2Lq3NBDsOcNb6RBxOFigSjKFdMo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-102-DIHVB4NBPreDdrI8g8VZEg-1; Wed, 12 Oct 2022 05:10:26 -0400
-X-MC-Unique: DIHVB4NBPreDdrI8g8VZEg-1
-Received: by mail-wm1-f69.google.com with SMTP id fc12-20020a05600c524c00b003b5054c70d3so9700216wmb.5
-        for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 02:10:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB6A8F66
+	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 09:29:24 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id a26so36737662ejc.4
+        for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 02:29:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T1Z9vdi2LcoCxXWuQF2NPhBlJ1FF6/qUQ6E2WFzYPWo=;
+        b=Cv2hLJMM6r2/iSvCr+BwVgcVJlHwDKPEmFXIjxyDujcbW5dhIQTnCA8klBVjz5PYr2
+         H6ioVw1wjFr6CP1lLowa5HwT9k/oSQn2Ldq5Clm+3Mvh3pCdNTNSZPBDvvO73K6exquU
+         rKjGBhv+h/Eifmszi8Jxz1tfLyvWR8E7GKoUHkcHtyVONZoMNt9Woul/kdt/pMDVxFlK
+         H1L1nisMj8SVC8ExEN7bHT+9XR0yivm8V+RQEaCh5ZWBDP3zZvuZXlbObhGwpaPGXa8q
+         LJs6Or/6u4iHgZQKzYjAkxOZirQ6qBxgs7SiE8mlpPC/aWwjtiiyoNQkSoO4pw/rl5Rt
+         1H+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KgIkXma0E5msWYy155T5GltFicUJWPgn01iAvI795ZE=;
-        b=gIeEkrPs5c6XC21MF7D9oSS89ZfBROEl+/lwRX4Icsd63Aq0XKfnrOwTIWaVQDeJWi
-         Yty1Edm4N6wizBfWhj1f1WtisatLiWYj6VAHWurpHcFkeKdMIXNNd9Hct/V7707gjcQ5
-         hCInlWx+bJP8SSATVQyhmuaOeqqs8xgzARAHiA2QX5AViPieBpN+/12OCu6gotfZUg0i
-         M1/XkGDHVHBTNVzrJSeyk8nxbyJjJQqK2D4FhQ1ukNcIo1yPFVe/Ir6x7vifL//ok47d
-         8r6MZLgGTSjBKsnLnIapcSi0p1uJihHs4hiN55InmgYdOkblLaYO7G97ktm8QBJyfew3
-         atpg==
-X-Gm-Message-State: ACrzQf0fOZqVi0EcIW/LE7zYv8/2zQcv9YOHgFJMsO5MY70VvypBTSUR
-	PhsLB5P2vKXWJvl6ZyB9QpIBVbfxjK6nQpmVN3vcCir+ldhrlHzXe6bopfdoDfFNVj9QnUYLMK1
-	lsPXajUQRdXKsC5U=
-X-Received: by 2002:a05:600c:6885:b0:3bd:d782:623c with SMTP id fn5-20020a05600c688500b003bdd782623cmr1984036wmb.102.1665565824836;
-        Wed, 12 Oct 2022 02:10:24 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4dEdvp7Izi0kkwf9P7W/WV/zsYxRBYW8pnBgB2yNhAXAUig90/CdbuXTMkEb8O+nfiGzQ8sw==
-X-Received: by 2002:a05:600c:6885:b0:3bd:d782:623c with SMTP id fn5-20020a05600c688500b003bdd782623cmr1984008wmb.102.1665565824449;
-        Wed, 12 Oct 2022 02:10:24 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-103-235.dyn.eolo.it. [146.241.103.235])
-        by smtp.gmail.com with ESMTPSA id k2-20020a5d6d42000000b0022e049586c5sm13192325wri.28.2022.10.12.02.10.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Oct 2022 02:10:23 -0700 (PDT)
-Message-ID: <0c51594362f1e64b9b2a45d10536051abf1e0470.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix abba deadlock on fastopen
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Wed, 12 Oct 2022 11:10:22 +0200
-In-Reply-To: <bbd50fc8-150c-84db-5287-71911a91e9c7@tessares.net>
-References: <c23778554e349d0a85a34aba14affdac9f5164c5.1665510026.git.pabeni@redhat.com>
-	 <bbd50fc8-150c-84db-5287-71911a91e9c7@tessares.net>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T1Z9vdi2LcoCxXWuQF2NPhBlJ1FF6/qUQ6E2WFzYPWo=;
+        b=aax84XmUOLWi7WXh7gPA1YkDrfSaOm+ub35RxF0dRfAp6TNvyKPIjCDLlqq6G8/ENn
+         CNojU5A13k6eXcJzj7hyS1wxT4fyPvBKB0tou0OlI5w6t6ychLG9vthJN65Li2VCvThF
+         GaZHZ9q5c0vNedBRO+Poz7ht22PPlSye3Hb+qqlGLi4lf4hbmAIM2lMpzq9g9cFtrzrF
+         qgyK31RueTTVWN2By1M1PiYSAAiTzvwbeh1A7hLsfFOW4vQjxRhj3BUWDHHiPUQJdv9P
+         Sfd25g6D3z3GVAwUPV3vlJb3WJ7VLBp+aTfdE420ezac5w/6TGP7y+myo0drSWlei55K
+         +BqA==
+X-Gm-Message-State: ACrzQf1Hy9mmo4FDStgg5b9wkVEemdo3eCX+0iAPMvE72feBo1+oZyux
+	x1O7ahXa7+zRVdFDOSShPNQU3V2xlqo5Mg==
+X-Google-Smtp-Source: AMsMyM78qJRMrouWN4Xp86V0HeG45Pm88dmcDKib5efY1gU440U+dFC9lPfygqvB9ZWqAasmdhgbHA==
+X-Received: by 2002:a17:907:320c:b0:77b:6f08:9870 with SMTP id xg12-20020a170907320c00b0077b6f089870mr21512134ejb.249.1665566962775;
+        Wed, 12 Oct 2022 02:29:22 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:f07e:bd7a:c3d9:59e6? ([2a02:578:8593:1200:f07e:bd7a:c3d9:59e6])
+        by smtp.gmail.com with ESMTPSA id t15-20020a1709067c0f00b00730b3bdd8d7sm917494ejo.179.2022.10.12.02.29.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Oct 2022 02:29:22 -0700 (PDT)
+Message-ID: <b3346c1f-5934-4c97-e65e-c0983f9e45ae@tessares.net>
+Date: Wed, 12 Oct 2022 11:29:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH mptcp-next v5 0/3] mptcp: add statistics for mptcp socket
+ in use
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ menglong8.dong@gmail.com
+Cc: mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+References: <20221007092922.13169-1-imagedong@tencent.com>
+ <95cb50a4-e50c-3b02-a521-24c2d11341de@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <95cb50a4-e50c-3b02-a521-24c2d11341de@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2022-10-12 at 10:22 +0200, Matthieu Baerts wrote:
-> Thank you for having caught the issue and already provided the patch!
+Hi Menglong, Mat,
+
+On 12/10/2022 02:53, Mat Martineau wrote:
+> On Fri, 7 Oct 2022, menglong8.dong@gmail.com wrote:
 > 
-> On 11/10/2022 19:40, Paolo Abeni wrote:
-> > Our CI reported lockdep splat in the fastopen code:
+>> From: Menglong Dong <imagedong@tencent.com>
+>>
+>> In the 1th patch, we do some code cleanup with replease 'sock->sk'
+>> with 'sk'. In the 2th patch, we add statistics for mptcp socket in
+>> use. And in the 3th patch, we add the testing for this commit.
+>>
 > 
-> (...)
+> I think v5 looks ok for the export branch - we can get more test
+> coverage there and update if needed.
 > 
-> > commit ("mptcp: factor out mptcp_connect()") will need some
-> > mangling on top of this one.
-> > 
-> > A possible alternative would be targeting even the above to -net.
-> > 
-> > Not strictly required, but it will also make more striaght-forward/
-> > legit the __inet_stream_connect() invocation here.
-> 
-> Indeed, we can. We would need more work around that anyway, no? (see my
-> comment below)
-> 
-> > ---
-> >  net/mptcp/protocol.c | 43 ++++++++++++++++++++++++++++++-------------
-> >  1 file changed, 30 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index f599ad44ed24..21f5676a60e8 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -1673,6 +1673,31 @@ static void mptcp_set_nospace(struct sock *sk)
-> >  	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
-> >  }
-> >  
-> > +static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msghdr *msg,
-> > +				  size_t len, int *copied_syn)
-> > +{
-> > +	unsigned int saved_flags = msg->msg_flags;
-> > +	int ret;
-> > +
-> > +	lock_sock(ssk);
-> > +	msg->msg_flags |= MSG_DONTWAIT;
-> > +	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
-> 
-> Would it not be cleaner (and easier to maintain?) if a new parameter is
-> added to tcp_sendmsg_fastopen() to force passing the O_NONBLOCK flag to
-> __inet_stream_connect? Not to modify msg->msg_flags to have the
-> behaviour we want.
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Uhmmm... cleaner only for this call-site. It could be confusing adding
-another parameter for blocking where there is already msg_flags for
-that. And I'm personally against adding to many arguments to a single
-function...
+Thank you for the patch and the review!
 
-> > +	msg->msg_flags = saved_flags;
-> > +	release_sock(ssk);
-> > +
-> > +	/* do the blocking bits of inet_stream_connect outside the ssk socket lock*/
-> 
-> (I thought checkpatch.pl was complaining when there was no space before
-> '*/' but it doesn't, all good :) )
-> 
-> > +	if (ret == -EINPROGRESS && !(msg->msg_flags & MSG_DONTWAIT)) {
-> > +		ret = __inet_stream_connect(sk->sk_socket, msg->msg_name,
-> > +					    msg->msg_namelen, msg->msg_flags, 1);
-> 
-> Without the commit ("mptcp: factor out mptcp_connect()"), would we need
-> to call the -net version of mptcp_stream_connect() but without the lock?
-
-Not strictly needed. I test this patch on export/net. Possibly cleaner.
-
-> > +
-> > +		/* On connect hard error fastopen no bytes actually sent. */
-> > +		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
-> 
-> The two last ones are there in case the "actual connect()" got
-> interrupted, right?
-
-Yes. Plain TCP consider copied_syn == 0 in that case. I did not find
-any existing helper to match such condition. Perhapas a longer comment
-may help.
-
-> > +			*copied_syn = 0;
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> >  {
-> >  	struct mptcp_sock *msk = mptcp_sk(sk);
-> > @@ -1692,24 +1717,16 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> >  	lock_sock(sk);
-> >  
-> >  	ssock = __mptcp_nmpc_socket(msk);
-> > -	if (unlikely(ssock && inet_sk(ssock->sk)->defer_connect)) {
-> > -		struct sock *ssk = ssock->sk;
-> > +	if (unlikely(ssock && (inet_sk(ssock->sk)->defer_connect ||
-> > +			       msg->msg_flags & MSG_FASTOPEN))) {
-> 
-> Just above in this mptcp_sendmsg() function, we mention we don't support
-> MSG_FASTOPEN yet. maybe we don't need to add this additional check now?
-
-Thanks for catching it. This is a stray change from a previous
-revision.
+I was going to apply it but I just noticed our public CI complained
+about the new test during its second test:
 
 
-I can send a v2 addressing the above and cleaning up comments, but
-AFAICS there is still pending the main question about including "mptcp:
-factor out mptcp_connect()" in -net. Currently I think that could be
-the better option.
+ KVM Validation: debug:
+  - Unstable: 2 failed test(s): selftest_diag selftest_mptcp_join 🔴:
+  - Task: https://cirrus-ci.com/task/6538547548127232
+  - Summary:
+https://api.cirrus-ci.com/v1/artifact/task/6538547548127232/summary/summary.txt
 
-Thanks,
 
-Paolo
+The useful bit:
 
+----------------------- 8< -----------------------
+not ok 1 test: selftest_diag.tap # exit=7
+# no msk on netns creation                          [  ok  ]
+# listen match for dport 10000                      [  ok  ]
+# listen match for sport 10000                      [  ok  ]
+# listen match for saddr and sport                  [  ok  ]
+# all listen sockets                                [  ok  ]
+# after MPC handshake                               [  ok  ]
+# ....chk remote_key                                [  ok  ]
+# ....chk no fallback                               [  ok  ]
+# msk in use statistics                             [  ok  ]
+# msk in use statistics                             [  ok  ]
+# check fallback                                    [  ok  ]
+# many msk socket present                           [  ok  ]
+# msk in use statistics                             [ fail ] expected
+249 found 248
+# msk in use statistics                             [  ok  ]
+----------------------- 8< -----------------------
+
+Do you mind looking at that please?
+
+
+Please note that the public CI is known to be slow. Here it was failing
+with a debug kernel config (KASAN, KMEMLEAK, etc. see
+kernel/configs/debug.config file)
+
+If you want to reproduce it in closer conditions, you can do something
+like this to build the same kernel and run diag.sh in a loop until it fails:
+
+  $ cd [kernel source code]
+  $ echo "run_loop run_selftest_one ./diag.sh" > .virtme-exec-run
+  $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+      --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+      auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
