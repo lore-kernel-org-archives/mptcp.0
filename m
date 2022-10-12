@@ -1,164 +1,113 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6481B17ED
-	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 15:39:25 +0000 (UTC)
-Received: by mail-ej1-f49.google.com with SMTP id bj12so38742061ejb.13
-        for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 08:39:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7FF28EA
+	for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 16:41:23 +0000 (UTC)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1364357a691so13575042fac.7
+        for <mptcp@lists.linux.dev>; Wed, 12 Oct 2022 09:41:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M5Isg4TeVNBYLecWxZ+OTpavjBe1AuMQUPQvMOnEOTk=;
-        b=ml1w+AaBz2nAONxSVcZZExr4aSFDw1dFmfkNjU7rn89vIL4hNA44lnKBTOHDaFNLs3
-         3PWMixV2/MjeHHg3oU9yta4wHhef0v9NdkcuB9SYDhjxsNv+RoR83OYzL/5pMINFlrla
-         mTwmkHhTq8yRwsf8EC3LFWfFmIMkPB8gDzYkmrfhXkmEB9+Ihu8e5+l4xopWmxf9LSif
-         TeeDNt43+6OTA7QKHggJG9xJX0aGJHr4TWR9BIfA8tjKkJl/CX3OR6JvzB5p9mH6ogPG
-         dLagt+WUz6SSx8wLqgN8XsxCZSwfXf6zKO98jiWzn3xTyxI0BkfClejOSlsG4RXviQ0c
-         1qHA==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y1LeQQ+sbb16TQRWPGy5tfP26yAap/JqI6ASvinTUI0=;
+        b=VoEY3GEre6IIJEkLFOhEyjQ/V2iD7B6ley7/fs95b4hDaKxChrDgFkXjkeTbIX0l45
+         0LY6q0XjBy5yDSEsD5DVi5+1vqfM+XhFzpBMtfnQJ+2zJpuyxuiD9PhPyXZ73abEqCV2
+         yAREcVtDh0HZqyUhpWZgIccuGhBmWHxoFDDHzgK1kz0dWRWGXeFvM+7Pk0xlV9hh63xb
+         WyS1y4zZahxjiZGAlyMniaPXHrbgEUCw57xa88H8hcFv3PlkWd20rQ5+G97yrQCp5wZP
+         6SiUJzDAohgBxunOejodwPFCqiF/OLj4/moaYcPeNdHqcNF5f8njGsR+5jTlX6rKzd9L
+         dCBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M5Isg4TeVNBYLecWxZ+OTpavjBe1AuMQUPQvMOnEOTk=;
-        b=x0YEeFbwlLSlvr4kQxdz3PzXBdav7Cu3EuuDxbAzG2YpOsNA8FewA5pNH2EdiidTuc
-         Cvjut+U4BRSQgV2Mu1+baht6FSP6nFpYtVV7c6wk3n4HbJCw8VbNUv5BSYBaA/34IAT/
-         sXx1g4ABS2JKFK5WDssZfGDHtiB8O+FHhfoV4oqjmcZKc7pKTBUuemBd8+O8szGKnvzI
-         vmdwe5vll1kG/8qYOx0EaGyIr39zl1HlwFTX4yw/neMRNfevxzPpZxWRpzVERTCpG0sZ
-         jDq8Te5RwWmYQ+ogk1G81QCjjHH4JAxzCIouR1NwnSujchIMxUv4pl/CvwGHCKwmzykV
-         jKCQ==
-X-Gm-Message-State: ACrzQf21Fh6DAY78i0nn/5rJkC/xNZJxkOJ41VyJojJRU4NSwsW0P0/b
-	QnlyOIzvjOCP3oeTUFJgtK/wM1a8tPcJFA==
-X-Google-Smtp-Source: AMsMyM7ptgZs9txitPyA1N5hLdHgozQYscmWDdiRt/9rta/arcyGot2XQ9o/XdbWOf9vkrI9jhlubQ==
-X-Received: by 2002:a17:907:a06d:b0:78d:ceae:ba5a with SMTP id ia13-20020a170907a06d00b0078dceaeba5amr8893754ejc.586.1665589163221;
-        Wed, 12 Oct 2022 08:39:23 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:a070:1697:e229:d255? ([2a02:578:8593:1200:a070:1697:e229:d255])
-        by smtp.gmail.com with ESMTPSA id k26-20020a17090632da00b0078d4962a46bsm1418048ejk.190.2022.10.12.08.39.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Oct 2022 08:39:22 -0700 (PDT)
-Message-ID: <dee06f30-f5ea-deb3-9d40-b4f7a5d460df@tessares.net>
-Date: Wed, 12 Oct 2022 17:39:21 +0200
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=y1LeQQ+sbb16TQRWPGy5tfP26yAap/JqI6ASvinTUI0=;
+        b=flaPew6rPoI07vmH88C7W6M81TneJ69LnoRyAMT8AqwZE2WYXHTubYplG+8Bd4bEG/
+         MLt3RVN9u9FrnJuJ3riimQDplpl1/RoK84x8AJRusX2Yd+gtKfieo7VqYDwCRwkCPrxq
+         UqD+eERk+fv1Is9E8+Kq7BdOrbWFKRjZPJWN0iR91Uh6iAM68YTYEFPuMfLmYJVpzuvs
+         45k2E0IFjcRMQ/1oKU+F+fiT/S1gm1/UM7T7vvcAvDluhJ4eOfcKv2V/EgymBkyXPtIm
+         vPh+fEfZKaibdeFoxRyCgMLbmzdsZaQGgQWuEBQ0Q+8VbOD8+oiD6GbI+q7x+kGsyR3S
+         Yz0Q==
+X-Gm-Message-State: ACrzQf1rqzjq4Cy0PC9bglWFXuTbY6w7e2/u1Ewnvd/iQI9afOSl1yRg
+	yjPd9effdJP2Cp2bZfHEPA==
+X-Google-Smtp-Source: AMsMyM595S2ejWRWJVqQWQVSLNB4D7UNUiOgtdpWp27JkCUmBUxLpvX3TsLLOtxWkwvhfBqaT7Ch8A==
+X-Received: by 2002:a05:6870:344b:b0:133:2265:780c with SMTP id i11-20020a056870344b00b001332265780cmr3015912oah.164.1665592882706;
+        Wed, 12 Oct 2022 09:41:22 -0700 (PDT)
+Received: from [127.0.0.1] ([23.102.168.125])
+        by smtp.gmail.com with ESMTPSA id j17-20020a9d7d91000000b006619533d1ddsm4398411otn.76.2022.10.12.09.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Oct 2022 09:41:22 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <7c61250080c052b9dfb42a023c85dc36d4450daf.1665584136.git.pabeni@redhat.com>
+References:
+ <7c61250080c052b9dfb42a023c85dc36d4450daf.1665584136.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix abba deadlock on fastopen: Tests Results
+Message-ID: <983afd92-1a27-82e9-f1b7-5b53d7871a0e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Oct 2022 16:41:21 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH mptcp-net v3] mptcp: fix abba deadlock on fastopen
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <7c61250080c052b9dfb42a023c85dc36d4450daf.1665584136.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <7c61250080c052b9dfb42a023c85dc36d4450daf.1665584136.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 12/10/2022 16:48, Paolo Abeni wrote:
-> Our CI reported lockdep splat in the fastopen code:
+Thank you for your modifications, that's great!
 
-(...)
+Our CI did some validations and here is its report:
 
-> The problem is caused by the blocking inet_wait_for_connect() releasing
-> and re-acquiring the msk socket lock while the subflow socket lock is
-> still held and the MPTCP socket requires that the msk socket lock must
-> be acquired before the subflow socket lock.
-> 
-> Address the issue always invoking tcp_sendmsg_fastopen() in an
-> unblocking manner, and later eventually complete the blocking
-> __inet_stream_connect() as needed.
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+packetdrill_add_addr selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5983248810508288
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5983248810508288/su=
+mmary/summary.txt
 
-Thank you for the v3!
+- KVM Validation: debug:
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6153658013319168
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6153658013319168/su=
+mmary/summary.txt
 
-I just have one last question here below (+ 2 small comments but a v4 is
-probably not needed):
-
-(...)
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1cdf9cd1a3cc..82d899233df4 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1673,6 +1673,37 @@ static void mptcp_set_nospace(struct sock *sk)
->  	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
->  }
->  
-> +static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msghdr *msg,
-> +				  size_t len, int *copied_syn)
-> +{
-> +	unsigned int saved_flags = msg->msg_flags;
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	int ret;
-> +
-> +	lock_sock(ssk);
-> +	msg->msg_flags |= MSG_DONTWAIT;
-> +	msk->connect_flags = O_NONBLOCK;
-
-Just to be sure I understand properly: here O_NONBLOCK is set but that
-will only be used for the subflow and only if MSG_FASTOPEN is set (and
-allowed), so not for TCP_FASTOPEN_CONNECT, right?
-
-But no need to reset them later, right?
-
-(I'm a bit confused by the fact we set msk->connect_flags in
-mptcp_stream_connect() before calling __inet_stream_connect() and not
-here below)
-
-> +	msk->is_sendmsg = 1;
-> +	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
-> +	msk->is_sendmsg = 0;
-> +	msg->msg_flags = saved_flags;
-> +	release_sock(ssk);
-> +
-> +	/* do the blocking bits of inet_stream_connect outside the ssk socket lock */
-> +	if (ret == -EINPROGRESS && !(msg->msg_flags & MSG_DONTWAIT)) {
-> +		ret = __inet_stream_connect(sk->sk_socket, msg->msg_name,
-> +					    msg->msg_namelen, msg->msg_flags, 1);
-> +
-> +		/* Keep the same behaviout of plain TCP: zero the copied bytes in
-
-s/behaviout/behaviour/ but I can fix that when applying the patch, I
-guess "checkpatch.pl --codespell" will remind me that.
-
-> +		 * case of any error, except timeout or signal
-> +		 */
-> +		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
-> +			*copied_syn = 0;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->  {
->  	struct mptcp_sock *msk = mptcp_sk(sk);
-> @@ -1693,26 +1724,14 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->  
->  	ssock = __mptcp_nmpc_socket(msk);
->  	if (unlikely(ssock && inet_sk(ssock->sk)->defer_connect)) {
-> -		struct sock *ssk = ssock->sk;
->  		int copied_syn = 0;
->  
-> -		lock_sock(ssk);
-> -
-> -		msk->connect_flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
-> -		msk->is_sendmsg = 1;
-> -		ret = tcp_sendmsg_fastopen(ssk, msg, &copied_syn, len, NULL);
-> -		msk->is_sendmsg = 0;
-> +		ret = mptcp_sendmsg_fastopen(sk, ssock->sk, msg, len, &copied_syn);
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/90ea741b4f08
 
 
-It might look a bit strange to add some code here and then move it to a
-dedicated function in the following commit but I'm sure that will be
-fine for other net maintainers! :-)
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
