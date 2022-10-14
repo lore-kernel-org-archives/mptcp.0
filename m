@@ -1,206 +1,167 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2082.outbound.protection.outlook.com [40.107.21.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE65220F8
-	for <mptcp@lists.linux.dev>; Fri, 14 Oct 2022 13:18:45 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id k2so10455321ejr.2
-        for <mptcp@lists.linux.dev>; Fri, 14 Oct 2022 06:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4Z246k6B1AMtOetmkZYcH4TKXrylLCm3hheSc3I+wm8=;
-        b=NTYHvybGwCvXpOWQQQthefAfRutU3Odm8qRXwWd499XXZWqRYGy3uGrubV1sv35Gjm
-         tKLTSseF76SIGQRQzqytSBGkKxMMccS4r+naxW1yxnR4ivyT9xpjfjqS6tT+YIrQy4yo
-         6pEkqc7ETuNUhbkWNmzzBG60Dtnplkqp9mqCRnc6Khhedjta/8rjgBh/Jpu/FuWYyOD1
-         v0fokA7R2gXus4se6Y05cxG4gjErMtViWkl5yEIljt2THq3iO66j9iJ6VzZWNQ1S5JxY
-         7Yg+N+AkndVaVCKIq1xaBxA8eGdz+1gQGVVWAauol2n7jg/nJn7/hLmOeEtL0utgjbwK
-         YOAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Z246k6B1AMtOetmkZYcH4TKXrylLCm3hheSc3I+wm8=;
-        b=k8K5dYz8QSOJe/kKfEXz9jqgLMycDDYc6KCYjUyjL8OIvDIT/scHKbmecXUqSJMem5
-         OwVeEgMFvnB3uiR2CyKAndKP0r/SpqcC88Wg8RKaBRE30wYsAqaEthplVY2vrN1RzHoQ
-         VfmYY/Oq7Hk3LUhqZY+7kMwxeu7wE1e72d8QRtHCQm7+Nr1XwbFK9iScDc5IYqYh17eN
-         eO5kfwAXzFCQdGLi3ciYzOP6de9uqq0V7KKX3xmlBDSWDZzkPcbaxgvkUzXPXJys+kwL
-         KMIavtNQFVWblutiEI6/uQac9C1GZq2HVhAvtwcYGF8Kt4xzpQ3u5WEs+I2a6g+gInDE
-         a4qQ==
-X-Gm-Message-State: ACrzQf3B+sIUQ2OlwDPWibSrncxociN+C+wFOsbocKyyDpfBQXZzLlnG
-	llSUW/2H3vjjDbF6We8v6brVzw==
-X-Google-Smtp-Source: AMsMyM4QNCwEwP0tehq7FvBlsPWI9D8+grSyBneztb/cea5BB1JKtNN6xWj+izgVYb3xn10RG4avkA==
-X-Received: by 2002:a17:907:2e0d:b0:78e:1d21:8001 with SMTP id ig13-20020a1709072e0d00b0078e1d218001mr3482886ejc.246.1665753523615;
-        Fri, 14 Oct 2022 06:18:43 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:39c6:43d:7d1c:5da5? ([2a02:578:8593:1200:39c6:43d:7d1c:5da5])
-        by smtp.gmail.com with ESMTPSA id d9-20020a170906370900b0073022b796a7sm1540591ejc.93.2022.10.14.06.18.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Oct 2022 06:18:43 -0700 (PDT)
-Message-ID: <bb01d3b7-6b0b-94c6-007d-96f9d49cef30@tessares.net>
-Date: Fri, 14 Oct 2022 15:18:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8253B20F8
+	for <mptcp@lists.linux.dev>; Fri, 14 Oct 2022 13:32:40 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K40spdKW0T/1xpSLJ9wgqE1LGqjbQqlWdsiRyr7KkEQRXms8SpWXhggxv9wpStxR4qhTNFlc55f3Uwj/8EsUtyX7bXGXyFIpm5LNEDuc4D4QuCJFNr8LKDrdYTNzfDFf0SQozKYKSBV1qW1DIDd4uNTaAUXRs10x9eNItAvHTxYxyfHdlM76Paqnd3bDbBZPAj9imyx6k46Gg2dBj357HZVLM2xfmex9ImC5c62jJ9Xu7k1zXWP1jjrkU7pg0Zuf6evHvXxHRMN9eoLBC/Nkjnfgz8kOL07tUHFCVF8+chFbDijRwMdVzTrE7utast9aZmSE02QYf4QMAM5eh6zQkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TabJlQ2rnxaruRvdVjNG3wxQe8WaJ4WF6yfJB1qDsHc=;
+ b=mmmEWB2agJWksicrXxuCEOnUj9nGx0/dw/T22g00/yvkanGkw2JceJspdI/rSqVzrh9wARjxtLlOQ0GsaM+OfEMgDmEnZMbLuphm4TYmcBMLjGyPXQxUPv/3hg5NdJBC0SAwxU0+6/jfnkfPrEc7IbvrL/9uOP8xCzt87n++rfP7WSeWAZjlhhv4tW0Ije3on2uDeQrVSj9TqXm1gkqdgu5V81Uj9GqwT46qt/wCcZWR1YLC0kzkvFgCGD6pYT33REQJG5SpFpbY/bhec5M50mbhdzvPCqXyVginT++Xb/i/vGBTTr9Zc+xCaTfhXZR36tHfIFYi3lSAOqTn1Va1Qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TabJlQ2rnxaruRvdVjNG3wxQe8WaJ4WF6yfJB1qDsHc=;
+ b=ITZiCe15s6hZafvkClwf/bzQxW7ep20Fy/IBwioQMa4CtW6bGgqDkau5LqLSVP0HpnIgicPQWHCqFBQpbmKF+OJgl2CGrxOuubATDceDeP3KNrfXLNajUYrbhtQadX/p05KzTKWNwhHVhAh2xmPoIcwjQfVcxJ+QDOti9euYiWNmY9YFAeGvYE4tGg+kHtnUuRyFEeq6yxgk8FDa2tGuEd4NG+9kZbEIQOPuLD5KYpgHydH5xnKE6BNF3Mn/nP0iNtdZXDJ4m64MaemSVt1GtFtNkKLzteF3dwrO3xyzfDmP8A5Hw7cJ986ODbQUlsIVZz3o7nFyeo03ikRhSi0I+g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by VI1PR04MB6975.eurprd04.prod.outlook.com (2603:10a6:803:138::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15; Fri, 14 Oct
+ 2022 13:32:37 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::645c:cc06:a616:fe45]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::645c:cc06:a616:fe45%7]) with mapi id 15.20.5723.029; Fri, 14 Oct 2022
+ 13:32:37 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v8 00/15] refactor push pending
+Date: Fri, 14 Oct 2022 21:32:07 +0800
+Message-Id: <cover.1665753926.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCPR01CA0065.jpnprd01.prod.outlook.com
+ (2603:1096:405:2::29) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH mptcp-net v3] mptcp: fix abba deadlock on fastopen
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <7c61250080c052b9dfb42a023c85dc36d4450daf.1665584136.git.pabeni@redhat.com>
- <dee06f30-f5ea-deb3-9d40-b4f7a5d460df@tessares.net>
- <4ce32959a049f5fcb34e98dc761af5d022fd8607.camel@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <4ce32959a049f5fcb34e98dc761af5d022fd8607.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|VI1PR04MB6975:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6eb3b54c-c01e-4dee-9b52-08daade88edd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	76kZm8r9OvsmuOBOWoHjRfCjY7DEXEG6olJQdZcnpdw3sky8xboZ5gjZpYlsal6WsTpx5Ek+vvfhB87kZVlFC7bY74GhYPPL+baZU9g4kT/JjMGGwHJ8YZN5vQ3iqjK7xLzi6EUWtcvc0eL6tK2vEHNC16xBv2mStMQvqqVNd3OxNmv5xGPdH8jK2eLW9nwqdDSF0/Ni1SFFan4WCXwhKop/Jib7o6/8aQLutFPAoRElddn5LVz5Lu4QdWSeNk12Yle4W8VMyHv5ecvPDTwvSg4UWhe3WQdtyaEStNPxb0TNtAMXbDLAuDDCOMLYGd+4koSc+y+o03QDFF53R2H4Zt2Ex447XvnTYtNc5hS1cfKPnybAh5Ko1llLTr2PITSU0/A9LGvrQDIpULwLusTIExLoDCS5iYMZxQsM8zNRaEM87EIgpGt8fqS/TjkMpC1DellWZwLbxQ6fyqKPs1hp5c54ObdeaARxa4HFuF0R7dmZqU0lN4DEKySQcvOVeqTJ0SyIQwyY/Ag+q2jrmvsqo+pESH+sRW6W+qLrVIPGOgdsZCozHVyF+hlyUOng6tnanNIMb4AV55MdyP80lxNbZPOBL896fesHU575UeZG+t/xzbI/poyhEh1gDhtI/7q+1RjjvELoMxG7Q6TtUESA20uVC7CV1o+ozPMWjT1pBWUWhhSOGuFk6Vu9vqxA8BTn2ciVW0Kq+vHfOFUi4g2kh/gAfal9/im93lvuxDfzXiaKvIjYyqyQYhnLqX1H2f3N
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(376002)(366004)(396003)(136003)(39860400002)(451199015)(8676002)(38100700002)(6916009)(316002)(478600001)(36756003)(6486002)(86362001)(83380400001)(44832011)(2906002)(66476007)(66556008)(4326008)(5660300002)(41300700001)(2616005)(6506007)(6512007)(66946007)(26005)(107886003)(8936002)(6666004)(186003)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KJqegT96psjYiqF1s+zJtSg+pCFan5bd96aybz6UISaM5JnH92KH9Y7AwbPP?=
+ =?us-ascii?Q?QYr5bVFHdqJ5a6Bf9GpEiuM/CSEw43Xb9biVXVyzguk9JvkStikm7m9C2mBQ?=
+ =?us-ascii?Q?e85WOdI80f6OwBu+erkpbnlJWMhwoyW+3Frz7eTkrAyuQhJj4xtPf4WW6YN6?=
+ =?us-ascii?Q?U1aCgza2vdAg2HAo+nLMt0ZIzMfQjZF6gJ1ARuKqq0kjBrG9bMMi+ja8OjyV?=
+ =?us-ascii?Q?qmOy3LWfcaxQgmftDo+5/RF45gC6OYM8lYVNiiS234CoXpia/fyimGZomF23?=
+ =?us-ascii?Q?nEK35IL2KiTfqIJbl5f1X2Y1Og5U7gvAHqnzOO4+D7mPRvW9l3mvFwoJ/xxV?=
+ =?us-ascii?Q?lvSvgObpoypRiesw64eVuQmjiyCY+SS90ecvXvX8Jpx+DxYaNB1f/SSz+iEO?=
+ =?us-ascii?Q?Dc9NuB9dfpYxS9HgPhjt/ybISdbwtL5vHNRbZE0HVxo7pjUyQ6du/dwVhSGj?=
+ =?us-ascii?Q?fMaPosKuvegARedQWIjSvcxwbQ58QGsIrSsZGEr+cqkXewSBb85Sk5M6tvJn?=
+ =?us-ascii?Q?Q6z0imnQ3NzCMJK3jKHZwmlVtVQoyNzrEVLBJqeaXXzpNpp3d1H7gq17/qJb?=
+ =?us-ascii?Q?eHGnOvOrRcwlBngz9o+5hP/B3lqELNQcDmhPrsABZBv0/rPI4NBNKaR2MMgY?=
+ =?us-ascii?Q?2gE63jOOg0WFJuIo9nwl/Hl2bZd8NfYDhOznCXWUJ4dV6LOXR2AN3E88OUOu?=
+ =?us-ascii?Q?HwrqBOMqevnBv391oLNC4s586qunCQiGjULIG0V6zOHNH4XEF509Zp7whsTJ?=
+ =?us-ascii?Q?BfTfmOd8V+V2+E+60DD5YBr7zDK2UChd26gsUxGOakLs+7fEKcPpBET+9AwN?=
+ =?us-ascii?Q?hdPPbabxw3mv2YJ4MIove6VdVPInFW9YySWgkSfflvdBRF03Qh81hlhlikWf?=
+ =?us-ascii?Q?opZDXuxhJxpGDmuQgDuqH27gTwzNV70ZhjPk7NxOwIAS4Vzg9ls18HwArIY4?=
+ =?us-ascii?Q?dmsi+/vrLJpKk3BQ9ik1t/hUe2gJL6+T/zJ4s41teJRA7L2tIJDEPaRQvA4E?=
+ =?us-ascii?Q?HJe9BFo7qdQvE4ecTzK6geQzkEW7VApvQVaPasqx14IZR+GEKIZed1GBJYg6?=
+ =?us-ascii?Q?CZUvGxOqFS+WtgmFxbUGyPWDMMkpzkyNtmVJ23ZjMF0dlehpGh6jAv3MXd8W?=
+ =?us-ascii?Q?Bv+Y7NfSuMkEFCz2GydFABc4NzwcvOW6f9H7iwYSZs3+qSuGmZqXZFilngVQ?=
+ =?us-ascii?Q?oSbhiS+NScK9arHGW6lTwx8IBJxp75ddU/S7kaEBOSME1ul7RpFyvjGEVqVW?=
+ =?us-ascii?Q?EQr0lQakNzMFFkO+1ug8sO+nhszk/BfPM10p3pvuMEZAmKAt5UtN9vPSPj7V?=
+ =?us-ascii?Q?7AuJEy/+LCSqhwiWel298ftLnNbrXFIETiB1Ks4CPErduqfo/EWGlRVi6TaP?=
+ =?us-ascii?Q?I9RE+q2OPcs5o2p3YSj1uMDLyLYAPHduQBUobKGlYODf3nj5UJeUcYhNI40A?=
+ =?us-ascii?Q?oJ6mjSBrbGHH1D5j5rOAaqsANmY6Y1uE1aLKl1TgGoLIZEutZa3WumcPuAEr?=
+ =?us-ascii?Q?86v9WPOzUaIi6ALE6RUdLsG608HtqMQqVNhMA73TnEFgfa80256yLAqsOWLb?=
+ =?us-ascii?Q?1yytZ0n3HEWan7ETdD+mT4lTV8STJsI3VIVRm6/cz7D7h0uWZ3SxCnr6rAL2?=
+ =?us-ascii?Q?cg=3D=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eb3b54c-c01e-4dee-9b52-08daade88edd
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2022 13:32:37.3189
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SXdTVcAKogqBrUtmN6mdm7cH2152ct2VgGvAPXli2fVgpa6I4Zr6mk98zepwuoMAHZuHbfKN0jc5sCvV/sTWDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6975
 
-Hi Paolo, Mat,
+v8:
+- merge "register default scheduler" into this series.
+- Move "multi-subflow scheduling" out of this series.
+- This series should be merged between the commit "mptcp: add get_subflow
+wrappers" and "bpf: Add bpf_mptcp_sched_ops", except the squash-to patches.
 
-On 13/10/2022 14:19, Paolo Abeni wrote:
-> On Wed, 2022-10-12 at 17:39 +0200, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 12/10/2022 16:48, Paolo Abeni wrote:
->>> Our CI reported lockdep splat in the fastopen code:
->>
->> (...)
->>
->>> The problem is caused by the blocking inet_wait_for_connect() releasing
->>> and re-acquiring the msk socket lock while the subflow socket lock is
->>> still held and the MPTCP socket requires that the msk socket lock must
->>> be acquired before the subflow socket lock.
->>>
->>> Address the issue always invoking tcp_sendmsg_fastopen() in an
->>> unblocking manner, and later eventually complete the blocking
->>> __inet_stream_connect() as needed.
->>
->> Thank you for the v3!
->>
->> I just have one last question here below (+ 2 small comments but a v4 is
->> probably not needed):
->>
->> (...)
->>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 1cdf9cd1a3cc..82d899233df4 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -1673,6 +1673,37 @@ static void mptcp_set_nospace(struct sock *sk)
->>>  	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
->>>  }
->>>  
->>> +static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msghdr *msg,
->>> +				  size_t len, int *copied_syn)
->>> +{
->>> +	unsigned int saved_flags = msg->msg_flags;
->>> +	struct mptcp_sock *msk = mptcp_sk(sk);
->>> +	int ret;
->>> +
->>> +	lock_sock(ssk);
->>> +	msg->msg_flags |= MSG_DONTWAIT;
->>> +	msk->connect_flags = O_NONBLOCK;
->>
->> Just to be sure I understand properly: here O_NONBLOCK is set but that
->> will only be used for the subflow and only if MSG_FASTOPEN is set (and
->> allowed), so not for TCP_FASTOPEN_CONNECT, right?
->>
->> But no need to reset them later, right?
->>
->> (I'm a bit confused by the fact we set msk->connect_flags in
->> mptcp_stream_connect() before calling __inet_stream_connect() and not
->> here below)
-> 
-> You are right, that is actually not obvious. The later
-> __inet_stream_connect() call will not reach mptcp_stream_connect(),
-> will perform only the inet_wait_for_connect() bits, so the
-> connect_flags will be unused.
+v7:
+- update delegate sending in patch 10
+- rebase to export/20221011T063543.
 
-Thank you for the explanation, that's clearer now!
+v6:
+- drop all msk->last_snd, add last_snd variable instead in patch 13
+- fix lock_sock issue in patch 3
+- merge squash-to patches
 
->>
->>> +	msk->is_sendmsg = 1;
->>> +	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
->>> +	msk->is_sendmsg = 0;
->>> +	msg->msg_flags = saved_flags;
->>> +	release_sock(ssk);
->>> +
->>> +	/* do the blocking bits of inet_stream_connect outside the ssk socket lock */
->>> +	if (ret == -EINPROGRESS && !(msg->msg_flags & MSG_DONTWAIT)) {
->>> +		ret = __inet_stream_connect(sk->sk_socket, msg->msg_name,
->>> +					    msg->msg_namelen, msg->msg_flags, 1);
->>> +
->>> +		/* Keep the same behaviout of plain TCP: zero the copied bytes in
->>
->> s/behaviout/behaviour/ but I can fix that when applying the patch, I
->> guess "checkpatch.pl --codespell" will remind me that.
+v5:
+- address Mat's comments in v4.
 
-(done)
+v4:
+- update __mptcp_subflow_push_pending as Mat suggested.
+- add more patches from "BPF redundant scheduler" series.
 
->>> +		 * case of any error, except timeout or signal
->>> +		 */
->>> +		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
->>> +			*copied_syn = 0;
->>> +	}
->>> +
->>> +	return ret;
->>> +}
->>> +
->>>  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>>  {
->>>  	struct mptcp_sock *msk = mptcp_sk(sk);
->>> @@ -1693,26 +1724,14 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>>  
->>>  	ssock = __mptcp_nmpc_socket(msk);
->>>  	if (unlikely(ssock && inet_sk(ssock->sk)->defer_connect)) {
->>> -		struct sock *ssk = ssock->sk;
->>>  		int copied_syn = 0;
->>>  
->>> -		lock_sock(ssk);
->>> -
->>> -		msk->connect_flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
->>> -		msk->is_sendmsg = 1;
->>> -		ret = tcp_sendmsg_fastopen(ssk, msg, &copied_syn, len, NULL);
->>> -		msk->is_sendmsg = 0;
->>> +		ret = mptcp_sendmsg_fastopen(sk, ssock->sk, msg, len, &copied_syn);
->>
->>
->> It might look a bit strange to add some code here and then move it to a
->> dedicated function in the following commit but I'm sure that will be
->> fine for other net maintainers! :-)
-> 
-> If you prefer I can rework the 'factor out' patch to make this change
-> more straight-forward.
+v3:
+- add a cleanup patch.
+- remove msk->last_snd in mptcp_subflow_get_send().
+- add the loop that calls the scheduler again in __mptcp_push_pending().
 
-No, all good, it should not cause any issues.
+v2:
+- add snd_burst check in dfrags loop as Mat suggested.
 
-The current v3 looks good to me as well so I just applied with Mat's RvB
-tag:
+Refactor __mptcp_push_pending() and __mptcp_subflow_push_pending() to
+remove duplicate code and support redundant scheduler more easily in
+__mptcp_subflow_push_pending().
 
-New patches for t/upstream-net:
-- db11c1e73050: mptcp: factor out mptcp_connect()
-- 8f2675510042: mptcp: fix abba deadlock on fastopen
-- Results: 1cb20c1f7d2a..971a69ed25f3 (export-net)
+Geliang Tang (15):
+  Revert "mptcp: add get_subflow wrappers"
+  Squash to "mptcp: add struct mptcp_sched_ops"
+  mptcp: use msk instead of mptcp_sk(sk)
+  mptcp: change 'first' as a parameter
+  mptcp: drop snd_burst in mptcp_sock
+  mptcp: refactor push_pending logic
+  mptcp: drop last_snd in mptcp_sock
+  mptcp: add sched_data_set_contexts helper
+  mptcp: register default scheduler
+  mptcp: add scheduler wrappers
+  Squash to "bpf: Add bpf_mptcp_sched_ops"
+  Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
+  Squash to "selftests/bpf: Add bpf_first scheduler"
+  Squash to "selftests/bpf: Add bpf_bkup scheduler"
+  Squash to "selftests/bpf: Add bpf_rr scheduler"
 
-New patches for t/upstream:
-- db11c1e73050: mptcp: factor out mptcp_connect()
-- 8f2675510042: mptcp: fix abba deadlock on fastopen
-- Results: 7769807fea85..cdd78b7e0a98 (export)
+ include/net/mptcp.h                           |   7 +-
+ net/mptcp/bpf.c                               |   1 +
+ net/mptcp/pm.c                                |   9 +-
+ net/mptcp/pm_netlink.c                        |   3 -
+ net/mptcp/protocol.c                          | 208 ++++++++----------
+ net/mptcp/protocol.h                          |  15 +-
+ net/mptcp/sched.c                             | 117 ++++++----
+ tools/testing/selftests/bpf/bpf_tcp_helpers.h |  10 +-
+ .../selftests/bpf/progs/mptcp_bpf_bkup.c      |  10 +-
+ .../selftests/bpf/progs/mptcp_bpf_first.c     |  10 +-
+ .../selftests/bpf/progs/mptcp_bpf_rr.c        |  16 +-
+ 11 files changed, 212 insertions(+), 194 deletions(-)
 
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20221014T131605
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221014T131605
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.35.3
+
