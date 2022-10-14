@@ -1,116 +1,108 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109D82912
-	for <mptcp@lists.linux.dev>; Fri, 14 Oct 2022 23:17:46 +0000 (UTC)
-Received: by mail-qk1-f177.google.com with SMTP id j21so3452878qkk.9
-        for <mptcp@lists.linux.dev>; Fri, 14 Oct 2022 16:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wpPDQY7DmC36sLY5KZuf7+6oIOeSbv8muTX19rd1OrA=;
-        b=EIKqj7nGqM/CgYPxWc2DyWcIJCCOiHtLAK4/2d0nX8xDBhGCGTTpa3M/aS2BMQL1oa
-         wqmSKGrr8mqu64SPZDw15+ha9kULDYG7jNCqG+sVlRHxsJSh+scRKrkciad6JKHeOZIC
-         DomQtuGo61a5z9p0uVlm82f1ZDuBD2ZH8LZ0BVGga+Se3Om/F685tXyCGUcu0zYwBWf3
-         If8bBwQbjq6SE3yYYy48GejkLMP2ugQRbxMLhNiWHV8wsksVFN63OVIYZ/HxTdXPJ0We
-         5v1zfiHyBi+M5yvxfv/vbmZo3AvH2VRNfBw+BRqz6A00oFDnTyPEzN+nWAEq1Rwu18n0
-         mbNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wpPDQY7DmC36sLY5KZuf7+6oIOeSbv8muTX19rd1OrA=;
-        b=DQtes4nkYot5iV/E3GTLzrxTMcqefOnxxVReZjuhgoXPcPWKe/QMzNzoPUc5B/1j3o
-         PWkVZdu/p+5xYcrm2T9uA+GVjXuqTDDMtRyYdh/BYFE9LX7QKD+M+5ylILNVWLdEmPIA
-         FWzcXdBPl6GUhxjHfCahygIzfhButA6SbFoqAh8ZT6Kz2lEbpdIWmB7X9JtIk7zz1OZf
-         dKXLB41OcQHciVh6HobwK/fIccCBxxtTMPKT5a6+QsxbgQ2+vcnUED7nSANW5ahfMI/J
-         eGSM3Ix9PRrSfpCVa+Bdw8oiSYFP88JuRRLiqre0B6ZM4TP6a1cMsAl6gHZRmLcCDN9w
-         W86Q==
-X-Gm-Message-State: ACrzQf1AHN/QRW4C0rQqjUjBm89V4CYZqldY9C5mat6d758E2LisfasW
-	wqcmJ1DS7c2Df1lnUkPzjQ==
-X-Google-Smtp-Source: AMsMyM5gnx1ed5dIKJXxyED6ELQy6TemT90M6bRiKeTevs6ttc53YlyCKul0g9SXhobtvW2gLCwtYQ==
-X-Received: by 2002:a05:620a:343:b0:6ec:f4b3:e3c8 with SMTP id t3-20020a05620a034300b006ecf4b3e3c8mr212270qkm.225.1665789464965;
-        Fri, 14 Oct 2022 16:17:44 -0700 (PDT)
-Received: from [127.0.0.1] ([20.10.148.210])
-        by smtp.gmail.com with ESMTPSA id b13-20020ac87fcd000000b0039a610a04b1sm3079788qtk.37.2022.10.14.16.17.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Oct 2022 16:17:44 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <2abed554f2050c7626dede74c92a181506a92682.1665779933.git.pabeni@redhat.com>
-References:
- <2abed554f2050c7626dede74c92a181506a92682.1665779933.git.pabeni@redhat.com>
-Subject: Re: selftests: mptcp: set test-case parameters consistently: Tests
- Results
-Message-ID: <a4d7da89-5ad7-e750-e3f2-d69e11818200@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Oct 2022 23:17:43 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9DB2F3F
+	for <mptcp@lists.linux.dev>; Fri, 14 Oct 2022 23:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665791626; x=1697327626;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZRva+LO+tlt2mIeLxatvjl8wZnLXy5H7gD+e9FY2cr8=;
+  b=lPzXozs/9RqMO1BJx7LSZiIgLQvzdl8rU2ZGtWsu4tGg+H0pkGV/cP9w
+   zWHIj5togzL0i2BLg+j8NtFze3lzW8XfPP1yRNf3uNxuBlqh1W+OMBqWG
+   xSgAZJrMseCMx9iitFkfqYLfl0OVRWuMcfpskfhiDkuzwgfa5nsoPb0kR
+   GBBy1VX58a8fxBYK56E3dytlzcv0+2U7JzvwVqfZHBewlPqD8Of70VQq1
+   MI+bo9BzAHJ4dJUMMM9D24FjipItb7fyoDbHjUYuJH9af3DDfDojtbtwB
+   AlxNpr4NhXIetxl04ZkCL29WfKy5Ta0PwdD5MKRuP7IBMD40A8by5YJmG
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="332017995"
+X-IronPort-AV: E=Sophos;i="5.95,185,1661842800"; 
+   d="scan'208";a="332017995"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2022 16:53:45 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="578800885"
+X-IronPort-AV: E=Sophos;i="5.95,185,1661842800"; 
+   d="scan'208";a="578800885"
+Received: from mcunning-mobl1.amr.corp.intel.com ([10.212.193.28])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2022 16:53:45 -0700
+Date: Fri, 14 Oct 2022 16:53:45 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v8 02/15] Squash to "mptcp: add struct
+ mptcp_sched_ops"
+In-Reply-To: <f13602e09c6e0854f43ba68cf926dc03b6036f4a.1665753926.git.geliang.tang@suse.com>
+Message-ID: <0a5e0508-6dd4-7a00-4294-42f030640535@linux.intel.com>
+References: <cover.1665753926.git.geliang.tang@suse.com> <f13602e09c6e0854f43ba68cf926dc03b6036f4a.1665753926.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-
-Hi Paolo,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal:
-  - Unstable: 3 failed test(s): =
-packetdrill_add_addr selftest_mptcp_join selftest_simult_flows =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5519911765147648
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5519911765147648/su=
-mmary/summary.txt
-
-- {"code":404,"message":
-  - "Can't find artifacts =
-containing file conclusion.txt"}:
-  - Task: https://cirrus-ci.=
-com/task/5536100100866048
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5536100100866048/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/0d89219ab621
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+On Fri, 14 Oct 2022, Geliang Tang wrote:
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+> New api:
+> - add new data_init
+> - add snd_burst in mptcp_sched_data
+> - add an int return value for get_subflow
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> include/net/mptcp.h | 7 +++++--
+> net/mptcp/sched.c   | 2 +-
+> 2 files changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index c25939b2af68..cac5b0d512fd 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -101,12 +101,15 @@ struct mptcp_out_options {
+>
+> struct mptcp_sched_data {
+> 	bool	reinject;
+> +	int	snd_burst;
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+I suggest moving this addition to "mptcp: drop snd_burst in mptcp_sock", 
+since it isn't used until then.
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+> 	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
+> };
+>
+> struct mptcp_sched_ops {
+> -	void (*get_subflow)(const struct mptcp_sock *msk,
+> -			    struct mptcp_sched_data *data);
+> +	void (*data_init)(const struct mptcp_sock *msk,
+> +			  struct mptcp_sched_data *data);
+> +	int (*get_subflow)(const struct mptcp_sock *msk,
+> +			   struct mptcp_sched_data *data);
+>
+> 	char			name[MPTCP_SCHED_NAME_MAX];
+> 	struct module		*owner;
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index d295b92a5789..949663742f14 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -33,7 +33,7 @@ struct mptcp_sched_ops *mptcp_sched_find(const char *name)
+>
+> int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
+> {
+> -	if (!sched->get_subflow)
+> +	if (!sched->data_init || !sched->get_subflow)
+> 		return -EINVAL;
+>
+> 	spin_lock(&mptcp_sched_list_lock);
+> -- 
+> 2.35.3
+>
+>
+>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+--
+Mat Martineau
+Intel
