@@ -1,113 +1,212 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F67443B
-	for <mptcp@lists.linux.dev>; Thu, 13 Oct 2022 23:30:40 +0000 (UTC)
-Received: by mail-il1-f169.google.com with SMTP id u10so1766653ilm.5
-        for <mptcp@lists.linux.dev>; Thu, 13 Oct 2022 16:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cYh5yv5c6uB+VYxevKXk+jj8SrynmUCiS8stBc3aIMQ=;
-        b=R8AAgH/6RB2XyFUqDfQYBh6bYcZ4vKRxTHXSj/gz164OswyOCpGOqRML4h9XLhncef
-         iKOknlK/shfhavbQIDjpMsZG+jjesL4bmXHMCNMrf6aRhszBvQgZcyjNyeW33+8EbdoF
-         p1r6LSt+MogVGM+xAL0PslUS/mX2DlNYRrxg0Pxyu24FoZyJe8TryNoOQZ5k0iRE/9Ne
-         dppiSUMxfuuxLIpTf1cVzwOw7fWjEpfpABY9QuMfsA7CuTAKqVv0s2grbKa+UeICpX6G
-         dPd7S0VDcuK5A5pBbdyJQE4XZHbDlzaNxYe5y77azFpUK/85/NC5RThX51gblfomgQ36
-         8psg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cYh5yv5c6uB+VYxevKXk+jj8SrynmUCiS8stBc3aIMQ=;
-        b=I79wv4/IsISN6zjdtpni94HQsK3tIuXaRmBsLrRDX2L9dGie+KI7/E4Igtrgm7uPsm
-         jAHNWIHj6fCd2vGM3tvwBgnlQA5bkrPf46Xb9tLZz3wPJ359CruRGX3GSpuu/j6u2X4u
-         q3pQsEj/XsZW+ExWUl8rF7Wd0E5SY9ZQbPjbpAwMotk1awWyvhjMZRk2EnOk+Fkphk/B
-         j0fhGlo2p1tCgwMacXQlKWzvMp7SkoiaBDq3pTL3DXGG5B89cFdHO6LyFfJW+pNBfKLL
-         9gQurRaJgJ1advhnVJpkS+CJAnZOcYS0EdkIa53pQstbGWNqDjkLwU5GizSwOEediYhx
-         DwfQ==
-X-Gm-Message-State: ACrzQf3BByWWV8eQ+DBm6ZwEJpZSBZEFSh0TI7VWq9hlYqvqZVxsRUWs
-	d95MWtHWB8IeEuXwnfMvDQ==
-X-Google-Smtp-Source: AMsMyM7BralF6+xiTP4I6wWvEJtIsvwxkQB1aXf+Hsx3tfEHllIT1EdVceJv70dRXU9HpK/W38GUDg==
-X-Received: by 2002:a92:d28a:0:b0:2fc:1400:19c9 with SMTP id p10-20020a92d28a000000b002fc140019c9mr1206154ilp.20.1665703839536;
-        Thu, 13 Oct 2022 16:30:39 -0700 (PDT)
-Received: from [127.0.0.1] ([40.77.44.223])
-        by smtp.gmail.com with ESMTPSA id t43-20020a05663834ab00b0035ad8fd5ce9sm475588jal.147.2022.10.13.16.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 16:30:38 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <7c61250080c052b9dfb42a023c85dc36d4450daf.1665584136.git.pabeni@redhat.com>
-References:
- <7c61250080c052b9dfb42a023c85dc36d4450daf.1665584136.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix abba deadlock on fastopen: Tests Results
-Message-ID: <d3b94417-448c-131a-63c9-025973d6e992@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Oct 2022 23:30:37 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A32370
+	for <mptcp@lists.linux.dev>; Fri, 14 Oct 2022 01:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665710080; x=1697246080;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=fiHarhEU+a5VvfQ0Nxh7/TxriIdgWvz2EzxJfS/0DY4=;
+  b=dB8V2ei1BxDSeIm7qsb9JVd/JIVs7aF5TcfmgxNdMj2nX8IEGxVH1crY
+   /ce8ukqlHY53hsvSAeEhOhbyK7qRC02K4yM2o9G235rPuxigzljtlGGkI
+   j3I9y2IQdruMTGTaeeIbFEM+BXAKNbXbK/G/mRDeFHy1QSKBTAM62EQSi
+   4kFY1GErhFx6Btw68y6qpmYxtYS0gll/FJS0GjzJvHAm5v2/YUX5GTsho
+   docwXAdgShSTDuBtskbd0eRcb7bFBKB2b1ZZpXRQkHhnJJ6p7QpVZ9L1H
+   WLHv7WHg3/M773Mpr/5APq1eLNkr0B6Rbnvsmp9+sKDzNKchNYleKnH+o
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10499"; a="391556423"
+X-IronPort-AV: E=Sophos;i="5.95,182,1661842800"; 
+   d="scan'208";a="391556423"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2022 18:14:31 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10499"; a="716562952"
+X-IronPort-AV: E=Sophos;i="5.95,182,1661842800"; 
+   d="scan'208";a="716562952"
+Received: from pateldee-mobl5.amr.corp.intel.com ([10.209.118.62])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2022 18:14:31 -0700
+Date: Thu, 13 Oct 2022 18:14:30 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v7 10/12] mptcp: multi subflows
+ subflow_push_pending
+In-Reply-To: <5ed126ff5fef486cb205b81f7f78fb9e7df4e040.1665549148.git.geliang.tang@suse.com>
+Message-ID: <fcae64af-2da6-4880-2d40-c32f76c8885f@linux.intel.com>
+References: <cover.1665549148.git.geliang.tang@suse.com> <5ed126ff5fef486cb205b81f7f78fb9e7df4e040.1665549148.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Wed, 12 Oct 2022, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> This patch adds the multiple subflows support for
+> __mptcp_subflow_push_pending(). Use mptcp_sched_get_send() wrapper
+> instead of mptcp_subflow_get_send() in it.
+>
+> Check the subflow scheduled flags to test which subflow or subflows are
+> picked by the scheduler, use them to send data.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 
-Our CI did some validations and here is its report:
+Hi Geliang -
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5272020548583424
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5272020548583424/summary/summary.txt
+We talked about redundant transmits from __mptcp_subflow_push_pending() in 
+the meeting today: 
+https://annuel2.framapad.org/p/mptcp_upstreaming_20221013#L110
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6397920455426048
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6397920455426048/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/0229c83c45c0
+It was hard to capture the whole discussion in the notes, but the main 
+point is that handling the multi-sublow __mptcp_subflow_push_pending() is 
+a lot more complicated than the __mptcp_push_pending() case.
 
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+__mptcp_subflow_push_pending() is running in one of two contexts, where 
+the ssk lock is already held and sock_owned_by_user(msk) has been checked:
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+1. From mptcp_incoming_options(). This allows transmission of unsent data 
+from mptcp_send_head when acks are received on a subflow - if the 
+scheduler selects the subflow that is already locked, then additional data 
+can be quickly sent without any delegated actions, release callbacks, or 
+worker threads. If the scheduler selects a different subflow, a "delegated 
+action" is used to schedule a callback for that subflow using the NAPI 
+poll API.
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+2. From mptcp_napi_poll() (the "delegated action"), as scheduled by the 
+case above.
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+There are some constraints to observe here:
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+In both case 1 and case 2, it should only delegate to one other subflow. 
+If there are more than two redundant subflows scheduled, there would need 
+to be a way to chain delegated calls. (I'll explain more about this with 
+the code below).
+
+It's also important to understand that the subflow and msk data locks are 
+released between case 1 above and a delegated action that runs later. 
+__mptcp_push_pending() could run and invoke the scheduler again, which 
+would overwrite the subflow->scheduled bits that were set by 
+__mptcp_subflow_push_pending(). This means __mptcp_push_pending() needs to 
+be aware of multiple-subflow sends that are in progress, and finish those 
+pushes before calling the scheduler again.
+
+
+To make all this work, we think more data needs to be stored in each 
+subflow by the scheduler. Each scheduled subflow needs to know:
+
+  * Is it scheduled? (subflow->scheduled)
+  * Where to start sending
+  * How much data to try to send on that subflow
+
+As the code is now, __mptcp_subflow_push_pending() will send sequential 
+data instead of redundant data if multiple subflows are scheduled.
+
+
+Like I said above, this is getting quite a bit more complicated for the 
+multiple subflow case. What do you think about posting a v8 patch set that 
+has only the single subflow refactoring and any necessary squash-to 
+patches? Then we could add those commits to the export branch, and start 
+working on a dedicated multi-subflow series?
+
+
+
+> ---
+> net/mptcp/protocol.c | 50 +++++++++++++++++++++++++++++++++-----------
+> 1 file changed, 38 insertions(+), 12 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 36525d7ea8e7..4c9c2c6dfbe5 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1599,11 +1599,11 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk,
+> 					 bool first)
+> {
+> +	struct mptcp_subflow_context *subflow, *last = NULL;
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> 	struct mptcp_sendmsg_info info = {
+> 		.data_lock_held = true,
+> 	};
+> -	struct sock *xmit_ssk;
+> 	int ret = 0;
+>
+> 	info.flags = 0;
+> @@ -1612,20 +1612,46 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk,
+> 		/* check for a different subflow usage only after
+> 		 * spooling the first chunk of data
+> 		 */
+> -		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
+> -		if (!xmit_ssk)
+> -			goto out;
+> -		if (xmit_ssk != ssk) {
+> -			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
+> -					       MPTCP_DELEGATE_SEND);
+> +		if (first) {
+> +			ret = __subflow_push_pending(sk, ssk, &info);
+> +			if (ret <= 0) {
+> +				if (ret == -EAGAIN)
+> +					goto again;
+> +				break;
+> +			}
+> +			first = false;
+> +			continue;
+> +		}
+> +
+> +		if (mptcp_sched_get_send(msk))
+> 			goto out;
+> +
+> +		mptcp_for_each_subflow(msk, subflow) {
+> +			if (READ_ONCE(subflow->scheduled))
+> +				last = subflow;
+> 		}
+>
+> -		ret = __subflow_push_pending(sk, ssk, &info);
+> -		if (ret <= 0) {
+> -			if (ret == -EAGAIN)
+> -				goto again;
+> -			break;
+> +		mptcp_for_each_subflow(msk, subflow) {
+> +			if (READ_ONCE(subflow->scheduled)) {
+> +				struct sock *xmit_ssk = mptcp_subflow_tcp_sock(subflow);
+> +
+> +				if (xmit_ssk != ssk) {
+> +					mptcp_subflow_delegate(subflow,
+> +							       MPTCP_DELEGATE_SEND);
+> +					mptcp_subflow_set_scheduled(subflow, false);
+> +					if (last && subflow != last)
+> +						continue;
+> +					goto out;
+
+mptcp_subflow_delegate() should be called only one time to pick the next 
+subflow to attempt. mptcp_napi_poll() will try to send on that subflow, 
+and then call mptcp_subflow_delegate() to schedule the next subflow. This 
+chain will continue until all the redundant subflows have transmitted 
+their data.
+
+> +				}
+> +
+> +				ret = __subflow_push_pending(sk, ssk, &info);
+> +				if (ret <= 0) {
+> +					if (ret == -EAGAIN)
+> +						goto again;
+> +					goto out;
+> +				}
+> +				mptcp_subflow_set_scheduled(subflow, false);
+> +			}
+> 		}
+> 	}
+>
+> -- 
+> 2.35.3
+>
+>
+>
+
+--
+Mat Martineau
+Intel
