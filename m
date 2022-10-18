@@ -1,46 +1,46 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2083.outbound.protection.outlook.com [40.107.105.83])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2042.outbound.protection.outlook.com [40.107.105.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3800C4A24
-	for <mptcp@lists.linux.dev>; Tue, 18 Oct 2022 11:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D904A24
+	for <mptcp@lists.linux.dev>; Tue, 18 Oct 2022 11:43:47 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AZfkpincRfzjDsF8SP6nwREjSGs3E386jNFP3+csf0abtkdgKs/NjrUOITVTauGZpccLhlmb/AK4h5z+yAWWBKMC7aRMjVZuMUwD8trflI7BMTUDazLFIiUIJsiEejcZ/s8OC1lJhNTfjZCn6KAL/rOYQ2iXNchpvdanAbiYoDsI/JVORS0L0z6uv98claUvvZuRMNJ8P8sRBECg81gr9epe4xYb4aMFVXHhnl0/cGaCOFNedMV2mcrlnhSo8yfuOqn0l/jeVg0bltrOepTzuGwmZGKhPSJDVmsBeA/KYCWcFhGP2NmLQzefVc+/ZQ+w4VMQuiA1EoNrIHbbh/4V7Q==
+ b=kPR/YXKEHnYnrH1BAcMcMihbI/bH1e0zAFLSV759mnB7Y9GFVyuNguiXbG0MMj/sifz3txaFVa8uFYJShLCJih9J3FT1pRtS9bCvF40bv7cHicCrXy5fr2SYEJJjpw4U3QwrE07rgwHr6TaOyrciOjVB5HTtkTo7wkIqy6YqCzfyHmaQKuP+vCF1411ivlKbus+RinDYUGXuOnGtCEJgDVdtV1tQT/s9hlaXfGySfFuLTDlIK7XV2ek6gtXAYxyqqckboC1GV9IDHyi+y9+saDPswJYGZziOZq9nadxA8LHu9OLFWKOJBLAvYqsOkzxBYCItI5vbwWGbAZWNsKfRwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d6wlPHT3zTwyc61b5eZvsUdIwWJo1gUFF0IC18iZunk=;
- b=E6VhKKj3Za/pBMTzWuXPbuIF7PHYrVJiGZ+hYBlpST8WMJDfkGkm407jupQrX7bj6Gp8W9byP3KdjDcURItTDTeYzP5IoGuOPbiGxuZSXil4VvRGDLx6TcPMd7l7BmKlT1ylZSNjewQAV2lB9qk//YJIeTdT7bMaMLykoXbDrVA7b+MjdH7YSkCUIY151AwWJCud5x9J9kTMfJGG6s0RCa1Xx9ryItmC8duQh3dDmaaKO4vRDsvg9ur9L+2v7yx7eRPCIVqNHvW7XWQEIOFnFB1+pCVXnBr3kPFHksrCViArfiOGVza60iFdP1qmL5Bu1rsHnFbc+c4kdMaPGcclKA==
+ bh=D5WP6glZaWFpyTRZgS+hCbuGqLJwSnhIt9/sWozvMKk=;
+ b=kMFYgJrsp1VwYNEfuiKY5M83k7xdFo8tOXlc4nzxqD4c3fMIXiScGVVlV6Ugqx6mumFQUMF2T7ww6SSEL29eYvsfh+njS27QEPtnbCNDjLkfMyFXheUpnW7EPKCveiFf8BubjKp+Xgndidh7ZeD2KGsdnqfvEuGNkggSCSPGKUCWXfVJgc6xgKxrKbLVVj7fpzBO1cpHDJjJXbUcJNuqsZ8JgleLzQvTuXqw0DgkDvrBRwRjeWqu2ROKs1fqwY/m08Ffb5UaEwKzmnzuAOh6tpXPp5rFRnABP4vC7B5W1OgofTbqTQa1gqqrfJU4I7HDGGi7NCRfSVBeV4+YC5e48g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d6wlPHT3zTwyc61b5eZvsUdIwWJo1gUFF0IC18iZunk=;
- b=IGmuZulAJXJ/Zujva9Do5bT16out2/NWCNtC8JNMrLfBRRsX6MMuMlXx/RQAIG76ATiZ/2QW4KwVPJW1LYQvnqe6kKcbMLA1Ouwx+J54gTp4n/uS/jWsxCSn4XPTh8KsUC5mvRnrCQxfFTz5h0yCZwDgKKoZMIqe7liwrAuZLk0gTy5DpkwE5jKMN+n/E8hk3s/H0Z+CabZyD+IwhLd+GfkDp8W2NsPwf1R8aejFcRfhPzGmNcC/ugxuVMTzEOQbJEvZb5riMzrJtn6iqKTyofSkUS9KQuKMs/B36y776vaa7/8Oa/gEwVZwVpm3i5sS0J77w/2DzAVFcTnwCD2Ymw==
+ bh=D5WP6glZaWFpyTRZgS+hCbuGqLJwSnhIt9/sWozvMKk=;
+ b=IRN2kFpH8DRHdqZFZ8Xt6vltB07GSh06vVoqdE2TrjUpa07w+WqjB47r8rUhdQICtt4uJWQXBUA4TSGZmJObV+G97BSuwfmcnBNzldvGR1pFzTHqQ/kGEb9TS4T2QQjwfjPuqGYmQFGO+SjCAwcQmgD8c8sO2MPc8JWQE6hOLCU+wdh5msIjZ0/dD4vbO+vzxp1IPSCvgudBogNwV2e2S8xV7+q1b8/VzxO75bYU20b/I8IlPdp4uzGD8YKVhTFaSguBnOn2wZ2Zwz7gerGbm2cQURHcbbKYyjJmG3MC9UvMBjEexnJ+JukYcY7mP8r/GYAIx9UDYf2zFwEoLG0vJA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by AS1PR04MB9237.eurprd04.prod.outlook.com (2603:10a6:20b:4d1::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.32; Tue, 18 Oct
- 2022 11:43:35 +0000
+ 2022 11:43:43 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::645c:cc06:a616:fe45]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::645c:cc06:a616:fe45%7]) with mapi id 15.20.5723.032; Tue, 18 Oct 2022
- 11:43:35 +0000
+ 11:43:43 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v13 1/6] mptcp: use get_send wrapper
-Date: Tue, 18 Oct 2022 19:43:13 +0800
-Message-Id: <20221018114318.23627-2-geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v13 2/6] mptcp: use get_retrans wrapper
+Date: Tue, 18 Oct 2022 19:43:14 +0800
+Message-Id: <20221018114318.23627-3-geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <20221018114318.23627-1-geliang.tang@suse.com>
 References: <20221018114318.23627-1-geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TY2PR02CA0018.apcprd02.prod.outlook.com
- (2603:1096:404:56::30) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: TYAPR01CA0067.jpnprd01.prod.outlook.com
+ (2603:1096:404:2b::31) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -50,181 +50,158 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS1PR04MB9237:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6a96879-c44c-4761-6321-08dab0fdfd3e
+X-MS-Office365-Filtering-Correlation-Id: ad500789-73b2-4b6f-855e-08dab0fe022b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	YpN8ccxN522A1zzEpKT9XNuv71PEbAG98vjsFizj80OVWPJrPHAaiGL2Qj02qHrjmFaTXpd4laINN08fXkir5AuIACzZNQDj6d+F0gLxfG/49R8lkXTjiyeG6zPdmF3IXL1c6+sgLTkJI/ZsmgpelBK9dhjDf37A5pNHeJGijmstRjufGcBhXM8msLbZW1XXKRvI4nP0R16Pg/jvNMzSg6OLyLiKyfeLg+/xz2/cijE9iDgjJIjav28Z+yR1BjKVaM5WV3TotesqsI2j2kobC95clpqp5dTF6sL90LWdNJPH4W/8boOKgnLC/vxuRXoYfiUOBCmkC/tbpKHSMcM2DBVc2n/jM1sNVO63k5uWnYbWhmYZ7UGEqpB1AkjcctPEGXoyELDvn5IktWVAzuNg/HrS57R5O5exdTHvfHDQQghFub/2xLArJHSy4YqbPoXWGeNB/et6qw+YDeS6GRgIWP+jnRtyxe74MMWIUczXmKy/pPNNsxlKnOGqqTtvHTLnymAzoERSnCcmHSHTKr5X1+hUA9LZYQ6otiv2iQCOeDR+nUvboFyCPGvQB8aricucCmcDkgf3lCn6XibsA7xgcbOukDFKNKsBkWdFVvvcS499xv+Df9BPtuN7C6B+5wyz48yzy02ZRITVdb3ssd1AVAlGNV4nXsq5IbvIemfyeEF3IR4as2xTwgnfkNqlpsfsYgWacriID/inlp9FEO38eYbiaqP0Q49QO8IZizkXNqm2WYOGql2fiAVzjJ1G2g1S
+	oLQWNxYT9y6PHtN7jR7Pq2rGFzhXHp8eLvgaQcQ/zokLDS7KP4WPVbuJzjxxP1s/PnDsraA/dWzHrEW7kJeZoB5VcYvEvk0nrPO7ga03zfJIq51gTpKu5Cmk/bYOysG481NiumlutEHR1PZ7zRnkZxCUQSbHvSx3Gkw/oV5Q7JpkbIdG7r37ZOPLKH2ppk59X61KDTuN85Ubds/tJmbeBn7q/rL7y/QV+xzKc9xhzS0e0GHK09IjkJlp0dX7Mj9CpO2p5WmqL+VSnVi2qYd1hikWifBpl3D+q4qwLvRIiBe68GMH0EUUCd+j8s/PtobIB9GNoEaXHnUXjuyU+pX5+zXuquNjKNdS8r2a8p+r2UTUjncOPZ+3GpPBrgdkL8nGtnnzLuEQHJkn0McZsVGgYDWc2QsfxbSI7sMwtqHnt0RmuosdTGD6eRRmhJZlp0gMhGMPIsgIFbtb+n2fMDqVfmDAYxsLy41t+7atsFRRXqz2rWZUJfiEGjzSlivUt6YnmT/2+P3pM059x1DCFms36R1NdSbOLwPp3DViT35qrIGYMumD1Cf6JMquFJ3wOH5kwXIyiQkF4Tq4VtJMJ7NW/KJd6mIIzYmY6BS3FdJ5ydwiZJeGtejqi0+6PK0wPPoM4r9gFm43jovKiZyAVinYKFQd0dDFtDOJ2RUwKWezCmXCy7kH0ztoFP03wRcqjOv2+gnftsS8+4pvRYJwJ0WKuAe1SODFpLP1mWPBgdG3ZvjKLQ+O+NRA7KjNupFh/OPe
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(376002)(346002)(39860400002)(366004)(396003)(451199015)(8936002)(5660300002)(44832011)(66476007)(4326008)(66946007)(38100700002)(8676002)(41300700001)(66556008)(86362001)(36756003)(186003)(2906002)(2616005)(1076003)(6666004)(478600001)(26005)(6512007)(107886003)(6506007)(6486002)(83380400001)(316002)(6916009)(13296009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Zszwg3eM1mT/OLsHkqIBygxn2s4IvzdW30O68OcgK010HNRJvz+iTD5+S0qA?=
- =?us-ascii?Q?JUEjRBnPo5VPBR78z9WoqwUgpnkqWfkMmLOGtdqSFGAgw2b6Gp3AI1/6+TU4?=
- =?us-ascii?Q?JW9w/D2e/CcvmfE679p2Qmr+5A6arxG4v4T83ZKDik2AhX770T+BgVwJHzsA?=
- =?us-ascii?Q?+AFkFqgaIh1tj6nb5nBmRxQU4DUAw9d7RebFj5ChKT56//rVNJXErOXBeRUt?=
- =?us-ascii?Q?DUio3b0IGITOj9zonhHiz8Ifgd/IrRPxbzP32tBhnuF/VQ5AzbDAp3VOb8FP?=
- =?us-ascii?Q?15CitQ09mWhRvJapm8n0GL8S5C0cy3+bOnn1dBhrl98JV+lv3++w0lNmlBEF?=
- =?us-ascii?Q?FDl/eJu+O++NqF41Op/7ACuHZtxMb6h5GujzQO1cTnmYs/4REoHsTiOFim8P?=
- =?us-ascii?Q?vANI24O4mf1riX3YplpEXWM32f1iJNFwP7vwMzkAKrMR6P4KhpeFQKaLzcdj?=
- =?us-ascii?Q?HXAUiFXcs7XdLU2AmsI90Qjv2JAqzme7yHUBhLu8oW5KnSX/Awh8GorUDlJs?=
- =?us-ascii?Q?GQCGIbCADNl5expAeEN8tBV/avQx1wAgZT6wS+K+ZtqDopzwrhLTt/uu6Ryj?=
- =?us-ascii?Q?YbJB3HGew+x4pXRvZeGNaYIr1T4bBqvLdiUfbxH1g+JvkrQuEF8siqRYs8MU?=
- =?us-ascii?Q?dFAO+W7OOkTMe+GTd/k6QFm93Zj9K0+n/wcDUqTfbhPGD8MJD4qMg8e5lN8R?=
- =?us-ascii?Q?Iwy38PA5WMR5RicXfZXdjlw96d/iI2lFJQCnFtXFSMD76y0dzEke5N0xLrgY?=
- =?us-ascii?Q?/mBicDcR9qrsprL3S1EqNOb8cPSkUwOPrWn19YOzddxq3b9bQ4UBEUcQoNUz?=
- =?us-ascii?Q?Hq6CJbf0Xj4+NIxktaV/6fkurLUQ2dIxU9YkwhbbDLE6HtaBwW4FTI8HqU8d?=
- =?us-ascii?Q?VPnwOEpnOL5+FBUtnkjnIMhXjOfZpIc5QooBJf6tvKdYg9HAfhWYKWRIPW3Q?=
- =?us-ascii?Q?dJYwDvTtaelkdA6bMwO6RwIEtd8AkeitGmQOwYz36oJlALQQLZ/JvTNtNpXS?=
- =?us-ascii?Q?Jvb5t2xSETcBn4pViDZV8TnMHaPo8MY/nE6Mg1vu+hnHlKF2o+nt9XAlgvxe?=
- =?us-ascii?Q?dRJL85ZR+z7ChUAQ2lUKgWemoQoBK/gLe29t3f73sv6QtE11Mv2IU2T/ueRJ?=
- =?us-ascii?Q?6EPUQgIWffn7NZXen6Iwt7u57pOq3E7YvUdYWoabP6AOOel1agffYl6aADOt?=
- =?us-ascii?Q?CvK3DT1AhpgFIxlnogKDYXQ7BqxTBEzUXfEEs73srdSUc9s4oZvf14HOqkIw?=
- =?us-ascii?Q?JJYVLmQwalTiF+Z/Yp6QOOGBCLFXX1LPKBCvxpG3T9miQko+JPfT3fiUajfI?=
- =?us-ascii?Q?GScpizSVvIeU0ZoD5QswzWGIHksR0x1FCqb+4O+K8ugNAoCzLVvtkJAJko6o?=
- =?us-ascii?Q?KbheaImNqM1NbZDB+5VmwDekFtQnIO2mAFf/wldSTKzz1Ug/V30UCtTBLmx2?=
- =?us-ascii?Q?rlcLG3iBni9giqBhKNoFPKCVsq6V7w4Y1C1D98gYJw5nO96Og266WrmFjvH/?=
- =?us-ascii?Q?JaunhkZBermdjhwcrxtI8/VUMqQdaBIw9/jshGyY1bFJOXPm+eAwcW26u+eX?=
- =?us-ascii?Q?4HSo6OFqQ9vVRdVXw6BumGGMxtlE036uxTjXp9JotlM8wsgLQ7IbR9LfUVGF?=
- =?us-ascii?Q?ww=3D=3D?=
+	=?us-ascii?Q?eHACXBp8SUUHN6ENEE0wbAFKlIbyCDsUN6z6sSeieqMFuKKhzUPAOSfQR75R?=
+ =?us-ascii?Q?SqkNajm7JWNm3FWG1goOdy4J8D+mjRFXew0DzlUraVOhDzevA5jr/AQ/3ZfZ?=
+ =?us-ascii?Q?GfhhtJXl2i7Wn2JLTY+4ZSg1fDIgOMFE7zS7RUo+QWj8xM3m8Jsvu/Cn6+3G?=
+ =?us-ascii?Q?ztBi8HY3W5kDpKY2Rrp/uDvFwqQflafB9+1F1SH/hI1kUMWvTmJfReVL9GP+?=
+ =?us-ascii?Q?836xA1RDxhn5jV35ggsNCUbvTQHjkOXZuoH6nGv9g4PPJbCEG0wKJeOnu0Y3?=
+ =?us-ascii?Q?svHjMS47Mc3igAUOxq1RabrJWxtaOY2Lp/wcW/xhHwUSFVlAOLXxMFHULMYv?=
+ =?us-ascii?Q?rC3PiyxZBZY565K1uT/tZDrlmgwUhrReCeZFpQEjcH+lLHm/YfOvkgw+gXyo?=
+ =?us-ascii?Q?jNwTqwkhp6zF/9bsFlFxP2eHtXhD6xMFSZbVhqqvgoo+emqwNsh+TWCBerex?=
+ =?us-ascii?Q?KAuhpWCIZcAcIwQly0TF30MCWkFIe7216pVg8fG7JOqaHXWltDjgCWhQ8kud?=
+ =?us-ascii?Q?4uc6hIzoOack5kZwd7NplkqiHGuJxyzRQ8xAx2auX+gnPgfq+7Wq33SDpfpg?=
+ =?us-ascii?Q?wcqMzgp2FpEkR8PdIXDT0jdJxkNO/GI8Q6Cuc4QjUaI4FAQcMpIBlG7LEwGt?=
+ =?us-ascii?Q?d4jMGFT5TdG0v8e42BO0H1zDzquBXwMPxXmQ5zGHxmVtKhS/YqYbaz0LNXRJ?=
+ =?us-ascii?Q?Nsl8prA5N5nyH1xtmOoHT/2c9G8MbJYdnPS+4/iK7XeH418leCtDqzjDf5WC?=
+ =?us-ascii?Q?pi4Nq/tmLK1hPMnMafWa8DG4wfYKsVL2QcI/w5FCJA4D4DaDG5GSodpOOZ9q?=
+ =?us-ascii?Q?tAnPkGFm/M5TAKwmQ4TchByhvJhICv0Fs45ASrdfpPRgOWB349V4YpTJedpi?=
+ =?us-ascii?Q?yqFmoff2SOoGTZpm7sTBXn4qLHDt2kxbDFbb+AP8370deoVlkhhiOPVt5TEU?=
+ =?us-ascii?Q?LT/b91j8lzHxmI/QQhqGRhG+lWvqZ4nRrsA6xJOzXLv1XZoYBqrNI7gxbian?=
+ =?us-ascii?Q?B7UPNEa0pu5VGoMEycDIgWXkxRGPp+IVoGmw7NMuo1H+uq81Rnt27qsFKBVY?=
+ =?us-ascii?Q?jolUMMQHOC2B22Wc8Yv59BGbgpZPIeJwesst9nR77InSfbhatFSTbcJVlx/Z?=
+ =?us-ascii?Q?ACoq5cQ/0MwbjgMxm80UbBQJVTx3vRix1S16FApWVJZM+5ewMXM6Ox4VCTlV?=
+ =?us-ascii?Q?Av93QshenSnYXZaiInsOUrhFNTVEKlHhXQ+5Lj44t4VlbfdusUS2j9sQSdR0?=
+ =?us-ascii?Q?CsaYpUEuWWFeuiIhJizdQGYiX8Mc6clj5OgSEBDwRVnYBGciG3NJh9kKl0SA?=
+ =?us-ascii?Q?8pLpWERbt6yQ4CLB4HaQmg96Tb+BU1Kx3I3sj+CvIEI/mb4+TLFZ3lRTbPGO?=
+ =?us-ascii?Q?7gwz81uv3noVc0PtMYvOHWgcBCn0g7l0tzgbCAxmtNDV3ZUbMfmeBr5SDYpY?=
+ =?us-ascii?Q?adtOhkRw1RDlrzlOCnVEMHjtVJDOdW0ZyLV17MD+2J8G6+r7EZYiz919W8q0?=
+ =?us-ascii?Q?70m05AMTxKR6UnRqVzLrLdrrWZQSRDmL8jaOm91+TAAYzlpUiDEn1ecA79QZ?=
+ =?us-ascii?Q?7CP0S4WRcwBU3ZSCF+9xKhwDbjBj4HnjVWdT9ku3Djt2G8yfT8Ir2mnPSX6H?=
+ =?us-ascii?Q?oQ=3D=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6a96879-c44c-4761-6321-08dab0fdfd3e
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad500789-73b2-4b6f-855e-08dab0fe022b
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 11:43:35.3284
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 11:43:43.5309
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NWNC+xyzFyOsQ1Cabi3Q6SGQ2zb2MYXZaVI1xnUDaFuR+o7yvZJaGNASDF05EqFou56nzqCdp0HovI9FwrkOJw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: iIJ5teZ9dq1Y0G0sri4pZQk3/6lc3AZj6vUTqAdv7bvcEOvUAMi3l9ThDP5h1gBU+rdfa8Kek6S3xl8O/rSm4Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9237
 
-This patch adds the multiple subflows support for __mptcp_push_pending()
-and __mptcp_subflow_push_pending(). Use mptcp_sched_get_send() wrapper
-instead of mptcp_subflow_get_send() in them.
+This patch adds the multiple subflows support for __mptcp_retrans(). In
+it, use sched_get_retrans() wrapper instead of mptcp_subflow_get_retrans().
 
-Check the subflow scheduled flags to test which subflow or subflows are
-picked by the scheduler, use them to send data.
+Iterate each subflow of msk, check the scheduled flag to test if it is
+picked by the scheduler. If so, use it to retrans data.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- net/mptcp/protocol.c | 78 +++++++++++++++++++++++++++++---------------
- 1 file changed, 52 insertions(+), 26 deletions(-)
+ net/mptcp/protocol.c | 61 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 38 insertions(+), 23 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9b73297f6543..e3def2cd5660 100644
+index e3def2cd5660..23184513489f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1564,22 +1564,30 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
- void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+@@ -2500,16 +2500,17 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+ static void __mptcp_retrans(struct sock *sk)
  {
  	struct mptcp_sock *msk = mptcp_sk(sk);
--	struct mptcp_sendmsg_info info = {
--				.flags = flags,
--	};
--	struct sock *ssk;
- 	int ret = 0;
- 
- again:
--	while (mptcp_send_head(sk) && (ssk = mptcp_subflow_get_send(msk))) {
--		lock_sock(ssk);
--		ret = __subflow_push_pending(sk, ssk, &info);
--		release_sock(ssk);
-+	while (mptcp_send_head(sk) && !mptcp_sched_get_send(msk)) {
-+		struct mptcp_subflow_context *subflow;
-+		struct mptcp_sendmsg_info info = {
-+			.flags = flags,
-+		};
- 
--		if (ret <= 0) {
--			if (ret == -EAGAIN)
--				goto again;
--			goto out;
-+		mptcp_for_each_subflow(msk, subflow) {
-+			if (READ_ONCE(subflow->scheduled)) {
-+				struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+				lock_sock(ssk);
-+				ret = __subflow_push_pending(sk, ssk, &info);
-+				release_sock(ssk);
-+
-+				if (ret <= 0) {
-+					if (ret == -EAGAIN)
-+						goto again;
-+					goto out;
-+				}
-+				mptcp_subflow_set_scheduled(subflow, false);
-+			}
- 		}
- 	}
- 
-@@ -1593,11 +1601,11 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 
- static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
- {
 +	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_sendmsg_info info = {
- 		.data_lock_held = true,
- 	};
--	struct sock *xmit_ssk;
- 	int ret = 0;
+ 	struct mptcp_sendmsg_info info = {};
+ 	struct mptcp_data_frag *dfrag;
+-	size_t copied = 0;
+ 	struct sock *ssk;
+-	int ret;
++	int ret, err;
++	u16 len = 0;
  
- 	info.flags = 0;
-@@ -1606,21 +1614,39 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
- 		/* check for a different subflow usage only after
- 		 * spooling the first chunk of data
- 		 */
--		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
--		if (!xmit_ssk)
--			goto out;
--		if (xmit_ssk != ssk) {
--			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
--					       MPTCP_DELEGATE_SEND);
--			goto out;
-+		if (first) {
-+			ret = __subflow_push_pending(sk, ssk, &info);
-+			first = false;
-+			if (ret <= 0) {
-+				if (ret == -EAGAIN)
-+					goto again;
-+				break;
-+			}
-+			continue;
- 		}
+ 	mptcp_clean_una_wakeup(sk);
  
--		ret = __subflow_push_pending(sk, ssk, &info);
--		first = false;
--		if (ret <= 0) {
--			if (ret == -EAGAIN)
--				goto again;
--			break;
-+		if (mptcp_sched_get_send(msk))
-+			goto out;
-+
-+		mptcp_for_each_subflow(msk, subflow) {
-+			if (READ_ONCE(subflow->scheduled)) {
-+				struct sock *xmit_ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+				if (xmit_ssk != ssk) {
-+					mptcp_subflow_delegate(subflow,
-+							       MPTCP_DELEGATE_SEND);
-+					mptcp_subflow_set_scheduled(subflow, false);
-+					goto out;
-+				}
-+
-+				ret = __subflow_push_pending(sk, ssk, &info);
-+				if (ret <= 0) {
-+					if (ret == -EAGAIN)
-+						goto again;
-+					goto out;
-+				}
-+				mptcp_subflow_set_scheduled(subflow, false);
-+			}
- 		}
+ 	/* first check ssk: need to kick "stale" logic */
+-	ssk = mptcp_subflow_get_retrans(msk);
++	err = mptcp_sched_get_retrans(msk);
+ 	dfrag = mptcp_rtx_head(sk);
+ 	if (!dfrag) {
+ 		if (mptcp_data_fin_enabled(msk)) {
+@@ -2528,31 +2529,45 @@ static void __mptcp_retrans(struct sock *sk)
+ 		goto reset_timer;
  	}
  
+-	if (!ssk)
++	if (err)
+ 		goto reset_timer;
+ 
+-	lock_sock(ssk);
++	mptcp_for_each_subflow(msk, subflow) {
++		if (READ_ONCE(subflow->scheduled)) {
++			u16 copied = 0;
++
++			ssk = mptcp_subflow_tcp_sock(subflow);
++			if (!ssk)
++				goto reset_timer;
++
++			lock_sock(ssk);
++
++			/* limit retransmission to the bytes already sent on some subflows */
++			info.sent = 0;
++			info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len :
++								    dfrag->already_sent;
++			while (info.sent < info.limit) {
++				ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
++				if (ret <= 0)
++					break;
++
++				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RETRANSSEGS);
++				copied += ret;
++				info.sent += ret;
++			}
++			if (copied) {
++				len = max(copied, len);
++				tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
++					 info.size_goal);
++				WRITE_ONCE(msk->allow_infinite_fallback, false);
++			}
+ 
+-	/* limit retransmission to the bytes already sent on some subflows */
+-	info.sent = 0;
+-	info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len : dfrag->already_sent;
+-	while (info.sent < info.limit) {
+-		ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+-		if (ret <= 0)
+-			break;
++			release_sock(ssk);
+ 
+-		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RETRANSSEGS);
+-		copied += ret;
+-		info.sent += ret;
+-	}
+-	if (copied) {
+-		dfrag->already_sent = max(dfrag->already_sent, info.sent);
+-		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
+-			 info.size_goal);
+-		WRITE_ONCE(msk->allow_infinite_fallback, false);
++			mptcp_subflow_set_scheduled(subflow, false);
++		}
+ 	}
+-
+-	release_sock(ssk);
++	dfrag->already_sent = max(dfrag->already_sent, len);
+ 
+ reset_timer:
+ 	mptcp_check_and_set_pending(sk);
 -- 
 2.35.3
 
