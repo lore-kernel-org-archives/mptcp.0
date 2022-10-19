@@ -1,170 +1,179 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8FB3C15
-	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 16:20:09 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id b4so29923214wrs.1
-        for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 09:20:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549C329A1
+	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 16:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GlLW1J6KihN8PYm63k/YXvl52ryJ0bQpxJCDZTZEo3A=;
-        b=DAbNmpB8iP6TkUWgpeZToMD9UWfbUgCOuro4Bcn0Q7zBceMJsMpgOJlsi1RjX/GCLQ
-         Du4VALghmu70wL8jIQOWiWCg1qPXauMbRPMRSKJs3o2V5Mb9xkhUewL7QxrPktMszqS/
-         cCnvwvcGGIU7m4Bck+uobY8O7Ia7S0F0dxI3Oz5bYNuV8oShmodmN3O5QTc+tX3ttExc
-         iG5ByI0YVNV83NPTvxySYrdRG4zzg8wTJHj5Ye6GonWBRoW+hJY4j+i46aEStNrgbRgP
-         bCysg28+749vD1KUlK+IiXK5uH3XqFpb8fjbJyz4kZobr453p4QJz8hDkVVoD14RrzZw
-         wXpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GlLW1J6KihN8PYm63k/YXvl52ryJ0bQpxJCDZTZEo3A=;
-        b=1eemOeoVkgyyijhmEWD2Xm1DLGIw+oYxs75WE5hRQBA+bwOSyVCNEE7Eis8XAUoJyQ
-         V7kLT8wDFDUmeKR5+KyA5bG/5f1lsBxfDGBlbeH6rG/wFBGfBUb9cmh+3eguUgbKOpS1
-         s3M6LrfXfj4RZBU8IAaR7cWAmvTs/EbViiInvbyCVJb+STbGP/ScBGAB7y18Deumc1fW
-         TDM1R5XHiAL7x7UqXGYBaVGOmyzTeDMyUDpiA7BmUXEy6ISPo1PNCQcGeVceo6br0jpm
-         yis5+52nBxEoKNAdKo2aJksymMSXU7LkNepXBLsyjuq8hfYSdLu6z7NPPtl9LMjfOC2h
-         ZajQ==
-X-Gm-Message-State: ACrzQf1LrwPnbDrIzKvAcwCjp7sQrTen4f/oLxGQDi6t4JGl8gM+8P3X
-	DAzLLZlrHsPqDUBhD3CPjYkt0lpGgyAxMG4Ig5k=
-X-Google-Smtp-Source: AMsMyM7irnfdnA/Wp5VjfEdonEk52L7FjEOSyDxuedXr/GoWItmjtzpx0jmJ0Fg+gnpZZEl7PXFlmQ==
-X-Received: by 2002:a5d:64e8:0:b0:231:a71:1eec with SMTP id g8-20020a5d64e8000000b002310a711eecmr5769901wri.59.1666196407395;
-        Wed, 19 Oct 2022 09:20:07 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m1-20020a1c2601000000b003c452678025sm433717wmm.4.2022.10.19.09.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 09:20:06 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 4/4] selftests: mptcp: uniform 'rndh' variable
-Date: Wed, 19 Oct 2022 18:19:40 +0200
-Message-Id: <20221019161940.3178393-5-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221019161940.3178393-1-matthieu.baerts@tessares.net>
-References: <20221019161940.3178393-1-matthieu.baerts@tessares.net>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1666197202; x=1697733202;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=bIXhfKh+mZ1iKq1/YrB97dCDXK0xJ/LGBj0e3seZSfE=;
+  b=IH03iW/Xtgq4rhVvth0XO2E6ULZcvM8t1MfhgX4optllCDA1sPy34GcW
+   /Vt8lzhXkVv4+bgcR49yGTpqO0EKbwuXtUpHDkm+FzKlR3wXXLgU/NtXK
+   F1scUw0FQorZT40ZDEZJVLkx2eVJnpB3tIqeadfq9SQ74LAbciAL9Uhdq
+   o=;
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-af372327.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 16:33:18 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+	by email-inbound-relay-pdx-2a-m6i4x-af372327.us-west-2.amazon.com (Postfix) with ESMTPS id 83E8D610E8;
+	Wed, 19 Oct 2022 16:33:17 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Wed, 19 Oct 2022 16:33:16 +0000
+Received: from 88665a182662.ant.amazon.com.com (10.43.160.128) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.15;
+ Wed, 19 Oct 2022 16:33:14 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <pabeni@redhat.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<kuba@kernel.org>, <mathew.j.martineau@linux.intel.com>,
+	<matthieu.baerts@tessares.net>, <mptcp@lists.linux.dev>,
+	<netdev@vger.kernel.org>
+Subject: [PATCH net-next 2/2] udp: track the forward memory release threshold in an hot cacheline
+Date: Wed, 19 Oct 2022 09:33:06 -0700
+Message-ID: <20221019163306.70984-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <dafe09ca2e14c4ab45f3d9db56b768e06750e382.1666173045.git.pabeni@redhat.com>
+References: <dafe09ca2e14c4ab45f3d9db56b768e06750e382.1666173045.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3556; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=5MOPslV8E5h86a4qDeXeU1c402U1r4M15OsyxIUwJ3M=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjUCOEjZvnx77HRvQL7OpWZVthz3FA9mqOsK+sZq5k
- SJOwuLqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY1AjhAAKCRD2t4JPQmmgc/kUD/
- 9faS5HiotzbVH/so5YOWeVf5KD136mWAu/geG3l1j3AGrwBS49CMrOzAZhg/juKt2ufSURpT/n7/lf
- d0op35tRI3DlTtbbRSQt3hIGaDCf4N4PxRU/CsW5qRFuz9nPVbaYWw2sdFA8odfdSswW5tFfw8KOsP
- ZoaAuouOV7889G1aVP8m4Niji+CdN3v3fWa3ZxqaGz8+xnNJOJie29ilJhZa0hNfi19ml80ncFlUvq
- a5BWLEKQoJJ20Yh1MHOpnVeFm+irRLZvscbyVNoFg/5nZ9dXiuFELobRCUPzKkI2Ke81Q5vuD/anRN
- T+pY/Yp0dpUuj9b2Qmz0FswI3yW4VqFW7dPeh+5ghl9Qhj8SGET2wWnkQK5Iwvhi8PWouGhn0KFZYq
- IZ/88UY0J58Mqc5b+hHMft9+2x9y4Jv7jTUUN9FB/PV8kqGBDoi/rYc3P7ZmFSYlYJb3w/BNX4u6S1
- e7dgwPPYlIhAlh7ao8fuYVLf2EBPtlz/rN7mLJiJcvxwIOVL4lDCpc7Zr0Tz8OXuYVBPhvRIAiscAl
- BmSTSm9o00fbKmSG5WYTw707kxwEl530fxD9BNn4jJvqo45rD6LrbJq1KVtyJXlvGDBq60YOTanHOE
- k379RRbz/OxCvLYFaKwysW9a3vAgzkC4SaOGFF39gG1z3EpBR5ExYDCcY24A==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.128]
+X-ClientProxiedBy: EX13D49UWC003.ant.amazon.com (10.43.162.10) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-The definition of 'rndh' was probably copied from one script to another
-but some times, 'sec' was not defined, not used and/or not spelled
-properly.
+From:   Paolo Abeni <pabeni@redhat.com>
+Date:   Wed, 19 Oct 2022 12:02:01 +0200
+> When the receiver process and the BH runs on different cores,
+> udp_rmem_release() experience a cache miss while accessing sk_rcvbuf,
+> as the latter shares the same cacheline with sk_forward_alloc, written
+> by the BH.
+> 
+> With this patch, UDP tracks the rcvbuf value and its update via custom
+> SOL_SOCKET socket options, and copies the forward memory threshold value
+> used by udp_rmem_release() in a different cacheline, already accessed by
+> the above function and uncontended.
+> 
+> Overall the above give a 10% peek throughput increase under UDP flood.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  include/linux/udp.h |  3 +++
+>  net/ipv4/udp.c      | 22 +++++++++++++++++++---
+>  net/ipv6/udp.c      |  8 ++++++--
+>  3 files changed, 28 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/udp.h b/include/linux/udp.h
+> index e96da4157d04..5cdba00a904a 100644
+> --- a/include/linux/udp.h
+> +++ b/include/linux/udp.h
+> @@ -87,6 +87,9 @@ struct udp_sock {
+>  
+>  	/* This field is dirtied by udp_recvmsg() */
+>  	int		forward_deficit;
+> +
+> +	/* This fields follows rcvbuf value, and is touched by udp_recvmsg */
+> +	int		forward_threshold;
+>  };
+>  
+>  #define UDP_MAX_SEGMENTS	(1 << 6UL)
+> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+> index 8126f67d18b3..915f573587fa 100644
+> --- a/net/ipv4/udp.c
+> +++ b/net/ipv4/udp.c
+> @@ -1448,7 +1448,7 @@ static void udp_rmem_release(struct sock *sk, int size, int partial,
+>  	if (likely(partial)) {
+>  		up->forward_deficit += size;
+>  		size = up->forward_deficit;
+> -		if (size < (sk->sk_rcvbuf >> 2) &&
+> +		if (size < READ_ONCE(up->forward_threshold) &&
+>  		    !skb_queue_empty(&up->reader_queue))
+>  			return;
+>  	} else {
+> @@ -1622,8 +1622,12 @@ static void udp_destruct_sock(struct sock *sk)
+>  
+>  int udp_init_sock(struct sock *sk)
+>  {
+> -	skb_queue_head_init(&udp_sk(sk)->reader_queue);
+> +	struct udp_sock *up = udp_sk(sk);
+> +
+> +	skb_queue_head_init(&up->reader_queue);
+> +	up->forward_threshold = sk->sk_rcvbuf >> 2;
+>  	sk->sk_destruct = udp_destruct_sock;
+> +	set_bit(SOCK_CUSTOM_SOCKOPT, &sk->sk_socket->flags);
+>  	return 0;
+>  }
+>  
+> @@ -2671,6 +2675,18 @@ int udp_lib_setsockopt(struct sock *sk, int level, int optname,
+>  	int err = 0;
+>  	int is_udplite = IS_UDPLITE(sk);
+>  
+> +	if (level == SOL_SOCKET) {
+> +		err = sk_setsockopt(sk, level, optname, optval, optlen);
+> +
+> +		if (optname == SO_RCVBUF || optname == SO_RCVBUFFORCE) {
+> +			sockopt_lock_sock(sk);
 
-Here all the 'rndh' are now defined the same way.
+Can we drop this lock by adding READ_ONCE() to sk->sk_rcvbuf below ?
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/diag.sh          | 1 +
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 3 +--
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 5 +++--
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 2 ++
- tools/testing/selftests/net/mptcp/simult_flows.sh  | 1 +
- tools/testing/selftests/net/mptcp/userspace_pm.sh  | 2 +-
- 6 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 515859a5168b..24bcd7b9bdb2 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -1,6 +1,7 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
-+sec=$(date +%s)
- rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
- ns="ns1-$rndh"
- ksft_skip=4
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 5942a16736a9..800adb4467f2 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -274,8 +274,7 @@ check_transfer()
- 
- check_mptcp_disabled()
- {
--	local disabled_ns
--	disabled_ns="ns_disabled-$sech-$(mktemp -u XXXXXX)"
-+	local disabled_ns="ns_disabled-$rndh"
- 	ip netns add ${disabled_ns} || exit $ksft_skip
- 
- 	# net.mptcp.enabled should be enabled by default
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index f3dd5f2a0272..53ecc8d4dc8a 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -59,8 +59,9 @@ init_partial()
- {
- 	capout=$(mktemp)
- 
--	local rndh
--	rndh=$(mktemp -u XXXXXX)
-+	local sec rndh
-+	sec=$(date +%s)
-+	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
- 
- 	ns1="ns1-$rndh"
- 	ns2="ns2-$rndh"
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 6e8f4599cc44..dbee386450f3 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -30,6 +30,8 @@ add_mark_rules()
- 
- init()
- {
-+	local sec rndh
-+	sec=$(date +%s)
- 	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
- 
- 	ns1="ns1-$rndh"
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index 8ae7e0c004fa..0915fb39afc3 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -1,6 +1,7 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
-+sec=$(date +%s)
- rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
- ns1="ns1-$rndh"
- ns2="ns2-$rndh"
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 3229725b64b0..5dfc3ee74b98 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -33,7 +33,7 @@ client_addr_id=${RANDOM:0:2}
- server_addr_id=${RANDOM:0:2}
- 
- sec=$(date +%s)
--rndh=$(stdbuf -o0 -e0 printf %x "$sec")-$(mktemp -u XXXXXX)
-+rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
- ns1="ns1-$rndh"
- ns2="ns2-$rndh"
- 
--- 
-2.37.2
+> +			/* paired with READ_ONCE in udp_rmem_release() */
+> +			WRITE_ONCE(up->forward_threshold, sk->sk_rcvbuf >> 2);
+> +			sockopt_release_sock(sk);
+> +		}
+> +		return err;
+> +	}
+> +
+>  	if (optlen < sizeof(int))
+>  		return -EINVAL;
+>  
+> @@ -2784,7 +2800,7 @@ EXPORT_SYMBOL(udp_lib_setsockopt);
+>  int udp_setsockopt(struct sock *sk, int level, int optname, sockptr_t optval,
+>  		   unsigned int optlen)
+>  {
+> -	if (level == SOL_UDP  ||  level == SOL_UDPLITE)
+> +	if (level == SOL_UDP  ||  level == SOL_UDPLITE || level == SOL_SOCKET)
+>  		return udp_lib_setsockopt(sk, level, optname,
+>  					  optval, optlen,
+>  					  udp_push_pending_frames);
+> diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+> index 8d09f0ea5b8c..1ed20bcfd7a0 100644
+> --- a/net/ipv6/udp.c
+> +++ b/net/ipv6/udp.c
+> @@ -64,8 +64,12 @@ static void udpv6_destruct_sock(struct sock *sk)
+>  
+>  int udpv6_init_sock(struct sock *sk)
+>  {
+> -	skb_queue_head_init(&udp_sk(sk)->reader_queue);
+> +	struct udp_sock *up = udp_sk(sk);
+> +
+> +	skb_queue_head_init(&up->reader_queue);
+> +	up->forward_threshold = sk->sk_rcvbuf >> 2;
+>  	sk->sk_destruct = udpv6_destruct_sock;
+> +	set_bit(SOCK_CUSTOM_SOCKOPT, &sk->sk_socket->flags);
+>  	return 0;
+>  }
 
+It's time to factorise this part like udp_destruct_common() ?
+
+
+>  
+> @@ -1671,7 +1675,7 @@ void udpv6_destroy_sock(struct sock *sk)
+>  int udpv6_setsockopt(struct sock *sk, int level, int optname, sockptr_t optval,
+>  		     unsigned int optlen)
+>  {
+> -	if (level == SOL_UDP  ||  level == SOL_UDPLITE)
+> +	if (level == SOL_UDP  ||  level == SOL_UDPLITE || level == SOL_SOCKET)
+>  		return udp_lib_setsockopt(sk, level, optname,
+>  					  optval, optlen,
+>  					  udp_v6_push_pending_frames);
+> -- 
+> 2.37.3
