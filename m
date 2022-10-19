@@ -1,84 +1,149 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B00F7E
-	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 15:16:28 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id l14-20020a05600c1d0e00b003c6ecc94285so959132wms.1
-        for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 08:16:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23A17E
+	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 15:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t8mbyz005k1ZCB0lm92YQ3sRD1pQLUKEAM6sS32v9xA=;
-        b=c+3bVrBXYN4nrzsuDgmO2S8ltukeYMIfhDpvuO6yVJ0KxthTuANe4qDgs5yE/VtpAc
-         T05OIoBGLS3C9dwTHlAkX+w05LkaSRsRF4CmHszCSuFoyKxTfpwDxM3dBJdFVWEc+2T9
-         oe+nC6MjolXYnHB1I6aZzuSqt+yGA7+I4TxZXtBfKAgsu0fT2fG2ka2Fqj2BxWFypV1W
-         io51YJRoXwW2haEiE+V0ALoFtPJBkoh9oZ7pO6q5wqg8YoNfgHRaw2V54RrHIY+f70rW
-         UFkDSL1mp4qXGt9A1huaDbtwvjKxcbPM2DRzToEGOKXrjq46hUEqEmr80OoGOaAAVtnI
-         DJig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8mbyz005k1ZCB0lm92YQ3sRD1pQLUKEAM6sS32v9xA=;
-        b=IeV9AylhlHA0cVSWTkjm/k21YEizmC2uFmb3aLJJpdqp3JJsQAu5AWJK0DN3JIkge1
-         cv85rSt1CUtg9Mke6vIqzwqdLbUe6RBYT1HWANiiDKE444iaBkbfg8+gRD8cEMyUR0fA
-         JAw0JPgRy3vaesZv+mvMcC3TWd8gxTi4rtQvJtPRBtIk/fe6Lp7NB0OrJXRbq10v+hML
-         XeRj5kupgPPoDzcEehij6mygYfPABzW0pHhrg0mgLPKiGRx2zytumdLmE9FqFmEGhhEZ
-         LnKnBjgqH7kYORxcOqLnkrsANrbpaTTkqlDWmZZim6cQV06+WK2H0rwnGkZJBRl9crBE
-         YQCg==
-X-Gm-Message-State: ACrzQf2wazmlJy490VnBv7YbXJ7FLILJZWEN6jAw0IFbzVHP2OceJXLV
-	5ICjz86Z7K3xYDagoeuldsPjrQ==
-X-Google-Smtp-Source: AMsMyM48se/OCyFP0vQ3MGzScXKz6W2eWWxuP1+zMUJDQ6tL6hFXXW18pp53YabhfymcZUiMtrWXVw==
-X-Received: by 2002:a05:600c:15cc:b0:3c6:6ff5:21b8 with SMTP id v12-20020a05600c15cc00b003c66ff521b8mr5929774wmf.55.1666192586471;
-        Wed, 19 Oct 2022 08:16:26 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:3000:72c0:ef02:f180? ([2a02:578:8593:1200:3000:72c0:ef02:f180])
-        by smtp.gmail.com with ESMTPSA id u10-20020a5d468a000000b0021badf3cb26sm16757337wrq.63.2022.10.19.08.16.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Oct 2022 08:16:26 -0700 (PDT)
-Message-ID: <9ec8db28-8b61-ce53-f247-b7ab7de7d5d6@tessares.net>
-Date: Wed, 19 Oct 2022 17:16:25 +0200
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1666193699; x=1697729699;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=D3yKd9UNHKi+g+UkzbUEW5vBMya1NlvJMwjke/PB7QA=;
+  b=jcHy/tH18zur4hJnecmWCiyfUoZjTiphA0S1JJ2TNtuQKFbG3aqfDl8O
+   o/D2nIk1ZDTWnEH5pe90csVs4mep4e+O/o+FdMdpP9jmk01DDlwMAhBLo
+   kdMUqKUZzYBioHcpzlXl+LwF3srdExyve8Vbu7GGz1p964ywWTbAKSU3I
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.95,196,1661817600"; 
+   d="scan'208";a="234356101"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-44b6fc51.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 15:34:50 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+	by email-inbound-relay-pdx-2a-m6i4x-44b6fc51.us-west-2.amazon.com (Postfix) with ESMTPS id 9817AA2753;
+	Wed, 19 Oct 2022 15:34:48 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Wed, 19 Oct 2022 15:34:47 +0000
+Received: from 88665a182662.ant.amazon.com (10.43.160.128) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.15;
+ Wed, 19 Oct 2022 15:34:44 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <matthieu.baerts@tessares.net>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<kuba@kernel.org>, <kuni1840@gmail.com>, <kuniyu@amazon.com>,
+	<mathew.j.martineau@linux.intel.com>, <mptcp@lists.linux.dev>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <yoshfuji@linux-ipv6.org>
+Subject: Re: [PATCH v1 net-next 1/5] inet6: Remove inet6_destroy_sock() in sk->sk_prot->destroy().
+Date: Wed, 19 Oct 2022 08:34:37 -0700
+Message-ID: <20221019153437.67054-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <2b8c8764-052a-97b3-bf5b-8335a75c11d9@tessares.net>
+References: <2b8c8764-052a-97b3-bf5b-8335a75c11d9@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH net-next 1/2] net: introduce and use custom sockopt socket
- flag
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- mptcp@lists.linux.dev, David Ahern <dsahern@kernel.org>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-References: <cover.1666173045.git.pabeni@redhat.com>
- <b9ca7b78bec42047bc9935be2697328c7b71b391.1666173045.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <b9ca7b78bec42047bc9935be2697328c7b71b391.1666173045.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.128]
+X-ClientProxiedBy: EX13D48UWB001.ant.amazon.com (10.43.163.80) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-Hi Paolo,
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+Date:   Wed, 19 Oct 2022 15:22:40 +0200
+> Hi Kuniyuki,
+> 
+> +cc MPTCP ML.
+> 
+> On 18/10/2022 21:09, Kuniyuki Iwashima wrote:
+> > After commit d38afeec26ed ("tcp/udp: Call inet6_destroy_sock()
+> > in IPv6 sk->sk_destruct()."), we call inet6_destroy_sock() in
+> > sk->sk_destruct() by setting inet6_sock_destruct() to it to make
+> > sure we do not leak inet6-specific resources.
+> > 
+> > Now we can remove unnecessary inet6_destroy_sock() calls in
+> > sk->sk_prot->destroy().
+> > 
+> > DCCP and SCTP have their own sk->sk_destruct() function, so we
+> > change them separately in the following patches.
+> > 
+> > Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> > ---
+> > Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> > Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+> 
+> Thank you for the cc!
+> Please next time also cc MPTCP ML if you don't mind.
 
-On 19/10/2022 12:02, Paolo Abeni wrote:
-> We will soon introduce custom setsockopt for UDP sockets, too.
-> Instead of doing even more complex arbitrary checks inside
-> sock_use_custom_sol_socket(), add a new socket flag and set it
-> for the relevant socket types (currently only MPTCP).
+Sure!
 
-Good idea, it is clearer and it looks good to me!
 
-For the modifications in MPTCP:
+> 
+> (...)
+> 
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index f599ad44ed24..7cc9c542c768 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -17,9 +17,6 @@
+> >  #include <net/protocol.h>
+> >  #include <net/tcp.h>
+> >  #include <net/tcp_states.h>
+> > -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> > -#include <net/transp_v6.h>
+> > -#endif
+> 
+> Please keep this include: it is needed to access "tcpv6_prot" (as
+> reported by the kernel bot).
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Will add it back in v2.
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+I wonder why allmodconfig couldn't catch this and noticed MPTCP
+cannot be modulised.
+I'll test all(yes|mod|no)config from next time :)
+
+
+> 
+> >  #include <net/mptcp.h>
+> >  #include <net/xfrm.h>
+> >  #include <asm/ioctls.h>
+> > @@ -3898,12 +3895,6 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+> >  
+> >  static struct proto mptcp_v6_prot;
+> >  
+> > -static void mptcp_v6_destroy(struct sock *sk)
+> > -{
+> > -	mptcp_destroy(sk);
+> > -	inet6_destroy_sock(sk);
+> > -}
+> > -
+> >  static struct inet_protosw mptcp_v6_protosw = {
+> >  	.type		= SOCK_STREAM,
+> >  	.protocol	= IPPROTO_MPTCP,
+> > @@ -3919,7 +3910,6 @@ int __init mptcp_proto_v6_init(void)
+> >  	mptcp_v6_prot = mptcp_prot;
+> >  	strcpy(mptcp_v6_prot.name, "MPTCPv6");
+> >  	mptcp_v6_prot.slab = NULL;
+> > -	mptcp_v6_prot.destroy = mptcp_v6_destroy;
+> >  	mptcp_v6_prot.obj_size = sizeof(struct mptcp6_sock);
+> >  
+> >  	err = proto_register(&mptcp_v6_prot, 1);
+> 
+> I see that for MPTCP IPv6 sockets, sk->sk_destruct is now set to
+> inet6_sock_destruct() which calls inet6_destroy_sock() via
+> inet6_cleanup_sock().
+> 
+> So all good for the MPTCP part (if you re-add the include ;) ).
+
+Thank you!
+
+
+> 
+> Cheers,
+> Matt
+> -- 
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
