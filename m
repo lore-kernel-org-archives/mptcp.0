@@ -1,49 +1,49 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DD53C26
-	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 16:20:08 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id v1so713917wrt.11
-        for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 09:20:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8FB3C15
+	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 16:20:09 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id b4so29923214wrs.1
+        for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 09:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xO7akXqZ9OyM18k2G1NCNjje846oBCwU3NC4tbIuUyA=;
-        b=4wMJ+aB66kQm2sa5C0L4jJR2e17lRrYgwKw3oPTKXOlvdyIx0h7nilrfVxZkqFf1T3
-         2Ae8ODX2Cytd6F/HXBfKb1KDnCm4Y3PE9TkU3kKYiFIwRiN8LgPmbi4VcPaFtSSy0Rl3
-         xHJKG0SJI9NYswoVedK/7Ts/bPZ3Bw+8B/ehaD5EL5E49ctHUWMwRILjnI7FnAD6TIui
-         pgJpU7/CvdlhgbT/yYd30y1Y/CppuBnryqXDCZaUBmYwIU8G1SjpidMx3Z0gR2rOf2o4
-         t2ivNWzXbrD+6wzMGBGOCDmkgv771QSETbPxw6SFeX3wOYJi8nwE2EtrhC6v0LahhRhX
-         zo7Q==
+        bh=GlLW1J6KihN8PYm63k/YXvl52ryJ0bQpxJCDZTZEo3A=;
+        b=DAbNmpB8iP6TkUWgpeZToMD9UWfbUgCOuro4Bcn0Q7zBceMJsMpgOJlsi1RjX/GCLQ
+         Du4VALghmu70wL8jIQOWiWCg1qPXauMbRPMRSKJs3o2V5Mb9xkhUewL7QxrPktMszqS/
+         cCnvwvcGGIU7m4Bck+uobY8O7Ia7S0F0dxI3Oz5bYNuV8oShmodmN3O5QTc+tX3ttExc
+         iG5ByI0YVNV83NPTvxySYrdRG4zzg8wTJHj5Ye6GonWBRoW+hJY4j+i46aEStNrgbRgP
+         bCysg28+749vD1KUlK+IiXK5uH3XqFpb8fjbJyz4kZobr453p4QJz8hDkVVoD14RrzZw
+         wXpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xO7akXqZ9OyM18k2G1NCNjje846oBCwU3NC4tbIuUyA=;
-        b=J9uN1rEms+jqvBJwJnivL0SVBE7LY9qlXq5oWb86+dNYoRkL7/T+jb30WAc+Yqk42A
-         iDTF6/Jx4kvNVzIAX1+5vKB3Zd2rQOpF+s5feD0gZK055Qu3DQGa/ojd+XsV4oTggFui
-         yIrGHpvHG+7l8tc+7csxA+nBH7xxmcqHZJx7Ff5+U9h0xXQqHWrOCvieDuzAbBwk+uBR
-         GNLDjn8OxPWRQnPzeDKlknIAzbqrIeRTAt67K2Ru4aNSkQzGyHjtiqw7mt+hPEXmXE+N
-         Uk3dTAqp68xT7MPygG9173s00pgp/fNap1TYlJ7Czb04khAzik34OwjX1sCAh65SCmVJ
-         kytQ==
-X-Gm-Message-State: ACrzQf0NxMSMDoHuRYqU91o8dBdyF1Sj6Y3FnXgAPYiec+KBIBNRpx15
-	UTrtjkVQqWLldrfXNUGGm7ddKJ4G9zdBvPVJg48=
-X-Google-Smtp-Source: AMsMyM7uYnLYNIMI527ylfd/6NjzX7cqieaBSvjBenGRBM1Dtb0O8z8tD5GdpW0kU9g071pogdaU8w==
-X-Received: by 2002:adf:f710:0:b0:22c:d668:504e with SMTP id r16-20020adff710000000b0022cd668504emr5763367wrp.98.1666196406508;
-        Wed, 19 Oct 2022 09:20:06 -0700 (PDT)
+        bh=GlLW1J6KihN8PYm63k/YXvl52ryJ0bQpxJCDZTZEo3A=;
+        b=1eemOeoVkgyyijhmEWD2Xm1DLGIw+oYxs75WE5hRQBA+bwOSyVCNEE7Eis8XAUoJyQ
+         V7kLT8wDFDUmeKR5+KyA5bG/5f1lsBxfDGBlbeH6rG/wFBGfBUb9cmh+3eguUgbKOpS1
+         s3M6LrfXfj4RZBU8IAaR7cWAmvTs/EbViiInvbyCVJb+STbGP/ScBGAB7y18Deumc1fW
+         TDM1R5XHiAL7x7UqXGYBaVGOmyzTeDMyUDpiA7BmUXEy6ISPo1PNCQcGeVceo6br0jpm
+         yis5+52nBxEoKNAdKo2aJksymMSXU7LkNepXBLsyjuq8hfYSdLu6z7NPPtl9LMjfOC2h
+         ZajQ==
+X-Gm-Message-State: ACrzQf1LrwPnbDrIzKvAcwCjp7sQrTen4f/oLxGQDi6t4JGl8gM+8P3X
+	DAzLLZlrHsPqDUBhD3CPjYkt0lpGgyAxMG4Ig5k=
+X-Google-Smtp-Source: AMsMyM7irnfdnA/Wp5VjfEdonEk52L7FjEOSyDxuedXr/GoWItmjtzpx0jmJ0Fg+gnpZZEl7PXFlmQ==
+X-Received: by 2002:a5d:64e8:0:b0:231:a71:1eec with SMTP id g8-20020a5d64e8000000b002310a711eecmr5769901wri.59.1666196407395;
+        Wed, 19 Oct 2022 09:20:07 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m1-20020a1c2601000000b003c452678025sm433717wmm.4.2022.10.19.09.20.05
+        by smtp.gmail.com with ESMTPSA id m1-20020a1c2601000000b003c452678025sm433717wmm.4.2022.10.19.09.20.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 19 Oct 2022 09:20:06 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 3/4] selftests: mptcp: removed defined but unused vars
-Date: Wed, 19 Oct 2022 18:19:39 +0200
-Message-Id: <20221019161940.3178393-4-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next 4/4] selftests: mptcp: uniform 'rndh' variable
+Date: Wed, 19 Oct 2022 18:19:40 +0200
+Message-Id: <20221019161940.3178393-5-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221019161940.3178393-1-matthieu.baerts@tessares.net>
 References: <20221019161940.3178393-1-matthieu.baerts@tessares.net>
@@ -53,88 +53,118 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2233; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=/aQVed8FVDQJkOFH15QgHf6ZsRUS3VhRUsfnudzsslM=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjUCODSQmHr5j/VeaDCmefMo1HjXF+UuVMyzz+QzTd
- jE/TvVeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY1AjgwAKCRD2t4JPQmmgc/SPD/
- 9x3EpU1xAm1XhTQi7l191WDIkLcrUMnU+ZJJP+17AdE89iBCZ+v8j4mfD4XSY+wAd01XIq3ktG/d3V
- KaTVoRu3nXpHe5L0yJ+q7QAFMr6pEYevBhF5X+8mroUYCUMR1m+pe/vUnHh8FoNLBExMQOmtlVrVXO
- jPm+OVX3NQ4de72ifZdGsXDbVTQC8l4zhM5U/A5G/a06/7rsgWpXtKA6Jiuhn+vqmu6/EbbWDR6u6h
- Z/3rUVDch0MJ2J+nJR9TO6NREM94ahH6uC4klNTMguSHKoP0bfVFdBlJTX6bPpTVNx4mpv36uc8MPR
- 8bUqj2973AJNuzOAxRnP4krj5BgM7Z31G7d6eGrXjmGF2VdB1k+6ZBLvyNo02NNrmUxFM8IJlEsFoK
- Lek0ZS7QP+FR6fGCduFMeW3IW+Adz6IBPxUGy16M+d6djY99zXbGtQHmcx7sjUEOOjUlufSgWD17A+
- Fhh8SMYhSYLxdgRjiw3dPnHr0az2pnRlIB8LHm/sz74i5GQi4XPE5v7OGu19LC+47MYVY1FcyVzELy
- 0ZRuVAz30gI3U8VK9YP7Lbg+XqqPIGuI3e4muYd8tAjL8yBmJFuPavRFatr0JBFQXGHrecy80a6v49
- u25ey/PGs/64Ux0lsRt4tRcZ6YhotrPQzwxNVfUmRI6NEpgpsf6x3fQYdoGA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3556; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=5MOPslV8E5h86a4qDeXeU1c402U1r4M15OsyxIUwJ3M=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjUCOEjZvnx77HRvQL7OpWZVthz3FA9mqOsK+sZq5k
+ SJOwuLqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY1AjhAAKCRD2t4JPQmmgc/kUD/
+ 9faS5HiotzbVH/so5YOWeVf5KD136mWAu/geG3l1j3AGrwBS49CMrOzAZhg/juKt2ufSURpT/n7/lf
+ d0op35tRI3DlTtbbRSQt3hIGaDCf4N4PxRU/CsW5qRFuz9nPVbaYWw2sdFA8odfdSswW5tFfw8KOsP
+ ZoaAuouOV7889G1aVP8m4Niji+CdN3v3fWa3ZxqaGz8+xnNJOJie29ilJhZa0hNfi19ml80ncFlUvq
+ a5BWLEKQoJJ20Yh1MHOpnVeFm+irRLZvscbyVNoFg/5nZ9dXiuFELobRCUPzKkI2Ke81Q5vuD/anRN
+ T+pY/Yp0dpUuj9b2Qmz0FswI3yW4VqFW7dPeh+5ghl9Qhj8SGET2wWnkQK5Iwvhi8PWouGhn0KFZYq
+ IZ/88UY0J58Mqc5b+hHMft9+2x9y4Jv7jTUUN9FB/PV8kqGBDoi/rYc3P7ZmFSYlYJb3w/BNX4u6S1
+ e7dgwPPYlIhAlh7ao8fuYVLf2EBPtlz/rN7mLJiJcvxwIOVL4lDCpc7Zr0Tz8OXuYVBPhvRIAiscAl
+ BmSTSm9o00fbKmSG5WYTw707kxwEl530fxD9BNn4jJvqo45rD6LrbJq1KVtyJXlvGDBq60YOTanHOE
+ k379RRbz/OxCvLYFaKwysW9a3vAgzkC4SaOGFF39gG1z3EpBR5ExYDCcY24A==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-Some variables were set but never used.
+The definition of 'rndh' was probably copied from one script to another
+but some times, 'sec' was not defined, not used and/or not spelled
+properly.
 
-This was not causing any issues except adding some confusion and having
-shellcheck complaining about them.
+Here all the 'rndh' are now defined the same way.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 3 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 1 -
- tools/testing/selftests/net/mptcp/simult_flows.sh  | 3 ---
- 3 files changed, 7 deletions(-)
+ tools/testing/selftests/net/mptcp/diag.sh          | 1 +
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 3 +--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 5 +++--
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 2 ++
+ tools/testing/selftests/net/mptcp/simult_flows.sh  | 1 +
+ tools/testing/selftests/net/mptcp/userspace_pm.sh  | 2 +-
+ 6 files changed, 9 insertions(+), 5 deletions(-)
 
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 515859a5168b..24bcd7b9bdb2 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -1,6 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
++sec=$(date +%s)
+ rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+ ns="ns1-$rndh"
+ ksft_skip=4
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 621af6895f4d..5942a16736a9 100755
+index 5942a16736a9..800adb4467f2 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -764,7 +764,6 @@ run_tests_peekmode()
+@@ -274,8 +274,7 @@ check_transfer()
  
- run_tests_disconnect()
+ check_mptcp_disabled()
  {
--	local peekmode="$1"
- 	local old_cin=$cin
- 	local old_sin=$sin
+-	local disabled_ns
+-	disabled_ns="ns_disabled-$sech-$(mktemp -u XXXXXX)"
++	local disabled_ns="ns_disabled-$rndh"
+ 	ip netns add ${disabled_ns} || exit $ksft_skip
  
-@@ -772,7 +771,6 @@ run_tests_disconnect()
+ 	# net.mptcp.enabled should be enabled by default
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index f3dd5f2a0272..53ecc8d4dc8a 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -59,8 +59,9 @@ init_partial()
+ {
+ 	capout=$(mktemp)
  
- 	# force do_transfer to cope with the multiple tranmissions
- 	sin="$cin.disconnect"
--	sin_disconnect=$old_sin
- 	cin="$cin.disconnect"
- 	cin_disconnect="$old_cin"
- 	connect_per_transfer=3
-@@ -783,7 +781,6 @@ run_tests_disconnect()
+-	local rndh
+-	rndh=$(mktemp -u XXXXXX)
++	local sec rndh
++	sec=$(date +%s)
++	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
  
- 	# restore previous status
- 	sin=$old_sin
--	sin_disconnect="$cout".disconnect
- 	cin=$old_cin
- 	cin_disconnect="$cin".disconnect
- 	connect_per_transfer=1
+ 	ns1="ns1-$rndh"
+ 	ns2="ns2-$rndh"
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 8a83100b212e..6e8f4599cc44 100755
+index 6e8f4599cc44..dbee386450f3 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -10,7 +10,6 @@ ksft_skip=4
- timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- mptcp_connect=""
--do_all_tests=1
+@@ -30,6 +30,8 @@ add_mark_rules()
  
- add_mark_rules()
+ init()
  {
++	local sec rndh
++	sec=$(date +%s)
+ 	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+ 
+ 	ns1="ns1-$rndh"
 diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index ffa13a957a36..8ae7e0c004fa 100755
+index 8ae7e0c004fa..0915fb39afc3 100755
 --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
 +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -148,9 +148,6 @@ do_transfer()
- 	:> "$sout"
- 	:> "$capout"
+@@ -1,6 +1,7 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
  
--	local addr_port
--	addr_port=$(printf "%s:%d" ${connect_addr} ${port})
--
- 	if $capture; then
- 		local capuser
- 		if [ -z $SUDO_USER ] ; then
++sec=$(date +%s)
+ rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+ ns1="ns1-$rndh"
+ ns2="ns2-$rndh"
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 3229725b64b0..5dfc3ee74b98 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -33,7 +33,7 @@ client_addr_id=${RANDOM:0:2}
+ server_addr_id=${RANDOM:0:2}
+ 
+ sec=$(date +%s)
+-rndh=$(stdbuf -o0 -e0 printf %x "$sec")-$(mktemp -u XXXXXX)
++rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
+ ns1="ns1-$rndh"
+ ns2="ns2-$rndh"
+ 
 -- 
 2.37.2
 
