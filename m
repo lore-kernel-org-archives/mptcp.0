@@ -1,201 +1,342 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF9B53BE
-	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 22:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1666219005; x=1697755005;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iOCiVAkzTSFj1QbPdyOJKBHoLDMqKrua2JrtyUAycek=;
-  b=htvVtJULo7z2snUXMLtSE8k1WqCO0/bOHe8DtAz0KVb6xIuohRASycuf
-   46/mvB1+6qXhoKATR4HjIm3FjgPd52287nkt1oLzS/sDEwk2H/LR+teeO
-   j81saQVDhj+uaKBJwubXp8zXzwn8kQ6Bx8F6EFEp0i8uUbT/d7e8gHH7c
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.95,196,1661817600"; 
-   d="scan'208";a="257425454"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 22:36:41 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-	by email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com (Postfix) with ESMTPS id DF0B0A24B5;
-	Wed, 19 Oct 2022 22:36:37 +0000 (UTC)
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.42; Wed, 19 Oct 2022 22:36:35 +0000
-Received: from 88665a182662.ant.amazon.com.com (10.43.162.213) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.15;
- Wed, 19 Oct 2022 22:36:32 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, Hideaki YOSHIFUJI
-	<yoshfuji@linux-ipv6.org>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, Kuniyuki Iwashima
-	<kuni1840@gmail.com>, <netdev@vger.kernel.org>, Mat Martineau
-	<mathew.j.martineau@linux.intel.com>, Matthieu Baerts
-	<matthieu.baerts@tessares.net>, <mptcp@lists.linux.dev>
-Subject: [PATCH v2 net-next 1/5] inet6: Remove inet6_destroy_sock() in sk->sk_prot->destroy().
-Date: Wed, 19 Oct 2022 15:35:59 -0700
-Message-ID: <20221019223603.22991-2-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221019223603.22991-1-kuniyu@amazon.com>
-References: <20221019223603.22991-1-kuniyu@amazon.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427615C87
+	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 23:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666222223; x=1697758223;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=reIHjIZYep4c71ONiVTtmrEIQaFpusVBXeP6U93DD40=;
+  b=a8dbBX4JL5hW/RRmqFkzUitBvKQ/4G1DCHU+RujxL0Wn+6gmsAKMAf7D
+   +qUtJPz9CxJ0dLxq1hm0rqrPrppEOjz7NAmKjk0rWjTt1VncjHLswHuZ8
+   e3o1YAULBxwuCeOI0uUchfHfr1B3yHrdzcCKWhqGT5NttKBgk5GyG8pW3
+   bywGl64nIKeVs5dEfhfSkiJmZIRz9QRDeRbVAuT9hxo4pdzfLg/iwVY84
+   JtAhCPUGRNoZ0ikS4GMpUGGxMAijGRRFoC3z9EWQV4Ohjm4rw1mzf1ccm
+   bhbmyQRX2Q3HtzenExsHnO2cOgJExugc23UaN7yWdGZGMrxbMnpTHhl+Y
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10505"; a="286951612"
+X-IronPort-AV: E=Sophos;i="5.95,196,1661842800"; 
+   d="scan'208";a="286951612"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 16:30:22 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10505"; a="804542733"
+X-IronPort-AV: E=Sophos;i="5.95,196,1661842800"; 
+   d="scan'208";a="804542733"
+Received: from mk6ht25xq5mac.sea.intel.com ([10.241.111.152])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 16:30:22 -0700
+Date: Wed, 19 Oct 2022 16:30:22 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v14 1/7] mptcp: refactor push_pending logic
+In-Reply-To: <1f31ba545d3585823aec4ea43686dd8d89237ebc.1666185947.git.geliang.tang@suse.com>
+Message-ID: <8c8877ea-3395-1bfb-3f46-3a5df5e4ab11@linux.intel.com>
+References: <cover.1666185947.git.geliang.tang@suse.com> <1f31ba545d3585823aec4ea43686dd8d89237ebc.1666185947.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.213]
-X-ClientProxiedBy: EX13D41UWC002.ant.amazon.com (10.43.162.127) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-Precedence: Bulk
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-After commit d38afeec26ed ("tcp/udp: Call inet6_destroy_sock()
-in IPv6 sk->sk_destruct()."), we call inet6_destroy_sock() in
-sk->sk_destruct() by setting inet6_sock_destruct() to it to make
-sure we do not leak inet6-specific resources.
+On Wed, 19 Oct 2022, Geliang Tang wrote:
 
-Now we can remove unnecessary inet6_destroy_sock() calls in
-sk->sk_prot->destroy().
+> To support redundant package schedulers more easily, this patch refactors
+> __mptcp_push_pending() logic from:
+>
+> For each dfrag:
+> 	While sends succeed:
+> 		Call the scheduler (selects subflow and msk->snd_burst)
+> 		Update subflow locks (push/release/acquire as needed)
+> 		Send the dfrag data with mptcp_sendmsg_frag()
+> 		Update already_sent, snd_nxt, snd_burst
+> 	Update msk->first_pending
+> Push/release on final subflow
+>
+> ->
+>
+> While first_pending isn't empty:
+> 	Call the scheduler (selects subflow and msk->snd_burst)
+> 	Update subflow locks (push/release/acquire as needed)
+> 	For each pending dfrag:
+> 		While sends succeed:
+> 			Send the dfrag data with mptcp_sendmsg_frag()
+> 			Update already_sent, snd_nxt, snd_burst
+> 		Update msk->first_pending
+> 		Break if required by msk->snd_burst / etc
+> 	Push/release on final subflow
+>
+> Refactors __mptcp_subflow_push_pending logic from:
+>
+> For each dfrag:
+> 	While sends succeed:
+> 		Call the scheduler (selects subflow and msk->snd_burst)
+> 		Send the dfrag data with mptcp_subflow_delegate(), break
+> 		Send the dfrag data with mptcp_sendmsg_frag()
+> 		Update dfrag->already_sent, msk->snd_nxt, msk->snd_burst
+> 	Update msk->first_pending
+>
+> ->
+>
+> While first_pending isn't empty:
+> 	Call the scheduler (selects subflow and msk->snd_burst)
+> 	Send the dfrag data with mptcp_subflow_delegate(), break
+> 	Send the dfrag data with mptcp_sendmsg_frag()
+> 	For each pending dfrag:
+> 		While sends succeed:
+> 			Send the dfrag data with mptcp_sendmsg_frag()
+> 			Update already_sent, snd_nxt, snd_burst
+> 		Update msk->first_pending
+> 		Break if required by msk->snd_burst / etc
+>
+> Move the duplicate code from __mptcp_push_pending() and
+> __mptcp_subflow_push_pending() into a new helper function, named
+> __subflow_push_pending(). Simplify __mptcp_push_pending() and
+> __mptcp_subflow_push_pending() by invoking this helper.
+>
+> Also move the burst check conditions out of the function
+> mptcp_subflow_get_send(), check them in __subflow_push_pending() in
+> the inner "for each pending dfrag" loop.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 
-DCCP and SCTP have their own sk->sk_destruct() function, so we
-change them separately in the following patches.
+Hi Geliang -
 
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
----
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
----
-v2: Fix build failure for CONFIG_MPTCP_IPV6=y
----
- net/ipv6/ping.c      | 6 ------
- net/ipv6/raw.c       | 2 --
- net/ipv6/tcp_ipv6.c  | 8 +-------
- net/ipv6/udp.c       | 2 --
- net/l2tp/l2tp_ip6.c  | 2 --
- net/mptcp/protocol.c | 7 -------
- 6 files changed, 1 insertion(+), 26 deletions(-)
+Thanks for the changes here. I need to run some tests before signing off 
+but this patch looks good so far.
 
-diff --git a/net/ipv6/ping.c b/net/ipv6/ping.c
-index 86c26e48d065..808983bc2ec9 100644
---- a/net/ipv6/ping.c
-+++ b/net/ipv6/ping.c
-@@ -23,11 +23,6 @@
- #include <linux/bpf-cgroup.h>
- #include <net/ping.h>
- 
--static void ping_v6_destroy(struct sock *sk)
--{
--	inet6_destroy_sock(sk);
--}
--
- /* Compatibility glue so we can support IPv6 when it's compiled as a module */
- static int dummy_ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len,
- 				 int *addr_len)
-@@ -205,7 +200,6 @@ struct proto pingv6_prot = {
- 	.owner =	THIS_MODULE,
- 	.init =		ping_init_sock,
- 	.close =	ping_close,
--	.destroy =	ping_v6_destroy,
- 	.pre_connect =	ping_v6_pre_connect,
- 	.connect =	ip6_datagram_connect_v6_only,
- 	.disconnect =	__udp_disconnect,
-diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
-index 722de9dd0ff7..a06a9f847db5 100644
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -1173,8 +1173,6 @@ static void raw6_destroy(struct sock *sk)
- 	lock_sock(sk);
- 	ip6_flush_pending_frames(sk);
- 	release_sock(sk);
--
--	inet6_destroy_sock(sk);
- }
- 
- static int rawv6_init_sk(struct sock *sk)
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 2a3f9296df1e..f676be14e6b6 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1966,12 +1966,6 @@ static int tcp_v6_init_sock(struct sock *sk)
- 	return 0;
- }
- 
--static void tcp_v6_destroy_sock(struct sock *sk)
--{
--	tcp_v4_destroy_sock(sk);
--	inet6_destroy_sock(sk);
--}
--
- #ifdef CONFIG_PROC_FS
- /* Proc filesystem TCPv6 sock list dumping. */
- static void get_openreq6(struct seq_file *seq,
-@@ -2164,7 +2158,7 @@ struct proto tcpv6_prot = {
- 	.accept			= inet_csk_accept,
- 	.ioctl			= tcp_ioctl,
- 	.init			= tcp_v6_init_sock,
--	.destroy		= tcp_v6_destroy_sock,
-+	.destroy		= tcp_v4_destroy_sock,
- 	.shutdown		= tcp_shutdown,
- 	.setsockopt		= tcp_setsockopt,
- 	.getsockopt		= tcp_getsockopt,
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 8d09f0ea5b8c..e3dde867d9d3 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -1661,8 +1661,6 @@ void udpv6_destroy_sock(struct sock *sk)
- 			udp_encap_disable();
- 		}
- 	}
--
--	inet6_destroy_sock(sk);
- }
- 
- /*
-diff --git a/net/l2tp/l2tp_ip6.c b/net/l2tp/l2tp_ip6.c
-index 9dbd801ddb98..2478aa60145f 100644
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -257,8 +257,6 @@ static void l2tp_ip6_destroy_sock(struct sock *sk)
- 
- 	if (tunnel)
- 		l2tp_tunnel_delete(tunnel);
--
--	inet6_destroy_sock(sk);
- }
- 
- static int l2tp_ip6_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len)
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f599ad44ed24..2e16c897c229 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3898,12 +3898,6 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 
- static struct proto mptcp_v6_prot;
- 
--static void mptcp_v6_destroy(struct sock *sk)
--{
--	mptcp_destroy(sk);
--	inet6_destroy_sock(sk);
--}
--
- static struct inet_protosw mptcp_v6_protosw = {
- 	.type		= SOCK_STREAM,
- 	.protocol	= IPPROTO_MPTCP,
-@@ -3919,7 +3913,6 @@ int __init mptcp_proto_v6_init(void)
- 	mptcp_v6_prot = mptcp_prot;
- 	strcpy(mptcp_v6_prot.name, "MPTCPv6");
- 	mptcp_v6_prot.slab = NULL;
--	mptcp_v6_prot.destroy = mptcp_v6_destroy;
- 	mptcp_v6_prot.obj_size = sizeof(struct mptcp6_sock);
- 
- 	err = proto_register(&mptcp_v6_prot, 1);
--- 
-2.30.2
 
+- Mat
+
+
+> ---
+> net/mptcp/protocol.c | 154 ++++++++++++++++++++++---------------------
+> 1 file changed, 80 insertions(+), 74 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ddeb8b36a677..67450378cb97 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1417,14 +1417,6 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+> 	u64 linger_time;
+> 	long tout = 0;
+>
+> -	/* re-use last subflow, if the burst allow that */
+> -	if (msk->last_snd && msk->snd_burst > 0 &&
+> -	    sk_stream_memory_free(msk->last_snd) &&
+> -	    mptcp_subflow_active(mptcp_subflow_ctx(msk->last_snd))) {
+> -		mptcp_set_timeout(sk);
+> -		return msk->last_snd;
+> -	}
+> -
+> 	/* pick the subflow with the lower wmem/wspace ratio */
+> 	for (i = 0; i < SSK_MODE_MAX; ++i) {
+> 		send_info[i].ssk = NULL;
+> @@ -1528,57 +1520,83 @@ void mptcp_check_and_set_pending(struct sock *sk)
+> 		mptcp_sk(sk)->push_pending |= BIT(MPTCP_PUSH_PENDING);
+> }
+>
+> -void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> +static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
+> +				  struct mptcp_sendmsg_info *info)
+> {
+> -	struct sock *prev_ssk = NULL, *ssk = NULL;
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> -	struct mptcp_sendmsg_info info = {
+> -				.flags = flags,
+> -	};
+> -	bool do_check_data_fin = false;
+> 	struct mptcp_data_frag *dfrag;
+> -	int len;
+> +	int len, copied = 0, err = 0;
+>
+> 	while ((dfrag = mptcp_send_head(sk))) {
+> -		info.sent = dfrag->already_sent;
+> -		info.limit = dfrag->data_len;
+> +		info->sent = dfrag->already_sent;
+> +		info->limit = dfrag->data_len;
+> 		len = dfrag->data_len - dfrag->already_sent;
+> 		while (len > 0) {
+> 			int ret = 0;
+>
+> -			prev_ssk = ssk;
+> -			ssk = mptcp_subflow_get_send(msk);
+> -
+> -			/* First check. If the ssk has changed since
+> -			 * the last round, release prev_ssk
+> -			 */
+> -			if (ssk != prev_ssk && prev_ssk)
+> -				mptcp_push_release(prev_ssk, &info);
+> -			if (!ssk)
+> -				goto out;
+> -
+> -			/* Need to lock the new subflow only if different
+> -			 * from the previous one, otherwise we are still
+> -			 * helding the relevant lock
+> -			 */
+> -			if (ssk != prev_ssk)
+> -				lock_sock(ssk);
+> -
+> -			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+> +			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, info);
+> 			if (ret <= 0) {
+> -				if (ret == -EAGAIN)
+> -					continue;
+> -				mptcp_push_release(ssk, &info);
+> +				err = copied ? : ret;
+> 				goto out;
+> 			}
+>
+> -			do_check_data_fin = true;
+> -			info.sent += ret;
+> +			info->sent += ret;
+> +			copied += ret;
+> 			len -= ret;
+>
+> 			mptcp_update_post_push(msk, dfrag, ret);
+> 		}
+> 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+> +
+> +		if (msk->snd_burst <= 0 ||
+> +		    !sk_stream_memory_free(ssk) ||
+> +		    !mptcp_subflow_active(mptcp_subflow_ctx(ssk))) {
+> +			err = copied ? : -EAGAIN;
+> +			goto out;
+> +		}
+> +		mptcp_set_timeout(sk);
+> +	}
+> +	err = copied;
+> +
+> +out:
+> +	return err;
+> +}
+> +
+> +void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> +{
+> +	struct sock *prev_ssk = NULL, *ssk = NULL;
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_sendmsg_info info = {
+> +		.flags = flags,
+> +	};
+> +	int ret = 0;
+> +
+> +	while (mptcp_send_head(sk)) {
+> +		prev_ssk = ssk;
+> +		ssk = mptcp_subflow_get_send(msk);
+> +
+> +		/* First check. If the ssk has changed since
+> +		 * the last round, release prev_ssk
+> +		 */
+> +		if (ssk != prev_ssk && prev_ssk)
+> +			mptcp_push_release(prev_ssk, &info);
+> +		if (!ssk)
+> +			goto out;
+> +
+> +		/* Need to lock the new subflow only if different
+> +		 * from the previous one, otherwise we are still
+> +		 * helding the relevant lock
+> +		 */
+> +		if (ssk != prev_ssk)
+> +			lock_sock(ssk);
+> +
+> +		ret = __subflow_push_pending(sk, ssk, &info);
+> +		if (ret <= 0) {
+> +			if (ret == -EAGAIN)
+> +				continue;
+> +			mptcp_push_release(ssk, &info);
+> +			goto out;
+> +		}
+> 	}
+>
+> 	/* at this point we held the socket lock for the last subflow we used */
+> @@ -1589,7 +1607,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> 	/* ensure the rtx timer is running */
+> 	if (!mptcp_timer_pending(sk))
+> 		mptcp_reset_timer(sk);
+> -	if (do_check_data_fin)
+> +	if (ret > 0)
+> 		__mptcp_check_send_data_fin(sk);
+> }
+>
+> @@ -1599,49 +1617,37 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
+> 	struct mptcp_sendmsg_info info = {
+> 		.data_lock_held = true,
+> 	};
+> -	struct mptcp_data_frag *dfrag;
+> 	struct sock *xmit_ssk;
+> -	int len, copied = 0;
+> +	int ret = 0;
+>
+> 	info.flags = 0;
+> -	while ((dfrag = mptcp_send_head(sk))) {
+> -		info.sent = dfrag->already_sent;
+> -		info.limit = dfrag->data_len;
+> -		len = dfrag->data_len - dfrag->already_sent;
+> -		while (len > 0) {
+> -			int ret = 0;
+> -
+> -			/* check for a different subflow usage only after
+> -			 * spooling the first chunk of data
+> -			 */
+> -			xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
+> -			if (!xmit_ssk)
+> -				goto out;
+> -			if (xmit_ssk != ssk) {
+> -				mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
+> -						       MPTCP_DELEGATE_SEND);
+> -				goto out;
+> -			}
+> -
+> -			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+> -			if (ret <= 0)
+> -				goto out;
+> -
+> -			info.sent += ret;
+> -			copied += ret;
+> -			len -= ret;
+> -			first = false;
+> +	while (mptcp_send_head(sk)) {
+> +		/* check for a different subflow usage only after
+> +		 * spooling the first chunk of data
+> +		 */
+> +		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
+> +		if (!xmit_ssk)
+> +			goto out;
+> +		if (xmit_ssk != ssk) {
+> +			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
+> +					       MPTCP_DELEGATE_SEND);
+> +			goto out;
+> +		}
+>
+> -			mptcp_update_post_push(msk, dfrag, ret);
+> +		ret = __subflow_push_pending(sk, ssk, &info);
+> +		first = false;
+> +		if (ret <= 0) {
+> +			if (ret == -EAGAIN)
+> +				continue;
+> +			break;
+> 		}
+> -		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+> 	}
+>
+> out:
+> 	/* __mptcp_alloc_tx_skb could have released some wmem and we are
+> 	 * not going to flush it via release_sock()
+> 	 */
+> -	if (copied) {
+> +	if (ret > 0) {
+> 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
+> 			 info.size_goal);
+> 		if (!mptcp_timer_pending(sk))
+> -- 
+> 2.35.3
+>
+>
+>
+
+--
+Mat Martineau
+Intel
