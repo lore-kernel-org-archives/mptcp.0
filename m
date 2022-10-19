@@ -1,115 +1,144 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AC228E8
-	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 12:03:09 +0000 (UTC)
-Received: by mail-pf1-f180.google.com with SMTP id m6so17052803pfb.0
-        for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 05:03:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3120B2F22
+	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 13:22:43 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id l32so12920416wms.2
+        for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 06:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g6CSpqkBkTdbbJiKX3nvD9+aRePkoBomkCbjFhOoFQI=;
-        b=E5UfmgTWPexBeUjUTwHqAnCK3eP04E8IV+H58wT4FkhCG6Q04S1DMjOR+NmEOl5jNi
-         PMsYjz5UXrUVWgflUc0cKK9sfbaAAqFtJJFe7Rg1xEFZU+yd0MIYwiK2lbOc8P/Pr28T
-         a72dZPNxljGXlUHdV3YkojMjLdbLz9sn26Yk7JAvyhA9F0rqcVivojIHT9MTAg5W++CC
-         +WZ06MEME3JU2mlTOnZBPuwCTDm0j+mulUYO3rPgJnB2vIhVrjg+wsWd/AP6Fz1TqXAe
-         trwKB9w9rcDufwsZ+z7XEwi7NhKFaXpZI+r/1bIQWXNs29sUBgj5SHCvDkzazeGL6LZS
-         X5bg==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sptB07iYznLDAF+JZ9JIDPEfvkos7leOqnu7QxhnmwY=;
+        b=r0B7E7N25HJRROYFnNu9I+RorLEXslcWWB07adUPgheVZFRv8MWEJHFHFjtzpV5Xkf
+         fxvPH+mBOKG9Jhj+5jyjNF0ct/spvL24MPbOuCQ6HrMi2QOQuog62RgAbLwwwuLL5n6K
+         jSlbBCwVo/yTQ84OsIVUjClEBX10ruMV2CtBrY1YCMouQFLFLi1FYpmVpjC4ZkI3yCkH
+         5oQAoB8fN2CLnwLw6TJjhiHhjrMmwi+J7n6H4MLen6sVOENd3j3HPpIsv6GPZhLo51fW
+         evSiPFfLE7ELgXm9jlqZzcKu2HyM2BvNOz6Mnr/SuKqQ85umuzkT1Q+U8u8G1Db+L2/q
+         x6Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=g6CSpqkBkTdbbJiKX3nvD9+aRePkoBomkCbjFhOoFQI=;
-        b=civKbccCsBg+MY5DhvMhEW7iPABK1/aQ5k3nPs3wAdGShV+Rit0gP1i5WoxUfs39ri
-         EaUQyF9M2ClnzgLLBmQOh4meQxu5TTwkcNUSY9BptOcgJSS9nKQuc39KBVK0RUFXcl4S
-         CEYG88IKAaFleRZGuwoZKfTwaGlHphuiniHKNDBgjek5+SIZ8IUnmycepsrWiwa+LIcq
-         M2im3AHHc8KldUpj3cOd/EfNPvHW+OuY9FhmZPOU5SGiN026zR8L6QIBbg+Dt7hBiHyE
-         P+SzDpJlm5rc6lLLx6biDL6Fd4Q2Rrr4YugKvMvKF/ExvR3aQj3lsrexmFasYxGaghkV
-         Gvbg==
-X-Gm-Message-State: ACrzQf0CydH8pa3k6IBd91c3ioLhoqvXU+/tc7sf07VkbZ3OBtcRp35U
-	rHRCiagG8EF+4unBMd9a+Q==
-X-Google-Smtp-Source: AMsMyM69QZv851FMw+hR7WH+EeS7UbxpHaVwK1g+p2sMTApcJo/XRG10YdUO0xW9L6xZj5IeTOj5DA==
-X-Received: by 2002:a65:464b:0:b0:42c:b0:9643 with SMTP id k11-20020a65464b000000b0042c00b09643mr7121211pgr.232.1666180989417;
-        Wed, 19 Oct 2022 05:03:09 -0700 (PDT)
-Received: from [127.0.0.1] ([20.245.174.141])
-        by smtp.gmail.com with ESMTPSA id i3-20020aa796e3000000b005625ef68eecsm11149816pfq.31.2022.10.19.05.03.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 05:03:08 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <dafe09ca2e14c4ab45f3d9db56b768e06750e382.1666173045.git.pabeni@redhat.com>
-References:
- <dafe09ca2e14c4ab45f3d9db56b768e06750e382.1666173045.git.pabeni@redhat.com>
-Subject: Re: udp: track the forward memory release threshold in an hot
- cacheline: Tests Results
-Message-ID: <ba705d5a-f8a6-3270-40ad-b9b3a4a5b544@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 19 Oct 2022 12:03:07 +0000
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sptB07iYznLDAF+JZ9JIDPEfvkos7leOqnu7QxhnmwY=;
+        b=koXpZYcog/qUSFtnrSD6/n3VSVEwp02Ync6WhKBWvERh1h1LdlehAW/jvXJzLdQjKl
+         QEToRtrgEojNhVheu7D/CHXlQwlhxAEYikoW2rBgUIQIXpJlOO272W9ZYP8UiGi85eCz
+         drSkD4zN1+DvfQITUvvoYlpNVMJCH0hQtg55ouWFdvij1xLPDYOnrSaZAY4+cnIQ0eeT
+         nywk53Yh930ygi+ieSK46zoyYffMWroI8Cg+52Kva2fcpYmLWCSsZe1GZxI0ZEplAE9l
+         FKkWnEzQSyu4PlVzkpiNNyYJ73wc9Y4MJD3qiEBcvt0miCSBbKWT6F9avqwdHgNDSXo2
+         wyqg==
+X-Gm-Message-State: ACrzQf29vqnWPGCEQqoyo3ce3iQG1CQY/2c1XHYclWGrKNavkPZFLyet
+	WC5BDTmaIjowmrFKBdeaEoCXCw==
+X-Google-Smtp-Source: AMsMyM4p7ZxcfyXFQ5PhbXiOS4Z6F45u61V6e4urvVg9FQVDPymxU7fDHu1Lv0kBk96fLiH8R+NTtQ==
+X-Received: by 2002:a1c:e90b:0:b0:3b4:fb6c:7654 with SMTP id q11-20020a1ce90b000000b003b4fb6c7654mr5617087wmc.98.1666185761990;
+        Wed, 19 Oct 2022 06:22:41 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:cbb4:9dfe:a976:2185? ([2a02:578:8593:1200:cbb4:9dfe:a976:2185])
+        by smtp.gmail.com with ESMTPSA id r18-20020a05600c35d200b003b3307fb98fsm14219609wmq.24.2022.10.19.06.22.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Oct 2022 06:22:41 -0700 (PDT)
+Message-ID: <2b8c8764-052a-97b3-bf5b-8335a75c11d9@tessares.net>
+Date: Wed, 19 Oct 2022 15:22:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v1 net-next 1/5] inet6: Remove inet6_destroy_sock() in
+ sk->sk_prot->destroy().
+Content-Language: en-GB
+To: Kuniyuki Iwashima <kuniyu@amazon.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ David Ahern <dsahern@kernel.org>, Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc: Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20221018190956.1308-1-kuniyu@amazon.com>
+ <20221018190956.1308-2-kuniyu@amazon.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20221018190956.1308-2-kuniyu@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Kuniyuki,
 
-Thank you for your modifications, that's great!
++cc MPTCP ML.
 
-Our CI did some validations and here is its report:
+On 18/10/2022 21:09, Kuniyuki Iwashima wrote:
+> After commit d38afeec26ed ("tcp/udp: Call inet6_destroy_sock()
+> in IPv6 sk->sk_destruct()."), we call inet6_destroy_sock() in
+> sk->sk_destruct() by setting inet6_sock_destruct() to it to make
+> sure we do not leak inet6-specific resources.
+> 
+> Now we can remove unnecessary inet6_destroy_sock() calls in
+> sk->sk_prot->destroy().
+> 
+> DCCP and SCTP have their own sk->sk_destruct() function, so we
+> change them separately in the following patches.
+> 
+> Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> ---
+> Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5122545217699840
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5122545217699840/su=
-mmary/summary.txt
+Thank you for the cc!
+Please next time also cc MPTCP ML if you don't mind.
 
-- {"code":404,"message":
-  - "Can't find artifacts =
-containing file conclusion.txt"}:
-  - Task: https://cirrus-ci.=
-com/task/6248445124542464
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6248445124542464/summary/summary.txt
+(...)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/bac2aa631e4b
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index f599ad44ed24..7cc9c542c768 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -17,9 +17,6 @@
+>  #include <net/protocol.h>
+>  #include <net/tcp.h>
+>  #include <net/tcp_states.h>
+> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -#include <net/transp_v6.h>
+> -#endif
 
+Please keep this include: it is needed to access "tcpv6_prot" (as
+reported by the kernel bot).
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+>  #include <net/mptcp.h>
+>  #include <net/xfrm.h>
+>  #include <asm/ioctls.h>
+> @@ -3898,12 +3895,6 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+>  
+>  static struct proto mptcp_v6_prot;
+>  
+> -static void mptcp_v6_destroy(struct sock *sk)
+> -{
+> -	mptcp_destroy(sk);
+> -	inet6_destroy_sock(sk);
+> -}
+> -
+>  static struct inet_protosw mptcp_v6_protosw = {
+>  	.type		= SOCK_STREAM,
+>  	.protocol	= IPPROTO_MPTCP,
+> @@ -3919,7 +3910,6 @@ int __init mptcp_proto_v6_init(void)
+>  	mptcp_v6_prot = mptcp_prot;
+>  	strcpy(mptcp_v6_prot.name, "MPTCPv6");
+>  	mptcp_v6_prot.slab = NULL;
+> -	mptcp_v6_prot.destroy = mptcp_v6_destroy;
+>  	mptcp_v6_prot.obj_size = sizeof(struct mptcp6_sock);
+>  
+>  	err = proto_register(&mptcp_v6_prot, 1);
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+I see that for MPTCP IPv6 sockets, sk->sk_destruct is now set to
+inet6_sock_destruct() which calls inet6_destroy_sock() via
+inet6_cleanup_sock().
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+So all good for the MPTCP part (if you re-add the include ;) ).
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
