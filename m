@@ -1,112 +1,201 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536825390
-	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 18:32:30 +0000 (UTC)
-Received: by mail-pf1-f179.google.com with SMTP id i3so18003747pfc.11
-        for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 11:32:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF9B53BE
+	for <mptcp@lists.linux.dev>; Wed, 19 Oct 2022 22:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2G3zfk8GlSSDI9mtQb+AkXeeFeLFFOA6rzmiCEnypIE=;
-        b=n8iqsc2FvwbB8v+ls37cUhGXJvkTTOexMLN9X/CUyLuodL2NTky5L4hSq1BXsRCFkV
-         tGs+/BZAfRgYzOQuPc5KDmDYGJ9G2JHgjonS5uTkZ8VsnqMVxwMwHlHQ8i6VCrMKEKLC
-         1cZfxG9wr7UDxOuvBiL9RxBFJUBwnCy97D35YhO9sn/Vu4pE4EdizS0PRJapjp2S5cQK
-         y7ne7i+8byI/UJo2dV+waRwxtK6p+bc2F98OnhmchLUCSWnAHiZ7Fcr/VppEfPc/QXM5
-         HmZwk4ooYU77Lu1QbY7gJOpcGYqce391ntMEySKNrDmcnFZvhDyUz1yPEkb7ljPv2OiZ
-         cz0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2G3zfk8GlSSDI9mtQb+AkXeeFeLFFOA6rzmiCEnypIE=;
-        b=LwJ/P+yeoagRfFxXlCw8AgpSpYg8+sjuU4DHpeDSOc0cVCAJruyR9QOMcXgEoBpY2H
-         GTnl7VUiMUoMFYv6TuihSVjT0f0RzzJH9NDYUa45gSt6Wy3ybFnIEosgdBPRCxxgUJyf
-         zum/pkDyZABEI2tMT4zhlziJRp7B2e++pEBBzOHd2hfhBgFqhoNNzuE7E16UZ9sVSNF1
-         6y7KO+FHYNNqN+EMDZR5W9Anc4tKGzQv+0i5sZG9AnLt5h2hkUmwxIqJukvSlsiAemJu
-         bYxf6PbS91ISAXdfwyPRUy2MwCIH4EJqFQUmZOcd5rqZKQJ2K7fiJCqZOQNNFMV5yqX9
-         4Erw==
-X-Gm-Message-State: ACrzQf0t/Wokg0Ak0+2J5ajdt60eyaAVn1S21eQJXvEysM0q3bSL93Df
-	/UV5NISx90Z9+sr+bt8eGb+AAgI0ZceR
-X-Google-Smtp-Source: AMsMyM76nkPQ88Y4CuH3Zz5U5LO83S2x/Ne2IV7rKAg0PW3MwrJBfqxWTIClD/XTuaiAjrDW6EwM2Q==
-X-Received: by 2002:a63:1455:0:b0:438:e26b:ab1f with SMTP id 21-20020a631455000000b00438e26bab1fmr8092089pgu.183.1666204349762;
-        Wed, 19 Oct 2022 11:32:29 -0700 (PDT)
-Received: from [127.0.0.1] ([20.115.154.114])
-        by smtp.gmail.com with ESMTPSA id z2-20020a17090a014200b0020adf65cebbsm302514pje.8.2022.10.19.11.32.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 11:32:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221019161940.3178393-5-matthieu.baerts@tessares.net>
-References: <20221019161940.3178393-5-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: uniform 'rndh' variable: Tests Results
-Message-ID: <71e04737-57e4-d82c-ccc3-8049654af44a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 19 Oct 2022 18:32:28 +0000
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1666219005; x=1697755005;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iOCiVAkzTSFj1QbPdyOJKBHoLDMqKrua2JrtyUAycek=;
+  b=htvVtJULo7z2snUXMLtSE8k1WqCO0/bOHe8DtAz0KVb6xIuohRASycuf
+   46/mvB1+6qXhoKATR4HjIm3FjgPd52287nkt1oLzS/sDEwk2H/LR+teeO
+   j81saQVDhj+uaKBJwubXp8zXzwn8kQ6Bx8F6EFEp0i8uUbT/d7e8gHH7c
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.95,196,1661817600"; 
+   d="scan'208";a="257425454"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 22:36:41 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+	by email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com (Postfix) with ESMTPS id DF0B0A24B5;
+	Wed, 19 Oct 2022 22:36:37 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Wed, 19 Oct 2022 22:36:35 +0000
+Received: from 88665a182662.ant.amazon.com.com (10.43.162.213) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.15;
+ Wed, 19 Oct 2022 22:36:32 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, Hideaki YOSHIFUJI
+	<yoshfuji@linux-ipv6.org>
+CC: Kuniyuki Iwashima <kuniyu@amazon.com>, Kuniyuki Iwashima
+	<kuni1840@gmail.com>, <netdev@vger.kernel.org>, Mat Martineau
+	<mathew.j.martineau@linux.intel.com>, Matthieu Baerts
+	<matthieu.baerts@tessares.net>, <mptcp@lists.linux.dev>
+Subject: [PATCH v2 net-next 1/5] inet6: Remove inet6_destroy_sock() in sk->sk_prot->destroy().
+Date: Wed, 19 Oct 2022 15:35:59 -0700
+Message-ID: <20221019223603.22991-2-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20221019223603.22991-1-kuniyu@amazon.com>
+References: <20221019223603.22991-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.213]
+X-ClientProxiedBy: EX13D41UWC002.ant.amazon.com (10.43.162.127) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-Hi Matthieu,
+After commit d38afeec26ed ("tcp/udp: Call inet6_destroy_sock()
+in IPv6 sk->sk_destruct()."), we call inet6_destroy_sock() in
+sk->sk_destruct() by setting inet6_sock_destruct() to it to make
+sure we do not leak inet6-specific resources.
 
-Thank you for your modifications, that's great!
+Now we can remove unnecessary inet6_destroy_sock() calls in
+sk->sk_prot->destroy().
 
-Our CI did some validations and here is its report:
+DCCP and SCTP have their own sk->sk_destruct() function, so we
+change them separately in the following patches.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/4915441154916352
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/4915441154916352/summary/summary.txt
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+---
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+---
+v2: Fix build failure for CONFIG_MPTCP_IPV6=y
+---
+ net/ipv6/ping.c      | 6 ------
+ net/ipv6/raw.c       | 2 --
+ net/ipv6/tcp_ipv6.c  | 8 +-------
+ net/ipv6/udp.c       | 2 --
+ net/l2tp/l2tp_ip6.c  | 2 --
+ net/mptcp/protocol.c | 7 -------
+ 6 files changed, 1 insertion(+), 26 deletions(-)
 
-- {"code":404,"message":
-  - "Can't find artifacts containing file =
-conclusion.txt"}:
-  - Task: https://cirrus-ci.com/task/6041341061758976
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6041341061758976/su=
-mmary/summary.txt
+diff --git a/net/ipv6/ping.c b/net/ipv6/ping.c
+index 86c26e48d065..808983bc2ec9 100644
+--- a/net/ipv6/ping.c
++++ b/net/ipv6/ping.c
+@@ -23,11 +23,6 @@
+ #include <linux/bpf-cgroup.h>
+ #include <net/ping.h>
+ 
+-static void ping_v6_destroy(struct sock *sk)
+-{
+-	inet6_destroy_sock(sk);
+-}
+-
+ /* Compatibility glue so we can support IPv6 when it's compiled as a module */
+ static int dummy_ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len,
+ 				 int *addr_len)
+@@ -205,7 +200,6 @@ struct proto pingv6_prot = {
+ 	.owner =	THIS_MODULE,
+ 	.init =		ping_init_sock,
+ 	.close =	ping_close,
+-	.destroy =	ping_v6_destroy,
+ 	.pre_connect =	ping_v6_pre_connect,
+ 	.connect =	ip6_datagram_connect_v6_only,
+ 	.disconnect =	__udp_disconnect,
+diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
+index 722de9dd0ff7..a06a9f847db5 100644
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -1173,8 +1173,6 @@ static void raw6_destroy(struct sock *sk)
+ 	lock_sock(sk);
+ 	ip6_flush_pending_frames(sk);
+ 	release_sock(sk);
+-
+-	inet6_destroy_sock(sk);
+ }
+ 
+ static int rawv6_init_sk(struct sock *sk)
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 2a3f9296df1e..f676be14e6b6 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1966,12 +1966,6 @@ static int tcp_v6_init_sock(struct sock *sk)
+ 	return 0;
+ }
+ 
+-static void tcp_v6_destroy_sock(struct sock *sk)
+-{
+-	tcp_v4_destroy_sock(sk);
+-	inet6_destroy_sock(sk);
+-}
+-
+ #ifdef CONFIG_PROC_FS
+ /* Proc filesystem TCPv6 sock list dumping. */
+ static void get_openreq6(struct seq_file *seq,
+@@ -2164,7 +2158,7 @@ struct proto tcpv6_prot = {
+ 	.accept			= inet_csk_accept,
+ 	.ioctl			= tcp_ioctl,
+ 	.init			= tcp_v6_init_sock,
+-	.destroy		= tcp_v6_destroy_sock,
++	.destroy		= tcp_v4_destroy_sock,
+ 	.shutdown		= tcp_shutdown,
+ 	.setsockopt		= tcp_setsockopt,
+ 	.getsockopt		= tcp_getsockopt,
+diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+index 8d09f0ea5b8c..e3dde867d9d3 100644
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -1661,8 +1661,6 @@ void udpv6_destroy_sock(struct sock *sk)
+ 			udp_encap_disable();
+ 		}
+ 	}
+-
+-	inet6_destroy_sock(sk);
+ }
+ 
+ /*
+diff --git a/net/l2tp/l2tp_ip6.c b/net/l2tp/l2tp_ip6.c
+index 9dbd801ddb98..2478aa60145f 100644
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -257,8 +257,6 @@ static void l2tp_ip6_destroy_sock(struct sock *sk)
+ 
+ 	if (tunnel)
+ 		l2tp_tunnel_delete(tunnel);
+-
+-	inet6_destroy_sock(sk);
+ }
+ 
+ static int l2tp_ip6_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f599ad44ed24..2e16c897c229 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3898,12 +3898,6 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 
+ static struct proto mptcp_v6_prot;
+ 
+-static void mptcp_v6_destroy(struct sock *sk)
+-{
+-	mptcp_destroy(sk);
+-	inet6_destroy_sock(sk);
+-}
+-
+ static struct inet_protosw mptcp_v6_protosw = {
+ 	.type		= SOCK_STREAM,
+ 	.protocol	= IPPROTO_MPTCP,
+@@ -3919,7 +3913,6 @@ int __init mptcp_proto_v6_init(void)
+ 	mptcp_v6_prot = mptcp_prot;
+ 	strcpy(mptcp_v6_prot.name, "MPTCPv6");
+ 	mptcp_v6_prot.slab = NULL;
+-	mptcp_v6_prot.destroy = mptcp_v6_destroy;
+ 	mptcp_v6_prot.obj_size = sizeof(struct mptcp6_sock);
+ 
+ 	err = proto_register(&mptcp_v6_prot, 1);
+-- 
+2.30.2
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e2fd62b1a03e
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
