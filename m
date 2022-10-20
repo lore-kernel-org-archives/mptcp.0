@@ -1,196 +1,115 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0235CA3
-	for <mptcp@lists.linux.dev>; Thu, 20 Oct 2022 18:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48E47B
+	for <mptcp@lists.linux.dev>; Thu, 20 Oct 2022 21:14:17 +0000 (UTC)
+Received: by mail-pl1-f179.google.com with SMTP id c24so478831plo.3
+        for <mptcp@lists.linux.dev>; Thu, 20 Oct 2022 14:14:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1666290025; x=1697826025;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=z+Y/NHNM5uoVzm+rHVda3yco3ULp47GHC5LXxgQtcSM=;
-  b=R24GdvH5j8GOf8O/BZAT3BPZjoxV0kLJ46YrDOQkjMKfSB1Tg+al6aLv
-   TrsCsuX6Tcu0miL2meZm4+9C869aoIsgNNcSRqlWpKODS3sLDTHsp7Zjt
-   exEUtd1iJPI56/1ptrMEYR3aH92A0kdbQSed/u7ZKFgsuHyruhHpZpp/L
-   k=;
-X-IronPort-AV: E=Sophos;i="5.95,199,1661817600"; 
-   d="scan'208";a="142447769"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-af372327.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 18:20:21 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-	by email-inbound-relay-pdx-2a-m6i4x-af372327.us-west-2.amazon.com (Postfix) with ESMTPS id D6ED6610CB;
-	Thu, 20 Oct 2022 18:20:20 +0000 (UTC)
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.42; Thu, 20 Oct 2022 18:20:20 +0000
-Received: from 88665a182662.ant.amazon.com.com (10.43.162.208) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.15;
- Thu, 20 Oct 2022 18:20:17 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <pabeni@redhat.com>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <mathew.j.martineau@linux.intel.com>,
-	<matthieu.baerts@tessares.net>, <mptcp@lists.linux.dev>,
-	<netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 2/2] udp: track the forward memory release threshold in an hot cacheline
-Date: Thu, 20 Oct 2022 11:20:08 -0700
-Message-ID: <20221020182008.293-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <2dede94e742d8096d6ac5e0f1979054ee158d9a8.1666287924.git.pabeni@redhat.com>
-References: <2dede94e742d8096d6ac5e0f1979054ee158d9a8.1666287924.git.pabeni@redhat.com>
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uy6bPfUUWnHqt8M6qg+lbMzsHksyOgr1Wqvtibo1tBw=;
+        b=MFnZJAvICNGV5+xken1XUInadwkwOHMaijybYZw/XuCV0R2epaFWbvaxdZ4A24D/ob
+         f62uW4ob0+zjAVIaRGagLDNgn3aNbccXv+S04i603nAooewHCn33+KZYrN1DIMc0lALa
+         oZJK0zQcmg+N68VboxAV+1HvYxWHkjA1VBCC5hGezf6BOP2rsdZUlOIP/gL0j1fX0giu
+         DYd9FBitdrodtX7E8jnt8y4+CuSo2AZo+Q14O8bLNos5bD8wgLbRzk4r5ZODDYbS6FR3
+         oAh9o0HtvI2pkY7eG4ucz8USGxMeHD+TcShMcf8rK1a2iWcdEhiwTvGYrwpN325di6Wx
+         6R9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Uy6bPfUUWnHqt8M6qg+lbMzsHksyOgr1Wqvtibo1tBw=;
+        b=UkkVYu10AQoQznm6I9ziWcBqScuCB3dPnyScomz3L8+zdCwzi3CnNHApxLh+QdLcoa
+         9qLjl7tTE+ehUNFu/FTC4/scgfuJ4ec9keTwWlPCtr1W70Lv5Qns9a1+vJrZNtKUdSik
+         GMii/w4LeBRVSQn4Px1nkiez0noTdjzZx0G9/63dUrk7561gxyV4Ql5FKQldaW/qHThj
+         3W7gpFdoGZO0yBahiwe82IJUADfehjbDv/O9+mPqy/UTXCFdYSczTVHmTrhokVfLt6DB
+         Pze72n22PqzakMugT9kDfGz178w75p6ClWbF/XYn872RSAA6RRZ8Txx7ujsqVo34Zvg7
+         DLFw==
+X-Gm-Message-State: ACrzQf1lH1EwdH0BzVhqm7xW+hhwQOBO2q+7tH+j0bK1dSAvTc7o1ur4
+	dF0mhfeTaPGtPFJxg5D+1A==
+X-Google-Smtp-Source: AMsMyM7/Cqve01P43uepks525JcYir70GVEhsGDsnINotTeOeR2UBjM3D6/QGflKdKaiSlVDoI677A==
+X-Received: by 2002:a17:902:ea06:b0:185:3d64:8d55 with SMTP id s6-20020a170902ea0600b001853d648d55mr15663216plg.7.1666300457226;
+        Thu, 20 Oct 2022 14:14:17 -0700 (PDT)
+Received: from [127.0.0.1] ([138.91.166.164])
+        by smtp.gmail.com with ESMTPSA id x22-20020aa79ad6000000b005625d6d2999sm13755441pfp.187.2022.10.20.14.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Oct 2022 14:14:16 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <2dede94e742d8096d6ac5e0f1979054ee158d9a8.1666287924.git.pabeni@redhat.com>
+References:
+ <2dede94e742d8096d6ac5e0f1979054ee158d9a8.1666287924.git.pabeni@redhat.com>
+Subject: Re: udp: track the forward memory release threshold in an hot
+ cacheline: Tests Results
+Message-ID: <796796d4-883e-1489-eace-2884ed20fa0d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 20 Oct 2022 21:14:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.208]
-X-ClientProxiedBy: EX13D42UWA001.ant.amazon.com (10.43.160.153) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-Precedence: Bulk
 
-From:   Paolo Abeni <pabeni@redhat.com>
-Date:   Thu, 20 Oct 2022 19:48:52 +0200
-> When the receiver process and the BH runs on different cores,
-> udp_rmem_release() experience a cache miss while accessing sk_rcvbuf,
-> as the latter shares the same cacheline with sk_forward_alloc, written
-> by the BH.
-> 
-> With this patch, UDP tracks the rcvbuf value and its update via custom
-> SOL_SOCKET socket options, and copies the forward memory threshold value
-> used by udp_rmem_release() in a different cacheline, already accessed by
-> the above function and uncontended.
-> 
-> Since the UDP socket init operation grown a bit, factor out the common
-> code between v4 and v6 in a shared helper.
-> 
-> Overall the above give a 10% peek throughput increase under UDP flood.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Hi Paolo,
 
-Acked-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Thank you for your modifications, that's great!
 
-Thank you!
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5317274872578048
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5317274872578048/summary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts containing file =
+conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/6443174779420672
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6443174779420672/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/31ed4dad9833
 
 
-> ---
-> v1 -> v2:
->  - factor out common init helper for udp && udpv6 sock (Kuniyuki)
-> ---
->  include/linux/udp.h |  3 +++
->  include/net/udp.h   |  9 +++++++++
->  net/ipv4/udp.c      | 18 +++++++++++++++---
->  net/ipv6/udp.c      |  4 ++--
->  4 files changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/udp.h b/include/linux/udp.h
-> index e96da4157d04..5cdba00a904a 100644
-> --- a/include/linux/udp.h
-> +++ b/include/linux/udp.h
-> @@ -87,6 +87,9 @@ struct udp_sock {
->  
->  	/* This field is dirtied by udp_recvmsg() */
->  	int		forward_deficit;
-> +
-> +	/* This fields follows rcvbuf value, and is touched by udp_recvmsg */
-> +	int		forward_threshold;
->  };
->  
->  #define UDP_MAX_SEGMENTS	(1 << 6UL)
-> diff --git a/include/net/udp.h b/include/net/udp.h
-> index fee053bcd17c..de4b528522bb 100644
-> --- a/include/net/udp.h
-> +++ b/include/net/udp.h
-> @@ -174,6 +174,15 @@ INDIRECT_CALLABLE_DECLARE(int udpv6_rcv(struct sk_buff *));
->  struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
->  				  netdev_features_t features, bool is_ipv6);
->  
-> +static inline void udp_lib_init_sock(struct sock *sk)
-> +{
-> +	struct udp_sock *up = udp_sk(sk);
-> +
-> +	skb_queue_head_init(&up->reader_queue);
-> +	up->forward_threshold = sk->sk_rcvbuf >> 2;
-> +	set_bit(SOCK_CUSTOM_SOCKOPT, &sk->sk_socket->flags);
-> +}
-> +
->  /* hash routines shared between UDPv4/6 and UDP-Litev4/6 */
->  static inline int udp_lib_hash(struct sock *sk)
->  {
-> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-> index 8126f67d18b3..e361ad93999e 100644
-> --- a/net/ipv4/udp.c
-> +++ b/net/ipv4/udp.c
-> @@ -1448,7 +1448,7 @@ static void udp_rmem_release(struct sock *sk, int size, int partial,
->  	if (likely(partial)) {
->  		up->forward_deficit += size;
->  		size = up->forward_deficit;
-> -		if (size < (sk->sk_rcvbuf >> 2) &&
-> +		if (size < READ_ONCE(up->forward_threshold) &&
->  		    !skb_queue_empty(&up->reader_queue))
->  			return;
->  	} else {
-> @@ -1622,7 +1622,7 @@ static void udp_destruct_sock(struct sock *sk)
->  
->  int udp_init_sock(struct sock *sk)
->  {
-> -	skb_queue_head_init(&udp_sk(sk)->reader_queue);
-> +	udp_lib_init_sock(sk);
->  	sk->sk_destruct = udp_destruct_sock;
->  	return 0;
->  }
-> @@ -2671,6 +2671,18 @@ int udp_lib_setsockopt(struct sock *sk, int level, int optname,
->  	int err = 0;
->  	int is_udplite = IS_UDPLITE(sk);
->  
-> +	if (level == SOL_SOCKET) {
-> +		err = sk_setsockopt(sk, level, optname, optval, optlen);
-> +
-> +		if (optname == SO_RCVBUF || optname == SO_RCVBUFFORCE) {
-> +			sockopt_lock_sock(sk);
-> +			/* paired with READ_ONCE in udp_rmem_release() */
-> +			WRITE_ONCE(up->forward_threshold, sk->sk_rcvbuf >> 2);
-> +			sockopt_release_sock(sk);
-> +		}
-> +		return err;
-> +	}
-> +
->  	if (optlen < sizeof(int))
->  		return -EINVAL;
->  
-> @@ -2784,7 +2796,7 @@ EXPORT_SYMBOL(udp_lib_setsockopt);
->  int udp_setsockopt(struct sock *sk, int level, int optname, sockptr_t optval,
->  		   unsigned int optlen)
->  {
-> -	if (level == SOL_UDP  ||  level == SOL_UDPLITE)
-> +	if (level == SOL_UDP  ||  level == SOL_UDPLITE || level == SOL_SOCKET)
->  		return udp_lib_setsockopt(sk, level, optname,
->  					  optval, optlen,
->  					  udp_push_pending_frames);
-> diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-> index 8d09f0ea5b8c..b0bc4e27ec2f 100644
-> --- a/net/ipv6/udp.c
-> +++ b/net/ipv6/udp.c
-> @@ -64,7 +64,7 @@ static void udpv6_destruct_sock(struct sock *sk)
->  
->  int udpv6_init_sock(struct sock *sk)
->  {
-> -	skb_queue_head_init(&udp_sk(sk)->reader_queue);
-> +	udp_lib_init_sock(sk);
->  	sk->sk_destruct = udpv6_destruct_sock;
->  	return 0;
->  }
-> @@ -1671,7 +1671,7 @@ void udpv6_destroy_sock(struct sock *sk)
->  int udpv6_setsockopt(struct sock *sk, int level, int optname, sockptr_t optval,
->  		     unsigned int optlen)
->  {
-> -	if (level == SOL_UDP  ||  level == SOL_UDPLITE)
-> +	if (level == SOL_UDP  ||  level == SOL_UDPLITE || level == SOL_SOCKET)
->  		return udp_lib_setsockopt(sk, level, optname,
->  					  optval, optlen,
->  					  udp_v6_push_pending_frames);
-> -- 
-> 2.37.3
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
