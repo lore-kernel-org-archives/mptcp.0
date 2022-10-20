@@ -1,30 +1,31 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72D55C96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F84A5CA0
 	for <mptcp@lists.linux.dev>; Thu, 20 Oct 2022 17:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1666288173;
+	s=mimecast20190719; t=1666288174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HJxjXLDfMlDyaKDLMRjU7XgUAM0x5ea4lpQloTO42nQ=;
-	b=GS1QaHiPP6LvqrSv0tItE7WEGlqOe5B/vbH2a6ZUIdvswAdTlcWgg5IcY705KSyYCXRzAs
-	KFXBelgrEP2mTV5tI16ktDeeDWAFPYRaenHVvLmv1+dwTQzN4+UUtUyRN5kQ23g7E/v2Te
-	PQGSo9aiWtPUK7HMmdEDwzMntGb4/Oo=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4Pb3/emoyHa57dBaQPwwjztj9mw+OTDfOL34jgo14T4=;
+	b=a4NbomZ96gV3UzIxtJPXo6pL5Hg7Uc17mAPBljI00hZjtyQFr/5XsGo5YKluZhOP8HwfUX
+	TJiU9Mbe0xuFFO85kkAhstz7dEbIl36P8Mc4xfaZI4o1lBnM1GpiuspqEZdR71ast4z9v8
+	yTnwDAcl7BvTvg106FIRtQSP8/4fnSQ=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-618-aBCeaIefPOKGzMn3YgbyLA-1; Thu, 20 Oct 2022 13:49:28 -0400
-X-MC-Unique: aBCeaIefPOKGzMn3YgbyLA-1
+ us-mta-21-KO5O6rouMVCezPVgm3rEJQ-1; Thu, 20 Oct 2022 13:49:30 -0400
+X-MC-Unique: KO5O6rouMVCezPVgm3rEJQ-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EAF77857D0F;
-	Thu, 20 Oct 2022 17:49:17 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8BE3387B2A2;
+	Thu, 20 Oct 2022 17:49:23 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.216])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 20EFC49BB63;
-	Thu, 20 Oct 2022 17:49:05 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DFC164A9255;
+	Thu, 20 Oct 2022 17:49:11 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -35,9 +36,11 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>,
 	Matthieu Baerts <matthieu.baerts@tessares.net>,
 	Kuniyuki Iwashima <kuniyu@amazon.com>
-Subject: [PATCH net-next v2 0/2] udp: avoid false sharing on receive
-Date: Thu, 20 Oct 2022 19:48:50 +0200
-Message-Id: <cover.1666287924.git.pabeni@redhat.com>
+Subject: [PATCH net-next v2 1/2] net: introduce and use custom sockopt socket flag
+Date: Thu, 20 Oct 2022 19:48:51 +0200
+Message-Id: <dc549a4d5c1d2031c64794c8e12bed55afb85c3e.1666287924.git.pabeni@redhat.com>
+In-Reply-To: <cover.1666287924.git.pabeni@redhat.com>
+References: <cover.1666287924.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,56 +50,72 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 
-Under high UDP load, the BH processing and the user-space receiver can
-run on different cores.
+We will soon introduce custom setsockopt for UDP sockets, too.
+Instead of doing even more complex arbitrary checks inside
+sock_use_custom_sol_socket(), add a new socket flag and set it
+for the relevant socket types (currently only MPTCP).
 
-The UDP implementation does a lot of effort to avoid false sharing in
-the receive path, but recent changes to the struct sock layout moved
-the sk_forward_alloc and the sk_rcvbuf fields on the same cacheline:
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ include/linux/net.h  | 1 +
+ net/mptcp/protocol.c | 4 ++++
+ net/socket.c         | 8 +-------
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
-        /* --- cacheline 4 boundary (256 bytes) --- */
-                struct sk_buff *   tail;
-        } sk_backlog;
-        int                        sk_forward_alloc;
-        unsigned int               sk_reserved_mem;
-        unsigned int               sk_ll_usec;
-        unsigned int               sk_napi_id;
-        int                        sk_rcvbuf;
-
-sk_forward_alloc is updated by the BH, while sk_rcvbuf is accessed by
-udp_recvmsg(), causing false sharing.
-
-A possible solution would be to re-order the struct sock fields to avoid
-the false sharing. Such change is subject to being invalidated by future
-changes and could have negative side effects on other workload.
-
-Instead this series uses a different approach, touching only the UDP
-socket layout. 
-
-The first patch generalizes the custom setsockopt infrastructure, to
-allow UDP tracking the buffer size, and the second patch addresses the
-issue, copying the relevant buffer information into an already hot
-cacheline.
-
-Overall the above gives a 10% peek throughput increase under UDP flood.
-
-v1 -> v2:
- - introduce and use a common helper to initialize the UDP v4/v6 sockets
-   (Kuniyuki)
-
-Paolo Abeni (2):
-  net: introduce and use custom sockopt socket flag
-  udp: track the forward memory release threshold in an hot cacheline
-
- include/linux/net.h  |  1 +
- include/linux/udp.h  |  3 +++
- include/net/udp.h    |  9 +++++++++
- net/ipv4/udp.c       | 18 +++++++++++++++---
- net/ipv6/udp.c       |  4 ++--
- net/mptcp/protocol.c |  4 ++++
- net/socket.c         |  8 +-------
- 7 files changed, 35 insertions(+), 12 deletions(-)
-
+diff --git a/include/linux/net.h b/include/linux/net.h
+index 711c3593c3b8..59350fd85823 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -41,6 +41,7 @@ struct net;
+ #define SOCK_NOSPACE		2
+ #define SOCK_PASSCRED		3
+ #define SOCK_PASSSEC		4
++#define SOCK_CUSTOM_SOCKOPT	5
+ 
+ #ifndef ARCH_HAS_SOCKET_TYPES
+ /**
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f599ad44ed24..0448a5c3da3c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2708,6 +2708,8 @@ static int mptcp_init_sock(struct sock *sk)
+ 	if (ret)
+ 		return ret;
+ 
++	set_bit(SOCK_CUSTOM_SOCKOPT, &sk->sk_socket->flags);
++
+ 	/* fetch the ca name; do it outside __mptcp_init_sock(), so that clone will
+ 	 * propagate the correct value
+ 	 */
+@@ -3684,6 +3686,8 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 		struct mptcp_subflow_context *subflow;
+ 		struct sock *newsk = newsock->sk;
+ 
++		set_bit(SOCK_CUSTOM_SOCKOPT, &newsock->flags);
++
+ 		lock_sock(newsk);
+ 
+ 		/* PM/worker can now acquire the first subflow socket
+diff --git a/net/socket.c b/net/socket.c
+index 00da9ce3dba0..55c5d536e5f6 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2199,13 +2199,7 @@ SYSCALL_DEFINE4(recv, int, fd, void __user *, ubuf, size_t, size,
+ 
+ static bool sock_use_custom_sol_socket(const struct socket *sock)
+ {
+-	const struct sock *sk = sock->sk;
+-
+-	/* Use sock->ops->setsockopt() for MPTCP */
+-	return IS_ENABLED(CONFIG_MPTCP) &&
+-	       sk->sk_protocol == IPPROTO_MPTCP &&
+-	       sk->sk_type == SOCK_STREAM &&
+-	       (sk->sk_family == AF_INET || sk->sk_family == AF_INET6);
++	return test_bit(SOCK_CUSTOM_SOCKOPT, &sock->flags);
+ }
+ 
+ /*
 -- 
 2.37.3
 
