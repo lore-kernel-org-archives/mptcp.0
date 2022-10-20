@@ -1,69 +1,128 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9103.amazon.com (smtp-fw-9103.amazon.com [207.171.188.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CAF5CA3
-	for <mptcp@lists.linux.dev>; Thu, 20 Oct 2022 18:11:47 +0000 (UTC)
-Received: by mail-yb1-f179.google.com with SMTP id f205so565449yba.2
-        for <mptcp@lists.linux.dev>; Thu, 20 Oct 2022 11:11:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294B55CA3
+	for <mptcp@lists.linux.dev>; Thu, 20 Oct 2022 18:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oJJKHdCph79ekx0FQxWf6mcRM8elTZFVKG09Lqyve3E=;
-        b=C0MZXSvfMEhfrc8pY4wdQo3q+9b5ow+Y5sgnWT2537ow1VUZSdgUsuRHscjf8bRj5c
-         Ck8HrtlisALDolXOOV0YznDfnRZmO/IomABTdm3CAwQkE1SwKQEM8XtXBiQGUOIYEx5O
-         RmHfnwsnjXOOVLKbTbfdZKoXVmBcbAxRG/ib+7vjSqidgzwkWoumy+prYC2u/MBbyV9q
-         e2FNcOahwWfkDuP21DnQGLA/T/XxSDTrjsrPAyzc9tEalsvbEMmblKzhcAdJ/a0J30RH
-         F4bT7fOa+sr9CCrKPpmiLXEaAg6KFkPKodoNX13Kx4msAJC933hB62qRpW4F6CRyRqXV
-         NBOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oJJKHdCph79ekx0FQxWf6mcRM8elTZFVKG09Lqyve3E=;
-        b=q/dOQjiz/aoAgcFl7/RwSK3mH3umWIJlr2BiMK7eAkI9g6sJZSEDy/TR3SdmQGYhry
-         Vu9W5Yo15sdtX/tovV8+5PUWvY4BXZieuRll8KKRG33AJcI+rvYSIohFhIZ4SKGmOh3d
-         TyBZzlZwjWm9kOw+BTmVIX95pQ+CyAZXNOW8OPAl64nVzK/b+kCRpWM3mM0V6S+WLt1I
-         /ThG6KF+ZtiqKY3Edm2i5Sxzbv0MldJocohTtXjEPmx6eBIzSG+dY0gIxnSAwUIZWb0I
-         ax6+oIRhcA3LNko1G1u5tQbEoiUnVN0csGIIjjoWWO370uSylCxh/A4utdNhfcjhsWjU
-         f2RA==
-X-Gm-Message-State: ACrzQf1NxkoxO2u2jvAu5cuaUW02ZTj7oErRaRRtqRVyn8rV2216vNpk
-	Gicy7tD1REVhaftG7KoQnx3QSH4jFFK0UFE8RrlC9w==
-X-Google-Smtp-Source: AMsMyM5qgEJXaKS7rT2ocfwhE7lTfIa8CcgthDfVlcgeYrrOVTV01h431iJ1dkXeEzgSNvEx5e9gFVyHw/93fdk1SYI=
-X-Received: by 2002:a25:e207:0:b0:6ca:268b:10c3 with SMTP id
- h7-20020a25e207000000b006ca268b10c3mr4536388ybe.407.1666289505845; Thu, 20
- Oct 2022 11:11:45 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1666289999; x=1697825999;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VXv+5nw1uniG4kx/+4kbwmBBcXy/t5DQjqLqRBz/u+8=;
+  b=K35y3tgyFtMGVM/XBVcT6mS7Q2goI+JGNC10kjzYXGLEshCYJuqzeXsN
+   5fEax1F++IMPUPUdvyQ/PkMLNPCXJtOq86Ku96CgvPoz+6ORS67uD/J0o
+   eebS8KUp3D3uULxvRBIatMgYUeDQ+K51qfgJIgQ3mem87jOsx5F9x+ZXf
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.95,199,1661817600"; 
+   d="scan'208";a="1066072278"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-af372327.us-west-2.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-9103.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 18:19:50 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+	by email-inbound-relay-pdx-2a-m6i4x-af372327.us-west-2.amazon.com (Postfix) with ESMTPS id 706196112D;
+	Thu, 20 Oct 2022 18:19:49 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Thu, 20 Oct 2022 18:19:38 +0000
+Received: from 88665a182662.ant.amazon.com.com (10.43.161.58) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.15;
+ Thu, 20 Oct 2022 18:19:36 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <pabeni@redhat.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <mathew.j.martineau@linux.intel.com>,
+	<matthieu.baerts@tessares.net>, <mptcp@lists.linux.dev>,
+	<netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 1/2] net: introduce and use custom sockopt socket flag
+Date: Thu, 20 Oct 2022 11:19:26 -0700
+Message-ID: <20221020181926.192-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <dc549a4d5c1d2031c64794c8e12bed55afb85c3e.1666287924.git.pabeni@redhat.com>
+References: <dc549a4d5c1d2031c64794c8e12bed55afb85c3e.1666287924.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1666287924.git.pabeni@redhat.com> <dc549a4d5c1d2031c64794c8e12bed55afb85c3e.1666287924.git.pabeni@redhat.com>
-In-Reply-To: <dc549a4d5c1d2031c64794c8e12bed55afb85c3e.1666287924.git.pabeni@redhat.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 20 Oct 2022 11:11:34 -0700
-Message-ID: <CANn89iL4z2m5MAxVrd_tNfn9OcmgX5yGm3XyxoJrhEBu99YV6g@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 1/2] net: introduce and use custom sockopt
- socket flag
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, mptcp@lists.linux.dev, David Ahern <dsahern@kernel.org>, 
-	Mat Martineau <mathew.j.martineau@linux.intel.com>, 
-	Matthieu Baerts <matthieu.baerts@tessares.net>, Kuniyuki Iwashima <kuniyu@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.58]
+X-ClientProxiedBy: EX13D39UWB001.ant.amazon.com (10.43.161.5) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-On Thu, Oct 20, 2022 at 10:49 AM Paolo Abeni <pabeni@redhat.com> wrote:
->
+From:   Paolo Abeni <pabeni@redhat.com>
+Date:   Thu, 20 Oct 2022 19:48:51 +0200
 > We will soon introduce custom setsockopt for UDP sockets, too.
 > Instead of doing even more complex arbitrary checks inside
 > sock_use_custom_sol_socket(), add a new socket flag and set it
 > for the relevant socket types (currently only MPTCP).
->
+> 
 > Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+
+
+> ---
+>  include/linux/net.h  | 1 +
+>  net/mptcp/protocol.c | 4 ++++
+>  net/socket.c         | 8 +-------
+>  3 files changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/net.h b/include/linux/net.h
+> index 711c3593c3b8..59350fd85823 100644
+> --- a/include/linux/net.h
+> +++ b/include/linux/net.h
+> @@ -41,6 +41,7 @@ struct net;
+>  #define SOCK_NOSPACE		2
+>  #define SOCK_PASSCRED		3
+>  #define SOCK_PASSSEC		4
+> +#define SOCK_CUSTOM_SOCKOPT	5
+>  
+>  #ifndef ARCH_HAS_SOCKET_TYPES
+>  /**
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index f599ad44ed24..0448a5c3da3c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2708,6 +2708,8 @@ static int mptcp_init_sock(struct sock *sk)
+>  	if (ret)
+>  		return ret;
+>  
+> +	set_bit(SOCK_CUSTOM_SOCKOPT, &sk->sk_socket->flags);
+> +
+>  	/* fetch the ca name; do it outside __mptcp_init_sock(), so that clone will
+>  	 * propagate the correct value
+>  	 */
+> @@ -3684,6 +3686,8 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+>  		struct mptcp_subflow_context *subflow;
+>  		struct sock *newsk = newsock->sk;
+>  
+> +		set_bit(SOCK_CUSTOM_SOCKOPT, &newsock->flags);
+> +
+>  		lock_sock(newsk);
+>  
+>  		/* PM/worker can now acquire the first subflow socket
+> diff --git a/net/socket.c b/net/socket.c
+> index 00da9ce3dba0..55c5d536e5f6 100644
+> --- a/net/socket.c
+> +++ b/net/socket.c
+> @@ -2199,13 +2199,7 @@ SYSCALL_DEFINE4(recv, int, fd, void __user *, ubuf, size_t, size,
+>  
+>  static bool sock_use_custom_sol_socket(const struct socket *sock)
+>  {
+> -	const struct sock *sk = sock->sk;
+> -
+> -	/* Use sock->ops->setsockopt() for MPTCP */
+> -	return IS_ENABLED(CONFIG_MPTCP) &&
+> -	       sk->sk_protocol == IPPROTO_MPTCP &&
+> -	       sk->sk_type == SOCK_STREAM &&
+> -	       (sk->sk_family == AF_INET || sk->sk_family == AF_INET6);
+> +	return test_bit(SOCK_CUSTOM_SOCKOPT, &sock->flags);
+>  }
+>  
+>  /*
+> -- 
+> 2.37.3
